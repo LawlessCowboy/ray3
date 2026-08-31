@@ -130,6 +130,11 @@ Important decoded records include:
 | `83 00 <shape> ... <type-ref> <role>` | Indirect type: aggregate pointer, array/pointer composition, function pointer, or C++ `this`. An indirect return omits the role and is immediately followed by its function-name marker. |
 | `05 00 12 00 <u32>` | Generic record prefix and link pointer; it is not an `04` variable-address record. |
 
+Linked type records begin with `<abbreviation:u32> <DWARF tag:u16> 12 00
+<next:u32>`. The semantic tag is the field at `+4` (`01` array, `02` class,
+`04` enum, `13` struct, `15` subroutine, `17` union); the first word is not a
+stable type kind.
+
 Type references link to file-level records. Named structs/unions/classes,
 enums, nested local arrays, pointer-to-array forms, function pointers,
 bitfields, inheritance offsets, and many members are recovered. There are
@@ -139,9 +144,10 @@ some `72` aggregate references have no recoverable tag/typedef. Those last
 cases are emitted as a visible `/* aggregate */ int` placeholder rather than
 inventing a type.
 
-Line maps make it possible to align a function's assembly with source lines;
-they help identify control-flow regions, validate recovered bodies, and focus
-manual decompilation on the right function even when a signature is partial.
+Each `.line` record entry is `<source-line:u32> ff ff <code-offset:u32>`. The
+extractor emits the complete address-ordered boundary list before a function,
+so reconstructed statements can be placed at the same target offsets and a
+candidate object's line table can provide an additional matching checkpoint.
 
 See [the detailed format notes](docs/debug-format.md) for byte layouts and
 examples, and [the audit notes](docs/debug-audit.md) for the evidence-preserving

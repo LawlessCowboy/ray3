@@ -94,19 +94,21 @@ MODIFIER_ARRAY  = 0x61   # array
 UNKNOWN_AGGREGATE_TYPE = '/* aggregate */ int'
 UNKNOWN_ARRAY_TYPE = '/* array */ int'
 UNKNOWN_FUNCTION_POINTER_TYPE = '/* function pointer */ int'
-# The last three values below are verified respectively with the enum and C++
-# layout probes.  Their precise Metrowerks terminology is still unknown, so
-# callers should use ``kind`` rather than treating these as a stable ABI.
-# Additional kinds below are verified in test_layout/test_layout_cpp: 0x1E
-# appears for a bitfield struct; 0x17/0x21/0x25/0x2E are emitted for named
-# aggregate/class forms.  The numeric kind is retained in TypeInfo because the
-# format's own terminology is not known yet.
-NAMED_TYPE_KINDS = {
-    0x17, 0x19, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x25, 0x2e,
-    0x3a, 0x4b,
-    # Seen in the linked Rayman target for DNM_stParsingDatas.  This is a
-    # named aggregate form, not an array despite neighbouring type records.
-    0x27,
+# Type-record header layout is ``<abbrev:u32> <tag:u16> 12 00 <next:u32>``.
+# The u16 is a DWARF tag; the first word is an abbreviation/form identifier
+# and must not be used to decide what the type means.  In particular, valid
+# structures in the linked game have many different abbreviation values.
+DW_TAG_ARRAY_TYPE = 0x01
+DW_TAG_CLASS_TYPE = 0x02
+DW_TAG_ENUMERATION_TYPE = 0x04
+DW_TAG_STRUCTURE_TYPE = 0x13
+DW_TAG_SUBROUTINE_TYPE = 0x15
+DW_TAG_UNION_TYPE = 0x17
+NAMED_TYPE_TAGS = {
+    DW_TAG_CLASS_TYPE,
+    DW_TAG_ENUMERATION_TYPE,
+    DW_TAG_STRUCTURE_TYPE,
+    DW_TAG_UNION_TYPE,
 }
 
 # Language codes in 36 01 XX records
@@ -150,7 +152,8 @@ class FuncInfo:
 @dataclass
 class TypeInfo:
     name: str
-    kind: int
+    kind: int                 # Metrowerks abbreviation/form identifier
+    tag: int = 0              # semantic DWARF tag from header offset +4
     members: list = field(default_factory=list)  # list of VarInfo
     enum_values: list = field(default_factory=list)  # list of (name, value)
     bases: list = field(default_factory=list)  # list of (type_name, byte_offset)
@@ -183,6 +186,7 @@ class DebugParser:
         self._type_names: dict[int, str] = {}
         self._type_reprs: dict[int, str] = {}
         self._type_kinds: dict[int, int] = {}
+        self._type_tags: dict[int, int] = {}
         # In a linked target, a real function-entry ``11 01`` record must
         # name an address in the ELF function-symbol table.  Supplying this
         # set prevents type/member records in an oversized debug block from
@@ -212,18 +216,60 @@ class DebugParser:
             return UNKNOWN_FUNCTION_POINTER_TYPE
         visiting.add(type_ref)
         try:
-            if self._type_kinds.get(type_ref) == 0x10:
+            tag = self._type_tags.get(type_ref)
+            if tag is None and self.d[type_ref + 6:type_ref + 8] == b'\x12\x00':
+                tag = struct.unpack_from('<H', self.d, type_ref + 4)[0]
+                self._type_tags[type_ref] = tag
+                self._type_kinds[type_ref] = struct.unpack_from('<I', self.d, type_ref)[0]
+            if tag == DW_TAG_ARRAY_TYPE:
+                return self._resolve_array_type(type_ref, visiting)
+            if tag == DW_TAG_SUBROUTINE_TYPE:
                 return self._resolve_function_type(type_ref, visiting)
         finally:
             visiting.remove(type_ref)
         return UNKNOWN_FUNCTION_POINTER_TYPE
+
+    def _resolve_array_type(self, type_pos: int, visiting: set[int]) -> str:
+        """Resolve an array record, including forward/nested array links."""
+        d = self.d
+        end = struct.unpack_from('<I', d, type_pos + 8)[0]
+        if (not (type_pos + 31 <= end <= len(d))
+                or d[type_pos + 12:type_pos + 18] != b'\x95\x00\x00\x00\xa3\x00'):
+            return UNKNOWN_ARRAY_TYPE
+        scalar_pos = d.find(b'\x55\x00', type_pos + 12, end)
+        aggregate_pos = d.find(b'\x72\x00', type_pos + 12, end)
+        if scalar_pos >= 0:
+            element_type = REG_TO_TYPE.get(d[scalar_pos + 2], 'int')
+        elif aggregate_pos >= 0 and aggregate_pos + 6 <= end:
+            element_ref = struct.unpack_from('<I', d, aggregate_pos + 2)[0]
+            element_type = self._type_names.get(element_ref)
+            if element_type is None:
+                element_type = self._type_reprs.get(element_ref)
+            if element_type is None and element_ref not in visiting:
+                element_type = self._resolve_type_ref(element_ref, visiting)
+            if element_type is None:
+                element_type = UNKNOWN_ARRAY_TYPE
+        else:
+            element_type = 'int'
+        upper_bound = struct.unpack_from('<I', d, type_pos + 27)[0]
+        if upper_bound == 0xffffffff:
+            result = element_type
+        else:
+            bracket = element_type.find('[')
+            if bracket >= 0:
+                result = (f'{element_type[:bracket]}[{upper_bound + 1}]'
+                          f'{element_type[bracket:]}')
+            else:
+                result = f'{element_type}[{upper_bound + 1}]'
+        self._type_reprs[type_pos] = result
+        return result
 
     def _resolve_indirect_type(self, type_ref: int, visiting: Optional[set[int]] = None) -> str:
         """Render an ``83`` use, which adds one level of indirection."""
         if type_ref in self._type_names:
             return f'{self._type_names[type_ref]}*'
         referred = self._resolve_type_ref(type_ref, visiting)
-        if self._type_kinds.get(type_ref) in (0x24, 0x26) and '[' in referred:
+        if self._type_tags.get(type_ref) == DW_TAG_ARRAY_TYPE and '[' in referred:
             base, dimensions = referred.split('[', 1)
             return f'{base} (*)[{dimensions}'
         # A function type's spelling already places the pointer at the
@@ -383,19 +429,40 @@ class DebugParser:
             if pos + 14 > len(d) or d[pos + 6:pos + 8] != b'\x12\x00':
                 continue
             kind = struct.unpack_from('<I', d, pos)[0]
+            tag = struct.unpack_from('<H', d, pos + 4)[0]
             next_pos = struct.unpack_from('<I', d, pos + 8)[0]
-            if kind not in NAMED_TYPE_KINDS or not (pos < next_pos <= len(d)):
+            if tag not in NAMED_TYPE_TAGS or not (pos < next_pos <= len(d)):
                 continue
-            name_pos = d.find(b'\x38\x00', pos + 12, next_pos)
+            name_pos = self._named_type_name_pos(pos, next_pos, tag)
             if name_pos < 0:
                 continue
             name, _ = cstr(d, name_pos + 2)
             if re.fullmatch(r'@anon(\d+)', name):
                 name = f'anon_{name[5:]}'
+            elif name == '@enum':
+                # Anonymous enums still have a usable referenced identity.
+                # Include the linked record offset to avoid conflating
+                # unrelated per-translation-unit declarations.
+                name = f'anon_enum_{pos:08x}'
             elif not (name and all(ch.isalnum() or ch == '_' for ch in name)):
                 continue
             self._type_kinds[pos] = kind
+            self._type_tags[pos] = tag
             self._type_names.setdefault(pos, name)
+
+    def _named_type_name_pos(self, pos: int, end: int, tag: int) -> int:
+        """Locate the actual name opcode in a named type record.
+
+        Aggregates put it directly after ``b6 00 <size:u32>``.  Enumerations
+        put their constants between that header and the final type name, so
+        the final ``38 00`` is the name opcode.  A forward search is unsafe:
+        an enum constant ending in the ASCII digit ``8`` contains those same
+        two bytes at its string terminator.
+        """
+        if tag == DW_TAG_ENUMERATION_TYPE:
+            return self.d.rfind(b'\x38\x00', pos + 18, end)
+        name_pos = pos + 18
+        return name_pos if self.d[name_pos:name_pos + 2] == b'\x38\x00' else -1
 
     def _parse_chunk(self, start: int, end: int, strtab_size: int):
         """Parse one per-function chunk of the .debug stream."""
@@ -418,6 +485,7 @@ class DebugParser:
         pending_var: Optional[VarInfo] = None
         pending_return_type: Optional[str] = None
         saw_return_descriptor = False
+        awaiting_function_name = False
         pending_function_entry = False
         skip_file_type_declarations = False
 
@@ -467,6 +535,7 @@ class DebugParser:
                                 pending_var = None
                                 pending_return_type = None
                                 saw_return_descriptor = False
+                                awaiting_function_name = False
                             current_func_addr = addr
                             pending_function_entry = True
                             skip_file_type_declarations = False
@@ -516,6 +585,18 @@ class DebugParser:
                 s, nxt = cstr(d, i+2)
                 cur_compiler = s
                 i = nxt
+                continue
+
+            # A scalar return descriptor can carry an opaque attribute block
+            # containing relocated type/debug addresses before the 07 38
+            # function name.  Those address bytes are not declarations.  Once
+            # the return has been decoded, scan only for the name marker; this
+            # prevents embedded 0x72 bytes from replacing a void return with a
+            # fictitious aggregate type.
+            if (awaiting_function_name
+                    and d[i:i + 3] != b'\x07\x38\x00'
+                    and d[i:i + 2] != b'\x38\x00'):
+                i += 1
                 continue
 
             # ---- 38 00 : source file path string ----
@@ -579,12 +660,26 @@ class DebugParser:
                     parsing_signature = True
                     pending_function_entry = False
                     skip_file_type_declarations = False
+                    awaiting_function_name = False
                 elif pending_var is not None and s and all(c.isalnum() or c == '_' for c in s):
                     # Local names use a bare 38 00 record, unlike parameters
                     # which use the 07 38 00 form.
                     attach_pending_name(s)
                 i = nxt
                 continue
+
+            # ---- generic 12-byte linked-record header ----
+            # Layout: <abbreviation:u32> <tag/storage:u16> 12 00 <next:u32>.
+            # The relocated link is opaque.  Scanning through it made a low
+            # byte of 0x72 look like an aggregate descriptor (and 0x04 like a
+            # stack offset), producing aggregate-typed scalar locals and huge
+            # fictitious offsets in the linked game.  Consume the complete
+            # header; the declaration payload begins immediately after it.
+            if i + 12 <= end and d[i + 6:i + 8] == b'\x12\x00':
+                next_record = struct.unpack_from('<I', d, i + 8)[0]
+                if i < next_record <= len(d):
+                    i += 12
+                    continue
 
             # ---- 04 : address/offset field (4 bytes) ----
             if b == 0x04 and i + 5 <= stream_end:
@@ -617,6 +712,7 @@ class DebugParser:
                         parsing_signature = True
                         pending_function_entry = False
                         skip_file_type_declarations = False
+                        awaiting_function_name = False
                 i = nxt
                 continue
 
@@ -681,6 +777,7 @@ class DebugParser:
                             # Function return descriptors precede the 07 38
                             # function-name record in MWCC's stream.
                             pending_return_type = type_str
+                            awaiting_function_name = True
                     elif self._cur_func:
                         if role != 'return':
                             var = VarInfo(
@@ -919,16 +1016,20 @@ class DebugParser:
                 break
             next_pos = struct.unpack_from('<I', d, pos + 8)[0]
             search_end = next_pos if pos < next_pos <= end else end
-            name_pos = d.find(b'\x38\x00', pos + 12, search_end)
             kind = struct.unpack_from('<I', d, pos)[0]
+            tag = struct.unpack_from('<H', d, pos + 4)[0]
+            name_pos = self._named_type_name_pos(pos, search_end, tag)
             self._type_kinds[pos] = kind
-            if name_pos >= 0 and kind in NAMED_TYPE_KINDS:
+            self._type_tags[pos] = tag
+            if name_pos >= 0 and tag in NAMED_TYPE_TAGS:
                 name, _ = cstr(d, name_pos + 2)
                 if re.fullmatch(r'@anon(\d+)', name):
                     # MWCC gives anonymous aggregates a stable internal name.
                     # Retain the identity, but make it a legal C identifier
                     # for later stub/type emission.
                     self._type_names[pos] = f'anon_{name[5:]}'
+                elif name == '@enum':
+                    self._type_names[pos] = f'anon_enum_{pos:08x}'
                 elif name and all(ch.isalnum() or ch == '_' for ch in name):
                     self._type_names[pos] = name
             # Array records observed in controlled objects have this fixed
@@ -936,48 +1037,10 @@ class DebugParser:
             # numeric kinds 0x24/0x26 are also used by named type records in
             # the target; treating those as arrays reads four name bytes (for
             # example ``dstV``) as a fake dimension such as 1450472293.
-            elif (kind in (0x24, 0x26)
-                  and d[pos + 12:pos + 18] == b'\x95\x00\x00\x00\xa3\x00'):
-                scalar_pos = d.find(b'\x55\x00', pos + 12, search_end)
-                aggregate_pos = d.find(b'\x72\x00', pos + 12, search_end)
-                if scalar_pos >= 0:
-                    element_type = REG_TO_TYPE.get(d[scalar_pos + 2], 'int')
-                elif aggregate_pos >= 0 and aggregate_pos + 6 <= search_end:
-                    element_ref = struct.unpack_from('<I', d, aggregate_pos + 2)[0]
-                    element_type = self._type_names.get(
-                        element_ref, self._type_reprs.get(element_ref, UNKNOWN_ARRAY_TYPE)
-                    )
-                else:
-                    element_type = 'int'
-                # The probe's u32 at +27 is the inclusive highest index.
-                if pos + 31 <= search_end:
-                    upper_bound = struct.unpack_from('<I', d, pos + 27)[0]
-                    # Target records use 0xffffffff as an unspecified-bound
-                    # sentinel.  Adding one produced the spectacular but
-                    # fictitious dimension 4294967296 in local declarations.
-                    # Preserve the element type and let the surrounding
-                    # declarator contribute any independently encoded bound.
-                    if upper_bound == 0xffffffff:
-                        self._type_reprs[pos] = element_type
-                        if not (pos < next_pos <= end):
-                            break
-                        pos = next_pos
-                        continue
-                    # An array's element can itself be an array.  Put the new
-                    # (outer) dimension before existing dimensions so a
-                    # linked ``[2]`` -> ``[3]`` graph prints int[2][3].
-                    bracket = element_type.find('[')
-                    if bracket >= 0:
-                        self._type_reprs[pos] = (
-                            f'{element_type[:bracket]}[{upper_bound + 1}]'
-                            f'{element_type[bracket:]}'
-                        )
-                    else:
-                        self._type_reprs[pos] = f'{element_type}[{upper_bound + 1}]'
-                else:
-                    self._type_reprs[pos] = UNKNOWN_ARRAY_TYPE
-            if kind in NAMED_TYPE_KINDS:
-                type_records.append((pos, next_pos, kind, name_pos))
+            elif tag == DW_TAG_ARRAY_TYPE:
+                self._resolve_array_type(pos, {pos})
+            if tag in NAMED_TYPE_TAGS:
+                type_records.append((pos, next_pos, kind, tag, name_pos))
             if not (pos < next_pos <= end):
                 break
             pos = next_pos
@@ -985,8 +1048,8 @@ class DebugParser:
         # Resolve these after the complete linked type list is indexed.  In
         # particular, indirect callback parameters can point at sibling type
         # records that have not yet been visited during the first pass.
-        for type_pos, kind in tuple(self._type_kinds.items()):
-            if kind == 0x10 and start <= type_pos < end:
+        for type_pos, tag in tuple(self._type_tags.items()):
+            if tag == DW_TAG_SUBROUTINE_TYPE and start <= type_pos < end:
                 self._type_reprs[type_pos] = self._resolve_function_type(type_pos, {type_pos})
 
         if self._cur_file:
@@ -996,13 +1059,13 @@ class DebugParser:
                         type_ref, self._type_reprs.get(type_ref, UNKNOWN_AGGREGATE_TYPE)
                     )
                 self._cur_file.globals_.append(var)
-            for type_pos, next_pos, kind, name_pos in type_records:
+            for type_pos, next_pos, kind, tag, name_pos in type_records:
                 name = self._type_names.get(type_pos)
                 if not name:
                     continue
-                info = TypeInfo(name=name, kind=kind)
+                info = TypeInfo(name=name, kind=kind, tag=tag)
                 name_end = d.find(b'\x00', name_pos + 2) + 1
-                if kind == 0x4b:
+                if tag == DW_TAG_ENUMERATION_TYPE:
                     # In the verified enum record, constant entries start at
                     # +24 as signed u32 followed by an inline NUL string and
                     # continue until the 38 00 enum-name record.
@@ -1063,11 +1126,17 @@ class DebugParser:
                     member_type = 'int'
                     scalar_pos = d.find(b'\x55\x00', member_pos + 12, member_name_pos)
                     aggregate_pos = d.find(b'\x72\x00', member_pos + 12, member_name_pos)
+                    indirect_pos = d.find(b'\x83\x00', member_pos + 12, member_name_pos)
                     if scalar_pos >= 0:
                         reg_code = d[scalar_pos + 2]
                         member_type = REG_TO_TYPE.get(
                             reg_code, f'/*type_0x{reg_code:02x}*/ int'
                         )
+                    elif indirect_pos >= 0:
+                        indirect = self._indirect_record(indirect_pos, member_name_pos)
+                        if indirect:
+                            type_ref, _ = indirect
+                            member_type = self._resolve_indirect_type(type_ref)
                     elif aggregate_pos >= 0 and aggregate_pos + 6 <= member_name_pos:
                         type_ref = struct.unpack_from('<I', d, aggregate_pos + 2)[0]
                         member_type = self._type_names.get(
@@ -1103,13 +1172,16 @@ def parse_line_section(line_data: bytes, func_addr: int) -> list[tuple[int, int]
     if len(line_data) < 8:
         return []
     entries = []
-    pos = 8   # skip header
-    while pos + 4 <= len(line_data):
-        addr, line = struct.unpack_from('<HH', line_data, pos)
-        pos += 4
-        if addr == 0xFFFF:
-            continue   # sentinel
-        if line == 0xFFFF:
+    # Each entry is ten bytes: source line (u32), 0xffff marker (u16), and
+    # code offset from the function entry (u32).  The final line-zero entry
+    # carries the end offset and is not a source boundary.  The old parser
+    # treated the stream as pairs of u16 values, which made every recovered
+    # code offset zero and rendered the generated comments useless.
+    pos = 8   # skip section-size and function-address header
+    while pos + 10 <= len(line_data):
+        line, marker, addr = struct.unpack_from('<IHI', line_data, pos)
+        pos += 10
+        if marker != 0xffff:
             continue
         if line > 0:
             entries.append((addr, line))
@@ -1363,6 +1435,20 @@ def generate_c_stub(file_info: FileInfo, func_list: list[FuncInfo],
         if not func.signature_trusted:
             lines.append('/* Debug signature rejected: type-record data leaked into it. */')
 
+        if func.line_map:
+            lines.append('/* Target MWCC statement boundaries (code offset -> source line):')
+            previous = None
+            for offset, line in func.line_map:
+                # Repeated identical records carry no additional matching
+                # information, but preserve distinct lines at one offset.
+                if (offset, line) == previous:
+                    continue
+                lines.append(f' *   +0x{offset:04x} -> line {line}')
+                previous = (offset, line)
+            lines.append(' * Place reconstructed statements at these boundaries;')
+            lines.append(' * compare a candidate object\'s line table as an extra checkpoint.')
+            lines.append(' */')
+
         # Signature
         sig = func_signature(func)
         lines.append(sig)
@@ -1372,12 +1458,6 @@ def generate_c_stub(file_info: FileInfo, func_list: list[FuncInfo],
         for loc in func.locals_:
             lname = safe_param_name(loc.name, 0)
             lines.append(f'    {format_declaration(loc.type_str, lname)};')
-
-        # Line map comments
-        if func.line_map:
-            lines.append(f'    /* line map: */')
-            for off, ln in func.line_map[:8]:  # cap for readability
-                lines.append(f'    /*   line {ln} @ +0x{off:03x} */')
 
         lines.append(f'    /* TODO: decompile from asm/... */')
         lines.append('}')

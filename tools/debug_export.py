@@ -61,10 +61,12 @@ def type_record_inventory(files):
     """
     types = [type_info for file_info in files for type_info in file_info.types]
     kinds = Counter(type_info.kind for type_info in types)
+    tags = Counter(type_info.tag for type_info in types)
     return {
         'scope': 'parser_recovered_named_types_only',
         'records': len(types),
         'kinds': {f'0x{kind:08x}': count for kind, count in sorted(kinds.items())},
+        'tags': {f'0x{tag:04x}': count for tag, count in sorted(tags.items())},
     }
 
 

@@ -230,6 +230,20 @@ A 4-byte little-endian address or offset value.
 | `82`      | Appears in some function descriptor blocks          |
 | `20`      | Type modifier / separator byte                      |
 
+#### Linked type-record header
+
+```
+<abbreviation:u32> <DWARF tag:u16> 12 00 <next-record:u32>
+```
+
+The semantic type category is the DWARF tag at offset `+4`, not the first
+word. Observed named-type tags are `0x02` (class), `0x04` (enumeration),
+`0x13` (structure), and `0x17` (union); `0x01` identifies an array and `0x15`
+a subroutine type. A named declaration then begins with `b6 00`, its byte size,
+and a `38 00` name. Treating the first word as a fixed type kind caused valid
+game structures to be omitted whenever their abbreviation was not present in
+the parser's small probe-derived allowlist.
+
 ---
 
 ## Full `.debug` Section Example
@@ -298,6 +312,20 @@ In the final linked ELF (`SLKA_250.78`):
 - Only **MW runtime library functions** have `.mwcats` entries (37 total)
 - Game code functions are in the `main` section without `.mwcats`
 - The `.debug` section is 12.5 MB, `.line` is 1.2 MB
+
+### `.line` function records
+
+The linked `.line` blob is a concatenation of function records. Each begins
+with `<record-size:u32> <function-address:u32>`, followed by ten-byte entries:
+
+```
+<source-line:u32> ff ff <code-offset:u32>
+```
+
+The final entry has source line zero and records the function end offset. Code
+offsets are relative to the function entry. Earlier extractor versions parsed
+each entry as two `u16` values; that happened to recover plausible line numbers
+but incorrectly assigned every one to offset zero.
 
 Source file paths in `.debug` use Windows-style backslash paths from the
 developer's machine (e.g. `C:\Program Files\Metrowerks\CodeWarrior\...` for
