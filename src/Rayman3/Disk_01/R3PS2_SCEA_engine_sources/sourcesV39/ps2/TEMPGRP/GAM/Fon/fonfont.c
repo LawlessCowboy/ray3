@@ -30,5 +30,5 @@ FON_tdstGeneral_ FON_g_stGeneral;
 /* addr: 0x00274b90  size: 8 bytes */
 unsigned int fn_ulStdGameSizeOf(void)
 {
-    /* TODO: decompile from asm/... */
+    return 100;
 }
