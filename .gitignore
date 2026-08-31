@@ -1,0 +1,33 @@
+# Retail game data and generated disassembly.  Supply a personally dumped ELF
+# locally as SLKA_250.78 when running the extractor or Splat.
+/SLKA_250.78
+/SLKA_250.78.ld
+/asm/
+/build/
+
+# The original scratch/compiler directory contains MWCC binaries, Wibo, probe
+# inputs/objects, and duplicate ELF copies.  Maintained scripts live in tools/.
+/Compiler/
+/wibo-x86_64
+*.exe
+*.dll
+*.o
+
+# Earlier extraction layouts; src/Rayman3 is the canonical source tree used by
+# the generated Splat ownership map.
+/src/C4_R3/
+/src/Program Files/
+/src/dev/
+/src/sourcesV39/
+/src/ø£
+
+# Local tooling state and Python products.
+/.agents/
+/.codex/
+__pycache__/
+*.py[cod]
+debug-export*.json
+
+# Editor and operating-system files.
+.DS_Store
+*.swp

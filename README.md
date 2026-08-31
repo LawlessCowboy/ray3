@@ -1,0 +1,156 @@
+# Rayman 3: Hoodlum Havoc — PlayStation 2 Korean decompilation
+
+This is an in-progress static-recompilation/decompilation project for the
+Korean PS2 release of *Rayman 3: Hoodlum Havoc* (`SLKA-250.78`). That build is
+especially useful because its linked ELF retains Metrowerks CodeWarrior debug
+information: original source paths, function names, many signatures, local
+names, aggregate layouts, line maps, and function sizes.
+
+The repository contains only recovered source, symbols/configuration, parser
+and extraction tools, and documentation. It does **not** contain game files,
+the retail ELF, generated assembly, MWCC, Wibo, PS2 SDK files, probe fixtures,
+or compiler binaries.
+
+## Status
+
+- The canonical recovered tree is [`src/Rayman3`](src/Rayman3). It follows the
+  source paths recorded in the target debug stream.
+- Function ownership, names, sizes, line maps, a substantial set of parameter
+  names/types, and many aggregate member layouts are recovered from debug
+  data.
+- Small/simple functions are being replaced with C/C++ implementations first.
+- The project can compile individual translation units when a compatible local
+  toolchain and headers are supplied. Full byte-matching linking is not yet
+  available: the original PS2 SDK/runtime objects and final link environment
+  have not been reconstructed.
+
+## Repository layout
+
+| Path | Purpose |
+| --- | --- |
+| `src/Rayman3/` | Canonical recovered source tree and ongoing decompilation work. |
+| `include/` | Project include files. |
+| `config/` | Splat map, symbols, and generated undefined-symbol lists. |
+| `tools/` | Debug extractor/auditor and Splat-layout helper scripts. |
+| `docs/` | Detailed reverse-engineering notes. |
+| `Makefile` | Per-translation-unit MWCC build and source extraction entry points. |
+
+## Required local inputs
+
+Use a legally obtained Korean retail ELF and keep it outside Git. The expected
+SHA-1 is `c2c3f5c2ccceedc6745b4738102409f27bbb9f10`.
+
+The optional compile workflow additionally needs:
+
+- Metrowerks `mwccps2.exe` version 2.4.1.01;
+- [Wibo](https://github.com/decompals/wibo) (or an equivalent way to run that
+  Windows compiler); and
+- the matching PS2 SDK headers/libraries.
+
+None of those proprietary game/compiler/SDK components are distributed here.
+
+## Working with the recovered source
+
+Compile the current translation units (no final link) with local tool paths:
+
+```sh
+make WIBO=/path/to/wibo-x86_64 MWCC=/path/to/mwccps2.exe
+```
+
+The evidence-backed baseline compiler profile is:
+
+```text
+-g -opt level=3 -farcall off -sdatathreshold 8 \
+   -inline off -strings reuse,nopool -enum int
+```
+
+`-opt level=3` and `-opt level=4` have been byte-identical for every current
+probe. Level 3 is therefore the conservative project spelling, not proof that
+the original selected level 3 over level 4. The `-opt all`/`full` speed bundle
+does change target-shaped probes and is not the current candidate. `farcall`
+off and the 8-byte small-data threshold have direct target evidence; the
+remaining switches either match MWCC defaults or still need a real recovered
+function to establish an override.
+
+To regenerate source from a local target, note that this overwrites generated
+stubs. Prefer a temporary output directory while inspecting parser changes:
+
+```sh
+python3 tools/extract_debug.py /path/to/SLKA_250.78 --out /tmp/ray3-extract
+```
+
+The Make target intentionally requires an explicit target path:
+
+```sh
+make extract TARGET=/path/to/SLKA_250.78
+```
+
+`tools/update_splat_config.py` derives source-file ownership ranges from the
+ELF, and `tools/split_splat_by_source.py` runs Splat in memory-bounded batches.
+Their output is intentionally ignored: generated split assembly belongs in a
+local `asm/` directory, not in the repository.
+
+## Metrowerks debug information
+
+The ELF's `.debug`, `.line`, and `.mwcats` sections are custom Metrowerks data,
+not ordinary DWARF or standard STABS, even though the 12-byte `.debug` header
+looks STABS-compatible.
+
+| Section | Recoverable information |
+| --- | --- |
+| `.debug` | Compiler/language, original Windows source path, function entry, signature descriptors, variable names, and linked aggregate/type records. |
+| `.line` | Function-relative instruction offsets mapped to original source lines. |
+| `.mwcats` | Function start address and exact code size. |
+| `.symtab` | Linked symbol names/addresses used to validate function boundaries. |
+
+### `.debug` stream model
+
+Each translation-unit/function chunk begins with:
+
+```text
+u32 strtab_size | 11 00 | u16 0012 | u32 section_end
+```
+
+In a relocatable object the final word is a chunk-relative byte count. In the
+linked Korean ELF it is an **absolute offset in the concatenated debug stream**.
+The extractor tests both possible boundaries by looking for the following
+header; treating every value as a relative count is a known failure mode that
+skips chunks and turns later type records into fake function parameters.
+
+Important decoded records include:
+
+| Record | Meaning |
+| --- | --- |
+| `11 01 <u32>` / `21 01 <u32>` | Function/block entry and scope/end address. Linked function entries are validated against `.symtab`. |
+| `36 01 <u32>` / `58 02 <str>` / `38 00 <str>` | Language, compiler name, and source path/name. |
+| `07 38 00 <name>` | Function or variable name. |
+| `55 00 <type> 00 <role>` | Scalar return/parameter/local descriptor. Roles include return (`13` or integer-return `43`) and parameter (`23`). |
+| `63 00 ...` | Primitive pointer/reference descriptor. |
+| `72 00 <type-ref> <role>` | By-value aggregate descriptor. |
+| `83 00 <shape> ... <type-ref> <role>` | Indirect type: aggregate pointer, array/pointer composition, function pointer, or C++ `this`. An indirect return omits the role and is immediately followed by its function-name marker. |
+| `05 00 12 00 <u32>` | Generic record prefix and link pointer; it is not an `04` variable-address record. |
+
+Type references link to file-level records. Named structs/unions/classes,
+enums, nested local arrays, pointer-to-array forms, function pointers,
+bitfields, inheritance offsets, and many members are recovered. There are
+intentional limits: typedef aliases are normally erased by MWCC, array bounds
+on parameters decay in the ABI, qualifiers are not reliably represented, and
+some `72` aggregate references have no recoverable tag/typedef. Those last
+cases are emitted as a visible `/* aggregate */ int` placeholder rather than
+inventing a type.
+
+Line maps make it possible to align a function's assembly with source lines;
+they help identify control-flow regions, validate recovered bodies, and focus
+manual decompilation on the right function even when a signature is partial.
+
+See [the detailed format notes](docs/debug-format.md) for byte layouts and
+examples, and [the audit notes](docs/debug-audit.md) for the evidence-preserving
+export workflow.
+
+## Contributing
+
+Keep source changes scoped to one recovered translation unit where practical.
+Do not commit retail binaries, generated assembly, compiler/SDK files, or
+experiments/probe artifacts. When changing the parser, validate with a local
+ELF extraction to a temporary directory and retain only reproducible parser
+logic and documentation in Git.
