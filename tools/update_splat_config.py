@@ -114,8 +114,8 @@ def main() -> None:
         if symbol.name:
             names.setdefault(symbol.value, symbol.name)
 
-    # Start a new range only when the source ownership changes.  536 ranges
-    # are tractable for Splat; one segment per 7,832 functions is not.  A
+    # Start a new range only when the source ownership changes.  A few hundred
+    # ranges are tractable for Splat; one segment per 7,832 functions is not.  A
     # source may recur after inlined/template/header code; suffix its later
     # fragments rather than overwriting an earlier assembly file.
     source_runs = []
@@ -150,11 +150,10 @@ def main() -> None:
         "    - config/symbols.txt", "    - config/splat_symbols.txt"
     )
     CONFIG_PATH.write_text(config)
-    symbol_count = (
-        len(SPLAT_SYMBOLS_PATH.read_text().splitlines()) - 1
-        if SPLAT_SYMBOLS_PATH.exists()
-        else write_splat_symbols(function_addresses, debug_names)
-    )
+    # Rebuild this view every time: parser improvements can recover additional
+    # functions or better names even when the ELF's ordinary symbol table is
+    # unchanged.
+    symbol_count = write_splat_symbols(function_addresses, debug_names)
     print(
         f"Wrote {len(source_runs)} source-owned asm ranges ({len(function_addresses)} "
         f"function addresses; {len(debug_sources)} with debug source ownership) and "

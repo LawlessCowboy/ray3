@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -21,6 +22,12 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 CONFIG_PATH = ROOT / "config" / "rayman3.yaml"
+
+
+def symbol_line_key(line: str) -> tuple[int, str]:
+    """Sort Splat's generated definitions by address, then by name."""
+    match = re.search(r"=\s*(0x[0-9A-Fa-f]+|\d+)\s*;", line)
+    return (int(match.group(1), 0) if match else 0, line)
 
 
 def main() -> None:
@@ -53,6 +60,8 @@ def main() -> None:
 
     with tempfile.TemporaryDirectory(prefix="rayman3-splat-") as temp_dir:
         temp_root = Path(temp_dir)
+        undefined_func_lines: set[str] = set()
+        undefined_sym_lines: set[str] = set()
         for batch_start in range(args.start, stop, args.batch_size):
             batch = source_segments[batch_start:min(batch_start + args.batch_size, stop)]
             next_index = batch_start + len(batch)
@@ -72,6 +81,12 @@ def main() -> None:
             batch_options["base_path"] = str(ROOT)
             batch_options["asset_path"] = str(temp_root / "assets")
             batch_options["build_path"] = str(temp_root / "build")
+            batch_options["undefined_funcs_auto_path"] = str(
+                temp_root / f"undefined_funcs_{batch_id:03d}.txt"
+            )
+            batch_options["undefined_syms_auto_path"] = str(
+                temp_root / f"undefined_syms_{batch_id:03d}.txt"
+            )
             batch_main = next(
                 segment for segment in batch_config["segments"]
                 if isinstance(segment, dict) and segment.get("name") == "main"
@@ -90,13 +105,40 @@ def main() -> None:
                 ["splat", "split", str(batch_path)], cwd=ROOT, check=True,
                 stdout=output, stderr=output,
             )
+            for option, destination in (
+                ("undefined_funcs_auto_path", undefined_func_lines),
+                ("undefined_syms_auto_path", undefined_sym_lines),
+            ):
+                generated_path = Path(batch_options[option])
+                if generated_path.exists():
+                    destination.update(
+                        line.strip() for line in generated_path.read_text().splitlines()
+                        if line.strip()
+                    )
 
     if args.start == 0 and stop == len(source_segments):
         expected = [ROOT / "asm" / f"{segment[2]}.s" for segment in source_segments]
         missing = [path for path in expected if not path.exists()]
         if missing:
             raise SystemExit(f"Splat did not write {len(missing)} expected asm files")
+        expected_set = set(expected)
+        stale = [path for path in (ROOT / "asm").rglob("*.s")
+                 if path not in expected_set]
+        for output_path, lines in (
+            (ROOT / config["options"]["undefined_funcs_auto_path"],
+             undefined_func_lines),
+            (ROOT / config["options"]["undefined_syms_auto_path"],
+             undefined_sym_lines),
+        ):
+            output_path.write_text(
+                "".join(f"{line}\n" for line in sorted(lines, key=symbol_line_key))
+            )
         print(f"Completed {len(expected)} source-owned asm ranges.")
+        if stale:
+            print(
+                f"Kept {len(stale)} obsolete generated asm files that are no longer "
+                "listed by the config."
+            )
     else:
         print(f"Completed source ranges {args.start + 1}-{stop}.")
 
