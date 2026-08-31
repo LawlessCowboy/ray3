@@ -72,14 +72,17 @@ off and the 8-byte small-data threshold have direct target evidence; the
 remaining switches either match MWCC defaults or still need a real recovered
 function to establish an override.
 
-To regenerate source from a local target, note that this overwrites generated
-stubs. Prefer a temporary output directory while inspecting parser changes:
+To inspect regenerated source without changing the working tree, use a
+temporary output directory:
 
 ```sh
 python3 tools/extract_debug.py /path/to/SLKA_250.78 --out /tmp/ray3-extract
 ```
 
-The Make target intentionally requires an explicit target path:
+The Make target intentionally requires an explicit target path. It refreshes
+the checked-in templates while preserving every non-TODO function body by its
+linked address, so parser and ownership improvements do not erase matching
+work:
 
 ```sh
 make extract TARGET=/path/to/SLKA_250.78

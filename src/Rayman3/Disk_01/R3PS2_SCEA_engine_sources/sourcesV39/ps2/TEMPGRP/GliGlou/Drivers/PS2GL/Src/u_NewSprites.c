@@ -10,68 +10,75 @@ typedef struct anon_1 anon_1;
 typedef struct tagsceGsReg tagsceGsReg;
 typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct anon_2 anon_2;
+typedef struct anon_41 anon_41;
+typedef struct anon_6 anon_6;
+typedef struct anon_22 anon_22;
+typedef struct anon_27 anon_27;
+typedef struct anon_37 anon_37;
+typedef struct anon_34 anon_34;
+typedef struct anon_32 anon_32;
+typedef struct anon_21 anon_21;
+typedef struct anon_12 anon_12;
+typedef struct anon_40 anon_40;
+typedef struct anon_42 anon_42;
+typedef struct anon_29 anon_29;
+typedef struct anon_3 anon_3;
+typedef struct anon_9 anon_9;
+typedef struct anon_10 anon_10;
+typedef struct anon_26 anon_26;
+typedef struct anon_33 anon_33;
+typedef struct anon_17 anon_17;
+typedef struct anon_15 anon_15;
+typedef struct anon_4 anon_4;
+typedef struct anon_30 anon_30;
+typedef struct anon_5 anon_5;
+typedef struct anon_28 anon_28;
+typedef struct anon_24 anon_24;
+typedef struct anon_39 anon_39;
+typedef struct anon_8 anon_8;
+typedef struct anon_19 anon_19;
+typedef struct anon_38 anon_38;
+typedef struct anon_11 anon_11;
+typedef struct anon_18 anon_18;
+typedef struct anon_23 anon_23;
+typedef struct anon_16 anon_16;
+typedef struct anon_20 anon_20;
+typedef struct anon_25 anon_25;
+typedef struct anon_36 anon_36;
+typedef union anon_7 anon_7;
 typedef struct tagGScontext tagGScontext;
+typedef struct _sceDmaTag _sceDmaTag;
 typedef struct tagGLprimbuf tagGLprimbuf;
 typedef struct LifeBarStruct_ LifeBarStruct_;
-typedef struct anon_3 anon_3;
-typedef struct anon_4 anon_4;
-typedef struct anon_5 anon_5;
+typedef struct tagListNodeSingle tagListNodeSingle;
 typedef struct tagGLlistpool tagGLlistpool;
 typedef struct tag_GLtexture tag_GLtexture;
-typedef struct anon_6 anon_6;
-typedef union anon_7 anon_7;
-typedef struct anon_8 anon_8;
+typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;
 typedef struct tagListNode tagListNode;
-typedef struct anon_9 anon_9;
-typedef struct tagGLcontext tagGLcontext;
-typedef struct anon_10 anon_10;
-typedef struct tagGLArrayInfo tagGLArrayInfo;
-typedef struct anon_11 anon_11;
-typedef struct anon_12 anon_12;
-typedef struct anon_13 anon_13;
-typedef struct anon_14 anon_14;
-typedef struct anon_15 anon_15;
-typedef struct anon_16 anon_16;
-typedef struct anon_17 anon_17;
-typedef struct tag_GLlight tag_GLlight;
-typedef struct anon_18 anon_18;
-typedef struct anon_19 anon_19;
-typedef struct tagstVIFCode tagstVIFCode;
-typedef struct anon_20 anon_20;
-typedef struct anon_21 anon_21;
-typedef struct anon_22 anon_22;
-typedef struct tagGLlistcalls tagGLlistcalls;
-typedef struct tag_GLmaterial tag_GLmaterial;
-typedef struct anon_23 anon_23;
-typedef struct anon_24 anon_24;
-typedef struct anon_25 anon_25;
-typedef struct tagGLtexname tagGLtexname;
-typedef struct tagGLlistdatas tagGLlistdatas;
-typedef struct anon_26 anon_26;
-typedef struct anon_27 anon_27;
-typedef struct anon_28 anon_28;
-typedef struct _sceDmaTag _sceDmaTag;
-typedef struct anon_29 anon_29;
-typedef struct anon_30 anon_30;
-typedef struct anon_31 anon_31;
-typedef struct anon_32 anon_32;
-typedef struct tagGLtexblock tagGLtexblock;
-typedef struct anon_33 anon_33;
-typedef struct anon_34 anon_34;
-typedef struct GEO_tdstColor_ GEO_tdstColor_;
-typedef struct anon_35 anon_35;
-typedef struct anon_36 anon_36;
+typedef struct tag_GLtexture_set tag_GLtexture_set;
 typedef struct tagGsLoadImage tagGsLoadImage;
-typedef struct anon_37 anon_37;
-typedef struct tagGLtexindex tagGLtexindex;
+typedef struct anon_14 anon_14;
 typedef struct tagGsSetTex tagGsSetTex;
-typedef struct anon_38 anon_38;
-typedef struct anon_39 anon_39;
-typedef struct anon_40 anon_40;
-typedef struct anon_41 anon_41;
-typedef struct tagGLlistnode tagGLlistnode;
+typedef struct tagGLtexname tagGLtexname;
+typedef struct tagGLtexblock tagGLtexblock;
+typedef struct tagGLtexindex tagGLtexindex;
+typedef struct tag_GLlight tag_GLlight;
+typedef struct tag_GLmaterial tag_GLmaterial;
+typedef struct tagGLArrayInfo tagGLArrayInfo;
+typedef struct tagGLcontext tagGLcontext;
+typedef struct GEO_tdstColor_ GEO_tdstColor_;
+typedef struct anon_31 anon_31;
+typedef struct anon_35 anon_35;
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct tag_GLtexture_image tag_GLtexture_image;
+typedef struct anon_13 anon_13;
+typedef struct tagstVIFCode tagstVIFCode;
+typedef struct BigBossLifeBarStruct_ BigBossLifeBarStruct_;
 typedef union unFunction unFunction;
-typedef struct anon_42 anon_42;
+typedef struct tagGLlistnode tagGLlistnode;
+typedef struct tagGLlistcalls tagGLlistcalls;
+typedef struct tagGLlistdatas tagGLlistdatas;
+typedef struct tagListData tagListData;
 
 struct anon_0 {
     unsigned long pad00 : 3; /* bit 0, byte +0x0 */
@@ -109,7 +116,7 @@ struct anon_1 {
     unsigned long REGS11 : 4; /* bit 44, byte +0x8 */
     unsigned long REGS12 : 4; /* bit 48, byte +0x8 */
     unsigned long REGS13 : 4; /* bit 52, byte +0x8 */
-    unsigned long 8 : 4; /* bit None, byte +0x8 */
+    unsigned long REGS14 : 4; /* bit 56, byte +0x8 */
     unsigned long REGS15 : 4; /* bit 60, byte +0x8 */
 };
 
@@ -137,7 +144,7 @@ struct GLI_tdstTexture_ {
     unsigned int lCompressionCounter; /* +0x38 */
     unsigned int lTypeOfCompression; /* +0x3c */
     unsigned int lTypeOfMipMapping; /* +0x40 */
-    int p_TextureOfSubstitution; /* +0x44 */
+    GLI_tdstTexture_* p_TextureOfSubstitution; /* +0x44 */
     unsigned char ucBilinearMode; /* +0x48 */
     unsigned char ucCylingMode; /* +0x49 */
     char a255_cFileName[128]; /* +0x4a */
@@ -150,6 +157,384 @@ struct anon_2 {
     unsigned long pad16 : 16; /* bit 16, byte +0x0 */
     unsigned long TA1 : 8; /* bit 32, byte +0x0 */
     unsigned long pad40 : 24; /* bit 40, byte +0x0 */
+};
+
+struct anon_41 {
+    unsigned long PRIM : 3; /* bit 0, byte +0x0 */
+    unsigned long IIP : 1; /* bit 3, byte +0x0 */
+    unsigned long TME : 1; /* bit 4, byte +0x0 */
+    unsigned long FGE : 1; /* bit 5, byte +0x0 */
+    unsigned long ABE : 1; /* bit 6, byte +0x0 */
+    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned long FST : 1; /* bit 8, byte +0x0 */
+    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
+    unsigned long FIX : 1; /* bit 10, byte +0x0 */
+    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+};
+
+struct anon_6 {
+    unsigned int R : 8; /* bit 0, byte +0x0 */
+    unsigned int G : 8; /* bit 8, byte +0x0 */
+    unsigned int B : 8; /* bit 16, byte +0x0 */
+    unsigned int A : 8; /* bit 24, byte +0x0 */
+    float Q; /* +0x4 */
+};
+
+struct anon_22 {
+    float S; /* +0x0 */
+    float T; /* +0x4 */
+};
+
+struct anon_27 {
+    unsigned long U : 14; /* bit 0, byte +0x0 */
+    unsigned long pad14 : 2; /* bit 14, byte +0x0 */
+    unsigned long V : 14; /* bit 16, byte +0x0 */
+    unsigned long pad30 : 34; /* bit 30, byte +0x0 */
+};
+
+struct anon_37 {
+    unsigned long X : 16; /* bit 0, byte +0x0 */
+    unsigned long Y : 16; /* bit 16, byte +0x0 */
+    unsigned long Z : 24; /* bit 32, byte +0x0 */
+    unsigned long F : 8; /* bit 56, byte +0x0 */
+};
+
+struct anon_34 {
+    unsigned long X : 16; /* bit 0, byte +0x0 */
+    unsigned long Y : 16; /* bit 16, byte +0x0 */
+    unsigned long Z : 32; /* bit 32, byte +0x0 */
+};
+
+struct anon_32 {
+    unsigned long TBP0 : 14; /* bit 0, byte +0x0 */
+    unsigned long TBW : 6; /* bit 14, byte +0x0 */
+    unsigned long PSM : 6; /* bit 20, byte +0x0 */
+    unsigned long TW : 4; /* bit 26, byte +0x0 */
+    unsigned long TH : 4; /* bit 30, byte +0x0 */
+    unsigned long TCC : 1; /* bit 34, byte +0x0 */
+    unsigned long TFX : 2; /* bit 35, byte +0x0 */
+    unsigned long CBP : 14; /* bit 37, byte +0x0 */
+    unsigned long CPSM : 4; /* bit 51, byte +0x0 */
+    unsigned long CSM : 1; /* bit 55, byte +0x0 */
+    unsigned long CSA : 5; /* bit 56, byte +0x0 */
+    unsigned long CLD : 3; /* bit 61, byte +0x0 */
+};
+
+struct anon_21 {
+    unsigned long WMS : 2; /* bit 0, byte +0x0 */
+    unsigned long WMT : 2; /* bit 2, byte +0x0 */
+    unsigned long MINU : 10; /* bit 4, byte +0x0 */
+    unsigned long MAXU : 10; /* bit 14, byte +0x0 */
+    unsigned long MINV : 10; /* bit 24, byte +0x0 */
+    unsigned long MAXV : 10; /* bit 34, byte +0x0 */
+    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
+};
+
+struct anon_12 {
+    unsigned long pad00 : 56; /* bit 0, byte +0x0 */
+    unsigned long F : 8; /* bit 56, byte +0x0 */
+};
+
+struct anon_40 {
+    unsigned long LCM : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 1; /* bit 1, byte +0x0 */
+    unsigned long MXL : 3; /* bit 2, byte +0x0 */
+    unsigned long MMAG : 1; /* bit 5, byte +0x0 */
+    unsigned long MMIN : 3; /* bit 6, byte +0x0 */
+    unsigned long MTBA : 1; /* bit 9, byte +0x0 */
+    unsigned long pad10 : 9; /* bit 10, byte +0x0 */
+    unsigned long L : 2; /* bit 19, byte +0x0 */
+    unsigned long pad21 : 11; /* bit 21, byte +0x0 */
+    unsigned long K : 12; /* bit 32, byte +0x0 */
+    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
+};
+
+struct anon_42 {
+    unsigned long pad00 : 20; /* bit 0, byte +0x0 */
+    unsigned long PSM : 6; /* bit 20, byte +0x0 */
+    unsigned long pad26 : 11; /* bit 26, byte +0x0 */
+    unsigned long CBP : 14; /* bit 37, byte +0x0 */
+    unsigned long CPSM : 4; /* bit 51, byte +0x0 */
+    unsigned long CSM : 1; /* bit 55, byte +0x0 */
+    unsigned long CSA : 5; /* bit 56, byte +0x0 */
+    unsigned long CLD : 3; /* bit 61, byte +0x0 */
+};
+
+struct anon_29 {
+    unsigned long OFX : 16; /* bit 0, byte +0x0 */
+    unsigned long pad16 : 16; /* bit 16, byte +0x0 */
+    unsigned long OFY : 16; /* bit 32, byte +0x0 */
+    unsigned long pad48 : 16; /* bit 48, byte +0x0 */
+};
+
+struct anon_3 {
+    unsigned long AC : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_9 {
+    unsigned long CBW : 6; /* bit 0, byte +0x0 */
+    unsigned long COU : 6; /* bit 6, byte +0x0 */
+    unsigned long COV : 10; /* bit 12, byte +0x0 */
+    unsigned long pad22 : 42; /* bit 22, byte +0x0 */
+};
+
+struct anon_10 {
+    unsigned long MSK : 2; /* bit 0, byte +0x0 */
+    unsigned long pad02 : 62; /* bit 2, byte +0x0 */
+};
+
+struct anon_26 {
+    unsigned long TBP1 : 14; /* bit 0, byte +0x0 */
+    unsigned long TBW1 : 6; /* bit 14, byte +0x0 */
+    unsigned long TBP2 : 14; /* bit 20, byte +0x0 */
+    unsigned long TBW2 : 6; /* bit 34, byte +0x0 */
+    unsigned long TBP3 : 14; /* bit 40, byte +0x0 */
+    unsigned long TBW3 : 6; /* bit 54, byte +0x0 */
+    unsigned long pad60 : 4; /* bit 60, byte +0x0 */
+};
+
+struct anon_33 {
+    unsigned long TBP4 : 14; /* bit 0, byte +0x0 */
+    unsigned long TBW4 : 6; /* bit 14, byte +0x0 */
+    unsigned long TBP5 : 14; /* bit 20, byte +0x0 */
+    unsigned long TBW5 : 6; /* bit 34, byte +0x0 */
+    unsigned long TBP6 : 14; /* bit 40, byte +0x0 */
+    unsigned long TBW6 : 6; /* bit 54, byte +0x0 */
+    unsigned long pad60 : 4; /* bit 60, byte +0x0 */
+};
+
+struct anon_17 {
+    unsigned long FCR : 8; /* bit 0, byte +0x0 */
+    unsigned long FCG : 8; /* bit 8, byte +0x0 */
+    unsigned long FCB : 8; /* bit 16, byte +0x0 */
+    unsigned long pad24 : 40; /* bit 24, byte +0x0 */
+};
+
+struct anon_15 {
+    unsigned long SCAX0 : 11; /* bit 0, byte +0x0 */
+    unsigned long pad11 : 5; /* bit 11, byte +0x0 */
+    unsigned long SCAX1 : 11; /* bit 16, byte +0x0 */
+    unsigned long pad27 : 5; /* bit 27, byte +0x0 */
+    unsigned long SCAY0 : 11; /* bit 32, byte +0x0 */
+    unsigned long pad43 : 5; /* bit 43, byte +0x0 */
+    unsigned long SCAY1 : 11; /* bit 48, byte +0x0 */
+    unsigned long pad59 : 5; /* bit 59, byte +0x0 */
+};
+
+struct anon_4 {
+    unsigned long A : 2; /* bit 0, byte +0x0 */
+    unsigned long B : 2; /* bit 2, byte +0x0 */
+    unsigned long C : 2; /* bit 4, byte +0x0 */
+    unsigned long D : 2; /* bit 6, byte +0x0 */
+    unsigned long pad8 : 24; /* bit 8, byte +0x0 */
+    unsigned long FIX : 8; /* bit 32, byte +0x0 */
+    unsigned long pad40 : 24; /* bit 40, byte +0x0 */
+};
+
+struct anon_30 {
+    unsigned long DIMX00 : 3; /* bit 0, byte +0x0 */
+    unsigned long pad00 : 1; /* bit 3, byte +0x0 */
+    unsigned long DIMX01 : 3; /* bit 4, byte +0x0 */
+    unsigned long pad01 : 1; /* bit 7, byte +0x0 */
+    unsigned long DIMX02 : 3; /* bit 8, byte +0x0 */
+    unsigned long pad02 : 1; /* bit 11, byte +0x0 */
+    unsigned long DIMX03 : 3; /* bit 12, byte +0x0 */
+    unsigned long pad03 : 1; /* bit 15, byte +0x0 */
+    unsigned long DIMX10 : 3; /* bit 16, byte +0x0 */
+    unsigned long pad10 : 1; /* bit 19, byte +0x0 */
+    unsigned long DIMX11 : 3; /* bit 20, byte +0x0 */
+    unsigned long pad11 : 1; /* bit 23, byte +0x0 */
+    unsigned long DIMX12 : 3; /* bit 24, byte +0x0 */
+    unsigned long pad12 : 1; /* bit 27, byte +0x0 */
+    unsigned long DIMX13 : 3; /* bit 28, byte +0x0 */
+    unsigned long pad13 : 1; /* bit 31, byte +0x0 */
+    unsigned long DIMX20 : 3; /* bit 32, byte +0x0 */
+    unsigned long pad20 : 1; /* bit 35, byte +0x0 */
+    unsigned long DIMX21 : 3; /* bit 36, byte +0x0 */
+    unsigned long pad21 : 1; /* bit 39, byte +0x0 */
+    unsigned long DIMX22 : 3; /* bit 40, byte +0x0 */
+    unsigned long pad22 : 1; /* bit 43, byte +0x0 */
+    unsigned long DIMX23 : 3; /* bit 44, byte +0x0 */
+    unsigned long pad23 : 1; /* bit 47, byte +0x0 */
+    unsigned long DIMX30 : 3; /* bit 48, byte +0x0 */
+    unsigned long pad30 : 1; /* bit 51, byte +0x0 */
+    unsigned long DIMX31 : 3; /* bit 52, byte +0x0 */
+    unsigned long pad31 : 1; /* bit 55, byte +0x0 */
+    unsigned long DIMX32 : 3; /* bit 56, byte +0x0 */
+    unsigned long pad32 : 1; /* bit 59, byte +0x0 */
+    unsigned long DIMX33 : 3; /* bit 60, byte +0x0 */
+    unsigned long pad33 : 1; /* bit 63, byte +0x0 */
+};
+
+struct anon_5 {
+    unsigned long DTHE : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_28 {
+    unsigned long CLAMP : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_24 {
+    unsigned long ATE : 1; /* bit 0, byte +0x0 */
+    unsigned long ATST : 3; /* bit 1, byte +0x0 */
+    unsigned long AREF : 8; /* bit 4, byte +0x0 */
+    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned long DATE : 1; /* bit 14, byte +0x0 */
+    unsigned long DATM : 1; /* bit 15, byte +0x0 */
+    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
+    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
+    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+};
+
+struct anon_39 {
+    unsigned long PABE : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_8 {
+    unsigned long FBA : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_19 {
+    unsigned long FBP : 9; /* bit 0, byte +0x0 */
+    unsigned long pad09 : 7; /* bit 9, byte +0x0 */
+    unsigned long FBW : 6; /* bit 16, byte +0x0 */
+    unsigned long pad22 : 2; /* bit 22, byte +0x0 */
+    unsigned long PSM : 6; /* bit 24, byte +0x0 */
+    unsigned long pad30 : 2; /* bit 30, byte +0x0 */
+    unsigned long FBMSK : 32; /* bit 32, byte +0x0 */
+};
+
+struct anon_38 {
+    unsigned long ZBP : 9; /* bit 0, byte +0x0 */
+    unsigned long pad09 : 15; /* bit 9, byte +0x0 */
+    unsigned long PSM : 4; /* bit 24, byte +0x0 */
+    unsigned long pad28 : 4; /* bit 28, byte +0x0 */
+    unsigned long ZMSK : 1; /* bit 32, byte +0x0 */
+    unsigned long pad33 : 31; /* bit 33, byte +0x0 */
+};
+
+struct anon_11 {
+    unsigned long SBP : 14; /* bit 0, byte +0x0 */
+    unsigned long pad14 : 2; /* bit 14, byte +0x0 */
+    unsigned long SBW : 6; /* bit 16, byte +0x0 */
+    unsigned long pad22 : 2; /* bit 22, byte +0x0 */
+    unsigned long SPSM : 6; /* bit 24, byte +0x0 */
+    unsigned long pad30 : 2; /* bit 30, byte +0x0 */
+    unsigned long DBP : 14; /* bit 32, byte +0x0 */
+    unsigned long pad46 : 2; /* bit 46, byte +0x0 */
+    unsigned long DBW : 6; /* bit 48, byte +0x0 */
+    unsigned long pad54 : 2; /* bit 54, byte +0x0 */
+    unsigned long DPSM : 6; /* bit 56, byte +0x0 */
+    unsigned long pad62 : 2; /* bit 62, byte +0x0 */
+};
+
+struct anon_18 {
+    unsigned long SSAX : 11; /* bit 0, byte +0x0 */
+    unsigned long pad11 : 5; /* bit 11, byte +0x0 */
+    unsigned long SSAY : 11; /* bit 16, byte +0x0 */
+    unsigned long pad27 : 5; /* bit 27, byte +0x0 */
+    unsigned long DSAX : 11; /* bit 32, byte +0x0 */
+    unsigned long pad43 : 5; /* bit 43, byte +0x0 */
+    unsigned long DSAY : 11; /* bit 48, byte +0x0 */
+    unsigned long DIR : 2; /* bit 59, byte +0x0 */
+    unsigned long pad61 : 3; /* bit 61, byte +0x0 */
+};
+
+struct anon_23 {
+    unsigned long RRW : 12; /* bit 0, byte +0x0 */
+    unsigned long pad12 : 20; /* bit 12, byte +0x0 */
+    unsigned long RRH : 12; /* bit 32, byte +0x0 */
+    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
+};
+
+struct anon_16 {
+    unsigned long XDR : 2; /* bit 0, byte +0x0 */
+    unsigned long pad02 : 62; /* bit 2, byte +0x0 */
+};
+
+struct anon_20 {
+    unsigned int ID; /* +0x0 */
+    unsigned int IDMSK; /* +0x4 */
+};
+
+struct anon_25 {
+    unsigned int ID; /* +0x0 */
+    unsigned int IDMSK; /* +0x4 */
+};
+
+struct anon_36 {
+    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+};
+
+union anon_7 {
+    signed char bData[16]; /* +0x0 */
+    unsigned char ubData[16]; /* +0x0 */
+    short sData[8]; /* +0x0 */
+    unsigned short usData[8]; /* +0x0 */
+    int iData[4]; /* +0x0 */
+    unsigned int uiData[4]; /* +0x0 */
+    long i64Data[2]; /* +0x0 */
+    unsigned long u64Data[2]; /* +0x0 */
+    float fData[4]; /* +0x0 */
+    double dData[2]; /* +0x0 */
 };
 
 struct tagGScontext {
@@ -211,17 +596,25 @@ struct tagGScontext {
     anon_36 GlobalModFlgs; /* +0x1b8 */
     anon_7 PackageBuffer[518]; /* +0x1c0 */
     int iBufCount; /* +0x2220 */
-    int pqCurrent; /* +0x2224 */
-    int pCurTag; /* +0x2228 */
+    anon_7* pqCurrent; /* +0x2224 */
+    anon_1* pCurTag; /* +0x2228 */
     signed char iRegs; /* +0x222c */
 };
 
+struct _sceDmaTag {
+    unsigned short qwc; /* +0x0 */
+    unsigned char mark; /* +0x2 */
+    unsigned char id; /* +0x3 */
+    _sceDmaTag* next; /* +0x4 */
+    unsigned int p[2]; /* +0x8 */
+};
+
 struct tagGLprimbuf {
-    int pNext; /* +0x0 */
+    tagGLprimbuf* pNext; /* +0x0 */
     unsigned int nCount; /* +0x4 */
     unsigned char bEOP; /* +0x8 */
     int pCode; /* +0xc */
-    int pData; /* +0x10 */
+    float (*) pData[4]; /* +0x10 */
     int pTexUnit; /* +0x14 */
     _sceDmaTag tagDma; /* +0x20 */
     anon_1 tagGif; /* +0x30 */
@@ -236,34 +629,19 @@ struct LifeBarStruct_ {
     float MaxLife; /* +0x10 */
     float CenterIcon; /* +0x14 */
     float fAlpha; /* +0x18 */
-    int pMat; /* +0x1c */
+    GLI_tdstMaterial_* pMat; /* +0x1c */
 };
 
-struct anon_3 {
-    unsigned long AC : 1; /* bit 0, byte +0x0 */
-    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
-};
-
-struct anon_4 {
-    unsigned long A : 2; /* bit 0, byte +0x0 */
-    unsigned long B : 2; /* bit 2, byte +0x0 */
-    unsigned long C : 2; /* bit 4, byte +0x0 */
-    unsigned long D : 2; /* bit 6, byte +0x0 */
-    unsigned long pad8 : 24; /* bit 8, byte +0x0 */
-    unsigned long FIX : 8; /* bit 32, byte +0x0 */
-    unsigned long pad40 : 24; /* bit 40, byte +0x0 */
-};
-
-struct anon_5 {
-    unsigned long DTHE : 1; /* bit 0, byte +0x0 */
-    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+struct tagListNodeSingle {
+    unsigned int nIndex; /* +0x0 */
+    tagListData* pData; /* +0x4 */
 };
 
 struct tagGLlistpool {
     unsigned int nFreeIndex; /* +0x0 */
-    /* array */ int aSingleIndex[64]; /* +0x4 */
-    int pFirstNode; /* +0x204 */
-    int pLastNode; /* +0x208 */
+    tagListNodeSingle aSingleIndex[64]; /* +0x4 */
+    tagListNode* pFirstNode; /* +0x204 */
+    tagListNode* pLastNode; /* +0x208 */
 };
 
 struct tag_GLtexture {
@@ -273,51 +651,124 @@ struct tag_GLtexture {
     unsigned int eTexFilterMag; /* +0x18 */
     unsigned int eTexWrapS; /* +0x1c */
     unsigned int eTexWrapT; /* +0x20 */
-    /* aggregate */ int Image; /* +0x24 */
+    int Image[7]; /* +0x24 */
     int iClutOffset; /* +0x40 */
     int iClutSize; /* +0x44 */
     int clut; /* +0x48 */
     unsigned char bClutUserMaintain; /* +0x4c */
 };
 
-struct anon_6 {
-    unsigned int R : 8; /* bit 0, byte +0x0 */
-    unsigned int G : 8; /* bit 8, byte +0x0 */
-    unsigned int B : 8; /* bit 16, byte +0x0 */
-    unsigned int A : 8; /* bit 24, byte +0x0 */
-    float Q; /* +0x4 */
-};
-
-union anon_7 {
-    signed char bData[16]; /* +0x0 */
-    unsigned char ubData[16]; /* +0x0 */
-    short sData[8]; /* +0x0 */
-    unsigned short usData[8]; /* +0x0 */
-    int iData[4]; /* +0x0 */
-    unsigned int uiData[4]; /* +0x0 */
-    long i64Data[2]; /* +0x0 */
-    unsigned long u64Data[2]; /* +0x0 */
-    float fData[4]; /* +0x0 */
-    double dData[2]; /* +0x0 */
-};
-
-struct anon_8 {
-    unsigned long FBA : 1; /* bit 0, byte +0x0 */
-    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+struct GLI_tdstAnimatedTextureNode_ {
+    GLI_tdstTexture_* p_stTexture; /* +0x0 */
+    float xDisplayTime; /* +0x4 */
+    GLI_tdstAnimatedTextureNode_* p_stNextDisplayNode; /* +0x8 */
 };
 
 struct tagListNode {
-    int pNext; /* +0x0 */
+    tagListNode* pNext; /* +0x0 */
     unsigned int nIndex; /* +0x4 */
     int iSize; /* +0x8 */
-    /* aggregate */ int apData; /* +0xc */
+    int apData[1]; /* +0xc */
 };
 
-struct anon_9 {
-    unsigned long CBW : 6; /* bit 0, byte +0x0 */
-    unsigned long COU : 6; /* bit 6, byte +0x0 */
-    unsigned long COV : 10; /* bit 12, byte +0x0 */
-    unsigned long pad22 : 42; /* bit 22, byte +0x0 */
+struct tag_GLtexture_set {
+    float vTexEnvColor[4]; /* +0x0 */
+    unsigned int eTexEnvMode; /* +0x10 */
+    unsigned int nTexGenBits; /* +0x14 */
+    unsigned short nTexGenModeS; /* +0x18 */
+    unsigned short nTexGenModeT; /* +0x1a */
+    unsigned short nTexGenModeR; /* +0x1c */
+    unsigned short nTexGenModeQ; /* +0x1e */
+    float vTexGenCoeffS[4]; /* +0x20 */
+    float vTexGenCoeffT[4]; /* +0x30 */
+    float vTexGenCoeffR[4]; /* +0x40 */
+    float vTexGenCoeffQ[4]; /* +0x50 */
+};
+
+struct tagGsLoadImage {
+    anon_1 gifTag; /* +0x0 */
+    anon_11 bitbltbuf; /* +0x10 */
+    long bitbltbufaddr; /* +0x18 */
+    anon_18 trxpos; /* +0x20 */
+    long trxposaddr; /* +0x28 */
+    anon_23 trxreg; /* +0x30 */
+    long trxregaddr; /* +0x38 */
+    anon_16 trxdir; /* +0x40 */
+    long trxdiraddr; /* +0x48 */
+};
+
+struct anon_14 {
+    unsigned long pad00; /* +0x0 */
+};
+
+struct tagGsSetTex {
+    anon_1 gifTag; /* +0x0 */
+    anon_14 texflush; /* +0x10 */
+    long texflushaddr; /* +0x18 */
+    anon_32 tex0; /* +0x20 */
+    long tex0addr; /* +0x28 */
+    anon_40 tex1; /* +0x30 */
+    long tex1addr; /* +0x38 */
+    anon_26 miptbp1; /* +0x40 */
+    long miptbp1addr; /* +0x48 */
+    anon_33 miptbp2; /* +0x50 */
+    long miptbp2addr; /* +0x58 */
+    anon_21 clamp; /* +0x60 */
+    long clampaddr; /* +0x68 */
+};
+
+struct tagGLtexname {
+    unsigned char bAllocated; /* +0x0 */
+    unsigned char bResident; /* +0x1 */
+    float fPrioritize; /* +0x4 */
+    unsigned int eDimension; /* +0x8 */
+    int iTexBlock; /* +0xc */
+    tag_GLtexture* pTex1D; /* +0x10 */
+    tag_GLtexture* pTex2D; /* +0x14 */
+    tag_GLtexture* pTexCube; /* +0x18 */
+};
+
+struct tagGLtexblock {
+    unsigned int nTexID : 10; /* bit 0, byte +0x0 */
+    int nStart : 11; /* bit 10, byte +0x0 */
+    int nLength : 11; /* bit 21, byte +0x0 */
+};
+
+struct tagGLtexindex {
+    unsigned int nTexID : 10; /* bit 0, byte +0x0 */
+    int nStart : 11; /* bit 10, byte +0x0 */
+};
+
+struct tag_GLlight {
+    float vAmbient[4]; /* +0x0 */
+    float vDiffuse[4]; /* +0x10 */
+    float vSpecular[4]; /* +0x20 */
+    float vPosition[4]; /* +0x30 */
+    float vDirection[4]; /* +0x40 */
+    float fSpotExponent; /* +0x50 */
+    float fSpotCutoff; /* +0x54 */
+    float fCosCutoff; /* +0x58 */
+    float fConstantAttenuation; /* +0x5c */
+    float fLinearAttenuation; /* +0x60 */
+    float fQuadraticAttenuation; /* +0x64 */
+};
+
+struct tag_GLmaterial {
+    float vAmbient[4]; /* +0x0 */
+    float vDiffuse[4]; /* +0x10 */
+    float vSpecular[4]; /* +0x20 */
+    float vEmission[4]; /* +0x30 */
+    float fShininess; /* +0x40 */
+    float fAmbientIndex; /* +0x44 */
+    float fDiffuseIndex; /* +0x48 */
+    float fSpecularIndex; /* +0x4c */
+};
+
+struct tagGLArrayInfo {
+    int size; /* +0x0 */
+    unsigned int type; /* +0x4 */
+    int stride; /* +0x8 */
+    int pointer; /* +0xc */
 };
 
 struct tagGLcontext {
@@ -373,11 +824,11 @@ struct tagGLcontext {
     unsigned int nLightBits; /* +0x174 */
     unsigned int bPointLighting; /* +0x178 */
     unsigned int nTextureEnableBits; /* +0x17c */
-    /* array */ int TextureSet[2]; /* +0x180 */
-    int pCurTexture; /* +0x240 */
+    tag_GLtexture_set TextureSet[2]; /* +0x180 */
+    tag_GLtexture_set* pCurTexture; /* +0x240 */
     tagGsLoadImage stGsLoadImage; /* +0x250 */
     tagGsSetTex astGsSetTex[2]; /* +0x2a0 */
-    int pstCurGsSetTex; /* +0x380 */
+    tagGsSetTex* pstCurGsSetTex; /* +0x380 */
     unsigned int anCurTexName1D[2]; /* +0x384 */
     unsigned int anCurTexName2D[2]; /* +0x38c */
     unsigned int nCurTexNameCube; /* +0x394 */
@@ -428,13 +879,13 @@ struct tagGLcontext {
     unsigned int eHintSmoothPolygon; /* +0x5ccc */
     unsigned int eHintFog; /* +0x5cd0 */
     unsigned int uiListBase; /* +0x5cd4 */
-    int pCurListData; /* +0x5cd8 */
-    int pCurListCalls; /* +0x5cdc */
-    int pPreListCalls; /* +0x5ce0 */
-    int pCurPrimBuf; /* +0x5ce4 */
-    int pCurParamBegin; /* +0x5ce8 */
-    int ppCurPrimBufHead; /* +0x5cec */
-    int pCurListVData; /* +0x5cf0 */
+    tagListData* pCurListData; /* +0x5cd8 */
+    tagGLlistcalls* pCurListCalls; /* +0x5cdc */
+    tagGLlistcalls* pPreListCalls; /* +0x5ce0 */
+    tagGLprimbuf* pCurPrimBuf; /* +0x5ce4 */
+    anon_13* pCurParamBegin; /* +0x5ce8 */
+    tagGLprimbuf* ppCurPrimBufHead; /* +0x5cec */
+    float (*) pCurListVData[4]; /* +0x5cf0 */
     int pCurListVCode; /* +0x5cf4 */
     int pCurListTexUnit; /* +0x5cf8 */
     tagGLlistpool ListPool; /* +0x5cfc */
@@ -478,91 +929,91 @@ struct tagGLcontext {
     int iMaxClipPlanes; /* +0x6000 */
     float avClipPlane[6][4]; /* +0x6010 */
     unsigned int eMatrixMode; /* +0x6070 */
-    int pCurMatrix; /* +0x6074 */
-    int pCurStack; /* +0x6078 */
+    float (*) pCurMatrix[4][4]; /* +0x6074 */
+    float (*) pCurStack[4][4]; /* +0x6078 */
     int piCurStackDepth; /* +0x607c */
     float ViewOrg[2]; /* +0x6080 */
     float ViewPort[4]; /* +0x6090 */
     float DepthRange[2]; /* +0x60a0 */
     float vacurColor[2][4]; /* +0x60b0 */
-    int pvcurColor; /* +0x60d0 */
+    float (*) pvcurColor[4]; /* +0x60d0 */
     float vcurNormal[4]; /* +0x60e0 */
     float vacurTexCoords[2][4]; /* +0x60f0 */
     unsigned int iCurTextureSet; /* +0x6110 */
-    int pvcurTextCoord; /* +0x6114 */
+    float (*) pvcurTextCoord[4]; /* +0x6114 */
     unsigned char bFinalCompile; /* +0x6118 */
     float valistColor[2][4]; /* +0x6120 */
-    int pvlistColor; /* +0x6140 */
+    float (*) pvlistColor[4]; /* +0x6140 */
     float vlistNormal[4]; /* +0x6150 */
     float valistTexCoords[2][4]; /* +0x6160 */
     unsigned int ilistTexSet; /* +0x6180 */
-    int pvlistTexCoord; /* +0x6184 */
+    float (*) pvlistTexCoord[4]; /* +0x6184 */
     unsigned char bRasterPosValid; /* +0x6188 */
     float fRasterPos[4]; /* +0x618c */
     float fRasterDistance; /* +0x619c */
     float fRasterColor[2][4]; /* +0x61a0 */
     float RasterMultiTexCoords[2][4]; /* +0x61c0 */
-    int pvRasterTexCoord; /* +0x61e0 */
+    float (*) pvRasterTexCoord[4]; /* +0x61e0 */
     unsigned char bEdgeFlag; /* +0x61e4 */
-    /* array */ int mFrustumNormal[4]; /* +0x61f0 */
-    /* array */ int mGuardBandNormal[4]; /* +0x6230 */
+    float mFrustumNormal[4][4]; /* +0x61f0 */
+    float mGuardBandNormal[4][4]; /* +0x6230 */
     float vZNearFar[4]; /* +0x6270 */
     float vObjectBS[4]; /* +0x6280 */
-    int pfvPackaeBSs; /* +0x6290 */
+    float (*) pfvPackaeBSs[4]; /* +0x6290 */
     int iPackageBSIndex; /* +0x6294 */
     float faObjectBoundingBox[6]; /* +0x6298 */
-    /* array */ int ModelViewMatrix[4]; /* +0x62b0 */
-    /* array */ int NormalMatrix[4]; /* +0x62f0 */
+    float ModelViewMatrix[4][4]; /* +0x62b0 */
+    float NormalMatrix[4][4]; /* +0x62f0 */
     unsigned int nModelViewStackDepth; /* +0x6330 */
-    /* array */ int ModelViewStack[16]; /* +0x6340 */
-    /* array */ int ProjectionMatrix[4]; /* +0x6740 */
-    /* array */ int GuardBandProjectionMatrix[4]; /* +0x6780 */
+    float ModelViewStack[16][4][4]; /* +0x6340 */
+    float ProjectionMatrix[4][4]; /* +0x6740 */
+    float GuardBandProjectionMatrix[4][4]; /* +0x6780 */
     unsigned int nProjectionStackDepth; /* +0x67c0 */
-    /* array */ int ProjectionStack[4]; /* +0x67d0 */
+    float ProjectionStack[4][4][4]; /* +0x67d0 */
     float NearFarStack[4][2]; /* +0x68d0 */
-    /* array */ int TextureMatrix[2]; /* +0x68f0 */
+    float TextureMatrix[2][4][4]; /* +0x68f0 */
     unsigned int nTextureStackDepths[2]; /* +0x6970 */
-    /* array */ int TextureStacks[2][4]; /* +0x6980 */
-    int pTextureMatrix; /* +0x6b80 */
+    float TextureStacks[2][4][4][4]; /* +0x6980 */
+    float (*) pTextureMatrix[4][4]; /* +0x6b80 */
     int pnTextureStackDepth; /* +0x6b84 */
-    int pTextureStack; /* +0x6b88 */
+    float (*) pTextureStack[4][4]; /* +0x6b88 */
     unsigned int eBeginMode; /* +0x6b8c */
     unsigned char bInBeginEndPair; /* +0x6b90 */
     unsigned char bInDisplayListExecution; /* +0x6b91 */
     int iBufLimit; /* +0x6b94 */
     int iBufCount; /* +0x6b98 */
-    int pVBuf; /* +0x6b9c */
-    int pCBuf; /* +0x6ba0 */
-    int pNBuf; /* +0x6ba4 */
-    int pTBuf; /* +0x6ba8 */
-    int pCBuf_b; /* +0x6bac */
-    int pTBuf_b; /* +0x6bb0 */
-    int pVIFDMABuf; /* +0x6bb4 */
-    int pVIFDMABufUnaligned; /* +0x6bb8 */
-    int pVIFInBuf; /* +0x6bbc */
-    int pVIFOutBuf; /* +0x6bc0 */
-    int pVIFIBufTail; /* +0x6bc4 */
-    int pVIFOBufTail; /* +0x6bc8 */
+    float (*) pVBuf[4]; /* +0x6b9c */
+    float (*) pCBuf[4]; /* +0x6ba0 */
+    float (*) pNBuf[4]; /* +0x6ba4 */
+    float (*) pTBuf[4]; /* +0x6ba8 */
+    float (*) pCBuf_b[4]; /* +0x6bac */
+    float (*) pTBuf_b[4]; /* +0x6bb0 */
+    float (*) pVIFDMABuf[4]; /* +0x6bb4 */
+    float (*) pVIFDMABufUnaligned[4]; /* +0x6bb8 */
+    float (*) pVIFInBuf[4]; /* +0x6bbc */
+    float (*) pVIFOutBuf[4]; /* +0x6bc0 */
+    float (*) pVIFIBufTail[4]; /* +0x6bc4 */
+    float (*) pVIFOBufTail[4]; /* +0x6bc8 */
     int iLightModel; /* +0x6bcc */
-    int pVU1_DMA_parameters; /* +0x6bd0 */
-    int pVU1_DMA_buf0; /* +0x6bd4 */
-    int pVU1_DMA_buf1; /* +0x6bd8 */
-    int pmClipping; /* +0x6bdc */
-    int pmNormal; /* +0x6be0 */
-    int pmClippingScreen; /* +0x6be4 */
-    int pmLocalScreen; /* +0x6be8 */
-    int pmModelView; /* +0x6bec */
-    int pvClampLimit; /* +0x6bf0 */
-    int pClippingFlags; /* +0x6bf4 */
-    int pGifTagFan; /* +0x6bf8 */
-    int pmD; /* +0x6bfc */
-    int pmVP; /* +0x6c00 */
-    int pmS; /* +0x6c04 */
-    int pmh; /* +0x6c08 */
-    int pvAmbient; /* +0x6c0c */
-    int pvEmission; /* +0x6c10 */
-    int pvScreenScale; /* +0x6c14 */
-    int pvColorRange; /* +0x6c18 */
+    _sceDmaTag* pVU1_DMA_parameters; /* +0x6bd0 */
+    _sceDmaTag* pVU1_DMA_buf0; /* +0x6bd4 */
+    _sceDmaTag* pVU1_DMA_buf1; /* +0x6bd8 */
+    float (*) pmClipping[4][4]; /* +0x6bdc */
+    float (*) pmNormal[4][4]; /* +0x6be0 */
+    float (*) pmClippingScreen[4][4]; /* +0x6be4 */
+    float (*) pmLocalScreen[4][4]; /* +0x6be8 */
+    float (*) pmModelView[4][4]; /* +0x6bec */
+    float (*) pvClampLimit[4]; /* +0x6bf0 */
+    int (*) pClippingFlags[4]; /* +0x6bf4 */
+    anon_1* pGifTagFan; /* +0x6bf8 */
+    float (*) pmD[4][4]; /* +0x6bfc */
+    float (*) pmVP[4][4]; /* +0x6c00 */
+    float (*) pmS[4][4]; /* +0x6c04 */
+    float (*) pmh[4][4]; /* +0x6c08 */
+    float (*) pvAmbient[4]; /* +0x6c0c */
+    float (*) pvEmission[4]; /* +0x6c10 */
+    float (*) pvScreenScale[4]; /* +0x6c14 */
+    float (*) pvColorRange[4]; /* +0x6c18 */
     int pfAlpha; /* +0x6c1c */
     int pfShininess; /* +0x6c20 */
     int pnColorMatMasks; /* +0x6c24 */
@@ -579,322 +1030,23 @@ struct tagGLcontext {
     int piEntryAddress; /* +0x6c50 */
     int peClippingMode; /* +0x6c54 */
     int peUseClippingMode; /* +0x6c58 */
-    int pGifTagBuf0; /* +0x6c5c */
-    int pGifTagBuf1; /* +0x6c60 */
+    anon_1* pGifTagBuf0; /* +0x6c5c */
+    anon_1* pGifTagBuf1; /* +0x6c60 */
     int iCurBuf; /* +0x6c64 */
-    int pVBuf0; /* +0x6c68 */
-    int pNBuf0; /* +0x6c6c */
-    int pCBuf0; /* +0x6c70 */
-    int pTBuf0; /* +0x6c74 */
-    int pCBuf0_b; /* +0x6c78 */
-    int pTBuf0_b; /* +0x6c7c */
-    int pVBuf1; /* +0x6c80 */
-    int pNBuf1; /* +0x6c84 */
-    int pCBuf1; /* +0x6c88 */
-    int pTBuf1; /* +0x6c8c */
-    int pCBuf1_b; /* +0x6c90 */
-    int pTBuf1_b; /* +0x6c94 */
-    int pMSCAL; /* +0x6c98 */
+    float (*) pVBuf0[4]; /* +0x6c68 */
+    float (*) pNBuf0[4]; /* +0x6c6c */
+    float (*) pCBuf0[4]; /* +0x6c70 */
+    float (*) pTBuf0[4]; /* +0x6c74 */
+    float (*) pCBuf0_b[4]; /* +0x6c78 */
+    float (*) pTBuf0_b[4]; /* +0x6c7c */
+    float (*) pVBuf1[4]; /* +0x6c80 */
+    float (*) pNBuf1[4]; /* +0x6c84 */
+    float (*) pCBuf1[4]; /* +0x6c88 */
+    float (*) pTBuf1[4]; /* +0x6c8c */
+    float (*) pCBuf1_b[4]; /* +0x6c90 */
+    float (*) pTBuf1_b[4]; /* +0x6c94 */
+    tagstVIFCode* pMSCAL; /* +0x6c98 */
     unsigned char VU1Package[10000]; /* +0x6ca0 */
-};
-
-struct anon_10 {
-    unsigned long MSK : 2; /* bit 0, byte +0x0 */
-    unsigned long pad02 : 62; /* bit 2, byte +0x0 */
-};
-
-struct tagGLArrayInfo {
-    int size; /* +0x0 */
-    unsigned int type; /* +0x4 */
-    int stride; /* +0x8 */
-    int pointer; /* +0xc */
-};
-
-struct anon_11 {
-    unsigned long SBP : 14; /* bit 0, byte +0x0 */
-    unsigned long pad14 : 2; /* bit 14, byte +0x0 */
-    unsigned long SBW : 6; /* bit 16, byte +0x0 */
-    unsigned long pad22 : 2; /* bit 22, byte +0x0 */
-    unsigned long SPSM : 6; /* bit 24, byte +0x0 */
-    unsigned long pad30 : 2; /* bit 30, byte +0x0 */
-    unsigned long DBP : 14; /* bit 32, byte +0x0 */
-    unsigned long pad46 : 2; /* bit 46, byte +0x0 */
-    unsigned long DBW : 6; /* bit 48, byte +0x0 */
-    unsigned long pad54 : 2; /* bit 54, byte +0x0 */
-    unsigned long 8 : 6; /* bit None, byte +0x0 */
-    unsigned long pad62 : 2; /* bit 62, byte +0x0 */
-};
-
-struct anon_12 {
-    unsigned long param0 : 56; /* bit None, byte +0x0 */
-    unsigned long 8 : 8; /* bit None, byte +0x0 */
-};
-
-struct anon_13 {
-    float vObjectBS[4]; /* +0x0 */
-    unsigned char bFinalCompile; /* +0x10 */
-    unsigned int mode; /* +0x14 */
-    int pPrimBuf; /* +0x18 */
-};
-
-struct anon_14 {
-    unsigned long pad00; /* +0x0 */
-};
-
-struct anon_15 {
-    unsigned long SCAX0 : 11; /* bit 0, byte +0x0 */
-    unsigned long pad11 : 5; /* bit 11, byte +0x0 */
-    unsigned long SCAX1 : 11; /* bit 16, byte +0x0 */
-    unsigned long pad27 : 5; /* bit 27, byte +0x0 */
-    unsigned long SCAY0 : 11; /* bit 32, byte +0x0 */
-    unsigned long pad43 : 5; /* bit 43, byte +0x0 */
-    unsigned long SCAY1 : 11; /* bit 48, byte +0x0 */
-    unsigned long pad59 : 5; /* bit 59, byte +0x0 */
-};
-
-struct anon_16 {
-    unsigned long XDR : 2; /* bit 0, byte +0x0 */
-    unsigned long pad02 : 62; /* bit 2, byte +0x0 */
-};
-
-struct anon_17 {
-    unsigned long FCR : 8; /* bit 0, byte +0x0 */
-    unsigned long FCG : 8; /* bit 8, byte +0x0 */
-    unsigned long FCB : 8; /* bit 16, byte +0x0 */
-    unsigned long pad24 : 40; /* bit 24, byte +0x0 */
-};
-
-struct tag_GLlight {
-    float vAmbient[4]; /* +0x0 */
-    float vDiffuse[4]; /* +0x10 */
-    float vSpecular[4]; /* +0x20 */
-    float vPosition[4]; /* +0x30 */
-    float vDirection[4]; /* +0x40 */
-    float fSpotExponent; /* +0x50 */
-    float fSpotCutoff; /* +0x54 */
-    float fCosCutoff; /* +0x58 */
-    float fConstantAttenuation; /* +0x5c */
-    float fLinearAttenuation; /* +0x60 */
-    float fQuadraticAttenuation; /* +0x64 */
-};
-
-struct anon_18 {
-    unsigned long SSAX : 11; /* bit 0, byte +0x0 */
-    unsigned long pad11 : 5; /* bit 11, byte +0x0 */
-    unsigned long SSAY : 11; /* bit 16, byte +0x0 */
-    unsigned long pad27 : 5; /* bit 27, byte +0x0 */
-    unsigned long DSAX : 11; /* bit 32, byte +0x0 */
-    unsigned long pad43 : 5; /* bit 43, byte +0x0 */
-    unsigned long DSAY : 11; /* bit 48, byte +0x0 */
-    unsigned long DIR : 2; /* bit 59, byte +0x0 */
-    unsigned long pad61 : 3; /* bit 61, byte +0x0 */
-};
-
-struct anon_19 {
-    unsigned long FBP : 9; /* bit 0, byte +0x0 */
-    unsigned long pad09 : 7; /* bit 9, byte +0x0 */
-    unsigned long FBW : 6; /* bit 16, byte +0x0 */
-    unsigned long pad22 : 2; /* bit 22, byte +0x0 */
-    unsigned long PSM : 6; /* bit 24, byte +0x0 */
-    unsigned long pad30 : 2; /* bit 30, byte +0x0 */
-    unsigned long FBMSK : 32; /* bit 32, byte +0x0 */
-};
-
-struct tagstVIFCode {
-    unsigned short IMMEDIATE; /* +0x0 */
-    unsigned char NUM; /* +0x2 */
-    unsigned char CMD; /* +0x3 */
-};
-
-struct anon_20 {
-    unsigned int ID; /* +0x0 */
-    unsigned int IDMSK; /* +0x4 */
-};
-
-struct anon_21 {
-    unsigned long WMS : 2; /* bit 0, byte +0x0 */
-    unsigned long WMT : 2; /* bit 2, byte +0x0 */
-    unsigned long MINU : 10; /* bit 4, byte +0x0 */
-    unsigned long MAXU : 10; /* bit 14, byte +0x0 */
-    unsigned long MINV : 10; /* bit 24, byte +0x0 */
-    unsigned long MAXV : 10; /* bit 34, byte +0x0 */
-    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
-};
-
-struct anon_22 {
-    float S; /* +0x0 */
-    float T; /* +0x4 */
-};
-
-struct tagGLlistcalls {
-    int pNext; /* +0x0 */
-    unsigned int cbCalls; /* +0x4 */
-    tagGLlistnode aNodes[1]; /* +0x8 */
-};
-
-struct tag_GLmaterial {
-    float vAmbient[4]; /* +0x0 */
-    float vDiffuse[4]; /* +0x10 */
-    float vSpecular[4]; /* +0x20 */
-    float vEmission[4]; /* +0x30 */
-    float fShininess; /* +0x40 */
-    float fAmbientIndex; /* +0x44 */
-    float fDiffuseIndex; /* +0x48 */
-    float fSpecularIndex; /* +0x4c */
-};
-
-struct anon_23 {
-    unsigned long RRW : 12; /* bit 0, byte +0x0 */
-    unsigned long pad12 : 20; /* bit 12, byte +0x0 */
-    unsigned long RRH : 12; /* bit 32, byte +0x0 */
-    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
-};
-
-struct anon_24 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
-};
-
-struct anon_25 {
-    unsigned int ID; /* +0x0 */
-    unsigned int IDMSK; /* +0x4 */
-};
-
-struct tagGLtexname {
-    unsigned char bAllocated; /* +0x0 */
-    unsigned char bResident; /* +0x1 */
-    float fPrioritize; /* +0x4 */
-    unsigned int eDimension; /* +0x8 */
-    int iTexBlock; /* +0xc */
-    int pTex1D; /* +0x10 */
-    int pTex2D; /* +0x14 */
-    int pTexCube; /* +0x18 */
-};
-
-struct tagGLlistdatas {
-    int pNext; /* +0x0 */
-    /* aggregate */ int apData; /* +0x4 */
-};
-
-struct anon_26 {
-    unsigned long TBP1 : 14; /* bit 0, byte +0x0 */
-    unsigned long TBW1 : 6; /* bit 14, byte +0x0 */
-    unsigned long TBP2 : 14; /* bit 20, byte +0x0 */
-    unsigned long TBW2 : 6; /* bit 34, byte +0x0 */
-    unsigned long TBP3 : 14; /* bit 40, byte +0x0 */
-    unsigned long TBW3 : 6; /* bit 54, byte +0x0 */
-    unsigned long pad60 : 4; /* bit 60, byte +0x0 */
-};
-
-struct anon_27 {
-    unsigned long U : 14; /* bit 0, byte +0x0 */
-    unsigned long pad14 : 2; /* bit 14, byte +0x0 */
-    unsigned long V : 14; /* bit 16, byte +0x0 */
-    unsigned long pad30 : 34; /* bit 30, byte +0x0 */
-};
-
-struct anon_28 {
-    unsigned long CLAMP : 1; /* bit 0, byte +0x0 */
-    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
-};
-
-struct _sceDmaTag {
-    unsigned short qwc; /* +0x0 */
-    unsigned char mark; /* +0x2 */
-    unsigned char id; /* +0x3 */
-    int next; /* +0x4 */
-    unsigned int p[2]; /* +0x8 */
-};
-
-struct anon_29 {
-    unsigned long OFX : 16; /* bit 0, byte +0x0 */
-    unsigned long pad16 : 16; /* bit 16, byte +0x0 */
-    unsigned long OFY : 16; /* bit 32, byte +0x0 */
-    unsigned long pad48 : 16; /* bit 48, byte +0x0 */
-};
-
-struct anon_30 {
-    unsigned long DIMX00 : 3; /* bit 0, byte +0x0 */
-    unsigned long pad00 : 1; /* bit 3, byte +0x0 */
-    unsigned long DIMX01 : 3; /* bit 4, byte +0x0 */
-    unsigned long pad01 : 1; /* bit 7, byte +0x0 */
-    unsigned long DIMX02 : 3; /* bit 8, byte +0x0 */
-    unsigned long pad02 : 1; /* bit 11, byte +0x0 */
-    unsigned long DIMX03 : 3; /* bit 12, byte +0x0 */
-    unsigned long pad03 : 1; /* bit 15, byte +0x0 */
-    unsigned long DIMX10 : 3; /* bit 16, byte +0x0 */
-    unsigned long pad10 : 1; /* bit 19, byte +0x0 */
-    unsigned long DIMX11 : 3; /* bit 20, byte +0x0 */
-    unsigned long pad11 : 1; /* bit 23, byte +0x0 */
-    unsigned long DIMX12 : 3; /* bit 24, byte +0x0 */
-    unsigned long pad12 : 1; /* bit 27, byte +0x0 */
-    unsigned long DIMX13 : 3; /* bit 28, byte +0x0 */
-    unsigned long pad13 : 1; /* bit 31, byte +0x0 */
-    unsigned long DIMX20 : 3; /* bit 32, byte +0x0 */
-    unsigned long pad20 : 1; /* bit 35, byte +0x0 */
-    unsigned long DIMX21 : 3; /* bit 36, byte +0x0 */
-    unsigned long pad21 : 1; /* bit 39, byte +0x0 */
-    unsigned long DIMX22 : 3; /* bit 40, byte +0x0 */
-    unsigned long pad22 : 1; /* bit 43, byte +0x0 */
-    unsigned long DIMX23 : 3; /* bit 44, byte +0x0 */
-    unsigned long pad23 : 1; /* bit 47, byte +0x0 */
-    unsigned long DIMX30 : 3; /* bit 48, byte +0x0 */
-    unsigned long pad30 : 1; /* bit 51, byte +0x0 */
-    unsigned long DIMX31 : 3; /* bit 52, byte +0x0 */
-    unsigned long pad31 : 1; /* bit 55, byte +0x0 */
-    unsigned long 8 : 3; /* bit None, byte +0x0 */
-    unsigned long pad32 : 1; /* bit 59, byte +0x0 */
-    unsigned long DIMX33 : 3; /* bit 60, byte +0x0 */
-    unsigned long pad33 : 1; /* bit 63, byte +0x0 */
-};
-
-struct anon_31 {
-    float stMat[2][2]; /* +0x0 */
-    float stTrans[2]; /* +0x10 */
-};
-
-struct anon_32 {
-    unsigned long TBP0 : 14; /* bit 0, byte +0x0 */
-    unsigned long TBW : 6; /* bit 14, byte +0x0 */
-    unsigned long PSM : 6; /* bit 20, byte +0x0 */
-    unsigned long TW : 4; /* bit 26, byte +0x0 */
-    unsigned long TH : 4; /* bit 30, byte +0x0 */
-    unsigned long TCC : 1; /* bit 34, byte +0x0 */
-    unsigned long TFX : 2; /* bit 35, byte +0x0 */
-    unsigned long CBP : 14; /* bit 37, byte +0x0 */
-    unsigned long CPSM : 4; /* bit 51, byte +0x0 */
-    unsigned long CSM : 1; /* bit 55, byte +0x0 */
-    unsigned long 8 : 5; /* bit None, byte +0x0 */
-    unsigned long CLD : 3; /* bit 61, byte +0x0 */
-};
-
-struct tagGLtexblock {
-    unsigned int nTexID : 10; /* bit 0, byte +0x0 */
-    int nStart : 11; /* bit 10, byte +0x0 */
-    int nLength : 11; /* bit 21, byte +0x0 */
-};
-
-struct anon_33 {
-    unsigned long TBP4 : 14; /* bit 0, byte +0x0 */
-    unsigned long TBW4 : 6; /* bit 14, byte +0x0 */
-    unsigned long TBP5 : 14; /* bit 20, byte +0x0 */
-    unsigned long TBW5 : 6; /* bit 34, byte +0x0 */
-    unsigned long TBP6 : 14; /* bit 40, byte +0x0 */
-    unsigned long TBW6 : 6; /* bit 54, byte +0x0 */
-    unsigned long pad60 : 4; /* bit 60, byte +0x0 */
-};
-
-struct anon_34 {
-    unsigned long X : 16; /* bit 0, byte +0x0 */
-    unsigned long Y : 16; /* bit 16, byte +0x0 */
-    unsigned long Z : 32; /* bit 32, byte +0x0 */
 };
 
 struct GEO_tdstColor_ {
@@ -904,8 +1056,13 @@ struct GEO_tdstColor_ {
     float xA; /* +0xc */
 };
 
+struct anon_31 {
+    float stMat[2][2]; /* +0x0 */
+    float stTrans[2]; /* +0x10 */
+};
+
 struct anon_35 {
-    int pst_Texture; /* +0x0 */
+    GLI_tdstTexture_* pst_Texture; /* +0x0 */
     char c_Operator; /* +0x4 */
     char c_ColorOperator; /* +0x5 */
     char c_UVSource; /* +0x6 */
@@ -920,142 +1077,74 @@ struct anon_35 {
     float fScaleV; /* +0x4c */
 };
 
-struct anon_36 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+struct GLI_tdstMaterial_ {
+    unsigned int xMaterialType; /* +0x0 */
+    GEO_tdstColor_ stAmbient; /* +0x4 */
+    GEO_tdstColor_ stDiffuse; /* +0x14 */
+    GEO_tdstColor_ stSpecular; /* +0x24 */
+    GEO_tdstColor_ stColor; /* +0x34 */
+    unsigned int lMaterialAdditionnalType; /* +0x44 */
+    int lSpecularExponent; /* +0x48 */
+    GLI_tdstTexture_* p_stTexture; /* +0x4c */
+    float fAddU; /* +0x50 */
+    float fAddV; /* +0x54 */
+    float fConstantAddU; /* +0x58 */
+    float fConstantAddV; /* +0x5c */
+    int lIncrementIsEnable; /* +0x60 */
+    unsigned int lActualRefreshNumber; /* +0x64 */
+    GLI_tdstAnimatedTextureNode_* p_stFistAnimatedTExtureNode; /* +0x68 */
+    GLI_tdstAnimatedTextureNode_* p_stActualAnimatedTExtureNode; /* +0x6c */
+    int lNumberOfDisplayNode; /* +0x70 */
+    float xActualDisplayTimeSinceStartOfLastTexture; /* +0x74 */
+    unsigned char xIsLocked; /* +0x78 */
+    unsigned int uiFlags; /* +0x7c */
+    unsigned int ulMultiTextureType; /* +0x80 */
+    unsigned int ulNbTextureStages; /* +0x84 */
+    anon_35 a_stMultiMaterial[4]; /* +0x88 */
 };
 
-struct tagGsLoadImage {
-    anon_1 gifTag; /* +0x0 */
-    anon_11 bitbltbuf; /* +0x10 */
-    long bitbltbufaddr; /* +0x18 */
-    anon_18 trxpos; /* +0x20 */
-    long trxposaddr; /* +0x28 */
-    anon_23 trxreg; /* +0x30 */
-    long trxregaddr; /* +0x38 */
-    anon_16 trxdir; /* +0x40 */
-    long trxdiraddr; /* +0x48 */
+struct tag_GLtexture_image {
+    unsigned int target; /* +0x0 */
+    int inputComponents; /* +0x4 */
+    int width; /* +0x8 */
+    int height; /* +0xc */
+    unsigned int format; /* +0x10 */
+    int pixels; /* +0x14 */
+    int pixelsAux; /* +0x18 */
+    int cbPixels; /* +0x1c */
+    int cbPixelsAux; /* +0x20 */
+    unsigned char pixelsChanged; /* +0x24 */
+    unsigned char bConverted; /* +0x25 */
+    unsigned char bUserMaintain; /* +0x26 */
+    unsigned int uiSpan; /* +0x28 */
 };
 
-struct anon_37 {
-    unsigned long X : 16; /* bit 0, byte +0x0 */
-    unsigned long Y : 16; /* bit 16, byte +0x0 */
-    unsigned long Z : 24; /* bit 32, byte +0x0 */
-    unsigned long 8 : 8; /* bit None, byte +0x0 */
+struct anon_13 {
+    float vObjectBS[4]; /* +0x0 */
+    unsigned char bFinalCompile; /* +0x10 */
+    unsigned int mode; /* +0x14 */
+    tagGLprimbuf* pPrimBuf; /* +0x18 */
 };
 
-struct tagGLtexindex {
-    unsigned int nTexID : 10; /* bit 0, byte +0x0 */
-    int nStart : 11; /* bit 10, byte +0x0 */
+struct tagstVIFCode {
+    unsigned short IMMEDIATE; /* +0x0 */
+    unsigned char NUM; /* +0x2 */
+    unsigned char CMD; /* +0x3 */
 };
 
-struct tagGsSetTex {
-    anon_1 gifTag; /* +0x0 */
-    anon_14 texflush; /* +0x10 */
-    long texflushaddr; /* +0x18 */
-    anon_32 tex0; /* +0x20 */
-    long tex0addr; /* +0x28 */
-    anon_40 tex1; /* +0x30 */
-    long tex1addr; /* +0x38 */
-    anon_26 miptbp1; /* +0x40 */
-    long miptbp1addr; /* +0x48 */
-    anon_33 miptbp2; /* +0x50 */
-    long miptbp2addr; /* +0x58 */
-    anon_21 clamp; /* +0x60 */
-    long clampaddr; /* +0x68 */
+struct BigBossLifeBarStruct_ {
+    float PosRightX; /* +0x0 */
+    float PosBottomY; /* +0x4 */
+    float CurrentLife; /* +0x8 */
+    float MaxLife; /* +0xc */
+    float fAlpha; /* +0x10 */
+    float CenterIcon; /* +0x14 */
+    GLI_tdstMaterial_* pMat; /* +0x18 */
 };
 
-struct anon_38 {
-    unsigned long ZBP : 9; /* bit 0, byte +0x0 */
-    unsigned long pad09 : 15; /* bit 9, byte +0x0 */
-    unsigned long PSM : 4; /* bit 24, byte +0x0 */
-    unsigned long pad28 : 4; /* bit 28, byte +0x0 */
-    unsigned long ZMSK : 1; /* bit 32, byte +0x0 */
-    unsigned long pad33 : 31; /* bit 33, byte +0x0 */
-};
-
-struct anon_39 {
-    unsigned long PABE : 1; /* bit 0, byte +0x0 */
-    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
-};
-
-struct anon_40 {
-    unsigned long LCM : 1; /* bit 0, byte +0x0 */
-    unsigned long pad01 : 1; /* bit 1, byte +0x0 */
-    unsigned long MXL : 3; /* bit 2, byte +0x0 */
-    unsigned long MMAG : 1; /* bit 5, byte +0x0 */
-    unsigned long MMIN : 3; /* bit 6, byte +0x0 */
-    unsigned long MTBA : 1; /* bit 9, byte +0x0 */
-    unsigned long pad10 : 9; /* bit 10, byte +0x0 */
-    unsigned long L : 2; /* bit 19, byte +0x0 */
-    unsigned long pad21 : 11; /* bit 21, byte +0x0 */
-    unsigned long K : 12; /* bit 32, byte +0x0 */
-    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
-};
-
-struct anon_41 {
-    unsigned long PRIM : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+union unFunction {
+    void (*pfnPlayVoid)(void); /* +0x0 */
+    void (*pfnPlayParam)(void*); /* +0x0 */
 };
 
 struct tagGLlistnode {
@@ -1064,20 +1153,31 @@ struct tagGLlistnode {
     unsigned char aParams[4]; /* +0x8 */
 };
 
-union unFunction {
-    int pfnPlayVoid; /* +0x0 */
-    int pfnPlayParam; /* +0x0 */
+struct tagGLlistcalls {
+    tagGLlistcalls* pNext; /* +0x0 */
+    unsigned int cbCalls; /* +0x4 */
+    tagGLlistnode aNodes[1]; /* +0x8 */
 };
 
-struct anon_42 {
-    unsigned long pad00 : 20; /* bit 0, byte +0x0 */
-    unsigned long PSM : 6; /* bit 20, byte +0x0 */
-    unsigned long pad26 : 11; /* bit 26, byte +0x0 */
-    unsigned long CBP : 14; /* bit 37, byte +0x0 */
-    unsigned long CPSM : 4; /* bit 51, byte +0x0 */
-    unsigned long CSM : 1; /* bit 55, byte +0x0 */
-    unsigned long 8 : 5; /* bit None, byte +0x0 */
-    unsigned long CLD : 3; /* bit 61, byte +0x0 */
+struct tagGLlistdatas {
+    tagGLlistdatas* pNext; /* +0x0 */
+    int apData[3]; /* +0x4 */
+};
+
+struct tagListData {
+    unsigned int eMode; /* +0x0 */
+    tagGLlistcalls* pCalls; /* +0x4 */
+    tagGLlistdatas* pDatas; /* +0x8 */
+    tagGLprimbuf* pPrimBufHead; /* +0xc */
+    tagGLprimbuf* pPrimBufTail; /* +0x10 */
+    float (*) pDmaBuffer[4]; /* +0x14 */
+    unsigned int uiSDLSize; /* +0x18 */
+    int pSDLIndices; /* +0x1c */
+    unsigned int uiSDLIndicesSize; /* +0x20 */
+    unsigned int uiSDLBits; /* +0x24 */
+    unsigned long ModFlgs; /* +0x28 */
+    float (*) pLastExecDmaBuffer[4]; /* +0x30 */
+    signed char ucSDLObjectReserveSize; /* +0x34 */
 };
 
 unsigned int GLI_g_LifeBarIsInit;
@@ -1105,29 +1205,250 @@ float BBLB_LifePosition[4];
 float BBLB_LifePosLeft[4];
 float BBLB_Icones[5][4];
 float BBLB_IconPosition[4];
-/* aggregate */ int GLI_g_BigBossLifeBar;
+BigBossLifeBarStruct_ GLI_g_BigBossLifeBar;
 LifeBarStruct_ GLI_g_TheLifeBar;
-tagGScontext 8;
-tagGLcontext 8;
+tagGScontext g_gsContext;
+tagGLcontext g_PS2glContext;
 int GLI_g_AnimatedTextureToUse;
 float myColorRange[4];
 float myColorRange2[4];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 93–98 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 92–98 */
 /* addr: 0x002cc110  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 92
+ *   +0x0004 -> line 93
+ *   +0x0008 -> line 92
+ *   +0x0010 -> line 95
+ *   +0x001c -> line 96
+ *   +0x0020 -> line 95
+ *   +0x0024 -> line 96
+ *   +0x006c -> line 98
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vInitDelayedFrees(void)
 {
     unsigned int i;
-    /* line map: */
-    /*   line 93 @ +0x000 */
-    /*   line 95 @ +0x000 */
-    /*   line 95 @ +0x000 */
-    /*   line 98 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 3083–3328 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 3068–3328 */
 /* addr: 0x002cc190  size: 2648 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3068
+ *   +0x0044 -> line 3083
+ *   +0x0050 -> line 3085
+ *   +0x0054 -> line 3110
+ *   +0x005c -> line 3113
+ *   +0x006c -> line 3116
+ *   +0x0088 -> line 3117
+ *   +0x0090 -> line 3116
+ *   +0x009c -> line 3117
+ *   +0x00a0 -> line 3116
+ *   +0x00b0 -> line 3117
+ *   +0x00b4 -> line 3116
+ *   +0x00b8 -> line 3117
+ *   +0x00bc -> line 3116
+ *   +0x00c0 -> line 3117
+ *   +0x00d0 -> line 3118
+ *   +0x00d8 -> line 3116
+ *   +0x00f0 -> line 3117
+ *   +0x0110 -> line 3118
+ *   +0x0114 -> line 3117
+ *   +0x0120 -> line 3118
+ *   +0x0128 -> line 3124
+ *   +0x0138 -> line 3125
+ *   +0x0140 -> line 3124
+ *   +0x0144 -> line 3131
+ *   +0x0148 -> line 3124
+ *   +0x014c -> line 3131
+ *   +0x0150 -> line 3124
+ *   +0x0168 -> line 3128
+ *   +0x016c -> line 3124
+ *   +0x0178 -> line 3125
+ *   +0x017c -> line 3128
+ *   +0x0180 -> line 3126
+ *   +0x0184 -> line 3131
+ *   +0x0188 -> line 3125
+ *   +0x018c -> line 3131
+ *   +0x0190 -> line 3125
+ *   +0x0194 -> line 3126
+ *   +0x0198 -> line 3131
+ *   +0x01d0 -> line 3133
+ *   +0x01d4 -> line 3136
+ *   +0x01d8 -> line 3133
+ *   +0x01dc -> line 3166
+ *   +0x01e0 -> line 3136
+ *   +0x01e4 -> line 3151
+ *   +0x01ec -> line 3133
+ *   +0x01f4 -> line 3151
+ *   +0x01f8 -> line 3135
+ *   +0x0200 -> line 3133
+ *   +0x0208 -> line 3138
+ *   +0x0210 -> line 3133
+ *   +0x0214 -> line 3136
+ *   +0x0218 -> line 3138
+ *   +0x0220 -> line 3143
+ *   +0x0228 -> line 3144
+ *   +0x0230 -> line 3145
+ *   +0x0238 -> line 3146
+ *   +0x0240 -> line 3151
+ *   +0x0250 -> line 3152
+ *   +0x0260 -> line 3157
+ *   +0x0268 -> line 3152
+ *   +0x026c -> line 3143
+ *   +0x0270 -> line 3159
+ *   +0x0278 -> line 3143
+ *   +0x027c -> line 3159
+ *   +0x0284 -> line 3143
+ *   +0x0288 -> line 3151
+ *   +0x028c -> line 3159
+ *   +0x0290 -> line 3138
+ *   +0x0298 -> line 3144
+ *   +0x02a4 -> line 3145
+ *   +0x02a8 -> line 3146
+ *   +0x02ac -> line 3151
+ *   +0x02bc -> line 3146
+ *   +0x02c0 -> line 3138
+ *   +0x02c4 -> line 3146
+ *   +0x02c8 -> line 3157
+ *   +0x02cc -> line 3145
+ *   +0x02d0 -> line 3152
+ *   +0x02dc -> line 3157
+ *   +0x02e8 -> line 3159
+ *   +0x02ec -> line 3145
+ *   +0x02f0 -> line 3159
+ *   +0x02f8 -> line 3166
+ *   +0x0300 -> line 3170
+ *   +0x0320 -> line 3172
+ *   +0x0334 -> line 3173
+ *   +0x034c -> line 3174
+ *   +0x0360 -> line 3175
+ *   +0x0378 -> line 3176
+ *   +0x038c -> line 3177
+ *   +0x03a4 -> line 3178
+ *   +0x03b8 -> line 3179
+ *   +0x03d0 -> line 3183
+ *   +0x03e0 -> line 3187
+ *   +0x03e4 -> line 3183
+ *   +0x03f0 -> line 3187
+ *   +0x03f4 -> line 3183
+ *   +0x0414 -> line 3189
+ *   +0x0418 -> line 3183
+ *   +0x0424 -> line 3189
+ *   +0x0430 -> line 3190
+ *   +0x0448 -> line 3191
+ *   +0x045c -> line 3192
+ *   +0x0474 -> line 3193
+ *   +0x0488 -> line 3194
+ *   +0x04a0 -> line 3195
+ *   +0x04b4 -> line 3196
+ *   +0x04cc -> line 3205
+ *   +0x0504 -> line 3207
+ *   +0x0508 -> line 3205
+ *   +0x0514 -> line 3207
+ *   +0x0520 -> line 3208
+ *   +0x0538 -> line 3209
+ *   +0x054c -> line 3210
+ *   +0x0564 -> line 3211
+ *   +0x0578 -> line 3212
+ *   +0x0590 -> line 3213
+ *   +0x05a4 -> line 3214
+ *   +0x05bc -> line 3218
+ *   +0x05c4 -> line 3222
+ *   +0x05c8 -> line 3229
+ *   +0x05cc -> line 3222
+ *   +0x05d0 -> line 3229
+ *   +0x05e8 -> line 3222
+ *   +0x05ec -> line 3229
+ *   +0x05f0 -> line 3222
+ *   +0x05f4 -> line 3229
+ *   +0x05fc -> line 3223
+ *   +0x0604 -> line 3222
+ *   +0x060c -> line 3224
+ *   +0x0614 -> line 3223
+ *   +0x061c -> line 3224
+ *   +0x0624 -> line 3222
+ *   +0x0628 -> line 3223
+ *   +0x062c -> line 3225
+ *   +0x0634 -> line 3224
+ *   +0x063c -> line 3225
+ *   +0x0644 -> line 3224
+ *   +0x0648 -> line 3229
+ *   +0x0650 -> line 3230
+ *   +0x0668 -> line 3231
+ *   +0x0680 -> line 3232
+ *   +0x0698 -> line 3233
+ *   +0x06b0 -> line 3234
+ *   +0x06c8 -> line 3235
+ *   +0x06d4 -> line 3236
+ *   +0x06ec -> line 3250
+ *   +0x0700 -> line 3254
+ *   +0x0704 -> line 3250
+ *   +0x0708 -> line 3254
+ *   +0x0710 -> line 3259
+ *   +0x0714 -> line 3257
+ *   +0x0718 -> line 3259
+ *   +0x071c -> line 3257
+ *   +0x0720 -> line 3259
+ *   +0x0730 -> line 3258
+ *   +0x0734 -> line 3259
+ *   +0x0748 -> line 3261
+ *   +0x0758 -> line 3264
+ *   +0x075c -> line 3267
+ *   +0x0760 -> line 3264
+ *   +0x0764 -> line 3268
+ *   +0x0768 -> line 3265
+ *   +0x076c -> line 3268
+ *   +0x0774 -> line 3267
+ *   +0x0778 -> line 3268
+ *   +0x0784 -> line 3266
+ *   +0x0788 -> line 3268
+ *   +0x079c -> line 3270
+ *   +0x07ac -> line 3277
+ *   +0x07b0 -> line 3273
+ *   +0x07b4 -> line 3276
+ *   +0x07b8 -> line 3273
+ *   +0x07bc -> line 3274
+ *   +0x07c0 -> line 3275
+ *   +0x07c4 -> line 3277
+ *   +0x07c8 -> line 3276
+ *   +0x07cc -> line 3277
+ *   +0x07d4 -> line 3276
+ *   +0x07d8 -> line 3277
+ *   +0x07f8 -> line 3280
+ *   +0x0804 -> line 3283
+ *   +0x0810 -> line 3284
+ *   +0x0828 -> line 3286
+ *   +0x0838 -> line 3287
+ *   +0x0850 -> line 3289
+ *   +0x0864 -> line 3290
+ *   +0x087c -> line 3292
+ *   +0x0890 -> line 3293
+ *   +0x08a8 -> line 3296
+ *   +0x08b4 -> line 3298
+ *   +0x08c0 -> line 3299
+ *   +0x08d8 -> line 3301
+ *   +0x08e8 -> line 3302
+ *   +0x0900 -> line 3304
+ *   +0x0914 -> line 3305
+ *   +0x092c -> line 3307
+ *   +0x0940 -> line 3308
+ *   +0x0958 -> line 3311
+ *   +0x0964 -> line 3313
+ *   +0x0970 -> line 3314
+ *   +0x0988 -> line 3316
+ *   +0x0998 -> line 3317
+ *   +0x09b0 -> line 3319
+ *   +0x09c4 -> line 3320
+ *   +0x09dc -> line 3322
+ *   +0x09f0 -> line 3323
+ *   +0x0a08 -> line 3326
+ *   +0x0a10 -> line 3328
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vDisplayBigBossLifeBars(void)
 {
     int a_bLifeBar[3];
@@ -1155,20 +1476,321 @@ void GLI_vDisplayBigBossLifeBars(void)
     float fXRight;
     float fYTop;
     float fXLeft;
-    /* line map: */
-    /*   line 3083 @ +0x000 */
-    /*   line 3110 @ +0x000 */
-    /*   line 3116 @ +0x000 */
-    /*   line 3116 @ +0x000 */
-    /*   line 3116 @ +0x000 */
-    /*   line 3116 @ +0x000 */
-    /*   line 3116 @ +0x000 */
-    /*   line 3118 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2778–3065 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2767–3065 */
 /* addr: 0x002ccbf0  size: 4004 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2767
+ *   +0x0004 -> line 2778
+ *   +0x0008 -> line 2767
+ *   +0x000c -> line 2778
+ *   +0x0010 -> line 2767
+ *   +0x0014 -> line 2778
+ *   +0x0018 -> line 2767
+ *   +0x0048 -> line 2778
+ *   +0x004c -> line 2781
+ *   +0x0050 -> line 2779
+ *   +0x0058 -> line 2778
+ *   +0x005c -> line 2779
+ *   +0x0060 -> line 2781
+ *   +0x0090 -> line 2802
+ *   +0x0094 -> line 2783
+ *   +0x0098 -> line 2802
+ *   +0x009c -> line 2783
+ *   +0x00a0 -> line 2802
+ *   +0x00e4 -> line 2805
+ *   +0x00ec -> line 2808
+ *   +0x00fc -> line 2811
+ *   +0x0118 -> line 2812
+ *   +0x0120 -> line 2811
+ *   +0x012c -> line 2812
+ *   +0x0130 -> line 2811
+ *   +0x0140 -> line 2812
+ *   +0x0144 -> line 2811
+ *   +0x0148 -> line 2812
+ *   +0x014c -> line 2811
+ *   +0x0150 -> line 2812
+ *   +0x0160 -> line 2813
+ *   +0x0168 -> line 2811
+ *   +0x0180 -> line 2812
+ *   +0x01a0 -> line 2813
+ *   +0x01a4 -> line 2812
+ *   +0x01b0 -> line 2813
+ *   +0x01b8 -> line 2823
+ *   +0x01c8 -> line 2840
+ *   +0x01cc -> line 2824
+ *   +0x01d4 -> line 2823
+ *   +0x01d8 -> line 2838
+ *   +0x01dc -> line 2823
+ *   +0x01e0 -> line 2838
+ *   +0x01ec -> line 2824
+ *   +0x01f4 -> line 2823
+ *   +0x01fc -> line 2824
+ *   +0x0204 -> line 2840
+ *   +0x0208 -> line 2826
+ *   +0x0210 -> line 2824
+ *   +0x0218 -> line 2828
+ *   +0x0220 -> line 2827
+ *   +0x0224 -> line 2832
+ *   +0x022c -> line 2829
+ *   +0x0230 -> line 2832
+ *   +0x0234 -> line 2833
+ *   +0x0238 -> line 2832
+ *   +0x023c -> line 2833
+ *   +0x0240 -> line 2832
+ *   +0x0248 -> line 2834
+ *   +0x0250 -> line 2833
+ *   +0x0258 -> line 2835
+ *   +0x0260 -> line 2833
+ *   +0x0264 -> line 2834
+ *   +0x0268 -> line 2836
+ *   +0x026c -> line 2835
+ *   +0x0270 -> line 2836
+ *   +0x0274 -> line 2835
+ *   +0x0278 -> line 2837
+ *   +0x027c -> line 2835
+ *   +0x0280 -> line 2834
+ *   +0x0284 -> line 2837
+ *   +0x0288 -> line 2835
+ *   +0x028c -> line 2836
+ *   +0x0290 -> line 2837
+ *   +0x0294 -> line 2836
+ *   +0x02a0 -> line 2837
+ *   +0x02a4 -> line 2834
+ *   +0x02a8 -> line 2840
+ *   +0x02b0 -> line 2842
+ *   +0x02b4 -> line 2843
+ *   +0x02d0 -> line 2845
+ *   +0x02d4 -> line 2844
+ *   +0x02d8 -> line 2845
+ *   +0x02e0 -> line 2852
+ *   +0x02e8 -> line 2857
+ *   +0x02ec -> line 2852
+ *   +0x02fc -> line 2857
+ *   +0x0304 -> line 2859
+ *   +0x0324 -> line 2863
+ *   +0x0338 -> line 2864
+ *   +0x0350 -> line 2865
+ *   +0x0364 -> line 2866
+ *   +0x037c -> line 2867
+ *   +0x0390 -> line 2868
+ *   +0x03a8 -> line 2869
+ *   +0x03bc -> line 2870
+ *   +0x03d4 -> line 2874
+ *   +0x03e0 -> line 2876
+ *   +0x03e4 -> line 2874
+ *   +0x03e8 -> line 2876
+ *   +0x03ec -> line 2874
+ *   +0x041c -> line 2876
+ *   +0x0424 -> line 2880
+ *   +0x0434 -> line 2881
+ *   +0x044c -> line 2882
+ *   +0x0460 -> line 2883
+ *   +0x0478 -> line 2884
+ *   +0x048c -> line 2885
+ *   +0x04a4 -> line 2886
+ *   +0x04b8 -> line 2887
+ *   +0x04d0 -> line 2889
+ *   +0x04d8 -> line 2892
+ *   +0x04dc -> line 2897
+ *   +0x0510 -> line 2899
+ *   +0x0514 -> line 2897
+ *   +0x0518 -> line 2899
+ *   +0x051c -> line 2897
+ *   +0x0524 -> line 2899
+ *   +0x052c -> line 2900
+ *   +0x0544 -> line 2901
+ *   +0x0558 -> line 2902
+ *   +0x0570 -> line 2903
+ *   +0x0584 -> line 2904
+ *   +0x059c -> line 2905
+ *   +0x05b0 -> line 2906
+ *   +0x05c8 -> line 2910
+ *   +0x05d0 -> line 2912
+ *   +0x05e0 -> line 2913
+ *   +0x05e8 -> line 2912
+ *   +0x05f0 -> line 2914
+ *   +0x05f8 -> line 2913
+ *   +0x0600 -> line 2914
+ *   +0x0608 -> line 2912
+ *   +0x060c -> line 2913
+ *   +0x0610 -> line 2915
+ *   +0x0618 -> line 2914
+ *   +0x0620 -> line 2917
+ *   +0x0628 -> line 2915
+ *   +0x0630 -> line 2917
+ *   +0x0638 -> line 2914
+ *   +0x063c -> line 2917
+ *   +0x0644 -> line 2918
+ *   +0x065c -> line 2920
+ *   +0x0670 -> line 2921
+ *   +0x0688 -> line 2923
+ *   +0x069c -> line 2924
+ *   +0x06b4 -> line 2926
+ *   +0x06c8 -> line 2927
+ *   +0x06e0 -> line 2932
+ *   +0x06e8 -> line 2935
+ *   +0x06ec -> line 2940
+ *   +0x06f0 -> line 2935
+ *   +0x06f4 -> line 2940
+ *   +0x0708 -> line 2941
+ *   +0x0710 -> line 2942
+ *   +0x071c -> line 2935
+ *   +0x0724 -> line 2936
+ *   +0x072c -> line 2935
+ *   +0x0730 -> line 2937
+ *   +0x0738 -> line 2936
+ *   +0x073c -> line 2935
+ *   +0x0740 -> line 2937
+ *   +0x0748 -> line 2936
+ *   +0x074c -> line 2938
+ *   +0x0754 -> line 2935
+ *   +0x075c -> line 2940
+ *   +0x0764 -> line 2936
+ *   +0x076c -> line 2937
+ *   +0x0770 -> line 2940
+ *   +0x077c -> line 2938
+ *   +0x0780 -> line 2940
+ *   +0x078c -> line 2937
+ *   +0x0790 -> line 2938
+ *   +0x0794 -> line 2940
+ *   +0x07a0 -> line 2937
+ *   +0x07a4 -> line 2941
+ *   +0x07a8 -> line 2940
+ *   +0x07ac -> line 2941
+ *   +0x07b0 -> line 2937
+ *   +0x07b4 -> line 2938
+ *   +0x07b8 -> line 2940
+ *   +0x07bc -> line 2938
+ *   +0x07c0 -> line 2940
+ *   +0x07c4 -> line 2941
+ *   +0x07c8 -> line 2940
+ *   +0x07d4 -> line 2941
+ *   +0x07dc -> line 2940
+ *   +0x07e4 -> line 2941
+ *   +0x07e8 -> line 2940
+ *   +0x07ec -> line 2941
+ *   +0x07f0 -> line 2940
+ *   +0x07f8 -> line 2941
+ *   +0x0808 -> line 2940
+ *   +0x0818 -> line 2941
+ *   +0x082c -> line 2942
+ *   +0x0834 -> line 2943
+ *   +0x0848 -> line 2944
+ *   +0x0854 -> line 2945
+ *   +0x0864 -> line 2949
+ *   +0x086c -> line 2951
+ *   +0x0884 -> line 2954
+ *   +0x089c -> line 2955
+ *   +0x08b4 -> line 2956
+ *   +0x08d4 -> line 2957
+ *   +0x08ec -> line 2960
+ *   +0x0904 -> line 2961
+ *   +0x091c -> line 2962
+ *   +0x0934 -> line 2963
+ *   +0x094c -> line 2965
+ *   +0x0968 -> line 2968
+ *   +0x0980 -> line 2969
+ *   +0x0998 -> line 2970
+ *   +0x09b0 -> line 2971
+ *   +0x09c8 -> line 2975
+ *   +0x09cc -> line 2974
+ *   +0x09d0 -> line 2975
+ *   +0x09d4 -> line 2974
+ *   +0x09f4 -> line 2975
+ *   +0x09fc -> line 2974
+ *   +0x0a04 -> line 2975
+ *   +0x0a08 -> line 2974
+ *   +0x0a10 -> line 2975
+ *   +0x0a14 -> line 2974
+ *   +0x0a18 -> line 2976
+ *   +0x0a28 -> line 2977
+ *   +0x0a58 -> line 2978
+ *   +0x0a5c -> line 2977
+ *   +0x0a60 -> line 2978
+ *   +0x0a64 -> line 2977
+ *   +0x0a68 -> line 2978
+ *   +0x0a6c -> line 2977
+ *   +0x0a70 -> line 2980
+ *   +0x0a78 -> line 2981
+ *   +0x0a90 -> line 2982
+ *   +0x0a94 -> line 2987
+ *   +0x0aa0 -> line 2984
+ *   +0x0aa4 -> line 2987
+ *   +0x0aa8 -> line 2989
+ *   +0x0ab8 -> line 2991
+ *   +0x0ac4 -> line 2992
+ *   +0x0ad0 -> line 2994
+ *   +0x0ad8 -> line 2997
+ *   +0x0ae4 -> line 2998
+ *   +0x0af0 -> line 3000
+ *   +0x0b08 -> line 3001
+ *   +0x0b28 -> line 3002
+ *   +0x0b48 -> line 3003
+ *   +0x0b58 -> line 3006
+ *   +0x0b60 -> line 3009
+ *   +0x0b78 -> line 3010
+ *   +0x0b80 -> line 3009
+ *   +0x0b90 -> line 3011
+ *   +0x0b94 -> line 3009
+ *   +0x0ba0 -> line 3011
+ *   +0x0ba4 -> line 3009
+ *   +0x0bb0 -> line 3010
+ *   +0x0bb4 -> line 3009
+ *   +0x0bb8 -> line 3010
+ *   +0x0bbc -> line 3009
+ *   +0x0bc4 -> line 3010
+ *   +0x0bc8 -> line 3009
+ *   +0x0bd8 -> line 3011
+ *   +0x0bdc -> line 3009
+ *   +0x0be4 -> line 3010
+ *   +0x0c18 -> line 3011
+ *   +0x0c20 -> line 3012
+ *   +0x0c34 -> line 3013
+ *   +0x0c40 -> line 3014
+ *   +0x0c50 -> line 3015
+ *   +0x0c64 -> line 3017
+ *   +0x0c6c -> line 3019
+ *   +0x0c8c -> line 3022
+ *   +0x0ca0 -> line 3023
+ *   +0x0cb8 -> line 3024
+ *   +0x0ccc -> line 3025
+ *   +0x0ce4 -> line 3026
+ *   +0x0cf8 -> line 3027
+ *   +0x0d10 -> line 3028
+ *   +0x0d24 -> line 3029
+ *   +0x0d3c -> line 3031
+ *   +0x0d50 -> line 3032
+ *   +0x0d68 -> line 3033
+ *   +0x0d7c -> line 3034
+ *   +0x0d94 -> line 3035
+ *   +0x0da8 -> line 3036
+ *   +0x0dc0 -> line 3037
+ *   +0x0dd4 -> line 3038
+ *   +0x0dec -> line 3040
+ *   +0x0e00 -> line 3041
+ *   +0x0e18 -> line 3042
+ *   +0x0e2c -> line 3043
+ *   +0x0e44 -> line 3044
+ *   +0x0e58 -> line 3045
+ *   +0x0e70 -> line 3046
+ *   +0x0e84 -> line 3047
+ *   +0x0e9c -> line 3050
+ *   +0x0eb0 -> line 3051
+ *   +0x0ec8 -> line 3052
+ *   +0x0edc -> line 3053
+ *   +0x0ef4 -> line 3054
+ *   +0x0f08 -> line 3055
+ *   +0x0f20 -> line 3056
+ *   +0x0f34 -> line 3057
+ *   +0x0f4c -> line 3062
+ *   +0x0f54 -> line 3063
+ *   +0x0f64 -> line 3065
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vDisplayLifeBars(void)
 {
     float CurrentLife;
@@ -1207,38 +1829,50 @@ void GLI_vDisplayLifeBars(void)
     float fYTop;
     float fXLeft;
     float fADC;
-    /* line map: */
-    /*   line 2778 @ +0x000 */
-    /*   line 2778 @ +0x000 */
-    /*   line 2778 @ +0x000 */
-    /*   line 2778 @ +0x000 */
-    /*   line 2779 @ +0x000 */
-    /*   line 2779 @ +0x000 */
-    /*   line 2802 @ +0x000 */
-    /*   line 2802 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2712–2712 */
 /* addr: 0x002cdba0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2712
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vDesinitBigBossLifeBars(void)
 {
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2701–2706 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2699–2707 */
 /* addr: 0x002cdbb0  size: 68 bytes */
-void GLI_vAddBigBossLifeBars(float PosRightX, float PosBottomY, float CurrentLife, float MaxLife, float CenterIcon, /* function pointer */ int pMat, float fAlpha)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2699
+ *   +0x0004 -> line 2706
+ *   +0x0008 -> line 2699
+ *   +0x000c -> line 2706
+ *   +0x0010 -> line 2700
+ *   +0x0018 -> line 2701
+ *   +0x0020 -> line 2702
+ *   +0x0028 -> line 2703
+ *   +0x0030 -> line 2704
+ *   +0x0038 -> line 2705
+ *   +0x003c -> line 2707
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vAddBigBossLifeBars(float PosRightX, float PosBottomY, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha)
 {
-    /* line map: */
-    /*   line 2706 @ +0x000 */
-    /*   line 2706 @ +0x000 */
-    /*   line 2701 @ +0x000 */
-    /*   line 2703 @ +0x000 */
-    /*   line 2705 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2676–2676 */
 /* addr: 0x002cdc00  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2676
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vDesinitLifeBars(void)
 {
     /* TODO: decompile from asm/... */

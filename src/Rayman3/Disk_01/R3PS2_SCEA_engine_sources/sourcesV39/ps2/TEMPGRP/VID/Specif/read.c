@@ -13,6 +13,16 @@ typedef struct anon_4 anon_4;
 typedef struct anon_5 anon_5;
 typedef struct anon_6 anon_6;
 
+typedef enum anon_enum_000308e8 {
+    sceMpegCbError = 0,
+    sceMpegCbNodata = 1,
+    sceMpegCbStopDMA = 2,
+    sceMpegCbRestartDMA = 3,
+    sceMpegCbBackground = 4,
+    sceMpegCbTimeStamp = 5,
+    sceMpegCbStr = 6,
+} anon_enum_000308e8;
+
 struct anon_0 {
     int width; /* +0x0 */
     int height; /* +0x4 */
@@ -27,7 +37,7 @@ struct anon_0 {
 };
 
 struct anon_1 {
-    /* aggregate */ int type; /* +0x0 */
+    anon_enum_000308e8 type; /* +0x0 */
     int header; /* +0x4 */
     int data; /* +0x8 */
     unsigned int len; /* +0xc */
@@ -73,7 +83,7 @@ struct anon_5 {
     int sema; /* +0x40 */
     int isActive; /* +0x44 */
     long totalBytes; /* +0x48 */
-    int ts; /* +0x50 */
+    anon_4* ts; /* +0x50 */
     int n_ts; /* +0x54 */
     int count_ts; /* +0x58 */
     int wt_ts; /* +0x5c */
@@ -91,25 +101,69 @@ struct anon_6 {
 int VID_g_iHasAudio;
 anon_6 videoDec;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\read.c lines 129–138 */
-/* addr: 0x00130f90  size: 216 bytes */
-unsigned int movie(char* name, int interruptable, float fVolume)
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\read.c lines 81–87 */
+/* addr: 0x00131070  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 81
+ *   +0x0004 -> line 82
+ *   +0x0008 -> line 81
+ *   +0x0014 -> line 83
+ *   +0x001c -> line 84
+ *   +0x0044 -> line 87
+ *   +0x0048 -> line 86
+ *   +0x004c -> line 87
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int vagCallbackLeft(anon_1* str)
 {
-    /* line map: */
-    /*   line 129 @ +0x000 */
-    /*   line 133 @ +0x000 */
-    /*   line 138 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\read.c lines 82–87 */
-/* addr: 0x00131070  size: 88 bytes */
-int vagCallbackLeft(anon_1* str)
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\read.c lines 41–74 */
+/* addr: 0x001310d0  size: 504 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 41
+ *   +0x0004 -> line 45
+ *   +0x0008 -> line 41
+ *   +0x000c -> line 45
+ *   +0x0010 -> line 41
+ *   +0x0038 -> line 45
+ *   +0x003c -> line 43
+ *   +0x0040 -> line 45
+ *   +0x005c -> line 54
+ *   +0x0060 -> line 46
+ *   +0x0064 -> line 54
+ *   +0x007c -> line 55
+ *   +0x0080 -> line 56
+ *   +0x0084 -> line 55
+ *   +0x008c -> line 58
+ *   +0x0098 -> line 55
+ *   +0x009c -> line 56
+ *   +0x00a0 -> line 55
+ *   +0x00a4 -> line 56
+ *   +0x00a8 -> line 55
+ *   +0x00ac -> line 58
+ *   +0x0170 -> line 61
+ *   +0x0178 -> line 62
+ *   +0x01a0 -> line 63
+ *   +0x01ac -> line 67
+ *   +0x01bc -> line 73
+ *   +0x01c8 -> line 74
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int videoCallback(anon_1* str, void* data)
 {
-    /* line map: */
-    /*   line 82 @ +0x000 */
-    /*   line 83 @ +0x000 */
-    /*   line 87 @ +0x000 */
-    /*   line 87 @ +0x000 */
+    int d1;
+    int d0;
+    unsigned char* pd1Unc;
+    unsigned char* pd0Unc;
+    unsigned char* pd1;
+    unsigned char* pd0;
+    int s1;
+    int s0;
+    unsigned char* ps0;
+    anon_3* rb;
     /* TODO: decompile from asm/... */
 }

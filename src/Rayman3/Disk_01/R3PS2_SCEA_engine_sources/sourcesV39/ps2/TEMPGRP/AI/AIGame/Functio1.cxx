@@ -4,1207 +4,2340 @@
 
 #include <stddef.h>
 
-/* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct WP_tdstGraph_ WP_tdstGraph_;
-typedef struct WP_tdstArc_ WP_tdstArc_;
-typedef struct tdstSubAnim_ tdstSubAnim_;
-typedef struct tdst3dData_ tdst3dData_;
-typedef struct DNM_stReport DNM_stReport;
-typedef struct tdstGetSetParam_ tdstGetSetParam_;
-typedef struct tdstComport_ tdstComport_;
-typedef struct tdstGraphChainedListNode_ tdstGraphChainedListNode_;
-typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
-typedef struct tdstBrain_ tdstBrain_;
-typedef struct _atexit _atexit;
-typedef struct GEO_tdstColor_ GEO_tdstColor_;
-typedef struct _RollOffParam _RollOffParam;
-typedef struct tdstCineinfo_ tdstCineinfo_;
-typedef struct tdstAChannel_ tdstAChannel_;
-typedef union GEO_tduVSObject_ GEO_tduVSObject_;
-typedef struct stTfmtStatus_ stTfmtStatus_;
-typedef struct AI_tdstMind_ AI_tdstMind_;
-typedef struct tdstState_ tdstState_;
-typedef struct DNM_stObstacle DNM_stObstacle;
-typedef struct tdstActionParam_ tdstActionParam_;
-typedef struct DNM_stDynamics DNM_stDynamics;
-typedef struct __sbuf __sbuf;
-typedef struct tdstMSSound_ tdstMSSound_;
-typedef struct CINE_Manager_ CINE_Manager_;
-typedef struct anon_0 anon_0;
-typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
-typedef struct tdstCouple_ tdstCouple_;
-typedef struct SECT_tdstListOfDNMLights_ SECT_tdstListOfDNMLights_;
-typedef union _SND_tduRefEvt _SND_tduRefEvt;
-typedef union anon_1 anon_1;
-typedef struct CINE_tdstCine_ CINE_tdstCine_;
-typedef struct tdstMacro_ tdstMacro_;
-typedef struct tdstDsgMem_ tdstDsgMem_;
-typedef struct SECT_tdstSector_ SECT_tdstSector_;
-typedef struct MTH_stRotation MTH_stRotation;
-typedef struct tdstScriptAI_ tdstScriptAI_;
-typedef struct anon_2 anon_2;
-typedef struct _reent _reent;
-typedef struct tdstActionTable_ tdstActionTable_;
-typedef struct _stTimerCount _stTimerCount;
-typedef struct __sFILE __sFILE;
-typedef struct tdstDsgVar_ tdstDsgVar_;
-typedef struct stMorphData stMorphData;
-typedef struct tdstElement3d_ tdstElement3d_;
-typedef struct tdstEngineTimerStructure_ tdstEngineTimerStructure_;
-typedef struct SCT_tdstListOfSoundEvent_ SCT_tdstListOfSoundEvent_;
-typedef struct _Bigint _Bigint;
-typedef struct tdstEvent_ tdstEvent_;
-typedef struct MTH_stMove MTH_stMove;
-typedef struct tdstAnim3d_ tdstAnim3d_;
-typedef struct stMACDPID stMACDPID;
-typedef struct tdstFrame3d_ tdstFrame3d_;
-typedef union anon_3 anon_3;
-typedef struct anon_4 anon_4;
-typedef struct tdstProhibit_ tdstProhibit_;
-typedef struct tm tm;
-typedef struct RGBAComponent_ RGBAComponent_;
-typedef struct tdstList_ tdstList_;
-typedef struct anon_5 anon_5;
-typedef struct anon_6 anon_6;
-typedef struct tdstListOfMacro_ tdstListOfMacro_;
-typedef struct anon_7 anon_7;
-typedef union RGBAStruct_ RGBAStruct_;
-typedef struct fn_lAddColor fn_lAddColor;
-
-struct WP_tdstGraph_ {
-    /* aggregate */ int m_hListOfNode; /* +0x0 */
-};
-
-struct WP_tdstArc_ {
-    int hNextBrotherDyn; /* +0x0 */
-    int hPrevBrotherDyn; /* +0x4 */
-    int hFatherDyn; /* +0x8 */
-    int m_hNode; /* +0xc */
-    unsigned int m_ulCapability; /* +0x10 */
-    unsigned int m_ulCapabilityInit; /* +0x14 */
-    int m_lWeight; /* +0x18 */
-    int m_lWeightInit; /* +0x1c */
-};
-
-struct tdstSubAnim_ {
-    int p_stSubAnim; /* +0x0 */
-};
-
-struct tdst3dData_ {
-    int h_InitialState; /* +0x0 */
-    int h_CurrentState; /* +0x4 */
-    int h_FirstStateOfAction; /* +0x8 */
-    int h_InitialObjectsTable; /* +0xc */
-    int h_CurrentObjectsTable; /* +0x10 */
-    int h_Family; /* +0x14 */
-    /* aggregate */ int stGLIObjectMatrix; /* +0x20 */
-    int p_stGLIObjectAbsoluteMatrix; /* +0x80 */
-    float xCurrentFrame; /* +0x84 */
-    unsigned char ucRepeatAnimation; /* +0x88 */
-    unsigned char ucNextEvent; /* +0x89 */
-    int d_ucEventActivation; /* +0x8c */
-    int p_stCurrentHieCouples; /* +0x90 */
-    unsigned short wCurrentHieNbCouples; /* +0x94 */
-    unsigned short wSizeOfArrayOfElts3d; /* +0x96 */
-    int h_StateInLastFrame; /* +0x98 */
-    int h_WantedState; /* +0x9c */
-    float xForcedFrame; /* +0xa0 */
-    unsigned char ucFlagEndState; /* +0xa4 */
-    unsigned char ucFlagEndOfAnim; /* +0xa5 */
-    int hArrayOfChannels; /* +0xa8 */
-    unsigned int ulNumberOfChannels; /* +0xac */
-    int hFirstActiveChannel; /* +0xb0 */
-    tdstFrame3d_ stFrame3d; /* +0xb4 */
-    int hMorphChannelList; /* +0xd8 */
-    unsigned int ulStartTime; /* +0xdc */
-    unsigned int ulTimeDelay; /* +0xe0 */
-    unsigned int ulTimePreviousFrame; /* +0xe4 */
-    float xLastFrame; /* +0xe8 */
-    unsigned char bStateJustModified; /* +0xec */
-    unsigned char bSkipCurrentFrame; /* +0xed */
-    int p_stShadowVisualMaterial; /* +0xf0 */
-    int p_stShadowTexture; /* +0xf4 */
-    float xShadowScaleX; /* +0xf8 */
-    float xShadowScaleY; /* +0xfc */
-    short xShadowQuality; /* +0x100 */
-    unsigned short uwNbEngineFrameSinceLastMechEvent; /* +0x102 */
-    unsigned char ucFrameRate; /* +0x104 */
-    unsigned char ucFlagModifState; /* +0x105 */
-    int lDrawMaskInit; /* +0x108 */
-    int lDrawMask; /* +0x10c */
-    int lLastComputeFrame; /* +0x110 */
-    /* aggregate */ int stLastEventGlobalPosition; /* +0x120 */
-    unsigned char bAnimMatrixChanged; /* +0x180 */
-    unsigned char ucUserEventFlags; /* +0x181 */
-    unsigned char ucBrainComputationFrequency; /* +0x182 */
-    char cBrainCounter; /* +0x183 */
-    unsigned short uwBrainMainCounter; /* +0x184 */
-    unsigned char ucTransparency; /* +0x186 */
-    unsigned char bDiscreetSpeed; /* +0x187 */
-    /* aggregate */ int stLightDirForDynamicShadow; /* +0x188 */
-    unsigned char ucIsShadowClosed; /* +0x194 */
-    unsigned char ucShadowRecLevel; /* +0x195 */
-    unsigned char ucLightComputationFrequency; /* +0x196 */
-    char cLightCounter; /* +0x197 */
-    /* aggregate */ int stSHWDeformationVector; /* +0x198 */
-    float xSHWHeight; /* +0x1a4 */
-    float xDistNoInterpol; /* +0x1a8 */
-    float xDistNoMorphing; /* +0x1ac */
-    float xDistNoDEnv; /* +0x1b0 */
-    /* aggregate */ int hForSubAnimInUseArray; /* +0x1b4 */
-    int h_CurrentCineActor; /* +0x1c0 */
-    /*type_0x23*/ int hSkinMaterial; /* +0x1c4 */
-    unsigned int NbSkinMaterials; /* +0x1d4 */
-    short xSkinIndex[4]; /* +0x1d8 */
-};
-
-struct DNM_stReport {
-    unsigned int m_ulPrevSurfaceState; /* +0x0 */
-    unsigned int m_ulCurrSurfaceState; /* +0x4 */
-    DNM_stObstacle m_stObstacle; /* +0x8 */
-    DNM_stObstacle m_stGround; /* +0x30 */
-    DNM_stObstacle m_stWall; /* +0x58 */
-    DNM_stObstacle m_stCharacter; /* +0x80 */
-    DNM_stObstacle m_stWater; /* +0xa8 */
-    DNM_stObstacle m_stCeil; /* +0xd0 */
-    MTH_stMove m_stAbsolutePrevSpeed; /* +0xf8 */
-    MTH_stMove m_stAbsoluteCurrSpeed; /* +0x114 */
-    MTH_stMove m_stAbsolutePrevPosition; /* +0x130 */
-    MTH_stMove m_stAbsoluteCurrPosition; /* +0x14c */
-    char m_cBitField; /* +0x168 */
-};
-
-struct tdstGetSetParam_ {
-    anon_2 uDummy; /* +0x0 */
-    /* aggregate */ int eType; /* +0xc */
-};
-
-struct tdstComport_ {
-    int p_stRules; /* +0x0 */
-    int p_stSchedule; /* +0x4 */
-    unsigned char ucNbRules; /* +0x8 */
-};
-
-struct tdstGraphChainedListNode_ {
-    int GraphChainedListNodeInfo; /* +0x0 */
-    int p_NextGraphChainedListNode; /* +0x4 */
-};
-
-struct WP_tdstWayPoint_ {
-    /* aggregate */ int m_stVertex; /* +0x0 */
-    float m_xRadius; /* +0xc */
-    int m_hSuperObject; /* +0x10 */
-};
-
-struct tdstBrain_ {
-    int p_stMind; /* +0x0 */
-    int hLastCollidedGoThroughMaterial; /* +0x4 */
-    unsigned char bWarnMechanicsFlag; /* +0x8 */
-    unsigned char bActiveDuringTransition; /* +0x9 */
-};
-
-struct _atexit {
-    int _next; /* +0x0 */
-    int _ind; /* +0x4 */
-    /* aggregate */ int _fns; /* +0x8 */
-};
-
-struct GEO_tdstColor_ {
-    float xR; /* +0x0 */
-    float xG; /* +0x4 */
-    float xB; /* +0x8 */
-    float xA; /* +0xc */
-};
-
-struct _RollOffParam {
-    int rDistSatur; /* +0x0 */
-    int rDistBackGround; /* +0x4 */
-    unsigned char ucBackgroundVol; /* +0x8 */
-};
-
-struct tdstCineinfo_ {
-    int hInit; /* +0x0 */
-    int hCurrent; /* +0x4 */
-    int hVisibility; /* +0x8 */
-    int hWork; /* +0xc */
-    /* aggregate */ int stLastFailedOrigin; /* +0x10 */
-    /* aggregate */ int stLastFailedWanted; /* +0x1c */
-    /* aggregate */ int stForceTarget; /* +0x28 */
-    /* aggregate */ int stForcePosition; /* +0x34 */
-    /* aggregate */ int stForceRefAxisY; /* +0x40 */
-    /* aggregate */ int stForceRefAxisZ; /* +0x4c */
-    float xApexRatio; /* +0x58 */
-    float xLastDeltaCut; /* +0x5c */
-    /* aggregate */ int eState; /* +0x60 */
-    float xCounter1; /* +0x64 */
-    float xCounter2; /* +0x68 */
-    float xCounter3; /* +0x6c */
-    float xCounter4; /* +0x70 */
-    unsigned char ucVolIAFlags; /* +0x74 */
-    unsigned char ucPerIAFlags; /* +0x75 */
-    char cLastCutAngleSens; /* +0x76 */
-    /* aggregate */ int AveragePosition; /* +0x78 */
-    /* aggregate */ int stSightAxisSystem; /* +0x158 */
-    unsigned char bCanDoBestPos; /* +0x17c */
-    /* array */ int a10_stTransparentSuperObjectForCamera[10]; /* +0x180 */
-    short xNumberOfTransparentSuperObjectForCamera; /* +0x248 */
-    float fTransparency; /* +0x24c */
-    float fTransparencySpeed; /* +0x250 */
-    unsigned char ucTransparencyFlag; /* +0x254 */
-    unsigned char bCameraIsMirrored; /* +0x255 */
-    unsigned char bLightComputation; /* +0x256 */
-};
-
-struct tdstAChannel_ {
-    int hSupObject; /* +0x0 */
-    int hZoomSupObject; /* +0x4 */
-    int p_stNextActiveChannel; /* +0x8 */
-    int p_stFatherChannel; /* +0xc */
-    int ax_InterpolatedPositions[2]; /* +0x10 */
-    unsigned char ucNbInterpolatedPositions; /* +0x88 */
-    unsigned char bControlledChannel; /* +0x89 */
-    unsigned char bLipsChannel; /* +0x8a */
-    unsigned char bActiveChannel; /* +0x8b */
-};
-
-union GEO_tduVSObject_ {
-    int p_stGeometricObject; /* +0x0 */
-    /*type_0x23*/ int p_stMorphObject; /* +0x0 */
-};
-
-struct stTfmtStatus_ {
-    float xScreenWidth; /* +0x0 */
-    float xBaseCharX; /* +0x4 */
-    float xBaseCharZ; /* +0x8 */
-    float xBaseToAddX; /* +0xc */
-    float xRandomPosRadius; /* +0x10 */
-    float xCharWidth; /* +0x14 */
-    float xLineHeight; /* +0x18 */
-    float xCharZoom; /* +0x1c */
-    float xCurCharZoom; /* +0x20 */
-    float xCurCharWidth; /* +0x24 */
-    int hSourceObjectTable; /* +0x28 */
-    char cJustificationMode; /* +0x2c */
-};
-
-struct AI_tdstMind_ {
-    int p_stAIModel; /* +0x0 */
-    int p_stIntelligence; /* +0x4 */
-    int p_stReflex; /* +0x8 */
-    int p_stDsgMem; /* +0xc */
-    unsigned char bDoingIntel; /* +0x10 */
-};
-
-struct tdstState_ {
-    int p_stAnim; /* +0x0 */
-    /* aggregate */ int hForTransitionArray; /* +0x4 */
-    /* aggregate */ int hForProhibitArray; /* +0xc */
-    int h_NextState; /* +0x14 */
-    int h_LinkedMechanicsIdCard; /* +0x18 */
-    int szLevelList; /* +0x1c */
-    int szAnimationSectionName; /* +0x20 */
-    unsigned char ucRepeatAnimation; /* +0x24 */
-    signed char scSpeedAnim; /* +0x25 */
-    unsigned char ucTransitionStatusFlag; /* +0x26 */
-    unsigned char ucCustomBits; /* +0x27 */
-};
-
-struct DNM_stObstacle {
-    float m_xRate; /* +0x0 */
-    /* aggregate */ int m_stNorm; /* +0x4 */
-    /* aggregate */ int m_stContact; /* +0x10 */
-    int hMyMaterial; /* +0x1c */
-    int hCollidedMaterial; /* +0x20 */
-    int mp_stSupObj; /* +0x24 */
-};
-
-struct tdstActionParam_ {
-    /* array */ int a_uParam[8]; /* +0x0 */
-};
-
-struct DNM_stDynamics {
-    /* aggregate */ int m_tdstDynamicsBaseBlock; /* +0x0 */
-    /* aggregate */ int m_tdstDynamicsAdvancedBlock; /* +0x170 */
-    /* aggregate */ int m_tdstDynamicsComplexBlock; /* +0x200 */
-};
-
-struct __sbuf {
-    int _base; /* +0x0 */
-    int _size; /* +0x4 */
-};
-
-struct tdstMSSound_ {
-    _RollOffParam stRollOff; /* +0x0 */
-    int hMechaCharacter; /* +0xc */
-};
-
-struct CINE_Manager_ {
-    /* aggregate */ int hCineList; /* +0x0 */
-    /* aggregate */ int gp_stFixedCameraMatrix; /* +0x10 */
-    int gp_stSPOHandleCamera; /* +0x70 */
-};
-
-struct anon_0 {
-    int iMagicPoints4Ray; /* +0x0 */
-    int iMagicPointsMax4Ray; /* +0x4 */
-    float xAirPoints4Ray; /* +0x8 */
-    float xAirPointsMax4Ray; /* +0xc */
-};
-
-struct GEO_tdstEdge_ {
-    short xPoints[2]; /* +0x0 */
-    /* array */ int st_VectorPoints[2]; /* +0x4 */
-};
-
-struct tdstCouple_ {
-    unsigned short wChild; /* +0x0 */
-    unsigned short wFather; /* +0x2 */
-};
-
-struct SECT_tdstListOfDNMLights_ {
-    int hDNMLights; /* +0x0 */
-    int hNextBrotherDyn; /* +0x4 */
-    int hPrevBrotherDyn; /* +0x8 */
-    int hFatherDyn; /* +0xc */
-};
-
-union _SND_tduRefEvt {
-    unsigned int Id; /* +0x0 */
-    int pstPtr; /* +0x0 */
-};
-
-union anon_1 {
-    /* aggregate */ int uId; /* +0x0 */
-    /* aggregate */ int uParam; /* +0x0 */
-};
-
-struct CINE_tdstCine_ {
-    /* aggregate */ int hActorList; /* +0x0 */
-    int hNextBrotherDyn; /* +0xc */
-    int hPrevBrotherDyn; /* +0x10 */
-    int hFatherDyn; /* +0x14 */
-    unsigned char bPlaying; /* +0x18 */
-    int lGenerateEvent; /* +0x1c */
-    char szName[255]; /* +0x20 */
-};
-
-struct tdstMacro_ {
-    int p_stInitTree; /* +0x0 */
-    int p_stCurrentTree; /* +0x4 */
-};
-
-struct tdstDsgMem_ {
-    int p_p_stDsgVar; /* +0x0 */
-    int p_cDsgMemBufferInit; /* +0x4 */
-    int p_cDsgMemBuffer; /* +0x8 */
-};
-
-struct SECT_tdstSector_ {
-    /* aggregate */ int stListOfCharacters; /* +0x0 */
-    /* aggregate */ int stListOfStaticLights; /* +0xc */
-    /* aggregate */ int stListOfDNMLights; /* +0x14 */
-    /* aggregate */ int stListOfSectorsInGraphicInteraction; /* +0x20 */
-    /* aggregate */ int stListOfSectorsInCollisionInteraction; /* +0x28 */
-    /* aggregate */ int stListOfSectorsInActivityInteraction; /* +0x30 */
-    /* aggregate */ int stListOfSectorsInSoundInteraction; /* +0x38 */
-    /* aggregate */ int stListOfSoundEvent; /* +0x40 */
-    /* array */ int stMinMaxPoints[2]; /* +0x48 */
-    float xZFar; /* +0x60 */
-    unsigned char xVirtual; /* +0x64 */
-    char cCameraType; /* +0x65 */
-    char cCounter; /* +0x66 */
-    char cPriority; /* +0x67 */
-    int pSkyVisualMaterial; /* +0x68 */
-    unsigned char FogIntensity; /* +0x6c */
-    int h_PreviousSectorInList; /* +0x70 */
-    int h_NextSectorInList; /* +0x74 */
-    int lModifierMulIntensity; /* +0x78 */
-    int lModifierAddIntensity; /* +0x7c */
-    unsigned int glOpaqueDisplayList; /* +0x80 */
-    unsigned int glTransparentDisplayList; /* +0x84 */
-    char cCurrentActivity; /* +0x88 */
-    char cWantedActivity; /* +0x89 */
-    unsigned char ucInList; /* +0x8a */
-    int xTransition; /* +0x8c */
-    _SND_tduRefEvt hTransitionSoundEvent; /* +0x90 */
-};
-
-struct MTH_stRotation {
-    float m_xAngle; /* +0x0 */
-    /* aggregate */ int m_stAxis; /* +0x4 */
-};
-
-struct tdstScriptAI_ {
-    int p_stComport; /* +0x0 */
-    unsigned int ulNbComport; /* +0x4 */
-    unsigned int ulNoComportInitDefault; /* +0x8 */
-    unsigned char ucActionTableNbEntry; /* +0xc */
-};
-
-struct anon_2 {
-    /* aggregate */ int uParam; /* +0x0 */
-};
-
-struct _reent {
-    int _errno; /* +0x0 */
-    int _stdin; /* +0x4 */
-    int _stdout; /* +0x8 */
-    int _stderr; /* +0xc */
-    int _inc; /* +0x10 */
-    char _emergency[25]; /* +0x14 */
-    int _current_category; /* +0x30 */
-    int _current_locale; /* +0x34 */
-    int __sdidinit; /* +0x38 */
-    int __cleanup; /* +0x3c */
-    int _result; /* +0x40 */
-    int _result_k; /* +0x44 */
-    int _p5s; /* +0x48 */
-    int _freelist; /* +0x4c */
-    int _cvtlen; /* +0x50 */
-    int _cvtbuf; /* +0x54 */
-    anon_3 _new; /* +0x58 */
-    int _atexit; /* +0x148 */
-    _atexit _atexit0; /* +0x14c */
-    int _sig_func; /* +0x1d4 */
-    /* aggregate */ int __sglue; /* +0x1d8 */
-    __sFILE __sf[3]; /* +0x1e4 */
-};
-
-struct tdstActionTable_ {
-    int p_stEntry; /* +0x0 */
-    unsigned char ucNbEntries; /* +0x4 */
-    unsigned char ucNbEntriesUsed; /* +0x5 */
-    unsigned char ucCurrentEntry; /* +0x6 */
-};
-
-struct _stTimerCount {
-    unsigned long m_ulLowPart; /* +0x0 */
-    unsigned long m_ulHighPart; /* +0x8 */
-};
-
-struct __sFILE {
-    int _p; /* +0x0 */
-    int _r; /* +0x4 */
-    int _w; /* +0x8 */
-    short _flags; /* +0xc */
-    short _file; /* +0xe */
-    __sbuf _bf; /* +0x10 */
-    int _lbfsize; /* +0x18 */
-    int _cookie; /* +0x1c */
-    int _read; /* +0x20 */
-    int _write; /* +0x24 */
-    int _seek; /* +0x28 */
-    int _close; /* +0x2c */
-    __sbuf _ub; /* +0x30 */
-    int _up; /* +0x38 */
-    int _ur; /* +0x3c */
-    unsigned char _ubuf[3]; /* +0x40 */
-    unsigned char _nbuf[1]; /* +0x43 */
-    __sbuf _lb; /* +0x44 */
-    int _blksize; /* +0x4c */
-    int _offset; /* +0x50 */
-    int _data; /* +0x54 */
-};
-
-struct tdstDsgVar_ {
-    int p_cDsgMemDefaultInit; /* +0x0 */
-    int p_stDsgVarInfo; /* +0x4 */
-    unsigned int ulSize; /* +0x8 */
-    unsigned char ucNbDsgVar; /* +0xc */
-};
-
-struct stMorphData {
-    unsigned short uwChannelNumber; /* +0x0 */
-    unsigned short uwFrameNumber; /* +0x2 */
-    unsigned char ucNbTarget; /* +0x4 */
-    unsigned char ucAlign[3]; /* +0x5 */
-    short a_xIndexTargetMT[10]; /* +0x8 */
-    unsigned char a_ucMorphingAmountMT[10]; /* +0x1c */
-};
-
-struct tdstElement3d_ {
-    unsigned short wElement : 15; /* bit 0, byte +0x0 */
-    unsigned short bf1ActiveStatus : 1; /* bit 15, byte +0x0 */
-    unsigned char ucChannelNumber; /* +0x2 */
-    unsigned char eTypeOfElement; /* +0x3 */
-    unsigned char ucTransparency; /* +0x4 */
-    unsigned char ucAnimLevel; /* +0x5 */
-};
-
-struct tdstEngineTimerStructure_ {
-    unsigned int ulTrameNumber; /* +0x0 */
-    short sTimerHandle; /* +0x4 */
-    unsigned int ulCurrentTimerCount; /* +0x8 */
-    unsigned int ulDeltaTimerCount; /* +0xc */
-    unsigned int a_ulCounter[16]; /* +0x10 */
-    unsigned int ulUsefulDeltaTime; /* +0x50 */
-    unsigned int ulPauseTime; /* +0x54 */
-    float xFrameLength; /* +0x58 */
-    _stTimerCount stRealTimeCount; /* +0x60 */
-    _stTimerCount stPauseTime; /* +0x70 */
-    unsigned int ulTickPerMS; /* +0x80 */
-};
-
-struct SCT_tdstListOfSoundEvent_ {
-    int hPointerOfSectorSO; /* +0x0 */
-    _SND_tduRefEvt uSoundEvent; /* +0x4 */
-};
-
-struct _Bigint {
-    int _next; /* +0x0 */
-    int _k; /* +0x4 */
-    int _maxwds; /* +0x8 */
-    int _sign; /* +0xc */
-    int _wds; /* +0x10 */
-    unsigned int _x[1]; /* +0x14 */
-};
-
-struct tdstEvent_ {
-    int p_stfEventInTBL; /* +0x0 */
-    unsigned short usEventNumberInTBL; /* +0x4 */
-    unsigned short uwFrameNumber; /* +0x6 */
-    unsigned short uwChannelNumber; /* +0x8 */
-    unsigned short uwIsLocalized; /* +0xa */
-};
-
-struct MTH_stMove {
-    /* aggregate */ int m_stLinear; /* +0x0 */
-    MTH_stRotation m_stAngular; /* +0xc */
-};
-
-struct tdstAnim3d_ {
-    unsigned short uwNumberOfFrames; /* +0x0 */
-    unsigned char ucFrameRate; /* +0x2 */
-    unsigned char ucMaxNumberOfElements; /* +0x3 */
-    int d_stAnimEvent; /* +0x4 */
-    int d_stMorphDataArray; /* +0x8 */
-    unsigned short uwNumOfA3dGENERAL; /* +0xc */
-    unsigned char ucNumberOfEvents; /* +0xe */
-    unsigned char ucFlagMergeAnim; /* +0xf */
-};
-
-struct stMACDPID {
-    float m_xData0; /* +0x0 */
-    /* aggregate */ int m_stData1; /* +0x4 */
-    /* aggregate */ int m_stData2; /* +0x10 */
-    /* aggregate */ int m_stData3; /* +0x1c */
-    float m_xData3; /* +0x28 */
-    float m_xData4; /* +0x2c */
-    float m_xData5; /* +0x30 */
-    /*type_0x23*/ int m_stData6; /* +0x34 */
-    /*type_0x23*/ int m_stData7; /* +0x44 */
-    char m_cData8; /* +0x54 */
-    unsigned short m_uwData9; /* +0x56 */
-    /* aggregate */ int m_stData10; /* +0x58 */
-    float m_xData11; /* +0x64 */
-    /* aggregate */ int m_stData12; /* +0x68 */
-    float m_xData13; /* +0x74 */
-    unsigned char m_bData14; /* +0x78 */
-};
-
-struct tdstFrame3d_ {
-    int p_stArrayOfElts3d; /* +0x0 */
-    int p_stAngularSpeedMatrix; /* +0x4 */
-    int p_stLinearSpeedVector; /* +0x8 */
-    /* aggregate */ int stHierarchy; /* +0xc */
-    /* aggregate */ int stDeformation; /* +0x14 */
-    int p_stAnim; /* +0x1c */
-    unsigned short uwFrameNumber; /* +0x20 */
-    unsigned char ucMatrixUpdated; /* +0x22 */
-    unsigned char ucCacheEntry; /* +0x23 */
-};
-
-union anon_3 {
-    /*type_0x23*/ int _reent; /* +0x0 */
-    /*type_0x23*/ int _unused; /* +0x0 */
-};
-
-struct anon_4 {
-    unsigned int _unused_rand; /* +0x0 */
-    int _strtok_last; /* +0x4 */
-    /*type_0x23*/ int _asctime_buf; /* +0x8 */
-    /*type_0x23*/ int _localtime_buf; /* +0x24 */
-    int _gamma_signgam; /* +0x48 */
-    int _rand_next; /* +0x50 */
-};
-
-struct tdstProhibit_ {
-    int h_ProhibitedState; /* +0x0 */
-};
-
-struct tm {
-    int tm_sec; /* +0x0 */
-    int tm_min; /* +0x4 */
-    int tm_hour; /* +0x8 */
-    int tm_mday; /* +0xc */
-    int tm_mon; /* +0x10 */
-    int tm_year; /* +0x14 */
-    int tm_wday; /* +0x18 */
-    int tm_yday; /* +0x1c */
-    int tm_isdst; /* +0x20 */
-};
-
-struct RGBAComponent_ {
-    unsigned char Red; /* +0x0 */
-    unsigned char Green; /* +0x1 */
-    unsigned char Blue; /* +0x2 */
-    unsigned char Alpha; /* +0x3 */
-};
-
-struct tdstList_ {
-    unsigned char ucNbElt; /* +0x0 */
-    unsigned char ucMaxSize; /* +0x1 */
-    int p_hTabElt; /* +0x4 */
-};
-
-struct anon_5 {
-    float m_xAngle; /* +0x0 */
-    /* aggregate */ int m_stAxis; /* +0x4 */
-};
-
-struct anon_6 {
-    float m_xAngle; /* +0x0 */
-    /* aggregate */ int m_stAxis; /* +0x4 */
-};
-
-struct tdstListOfMacro_ {
-    int p_stMacro; /* +0x0 */
-    unsigned char ucNbMacro; /* +0x4 */
-};
-
-struct anon_7 {
-    /* aggregate */ int _nextf; /* +0x0 */
-    unsigned int _nmalloc[30]; /* +0x78 */
-};
-
-union RGBAStruct_ {
-    int Color; /* +0x0 */
-    /*type_0x23*/ int Component; /* +0x0 */
-};
-
-struct fn_lAddColor {
-    /*type_0x55*/ int c3; /* +0x0 */
-};
-
-unsigned int g_ulMode;
-unsigned int g_ulCollideTimeCounter;
-unsigned int g_ulTypeMode;
-unsigned int g_ulOverRideRayTraceSpoMask;
-int g_bReInitAllDynamicActors;
-unsigned int g_MaxLinePerChapter;
-float g_DistanceActMin;
-float g_DistanceActMax;
-int COLANTIBUG_hHandleOfCharacter;
-char g_szDummyScore[6];
-char g_szDummyDate[12];
-/*type_0x23*/ int g_szDummy;
-int g_hCharacterMaskedForResearch;
-char g_CreditsPath[256];
-/*type_0x23*/ int g_CreditsVariables;
-int g_ppCreditsCurrentChapter;
-int g_hColMatHit;
-int g_hSuperObjectHit;
-/* aggregate */ int g_stCollideResultVector;
-/* aggregate */ int g_stCollideResultPoint;
-/* aggregate */ int g_stCollideParameterVector;
-/* aggregate */ int g_stCollideParameterPoint;
-int MENU_g_bInversionVert;
-int MENU_g_bInversionHor;
-int GLI_g_50_or_60_HzMode;
-/* aggregate */ int g_stEngineStructure;
-int gp_stInactiveDynamicWorld;
-int gp_stDynamicWorld;
-int g_iNewImpulseTribe;
-unsigned int g_xMask;
-int HIE_gs_lCurrentFrame;
-anon_0 stExtendDatas4Ray;
-/* array */ int g_stInfoTextAffiche[30];
-char TEXT_gc_ViewportFixed;
-/* aggregate */ int gp_SuperObjPersoGenerated;
-float TEXT_gaf_FloatParameters[10];
-int TEXT_gai_IntParameters[10];
-unsigned int g_ulSpoMask;
-int SECT_hFatherSector;
-
-/* addr: 0x002120c0  size: 8 bytes */
-unsigned char fn_ucSetFieldDefaultFunction(void)
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3961–4404 */
+/* addr: 0x00216fc0  size: 2348 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3961
+ *   +0x0004 -> line 3965
+ *   +0x0008 -> line 3961
+ *   +0x003c -> line 3962
+ *   +0x0040 -> line 3965
+ *   +0x0068 -> line 3980
+ *   +0x0080 -> line 3981
+ *   +0x0094 -> line 3983
+ *   +0x00ac -> line 3998
+ *   +0x00b0 -> line 4000
+ *   +0x00cc -> line 4012
+ *   +0x00d8 -> line 4014
+ *   +0x00f0 -> line 4017
+ *   +0x0118 -> line 4019
+ *   +0x0130 -> line 4020
+ *   +0x0134 -> line 4019
+ *   +0x0140 -> line 4023
+ *   +0x0160 -> line 4024
+ *   +0x0170 -> line 4025
+ *   +0x0188 -> line 4027
+ *   +0x0198 -> line 4028
+ *   +0x01b0 -> line 4041
+ *   +0x01c0 -> line 4043
+ *   +0x01c8 -> line 4059
+ *   +0x01cc -> line 4063
+ *   +0x01d0 -> line 4059
+ *   +0x01f8 -> line 4063
+ *   +0x0208 -> line 4064
+ *   +0x0214 -> line 4066
+ *   +0x0228 -> line 4067
+ *   +0x022c -> line 4066
+ *   +0x0238 -> line 4067
+ *   +0x0248 -> line 4071
+ *   +0x0254 -> line 4072
+ *   +0x0258 -> line 4071
+ *   +0x025c -> line 4072
+ *   +0x0260 -> line 4074
+ *   +0x0268 -> line 4088
+ *   +0x026c -> line 4103
+ *   +0x0278 -> line 4104
+ *   +0x02a8 -> line 4106
+ *   +0x02b8 -> line 4107
+ *   +0x02e4 -> line 4109
+ *   +0x02f4 -> line 4111
+ *   +0x0304 -> line 4119
+ *   +0x0310 -> line 4121
+ *   +0x0318 -> line 4122
+ *   +0x0348 -> line 4123
+ *   +0x0360 -> line 4128
+ *   +0x0370 -> line 4125
+ *   +0x0374 -> line 4128
+ *   +0x0380 -> line 4129
+ *   +0x039c -> line 4142
+ *   +0x03a4 -> line 4143
+ *   +0x03ac -> line 4145
+ *   +0x03b8 -> line 4148
+ *   +0x03c4 -> line 4151
+ *   +0x03f0 -> line 4154
+ *   +0x03f8 -> line 4157
+ *   +0x0410 -> line 4159
+ *   +0x0428 -> line 4161
+ *   +0x042c -> line 4164
+ *   +0x0438 -> line 4166
+ *   +0x0460 -> line 4170
+ *   +0x0474 -> line 4173
+ *   +0x0480 -> line 4175
+ *   +0x04a8 -> line 4177
+ *   +0x04b0 -> line 4181
+ *   +0x04b4 -> line 4179
+ *   +0x04b8 -> line 4181
+ *   +0x04bc -> line 4179
+ *   +0x04d0 -> line 4181
+ *   +0x04d8 -> line 4186
+ *   +0x04e0 -> line 4191
+ *   +0x04f4 -> line 4192
+ *   +0x0500 -> line 4194
+ *   +0x0504 -> line 4196
+ *   +0x0508 -> line 4197
+ *   +0x0530 -> line 4198
+ *   +0x0548 -> line 4217
+ *   +0x0558 -> line 4218
+ *   +0x055c -> line 4219
+ *   +0x056c -> line 4218
+ *   +0x0570 -> line 4219
+ *   +0x0578 -> line 4220
+ *   +0x057c -> line 4219
+ *   +0x0580 -> line 4220
+ *   +0x0590 -> line 4238
+ *   +0x05a8 -> line 4240
+ *   +0x05b0 -> line 4256
+ *   +0x05b4 -> line 4258
+ *   +0x05c0 -> line 4262
+ *   +0x0600 -> line 4266
+ *   +0x0604 -> line 4267
+ *   +0x0608 -> line 4270
+ *   +0x0648 -> line 4277
+ *   +0x0650 -> line 4279
+ *   +0x0670 -> line 4283
+ *   +0x067c -> line 4290
+ *   +0x0680 -> line 4291
+ *   +0x069c -> line 4292
+ *   +0x06a0 -> line 4291
+ *   +0x06a4 -> line 4293
+ *   +0x06b8 -> line 4295
+ *   +0x06bc -> line 4296
+ *   +0x06c0 -> line 4295
+ *   +0x06c4 -> line 4296
+ *   +0x06c8 -> line 4298
+ *   +0x06d0 -> line 4318
+ *   +0x06dc -> line 4319
+ *   +0x070c -> line 4321
+ *   +0x071c -> line 4322
+ *   +0x0748 -> line 4324
+ *   +0x0758 -> line 4325
+ *   +0x0784 -> line 4327
+ *   +0x0794 -> line 4329
+ *   +0x07a4 -> line 4337
+ *   +0x07a8 -> line 4338
+ *   +0x07b4 -> line 4341
+ *   +0x07bc -> line 4344
+ *   +0x07d8 -> line 4347
+ *   +0x07e8 -> line 4350
+ *   +0x0808 -> line 4354
+ *   +0x0810 -> line 4356
+ *   +0x0830 -> line 4359
+ *   +0x083c -> line 4366
+ *   +0x0840 -> line 4367
+ *   +0x085c -> line 4369
+ *   +0x0868 -> line 4373
+ *   +0x086c -> line 4376
+ *   +0x0874 -> line 4379
+ *   +0x0880 -> line 4387
+ *   +0x0888 -> line 4389
+ *   +0x08c4 -> line 4393
+ *   +0x08cc -> line 4395
+ *   +0x08e0 -> line 4397
+ *   +0x08e4 -> line 4398
+ *   +0x08e8 -> line 4397
+ *   +0x08ec -> line 4398
+ *   +0x08f4 -> line 4403
+ *   +0x08f8 -> line 4404
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_p_stCreditsManagementFunctions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /*type_0x36*/ int param0;
+    int begin;
+    char* hText;
+    unsigned int i;
+    unsigned int NbNames;
+    unsigned int ligne;
+    unsigned int lIndex;
+    unsigned int lLanguage;
+    unsigned int lPage;
+    tdstGetSetParam_ stParam;
+    long offset;
+    int r;
+    int i;
+    char buffer[101];
+    int end;
+    char* hText;
+    unsigned int begin;
+    unsigned int pages;
+    unsigned int caract;
+    unsigned int ligne;
+    unsigned int lLanguage;
+    unsigned int lChapter;
+    tdstGetSetParam_ stParam;
+    __sFILE* pCreditsFile;
+    unsigned int header;
+    unsigned int r;
+    unsigned int i;
+    char buffer[101];
+    __sFILE* pCreditsFile;
+    tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2893–2935 */
-/* addr: 0x00218750  size: 380 bytes */
-void fn_p_GetPriviligedActivationZdx(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, tdstCollSet_* hCollSet, /* function pointer */ int hPerso)
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3943–3943 */
+/* addr: 0x002178f0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3943
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_p_stGetXBoxRegion(tdstNodeInterpret_* p_stTree)
 {
-    /* aggregate */ int eFuncId;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3897–3912 */
+/* addr: 0x00217900  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3897
+ *   +0x0010 -> line 3902
+ *   +0x0018 -> line 3908
+ *   +0x001c -> line 3909
+ *   +0x0020 -> line 3908
+ *   +0x0028 -> line 3909
+ *   +0x002c -> line 3912
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stComputeNot(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdstGetSetParam_ stParam1;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3837–3894 */
+/* addr: 0x00217940  size: 252 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3837
+ *   +0x0020 -> line 3851
+ *   +0x0024 -> line 3837
+ *   +0x0028 -> line 3841
+ *   +0x002c -> line 3851
+ *   +0x0038 -> line 3855
+ *   +0x0044 -> line 3858
+ *   +0x004c -> line 3861
+ *   +0x005c -> line 3865
+ *   +0x0088 -> line 3869
+ *   +0x0090 -> line 3872
+ *   +0x0098 -> line 3875
+ *   +0x00a0 -> line 3877
+ *   +0x00b0 -> line 3878
+ *   +0x00b8 -> line 3881
+ *   +0x00c0 -> line 3884
+ *   +0x00c8 -> line 3886
+ *   +0x00cc -> line 3890
+ *   +0x00d0 -> line 3891
+ *   +0x00d8 -> line 3893
+ *   +0x00dc -> line 3894
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stComputeXor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned int ulParam2;
+    unsigned int ulParam1;
+    unsigned int ulValue;
+    tdeFuncId_ eFuncId;
+    tdstGetSetParam_ stParam2;
+    tdstGetSetParam_ stParam1;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3672–3701 */
+/* addr: 0x00217a40  size: 192 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3672
+ *   +0x0028 -> line 3676
+ *   +0x002c -> line 3672
+ *   +0x0030 -> line 3674
+ *   +0x0034 -> line 3681
+ *   +0x004c -> line 3683
+ *   +0x0058 -> line 3685
+ *   +0x0060 -> line 3687
+ *   +0x0070 -> line 3690
+ *   +0x007c -> line 3691
+ *   +0x0084 -> line 3693
+ *   +0x008c -> line 3698
+ *   +0x0098 -> line 3700
+ *   +0x009c -> line 3701
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetCurrentFrame(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned int ulValue;
+    tdst3dData_* h3dData;
+    tdeFuncId_ eFuncId;
+    HIE_tdstSuperObject_* hPerso;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3628–3663 */
+/* addr: 0x00217b00  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3628
+ *   +0x0028 -> line 3632
+ *   +0x002c -> line 3630
+ *   +0x0030 -> line 3637
+ *   +0x0048 -> line 3639
+ *   +0x0054 -> line 3641
+ *   +0x005c -> line 3643
+ *   +0x0080 -> line 3647
+ *   +0x0088 -> line 3650
+ *   +0x0090 -> line 3653
+ *   +0x0098 -> line 3655
+ *   +0x00a0 -> line 3660
+ *   +0x00ac -> line 3662
+ *   +0x00b0 -> line 3663
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetStdGameLimit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned int ulValue;
+    tdstStandardGame_* hStdGame;
+    tdeFuncId_ eFuncId;
+    HIE_tdstSuperObject_* hPerso;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3577–3616 */
+/* addr: 0x00217bd0  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3577
+ *   +0x0028 -> line 3581
+ *   +0x002c -> line 3579
+ *   +0x0030 -> line 3587
+ *   +0x0048 -> line 3589
+ *   +0x0054 -> line 3591
+ *   +0x005c -> line 3593
+ *   +0x0078 -> line 3596
+ *   +0x0080 -> line 3598
+ *   +0x0088 -> line 3600
+ *   +0x0090 -> line 3602
+ *   +0x0098 -> line 3604
+ *   +0x00a0 -> line 3613
+ *   +0x00ac -> line 3615
+ *   +0x00b0 -> line 3616
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetMSSoundValues(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    int xSndValue;
+    unsigned int ulValue;
+    tdstMSSound_* hMSSound;
+    tdeFuncId_ eFuncId;
+    HIE_tdstSuperObject_* hPerso;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3562–3565 */
+/* addr: 0x00217ca0  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3562
+ *   +0x000c -> line 3564
+ *   +0x0010 -> line 3565
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetVideoOptions(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3517–3525 */
+/* addr: 0x00217cc0  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3517
+ *   +0x0004 -> line 3522
+ *   +0x0008 -> line 3517
+ *   +0x000c -> line 3522
+ *   +0x0010 -> line 3517
+ *   +0x0014 -> line 3522
+ *   +0x001c -> line 3524
+ *   +0x0020 -> line 3525
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetBrightness(tdstNodeInterpret_* p_stTree)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3481–3507 */
+/* addr: 0x00217cf0  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3481
+ *   +0x0010 -> line 3486
+ *   +0x0018 -> line 3493
+ *   +0x001c -> line 3486
+ *   +0x0020 -> line 3493
+ *   +0x0028 -> line 3495
+ *   +0x0034 -> line 3506
+ *   +0x0038 -> line 3495
+ *   +0x0040 -> line 3505
+ *   +0x0048 -> line 3507
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetNameResolution(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    char szName[60];
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3465–3465 */
+/* addr: 0x00217d50  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3465
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stIsDisplayModeAvailable(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3451–3451 */
+/* addr: 0x00217d60  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3451
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stSaveCurrentResolution(tdstNodeInterpret_* p_stTree)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3421–3430 */
+/* addr: 0x00217d70  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3421
+ *   +0x0004 -> line 3426
+ *   +0x0008 -> line 3421
+ *   +0x000c -> line 3426
+ *   +0x0010 -> line 3421
+ *   +0x0014 -> line 3426
+ *   +0x001c -> line 3429
+ *   +0x0020 -> line 3430
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetCurrentResolution(tdstNodeInterpret_* p_stTree)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3402–3411 */
+/* addr: 0x00217da0  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3402
+ *   +0x0004 -> line 3407
+ *   +0x0008 -> line 3402
+ *   +0x000c -> line 3407
+ *   +0x0010 -> line 3402
+ *   +0x0014 -> line 3407
+ *   +0x001c -> line 3410
+ *   +0x0020 -> line 3411
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetNbAvailableResolution(tdstNodeInterpret_* p_stTree)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3362–3373 */
+/* addr: 0x00217dd0  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3362
+ *   +0x0014 -> line 3367
+ *   +0x0020 -> line 3368
+ *   +0x0028 -> line 3370
+ *   +0x003c -> line 3372
+ *   +0x0040 -> line 3373
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stTextToInt(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    char* pszString;
+    tdstGetSetParam_ stParam;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3346–3352 */
+/* addr: 0x00217e30  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3346
+ *   +0x0010 -> line 3348
+ *   +0x0018 -> line 3350
+ *   +0x0044 -> line 3352
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_p_stGetLanguageText(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdstGetSetParam_ stParam;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3336–3338 */
+/* addr: 0x00217e90  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3336
+ *   +0x000c -> line 3337
+ *   +0x0010 -> line 3336
+ *   +0x0014 -> line 3338
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_p_stGetNbLanguages(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3326–3328 */
+/* addr: 0x00217eb0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3326
+ *   +0x000c -> line 3327
+ *   +0x0010 -> line 3326
+ *   +0x0014 -> line 3328
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_p_stGetCurrentLanguageId(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3315–3317 */
+/* addr: 0x00217ed0  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3315
+ *   +0x0008 -> line 3316
+ *   +0x000c -> line 3317
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetDriversAvailable(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3289–3303 */
+/* addr: 0x00217ef0  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3289
+ *   +0x0014 -> line 3292
+ *   +0x001c -> line 3298
+ *   +0x0034 -> line 3302
+ *   +0x0038 -> line 3303
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetButtonName(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdstGetSetParam_ stParam;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3181–3282 */
+/* addr: 0x00217f40  size: 544 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3181
+ *   +0x0004 -> line 3195
+ *   +0x0008 -> line 3181
+ *   +0x0038 -> line 3195
+ *   +0x003c -> line 3182
+ *   +0x0040 -> line 3195
+ *   +0x0068 -> line 3208
+ *   +0x006c -> line 3195
+ *   +0x0074 -> line 3208
+ *   +0x0078 -> line 3195
+ *   +0x0084 -> line 3208
+ *   +0x0090 -> line 3221
+ *   +0x0094 -> line 3209
+ *   +0x0098 -> line 3223
+ *   +0x009c -> line 3213
+ *   +0x00a0 -> line 3221
+ *   +0x00a8 -> line 3213
+ *   +0x00ac -> line 3223
+ *   +0x00c8 -> line 3227
+ *   +0x00e8 -> line 3231
+ *   +0x0100 -> line 3233
+ *   +0x0108 -> line 3244
+ *   +0x011c -> line 3255
+ *   +0x0120 -> line 3245
+ *   +0x0124 -> line 3256
+ *   +0x0128 -> line 3249
+ *   +0x0130 -> line 3256
+ *   +0x013c -> line 3258
+ *   +0x0160 -> line 3261
+ *   +0x0174 -> line 3262
+ *   +0x0180 -> line 3265
+ *   +0x0190 -> line 3267
+ *   +0x01a8 -> line 3268
+ *   +0x01b8 -> line 3270
+ *   +0x01c8 -> line 3271
+ *   +0x01d0 -> line 3272
+ *   +0x01d8 -> line 3277
+ *   +0x01e0 -> line 3278
+ *   +0x01e8 -> line 3281
+ *   +0x01f0 -> line 3282
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_GetBooleanInArray(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned int ulIndexBit;
+    unsigned int ulValue;
+    unsigned int ulIndexLong;
+    unsigned int ulNumberOfBits;
+    unsigned int ulIndexLastBit;
+    unsigned int ulIndexLastLong;
+    unsigned int ulLastIndex;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+    unsigned int ulIndexFirstBit;
+    unsigned int ulIndexFirstLong;
+    unsigned int ulFirstIndex;
+    unsigned char ucArrayId;
+    AI_tdstMind_* p_stMind;
+    tdeFuncId_ eFuncId;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3060–3177 */
+/* addr: 0x00218160  size: 920 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3060
+ *   +0x003c -> line 3081
+ *   +0x0058 -> line 3084
+ *   +0x0060 -> line 3087
+ *   +0x0064 -> line 3084
+ *   +0x006c -> line 3087
+ *   +0x0080 -> line 3088
+ *   +0x0090 -> line 3090
+ *   +0x0098 -> line 3088
+ *   +0x009c -> line 3090
+ *   +0x00a4 -> line 3091
+ *   +0x00b4 -> line 3093
+ *   +0x00bc -> line 3091
+ *   +0x00c0 -> line 3093
+ *   +0x00c8 -> line 3094
+ *   +0x00cc -> line 3093
+ *   +0x00d0 -> line 3094
+ *   +0x00ec -> line 3096
+ *   +0x0104 -> line 3098
+ *   +0x010c -> line 3099
+ *   +0x0110 -> line 3098
+ *   +0x0124 -> line 3099
+ *   +0x012c -> line 3103
+ *   +0x0130 -> line 3104
+ *   +0x0134 -> line 3103
+ *   +0x0138 -> line 3104
+ *   +0x0148 -> line 3105
+ *   +0x014c -> line 3108
+ *   +0x0160 -> line 3110
+ *   +0x0164 -> line 3109
+ *   +0x0168 -> line 3110
+ *   +0x016c -> line 3109
+ *   +0x0174 -> line 3110
+ *   +0x0190 -> line 3113
+ *   +0x019c -> line 3114
+ *   +0x01a4 -> line 3127
+ *   +0x01a8 -> line 3128
+ *   +0x01ac -> line 3127
+ *   +0x01c0 -> line 3128
+ *   +0x01c8 -> line 3130
+ *   +0x01d0 -> line 3131
+ *   +0x01d8 -> line 3133
+ *   +0x01e0 -> line 3134
+ *   +0x01e4 -> line 3133
+ *   +0x01f8 -> line 3134
+ *   +0x0200 -> line 3137
+ *   +0x0204 -> line 3138
+ *   +0x021c -> line 3140
+ *   +0x0224 -> line 3141
+ *   +0x0228 -> line 3140
+ *   +0x023c -> line 3141
+ *   +0x0244 -> line 3151
+ *   +0x0248 -> line 3148
+ *   +0x024c -> line 3145
+ *   +0x0250 -> line 3151
+ *   +0x0254 -> line 3148
+ *   +0x0258 -> line 3151
+ *   +0x0260 -> line 3145
+ *   +0x0268 -> line 3151
+ *   +0x026c -> line 3145
+ *   +0x0280 -> line 3149
+ *   +0x0284 -> line 3151
+ *   +0x028c -> line 3152
+ *   +0x029c -> line 3154
+ *   +0x02a4 -> line 3155
+ *   +0x02a8 -> line 3154
+ *   +0x02bc -> line 3155
+ *   +0x02c4 -> line 3158
+ *   +0x02c8 -> line 3164
+ *   +0x02d0 -> line 3158
+ *   +0x02d4 -> line 3161
+ *   +0x02dc -> line 3158
+ *   +0x02e0 -> line 3164
+ *   +0x02e4 -> line 3158
+ *   +0x02e8 -> line 3161
+ *   +0x02ec -> line 3158
+ *   +0x02f0 -> line 3161
+ *   +0x02f4 -> line 3164
+ *   +0x02f8 -> line 3161
+ *   +0x02fc -> line 3164
+ *   +0x0300 -> line 3166
+ *   +0x030c -> line 3169
+ *   +0x0328 -> line 3171
+ *   +0x033c -> line 3175
+ *   +0x0344 -> line 3176
+ *   +0x0348 -> line 3175
+ *   +0x0360 -> line 3177
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_p_ComputeJumpImpulsion(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdstDynam_* h_Dynam;
+    DNM_stDynamics* p_stDynamic;
+    float xb;
+    float xa;
+    float xt;
+    float xDelta;
+    float xG;
+    float xZmax;
+    MTH3D_tdstVector_ stNullVector;
+    MTH3D_tdstVector_ stImpulsion;
+    MTH3D_tdstVector_ stEndPosition;
+    MTH3D_tdstVector_ stStartPosition;
+    HIE_tdstSuperObject_* hPerso;
+    tdstGetSetParam_ stParam;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3000–3043 */
+/* addr: 0x00218500  size: 292 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3000
+ *   +0x0024 -> line 3004
+ *   +0x0028 -> line 3009
+ *   +0x0040 -> line 3011
+ *   +0x0054 -> line 3014
+ *   +0x007c -> line 3017
+ *   +0x0094 -> line 3018
+ *   +0x009c -> line 3021
+ *   +0x00b4 -> line 3022
+ *   +0x00bc -> line 3030
+ *   +0x00d0 -> line 3031
+ *   +0x00ec -> line 3033
+ *   +0x00f4 -> line 3037
+ *   +0x00fc -> line 3038
+ *   +0x0104 -> line 3042
+ *   +0x0108 -> line 3043
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_GetCustomValuesFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    MTH3D_tdstVector_ stTmpVec;
+    tdeFuncId_ eFuncId;
+    short xIndex;
+    tdstGetSetParam_ stParam;
+    HIE_tdstSuperObject_* hPerso;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2951–2995 */
+/* addr: 0x00218630  size: 280 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2951
+ *   +0x0020 -> line 2954
+ *   +0x0028 -> line 2959
+ *   +0x0040 -> line 2961
+ *   +0x0068 -> line 2964
+ *   +0x0074 -> line 2965
+ *   +0x008c -> line 2966
+ *   +0x0090 -> line 2967
+ *   +0x0098 -> line 2971
+ *   +0x00a8 -> line 2972
+ *   +0x00ac -> line 2973
+ *   +0x00b0 -> line 2974
+ *   +0x00b8 -> line 2980
+ *   +0x00c4 -> line 2982
+ *   +0x00dc -> line 2983
+ *   +0x00e0 -> line 2984
+ *   +0x00e8 -> line 2989
+ *   +0x00f0 -> line 2990
+ *   +0x00f8 -> line 2994
+ *   +0x00fc -> line 2995
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_GetComputationFrequency(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdeFuncId_ eFuncId;
+    unsigned char ucFrequency;
+    HIE_tdstSuperObject_* hPerso;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2888–2935 */
+/* addr: 0x00218750  size: 380 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2888
+ *   +0x0024 -> line 2893
+ *   +0x0028 -> line 2899
+ *   +0x0040 -> line 2901
+ *   +0x0044 -> line 2903
+ *   +0x004c -> line 2901
+ *   +0x0054 -> line 2903
+ *   +0x0060 -> line 2907
+ *   +0x0098 -> line 2910
+ *   +0x00b4 -> line 2911
+ *   +0x00bc -> line 2912
+ *   +0x00c4 -> line 2915
+ *   +0x00e0 -> line 2916
+ *   +0x00e8 -> line 2917
+ *   +0x00f0 -> line 2919
+ *   +0x010c -> line 2920
+ *   +0x0114 -> line 2921
+ *   +0x011c -> line 2923
+ *   +0x013c -> line 2924
+ *   +0x0144 -> line 2925
+ *   +0x014c -> line 2929
+ *   +0x0154 -> line 2930
+ *   +0x015c -> line 2934
+ *   +0x0160 -> line 2935
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_GetPriviligedActivationZdx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdstCollSet_* hCollSet;
+    tdeFuncId_ eFuncId;
     unsigned char ePrivilege;
     int lZoneNumber;
+    HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* line map: */
-    /*   line 2893 @ +0x000 */
-    /*   line 2901 @ +0x000 */
-    /*   line 2901 @ +0x000 */
-    /*   line 2907 @ +0x000 */
-    /*   line 2911 @ +0x000 */
-    /*   line 2915 @ +0x000 */
-    /*   line 2917 @ +0x000 */
-    /*   line 2920 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2753–2802 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2812–2869 */
+/* addr: 0x002188d0  size: 284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2812
+ *   +0x0024 -> line 2817
+ *   +0x0028 -> line 2822
+ *   +0x0040 -> line 2827
+ *   +0x004c -> line 2829
+ *   +0x0064 -> line 2842
+ *   +0x0070 -> line 2846
+ *   +0x0078 -> line 2848
+ *   +0x008c -> line 2852
+ *   +0x0094 -> line 2856
+ *   +0x0098 -> line 2855
+ *   +0x009c -> line 2856
+ *   +0x00b0 -> line 2859
+ *   +0x00e8 -> line 2860
+ *   +0x00f4 -> line 2867
+ *   +0x00fc -> line 2868
+ *   +0x0100 -> line 2869
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_GetHierarchyLink(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    tdeFuncId_ eFuncId;
+    HIE_tdstSuperObject_* hFather;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstDynam_* h_Dynam;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2744–2804 */
 /* addr: 0x002189f0  size: 280 bytes */
-void fn_p_GetCollidedSPO(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int p_CollidedSPO, /* function pointer */ int hNewSuperObjPerso, DNM_stReport* p_stDynamReport)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2744
+ *   +0x0024 -> line 2753
+ *   +0x0040 -> line 2757
+ *   +0x0048 -> line 2759
+ *   +0x0054 -> line 2772
+ *   +0x005c -> line 2774
+ *   +0x0064 -> line 2775
+ *   +0x006c -> line 2777
+ *   +0x0070 -> line 2778
+ *   +0x0098 -> line 2781
+ *   +0x00ac -> line 2785
+ *   +0x00b4 -> line 2787
+ *   +0x00c8 -> line 2791
+ *   +0x00d0 -> line 2793
+ *   +0x00e4 -> line 2795
+ *   +0x00ec -> line 2802
+ *   +0x00f4 -> line 2803
+ *   +0x00f8 -> line 2802
+ *   +0x00fc -> line 2804
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_GetCollidedSPO(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* aggregate */ int param0;
-    /* line map: */
-    /*   line 2753 @ +0x000 */
-    /*   line 2759 @ +0x000 */
-    /*   line 2774 @ +0x000 */
-    /*   line 2777 @ +0x000 */
-    /*   line 2781 @ +0x000 */
-    /*   line 2787 @ +0x000 */
-    /*   line 2793 @ +0x000 */
-    /*   line 2802 @ +0x000 */
+    tdeFuncId_ param0;
+    HIE_tdstSuperObject_* p_CollidedSPO;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    DNM_stReport* p_stDynamReport;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2556–2739 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2552–2740 */
 /* addr: 0x00218b10  size: 780 bytes */
-void fn_p_GetMechanicParameter(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int hNewSuperObjPerso, tdstDynam_* h_Dynam, DNM_stDynamics* pstDynamic)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2552
+ *   +0x0024 -> line 2556
+ *   +0x0028 -> line 2562
+ *   +0x0040 -> line 2567
+ *   +0x004c -> line 2568
+ *   +0x0064 -> line 2581
+ *   +0x006c -> line 2582
+ *   +0x0078 -> line 2585
+ *   +0x0080 -> line 2587
+ *   +0x00ac -> line 2592
+ *   +0x00b8 -> line 2594
+ *   +0x00c4 -> line 2601
+ *   +0x00d0 -> line 2603
+ *   +0x00dc -> line 2609
+ *   +0x00e8 -> line 2611
+ *   +0x00f4 -> line 2616
+ *   +0x010c -> line 2617
+ *   +0x0114 -> line 2619
+ *   +0x0120 -> line 2625
+ *   +0x012c -> line 2627
+ *   +0x0138 -> line 2633
+ *   +0x0144 -> line 2635
+ *   +0x0150 -> line 2641
+ *   +0x015c -> line 2643
+ *   +0x0168 -> line 2649
+ *   +0x0174 -> line 2651
+ *   +0x0180 -> line 2657
+ *   +0x018c -> line 2659
+ *   +0x0198 -> line 2665
+ *   +0x01a4 -> line 2667
+ *   +0x01b0 -> line 2673
+ *   +0x01bc -> line 2674
+ *   +0x01c0 -> line 2673
+ *   +0x01d4 -> line 2674
+ *   +0x01d8 -> line 2676
+ *   +0x01dc -> line 2674
+ *   +0x01f0 -> line 2676
+ *   +0x01f8 -> line 2682
+ *   +0x0204 -> line 2684
+ *   +0x0210 -> line 2690
+ *   +0x021c -> line 2691
+ *   +0x0220 -> line 2690
+ *   +0x0234 -> line 2691
+ *   +0x0238 -> line 2693
+ *   +0x023c -> line 2691
+ *   +0x0250 -> line 2693
+ *   +0x0258 -> line 2699
+ *   +0x0264 -> line 2701
+ *   +0x0270 -> line 2707
+ *   +0x027c -> line 2709
+ *   +0x0288 -> line 2715
+ *   +0x0294 -> line 2717
+ *   +0x02a0 -> line 2723
+ *   +0x02ac -> line 2725
+ *   +0x02b8 -> line 2730
+ *   +0x02d4 -> line 2731
+ *   +0x02e0 -> line 2738
+ *   +0x02ec -> line 2739
+ *   +0x02f0 -> line 2740
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_GetMechanicParameter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* aggregate */ int stStreamSpeed;
-    /* aggregate */ int stSpeedLimit;
+    MTH3D_tdstVector_ stStreamSpeed;
+    MTH3D_tdstVector_ stSpeedLimit;
     float xSlopeLimit;
-    /* aggregate */ int eFuncId;
-    /* line map: */
-    /*   line 2556 @ +0x000 */
-    /*   line 2567 @ +0x000 */
-    /*   line 2581 @ +0x000 */
-    /*   line 2585 @ +0x000 */
-    /*   line 2592 @ +0x000 */
-    /*   line 2601 @ +0x000 */
-    /*   line 2609 @ +0x000 */
-    /*   line 2616 @ +0x000 */
+    tdeFuncId_ eFuncId;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstDynam_* h_Dynam;
+    DNM_stDynamics* pstDynamic;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2372–2539 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2371–2541 */
 /* addr: 0x00218e20  size: 1452 bytes */
-void fn_p_stVectorAndAngle(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2371
+ *   +0x0034 -> line 2372
+ *   +0x0038 -> line 2386
+ *   +0x0040 -> line 2387
+ *   +0x0044 -> line 2386
+ *   +0x0048 -> line 2387
+ *   +0x0054 -> line 2389
+ *   +0x005c -> line 2387
+ *   +0x0064 -> line 2389
+ *   +0x006c -> line 2390
+ *   +0x0070 -> line 2389
+ *   +0x0074 -> line 2390
+ *   +0x0078 -> line 2394
+ *   +0x007c -> line 2390
+ *   +0x0084 -> line 2394
+ *   +0x0090 -> line 2390
+ *   +0x009c -> line 2394
+ *   +0x00e4 -> line 2396
+ *   +0x0148 -> line 2397
+ *   +0x0150 -> line 2399
+ *   +0x0154 -> line 2400
+ *   +0x01a8 -> line 2402
+ *   +0x0210 -> line 2403
+ *   +0x0218 -> line 2405
+ *   +0x021c -> line 2408
+ *   +0x0244 -> line 2411
+ *   +0x024c -> line 2414
+ *   +0x0254 -> line 2416
+ *   +0x0258 -> line 2417
+ *   +0x0260 -> line 2421
+ *   +0x026c -> line 2425
+ *   +0x0270 -> line 2421
+ *   +0x0274 -> line 2425
+ *   +0x0278 -> line 2422
+ *   +0x027c -> line 2425
+ *   +0x0298 -> line 2427
+ *   +0x02b4 -> line 2428
+ *   +0x02bc -> line 2429
+ *   +0x02d8 -> line 2430
+ *   +0x02dc -> line 2434
+ *   +0x02e4 -> line 2437
+ *   +0x030c -> line 2442
+ *   +0x0330 -> line 2445
+ *   +0x0338 -> line 2450
+ *   +0x0354 -> line 2453
+ *   +0x035c -> line 2458
+ *   +0x0380 -> line 2459
+ *   +0x0384 -> line 2462
+ *   +0x0398 -> line 2464
+ *   +0x03a0 -> line 2465
+ *   +0x03a8 -> line 2468
+ *   +0x03b0 -> line 2471
+ *   +0x03b4 -> line 2472
+ *   +0x03bc -> line 2476
+ *   +0x03e0 -> line 2478
+ *   +0x03fc -> line 2479
+ *   +0x0404 -> line 2480
+ *   +0x041c -> line 2481
+ *   +0x0420 -> line 2484
+ *   +0x0428 -> line 2485
+ *   +0x0430 -> line 2489
+ *   +0x0438 -> line 2492
+ *   +0x0440 -> line 2494
+ *   +0x0444 -> line 2495
+ *   +0x044c -> line 2499
+ *   +0x0458 -> line 2503
+ *   +0x045c -> line 2499
+ *   +0x0460 -> line 2503
+ *   +0x048c -> line 2504
+ *   +0x0498 -> line 2507
+ *   +0x049c -> line 2504
+ *   +0x04a8 -> line 2507
+ *   +0x04d0 -> line 2510
+ *   +0x04e8 -> line 2512
+ *   +0x04f0 -> line 2515
+ *   +0x0508 -> line 2517
+ *   +0x0510 -> line 2520
+ *   +0x0528 -> line 2521
+ *   +0x052c -> line 2528
+ *   +0x0548 -> line 2529
+ *   +0x0550 -> line 2530
+ *   +0x0568 -> line 2531
+ *   +0x056c -> line 2533
+ *   +0x0578 -> line 2539
+ *   +0x057c -> line 2541
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stVectorAndAngle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     float xNorm;
     float xNorm;
     float xAngle;
     float xCos;
     float xSin;
-    /* aggregate */ int stVectorV;
-    /* aggregate */ int stVectorU;
+    MTH3D_tdstVector_ stVectorV;
+    MTH3D_tdstVector_ stVectorU;
     unsigned char bASourceVectorIsNull;
     unsigned char ucPlan;
-    /* aggregate */ int eFuncId;
-    /* line map: */
-    /*   line 2372 @ +0x000 */
-    /*   line 2387 @ +0x000 */
-    /*   line 2387 @ +0x000 */
-    /*   line 2387 @ +0x000 */
-    /*   line 2390 @ +0x000 */
-    /*   line 2390 @ +0x000 */
-    /*   line 2390 @ +0x000 */
-    /*   line 2390 @ +0x000 */
+    tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2325–2354 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2310–2354 */
 /* addr: 0x002193d0  size: 356 bytes */
-void fn_p_stComputeRebondVector(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2310
+ *   +0x0014 -> line 2325
+ *   +0x001c -> line 2326
+ *   +0x0020 -> line 2325
+ *   +0x0024 -> line 2326
+ *   +0x0030 -> line 2328
+ *   +0x0038 -> line 2326
+ *   +0x0040 -> line 2328
+ *   +0x0048 -> line 2329
+ *   +0x0054 -> line 2332
+ *   +0x0058 -> line 2329
+ *   +0x005c -> line 2332
+ *   +0x0064 -> line 2329
+ *   +0x006c -> line 2332
+ *   +0x0074 -> line 2333
+ *   +0x0094 -> line 2336
+ *   +0x00c0 -> line 2338
+ *   +0x00c8 -> line 2336
+ *   +0x00cc -> line 2346
+ *   +0x00d0 -> line 2338
+ *   +0x00e8 -> line 2340
+ *   +0x0110 -> line 2342
+ *   +0x0134 -> line 2346
+ *   +0x0150 -> line 2354
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stComputeRebondVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* aggregate */ int stReactionVector;
+    MTH3D_tdstVector_ stReactionVector;
     float xReactionNorm;
-    /* aggregate */ int stInitVector;
-    /* aggregate */ int stNormalVector;
-    /* line map: */
-    /*   line 2325 @ +0x000 */
-    /*   line 2325 @ +0x000 */
-    /*   line 2328 @ +0x000 */
-    /*   line 2328 @ +0x000 */
-    /*   line 2332 @ +0x000 */
-    /*   line 2332 @ +0x000 */
-    /*   line 2332 @ +0x000 */
-    /*   line 2336 @ +0x000 */
+    MTH3D_tdstVector_ stInitVector;
+    MTH3D_tdstVector_ stNormalVector;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2250–2297 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2240–2300 */
 /* addr: 0x00219540  size: 876 bytes */
-void fn_p_stGetFirstCollisionInfo(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int p_stResultOwnerPerso, /* function pointer */ int p_stResultOwnerPerso, /* function pointer */ int p_stResultOwnerPerso, /* function pointer */ int p_stResultOwnerPerso, AI_tdstMind_* p_stMind)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2240
+ *   +0x0034 -> line 2250
+ *   +0x0040 -> line 2252
+ *   +0x0050 -> line 2255
+ *   +0x0058 -> line 2252
+ *   +0x0070 -> line 2255
+ *   +0x0078 -> line 2257
+ *   +0x0088 -> line 2260
+ *   +0x008c -> line 2257
+ *   +0x0094 -> line 2260
+ *   +0x009c -> line 2257
+ *   +0x00ac -> line 2260
+ *   +0x00b4 -> line 2264
+ *   +0x00b8 -> line 2260
+ *   +0x00bc -> line 2264
+ *   +0x00c4 -> line 2261
+ *   +0x00c8 -> line 2264
+ *   +0x00cc -> line 2268
+ *   +0x00d0 -> line 2269
+ *   +0x00d4 -> line 2264
+ *   +0x00d8 -> line 2266
+ *   +0x00dc -> line 2264
+ *   +0x00ec -> line 2268
+ *   +0x00f0 -> line 2266
+ *   +0x00f4 -> line 2267
+ *   +0x00f8 -> line 2265
+ *   +0x00fc -> line 2269
+ *   +0x0104 -> line 2270
+ *   +0x0120 -> line 2273
+ *   +0x0138 -> line 2274
+ *   +0x0148 -> line 2276
+ *   +0x014c -> line 2279
+ *   +0x0150 -> line 2281
+ *   +0x0154 -> line 2279
+ *   +0x0158 -> line 2281
+ *   +0x0180 -> line 2282
+ *   +0x0184 -> line 2281
+ *   +0x0188 -> line 2282
+ *   +0x018c -> line 2283
+ *   +0x0194 -> line 2281
+ *   +0x01a4 -> line 2282
+ *   +0x01a8 -> line 2283
+ *   +0x01b0 -> line 2285
+ *   +0x01dc -> line 2286
+ *   +0x01e8 -> line 2285
+ *   +0x01ec -> line 2287
+ *   +0x01f4 -> line 2285
+ *   +0x01f8 -> line 2286
+ *   +0x0200 -> line 2285
+ *   +0x0208 -> line 2286
+ *   +0x020c -> line 2285
+ *   +0x0210 -> line 2286
+ *   +0x0220 -> line 2287
+ *   +0x0228 -> line 2289
+ *   +0x0254 -> line 2290
+ *   +0x0260 -> line 2289
+ *   +0x0264 -> line 2291
+ *   +0x026c -> line 2289
+ *   +0x0270 -> line 2290
+ *   +0x0278 -> line 2289
+ *   +0x0280 -> line 2290
+ *   +0x0284 -> line 2289
+ *   +0x0288 -> line 2290
+ *   +0x0298 -> line 2291
+ *   +0x02a0 -> line 2293
+ *   +0x02cc -> line 2294
+ *   +0x02d0 -> line 2293
+ *   +0x02dc -> line 2294
+ *   +0x0310 -> line 2295
+ *   +0x0314 -> line 2294
+ *   +0x0318 -> line 2295
+ *   +0x0324 -> line 2297
+ *   +0x032c -> line 2299
+ *   +0x0330 -> line 2297
+ *   +0x033c -> line 2300
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_p_stGetFirstCollisionInfo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
     tdstGetSetParam_ stParam;
     unsigned char ucVarId;
+    AI_tdstMind_* p_stMind;
     unsigned int xTestedMask;
     unsigned int ulMode;
-    /* aggregate */ int stVectorSave;
-    /* line map: */
-    /*   line 2250 @ +0x000 */
-    /*   line 2255 @ +0x000 */
-    /*   line 2255 @ +0x000 */
-    /*   line 2260 @ +0x000 */
-    /*   line 2260 @ +0x000 */
-    /*   line 2260 @ +0x000 */
-    /*   line 2260 @ +0x000 */
-    /*   line 2261 @ +0x000 */
+    MTH3D_tdstVector_ stVectorSave;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2179–2235 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2171–2235 */
 /* addr: 0x002198b0  size: 632 bytes */
-void fn_p_stGetCollisionWithCollideMaterial(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2171
+ *   +0x002c -> line 2179
+ *   +0x0034 -> line 2181
+ *   +0x0084 -> line 2183
+ *   +0x008c -> line 2184
+ *   +0x0090 -> line 2183
+ *   +0x00ac -> line 2188
+ *   +0x00b8 -> line 2190
+ *   +0x0108 -> line 2192
+ *   +0x0110 -> line 2193
+ *   +0x0114 -> line 2192
+ *   +0x0130 -> line 2197
+ *   +0x0140 -> line 2202
+ *   +0x0150 -> line 2203
+ *   +0x0154 -> line 2207
+ *   +0x0164 -> line 2208
+ *   +0x0168 -> line 2211
+ *   +0x01a0 -> line 2216
+ *   +0x01ac -> line 2221
+ *   +0x01b0 -> line 2216
+ *   +0x01c4 -> line 2220
+ *   +0x01c8 -> line 2216
+ *   +0x01cc -> line 2218
+ *   +0x01d0 -> line 2216
+ *   +0x01e0 -> line 2220
+ *   +0x01e4 -> line 2218
+ *   +0x01e8 -> line 2217
+ *   +0x01ec -> line 2219
+ *   +0x01f0 -> line 2221
+ *   +0x01f8 -> line 2222
+ *   +0x0214 -> line 2223
+ *   +0x0218 -> line 2233
+ *   +0x021c -> line 2231
+ *   +0x0220 -> line 2233
+ *   +0x0224 -> line 2234
+ *   +0x0228 -> line 2231
+ *   +0x022c -> line 2233
+ *   +0x0250 -> line 2235
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_p_stGetCollisionWithCollideMaterial(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int bCompute;
     unsigned int xTestedMask;
     unsigned int ulMode;
-    /* aggregate */ int stVectorSave;
-    /* line map: */
-    /*   line 2179 @ +0x000 */
-    /*   line 2183 @ +0x000 */
-    /*   line 2183 @ +0x000 */
-    /*   line 2190 @ +0x000 */
-    /*   line 2193 @ +0x000 */
-    /*   line 2197 @ +0x000 */
-    /*   line 2203 @ +0x000 */
-    /*   line 2208 @ +0x000 */
+    MTH3D_tdstVector_ stVectorSave;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2083–2154 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2082–2154 */
 /* addr: 0x00219b30  size: 744 bytes */
-void fn_p_stGetCollision(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2082
+ *   +0x002c -> line 2083
+ *   +0x0030 -> line 2090
+ *   +0x0038 -> line 2092
+ *   +0x0088 -> line 2094
+ *   +0x0090 -> line 2095
+ *   +0x0094 -> line 2094
+ *   +0x00b0 -> line 2099
+ *   +0x00bc -> line 2101
+ *   +0x010c -> line 2103
+ *   +0x0114 -> line 2104
+ *   +0x0118 -> line 2103
+ *   +0x0134 -> line 2108
+ *   +0x0144 -> line 2109
+ *   +0x0148 -> line 2112
+ *   +0x0180 -> line 2117
+ *   +0x018c -> line 2122
+ *   +0x0190 -> line 2117
+ *   +0x01a4 -> line 2120
+ *   +0x01a8 -> line 2117
+ *   +0x01ac -> line 2118
+ *   +0x01b0 -> line 2117
+ *   +0x01c0 -> line 2120
+ *   +0x01c4 -> line 2118
+ *   +0x01c8 -> line 2119
+ *   +0x01cc -> line 2121
+ *   +0x01d0 -> line 2122
+ *   +0x01d8 -> line 2123
+ *   +0x01f4 -> line 2126
+ *   +0x021c -> line 2129
+ *   +0x0240 -> line 2130
+ *   +0x0248 -> line 2133
+ *   +0x026c -> line 2138
+ *   +0x0274 -> line 2142
+ *   +0x02b4 -> line 2151
+ *   +0x02b8 -> line 2153
+ *   +0x02bc -> line 2151
+ *   +0x02c0 -> line 2154
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_p_stGetCollision(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int bCompute;
     unsigned int ulMode;
-    /* aggregate */ int stVectorSave;
-    /* aggregate */ int eFuncId;
-    /* line map: */
-    /*   line 2083 @ +0x000 */
-    /*   line 2092 @ +0x000 */
-    /*   line 2095 @ +0x000 */
-    /*   line 2099 @ +0x000 */
-    /*   line 2103 @ +0x000 */
-    /*   line 2103 @ +0x000 */
-    /*   line 2109 @ +0x000 */
-    /*   line 2117 @ +0x000 */
+    MTH3D_tdstVector_ stVectorSave;
+    tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2036–2058 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2035–2059 */
 /* addr: 0x00219e20  size: 172 bytes */
-void fn_p_stGetLastCollisionActor(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int p_SuperObjCollidedActor, /* function pointer */ int p_SuperObjPersoTreated)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2035
+ *   +0x0004 -> line 2041
+ *   +0x0008 -> line 2035
+ *   +0x0018 -> line 2036
+ *   +0x001c -> line 2041
+ *   +0x0024 -> line 2044
+ *   +0x0030 -> line 2045
+ *   +0x003c -> line 2050
+ *   +0x0044 -> line 2053
+ *   +0x007c -> line 2055
+ *   +0x0088 -> line 2057
+ *   +0x0094 -> line 2058
+ *   +0x0098 -> line 2059
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetLastCollisionActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdstGetSetParam_ stParam;
-    /* aggregate */ int eFuncId;
-    /* line map: */
-    /*   line 2041 @ +0x000 */
-    /*   line 2036 @ +0x000 */
-    /*   line 2044 @ +0x000 */
-    /*   line 2050 @ +0x000 */
-    /*   line 2055 @ +0x000 */
-    /*   line 2058 @ +0x000 */
+    HIE_tdstSuperObject_* p_SuperObjCollidedActor;
+    HIE_tdstSuperObject_* p_SuperObjPersoTreated;
+    tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1703–2026 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1699–2026 */
 /* addr: 0x00219ed0  size: 1996 bytes */
-void fn_p_stGetCollidePoint(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int hCollideMat, /* function pointer */ int hCollideMat, /* function pointer */ int hCollideMat, DNM_stObstacle* p_stObstacle, DNM_stObstacle* p_stObstacle, /* function pointer */ int hNewSuperObjPerso, DNM_stObstacle* p_stObstacle, DNM_stReport* p_stDynamReport)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1699
+ *   +0x002c -> line 1703
+ *   +0x0030 -> line 1700
+ *   +0x0034 -> line 1709
+ *   +0x004c -> line 1713
+ *   +0x0058 -> line 1715
+ *   +0x0084 -> line 1721
+ *   +0x0094 -> line 1724
+ *   +0x009c -> line 1725
+ *   +0x00a8 -> line 1729
+ *   +0x00ac -> line 1730
+ *   +0x00bc -> line 1732
+ *   +0x00c0 -> line 1733
+ *   +0x0110 -> line 1735
+ *   +0x0120 -> line 1737
+ *   +0x0124 -> line 1738
+ *   +0x0174 -> line 1740
+ *   +0x0184 -> line 1742
+ *   +0x0188 -> line 1743
+ *   +0x01d8 -> line 1745
+ *   +0x01e8 -> line 1747
+ *   +0x01ec -> line 1748
+ *   +0x023c -> line 1750
+ *   +0x024c -> line 1753
+ *   +0x029c -> line 1755
+ *   +0x02a4 -> line 1757
+ *   +0x02a8 -> line 1758
+ *   +0x02f8 -> line 1761
+ *   +0x02fc -> line 1762
+ *   +0x0300 -> line 1761
+ *   +0x0308 -> line 1762
+ *   +0x0310 -> line 1768
+ *   +0x0320 -> line 1769
+ *   +0x0324 -> line 1771
+ *   +0x0334 -> line 1772
+ *   +0x0338 -> line 1774
+ *   +0x035c -> line 1778
+ *   +0x0364 -> line 1779
+ *   +0x0370 -> line 1784
+ *   +0x0378 -> line 1788
+ *   +0x0380 -> line 1792
+ *   +0x0388 -> line 1796
+ *   +0x0390 -> line 1800
+ *   +0x0398 -> line 1803
+ *   +0x039c -> line 1806
+ *   +0x03ec -> line 1808
+ *   +0x03f0 -> line 1806
+ *   +0x03f4 -> line 1808
+ *   +0x03fc -> line 1813
+ *   +0x0408 -> line 1815
+ *   +0x040c -> line 1813
+ *   +0x0414 -> line 1815
+ *   +0x041c -> line 1813
+ *   +0x0420 -> line 1815
+ *   +0x0428 -> line 1816
+ *   +0x042c -> line 1818
+ *   +0x043c -> line 1819
+ *   +0x0440 -> line 1821
+ *   +0x0464 -> line 1825
+ *   +0x046c -> line 1826
+ *   +0x0470 -> line 1825
+ *   +0x0484 -> line 1826
+ *   +0x048c -> line 1831
+ *   +0x0494 -> line 1835
+ *   +0x049c -> line 1839
+ *   +0x04a4 -> line 1843
+ *   +0x04ac -> line 1847
+ *   +0x04b4 -> line 1850
+ *   +0x04b8 -> line 1853
+ *   +0x04c0 -> line 1855
+ *   +0x04c4 -> line 1853
+ *   +0x04d8 -> line 1855
+ *   +0x04e0 -> line 1863
+ *   +0x04e4 -> line 1865
+ *   +0x04e8 -> line 1863
+ *   +0x04ec -> line 1865
+ *   +0x0500 -> line 1867
+ *   +0x0514 -> line 1868
+ *   +0x051c -> line 1871
+ *   +0x0528 -> line 1874
+ *   +0x0530 -> line 1880
+ *   +0x0538 -> line 1882
+ *   +0x053c -> line 1880
+ *   +0x0550 -> line 1882
+ *   +0x0558 -> line 1889
+ *   +0x0568 -> line 1891
+ *   +0x0590 -> line 1895
+ *   +0x0598 -> line 1896
+ *   +0x05a0 -> line 1901
+ *   +0x05a8 -> line 1905
+ *   +0x05b0 -> line 1909
+ *   +0x05b8 -> line 1913
+ *   +0x05c0 -> line 1917
+ *   +0x05c8 -> line 1920
+ *   +0x05cc -> line 1923
+ *   +0x05d8 -> line 1925
+ *   +0x05e0 -> line 1931
+ *   +0x05e4 -> line 1934
+ *   +0x05e8 -> line 1931
+ *   +0x05f4 -> line 1932
+ *   +0x05fc -> line 1934
+ *   +0x0604 -> line 1945
+ *   +0x060c -> line 1947
+ *   +0x061c -> line 1949
+ *   +0x0624 -> line 1950
+ *   +0x0628 -> line 1949
+ *   +0x063c -> line 1950
+ *   +0x0644 -> line 1955
+ *   +0x0650 -> line 1956
+ *   +0x0664 -> line 1958
+ *   +0x0698 -> line 1959
+ *   +0x06a0 -> line 1962
+ *   +0x06c0 -> line 1965
+ *   +0x06c8 -> line 1973
+ *   +0x06d8 -> line 1975
+ *   +0x06e0 -> line 1976
+ *   +0x06ec -> line 1981
+ *   +0x06f4 -> line 1982
+ *   +0x0704 -> line 1984
+ *   +0x0714 -> line 1985
+ *   +0x071c -> line 1988
+ *   +0x0728 -> line 1991
+ *   +0x0730 -> line 1999
+ *   +0x0740 -> line 2001
+ *   +0x0748 -> line 2002
+ *   +0x0754 -> line 2007
+ *   +0x075c -> line 2008
+ *   +0x076c -> line 2010
+ *   +0x0780 -> line 2011
+ *   +0x0788 -> line 2014
+ *   +0x0794 -> line 2017
+ *   +0x079c -> line 2024
+ *   +0x07a4 -> line 2025
+ *   +0x07a8 -> line 2026
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetCollidePoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* aggregate */ int stVec;
+    GMT_tdstCollideMaterial_* hCollideMat;
+    GMT_tdstCollideMaterial_* hCollideMat;
+    MTH3D_tdstVector_ stVec;
+    GMT_tdstCollideMaterial_* hCollideMat;
+    DNM_stObstacle* p_stObstacle;
+    DNM_stObstacle* p_stObstacle;
     int lWhichObstacle;
-    /* aggregate */ int stNullVector;
+    MTH3D_tdstVector_ stNullVector;
     int lWhichObstacle;
     unsigned int ulSurfState;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
     unsigned short xMask;
-    /* aggregate */ int eFuncId;
-    /* line map: */
-    /*   line 1703 @ +0x000 */
-    /*   line 1709 @ +0x000 */
-    /*   line 1715 @ +0x000 */
-    /*   line 1724 @ +0x000 */
-    /*   line 1729 @ +0x000 */
-    /*   line 1732 @ +0x000 */
-    /*   line 1735 @ +0x000 */
-    /*   line 1738 @ +0x000 */
+    DNM_stObstacle* p_stObstacle;
+    DNM_stReport* p_stDynamReport;
+    tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1509–1674 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1508–1674 */
 /* addr: 0x0021a6a0  size: 924 bytes */
-void fn_p_stNamesFunc(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int d_stLineResults)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1508
+ *   +0x0004 -> line 1511
+ *   +0x0008 -> line 1508
+ *   +0x0044 -> line 1509
+ *   +0x0048 -> line 1511
+ *   +0x0078 -> line 1518
+ *   +0x0080 -> line 1525
+ *   +0x0088 -> line 1535
+ *   +0x0094 -> line 1536
+ *   +0x009c -> line 1537
+ *   +0x00a4 -> line 1536
+ *   +0x00a8 -> line 1537
+ *   +0x00b0 -> line 1538
+ *   +0x00d0 -> line 1539
+ *   +0x00d4 -> line 1545
+ *   +0x00e0 -> line 1539
+ *   +0x00e4 -> line 1541
+ *   +0x00ec -> line 1543
+ *   +0x00f0 -> line 1545
+ *   +0x00f8 -> line 1546
+ *   +0x00fc -> line 1545
+ *   +0x0100 -> line 1546
+ *   +0x012c -> line 1555
+ *   +0x0130 -> line 1550
+ *   +0x0134 -> line 1555
+ *   +0x0138 -> line 1550
+ *   +0x013c -> line 1555
+ *   +0x0140 -> line 1550
+ *   +0x014c -> line 1555
+ *   +0x0150 -> line 1550
+ *   +0x0154 -> line 1555
+ *   +0x0158 -> line 1550
+ *   +0x0160 -> line 1555
+ *   +0x0170 -> line 1557
+ *   +0x0184 -> line 1559
+ *   +0x0188 -> line 1560
+ *   +0x018c -> line 1559
+ *   +0x0194 -> line 1560
+ *   +0x0198 -> line 1559
+ *   +0x01a0 -> line 1560
+ *   +0x01c0 -> line 1562
+ *   +0x01c8 -> line 1563
+ *   +0x01d0 -> line 1562
+ *   +0x01d8 -> line 1563
+ *   +0x01f8 -> line 1565
+ *   +0x0200 -> line 1566
+ *   +0x0208 -> line 1565
+ *   +0x0220 -> line 1566
+ *   +0x0240 -> line 1568
+ *   +0x0244 -> line 1566
+ *   +0x0248 -> line 1568
+ *   +0x0250 -> line 1570
+ *   +0x025c -> line 1572
+ *   +0x0268 -> line 1631
+ *   +0x027c -> line 1632
+ *   +0x0288 -> line 1641
+ *   +0x0294 -> line 1642
+ *   +0x029c -> line 1645
+ *   +0x02a4 -> line 1642
+ *   +0x02a8 -> line 1645
+ *   +0x02b0 -> line 1646
+ *   +0x02b4 -> line 1645
+ *   +0x02b8 -> line 1649
+ *   +0x02c4 -> line 1651
+ *   +0x02e8 -> line 1652
+ *   +0x0308 -> line 1653
+ *   +0x0318 -> line 1656
+ *   +0x033c -> line 1658
+ *   +0x0348 -> line 1659
+ *   +0x0350 -> line 1662
+ *   +0x035c -> line 1665
+ *   +0x0360 -> line 1674
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stNamesFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     char* pszString;
     short wIndexInString;
     short wCpt;
     char* pszString;
+    stTfmtLineResults_* d_stLineResults;
     stTfmtStatus_ stStatus;
     unsigned char ucCurrentLine;
     unsigned char ucMaxNbLines;
     unsigned char ucArrayPosVectorId;
     unsigned char ucArrayEndCharId;
     unsigned char ucArrayStartCharId;
-    /* aggregate */ int eFuncId;
-    /* line map: */
-    /*   line 1511 @ +0x000 */
-    /*   line 1509 @ +0x000 */
-    /*   line 1518 @ +0x000 */
-    /*   line 1535 @ +0x000 */
-    /*   line 1537 @ +0x000 */
-    /*   line 1537 @ +0x000 */
-    /*   line 1539 @ +0x000 */
-    /*   line 1539 @ +0x000 */
+    tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1333–1486 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1330–1488 */
 /* addr: 0x0021aa40  size: 916 bytes */
-void fn_p_st3DFunc(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, tdstDynam_* h_Dynam, DNM_stDynamics* p_stDynamic, /* function pointer */ int hNewSuperObjPerso)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1330
+ *   +0x0030 -> line 1333
+ *   +0x0034 -> line 1331
+ *   +0x0038 -> line 1341
+ *   +0x0050 -> line 1343
+ *   +0x0060 -> line 1345
+ *   +0x00c4 -> line 1350
+ *   +0x00cc -> line 1367
+ *   +0x00dc -> line 1368
+ *   +0x00e0 -> line 1367
+ *   +0x00e4 -> line 1370
+ *   +0x00f0 -> line 1372
+ *   +0x00f8 -> line 1373
+ *   +0x00fc -> line 1372
+ *   +0x0110 -> line 1373
+ *   +0x0120 -> line 1377
+ *   +0x015c -> line 1379
+ *   +0x0164 -> line 1386
+ *   +0x0168 -> line 1390
+ *   +0x0184 -> line 1394
+ *   +0x0190 -> line 1395
+ *   +0x0194 -> line 1406
+ *   +0x019c -> line 1409
+ *   +0x01a4 -> line 1410
+ *   +0x01ac -> line 1415
+ *   +0x01b8 -> line 1416
+ *   +0x01d8 -> line 1418
+ *   +0x0248 -> line 1427
+ *   +0x025c -> line 1429
+ *   +0x0284 -> line 1431
+ *   +0x0290 -> line 1432
+ *   +0x0298 -> line 1436
+ *   +0x02ac -> line 1438
+ *   +0x02b4 -> line 1443
+ *   +0x02bc -> line 1445
+ *   +0x02c4 -> line 1450
+ *   +0x02d4 -> line 1452
+ *   +0x02dc -> line 1456
+ *   +0x02e4 -> line 1458
+ *   +0x02ec -> line 1462
+ *   +0x02f4 -> line 1464
+ *   +0x0314 -> line 1466
+ *   +0x031c -> line 1473
+ *   +0x0328 -> line 1475
+ *   +0x0330 -> line 1480
+ *   +0x0348 -> line 1486
+ *   +0x0350 -> line 1487
+ *   +0x0354 -> line 1486
+ *   +0x036c -> line 1488
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_st3DFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* aggregate */ int stV2;
-    /* aggregate */ int stV1;
-    /* aggregate */ int stV2;
-    /* aggregate */ int stV1;
-    /* aggregate */ int stDstVector;
+    MTH3D_tdstVector_ stV2;
+    MTH3D_tdstVector_ stV1;
+    tdstDynam_* h_Dynam;
+    DNM_stDynamics* p_stDynamic;
+    MTH3D_tdstVector_ stV2;
+    MTH3D_tdstVector_ stV1;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    MTH3D_tdstVector_ stDstVector;
     int lGlobalAxis;
     unsigned char ucChannel;
-    /* aggregate */ int eFuncId;
-    /* line map: */
-    /*   line 1333 @ +0x000 */
-    /*   line 1341 @ +0x000 */
-    /*   line 1345 @ +0x000 */
-    /*   line 1367 @ +0x000 */
-    /*   line 1367 @ +0x000 */
-    /*   line 1372 @ +0x000 */
-    /*   line 1372 @ +0x000 */
-    /*   line 1377 @ +0x000 */
+    tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1303–1312 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1298–1313 */
 /* addr: 0x0021ade0  size: 144 bytes */
-void fn_p_stGetPersoSighting(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int hNewSuperObjPerso)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1298
+ *   +0x001c -> line 1303
+ *   +0x0038 -> line 1307
+ *   +0x0048 -> line 1308
+ *   +0x004c -> line 1311
+ *   +0x0050 -> line 1312
+ *   +0x0054 -> line 1308
+ *   +0x0074 -> line 1311
+ *   +0x0078 -> line 1313
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetPersoSighting(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* line map: */
-    /*   line 1303 @ +0x000 */
-    /*   line 1308 @ +0x000 */
-    /*   line 1312 @ +0x000 */
-    /*   line 1311 @ +0x000 */
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1232–1290 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1230–1290 */
 /* addr: 0x0021ae70  size: 516 bytes */
-void fn_p_stCollideCommunicationFunc(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int hNewSuperObjPerso, tdstCollSet_* _hCollSet)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1230
+ *   +0x002c -> line 1232
+ *   +0x0030 -> line 1231
+ *   +0x0034 -> line 1236
+ *   +0x004c -> line 1238
+ *   +0x0050 -> line 1240
+ *   +0x0054 -> line 1238
+ *   +0x0058 -> line 1240
+ *   +0x008c -> line 1243
+ *   +0x0094 -> line 1244
+ *   +0x00a8 -> line 1245
+ *   +0x00b8 -> line 1246
+ *   +0x00c0 -> line 1249
+ *   +0x00cc -> line 1250
+ *   +0x00d0 -> line 1253
+ *   +0x00d8 -> line 1254
+ *   +0x0134 -> line 1256
+ *   +0x013c -> line 1259
+ *   +0x0144 -> line 1265
+ *   +0x0150 -> line 1266
+ *   +0x0154 -> line 1269
+ *   +0x015c -> line 1270
+ *   +0x0188 -> line 1272
+ *   +0x0194 -> line 1273
+ *   +0x0198 -> line 1275
+ *   +0x01a0 -> line 1279
+ *   +0x01b0 -> line 1280
+ *   +0x01b4 -> line 1282
+ *   +0x01dc -> line 1289
+ *   +0x01e0 -> line 1290
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stCollideCommunicationFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstCollSet_* _hCollSet;
     short wIndex;
-    /* aggregate */ int eFuncId;
-    /* line map: */
-    /*   line 1232 @ +0x000 */
-    /*   line 1236 @ +0x000 */
-    /*   line 1240 @ +0x000 */
-    /*   line 1240 @ +0x000 */
-    /*   line 1244 @ +0x000 */
-    /*   line 1246 @ +0x000 */
-    /*   line 1250 @ +0x000 */
-    /*   line 1254 @ +0x000 */
+    tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1073–1217 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1072–1218 */
 /* addr: 0x0021b080  size: 1548 bytes */
-void fn_p_stGetNormalCollideVector(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int p_stResultOwnerPerso, AI_tdstMind_* p_stMind, /* function pointer */ int hNewSuperObjPerso, DNM_stObstacle* p_stObstacle, DNM_stReport* p_stDynamReport)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1072
+ *   +0x0034 -> line 1073
+ *   +0x0038 -> line 1082
+ *   +0x0050 -> line 1084
+ *   +0x0064 -> line 1087
+ *   +0x0070 -> line 1089
+ *   +0x00a4 -> line 1094
+ *   +0x00b0 -> line 1095
+ *   +0x00b4 -> line 1097
+ *   +0x00c4 -> line 1098
+ *   +0x00c8 -> line 1100
+ *   +0x00ec -> line 1104
+ *   +0x00f4 -> line 1105
+ *   +0x00f8 -> line 1104
+ *   +0x010c -> line 1105
+ *   +0x0114 -> line 1110
+ *   +0x011c -> line 1114
+ *   +0x0124 -> line 1118
+ *   +0x012c -> line 1122
+ *   +0x0134 -> line 1126
+ *   +0x013c -> line 1129
+ *   +0x0140 -> line 1132
+ *   +0x0148 -> line 1134
+ *   +0x014c -> line 1132
+ *   +0x0160 -> line 1134
+ *   +0x0168 -> line 1141
+ *   +0x016c -> line 1142
+ *   +0x017c -> line 1145
+ *   +0x01ac -> line 1147
+ *   +0x01b8 -> line 1150
+ *   +0x01e8 -> line 1152
+ *   +0x01f8 -> line 1155
+ *   +0x0228 -> line 1157
+ *   +0x0234 -> line 1160
+ *   +0x0264 -> line 1162
+ *   +0x0274 -> line 1165
+ *   +0x02a4 -> line 1167
+ *   +0x02ac -> line 1170
+ *   +0x02dc -> line 1172
+ *   +0x0320 -> line 1174
+ *   +0x0380 -> line 1179
+ *   +0x0398 -> line 1182
+ *   +0x03a0 -> line 1189
+ *   +0x03a4 -> line 1182
+ *   +0x03b0 -> line 1189
+ *   +0x03b8 -> line 1191
+ *   +0x03cc -> line 1194
+ *   +0x03f8 -> line 1196
+ *   +0x03fc -> line 1194
+ *   +0x0400 -> line 1196
+ *   +0x0414 -> line 1194
+ *   +0x0418 -> line 1196
+ *   +0x0420 -> line 1194
+ *   +0x042c -> line 1196
+ *   +0x0448 -> line 1197
+ *   +0x0458 -> line 1196
+ *   +0x045c -> line 1197
+ *   +0x04a0 -> line 1198
+ *   +0x04e4 -> line 1200
+ *   +0x04e8 -> line 1198
+ *   +0x04ec -> line 1200
+ *   +0x04f0 -> line 1198
+ *   +0x04f4 -> line 1200
+ *   +0x052c -> line 1202
+ *   +0x058c -> line 1205
+ *   +0x0590 -> line 1206
+ *   +0x0594 -> line 1205
+ *   +0x0598 -> line 1206
+ *   +0x059c -> line 1205
+ *   +0x05a0 -> line 1206
+ *   +0x05ac -> line 1208
+ *   +0x05b4 -> line 1210
+ *   +0x05b8 -> line 1208
+ *   +0x05cc -> line 1210
+ *   +0x05d4 -> line 1216
+ *   +0x05dc -> line 1217
+ *   +0x05e0 -> line 1218
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stGetNormalCollideVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     float xNorm;
-    /* aggregate */ int VectTmp;
-    /* aggregate */ int VectTmp;
+    MTH3D_tdstVector_ VectTmp;
+    MTH3D_tdstVector_ VectTmp;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
     tdstGetSetParam_ stParam;
+    AI_tdstMind_* p_stMind;
     unsigned char ucVarId;
     float xTmp;
-    /* aggregate */ int stVertical;
+    MTH3D_tdstVector_ stVertical;
     float xNorm;
     unsigned int ulSurfState;
     int lWhichObstacle;
-    /* aggregate */ int stNormalVector;
-    /* aggregate */ int eFuncId;
-    /* line map: */
-    /*   line 1073 @ +0x000 */
-    /*   line 1084 @ +0x000 */
-    /*   line 1089 @ +0x000 */
-    /*   line 1095 @ +0x000 */
-    /*   line 1098 @ +0x000 */
-    /*   line 1104 @ +0x000 */
-    /*   line 1104 @ +0x000 */
-    /*   line 1110 @ +0x000 */
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    DNM_stObstacle* p_stObstacle;
+    DNM_stReport* p_stDynamReport;
+    MTH3D_tdstVector_ stNormalVector;
+    tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1061–1061 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1041–1062 */
 /* addr: 0x0021b690  size: 72 bytes */
-void fn_p_stGetDTFunction(/* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1041
+ *   +0x003c -> line 1061
+ *   +0x0040 -> line 1062
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_p_stGetDTFunction(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* line map: */
-    /*   line 1061 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 980–1022 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 977–1023 */
 /* addr: 0x00220860  size: 196 bytes */
-void fn_p_stCode4VitesseHorizontaleDuPerso(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int hNewSuperObjPerso, DNM_stReport* p_stDynamReport)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 977
+ *   +0x0024 -> line 980
+ *   +0x0028 -> line 986
+ *   +0x0040 -> line 988
+ *   +0x0050 -> line 990
+ *   +0x0058 -> line 993
+ *   +0x0074 -> line 1000
+ *   +0x007c -> line 1001
+ *   +0x0088 -> line 1009
+ *   +0x0090 -> line 1010
+ *   +0x009c -> line 1019
+ *   +0x00a4 -> line 1022
+ *   +0x00a8 -> line 1023
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stCode4VitesseHorizontaleDuPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* aggregate */ int eFuncId;
-    /* line map: */
-    /*   line 980 @ +0x000 */
-    /*   line 988 @ +0x000 */
-    /*   line 993 @ +0x000 */
-    /*   line 1001 @ +0x000 */
-    /*   line 1010 @ +0x000 */
-    /*   line 1022 @ +0x000 */
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdeFuncId_ eFuncId;
+    DNM_stReport* p_stDynamReport;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 885–960 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 876–962 */
 /* addr: 0x00220930  size: 432 bytes */
-void fn_p_stCode4LitPositionZDx(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int hGeoObj, /* function pointer */ int hPerso)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 876
+ *   +0x0024 -> line 885
+ *   +0x0028 -> line 891
+ *   +0x0040 -> line 894
+ *   +0x0054 -> line 898
+ *   +0x007c -> line 902
+ *   +0x0090 -> line 903
+ *   +0x0098 -> line 907
+ *   +0x00ac -> line 908
+ *   +0x00b4 -> line 913
+ *   +0x00c8 -> line 914
+ *   +0x00d0 -> line 920
+ *   +0x00d8 -> line 921
+ *   +0x00e0 -> line 937
+ *   +0x00e8 -> line 939
+ *   +0x0110 -> line 942
+ *   +0x0118 -> line 943
+ *   +0x011c -> line 942
+ *   +0x013c -> line 943
+ *   +0x0144 -> line 949
+ *   +0x0158 -> line 952
+ *   +0x0168 -> line 954
+ *   +0x0170 -> line 955
+ *   +0x0174 -> line 954
+ *   +0x0188 -> line 955
+ *   +0x0190 -> line 960
+ *   +0x0194 -> line 962
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stCode4LitPositionZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* aggregate */ int eFuncId;
+    tdeFuncId_ eFuncId;
     short xMinPoint;
     short xMaxPoint;
-    /* aggregate */ int stVectorMin;
+    MTH3D_tdstVector_ stVectorMin;
     int lZoneNumber;
+    COL_tdstCollideObject_* hGeoObj;
+    HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* line map: */
-    /*   line 885 @ +0x000 */
-    /*   line 894 @ +0x000 */
-    /*   line 902 @ +0x000 */
-    /*   line 907 @ +0x000 */
-    /*   line 913 @ +0x000 */
-    /*   line 920 @ +0x000 */
-    /*   line 937 @ +0x000 */
-    /*   line 942 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 730–858 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 727–862 */
 /* addr: 0x00220ae0  size: 1008 bytes */
-void fn_p_stCode4VecteurPointAxe(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int param3, /* function pointer */ int p_stOVector, /* function pointer */ int p_stMVector)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 727
+ *   +0x0018 -> line 749
+ *   +0x001c -> line 727
+ *   +0x0024 -> line 730
+ *   +0x0028 -> line 749
+ *   +0x0034 -> line 753
+ *   +0x0044 -> line 757
+ *   +0x005c -> line 760
+ *   +0x007c -> line 767
+ *   +0x0080 -> line 774
+ *   +0x0084 -> line 767
+ *   +0x0088 -> line 774
+ *   +0x008c -> line 767
+ *   +0x0094 -> line 774
+ *   +0x0098 -> line 767
+ *   +0x00a4 -> line 770
+ *   +0x00a8 -> line 773
+ *   +0x00ac -> line 770
+ *   +0x00c0 -> line 773
+ *   +0x00c4 -> line 770
+ *   +0x00c8 -> line 773
+ *   +0x00d4 -> line 770
+ *   +0x00d8 -> line 773
+ *   +0x00f0 -> line 774
+ *   +0x0138 -> line 782
+ *   +0x014c -> line 783
+ *   +0x0154 -> line 787
+ *   +0x016c -> line 788
+ *   +0x01c4 -> line 791
+ *   +0x01dc -> line 793
+ *   +0x01f4 -> line 796
+ *   +0x0208 -> line 797
+ *   +0x0210 -> line 803
+ *   +0x0214 -> line 801
+ *   +0x021c -> line 803
+ *   +0x0224 -> line 806
+ *   +0x0250 -> line 807
+ *   +0x0258 -> line 811
+ *   +0x026c -> line 816
+ *   +0x0274 -> line 822
+ *   +0x0278 -> line 825
+ *   +0x027c -> line 822
+ *   +0x0280 -> line 825
+ *   +0x0284 -> line 822
+ *   +0x0294 -> line 825
+ *   +0x0298 -> line 822
+ *   +0x029c -> line 825
+ *   +0x02a8 -> line 822
+ *   +0x02ac -> line 825
+ *   +0x02ec -> line 833
+ *   +0x02f4 -> line 834
+ *   +0x02fc -> line 838
+ *   +0x035c -> line 839
+ *   +0x0374 -> line 842
+ *   +0x0394 -> line 845
+ *   +0x039c -> line 851
+ *   +0x03a4 -> line 852
+ *   +0x03ac -> line 858
+ *   +0x03b4 -> line 860
+ *   +0x03b8 -> line 858
+ *   +0x03d0 -> line 862
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stCode4VecteurPointAxe(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     float xNorm;
     float xNorm;
-    /* aggregate */ int stPVector;
-    /* aggregate */ int eFuncId;
-    /* aggregate */ int stdVector;
+    MTH3D_tdstVector_ stPVector;
+    tdeFuncId_ eFuncId;
+    MTH3D_tdstVector_* param0;
+    MTH3D_tdstVector_* p_stOVector;
+    MTH3D_tdstVector_* p_stMVector;
+    MTH3D_tdstVector_ stdVector;
     tdstGetSetParam_ stParam3;
     tdstGetSetParam_ stParam2;
     tdstGetSetParam_ stParam1;
-    /* line map: */
-    /*   line 749 @ +0x000 */
-    /*   line 730 @ +0x000 */
-    /*   line 753 @ +0x000 */
-    /*   line 760 @ +0x000 */
-    /*   line 774 @ +0x000 */
-    /*   line 774 @ +0x000 */
-    /*   line 774 @ +0x000 */
-    /*   line 770 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 599–711 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 581–715 */
 /* addr: 0x00220ed0  size: 640 bytes */
-void fn_p_stCode4LitAxeZDx(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int hGeoObj, /* function pointer */ int hPerso)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 581
+ *   +0x0030 -> line 599
+ *   +0x0034 -> line 605
+ *   +0x004c -> line 608
+ *   +0x005c -> line 609
+ *   +0x0060 -> line 608
+ *   +0x0064 -> line 612
+ *   +0x0078 -> line 615
+ *   +0x00a0 -> line 619
+ *   +0x00b4 -> line 620
+ *   +0x00bc -> line 624
+ *   +0x00d0 -> line 625
+ *   +0x00d8 -> line 629
+ *   +0x00ec -> line 630
+ *   +0x00f4 -> line 635
+ *   +0x00fc -> line 636
+ *   +0x0104 -> line 642
+ *   +0x0118 -> line 644
+ *   +0x0120 -> line 646
+ *   +0x013c -> line 651
+ *   +0x0150 -> line 654
+ *   +0x0160 -> line 655
+ *   +0x0170 -> line 659
+ *   +0x0174 -> line 662
+ *   +0x0178 -> line 659
+ *   +0x017c -> line 663
+ *   +0x0180 -> line 659
+ *   +0x0184 -> line 664
+ *   +0x0188 -> line 662
+ *   +0x018c -> line 663
+ *   +0x0190 -> line 667
+ *   +0x01b0 -> line 669
+ *   +0x01b4 -> line 672
+ *   +0x01d4 -> line 674
+ *   +0x01d8 -> line 677
+ *   +0x01f8 -> line 682
+ *   +0x0200 -> line 687
+ *   +0x0204 -> line 691
+ *   +0x020c -> line 695
+ *   +0x0218 -> line 699
+ *   +0x0224 -> line 707
+ *   +0x0234 -> line 711
+ *   +0x023c -> line 713
+ *   +0x0240 -> line 711
+ *   +0x0258 -> line 715
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stCode4LitAxeZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* aggregate */ int eFuncId;
+    tdeFuncId_ eFuncId;
     short xMinPoint;
     short xMaxPoint;
-    /* aggregate */ int stAxisVector;
-    /* aggregate */ int stVectorMax;
-    /* aggregate */ int stVectorMin;
+    MTH3D_tdstVector_ stAxisVector;
+    MTH3D_tdstVector_ stVectorMax;
+    MTH3D_tdstVector_ stVectorMin;
     float fMaxZ;
     float fMaxY;
     float fMaxX;
     int lLocalGlobal;
     int lZoneNumber;
+    COL_tdstCollideObject_* hGeoObj;
+    HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* line map: */
-    /*   line 599 @ +0x000 */
-    /*   line 608 @ +0x000 */
-    /*   line 608 @ +0x000 */
-    /*   line 615 @ +0x000 */
-    /*   line 620 @ +0x000 */
-    /*   line 625 @ +0x000 */
-    /*   line 630 @ +0x000 */
-    /*   line 636 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 479–565 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 469–565 */
 /* addr: 0x00221150  size: 516 bytes */
-void fn_p_stCode4LitDimensionZDx(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int hGeoObj, /* function pointer */ int hPerso)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 469
+ *   +0x0024 -> line 479
+ *   +0x0028 -> line 485
+ *   +0x0040 -> line 488
+ *   +0x0054 -> line 492
+ *   +0x007c -> line 496
+ *   +0x0090 -> line 497
+ *   +0x0098 -> line 502
+ *   +0x00ac -> line 503
+ *   +0x00b4 -> line 508
+ *   +0x00c8 -> line 509
+ *   +0x00d0 -> line 514
+ *   +0x00d8 -> line 515
+ *   +0x00e0 -> line 520
+ *   +0x00e8 -> line 522
+ *   +0x0110 -> line 528
+ *   +0x011c -> line 529
+ *   +0x0128 -> line 531
+ *   +0x0130 -> line 536
+ *   +0x0144 -> line 539
+ *   +0x0154 -> line 540
+ *   +0x0164 -> line 545
+ *   +0x01a4 -> line 547
+ *   +0x01ac -> line 552
+ *   +0x01b0 -> line 556
+ *   +0x01b8 -> line 559
+ *   +0x01c4 -> line 562
+ *   +0x01cc -> line 563
+ *   +0x01d0 -> line 562
+ *   +0x01e8 -> line 565
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stCode4LitDimensionZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     float xRadius;
-    /* aggregate */ int eFuncId;
+    tdeFuncId_ eFuncId;
     short xMinPoint;
     short xMaxPoint;
-    /* aggregate */ int stVectorMax;
-    /* aggregate */ int stVectorMin;
+    MTH3D_tdstVector_ stVectorMax;
+    MTH3D_tdstVector_ stVectorMin;
     int lZoneNumber;
+    COL_tdstCollideObject_* hGeoObj;
+    HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* line map: */
-    /*   line 479 @ +0x000 */
-    /*   line 488 @ +0x000 */
-    /*   line 496 @ +0x000 */
-    /*   line 502 @ +0x000 */
-    /*   line 508 @ +0x000 */
-    /*   line 514 @ +0x000 */
-    /*   line 520 @ +0x000 */
-    /*   line 528 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 371–454 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 361–456 */
 /* addr: 0x00221360  size: 628 bytes */
-void fn_p_stCode4LitCentreZDx(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue, /* function pointer */ int hGeoObj, /* function pointer */ int hPerso)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 361
+ *   +0x0024 -> line 371
+ *   +0x0028 -> line 377
+ *   +0x0040 -> line 380
+ *   +0x0054 -> line 384
+ *   +0x007c -> line 389
+ *   +0x0090 -> line 390
+ *   +0x0098 -> line 394
+ *   +0x00ac -> line 395
+ *   +0x00b4 -> line 400
+ *   +0x00c8 -> line 401
+ *   +0x00d0 -> line 405
+ *   +0x00d8 -> line 406
+ *   +0x00e0 -> line 410
+ *   +0x00e8 -> line 412
+ *   +0x0110 -> line 417
+ *   +0x0138 -> line 419
+ *   +0x0140 -> line 424
+ *   +0x0154 -> line 427
+ *   +0x0164 -> line 428
+ *   +0x0174 -> line 431
+ *   +0x0190 -> line 434
+ *   +0x0194 -> line 431
+ *   +0x01dc -> line 434
+ *   +0x01f4 -> line 436
+ *   +0x01fc -> line 442
+ *   +0x0204 -> line 441
+ *   +0x020c -> line 442
+ *   +0x0220 -> line 446
+ *   +0x0228 -> line 450
+ *   +0x022c -> line 451
+ *   +0x0234 -> line 450
+ *   +0x023c -> line 451
+ *   +0x0254 -> line 454
+ *   +0x0258 -> line 456
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stCode4LitCentreZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* aggregate */ int eFuncId;
+    tdeFuncId_ eFuncId;
     short xMinPoint;
     short xMaxPoint;
-    /* aggregate */ int stVectorMax;
-    /* aggregate */ int stVectorMin;
+    MTH3D_tdstVector_ stVectorMax;
+    MTH3D_tdstVector_ stVectorMin;
     int lZoneNumber;
+    COL_tdstCollideObject_* hGeoObj;
+    HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* line map: */
-    /*   line 371 @ +0x000 */
-    /*   line 380 @ +0x000 */
-    /*   line 389 @ +0x000 */
-    /*   line 394 @ +0x000 */
-    /*   line 400 @ +0x000 */
-    /*   line 405 @ +0x000 */
-    /*   line 410 @ +0x000 */
-    /*   line 417 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 290–346 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 289–346 */
 /* addr: 0x002215e0  size: 476 bytes */
-void fn_p_stCode4VitessePadAnalogique(/* function pointer */ int p_SuperObjPerso, /* function pointer */ int p_stTree, tdstGetSetParam_* p_stValue)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 289
+ *   +0x0004 -> line 292
+ *   +0x0008 -> line 289
+ *   +0x0024 -> line 290
+ *   +0x0028 -> line 292
+ *   +0x0038 -> line 304
+ *   +0x0040 -> line 305
+ *   +0x0044 -> line 304
+ *   +0x0048 -> line 305
+ *   +0x0068 -> line 308
+ *   +0x0074 -> line 309
+ *   +0x0098 -> line 312
+ *   +0x00a8 -> line 313
+ *   +0x00d4 -> line 323
+ *   +0x00d8 -> line 322
+ *   +0x00dc -> line 323
+ *   +0x00e0 -> line 322
+ *   +0x00e4 -> line 323
+ *   +0x00e8 -> line 322
+ *   +0x00ec -> line 323
+ *   +0x00f0 -> line 322
+ *   +0x00f8 -> line 324
+ *   +0x00fc -> line 323
+ *   +0x0104 -> line 324
+ *   +0x0108 -> line 323
+ *   +0x010c -> line 324
+ *   +0x0110 -> line 325
+ *   +0x0118 -> line 322
+ *   +0x011c -> line 325
+ *   +0x0170 -> line 326
+ *   +0x0174 -> line 329
+ *   +0x0178 -> line 326
+ *   +0x01a0 -> line 329
+ *   +0x01bc -> line 346
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* fn_p_stCode4VitessePadAnalogique(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     float xNorm;
-    /* aggregate */ int stSpeedVector;
-    /* aggregate */ int eFuncId;
-    /* line map: */
-    /*   line 292 @ +0x000 */
-    /*   line 290 @ +0x000 */
-    /*   line 304 @ +0x000 */
-    /*   line 304 @ +0x000 */
-    /*   line 308 @ +0x000 */
-    /*   line 312 @ +0x000 */
-    /*   line 323 @ +0x000 */
-    /*   line 323 @ +0x000 */
+    MTH3D_tdstVector_ stSpeedVector;
+    tdeFuncId_ eFuncId;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 124–277 */
+/* addr: 0x002217c0  size: 952 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 124
+ *   +0x0004 -> line 161
+ *   +0x0008 -> line 124
+ *   +0x000c -> line 138
+ *   +0x0010 -> line 124
+ *   +0x0014 -> line 161
+ *   +0x0018 -> line 124
+ *   +0x0028 -> line 138
+ *   +0x0034 -> line 161
+ *   +0x0038 -> line 138
+ *   +0x0040 -> line 135
+ *   +0x0044 -> line 138
+ *   +0x0048 -> line 139
+ *   +0x004c -> line 140
+ *   +0x0050 -> line 139
+ *   +0x0058 -> line 141
+ *   +0x005c -> line 139
+ *   +0x0064 -> line 143
+ *   +0x0068 -> line 161
+ *   +0x0070 -> line 166
+ *   +0x0080 -> line 171
+ *   +0x0084 -> line 172
+ *   +0x008c -> line 175
+ *   +0x00bc -> line 176
+ *   +0x00c4 -> line 180
+ *   +0x00f4 -> line 183
+ *   +0x0104 -> line 186
+ *   +0x0114 -> line 188
+ *   +0x0118 -> line 190
+ *   +0x0128 -> line 192
+ *   +0x0154 -> line 193
+ *   +0x0158 -> line 194
+ *   +0x0164 -> line 195
+ *   +0x0168 -> line 198
+ *   +0x0174 -> line 200
+ *   +0x0178 -> line 201
+ *   +0x0180 -> line 206
+ *   +0x0184 -> line 208
+ *   +0x0194 -> line 210
+ *   +0x0198 -> line 212
+ *   +0x01a0 -> line 214
+ *   +0x01d8 -> line 217
+ *   +0x020c -> line 221
+ *   +0x0218 -> line 224
+ *   +0x0220 -> line 225
+ *   +0x0238 -> line 227
+ *   +0x0240 -> line 228
+ *   +0x0244 -> line 231
+ *   +0x0248 -> line 232
+ *   +0x0258 -> line 236
+ *   +0x0268 -> line 241
+ *   +0x026c -> line 245
+ *   +0x0270 -> line 242
+ *   +0x0274 -> line 245
+ *   +0x027c -> line 246
+ *   +0x0288 -> line 247
+ *   +0x02b0 -> line 250
+ *   +0x02c0 -> line 252
+ *   +0x02c4 -> line 253
+ *   +0x02cc -> line 255
+ *   +0x0304 -> line 258
+ *   +0x0338 -> line 261
+ *   +0x0340 -> line 264
+ *   +0x0348 -> line 265
+ *   +0x0360 -> line 267
+ *   +0x0368 -> line 268
+ *   +0x036c -> line 271
+ *   +0x0370 -> line 272
+ *   +0x037c -> line 273
+ *   +0x0380 -> line 274
+ *   +0x0390 -> line 276
+ *   +0x0398 -> line 277
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vComputeCollideResult(HIE_tdstSuperObject_* hSender)
+{
+    SECT_tdstSector_* hSectorObject;
+    MTH3D_tdstVector_ stMax;
+    MTH3D_tdstVector_ stMin;
+    GMT_tdstCollideMaterial_* hColMatHit;
+    int i;
+    SECT_tdstListOfSOSectorsInActivityInteraction_* hInterList;
+    SECT_tdstListOfSOSectorsInGraphicInteraction_* hList;
+    HIE_tdstSuperObject_* hSector1;
+    SECT_tdstListOfSOCharacters_* hCharacterList;
+    HIE_tdstSuperObject_* hSuperObjectHit;
     /* TODO: decompile from asm/... */
 }

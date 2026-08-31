@@ -27,38 +27,32 @@ struct tdstDataPath_ {
 char DPT_g_szTrueSaveGamePath[256];
 tdstDataPath_ g_stDataPath;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\DPT\DPT.c lines 792–802 */
-/* addr: 0x00257e50  size: 44 bytes */
-void COL_fn_vExploreOctreeWithBox(/* function pointer */ int p_stOctree, /* function pointer */ int p_stMinPoint, /* function pointer */ int p_stMaxPoint, /* function pointer */ int d_pstSelectedNode, short* p_xNumberOfSelectedNodes)
-{
-    /* line map: */
-    /*   line 792 @ +0x000 */
-    /*   line 796 @ +0x000 */
-    /*   line 802 @ +0x000 */
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\DPT\DPT.c lines 697–773 */
-/* addr: 0x00257e80  size: 432 bytes */
-void COL_fn_vExploreRecursiveOctreeWithBox(/* function pointer */ int p_stNodeToBeExplored, /* function pointer */ int p_stMinSituation, /* function pointer */ int p_stMaxSituation, /* function pointer */ int d_pstSelectedNode, short* p_xNumberOfSelectedNodes)
-{
-    /* line map: */
-    /*   line 697 @ +0x000 */
-    /*   line 697 @ +0x000 */
-    /*   line 703 @ +0x000 */
-    /*   line 707 @ +0x000 */
-    /*   line 709 @ +0x000 */
-    /*   line 711 @ +0x000 */
-    /*   line 713 @ +0x000 */
-    /*   line 717 @ +0x000 */
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\DPT\DPT.c lines 60–60 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\DPT\DPT.c lines 59–60 */
 /* addr: 0x00258030  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 59
+ *   +0x0004 -> line 60
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_szGetGameDataPath(void)
 {
-    /* line map: */
-    /*   line 60 @ +0x000 */
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\DPT\DPT.c lines 39–50 */
+/* addr: 0x00258040  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 39
+ *   +0x0008 -> line 44
+ *   +0x000c -> line 39
+ *   +0x0010 -> line 44
+ *   +0x0018 -> line 46
+ *   +0x0024 -> line 50
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vSetGameDataPath(char* _p_szPath)
+{
     /* TODO: decompile from asm/... */
 }

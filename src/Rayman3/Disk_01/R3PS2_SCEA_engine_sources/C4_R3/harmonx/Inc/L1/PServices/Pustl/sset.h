@@ -4,8 +4,14 @@
 
 #include <stddef.h>
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\C4_R3\harmonx\Inc\L1\PServices\Pustl\sset.h lines 39–39 */
 /* addr: 0x0018b6e0  size: 8 bytes */
-void Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_KfnC::__cl(CResData* _X)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 39
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+CResData* Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_KfnC::__cl(CResData* _X)
 {
     /* TODO: decompile from asm/... */
 }

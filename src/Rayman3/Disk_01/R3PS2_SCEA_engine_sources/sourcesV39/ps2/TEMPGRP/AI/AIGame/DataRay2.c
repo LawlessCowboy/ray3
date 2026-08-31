@@ -15,13 +15,3 @@ struct anon_0 {
 };
 
 anon_0 stExtendDatas4Ray;
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\DataRay2.c lines 126–126 */
-/* addr: 0x00211870  size: 32 bytes */
-/* Debug signature rejected: type-record data leaked into it. */
-void fn_p_fn_pGetDsgVarGetFunctionPtr(void)
-{
-    /* line map: */
-    /*   line 126 @ +0x000 */
-    /* TODO: decompile from asm/... */
-}

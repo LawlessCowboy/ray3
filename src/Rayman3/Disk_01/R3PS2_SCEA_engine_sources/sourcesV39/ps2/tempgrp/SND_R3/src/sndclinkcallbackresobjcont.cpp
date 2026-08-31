@@ -6,32 +6,53 @@
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CResObj CResObj;
+typedef struct _Node _Node;
 typedef struct V3Ds V3Ds;
+typedef struct CVolumeActorModifier CVolumeActorModifier;
+typedef struct CLinkCallbackResObj CLinkCallbackResObj;
+typedef struct CProgramContext CProgramContext;
 typedef struct CRefIdObj CRefIdObj;
+typedef struct slist slist;
+typedef struct CStringIsLess CStringIsLess;
+typedef struct stree stree;
 typedef struct smap smap;
+typedef struct CCmdInterface CCmdInterface;
 typedef struct CResType CResType;
+typedef struct sstring sstring;
 typedef struct CResData CResData;
+typedef struct CUUID CUUID;
 typedef struct C2DParams C2DParams;
 typedef struct iterator iterator;
+typedef struct less less;
 typedef struct const_iterator const_iterator;
 typedef struct C3DDirection C3DDirection;
 typedef struct C3DParam C3DParam;
-typedef struct CCmdInterface CCmdInterface;
 typedef struct CIdObj CIdObj;
 typedef struct streebase streebase;
 typedef struct CCritSect CCritSect;
-typedef struct CActorResObj CActorResObj;
-typedef struct smap smap;
-typedef struct sTreeLink sTreeLink;
-typedef struct sstring sstring;
-typedef struct smap smap;
-typedef struct CResObjState CResObjState;
-typedef struct smap smap;
+typedef struct CPitchActorModifier CPitchActorModifier;
 typedef struct CRolloffParam CRolloffParam;
+typedef struct CResObjState CResObjState;
+typedef struct CActorProgramContext CActorProgramContext;
+typedef struct CActorResObj CActorResObj;
+typedef struct sTreeLink sTreeLink;
+typedef struct CLinkCallbackResObjCont CLinkCallbackResObjCont;
+typedef struct CActorModifiers CActorModifiers;
+
+typedef enum _Redbl {
+    _Red = 0,
+    _Black = 1,
+} _Redbl;
 
 struct CResObj {
-    int m_roType; /* +0x4 */
-    int m_poResData; /* +0x8 */
+    CResType* m_roType; /* +0x4 */
+    CResData* m_poResData; /* +0x8 */
+};
+
+struct _Node {
+    _Node* _pNext; /* +0x0 */
+    _Node* _pPrev; /* +0x4 */
+    CLinkCallbackResObj* _Value; /* +0x8 */
 };
 
 struct V3Ds {
@@ -40,13 +61,52 @@ struct V3Ds {
     float fZ; /* +0x8 */
 };
 
+struct CVolumeActorModifier {
+    /* C++ base CActorModifiers at +0x0. */
+};
+
+struct CLinkCallbackResObj {
+    CActorResObj* mroActorObj; /* +0x0 */
+    CResObj* mroResObj; /* +0x4 */
+    void (*mpfnProc)(int); /* +0x8 */
+    int ms32Param; /* +0xc */
+};
+
+struct CProgramContext {
+    CVarAccess* m_poGlobVarAcc; /* +0x4 */
+    CVarAccess* m_poOwnerVarAcc; /* +0x8 */
+};
+
 struct CRefIdObj {
     /* C++ base CIdObj at +0x0. */
     unsigned char m_bMarkFlag; /* +0xc */
 };
 
+struct slist {
+    sallocator m_oAllocator; /* +0x0 */
+    _Node* _Head; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct CStringIsLess {
+    /* C++ base binary_function at +0x0. */
+};
+
+struct stree {
+    /* C++ base streebase at +0x0. */
+    sallocator allocator; /* +0xc */
+    CStringIsLess key_compare; /* +0xd */
+};
+
 struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
+    stree _Tr; /* +0x0 */
+};
+
+struct CCmdInterface {
+    smap m_oCommands; /* +0x0 */
+    smap m_oInterfaces; /* +0x10 */
+    smap m_oSubInterfaces; /* +0x20 */
+    int m_czInterfaceName; /* +0x30 */
 };
 
 struct CResType {
@@ -58,10 +118,19 @@ struct CResType {
     smap m_oCommands; /* +0x3c */
 };
 
+struct sstring {
+    int m_pcData; /* +0x0 */
+};
+
 struct CResData {
     /* C++ base CRefIdObj at +0x0. */
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
+};
+
+struct CUUID {
+    unsigned int m_uiHighWord; /* +0x0 */
+    unsigned int m_uiLowWord; /* +0x4 */
 };
 
 struct C2DParams {
@@ -75,8 +144,12 @@ struct iterator {
     /* C++ base const_iterator at +0x0. */
 };
 
+struct less {
+    /* C++ base binary_function at +0x0. */
+};
+
 struct const_iterator {
-    int _Ptr; /* +0x0 */
+    _Node* _Ptr; /* +0x0 */
 };
 
 struct C3DDirection {
@@ -90,20 +163,13 @@ struct C3DParam {
     C3DDirection m_oDir; /* +0x18 */
 };
 
-struct CCmdInterface {
-    smap m_oCommands; /* +0x0 */
-    smap m_oInterfaces; /* +0x10 */
-    smap m_oSubInterfaces; /* +0x20 */
-    int m_czInterfaceName; /* +0x30 */
-};
-
 struct CIdObj {
     /* C++ base CRTTIClass at +0x0. */
-    /* aggregate */ int m_oId; /* +0x4 */
+    CUUID m_oId; /* +0x4 */
 };
 
 struct streebase {
-    int _HeadLink; /* +0x0 */
+    sTreeLink* _HeadLink; /* +0x0 */
     unsigned char _Multi; /* +0x4 */
     unsigned int _Size; /* +0x8 */
 };
@@ -112,41 +178,18 @@ struct CCritSect {
     unsigned int m_uiCS; /* +0x0 */
 };
 
-struct CActorResObj {
-    /* C++ base CResObj at +0x0. */
-    C3DParam m_o3DParams; /* +0xc */
-    /* aggregate */ int m_oPitchModifier; /* +0x3c */
-    CRolloffParam m_oRolloff; /* +0x60 */
-    C2DParams m_o2DParams; /* +0x6c */
-    unsigned char m_b3DParamsChanged; /* +0x7c */
-    unsigned char m_b3DRes; /* +0x7d */
-    sstring m_sName; /* +0x80 */
-    unsigned char m_b2DParamsComputed; /* +0x84 */
-    /* aggregate */ int m_oVolModifier; /* +0x88 */
-    /* aggregate */ int m_oProgramContext; /* +0xac */
+struct CPitchActorModifier {
+    /* C++ base CActorModifiers at +0x0. */
 };
 
-struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
-};
-
-struct sTreeLink {
-    int m_poLeft; /* +0x0 */
-    int m_poParent; /* +0x4 */
-    int m_poRight; /* +0x8 */
-    /* aggregate */ int m_eColor; /* +0xc */
-};
-
-struct sstring {
-    int m_pcData; /* +0x0 */
-};
-
-struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
+struct CRolloffParam {
+    float m_fStabilisationDistance; /* +0x0 */
+    float m_fSaturationDistance; /* +0x4 */
+    float m_fStabilisationVolume; /* +0x8 */
 };
 
 struct CResObjState {
-    int m_poResObj; /* +0x0 */
+    CResObj* m_poResObj; /* +0x0 */
     unsigned int m_uiInstance; /* +0x4 */
     unsigned char m_bPlayable; /* +0x8 */
     unsigned char m_b2DRes; /* +0x9 */
@@ -157,30 +200,69 @@ struct CResObjState {
     unsigned char m_bResident; /* +0xe */
     int m_pvUserData; /* +0x10 */
     int m_iUserDataSize; /* +0x14 */
-    int m_poNext; /* +0x18 */
-    int m_poPrevious; /* +0x1c */
-    int m_poOwner; /* +0x20 */
+    CResObjState* m_poNext; /* +0x18 */
+    CResObjState* m_poPrevious; /* +0x1c */
+    CResObj* m_poOwner; /* +0x20 */
     unsigned int m_uiLockCount; /* +0x24 */
 };
 
-struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
+struct CActorProgramContext {
+    /* C++ base CProgramContext at +0x0. */
+    /* C++ base CVarAccess at +0xc. */
+    CResObjState m_oObjStates; /* +0x10 */
+    CActorResObj* m_pActor; /* +0x38 */
+    smap m_oVariables; /* +0x3c */
+    CCritSect m_oMutex; /* +0x4c */
 };
 
-struct CRolloffParam {
-    float m_fStabilisationDistance; /* +0x0 */
-    float m_fSaturationDistance; /* +0x4 */
-    float m_fStabilisationVolume; /* +0x8 */
+struct CActorResObj {
+    /* C++ base CResObj at +0x0. */
+    C3DParam m_o3DParams; /* +0xc */
+    CPitchActorModifier m_oPitchModifier; /* +0x3c */
+    CRolloffParam m_oRolloff; /* +0x60 */
+    C2DParams m_o2DParams; /* +0x6c */
+    unsigned char m_b3DParamsChanged; /* +0x7c */
+    unsigned char m_b3DRes; /* +0x7d */
+    sstring m_sName; /* +0x80 */
+    unsigned char m_b2DParamsComputed; /* +0x84 */
+    CVolumeActorModifier m_oVolModifier; /* +0x88 */
+    CActorProgramContext m_oProgramContext; /* +0xac */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkcallbackresobjcont.cpp lines 57–61 */
+struct sTreeLink {
+    sTreeLink* m_poLeft; /* +0x0 */
+    sTreeLink* m_poParent; /* +0x4 */
+    sTreeLink* m_poRight; /* +0x8 */
+    _Redbl m_eColor; /* +0xc */
+};
+
+struct CLinkCallbackResObjCont {
+    /* C++ base slist at +0x0. */
+};
+
+struct CActorModifiers {
+    /* C++ base CVarNotifTarget at +0x0. */
+    CActorResObj* m_pActor; /* +0x4 */
+    smap m_oVariables; /* +0x8 */
+    float m_fDirectValue; /* +0x18 */
+    float m_fResultValue; /* +0x1c */
+    unsigned char m_bResultChanged; /* +0x20 */
+};
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkcallbackresobjcont.cpp lines 54–61 */
 /* addr: 0x0018d120  size: 352 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 54
+ *   +0x001c -> line 57
+ *   +0x003c -> line 58
+ *   +0x0048 -> line 59
+ *   +0x0078 -> line 60
+ *   +0x014c -> line 61
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void ~CBankDescCont(void)
 {
     iterator it;
-    /* line map: */
-    /*   line 57 @ +0x000 */
-    /*   line 59 @ +0x000 */
-    /*   line 61 @ +0x000 */
     /* TODO: decompile from asm/... */
 }

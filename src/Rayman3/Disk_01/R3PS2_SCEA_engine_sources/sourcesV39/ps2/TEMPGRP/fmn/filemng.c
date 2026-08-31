@@ -47,35 +47,54 @@ char g_cCDResetEnable;
 int FMN_ax_lFileIsOpened[8];
 anon_1 FMN_ax_stFiles[8];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\filemng.c lines 22–24 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\filemng.c lines 21–24 */
 /* addr: 0x00258490  size: 56 bytes */
-/*type_0x00*/ int FIL_fn_vFirstInit(void)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 21
+ *   +0x0004 -> line 22
+ *   +0x0008 -> line 21
+ *   +0x000c -> line 22
+ *   +0x0024 -> line 23
+ *   +0x002c -> line 24
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void FIL_fn_vFirstInit(void)
 {
-    /* line map: */
-    /*   line 22 @ +0x000 */
-    /*   line 22 @ +0x000 */
-    /*   line 24 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\filemng.c lines 1002–1006 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\filemng.c lines 959–1007 */
 /* addr: 0x002584d0  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 959
+ *   +0x0008 -> line 1002
+ *   +0x000c -> line 959
+ *   +0x0010 -> line 1002
+ *   +0x0018 -> line 1007
+ *   +0x001c -> line 1006
+ *   +0x0024 -> line 1007
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void FMN_SCE_AddBaseDirectory(char* buffer)
 {
     char s_szFileName[256];
-    /* line map: */
-    /*   line 1002 @ +0x000 */
-    /*   line 1002 @ +0x000 */
-    /*   line 1006 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\filemng.c lines 941–943 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\filemng.c lines 940–944 */
 /* addr: 0x00258500  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 940
+ *   +0x000c -> line 941
+ *   +0x0014 -> line 942
+ *   +0x001c -> line 943
+ *   +0x0024 -> line 944
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void FMN_SCE_ConvertPath2DVD(char* buffer)
 {
-    /* line map: */
-    /*   line 941 @ +0x000 */
-    /*   line 943 @ +0x000 */
     /* TODO: decompile from asm/... */
 }

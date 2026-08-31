@@ -5,23 +5,37 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct tag_GLtexture_set tag_GLtexture_set;
 typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct anon_0 anon_0;
 typedef struct anon_1 anon_1;
 typedef struct tagGLtexindex tagGLtexindex;
+typedef union unFunction unFunction;
+typedef struct tagGLlistnode tagGLlistnode;
 typedef struct tagGLlistcalls tagGLlistcalls;
+typedef struct anon_41 anon_41;
 typedef struct anon_2 anon_2;
+typedef struct anon_16 anon_16;
+typedef struct anon_33 anon_33;
+typedef struct anon_39 anon_39;
+typedef struct anon_29 anon_29;
+typedef struct anon_34 anon_34;
+typedef struct anon_23 anon_23;
 typedef struct tagGsSetTex tagGsSetTex;
+typedef struct _sceDmaTag _sceDmaTag;
 typedef struct tagGLprimbuf tagGLprimbuf;
+typedef struct GEO_tdstColor_ GEO_tdstColor_;
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct anon_3 anon_3;
 typedef struct anon_4 anon_4;
+typedef struct tagListNodeSingle tagListNodeSingle;
 typedef struct anon_5 anon_5;
 typedef struct anon_6 anon_6;
 typedef struct anon_7 anon_7;
-typedef struct tagGLlistnode tagGLlistnode;
+typedef struct tagListData tagListData;
 typedef struct GLI_st_RegisteredTexture_ GLI_st_RegisteredTexture_;
-typedef union unFunction unFunction;
 typedef struct anon_8 anon_8;
+typedef struct GLI_tdstTexturePS2GL_ GLI_tdstTexturePS2GL_;
 typedef union anon_9 anon_9;
 typedef struct anon_10 anon_10;
 typedef struct S_TXR_Header_ S_TXR_Header_;
@@ -29,52 +43,60 @@ typedef struct anon_11 anon_11;
 typedef struct anon_12 anon_12;
 typedef struct tagListNode tagListNode;
 typedef struct anon_13 anon_13;
+typedef struct tag_GLtexture_image tag_GLtexture_image;
 typedef struct anon_14 anon_14;
+typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;
 typedef struct anon_15 anon_15;
-typedef struct anon_16 anon_16;
 typedef struct anon_17 anon_17;
-typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct anon_18 anon_18;
 typedef struct anon_19 anon_19;
+typedef struct ConcatFileHeader_ ConcatFileHeader_;
 typedef struct anon_20 anon_20;
 typedef struct anon_21 anon_21;
 typedef struct CTL_MapInfo_ CTL_MapInfo_;
 typedef struct tagGLlistpool tagGLlistpool;
 typedef struct tag_GLtexture tag_GLtexture;
 typedef struct anon_22 anon_22;
-typedef struct anon_23 anon_23;
 typedef struct anon_24 anon_24;
-typedef struct tagGLcontext tagGLcontext;
 typedef struct anon_25 anon_25;
+typedef struct tagGsLoadImage tagGsLoadImage;
+typedef struct tagGLtexname tagGLtexname;
+typedef struct tagGLtexblock tagGLtexblock;
+typedef struct tag_GLlight tag_GLlight;
+typedef struct tag_GLmaterial tag_GLmaterial;
+typedef struct tagGLArrayInfo tagGLArrayInfo;
+typedef struct tagGLcontext tagGLcontext;
 typedef struct anon_26 anon_26;
 typedef struct anon_27 anon_27;
-typedef struct tagGLArrayInfo tagGLArrayInfo;
 typedef struct tagsceGsReg tagsceGsReg;
 typedef struct anon_28 anon_28;
-typedef struct anon_29 anon_29;
-typedef struct tagGScontext tagGScontext;
-typedef struct anon_30 anon_30;
-typedef struct tag_GLlight tag_GLlight;
-typedef struct _sceDmaTag _sceDmaTag;
+typedef struct anon_40 anon_40;
+typedef struct anon_36 anon_36;
+typedef struct anon_35 anon_35;
+typedef struct anon_42 anon_42;
 typedef struct anon_31 anon_31;
 typedef struct anon_32 anon_32;
-typedef struct anon_33 anon_33;
-typedef struct tagstVIFCode tagstVIFCode;
-typedef struct anon_34 anon_34;
-typedef struct CTL_Info_ CTL_Info_;
-typedef struct anon_35 anon_35;
-typedef struct anon_36 anon_36;
-typedef struct tag_GLmaterial tag_GLmaterial;
-typedef struct tagGLtexname tagGLtexname;
-typedef struct anon_37 anon_37;
+typedef struct anon_30 anon_30;
 typedef struct anon_38 anon_38;
+typedef struct anon_37 anon_37;
+typedef struct tagGScontext tagGScontext;
+typedef struct tagstVIFCode tagstVIFCode;
+typedef struct CTL_Info_ CTL_Info_;
 typedef struct tagGLlistdatas tagGLlistdatas;
-typedef struct anon_39 anon_39;
-typedef struct anon_40 anon_40;
-typedef struct tagGLtexblock tagGLtexblock;
-typedef struct tagGsLoadImage tagGsLoadImage;
-typedef struct anon_41 anon_41;
-typedef struct anon_42 anon_42;
+
+struct tag_GLtexture_set {
+    float vTexEnvColor[4]; /* +0x0 */
+    unsigned int eTexEnvMode; /* +0x10 */
+    unsigned int nTexGenBits; /* +0x14 */
+    unsigned short nTexGenModeS; /* +0x18 */
+    unsigned short nTexGenModeT; /* +0x1a */
+    unsigned short nTexGenModeR; /* +0x1c */
+    unsigned short nTexGenModeQ; /* +0x1e */
+    float vTexGenCoeffS[4]; /* +0x20 */
+    float vTexGenCoeffT[4]; /* +0x30 */
+    float vTexGenCoeffR[4]; /* +0x40 */
+    float vTexGenCoeffQ[4]; /* +0x50 */
+};
 
 struct GLI_tdstTexture_ {
     int bIsAvailable; /* +0x0 */
@@ -96,7 +118,7 @@ struct GLI_tdstTexture_ {
     unsigned int lCompressionCounter; /* +0x38 */
     unsigned int lTypeOfCompression; /* +0x3c */
     unsigned int lTypeOfMipMapping; /* +0x40 */
-    int p_TextureOfSubstitution; /* +0x44 */
+    GLI_tdstTexture_* p_TextureOfSubstitution; /* +0x44 */
     unsigned char ucBilinearMode; /* +0x48 */
     unsigned char ucCylingMode; /* +0x49 */
     char a255_cFileName[128]; /* +0x4a */
@@ -138,7 +160,7 @@ struct anon_1 {
     unsigned long REGS11 : 4; /* bit 44, byte +0x8 */
     unsigned long REGS12 : 4; /* bit 48, byte +0x8 */
     unsigned long REGS13 : 4; /* bit 52, byte +0x8 */
-    unsigned long 8 : 4; /* bit None, byte +0x8 */
+    unsigned long REGS14 : 4; /* bit 56, byte +0x8 */
     unsigned long REGS15 : 4; /* bit 60, byte +0x8 */
 };
 
@@ -147,14 +169,30 @@ struct tagGLtexindex {
     int nStart : 11; /* bit 10, byte +0x0 */
 };
 
+union unFunction {
+    void (*pfnPlayVoid)(void); /* +0x0 */
+    void (*pfnPlayParam)(void*); /* +0x0 */
+};
+
+struct tagGLlistnode {
+    unFunction pfns; /* +0x0 */
+    int cbParamCount; /* +0x4 */
+    unsigned char aParams[4]; /* +0x8 */
+};
+
 struct tagGLlistcalls {
-    int pNext; /* +0x0 */
+    tagGLlistcalls* pNext; /* +0x0 */
     unsigned int cbCalls; /* +0x4 */
     tagGLlistnode aNodes[1]; /* +0x8 */
 };
 
+struct anon_41 {
+    float stMat[2][2]; /* +0x0 */
+    float stTrans[2]; /* +0x10 */
+};
+
 struct anon_2 {
-    int pst_Texture; /* +0x0 */
+    GLI_tdstTexture_* pst_Texture; /* +0x0 */
     char c_Operator; /* +0x4 */
     char c_ColorOperator; /* +0x5 */
     char c_UVSource; /* +0x6 */
@@ -167,6 +205,69 @@ struct anon_2 {
     unsigned int ulSetMaterialFunction; /* +0x44 */
     float fScaleU; /* +0x48 */
     float fScaleV; /* +0x4c */
+};
+
+struct anon_16 {
+    unsigned long pad00; /* +0x0 */
+};
+
+struct anon_33 {
+    unsigned long TBP0 : 14; /* bit 0, byte +0x0 */
+    unsigned long TBW : 6; /* bit 14, byte +0x0 */
+    unsigned long PSM : 6; /* bit 20, byte +0x0 */
+    unsigned long TW : 4; /* bit 26, byte +0x0 */
+    unsigned long TH : 4; /* bit 30, byte +0x0 */
+    unsigned long TCC : 1; /* bit 34, byte +0x0 */
+    unsigned long TFX : 2; /* bit 35, byte +0x0 */
+    unsigned long CBP : 14; /* bit 37, byte +0x0 */
+    unsigned long CPSM : 4; /* bit 51, byte +0x0 */
+    unsigned long CSM : 1; /* bit 55, byte +0x0 */
+    unsigned long CSA : 5; /* bit 56, byte +0x0 */
+    unsigned long CLD : 3; /* bit 61, byte +0x0 */
+};
+
+struct anon_39 {
+    unsigned long LCM : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 1; /* bit 1, byte +0x0 */
+    unsigned long MXL : 3; /* bit 2, byte +0x0 */
+    unsigned long MMAG : 1; /* bit 5, byte +0x0 */
+    unsigned long MMIN : 3; /* bit 6, byte +0x0 */
+    unsigned long MTBA : 1; /* bit 9, byte +0x0 */
+    unsigned long pad10 : 9; /* bit 10, byte +0x0 */
+    unsigned long L : 2; /* bit 19, byte +0x0 */
+    unsigned long pad21 : 11; /* bit 21, byte +0x0 */
+    unsigned long K : 12; /* bit 32, byte +0x0 */
+    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
+};
+
+struct anon_29 {
+    unsigned long TBP1 : 14; /* bit 0, byte +0x0 */
+    unsigned long TBW1 : 6; /* bit 14, byte +0x0 */
+    unsigned long TBP2 : 14; /* bit 20, byte +0x0 */
+    unsigned long TBW2 : 6; /* bit 34, byte +0x0 */
+    unsigned long TBP3 : 14; /* bit 40, byte +0x0 */
+    unsigned long TBW3 : 6; /* bit 54, byte +0x0 */
+    unsigned long pad60 : 4; /* bit 60, byte +0x0 */
+};
+
+struct anon_34 {
+    unsigned long TBP4 : 14; /* bit 0, byte +0x0 */
+    unsigned long TBW4 : 6; /* bit 14, byte +0x0 */
+    unsigned long TBP5 : 14; /* bit 20, byte +0x0 */
+    unsigned long TBW5 : 6; /* bit 34, byte +0x0 */
+    unsigned long TBP6 : 14; /* bit 40, byte +0x0 */
+    unsigned long TBW6 : 6; /* bit 54, byte +0x0 */
+    unsigned long pad60 : 4; /* bit 60, byte +0x0 */
+};
+
+struct anon_23 {
+    unsigned long WMS : 2; /* bit 0, byte +0x0 */
+    unsigned long WMT : 2; /* bit 2, byte +0x0 */
+    unsigned long MINU : 10; /* bit 4, byte +0x0 */
+    unsigned long MAXU : 10; /* bit 14, byte +0x0 */
+    unsigned long MINV : 10; /* bit 24, byte +0x0 */
+    unsigned long MAXV : 10; /* bit 34, byte +0x0 */
+    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
 };
 
 struct tagGsSetTex {
@@ -185,23 +286,64 @@ struct tagGsSetTex {
     long clampaddr; /* +0x68 */
 };
 
+struct _sceDmaTag {
+    unsigned short qwc; /* +0x0 */
+    unsigned char mark; /* +0x2 */
+    unsigned char id; /* +0x3 */
+    _sceDmaTag* next; /* +0x4 */
+    unsigned int p[2]; /* +0x8 */
+};
+
 struct tagGLprimbuf {
-    int pNext; /* +0x0 */
+    tagGLprimbuf* pNext; /* +0x0 */
     unsigned int nCount; /* +0x4 */
     unsigned char bEOP; /* +0x8 */
     int pCode; /* +0xc */
-    int pData; /* +0x10 */
+    float (*) pData[4]; /* +0x10 */
     int pTexUnit; /* +0x14 */
     _sceDmaTag tagDma; /* +0x20 */
     anon_1 tagGif; /* +0x30 */
     int vData[4]; /* +0x40 */
 };
 
+struct GEO_tdstColor_ {
+    float xR; /* +0x0 */
+    float xG; /* +0x4 */
+    float xB; /* +0x8 */
+    float xA; /* +0xc */
+};
+
+struct GLI_tdstMaterial_ {
+    unsigned int xMaterialType; /* +0x0 */
+    GEO_tdstColor_ stAmbient; /* +0x4 */
+    GEO_tdstColor_ stDiffuse; /* +0x14 */
+    GEO_tdstColor_ stSpecular; /* +0x24 */
+    GEO_tdstColor_ stColor; /* +0x34 */
+    unsigned int lMaterialAdditionnalType; /* +0x44 */
+    int lSpecularExponent; /* +0x48 */
+    GLI_tdstTexture_* p_stTexture; /* +0x4c */
+    float fAddU; /* +0x50 */
+    float fAddV; /* +0x54 */
+    float fConstantAddU; /* +0x58 */
+    float fConstantAddV; /* +0x5c */
+    int lIncrementIsEnable; /* +0x60 */
+    unsigned int lActualRefreshNumber; /* +0x64 */
+    GLI_tdstAnimatedTextureNode_* p_stFistAnimatedTExtureNode; /* +0x68 */
+    GLI_tdstAnimatedTextureNode_* p_stActualAnimatedTExtureNode; /* +0x6c */
+    int lNumberOfDisplayNode; /* +0x70 */
+    float xActualDisplayTimeSinceStartOfLastTexture; /* +0x74 */
+    unsigned char xIsLocked; /* +0x78 */
+    unsigned int uiFlags; /* +0x7c */
+    unsigned int ulMultiTextureType; /* +0x80 */
+    unsigned int ulNbTextureStages; /* +0x84 */
+    anon_2 a_stMultiMaterial[4]; /* +0x88 */
+};
+
 struct anon_3 {
     float vObjectBS[4]; /* +0x0 */
     unsigned char bFinalCompile; /* +0x10 */
     unsigned int mode; /* +0x14 */
-    int pPrimBuf; /* +0x18 */
+    tagGLprimbuf* pPrimBuf; /* +0x18 */
 };
 
 struct anon_4 {
@@ -211,6 +353,11 @@ struct anon_4 {
     unsigned long pad16 : 16; /* bit 16, byte +0x0 */
     unsigned long TA1 : 8; /* bit 32, byte +0x0 */
     unsigned long pad40 : 24; /* bit 40, byte +0x0 */
+};
+
+struct tagListNodeSingle {
+    unsigned int nIndex; /* +0x0 */
+    tagListData* pData; /* +0x4 */
 };
 
 struct anon_5 {
@@ -233,22 +380,27 @@ struct anon_7 {
     unsigned long pad01 : 63; /* bit 1, byte +0x0 */
 };
 
-struct tagGLlistnode {
-    unFunction pfns; /* +0x0 */
-    int cbParamCount; /* +0x4 */
-    unsigned char aParams[4]; /* +0x8 */
+struct tagListData {
+    unsigned int eMode; /* +0x0 */
+    tagGLlistcalls* pCalls; /* +0x4 */
+    tagGLlistdatas* pDatas; /* +0x8 */
+    tagGLprimbuf* pPrimBufHead; /* +0xc */
+    tagGLprimbuf* pPrimBufTail; /* +0x10 */
+    float (*) pDmaBuffer[4]; /* +0x14 */
+    unsigned int uiSDLSize; /* +0x18 */
+    int pSDLIndices; /* +0x1c */
+    unsigned int uiSDLIndicesSize; /* +0x20 */
+    unsigned int uiSDLBits; /* +0x24 */
+    unsigned long ModFlgs; /* +0x28 */
+    float (*) pLastExecDmaBuffer[4]; /* +0x30 */
+    signed char ucSDLObjectReserveSize; /* +0x34 */
 };
 
 struct GLI_st_RegisteredTexture_ {
     int pTextureData; /* +0x0 */
     unsigned int TextureName; /* +0x4 */
     unsigned int Flags; /* +0x8 */
-    int p_stTexture; /* +0xc */
-};
-
-union unFunction {
-    int pfnPlayVoid; /* +0x0 */
-    int pfnPlayParam; /* +0x0 */
+    GLI_tdstTexture_* p_stTexture; /* +0xc */
 };
 
 struct anon_8 {
@@ -257,6 +409,10 @@ struct anon_8 {
     unsigned int B : 8; /* bit 16, byte +0x0 */
     unsigned int A : 8; /* bit 24, byte +0x0 */
     float Q; /* +0x4 */
+};
+
+struct GLI_tdstTexturePS2GL_ {
+    unsigned int TextureID; /* +0x0 */
 };
 
 union anon_9 {
@@ -349,15 +505,31 @@ struct anon_12 {
 };
 
 struct tagListNode {
-    int pNext; /* +0x0 */
+    tagListNode* pNext; /* +0x0 */
     unsigned int nIndex; /* +0x4 */
     int iSize; /* +0x8 */
-    /* aggregate */ int apData; /* +0xc */
+    int apData[1]; /* +0xc */
 };
 
 struct anon_13 {
     unsigned long MSK : 2; /* bit 0, byte +0x0 */
     unsigned long pad02 : 62; /* bit 2, byte +0x0 */
+};
+
+struct tag_GLtexture_image {
+    unsigned int target; /* +0x0 */
+    int inputComponents; /* +0x4 */
+    int width; /* +0x8 */
+    int height; /* +0xc */
+    unsigned int format; /* +0x10 */
+    int pixels; /* +0x14 */
+    int pixelsAux; /* +0x18 */
+    int cbPixels; /* +0x1c */
+    int cbPixelsAux; /* +0x20 */
+    unsigned char pixelsChanged; /* +0x24 */
+    unsigned char bConverted; /* +0x25 */
+    unsigned char bUserMaintain; /* +0x26 */
+    unsigned int uiSpan; /* +0x28 */
 };
 
 struct anon_14 {
@@ -371,17 +543,19 @@ struct anon_14 {
     unsigned long pad46 : 2; /* bit 46, byte +0x0 */
     unsigned long DBW : 6; /* bit 48, byte +0x0 */
     unsigned long pad54 : 2; /* bit 54, byte +0x0 */
-    unsigned long 8 : 6; /* bit None, byte +0x0 */
+    unsigned long DPSM : 6; /* bit 56, byte +0x0 */
     unsigned long pad62 : 2; /* bit 62, byte +0x0 */
 };
 
-struct anon_15 {
-    unsigned long param0 : 56; /* bit None, byte +0x0 */
-    unsigned long 8 : 8; /* bit None, byte +0x0 */
+struct GLI_tdstAnimatedTextureNode_ {
+    GLI_tdstTexture_* p_stTexture; /* +0x0 */
+    float xDisplayTime; /* +0x4 */
+    GLI_tdstAnimatedTextureNode_* p_stNextDisplayNode; /* +0x8 */
 };
 
-struct anon_16 {
-    unsigned long pad00; /* +0x0 */
+struct anon_15 {
+    unsigned long pad00 : 56; /* bit 0, byte +0x0 */
+    unsigned long F : 8; /* bit 56, byte +0x0 */
 };
 
 struct anon_17 {
@@ -395,13 +569,6 @@ struct anon_17 {
     unsigned long pad59 : 5; /* bit 59, byte +0x0 */
 };
 
-struct GEO_tdstColor_ {
-    float xR; /* +0x0 */
-    float xG; /* +0x4 */
-    float xB; /* +0x8 */
-    float xA; /* +0xc */
-};
-
 struct anon_18 {
     unsigned long FCR : 8; /* bit 0, byte +0x0 */
     unsigned long FCG : 8; /* bit 8, byte +0x0 */
@@ -412,6 +579,11 @@ struct anon_18 {
 struct anon_19 {
     unsigned long XDR : 2; /* bit 0, byte +0x0 */
     unsigned long pad02 : 62; /* bit 2, byte +0x0 */
+};
+
+struct ConcatFileHeader_ {
+    char Name[256]; /* +0x0 */
+    unsigned int PositionInFile; /* +0x100 */
 };
 
 struct anon_20 {
@@ -444,9 +616,9 @@ struct CTL_MapInfo_ {
 
 struct tagGLlistpool {
     unsigned int nFreeIndex; /* +0x0 */
-    /* array */ int aSingleIndex[64]; /* +0x4 */
-    int pFirstNode; /* +0x204 */
-    int pLastNode; /* +0x208 */
+    tagListNodeSingle aSingleIndex[64]; /* +0x4 */
+    tagListNode* pFirstNode; /* +0x204 */
+    tagListNode* pLastNode; /* +0x208 */
 };
 
 struct tag_GLtexture {
@@ -456,7 +628,7 @@ struct tag_GLtexture {
     unsigned int eTexFilterMag; /* +0x18 */
     unsigned int eTexWrapS; /* +0x1c */
     unsigned int eTexWrapT; /* +0x20 */
-    /* aggregate */ int Image; /* +0x24 */
+    int Image[7]; /* +0x24 */
     int iClutOffset; /* +0x40 */
     int iClutSize; /* +0x44 */
     int clut; /* +0x48 */
@@ -468,19 +640,77 @@ struct anon_22 {
     unsigned int IDMSK; /* +0x4 */
 };
 
-struct anon_23 {
-    unsigned long WMS : 2; /* bit 0, byte +0x0 */
-    unsigned long WMT : 2; /* bit 2, byte +0x0 */
-    unsigned long MINU : 10; /* bit 4, byte +0x0 */
-    unsigned long MAXU : 10; /* bit 14, byte +0x0 */
-    unsigned long MINV : 10; /* bit 24, byte +0x0 */
-    unsigned long MAXV : 10; /* bit 34, byte +0x0 */
-    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
-};
-
 struct anon_24 {
     float S; /* +0x0 */
     float T; /* +0x4 */
+};
+
+struct anon_25 {
+    unsigned long RRW : 12; /* bit 0, byte +0x0 */
+    unsigned long pad12 : 20; /* bit 12, byte +0x0 */
+    unsigned long RRH : 12; /* bit 32, byte +0x0 */
+    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
+};
+
+struct tagGsLoadImage {
+    anon_1 gifTag; /* +0x0 */
+    anon_14 bitbltbuf; /* +0x10 */
+    long bitbltbufaddr; /* +0x18 */
+    anon_20 trxpos; /* +0x20 */
+    long trxposaddr; /* +0x28 */
+    anon_25 trxreg; /* +0x30 */
+    long trxregaddr; /* +0x38 */
+    anon_19 trxdir; /* +0x40 */
+    long trxdiraddr; /* +0x48 */
+};
+
+struct tagGLtexname {
+    unsigned char bAllocated; /* +0x0 */
+    unsigned char bResident; /* +0x1 */
+    float fPrioritize; /* +0x4 */
+    unsigned int eDimension; /* +0x8 */
+    int iTexBlock; /* +0xc */
+    tag_GLtexture* pTex1D; /* +0x10 */
+    tag_GLtexture* pTex2D; /* +0x14 */
+    tag_GLtexture* pTexCube; /* +0x18 */
+};
+
+struct tagGLtexblock {
+    unsigned int nTexID : 10; /* bit 0, byte +0x0 */
+    int nStart : 11; /* bit 10, byte +0x0 */
+    int nLength : 11; /* bit 21, byte +0x0 */
+};
+
+struct tag_GLlight {
+    float vAmbient[4]; /* +0x0 */
+    float vDiffuse[4]; /* +0x10 */
+    float vSpecular[4]; /* +0x20 */
+    float vPosition[4]; /* +0x30 */
+    float vDirection[4]; /* +0x40 */
+    float fSpotExponent; /* +0x50 */
+    float fSpotCutoff; /* +0x54 */
+    float fCosCutoff; /* +0x58 */
+    float fConstantAttenuation; /* +0x5c */
+    float fLinearAttenuation; /* +0x60 */
+    float fQuadraticAttenuation; /* +0x64 */
+};
+
+struct tag_GLmaterial {
+    float vAmbient[4]; /* +0x0 */
+    float vDiffuse[4]; /* +0x10 */
+    float vSpecular[4]; /* +0x20 */
+    float vEmission[4]; /* +0x30 */
+    float fShininess; /* +0x40 */
+    float fAmbientIndex; /* +0x44 */
+    float fDiffuseIndex; /* +0x48 */
+    float fSpecularIndex; /* +0x4c */
+};
+
+struct tagGLArrayInfo {
+    int size; /* +0x0 */
+    unsigned int type; /* +0x4 */
+    int stride; /* +0x8 */
+    int pointer; /* +0xc */
 };
 
 struct tagGLcontext {
@@ -536,11 +766,11 @@ struct tagGLcontext {
     unsigned int nLightBits; /* +0x174 */
     unsigned int bPointLighting; /* +0x178 */
     unsigned int nTextureEnableBits; /* +0x17c */
-    /* array */ int TextureSet[2]; /* +0x180 */
-    int pCurTexture; /* +0x240 */
+    tag_GLtexture_set TextureSet[2]; /* +0x180 */
+    tag_GLtexture_set* pCurTexture; /* +0x240 */
     tagGsLoadImage stGsLoadImage; /* +0x250 */
     tagGsSetTex astGsSetTex[2]; /* +0x2a0 */
-    int pstCurGsSetTex; /* +0x380 */
+    tagGsSetTex* pstCurGsSetTex; /* +0x380 */
     unsigned int anCurTexName1D[2]; /* +0x384 */
     unsigned int anCurTexName2D[2]; /* +0x38c */
     unsigned int nCurTexNameCube; /* +0x394 */
@@ -591,13 +821,13 @@ struct tagGLcontext {
     unsigned int eHintSmoothPolygon; /* +0x5ccc */
     unsigned int eHintFog; /* +0x5cd0 */
     unsigned int uiListBase; /* +0x5cd4 */
-    int pCurListData; /* +0x5cd8 */
-    int pCurListCalls; /* +0x5cdc */
-    int pPreListCalls; /* +0x5ce0 */
-    int pCurPrimBuf; /* +0x5ce4 */
-    int pCurParamBegin; /* +0x5ce8 */
-    int ppCurPrimBufHead; /* +0x5cec */
-    int pCurListVData; /* +0x5cf0 */
+    tagListData* pCurListData; /* +0x5cd8 */
+    tagGLlistcalls* pCurListCalls; /* +0x5cdc */
+    tagGLlistcalls* pPreListCalls; /* +0x5ce0 */
+    tagGLprimbuf* pCurPrimBuf; /* +0x5ce4 */
+    anon_3* pCurParamBegin; /* +0x5ce8 */
+    tagGLprimbuf* ppCurPrimBufHead; /* +0x5cec */
+    float (*) pCurListVData[4]; /* +0x5cf0 */
     int pCurListVCode; /* +0x5cf4 */
     int pCurListTexUnit; /* +0x5cf8 */
     tagGLlistpool ListPool; /* +0x5cfc */
@@ -641,37 +871,37 @@ struct tagGLcontext {
     int iMaxClipPlanes; /* +0x6000 */
     float avClipPlane[6][4]; /* +0x6010 */
     unsigned int eMatrixMode; /* +0x6070 */
-    int pCurMatrix; /* +0x6074 */
-    int pCurStack; /* +0x6078 */
+    float (*) pCurMatrix[4][4]; /* +0x6074 */
+    float (*) pCurStack[4][4]; /* +0x6078 */
     int piCurStackDepth; /* +0x607c */
     float ViewOrg[2]; /* +0x6080 */
     float ViewPort[4]; /* +0x6090 */
     float DepthRange[2]; /* +0x60a0 */
     float vacurColor[2][4]; /* +0x60b0 */
-    int pvcurColor; /* +0x60d0 */
+    float (*) pvcurColor[4]; /* +0x60d0 */
     float vcurNormal[4]; /* +0x60e0 */
     float vacurTexCoords[2][4]; /* +0x60f0 */
     unsigned int iCurTextureSet; /* +0x6110 */
-    int pvcurTextCoord; /* +0x6114 */
+    float (*) pvcurTextCoord[4]; /* +0x6114 */
     unsigned char bFinalCompile; /* +0x6118 */
     float valistColor[2][4]; /* +0x6120 */
-    int pvlistColor; /* +0x6140 */
+    float (*) pvlistColor[4]; /* +0x6140 */
     float vlistNormal[4]; /* +0x6150 */
     float valistTexCoords[2][4]; /* +0x6160 */
     unsigned int ilistTexSet; /* +0x6180 */
-    int pvlistTexCoord; /* +0x6184 */
+    float (*) pvlistTexCoord[4]; /* +0x6184 */
     unsigned char bRasterPosValid; /* +0x6188 */
     float fRasterPos[4]; /* +0x618c */
     float fRasterDistance; /* +0x619c */
     float fRasterColor[2][4]; /* +0x61a0 */
     float RasterMultiTexCoords[2][4]; /* +0x61c0 */
-    int pvRasterTexCoord; /* +0x61e0 */
+    float (*) pvRasterTexCoord[4]; /* +0x61e0 */
     unsigned char bEdgeFlag; /* +0x61e4 */
     float mFrustumNormal[4][4]; /* +0x61f0 */
     float mGuardBandNormal[4][4]; /* +0x6230 */
     float vZNearFar[4]; /* +0x6270 */
     float vObjectBS[4]; /* +0x6280 */
-    int pfvPackaeBSs; /* +0x6290 */
+    float (*) pfvPackaeBSs[4]; /* +0x6290 */
     int iPackageBSIndex; /* +0x6294 */
     float faObjectBoundingBox[6]; /* +0x6298 */
     float ModelViewMatrix[4][4]; /* +0x62b0 */
@@ -686,46 +916,46 @@ struct tagGLcontext {
     float TextureMatrix[2][4][4]; /* +0x68f0 */
     unsigned int nTextureStackDepths[2]; /* +0x6970 */
     float TextureStacks[2][4][4][4]; /* +0x6980 */
-    int pTextureMatrix; /* +0x6b80 */
+    float (*) pTextureMatrix[4][4]; /* +0x6b80 */
     int pnTextureStackDepth; /* +0x6b84 */
-    int pTextureStack; /* +0x6b88 */
+    float (*) pTextureStack[4][4]; /* +0x6b88 */
     unsigned int eBeginMode; /* +0x6b8c */
     unsigned char bInBeginEndPair; /* +0x6b90 */
     unsigned char bInDisplayListExecution; /* +0x6b91 */
     int iBufLimit; /* +0x6b94 */
     int iBufCount; /* +0x6b98 */
-    int pVBuf; /* +0x6b9c */
-    int pCBuf; /* +0x6ba0 */
-    int pNBuf; /* +0x6ba4 */
-    int pTBuf; /* +0x6ba8 */
-    int pCBuf_b; /* +0x6bac */
-    int pTBuf_b; /* +0x6bb0 */
-    int pVIFDMABuf; /* +0x6bb4 */
-    int pVIFDMABufUnaligned; /* +0x6bb8 */
-    int pVIFInBuf; /* +0x6bbc */
-    int pVIFOutBuf; /* +0x6bc0 */
-    int pVIFIBufTail; /* +0x6bc4 */
-    int pVIFOBufTail; /* +0x6bc8 */
+    float (*) pVBuf[4]; /* +0x6b9c */
+    float (*) pCBuf[4]; /* +0x6ba0 */
+    float (*) pNBuf[4]; /* +0x6ba4 */
+    float (*) pTBuf[4]; /* +0x6ba8 */
+    float (*) pCBuf_b[4]; /* +0x6bac */
+    float (*) pTBuf_b[4]; /* +0x6bb0 */
+    float (*) pVIFDMABuf[4]; /* +0x6bb4 */
+    float (*) pVIFDMABufUnaligned[4]; /* +0x6bb8 */
+    float (*) pVIFInBuf[4]; /* +0x6bbc */
+    float (*) pVIFOutBuf[4]; /* +0x6bc0 */
+    float (*) pVIFIBufTail[4]; /* +0x6bc4 */
+    float (*) pVIFOBufTail[4]; /* +0x6bc8 */
     int iLightModel; /* +0x6bcc */
-    int pVU1_DMA_parameters; /* +0x6bd0 */
-    int pVU1_DMA_buf0; /* +0x6bd4 */
-    int pVU1_DMA_buf1; /* +0x6bd8 */
-    int pmClipping; /* +0x6bdc */
-    int pmNormal; /* +0x6be0 */
-    int pmClippingScreen; /* +0x6be4 */
-    int pmLocalScreen; /* +0x6be8 */
-    int pmModelView; /* +0x6bec */
-    int pvClampLimit; /* +0x6bf0 */
-    int pClippingFlags; /* +0x6bf4 */
-    int pGifTagFan; /* +0x6bf8 */
-    int pmD; /* +0x6bfc */
-    int pmVP; /* +0x6c00 */
-    int pmS; /* +0x6c04 */
-    int pmh; /* +0x6c08 */
-    int pvAmbient; /* +0x6c0c */
-    int pvEmission; /* +0x6c10 */
-    int pvScreenScale; /* +0x6c14 */
-    int pvColorRange; /* +0x6c18 */
+    _sceDmaTag* pVU1_DMA_parameters; /* +0x6bd0 */
+    _sceDmaTag* pVU1_DMA_buf0; /* +0x6bd4 */
+    _sceDmaTag* pVU1_DMA_buf1; /* +0x6bd8 */
+    float (*) pmClipping[4][4]; /* +0x6bdc */
+    float (*) pmNormal[4][4]; /* +0x6be0 */
+    float (*) pmClippingScreen[4][4]; /* +0x6be4 */
+    float (*) pmLocalScreen[4][4]; /* +0x6be8 */
+    float (*) pmModelView[4][4]; /* +0x6bec */
+    float (*) pvClampLimit[4]; /* +0x6bf0 */
+    int (*) pClippingFlags[4]; /* +0x6bf4 */
+    anon_1* pGifTagFan; /* +0x6bf8 */
+    float (*) pmD[4][4]; /* +0x6bfc */
+    float (*) pmVP[4][4]; /* +0x6c00 */
+    float (*) pmS[4][4]; /* +0x6c04 */
+    float (*) pmh[4][4]; /* +0x6c08 */
+    float (*) pvAmbient[4]; /* +0x6c0c */
+    float (*) pvEmission[4]; /* +0x6c10 */
+    float (*) pvScreenScale[4]; /* +0x6c14 */
+    float (*) pvColorRange[4]; /* +0x6c18 */
     int pfAlpha; /* +0x6c1c */
     int pfShininess; /* +0x6c20 */
     int pnColorMatMasks; /* +0x6c24 */
@@ -742,30 +972,23 @@ struct tagGLcontext {
     int piEntryAddress; /* +0x6c50 */
     int peClippingMode; /* +0x6c54 */
     int peUseClippingMode; /* +0x6c58 */
-    int pGifTagBuf0; /* +0x6c5c */
-    int pGifTagBuf1; /* +0x6c60 */
+    anon_1* pGifTagBuf0; /* +0x6c5c */
+    anon_1* pGifTagBuf1; /* +0x6c60 */
     int iCurBuf; /* +0x6c64 */
-    int pVBuf0; /* +0x6c68 */
-    int pNBuf0; /* +0x6c6c */
-    int pCBuf0; /* +0x6c70 */
-    int pTBuf0; /* +0x6c74 */
-    int pCBuf0_b; /* +0x6c78 */
-    int pTBuf0_b; /* +0x6c7c */
-    int pVBuf1; /* +0x6c80 */
-    int pNBuf1; /* +0x6c84 */
-    int pCBuf1; /* +0x6c88 */
-    int pTBuf1; /* +0x6c8c */
-    int pCBuf1_b; /* +0x6c90 */
-    int pTBuf1_b; /* +0x6c94 */
-    int pMSCAL; /* +0x6c98 */
+    float (*) pVBuf0[4]; /* +0x6c68 */
+    float (*) pNBuf0[4]; /* +0x6c6c */
+    float (*) pCBuf0[4]; /* +0x6c70 */
+    float (*) pTBuf0[4]; /* +0x6c74 */
+    float (*) pCBuf0_b[4]; /* +0x6c78 */
+    float (*) pTBuf0_b[4]; /* +0x6c7c */
+    float (*) pVBuf1[4]; /* +0x6c80 */
+    float (*) pNBuf1[4]; /* +0x6c84 */
+    float (*) pCBuf1[4]; /* +0x6c88 */
+    float (*) pTBuf1[4]; /* +0x6c8c */
+    float (*) pCBuf1_b[4]; /* +0x6c90 */
+    float (*) pTBuf1_b[4]; /* +0x6c94 */
+    tagstVIFCode* pMSCAL; /* +0x6c98 */
     unsigned char VU1Package[10000]; /* +0x6ca0 */
-};
-
-struct anon_25 {
-    unsigned long RRW : 12; /* bit 0, byte +0x0 */
-    unsigned long pad12 : 20; /* bit 12, byte +0x0 */
-    unsigned long RRH : 12; /* bit 32, byte +0x0 */
-    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
 };
 
 struct anon_26 {
@@ -785,13 +1008,6 @@ struct anon_27 {
     unsigned int IDMSK; /* +0x4 */
 };
 
-struct tagGLArrayInfo {
-    int size; /* +0x0 */
-    unsigned int type; /* +0x4 */
-    int stride; /* +0x8 */
-    int pointer; /* +0xc */
-};
-
 struct tagsceGsReg {
     unsigned long DATA; /* +0x0 */
 };
@@ -803,14 +1019,102 @@ struct anon_28 {
     unsigned long pad30 : 34; /* bit 30, byte +0x0 */
 };
 
-struct anon_29 {
-    unsigned long TBP1 : 14; /* bit 0, byte +0x0 */
-    unsigned long TBW1 : 6; /* bit 14, byte +0x0 */
-    unsigned long TBP2 : 14; /* bit 20, byte +0x0 */
-    unsigned long TBW2 : 6; /* bit 34, byte +0x0 */
-    unsigned long TBP3 : 14; /* bit 40, byte +0x0 */
-    unsigned long TBW3 : 6; /* bit 54, byte +0x0 */
-    unsigned long pad60 : 4; /* bit 60, byte +0x0 */
+struct anon_40 {
+    unsigned long PRIM : 3; /* bit 0, byte +0x0 */
+    unsigned long IIP : 1; /* bit 3, byte +0x0 */
+    unsigned long TME : 1; /* bit 4, byte +0x0 */
+    unsigned long FGE : 1; /* bit 5, byte +0x0 */
+    unsigned long ABE : 1; /* bit 6, byte +0x0 */
+    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned long FST : 1; /* bit 8, byte +0x0 */
+    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
+    unsigned long FIX : 1; /* bit 10, byte +0x0 */
+    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+};
+
+struct anon_36 {
+    unsigned long X : 16; /* bit 0, byte +0x0 */
+    unsigned long Y : 16; /* bit 16, byte +0x0 */
+    unsigned long Z : 24; /* bit 32, byte +0x0 */
+    unsigned long F : 8; /* bit 56, byte +0x0 */
+};
+
+struct anon_35 {
+    unsigned long X : 16; /* bit 0, byte +0x0 */
+    unsigned long Y : 16; /* bit 16, byte +0x0 */
+    unsigned long Z : 32; /* bit 32, byte +0x0 */
+};
+
+struct anon_42 {
+    unsigned long pad00 : 20; /* bit 0, byte +0x0 */
+    unsigned long PSM : 6; /* bit 20, byte +0x0 */
+    unsigned long pad26 : 11; /* bit 26, byte +0x0 */
+    unsigned long CBP : 14; /* bit 37, byte +0x0 */
+    unsigned long CPSM : 4; /* bit 51, byte +0x0 */
+    unsigned long CSM : 1; /* bit 55, byte +0x0 */
+    unsigned long CSA : 5; /* bit 56, byte +0x0 */
+    unsigned long CLD : 3; /* bit 61, byte +0x0 */
+};
+
+struct anon_31 {
+    unsigned long OFX : 16; /* bit 0, byte +0x0 */
+    unsigned long pad16 : 16; /* bit 16, byte +0x0 */
+    unsigned long OFY : 16; /* bit 32, byte +0x0 */
+    unsigned long pad48 : 16; /* bit 48, byte +0x0 */
+};
+
+struct anon_32 {
+    unsigned long DIMX00 : 3; /* bit 0, byte +0x0 */
+    unsigned long pad00 : 1; /* bit 3, byte +0x0 */
+    unsigned long DIMX01 : 3; /* bit 4, byte +0x0 */
+    unsigned long pad01 : 1; /* bit 7, byte +0x0 */
+    unsigned long DIMX02 : 3; /* bit 8, byte +0x0 */
+    unsigned long pad02 : 1; /* bit 11, byte +0x0 */
+    unsigned long DIMX03 : 3; /* bit 12, byte +0x0 */
+    unsigned long pad03 : 1; /* bit 15, byte +0x0 */
+    unsigned long DIMX10 : 3; /* bit 16, byte +0x0 */
+    unsigned long pad10 : 1; /* bit 19, byte +0x0 */
+    unsigned long DIMX11 : 3; /* bit 20, byte +0x0 */
+    unsigned long pad11 : 1; /* bit 23, byte +0x0 */
+    unsigned long DIMX12 : 3; /* bit 24, byte +0x0 */
+    unsigned long pad12 : 1; /* bit 27, byte +0x0 */
+    unsigned long DIMX13 : 3; /* bit 28, byte +0x0 */
+    unsigned long pad13 : 1; /* bit 31, byte +0x0 */
+    unsigned long DIMX20 : 3; /* bit 32, byte +0x0 */
+    unsigned long pad20 : 1; /* bit 35, byte +0x0 */
+    unsigned long DIMX21 : 3; /* bit 36, byte +0x0 */
+    unsigned long pad21 : 1; /* bit 39, byte +0x0 */
+    unsigned long DIMX22 : 3; /* bit 40, byte +0x0 */
+    unsigned long pad22 : 1; /* bit 43, byte +0x0 */
+    unsigned long DIMX23 : 3; /* bit 44, byte +0x0 */
+    unsigned long pad23 : 1; /* bit 47, byte +0x0 */
+    unsigned long DIMX30 : 3; /* bit 48, byte +0x0 */
+    unsigned long pad30 : 1; /* bit 51, byte +0x0 */
+    unsigned long DIMX31 : 3; /* bit 52, byte +0x0 */
+    unsigned long pad31 : 1; /* bit 55, byte +0x0 */
+    unsigned long DIMX32 : 3; /* bit 56, byte +0x0 */
+    unsigned long pad32 : 1; /* bit 59, byte +0x0 */
+    unsigned long DIMX33 : 3; /* bit 60, byte +0x0 */
+    unsigned long pad33 : 1; /* bit 63, byte +0x0 */
+};
+
+struct anon_30 {
+    unsigned long CLAMP : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_38 {
+    unsigned long PABE : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_37 {
+    unsigned long ZBP : 9; /* bit 0, byte +0x0 */
+    unsigned long pad09 : 15; /* bit 9, byte +0x0 */
+    unsigned long PSM : 4; /* bit 24, byte +0x0 */
+    unsigned long pad28 : 4; /* bit 28, byte +0x0 */
+    unsigned long ZMSK : 1; /* bit 32, byte +0x0 */
+    unsigned long pad33 : 31; /* bit 33, byte +0x0 */
 };
 
 struct tagGScontext {
@@ -872,93 +1176,9 @@ struct tagGScontext {
     anon_11 GlobalModFlgs; /* +0x1b8 */
     anon_9 PackageBuffer[518]; /* +0x1c0 */
     int iBufCount; /* +0x2220 */
-    int pqCurrent; /* +0x2224 */
-    int pCurTag; /* +0x2228 */
+    anon_9* pqCurrent; /* +0x2224 */
+    anon_1* pCurTag; /* +0x2228 */
     signed char iRegs; /* +0x222c */
-};
-
-struct anon_30 {
-    unsigned long CLAMP : 1; /* bit 0, byte +0x0 */
-    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
-};
-
-struct tag_GLlight {
-    float vAmbient[4]; /* +0x0 */
-    float vDiffuse[4]; /* +0x10 */
-    float vSpecular[4]; /* +0x20 */
-    float vPosition[4]; /* +0x30 */
-    float vDirection[4]; /* +0x40 */
-    float fSpotExponent; /* +0x50 */
-    float fSpotCutoff; /* +0x54 */
-    float fCosCutoff; /* +0x58 */
-    float fConstantAttenuation; /* +0x5c */
-    float fLinearAttenuation; /* +0x60 */
-    float fQuadraticAttenuation; /* +0x64 */
-};
-
-struct _sceDmaTag {
-    unsigned short qwc; /* +0x0 */
-    unsigned char mark; /* +0x2 */
-    unsigned char id; /* +0x3 */
-    int next; /* +0x4 */
-    unsigned int p[2]; /* +0x8 */
-};
-
-struct anon_31 {
-    unsigned long OFX : 16; /* bit 0, byte +0x0 */
-    unsigned long pad16 : 16; /* bit 16, byte +0x0 */
-    unsigned long OFY : 16; /* bit 32, byte +0x0 */
-    unsigned long pad48 : 16; /* bit 48, byte +0x0 */
-};
-
-struct anon_32 {
-    unsigned long DIMX00 : 3; /* bit 0, byte +0x0 */
-    unsigned long pad00 : 1; /* bit 3, byte +0x0 */
-    unsigned long DIMX01 : 3; /* bit 4, byte +0x0 */
-    unsigned long pad01 : 1; /* bit 7, byte +0x0 */
-    unsigned long DIMX02 : 3; /* bit 8, byte +0x0 */
-    unsigned long pad02 : 1; /* bit 11, byte +0x0 */
-    unsigned long DIMX03 : 3; /* bit 12, byte +0x0 */
-    unsigned long pad03 : 1; /* bit 15, byte +0x0 */
-    unsigned long DIMX10 : 3; /* bit 16, byte +0x0 */
-    unsigned long pad10 : 1; /* bit 19, byte +0x0 */
-    unsigned long DIMX11 : 3; /* bit 20, byte +0x0 */
-    unsigned long pad11 : 1; /* bit 23, byte +0x0 */
-    unsigned long DIMX12 : 3; /* bit 24, byte +0x0 */
-    unsigned long pad12 : 1; /* bit 27, byte +0x0 */
-    unsigned long DIMX13 : 3; /* bit 28, byte +0x0 */
-    unsigned long pad13 : 1; /* bit 31, byte +0x0 */
-    unsigned long DIMX20 : 3; /* bit 32, byte +0x0 */
-    unsigned long pad20 : 1; /* bit 35, byte +0x0 */
-    unsigned long DIMX21 : 3; /* bit 36, byte +0x0 */
-    unsigned long pad21 : 1; /* bit 39, byte +0x0 */
-    unsigned long DIMX22 : 3; /* bit 40, byte +0x0 */
-    unsigned long pad22 : 1; /* bit 43, byte +0x0 */
-    unsigned long DIMX23 : 3; /* bit 44, byte +0x0 */
-    unsigned long pad23 : 1; /* bit 47, byte +0x0 */
-    unsigned long DIMX30 : 3; /* bit 48, byte +0x0 */
-    unsigned long pad30 : 1; /* bit 51, byte +0x0 */
-    unsigned long DIMX31 : 3; /* bit 52, byte +0x0 */
-    unsigned long pad31 : 1; /* bit 55, byte +0x0 */
-    unsigned long 8 : 3; /* bit None, byte +0x0 */
-    unsigned long pad32 : 1; /* bit 59, byte +0x0 */
-    unsigned long DIMX33 : 3; /* bit 60, byte +0x0 */
-    unsigned long pad33 : 1; /* bit 63, byte +0x0 */
-};
-
-struct anon_33 {
-    unsigned long TBP0 : 14; /* bit 0, byte +0x0 */
-    unsigned long TBW : 6; /* bit 14, byte +0x0 */
-    unsigned long PSM : 6; /* bit 20, byte +0x0 */
-    unsigned long TW : 4; /* bit 26, byte +0x0 */
-    unsigned long TH : 4; /* bit 30, byte +0x0 */
-    unsigned long TCC : 1; /* bit 34, byte +0x0 */
-    unsigned long TFX : 2; /* bit 35, byte +0x0 */
-    unsigned long CBP : 14; /* bit 37, byte +0x0 */
-    unsigned long CPSM : 4; /* bit 51, byte +0x0 */
-    unsigned long CSM : 1; /* bit 55, byte +0x0 */
-    unsigned long 8 : 5; /* bit None, byte +0x0 */
-    unsigned long CLD : 3; /* bit 61, byte +0x0 */
 };
 
 struct tagstVIFCode {
@@ -967,137 +1187,17 @@ struct tagstVIFCode {
     unsigned char CMD; /* +0x3 */
 };
 
-struct anon_34 {
-    unsigned long TBP4 : 14; /* bit 0, byte +0x0 */
-    unsigned long TBW4 : 6; /* bit 14, byte +0x0 */
-    unsigned long TBP5 : 14; /* bit 20, byte +0x0 */
-    unsigned long TBW5 : 6; /* bit 34, byte +0x0 */
-    unsigned long TBP6 : 14; /* bit 40, byte +0x0 */
-    unsigned long TBW6 : 6; /* bit 54, byte +0x0 */
-    unsigned long pad60 : 4; /* bit 60, byte +0x0 */
-};
-
 struct CTL_Info_ {
     unsigned int NumberOfMapsInIniFile; /* +0x0 */
     CTL_MapInfo_ Maps[25]; /* +0x4 */
 };
 
-struct anon_35 {
-    unsigned long X : 16; /* bit 0, byte +0x0 */
-    unsigned long Y : 16; /* bit 16, byte +0x0 */
-    unsigned long Z : 32; /* bit 32, byte +0x0 */
-};
-
-struct anon_36 {
-    unsigned long X : 16; /* bit 0, byte +0x0 */
-    unsigned long Y : 16; /* bit 16, byte +0x0 */
-    unsigned long Z : 24; /* bit 32, byte +0x0 */
-    unsigned long 8 : 8; /* bit None, byte +0x0 */
-};
-
-struct tag_GLmaterial {
-    float vAmbient[4]; /* +0x0 */
-    float vDiffuse[4]; /* +0x10 */
-    float vSpecular[4]; /* +0x20 */
-    float vEmission[4]; /* +0x30 */
-    float fShininess; /* +0x40 */
-    float fAmbientIndex; /* +0x44 */
-    float fDiffuseIndex; /* +0x48 */
-    float fSpecularIndex; /* +0x4c */
-};
-
-struct tagGLtexname {
-    unsigned char bAllocated; /* +0x0 */
-    unsigned char bResident; /* +0x1 */
-    float fPrioritize; /* +0x4 */
-    unsigned int eDimension; /* +0x8 */
-    int iTexBlock; /* +0xc */
-    int pTex1D; /* +0x10 */
-    int pTex2D; /* +0x14 */
-    int pTexCube; /* +0x18 */
-};
-
-struct anon_37 {
-    unsigned long ZBP : 9; /* bit 0, byte +0x0 */
-    unsigned long pad09 : 15; /* bit 9, byte +0x0 */
-    unsigned long PSM : 4; /* bit 24, byte +0x0 */
-    unsigned long pad28 : 4; /* bit 28, byte +0x0 */
-    unsigned long ZMSK : 1; /* bit 32, byte +0x0 */
-    unsigned long pad33 : 31; /* bit 33, byte +0x0 */
-};
-
-struct anon_38 {
-    unsigned long PABE : 1; /* bit 0, byte +0x0 */
-    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
-};
-
 struct tagGLlistdatas {
-    int pNext; /* +0x0 */
-    /* aggregate */ int apData; /* +0x4 */
+    tagGLlistdatas* pNext; /* +0x0 */
+    int apData[3]; /* +0x4 */
 };
 
-struct anon_39 {
-    unsigned long LCM : 1; /* bit 0, byte +0x0 */
-    unsigned long pad01 : 1; /* bit 1, byte +0x0 */
-    unsigned long MXL : 3; /* bit 2, byte +0x0 */
-    unsigned long MMAG : 1; /* bit 5, byte +0x0 */
-    unsigned long MMIN : 3; /* bit 6, byte +0x0 */
-    unsigned long MTBA : 1; /* bit 9, byte +0x0 */
-    unsigned long pad10 : 9; /* bit 10, byte +0x0 */
-    unsigned long L : 2; /* bit 19, byte +0x0 */
-    unsigned long pad21 : 11; /* bit 21, byte +0x0 */
-    unsigned long K : 12; /* bit 32, byte +0x0 */
-    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
-};
-
-struct anon_40 {
-    unsigned long PRIM : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
-};
-
-struct tagGLtexblock {
-    unsigned int nTexID : 10; /* bit 0, byte +0x0 */
-    int nStart : 11; /* bit 10, byte +0x0 */
-    int nLength : 11; /* bit 21, byte +0x0 */
-};
-
-struct tagGsLoadImage {
-    anon_1 gifTag; /* +0x0 */
-    anon_14 bitbltbuf; /* +0x10 */
-    long bitbltbufaddr; /* +0x18 */
-    anon_20 trxpos; /* +0x20 */
-    long trxposaddr; /* +0x28 */
-    anon_25 trxreg; /* +0x30 */
-    long trxregaddr; /* +0x38 */
-    anon_19 trxdir; /* +0x40 */
-    long trxdiraddr; /* +0x48 */
-};
-
-struct anon_41 {
-    float stMat[2][2]; /* +0x0 */
-    float stTrans[2]; /* +0x10 */
-};
-
-struct anon_42 {
-    unsigned long pad00 : 20; /* bit 0, byte +0x0 */
-    unsigned long PSM : 6; /* bit 20, byte +0x0 */
-    unsigned long pad26 : 11; /* bit 26, byte +0x0 */
-    unsigned long CBP : 14; /* bit 37, byte +0x0 */
-    unsigned long CPSM : 4; /* bit 51, byte +0x0 */
-    unsigned long CSM : 1; /* bit 55, byte +0x0 */
-    unsigned long 8 : 5; /* bit None, byte +0x0 */
-    unsigned long CLD : 3; /* bit 61, byte +0x0 */
-};
-
-/* aggregate */ int GLI_g_TextureMemSpace;
+int GLI_g_TextureMemSpace[4];
 int GLI_g_CreatingTBF;
 int GLI_g_pTBFBuffer;
 int GLI_g_pLevelTBFBuffer;
@@ -1136,19 +1236,19 @@ int GLI_g_OldTV;
 int GLI_g_OldTVData;
 int GLI_g_ScreenShotLoadingBuffer;
 GLI_tdstTexture_ GLI_g_OldTVTexture;
-/* aggregate */ int GLI_g_OldTVMaterial;
+GLI_tdstMaterial_ GLI_g_OldTVMaterial;
 GLI_tdstTexture_ GLI_g_RasterFontTexture;
-/* aggregate */ int GLI_g_RasterFontMaterial;
+GLI_tdstMaterial_ GLI_g_RasterFontMaterial;
 int GLI_g_TextureNames[4][400];
 char ReadBuffer[20480];
 CTL_Info_ CTL_g_Infos;
 GLI_st_RegisteredTexture_ GLI_g_RegisteredTextures[500];
 int TempTexture;
 unsigned int GLI_PS2GL_TextureArray[400];
-/* array */ int GLI_g_TransitionTextureInformation[2];
+int GLI_g_TransitionTextureInformation[2][25];
 char GLI_g_MapBeingLoaded[512];
-tagGLcontext 8;
-tagGScontext 8;
+tagGLcontext g_PS2glContext;
+tagGScontext g_gsContext;
 int PS2glAllocator64;
 int PS2glLiberator;
 unsigned int gs_lActualRefreshNumberForScolledTextures;
@@ -1162,473 +1262,1175 @@ int Bug_Please_ReloadMenu_40;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 95–102 */
 /* addr: 0x002c4800  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 100
+ *   +0x0004 -> line 95
+ *   +0x0008 -> line 96
+ *   +0x000c -> line 100
+ *   +0x0010 -> line 97
+ *   +0x0014 -> line 98
+ *   +0x0018 -> line 99
+ *   +0x001c -> line 102
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vClearSendMatStates(void)
 {
-    /* line map: */
-    /*   line 95 @ +0x000 */
-    /*   line 100 @ +0x000 */
-    /*   line 98 @ +0x000 */
-    /*   line 102 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2491–2511 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2488–2512 */
 /* addr: 0x002c4830  size: 324 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2488
+ *   +0x0004 -> line 2491
+ *   +0x0008 -> line 2488
+ *   +0x000c -> line 2491
+ *   +0x0010 -> line 2488
+ *   +0x0014 -> line 2493
+ *   +0x0018 -> line 2491
+ *   +0x001c -> line 2493
+ *   +0x0020 -> line 2491
+ *   +0x0024 -> line 2493
+ *   +0x002c -> line 2494
+ *   +0x0030 -> line 2493
+ *   +0x0034 -> line 2491
+ *   +0x0038 -> line 2493
+ *   +0x003c -> line 2491
+ *   +0x0040 -> line 2493
+ *   +0x004c -> line 2491
+ *   +0x0054 -> line 2493
+ *   +0x0070 -> line 2491
+ *   +0x0074 -> line 2493
+ *   +0x0078 -> line 2491
+ *   +0x007c -> line 2493
+ *   +0x0084 -> line 2494
+ *   +0x0088 -> line 2493
+ *   +0x0098 -> line 2494
+ *   +0x00a0 -> line 2496
+ *   +0x00ac -> line 2495
+ *   +0x00b0 -> line 2499
+ *   +0x00b4 -> line 2495
+ *   +0x00bc -> line 2497
+ *   +0x00c0 -> line 2499
+ *   +0x00c8 -> line 2501
+ *   +0x00d4 -> line 2505
+ *   +0x00f0 -> line 2506
+ *   +0x0120 -> line 2508
+ *   +0x0124 -> line 2511
+ *   +0x0128 -> line 2508
+ *   +0x012c -> line 2509
+ *   +0x0134 -> line 2512
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLI_iGetOneMenuTextureNames(void)
 {
     int TexName;
-    /* line map: */
-    /*   line 2491 @ +0x000 */
-    /*   line 2491 @ +0x000 */
-    /*   line 2493 @ +0x000 */
-    /*   line 2493 @ +0x000 */
-    /*   line 2493 @ +0x000 */
-    /*   line 2493 @ +0x000 */
-    /*   line 2493 @ +0x000 */
-    /*   line 2493 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2415–2478 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2410–2480 */
 /* addr: 0x002c4980  size: 700 bytes */
-void GLI_vUncompressScreenShotIntoMaterial(/* function pointer */ int ppMaterial, /* function pointer */ int p_stSpecParam, /* function pointer */ int pMaterial, GLI_tdstTexture_* p_stTexture)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2410
+ *   +0x0014 -> line 2415
+ *   +0x0020 -> line 2416
+ *   +0x0028 -> line 2418
+ *   +0x0034 -> line 2421
+ *   +0x0090 -> line 2423
+ *   +0x0094 -> line 2425
+ *   +0x00a0 -> line 2427
+ *   +0x00d0 -> line 2428
+ *   +0x00dc -> line 2430
+ *   +0x0144 -> line 2431
+ *   +0x014c -> line 2436
+ *   +0x0150 -> line 2440
+ *   +0x0154 -> line 2436
+ *   +0x0158 -> line 2440
+ *   +0x015c -> line 2437
+ *   +0x0160 -> line 2440
+ *   +0x0164 -> line 2438
+ *   +0x0168 -> line 2440
+ *   +0x0170 -> line 2444
+ *   +0x0180 -> line 2445
+ *   +0x018c -> line 2447
+ *   +0x01f4 -> line 2448
+ *   +0x01fc -> line 2452
+ *   +0x0200 -> line 2454
+ *   +0x020c -> line 2458
+ *   +0x0214 -> line 2460
+ *   +0x0220 -> line 2461
+ *   +0x0224 -> line 2465
+ *   +0x0234 -> line 2469
+ *   +0x0238 -> line 2467
+ *   +0x023c -> line 2469
+ *   +0x0244 -> line 2470
+ *   +0x0248 -> line 2472
+ *   +0x024c -> line 2470
+ *   +0x0250 -> line 2472
+ *   +0x0258 -> line 2474
+ *   +0x025c -> line 2473
+ *   +0x0260 -> line 2474
+ *   +0x0264 -> line 2473
+ *   +0x026c -> line 2477
+ *   +0x0278 -> line 2478
+ *   +0x02a4 -> line 2480
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vUncompressScreenShotIntoMaterial(GLI_tdstMaterial_* ppMaterial)
 {
-    /* line map: */
-    /*   line 2415 @ +0x000 */
-    /*   line 2418 @ +0x000 */
-    /*   line 2423 @ +0x000 */
-    /*   line 2427 @ +0x000 */
-    /*   line 2430 @ +0x000 */
-    /*   line 2436 @ +0x000 */
-    /*   line 2436 @ +0x000 */
-    /*   line 2437 @ +0x000 */
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+    GLI_tdstMaterial_* pMaterial;
+    GLI_tdstTexture_* p_stTexture;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2390–2407 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2388–2407 */
 /* addr: 0x002c4c40  size: 220 bytes */
-void GLI_vFreeTempMaterial(/* function pointer */ int ppMaterial)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2388
+ *   +0x0018 -> line 2390
+ *   +0x0024 -> line 2393
+ *   +0x0030 -> line 2395
+ *   +0x003c -> line 2397
+ *   +0x0048 -> line 2398
+ *   +0x0050 -> line 2400
+ *   +0x0094 -> line 2401
+ *   +0x00ac -> line 2402
+ *   +0x00b0 -> line 2404
+ *   +0x00bc -> line 2406
+ *   +0x00c0 -> line 2407
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vFreeTempMaterial(GLI_tdstMaterial_* ppMaterial)
 {
-    /* line map: */
-    /*   line 2390 @ +0x000 */
-    /*   line 2395 @ +0x000 */
-    /*   line 2398 @ +0x000 */
-    /*   line 2401 @ +0x000 */
-    /*   line 2404 @ +0x000 */
-    /*   line 2407 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2345–2362 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2342–2367 */
 /* addr: 0x002c4d20  size: 100 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2342
+ *   +0x0010 -> line 2345
+ *   +0x0018 -> line 2347
+ *   +0x0024 -> line 2352
+ *   +0x002c -> line 2354
+ *   +0x0038 -> line 2357
+ *   +0x0040 -> line 2361
+ *   +0x004c -> line 2362
+ *   +0x0050 -> line 2367
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vFreeTempTexture(GLI_tdstTexture_* p_stTexture)
 {
-    /* line map: */
-    /*   line 2345 @ +0x000 */
-    /*   line 2352 @ +0x000 */
-    /*   line 2357 @ +0x000 */
-    /*   line 2362 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2299–2328 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2297–2328 */
 /* addr: 0x002c4d90  size: 240 bytes */
-void GLI_xCreateMaterialPS2GL(/* function pointer */ int hMaterial)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2297
+ *   +0x000c -> line 2299
+ *   +0x0020 -> line 2300
+ *   +0x002c -> line 2305
+ *   +0x0030 -> line 2306
+ *   +0x003c -> line 2309
+ *   +0x0040 -> line 2313
+ *   +0x0044 -> line 2309
+ *   +0x0048 -> line 2318
+ *   +0x004c -> line 2306
+ *   +0x0050 -> line 2307
+ *   +0x0058 -> line 2309
+ *   +0x0060 -> line 2310
+ *   +0x0068 -> line 2311
+ *   +0x0070 -> line 2313
+ *   +0x0078 -> line 2314
+ *   +0x0080 -> line 2315
+ *   +0x0088 -> line 2317
+ *   +0x0090 -> line 2318
+ *   +0x0098 -> line 2319
+ *   +0x00a0 -> line 2321
+ *   +0x00a8 -> line 2322
+ *   +0x00b0 -> line 2323
+ *   +0x00b8 -> line 2324
+ *   +0x00c4 -> line 2325
+ *   +0x00d0 -> line 2326
+ *   +0x00d8 -> line 2327
+ *   +0x00e0 -> line 2328
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_xCreateMaterialPS2GL(GLI_tdstMaterial_* hMaterial)
 {
-    /* line map: */
-    /*   line 2299 @ +0x000 */
-    /*   line 2305 @ +0x000 */
-    /*   line 2309 @ +0x000 */
-    /*   line 2309 @ +0x000 */
-    /*   line 2306 @ +0x000 */
-    /*   line 2309 @ +0x000 */
-    /*   line 2311 @ +0x000 */
-    /*   line 2314 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2274–2281 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2273–2282 */
 /* addr: 0x002c4e80  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2273
+ *   +0x000c -> line 2274
+ *   +0x0018 -> line 2276
+ *   +0x0028 -> line 2279
+ *   +0x0034 -> line 2282
+ *   +0x0038 -> line 2281
+ *   +0x003c -> line 2282
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLI_bLoadSnapShotTexture(char* _pFileName)
 {
-    /* line map: */
-    /*   line 2274 @ +0x000 */
-    /*   line 2279 @ +0x000 */
-    /*   line 2281 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2257–2257 */
 /* addr: 0x002c4ed0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2257
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void ProcessSky(void)
 {
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2035–2132 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2029–2132 */
 /* addr: 0x002c4ee0  size: 784 bytes */
-void GLI_vFreeTextureBloc(unsigned int TextureBlocId, GLI_tdstTexture_* p_stTexture)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2029
+ *   +0x0004 -> line 2035
+ *   +0x0008 -> line 2029
+ *   +0x000c -> line 2035
+ *   +0x0010 -> line 2029
+ *   +0x001c -> line 2035
+ *   +0x0020 -> line 2029
+ *   +0x0024 -> line 2035
+ *   +0x0028 -> line 2029
+ *   +0x0038 -> line 2035
+ *   +0x0044 -> line 2038
+ *   +0x0054 -> line 2041
+ *   +0x0060 -> line 2043
+ *   +0x0068 -> line 2044
+ *   +0x0074 -> line 2046
+ *   +0x00a0 -> line 2048
+ *   +0x00a8 -> line 2050
+ *   +0x00c0 -> line 2053
+ *   +0x00c8 -> line 2055
+ *   +0x00d4 -> line 2057
+ *   +0x00dc -> line 2060
+ *   +0x00e0 -> line 2061
+ *   +0x00e4 -> line 2062
+ *   +0x00ec -> line 2064
+ *   +0x010c -> line 2067
+ *   +0x0114 -> line 2071
+ *   +0x011c -> line 2076
+ *   +0x0138 -> line 2079
+ *   +0x0148 -> line 2083
+ *   +0x015c -> line 2088
+ *   +0x0174 -> line 2091
+ *   +0x017c -> line 2094
+ *   +0x0188 -> line 2097
+ *   +0x0190 -> line 2100
+ *   +0x0194 -> line 2101
+ *   +0x0198 -> line 2102
+ *   +0x01a8 -> line 2106
+ *   +0x01b0 -> line 2109
+ *   +0x01d8 -> line 2112
+ *   +0x01e0 -> line 2118
+ *   +0x01f8 -> line 2119
+ *   +0x021c -> line 2121
+ *   +0x02ac -> line 2123
+ *   +0x02b8 -> line 2126
+ *   +0x02cc -> line 2130
+ *   +0x02e4 -> line 2132
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vFreeTextureBloc(unsigned int TextureBlocId)
 {
     unsigned int Channel;
+    GLI_tdstTexture_* p_stTexture;
     unsigned int lTextureCounter;
     int ChannelHigh;
     int ChannelLow;
-    /* line map: */
-    /*   line 2035 @ +0x000 */
-    /*   line 2035 @ +0x000 */
-    /*   line 2035 @ +0x000 */
-    /*   line 2035 @ +0x000 */
-    /*   line 2035 @ +0x000 */
-    /*   line 2041 @ +0x000 */
-    /*   line 2044 @ +0x000 */
-    /*   line 2048 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1774–2008 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1763–2009 */
 /* addr: 0x002c51f0  size: 1500 bytes */
-void LoadTextureBlocInternal(int DestTextureBlocID, int ChannelId, /* function pointer */ int p_stSpecParam, GLI_tdstTexture_* p_stTexture)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1763
+ *   +0x002c -> line 1774
+ *   +0x0054 -> line 1783
+ *   +0x0058 -> line 1777
+ *   +0x0060 -> line 1785
+ *   +0x0064 -> line 1780
+ *   +0x0068 -> line 1788
+ *   +0x0070 -> line 1783
+ *   +0x0084 -> line 1793
+ *   +0x0088 -> line 1790
+ *   +0x00a4 -> line 1793
+ *   +0x00b0 -> line 1797
+ *   +0x00c0 -> line 1801
+ *   +0x00c4 -> line 1803
+ *   +0x00d8 -> line 1806
+ *   +0x00e0 -> line 1811
+ *   +0x00ec -> line 1815
+ *   +0x00f8 -> line 1819
+ *   +0x0100 -> line 1821
+ *   +0x0134 -> line 1823
+ *   +0x013c -> line 1828
+ *   +0x0148 -> line 1831
+ *   +0x01d4 -> line 1834
+ *   +0x01dc -> line 1837
+ *   +0x01e4 -> line 1840
+ *   +0x01f8 -> line 1852
+ *   +0x01fc -> line 1856
+ *   +0x0200 -> line 1852
+ *   +0x0210 -> line 1861
+ *   +0x022c -> line 1864
+ *   +0x023c -> line 1866
+ *   +0x0240 -> line 1868
+ *   +0x0254 -> line 1871
+ *   +0x025c -> line 1873
+ *   +0x02a8 -> line 1879
+ *   +0x02b0 -> line 1882
+ *   +0x02bc -> line 1884
+ *   +0x02c4 -> line 1889
+ *   +0x02c8 -> line 1893
+ *   +0x02cc -> line 1888
+ *   +0x02d0 -> line 1889
+ *   +0x02e8 -> line 1894
+ *   +0x0310 -> line 1897
+ *   +0x0350 -> line 1914
+ *   +0x036c -> line 1916
+ *   +0x0374 -> line 1917
+ *   +0x0380 -> line 1918
+ *   +0x0398 -> line 1920
+ *   +0x03a8 -> line 1921
+ *   +0x03b4 -> line 1922
+ *   +0x03b8 -> line 1927
+ *   +0x03ec -> line 1929
+ *   +0x03f0 -> line 1930
+ *   +0x03fc -> line 1931
+ *   +0x0404 -> line 1932
+ *   +0x0408 -> line 1933
+ *   +0x0418 -> line 1934
+ *   +0x0420 -> line 1935
+ *   +0x0428 -> line 1937
+ *   +0x0438 -> line 1938
+ *   +0x0440 -> line 1939
+ *   +0x0448 -> line 1941
+ *   +0x0458 -> line 1942
+ *   +0x0464 -> line 1945
+ *   +0x0468 -> line 1948
+ *   +0x0478 -> line 1949
+ *   +0x0488 -> line 1951
+ *   +0x0494 -> line 1952
+ *   +0x0498 -> line 1958
+ *   +0x04b8 -> line 1961
+ *   +0x04c0 -> line 1964
+ *   +0x04c4 -> line 1965
+ *   +0x04c8 -> line 1967
+ *   +0x04cc -> line 1973
+ *   +0x04d0 -> line 1974
+ *   +0x04d4 -> line 1967
+ *   +0x04d8 -> line 1974
+ *   +0x04e8 -> line 1975
+ *   +0x0538 -> line 1981
+ *   +0x0548 -> line 1984
+ *   +0x0550 -> line 1987
+ *   +0x0558 -> line 1990
+ *   +0x056c -> line 1993
+ *   +0x057c -> line 2008
+ *   +0x05ac -> line 2009
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void LoadTextureBlocInternal(int DestTextureBlocID, int ChannelId)
 {
     unsigned int Flag;
     unsigned int GL_iTextureFormat;
     int i;
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+    GLI_tdstTexture_* p_stTexture;
     unsigned int NbTexturesInBloc;
     unsigned int ChannelHigh;
     unsigned int ChannelLow;
     unsigned int lTextureCounter;
-    /* line map: */
-    /*   line 1774 @ +0x000 */
-    /*   line 1777 @ +0x000 */
-    /*   line 1780 @ +0x000 */
-    /*   line 1783 @ +0x000 */
-    /*   line 1790 @ +0x000 */
-    /*   line 1797 @ +0x000 */
-    /*   line 1803 @ +0x000 */
-    /*   line 1811 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1756–1756 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1755–1757 */
 /* addr: 0x002c57d0  size: 40 bytes */
-void DisableAlphaTest(/* function pointer */ int p_stMaterial)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1755
+ *   +0x0008 -> line 1756
+ *   +0x000c -> line 1755
+ *   +0x0018 -> line 1756
+ *   +0x0020 -> line 1757
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DisableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
 {
-    /* line map: */
-    /*   line 1756 @ +0x000 */
-    /*   line 1756 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1751–1751 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1750–1752 */
 /* addr: 0x002c5800  size: 32 bytes */
-void EnableAlphaTest(/* function pointer */ int p_stMaterial)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1750
+ *   +0x0010 -> line 1751
+ *   +0x0018 -> line 1752
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void EnableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
 {
-    /* line map: */
-    /*   line 1751 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1741–1741 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1740–1741 */
 /* addr: 0x002c5820  size: 20 bytes */
-void EnableAlpha(/* function pointer */ int p_stMaterial)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1740
+ *   +0x000c -> line 1741
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void EnableAlpha(GLI_tdstMaterial_* p_stMaterial)
 {
-    /* line map: */
-    /*   line 1741 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1714–1728 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1705–1733 */
 /* addr: 0x002c5840  size: 132 bytes */
-int GLI_iLoadMenuTexture(GLI_tdstTexture_* pp_stTexture, char* TxrName, GLI_tdstTexture_* p_stTexture)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1705
+ *   +0x0014 -> line 1714
+ *   +0x002c -> line 1716
+ *   +0x0034 -> line 1717
+ *   +0x003c -> line 1719
+ *   +0x0048 -> line 1721
+ *   +0x0054 -> line 1724
+ *   +0x0064 -> line 1728
+ *   +0x0068 -> line 1731
+ *   +0x006c -> line 1728
+ *   +0x0070 -> line 1733
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int GLI_iLoadMenuTexture(GLI_tdstTexture_* pp_stTexture, char* TxrName)
 {
-    /* line map: */
-    /*   line 1714 @ +0x000 */
-    /*   line 1717 @ +0x000 */
-    /*   line 1721 @ +0x000 */
-    /*   line 1728 @ +0x000 */
-    /*   line 1728 @ +0x000 */
+    GLI_tdstTexture_* p_stTexture;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1686–1686 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1684–1686 */
 /* addr: 0x002c58d0  size: 24 bytes */
-void GLI_vReloadMenuTextureData(/* function pointer */ int pMaterial, void* pWhereToLoad, int TextureName, unsigned int MaxSize)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1684
+ *   +0x000c -> line 1686
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vReloadMenuTextureData(GLI_tdstMaterial_* pMaterial, void* pWhereToLoad, int TextureName, unsigned int MaxSize)
 {
-    /* line map: */
-    /*   line 1686 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1573–1677 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1549–1677 */
 /* addr: 0x002c58f0  size: 500 bytes */
-int GLI_iLoadTexture(GLI_tdstTexture_* p_stTexture, void* pWhereDoIPutTheData, int MaxFileSize, /* function pointer */ int param3, S_TXR_Header_* pHeader)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1549
+ *   +0x0024 -> line 1573
+ *   +0x0044 -> line 1576
+ *   +0x004c -> line 1578
+ *   +0x0058 -> line 1579
+ *   +0x005c -> line 1580
+ *   +0x0070 -> line 1582
+ *   +0x007c -> line 1589
+ *   +0x0088 -> line 1595
+ *   +0x0090 -> line 1601
+ *   +0x009c -> line 1604
+ *   +0x00a8 -> line 1609
+ *   +0x00ac -> line 1627
+ *   +0x00b4 -> line 1628
+ *   +0x00c4 -> line 1633
+ *   +0x00dc -> line 1634
+ *   +0x00e4 -> line 1639
+ *   +0x00e8 -> line 1646
+ *   +0x00ec -> line 1650
+ *   +0x00f0 -> line 1639
+ *   +0x00f4 -> line 1640
+ *   +0x00fc -> line 1641
+ *   +0x0104 -> line 1642
+ *   +0x010c -> line 1644
+ *   +0x0110 -> line 1646
+ *   +0x0114 -> line 1650
+ *   +0x011c -> line 1648
+ *   +0x0128 -> line 1652
+ *   +0x0144 -> line 1653
+ *   +0x0158 -> line 1654
+ *   +0x0168 -> line 1662
+ *   +0x0170 -> line 1660
+ *   +0x0174 -> line 1662
+ *   +0x01c4 -> line 1669
+ *   +0x01d0 -> line 1676
+ *   +0x01d4 -> line 1677
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int GLI_iLoadTexture(GLI_tdstTexture_* p_stTexture, void* pWhereDoIPutTheData, int MaxFileSize)
 {
     unsigned int Flag;
     char* ptr;
+    GLI_tdstTexturePS2GL_* param0;
+    S_TXR_Header_* pHeader;
     int FileSize;
     char buffer[1024];
     int ReadHandle;
     int TheFile;
-    /* line map: */
-    /*   line 1573 @ +0x000 */
-    /*   line 1578 @ +0x000 */
-    /*   line 1580 @ +0x000 */
-    /*   line 1589 @ +0x000 */
-    /*   line 1601 @ +0x000 */
-    /*   line 1609 @ +0x000 */
-    /*   line 1628 @ +0x000 */
-    /*   line 1634 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1463–1531 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1454–1537 */
 /* addr: 0x002c5af0  size: 584 bytes */
-void GLI_vLoadRasterFontMaterial(S_TXR_Header_* pHeader, /* function pointer */ int p_stSpecParam, GLI_tdstTexture_* p_stTexture)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1454
+ *   +0x0004 -> line 1463
+ *   +0x0008 -> line 1454
+ *   +0x000c -> line 1463
+ *   +0x0010 -> line 1454
+ *   +0x0014 -> line 1463
+ *   +0x0018 -> line 1454
+ *   +0x001c -> line 1465
+ *   +0x0020 -> line 1454
+ *   +0x0024 -> line 1465
+ *   +0x0028 -> line 1454
+ *   +0x002c -> line 1465
+ *   +0x0034 -> line 1466
+ *   +0x0040 -> line 1471
+ *   +0x0044 -> line 1467
+ *   +0x0048 -> line 1471
+ *   +0x004c -> line 1467
+ *   +0x0050 -> line 1468
+ *   +0x0058 -> line 1469
+ *   +0x005c -> line 1471
+ *   +0x0070 -> line 1473
+ *   +0x0078 -> line 1476
+ *   +0x0080 -> line 1481
+ *   +0x0090 -> line 1482
+ *   +0x00a0 -> line 1485
+ *   +0x00ac -> line 1486
+ *   +0x00bc -> line 1488
+ *   +0x00c0 -> line 1490
+ *   +0x00c4 -> line 1496
+ *   +0x00cc -> line 1490
+ *   +0x00d4 -> line 1491
+ *   +0x00e0 -> line 1492
+ *   +0x00ec -> line 1493
+ *   +0x00f4 -> line 1496
+ *   +0x0100 -> line 1507
+ *   +0x0104 -> line 1496
+ *   +0x0108 -> line 1507
+ *   +0x010c -> line 1497
+ *   +0x0110 -> line 1503
+ *   +0x0114 -> line 1497
+ *   +0x0118 -> line 1503
+ *   +0x011c -> line 1507
+ *   +0x0124 -> line 1503
+ *   +0x014c -> line 1507
+ *   +0x0154 -> line 1511
+ *   +0x0158 -> line 1509
+ *   +0x015c -> line 1514
+ *   +0x0160 -> line 1509
+ *   +0x0168 -> line 1511
+ *   +0x016c -> line 1514
+ *   +0x0170 -> line 1511
+ *   +0x0174 -> line 1514
+ *   +0x017c -> line 1516
+ *   +0x0198 -> line 1517
+ *   +0x01ac -> line 1518
+ *   +0x01bc -> line 1526
+ *   +0x01c0 -> line 1524
+ *   +0x01c4 -> line 1526
+ *   +0x0218 -> line 1529
+ *   +0x021c -> line 1531
+ *   +0x0220 -> line 1529
+ *   +0x0224 -> line 1531
+ *   +0x022c -> line 1537
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vLoadRasterFontMaterial(void)
 {
     unsigned int Flag;
+    S_TXR_Header_* pHeader;
     int FileSize;
     int TheFile;
-    /* line map: */
-    /*   line 1463 @ +0x000 */
-    /*   line 1463 @ +0x000 */
-    /*   line 1463 @ +0x000 */
-    /*   line 1465 @ +0x000 */
-    /*   line 1465 @ +0x000 */
-    /*   line 1465 @ +0x000 */
-    /*   line 1471 @ +0x000 */
-    /*   line 1471 @ +0x000 */
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+    GLI_tdstTexture_* p_stTexture;
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1075–1208 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1072–1209 */
 /* addr: 0x002c5d40  size: 1340 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1072
+ *   +0x001c -> line 1075
+ *   +0x0020 -> line 1072
+ *   +0x0024 -> line 1078
+ *   +0x0030 -> line 1081
+ *   +0x0040 -> line 1082
+ *   +0x0054 -> line 1084
+ *   +0x0064 -> line 1087
+ *   +0x0068 -> line 1089
+ *   +0x006c -> line 1087
+ *   +0x0070 -> line 1089
+ *   +0x0078 -> line 1091
+ *   +0x0088 -> line 1092
+ *   +0x0090 -> line 1095
+ *   +0x0094 -> line 1097
+ *   +0x009c -> line 1095
+ *   +0x00a0 -> line 1097
+ *   +0x00ac -> line 1099
+ *   +0x00b8 -> line 1100
+ *   +0x00c0 -> line 1101
+ *   +0x00c8 -> line 1103
+ *   +0x00d4 -> line 1105
+ *   +0x0168 -> line 1106
+ *   +0x0170 -> line 1109
+ *   +0x0178 -> line 1111
+ *   +0x0180 -> line 1112
+ *   +0x018c -> line 1114
+ *   +0x0198 -> line 1116
+ *   +0x01a0 -> line 1118
+ *   +0x01a8 -> line 1123
+ *   +0x01ac -> line 1125
+ *   +0x01c0 -> line 1127
+ *   +0x01d4 -> line 1130
+ *   +0x0210 -> line 1132
+ *   +0x021c -> line 1134
+ *   +0x0228 -> line 1136
+ *   +0x0230 -> line 1138
+ *   +0x0238 -> line 1141
+ *   +0x0260 -> line 1145
+ *   +0x0270 -> line 1146
+ *   +0x0274 -> line 1149
+ *   +0x0278 -> line 1146
+ *   +0x027c -> line 1149
+ *   +0x0280 -> line 1146
+ *   +0x02a0 -> line 1147
+ *   +0x02a4 -> line 1149
+ *   +0x02a8 -> line 1147
+ *   +0x02ac -> line 1149
+ *   +0x02b4 -> line 1151
+ *   +0x02c0 -> line 1152
+ *   +0x02dc -> line 1154
+ *   +0x02e4 -> line 1155
+ *   +0x02f0 -> line 1156
+ *   +0x02fc -> line 1158
+ *   +0x031c -> line 1160
+ *   +0x0320 -> line 1162
+ *   +0x0338 -> line 1164
+ *   +0x0348 -> line 1165
+ *   +0x0350 -> line 1166
+ *   +0x0358 -> line 1168
+ *   +0x0364 -> line 1170
+ *   +0x03fc -> line 1171
+ *   +0x0404 -> line 1174
+ *   +0x0410 -> line 1176
+ *   +0x0418 -> line 1177
+ *   +0x0424 -> line 1179
+ *   +0x0434 -> line 1182
+ *   +0x0444 -> line 1185
+ *   +0x0458 -> line 1187
+ *   +0x0468 -> line 1190
+ *   +0x046c -> line 1193
+ *   +0x0470 -> line 1190
+ *   +0x0474 -> line 1191
+ *   +0x047c -> line 1193
+ *   +0x0498 -> line 1194
+ *   +0x04ac -> line 1195
+ *   +0x04bc -> line 1199
+ *   +0x04d8 -> line 1200
+ *   +0x04f0 -> line 1201
+ *   +0x0500 -> line 1203
+ *   +0x050c -> line 1205
+ *   +0x0518 -> line 1208
+ *   +0x051c -> line 1209
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLI_xLoadTextureTXR(GLI_tdstTexture_* p_stTexture, char* FileName)
 {
     unsigned int TextureTotalSize;
     S_TXR_Header_ Header;
     int i;
-    /* line map: */
-    /*   line 1075 @ +0x000 */
-    /*   line 1078 @ +0x000 */
-    /*   line 1082 @ +0x000 */
-    /*   line 1087 @ +0x000 */
-    /*   line 1087 @ +0x000 */
-    /*   line 1091 @ +0x000 */
-    /*   line 1095 @ +0x000 */
-    /*   line 1095 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 981–1011 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 977–1012 */
 /* addr: 0x002c6280  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 977
+ *   +0x0004 -> line 983
+ *   +0x0008 -> line 977
+ *   +0x000c -> line 981
+ *   +0x0010 -> line 977
+ *   +0x0014 -> line 983
+ *   +0x0018 -> line 977
+ *   +0x001c -> line 983
+ *   +0x0030 -> line 985
+ *   +0x003c -> line 987
+ *   +0x0048 -> line 988
+ *   +0x0050 -> line 991
+ *   +0x0058 -> line 993
+ *   +0x0070 -> line 997
+ *   +0x007c -> line 1003
+ *   +0x008c -> line 1005
+ *   +0x00a0 -> line 1007
+ *   +0x00b4 -> line 1008
+ *   +0x00c8 -> line 1010
+ *   +0x00e4 -> line 1011
+ *   +0x00f8 -> line 1012
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vOpenTXCFile(void)
 {
     char* pTemp;
     int TextSize;
     int i;
-    /* line map: */
-    /*   line 983 @ +0x000 */
-    /*   line 981 @ +0x000 */
-    /*   line 983 @ +0x000 */
-    /*   line 983 @ +0x000 */
-    /*   line 987 @ +0x000 */
-    /*   line 991 @ +0x000 */
-    /*   line 997 @ +0x000 */
-    /*   line 1005 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 943–969 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 938–972 */
 /* addr: 0x002c6390  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 938
+ *   +0x0020 -> line 943
+ *   +0x0038 -> line 947
+ *   +0x0044 -> line 950
+ *   +0x0048 -> line 949
+ *   +0x004c -> line 950
+ *   +0x0060 -> line 953
+ *   +0x0074 -> line 954
+ *   +0x0078 -> line 957
+ *   +0x007c -> line 955
+ *   +0x0080 -> line 959
+ *   +0x0088 -> line 961
+ *   +0x009c -> line 962
+ *   +0x00a4 -> line 965
+ *   +0x00ac -> line 968
+ *   +0x00c0 -> line 969
+ *   +0x00cc -> line 972
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void ReadFromBufferedCD(int MyFile, char* Dest, unsigned int Size)
 {
     int AlreadyReadSize;
-    /* line map: */
-    /*   line 943 @ +0x000 */
-    /*   line 950 @ +0x000 */
-    /*   line 950 @ +0x000 */
-    /*   line 954 @ +0x000 */
-    /*   line 955 @ +0x000 */
-    /*   line 961 @ +0x000 */
-    /*   line 965 @ +0x000 */
-    /*   line 969 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 893–912 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 888–912 */
 /* addr: 0x002c6480  size: 220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 888
+ *   +0x0014 -> line 893
+ *   +0x001c -> line 895
+ *   +0x0024 -> line 897
+ *   +0x0038 -> line 898
+ *   +0x003c -> line 899
+ *   +0x0050 -> line 902
+ *   +0x0054 -> line 900
+ *   +0x005c -> line 903
+ *   +0x00a0 -> line 907
+ *   +0x00b8 -> line 909
+ *   +0x00c8 -> line 912
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CTL_SetCurrentMap(char* Map)
 {
     char Temp[16];
     int i;
-    /* line map: */
-    /*   line 893 @ +0x000 */
-    /*   line 897 @ +0x000 */
-    /*   line 899 @ +0x000 */
-    /*   line 900 @ +0x000 */
-    /*   line 907 @ +0x000 */
-    /*   line 912 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 810–879 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 801–881 */
 /* addr: 0x002c6560  size: 608 bytes */
-void CTL_Load_Ini_File(CTL_MapInfo_* pMap)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 801
+ *   +0x0024 -> line 810
+ *   +0x0030 -> line 812
+ *   +0x0034 -> line 814
+ *   +0x0050 -> line 816
+ *   +0x0058 -> line 818
+ *   +0x005c -> line 819
+ *   +0x0064 -> line 822
+ *   +0x0070 -> line 823
+ *   +0x0080 -> line 825
+ *   +0x0084 -> line 830
+ *   +0x0088 -> line 825
+ *   +0x008c -> line 830
+ *   +0x0090 -> line 825
+ *   +0x0094 -> line 826
+ *   +0x0098 -> line 825
+ *   +0x009c -> line 828
+ *   +0x00a0 -> line 825
+ *   +0x00ac -> line 830
+ *   +0x00b4 -> line 831
+ *   +0x00bc -> line 834
+ *   +0x00d0 -> line 836
+ *   +0x00ec -> line 837
+ *   +0x00fc -> line 847
+ *   +0x0108 -> line 853
+ *   +0x010c -> line 851
+ *   +0x0110 -> line 853
+ *   +0x0114 -> line 851
+ *   +0x0118 -> line 853
+ *   +0x0128 -> line 854
+ *   +0x0138 -> line 856
+ *   +0x0148 -> line 857
+ *   +0x014c -> line 856
+ *   +0x0150 -> line 860
+ *   +0x015c -> line 861
+ *   +0x0170 -> line 863
+ *   +0x0180 -> line 865
+ *   +0x0190 -> line 867
+ *   +0x01a4 -> line 868
+ *   +0x01c0 -> line 869
+ *   +0x01d8 -> line 870
+ *   +0x01f4 -> line 871
+ *   +0x020c -> line 875
+ *   +0x0218 -> line 876
+ *   +0x0220 -> line 878
+ *   +0x022c -> line 879
+ *   +0x0234 -> line 881
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void CTL_Load_Ini_File(void)
 {
     char* split1;
     unsigned int FileSize;
     char* TempBuffer;
     unsigned int CurrentTexture;
     unsigned int CurrentMap;
+    CTL_MapInfo_* pMap;
     char TempLine[1024];
     int MyFile;
-    /* line map: */
-    /*   line 810 @ +0x000 */
-    /*   line 814 @ +0x000 */
-    /*   line 818 @ +0x000 */
-    /*   line 822 @ +0x000 */
-    /*   line 825 @ +0x000 */
-    /*   line 825 @ +0x000 */
-    /*   line 825 @ +0x000 */
-    /*   line 825 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 772–797 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 769–798 */
 /* addr: 0x002c67c0  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 769
+ *   +0x0018 -> line 772
+ *   +0x001c -> line 769
+ *   +0x0020 -> line 777
+ *   +0x0024 -> line 776
+ *   +0x0028 -> line 780
+ *   +0x006c -> line 783
+ *   +0x0078 -> line 784
+ *   +0x00a8 -> line 786
+ *   +0x00bc -> line 787
+ *   +0x00c4 -> line 788
+ *   +0x00c8 -> line 789
+ *   +0x00e8 -> line 791
+ *   +0x0100 -> line 793
+ *   +0x0118 -> line 795
+ *   +0x0128 -> line 797
+ *   +0x012c -> line 798
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int CTL_ReadLine(char* TempLine)
 {
     int eof;
     int i;
     char c;
-    /* line map: */
-    /*   line 772 @ +0x000 */
-    /*   line 777 @ +0x000 */
-    /*   line 780 @ +0x000 */
-    /*   line 784 @ +0x000 */
-    /*   line 787 @ +0x000 */
-    /*   line 789 @ +0x000 */
-    /*   line 793 @ +0x000 */
-    /*   line 797 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 612–697 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 604–697 */
 /* addr: 0x002c6910  size: 972 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 604
+ *   +0x0004 -> line 616
+ *   +0x0008 -> line 604
+ *   +0x000c -> line 615
+ *   +0x0010 -> line 604
+ *   +0x0014 -> line 619
+ *   +0x0018 -> line 604
+ *   +0x002c -> line 612
+ *   +0x0030 -> line 613
+ *   +0x0034 -> line 619
+ *   +0x0038 -> line 616
+ *   +0x0040 -> line 615
+ *   +0x0048 -> line 617
+ *   +0x004c -> line 619
+ *   +0x0054 -> line 621
+ *   +0x007c -> line 622
+ *   +0x0080 -> line 625
+ *   +0x0084 -> line 623
+ *   +0x0088 -> line 622
+ *   +0x0090 -> line 623
+ *   +0x00a4 -> line 625
+ *   +0x00ac -> line 627
+ *   +0x00bc -> line 628
+ *   +0x00c4 -> line 631
+ *   +0x00d4 -> line 633
+ *   +0x00dc -> line 635
+ *   +0x00e8 -> line 638
+ *   +0x0110 -> line 639
+ *   +0x0114 -> line 642
+ *   +0x0118 -> line 640
+ *   +0x011c -> line 639
+ *   +0x0124 -> line 640
+ *   +0x0138 -> line 642
+ *   +0x0140 -> line 644
+ *   +0x0150 -> line 645
+ *   +0x0158 -> line 648
+ *   +0x0168 -> line 650
+ *   +0x0170 -> line 652
+ *   +0x0178 -> line 654
+ *   +0x018c -> line 658
+ *   +0x0190 -> line 659
+ *   +0x01ac -> line 664
+ *   +0x01b8 -> line 666
+ *   +0x01e0 -> line 667
+ *   +0x01e4 -> line 668
+ *   +0x01e8 -> line 669
+ *   +0x01ec -> line 670
+ *   +0x01f8 -> line 672
+ *   +0x01fc -> line 673
+ *   +0x0208 -> line 672
+ *   +0x0210 -> line 673
+ *   +0x02a8 -> line 674
+ *   +0x02b0 -> line 677
+ *   +0x02cc -> line 678
+ *   +0x02fc -> line 680
+ *   +0x0300 -> line 681
+ *   +0x0304 -> line 680
+ *   +0x030c -> line 681
+ *   +0x0320 -> line 684
+ *   +0x0328 -> line 687
+ *   +0x0344 -> line 688
+ *   +0x0374 -> line 690
+ *   +0x0378 -> line 691
+ *   +0x037c -> line 690
+ *   +0x0384 -> line 691
+ *   +0x03a0 -> line 695
+ *   +0x03a8 -> line 696
+ *   +0x03b0 -> line 697
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_v_SendTextureBitmapToPS2GL(GLI_tdstTexture_* p_stTexture, unsigned int uTexFormat)
 {
     unsigned int CurrentLevel;
     unsigned int CurrentSize;
     unsigned char* ptr;
+    unsigned int ty;
     unsigned int tx;
-    /* line map: */
-    /*   line 616 @ +0x000 */
-    /*   line 615 @ +0x000 */
-    /*   line 619 @ +0x000 */
-    /*   line 612 @ +0x000 */
-    /*   line 619 @ +0x000 */
-    /*   line 615 @ +0x000 */
-    /*   line 619 @ +0x000 */
-    /*   line 622 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 558–558 */
 /* addr: 0x002c6ce0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 558
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_DRV_vUnLoadTextures(void)
 {
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 550–550 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 549–554 */
 /* addr: 0x002c6cf0  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 549
+ *   +0x0018 -> line 550
+ *   +0x0058 -> line 554
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vUnloadTexturePartial(unsigned char ucChannel)
 {
-    /* line map: */
-    /*   line 550 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 502–537 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 498–538 */
 /* addr: 0x002c6d60  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 498
+ *   +0x0008 -> line 502
+ *   +0x0014 -> line 508
+ *   +0x0020 -> line 512
+ *   +0x0028 -> line 517
+ *   +0x0034 -> line 518
+ *   +0x0040 -> line 520
+ *   +0x004c -> line 537
+ *   +0x0054 -> line 538
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_DRV_vDownLoadTextures(void)
 {
-    /* line map: */
-    /*   line 502 @ +0x000 */
-    /*   line 512 @ +0x000 */
-    /*   line 518 @ +0x000 */
-    /*   line 537 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 486–486 */
 /* addr: 0x002c6dc0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 486
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void LoadTextureBloc(int DestTextureBlocID, int ChannelId)
 {
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 411–474 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 404–476 */
 /* addr: 0x002c6dd0  size: 364 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 404
+ *   +0x0004 -> line 411
+ *   +0x0008 -> line 404
+ *   +0x0018 -> line 411
+ *   +0x0048 -> line 414
+ *   +0x0060 -> line 415
+ *   +0x0068 -> line 417
+ *   +0x0080 -> line 418
+ *   +0x0088 -> line 422
+ *   +0x00ac -> line 434
+ *   +0x00c8 -> line 438
+ *   +0x00f8 -> line 441
+ *   +0x0100 -> line 442
+ *   +0x0108 -> line 444
+ *   +0x0110 -> line 445
+ *   +0x0118 -> line 449
+ *   +0x0128 -> line 453
+ *   +0x0130 -> line 456
+ *   +0x0134 -> line 459
+ *   +0x0140 -> line 461
+ *   +0x014c -> line 473
+ *   +0x0154 -> line 474
+ *   +0x0158 -> line 476
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vLoadTBF_File(int DestBlocId, int SourceBlocId)
 {
-    /* line map: */
-    /*   line 411 @ +0x000 */
-    /*   line 411 @ +0x000 */
-    /*   line 415 @ +0x000 */
-    /*   line 418 @ +0x000 */
-    /*   line 434 @ +0x000 */
-    /*   line 441 @ +0x000 */
-    /*   line 444 @ +0x000 */
-    /*   line 449 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 378–399 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 372–400 */
 /* addr: 0x002c6f40  size: 296 bytes */
-void GLI_vProcessRegisteredTextures(GLI_st_RegisteredTexture_* pReg)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 372
+ *   +0x0014 -> line 378
+ *   +0x001c -> line 379
+ *   +0x0034 -> line 381
+ *   +0x003c -> line 379
+ *   +0x0080 -> line 381
+ *   +0x0088 -> line 383
+ *   +0x008c -> line 384
+ *   +0x0090 -> line 383
+ *   +0x0094 -> line 384
+ *   +0x0098 -> line 383
+ *   +0x009c -> line 384
+ *   +0x00a8 -> line 387
+ *   +0x00b0 -> line 389
+ *   +0x00bc -> line 390
+ *   +0x00c8 -> line 392
+ *   +0x00cc -> line 390
+ *   +0x00d4 -> line 391
+ *   +0x00dc -> line 392
+ *   +0x00e8 -> line 395
+ *   +0x00f4 -> line 397
+ *   +0x0108 -> line 399
+ *   +0x010c -> line 400
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vProcessRegisteredTextures(void)
 {
+    GLI_st_RegisteredTexture_* pReg;
     unsigned int GL_iTextureFormat;
     unsigned int i;
-    /* line map: */
-    /*   line 378 @ +0x000 */
-    /*   line 381 @ +0x000 */
-    /*   line 381 @ +0x000 */
-    /*   line 384 @ +0x000 */
-    /*   line 384 @ +0x000 */
-    /*   line 384 @ +0x000 */
-    /*   line 389 @ +0x000 */
-    /*   line 392 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 284–284 */
 /* addr: 0x002c7070  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 284
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vSetLoadingFix(int BoolVal)
 {
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 166–184 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 165–184 */
 /* addr: 0x002c7080  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 165
+ *   +0x0008 -> line 166
+ *   +0x0010 -> line 168
+ *   +0x0018 -> line 169
+ *   +0x0024 -> line 171
+ *   +0x0034 -> line 172
+ *   +0x0044 -> line 173
+ *   +0x0054 -> line 174
+ *   +0x0064 -> line 176
+ *   +0x0074 -> line 177
+ *   +0x0084 -> line 181
+ *   +0x008c -> line 184
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vFreeInBinaryPreservingTheCurrentMode(void* pointer)
 {
-    /* line map: */
-    /*   line 166 @ +0x000 */
-    /*   line 169 @ +0x000 */
-    /*   line 172 @ +0x000 */
-    /*   line 174 @ +0x000 */
-    /*   line 177 @ +0x000 */
-    /*   line 184 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 143–162 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 140–162 */
 /* addr: 0x002c7120  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 140
+ *   +0x000c -> line 143
+ *   +0x0014 -> line 144
+ *   +0x0020 -> line 147
+ *   +0x0030 -> line 148
+ *   +0x0040 -> line 149
+ *   +0x0050 -> line 150
+ *   +0x0060 -> line 152
+ *   +0x0070 -> line 153
+ *   +0x0080 -> line 157
+ *   +0x0088 -> line 161
+ *   +0x008c -> line 162
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size)
 {
     void* pointer;
-    /* line map: */
-    /*   line 143 @ +0x000 */
-    /*   line 147 @ +0x000 */
-    /*   line 149 @ +0x000 */
-    /*   line 152 @ +0x000 */
-    /*   line 157 @ +0x000 */
-    /*   line 162 @ +0x000 */
     /* TODO: decompile from asm/... */
 }

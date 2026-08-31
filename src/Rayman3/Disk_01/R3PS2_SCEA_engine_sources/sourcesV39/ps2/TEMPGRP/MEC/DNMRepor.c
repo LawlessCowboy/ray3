@@ -5,33 +5,77 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct MTH_fn_vVectorPlaneProjection MTH_fn_vVectorPlaneProjection;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct MTH_stRotation MTH_stRotation;
 typedef struct DNM_stObstacle DNM_stObstacle;
 typedef struct MTH_stMove MTH_stMove;
+typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
+typedef struct DNM_stMecMatCharacteristics DNM_stMecMatCharacteristics;
+typedef struct DNM_stMecObstacle DNM_stMecObstacle;
 typedef struct DNM_stReport DNM_stReport;
+typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
+typedef struct DNM_stMecReport DNM_stMecReport;
 
-struct MTH_fn_vVectorPlaneProjection {
-    float xDotProduct; /* +0x0 */
+typedef enum anon_enum_00bb199c {
+    DNM_ObsType_Nothing = 0,
+    DNM_ObsType_Scenery = 1,
+    DNM_ObsType_Mobile = 2,
+    DNM_ObsType_DoubleEdge = 4,
+    DNM_ObsType_MobileWall = 9,
+    DNM_Dummy_For_Align = 2147483647,
+} anon_enum_00bb199c;
+
+struct MTH3D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
 };
 
 struct MTH_stRotation {
     float m_xAngle; /* +0x0 */
-    /* aggregate */ int m_stAxis; /* +0x4 */
+    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
 };
 
 struct DNM_stObstacle {
     float m_xRate; /* +0x0 */
-    /* aggregate */ int m_stNorm; /* +0x4 */
-    /* aggregate */ int m_stContact; /* +0x10 */
-    int hMyMaterial; /* +0x1c */
-    int hCollidedMaterial; /* +0x20 */
-    int mp_stSupObj; /* +0x24 */
+    MTH3D_tdstVector_ m_stNorm; /* +0x4 */
+    MTH3D_tdstVector_ m_stContact; /* +0x10 */
+    GMT_tdstGameMaterial_* hMyMaterial; /* +0x1c */
+    GMT_tdstGameMaterial_* hCollidedMaterial; /* +0x20 */
+    HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
 };
 
 struct MTH_stMove {
-    /* aggregate */ int m_stLinear; /* +0x0 */
+    MTH3D_tdstVector_ m_stLinear; /* +0x0 */
     MTH_stRotation m_stAngular; /* +0xc */
+};
+
+struct GMT_tdstGameMaterial_ {
+    int hSoundMaterial; /* +0x0 */
+    GMT_tdstCollideMaterial_* hCollideMaterial; /* +0x4 */
+};
+
+struct DNM_stMecMatCharacteristics {
+    float m_xSlide; /* +0x0 */
+    float m_xRebound; /* +0x4 */
+};
+
+struct DNM_stMecObstacle {
+    float m_xRate; /* +0x0 */
+    MTH3D_tdstVector_ m_stNorm; /* +0x4 */
+    MTH3D_tdstVector_ m_stContact; /* +0x10 */
+    GMT_tdstGameMaterial_* hMyMaterial; /* +0x1c */
+    GMT_tdstGameMaterial_* hCollidedMaterial; /* +0x20 */
+    HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
+    anon_enum_00bb199c m_eType; /* +0x28 */
+    short m_xMyEntity; /* +0x2c */
+    short m_xCollidedEntity; /* +0x2e */
+    MTH3D_tdstVector_ m_stTranslation; /* +0x30 */
+    MTH3D_tdstVector_ m_stZoneMove; /* +0x3c */
+    MTH3D_tdstVector_ m_stZonePosition; /* +0x48 */
+    float m_xZoneRadius; /* +0x54 */
+    DNM_stMecMatCharacteristics m_stProperties; /* +0x58 */
+    DNM_stMecMatCharacteristics m_stMyProperties; /* +0x60 */
 };
 
 struct DNM_stReport {
@@ -50,22 +94,52 @@ struct DNM_stReport {
     char m_cBitField; /* +0x168 */
 };
 
-/* aggregate */ int g_stReport;
+struct GMT_tdstCollideMaterial_ {
+    short wTypeOfZone; /* +0x0 */
+    unsigned short xIdentifier; /* +0x2 */
+    MTH3D_tdstVector_ stDirection; /* +0x4 */
+    float xCoeff; /* +0x10 */
+    unsigned short wTypeForAi; /* +0x14 */
+};
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMRepor.c lines 46–61 */
+struct DNM_stMecReport {
+    unsigned int m_ulCurrSurfaceState; /* +0x0 */
+    DNM_stMecObstacle m_stObstacle; /* +0x4 */
+    DNM_stMecObstacle m_stGround; /* +0x6c */
+    DNM_stMecObstacle m_stWall; /* +0xd4 */
+    DNM_stMecObstacle m_stCharacter; /* +0x13c */
+    DNM_stMecObstacle m_stWater; /* +0x1a4 */
+    DNM_stMecObstacle m_stCeil; /* +0x20c */
+};
+
+DNM_stMecReport g_stReport;
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMRepor.c lines 37–63 */
 /* addr: 0x00302b40  size: 272 bytes */
-void MTH_fn_vVectorPlaneProjection(/* function pointer */ int _p_stResult, /* function pointer */ int _p_stSource, /* function pointer */ int _p_stPlaneNorm, /* function pointer */ int _p_stProjDirection, /* function pointer */ int p_stTmp)
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 37
+ *   +0x0004 -> line 46
+ *   +0x000c -> line 47
+ *   +0x0034 -> line 49
+ *   +0x003c -> line 51
+ *   +0x0054 -> line 53
+ *   +0x0078 -> line 56
+ *   +0x007c -> line 53
+ *   +0x0080 -> line 54
+ *   +0x0084 -> line 56
+ *   +0x0098 -> line 57
+ *   +0x00b8 -> line 59
+ *   +0x00c0 -> line 60
+ *   +0x00d8 -> line 61
+ *   +0x0108 -> line 63
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MTH_fn_vVectorPlaneProjection(MTH3D_tdstVector_* _p_stResult, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stPlaneNorm, MTH3D_tdstVector_* _p_stProjDirection)
 {
     float xDotProduct;
     float xAlpha;
-    /* array */ int a_stVector[1];
-    /* line map: */
-    /*   line 46 @ +0x000 */
-    /*   line 49 @ +0x000 */
-    /*   line 53 @ +0x000 */
-    /*   line 53 @ +0x000 */
-    /*   line 56 @ +0x000 */
-    /*   line 59 @ +0x000 */
-    /*   line 61 @ +0x000 */
+    MTH3D_tdstVector_* p_stTmp;
+    MTH3D_tdstVector_ a_stVector[1];
     /* TODO: decompile from asm/... */
 }

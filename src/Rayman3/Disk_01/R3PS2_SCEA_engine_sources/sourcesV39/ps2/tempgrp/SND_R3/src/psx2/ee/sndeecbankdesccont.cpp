@@ -5,79 +5,125 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct sTreeNode sTreeNode;
+typedef struct CUUID CUUID;
+typedef struct sstring sstring;
 typedef struct CPS2IdObjInfo CPS2IdObjInfo;
+typedef struct spair spair;
+typedef struct sTreeNode sTreeNode;
+typedef struct less less;
+typedef struct stree stree;
 typedef struct smap smap;
 typedef struct CResData CResData;
+typedef struct _RollOffParam _RollOffParam;
+typedef struct CResObjParams CResObjParams;
+typedef struct CExtraEventActor CExtraEventActor;
 typedef struct CLinkActor CLinkActor;
-typedef struct smap smap;
-typedef struct sstring sstring;
+typedef struct CPS2IdObjLoader CPS2IdObjLoader;
 typedef struct CBankDescCont CBankDescCont;
 typedef struct CResObj CResObj;
 typedef struct iterator_base iterator_base;
+typedef struct sset sset;
 typedef struct CVar CVar;
 typedef struct CCritSect CCritSect;
-typedef struct sTreeNode sTreeNode;
-typedef struct CExtraEventActor CExtraEventActor;
 typedef struct CBankDesc CBankDesc;
 typedef struct CResObjState CResObjState;
 typedef struct sTreeLink sTreeLink;
-typedef struct CResObjParams CResObjParams;
+typedef struct CRolloffParam CRolloffParam;
 typedef struct CActorResData CActorResData;
+typedef union CVal CVal;
 typedef struct CBoolRefParam CBoolRefParam;
-typedef struct sset sset;
-typedef struct smap smap;
-typedef struct iterator iterator;
-typedef struct _RollOffParam _RollOffParam;
-typedef struct sTreeNode sTreeNode;
-typedef struct C3DParam C3DParam;
-typedef struct sTreeNode sTreeNode;
-typedef struct CResType CResType;
-typedef struct CActorResObj CActorResObj;
-typedef struct CAllocBlock CAllocBlock;
-typedef struct smap smap;
+typedef struct CActorProgramContext CActorProgramContext;
+typedef struct CIndexAllocator CIndexAllocator;
 typedef struct iterator iterator;
 typedef struct V3Ds V3Ds;
-typedef struct CSndVarType CSndVarType;
-typedef struct CLinkTypeActor CLinkTypeActor;
+typedef struct C3DDirection C3DDirection;
+typedef struct C3DParam C3DParam;
+typedef struct CVolumeActorModifier CVolumeActorModifier;
+typedef struct CCmdInterface CCmdInterface;
+typedef struct CResType CResType;
+typedef struct CPitchActorModifier CPitchActorModifier;
 typedef struct C2DParams C2DParams;
-typedef struct smap smap;
+typedef struct CActorResObj CActorResObj;
+typedef struct CAllocBlock CAllocBlock;
+typedef struct CActorModifiers CActorModifiers;
+typedef struct CSndVarType CSndVarType;
+typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
+typedef struct CLinkTypeActor CLinkTypeActor;
 typedef struct _stVector _stVector;
 typedef struct TTypedVar TTypedVar;
 typedef struct PostponedPlay PostponedPlay;
 typedef struct streebase streebase;
 typedef struct CIdObj CIdObj;
-typedef struct smap smap;
+typedef struct CStringIsLess CStringIsLess;
 typedef union _SND_tduRefEvt _SND_tduRefEvt;
-typedef struct smap smap;
-typedef struct CRolloffParam CRolloffParam;
-typedef struct sTreeNode sTreeNode;
-typedef struct smap smap;
+typedef struct CLinkTypeActorCont CLinkTypeActorCont;
+typedef struct CProgramContext CProgramContext;
 typedef struct CIdObjPtr CIdObjPtr;
-typedef struct sset sset;
 typedef struct CLookupElement CLookupElement;
-typedef struct CCmdInterface CCmdInterface;
 typedef struct CEventResData CEventResData;
-typedef struct sset sset;
-typedef struct iterator iterator;
 typedef struct CRefIdObj CRefIdObj;
-typedef struct C3DDirection C3DDirection;
-typedef struct smap smap;
-typedef union CVal CVal;
 
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
-    /* aggregate */ int m_oValue; /* +0x10 */
+typedef enum _Redbl {
+    _Red = 0,
+    _Black = 1,
+} _Redbl;
+
+typedef enum tdeType {
+    EBASE = 0,
+    EARRAY = 1,
+    ESTRUCT = 2,
+    EOBJECT = 3,
+    ERESID = 4,
+    EENUM = 5,
+} tdeType;
+
+typedef enum tdeEventType {
+    EPLAYEVENT = 0,
+    ESTOPEVENT = 1,
+    EPITCHEVENT = 2,
+    EVOLUMEEVENT = 3,
+    EEXTRAEVENT = 4,
+    ESTOPALLEVENT = 5,
+    ESTOPANDGO = 6,
+} tdeEventType;
+
+struct CUUID {
+    unsigned int m_uiHighWord; /* +0x0 */
+    unsigned int m_uiLowWord; /* +0x4 */
+};
+
+struct sstring {
+    int m_pcData; /* +0x0 */
 };
 
 struct CPS2IdObjInfo {
-    /* aggregate */ int m_oId; /* +0x0 */
+    CUUID m_oId; /* +0x0 */
     unsigned int m_uiOffset; /* +0x8 */
     sstring m_strFileName; /* +0xc */
 };
 
+struct spair {
+    CUUID first; /* +0x0 */
+    CPS2IdObjInfo second; /* +0x8 */
+};
+
+struct sTreeNode {
+    /* C++ base sTreeLink at +0x0. */
+    spair m_oValue; /* +0x10 */
+};
+
+struct less {
+    /* C++ base binary_function at +0x0. */
+};
+
+struct stree {
+    /* C++ base streebase at +0x0. */
+    sallocator allocator; /* +0xc */
+    less key_compare; /* +0xd */
+};
+
 struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
+    stree _Tr; /* +0x0 */
 };
 
 struct CResData {
@@ -86,62 +132,33 @@ struct CResData {
     sstring m_strName; /* +0x14 */
 };
 
-struct CLinkActor {
-    int mpoType; /* +0x0 */
-    int ms32ACPObjectId; /* +0x4 */
-    CExtraEventActor m_oExtraActors; /* +0xc */
-    int m_poNext; /* +0x74 */
-    int m_poPrevious; /* +0x78 */
+struct _RollOffParam {
+    int rDistSatur; /* +0x0 */
+    int rDistBackGround; /* +0x4 */
+    unsigned char ucBackgroundVol; /* +0x8 */
 };
 
-struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
-};
-
-struct sstring {
-    int m_pcData; /* +0x0 */
-};
-
-struct CBankDescCont {
-    /* C++ base smap at +0x0. */
-    /* aggregate */ int moLoader; /* +0x10 */
-};
-
-struct CResObj {
-    int m_roType; /* +0x4 */
-    int m_poResData; /* +0x8 */
-};
-
-struct iterator_base {
-    int _Ptr; /* +0x0 */
-};
-
-struct CVar {
-    int m_poType; /* +0x4 */
-    sset m_NotifTargets; /* +0x8 */
-    sstring m_strName; /* +0x18 */
-};
-
-struct CCritSect {
-    unsigned int m_uiCS; /* +0x0 */
-};
-
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
-    int m_oValue; /* +0x10 */
+struct CResObjParams {
+    /* C++ base CInterface at +0x0. */
+    CResObjParams* m_poNext; /* +0x4 */
+    CResObjParams* m_poPrevious; /* +0x8 */
+    unsigned int m_uiNbRefs; /* +0xc */
+    int m_s32Handle; /* +0x10 */
+    CResData* m_poResData; /* +0x14 */
+    void (*m_pfn_Proc)(int); /* +0x18 */
 };
 
 struct CExtraEventActor {
-    int m_poNext; /* +0x0 */
-    int m_poPrevious; /* +0x4 */
-    int m_poIntSwitchVar; /* +0x8 */
-    int mpoActorObj; /* +0xc */
-    int mpoVolumeModifier; /* +0x10 */
-    int mpoPitchModifier; /* +0x14 */
-    int mpoActorType; /* +0x18 */
+    CExtraEventActor* m_poNext; /* +0x0 */
+    CExtraEventActor* m_poPrevious; /* +0x4 */
+    TTypedVar* m_poIntSwitchVar; /* +0x8 */
+    CActorResObj* mpoActorObj; /* +0xc */
+    TTypedVar* mpoVolumeModifier; /* +0x10 */
+    TTypedVar* mpoPitchModifier; /* +0x14 */
+    CLinkTypeActor* mpoActorType; /* +0x18 */
     int ms32ACPObjectId; /* +0x1c */
     int ms32ACPChannelId; /* +0x20 */
-    /* aggregate */ int meExtraCoeff; /* +0x24 */
+    tdeEventType meExtraCoeff; /* +0x24 */
     float mfCoeffA; /* +0x28 */
     float mfCoeffB; /* +0x2c */
     float mfCoeffC; /* +0x30 */
@@ -153,14 +170,55 @@ struct CExtraEventActor {
     CResObjParams m_oResObjParams; /* +0x4c */
 };
 
+struct CLinkActor {
+    CLinkTypeActor* mpoType; /* +0x0 */
+    int ms32ACPObjectId; /* +0x4 */
+    CExtraEventActor m_oExtraActors; /* +0xc */
+    CLinkActor* m_poNext; /* +0x74 */
+    CLinkActor* m_poPrevious; /* +0x78 */
+};
+
+struct CPS2IdObjLoader {
+    smap m_oIdObjsCache; /* +0x0 */
+    smap m_oIndex; /* +0x10 */
+};
+
+struct CBankDescCont {
+    /* C++ base smap at +0x0. */
+    CPS2IdObjLoader moLoader; /* +0x10 */
+};
+
+struct CResObj {
+    CResType* m_roType; /* +0x4 */
+    CResData* m_poResData; /* +0x8 */
+};
+
+struct iterator_base {
+    sTreeLink* _Ptr; /* +0x0 */
+};
+
+struct sset {
+    stree _Tr; /* +0x0 */
+};
+
+struct CVar {
+    CSndVarType* m_poType; /* +0x4 */
+    sset m_NotifTargets; /* +0x8 */
+    sstring m_strName; /* +0x18 */
+};
+
+struct CCritSect {
+    unsigned int m_uiCS; /* +0x0 */
+};
+
 struct CBankDesc {
     /* C++ base sset at +0x0. */
-    int mroLoader; /* +0x10 */
+    CPS2IdObjLoader* mroLoader; /* +0x10 */
     sstring mostringName; /* +0x14 */
 };
 
 struct CResObjState {
-    int m_poResObj; /* +0x0 */
+    CResObj* m_poResObj; /* +0x0 */
     unsigned int m_uiInstance; /* +0x4 */
     unsigned char m_bPlayable; /* +0x8 */
     unsigned char m_b2DRes; /* +0x9 */
@@ -171,27 +229,23 @@ struct CResObjState {
     unsigned char m_bResident; /* +0xe */
     int m_pvUserData; /* +0x10 */
     int m_iUserDataSize; /* +0x14 */
-    int m_poNext; /* +0x18 */
-    int m_poPrevious; /* +0x1c */
-    int m_poOwner; /* +0x20 */
+    CResObjState* m_poNext; /* +0x18 */
+    CResObjState* m_poPrevious; /* +0x1c */
+    CResObj* m_poOwner; /* +0x20 */
     unsigned int m_uiLockCount; /* +0x24 */
 };
 
 struct sTreeLink {
-    int m_poLeft; /* +0x0 */
-    int m_poParent; /* +0x4 */
-    int m_poRight; /* +0x8 */
-    /* aggregate */ int m_eColor; /* +0xc */
+    sTreeLink* m_poLeft; /* +0x0 */
+    sTreeLink* m_poParent; /* +0x4 */
+    sTreeLink* m_poRight; /* +0x8 */
+    _Redbl m_eColor; /* +0xc */
 };
 
-struct CResObjParams {
-    /* C++ base CInterface at +0x0. */
-    int m_poNext; /* +0x4 */
-    int m_poPrevious; /* +0x8 */
-    unsigned int m_uiNbRefs; /* +0xc */
-    int m_s32Handle; /* +0x10 */
-    int m_poResData; /* +0x14 */
-    int m_pfn_Proc; /* +0x18 */
+struct CRolloffParam {
+    float m_fStabilisationDistance; /* +0x0 */
+    float m_fSaturationDistance; /* +0x4 */
+    float m_fStabilisationVolume; /* +0x8 */
 };
 
 struct CActorResData {
@@ -200,7 +254,12 @@ struct CActorResData {
     sset m_oProgramList; /* +0x1c */
     smap m_oVariables; /* +0x2c */
     CRolloffParam m_oRolloff; /* +0x3c */
-    int m_poGlobalVarAccess; /* +0x48 */
+    CVarAccess* m_poGlobalVarAccess; /* +0x48 */
+};
+
+union CVal {
+    int pcBool; /* +0x0 */
+    TTypedVar* poBoolVar; /* +0x0 */
 };
 
 struct CBoolRefParam {
@@ -209,72 +268,19 @@ struct CBoolRefParam {
     unsigned int m_uiValue; /* +0x8 */
 };
 
-struct sset {
-    /* aggregate */ int _Tr; /* +0x0 */
+struct CActorProgramContext {
+    /* C++ base CProgramContext at +0x0. */
+    /* C++ base CVarAccess at +0xc. */
+    CResObjState m_oObjStates; /* +0x10 */
+    CActorResObj* m_pActor; /* +0x38 */
+    smap m_oVariables; /* +0x3c */
+    CCritSect m_oMutex; /* +0x4c */
 };
 
-struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
-};
-
-struct iterator {
-    /* C++ base iterator_base at +0x0. */
-};
-
-struct _RollOffParam {
-    int rDistSatur; /* +0x0 */
-    int rDistBackGround; /* +0x4 */
-    unsigned char ucBackgroundVol; /* +0x8 */
-};
-
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
-    /* aggregate */ int m_oValue; /* +0x10 */
-};
-
-struct C3DParam {
-    V3Ds m_oPos; /* +0x0 */
-    V3Ds m_oSpeed; /* +0xc */
-    C3DDirection m_oDir; /* +0x18 */
-};
-
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
-    /* aggregate */ int m_oValue; /* +0x10 */
-};
-
-struct CResType {
-    unsigned char m_b2D; /* +0x0 */
-    unsigned char m_b3D; /* +0x1 */
-    unsigned char m_bPlayable; /* +0x2 */
-    CCmdInterface m_oInterface; /* +0x4 */
-    int m_czResDataClassName; /* +0x38 */
-    smap m_oCommands; /* +0x3c */
-};
-
-struct CActorResObj {
-    /* C++ base CResObj at +0x0. */
-    C3DParam m_o3DParams; /* +0xc */
-    /* aggregate */ int m_oPitchModifier; /* +0x3c */
-    CRolloffParam m_oRolloff; /* +0x60 */
-    C2DParams m_o2DParams; /* +0x6c */
-    unsigned char m_b3DParamsChanged; /* +0x7c */
-    unsigned char m_b3DRes; /* +0x7d */
-    sstring m_sName; /* +0x80 */
-    unsigned char m_b2DParamsComputed; /* +0x84 */
-    /* aggregate */ int m_oVolModifier; /* +0x88 */
-    /* aggregate */ int m_oProgramContext; /* +0xac */
-};
-
-struct CAllocBlock {
-    int m_poNextBlock; /* +0x0 */
-    unsigned int m_uiBufferSize; /* +0x4 */
-    int m_pcBuffer; /* +0x8 */
-    int m_pcBufferPos; /* +0xc */
-};
-
-struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
+struct CIndexAllocator {
+    CAllocBlock* m_poAllocBlocks; /* +0x0 */
+    char m_cRootNodeBuffer[40]; /* +0x4 */
+    unsigned int m_uiNbAllocs; /* +0x2c */
 };
 
 struct iterator {
@@ -287,17 +293,39 @@ struct V3Ds {
     float fZ; /* +0x8 */
 };
 
-struct CSndVarType {
-    /* aggregate */ int m_eType; /* +0x4 */
-    int m_czTypeName; /* +0x8 */
+struct C3DDirection {
+    V3Ds m_oFront; /* +0x0 */
+    V3Ds m_oTop; /* +0xc */
 };
 
-struct CLinkTypeActor {
-    CLinkActor m_oActors; /* +0x0 */
-    int mroVolumeModifier; /* +0x7c */
-    int ms32TypeId; /* +0x80 */
-    int ms32LineId; /* +0x84 */
-    /* aggregate */ int mstIActor; /* +0x88 */
+struct C3DParam {
+    V3Ds m_oPos; /* +0x0 */
+    V3Ds m_oSpeed; /* +0xc */
+    C3DDirection m_oDir; /* +0x18 */
+};
+
+struct CVolumeActorModifier {
+    /* C++ base CActorModifiers at +0x0. */
+};
+
+struct CCmdInterface {
+    smap m_oCommands; /* +0x0 */
+    smap m_oInterfaces; /* +0x10 */
+    smap m_oSubInterfaces; /* +0x20 */
+    int m_czInterfaceName; /* +0x30 */
+};
+
+struct CResType {
+    unsigned char m_b2D; /* +0x0 */
+    unsigned char m_b3D; /* +0x1 */
+    unsigned char m_bPlayable; /* +0x2 */
+    CCmdInterface m_oInterface; /* +0x4 */
+    int m_czResDataClassName; /* +0x38 */
+    smap m_oCommands; /* +0x3c */
+};
+
+struct CPitchActorModifier {
+    /* C++ base CActorModifiers at +0x0. */
 };
 
 struct C2DParams {
@@ -307,8 +335,65 @@ struct C2DParams {
     float m_fSpace; /* +0xc */
 };
 
-struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
+struct CActorResObj {
+    /* C++ base CResObj at +0x0. */
+    C3DParam m_o3DParams; /* +0xc */
+    CPitchActorModifier m_oPitchModifier; /* +0x3c */
+    CRolloffParam m_oRolloff; /* +0x60 */
+    C2DParams m_o2DParams; /* +0x6c */
+    unsigned char m_b3DParamsChanged; /* +0x7c */
+    unsigned char m_b3DRes; /* +0x7d */
+    sstring m_sName; /* +0x80 */
+    unsigned char m_b2DParamsComputed; /* +0x84 */
+    CVolumeActorModifier m_oVolModifier; /* +0x88 */
+    CActorProgramContext m_oProgramContext; /* +0xac */
+};
+
+struct CAllocBlock {
+    CAllocBlock* m_poNextBlock; /* +0x0 */
+    unsigned int m_uiBufferSize; /* +0x4 */
+    int m_pcBuffer; /* +0x8 */
+    int m_pcBufferPos; /* +0xc */
+};
+
+struct CActorModifiers {
+    /* C++ base CVarNotifTarget at +0x0. */
+    CActorResObj* m_pActor; /* +0x4 */
+    smap m_oVariables; /* +0x8 */
+    float m_fDirectValue; /* +0x18 */
+    float m_fResultValue; /* +0x1c */
+    unsigned char m_bResultChanged; /* +0x20 */
+};
+
+struct CSndVarType {
+    tdeType m_eType; /* +0x4 */
+    int m_czTypeName; /* +0x8 */
+};
+
+struct _tdstAllRetObjectSound {
+    int (*X)(int); /* +0x0 */
+    int (*Y)(int); /* +0x4 */
+    int (*Z)(int); /* +0x8 */
+    int (*VX)(int); /* +0xc */
+    int (*VY)(int); /* +0x10 */
+    int (*VZ)(int); /* +0x14 */
+    unsigned char (*REVERB)(int); /* +0x18 */
+    void (*ExtraCoef)(int, _SND_tduRefEvt, int*, int*, int*); /* +0x1c */
+    int (*Switch)(int, int); /* +0x20 */
+    int (*MicroLink)(int, int); /* +0x24 */
+    int (*pfnPosition)(int, int, _stVector*); /* +0x28 */
+    int (*pfnVelocity)(int, int, _stVector*); /* +0x2c */
+    int (*pfnMicroLink)(int, int, int); /* +0x30 */
+    int (*pfnRollOff)(int, int, _RollOffParam*); /* +0x34 */
+    int (*pfnInfo)(int, int, char*, int); /* +0x38 */
+};
+
+struct CLinkTypeActor {
+    CLinkActor m_oActors; /* +0x0 */
+    TTypedVar* mroVolumeModifier; /* +0x7c */
+    int ms32TypeId; /* +0x80 */
+    int ms32LineId; /* +0x84 */
+    _tdstAllRetObjectSound mstIActor; /* +0x88 */
 };
 
 struct _stVector {
@@ -323,74 +408,56 @@ struct TTypedVar {
 };
 
 struct PostponedPlay {
-    int m_pNext; /* +0x0 */
-    int m_pPrev; /* +0x4 */
-    int m_pData; /* +0x8 */
+    PostponedPlay* m_pNext; /* +0x0 */
+    PostponedPlay* m_pPrev; /* +0x4 */
+    CEventResData* m_pData; /* +0x8 */
     int m_s32Handle; /* +0xc */
     int m_s32LastCmd; /* +0x10 */
-    int m_pProc; /* +0x14 */
-    int m_pEActor; /* +0x18 */
+    void (*m_pProc)(int); /* +0x14 */
+    CExtraEventActor* m_pEActor; /* +0x18 */
     unsigned int m_u32EngineContext; /* +0x1c */
 };
 
 struct streebase {
-    int _HeadLink; /* +0x0 */
+    sTreeLink* _HeadLink; /* +0x0 */
     unsigned char _Multi; /* +0x4 */
     unsigned int _Size; /* +0x8 */
 };
 
 struct CIdObj {
     /* C++ base CRTTIClass at +0x0. */
-    /* aggregate */ int m_oId; /* +0x4 */
+    CUUID m_oId; /* +0x4 */
 };
 
-struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
+struct CStringIsLess {
+    /* C++ base binary_function at +0x0. */
 };
 
 union _SND_tduRefEvt {
     unsigned int Id; /* +0x0 */
-    int pstPtr; /* +0x0 */
+    _SND_tdstBlockEvent* pstPtr; /* +0x0 */
 };
 
-struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
+struct CLinkTypeActorCont {
+    /* C++ base smap at +0x0. */
+    CActorResData* m_poStandardActorResData; /* +0x10 */
+    CActorResData* m_poMusicActorResData; /* +0x14 */
+    CResData* m_poMusicProgramResData; /* +0x18 */
 };
 
-struct CRolloffParam {
-    float m_fStabilisationDistance; /* +0x0 */
-    float m_fSaturationDistance; /* +0x4 */
-    float m_fStabilisationVolume; /* +0x8 */
-};
-
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
-    /* aggregate */ int m_oValue; /* +0x10 */
-};
-
-struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
+struct CProgramContext {
+    CVarAccess* m_poGlobVarAcc; /* +0x4 */
+    CVarAccess* m_poOwnerVarAcc; /* +0x8 */
 };
 
 struct CIdObjPtr {
-    int m_poElmt; /* +0x0 */
-};
-
-struct sset {
-    /* aggregate */ int _Tr; /* +0x0 */
+    CLookupElement* m_poElmt; /* +0x0 */
 };
 
 struct CLookupElement {
     int m_iNbRef; /* +0x0 */
-    /* aggregate */ int m_oId; /* +0x4 */
-    int m_poIdObj; /* +0xc */
-};
-
-struct CCmdInterface {
-    smap m_oCommands; /* +0x0 */
-    smap m_oInterfaces; /* +0x10 */
-    smap m_oSubInterfaces; /* +0x20 */
-    int m_czInterfaceName; /* +0x30 */
+    CUUID m_oId; /* +0x4 */
+    CIdObj* m_poIdObj; /* +0xc */
 };
 
 struct CEventResData {
@@ -399,16 +466,8 @@ struct CEventResData {
     float m_fCoeffB; /* +0x1c */
     float m_fCoeffC; /* +0x20 */
     float m_fCoeffD; /* +0x24 */
-    /* aggregate */ int m_eEventType; /* +0x28 */
+    tdeEventType m_eEventType; /* +0x28 */
     CIdObjPtr m_pTargetRes; /* +0x2c */
-};
-
-struct sset {
-    /* aggregate */ int _Tr; /* +0x0 */
-};
-
-struct iterator {
-    /* C++ base iterator_base at +0x0. */
 };
 
 struct CRefIdObj {
@@ -416,45 +475,36 @@ struct CRefIdObj {
     unsigned char m_bMarkFlag; /* +0xc */
 };
 
-struct C3DDirection {
-    V3Ds m_oFront; /* +0x0 */
-    V3Ds m_oTop; /* +0xc */
-};
-
-struct smap {
-    /* aggregate */ int _Tr; /* +0x0 */
-};
-
-union CVal {
-    int pcBool; /* +0x0 */
-    int poBoolVar; /* +0x0 */
-};
-
-int ss32CurrentRefreshChannel;
-int ms_pFree;
-int ms_pLast;
-int ms_pFirst;
-int ms_czNil;
-sTreeLink _NilElmt;
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesccont.cpp lines 36–40 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesccont.cpp lines 30–40 */
 /* addr: 0x0018beb0  size: 304 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 30
+ *   +0x00ac -> line 36
+ *   +0x00b4 -> line 37
+ *   +0x00c0 -> line 38
+ *   +0x00f8 -> line 39
+ *   +0x011c -> line 40
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void _NilElmt__Q24usnd9streebase(char* pch_FilePath)
 {
-    /* line map: */
-    /*   line 36 @ +0x000 */
-    /*   line 38 @ +0x000 */
-    /*   line 40 @ +0x000 */
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesccont.cpp lines 64–67 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesccont.cpp lines 63–68 */
 /* addr: 0x0018cad0  size: 468 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 63
+ *   +0x0020 -> line 64
+ *   +0x005c -> line 66
+ *   +0x0120 -> line 67
+ *   +0x01b8 -> line 68
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CBankDescCont::mfn_poAddBankDesc(char* pch_FileName)
 {
     sstring o_Key;
-    /* line map: */
-    /*   line 64 @ +0x000 */
-    /*   line 67 @ +0x000 */
     /* TODO: decompile from asm/... */
 }

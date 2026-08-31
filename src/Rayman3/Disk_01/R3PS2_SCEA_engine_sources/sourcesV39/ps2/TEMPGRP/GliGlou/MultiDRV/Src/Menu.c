@@ -5,14 +5,29 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct anon_0 anon_0;
-typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
-typedef struct GEO_tdstColor_ GEO_tdstColor_;
-typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 typedef struct anon_1 anon_1;
+typedef struct anon_0 anon_0;
+typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
+typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
+typedef struct GEO_tdstElementIndexedTriangles_ GEO_tdstElementIndexedTriangles_;
+typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
+typedef struct GEO_tdstColor_ GEO_tdstColor_;
+typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;
+typedef struct GEO_tdstTripledIndex_ GEO_tdstTripledIndex_;
+typedef struct ACP_tdst2DUVValues_ ACP_tdst2DUVValues_;
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
+typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
+
+struct anon_1 {
+    float stMat[2][2]; /* +0x0 */
+    float stTrans[2]; /* +0x10 */
+};
 
 struct anon_0 {
-    int pst_Texture; /* +0x0 */
+    GLI_tdstTexture_* pst_Texture; /* +0x0 */
     char c_Operator; /* +0x4 */
     char c_ColorOperator; /* +0x5 */
     char c_UVSource; /* +0x6 */
@@ -25,6 +40,13 @@ struct anon_0 {
     unsigned int ulSetMaterialFunction; /* +0x44 */
     float fScaleU; /* +0x48 */
     float fScaleV; /* +0x4c */
+};
+
+struct MTH4D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+    float xW; /* +0xc */
 };
 
 struct GLI_tdstTexture_ {
@@ -47,10 +69,34 @@ struct GLI_tdstTexture_ {
     unsigned int lCompressionCounter; /* +0x38 */
     unsigned int lTypeOfCompression; /* +0x3c */
     unsigned int lTypeOfMipMapping; /* +0x40 */
-    int p_TextureOfSubstitution; /* +0x44 */
+    GLI_tdstTexture_* p_TextureOfSubstitution; /* +0x44 */
     unsigned char ucBilinearMode; /* +0x48 */
     unsigned char ucCylingMode; /* +0x49 */
     char a255_cFileName[128]; /* +0x4a */
+};
+
+struct GEO_tdstElementIndexedTriangles_ {
+    GLI_tdstMaterial_* hVisualMaterial; /* +0x0 */
+    short xNbFaces; /* +0x4 */
+    short xNbElementUV; /* +0x6 */
+    short xNbUVStages; /* +0x8 */
+    GEO_tdstTripledIndex_* d_stListOfFacesTripled; /* +0xc */
+    GEO_tdstTripledIndex_* d_stListOfFacesTripledIndexUV; /* +0x10 */
+    MTH3D_tdstVector_* d_stListOfFacesNormals; /* +0x14 */
+    ACP_tdst2DUVValues_* d_stListOfElementUV; /* +0x18 */
+    GEO_tdstTripledIndex_* d_stListOfFacesEdges; /* +0x1c */
+    GEO_tdstTripledIndex_* d_stListOfFacesAdjacent; /* +0x20 */
+    int d_stListOfIndexUsedByThisElement; /* +0x24 */
+    short xNumberOfIndexsUsed; /* +0x28 */
+    short xIndexOfParallelBox; /* +0x2a */
+    unsigned int glDisplayList; /* +0x2c */
+    int p_xSpecialValue; /* +0x30 */
+    unsigned char bVisibleInPortal; /* +0x34 */
+    unsigned int pVertexArrays[4]; /* +0x38 */
+};
+
+struct GEO_tdstDoubledIndex_ {
+    short a2_xIndex[2]; /* +0x0 */
 };
 
 struct GEO_tdstColor_ {
@@ -60,14 +106,87 @@ struct GEO_tdstColor_ {
     float xA; /* +0xc */
 };
 
-struct GEO_tdstEdge_ {
-    short xPoints[2]; /* +0x0 */
-    /* array */ int st_VectorPoints[2]; /* +0x4 */
+struct GLI_tdstAnimatedTextureNode_ {
+    GLI_tdstTexture_* p_stTexture; /* +0x0 */
+    float xDisplayTime; /* +0x4 */
+    GLI_tdstAnimatedTextureNode_* p_stNextDisplayNode; /* +0x8 */
 };
 
-struct anon_1 {
-    float stMat[2][2]; /* +0x0 */
-    float stTrans[2]; /* +0x10 */
+struct GEO_tdstTripledIndex_ {
+    short a3_xIndex[3]; /* +0x0 */
+};
+
+struct ACP_tdst2DUVValues_ {
+    float xU; /* +0x0 */
+    float xV; /* +0x4 */
+};
+
+struct GLI_tdstMaterial_ {
+    unsigned int xMaterialType; /* +0x0 */
+    GEO_tdstColor_ stAmbient; /* +0x4 */
+    GEO_tdstColor_ stDiffuse; /* +0x14 */
+    GEO_tdstColor_ stSpecular; /* +0x24 */
+    GEO_tdstColor_ stColor; /* +0x34 */
+    unsigned int lMaterialAdditionnalType; /* +0x44 */
+    int lSpecularExponent; /* +0x48 */
+    GLI_tdstTexture_* p_stTexture; /* +0x4c */
+    float fAddU; /* +0x50 */
+    float fAddV; /* +0x54 */
+    float fConstantAddU; /* +0x58 */
+    float fConstantAddV; /* +0x5c */
+    int lIncrementIsEnable; /* +0x60 */
+    unsigned int lActualRefreshNumber; /* +0x64 */
+    GLI_tdstAnimatedTextureNode_* p_stFistAnimatedTExtureNode; /* +0x68 */
+    GLI_tdstAnimatedTextureNode_* p_stActualAnimatedTExtureNode; /* +0x6c */
+    int lNumberOfDisplayNode; /* +0x70 */
+    float xActualDisplayTimeSinceStartOfLastTexture; /* +0x74 */
+    unsigned char xIsLocked; /* +0x78 */
+    unsigned int uiFlags; /* +0x7c */
+    unsigned int ulMultiTextureType; /* +0x80 */
+    unsigned int ulNbTextureStages; /* +0x84 */
+    anon_0 a_stMultiMaterial[4]; /* +0x88 */
+};
+
+struct GEO_tdstGeometricObject_ {
+    MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
+    MTH3D_tdstVector_* d_stListOfPointsNormals; /* +0x4 */
+    int d_dfVertexTransparency; /* +0x8 */
+    int d_xListOfElementsTypes; /* +0xc */
+    int d_stListOfElements; /* +0x10 */
+    GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
+    GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
+    unsigned int ulType; /* +0x1c */
+    short xNbPoints; /* +0x20 */
+    short xNbElements; /* +0x22 */
+    short xNbEdges; /* +0x24 */
+    short xNbParallelBoxes; /* +0x26 */
+    float xBoudingSphereRadius; /* +0x28 */
+    MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
+    GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
+    short xNbEdgesDI; /* +0x44 */
+    short xNbOctreeEdges; /* +0x46 */
+    int bUsedForShadowDrawing; /* +0x48 */
+    int bUsedForShadowCreating; /* +0x4c */
+    int pSDC_Data; /* +0x50 */
+    unsigned int bIsStatic; /* +0x54 */
+    unsigned int glDisplayList; /* +0x58 */
+    unsigned char bVTForSinus; /* +0x5c */
+};
+
+struct GEO_tdstParallelBox_ {
+    MTH4D_tdstVector_ stMinPoint; /* +0x0 */
+    MTH4D_tdstVector_ stMaxPoint; /* +0x10 */
+};
+
+struct MTH3D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+};
+
+struct GEO_tdstEdge_ {
+    short xPoints[2]; /* +0x0 */
+    MTH3D_tdstVector_ st_VectorPoints[2]; /* +0x4 */
 };
 
 int GLI_g_hMenuBackgroundObject;
@@ -76,17 +195,27 @@ float ga_fColor1_PC[3];
 float ga_fColor2_PC[3];
 float ga_fColor3_PC[3];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Menu.c lines 16–31 */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Menu.c lines 14–36 */
 /* addr: 0x002aa220  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 14
+ *   +0x0014 -> line 16
+ *   +0x0018 -> line 27
+ *   +0x0020 -> line 29
+ *   +0x0030 -> line 30
+ *   +0x0034 -> line 29
+ *   +0x0038 -> line 30
+ *   +0x0050 -> line 31
+ *   +0x0060 -> line 33
+ *   +0x0064 -> line 31
+ *   +0x0068 -> line 33
+ *   +0x006c -> line 31
+ *   +0x0078 -> line 36
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_xInitMatrixStack(void)
 {
     short xI;
-    /* line map: */
-    /*   line 16 @ +0x000 */
-    /*   line 29 @ +0x000 */
-    /*   line 29 @ +0x000 */
-    /*   line 31 @ +0x000 */
-    /*   line 31 @ +0x000 */
-    /*   line 31 @ +0x000 */
     /* TODO: decompile from asm/... */
 }

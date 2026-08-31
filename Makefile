@@ -51,7 +51,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%
 
 extract:
 	@test -n "$(TARGET)" || (echo "Set TARGET=/path/to/SLKA_250.78"; exit 2)
-	python3 $(TOOLS_DIR)/extract_debug.py "$(TARGET)" --out $(SRC_DIR)
+	python3 $(TOOLS_DIR)/extract_debug.py "$(TARGET)" --out $(SRC_DIR) \
+		--preserve-implemented
 
 list:
 	@printf '%s\n' $(SOURCES)

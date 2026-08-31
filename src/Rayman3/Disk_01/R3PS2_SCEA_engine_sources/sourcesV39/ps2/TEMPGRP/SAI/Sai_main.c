@@ -9,6 +9,8 @@ typedef struct tdstPointerData_ tdstPointerData_;
 typedef struct tdstArrayData_ tdstArrayData_;
 typedef struct tdstBooleanData_ tdstBooleanData_;
 typedef union SAI_tduData_ SAI_tduData_;
+typedef struct SAI_tdstListEntry_ SAI_tdstListEntry_;
+typedef struct SAI_tdstInternalStructure_ SAI_tdstInternalStructure_;
 
 struct tdstPointerData_ {
     int p_vPointer; /* +0x0 */
@@ -35,16 +37,36 @@ union SAI_tduData_ {
     tdstBooleanData_ stBooleanData; /* +0x0 */
 };
 
-unsigned char g_ucSAIModuleId;
-/* aggregate */ int SAI_g_stInternalStructure;
+struct SAI_tdstListEntry_ {
+    SAI_tdstListEntry_* p_stNextEntry; /* +0x0 */
+    int p_vDataPointer; /* +0x4 */
+    SAI_tduData_ uData; /* +0x8 */
+    unsigned short eFlags; /* +0x10 */
+    unsigned char ucMemoryLevel; /* +0x12 */
+    unsigned char ucDummy; /* +0x13 */
+};
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\Sai_main.c lines 61–69 */
+struct SAI_tdstInternalStructure_ {
+    SAI_tdstListEntry_* p_stFirstEntry; /* +0x0 */
+    SAI_tdstListEntry_* p_stLastEntry; /* +0x4 */
+};
+
+unsigned char g_ucSAIModuleId;
+SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\Sai_main.c lines 60–69 */
 /* addr: 0x003191b0  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 60
+ *   +0x0004 -> line 61
+ *   +0x0008 -> line 60
+ *   +0x000c -> line 61
+ *   +0x0024 -> line 68
+ *   +0x002c -> line 69
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void RND_fn_vFirstInitRandom(void)
 {
-    /* line map: */
-    /*   line 61 @ +0x000 */
-    /*   line 61 @ +0x000 */
-    /*   line 69 @ +0x000 */
     /* TODO: decompile from asm/... */
 }

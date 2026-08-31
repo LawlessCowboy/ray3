@@ -45,6 +45,26 @@ def cstr(data: bytes, pos: int) -> tuple[str, int]:
     return data[pos:end].decode('latin-1', errors='replace'), end + 1
 
 
+SOURCE_PATH_RE = re.compile(
+    r'(?i)\.(?:c|cc|cpp|cxx|h|hh|hpp|hxx|s|asm)$'
+)
+
+
+def is_source_path(value: str) -> bool:
+    """Return whether an inline string is a credible source-file path.
+
+    Relocated addresses can follow the same ``38 00`` opcode used by inline
+    strings.  Interpreting their little-endian bytes as Latin-1 occasionally
+    produces a backslash, which is not sufficient evidence of a path.
+    """
+    return (
+        bool(value)
+        and all(0x20 <= ord(char) <= 0x7e for char in value)
+        and ('\\' in value or '/' in value)
+        and SOURCE_PATH_RE.search(value) is not None
+    )
+
+
 # ---------------------------------------------------------------------------
 # Type system
 # ---------------------------------------------------------------------------
@@ -129,6 +149,7 @@ class VarInfo:
     line: int = 0
     bit_offset: Optional[int] = None
     bit_width: Optional[int] = None
+    address: int = 0         # linked address for file-level globals
 
 
 @dataclass
@@ -464,9 +485,35 @@ class DebugParser:
         name_pos = pos + 18
         return name_pos if self.d[name_pos:name_pos + 2] == b'\x38\x00' else -1
 
+    def _terminal_identifier_record(self, marker: bytes, start: int,
+                                    end: int) -> tuple[int, str]:
+        """Find a trailing inline identifier record within a linked node.
+
+        Location and bit-offset fields are raw little-endian integers, so
+        their bytes can imitate the 38-name opcodes.  A declaration/member
+        name is structurally the final NUL-terminated field in its node.
+        """
+        search_pos = start
+        while search_pos < end:
+            candidate = self.d.find(marker, search_pos, end)
+            if candidate < 0:
+                break
+            name, name_end = cstr(self.d, candidate + len(marker))
+            if (name_end == end
+                    and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name)):
+                return candidate, name
+            search_pos = candidate + 1
+        return -1, ''
+
     def _parse_chunk(self, start: int, end: int, strtab_size: int):
         """Parse one per-function chunk of the .debug stream."""
         d = self.d
+        # A linked ELF concatenates independently emitted .debug sections.
+        # Source/type metadata in the next section must not be allowed to
+        # retag the function completed by the preceding one.  Metadata that
+        # legitimately follows a function body lives before that section's
+        # end and is still handled below.
+        self._finalise_func()
         # Despite the STABS-like header, strtab_size does *not* delimit an
         # opaque trailing string table.  The controlled MWCC probes contain
         # parameter and local declarations in those final bytes.  Walk the
@@ -602,7 +649,7 @@ class DebugParser:
             # ---- 38 00 : source file path string ----
             if b == 0x38 and i+1 < end and d[i+1] == 0x00:
                 s, nxt = cstr(d, i+2)
-                if '\\' in s or '/' in s:
+                if is_source_path(s):
                     if (self._cur_func is not None
                             and self._function_addresses is not None):
                         # A linked record can repeat its source metadata
@@ -661,10 +708,18 @@ class DebugParser:
                     pending_function_entry = False
                     skip_file_type_declarations = False
                     awaiting_function_name = False
-                elif pending_var is not None and s and all(c.isalnum() or c == '_' for c in s):
+                elif pending_var is not None:
                     # Local names use a bare 38 00 record, unlike parameters
-                    # which use the 07 38 00 form.
-                    attach_pending_name(s)
+                    # which use the 07 38 00 form.  A location address can
+                    # contain a false 38 00 pair; do not consume through its
+                    # payload as a string, or the real following name opcode
+                    # is skipped.  Addresses 0x00383260 in PS2GL produced the
+                    # bogus local name ``8`` this way.
+                    if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', s):
+                        attach_pending_name(s)
+                    else:
+                        i += 1
+                        continue
                 i = nxt
                 continue
 
@@ -690,10 +745,14 @@ class DebugParser:
             # ---- 07 38 00 : symbol name ----
             if b == 0x07 and i+2 < end and d[i+1] == 0x38 and d[i+2] == 0x00:
                 s, nxt = cstr(d, i+3)
-                if s and all(c.isalnum() or c in '_~<>:' for c in s):
-                    if pending_var is not None:
+                if pending_var is not None:
+                    if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', s):
                         attach_pending_name(s)
-                    elif (self._cur_file and self._cur_func is None
+                    else:
+                        i += 1
+                        continue
+                elif s and all(c.isalnum() or c in '_~<>:' for c in s):
+                    if (self._cur_file and self._cur_func is None
                           and (self._function_addresses is None
                                and is_function_chunk
                                or pending_function_entry)):
@@ -872,10 +931,14 @@ class DebugParser:
                     continue
                 elif role_byte == ROLE_PARAM and self._cur_func:
                     var = VarInfo(
-                        name='', type_str=type_str, role='param',
+                        name='', type_str=type_str,
+                        role='param' if parsing_signature else 'local',
                         stack_offset=pending_addr,
                     )
-                    self._cur_func.params.append(var)
+                    if parsing_signature:
+                        self._cur_func.params.append(var)
+                    else:
+                        self._cur_func.locals_.append(var)
                     pending_var = var
                     i = next_i
                     continue
@@ -986,10 +1049,17 @@ class DebugParser:
             next_pos = struct.unpack_from('<I', d, pos + 8)[0]
             if not (pos < next_pos <= end):
                 break
-            name_pos = d.find(b'\x38\x00', pos + 12, next_pos)
+            # A linked global ends with ``38 00 <name> 00``.  Do not accept
+            # the first 38 00 byte pair in the record: the preceding
+            # ``05 00 03 <address:u32>`` can itself contain those bytes.  For
+            # example, address 0x00382e60 made VU0_gs_LastMPRGLoaded appear as
+            # the identifier ``8``.  The real name string is the one whose
+            # terminator reaches the next linked record exactly.
+            name_pos, name = self._terminal_identifier_record(
+                b'\x38\x00', pos + 12, next_pos
+            )
             if name_pos < 0:
                 break
-            name, _ = cstr(d, name_pos + 2)
             type_str = 'int'
             type_ref = None
             scalar_pos = d.find(b'\x55\x00', pos + 12, name_pos)
@@ -999,9 +1069,14 @@ class DebugParser:
                 type_str = REG_TO_TYPE.get(reg_code, f'/*type_0x{reg_code:02x}*/ int')
             elif aggregate_pos >= 0 and aggregate_pos + 6 <= name_pos:
                 type_ref = struct.unpack_from('<I', d, aggregate_pos + 2)[0]
+            address = 0
+            address_pos = d.rfind(b'\x05\x00\x03', pos + 12, name_pos)
+            if address_pos >= 0 and address_pos + 7 <= name_pos:
+                address = struct.unpack_from('<I', d, address_pos + 3)[0]
             pending_globals.append((
                 VarInfo(name=name, type_str=type_str,
-                        role='static' if storage_class == 12 else 'global'),
+                        role='static' if storage_class == 12 else 'global',
+                        address=address),
                 type_ref,
             ))
             pos = next_pos
@@ -1030,7 +1105,7 @@ class DebugParser:
                     self._type_names[pos] = f'anon_{name[5:]}'
                 elif name == '@enum':
                     self._type_names[pos] = f'anon_enum_{pos:08x}'
-                elif name and all(ch.isalnum() or ch == '_' for ch in name):
+                elif re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name):
                     self._type_names[pos] = name
             # Array records observed in controlled objects have this fixed
             # prefix before their element descriptor and upper bound.  The
@@ -1087,23 +1162,31 @@ class DebugParser:
                     member_next = struct.unpack_from('<I', d, member_pos + 8)[0]
                     if not (member_pos < member_next <= next_pos):
                         break
-                    member_name_pos = d.find(b'\x07\x38\x00', member_pos + 12, member_next)
+                    member_name_pos, member_name = self._terminal_identifier_record(
+                        b'\x07\x38\x00', member_pos + 12, member_next
+                    )
                     bitfield_marker = d.find(b'\x07\xd6\x00', member_pos + 12, member_next)
                     bit_width = bit_offset = None
-                    name_prefix_length = 3
                     if member_name_pos < 0 and bitfield_marker >= 0:
                         # Bitfield members use 07 D6 00 <width:u32> C5 00
                         # <bit-offset:u16> 38 00 <name>.  Unlike ordinary
                         # members, their name record has no 07 prefix.
-                        candidate_name_pos = d.find(b'\x38\x00', bitfield_marker + 3, member_next)
+                        bit_offset_marker = d.find(
+                            b'\xc5\x00', bitfield_marker + 7, member_next
+                        )
+                        name_search_start = (
+                            bit_offset_marker + 4
+                            if bit_offset_marker >= 0
+                            else bitfield_marker + 7
+                        )
+                        candidate_name_pos, candidate_name = self._terminal_identifier_record(
+                            b'\x38\x00', name_search_start, member_next
+                        )
                         if candidate_name_pos >= 0:
                             member_name_pos = candidate_name_pos
-                            name_prefix_length = 2
+                            member_name = candidate_name
                             if bitfield_marker + 7 <= member_next:
                                 bit_width = struct.unpack_from('<I', d, bitfield_marker + 3)[0]
-                            bit_offset_marker = d.find(
-                                b'\xc5\x00', bitfield_marker + 7, candidate_name_pos
-                            )
                             if bit_offset_marker >= 0 and bit_offset_marker + 4 <= candidate_name_pos:
                                 bit_offset = struct.unpack_from('<H', d, bit_offset_marker + 2)[0]
                     aggregate_pos = d.find(b'\x72\x00', member_pos + 12, member_next)
@@ -1122,7 +1205,6 @@ class DebugParser:
                                 info.bases.append((base_name, offset))
                         member_pos = member_next
                         continue
-                    member_name, _ = cstr(d, member_name_pos + name_prefix_length)
                     member_type = 'int'
                     scalar_pos = d.find(b'\x55\x00', member_pos + 12, member_name_pos)
                     aggregate_pos = d.find(b'\x72\x00', member_pos + 12, member_name_pos)
@@ -1308,9 +1390,19 @@ C_KEYWORDS = {
 
 
 def safe_param_name(name: str, idx: int) -> str:
-    if not name or name in C_KEYWORDS:
+    if (not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name or '')
+            or name in C_KEYWORDS):
         return f'param{idx}'
     return name
+
+
+def safe_global_name(global_: VarInfo, idx: int) -> str:
+    """Return a legal stable spelling for a malformed recovered global."""
+    if (re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', global_.name or '')
+            and global_.name not in C_KEYWORDS):
+        return global_.name
+    address = f'{global_.address:08x}' if global_.address else 'unknown'
+    return f'global_{address}_{idx}'
 
 
 def format_declaration(type_str: str, name: str) -> str:
@@ -1344,6 +1436,39 @@ def aggregate_is_union(type_info: TypeInfo) -> bool:
             and all(member.stack_offset == 0 for member in type_info.members))
 
 
+def order_aggregate_definitions(types: list[TypeInfo]) -> list[TypeInfo]:
+    """Place aggregates after any complete by-value member dependencies."""
+    by_name = {type_info.name: type_info for type_info in types}
+    ordered: list[TypeInfo] = []
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(type_info: TypeInfo) -> None:
+        if type_info.name in visited:
+            return
+        if type_info.name in visiting:
+            # A genuine aggregate cannot contain itself by value.  Keep the
+            # recovered order for malformed/cyclic records rather than
+            # recursing forever.
+            return
+        visiting.add(type_info.name)
+        for member in type_info.members:
+            spelling = member.type_str.strip()
+            if '*' in spelling or '&' in spelling:
+                continue
+            dependency_name = spelling.split('[', 1)[0].strip()
+            dependency = by_name.get(dependency_name)
+            if dependency is not None:
+                visit(dependency)
+        visiting.remove(type_info.name)
+        visited.add(type_info.name)
+        ordered.append(type_info)
+
+    for type_info in types:
+        visit(type_info)
+    return ordered
+
+
 def generate_type_definitions(file_info: FileInfo) -> list[str]:
     """Emit conservative C declarations for recovered aggregate layouts.
 
@@ -1356,6 +1481,7 @@ def generate_type_definitions(file_info: FileInfo) -> list[str]:
         type_info for type_info in file_info.types
         if type_info.members or type_info.bases
     ]
+    aggregate_types = order_aggregate_definitions(aggregate_types)
     enum_types = [type_info for type_info in file_info.types if type_info.enum_values]
     if not aggregate_types and not enum_types:
         return []
@@ -1398,7 +1524,8 @@ def generate_type_definitions(file_info: FileInfo) -> list[str]:
 
 
 def generate_c_stub(file_info: FileInfo, func_list: list[FuncInfo],
-                    sym_map: dict) -> str:
+                    sym_map: dict,
+                    implemented_bodies: Optional[dict[int, str]] = None) -> str:
     lines = []
     lines.append(f'/* {file_info.path} */')
     lines.append(f'/* Language: {file_info.language} */')
@@ -1414,9 +1541,10 @@ def generate_c_stub(file_info: FileInfo, func_list: list[FuncInfo],
 
     lines.extend(generate_type_definitions(file_info))
 
-    for global_ in file_info.globals_:
+    for global_index, global_ in enumerate(file_info.globals_):
         storage = 'static ' if global_.role == 'static' else ''
-        lines.append(f'{storage}{format_declaration(global_.type_str, global_.name)};')
+        global_name = safe_global_name(global_, global_index)
+        lines.append(f'{storage}{format_declaration(global_.type_str, global_name)};')
     if file_info.globals_:
         lines.append('')
 
@@ -1454,6 +1582,13 @@ def generate_c_stub(file_info: FileInfo, func_list: list[FuncInfo],
         lines.append(sig)
         lines.append('{')
 
+        preserved_body = (implemented_bodies or {}).get(func.addr)
+        if preserved_body is not None:
+            lines.extend(preserved_body.splitlines())
+            lines.append('}')
+            lines.append('')
+            continue
+
         # Local variable stubs
         for loc in func.locals_:
             lname = safe_param_name(loc.name, 0)
@@ -1464,6 +1599,79 @@ def generate_c_stub(file_info: FileInfo, func_list: list[FuncInfo],
         lines.append('')
 
     return '\n'.join(lines)
+
+
+def _function_body_after(text: str, start: int) -> Optional[tuple[str, int]]:
+    """Return a C/C++ function body and its closing-brace position.
+
+    ``start`` points just after an extractor-owned address comment.  The
+    scanner ignores comments and quoted strings so braces in recovered line
+    annotations or string literals do not affect nesting.
+    """
+    i = start
+    opening = -1
+    depth = 0
+    state = 'code'
+    while i < len(text):
+        char = text[i]
+        following = text[i + 1] if i + 1 < len(text) else ''
+        if state == 'line_comment':
+            if char == '\n':
+                state = 'code'
+        elif state == 'block_comment':
+            if char == '*' and following == '/':
+                state = 'code'
+                i += 1
+        elif state in ('string', 'char'):
+            if char == '\\':
+                i += 1
+            elif ((state == 'string' and char == '"')
+                  or (state == 'char' and char == "'")):
+                state = 'code'
+        elif char == '/' and following == '/':
+            state = 'line_comment'
+            i += 1
+        elif char == '/' and following == '*':
+            state = 'block_comment'
+            i += 1
+        elif char == '"':
+            state = 'string'
+        elif char == "'":
+            state = 'char'
+        elif char == '{':
+            if opening < 0:
+                opening = i
+            depth += 1
+        elif char == '}' and opening >= 0:
+            depth -= 1
+            if depth == 0:
+                return text[opening + 1:i], i
+        i += 1
+    return None
+
+
+def collect_implemented_bodies(out_root: Path) -> dict[int, str]:
+    """Collect non-TODO bodies so a template refresh cannot erase matches."""
+    bodies: dict[int, str] = {}
+    address_pattern = re.compile(
+        r'/\*\s*addr:\s*0x([0-9A-Fa-f]+)\s+size:\s*\d+\s+bytes\s*\*/'
+    )
+    if not out_root.exists():
+        return bodies
+    source_paths = (
+        path for path in out_root.rglob('*')
+        if path.is_file() and path.suffix.lower() in ('.c', '.cpp', '.cxx')
+    )
+    for path in source_paths:
+        text = path.read_text(encoding='utf-8', errors='replace')
+        for match in address_pattern.finditer(text):
+            result = _function_body_after(text, match.end())
+            if result is None:
+                continue
+            body, _ = result
+            if 'TODO: decompile from asm/' not in body:
+                bodies[int(match.group(1), 16)] = body.strip('\n')
+    return bodies
 
 
 # ---------------------------------------------------------------------------
@@ -1477,6 +1685,10 @@ def main():
     ap.add_argument('--strip-prefix', default='', help='Path prefix to strip from source paths')
     ap.add_argument('--verbose', '-v', action='store_true')
     ap.add_argument('--list-files', action='store_true', help='Just list source files and exit')
+    ap.add_argument(
+        '--preserve-implemented', action='store_true',
+        help='retain non-TODO function bodies already present under --out, keyed by address',
+    )
     args = ap.parse_args()
 
     print(f'Reading {args.elf}...', flush=True)
@@ -1498,6 +1710,11 @@ def main():
     symbols = parse_symtab(symtab_data, strtab_data) if symtab_data else []
     func_syms  = {s.value: s for s in symbols if s.type_ == STT_FUNC}
     obj_syms   = {s.name:  s for s in symbols if s.type_ == STT_OBJECT and s.bind == STB_GLOBAL}
+    data_syms_by_addr: dict[int, list[SymbolInfo]] = {}
+    for symbol in symbols:
+        if (symbol.value and symbol.type_ in (STT_NOTYPE, STT_OBJECT)
+                and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', symbol.name)):
+            data_syms_by_addr.setdefault(symbol.value, []).append(symbol)
     print(f'  {len(symbols)} symbols, {len(func_syms)} functions, {len(obj_syms)} global objects')
 
     # --- Parse .mwcats for function sizes ---
@@ -1537,7 +1754,17 @@ def main():
     # --- Enrich functions with symtab sizes and line maps ---
     print('Enriching with symtab/mwcats data...', flush=True)
     line_maps = parse_line_blob(line_data)
+    repaired_global_names = 0
     for file_info in files:
+        for global_ in file_info.globals_:
+            if (re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', global_.name or '')
+                    or not global_.address):
+                continue
+            candidates = data_syms_by_addr.get(global_.address, [])
+            unique_names = sorted({symbol.name for symbol in candidates})
+            if len(unique_names) == 1:
+                global_.name = unique_names[0]
+                repaired_global_names += 1
         for func in file_info.functions:
             # Size from symtab
             sym = func_syms.get(func.addr)
@@ -1569,6 +1796,8 @@ def main():
             for idx, p in enumerate(func.params):
                 if not p.name:
                     p.name = safe_param_name('', idx)
+    if repaired_global_names:
+        print(f'  Repaired {repaired_global_names} malformed global names from .symtab')
 
     # --- Merge all FileInfo objects with the same source path ---
     print('Merging per-function chunks by source file...', flush=True)
@@ -1594,6 +1823,11 @@ def main():
     # --- Generate output ---
     out_root = Path(args.out)
     print(f'Writing stub files to {out_root}...', flush=True)
+    implemented_bodies = (
+        collect_implemented_bodies(out_root) if args.preserve_implemented else {}
+    )
+    if args.preserve_implemented:
+        print(f'  Preserving {len(implemented_bodies)} implemented function bodies')
 
     # Stats
     files_written = 0
@@ -1610,7 +1844,9 @@ def main():
         file_info.functions.sort(key=lambda f: f.addr)
 
         # Generate stub
-        stub = generate_c_stub(file_info, file_info.functions, obj_syms)
+        stub = generate_c_stub(
+            file_info, file_info.functions, obj_syms, implemented_bodies
+        )
         out_path.write_text(stub, encoding='utf-8')
         files_written += 1
         funcs_written += len(file_info.functions)
