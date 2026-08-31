@@ -45,8 +45,10 @@ unsigned char g_ucNbFontBitmap;
 /* array */ int g_TabBitmapFont[50];
 _tdstFont g_ListOfFonts[2];
 
+void fn_vInitFont(void);
+
 /* addr: 0x00323690  size: 8 bytes */
 void TXT_fn_vLoadInit(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_vInitFont();
 }
