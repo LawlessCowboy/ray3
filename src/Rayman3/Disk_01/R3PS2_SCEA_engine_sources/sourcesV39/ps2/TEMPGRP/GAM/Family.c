@@ -487,7 +487,6 @@ struct LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn {
 /* addr: 0x0025f630  size: 8 bytes */
 void fn_vEmptyFunction2(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Family.c lines 244–244 */

@@ -393,7 +393,6 @@ void AGO2_vTestExploseWall(/* function pointer */ int pp, /* function pointer */
 /* addr: 0x001e1160  size: 8 bytes */
 void AGO2_vTestWall(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3941–4057 */
@@ -841,7 +840,6 @@ unsigned char AGO2_CreateFireWall(AGO2_Part_* p, float xParam1, AGO2_Part_* pp)
 /* addr: 0x001e4f40  size: 8 bytes */
 void AGO2_ProcessEmpty(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2306–2314 */
@@ -1178,7 +1176,6 @@ void AGO2_DisplayLightning(AGO2_Part_* p)
 /* addr: 0x001e8a50  size: 8 bytes */
 void AGO2_ProcessLightning(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1239–1244 */

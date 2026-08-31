@@ -520,7 +520,6 @@ unsigned char g_bFrozenWhenStart;
 /* addr: 0x0025f0a0  size: 8 bytes */
 void fn_vInitWaterStreakEffect(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 1699–2076 */

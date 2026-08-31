@@ -23,7 +23,6 @@ void SAV2_fn_vFirstInit(void)
 /* addr: 0x0028d100  size: 8 bytes */
 void fn_vBbFrameManagement(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* addr: 0x0028d110  size: 8 bytes */

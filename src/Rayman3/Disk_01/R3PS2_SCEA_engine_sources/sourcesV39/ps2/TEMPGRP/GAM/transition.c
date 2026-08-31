@@ -533,7 +533,6 @@ void (*fn_vTransitionDeallocatorOdd)(void*);
 /* addr: 0x0028d140  size: 8 bytes */
 void fn_vBbInit(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 523–526 */
