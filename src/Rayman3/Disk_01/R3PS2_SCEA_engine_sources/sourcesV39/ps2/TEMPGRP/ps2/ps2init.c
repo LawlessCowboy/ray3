@@ -311,7 +311,7 @@ void (*fn_v_EngMain_VBLCallback)(void);
  */
 GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* _hPhysicalObject)
 {
-    /* TODO: decompile from asm/... */
+    return *(GEO_tdstVisualSet_**)_hPhysicalObject;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2init.c lines 426–489 */

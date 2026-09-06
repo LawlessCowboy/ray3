@@ -149,7 +149,7 @@ void GLI_ClearZBufferRegion(void)
  */
 void GLI_xSendListToViewport(GLD_tdstViewportAttributes_* p_stVpt)
 {
-    /* TODO: decompile from asm/... */
+    GLI_DRV_xSendListToViewport(p_stVpt);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\GliPs2Unused.c lines 198–201 */

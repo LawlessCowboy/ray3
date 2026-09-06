@@ -1383,7 +1383,9 @@ unsigned char GAM_fn_ucGetTypeOfEvent(tdstEvent_* _p_stEvent)
  */
 unsigned short fn_uwGetNbEngineFrameSinceLastMechEvent(HIE_tdstSuperObject_* p_stSuperObject)
 {
-    return *(unsigned short *)((char *)p_stSuperObject->hLinkedObject.p_stCharacter + 0x102);
+    tdstEngineObject_* p_stCharacter = p_stSuperObject->hLinkedObject.p_stCharacter;
+
+    return *(unsigned short *)((char *)p_stCharacter + 0x102);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 468–634 */

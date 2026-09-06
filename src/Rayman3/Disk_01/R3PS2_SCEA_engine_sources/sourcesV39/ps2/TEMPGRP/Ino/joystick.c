@@ -50,5 +50,5 @@ short INO_fn_wInit(void)
  */
 unsigned int INO_fn_ulJoyPreviousButtons(stDevice* _hDev)
 {
-    /* TODO: decompile from asm/... */
+    return *(unsigned int*)((char*)_hDev->m_p_stLastState + 4);
 }

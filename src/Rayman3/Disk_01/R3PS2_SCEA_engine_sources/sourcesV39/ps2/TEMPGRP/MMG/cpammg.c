@@ -93,7 +93,7 @@ unsigned char MEC_fn_bWallNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_*
  */
 void Mmg_fn_vEnableAllocationError(void)
 {
-    /* TODO: decompile from asm/... */
+    Mmg_g_bAllocationError = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 5148–5148 */

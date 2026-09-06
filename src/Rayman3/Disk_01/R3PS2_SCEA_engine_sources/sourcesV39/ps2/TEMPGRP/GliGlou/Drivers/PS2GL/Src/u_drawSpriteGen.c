@@ -2566,5 +2566,8 @@ void GLI_v_CalculateVectorsFor3DSpriteGenVU0(MAT_tdstTransformation_* pInvertedC
 void GLI_v_CalculateInverseCamMat(MAT_tdstTransformation_* pInvertedCam, GLD_tdstViewportAttributes_* _p_stViewport)
 {
     GLI_tdstCamera_* p_stCam;
-    /* TODO: decompile from asm/... */
+
+    p_stCam = *(GLI_tdstCamera_**)_p_stViewport->p_vSpecificToXD;
+    GLI_g_p_stCurrentCam = (int)p_stCam;
+    MAT_fn_vInvert(pInvertedCam, (MAT_tdstTransformation_* )((char*)p_stCam + 0x10));
 }

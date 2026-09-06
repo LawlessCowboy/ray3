@@ -78,7 +78,8 @@ void INO_fn_hCreateJoystickDevice(short _wPort)
  */
 short INO_fn_wInvalidateHandle(stDevice* hDev)
 {
-    /* TODO: decompile from asm/... */
+    *(unsigned int*)hDev = 0;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 453–476 */

@@ -3388,7 +3388,7 @@ void CAM_fn_p_GetViewportCoordinates(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  */
 void fn_vGetViewportCoordinates(MTH3D_tdstVector_* pDestination2D, MTH3D_tdstVector_* pWorldPoint, GLD_tdstViewportAttributes_* _p_stViewport)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vGet2DPercentPointFrom3DWorldPoint(_p_stViewport, pDestination2D, pWorldPoint);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Fnct.c lines 902–937 */

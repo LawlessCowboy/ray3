@@ -1034,5 +1034,5 @@ void fn_vReinitEngineClock(void)
  */
 void fn_vInitFrameLenght(void)
 {
-    /* TODO: decompile from asm/... */
+    g_stEngineStructure.stEngineTimer.xFrameLength = g_xVideoFrameDurationInSeconds;
 }

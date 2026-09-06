@@ -171,5 +171,5 @@ int PIC_bIntersectSegmentWithCollideObject(MTH3D_tdstVector_* p_stCameraPos, MTH
  */
 tdstPhysicalCollSet_* PO_fn_hGetCollideSet(PO_tdstPhysicalObject_* _hPhysicalObject)
 {
-    /* TODO: decompile from asm/... */
+    return _hPhysicalObject->_hCollideSet;
 }

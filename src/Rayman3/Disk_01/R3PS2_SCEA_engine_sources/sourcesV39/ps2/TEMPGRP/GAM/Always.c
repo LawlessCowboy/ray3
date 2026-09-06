@@ -1853,7 +1853,8 @@ void fn_p_stAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFath
  */
 void fn_p_stDemoAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix, short wAlwaysNumber)
 {
-    /* TODO: decompile from asm/... */
+    g_swAlwaysNumber = wAlwaysNumber;
+    fn_p_stAllocateAlways(otObjectModelType, p_stFatherSuperObject, _hGenerator, p_stMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 419–429 */

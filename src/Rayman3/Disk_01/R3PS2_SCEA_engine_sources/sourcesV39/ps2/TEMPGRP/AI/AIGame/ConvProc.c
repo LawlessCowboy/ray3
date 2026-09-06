@@ -2886,9 +2886,9 @@ tdstProcedureEntry_ a_stProcedureTable[876];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_fn_pGetProcedureFunctionPtr(tdeProcedureId_ eProcedureId)
+tdstNodeInterpret_* (*fn_p_fn_pGetProcedureFunctionPtr(tdeProcedureId_ eProcedureId))(HIE_tdstSuperObject_*, tdstNodeInterpret_*)
 {
-    /* TODO: decompile from asm/... */
+    return a_stProcedureTable[eProcedureId].p_fn_p_stProcedureFunction;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvProc.c lines 127–128 */
@@ -2901,5 +2901,5 @@ void fn_p_fn_pGetProcedureFunctionPtr(tdeProcedureId_ eProcedureId)
  */
 unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcId)
 {
-    /* TODO: decompile from asm/... */
+    return a_stProcedureTable[eProcId].bUltraProcedureFlag;
 }

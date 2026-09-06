@@ -2949,9 +2949,9 @@ tdstFunctionEntry_ a_stFunctionTable[446];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_fn_pGetFunctionFunctionPtr(tdeFuncId_ eFuncId)
+tdstNodeInterpret_* (*fn_p_fn_pGetFunctionFunctionPtr(tdeFuncId_ eFuncId))(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*)
 {
-    /* TODO: decompile from asm/... */
+    return a_stFunctionTable[eFuncId].p_fn_p_stFunctionFunction;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFunc.c lines 130–131 */
@@ -2964,5 +2964,5 @@ void fn_p_fn_pGetFunctionFunctionPtr(tdeFuncId_ eFuncId)
  */
 unsigned char fn_ucGetFunctionUltraOperator(tdeFuncId_ eFuncId)
 {
-    /* TODO: decompile from asm/... */
+    return a_stFunctionTable[eFuncId].bUltraFunctionFlag;
 }

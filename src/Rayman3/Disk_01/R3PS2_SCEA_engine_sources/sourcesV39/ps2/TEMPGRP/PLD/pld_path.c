@@ -377,7 +377,7 @@ void PLD_szLvlKeyFramesName(char* szName)
  */
 void PLD_szFixKeyFramesName(void)
 {
-    /* TODO: decompile from asm/... */
+    strcpy(PLD_g_szAreaFileName, "FixKeyFrames");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 287–291 */
@@ -461,5 +461,5 @@ void PLD_szLevelName(char* szName)
  */
 void PLD_szFixName(void)
 {
-    /* TODO: decompile from asm/... */
+    strcpy(PLD_g_szAreaFileName, "Fix");
 }

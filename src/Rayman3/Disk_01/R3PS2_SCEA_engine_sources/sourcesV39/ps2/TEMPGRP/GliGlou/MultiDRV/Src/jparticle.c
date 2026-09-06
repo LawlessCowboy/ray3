@@ -44,7 +44,7 @@ float J_g_NoiseLevel;
  */
 void GLI_vInitLensFlare(void)
 {
-    /* TODO: decompile from asm/... */
+    *(int*)0x5E5004 = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\jparticle.c lines 229–412 */

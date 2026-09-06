@@ -1149,7 +1149,7 @@ void fn_vFreeLevelAllowedMemory(void)
  */
 void fn_vBrainCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
-    /* TODO: decompile from asm/... */
+    fn_vSimulateMindAllocationFromAnotherMind(_p_stObjectSrc->h_Brain->p_stMind, _p_stObjectDest->h_Brain->p_stMind);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Brain.c lines 288–307 */
