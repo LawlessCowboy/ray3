@@ -452,9 +452,20 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
     obj_symbols = parse_symbols(obj_sections)
     candidates = [symbol for symbol in obj_symbols if symbol.type == STT_FUNC
                   and symbol.name == entry['name'] and symbol.size]
+    # The debug stream records C++ source names, while MWCC's relocatable
+    # objects retain its CodeWarrior ABI suffix (for example
+    # ``fn_bStreamSize__FUi``).  C functions must remain an exact-name match;
+    # for C++ accept the ABI spelling only when it identifies one function.
+    if not candidates and entry.get('language') == 'C++':
+        candidates = [symbol for symbol in obj_symbols if symbol.type == STT_FUNC
+                      and symbol.name.startswith(entry['name'] + '__') and symbol.size]
     if not candidates:
         return {'status': 'OBJECT_ERROR', 'entry': entry, 'detail':
                 f"no object function symbol named {entry['name']!r}"}
+    if len(candidates) != 1:
+        return {'status': 'OBJECT_ERROR', 'entry': entry, 'detail':
+                f"ambiguous object symbols for {entry['name']!r}: " +
+                ', '.join(symbol.name for symbol in candidates)}
     candidate = candidates[0]
     section = obj_sections[candidate.shndx]
     candidate_bytes = bytearray(section.data[candidate.value:candidate.value + candidate.size])
