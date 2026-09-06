@@ -665,6 +665,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
       "status": "MATCH"
     },
+    "0x0026eca0": {
+      "address": "0x0026eca0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bGetCharacterForceCollisionWhenNotMoving",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MATCH"
+    },
     "0x00270810": {
       "address": "0x00270810",
       "compiler_profile": "mwccps2-3.0-011126-o3",

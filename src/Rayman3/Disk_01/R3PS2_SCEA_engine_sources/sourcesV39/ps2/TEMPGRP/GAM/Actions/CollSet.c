@@ -1544,7 +1544,9 @@ void fn_vCollSetSetCollComputeFrequency(tdstCollSet_* _hCollSet, unsigned char _
  */
 unsigned char fn_bGetCharacterForceCollisionWhenNotMoving(HIE_tdstSuperObject_* _hSuperObject)
 {
-    /* TODO: decompile from asm/... */
+    tdstCollSet_* hCollSet = _hSuperObject != NULL ? _hSuperObject->hLinkedObject.p_stCharacter->h_CollSet : NULL;
+    unsigned int bResult = hCollSet != NULL ? hCollSet->ucCollisionFlag & 0x10 : 0;
+    return bResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 702–704 */
