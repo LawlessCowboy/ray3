@@ -2967,9 +2967,9 @@ tdstFieldTypeEntry_ a_stFieldTypeTable[5];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_fn_pGetFieldSetFunctionPtr(tdeFieldId_ eFieldId)
+unsigned char (*fn_p_fn_pGetFieldSetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*)
 {
-    /* TODO: decompile from asm/... */
+    return a_stFieldTable[eFieldId].p_fn_cSetFieldFunction;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFild.c lines 225–226 */
@@ -2980,9 +2980,9 @@ void fn_p_fn_pGetFieldSetFunctionPtr(tdeFieldId_ eFieldId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_fn_pGetFieldGetFunctionPtr(tdeFieldId_ eFieldId)
+unsigned char (*fn_p_fn_pGetFieldGetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*)
 {
-    /* TODO: decompile from asm/... */
+    return a_stFieldTable[eFieldId].p_fn_cGetFieldFunction;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFild.c lines 120–121 */
@@ -2993,9 +2993,9 @@ void fn_p_fn_pGetFieldGetFunctionPtr(tdeFieldId_ eFieldId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_eGetEngineFieldType(tdeFieldId_ eFieldId)
+tdeVariableType_ fn_eGetEngineFieldType(tdeFieldId_ eFieldId)
 {
-    /* TODO: decompile from asm/... */
+    return a_stFieldTable[eFieldId].eType;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFild.c lines 114–115 */
@@ -3006,9 +3006,9 @@ void fn_eGetEngineFieldType(tdeFieldId_ eFieldId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_fn_pGetFieldTypeSetFunctionPtr(tdeFieldTypeId_ eFieldTypeId)
+void (*fn_p_fn_pGetFieldTypeSetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*)
 {
-    /* TODO: decompile from asm/... */
+    return a_stFieldTypeTable[eFieldTypeId].fn_p_fn_vSetTypeFunction;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFild.c lines 109–110 */
@@ -3019,7 +3019,7 @@ void fn_p_fn_pGetFieldTypeSetFunctionPtr(tdeFieldTypeId_ eFieldTypeId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_fn_pGetFieldTypeGetFunctionPtr(tdeFieldTypeId_ eFieldTypeId)
+void (*fn_p_fn_pGetFieldTypeGetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*)
 {
-    /* TODO: decompile from asm/... */
+    return a_stFieldTypeTable[eFieldTypeId].fn_p_fn_vGetTypeFunction;
 }

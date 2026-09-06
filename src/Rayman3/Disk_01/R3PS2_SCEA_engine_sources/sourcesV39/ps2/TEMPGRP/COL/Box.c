@@ -139,7 +139,12 @@ void COL_fn_vComputeBoundingBoxOfSphereAndBox(MTH3D_tdstVector_* p_stMinBounding
  */
 void COL_fn_vComputeBoundingBoxOfSphere(MTH3D_tdstVector_* p_stMinBounding, MTH3D_tdstVector_* p_stMaxBounding, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
 {
-    /* TODO: decompile from asm/... */
+    p_stMinBounding->xX = p_stSphereCenter->xX - xSphereRadius;
+    p_stMinBounding->xY = p_stSphereCenter->xY - xSphereRadius;
+    p_stMinBounding->xZ = p_stSphereCenter->xZ - xSphereRadius;
+    p_stMaxBounding->xX = p_stSphereCenter->xX + xSphereRadius;
+    p_stMaxBounding->xY = p_stSphereCenter->xY + xSphereRadius;
+    p_stMaxBounding->xZ = p_stSphereCenter->xZ + xSphereRadius;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Box.c lines 73–81 */

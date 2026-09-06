@@ -189,6 +189,10 @@ extern signed char INO_fn_cStopFFBEffectWithFade(unsigned int ulCurrentTime, stD
 extern void INO_fn_vStopAllFFBEffectForAllDevice(void);
 extern void INO_fn_vStopAllFFBEffectForDevice(unsigned int ulCurrentTime, stDevice* pDevice);
 extern void INO_fn_vStopFFBEffect(unsigned int ulCurrentTime, stDevice* pDevice, signed char cEffectNumber);
+extern signed char INO_fn_cCreateAndLaunchConstantFFBEffect(unsigned int, stDevice*, float, float, float, float, float, float);
+extern void INO_fn_vStopPreCreatedFFBEffect(unsigned int, stDevice*, signed char);
+extern void INO_fn_vStartPreCreatedFFBEffect(unsigned int, stDevice*, signed char);
+extern int D_7D35C0;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 60–243 */
 /* addr: 0x002f5ee0  size: 1988 bytes */
@@ -436,7 +440,7 @@ void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber
  */
 signed char IPT_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime)
 {
-    /* TODO: decompile from asm/... */
+    return INO_fn_cCreateAndLaunchConstantFFBEffect(ulCurrentTime, *(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260), xFadeInStartValue, xFadeInTime, xConstantValue, xConstantTime, xFadeOutStopValue, xFadeOutTime);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1131–1131 */
@@ -448,7 +452,7 @@ signed char IPT_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime,
  */
 void IPT_fn_vStopPreCreatedFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber)
 {
-    /* TODO: decompile from asm/... */
+    INO_fn_vStopPreCreatedFFBEffect(ulCurrentTime, *(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260), cEffectNumber);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1124–1124 */
@@ -460,7 +464,7 @@ void IPT_fn_vStopPreCreatedFFBEffect(unsigned int ulCurrentTime, unsigned char u
  */
 void IPT_fn_vStartPreCreatedFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber)
 {
-    /* TODO: decompile from asm/... */
+    INO_fn_vStartPreCreatedFFBEffect(ulCurrentTime, *(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260), cEffectNumber);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1119–1119 */

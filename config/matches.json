@@ -209,6 +209,336 @@
       "status": "MISMATCH",
       "target_size": 24,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fbf20",
+      "candidate_size": 20,
+      "first_difference": 2,
+      "implementation": "unsigned char fn_ucGetDsgVarBoolean(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)\n{\n    p_stGetSetParam->uDummy.uParam.lValue = *(char*)pMyVarAddr;\n    p_stGetSetParam->eType = E_vt_Boolean;\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_ucGetDsgVarBoolean",
+      "reason": "Boolean getter writes the correct tag but the union member name is still wrong; current source stores to the wrong field offsets for the value slot.",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MISMATCH",
+      "target_size": 24,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0028dd30",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "unsigned int fn_uiOpenStream(char* szFilename)\n{\n    return 0;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "fn_uiOpenStream",
+      "reason": "Target is a tail jump to the C++ fs_uiOpen method, but the exact declaration/signature context is still unresolved; guessing a wrapper here risks the wrong mangled call shape.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a8510",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GLI_fn_vTimerPS2Counter(unsigned int* pCount)\n{\n    unsigned int counter;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "GLI_fn_vTimerPS2Counter",
+      "reason": "Target compiles to a direct CP0 Count read and store; no safe natural-C helper or existing wrapper was available in-tree, so I left this one unimplemented rather than forcing inline assembly or an intrinsic.",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/DispMode.c",
+      "status": "MISMATCH",
+      "target_size": 12,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002118a0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "unsigned char fn_ucGetFieldSystemTime(tdstGetSetParam_* p_stGetSetParam)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_ucGetFieldSystemTime",
+      "reason": "Source shape is too small for the 20-byte target body; the getter needs the explicit stack-store pattern seen in the assembly rather than the current stub.",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fcdc0",
+      "candidate_size": 8,
+      "first_difference": 2,
+      "implementation": "tdstNodeInterpret_* fn_p_stEvalNULL(tdstNodeInterpret_* p_stTree)\n{\n    return (tdstNodeInterpret_*)((char*)p_stTree + 8);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_stEvalNULL",
+      "reason": "Debug and ABI evidence show the function consumes its input in a1, but the recovered one-argument C signature only exposes a0; this looks like a signature/layout extraction issue rather than a source-body problem.",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MISMATCH",
+      "target_size": 12,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211620",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void fn_p_fn_pGetFieldSetFunctionPtr(tdeFieldId_ eFieldId)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_fn_pGetFieldSetFunctionPtr",
+      "reason": "Recovered source signature is void, but the target emits a 32-byte table-lookup function that returns a value; this needs a signature correction before the body can match.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvFild.c",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002224a0",
+      "candidate_size": 20,
+      "first_difference": 0,
+      "implementation": "tdstNodeInterpret_* fn_p_stNoSoundEventKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)\n{\n    p_stValue->uDummy.uParam.pSoundEvent = NULL;\n    p_stValue->eType = 31;\n    return p_stTree;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_stNoSoundEventKeyWord",
+      "reason": "The function body now matches the intended semantics, but the verifier shows the live output slot and tree parameter are mislaid: the compiler writes to a1/a2 where the target uses a2 only, so this looks like a signature/extraction mismatch rather than a source-flow problem.",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211530",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_fn_pGetMetaActionFunctionPtr",
+      "reason": "Recovered source signature is void, but the target is a 32-byte table-lookup wrapper that returns a value; this needs a signature correction before the body can match.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvAct.c",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002118a0",
+      "candidate_size": 20,
+      "first_difference": 0,
+      "implementation": "unsigned char fn_ucGetFieldSystemTime(tdstGetSetParam_* p_stGetSetParam)\n{\n    p_stGetSetParam->uDummy.uParam.lValue = 0;\n    p_stGetSetParam->eType = 6;\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_ucGetFieldSystemTime",
+      "reason": "ABI expects writes through , but the source signature and natural C reconstruction only drive ; likely a signature/debug-layout mismatch rather than logic.",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002118d0",
+      "candidate_size": 20,
+      "first_difference": 0,
+      "implementation": "unsigned char fn_ucGetFieldSystemDate(tdstGetSetParam_* p_stGetSetParam)\n{\n    p_stGetSetParam->uDummy.uParam.lValue = 0;\n    p_stGetSetParam->eType = 6;\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_ucGetFieldSystemDate",
+      "reason": "ABI expects writes through , but the source signature and natural C reconstruction only drive ; likely a signature/debug-layout mismatch rather than logic.",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002117c0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void fn_p_stEvalDsgVarRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_stEvalDsgVarRef",
+      "reason": "This function is a large resolver with a callout and pointer arithmetic, not a trivial wrapper; the current stub is far from the target and needs a dedicated reconstruction pass.",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvVar.c",
+      "status": "MISMATCH",
+      "target_size": 140,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211530",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_fn_pGetMetaActionFunctionPtr",
+      "reason": "Signature evidence shows the target returns unsigned char (*)(HIE_tdstSuperObject_*) while the source still declares void; this needs a signature correction before the wrapper can match.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvAct.c",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211550",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_fn_pGetMetaActionInitFunctionPtr",
+      "reason": "Signature evidence shows the target returns tdstNodeInterpret_* (*)(HIE_tdstSuperObject_*, tdstNodeInterpret_*) while the source still declares void; this needs a signature correction before the wrapper can match.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvAct.c",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211570",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void szGetMetaActionTypeInParamFromId(tdeMetaActionId_ eMetaActionId)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "szGetMetaActionTypeInParamFromId",
+      "reason": "Signature evidence indicates the source declaration is wrong for a table-lookup wrapper; the current void signature needs correction before this function can match.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvAct.c",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002c6ce0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GLI_DRV_vUnLoadTextures(void)\n{\n    GLI_vUnloadTexturePartial(1);\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "GLI_DRV_vUnLoadTextures",
+      "reason": "Source already tail-calls GLI_vUnloadTexturePartial(1), but the emitted jump target resolves differently in the matcher; likely a relocation/declaration resolution issue rather than a body-shape problem.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002c6dc0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void LoadTextureBlocInternal(int DestTextureBlocID, int ChannelId)\n{\n    unsigned int Flag;\n    unsigned int GL_iTextureFormat;\n    int i;\n    GLI_tdstTexturePS2GL_* p_stSpecParam;\n    GLI_tdstTexture_* p_stTexture;\n    unsigned int NbTexturesInBloc;\n    unsigned int ChannelHigh;\n    unsigned int ChannelLow;\n    unsigned int lTextureCounter;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "LoadTextureBloc",
+      "reason": "Tail-jump wrapper shape is correct, but the relocation resolves to a different helper address than the matcher expects; likely a symbol resolution or declaration issue, not a control-flow rewrite.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002117a0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void fn_GetDsgVarType(tdeDsgVarTypeId_ eDsgVarTypeId)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_GetDsgVarType",
+      "reason": "Signature evidence shows the target returns a value from a lookup table, but the recovered source still declares void; this needs a signature correction before the body can match.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvVar.c",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211870",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void fn_p_fn_pGetDsgVarGetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_fn_pGetDsgVarGetFunctionPtr",
+      "reason": "Signature evidence shows the target returns an unsigned char function pointer from a table lookup, but the recovered source still declares void; this needs a signature correction before the body can match.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvVar.c",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002117c0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void fn_p_stEvalDsgVarRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_stEvalDsgVarRef",
+      "reason": "Signature evidence shows this is a real evaluator function returning tdstNodeInterpret_* rather than a void stub; the recovered declaration needs correction before matching.",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvVar.c",
+      "status": "MISMATCH",
+      "target_size": 140,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a9d70",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "GLI_xGetMaterialTextureScrollingCoef",
+      "reason": "The matcher shows a real 3-output getter: it reads two floats and a flag field from the material and writes them through out-parameters, so the naive empty-body reconstruction is insufficient.",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MISMATCH",
+      "target_size": 28,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a9da0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GLI_xSetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int bSwitch, float fUSpeed, float fVSpeed)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "GLI_xSetMaterialTextureScrollingCoef",
+      "reason": "This function is not a short wrapper; the matcher shows a full conditional state update over texture scrolling fields, so it needs a real body reconstruction rather than a trivial stub.",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MISMATCH",
+      "target_size": 72,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fbe30",
+      "candidate_size": 44,
+      "first_difference": 18,
+      "implementation": "unsigned char fn_ucGetDsgVarGameMaterial(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)\n{\n    GMT_tdstGameMaterial_* hGameMaterial;\n    hGameMaterial = *(GMT_tdstGameMaterial_**)pMyVarAddr;\n    *(GMT_tdstGameMaterial_**)p_stGetSetParam = hGameMaterial;\n    *((tdeVariableType_*)((char*)p_stGetSetParam + 12)) = E_vt_GameMaterial;\n    return GMT_fn_b_ulIsValid(hGameMaterial) != 0;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "fn_ucGetDsgVarGameMaterial",
+      "reason": "Verifier shows the current source writes via a1, but the target stores via a2 and then calls GMT_fn_b_ulIsValid; this is a parameter-layout mismatch, not a simple raw-pointer replacement.",
+      "size": 44,
+      "source": "src/Rayman3/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MISMATCH",
+      "target_size": 44,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -506,7 +836,7 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_p_stEvalCondition",
       "size": 100,
-      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvCond.c",
+      "source": "src/Rayman3/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvCond.c",
       "status": "MATCH"
     },
     "0x00211600": {
@@ -515,6 +845,46 @@
       "name": "fn_ucGetConditionUltraOperator",
       "size": 24,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvCond.c",
+      "status": "MATCH"
+    },
+    "0x00211620": {
+      "address": "0x00211620",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_fn_pGetFieldSetFunctionPtr",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvFild.c",
+      "status": "MATCH"
+    },
+    "0x00211640": {
+      "address": "0x00211640",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_fn_pGetFieldGetFunctionPtr",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvFild.c",
+      "status": "MATCH"
+    },
+    "0x00211660": {
+      "address": "0x00211660",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_eGetEngineFieldType",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvFild.c",
+      "status": "MATCH"
+    },
+    "0x00211680": {
+      "address": "0x00211680",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_fn_pGetFieldTypeSetFunctionPtr",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvFild.c",
+      "status": "MATCH"
+    },
+    "0x002116a0": {
+      "address": "0x002116a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_fn_pGetFieldTypeGetFunctionPtr",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvFild.c",
       "status": "MATCH"
     },
     "0x00211700": {
@@ -1733,6 +2103,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
       "status": "MATCH"
     },
+    "0x00296700": {
+      "address": "0x00296700",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vReinitSpriteScale",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MATCH"
+    },
     "0x00299480": {
       "address": "0x00299480",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -1877,6 +2255,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Domat_PS2GL.c",
       "status": "MATCH"
     },
+    "0x002a8550": {
+      "address": "0x002a8550",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_vInitInstantFadeIn",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/DispMode.c",
+      "status": "MATCH"
+    },
+    "0x002a85b0": {
+      "address": "0x002a85b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vFogOff",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Fog.c",
+      "status": "MATCH"
+    },
+    "0x002a85c0": {
+      "address": "0x002a85c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vFogOn",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Fog.c",
+      "status": "MATCH"
+    },
     "0x002a88b0": {
       "address": "0x002a88b0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -1906,7 +2308,7 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_fn_xFogGetBlendFar",
       "size": 8,
-      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "source": "src/Rayman3/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
       "status": "MATCH"
     },
     "0x002a8a80": {
@@ -1914,7 +2316,7 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_xGetLightBackgroundColor",
       "size": 36,
-      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "source": "src/Rayman3/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
       "status": "MATCH"
     },
     "0x002a8bc0": {
@@ -1922,7 +2324,7 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_xGetLightColor",
       "size": 36,
-      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "source": "src/Rayman3/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
       "status": "MATCH"
     },
     "0x002a8bf0": {
@@ -1930,7 +2332,7 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_xSetLightColor",
       "size": 36,
-      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "source": "src/Rayman3/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
       "status": "MATCH"
     },
     "0x002a9c60": {
@@ -1978,7 +2380,7 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_xGetMaterialDiffuseCoef",
       "size": 36,
-      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "source": "src/Rayman3/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"
     },
     "0x002a9fa0": {
@@ -1986,7 +2388,7 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_xGetMaterialColor",
       "size": 36,
-      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "source": "src/Rayman3/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"
     },
     "0x002aa020": {
@@ -1994,7 +2396,7 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_xGetMaterialAmbientCoef",
       "size": 36,
-      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "source": "src/Rayman3/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"
     },
     "0x002aa2b0": {
@@ -2181,6 +2583,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/gld/DevVpt.c",
       "status": "MATCH"
     },
+    "0x002b1210": {
+      "address": "0x002b1210",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_vSetCameraMirrorMode",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
+      "status": "MATCH"
+    },
     "0x002b1220": {
       "address": "0x002b1220",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -2205,11 +2615,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
       "status": "MATCH"
     },
+    "0x002b3540": {
+      "address": "0x002b3540",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_vBlitSurfaceForBlitInBackBuffer",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
+      "status": "MATCH"
+    },
+    "0x002b3550": {
+      "address": "0x002b3550",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_vFreeSurfaceForBlit",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
+      "status": "MATCH"
+    },
     "0x002b35e0": {
       "address": "0x002b35e0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_ClearZBufferRegion",
       "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
+      "status": "MATCH"
+    },
+    "0x002b3650": {
+      "address": "0x002b3650",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fnl_InitDll",
+      "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
       "status": "MATCH"
     },
@@ -2427,6 +2861,14 @@
       "name": "IPT_fn_vFirstInitInput",
       "size": 48,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/p5/ipt_scpt.c",
+      "status": "MATCH"
+    },
+    "0x002f7480": {
+      "address": "0x002f7480",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vInitCommandLines",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
       "status": "MATCH"
     },
     "0x002f7490": {

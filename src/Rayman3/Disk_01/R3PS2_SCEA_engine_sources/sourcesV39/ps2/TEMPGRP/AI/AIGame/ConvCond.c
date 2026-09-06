@@ -2960,7 +2960,7 @@ void fn_p_stEvalCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpr
     int bValue;
     tdstNodeInterpret_* p_stNextTree;
 
-    p_stNextTree = (tdstNodeInterpret_ *)((unsigned char *)p_stTree + 8);
+    p_stNextTree = p_stTree + 1;
     a_stConditionTable[(unsigned int)p_stTree->uDummy.uId.eCondId].p_fn_p_stConditionFunction(p_SuperObjPerso, p_stNextTree, &lValue);
     bValue = lValue ? 1 : 0;
     *(int *)p_stValue = bValue;

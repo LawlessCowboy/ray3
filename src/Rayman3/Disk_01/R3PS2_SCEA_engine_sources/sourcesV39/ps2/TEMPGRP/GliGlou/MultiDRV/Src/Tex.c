@@ -181,7 +181,8 @@ void GLI_fn_vOpenBigFileTextures(void)
  */
 void GLI_vIniTextRead(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_fn_vUnallocAllTextures();
+    gs_aDEFTableOfTextureAlreadyRead = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Tex.c lines 161–175 */
@@ -206,7 +207,20 @@ void GLI_vIniTextRead(void)
  */
 int GLI_lGetLog2n(int ln)
 {
-    /* TODO: decompile from asm/... */
+    if (ln >= 0x2001) return 13;
+    if (ln >= 0x1001) return 12;
+    if (ln >= 0x801) return 11;
+    if (ln >= 0x401) return 10;
+    if (ln >= 0x201) return 9;
+    if (ln >= 0x101) return 8;
+    if (ln >= 0x81) return 7;
+    if (ln >= 0x41) return 6;
+    if (ln >= 0x21) return 5;
+    if (ln >= 0x11) return 4;
+    if (ln >= 9) return 3;
+    if (ln >= 5) return 2;
+    if (ln >= 3) return 1;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Tex.c lines 142–146 */

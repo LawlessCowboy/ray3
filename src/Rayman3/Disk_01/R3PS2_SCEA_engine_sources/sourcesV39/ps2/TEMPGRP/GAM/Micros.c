@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+int sprintf(char*, const char*, ...);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -1082,9 +1083,10 @@ int GAM_fn_bInitSoundTypes(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, char* pch_Buffer)
+int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, int unused, char* pch_Buffer)
 {
-    /* TODO: decompile from asm/... */
+    sprintf(pch_Buffer, "Object type ambiance n\xb0 %d\n", s32_ObjectId);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 580–583 */
@@ -1100,9 +1102,10 @@ int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, char* pch_Buffer)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeMusicInfo(int s32_ObjectId, char* pch_String)
+int fn_bObjectTypeMusicInfo(int s32_ObjectId, int unused, char* pch_String)
 {
-    /* TODO: decompile from asm/... */
+    sprintf(pch_String, "Object type music n\xb0 %d\n", s32_ObjectId);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 530–560 */
@@ -1192,9 +1195,9 @@ int fn_bObjectTypeAnimationRollOff(int s32_ObjectId, _RollOffParam* pst_RollOff)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeAnimationLinkBis(int s32_ObjectId, int s32_MicroId)
+int fn_bObjectTypeAnimationLinkBis(int s32_ObjectId, int unused, int s32_MicroId)
 {
-    /* TODO: decompile from asm/... */
+    return fn_bObjectTypeAnimationLink(s32_ObjectId, s32_MicroId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 367–416 */
@@ -1613,7 +1616,7 @@ int fn_bRetObjectRollOffNull(int s32_ObjectId, int s32_ChannelId, _RollOffParam*
  */
 int fn_bRetObjectLinkBisNull(void)
 {
-    /* TODO: decompile from asm/... */
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 39–46 */
@@ -1650,7 +1653,7 @@ int fn_bObjectPositionNull(int s32_ObjectId, int s32_ChannelId, _stVector* pst_V
  */
 int fn_bRetObjectLinkNull(void)
 {
-    /* TODO: decompile from asm/... */
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 33–33 */
@@ -1662,7 +1665,7 @@ int fn_bRetObjectLinkNull(void)
  */
 int fn_s32RetObjectSwitchNull(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 26–32 */
@@ -1697,5 +1700,5 @@ void fn_vRetObjectExtraCoefNull(int s32_ObjectId, _SND_tduRefEvt u_SoundEvent, i
  */
 unsigned char fn_u8RetObjectReverbNull(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }

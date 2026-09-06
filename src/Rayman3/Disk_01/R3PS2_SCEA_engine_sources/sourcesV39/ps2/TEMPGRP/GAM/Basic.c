@@ -1802,7 +1802,9 @@ void GAM_fn_vSetEngineInFixMode(void)
  */
 unsigned char GAM_fn_bIsEngineInTransitionMode(void)
 {
-    /* TODO: decompile from asm/... */
+    if (GAM_gs_tdeLoadingMode == GAM_eTransitionLoading)
+        return 1;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1124–1125 */
@@ -2112,9 +2114,15 @@ int fn_lGetSubMapNumber(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_szGetLevelName(void)
+char* fn_p_szGetLevelName(void)
 {
-    /* TODO: decompile from asm/... */
+    static int FirstTime = 1;
+    if (FirstTime != 0)
+    {
+        FirstTime = 0;
+        AskForLevelStart();
+    }
+    return g_stEngineStructure.szLevelName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 527–553 */

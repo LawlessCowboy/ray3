@@ -49,7 +49,12 @@ int M2D_fn_iNbTexturesNeededForMenu(void)
  */
 void fn_vSetStereoGameMenu2D(unsigned int uiSet)
 {
-    /* TODO: decompile from asm/... */
+    if (uiSet != 1) {
+        uiSet = 0;
+    } else {
+        uiSet = 1;
+    }
+    SND_fn_vSetStereoSound((int)uiSet);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\SoundMenu2D.c lines 129–169 */

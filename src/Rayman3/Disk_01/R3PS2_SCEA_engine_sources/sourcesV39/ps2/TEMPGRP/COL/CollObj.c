@@ -482,7 +482,7 @@ void COL_fn_vGetInfoFromGeometricSphere(MTH3D_tdstVector_* _p_stSphereCenter, fl
  */
 MTH3D_tdstVector_* COL_fn_pGetMaxPointOfParallelBox(COL_tdstParallelBox_* _p_stParallelBox)
 {
-    return (MTH3D_tdstVector_*)((unsigned char*)_p_stParallelBox + 16);
+    return (MTH3D_tdstVector_*)((unsigned char*)_p_stParallelBox + 0x10);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1578–1578 */
@@ -587,7 +587,7 @@ void COL_vCreateCollideObject(COL_tdstCollideObject_* p_hObject, short xNbPoints
  */
 void COL_vGetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
 {
-    /* TODO: decompile from asm/... */
+    *p_stPoint = hObject->d_stListOfPoints[3 * xIndexOfPoint];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1368–1369 */
@@ -600,7 +600,7 @@ void COL_vGetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p
  */
 void COL_vSetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
 {
-    /* TODO: decompile from asm/... */
+    hObject->d_stListOfPoints[3 * xIndexOfPoint] = *p_stPoint;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1352–1353 */

@@ -35,7 +35,7 @@ struct ISI_tdstISILOD_ {
     int d_fLightMapU; /* +0x8 */
 };
 
-int g_p_stRawRLIsForThisObject;
+ISI_tdstColor_* g_p_stRawRLIsForThisObject;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 21–30 */
 /* addr: 0x002f7f70  size: 96 bytes */
@@ -78,9 +78,14 @@ ISI_tdstColor_* ISI_fn_dGetVertexRLI(void* _hISI)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD)
+int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD)
 {
-    /* TODO: decompile from asm/... */
+    ISI_tdstISI_* hISI;
+    int* pISILOD;
+
+    hISI = (ISI_tdstISI_*)_hISI;
+    pISILOD = (int*)hISI->d_stISILOD + (int)_xNumISILOD * 3;
+    return pISILOD[2];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 680–685 */
@@ -91,9 +96,14 @@ void ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD)
+ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD)
 {
-    /* TODO: decompile from asm/... */
+    ISI_tdstISI_* hISI;
+    ISI_tdstColor_** pISILOD;
+
+    hISI = (ISI_tdstISI_*)_hISI;
+    pISILOD = (ISI_tdstColor_**)hISI->d_stISILOD + (int)_xNumISILOD * 3;
+    return g_p_stRawRLIsForThisObject = pISILOD[1];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 654–655 */

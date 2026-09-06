@@ -1122,7 +1122,7 @@ unsigned char g_ucGameModuleId;
  */
 unsigned int fn_ulMSSoundSizeOf(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0x10;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 571–594 */

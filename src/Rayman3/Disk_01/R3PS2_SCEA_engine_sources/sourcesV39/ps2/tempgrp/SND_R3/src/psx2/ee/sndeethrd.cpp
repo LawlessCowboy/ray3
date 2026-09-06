@@ -262,9 +262,9 @@ void usnd_vTimerLoop__FPv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int usnd_uiDesinitTimers(void)
+extern "C" unsigned int usnd_uiDesinitTimers(void)
 {
-    /* TODO: decompile from asm/... */
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 383–424 */
@@ -311,9 +311,8 @@ unsigned int usnd_uiInitTimers(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void usnd_vUpdateTimers(void)
+extern "C" void usnd_vUpdateTimers(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 344–346 */

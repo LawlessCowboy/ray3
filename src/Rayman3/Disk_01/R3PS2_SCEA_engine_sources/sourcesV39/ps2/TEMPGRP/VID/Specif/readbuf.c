@@ -27,7 +27,9 @@ struct anon_0 {
  */
 int readBufEndGet(anon_0* b, int size)
 {
-    /* TODO: decompile from asm/... */
+    size = size < b->count ? b->count : size;
+    b->count -= size;
+    return size;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\readbuf.c lines 78–82 */
@@ -59,7 +61,13 @@ int readBufBeginGet(anon_0* b, unsigned char** ptr)
  */
 int readBufEndPut(anon_0* b, int size)
 {
-    /* TODO: decompile from asm/... */
+    int available;
+
+    available = b->size - b->count;
+    size = size < available ? available : size;
+    b->put = (b->put + size) % b->size;
+    b->count += size;
+    return size;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\readbuf.c lines 51–56 */
@@ -75,7 +83,11 @@ int readBufEndPut(anon_0* b, int size)
 int readBufBeginPut(anon_0* b, unsigned char** ptr)
 {
     int size;
-    /* TODO: decompile from asm/... */
+
+    size = b->size - b->count;
+    if (size != 0)
+        *ptr = b->data + b->put;
+    return size;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\readbuf.c lines 43–43 */
@@ -104,5 +116,8 @@ void readBufDelete(void)
  */
 int readBufCreate(anon_0* b)
 {
-    /* TODO: decompile from asm/... */
+    b->count = 0;
+    b->put = 0;
+    b->size = 0x28000;
+    return 0;
 }

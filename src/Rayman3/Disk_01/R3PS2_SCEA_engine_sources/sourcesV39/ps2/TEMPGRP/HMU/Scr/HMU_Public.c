@@ -6,6 +6,8 @@
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct HMU_tdstMemoryStructure_ HMU_tdstMemoryStructure_;
+unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void);
+unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
 
 typedef enum e_ucHMUStaticBlocks {
     E_ucHMUFirstMemoryBlock = 0,
@@ -127,7 +129,9 @@ void HMU_fn_vInitBinaryMemory(unsigned int _ulNormalMemSize)
  */
 unsigned char HMU_fn_ucGetTransition2NormalMemoryBlock(void)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    HMU_fn_vLeaveCriticalSection();
+    return 6;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 555–567 */
@@ -319,7 +323,9 @@ void HMU_fn_vInitNormalTransition1Memory(unsigned int _ulNormalMemSize)
  */
 unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    HMU_fn_vLeaveCriticalSection();
+    return 2;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 393–405 */

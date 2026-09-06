@@ -3109,7 +3109,9 @@ unsigned char fn_ucSetFieldSystemTime(void)
  */
 unsigned char fn_ucGetFieldSystemTime(tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    p_stGetSetParam->uDummy.uParam.lValue = 0;
+    p_stGetSetParam->eType = 6;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 418–418 */
@@ -3135,7 +3137,9 @@ unsigned char fn_ucSetFieldSystemDate(void)
  */
 unsigned char fn_ucGetFieldSystemDate(tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    p_stGetSetParam->uDummy.uParam.lValue = 0;
+    p_stGetSetParam->eType = 6;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 392–396 */

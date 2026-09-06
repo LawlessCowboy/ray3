@@ -160,7 +160,11 @@ short COL_lGetAlignedBoxNbBoxes(COL_tdstCollideObject_* hObject, short hElement)
  */
 GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedAlignedBox(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfAlignedBox)
 {
-    /* TODO: decompile from asm/... */
+    COL_tdstElementAlignedBoxes_* pElement;
+    COL_tdstIndexedAlignedBox_* pBox;
+    pElement = (*(COL_tdstElementAlignedBoxes_***)&hObject->d_stListOfElements)[hElement];
+    pBox = pElement->d_stListOfAlignedBoxes;
+    return pBox[xNumberOfAlignedBox].hMaterial;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 586–590 */
@@ -234,7 +238,11 @@ short COL_lGetIndexedSphereNbSpheres(COL_tdstCollideObject_* _hObject, short hEl
  */
 GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedSphere(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfSphere)
 {
-    /* TODO: decompile from asm/... */
+    COL_tdstElementSpheres_* pElement;
+    COL_tdstIndexedSphere_* pSphere;
+    pElement = (*(COL_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement];
+    pSphere = pElement->d_stListOfSpheres;
+    return pSphere[xNumberOfSphere].hMaterial;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 286–304 */

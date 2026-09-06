@@ -23,5 +23,9 @@ unsigned char g_ucFONModuleId;
  */
 void FON_fn_vInitFonts(void)
 {
-    /* TODO: decompile from asm/... */
+    *((unsigned short*)0x542D48) = 0;
+    *(unsigned int*)0x542D4C = 0;
+    *(unsigned int*)0x542D50 = 0;
+    *(unsigned int*)0x542D40 = 0;
+    *(unsigned int*)0x542D44 = RND_fn_hReserveANewHandleIndex();
 }

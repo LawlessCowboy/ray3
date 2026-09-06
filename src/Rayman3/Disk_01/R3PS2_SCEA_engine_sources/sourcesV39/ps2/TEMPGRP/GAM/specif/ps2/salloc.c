@@ -98,5 +98,18 @@ void fn_pvAllocAllocator(anon_0* pstAllocator, unsigned int u32Size)
  */
 void fn_vInitAllocator(anon_0* pstAllocator, unsigned int u32Size, char* pcBuffer)
 {
-    /* TODO: decompile from asm/... */
+    char* pcTop;
+
+    pstAllocator->u32Limit = u32Size;
+    pstAllocator->pcBase = (int)pcBuffer;
+    pstAllocator->pcTop = (int)pcBuffer;
+    pcTop = (char*)pstAllocator->pcTop + 4;
+    pstAllocator->pcTop = (int)pcTop;
+
+    if ((pstAllocator->pcTop & 0xF) != 0)
+    {
+        pstAllocator->pcTop = (pstAllocator->pcTop & -0x10) + 0x10;
+    }
+
+    channel_debug_printf(-1, "@332", pstAllocator->pcTop - 4);
 }

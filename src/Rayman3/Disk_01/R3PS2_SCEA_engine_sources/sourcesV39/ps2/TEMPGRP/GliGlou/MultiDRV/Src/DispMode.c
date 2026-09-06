@@ -94,7 +94,8 @@ void GLI_fn_vTimerPS2Counter(unsigned int* pCount)
  */
 void GLI_fn_vDoCompleteFadeOut(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_CompleteFadeDirection = -0.1f;
+    GLI_g_CompleteFadeCurrentValue = 1.0f - GLI_g_CompleteFadeDirection;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\DispMode.c lines 561–563 */
@@ -107,5 +108,6 @@ void GLI_fn_vDoCompleteFadeOut(void)
  */
 void GLI_fn_vInitInstantFadeIn(unsigned int ulNumberOfFrame)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_ulFadeNumberOfFrameIn = ulNumberOfFrame;
+    GLI_g_ulFadeCurrentFrameIn = 0;
 }

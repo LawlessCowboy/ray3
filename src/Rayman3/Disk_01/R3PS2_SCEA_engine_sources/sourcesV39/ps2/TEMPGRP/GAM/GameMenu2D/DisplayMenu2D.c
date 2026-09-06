@@ -204,7 +204,7 @@ int g_GotoRight;
  */
 unsigned int fn_uiOpenStream(char* szFilename)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 2436–2534 */
@@ -1204,7 +1204,7 @@ void fn_vChangeAreYouSureValue(void)
  */
 int fn_GetAreYouSureValue(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_AreYouSureValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 588–588 */
@@ -1216,7 +1216,7 @@ int fn_GetAreYouSureValue(void)
  */
 void SetAreYouSureValue(int Val)
 {
-    /* TODO: decompile from asm/... */
+    g_AreYouSureValue = Val;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 400–460 */
@@ -1349,5 +1349,5 @@ void fn_vDraw2DSelectedSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_st
  */
 void fn_vReinitSpriteScale(void)
 {
-    /* TODO: decompile from asm/... */
+    g_CurrentSelectedSpriteScale = 1.0f;
 }

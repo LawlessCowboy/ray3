@@ -80,8 +80,17 @@ void fn_v_QuatSlerp(float* _a4_xQuatD, float* _a4_xQuatS1, float* _a4_xQuatS2, f
  */
 float fn_xRModulus(float xValue, float xModulus)
 {
-    float xTempo;
-    /* TODO: decompile from asm/... */
+    register float xTempo;
+
+    xTempo = xModulus;
+    if (xModulus <= xValue)
+    {
+        do
+        {
+            xTempo = xTempo + xModulus;
+        } while (xTempo <= xValue);
+    }
+    return xValue - (xTempo - xModulus);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 398–418 */

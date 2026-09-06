@@ -406,7 +406,7 @@ void GEO_xReinitZFarTransparencyLevel(void)
  */
 float GEO_xGetZFarTransparencyLevel(void)
 {
-    /* TODO: decompile from asm/... */
+    return GEO_g_xZFarTransparencyLevel;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 71–73 */
@@ -420,7 +420,9 @@ float GEO_xGetZFarTransparencyLevel(void)
  */
 void GEO_vSetZFarTransparencyZone(float _xZ)
 {
-    /* TODO: decompile from asm/... */
+    GEO_g_xZFarTransparencyZone = _xZ;
+    if (0.0f != _xZ)
+        GEO_g_xOoZFarTransparencyZone = 1.0f / _xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 67–67 */
@@ -432,7 +434,7 @@ void GEO_vSetZFarTransparencyZone(float _xZ)
  */
 float GEO_xGetZFarTransparencyZone(void)
 {
-    /* TODO: decompile from asm/... */
+    return GEO_g_xZFarTransparencyZone;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 65–65 */
@@ -444,5 +446,5 @@ float GEO_xGetZFarTransparencyZone(void)
  */
 void GEO_vSetZFar(float _xZ)
 {
-    /* TODO: decompile from asm/... */
+    GEO_g_xZFar = _xZ;
 }

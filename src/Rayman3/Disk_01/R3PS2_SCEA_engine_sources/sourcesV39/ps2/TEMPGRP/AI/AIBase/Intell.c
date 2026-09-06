@@ -3024,7 +3024,7 @@ void fn_vSetFieldTypeComport(void)
  */
 tdstNodeInterpret_* fn_p_stEvalCineRef(tdstNodeInterpret_* p_stTree)
 {
-    /* TODO: decompile from asm/... */
+    return (tdstNodeInterpret_*)((char*)p_stTree + 8);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1851–1934 */
@@ -3326,7 +3326,7 @@ tdstNodeInterpret_* fn_p_stEvalFunction(HIE_tdstSuperObject_* p_SuperObjPerso, t
  */
 tdstNodeInterpret_* fn_p_stEvalNULL(tdstNodeInterpret_* p_stTree)
 {
-    /* TODO: decompile from asm/... */
+    return (tdstNodeInterpret_*)((char*)p_stTree + 8);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 900–902 */
@@ -3624,9 +3624,13 @@ tdstNodeInterpret_* fn_p_stEvalWayPointRef(tdstNodeInterpret_* p_stTree, tdstGet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalConstantVector(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalConstantVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    ((int *)&p_stValue->uDummy.uParam)[0] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[0];
+    ((int *)&p_stValue->uDummy.uParam)[1] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[1];
+    ((int *)&p_stValue->uDummy.uParam)[2] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[2];
+    p_stValue->eType = E_vt_Vector;
+    return (tdstNodeInterpret_ *)((char *)p_stTree + 8);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 606–665 */

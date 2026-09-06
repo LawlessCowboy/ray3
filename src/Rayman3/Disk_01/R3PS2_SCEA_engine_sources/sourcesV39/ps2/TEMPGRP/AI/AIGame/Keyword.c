@@ -3331,7 +3331,9 @@ tdstNodeInterpret_* fn_p_stNobodyKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSe
  */
 tdstNodeInterpret_* fn_p_stNoSoundEventKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.pSoundEvent = NULL;
+    p_stValue->eType = 31;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 112–115 */

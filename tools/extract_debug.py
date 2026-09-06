@@ -548,6 +548,7 @@ class DebugParser:
         saw_return_descriptor = False
         awaiting_function_name = False
         pending_function_entry = False
+        just_started_function = False
         skip_file_type_declarations = False
 
         def attach_pending_name(name: str):
@@ -715,6 +716,7 @@ class DebugParser:
                         language=cur_lang,
                         compiler=cur_compiler,
                     )
+                    just_started_function = True
                     if s in ('__ct', '__dt'):
                         self._cur_func.return_type = 'void'
                     pending_return_type = None
@@ -779,6 +781,7 @@ class DebugParser:
                             language=cur_lang,
                             compiler=cur_compiler,
                         )
+                        just_started_function = True
                         if s in ('__ct', '__dt'):
                             self._cur_func.return_type = 'void'
                         pending_return_type = None
@@ -940,6 +943,8 @@ class DebugParser:
                     role_byte in (ROLE_RETURN, ROLE_RETURN_ALT,
                                   ROLE_RETURN_AGGREGATE)
                     or is_first_pending_descriptor
+                    or (just_started_function and '(*)' in type_str
+                        and not saw_return_descriptor)
                 )
                 if is_return:
                     saw_return_descriptor = True
@@ -947,6 +952,7 @@ class DebugParser:
                         self._cur_func.return_type = type_str
                     else:
                         pending_return_type = type_str
+                    just_started_function = False
                     # Revisit the marker; it begins the function name that
                     # immediately follows the return descriptor.
                     i = next_i - 1
@@ -962,6 +968,7 @@ class DebugParser:
                     else:
                         self._cur_func.locals_.append(var)
                     pending_var = var
+                    just_started_function = False
                     i = next_i
                     continue
 
@@ -1575,8 +1582,25 @@ def generate_type_definitions(file_info: FileInfo) -> list[str]:
         lines.append(f'{keyword} {type_info.name} {{')
         for base_name, offset in type_info.bases:
             lines.append(f'    /* C++ base {base_name} at +0x{offset:x}. */')
-        for member in type_info.members:
+        enum_names = {enum.name for enum in enum_types}
+        cursor = 0
+        padding_index = 0
+        for member_index, member in enumerate(type_info.members):
             member_name = safe_param_name(member.name, 0)
+            # MWCC debug records preserve member offsets, but do not emit
+            # records for unnamed source padding.  Materialize gaps only when
+            # the preceding member has a known scalar-sized representation;
+            # unknown aggregate sizes are left untouched rather than guessed.
+            if member.stack_offset > cursor and cursor >= 0:
+                gap = member.stack_offset - cursor
+                previous = type_info.members[member_index - 1] if member_index else None
+                if gap > 0 and previous is not None and _known_four_byte_member(previous, enum_names):
+                    lines.append(
+                        f'    unsigned char _extractor_padding_{padding_index:02d}[{gap}];'
+                        f' /* implicitly added by extractor; +0x{cursor:x}..'
+                        f'0x{member.stack_offset - 1:x} */'
+                    )
+                    padding_index += 1
             if member.bit_width is not None:
                 lines.append(
                     f'    {member.type_str} {member_name} : {member.bit_width};'
@@ -1587,9 +1611,32 @@ def generate_type_definitions(file_info: FileInfo) -> list[str]:
                     f'    {format_declaration(member.type_str, member_name)};'
                     f' /* +0x{member.stack_offset:x} */'
                 )
+            member_size = _known_member_size(member, enum_names)
+            cursor = member.stack_offset + member_size if member_size else member.stack_offset
         lines.append('};')
         lines.append('')
     return lines
+
+
+def _known_four_byte_member(member: VarInfo, enum_names: set[str]) -> bool:
+    return _known_member_size(member, enum_names) == 4
+
+
+def _known_member_size(member: VarInfo, enum_names: set[str]) -> int | None:
+    """Return a conservative size for members whose ABI size is known."""
+    if member.bit_width is not None:
+        return None
+    spelling = member.type_str.strip()
+    if spelling in enum_names or '*' in spelling:
+        return 4
+    if spelling in {'char', 'signed char', 'unsigned char', 'bool'}:
+        return 1
+    if spelling in {'short', 'signed short', 'unsigned short'}:
+        return 2
+    if spelling in {'int', 'signed int', 'unsigned int', 'float', 'long',
+                    'signed long', 'unsigned long'}:
+        return 4
+    return None
 
 
 def normalize_file_info(file_info: FileInfo) -> None:

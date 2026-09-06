@@ -199,7 +199,17 @@ int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen)
 {
     int lCheckSum;
     int i;
-    /* TODO: decompile from asm/... */
+
+    lCheckSum = 0;
+    i = 0;
+
+    while (i < lLen)
+    {
+        lCheckSum += p_ucBuffer[i];
+        i++;
+    }
+
+    return lCheckSum;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1585–1593 */
@@ -237,7 +247,12 @@ int Int100ToBCD(int val)
 int BCDToInt100(int val)
 {
     int lReturn;
-    /* TODO: decompile from asm/... */
+
+    lReturn = 0;
+    val &= 0xFF;
+    lReturn = val & 0xF;
+    lReturn += (val >> 4) * 10;
+    return lReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1615–1657 */

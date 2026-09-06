@@ -9,6 +9,8 @@ typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct tdstViewportManagement_ tdstViewportManagement_;
+typedef struct tdstEngineStructure_ tdstEngineStructure_;
 
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
@@ -49,6 +51,18 @@ struct MTH3D_tdstVector_ {
     float xZ; /* +0x8 */
 };
 
+struct tdstViewportManagement_ {
+    void* hActiveCamera; /* +0x0 */
+    int d_lUnused[3]; /* +0x4 */
+};
+
+struct tdstEngineStructure_ {
+    char d_aUnused[0x5f4];
+    tdstViewportManagement_* a_hViewportArray; /* +0x5f4 */
+};
+
+extern tdstEngineStructure_ g_stEngineStructure;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolMatr.c lines 76–78 */
 /* addr: 0x0026aa50  size: 52 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -58,9 +72,11 @@ struct MTH3D_tdstVector_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_hGetActiveCamera(int _lViewportNumber)
+void* CAM_fn_hGetActiveCamera(int _lViewportNumber)
 {
-    /* TODO: decompile from asm/... */
+    if (_lViewportNumber >= 5 || _lViewportNumber < 0)
+        return NULL;
+    return g_stEngineStructure.a_hViewportArray[_lViewportNumber].hActiveCamera;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolMatr.c lines 128–149 */

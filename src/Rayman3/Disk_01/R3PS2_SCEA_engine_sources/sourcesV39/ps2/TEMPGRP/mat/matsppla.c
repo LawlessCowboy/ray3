@@ -39,6 +39,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    char _pad[12]; /* +0x4 */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -48,6 +49,8 @@ struct MTH3D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
 };
+
+void MAT_fn_vNormQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsppla.c lines 875–880 */
 /* addr: 0x002fa220  size: 16 bytes */
@@ -61,7 +64,10 @@ struct MTH3D_tdstVector_ {
 float MTH_fn_xSqrAddSqrAddSqrOpt2(float a, float b, float c)
 {
     float xRet;
-    /* TODO: decompile from asm/... */
+    xRet = a * a;
+    xRet += b * b;
+    xRet += c * c;
+    return xRet;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsppla.c lines 92–95 */
@@ -75,5 +81,10 @@ float MTH_fn_xSqrAddSqrAddSqrOpt2(float a, float b, float c)
  */
 void MAT_fn_vInitTransformationWithNormQuaternion(MAT_tdstTransformation_* _hTransform, float* _a_xQuaternion)
 {
-    /* TODO: decompile from asm/... */
+    _hTransform->eType = 5;
+    _hTransform->stScaleVector.xX = 1.0f;
+    _hTransform->stScaleVector.xY = 1.0f;
+    _hTransform->stScaleVector.xZ = 1.0f;
+    _hTransform->stScaleVector.xW = 1.0f;
+    MAT_fn_vNormQuatToMatrix(&_hTransform->stTransformMatrix, _a_xQuaternion[0], _a_xQuaternion[1], _a_xQuaternion[2], _a_xQuaternion[3]);
 }

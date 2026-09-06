@@ -31,6 +31,8 @@ typedef struct GEO_tdstElementSpheres_ GEO_tdstElementSpheres_;
 typedef struct GEO_tdstIndexedSphere_ GEO_tdstIndexedSphere_;
 typedef struct GEO_tdstIndexedAlignedBox_ GEO_tdstIndexedAlignedBox_;
 
+extern float GEO_g_xZFar;
+
 struct MTH4D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
@@ -224,7 +226,7 @@ unsigned char g_ucGEOModuleId;
  */
 float GEO_xGetZFar(void)
 {
-    /* TODO: decompile from asm/... */
+    return GEO_g_xZFar;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 704–706 */
@@ -237,7 +239,9 @@ float GEO_xGetZFar(void)
  */
 void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, GLI_tdstMaterial_* hVisualMaterial)
 {
-    /* TODO: decompile from asm/... */
+    GEO_tdstIndexedCone_* p_stCone;
+    p_stCone = (*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones + xNumberOfCone;
+    p_stCone->hVisualMaterial = hVisualMaterial;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 681–683 */
@@ -250,7 +254,7 @@ void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, shor
  */
 void GEO_vSetRadiusOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, float xRadius)
 {
-    /* TODO: decompile from asm/... */
+    (*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones[xNumberOfCone].xBaseRadius = xRadius;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 634–638 */
@@ -302,7 +306,9 @@ void GEO_vCreateElementCones(GEO_tdstGeometricObject_* hObject, short* p_hElemen
  */
 void GEO_vSetVisualMaterialOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, GLI_tdstMaterial_* hVisualMaterial)
 {
-    /* TODO: decompile from asm/... */
+    GEO_tdstIndexedSphere_* p_stSphere;
+    p_stSphere = (*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres + xNumberOfSphere;
+    p_stSphere->hVisualMaterial = hVisualMaterial;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 351–353 */
@@ -315,7 +321,7 @@ void GEO_vSetVisualMaterialOfIndexedSphere(GEO_tdstGeometricObject_* hObject, sh
  */
 void GEO_vSetRadiusOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, float xRadius)
 {
-    /* TODO: decompile from asm/... */
+    (*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres[xNumberOfSphere].xRadius = xRadius;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 310–312 */
@@ -328,7 +334,9 @@ void GEO_vSetRadiusOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hEle
  */
 void GEO_vSetCenterPointOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, short xIndexOfPoint)
 {
-    /* TODO: decompile from asm/... */
+    GEO_tdstIndexedSphere_* p_stSphere;
+    p_stSphere = (*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres + xNumberOfSphere;
+    p_stSphere->xCenterPoint = xIndexOfPoint;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 246–264 */

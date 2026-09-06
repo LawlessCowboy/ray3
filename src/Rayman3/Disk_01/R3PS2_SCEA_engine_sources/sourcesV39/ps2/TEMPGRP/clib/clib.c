@@ -14,9 +14,9 @@ int LogPassages[1000];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float PS2SQRTF(void)
+float PS2SQRTF(float x)
 {
-    /* TODO: decompile from asm/... */
+    return x;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\clib\clib.c lines 84–93 */
@@ -86,8 +86,16 @@ void Strrchr(char* string, int ch)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Strchr(char* s, int c)
+char* Strchr(char* s, int c)
 {
     char* pcIndex;
-    /* TODO: decompile from asm/... */
+    char* result;
+    pcIndex = s;
+    while (*pcIndex != '\0' && *pcIndex != (char)c)
+        pcIndex++;
+    if (*pcIndex)
+        result = pcIndex;
+    else
+        result = NULL;
+    return result;
 }

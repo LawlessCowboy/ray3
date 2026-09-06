@@ -3199,6 +3199,9 @@ tdstNodeInterpret_* fn_p_stSetInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso
     /* TODO: decompile from asm/... */
 }
 
+extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+extern void SND_fn_vSetDopplerFactorSound(tdeProcedureId_ eDopplerFactor);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 564–572 */
 /* addr: 0x0024af10  size: 80 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3215,7 +3218,9 @@ tdstNodeInterpret_* fn_p_stSetInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso
 tdstNodeInterpret_* fn_p_stSetDopplerEffect(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ st_Param;
-    /* TODO: decompile from asm/... */
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+    SND_fn_vSetDopplerFactorSound(st_Param.uDummy.uParam.xValue * 65536.0f);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 523–559 */

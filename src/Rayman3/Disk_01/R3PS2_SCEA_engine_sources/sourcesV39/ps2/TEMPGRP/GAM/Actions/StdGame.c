@@ -1204,7 +1204,7 @@ unsigned char g_ucGameModuleId;
  */
 unsigned int fn_ulSectInfoSizeOf(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0x18;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 787–789 */
@@ -1325,7 +1325,10 @@ float fn_xStandardGameGetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
 unsigned char fn_ucStandardGameGetTransparencyZoneMaxSO(HIE_tdstSuperObject_* hSupObj)
 {
     tdstStandardGame_* hStdGame;
-    /* TODO: decompile from asm/... */
+    hStdGame = hSupObj->hLinkedObject.p_stCharacter->h_StandardGame;
+    if (hStdGame != NULL)
+        return (unsigned char)hStdGame->ucTransparencyZoneMax;
+    return (unsigned char)0x50;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 643–645 */
@@ -1340,7 +1343,10 @@ unsigned char fn_ucStandardGameGetTransparencyZoneMaxSO(HIE_tdstSuperObject_* hS
 unsigned char fn_ucStandardGameGetTransparencyZoneMinSO(HIE_tdstSuperObject_* hSupObj)
 {
     tdstStandardGame_* hStdGame;
-    /* TODO: decompile from asm/... */
+    hStdGame = hSupObj->hLinkedObject.p_stCharacter->h_StandardGame;
+    if (hStdGame != NULL)
+        return (unsigned char)hStdGame->ucTransparencyZoneMin;
+    return (unsigned char)0x50;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 638–639 */
@@ -1396,7 +1402,7 @@ void fn_vStandardGameSetSuperObject(tdstStandardGame_* h_StdGame, HIE_tdstSuperO
     h_StdGame->h_SuperObject = h_SuperObject;
     if (h_SuperObject != NULL)
     {
-        *(MAT_tdstTransformation_ **)((unsigned char *)h_SuperObject->hLinkedObject.p_stCharacter->h_3dData + 0x80) = h_SuperObject->hGlobalMatrix;
+        h_SuperObject->hLinkedObject.p_stCharacter->h_3dData->p_stGLIObjectAbsoluteMatrix = h_SuperObject->hGlobalMatrix;
     }
 }
 

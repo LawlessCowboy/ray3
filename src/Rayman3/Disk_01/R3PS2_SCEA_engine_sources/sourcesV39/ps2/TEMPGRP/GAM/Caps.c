@@ -1161,7 +1161,8 @@ void fn_vChangeCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32C
  */
 void fn_vSubCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
 {
-    /* TODO: decompile from asm/... */
+    tdstStandardGame_* p_stStandardGame = _p_stObject->h_StandardGame;
+    p_stStandardGame->ubf32Capabilities &= ~_ubf32Capabilities;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Caps.c lines 44–45 */
@@ -1174,7 +1175,7 @@ void fn_vSubCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capa
  */
 void fn_vAddCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
 {
-    /* TODO: decompile from asm/... */
+    _p_stObject->h_StandardGame->ubf32Capabilities |= _ubf32Capabilities;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Caps.c lines 39–40 */
@@ -1187,5 +1188,5 @@ void fn_vAddCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capa
  */
 unsigned int fn_ulGetCapabilities(tdstEngineObject_* _p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    return _p_stObject->h_StandardGame->ubf32Capabilities;
 }

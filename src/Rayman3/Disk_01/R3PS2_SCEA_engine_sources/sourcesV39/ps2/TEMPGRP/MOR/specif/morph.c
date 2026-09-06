@@ -116,6 +116,7 @@ typedef union GEO_tduVSObject_ GEO_tduVSObject_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
 typedef struct MOR_stMorphVector_ MOR_stMorphVector_;
 typedef struct MOR_stMorphObject_ MOR_stMorphObject_;
+extern MOR_stMorphObject_ D_7D5384[];
 typedef struct tdstLipsSynchValue_ tdstLipsSynchValue_;
 typedef struct LST2_tdstAnchorTotdxHandleToStateOpt LST2_tdstAnchorTotdxHandleToStateOpt;
 typedef struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt;
@@ -1274,9 +1275,9 @@ void MOR_fn_vDoMorph(short _xIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MOR_fn_hGetMorphedObject(short _xIndex)
+void* MOR_fn_hGetMorphedObject(short _xIndex)
 {
-    /* TODO: decompile from asm/... */
+    return D_7D5384[(int)_xIndex].hBaseObject;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1440–1457 */

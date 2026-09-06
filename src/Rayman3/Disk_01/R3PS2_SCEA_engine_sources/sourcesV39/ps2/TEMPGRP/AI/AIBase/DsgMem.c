@@ -3349,7 +3349,14 @@ unsigned char fn_ucSetDsgVarInput(void* pMyVarAddr, tdstGetSetParam_* p_stGetSet
 unsigned char fn_ucSetDsgVarSOLinks(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstSuperObjectLinks_* p_stSOL;
-    /* TODO: decompile from asm/... */
+    p_stSOL = p_stGetSetParam->uDummy.uParam.hSOLinks;
+
+    if (p_stSOL != NULL)
+        *(tdstSuperObjectLinks_**)pMyVarAddr = p_stSOL;
+    else
+        *(tdstSuperObjectLinks_**)pMyVarAddr = NULL;
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 933–944 */
@@ -3366,7 +3373,14 @@ unsigned char fn_ucSetDsgVarSOLinks(void* pMyVarAddr, tdstGetSetParam_* p_stGetS
 unsigned char fn_ucSetDsgVarSuperObject(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
 {
     HIE_tdstSuperObject_* p_stObject;
-    /* TODO: decompile from asm/... */
+    p_stObject = p_stGetSetParam->uDummy.uParam.hSuperObject;
+
+    if (p_stObject != NULL)
+        *(HIE_tdstSuperObject_**)pMyVarAddr = p_stObject;
+    else
+        *(HIE_tdstSuperObject_**)pMyVarAddr = NULL;
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 912–927 */
@@ -3584,7 +3598,9 @@ unsigned char fn_ucGetDsgVar_128To127(void* pMyVarAddr, tdstGetSetParam_* p_stGe
  */
 unsigned char fn_ucGetDsgVarBoolean(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    p_stGetSetParam->uDummy.uParam.lValue = *(char*)pMyVarAddr;
+    p_stGetSetParam->eType = E_vt_Boolean;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 715–717 */
@@ -3713,7 +3729,12 @@ unsigned char fn_ucGetDsgVarCaps(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetP
 unsigned char fn_ucGetDsgVarVector(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
 {
     MTH3D_tdstVector_* p_stVertex;
-    /* TODO: decompile from asm/... */
+    p_stVertex = pMyVarAddr;
+    p_stGetSetParam->uDummy.uParam.stVectorValue.xX = p_stVertex->xX;
+    p_stGetSetParam->uDummy.uParam.stVectorValue.xY = p_stVertex->xY;
+    p_stGetSetParam->uDummy.uParam.stVectorValue.xZ = p_stVertex->xZ;
+    p_stGetSetParam->eType = E_vt_Vector;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 629–635 */

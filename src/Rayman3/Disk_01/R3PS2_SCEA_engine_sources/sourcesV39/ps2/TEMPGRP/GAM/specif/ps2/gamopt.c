@@ -886,7 +886,7 @@ void fn_vPauseFromMemoryCard(void)
  */
 int fn_bHasBeenPausedForController(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_EngineWasPausedAutomatically;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 799–1010 */
@@ -988,7 +988,7 @@ void GAM_fn_vCheckJoyConnections(void)
  */
 int GAM_fn_iIsGamePaused(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_stEngineStructure.bEngineIsInPaused != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 414–477 */
@@ -1167,5 +1167,5 @@ void GAM_fn_vSetVolumeMusic(int s32_Value)
  */
 void fn_vChangeDetailsValue(unsigned int _ulValue)
 {
-    /* TODO: decompile from asm/... */
+    g_stGameOptions.ulDetails = _ulValue;
 }

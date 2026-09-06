@@ -1860,7 +1860,6 @@ void fn_vInitAllObjectsWhenMapJustLoaded(void)
  */
 void fn_vInitAllObjectsWhenNewGameStart(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 446–456 */

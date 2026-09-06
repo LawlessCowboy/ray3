@@ -2022,5 +2022,5 @@ void GLI_vSetDynShadowParam(unsigned char bOnOff, unsigned int ulNewLevel, float
  */
 void GLI_vSetDynShadowState(unsigned char bOnOff)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_bDynShadowIsOn = bOnOff;
 }

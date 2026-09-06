@@ -28,7 +28,7 @@ typedef struct tdstAnim3d_ tdstAnim3d_;
 typedef struct RGBAComponent_ RGBAComponent_;
 typedef union RGBAStruct_ RGBAStruct_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn;
 typedef struct CINE_tdstCineActor_ CINE_tdstCineActor_;
@@ -1864,7 +1864,7 @@ struct MTH3D_tdstVector_ {
     float xZ; /* +0x8 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -3043,8 +3043,24 @@ unsigned char fn_ucFindPlaceInActionTable(tdstIntelligence_* p_stIntelligence)
 {
     tdstActionTableEntry_* param0;
     unsigned char ucNbEntries;
-    unsigned char ucCurrentEntry;
-    /* TODO: decompile from asm/... */
+    register unsigned char ucCurrentEntry;
+
+    ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
+
+    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed < ucNbEntries)
+    {
+        param0 = p_stIntelligence->p_stActionTable->p_stEntry;
+
+        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; param0 += 1, ucCurrentEntry += 1)
+        {
+            if (param0->bUsed == 0)
+            {
+                return ucCurrentEntry;
+            }
+        }
+    }
+
+    return ucNbEntries;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActTable.c lines 61–88 */

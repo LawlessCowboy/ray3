@@ -361,7 +361,12 @@ HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListHead(void)
 void SECT_fn_vDesactivateSector(HIE_tdstSuperObject_* _hSectorSO)
 {
     SECT_tdstSector_* param0;
-    /* TODO: decompile from asm/... */
+    param0 = _hSectorSO->hLinkedObject.p_stSector;
+
+    if (param0->cCurrentActivity != 0)
+    {
+        param0->cCurrentActivity = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 63–92 */
@@ -406,5 +411,10 @@ void SECT_fn_vRemoveSectorFromList(HIE_tdstSuperObject_* _hSectorSO)
 void SECT_fn_vActivateSector(HIE_tdstSuperObject_* _hSectorSO)
 {
     SECT_tdstSector_* hSector;
-    /* TODO: decompile from asm/... */
+    hSector = _hSectorSO->hLinkedObject.p_stSector;
+
+    if (hSector->cCurrentActivity != 1)
+    {
+        hSector->cCurrentActivity = 1;
+    }
 }

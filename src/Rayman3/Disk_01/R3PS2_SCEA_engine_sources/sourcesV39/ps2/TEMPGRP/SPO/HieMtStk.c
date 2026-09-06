@@ -398,7 +398,7 @@ struct GLD_tdstViewportAttributes_ {
 
 int GeoHandle;
 float VoidReal;
-int g_p_stCurrentMatrix;
+MAT_tdstTransformation_* g_p_stCurrentMatrix;
 int HIE_g_hCurrentMatrix;
 int HIE_g_a_hMatrixStack[50];
 int HIE_g_lNbMatrixInStack;
@@ -521,7 +521,19 @@ unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* _hVpt)
  */
 unsigned char HIE_fn_bLoadIdentity(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int uIndex;
+    MAT_tdstTransformation_* p_stMatrix;
+
+    if (HIE_g_lNbMatrixInStack == 0x32) {
+        return 0;
+    }
+
+    p_stMatrix = (MAT_tdstTransformation_ *)((unsigned char *)0x820000 - 0x74F0);
+    MAT_fn_vSetIdentity(p_stMatrix);
+    HIE_g_lNbMatrixInStack++;
+    uIndex = (unsigned int)HIE_g_lNbMatrixInStack << 2;
+    HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack];
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieMtStk.c lines 49–54 */
@@ -541,7 +553,9 @@ unsigned char HIE_fn_bLoadIdentity(void)
  */
 void HIE_fn_vInitMatrixStack(void)
 {
-    /* TODO: decompile from asm/... */
+    MAT_fn_vSetIdentity(g_p_stCurrentMatrix);
+    HIE_g_lNbMatrixInStack = 1;
+    HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieMtStk.c lines 41–44 */
@@ -560,5 +574,10 @@ void HIE_fn_vInitMatrixStack(void)
  */
 void HIE_fn_vCreateMatrixStack(void)
 {
-    /* TODO: decompile from asm/... */
+    MAT_tdstTransformation_* p_stMatrix;
+
+    p_stMatrix = (MAT_tdstTransformation_ *)HMU_fn_p_vMalloc(0x60, 0);
+    MAT_fn_vSetIdentity(p_stMatrix);
+    g_p_stCurrentMatrix = p_stMatrix;
+    HIE_g_lNbMatrixInStack = 1;
 }

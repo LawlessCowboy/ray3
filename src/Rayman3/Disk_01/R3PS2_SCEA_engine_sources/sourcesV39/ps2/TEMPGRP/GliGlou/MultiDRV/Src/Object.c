@@ -1125,9 +1125,9 @@ int GLI_BIG_GLOBALS_lDrawModeMask;
 int GLI_BIG_GLOBALS_p_stObj;
 int GLI_BIG_GLOBALS_p_stVpt;
 float GLI_BIG_GLOBALS_xGlobalAlpha;
-int g_p_stCurrentMatrix;
-unsigned char GLI_g_bDynShadowIsOn;
+extern int g_p_stCurrentMatrix;
 int g_p_stCurrentViewport;
+unsigned char GLI_g_bDynShadowIsOn;
 int Global_CharacterModuleBeingDisplayed;
 int g_p_stRawRLIsForThisObject;
 unsigned int AGO_g_ulNbLights;
@@ -1232,7 +1232,11 @@ void GLIPS2_vSendCharacterVisualSetToViewport(GEO_tdstVisualSet_* p_stVisualSet,
 void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt)
 {
     GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
-    /* TODO: decompile from asm/... */
+    p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
+    GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
+    g_p_stCurrentViewport = (int)p_stVpt;
+    g_p_stCurrentMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
+    g_p_stCurrentViewport = (int)p_stSpecifAttrib3D->p_stCam;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 687–687 */

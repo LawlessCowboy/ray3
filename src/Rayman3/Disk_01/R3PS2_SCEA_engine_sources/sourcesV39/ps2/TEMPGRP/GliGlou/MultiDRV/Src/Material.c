@@ -1321,7 +1321,7 @@ void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExp
  */
 void GLI_xGetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
-    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)hMaterial + 0x14);
+    *(GEO_tdstColor_*)p_stColor = hMaterial->stDiffuse;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 212–215 */
@@ -1349,7 +1349,7 @@ void GLI_xSetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p
  */
 void GLI_xGetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
-    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)hMaterial + 0x34);
+    *(GEO_tdstColor_*)p_stColor = hMaterial->stColor;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 198–201 */
@@ -1377,7 +1377,7 @@ void GLI_xSetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stCol
  */
 void GLI_xGetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
-    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)hMaterial + 0x4);
+    *(GEO_tdstColor_*)p_stColor = hMaterial->stAmbient;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 179–186 */
