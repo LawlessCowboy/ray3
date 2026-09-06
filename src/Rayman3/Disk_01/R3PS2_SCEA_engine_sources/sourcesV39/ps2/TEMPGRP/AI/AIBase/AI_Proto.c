@@ -3208,10 +3208,18 @@ void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeI
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned char fn_bIntelligenceEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence);
+
 unsigned char fn_bDoReflexPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     AI_tdstMind_* p_stPerso;
-    /* TODO: decompile from asm/... */
+
+    p_stPerso = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+    p_stPerso->bDoingIntel = 0;
+    if (p_stPerso->p_stReflex != NULL) {
+        return fn_bIntelligenceEngine(p_SuperObjPerso, p_stPerso->p_stReflex);
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 480–498 */
