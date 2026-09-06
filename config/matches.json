@@ -209,6 +209,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
       "status": "MATCH"
     },
+    "0x002118c0": {
+      "address": "0x002118c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetFieldSystemDate",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
+    "0x00211f90": {
+      "address": "0x00211f90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetFieldOrientation",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
+    "0x002120c0": {
+      "address": "0x002120c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetFieldDefaultFunction",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
     "0x00221e60": {
       "address": "0x00221e60",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -245,6 +269,22 @@
       "address": "0x0024e090",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "COL_fn_pGetMinPointOfParallelBox",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c",
+      "status": "MATCH"
+    },
+    "0x0024e1d0": {
+      "address": "0x0024e1d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "COL_xGetCollideObjectNumberOfElementsMax",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c",
+      "status": "MATCH"
+    },
+    "0x0024e1e0": {
+      "address": "0x0024e1e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "COL_xGetCollideObjectNumberOfPoints",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c",
       "status": "MATCH"

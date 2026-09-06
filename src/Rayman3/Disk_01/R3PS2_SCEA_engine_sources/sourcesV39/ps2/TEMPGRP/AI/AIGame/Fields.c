@@ -3121,7 +3121,7 @@ unsigned char fn_ucGetFieldSystemTime(tdstGetSetParam_* p_stGetSetParam)
  */
 unsigned char fn_ucSetFieldSystemDate(void)
 {
-    /* TODO: decompile from asm/... */
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 409–411 */
@@ -3524,7 +3524,7 @@ unsigned char fn_ucGetFieldOrientation(HIE_tdstSuperObject_* hSuperObjPerso, tds
  */
 unsigned char fn_ucSetFieldOrientation(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 150–154 */
@@ -3641,5 +3641,5 @@ unsigned char fn_ucGetFieldPrevComportIntell(HIE_tdstSuperObject_* hSuperObjPers
  */
 unsigned char fn_ucSetFieldDefaultFunction(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }

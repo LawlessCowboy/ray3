@@ -545,7 +545,7 @@ short COL_xGetParallelBoxIndexOfElement(COL_tdstCollideObject_* hObject, short x
  */
 short COL_xGetCollideObjectNumberOfElementsMax(COL_tdstCollideObject_* hObject)
 {
-    /* TODO: decompile from asm/... */
+    return hObject->xNbElements;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1479–1479 */
@@ -557,7 +557,7 @@ short COL_xGetCollideObjectNumberOfElementsMax(COL_tdstCollideObject_* hObject)
  */
 short COL_xGetCollideObjectNumberOfPoints(COL_tdstCollideObject_* hObject)
 {
-    /* TODO: decompile from asm/... */
+    return hObject->xNbPoints;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1404–1407 */
