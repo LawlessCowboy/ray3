@@ -1509,7 +1509,6 @@ unsigned char fn_ucToTableElement(int _n)
  */
 void CAM_vDisplayInfo(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 345–394 */
@@ -1742,5 +1741,12 @@ void CAM_fn_vReInitCameras(void)
  */
 void CAM_fn_vAssignCameraToAViewport(int _lViewportNumber, HIE_tdstSuperObject_* _hCamera)
 {
-    /* TODO: decompile from asm/... */
+    tdstViewportManagement_* hViewport;
+
+    if ((_lViewportNumber >= 5) || (_lViewportNumber < 0))
+        hViewport = NULL;
+    else
+        hViewport = g_stEngineStructure.a_hViewportArray + _lViewportNumber;
+    hViewport->hCamera = _hCamera;
+    hViewport->bValid = 1;
 }

@@ -13,7 +13,7 @@
  */
 unsigned char fn_bLoadPlayerSaveGameAfterLoadLevel(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\LoadGame.c lines 883–883 */

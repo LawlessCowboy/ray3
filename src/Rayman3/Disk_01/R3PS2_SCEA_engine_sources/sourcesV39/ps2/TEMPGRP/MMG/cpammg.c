@@ -451,10 +451,12 @@ void fn_p_vDynAlloc(unsigned int ulSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Mmg_fn_vDeleteBlock(unsigned char ucBlockId, tdstBlockInfoPriv_* p_stMyBlocksInfo)
+void Mmg_fn_vDeleteBlock(unsigned char ucBlockId, unsigned char ucMode, tdstBlockInfoPriv_* p_stMyBlocksInfo)
 {
     tdstBlockInfoPriv_* p_stMyBlockInfo;
-    /* TODO: decompile from asm/... */
+    p_stMyBlockInfo = p_stMyBlocksInfo + ucBlockId;
+    free((void*)p_stMyBlockInfo->p_cBeginBlock);
+    p_stMyBlockInfo->p_cBeginBlock = -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 215–441 */

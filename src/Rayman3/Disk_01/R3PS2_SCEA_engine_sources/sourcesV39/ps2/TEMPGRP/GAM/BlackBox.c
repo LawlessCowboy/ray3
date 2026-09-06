@@ -58,7 +58,7 @@ void fn_vBbFrameManagement(void)
  */
 int fn_bBbStopMonitoring(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\BlackBox.c lines 267–267 */
@@ -70,7 +70,7 @@ int fn_bBbStopMonitoring(void)
  */
 int fn_bBbStartMonitoring(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\BlackBox.c lines 235–235 */
@@ -82,5 +82,5 @@ int fn_bBbStartMonitoring(void)
  */
 short fn_wBbDeclareVariable2Monitor(void)
 {
-    /* TODO: decompile from asm/... */
+    return -1;
 }

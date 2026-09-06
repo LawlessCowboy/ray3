@@ -52,6 +52,7 @@ struct SAI_tdstListEntry_ {
 };
 
 unsigned char g_ucSAIModuleId;
+extern SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 32–45 */
 /* addr: 0x003191f0  size: 56 bytes */
@@ -68,7 +69,10 @@ unsigned char g_ucSAIModuleId;
  */
 void SAI_fn_vFirstInit(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_ucSAIModuleId == 255)
+        g_ucSAIModuleId = Erm_fn_ucInitErrMsg(g_ucSAIModuleId);
+    SAI_g_stInternalStructure.p_stFirstEntry = NULL;
+    SAI_g_stInternalStructure.p_stLastEntry = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 356–367 */

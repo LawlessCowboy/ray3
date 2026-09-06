@@ -11,6 +11,7 @@ typedef struct tdstBooleanData_ tdstBooleanData_;
 typedef union SAI_tduData_ SAI_tduData_;
 typedef struct SAI_tdstListEntry_ SAI_tdstListEntry_;
 typedef struct SAI_tdstInternalStructure_ SAI_tdstInternalStructure_;
+typedef struct RND_tdstRandom_ RND_tdstRandom_;
 
 struct tdstPointerData_ {
     int p_vPointer; /* +0x0 */
@@ -51,8 +52,15 @@ struct SAI_tdstInternalStructure_ {
     SAI_tdstListEntry_* p_stLastEntry; /* +0x4 */
 };
 
+struct RND_tdstRandom_ {
+    char a_ucPadding[0xcc];
+    unsigned int hLastUsedIndex;
+};
+
 unsigned char g_ucSAIModuleId;
 SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
+extern unsigned char g_ucRNDModuleId;
+extern RND_tdstRandom_ RND_g_stRandomStructure;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\Sai_main.c lines 60–69 */
 /* addr: 0x003191b0  size: 56 bytes */
@@ -68,5 +76,7 @@ SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
  */
 void RND_fn_vFirstInitRandom(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_ucRNDModuleId == 255)
+        g_ucRNDModuleId = Erm_fn_ucInitErrMsg(g_ucRNDModuleId);
+    RND_g_stRandomStructure.hLastUsedIndex = 0;
 }

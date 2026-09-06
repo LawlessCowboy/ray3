@@ -192,7 +192,7 @@ tdstTransition_* fn_hIfExistTransitionalWithTargetState(tdstState_* h_State, tds
  */
 unsigned char fn_ucGetLinkingTypeInTransition(tdstTransition_* h_Transition)
 {
-    /* TODO: decompile from asm/... */
+    return h_Transition->ucLinkingType;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 285–285 */
@@ -204,7 +204,7 @@ unsigned char fn_ucGetLinkingTypeInTransition(tdstTransition_* h_Transition)
  */
 tdstState_* fn_hGetStateToGoInTransition(tdstTransition_* h_Transition)
 {
-    /* TODO: decompile from asm/... */
+    return h_Transition->h_StateToGo;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 230–230 */
@@ -216,7 +216,7 @@ tdstState_* fn_hGetStateToGoInTransition(tdstTransition_* h_Transition)
  */
 unsigned char fn_ucGetStateCustomBits(tdstState_* h_State)
 {
-    /* TODO: decompile from asm/... */
+    return h_State->ucCustomBits;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 217–217 */
@@ -226,9 +226,9 @@ unsigned char fn_ucGetStateCustomBits(tdstState_* h_State)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_hGetStateMechanicsIdCard(tdstState_* h_State)
+int fn_hGetStateMechanicsIdCard(tdstState_* h_State)
 {
-    /* TODO: decompile from asm/... */
+    return h_State->h_LinkedMechanicsIdCard;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 212–212 */
@@ -240,7 +240,7 @@ void fn_hGetStateMechanicsIdCard(tdstState_* h_State)
  */
 void fn_vSetSpeedInState(tdstState_* h_State, signed char scSpeedAnim)
 {
-    /* TODO: decompile from asm/... */
+    h_State->scSpeedAnim = scSpeedAnim;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 208–208 */
@@ -252,7 +252,7 @@ void fn_vSetSpeedInState(tdstState_* h_State, signed char scSpeedAnim)
  */
 signed char fn_scGetSpeedInState(tdstState_* h_State)
 {
-    /* TODO: decompile from asm/... */
+    return h_State->scSpeedAnim;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 198–198 */

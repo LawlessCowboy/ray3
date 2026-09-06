@@ -1428,7 +1428,7 @@ unsigned char g_ucGameModuleId;
  */
 unsigned int fn_ulBrainSizeOf(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0xC;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1278–1278 */
@@ -1440,7 +1440,7 @@ unsigned int fn_ulBrainSizeOf(void)
  */
 void CAM_fn_vSetLightComputation(tdstCineinfo_* _hCineinfo, unsigned char _bLightComputation)
 {
-    /* TODO: decompile from asm/... */
+    _hCineinfo->bLightComputation = _bLightComputation;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1272–1272 */
@@ -1452,7 +1452,7 @@ void CAM_fn_vSetLightComputation(tdstCineinfo_* _hCineinfo, unsigned char _bLigh
  */
 unsigned char CAM_fn_bGetLightComputation(tdstCineinfo_* _hCineinfo)
 {
-    /* TODO: decompile from asm/... */
+    return _hCineinfo->bLightComputation;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1264–1264 */
@@ -1464,7 +1464,7 @@ unsigned char CAM_fn_bGetLightComputation(tdstCineinfo_* _hCineinfo)
  */
 unsigned char CAM_fn_bGetMirrorFlag(tdstCineinfo_* _hCineinfo)
 {
-    /* TODO: decompile from asm/... */
+    return _hCineinfo->bCameraIsMirrored;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1259–1259 */
@@ -1476,7 +1476,7 @@ unsigned char CAM_fn_bGetMirrorFlag(tdstCineinfo_* _hCineinfo)
  */
 void CAM_fn_vSetMirrorFlag(tdstCineinfo_* _hCineinfo, unsigned char _bFlag)
 {
-    /* TODO: decompile from asm/... */
+    _hCineinfo->bCameraIsMirrored = _bFlag;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1254–1254 */
@@ -1488,7 +1488,7 @@ void CAM_fn_vSetMirrorFlag(tdstCineinfo_* _hCineinfo, unsigned char _bFlag)
  */
 unsigned char CAM_fn_ucGetTransparencyFlag(tdstCineinfo_* _hCineinfo)
 {
-    /* TODO: decompile from asm/... */
+    return _hCineinfo->ucTransparencyFlag;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1249–1249 */
@@ -1500,7 +1500,7 @@ unsigned char CAM_fn_ucGetTransparencyFlag(tdstCineinfo_* _hCineinfo)
  */
 void CAM_fn_vSetTransparencyFlag(tdstCineinfo_* _hCineinfo, unsigned char _ucValue)
 {
-    /* TODO: decompile from asm/... */
+    _hCineinfo->ucTransparencyFlag = _ucValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1233–1244 */

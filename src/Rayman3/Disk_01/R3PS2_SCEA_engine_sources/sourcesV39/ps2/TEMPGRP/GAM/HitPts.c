@@ -1743,7 +1743,7 @@ void fn_vAddHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
  */
 void fn_vSetHitPointsMaxToMaxValue(tdstEngineObject_* _p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    _p_stObject->h_StandardGame->ucHitPointsMax = _p_stObject->h_StandardGame->ucHitPointsMaxMax;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 77–78 */
@@ -1756,7 +1756,7 @@ void fn_vSetHitPointsMaxToMaxValue(tdstEngineObject_* _p_stObject)
  */
 void fn_vSetHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    /* TODO: decompile from asm/... */
+    _p_stObject->h_StandardGame->ucHitPointsMax = _ucValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 72–73 */
@@ -1769,7 +1769,7 @@ void fn_vSetHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
  */
 unsigned char fn_ucGetHitPointsMax(tdstEngineObject_* _p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    return _p_stObject->h_StandardGame->ucHitPointsMax;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 61–68 */
@@ -1813,7 +1813,7 @@ void fn_vAddHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
  */
 void fn_vSetHitPointsToMaxValue(tdstEngineObject_* _p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    _p_stObject->h_StandardGame->ucHitPoints = _p_stObject->h_StandardGame->ucHitPointsMax;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 43–44 */
@@ -1826,7 +1826,7 @@ void fn_vSetHitPointsToMaxValue(tdstEngineObject_* _p_stObject)
  */
 void fn_vSetHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    /* TODO: decompile from asm/... */
+    _p_stObject->h_StandardGame->ucHitPoints = _ucValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 38–39 */
@@ -1839,5 +1839,5 @@ void fn_vSetHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
  */
 void fn_vSetHitPointsInit(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    /* TODO: decompile from asm/... */
+    _p_stObject->h_StandardGame->ucSaveHitPoints = _ucValue;
 }

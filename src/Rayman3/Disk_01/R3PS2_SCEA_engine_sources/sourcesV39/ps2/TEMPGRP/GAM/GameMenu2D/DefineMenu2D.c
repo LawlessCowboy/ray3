@@ -2960,7 +2960,7 @@ void ActivateInGameMenu2DBonus(int WithExit)
  */
 void fn_vR3SetNbCineOpen(unsigned int ulNum)
 {
-    /* TODO: decompile from asm/... */
+    g_NbCinematicOpen = ulNum;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 411–411 */
@@ -2972,7 +2972,7 @@ void fn_vR3SetNbCineOpen(unsigned int ulNum)
  */
 void fn_vR3SetNbBonusOpen(unsigned int ulNum)
 {
-    /* TODO: decompile from asm/... */
+    g_NbArcadeOpen = ulNum;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 394–404 */

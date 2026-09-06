@@ -13,7 +13,6 @@
  */
 void abort(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\rm3\overlib.c lines 244–244 */
@@ -25,7 +24,6 @@ void abort(void)
  */
 void exit(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\rm3\overlib.c lines 159–199 */

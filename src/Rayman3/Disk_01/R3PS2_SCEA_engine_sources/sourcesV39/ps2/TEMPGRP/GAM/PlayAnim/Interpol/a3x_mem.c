@@ -19,6 +19,8 @@ typedef struct stMorphData stMorphData;
 typedef struct tdstStackInfos_ tdstStackInfos_;
 typedef struct tdstA3dGENERAL_ForTransitions_ tdstA3dGENERAL_ForTransitions_;
 
+void fn_v_InitSinTab(void);
+
 struct tdstEvent_ {
     tdstEventInTable_* p_stfEventInTBL; /* +0x0 */
     unsigned short usEventNumberInTBL; /* +0x4 */
@@ -293,5 +295,5 @@ void fn_p_stFindFreeMergeA3dGeneral(unsigned short* p_uwIndex)
  */
 void fn_v_InitInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_v_InitSinTab();
 }

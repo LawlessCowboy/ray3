@@ -8,6 +8,7 @@
 typedef struct anon_0 anon_0;
 typedef struct stSCEFile stSCEFile;
 typedef struct anon_1 anon_1;
+typedef struct FIL_tdstInternalGeneral_ FIL_tdstInternalGeneral_;
 
 struct anon_0 {
     int BaseNameStart; /* +0x0 */
@@ -35,7 +36,12 @@ struct anon_1 {
     int p_lEntries; /* +0x83c */
 };
 
-unsigned char g_ucFMNModuleId;
+struct FIL_tdstInternalGeneral_ {
+    unsigned char ucDisplayInformation;
+};
+
+unsigned char g_ucFILModuleId;
+extern FIL_tdstInternalGeneral_ g_stInternalGeneral;
 static int gs_lTotalSize;
 static int gs_iUseCounter;
 unsigned int BitLongCount;
@@ -61,7 +67,9 @@ anon_1 FMN_ax_stFiles[8];
  */
 void FIL_fn_vFirstInit(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_ucFILModuleId == 255)
+        g_ucFILModuleId = Erm_fn_ucInitErrMsg(g_ucFILModuleId);
+    g_stInternalGeneral.ucDisplayInformation = 255;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\filemng.c lines 959–1007 */

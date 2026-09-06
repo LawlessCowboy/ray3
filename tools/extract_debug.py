@@ -285,20 +285,33 @@ class DebugParser:
         self._type_reprs[type_pos] = result
         return result
 
-    def _resolve_indirect_type(self, type_ref: int, visiting: Optional[set[int]] = None) -> str:
-        """Render an ``83`` use, which adds one level of indirection."""
+    def _resolve_indirect_type(self, type_ref: int, indirection_depth: int = 1,
+                               visiting: Optional[set[int]] = None) -> str:
+        """Render an ``83`` use with every encoded pointer component.
+
+        The ``83`` shape field counts the declarator components before its
+        relocated type reference: shape 5 has one component, shape 6 has two.
+        Earlier code parsed that shape to find the reference but always added
+        only one star, silently collapsing ``T **`` parameters into ``T *``.
+        """
+        stars = '*' * indirection_depth
         if type_ref in self._type_names:
-            return f'{self._type_names[type_ref]}*'
+            return f'{self._type_names[type_ref]}{stars}'
         referred = self._resolve_type_ref(type_ref, visiting)
         if self._type_tags.get(type_ref) == DW_TAG_ARRAY_TYPE and '[' in referred:
             base, dimensions = referred.split('[', 1)
-            return f'{base} (*)[{dimensions}'
+            if indirection_depth == 1:
+                return f'{base} (*)[{dimensions}'
+            return f'{base} {stars}[{dimensions}'
         # A function type's spelling already places the pointer at the
         # declarator position, so adding another star here would be wrong.
+        # A further component is a pointer-to-function-pointer.
+        if indirection_depth > 1 and '(*)' in referred:
+            return referred.replace('(*)', f'({stars})')
         return referred
 
-    def _indirect_record(self, pos: int, end: int) -> Optional[tuple[int, int]]:
-        """Return ``(type_ref, next_pos)`` for an 83 record.
+    def _indirect_record(self, pos: int, end: int) -> Optional[tuple[int, int, int]]:
+        """Return ``(type_ref, indirection_depth, next_pos)`` for an 83 record.
 
         The u16 shape field controls the number of one-byte declarator
         components before the relocated u32 reference: observed shape 5 has
@@ -311,7 +324,8 @@ class DebugParser:
         ref_pos = pos + shape
         if shape < 5 or ref_pos + 5 > end:
             return None
-        return struct.unpack_from('<I', d, ref_pos)[0], ref_pos + 5
+        return (struct.unpack_from('<I', d, ref_pos)[0], shape - 4,
+                ref_pos + 5)
 
     def _resolve_function_type(self, type_pos: int, visiting: set[int]) -> str:
         """Decode a ``kind == 0x10`` function-type record.
@@ -350,9 +364,9 @@ class DebugParser:
                 continue
             indirect = self._indirect_record(scan, end)
             if indirect:
-                type_ref, next_scan = indirect
+                type_ref, indirection_depth, next_scan = indirect
                 markers.append(self._resolve_indirect_type(
-                    type_ref, visiting
+                    type_ref, indirection_depth, visiting
                 ))
                 scan = next_scan
                 continue
@@ -903,11 +917,11 @@ class DebugParser:
             # by its position between a validated function entry and name.
             indirect = self._indirect_record(i, end)
             if indirect:
-                type_ref, next_i = indirect
+                type_ref, indirection_depth, next_i = indirect
                 if skip_file_type_declarations:
                     i = next_i
                     continue
-                type_str = self._resolve_indirect_type(type_ref)
+                type_str = self._resolve_indirect_type(type_ref, indirection_depth)
                 # The byte following the relocated type reference is normally
                 # the role.  For an indirect return MWCC omits the role, so
                 # this byte is already the following name-record marker.
@@ -1218,8 +1232,10 @@ class DebugParser:
                     elif indirect_pos >= 0:
                         indirect = self._indirect_record(indirect_pos, member_name_pos)
                         if indirect:
-                            type_ref, _ = indirect
-                            member_type = self._resolve_indirect_type(type_ref)
+                            type_ref, indirection_depth, _ = indirect
+                            member_type = self._resolve_indirect_type(
+                                type_ref, indirection_depth
+                            )
                     elif aggregate_pos >= 0 and aggregate_pos + 6 <= member_name_pos:
                         type_ref = struct.unpack_from('<I', d, aggregate_pos + 2)[0]
                         member_type = self._type_names.get(

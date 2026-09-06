@@ -126,6 +126,9 @@ struct GLD_tdstViewportAttributes_ {
     short hViewport; /* +0x6e */
 };
 
+int GLD_bGetViewportAttributes(short hDevice, short hViewport,
+                               GLD_tdstViewportAttributes_* p_stAttributes);
+
 struct GEO_tdstDoubledIndex_ {
     short a2_xIndex[2]; /* +0x0 */
 };
@@ -283,10 +286,13 @@ void GLI_fn_vSetCameraMirrorMode(GLI_tdstCamera_* p_stCam, unsigned char _bMirro
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xGetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_* p_stCam)
+void GLI_xGetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_** p_stCam)
 {
     GLD_tdstViewportAttributes_ stViewAttrib;
-    /* TODO: decompile from asm/... */
+    if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib))
+    {
+        *p_stCam = *(GLI_tdstCamera_**)stViewAttrib.p_vSpecificToXD;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Camera.c lines 245–262 */
