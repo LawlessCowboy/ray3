@@ -790,7 +790,12 @@ void SECT_fn_vSetHandleOfLightsInDNMLightsList(SECT_tdstListOfDNMLights_* hDNMLi
 SECT_tdstListOfDNMLights_* SECT_fn_hCreateElementLstDNMLights(void)
 {
     SECT_tdstListOfDNMLights_* hDNMLightsElement;
-    /* TODO: decompile from asm/... */
+
+    hDNMLightsElement = (SECT_tdstListOfDNMLights_ *)HMU_fn_p_vMalloc(0x10, 0);
+    hDNMLightsElement->hNextBrotherDyn = NULL;
+    hDNMLightsElement->hPrevBrotherDyn = NULL;
+    hDNMLightsElement->hFatherDyn = NULL;
+    return hDNMLightsElement;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 217–217 */
@@ -820,7 +825,12 @@ void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* h
 SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void)
 {
     SECT_tdstListOfSOCharacters_* hCharacterElement;
-    /* TODO: decompile from asm/... */
+
+    hCharacterElement = (SECT_tdstListOfSOCharacters_ *)HMU_fn_p_vMalloc(0x10, 0);
+    hCharacterElement->hNextBrotherDyn = NULL;
+    hCharacterElement->hPrevBrotherDyn = NULL;
+    hCharacterElement->hFatherDyn = NULL;
+    return hCharacterElement;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 187–188 */

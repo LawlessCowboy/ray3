@@ -27,7 +27,7 @@ struct anon_0 {
  */
 int readBufEndGet(anon_0* b, int size)
 {
-    size = size < b->count ? b->count : size;
+    size = size < b->count ? size : b->count;
     b->count -= size;
     return size;
 }
@@ -119,5 +119,4 @@ int readBufCreate(anon_0* b)
     b->count = 0;
     b->put = 0;
     b->size = 0x28000;
-    return 0;
 }

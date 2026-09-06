@@ -2887,9 +2887,9 @@ tdstMetaActionEntry_ a_stMetaActionTable[13];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId)
+unsigned char (*fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId))(HIE_tdstSuperObject_*)
 {
-    /* TODO: decompile from asm/... */
+    return a_stMetaActionTable[eMetaActionId].p_fn_ucMetaActionFunction;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvAct.c lines 164–165 */
@@ -2900,9 +2900,9 @@ void fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId)
+tdstNodeInterpret_* (*fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId))(HIE_tdstSuperObject_*, tdstNodeInterpret_*)
 {
-    /* TODO: decompile from asm/... */
+    return a_stMetaActionTable[eMetaActionId].p_fn_p_stMetaActionInitFunction;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvAct.c lines 102–103 */
@@ -2913,7 +2913,7 @@ void fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void szGetMetaActionTypeInParamFromId(tdeMetaActionId_ eMetaActionId)
+char* szGetMetaActionTypeInParamFromId(tdeMetaActionId_ eMetaActionId)
 {
-    /* TODO: decompile from asm/... */
+    return a_stMetaActionTable[eMetaActionId].szMetaActionTypeParam;
 }

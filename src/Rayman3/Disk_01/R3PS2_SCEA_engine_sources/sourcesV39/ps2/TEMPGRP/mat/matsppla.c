@@ -64,9 +64,8 @@ void MAT_fn_vNormQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _
 float MTH_fn_xSqrAddSqrAddSqrOpt2(float a, float b, float c)
 {
     float xRet;
-    xRet = a * a;
-    xRet += b * b;
-    xRet += c * c;
+
+    xRet = a * a + b * b + c * c;
     return xRet;
 }
 

@@ -238,9 +238,9 @@ void fn_v_InterpolBetweenKeys(tdstKeyFrame_* _p_stKey1, tdstKeyFrame_* _p_stKey2
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_GetA3dGENERALForTransitions(unsigned short uwIndex)
+tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short uwIndex)
 {
-    /* TODO: decompile from asm/... */
+    return &a32_stA3dGENERALTransitionArray[uwIndex];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_mem.c lines 692–696 */
@@ -258,7 +258,9 @@ void fn_p_GetA3dGENERALForTransitions(unsigned short uwIndex)
 void fn_vReleaseMergeA3dGeneral(unsigned short _uwIndex)
 {
     unsigned int ubBitToSet;
-    /* TODO: decompile from asm/... */
+    ubBitToSet = 1;
+    ubBitToSet <<= _uwIndex;
+    ulFreePlaceInMergeStack &= ~ubBitToSet;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_mem.c lines 666–683 */

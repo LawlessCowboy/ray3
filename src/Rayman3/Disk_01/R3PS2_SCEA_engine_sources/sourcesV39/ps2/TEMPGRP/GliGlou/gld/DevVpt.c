@@ -14,6 +14,13 @@ typedef struct GLD_tdstDeviceAttributes_ GLD_tdstDeviceAttributes_;
 typedef struct GLD_stDevice GLD_stDevice;
 typedef struct tdstBlockInfo_ tdstBlockInfo_;
 typedef struct tdstGliCaps_ tdstGliCaps_;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+
+struct MTH3D_tdstVector_ {
+    float x;
+    float y;
+    float z;
+};
 
 struct GLD_tdstViewportAttributes_ {
     unsigned int dwInitialHeight; /* +0x0 */
@@ -127,6 +134,8 @@ int g_pstGLDDevices[16];
 tdstBlockInfo_ g_a_stGLDBlocksInfo[4];
 tdstGliCaps_ GLI_g_stCaps;
 void (*GLD_vCloseErr)(void);
+extern MTH3D_tdstVector_ stWaterPlaneNormale;
+extern float fWaterPlaneDistance;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 313–315 */
 /* addr: 0x002ac030  size: 40 bytes */
@@ -136,9 +145,10 @@ void (*GLD_vCloseErr)(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSetWaterplane(MTH3D_tdstVector_* p_stNormale, float xDistance)
+void GLI_vSetWaterplane(int unused, MTH3D_tdstVector_* p_stNormale, float xDistance)
 {
-    /* TODO: decompile from asm/... */
+    stWaterPlaneNormale = *p_stNormale;
+    fWaterPlaneDistance = xDistance;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1704–1706 */
@@ -295,7 +305,18 @@ int GLD_bSetViewportPosition(short hVP, GLD_tdstViewportAttributes_* pstViewAttr
  */
 int GLD_bWriteToViewportFinished(short hVP)
 {
-    /* TODO: decompile from asm/... */
+    GLD_stDevice* p_stDev;
+    int lVP;
+
+    lVP = hVP;
+    if (lVP < 0)
+    {
+        lVP += 0xF;
+    }
+    lVP >>= 4;
+    p_stDev = (GLD_stDevice*)g_pstGLDDevices[lVP];
+    p_stDev->bIsLocked = 0;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 882–913 */

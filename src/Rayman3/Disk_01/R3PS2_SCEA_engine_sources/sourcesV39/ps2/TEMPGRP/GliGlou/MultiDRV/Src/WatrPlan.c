@@ -193,7 +193,9 @@ void GLI_vSetSinEffetBase(float xBase)
  */
 void GLI_vSetSinusEffectOnRLIBase(float xRed, float xGreen, float xBlue)
 {
-    /* TODO: decompile from asm/... */
+    a3_lSinRLIBase[0] = xRed;
+    a3_lSinRLIBase[1] = xGreen;
+    a3_lSinRLIBase[2] = xBlue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1141–1144 */
@@ -208,7 +210,9 @@ void GLI_vSetSinusEffectOnRLIBase(float xRed, float xGreen, float xBlue)
  */
 void GLI_vSetSinusEffectOnRLIAmp(float xRed, float xGreen, float xBlue)
 {
-    /* TODO: decompile from asm/... */
+    a3_lSinRLIAmp[0] = xRed;
+    a3_lSinRLIAmp[1] = xGreen;
+    a3_lSinRLIAmp[2] = xBlue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1109–1137 */

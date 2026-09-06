@@ -4,6 +4,18 @@
 
 #include <stddef.h>
 
+typedef struct SVG_stMCStatus_ SVG_stMCStatus_;
+
+struct SVG_stMCStatus_ {
+    int iPort; /* +0x0 */
+    int iSlot; /* +0x4 */
+    int iStatus; /* +0x8 */
+};
+
+extern SVG_stMCStatus_ g_axPadMapping[2];
+extern int INO_gs_a_bIsForceFeedBack[2];
+extern int scePadInfoMode(int, int, int, int);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -780,7 +792,11 @@ unsigned char IPO_g_ucNumberOfRLITables;
  */
 void fn_vUpdateIsFfbTable(unsigned char _ucJoyNb)
 {
-    /* TODO: decompile from asm/... */
+    INO_gs_a_bIsForceFeedBack[_ucJoyNb] = scePadInfoMode(
+        g_axPadMapping[_ucJoyNb].iPort,
+        g_axPadMapping[_ucJoyNb].iSlot,
+        2,
+        0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\Ps2\tempgrp\IPO\Specif\IPO.c lines 226–226 */

@@ -147,7 +147,10 @@ struct COL_tdstIndexedAlignedBox_ {
  */
 short COL_lGetAlignedBoxNbBoxes(COL_tdstCollideObject_* hObject, short hElement)
 {
-    /* TODO: decompile from asm/... */
+    COL_tdstElementAlignedBoxes_* pElement;
+
+    pElement = (*(COL_tdstElementAlignedBoxes_***)&hObject->d_stListOfElements)[hElement];
+    return *(short *)((char *)pElement->d_stListOfAlignedBoxes + 4);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 610–612 */

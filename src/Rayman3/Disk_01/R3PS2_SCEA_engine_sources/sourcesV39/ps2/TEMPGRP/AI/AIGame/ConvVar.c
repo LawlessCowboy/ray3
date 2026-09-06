@@ -2962,9 +2962,9 @@ tdstInitTypeEntry_ a_st_InitTypeTable[4];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_GetDsgVarType(tdeDsgVarTypeId_ eDsgVarTypeId)
+tdeVariableType_ fn_GetDsgVarType(tdeDsgVarTypeId_ eDsgVarTypeId)
 {
-    /* TODO: decompile from asm/... */
+    return a_stDsgVarTypeTable[eDsgVarTypeId].eVariableType;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvVar.c lines 152–155 */
@@ -2996,9 +2996,9 @@ void fn_p_stEvalDsgVarRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_fn_pGetDsgVarSetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId)
+unsigned char (*fn_p_fn_pGetDsgVarSetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId))(void*, unsigned char, tdstGetSetParam_*)
 {
-    /* TODO: decompile from asm/... */
+    return a_stDsgVarTypeTable[eDsgVarTypeId].p_fn_ucSetDsgVarFunction;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvVar.c lines 125–126 */
@@ -3009,7 +3009,7 @@ void fn_p_fn_pGetDsgVarSetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_fn_pGetDsgVarGetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId)
+unsigned char (*fn_p_fn_pGetDsgVarGetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId))(void*, unsigned char, tdstGetSetParam_*)
 {
-    /* TODO: decompile from asm/... */
+    return a_stDsgVarTypeTable[eDsgVarTypeId].p_fn_ucGetDsgVarFunction;
 }
