@@ -48,7 +48,6 @@ GEO_tdstGeometricObject_* GEO_hAllocTMPGeometricObject(short xNbPoints, short xN
  */
 void GLI_fn_vDrawMirror(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\ClipTRIANGLES.c lines 115–115 */
@@ -60,5 +59,4 @@ void GLI_fn_vDrawMirror(void)
  */
 void GLI_DRV_xSendListToViewport(void)
 {
-    /* TODO: decompile from asm/... */
 }
