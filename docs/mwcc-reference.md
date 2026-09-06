@@ -24,6 +24,9 @@ flags in `tools/match.py`.
   cover Rayman 3's 2001 compiler build, so do not treat its internal layouts or
   flags as directly applicable.
 
+For the Rayman-specific experiment protocol derived from these references, see
+[`mwcc-probe-playbook.md`](mwcc-probe-playbook.md).
+
 ## Worker rules for compiler observations
 
 1. Do not copy another project's flags or source idioms into Rayman 3 merely
