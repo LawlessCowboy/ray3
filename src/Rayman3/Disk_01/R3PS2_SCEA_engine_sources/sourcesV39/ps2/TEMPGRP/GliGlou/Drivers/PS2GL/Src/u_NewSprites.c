@@ -1180,6 +1180,8 @@ struct tagListData {
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };
 
+extern unsigned char GLI_g_DelayedFrees[];
+
 unsigned int GLI_g_LifeBarIsInit;
 unsigned int GLI_g_BigBossLifeBarIsInit;
 float LB_LowerCorner[4];
@@ -1230,7 +1232,25 @@ float myColorRange2[4];
 void GLI_vInitDelayedFrees(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    GLI_g_AnimatedTextureToUse = 1;
+    for (i = 0; i < 0x7D0; i += 8) {
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[0] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[2] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[3] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[5] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[6] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[8] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[9] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[11] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[12] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[13] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[14] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[15] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[16] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[17] = 0;
+        ((unsigned int *)(GLI_g_DelayedFrees + i))[18] = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 3068–3328 */
@@ -1841,7 +1861,7 @@ void GLI_vDisplayLifeBars(void)
  */
 void GLI_vDesinitBigBossLifeBars(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_BigBossLifeBarIsInit = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2699–2707 */
@@ -1875,5 +1895,5 @@ void GLI_vAddBigBossLifeBars(float PosRightX, float PosBottomY, float CurrentLif
  */
 void GLI_vDesinitLifeBars(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_LifeBarIsInit = 0;
 }

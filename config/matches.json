@@ -104,6 +104,21 @@
       "status": "MISMATCH",
       "target_size": 96,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b3610",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GLI_xSendListToViewport(GLD_tdstViewportAttributes_* p_stVpt)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "GLI_xSendListToViewport",
+      "reason": "Candidate returns immediately, but the target is a tail jump to another viewport helper; need the wrapper form and callee identity before matching.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -1916,6 +1931,38 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Tex.c",
       "status": "MATCH"
     },
+    "0x002ab320": {
+      "address": "0x002ab320",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "TEX_fn_vSetTextureCaps",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Texture.c",
+      "status": "MATCH"
+    },
+    "0x002ab330": {
+      "address": "0x002ab330",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "TEX_fn_lGetTextureCaps",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Texture.c",
+      "status": "MATCH"
+    },
+    "0x002ab340": {
+      "address": "0x002ab340",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "TEX_fn_lGetTextureRealWidth",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Texture.c",
+      "status": "MATCH"
+    },
+    "0x002ab350": {
+      "address": "0x002ab350",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "TEX_fn_lGetTextureRealHeight",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Texture.c",
+      "status": "MATCH"
+    },
     "0x002abaa0": {
       "address": "0x002abaa0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -2122,6 +2169,22 @@
       "name": "GLI_vSetLoadingFix",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002cdba0": {
+      "address": "0x002cdba0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDesinitBigBossLifeBars",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_NewSprites.c",
+      "status": "MATCH"
+    },
+    "0x002cdc00": {
+      "address": "0x002cdc00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDesinitLifeBars",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_NewSprites.c",
       "status": "MATCH"
     },
     "0x002ee650": {
