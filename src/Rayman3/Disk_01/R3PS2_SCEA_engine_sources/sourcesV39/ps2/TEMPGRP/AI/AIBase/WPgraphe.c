@@ -3143,7 +3143,11 @@ WP_tdstListOfArc_* WPARCLST_fn_hInit(void)
  */
 WP_tdstListOfArc_* WPG_fn_hGetArcList(WP_tdstGraphNode_* hSrcNode)
 {
-    /* TODO: decompile from asm/... */
+    if (hSrcNode != NULL) {
+        return hSrcNode->m_hListOfArc;
+    }
+
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1494–1497 */

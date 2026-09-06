@@ -177,6 +177,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WParc.c",
       "status": "MATCH"
     },
+    "0x001fef00": {
+      "address": "0x001fef00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "WPG_fn_hGetArcList",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
     "0x001fef60": {
       "address": "0x001fef60",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -941,6 +949,46 @@
       "address": "0x0029c280",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_vR3SetNbBonusOpen",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x0029d090": {
+      "address": "0x0029d090",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ulR3GetEnvNbCage",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x0029d4f0": {
+      "address": "0x0029d4f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vR3SetEnvNbCage",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x0029d940": {
+      "address": "0x0029d940",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "M2D_fn_ulGetRevisitEnvironmentNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x0029d970": {
+      "address": "0x0029d970",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "M2D_fn_vForbidExitFromMenu",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x0029d980": {
+      "address": "0x0029d980",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vR3SetEndOfGame",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
       "status": "MATCH"

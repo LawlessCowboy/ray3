@@ -3068,7 +3068,7 @@ void fn_vR3StoreInitScore(void)
  */
 unsigned int fn_ulR3GetEnvNbCage(unsigned int ulIndE)
 {
-    /* TODO: decompile from asm/... */
+    return g_aEnvValue[ulIndE].ulNbCage;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 310–323 */
@@ -3112,7 +3112,8 @@ unsigned int fn_ulR3GetEnvScore(unsigned int ulIndE)
  */
 void fn_vR3SetEnvNbCage(unsigned int ulIndE, unsigned int ulNbCage)
 {
-    /* TODO: decompile from asm/... */
+    if (ulIndE < 10)
+        g_aEnvValue[ulIndE].ulNbCage = ulNbCage;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 268–289 */
@@ -3164,7 +3165,11 @@ void fn_vR3RecomputeGlobalScore(void)
  */
 unsigned int M2D_fn_ulGetRevisitEnvironmentNumber(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_RevisitMode)
+        goto revisit;
+    return 0;
+revisit:
+    return g_RevisitIndCurrentEnv;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 214–215 */
@@ -3177,7 +3182,7 @@ unsigned int M2D_fn_ulGetRevisitEnvironmentNumber(void)
  */
 void M2D_fn_vForbidExitFromMenu(void)
 {
-    /* TODO: decompile from asm/... */
+    g_ExitForbidden = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 203–203 */
@@ -3189,5 +3194,5 @@ void M2D_fn_vForbidExitFromMenu(void)
  */
 void fn_vR3SetEndOfGame(unsigned int ulValue)
 {
-    /* TODO: decompile from asm/... */
+    g_EndOfGameIsDone = ulValue;
 }
