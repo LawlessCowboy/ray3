@@ -2128,6 +2128,36 @@
       "status": "MISMATCH",
       "target_size": 64,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fc0d0",
+      "candidate_size": 32,
+      "first_difference": 12,
+      "implementation": "unsigned char fn_ucGetDsgVarInput(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)\n{\n    IPT_tdstEntryElement_* hEntryElement;\n    hEntryElement = *(IPT_tdstEntryElement_**)pMyVarAddr;\n    *(IPT_tdstEntryElement_**)p_stGetSetParam = hEntryElement;\n    *((tdeVariableType_*)((char*)p_stGetSetParam + 12)) = E_vt_Button;\n    return (unsigned int)hEntryElement >= 1;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "fn_ucGetDsgVarInput",
+      "reason": "Recovered load and parameter stores exactly; residual is MWCC redundant xor before sltiu/xori and unsigned-char return mask difference.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ee5e0",
+      "candidate_size": 8,
+      "first_difference": 4,
+      "implementation": "unsigned char HMU_fn_bIsInitialized(void)\n{\n    return HMU_g_bHMU_CS_Created;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.6-sol",
+      "name": "HMU_fn_bIsInitialized",
+      "reason": "Only relocation immediate differs at +0x4: HMU_g_bHMU_CS_Created resolves to gp-0x6610 in candidate versus gp-0x6614 target; function body and line map otherwise match. Likely global-data layout/symbol placement.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/HMU/Scr/HMU_Sync.c",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -5026,6 +5056,22 @@
       "name": "HMU_fn_vSetMemoriesInFixMode",
       "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/HMU/Scr/HMU_Public.c",
+      "status": "MATCH"
+    },
+    "0x002ee5f0": {
+      "address": "0x002ee5f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "HMU_fn_vLeaveCriticalSection",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/HMU/Scr/HMU_Sync.c",
+      "status": "MATCH"
+    },
+    "0x002ee600": {
+      "address": "0x002ee600",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "HMU_fn_vEnterCriticalSection",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/HMU/Scr/HMU_Sync.c",
       "status": "MATCH"
     },
     "0x002ee650": {

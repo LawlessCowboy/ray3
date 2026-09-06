@@ -16,6 +16,10 @@ struct _stCriticalSection {
 unsigned char HMU_g_bHMU_CS_Created;
 _stCriticalSection g_stHMU_CS;
 
+extern void PS2_fn_vCreateCriticalSection(_stCriticalSection* p_stCS);
+extern void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS);
+extern void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Sync.c lines 37–37 */
 /* addr: 0x002ee5e0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -37,7 +41,7 @@ unsigned char HMU_fn_bIsInitialized(void)
  */
 void HMU_fn_vLeaveCriticalSection(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2_fn_vLeaveCriticalSection(&g_stHMU_CS);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Sync.c lines 56–60 */
@@ -53,5 +57,13 @@ void HMU_fn_vLeaveCriticalSection(void)
  */
 void HMU_fn_vEnterCriticalSection(void)
 {
-    /* TODO: decompile from asm/... */
+    if (HMU_g_bHMU_CS_Created == 0)
+    {
+        if (HMU_g_bHMU_CS_Created == 0)
+        {
+            PS2_fn_vCreateCriticalSection(&g_stHMU_CS);
+            HMU_g_bHMU_CS_Created = 1;
+        }
+    }
+    PS2_fn_vEnterCriticalSection(&g_stHMU_CS);
 }

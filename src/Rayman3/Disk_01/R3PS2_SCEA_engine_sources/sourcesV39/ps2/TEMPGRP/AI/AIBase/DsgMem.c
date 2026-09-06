@@ -3885,7 +3885,7 @@ unsigned char fn_ucGetDsgVarInput(void* pMyVarAddr, unsigned char ucIndex, tdstG
     hEntryElement = *(IPT_tdstEntryElement_**)pMyVarAddr;
     *(IPT_tdstEntryElement_**)p_stGetSetParam = hEntryElement;
     *((tdeVariableType_*)((char*)p_stGetSetParam + 12)) = E_vt_Button;
-    return 1;
+    return (unsigned int)hEntryElement >= 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 572–578 */
