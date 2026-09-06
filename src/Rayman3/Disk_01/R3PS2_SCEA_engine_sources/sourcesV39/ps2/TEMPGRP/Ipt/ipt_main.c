@@ -765,7 +765,11 @@ void IPT_fn_vDesactiveJoystickAndPadControl(void)
  */
 void IPT_fn_vDesactivateEntryElement(IPT_tdstEntryElement_* _hEntryElement)
 {
-    /* TODO: decompile from asm/... */
+    if (_hEntryElement != NULL)
+    {
+        _hEntryElement->bIsActivate = 0;
+        _hEntryElement->lState = -2;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 553–558 */
@@ -781,7 +785,11 @@ void IPT_fn_vDesactivateEntryElement(IPT_tdstEntryElement_* _hEntryElement)
  */
 void IPT_fn_vActivateEntryElement(IPT_tdstEntryElement_* _hEntryElement)
 {
-    /* TODO: decompile from asm/... */
+    if (_hEntryElement != NULL)
+    {
+        _hEntryElement->bIsActivate = 1;
+        _hEntryElement->lState = -2;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 534–538 */

@@ -167,6 +167,9 @@ short COL_g_xOctreeMaxDepth;
 short COL_g_xTotalNumberOfFacesLimit;
 short COL_g_xNumberOfFacesLimit;
 
+void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_* d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes);
+void COL_fn_vExploreRecursiveOctreeWithBox(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stMinSituation, MTH3D_tdstVector_* p_stMaxSituation, COL_tdstOctreeNode_* d_pstSelectedNode, short* p_xNumberOfSelectedNodes);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\OctreeGO.c lines 912–924 */
 /* addr: 0x00257bc0  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -181,7 +184,11 @@ short COL_g_xNumberOfFacesLimit;
  */
 void COL_fn_vExploreOctreeWithSegment(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_* d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
 {
-    /* TODO: decompile from asm/... */
+    *p_xNumberOfSelectedNodes = 0;
+    COL_g_xSelectedDepth = 0;
+    COL_g_xDepth = 0;
+    if (p_stOctree != NULL)
+        COL_fn_vExploreRecursiveOctreeWithSegment(p_stOctree->p_stOctreeRoot, p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\OctreeGO.c lines 861–894 */
@@ -230,7 +237,11 @@ void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_* p_stNodeToBe
  */
 void COL_fn_vExploreOctreeWithBox(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, COL_tdstOctreeNode_* d_pstSelectedNode, short* p_xNumberOfSelectedNodes)
 {
-    /* TODO: decompile from asm/... */
+    *p_xNumberOfSelectedNodes = 0;
+    COL_g_xSelectedDepth = 0;
+    COL_g_xDepth = 0;
+    if (p_stOctree != NULL)
+        COL_fn_vExploreRecursiveOctreeWithBox(p_stOctree->p_stOctreeRoot, p_stMinPoint, p_stMaxPoint, d_pstSelectedNode, p_xNumberOfSelectedNodes);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\OctreeGO.c lines 696–773 */

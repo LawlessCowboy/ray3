@@ -3000,6 +3000,8 @@ int GROS_ANTIBUG_DE_LA_MORT_QUI_TUE;
 unsigned char g_ucUseDefaultActionReturn;
 unsigned char g_ucNewActionReturn;
 
+tdstNodeInterpret_* fn_p_stEvalSubRoutine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue, tdstMacro_* p_stMacro);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 59–59 */
 /* addr: 0x001fc4d0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3009,7 +3011,7 @@ unsigned char g_ucNewActionReturn;
  */
 void fn_vSetFieldTypeComport(void)
 {
-    /* TODO: decompile from asm/... */
+    return;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1938–1939 */
@@ -3295,7 +3297,7 @@ void fn_p_stEvalProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpr
  */
 void fn_vSetProcedureActionReturn(unsigned char ucActionReturn)
 {
-    /* TODO: decompile from asm/... */
+    ucProcedureActionReturn = ucActionReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1062–1119 */
@@ -3839,5 +3841,5 @@ tdstNodeInterpret_* fn_p_stEvalColor(tdstNodeInterpret_* p_stTree, tdstGetSetPar
  */
 tdstNodeInterpret_* fn_p_stEvalMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    return fn_p_stEvalSubRoutine(p_SuperObjPerso, p_stTree, p_stValue, p_stTree->uDummy.uParam.p_stMacro);
 }

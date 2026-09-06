@@ -49,6 +49,46 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Getset.c",
       "status": "MATCH"
     },
+    "0x001fc4d0": {
+      "address": "0x001fc4d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vSetFieldTypeComport",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcd60": {
+      "address": "0x001fcd60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vSetProcedureActionReturn",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fd330": {
+      "address": "0x001fd330",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalMacro",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x00257bc0": {
+      "address": "0x00257bc0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "COL_fn_vExploreOctreeWithSegment",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/OctreeGO.c",
+      "status": "MATCH"
+    },
+    "0x00257e50": {
+      "address": "0x00257e50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "COL_fn_vExploreOctreeWithBox",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/OctreeGO.c",
+      "status": "MATCH"
+    },
     "0x00271b50": {
       "address": "0x00271b50",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -103,6 +143,22 @@
       "name": "fn_vInterruptMenu2D",
       "size": 60,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x002f7020": {
+      "address": "0x002f7020",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vDesactivateEntryElement",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_main.c",
+      "status": "MATCH"
+    },
+    "0x002f7040": {
+      "address": "0x002f7040",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vActivateEntryElement",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_main.c",
       "status": "MATCH"
     }
   },
