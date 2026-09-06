@@ -58,7 +58,18 @@ int strFileRead(anon_0* file, void* buff, int size)
 {
     unsigned int err;
     int count;
-    /* TODO: decompile from asm/... */
+    if (file->isOnCD)
+    {
+        count = sceCdStRead(size >> 11, buff, 1, &err);
+        count <<= 11;
+        if (err != 0)
+            count = -1;
+    }
+    else
+    {
+        count = sceRead(file->fd, buff, size);
+    }
+    return count;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\strfile.c lines 193–201 */

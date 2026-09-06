@@ -121,5 +121,5 @@ unsigned char Erm_fn_ucInitErrMsg(void)
  */
 void Erm_fn_vSetCallBackForExit(void (*_p_fn_ExitAppliCallBack)(void))
 {
-    /* TODO: decompile from asm/... */
+    p_fn_ExitAppliCallBack = (int)_p_fn_ExitAppliCallBack;
 }

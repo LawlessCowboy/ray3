@@ -1578,7 +1578,14 @@ void fn_vChooseTheGoodInit(void)
 unsigned char fn_bEndOfOneStep(void)
 {
     unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    ucReturn = 0;
+    if ((g_stEngineStructure.eEngineMode == 2) ||
+        (g_stEngineStructure.eEngineMode == 6) ||
+        (g_stEngineStructure.eEngineMode == 8))
+    {
+        ucReturn = 1;
+    }
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 404–408 */

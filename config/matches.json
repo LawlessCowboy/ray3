@@ -17,6 +17,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/engmain.c",
       "status": "MATCH"
     },
+    "0x00131470": {
+      "address": "0x00131470",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "strFileRead",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/strfile.c",
+      "status": "MATCH"
+    },
     "0x001fb7a0": {
       "address": "0x001fb7a0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -191,6 +199,22 @@
       "name": "COL_fn_vExploreOctreeWithBox",
       "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/OctreeGO.c",
+      "status": "MATCH"
+    },
+    "0x00258400": {
+      "address": "0x00258400",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "Erm_fn_vSetCallBackForExit",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ERM/CpaError.c",
+      "status": "MATCH"
+    },
+    "0x0025f5d0": {
+      "address": "0x0025f5d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bEndOfOneStep",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Engine.c",
       "status": "MATCH"
     },
     "0x0025fee0": {
