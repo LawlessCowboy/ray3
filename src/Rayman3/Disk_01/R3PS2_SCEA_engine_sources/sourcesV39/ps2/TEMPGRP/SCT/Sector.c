@@ -500,8 +500,8 @@ HIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* _
  */
 int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject)
 {
-    SECT_tdstSector_* param0;
-    /* TODO: decompile from asm/... */
+    SECT_tdstSector_* param0 = _hSectorObject->hLinkedObject.p_stSector;
+    return (param0->cWantedActivity == 0) && (param0->cCurrentActivity != param0->cWantedActivity);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 941–946 */
@@ -515,8 +515,8 @@ int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject)
  */
 int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject)
 {
-    SECT_tdstSector_* param0;
-    /* TODO: decompile from asm/... */
+    SECT_tdstSector_* param0 = _hSectorObject->hLinkedObject.p_stSector;
+    return (param0->cWantedActivity == 1) && (param0->cCurrentActivity != param0->cWantedActivity);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 905–936 */

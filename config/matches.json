@@ -881,6 +881,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/PC/SubMapPs.c",
       "status": "MATCH"
     },
+    "0x00282b00": {
+      "address": "0x00282b00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_vResetClipFixObject",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/PC/DspFix.c",
+      "status": "MATCH"
+    },
+    "0x00282b80": {
+      "address": "0x00282b80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_vSetFixClippingCoordinates",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/PC/DspFix.c",
+      "status": "MATCH"
+    },
+    "0x00282ba0": {
+      "address": "0x00282ba0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vAskToDisplayVignette",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/PC/DspFix.c",
+      "status": "MATCH"
+    },
     "0x0028d110": {
       "address": "0x0028d110",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -1119,6 +1143,22 @@
       "name": "GLI_vCreateObjectsReference",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
+      "status": "MATCH"
+    },
+    "0x002aafe0": {
+      "address": "0x002aafe0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_vCloseBigFileTextures",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Tex.c",
+      "status": "MATCH"
+    },
+    "0x002aaff0": {
+      "address": "0x002aaff0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_vOpenBigFileTextures",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Tex.c",
       "status": "MATCH"
     },
     "0x002abaa0": {
@@ -1798,6 +1838,22 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_xGetSectorZFar",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
+      "status": "MATCH"
+    },
+    "0x0031c440": {
+      "address": "0x0031c440",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SECT_fn_bIsSectorNewlyInactive",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
+      "status": "MATCH"
+    },
+    "0x0031c470": {
+      "address": "0x0031c470",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SECT_fn_bIsSectorNewlyActive",
+      "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
       "status": "MATCH"
     },

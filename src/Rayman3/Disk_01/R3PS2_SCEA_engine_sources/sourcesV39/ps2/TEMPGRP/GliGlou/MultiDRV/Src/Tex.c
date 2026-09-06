@@ -156,7 +156,6 @@ void GLI_vRealyComputeLod(GLI_tdstTexture_* p_stTexture)
  */
 void GLI_fn_vCloseBigFileTextures(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Tex.c lines 226–226 */
@@ -168,7 +167,6 @@ void GLI_fn_vCloseBigFileTextures(void)
  */
 void GLI_fn_vOpenBigFileTextures(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Tex.c lines 212–215 */

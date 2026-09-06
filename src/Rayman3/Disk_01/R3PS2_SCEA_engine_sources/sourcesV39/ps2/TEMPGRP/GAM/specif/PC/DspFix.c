@@ -1392,6 +1392,7 @@ unsigned int GAM_g_dwOldRight;
 unsigned int GAM_g_dwOldBottom;
 unsigned int GAM_g_dwOldLeft;
 unsigned int GAM_g_dwOldTop;
+extern void GLI_vRemoveScissors(GLD_tdstViewportAttributes_*);
 tdstDisplayVignetteDuringPlaying_ g_stDisplayVignetteDuringPlaying;
 unsigned char g_ucGameModuleId;
 tdstEngineStructure_ g_stEngineStructure;
@@ -1433,7 +1434,11 @@ void GAM_fn_hGetSubMapPosition(int _lSubMapNumber, int _lEntryNumber)
  */
 void GAM_fn_vResetClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
 {
-    /* TODO: decompile from asm/... */
+    _p_stFixViewportAttr->dwClipTopInPix = GAM_g_dwOldTop;
+    _p_stFixViewportAttr->dwClipLeftInPix = GAM_g_dwOldLeft;
+    _p_stFixViewportAttr->dwClipBottomInPix = GAM_g_dwOldBottom;
+    _p_stFixViewportAttr->dwClipRightInPix = GAM_g_dwOldRight;
+    GLI_vRemoveScissors(_p_stFixViewportAttr);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\DspFix.c lines 150–160 */
@@ -1470,7 +1475,10 @@ void GAM_fn_vClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
  */
 void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int _lRight)
 {
-    /* TODO: decompile from asm/... */
+    GAM_g_dwClipping_Top = _lTop;
+    GAM_g_dwClipping_Left = _lLeft;
+    GAM_g_dwClipping_Right = _lBottom;
+    GAM_g_dwClipping_Bottom = _lRight;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\DspFix.c lines 116–118 */
@@ -1483,5 +1491,5 @@ void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int 
  */
 void fn_vAskToDisplayVignette(void)
 {
-    /* TODO: decompile from asm/... */
+    g_stDisplayVignetteDuringPlaying.bAskToDisplayVignette = 0;
 }
