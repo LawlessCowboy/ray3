@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct stFile_ stFile_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\public\PS2\ps2Prothelper.h lines 85–123 */
 /* addr: 0x002640d0  size: 1224 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

@@ -5,6 +5,24 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_tdstLight_ GLI_tdstLight_;
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
+typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
+typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
+typedef struct WP_tdstListOfArc_ WP_tdstListOfArc_;
+typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct tdstCollSet_ tdstCollSet_;
+typedef struct tdstDynam_ tdstDynam_;
+typedef struct tdstLipsSynchroTable_ tdstLipsSynchroTable_;
+typedef struct tdstMSLight_ tdstMSLight_;
+typedef struct tdstMSWay_ tdstMSWay_;
+typedef struct tdstMicro_ tdstMicro_;
+typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
+typedef struct tdstParticleGenerator_ tdstParticleGenerator_;
+typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
+typedef struct tdstSectInfo_ tdstSectInfo_;
 typedef struct tdstComport_ tdstComport_;
 typedef union _SND_tduRefEvt _SND_tduRefEvt;
 typedef struct SCT_tdstListOfSoundEvent_ SCT_tdstListOfSoundEvent_;
@@ -3247,8 +3265,18 @@ void AI_fn_vFirstInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_pstAllocMind(void)
+AI_tdstMind_* fn_pstAllocMind(void)
 {
+    extern void* HMU_fn_p_vMalloc(unsigned int u32Size,
+                                  unsigned char bTempMalloc);
     AI_tdstMind_* p_stMind;
-    /* TODO: decompile from asm/... */
+
+    p_stMind = HMU_fn_p_vMalloc(sizeof(AI_tdstMind_), 0);
+    p_stMind->p_stAIModel = NULL;
+    p_stMind->p_stIntelligence = NULL;
+    p_stMind->p_stReflex = NULL;
+    p_stMind->p_stDsgMem = NULL;
+    p_stMind->bDoingIntel = 0;
+
+    return p_stMind;
 }

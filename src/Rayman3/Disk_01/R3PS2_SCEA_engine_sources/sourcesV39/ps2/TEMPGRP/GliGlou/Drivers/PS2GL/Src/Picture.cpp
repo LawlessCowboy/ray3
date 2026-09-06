@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct aggregate aggregate;
 typedef struct tag_GLtexture tag_GLtexture;
 typedef struct sceGsSignal sceGsSignal;
 typedef struct _sceDmaTag _sceDmaTag;

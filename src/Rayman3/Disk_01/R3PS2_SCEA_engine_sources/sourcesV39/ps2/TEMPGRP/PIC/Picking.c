@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;

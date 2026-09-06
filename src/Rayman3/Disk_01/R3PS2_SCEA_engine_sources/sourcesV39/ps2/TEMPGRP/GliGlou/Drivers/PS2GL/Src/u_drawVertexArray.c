@@ -5,6 +5,10 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
+typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
+typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
+typedef struct _SDC_Instance_ _SDC_Instance_;
 typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;
 typedef struct GLI_tdstNormalsToRecompute_ GLI_tdstNormalsToRecompute_;
 typedef struct GLI_tdstTexture_ GLI_tdstTexture_;

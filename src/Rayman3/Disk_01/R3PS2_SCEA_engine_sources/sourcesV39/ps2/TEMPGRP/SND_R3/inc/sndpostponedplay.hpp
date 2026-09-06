@@ -4,6 +4,11 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CEventResData CEventResData;
+typedef struct CExtraEventActor CExtraEventActor;
+typedef struct PostponedPlay PostponedPlay;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SND_R3\inc\sndpostponedplay.hpp lines 65–72 */
 /* addr: 0x001d0760  size: 36 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

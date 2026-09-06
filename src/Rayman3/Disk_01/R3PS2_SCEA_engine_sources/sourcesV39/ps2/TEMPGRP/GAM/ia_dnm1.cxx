@@ -4,6 +4,12 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct DNM_stDynamics DNM_stDynamics;
+typedef struct DNM_stReport DNM_stReport;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct tdstDynam_ tdstDynam_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm1.cxx lines 155–188 */
 /* addr: 0x00262b10  size: 164 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -26,7 +32,7 @@
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_hSuperObjectGetLastCollidedCharacter(HIE_tdstSuperObject_* hCharacter)
+HIE_tdstSuperObject_* fn_hSuperObjectGetLastCollidedCharacter(HIE_tdstSuperObject_* hCharacter)
 {
     HIE_tdstSuperObject_* p_stObjectCollided;
     DNM_stDynamics* p_stDynamics;

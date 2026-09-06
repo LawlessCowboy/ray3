@@ -5,6 +5,34 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GEO_tdstDeformationInfluence_ GEO_tdstDeformationInfluence_;
+typedef struct GEO_tdstDeformationVertex_ GEO_tdstDeformationVertex_;
+typedef struct GEO_tdstElementDeformationSetInfo_ GEO_tdstElementDeformationSetInfo_;
+typedef struct GLI_tdstLight_ GLI_tdstLight_;
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
+typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
+typedef struct WP_tdstGraph_ WP_tdstGraph_;
+typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct tdstAChannel_ tdstAChannel_;
+typedef struct tdstAlwaysActiveCharacter_ tdstAlwaysActiveCharacter_;
+typedef struct tdstComport_ tdstComport_;
+typedef struct tdstDsgVar_ tdstDsgVar_;
+typedef struct tdstEngineObject_ tdstEngineObject_;
+typedef struct tdstFamilyList_ tdstFamilyList_;
+typedef struct tdstLipsSynchroTable_ tdstLipsSynchroTable_;
+typedef struct tdstListOfMacro_ tdstListOfMacro_;
+typedef struct tdstMacro_ tdstMacro_;
+typedef struct tdstNodeCamera_ tdstNodeCamera_;
+typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
+typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
+typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
+typedef struct tdstParticleGenerator_ tdstParticleGenerator_;
+typedef struct tdstScriptAI_ tdstScriptAI_;
+typedef struct tdstState_ tdstState_;
+typedef struct tdstSuperObjectLinks_ tdstSuperObjectLinks_;
+typedef struct tdstViewportManagement_ tdstViewportManagement_;
 typedef struct anon_3 anon_3;
 typedef struct SAV2_MenuOptionHeader_ SAV2_MenuOptionHeader_;
 typedef struct SAV2_tdstHeader_ SAV2_tdstHeader_;

@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CResData CResData;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\C4_R3\harmonx\Inc\L1\PServices\Pustl\sset.h lines 39–39 */
 /* addr: 0x0018b6e0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

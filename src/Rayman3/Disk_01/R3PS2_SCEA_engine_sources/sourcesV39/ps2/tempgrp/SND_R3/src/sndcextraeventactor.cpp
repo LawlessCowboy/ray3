@@ -5,6 +5,11 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CLinkMicro CLinkMicro;
+typedef struct CRTTIClass CRTTIClass;
+typedef struct CVarAccess CVarAccess;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct pointer pointer;
 typedef struct CStringIsLess CStringIsLess;
 typedef struct stree stree;
 typedef struct V3Ds V3Ds;

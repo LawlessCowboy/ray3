@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct _tdstBinarizedDataForMenu _tdstBinarizedDataForMenu;
 typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
 typedef struct anon_0 anon_0;

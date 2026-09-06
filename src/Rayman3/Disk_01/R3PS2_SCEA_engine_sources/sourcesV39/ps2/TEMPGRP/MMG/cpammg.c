@@ -5,6 +5,8 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct DNM_stDynamics DNM_stDynamics;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct tdstInformationHeaderOfBolckWithoutFree_ tdstInformationHeaderOfBolckWithoutFree_;
 typedef struct tdstBlockInfoPriv_ tdstBlockInfoPriv_;
 typedef struct tdstChannelInfo_ tdstChannelInfo_;

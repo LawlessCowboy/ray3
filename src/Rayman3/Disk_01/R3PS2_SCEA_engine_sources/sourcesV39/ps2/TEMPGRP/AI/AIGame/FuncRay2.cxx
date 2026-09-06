@@ -4,6 +4,30 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CINE_tdstCine_ CINE_tdstCine_;
+typedef struct COL_tdstCollideObject_ COL_tdstCollideObject_;
+typedef struct DNM_stDynamics DNM_stDynamics;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
+typedef struct SECT_tdstListOfSOSectorsInGraphicInteraction_ SECT_tdstListOfSOSectorsInGraphicInteraction_;
+typedef struct WP_tdstArc_ WP_tdstArc_;
+typedef struct WP_tdstGraphNode_ WP_tdstGraphNode_;
+typedef struct WP_tdstGraph_ WP_tdstGraph_;
+typedef struct WP_tdstListOfArc_ WP_tdstListOfArc_;
+typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
+typedef struct tdstAChannel_ tdstAChannel_;
+typedef struct tdstDynam_ tdstDynam_;
+typedef struct tdstEngineObject_ tdstEngineObject_;
+typedef struct tdstFamilyList_ tdstFamilyList_;
+typedef struct tdstGetSetParam_ tdstGetSetParam_;
+typedef struct tdstMSWay_ tdstMSWay_;
+typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
+typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
+typedef struct tdstStandardGame_ tdstStandardGame_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 4091–4099 */
 /* addr: 0x0021b6e0  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

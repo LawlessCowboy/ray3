@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct MTH_stRotation MTH_stRotation;
 typedef struct DNM_stObstacle DNM_stObstacle;

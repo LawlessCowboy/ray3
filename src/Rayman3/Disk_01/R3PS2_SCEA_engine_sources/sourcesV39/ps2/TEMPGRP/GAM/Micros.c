@@ -5,6 +5,28 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_tdstLight_ GLI_tdstLight_;
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
+typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
+typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct tdstCineinfo_ tdstCineinfo_;
+typedef struct tdstCollSet_ tdstCollSet_;
+typedef struct tdstComport_ tdstComport_;
+typedef struct tdstDsgMem_ tdstDsgMem_;
+typedef struct tdstDsgVar_ tdstDsgVar_;
+typedef struct tdstDynam_ tdstDynam_;
+typedef struct tdstIntelligence_ tdstIntelligence_;
+typedef struct tdstListOfMacro_ tdstListOfMacro_;
+typedef struct tdstMSLight_ tdstMSLight_;
+typedef struct tdstMSWay_ tdstMSWay_;
+typedef struct tdstMicro_ tdstMicro_;
+typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
+typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
+typedef struct tdstScriptAI_ tdstScriptAI_;
+typedef struct tdstSectInfo_ tdstSectInfo_;
+typedef struct tdstState_ tdstState_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;

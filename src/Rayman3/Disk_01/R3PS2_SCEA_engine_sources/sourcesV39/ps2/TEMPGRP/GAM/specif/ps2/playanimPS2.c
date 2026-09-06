@@ -5,6 +5,29 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_tdstLight_ GLI_tdstLight_;
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
+typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
+typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct tdstCineinfo_ tdstCineinfo_;
+typedef struct tdstCollSet_ tdstCollSet_;
+typedef struct tdstComport_ tdstComport_;
+typedef struct tdstDsgMem_ tdstDsgMem_;
+typedef struct tdstDsgVar_ tdstDsgVar_;
+typedef struct tdstDynam_ tdstDynam_;
+typedef struct tdstFamilyList_ tdstFamilyList_;
+typedef struct tdstIntelligence_ tdstIntelligence_;
+typedef struct tdstListOfMacro_ tdstListOfMacro_;
+typedef struct tdstMSLight_ tdstMSLight_;
+typedef struct tdstMSSound_ tdstMSSound_;
+typedef struct tdstMSWay_ tdstMSWay_;
+typedef struct tdstMicro_ tdstMicro_;
+typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
+typedef struct tdstScriptAI_ tdstScriptAI_;
+typedef struct tdstSectInfo_ tdstSectInfo_;
+typedef struct tdstState_ tdstState_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt;
 typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;

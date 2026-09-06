@@ -4,6 +4,20 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CIndexAllocator CIndexAllocator;
+typedef struct CResData CResData;
+typedef struct CUUID CUUID;
+typedef struct TTypedVar TTypedVar;
+typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
+typedef struct iterator iterator;
+typedef struct less less;
+typedef struct sTreeLink sTreeLink;
+typedef struct sTreeNode sTreeNode;
+typedef struct sallocator sallocator;
+typedef struct spair spair;
+typedef struct sstring sstring;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\C4_R3\harmonx\Inc\L1\PServices\Pustl\stree.h lines 495–495 */
 /* addr: 0x00186dd0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

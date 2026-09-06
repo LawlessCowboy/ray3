@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CUUID CUUID;
+typedef struct CWaveFileIdObj CWaveFileIdObj;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\C4_R3\harmonx\Inc\L2\PServices\PRefIdObj\CIdObjPtr.h lines 378–380 */
 /* addr: 0x00189650  size: 12 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

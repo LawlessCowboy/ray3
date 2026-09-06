@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct J_ParticleSprite_ J_ParticleSprite_;
 typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;
 typedef struct _sceDmaTag _sceDmaTag;
 typedef struct anon_1 anon_1;

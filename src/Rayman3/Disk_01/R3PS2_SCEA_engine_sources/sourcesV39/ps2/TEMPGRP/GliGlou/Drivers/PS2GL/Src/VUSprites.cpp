@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct aggregate aggregate;
 typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
 typedef struct CSpriteController CSpriteController;
 typedef struct sceGsTexflush sceGsTexflush;

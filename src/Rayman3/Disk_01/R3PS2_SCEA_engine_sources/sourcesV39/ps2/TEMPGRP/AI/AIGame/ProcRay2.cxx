@@ -4,6 +4,28 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct AI_tdstMind_ AI_tdstMind_;
+typedef struct COL_tdstCollideObject_ COL_tdstCollideObject_;
+typedef struct DNM_stDynamics DNM_stDynamics;
+typedef struct GLI_tdstLight_ GLI_tdstLight_;
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct WP_tdstGraphNode_ WP_tdstGraphNode_;
+typedef struct WP_tdstGraph_ WP_tdstGraph_;
+typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
+typedef struct tdst3dData_ tdst3dData_;
+typedef struct tdstArray_ tdstArray_;
+typedef struct tdstDynam_ tdstDynam_;
+typedef struct tdstEngineObject_ tdstEngineObject_;
+typedef struct tdstGetSetParam_ tdstGetSetParam_;
+typedef struct tdstListOfMacro_ tdstListOfMacro_;
+typedef struct tdstMSLight_ tdstMSLight_;
+typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
+typedef struct tdstSuperObjectLinks_ tdstSuperObjectLinks_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 4225–4241 */
 /* addr: 0x0022a130  size: 96 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

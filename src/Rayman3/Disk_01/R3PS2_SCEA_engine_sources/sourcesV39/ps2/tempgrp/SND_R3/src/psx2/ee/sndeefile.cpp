@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct aggregate aggregate;
 typedef struct _glue _glue;
 typedef struct __sbuf __sbuf;
 typedef struct __sFILE __sFILE;

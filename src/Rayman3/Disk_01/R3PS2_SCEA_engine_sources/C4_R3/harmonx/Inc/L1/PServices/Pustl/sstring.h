@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct sstring sstring;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\C4_R3\harmonx\Inc\L1\PServices\Pustl\sstring.h lines 34–37 */
 /* addr: 0x00188690  size: 100 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

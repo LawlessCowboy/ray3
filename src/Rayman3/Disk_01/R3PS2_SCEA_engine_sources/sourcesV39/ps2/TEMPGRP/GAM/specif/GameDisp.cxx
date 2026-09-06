@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\GameDisp.cxx lines 33–320 */
 /* addr: 0x0025f940  size: 804 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

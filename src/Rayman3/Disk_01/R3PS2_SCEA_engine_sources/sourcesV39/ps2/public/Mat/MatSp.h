@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\public\Mat\MatSp.h lines 140–173 */
 /* addr: 0x00201650  size: 124 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

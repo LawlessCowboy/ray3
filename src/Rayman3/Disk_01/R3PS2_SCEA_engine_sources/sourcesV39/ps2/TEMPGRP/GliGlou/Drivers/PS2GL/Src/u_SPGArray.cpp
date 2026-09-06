@@ -5,6 +5,8 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct S_TXR_Header_ S_TXR_Header_;
+typedef struct aggregate aggregate;
 typedef struct C_VertexArrayContainer C_VertexArrayContainer;
 typedef struct tagGLlistdatas tagGLlistdatas;
 typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;

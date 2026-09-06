@@ -913,7 +913,8 @@ class DebugParser:
                 # this byte is already the following name-record marker.
                 role_byte = d[next_i - 1]
                 is_return = (
-                    role_byte in (ROLE_RETURN, ROLE_RETURN_ALT)
+                    role_byte in (ROLE_RETURN, ROLE_RETURN_ALT,
+                                  ROLE_RETURN_AGGREGATE)
                     or (self._cur_func is None
                         and pending_function_entry
                         and not saw_return_descriptor
@@ -1469,6 +1470,45 @@ def order_aggregate_definitions(types: list[TypeInfo]) -> list[TypeInfo]:
     return ordered
 
 
+def unresolved_pointer_type_names(file_info: FileInfo) -> list[tuple[str, str]]:
+    """Find pointer-only typedef names absent from this debug type chain.
+
+    MWCC emits the complete layout only for types needed by value in a
+    translation unit.  Header-owned opaque types may therefore occur solely
+    as ``Name*`` spellings without a corresponding named type record.  The
+    original headers supplied their forward typedefs; recreate those safe,
+    incomplete declarations so extracted units remain compilable.
+    """
+    defined_names = {
+        type_info.name for type_info in file_info.types
+        if type_info.members or type_info.bases or type_info.enum_values
+    }
+    tags_by_name = {type_info.name: type_info.tag for type_info in file_info.types}
+    ignored_names = set(C_KEYWORDS) | {
+        'size_t', 'ptrdiff_t', 'wchar_t',
+    }
+    spellings = []
+    spellings.extend(global_.type_str for global_ in file_info.globals_)
+    for type_info in file_info.types:
+        spellings.extend(member.type_str for member in type_info.members)
+    for function in file_info.functions:
+        spellings.append(function.return_type)
+        spellings.extend(parameter.type_str for parameter in function.params)
+        spellings.extend(local.type_str for local in function.locals_)
+
+    unresolved = set()
+    for spelling in spellings:
+        for match in re.finditer(r'\b([A-Za-z_][A-Za-z0-9_]*)\s*\*', spelling):
+            name = match.group(1)
+            if name not in defined_names and name not in ignored_names:
+                unresolved.add(name)
+    return [
+        ('union' if tags_by_name.get(name) == DW_TAG_UNION_TYPE else 'struct',
+         name)
+        for name in sorted(unresolved)
+    ]
+
+
 def generate_type_definitions(file_info: FileInfo) -> list[str]:
     """Emit conservative C declarations for recovered aggregate layouts.
 
@@ -1483,10 +1523,13 @@ def generate_type_definitions(file_info: FileInfo) -> list[str]:
     ]
     aggregate_types = order_aggregate_definitions(aggregate_types)
     enum_types = [type_info for type_info in file_info.types if type_info.enum_values]
-    if not aggregate_types and not enum_types:
+    opaque_pointer_types = unresolved_pointer_type_names(file_info)
+    if not aggregate_types and not enum_types and not opaque_pointer_types:
         return []
 
     lines = ['/* Recovered aggregate layouts from MWCC debug type records. */']
+    for keyword, type_name in opaque_pointer_types:
+        lines.append(f'typedef {keyword} {type_name} {type_name};')
     for type_info in aggregate_types:
         keyword = 'union' if aggregate_is_union(type_info) else 'struct'
         lines.append(f'typedef {keyword} {type_info.name} {type_info.name};')

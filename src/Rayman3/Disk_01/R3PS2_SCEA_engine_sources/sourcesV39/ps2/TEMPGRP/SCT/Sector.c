@@ -5,6 +5,12 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_tdstLight_ GLI_tdstLight_;
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
+typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct tdstEngineObject_ tdstEngineObject_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct GEO_tdstTripledIndex_ GEO_tdstTripledIndex_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
@@ -781,7 +787,7 @@ void SECT_fn_vSetHandleOfLightsInDNMLightsList(SECT_tdstListOfDNMLights_* hDNMLi
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SECT_fn_hCreateElementLstDNMLights(void)
+SECT_tdstListOfDNMLights_* SECT_fn_hCreateElementLstDNMLights(void)
 {
     SECT_tdstListOfDNMLights_* hDNMLightsElement;
     /* TODO: decompile from asm/... */
@@ -811,7 +817,7 @@ void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* h
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SECT_fn_hCreateElementLstCharacter(void)
+SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void)
 {
     SECT_tdstListOfSOCharacters_* hCharacterElement;
     /* TODO: decompile from asm/... */

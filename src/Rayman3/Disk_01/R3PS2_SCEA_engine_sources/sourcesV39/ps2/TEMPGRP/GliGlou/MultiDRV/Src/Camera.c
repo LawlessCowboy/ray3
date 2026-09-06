@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct J_ParticleSprite_ J_ParticleSprite_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;

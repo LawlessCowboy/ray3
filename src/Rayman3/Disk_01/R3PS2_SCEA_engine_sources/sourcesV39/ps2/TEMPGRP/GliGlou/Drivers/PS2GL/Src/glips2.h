@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\glips2.h lines 1046–1069 */
 /* addr: 0x002b3e70  size: 72 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

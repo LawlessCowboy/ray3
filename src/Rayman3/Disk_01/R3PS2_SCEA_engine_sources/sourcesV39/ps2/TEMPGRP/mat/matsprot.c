@@ -5,6 +5,8 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct ISI_tdstColor_ ISI_tdstColor_;
+typedef struct ISI_tdstISI_ ISI_tdstISI_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;

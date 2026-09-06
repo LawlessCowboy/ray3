@@ -4,6 +4,18 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct DNM_stDynamics DNM_stDynamics;
+typedef struct DNM_stReport DNM_stReport;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
+typedef struct tdstBrain_ tdstBrain_;
+typedef struct tdstCollSet_ tdstCollSet_;
+typedef struct tdstDynam_ tdstDynam_;
+typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
+typedef struct tdstStandardGame_ tdstStandardGame_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 1085–1116 */
 /* addr: 0x0020dc40  size: 108 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

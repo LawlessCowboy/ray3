@@ -5,6 +5,9 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct _tdstBlockResourceMem _tdstBlockResourceMem;
+typedef struct tdstLipsSynchroTable_ tdstLipsSynchroTable_;
+typedef struct tdstParticleGenerator_ tdstParticleGenerator_;
 typedef struct LST2_tdstAnchorToDEMO_tdxHandleToDemoSOElementOpt LST2_tdstAnchorToDEMO_tdxHandleToDemoSOElementOpt;
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;

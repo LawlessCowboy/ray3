@@ -11,7 +11,7 @@ INCLUDE_DIR := include
 BUILD_DIR := build
 OBJ_DIR := $(BUILD_DIR)/obj
 
-# MWCC 2.4.1.01 and Wibo are intentionally not distributed with this project.
+# CodeWarrior PS2 3.0 (2001-11-26) and Wibo are intentionally not distributed.
 # Set these to local installations, for example:
 #   make WIBO=/path/to/wibo-x86_64 MWCC=/path/to/mwccps2.exe
 WIBO ?= wibo-x86_64

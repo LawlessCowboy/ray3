@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CResData CResData;
+typedef struct sstring sstring;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\C4_R3\harmonx\Inc\L1\PServices\Pustl\sfunctional.h lines 107–107 */
 /* addr: 0x0018c8c0  size: 16 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

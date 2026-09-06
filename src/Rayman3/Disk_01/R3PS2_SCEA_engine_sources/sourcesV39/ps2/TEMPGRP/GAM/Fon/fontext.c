@@ -5,6 +5,20 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_tdstLight_ GLI_tdstLight_;
+typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
+typedef struct WP_tdstGraph_ WP_tdstGraph_;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct tdstAlwaysActiveCharacter_ tdstAlwaysActiveCharacter_;
+typedef struct tdstComport_ tdstComport_;
+typedef struct tdstEngineObject_ tdstEngineObject_;
+typedef struct tdstFamilyList_ tdstFamilyList_;
+typedef struct tdstNodeCamera_ tdstNodeCamera_;
+typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
+typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
+typedef struct tdstState_ tdstState_;
+typedef struct tdstSuperObjectLinks_ tdstSuperObjectLinks_;
+typedef struct tdstViewportManagement_ tdstViewportManagement_;
 typedef struct tdstSubAnimInUse_ tdstSubAnimInUse_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct COL_tdstBoundingSphere_ COL_tdstBoundingSphere_;

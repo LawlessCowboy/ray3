@@ -42,7 +42,7 @@ SHA-1 is `c2c3f5c2ccceedc6745b4738102409f27bbb9f10`.
 
 The optional compile workflow additionally needs:
 
-- Metrowerks `mwccps2.exe` version 2.4.1.01;
+- Metrowerks CodeWarrior PS2 3.0, preferably the 26 November 2001 build;
 - [Wibo](https://github.com/decompals/wibo) (or an equivalent way to run that
   Windows compiler); and
 - the matching PS2 SDK headers/libraries.
@@ -71,6 +71,13 @@ does change target-shaped probes and is not the current candidate. `farcall`
 off and the 8-byte small-data threshold have direct target evidence; the
 remaining switches either match MWCC defaults or still need a real recovered
 function to establish an override.
+
+The ELF comment `MW MIPS C Compiler (2.4.1.01)` does not identify the compiler
+front end: CodeWarrior PS2 3.0 emits that same comment. The November 2001 3.0
+compiler exactly reproduces `fn_pstAllocMind`, including the target's `sd/ld`
+RA save and `daddu` zero idiom; the previously tested 2.4 Build 0017 instead
+emits `sq/lq` and `pextlb`. A later 3.0 Build 38 produces the same matching code,
+so the precise 3.0 build remains to be discriminated with additional functions.
 
 To inspect regenerated source without changing the working tree, use a
 temporary output directory:
@@ -130,7 +137,7 @@ Important decoded records include:
 | `55 00 <type> 00 <role>` | Scalar return/parameter/local descriptor. Roles include return (`13` or integer-return `43`) and parameter (`23`). |
 | `63 00 ...` | Primitive pointer/reference descriptor. |
 | `72 00 <type-ref> <role>` | By-value aggregate descriptor. |
-| `83 00 <shape> ... <type-ref> <role>` | Indirect type: aggregate pointer, array/pointer composition, function pointer, or C++ `this`. An indirect return omits the role and is immediately followed by its function-name marker. |
+| `83 00 <shape> ... <type-ref> <role>` | Indirect type: aggregate pointer, array/pointer composition, function pointer, or C++ `this`. Indirect returns may carry aggregate-return role `a3`; some omit the role and are immediately followed by the function-name marker. |
 | `05 00 12 00 <u32>` | Generic record prefix and link pointer; it is not an `04` variable-address record. |
 
 Linked type records begin with `<abbreviation:u32> <DWARF tag:u16> 12 00

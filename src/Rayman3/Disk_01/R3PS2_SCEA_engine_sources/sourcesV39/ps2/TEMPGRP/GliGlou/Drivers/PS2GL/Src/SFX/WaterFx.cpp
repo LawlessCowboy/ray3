@@ -5,6 +5,25 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct AI_tdstMind_ AI_tdstMind_;
+typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;
+typedef struct WP_tdstListOfArc_ WP_tdstListOfArc_;
+typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct tdstAlwaysActiveCharacter_ tdstAlwaysActiveCharacter_;
+typedef struct tdstCineinfo_ tdstCineinfo_;
+typedef struct tdstCollSet_ tdstCollSet_;
+typedef struct tdstComport_ tdstComport_;
+typedef struct tdstDynam_ tdstDynam_;
+typedef struct tdstMSLight_ tdstMSLight_;
+typedef struct tdstMSSound_ tdstMSSound_;
+typedef struct tdstMSWay_ tdstMSWay_;
+typedef struct tdstMicro_ tdstMicro_;
+typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
+typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
+typedef struct tdstSectInfo_ tdstSectInfo_;
+typedef struct tdstState_ tdstState_;
+typedef struct tdstSuperObjectLinks_ tdstSuperObjectLinks_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;

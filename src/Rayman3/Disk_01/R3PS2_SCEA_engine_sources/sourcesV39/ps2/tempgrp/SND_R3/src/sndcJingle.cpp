@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CResData CResData;
 typedef struct JingleList JingleList;
 typedef struct JingleElt JingleElt;
 

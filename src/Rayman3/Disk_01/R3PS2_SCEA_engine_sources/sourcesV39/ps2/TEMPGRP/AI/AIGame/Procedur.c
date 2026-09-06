@@ -5,6 +5,25 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;
+typedef struct GLI_tdstLight_ GLI_tdstLight_;
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
+typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
+typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct tdstAlwaysActiveCharacter_ tdstAlwaysActiveCharacter_;
+typedef struct tdstCollSet_ tdstCollSet_;
+typedef struct tdstDynam_ tdstDynam_;
+typedef struct tdstLipsSynchroTable_ tdstLipsSynchroTable_;
+typedef struct tdstMSLight_ tdstMSLight_;
+typedef struct tdstMSWay_ tdstMSWay_;
+typedef struct tdstMicro_ tdstMicro_;
+typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
+typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
+typedef struct tdstParticleGenerator_ tdstParticleGenerator_;
+typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
+typedef struct tdstSectInfo_ tdstSectInfo_;
 typedef union tduIdInterpret_ tduIdInterpret_;
 typedef struct RGBAComponent_ RGBAComponent_;
 typedef union RGBAStruct_ RGBAStruct_;
@@ -3651,7 +3670,7 @@ tdstNodeInterpret_* fn_p_stGcResetToIpl(tdstNodeInterpret_* p_stTree)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGcSetActiveMcSlot(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stGcSetActiveMcSlot(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
     /* TODO: decompile from asm/... */
@@ -3671,7 +3690,7 @@ void fn_p_stGcSetActiveMcSlot(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSFX_ActivateWaterCircles(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSFX_ActivateWaterCircles(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
     /* TODO: decompile from asm/... */
@@ -3691,7 +3710,7 @@ void fn_p_stSFX_ActivateWaterCircles(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSFX_ActivateLightReflection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSFX_ActivateLightReflection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
     /* TODO: decompile from asm/... */
@@ -3726,7 +3745,7 @@ tdstNodeInterpret_* fn_p_stWaterEffect_GenerateSplash(HIE_tdstSuperObject_* p_Su
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stWaterEffect_GenerateImpulse(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stWaterEffect_GenerateImpulse(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
     /* TODO: decompile from asm/... */
@@ -3787,7 +3806,7 @@ tdstNodeInterpret_* fn_p_stSetCurrentValueAsInit(HIE_tdstSuperObject_* p_SuperOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stDemoProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stDemoProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
@@ -4589,7 +4608,7 @@ tdstNodeInterpret_* fn_p_stBrainActivationProcedure(HIE_tdstSuperObject_* p_Supe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSetVSyncWait(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSetVSyncWait(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdeProcedureId_ eProcedureId;
     tdstGetSetParam_ stParam;
@@ -7269,7 +7288,7 @@ tdstNodeInterpret_* fn_p_stHitPointsProcedure(HIE_tdstSuperObject_* p_SuperObjPe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stLogWindowProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stLogWindowProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
     /* TODO: decompile from asm/... */

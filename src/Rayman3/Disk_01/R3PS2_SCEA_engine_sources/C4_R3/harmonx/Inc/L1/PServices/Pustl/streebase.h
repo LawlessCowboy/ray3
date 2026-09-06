@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct iterator_base iterator_base;
+typedef struct sTreeLink sTreeLink;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\C4_R3\harmonx\Inc\L1\PServices\Pustl\streebase.h lines 182–195 */
 /* addr: 0x00186d30  size: 136 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

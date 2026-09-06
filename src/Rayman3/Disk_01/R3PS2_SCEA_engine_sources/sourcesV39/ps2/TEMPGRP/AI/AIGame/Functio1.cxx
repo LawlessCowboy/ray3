@@ -4,6 +4,29 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct AI_tdstMind_ AI_tdstMind_;
+typedef struct COL_tdstCollideObject_ COL_tdstCollideObject_;
+typedef struct DNM_stDynamics DNM_stDynamics;
+typedef struct DNM_stObstacle DNM_stObstacle;
+typedef struct DNM_stReport DNM_stReport;
+typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
+typedef struct SECT_tdstListOfSOSectorsInActivityInteraction_ SECT_tdstListOfSOSectorsInActivityInteraction_;
+typedef struct SECT_tdstListOfSOSectorsInGraphicInteraction_ SECT_tdstListOfSOSectorsInGraphicInteraction_;
+typedef struct SECT_tdstSector_ SECT_tdstSector_;
+typedef struct __sFILE __sFILE;
+typedef struct stTfmtLineResults_ stTfmtLineResults_;
+typedef struct tdst3dData_ tdst3dData_;
+typedef struct tdstCollSet_ tdstCollSet_;
+typedef struct tdstDynam_ tdstDynam_;
+typedef struct tdstGetSetParam_ tdstGetSetParam_;
+typedef struct tdstMSSound_ tdstMSSound_;
+typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
+typedef struct tdstStandardGame_ tdstStandardGame_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3961–4404 */
 /* addr: 0x00216fc0  size: 2348 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

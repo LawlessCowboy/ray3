@@ -5,6 +5,10 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct tdst3dData_ tdst3dData_;
+typedef struct tdstAnim3d_ tdstAnim3d_;
+typedef struct tdstEvent_ tdstEvent_;
 typedef struct tdstA3dGENERAL_ tdstA3dGENERAL_;
 
 struct tdstA3dGENERAL_ {

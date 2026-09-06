@@ -5,6 +5,9 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct tdstLipsSynchroTable_ tdstLipsSynchroTable_;
+typedef struct tdstParticleGenerator_ tdstParticleGenerator_;
 typedef struct tdstComport_ tdstComport_;
 typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
 typedef struct tdstMSWay_ tdstMSWay_;

@@ -4,6 +4,12 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct COL_tdstCollideObject_ COL_tdstCollideObject_;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct tdstZdxIndexList_ tdstZdxIndexList_;
+typedef struct tdstZdxList_ tdstZdxList_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZeMem.c lines 100–139 */
 /* addr: 0x0026ced0  size: 308 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

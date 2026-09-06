@@ -4,6 +4,25 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct AI_tdstBatchOrder_ AI_tdstBatchOrder_;
+typedef struct AI_tdstMind_ AI_tdstMind_;
+typedef struct COL_tdstCollideObject_ COL_tdstCollideObject_;
+typedef struct DNM_stDynamics DNM_stDynamics;
+typedef struct DNM_stReport DNM_stReport;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
+typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct tdstCineinfo_ tdstCineinfo_;
+typedef struct tdstCollSet_ tdstCollSet_;
+typedef struct tdstDynam_ tdstDynam_;
+typedef struct tdstEngineObject_ tdstEngineObject_;
+typedef struct tdstList_ tdstList_;
+typedef struct tdstMSLight_ tdstMSLight_;
+typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
+typedef struct tdstStandardGame_ tdstStandardGame_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6566–6587 */
 /* addr: 0x0022f360  size: 176 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -198,7 +217,7 @@ void fn_p_stTemporalChangeSighting(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSetVideoOptions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSetVideoOptions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
     /* TODO: decompile from asm/... */
@@ -230,7 +249,7 @@ tdstNodeInterpret_* fn_p_stChangeBrightness(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSelectResolution(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSelectResolution(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
     /* TODO: decompile from asm/... */
@@ -245,7 +264,7 @@ void fn_p_stSelectResolution(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInte
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSelectDriver(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSelectDriver(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
     /* TODO: decompile from asm/... */

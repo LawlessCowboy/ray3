@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_SpecificPS2GL_Structure_ GLI_SpecificPS2GL_Structure_;
 typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct stLensFlareTab_ stLensFlareTab_;
 typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;

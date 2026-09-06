@@ -5,6 +5,27 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_tdstLight_ GLI_tdstLight_;
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
+typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
+typedef struct WP_tdstListOfArc_ WP_tdstListOfArc_;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct tdstAChannel_ tdstAChannel_;
+typedef struct tdstAlwaysActiveCharacter_ tdstAlwaysActiveCharacter_;
+typedef struct tdstComport_ tdstComport_;
+typedef struct tdstCsaList_ tdstCsaList_;
+typedef struct tdstDsgMem_ tdstDsgMem_;
+typedef struct tdstDsgVar_ tdstDsgVar_;
+typedef struct tdstIntelligence_ tdstIntelligence_;
+typedef struct tdstListOfMacro_ tdstListOfMacro_;
+typedef struct tdstMorphChannelList_ tdstMorphChannelList_;
+typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
+typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
+typedef struct tdstScriptAI_ tdstScriptAI_;
+typedef struct tdstSuperObjectLinks_ tdstSuperObjectLinks_;
+typedef struct tdstZdxList_ tdstZdxList_;
+typedef struct tdstZoneSetList_ tdstZoneSetList_;
 typedef struct tdstBrain_ tdstBrain_;
 typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn;

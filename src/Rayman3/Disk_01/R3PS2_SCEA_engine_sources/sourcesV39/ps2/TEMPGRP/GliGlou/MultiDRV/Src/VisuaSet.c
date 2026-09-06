@@ -5,6 +5,8 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
+typedef struct MOR_stMorphObject_ MOR_stMorphObject_;
 typedef struct ISI_tdstColor_ ISI_tdstColor_;
 typedef struct GEO_tdstVisualSet_ GEO_tdstVisualSet_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;

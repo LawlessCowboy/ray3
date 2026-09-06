@@ -4,6 +4,14 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct _tdstCheapCharacterList _tdstCheapCharacterList;
+typedef struct tdstGetSetParam_ tdstGetSetParam_;
+typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 643–677 */
 /* addr: 0x002290b0  size: 196 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

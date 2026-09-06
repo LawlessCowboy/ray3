@@ -5,6 +5,8 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CResData CResData;
+typedef struct CUUID CUUID;
 typedef struct sstring sstring;
 typedef struct CTextFileSrc CTextFileSrc;
 typedef struct CPS2FileSrcFlow CPS2FileSrcFlow;

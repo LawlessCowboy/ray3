@@ -5,6 +5,9 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct AGO2_MEM_HandleDescriptors_ AGO2_MEM_HandleDescriptors_;
 typedef struct AGO2_MEM_FreeZone_ AGO2_MEM_FreeZone_;
 

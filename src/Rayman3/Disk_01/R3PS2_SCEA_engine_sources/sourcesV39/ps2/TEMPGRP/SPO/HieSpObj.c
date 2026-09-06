@@ -5,6 +5,16 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct COL_tdstBoundingSphere_ COL_tdstBoundingSphere_;
+typedef struct COL_tdstCollideObject_ COL_tdstCollideObject_;
+typedef struct COL_tdstParallelBox_ COL_tdstParallelBox_;
+typedef struct GLI_tdstLight_ GLI_tdstLight_;
+typedef struct HIE_tdstPickInfo_ HIE_tdstPickInfo_;
+typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
+typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
+typedef struct SECT_tdstSector_ SECT_tdstSector_;
+typedef struct tdstEngineObject_ tdstEngineObject_;
+typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
 typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;

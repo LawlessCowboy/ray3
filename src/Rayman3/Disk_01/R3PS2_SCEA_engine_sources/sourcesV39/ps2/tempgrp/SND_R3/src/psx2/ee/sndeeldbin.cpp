@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct CIdObjPtr CIdObjPtr;
 typedef union _tduRefRes _tduRefRes;
 typedef struct _tdstInfoTrackMem _tdstInfoTrackMem;
@@ -680,7 +681,7 @@ void SND_fn_vStartLoad(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId)
+_SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId)
 {
     CEventResData* po_Answer;
     /* TODO: decompile from asm/... */

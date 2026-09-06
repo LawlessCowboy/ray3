@@ -5,6 +5,9 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CVarAccess CVarAccess;
+typedef struct JingleList JingleList;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct CStringIsLess CStringIsLess;
 typedef struct stree stree;
 typedef struct CSndVarType CSndVarType;

@@ -4,6 +4,11 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct stFile_ stFile_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 1110–1292 */
 /* addr: 0x00262f30  size: 1116 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

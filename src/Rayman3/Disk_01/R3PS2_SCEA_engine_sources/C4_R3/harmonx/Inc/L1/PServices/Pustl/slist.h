@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct _Node _Node;
+typedef struct iterator iterator;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\C4_R3\harmonx\Inc\L1\PServices\Pustl\slist.h lines 159–161 */
 /* addr: 0x00186c50  size: 20 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

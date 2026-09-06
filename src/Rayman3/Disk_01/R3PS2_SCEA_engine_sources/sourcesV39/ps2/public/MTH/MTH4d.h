@@ -4,6 +4,11 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
+typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\public\MTH\MTH4d.h lines 112–115 */
 /* addr: 0x002814e0  size: 28 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

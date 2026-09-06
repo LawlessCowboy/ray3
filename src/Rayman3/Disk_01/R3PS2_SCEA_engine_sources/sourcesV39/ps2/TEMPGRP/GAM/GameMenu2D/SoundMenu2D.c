@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef union _SND_tduRefEvt _SND_tduRefEvt;
 
 union _SND_tduRefEvt {

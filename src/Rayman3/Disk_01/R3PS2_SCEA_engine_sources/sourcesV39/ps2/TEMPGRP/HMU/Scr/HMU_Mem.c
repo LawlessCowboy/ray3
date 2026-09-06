@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct sceDmaChan sceDmaChan;
 typedef struct tdstBlockInfo_ tdstBlockInfo_;
 typedef struct HMU_tdstMemoryStructure_ HMU_tdstMemoryStructure_;
 

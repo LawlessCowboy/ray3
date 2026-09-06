@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
 typedef struct CSoundSemaphoreCont CSoundSemaphoreCont;
 typedef struct iterator iterator;
 typedef struct spair spair;

@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\ClipTRIANGLES.c lines 75–118 */
 /* addr: 0x002a4d30  size: 184 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

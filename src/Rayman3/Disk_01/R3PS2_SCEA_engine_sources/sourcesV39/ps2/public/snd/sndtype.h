@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct _tdstAllRetMicroSound _tdstAllRetMicroSound;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\public\snd\sndtype.h lines 485–502 */
 /* addr: 0x001cfa80  size: 72 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

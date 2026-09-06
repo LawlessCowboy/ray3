@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CVarAccess CVarAccess;
 typedef struct CResObj CResObj;
 typedef struct _Node _Node;
 typedef struct V3Ds V3Ds;

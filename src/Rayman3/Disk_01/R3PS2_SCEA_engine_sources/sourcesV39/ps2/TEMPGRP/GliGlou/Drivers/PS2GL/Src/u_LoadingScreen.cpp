@@ -5,6 +5,8 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+typedef struct aggregate aggregate;
 typedef struct sceGsMiptbp1 sceGsMiptbp1;
 typedef union unFunction unFunction;
 typedef struct tagGLlistnode tagGLlistnode;

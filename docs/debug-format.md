@@ -211,8 +211,9 @@ For pointer types (`int*`), a `0x63` byte precedes the `0x23` parameter byte.
 For struct/aggregate types, `0x72` is used in a similar position. `83 00`
 records carry an indirect relocated type reference and are used for pointers to
 named aggregates, composed array/pointer declarations, function pointers, and
-C++ `this`. Parameters include a trailing `0x23`; an indirect return omits a
-role byte and is immediately followed by the function-name marker.
+C++ `this`. Parameters include a trailing `0x23`. Indirect returns either use
+the aggregate-return role `0xa3`, as in `fn_pstAllocMind`, or omit the role and
+are immediately followed by the function-name marker.
 
 #### Address/offset record
 

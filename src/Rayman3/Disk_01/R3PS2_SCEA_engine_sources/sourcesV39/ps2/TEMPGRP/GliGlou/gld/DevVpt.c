@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
 typedef struct GLD_stViewport GLD_stViewport;
 typedef struct stPOINT stPOINT;

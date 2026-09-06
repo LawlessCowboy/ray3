@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct stInterpolatedPosition stInterpolatedPosition;
 typedef struct tdstEvent_ tdstEvent_;
 typedef struct tdstEventInTable_ tdstEventInTable_;
 typedef struct tdstKeyFrame_ tdstKeyFrame_;

@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct DNM_stReport DNM_stReport;
 
 typedef enum anon_enum_00bb26b6 {
     DNM_eMIC_Error = -1,

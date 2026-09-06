@@ -5,6 +5,10 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
+typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct tdstEngineObject_ tdstEngineObject_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;

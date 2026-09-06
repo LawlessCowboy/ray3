@@ -5,6 +5,8 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct _SDC_Instance_ _SDC_Instance_;
+typedef struct tdstSDLCacheEntry_ tdstSDLCacheEntry_;
 typedef struct C_Sdl C_Sdl;
 typedef struct tagGLlistdatas tagGLlistdatas;
 typedef struct GLI_tdstTexture_ GLI_tdstTexture_;

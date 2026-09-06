@@ -5,6 +5,8 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CVarAccess CVarAccess;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct _RollOffParam _RollOffParam;
 typedef struct CResObjParams CResObjParams;
 typedef struct CExtraEventActor CExtraEventActor;

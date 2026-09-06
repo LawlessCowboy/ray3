@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct _stCriticalSection _stCriticalSection;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct RND_tdstRandom_ RND_tdstRandom_;

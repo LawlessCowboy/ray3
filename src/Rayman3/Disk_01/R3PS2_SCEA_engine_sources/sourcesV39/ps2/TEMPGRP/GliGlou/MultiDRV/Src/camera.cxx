@@ -4,6 +4,14 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
+typedef struct GLD_tdstDeviceAttributes_ GLD_tdstDeviceAttributes_;
+typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
+typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
+typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\camera.cxx lines 441–664 */
 /* addr: 0x002b14e0  size: 1632 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

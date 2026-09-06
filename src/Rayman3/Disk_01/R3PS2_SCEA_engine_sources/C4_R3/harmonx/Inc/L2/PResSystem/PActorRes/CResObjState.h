@@ -4,6 +4,14 @@
 
 #include <stddef.h>
 
+/* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct CBankDesc CBankDesc;
+typedef struct CExtraEventActor CExtraEventActor;
+typedef struct CLinkActor CLinkActor;
+typedef struct CLinkTypeActorCont CLinkTypeActorCont;
+typedef struct CResObjParams CResObjParams;
+typedef struct PostponedPlay PostponedPlay;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\C4_R3\harmonx\Inc\L2\PResSystem\PActorRes\CResObjState.h lines 92–210 */
 /* addr: 0x0018bfe0  size: 2096 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
