@@ -993,6 +993,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
       "status": "MATCH"
     },
+    "0x0029fd50": {
+      "address": "0x0029fd50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "M2D_fn_iNbTexturesNeededForMenu",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/SoundMenu2D.c",
+      "status": "MATCH"
+    },
     "0x002a88b0": {
       "address": "0x002a88b0",
       "compiler_profile": "mwccps2-3.0-011126-o3",

@@ -3165,10 +3165,10 @@ void fn_vR3RecomputeGlobalScore(void)
  */
 unsigned int M2D_fn_ulGetRevisitEnvironmentNumber(void)
 {
-    if (g_RevisitMode)
-        goto revisit;
-    return 0;
-revisit:
+    if (g_RevisitMode != 0) {
+    } else {
+        return 0;
+    }
     return g_RevisitIndCurrentEnv;
 }
 
