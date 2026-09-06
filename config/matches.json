@@ -1169,6 +1169,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_anal.c",
       "status": "MATCH"
     },
+    "0x002f6770": {
+      "address": "0x002f6770",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vStopAllConstantFFBEffectForAllDevices",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_main.c",
+      "status": "MATCH"
+    },
     "0x002f7020": {
       "address": "0x002f7020",
       "compiler_profile": "mwccps2-3.0-011126-o3",

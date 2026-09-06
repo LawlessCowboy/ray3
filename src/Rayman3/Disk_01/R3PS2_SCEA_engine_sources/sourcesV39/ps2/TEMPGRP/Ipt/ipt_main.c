@@ -184,6 +184,11 @@ int IPT_g_c_szValidExtraKeyForChat;
 IPT_tdstLineCommand_ IPT_g_hLineCommand;
 IPT_tdstInput_ IPT_g_hInputStructure;
 int IPT_gd_hKeyAndPadDefine;
+extern stDevice INO_g_a_stDIDevice[];
+extern signed char INO_fn_cStopFFBEffectWithFade(unsigned int ulCurrentTime, stDevice* pDevice, float xFadeOutStopValue, float xFadeOutTime);
+extern void INO_fn_vStopAllFFBEffectForAllDevice(void);
+extern void INO_fn_vStopAllFFBEffectForDevice(unsigned int ulCurrentTime, stDevice* pDevice);
+extern void INO_fn_vStopFFBEffect(unsigned int ulCurrentTime, stDevice* pDevice, signed char cEffectNumber);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 60–243 */
 /* addr: 0x002f5ee0  size: 1988 bytes */
@@ -395,7 +400,7 @@ signed char IPT_fn_cStopFFBEffectWithFade(unsigned int ulCurrentTime, unsigned c
  */
 void IPT_fn_vStopAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime)
 {
-    /* TODO: decompile from asm/... */
+    INO_fn_vStopAllFFBEffectForAllDevice();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1157–1157 */
