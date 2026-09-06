@@ -33,6 +33,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/engmain.c",
       "status": "MATCH"
     },
+    "0x0012c470": {
+      "address": "0x0012c470",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SetPal60",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/winmain.c",
+      "status": "MATCH"
+    },
+    "0x0012c4a0": {
+      "address": "0x0012c4a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SetPal50",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/winmain.c",
+      "status": "MATCH"
+    },
     "0x0012f490": {
       "address": "0x0012f490",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -1639,6 +1655,14 @@
       "name": "PCS_fn_hGetZddGeoObjOfPhysicalCollSet",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PIC/Picking.c",
+      "status": "MATCH"
+    },
+    "0x00318d90": {
+      "address": "0x00318d90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "channel_debug_printf",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ps2/ps2critsect.c",
       "status": "MATCH"
     },
     "0x00318dc0": {

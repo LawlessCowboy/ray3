@@ -146,7 +146,10 @@ int main(void)
  */
 void SetPal60(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_eVideoMode == PAL_50) {
+        g_eVideoMode = PAL_60;
+        DISP_fMonitorfrequency = 60.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\rm3\winmain.c lines 125–131 */
@@ -162,5 +165,8 @@ void SetPal60(void)
  */
 void SetPal50(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_eVideoMode == PAL_60) {
+        g_eVideoMode = PAL_50;
+        DISP_fMonitorfrequency = 50.0f;
+    }
 }

@@ -33,9 +33,9 @@ struct SemaParam {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int channel_debug_printf(void)
+int channel_debug_printf(int channel, const char *format, ...)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2critsect.c lines 72–89 */
