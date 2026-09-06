@@ -388,7 +388,7 @@ void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime)
  */
 signed char IPT_fn_cStopFFBEffectWithFade(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber, float xFadeOutStopValue, float xFadeOutTime)
 {
-    /* TODO: decompile from asm/... */
+    return INO_fn_cStopFFBEffectWithFade(ulCurrentTime, IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hDeviceHandle, xFadeOutStopValue, xFadeOutTime);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1163–1163 */
@@ -412,7 +412,7 @@ void IPT_fn_vStopAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime)
  */
 void IPT_fn_vStopAllConstantFFBEffectForDevice(unsigned int ulCurrentTime, unsigned char ucPadNumber)
 {
-    /* TODO: decompile from asm/... */
+    INO_fn_vStopAllFFBEffectForDevice(ulCurrentTime, IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hDeviceHandle);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1150–1150 */
@@ -424,7 +424,7 @@ void IPT_fn_vStopAllConstantFFBEffectForDevice(unsigned int ulCurrentTime, unsig
  */
 void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber)
 {
-    /* TODO: decompile from asm/... */
+    INO_fn_vStopFFBEffect(ulCurrentTime, IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hDeviceHandle, cEffectNumber);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1138–1138 */
