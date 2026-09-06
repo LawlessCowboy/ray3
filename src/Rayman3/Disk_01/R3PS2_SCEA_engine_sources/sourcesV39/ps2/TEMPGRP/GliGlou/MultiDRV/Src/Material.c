@@ -1347,7 +1347,7 @@ void GLI_xSetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p
  */
 void GLI_xGetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
-    /* TODO: decompile from asm/... */
+    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)hMaterial + 0x34);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 198–201 */
@@ -1375,7 +1375,7 @@ void GLI_xSetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stCol
  */
 void GLI_xGetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
-    /* TODO: decompile from asm/... */
+    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)hMaterial + 0x4);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 179–186 */

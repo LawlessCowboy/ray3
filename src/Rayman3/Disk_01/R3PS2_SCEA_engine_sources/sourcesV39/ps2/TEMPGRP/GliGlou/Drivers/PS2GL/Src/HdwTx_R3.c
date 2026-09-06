@@ -103,7 +103,7 @@ struct GLI_tdstTexture_ {
     int lTextureQuality; /* +0x4 */
     int p_vBitMap; /* +0x8 */
     int p_vColorTable; /* +0xc */
-    int p_stSpecParam; /* +0x10 */
+    int* p_stSpecParam; /* +0x10 */
     int lTextureCaps; /* +0x14 */
     unsigned short lHeight; /* +0x18 */
     unsigned short lWidth; /* +0x1a */
@@ -1680,7 +1680,8 @@ void LoadTextureBlocInternal(int DestTextureBlocID, int ChannelId)
  */
 void DisableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
 {
-    /* TODO: decompile from asm/... */
+    p_stMaterial->p_stTexture->lTextureCaps &= ~0x100;
+    p_stMaterial->a_stMultiMaterial[0].ulTextureProperties &= ~0x40;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1750–1752 */
@@ -1694,7 +1695,8 @@ void DisableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
  */
 void EnableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
 {
-    /* TODO: decompile from asm/... */
+    p_stMaterial->p_stTexture->lTextureCaps |= 0x100;
+    p_stMaterial->a_stMultiMaterial[0].ulTextureProperties |= 0x40;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1740–1741 */
@@ -1707,7 +1709,7 @@ void EnableAlphaTest(GLI_tdstMaterial_* p_stMaterial)
  */
 void EnableAlpha(GLI_tdstMaterial_* p_stMaterial)
 {
-    /* TODO: decompile from asm/... */
+    p_stMaterial->p_stTexture->lTextureCaps |= 8;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1705–1733 */
@@ -1743,7 +1745,8 @@ int GLI_iLoadMenuTexture(GLI_tdstTexture_* pp_stTexture, char* TxrName)
  */
 void GLI_vReloadMenuTextureData(GLI_tdstMaterial_* pMaterial, void* pWhereToLoad, int TextureName, unsigned int MaxSize)
 {
-    /* TODO: decompile from asm/... */
+    *pMaterial->p_stTexture->p_stSpecParam = TextureName;
+    GLI_iLoadTexture(pMaterial->p_stTexture, pWhereToLoad, MaxSize);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1549–1677 */

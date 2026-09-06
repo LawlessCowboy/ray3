@@ -2899,6 +2899,9 @@ struct SCT_tdstListOfSoundEvent_ {
     _SND_tduRefEvt uSoundEvent; /* +0x4 */
 };
 
+extern unsigned char g_ucAIModuleId;
+extern void Erm_fn_v_UpdateLastError(unsigned short, unsigned char, unsigned int, unsigned short, int, unsigned char, unsigned char, char*);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 42–42 */
 /* addr: 0x001fe9c0  size: 36 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2908,7 +2911,7 @@ struct SCT_tdstListOfSoundEvent_ {
  */
 void fn_vOnAIErm_M_UpdateLastError(unsigned short FatalErrorNum, char* szMsg)
 {
-    /* TODO: decompile from asm/... */
+    Erm_fn_v_UpdateLastError(67, g_ucAIModuleId, 0, FatalErrorNum, -1, 255, 255, szMsg);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 262–271 */

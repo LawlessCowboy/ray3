@@ -341,7 +341,7 @@ void GLI_xGetLightBackgroundColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_s
 {
     /* line map: */
     /*   line 834 @ +0x000 */
-    *p_stColor = p_stLight->stBackgroundColor;
+    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)p_stLight + 0x110);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 764–765 */
@@ -468,7 +468,7 @@ void GLI_xGetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor)
 {
     /* line map: */
     /*   line 692 @ +0x000 */
-    *p_stColor = p_stLight->stColor;
+    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)p_stLight + 0x90);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 686–687 */
@@ -483,7 +483,7 @@ void GLI_xSetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor)
 {
     /* line map: */
     /*   line 687 @ +0x000 */
-    p_stLight->stColor = *p_stColor;
+    *(GEO_tdstColor_* )((unsigned char*)p_stLight + 0x90) = *(GEO_tdstColor_*)p_stColor;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 678–679 */

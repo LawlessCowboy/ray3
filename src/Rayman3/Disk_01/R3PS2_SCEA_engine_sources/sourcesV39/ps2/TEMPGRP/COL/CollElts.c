@@ -208,7 +208,7 @@ void COL_vCreateElementAlignedBoxes(COL_tdstCollideObject_* hObject, short* p_hE
  */
 void COL_vSetRadiusOfIndexedSphere(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfSphere, float xRadius)
 {
-    /* TODO: decompile from asm/... */
+    (*(COL_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres[xNumberOfSphere].xRadius = xRadius;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 369–370 */
@@ -272,5 +272,5 @@ void COL_vCreateElementSpheres(COL_tdstCollideObject_* hObject, short* p_hElemen
  */
 void COL_vGetGameMaterialOfIndexedTriangles(COL_tdstCollideObject_* hObject, short hElement, GMT_tdstGameMaterial_* p_hMaterial)
 {
-    /* TODO: decompile from asm/... */
+    *(GMT_tdstGameMaterial_**)p_hMaterial = (*(COL_tdstElementIndexedTriangles_***)&hObject->d_stListOfElements)[hElement]->hMaterial;
 }

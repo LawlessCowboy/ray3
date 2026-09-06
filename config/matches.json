@@ -153,6 +153,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
       "status": "MATCH"
     },
+    "0x001fe9c0": {
+      "address": "0x001fe9c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vOnAIErm_M_UpdateLastError",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WParc.c",
+      "status": "MATCH"
+    },
     "0x001fef60": {
       "address": "0x001fef60",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -263,6 +271,22 @@
       "name": "fn_vGetUltraOperatorPerso",
       "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Operator.c",
+      "status": "MATCH"
+    },
+    "0x0024caf0": {
+      "address": "0x0024caf0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "COL_vSetRadiusOfIndexedSphere",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollElts.c",
+      "status": "MATCH"
+    },
+    "0x0024cc80": {
+      "address": "0x0024cc80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "COL_vGetGameMaterialOfIndexedTriangles",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollElts.c",
       "status": "MATCH"
     },
     "0x0024e080": {
@@ -913,6 +937,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Init_Gli.c",
       "status": "MATCH"
     },
+    "0x002a8a80": {
+      "address": "0x002a8a80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xGetLightBackgroundColor",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "status": "MATCH"
+    },
+    "0x002a8bc0": {
+      "address": "0x002a8bc0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xGetLightColor",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "status": "MATCH"
+    },
+    "0x002a8bf0": {
+      "address": "0x002a8bf0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xSetLightColor",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "status": "MATCH"
+    },
     "0x002a9c60": {
       "address": "0x002a9c60",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -942,6 +990,30 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_xSetMaterialType",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
+    "0x002a9f20": {
+      "address": "0x002a9f20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xGetMaterialDiffuseCoef",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
+    "0x002a9fa0": {
+      "address": "0x002a9fa0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xGetMaterialColor",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
+    "0x002aa020": {
+      "address": "0x002aa020",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xGetMaterialAmbientCoef",
+      "size": 36,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"
     },
@@ -1105,6 +1177,38 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
       "status": "MATCH"
     },
+    "0x002c57d0": {
+      "address": "0x002c57d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "DisableAlphaTest",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c5800": {
+      "address": "0x002c5800",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "EnableAlphaTest",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c5820": {
+      "address": "0x002c5820",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "EnableAlpha",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c58d0": {
+      "address": "0x002c58d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vReloadMenuTextureData",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
     "0x002c7070": {
       "address": "0x002c7070",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -1231,6 +1335,230 @@
       "name": "IPT_fn_vFirstInitInput",
       "size": 48,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/p5/ipt_scpt.c",
+      "status": "MATCH"
+    },
+    "0x002f7490": {
+      "address": "0x002f7490",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vGetJoystickAxesForPadNumber2",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f74d0": {
+      "address": "0x002f74d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetJoystickAxesForPadNumber2",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f78c0": {
+      "address": "0x002f78c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_xGetSectorForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f78f0": {
+      "address": "0x002f78f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetSectorForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7920": {
+      "address": "0x002f7920",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_xGetRotationAngleForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7950": {
+      "address": "0x002f7950",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetRotationAngleForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7980": {
+      "address": "0x002f7980",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_xGetTrueAnalogForceForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f79b0": {
+      "address": "0x002f79b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetTrueAnalogForceForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f79e0": {
+      "address": "0x002f79e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_xGetAnalogForceForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7a10": {
+      "address": "0x002f7a10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetAnalogForceForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7a40": {
+      "address": "0x002f7a40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_wGetVAxisForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7a70": {
+      "address": "0x002f7a70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetVAxisForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7aa0": {
+      "address": "0x002f7aa0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vGetHAxisForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7ad0": {
+      "address": "0x002f7ad0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetHAxisForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7b00": {
+      "address": "0x002f7b00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vGetGlobalVectorForPadNumber",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7b40": {
+      "address": "0x002f7b40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetGlobalVectorForPadNumber",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7c20": {
+      "address": "0x002f7c20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetCenterForPadNumber",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7c60": {
+      "address": "0x002f7c60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetMinMaxAxeYForPadNumber",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7ca0": {
+      "address": "0x002f7ca0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetMinMaxAxeXForPadNumber",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7ce0": {
+      "address": "0x002f7ce0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vGetCenterForPadNumber",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7d20": {
+      "address": "0x002f7d20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vGetMinMaxAxeYForPadNumber",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7d60": {
+      "address": "0x002f7d60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vGetMinMaxAxeXForPadNumber",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7da0": {
+      "address": "0x002f7da0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_bGetKeyboardCancelInertiaForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7e50": {
+      "address": "0x002f7e50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vGetJoystickAxesForPadNumber",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7e90": {
+      "address": "0x002f7e90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetKeyboardCancelInertiaForPadNumber",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7f30": {
+      "address": "0x002f7f30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vSetJoystickAxesForPadNumber",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MATCH"
+    },
+    "0x002f7fd0": {
+      "address": "0x002f7fd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "ISI_fn_dGetVertexRLI",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ISI/ISI.c",
+      "status": "MATCH"
+    },
+    "0x002f8040": {
+      "address": "0x002f8040",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "ISI_fn_xGetNbVertexRLILOD",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ISI/ISI.c",
       "status": "MATCH"
     },
     "0x00314bd0": {

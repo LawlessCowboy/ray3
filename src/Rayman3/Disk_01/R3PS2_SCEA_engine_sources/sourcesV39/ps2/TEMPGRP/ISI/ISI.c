@@ -67,7 +67,7 @@ unsigned char IPT_fn_ucGetFirstValidJoystick(void)
  */
 ISI_tdstColor_* ISI_fn_dGetVertexRLI(void* _hISI)
 {
-    /* TODO: decompile from asm/... */
+    return ((ISI_tdstISI_*)_hISI)->d_stISILOD->d_stVertexRLI;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 704–705 */
@@ -106,7 +106,10 @@ void ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD)
  */
 short ISI_fn_xGetNbVertexRLILOD(void* _hISI, short _xNumISILOD)
 {
-    /* TODO: decompile from asm/... */
+    ISI_tdstISI_* hISI;
+
+    hISI = (ISI_tdstISI_*)_hISI;
+    return hISI->d_stISILOD[_xNumISILOD].xNbVertexRLI;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 601–618 */

@@ -173,9 +173,10 @@ void IPT_fn_vInitCommandLines(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void IPT_fn_vGetJoystickAxesForPadNumber2(unsigned char ucPadNumber, IPT_tdstEntryElement_* p_hJoyAxeX, IPT_tdstEntryElement_* p_hJoyAxeY)
+void IPT_fn_vGetJoystickAxesForPadNumber2(unsigned char ucPadNumber, IPT_tdstEntryElement_** p_hJoyAxeX, IPT_tdstEntryElement_** p_hJoyAxeY)
 {
-    /* TODO: decompile from asm/... */
+    *p_hJoyAxeX = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickAxeZ;
+    *p_hJoyAxeY = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickAxeR;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 300–306 */
@@ -200,7 +201,10 @@ void IPT_fn_vGetJoystickAxesForPadNumber2(unsigned char ucPadNumber, IPT_tdstEnt
  */
 void IPT_fn_vSetJoystickAxesForPadNumber2(unsigned char ucPadNumber, IPT_tdstEntryElement_* hJoyAxeX, IPT_tdstEntryElement_* hJoyAxeY, IPT_tdstEntryElement_* hJoyAxeX1, IPT_tdstEntryElement_* hJoyAxeY1)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickAxeX = hJoyAxeX;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickAxeY = hJoyAxeY;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickAxeZ = hJoyAxeX1;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickAxeR = hJoyAxeY1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 283–287 */
@@ -337,7 +341,7 @@ void IPT_fn_vSetKeyAndPadButtonForPadNumber(unsigned char ucPadNumber, unsigned 
  */
 int IPT_fn_xGetSectorForPadNumber(unsigned char ucPadNumber)
 {
-    /* TODO: decompile from asm/... */
+    return IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.lSector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 215–216 */
@@ -350,7 +354,7 @@ int IPT_fn_xGetSectorForPadNumber(unsigned char ucPadNumber)
  */
 void IPT_fn_vSetSectorForPadNumber(unsigned char ucPadNumber, int lSector)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.lSector = lSector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 210–211 */
@@ -363,7 +367,7 @@ void IPT_fn_vSetSectorForPadNumber(unsigned char ucPadNumber, int lSector)
  */
 float IPT_fn_xGetRotationAngleForPadNumber(unsigned char ucPadNumber)
 {
-    /* TODO: decompile from asm/... */
+    return IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.xRotationAngle;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 205–206 */
@@ -376,7 +380,7 @@ float IPT_fn_xGetRotationAngleForPadNumber(unsigned char ucPadNumber)
  */
 void IPT_fn_vSetRotationAngleForPadNumber(unsigned char ucPadNumber, float xRotationAngle)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.xRotationAngle = xRotationAngle;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 200–201 */
@@ -389,7 +393,7 @@ void IPT_fn_vSetRotationAngleForPadNumber(unsigned char ucPadNumber, float xRota
  */
 float IPT_fn_xGetTrueAnalogForceForPadNumber(unsigned char ucPadNumber)
 {
-    /* TODO: decompile from asm/... */
+    return IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.xTrueAnalogForce;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 195–196 */
@@ -402,7 +406,7 @@ float IPT_fn_xGetTrueAnalogForceForPadNumber(unsigned char ucPadNumber)
  */
 void IPT_fn_vSetTrueAnalogForceForPadNumber(unsigned char ucPadNumber, float xTrueAnalogForce)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.xTrueAnalogForce = xTrueAnalogForce;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 190–191 */
@@ -415,7 +419,7 @@ void IPT_fn_vSetTrueAnalogForceForPadNumber(unsigned char ucPadNumber, float xTr
  */
 float IPT_fn_xGetAnalogForceForPadNumber(unsigned char ucPadNumber)
 {
-    /* TODO: decompile from asm/... */
+    return IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.xAnalogForce;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 185–186 */
@@ -428,7 +432,7 @@ float IPT_fn_xGetAnalogForceForPadNumber(unsigned char ucPadNumber)
  */
 void IPT_fn_vSetAnalogForceForPadNumber(unsigned char ucPadNumber, float xAnalogForce)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.xAnalogForce = xAnalogForce;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 180–181 */
@@ -441,7 +445,7 @@ void IPT_fn_vSetAnalogForceForPadNumber(unsigned char ucPadNumber, float xAnalog
  */
 short IPT_fn_wGetVAxisForPadNumber(unsigned char ucPadNumber)
 {
-    /* TODO: decompile from asm/... */
+    return IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.wVerticalAxis;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 175–176 */
@@ -454,7 +458,7 @@ short IPT_fn_wGetVAxisForPadNumber(unsigned char ucPadNumber)
  */
 void IPT_fn_vSetVAxisForPadNumber(unsigned char ucPadNumber, short wVerticalAxis)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.wVerticalAxis = wVerticalAxis;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 170–171 */
@@ -467,7 +471,7 @@ void IPT_fn_vSetVAxisForPadNumber(unsigned char ucPadNumber, short wVerticalAxis
  */
 short IPT_fn_vGetHAxisForPadNumber(unsigned char ucPadNumber)
 {
-    /* TODO: decompile from asm/... */
+    return IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.wHorizontalAxis;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 165–166 */
@@ -480,7 +484,7 @@ short IPT_fn_vGetHAxisForPadNumber(unsigned char ucPadNumber)
  */
 void IPT_fn_vSetHAxisForPadNumber(unsigned char ucPadNumber, short wHorizontalAxis)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.wHorizontalAxis = wHorizontalAxis;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 160–161 */
@@ -493,7 +497,7 @@ void IPT_fn_vSetHAxisForPadNumber(unsigned char ucPadNumber, short wHorizontalAx
  */
 void IPT_fn_vGetGlobalVectorForPadNumber(unsigned char ucPadNumber, MTH3D_tdstVector_* p_stGlobalVector)
 {
-    /* TODO: decompile from asm/... */
+    *p_stGlobalVector = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.stGlobalVector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 155–156 */
@@ -506,7 +510,7 @@ void IPT_fn_vGetGlobalVectorForPadNumber(unsigned char ucPadNumber, MTH3D_tdstVe
  */
 void IPT_fn_vSetGlobalVectorForPadNumber(unsigned char ucPadNumber, MTH3D_tdstVector_* p_stGlobalVector)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.stGlobalVector = *p_stGlobalVector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 133–140 */
@@ -561,7 +565,8 @@ void IPT_fn_vSetAllOutputValueForPadNumber(unsigned char ucPadNumber, MTH3D_tdst
  */
 void IPT_fn_vSetCenterForPadNumber(unsigned char ucPadNumber, signed char cJoystickXCenter, signed char cJoystickYCenter)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickXcenter = cJoystickXCenter;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickYcenter = cJoystickYCenter;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 121–123 */
@@ -580,7 +585,8 @@ void IPT_fn_vSetCenterForPadNumber(unsigned char ucPadNumber, signed char cJoyst
  */
 void IPT_fn_vSetMinMaxAxeYForPadNumber(unsigned char ucPadNumber, signed char cJoystickYmin, signed char cJoystickYmax)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickYmin = cJoystickYmin;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickYmax = cJoystickYmax;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 115–117 */
@@ -599,7 +605,8 @@ void IPT_fn_vSetMinMaxAxeYForPadNumber(unsigned char ucPadNumber, signed char cJ
  */
 void IPT_fn_vSetMinMaxAxeXForPadNumber(unsigned char ucPadNumber, signed char cJoystickXmin, signed char cJoystickXmax)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickXmin = cJoystickXmin;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickXmax = cJoystickXmax;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 109–111 */
@@ -619,7 +626,8 @@ void IPT_fn_vSetMinMaxAxeXForPadNumber(unsigned char ucPadNumber, signed char cJ
  */
 void IPT_fn_vGetCenterForPadNumber(unsigned char ucPadNumber, signed char* p_cJoystickXCenter, signed char* p_cJoystickYCenter)
 {
-    /* TODO: decompile from asm/... */
+    *p_cJoystickXCenter = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickXcenter;
+    *p_cJoystickYCenter = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickYcenter;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 103–105 */
@@ -639,7 +647,8 @@ void IPT_fn_vGetCenterForPadNumber(unsigned char ucPadNumber, signed char* p_cJo
  */
 void IPT_fn_vGetMinMaxAxeYForPadNumber(unsigned char ucPadNumber, signed char* p_cJoystickYmin, signed char* p_cJoystickYmax)
 {
-    /* TODO: decompile from asm/... */
+    *p_cJoystickYmin = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickYmin;
+    *p_cJoystickYmax = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickYmax;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 97–99 */
@@ -659,7 +668,8 @@ void IPT_fn_vGetMinMaxAxeYForPadNumber(unsigned char ucPadNumber, signed char* p
  */
 void IPT_fn_vGetMinMaxAxeXForPadNumber(unsigned char ucPadNumber, signed char* p_cJoystickXmin, signed char* p_cJoystickXmax)
 {
-    /* TODO: decompile from asm/... */
+    *p_cJoystickXmin = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickXmin;
+    *p_cJoystickXmax = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].cJoystickXmax;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 87–88 */
@@ -672,7 +682,7 @@ void IPT_fn_vGetMinMaxAxeXForPadNumber(unsigned char ucPadNumber, signed char* p
  */
 unsigned char IPT_fn_bGetKeyboardCancelInertiaForPadNumber(unsigned char ucPadNumber)
 {
-    /* TODO: decompile from asm/... */
+    return IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].bCancelKeyboardInertia;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 78–83 */
@@ -720,9 +730,10 @@ void IPT_fn_vGetKeyboardAxesForPadNumber(unsigned char ucPadNumber, IPT_tdstEntr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void IPT_fn_vGetJoystickAxesForPadNumber(unsigned char ucPadNumber, IPT_tdstEntryElement_* p_hJoyAxeX, IPT_tdstEntryElement_* p_hJoyAxeY)
+void IPT_fn_vGetJoystickAxesForPadNumber(unsigned char ucPadNumber, IPT_tdstEntryElement_** p_hJoyAxeX, IPT_tdstEntryElement_** p_hJoyAxeY)
 {
-    /* TODO: decompile from asm/... */
+    *p_hJoyAxeX = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickAxeX;
+    *p_hJoyAxeY = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickAxeY;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 67–68 */
@@ -735,7 +746,7 @@ void IPT_fn_vGetJoystickAxesForPadNumber(unsigned char ucPadNumber, IPT_tdstEntr
  */
 void IPT_fn_vSetKeyboardCancelInertiaForPadNumber(unsigned char ucPadNumber, unsigned char bCancelInertia)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].bCancelKeyboardInertia = bCancelInertia;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 58–63 */
@@ -780,5 +791,6 @@ void IPT_fn_vSetKeyboardAxesForPadNumber(unsigned char ucPadNumber, IPT_tdstEntr
  */
 void IPT_fn_vSetJoystickAxesForPadNumber(unsigned char ucPadNumber, IPT_tdstEntryElement_* hJoyAxeX, IPT_tdstEntryElement_* hJoyAxeY)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickAxeX = hJoyAxeX;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickAxeY = hJoyAxeY;
 }
