@@ -92,6 +92,7 @@ typedef struct tdstFrame3d_ tdstFrame3d_;
 
 void GLI_vGetLightAlphas(GLI_tdstLight_* p_stLight, float* p_xLittleAlpha, float* p_xBigAlpha);
 void GLI_vSetLightAlphas(GLI_tdstLight_* p_stLight, float xLittleAlpha, float xBigAlpha);
+void GLI_vSetLightNearFar(GLI_tdstLight_* p_stLight, float xNear, float xFar);
 void GLI_xSetLightState(GLI_tdstLight_* p_stLight, int ucOnOff);
 void GLI_xGetLightState(GLI_tdstLight_* p_stLight, unsigned char* p_ucOnOff);
 void GLI_vSetLightType(GLI_tdstLight_* p_stLight, int lTypeOfLight);
@@ -745,7 +746,7 @@ unsigned char g_ucGameModuleId;
  */
 unsigned int fn_ulDynamSizeOf(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0x0C;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1344–1353 */
@@ -1124,7 +1125,7 @@ void fn_vMSLightSetLittleAlpha(tdstMSLight_* h_MSLight, float xLittleAlpha)
  */
 void fn_vMSLightSetNearFar(tdstMSLight_* h_MSLight, float xNear, float xFar)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vSetLightNearFar(h_MSLight->p_stLight, xNear, xFar);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1012–1012 */
@@ -1294,7 +1295,7 @@ void fn_vLightAlloc(tdstEngineObject_* p_stObject)
  */
 unsigned int fn_ulLightSizeOf(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0x40;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 234–288 */

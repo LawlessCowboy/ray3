@@ -13,6 +13,11 @@ baseline profile is encoded in `tools/match.py` and the Makefile.
    python3 tools/match.py show FUNCTION
    ```
 
+   Then run an initial `python3 tools/match.py check FUNCTION` before editing.
+   If it already reports `MATCH`, treat it as a pre-existing match: record it
+   with `--record`, report that no source change was needed, and select another
+   worklist function.
+
 3. Reconstruct natural C/C++ using the debug signature, target line map, and
    generated assembly. Prefer original-looking control flow, macros, types,
    declaration order, and formatting.
@@ -50,6 +55,12 @@ baseline profile is encoded in `tools/match.py` and the Makefile.
    After a verified `MATCH`, run `python3 tools/match.py check FUNCTION --record`
    so the coordinator's worklist excludes the completed function. A reported
    match that is not recorded remains eligible for redispatch.
+
+   For a useful but unsuccessful attempt, record it with
+   `python3 tools/match.py check FUNCTION --record-attempt --model MODEL
+   --reason "concise mismatch diagnosis"`. The manifest keeps the attempted
+   implementation and verifier diagnostics for later workers; failed attempts
+   remain eligible for deliberate retry.
 
 The matcher compiles the owning translation unit, caches the object by source
 and compiler profile, resolves named MIPS relocations against the retail ELF,

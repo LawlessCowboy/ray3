@@ -2226,5 +2226,5 @@ unsigned char GAM_MultiVP_fn_ucGetNumberOfColumns(void)
  */
 unsigned char GAM_MultiVP_fn_ucGetMaxNumberOfPlayers(void)
 {
-    /* TODO: decompile from asm/... */
+    return 4;
 }

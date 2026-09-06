@@ -1589,7 +1589,7 @@ void CAM_fn_vResetArrayOfTransparentSuperObject(tdstCineinfo_* _hCineinfo)
  */
 void CAM_fn_vCineInfoSetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo, HIE_tdstSuperObject_* _hSuperObject)
 {
-    /* TODO: decompile from asm/... */
+    _hIntCineinfo->hSuperObjectTargeted = _hSuperObject;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 951–977 */
@@ -1865,7 +1865,7 @@ void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* _hCineinfo)
  */
 unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo)
 {
-    /* TODO: decompile from asm/... */
+    return _hIntCineinfo->bDebugCamera;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 650–650 */
@@ -1877,7 +1877,7 @@ unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _h
  */
 char CAM_fn_cCineInfoGetChannel(tdstInternalStructurCineinfo_* _hIntCineinfo)
 {
-    /* TODO: decompile from asm/... */
+    return _hIntCineinfo->cChannel;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 632–632 */
@@ -1889,7 +1889,7 @@ char CAM_fn_cCineInfoGetChannel(tdstInternalStructurCineinfo_* _hIntCineinfo)
  */
 HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo)
 {
-    /* TODO: decompile from asm/... */
+    return _hIntCineinfo->hSuperObjectTargeted;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 614–614 */
@@ -2118,5 +2118,5 @@ void CAM_fn_vCineinfoAlloc(tdstEngineObject_* _p_stObject)
  */
 unsigned int CAM_fn_ulCineinfoSizeOf(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0x258;
 }

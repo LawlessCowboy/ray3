@@ -1125,6 +1125,7 @@ struct AI_tdstMind_ {
 extern void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode);
 extern void SECT_fn_vIsolateDNMLightsListNode(SECT_tdstListOfDNMLights_* hNode);
 extern SECT_tdstListOfDNMLights_* fn_hMSLightGetLightNodeInSector(tdstMSLight_* hMSLight);
+extern unsigned char PLD_fn_bIsInFix(void* Ptr);
 
 int g_hCharacterLauchingSoundEvents;
 int SECT_hFatherSector;
@@ -1141,7 +1142,7 @@ unsigned char g_ucGameModuleId;
  */
 unsigned int fn_ulMicroSizeOf(void)
 {
-    /* TODO: decompile from asm/... */
+    return sizeof(tdstMicro_);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 634–644 */
@@ -1261,7 +1262,7 @@ HIE_tdstSuperObject_* GAM_fn_hGetCurrentSector(HIE_tdstSuperObject_* _hCharacter
  */
 void fn_vSectInfoSetCurrentSector(tdstSectInfo_* h_SectInfo, HIE_tdstSuperObject_* hCurrentSector)
 {
-    /* TODO: decompile from asm/... */
+    h_SectInfo->hCurrentSector = hCurrentSector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 481–481 */
@@ -1273,7 +1274,7 @@ void fn_vSectInfoSetCurrentSector(tdstSectInfo_* h_SectInfo, HIE_tdstSuperObject
  */
 HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo)
 {
-    /* TODO: decompile from asm/... */
+    return h_SectInfo->hCurrentSector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 460–466 */
@@ -1370,7 +1371,6 @@ void fn_vSectInfoInitForSingleCharacter(HIE_tdstSuperObject_* hCharacter, MTH3D_
  */
 void fn_vSectInfoCopyClone(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 300–322 */
@@ -1443,7 +1443,7 @@ void fn_vSectInfoInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectI
  */
 unsigned char fn_bIsInFix(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    return PLD_fn_bIsInFix(p_stObject);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 190–190 */
@@ -1455,7 +1455,7 @@ unsigned char fn_bIsInFix(tdstEngineObject_* p_stObject)
  */
 void fn_vSectInfoFree(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    p_stObject->h_SectInfo = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 143–153 */

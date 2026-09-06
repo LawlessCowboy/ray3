@@ -1217,7 +1217,7 @@ unsigned char fn_bObjectTableHasZde(tdstObjectsTablesList_* _hObjectTableList)
  */
 tdstObjectsTableElement_* fn_d_hGetInitObjectsTable(tdstObjectsTablesList_* h_ObjectsTablesListElement)
 {
-    /* TODO: decompile from asm/... */
+    return h_ObjectsTablesListElement->d_stInitObjectsTable;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjsTbls.c lines 171–171 */

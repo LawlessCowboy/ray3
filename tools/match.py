@@ -527,6 +527,26 @@ def save_manifest(manifest: dict) -> None:
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
 
 
+def function_source_excerpt(source: Path, name: str) -> str:
+    """Return the named function's current C/C++ definition for attempt logs."""
+    text = source.read_text(encoding='utf-8', errors='replace')
+    marker = text.find(name)
+    if marker < 0:
+        return ''
+    opening = text.find('{', marker)
+    if opening < 0:
+        return text[max(0, marker - 200):marker + len(name)]
+    depth = 0
+    for position in range(opening, len(text)):
+        if text[position] == '{':
+            depth += 1
+        elif text[position] == '}':
+            depth -= 1
+            if depth == 0:
+                return text[max(0, text.rfind('\n', 0, marker) + 1):position + 1]
+    return text[max(0, text.rfind('\n', 0, marker) + 1):]
+
+
 def coverage() -> dict:
     _, symbols, main, _, _ = target_context()
     manifest = load_manifest()
@@ -784,6 +804,27 @@ def command_check(args: argparse.Namespace) -> int:
         }
         save_manifest(manifest)
         print('recorded verified match')
+    if args.record_attempt:
+        manifest = load_manifest()
+        source_path = ROOT / entry['source']
+        attempt = {
+            'address': f"0x{entry['address']:08x}",
+            'name': entry['name'],
+            'size': entry['size'],
+            'source': entry['source'],
+            'status': result['status'],
+            'model': args.model or os.environ.get('CODEX_MODEL', 'unknown'),
+            'reason': args.reason or '',
+            'candidate_size': result.get('candidate_size'),
+            'target_size': result.get('target_size'),
+            'first_difference': result.get('first_difference'),
+            'unresolved_relocations': result.get('unresolved_relocations', []),
+            'line_offsets_equal': result.get('line_offsets_equal'),
+            'implementation': function_source_excerpt(source_path, entry['name']),
+        }
+        manifest.setdefault('attempts', []).append(attempt)
+        save_manifest(manifest)
+        print('recorded attempt')
     return 0 if result['status'] == 'MATCH' else 1
 
 
@@ -903,6 +944,10 @@ def main() -> int:
     check_parser.add_argument('--diff', action='store_true')
     check_parser.add_argument('--json', action='store_true')
     check_parser.add_argument('--record', action='store_true')
+    check_parser.add_argument('--record-attempt', action='store_true',
+                              help='record this attempt, including mismatch diagnostics')
+    check_parser.add_argument('--model', help='model that attempted the function')
+    check_parser.add_argument('--reason', help='concise explanation of the mismatch')
     check_parser.set_defaults(func=command_check)
     coverage_parser = sub.add_parser('coverage')
     coverage_parser.add_argument('--json', action='store_true')

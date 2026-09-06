@@ -1530,7 +1530,7 @@ unsigned char fn_ucCollSetGetCollComputeFrequency(tdstCollSet_* _hCollSet)
  */
 void fn_vCollSetSetCollComputeFrequency(tdstCollSet_* _hCollSet, unsigned char _ucFrequency)
 {
-    /* TODO: decompile from asm/... */
+    _hCollSet->ucCollComputeFrequency = _ucFrequency;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 708–711 */
@@ -1720,7 +1720,7 @@ unsigned char fn_bCollSetGetCharacterNoCollisionWithMap(tdstCollSet_* _hCollSet)
  */
 void CS_fn_vSetCharacterPriority(tdstCollSet_* hCollSet, unsigned char _ucPriority)
 {
-    /* TODO: decompile from asm/... */
+    hCollSet->ucCharacterPriority = _ucPriority;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 620–620 */
@@ -1732,7 +1732,7 @@ void CS_fn_vSetCharacterPriority(tdstCollSet_* hCollSet, unsigned char _ucPriori
  */
 unsigned char CS_fn_ucGetCharacterPriority(tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hCollSet->ucCharacterPriority;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 590–593 */
@@ -1819,7 +1819,7 @@ void fn_vCollSetSetColliderVector(tdstCollSet_* _hCollSet, short _wIndex, MTH3D_
  */
 void fn_vCollSetSetColliderType(tdstCollSet_* _hCollSet, unsigned char _ucType)
 {
-    /* TODO: decompile from asm/... */
+    _hCollSet->stColliderInfo.ucColliderType = _ucType;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 538–538 */
@@ -1831,7 +1831,7 @@ void fn_vCollSetSetColliderType(tdstCollSet_* _hCollSet, unsigned char _ucType)
  */
 void fn_vCollSetSetColliderPriority(tdstCollSet_* _hCollSet, unsigned char _ucPri)
 {
-    /* TODO: decompile from asm/... */
+    _hCollSet->stColliderInfo.ucColliderPriority = _ucPri;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 530–533 */
@@ -1890,7 +1890,7 @@ HIE_tdstSuperObject_* fn_stCollSetGetColliderActor(tdstCollSet_* _hCollSet, shor
  */
 unsigned char fn_ucCollSetGetColliderType(tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hCollSet->stColliderInfo.ucColliderType;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 503–503 */
@@ -1902,7 +1902,7 @@ unsigned char fn_ucCollSetGetColliderType(tdstCollSet_* _hCollSet)
  */
 unsigned char fn_ucCollSetGetColliderPriority(tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hCollSet->stColliderInfo.ucColliderPriority;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 490–490 */

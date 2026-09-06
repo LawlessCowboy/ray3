@@ -36,6 +36,8 @@ struct SectorCache_ {
     unsigned long lastaccess; /* +0x10 */
 };
 
+void (*sceCdCbfunc)(void);
+
 unsigned long GLOBAL_SectorAccess;
 int g_NbCacheFiles;
 int pRootDirCache;
@@ -56,7 +58,7 @@ unsigned char loadbufRootDir[2048];
  */
 void CD_SetCallBack(void* FunctionPointer)
 {
-    /* TODO: decompile from asm/... */
+    sceCdCbfunc = (void (*)(void))FunctionPointer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 427–481 */
