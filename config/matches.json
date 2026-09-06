@@ -161,6 +161,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Operator.c",
       "status": "MATCH"
     },
+    "0x0024e080": {
+      "address": "0x0024e080",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "COL_fn_pGetMaxPointOfParallelBox",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c",
+      "status": "MATCH"
+    },
+    "0x0024e090": {
+      "address": "0x0024e090",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "COL_fn_pGetMinPointOfParallelBox",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c",
+      "status": "MATCH"
+    },
     "0x00257bc0": {
       "address": "0x00257bc0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -231,6 +247,22 @@
       "name": "fn_ucCollSetGetCollComputeFrequency",
       "size": 24,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MATCH"
+    },
+    "0x00270810": {
+      "address": "0x00270810",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMSLightSetBigAlpha",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x00270860": {
+      "address": "0x00270860",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMSLightSetLittleAlpha",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
       "status": "MATCH"
     },
     "0x00271b50": {

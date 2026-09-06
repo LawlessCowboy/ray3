@@ -482,7 +482,7 @@ void COL_fn_vGetInfoFromGeometricSphere(MTH3D_tdstVector_* _p_stSphereCenter, fl
  */
 MTH3D_tdstVector_* COL_fn_pGetMaxPointOfParallelBox(COL_tdstParallelBox_* _p_stParallelBox)
 {
-    /* TODO: decompile from asm/... */
+    return (MTH3D_tdstVector_*)((unsigned char*)_p_stParallelBox + 16);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1578–1578 */
@@ -494,7 +494,7 @@ MTH3D_tdstVector_* COL_fn_pGetMaxPointOfParallelBox(COL_tdstParallelBox_* _p_stP
  */
 MTH3D_tdstVector_* COL_fn_pGetMinPointOfParallelBox(COL_tdstParallelBox_* _p_stParallelBox)
 {
-    /* TODO: decompile from asm/... */
+    return (MTH3D_tdstVector_*)_p_stParallelBox;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1533–1543 */

@@ -90,6 +90,9 @@ typedef struct tdstAnim3d_ tdstAnim3d_;
 typedef struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn;
 typedef struct tdstFrame3d_ tdstFrame3d_;
 
+void GLI_vGetLightAlphas(GLI_tdstLight_* p_stLight, float* p_xLittleAlpha, float* p_xBigAlpha);
+void GLI_vSetLightAlphas(GLI_tdstLight_* p_stLight, float xLittleAlpha, float xBigAlpha);
+
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
     MAT_eTransform_Identity = 1,
@@ -114,13 +117,19 @@ typedef enum tdeObjectTreeInit_ {
     OTI_AlwaysCreated = 5,
 } tdeObjectTreeInit_;
 
+struct MTH3D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+};
+
 struct tdstMSLight_ {
     unsigned char bLocalLight; /* +0x0 */
     unsigned char bOnlyLocalLight; /* +0x1 */
     unsigned char bGiroPhare; /* +0x2 */
     unsigned char bPulsing; /* +0x3 */
-    int stOffsetVect; /* +0x4 */
-    int stAngle; /* +0x10 */
+    MTH3D_tdstVector_ stOffsetVect; /* +0x4 */
+    MTH3D_tdstVector_ stAngle; /* +0x10 */
     float xStepGiro; /* +0x1c */
     float xStepPulse; /* +0x20 */
     float xMaxRangePulse; /* +0x24 */
@@ -522,12 +531,6 @@ struct GEO_tdstEdge_ {
 
 struct SECT_tdstListOfSOSectorsInActivityInteraction_ {
     HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
-};
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
 };
 
 struct SECT_tdstSector_ {
@@ -1078,9 +1081,10 @@ void fn_vMSLightSetColorRGBA(tdstMSLight_* h_MSLight, float xR, float xG, float 
  */
 void fn_vMSLightSetBigAlpha(tdstMSLight_* h_MSLight, float xBigAlpha)
 {
-    float xBigIni;
     float xLittleIni;
-    /* TODO: decompile from asm/... */
+    float xBigIni;
+    GLI_vGetLightAlphas(h_MSLight->p_stLight, &xLittleIni, &xBigIni);
+    GLI_vSetLightAlphas(h_MSLight->p_stLight, xLittleIni, xBigAlpha);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1028–1032 */
@@ -1099,9 +1103,10 @@ void fn_vMSLightSetBigAlpha(tdstMSLight_* h_MSLight, float xBigAlpha)
  */
 void fn_vMSLightSetLittleAlpha(tdstMSLight_* h_MSLight, float xLittleAlpha)
 {
-    float xBigIni;
     float xLittleIni;
-    /* TODO: decompile from asm/... */
+    float xBigIni;
+    GLI_vGetLightAlphas(h_MSLight->p_stLight, &xLittleIni, &xBigIni);
+    GLI_vSetLightAlphas(h_MSLight->p_stLight, xLittleAlpha, xBigIni);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1017–1017 */
