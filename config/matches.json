@@ -849,11 +849,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/playevts.c",
       "status": "MATCH"
     },
+    "0x0027dce0": {
+      "address": "0x0027dce0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_uwGetFrameInNextAnimForIntermAnim",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MATCH"
+    },
     "0x0027dd00": {
       "address": "0x0027dd00",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_vDeleteIntermediateAnimation",
       "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
+      "status": "MATCH"
+    },
+    "0x0027f340": {
+      "address": "0x0027f340",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_GetEventsAddress",
+      "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_intn.c",
       "status": "MATCH"
     },

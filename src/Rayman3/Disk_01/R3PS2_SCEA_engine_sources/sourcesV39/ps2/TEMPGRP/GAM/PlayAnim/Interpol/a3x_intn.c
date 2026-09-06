@@ -1751,7 +1751,9 @@ int fn_bTestSamePosition(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAni
 unsigned short fn_uwGetFrameInNextAnimForIntermAnim(tdstAnim3d_* p_stTempoAnim)
 {
     tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    /* TODO: decompile from asm/... */
+    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
+    p_stA3dGENERAL = fn_p_GetA3dGENERALForTransitions(p_stTempoAnim->uwNumOfA3dGENERAL);
+    return p_stA3dGENERAL->uwNextFrame;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1310–1315 */
@@ -2366,5 +2368,5 @@ void fn_vUpdateFrame(void* _p_stSuperObject, tdstFrame3d_* _p_stFrame, tdstAnim3
  */
 tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d)
 {
-    /* TODO: decompile from asm/... */
+    return _p_stAnim3d->d_stAnimEvent;
 }
