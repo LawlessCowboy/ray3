@@ -1242,7 +1242,9 @@ void fn_vReInitObjectTable(tdstObjectsTablesList_* param0)
  */
 unsigned short fn_uwGetObjectTableNumberOfelements(tdstObjectsTablesList_* _hTargetTable)
 {
-    /* TODO: decompile from asm/... */
+    if (_hTargetTable != NULL)
+        return _hTargetTable->wNumberOfElement;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjsTbls.c lines 123–126 */

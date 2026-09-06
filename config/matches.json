@@ -153,6 +153,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/OctreeGO.c",
       "status": "MATCH"
     },
+    "0x0025fee0": {
+      "address": "0x0025fee0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_vCheckIfDebugCamera",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameDisp.c",
+      "status": "MATCH"
+    },
     "0x00266490": {
       "address": "0x00266490",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -175,6 +183,22 @@
       "name": "fn_vRetObjectExtraCoefNull",
       "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Micros.c",
+      "status": "MATCH"
+    },
+    "0x00267e40": {
+      "address": "0x00267e40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_uwGetObjectTableNumberOfelements",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ObjsTbls.c",
+      "status": "MATCH"
+    },
+    "0x0026ec70": {
+      "address": "0x0026ec70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucCollSetGetCollComputeFrequency",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
       "status": "MATCH"
     },
     "0x00271b50": {

@@ -1515,7 +1515,10 @@ unsigned char fn_ucCollSetGetCollComputeFrequencySO(HIE_tdstSuperObject_* hSuper
  */
 unsigned char fn_ucCollSetGetCollComputeFrequency(tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    int ucFrequency = 1;
+    if (_hCollSet != NULL)
+        ucFrequency = _hCollSet->ucCollComputeFrequency;
+    return ucFrequency;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 718–718 */

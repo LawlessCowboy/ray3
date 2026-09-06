@@ -1697,9 +1697,10 @@ void fn_vDisplayAll(unsigned char _ucViewPortIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GAM_fn_vCheckIfDebugCamera(HIE_tdstSuperObject_* hCamera)
+void GAM_fn_vCheckIfDebugCamera(HIE_tdstSuperObject_** hCamera)
 {
-    /* TODO: decompile from asm/... */
+    if (g_ucDebugCamera != 0)
+        *hCamera = g_stEngineStructure.h_StdCamCaracter;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 238–240 */
