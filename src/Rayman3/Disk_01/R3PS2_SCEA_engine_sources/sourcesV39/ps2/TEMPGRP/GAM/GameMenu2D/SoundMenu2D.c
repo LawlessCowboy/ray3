@@ -37,7 +37,7 @@ extern void SND_fn_vSetStereoSound(int b_Stereo);
  */
 int M2D_fn_iNbTexturesNeededForMenu(void)
 {
-    /* TODO: decompile from asm/... */
+    return 30;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\SoundMenu2D.c lines 189–189 */
