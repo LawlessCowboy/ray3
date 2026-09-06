@@ -22,9 +22,21 @@ baseline profile is encoded in `tools/match.py` and the Makefile.
    python3 tools/match.py check FUNCTION
    ```
 
-5. A function is done only when it reports `MATCH`. Use `--diff` only when the
-   one-line result needs investigation. Do not claim a match based solely on
-   visually similar assembly.
+5. A function is done only when it reports `MATCH`. For a mismatch, use:
+
+   ```sh
+   python3 tools/match.py check FUNCTION --diff
+   ```
+
+   This prints the entire function as side-by-side four-byte PS2 instruction
+   words **and Rabbitizer-decoded mnemonics** after named relocations have
+   been resolved. Every differing word is marked `!`; `R` marks a candidate
+   relocation word. Inspect every `!`, then compare those offsets with the
+   matching target `asm/.../*.s` file. A lone
+   `R`/immediate mismatch often indicates a symbol, layout, or signature issue;
+   several adjacent non-relocation words usually indicate source shape or
+   compiler scheduling. Do not claim a match based solely on visually similar
+   assembly.
 
 The matcher compiles the owning translation unit, caches the object by source
 and compiler profile, resolves named MIPS relocations against the retail ELF,

@@ -1022,7 +1022,6 @@ unsigned int fn_ulDetermineUsefulDT(void)
  */
 void fn_vReinitEngineClock(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 97–99 */

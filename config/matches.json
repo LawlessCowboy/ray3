@@ -665,6 +665,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Fon/fontext.c",
       "status": "MATCH"
     },
+    "0x0027b330": {
+      "address": "0x0027b330",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_ucGetFirstCallOfEvent",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/playevts.c",
+      "status": "MATCH"
+    },
+    "0x0027b340": {
+      "address": "0x0027b340",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_ucGetTypeOfEvent",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/playevts.c",
+      "status": "MATCH"
+    },
     "0x0027dd00": {
       "address": "0x0027dd00",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -833,6 +849,102 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"
     },
+    "0x002aa2b0": {
+      "address": "0x002aa2b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_vInitMenuBackground",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
+      "status": "MATCH"
+    },
+    "0x002aa680": {
+      "address": "0x002aa680",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vCreateObjectsReference",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
+      "status": "MATCH"
+    },
+    "0x002abaa0": {
+      "address": "0x002abaa0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vSetSinEffetBase",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002abdc0": {
+      "address": "0x002abdc0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_SinusEffect_cIsSecondViewportAffected",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002abdd0": {
+      "address": "0x002abdd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_SinusEffect_vGetFlag",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002abde0": {
+      "address": "0x002abde0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_SinusEffect_vSetFlag",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002abdf0": {
+      "address": "0x002abdf0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_SinusEffect_vGetState",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002abe00": {
+      "address": "0x002abe00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_SinusEffect_vSetState",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002abe10": {
+      "address": "0x002abe10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_vSetSinusPreMultiplier",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002abff0": {
+      "address": "0x002abff0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vWaterplaneDisable2DSinus",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002ac000": {
+      "address": "0x002ac000",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vSetWaterplaneOff",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002ac020": {
+      "address": "0x002ac020",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vSetWaterplaneOn",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
     "0x002b1220": {
       "address": "0x002b1220",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -871,6 +983,22 @@
       "name": "GLI_vRemoveLights",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawVertexArray.c",
+      "status": "MATCH"
+    },
+    "0x002c4ed0": {
+      "address": "0x002c4ed0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "ProcessSky",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c7070": {
+      "address": "0x002c7070",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vSetLoadingFix",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
       "status": "MATCH"
     },
     "0x002ee650": {
@@ -943,6 +1071,54 @@
       "name": "SAI_fn_vFirstInit",
       "size": 56,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SAI/SAI_Priv.c",
+      "status": "MATCH"
+    },
+    "0x0031c310": {
+      "address": "0x0031c310",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SECT_fn_p_stGetMaxPointInBorder",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
+      "status": "MATCH"
+    },
+    "0x0031c320": {
+      "address": "0x0031c320",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SECT_fn_p_stGetMinPointInBorder",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
+      "status": "MATCH"
+    },
+    "0x0031c330": {
+      "address": "0x0031c330",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_xGetSectorZFar",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
+      "status": "MATCH"
+    },
+    "0x0031c540": {
+      "address": "0x0031c540",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_cGetSectorCameraType",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
+      "status": "MATCH"
+    },
+    "0x0031c550": {
+      "address": "0x0031c550",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SECT_fn_bIsThisSectorVirtual",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
+      "status": "MATCH"
+    },
+    "0x0031d010": {
+      "address": "0x0031d010",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SECT_fn_vSetCharacterPointerInCharacterList",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
       "status": "MATCH"
     }
   },

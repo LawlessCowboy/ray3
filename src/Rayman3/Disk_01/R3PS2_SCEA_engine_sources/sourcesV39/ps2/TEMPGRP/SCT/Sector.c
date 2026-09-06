@@ -414,7 +414,7 @@ void SCT_fn_vGetSymMatrixOfCameraInMirror(MAT_tdstTransformation_* hMatrixOfCame
  */
 MTH3D_tdstVector_* SECT_fn_p_stGetMaxPointInBorder(SECT_tdstSector_* _hSector)
 {
-    /* TODO: decompile from asm/... */
+    return &_hSector->stMinMaxPoints[1];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1019–1019 */
@@ -426,7 +426,7 @@ MTH3D_tdstVector_* SECT_fn_p_stGetMaxPointInBorder(SECT_tdstSector_* _hSector)
  */
 MTH3D_tdstVector_* SECT_fn_p_stGetMinPointInBorder(SECT_tdstSector_* _hSector)
 {
-    /* TODO: decompile from asm/... */
+    return &_hSector->stMinMaxPoints[0];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1013–1014 */
@@ -439,7 +439,7 @@ MTH3D_tdstVector_* SECT_fn_p_stGetMinPointInBorder(SECT_tdstSector_* _hSector)
  */
 float fn_xGetSectorZFar(HIE_tdstSuperObject_* _hSprObjSector)
 {
-    /* TODO: decompile from asm/... */
+    return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->xZFar;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 993–1002 */
@@ -556,7 +556,7 @@ int SECT_fn_cSetWantedActivity(HIE_tdstSuperObject_* _hSectorObject, char _cWant
  */
 char fn_cGetSectorCameraType(HIE_tdstSuperObject_* _hSprObjSector)
 {
-    /* TODO: decompile from asm/... */
+    return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->cCameraType;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 884–885 */
@@ -569,7 +569,7 @@ char fn_cGetSectorCameraType(HIE_tdstSuperObject_* _hSprObjSector)
  */
 unsigned char SECT_fn_bIsThisSectorVirtual(HIE_tdstSuperObject_* _hSprObjSector)
 {
-    /* TODO: decompile from asm/... */
+    return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->xVirtual;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 504–505 */
@@ -802,7 +802,7 @@ SECT_tdstListOfDNMLights_* SECT_fn_hCreateElementLstDNMLights(void)
  */
 void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* hCharacterElement, HIE_tdstSuperObject_* hSectorSuperObject)
 {
-    /* TODO: decompile from asm/... */
+    hCharacterElement->hPointerOfCharacter = hSectorSuperObject;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 200–208 */

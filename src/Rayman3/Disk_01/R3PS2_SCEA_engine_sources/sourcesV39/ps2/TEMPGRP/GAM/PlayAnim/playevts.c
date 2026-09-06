@@ -1357,7 +1357,7 @@ void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* 
  */
 unsigned char GAM_fn_ucGetFirstCallOfEvent(tdstEvent_* _p_stEvent)
 {
-    /* TODO: decompile from asm/... */
+    return _p_stEvent->p_stfEventInTBL->ucFirstCall;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 651–652 */
@@ -1370,7 +1370,7 @@ unsigned char GAM_fn_ucGetFirstCallOfEvent(tdstEvent_* _p_stEvent)
  */
 unsigned char GAM_fn_ucGetTypeOfEvent(tdstEvent_* _p_stEvent)
 {
-    /* TODO: decompile from asm/... */
+    return _p_stEvent->p_stfEventInTBL->ucTypeOfEvent;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 638–639 */
@@ -1383,7 +1383,7 @@ unsigned char GAM_fn_ucGetTypeOfEvent(tdstEvent_* _p_stEvent)
  */
 unsigned short fn_uwGetNbEngineFrameSinceLastMechEvent(HIE_tdstSuperObject_* p_stSuperObject)
 {
-    /* TODO: decompile from asm/... */
+    return *(unsigned short *)((char *)p_stSuperObject->hLinkedObject.p_stCharacter + 0x102);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 468–634 */

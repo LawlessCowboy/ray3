@@ -1142,7 +1142,6 @@ char g_cSinusEffectState;
  */
 void GLI_fn_vInitMenuBackground(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 739–851 */
@@ -1245,7 +1244,6 @@ void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt)
  */
 void GLI_vCreateObjectsReference(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 565–677 */

@@ -1243,6 +1243,7 @@ int GLI_g_TextureNames[4][400];
 char ReadBuffer[20480];
 CTL_Info_ CTL_g_Infos;
 GLI_st_RegisteredTexture_ GLI_g_RegisteredTextures[500];
+void GLI_vUnloadTexturePartial(unsigned char ucChannel);
 int TempTexture;
 unsigned int GLI_PS2GL_TextureArray[400];
 int GLI_g_TransitionTextureInformation[2][25];
@@ -2256,7 +2257,7 @@ void GLI_v_SendTextureBitmapToPS2GL(GLI_tdstTexture_* p_stTexture, unsigned int 
  */
 void GLI_DRV_vUnLoadTextures(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vUnloadTexturePartial(1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 549–554 */
@@ -2302,7 +2303,7 @@ void GLI_DRV_vDownLoadTextures(void)
  */
 void LoadTextureBloc(int DestTextureBlocID, int ChannelId)
 {
-    /* TODO: decompile from asm/... */
+    LoadTextureBlocInternal(DestTextureBlocID, ChannelId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 404–476 */
@@ -2385,7 +2386,7 @@ void GLI_vProcessRegisteredTextures(void)
  */
 void GLI_vSetLoadingFix(int BoolVal)
 {
-    /* TODO: decompile from asm/... */
+    GLI_gs_LoadingFix = BoolVal;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 165–184 */

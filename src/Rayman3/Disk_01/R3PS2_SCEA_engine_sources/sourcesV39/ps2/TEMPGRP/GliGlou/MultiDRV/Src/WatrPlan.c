@@ -178,7 +178,7 @@ void GLI_vSaveSinusContext(void)
  */
 void GLI_vSetSinEffetBase(float xBase)
 {
-    /* TODO: decompile from asm/... */
+    GLI_fSinEffectBase = xBase;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1147–1150 */
@@ -371,7 +371,7 @@ void GLI_fn_SinusEffect_vSetFreqMesh(int _lXFreq, int _lYFreq, int _lZFreq)
  */
 char GLI_fn_SinusEffect_cIsSecondViewportAffected(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_cSinusEffectFlag & 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 941–941 */
@@ -383,7 +383,7 @@ char GLI_fn_SinusEffect_cIsSecondViewportAffected(void)
  */
 char GLI_fn_SinusEffect_vGetFlag(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_cSinusEffectFlag;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 936–936 */
@@ -395,7 +395,7 @@ char GLI_fn_SinusEffect_vGetFlag(void)
  */
 void GLI_fn_SinusEffect_vSetFlag(char _cFlag)
 {
-    /* TODO: decompile from asm/... */
+    g_cSinusEffectFlag = _cFlag;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 926–926 */
@@ -407,7 +407,7 @@ void GLI_fn_SinusEffect_vSetFlag(char _cFlag)
  */
 char GLI_fn_SinusEffect_vGetState(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_cSinusEffectState;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 921–921 */
@@ -419,7 +419,7 @@ char GLI_fn_SinusEffect_vGetState(void)
  */
 void GLI_fn_SinusEffect_vSetState(char _cState)
 {
-    /* TODO: decompile from asm/... */
+    g_cSinusEffectState = _cState;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 905–909 */
@@ -433,7 +433,9 @@ void GLI_fn_SinusEffect_vSetState(char _cState)
  */
 void GLI_fn_vSetSinusPreMultiplier(float X, float Y, float Z)
 {
-    /* TODO: decompile from asm/... */
+    g_xSinusSizeMulx = X;
+    g_xSinusSizeMuly = Y;
+    g_xSinusSizeMulz = Z;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 832–893 */
@@ -541,7 +543,7 @@ void GLI_vInitWaterplaneModule(void)
  */
 void GLI_vWaterplaneDisable2DSinus(void)
 {
-    /* TODO: decompile from asm/... */
+    bWaterPlaneState |= 0x20;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 358–359 */
@@ -554,7 +556,7 @@ void GLI_vWaterplaneDisable2DSinus(void)
  */
 void GLI_vSetWaterplaneOff(void)
 {
-    /* TODO: decompile from asm/... */
+    bWaterPlaneState &= ~1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 348–349 */
@@ -567,5 +569,5 @@ void GLI_vSetWaterplaneOff(void)
  */
 void GLI_vSetWaterplaneOn(void)
 {
-    /* TODO: decompile from asm/... */
+    bWaterPlaneState |= 1;
 }

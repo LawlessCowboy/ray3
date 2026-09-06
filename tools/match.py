@@ -18,6 +18,15 @@ import struct
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+try:
+    import rabbitizer
+except ImportError:
+    rabbitizer = None
+try:
+    import spimdisasm
+except ImportError:
+    spimdisasm = None
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -556,6 +565,12 @@ def command_doctor(_: argparse.Namespace) -> int:
         digest = hashlib.sha1(TARGET_PATH.read_bytes()).hexdigest()
         print(f'ELF SHA-1: {digest} ({"ok" if digest == "c2c3f5c2ccceedc6745b4738102409f27bbb9f10" else "unexpected"})')
         ok &= digest == 'c2c3f5c2ccceedc6745b4738102409f27bbb9f10'
+    for label, module in [('spimdisasm', spimdisasm), ('Rabbitizer', rabbitizer)]:
+        if module is None:
+            print(f'{label}: MISSING (install with: python3 -m pip install spimdisasm rabbitizer)')
+            ok = False
+        else:
+            print(f'{label}: ok ({getattr(module, '__version__', 'installed')})')
     return 0 if ok else 2
 
 
@@ -586,6 +601,30 @@ def command_show(args: argparse.Namespace) -> int:
     return 0
 
 
+def format_word_diff(candidate_hex: str, target_hex: str, relocations: list[dict]) -> str:
+    """Render every instruction word, not only the first byte mismatch.
+
+    PS2 instructions are four-byte little-endian words.  The matcher compares
+    relocation-resolved bytes, so this table gives workers the same data in a
+    source-shaped, full-function view.  ``!`` marks every differing word and
+    ``R`` marks an object relocation that affected that word.
+    """
+    candidate = bytes.fromhex(candidate_hex)
+    target = bytes.fromhex(target_hex)
+    relocation_offsets = {entry['offset'] for entry in relocations}
+    lines = ['offset  candidate  target     flags  candidate instruction                 target instruction']
+    for offset in range(0, max(len(candidate), len(target)), 4):
+        got = candidate[offset:offset + 4]
+        want = target[offset:offset + 4]
+        got_word = f'{struct.unpack("<I", (got + bytes(4))[:4])[0]:08x}' if got else '--------'
+        want_word = f'{struct.unpack("<I", (want + bytes(4))[:4])[0]:08x}' if want else '--------'
+        flags = ('!' if got != want else ' ') + ('R' if offset in relocation_offsets else ' ')
+        got_asm = rabbitizer.Instruction(int(got_word, 16)).disassemble() if rabbitizer and got else ''
+        want_asm = rabbitizer.Instruction(int(want_word, 16)).disassemble() if rabbitizer and want else ''
+        lines.append(f'+0x{offset:04x}  {got_word}  {want_word}  {flags}  {got_asm:<36} {want_asm}')
+    return '\n'.join(lines)
+
+
 def command_check(args: argparse.Namespace) -> int:
     _, symbols, main, _, _ = target_context()
     entry = find_entry(args.function, cached_source_index(symbols, main))
@@ -613,6 +652,8 @@ def command_check(args: argparse.Namespace) -> int:
         if args.diff:
             print('candidate:', result['candidate_hex'])
             print('target:   ', result['target_hex'])
+            print(format_word_diff(result['candidate_hex'], result['target_hex'],
+                                   result['relocations']))
     if args.record and result['status'] == 'MATCH':
         manifest = load_manifest()
         manifest.setdefault('functions', {})[f"0x{entry['address']:08x}"] = {
