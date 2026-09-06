@@ -579,7 +579,13 @@ def command_list(args: argparse.Namespace) -> int:
     _, symbols, main, _, _ = target_context()
     entries = cached_source_index(symbols, main, args.refresh_index)
     compileability = load_compileability()
-    matches = [e for e in entries if (not args.unmatched or e['todo'])
+    manifest = load_manifest()
+    recorded_matches = {
+        int(record['address'], 16)
+        for record in manifest.get('functions', {}).values()
+        if record.get('status') == 'MATCH'
+    }
+    matches = [e for e in entries if (not args.unmatched or e['address'] not in recorded_matches)
                and (args.include_unowned or e['source'] is not None)
                and (not args.max_lines or len(e['line_map']) <= args.max_lines)
                and (not args.language or e['language'] == args.language)
