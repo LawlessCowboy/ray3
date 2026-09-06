@@ -114,7 +114,8 @@ void fn_vFirstInitObjectTypeStructure(void)
  */
 void fn_h_TmpStateFree(tdstState_* h_State)
 {
-    /* TODO: decompile from asm/... */
+    extern void HMU_fn_vFree(void*, int);
+    HMU_fn_vFree(&h_State, 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 365–394 */
@@ -264,7 +265,7 @@ signed char fn_scGetSpeedInState(tdstState_* h_State)
  */
 void fn_vSetRepeatAnimationInState(tdstState_* h_State, unsigned char ucRepeatAnimation)
 {
-    /* TODO: decompile from asm/... */
+    h_State->ucRepeatAnimation = ucRepeatAnimation;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 185–185 */
@@ -276,7 +277,7 @@ void fn_vSetRepeatAnimationInState(tdstState_* h_State, unsigned char ucRepeatAn
  */
 void fn_vSetNextStateInState(tdstState_* h_State, tdstState_* h_NextState)
 {
-    /* TODO: decompile from asm/... */
+    h_State->h_NextState = h_NextState;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 181–181 */
@@ -288,7 +289,7 @@ void fn_vSetNextStateInState(tdstState_* h_State, tdstState_* h_NextState)
  */
 tdstState_* fn_hGetNextStateInState(tdstState_* h_State)
 {
-    /* TODO: decompile from asm/... */
+    return h_State->h_NextState;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 176–176 */
@@ -300,5 +301,5 @@ tdstState_* fn_hGetNextStateInState(tdstState_* h_State)
  */
 void fn_vSetAnimInState(tdstState_* h_State, tdstAnim3d_* p_stAnim)
 {
-    /* TODO: decompile from asm/... */
+    h_State->p_stAnim = p_stAnim;
 }

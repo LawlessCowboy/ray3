@@ -617,6 +617,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ObjsTbls.c",
       "status": "MATCH"
     },
+    "0x00268190": {
+      "address": "0x00268190",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_h_TmpStateFree",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/State.c",
+      "status": "MATCH"
+    },
     "0x002682c0": {
       "address": "0x002682c0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -661,6 +669,38 @@
       "address": "0x00268310",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_scGetSpeedInState",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/State.c",
+      "status": "MATCH"
+    },
+    "0x00268320": {
+      "address": "0x00268320",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vSetRepeatAnimationInState",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/State.c",
+      "status": "MATCH"
+    },
+    "0x00268330": {
+      "address": "0x00268330",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vSetNextStateInState",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/State.c",
+      "status": "MATCH"
+    },
+    "0x00268340": {
+      "address": "0x00268340",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_hGetNextStateInState",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/State.c",
+      "status": "MATCH"
+    },
+    "0x00268350": {
+      "address": "0x00268350",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vSetAnimInState",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/State.c",
       "status": "MATCH"
