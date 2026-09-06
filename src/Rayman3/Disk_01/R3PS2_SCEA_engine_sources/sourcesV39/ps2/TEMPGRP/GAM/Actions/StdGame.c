@@ -1393,7 +1393,11 @@ unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj)
  */
 void fn_vStandardGameSetSuperObject(tdstStandardGame_* h_StdGame, HIE_tdstSuperObject_* h_SuperObject)
 {
-    /* TODO: decompile from asm/... */
+    h_StdGame->h_SuperObject = h_SuperObject;
+    if (h_SuperObject != NULL)
+    {
+        *(MAT_tdstTransformation_ **)((unsigned char *)h_SuperObject->hLinkedObject.p_stCharacter->h_3dData + 0x80) = h_SuperObject->hGlobalMatrix;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 603–604 */
@@ -1406,7 +1410,7 @@ void fn_vStandardGameSetSuperObject(tdstStandardGame_* h_StdGame, HIE_tdstSuperO
  */
 HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame)
 {
-    /* TODO: decompile from asm/... */
+    return h_StdGame != NULL ? h_StdGame->h_SuperObject : NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 586–586 */

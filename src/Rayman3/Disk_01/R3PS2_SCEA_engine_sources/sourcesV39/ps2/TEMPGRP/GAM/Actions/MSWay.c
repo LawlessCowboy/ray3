@@ -1352,7 +1352,12 @@ int MSWay_fn_lSetCurrentIndexInPath(tdstMSWay_* hWay, int _lIndex)
  */
 int MSWay_fn_lGetFirstIndexInPath(tdstMSWay_* hWay)
 {
-    /* TODO: decompile from asm/... */
+    if (hWay != NULL)
+    {
+        if (hWay->m_hPath != NULL)
+            return 0;
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 364–368 */
@@ -1367,7 +1372,12 @@ int MSWay_fn_lGetFirstIndexInPath(tdstMSWay_* hWay)
  */
 int MSWay_fn_lGetLastIndexInPath(tdstMSWay_* hWay)
 {
-    /* TODO: decompile from asm/... */
+    if (hWay != NULL)
+    {
+        if (hWay->m_hPath != NULL)
+            return hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn - 1;
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 357–360 */
@@ -1382,7 +1392,12 @@ int MSWay_fn_lGetLastIndexInPath(tdstMSWay_* hWay)
  */
 int MSWay_fn_lGetCurrentIndexInPath(tdstMSWay_* hWay)
 {
-    /* TODO: decompile from asm/... */
+    if (hWay != NULL)
+    {
+        if (hWay->m_hPath != NULL)
+            return hWay->m_lIndex;
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 350–353 */
@@ -1397,7 +1412,12 @@ int MSWay_fn_lGetCurrentIndexInPath(tdstMSWay_* hWay)
  */
 int MSWay_fn_lGetNumberWayPointInPath(tdstMSWay_* hWay)
 {
-    /* TODO: decompile from asm/... */
+    if (hWay != NULL)
+    {
+        if (hWay->m_hPath != NULL)
+            return hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 332–346 */

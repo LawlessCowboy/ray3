@@ -2268,6 +2268,8 @@ struct tdstGetSetParam_ {
     tdeVariableType_ eType; /* +0xc */
 };
 
+unsigned char fn_ucIsThereFloatIfYesConvertItToInteger(tdstGetSetParam_* p_stGetSetParam);
+
 struct tdstStandardGame_ {
     int otObjectFamilyType; /* +0x0 */
     int otObjectModelType; /* +0x4 */
@@ -3113,7 +3115,7 @@ unsigned char fn_ucSetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSu
  */
 void fn_vSetFieldType0To255(tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    fn_ucIsThereFloatIfYesConvertItToInteger(p_stGetSetParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Getset.c lines 79–79 */
@@ -3125,7 +3127,7 @@ void fn_vSetFieldType0To255(tdstGetSetParam_* p_stGetSetParam)
  */
 void fn_vSetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    fn_ucIsThereFloatIfYesConvertItToInteger(p_stGetSetParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Getset.c lines 71–75 */
@@ -3151,5 +3153,5 @@ void fn_vSetFieldTypeFloat(tdstGetSetParam_* p_stGetSetParam)
  */
 void fn_vSetFieldTypeVector(void)
 {
-    /* TODO: decompile from asm/... */
+    return;
 }
