@@ -133,5 +133,5 @@ void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume)
  */
 void VID_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality)
 {
-    VIDSPE_fn_vSetVideoQuality(ucBPP, ucVideoQuality);
+    VIDSPE_fn_vSetVideoQuality();
 }

@@ -47,6 +47,10 @@ baseline profile is encoded in `tools/match.py` and the Makefile.
    FUNCTION` to see source, raw-debug, decoded type, and target ABI evidence.
    Do not claim a match based solely on visually similar assembly.
 
+   After a verified `MATCH`, run `python3 tools/match.py check FUNCTION --record`
+   so the coordinator's worklist excludes the completed function. A reported
+   match that is not recorded remains eligible for redispatch.
+
 The matcher compiles the owning translation unit, caches the object by source
 and compiler profile, resolves named MIPS relocations against the retail ELF,
 and checks function bytes, size, relocation targets, and line offsets.
@@ -82,6 +86,10 @@ python3 tools/match.py list --unmatched --compileable --model gpt-5.6-luna
 
 - Do not use inline assembly, hand-written opcodes, or intrinsics to force a
   match. Investigate compiler options, source structure, and macros first.
+- Prefer natural structured control flow over explicit `goto` statements when
+  reconstructing source; explicit gotos were uncommon in ordinary gameplay
+  code. Use one only when the target control-flow/line-map evidence cannot be
+  reproduced by an equivalent `if`/`else`, loop, or early-return form.
 - Do not change `tools/`, `config/`, `Makefile`, the parser, Splat config, or
   another worker's source file unless the coordinator assigns that work.
 - Do not run extraction, Splat regeneration, `git add`, or `git commit`.
