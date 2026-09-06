@@ -1714,5 +1714,6 @@ void GAM_fn_vCheckIfDebugCamera(HIE_tdstSuperObject_** hCamera)
  */
 void fn_vSetCinemascopeRatio(unsigned int ulRatio)
 {
-    /* TODO: decompile from asm/... */
+    if (ulRatio != 0 && ulRatio < 101)
+        g_ulMinSize = ulRatio;
 }

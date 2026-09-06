@@ -3058,7 +3058,10 @@ void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuper
  */
 void fn_vSetUltraOperatorPerso(HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_* hNewCurrentSuperObjPerso)
 {
-    /* TODO: decompile from asm/... */
+    if (hCurrentSuperObjPerso == hNewCurrentSuperObjPerso)
+        g_hCurrentSuperObjPerso = 0;
+    else
+        g_hCurrentSuperObjPerso = hNewCurrentSuperObjPerso;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 596–1043 */
