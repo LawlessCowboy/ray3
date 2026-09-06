@@ -135,6 +135,8 @@ typedef struct tdstDsgVar_ tdstDsgVar_;
 typedef struct tdstProhibit_ tdstProhibit_;
 typedef struct tdstListOfMacro_ tdstListOfMacro_;
 
+tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+
 typedef enum tdeMetaActionId_ {
     eMetaAction_FrozenWait = 0,
     eMetaAction_ExecuteAction = 1,
@@ -3026,7 +3028,7 @@ void fn_p_stEndWhileKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInter
  */
 tdstNodeInterpret_* fn_p_stBeginWhileKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    return fn_p_stIntelligenceEvalTreeEngine(p_SuperObjPerso, p_stTree, p_stValue);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 434–455 */
@@ -3215,7 +3217,7 @@ tdstNodeInterpret_* fn_p_stElseKeyWord(tdstNodeInterpret_* p_stTree)
  */
 tdstNodeInterpret_* fn_p_stThenKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    return fn_p_stIntelligenceEvalTreeEngine(p_SuperObjPerso, p_stTree, p_stValue);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 163–165 */

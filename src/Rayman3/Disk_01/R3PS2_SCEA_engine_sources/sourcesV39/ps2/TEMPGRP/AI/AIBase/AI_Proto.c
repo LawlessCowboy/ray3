@@ -3246,7 +3246,8 @@ unsigned char fn_bDoIntelligencePerso(HIE_tdstSuperObject_* p_SuperObjPerso)
  */
 void AI_fn_vFirstInit(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_ucAIModuleId == 255)
+        g_ucAIModuleId = Erm_fn_ucInitErrMsg(g_ucAIModuleId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 193–229 */

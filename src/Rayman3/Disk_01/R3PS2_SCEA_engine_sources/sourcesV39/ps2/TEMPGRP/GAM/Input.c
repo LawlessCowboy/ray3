@@ -1470,5 +1470,10 @@ void fn_vLastDesinitEngine(void)
  */
 void fn_vEngineReadInput(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_vManageControlerDisconnection();
+    if (g_stEngineStructure.eInputMode == 0)
+    {
+        IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+        fn_vAnalyse3DOSSpecialInputActions();
+    }
 }

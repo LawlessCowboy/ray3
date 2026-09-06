@@ -11,6 +11,15 @@ and extraction tools, and documentation. It does **not** contain game files,
 the retail ELF, generated assembly, MWCC, Wibo, PS2 SDK files, probe fixtures,
 or compiler binaries.
 
+## Verified matching progress
+
+Checked with `python3 tools/match.py coverage` at each matching commit:
+
+- Functions: **39 / 7,832**
+- Code: **1,020 / 2,268,104 bytes** (**0.0450%**)
+- Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
+  started yet.
+
 ## Status
 
 - The canonical recovered tree is [`src/Rayman3`](src/Rayman3). It follows the
