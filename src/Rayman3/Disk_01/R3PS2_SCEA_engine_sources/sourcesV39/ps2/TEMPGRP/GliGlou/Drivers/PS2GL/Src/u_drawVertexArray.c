@@ -233,7 +233,8 @@ void GLI_vRecomputeNormalsWhileWaitingForVBL(void)
  */
 void GLI_vEndNormalRecomputation(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_CurrentNormalToRecompute = 0;
+    GLI_g_NbNormalsToRecompute = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 1446–1458 */
@@ -268,7 +269,7 @@ void GLI_vRecomputeAllCharacterNormalsAndWaitForSyncPath(void)
  */
 void GLI_vStartNormalRecomp(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_CurrentNormalToRecompute = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 1413–1424 */
@@ -553,7 +554,7 @@ void TestAddAGOLight(MTH3D_tdstVector_* pPosition, float* Color, float fardist)
  */
 void GLI_vRemovePointLightsAfterProcessing(void)
 {
-    /* TODO: decompile from asm/... */
+    AGO_g_ulNbLights = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 891–891 */
@@ -565,7 +566,6 @@ void GLI_vRemovePointLightsAfterProcessing(void)
  */
 void GLI_vRemoveLights(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 801–858 */

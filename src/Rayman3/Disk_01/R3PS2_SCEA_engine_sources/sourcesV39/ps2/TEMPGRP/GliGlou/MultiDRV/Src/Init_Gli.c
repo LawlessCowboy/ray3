@@ -240,9 +240,9 @@ void GLI_vSetFog2(float xBlendStart, float xDepthStart, float xBlendEnd, float x
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSignalCurrentMemoryChannel(unsigned char ucCurrentChannel)
+void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel)
 {
-    /* TODO: decompile from asm/... */
+    GLI_TEX_vSignalCurrentMemoryChannel(ucCurrentChannel);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Init_Gli.c lines 206–206 */
@@ -254,7 +254,7 @@ void GLI_vSignalCurrentMemoryChannel(unsigned char ucCurrentChannel)
  */
 void GLI_vEndofGeometricLoad(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vComputeTextures();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Init_Gli.c lines 190–190 */
@@ -266,5 +266,5 @@ void GLI_vEndofGeometricLoad(void)
  */
 int GLI_xIsGliInit(void)
 {
-    /* TODO: decompile from asm/... */
+    return GLI_gsIsInit;
 }

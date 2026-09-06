@@ -777,6 +777,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
       "status": "MATCH"
     },
+    "0x002a88b0": {
+      "address": "0x002a88b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vSignalCurrentMemoryChannel",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Init_Gli.c",
+      "status": "MATCH"
+    },
+    "0x002a88c0": {
+      "address": "0x002a88c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vEndofGeometricLoad",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Init_Gli.c",
+      "status": "MATCH"
+    },
+    "0x002a88d0": {
+      "address": "0x002a88d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xIsGliInit",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Init_Gli.c",
+      "status": "MATCH"
+    },
     "0x002a9c60": {
       "address": "0x002a9c60",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -815,6 +839,38 @@
       "name": "GLI_xGetViewportCamera",
       "size": 60,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
+      "status": "MATCH"
+    },
+    "0x002bd5e0": {
+      "address": "0x002bd5e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vEndNormalRecomputation",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawVertexArray.c",
+      "status": "MATCH"
+    },
+    "0x002bd690": {
+      "address": "0x002bd690",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vStartNormalRecomp",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawVertexArray.c",
+      "status": "MATCH"
+    },
+    "0x002bdbd0": {
+      "address": "0x002bdbd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vRemovePointLightsAfterProcessing",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawVertexArray.c",
+      "status": "MATCH"
+    },
+    "0x002bdbe0": {
+      "address": "0x002bdbe0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vRemoveLights",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawVertexArray.c",
       "status": "MATCH"
     },
     "0x002ee650": {
