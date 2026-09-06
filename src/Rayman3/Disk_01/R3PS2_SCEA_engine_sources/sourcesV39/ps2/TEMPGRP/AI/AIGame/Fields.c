@@ -3345,7 +3345,8 @@ unsigned char fn_ucGetFieldPadHorizontalAxis(tdstGetSetParam_* p_stGetSetParam)
  */
 unsigned char fn_ucSetFieldPadGlobalVector(tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    IPT_fn_vSetGlobalVectorForPadNumber(AI_g_ucLastMarioPadUsed, (MTH3D_tdstVector_*)p_stGetSetParam);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 297–303 */
@@ -3543,7 +3544,11 @@ unsigned char fn_ucSetFieldOrientation(void)
  */
 unsigned char fn_ucGetFieldPosition(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    ((int*)p_stGetSetParam)[0] = ((int*)&hSuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3)[0];
+    ((int*)p_stGetSetParam)[1] = ((int*)&hSuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3)[1];
+    ((int*)p_stGetSetParam)[2] = ((int*)&hSuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3)[2];
+    *(tdeVariableType_*)((char*)p_stGetSetParam + 12) = E_vt_Vector;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 118–121 */
@@ -3558,7 +3563,10 @@ unsigned char fn_ucGetFieldPosition(HIE_tdstSuperObject_* hSuperObjPerso, tdstGe
  */
 unsigned char fn_ucSetFieldShadowScaleY(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* p_stObject;
+    p_stObject = hSuperObjPerso->hLinkedObject.p_stCharacter;
+    *(float*)((char*)p_stObject->h_3dData + 0xFC) = p_stGetSetParam->uDummy.uParam.xValue;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 111–114 */
@@ -3573,7 +3581,11 @@ unsigned char fn_ucSetFieldShadowScaleY(HIE_tdstSuperObject_* hSuperObjPerso, td
  */
 unsigned char fn_ucGetFieldShadowScaleY(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* p_stObject;
+    p_stObject = hSuperObjPerso->hLinkedObject.p_stCharacter;
+    p_stGetSetParam->uDummy.uParam.xValue = *(float*)((char*)p_stObject->h_3dData + 0xFC);
+    *((tdeVariableType_*)((char*)p_stGetSetParam + 12)) = E_vt_Float;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 104–107 */
@@ -3588,7 +3600,10 @@ unsigned char fn_ucGetFieldShadowScaleY(HIE_tdstSuperObject_* hSuperObjPerso, td
  */
 unsigned char fn_ucSetFieldShadowScaleX(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* p_stObject;
+    p_stObject = hSuperObjPerso->hLinkedObject.p_stCharacter;
+    *(float*)((char*)p_stObject->h_3dData + 0xF8) = p_stGetSetParam->uDummy.uParam.xValue;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 97–100 */
@@ -3603,7 +3618,11 @@ unsigned char fn_ucSetFieldShadowScaleX(HIE_tdstSuperObject_* hSuperObjPerso, td
  */
 unsigned char fn_ucGetFieldShadowScaleX(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* p_stObject;
+    p_stObject = hSuperObjPerso->hLinkedObject.p_stCharacter;
+    p_stGetSetParam->uDummy.uParam.xValue = *(float*)((char*)p_stObject->h_3dData + 0xF8);
+    *((tdeVariableType_*)((char*)p_stGetSetParam + 12)) = E_vt_Float;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 88–90 */

@@ -2888,7 +2888,7 @@ float g_DistanceWaypointMax;
  */
 void WPG_fn_vSetAllocMode(void)
 {
-    /* TODO: decompile from asm/... */
+    GAM_fn_vPushAllocMode(2);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPWayPt.c lines 801–809 */
@@ -2964,7 +2964,9 @@ float WP_fnx_WayPoint_GetRadius(WP_tdstWayPoint_* _hWayPoint)
  */
 void WP_fnv_WayPoint_SetVertex(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _pstNewVector)
 {
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stNewVector = *_pstNewVector;
+
+    _hWayPoint->m_stVertex = stNewVector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPWayPt.c lines 242–243 */
@@ -2977,7 +2979,9 @@ void WP_fnv_WayPoint_SetVertex(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* 
  */
 void WP_fnv_WayPoint_GetVertex(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _pstVector)
 {
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stVertex = _hWayPoint->m_stVertex;
+
+    *_pstVector = stVertex;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPWayPt.c lines 98–98 */

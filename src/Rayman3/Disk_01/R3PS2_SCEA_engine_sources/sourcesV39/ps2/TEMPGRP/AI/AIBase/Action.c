@@ -2943,7 +2943,7 @@ unsigned char g_ucNewActionReturn;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_ScrollMatUV::Display(void)
+void Display__16AGO3_ScrollMatUVFP27GLD_tdstViewportAttributes_(void)
 {
     /* TODO: decompile from asm/... */
 }

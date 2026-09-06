@@ -5350,10 +5350,6 @@ tdstNodeInterpret_* fn_p_stGetWpAbsolutePosition(HIE_tdstSuperObject_* p_SuperOb
 tdstNodeInterpret_* fn_p_stInterpolationBt3WP(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     float xNorm;
-    float xNorm;
-    float xNorm;
-    float xNorm;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
     HIE_tdstSuperObject_* p_stResultOwnerPerso;
     /*type_0x83*/ int hNewSuperObjPerso;
     AI_tdstMind_* p_stMind;
@@ -5513,7 +5509,6 @@ tdstNodeInterpret_* fn_p_stBezierBt3WP(HIE_tdstSuperObject_* p_SuperObjPerso, td
 {
     float xNorm;
     HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
     /*type_0x83*/ int hNewSuperObjPerso;
     MTH3D_tdstVector_ p_stDirection;
     MTH3D_tdstVector_ p_stResult;
@@ -5653,7 +5648,7 @@ tdstNodeInterpret_* fn_p_stDistanceToPersoCenter(HIE_tdstSuperObject_* p_SuperOb
     MTH3D_tdstVector_* p_stCenter1;
     MTH3D_tdstVector_ stCenter1;
     COL_tdstBoundingSphere_* hBoundingSphere2;
-    COL_tdstBoundingSphere_* param0;
+    COL_tdstBoundingSphere_* hBoundingSphere1;
     /* TODO: decompile from asm/... */
 }
 

@@ -4114,9 +4114,6 @@ tdstNodeInterpret_* fn_p_stZDECondition(HIE_tdstSuperObject_* p_SuperObjPerso, t
     unsigned char ucModuleOrCharacter;
     unsigned short xMask2;
     unsigned short xMask1;
-    unsigned short xMask;
-    unsigned char ucModuleOrCharacter;
-    unsigned char ucChannelNumber;
     unsigned char ucModuleOrCharacter2;
     unsigned char ucModuleOrCharacter1;
     unsigned char ucChannelNumber2;
@@ -4167,8 +4164,6 @@ tdstNodeInterpret_* fn_p_stZDDCondition(HIE_tdstSuperObject_* p_SuperObjPerso, t
 {
     unsigned char ucModuleOrCharacter;
     unsigned char ucChannelNumber;
-    unsigned char ucChannelNumber;
-    unsigned char ucModuleOrCharacter;
     tdeCondId_ eCondId;
     HIE_tdstSuperObject_* hCharacter2;
     HIE_tdstSuperObject_* hCharacter1;
@@ -4284,7 +4279,6 @@ tdstNodeInterpret_* fn_p_stButtonCondition(HIE_tdstSuperObject_* p_SuperObjPerso
 tdstNodeInterpret_* fn_p_stBooleanCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     int l1;
-    tdstNodeInterpret_* p_stTreeInit;
     tdstNodeInterpret_* p_stTreeInit;
     tdeCondId_ eCondId;
     tdstGetSetParam_ stValue;

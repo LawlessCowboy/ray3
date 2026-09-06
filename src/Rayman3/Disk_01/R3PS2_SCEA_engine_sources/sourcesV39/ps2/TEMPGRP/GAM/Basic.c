@@ -1802,7 +1802,9 @@ void GAM_fn_vSetEngineInFixMode(void)
  */
 unsigned char GAM_fn_bIsEngineInTransitionMode(void)
 {
-    if (GAM_gs_tdeLoadingMode == GAM_eTransitionLoading)
+    unsigned char ucLoadingMode = GAM_gs_tdeLoadingMode;
+
+    if (ucLoadingMode == GAM_eTransitionLoading)
         return 1;
     return 0;
 }

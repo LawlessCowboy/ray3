@@ -1806,7 +1806,7 @@ void CAM_fn_vSetCameraInList(HIE_tdstSuperObject_* _hSupObjectCamera)
  */
 void CAM_fn_vSetCineinfoWorkFromVisibility(tdstCineinfo_* param0)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(param0->hWork, param0->hVisibility, sizeof(tdstInternalStructurCineinfo_));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 725–728 */
@@ -1901,7 +1901,7 @@ HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructu
  */
 void CAM_fn_vCineinfoCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(_p_stObjectDest->h_Cineinfo->hInit, _p_stObjectSrc->h_Cineinfo->hInit, sizeof(tdstInternalStructurCineinfo_));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 584–605 */

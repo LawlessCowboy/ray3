@@ -3321,7 +3321,6 @@ void Cam_fn_vComputeMovingOnRail(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstV
     float xNorm;
     char cCameraIsOnWp;
     float xSqrNorm;
-    float xNorm;
     float xFactor;
     MTH3D_tdstVector_ stWpDestination;
     MTH3D_tdstVector_ stRailAxis;

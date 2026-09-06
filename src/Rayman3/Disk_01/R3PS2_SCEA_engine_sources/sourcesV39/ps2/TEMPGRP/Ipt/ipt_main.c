@@ -440,7 +440,7 @@ void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber
  */
 signed char IPT_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime)
 {
-    return INO_fn_cCreateAndLaunchConstantFFBEffect(ulCurrentTime, *(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260), xFadeInStartValue, xFadeInTime, xConstantValue, xConstantTime, xFadeOutStopValue, xFadeOutTime);
+    return INO_fn_cCreateAndLaunchConstantFFBEffect(ulCurrentTime, ((stDevice**)&D_7D35C0)[ucPadNumber], xFadeInStartValue, xFadeInTime, xConstantValue, xConstantTime, xFadeOutStopValue, xFadeOutTime);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1131–1131 */
@@ -452,7 +452,7 @@ signed char IPT_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime,
  */
 void IPT_fn_vStopPreCreatedFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber)
 {
-    INO_fn_vStopPreCreatedFFBEffect(ulCurrentTime, *(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260), cEffectNumber);
+    INO_fn_vStopPreCreatedFFBEffect(ulCurrentTime, ((stDevice**)&D_7D35C0)[ucPadNumber], cEffectNumber);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1124–1124 */
@@ -464,7 +464,7 @@ void IPT_fn_vStopPreCreatedFFBEffect(unsigned int ulCurrentTime, unsigned char u
  */
 void IPT_fn_vStartPreCreatedFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber)
 {
-    INO_fn_vStartPreCreatedFFBEffect(ulCurrentTime, *(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260), cEffectNumber);
+    INO_fn_vStartPreCreatedFFBEffect(ulCurrentTime, ((stDevice**)&D_7D35C0)[ucPadNumber], cEffectNumber);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1119–1119 */

@@ -127,6 +127,8 @@ typedef struct SCT_tdstListOfSoundEvent_ SCT_tdstListOfSoundEvent_;
 typedef struct tdstLipsSynchValue_ tdstLipsSynchValue_;
 typedef struct WP_tdstGraph_ WP_tdstGraph_;
 
+extern unsigned char g_stEngineStructure[];
+
 typedef enum e_ucCameraStates_ {
     CAM_e_State_GoToOptimal = 0,
     CAM_e_State_GoToComputedOptimal = 1,
@@ -1192,7 +1194,7 @@ struct WP_tdstGraph_ {
  */
 unsigned char GAM_MultiVP_fn_ucGetNumberOfPlayers(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_stEngineStructure[0xF0];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjsTbls.c lines 211–212 */
@@ -1205,7 +1207,7 @@ unsigned char GAM_MultiVP_fn_ucGetNumberOfPlayers(void)
  */
 unsigned char fn_bObjectTableHasZde(tdstObjectsTablesList_* _hObjectTableList)
 {
-    /* TODO: decompile from asm/... */
+    return (_hObjectTableList->wZDxUsed & 2) != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjsTbls.c lines 177–177 */

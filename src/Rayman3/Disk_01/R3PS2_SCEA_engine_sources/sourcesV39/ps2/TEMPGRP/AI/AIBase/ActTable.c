@@ -2919,7 +2919,7 @@ void fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char uc
  */
 void fn_vInitActionTable(tdstIntelligence_* p_stIntelligence)
 {
-    unsigned char ucNbEntries;
+    register unsigned char ucNbEntries;
     unsigned char ucNEntry;
     /* TODO: decompile from asm/... */
 }
@@ -2948,9 +2948,9 @@ void fn_vInitActionTable(tdstIntelligence_* p_stIntelligence)
  */
 void fn_vUnuseAllRulesFromSchedule(tdstIntelligence_* p_stIntelligence)
 {
-    tdstActionTableEntry_* p_stEntry;
+    tdstActionTable_* p_stActionTable;
     unsigned char ucCurrentEntry;
-    unsigned char ucNbEntries;
+    const unsigned char ucNbEntries;
     /* TODO: decompile from asm/... */
 }
 
@@ -3042,8 +3042,8 @@ void fn_vUseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence, unsigne
 unsigned char fn_ucFindPlaceInActionTable(tdstIntelligence_* p_stIntelligence)
 {
     tdstActionTableEntry_* param0;
+    unsigned char ucCurrentEntry;
     unsigned char ucNbEntries;
-    register unsigned char ucCurrentEntry;
 
     ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
 
@@ -3059,7 +3059,6 @@ unsigned char fn_ucFindPlaceInActionTable(tdstIntelligence_* p_stIntelligence)
             }
         }
     }
-
     return ucNbEntries;
 }
 
@@ -3085,5 +3084,18 @@ unsigned char fn_ucIsRuleAndNodeInActionTable(tdstIntelligence_* p_stIntelligenc
     tdstActionTableEntry_* p_stEntry;
     unsigned char ucCurrentEntry;
     unsigned char ucNbEntries;
-    /* TODO: decompile from asm/... */
+    ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
+    if (ucNbEntries != 0)
+    {
+        p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry;
+        ucCurrentEntry = 0;
+        while (ucCurrentEntry < p_stIntelligence->p_stActionTable->ucNbEntriesUsed)
+        {
+            if (p_stEntry->bUsed != 0 && p_stEntry->ucNumRule == ucNumRule && p_stEntry->p_stNode == p_stNode)
+                break;
+            ucCurrentEntry++;
+            p_stEntry++;
+        }
+    }
+    return p_stIntelligence->p_stActionTable->ucNbEntriesUsed;
 }

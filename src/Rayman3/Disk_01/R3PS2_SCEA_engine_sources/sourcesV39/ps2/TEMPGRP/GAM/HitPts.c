@@ -1730,15 +1730,19 @@ unsigned char fn_ucSubHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char
  */
 void fn_vAddHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    unsigned int value;
+    int value;
+    unsigned char max;
+    unsigned char maxMax;
     value = _ucValue;
-    if (_p_stObject->h_StandardGame->ucHitPointsMaxMax < value + _p_stObject->h_StandardGame->ucHitPointsMax)
+    max = _p_stObject->h_StandardGame->ucHitPointsMax;
+    maxMax = _p_stObject->h_StandardGame->ucHitPointsMaxMax;
+    if (maxMax < value + max)
     {
         _p_stObject->h_StandardGame->ucHitPointsMax = _p_stObject->h_StandardGame->ucHitPointsMaxMax;
     }
     else
     {
-        _p_stObject->h_StandardGame->ucHitPointsMax = value + (signed char)_p_stObject->h_StandardGame->ucHitPointsMax;
+        _p_stObject->h_StandardGame->ucHitPointsMax = value + (signed char)max;
     }
 }
 

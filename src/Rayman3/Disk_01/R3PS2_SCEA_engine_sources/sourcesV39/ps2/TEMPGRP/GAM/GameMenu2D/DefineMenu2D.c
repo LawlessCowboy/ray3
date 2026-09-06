@@ -3154,8 +3154,13 @@ void fn_vR3SetEnvScoreWithRevisit(unsigned int ulIndE, unsigned int ulScore)
  */
 void fn_vR3RecomputeGlobalScore(void)
 {
-    int i;
-    /* TODO: decompile from asm/... */
+    unsigned short i;
+    g_aEnvValue[0].ulScore = 0;
+    for (i = 1; i < 10; i++)
+        g_aEnvValue[0].ulScore += g_aEnvValue[i].ulScore;
+    for (i = 1; i < 10; i++)
+        g_aEnvValue[0].ulScore += g_aEnvValue[i].ulNbCage;
+    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 221–227 */

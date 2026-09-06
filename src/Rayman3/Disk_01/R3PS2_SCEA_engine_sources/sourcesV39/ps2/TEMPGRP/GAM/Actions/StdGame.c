@@ -1219,7 +1219,7 @@ unsigned int fn_ulSectInfoSizeOf(void)
  */
 unsigned char fn_ucStdGameCheckValidity(HIE_tdstSuperObject_* _h_SprObj)
 {
-    /* TODO: decompile from asm/... */
+    return _h_SprObj->hLinkedObject.p_stCharacter->h_StandardGame != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 706–715 */
@@ -1269,7 +1269,14 @@ void fn_vStandardGameGetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex,
  */
 void fn_vStandardGameSetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex, int _lValue)
 {
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* p_stObject;
+    tdstStandardGame_* p_stStandardGame;
+    if ((_lIndex < 2) && (_lIndex >= 0))
+    {
+        p_stObject = _hSO->hLinkedObject.p_stCharacter;
+        p_stStandardGame = p_stObject->h_StandardGame;
+        p_stStandardGame->a_lCustomLongs[_lIndex] = _lValue;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 672–677 */
@@ -1283,7 +1290,12 @@ void fn_vStandardGameSetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex, i
  */
 int fn_lStandardGameGetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
 {
-    /* TODO: decompile from asm/... */
+    int lValue = 0;
+    if ((_lIndex < 2) && (_lIndex >= 0))
+    {
+        lValue = _hSO->hLinkedObject.p_stCharacter->h_StandardGame->a_lCustomLongs[_lIndex];
+    }
+    return lValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 664–668 */
@@ -1297,7 +1309,14 @@ int fn_lStandardGameGetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
  */
 void fn_vStandardGameSetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex, float _xValue)
 {
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* p_stObject;
+    tdstStandardGame_* p_stStandardGame;
+    if ((_lIndex < 2) && (_lIndex >= 0))
+    {
+        p_stObject = _hSO->hLinkedObject.p_stCharacter;
+        p_stStandardGame = p_stObject->h_StandardGame;
+        p_stStandardGame->a_xCustomFloats[_lIndex] = _xValue;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 655–660 */
@@ -1312,7 +1331,18 @@ void fn_vStandardGameSetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex, 
  */
 float fn_xStandardGameGetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
 {
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* p_stObject;
+    tdstStandardGame_* p_stStandardGame;
+    float xValue;
+    if ((_lIndex < 2) && (_lIndex >= 0))
+    {
+        p_stObject = _hSO->hLinkedObject.p_stCharacter;
+        p_stStandardGame = p_stObject->h_StandardGame;
+        xValue = p_stStandardGame->a_xCustomFloats[_lIndex];
+    }
+    else
+        xValue = 0.0f;
+    return xValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 649–651 */
@@ -1361,7 +1391,7 @@ unsigned char fn_ucStandardGameGetTransparencyZoneMinSO(HIE_tdstSuperObject_* hS
  */
 unsigned char fn_bStandardGameIsAPlatform(HIE_tdstSuperObject_* hSupObj)
 {
-    /* TODO: decompile from asm/... */
+    return hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType == 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 624–625 */
@@ -1374,7 +1404,7 @@ unsigned char fn_bStandardGameIsAPlatform(HIE_tdstSuperObject_* hSupObj)
  */
 void fn_vStandardGameSetCustomBitsSO(HIE_tdstSuperObject_* hSupObj, unsigned int ulCustomBits)
 {
-    /* TODO: decompile from asm/... */
+    hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits = ulCustomBits;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 619–620 */
@@ -1387,7 +1417,7 @@ void fn_vStandardGameSetCustomBitsSO(HIE_tdstSuperObject_* hSupObj, unsigned int
  */
 unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj)
 {
-    /* TODO: decompile from asm/... */
+    return hSupObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 609–615 */
@@ -1430,7 +1460,7 @@ HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGa
  */
 void fn_vStdGameCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(_p_stObjectDest->h_StandardGame, _p_stObjectSrc->h_StandardGame, sizeof(tdstStandardGame_));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 565–566 */
@@ -1443,7 +1473,7 @@ void fn_vStdGameCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_*
  */
 void fn_vSetHitPointsMaxToInitValue(tdstEngineObject_* _p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    _p_stObject->h_StandardGame->ucHitPointsMax = _p_stObject->h_StandardGame->ucSaveHitPointsMax;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 560–561 */
@@ -1456,7 +1486,7 @@ void fn_vSetHitPointsMaxToInitValue(tdstEngineObject_* _p_stObject)
  */
 void fn_vSetHitPointsToInitValue(tdstEngineObject_* _p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    _p_stObject->h_StandardGame->ucHitPoints = _p_stObject->h_StandardGame->ucSaveHitPoints;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 501–520 */

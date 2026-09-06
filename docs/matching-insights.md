@@ -33,3 +33,7 @@ compiler option, construct, and outcome.
 - [compiler] For GLI_vResetTableOfActiveLightsForChar, leaving memset without an explicit prototype reproduced the target tail-call exactly (24/24); declaring memset as void or void* changed argument evaluation/register scheduling and emitted 28 bytes. MWCC's implicit builtin/library handling is significant for memset wrappers. (2026-09-06)
 
 - [debug-format] Keyword wrappers required correcting tduGetSetParam_ from generated struct to union (all members at offset 0) plus an omitted leading ABI parameter; fn_p_stNoVMTKeyWord then matched 20/20 with p_stTree in a1 and p_stValue in a2. (2026-09-06)
+
+- [relocation] In HMU_Sync.c, the target encodes the shared HMU_g_bHMU_CS_Created relocation as gp-0x6614 in HMU_fn_bIsInitialized but gp-0x6610 in matched HMU_fn_vEnterCriticalSection. A single natural source declaration can match the latter but not both; treat isolated accessor failures as target relocation/data-layout evidence. (2026-09-06)
+
+- [debug-format] fn_ucGetDsgVarBoolean is a three-argument ABI despite the recovered two-argument declaration; target loads byte from a0, writes output through a2, and tags it E_vt_Integer (6), not E_vt_Boolean (1). This exact natural-C signature/tag change produced a 24/24 MATCH. (2026-09-06)

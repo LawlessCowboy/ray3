@@ -102,7 +102,7 @@ unsigned char SAI_fn_bInitAllWhen(unsigned short _eUserFlags)
  */
 unsigned char SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, unsigned short _eFlags)
 {
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, param0, _ulSize, 0x2000, _eFlags);
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, param0, _ulSize, 0x5000, _eFlags);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 99–134 */
@@ -154,7 +154,7 @@ unsigned char SAI_fn_bRemoveValueFromTable(void* _p_vValue, unsigned short _eFla
  */
 unsigned char SAI_fn_bInsertMTHVectorInTable(void* _p_vValue, unsigned short _eFlags)
 {
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 0xC, 0x1000, _eFlags);
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 0xC, 0x5000, _eFlags);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 57–57 */
@@ -166,7 +166,7 @@ unsigned char SAI_fn_bInsertMTHVectorInTable(void* _p_vValue, unsigned short _eF
  */
 unsigned char SAI_fn_bInsertMTHRealInTable(void* _p_vValue, unsigned short _eFlags)
 {
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 4, 0x4000, _eFlags);
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 4, 0x3000, _eFlags);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 51–51 */
@@ -178,7 +178,7 @@ unsigned char SAI_fn_bInsertMTHRealInTable(void* _p_vValue, unsigned short _eFla
  */
 unsigned char SAI_fn_bInsertPointerInTable(void* _p_vValue, unsigned short _eFlags)
 {
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 8, 0x4000, _eFlags);
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 8, 0x7000, _eFlags);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 36–36 */
@@ -190,7 +190,7 @@ unsigned char SAI_fn_bInsertPointerInTable(void* _p_vValue, unsigned short _eFla
  */
 unsigned char SAI_fn_bInsertLongInTable(void* _p_vValue, unsigned short _eFlags)
 {
-    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 4, 0x4000, _eFlags);
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 4, 0x3000, _eFlags);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 26–26 */

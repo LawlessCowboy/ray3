@@ -1620,7 +1620,7 @@ int fn_bTestSubAnimNearEnd(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNum
 {
     tdstSubAnimInUse_* param0;
     tdstSubAnim_* hSubAnimInFamily;
-    tdst3dData_* param0;
+    tdst3dData_* h3dData;
     /* TODO: decompile from asm/... */
 }
 
@@ -1700,7 +1700,7 @@ int fn_bTestSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSu
 {
     tdstSubAnimInUse_* param0;
     tdstSubAnim_* hSubAnimInFamily;
-    tdst3dData_* param0;
+    tdst3dData_* h3dData;
     /* TODO: decompile from asm/... */
 }
 
@@ -1725,7 +1725,7 @@ int fn_bTestCustomBitSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulN
     tdstSubAnimInUse_* hNextSubAnimInUse;
     tdstSubAnimInUse_* param0;
     tdstSubAnim_* hSubAnimInFamily;
-    tdst3dData_* param0;
+    tdst3dData_* h3dData;
     /* TODO: decompile from asm/... */
 }
 

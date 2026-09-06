@@ -16,6 +16,33 @@ typedef struct tdstDynam_ tdstDynam_;
 typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
 
+typedef enum tdeCondId_ {
+    eCond_Dummy = 0,
+} tdeCondId_;
+
+typedef enum tdeVariableType_ {
+    eVariableType_Dummy = 0,
+} tdeVariableType_;
+
+struct MTH3D_tdstVector_ {
+    float xX;
+    float xY;
+    float xZ;
+};
+
+typedef union tduGetSetParam_ {
+    float xValue;
+    int lValue;
+    unsigned int ulValue;
+    void* pValue;
+    MTH3D_tdstVector_ stVectorValue;
+} tduGetSetParam_;
+
+typedef struct tdstGetSetParam_ {
+    tduGetSetParam_ uParam;
+    tdeVariableType_ eType;
+} tdstGetSetParam_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 1085–1116 */
 /* addr: 0x0020dc40  size: 108 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

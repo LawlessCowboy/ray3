@@ -2214,7 +2214,7 @@ void GAM_MultiVP_fn_vSetNumberOfPlayers(unsigned char _ucNumberOfPlayers, unsign
  */
 unsigned char GAM_MultiVP_fn_ucGetNumberOfColumns(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_stEngineStructure.ucNumberOfColumnsInMultiMode;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 66–66 */
