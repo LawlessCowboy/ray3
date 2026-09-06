@@ -1122,6 +1122,10 @@ struct AI_tdstMind_ {
     unsigned char bDoingIntel; /* +0x10 */
 };
 
+extern void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode);
+extern void SECT_fn_vIsolateDNMLightsListNode(SECT_tdstListOfDNMLights_* hNode);
+extern SECT_tdstListOfDNMLights_* fn_hMSLightGetLightNodeInSector(tdstMSLight_* hMSLight);
+
 int g_hCharacterLauchingSoundEvents;
 int SECT_hFatherSector;
 int gp_stInactiveDynamicWorld;
@@ -1285,7 +1289,12 @@ HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo)
  */
 void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* hCharacter)
 {
-    /* TODO: decompile from asm/... */
+    SECT_fn_vIsolateCharListNode(hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hNodeInSector);
+
+    if (hCharacter->hLinkedObject.p_stCharacter->h_MSLight != NULL)
+    {
+        SECT_fn_vIsolateDNMLightsListNode(fn_hMSLightGetLightNodeInSector(hCharacter->hLinkedObject.p_stCharacter->h_MSLight));
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 431–443 */

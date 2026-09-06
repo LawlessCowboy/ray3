@@ -1452,7 +1452,7 @@ tdstObjectsTablesList_* fn_hGetObjectsTableOfFamilyByIndex(tdstFamilyList_* _hFa
  */
 COL_tdstBoundingSphere_* fn_vGetBoundingVolumeOfFamily(tdstFamilyList_* h_Family)
 {
-    /* TODO: decompile from asm/... */
+    return h_Family->hBoundingSphere;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Family.c lines 75–80 */

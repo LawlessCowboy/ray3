@@ -249,6 +249,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Engine.c",
       "status": "MATCH"
     },
+    "0x0025f680": {
+      "address": "0x0025f680",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vGetBoundingVolumeOfFamily",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Family.c",
+      "status": "MATCH"
+    },
     "0x0025fee0": {
       "address": "0x0025fee0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -383,6 +391,14 @@
       "name": "MSWay_fn_lGetNumberWayPointInPath",
       "size": 40,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSWay.c",
+      "status": "MATCH"
+    },
+    "0x00273970": {
+      "address": "0x00273970",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vRemoveObjectInSectorList",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/SectInfo.c",
       "status": "MATCH"
     },
     "0x002743c0": {
