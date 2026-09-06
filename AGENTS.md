@@ -58,6 +58,11 @@ this project's baseline without a local reproduction.
 For a persistent mismatch, use `docs/mwcc-probe-playbook.md` to classify it
 and run one controlled natural-C experiment at a time.
 
+For a candidate whose control flow, calls, relocations, and data accesses are
+already right but whose residual is register allocation or scheduling, hand it
+to `docs/permuter.md`.  Upstream decomp-permuter scores are advisory; only
+`python3 tools/permute.py verify FUNCTION CANDIDATE` can certify a Rayman match.
+
 The coordinator runs `python3 tools/match.py preflight --jobs 4` before bulk
 assignment. Select only sources shown by `list --compileable` until extractor
 work clears more translation units. Run `index --refresh` after a full source

@@ -5,6 +5,11 @@
 /asm/
 /build/
 
+# Local decomp-permuter checkout and virtual environment.  The checked-in
+# Rayman adapter is tools/permute.py; install third-party code locally.
+/tools/decomp-permuter/
+/tools/permuter-venv/
+
 # The original scratch/compiler directory contains MWCC binaries, Wibo, probe
 # inputs/objects, and duplicate ELF copies.  Maintained scripts live in tools/.
 /Compiler/

@@ -442,9 +442,9 @@ def patch_relocation(code: bytearray, offset: int, reloc_type: int,
     return True
 
 
-def compare(entry: dict, verbose: bool = False) -> dict:
+def compare(entry: dict, verbose: bool = False, source_override: Path | None = None) -> dict:
     sections, target_symbols, main, _, target_names = target_context()
-    source = ROOT / entry['source']
+    source = source_override or ROOT / entry['source']
     obj_path, build_state = compile_source(source)
     if obj_path is None:
         return {'status': 'COMPILE_ERROR', 'entry': entry, 'detail': build_state}
