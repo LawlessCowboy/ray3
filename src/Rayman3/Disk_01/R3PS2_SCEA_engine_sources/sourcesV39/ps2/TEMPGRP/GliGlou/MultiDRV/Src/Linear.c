@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+extern unsigned char g_ucTableOfActiveLightsForChar[300];
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
@@ -114,5 +116,5 @@ MAT_tdstTransformation_ GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraM
  */
 void GLI_vResetTableOfActiveLightsForChar(char _cValue)
 {
-    /* TODO: decompile from asm/... */
+    memset(g_ucTableOfActiveLightsForChar, _cValue, 300);
 }

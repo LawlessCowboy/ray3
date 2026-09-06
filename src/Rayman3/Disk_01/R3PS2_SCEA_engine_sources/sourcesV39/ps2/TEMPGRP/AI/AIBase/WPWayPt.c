@@ -2939,7 +2939,7 @@ unsigned char WP_fnb_WayPoint_IsDynamic(WP_tdstWayPoint_* _hWayPoint)
  */
 void WP_fnv_WayPoint_SetRadius(WP_tdstWayPoint_* _hWayPoint, float _xNewRadius)
 {
-    _hWayPoint->m_xRadius = xRadius;
+    _hWayPoint->m_xRadius = _xNewRadius;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPWayPt.c lines 275–275 */

@@ -1207,8 +1207,6 @@ DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics* _p_stDynamics, H
 void CAM_fn_vComputeCameraSystemAxis(HIE_tdstSuperObject_* _h_SupObj, MTH3D_tdstVector_* _p_stNewPosition, MTH3D_tdstVector_* _p_stNewTarget, MTH3D_tdstVector_* _p_stAxisX, MTH3D_tdstVector_* _p_stAxisY, MTH3D_tdstVector_* _p_stAxisZ)
 {
     float xNorm;
-    float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ stYVector;
     /* TODO: decompile from asm/... */
 }
@@ -1428,14 +1426,7 @@ void CAM_fn_vComputeCameraSystemAxis(HIE_tdstSuperObject_* _h_SupObj, MTH3D_tdst
 DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstacle, DNM_stDynamics* _p_stDynamics, DNM_stParsingDatas* _p_stExternData, HIE_tdstSuperObject_* _hSupObj, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stNewPosition)
 {
     float xNorm;
-    float xNorm;
-    float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ VectTmp;
-    float xNorm;
-    float xNorm;
-    float xNorm;
-    float xNorm;
     MAT_tdstTransformation_ stEndMatrix;
     MAT_tdstTransformation_ stBeginMatrix;
     MTH3D_tdstVector_* p_stProjectedVector;
@@ -1451,7 +1442,6 @@ DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstac
     unsigned int uiNumNormals;
     MTH3D_tdstVector_ a_stCross[5];
     MTH3D_tdstVector_ a_stNormals[5];
-    float xNorm;
     float xAngle;
     int lNbCollisions;
     MTH_stRotation stRotation;
@@ -1793,9 +1783,6 @@ void DNM_fn_vDynamicsTakeCareOfLastMove(MTH3D_tdstVector_* _p_stShiftingResult, 
  */
 float CAM_fn_xComputeVerticalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ)
 {
-    float xNorm;
-    float xNorm;
-    float xNorm;
     float xNorm;
     MTH_stRotation stRotation;
     float xDestAngle;

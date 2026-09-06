@@ -3349,8 +3349,6 @@ float fn_xAngleVectorVertical(MTH3D_tdstVector_* stVectorU, MTH3D_tdstVector_* s
 {
     float xNorm;
     MTH3D_tdstVector_ VectTmp;
-    float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ vW;
     MTH3D_tdstVector_ vN;
     MTH3D_tdstVector_ vV;
@@ -3395,7 +3393,6 @@ float fn_xAngleVectorVertical(MTH3D_tdstVector_* stVectorU, MTH3D_tdstVector_* s
  */
 float fn_xAngleVectorXOY(MTH3D_tdstVector_* stVectorU, MTH3D_tdstVector_* stVectorV)
 {
-    float xNorm;
     float xNorm;
     MTH3D_tdstVector_ vUtemp2;
     MTH3D_tdstVector_ vUtemp;

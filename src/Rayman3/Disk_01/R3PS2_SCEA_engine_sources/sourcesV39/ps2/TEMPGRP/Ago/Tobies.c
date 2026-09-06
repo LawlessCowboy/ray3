@@ -76,7 +76,19 @@ void AGO2_vReInit(void)
 void Toby_AddSegment(unsigned int IDNumber, MTH3D_tdstVector_* pPos1, MTH3D_tdstVector_* pPos2)
 {
     _Toby_Part_* param0;
-    /* TODO: decompile from asm/... */
+    _Toby_* toby = ((_Toby_*)Toby_g_Container) + IDNumber;
+    if (toby->NbActualSegments < toby->NbAllocatedSegments)
+    {
+        param0 = toby->pSegments + toby->NbActualSegments++;
+        param0->pStart[0] = pPos1->xX;
+        param0->pStart[1] = pPos1->xY;
+        param0->pStart[2] = pPos1->xZ;
+        param0->pStart[3] = 1.0f;
+        param0->pEnd[0] = pPos2->xX;
+        param0->pEnd[1] = pPos2->xY;
+        param0->pEnd[2] = pPos2->xZ;
+        param0->pEnd[3] = 1.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\Tobies.c lines 117–130 */
@@ -113,7 +125,11 @@ void Toby_Allocate(unsigned int IDNumber, unsigned int NumberOfSegments)
  */
 void Toby_SetTransparency(unsigned int IDNumber, float fAlphaValue)
 {
-    /* TODO: decompile from asm/... */
+    if (fAlphaValue < 0.0f)
+        fAlphaValue = 0.0f;
+    if (fAlphaValue > 1.0f)
+        fAlphaValue = 1.0f;
+    ((_Toby_*)Toby_g_Container)[IDNumber].fTransparency = fAlphaValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\Tobies.c lines 105–105 */

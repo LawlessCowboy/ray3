@@ -1708,7 +1708,7 @@ unsigned char fn_bCollSetGetCharacterNoCollisionWithProjectile(tdstCollSet_* _hC
  */
 unsigned char fn_bCollSetGetCharacterNoCollisionWithMap(tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hCollSet->ucCollisionFlag & 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 625–625 */

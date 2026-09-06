@@ -116,7 +116,12 @@ typedef union GEO_tduVSObject_ GEO_tduVSObject_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
 typedef struct MOR_stMorphVector_ MOR_stMorphVector_;
 typedef struct MOR_stMorphObject_ MOR_stMorphObject_;
-extern MOR_stMorphObject_ D_7D5384[];
+typedef struct MOR_stMorphObjectIndex_ MOR_stMorphObjectIndex_;
+struct MOR_stMorphObjectIndex_ {
+    void* hBaseObject; /* +0x0 */
+    unsigned char a_ucPad[0xA8 - sizeof(void*)]; /* +0x4 */
+};
+extern MOR_stMorphObjectIndex_ D_7D5384[];
 typedef struct tdstLipsSynchValue_ tdstLipsSynchValue_;
 typedef struct LST2_tdstAnchorTotdxHandleToStateOpt LST2_tdstAnchorTotdxHandleToStateOpt;
 typedef struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt;

@@ -88,7 +88,7 @@ void FIL_fn_vFirstInit(void)
 void FMN_SCE_AddBaseDirectory(char* buffer)
 {
     char s_szFileName[256];
-    /* TODO: decompile from asm/... */
+    strcpy(s_szFileName, buffer);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\filemng.c lines 940–944 */

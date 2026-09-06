@@ -3673,9 +3673,7 @@ void CAM_fn_vConstraintMoveAfterVisFailure(CAM_tdstUpdateCamera_* _p_stStruct)
 void CAM_fn_vComputeSpeed(CAM_tdstUpdateCamera_* _p_stStruct)
 {
     float xNorm;
-    float xNorm;
     float xAngle;
-    float xNorm;
     MTH3D_tdstVector_ stMoveTgt;
     MTH3D_tdstVector_ stTempVector1;
     MTH3D_tdstVector_ stTempVector;
@@ -3747,12 +3745,10 @@ void CAM_fn_vComputeMovePosWithDynTheta(CAM_tdstUpdateCamera_* _p_stStruct)
 void CAM_fn_vComputeMovePos(CAM_tdstUpdateCamera_* _p_stStruct)
 {
     float xNorm;
-    float xNorm;
     float xThetaAngle;
     float xAlphaAngle;
     float xDistMax;
     float xDistMin;
-    float xNorm;
     MTH3D_tdstVector_ stCamTargetVector;
     MTH3D_tdstVector_ stDir;
     /* TODO: decompile from asm/... */
@@ -3795,7 +3791,6 @@ void CAM_fn_vComputeMovePos(CAM_tdstUpdateCamera_* _p_stStruct)
  */
 char CAM_fn_cDynChangeTheta(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stTestedPos)
 {
-    float xNorm;
     float xNorm;
     float xThetaAngle;
     float xAngle;
@@ -4069,8 +4064,6 @@ void CAM_fn_vComputeTargetedPersoPos(CAM_tdstUpdateCamera_* _p_stStruct, HIE_tds
  */
 void CAM_fn_vComputeRefAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stRefAxis)
 {
-    float xNorm;
-    float xNorm;
     float xNorm;
     MTH3D_tdstVector_ stVectorNull;
     /* TODO: decompile from asm/... */

@@ -2990,7 +2990,10 @@ void fn_vR3SetNbBonusOpen(unsigned int ulNum)
  */
 void fn_vR3SetCurrentEnvNumber(unsigned int ulNum)
 {
-    /* TODO: decompile from asm/... */
+    if (ulNum > (unsigned int)g_MaxIndCurrentEnv)
+        g_MaxIndCurrentEnv = ulNum;
+    if (ulNum != (unsigned int)g_IndCurrentEnv)
+        g_IndCurrentEnv = ulNum;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 386–386 */
@@ -3002,7 +3005,7 @@ void fn_vR3SetCurrentEnvNumber(unsigned int ulNum)
  */
 void fn_vUpdatePlayerGameName(void)
 {
-    /* TODO: decompile from asm/... */
+    return;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 368–381 */

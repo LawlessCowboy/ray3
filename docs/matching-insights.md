@@ -29,3 +29,7 @@ compiler option, construct, and outcome.
 - [compiler] MWCC PS2 3.0: assigning a masked ternary expression to an unsigned int local and returning it from an unsigned-char function preserves the final andi 0xff conversion; equivalent early returns let range analysis remove that mask. (2026-09-06)
 
 - [compiler] MWCC PS2 3.0 emits a post-call andi 0xff when an undeclared callee is implicitly assumed to return int; declaring its unsigned-char return type removes that conversion. (2026-09-06)
+
+- [compiler] For GLI_vResetTableOfActiveLightsForChar, leaving memset without an explicit prototype reproduced the target tail-call exactly (24/24); declaring memset as void or void* changed argument evaluation/register scheduling and emitted 28 bytes. MWCC's implicit builtin/library handling is significant for memset wrappers. (2026-09-06)
+
+- [debug-format] Keyword wrappers required correcting tduGetSetParam_ from generated struct to union (all members at offset 0) plus an omitted leading ABI parameter; fn_p_stNoVMTKeyWord then matched 20/20 with p_stTree in a1 and p_stValue in a2. (2026-09-06)

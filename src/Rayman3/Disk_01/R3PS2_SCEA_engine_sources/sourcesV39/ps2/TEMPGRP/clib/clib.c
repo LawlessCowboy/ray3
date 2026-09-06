@@ -16,7 +16,7 @@ int LogPassages[1000];
  */
 float PS2SQRTF(float x)
 {
-    return x;
+    return __builtin_sqrt(x);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\clib\clib.c lines 84–93 */

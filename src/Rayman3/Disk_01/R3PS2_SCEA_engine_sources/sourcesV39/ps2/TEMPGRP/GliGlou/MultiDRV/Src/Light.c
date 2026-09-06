@@ -326,7 +326,7 @@ float GLI_fn_xFogGetNear(GLI_tdstLight_* p_stLight)
  */
 unsigned char GLI_ucGetObjectLighted(GLI_tdstLight_* p_stLight)
 {
-    return p_stLight->ucObjectLighted;
+    return *(unsigned char*)((unsigned char*)p_stLight + 0xC5);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 833–834 */
@@ -732,7 +732,7 @@ void GLI_vAddInternalLightToViewport(MTH3D_tdstVector_* pAmbientColor, MTH3D_tds
  */
 void GLI_vCopyLight(GLI_tdstLight_* p_stLightDst, GLI_tdstLight_* p_stLightSrc)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(p_stLightDst, p_stLightSrc, 0x130);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 413–441 */
@@ -797,7 +797,7 @@ void GLI_xSetViewportLightsOnOff(unsigned char bOnOff)
  */
 void GLI_vClearListOfLightInViewport(void)
 {
-    /* TODO: decompile from asm/... */
+    gs_CurrentNumberOfLightInViewport = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 373–376 */

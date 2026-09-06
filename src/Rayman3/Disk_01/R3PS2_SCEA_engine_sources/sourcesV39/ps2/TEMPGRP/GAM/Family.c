@@ -1427,7 +1427,7 @@ void fn_vEmptyFunction2(void)
  */
 unsigned char fn_bGetFamilyProperty(tdstFamilyList_* h_Family, unsigned char ucPropertyMask)
 {
-    /* TODO: decompile from asm/... */
+    return (unsigned char)(h_Family->ucProperties & ucPropertyMask);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Family.c lines 201–202 */
@@ -1440,7 +1440,7 @@ unsigned char fn_bGetFamilyProperty(tdstFamilyList_* h_Family, unsigned char ucP
  */
 tdstObjectsTablesList_* fn_hGetObjectsTableOfFamilyByIndex(tdstFamilyList_* _hFamily, short _xIndex)
 {
-    /* TODO: decompile from asm/... */
+    return &_hFamily->hForObjectsTablesList.hFirstElementOpt[_xIndex];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Family.c lines 164–164 */

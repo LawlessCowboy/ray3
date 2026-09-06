@@ -3460,7 +3460,6 @@ CAM_tdstCameraConstants_ CAM_g_stCameraConstants;
 tdstNodeInterpret_* CAM_fn_p_stUpdatePosition2(HIE_tdstSuperObject_* _hSuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ stSight;
     MTH3D_tdstVector_ stHorizontal;
     MTH3D_tdstVector_ stVertical;

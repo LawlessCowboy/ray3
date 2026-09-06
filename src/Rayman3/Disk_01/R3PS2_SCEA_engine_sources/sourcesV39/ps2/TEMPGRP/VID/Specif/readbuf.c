@@ -64,7 +64,7 @@ int readBufEndPut(anon_0* b, int size)
     int available;
 
     available = b->size - b->count;
-    size = size < available ? available : size;
+    size = available > size ? size : available;
     b->put = (b->put + size) % b->size;
     b->count += size;
     return size;

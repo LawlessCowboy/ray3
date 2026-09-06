@@ -98,7 +98,18 @@ struct tdstTransition_ {
  */
 void fn_vFirstInitObjectTypeStructure(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int* puObjectTypeStructure;
+
+    puObjectTypeStructure = (unsigned int*)0x5482c0;
+    puObjectTypeStructure[0] = 0;
+    puObjectTypeStructure[1] = 0;
+    puObjectTypeStructure[2] = 0;
+    puObjectTypeStructure[3] = 0;
+    puObjectTypeStructure[4] = 0;
+    puObjectTypeStructure[5] = 0;
+    puObjectTypeStructure[6] = 0;
+    puObjectTypeStructure[7] = 0;
+    puObjectTypeStructure[8] = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 397–399 */

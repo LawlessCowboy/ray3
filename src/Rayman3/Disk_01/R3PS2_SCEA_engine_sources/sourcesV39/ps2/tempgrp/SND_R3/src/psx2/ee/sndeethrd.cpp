@@ -10,6 +10,8 @@ typedef struct _usnd_STimerStruct _usnd_STimerStruct;
 typedef struct ThreadParam ThreadParam;
 typedef struct SemaParam SemaParam;
 
+extern "C" void DeleteSema(int);
+
 struct _SHiResTime {
     unsigned int m_uiHighWord; /* +0x0 */
     unsigned int m_uiLowWord; /* +0x4 */
@@ -140,7 +142,8 @@ void usnd_vEnterCritSect(unsigned int uiCS)
  */
 void usnd_vDeleteCritSect(unsigned int uiCS)
 {
-    /* TODO: decompile from asm/... */
+    gs_nbSem--;
+    DeleteSema(uiCS - 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 617–633 */

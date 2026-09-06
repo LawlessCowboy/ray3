@@ -1654,7 +1654,13 @@ void CAM_fn_vInvalidateViewports(void)
  */
 unsigned char CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* _h_SprObj)
 {
-    /* TODO: decompile from asm/... */
+    if (_h_SprObj->ulTypeOfLinkedObject != 2)
+        return 0;
+    {
+        int lNumberOfElementsDyn;
+        lNumberOfElementsDyn = _h_SprObj->hLinkedObject.p_stSuperObject->lNumberOfElementsDyn;
+        return (unsigned int)lNumberOfElementsDyn >= 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 149–220 */

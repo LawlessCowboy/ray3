@@ -74,5 +74,9 @@ void DEMO_pcGetNextFlowSegment(void)
  */
 void DEMO_fn_vStopEventFlow(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_bSyncStream(g_DEMO_u32StreamRequestHandle);
+    fn_vCloseStream(g_DEMO_u32StreamFileHandle);
+    g_DEMO_u32StreamFileOffset = 0;
+    g_DEMO_u32StreamFileHandle = -1;
+    g_DEMO_u32StreamRequestHandle = -1;
 }

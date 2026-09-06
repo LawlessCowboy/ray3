@@ -50,7 +50,8 @@ short TMR_fn_wInitLibrary(void)
 unsigned int TMR_fn_ulFastGetInternalCounter(void)
 {
     _stTimerCount st;
-    /* TODO: decompile from asm/... */
+    GLI_fn_vTimerPS2Counter(&st.m_ulLowPart);
+    return st.m_ulLowPart;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\specif\TimerPrv.c lines 139–139 */

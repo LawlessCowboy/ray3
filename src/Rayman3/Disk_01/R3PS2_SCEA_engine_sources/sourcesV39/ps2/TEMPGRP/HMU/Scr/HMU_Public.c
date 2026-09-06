@@ -92,7 +92,9 @@ void HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc)
  */
 void HMU_fn_vSetMemoriesInBinaryMode(void)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUBinaryMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 591–602 */
@@ -148,7 +150,9 @@ unsigned char HMU_fn_ucGetTransition2NormalMemoryBlock(void)
  */
 unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    HMU_fn_vLeaveCriticalSection();
+    return 4;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 543–552 */
@@ -165,7 +169,10 @@ unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void)
  */
 void HMU_fn_vSetMemoriesInTransition2Mode(void)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUTransition2NormalMemoryBlock;
+    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMUTransition2TempMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 531–540 */
@@ -182,7 +189,10 @@ void HMU_fn_vSetMemoriesInTransition2Mode(void)
  */
 void HMU_fn_vSetMemoriesInTransition1Mode(void)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUTransition1NormalMemoryBlock;
+    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMUTransition1TempMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 517–528 */
@@ -342,7 +352,9 @@ unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void)
  */
 unsigned char HMU_fn_ucGetFixNormalMemoryBlock(void)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    HMU_fn_vLeaveCriticalSection();
+    return E_ucHMUFixNormalMemoryBlock;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 378–390 */
@@ -360,7 +372,10 @@ unsigned char HMU_fn_ucGetFixNormalMemoryBlock(void)
 unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void)
 {
     unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    ucReturn = HMU_g_stMemoryStructure.m_eActualTempMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 363–375 */
@@ -378,7 +393,10 @@ unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void)
 unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void)
 {
     unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    ucReturn = HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 352–360 */
@@ -394,7 +412,9 @@ unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void)
  */
 void HMU_fn_vSetActualTempMemoryBlock(unsigned char ucBlocNumber)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = ucBlocNumber;
+    HMU_fn_vLeaveCriticalSection();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 341–349 */
@@ -410,7 +430,9 @@ void HMU_fn_vSetActualTempMemoryBlock(unsigned char ucBlocNumber)
  */
 void HMU_fn_vSetActualNormalMemoryBlock(unsigned char ucBlocNumber)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = ucBlocNumber;
+    HMU_fn_vLeaveCriticalSection();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 329–338 */
@@ -427,7 +449,10 @@ void HMU_fn_vSetActualNormalMemoryBlock(unsigned char ucBlocNumber)
  */
 void HMU_fn_vSetMemoriesInLevelMode(void)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMULevelNormalMemoryBlock;
+    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMULevelTempMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 317–326 */
@@ -446,7 +471,10 @@ void HMU_fn_vSetMemoriesInLevelMode(void)
  */
 void HMU_fn_vSetMemoriesInFixMode(void)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vEnterCriticalSection();
+    HMU_g_stMemoryStructure.m_eActualNormalMemoryBlock = E_ucHMUFixNormalMemoryBlock;
+    HMU_g_stMemoryStructure.m_eActualTempMemoryBlock = E_ucHMUFixTempMemoryBlock;
+    HMU_fn_vLeaveCriticalSection();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 279–292 */

@@ -3350,9 +3350,6 @@ anon_3 gast_VectorArrayCpt[256];
 char cJustBetterPos;
 CAM_tdstCameraConstants_ CAM_g_stCameraConstants;
 tdstEngineStructure_ g_stEngineStructure;
-int (*CAM_fni_ComparePositions)(void*, void*);
-char (*CAM_fn_cCameraCantSee)(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
-char (*CAM_fn_cCameraCantGoFailure)(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1735–1774 */
 /* addr: 0x0020b280  size: 392 bytes */
@@ -3571,7 +3568,6 @@ void CAM_fn_vTestOppositeCollision(CAM_tdstUpdateCamera_* _p_stStruct)
  */
 void CAM_fn_vTestBadVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
 {
-    float xNorm;
     float xNorm;
     MTH3D_tdstVector_ stVectorNull;
     MTH3D_tdstVector_ stTempVector;
@@ -3827,7 +3823,6 @@ char CAM_fn_cFindNewGoodIdealPos(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstV
 void CAM_fn_vFillVectorArray(CAM_tdstUpdateCamera_* _p_stStruct, char _cMode)
 {
     float xNorm;
-    float xNorm;
     e_ucCameraStates_ eState;
     CAM_tdstUpdateCamera_ stStruct;
     tdstInternalStructurCineinfo_ stTemp;
@@ -4032,7 +4027,6 @@ char CAM_fn_cCameraCantSee(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_
 char CAM_fn_cCameraCantGoFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos)
 {
     float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ stTempVector;
     /* TODO: decompile from asm/... */
 }
@@ -4084,7 +4078,6 @@ char CAM_fn_cCameraCantGoFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstV
  */
 char CAM_fn_cSendMultiSegment(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos, float _xRadiusCamera, float _xRadiusTarget, int _lNbRay, tdstCineinfo_* _hCineinfo)
 {
-    float xNorm;
     float xNorm;
     int i;
     MTH3D_tdstVector_ stVector;

@@ -125,7 +125,30 @@ unsigned char COL_fn_bDetectCollisionBetweenTwoParallelBoxes(MTH3D_tdstVector_* 
  */
 void COL_fn_vComputeBoundingBoxOfSphereAndBox(MTH3D_tdstVector_* p_stMinBounding, MTH3D_tdstVector_* p_stMaxBounding, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
 {
-    /* TODO: decompile from asm/... */
+    p_stMinBounding->xX = p_stSphereCenter->xX - xSphereRadius;
+    p_stMinBounding->xY = p_stSphereCenter->xY - xSphereRadius;
+    p_stMinBounding->xZ = p_stSphereCenter->xZ - xSphereRadius;
+    p_stMaxBounding->xX = p_stSphereCenter->xX + xSphereRadius;
+    p_stMaxBounding->xY = p_stSphereCenter->xY + xSphereRadius;
+    p_stMaxBounding->xZ = p_stSphereCenter->xZ + xSphereRadius;
+    if (p_stMinPoint->xX < p_stMinBounding->xX) {
+        p_stMinBounding->xX = p_stMinPoint->xX;
+    }
+    if (p_stMinPoint->xY < p_stMinBounding->xY) {
+        p_stMinBounding->xY = p_stMinPoint->xY;
+    }
+    if (p_stMinPoint->xZ < p_stMinBounding->xZ) {
+        p_stMinBounding->xZ = p_stMinPoint->xZ;
+    }
+    if (p_stMaxPoint->xX > p_stMaxBounding->xX) {
+        p_stMaxBounding->xX = p_stMaxPoint->xX;
+    }
+    if (p_stMaxPoint->xY > p_stMaxBounding->xY) {
+        p_stMaxBounding->xY = p_stMaxPoint->xY;
+    }
+    if (p_stMaxPoint->xZ > p_stMaxBounding->xZ) {
+        p_stMaxBounding->xZ = p_stMaxPoint->xZ;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Box.c lines 144–146 */
@@ -164,5 +187,67 @@ void COL_fn_vComputeBoundingBoxOfSphere(MTH3D_tdstVector_* p_stMinBounding, MTH3
  */
 void COL_fn_vMinMaxBox2VerticesBox(MTH3D_tdstVector_* a8_stBoxDest, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
 {
-    /* TODO: decompile from asm/... */
+    a8_stBoxDest[0] = p_stMinPoint[0];
+    a8_stBoxDest[1] = p_stMinPoint[1];
+    a8_stBoxDest[2] = p_stMinPoint[2];
+    a8_stBoxDest[3] = p_stMinPoint[0];
+    a8_stBoxDest[4] = p_stMinPoint[1];
+    a8_stBoxDest[5] = p_stMaxPoint[2];
+    a8_stBoxDest[6] = p_stMinPoint[0];
+    a8_stBoxDest[7] = p_stMaxPoint[1];
+    a8_stBoxDest[8] = p_stMaxPoint[2];
+    a8_stBoxDest[9] = p_stMinPoint[0];
+    a8_stBoxDest[10] = p_stMinPoint[1];
+    a8_stBoxDest[11] = p_stMinPoint[2];
+    a8_stBoxDest[12] = p_stMinPoint[0];
+    a8_stBoxDest[13] = p_stMaxPoint[1];
+    a8_stBoxDest[14] = p_stMinPoint[2];
+    a8_stBoxDest[15] = p_stMaxPoint[0];
+    a8_stBoxDest[16] = p_stMinPoint[1];
+    a8_stBoxDest[17] = p_stMinPoint[2];
+    a8_stBoxDest[18] = p_stMaxPoint[0];
+    a8_stBoxDest[19] = p_stMaxPoint[1];
+    a8_stBoxDest[20] = p_stMinPoint[2];
+    a8_stBoxDest[21] = p_stMaxPoint[0];
+    a8_stBoxDest[22] = p_stMinPoint[1];
+    a8_stBoxDest[23] = p_stMaxPoint[2];
+    a8_stBoxDest[24] = p_stMaxPoint[0];
+    a8_stBoxDest[25] = p_stMinPoint[1];
+    a8_stBoxDest[26] = p_stMaxPoint[2];
+    a8_stBoxDest[27] = p_stMaxPoint[0];
+    a8_stBoxDest[28] = p_stMinPoint[1];
+    a8_stBoxDest[29] = p_stMinPoint[2];
+    a8_stBoxDest[30] = p_stMaxPoint[0];
+    a8_stBoxDest[31] = p_stMaxPoint[1];
+    a8_stBoxDest[32] = p_stMaxPoint[2];
+    a8_stBoxDest[33] = p_stMaxPoint[0];
+    a8_stBoxDest[34] = p_stMaxPoint[1];
+    a8_stBoxDest[35] = p_stMinPoint[2];
+    a8_stBoxDest[36] = p_stMinPoint[0];
+    a8_stBoxDest[37] = p_stMaxPoint[1];
+    a8_stBoxDest[38] = p_stMinPoint[2];
+    a8_stBoxDest[39] = p_stMinPoint[0];
+    a8_stBoxDest[40] = p_stMaxPoint[1];
+    a8_stBoxDest[41] = p_stMaxPoint[2];
+    a8_stBoxDest[42] = p_stMaxPoint[0];
+    a8_stBoxDest[43] = p_stMinPoint[1];
+    a8_stBoxDest[44] = p_stMinPoint[2];
+    a8_stBoxDest[45] = p_stMaxPoint[0];
+    a8_stBoxDest[46] = p_stMinPoint[1];
+    a8_stBoxDest[47] = p_stMaxPoint[2];
+    a8_stBoxDest[48] = p_stMaxPoint[0];
+    a8_stBoxDest[49] = p_stMaxPoint[1];
+    a8_stBoxDest[50] = p_stMinPoint[2];
+    a8_stBoxDest[51] = p_stMaxPoint[0];
+    a8_stBoxDest[52] = p_stMaxPoint[1];
+    a8_stBoxDest[53] = p_stMaxPoint[2];
+    a8_stBoxDest[54] = p_stMinPoint[0];
+    a8_stBoxDest[55] = p_stMinPoint[1];
+    a8_stBoxDest[56] = p_stMaxPoint[2];
+    a8_stBoxDest[57] = p_stMinPoint[0];
+    a8_stBoxDest[58] = p_stMaxPoint[1];
+    a8_stBoxDest[59] = p_stMaxPoint[2];
+    a8_stBoxDest[60] = p_stMinPoint[0];
+    a8_stBoxDest[61] = p_stMaxPoint[1];
+    a8_stBoxDest[62] = p_stMinPoint[2];
 }

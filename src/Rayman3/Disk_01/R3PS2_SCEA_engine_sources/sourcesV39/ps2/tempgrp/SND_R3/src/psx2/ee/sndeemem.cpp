@@ -15,7 +15,7 @@ extern "C" void HMU_fn_vSndFree(void**);
  */
 void usnd_memset(void* pvDest, unsigned char uiVal, unsigned int uiSize)
 {
-    /* TODO: decompile from asm/... */
+    memset(pvDest, uiVal & 0xFF, uiSize);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeemem.cpp lines 80–80 */
@@ -27,7 +27,7 @@ void usnd_memset(void* pvDest, unsigned char uiVal, unsigned int uiSize)
  */
 int usnd_memcmp(void* pvDest, void* pvSrc, unsigned int uiSize)
 {
-    /* TODO: decompile from asm/... */
+    return memcmp(pvDest, pvSrc, uiSize);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeemem.cpp lines 75–75 */
@@ -39,7 +39,7 @@ int usnd_memcmp(void* pvDest, void* pvSrc, unsigned int uiSize)
  */
 void usnd_memcpy(void* pvDest, void* pvSrc, unsigned int uiSize)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(pvDest, pvSrc, uiSize);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeemem.cpp lines 64–71 */

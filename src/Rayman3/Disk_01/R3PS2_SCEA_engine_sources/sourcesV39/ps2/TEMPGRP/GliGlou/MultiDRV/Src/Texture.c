@@ -52,10 +52,19 @@ struct TEX_tdstPalette_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int gs_aDEFTableOfTextureMemoryChannels[];
+extern int gs_aDEFTableOfTextureAlreadyRead[];
+
 void GLI_fn_vUnallocTextureInChannel(unsigned char _ucChannel)
 {
     int lTextureCounter;
-    /* TODO: decompile from asm/... */
+
+    for (lTextureCounter = 0; lTextureCounter < 0x190; lTextureCounter++) {
+        if (gs_aDEFTableOfTextureMemoryChannels[lTextureCounter] == _ucChannel) {
+            gs_aDEFTableOfTextureMemoryChannels[lTextureCounter] = 0xC0DE0005;
+            gs_aDEFTableOfTextureAlreadyRead[lTextureCounter] = 0;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Texture.c lines 258–258 */

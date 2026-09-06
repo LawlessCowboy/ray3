@@ -4,6 +4,11 @@
 
 #include <stddef.h>
 
+typedef struct tdstGetSetParam_ {
+    unsigned char uDummy[12];
+    int eType;
+} tdstGetSetParam_;
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;

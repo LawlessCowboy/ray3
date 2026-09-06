@@ -368,7 +368,7 @@ void IPT_fn_vForceFeedBackRunTime(unsigned int ulCurrentTime)
  */
 void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime)
 {
-    /* TODO: decompile from asm/... */
+    INO_fn_vResumeAllFFBEffectForAllDevice();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1177–1177 */
@@ -380,7 +380,7 @@ void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime)
  */
 void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime)
 {
-    /* TODO: decompile from asm/... */
+    INO_fn_vPauseAllFFBEffectForAllDevice();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1168–1168 */
@@ -476,7 +476,7 @@ void IPT_fn_vStartPreCreatedFFBEffect(unsigned int ulCurrentTime, unsigned char 
  */
 void IPT_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices(void)
 {
-    /* TODO: decompile from asm/... */
+    INO_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1114–1114 */
@@ -827,7 +827,7 @@ void IPT_fn_vActivateAllEntryElements(void)
  */
 unsigned char IPT_fn_bIsEnabled(void)
 {
-    /* TODO: decompile from asm/... */
+    return IPT_g_bInputEnabled;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 433–448 */

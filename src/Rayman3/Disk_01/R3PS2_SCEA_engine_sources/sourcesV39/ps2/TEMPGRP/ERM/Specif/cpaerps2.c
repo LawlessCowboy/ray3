@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+extern void Erm_fn_v_PrintErrMsgCore(char*, char*, char*);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ERM\Specif\cpaerps2.c lines 162–162 */
 /* addr: 0x00258410  size: 28 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -13,7 +15,7 @@
  */
 void Erm_fn_v_PrintErrMsgWithPersonalMsg(char* param0, char* p_cTxt2, char* p_cTxt3)
 {
-    /* TODO: decompile from asm/... */
+    Erm_fn_v_PrintErrMsgCore("%s %s", p_cTxt2, p_cTxt3);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ERM\Specif\cpaerps2.c lines 129–129 */
@@ -25,5 +27,5 @@ void Erm_fn_v_PrintErrMsgWithPersonalMsg(char* param0, char* p_cTxt2, char* p_cT
  */
 void Erm_fn_v_PrintErrMsg(char* p_cTxt1, char* p_cTxt2)
 {
-    /* TODO: decompile from asm/... */
+    Erm_fn_v_PrintErrMsgCore("%s %s", p_cTxt1, p_cTxt2);
 }

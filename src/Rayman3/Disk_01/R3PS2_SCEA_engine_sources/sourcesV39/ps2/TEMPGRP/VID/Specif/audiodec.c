@@ -80,5 +80,8 @@ int vagUpdateSound(void)
  */
 int vagInit(float fVolume)
 {
-    /* TODO: decompile from asm/... */
+    SND_VID_fn_vInitVideoSound(2, 0xAC44);
+    g_s_TimerSnd = 0;
+    g_s_SoundIsPlaying = 0;
+    return 0;
 }

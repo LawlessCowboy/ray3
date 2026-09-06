@@ -90,7 +90,11 @@ int GLI_DRV_bBeginScene(void)
  */
 void GLI_fn_vInitRenderParameters(void)
 {
-    /* TODO: decompile from asm/... */
+    bIsWriteEnable = 1;
+    ucSaveFunction = 0xff;
+    xSaveFogIsOn = 0;
+    ucSaveCyclingMode[0] = 0xff;
+    ucSaveCyclingMode[1] = 0xff;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Domat_PS2GL.c lines 128–128 */

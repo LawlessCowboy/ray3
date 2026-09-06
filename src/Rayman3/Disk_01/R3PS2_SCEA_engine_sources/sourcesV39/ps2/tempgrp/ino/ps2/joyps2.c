@@ -35,6 +35,7 @@ struct stDevice {
 
 struct anon_0 {
     unsigned char m_ucStatus; /* +0x0 */
+    unsigned short m_uwDirections; /* +0x2 */
 };
 
 struct stAxisCaps {
@@ -84,7 +85,7 @@ int g_EngineHasBeenPausedBecauseOfMC;
  */
 unsigned short INO_fn_uwJoyPreviousDirections(stDevice* _hDev)
 {
-    /* TODO: decompile from asm/... */
+    return ((stJoystickState*)_hDev->m_p_stLastState)->m_uwDirections;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 791–802 */
@@ -190,9 +191,13 @@ short INOPS2_fn_wJoyCheckConnection(short _wJoystickNum)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short INOPS2_fn_wJoyGetJoystickCaps(stJoystickCaps* _p_stJoyCaps)
+short INOPS2_fn_wJoyGetJoystickCaps(int _unused, stJoystickCaps* _p_stJoyCaps)
 {
-    /* TODO: decompile from asm/... */
+    _p_stJoyCaps->m_a_stAxisCaps[0].m_lRange = 128;
+    _p_stJoyCaps->m_a_stAxisCaps[1].m_lRange = 128;
+    _p_stJoyCaps->m_a_stAxisCaps[3].m_lRange = 128;
+    _p_stJoyCaps->m_a_stAxisCaps[4].m_lRange = 128;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 623–684 */

@@ -3130,7 +3130,7 @@ tdstEngineStructure_ g_stEngineStructure;
 WP_tdstListOfArc_* WPARCLST_fn_hInit(void)
 {
     WP_tdstListOfArc_* hList;
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1660–1662 */

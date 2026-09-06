@@ -2220,7 +2220,11 @@ struct tduGetSetParam_ {
 };
 
 struct anon_0 {
-    tduGetSetParam_ uParam; /* +0x0 */
+    union {
+        float xValue; /* +0x0 */
+        int lValue; /* +0x0 */
+    };
+    int _pad[2]; /* +0x4 */
 };
 
 struct tdstInternalStructurCineinfo_ {
@@ -3027,7 +3031,10 @@ unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSu
  */
 void fn_vGetFieldType0To255(tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stGetSetParam->eType == E_vt_Float) {
+        p_stGetSetParam->uDummy.lValue = (int)p_stGetSetParam->uDummy.xValue;
+        p_stGetSetParam->eType = E_vt_Integer;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Getset.c lines 131–136 */
@@ -3044,7 +3051,10 @@ void fn_vGetFieldType0To255(tdstGetSetParam_* p_stGetSetParam)
  */
 void fn_vGetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stGetSetParam->eType == E_vt_Float) {
+        p_stGetSetParam->uDummy.lValue = *(volatile float *)p_stGetSetParam;
+        p_stGetSetParam->eType = E_vt_Integer;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Getset.c lines 124–128 */
@@ -3058,7 +3068,10 @@ void fn_vGetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam)
  */
 void fn_vGetFieldTypeFloat(tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stGetSetParam->eType != E_vt_Float) {
+        p_stGetSetParam->uDummy.xValue = p_stGetSetParam->uDummy.lValue;
+        p_stGetSetParam->eType = E_vt_Float;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Getset.c lines 120–120 */
@@ -3141,7 +3154,10 @@ void fn_vSetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam)
  */
 void fn_vSetFieldTypeFloat(tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stGetSetParam->eType != E_vt_Float) {
+        p_stGetSetParam->uDummy.xValue = p_stGetSetParam->uDummy.lValue;
+        p_stGetSetParam->eType = E_vt_Float;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Getset.c lines 67–67 */

@@ -15,8 +15,8 @@ or compiler binaries.
 
 Checked with `python3 tools/match.py coverage` at each matching commit:
 
-- Functions: **388 / 7,832**
-- Code: **8,292 / 2,268,104 bytes** (**0.3656%**)
+- Functions: **450 / 7,832**
+- Code: **10,160 / 2,268,104 bytes** (**0.4480%**)
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
   started yet.
 

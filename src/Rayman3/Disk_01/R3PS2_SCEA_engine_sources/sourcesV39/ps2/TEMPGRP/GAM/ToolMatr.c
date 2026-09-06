@@ -74,9 +74,13 @@ extern tdstEngineStructure_ g_stEngineStructure;
  */
 void* CAM_fn_hGetActiveCamera(int _lViewportNumber)
 {
-    if (_lViewportNumber >= 5 || _lViewportNumber < 0)
+    if (_lViewportNumber < 5)
+    {
+        if (_lViewportNumber >= 0)
+            return g_stEngineStructure.a_hViewportArray[_lViewportNumber].hActiveCamera;
         return NULL;
-    return g_stEngineStructure.a_hViewportArray[_lViewportNumber].hActiveCamera;
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolMatr.c lines 128–149 */

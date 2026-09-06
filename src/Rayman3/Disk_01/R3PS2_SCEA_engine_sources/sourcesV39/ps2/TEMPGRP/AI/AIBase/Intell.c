@@ -3022,9 +3022,10 @@ void fn_vSetFieldTypeComport(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalCineRef(tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stEvalCineRef(int unused, tdstNodeInterpret_* p_stTree)
 {
-    return (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1851–1934 */
@@ -3324,9 +3325,10 @@ tdstNodeInterpret_* fn_p_stEvalFunction(HIE_tdstSuperObject_* p_SuperObjPerso, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalNULL(tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stEvalNULL(int unused, tdstNodeInterpret_* p_stTree)
 {
-    return (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 900–902 */

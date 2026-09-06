@@ -4,6 +4,133 @@
 
 #include <stddef.h>
 
+typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
+typedef struct _stTimerCount _stTimerCount;
+typedef struct tdstEngineTimerStructure_ tdstEngineTimerStructure_;
+typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
+typedef struct tdstCouple_ tdstCouple_;
+typedef struct tdstState_ tdstState_;
+typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
+typedef union RGBAStruct_ RGBAStruct_;
+typedef union tduGetSetParam_ tduGetSetParam_;
+typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
+typedef struct LST2_tdstAnchorTotdxHandleToStateOpt LST2_tdstAnchorTotdxHandleToStateOpt;
+typedef struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt;
+typedef struct LST2_tdstAnchorTotdxHandleToTransitionOpt LST2_tdstAnchorTotdxHandleToTransitionOpt;
+typedef struct LST2_tdstAnchorTotdxHandleToProhibitOpt LST2_tdstAnchorTotdxHandleToProhibitOpt;
+typedef struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn;
+typedef union anon_0 anon_0;
+
+struct MTH4D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+    float xW; /* +0xc */
+};
+
+struct _stTimerCount {
+    unsigned long m_ulLowPart; /* +0x0 */
+    unsigned long m_ulHighPart; /* +0x8 */
+};
+
+struct tdstEngineTimerStructure_ {
+    unsigned int ulTrameNumber; /* +0x0 */
+    short sTimerHandle; /* +0x4 */
+    unsigned int ulCurrentTimerCount; /* +0x8 */
+    unsigned int ulDeltaTimerCount; /* +0xc */
+    unsigned int a_ulCounter[16]; /* +0x10 */
+    unsigned int ulUsefulDeltaTime; /* +0x50 */
+    unsigned int ulPauseTime; /* +0x54 */
+    float xFrameLength; /* +0x58 */
+    _stTimerCount stRealTimeCount; /* +0x60 */
+    _stTimerCount stPauseTime; /* +0x70 */
+    unsigned int ulTickPerMS; /* +0x80 */
+};
+
+struct tdstPLA_Hierarchy_ {
+    unsigned int ulNbOfCouples; /* +0x0 */
+    tdstCouple_* d_stCouples; /* +0x4 */
+};
+
+union RGBAStruct_ {
+    int Color; /* +0x0 */
+};
+
+union HIE_tduLinkedObject_ {
+    int p_Void; /* +0x0 */
+};
+
+struct LST2_tdstAnchorTotdxHandleToStateOpt {
+    tdstState_* hFirstElementOpt; /* +0x0 */
+    int lNumberOfElementsOpt; /* +0x4 */
+};
+
+struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt {
+    tdstObjectsTablesList_* hFirstElementOpt; /* +0x0 */
+    int lNumberOfElementsOpt; /* +0x4 */
+};
+
+struct LST2_tdstAnchorTotdxHandleToTransitionOpt {
+    void* hFirstElementOpt; /* +0x0 */
+    int lNumberOfElementsOpt; /* +0x4 */
+};
+
+struct LST2_tdstAnchorTotdxHandleToProhibitOpt {
+    void* hFirstElementOpt; /* +0x0 */
+    int lNumberOfElementsOpt; /* +0x4 */
+};
+
+struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn {
+    void* hFirstElementDyn; /* +0x0 */
+    void* hLastElementDyn; /* +0x4 */
+    int lNumberOfElementsDyn; /* +0x8 */
+};
+
+union anon_0 {
+    int uDummy; /* +0x0 */
+};
+
+typedef enum MAT_tdeTranformationType_ {
+    MAT_eTransform_Uninitialized = 0,
+    MAT_eTransform_Identity = 1,
+    MAT_eTransform_Translation = 2,
+    MAT_eTransform_Zoom = 3,
+    MAT_eTransform_Scale = 4,
+    MAT_eTransform_Rotation = 5,
+    MAT_eTransform_RotationZoom = 6,
+    MAT_eTransform_RotationScale = 7,
+    MAT_eTransform_ComplexRotationScale = 8,
+    MAT_eTransform_Undefined = 9,
+} MAT_tdeTranformationType_;
+
+typedef enum tdeObjectTreeInit_ {
+    OTI_WhenGameStart = 0,
+    OTI_MapLoaded = 1,
+    OTI_ReinitTheMap = 2,
+    OTI_LoadSavedGame = 3,
+    OTI_PlayerDead = 4,
+    OTI_WhenGoOutOfZone = 4,
+    OTI_Always = 4,
+    OTI_AlwaysCreated = 5,
+} tdeObjectTreeInit_;
+
+typedef enum tdeMetaActionId_ {
+    eMetaAction_FrozenWait = 0,
+    eMetaAction_ExecuteAction = 1,
+    eMetaAction_ExecuteActionSmooth = 2,
+    eMetaAction_WaitEndOfAction = 3,
+    eMetaAction_WaitEndOfAnim = 4,
+    eMetaAction_CamCineMoveAToBTgtC = 5,
+    eMetaAction_CamCineMoveAToBTgtAC = 6,
+    eMetaAction_CamCinePosATgtB = 7,
+    eMetaAction_CamCinePosAMoveTgtBToC = 8,
+    eMetaAction_CamCinePosATgtBTurnPosH = 9,
+    eMetaAction_CamCinePosATgtBTurnTgtH = 10,
+    eMetaAction_CamCinePosATgtBTurnPosV = 11,
+    eMetaAction_CamCinePosATgtBTurnTgtV = 12,
+    eNbMetaAction = 13,
+} tdeMetaActionId_;
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
@@ -1015,6 +1142,39 @@ struct MTH3D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
+};
+
+union tduGetSetParam_ {
+    float xValue; /* +0x0 */
+    int lValue; /* +0x0 */
+    unsigned int ulValue; /* +0x0 */
+    short wValue; /* +0x0 */
+    unsigned short uwValue; /* +0x0 */
+    char cValue; /* +0x0 */
+    unsigned char ucValue; /* +0x0 */
+    RGBAStruct_ ColorValue; /* +0x0 */
+    int szString; /* +0x0 */
+    tdstEngineObject_* p_stEngObjValue; /* +0x0 */
+    tdstState_* tdxstHandleToState; /* +0x0 */
+    HIE_tdstSuperObject_* hSuperObject; /* +0x0 */
+    tdstSuperObjectLinks_* hSOLinks; /* +0x0 */
+    WP_tdstWayPoint_* m_hWayPoint; /* +0x0 */
+    unsigned short xMask; /* +0x0 */
+    tdstLipsSynchroTable_* hLipsSynchro; /* +0x0 */
+    tdstObjectsTablesList_* hObjectTable; /* +0x0 */
+    tdstFamilyList_* hFamily; /* +0x0 */
+    _SND_tdstBlockEvent* pSoundEvent; /* +0x0 */
+    tdstComport_* pComport; /* +0x0 */
+    int hText; /* +0x0 */
+    tdstParticleGenerator_* hParticleGenerator; /* +0x0 */
+    GMT_tdstGameMaterial_* hGameMaterial; /* +0x0 */
+    GLI_tdstMaterial_* hVisualMaterial; /* +0x0 */
+    AI_tdstAIModel_* p_stModel; /* +0x0 */
+    MTH3D_tdstVector_ stVectorValue; /* +0x0 */
+    GLI_tdstLight_* p_stLight; /* +0x0 */
+    WP_tdstGraph_* hGraph; /* +0x0 */
+    tdstMacro_* p_stMacro; /* +0x0 */
+    CINE_tdstCine_* p_stCine; /* +0x0 */
 };
 
 struct HIE_tdstSuperObject_ {

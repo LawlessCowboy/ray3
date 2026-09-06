@@ -305,5 +305,7 @@ unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement)
  */
 unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement)
 {
-    /* TODO: decompile from asm/... */
+    if (_hEntryElement == NULL)
+        return 0;
+    return _hEntryElement->lState == 1;
 }

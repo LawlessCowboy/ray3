@@ -114,7 +114,7 @@ int CD_OpenFileWithNameConversion(char* RawFileName)
  */
 void CD_Close(int FileHandle)
 {
-    /* TODO: decompile from asm/... */
+    gs_CD_Files[FileHandle].FirstLogicalSector = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 288–450 */
@@ -240,7 +240,7 @@ unsigned int CD_Seek(int FileHandle, int Position, int WhereFrom)
  */
 unsigned int CD_Length(int FileHandle)
 {
-    /* TODO: decompile from asm/... */
+    return gs_CD_Files[FileHandle].FileSize;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 82–234 */

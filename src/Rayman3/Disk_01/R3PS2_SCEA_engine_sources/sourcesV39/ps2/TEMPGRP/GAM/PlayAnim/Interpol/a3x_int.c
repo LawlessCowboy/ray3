@@ -7,6 +7,39 @@
 float xEps;
 float ax_AcosTab[8192];
 short ax_SinTab[8192];
+typedef struct tdstA3dGENERAL_ tdstA3dGENERAL_;
+extern tdstA3dGENERAL_ *g_ax_pA3dGENERAL;
+
+struct tdstA3dGENERAL_ {
+    unsigned short uwAnimationSpeed;
+    unsigned short uwNumberOfVectors;
+    unsigned short uwNumberOfQuaternions;
+    unsigned short uwNumberOfHierarchies;
+    unsigned short uwNumberOfNTTO;
+    unsigned short uwNumberOfSavedFrames;
+    unsigned short uwNumberOfDeformations;
+    unsigned short uwNumberOfChannels;
+    unsigned short uwNumberOfFrames;
+    unsigned int ulNumberOfKeyFrames;
+    unsigned short uwNumberOfEvents;
+    unsigned short uwNumOfFirstPosition;
+    unsigned short uwStartFrame;
+    unsigned short uwEndFrame;
+    unsigned short uwFakeAnimSpeed;
+    unsigned short uwFlags;
+    unsigned short uwNumOfAnimationTranslationOffset;
+    unsigned short uwNumOfAnimationRotationOffset;
+    unsigned short uwNumberOfMorphData;
+    unsigned short uwNumOfFirstVector;
+    unsigned short uwNumOfFirstQuaternion;
+    unsigned short uwNumOfFirstHierarchy;
+    unsigned short uwNumOfFirstNTTO;
+    unsigned short uwNumOfFirstDeformation;
+    unsigned short uwNumOfFirstOnlyFrame;
+    unsigned short uwNumOfFirstChannel;
+    unsigned short uwNumOfFirstEvent;
+    unsigned short uwNumOfFirstMorphData;
+};
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 39–40 */
 /* addr: 0x0027be80  size: 28 bytes */
@@ -16,9 +49,9 @@ short ax_SinTab[8192];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_GetA3dGENERAL(unsigned short _uwNumOfA3dGENERAL)
+tdstA3dGENERAL_ *fn_p_GetA3dGENERAL(unsigned short _uwNumOfA3dGENERAL)
 {
-    /* TODO: decompile from asm/... */
+    return &g_ax_pA3dGENERAL[_uwNumOfA3dGENERAL];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 534–591 */

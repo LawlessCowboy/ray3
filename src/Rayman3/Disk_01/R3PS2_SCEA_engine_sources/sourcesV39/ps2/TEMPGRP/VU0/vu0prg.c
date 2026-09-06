@@ -20,7 +20,7 @@ unsigned int PlayAnimMPG;
  */
 void VU0_fn_vLoadPrgCollision(void)
 {
-    /* TODO: decompile from asm/... */
+    return;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VU0\vu0prg.c lines 107–108 */
@@ -33,7 +33,7 @@ void VU0_fn_vLoadPrgCollision(void)
  */
 void VU0_fn_vLoadPrgPlayAnim(void)
 {
-    /* TODO: decompile from asm/... */
+    return;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VU0\vu0prg.c lines 60–77 */

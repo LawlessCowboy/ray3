@@ -1460,7 +1460,21 @@ void GAM_fn_vResetClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAtt
  */
 void GAM_fn_vClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int ulClipValue;
+
+    ulClipValue = _p_stFixViewportAttr->dwClipTopInPix;
+    GAM_g_dwOldTop = ulClipValue;
+    ulClipValue = _p_stFixViewportAttr->dwClipLeftInPix;
+    GAM_g_dwOldLeft = ulClipValue;
+    ulClipValue = _p_stFixViewportAttr->dwClipBottomInPix;
+    GAM_g_dwOldBottom = ulClipValue;
+    ulClipValue = _p_stFixViewportAttr->dwClipRightInPix;
+    GAM_g_dwOldRight = ulClipValue;
+    _p_stFixViewportAttr->dwClipTopInPix = GAM_g_dwClipping_Top;
+    _p_stFixViewportAttr->dwClipLeftInPix = GAM_g_dwClipping_Left;
+    _p_stFixViewportAttr->dwClipBottomInPix = GAM_g_dwClipping_Right;
+    _p_stFixViewportAttr->dwClipRightInPix = GAM_g_dwClipping_Bottom;
+    GLI_vRemoveScissors(_p_stFixViewportAttr);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\DspFix.c lines 132–136 */

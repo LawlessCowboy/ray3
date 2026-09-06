@@ -328,7 +328,7 @@ unsigned char IPT_fn_bIsJustValidatedPadButton(unsigned char ucPadNumber, unsign
  */
 void IPT_fn_vSetKeyAndPadButtonForPadNumber(unsigned char ucPadNumber, unsigned char ucButtonNumber, IPT_tdstEntryElement_* hPadButton, IPT_tdstEntryElement_* hKeyButton)
 {
-    /* TODO: decompile from asm/... */
+    (void)ucPadNumber; (void)ucButtonNumber; (void)hPadButton; (void)hKeyButton;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 220–221 */

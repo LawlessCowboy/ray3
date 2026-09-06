@@ -54,5 +54,6 @@ tdstDataPath_* fn_szGetGameDataPath(void)
  */
 void fn_vSetGameDataPath(char* _p_szPath)
 {
-    /* TODO: decompile from asm/... */
+    strcpy(g_stDataPath.szGameData, _p_szPath);
+    strupr(g_stDataPath.szGameData);
 }

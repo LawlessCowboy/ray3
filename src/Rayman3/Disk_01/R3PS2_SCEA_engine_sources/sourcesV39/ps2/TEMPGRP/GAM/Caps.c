@@ -1162,7 +1162,7 @@ void fn_vChangeCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32C
 void fn_vSubCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
 {
     tdstStandardGame_* p_stStandardGame = _p_stObject->h_StandardGame;
-    p_stStandardGame->ubf32Capabilities &= ~_ubf32Capabilities;
+    p_stStandardGame->ubf32Capabilities -= p_stStandardGame->ubf32Capabilities & _ubf32Capabilities;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Caps.c lines 44–45 */

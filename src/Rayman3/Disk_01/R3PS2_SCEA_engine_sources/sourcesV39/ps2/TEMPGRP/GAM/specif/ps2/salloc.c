@@ -46,7 +46,6 @@ void fn_vGetScreenShotDefaultName(void)
     int i;
     int Number;
     int Found;
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\salloc.c lines 116–116 */
@@ -58,7 +57,7 @@ void fn_vGetScreenShotDefaultName(void)
  */
 void fn_vFreeAllocator(anon_0* pstAllocator, void* pvClientAddress)
 {
-    /* TODO: decompile from asm/... */
+    channel_debug_printf(-1, "Free allocator %p\n", pvClientAddress);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\salloc.c lines 64–96 */

@@ -109,7 +109,18 @@ void Erm_fn_ClearLastError(unsigned int ulChannelId)
  */
 unsigned char Erm_fn_ucInitErrMsg(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char ucModuleCount = g_ucErmNbOfModule;
+    if (ucModuleCount == 0)
+    {
+        g_stErmTheLastErrorInfo[0].uwLastErr = 0;
+        g_stErmTheLastErrorInfo[0].ulChannelId = 0;
+        g_stErmTheLastErrorInfo[1].uwLastErr = 0;
+        g_stErmTheLastErrorInfo[1].ulChannelId = 0;
+        g_stErmTheLastErrorInfo[2].uwLastErr = 0;
+        g_stErmTheLastErrorInfo[2].ulChannelId = 0;
+    }
+    g_ucErmNbOfModule = ucModuleCount + 1;
+    return g_ucErmNbOfModule;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ERM\CpaError.c lines 50–50 */

@@ -3000,7 +3000,6 @@ unsigned char g_ucAIModuleId;
 void fn_p_stEvalSubRoutine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue, tdstMacro_* p_stMacro)
 {
     tdstNodeInterpret_* p_stTreeTmp;
-    tdstNodeInterpret_* p_stTreeTmp;
     unsigned char ucIndTabAction;
     tdstNodeInterpret_* p_stTreeSave;
     unsigned char ucActionReturn;

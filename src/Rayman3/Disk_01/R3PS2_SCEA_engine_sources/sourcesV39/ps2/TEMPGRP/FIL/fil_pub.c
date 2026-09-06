@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+extern int printf(const char *, ...);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn;
@@ -49,7 +50,8 @@ FIL_tdstInternalGeneral_ g_stInternalGeneral;
  */
 int Erm_fn_iMessageBox(char* _szText, char* _szTitle)
 {
-    /* TODO: decompile from asm/... */
+    printf("%s", _szTitle, _szText);
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\FIL\fil_pub.c lines 116–116 */

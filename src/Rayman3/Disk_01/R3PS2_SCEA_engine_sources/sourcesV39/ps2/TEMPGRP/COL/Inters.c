@@ -315,7 +315,20 @@ unsigned char INT_fn_bFastRejectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_
  */
 unsigned char INT_fn_bGetInclusionPointInSphere(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
 {
-    /* TODO: decompile from asm/... */
+    float xDx;
+    float xDy;
+    float xDz;
+    float xDistSq;
+
+    xDx = p_stPoint->xX - p_stSphereCenter->xX;
+    xDy = p_stPoint->xY - p_stSphereCenter->xY;
+    xDz = p_stPoint->xZ - p_stSphereCenter->xZ;
+    xDistSq = (xDx * xDx) + (xDy * xDy) + (xDz * xDz);
+    if (xDistSq <= (xSphereRadius * xSphereRadius)) {
+        return 1;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1283–1322 */

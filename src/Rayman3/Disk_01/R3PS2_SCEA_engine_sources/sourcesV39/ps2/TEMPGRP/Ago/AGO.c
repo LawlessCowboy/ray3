@@ -1234,7 +1234,7 @@ float gs_fCoefOfMultiplicationForAnimatedTexture;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SwitchData::RebuildSwitch(void)
+void RebuildSwitch(void)
 {
     unsigned int pos;
     unsigned int i;
@@ -2420,116 +2420,22 @@ void AGO_vAddParticleContd(unsigned int PartType, MTH3D_tdstVector_* p_stPositio
     AGO_V4D_ Vector3;
     AGO_V4D_ Vector2;
     AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
     AGO_V4D_ NDirection;
     AGO_V4D_ NPosition;
     float* p2;
     float* p1;
     float fNorm;
-    float* p2;
-    float* p1;
     AGO_Part_* p;
-    float fNorm;
     float Color[4];
-    float Color[4];
-    float Color[4];
-    float Color[4];
-    float Color[4];
-    float Color[4];
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO_V4D_ NDirection;
-    AGO_V4D_ NPosition;
-    unsigned int i;
     float sx;
     float Norm;
-    AGO_Part_* p;
     float SPEED;
     float DIST;
     float R2;
     float R1;
     MTH3D_tdstVector_ V2;
     MTH3D_tdstVector_ V1;
-    AGO2_Part_* p;
     unsigned int can;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    AGO2_Part_* p;
-    unsigned int can;
-    AGO_V4D_ Vector4;
-    AGO_V4D_ Vector3;
-    AGO_V4D_ Vector2;
-    AGO_V4D_ Vector1;
-    unsigned int can;
-    unsigned int i;
-    AGO_Part_* p;
     unsigned int IntParam;
     float Direction[4];
     float param2;
@@ -2537,31 +2443,11 @@ void AGO_vAddParticleContd(unsigned int PartType, MTH3D_tdstVector_* p_stPositio
     float Pos2[3];
     float V4[3];
     float V3[3];
-    float V2[3];
-    float V1[3];
     float fNorm1;
-    int j;
-    unsigned int i;
-    AGO_Part_* p;
-    int j;
-    AGO_Part_* p;
-    float Norm;
-    AGO_Part_* p;
-    int j;
-    AGO_Part_* p;
-    int j;
-    AGO_Part_* p;
     unsigned int Limit;
-    float* p2;
-    float* p1;
-    float* p2;
-    float* p1;
     float scale;
-    int i;
-    float Direction[3];
     float Pos[3];
     AGO_V4D_ Dest;
-    AGO_V4D_ Pos;
     float ZAngle;
     float YAngle;
     float XAngle;
@@ -3034,33 +2920,17 @@ void AGO_vAddParticle(unsigned int PartType, MTH3D_tdstVector_* p_stPosition, MT
     AGO_Part_* p;
     float* p2;
     float* p1;
-    float* p2;
     float* param0;
-    AGO_Part_* p;
-    float* p2;
-    float* p1;
-    float* p2;
-    float* p1;
-    float fNorm;
-    float* p2;
-    float* p1;
     float fNorm;
     float angle;
     int Number;
     float sin1;
     float cos1;
     float fRadius;
-    float* p2;
-    float* p1;
-    float* p2;
-    float* p1;
     float scale;
     int i;
     float Direction[3];
     float Pos[3];
-    float NextBubble;
-    float NextBubble;
-    float NextBubble;
     float NextBubble;
     /* TODO: decompile from asm/... */
 }
@@ -3798,8 +3668,6 @@ void CreateType104AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDi
 {
     float* p2;
     float* p1;
-    float* p2;
-    float* p1;
     int i;
     float Direction[3];
     float Pos[3];
@@ -3961,8 +3829,6 @@ void CreateType28AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDir
  */
 void CreateType65AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)
 {
-    float* p2;
-    float* p1;
     float* p2;
     float* p1;
     float scale;
@@ -4181,8 +4047,6 @@ void CreateType62AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDir
 {
     float* p2;
     float* p1;
-    float* p2;
-    float* p1;
     float time;
     float scale;
     int i;
@@ -4223,8 +4087,6 @@ void CreateType60AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDir
 {
     float* p2;
     float* p1;
-    float* p2;
-    float* p1;
     float scale;
     int i;
     float Direction[3];
@@ -4263,8 +4125,6 @@ void CreateType60AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDir
  */
 void CreateType52AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial)
 {
-    float* p2;
-    float* p1;
     float* p2;
     float* p1;
     int i;
@@ -4379,10 +4239,6 @@ void CreateType72AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDir
  */
 void CreateType8AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial)
 {
-    float* p2;
-    float* p1;
-    float* p2;
-    float* p1;
     float* p2;
     float* p1;
     float vy;
@@ -4865,11 +4721,6 @@ void AGO_vProcessPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p
     float untransparency;
     float unscale;
     float* pp2;
-    float* pp;
-    int i;
-    int Finished;
-    float Val2;
-    float Val1;
     int i;
     int Finished;
     float Val2;
@@ -5437,10 +5288,6 @@ void AGO_vDisplayPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p
     float v2[3];
     float v1[3];
     float* CosTable;
-    float x4[3];
-    float x3[3];
-    float x2[3];
-    float x1[3];
     float dt;
     float zz2;
     float xx2;
@@ -5448,21 +5295,7 @@ void AGO_vDisplayPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p
     float Z;
     float FragTransparency;
     float Angle;
-    int i;
-    float* CosTable;
     float Position[3];
-    float x4[3];
-    float x3[3];
-    float x2[3];
-    float x1[3];
-    float dt;
-    float zz2;
-    float xx2;
-    float Scale;
-    float Z;
-    float FragTransparency;
-    float Angle;
-    int i;
     float TempPos[3];
     float Val2;
     float Val1;
@@ -5470,7 +5303,6 @@ void AGO_vDisplayPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p
     MTH3D_tdstVector_ stV2;
     MTH3D_tdstVector_ stV1;
     float xNorm;
-    int i;
     float Alpha;
     float A2;
     float dy;
@@ -5483,26 +5315,9 @@ void AGO_vDisplayPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p
     MTH3D_tdstVector_ NewPos;
     MTH3D_tdstVector_ OldRegularPos;
     MTH3D_tdstVector_ OldModifiedPos;
-    float xNorm;
-    int i;
     float Time;
     float dPos;
-    float Alpha;
-    float Scale;
-    MTH3D_tdstVector_ VY;
-    MTH3D_tdstVector_ VX;
-    MTH3D_tdstVector_ vDir2;
-    MTH3D_tdstVector_ vDir;
-    MTH3D_tdstVector_ NewPos;
-    MTH3D_tdstVector_ OldRegularPos;
-    MTH3D_tdstVector_ OldModifiedPos;
     float fNorm;
-    MTH3D_tdstVector_ stV2;
-    MTH3D_tdstVector_ stV1;
-    float timet;
-    float* pp2;
-    float* pp;
-    float* pp2;
     float timet;
     float AddZ;
     float AddY;
@@ -6386,14 +6201,6 @@ void AGO_vCreatePart(unsigned int parm_ulType, float* parm_a3_fPosition, float* 
     float Angle;
     float Cos1;
     float Sin1;
-    MTH3D_tdstVector_ V2;
-    MTH3D_tdstVector_ V1;
-    float* p2;
-    float* p1;
-    float* p2;
-    float* p1;
-    float* p2;
-    float* p1;
     int i;
     AGO_Part_* p;
     /* TODO: decompile from asm/... */

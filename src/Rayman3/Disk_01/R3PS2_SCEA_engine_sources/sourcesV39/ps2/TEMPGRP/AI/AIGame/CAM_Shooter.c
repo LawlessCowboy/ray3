@@ -3523,8 +3523,6 @@ MTH3D_tdstVector_ g_stCollideResultVector;
 unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
 {
     float xNorm;
-    float xNorm;
-    float xNorm;
     float xD2r;
     MTH3D_tdstVector_ vTemp2;
     MTH3D_tdstVector_ vTemp1;

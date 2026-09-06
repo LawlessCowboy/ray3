@@ -42,7 +42,7 @@ typedef struct SCT_tdstListOfSoundEvent_ SCT_tdstListOfSoundEvent_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
 typedef struct tdstCouple_ tdstCouple_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_0 anon_0;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
@@ -2036,7 +2036,7 @@ struct tdstCouple_ {
     unsigned short wFather; /* +0x2 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -3229,9 +3229,11 @@ tdstNodeInterpret_* fn_p_stThenKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoVMTKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoVMTKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hVisualMaterial = NULL;
+    p_stValue->eType = E_vt_VisualMaterial;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 157–159 */
@@ -3243,9 +3245,11 @@ tdstNodeInterpret_* fn_p_stNoVMTKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoGMTKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoGMTKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hGameMaterial = NULL;
+    p_stValue->eType = E_vt_GameMaterial;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 151–153 */
@@ -3257,9 +3261,11 @@ tdstNodeInterpret_* fn_p_stNoGMTKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoGraphKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoGraphKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hGraph = NULL;
+    p_stValue->eType = E_vt_Graph;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 145–147 */
@@ -3271,9 +3277,11 @@ tdstNodeInterpret_* fn_p_stNoGraphKeyWord(tdstNodeInterpret_* p_stTree, tdstGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stCapsNullKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stCapsNullKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    *(unsigned int *)&p_stValue->uDummy.uParam.xMask = 0;
+    p_stValue->eType = E_vt_Caps;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 139–141 */
@@ -3329,10 +3337,10 @@ tdstNodeInterpret_* fn_p_stNobodyKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoSoundEventKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoSoundEventKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.pSoundEvent = NULL;
-    p_stValue->eType = 31;
+    p_stValue->eType = E_vt_SoundEvent;
     return p_stTree;
 }
 

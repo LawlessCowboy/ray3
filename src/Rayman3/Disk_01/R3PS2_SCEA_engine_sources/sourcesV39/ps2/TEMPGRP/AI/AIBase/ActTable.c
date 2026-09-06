@@ -2883,7 +2883,7 @@ unsigned char g_ucUseDefaultActionReturn;
  */
 void fn_vSetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, float xValue)
 {
-    /* TODO: decompile from asm/... */
+    return;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActTable.c lines 347–351 */

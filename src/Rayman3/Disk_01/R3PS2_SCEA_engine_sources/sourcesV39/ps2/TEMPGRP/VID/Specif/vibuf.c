@@ -209,7 +209,16 @@ int viBufModifyPts(anon_3* f, anon_2* new_ts)
  */
 void viBufFlush(anon_3* f)
 {
-    /* TODO: decompile from asm/... */
+    WaitSema(f->sema);
+    {
+        int value = f->readBytes + 0x7ff;
+        if (value < 0)
+            value = (value + 0x7ff) >> 11;
+        else
+            value >>= 11;
+        f->readBytes = value << 11;
+    }
+    SignalSema(f->sema);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 498–508 */
@@ -229,7 +238,10 @@ void viBufFlush(anon_3* f)
 int viBufCount(anon_3* f)
 {
     int ret;
-    /* TODO: decompile from asm/... */
+    WaitSema(f->sema);
+    ret = f->readBytes + (f->dmaN << 11);
+    SignalSema(f->sema);
+    return ret;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 466–474 */
@@ -453,7 +465,10 @@ int viBufAddDMA(anon_3* f)
  */
 void viBufEndPut(anon_3* f, int size)
 {
-    /* TODO: decompile from asm/... */
+    WaitSema(f->sema);
+    f->readBytes += size;
+    f->totalBytes += (long)size;
+    SignalSema(f->sema);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 199–226 */

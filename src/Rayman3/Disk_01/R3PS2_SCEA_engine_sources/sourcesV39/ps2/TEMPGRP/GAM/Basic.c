@@ -1569,7 +1569,7 @@ void fn_vLastDesinitAlwaysStructure(void)
  */
 unsigned char GAM_fn_bLoadBitmapForAGO(void)
 {
-    /* TODO: decompile from asm/... */
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1868–1878 */
@@ -1646,7 +1646,7 @@ void fn_vSetEngineInPaused(void)
  */
 unsigned char fn_bIsEngineInPause(void)
 {
-    /* TODO: decompile from asm/... */
+    return *(unsigned char *)0x53f004;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1292–1429 */
@@ -1842,7 +1842,7 @@ unsigned char GAM_fn_bIsEngineInFixMode(void)
  */
 unsigned short GAM_fn_uwGetEngineLoading(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 893–1081 */
@@ -2073,7 +2073,7 @@ unsigned char fn_bIsNextLevelNameValid(void)
  */
 void fn_vFreeNextLevelName(void)
 {
-    /* TODO: decompile from asm/... */
+    *(unsigned char *)0x53831f = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 594–595 */
@@ -2086,7 +2086,7 @@ void fn_vFreeNextLevelName(void)
  */
 void fn_p_szGetNextLevelName(void)
 {
-    /* TODO: decompile from asm/... */
+    return;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 584–585 */
@@ -2099,7 +2099,7 @@ void fn_p_szGetNextLevelName(void)
  */
 int fn_lGetSubMapNumber(void)
 {
-    /* TODO: decompile from asm/... */
+    return *(int *)0x538a00;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 561–580 */
@@ -2166,7 +2166,7 @@ void fn_vSetLevelName(char* _szName)
  */
 void fn_p_szGetFirstLevelName(void)
 {
-    /* TODO: decompile from asm/... */
+    return;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 508–508 */
@@ -2178,5 +2178,5 @@ void fn_p_szGetFirstLevelName(void)
  */
 void fn_vInitAndRegisterAllScriptSections(void)
 {
-    /* TODO: decompile from asm/... */
+    TXT_fn_vLoadInit();
 }
