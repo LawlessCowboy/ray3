@@ -3770,7 +3770,6 @@ char g_GLI_bForceAAAColor;
 char g_bCanResize2DSpriteWithPercentAccordingToViewportRatio;
 tdstEngineStructure_ g_stEngineStructure;
 _tdstFont g_ListOfFonts;
-unsigned char TXT_g_EndCode[2];
 _tdstBitmapFont g_TabBitmapFont;
 unsigned char g_ucCurrentViewport;
 

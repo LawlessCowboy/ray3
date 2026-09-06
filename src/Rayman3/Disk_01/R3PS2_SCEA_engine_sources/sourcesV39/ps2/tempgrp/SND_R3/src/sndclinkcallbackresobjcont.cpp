@@ -14,7 +14,7 @@ typedef struct CLinkCallbackResObj CLinkCallbackResObj;
 typedef struct CProgramContext CProgramContext;
 typedef struct CRefIdObj CRefIdObj;
 typedef struct slist slist;
-typedef struct CStringIsLess CStringIsLess;
+typedef struct less less;
 typedef struct stree stree;
 typedef struct smap smap;
 typedef struct CCmdInterface CCmdInterface;
@@ -24,7 +24,6 @@ typedef struct CResData CResData;
 typedef struct CUUID CUUID;
 typedef struct C2DParams C2DParams;
 typedef struct iterator iterator;
-typedef struct less less;
 typedef struct const_iterator const_iterator;
 typedef struct C3DDirection C3DDirection;
 typedef struct C3DParam C3DParam;
@@ -37,6 +36,7 @@ typedef struct CResObjState CResObjState;
 typedef struct CActorProgramContext CActorProgramContext;
 typedef struct CActorResObj CActorResObj;
 typedef struct sTreeLink sTreeLink;
+typedef struct CStringIsLess CStringIsLess;
 typedef struct CLinkCallbackResObjCont CLinkCallbackResObjCont;
 typedef struct CActorModifiers CActorModifiers;
 
@@ -89,14 +89,14 @@ struct slist {
     unsigned int _Size; /* +0x8 */
 };
 
-struct CStringIsLess {
+struct less {
     /* C++ base binary_function at +0x0. */
 };
 
 struct stree {
     /* C++ base streebase at +0x0. */
     sallocator allocator; /* +0xc */
-    CStringIsLess key_compare; /* +0xd */
+    less key_compare; /* +0xd */
 };
 
 struct smap {
@@ -143,10 +143,6 @@ struct C2DParams {
 
 struct iterator {
     /* C++ base const_iterator at +0x0. */
-};
-
-struct less {
-    /* C++ base binary_function at +0x0. */
 };
 
 struct const_iterator {
@@ -235,6 +231,10 @@ struct sTreeLink {
     sTreeLink* m_poParent; /* +0x4 */
     sTreeLink* m_poRight; /* +0x8 */
     _Redbl m_eColor; /* +0xc */
+};
+
+struct CStringIsLess {
+    /* C++ base binary_function at +0x0. */
 };
 
 struct CLinkCallbackResObjCont {

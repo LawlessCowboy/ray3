@@ -23,20 +23,6 @@ typedef enum e_ucHMUStaticBlocks {
     E_ucHMUMaxBlocksNb = 9,
 } e_ucHMUStaticBlocks;
 
-typedef enum e_ucHMUStaticBlocks {
-    E_ucHMUFirstMemoryBlock = 0,
-    E_ucHMUFixNormalMemoryBlock = 0,
-    E_ucHMUFixTempMemoryBlock = 1,
-    E_ucHMULevelNormalMemoryBlock = 2,
-    E_ucHMULevelTempMemoryBlock = 3,
-    E_ucHMUTransition1NormalMemoryBlock = 4,
-    E_ucHMUTransition1TempMemoryBlock = 5,
-    E_ucHMUTransition2NormalMemoryBlock = 6,
-    E_ucHMUTransition2TempMemoryBlock = 7,
-    E_ucHMUBinaryMemoryBlock = 8,
-    E_ucHMUMaxBlocksNb = 9,
-} e_ucHMUStaticBlocks;
-
 struct tdstBlockInfo_ {
     int p_cBeginBlock; /* +0x0 */
     int p_cEndBlock; /* +0x4 */
@@ -57,8 +43,6 @@ HMU_tdstMemoryStructure_ HMU_g_stMemoryStructure;
 tdstBlockInfo_ g_a_stHMUBlocksInfo[9];
 unsigned int HMU_g_ulLastSndDirectAlloc;
 int HMU_g_p_vSndDirectSoundAlloc[1000];
-HMU_tdstMemoryStructure_ HMU_g_stMemoryStructure;
-unsigned char g_ucHMUModuleId;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Mem.c lines 192–241 */
 /* addr: 0x002ed560  size: 452 bytes */

@@ -5,11 +5,11 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct iterator iterator;
 typedef struct spair spair;
 typedef struct sTreeNode sTreeNode;
 typedef struct less less;
 typedef struct stree stree;
+typedef struct iterator iterator;
 typedef struct CSoundSemaphoreInfo CSoundSemaphoreInfo;
 typedef struct CSoundSemaphore CSoundSemaphore;
 typedef struct iterator_base iterator_base;
@@ -22,13 +22,9 @@ typedef enum _Redbl {
     _Black = 1,
 } _Redbl;
 
-struct iterator {
-    /* C++ base iterator_base at +0x0. */
-};
-
 struct spair {
-    iterator first; /* +0x0 */
-    unsigned char second; /* +0x4 */
+    int first; /* +0x0 */
+    CSoundSemaphoreInfo* second; /* +0x4 */
 };
 
 struct sTreeNode {
@@ -44,6 +40,10 @@ struct stree {
     /* C++ base streebase at +0x0. */
     sallocator allocator; /* +0xc */
     less key_compare; /* +0xd */
+};
+
+struct iterator {
+    /* C++ base iterator_base at +0x0. */
 };
 
 struct CSoundSemaphoreInfo {

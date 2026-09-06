@@ -45,6 +45,7 @@ typedef struct CActorResData CActorResData;
 typedef struct CSoundSemaphore CSoundSemaphore;
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
 typedef struct CLinkTypeActor CLinkTypeActor;
+typedef struct TTypedVar TTypedVar;
 typedef struct slist slist;
 typedef struct CEventResData CEventResData;
 typedef struct CRefIdObj CRefIdObj;
@@ -54,7 +55,6 @@ typedef struct CLinkCallbackResObjCont CLinkCallbackResObjCont;
 typedef struct CProgramContext CProgramContext;
 typedef struct CActorModifiers CActorModifiers;
 typedef struct _stVector _stVector;
-typedef struct TTypedVar TTypedVar;
 typedef struct CVar CVar;
 typedef struct CLinkTypeActorCont CLinkTypeActorCont;
 typedef union _SND_tduRefEvt _SND_tduRefEvt;
@@ -302,7 +302,7 @@ struct iterator_base {
 
 struct spair {
     int first; /* +0x0 */
-    unsigned int second; /* +0x4 */
+    CLinkTypeActor* second; /* +0x4 */
 };
 
 struct sTreeNode {
@@ -378,6 +378,11 @@ struct CLinkTypeActor {
     _tdstAllRetObjectSound mstIActor; /* +0x88 */
 };
 
+struct TTypedVar {
+    /* C++ base CVar at +0x0. */
+    float m_oValue; /* +0x1c */
+};
+
 struct slist {
     sallocator m_oAllocator; /* +0x0 */
     _Node* _Head; /* +0x4 */
@@ -400,7 +405,7 @@ struct CRefIdObj {
 };
 
 struct const_iterator {
-    /* C++ base iterator_base at +0x0. */
+    _Node* _Ptr; /* +0x0 */
 };
 
 struct streebase {
@@ -431,11 +436,6 @@ struct _stVector {
     float f32x; /* +0x0 */
     float f32y; /* +0x4 */
     float f32z; /* +0x8 */
-};
-
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
-    float m_oValue; /* +0x1c */
 };
 
 struct CVar {

@@ -7,11 +7,12 @@
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CVarAccess CVarAccess;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct iterator iterator;
+typedef struct spair spair;
+typedef struct sTreeNode sTreeNode;
 typedef struct CUUID CUUID;
 typedef struct sstring sstring;
 typedef struct CPS2IdObjInfo CPS2IdObjInfo;
-typedef struct spair spair;
-typedef struct sTreeNode sTreeNode;
 typedef struct less less;
 typedef struct stree stree;
 typedef struct smap smap;
@@ -20,6 +21,7 @@ typedef struct _RollOffParam _RollOffParam;
 typedef struct CResObjParams CResObjParams;
 typedef struct CExtraEventActor CExtraEventActor;
 typedef struct CLinkActor CLinkActor;
+typedef struct TTypedVar TTypedVar;
 typedef struct CPS2IdObjLoader CPS2IdObjLoader;
 typedef struct CBankDescCont CBankDescCont;
 typedef struct CResObj CResObj;
@@ -36,7 +38,6 @@ typedef union CVal CVal;
 typedef struct CBoolRefParam CBoolRefParam;
 typedef struct CActorProgramContext CActorProgramContext;
 typedef struct CIndexAllocator CIndexAllocator;
-typedef struct iterator iterator;
 typedef struct V3Ds V3Ds;
 typedef struct C3DDirection C3DDirection;
 typedef struct C3DParam C3DParam;
@@ -52,7 +53,6 @@ typedef struct CSndVarType CSndVarType;
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
 typedef struct CLinkTypeActor CLinkTypeActor;
 typedef struct _stVector _stVector;
-typedef struct TTypedVar TTypedVar;
 typedef struct PostponedPlay PostponedPlay;
 typedef struct streebase streebase;
 typedef struct CIdObj CIdObj;
@@ -89,6 +89,20 @@ typedef enum tdeEventType {
     ESTOPANDGO = 6,
 } tdeEventType;
 
+struct iterator {
+    /* C++ base iterator_base at +0x0. */
+};
+
+struct spair {
+    iterator first; /* +0x0 */
+    unsigned char second; /* +0x4 */
+};
+
+struct sTreeNode {
+    /* C++ base sTreeLink at +0x0. */
+    spair m_oValue; /* +0x10 */
+};
+
 struct CUUID {
     unsigned int m_uiHighWord; /* +0x0 */
     unsigned int m_uiLowWord; /* +0x4 */
@@ -102,16 +116,6 @@ struct CPS2IdObjInfo {
     CUUID m_oId; /* +0x0 */
     unsigned int m_uiOffset; /* +0x8 */
     sstring m_strFileName; /* +0xc */
-};
-
-struct spair {
-    CUUID first; /* +0x0 */
-    CPS2IdObjInfo second; /* +0x8 */
-};
-
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
-    spair m_oValue; /* +0x10 */
 };
 
 struct less {
@@ -178,6 +182,11 @@ struct CLinkActor {
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
+};
+
+struct TTypedVar {
+    /* C++ base CVar at +0x0. */
+    float m_oValue; /* +0x1c */
 };
 
 struct CPS2IdObjLoader {
@@ -283,10 +292,6 @@ struct CIndexAllocator {
     CAllocBlock* m_poAllocBlocks; /* +0x0 */
     char m_cRootNodeBuffer[40]; /* +0x4 */
     unsigned int m_uiNbAllocs; /* +0x2c */
-};
-
-struct iterator {
-    /* C++ base iterator_base at +0x0. */
 };
 
 struct V3Ds {
@@ -402,11 +407,6 @@ struct _stVector {
     float f32x; /* +0x0 */
     float f32y; /* +0x4 */
     float f32z; /* +0x8 */
-};
-
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
-    float m_oValue; /* +0x1c */
 };
 
 struct PostponedPlay {

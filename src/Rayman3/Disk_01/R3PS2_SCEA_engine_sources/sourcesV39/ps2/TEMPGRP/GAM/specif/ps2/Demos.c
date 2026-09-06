@@ -25,6 +25,7 @@ typedef struct tdstZdxList_ tdstZdxList_;
 typedef struct tdstZoneSetList_ tdstZoneSetList_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn;
 typedef struct CINE_tdstCine_ CINE_tdstCine_;
+typedef struct tdstMorphChannelList_ tdstMorphChannelList_;
 typedef struct LST2_tdstAnchorTotdxHandleToStateOpt LST2_tdstAnchorTotdxHandleToStateOpt;
 typedef struct LST2_tdstAnchorTotdxHandleToSubAnimOpt LST2_tdstAnchorTotdxHandleToSubAnimOpt;
 typedef struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt;
@@ -40,10 +41,12 @@ typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt;
+typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
 typedef struct SECT_tdstListOfSOSectorsInSoundInteraction_ SECT_tdstListOfSOSectorsInSoundInteraction_;
 typedef struct SECT_tdstListOfSOSectorsInGraphicInteraction_ SECT_tdstListOfSOSectorsInGraphicInteraction_;
 typedef struct tdstEventInTable_ tdstEventInTable_;
 typedef struct AI_tdstMind_ AI_tdstMind_;
+typedef struct tdstSectInfo_ tdstSectInfo_;
 typedef struct tdstAnim3d_ tdstAnim3d_;
 typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn;
@@ -59,6 +62,7 @@ typedef struct tdstLipsSynchValue_ tdstLipsSynchValue_;
 typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
 typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
 typedef struct tdstFrame3d_ tdstFrame3d_;
+typedef struct tdstMicro_ tdstMicro_;
 typedef struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn;
 typedef struct AI_tdstAIModel_ AI_tdstAIModel_;
 typedef struct tdstElement3d_ tdstElement3d_;
@@ -68,31 +72,56 @@ typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct tdst3dData_ tdst3dData_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
+typedef struct tdstAveragePosition_ tdstAveragePosition_;
+typedef struct tdstSightAxisSystem_ tdstSightAxisSystem_;
+typedef struct tdstTransparentSuperObjectForCamera_ tdstTransparentSuperObjectForCamera_;
+typedef struct tdstCineinfo_ tdstCineinfo_;
 typedef struct tdstDynam_ tdstDynam_;
 typedef struct tdstBrain_ tdstBrain_;
 typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
 typedef struct SECT_tdstListOfStaticLights_ SECT_tdstListOfStaticLights_;
+typedef struct stColliderInfo_ stColliderInfo_;
+typedef struct tdstCollSet_ tdstCollSet_;
+typedef struct LST2_tdstAnchorTotdxHandleToTransitionOpt LST2_tdstAnchorTotdxHandleToTransitionOpt;
+typedef struct LST2_tdstAnchorTotdxHandleToProhibitOpt LST2_tdstAnchorTotdxHandleToProhibitOpt;
+typedef struct tdstState_ tdstState_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn;
-typedef struct anon_7 anon_7;
-typedef struct anon_8 anon_8;
+typedef struct tdstMSWay_ tdstMSWay_;
+typedef struct anon_0 anon_0;
+typedef struct anon_1 anon_1;
 typedef struct stMACDPID stMACDPID;
 typedef struct DNM_stDynamicsComplexBlock DNM_stDynamicsComplexBlock;
+typedef struct tdstMSLight_ tdstMSLight_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
+typedef struct anon_2 anon_2;
+typedef struct anon_3 anon_3;
+typedef struct anon_4 anon_4;
+typedef union _tduRefRes _tduRefRes;
+typedef struct anon_5 anon_5;
+typedef struct anon_6 anon_6;
+typedef struct anon_9 anon_9;
+typedef struct anon_10 anon_10;
+typedef union anon_11 anon_11;
+typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
+typedef struct _RollOffParam _RollOffParam;
+typedef struct tdstMSSound_ tdstMSSound_;
 typedef struct LST2_tdstAnchorToWP_tdhGraphNodeDyn LST2_tdstAnchorToWP_tdhGraphNodeDyn;
 typedef struct WP_tdstGraphNode_ WP_tdstGraphNode_;
 typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
+typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
 typedef struct MTH_stRotation MTH_stRotation;
-typedef struct anon_0 anon_0;
 typedef struct tdstCouple_ tdstCouple_;
-typedef struct anon_1 anon_1;
 typedef struct CINE_tdstChannelLink_ CINE_tdstChannelLink_;
 typedef struct DNM_stDynamicsBaseBlock DNM_stDynamicsBaseBlock;
 typedef struct DNM_stDynamicsAdvancedBlock DNM_stDynamicsAdvancedBlock;
 typedef struct DNM_stDynamics DNM_stDynamics;
 typedef struct DNM_stParsingDatas DNM_stParsingDatas;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
+typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
+typedef struct stInterpolatedPosition stInterpolatedPosition;
+typedef struct tdstAChannel_ tdstAChannel_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt;
@@ -111,27 +140,11 @@ typedef struct tdstDemoCompressedTransform_ tdstDemoCompressedTransform_;
 typedef struct tdstDemoSOList_ tdstDemoSOList_;
 typedef struct GLI_tdst2DVertex_ GLI_tdst2DVertex_;
 typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
-typedef struct LST2_tdstAnchorTotdxHandleToTransitionOpt LST2_tdstAnchorTotdxHandleToTransitionOpt;
-typedef struct LST2_tdstAnchorTotdxHandleToProhibitOpt LST2_tdstAnchorTotdxHandleToProhibitOpt;
-typedef struct tdstState_ tdstState_;
-typedef struct anon_2 anon_2;
-typedef struct anon_3 anon_3;
-typedef struct anon_4 anon_4;
-typedef union _tduRefRes _tduRefRes;
-typedef struct anon_5 anon_5;
-typedef struct anon_6 anon_6;
-typedef struct anon_9 anon_9;
-typedef struct anon_10 anon_10;
-typedef union anon_11 anon_11;
-typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct tdstViewportManagement_ tdstViewportManagement_;
 typedef struct _stTimerCount _stTimerCount;
-typedef struct stColliderInfo_ stColliderInfo_;
 typedef struct LST2_tdstAnchorTotdxHandleToNodeCameraDyn LST2_tdstAnchorTotdxHandleToNodeCameraDyn;
 typedef struct tdstNodeCamera_ tdstNodeCamera_;
 typedef struct GLI_tdstSpecificAttributesFor3D_ GLI_tdstSpecificAttributesFor3D_;
-typedef struct stInterpolatedPosition stInterpolatedPosition;
-typedef struct tdstAChannel_ tdstAChannel_;
 typedef struct LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn;
 typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
 typedef struct FIL_tdstFileNameListElement_ FIL_tdstFileNameListElement_;
@@ -140,35 +153,22 @@ typedef struct tdst_EntryActions_ tdst_EntryActions_;
 typedef struct tdstLanguageStructure_ tdstLanguageStructure_;
 typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;
 typedef struct tdstEngineTimerStructure_ tdstEngineTimerStructure_;
-typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
 typedef struct tdstObjectsTableElement_ tdstObjectsTableElement_;
 typedef struct LST2_tdstAnchorToDEMO_tdxHandleToDemoSOElementOpt LST2_tdstAnchorToDEMO_tdxHandleToDemoSOElementOpt;
 typedef struct tdstTransition_ tdstTransition_;
 typedef struct tdstSuperObjectLinks_ tdstSuperObjectLinks_;
-typedef struct tdstMorphChannelList_ tdstMorphChannelList_;
 typedef struct tdstProhibit_ tdstProhibit_;
-typedef struct tdstAveragePosition_ tdstAveragePosition_;
 typedef struct LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn;
-typedef struct _RollOffParam _RollOffParam;
-typedef struct tdstMSSound_ tdstMSSound_;
-typedef struct tdstSightAxisSystem_ tdstSightAxisSystem_;
-typedef struct tdstTransparentSuperObjectForCamera_ tdstTransparentSuperObjectForCamera_;
+typedef struct anon_7 anon_7;
+typedef struct anon_8 anon_8;
 typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
 typedef struct CINE_Manager_ CINE_Manager_;
-typedef struct tdstSectInfo_ tdstSectInfo_;
-typedef struct tdstCineinfo_ tdstCineinfo_;
 typedef struct tdstEngineStructure_ tdstEngineStructure_;
 typedef struct MOR_stMorphVector_ MOR_stMorphVector_;
 typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
-typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
-typedef struct tdstCollSet_ tdstCollSet_;
-typedef struct tdstMSLight_ tdstMSLight_;
 typedef union GEO_tduVSObject_ GEO_tduVSObject_;
 typedef struct MOR_stMorphObject_ MOR_stMorphObject_;
-typedef struct tdstMSWay_ tdstMSWay_;
 typedef struct GEO_tdstVisualSet_ GEO_tdstVisualSet_;
-typedef struct tdstMicro_ tdstMicro_;
-typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
 typedef struct GEO_tdstColor_ GEO_tdstColor_;
 
 typedef enum MAT_tdeTranformationType_ {
@@ -216,19 +216,6 @@ typedef enum e_ucCameraStates_ {
     CAM_e_TempState_ApexMode = 5,
 } e_ucCameraStates_;
 
-typedef enum MAT_tdeTranformationType_ {
-    MAT_eTransform_Uninitialized = 0,
-    MAT_eTransform_Identity = 1,
-    MAT_eTransform_Translation = 2,
-    MAT_eTransform_Zoom = 3,
-    MAT_eTransform_Scale = 4,
-    MAT_eTransform_Rotation = 5,
-    MAT_eTransform_RotationZoom = 6,
-    MAT_eTransform_RotationScale = 7,
-    MAT_eTransform_ComplexRotationScale = 8,
-    MAT_eTransform_Undefined = 9,
-} MAT_tdeTranformationType_;
-
 typedef enum anon_enum_008f192e {
     DNM_eMIC_Error = -1,
     DNM_eCamera = 0,
@@ -266,6 +253,14 @@ struct CINE_tdstCine_ {
     unsigned char bPlaying; /* +0x18 */
     int lGenerateEvent; /* +0x1c */
     char szName[255]; /* +0x20 */
+};
+
+struct tdstMorphChannelList_ {
+    tdstMorphChannelList_* hNextBrotherDyn; /* +0x0 */
+    tdstMorphChannelList_* hPrevBrotherDyn; /* +0x4 */
+    LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hFatherDyn; /* +0x8 */
+    unsigned short uwChannelNumber; /* +0xc */
+    short MorphListIndex; /* +0xe */
 };
 
 struct LST2_tdstAnchorTotdxHandleToStateOpt {
@@ -397,6 +392,13 @@ struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt {
     int lNumberOfElementsOpt; /* +0x4 */
 };
 
+struct tdstObjectsTablesList_ {
+    tdstObjectsTableElement_* d_stObjectsTable; /* +0x0 */
+    tdstObjectsTableElement_* d_stInitObjectsTable; /* +0x4 */
+    unsigned short wNumberOfElement; /* +0x8 */
+    unsigned short wZDxUsed; /* +0xa */
+};
+
 struct SECT_tdstListOfSOSectorsInSoundInteraction_ {
     HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
     int lVolume; /* +0x4 */
@@ -423,6 +425,13 @@ struct AI_tdstMind_ {
     tdstIntelligence_* p_stReflex; /* +0x8 */
     tdstDsgMem_* p_stDsgMem; /* +0xc */
     unsigned char bDoingIntel; /* +0x10 */
+};
+
+struct tdstSectInfo_ {
+    HIE_tdstSuperObject_* hCurrentSector; /* +0x0 */
+    SECT_tdstListOfSOCharacters_* hNodeInSector; /* +0x4 */
+    MTH3D_tdstVector_ stPreviousPosition; /* +0x8 */
+    HIE_tdstSuperObject_* hSectorSynchroCharacter; /* +0x14 */
 };
 
 struct tdstAnim3d_ {
@@ -582,6 +591,11 @@ struct tdstFrame3d_ {
     unsigned char ucCacheEntry; /* +0x23 */
 };
 
+struct tdstMicro_ {
+    MAT_tdstTransformation_* hMicroMatrix; /* +0x0 */
+    unsigned char bIsActive; /* +0x4 */
+};
+
 struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn {
     tdstSubAnimInUse_* hFirstElementDyn; /* +0x0 */
     tdstSubAnimInUse_* hLastElementDyn; /* +0x4 */
@@ -731,6 +745,59 @@ struct tdstStandardGame_ {
     MTH3D_tdstVector_ a_stCustomVectors[2]; /* +0x4c */
 };
 
+struct tdstAveragePosition_ {
+    MTH3D_tdstVector_ a_CheckedSpeed[8]; /* +0x0 */
+    MTH3D_tdstVector_ a_CheckedPos[8]; /* +0x60 */
+    float a_CheckedTime[8]; /* +0xc0 */
+};
+
+struct tdstSightAxisSystem_ {
+    MTH3D_tdstVector_ SightAxis; /* +0x0 */
+    MTH3D_tdstVector_ FirstComplementaryAxis; /* +0xc */
+    MTH3D_tdstVector_ SecondComplementaryAxis; /* +0x18 */
+};
+
+struct tdstTransparentSuperObjectForCamera_ {
+    HIE_tdstSuperObject_* hSuperObject; /* +0x0 */
+    int lInitialDrawMask; /* +0x4 */
+    float fInitialTransparenceLevel; /* +0x8 */
+    float fCurrentTransparencyLevel; /* +0xc */
+    unsigned char bIncrease; /* +0x10 */
+};
+
+struct tdstCineinfo_ {
+    tdstInternalStructurCineinfo_* hInit; /* +0x0 */
+    tdstInternalStructurCineinfo_* hCurrent; /* +0x4 */
+    tdstInternalStructurCineinfo_* hVisibility; /* +0x8 */
+    tdstInternalStructurCineinfo_* hWork; /* +0xc */
+    MTH3D_tdstVector_ stLastFailedOrigin; /* +0x10 */
+    MTH3D_tdstVector_ stLastFailedWanted; /* +0x1c */
+    MTH3D_tdstVector_ stForceTarget; /* +0x28 */
+    MTH3D_tdstVector_ stForcePosition; /* +0x34 */
+    MTH3D_tdstVector_ stForceRefAxisY; /* +0x40 */
+    MTH3D_tdstVector_ stForceRefAxisZ; /* +0x4c */
+    float xApexRatio; /* +0x58 */
+    float xLastDeltaCut; /* +0x5c */
+    e_ucCameraStates_ eState; /* +0x60 */
+    float xCounter1; /* +0x64 */
+    float xCounter2; /* +0x68 */
+    float xCounter3; /* +0x6c */
+    float xCounter4; /* +0x70 */
+    unsigned char ucVolIAFlags; /* +0x74 */
+    unsigned char ucPerIAFlags; /* +0x75 */
+    char cLastCutAngleSens; /* +0x76 */
+    tdstAveragePosition_ AveragePosition; /* +0x78 */
+    tdstSightAxisSystem_ stSightAxisSystem; /* +0x158 */
+    unsigned char bCanDoBestPos; /* +0x17c */
+    tdstTransparentSuperObjectForCamera_ a10_stTransparentSuperObjectForCamera[10]; /* +0x180 */
+    short xNumberOfTransparentSuperObjectForCamera; /* +0x248 */
+    float fTransparency; /* +0x24c */
+    float fTransparencySpeed; /* +0x250 */
+    unsigned char ucTransparencyFlag; /* +0x254 */
+    unsigned char bCameraIsMirrored; /* +0x255 */
+    unsigned char bLightComputation; /* +0x256 */
+};
+
 struct tdstDynam_ {
     DNM_stDynamics* p_stDynamics; /* +0x0 */
     DNM_stParsingDatas* p_stParsingDatas; /* +0x4 */
@@ -755,18 +822,80 @@ struct SECT_tdstListOfStaticLights_ {
     GLI_tdstLight_* hStaticLights; /* +0x0 */
 };
 
+struct stColliderInfo_ {
+    int a_stColliderActors[2]; /* +0x0 */
+    MTH3D_tdstVector_ a_stColliderVectors[2]; /* +0x8 */
+    float a_xColliderReals[2]; /* +0x20 */
+    unsigned char ucColliderType; /* +0x28 */
+    unsigned char ucColliderPriority; /* +0x29 */
+    unsigned char a2_ucUnused[2]; /* +0x2a */
+};
+
+struct tdstCollSet_ {
+    tdstZdxList_* hZddList; /* +0x0 */
+    tdstZdxList_* hZdeList; /* +0x4 */
+    tdstZdxList_* hZdmList; /* +0x8 */
+    tdstZdxList_* hZdrList; /* +0xc */
+    tdstCsaList_* hZddActivationList; /* +0x10 */
+    tdstCsaList_* hZdeActivationList; /* +0x14 */
+    tdstCsaList_* hZdmActivationList; /* +0x18 */
+    tdstCsaList_* hZdrActivationList; /* +0x1c */
+    tdstZoneSetList_* hZddCurrentActivation; /* +0x20 */
+    tdstZoneSetList_* hZdeCurrentActivation; /* +0x24 */
+    tdstZoneSetList_* hZdrCurrentActivation; /* +0x28 */
+    tdstZoneSetList_* hZdmCurrentActivation; /* +0x2c */
+    unsigned int ulFBZddPriviligedZones; /* +0x30 */
+    unsigned int ulFBZdePriviligedZones; /* +0x34 */
+    unsigned int ulFBZdmPriviligedZones; /* +0x38 */
+    unsigned int ulFBZdrPriviligedZones; /* +0x3c */
+    unsigned char ucCollComputeFrequency; /* +0x40 */
+    unsigned char ucCharacterPriority; /* +0x41 */
+    unsigned char ucCollisionFlag; /* +0x42 */
+    stColliderInfo_ stColliderInfo; /* +0x44 */
+};
+
+struct LST2_tdstAnchorTotdxHandleToTransitionOpt {
+    tdstTransition_* hFirstElementOpt; /* +0x0 */
+    int lNumberOfElementsOpt; /* +0x4 */
+};
+
+struct LST2_tdstAnchorTotdxHandleToProhibitOpt {
+    tdstProhibit_* hFirstElementOpt; /* +0x0 */
+    int lNumberOfElementsOpt; /* +0x4 */
+};
+
+struct tdstState_ {
+    tdstAnim3d_* p_stAnim; /* +0x0 */
+    LST2_tdstAnchorTotdxHandleToTransitionOpt hForTransitionArray; /* +0x4 */
+    LST2_tdstAnchorTotdxHandleToProhibitOpt hForProhibitArray; /* +0xc */
+    tdstState_* h_NextState; /* +0x14 */
+    int h_LinkedMechanicsIdCard; /* +0x18 */
+    int szLevelList; /* +0x1c */
+    int szAnimationSectionName; /* +0x20 */
+    unsigned char ucRepeatAnimation; /* +0x24 */
+    signed char scSpeedAnim; /* +0x25 */
+    unsigned char ucTransitionStatusFlag; /* +0x26 */
+    unsigned char ucCustomBits; /* +0x27 */
+};
+
 struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn {
     SECT_tdstListOfSOCharacters_* hFirstElementDyn; /* +0x0 */
     SECT_tdstListOfSOCharacters_* hLastElementDyn; /* +0x4 */
     int lNumberOfElementsDyn; /* +0x8 */
 };
 
-struct anon_7 {
+struct tdstMSWay_ {
+    WP_tdstGraph_* m_hPath; /* +0x0 */
+    int m_lIndex; /* +0x4 */
+    char m_bIsCircular; /* +0x8 */
+};
+
+struct anon_0 {
     float m_xAngle; /* +0x0 */
     MTH3D_tdstVector_ m_stAxis; /* +0x4 */
 };
 
-struct anon_8 {
+struct anon_1 {
     float m_xAngle; /* +0x0 */
     MTH3D_tdstVector_ m_stAxis; /* +0x4 */
 };
@@ -779,8 +908,8 @@ struct stMACDPID {
     float m_xData3; /* +0x28 */
     float m_xData4; /* +0x2c */
     float m_xData5; /* +0x30 */
-    anon_7 m_stData6; /* +0x34 */
-    anon_8 m_stData7; /* +0x44 */
+    anon_0 m_stData6; /* +0x34 */
+    anon_1 m_stData7; /* +0x44 */
     char m_cData8; /* +0x54 */
     unsigned short m_uwData9; /* +0x56 */
     MTH3D_tdstVector_ m_stData10; /* +0x58 */
@@ -802,6 +931,26 @@ struct DNM_stDynamicsComplexBlock {
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
     MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
     MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
+};
+
+struct tdstMSLight_ {
+    unsigned char bLocalLight; /* +0x0 */
+    unsigned char bOnlyLocalLight; /* +0x1 */
+    unsigned char bGiroPhare; /* +0x2 */
+    unsigned char bPulsing; /* +0x3 */
+    MTH3D_tdstVector_ stOffsetVect; /* +0x4 */
+    MTH3D_tdstVector_ stAngle; /* +0x10 */
+    float xStepGiro; /* +0x1c */
+    float xStepPulse; /* +0x20 */
+    float xMaxRangePulse; /* +0x24 */
+    float xGiroAngle; /* +0x28 */
+    GLI_tdstLight_* p_stLight; /* +0x2c */
+    GEO_tdstGeometricObject_* p_stVisuLight; /* +0x30 */
+    SECT_tdstListOfDNMLights_* hLightInSector; /* +0x34 */
+    unsigned char ucNbRLIUse; /* +0x38 */
+    unsigned char ucFirstRLI; /* +0x39 */
+    unsigned char ucSecondRLI; /* +0x3a */
+    float ucBlendPercent; /* +0x3c */
 };
 
 struct GEO_tdstGeometricObject_ {
@@ -834,9 +983,82 @@ struct GEO_tdstDoubledIndex_ {
     short a2_xIndex[2]; /* +0x0 */
 };
 
+struct anon_2 {
+    _SND_tduRefEvt uEvt; /* +0x0 */
+};
+
+struct anon_3 {
+    _SND_tduRefEvt uEvtStop; /* +0x0 */
+    _SND_tduRefEvt uEvtGo; /* +0x4 */
+};
+
+struct anon_4 {
+    _SND_tduRefEvt uEvtStop; /* +0x0 */
+    _SND_tduRefEvt uEvtGo; /* +0x4 */
+    int iTime; /* +0x8 */
+};
+
+union _tduRefRes {
+    unsigned int Id; /* +0x0 */
+    _tdstBlockResourceMem* pstPtr; /* +0x0 */
+};
+
+struct anon_5 {
+    _tduRefRes uResource; /* +0x0 */
+    int CoefA; /* +0x4 */
+    int CoefB; /* +0x8 */
+    anon_0 stDeTune; /* +0xc */
+};
+
+struct anon_6 {
+    _tduRefRes uResource; /* +0x0 */
+    int rtCoefPitch; /* +0x4 */
+    int rtCoefVol; /* +0x8 */
+    int rtCoefPan; /* +0xc */
+};
+
+struct anon_9 {
+    int iIdEffect; /* +0x0 */
+};
+
+struct anon_10 {
+    int bConcernWithObjectType; /* +0x0 */
+    int lNewVolume; /* +0x4 */
+};
+
+union anon_11 {
+    anon_1 stPlay; /* +0x0 */
+    anon_2 stStop; /* +0x0 */
+    anon_3 stStopNGo; /* +0x0 */
+    anon_4 stStopNGoFade; /* +0x0 */
+    anon_5 stExtraParam; /* +0x0 */
+    anon_6 stExtraAll; /* +0x0 */
+    anon_9 stEffect; /* +0x0 */
+    anon_10 stChangeVolume; /* +0x0 */
+};
+
+struct _SND_tdstBlockEvent {
+    unsigned int Id; /* +0x0 */
+    anon_enum_008f274c eType; /* +0x4 */
+    anon_11 uParams; /* +0x8 */
+    int bStopable : 1; /* bit 0, byte +0x18 */
+    int bDynamic : 1; /* bit 1, byte +0x18 */
+};
+
 struct GEO_tdstParallelBox_ {
     MTH4D_tdstVector_ stMinPoint; /* +0x0 */
     MTH4D_tdstVector_ stMaxPoint; /* +0x10 */
+};
+
+struct _RollOffParam {
+    int rDistSatur; /* +0x0 */
+    int rDistBackGround; /* +0x4 */
+    unsigned char ucBackgroundVol; /* +0x8 */
+};
+
+struct tdstMSSound_ {
+    _RollOffParam stRollOff; /* +0x0 */
+    HIE_tdstSuperObject_* hMechaCharacter; /* +0xc */
 };
 
 struct LST2_tdstAnchorToWP_tdhGraphNodeDyn {
@@ -861,12 +1083,13 @@ struct HIE_tdstModifierObject_ {
     int lAddIntensity; /* +0x8 */
 };
 
-struct MTH_stRotation {
-    float m_xAngle; /* +0x0 */
-    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
+struct WP_tdstWayPoint_ {
+    MTH3D_tdstVector_ m_stVertex; /* +0x0 */
+    float m_xRadius; /* +0xc */
+    HIE_tdstSuperObject_* m_hSuperObject; /* +0x10 */
 };
 
-struct anon_0 {
+struct MTH_stRotation {
     float m_xAngle; /* +0x0 */
     MTH3D_tdstVector_ m_stAxis; /* +0x4 */
 };
@@ -874,11 +1097,6 @@ struct anon_0 {
 struct tdstCouple_ {
     unsigned short wChild; /* +0x0 */
     unsigned short wFather; /* +0x2 */
-};
-
-struct anon_1 {
-    float m_xAngle; /* +0x0 */
-    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
 };
 
 struct CINE_tdstChannelLink_ {
@@ -949,6 +1167,33 @@ struct DNM_stParsingDatas {
 struct GEO_tdstEdge_ {
     short xPoints[2]; /* +0x0 */
     MTH3D_tdstVector_ st_VectorPoints[2]; /* +0x4 */
+};
+
+struct PO_tdstPhysicalObject_ {
+    GEO_tdstVisualSet_* _hVisualSet; /* +0x0 */
+    tdstPhysicalCollSet_* _hCollideSet; /* +0x4 */
+    COL_tdstBoundingSphere_* _hVisualBoundingVolume; /* +0x8 */
+    COL_tdstBoundingSphere_* _hCollideBoundingVolume; /* +0xc */
+};
+
+struct stInterpolatedPosition {
+    float stRot[4]; /* +0x0 */
+    float stRotSca[4]; /* +0x10 */
+    MTH3D_tdstVector_ stPos; /* +0x20 */
+    MTH3D_tdstVector_ stVecSca; /* +0x2c */
+    float xPercent; /* +0x38 */
+};
+
+struct tdstAChannel_ {
+    HIE_tdstSuperObject_* hSupObject; /* +0x0 */
+    HIE_tdstSuperObject_* hZoomSupObject; /* +0x4 */
+    tdstAChannel_* p_stNextActiveChannel; /* +0x8 */
+    tdstAChannel_* p_stFatherChannel; /* +0xc */
+    stInterpolatedPosition ax_InterpolatedPositions[2]; /* +0x10 */
+    unsigned char ucNbInterpolatedPositions; /* +0x88 */
+    unsigned char bControlledChannel; /* +0x89 */
+    unsigned char bLipsChannel; /* +0x8a */
+    unsigned char bActiveChannel; /* +0x8b */
 };
 
 struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt {
@@ -1116,92 +1361,6 @@ struct GLI_tdstCamera_ {
     unsigned char bCameraIsMirrored; /* +0xf0 */
 };
 
-struct LST2_tdstAnchorTotdxHandleToTransitionOpt {
-    tdstTransition_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToProhibitOpt {
-    tdstProhibit_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct tdstState_ {
-    tdstAnim3d_* p_stAnim; /* +0x0 */
-    LST2_tdstAnchorTotdxHandleToTransitionOpt hForTransitionArray; /* +0x4 */
-    LST2_tdstAnchorTotdxHandleToProhibitOpt hForProhibitArray; /* +0xc */
-    tdstState_* h_NextState; /* +0x14 */
-    int h_LinkedMechanicsIdCard; /* +0x18 */
-    int szLevelList; /* +0x1c */
-    int szAnimationSectionName; /* +0x20 */
-    unsigned char ucRepeatAnimation; /* +0x24 */
-    signed char scSpeedAnim; /* +0x25 */
-    unsigned char ucTransitionStatusFlag; /* +0x26 */
-    unsigned char ucCustomBits; /* +0x27 */
-};
-
-struct anon_2 {
-    _SND_tduRefEvt uEvt; /* +0x0 */
-};
-
-struct anon_3 {
-    _SND_tduRefEvt uEvtStop; /* +0x0 */
-    _SND_tduRefEvt uEvtGo; /* +0x4 */
-};
-
-struct anon_4 {
-    _SND_tduRefEvt uEvtStop; /* +0x0 */
-    _SND_tduRefEvt uEvtGo; /* +0x4 */
-    int iTime; /* +0x8 */
-};
-
-union _tduRefRes {
-    unsigned int Id; /* +0x0 */
-    _tdstBlockResourceMem* pstPtr; /* +0x0 */
-};
-
-struct anon_5 {
-    _tduRefRes uResource; /* +0x0 */
-    int CoefA; /* +0x4 */
-    int CoefB; /* +0x8 */
-    anon_0 stDeTune; /* +0xc */
-};
-
-struct anon_6 {
-    _tduRefRes uResource; /* +0x0 */
-    int rtCoefPitch; /* +0x4 */
-    int rtCoefVol; /* +0x8 */
-    int rtCoefPan; /* +0xc */
-};
-
-struct anon_9 {
-    int iIdEffect; /* +0x0 */
-};
-
-struct anon_10 {
-    int bConcernWithObjectType; /* +0x0 */
-    int lNewVolume; /* +0x4 */
-};
-
-union anon_11 {
-    anon_1 stPlay; /* +0x0 */
-    anon_2 stStop; /* +0x0 */
-    anon_3 stStopNGo; /* +0x0 */
-    anon_4 stStopNGoFade; /* +0x0 */
-    anon_5 stExtraParam; /* +0x0 */
-    anon_6 stExtraAll; /* +0x0 */
-    anon_9 stEffect; /* +0x0 */
-    anon_10 stChangeVolume; /* +0x0 */
-};
-
-struct _SND_tdstBlockEvent {
-    unsigned int Id; /* +0x0 */
-    anon_enum_008f274c eType; /* +0x4 */
-    anon_11 uParams; /* +0x8 */
-    int bStopable : 1; /* bit 0, byte +0x18 */
-    int bDynamic : 1; /* bit 1, byte +0x18 */
-};
-
 struct tdstViewportManagement_ {
     HIE_tdstSuperObject_* hCamera; /* +0x0 */
     HIE_tdstSuperObject_* hTempCamera; /* +0x4 */
@@ -1212,15 +1371,6 @@ struct tdstViewportManagement_ {
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
     unsigned long m_ulHighPart; /* +0x8 */
-};
-
-struct stColliderInfo_ {
-    int a_stColliderActors[2]; /* +0x0 */
-    MTH3D_tdstVector_ a_stColliderVectors[2]; /* +0x8 */
-    float a_xColliderReals[2]; /* +0x20 */
-    unsigned char ucColliderType; /* +0x28 */
-    unsigned char ucColliderPriority; /* +0x29 */
-    unsigned char a2_ucUnused[2]; /* +0x2a */
 };
 
 struct LST2_tdstAnchorTotdxHandleToNodeCameraDyn {
@@ -1239,26 +1389,6 @@ struct tdstNodeCamera_ {
 struct GLI_tdstSpecificAttributesFor3D_ {
     GLI_tdstCamera_* p_stCam; /* +0x0 */
     float xNear; /* +0x4 */
-};
-
-struct stInterpolatedPosition {
-    float stRot[4]; /* +0x0 */
-    float stRotSca[4]; /* +0x10 */
-    MTH3D_tdstVector_ stPos; /* +0x20 */
-    MTH3D_tdstVector_ stVecSca; /* +0x2c */
-    float xPercent; /* +0x38 */
-};
-
-struct tdstAChannel_ {
-    HIE_tdstSuperObject_* hSupObject; /* +0x0 */
-    HIE_tdstSuperObject_* hZoomSupObject; /* +0x4 */
-    tdstAChannel_* p_stNextActiveChannel; /* +0x8 */
-    tdstAChannel_* p_stFatherChannel; /* +0xc */
-    stInterpolatedPosition ax_InterpolatedPositions[2]; /* +0x10 */
-    unsigned char ucNbInterpolatedPositions; /* +0x88 */
-    unsigned char bControlledChannel; /* +0x89 */
-    unsigned char bLipsChannel; /* +0x8a */
-    unsigned char bActiveChannel; /* +0x8b */
 };
 
 struct LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn {
@@ -1375,13 +1505,6 @@ struct tdstEngineTimerStructure_ {
     unsigned int ulTickPerMS; /* +0x80 */
 };
 
-struct tdstObjectsTablesList_ {
-    tdstObjectsTableElement_* d_stObjectsTable; /* +0x0 */
-    tdstObjectsTableElement_* d_stInitObjectsTable; /* +0x4 */
-    unsigned short wNumberOfElement; /* +0x8 */
-    unsigned short wZDxUsed; /* +0xa */
-};
-
 struct tdstObjectsTableElement_ {
     MTH3D_tdstVector_* p_stCustomZoom; /* +0x0 */
     int h_Target; /* +0x4 */
@@ -1414,22 +1537,8 @@ struct tdstSuperObjectLinks_ {
     tdeSOL_ObjPersistence_* ePersistenceOfLinkedObj; /* +0x84 */
 };
 
-struct tdstMorphChannelList_ {
-    tdstMorphChannelList_* hNextBrotherDyn; /* +0x0 */
-    tdstMorphChannelList_* hPrevBrotherDyn; /* +0x4 */
-    LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hFatherDyn; /* +0x8 */
-    unsigned short uwChannelNumber; /* +0xc */
-    short MorphListIndex; /* +0xe */
-};
-
 struct tdstProhibit_ {
     tdstState_* h_ProhibitedState; /* +0x0 */
-};
-
-struct tdstAveragePosition_ {
-    MTH3D_tdstVector_ a_CheckedSpeed[8]; /* +0x0 */
-    MTH3D_tdstVector_ a_CheckedPos[8]; /* +0x60 */
-    float a_CheckedTime[8]; /* +0xc0 */
 };
 
 struct LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn {
@@ -1438,29 +1547,14 @@ struct LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn {
     int lNumberOfElementsDyn; /* +0x8 */
 };
 
-struct _RollOffParam {
-    int rDistSatur; /* +0x0 */
-    int rDistBackGround; /* +0x4 */
-    unsigned char ucBackgroundVol; /* +0x8 */
+struct anon_7 {
+    float m_xAngle; /* +0x0 */
+    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
 };
 
-struct tdstMSSound_ {
-    _RollOffParam stRollOff; /* +0x0 */
-    HIE_tdstSuperObject_* hMechaCharacter; /* +0xc */
-};
-
-struct tdstSightAxisSystem_ {
-    MTH3D_tdstVector_ SightAxis; /* +0x0 */
-    MTH3D_tdstVector_ FirstComplementaryAxis; /* +0xc */
-    MTH3D_tdstVector_ SecondComplementaryAxis; /* +0x18 */
-};
-
-struct tdstTransparentSuperObjectForCamera_ {
-    HIE_tdstSuperObject_* hSuperObject; /* +0x0 */
-    int lInitialDrawMask; /* +0x4 */
-    float fInitialTransparenceLevel; /* +0x8 */
-    float fCurrentTransparencyLevel; /* +0xc */
-    unsigned char bIncrease; /* +0x10 */
+struct anon_8 {
+    float m_xAngle; /* +0x0 */
+    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
 };
 
 struct GLD_tdstViewportAttributes_ {
@@ -1499,46 +1593,6 @@ struct CINE_Manager_ {
     LST2_tdstAnchorToCINE_tdxHandleToCineDyn hCineList; /* +0x0 */
     MAT_tdstTransformation_ gp_stFixedCameraMatrix; /* +0x10 */
     HIE_tdstSuperObject_* gp_stSPOHandleCamera; /* +0x70 */
-};
-
-struct tdstSectInfo_ {
-    HIE_tdstSuperObject_* hCurrentSector; /* +0x0 */
-    SECT_tdstListOfSOCharacters_* hNodeInSector; /* +0x4 */
-    MTH3D_tdstVector_ stPreviousPosition; /* +0x8 */
-    HIE_tdstSuperObject_* hSectorSynchroCharacter; /* +0x14 */
-};
-
-struct tdstCineinfo_ {
-    tdstInternalStructurCineinfo_* hInit; /* +0x0 */
-    tdstInternalStructurCineinfo_* hCurrent; /* +0x4 */
-    tdstInternalStructurCineinfo_* hVisibility; /* +0x8 */
-    tdstInternalStructurCineinfo_* hWork; /* +0xc */
-    MTH3D_tdstVector_ stLastFailedOrigin; /* +0x10 */
-    MTH3D_tdstVector_ stLastFailedWanted; /* +0x1c */
-    MTH3D_tdstVector_ stForceTarget; /* +0x28 */
-    MTH3D_tdstVector_ stForcePosition; /* +0x34 */
-    MTH3D_tdstVector_ stForceRefAxisY; /* +0x40 */
-    MTH3D_tdstVector_ stForceRefAxisZ; /* +0x4c */
-    float xApexRatio; /* +0x58 */
-    float xLastDeltaCut; /* +0x5c */
-    e_ucCameraStates_ eState; /* +0x60 */
-    float xCounter1; /* +0x64 */
-    float xCounter2; /* +0x68 */
-    float xCounter3; /* +0x6c */
-    float xCounter4; /* +0x70 */
-    unsigned char ucVolIAFlags; /* +0x74 */
-    unsigned char ucPerIAFlags; /* +0x75 */
-    char cLastCutAngleSens; /* +0x76 */
-    tdstAveragePosition_ AveragePosition; /* +0x78 */
-    tdstSightAxisSystem_ stSightAxisSystem; /* +0x158 */
-    unsigned char bCanDoBestPos; /* +0x17c */
-    tdstTransparentSuperObjectForCamera_ a10_stTransparentSuperObjectForCamera[10]; /* +0x180 */
-    short xNumberOfTransparentSuperObjectForCamera; /* +0x248 */
-    float fTransparency; /* +0x24c */
-    float fTransparencySpeed; /* +0x250 */
-    unsigned char ucTransparencyFlag; /* +0x254 */
-    unsigned char bCameraIsMirrored; /* +0x255 */
-    unsigned char bLightComputation; /* +0x256 */
 };
 
 struct tdstEngineStructure_ {
@@ -1641,55 +1695,6 @@ struct tdstInternalStructurCineinfo_ {
     unsigned char bDebugCamera; /* +0x7a */
 };
 
-struct WP_tdstWayPoint_ {
-    MTH3D_tdstVector_ m_stVertex; /* +0x0 */
-    float m_xRadius; /* +0xc */
-    HIE_tdstSuperObject_* m_hSuperObject; /* +0x10 */
-};
-
-struct tdstCollSet_ {
-    tdstZdxList_* hZddList; /* +0x0 */
-    tdstZdxList_* hZdeList; /* +0x4 */
-    tdstZdxList_* hZdmList; /* +0x8 */
-    tdstZdxList_* hZdrList; /* +0xc */
-    tdstCsaList_* hZddActivationList; /* +0x10 */
-    tdstCsaList_* hZdeActivationList; /* +0x14 */
-    tdstCsaList_* hZdmActivationList; /* +0x18 */
-    tdstCsaList_* hZdrActivationList; /* +0x1c */
-    tdstZoneSetList_* hZddCurrentActivation; /* +0x20 */
-    tdstZoneSetList_* hZdeCurrentActivation; /* +0x24 */
-    tdstZoneSetList_* hZdrCurrentActivation; /* +0x28 */
-    tdstZoneSetList_* hZdmCurrentActivation; /* +0x2c */
-    unsigned int ulFBZddPriviligedZones; /* +0x30 */
-    unsigned int ulFBZdePriviligedZones; /* +0x34 */
-    unsigned int ulFBZdmPriviligedZones; /* +0x38 */
-    unsigned int ulFBZdrPriviligedZones; /* +0x3c */
-    unsigned char ucCollComputeFrequency; /* +0x40 */
-    unsigned char ucCharacterPriority; /* +0x41 */
-    unsigned char ucCollisionFlag; /* +0x42 */
-    stColliderInfo_ stColliderInfo; /* +0x44 */
-};
-
-struct tdstMSLight_ {
-    unsigned char bLocalLight; /* +0x0 */
-    unsigned char bOnlyLocalLight; /* +0x1 */
-    unsigned char bGiroPhare; /* +0x2 */
-    unsigned char bPulsing; /* +0x3 */
-    MTH3D_tdstVector_ stOffsetVect; /* +0x4 */
-    MTH3D_tdstVector_ stAngle; /* +0x10 */
-    float xStepGiro; /* +0x1c */
-    float xStepPulse; /* +0x20 */
-    float xMaxRangePulse; /* +0x24 */
-    float xGiroAngle; /* +0x28 */
-    GLI_tdstLight_* p_stLight; /* +0x2c */
-    GEO_tdstGeometricObject_* p_stVisuLight; /* +0x30 */
-    SECT_tdstListOfDNMLights_* hLightInSector; /* +0x34 */
-    unsigned char ucNbRLIUse; /* +0x38 */
-    unsigned char ucFirstRLI; /* +0x39 */
-    unsigned char ucSecondRLI; /* +0x3a */
-    float ucBlendPercent; /* +0x3c */
-};
-
 union GEO_tduVSObject_ {
     GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
     MOR_stMorphObject_* p_stMorphObject; /* +0x0 */
@@ -1701,12 +1706,6 @@ struct MOR_stMorphObject_ {
     MOR_stMorphVector_* d_stMorphVector; /* +0x8 */
 };
 
-struct tdstMSWay_ {
-    WP_tdstGraph_* m_hPath; /* +0x0 */
-    int m_lIndex; /* +0x4 */
-    char m_bIsCircular; /* +0x8 */
-};
-
 struct GEO_tdstVisualSet_ {
     float xLastDistance; /* +0x0 */
     short xNbLodDefinitions; /* +0x4 */
@@ -1715,18 +1714,6 @@ struct GEO_tdstVisualSet_ {
     GEO_tduVSObject_* d_p_stLodDefinitions; /* +0xc */
     int d_hRLI; /* +0x10 */
     int lNumberOfRLI; /* +0x14 */
-};
-
-struct tdstMicro_ {
-    MAT_tdstTransformation_* hMicroMatrix; /* +0x0 */
-    unsigned char bIsActive; /* +0x4 */
-};
-
-struct PO_tdstPhysicalObject_ {
-    GEO_tdstVisualSet_* _hVisualSet; /* +0x0 */
-    tdstPhysicalCollSet_* _hCollideSet; /* +0x4 */
-    COL_tdstBoundingSphere_* _hVisualBoundingVolume; /* +0x8 */
-    COL_tdstBoundingSphere_* _hCollideBoundingVolume; /* +0xc */
 };
 
 struct GEO_tdstColor_ {
@@ -1781,7 +1768,6 @@ unsigned int g_DEMO_u32PlayMode;
 tdstEngineStructure_ g_stEngineStructure;
 tdst_EntryActions_ g_st_3DOS_EntryActions;
 int g_bAnimConstantSpeed;
-int gp_stDynamicWorld;
 int HIE_gs_lCurrentFrame;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 56–101 */

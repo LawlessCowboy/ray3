@@ -71,7 +71,7 @@ struct SDC_VertexArrays_ {
     unsigned int OptType; /* +0x0 */
     unsigned int NbElements; /* +0x4 */
     GLI_tdstMaterial_* pArrayOfMaterials; /* +0x8 */
-    float (*) pArrayOfVertexArrays[4]; /* +0xc */
+    float (*pArrayOfVertexArrays)[4]; /* +0xc */
     int pVertexArraySizes; /* +0x10 */
     int pNbTrianglesPerElement; /* +0x14 */
     int pbIsTransparent; /* +0x18 */
@@ -145,9 +145,9 @@ unsigned int SDL_GetNew(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, unsigned int iElement, float (*) pVOrg[4], float (*) pUV1[4], float (*) pNormals[4])
+void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, unsigned int iElement, float (*pVOrg)[4], float (*pUV1)[4], float (*pNormals)[4])
 {
-    float (*) pVA[4];
+    float (*pVA)[4];
     unsigned int NbVertices;
     /* TODO: decompile from asm/... */
 }
@@ -188,7 +188,7 @@ void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, u
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vGetVertexPointersFromSDCStructureForSinus(SDC_VertexArrays_* pSDC, unsigned int iElement, float (*) pVOrg[4], float** pVTSinus)
+void GLI_vGetVertexPointersFromSDCStructureForSinus(SDC_VertexArrays_* pSDC, unsigned int iElement, float (*pVOrg)[4], float** pVTSinus)
 {
     unsigned int Type;
     unsigned int LayerTypes;
@@ -196,7 +196,7 @@ void GLI_vGetVertexPointersFromSDCStructureForSinus(SDC_VertexArrays_* pSDC, uns
     unsigned int NbStages;
     unsigned int stage;
     GLI_tdstMaterial_* hVisualMaterial;
-    float (*) pVA[4];
+    float (*pVA)[4];
     unsigned int NbVerticesAlignedUVs;
     unsigned int NbVerticesAligned;
     unsigned int NbVertices;

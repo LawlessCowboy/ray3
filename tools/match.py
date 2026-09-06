@@ -1,0 +1,611 @@
+#!/usr/bin/env python3
+"""Fast, relocation-aware matching support for the Rayman 3 PS2 project.
+
+The tool deliberately works from relocatable MWCC objects.  It resolves named
+MIPS relocations against the linked retail ELF, so a function can be verified
+without reconstructing the game's final linker environment.
+"""
+
+from __future__ import annotations
+
+import argparse
+import fcntl
+import hashlib
+import json
+import os
+import re
+import struct
+import subprocess
+import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
+
+from extract_debug import STT_FUNC, STT_OBJECT, parse_line_blob, parse_line_section
+
+
+ROOT = Path(__file__).resolve().parent.parent
+SRC_ROOT = ROOT / 'src' / 'Rayman3'
+BUILD_ROOT = ROOT / 'build' / 'match'
+INDEX_PATH = BUILD_ROOT / 'source-index.json'
+COMPILEABILITY_PATH = BUILD_ROOT / 'compileability.json'
+MANIFEST_PATH = ROOT / 'config' / 'matches.json'
+INSIGHTS_PATH = ROOT / 'docs' / 'matching-insights.md'
+TARGET_PATH = ROOT / 'SLKA_250.78'
+DEFAULT_WIBO = ROOT / 'wibo-x86_64'
+DEFAULT_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0-011126' / 'mwccps2.exe'
+DEFAULT_INCLUDES = ROOT / 'include' / 'mwcc'
+MWCC_FLAGS = [
+    '-c', '-g', '-opt', 'level=3', '-farcall', 'off', '-sdatathreshold', '8',
+    '-inline', 'off', '-strings', 'reuse,nopool', '-enum', 'int',
+]
+
+
+@dataclass
+class Section:
+    index: int
+    name: str
+    type: int
+    addr: int
+    offset: int
+    size: int
+    link: int
+    info: int
+    entsize: int
+    data: bytes
+
+
+@dataclass
+class Symbol:
+    index: int
+    name: str
+    value: int
+    size: int
+    info: int
+    shndx: int
+
+    @property
+    def type(self) -> int:
+        return self.info & 0x0F
+
+
+def read_sections(path: Path) -> list[Section]:
+    data = path.read_bytes()
+    if data[:4] != b'\x7fELF' or data[4] != 1 or data[5] != 1:
+        raise ValueError(f'{path}: expected ELF32 little-endian')
+    shoff, = struct.unpack_from('<I', data, 32)
+    shentsize, shnum, shstrndx = struct.unpack_from('<HHH', data, 46)
+    shstr_hdr = shoff + shstrndx * shentsize
+    _, _, _, _, shstr_off, shstr_size, *_ = struct.unpack_from('<IIIIIIIIII', data, shstr_hdr)
+    shstr = data[shstr_off:shstr_off + shstr_size]
+    sections = []
+    for index in range(shnum):
+        offset = shoff + index * shentsize
+        name_off, typ, _, addr, file_off, size, link, info, _, entsize = struct.unpack_from(
+            '<IIIIIIIIII', data, offset)
+        end = shstr.find(b'\0', name_off)
+        name = shstr[name_off:end].decode('latin-1') if name_off else ''
+        sections.append(Section(index, name, typ, addr, file_off, size, link, info,
+                                entsize, data[file_off:file_off + size]))
+    return sections
+
+
+def named_sections(sections: list[Section]) -> dict[str, Section]:
+    """Return the first section of each name; object files may have duplicates."""
+    result = {}
+    for section in sections:
+        result.setdefault(section.name, section)
+    return result
+
+
+def c_string(data: bytes, offset: int) -> str:
+    end = data.find(b'\0', offset)
+    return data[offset:end].decode('latin-1', errors='replace')
+
+
+def parse_symbols(sections: list[Section]) -> list[Symbol]:
+    result = []
+    for section in sections:
+        if section.type != 2 or section.entsize != 16:
+            continue
+        strings = sections[section.link].data
+        for offset in range(0, section.size, 16):
+            name_off, value, size, info, _, shndx = struct.unpack_from('<IIIBBH', section.data, offset)
+            result.append(Symbol(len(result), c_string(strings, name_off), value, size, info, shndx))
+    return result
+
+
+def parse_relocations(section: Section) -> list[tuple[int, int, int]]:
+    """Return (offset, symbol-index, MIPS relocation-type)."""
+    result = []
+    for offset in range(0, section.size, 8):
+        reloc_offset, info = struct.unpack_from('<II', section.data, offset)
+        result.append((reloc_offset, info >> 8, info & 0xFF))
+    return result
+
+
+def preferred_symbol(symbols: list[Symbol], address: int) -> Symbol | None:
+    candidates = [s for s in symbols if s.value == address and s.name]
+    if not candidates:
+        return None
+    generated = {'ENTRYPOINT', '__gnu_compiled_c', 'gcc2_compiled.'}
+    return min(candidates, key=lambda s: (s.name in generated, len(s.name), s.name))
+
+
+def intervals_size(intervals: list[tuple[int, int]]) -> int:
+    total = 0
+    end = -1
+    for start, stop in sorted(intervals):
+        if stop <= end:
+            continue
+        total += stop - max(start, end)
+        end = max(end, stop)
+    return total
+
+
+ADDR_RE = re.compile(r'/\*\s*addr:\s*0x([0-9A-Fa-f]+)\s+size:\s*(\d+)\s+bytes\s*\*/')
+NAME_RE = re.compile(r'\b([A-Za-z_~][A-Za-z0-9_:~]*)\s*\([^;{}]*\)\s*\{', re.S)
+LINE_RE = re.compile(r'\+0x([0-9A-Fa-f]+)\s*->\s*line\s*(\d+)')
+
+
+def source_index(target_symbols: list[Symbol]) -> list[dict]:
+    by_addr = {symbol.value: preferred_symbol(target_symbols, symbol.value)
+               for symbol in target_symbols if symbol.type == STT_FUNC}
+    entries = []
+    for path in SRC_ROOT.rglob('*'):
+        if path.suffix.lower() not in {'.c', '.cpp', '.cxx'}:
+            continue
+        text = path.read_text(encoding='utf-8', errors='replace')
+        for match in ADDR_RE.finditer(text):
+            address = int(match.group(1), 16)
+            size = int(match.group(2))
+            ahead = text[match.end():match.end() + 4096]
+            name_match = NAME_RE.search(ahead)
+            symbol = by_addr.get(address)
+            name = symbol.name if symbol else (name_match.group(1) if name_match else '')
+            comment_end = text.find('*/', match.end())
+            comment = text[match.start():comment_end + 2] if comment_end >= 0 else ''
+            line_map = [(int(offset, 16), int(line)) for offset, line in LINE_RE.findall(comment)]
+            body_start = text.find('{', match.end())
+            body = text[body_start:body_start + 400] if body_start >= 0 else ''
+            entries.append({
+                'address': address,
+                'size': size,
+                'name': name,
+                'source': str(path.relative_to(ROOT)),
+                'language': 'C++' if path.suffix.lower() in {'.cpp', '.cxx'} else 'C',
+                'todo': 'TODO: decompile from asm/' in body,
+                'line_map': line_map,
+            })
+    return entries
+
+
+def cached_source_index(target_symbols: list[Symbol], refresh: bool = False) -> list[dict]:
+    """Load stable function ownership metadata without rereading 340 sources.
+
+    Function address comments and ownership do not change during normal body
+    matching.  Refresh explicitly after extractor/Splat work; body edits do
+    not need a rebuild and therefore keep the match loop fast.
+    """
+    if not refresh and INDEX_PATH.exists():
+        try:
+            payload = json.loads(INDEX_PATH.read_text())
+            if payload.get('target_size') == TARGET_PATH.stat().st_size:
+                return payload['entries']
+        except (OSError, ValueError, KeyError):
+            pass
+    entries = source_index(target_symbols)
+    INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
+    INDEX_PATH.write_text(json.dumps({
+        'target_size': TARGET_PATH.stat().st_size,
+        'entries': entries,
+    }, separators=(',', ':')))
+    return entries
+
+
+def target_context() -> tuple[list[Section], list[Symbol], Section, dict[int, Symbol], dict[str, Symbol]]:
+    if not TARGET_PATH.exists():
+        raise FileNotFoundError('retail ELF missing: place it at SLKA_250.78')
+    sections = read_sections(TARGET_PATH)
+    by_name = named_sections(sections)
+    main = by_name['main']
+    symbols = parse_symbols(sections)
+    addresses = {}
+    names = {}
+    for symbol in symbols:
+        if symbol.name:
+            names.setdefault(symbol.name, symbol)
+        if symbol.value and symbol.type in {STT_FUNC, STT_OBJECT}:
+            addresses.setdefault(symbol.value, symbol)
+    return sections, symbols, main, addresses, names
+
+
+def find_entry(query: str, entries: list[dict]) -> dict:
+    if query.lower().startswith('0x'):
+        address = int(query, 16)
+        matches = [entry for entry in entries if entry['address'] == address]
+    else:
+        matches = [entry for entry in entries if entry['name'] == query]
+    if len(matches) != 1:
+        detail = ', '.join(f"0x{x['address']:08x}" for x in matches[:8]) or 'none'
+        raise ValueError(f'function {query!r} is ambiguous or absent ({detail})')
+    return matches[0]
+
+
+def tool_paths() -> tuple[Path, Path, Path]:
+    wibo = Path(os.environ.get('WIBO', DEFAULT_WIBO))
+    mwcc = Path(os.environ.get('MWCC', DEFAULT_MWCC))
+    includes = Path(os.environ.get('MWC_INCLUDES', DEFAULT_INCLUDES))
+    return wibo, mwcc, includes
+
+
+def compile_source(source: Path) -> tuple[Path | None, str]:
+    wibo, mwcc, includes = tool_paths()
+    for path, label in ((wibo, 'Wibo'), (mwcc, 'MWCC'), (includes, 'MWC include directory')):
+        if not path.exists():
+            return None, f'{label} missing: {path}'
+    fingerprint = hashlib.sha1()
+    fingerprint.update(source.read_bytes())
+    fingerprint.update(mwcc.read_bytes())
+    fingerprint.update(' '.join(MWCC_FLAGS).encode())
+    output = BUILD_ROOT / 'objects' / f'{fingerprint.hexdigest()}.o'
+    if output.exists():
+        return output, 'cached'
+    output.parent.mkdir(parents=True, exist_ok=True)
+    temporary = output.with_suffix('.tmp.o')
+    env = os.environ.copy()
+    env['MWCIncludes'] = str(includes)
+    cmd = [str(wibo), str(mwcc), '-I' + str(ROOT / 'include'), *MWCC_FLAGS,
+           str(source), '-o', str(temporary)]
+    result = subprocess.run(cmd, cwd=ROOT, env=env, text=True,
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    if result.returncode:
+        temporary.unlink(missing_ok=True)
+        return None, result.stdout[-4000:]
+    temporary.replace(output)
+    return output, 'compiled'
+
+
+def load_compileability() -> dict:
+    if not COMPILEABILITY_PATH.exists():
+        return {'sources': {}}
+    try:
+        return json.loads(COMPILEABILITY_PATH.read_text())
+    except (OSError, ValueError):
+        return {'sources': {}}
+
+
+def source_compileable(source_rel: str, state: dict) -> bool:
+    record = state.get('sources', {}).get(source_rel)
+    path = ROOT / source_rel
+    if not record or not path.exists():
+        return False
+    info = path.stat()
+    return (record.get('status') == 'ok' and record.get('mtime_ns') == info.st_mtime_ns
+            and record.get('size') == info.st_size)
+
+
+def signed16(value: int) -> int:
+    return value - 0x10000 if value & 0x8000 else value
+
+
+def patch_relocation(code: bytearray, offset: int, reloc_type: int,
+                     symbol_address: int, gp: int) -> bool:
+    """Apply supported MIPS REL relocations in-place; return exactness support."""
+    if offset + 4 > len(code):
+        return False
+    word, = struct.unpack_from('<I', code, offset)
+    if reloc_type == 2:  # R_MIPS_32
+        struct.pack_into('<I', code, offset, (symbol_address + word) & 0xFFFFFFFF)
+    elif reloc_type == 4:  # R_MIPS_26
+        word = (word & 0xFC000000) | ((symbol_address >> 2) & 0x03FFFFFF)
+        struct.pack_into('<I', code, offset, word)
+    elif reloc_type == 5:  # R_MIPS_HI16; common zero-addend form
+        addend = (word & 0xFFFF) << 16
+        word = (word & 0xFFFF0000) | (((symbol_address + addend + 0x8000) >> 16) & 0xFFFF)
+        struct.pack_into('<I', code, offset, word)
+    elif reloc_type == 6:  # R_MIPS_LO16
+        word = (word & 0xFFFF0000) | ((symbol_address + signed16(word & 0xFFFF)) & 0xFFFF)
+        struct.pack_into('<I', code, offset, word)
+    elif reloc_type == 7:  # R_MIPS_GPREL16
+        word = (word & 0xFFFF0000) | ((symbol_address - gp + signed16(word & 0xFFFF)) & 0xFFFF)
+        struct.pack_into('<I', code, offset, word)
+    else:
+        return False
+    return True
+
+
+def compare(entry: dict, verbose: bool = False) -> dict:
+    sections, target_symbols, main, _, target_names = target_context()
+    source = ROOT / entry['source']
+    obj_path, build_state = compile_source(source)
+    if obj_path is None:
+        return {'status': 'COMPILE_ERROR', 'entry': entry, 'detail': build_state}
+    obj_sections = read_sections(obj_path)
+    obj_symbols = parse_symbols(obj_sections)
+    candidates = [symbol for symbol in obj_symbols if symbol.type == STT_FUNC
+                  and symbol.name == entry['name'] and symbol.size]
+    if not candidates:
+        return {'status': 'OBJECT_ERROR', 'entry': entry, 'detail':
+                f"no object function symbol named {entry['name']!r}"}
+    candidate = candidates[0]
+    section = obj_sections[candidate.shndx]
+    candidate_bytes = bytearray(section.data[candidate.value:candidate.value + candidate.size])
+    target_offset = main.offset + entry['address'] - main.addr
+    target_bytes = TARGET_PATH.read_bytes()[target_offset:target_offset + entry['size']]
+    gp_symbol = target_names.get('_gp')
+    gp = gp_symbol.value if gp_symbol else 0
+    unresolved = []
+    relocations = []
+    for rel_section in obj_sections:
+        if rel_section.type != 9 or rel_section.info != candidate.shndx:
+            continue
+        for offset, symbol_index, reloc_type in parse_relocations(rel_section):
+            if not candidate.value <= offset < candidate.value + candidate.size:
+                continue
+            relative = offset - candidate.value
+            symbol = obj_symbols[symbol_index] if symbol_index < len(obj_symbols) else None
+            target_symbol = target_names.get(symbol.name) if symbol and symbol.name else None
+            relocations.append({'offset': relative, 'type': reloc_type,
+                                'symbol': symbol.name if symbol else ''})
+            if target_symbol is None or not patch_relocation(candidate_bytes, relative, reloc_type,
+                                                               target_symbol.value, gp):
+                unresolved.append(relocations[-1])
+    code_equal = bytes(candidate_bytes) == target_bytes
+    line_symbol = next((symbol for symbol in obj_symbols
+                        if symbol.name == '.line_' + entry['name']), None)
+    line_section = obj_sections[line_symbol.shndx] if line_symbol else None
+    candidate_lines = parse_line_section(line_section.data, 0) if line_section else []
+    target_offsets = [offset for offset, _ in entry['line_map']]
+    candidate_offsets = [offset for offset, _ in candidate_lines]
+    lines_equal = bool(target_offsets) and candidate_offsets == target_offsets
+    status = 'MATCH' if (code_equal and not unresolved and candidate.size == entry['size']) else 'MISMATCH'
+    first_difference = None
+    for offset, (got, want) in enumerate(zip(candidate_bytes, target_bytes)):
+        if got != want:
+            first_difference = offset
+            break
+    if first_difference is None and len(candidate_bytes) != len(target_bytes):
+        first_difference = min(len(candidate_bytes), len(target_bytes))
+    return {
+        'status': status, 'entry': entry, 'object': str(obj_path.relative_to(ROOT)),
+        'build': build_state, 'candidate_size': candidate.size, 'target_size': entry['size'],
+        'code_equal': code_equal, 'line_offsets_equal': lines_equal,
+        'candidate_lines': candidate_lines, 'target_lines': entry['line_map'],
+        'relocations': relocations, 'unresolved_relocations': unresolved,
+        'first_difference': first_difference,
+        'candidate_hex': bytes(candidate_bytes).hex() if verbose else '',
+        'target_hex': target_bytes.hex() if verbose else '',
+    }
+
+
+def load_manifest() -> dict:
+    if not MANIFEST_PATH.exists():
+        return {'schema_version': 1, 'functions': {}, 'data': {}}
+    return json.loads(MANIFEST_PATH.read_text())
+
+
+def save_manifest(manifest: dict) -> None:
+    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
+
+
+def coverage() -> dict:
+    _, symbols, main, _, _ = target_context()
+    manifest = load_manifest()
+    code = [(s.value, s.value + s.size) for s in symbols if s.type == STT_FUNC and s.size
+            and main.addr <= s.value < main.addr + main.size]
+    data = [(s.value, s.value + s.size) for s in symbols if s.type == STT_OBJECT and s.size
+            and main.addr <= s.value < main.addr + main.size]
+    function_records = list(manifest.get('functions', {}).values())
+    data_records = list(manifest.get('data', {}).values())
+    matched_code = [(int(record['address'], 16), int(record['address'], 16) + record['size'])
+                    for record in function_records if record.get('status') == 'MATCH']
+    matched_data = [(int(record['address'], 16), int(record['address'], 16) + record['size'])
+                    for record in data_records if record.get('status') == 'MATCH']
+    return {
+        'matched_functions': len([r for r in function_records if r.get('status') == 'MATCH']),
+        'total_functions': len({(s.value, s.size) for s in symbols if s.type == STT_FUNC and s.size
+                                and main.addr <= s.value < main.addr + main.size}),
+        'code_bytes_matched': intervals_size(matched_code),
+        'code_bytes_total': intervals_size(code),
+        'data_objects_matched': len([r for r in data_records if r.get('status') == 'MATCH']),
+        'data_objects_total': len({(s.value, s.size) for s in symbols if s.type == STT_OBJECT and s.size
+                                   and main.addr <= s.value < main.addr + main.size}),
+        'data_bytes_matched': intervals_size(matched_data),
+        'data_bytes_total': intervals_size(data),
+    }
+
+
+def print_coverage(result: dict) -> None:
+    def pct(value: int, total: int) -> str:
+        return f'{(100 * value / total):.4f}%' if total else 'n/a'
+    print(f"functions: {result['matched_functions']}/{result['total_functions']}")
+    print(f"code bytes: {result['code_bytes_matched']}/{result['code_bytes_total']} "
+          f"({pct(result['code_bytes_matched'], result['code_bytes_total'])})")
+    print(f"data bytes: {result['data_bytes_matched']}/{result['data_bytes_total']} "
+          f"({pct(result['data_bytes_matched'], result['data_bytes_total'])})")
+    print(f"data objects: {result['data_objects_matched']}/{result['data_objects_total']}")
+
+
+def command_doctor(_: argparse.Namespace) -> int:
+    wibo, mwcc, includes = tool_paths()
+    ok = True
+    for label, path in [('retail ELF', TARGET_PATH), ('Wibo', wibo), ('MWCC 3.0', mwcc),
+                        ('MWC include directory', includes)]:
+        state = 'ok' if path.exists() else 'MISSING'
+        print(f'{label}: {state} ({path.relative_to(ROOT) if path.is_relative_to(ROOT) else path})')
+        ok &= path.exists()
+    if TARGET_PATH.exists():
+        digest = hashlib.sha1(TARGET_PATH.read_bytes()).hexdigest()
+        print(f'ELF SHA-1: {digest} ({"ok" if digest == "c2c3f5c2ccceedc6745b4738102409f27bbb9f10" else "unexpected"})')
+        ok &= digest == 'c2c3f5c2ccceedc6745b4738102409f27bbb9f10'
+    return 0 if ok else 2
+
+
+def command_list(args: argparse.Namespace) -> int:
+    _, symbols, _, _, _ = target_context()
+    entries = cached_source_index(symbols, args.refresh_index)
+    compileability = load_compileability()
+    matches = [e for e in entries if (not args.unmatched or e['todo'])
+               and (not args.max_lines or len(e['line_map']) <= args.max_lines)
+               and (not args.language or e['language'] == args.language)
+               and (not args.compileable or source_compileable(e['source'], compileability))]
+    for entry in sorted(matches, key=lambda e: (e['size'], e['address']))[:args.limit]:
+        print(f"0x{entry['address']:08x} {entry['size']:4d} {entry['language']:3s} "
+              f"lines={len(entry['line_map']):2d} {entry['name']}  {entry['source']}")
+    print(f'{len(matches)} functions selected')
+    return 0
+
+
+def command_show(args: argparse.Namespace) -> int:
+    _, symbols, _, _, _ = target_context()
+    entry = find_entry(args.function, cached_source_index(symbols))
+    print(json.dumps(entry, indent=2))
+    return 0
+
+
+def command_check(args: argparse.Namespace) -> int:
+    _, symbols, _, _, _ = target_context()
+    entry = find_entry(args.function, cached_source_index(symbols))
+    result = compare(entry, args.diff)
+    if args.json:
+        print(json.dumps(result, indent=2))
+    elif result['status'] == 'COMPILE_ERROR':
+        print(f"COMPILE_ERROR {entry['name']}\n{result['detail']}")
+    elif result['status'] == 'OBJECT_ERROR':
+        print(f"OBJECT_ERROR {entry['name']}: {result['detail']}")
+    else:
+        print(f"{result['status']} {entry['name']} text={result['candidate_size']}/{result['target_size']} "
+              f"relocs={len(result['relocations']) - len(result['unresolved_relocations'])}/"
+              f"{len(result['relocations'])} lines={'ok' if result['line_offsets_equal'] else 'different'} "
+              f"build={result['build']}")
+        if result['first_difference'] is not None:
+            print(f"first difference: +0x{result['first_difference']:x}")
+        if result['unresolved_relocations']:
+            print('unresolved relocations: ' + ', '.join(
+                f"+0x{x['offset']:x}/type{x['type']}/{x['symbol'] or '?'}"
+                for x in result['unresolved_relocations']))
+        if args.diff:
+            print('candidate:', result['candidate_hex'])
+            print('target:   ', result['target_hex'])
+    if args.record and result['status'] == 'MATCH':
+        manifest = load_manifest()
+        manifest.setdefault('functions', {})[f"0x{entry['address']:08x}"] = {
+            'address': f"0x{entry['address']:08x}", 'name': entry['name'], 'size': entry['size'],
+            'source': entry['source'], 'status': 'MATCH',
+            'compiler_profile': 'mwccps2-3.0-011126-o3',
+        }
+        save_manifest(manifest)
+        print('recorded verified match')
+    return 0 if result['status'] == 'MATCH' else 1
+
+
+def command_coverage(args: argparse.Namespace) -> int:
+    result = coverage()
+    if args.json:
+        print(json.dumps(result, indent=2))
+    else:
+        print_coverage(result)
+    return 0
+
+
+def command_insight(args: argparse.Namespace) -> int:
+    if args.action == 'list':
+        print(INSIGHTS_PATH.read_text() if INSIGHTS_PATH.exists() else 'No insights recorded.')
+        return 0
+    INSIGHTS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with INSIGHTS_PATH.open('a', encoding='utf-8') as file:
+        fcntl.flock(file.fileno(), fcntl.LOCK_EX)
+        file.write(f"\n- [{args.category}] {args.text} ({date.today().isoformat()})\n")
+        fcntl.flock(file.fileno(), fcntl.LOCK_UN)
+    print('recorded shared insight')
+    return 0
+
+
+def command_index(args: argparse.Namespace) -> int:
+    _, symbols, _, _, _ = target_context()
+    entries = cached_source_index(symbols, args.refresh)
+    print(f'indexed {len(entries)} recovered functions at {INDEX_PATH.relative_to(ROOT)}')
+    return 0
+
+
+def command_preflight(args: argparse.Namespace) -> int:
+    """Compile each unique canonical source once and persist its readiness."""
+    _, symbols, _, _, _ = target_context()
+    entries = cached_source_index(symbols, args.refresh_index)
+    sources = sorted({entry['source'] for entry in entries})
+    if args.limit:
+        sources = sources[:args.limit]
+    state = load_compileability()
+    state.setdefault('sources', {})
+
+    def probe(source_rel: str) -> tuple[str, bool, str, int, int]:
+        source = ROOT / source_rel
+        obj, detail = compile_source(source)
+        info = source.stat()
+        return source_rel, obj is not None, detail, info.st_mtime_ns, info.st_size
+
+    complete = 0
+    with ThreadPoolExecutor(max_workers=args.jobs) as pool:
+        futures = [pool.submit(probe, source_rel) for source_rel in sources]
+        for future in as_completed(futures):
+            source_rel, ok, detail, mtime_ns, size = future.result()
+            state['sources'][source_rel] = {
+                'status': 'ok' if ok else 'blocked', 'detail': detail[-1000:],
+                'mtime_ns': mtime_ns, 'size': size,
+            }
+            complete += 1
+            print(f"{'OK' if ok else 'BLOCKED'} {complete}/{len(sources)} {source_rel}")
+    COMPILEABILITY_PATH.parent.mkdir(parents=True, exist_ok=True)
+    COMPILEABILITY_PATH.write_text(json.dumps(state, indent=2, sort_keys=True) + '\n')
+    ok_count = sum(source_compileable(source_rel, state) for source_rel in sources)
+    print(f'compileable sources: {ok_count}/{len(sources)}')
+    return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    sub = parser.add_subparsers(dest='command', required=True)
+    sub.add_parser('doctor').set_defaults(func=command_doctor)
+    index_parser = sub.add_parser('index')
+    index_parser.add_argument('--refresh', action='store_true')
+    index_parser.set_defaults(func=command_index)
+    list_parser = sub.add_parser('list')
+    list_parser.add_argument('--unmatched', action='store_true')
+    list_parser.add_argument('--max-lines', type=int)
+    list_parser.add_argument('--language', choices=['C', 'C++'])
+    list_parser.add_argument('--limit', type=int, default=30)
+    list_parser.add_argument('--refresh-index', action='store_true')
+    list_parser.add_argument('--compileable', action='store_true')
+    list_parser.set_defaults(func=command_list)
+    show_parser = sub.add_parser('show')
+    show_parser.add_argument('function')
+    show_parser.set_defaults(func=command_show)
+    check_parser = sub.add_parser('check')
+    check_parser.add_argument('function')
+    check_parser.add_argument('--diff', action='store_true')
+    check_parser.add_argument('--json', action='store_true')
+    check_parser.add_argument('--record', action='store_true')
+    check_parser.set_defaults(func=command_check)
+    coverage_parser = sub.add_parser('coverage')
+    coverage_parser.add_argument('--json', action='store_true')
+    coverage_parser.set_defaults(func=command_coverage)
+    insight_parser = sub.add_parser('insight')
+    insight_parser.add_argument('action', choices=['add', 'list'])
+    insight_parser.add_argument('text', nargs='?')
+    insight_parser.add_argument('--category', default='general')
+    insight_parser.set_defaults(func=command_insight)
+    preflight_parser = sub.add_parser('preflight')
+    preflight_parser.add_argument('--jobs', type=int, default=4)
+    preflight_parser.add_argument('--limit', type=int)
+    preflight_parser.add_argument('--refresh-index', action='store_true')
+    preflight_parser.set_defaults(func=command_preflight)
+    args = parser.parse_args()
+    if args.command == 'insight' and args.action == 'add' and not args.text:
+        parser.error('insight add requires text')
+    return args.func(args)
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

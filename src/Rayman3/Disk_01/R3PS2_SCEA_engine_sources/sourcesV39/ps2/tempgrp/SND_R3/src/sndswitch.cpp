@@ -19,7 +19,7 @@ typedef struct C2DParams C2DParams;
 typedef struct sstring sstring;
 typedef struct CVolumeActorModifier CVolumeActorModifier;
 typedef struct CResObjState CResObjState;
-typedef struct CStringIsLess CStringIsLess;
+typedef struct less less;
 typedef struct stree stree;
 typedef struct smap smap;
 typedef struct CCritSect CCritSect;
@@ -35,7 +35,6 @@ typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
 typedef struct CLinkTypeActor CLinkTypeActor;
 typedef struct CCmdInterface CCmdInterface;
 typedef struct CSndVarType CSndVarType;
-typedef struct less less;
 typedef struct CResObj CResObj;
 typedef struct CResData CResData;
 typedef struct _stVector _stVector;
@@ -46,6 +45,7 @@ typedef struct CResType CResType;
 typedef struct CRefIdObj CRefIdObj;
 typedef struct CUUID CUUID;
 typedef struct CActorModifiers CActorModifiers;
+typedef struct CStringIsLess CStringIsLess;
 typedef struct CIdObj CIdObj;
 
 typedef enum _SIF_eInfoTypeId {
@@ -177,14 +177,14 @@ struct CResObjState {
     unsigned int m_uiLockCount; /* +0x24 */
 };
 
-struct CStringIsLess {
+struct less {
     /* C++ base binary_function at +0x0. */
 };
 
 struct stree {
     /* C++ base streebase at +0x0. */
     sallocator allocator; /* +0xc */
-    CStringIsLess key_compare; /* +0xd */
+    less key_compare; /* +0xd */
 };
 
 struct smap {
@@ -289,10 +289,6 @@ struct CSndVarType {
     int m_czTypeName; /* +0x8 */
 };
 
-struct less {
-    /* C++ base binary_function at +0x0. */
-};
-
 struct CResObj {
     CResType* m_roType; /* +0x4 */
     CResData* m_poResData; /* +0x8 */
@@ -354,6 +350,10 @@ struct CActorModifiers {
     float m_fDirectValue; /* +0x18 */
     float m_fResultValue; /* +0x1c */
     unsigned char m_bResultChanged; /* +0x20 */
+};
+
+struct CStringIsLess {
+    /* C++ base binary_function at +0x0. */
 };
 
 struct CIdObj {

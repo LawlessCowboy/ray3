@@ -7,9 +7,9 @@
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
 typedef struct CSoundSemaphoreCont CSoundSemaphoreCont;
-typedef struct iterator iterator;
 typedef struct spair spair;
 typedef struct sTreeNode sTreeNode;
+typedef struct iterator iterator;
 typedef struct less less;
 typedef struct stree stree;
 typedef struct iterator_base iterator_base;
@@ -27,18 +27,18 @@ struct CSoundSemaphoreCont {
     /* C++ base smap at +0x0. */
 };
 
-struct iterator {
-    /* C++ base iterator_base at +0x0. */
-};
-
 struct spair {
-    iterator first; /* +0x0 */
-    unsigned char second; /* +0x4 */
+    int first; /* +0x0 */
+    CSoundSemaphore* second; /* +0x4 */
 };
 
 struct sTreeNode {
     /* C++ base sTreeLink at +0x0. */
     spair m_oValue; /* +0x10 */
+};
+
+struct iterator {
+    /* C++ base iterator_base at +0x0. */
 };
 
 struct less {

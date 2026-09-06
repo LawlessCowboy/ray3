@@ -1,0 +1,22 @@
+{
+  "data": {},
+  "functions": {
+    "0x001fb7d0": {
+      "address": "0x001fb7d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_pstAllocMind",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MATCH"
+    },
+    "0x00299480": {
+      "address": "0x00299480",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vInterruptMenu2D",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    }
+  },
+  "schema_version": 1
+}

@@ -63,19 +63,6 @@ typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Undefined = 9,
 } MAT_tdeTranformationType_;
 
-typedef enum MAT_tdeTranformationType_ {
-    MAT_eTransform_Uninitialized = 0,
-    MAT_eTransform_Identity = 1,
-    MAT_eTransform_Translation = 2,
-    MAT_eTransform_Zoom = 3,
-    MAT_eTransform_Scale = 4,
-    MAT_eTransform_Rotation = 5,
-    MAT_eTransform_RotationZoom = 6,
-    MAT_eTransform_RotationScale = 7,
-    MAT_eTransform_ComplexRotationScale = 8,
-    MAT_eTransform_Undefined = 9,
-} MAT_tdeTranformationType_;
-
 struct MTH3D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
@@ -415,14 +402,10 @@ int g_p_stCurrentMatrix;
 int HIE_g_hCurrentMatrix;
 int HIE_g_a_hMatrixStack[50];
 int HIE_g_lNbMatrixInStack;
-int HIE_g_lNbMatrixInStack;
 MAT_tdstTransformation_ Global_tempCamStackMatrix;
 unsigned int HIE_g_lNbMatrixInCameraStack;
 MAT_tdstTransformation_ HIE_g_a_stCameraMatrixStack[51];
-int HIE_g_hCurrentMatrix;
-int HIE_g_a_hMatrixStack[50];
 int g_p_stCurrentInCamCoordsMatrix;
-int g_p_stCurrentMatrix;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieMtStk.c lines 632–723 */
 /* addr: 0x003200c0  size: 476 bytes */

@@ -95,6 +95,42 @@ work:
 make extract TARGET=/path/to/SLKA_250.78
 ```
 
+## Bulk matching workflow
+
+`tools/match.py` is the standard compile/compare loop for recovered
+functions. It compiles the owning translation unit with the Version 3 profile,
+caches the resulting object, resolves supported named MIPS relocations against
+the retail ELF, and compares the function bytes, size, relocation targets, and
+debug line offsets.
+
+```sh
+python3 tools/match.py doctor
+python3 tools/match.py list --unmatched --language C --max-lines 15
+python3 tools/match.py show fn_vInterruptMenu2D
+python3 tools/match.py check fn_vInterruptMenu2D
+python3 tools/match.py coverage
+```
+
+Before dispatching workers, build a cached readiness list and choose from it:
+
+```sh
+python3 tools/match.py index --refresh
+python3 tools/match.py preflight --jobs 4
+python3 tools/match.py list --unmatched --compileable --language C --max-lines 15
+```
+
+`check --record` adds an exact result to `config/matches.json`. The coverage
+report gives both the verified function count and byte coverage: function code
+is measured from unique non-zero-size `STT_FUNC` ranges in the ELF; static data
+is measured from unique non-zero-size `STT_OBJECT` ranges in its loaded main
+section. Data remains at zero until an explicitly verified object is recorded.
+
+For parallel work, read [AGENTS.md](AGENTS.md). Workers are assigned one source
+file at a time and use the concise matcher result rather than repeatedly
+printing full assembly. Reusable compiler or ABI observations belong in
+[matching insights](docs/matching-insights.md), recorded with `match.py
+insight add`.
+
 `tools/update_splat_config.py` derives source-file ownership ranges from the
 ELF, and `tools/split_splat_by_source.py` runs Splat in memory-bounded batches.
 Their output is intentionally ignored: generated split assembly belongs in a

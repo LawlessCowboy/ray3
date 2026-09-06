@@ -65,8 +65,8 @@ float J_New_g_NoiseLevel;
 void C_VertexArrayContainer(unsigned int NbSprites)
 {
     unsigned int i;
-    float (*) pV2[4];
-    float (*) param0[4];
+    float (*pV2)[4];
+    float (*param0)[4];
     unsigned int MemSize;
     /* TODO: decompile from asm/... */
 }
@@ -134,7 +134,7 @@ void C_VertexArrayContainer(unsigned int NbSprites)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int J_New_CreateParticlesOnFace(float (*) pParticles[4], unsigned int MaxParticles, J_New_ParticleFace_* pFace, float _fU, float _fV, float NoiseLevel)
+unsigned int J_New_CreateParticlesOnFace(float (*pParticles)[4], unsigned int MaxParticles, J_New_ParticleFace_* pFace, float _fU, float _fV, float NoiseLevel)
 {
     int Edge[3];
     int NbEdges;

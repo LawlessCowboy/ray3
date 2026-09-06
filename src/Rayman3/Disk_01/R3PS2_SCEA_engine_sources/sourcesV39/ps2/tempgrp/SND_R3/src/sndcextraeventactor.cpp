@@ -5,7 +5,6 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct CLinkMicro CLinkMicro;
 typedef struct CRTTIClass CRTTIClass;
 typedef struct CVarAccess CVarAccess;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
@@ -245,7 +244,7 @@ struct CPitchActorModifier {
 
 struct spair {
     int first; /* +0x0 */
-    CClassInfo* second; /* +0x4 */
+    unsigned int second; /* +0x4 */
 };
 
 struct sTreeNode {

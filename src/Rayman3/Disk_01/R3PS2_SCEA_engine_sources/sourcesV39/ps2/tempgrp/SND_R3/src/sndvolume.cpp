@@ -33,7 +33,7 @@ typedef struct tdstSuperObjectLinks_ tdstSuperObjectLinks_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
-typedef struct CStringIsLess CStringIsLess;
+typedef struct less less;
 typedef struct stree stree;
 typedef struct smap smap;
 typedef struct CGlobalVarAccess CGlobalVarAccess;
@@ -73,9 +73,9 @@ typedef struct _stTimerCount _stTimerCount;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 typedef struct GLI_tdst2DVertex_ GLI_tdst2DVertex_;
 typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
+typedef struct CStringIsLess CStringIsLess;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
-typedef struct less less;
 typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
 typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
 typedef struct tdstLipsSynchValue_ tdstLipsSynchValue_;
@@ -201,14 +201,14 @@ struct HIE_tdstSuperObject_ {
     unsigned char xTransition; /* +0x7e */
 };
 
-struct CStringIsLess {
+struct less {
     /* C++ base binary_function at +0x0. */
 };
 
 struct stree {
     /* C++ base streebase at +0x0. */
     sallocator allocator; /* +0xc */
-    CStringIsLess key_compare; /* +0xd */
+    less key_compare; /* +0xd */
 };
 
 struct smap {
@@ -475,6 +475,10 @@ struct GLI_tdstCamera_ {
     unsigned char bCameraIsMirrored; /* +0xf0 */
 };
 
+struct CStringIsLess {
+    /* C++ base binary_function at +0x0. */
+};
+
 struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn {
     SECT_tdstListOfSOCharacters_* hFirstElementDyn; /* +0x0 */
     SECT_tdstListOfSOCharacters_* hLastElementDyn; /* +0x4 */
@@ -484,10 +488,6 @@ struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn {
 struct GEO_tdstParallelBox_ {
     MTH4D_tdstVector_ stMinPoint; /* +0x0 */
     MTH4D_tdstVector_ stMaxPoint; /* +0x10 */
-};
-
-struct less {
-    /* C++ base binary_function at +0x0. */
 };
 
 struct HIE_tdstModifierObject_ {

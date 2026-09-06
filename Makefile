@@ -6,7 +6,7 @@
 
 SHELL := /bin/bash
 
-SRC_DIR := src
+SRC_DIR := src/Rayman3
 INCLUDE_DIR := include
 BUILD_DIR := build
 OBJ_DIR := $(BUILD_DIR)/obj
@@ -17,6 +17,12 @@ OBJ_DIR := $(BUILD_DIR)/obj
 WIBO ?= wibo-x86_64
 MWCC ?= mwccps2.exe
 MWCC_RUN := $(WIBO) $(MWCC)
+
+# MWCC searches this directory for angle-bracket standard headers.  The small
+# compatibility header in this repository is sufficient for the recovered
+# templates; a full PS2 SDK include tree can override it.
+MWC_INCLUDES ?= $(abspath $(INCLUDE_DIR)/mwcc)
+MWCC_ENV := MWCIncludes="$(MWC_INCLUDES)"
 
 TOOLS_DIR := tools
 
@@ -37,7 +43,7 @@ SOURCES := $(shell find $(SRC_DIR) -type f \( -name '*.c' -o -name '*.cpp' -o -n
 OBJECTS := $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%.o,$(SOURCES))
 
 .DEFAULT_GOAL := objects
-.PHONY: all objects extract list dry-run clean
+.PHONY: all objects extract list dry-run clean match-doctor match-coverage
 
 all: objects
 
@@ -47,7 +53,7 @@ objects: $(OBJECTS)
 # makes one pattern rule work for C, CPP, and CXX paths without collisions.
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%
 	@mkdir -p "$(@D)"
-	$(MWCC_RUN) $(CPPFLAGS) $(MWCC_FLAGS) "$<" -o "$@"
+	$(MWCC_ENV) $(MWCC_RUN) $(CPPFLAGS) $(MWCC_FLAGS) "$<" -o "$@"
 
 extract:
 	@test -n "$(TARGET)" || (echo "Set TARGET=/path/to/SLKA_250.78"; exit 2)
@@ -62,6 +68,12 @@ dry-run:
 	@printf 'Flags: %s %s\n' "$(CPPFLAGS)" "$(MWCC_FLAGS)"
 	@printf 'Sources: %s\n' "$(words $(SOURCES))"
 	@printf 'Objects: %s\n' "$(words $(OBJECTS))"
+
+match-doctor:
+	python3 $(TOOLS_DIR)/match.py doctor
+
+match-coverage:
+	python3 $(TOOLS_DIR)/match.py coverage
 
 clean:
 	rm -rf "$(OBJ_DIR)"

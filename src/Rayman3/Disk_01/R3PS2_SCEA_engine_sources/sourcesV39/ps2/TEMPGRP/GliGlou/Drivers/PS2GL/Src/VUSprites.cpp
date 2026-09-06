@@ -139,7 +139,7 @@ struct CSpriteController {
     unsigned int m_NbVertices; /* +0x1c */
     unsigned int m_MaxNbSpritesVertices; /* +0x20 */
     int m_CurrentSpriteListIndex; /* +0x24 */
-    float (*) m_CurrentVP[4]; /* +0x28 */
+    float (*m_CurrentVP)[4]; /* +0x28 */
     int m_CurrentVC; /* +0x2c */
     int m_CurrentVT; /* +0x30 */
     GLI_tdstMaterial_* m_pCurrentMaterial; /* +0x34 */
@@ -938,7 +938,7 @@ struct tagGLcontext {
     tagGLprimbuf* pCurPrimBuf; /* +0x5ce4 */
     stParamBegin* pCurParamBegin; /* +0x5ce8 */
     tagGLprimbuf* ppCurPrimBufHead; /* +0x5cec */
-    float (*) pCurListVData[4]; /* +0x5cf0 */
+    float (*pCurListVData)[4]; /* +0x5cf0 */
     int pCurListVCode; /* +0x5cf4 */
     int pCurListTexUnit; /* +0x5cf8 */
     tagGLlistpool ListPool; /* +0x5cfc */
@@ -982,37 +982,37 @@ struct tagGLcontext {
     int iMaxClipPlanes; /* +0x6000 */
     float avClipPlane[6][4]; /* +0x6010 */
     unsigned int eMatrixMode; /* +0x6070 */
-    float (*) pCurMatrix[4][4]; /* +0x6074 */
-    float (*) pCurStack[4][4]; /* +0x6078 */
+    float (*pCurMatrix)[4][4]; /* +0x6074 */
+    float (*pCurStack)[4][4]; /* +0x6078 */
     int piCurStackDepth; /* +0x607c */
     float ViewOrg[2]; /* +0x6080 */
     float ViewPort[4]; /* +0x6090 */
     float DepthRange[2]; /* +0x60a0 */
     float vacurColor[2][4]; /* +0x60b0 */
-    float (*) pvcurColor[4]; /* +0x60d0 */
+    float (*pvcurColor)[4]; /* +0x60d0 */
     float vcurNormal[4]; /* +0x60e0 */
     float vacurTexCoords[2][4]; /* +0x60f0 */
     unsigned int iCurTextureSet; /* +0x6110 */
-    float (*) pvcurTextCoord[4]; /* +0x6114 */
+    float (*pvcurTextCoord)[4]; /* +0x6114 */
     unsigned char bFinalCompile; /* +0x6118 */
     float valistColor[2][4]; /* +0x6120 */
-    float (*) pvlistColor[4]; /* +0x6140 */
+    float (*pvlistColor)[4]; /* +0x6140 */
     float vlistNormal[4]; /* +0x6150 */
     float valistTexCoords[2][4]; /* +0x6160 */
     unsigned int ilistTexSet; /* +0x6180 */
-    float (*) pvlistTexCoord[4]; /* +0x6184 */
+    float (*pvlistTexCoord)[4]; /* +0x6184 */
     unsigned char bRasterPosValid; /* +0x6188 */
     float fRasterPos[4]; /* +0x618c */
     float fRasterDistance; /* +0x619c */
     float fRasterColor[2][4]; /* +0x61a0 */
     float RasterMultiTexCoords[2][4]; /* +0x61c0 */
-    float (*) pvRasterTexCoord[4]; /* +0x61e0 */
+    float (*pvRasterTexCoord)[4]; /* +0x61e0 */
     unsigned char bEdgeFlag; /* +0x61e4 */
     float mFrustumNormal[4][4]; /* +0x61f0 */
     float mGuardBandNormal[4][4]; /* +0x6230 */
     float vZNearFar[4]; /* +0x6270 */
     float vObjectBS[4]; /* +0x6280 */
-    float (*) pfvPackaeBSs[4]; /* +0x6290 */
+    float (*pfvPackaeBSs)[4]; /* +0x6290 */
     int iPackageBSIndex; /* +0x6294 */
     float faObjectBoundingBox[6]; /* +0x6298 */
     float ModelViewMatrix[4][4]; /* +0x62b0 */
@@ -1027,46 +1027,46 @@ struct tagGLcontext {
     float TextureMatrix[2][4][4]; /* +0x68f0 */
     unsigned int nTextureStackDepths[2]; /* +0x6970 */
     float TextureStacks[2][4][4][4]; /* +0x6980 */
-    float (*) pTextureMatrix[4][4]; /* +0x6b80 */
+    float (*pTextureMatrix)[4][4]; /* +0x6b80 */
     int pnTextureStackDepth; /* +0x6b84 */
-    float (*) pTextureStack[4][4]; /* +0x6b88 */
+    float (*pTextureStack)[4][4]; /* +0x6b88 */
     unsigned int eBeginMode; /* +0x6b8c */
     unsigned char bInBeginEndPair; /* +0x6b90 */
     unsigned char bInDisplayListExecution; /* +0x6b91 */
     int iBufLimit; /* +0x6b94 */
     int iBufCount; /* +0x6b98 */
-    float (*) pVBuf[4]; /* +0x6b9c */
-    float (*) pCBuf[4]; /* +0x6ba0 */
-    float (*) pNBuf[4]; /* +0x6ba4 */
-    float (*) pTBuf[4]; /* +0x6ba8 */
-    float (*) pCBuf_b[4]; /* +0x6bac */
-    float (*) pTBuf_b[4]; /* +0x6bb0 */
-    float (*) pVIFDMABuf[4]; /* +0x6bb4 */
-    float (*) pVIFDMABufUnaligned[4]; /* +0x6bb8 */
-    float (*) pVIFInBuf[4]; /* +0x6bbc */
-    float (*) pVIFOutBuf[4]; /* +0x6bc0 */
-    float (*) pVIFIBufTail[4]; /* +0x6bc4 */
-    float (*) pVIFOBufTail[4]; /* +0x6bc8 */
+    float (*pVBuf)[4]; /* +0x6b9c */
+    float (*pCBuf)[4]; /* +0x6ba0 */
+    float (*pNBuf)[4]; /* +0x6ba4 */
+    float (*pTBuf)[4]; /* +0x6ba8 */
+    float (*pCBuf_b)[4]; /* +0x6bac */
+    float (*pTBuf_b)[4]; /* +0x6bb0 */
+    float (*pVIFDMABuf)[4]; /* +0x6bb4 */
+    float (*pVIFDMABufUnaligned)[4]; /* +0x6bb8 */
+    float (*pVIFInBuf)[4]; /* +0x6bbc */
+    float (*pVIFOutBuf)[4]; /* +0x6bc0 */
+    float (*pVIFIBufTail)[4]; /* +0x6bc4 */
+    float (*pVIFOBufTail)[4]; /* +0x6bc8 */
     int iLightModel; /* +0x6bcc */
     _sceDmaTag* pVU1_DMA_parameters; /* +0x6bd0 */
     _sceDmaTag* pVU1_DMA_buf0; /* +0x6bd4 */
     _sceDmaTag* pVU1_DMA_buf1; /* +0x6bd8 */
-    float (*) pmClipping[4][4]; /* +0x6bdc */
-    float (*) pmNormal[4][4]; /* +0x6be0 */
-    float (*) pmClippingScreen[4][4]; /* +0x6be4 */
-    float (*) pmLocalScreen[4][4]; /* +0x6be8 */
-    float (*) pmModelView[4][4]; /* +0x6bec */
-    float (*) pvClampLimit[4]; /* +0x6bf0 */
-    int (*) pClippingFlags[4]; /* +0x6bf4 */
+    float (*pmClipping)[4][4]; /* +0x6bdc */
+    float (*pmNormal)[4][4]; /* +0x6be0 */
+    float (*pmClippingScreen)[4][4]; /* +0x6be4 */
+    float (*pmLocalScreen)[4][4]; /* +0x6be8 */
+    float (*pmModelView)[4][4]; /* +0x6bec */
+    float (*pvClampLimit)[4]; /* +0x6bf0 */
+    int (*pClippingFlags)[4]; /* +0x6bf4 */
     sceGifTag* pGifTagFan; /* +0x6bf8 */
-    float (*) pmD[4][4]; /* +0x6bfc */
-    float (*) pmVP[4][4]; /* +0x6c00 */
-    float (*) pmS[4][4]; /* +0x6c04 */
-    float (*) pmh[4][4]; /* +0x6c08 */
-    float (*) pvAmbient[4]; /* +0x6c0c */
-    float (*) pvEmission[4]; /* +0x6c10 */
-    float (*) pvScreenScale[4]; /* +0x6c14 */
-    float (*) pvColorRange[4]; /* +0x6c18 */
+    float (*pmD)[4][4]; /* +0x6bfc */
+    float (*pmVP)[4][4]; /* +0x6c00 */
+    float (*pmS)[4][4]; /* +0x6c04 */
+    float (*pmh)[4][4]; /* +0x6c08 */
+    float (*pvAmbient)[4]; /* +0x6c0c */
+    float (*pvEmission)[4]; /* +0x6c10 */
+    float (*pvScreenScale)[4]; /* +0x6c14 */
+    float (*pvColorRange)[4]; /* +0x6c18 */
     int pfAlpha; /* +0x6c1c */
     int pfShininess; /* +0x6c20 */
     int pnColorMatMasks; /* +0x6c24 */
@@ -1086,18 +1086,18 @@ struct tagGLcontext {
     sceGifTag* pGifTagBuf0; /* +0x6c5c */
     sceGifTag* pGifTagBuf1; /* +0x6c60 */
     int iCurBuf; /* +0x6c64 */
-    float (*) pVBuf0[4]; /* +0x6c68 */
-    float (*) pNBuf0[4]; /* +0x6c6c */
-    float (*) pCBuf0[4]; /* +0x6c70 */
-    float (*) pTBuf0[4]; /* +0x6c74 */
-    float (*) pCBuf0_b[4]; /* +0x6c78 */
-    float (*) pTBuf0_b[4]; /* +0x6c7c */
-    float (*) pVBuf1[4]; /* +0x6c80 */
-    float (*) pNBuf1[4]; /* +0x6c84 */
-    float (*) pCBuf1[4]; /* +0x6c88 */
-    float (*) pTBuf1[4]; /* +0x6c8c */
-    float (*) pCBuf1_b[4]; /* +0x6c90 */
-    float (*) pTBuf1_b[4]; /* +0x6c94 */
+    float (*pVBuf0)[4]; /* +0x6c68 */
+    float (*pNBuf0)[4]; /* +0x6c6c */
+    float (*pCBuf0)[4]; /* +0x6c70 */
+    float (*pTBuf0)[4]; /* +0x6c74 */
+    float (*pCBuf0_b)[4]; /* +0x6c78 */
+    float (*pTBuf0_b)[4]; /* +0x6c7c */
+    float (*pVBuf1)[4]; /* +0x6c80 */
+    float (*pNBuf1)[4]; /* +0x6c84 */
+    float (*pCBuf1)[4]; /* +0x6c88 */
+    float (*pTBuf1)[4]; /* +0x6c8c */
+    float (*pCBuf1_b)[4]; /* +0x6c90 */
+    float (*pTBuf1_b)[4]; /* +0x6c94 */
     tagstVIFCode* pMSCAL; /* +0x6c98 */
     unsigned char VU1Package[10000]; /* +0x6ca0 */
 };
@@ -1108,13 +1108,13 @@ struct tagListData {
     tagGLlistdatas* pDatas; /* +0x8 */
     tagGLprimbuf* pPrimBufHead; /* +0xc */
     tagGLprimbuf* pPrimBufTail; /* +0x10 */
-    float (*) pDmaBuffer[4]; /* +0x14 */
+    float (*pDmaBuffer)[4]; /* +0x14 */
     unsigned int uiSDLSize; /* +0x18 */
     int pSDLIndices; /* +0x1c */
     unsigned int uiSDLIndicesSize; /* +0x20 */
     unsigned int uiSDLBits; /* +0x24 */
     unsigned long ModFlgs; /* +0x28 */
-    float (*) pLastExecDmaBuffer[4]; /* +0x30 */
+    float (*pLastExecDmaBuffer)[4]; /* +0x30 */
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };
 
@@ -1151,7 +1151,7 @@ struct tagGLprimbuf {
     unsigned int nCount; /* +0x4 */
     unsigned char bEOP; /* +0x8 */
     int pCode; /* +0xc */
-    float (*) pData[4]; /* +0x10 */
+    float (*pData)[4]; /* +0x10 */
     int pTexUnit; /* +0x14 */
     _sceDmaTag tagDma; /* +0x20 */
     sceGifTag tagGif; /* +0x30 */
@@ -1304,7 +1304,7 @@ void GLI_vDraw2DRectangleWithColor(float xXMin, float xXMax, float xYMin, float 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vDrawFireSpriteGroup(GLI_tdstMaterial_* param0, float (*) pData[4], unsigned int NbParticles)
+void GLI_vDrawFireSpriteGroup(GLI_tdstMaterial_* param0, float (*pData)[4], unsigned int NbParticles)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1729,7 +1729,7 @@ void GLI_vInitSpriteController(void)
 void CSpriteController::Draw2DRectangleWithColor(float xXMin, float xXMax, float xYMin, float xYMax, GLI_tdstMaterial_* hMaterial, unsigned int ulColor)
 {
     float fADC;
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* pC;
     /* TODO: decompile from asm/... */
 }
@@ -1797,7 +1797,7 @@ void CSpriteController::Icon2D_Percent(float xXMin, float xYMin, float xXMax, fl
 {
     float fADC;
     int Alpha;
-    float (*) param0[4];
+    float (*param0)[4];
     unsigned int* pC;
     unsigned int Color;
     /* TODO: decompile from asm/... */
@@ -1946,7 +1946,7 @@ void CSpriteController::Icon2D_Rotate_Percent_and_UVs(float xXMin, float xXMax, 
     float fCos;
     float fADC;
     int Alpha;
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* pC;
     unsigned int VMax;
     unsigned int VMin;
@@ -2036,7 +2036,7 @@ void CSpriteController::Sprite2DWithUV(float xXMin, float xXMax, float xYMin, fl
 {
     float fADC;
     int Alpha;
-    float (*) param0[4];
+    float (*param0)[4];
     unsigned int* pC;
     unsigned int VMax;
     unsigned int VMin;
@@ -2131,7 +2131,7 @@ void CSpriteController::DrawWorldQuadWithUVsAndAlpha(float* x1, float* x2, float
     int VMin;
     int UMax;
     int UMin;
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* pC;
     /* TODO: decompile from asm/... */
 }
@@ -2257,7 +2257,7 @@ void CSpriteController::WorldQuadWithUVAndFade(float* x1, float* x2, float* x3, 
     int UMax;
     int UMin;
     int Alpha;
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* pC;
     unsigned int Color;
     /* TODO: decompile from asm/... */
@@ -2338,7 +2338,7 @@ void CSpriteController::WorldQuadWithUV(float* x1, float* x2, float* x3, float* 
     int VMin;
     int UMax;
     int UMin;
-    float (*) param0[4];
+    float (*param0)[4];
     unsigned int* pC;
     /* TODO: decompile from asm/... */
 }
@@ -2395,7 +2395,7 @@ void CSpriteController::WorldQuadWithUV(float* x1, float* x2, float* x3, float* 
 void CSpriteController::WorldQuad(float* x1, float* x2, float* x3, float* x4, GLI_tdstMaterial_* pMaterial)
 {
     float fADC;
-    float (*) param0[4];
+    float (*param0)[4];
     unsigned int* pC;
     /* TODO: decompile from asm/... */
 }
@@ -2469,7 +2469,7 @@ int CSpriteController::WorldPlanarSprite(MTH3D_tdstVector_* pPosition, GLI_tdstM
     float Pos[4];
     float Vy[4];
     float Vx[4];
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* pC;
     /* TODO: decompile from asm/... */
 }
@@ -2569,7 +2569,7 @@ void CSpriteController::WorldOrthoPlanarOriented(MTH3D_tdstVector_* pPosition, G
     float Pos[4];
     float Vy[4];
     float Vx[4];
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* pC;
     /* TODO: decompile from asm/... */
 }
@@ -2646,7 +2646,7 @@ int CSpriteController::WorldOrthoPlanarSpriteColor(MTH3D_tdstVector_* pPosition,
     float Pos[4];
     float Vy[4];
     float Vx[4];
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* pC;
     /* TODO: decompile from asm/... */
 }
@@ -2724,7 +2724,7 @@ int CSpriteController::WorldOrthoPlanarSprite(MTH3D_tdstVector_* pPosition, GLI_
     float Pos[4];
     float Vy[4];
     float Vx[4];
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* pC;
     /* TODO: decompile from asm/... */
 }
@@ -2798,7 +2798,7 @@ void CSpriteController::SemiLookatSprite(MTH3D_tdstVector_* a3_fPosition, MTH3D_
     float Position2[4];
     float Position1[4];
     int Alpha;
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* pC;
     unsigned int ColorCenter;
     unsigned int ColorOut;
@@ -2866,7 +2866,7 @@ int CSpriteController::SimpleSpriteOriented_WithUVs(MTH3D_tdstVector_* pPosition
     unsigned int VMin;
     unsigned int UMax;
     unsigned int UMin;
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* param0;
     /* TODO: decompile from asm/... */
 }
@@ -2948,7 +2948,7 @@ int CSpriteController::SimpleSprite_UVAnim(GLI_tdstMaterial_* pMaterial, MTH3D_t
     unsigned int UMin;
     float V1;
     float U1;
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* param0;
     /* TODO: decompile from asm/... */
 }
@@ -2990,7 +2990,7 @@ int CSpriteController::SimpleSprite_UVAnim(GLI_tdstMaterial_* pMaterial, MTH3D_t
  */
 int CSpriteController::SimpleSpriteColor(GLI_tdstMaterial_* pMaterial, MTH3D_tdstVector_* pPosition, float SizeX, float SizeY, unsigned int ulColor)
 {
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* pC;
     /* TODO: decompile from asm/... */
 }
@@ -3038,13 +3038,13 @@ int CSpriteController::SimpleSpriteColor(GLI_tdstMaterial_* pMaterial, MTH3D_tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CSpriteController::DrawFireSpriteGroup(GLI_tdstMaterial_* pMaterial, float (*) pData[4], unsigned int NbParticles)
+void CSpriteController::DrawFireSpriteGroup(GLI_tdstMaterial_* pMaterial, float (*pData)[4], unsigned int NbParticles)
 {
     unsigned int NbVertices;
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* pT;
     unsigned int* pC;
-    float (*) pVect[4];
+    float (*pVect)[4];
     unsigned int i;
     /* TODO: decompile from asm/... */
 }
@@ -3091,7 +3091,7 @@ void CSpriteController::DrawFireSpriteGroup(GLI_tdstMaterial_* pMaterial, float 
  */
 int CSpriteController::SimpleSprite(GLI_tdstMaterial_* pMaterial, MTH3D_tdstVector_* pPosition, float SizeX, float SizeY)
 {
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int* param0;
     /* TODO: decompile from asm/... */
 }

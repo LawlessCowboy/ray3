@@ -669,7 +669,7 @@ struct tdstFamilyList_ {
 struct _SDC_Instance_ {
     HIE_tdstSuperObject_* pSPO; /* +0x0 */
     unsigned int ulElementNumber; /* +0x4 */
-    float (*) pVertexArray[4]; /* +0x8 */
+    float (*pVertexArray)[4]; /* +0x8 */
     int pInstanceNormals; /* +0xc */
     C_Sdl* pSDL; /* +0x10 */
     unsigned int ulFrameNumber; /* +0x14 */
@@ -683,13 +683,13 @@ struct tagListData {
     tagGLlistdatas* pDatas; /* +0x8 */
     tagGLprimbuf* pPrimBufHead; /* +0xc */
     tagGLprimbuf* pPrimBufTail; /* +0x10 */
-    float (*) pDmaBuffer[4]; /* +0x14 */
+    float (*pDmaBuffer)[4]; /* +0x14 */
     unsigned int uiSDLSize; /* +0x18 */
     int pSDLIndices; /* +0x1c */
     unsigned int uiSDLIndicesSize; /* +0x20 */
     unsigned int uiSDLBits; /* +0x24 */
     unsigned long ModFlgs; /* +0x28 */
-    float (*) pLastExecDmaBuffer[4]; /* +0x30 */
+    float (*pLastExecDmaBuffer)[4]; /* +0x30 */
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };
 
@@ -800,7 +800,7 @@ struct tagGLprimbuf {
     unsigned int nCount; /* +0x4 */
     unsigned char bEOP; /* +0x8 */
     int pCode; /* +0xc */
-    float (*) pData[4]; /* +0x10 */
+    float (*pData)[4]; /* +0x10 */
     int pTexUnit; /* +0x14 */
     _sceDmaTag tagDma; /* +0x20 */
     sceGifTag tagGif; /* +0x30 */
@@ -1208,7 +1208,7 @@ int GLI_g_SdlCache;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void J_New_GetParticleSpriteFromInterpolatedPoints(float (*) pParticles[4], J_New_InterpolPoint_* p1, J_New_InterpolPoint_* p2, float V)
+void J_New_GetParticleSpriteFromInterpolatedPoints(float (*pParticles)[4], J_New_InterpolPoint_* p1, J_New_InterpolPoint_* p2, float V)
 {
     float vA[4];
     /* TODO: decompile from asm/... */

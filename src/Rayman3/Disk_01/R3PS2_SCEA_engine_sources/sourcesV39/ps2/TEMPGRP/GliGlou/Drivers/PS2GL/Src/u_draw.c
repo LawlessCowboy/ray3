@@ -662,7 +662,7 @@ struct tagGLprimbuf {
     unsigned int nCount; /* +0x4 */
     unsigned char bEOP; /* +0x8 */
     int pCode; /* +0xc */
-    float (*) pData[4]; /* +0x10 */
+    float (*pData)[4]; /* +0x10 */
     int pTexUnit; /* +0x14 */
     _sceDmaTag tagDma; /* +0x20 */
     anon_17 tagGif; /* +0x30 */
@@ -1877,13 +1877,13 @@ struct tagListData {
     tagGLlistdatas* pDatas; /* +0x8 */
     tagGLprimbuf* pPrimBufHead; /* +0xc */
     tagGLprimbuf* pPrimBufTail; /* +0x10 */
-    float (*) pDmaBuffer[4]; /* +0x14 */
+    float (*pDmaBuffer)[4]; /* +0x14 */
     unsigned int uiSDLSize; /* +0x18 */
     int pSDLIndices; /* +0x1c */
     unsigned int uiSDLIndicesSize; /* +0x20 */
     unsigned int uiSDLBits; /* +0x24 */
     unsigned long ModFlgs; /* +0x28 */
-    float (*) pLastExecDmaBuffer[4]; /* +0x30 */
+    float (*pLastExecDmaBuffer)[4]; /* +0x30 */
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };
 
@@ -2185,7 +2185,7 @@ struct tagGLcontext {
     tagGLprimbuf* pCurPrimBuf; /* +0x5ce4 */
     anon_1* pCurParamBegin; /* +0x5ce8 */
     tagGLprimbuf* ppCurPrimBufHead; /* +0x5cec */
-    float (*) pCurListVData[4]; /* +0x5cf0 */
+    float (*pCurListVData)[4]; /* +0x5cf0 */
     int pCurListVCode; /* +0x5cf4 */
     int pCurListTexUnit; /* +0x5cf8 */
     tagGLlistpool ListPool; /* +0x5cfc */
@@ -2229,37 +2229,37 @@ struct tagGLcontext {
     int iMaxClipPlanes; /* +0x6000 */
     float avClipPlane[6][4]; /* +0x6010 */
     unsigned int eMatrixMode; /* +0x6070 */
-    float (*) pCurMatrix[4][4]; /* +0x6074 */
-    float (*) pCurStack[4][4]; /* +0x6078 */
+    float (*pCurMatrix)[4][4]; /* +0x6074 */
+    float (*pCurStack)[4][4]; /* +0x6078 */
     int piCurStackDepth; /* +0x607c */
     float ViewOrg[2]; /* +0x6080 */
     float ViewPort[4]; /* +0x6090 */
     float DepthRange[2]; /* +0x60a0 */
     float vacurColor[2][4]; /* +0x60b0 */
-    float (*) pvcurColor[4]; /* +0x60d0 */
+    float (*pvcurColor)[4]; /* +0x60d0 */
     float vcurNormal[4]; /* +0x60e0 */
     float vacurTexCoords[2][4]; /* +0x60f0 */
     unsigned int iCurTextureSet; /* +0x6110 */
-    float (*) pvcurTextCoord[4]; /* +0x6114 */
+    float (*pvcurTextCoord)[4]; /* +0x6114 */
     unsigned char bFinalCompile; /* +0x6118 */
     float valistColor[2][4]; /* +0x6120 */
-    float (*) pvlistColor[4]; /* +0x6140 */
+    float (*pvlistColor)[4]; /* +0x6140 */
     float vlistNormal[4]; /* +0x6150 */
     float valistTexCoords[2][4]; /* +0x6160 */
     unsigned int ilistTexSet; /* +0x6180 */
-    float (*) pvlistTexCoord[4]; /* +0x6184 */
+    float (*pvlistTexCoord)[4]; /* +0x6184 */
     unsigned char bRasterPosValid; /* +0x6188 */
     float fRasterPos[4]; /* +0x618c */
     float fRasterDistance; /* +0x619c */
     float fRasterColor[2][4]; /* +0x61a0 */
     float RasterMultiTexCoords[2][4]; /* +0x61c0 */
-    float (*) pvRasterTexCoord[4]; /* +0x61e0 */
+    float (*pvRasterTexCoord)[4]; /* +0x61e0 */
     unsigned char bEdgeFlag; /* +0x61e4 */
     float mFrustumNormal[4][4]; /* +0x61f0 */
     float mGuardBandNormal[4][4]; /* +0x6230 */
     float vZNearFar[4]; /* +0x6270 */
     float vObjectBS[4]; /* +0x6280 */
-    float (*) pfvPackaeBSs[4]; /* +0x6290 */
+    float (*pfvPackaeBSs)[4]; /* +0x6290 */
     int iPackageBSIndex; /* +0x6294 */
     float faObjectBoundingBox[6]; /* +0x6298 */
     float ModelViewMatrix[4][4]; /* +0x62b0 */
@@ -2274,46 +2274,46 @@ struct tagGLcontext {
     float TextureMatrix[2][4][4]; /* +0x68f0 */
     unsigned int nTextureStackDepths[2]; /* +0x6970 */
     float TextureStacks[2][4][4][4]; /* +0x6980 */
-    float (*) pTextureMatrix[4][4]; /* +0x6b80 */
+    float (*pTextureMatrix)[4][4]; /* +0x6b80 */
     int pnTextureStackDepth; /* +0x6b84 */
-    float (*) pTextureStack[4][4]; /* +0x6b88 */
+    float (*pTextureStack)[4][4]; /* +0x6b88 */
     unsigned int eBeginMode; /* +0x6b8c */
     unsigned char bInBeginEndPair; /* +0x6b90 */
     unsigned char bInDisplayListExecution; /* +0x6b91 */
     int iBufLimit; /* +0x6b94 */
     int iBufCount; /* +0x6b98 */
-    float (*) pVBuf[4]; /* +0x6b9c */
-    float (*) pCBuf[4]; /* +0x6ba0 */
-    float (*) pNBuf[4]; /* +0x6ba4 */
-    float (*) pTBuf[4]; /* +0x6ba8 */
-    float (*) pCBuf_b[4]; /* +0x6bac */
-    float (*) pTBuf_b[4]; /* +0x6bb0 */
-    float (*) pVIFDMABuf[4]; /* +0x6bb4 */
-    float (*) pVIFDMABufUnaligned[4]; /* +0x6bb8 */
-    float (*) pVIFInBuf[4]; /* +0x6bbc */
-    float (*) pVIFOutBuf[4]; /* +0x6bc0 */
-    float (*) pVIFIBufTail[4]; /* +0x6bc4 */
-    float (*) pVIFOBufTail[4]; /* +0x6bc8 */
+    float (*pVBuf)[4]; /* +0x6b9c */
+    float (*pCBuf)[4]; /* +0x6ba0 */
+    float (*pNBuf)[4]; /* +0x6ba4 */
+    float (*pTBuf)[4]; /* +0x6ba8 */
+    float (*pCBuf_b)[4]; /* +0x6bac */
+    float (*pTBuf_b)[4]; /* +0x6bb0 */
+    float (*pVIFDMABuf)[4]; /* +0x6bb4 */
+    float (*pVIFDMABufUnaligned)[4]; /* +0x6bb8 */
+    float (*pVIFInBuf)[4]; /* +0x6bbc */
+    float (*pVIFOutBuf)[4]; /* +0x6bc0 */
+    float (*pVIFIBufTail)[4]; /* +0x6bc4 */
+    float (*pVIFOBufTail)[4]; /* +0x6bc8 */
     int iLightModel; /* +0x6bcc */
     _sceDmaTag* pVU1_DMA_parameters; /* +0x6bd0 */
     _sceDmaTag* pVU1_DMA_buf0; /* +0x6bd4 */
     _sceDmaTag* pVU1_DMA_buf1; /* +0x6bd8 */
-    float (*) pmClipping[4][4]; /* +0x6bdc */
-    float (*) pmNormal[4][4]; /* +0x6be0 */
-    float (*) pmClippingScreen[4][4]; /* +0x6be4 */
-    float (*) pmLocalScreen[4][4]; /* +0x6be8 */
-    float (*) pmModelView[4][4]; /* +0x6bec */
-    float (*) pvClampLimit[4]; /* +0x6bf0 */
-    int (*) pClippingFlags[4]; /* +0x6bf4 */
+    float (*pmClipping)[4][4]; /* +0x6bdc */
+    float (*pmNormal)[4][4]; /* +0x6be0 */
+    float (*pmClippingScreen)[4][4]; /* +0x6be4 */
+    float (*pmLocalScreen)[4][4]; /* +0x6be8 */
+    float (*pmModelView)[4][4]; /* +0x6bec */
+    float (*pvClampLimit)[4]; /* +0x6bf0 */
+    int (*pClippingFlags)[4]; /* +0x6bf4 */
     anon_17* pGifTagFan; /* +0x6bf8 */
-    float (*) pmD[4][4]; /* +0x6bfc */
-    float (*) pmVP[4][4]; /* +0x6c00 */
-    float (*) pmS[4][4]; /* +0x6c04 */
-    float (*) pmh[4][4]; /* +0x6c08 */
-    float (*) pvAmbient[4]; /* +0x6c0c */
-    float (*) pvEmission[4]; /* +0x6c10 */
-    float (*) pvScreenScale[4]; /* +0x6c14 */
-    float (*) pvColorRange[4]; /* +0x6c18 */
+    float (*pmD)[4][4]; /* +0x6bfc */
+    float (*pmVP)[4][4]; /* +0x6c00 */
+    float (*pmS)[4][4]; /* +0x6c04 */
+    float (*pmh)[4][4]; /* +0x6c08 */
+    float (*pvAmbient)[4]; /* +0x6c0c */
+    float (*pvEmission)[4]; /* +0x6c10 */
+    float (*pvScreenScale)[4]; /* +0x6c14 */
+    float (*pvColorRange)[4]; /* +0x6c18 */
     int pfAlpha; /* +0x6c1c */
     int pfShininess; /* +0x6c20 */
     int pnColorMatMasks; /* +0x6c24 */
@@ -2333,18 +2333,18 @@ struct tagGLcontext {
     anon_17* pGifTagBuf0; /* +0x6c5c */
     anon_17* pGifTagBuf1; /* +0x6c60 */
     int iCurBuf; /* +0x6c64 */
-    float (*) pVBuf0[4]; /* +0x6c68 */
-    float (*) pNBuf0[4]; /* +0x6c6c */
-    float (*) pCBuf0[4]; /* +0x6c70 */
-    float (*) pTBuf0[4]; /* +0x6c74 */
-    float (*) pCBuf0_b[4]; /* +0x6c78 */
-    float (*) pTBuf0_b[4]; /* +0x6c7c */
-    float (*) pVBuf1[4]; /* +0x6c80 */
-    float (*) pNBuf1[4]; /* +0x6c84 */
-    float (*) pCBuf1[4]; /* +0x6c88 */
-    float (*) pTBuf1[4]; /* +0x6c8c */
-    float (*) pCBuf1_b[4]; /* +0x6c90 */
-    float (*) pTBuf1_b[4]; /* +0x6c94 */
+    float (*pVBuf0)[4]; /* +0x6c68 */
+    float (*pNBuf0)[4]; /* +0x6c6c */
+    float (*pCBuf0)[4]; /* +0x6c70 */
+    float (*pTBuf0)[4]; /* +0x6c74 */
+    float (*pCBuf0_b)[4]; /* +0x6c78 */
+    float (*pTBuf0_b)[4]; /* +0x6c7c */
+    float (*pVBuf1)[4]; /* +0x6c80 */
+    float (*pNBuf1)[4]; /* +0x6c84 */
+    float (*pCBuf1)[4]; /* +0x6c88 */
+    float (*pTBuf1)[4]; /* +0x6c8c */
+    float (*pCBuf1_b)[4]; /* +0x6c90 */
+    float (*pTBuf1_b)[4]; /* +0x6c94 */
     tagstVIFCode* pMSCAL; /* +0x6c98 */
     unsigned char VU1Package[10000]; /* +0x6ca0 */
 };

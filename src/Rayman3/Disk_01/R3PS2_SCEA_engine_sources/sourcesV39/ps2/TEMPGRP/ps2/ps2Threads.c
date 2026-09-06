@@ -57,7 +57,6 @@ void (*fn_v_EngMain_MainLoop)(void);
 unsigned int _heap_size;
 unsigned int _end;
 unsigned int _stack_size;
-unsigned int _stack;
 unsigned int _start;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 71–380 */

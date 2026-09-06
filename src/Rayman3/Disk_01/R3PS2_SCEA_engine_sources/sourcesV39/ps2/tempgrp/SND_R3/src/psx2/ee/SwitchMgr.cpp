@@ -8,6 +8,7 @@
 typedef struct CVarAccess CVarAccess;
 typedef struct JingleList JingleList;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct TTypedVar TTypedVar;
 typedef struct CStringIsLess CStringIsLess;
 typedef struct stree stree;
 typedef struct CSndVarType CSndVarType;
@@ -35,7 +36,6 @@ typedef struct CActorResObj CActorResObj;
 typedef struct iterator_base iterator_base;
 typedef struct CCmdInterface CCmdInterface;
 typedef struct CResType CResType;
-typedef struct TTypedVar TTypedVar;
 typedef struct CIdObjPtr CIdObjPtr;
 typedef struct CSwitchElement CSwitchElement;
 typedef struct CUUID CUUID;
@@ -88,6 +88,11 @@ typedef enum tdeEventType {
     ESTOPALLEVENT = 5,
     ESTOPANDGO = 6,
 } tdeEventType;
+
+struct TTypedVar {
+    /* C++ base CVar at +0x0. */
+    float m_oValue; /* +0x1c */
+};
 
 struct CStringIsLess {
     /* C++ base binary_function at +0x0. */
@@ -295,11 +300,6 @@ struct CResType {
     CCmdInterface m_oInterface; /* +0x4 */
     int m_czResDataClassName; /* +0x38 */
     smap m_oCommands; /* +0x3c */
-};
-
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
-    float m_oValue; /* +0x1c */
 };
 
 struct CIdObjPtr {

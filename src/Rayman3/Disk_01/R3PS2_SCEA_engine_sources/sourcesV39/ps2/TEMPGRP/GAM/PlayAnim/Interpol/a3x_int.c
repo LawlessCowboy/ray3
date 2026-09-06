@@ -115,7 +115,7 @@ float fn_xRModulus(float xValue, float xModulus)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_v_QuatToMatrix(float (*) _a3a3_xMtx[3], float* _a4_xQuat)
+void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat)
 {
     float xZS;
     float xYS;

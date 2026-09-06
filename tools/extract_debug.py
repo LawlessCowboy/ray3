@@ -1408,13 +1408,16 @@ def safe_global_name(global_: VarInfo, idx: int) -> str:
 
 def format_declaration(type_str: str, name: str) -> str:
     """Format a recovered declarator, including array/function-pointer forms."""
+    # A pointer-to-array is itself a declarator.  Handle it before the plain
+    # array case so ``float (*)[4]`` becomes ``float (*value)[4]`` rather than
+    # the invalid ``float (*) value[4]``.
+    if '(*)' in type_str:
+        return type_str.replace('(*)', f'(*{name})')
     # Keep the complete suffix together: ``float[4][4]`` must become
     # ``float matrix[4][4]``, not the invalid ``float[4] matrix[4]``.
     array_match = re.match(r'^(.*?)(\[(?:\d+)\](?:\[(?:\d+)\])*)$', type_str)
     if array_match:
         return f'{array_match.group(1)} {name}{array_match.group(2)}'
-    if '(*)' in type_str:
-        return type_str.replace('(*)', f'(*{name})')
     return f'{type_str} {name}'
 
 
@@ -1564,6 +1567,40 @@ def generate_type_definitions(file_info: FileInfo) -> list[str]:
         lines.append('};')
         lines.append('')
     return lines
+
+
+def normalize_file_info(file_info: FileInfo) -> None:
+    """Remove duplicate file-scope records caused by merged debug chunks.
+
+    MWCC repeats header and file-scope debug records in multiple chunks of one
+    source file.  Those repetitions are useful while parsing but invalid when
+    emitted as one C/C++ translation unit: duplicate globals and enum
+    definitions prevent otherwise independent functions from compiling.
+    Prefer the richest type record and the first named global at each linked
+    address; neither choice invents data that the debug stream did not carry.
+    """
+    globals_by_key: dict[tuple, VarInfo] = {}
+    for global_ in file_info.globals_:
+        legal_name = safe_global_name(global_, 0)
+        key = ('address', global_.address) if global_.address else (
+            'name', global_.role, legal_name)
+        globals_by_key.setdefault(key, global_)
+    file_info.globals_ = list(globals_by_key.values())
+
+    def type_score(type_info: TypeInfo) -> tuple[int, int, int]:
+        return (len(type_info.members) + len(type_info.enum_values) + len(type_info.bases),
+                len(type_info.members), len(type_info.enum_values))
+
+    types_by_name: dict[str, TypeInfo] = {}
+    anonymous_types: list[TypeInfo] = []
+    for type_info in file_info.types:
+        if not type_info.name:
+            anonymous_types.append(type_info)
+            continue
+        old = types_by_name.get(type_info.name)
+        if old is None or type_score(type_info) > type_score(old):
+            types_by_name[type_info.name] = type_info
+    file_info.types = [*types_by_name.values(), *anonymous_types]
 
 
 def generate_c_stub(file_info: FileInfo, func_list: list[FuncInfo],
@@ -1879,6 +1916,8 @@ def main():
     for rel, file_info in sorted(merged.items()):
         if not file_info.functions and not file_info.path:
             continue
+
+        normalize_file_info(file_info)
 
         out_path = out_root / rel
         out_path.parent.mkdir(parents=True, exist_ok=True)

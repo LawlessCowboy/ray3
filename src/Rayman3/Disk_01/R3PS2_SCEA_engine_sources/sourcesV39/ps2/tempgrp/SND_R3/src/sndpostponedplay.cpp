@@ -14,6 +14,7 @@ typedef struct CSndVarType CSndVarType;
 typedef struct V3Ds V3Ds;
 typedef struct C3DDirection C3DDirection;
 typedef struct PostponedPlay PostponedPlay;
+typedef struct CStringIsLess CStringIsLess;
 typedef struct stree stree;
 typedef struct smap smap;
 typedef struct _RollOffParam _RollOffParam;
@@ -40,18 +41,17 @@ typedef struct CActorResObj CActorResObj;
 typedef struct CRefIdObj CRefIdObj;
 typedef union _SND_tduRefEvt _SND_tduRefEvt;
 typedef struct streebase streebase;
+typedef struct TTypedVar TTypedVar;
 typedef struct CLookupElement CLookupElement;
 typedef struct CCmdInterface CCmdInterface;
 typedef struct CResType CResType;
 typedef struct sset sset;
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
 typedef struct sTreeLink sTreeLink;
-typedef struct TTypedVar TTypedVar;
 typedef struct CLinkTypeActor CLinkTypeActor;
 typedef struct CProgramContext CProgramContext;
 typedef struct CVar CVar;
 typedef struct CActorModifiers CActorModifiers;
-typedef struct CStringIsLess CStringIsLess;
 
 typedef enum tdeType {
     EBASE = 0,
@@ -108,10 +108,14 @@ struct PostponedPlay {
     unsigned int m_u32EngineContext; /* +0x1c */
 };
 
+struct CStringIsLess {
+    /* C++ base binary_function at +0x0. */
+};
+
 struct stree {
     /* C++ base streebase at +0x0. */
     sallocator allocator; /* +0xc */
-    less key_compare; /* +0xd */
+    CStringIsLess key_compare; /* +0xd */
 };
 
 struct smap {
@@ -297,6 +301,11 @@ struct streebase {
     unsigned int _Size; /* +0x8 */
 };
 
+struct TTypedVar {
+    /* C++ base CVar at +0x0. */
+    float m_oValue; /* +0x1c */
+};
+
 struct CLookupElement {
     int m_iNbRef; /* +0x0 */
     CUUID m_oId; /* +0x4 */
@@ -348,11 +357,6 @@ struct sTreeLink {
     _Redbl m_eColor; /* +0xc */
 };
 
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
-    float m_oValue; /* +0x1c */
-};
-
 struct CLinkTypeActor {
     CLinkActor m_oActors; /* +0x0 */
     TTypedVar* mroVolumeModifier; /* +0x7c */
@@ -379,10 +383,6 @@ struct CActorModifiers {
     float m_fDirectValue; /* +0x18 */
     float m_fResultValue; /* +0x1c */
     unsigned char m_bResultChanged; /* +0x20 */
-};
-
-struct CStringIsLess {
-    /* C++ base binary_function at +0x0. */
 };
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 452–478 */

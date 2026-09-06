@@ -8,6 +8,7 @@
 typedef struct CUUID CUUID;
 typedef struct CIdObj CIdObj;
 typedef struct iterator_base iterator_base;
+typedef struct CIndexAllocator CIndexAllocator;
 typedef struct less less;
 typedef struct stree stree;
 typedef struct smap smap;
@@ -23,7 +24,6 @@ typedef struct CAllocBlock CAllocBlock;
 typedef struct iterator iterator;
 typedef struct streebase streebase;
 typedef struct spair spair;
-typedef struct CIndexAllocator CIndexAllocator;
 
 typedef enum _Redbl {
     _Red = 0,
@@ -44,14 +44,20 @@ struct iterator_base {
     sTreeLink* _Ptr; /* +0x0 */
 };
 
+struct CIndexAllocator {
+    CAllocBlock* m_poAllocBlocks; /* +0x0 */
+    char m_cRootNodeBuffer[40]; /* +0x4 */
+    unsigned int m_uiNbAllocs; /* +0x2c */
+};
+
 struct less {
     /* C++ base binary_function at +0x0. */
 };
 
 struct stree {
     /* C++ base streebase at +0x0. */
-    sallocator allocator; /* +0xc */
-    less key_compare; /* +0xd */
+    CIndexAllocator allocator; /* +0xc */
+    less key_compare; /* +0x3c */
 };
 
 struct smap {
@@ -120,12 +126,6 @@ struct streebase {
 struct spair {
     iterator first; /* +0x0 */
     unsigned char second; /* +0x4 */
-};
-
-struct CIndexAllocator {
-    CAllocBlock* m_poAllocBlocks; /* +0x0 */
-    char m_cRootNodeBuffer[40]; /* +0x4 */
-    unsigned int m_uiNbAllocs; /* +0x2c */
 };
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesc.cpp lines 57–57 */

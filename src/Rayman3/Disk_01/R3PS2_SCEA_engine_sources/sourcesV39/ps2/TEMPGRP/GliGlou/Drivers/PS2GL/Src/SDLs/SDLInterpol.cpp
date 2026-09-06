@@ -20,7 +20,7 @@ struct PS2GL_VU1_InterpolMatrixData_ {
     float OriginalModelView[4][4]; /* +0x10 */
     float ProjectionMatrix[4][4]; /* +0x50 */
     float GuardBandProjectionMatrix[4][4]; /* +0x90 */
-    float (*) pCameraMatrix[4][4]; /* +0xd0 */
+    float (*pCameraMatrix)[4][4]; /* +0xd0 */
 };
 
 struct tag_stVU1MatriceT {
@@ -197,7 +197,7 @@ void GLI_vInterpolAllNormalMatrix(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_AddNormalInterpolation(float (*) ModelView[4][4])
+void GLI_AddNormalInterpolation(float (*ModelView)[4][4])
 {
     PS2GL_VU1_InterpolMatrixData_* p;
     /* TODO: decompile from asm/... */
@@ -226,8 +226,8 @@ void GLI_AddNormalInterpolation(float (*) ModelView[4][4])
  */
 void GLI_vUpdateAllMatricesOutSDL(void)
 {
-    float (*) pNewMirrorCameraMatrix[4][4];
-    float (*) pNewCameraMatrix[4][4];
+    float (*pNewMirrorCameraMatrix)[4][4];
+    float (*pNewCameraMatrix)[4][4];
     unsigned int i;
     /* TODO: decompile from asm/... */
 }

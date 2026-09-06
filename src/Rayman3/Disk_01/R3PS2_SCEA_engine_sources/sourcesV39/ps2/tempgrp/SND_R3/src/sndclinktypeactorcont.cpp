@@ -8,13 +8,12 @@
 typedef struct CVarAccess CVarAccess;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
-typedef struct iterator iterator;
+typedef struct CUUID CUUID;
 typedef struct spair spair;
 typedef struct sTreeNode sTreeNode;
 typedef struct const_iterator const_iterator;
 typedef struct CVolumeActorModifier CVolumeActorModifier;
 typedef struct CResObjParams CResObjParams;
-typedef struct CUUID CUUID;
 typedef struct sstring sstring;
 typedef struct CPS2IdObjInfo CPS2IdObjInfo;
 typedef struct CSndVarType CSndVarType;
@@ -44,6 +43,7 @@ typedef struct sTreeLink sTreeLink;
 typedef struct CAllocBlock CAllocBlock;
 typedef struct CLinkTypeActor CLinkTypeActor;
 typedef struct CProgramContext CProgramContext;
+typedef struct iterator iterator;
 typedef struct _Node _Node;
 typedef struct _stVector _stVector;
 typedef struct CCmdInterface CCmdInterface;
@@ -104,13 +104,14 @@ struct _tdstAllRetObjectSound {
     int (*pfnInfo)(int, int, char*, int); /* +0x38 */
 };
 
-struct iterator {
-    /* C++ base const_iterator at +0x0. */
+struct CUUID {
+    unsigned int m_uiHighWord; /* +0x0 */
+    unsigned int m_uiLowWord; /* +0x4 */
 };
 
 struct spair {
-    iterator first; /* +0x0 */
-    unsigned char second; /* +0x4 */
+    CUUID first; /* +0x0 */
+    CIdObj* second; /* +0x8 */
 };
 
 struct sTreeNode {
@@ -134,11 +135,6 @@ struct CResObjParams {
     int m_s32Handle; /* +0x10 */
     CResData* m_poResData; /* +0x14 */
     void (*m_pfn_Proc)(int); /* +0x18 */
-};
-
-struct CUUID {
-    unsigned int m_uiHighWord; /* +0x0 */
-    unsigned int m_uiLowWord; /* +0x4 */
 };
 
 struct sstring {
@@ -345,6 +341,10 @@ struct CLinkTypeActor {
 struct CProgramContext {
     CVarAccess* m_poGlobVarAcc; /* +0x4 */
     CVarAccess* m_poOwnerVarAcc; /* +0x8 */
+};
+
+struct iterator {
+    /* C++ base iterator_base at +0x0. */
 };
 
 struct _Node {

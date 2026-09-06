@@ -1046,7 +1046,7 @@ int GLI_BIG_GLOBALS_p_stObj;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (*) pVOrg[4], float (*) pUV1[4], float (*) pUV2[4], float (*) pUVChrome[4], float (*) pNormals[4])
+void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (*pVOrg)[4], float (*pUV1)[4], float (*pUV2)[4], float (*pUVChrome)[4], float (*pNormals)[4])
 {
     unsigned int Type;
     unsigned int LayerTypes;
@@ -1054,7 +1054,7 @@ void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned in
     unsigned int NbStages;
     unsigned int stage;
     GLI_tdstMaterial_* hVisualMaterial;
-    float (*) pVA[4];
+    float (*pVA)[4];
     unsigned int NbVerticesAlignedUVs;
     unsigned int NbVerticesAligned;
     unsigned int NbVertices;
@@ -1145,7 +1145,7 @@ void GLIPS2_vManageLightsForThisCharacter(GLD_tdstViewportAttributes_* _hVpt, HI
     float stAbsCenter[4];
     float Vect[4];
     float stDist;
-    float (*) p_stLightPos[4];
+    float (*p_stLightPos)[4];
     float xSquare;
     unsigned char* pLightActivity;
     GLI_tdstLight_* ppLights;
@@ -1249,9 +1249,9 @@ void GLIPS2_vManageLightsForThisCharacter(GLD_tdstViewportAttributes_* _hVpt, HI
 void GLI_vCalculateLightingMatricesForCheap(HIE_tdstSuperObject_* _hSprObj, GLI_tdstMaterial_* pMat)
 {
     float Diffuse[4];
-    float (*) LightColor[4][4];
-    float (*) LightPos[4][4];
-    float (*) AmbientLight[4];
+    float (*LightColor)[4][4];
+    float (*LightPos)[4][4];
+    float (*AmbientLight)[4];
     /* TODO: decompile from asm/... */
 }
 
@@ -1377,9 +1377,9 @@ void GLI_vCalculateLightingMatrices(GLI_tdstMaterial_* pMat)
 {
     float Diffuse[4];
     unsigned char* Local_ucTableOfActiveLightsForChar;
-    float (*) LightColor[4][4];
-    float (*) LightPos[4][4];
-    float (*) AmbientLight[4];
+    float (*LightColor)[4][4];
+    float (*LightPos)[4][4];
+    float (*AmbientLight)[4];
     unsigned int NoAmbient;
     GLI_tdstLight_* p_stLight;
     unsigned int CurrentLightID;
@@ -1514,7 +1514,7 @@ void GLI_vCalculateLightingMatricesGhost(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLI_vSetParaSphericalLight__FP14GLI_tdstLight_UiPA4_A4_fPA4_A4_fPA4_f(GLI_tdstLight_* pLight, unsigned int LightID, float (*) LightPos[4][4], float (*) LightColor[4][4])
+int GLI_vSetParaSphericalLight__FP14GLI_tdstLight_UiPA4_A4_fPA4_A4_fPA4_f(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4])
 {
     MTH3D_tdstVector_ stVect;
     float xDamp;
@@ -1586,7 +1586,7 @@ int GLI_vSetParaSphericalLight__FP14GLI_tdstLight_UiPA4_A4_fPA4_A4_fPA4_f(GLI_td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLI_vSetSphericalLight__FP14GLI_tdstLight_UiPA4_A4_fPA4_A4_fPA4_f(GLI_tdstLight_* pLight, unsigned int LightID, float (*) LightPos[4][4], float (*) LightColor[4][4], float (*) AmbientLight[4])
+int GLI_vSetSphericalLight__FP14GLI_tdstLight_UiPA4_A4_fPA4_A4_fPA4_f(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4])
 {
     float TempVect[4];
     float xDamp;

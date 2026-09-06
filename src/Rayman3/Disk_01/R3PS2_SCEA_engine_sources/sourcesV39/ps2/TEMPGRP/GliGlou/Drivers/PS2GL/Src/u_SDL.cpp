@@ -356,7 +356,7 @@ struct SDC_VertexArrays_ {
     unsigned int OptType; /* +0x0 */
     unsigned int NbElements; /* +0x4 */
     GLI_tdstMaterial_* pArrayOfMaterials; /* +0x8 */
-    float (*) pArrayOfVertexArrays[4]; /* +0xc */
+    float (*pArrayOfVertexArrays)[4]; /* +0xc */
     int pVertexArraySizes; /* +0x10 */
     int pNbTrianglesPerElement; /* +0x14 */
     int pbIsTransparent; /* +0x18 */
@@ -453,7 +453,7 @@ struct tdstSubAnimInUse_ {
 struct _SDC_Instance_ {
     HIE_tdstSuperObject_* pSPO; /* +0x0 */
     unsigned int ulElementNumber; /* +0x4 */
-    float (*) pVertexArray[4]; /* +0x8 */
+    float (*pVertexArray)[4]; /* +0x8 */
     int pInstanceNormals; /* +0xc */
     C_Sdl* pSDL; /* +0x10 */
     unsigned int ulFrameNumber; /* +0x14 */
@@ -1119,13 +1119,13 @@ struct tagListData {
     tagGLlistdatas* pDatas; /* +0x8 */
     tagGLprimbuf* pPrimBufHead; /* +0xc */
     tagGLprimbuf* pPrimBufTail; /* +0x10 */
-    float (*) pDmaBuffer[4]; /* +0x14 */
+    float (*pDmaBuffer)[4]; /* +0x14 */
     unsigned int uiSDLSize; /* +0x18 */
     int pSDLIndices; /* +0x1c */
     unsigned int uiSDLIndicesSize; /* +0x20 */
     unsigned int uiSDLBits; /* +0x24 */
     unsigned long ModFlgs; /* +0x28 */
-    float (*) pLastExecDmaBuffer[4]; /* +0x30 */
+    float (*pLastExecDmaBuffer)[4]; /* +0x30 */
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };
 
@@ -1142,8 +1142,8 @@ struct TransparentSpriteGen_ {
     GEO_tdstElementIndexedTriangles_* p_stEIT; /* +0x40 */
     ISI_tdstColor_* pRLIs; /* +0x44 */
     int LightMapU; /* +0x48 */
-    float (*) pV1[4]; /* +0x4c */
-    float (*) pU1[4]; /* +0x50 */
+    float (*pV1)[4]; /* +0x4c */
+    float (*pU1)[4]; /* +0x50 */
     float Norme; /* +0x54 */
     MTH4D_tdstMatrix_ Matrix; /* +0x60 */
     int pVT; /* +0xa0 */
@@ -1670,7 +1670,7 @@ struct tagGLcontext {
     tagGLprimbuf* pCurPrimBuf; /* +0x5ce4 */
     stParamBegin* pCurParamBegin; /* +0x5ce8 */
     tagGLprimbuf* ppCurPrimBufHead; /* +0x5cec */
-    float (*) pCurListVData[4]; /* +0x5cf0 */
+    float (*pCurListVData)[4]; /* +0x5cf0 */
     int pCurListVCode; /* +0x5cf4 */
     int pCurListTexUnit; /* +0x5cf8 */
     tagGLlistpool ListPool; /* +0x5cfc */
@@ -1714,37 +1714,37 @@ struct tagGLcontext {
     int iMaxClipPlanes; /* +0x6000 */
     float avClipPlane[6][4]; /* +0x6010 */
     unsigned int eMatrixMode; /* +0x6070 */
-    float (*) pCurMatrix[4][4]; /* +0x6074 */
-    float (*) pCurStack[4][4]; /* +0x6078 */
+    float (*pCurMatrix)[4][4]; /* +0x6074 */
+    float (*pCurStack)[4][4]; /* +0x6078 */
     int piCurStackDepth; /* +0x607c */
     float ViewOrg[2]; /* +0x6080 */
     float ViewPort[4]; /* +0x6090 */
     float DepthRange[2]; /* +0x60a0 */
     float vacurColor[2][4]; /* +0x60b0 */
-    float (*) pvcurColor[4]; /* +0x60d0 */
+    float (*pvcurColor)[4]; /* +0x60d0 */
     float vcurNormal[4]; /* +0x60e0 */
     float vacurTexCoords[2][4]; /* +0x60f0 */
     unsigned int iCurTextureSet; /* +0x6110 */
-    float (*) pvcurTextCoord[4]; /* +0x6114 */
+    float (*pvcurTextCoord)[4]; /* +0x6114 */
     unsigned char bFinalCompile; /* +0x6118 */
     float valistColor[2][4]; /* +0x6120 */
-    float (*) pvlistColor[4]; /* +0x6140 */
+    float (*pvlistColor)[4]; /* +0x6140 */
     float vlistNormal[4]; /* +0x6150 */
     float valistTexCoords[2][4]; /* +0x6160 */
     unsigned int ilistTexSet; /* +0x6180 */
-    float (*) pvlistTexCoord[4]; /* +0x6184 */
+    float (*pvlistTexCoord)[4]; /* +0x6184 */
     unsigned char bRasterPosValid; /* +0x6188 */
     float fRasterPos[4]; /* +0x618c */
     float fRasterDistance; /* +0x619c */
     float fRasterColor[2][4]; /* +0x61a0 */
     float RasterMultiTexCoords[2][4]; /* +0x61c0 */
-    float (*) pvRasterTexCoord[4]; /* +0x61e0 */
+    float (*pvRasterTexCoord)[4]; /* +0x61e0 */
     unsigned char bEdgeFlag; /* +0x61e4 */
     float mFrustumNormal[4][4]; /* +0x61f0 */
     float mGuardBandNormal[4][4]; /* +0x6230 */
     float vZNearFar[4]; /* +0x6270 */
     float vObjectBS[4]; /* +0x6280 */
-    float (*) pfvPackaeBSs[4]; /* +0x6290 */
+    float (*pfvPackaeBSs)[4]; /* +0x6290 */
     int iPackageBSIndex; /* +0x6294 */
     float faObjectBoundingBox[6]; /* +0x6298 */
     float ModelViewMatrix[4][4]; /* +0x62b0 */
@@ -1759,46 +1759,46 @@ struct tagGLcontext {
     float TextureMatrix[2][4][4]; /* +0x68f0 */
     unsigned int nTextureStackDepths[2]; /* +0x6970 */
     float TextureStacks[2][4][4][4]; /* +0x6980 */
-    float (*) pTextureMatrix[4][4]; /* +0x6b80 */
+    float (*pTextureMatrix)[4][4]; /* +0x6b80 */
     int pnTextureStackDepth; /* +0x6b84 */
-    float (*) pTextureStack[4][4]; /* +0x6b88 */
+    float (*pTextureStack)[4][4]; /* +0x6b88 */
     unsigned int eBeginMode; /* +0x6b8c */
     unsigned char bInBeginEndPair; /* +0x6b90 */
     unsigned char bInDisplayListExecution; /* +0x6b91 */
     int iBufLimit; /* +0x6b94 */
     int iBufCount; /* +0x6b98 */
-    float (*) pVBuf[4]; /* +0x6b9c */
-    float (*) pCBuf[4]; /* +0x6ba0 */
-    float (*) pNBuf[4]; /* +0x6ba4 */
-    float (*) pTBuf[4]; /* +0x6ba8 */
-    float (*) pCBuf_b[4]; /* +0x6bac */
-    float (*) pTBuf_b[4]; /* +0x6bb0 */
-    float (*) pVIFDMABuf[4]; /* +0x6bb4 */
-    float (*) pVIFDMABufUnaligned[4]; /* +0x6bb8 */
-    float (*) pVIFInBuf[4]; /* +0x6bbc */
-    float (*) pVIFOutBuf[4]; /* +0x6bc0 */
-    float (*) pVIFIBufTail[4]; /* +0x6bc4 */
-    float (*) pVIFOBufTail[4]; /* +0x6bc8 */
+    float (*pVBuf)[4]; /* +0x6b9c */
+    float (*pCBuf)[4]; /* +0x6ba0 */
+    float (*pNBuf)[4]; /* +0x6ba4 */
+    float (*pTBuf)[4]; /* +0x6ba8 */
+    float (*pCBuf_b)[4]; /* +0x6bac */
+    float (*pTBuf_b)[4]; /* +0x6bb0 */
+    float (*pVIFDMABuf)[4]; /* +0x6bb4 */
+    float (*pVIFDMABufUnaligned)[4]; /* +0x6bb8 */
+    float (*pVIFInBuf)[4]; /* +0x6bbc */
+    float (*pVIFOutBuf)[4]; /* +0x6bc0 */
+    float (*pVIFIBufTail)[4]; /* +0x6bc4 */
+    float (*pVIFOBufTail)[4]; /* +0x6bc8 */
     int iLightModel; /* +0x6bcc */
     _sceDmaTag* pVU1_DMA_parameters; /* +0x6bd0 */
     _sceDmaTag* pVU1_DMA_buf0; /* +0x6bd4 */
     _sceDmaTag* pVU1_DMA_buf1; /* +0x6bd8 */
-    float (*) pmClipping[4][4]; /* +0x6bdc */
-    float (*) pmNormal[4][4]; /* +0x6be0 */
-    float (*) pmClippingScreen[4][4]; /* +0x6be4 */
-    float (*) pmLocalScreen[4][4]; /* +0x6be8 */
-    float (*) pmModelView[4][4]; /* +0x6bec */
-    float (*) pvClampLimit[4]; /* +0x6bf0 */
-    int (*) pClippingFlags[4]; /* +0x6bf4 */
+    float (*pmClipping)[4][4]; /* +0x6bdc */
+    float (*pmNormal)[4][4]; /* +0x6be0 */
+    float (*pmClippingScreen)[4][4]; /* +0x6be4 */
+    float (*pmLocalScreen)[4][4]; /* +0x6be8 */
+    float (*pmModelView)[4][4]; /* +0x6bec */
+    float (*pvClampLimit)[4]; /* +0x6bf0 */
+    int (*pClippingFlags)[4]; /* +0x6bf4 */
     sceGifTag* pGifTagFan; /* +0x6bf8 */
-    float (*) pmD[4][4]; /* +0x6bfc */
-    float (*) pmVP[4][4]; /* +0x6c00 */
-    float (*) pmS[4][4]; /* +0x6c04 */
-    float (*) pmh[4][4]; /* +0x6c08 */
-    float (*) pvAmbient[4]; /* +0x6c0c */
-    float (*) pvEmission[4]; /* +0x6c10 */
-    float (*) pvScreenScale[4]; /* +0x6c14 */
-    float (*) pvColorRange[4]; /* +0x6c18 */
+    float (*pmD)[4][4]; /* +0x6bfc */
+    float (*pmVP)[4][4]; /* +0x6c00 */
+    float (*pmS)[4][4]; /* +0x6c04 */
+    float (*pmh)[4][4]; /* +0x6c08 */
+    float (*pvAmbient)[4]; /* +0x6c0c */
+    float (*pvEmission)[4]; /* +0x6c10 */
+    float (*pvScreenScale)[4]; /* +0x6c14 */
+    float (*pvColorRange)[4]; /* +0x6c18 */
     int pfAlpha; /* +0x6c1c */
     int pfShininess; /* +0x6c20 */
     int pnColorMatMasks; /* +0x6c24 */
@@ -1818,18 +1818,18 @@ struct tagGLcontext {
     sceGifTag* pGifTagBuf0; /* +0x6c5c */
     sceGifTag* pGifTagBuf1; /* +0x6c60 */
     int iCurBuf; /* +0x6c64 */
-    float (*) pVBuf0[4]; /* +0x6c68 */
-    float (*) pNBuf0[4]; /* +0x6c6c */
-    float (*) pCBuf0[4]; /* +0x6c70 */
-    float (*) pTBuf0[4]; /* +0x6c74 */
-    float (*) pCBuf0_b[4]; /* +0x6c78 */
-    float (*) pTBuf0_b[4]; /* +0x6c7c */
-    float (*) pVBuf1[4]; /* +0x6c80 */
-    float (*) pNBuf1[4]; /* +0x6c84 */
-    float (*) pCBuf1[4]; /* +0x6c88 */
-    float (*) pTBuf1[4]; /* +0x6c8c */
-    float (*) pCBuf1_b[4]; /* +0x6c90 */
-    float (*) pTBuf1_b[4]; /* +0x6c94 */
+    float (*pVBuf0)[4]; /* +0x6c68 */
+    float (*pNBuf0)[4]; /* +0x6c6c */
+    float (*pCBuf0)[4]; /* +0x6c70 */
+    float (*pTBuf0)[4]; /* +0x6c74 */
+    float (*pCBuf0_b)[4]; /* +0x6c78 */
+    float (*pTBuf0_b)[4]; /* +0x6c7c */
+    float (*pVBuf1)[4]; /* +0x6c80 */
+    float (*pNBuf1)[4]; /* +0x6c84 */
+    float (*pCBuf1)[4]; /* +0x6c88 */
+    float (*pTBuf1)[4]; /* +0x6c8c */
+    float (*pCBuf1_b)[4]; /* +0x6c90 */
+    float (*pTBuf1_b)[4]; /* +0x6c94 */
     tagstVIFCode* pMSCAL; /* +0x6c98 */
     unsigned char VU1Package[10000]; /* +0x6ca0 */
 };
@@ -1975,7 +1975,7 @@ struct tag_GLtexture {
 };
 
 struct GLI_tdstVAToUpdate_ {
-    float (*) pDestPV[4]; /* +0x0 */
+    float (*pDestPV)[4]; /* +0x0 */
     GEO_tdstElementIndexedTriangles_* p_stEIT; /* +0x4 */
     MTH3D_tdstVector_* p_stPoints; /* +0x8 */
     unsigned int NbPoints; /* +0xc */
@@ -1988,7 +1988,7 @@ struct tagGLprimbuf {
     unsigned int nCount; /* +0x4 */
     unsigned char bEOP; /* +0x8 */
     int pCode; /* +0xc */
-    float (*) pData[4]; /* +0x10 */
+    float (*pData)[4]; /* +0x10 */
     int pTexUnit; /* +0x14 */
     _sceDmaTag tagDma; /* +0x20 */
     sceGifTag tagGif; /* +0x30 */
@@ -2058,8 +2058,8 @@ struct GLI_tdstLight_ {
 };
 
 struct _Sinus_Copy_ {
-    float (*) pVDest[4]; /* +0x0 */
-    float (*) pVCopy[4]; /* +0x4 */
+    float (*pVDest)[4]; /* +0x0 */
+    float (*pVCopy)[4]; /* +0x4 */
 };
 
 struct tdstElement3d_ {
@@ -2652,19 +2652,19 @@ void GLI_vProcessAgoLights(void)
  */
 void GLI_vProcessSinusEffectOnObject(GEO_tdstGeometricObject_* pObj)
 {
-    float (*) Temp[4];
+    float (*Temp)[4];
     float fFreq;
     float Mulz[4];
     float Muly[4];
     float Mulx[4];
     float Freq[4];
     unsigned int i;
-    float (*) pColors[4];
-    float (*) pUVChrome[4];
-    float (*) pUV2[4];
-    float (*) pUV1[4];
-    float (*) pVOrg[4];
-    float (*) DestSin[4];
+    float (*pColors)[4];
+    float (*pUVChrome)[4];
+    float (*pUV2)[4];
+    float (*pUV1)[4];
+    float (*pVOrg)[4];
+    float (*DestSin)[4];
     unsigned int* param0;
     float* sintable;
     float Mulz[4];
@@ -2673,13 +2673,13 @@ void GLI_vProcessSinusEffectOnObject(GEO_tdstGeometricObject_* pObj)
     float Amp[4];
     float Freq[4];
     unsigned int i;
-    float (*) pVTemp[4];
+    float (*pVTemp)[4];
     float* pVT;
     unsigned int stage;
     unsigned int NbVertices;
     unsigned int iElement;
-    float (*) pVDest[4];
-    float (*) pVCopy[4];
+    float (*pVDest)[4];
+    float (*pVCopy)[4];
     SDC_VertexArrays_* pSDC;
     /* TODO: decompile from asm/... */
 }
@@ -2776,16 +2776,16 @@ void GLI_c_DrawUnoptimizedCharacter(GEO_tdstGeometricObject_* pObj)
     unsigned int bUsingStrips;
     GEO_tdstElementIndexedTriangles_* p_stEIT;
     SDC_VertexArrays_* pSDC;
-    float (*) pUsedUV[4];
+    float (*pUsedUV)[4];
     unsigned int OrgNbStages;
     unsigned int NbVertices;
     unsigned int NbStages;
     unsigned int stage;
-    float (*) pNormals[4];
-    float (*) pUVChrome[4];
-    float (*) pUV2[4];
-    float (*) pUV1[4];
-    float (*) pVOrg[4];
+    float (*pNormals)[4];
+    float (*pUVChrome)[4];
+    float (*pUV2)[4];
+    float (*pUV1)[4];
+    float (*pVOrg)[4];
     unsigned int iElement;
     /* TODO: decompile from asm/... */
 }
@@ -2875,16 +2875,16 @@ void DisplayAllUnOptChar(void)
     unsigned int bUsingStrips;
     _UnoptimizedTransparentCharacters_* p;
     SDC_VertexArrays_* pSDC;
-    float (*) pUsedUV[4];
+    float (*pUsedUV)[4];
     unsigned int OrgNbStages;
     unsigned int NbVertices;
     unsigned int NbStages;
     unsigned int stage;
-    float (*) pNormals[4];
-    float (*) pUVChrome[4];
-    float (*) pUV2[4];
-    float (*) pUV1[4];
-    float (*) pVOrg[4];
+    float (*pNormals)[4];
+    float (*pUVChrome)[4];
+    float (*pUV2)[4];
+    float (*pUV1)[4];
+    float (*pVOrg)[4];
     unsigned int i;
     /* TODO: decompile from asm/... */
 }
@@ -3002,16 +3002,16 @@ void GLI_c_DrawUnoptimizedMap(GEO_tdstGeometricObject_* pObj)
     SDC_VertexArrays_* pSDC;
     unsigned int NbStages;
     float CurrentMatrix[4][4];
-    float (*) pUsedUV[4];
+    float (*pUsedUV)[4];
     unsigned int bUsingStrips;
     unsigned int OrgNbStages;
     unsigned int NbVertices;
     unsigned int stage;
-    float (*) pColors[4];
-    float (*) pUVChrome[4];
-    float (*) pUV2[4];
-    float (*) pUV1[4];
-    float (*) pVOrg[4];
+    float (*pColors)[4];
+    float (*pUVChrome)[4];
+    float (*pUV2)[4];
+    float (*pUV1)[4];
+    float (*pVOrg)[4];
     unsigned int iElement;
     /* TODO: decompile from asm/... */
 }
@@ -3537,11 +3537,11 @@ void GT3_DisplayAllReflections(void)
     unsigned int bUsingStrips;
     unsigned char zTst;
     unsigned int NbVertices;
-    float (*) pColors[4];
-    float (*) pUVChrome[4];
-    float (*) pUV2[4];
-    float (*) pUV1[4];
-    float (*) pVOrg[4];
+    float (*pColors)[4];
+    float (*pUVChrome)[4];
+    float (*pUV2)[4];
+    float (*pUV1)[4];
+    float (*pVOrg)[4];
     unsigned int i;
     /* TODO: decompile from asm/... */
 }
@@ -3924,18 +3924,18 @@ void GLI_c_DrawActorInstance(GEO_tdstGeometricObject_* pObj)
     float fB;
     float fA;
     unsigned int NbVertices;
-    float (*) pVOrg[4];
+    float (*pVOrg)[4];
     void* pTempData;
     unsigned int bUsingStrips;
-    float (*) pUsedUV[4];
+    float (*pUsedUV)[4];
     unsigned int NbVertices;
     unsigned int NbStages;
     unsigned int stage;
-    float (*) pNormals[4];
-    float (*) pUVChrome[4];
-    float (*) pUV2[4];
-    float (*) pUV1[4];
-    float (*) pVOrg[4];
+    float (*pNormals)[4];
+    float (*pUVChrome)[4];
+    float (*pUV2)[4];
+    float (*pUV1)[4];
+    float (*pVOrg)[4];
     C_SdlRef* pRef;
     GEO_tdstElementIndexedTriangles_* p_stEIT;
     HIE_tdstSuperObject_* Loc_CurrentActor;
@@ -3947,7 +3947,7 @@ void GLI_c_DrawActorInstance(GEO_tdstGeometricObject_* pObj)
     C_CharacterSdl* pSDL;
     unsigned int iElement;
     unsigned int* pInstanceNormals;
-    float (*) pVertexArray[4];
+    float (*pVertexArray)[4];
     _SDC_Instance_* pInstance;
     C_InstanceList* pInstanceList;
     SDC_VertexArrays_* pSDC;
@@ -4056,7 +4056,7 @@ void GLI_vUpdateAllVAs(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vRemoveCharacterVAFromProcessList(float (*) pDest[4])
+void GLI_vRemoveCharacterVAFromProcessList(float (*pDest)[4])
 {
     GLI_tdstVAToUpdate_* p;
     unsigned int i;
@@ -4086,7 +4086,7 @@ void GLI_vRemoveCharacterVAFromProcessList(float (*) pDest[4])
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vUpdateCharacterVA(float (*) pDestPV[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints, unsigned int NbDestPoints, unsigned int bNoInterpol)
+void GLI_vUpdateCharacterVA(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints, unsigned int NbDestPoints, unsigned int bNoInterpol)
 {
     unsigned int i;
     GLI_tdstVAToUpdate_* p;

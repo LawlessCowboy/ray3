@@ -459,7 +459,7 @@ struct SDC_VertexArrays_ {
     unsigned int OptType; /* +0x0 */
     unsigned int NbElements; /* +0x4 */
     GLI_tdstMaterial_* pArrayOfMaterials; /* +0x8 */
-    float (*) pArrayOfVertexArrays[4]; /* +0xc */
+    float (*pArrayOfVertexArrays)[4]; /* +0xc */
     int pVertexArraySizes; /* +0x10 */
     int pNbTrianglesPerElement; /* +0x14 */
     int pbIsTransparent; /* +0x18 */

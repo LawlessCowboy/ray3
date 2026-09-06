@@ -433,7 +433,7 @@ void GLI_vRecomputeCharacterNormalsReal(unsigned int* pInstanceNormals, GEO_tdst
     unsigned int Adder;
     short* pIndices;
     unsigned short* pIndexArray;
-    float (*) pTempArray[4];
+    float (*pTempArray)[4];
     void* pSPR;
     unsigned int i;
     /* TODO: decompile from asm/... */
@@ -494,7 +494,7 @@ void InitNormalPacker(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vUpdateCharacterVARealInterp(float (*) pDestPV[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints)
+void GLI_vUpdateCharacterVARealInterp(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints)
 {
     unsigned int offset;
     unsigned int counter;
@@ -503,7 +503,7 @@ void GLI_vUpdateCharacterVARealInterp(float (*) pDestPV[4], GEO_tdstElementIndex
     float x;
     unsigned short* pIndexArray;
     MTH3D_tdstVector_* p_stPointsArg;
-    float (*) pV[4];
+    float (*pV)[4];
     unsigned int i;
     /* TODO: decompile from asm/... */
 }

@@ -8,7 +8,6 @@
 typedef struct less less;
 typedef struct stree stree;
 typedef struct sTreeLink sTreeLink;
-typedef struct iterator iterator;
 typedef struct spair spair;
 typedef struct sTreeNode sTreeNode;
 typedef struct CLinkMicroCont CLinkMicroCont;
@@ -21,6 +20,7 @@ typedef struct CMicrophone CMicrophone;
 typedef struct V3Ds V3Ds;
 typedef struct C3DDirection C3DDirection;
 typedef struct smap smap;
+typedef struct iterator iterator;
 typedef struct C3DParam C3DParam;
 typedef struct streebase streebase;
 
@@ -46,13 +46,9 @@ struct sTreeLink {
     _Redbl m_eColor; /* +0xc */
 };
 
-struct iterator {
-    /* C++ base iterator_base at +0x0. */
-};
-
 struct spair {
-    iterator first; /* +0x0 */
-    unsigned char second; /* +0x4 */
+    int first; /* +0x0 */
+    CLinkMicro* second; /* +0x4 */
 };
 
 struct sTreeNode {
@@ -122,6 +118,10 @@ struct C3DDirection {
 
 struct smap {
     stree _Tr; /* +0x0 */
+};
+
+struct iterator {
+    /* C++ base iterator_base at +0x0. */
 };
 
 struct C3DParam {
