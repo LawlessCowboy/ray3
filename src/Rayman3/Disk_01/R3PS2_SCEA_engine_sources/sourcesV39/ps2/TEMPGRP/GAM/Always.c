@@ -1526,7 +1526,7 @@ int g_bMinimalLoading;
  */
 HIE_tdstSuperObject_* fn_hGetCharacterInAlwaysActiveCharacterNode(tdstAlwaysActiveCharacter_* hCharNode)
 {
-    /* TODO: decompile from asm/... */
+    return *(HIE_tdstSuperObject_* *)((char *)hCharNode + 0xc);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1311–1327 */

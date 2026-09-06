@@ -66,7 +66,11 @@ void VID_fn_vPlayVideoNow(void)
  */
 void VID_fn_vPlayVideoIfAskedAfterLevel(void)
 {
-    /* TODO: decompile from asm/... */
+    if (VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel != 0)
+    {
+        VIDSPE_fn_vPlayVideoNow(0, 1, -1);
+        VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\VID_Pub.c lines 170–171 */

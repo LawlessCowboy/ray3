@@ -1442,7 +1442,7 @@ void MC_fn_hGetFirstMainCharNode(void)
  */
 HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode)
 {
-    /* TODO: decompile from asm/... */
+    return hMainCharNode->hCharacter;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 108–108 */
@@ -1454,5 +1454,5 @@ HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharact
  */
 void MC_fn_vSetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode, HIE_tdstSuperObject_* hCharacter)
 {
-    /* TODO: decompile from asm/... */
+    hMainCharNode->hCharacter = hCharacter;
 }

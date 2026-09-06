@@ -17,6 +17,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/engmain.c",
       "status": "MATCH"
     },
+    "0x0012f490": {
+      "address": "0x0012f490",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "VID_fn_vPlayVideoIfAskedAfterLevel",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/VID_Pub.c",
+      "status": "MATCH"
+    },
     "0x00131470": {
       "address": "0x00131470",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -225,6 +233,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
       "status": "MATCH"
     },
+    "0x0025b150": {
+      "address": "0x0025b150",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_hGetCharacterInAlwaysActiveCharacterNode",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Always.c",
+      "status": "MATCH"
+    },
     "0x0025e680": {
       "address": "0x0025e680",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -293,6 +309,22 @@
       "address": "0x002654d0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "MC_fn_hGetNextMainCharNode",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/MainChar.c",
+      "status": "MATCH"
+    },
+    "0x002654f0": {
+      "address": "0x002654f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_fn_hGetCharacterInMainCharacterNode",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/MainChar.c",
+      "status": "MATCH"
+    },
+    "0x00265500": {
+      "address": "0x00265500",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_fn_vSetCharacterInMainCharacterNode",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/MainChar.c",
       "status": "MATCH"
@@ -479,6 +511,14 @@
       "name": "IPT_fn_vFirstInitInput",
       "size": 48,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/p5/ipt_scpt.c",
+      "status": "MATCH"
+    },
+    "0x00318dc0": {
+      "address": "0x00318dc0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2_fn_vLeaveCriticalSection",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ps2/ps2critsect.c",
       "status": "MATCH"
     }
   },

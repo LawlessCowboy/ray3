@@ -51,7 +51,11 @@ int channel_debug_printf(void)
  */
 void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stCS->ReentrancyCount-- == 0)
+    {
+        p_stCS->OwnerThreadId = -1;
+        SignalSema(p_stCS->Sid);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2critsect.c lines 36–68 */
