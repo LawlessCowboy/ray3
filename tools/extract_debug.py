@@ -926,13 +926,20 @@ class DebugParser:
                 # the role.  For an indirect return MWCC omits the role, so
                 # this byte is already the following name-record marker.
                 role_byte = d[next_i - 1]
+                # Pointer returns in the linked MWCC stream may use a
+                # pointer-specific trailing attribute (for example ``03 23``)
+                # rather than the scalar 13/43 return role.  At a validated
+                # function entry, the first indirect descriptor before the
+                # name is necessarily the return type, matching the scalar
+                # 55-record fallback above.
+                is_first_pending_descriptor = (
+                    self._cur_func is None and pending_function_entry
+                    and not saw_return_descriptor
+                )
                 is_return = (
                     role_byte in (ROLE_RETURN, ROLE_RETURN_ALT,
                                   ROLE_RETURN_AGGREGATE)
-                    or (self._cur_func is None
-                        and pending_function_entry
-                        and not saw_return_descriptor
-                        and role_byte in (0x07, 0x38, 0x08))
+                    or is_first_pending_descriptor
                 )
                 if is_return:
                     saw_return_descriptor = True

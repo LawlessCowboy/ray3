@@ -35,9 +35,9 @@ tdstDataPath_ g_stDataPath;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_szGetGameDataPath(void)
+tdstDataPath_* fn_szGetGameDataPath(void)
 {
-    /* TODO: decompile from asm/... */
+    return &g_stDataPath;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\DPT\DPT.c lines 39–50 */

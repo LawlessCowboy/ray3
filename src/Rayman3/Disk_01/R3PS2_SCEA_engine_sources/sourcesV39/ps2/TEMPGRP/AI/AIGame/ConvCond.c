@@ -2956,8 +2956,15 @@ tdstConditionEntry_ a_stConditionTable[178];
  */
 void fn_p_stEvalCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    int lValue;
-    /* TODO: decompile from asm/... */
+    int lValue = 0;
+    int bValue;
+    tdstNodeInterpret_* p_stNextTree;
+
+    p_stNextTree = (tdstNodeInterpret_ *)((unsigned char *)p_stTree + 8);
+    a_stConditionTable[(unsigned int)p_stTree->uDummy.uId.eCondId].p_fn_p_stConditionFunction(p_SuperObjPerso, p_stNextTree, &lValue);
+    bValue = lValue ? 1 : 0;
+    *(int *)p_stValue = bValue;
+    *(tdeVariableType_ *)((unsigned char *)p_stValue + 0xC) = E_vt_Integer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvCond.c lines 126–127 */
@@ -2970,5 +2977,5 @@ void fn_p_stEvalCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpr
  */
 unsigned char fn_ucGetConditionUltraOperator(tdeCondId_ eCondId)
 {
-    /* TODO: decompile from asm/... */
+    return a_stConditionTable[eCondId].bUltraCondtionFlag;
 }

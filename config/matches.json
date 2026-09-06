@@ -169,6 +169,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
       "status": "MATCH"
     },
+    "0x00211590": {
+      "address": "0x00211590",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalCondition",
+      "size": 100,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvCond.c",
+      "status": "MATCH"
+    },
+    "0x00211600": {
+      "address": "0x00211600",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetConditionUltraOperator",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvCond.c",
+      "status": "MATCH"
+    },
     "0x00211890": {
       "address": "0x00211890",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -231,6 +247,14 @@
       "name": "COL_fn_vExploreOctreeWithBox",
       "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/OctreeGO.c",
+      "status": "MATCH"
+    },
+    "0x00258030": {
+      "address": "0x00258030",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_szGetGameDataPath",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/DPT/DPT.c",
       "status": "MATCH"
     },
     "0x00258400": {
@@ -953,6 +977,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
       "status": "MATCH"
     },
+    "0x002b3530": {
+      "address": "0x002b3530",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vSetModifierIntensity",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
+      "status": "MATCH"
+    },
+    "0x002b35e0": {
+      "address": "0x002b35e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_ClearZBufferRegion",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
+      "status": "MATCH"
+    },
     "0x002bd5e0": {
       "address": "0x002bd5e0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -1007,6 +1047,22 @@
       "name": "HMU_fn_vCreateCriticalSection",
       "size": 48,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ino/joyinit.c",
+      "status": "MATCH"
+    },
+    "0x002f1bd0": {
+      "address": "0x002f1bd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_hGetPortalCamera",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/Ps2/tempgrp/IPO/Specif/IPO.c",
+      "status": "MATCH"
+    },
+    "0x002f1be0": {
+      "address": "0x002f1be0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPO_fn_hGetRadiosity",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/Ps2/tempgrp/IPO/Specif/IPO.c",
       "status": "MATCH"
     },
     "0x002f5b70": {
@@ -1071,6 +1127,38 @@
       "name": "SAI_fn_vFirstInit",
       "size": 56,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SAI/SAI_Priv.c",
+      "status": "MATCH"
+    },
+    "0x00319b60": {
+      "address": "0x00319b60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SAI_fn_bInsertBoolInTable",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/SectList.c",
+      "status": "MATCH"
+    },
+    "0x00319b80": {
+      "address": "0x00319b80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SECT_fnvInitGlobalsForActivity",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/SectList.c",
+      "status": "MATCH"
+    },
+    "0x00319b90": {
+      "address": "0x00319b90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SECT_fn_hGetActiveSectorListNext",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/SectList.c",
+      "status": "MATCH"
+    },
+    "0x00319ba0": {
+      "address": "0x00319ba0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SECT_fn_hGetActiveSectorListHead",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/SectList.c",
       "status": "MATCH"
     },
     "0x0031c310": {

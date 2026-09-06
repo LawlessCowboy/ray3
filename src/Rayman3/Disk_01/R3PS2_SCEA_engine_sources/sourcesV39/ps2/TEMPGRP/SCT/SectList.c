@@ -39,6 +39,15 @@ typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
 typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
+typedef struct SAI_tdstInternalStructure_ SAI_tdstInternalStructure_;
+
+struct SAI_tdstInternalStructure_ {
+    void* p_stFirstEntry;
+    void* p_stLastEntry;
+};
+
+extern SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
+extern unsigned char SAI_fn_bInsertAnElementInList(SAI_tdstInternalStructure_*, void*, unsigned int, unsigned short, unsigned short);
 
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
@@ -298,7 +307,7 @@ unsigned short SECT_g_uwActiveSectorList_NumberOfElements;
  */
 unsigned char SAI_fn_bInsertBoolInTable(void* _p_vValue, unsigned char ucMask, unsigned short _eFlags)
 {
-    /* TODO: decompile from asm/... */
+    return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, ucMask, 0x8000, _eFlags);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 127–129 */
@@ -311,7 +320,7 @@ unsigned char SAI_fn_bInsertBoolInTable(void* _p_vValue, unsigned char ucMask, u
  */
 void SECT_fnvInitGlobalsForActivity(void)
 {
-    /* TODO: decompile from asm/... */
+    SECT_g_hActiveSectorList_Head = SECT_g_hActiveSectorList_Tail = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 121–122 */
@@ -324,7 +333,7 @@ void SECT_fnvInitGlobalsForActivity(void)
  */
 HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListNext(HIE_tdstSuperObject_* _hCurrentSO)
 {
-    /* TODO: decompile from asm/... */
+    return _hCurrentSO->hLinkedObject.p_stSector->h_NextSectorInList;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 116–116 */
@@ -334,9 +343,9 @@ HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListNext(HIE_tdstSuperObject_* _hC
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SECT_fn_hGetActiveSectorListHead(void)
+HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListHead(void)
 {
-    /* TODO: decompile from asm/... */
+    return (HIE_tdstSuperObject_ *)SECT_g_hActiveSectorList_Head;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 97–104 */

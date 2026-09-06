@@ -792,7 +792,7 @@ void fn_vUpdateIsFfbTable(unsigned char _ucJoyNb)
  */
 HIE_tdstSuperObject_* fn_hGetPortalCamera(IPO_tdstInstanciatedPhysicalObject_* hIPO)
 {
-    /* TODO: decompile from asm/... */
+    return hIPO->hPortalCamera;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\Ps2\tempgrp\IPO\Specif\IPO.c lines 112–112 */
@@ -802,7 +802,7 @@ HIE_tdstSuperObject_* fn_hGetPortalCamera(IPO_tdstInstanciatedPhysicalObject_* h
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void IPO_fn_hGetRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject)
+int IPO_fn_hGetRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject)
 {
-    /* TODO: decompile from asm/... */
+    return _hInstanciatedPhysicalObject->_hCurrentRadiosity;
 }

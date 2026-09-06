@@ -136,7 +136,8 @@ void fn_RemoveTextureFromMaterial(void)
  */
 void GLI_ClearZBufferRegion(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2glDepthMask(1);
+    PS2glClear(0xD56);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\GliPs2Unused.c lines 205–205 */
