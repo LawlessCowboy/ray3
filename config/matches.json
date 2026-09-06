@@ -119,6 +119,96 @@
       "status": "MISMATCH",
       "target_size": 8,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ee5e0",
+      "candidate_size": 8,
+      "first_difference": 4,
+      "implementation": "unsigned char HMU_fn_bIsInitialized(void)\n{\n    return HMU_g_bHMU_CS_Created;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "HMU_fn_bIsInitialized",
+      "reason": "Direct getter still resolves to the wrong gp-relative offset (-0x6610 vs target -0x6614), indicating a symbol/layout mismatch in this translation unit rather than a missing source statement.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/HMU/Scr/HMU_Sync.c",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b1210",
+      "candidate_size": 8,
+      "first_difference": 4,
+      "implementation": "void GLI_fn_vSetCameraMirrorMode(GLI_tdstCamera_* p_stCam, unsigned char _bMirrorMode)\n{\n    p_stCam->bCameraIsMirrored = _bMirrorMode;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "GLI_fn_vSetCameraMirrorMode",
+      "reason": "Store shape is correct but compiler emits offset 0xD8 instead of declared 0xF0, indicating a struct-layout mismatch in the recovered GLI_tdstCamera_ definition rather than function logic.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002223c0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "tdstNodeInterpret_* fn_p_stNoVMTKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_stNoVMTKeyWord",
+      "reason": "Current one-line source shape is too small; target emits a 20-byte body with store/addiu/daddu sequence, so this needs a fuller keyword-wrapper reconstruction.",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00222400",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "tdstNodeInterpret_* fn_p_stNoGraphKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_stNoGraphKeyWord",
+      "reason": "Current one-line source shape is too small; target emits a 20-byte body with store/addiu/daddu sequence, so this needs a fuller keyword-wrapper reconstruction.",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00222420",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "tdstNodeInterpret_* fn_p_stCapsNullKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_stCapsNullKeyWord",
+      "reason": "Current one-line source shape is too small; target emits a 20-byte body with store/addiu/daddu sequence, so this needs a fuller keyword-wrapper reconstruction.",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00222440",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "tdstNodeInterpret_* fn_p_stEmptyTextKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_p_stEmptyTextKeyWord",
+      "reason": "Current source shape does not match the 24-byte target body; this needs a fuller keyword-wrapper reconstruction.",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MISMATCH",
+      "target_size": 24,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -1811,6 +1901,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Init_Gli.c",
       "status": "MATCH"
     },
+    "0x002a8a20": {
+      "address": "0x002a8a20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_xFogGetBlendFar",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "status": "MATCH"
+    },
     "0x002a8a80": {
       "address": "0x002a8a80",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -2089,6 +2187,14 @@
       "name": "GLI_xGetViewportCamera",
       "size": 60,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
+      "status": "MATCH"
+    },
+    "0x002b3520": {
+      "address": "0x002b3520",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vSetDynShadowState",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/ModifierVol.c",
       "status": "MATCH"
     },
     "0x002b3530": {
