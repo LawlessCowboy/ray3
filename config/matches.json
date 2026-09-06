@@ -73,6 +73,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndslider.cpp",
       "status": "MATCH"
     },
+    "0x001e0d10": {
+      "address": "0x001e0d10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "AGO2_MEM_Init",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO2_Mem.c",
+      "status": "MATCH"
+    },
     "0x001ea460": {
       "address": "0x001ea460",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -777,6 +785,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/cineinfo.c",
       "status": "MATCH"
     },
+    "0x0026dad0": {
+      "address": "0x0026dad0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vGetPersoSightAxisSystem",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/cineinfo.c",
+      "status": "MATCH"
+    },
     "0x0026ec70": {
       "address": "0x0026ec70",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -793,6 +809,78 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
       "status": "MATCH"
     },
+    "0x00270750": {
+      "address": "0x00270750",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bMSLightGetPulse",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x00270760": {
+      "address": "0x00270760",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMSLightSetPulse",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x00270770": {
+      "address": "0x00270770",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bMSLightGetGiroPhare",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x00270780": {
+      "address": "0x00270780",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMSLightSetGiroPhare",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x00270790": {
+      "address": "0x00270790",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bMSLightGetOnlyLocalLight",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x002707a0": {
+      "address": "0x002707a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMSLightSetOnlyLocalLight",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x002707b0": {
+      "address": "0x002707b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bMSLightGetLocalLight",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x002707c0": {
+      "address": "0x002707c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMSLightSetLocalLight",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x002707d0": {
+      "address": "0x002707d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stMSLightGetLight",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
     "0x00270810": {
       "address": "0x00270810",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -806,6 +894,38 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_vMSLightSetLittleAlpha",
       "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x002708c0": {
+      "address": "0x002708c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMSLightSetOnOff",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x002708d0": {
+      "address": "0x002708d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucMSLightGetOnOff",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x00270900": {
+      "address": "0x00270900",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMSLightSetTypeOfLight",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x00270910": {
+      "address": "0x00270910",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_hMSLightGetLightNodeInSector",
+      "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
       "status": "MATCH"
     },

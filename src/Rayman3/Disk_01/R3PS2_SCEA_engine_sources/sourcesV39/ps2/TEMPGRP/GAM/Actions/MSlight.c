@@ -92,6 +92,9 @@ typedef struct tdstFrame3d_ tdstFrame3d_;
 
 void GLI_vGetLightAlphas(GLI_tdstLight_* p_stLight, float* p_xLittleAlpha, float* p_xBigAlpha);
 void GLI_vSetLightAlphas(GLI_tdstLight_* p_stLight, float xLittleAlpha, float xBigAlpha);
+void GLI_xSetLightState(GLI_tdstLight_* p_stLight, int ucOnOff);
+void GLI_xGetLightState(GLI_tdstLight_* p_stLight, unsigned char* p_ucOnOff);
+void GLI_vSetLightType(GLI_tdstLight_* p_stLight, int lTypeOfLight);
 
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
@@ -944,7 +947,7 @@ float fn_xComputeAngleOfPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
  */
 unsigned char fn_bMSLightGetPulse(tdstMSLight_* h_MSLight)
 {
-    /* TODO: decompile from asm/... */
+    return h_MSLight->bPulsing;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1091–1094 */
@@ -958,7 +961,9 @@ unsigned char fn_bMSLightGetPulse(tdstMSLight_* h_MSLight)
  */
 void fn_vMSLightSetPulse(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep, float xMaxRange)
 {
-    /* TODO: decompile from asm/... */
+    h_MSLight->bPulsing = bOnOff;
+    h_MSLight->xStepPulse = xStep;
+    h_MSLight->xMaxRangePulse = xMaxRange;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1087–1087 */
@@ -970,7 +975,7 @@ void fn_vMSLightSetPulse(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xS
  */
 unsigned char fn_bMSLightGetGiroPhare(tdstMSLight_* h_MSLight)
 {
-    /* TODO: decompile from asm/... */
+    return h_MSLight->bGiroPhare;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1080–1082 */
@@ -983,7 +988,8 @@ unsigned char fn_bMSLightGetGiroPhare(tdstMSLight_* h_MSLight)
  */
 void fn_vMSLightSetGiroPhare(tdstMSLight_* h_MSLight, unsigned char bOnOff, float xStep)
 {
-    /* TODO: decompile from asm/... */
+    h_MSLight->bGiroPhare = bOnOff;
+    h_MSLight->xStepGiro = xStep;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1076–1076 */
@@ -995,7 +1001,7 @@ void fn_vMSLightSetGiroPhare(tdstMSLight_* h_MSLight, unsigned char bOnOff, floa
  */
 unsigned char fn_bMSLightGetOnlyLocalLight(tdstMSLight_* h_MSLight)
 {
-    /* TODO: decompile from asm/... */
+    return h_MSLight->bOnlyLocalLight;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1072–1072 */
@@ -1007,7 +1013,7 @@ unsigned char fn_bMSLightGetOnlyLocalLight(tdstMSLight_* h_MSLight)
  */
 void fn_vMSLightSetOnlyLocalLight(tdstMSLight_* h_MSLight, unsigned char bOnlyLocalLight)
 {
-    /* TODO: decompile from asm/... */
+    h_MSLight->bOnlyLocalLight = bOnlyLocalLight;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1068–1068 */
@@ -1019,7 +1025,7 @@ void fn_vMSLightSetOnlyLocalLight(tdstMSLight_* h_MSLight, unsigned char bOnlyLo
  */
 unsigned char fn_bMSLightGetLocalLight(tdstMSLight_* h_MSLight)
 {
-    /* TODO: decompile from asm/... */
+    return h_MSLight->bLocalLight;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1064–1064 */
@@ -1031,7 +1037,7 @@ unsigned char fn_bMSLightGetLocalLight(tdstMSLight_* h_MSLight)
  */
 void fn_vMSLightSetLocalLight(tdstMSLight_* h_MSLight, unsigned char bLocalLight)
 {
-    /* TODO: decompile from asm/... */
+    h_MSLight->bLocalLight = bLocalLight;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1060–1060 */
@@ -1043,7 +1049,7 @@ void fn_vMSLightSetLocalLight(tdstMSLight_* h_MSLight, unsigned char bLocalLight
  */
 GLI_tdstLight_* fn_p_stMSLightGetLight(tdstMSLight_* h_MSLight)
 {
-    /* TODO: decompile from asm/... */
+    return h_MSLight->p_stLight;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1047–1055 */
@@ -1130,7 +1136,7 @@ void fn_vMSLightSetNearFar(tdstMSLight_* h_MSLight, float xNear, float xFar)
  */
 void fn_vMSLightSetOnOff(tdstMSLight_* h_MSLight, unsigned char ucOnOff)
 {
-    /* TODO: decompile from asm/... */
+    GLI_xSetLightState(h_MSLight->p_stLight, (int)ucOnOff);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1003–1008 */
@@ -1146,7 +1152,8 @@ void fn_vMSLightSetOnOff(tdstMSLight_* h_MSLight, unsigned char ucOnOff)
 unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight)
 {
     int lOnOff;
-    /* TODO: decompile from asm/... */
+    GLI_xGetLightState(h_MSLight->p_stLight, (unsigned char*)&lOnOff);
+    return lOnOff;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 999–999 */
@@ -1158,7 +1165,7 @@ unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight)
  */
 void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, int lTypeOfLight)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vSetLightType(h_MSLight->p_stLight, (unsigned short)lTypeOfLight);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 714–714 */
@@ -1170,7 +1177,7 @@ void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, int lTypeOfLight)
  */
 SECT_tdstListOfDNMLights_* fn_hMSLightGetLightNodeInSector(tdstMSLight_* _hMSLight)
 {
-    /* TODO: decompile from asm/... */
+    return _hMSLight->hLightInSector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 685–698 */

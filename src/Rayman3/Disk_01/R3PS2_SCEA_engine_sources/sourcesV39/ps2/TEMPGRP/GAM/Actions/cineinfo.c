@@ -1766,7 +1766,15 @@ void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo)
  */
 void fn_vGetPersoSightAxisSystem(tdstCineinfo_* _hCineinfo, MTH3D_tdstVector_* _p_stSightAxis, MTH3D_tdstVector_* _p_stFirstComplementaryAxis, MTH3D_tdstVector_* _p_stSecondComplementaryAxis)
 {
-    /* TODO: decompile from asm/... */
+    *(unsigned int*)&_p_stSightAxis->xX = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SightAxis.xX;
+    *(unsigned int*)&_p_stSightAxis->xY = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SightAxis.xY;
+    *(unsigned int*)&_p_stSightAxis->xZ = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SightAxis.xZ;
+    *(unsigned int*)&_p_stFirstComplementaryAxis->xX = *(unsigned int*)&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis.xX;
+    *(unsigned int*)&_p_stFirstComplementaryAxis->xY = *(unsigned int*)&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis.xY;
+    *(unsigned int*)&_p_stFirstComplementaryAxis->xZ = *(unsigned int*)&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis.xZ;
+    *(unsigned int*)&_p_stSecondComplementaryAxis->xX = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis.xX;
+    *(unsigned int*)&_p_stSecondComplementaryAxis->xY = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis.xY;
+    *(unsigned int*)&_p_stSecondComplementaryAxis->xZ = *(unsigned int*)&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis.xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 750–759 */

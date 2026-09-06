@@ -242,7 +242,12 @@ void AGO2_MEM_Shrink(void)
  */
 void AGO2_MEM_Init(void)
 {
-    /* TODO: decompile from asm/... */
+    g_AGO2_MEM_CurrentHandle = 1;
+    g_AGO2_MEM_NumberOfFreeZones = 1;
+    g_AGO2_MEM_FreeZones[0].pStart = (int)g_AGO2_Main_Memory;
+    g_AGO2_MEM_FreeZones[0].pEnd = (int)&g_AGO2_MEM_FreeZones;
+    g_AGO2_MEM_NbOfAllocatedBlocs = 0;
+    g_AGO2_MEM_FreeZones[0].Size = 0x100000;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2_Mem.c lines 251–260 */
