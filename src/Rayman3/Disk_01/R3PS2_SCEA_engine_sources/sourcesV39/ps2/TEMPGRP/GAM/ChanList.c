@@ -1190,7 +1190,7 @@ unsigned short g_DEMO_KeybTest;
  */
 void fn_vSetCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
 {
-    /* TODO: decompile from asm/... */
+    _p_stObject->h_StandardGame->ubf32Capabilities = _ubf32Capabilities;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 543–546 */

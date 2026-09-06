@@ -1405,7 +1405,7 @@ DNM_stDynamics* (*DNM_p_stDynamicsCameraMechanics)(DNM_stDynamics*, HIE_tdstSupe
  */
 unsigned char fn_ucGetHitPoints(tdstEngineObject_* _p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    return _p_stObject->h_StandardGame->ucHitPoints;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 325–488 */

@@ -49,7 +49,7 @@ unsigned int GLI_gsCurrentMemoryChannel;
  */
 void GLI_TEX_vSignalCurrentMemoryChannel(unsigned char ucCurrentChannel)
 {
-    /* TODO: decompile from asm/... */
+    GLI_gsCurrentMemoryChannel = ucCurrentChannel;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\TexArray.c lines 153–162 */
@@ -82,7 +82,7 @@ void GLI_vUnCompressExistantTexture(void)
  */
 int GLI_lGetBigestSizeOfTexture(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0x40400;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\TexArray.c lines 80–85 */

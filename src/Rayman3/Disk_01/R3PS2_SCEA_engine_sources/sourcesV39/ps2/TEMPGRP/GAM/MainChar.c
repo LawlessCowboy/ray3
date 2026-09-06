@@ -1428,9 +1428,9 @@ tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMain
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MC_fn_hGetFirstMainCharNode(void)
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_stEngineStructure.hMainCharacterList.hFirstElementDyn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 113–113 */

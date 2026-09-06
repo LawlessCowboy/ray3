@@ -303,8 +303,10 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_pad_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
+    unsigned char _extractor_pad_01[8]; /* implicitly added by extractor; +0x60..0x67 */
 };
 
 struct MTH3D_tdstMatrix_ {

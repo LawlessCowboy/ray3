@@ -1199,9 +1199,9 @@ unsigned char g_bHighSpeed;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DNM_fn_eIdentityCardGetType(void* _hCurrent)
+int DNM_fn_eIdentityCardGetType(void* _hCurrent)
 {
-    /* TODO: decompile from asm/... */
+    return ((DNM_stDynamicsBaseBlock*)_hCurrent)->m_lObjectType;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 1062–1101 */

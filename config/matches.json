@@ -539,6 +539,66 @@
       "status": "MISMATCH",
       "target_size": 44,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ee5e0",
+      "candidate_size": 8,
+      "first_difference": 4,
+      "implementation": "unsigned char HMU_fn_bIsInitialized(void)\n{\n    return HMU_g_bHMU_CS_Created;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "HMU_fn_bIsInitialized",
+      "reason": "Body is already correct; only the GP-relative symbol offset differs by 4 bytes, which points to declaration/layout drift rather than a source logic issue.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/HMU/Scr/HMU_Sync.c",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ee5f0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void HMU_fn_vLeaveCriticalSection(void)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "HMU_fn_vLeaveCriticalSection",
+      "reason": "Target is a relocation-based tail jump through a global-address setup; the source stub shape is not enough to reproduce the exact wrapper without identifying the callee/address pattern.",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/HMU/Scr/HMU_Sync.c",
+      "status": "MISMATCH",
+      "target_size": 12,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0025b070",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "tdstAlwaysActiveCharacter_* fn_hGetNextAlwaysActiveCharNode(tdstAlwaysActiveCharacter_* hCharNode, unsigned char bTestDynamicAlwaysActive)\n{\n    tdstAlwaysActiveCharacter_* hNextCharNode;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "fn_hGetNextAlwaysActiveCharNode",
+      "reason": "Mismatch is control-flow shape: target walks the always-active list with a null-guard and loop, while candidate is still stubbed.",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/AlwAct.c",
+      "status": "MISMATCH",
+      "target_size": 56,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0027feb0",
+      "candidate_size": 12,
+      "first_difference": 0,
+      "implementation": "int GAM_fn_iIsGamePaused(void)\n{\n    return g_stEngineStructure.bEngineIsInPaused;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "GAM_fn_iIsGamePaused",
+      "reason": "Residual mismatch is source-layout/codegen related: target uses gp-relative access to g_stEngineStructure, while the local TU definition drives an absolute-address load in the current source form.",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/gamopt.c",
+      "status": "MISMATCH",
+      "target_size": 12,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -1071,12 +1131,36 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/fmn/cdread.c",
       "status": "MATCH"
     },
+    "0x00259530": {
+      "address": "0x00259530",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_vInitActorsToLoad",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
+    "0x00259610": {
+      "address": "0x00259610",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_vInitFamiliesToLoad",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
     "0x00259fa0": {
       "address": "0x00259fa0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_vInitAllObjectsWhenNewGameStart",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
+    "0x0025b0b0": {
+      "address": "0x0025b0b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_hGetFirstAlwaysActiveCharNode",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/AlwAct.c",
       "status": "MATCH"
     },
     "0x0025b150": {
@@ -1101,6 +1185,14 @@
       "name": "fn_ulGetCapabilities",
       "size": 12,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Caps.c",
+      "status": "MATCH"
+    },
+    "0x0025d5b0": {
+      "address": "0x0025d5b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vSetCapabilities",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ChanList.c",
       "status": "MATCH"
     },
     "0x0025e680": {
@@ -1215,6 +1307,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/HitPts.c",
       "status": "MATCH"
     },
+    "0x00262510": {
+      "address": "0x00262510",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetHitPoints",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ia_dnm.c",
+      "status": "MATCH"
+    },
     "0x002650a0": {
       "address": "0x002650a0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -1244,6 +1344,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "MC_fn_hGetNextMainCharNode",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/MainChar.c",
+      "status": "MATCH"
+    },
+    "0x002654e0": {
+      "address": "0x002654e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_fn_hGetFirstMainCharNode",
+      "size": 12,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/MainChar.c",
       "status": "MATCH"
     },
@@ -1935,6 +2043,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/StdGame.c",
       "status": "MATCH"
     },
+    "0x00274b90": {
+      "address": "0x00274b90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ulStdGameSizeOf",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Fon/fonfont.c",
+      "status": "MATCH"
+    },
     "0x00274be0": {
       "address": "0x00274be0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -2431,6 +2547,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Tex.c",
       "status": "MATCH"
     },
+    "0x002ab140": {
+      "address": "0x002ab140",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_TEX_vSignalCurrentMemoryChannel",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/TexArray.c",
+      "status": "MATCH"
+    },
+    "0x002ab1d0": {
+      "address": "0x002ab1d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_lGetBigestSizeOfTexture",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/TexArray.c",
+      "status": "MATCH"
+    },
     "0x002ab320": {
       "address": "0x002ab320",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -2645,6 +2777,14 @@
       "name": "GLI_fnl_InitDll",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
+      "status": "MATCH"
+    },
+    "0x002bce40": {
+      "address": "0x002bce40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vEnd2DSpritesWithUVs",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSprites.c",
       "status": "MATCH"
     },
     "0x002bd5e0": {
@@ -3101,6 +3241,14 @@
       "name": "MAT_fn_vInitTransformationWithNormQuaternion",
       "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsppla.c",
+      "status": "MATCH"
+    },
+    "0x00302c80": {
+      "address": "0x00302c80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "DNM_fn_eIdentityCardGetType",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECBase.c",
       "status": "MATCH"
     },
     "0x00314bd0": {

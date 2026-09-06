@@ -86,8 +86,14 @@ extraction; ordinary function-body edits keep the cached index valid.
 Each indexed function has an estimated difficulty and recommended model based
 on its target instruction count, branches, calls, memory pressure, FP/VU use,
 debug-line complexity, and language. This is triage only: escalate when the
-first mismatch reveals hidden complexity. The coordinator can inspect buckets
-with `python3 tools/match.py worklist` and assign a model directly:
+first mismatch reveals hidden complexity. Difficulty labels are not eligibility
+restrictions: an assigned `trivial` function must still be attempted and must
+not be refused merely because it is not an obvious return wrapper. Such
+functions may contain branches, field accesses, calls, or aggregate copies.
+Workers may also take moderately complex functions when source-file context
+makes that efficient, escalating only when evidence warrants it. The
+coordinator can inspect buckets with `python3 tools/match.py worklist` and
+assign a model directly:
 
 ```sh
 python3 tools/match.py list --unmatched --compileable --model gpt-5.6-luna

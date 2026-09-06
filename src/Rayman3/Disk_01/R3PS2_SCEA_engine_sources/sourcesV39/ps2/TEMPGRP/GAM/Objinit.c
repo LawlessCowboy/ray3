@@ -1550,7 +1550,7 @@ void GAM_fn_vSetActorToLoad(tdstEngineObject_* p_stEngineObject)
  */
 void GAM_fn_vInitActorsToLoad(void)
 {
-    /* TODO: decompile from asm/... */
+    GAM_g_stTheListOfActorsToLoad.u32NbElements = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 972–973 */
@@ -1594,7 +1594,7 @@ void GAM_fn_vSetFamilyToLoad(tdstFamilyList_* h_Family)
  */
 void GAM_fn_vInitFamiliesToLoad(void)
 {
-    /* TODO: decompile from asm/... */
+    GAM_g_stTheListOfFamiliesToLoad.u32NbElements = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 761–879 */

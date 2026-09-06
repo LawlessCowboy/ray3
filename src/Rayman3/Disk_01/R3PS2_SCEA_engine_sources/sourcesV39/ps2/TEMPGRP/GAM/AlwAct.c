@@ -1463,9 +1463,9 @@ tdstAlwaysActiveCharacter_* fn_hGetNextAlwaysActiveCharNode(tdstAlwaysActiveChar
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_hGetFirstAlwaysActiveCharNode(void)
+tdstAlwaysActiveCharacter_* fn_hGetFirstAlwaysActiveCharNode(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 103–113 */

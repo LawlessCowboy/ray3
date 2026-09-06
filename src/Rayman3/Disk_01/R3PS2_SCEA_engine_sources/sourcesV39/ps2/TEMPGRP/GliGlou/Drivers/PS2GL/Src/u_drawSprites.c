@@ -1597,7 +1597,7 @@ void GLI_vDisplayWorldTriangle(GLD_tdstViewportAttributes_* _p_stViewport, float
  */
 void GLI_vEnd2DSpritesWithUVs(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vEndNewSprite();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSprites.c lines 684–699 */
@@ -1617,7 +1617,16 @@ void GLI_vEnd2DSpritesWithUVs(void)
  */
 void GLI_vEndWorldSprites(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vEndNewSprite();
+
+    if (GLI_BIG_GLOBALS_lHierachDrawMask)
+    {
+        PS2glColor4f(0.5f, 1.0f, 0.5f, 1.0f);
+        PS2glEnd();
+        GLI_BIG_GLOBALS_lCurrentDrawMask = 0;
+        GLI_BIG_GLOBALS_hCurrentMaterial = 0;
+        GLI_BIG_GLOBALS_lHierachDrawMask = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSprites.c lines 184–272 */
