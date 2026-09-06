@@ -59,6 +59,51 @@
       "status": "MISMATCH",
       "target_size": 8,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0028dd30",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "unsigned int fn_uiOpenStream(char* szFilename)\n{\n    return 0;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "fn_uiOpenStream",
+      "reason": "Candidate currently returns 0, but diff shows the target is a tail jump to another helper with a different argument setup; need the callee identity or wrapper shape before matching.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a9e90",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GLI_xGetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int* p_lSpecularExponent, GEO_tdstColor_* p_stColor)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "GLI_xGetMaterialSpecularCoef",
+      "reason": "Initial source shape does not yet match the target; verification fails at offset +0x0 with line-table differences, so this needs a closer decompile pass.",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MISMATCH",
+      "target_size": 44,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a9ec0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExponent, GEO_tdstColor_* p_stColor)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.4-mini",
+      "name": "GLI_xSetMaterialSpecularCoef",
+      "reason": "Initial source shape does not yet match the target; verification fails at offset +0x0 with line-table differences, so this needs a closer decompile pass.",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MISMATCH",
+      "target_size": 96,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -1487,6 +1532,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/LoadGame.c",
       "status": "MATCH"
     },
+    "0x00280ef0": {
+      "address": "0x00280ef0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_vReadUbiIniFileForGame",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/LoadGame.c",
+      "status": "MATCH"
+    },
     "0x00282aa0": {
       "address": "0x00282aa0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -1787,6 +1840,14 @@
       "address": "0x002a9d20",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_lGetMaterialNumberOfAnimatedTexture",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
+    "0x002a9e70": {
+      "address": "0x002a9e70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vSetMaterialAsChromed",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"

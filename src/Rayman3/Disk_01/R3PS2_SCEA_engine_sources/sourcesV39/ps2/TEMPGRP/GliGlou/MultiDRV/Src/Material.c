@@ -1105,7 +1105,7 @@ void GLI_vRefreshAllCyclingTextures(float fCoefOfMultiplication)
  */
 void GLI_vUnLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial)
 {
-    /* TODO: decompile from asm/... */
+    _hMaterial->xIsLocked = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 571–572 */
@@ -1118,7 +1118,7 @@ void GLI_vUnLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial)
  */
 void GLI_vLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial)
 {
-    /* TODO: decompile from asm/... */
+    _hMaterial->xIsLocked = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 494–503 */
@@ -1171,7 +1171,7 @@ int GLI_lGetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial)
  */
 int GLI_lGetMaterialNumberOfAnimatedTexture(GLI_tdstMaterial_* hMaterial)
 {
-    /* TODO: decompile from asm/... */
+    return hMaterial->lNumberOfDisplayNode;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 367–370 */
@@ -1212,9 +1212,11 @@ void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int* p_b
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xSetMaterialTextureDecalage(GLI_tdstMaterial_* hMaterial, int bSwitch, float fUSpeed, float fVSpeed)
+void GLI_xSetMaterialTextureDecalage(GLI_tdstMaterial_* hMaterial, float fUSpeed, float fVSpeed, int bSwitch)
 {
-    /* TODO: decompile from asm/... */
+    hMaterial->fAddU = fUSpeed;
+    hMaterial->fAddV = fVSpeed;
+    hMaterial->lIncrementIsEnable = bSwitch;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 325–332 */
@@ -1276,7 +1278,7 @@ void GLI_vSetMaterialAsChromed(void)
  */
 void GLI_xSetMaterialType(GLI_tdstMaterial_* hMaterial, unsigned int xMType)
 {
-    /* TODO: decompile from asm/... */
+    hMaterial->xMaterialType = xMType;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 234–236 */
@@ -1319,7 +1321,7 @@ void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExp
  */
 void GLI_xGetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
-    /* TODO: decompile from asm/... */
+    *(GEO_tdstColor_*)p_stColor = *(GEO_tdstColor_* )((unsigned char*)hMaterial + 0x14);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 212–215 */
