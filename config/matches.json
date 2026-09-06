@@ -1041,6 +1041,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
       "status": "MATCH"
     },
+    "0x002abd50": {
+      "address": "0x002abd50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_SinusEffect_vSetAmplitude",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002abd80": {
+      "address": "0x002abd80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_SinusEffect_vSetFreqRLI",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002abda0": {
+      "address": "0x002abda0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_fn_SinusEffect_vSetFreqMesh",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
     "0x002abdc0": {
       "address": "0x002abdc0",
       "compiler_profile": "mwccps2-3.0-011126-o3",

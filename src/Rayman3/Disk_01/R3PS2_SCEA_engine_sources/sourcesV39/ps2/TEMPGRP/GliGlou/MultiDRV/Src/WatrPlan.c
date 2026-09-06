@@ -18,9 +18,9 @@ struct GEO_tdstColor_ {
 };
 
 struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
+    int xX; /* +0x0 */
+    int xY; /* +0x4 */
+    int xZ; /* +0x8 */
 };
 
 static float GLI_gsWaterPlaneRefraction;
@@ -328,7 +328,9 @@ void GLI_vUpdateEffectData(unsigned int _ulDeltaT)
  */
 void GLI_fn_SinusEffect_vSetAmplitude(MTH3D_tdstVector_* _p_stAmpVector)
 {
-    /* TODO: decompile from asm/... */
+    stSinEffectAmp.xX = _p_stAmpVector->xX;
+    stSinEffectAmp.xY = _p_stAmpVector->xY;
+    stSinEffectAmp.xZ = _p_stAmpVector->xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 970–973 */
@@ -343,7 +345,9 @@ void GLI_fn_SinusEffect_vSetAmplitude(MTH3D_tdstVector_* _p_stAmpVector)
  */
 void GLI_fn_SinusEffect_vSetFreqRLI(int _lXFreq, int _lYFreq, int _lZFreq)
 {
-    /* TODO: decompile from asm/... */
+    a3_lSinEffectFreqRLI[0] = _lXFreq;
+    a3_lSinEffectFreqRLI[1] = _lYFreq;
+    a3_lSinEffectFreqRLI[2] = _lZFreq;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 963–966 */
@@ -358,7 +362,9 @@ void GLI_fn_SinusEffect_vSetFreqRLI(int _lXFreq, int _lYFreq, int _lZFreq)
  */
 void GLI_fn_SinusEffect_vSetFreqMesh(int _lXFreq, int _lYFreq, int _lZFreq)
 {
-    /* TODO: decompile from asm/... */
+    a3_lSinEffectFreqMesh[0] = _lXFreq;
+    a3_lSinEffectFreqMesh[1] = _lYFreq;
+    a3_lSinEffectFreqMesh[2] = _lZFreq;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 952–953 */
