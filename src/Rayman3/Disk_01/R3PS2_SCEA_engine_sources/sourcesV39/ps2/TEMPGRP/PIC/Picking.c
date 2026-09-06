@@ -44,6 +44,13 @@ struct GEO_tdstDoubledIndex_ {
     short a2_xIndex[2]; /* +0x0 */
 };
 
+struct tdstPhysicalCollSet_ {
+    COL_tdstCollideObject_* hZdm; /* +0x0 */
+    COL_tdstCollideObject_* hZdd; /* +0x4 */
+    COL_tdstCollideObject_* hZde; /* +0x8 */
+    COL_tdstCollideObject_* hZdr; /* +0xc */
+};
+
 struct MTH3D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
@@ -165,5 +172,5 @@ int g_p_stCurrentMatrix;
  */
 COL_tdstCollideObject_* PCS_fn_hGetZddGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hPhyCollSet->hZdd;
 }

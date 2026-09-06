@@ -213,7 +213,7 @@ COL_tdstCollideObject_* PCS_fn_hGetGeoObjOfPhysicalCollSet(unsigned char ucZoneT
  */
 COL_tdstCollideObject_* PCS_fn_hGetZdmGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hPhyCollSet->hZdm;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 86–86 */
@@ -225,7 +225,7 @@ COL_tdstCollideObject_* PCS_fn_hGetZdmGeoObjOfPhysicalCollSet(tdstPhysicalCollSe
  */
 COL_tdstCollideObject_* PCS_fn_hGetZdrGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hPhyCollSet->hZdr;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 73–73 */
@@ -237,5 +237,5 @@ COL_tdstCollideObject_* PCS_fn_hGetZdrGeoObjOfPhysicalCollSet(tdstPhysicalCollSe
  */
 COL_tdstCollideObject_* PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hPhyCollSet->hZde;
 }

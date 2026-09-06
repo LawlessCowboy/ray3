@@ -185,6 +185,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvCond.c",
       "status": "MATCH"
     },
+    "0x00211700": {
+      "address": "0x00211700",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalKeyWord",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvKey.c",
+      "status": "MATCH"
+    },
+    "0x00211730": {
+      "address": "0x00211730",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalOperator",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ConvOper.c",
+      "status": "MATCH"
+    },
     "0x00211890": {
       "address": "0x00211890",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -1049,6 +1065,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ino/joyinit.c",
       "status": "MATCH"
     },
+    "0x002ef0b0": {
+      "address": "0x002ef0b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "INOPS2_fn_wJoyCheckConnectionFast",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/joyps2.c",
+      "status": "MATCH"
+    },
+    "0x002f0190": {
+      "address": "0x002f0190",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "INO_fn_vResumeAllFFBEffectForAllDevice",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c",
+      "status": "MATCH"
+    },
+    "0x002f01b0": {
+      "address": "0x002f01b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "INO_fn_vPauseAllFFBEffectForAllDevice",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c",
+      "status": "MATCH"
+    },
     "0x002f1bd0": {
       "address": "0x002f1bd0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -1103,6 +1143,38 @@
       "name": "Mmg_fn_vDeleteBlock",
       "size": 56,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MMG/cpammg.c",
+      "status": "MATCH"
+    },
+    "0x00317f90": {
+      "address": "0x00317f90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PCS_fn_hGetZdmGeoObjOfPhysicalCollSet",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PCS/Specif/PhysColl.c",
+      "status": "MATCH"
+    },
+    "0x00317fa0": {
+      "address": "0x00317fa0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PCS_fn_hGetZdrGeoObjOfPhysicalCollSet",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PCS/Specif/PhysColl.c",
+      "status": "MATCH"
+    },
+    "0x00317fb0": {
+      "address": "0x00317fb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PCS_fn_hGetZdeGeoObjOfPhysicalCollSet",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PCS/Specif/PhysColl.c",
+      "status": "MATCH"
+    },
+    "0x00317fc0": {
+      "address": "0x00317fc0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PCS_fn_hGetZddGeoObjOfPhysicalCollSet",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PIC/Picking.c",
       "status": "MATCH"
     },
     "0x00318dc0": {

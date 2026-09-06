@@ -124,7 +124,7 @@ short INOPS2_fn_wReadJoystick(stDevice* _p_stDev)
  */
 short INOPS2_fn_wJoyCheckConnectionFast(short _wJoystickNum)
 {
-    /* TODO: decompile from asm/... */
+    return !gs_a_DeconnectedJoy[(int)_wJoystickNum];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 737–765 */

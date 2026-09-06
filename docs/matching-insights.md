@@ -23,3 +23,5 @@ compiler option, construct, and outcome.
   escalation rather than forcing an unsuitable worker to persist. (2026-09-06)
 
 - [debug-format] MWCC linked .debug function records may omit unused leading parameters: Micros null callbacks record only their used pointer 0x83/0x63 descriptors, while _tdstAllRetObjectSound's function-pointer types preserve the full signatures and target code uses the resulting a2/a3/t0 registers. Treat such extracted parameter lists as incomplete when callback type or C++ mangling proves greater arity. (2026-09-06)
+
+- [compiler] MWCC PS2 3.0 recognizes #pragma schedule off/reset. On fn_ucFindPlaceInActionTable it restores the target's 100-byte size and unscheduled outer/final return slots, but changes loop-init and increment ordering, proving the target was not compiled with scheduling disabled for the whole function. (2026-09-06)

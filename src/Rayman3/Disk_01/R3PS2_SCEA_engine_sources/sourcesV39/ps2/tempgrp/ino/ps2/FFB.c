@@ -82,7 +82,11 @@ int INOPS2_fn_iWaitCmd(int _iPort, int _iSlot, int time_to_wait)
  */
 void INO_fn_vResumeAllFFBEffectForAllDevice(void)
 {
-    /* TODO: decompile from asm/... */
+    if (MENU_g_bVibration) {
+        INO_gs_EffectsArePaused = 0;
+    } else {
+        INO_gs_EffectsArePaused = 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 551–552 */
@@ -95,7 +99,7 @@ void INO_fn_vResumeAllFFBEffectForAllDevice(void)
  */
 void INO_fn_vPauseAllFFBEffectForAllDevice(void)
 {
-    /* TODO: decompile from asm/... */
+    INO_gs_EffectsArePaused = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 504–545 */

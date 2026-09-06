@@ -2949,5 +2949,5 @@ tdstOperatorEntry_ a_stOperatorTable[29];
  */
 void fn_p_stEvalOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    a_stOperatorTable[p_stTree->uDummy.uId.eOperatorId].p_fn_p_stOperatorFunction(p_SuperObjPerso, (tdstNodeInterpret_ *)((unsigned char *)p_stTree + 8), p_stValue);
 }
