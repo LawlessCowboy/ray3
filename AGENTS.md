@@ -22,6 +22,12 @@ baseline profile is encoded in `tools/match.py` and the Makefile.
    python3 tools/match.py check FUNCTION
    ```
 
+   Fast-worker assignments get up to 20 distinct, controlled natural-C
+   variants before escalation. Group variants by a concrete hypothesis
+   (control flow, typed locals/aliases, declaration lifetime, field/cast
+   access, or source layout) and inspect `--diff` after each. Escalate earlier
+   only for confirmed debug-parser, type/layout, or object-symbol evidence.
+
 5. A function is done only when it reports `MATCH`. For a mismatch, use:
 
    ```sh
