@@ -265,7 +265,8 @@ float IPT_fn_xGetAnalogicValue(IPT_tdstEntryElement_* _hEntryElement)
  */
 unsigned char IPT_fn_bIsInvalidated(IPT_tdstEntryElement_* _hEntryElement)
 {
-    /* TODO: decompile from asm/... */
+    return ((_hEntryElement == NULL) || (_hEntryElement->lState < 0)) ?
+        (unsigned char)1 : (unsigned char)0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 120–121 */

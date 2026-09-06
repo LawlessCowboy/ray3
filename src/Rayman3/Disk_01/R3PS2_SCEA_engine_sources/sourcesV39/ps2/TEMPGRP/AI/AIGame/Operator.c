@@ -2981,7 +2981,7 @@ struct tdstActionTable_ {
     unsigned char ucCurrentEntry; /* +0x6 */
 };
 
-int g_hCurrentSuperObjPerso;
+HIE_tdstSuperObject_* g_hCurrentSuperObjPerso;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 1115–1141 */
 /* addr: 0x00222600  size: 144 bytes */
@@ -3032,9 +3032,18 @@ void fn_p_stUltraOperator(HIE_tdstSuperObject_* hCurrentSuperObjPerso, tdstNodeI
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_* hNewSuperObjPerso)
+void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso)
 {
-    /* TODO: decompile from asm/... */
+    if (g_hCurrentSuperObjPerso != 0)
+    {
+        if (bYouHaveRightToUseThisFunction != 0)
+        {
+            *hNewSuperObjPerso = g_hCurrentSuperObjPerso;
+            g_hCurrentSuperObjPerso = 0;
+        }
+    }
+    else
+        *hNewSuperObjPerso = hCurrentSuperObjPerso;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 1055–1063 */

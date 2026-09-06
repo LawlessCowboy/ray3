@@ -129,6 +129,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
       "status": "MATCH"
     },
+    "0x00222700": {
+      "address": "0x00222700",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vGetUltraOperatorPerso",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Operator.c",
+      "status": "MATCH"
+    },
     "0x00257bc0": {
       "address": "0x00257bc0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -223,6 +231,14 @@
       "name": "fn_vInterruptMenu2D",
       "size": 60,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x002f5b70": {
+      "address": "0x002f5b70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_bIsInvalidated",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_anal.c",
       "status": "MATCH"
     },
     "0x002f7020": {
