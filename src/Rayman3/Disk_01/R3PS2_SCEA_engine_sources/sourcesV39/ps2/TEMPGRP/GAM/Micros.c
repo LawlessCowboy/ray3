@@ -1592,10 +1592,16 @@ HIE_tdstSuperObject_* fn_hGetSuperObjectActorHandle(int s32_ObjectId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bRetObjectRollOffNull(_RollOffParam* pst_RollOff)
+int fn_bRetObjectRollOffNull(int s32_ObjectId, int s32_ChannelId, _RollOffParam* pst_RollOff)
 {
-    int b_Answer;
-    /* TODO: decompile from asm/... */
+    int b_Answer = 0;
+    if (pst_RollOff != NULL)
+    {
+        pst_RollOff->rDistBackGround = 0;
+        b_Answer = 1;
+        pst_RollOff->rDistSatur = 0;
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 47–47 */
@@ -1622,10 +1628,17 @@ int fn_bRetObjectLinkBisNull(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectPositionNull(_stVector* pst_Vector)
+int fn_bObjectPositionNull(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector)
 {
-    int b_Answer;
-    /* TODO: decompile from asm/... */
+    int b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        pst_Vector->f32x = 0;
+        b_Answer = 1;
+        pst_Vector->f32y = 0;
+        pst_Vector->f32z = 0;
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 34–34 */
@@ -1665,9 +1678,14 @@ int fn_s32RetObjectSwitchNull(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vRetObjectExtraCoefNull(int* pr_Pitch, int* pr_Pan, int* pr_Vol)
+void fn_vRetObjectExtraCoefNull(int s32_ObjectId, _SND_tduRefEvt u_SoundEvent, int* pr_Pitch, int* pr_Pan, int* pr_Vol)
 {
-    /* TODO: decompile from asm/... */
+    if (pr_Pitch != NULL)
+        *pr_Pitch = 0x10000;
+    if (pr_Pan != NULL)
+        *pr_Pan = 0x400000;
+    if (pr_Vol != NULL)
+        *pr_Vol = 0x400000;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 24–24 */

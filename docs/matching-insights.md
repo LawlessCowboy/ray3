@@ -21,3 +21,5 @@ compiler option, construct, and outcome.
   pressure, FP/VU instructions, debug-line complexity, and C++ status. It
   selects the least-cost model bucket; an early mismatch should still trigger
   escalation rather than forcing an unsuitable worker to persist. (2026-09-06)
+
+- [debug-format] MWCC linked .debug function records may omit unused leading parameters: Micros null callbacks record only their used pointer 0x83/0x63 descriptors, while _tdstAllRetObjectSound's function-pointer types preserve the full signatures and target code uses the resulting a2/a3/t0 registers. Treat such extracted parameter lists as incomplete when callback type or C++ mangling proves greater arity. (2026-09-06)

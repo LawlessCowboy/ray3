@@ -2070,6 +2070,8 @@ struct WP_tdstGraph_ {
     LST2_tdstAnchorToWP_tdhGraphNodeDyn m_hListOfNode; /* +0x0 */
 };
 
+WP_tdstGraph_* WPG_fn_lBuildOrderedPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hStartWP, int bIsCircular, int bIsRandom);
+
 struct HIE_tdstSuperObject_ {
     unsigned int ulTypeOfLinkedObject; /* +0x0 */
     HIE_tduLinkedObject_ hLinkedObject; /* +0x4 */
@@ -3169,7 +3171,7 @@ WP_tdstWayPoint_* WPG_fn_hGetWaypointOfGraph(WP_tdstGraph_* hGraph, int iIndex, 
  */
 int WPG_fn_lNumberOfWaypointOfGraph(WP_tdstGraph_* hGraph)
 {
-    /* TODO: decompile from asm/... */
+    return hGraph->m_hListOfNode.lNumberOfElementsDyn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1441–1441 */
@@ -3181,7 +3183,7 @@ int WPG_fn_lNumberOfWaypointOfGraph(WP_tdstGraph_* hGraph)
  */
 WP_tdstGraph_* WPG_fn_lBuildRandomPath(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hStartWP, int _bIsCircular)
 {
-    /* TODO: decompile from asm/... */
+    return WPG_fn_lBuildOrderedPath(_hGraph, _hStartWP, _bIsCircular, 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1233–1436 */
@@ -3861,5 +3863,5 @@ void WPG_fn_vDestroy(WP_tdstGraph_* hGraph)
  */
 void WPG_fn_vClearAllocMode(void)
 {
-    /* TODO: decompile from asm/... */
+    GAM_fn_vPopAllocMode();
 }

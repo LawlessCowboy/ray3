@@ -3095,7 +3095,7 @@ unsigned char AI_g_ucLastMarioPadUsed;
  */
 unsigned char fn_ucSetFieldSystemTime(void)
 {
-    /* TODO: decompile from asm/... */
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 430–432 */

@@ -97,6 +97,38 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
       "status": "MATCH"
     },
+    "0x001fef60": {
+      "address": "0x001fef60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "WPG_fn_lNumberOfWaypointOfGraph",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x001fef70": {
+      "address": "0x001fef70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "WPG_fn_lBuildRandomPath",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x00200a70": {
+      "address": "0x00200a70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "WPG_fn_vClearAllocMode",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x00211890": {
+      "address": "0x00211890",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetFieldSystemTime",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
     "0x00257bc0": {
       "address": "0x00257bc0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -111,6 +143,30 @@
       "name": "COL_fn_vExploreOctreeWithBox",
       "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/OctreeGO.c",
+      "status": "MATCH"
+    },
+    "0x00266490": {
+      "address": "0x00266490",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bRetObjectRollOffNull",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Micros.c",
+      "status": "MATCH"
+    },
+    "0x002664c0": {
+      "address": "0x002664c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bObjectPositionNull",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Micros.c",
+      "status": "MATCH"
+    },
+    "0x00266500": {
+      "address": "0x00266500",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vRetObjectExtraCoefNull",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Micros.c",
       "status": "MATCH"
     },
     "0x00271b50": {
