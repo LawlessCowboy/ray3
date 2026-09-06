@@ -1768,7 +1768,10 @@ unsigned short fn_uwGetFrameInNextAnimForIntermAnim(tdstAnim3d_* p_stTempoAnim)
  */
 void fn_vDeleteIntermediateAnimation(tdstAnim3d_* p_stTempoAnim)
 {
-    /* TODO: decompile from asm/... */
+    fn_vReleaseMergeA3dGeneral(p_stTempoAnim->uwNumOfA3dGENERAL);
+    if (p_stTempoAnim->d_stMorphDataArray != NULL)
+        HMU_fn_vFree(&p_stTempoAnim->d_stMorphDataArray, 1);
+    HMU_fn_vFree(&p_stTempoAnim, 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1172–1306 */

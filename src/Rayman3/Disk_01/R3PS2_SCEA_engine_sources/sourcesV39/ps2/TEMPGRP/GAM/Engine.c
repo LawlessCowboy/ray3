@@ -1600,5 +1600,8 @@ unsigned char fn_bEndOfOneStep(void)
 unsigned char fn_bEndOfGame(void)
 {
     unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    ucReturn = 0;
+    if (g_stEngineStructure.eEngineMode == 2)
+        ucReturn = 1;
+    return ucReturn;
 }

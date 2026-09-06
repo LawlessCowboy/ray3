@@ -1632,7 +1632,7 @@ unsigned char g_ucGameModuleId;
  */
 int fn_s32RetObjectCoordinateNull(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 668–682 */

@@ -1393,7 +1393,7 @@ int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFam
  */
 HIE_tdstSuperObject_* MC_fn_hGetNewMainCharacter(tdstNodeMainCharacter_* hMainCharNode)
 {
-    /* TODO: decompile from asm/... */
+    return hMainCharNode->hNewCharacterForTheNextFrame;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 131–131 */
@@ -1405,7 +1405,7 @@ HIE_tdstSuperObject_* MC_fn_hGetNewMainCharacter(tdstNodeMainCharacter_* hMainCh
  */
 void MC_fn_vSetNewMainCharacter(tdstNodeMainCharacter_* hMainCharNode, HIE_tdstSuperObject_* hCharacter)
 {
-    /* TODO: decompile from asm/... */
+    hMainCharNode->hNewCharacterForTheNextFrame = hCharacter;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 123–123 */
@@ -1417,7 +1417,7 @@ void MC_fn_vSetNewMainCharacter(tdstNodeMainCharacter_* hMainCharNode, HIE_tdstS
  */
 tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMainCharNode)
 {
-    /* TODO: decompile from asm/... */
+    return hMainCharNode->hNextBrotherDyn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 117–118 */

@@ -14,6 +14,7 @@ struct IPT_tdstConvertValue_ {
 
 unsigned char IPT_g_bSkippedEntry;
 IPT_tdstConvertValue_ IPT_g_ConvertAZERTYtoQWERTY;
+unsigned char g_ucIPTModuleId;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\p5\ipt_scpt.c lines 41–48 */
 /* addr: 0x002f73d0  size: 48 bytes */
@@ -28,5 +29,6 @@ IPT_tdstConvertValue_ IPT_g_ConvertAZERTYtoQWERTY;
  */
 void IPT_fn_vFirstInitInput(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_ucIPTModuleId == 255)
+        g_ucIPTModuleId = Erm_fn_ucInitErrMsg(g_ucIPTModuleId);
 }

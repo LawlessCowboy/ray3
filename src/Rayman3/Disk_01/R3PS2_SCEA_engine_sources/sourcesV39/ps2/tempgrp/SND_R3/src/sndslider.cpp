@@ -4,6 +4,13 @@
 
 #include <stddef.h>
 
+class CLinkMicroCont
+{
+public:
+    static CLinkMicroCont& mfn_roGetInstance(void);
+    int mfn_s32AddMicroInstance(void);
+};
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndslider.cpp lines 30–32 */
 /* addr: 0x001866d0  size: 36 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -13,9 +20,9 @@
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_lCreateMicroSound(void)
+extern "C" int SND_fn_lCreateMicroSound(void)
 {
-    /* TODO: decompile from asm/... */
+    return CLinkMicroCont::mfn_roGetInstance().mfn_s32AddMicroInstance();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndslider.cpp lines 124–132 */
