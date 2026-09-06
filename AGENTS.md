@@ -30,17 +30,24 @@ baseline profile is encoded in `tools/match.py` and the Makefile.
 
    This prints the entire function as side-by-side four-byte PS2 instruction
    words **and Rabbitizer-decoded mnemonics** after named relocations have
-   been resolved. Every differing word is marked `!`; `R` marks a candidate
-   relocation word. Inspect every `!`, then compare those offsets with the
-   matching target `asm/.../*.s` file. A lone
-   `R`/immediate mismatch often indicates a symbol, layout, or signature issue;
-   several adjacent non-relocation words usually indicate source shape or
-   compiler scheduling. Do not claim a match based solely on visually similar
-   assembly.
+   been resolved. Every differing word is marked `!`; `B` identifies a branch,
+   `D` its delay slot, and `Rtype:symbol` names a candidate relocation. Local
+   branch destinations are labelled `L_....`, followed by a candidate/target
+   line-map table. Inspect every `!`, then compare those offsets with the
+   matching target `asm/.../*.s` file. A lone relocation/immediate mismatch
+   often indicates a symbol, layout, or signature issue; several adjacent
+   non-relocation words usually indicate source shape or compiler scheduling.
+   For a suspected signature error, run `python3 tools/match.py signature
+   FUNCTION` to see source, raw-debug, decoded type, and target ABI evidence.
+   Do not claim a match based solely on visually similar assembly.
 
 The matcher compiles the owning translation unit, caches the object by source
 and compiler profile, resolves named MIPS relocations against the retail ELF,
 and checks function bytes, size, relocation targets, and line offsets.
+
+For cross-project Metrowerks context, read `docs/mwcc-reference.md`; it is
+methodology only. Never copy another project's compiler version or flags into
+this project's baseline without a local reproduction.
 
 The coordinator runs `python3 tools/match.py preflight --jobs 4` before bulk
 assignment. Select only sources shown by `list --compileable` until extractor

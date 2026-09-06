@@ -31,7 +31,8 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
-from extract_debug import STT_FUNC, STT_OBJECT, parse_line_blob, parse_line_section
+from extract_debug import (DebugParser, STT_FUNC, STT_OBJECT, parse_line_blob,
+                           parse_line_section)
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -601,7 +602,72 @@ def command_show(args: argparse.Namespace) -> int:
     return 0
 
 
-def format_word_diff(candidate_hex: str, target_hex: str, relocations: list[dict]) -> str:
+def command_signature(args: argparse.Namespace) -> int:
+    """Print source, raw-debug, and ABI evidence for a recovered signature."""
+    sections, symbols, main, _, _ = target_context()
+    entry = find_entry(args.function, cached_source_index(symbols, main))
+    print(f"function: {entry['name']} @ 0x{entry['address']:08x} ({entry['size']} bytes)")
+    if entry['source']:
+        source = (ROOT / entry['source']).read_text(encoding='utf-8', errors='replace')
+        marker = source.find(f' {entry["name"]}(')
+        if marker < 0:
+            marker = source.find(entry['name'] + '(')
+        declaration = source[source.rfind('\n', 0, marker) + 1:source.find('{', marker)].strip()
+        print(f'source declaration: {declaration or "<not recovered>"}')
+    debug = next((section.data for section in sections if section.name == '.debug'), b'')
+    name_pos = debug.find((entry['name'] + '\0').encode('latin-1'))
+    if name_pos >= 0:
+        parser = DebugParser(debug)
+        parser._index_named_type_records()
+        record_pos = debug.rfind(b'\x83\x00', max(0, name_pos - 64), name_pos)
+        record = parser._indirect_record(record_pos, len(debug)) if record_pos >= 0 else None
+        print(f'raw debug name offset: 0x{name_pos:x}')
+        print('raw debug context:', debug[max(0, name_pos - 16):name_pos + len(entry['name']) + 8].hex(' '))
+        if record:
+            type_ref, depth, next_pos = record
+            print(f'indirect type: ref=0x{type_ref:x} depth={depth} '
+                  f'decoded={parser._resolve_indirect_type(type_ref, depth)}')
+            print('trailing attributes:', debug[next_pos - 1:next_pos + 2].hex(' '))
+    else:
+        print('raw debug evidence: name not found')
+    offset = entry['address'] - main.addr
+    target = main.data[offset:offset + min(entry['size'], 24)]
+    print('target ABI evidence:')
+    for instruction_offset in range(0, len(target) - 3, 4):
+        word = struct.unpack_from('<I', target, instruction_offset)[0]
+        mnemonic = rabbitizer.Instruction(word).disassemble() if rabbitizer else f'0x{word:08x}'
+        print(f'  +0x{instruction_offset:04x}: {mnemonic}')
+    return 0
+
+
+def branch_target(word: int, offset: int, function_address: int) -> int | None:
+    """Return an in-function branch target offset when an instruction has one."""
+    opcode = word >> 26
+    is_relative = (
+        opcode == 1 or 4 <= opcode <= 7 or 20 <= opcode <= 23
+        or (opcode in (17, 18) and ((word >> 21) & 0x1f) == 8)
+    )
+    if is_relative:
+        immediate = word & 0xffff
+        if immediate & 0x8000:
+            immediate -= 0x10000
+        return offset + 4 + immediate * 4
+    if opcode in (2, 3):
+        absolute = ((function_address + offset + 4) & 0xf0000000) | ((word & 0x03ffffff) << 2)
+        return absolute - function_address
+    return None
+
+
+def is_control_transfer(word: int) -> bool:
+    opcode = word >> 26
+    if opcode in (1, 2, 3, 4, 5, 6, 7, 17, 18, 20, 21, 22, 23):
+        return True
+    return opcode == 0 and ((word & 0x3f) in (8, 9))  # jr / jalr
+
+
+def format_word_diff(candidate_hex: str, target_hex: str, relocations: list[dict],
+                     function_address: int, candidate_lines: list[tuple[int, int]],
+                     target_lines: list[tuple[int, int]]) -> str:
     """Render every instruction word, not only the first byte mismatch.
 
     PS2 instructions are four-byte little-endian words.  The matcher compares
@@ -611,17 +677,54 @@ def format_word_diff(candidate_hex: str, target_hex: str, relocations: list[dict
     """
     candidate = bytes.fromhex(candidate_hex)
     target = bytes.fromhex(target_hex)
-    relocation_offsets = {entry['offset'] for entry in relocations}
-    lines = ['offset  candidate  target     flags  candidate instruction                 target instruction']
+    relocation_by_offset: dict[int, list[dict]] = {}
+    for relocation in relocations:
+        relocation_by_offset.setdefault(relocation['offset'], []).append(relocation)
+    words = max(len(candidate), len(target)) // 4
+    label_offsets = set()
+    for raw in (candidate, target):
+        for offset in range(0, len(raw) - 3, 4):
+            target_offset = branch_target(struct.unpack_from('<I', raw, offset)[0], offset,
+                                          function_address)
+            if target_offset is not None and 0 <= target_offset < words * 4:
+                label_offsets.add(target_offset)
+    candidate_line_map = dict(candidate_lines)
+    target_line_map = dict(target_lines)
+    lines = ['offset  candidate  target     flags        candidate instruction                 target instruction']
     for offset in range(0, max(len(candidate), len(target)), 4):
+        if offset in label_offsets:
+            lines.append(f'L_{offset:04x}:')
         got = candidate[offset:offset + 4]
         want = target[offset:offset + 4]
         got_word = f'{struct.unpack("<I", (got + bytes(4))[:4])[0]:08x}' if got else '--------'
         want_word = f'{struct.unpack("<I", (want + bytes(4))[:4])[0]:08x}' if want else '--------'
-        flags = ('!' if got != want else ' ') + ('R' if offset in relocation_offsets else ' ')
-        got_asm = rabbitizer.Instruction(int(got_word, 16)).disassemble() if rabbitizer and got else ''
-        want_asm = rabbitizer.Instruction(int(want_word, 16)).disassemble() if rabbitizer and want else ''
-        lines.append(f'+0x{offset:04x}  {got_word}  {want_word}  {flags}  {got_asm:<36} {want_asm}')
+        got_value = int(got_word, 16) if got else 0
+        want_value = int(want_word, 16) if want else 0
+        relocation_note = ','.join(
+            f"R{entry['type']}:{entry['symbol'] or '?'}"
+            for entry in relocation_by_offset.get(offset, [])
+        )
+        delay_slot = (offset >= 4 and ((got and is_control_transfer(
+            struct.unpack_from('<I', candidate, offset - 4)[0])) or (want and is_control_transfer(
+            struct.unpack_from('<I', target, offset - 4)[0]))))
+        flags = ('!' if got != want else ' ') + ('B' if (got and is_control_transfer(got_value))
+                 or (want and is_control_transfer(want_value)) else ' ')
+        flags += 'D' if delay_slot else ' '
+        flags += f' {relocation_note}' if relocation_note else ''
+        got_asm = rabbitizer.Instruction(got_value).disassemble() if rabbitizer and got else ''
+        want_asm = rabbitizer.Instruction(want_value).disassemble() if rabbitizer and want else ''
+        got_target = branch_target(got_value, offset, function_address) if got else None
+        want_target = branch_target(want_value, offset, function_address) if want else None
+        if got_target is not None:
+            got_asm += f' -> {"L_" + format(got_target, "04x") if 0 <= got_target < words * 4 else hex(function_address + got_target)}'
+        if want_target is not None:
+            want_asm += f' -> {"L_" + format(want_target, "04x") if 0 <= want_target < words * 4 else hex(function_address + want_target)}'
+        lines.append(f'+0x{offset:04x}  {got_word}  {want_word}  {flags:<12} {got_asm:<36} {want_asm}')
+    if candidate_line_map or target_line_map:
+        lines.append('line map: offset  candidate-line  target-line')
+        for offset in sorted(set(candidate_line_map) | set(target_line_map)):
+            lines.append(f'          +0x{offset:04x}  {candidate_line_map.get(offset, "-")!s:<14} '
+                         f'{target_line_map.get(offset, "-")}')
     return '\n'.join(lines)
 
 
@@ -653,7 +756,8 @@ def command_check(args: argparse.Namespace) -> int:
             print('candidate:', result['candidate_hex'])
             print('target:   ', result['target_hex'])
             print(format_word_diff(result['candidate_hex'], result['target_hex'],
-                                   result['relocations']))
+                                   result['relocations'], entry['address'],
+                                   result['candidate_lines'], result['target_lines']))
     if args.record and result['status'] == 'MATCH':
         manifest = load_manifest()
         manifest.setdefault('functions', {})[f"0x{entry['address']:08x}"] = {
@@ -774,6 +878,9 @@ def main() -> int:
     show_parser = sub.add_parser('show')
     show_parser.add_argument('function')
     show_parser.set_defaults(func=command_show)
+    signature_parser = sub.add_parser('signature')
+    signature_parser.add_argument('function')
+    signature_parser.set_defaults(func=command_signature)
     check_parser = sub.add_parser('check')
     check_parser.add_argument('function')
     check_parser.add_argument('--diff', action='store_true')
