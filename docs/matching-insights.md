@@ -16,3 +16,8 @@ compiler option, construct, and outcome.
   final clamp on one source line to reproduce the target line-offset pattern.
 
 - [tooling] Cached match checks take about 0.3 seconds when the source body is unchanged; run index --refresh only after extraction changes ownership comments. (2026-09-06)
+
+- [tooling] Difficulty triage uses target code size, branch/call count, memory
+  pressure, FP/VU instructions, debug-line complexity, and C++ status. It
+  selects the least-cost model bucket; an early mismatch should still trigger
+  escalation rather than forcing an unsuitable worker to persist. (2026-09-06)

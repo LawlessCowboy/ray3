@@ -36,6 +36,12 @@ TARGET_PATH = ROOT / 'SLKA_250.78'
 DEFAULT_WIBO = ROOT / 'wibo-x86_64'
 DEFAULT_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0-011126' / 'mwccps2.exe'
 DEFAULT_INCLUDES = ROOT / 'include' / 'mwcc'
+MODEL_ORDER = {
+    'gpt-5.4-mini': 0,
+    'gpt-5.6-luna': 1,
+    'gpt-5.6-terra': 2,
+    'gpt-5.6-sol': 3,
+}
 MWCC_FLAGS = [
     '-c', '-g', '-opt', 'level=3', '-farcall', 'off', '-sdatathreshold', '8',
     '-inline', 'off', '-strings', 'reuse,nopool', '-enum', 'int',
@@ -149,12 +155,92 @@ NAME_RE = re.compile(r'\b([A-Za-z_~][A-Za-z0-9_:~]*)\s*\([^;{}]*\)\s*\{', re.S)
 LINE_RE = re.compile(r'\+0x([0-9A-Fa-f]+)\s*->\s*line\s*(\d+)')
 
 
-def source_index(target_symbols: list[Symbol]) -> list[dict]:
+def instruction_features(code: bytes) -> dict[str, int]:
+    """Return cheap, architecture-specific complexity signals from MIPS code."""
+    branches = calls = cop1 = cop2 = memory = 0
+    for offset in range(0, len(code) - 3, 4):
+        word, = struct.unpack_from('<I', code, offset)
+        opcode = word >> 26
+        funct = word & 0x3F
+        if opcode in {1, 4, 5, 6, 7, 20, 21, 22, 23}:
+            branches += 1
+        if opcode == 3 or (opcode == 0 and funct == 9):
+            calls += 1
+        if opcode == 17:
+            cop1 += 1
+        elif opcode == 18:
+            cop2 += 1
+        if 32 <= opcode <= 46:
+            memory += 1
+    return {
+        'instructions': len(code) // 4,
+        'branches': branches,
+        'calls': calls,
+        'cop1': cop1,
+        'cop2': cop2,
+        'memory': memory,
+    }
+
+
+def difficulty_for(code: bytes, line_count: int, language: str) -> dict:
+    """Estimate matching effort and the least expensive suitable worker model.
+
+    This is a triage estimate, not a claim about semantic difficulty. It is
+    deliberately biased toward cheap models for small integer C functions and
+    escalates for calls, control flow, floating point/VU code, and C++.
+    """
+    features = instruction_features(code)
+    size = len(code)
+    score = 0
+    if size > 12:
+        score += 1
+    if size > 32:
+        score += 1
+    if size > 80:
+        score += 1
+    if size > 160:
+        score += 2
+    if size > 320:
+        score += 3
+    score += min(features['branches'], 6)
+    score += 2 * min(features['calls'], 5)
+    if features['memory'] > 8:
+        score += 1
+    if line_count > 8:
+        score += 1
+    if line_count > 20:
+        score += 2
+    if features['cop1']:
+        score += 3
+    if features['cop2']:
+        score += 5
+    if language == 'C++':
+        score += 3
+    if score <= 1:
+        label, model, thinking = 'trivial', 'gpt-5.4-mini', 'minimal'
+    elif score <= 4:
+        label, model, thinking = 'easy', 'gpt-5.6-luna', 'low'
+    elif score <= 8:
+        label, model, thinking = 'moderate', 'gpt-5.6-terra', 'medium'
+    elif score <= 15:
+        label, model, thinking = 'complex', 'gpt-5.6-sol', 'high'
+    else:
+        label, model, thinking = 'expert', 'gpt-5.6-sol', 'xhigh'
+    return {
+        'score': score,
+        'label': label,
+        'model': model,
+        'thinking': thinking,
+        **features,
+    }
+
+
+def source_index(target_symbols: list[Symbol], main: Section) -> list[dict]:
     by_addr = {symbol.value: preferred_symbol(target_symbols, symbol.value)
                for symbol in target_symbols if symbol.type == STT_FUNC}
-    entries = []
+    entries_by_address: dict[int, dict] = {}
     for path in SRC_ROOT.rglob('*'):
-        if path.suffix.lower() not in {'.c', '.cpp', '.cxx'}:
+        if path.suffix.lower() not in {'.c', '.cpp', '.cxx', '.h', '.hpp', '.hxx'}:
             continue
         text = path.read_text(encoding='utf-8', errors='replace')
         for match in ADDR_RE.finditer(text):
@@ -169,19 +255,45 @@ def source_index(target_symbols: list[Symbol]) -> list[dict]:
             line_map = [(int(offset, 16), int(line)) for offset, line in LINE_RE.findall(comment)]
             body_start = text.find('{', match.end())
             body = text[body_start:body_start + 400] if body_start >= 0 else ''
-            entries.append({
+            suffix = path.suffix.lower()
+            language = 'C++' if suffix in {'.cpp', '.cxx', '.hpp', '.hxx'} else 'C'
+            code_offset = address - main.addr
+            code = main.data[code_offset:code_offset + size] if code_offset >= 0 else b''
+            entries_by_address.setdefault(address, {
                 'address': address,
                 'size': size,
                 'name': name,
                 'source': str(path.relative_to(ROOT)),
-                'language': 'C++' if path.suffix.lower() in {'.cpp', '.cxx'} else 'C',
+                'language': language,
                 'todo': 'TODO: decompile from asm/' in body,
                 'line_map': line_map,
+                'difficulty': difficulty_for(code, len(line_map), language),
             })
-    return entries
+    # The debug parser currently owns only part of the ELF's function set.
+    # Keep a difficulty record for every remaining code symbol as well, but
+    # leave it unassigned until source ownership is recovered.
+    for symbol in target_symbols:
+        if (symbol.type != STT_FUNC or not symbol.size or symbol.value in entries_by_address
+                or not main.addr <= symbol.value < main.addr + main.size):
+            continue
+        code_offset = symbol.value - main.addr
+        code = main.data[code_offset:code_offset + symbol.size]
+        preferred = preferred_symbol(target_symbols, symbol.value)
+        entries_by_address[symbol.value] = {
+            'address': symbol.value,
+            'size': symbol.size,
+            'name': preferred.name if preferred else symbol.name or f'sym_{symbol.value:08x}',
+            'source': None,
+            'language': 'unknown',
+            'todo': True,
+            'line_map': [],
+            'difficulty': difficulty_for(code, 0, 'unknown'),
+        }
+    return list(entries_by_address.values())
 
 
-def cached_source_index(target_symbols: list[Symbol], refresh: bool = False) -> list[dict]:
+def cached_source_index(target_symbols: list[Symbol], main: Section,
+                        refresh: bool = False) -> list[dict]:
     """Load stable function ownership metadata without rereading 340 sources.
 
     Function address comments and ownership do not change during normal body
@@ -191,13 +303,15 @@ def cached_source_index(target_symbols: list[Symbol], refresh: bool = False) -> 
     if not refresh and INDEX_PATH.exists():
         try:
             payload = json.loads(INDEX_PATH.read_text())
-            if payload.get('target_size') == TARGET_PATH.stat().st_size:
+            if (payload.get('schema_version') == 3
+                    and payload.get('target_size') == TARGET_PATH.stat().st_size):
                 return payload['entries']
         except (OSError, ValueError, KeyError):
             pass
-    entries = source_index(target_symbols)
+    entries = source_index(target_symbols, main)
     INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
     INDEX_PATH.write_text(json.dumps({
+        'schema_version': 3,
         'target_size': TARGET_PATH.stat().st_size,
         'entries': entries,
     }, separators=(',', ':')))
@@ -277,6 +391,8 @@ def load_compileability() -> dict:
 
 
 def source_compileable(source_rel: str, state: dict) -> bool:
+    if not source_rel:
+        return False
     record = state.get('sources', {}).get(source_rel)
     path = ROOT / source_rel
     if not record or not path.exists():
@@ -444,30 +560,38 @@ def command_doctor(_: argparse.Namespace) -> int:
 
 
 def command_list(args: argparse.Namespace) -> int:
-    _, symbols, _, _, _ = target_context()
-    entries = cached_source_index(symbols, args.refresh_index)
+    _, symbols, main, _, _ = target_context()
+    entries = cached_source_index(symbols, main, args.refresh_index)
     compileability = load_compileability()
     matches = [e for e in entries if (not args.unmatched or e['todo'])
+               and (args.include_unowned or e['source'] is not None)
                and (not args.max_lines or len(e['line_map']) <= args.max_lines)
                and (not args.language or e['language'] == args.language)
-               and (not args.compileable or source_compileable(e['source'], compileability))]
-    for entry in sorted(matches, key=lambda e: (e['size'], e['address']))[:args.limit]:
+               and (not args.compileable or source_compileable(e['source'], compileability))
+               and (not args.difficulty or e['difficulty']['label'] == args.difficulty)
+               and (not args.model or e['difficulty']['model'] == args.model)]
+    for entry in sorted(matches, key=lambda e: (e['difficulty']['score'], e['size'], e['address']))[:args.limit]:
+        difficulty = entry['difficulty']
         print(f"0x{entry['address']:08x} {entry['size']:4d} {entry['language']:3s} "
-              f"lines={len(entry['line_map']):2d} {entry['name']}  {entry['source']}")
+              f"{difficulty['label']:8s} {difficulty['model']:13s}/{difficulty['thinking']:7s} "
+              f"lines={len(entry['line_map']):2d} {entry['name']}  {entry['source'] or '<unrecovered>'}")
     print(f'{len(matches)} functions selected')
     return 0
 
 
 def command_show(args: argparse.Namespace) -> int:
-    _, symbols, _, _, _ = target_context()
-    entry = find_entry(args.function, cached_source_index(symbols))
+    _, symbols, main, _, _ = target_context()
+    entry = find_entry(args.function, cached_source_index(symbols, main))
     print(json.dumps(entry, indent=2))
     return 0
 
 
 def command_check(args: argparse.Namespace) -> int:
-    _, symbols, _, _, _ = target_context()
-    entry = find_entry(args.function, cached_source_index(symbols))
+    _, symbols, main, _, _ = target_context()
+    entry = find_entry(args.function, cached_source_index(symbols, main))
+    if entry['source'] is None:
+        print(f"SOURCE_UNRECOVERED {entry['name']}: no debug-owned source template")
+        return 1
     result = compare(entry, args.diff)
     if args.json:
         print(json.dumps(result, indent=2))
@@ -524,17 +648,18 @@ def command_insight(args: argparse.Namespace) -> int:
 
 
 def command_index(args: argparse.Namespace) -> int:
-    _, symbols, _, _, _ = target_context()
-    entries = cached_source_index(symbols, args.refresh)
-    print(f'indexed {len(entries)} recovered functions at {INDEX_PATH.relative_to(ROOT)}')
+    _, symbols, main, _, _ = target_context()
+    entries = cached_source_index(symbols, main, args.refresh)
+    print(f'indexed {len(entries)} ELF functions at {INDEX_PATH.relative_to(ROOT)}')
     return 0
 
 
 def command_preflight(args: argparse.Namespace) -> int:
     """Compile each unique canonical source once and persist its readiness."""
-    _, symbols, _, _, _ = target_context()
-    entries = cached_source_index(symbols, args.refresh_index)
-    sources = sorted({entry['source'] for entry in entries})
+    _, symbols, main, _, _ = target_context()
+    entries = cached_source_index(symbols, main, args.refresh_index)
+    sources = sorted({entry['source'] for entry in entries if entry['source']
+                      and Path(entry['source']).suffix.lower() in {'.c', '.cpp', '.cxx'}})
     if args.limit:
         sources = sources[:args.limit]
     state = load_compileability()
@@ -564,6 +689,28 @@ def command_preflight(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_worklist(args: argparse.Namespace) -> int:
+    """Summarise eligible functions by the least-cost recommended worker."""
+    _, symbols, main, _, _ = target_context()
+    entries = cached_source_index(symbols, main)
+    compileability = load_compileability()
+    groups: dict[tuple[str, str, str], list[dict]] = {}
+    for entry in entries:
+        if not entry['todo'] or not source_compileable(entry['source'], compileability):
+            continue
+        difficulty = entry['difficulty']
+        key = (difficulty['model'], difficulty['thinking'], difficulty['label'])
+        groups.setdefault(key, []).append(entry)
+    for (model, thinking, label), group in sorted(groups.items(),
+                                                   key=lambda item: MODEL_ORDER[item[0][0]]):
+        total_bytes = sum(entry['size'] for entry in group)
+        print(f'{model:13s} {thinking:7s} {label:8s} '
+              f'functions={len(group):4d} code_bytes={total_bytes:7d}')
+    print('Assign a bucket with: tools/match.py list --unmatched --compileable '
+          '--model MODEL --limit N')
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
@@ -578,6 +725,10 @@ def main() -> int:
     list_parser.add_argument('--limit', type=int, default=30)
     list_parser.add_argument('--refresh-index', action='store_true')
     list_parser.add_argument('--compileable', action='store_true')
+    list_parser.add_argument('--include-unowned', action='store_true')
+    list_parser.add_argument('--difficulty', choices=['trivial', 'easy', 'moderate', 'complex', 'expert'])
+    list_parser.add_argument('--model', choices=['gpt-5.4-mini', 'gpt-5.6-luna',
+                                                  'gpt-5.6-terra', 'gpt-5.6-sol'])
     list_parser.set_defaults(func=command_list)
     show_parser = sub.add_parser('show')
     show_parser.add_argument('function')
@@ -601,6 +752,7 @@ def main() -> int:
     preflight_parser.add_argument('--limit', type=int)
     preflight_parser.add_argument('--refresh-index', action='store_true')
     preflight_parser.set_defaults(func=command_preflight)
+    sub.add_parser('worklist').set_defaults(func=command_worklist)
     args = parser.parse_args()
     if args.command == 'insight' and args.action == 'add' and not args.text:
         parser.error('insight add requires text')

@@ -35,6 +35,16 @@ assignment. Select only sources shown by `list --compileable` until extractor
 work clears more translation units. Run `index --refresh` after a full source
 extraction; ordinary function-body edits keep the cached index valid.
 
+Each indexed function has an estimated difficulty and recommended model based
+on its target instruction count, branches, calls, memory pressure, FP/VU use,
+debug-line complexity, and language. This is triage only: escalate when the
+first mismatch reveals hidden complexity. The coordinator can inspect buckets
+with `python3 tools/match.py worklist` and assign a model directly:
+
+```sh
+python3 tools/match.py list --unmatched --compileable --model gpt-5.6-luna
+```
+
 ## Constraints
 
 - Do not use inline assembly, hand-written opcodes, or intrinsics to force a

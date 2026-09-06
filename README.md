@@ -119,6 +119,15 @@ python3 tools/match.py preflight --jobs 4
 python3 tools/match.py list --unmatched --compileable --language C --max-lines 15
 ```
 
+The indexed worklist estimates difficulty from target code shape and recommends
+the least-cost model/reasoning level. It is a triage aid, not matching proof:
+
+```sh
+python3 tools/match.py worklist
+python3 tools/match.py list --unmatched --compileable --model gpt-5.6-luna
+python3 tools/match.py list --unmatched --compileable --difficulty moderate
+```
+
 `check --record` adds an exact result to `config/matches.json`. The coverage
 report gives both the verified function count and byte coverage: function code
 is measured from unique non-zero-size `STT_FUNC` ranges in the ELF; static data
