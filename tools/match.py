@@ -837,6 +837,40 @@ def command_coverage(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_verify_recorded(args: argparse.Namespace) -> int:
+    """Recompile and verify every function currently recorded as MATCH."""
+    _, symbols, main, _, _ = target_context()
+    entries = cached_source_index(symbols, main)
+    by_address = {entry['address']: entry for entry in entries}
+    manifest = load_manifest()
+    recorded = [record for record in manifest.get('functions', {}).values()
+                if record.get('status') == 'MATCH']
+    targets = [by_address.get(int(record['address'], 16)) for record in recorded]
+    targets = [entry for entry in targets if entry is not None]
+    jobs = max(1, args.jobs)
+    results = []
+    with ThreadPoolExecutor(max_workers=jobs) as pool:
+        futures = {pool.submit(compare, entry): entry for entry in targets}
+        for future in as_completed(futures):
+            entry = futures[future]
+            try:
+                result = future.result()
+            except Exception as error:  # keep the audit running for other functions
+                result = {'status': 'ERROR', 'entry': entry, 'detail': str(error)}
+            results.append(result)
+    failures = [result for result in results if result.get('status') != 'MATCH']
+    for result in sorted(results, key=lambda item: item['entry']['address']):
+        entry = result['entry']
+        if result['status'] == 'MATCH':
+            print(f"MATCH {entry['name']}")
+        else:
+            print(f"{result['status']} {entry['name']}"
+                  f" first_difference={result.get('first_difference')}"
+                  f" detail={result.get('detail', '')}")
+    print(f"verified {len(results) - len(failures)}/{len(results)} recorded matches")
+    return 1 if failures else 0
+
+
 def command_insight(args: argparse.Namespace) -> int:
     if args.action == 'list':
         print(INSIGHTS_PATH.read_text() if INSIGHTS_PATH.exists() else 'No insights recorded.')
@@ -952,6 +986,10 @@ def main() -> int:
     coverage_parser = sub.add_parser('coverage')
     coverage_parser.add_argument('--json', action='store_true')
     coverage_parser.set_defaults(func=command_coverage)
+    verify_parser = sub.add_parser('verify-recorded',
+                                   help='recompile and verify every recorded MATCH')
+    verify_parser.add_argument('--jobs', type=int, default=4)
+    verify_parser.set_defaults(func=command_verify_recorded)
     insight_parser = sub.add_parser('insight')
     insight_parser.add_argument('action', choices=['add', 'list'])
     insight_parser.add_argument('text', nargs='?')

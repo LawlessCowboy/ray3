@@ -168,9 +168,12 @@ void GLI_hComputeBlendRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex1
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_hGetRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex)
+int GLI_hGetRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char lIndex = ucIndex;
+    if (lIndex < hVisualSet->lNumberOfRLI)
+        return ((int*)hVisualSet->d_hRLI)[lIndex];
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 417–433 */
@@ -182,9 +185,13 @@ void GLI_hGetRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lDrawModeMask)
+void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, void* hISI, int lDrawModeMask)
 {
-    /* TODO: decompile from asm/... */
+    g_p_stRawRLIsForThisObject = 0;
+    g_p_stRLIForNextObjectToDraw = 0;
+    g_p_stLightMapUForNextObjectToDraw = 0;
+    if (p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject)
+        GLI_xSendObjectToViewportWithLights(p_stVpt, p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject, lDrawModeMask);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 341–359 */
@@ -246,7 +253,7 @@ void GLI_lSendVisualSetToViewportWithRLI2(GLD_tdstViewportAttributes_* p_stVpt, 
  */
 int GLI_lGetVisualSetNumbertOfLOD(GEO_tdstVisualSet_* p_stVisualSet)
 {
-    /* TODO: decompile from asm/... */
+    return p_stVisualSet->xNbLodDefinitions;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 189–195 */
@@ -278,5 +285,8 @@ GEO_tdstGeometricObject_* GLI_hGetVisualSetGeometricForADistance(GEO_tdstVisualS
  */
 void GLI_vGetVisualSetLOD(GEO_tdstVisualSet_* p_stVisualSet, int lNumberOfLodToGet, float* p_xThreshold, GEO_tdstGeometricObject_* h_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (lNumberOfLodToGet < p_stVisualSet->xNbLodDefinitions) {
+        *p_xThreshold = ((float*)p_stVisualSet->d_xThresholdsTable)[lNumberOfLodToGet];
+        *(GEO_tdstGeometricObject_**)h_stObject = ((GEO_tduVSObject_*)p_stVisualSet->d_p_stLodDefinitions)[lNumberOfLodToGet].p_stGeometricObject;
+    }
 }

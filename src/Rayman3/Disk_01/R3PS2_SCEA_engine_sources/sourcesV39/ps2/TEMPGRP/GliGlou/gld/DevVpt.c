@@ -149,9 +149,10 @@ void GLI_vSetWaterplane(MTH3D_tdstVector_* p_stNormale, float xDistance)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bSetBackgroundColorForDevice(unsigned int crRGB)
+int GLD_bSetBackgroundColorForDevice(short hDev, unsigned int crRGB)
 {
-    /* TODO: decompile from asm/... */
+    GLI_gs_lBackGroundColor = crRGB;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1685–1695 */
@@ -334,7 +335,7 @@ int GLD_bRequestWriteToViewport(short hVP, GLD_tdstViewportAttributes_* pstViewA
  */
 int GLD_bEndWriteToDevice(void)
 {
-    /* TODO: decompile from asm/... */
+    return GLI_DRV_bEndScene();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 845–848 */
@@ -459,7 +460,16 @@ int GLD_bCreateViewport(short hDev, GLD_tdstViewportAttributes_* pstViewAttrib, 
 int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib)
 {
     GLD_stDevice* pstDev;
-    /* TODO: decompile from asm/... */
+
+    g_bGLDBlockSwaping = 1;
+    while (g_bGLDSwapInProgress)
+        ;
+    pstDev = (GLD_stDevice*)g_pstGLDDevices[hDev];
+    if (pstDev == NULL)
+        return 0;
+    memcpy(pstDevAttrib, pstDev, sizeof(GLD_tdstDeviceAttributes_));
+    g_bGLDBlockSwaping = 0;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 517–565 */

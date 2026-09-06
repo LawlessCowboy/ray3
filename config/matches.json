@@ -1963,6 +1963,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Texture.c",
       "status": "MATCH"
     },
+    "0x002ab5c0": {
+      "address": "0x002ab5c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_lGetVisualSetNumbertOfLOD",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/VisuaSet.c",
+      "status": "MATCH"
+    },
     "0x002abaa0": {
       "address": "0x002abaa0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -2065,6 +2073,14 @@
       "name": "GLI_vSetWaterplaneOn",
       "size": 16,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/WatrPlan.c",
+      "status": "MATCH"
+    },
+    "0x002ac4f0": {
+      "address": "0x002ac4f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLD_bEndWriteToDevice",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/gld/DevVpt.c",
       "status": "MATCH"
     },
     "0x002b1220": {
