@@ -73,6 +73,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndslider.cpp",
       "status": "MATCH"
     },
+    "0x001ea460": {
+      "address": "0x001ea460",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "Toby_SetMaterial",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/Tobies.c",
+      "status": "MATCH"
+    },
     "0x001fb720": {
       "address": "0x001fb720",
       "compiler_profile": "mwccps2-3.0-011126-o3",

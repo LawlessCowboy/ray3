@@ -123,9 +123,9 @@ void Toby_SetTransparency(unsigned int IDNumber, float fAlphaValue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Toby_SetMaterial(GLI_tdstMaterial_* hVisualMaterial)
+void Toby_SetMaterial(void* unused, GLI_tdstMaterial_* hVisualMaterial)
 {
-    /* TODO: decompile from asm/... */
+    AGO_g_TobyMaterial = (int)hVisualMaterial;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\Tobies.c lines 88–99 */
