@@ -19,7 +19,7 @@ int p_fn_v_EngMain_Display;
  */
 void fn_v_EngMain_VBLCallback(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2_fn_vWakeupMainThread();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\rm3\engmain.c lines 257–286 */
@@ -62,7 +62,7 @@ void fn_v_EngMain_GlobalInitAfterCreateFrame(void)
  */
 void fn_v_EngMain_GlobalInitBeforeCreateFrame(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_vInitEngineWhenInitApplication();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\rm3\engmain.c lines 60–69 */

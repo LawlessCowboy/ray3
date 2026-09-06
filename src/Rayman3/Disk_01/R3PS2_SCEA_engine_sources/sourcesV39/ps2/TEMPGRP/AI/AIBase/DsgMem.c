@@ -3473,10 +3473,13 @@ unsigned char fn_ucGetDsgVarVisualMaterial(void* pMyVarAddr, tdstGetSetParam_* p
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarGameMaterial(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarGameMaterial(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
     GMT_tdstGameMaterial_* hGameMaterial;
-    /* TODO: decompile from asm/... */
+    hGameMaterial = *(GMT_tdstGameMaterial_**)pMyVarAddr;
+    *(GMT_tdstGameMaterial_**)p_stGetSetParam = hGameMaterial;
+    *((tdeVariableType_*)((char*)p_stGetSetParam + 12)) = E_vt_GameMaterial;
+    return GMT_fn_b_ulIsValid(hGameMaterial) != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 776–778 */

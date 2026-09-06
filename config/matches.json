@@ -1,12 +1,36 @@
 {
   "data": {},
   "functions": {
+    "0x0012bed0": {
+      "address": "0x0012bed0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_v_EngMain_VBLCallback",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/engmain.c",
+      "status": "MATCH"
+    },
+    "0x0012bf90": {
+      "address": "0x0012bf90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_v_EngMain_GlobalInitBeforeCreateFrame",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/engmain.c",
+      "status": "MATCH"
+    },
     "0x001fb7d0": {
       "address": "0x001fb7d0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_pstAllocMind",
       "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MATCH"
+    },
+    "0x001fbe30": {
+      "address": "0x001fbe30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetDsgVarGameMaterial",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "MATCH"
     },
     "0x001fc3e0": {
