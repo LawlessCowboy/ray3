@@ -66,7 +66,9 @@ void HMU_fn_vCreateCriticalSection(void)
  */
 short INO_fn_wIsJoystickConnectedFast(stDevice* _hDev)
 {
-    /* TODO: decompile from asm/... */
+    if (*(unsigned short *)_hDev == 0x10)
+        return INOPS2_fn_wJoyCheckConnectionFast(*(short *)((unsigned char *)_hDev + 2));
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\joyinit.c lines 80–82 */
