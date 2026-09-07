@@ -3237,9 +3237,9 @@ unsigned char fn_ucSetDsgVarGraph(void* pMyVarAddr, int unused, tduGetSetParam_*
  */
 unsigned char fn_ucSetDsgVarCaps(void* pMyVarAddr, int unused, tduGetSetParam_* p_stGetSetParam)
 {
-    unsigned short xMask;
-    xMask = p_stGetSetParam->xMask;
-    *(unsigned short*)pMyVarAddr = xMask;
+    unsigned int xMask;
+    xMask = *(unsigned int*)p_stGetSetParam;
+    *(unsigned int*)pMyVarAddr = xMask;
     return 1;
 }
 
@@ -3322,7 +3322,7 @@ unsigned char fn_ucSetDsgVarAction(void* pMyVarAddr, int unused, tduGetSetParam_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarLight(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarLight(void* pMyVarAddr, int unused, tdstGetSetParam_* p_stGetSetParam)
 {
     GLI_tdstLight_* p_stLight;
     p_stLight = p_stGetSetParam->uDummy.uParam.p_stLight;
@@ -3339,7 +3339,7 @@ unsigned char fn_ucSetDsgVarLight(void* pMyVarAddr, tdstGetSetParam_* p_stGetSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarSoundEvent(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarSoundEvent(void* pMyVarAddr, int unused, tdstGetSetParam_* p_stGetSetParam)
 {
     _SND_tdstBlockEvent* pSoundEvent;
     pSoundEvent = p_stGetSetParam->uDummy.uParam.pSoundEvent;

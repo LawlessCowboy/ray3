@@ -3307,9 +3307,10 @@ int GLI_g_bWideScreenMode;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stDummyCondition(tdstNodeInterpret_* p_stTree, int* p_lValue)
+tdstNodeInterpret_* fn_p_stDummyCondition(tdstNodeInterpret_* p_stTree, int* p_lValue, int* p_lResult)
 {
-    /* TODO: decompile from asm/... */
+    *p_lResult = 1;
+    return (tdstNodeInterpret_*)p_lValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1775–1804 */

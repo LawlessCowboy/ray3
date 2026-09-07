@@ -3612,6 +3612,66 @@
       "status": "MISMATCH",
       "target_size": 8,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x003236e0",
+      "candidate_size": 1068,
+      "first_difference": 76,
+      "implementation": "void TXT_vAfficheSpecialWithTransparency(char* String, float* a3_Pos, float f0_255Transparency)\n{\n    float x1[3];\n    float x2[3];\n    _JFFTXT_* p;\n    GLD_tdstViewportAttributes_* p_stVpt;\n    _JFFTXT_ DummyString;\n    GLD_tdstViewportAttributes_ stVpt;\n\n    p = &DummyString;\n    p_stVpt = &stVpt;\n    stVpt.dwWidth = 640;\n    stVpt.dwHeight = 480;\n    stVpt.iOffsetPosX = 0;\n    stVpt.iOffsetPosY = 0;\n\n    if (String)\n    {\n        p->pString = (int)String;\n        if (2147483648.0f <= f0_255Transparency)\n            p->ucTransparency = (unsigned int)((int)(f0_255Transparency - 2147483648.0f) | 0x80000000);\n        else\n            p->ucTransparency = (int)f0_255Transparency;\n        p->bOther = 8;\n        p->a3_Pos[0] = a3_Pos[0];\n        p->a3_Pos[1] = a3_Pos[1];\n        p->a3_Pos[2] = a3_Pos[2];\n        p->ulColor = TXT_g_ulDefaultColor;\n\n        g_fCurrentSizeFontW = 1.0f;\n        g_fCurrentSizeFontH = 1.0f;\n        g_fInterLetterRatio = 1.0f;\n        g_ucCurrentNumFont = 0;\n        g_GLI_bForceAAAColor = 0;\n\n        if (p->bOther & 0x40)\n            g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 0;\n        else\n            g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;\n\n        g_ucCurrentNumFont = 0;\n        g_ucCurrentNumTextureFont = 50;\n        g_fCurrentSizeFontW = 1.0f;\n        g_fCurrentSizeFontH = 1.0f;\n        g_fInterLetterRatio = 1.0f;\n\n        x1[0] = p->a3_Pos[0] * (float)p_stVpt->dwWidth * 0.001f;\n        x1[1] = p->a3_Pos[1] * (float)p_stVpt->dwHeight * 0.001f;\n        TXT_g_StringExtents[2] = x1[0];\n        TXT_g_StringExtents[0] = x1[0];\n        TXT_g_StringExtents[3] = x1[1];\n        TXT_g_StringExtents[1] = x1[1];\n        TXT_g_GettingExtents = 1;\n        TXT_vDrawString(p_stVpt, p);\n\n        g_ucCurrentNumTextureFont = 50;\n        TXT_g_GettingExtents = 0;\n        g_fCurrentSizeFontW = 1.0f;\n        g_fCurrentSizeFontH = 1.0f;\n        g_fInterLetterRatio = 1.0f;\n        g_ucCurrentNumFont = 0;\n\n        x1[0] = TXT_g_StringExtents[0] * 100.0f / (float)p_stVpt->dwWidth - 1.0f;\n        x1[1] = TXT_g_StringExtents[1] * 100.0f / (float)p_stVpt->dwHeight - 1.0f;\n        x2[0] = TXT_g_StringExtents[2] * 100.0f / (float)p_stVpt->dwWidth + 1.0f;\n        x2[1] = TXT_g_StringExtents[3] * 100.0f / (float)p_stVpt->dwHeight + 1.0f;\n\n        GLI_vDisplayFrame(x1, x2, p->ucTransparency * 0.7f, p_stVpt);\n        g_GLI_bForceAAAColor = 1;\n        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;\n        GLI_vSetGlobalAlpha((float)p->ucTransparency);\n        TXT_vDrawString(p_stVpt, p);\n        GLI_vEnd2DSpritesWithUVs();\n        g_GLI_bForceAAAColor = 0;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "TXT_vAfficheSpecialWithTransparency",
+      "reason": "Reconstructed full 1068-byte function with exact 44/44 relocations, exact prologue through +0x48, target constants/calls/aggregate accesses, and discovered scoped #pragma fast_fptosi on is required to inline signed cvt.w.s. Residual begins +0x4c: natural explicit unsigned-range macro compiles high path as fallthrough (bc1f +10), uses f0/v0 temporaries and inserts andi 0xff; target compiler-generated unsigned conversion branches high with bc1t +5 and destructively converts f12 into v1 with no andi. Plain unsigned-char/unsigned-int casts instead call fptoui (1004 bytes); macro-shaped ternary and local-temp variants ranged 1052-1064 and did not improve the block. This 1068/1068 same-size candidate is the best controlled result.",
+      "size": 1068,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
+      "status": "MISMATCH",
+      "target_size": 1068,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00258cf0",
+      "candidate_size": 8,
+      "first_difference": 4,
+      "implementation": "void CD_SetCallBack(void* FunctionPointer)\n{\n    sceCdCbfunc = (void (*)(void))FunctionPointer;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "CD_SetCallBack",
+      "reason": "Single-store wrapper still misses the retail gp offset by 0x4 despite matching instruction shape and line map.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/fmn/sceecd.c",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0027fbd0",
+      "candidate_size": 16,
+      "first_difference": 0,
+      "implementation": "int fn_bHasBeenPausedForController(void)\n{\n    return ((g_EngineWasPausedAutomatically & 5) != 0);\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "fn_bHasBeenPausedForController",
+      "reason": "Boolean helper is logically right but still loads the int global as a word instead of the retail byte access pattern.",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/gamopt.c",
+      "status": "MISMATCH",
+      "target_size": 16,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002647d0",
+      "candidate_size": 12,
+      "first_difference": 8,
+      "implementation": "unsigned char EngineIsFrozen(void)\n{\n    return g_stEngineStructure.bEngineFrozen;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.4-mini",
+      "name": "EngineIsFrozen",
+      "reason": "Byte accessor compiles to the right symbol family but uses the wrong field offset; first mismatch is the final load word at +0x8.",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Initeng.c",
+      "status": "MISMATCH",
+      "target_size": 12,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -3872,6 +3932,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "MATCH"
     },
+    "0x001fbbb0": {
+      "address": "0x001fbbb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVarCaps",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
     "0x001fbbc0": {
       "address": "0x001fbbc0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -3884,6 +3952,22 @@
       "address": "0x001fbc10",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_ucSetDsgVarAction",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fbc20": {
+      "address": "0x001fbc20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVarLight",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fbc30": {
+      "address": "0x001fbc30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVarSoundEvent",
       "size": 16,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "MATCH"
@@ -4166,6 +4250,14 @@
       "name": "fn_vGetViewportCoordinates",
       "size": 24,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Fnct.c",
+      "status": "MATCH"
+    },
+    "0x0020dc30": {
+      "address": "0x0020dc30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stDummyCondition",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Cond.c",
       "status": "MATCH"
     },
     "0x00211590": {
@@ -4709,6 +4801,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_vReinitEngineClock",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Clock.c",
+      "status": "MATCH"
+    },
+    "0x0025e690": {
+      "address": "0x0025e690",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vInitFrameLenght",
+      "size": 16,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Clock.c",
       "status": "MATCH"
     },
@@ -5280,6 +5380,38 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
       "status": "MATCH"
     },
+    "0x0026ee10": {
+      "address": "0x0026ee10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bCollSetGetCharacterNoCollisionWithOtherSectors",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MATCH"
+    },
+    "0x0026ee20": {
+      "address": "0x0026ee20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bCollSetGetCharacterNoCollisionWithMainCharacter",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MATCH"
+    },
+    "0x0026ee30": {
+      "address": "0x0026ee30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bCollSetGetCharacterNoCollisionWithSecondaryCharacter",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MATCH"
+    },
+    "0x0026ee40": {
+      "address": "0x0026ee40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bCollSetGetCharacterNoCollisionWithProjectile",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MATCH"
+    },
     "0x0026ee50": {
       "address": "0x0026ee50",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -5510,6 +5642,46 @@
       "name": "fn_ulLightSizeOf",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x00271200": {
+      "address": "0x00271200",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_hMSSoundGetMechaCharacter",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSSound.c",
+      "status": "MATCH"
+    },
+    "0x00271210": {
+      "address": "0x00271210",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMSSoundSetBackGroundDistance",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSSound.c",
+      "status": "MATCH"
+    },
+    "0x00271220": {
+      "address": "0x00271220",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_xMSSoundGetBackGroundDistance",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSSound.c",
+      "status": "MATCH"
+    },
+    "0x00271240": {
+      "address": "0x00271240",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_xMSSoundGetSaturationDistance",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSSound.c",
+      "status": "MATCH"
+    },
+    "0x00271250": {
+      "address": "0x00271250",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMSSoundCopyClone",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSSound.c",
       "status": "MATCH"
     },
     "0x00271590": {
@@ -6192,6 +6364,30 @@
       "source": "src/Rayman3/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
       "status": "MATCH"
     },
+    "0x002a8ab0": {
+      "address": "0x002a8ab0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vSetLightType",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "status": "MATCH"
+    },
+    "0x002a8ac0": {
+      "address": "0x002a8ac0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_lGetLightType",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "status": "MATCH"
+    },
+    "0x002a8b70": {
+      "address": "0x002a8b70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vSetLightNearFar",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "status": "MATCH"
+    },
     "0x002a8bc0": {
       "address": "0x002a8bc0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -6206,6 +6402,22 @@
       "name": "GLI_xSetLightColor",
       "size": 36,
       "source": "src/Rayman3/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "status": "MATCH"
+    },
+    "0x002a8c20": {
+      "address": "0x002a8c20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xGetLightState",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "status": "MATCH"
+    },
+    "0x002a8c30": {
+      "address": "0x002a8c30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xSetLightState",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
       "status": "MATCH"
     },
     "0x002a9120": {
@@ -6253,6 +6465,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_lGetMaterialNumberOfAnimatedTexture",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
+    "0x002a9d90": {
+      "address": "0x002a9d90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xSetMaterialTextureDecalage",
+      "size": 16,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"
     },
@@ -7008,6 +7228,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_main.c",
       "status": "MATCH"
     },
+    "0x002f6870": {
+      "address": "0x002f6870",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_main.c",
+      "status": "MATCH"
+    },
     "0x002f7020": {
       "address": "0x002f7020",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -7565,6 +7793,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "SECT_fn_bIsThisSectorVirtual",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
+      "status": "MATCH"
+    },
+    "0x0031cfd0": {
+      "address": "0x0031cfd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SECT_fn_vSetHandleOfLightsInDNMLightsList",
+      "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
       "status": "MATCH"
     },

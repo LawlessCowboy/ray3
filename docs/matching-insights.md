@@ -41,3 +41,5 @@ compiler option, construct, and outcome.
 - [compiler] MWCC PS2 3.0 level 3 only runs its loop unroller in speed mode: #pragma optimize_for_size off changed a signed-int 9-trip struct-array accumulation from an 84-byte rolled loop to a 320-byte factor-8 main loop plus scalar remainder; the compiler help independently states that loop unrolling requires -opt speed. (2026-09-06)
 
 - [compiler] MWCC PS2 3.0: local #pragma optimize_for_size off changed repeated 0.001f and 0.7f constants from small-data literal loads into target-shaped lui/ori/mtc1 immediates in TXT_vAfficheSpecialWithTransparency; it did not change float-to-unsigned-char lowering through fptoui. (2026-09-07)
+
+- [compiler] MWCC PS2 3.0 recognizes scoped #pragma fast_fptosi on/reset: under the accepted -opt level=3 baseline it changes natural signed float-to-int casts from fptosi calls into hardware cvt.w.s/mfc1, while unsigned int/char casts still call fptoui. (2026-09-07)

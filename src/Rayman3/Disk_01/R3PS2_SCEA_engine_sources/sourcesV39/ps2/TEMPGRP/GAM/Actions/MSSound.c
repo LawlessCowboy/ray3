@@ -1208,7 +1208,7 @@ GEO_tdstGeometricObject_* fn_pCreateSphere(float x, float y, float z, float xRad
  */
 HIE_tdstSuperObject_* fn_hMSSoundGetMechaCharacter(tdstMSSound_* h_MSSound)
 {
-    /* TODO: decompile from asm/... */
+    return *(HIE_tdstSuperObject_* *)((unsigned char*)h_MSSound + 0xC);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 348–348 */
@@ -1220,7 +1220,7 @@ HIE_tdstSuperObject_* fn_hMSSoundGetMechaCharacter(tdstMSSound_* h_MSSound)
  */
 void fn_vMSSoundSetBackGroundDistance(tdstMSSound_* h_MSSound, int _xBackGroundDistance)
 {
-    /* TODO: decompile from asm/... */
+    *(int*)((unsigned char*)h_MSSound + 0x4) = _xBackGroundDistance;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 343–343 */
@@ -1232,7 +1232,7 @@ void fn_vMSSoundSetBackGroundDistance(tdstMSSound_* h_MSSound, int _xBackGroundD
  */
 int fn_xMSSoundGetBackGroundDistance(tdstMSSound_* h_MSSound)
 {
-    /* TODO: decompile from asm/... */
+    return *(int*)((unsigned char*)h_MSSound + 0x4);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 338–338 */
@@ -1244,7 +1244,7 @@ int fn_xMSSoundGetBackGroundDistance(tdstMSSound_* h_MSSound)
  */
 void fn_vMSSoundSetSaturationDistance(tdstMSSound_* h_MSSound, int _xSaturationDistance)
 {
-    /* TODO: decompile from asm/... */
+    *(int*)((unsigned char*)h_MSSound + 0x0) = _xSaturationDistance;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 333–333 */
@@ -1256,7 +1256,7 @@ void fn_vMSSoundSetSaturationDistance(tdstMSSound_* h_MSSound, int _xSaturationD
  */
 int fn_xMSSoundGetSaturationDistance(tdstMSSound_* h_MSSound)
 {
-    /* TODO: decompile from asm/... */
+    return *(int*)((unsigned char*)h_MSSound + 0x0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 314–314 */
@@ -1268,7 +1268,7 @@ int fn_xMSSoundGetSaturationDistance(tdstMSSound_* h_MSSound)
  */
 void fn_vMSSoundCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(_p_stObjectDest->h_MSSound, _p_stObjectSrc->h_MSSound, 0x10);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 277–297 */

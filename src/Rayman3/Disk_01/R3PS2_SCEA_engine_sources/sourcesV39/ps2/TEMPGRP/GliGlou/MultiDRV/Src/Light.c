@@ -354,8 +354,6 @@ void GLI_xGetLightBackgroundColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_s
  */
 void GLI_vSetLightType(GLI_tdstLight_* p_stLight, unsigned short lNewType)
 {
-    /* line map: */
-    /*   line 765 @ +0x000 */
     p_stLight->lTypeOfLight = lNewType;
 }
 
@@ -437,8 +435,6 @@ void GLI_vGetLightNearFar(GLI_tdstLight_* p_stLight, float* p_xNear, float* p_xF
  */
 void GLI_vSetLightNearFar(GLI_tdstLight_* p_stLight, float xNear, float xFar)
 {
-    /* line map: */
-    /*   line 729 @ +0x000 */
     p_stLight->xNear = xNear;
     p_stLight->xFar = xFar;
 }
@@ -505,8 +501,6 @@ void GLI_xSetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor)
  */
 void GLI_xGetLightState(GLI_tdstLight_* p_stLight, int* pb_lOnOff)
 {
-    /* line map: */
-    /*   line 679 @ +0x000 */
     *pb_lOnOff = p_stLight->b_lOnOff;
 }
 

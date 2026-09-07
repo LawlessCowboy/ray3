@@ -1656,7 +1656,7 @@ unsigned char fn_bCollSetGetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* 
  */
 unsigned char fn_bCollSetGetCharacterNoCollisionWithOtherSectors(tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hCollSet->ucCollisionFlag & 0x20;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 656–657 */
@@ -1669,7 +1669,7 @@ unsigned char fn_bCollSetGetCharacterNoCollisionWithOtherSectors(tdstCollSet_* _
  */
 unsigned char fn_bCollSetGetCharacterNoCollisionWithMainCharacter(tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hCollSet->ucCollisionFlag & 8;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 644–645 */
@@ -1682,7 +1682,7 @@ unsigned char fn_bCollSetGetCharacterNoCollisionWithMainCharacter(tdstCollSet_* 
  */
 unsigned char fn_bCollSetGetCharacterNoCollisionWithSecondaryCharacter(tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hCollSet->ucCollisionFlag & 4;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 639–640 */
@@ -1695,7 +1695,7 @@ unsigned char fn_bCollSetGetCharacterNoCollisionWithSecondaryCharacter(tdstCollS
  */
 unsigned char fn_bCollSetGetCharacterNoCollisionWithProjectile(tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hCollSet->ucCollisionFlag & 2;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 634–635 */

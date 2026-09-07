@@ -1818,7 +1818,7 @@ void fn_vGetScrollSpeedMatCollided(HIE_tdstSuperObject_* p_stSuperObj, MTH3D_tds
  */
 unsigned char EngineIsFrozen(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_stEngineStructure.bEngineFrozen;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1378–1387 */

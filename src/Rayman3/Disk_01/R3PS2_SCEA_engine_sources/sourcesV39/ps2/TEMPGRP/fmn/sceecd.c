@@ -53,8 +53,6 @@ unsigned char loadbufRootDir[2048];
 /* addr: 0x00258cf0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
  *   +0x0000 -> line 59
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
  */
 void CD_SetCallBack(void* FunctionPointer)
 {

@@ -886,7 +886,7 @@ void fn_vPauseFromMemoryCard(void)
  */
 int fn_bHasBeenPausedForController(void)
 {
-    return g_EngineWasPausedAutomatically;
+    return ((g_EngineWasPausedAutomatically & 5) != 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 799–1010 */
