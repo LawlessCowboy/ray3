@@ -37,3 +37,7 @@ compiler option, construct, and outcome.
 - [relocation] In HMU_Sync.c, the target encodes the shared HMU_g_bHMU_CS_Created relocation as gp-0x6614 in HMU_fn_bIsInitialized but gp-0x6610 in matched HMU_fn_vEnterCriticalSection. A single natural source declaration can match the latter but not both; treat isolated accessor failures as target relocation/data-layout evidence. (2026-09-06)
 
 - [debug-format] fn_ucGetDsgVarBoolean is a three-argument ABI despite the recovered two-argument declaration; target loads byte from a0, writes output through a2, and tags it E_vt_Integer (6), not E_vt_Boolean (1). This exact natural-C signature/tag change produced a 24/24 MATCH. (2026-09-06)
+
+- [compiler] MWCC PS2 3.0 level 3 only runs its loop unroller in speed mode: #pragma optimize_for_size off changed a signed-int 9-trip struct-array accumulation from an 84-byte rolled loop to a 320-byte factor-8 main loop plus scalar remainder; the compiler help independently states that loop unrolling requires -opt speed. (2026-09-06)
+
+- [compiler] MWCC PS2 3.0: local #pragma optimize_for_size off changed repeated 0.001f and 0.7f constants from small-data literal loads into target-shaped lui/ori/mtc1 immediates in TXT_vAfficheSpecialWithTransparency; it did not change float-to-unsigned-char lowering through fptoui. (2026-09-07)

@@ -28,6 +28,14 @@ typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
 typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
 
+typedef enum tdeFuncId_ { eFunc_Dummy = 0 } tdeFuncId_;
+typedef enum tdeVariableType_ { eVariableType_Dummy = 0 } tdeVariableType_;
+struct MTH3D_tdstVector_ { float xX; float xY; float xZ; };
+struct MAT_tdstTransformation_ { int eType; unsigned char data[100]; };
+typedef union tduGetSetParam_ { int lValue; float xValue; MTH3D_tdstVector_ stVectorValue; void* pValue; } tduGetSetParam_;
+struct tdstGetSetParam_ { tduGetSetParam_ uParam; tdeVariableType_ eType; };
+typedef struct stTfmtStatus_ { unsigned char data[48]; } stTfmtStatus_;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 4091–4099 */
 /* addr: 0x0021b6e0  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -878,7 +886,6 @@ tdstNodeInterpret_* fn_p_stTravelOnAGraph(HIE_tdstSuperObject_* p_SuperObjPerso,
 {
     WP_tdstArc_* hElement;
     int lNbOfConnectedWP;
-    WP_tdstArc_* hElement;
     int lWeightMax;
     int lWeightMin;
     int lValue;
@@ -1268,7 +1275,6 @@ tdstNodeInterpret_* fn_p_stWayFunction(HIE_tdstSuperObject_* p_SuperObjPerso, td
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     unsigned int ulNewCaps;
     int lWeight;
-    int lIndex;
     int lValue;
     tdstMSWay_* h_MSWay;
     tdeFuncId_ eFuncId;
@@ -2169,10 +2175,8 @@ void fn_p_stCode4TextAffiche(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInte
 {
     unsigned int ulCptDelay;
     unsigned int ulTmpDelay;
-    unsigned int ulTmpDelay;
     DNM_stDynamics* p_stDynamics;
     MTH3D_tdstVector_ stResolutionScale;
-    unsigned int ulTmpDelay;
     MAT_tdstTransformation_ stMatrix;
     int i_Num;
     char asz_Num[20];

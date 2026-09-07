@@ -19,6 +19,9 @@ typedef struct _stTimerCount _stTimerCount;
 typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct stMorphData stMorphData;
 typedef struct stMACDPID stMACDPID;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef union _SND_tduRefEvt _SND_tduRefEvt;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 typedef struct anon_0 anon_0;
@@ -36,6 +39,69 @@ typedef struct tdstGraphChainedListNode_ tdstGraphChainedListNode_;
 typedef struct DNM_stObstacle DNM_stObstacle;
 typedef struct MTH_stMove MTH_stMove;
 typedef struct SECT_tdstSector_ SECT_tdstSector_;
+
+struct MTH3D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+};
+
+struct anon_0 {
+    float m_xAngle; /* +0x0 */
+    int m_stAxis; /* +0x4 */
+};
+
+struct anon_1 {
+    float m_xAngle; /* +0x0 */
+    int m_stAxis; /* +0x4 */
+};
+
+struct tdstFrame3d_ {
+    int p_stArrayOfElts3d; /* +0x0 */
+    int p_stAngularSpeedMatrix; /* +0x4 */
+    int p_stLinearSpeedVector; /* +0x8 */
+    int stHierarchy; /* +0xc */
+    int stDeformation; /* +0x14 */
+    int p_stAnim; /* +0x1c */
+    unsigned short uwFrameNumber; /* +0x20 */
+    unsigned char ucMatrixUpdated; /* +0x22 */
+    unsigned char ucCacheEntry; /* +0x23 */
+};
+
+struct DNM_stObstacle {
+    float m_xRate; /* +0x0 */
+    MTH3D_tdstVector_ m_stNorm; /* +0x4 */
+    MTH3D_tdstVector_ m_stContact; /* +0x10 */
+    GMT_tdstGameMaterial_* hMyMaterial; /* +0x1c */
+    GMT_tdstGameMaterial_* hCollidedMaterial; /* +0x20 */
+    HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
+};
+
+struct MTH_stRotation {
+    float m_xAngle; /* +0x0 */
+    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
+};
+
+struct MTH_stMove {
+    MTH3D_tdstVector_ m_stLinear; /* +0x0 */
+    MTH_stRotation m_stAngular; /* +0xc */
+};
+
+struct DNM_stReport {
+    unsigned int m_ulPrevSurfaceState; /* +0x0 */
+    unsigned int m_ulCurrSurfaceState; /* +0x4 */
+    DNM_stObstacle m_stObstacle; /* +0x8 */
+    DNM_stObstacle m_stGround; /* +0x30 */
+    DNM_stObstacle m_stWall; /* +0x58 */
+    DNM_stObstacle m_stCharacter; /* +0x80 */
+    DNM_stObstacle m_stWater; /* +0xa8 */
+    DNM_stObstacle m_stCeil; /* +0xd0 */
+    MTH_stMove m_stAbsolutePrevSpeed; /* +0xf8 */
+    MTH_stMove m_stAbsoluteCurrSpeed; /* +0x114 */
+    MTH_stMove m_stAbsolutePrevPosition; /* +0x130 */
+    MTH_stMove m_stAbsoluteCurrPosition; /* +0x14c */
+    char m_cBitField; /* +0x168 */
+};
 
 struct tdstCouple_ {
     unsigned short wChild; /* +0x0 */
@@ -55,22 +121,6 @@ struct AI_tdstMind_ {
     int p_stReflex; /* +0x8 */
     int p_stDsgMem; /* +0xc */
     unsigned char bDoingIntel; /* +0x10 */
-};
-
-struct DNM_stReport {
-    unsigned int m_ulPrevSurfaceState; /* +0x0 */
-    unsigned int m_ulCurrSurfaceState; /* +0x4 */
-    DNM_stObstacle m_stObstacle; /* +0x8 */
-    DNM_stObstacle m_stGround; /* +0x30 */
-    DNM_stObstacle m_stWall; /* +0x58 */
-    DNM_stObstacle m_stCharacter; /* +0x80 */
-    DNM_stObstacle m_stWater; /* +0xa8 */
-    DNM_stObstacle m_stCeil; /* +0xd0 */
-    MTH_stMove m_stAbsolutePrevSpeed; /* +0xf8 */
-    MTH_stMove m_stAbsoluteCurrSpeed; /* +0x114 */
-    MTH_stMove m_stAbsolutePrevPosition; /* +0x130 */
-    MTH_stMove m_stAbsoluteCurrPosition; /* +0x14c */
-    char m_cBitField; /* +0x168 */
 };
 
 struct tdstAlways_ {
@@ -229,11 +279,6 @@ struct GEO_tdstEdge_ {
     /* array */ int st_VectorPoints[2]; /* +0x4 */
 };
 
-struct anon_0 {
-    float m_xAngle; /* +0x0 */
-    /* aggregate */ int m_stAxis; /* +0x4 */
-};
-
 struct tdstEngineTimerStructure_ {
     unsigned int ulTrameNumber; /* +0x0 */
     short sTimerHandle; /* +0x4 */
@@ -248,11 +293,6 @@ struct tdstEngineTimerStructure_ {
     unsigned int ulTickPerMS; /* +0x80 */
 };
 
-struct anon_1 {
-    float m_xAngle; /* +0x0 */
-    /* aggregate */ int m_stAxis; /* +0x4 */
-};
-
 struct tdstElement3d_ {
     unsigned short wElement : 15; /* bit 0, byte +0x0 */
     unsigned short bf1ActiveStatus : 1; /* bit 15, byte +0x0 */
@@ -260,11 +300,6 @@ struct tdstElement3d_ {
     unsigned char eTypeOfElement; /* +0x3 */
     unsigned char ucTransparency; /* +0x4 */
     unsigned char ucAnimLevel; /* +0x5 */
-};
-
-struct MTH_stRotation {
-    float m_xAngle; /* +0x0 */
-    /* aggregate */ int m_stAxis; /* +0x4 */
 };
 
 struct tdstEvent_ {
@@ -303,35 +338,9 @@ struct SCT_tdstListOfSoundEvent_ {
     _SND_tduRefEvt uSoundEvent; /* +0x4 */
 };
 
-struct tdstFrame3d_ {
-    int p_stArrayOfElts3d; /* +0x0 */
-    int p_stAngularSpeedMatrix; /* +0x4 */
-    int p_stLinearSpeedVector; /* +0x8 */
-    /* aggregate */ int stHierarchy; /* +0xc */
-    /* aggregate */ int stDeformation; /* +0x14 */
-    int p_stAnim; /* +0x1c */
-    unsigned short uwFrameNumber; /* +0x20 */
-    unsigned char ucMatrixUpdated; /* +0x22 */
-    unsigned char ucCacheEntry; /* +0x23 */
-};
-
 struct tdstGraphChainedListNode_ {
     int GraphChainedListNodeInfo; /* +0x0 */
     int p_NextGraphChainedListNode; /* +0x4 */
-};
-
-struct DNM_stObstacle {
-    float m_xRate; /* +0x0 */
-    /* aggregate */ int m_stNorm; /* +0x4 */
-    /* aggregate */ int m_stContact; /* +0x10 */
-    int hMyMaterial; /* +0x1c */
-    int hCollidedMaterial; /* +0x20 */
-    int mp_stSupObj; /* +0x24 */
-};
-
-struct MTH_stMove {
-    /* aggregate */ int m_stLinear; /* +0x0 */
-    MTH_stRotation m_stAngular; /* +0xc */
 };
 
 struct SECT_tdstSector_ {

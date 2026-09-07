@@ -3154,12 +3154,41 @@ void fn_vR3SetEnvScoreWithRevisit(unsigned int ulIndE, unsigned int ulScore)
  */
 void fn_vR3RecomputeGlobalScore(void)
 {
-    unsigned short i;
+    int i;
+    int offset;
+    anon_2 *p;
+
     g_aEnvValue[0].ulScore = 0;
-    for (i = 1; i < 10; i++)
-        g_aEnvValue[0].ulScore += g_aEnvValue[i].ulScore;
-    for (i = 1; i < 10; i++)
-        g_aEnvValue[0].ulScore += g_aEnvValue[i].ulNbCage;
+
+    i = 1;
+    offset = 8;
+    do
+    {
+        p = (anon_2 *)((char *)g_aEnvValue + offset);
+        g_aEnvValue[0].ulScore += p[0].ulScore;
+        g_aEnvValue[0].ulScore += p[1].ulScore;
+        g_aEnvValue[0].ulScore += p[2].ulScore;
+        g_aEnvValue[0].ulScore += p[3].ulScore;
+        g_aEnvValue[0].ulScore += p[4].ulScore;
+        g_aEnvValue[0].ulScore += p[5].ulScore;
+        g_aEnvValue[0].ulScore += p[6].ulScore;
+        g_aEnvValue[0].ulScore += p[7].ulScore;
+        i += 8;
+        offset += 64;
+    } while (i < 2);
+
+    offset = i * 8;
+    if (i < 10)
+    {
+        do
+        {
+            p = (anon_2 *)((char *)g_aEnvValue + offset);
+            g_aEnvValue[0].ulScore += p->ulScore;
+            i++;
+            offset += 8;
+        } while (i < 10);
+    }
+
     g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
 }
 

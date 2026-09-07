@@ -3510,6 +3510,93 @@
       "status": "MISMATCH",
       "target_size": 64,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0029d800",
+      "candidate_size": 180,
+      "first_difference": 2,
+      "implementation": "void fn_vR3RecomputeGlobalScore(void)\n{\n    unsigned int i;\n    struct anon_2_full* p;\n    p = (struct anon_2_full*)g_aEnvValue;\n    p[0].score0 = 0;\n    for (i = 1; i < 10; i++)\n    {\n        p[0].score0 += p[i].score0;\n        p[0].score0 += p[i].score1;\n        p[0].score0 += p[i].score2;\n        p[0].score0 += p[i].score3;\n        p[0].score0 += p[i].score4;\n        p[0].score0 += p[i].score5;\n        p[0].score0 += p[i].score6;\n        p[0].score0 += p[i].score7;\n    }\n    g_RevisitCurrentGlobalScore = p[0].score0;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "fn_vR3RecomputeGlobalScore",
+      "reason": "Recovered hidden 0x40-byte aggregate and eight score fields at offsets 0x4..0x3c; natural typed pointer loop reaches 180/320. Remaining mismatch is accumulator/pointer scheduling and target's two-phase loop structure.",
+      "size": 320,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 320,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0029d800",
+      "candidate_size": 316,
+      "first_difference": 300,
+      "implementation": "void fn_vR3RecomputeGlobalScore(void)\n{\n    int i;\n    int offset;\n    anon_2 *p;\n\n    g_aEnvValue[0].ulScore = 0;\n\n    i = 1;\n    offset = 8;\n    do\n    {\n        p = (anon_2 *)((char *)g_aEnvValue + offset);\n        g_aEnvValue[0].ulScore += p[0].ulScore;\n        g_aEnvValue[0].ulScore += p[1].ulScore;\n        g_aEnvValue[0].ulScore += p[2].ulScore;\n        g_aEnvValue[0].ulScore += p[3].ulScore;\n        g_aEnvValue[0].ulScore += p[4].ulScore;\n        g_aEnvValue[0].ulScore += p[5].ulScore;\n        g_aEnvValue[0].ulScore += p[6].ulScore;\n        g_aEnvValue[0].ulScore += p[7].ulScore;\n        i += 8;\n        offset += 64;\n    } while (i < 2);\n\n    offset = i * 8;\n    if (i < 10)\n    {\n        do\n        {\n            p = (anon_2 *)((char *)g_aEnvValue + offset);\n            g_aEnvValue[0].ulScore += p->ulScore;\n            i++;\n            offset += 8;\n        } while (i < 10);\n    }\n\n    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "fn_vR3RecomputeGlobalScore",
+      "reason": "First difference +0x12c: signed int index with explicit byte-offset induction, factor-8 main do-loop, and scalar remainder reproduces all 79 candidate instructions through the remainder-loop delay slot; candidate is 316/320 and only lacks the target standalone nop before the final global reload. This is compiler scheduling/source-layout residual. A compact rolled loop under #pragma optimize_for_size off auto-unrolled to the exact 320-byte size and target line map, but scheduled its nop at +0xf4 instead and first differed at +0xf0.",
+      "size": 320,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 320,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0024e3e0",
+      "candidate_size": 56,
+      "first_difference": 24,
+      "implementation": "void COL_vSetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)\n{\n    hObject->d_stListOfPoints[3 * xIndexOfPoint] = *p_stPoint;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.6-sol",
+      "name": "COL_vSetPointOfObject",
+      "reason": "Tried treating point storage as float[3] to correct target stride (12 bytes versus vector-pointer arithmetic's 36 bytes), plus local load-order variants. Natural C corrected stride but register/vector-load ordering remained mismatched; baseline restored.",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c",
+      "status": "MISMATCH",
+      "target_size": 56,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x003236e0",
+      "candidate_size": 1004,
+      "first_difference": 20,
+      "implementation": "void TXT_vAfficheSpecialWithTransparency(char* String, float* a3_Pos, float f0_255Transparency)\n{\n    float x1[3];\n    float x2[3];\n    _JFFTXT_* p;\n    GLD_tdstViewportAttributes_* p_stVpt;\n    _JFFTXT_ DummyString;\n    GLD_tdstViewportAttributes_ stVpt;\n\n    p = &DummyString;\n    p_stVpt = &stVpt;\n    stVpt.dwHeight = 480;\n    stVpt.dwWidth = 640;\n    stVpt.iOffsetPosX = 0;\n    stVpt.iOffsetPosY = 0;\n\n    if (String)\n    {\n        p->pString = (int)String;\n        p->ucTransparency = f0_255Transparency;\n        p->bOther = 8;\n        p->a3_Pos[0] = a3_Pos[0];\n        p->a3_Pos[1] = a3_Pos[1];\n        p->a3_Pos[2] = a3_Pos[2];\n        p->ulColor = TXT_g_ulDefaultColor;\n\n        g_fCurrentSizeFontW = 1.0f;\n        g_fCurrentSizeFontH = 1.0f;\n        g_fInterLetterRatio = 1.0f;\n        g_ucCurrentNumFont = 0;\n        g_GLI_bForceAAAColor = 0;\n\n        if (p->bOther & 0x40)\n            g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 0;\n        else\n            g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;\n\n        g_ucCurrentNumFont = 0;\n        g_ucCurrentNumTextureFont = 50;\n        g_fCurrentSizeFontW = 1.0f;\n        g_fCurrentSizeFontH = 1.0f;\n        g_fInterLetterRatio = 1.0f;\n\n        x1[0] = p->a3_Pos[0] * (float)p_stVpt->dwWidth * 0.001f;\n        x1[1] = p->a3_Pos[1] * (float)p_stVpt->dwHeight * 0.001f;\n        TXT_g_StringExtents[2] = x1[0];\n        TXT_g_StringExtents[0] = x1[0];\n        TXT_g_StringExtents[3] = x1[1];\n        TXT_g_StringExtents[1] = x1[1];\n        TXT_g_GettingExtents = 1;\n        TXT_vDrawString(p_stVpt, p);\n\n        g_ucCurrentNumTextureFont = 50;\n        TXT_g_GettingExtents = 0;\n        g_fCurrentSizeFontW = 1.0f;\n        g_fCurrentSizeFontH = 1.0f;\n        g_fInterLetterRatio = 1.0f;\n        g_ucCurrentNumFont = 0;\n\n        x1[0] = TXT_g_StringExtents[0] * 100.0f / (float)p_stVpt->dwWidth - 1.0f;\n        x1[1] = TXT_g_StringExtents[1] * 100.0f / (float)p_stVpt->dwHeight - 1.0f;\n        x2[0] = TXT_g_StringExtents[2] * 100.0f / (float)p_stVpt->dwWidth + 1.0f;\n        x2[1] = TXT_g_StringExtents[3] * 100.0f / (float)p_stVpt->dwHeight + 1.0f;\n\n        GLI_vDisplayFrame(x1, x2, p->ucTransparency * 0.7f, p_stVpt);\n        g_GLI_bForceAAAColor = 1;\n        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;\n        GLI_vSetGlobalAlpha((float)p->ucTransparency);\n        TXT_vDrawString(p_stVpt, p);\n        GLI_vEnd2DSpritesWithUVs();\n        g_GLI_bForceAAAColor = 0;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "TXT_vAfficheSpecialWithTransparency",
+      "reason": "First difference +0x14: full natural-C reconstruction reaches 1004/1068 bytes and 44/45 relocations. Local #pragma optimize_for_size off reproduces the target's immediate 0.001f/0.7f constants; object stack slots, viewport setup, globals, extents store order, five calls, and all later data/control flow are recovered. Residual is compiler behavior: baseline MWCC lowers the direct float-to-unsigned-char assignment through unresolved fptoui at +0x3c, preserving a3_Pos in s2; retail emits a 64-byte inline unsigned conversion and keeps a1 live. Direct/explicit unsigned casts, implicit assignment, unsigned temporary, explicit natural-C range expansion, inline on/auto, and optimization_level 4 did not reproduce that lowering without prohibited intrinsics.",
+      "size": 1068,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
+      "status": "MISMATCH",
+      "target_size": 1068,
+      "unresolved_relocations": [
+        {
+          "offset": 60,
+          "symbol": "fptoui",
+          "type": 4
+        }
+      ]
+    },
+    {
+      "address": "0x002aac80",
+      "candidate_size": 76,
+      "first_difference": 0,
+      "implementation": "void GLI_vSetGlobalAlpha(float Alpha)\n{\n    float fAlpha;\n\n    fAlpha = Alpha * (1.0f / 255.0f);\n    fAlpha = (fAlpha > 1.0f) ? 1.0f : fAlpha;\n    fAlpha = (fAlpha < 0.0f) ? 0.0f : fAlpha;\n    GLI_BIG_GLOBALS_xGlobalAlpha = fAlpha;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "GLI_vSetGlobalAlpha",
+      "reason": "Retried prior clamp reconstruction with natural if/ternary forms and local optimize_for_size pragma. The pragma reproduces target immediate 0x3B808081 materialization, but MWCC emits branch-based clamps and reversed multiply operands; target uses branchless PS2 min.s/max.s. Builtin __min/__max and __fmin/__fmax lower to calls, so no natural-C exact match yet.",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Proj.c",
+      "status": "MISMATCH",
+      "target_size": 52,
+      "unresolved_relocations": [
+        {
+          "offset": 0,
+          "symbol": "@13",
+          "type": 8
+        }
+      ]
     }
   ],
   "data": {},
@@ -5687,6 +5774,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GAM_fn_vResetClipFixObject",
       "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/PC/DspFix.c",
+      "status": "MATCH"
+    },
+    "0x00282b30": {
+      "address": "0x00282b30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_vClipFixObject",
+      "size": 68,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/PC/DspFix.c",
       "status": "MATCH"
     },

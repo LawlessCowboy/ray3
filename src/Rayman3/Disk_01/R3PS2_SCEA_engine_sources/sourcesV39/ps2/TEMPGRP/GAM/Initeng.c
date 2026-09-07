@@ -110,6 +110,7 @@ typedef struct COL_tdstCollideObject_ COL_tdstCollideObject_;
 typedef struct tdstNodeCamera_ tdstNodeCamera_;
 typedef struct tdstEvent_ tdstEvent_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
+typedef struct GLI_tdstDataOfElement_ GLI_tdstDataOfElement_;
 typedef struct SECT_tdstListOfDNMLights_ SECT_tdstListOfDNMLights_;
 typedef struct CINE_Manager_ CINE_Manager_;
 typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
@@ -123,6 +124,11 @@ typedef struct _stTimerCount _stTimerCount;
 typedef struct tdstEngineTimerStructure_ tdstEngineTimerStructure_;
 typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
 typedef struct GLI_tdstSpecificAttributesFor3D_ GLI_tdstSpecificAttributesFor3D_;
+struct MTH3D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+};
 typedef struct LST2_tdstAnchorTotdxHandleToNodeCameraDyn LST2_tdstAnchorTotdxHandleToNodeCameraDyn;
 typedef struct LST2_tdstAnchorTotdxHandleToFamilyListDyn LST2_tdstAnchorTotdxHandleToFamilyListDyn;
 typedef struct tdstEngineStructure_ tdstEngineStructure_;
@@ -142,6 +148,15 @@ typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn LST2_tdst
 typedef struct MTH_stRotation MTH_stRotation;
 typedef struct MTH_stMove MTH_stMove;
 typedef struct DNM_stReport DNM_stReport;
+
+struct GLI_tdstDataOfElement_ {
+    MTH3D_tdstVector_ stHit; /* +0x0 */
+    float xDistance; /* +0xc */
+    short xElements; /* +0x10 */
+    short xIndexOfFace; /* +0x12 */
+    short xIndexOfEdge; /* +0x14 */
+    short xIndexOfPoint; /* +0x16 */
+};
 typedef struct COL_tdstOctreeNode_ COL_tdstOctreeNode_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt;
@@ -273,12 +288,6 @@ struct AI_tdstMind_ {
     tdstIntelligence_* p_stReflex; /* +0x8 */
     tdstDsgMem_* p_stDsgMem; /* +0xc */
     unsigned char bDoingIntel; /* +0x10 */
-};
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
 };
 
 struct anon_0 {
@@ -1894,7 +1903,6 @@ void fn_vReinitTheStaticHierarchie(HIE_tdstSuperObject_* hSuperObject)
  */
 void fn_vReinitTheMap(void)
 {
-    unsigned char uc_ViewPortIndex;
     unsigned char uc_ViewPortIndex;
     int i;
     /* TODO: decompile from asm/... */

@@ -8,6 +8,7 @@
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
+typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
 typedef struct WP_tdstListOfArc_ WP_tdstListOfArc_;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
@@ -68,6 +69,13 @@ typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct tdstDynam_ tdstDynam_;
 typedef struct SECT_tdstListOfSOSectorsInGraphicInteraction_ SECT_tdstListOfSOSectorsInGraphicInteraction_;
 typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
+
+struct GEO_tdstColor_ {
+    float xR; /* +0x0 */
+    float xG; /* +0x4 */
+    float xB; /* +0x8 */
+    float xA; /* +0xc */
+};
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt;
 typedef struct GEO_tdstVisualSet_ GEO_tdstVisualSet_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;

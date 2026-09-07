@@ -1393,6 +1393,7 @@ unsigned int GAM_g_dwOldBottom;
 unsigned int GAM_g_dwOldLeft;
 unsigned int GAM_g_dwOldTop;
 extern void GLI_vRemoveScissors(GLD_tdstViewportAttributes_*);
+extern void GLI_vSetScissors(GLD_tdstViewportAttributes_*);
 tdstDisplayVignetteDuringPlaying_ g_stDisplayVignetteDuringPlaying;
 unsigned char g_ucGameModuleId;
 tdstEngineStructure_ g_stEngineStructure;
@@ -1474,7 +1475,7 @@ void GAM_fn_vClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
     _p_stFixViewportAttr->dwClipLeftInPix = GAM_g_dwClipping_Left;
     _p_stFixViewportAttr->dwClipBottomInPix = GAM_g_dwClipping_Right;
     _p_stFixViewportAttr->dwClipRightInPix = GAM_g_dwClipping_Bottom;
-    GLI_vRemoveScissors(_p_stFixViewportAttr);
+    GLI_vSetScissors(_p_stFixViewportAttr);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\DspFix.c lines 132–136 */

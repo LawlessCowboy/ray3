@@ -3794,6 +3794,13 @@ void fn_vInitFont(void)
     /* TODO: decompile from asm/... */
 }
 
+void TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p);
+void GLI_vDisplayFrame(float* a3_fPosition, float* a3_fDirection, float _f_Transparency, GLD_tdstViewportAttributes_* _p_stViewport);
+void GLI_vSetGlobalAlpha(float Alpha);
+void GLI_vEnd2DSpritesWithUVs(void);
+
+#pragma optimize_for_size off
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1955–2043 */
 /* addr: 0x003236e0  size: 1068 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3860,14 +3867,79 @@ void fn_vInitFont(void)
  */
 void TXT_vAfficheSpecialWithTransparency(char* String, float* a3_Pos, float f0_255Transparency)
 {
-    float x2[3];
     float x1[3];
-    GLD_tdstViewportAttributes_* p_stVpt;
-    GLD_tdstViewportAttributes_ stVpt;
+    float x2[3];
     _JFFTXT_* p;
+    GLD_tdstViewportAttributes_* p_stVpt;
     _JFFTXT_ DummyString;
-    /* TODO: decompile from asm/... */
+    GLD_tdstViewportAttributes_ stVpt;
+
+    p = &DummyString;
+    p_stVpt = &stVpt;
+    stVpt.dwHeight = 480;
+    stVpt.dwWidth = 640;
+    stVpt.iOffsetPosX = 0;
+    stVpt.iOffsetPosY = 0;
+
+    if (String)
+    {
+        p->pString = (int)String;
+        p->ucTransparency = f0_255Transparency;
+        p->bOther = 8;
+        p->a3_Pos[0] = a3_Pos[0];
+        p->a3_Pos[1] = a3_Pos[1];
+        p->a3_Pos[2] = a3_Pos[2];
+        p->ulColor = TXT_g_ulDefaultColor;
+
+        g_fCurrentSizeFontW = 1.0f;
+        g_fCurrentSizeFontH = 1.0f;
+        g_fInterLetterRatio = 1.0f;
+        g_ucCurrentNumFont = 0;
+        g_GLI_bForceAAAColor = 0;
+
+        if (p->bOther & 0x40)
+            g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 0;
+        else
+            g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+
+        g_ucCurrentNumFont = 0;
+        g_ucCurrentNumTextureFont = 50;
+        g_fCurrentSizeFontW = 1.0f;
+        g_fCurrentSizeFontH = 1.0f;
+        g_fInterLetterRatio = 1.0f;
+
+        x1[0] = p->a3_Pos[0] * (float)p_stVpt->dwWidth * 0.001f;
+        x1[1] = p->a3_Pos[1] * (float)p_stVpt->dwHeight * 0.001f;
+        TXT_g_StringExtents[2] = x1[0];
+        TXT_g_StringExtents[0] = x1[0];
+        TXT_g_StringExtents[3] = x1[1];
+        TXT_g_StringExtents[1] = x1[1];
+        TXT_g_GettingExtents = 1;
+        TXT_vDrawString(p_stVpt, p);
+
+        g_ucCurrentNumTextureFont = 50;
+        TXT_g_GettingExtents = 0;
+        g_fCurrentSizeFontW = 1.0f;
+        g_fCurrentSizeFontH = 1.0f;
+        g_fInterLetterRatio = 1.0f;
+        g_ucCurrentNumFont = 0;
+
+        x1[0] = TXT_g_StringExtents[0] * 100.0f / (float)p_stVpt->dwWidth - 1.0f;
+        x1[1] = TXT_g_StringExtents[1] * 100.0f / (float)p_stVpt->dwHeight - 1.0f;
+        x2[0] = TXT_g_StringExtents[2] * 100.0f / (float)p_stVpt->dwWidth + 1.0f;
+        x2[1] = TXT_g_StringExtents[3] * 100.0f / (float)p_stVpt->dwHeight + 1.0f;
+
+        GLI_vDisplayFrame(x1, x2, p->ucTransparency * 0.7f, p_stVpt);
+        g_GLI_bForceAAAColor = 1;
+        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+        GLI_vSetGlobalAlpha((float)p->ucTransparency);
+        TXT_vDrawString(p_stVpt, p);
+        GLI_vEnd2DSpritesWithUVs();
+        g_GLI_bForceAAAColor = 0;
+    }
 }
+
+#pragma optimize_for_size reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1872–1950 */
 /* addr: 0x00323b10  size: 972 bytes */
@@ -4635,11 +4707,6 @@ void TXT_vDrawAStringOnLine(float fX, float fY, unsigned char* szText, _JFFTXT_*
 {
     char Str[100];
     float sintime;
-    char Str[100];
-    char Str[100];
-    char Str[100];
-    char Str[100];
-    char Str[100];
     unsigned short i;
     unsigned short L;
     float fCurX;
@@ -4888,7 +4955,6 @@ void TXT_vAffiche(GLD_tdstViewportAttributes_* p_stVpt, float fFrameLenght)
 {
     float x2[3];
     float x1[3];
-    int trsp;
     int trsp;
     unsigned char ucDrawThisString;
     int i;
