@@ -394,7 +394,7 @@ int GEO_lMainCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVecto
  */
 void GEO_xReinitZFarTransparencyLevel(void)
 {
-    /* TODO: decompile from asm/... */
+    GEO_g_xZFarTransparencyLevel = 1.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 75–75 */

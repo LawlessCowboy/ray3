@@ -38,6 +38,9 @@ typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
+typedef struct tdstGetSetParam_ tdstGetSetParam_;
+extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
 typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
 typedef struct tdstFrame3d_ tdstFrame3d_;
@@ -49,12 +52,10 @@ typedef struct MTH_stRotation MTH_stRotation;
 typedef struct MTH_stMove MTH_stMove;
 typedef struct DNM_stReport DNM_stReport;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
-typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
 typedef struct tdstEngineObject_ tdstEngineObject_;
 typedef struct tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_2 anon_2;
-typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct tdstComport_ tdstComport_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
 typedef struct COL_tdstBoundingSphere_ COL_tdstBoundingSphere_;
@@ -3628,7 +3629,7 @@ tdstNodeInterpret_* fn_p_st_FormatMC(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  */
 tdstNodeInterpret_* fn_p_stIsMcValid(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2872–2875 */
@@ -4811,9 +4812,9 @@ tdstNodeInterpret_* fn_p_stGlobalToLocal(HIE_tdstSuperObject_* p_SuperObjPerso, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stDummyFunction(tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stDummyFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    /* TODO: decompile from asm/... */
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 1173–1184 */

@@ -3491,5 +3491,5 @@ void fn_GetPersoSighting(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSup
  */
 int fn_bIsValidObject(HIE_tdstSuperObject_* pPerso)
 {
-    /* TODO: decompile from asm/... */
+    return pPerso != 0;
 }

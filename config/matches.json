@@ -3597,6 +3597,21 @@
           "type": 8
         }
       ]
+    },
+    {
+      "address": "0x0025c490",
+      "candidate_size": 8,
+      "first_difference": 4,
+      "implementation": "unsigned short GAM_fn_uwGetEngineLoading(void)\n{\n    return GAM_g_uwLoadingLevel;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.6-sol",
+      "name": "GAM_fn_uwGetEngineLoading",
+      "reason": "Natural global-return reconstruction emits the correct lhu/jr shape but GP offset is 4 bytes off (-0x7058 vs target -0x7054), indicating duplicate/global small-data layout mismatch in the Basic.c translation unit.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Basic.c",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -4137,6 +4152,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPWayPt.c",
       "status": "MATCH"
     },
+    "0x00200c10": {
+      "address": "0x00200c10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vInitDistanceWaypoint",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ActMain.c",
+      "status": "MATCH"
+    },
     "0x002062b0": {
       "address": "0x002062b0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -4337,6 +4360,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
       "status": "MATCH"
     },
+    "0x002121d0": {
+      "address": "0x002121d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stIsMcValid",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
     "0x00221e60": {
       "address": "0x00221e60",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -4423,6 +4454,14 @@
       "name": "fn_p_stIsInStereoMode",
       "size": 56,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiCondSound.c",
+      "status": "MATCH"
+    },
+    "0x0024c7c0": {
+      "address": "0x0024c7c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bIsValidObject",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AICommonTools.c",
       "status": "MATCH"
     },
     "0x0024caf0": {
@@ -5801,6 +5840,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/PC/DspFix.c",
       "status": "MATCH"
     },
+    "0x00289590": {
+      "address": "0x00289590",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ul3dDataSizeOf",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
     "0x0028d100": {
       "address": "0x0028d100",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -5943,6 +5990,14 @@
       "name": "M2D_fn_iNbTexturesNeededForMenu",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/SoundMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x002a1480": {
+      "address": "0x002a1480",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GEO_xReinitZFarTransparencyLevel",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/Culling.c",
       "status": "MATCH"
     },
     "0x002a1490": {

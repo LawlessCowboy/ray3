@@ -1844,7 +1844,7 @@ unsigned char GAM_fn_bIsEngineInFixMode(void)
  */
 unsigned short GAM_fn_uwGetEngineLoading(void)
 {
-    return 0;
+    return GAM_g_uwLoadingLevel;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 893–1081 */

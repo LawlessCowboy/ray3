@@ -21,6 +21,9 @@ typedef struct LST2_tdstAnchorTotdxHandleToProhibitOpt LST2_tdstAnchorTotdxHandl
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn;
 typedef union anon_0 anon_0;
 
+extern float g_DistanceWaypointMin;
+extern float g_DistanceWaypointMax;
+
 struct MTH4D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
@@ -1968,7 +1971,8 @@ tdstEngineStructure_ g_stEngineStructure;
  */
 void fn_vInitDistanceWaypoint(void)
 {
-    /* TODO: decompile from asm/... */
+    g_DistanceWaypointMin = 0.0f;
+    g_DistanceWaypointMax = 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 202–217 */
