@@ -1237,7 +1237,7 @@ float gs_fCoefOfMultiplicationForAnimatedTexture;
 void RebuildSwitch(void)
 {
     unsigned int pos;
-    unsigned int i;
+    int i;
     /* TODO: decompile from asm/... */
 }
 
@@ -1348,6 +1348,12 @@ void AGO_vClearUnwanted110AGOsForDemos(void)
     /* TODO: decompile from asm/... */
 }
 
+void GLI_vSetGlobalAlpha(float fAlpha);
+void GLI_vDisplayWorldTriangle(GLD_tdstViewportAttributes_* p_stVpt, float* p_stCoordinates, float* p_stUV, int hVisualMaterial);
+void* memcpy(void* pDestination, const void* pSource, size_t ulSize);
+
+#pragma optimize_for_size off
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 8011–8066 */
 /* addr: 0x001d1a00  size: 508 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1378,11 +1384,49 @@ void AGO_vClearUnwanted110AGOsForDemos(void)
  */
 void AGO_vDisplayTriangles(GLD_tdstViewportAttributes_* p_stVpt)
 {
-    unsigned int j;
-    unsigned int i;
     AGO_Triangles_* p;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    unsigned int j;
+
+    g_AGO_NbEngineFramesSinceStart++;
+
+    for (i = 0; i < g_NbAGO_Triangles; i++)
+    {
+        p = &g_pAGO_Triangles[i];
+        if ((p->type & 2) != 0)
+        {
+            p->fTransparency = 255.0f -
+                ((255.0f * (float)(g_AGO_NbEngineFramesSinceStart - p->CreationTime - 1)) / (float)p->DelayTime);
+        }
+
+        GLI_vSetGlobalAlpha(p->fTransparency);
+        GLI_vDisplayWorldTriangle(p_stVpt, p->c[0], p->uv[0], p->VisualMaterial);
+
+        if ((g_AGO_NbEngineFramesSinceStart - p->CreationTime) >= p->DelayTime)
+        {
+            p->type |= 0x80000000;
+        }
+    }
+
+    j = 0;
+    while (j < g_NbAGO_Triangles)
+    {
+        if ((g_pAGO_Triangles[j].type & 0x80000000) != 0)
+        {
+            for (i = j + 1; i < g_NbAGO_Triangles; i++)
+            {
+                memcpy(&g_pAGO_Triangles[i - 1], &g_pAGO_Triangles[i], sizeof(AGO_Triangles_));
+            }
+            g_NbAGO_Triangles--;
+        }
+        else
+        {
+            j++;
+        }
+    }
 }
+
+#pragma optimize_for_size reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 7964–8007 */
 /* addr: 0x001d1c00  size: 352 bytes */

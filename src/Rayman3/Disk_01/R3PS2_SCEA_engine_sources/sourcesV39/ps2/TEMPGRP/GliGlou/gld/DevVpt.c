@@ -303,18 +303,17 @@ int GLD_bSetViewportPosition(short hVP, GLD_tdstViewportAttributes_* pstViewAttr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bWriteToViewportFinished(short hVP)
+int GLD_bWriteToViewportFinished(void* unused, short hVP)
 {
     GLD_stDevice* p_stDev;
     int lVP;
 
-    lVP = hVP;
-    if (lVP < 0)
+    lVP = hVP >> 4;
+    if (hVP < 0)
     {
-        lVP += 0xF;
+        lVP = (hVP + 0xF) >> 4;
     }
-    lVP >>= 4;
-    p_stDev = (GLD_stDevice*)g_pstGLDDevices[lVP];
+    p_stDev = (GLD_stDevice*)g_pstGLDDevices[(short)lVP];
     p_stDev->bIsLocked = 0;
     return 1;
 }

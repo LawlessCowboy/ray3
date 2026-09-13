@@ -3375,10 +3375,10 @@ unsigned char fn_ucSetDsgVarInput(void* pMyVarAddr, unsigned char ucIndex, tdstG
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarSOLinks(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarSOLinks(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam, tdstGetSetParam_* p_stValue)
 {
     tdstSuperObjectLinks_* p_stSOL;
-    p_stSOL = p_stGetSetParam->uDummy.uParam.hSOLinks;
+    p_stSOL = p_stValue->uDummy.uParam.hSOLinks;
 
     if (p_stSOL != NULL)
         *(tdstSuperObjectLinks_**)pMyVarAddr = p_stSOL;
@@ -3399,10 +3399,10 @@ unsigned char fn_ucSetDsgVarSOLinks(void* pMyVarAddr, tdstGetSetParam_* p_stGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarSuperObject(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarSuperObject(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam, tdstGetSetParam_* p_stValue)
 {
     HIE_tdstSuperObject_* p_stObject;
-    p_stObject = p_stGetSetParam->uDummy.uParam.hSuperObject;
+    p_stObject = p_stValue->uDummy.uParam.hSuperObject;
 
     if (p_stObject != NULL)
         *(HIE_tdstSuperObject_**)pMyVarAddr = p_stObject;

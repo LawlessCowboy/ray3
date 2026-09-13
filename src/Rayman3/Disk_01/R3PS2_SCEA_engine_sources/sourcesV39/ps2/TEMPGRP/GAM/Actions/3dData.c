@@ -1634,7 +1634,7 @@ int fn_bTestSubAnimNearEnd(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNum
  */
 int fn_bSubAnimRunning(HIE_tdstSuperObject_* _hCharacter)
 {
-    /* TODO: decompile from asm/... */
+    return *(int*)((char*)_hCharacter->hLinkedObject.p_stCharacter->h_3dData + 0x1bc) > 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1180–1194 */

@@ -4381,7 +4381,6 @@ tdstNodeInterpret_* fn_p_stSCT_UltraProcedure(HIE_tdstSuperObject_* p_SuperObjPe
 void fn_p_stSAV2SaveProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
     SAV2_tdeDataType_ eDataType;
     unsigned int ulMyVarSize;
     tdstArray_* p_stArray;
@@ -4838,9 +4837,6 @@ void fn_p_stMultiPlayerProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNode
 tdstNodeInterpret_* fn_p_stJFFTXTGetBdBox(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
     int* x2;
     int* y1f;
     int* x1;
@@ -5294,9 +5290,6 @@ void fn_p_stJFFTXTProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInter
     float xNear;
     float xSize;
     int NumeroVp;
-    MTH3D_tdstVector_ stOffset;
-    int NumeroVp;
-    int NumeroVp;
     char* pszString;
     int ID;
     float xParameter;
@@ -5589,19 +5582,9 @@ void fn_p_stAGOProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpre
     int NumeroBitmap;
     int NumeroVp;
     GLI_tdstMaterial_* hVisualMaterial1;
-    MTH3D_tdstVector_ stVect2;
-    MTH3D_tdstVector_ stVect1;
     int NumeroGauge;
-    int NumeroVp;
-    MTH3D_tdstVector_ stVect2;
-    MTH3D_tdstVector_ stVect1;
     int NumeroIcone;
-    int NumeroVp;
     unsigned int PartType;
-    MTH3D_tdstVector_ stDirection;
-    MTH3D_tdstVector_ stPosition;
-    GLI_tdstMaterial_* hVisualMaterial;
-    tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
     /* TODO: decompile from asm/... */
 }
@@ -6152,7 +6135,6 @@ tdstNodeInterpret_* fn_p_stVisualMaterialProcedure(HIE_tdstSuperObject_* p_Super
  */
 tdstNodeInterpret_* fn_p_stTransparenceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    unsigned short uwChannelNumber;
     unsigned short uwChannelNumber;
     HIE_tdstSuperObject_* hModule;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
@@ -6719,7 +6701,6 @@ tdstNodeInterpret_* fn_p_stKeyboardProcedure(HIE_tdstSuperObject_* p_SuperObjPer
 tdstNodeInterpret_* fn_p_stPersoLightProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned char bOnOff;
-    unsigned char bOnOff;
     GEO_tdstColor_ stColor;
     tdstGetSetParam_ stParam;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
@@ -7107,13 +7088,9 @@ tdstNodeInterpret_* fn_p_stListEnsembleProcedure(HIE_tdstSuperObject_* p_SuperOb
 void fn_p_stListProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstBrain_* hBrain;
-    unsigned char ucPos;
     AI_tdstAIModel_* p_stModel;
     HIE_tdstSuperObject_* hPerso;
     unsigned char ucPos;
-    tdstFamilyList_* hFamily;
-    HIE_tdstSuperObject_* hPerso;
-    AI_tdstAIModel_* p_stModel;
     tdstFamilyList_* hFamily;
     tdstList_* p_stList;
     tdeProcedureId_ eProcedureId;

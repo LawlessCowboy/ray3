@@ -1377,9 +1377,18 @@ def demangle_simple(name: str) -> str:
     m = re.match(r'^__ct__(.+?)F', name)
     if m:
         return class_name(m.group(1))
-    m = re.match(r'^(.+?)__(.+?)F', name)
+    # MW's member spelling is ``method__<len><class>F<args>``.  Do not use a
+    # lazy ``...F`` match here: class names frequently contain the letter F
+    # (for example ``...FireBall``), which previously truncated the class and
+    # collapsed distinct methods into duplicate definitions.
+    m = re.match(r'^(.+?)__(\d+)', name)
     if m:
-        return f'{class_name(m.group(2))}::{m.group(1)}'
+        method = m.group(1)
+        length = int(m.group(2))
+        class_start = m.end()
+        class_name_value = name[class_start:class_start + length]
+        if len(class_name_value) == length:
+            return f'{class_name_value}::{method}'
     return name
 
 
@@ -1568,6 +1577,31 @@ def generate_type_definitions(file_info: FileInfo) -> list[str]:
         lines.append(f'typedef {keyword} {type_info.name} {type_info.name};')
     lines.append('')
 
+    # C++ member definitions emitted from the debug function records must
+    # have matching declarations in their recovered class/struct.  The old
+    # extractor only emitted data members, so MWCC rejected otherwise valid
+    # translation units with "undefined identifier" errors at out-of-class
+    # definitions such as ``AGO3_SimpleSparks::Process``.  Derive only the
+    # source-level declaration (the implicit ``this`` parameter was already
+    # removed while parsing) from the demangled function name and signature.
+    methods_by_type: dict[str, list[str]] = {}
+    for function in file_info.functions:
+        if '::' not in function.name:
+            continue
+        class_name, method_name = function.name.rsplit('::', 1)
+        if class_name not in {t.name for t in aggregate_types}:
+            continue
+        params = []
+        for idx, parameter in enumerate(function.params):
+            params.append(format_declaration(
+                parameter.type_str, safe_param_name(parameter.name, idx)))
+        param_str = ', '.join(params) if params else 'void'
+        if method_name == class_name or method_name == f'~{class_name}':
+            declaration = f'{method_name}({param_str});'
+        else:
+            declaration = f'{function.return_type} {method_name}({param_str});'
+        methods_by_type.setdefault(class_name, []).append(declaration)
+
     # C does not support a useful forward declaration for an enum.  Define
     # value-bearing enums before structures that may refer to them.
     for type_info in enum_types:
@@ -1613,6 +1647,11 @@ def generate_type_definitions(file_info: FileInfo) -> list[str]:
                 )
             member_size = _known_member_size(member, enum_names)
             cursor = member.stack_offset + member_size if member_size else member.stack_offset
+        seen_methods = set()
+        for declaration in methods_by_type.get(type_info.name, []):
+            if declaration not in seen_methods:
+                lines.append(f'    {declaration}')
+                seen_methods.add(declaration)
         lines.append('};')
         lines.append('')
     return lines
@@ -1656,6 +1695,40 @@ def normalize_file_info(file_info: FileInfo) -> None:
             'name', global_.role, legal_name)
         globals_by_key.setdefault(key, global_)
     file_info.globals_ = list(globals_by_key.values())
+
+    # Merged C++ debug chunks can repeat the same out-of-class method record.
+    # Emitting both definitions makes MWCC report a redefinition and can
+    # cascade into misleading "undefined identifier" diagnostics.  Keep one
+    # function record per linked address (or name when no address is known),
+    # preferring the record with the richest recovered signature/body metadata.
+    functions_by_key: dict[tuple, FuncInfo] = {}
+    for function in file_info.functions:
+        key = ('address', function.addr) if function.addr else ('name', function.name)
+        old = functions_by_key.get(key)
+        if old is None:
+            functions_by_key[key] = function
+            continue
+        old_score = (len(old.params) + len(old.locals_), len(old.line_map), old.size)
+        new_score = (len(function.params) + len(function.locals_), len(function.line_map), function.size)
+        if new_score > old_score:
+            functions_by_key[key] = function
+    file_info.functions = list(functions_by_key.values())
+
+    # A single function's debug chunks may repeat automatic-variable records
+    # when scopes are merged.  Emitting those declarations twice is illegal
+    # in the generated stub (and was a major source of blocked TUs).  Keep one
+    # declaration per source-level name, preferring the first occurrence whose
+    # type/offset is already backed by the debug stream.
+    for function in file_info.functions:
+        seen_locals: set[str] = set()
+        unique_locals = []
+        for local in function.locals_:
+            key = local.name or f'__anon_{len(unique_locals)}'
+            if key in seen_locals:
+                continue
+            seen_locals.add(key)
+            unique_locals.append(local)
+        function.locals_ = unique_locals
 
     def type_score(type_info: TypeInfo) -> tuple[int, int, int]:
         return (len(type_info.members) + len(type_info.enum_values) + len(type_info.bases),
@@ -1920,6 +1993,15 @@ def main():
             sym = func_syms.get(func.addr)
             if sym:
                 func.size = sym.size
+                # The debug stream's C++ linkage-name record can be truncated
+                # at the first ``F`` in a class name (e.g. FireBall), causing
+                # distinct classes to collapse to one spelling.  The linked
+                # symbol table preserves the length-prefixed authoritative
+                # name; use its safe demangling for all C++ methods.
+                if '__' in sym.name:
+                    demangled_symbol = demangle_simple(sym.name)
+                    if '::' in demangled_symbol:
+                        func.name = demangled_symbol
                 # A C function's debug spelling should agree with the linked
                 # symbol.  When it does not, the current stream scanner has
                 # usually consumed an aggregate record as a signature (for
@@ -1967,6 +2049,11 @@ def main():
         merged[rel].functions.extend(file_info.functions)
         merged[rel].globals_.extend(file_info.globals_)
         merged[rel].types.extend(file_info.types)
+
+    # Normalize after concatenating all independently emitted debug chunks;
+    # duplicates often only become visible at this per-source merge stage.
+    for file_info in merged.values():
+        normalize_file_info(file_info)
 
     print(f'  {len(merged)} unique source files after merge', flush=True)
 

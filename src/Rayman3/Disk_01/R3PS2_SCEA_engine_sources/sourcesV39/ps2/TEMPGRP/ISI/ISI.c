@@ -83,7 +83,7 @@ int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD)
     ISI_tdstISI_* hISI;
 
     hISI = (ISI_tdstISI_*)_hISI;
-    return hISI->d_stISILOD[_xNumISILOD].d_fLightMapU;
+    return *(int *)((char *)hISI->d_stISILOD + 8 + (int)_xNumISILOD * 12);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 680–685 */
@@ -100,7 +100,7 @@ ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD)
     ISI_tdstColor_** pISILOD;
 
     hISI = (ISI_tdstISI_*)_hISI;
-    pISILOD = (ISI_tdstColor_**)hISI->d_stISILOD + (int)_xNumISILOD * 3;
+    pISILOD = (ISI_tdstColor_**)((char *)hISI->d_stISILOD + 4 + (int)_xNumISILOD * 12);
     g_p_stRawRLIsForThisObject = pISILOD[1];
     return g_p_stRawRLIsForThisObject;
 }

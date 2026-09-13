@@ -48,7 +48,8 @@ unsigned char g_ucVIDModuleId;
  */
 void VID_fn_vPlayVideoNow(void)
 {
-    /* TODO: decompile from asm/... */
+    VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = 0;
+    VIDSPE_fn_vPlayVideoNow(0, 1, -1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\VID_Pub.c lines 174–180 */
@@ -83,7 +84,7 @@ void VID_fn_vPlayVideoIfAskedAfterLevel(void)
  */
 void VID_fn_vPlayVideoAfterLevel(void)
 {
-    /* TODO: decompile from asm/... */
+    VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\VID_Pub.c lines 145–166 */

@@ -1643,7 +1643,7 @@ void fn_vCollSetSetCharacterNoCollisionWithMap(tdstCollSet_* _hCollSet, unsigned
  */
 unsigned char fn_bCollSetGetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    return _hCollSet->ucCollisionFlag & 0x40;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 661–662 */
@@ -1914,7 +1914,7 @@ unsigned char fn_ucCollSetGetColliderPriority(tdstCollSet_* _hCollSet)
  */
 void fn_vCollSetCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(_p_stObjectDest->h_CollSet, _p_stObjectSrc->h_CollSet, 0x44);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 454–473 */

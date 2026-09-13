@@ -988,7 +988,7 @@ void GAM_fn_vCheckJoyConnections(void)
  */
 int GAM_fn_iIsGamePaused(void)
 {
-    return g_stEngineStructure.bEngineIsInPaused;
+    return g_EngineWasPausedAutomatically;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 414–477 */

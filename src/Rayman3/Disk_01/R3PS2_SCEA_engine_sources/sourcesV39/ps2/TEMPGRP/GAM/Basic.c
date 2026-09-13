@@ -1832,7 +1832,7 @@ unsigned char GAM_fn_bIsEngineInLevelMode(void)
  */
 unsigned char GAM_fn_bIsEngineInFixMode(void)
 {
-    /* TODO: decompile from asm/... */
+    return GAM_gs_tdeLoadingMode ? 0 : 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1089–1089 */
@@ -2086,9 +2086,9 @@ void fn_vFreeNextLevelName(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_szGetNextLevelName(void)
+char *fn_p_szGetNextLevelName(void)
 {
-    return;
+    return (char *)((char *)0x54000000 - 0x7ce1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 584–585 */
@@ -2166,9 +2166,9 @@ void fn_vSetLevelName(char* _szName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_szGetFirstLevelName(void)
+char *fn_p_szGetFirstLevelName(void)
 {
-    return;
+    return (char *)((char *)0x54000000 - 0x7cc3);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 508–508 */

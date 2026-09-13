@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+extern unsigned int fs_uiOpen__Q24usnd11CPS2FileMgrFPCc13_ERamLocation(const char *, unsigned int);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct _tdstBinarizedDataForMenu _tdstBinarizedDataForMenu;
@@ -204,7 +206,7 @@ int g_GotoRight;
  */
 unsigned int fn_uiOpenStream(char* szFilename)
 {
-    return 0;
+    return fs_uiOpen__Q24usnd11CPS2FileMgrFPCc13_ERamLocation(szFilename, 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 2436–2534 */

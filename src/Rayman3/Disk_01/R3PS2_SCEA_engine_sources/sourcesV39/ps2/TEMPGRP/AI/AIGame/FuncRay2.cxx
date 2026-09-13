@@ -36,6 +36,10 @@ typedef union tduGetSetParam_ { int lValue; float xValue; MTH3D_tdstVector_ stVe
 struct tdstGetSetParam_ { tduGetSetParam_ uParam; tdeVariableType_ eType; };
 typedef struct stTfmtStatus_ { unsigned char data[48]; } stTfmtStatus_;
 
+static HIE_tdstSuperObject_* g_hCharacterMaskedForResearch;
+float g_xDistanceActMin;
+float g_xDistanceActMax;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 4091–4099 */
 /* addr: 0x0021b6e0  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1689,7 +1693,7 @@ void fn_hGetClosestPersoInSector(HIE_tdstSuperObject_* _hCloserSO, float* _p_xBe
  */
 void fn_vSetCharacterMaskedForResearch(HIE_tdstSuperObject_* hCharacter)
 {
-    /* TODO: decompile from asm/... */
+    g_hCharacterMaskedForResearch = hCharacter;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 952–952 */
@@ -1701,7 +1705,7 @@ void fn_vSetCharacterMaskedForResearch(HIE_tdstSuperObject_* hCharacter)
  */
 void fn_vInitRecherchePerso(void)
 {
-    /* TODO: decompile from asm/... */
+    g_hCharacterMaskedForResearch = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 823–924 */
@@ -2223,7 +2227,7 @@ void fn_p_stCode4TextAffiche(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInte
  */
 void fn_vSetDistanceActMax(float xDistACT)
 {
-    /* TODO: decompile from asm/... */
+    g_xDistanceActMax = xDistACT;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 70–70 */
@@ -2235,7 +2239,7 @@ void fn_vSetDistanceActMax(float xDistACT)
  */
 void fn_vSetDistanceActMin(float xDistACT)
 {
-    /* TODO: decompile from asm/... */
+    g_xDistanceActMin = xDistACT;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 64–66 */
@@ -2248,5 +2252,6 @@ void fn_vSetDistanceActMin(float xDistACT)
  */
 void fn_vInitDistanceAct(void)
 {
-    /* TODO: decompile from asm/... */
+    g_xDistanceActMin = 0.0f;
+    g_xDistanceActMax = 0.0f;
 }

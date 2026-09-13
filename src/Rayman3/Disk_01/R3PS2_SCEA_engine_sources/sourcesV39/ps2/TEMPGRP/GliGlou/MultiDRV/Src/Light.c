@@ -806,7 +806,9 @@ void GLI_vClearListOfLightInViewport(void)
  */
 void GLI_vPopLightsInViewport(unsigned int lNbLightsToPop)
 {
-    /* TODO: decompile from asm/... */
+    gs_CurrentNumberOfLightInViewport -= lNbLightsToPop;
+    if (gs_CurrentNumberOfLightInViewport < 0)
+        gs_CurrentNumberOfLightInViewport = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 359–362 */
@@ -820,5 +822,9 @@ void GLI_vPopLightsInViewport(unsigned int lNbLightsToPop)
  */
 void GLI_vAddLightToViewport(GLI_tdstLight_* p_stLight)
 {
-    /* TODO: decompile from asm/... */
+    if (gs_CurrentNumberOfLightInViewport != 300)
+    {
+        gs_aDEF_p_CurrentListOfLight[gs_CurrentNumberOfLightInViewport] = (int)p_stLight;
+        gs_CurrentNumberOfLightInViewport++;
+    }
 }

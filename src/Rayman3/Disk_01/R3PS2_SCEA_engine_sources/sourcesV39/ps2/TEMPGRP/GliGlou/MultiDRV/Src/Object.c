@@ -1235,8 +1235,8 @@ void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt)
     p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
     GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
     g_p_stCurrentViewport = (int)p_stVpt;
-    g_p_stCurrentMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
-    g_p_stCurrentViewport = (int)p_stSpecifAttrib3D->p_stCam;
+    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
+    GLI_BIG_GLOBALS_p_stCurrentCamera = (int)p_stSpecifAttrib3D->p_stCam;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 687–687 */
@@ -1359,7 +1359,12 @@ void GLI_xSendObjectToViewportWithLights(GLD_tdstViewportAttributes_* p_stVpt, G
 void GLI_vSetViewportVars(GLD_tdstViewportAttributes_* p_stVpt)
 {
     GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
-    /* TODO: decompile from asm/... */
+    p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
+    GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
+    g_p_stCurrentViewport = (int)p_stVpt;
+    GLI_BIG_GLOBALS_gs_st_CurrentMatrix = (int)g_p_stCurrentMatrix;
+    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
+    GLI_BIG_GLOBALS_p_stCurrentCamera = (int)p_stSpecifAttrib3D->p_stCam;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 375–431 */

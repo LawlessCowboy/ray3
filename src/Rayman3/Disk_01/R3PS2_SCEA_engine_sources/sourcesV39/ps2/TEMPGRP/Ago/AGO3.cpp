@@ -192,6 +192,7 @@ struct AGO3_Chain {
     float m_fIntermediateSize; /* +0x70 */
     float m_fLinkType; /* +0x74 */
     float m_fMainSize; /* +0x78 */
+    void Process(void);
 };
 
 struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn {
@@ -293,6 +294,7 @@ struct AGO3_LightExplosion {
     AGO3_LE_SpriteData m_a_stCloud[12]; /* +0x50 */
     AGO3_LE_SpriteData m_a_stParticle[20]; /* +0x200 */
     unsigned int m_a_ulParticleID[20]; /* +0x4d0 */
+    void DesInit(void);
 };
 
 struct AGO3_SBS_tdstSnowPart_ {
@@ -386,6 +388,9 @@ struct AGO3_SimpleSparks {
     float m_fTransparency; /* +0x34 */
     unsigned int m_NbParticles; /* +0x38 */
     float m_fSize; /* +0x3c */
+    void Process(void);
+    void DesInit(void);
+    void Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fParameter);
 };
 
 struct WP_tdstGraphNode_ {
@@ -557,6 +562,8 @@ struct AGO3_Part {
     C_Vector m_Position; /* +0x10 */
     GLI_tdstMaterial_* m_pMat1; /* +0x20 */
     unsigned char m_Finished; /* +0x24 */
+    void Process(void);
+    void Display(GLD_tdstViewportAttributes_* hVp);
 };
 
 struct AGO3_LinkChainComputing {
@@ -614,6 +621,7 @@ struct AGO3_HurricaneUpper {
     MTH3D_tdstVector_ m_Position; /* +0x490 */
     float m_fTime; /* +0x49c */
     float m_fEndTime; /* +0x4a0 */
+    int Kill_Enabled(void);
 };
 
 struct SECT_tdstListOfSOSectorsInSoundInteraction_ {
@@ -681,6 +689,7 @@ struct AGO3_SwirlingBubbles {
     int m_bAlive; /* +0x58 */
     int m_bGenerationInProgress; /* +0x5c */
     AGO3_SB_SpriteData m_stSprite[512]; /* +0x60 */
+    void DesInit(void);
 };
 
 struct GEO_tdstGeometricObject_ {
@@ -707,6 +716,8 @@ struct GEO_tdstGeometricObject_ {
     unsigned int bIsStatic; /* +0x54 */
     unsigned int glDisplayList; /* +0x58 */
     unsigned char bVTForSinus; /* +0x5c */
+    void DesInit(void);
+    void Display(void);
 };
 
 struct AGO3_DigitalScoreDisplay {
@@ -722,6 +733,7 @@ struct AGO3_DigitalScoreDisplay {
     float m_fCurrentHalfFrequency; /* +0x60 */
     float m_fImpulse; /* +0x64 */
     unsigned int m_hHandleID; /* +0x68 */
+    void Display(void);
 };
 
 struct SECT_tdstListOfSOSectorsInCollisionInteraction_ {
@@ -867,6 +879,7 @@ struct AGO3_OrientedTarget {
     float m_fTiltedAngle; /* +0x3c */
     float m_fSize; /* +0x40 */
     float m_a_fSpriteVertex[4][3]; /* +0x44 */
+    void DesInit(void);
 };
 
 struct AGO3_BeamWithUVs {
@@ -1456,6 +1469,7 @@ struct AGO3_Snowboard_SnowEffect {
     float m_fDistance; /* +0x98c */
     float m_fVPosition; /* +0x990 */
     float m_fUPosition; /* +0x994 */
+    void DesInit(void);
 };
 
 struct CINE_Manager_ {

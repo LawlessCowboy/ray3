@@ -241,7 +241,7 @@ void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, shor
 {
     GEO_tdstIndexedCone_* p_stCone;
     p_stCone = (*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones + xNumberOfCone;
-    p_stCone->hVisualMaterial = hVisualMaterial;
+    ((GLI_tdstMaterial_ **)((char *)p_stCone + 8))[0] = hVisualMaterial;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 681–683 */
@@ -254,7 +254,7 @@ void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, shor
  */
 void GEO_vSetRadiusOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, float xRadius)
 {
-    (*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones[xNumberOfCone].xBaseRadius = xRadius;
+    ((float *)((char *)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones + 4))[xNumberOfCone * 3] = xRadius;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 634–638 */
@@ -308,7 +308,7 @@ void GEO_vSetVisualMaterialOfIndexedSphere(GEO_tdstGeometricObject_* hObject, sh
 {
     GEO_tdstIndexedSphere_* p_stSphere;
     p_stSphere = (*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres + xNumberOfSphere;
-    p_stSphere->hVisualMaterial = hVisualMaterial;
+    ((GLI_tdstMaterial_ **)((char *)p_stSphere + 8))[0] = hVisualMaterial;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 351–353 */
@@ -336,7 +336,7 @@ void GEO_vSetCenterPointOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short
 {
     GEO_tdstIndexedSphere_* p_stSphere;
     p_stSphere = (*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres + xNumberOfSphere;
-    p_stSphere->xCenterPoint = xIndexOfPoint;
+    ((short *)((char *)p_stSphere + 8))[0] = xIndexOfPoint;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 246–264 */

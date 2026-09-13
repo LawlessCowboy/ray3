@@ -3800,6 +3800,7 @@ void GLI_vSetGlobalAlpha(float Alpha);
 void GLI_vEnd2DSpritesWithUVs(void);
 
 #pragma optimize_for_size off
+#pragma fast_fptosi on
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1955–2043 */
 /* addr: 0x003236e0  size: 1068 bytes */
@@ -3876,15 +3877,18 @@ void TXT_vAfficheSpecialWithTransparency(char* String, float* a3_Pos, float f0_2
 
     p = &DummyString;
     p_stVpt = &stVpt;
-    stVpt.dwHeight = 480;
     stVpt.dwWidth = 640;
+    stVpt.dwHeight = 480;
     stVpt.iOffsetPosX = 0;
     stVpt.iOffsetPosY = 0;
 
     if (String)
     {
         p->pString = (int)String;
-        p->ucTransparency = f0_255Transparency;
+        if (2147483648.0f <= f0_255Transparency)
+            p->ucTransparency = (unsigned int)((int)(f0_255Transparency - 2147483648.0f) | 0x80000000);
+        else
+            p->ucTransparency = (int)f0_255Transparency;
         p->bOther = 8;
         p->a3_Pos[0] = a3_Pos[0];
         p->a3_Pos[1] = a3_Pos[1];
@@ -3940,6 +3944,7 @@ void TXT_vAfficheSpecialWithTransparency(char* String, float* a3_Pos, float f0_2
 }
 
 #pragma optimize_for_size reset
+#pragma fast_fptosi reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1872–1950 */
 /* addr: 0x00323b10  size: 972 bytes */

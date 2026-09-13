@@ -94,6 +94,7 @@ struct GLI_tdstCamera_ {
     unsigned char ucCameraTransparency; /* +0xe8 */
     float xTranspDist; /* +0xec */
     unsigned char bCameraIsMirrored; /* +0xf0 */
+    unsigned char _extractor_pad_f1[15]; /* implicitly added by extractor; +0xf1..0xff */
 };
 
 struct GLD_tdstViewportAttributes_ {
@@ -344,7 +345,8 @@ void GLI_xSetCameraRatio(GLI_tdstCamera_* p_stCam, float xRatio)
  */
 void GLI_xGetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float* p_xAlphaX, float* p_xRatio)
 {
-    /* TODO: decompile from asm/... */
+    *p_xAlphaX = p_stCam->xAlphaX;
+    *p_xRatio = p_stCam->xRatio;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Camera.c lines 211–214 */
@@ -389,7 +391,8 @@ void GLI_xSetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_s
  */
 void GLI_xGetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_stMatrix)
 {
-    /* TODO: decompile from asm/... */
+    *(MTH4D_tdstMatrix_*)((unsigned char*)p_stMatrix + 0x10) = *(MTH4D_tdstMatrix_*)((unsigned char*)p_stCam + 0x10);
+    *(MTH4D_tdstVector_*)((unsigned char*)p_stMatrix + 0x50) = *(MTH4D_tdstVector_*)((unsigned char*)p_stCam + 0x50);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Camera.c lines 109–114 */
@@ -419,5 +422,5 @@ void GLI_xSetCameraNearFar(GLI_tdstCamera_* p_stCam, float xFar)
  */
 void GLI_vCopyCamera(GLI_tdstCamera_* p_stCamDest, GLI_tdstCamera_* p_stCamSource)
 {
-    /* TODO: decompile from asm/... */
+    *p_stCamDest = *p_stCamSource;
 }

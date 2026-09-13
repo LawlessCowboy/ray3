@@ -139,7 +139,7 @@ int g_p_stRLIForNextObjectToDraw;
  */
 void TEX_vSetTextureQualityLevel(GLI_tdstTexture_* p_stTexture, char ucTextQuality)
 {
-    /* TODO: decompile from asm/... */
+    *(int *)((char *)p_stTexture + 4) = ucTextQuality;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 460–466 */

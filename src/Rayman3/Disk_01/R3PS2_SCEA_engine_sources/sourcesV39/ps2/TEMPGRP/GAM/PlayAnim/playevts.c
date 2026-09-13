@@ -1383,7 +1383,7 @@ unsigned char GAM_fn_ucGetTypeOfEvent(tdstEvent_* _p_stEvent)
  */
 unsigned short fn_uwGetNbEngineFrameSinceLastMechEvent(HIE_tdstSuperObject_* p_stSuperObject)
 {
-    tdstEngineObject_* p_stCharacter = p_stSuperObject->hLinkedObject.p_stCharacter;
+    tdstEngineObject_* p_stCharacter = (tdstEngineObject_ *)p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
 
     return *(unsigned short *)((char *)p_stCharacter + 0x102);
 }

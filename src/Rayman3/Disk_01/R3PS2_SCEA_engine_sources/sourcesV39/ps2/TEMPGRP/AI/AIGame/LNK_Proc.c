@@ -3953,7 +3953,6 @@ void fn_Mechanics(LinkActorType_* p_link)
 void fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k)
 {
     float xNorm;
-    float xNorm;
     int bMovePoint;
     float sumAngle;
     MTH3D_tdstVector_ p_stPointD;
@@ -4032,7 +4031,6 @@ void fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k)
  */
 int fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k)
 {
-    float xNorm;
     float xNorm;
     MTH3D_tdstVector_ p_tempVector;
     MTH3D_tdstVector_* p_stNormalB;
@@ -4187,7 +4185,6 @@ int fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k)
  */
 void fn_CheckNewCutPoint(LinkActorType_* p_link, unsigned short k)
 {
-    float xNorm;
     float xNorm;
     MTH3D_tdstVector_ VectTmp;
     MTH3D_tdstVector_ p_stMovePoint;

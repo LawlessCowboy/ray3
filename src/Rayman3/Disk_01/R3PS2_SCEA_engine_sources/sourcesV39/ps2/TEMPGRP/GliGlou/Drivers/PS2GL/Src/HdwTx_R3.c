@@ -1278,7 +1278,11 @@ int Bug_Please_ReloadMenu_40;
  */
 void GLI_vClearSendMatStates(void)
 {
-    /* TODO: decompile from asm/... */
+    /* These state slots are maintained by the PS2GL material sender. */
+    GLI_g_GlobalBpp = 0;
+    GLI_g_ExternalTextureHeader = 0;
+    GLI_g_ulNumberOfLoadedTexture = 0;
+    Bug_Please_ReloadMenu_40 = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2488–2512 */

@@ -3461,9 +3461,11 @@ tdstNodeInterpret_* fn_p_stEvalComportRef(tdstNodeInterpret_* p_stTree, tdstGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalEndMacro(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalEndMacro(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.lValue = 0;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree + 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 807–810 */
@@ -3476,9 +3478,11 @@ tdstNodeInterpret_* fn_p_stEvalEndMacro(tdstNodeInterpret_* p_stTree, tdstGetSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalBeginMacro(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalBeginMacro(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.lValue = 0;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree + 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 798–800 */
@@ -3490,9 +3494,11 @@ tdstNodeInterpret_* fn_p_stEvalBeginMacro(tdstNodeInterpret_* p_stTree, tdstGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalEndOfTree(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalEndOfTree(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.lValue = 16;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree + 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 784–791 */

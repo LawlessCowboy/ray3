@@ -1292,7 +1292,8 @@ void GLI_xSetMaterialType(GLI_tdstMaterial_* hMaterial, unsigned int xMType)
  */
 void GLI_xGetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int* p_lSpecularExponent, GEO_tdstColor_* p_stColor)
 {
-    /* TODO: decompile from asm/... */
+    *p_stColor = hMaterial->stSpecular;
+    *p_lSpecularExponent = hMaterial->lSpecularExponent;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 226–230 */

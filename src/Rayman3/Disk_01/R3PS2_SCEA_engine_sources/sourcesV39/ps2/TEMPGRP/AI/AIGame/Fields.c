@@ -3107,10 +3107,10 @@ unsigned char fn_ucSetFieldSystemTime(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetFieldSystemTime(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetFieldSystemTime(void* p_unused, tdstGetSetParam_* p_stGetSetParam)
 {
-    p_stGetSetParam->uDummy.uParam.lValue = 0;
-    p_stGetSetParam->eType = 6;
+    *(int*)((char*)p_stGetSetParam + 0x0) = 0;
+    *(tdeVariableType_*)((char*)p_stGetSetParam + 0xC) = E_vt_Integer;
     return 1;
 }
 
@@ -3135,10 +3135,10 @@ unsigned char fn_ucSetFieldSystemDate(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetFieldSystemDate(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetFieldSystemDate(void* p_unused, tdstGetSetParam_* p_stGetSetParam)
 {
-    p_stGetSetParam->uDummy.uParam.lValue = 0;
-    p_stGetSetParam->eType = 6;
+    *(int*)((char*)p_stGetSetParam + 0x0) = 0;
+    *(tdeVariableType_*)((char*)p_stGetSetParam + 0xC) = E_vt_Integer;
     return 1;
 }
 

@@ -3293,9 +3293,11 @@ tdstNodeInterpret_* fn_p_stCapsNullKeyWord(int unused, tdstNodeInterpret_* p_stT
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEmptyTextKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEmptyTextKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hText = -1;
+    p_stValue->eType = E_vt_Text;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 132–134 */
@@ -3307,9 +3309,11 @@ tdstNodeInterpret_* fn_p_stEmptyTextKeyWord(tdstNodeInterpret_* p_stTree, tdstGe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNowhereKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNowhereKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.m_hWayPoint = NULL;
+    p_stValue->eType = E_vt_WayPoint;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 125–128 */
@@ -3322,9 +3326,11 @@ tdstNodeInterpret_* fn_p_stNowhereKeyWord(tdstNodeInterpret_* p_stTree, tdstGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNobodyKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNobodyKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.p_stEngObjValue = NULL;
+    p_stValue->eType = E_vt_Perso;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 119–122 */
@@ -3354,9 +3360,11 @@ tdstNodeInterpret_* fn_p_stNoSoundEventKeyWord(int unused, tdstNodeInterpret_* p
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoSOLinksWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoSOLinksWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hSOLinks = NULL;
+    p_stValue->eType = E_vt_SOLinks;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 103–106 */
@@ -3369,9 +3377,11 @@ tdstNodeInterpret_* fn_p_stNoSOLinksWord(tdstNodeInterpret_* p_stTree, tdstGetSe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoSuperObjectKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoSuperObjectKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hSuperObject = NULL;
+    p_stValue->eType = E_vt_SuperObject;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 95–98 */
@@ -3384,9 +3394,11 @@ tdstNodeInterpret_* fn_p_stNoSuperObjectKeyWord(tdstNodeInterpret_* p_stTree, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoInputKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoInputKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    *(unsigned int *)&p_stValue->uDummy.uParam.xMask = 0;
+    p_stValue->eType = E_vt_Button;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 86–90 */
@@ -3429,7 +3441,9 @@ tdstNodeInterpret_* fn_p_stMeKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoActionKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoActionKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.p_stMacro = NULL;
+    p_stValue->eType = E_vt_Action;
+    return p_stTree;
 }

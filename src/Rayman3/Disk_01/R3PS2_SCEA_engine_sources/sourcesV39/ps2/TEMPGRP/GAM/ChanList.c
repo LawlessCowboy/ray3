@@ -1443,7 +1443,27 @@ void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChan
     unsigned int ulI;
     tdstAChannel_* p_stChannel;
     tdst3dData_* hCurrent3dData;
-    /* TODO: decompile from asm/... */
+    unsigned int ulNumberOfChannels;
+    unsigned int ulOffset;
+
+    hCurrent3dData = _hActor->h_3dData;
+    p_stChannel = *(tdstAChannel_**)((char*)hCurrent3dData + 0xa8);
+    if (p_stChannel != NULL)
+    {
+        ulNumberOfChannels = *(unsigned int*)((char*)hCurrent3dData + 0xac);
+        if (_uwChannel != 0xffff)
+        {
+            ulOffset = (unsigned int)_uwChannel * sizeof(tdstAChannel_);
+            ((unsigned char*)&p_stChannel->bControlledChannel)[ulOffset] = _bControlled;
+        }
+        else
+        {
+            for (ulI = 0; ulI < ulNumberOfChannels; ulI++, p_stChannel++)
+            {
+                p_stChannel->bControlledChannel = _bControlled;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 102–126 */

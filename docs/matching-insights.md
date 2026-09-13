@@ -43,3 +43,7 @@ compiler option, construct, and outcome.
 - [compiler] MWCC PS2 3.0: local #pragma optimize_for_size off changed repeated 0.001f and 0.7f constants from small-data literal loads into target-shaped lui/ori/mtc1 immediates in TXT_vAfficheSpecialWithTransparency; it did not change float-to-unsigned-char lowering through fptoui. (2026-09-07)
 
 - [compiler] MWCC PS2 3.0 recognizes scoped #pragma fast_fptosi on/reset: under the accepted -opt level=3 baseline it changes natural signed float-to-int casts from fptosi calls into hardware cvt.w.s/mfc1, while unsigned int/char casts still call fptoui. (2026-09-07)
+
+- [debug-format] GLD_bWriteToViewportFinished's recovered one-parameter declaration omitted a leading ABI parameter: the target consumes hVP from , and adding an unused leading void* plus the natural hVP>>4/negative correction and (short) index cast produced the exact 64-byte match. Treat single-parameter MWCC records with unexpected  use as possible omitted leading parameters. (2026-09-13)
+
+- [compiler] MWCC PS2 3.0 level 3: #pragma optimize_for_size off enables strength-reduced byte-offset induction for variable-bound loops over 80-byte struct arrays; default size mode recalculates index*80 and saves one fewer callee-saved register. (2026-09-13)
