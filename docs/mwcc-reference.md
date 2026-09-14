@@ -40,3 +40,13 @@ For the Rayman-specific experiment protocol derived from these references, see
 4. For a suspicious recovered declaration, run `match.py signature FUNCTION`
    before changing the function body.  It displays source, raw debug, decoded
    indirect type evidence, and the opening target ABI instructions.
+5. Treat narrow debug-recovered ABI types as hypotheses, not guarantees.  On
+   this MWCC PS2 build, wrappers whose debug record says `unsigned char` or
+   `unsigned short` may need a natural `int` declaration when the target
+   branches directly on the argument or returns an unmasked full-width value;
+   the narrow declaration introduces an extra `andi`/extension instruction.
+   Likewise, `long` and `unsigned long` are 8-byte aggregate members, so do
+   not retain extractor-inserted 4-byte gaps between adjacent long fields.
+   Try these corrections manually when a one-instruction mask or a consistent
+   0x10 structure shift is the only residual mismatch, then verify with
+   `match.py check`.
