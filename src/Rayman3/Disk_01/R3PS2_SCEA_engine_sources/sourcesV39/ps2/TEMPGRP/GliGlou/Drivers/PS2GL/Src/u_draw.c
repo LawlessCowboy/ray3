@@ -2426,6 +2426,7 @@ unsigned int SCT_g_DrawingMirrored;
 float GLI_g_NegVect[4];
 int GLI_g_HasVertexTransparency;
 float GLI_BIG_GLOBALS_xGlobalAlpha;
+void GLI_vAddShadowObject(float* p1, float* p2, float* p3, float* p4, GLI_tdstMaterial_* ShadowMat);
 int GLI_BIG_GLOBALS_p_stObj;
 unsigned int GLI_g_NbTransparentElements;
 unsigned int NbElementComputed;
@@ -2822,10 +2823,14 @@ void GLI_vDisplayAllShadows(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_SendShadowElementToViewport(GEO_tdstGeometricObject_* p_stObj)
+void GLI_SendShadowElementToViewport(int param0, GEO_tdstGeometricObject_* p_stObj)
 {
-    MTH3D_tdstVector_* pVert;
-    /* TODO: decompile from asm/... */
+    float* pVert;
+    GLI_tdstMaterial_* pMaterial;
+    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+    pVert = (float*)p_stObj->d_stListOfPoints;
+    pMaterial = *(GLI_tdstMaterial_**)p_stObj->d_stListOfElements;
+    GLI_vAddShadowObject(pVert, pVert + 3, pVert + 6, pVert + 9, pMaterial);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1519–1554 */
@@ -2961,7 +2966,20 @@ void GLI_vAddShadowObject(float* p1, float* p2, float* p3, float* p4, GLI_tdstMa
 void GLI_vInitSimpleShadowArrays(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    for (i = 0; i < 384; i++) {
+        GLI_g_SimpleShadowsRLIs[i][0] = 127.0f;
+        GLI_g_SimpleShadowsRLIs[i][1] = 127.0f;
+        GLI_g_SimpleShadowsRLIs[i][2] = 127.0f;
+        GLI_g_SimpleShadowsRLIs[i][3] = 127.0f;
+        GLI_g_SimpleShadowsUVs[i][0] = 0.0f;
+        GLI_g_SimpleShadowsUVs[i][1] = 0.0f;
+        GLI_g_SimpleShadowsUVs[i][2] = 0.0f;
+        GLI_g_SimpleShadowsUVs[i][3] = 0.0f;
+        GLI_g_SimpleShadowsPos[i][0] = 0.0f;
+        GLI_g_SimpleShadowsPos[i][1] = 0.0f;
+        GLI_g_SimpleShadowsPos[i][2] = 0.0f;
+        GLI_g_SimpleShadowsPos[i][3] = 1.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1465–1465 */
@@ -2973,7 +2991,6 @@ void GLI_vInitSimpleShadowArrays(void)
  */
 void GLI_DRV_xSendElementTIToClip_TRIANGLES(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1380–1438 */
@@ -3514,7 +3531,6 @@ void GLI_DRV_vSetCommonGLRenderStates(void)
  */
 void GLI_vResetTempList(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 720–720 */
@@ -3526,7 +3542,6 @@ void GLI_vResetTempList(void)
  */
 void GLI_vAllocateTempLists(void)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 672–712 */
@@ -3887,7 +3902,7 @@ void GLI_vSetScissors(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
  */
 GLI_SpecificPS2GL_Structure_* GLI_pstGetSpecificStructureFromEIT(GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
-    /* TODO: decompile from asm/... */
+    return (GLI_SpecificPS2GL_Structure_*)p_stEIT->glDisplayList;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 157–220 */

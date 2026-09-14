@@ -1104,9 +1104,17 @@ void MEC_fn_vFreePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MEC_fn_vSetPlatformLink(DNM_stDynamics*, HIE_tdstSuperObject_*, HIE_tdstSuperObject_*);
+
 void MEC_fn_vForcePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int ulFlags;
+
+    MEC_fn_vSetPlatformLink(p_stDynamic, hSupObj, hFatherSupObj);
+    ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags;
+    ulFlags |= 0x40000000;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 129–133 */

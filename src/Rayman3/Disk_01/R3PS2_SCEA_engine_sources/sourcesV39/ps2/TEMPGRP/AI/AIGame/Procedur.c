@@ -3628,6 +3628,8 @@ unsigned int g_ulOverRideRayTraceSpoMask;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+
 tdstNodeInterpret_* fn_p_stAllowNormalsRecomputing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
@@ -3705,8 +3707,8 @@ tdstNodeInterpret_* fn_p_stGcResetToIpl(tdstNodeInterpret_* p_stTree, tdstNodeIn
  */
 tdstNodeInterpret_* fn_p_stGcSetActiveMcSlot(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    int stParam[4];
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6852–6866 */
@@ -3780,8 +3782,8 @@ tdstNodeInterpret_* fn_p_stWaterEffect_GenerateSplash(HIE_tdstSuperObject_* p_Su
  */
 tdstNodeInterpret_* fn_p_stWaterEffect_GenerateImpulse(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    int stParam[4];
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6714–6733 */
@@ -5660,7 +5662,9 @@ tdstNodeInterpret_* fn_p_stAGOProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, t
 tdstNodeInterpret_* fn_p_stDummy(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    printf("ProcedureDummy %d, spo=0x%x!\n", eProcedureId, p_SuperObjPerso);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 3930–3951 */
@@ -7356,8 +7360,8 @@ tdstNodeInterpret_* fn_p_stHitPointsProcedure(HIE_tdstSuperObject_* p_SuperObjPe
  */
 tdstNodeInterpret_* fn_p_stLogWindowProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    int stParam[4];
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 962–1007 */

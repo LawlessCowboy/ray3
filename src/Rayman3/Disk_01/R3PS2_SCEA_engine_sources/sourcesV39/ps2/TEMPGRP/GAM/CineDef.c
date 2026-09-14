@@ -3382,7 +3382,12 @@ CINE_tdstCine_* CINE_fn_hGetCineAtIndex(int iPos)
 {
     int iIndex;
     CINE_tdstCine_* hCine;
-    /* TODO: decompile from asm/... */
+    hCine = g_stEngineStructure.stCineManager->hCineList.hFirstElementDyn;
+    iIndex = 0;
+    for (; iIndex < iPos; iIndex++) {
+        hCine = hCine->hNextBrotherDyn;
+    }
+    return hCine;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 677–782 */

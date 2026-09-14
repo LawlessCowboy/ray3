@@ -62,6 +62,7 @@ unsigned int TXT_g_ulDefaultColor;
 SVG_stMCStatus_ g_axPadMapping;
 int MC_g_MemoryNeededIs63K;
 int MC_g_TotalMemoryNeeded;
+int SVG_fn_iGetChangeInMC0AndReset(void);
 int g_bSavingGameWithOptionsDontCheckDate;
 int bCheckMC;
 int bSetMC;
@@ -138,7 +139,11 @@ void MC_AddString(int Number, char* String)
  */
 void MC_SetBackgroundMaterial(void* pMaterial)
 {
-    /* TODO: decompile from asm/... */
+    volatile void** localMaterial;
+    localMaterial = (volatile void**)&pMaterial;
+    if (MC_g_MemoryCardOperationBackGroundTexture == 0) {
+        MC_g_MemoryCardOperationBackGroundTexture = (int)*localMaterial;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 411–432 */
@@ -920,7 +925,9 @@ int MC_MemoryCardChanged(void)
  */
 void MC_AknowledgeMemoryCard(void)
 {
-    /* TODO: decompile from asm/... */
+    int result;
+    result = SVG_fn_iGetChangeInMC0AndReset();
+    (void)result;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1663–1678 */

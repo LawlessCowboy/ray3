@@ -934,6 +934,7 @@ unsigned int g_ulNumberOfAgos2;
 unsigned int AGO2_g_NbWalls;
 unsigned int AGO2_g_Walls[10];
 int g_AGO2_p_stViewport;
+void GLI_v_DisplayLightning(GLD_tdstViewportAttributes_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, int, float);
 unsigned char g_pAGO2TypesDisplayed[50];
 AGO2_Types_ g_pAGO2Types[50];
 AGO2_Part_ g_pAGO2Parts[300];
@@ -3839,7 +3840,14 @@ unsigned char AGO2_CreateSerialCameraParticleRain(unsigned int ulParticleType, A
  */
 void AGO2_DisplayLightning(AGO2_Part_* p)
 {
-    /* TODO: decompile from asm/... */
+    AGO2_Part_* pPart;
+
+    pPart = p;
+    GLI_v_DisplayLightning((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport,
+                            (MTH3D_tdstVector_*)&pPart->Position,
+                            (MTH3D_tdstVector_*)&pPart->Direction,
+                            pPart->pMaterial1, pPart->xSize[0]);
+    pPart->ulType |= 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1250–1250 */
@@ -3866,9 +3874,14 @@ void AGO2_ProcessLightning(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateLightning(AGO2_Part_* p)
+unsigned char AGO2_CreateLightning(unsigned int _unused, AGO2_Part_* p)
 {
-    /* TODO: decompile from asm/... */
+    p->xTransparencySpeed = 0.0f;
+    p->xSize[0] = 2.5f;
+    p->xSize[1] = 2.0f;
+    p->xShrinkingSpeed = 0.0f;
+    p->xTransparency = 255.0f;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1174–1223 */

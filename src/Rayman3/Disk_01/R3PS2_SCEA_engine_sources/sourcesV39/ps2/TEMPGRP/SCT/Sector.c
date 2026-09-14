@@ -460,9 +460,23 @@ float fn_xGetSectorZFar(HIE_tdstSuperObject_* _hSprObjSector)
  */
 void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot)
 {
-    SECT_tdstSector_* param0;
     HIE_tdstSuperObject_* hCurrentSector;
-    /* TODO: decompile from asm/... */
+    SECT_tdstSector_* param0;
+
+    hCurrentSector = hSectorRoot->hFirstElementDyn;
+    if (hCurrentSector)
+    {
+        do
+        {
+            param0 = hCurrentSector->hLinkedObject.p_stSector;
+            param0->cCurrentActivity = -1;
+            param0->ucInList = 0;
+            param0->h_PreviousSectorInList = 0;
+            param0->h_NextSectorInList = 0;
+            hCurrentSector = hCurrentSector->hNextBrotherDyn;
+        } while (hCurrentSector);
+    }
+    SECT_fnvInitGlobalsForActivity();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 960–982 */

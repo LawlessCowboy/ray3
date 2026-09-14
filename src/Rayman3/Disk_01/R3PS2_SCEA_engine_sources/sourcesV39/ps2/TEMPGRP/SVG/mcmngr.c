@@ -127,8 +127,13 @@ void SVG_fn_vCheckStatusChangeInMC0(void)
  */
 int SVG_fn_iGetChangeInMC0AndReset(void)
 {
-    int iReturn;
-    /* TODO: decompile from asm/... */
+    register int iReturn;
+
+    SVG_fn_vCheckStatusChangeInMC0();
+    iReturn = gs_iSceMcOpChanged;
+    gs_iSceMcOpChanged = 0;
+    gs_iSceMcOpWarned = 0;
+    return iReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 181–184 */
@@ -143,7 +148,11 @@ int SVG_fn_iGetChangeInMC0AndReset(void)
  */
 int SVG_fn_iGetChangeInMC0(void)
 {
-    /* TODO: decompile from asm/... */
+    int iReturn;
+
+    SVG_fn_vCheckStatusChangeInMC0();
+    iReturn = gs_iSceMcOpChanged;
+    return iReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 188–190 */

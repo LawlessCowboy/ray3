@@ -1587,7 +1587,14 @@ void CAM_fn_vResetArrayOfTransparentSuperObject(tdstCineinfo_* _hCineinfo)
 {
     tdstTransparentSuperObjectForCamera_* param0;
     tdstTransparentSuperObjectForCamera_* p_stFirst;
-    /* TODO: decompile from asm/... */
+    p_stFirst = _hCineinfo->a10_stTransparentSuperObjectForCamera;
+    param0 = p_stFirst + _hCineinfo->xNumberOfTransparentSuperObjectForCamera;
+    if (p_stFirst < param0) {
+        do {
+            p_stFirst->bIncrease = 0;
+            p_stFirst++;
+        } while (p_stFirst < param0);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1156–1156 */
@@ -1831,7 +1838,8 @@ void CAM_fn_vSetCineinfoWorkFromVisibility(tdstCineinfo_* param0)
  */
 void CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_* _hCineinfo)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(_hCineinfo->hCurrent, _hCineinfo->hVisibility, sizeof(tdstInternalStructurCineinfo_));
+    _hCineinfo->ucPerIAFlags &= 0xfd;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 716–722 */

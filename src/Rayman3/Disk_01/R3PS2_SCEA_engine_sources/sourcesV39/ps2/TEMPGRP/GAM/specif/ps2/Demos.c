@@ -3006,7 +3006,8 @@ void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag)
  */
 void DEMO_fn_vSetMapToLoadWhenDemoFinished(char* _szMapName)
 {
-    /* TODO: decompile from asm/... */
+    strncpy(g_szMapNameToLoadWhenDemoFinished, _szMapName, 20);
+    g_szMapNameToLoadWhenDemoFinished[19] = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 2023–2023 */
@@ -3051,7 +3052,8 @@ void DEMO_fn_vLoadDemoIfNeeded(void)
  */
 void DEMO_fn_vAskToLoadDemo(char* pcDemoName)
 {
-    /* TODO: decompile from asm/... */
+    strcpy(g_szDemoToLoad, pcDemoName);
+    g_DEMO_LoadDemo = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1808–1921 */
@@ -3352,9 +3354,27 @@ void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* _p_stCompress
  */
 float fn_fUncompressNumber(short n)
 {
-    unsigned int mantissa;
-    unsigned int expf;
-    unsigned int sign_bit;
     unsigned int ulValue;
-    /* TODO: decompile from asm/... */
+    unsigned int mantissa;
+    int expf;
+    unsigned int sign_bit;
+    union {
+        unsigned int ul;
+        float f;
+    } value;
+
+    ulValue = n;
+    expf = n & 0x7c00;
+    sign_bit = n & 0x8000;
+    mantissa = n & 0x3ff;
+    expf >>= 10;
+    if (expf != 0)
+    {
+        expf += 0x70;
+        expf <<= 23;
+    }
+    mantissa <<= 13;
+    sign_bit <<= 16;
+    value.ul = sign_bit | expf | mantissa;
+    return value.f;
 }

@@ -1908,7 +1908,14 @@ void GLI_vDesinitBigBossLifeBars(void)
  */
 void GLI_vAddBigBossLifeBars(float PosRightX, float PosBottomY, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_BigBossLifeBar.PosRightX = PosRightX;
+    GLI_g_BigBossLifeBarIsInit = 1;
+    GLI_g_BigBossLifeBar.PosBottomY = PosBottomY;
+    GLI_g_BigBossLifeBar.CurrentLife = CurrentLife;
+    GLI_g_BigBossLifeBar.MaxLife = MaxLife;
+    GLI_g_BigBossLifeBar.CenterIcon = CenterIcon;
+    GLI_g_BigBossLifeBar.pMat = pMat;
+    GLI_g_BigBossLifeBar.fAlpha = fAlpha;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2676–2676 */

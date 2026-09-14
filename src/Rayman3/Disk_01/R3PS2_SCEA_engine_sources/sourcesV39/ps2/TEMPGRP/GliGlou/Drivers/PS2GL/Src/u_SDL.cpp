@@ -2325,6 +2325,11 @@ TransparentSpriteGen_ GLI_g_TransparentSpriteGens[200];
 unsigned int GLI_g_NbTransparentSpriteGens;
 GT3_Reflections_ GLI_g_GT3_Reflections[256];
 unsigned int GLI_g_NbGT3_Reflections;
+extern unsigned int GLI_g_DMA_SomethingWasDrawn;
+extern unsigned int GLI_g_DMA_PreparingOpaque;
+extern unsigned int GLI_g_DMA_DrawingAllNZ;
+extern unsigned int CTL_Buffer;
+extern unsigned int CTL_BufferPos;
 float PLICPLOCVERTEXES[1024][4];
 unsigned int GLI_g_NbTransparentUnoptimizedMap;
 RegisteredTransparentUnoptimizedMap_ GLI_g_TransparentUnoptimizedMapElements[256];
@@ -2431,7 +2436,12 @@ void GLI_vReinitTempVertexArrays(void)
  */
 void GLI_vRemoveRefs(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_DMA_SomethingWasDrawn = 0;
+    GLI_g_DMA_PreparingOpaque = 0;
+    GLI_g_DMA_DrawingAllNZ = 0;
+    GLI_g_ThisLayerHasScrolling = 0;
+    CTL_Buffer = 0;
+    CTL_BufferPos = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 3412–3421 */
@@ -4003,7 +4013,7 @@ int GLIPS2_bCharacterHasTheRightSkin(GLI_tdstMaterial_* hMat, int Index)
  */
 void GLIPS2_vSetNoInterpolationForThisCharacter(HIE_tdstSuperObject_* hPerso)
 {
-    /* TODO: decompile from asm/... */
+    hPerso->lDisplayPrioriry = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 455–471 */

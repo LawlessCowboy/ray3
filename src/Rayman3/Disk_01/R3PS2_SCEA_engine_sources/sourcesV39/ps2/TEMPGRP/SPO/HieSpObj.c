@@ -527,7 +527,10 @@ void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* _hSprObj)
  */
 void HIE_fn_vInitGlobalMatrixFrameCounter(int lValue)
 {
-    /* TODO: decompile from asm/... */
+    if (lValue != -1)
+        HIE_gs_lCurrentFrame = lValue;
+    else
+        HIE_gs_lCurrentFrame = lValue + 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 393–406 */
@@ -560,7 +563,9 @@ void HIE_fn_vInvalidateOneGlobalMatrix(HIE_tdstSuperObject_* _hSprObj)
  */
 void HIE_fn_vInvalidateAllGlobalMatrices(void)
 {
-    /* TODO: decompile from asm/... */
+    HIE_gs_lCurrentFrame++;
+    if (HIE_gs_lCurrentFrame == -1)
+        HIE_gs_lCurrentFrame++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 380–382 */
@@ -624,7 +629,9 @@ int HIE_fn_vRecUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO)
  */
 HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectPrevBrother(HIE_tdstSuperObject_* _hSprObj)
 {
-    /* TODO: decompile from asm/... */
+    if (_hSprObj)
+        _hSprObj = _hSprObj->hPrevBrotherDyn;
+    return _hSprObj;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 332–335 */
@@ -637,7 +644,9 @@ HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectPrevBrother(HIE_tdstSuperObject
  */
 HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* _hSprObj)
 {
-    /* TODO: decompile from asm/... */
+    if (_hSprObj)
+        _hSprObj = _hSprObj->hNextBrotherDyn;
+    return _hSprObj;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 272–325 */

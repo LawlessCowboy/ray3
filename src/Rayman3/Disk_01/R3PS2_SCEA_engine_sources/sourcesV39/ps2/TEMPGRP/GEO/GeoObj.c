@@ -249,7 +249,9 @@ short GEO_xGetParallelBoxIndexOfElement(GEO_tdstGeometricObject_* hObject, short
  */
 GEO_tdstParallelBox_* GEO_hGetParallelBox(GEO_tdstGeometricObject_* hObject, short xParallelBox)
 {
-    /* TODO: decompile from asm/... */
+    if (xParallelBox < hObject->xNbParallelBoxes)
+        return hObject->d_stListOfParallelBoxes + xParallelBox;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 950–974 */
@@ -447,7 +449,18 @@ void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject)
  */
 void GEO_vGetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
 {
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_* p_stCurrentPoint;
+    float xY;
+    float xX;
+    float xZ;
+
+    p_stCurrentPoint = hObject->d_stListOfPoints + xIndexOfPoint;
+    xZ = p_stCurrentPoint->xZ;
+    xY = p_stCurrentPoint->xY;
+    xX = p_stCurrentPoint->xX;
+    p_stPoint->xX = xX;
+    p_stPoint->xY = xY;
+    p_stPoint->xZ = xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 378–379 */
@@ -460,7 +473,18 @@ void GEO_vGetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_*
  */
 void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
 {
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_* p_stCurrentPoint;
+    float xY;
+    float xX;
+    float xZ;
+
+    p_stCurrentPoint = hObject->d_stListOfPoints + xIndexOfPoint;
+    xZ = p_stPoint->xZ;
+    xY = p_stPoint->xY;
+    xX = p_stPoint->xX;
+    p_stCurrentPoint->xX = xX;
+    p_stCurrentPoint->xY = xY;
+    p_stCurrentPoint->xZ = xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 347–351 */

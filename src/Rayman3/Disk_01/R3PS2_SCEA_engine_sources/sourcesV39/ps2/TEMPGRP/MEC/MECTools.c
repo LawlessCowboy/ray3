@@ -1383,7 +1383,7 @@ unsigned char MEC_fn_bNoMove(DNM_stDynamics* p_stDynamic)
  */
 unsigned char MEC_fn_bMainActor(HIE_tdstSuperObject_* hSupObj)
 {
-    /* TODO: decompile from asm/... */
+    return (((fn_ulStandardGameGetCustomBitsSO(hSupObj) & 0x80000000) ^ 0x80000000) < 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1335–1347 */

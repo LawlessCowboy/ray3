@@ -1654,7 +1654,7 @@ int fn_bGetMicroVelocity(int s32_ObjectId, _stVector* pst_Vector)
  */
 float fn_rClampValue(float r_Value)
 {
-    /* TODO: decompile from asm/... */
+    return r_Value;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 402–411 */

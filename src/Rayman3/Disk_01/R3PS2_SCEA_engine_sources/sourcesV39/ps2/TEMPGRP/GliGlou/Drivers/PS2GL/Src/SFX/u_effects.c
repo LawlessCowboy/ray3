@@ -1997,7 +1997,10 @@ void GLIPS2_vSetMirrorAE_NoFx(void)
  */
 void GLIPS2_vSetAE_MotionBlur(unsigned int bOnOff, float fIntensity)
 {
-    /* TODO: decompile from asm/... */
+    if (bOnOff)
+        GLI_g_MotionBlurIntensity = fIntensity;
+    else
+        GLI_g_MotionBlurIntensity = 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5769–5770 */
@@ -2010,7 +2013,10 @@ void GLIPS2_vSetAE_MotionBlur(unsigned int bOnOff, float fIntensity)
  */
 void GLIPS2_vSetAE_WaterFX(unsigned int bOnOff)
 {
-    /* TODO: decompile from asm/... */
+    if (bOnOff)
+        GLI_g_bFullScreenWaterEffect = 1;
+    else
+        GLI_g_bFullScreenWaterEffect = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5756–5761 */
@@ -2040,7 +2046,11 @@ void GLIPS2_vSetAE_ColorCorrection(unsigned int bOnOff, float fPreContrast, floa
  */
 void GLIPS2_vSetAE_ZoomBlur(unsigned int bOnOff, float fIntensity)
 {
-    /* TODO: decompile from asm/... */
+    if (bOnOff)
+        GLI_g_AfterEffect = 2;
+    else
+        GLI_g_AfterEffect = 0;
+    AE_ZoomBlurIntensity = fIntensity;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5733–5739 */

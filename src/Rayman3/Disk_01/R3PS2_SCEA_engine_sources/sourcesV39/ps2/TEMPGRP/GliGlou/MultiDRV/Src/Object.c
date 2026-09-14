@@ -1423,5 +1423,5 @@ void GLI_xSendObjectElement(GLD_tdstViewportAttributes_* p_stVpt)
  */
 float GLI_vGetGlobalAlpha(void)
 {
-    /* TODO: decompile from asm/... */
+    return GLI_BIG_GLOBALS_xGlobalAlpha * 255.0f;
 }

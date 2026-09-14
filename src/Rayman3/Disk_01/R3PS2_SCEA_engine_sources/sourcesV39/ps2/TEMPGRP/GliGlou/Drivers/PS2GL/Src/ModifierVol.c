@@ -1965,7 +1965,9 @@ void GLI_vStartDrawingShadowVolume(void)
  */
 void SwapShadowBuffers(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_CurrentShadowArray ^= 1;
+    GLI_g_CurrentShadowVertexArrayFront = GLI_g_GlobalShadowVertexArray[GLI_g_CurrentShadowArray][0];
+    GLI_g_CurrentShadowVertexArrayBack = GLI_g_GlobalShadowVertexArray[GLI_g_CurrentShadowArray][1];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 191–235 */

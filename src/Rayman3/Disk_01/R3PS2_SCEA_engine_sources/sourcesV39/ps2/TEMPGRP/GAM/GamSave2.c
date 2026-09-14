@@ -1759,7 +1759,7 @@ unsigned char SAV2_fn_bSaveAllOnDisk(char* p_szSaveName)
  */
 void GAM_vAllocateSaveBloc(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2_g_SaveBloc = malloc(0x1000);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 591–596 */

@@ -1945,7 +1945,11 @@ void fn_vPutBackOldGeometricObjectsBeforeAnimPlayer(void)
  */
 int PLA_fn_bTestIfActorIsInSmoothAnim(HIE_tdstSuperObject_* p_stSuperObject)
 {
-    /* TODO: decompile from asm/... */
+    tdstState_* pState;
+    pState = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentState;
+    if (pState == 0)
+        return 0;
+    return pState->p_stAnim->ucFlagMergeAnim;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 3035–3037 */
@@ -1958,7 +1962,7 @@ int PLA_fn_bTestIfActorIsInSmoothAnim(HIE_tdstSuperObject_* p_stSuperObject)
  */
 int PLA_fn_bTestIfEndOfAnim(HIE_tdstSuperObject_* p_stSuperObject)
 {
-    /* TODO: decompile from asm/... */
+    return p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->ucFlagEndOfAnim != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 3023–3031 */
@@ -1975,7 +1979,12 @@ int PLA_fn_bTestIfEndOfAnim(HIE_tdstSuperObject_* p_stSuperObject)
 int PLA_fn_bTestIfEndOfAction(HIE_tdstSuperObject_* p_stSuperObject)
 {
     tdst3dData_* param0;
-    /* TODO: decompile from asm/... */
+    param0 = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+    if (param0->ucFlagEndState != 0) {
+        if (param0->h_CurrentState == param0->h_WantedState)
+            return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 2991–3019 */
@@ -2123,7 +2132,7 @@ MTH3D_tdstVector_* PLA_fn_stGetLinearSpeedVector(HIE_tdstSuperObject_* p_stSuper
  */
 int PLA_fn_bTestCurrentAction(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_FirstStateOfAction)
 {
-    /* TODO: decompile from asm/... */
+    return h_FirstStateOfAction == p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_FirstStateOfAction;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 2838–2854 */
@@ -2196,7 +2205,7 @@ int PLA_fn_vInitNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_St
  */
 unsigned short PLA_fn_uwGetNbFrameInCurrAnim(HIE_tdstSuperObject_* p_stSuperObject)
 {
-    /* TODO: decompile from asm/... */
+    return p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentState->p_stAnim->uwNumberOfFrames;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 2704–2759 */

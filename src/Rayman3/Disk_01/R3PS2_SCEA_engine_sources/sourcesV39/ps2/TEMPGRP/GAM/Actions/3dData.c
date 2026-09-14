@@ -1946,7 +1946,9 @@ int fn_b3dDataGetUserEventFlag(tdst3dData_* h_3dData, unsigned char _ucFlagIndex
  */
 void fn_v3dDataSetLightComputationFrequency(tdst3dData_* h_3dData, unsigned char _ucFrequency)
 {
-    /* TODO: decompile from asm/... */
+    h_3dData->ucLightComputationFrequency = _ucFrequency;
+    if (h_3dData->cLightCounter >= h_3dData->ucLightComputationFrequency)
+        h_3dData->cLightCounter = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 878–885 */
@@ -1993,7 +1995,9 @@ void fn_v3dDataUpdateBrainCounter(HIE_tdstSuperObject_* _hCharacter)
  */
 void fn_v3dDataSetBrainComputationFrequency(tdst3dData_* h_3dData, unsigned char _ucFrequency)
 {
-    /* TODO: decompile from asm/... */
+    h_3dData->ucBrainComputationFrequency = _ucFrequency;
+    if (h_3dData->cBrainCounter >= h_3dData->ucBrainComputationFrequency)
+        h_3dData->cBrainCounter = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 832–835 */

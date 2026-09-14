@@ -5229,9 +5229,8 @@ void fn_v_Transition_CorrectTextureChannel(GLI_tdstTexture_* p_stTexture)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int debug_printf(void)
+void debug_printf(char* format, ...)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1300–1332 */

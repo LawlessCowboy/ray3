@@ -2414,7 +2414,10 @@ void GLI_vUpdateFogFromSector(SECT_tdstSector_* hSectorObject)
  */
 void GLI_fn_vApplyChangesToObjectVerticesAndUvs(GEO_tdstGeometricObject_* _p_stObj)
 {
-    /* TODO: decompile from asm/... */
+    GLI_BIG_GLOBALS_p_stObj = (int)_p_stObj;
+    if (_p_stObj->pSDC_Data != 0) {
+        ((SDC_VertexArrays_*)_p_stObj->pSDC_Data)->FrameDeformed = GLI_g_FrameNumber;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 987–988 */
@@ -2427,7 +2430,10 @@ void GLI_fn_vApplyChangesToObjectVerticesAndUvs(GEO_tdstGeometricObject_* _p_stO
  */
 void GLI_vApplyChangesToObjectVertices(GEO_tdstGeometricObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    GLI_BIG_GLOBALS_p_stObj = (int)p_stObject;
+    if (p_stObject->pSDC_Data != 0) {
+        ((SDC_VertexArrays_*)p_stObject->pSDC_Data)->FrameDeformed = GLI_g_FrameNumber;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 951–981 */

@@ -1808,7 +1808,14 @@ unsigned char fn_ucGetHitPointsMax(tdstEngineObject_* _p_stObject)
  */
 unsigned char fn_ucSubHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    /* TODO: decompile from asm/... */
+    tdstStandardGame_* hStandardGame = _p_stObject->h_StandardGame;
+    int value = hStandardGame->ucHitPoints - _ucValue;
+    unsigned char* pHitPoints = &hStandardGame->ucHitPoints;
+    if (value > 0)
+        *pHitPoints = (signed char)*pHitPoints - _ucValue;
+    else
+        *pHitPoints = 0;
+    return _p_stObject->h_StandardGame->ucHitPoints;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 53–57 */

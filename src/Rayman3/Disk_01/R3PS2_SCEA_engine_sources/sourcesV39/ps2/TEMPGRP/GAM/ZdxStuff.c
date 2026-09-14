@@ -2008,10 +2008,13 @@ void fn_vGetAllCharactersInContactWithThisZde(HIE_tdstSuperObject_* _hSuperObj, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj);
+
 COL_tdstCollideObject_* fn_hGetCollideZdxOfTypeAtIndex(unsigned char ucZoneType, unsigned short uwIndex, HIE_tdstSuperObject_* hSuperObj)
 {
     tdstZdxList_* p_stZdxList;
-    /* TODO: decompile from asm/... */
+    p_stZdxList = CS_fn_hGetZdxList(ucZoneType, hSuperObj);
+    return p_stZdxList->hGeoZdxList.hFirstElementOpt[uwIndex].hGeoObj;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 537–655 */

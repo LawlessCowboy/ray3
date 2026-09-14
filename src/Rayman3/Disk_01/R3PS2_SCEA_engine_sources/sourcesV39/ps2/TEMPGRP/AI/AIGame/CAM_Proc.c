@@ -3515,8 +3515,9 @@ tdstNodeInterpret_* CAM_fn_p_stCameraSetTransparencyFlag(HIE_tdstSuperObject_* p
  */
 tdstNodeInterpret_* CAM_fn_p_stCameraMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    char stValue[16];
+    fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stValue);
+    g_stEngineStructure.cCameraMode = stValue[0];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 1828–2081 */

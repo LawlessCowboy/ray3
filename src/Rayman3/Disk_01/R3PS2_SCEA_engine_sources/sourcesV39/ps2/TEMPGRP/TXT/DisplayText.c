@@ -5061,7 +5061,11 @@ void TXT_vSetFrameMode(int StringNumber, unsigned char bOnOff)
  */
 void TXT_vDoFadeOut(int StringNumber)
 {
-    /* TODO: decompile from asm/... */
+    _JFFTXT_* param0;
+    if (StringNumber < 200) {
+        param0 = &g_JFFTXT[StringNumber];
+        param0->bOther = 2;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 309–315 */
@@ -5080,7 +5084,11 @@ void TXT_vDoFadeOut(int StringNumber)
 void TXT_vDoFadeIn(int StringNumber)
 {
     _JFFTXT_* param0;
-    /* TODO: decompile from asm/... */
+    if (StringNumber < 200) {
+        param0 = &g_JFFTXT[StringNumber];
+        param0->bOther = 1;
+        param0->ucTransparency = 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 296–301 */
@@ -5094,7 +5102,11 @@ void TXT_vDoFadeIn(int StringNumber)
  */
 void TXT_vSetTransparence(int StringNumber, unsigned int ulTransparence)
 {
-    /* TODO: decompile from asm/... */
+    _JFFTXT_* param0;
+    if (StringNumber < 200) {
+        param0 = &g_JFFTXT[StringNumber];
+        param0->ucTransparency = ulTransparence;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 284–289 */
@@ -5108,7 +5120,11 @@ void TXT_vSetTransparence(int StringNumber, unsigned int ulTransparence)
  */
 void TXT_vSetColor(int StringNumber, unsigned int ulRed, unsigned int ulGreen, unsigned int ulBlue)
 {
-    /* TODO: decompile from asm/... */
+    _JFFTXT_* param0;
+    if (StringNumber < 200) {
+        param0 = &g_JFFTXT[StringNumber];
+        param0->ulColor = (ulRed << 16) | (ulGreen << 8) | ulBlue;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 263–277 */

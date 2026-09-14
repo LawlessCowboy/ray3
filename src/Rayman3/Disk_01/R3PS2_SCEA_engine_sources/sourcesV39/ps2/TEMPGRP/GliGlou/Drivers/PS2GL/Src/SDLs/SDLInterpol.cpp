@@ -4,6 +4,11 @@
 
 #include <stddef.h>
 
+typedef struct C_SdlRef C_SdlRef;
+struct C_SdlRef {
+    void __nw(unsigned int Size);
+};
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct PS2GL_VU1_InterpolMatrixData_ PS2GL_VU1_InterpolMatrixData_;
 typedef struct tag_stVU1MatriceT tag_stVU1MatriceT;
