@@ -49,6 +49,7 @@ _compile_locks: dict[Path, threading.Lock] = {}
 _compile_locks_guard = threading.Lock()
 INDEX_PATH = BUILD_ROOT / 'source-index.json'
 COMPILEABILITY_PATH = BUILD_ROOT / 'compileability.json'
+LEASES_PATH = BUILD_ROOT / 'source-leases.json'
 MANIFEST_PATH = ROOT / 'config' / 'matches.json'
 INSIGHTS_PATH = ROOT / 'docs' / 'matching-insights.md'
 TARGET_PATH = ROOT / 'SLKA_250.78'
@@ -849,6 +850,80 @@ def command_check(args: argparse.Namespace) -> int:
     return 0 if result['status'] == 'MATCH' else 1
 
 
+def classify_result(result: dict) -> str:
+    """Give workers a first-pass routing label for a mismatch."""
+    status = result.get('status')
+    if status in {'COMPILE_ERROR', 'OBJECT_ERROR'}:
+        return 'translation-unit'
+    if status != 'MISMATCH':
+        return str(status or 'unknown').lower()
+    if result.get('unresolved_relocations'):
+        return 'relocation/global-layout'
+    if result.get('candidate_size') != result.get('target_size'):
+        return 'control-flow/size'
+    candidate = bytes.fromhex(result.get('candidate_hex', ''))
+    target = bytes.fromhex(result.get('target_hex', ''))
+    differing = [offset for offset in range(0, min(len(candidate), len(target)), 4)
+                 if candidate[offset:offset + 4] != target[offset:offset + 4]]
+    reloc_offsets = {r['offset'] & ~3 for r in result.get('relocations', [])}
+    if differing and set(differing) <= reloc_offsets:
+        return 'relocation/global-layout'
+    for offset in differing:
+        got = struct.unpack_from('<I', candidate, offset)[0]
+        want = struct.unpack_from('<I', target, offset)[0]
+        got_op, want_op = got >> 26, want >> 26
+        if got_op == 0x0C and want_op != 0x0C:
+            return 'abi-narrow-type'
+        if {got_op, want_op} == {2, 3}:
+            return 'tail-call/dispatch'
+    if result.get('code_equal') and not result.get('line_offsets_equal'):
+        return 'source-layout/line-map'
+    return 'codegen/scheduling'
+
+
+def command_classify(args: argparse.Namespace) -> int:
+    _, symbols, main, _, _ = target_context()
+    entry = find_entry(args.function, cached_source_index(symbols, main))
+    result = compare(entry, verbose=True)
+    print(json.dumps({'name': entry['name'], 'status': result.get('status'),
+                      'class': classify_result(result),
+                      'first_difference': result.get('first_difference'),
+                      'candidate_size': result.get('candidate_size'),
+                      'target_size': result.get('target_size'),
+                      'unresolved_relocations': result.get('unresolved_relocations', []),
+                      'line_offsets_equal': result.get('line_offsets_equal')}, indent=2))
+    return 0 if result.get('status') == 'MATCH' else 1
+
+
+def load_leases() -> dict:
+    if not LEASES_PATH.exists():
+        return {}
+    return json.loads(LEASES_PATH.read_text())
+
+
+def command_lease(args: argparse.Namespace) -> int:
+    leases = load_leases()
+    if args.action == 'list':
+        print(json.dumps(leases, indent=2, sort_keys=True))
+        return 0
+    if not args.source:
+        raise SystemExit('lease claim/release requires SOURCE')
+    if args.action == 'claim':
+        if args.source in leases and leases[args.source] != args.owner:
+            print(f'LEASED {args.source} by {leases[args.source]}')
+            return 1
+        leases[args.source] = args.owner
+        LEASES_PATH.parent.mkdir(parents=True, exist_ok=True)
+        LEASES_PATH.write_text(json.dumps(leases, indent=2, sort_keys=True) + '\n')
+        print(f'claimed {args.source} for {args.owner}')
+        return 0
+    leases.pop(args.source, None)
+    LEASES_PATH.parent.mkdir(parents=True, exist_ok=True)
+    LEASES_PATH.write_text(json.dumps(leases, indent=2, sort_keys=True) + '\n')
+    print(f'released {args.source}')
+    return 0
+
+
 def command_coverage(args: argparse.Namespace) -> int:
     result = coverage()
     if args.json:
@@ -1022,6 +1097,7 @@ def command_batch(args: argparse.Namespace) -> int:
     entries = cached_source_index(symbols, main)
     compileability = load_compileability()
     manifest = load_manifest()
+    leases = load_leases()
     matched = {int(r['address'], 16) for r in manifest.get('functions', {}).values()
                if r.get('status') == 'MATCH'}
     attempted = {int(r['address'], 16) for r in manifest.get('attempts', [])
@@ -1030,6 +1106,7 @@ def command_batch(args: argparse.Namespace) -> int:
     for entry in entries:
         if (not entry.get('todo') or not entry.get('source')
                 or not source_compileable(entry['source'], compileability)
+                or (not args.include_leased and entry['source'] in leases)
                 or entry['address'] in matched
                 or (not args.include_attempted and entry['address'] in attempted)):
             continue
@@ -1078,6 +1155,9 @@ def main() -> int:
     signature_parser = sub.add_parser('signature')
     signature_parser.add_argument('function')
     signature_parser.set_defaults(func=command_signature)
+    classify_parser = sub.add_parser('classify', help='classify a mismatch for worker routing')
+    classify_parser.add_argument('function')
+    classify_parser.set_defaults(func=command_classify)
     check_parser = sub.add_parser('check')
     check_parser.add_argument('function')
     check_parser.add_argument('--diff', action='store_true')
@@ -1110,10 +1190,16 @@ def main() -> int:
     batch_parser.add_argument('--sources', type=int, default=3)
     batch_parser.add_argument('--per-source', type=int, default=20)
     batch_parser.add_argument('--include-attempted', action='store_true')
+    batch_parser.add_argument('--include-leased', action='store_true')
     batch_parser.add_argument('--difficulty', choices=['trivial', 'easy', 'moderate', 'complex', 'expert'])
     batch_parser.add_argument('--model', choices=['gpt-5.4-mini', 'gpt-5.6-luna',
                                                    'gpt-5.6-terra', 'gpt-5.6-sol'])
     batch_parser.set_defaults(func=command_batch)
+    lease_parser = sub.add_parser('lease', help='claim translation units to prevent duplicate work')
+    lease_parser.add_argument('action', choices=['claim', 'release', 'list'])
+    lease_parser.add_argument('source', nargs='?')
+    lease_parser.add_argument('--owner', default=os.environ.get('CODEX_MODEL', 'worker'))
+    lease_parser.set_defaults(func=command_lease)
     args = parser.parse_args()
     if args.command == 'insight' and args.action == 'add' and not args.text:
         parser.error('insight add requires text')

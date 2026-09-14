@@ -99,6 +99,19 @@ assign a model directly:
 python3 tools/match.py list --unmatched --compileable --model gpt-5.6-luna
 ```
 
+Claim a whole source before dispatching it so concurrent workers do not
+duplicate a translation unit. `batch` skips leased sources by default:
+
+```sh
+python3 tools/match.py lease claim SOURCE --owner WORKER
+python3 tools/match.py batch --sources 1 --per-source 20
+python3 tools/match.py lease release SOURCE --owner WORKER
+```
+
+After a mismatch, use `python3 tools/match.py classify FUNCTION` for an
+initial routing label such as `abi-narrow-type`, `relocation/global-layout`,
+`tail-call/dispatch`, or `codegen/scheduling` before retrying or escalating.
+
 ## Constraints
 
 - Do not use inline assembly, hand-written opcodes, or intrinsics to force a
