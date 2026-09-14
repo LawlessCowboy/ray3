@@ -40,6 +40,9 @@ typedef struct CStringIsLess CStringIsLess;
 typedef struct CLinkCallbackResObjCont CLinkCallbackResObjCont;
 typedef struct CActorModifiers CActorModifiers;
 
+/* Empty allocator support object used by the recovered STL containers. */
+struct sallocator {};
+
 typedef enum _Redbl {
     _Red = 0,
     _Black = 1,
@@ -262,7 +265,7 @@ struct CActorModifiers {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ~CBankDescCont(void)
+void __dt__13CBankDescContFv(void)
 {
     iterator it;
     /* TODO: decompile from asm/... */

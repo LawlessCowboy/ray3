@@ -26,6 +26,7 @@ typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct stInterpolatedPosition stInterpolatedPosition;
 typedef struct tdstAChannel_ tdstAChannel_;
 typedef struct C_SdlRef C_SdlRef;
+typedef int anon_0;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct tdstAnim3d_ tdstAnim3d_;
@@ -168,6 +169,7 @@ struct C_InstanceList {
     unsigned int SearchAndDestroyInstanceForThisSPO(HIE_tdstSuperObject_* pSPO);
     void DeleteInstance(_SDC_Instance_* pInstance);
     _SDC_Instance_* AddInstance(HIE_tdstSuperObject_* pSPO, float (*pVertexArray)[4], unsigned int* pInstanceNormals, C_Sdl* pSDL, unsigned int ulElementNumber);
+    ~C_InstanceList();
 };
 
 struct _sceDmaTag {
@@ -1328,7 +1330,7 @@ _SDC_Instance_* C_InstanceList::AddInstance(HIE_tdstSuperObject_* pSPO, float (*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ~C_InstanceList(void)
+C_InstanceList::~C_InstanceList(void)
 {
     _SDC_Instance_* pInstance;
     unsigned int i;

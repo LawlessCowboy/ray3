@@ -758,6 +758,7 @@ struct C_Sdl {
     int m_SkinIndex; /* +0x3c */
     GLI_tdstMaterial_* m_SkinMaterial; /* +0x40 */
     int m_bIsBlinking; /* +0x44 */
+    void UpdateFogs(void);
 };
 
 struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn {
@@ -1108,16 +1109,16 @@ struct MOR_stMorphVector_ {
 };
 
 unsigned int hCurrentSDL;
-anon_8 __vt__22C_SdlRef_FogParameters;
-anon_9 __vt__8C_SdlRef;
-anon_3 __vt__22C_SdlRef_TextureOffset;
-anon_5 __vt__22C_SdlRef_PointLighting;
-anon_4 __vt__24C_SdlRef_TextureIdMatrix;
-anon_6 __vt__22C_SdlRef_TextureMatrix;
-anon_2 __vt__28C_SdlRef_LocalMatrixForCheap;
-anon_1 __vt__20C_SdlRef_LocalMatrix;
-anon_7 __vt__5C_Sdl;
-anon_0 __vt__14C_CharacterSdl;
+int __vt__22C_SdlRef_FogParameters;
+int __vt__8C_SdlRef;
+int __vt__22C_SdlRef_TextureOffset;
+int __vt__22C_SdlRef_PointLighting;
+int __vt__24C_SdlRef_TextureIdMatrix;
+int __vt__22C_SdlRef_TextureMatrix;
+int __vt__28C_SdlRef_LocalMatrixForCheap;
+int __vt__20C_SdlRef_LocalMatrix;
+int __vt__5C_Sdl;
+int __vt__14C_CharacterSdl;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 39–49 */
 /* addr: 0x002dad10  size: 168 bytes */
@@ -1232,7 +1233,8 @@ unsigned int SDL_REF_GetNewLocalMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned i
  */
 void SDL_IncNbElements(unsigned int hSDL)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int* p = (unsigned int*)(hSDL + 0x20);
+    *p = *p + 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 112–112 */
@@ -1244,7 +1246,7 @@ void SDL_IncNbElements(unsigned int hSDL)
  */
 void SDL_SetNbFaces(unsigned int hSDL, unsigned int NbFaces)
 {
-    /* TODO: decompile from asm/... */
+    *(unsigned int*)(hSDL + 0x1C) = NbFaces;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 106–106 */
@@ -1256,7 +1258,7 @@ void SDL_SetNbFaces(unsigned int hSDL, unsigned int NbFaces)
  */
 void SDL_UpdateFogs(unsigned int hSDL)
 {
-    /* TODO: decompile from asm/... */
+    ((C_Sdl*)hSDL)->UpdateFogs();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 96–96 */

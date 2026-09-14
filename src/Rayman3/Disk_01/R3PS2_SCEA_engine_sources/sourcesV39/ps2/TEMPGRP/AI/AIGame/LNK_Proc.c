@@ -3557,9 +3557,9 @@ tdstNodeInterpret_* LNK_fn_SetSendDataRate(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* LNK_fn_p_SetLag(tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* LNK_fn_p_SetLag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    /* TODO: decompile from asm/... */
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1818–1857 */

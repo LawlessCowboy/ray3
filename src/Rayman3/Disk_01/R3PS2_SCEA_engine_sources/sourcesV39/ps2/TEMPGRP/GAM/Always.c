@@ -1861,10 +1861,10 @@ HIE_tdstSuperObject_* fn_p_stAllocateAlways(int otObjectModelType, HIE_tdstSuper
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-HIE_tdstSuperObject_* fn_p_stDemoAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix, short wAlwaysNumber)
+HIE_tdstSuperObject_* fn_p_stDemoAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, MAT_tdstTransformation_* p_stMatrix, unsigned short uwAction, short wAlwaysNumber)
 {
     g_swAlwaysNumber = wAlwaysNumber;
-    fn_p_stAllocateAlways(otObjectModelType, p_stFatherSuperObject, _hGenerator, p_stMatrix);
+    return fn_p_stAllocateAlways(otObjectModelType, p_stFatherSuperObject, _hGenerator, p_stMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 419–429 */

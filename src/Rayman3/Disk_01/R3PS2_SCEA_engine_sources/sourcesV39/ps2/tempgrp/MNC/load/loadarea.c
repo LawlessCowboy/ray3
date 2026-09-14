@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+typedef void* (*MNC_tfnAllocator_)(unsigned int);
+
+extern void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct anon_0 anon_0;
 typedef struct _tdstLink _tdstLink;
@@ -36,8 +40,8 @@ static unsigned int g_ulAreaChecksum;
 int g_a_pcEndOfArea[250];
 anon_2 g_a_stOldLinkPointers[250];
 int g_a_pcAreaBasePointers[250];
-void (*MNC_fn_vDefaultDeallocator)(void*);
-void* (*MNC_fn_pvDefaultAllocator)(unsigned int);
+void (*g_MNC_fn_vDefaultDeallocator)(void*);
+MNC_tfnAllocator_ g_MNC_fn_pvDefaultAllocator;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\MNC\load\loadarea.c lines 774–784 */
 /* addr: 0x001330a0  size: 120 bytes */
@@ -241,7 +245,7 @@ void MNC_fn_vUnLoadAreaWithDeallocator(unsigned int _u32AreaId, void (*_fn_vDeal
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void* (*)(unsigned int) MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId)
+MNC_tfnAllocator_ MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId)
 {
     unsigned int u32Area;
     int fh;
@@ -282,9 +286,9 @@ void MNC_fn_vDefaultDeallocator(void* pvPointer)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MNC_fn_pvDefaultAllocator(unsigned int u32Size)
+void* MNC_fn_pvDefaultAllocator(unsigned int u32Size)
 {
-    /* TODO: decompile from asm/... */
+    return HMU_fn_p_vMalloc(u32Size, 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\MNC\load\loadarea.c lines 122–122 */
@@ -296,5 +300,5 @@ void MNC_fn_pvDefaultAllocator(unsigned int u32Size)
  */
 unsigned int MNC_fn_ulGetAreaChecksum(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_ulAreaChecksum;
 }

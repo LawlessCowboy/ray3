@@ -53,6 +53,9 @@ typedef struct CProgramContext CProgramContext;
 typedef struct CVar CVar;
 typedef struct CActorModifiers CActorModifiers;
 
+/* Empty allocator support object used by the recovered STL tree. */
+struct sallocator {};
+
 typedef enum tdeType {
     EBASE = 0,
     EARRAY = 1,

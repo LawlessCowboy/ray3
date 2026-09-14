@@ -116,6 +116,8 @@ typedef struct tdstCineinfo_ tdstCineinfo_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
 typedef struct tdstMetaActionEntry_ tdstMetaActionEntry_;
+typedef unsigned char (*tdfn_MetaActionFunction_)(HIE_tdstSuperObject_*);
+typedef tdstNodeInterpret_* (*tdfn_MetaActionInitFunction_)(HIE_tdstSuperObject_*, tdstNodeInterpret_*);
 typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef union GEO_tduVSObject_ GEO_tduVSObject_;
@@ -2891,7 +2893,7 @@ tdstMetaActionEntry_ a_stMetaActionTable[13];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char (*)(HIE_tdstSuperObject_*) fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId)
+tdfn_MetaActionFunction_ fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId)
 {
     return a_stMetaActionTable[eMetaActionId].p_fn_ucMetaActionFunction;
 }
@@ -2904,7 +2906,7 @@ unsigned char (*)(HIE_tdstSuperObject_*) fn_p_fn_pGetMetaActionFunctionPtr(tdeMe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* (*)(HIE_tdstSuperObject_*, tdstNodeInterpret_*) fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId)
+tdfn_MetaActionInitFunction_ fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId)
 {
     return a_stMetaActionTable[eMetaActionId].p_fn_p_stMetaActionInitFunction;
 }
@@ -2917,7 +2919,7 @@ tdstNodeInterpret_* (*)(HIE_tdstSuperObject_*, tdstNodeInterpret_*) fn_p_fn_pGet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void szGetMetaActionTypeInParamFromId(tdeMetaActionId_ eMetaActionId)
+char* szGetMetaActionTypeInParamFromId(tdeMetaActionId_ eMetaActionId)
 {
     return a_stMetaActionTable[eMetaActionId].szMetaActionTypeParam;
 }

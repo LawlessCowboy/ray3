@@ -2329,7 +2329,7 @@ unsigned int Vu1CallCounter;
 float myColorRange[4];
 static int gs_iIH_VIF1;
 static int gs_iIH_BEIS;
-int GLI_p_fn_vClientSwapBufferCallback;
+void (*GLI_p_fn_vClientSwapBufferCallback)(void);
 int GLI_g_EnableSwapBufferCallback;
 unsigned int GLI_g_bInExpertRasters;
 unsigned int GLI_g_DisplayRasters;
@@ -3533,7 +3533,7 @@ void GLI_DRV_xInitDriver(void)
  */
 void GLI_fn_vSetSwapBufferCallback(void (*f)(void))
 {
-    /* TODO: decompile from asm/... */
+    GLI_p_fn_vClientSwapBufferCallback = f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 618–622 */

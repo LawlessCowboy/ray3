@@ -1938,7 +1938,11 @@ void GLIPS2_vProcessWater2DEffect(void)
  */
 void GLIPS2_vSetMirrorAE_Blur(unsigned int bOnOff, float fVal)
 {
-    /* TODO: decompile from asm/... */
+    if (bOnOff)
+        AE_MirrorFX |= 1;
+    else
+        AE_MirrorFX &= ~1;
+    AE_Blur_M = fVal;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5808–5811 */
@@ -1984,7 +1988,7 @@ void GLIPS2_vSetMirrorAE_ColorCorrection(unsigned int bOnOff, float fPreContrast
  */
 void GLIPS2_vSetMirrorAE_NoFx(void)
 {
-    /* TODO: decompile from asm/... */
+    AE_MirrorFX = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5778–5779 */
@@ -2205,7 +2209,7 @@ void AE_Filter_AutoGlow(float r, float g, float b, float Brightness)
  */
 void AE_Filter_AutoGlowDown(float r, float g, float b, float Brightness)
 {
-    /* TODO: decompile from asm/... */
+    AE_Filter_AutoGlow(r, g, b, Brightness);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5414–5476 */
@@ -5119,7 +5123,7 @@ void GLIPS2_vCreateWaterEffect(unsigned int Type, float X1, float Y1, float X2, 
  */
 void GLIPS2_vSetWaterDeformation(int Val)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_bFullScreenWaterEffect = (unsigned int)Val;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 976–977 */

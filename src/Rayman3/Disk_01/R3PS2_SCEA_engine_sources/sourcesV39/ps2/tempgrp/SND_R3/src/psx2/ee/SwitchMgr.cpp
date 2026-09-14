@@ -65,6 +65,9 @@ typedef struct CRefIdObj CRefIdObj;
 typedef struct CIndexAllocator CIndexAllocator;
 typedef struct CActorResData CActorResData;
 
+typedef struct sallocator sallocator;
+struct sallocator { int data[8]; };
+
 typedef enum _Redbl {
     _Red = 0,
     _Black = 1,
@@ -468,6 +471,19 @@ struct CActorResData {
     smap m_oVariables; /* +0x2c */
     CRolloffParam m_oRolloff; /* +0x3c */
     CVarAccess* m_poGlobalVarAccess; /* +0x48 */
+};
+
+struct Jingle {
+    void fs_vAddJingle(int, int, int, int);
+};
+
+struct SwitchMgr {
+    void fs_vAddDataToDelete(CResData*);
+    void fs_vStopAll(void);
+    void fs_vUpdateWaves(CPS2IdObjLoader*);
+    void fs_vClearTexture(void);
+    void fs_vAddTexture(unsigned int);
+    void fs_vAdd(CSwitchResData*);
 };
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 31–61 */

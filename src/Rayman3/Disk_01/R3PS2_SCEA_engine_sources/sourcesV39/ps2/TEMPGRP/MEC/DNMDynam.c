@@ -460,9 +460,14 @@ void DNM_fn_vDynamicsCopyClone(DNM_stDynamics* _p_stDst, DNM_stDynamics* _p_stSr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void DNM_fn_vInitDynamic(DNM_stDynamics* p_stDynamic, void* hIdCard);
+
 void DNM_fn_vChangeIdCard(DNM_stDynamics* _p_stDynamics, void* _hNewIdCard)
 {
-    /* TODO: decompile from asm/... */
+    DNM_stMecBaseIdCard* pIdCard = (DNM_stMecBaseIdCard*)_hNewIdCard;
+    if (pIdCard->m_eIdentity == 1)
+        DNM_fn_vInitDynamic(_p_stDynamics, _hNewIdCard);
+    _p_stDynamics->m_tdstDynamicsBaseBlock.m_pCurrentIdCard = (int)_hNewIdCard;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMDynam.c lines 314–362 */
@@ -530,5 +535,5 @@ void DNM_fn_vInitDynamic(DNM_stDynamics* p_stDynamic, void* hIdCard)
  */
 void DNM_fn_vInitBaseMechanic(DNM_stDynamics* p_stDynamic)
 {
-    /* TODO: decompile from asm/... */
+    DNM_fn_vDynamicsInitDefault(p_stDynamic);
 }

@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+extern void (*sceCdCbfunc)(void);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct stFile_ stFile_;
 typedef struct anon_0 anon_0;
@@ -215,5 +217,36 @@ int SearchSectorCache(unsigned long sectornumber, char* pBuffer)
     unsigned long MinSector;
     unsigned long MinAccess;
     int i;
-    /* TODO: decompile from asm/... */
+    GLOBAL_SectorAccess++;
+    for (i = 0; i < 16; ++i) {
+        if (GLOBAL_SectorCache[i].bValid &&
+            GLOBAL_SectorCache[i].SectorNumber == sectornumber) {
+            memcpy(pBuffer, GLOBAL_LoadBuffer + (i << 11), 0x800);
+            GLOBAL_SectorCache[i].lastaccess = GLOBAL_SectorAccess;
+            return 1;
+        }
+    }
+
+    MinSector = 0;
+    MinAccess = GLOBAL_SectorCache[0].lastaccess;
+    for (i = 1; i < 16; ++i) {
+        if (GLOBAL_SectorCache[i].lastaccess < MinAccess) {
+            MinSector = i;
+            MinAccess = GLOBAL_SectorCache[i].lastaccess;
+        }
+    }
+
+    while (!sceCdRead(sectornumber, 1,
+                      GLOBAL_LoadBuffer + (MinSector << 11), &CDmode)) {
+        sceCdDiskReady(0);
+    }
+    sceCdSync(0);
+    while (sceCdGetError()) {
+        sceCdDiskReady(0);
+    }
+    GLOBAL_SectorCache[MinSector].SectorNumber = sectornumber;
+    GLOBAL_SectorCache[MinSector].bValid = 1;
+    GLOBAL_SectorCache[MinSector].lastaccess = GLOBAL_SectorAccess;
+    memcpy(pBuffer, GLOBAL_LoadBuffer + (MinSector << 11), 0x800);
+    return 1;
 }

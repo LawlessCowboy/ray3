@@ -14,7 +14,7 @@ int LogPassages[1000];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float PS2SQRTF(void)
+float PS2SQRTF(float x)
 {
     return __builtin_sqrt(x);
 }
@@ -68,7 +68,7 @@ void Strcat(char* s1, char* s2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Strrchr(char* string, int ch)
+char* Strrchr(char* string, int ch)
 {
     char* start;
     /* TODO: decompile from asm/... */
@@ -86,7 +86,7 @@ void Strrchr(char* string, int ch)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Strchr(char* s, int c)
+char* Strchr(char* s, int c)
 {
     char* pcIndex;
     char* result;

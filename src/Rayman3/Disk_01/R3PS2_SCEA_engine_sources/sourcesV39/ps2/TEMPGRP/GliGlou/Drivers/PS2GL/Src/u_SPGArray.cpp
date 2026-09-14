@@ -80,6 +80,10 @@ typedef struct sceGsPrmode sceGsPrmode;
 typedef struct sceGsSignal sceGsSignal;
 typedef struct tagGScontext tagGScontext;
 
+struct C_LoadingScreen {
+    int LoadTexture(char* TextureFileName, unsigned int** ppTextureData, unsigned int* pTextureName);
+};
+
 struct C_VertexArrayContainer {
     unsigned int m_CurrentFrameIndex; /* +0x0 */
     int m_pV[2]; /* +0x4 */
@@ -1186,6 +1190,7 @@ int C_LoadingScreen::LoadTexture(char* TextureFileName, unsigned int** ppTexture
     unsigned int SizeOfFile;
     int In;
     /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 415–416 */
@@ -1199,7 +1204,9 @@ int C_LoadingScreen::LoadTexture(char* TextureFileName, unsigned int** ppTexture
 void VAC_SetMaterial(void* hContainer, GLI_tdstMaterial_* pMat)
 {
     C_VertexArrayContainer* pContainer;
-    /* TODO: decompile from asm/... */
+    pContainer = (C_VertexArrayContainer*)hContainer;
+    pContainer->m_AnimatedTextureToUse = GLI_g_AnimatedTextureToUse;
+    pContainer->m_pMat = pMat;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 387–395 */
@@ -1238,6 +1245,7 @@ int VAC_Acquire(void* hContainer, float (*pMatrix)[4][4], GLI_tdstMaterial_* pMa
 {
     C_VertexArrayContainer* pContainer;
     /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 361–362 */
@@ -1251,7 +1259,9 @@ int VAC_Acquire(void* hContainer, float (*pMatrix)[4][4], GLI_tdstMaterial_* pMa
 void VAC_ReinitForNewFrame(void* hContainer)
 {
     C_VertexArrayContainer* pContainer;
-    /* TODO: decompile from asm/... */
+    pContainer = (C_VertexArrayContainer*)hContainer;
+    pContainer->m_CurrentFrameIndex ^= 1;
+    pContainer->m_CurrentIndex = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 349–355 */
@@ -1377,7 +1387,7 @@ void C_VertexArrayContainer::SetMatrix(float (*pMatrix)[4][4])
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ~C_VertexArrayContainer(void)
+void __dt__22C_VertexArrayContainerFv(void)
 {
     /* TODO: decompile from asm/... */
 }

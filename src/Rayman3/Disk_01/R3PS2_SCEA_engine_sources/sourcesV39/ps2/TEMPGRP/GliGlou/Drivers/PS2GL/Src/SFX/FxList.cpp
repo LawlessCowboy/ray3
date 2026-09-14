@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+typedef int anon_0;
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct tdstBaseFxListElement_ tdstBaseFxListElement_;
 typedef struct C_BaseFx C_BaseFx;
@@ -55,7 +57,7 @@ unsigned int GLI_g_CurrentSDLFogColor;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ~C_(void)
+void C_FxList_destructor(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -169,7 +171,7 @@ void C_FxList::DeleteAll(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ~C_(void)
+void C_FxList_destructor2(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -182,7 +184,7 @@ void ~C_(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_(void)
+void C_FxList_ctor(void)
 {
     /* TODO: decompile from asm/... */
 }

@@ -9,6 +9,17 @@ typedef struct CResData CResData;
 typedef struct JingleList JingleList;
 typedef struct JingleElt JingleElt;
 
+/* Recovered as a static utility class: the member definitions below are
+ * emitted from several sound-manager TUs, while the original class body is
+ * not present in this extracted source. */
+struct Jingle {
+    static CResData* ms_fVolReduction(void);
+    static int fs_uGetOldVolume(int, int);
+    static int fs_uGetVolume(int, int);
+    static void fs_vSynchronise(void);
+    static void fs_vAddJingle(int, int, int, int);
+};
+
 struct JingleList {
     int m_iVolumeLine; /* +0x0 */
     int m_uOldVol; /* +0x4 */

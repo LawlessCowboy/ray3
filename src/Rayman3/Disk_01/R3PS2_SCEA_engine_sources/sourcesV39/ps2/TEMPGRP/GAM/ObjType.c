@@ -21,6 +21,7 @@ typedef struct tdstIntelligence_ tdstIntelligence_;
 typedef struct tdstListOfMacro_ tdstListOfMacro_;
 typedef struct tdstMorphChannelList_ tdstMorphChannelList_;
 typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
+typedef struct tdstObjectsTableElement_ tdstObjectsTableElement_;
 typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
 typedef struct tdstScriptAI_ tdstScriptAI_;
 typedef struct tdstState_ tdstState_;
@@ -247,6 +248,16 @@ struct MTH3D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
+};
+
+struct tdstObjectsTableElement_ {
+    MTH3D_tdstVector_* p_stCustomZoom;
+    int h_Target;
+    unsigned int uwChannelNumber;
+    unsigned short wTypeOfTarget;
+    unsigned char ucPhoneme;
+    unsigned char ucIntensity;
+    unsigned char ucExpression;
 };
 
 struct HIE_tdstSuperObject_ {
@@ -1186,9 +1197,12 @@ void fn_szFindPersonalTypeNameOfPersonalType(int otType)
  */
 unsigned char fn_ucFindPersonalIdOfPersonalType(int otType)
 {
-    unsigned int i;
     tdstObjectTypeElement_* hHandleToObjectTypeElement;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    hHandleToObjectTypeElement = g_stObjectTypes.hPersonalType.hFirstElementDyn;
+    for (i = 0; i < (unsigned int)otType; i++)
+        hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn;
+    return hHandleToObjectTypeElement->ucPermanentId;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 323–329 */
@@ -1240,7 +1254,10 @@ int fn_otFindFamilyTypeOfFamilyTypeName(char* szType)
  */
 unsigned char fn_ucFindFamilyIdOfFamilyType(int otType)
 {
-    unsigned int i;
     tdstObjectTypeElement_* hHandleToObjectTypeElement;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    hHandleToObjectTypeElement = g_stObjectTypes.hFamilyType.hFirstElementDyn;
+    for (i = 0; i < (unsigned int)otType; i++)
+        hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn;
+    return hHandleToObjectTypeElement->ucPermanentId;
 }

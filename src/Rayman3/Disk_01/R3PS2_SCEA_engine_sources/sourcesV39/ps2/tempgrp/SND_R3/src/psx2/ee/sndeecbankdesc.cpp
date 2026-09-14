@@ -153,7 +153,7 @@ void _NilElmt__Q24usnd9streebase(unsigned int uiSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ~CBankDesc(void)
+void __dt__9CBankDescFv(void)
 {
     iterator it;
     /* TODO: decompile from asm/... */

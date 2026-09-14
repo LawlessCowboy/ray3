@@ -1244,7 +1244,7 @@ void SHW_fn_vSentToViewPort(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuper
  */
 void SHW_fn_vInitShadowCounter(void)
 {
-    /* TODO: decompile from asm/... */
+    g_xIndexOfShadow = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 527–527 */
@@ -1256,5 +1256,5 @@ void SHW_fn_vInitShadowCounter(void)
  */
 void SHW_fn_vGlobalInitShadowCounter(void)
 {
-    /* TODO: decompile from asm/... */
+    g_xIndexOfShadow = 0;
 }

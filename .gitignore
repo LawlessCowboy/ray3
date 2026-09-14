@@ -36,3 +36,8 @@ debug-export*.json
 # Editor and operating-system files.
 .DS_Store
 *.swp
+/.m2c/
+/m2c-seeds/
+*.m2c
+/tools/m2c-lib/
+/tools/m2c-venv/

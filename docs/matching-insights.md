@@ -63,3 +63,7 @@ compiler option, construct, and outcome.
 - [debug-format] CollSet no-collision setters all require an int condition parameter for MWCC ABI: changing the extractor-generated unsigned char parameter to int produced exact 44-byte matches for the ZDE projectile, other sectors, main character, secondary character, projectile, and map setters. The target branches directly on a1; unsigned-char candidates emitted an extra andi/mask. (2026-09-14)
 
 - [debug-format] Extractor aggregate sizing must treat long and unsigned long as 8-byte MWCC PS2 types; treating them as 4 bytes inserts false internal padding and shifts enclosing fields (confirmed by _stTimerCount and engine-layout matches). (2026-09-14)
+
+- [debug-format] LNK_fn_p_SetLag raw debug signature decoded only one tdstNodeInterpret_* parameter, but target ABI returns ; adding the omitted leading HIE_tdstSuperObject_* parameter and returning the second argument reproduces the exact 8-byte thunk. Treat similar one-parameter callback wrappers as possible signature-gap cases and validate register usage. (2026-09-14)
+
+- [compiler] SDLRefs printf probe: under MWCC PS2 3.0 O3, a C++ member method calling extern "C" printf emits a 0x20-byte stack-frame jal even with void/non-variadic declarations; target SDLRefs methods are 12-byte lui/j tail thunks. Recovered target literals are @820="Dummy interpol reference called !!\\n" and @823="Dummy reference called !!\\n". This points to a project macro/special declaration or compiler-context difference, not unknown string contents. (2026-09-14)

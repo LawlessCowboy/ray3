@@ -28,11 +28,17 @@ typedef struct CActorResObj CActorResObj;
 typedef struct TTypedVar TTypedVar;
 typedef struct CProgramContext CProgramContext;
 typedef struct CSwitchNotif CSwitchNotif;
+typedef struct sallocator sallocator;
+typedef int anon_0;
 typedef struct sset sset;
 typedef struct CVar CVar;
 typedef struct CLinkActor CLinkActor;
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
 typedef struct CLinkTypeActor CLinkTypeActor;
+
+struct sallocator {
+    int data[4];
+};
 typedef struct CCmdInterface CCmdInterface;
 typedef struct CSndVarType CSndVarType;
 typedef struct CResObj CResObj;

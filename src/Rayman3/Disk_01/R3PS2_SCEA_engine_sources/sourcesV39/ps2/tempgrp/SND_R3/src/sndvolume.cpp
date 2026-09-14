@@ -67,6 +67,11 @@ typedef struct SECT_tdstListOfSOSectorsInGraphicInteraction_ SECT_tdstListOfSOSe
 typedef struct tdstCouple_ tdstCouple_;
 typedef struct tdstLanguageStructure_ tdstLanguageStructure_;
 typedef struct streebase streebase;
+typedef struct sallocator sallocator;
+
+struct sallocator {
+    int data[8];
+};
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt;
 typedef struct CSndVarType CSndVarType;
 typedef struct _stTimerCount _stTimerCount;

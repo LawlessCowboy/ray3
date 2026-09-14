@@ -24,6 +24,9 @@ typedef struct iterator iterator;
 typedef struct C3DParam C3DParam;
 typedef struct streebase streebase;
 
+/* Empty allocator support object recovered from the STL-backed tree layout. */
+struct sallocator {};
+
 typedef enum _Redbl {
     _Red = 0,
     _Black = 1,

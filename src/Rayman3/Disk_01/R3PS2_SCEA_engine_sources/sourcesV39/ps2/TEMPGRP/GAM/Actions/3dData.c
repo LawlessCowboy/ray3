@@ -2011,7 +2011,9 @@ void fn_v3dDataSetBrainComputationFrequency(tdst3dData_* h_3dData, unsigned char
  */
 void fn_v3dDataSetGlobalAccelerationFactor(float fFactor)
 {
-    /* TODO: decompile from asm/... */
+    if (fFactor < 1.0f / 10.0f)
+        fFactor = 1.0f / 10.0f;
+    g_fGlobalAccelerationFactorForAnims = fFactor;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 817–828 */

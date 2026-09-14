@@ -1633,7 +1633,7 @@ void DMMBloc::remove_FreeBloc(DMM_tdstFreeBloc_* pFreeBloc)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DMMBloc(unsigned int MemoryBlocSize, unsigned int Alignment)
+void DMMBloc_ctor(unsigned int MemoryBlocSize, unsigned int Alignment)
 {
     unsigned int i;
     /* TODO: decompile from asm/... */

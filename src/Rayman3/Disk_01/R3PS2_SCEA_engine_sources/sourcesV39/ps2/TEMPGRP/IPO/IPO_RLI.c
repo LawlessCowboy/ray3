@@ -1052,7 +1052,7 @@ tdstEngineStructure_ g_stEngineStructure;
  */
 PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject)
 {
-    /* TODO: decompile from asm/... */
+    return _hInstanciatedPhysicalObject->_hPhysicalObject;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 763–849 */
@@ -1482,7 +1482,7 @@ void IPO_fn_vSetChangeOfRLITable(char _cIndexToReach, unsigned int _ulChangeDura
  */
 void IPO_fn_vSetRLITransitionsBlocking(char _cBlocking)
 {
-    /* TODO: decompile from asm/... */
+    IPO_g_cBlockingTransitions = _cBlocking;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 228–228 */
@@ -1494,7 +1494,7 @@ void IPO_fn_vSetRLITransitionsBlocking(char _cBlocking)
  */
 char IPO_fn_bRLITransitionInProgress(void)
 {
-    /* TODO: decompile from asm/... */
+    return IPO_g_cTransitionInProgress;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 212–222 */

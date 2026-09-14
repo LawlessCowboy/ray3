@@ -2309,7 +2309,7 @@ tagGLcontext g_PS2glContext;
 unsigned int paddata;
 tdstEngineStructure_ g_stEngineStructure;
 unsigned char rdata[32];
-void (*GLI_vProgressCallBack)(unsigned int);
+void (*GLI_vProgressCallBackPtr)(unsigned int);
 int CD_ProgressCallBack;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 78–80 */
@@ -2606,7 +2606,7 @@ void GLI_vShowVignetteFromHandle(int FileHandle)
  */
 void ChangeClippingMode(void)
 {
-    /* TODO: decompile from asm/... */
+    *(volatile unsigned int*)0x386a84 = 3;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 1613–1616 */
@@ -2743,7 +2743,8 @@ void GLI_vSetProgressCallBack(unsigned int SizeToRead)
  */
 void GLI_vProgressCallBack(unsigned int NbBytesReadThisTime)
 {
-    /* TODO: decompile from asm/... */
+    g_ProgressSizeHaveRead += NbBytesReadThisTime;
+    g_ProgressTime++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 178–320 */

@@ -10,6 +10,20 @@ typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct tdstViewportManagement_ tdstViewportManagement_;
+typedef struct tdstEngineStructure_ tdstEngineStructure_;
+
+struct tdstViewportManagement_ {
+    HIE_tdstSuperObject_* hActiveCamera; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
+};
+
+struct tdstEngineStructure_ {
+    unsigned char _extractor_padding_01[0x5f4]; /* implicitly added by extractor; +0x0..0x5f3 */
+    tdstViewportManagement_* a_hViewportArray; /* +0x5f4 */
+};
+
+tdstEngineStructure_ g_stEngineStructure;
 
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
@@ -62,8 +76,7 @@ struct MTH3D_tdstVector_ {
  */
 HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int _lViewportNumber)
 {
-    if (_lViewportNumber < 5)
-    {
+    if (_lViewportNumber < 5) {
         if (_lViewportNumber >= 0)
             return g_stEngineStructure.a_hViewportArray[_lViewportNumber].hActiveCamera;
         return NULL;

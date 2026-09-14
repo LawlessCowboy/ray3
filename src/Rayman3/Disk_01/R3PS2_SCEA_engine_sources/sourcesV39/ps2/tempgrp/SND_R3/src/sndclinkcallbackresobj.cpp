@@ -22,6 +22,11 @@ typedef struct CProgramContext CProgramContext;
 typedef struct sstring sstring;
 typedef struct CResData CResData;
 typedef struct CLinkCallbackResObj CLinkCallbackResObj;
+typedef struct CLinkCallbackResObjCont CLinkCallbackResObjCont;
+typedef struct iterator iterator;
+typedef struct sallocator sallocator;
+struct sallocator { int data[4]; };
+struct iterator { int data[4]; };
 typedef struct CUUID CUUID;
 typedef struct CIdObj CIdObj;
 typedef struct CCritSect CCritSect;
@@ -142,6 +147,10 @@ struct CLinkCallbackResObj {
     void (*mpfnProc)(int); /* +0x8 */
     int ms32Param; /* +0xc */
     unsigned char mfn_bSynchroCallbackResObj(void);
+};
+
+struct CLinkCallbackResObjCont {
+    unsigned char mfn_bSynchroCallbackInstance(void);
 };
 
 struct CUUID {

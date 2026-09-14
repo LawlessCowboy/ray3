@@ -4,6 +4,17 @@
 
 #include <stddef.h>
 
+typedef struct ThreadParam ThreadParam;
+struct ThreadParam {
+    void* entry;
+    void* stack;
+    int stackSize;
+    void* gp;
+    int initPriority;
+    int attr;
+    int option;
+};
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2exceptions.c lines 131–151 */
 /* addr: 0x00318ce0  size: 176 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

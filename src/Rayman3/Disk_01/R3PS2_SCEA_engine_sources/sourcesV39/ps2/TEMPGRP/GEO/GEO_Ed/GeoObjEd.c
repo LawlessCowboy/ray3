@@ -51,7 +51,7 @@ struct GEO_tdstGeometricObject_ {
     int d_stListOfElements; /* +0x10 */
     GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
     GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
-    unsigned int ulType; /* +0x1c */
+    unsigned char ulType; /* +0x1c */
     short xNbPoints; /* +0x20 */
     short xNbElements; /* +0x22 */
     short xNbEdges; /* +0x24 */
@@ -266,7 +266,7 @@ void GEO_vTurnLookAt(GEO_tdstGeometricObject_* p_stObj, GLD_tdstViewportAttribut
  */
 unsigned char GEO_bIsLookAt(GEO_tdstGeometricObject_* p_stObj)
 {
-    /* TODO: decompile from asm/... */
+    return p_stObj->ulType;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 147–151 */

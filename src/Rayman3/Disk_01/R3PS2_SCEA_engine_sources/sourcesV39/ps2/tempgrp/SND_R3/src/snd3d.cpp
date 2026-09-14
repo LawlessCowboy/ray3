@@ -63,6 +63,16 @@ typedef struct CIdObj CIdObj;
 typedef struct CSndVarType CSndVarType;
 typedef struct CStringIsLess CStringIsLess;
 
+/* The original STL allocator is only present as an empty base/member in the
+ * recovered declarations used by this translation unit.  Keep it opaque
+ * until its complete library layout is recovered. */
+struct sallocator {};
+
+/* This TU contains one recovered out-of-line Jingle helper. */
+struct Jingle {
+    static void ms_fVolReduction(int);
+};
+
 typedef enum tdeEventType {
     EPLAYEVENT = 0,
     ESTOPEVENT = 1,

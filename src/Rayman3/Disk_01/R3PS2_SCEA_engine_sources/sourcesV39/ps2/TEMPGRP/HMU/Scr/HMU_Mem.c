@@ -8,6 +8,11 @@
 typedef struct sceDmaChan sceDmaChan;
 typedef struct tdstBlockInfo_ tdstBlockInfo_;
 typedef struct HMU_tdstMemoryStructure_ HMU_tdstMemoryStructure_;
+typedef struct sceGsStoreImage sceGsStoreImage;
+
+struct sceGsStoreImage {
+    unsigned char data[0x60];
+};
 
 typedef enum e_ucHMUStaticBlocks {
     E_ucHMUFirstMemoryBlock = 0,

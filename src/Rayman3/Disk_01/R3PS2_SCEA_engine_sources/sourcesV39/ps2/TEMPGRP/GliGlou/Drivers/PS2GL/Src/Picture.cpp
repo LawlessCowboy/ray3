@@ -76,6 +76,10 @@ typedef struct sceGsXyoffset sceGsXyoffset;
 typedef struct sceGsPrmode sceGsPrmode;
 typedef struct tagGScontext tagGScontext;
 
+struct C_BaseFx {
+    void SetCurrentFog(void);
+};
+
 struct tag_GLtexture {
     float vTexBorderColor[4]; /* +0x0 */
     unsigned int eDimension; /* +0x10 */
@@ -1088,6 +1092,7 @@ struct tagGScontext {
 
 int GLI_g_bAskedToTakeAPicture;
 static unsigned char GLI_g_aPictureData[81924];
+extern "C" void PS2MC_fn_vSaveScreenShot(char* _pData, char* _pFileName);
 tagGScontext g_gsContext;
 int YRES;
 int XRES;
@@ -1118,7 +1123,7 @@ void C_BaseFx::SetCurrentFog(void)
  */
 void GLI_vSavePicture(char* Name)
 {
-    /* TODO: decompile from asm/... */
+    PS2MC_fn_vSaveScreenShot((char*)GLI_g_aPictureData, Name);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 549–551 */
@@ -1145,7 +1150,7 @@ void GLI_vTakePicture(void)
  */
 void GLI_vAskToTakePicture(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_bAskedToTakeAPicture = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 398–482 */

@@ -26,6 +26,7 @@ typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn;
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct GLI_tdstDataOfElement_ GLI_tdstDataOfElement_;
 typedef struct anon_0 anon_0;
 typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
 typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
@@ -280,6 +281,15 @@ struct MTH3D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
+};
+
+struct GLI_tdstDataOfElement_ {
+    MTH3D_tdstVector_ stHit;
+    float xDistance;
+    short xElements;
+    short xIndexOfFace;
+    short xIndexOfEdge;
+    short xIndexOfPoint;
 };
 
 struct anon_0 {
@@ -1821,7 +1831,7 @@ void fn_vGetScrollSpeedMatCollided(HIE_tdstSuperObject_* p_stSuperObj, MTH3D_tds
  */
 unsigned char EngineIsFrozen(void)
 {
-    return g_stEngineStructure.bEngineFrozen;
+    return *(unsigned char*)0x539e74;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1378–1387 */

@@ -11,6 +11,9 @@ typedef struct _RollOffParam _RollOffParam;
 typedef struct CResObjParams CResObjParams;
 typedef struct CExtraEventActor CExtraEventActor;
 typedef struct CLinkActor CLinkActor;
+typedef struct CLinkActorPool CLinkActorPool;
+typedef struct sallocator sallocator;
+struct sallocator { int data[4]; };
 typedef struct CResObj CResObj;
 typedef struct CIdObjPtr CIdObjPtr;
 typedef struct CEventResData CEventResData;
@@ -127,6 +130,13 @@ struct CLinkActor {
     void f_vIsolate(void);
     void f_vDesInit(void);
     void f_vInit(CLinkTypeActor* ro_Type, int s32_ObjectId);
+    ~CLinkActor();
+};
+
+struct CLinkActorPool {
+    void ms_oPool(void);
+    void f_vSalvageActor(CLinkActor*);
+    CLinkActor* fs_poGetAnActor(void);
 };
 
 struct CResObj {
@@ -615,7 +625,7 @@ void CLinkActor::f_vInit(CLinkTypeActor* ro_Type, int s32_ObjectId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ~CLinkActor(void)
+CLinkActor::~CLinkActor(void)
 {
     /* TODO: decompile from asm/... */
 }

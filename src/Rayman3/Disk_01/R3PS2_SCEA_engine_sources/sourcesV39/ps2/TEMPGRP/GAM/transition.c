@@ -1425,7 +1425,6 @@ int gp_stActualWorld;
 int gp_stNewActualWorld;
 int g_a_hSOCurrentMainSector[4];
 int g_lSoundObjectTypeAmbiance;
-void (*fn_vPlugMicroOnSO)(HIE_tdstSuperObject_*);
 void (*fn_vTransitionDeallocatorEven)(void*);
 void (*fn_vTransitionDeallocatorOdd)(void*);
 void* (*fn_pvTransitionAllocatorEven)(unsigned int);
@@ -1485,7 +1484,7 @@ void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject)
  */
 void fn_vSetTransitionBloc(int lBloc)
 {
-    /* TODO: decompile from asm/... */
+    g_lTransitionBloc = lBloc;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 482–482 */
@@ -1497,7 +1496,7 @@ void fn_vSetTransitionBloc(int lBloc)
  */
 int fn_lGetTransitionBloc(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_lTransitionBloc;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 368–473 */
@@ -1628,7 +1627,7 @@ void fn_vPlugMicroOnSO(HIE_tdstSuperObject_* hSO)
  */
 unsigned char fn_bScriptTransitionDeallocationCondition(void)
 {
-    /* TODO: decompile from asm/... */
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 137–137 */
@@ -1640,7 +1639,7 @@ unsigned char fn_bScriptTransitionDeallocationCondition(void)
  */
 unsigned char fn_bLevelHadTransitionMemory(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_bLevelHadTransitionMemory;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 130–130 */
@@ -1652,7 +1651,7 @@ unsigned char fn_bLevelHadTransitionMemory(void)
  */
 void fn_vSetLevelHasTransitionMemory(unsigned char bValue)
 {
-    /* TODO: decompile from asm/... */
+    g_bLevelHasTransitionMemory = bValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 125–125 */
@@ -1664,7 +1663,7 @@ void fn_vSetLevelHasTransitionMemory(unsigned char bValue)
  */
 unsigned char fn_bLevelHasTransitionMemory(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_bLevelHasTransitionMemory;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 111–111 */
@@ -1676,7 +1675,7 @@ unsigned char fn_bLevelHasTransitionMemory(void)
  */
 unsigned char fn_bIsTransitionInProgress(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_bTransitionInProgress;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 104–104 */
@@ -1688,7 +1687,7 @@ unsigned char fn_bIsTransitionInProgress(void)
  */
 unsigned char fn_bIsLoadInProgress(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_bLoadInProgress;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 92–92 */
@@ -1700,7 +1699,7 @@ unsigned char fn_bIsLoadInProgress(void)
  */
 void fn_vStopTransition(void)
 {
-    /* TODO: decompile from asm/... */
+    g_bTransitionIsRunning = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 80–80 */
@@ -1712,5 +1711,5 @@ void fn_vStopTransition(void)
  */
 void fn_vSetDoTransition(unsigned char bValue)
 {
-    /* TODO: decompile from asm/... */
+    g_bDoTransition = bValue;
 }

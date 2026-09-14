@@ -2176,8 +2176,8 @@ int g_p_stCurrentMatrix;
 int HIE_g_hCurrentMatrix;
 MAT_tdstTransformation_ PS2_MatStack[51];
 unsigned int PS2_MatStackIndex;
-anon_4 __vt__5C_Sdl;
-anon_1 __vt__14C_CharacterSdl;
+int __vt__5C_Sdl;
+int __vt__14C_CharacterSdl;
 float g_LeftHandedIdentityMatrix[16];
 unsigned int GLI_g_NumberInList;
 unsigned int hCurrentSDL;
@@ -2188,23 +2188,27 @@ int GLI_g_CurrentSkinMaterial;
 int GLI_g_CurrentSkinIndex;
 int GLI_BIG_GLOBALS_p_stObj;
 int Global_CharacterModuleBeingDisplayed;
-anon_0 __vt__28C_SdlRef_LocalMatrixForCheap;
-anon_5 __vt__8C_SdlRef;
+int __vt__28C_SdlRef_LocalMatrixForCheap;
+int __vt__8C_SdlRef;
 float GLI_g_DummyNonIDMatrix[4][4];
 unsigned int GLI_g_LatestHadAChrome;
 int g_TextMatrixIsIdentity;
 float GLI_g_TEXTUREMATRIX_Dummy[16];
 float GLI_g_SPOMATRIX_Dummy[16];
 unsigned int GLI_g_ThisLayerHasScrolling;
-anon_3 __vt__22C_SdlRef_TextureMatrix;
+int __vt__22C_SdlRef_TextureMatrix;
 unsigned int GLI_g_bChromeEffectOnThisLayer;
 float light_specular0[4];
 char GLI_b_CreatingActorSDL;
 int GLI_g_LastCyclingMode;
 unsigned int GLI_g_CurrentStage;
 float GlobalAlphaVal;
-anon_2 __vt__24C_SdlRef_TextureIdMatrix;
+int __vt__24C_SdlRef_TextureIdMatrix;
 int HIE_gs_lCurrentFrame;
+
+struct C_InstanceList {
+    static void __nw(unsigned int Size);
+};
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 25–25 */
 /* addr: 0x002d8b60  size: 12 bytes */

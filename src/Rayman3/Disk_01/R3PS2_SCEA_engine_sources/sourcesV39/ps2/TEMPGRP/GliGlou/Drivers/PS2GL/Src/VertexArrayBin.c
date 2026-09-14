@@ -75,6 +75,11 @@ struct ISI_tdstColor_ {
     short xAlpha; /* +0x6 */
 };
 
+struct anon_1 {
+    float stMat[2][2];
+    float stTrans[2];
+};
+
 struct anon_0 {
     int pst_Texture; /* +0x0 */
     char c_Operator; /* +0x4 */
@@ -89,11 +94,6 @@ struct anon_0 {
     unsigned int ulSetMaterialFunction; /* +0x44 */
     float fScaleU; /* +0x48 */
     float fScaleV; /* +0x4c */
-};
-
-struct anon_1 {
-    float stMat[2][2]; /* +0x0 */
-    float stTrans[2]; /* +0x10 */
 };
 
 struct GEO_tdstColor_ {

@@ -100,7 +100,7 @@ void fn_vFirstInitObjectTypeStructure(void)
 {
     unsigned int* puObjectTypeStructure;
 
-    puObjectTypeStructure = (unsigned int*)0x5482c0;
+    puObjectTypeStructure = (unsigned int*)0x5382c0;
     puObjectTypeStructure[0] = 0;
     puObjectTypeStructure[1] = 0;
     puObjectTypeStructure[2] = 0;

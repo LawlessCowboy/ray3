@@ -1453,7 +1453,13 @@ void MEC_fn_vSetInitialFrameTranslation(DNM_stDynamics* p_stDynamic, MTH3D_tdstV
 HIE_tdstSuperObject_* MEC_fn_hGetFatherActor(HIE_tdstSuperObject_* hSupObj)
 {
     HIE_tdstSuperObject_* hActor;
-    /* TODO: decompile from asm/... */
+    hActor = hSupObj;
+    while (*(int*)hActor != 2) {
+        hActor = *(HIE_tdstSuperObject_**)((char*)hActor + 0x1C);
+        if (hActor == NULL)
+            break;
+    }
+    return hActor;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1263–1269 */
@@ -1750,7 +1756,9 @@ float MEC_fn_xConvertScale(float xValue, unsigned char bAdjust)
  */
 void MEC_fn_vRoundVector(MTH3D_tdstVector_* p_stVector, float xEpsilon)
 {
-    /* TODO: decompile from asm/... */
+    p_stVector->xX = (int)(p_stVector->xX / xEpsilon) * xEpsilon;
+    p_stVector->xY = (int)(p_stVector->xY / xEpsilon) * xEpsilon;
+    p_stVector->xZ = (int)(p_stVector->xZ / xEpsilon) * xEpsilon;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 849–868 */
@@ -1795,7 +1803,9 @@ void MEC_fn_vAdjustSpeed(DNM_stDynamics* p_stDynamic, float xDT)
  */
 void MEC_fn_vAdjustScaleVector(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector)
 {
-    /* TODO: decompile from asm/... */
+    p_stVector->xX *= *(float*)((char*)p_stDynamic + 0x48);
+    p_stVector->xY *= *(float*)((char*)p_stDynamic + 0x4C);
+    p_stVector->xZ *= *(float*)((char*)p_stDynamic + 0x50);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 784–784 */
@@ -2353,9 +2363,11 @@ unsigned char MEC_fn_bCanCrashActor(DNM_stMecObstacle* p_stCollideObstacle)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char MEC_fn_bCeilObstacle(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle)
+int MEC_fn_bCeilObstacle(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle)
 {
-    /* TODO: decompile from asm/... */
+    float dynamic = *(float*)((char*)p_stDynamic + 0x18);
+    float obstacle = *(float*)((char*)p_stObstacle + 0xC);
+    return obstacle < -dynamic;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 60–62 */
@@ -2366,7 +2378,7 @@ unsigned char MEC_fn_bCeilObstacle(DNM_stDynamics* p_stDynamic, DNM_stMecObstacl
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char MEC_fn_bGroundNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal)
+int MEC_fn_bGroundNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal)
 {
-    /* TODO: decompile from asm/... */
+    return p_stNormal->xZ >= *(float*)((char*)p_stDynamic + 0x18);
 }

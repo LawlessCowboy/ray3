@@ -14,6 +14,7 @@ typedef struct _atexit _atexit;
 typedef struct _reent _reent;
 typedef struct tm tm;
 
+
 struct _glue {
     _glue* _next; /* +0x0 */
     int _niobs; /* +0x4 */
@@ -83,9 +84,9 @@ struct _reent {
     int _cvtbuf; /* +0x54 */
     /* aggregate */ int _new; /* +0x58 */
     unsigned char _extractor_padding_00[236]; /* implicitly added by extractor; +0x5c..0x147 */
-    _atexit* _atexit; /* +0x148 */
+    _atexit* _atexit_ptr; /* +0x148 */
     _atexit _atexit0; /* +0x14c */
-    void (**)(int) _sig_func; /* +0x1d4 */
+    void (**_sig_func)(int); /* +0x1d4 */
     _glue __sglue; /* +0x1d8 */
     __sFILE __sf[3]; /* +0x1e4 */
 };

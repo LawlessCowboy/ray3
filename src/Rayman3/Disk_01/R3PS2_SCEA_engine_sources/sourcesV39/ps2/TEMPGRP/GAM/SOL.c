@@ -1649,9 +1649,13 @@ void GAM_fn_vWriteStringInUbiIniFile(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vReinitSOLRotation(tdstSuperObjectLinks_* _hSOL);
+void fn_vReinitSOLTranslation(tdstSuperObjectLinks_* _hSOL);
+
 void fn_vReinitSOL(tdstSuperObjectLinks_* _hSOL)
 {
-    /* TODO: decompile from asm/... */
+    fn_vReinitSOLTranslation(_hSOL);
+    fn_vReinitSOLRotation(_hSOL);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 1084–1113 */

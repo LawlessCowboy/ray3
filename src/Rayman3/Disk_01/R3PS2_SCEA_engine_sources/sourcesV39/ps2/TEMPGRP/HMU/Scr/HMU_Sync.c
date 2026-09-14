@@ -13,6 +13,7 @@ struct _stCriticalSection {
     int ReentrancyCount; /* +0x8 */
 };
 
+unsigned char HMU_g_bInitialized;
 unsigned char HMU_g_bHMU_CS_Created;
 _stCriticalSection g_stHMU_CS;
 
@@ -25,7 +26,7 @@ _stCriticalSection g_stHMU_CS;
  */
 unsigned char HMU_fn_bIsInitialized(void)
 {
-    return HMU_g_bHMU_CS_Created;
+    return HMU_g_bInitialized;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Sync.c lines 64–64 */

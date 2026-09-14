@@ -4733,7 +4733,7 @@ void TXT_vDrawAStringOnLine(float fX, float fY, unsigned char* szText, _JFFTXT_*
  */
 void TXT_fn_fComputePixelLengthOfString(char* _szText, float* W, float* H)
 {
-    /* TODO: decompile from asm/... */
+    ComputePixelWidthAndHeightOfString((unsigned char*)_szText, W, H);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 962–1070 */

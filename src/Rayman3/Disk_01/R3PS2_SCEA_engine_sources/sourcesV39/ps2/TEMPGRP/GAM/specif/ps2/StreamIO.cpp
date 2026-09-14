@@ -4,6 +4,11 @@
 
 #include <stddef.h>
 
+extern "C" unsigned int fs_uiGetSize__Q24usnd11CPS2FileMgrFUi(unsigned int);
+extern "C" unsigned int fs_uiRead__Q24usnd11CPS2FileMgrFUiUiUiUiUiPFPv_vPv(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, void (*)(void), void*);
+extern "C" unsigned int fs_bSync__Q24usnd11CPS2FileMgrFUib(unsigned int, unsigned int);
+extern "C" void fs_vClose__Q24usnd11CPS2FileMgrFUi(unsigned int);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\StreamIO.cpp lines 93–111 */
 /* addr: 0x0028dc80  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -22,7 +27,7 @@
  */
 unsigned char DEMO_bInitEventFlow(char* szFileName)
 {
-    /* TODO: decompile from asm/... */
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\StreamIO.cpp lines 51–51 */
@@ -34,7 +39,7 @@ unsigned char DEMO_bInitEventFlow(char* szFileName)
  */
 unsigned int fn_bStreamSize(unsigned int u32FileHandle)
 {
-    return fs_uiGetSize(u32FileHandle);
+    return fs_uiGetSize__Q24usnd11CPS2FileMgrFUi(u32FileHandle);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\StreamIO.cpp lines 34–39 */
@@ -50,7 +55,7 @@ unsigned int fn_bStreamSize(unsigned int u32FileHandle)
  */
 unsigned char fn_bSyncStream(unsigned int u32RequestHandle)
 {
-    /* TODO: decompile from asm/... */
+    return fs_bSync__Q24usnd11CPS2FileMgrFUib(u32RequestHandle, 1) != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\StreamIO.cpp lines 29–29 */
@@ -62,7 +67,7 @@ unsigned char fn_bSyncStream(unsigned int u32RequestHandle)
  */
 unsigned int fn_uiReadStream(unsigned int u32FileHandle, unsigned int u32FilePos, char* pcBuffer, unsigned int u32Size, unsigned int u32Priority)
 {
-    return func_801C20D0(u32FileHandle, u32FilePos, pcBuffer, u32Size, u32Priority, 0, 0);
+    return fs_uiRead__Q24usnd11CPS2FileMgrFUiUiUiUiUiPFPv_vPv(u32FileHandle, u32FilePos, (unsigned int)pcBuffer, u32Size, u32Priority, 0, 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\StreamIO.cpp lines 23–23 */
@@ -74,5 +79,5 @@ unsigned int fn_uiReadStream(unsigned int u32FileHandle, unsigned int u32FilePos
  */
 void fn_vCloseStream(unsigned int u32FileHandle)
 {
-    func_801C20E0(u32FileHandle);
+    fs_vClose__Q24usnd11CPS2FileMgrFUi(u32FileHandle);
 }

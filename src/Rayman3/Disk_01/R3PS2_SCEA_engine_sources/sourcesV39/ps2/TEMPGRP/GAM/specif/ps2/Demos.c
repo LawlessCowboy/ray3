@@ -1853,7 +1853,7 @@ void DEMO_fn_vReadDemoTableFile(void)
  */
 void DEMO_fn_vDesInitGame(void)
 {
-    /* TODO: decompile from asm/... */
+    g_hDemoSOList = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7175–7410 */
@@ -3019,7 +3019,7 @@ void DEMO_fn_vSetMapToLoadWhenDemoFinished(char* _szMapName)
  */
 void DEMO_fn_vSetTestInputDuringDemo(int _bTestInput)
 {
-    /* TODO: decompile from asm/... */
+    g_bTestInputDuringDemo = _bTestInput;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1963–1968 */
@@ -3149,7 +3149,7 @@ void DEMO_fn_pcBuildDemoPath(char* szFilename)
  */
 void DEMO_fn_vCloseFirstInit(void)
 {
-    /* TODO: decompile from asm/... */
+    g_DEMO_FirstInitFlag = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1367–1373 */

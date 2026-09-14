@@ -81,7 +81,7 @@ struct tdstAnim3d_ {
 
 struct SCT_tdstListOfSoundEvent_ {
     int hPointerOfSectorSO; /* +0x0 */
-    _SND_tduRefEvt uSoundEvent; /* +0x4 */
+    int uSoundEvent; /* +0x4 */
 };
 
 struct tdstFrame3d_ {
@@ -205,8 +205,8 @@ struct stMACDPID {
     float m_xData3; /* +0x28 */
     float m_xData4; /* +0x2c */
     float m_xData5; /* +0x30 */
-    anon_0 m_stData6; /* +0x34 */
-    anon_1 m_stData7; /* +0x44 */
+    int m_stData6; /* +0x34 */
+    int m_stData7; /* +0x44 */
     char m_cData8; /* +0x54 */
     unsigned short m_uwData9; /* +0x56 */
     /* aggregate */ int m_stData10; /* +0x58 */

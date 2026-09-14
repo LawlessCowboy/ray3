@@ -28,7 +28,7 @@ typedef struct tdstAnim3d_ tdstAnim3d_;
 typedef struct RGBAComponent_ RGBAComponent_;
 typedef union RGBAStruct_ RGBAStruct_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn;
 typedef struct CINE_tdstCineActor_ CINE_tdstCineActor_;
@@ -1864,7 +1864,7 @@ struct MTH3D_tdstVector_ {
     float xZ; /* +0x8 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -2887,7 +2887,24 @@ unsigned char g_ucUseDefaultActionReturn;
  */
 void fn_vSetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, float xValue)
 {
-    return;
+    unsigned char* p;
+    unsigned char* base;
+    unsigned char* array;
+    unsigned int stride;
+
+    p = *(unsigned char**)((char*)p_SuperObjPerso + 4);
+    p = *(unsigned char**)(p + 0xc);
+    p = *(unsigned char**)p;
+    if (*(unsigned char*)(p + 0x10) != 0)
+        p = *(unsigned char**)(p + 4);
+    else
+        p = *(unsigned char**)(p + 8);
+    base = *(unsigned char**)(p + 0x10);
+    stride = (unsigned int)*(unsigned char*)(base + 6);
+    array = *(unsigned char**)base;
+    ucN &= 0xff;
+    p = array + stride * 104 + (unsigned int)ucN * 12;
+    *(float*)p = xValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActTable.c lines 347–351 */
@@ -2902,7 +2919,12 @@ void fn_vSetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperOb
  */
 tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char ucNEntry)
 {
-    /* TODO: decompile from asm/... */
+    tdstActionTableEntry_* p_stEntry;
+
+    p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry + ucNEntry;
+    g_ucUseDefaultActionReturn = p_stEntry->bUseDefaultActionReturn;
+    g_ucNewActionReturn = p_stEntry->ucNewActionReturn;
+    return p_stEntry->p_stNode;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActTable.c lines 328–341 */

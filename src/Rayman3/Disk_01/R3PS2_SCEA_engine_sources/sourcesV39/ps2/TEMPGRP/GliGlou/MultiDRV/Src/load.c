@@ -16,6 +16,12 @@ typedef struct anon_0 anon_0;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;
 
+struct MTH3D_tdstVector_ {
+    float xX;
+    float xY;
+    float xZ;
+};
+
 struct GLI_tdstTexture_ {
     int bIsAvailable; /* +0x0 */
     int lTextureQuality; /* +0x4 */

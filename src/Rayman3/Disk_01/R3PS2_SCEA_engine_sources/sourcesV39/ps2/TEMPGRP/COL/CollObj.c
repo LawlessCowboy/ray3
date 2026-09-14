@@ -535,7 +535,19 @@ void COL_vGetNormalOfGeometricObjectElement(COL_tdstCollideObject_* hObject, sho
  */
 short COL_xGetParallelBoxIndexOfElement(COL_tdstCollideObject_* hObject, short xIndexElement)
 {
-    /* TODO: decompile from asm/... */
+    short xType;
+    xType = ((short*)hObject->d_xListOfElementsTypes)[xIndexElement];
+    if (xType != 8)
+    {
+        if (xType != 7)
+        {
+            if (xType != 1)
+                return -1;
+            return ((COL_tdstElementIndexedTriangles_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
+        }
+        return ((COL_tdstElementAlignedBoxes_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
+    }
+    return ((COL_tdstElementSpheres_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1494–1494 */
@@ -615,7 +627,8 @@ void COL_vSetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p
  */
 short COL_xGetElementType(COL_tdstCollideObject_* hObject, short xElement)
 {
-    /* TODO: decompile from asm/... */
+    xElement *= 2;
+    return *(short*)((char*)hObject->d_xListOfElementsTypes + xElement);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1179–1193 */

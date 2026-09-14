@@ -4,8 +4,10 @@
 
 #include <stddef.h>
 
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct DNM_stMecObstacle DNM_stMecObstacle;
+typedef struct DNM_stMecMatCharacteristics DNM_stMecMatCharacteristics;
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
 typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
@@ -110,6 +112,29 @@ struct MTH3D_tdstVector_ {
     float xZ; /* +0x8 */
 };
 
+struct DNM_stMecMatCharacteristics {
+    float m_xSlide;
+    float m_xRebound;
+};
+
+struct DNM_stMecObstacle {
+    float m_xRate;
+    MTH3D_tdstVector_ m_stNorm;
+    MTH3D_tdstVector_ m_stContact;
+    GMT_tdstGameMaterial_* hMyMaterial;
+    GMT_tdstGameMaterial_* hCollidedMaterial;
+    HIE_tdstSuperObject_* mp_stSupObj;
+    int m_eType;
+    short m_xMyEntity;
+    short m_xCollidedEntity;
+    MTH3D_tdstVector_ m_stTranslation;
+    MTH3D_tdstVector_ m_stZoneMove;
+    MTH3D_tdstVector_ m_stZonePosition;
+    float m_xZoneRadius;
+    DNM_stMecMatCharacteristics m_stProperties;
+    DNM_stMecMatCharacteristics m_stMyProperties;
+};
+
 struct GEO_tdstDoubledIndex_ {
     short a2_xIndex[2]; /* +0x0 */
 };
@@ -138,6 +163,7 @@ struct DNM_stDynamicsBaseBlock {
     MTH3D_tdstVector_ m_stSafeTranslation; /* +0x60 */
     MTH3D_tdstVector_ m_stAddTranslation; /* +0x6c */
     MAT_tdstTransformation_ m_stPreviousMatrix; /* +0x80 */
+    unsigned char _extractor_padding_matrix[8]; /* implicitly added by extractor */
     MAT_tdstTransformation_ m_stCurrentMatrix; /* +0xe0 */
     MTH3D_tdstMatrix_ m_stImposeRotationMatrix; /* +0x140 */
     unsigned char m_ucNbFrame; /* +0x164 */
@@ -589,9 +615,12 @@ void MEC_fn_vAdditionnalTranslation(DNM_stDynamics* p_stDynamic)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void MAT_fn_vSetRotationMatrix(MAT_tdstTransformation_*, MTH3D_tdstMatrix_*);
+
 void MEC_fn_vImposeRotation(DNM_stDynamics* p_stDynamic)
 {
-    /* TODO: decompile from asm/... */
+    MAT_fn_vSetRotationMatrix(&p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix,
+                              &p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECOpt.c lines 381–393 */

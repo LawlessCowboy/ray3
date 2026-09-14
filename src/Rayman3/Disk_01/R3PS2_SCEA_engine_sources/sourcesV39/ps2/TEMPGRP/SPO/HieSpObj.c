@@ -629,9 +629,7 @@ int HIE_fn_vRecUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO)
  */
 HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectPrevBrother(HIE_tdstSuperObject_* _hSprObj)
 {
-    if (_hSprObj)
-        _hSprObj = _hSprObj->hPrevBrotherDyn;
-    return _hSprObj;
+    return _hSprObj ? _hSprObj->hPrevBrotherDyn : _hSprObj;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 332–335 */
@@ -644,9 +642,7 @@ HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectPrevBrother(HIE_tdstSuperObject
  */
 HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* _hSprObj)
 {
-    if (_hSprObj)
-        _hSprObj = _hSprObj->hNextBrotherDyn;
-    return _hSprObj;
+    return _hSprObj ? _hSprObj->hNextBrotherDyn : _hSprObj;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 272–325 */

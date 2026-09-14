@@ -237,7 +237,7 @@ int zeFrame;
 int a7_p_vBuffers64_Pointers[8];
 int _gp;
 void (*videoDecMain)(anon_2*);
-void (*defMain)(void);
+void (*defMainPtr)(void);
 int (*vagCallbackLeft)(anon_3*, anon_1*, void*);
 int (*videoCallback)(anon_3*, anon_1*, void*);
 int SND_g_iEnoughSound;

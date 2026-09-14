@@ -6839,7 +6839,7 @@ void AGO3_BeamWithUVs::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_BeamWithUVs::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 823–851 */
@@ -7273,7 +7273,7 @@ void AGO3_SimpleSparks::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pM
  */
 void AGO3_Part::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 355–355 */
@@ -7410,7 +7410,7 @@ void AGO3_Transition::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_OrientedTarget::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5865–5865 */
@@ -7446,7 +7446,7 @@ void AGO3_DigitalScoreDisplay::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_LightExplosion::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3571–3571 */

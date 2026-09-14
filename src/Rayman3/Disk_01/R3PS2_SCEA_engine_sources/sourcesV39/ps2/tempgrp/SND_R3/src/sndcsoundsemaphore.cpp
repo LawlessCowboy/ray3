@@ -16,6 +16,8 @@ typedef struct iterator_base iterator_base;
 typedef struct sTreeLink sTreeLink;
 typedef struct streebase streebase;
 typedef struct smap smap;
+typedef struct sallocator sallocator;
+struct sallocator { int data[4]; };
 
 typedef enum _Redbl {
     _Red = 0,
@@ -56,6 +58,7 @@ struct CSoundSemaphore {
     /* C++ base smap at +0x0. */
     unsigned int mu32ChannelId; /* +0x10 */
     unsigned int mu32ChannelSize; /* +0x14 */
+    CSoundSemaphore(unsigned int, unsigned int);
     void f_vSynchro(void);
 };
 
@@ -143,11 +146,15 @@ void CSoundSemaphore::f_vSynchro(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Original malformed template-instantiation body retained below as evidence. */
+#if 0
 void _Erase__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>FPQ34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>9sTreeNode(sTreeNode* _pNode)
 {
     sTreeNode* _pNode2;
     /* TODO: decompile from asm/... */
 }
+
+#endif
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphore.cpp lines 29–32 */
 /* addr: 0x001cb6b0  size: 168 bytes */
@@ -159,7 +166,7 @@ void _Erase__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CSoundSemaphore(unsigned int u32_ChannelId, unsigned int u32_ChannelSize)
+CSoundSemaphore::CSoundSemaphore(unsigned int u32_ChannelId, unsigned int u32_ChannelSize)
 {
     /* TODO: decompile from asm/... */
 }

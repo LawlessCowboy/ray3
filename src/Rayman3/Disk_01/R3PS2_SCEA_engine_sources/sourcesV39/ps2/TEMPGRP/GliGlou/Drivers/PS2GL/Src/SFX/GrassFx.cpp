@@ -1297,9 +1297,9 @@ struct tagGScontext {
 
 C_FxList GrassFx_g_List;
 C_FxList GrassFx_g_ListToDisplay;
-anon_1 __vt__9C_GrassFx;
+int __vt__9C_GrassFx;
 int PS2glAllocator64;
-anon_0 __vt__8C_BaseFx;
+int __vt__8C_BaseFx;
 float myColorRange[4];
 tagGScontext g_gsContext;
 tagGLcontext g_PS2glContext;

@@ -2907,7 +2907,31 @@ void GLI_SendShadowElementToViewport(int param0, GEO_tdstGeometricObject_* p_stO
  */
 void GLI_vAddShadowObject(float* p1, float* p2, float* p3, float* p4, GLI_tdstMaterial_* ShadowMat)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+
+    i = GLI_g_NbSimpleShadows + GLI_g_SimpleShadowBegin;
+    if (i < 64) {
+        GLI_g_NbSimpleShadows++;
+        GLI_g_SimpleShadowMaterial = (int)ShadowMat;
+        GLI_g_SimpleShadowsPos[6 * i][0] = p1[0];
+        GLI_g_SimpleShadowsPos[6 * i][1] = p1[1];
+        GLI_g_SimpleShadowsPos[6 * i][2] = p1[2];
+        GLI_g_SimpleShadowsPos[6 * i + 1][0] = p2[0];
+        GLI_g_SimpleShadowsPos[6 * i + 1][1] = p2[1];
+        GLI_g_SimpleShadowsPos[6 * i + 1][2] = p2[2];
+        GLI_g_SimpleShadowsPos[6 * i + 2][0] = p3[0];
+        GLI_g_SimpleShadowsPos[6 * i + 2][1] = p3[1];
+        GLI_g_SimpleShadowsPos[6 * i + 2][2] = p3[2];
+        GLI_g_SimpleShadowsPos[6 * i + 3][0] = p1[0];
+        GLI_g_SimpleShadowsPos[6 * i + 3][1] = p1[1];
+        GLI_g_SimpleShadowsPos[6 * i + 3][2] = p1[2];
+        GLI_g_SimpleShadowsPos[6 * i + 4][0] = p3[0];
+        GLI_g_SimpleShadowsPos[6 * i + 4][1] = p3[1];
+        GLI_g_SimpleShadowsPos[6 * i + 4][2] = p3[2];
+        GLI_g_SimpleShadowsPos[6 * i + 5][0] = p4[0];
+        GLI_g_SimpleShadowsPos[6 * i + 5][1] = p4[1];
+        GLI_g_SimpleShadowsPos[6 * i + 5][2] = p4[2];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1480–1516 */

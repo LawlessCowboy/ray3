@@ -395,7 +395,7 @@ void COL_fn_vGetCollidedEgde(int Ind, MTH3D_tdstVector_* _pV1, MTH3D_tdstVector_
  */
 int COL_fn_iNbCollidedEdges(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_NbCollidedEdges;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 71–71 */
@@ -407,5 +407,5 @@ int COL_fn_iNbCollidedEdges(void)
  */
 void COL_fn_vResetNbCollidedEdges(void)
 {
-    /* TODO: decompile from asm/... */
+    g_NbCollidedEdges = 0;
 }

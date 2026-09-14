@@ -112,6 +112,32 @@ After a mismatch, use `python3 tools/match.py classify FUNCTION` for an
 initial routing label such as `abi-narrow-type`, `relocation/global-layout`,
 `tail-call/dispatch`, or `codegen/scheduling` before retrying or escalating.
 
+## m2c seeds for advanced functions
+
+For large or advanced functions (roughly 100+ bytes, many basic blocks,
+loops, calls, or substantial stack traffic), workers may generate a
+starting-point candidate with:
+
+```sh
+python3 tools/m2c_seed.py FUNCTION --output m2c-seeds/FUNCTION.c
+```
+
+The wrapper resolves the function's owning assembly file, selects the
+`mipsel-mwcc-c` or `mipsel-mwcc-c++` target, and passes the recovered source as
+context. Install m2c locally if needed:
+
+```sh
+python3 -m pip install 'm2c @ git+https://github.com/matt-kempster/m2c.git'
+```
+
+m2c output is scaffolding only. Do not copy it over canonical source or claim
+a match from visual similarity. Preserve the generated seed outside
+`src/Rayman3/`, then transfer only evidence-supported natural C into the
+leased source file and verify every iteration with `tools/match.py check
+FUNCTION --diff`. Use the debug signature, line map, recovered layouts, and
+relocation names to correct m2c's guessed types, globals, and calls. For
+small wrappers, direct reconstruction is usually faster than a seed.
+
 ## Constraints
 
 - Do not use inline assembly, hand-written opcodes, or intrinsics to force a

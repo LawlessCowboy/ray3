@@ -12,6 +12,14 @@ typedef struct CTextFileSrc CTextFileSrc;
 typedef struct CPS2FileSrcFlow CPS2FileSrcFlow;
 typedef struct CTextFile CTextFile;
 typedef struct CSrcFlow CSrcFlow;
+typedef struct CFlow CFlow;
+typedef struct CBankDesc CBankDesc;
+struct CUUID { int data[4]; };
+struct CFlow { int data[2]; };
+struct CBankDesc {
+    int data[8];
+    CResData* mfn_poAddCResData(CUUID*);
+};
 
 typedef enum anon_enum_001bafa4 {
     E_INVALID_SIZE = -1,

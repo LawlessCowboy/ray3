@@ -725,7 +725,7 @@ tdstEngineStructure_ g_stEngineStructure;
 SVG_stMCStatus_ g_axPadMapping;
 tdstGameOptions_ g_stGameOptions;
 int VMS_g_a8_lDriveNo[8];
-int (*fn_iCompareSlotDate)(void*, void*);
+int (*g_fn_iCompareSlotDate)(void*, void*);
 int g_bSavingGameWithOptionsDontCheckDate;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\GamSave.c lines 141–152 */
@@ -758,7 +758,7 @@ void fn_vValidateAllOption(void)
  */
 int GAM_fn_iGetCurrentLanguageNb(void)
 {
-    /* TODO: decompile from asm/... */
+    return *(unsigned char*)0x539e72;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\GamSave.c lines 1051–1075 */
@@ -916,5 +916,5 @@ int fn_iCompareSlotDate(void* p_v1, void* p_v2)
  */
 unsigned char fn_bLoadLevelSaveGameAfterLoadLevel(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }

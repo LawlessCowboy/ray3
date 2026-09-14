@@ -400,7 +400,7 @@ struct GLD_tdstViewportAttributes_ {
 
 int GeoHandle;
 float VoidReal;
-int g_p_stCurrentMatrix;
+MAT_tdstTransformation_* g_p_stCurrentMatrix;
 int HIE_g_hCurrentMatrix;
 int HIE_g_a_hMatrixStack[50];
 int HIE_g_lNbMatrixInStack;

@@ -18,6 +18,15 @@ typedef struct stree stree;
 typedef struct sset sset;
 typedef struct CMicrophone CMicrophone;
 
+/* The allocator is an empty STL support object in this recovered layout. */
+struct sallocator {};
+
+/* Only the callback body is emitted in this TU; its class declaration was
+ * absent from the extracted source. */
+struct CMusicMarkerNotifTarget {
+    void fv_vVarAccessed(void);
+};
+
 typedef enum _Redbl {
     _Red = 0,
     _Black = 1,

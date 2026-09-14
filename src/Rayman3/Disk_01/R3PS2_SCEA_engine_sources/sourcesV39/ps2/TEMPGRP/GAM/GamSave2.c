@@ -1466,7 +1466,7 @@ int SAV2_CheckMCStatus(int _id)
  */
 int SAV2_LastError(void)
 {
-    /* TODO: decompile from asm/... */
+    return !SAV2_ExitCode;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1481–1497 */
@@ -1792,6 +1792,9 @@ void SAV2_fn_vSetValueInPipeline(char* p_szElementName, void* p_stParam)
     /* TODO: decompile from asm/... */
 }
 
+void SAV2_fn_xGetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
+void SAV2_fn_vSetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 579–579 */
 /* addr: 0x0028bd80  size: 12 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1801,7 +1804,7 @@ void SAV2_fn_vSetValueInPipeline(char* p_szElementName, void* p_stParam)
  */
 void SAV2_fn_xGetASingleValue(char* p_szElementName, void* p_stParam)
 {
-    /* TODO: decompile from asm/... */
+    SAV2_fn_xGetAValueAtIndex(p_szElementName, 0, p_stParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 574–574 */
@@ -1813,7 +1816,7 @@ void SAV2_fn_xGetASingleValue(char* p_szElementName, void* p_stParam)
  */
 void SAV2_fn_vSetASingleValue(char* p_szElementName, void* p_stParam)
 {
-    /* TODO: decompile from asm/... */
+    SAV2_fn_vSetAValueAtIndex(p_szElementName, 0, p_stParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 479–570 */

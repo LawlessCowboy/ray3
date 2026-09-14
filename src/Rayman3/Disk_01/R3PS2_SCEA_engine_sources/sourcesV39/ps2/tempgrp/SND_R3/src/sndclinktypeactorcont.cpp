@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+typedef int sallocator;
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CVarAccess CVarAccess;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;

@@ -51,12 +51,19 @@ struct MTH4D_tdstVector_ {
     float xW; /* +0xc */
 };
 
+struct MAT_tdstTransformation_ {
+    int eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
+    MTH4D_tdstVector_ stTransformMatrix[4]; /* +0x10 */
+    MTH4D_tdstVector_ stScaleVector; /* +0x50 */
+};
+
 struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
     MTH3D_tdstVector_* d_stListOfPointsNormals; /* +0x4 */
     int d_dfVertexTransparency; /* +0x8 */
     int d_xListOfElementsTypes; /* +0xc */
-    int d_stListOfElements; /* +0x10 */
+    GEO_tdstElementIndexedTriangles_** d_stListOfElements; /* +0x10 */
     GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
     GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
     unsigned int ulType; /* +0x1c */
@@ -251,7 +258,7 @@ void GEO_vSetUVOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElem
  */
 int GEO_lGetIndexedTriangleNbFaces(GEO_tdstGeometricObject_* hObject, short hElement)
 {
-    /* TODO: decompile from asm/... */
+    return hObject->d_stListOfElements[hElement]->xNbFaces;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 228–235 */

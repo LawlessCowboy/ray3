@@ -290,7 +290,8 @@ int MC_SquareOrTriangleButtonsPressed(void)
  */
 void MC_WaitForXAndOButtonRelease(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+    while (MC_XorOButtonsPressed()) {}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 605–612 */
@@ -305,7 +306,8 @@ void MC_WaitForXAndOButtonRelease(void)
  */
 void MC_WaitForXAndTriangleButtonRelease(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+    while (MC_XorTriangleButtonsPressed()) {}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 615–622 */
@@ -320,7 +322,8 @@ void MC_WaitForXAndTriangleButtonRelease(void)
  */
 void MC_WaitForSquareAndTriangleButtonRelease(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+    while (MC_SquareOrTriangleButtonsPressed()) {}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 626–635 */
@@ -335,7 +338,8 @@ void MC_WaitForSquareAndTriangleButtonRelease(void)
  */
 void MC_WaitForXButtonRelease(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+    while (MC_XButtonPressed()) {}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 638–646 */
@@ -350,7 +354,8 @@ void MC_WaitForXButtonRelease(void)
  */
 void MC_WaitForTriangleButtonRelease(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+    while (MC_TriangleButtonPressed()) {}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 649–657 */
@@ -365,7 +370,8 @@ void MC_WaitForTriangleButtonRelease(void)
  */
 void MC_WaitForSquareButtonRelease(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+    while (MC_SquareButtonPressed()) {}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 664–693 */

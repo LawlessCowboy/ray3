@@ -131,11 +131,11 @@ struct anon_8 {
 
 anon_0 videoDec;
 int zeFrame;
-int (*mpegTS)(anon_2*, anon_6*, void*);
-int (*mpegRestartDMA)(anon_2*, anon_3*, void*);
-int (*mpegStopDMA)(anon_2*, anon_3*, void*);
-int (*mpegNodata)(anon_2*, anon_3*, void*);
-int (*mpegError)(anon_2*, anon_5*, void*);
+int (*g_mpegTS)(anon_2*, anon_6*, void*);
+int (*g_mpegRestartDMA)(anon_2*, anon_3*, void*);
+int (*g_mpegStopDMA)(anon_2*, anon_3*, void*);
+int (*g_mpegNodata)(anon_2*, anon_3*, void*);
+int (*g_mpegError)(anon_2*, anon_5*, void*);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 394–401 */
 /* addr: 0x00132970  size: 68 bytes */
@@ -366,7 +366,10 @@ int videoDecPutTs(anon_0* vd, long pts_val, long dts_val, unsigned char* start, 
  */
 unsigned int videoDecGetState(anon_0* vd)
 {
-    return vd->state;
+    /* The recovered nested aggregate currently overstates its size; the
+     * debug target places state at +0xa8. Keep the access explicit until the
+     * nested video-decoder layout is fully recovered. */
+    return *(unsigned int*)((unsigned char*)vd + 0xa8);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 150–152 */
@@ -408,7 +411,9 @@ int videoDecDelete(anon_0* vd)
  */
 void videoDecEndPut(anon_0* vd, int size)
 {
-    viBufEndPut(&vd->vibuf, size);
+    /* The recovered mpeg aggregate is oversized by 0x28; the target ABI
+     * passes the embedded viBuf at the debug-recorded +0x48 offset. */
+    viBufEndPut((anon_4*)((unsigned char*)vd + 0x48), size);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 110–110 */
@@ -420,7 +425,7 @@ void videoDecEndPut(anon_0* vd, int size)
  */
 void videoDecBeginPut(anon_0* vd, unsigned char** ptr0, int* len0, unsigned char** ptr1, int* len1)
 {
-    viBufBeginPut(&vd->vibuf, ptr0, len0, ptr1, len1);
+    viBufBeginPut((anon_4*)((unsigned char*)vd + 0x48), ptr0, len0, ptr1, len1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 98–101 */

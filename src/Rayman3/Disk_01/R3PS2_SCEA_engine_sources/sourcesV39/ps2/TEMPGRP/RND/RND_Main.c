@@ -9,6 +9,16 @@ typedef struct _stCriticalSection _stCriticalSection;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct RND_tdstRandom_ RND_tdstRandom_;
+typedef struct SemaParam SemaParam;
+
+struct SemaParam {
+    int attr;
+    int option;
+    int initCount;
+    int maxCount;
+    int waitThreads;
+    int waitMode;
+};
 
 struct MTH3D_tdstVector_ {
     float xX; /* +0x0 */

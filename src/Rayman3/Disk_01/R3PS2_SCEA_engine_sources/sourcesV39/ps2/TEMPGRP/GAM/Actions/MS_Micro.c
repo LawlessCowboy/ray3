@@ -1151,7 +1151,7 @@ unsigned char g_ucGameModuleId;
  */
 unsigned int fn_ulMSWaySizeOf(void)
 {
-    /* TODO: decompile from asm/... */
+    return 12;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 856–857 */
@@ -1319,7 +1319,7 @@ void fn_vAddMicro(tdstEngineObject_* hEngObj)
  */
 int RetMicroSonoreFILTRE(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 707–715 */

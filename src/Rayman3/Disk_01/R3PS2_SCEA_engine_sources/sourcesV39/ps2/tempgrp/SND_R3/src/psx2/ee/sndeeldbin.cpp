@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+typedef int CFlow;
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct CIdObjPtr CIdObjPtr;

@@ -4,6 +4,11 @@
 
 #include <stddef.h>
 
+extern void* memset(void*, int, unsigned int);
+extern int memcmp(const void*, const void*, unsigned int);
+extern void* memcpy(void*, const void*, unsigned int);
+extern void HMU_fn_vSndFree(void**);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeemem.cpp lines 90–90 */
 /* addr: 0x0018af40  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

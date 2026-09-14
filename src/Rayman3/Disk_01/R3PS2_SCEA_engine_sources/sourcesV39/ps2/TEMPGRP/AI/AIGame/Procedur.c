@@ -3963,8 +3963,10 @@ tdstNodeInterpret_* fn_p_stAddMemoryCardString(HIE_tdstSuperObject_* p_SuperObjP
  */
 tdstNodeInterpret_* fn_p_stValidateMemoryCard(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    int stParam[4];
+    tdstNodeInterpret_* result = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
+    SVG_fn_SetAsCurrentMemoryCard(((unsigned char*)stParam)[0]);
+    return result;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6457–6471 */

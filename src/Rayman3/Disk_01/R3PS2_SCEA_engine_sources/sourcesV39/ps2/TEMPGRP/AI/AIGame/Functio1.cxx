@@ -27,6 +27,20 @@ typedef struct tdstMSSound_ tdstMSSound_;
 typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
 
+typedef int tdeFuncId_;
+struct MTH3D_tdstVector_ {
+    float xX;
+    float xY;
+    float xZ;
+};
+struct tdstGetSetParam_ {
+    int data[4];
+};
+typedef struct stTfmtStatus_ stTfmtStatus_;
+struct stTfmtStatus_ {
+    int data[8];
+};
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3961–4404 */
 /* addr: 0x00216fc0  size: 2348 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

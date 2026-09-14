@@ -11,6 +11,15 @@ typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
 typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct GLI_tdstAligned2DVector_ GLI_tdstAligned2DVector_;
+typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
+
+struct MTH3D_tdstVector_ { float xX, xY, xZ; };
+struct MTH4D_tdstVector_ { float xX, xY, xZ, xW; };
+struct GLI_tdstAligned2DVector_ { float xX, xY; };
+struct MAT_tdstTransformation_ { float data[32]; };
+struct GLD_tdstViewportAttributes_ { int data[28]; };
+struct GLD_tdstDeviceAttributes_ { int data[16]; };
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\camera.cxx lines 441–664 */
 /* addr: 0x002b14e0  size: 1632 bytes */

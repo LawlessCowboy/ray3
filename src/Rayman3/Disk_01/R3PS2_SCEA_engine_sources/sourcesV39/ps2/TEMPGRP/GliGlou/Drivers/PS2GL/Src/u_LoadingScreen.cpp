@@ -229,6 +229,7 @@ struct tagstVIFCode {
 };
 
 struct C_LoadingScreen {
+    C_LoadingScreen();
     unsigned int m_bDataIsValid; /* +0x0 */
     int m_ModelTextureData; /* +0x4 */
     unsigned int m_ModelTextureName; /* +0x8 */
@@ -1087,7 +1088,6 @@ int LS_iThreadID;
 unsigned int g_ProgressSizeHaveRead;
 unsigned int g_ProgressSizeToRead;
 int _gp;
-void (*LS_Process)(void);
 int PS2glLiberator;
 int PS2glAllocator64;
 tagGScontext g_gsContext;
@@ -1544,7 +1544,7 @@ void C_LoadingScreen::FreeTexture(unsigned int** ppTextureData, unsigned int* pT
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_LoadingScreen(void)
+C_LoadingScreen::C_LoadingScreen(void)
 {
     char TempString[128];
     /* TODO: decompile from asm/... */

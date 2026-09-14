@@ -1410,7 +1410,7 @@ void AGO2_DisplayCylinder(AGO2_Part_* p)
  */
 void AGO2_ProcessDieAtOnce(AGO2_Part_* p)
 {
-    /* TODO: decompile from asm/... */
+    p->ulType |= 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3815–3818 */
@@ -1422,9 +1422,11 @@ void AGO2_ProcessDieAtOnce(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateCylinder(AGO2_Part_* p, float xParam1, float xParam2)
+unsigned char AGO2_CreateCylinder(int unused, AGO2_Part_* p, float xParam1, float xParam2)
 {
-    /* TODO: decompile from asm/... */
+    p->Vector1.xX = xParam1;
+    p->Vector1.xY = xParam2;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3740–3804 */
@@ -1815,7 +1817,7 @@ void DisplayIcePic(AGO2_Part_* p, float radius, float smallRadius, MTH3D_tdstVec
  */
 void AGO2_ProcessIce(AGO2_Part_* p)
 {
-    /* TODO: decompile from asm/... */
+    p->ulType |= 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3349–3351 */
@@ -1826,9 +1828,10 @@ void AGO2_ProcessIce(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateIce(AGO2_Part_* p, float xParam1)
+unsigned char AGO2_CreateIce(int unused, AGO2_Part_* p, float xParam1)
 {
-    /* TODO: decompile from asm/... */
+    p->Vector1.xX = xParam1;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3300–3345 */

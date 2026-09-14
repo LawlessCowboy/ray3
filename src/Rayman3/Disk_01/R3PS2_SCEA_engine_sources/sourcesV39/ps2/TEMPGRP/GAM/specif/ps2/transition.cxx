@@ -4,6 +4,16 @@
 
 #include <stddef.h>
 
+typedef void (*transition_deallocator_t)(void*);
+typedef void* (*transition_allocator_t)(unsigned int);
+typedef int anon_enum_0093e9cf;
+
+extern int D_58843C;
+extern int g_stTransitionAllocator;
+extern void fn_vResetAllocator(int*);
+extern void fn_vFreeAllocator(int*, void*);
+extern void* fn_pvAllocAllocator(int*, unsigned int);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 278–283 */
 /* addr: 0x0028d810  size: 72 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -14,7 +24,7 @@
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void (*)(void*) fn_pfnCurrentTransitionDeallocator(void)
+transition_deallocator_t fn_pfnCurrentTransitionDeallocator(void)
 {
     int TransitionNumber;
     /* TODO: decompile from asm/... */
@@ -28,7 +38,7 @@ void (*)(void*) fn_pfnCurrentTransitionDeallocator(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void* (*)(unsigned int) fn_pfnCurrentTransitionAllocator(void)
+transition_allocator_t fn_pfnCurrentTransitionAllocator(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -42,7 +52,7 @@ void* (*)(unsigned int) fn_pfnCurrentTransitionAllocator(void)
  */
 void fn_vResetTransitionAllocatorEven(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_vResetAllocator(&D_58843C);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 252–252 */
@@ -54,7 +64,7 @@ void fn_vResetTransitionAllocatorEven(void)
  */
 void fn_vTransitionDeallocatorEven(void* pvPointer)
 {
-    /* TODO: decompile from asm/... */
+    fn_vFreeAllocator(&D_58843C, pvPointer);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 246–246 */
@@ -64,9 +74,9 @@ void fn_vTransitionDeallocatorEven(void* pvPointer)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_pvTransitionAllocatorEven(unsigned int u32Size)
+void* fn_pvTransitionAllocatorEven(unsigned int u32Size)
 {
-    /* TODO: decompile from asm/... */
+    return fn_pvAllocAllocator(&D_58843C, u32Size);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 241–241 */
@@ -78,7 +88,7 @@ void fn_pvTransitionAllocatorEven(unsigned int u32Size)
  */
 void fn_vResetTransitionAllocatorOdd(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_vResetAllocator(&g_stTransitionAllocator);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 235–235 */
@@ -90,7 +100,7 @@ void fn_vResetTransitionAllocatorOdd(void)
  */
 void fn_vTransitionDeallocatorOdd(void* pvPointer)
 {
-    /* TODO: decompile from asm/... */
+    fn_vFreeAllocator(&g_stTransitionAllocator, pvPointer);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 229–229 */
@@ -100,9 +110,9 @@ void fn_vTransitionDeallocatorOdd(void* pvPointer)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_pvTransitionAllocatorOdd(unsigned int u32Size)
+void* fn_pvTransitionAllocatorOdd(unsigned int u32Size)
 {
-    /* TODO: decompile from asm/... */
+    return fn_pvAllocAllocator(&g_stTransitionAllocator, u32Size);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 210–225 */

@@ -1274,7 +1274,8 @@ stInfoTextAffiche_ g_stInfoTextAffiche[30];
  */
 tdstAnim3d_* fn_p_stGetAnimInState(tdstState_* h_State)
 {
-    /* TODO: decompile from asm/... */
+    /* tdstState_ is still opaque; the target reads its first pointer field. */
+    return *(tdstAnim3d_**)h_State;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 1220–1235 */

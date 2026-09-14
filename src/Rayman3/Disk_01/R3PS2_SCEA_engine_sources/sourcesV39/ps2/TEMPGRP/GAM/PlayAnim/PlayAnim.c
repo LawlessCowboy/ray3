@@ -1910,7 +1910,8 @@ void fn_vGetDeformationInfoForChannel(unsigned int ulChannelNumber, tdstPLA_Defo
  */
 void fn_vClearPlayanimTempGeometricObjects(void)
 {
-    /* TODO: decompile from asm/... */
+    gulSwapAllocationIndex = 0;
+    gulVectorAllocationIndex = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 3574–3585 */

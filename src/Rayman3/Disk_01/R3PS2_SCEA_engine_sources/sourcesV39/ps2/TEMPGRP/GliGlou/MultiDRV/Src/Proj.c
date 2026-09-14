@@ -13,6 +13,8 @@ typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
 
+float GLI_BIG_GLOBALS_xGlobalAlpha;
+
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
     MAT_eTransform_Identity = 1,
@@ -110,7 +112,7 @@ void GLI_vSetGlobalAlpha(float Alpha)
 {
     float fAlpha;
 
-    fAlpha = Alpha * (1.0f / 255.0f);
+    fAlpha = Alpha * 0.003921569f;
     fAlpha = (fAlpha > 1.0f) ? 1.0f : fAlpha;
     fAlpha = (fAlpha < 0.0f) ? 0.0f : fAlpha;
     GLI_BIG_GLOBALS_xGlobalAlpha = fAlpha;

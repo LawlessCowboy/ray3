@@ -41,7 +41,9 @@ struct _stVector {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void f_vSetValue__Q24usnd12TTypedVar<f>Ff(float oValue)
+/* The recovered template qualifier is not valid C++ in an identifier; the
+ * MWCC symbol spelling omits the angle-bracket type argument here. */
+void f_vSetValue__Q24usnd12TTypedVarFf(float oValue)
 {
     /* TODO: decompile from asm/... */
 }

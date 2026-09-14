@@ -449,7 +449,6 @@ int g_p_stCurrentMatrix;
 int HIE_g_hCurrentMatrix;
 int HIE_g_a_hMatrixStack[50];
 int HIE_g_lNbMatrixInStack;
-int (*fn_iZCompare)(void*, void*);
 GEO_tdstColor_ GLI_stFogColor;
 float GLI_xFogInfinite;
 float GLI_xFogFar;

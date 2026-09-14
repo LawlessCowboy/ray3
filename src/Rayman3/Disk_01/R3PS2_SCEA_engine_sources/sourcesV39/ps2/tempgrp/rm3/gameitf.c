@@ -6,6 +6,12 @@
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct GLI_tdstSpecificAttributesFor3D_ GLI_tdstSpecificAttributesFor3D_;
+
+struct GLI_tdstSpecificAttributesFor3D_ {
+    int p_stCam; /* +0x0 */
+    float xNear; /* +0x4 */
+};
 
 struct MTH3D_tdstVector_ {
     float xX; /* +0x0 */
@@ -40,5 +46,5 @@ void fn_v_EngMain_EmptyFunction__Fv(void)
  */
 short fn_hGetGLDDevice(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_h_AllCm_MainDisplayDevice;
 }

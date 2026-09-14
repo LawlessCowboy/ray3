@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+typedef int anon_0;
+typedef int anon_1;
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;

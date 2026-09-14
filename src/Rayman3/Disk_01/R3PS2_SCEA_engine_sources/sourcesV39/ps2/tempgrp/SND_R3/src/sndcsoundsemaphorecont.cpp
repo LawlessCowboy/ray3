@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+typedef int sallocator;
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
 typedef struct CSoundSemaphoreCont CSoundSemaphoreCont;
@@ -93,7 +95,7 @@ struct smap {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int ~CSoundSemaphoreCont(_tdstAllRetObjectSound* pst_IActor, int s32_VolId)
+int CSoundSemaphoreCont_ctor(_tdstAllRetObjectSound* pst_IActor, int s32_VolId)
 {
     /* TODO: decompile from asm/... */
 }
@@ -219,7 +221,7 @@ void CSoundSemaphoreCont::mfn_vDelete(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ~CSoundSemaphoreCont(void)
+void CSoundSemaphoreCont_destructor(void)
 {
     iterator it;
     /* TODO: decompile from asm/... */

@@ -741,7 +741,7 @@ unsigned int RUMBLE_g_ulFrequency;
 unsigned int RUMBLE_g_ulPower;
 int RUMBLE_g_bRequest;
 unsigned char g_bCONSOLE_ENGINE;
-int g_EngineWasPausedAutomatically;
+unsigned char g_EngineWasPausedAutomatically;
 unsigned int uDevicePaused;
 unsigned int g_ulMoviesBit2;
 unsigned int g_ulMoviesBit1;
@@ -995,7 +995,7 @@ void GAM_fn_vCheckJoyConnections(void)
  */
 int GAM_fn_iIsGamePaused(void)
 {
-    return g_EngineWasPausedAutomatically;
+    return PAUSE_g_ucPauseCause != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 414–477 */

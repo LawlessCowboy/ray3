@@ -8,6 +8,10 @@
 typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct stFile_ stFile_;
+typedef struct _SND_tdstInitStruct _SND_tdstInitStruct;
+struct _SND_tdstInitStruct {
+    int data[16];
+};
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 1110–1292 */
 /* addr: 0x00262f30  size: 1116 bytes */

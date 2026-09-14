@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+typedef int sallocator;
+typedef int CFlow;
+typedef struct CExtraEventActorPool CExtraEventActorPool;
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CRTTIClass CRTTIClass;
 typedef struct CVarAccess CVarAccess;
@@ -16,6 +20,11 @@ typedef struct C3DDirection C3DDirection;
 typedef struct CResObjParams CResObjParams;
 typedef struct _RollOffParam _RollOffParam;
 typedef struct CExtraEventActor CExtraEventActor;
+struct CExtraEventActorPool {
+    int _placeholder;
+    void f_vSalvageActor(CExtraEventActor*);
+    CExtraEventActor* fs_poGetAnActor(int);
+};
 typedef struct iterator_base iterator_base;
 typedef struct CLinkActor CLinkActor;
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
@@ -782,7 +791,7 @@ unsigned char CExtraEventActor::mfn_bPlay(CEventResData* ro_EventResData, int s3
  */
 void SND_fn_vSetSwitchMaterial(int iNB)
 {
-    /* TODO: decompile from asm/... */
+    g_uiNextSwitchValue = (unsigned int)iNB;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 811–811 */
@@ -794,7 +803,7 @@ void SND_fn_vSetSwitchMaterial(int iNB)
  */
 int SND_fn_iGetSwitchMaterial(void)
 {
-    /* TODO: decompile from asm/... */
+    return (int)g_uiLastSwitchValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 798–799 */
@@ -1067,7 +1076,7 @@ void CExtraEventActor::f_vDesInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ~CExtraEventActor(void)
+void CExtraEventActor_destructor(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1170,7 +1179,7 @@ void CExtraEventActor::f_vInitActorObj(int s32_ACPObjectId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CExtraEventActor(void)
+void CExtraEventActor_ctor(void)
 {
     /* TODO: decompile from asm/... */
 }

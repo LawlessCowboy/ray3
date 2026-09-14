@@ -19,6 +19,9 @@ typedef struct _RollOffParam _RollOffParam;
 typedef struct CExtraEventActor CExtraEventActor;
 typedef struct CLinkActor CLinkActor;
 typedef struct CLinkTypeActor CLinkTypeActor;
+typedef struct sallocator sallocator;
+typedef int anon_0;
+struct sallocator { int data[4]; };
 typedef struct CPitchActorModifier CPitchActorModifier;
 typedef struct CRolloffParam CRolloffParam;
 typedef struct C2DParams C2DParams;
@@ -172,6 +175,7 @@ struct CLinkTypeActor {
     TTypedVar* mroVolumeModifier; /* +0x7c */
     int ms32TypeId; /* +0x80 */
     int ms32LineId; /* +0x84 */
+    CLinkTypeActor(TTypedVar*, int, int, _tdstAllRetObjectSound*);
     _tdstAllRetObjectSound mstIActor; /* +0x88 */
     unsigned char mfn_bSoundPlaying(void);
     unsigned char mfn_bExecuteActorInTypeActorInstance(int s32_CmdId, int s32_ObjectId);
@@ -502,7 +506,7 @@ CLinkActor* CLinkTypeActor::mfn_poGetActorFromIdInTypeActorInstance(int s32_Acto
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CLinkTypeActor(TTypedVar* ro_VolumeModifier, int s32_TypeId, int s32_LineId, _tdstAllRetObjectSound* pst_IActor)
+CLinkTypeActor::CLinkTypeActor(TTypedVar* ro_VolumeModifier, int s32_TypeId, int s32_LineId, _tdstAllRetObjectSound* pst_IActor)
 {
     /* TODO: decompile from asm/... */
 }

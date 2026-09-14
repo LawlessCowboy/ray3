@@ -1140,6 +1140,11 @@ struct GMT_tdstCollideMaterial_ {
 };
 
 MOR_stMorphStruct_ g_MorphTasksList[50];
+struct MOR_DEntry_ {
+    PO_tdstPhysicalObject_* hBaseObject; /* +0x0 */
+    unsigned char _extractor_padding_00[52]; /* implicitly added by extractor; +0x4..0x37 */
+};
+struct MOR_DEntry_ D_7D5384[50];
 tdstEngineStructure_ g_stEngineStructure;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 69–173 */

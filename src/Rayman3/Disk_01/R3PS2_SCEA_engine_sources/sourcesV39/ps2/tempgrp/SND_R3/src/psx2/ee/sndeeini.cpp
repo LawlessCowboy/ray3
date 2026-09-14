@@ -9,6 +9,7 @@ typedef struct CVarAccess CVarAccess;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct CIdObjPtr CIdObjPtr;
 typedef struct CStringIsLess CStringIsLess;
+typedef int sallocator;
 typedef struct stree stree;
 typedef struct sset sset;
 typedef struct _RollOffParam _RollOffParam;

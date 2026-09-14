@@ -1473,7 +1473,8 @@ COL_tdstCollideObject_* fn_hMakeOneObjectFromManyOthers(unsigned char _ucZoneTyp
  */
 COL_tdstCollideObject_* fn_hStaticMakeOneObjectFromManyZdx(unsigned char _ucZoneType, HIE_tdstSuperObject_* _hCharacter)
 {
-    /* TODO: decompile from asm/... */
+    return fn_hMakeOneObjectFromManyOthers(_ucZoneType, _hCharacter,
+        (COL_tdstCollideObject_*)g_hStaticCollisionGeoObj);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2274–2274 */
@@ -1485,7 +1486,8 @@ COL_tdstCollideObject_* fn_hStaticMakeOneObjectFromManyZdx(unsigned char _ucZone
  */
 COL_tdstCollideObject_* fn_hMakeOneObjectFromManyZdx(unsigned char _ucZoneType, HIE_tdstSuperObject_* _hCharacter)
 {
-    /* TODO: decompile from asm/... */
+    return fn_hMakeOneObjectFromManyOthers(_ucZoneType, _hCharacter,
+        (COL_tdstCollideObject_*)g_hCollisionGeoObj);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2173–2195 */

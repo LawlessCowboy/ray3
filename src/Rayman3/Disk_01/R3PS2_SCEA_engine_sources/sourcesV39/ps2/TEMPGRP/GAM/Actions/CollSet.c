@@ -1356,10 +1356,89 @@ unsigned char g_ucGameModuleId;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef struct CAM_tdstCameraConstants_ {
+    float xRayCameraSphereToGo1;
+    float xRayCameraSphereToGo2;
+    float xRayCameraSphereToSee1;
+    float xRayCameraSphereToSee2;
+    float xBaseAngleComputePosNormal;
+    float xBaseAngleComputePosFailure;
+    float xAverageForComputePos;
+    float xAverageForComputeLinearSpeed;
+    float xMinLinearSpeedCamera;
+    float xMinLinearSpeedTgtPerso;
+    float xMinAngularSpeedTgtPerso;
+    float xEpsilonDynTgtAngle;
+    float xEpsilonDynTgtFocalAngle;
+    float xEpsilonForEqualVectors;
+    float xOffsetMinDistPerso;
+    float xDistanceForNoCut;
+    short xNumRayCameraCanGo;
+    short xNumRayCameraCanSee;
+    short xTickTestVisibility;
+    short xTickFindBetterPos;
+    short xTickFindBetterPosIfNoMove;
+    short xTickFailureCantSee;
+    float xDynSpeed_LinearFactNorm;
+    float xDynSpeed_LinearMax;
+    float xDynSpeed_LinearMulPerso;
+    float xDynSpeed_AngularFactNorm;
+    float xDynSpeed_AngularMax;
+    float xDynSpeed_AngularMulPerso;
+    float xDynSpeed_TargetFactNorm;
+    float xDynSpeed_TargetMax;
+    float xDynSpeed_TargetMulPerso;
+    float xBaseCutAngle;
+    float xCutAngleFactorPos;
+    float xCutAngleFactorTgt;
+    short wFlags;
+    short wAlign;
+} CAM_tdstCameraConstants_;
+
+extern CAM_tdstCameraConstants_ CAM_g_stCameraConstants;
+extern CAM_tdstCameraConstants_ CAM_g_stCopyCameraConstants;
+
+#pragma optimize_for_size off
 void CAM_fn_vLoadCameraConstants(void)
 {
-    /* TODO: decompile from asm/... */
+    CAM_g_stCameraConstants.xRayCameraSphereToGo1 = 0.35f;
+    CAM_g_stCameraConstants.xRayCameraSphereToGo2 = 0.35f;
+    CAM_g_stCameraConstants.xRayCameraSphereToSee1 = 0.1f;
+    CAM_g_stCameraConstants.xRayCameraSphereToSee2 = 0.1f;
+    CAM_g_stCameraConstants.xBaseAngleComputePosNormal = 0.7853982f;
+    CAM_g_stCameraConstants.xBaseAngleComputePosFailure = 0.3926991f;
+    CAM_g_stCameraConstants.xAverageForComputePos = 0.4f;
+    CAM_g_stCameraConstants.xAverageForComputeLinearSpeed = 0.4f;
+    CAM_g_stCameraConstants.xMinLinearSpeedCamera = 0.005f;
+    CAM_g_stCameraConstants.xMinLinearSpeedTgtPerso = 0.01f;
+    CAM_g_stCameraConstants.xMinAngularSpeedTgtPerso = 0.01f;
+    CAM_g_stCameraConstants.xEpsilonDynTgtAngle = 0.7853982f;
+    CAM_g_stCameraConstants.xEpsilonDynTgtFocalAngle = 0.19634954f;
+    CAM_g_stCameraConstants.xEpsilonForEqualVectors = 0.5f;
+    CAM_g_stCameraConstants.xOffsetMinDistPerso = 0.05f;
+    CAM_g_stCameraConstants.xDistanceForNoCut = 5.0f;
+    CAM_g_stCameraConstants.xNumRayCameraCanGo = 3;
+    CAM_g_stCameraConstants.xNumRayCameraCanSee = 1;
+    CAM_g_stCameraConstants.xTickTestVisibility = 4;
+    CAM_g_stCameraConstants.xTickFindBetterPos = 20;
+    CAM_g_stCameraConstants.xTickFindBetterPosIfNoMove = 60;
+    CAM_g_stCameraConstants.xTickFailureCantSee = 60;
+    CAM_g_stCameraConstants.xDynSpeed_LinearFactNorm = 3.0f;
+    CAM_g_stCameraConstants.xDynSpeed_LinearMax = 10.0f;
+    CAM_g_stCameraConstants.xDynSpeed_LinearMulPerso = 1.5f;
+    CAM_g_stCameraConstants.xDynSpeed_AngularFactNorm = 3.0f;
+    CAM_g_stCameraConstants.xDynSpeed_AngularMax = 3.0f;
+    CAM_g_stCameraConstants.xDynSpeed_AngularMulPerso = 0.0f;
+    CAM_g_stCameraConstants.xDynSpeed_TargetFactNorm = 4.0f;
+    CAM_g_stCameraConstants.xDynSpeed_TargetMax = 10.0f;
+    CAM_g_stCameraConstants.xDynSpeed_TargetMulPerso = 1.0f;
+    CAM_g_stCameraConstants.xBaseCutAngle = 0.3926991f;
+    CAM_g_stCameraConstants.xCutAngleFactorPos = 1.0f;
+    CAM_g_stCameraConstants.xCutAngleFactorTgt = 1.0f;
+    CAM_g_stCameraConstants.wFlags = 0;
+    memcpy(&CAM_g_stCopyCameraConstants, &CAM_g_stCameraConstants, sizeof(CAM_tdstCameraConstants_));
 }
+#pragma optimize_for_size reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 917–938 */
 /* addr: 0x0026e7c0  size: 212 bytes */

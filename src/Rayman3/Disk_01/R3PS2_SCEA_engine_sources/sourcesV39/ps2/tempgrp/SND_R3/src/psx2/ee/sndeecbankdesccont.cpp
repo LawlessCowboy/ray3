@@ -25,6 +25,8 @@ typedef struct TTypedVar TTypedVar;
 typedef struct CPS2IdObjLoader CPS2IdObjLoader;
 typedef struct CBankDescCont CBankDescCont;
 typedef struct CResObj CResObj;
+typedef struct sallocator sallocator;
+struct sallocator { int data[4]; };
 typedef struct iterator_base iterator_base;
 typedef struct sset sset;
 typedef struct CVar CVar;
