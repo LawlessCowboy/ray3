@@ -4,8 +4,6 @@
 
 #include <stddef.h>
 
-extern unsigned int fs_uiOpen__Q24usnd11CPS2FileMgrFPCc13_ERamLocation(const char *, unsigned int);
-
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct _tdstBinarizedDataForMenu _tdstBinarizedDataForMenu;

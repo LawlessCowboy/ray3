@@ -47,3 +47,19 @@ compiler option, construct, and outcome.
 - [debug-format] GLD_bWriteToViewportFinished's recovered one-parameter declaration omitted a leading ABI parameter: the target consumes hVP from , and adding an unused leading void* plus the natural hVP>>4/negative correction and (short) index cast produced the exact 64-byte match. Treat single-parameter MWCC records with unexpected  use as possible omitted leading parameters. (2026-09-13)
 
 - [compiler] MWCC PS2 3.0 level 3: #pragma optimize_for_size off enables strength-reduced byte-offset induction for variable-bound loops over 80-byte struct arrays; default size mode recalculates index*80 and saves one fewer callee-saved register. (2026-09-13)
+
+- [debug-format] Five trivial procedure callbacks in Procedur.c had extracted one-parameter signatures but target ABI returned ; adding a second natural pointer parameter and returning it reproduced jr/daddu exactly, confirming omitted leading callback parameters in debug extraction. (2026-09-13)
+
+- [source-layout] In u_drawHier.c, SDC_VertexArrays_.pArrayOfVertexArrays is one pointer at +0xc, not a four-element pointer array: the following debug-field offsets place FrameDeformed at +0x1c; correcting the generated declaration reproduced GLI_vSetObjectDeformed's FrameDeformed store. (2026-09-13)
+
+- [abi] SAI_Pub b-prefixed wrappers are actually int-returning and their flag parameters are int, despite debug-recovered unsigned char/unsigned short types. Unsigned narrowing inserted andi/mask instructions and stack frames; changing wrappers to int reproduced all 8 target tail-call bodies exactly. (2026-09-13)
+
+- [debug-format] AiCondSound.c required explicit cross-TU declarations for fn_p_stEvalTree and SND_fn_bGetStereoSound; extractor emitted an undefined p_SuperObjPerso use in the two-parameter fn_p_stIsInStereoMode body. Adding natural prototypes and removing the stale cast restored TU compilation. (2026-09-13)
+
+- [source-layout] AiCondSound fn_p_stIsEventValid matches when the output parameter is backed by int st_Param[4] (not a scalar or recovered tdstGetSetParam_ object); MWCC then places the temporary at sp+0x20 and emits the target addiu/movz boolean sequence. (2026-09-14)
+
+- [abi] Two recovered wrappers with debug unsigned-char return records matched only when declared int: fn_bDoReflexPerso (56/56) and fn_ucWaitEndOfAction (44/44). MWCC target returns full 32/64-bit expression without andi; the debug return type is not sufficient to reconstruct source ABI. (2026-09-14)
+
+- [debug-format] CollSet no-collision setters all require an int condition parameter for MWCC ABI: changing the extractor-generated unsigned char parameter to int produced exact 44-byte matches for the ZDE projectile, other sectors, main character, secondary character, projectile, and map setters. The target branches directly on a1; unsigned-char candidates emitted an extra andi/mask. (2026-09-14)
+
+- [debug-format] Extractor aggregate sizing must treat long and unsigned long as 8-byte MWCC PS2 types; treating them as 4 bytes inserts false internal padding and shifts enclosing fields (confirmed by _stTimerCount and engine-layout matches). (2026-09-14)

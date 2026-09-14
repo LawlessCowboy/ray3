@@ -394,6 +394,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -458,8 +459,8 @@ struct tdstMorphChannelList_ {
 struct SDC_VertexArrays_ {
     unsigned int OptType; /* +0x0 */
     unsigned int NbElements; /* +0x4 */
-    GLI_tdstMaterial_* pArrayOfMaterials; /* +0x8 */
-    float (*pArrayOfVertexArrays)[4]; /* +0xc */
+    GLI_tdstMaterial_** pArrayOfMaterials; /* +0x8 */
+    float ** pArrayOfVertexArrays[4]; /* +0xc */
     int pVertexArraySizes; /* +0x10 */
     int pNbTrianglesPerElement; /* +0x14 */
     int pbIsTransparent; /* +0x18 */
@@ -491,6 +492,7 @@ struct GLI_tdstLight_ {
     float xBigAlpha; /* +0x18 */
     float xLittleTangent; /* +0x1c */
     float xBigTangent; /* +0x20 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x24..0x2f */
     MAT_tdstTransformation_ stMatrix; /* +0x30 */
     GEO_tdstColor_ stColor; /* +0x90 */
     float SqNear; /* +0xa0 */
@@ -621,6 +623,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -650,6 +653,7 @@ struct GEO_tdstIndexedSprite_ {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */
@@ -901,7 +905,7 @@ struct GEO_tdstSprite_ {
     int d_xThresholds; /* +0x8 */
     MTH2D_tdstVector_* d_xSizeOfSprite; /* +0xc */
     MTH2D_tdstVector_* d_xDisplacementOfSprite; /* +0x10 */
-    GLI_tdstMaterial_* d_hVisualMaterial; /* +0x14 */
+    GLI_tdstMaterial_** d_hVisualMaterial; /* +0x14 */
 };
 
 struct SECT_tdstListOfSOSectorsInSoundInteraction_ {
@@ -999,6 +1003,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -1035,6 +1040,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -1125,9 +1131,9 @@ int GLI_BIG_GLOBALS_lDrawModeMask;
 int GLI_BIG_GLOBALS_p_stObj;
 int GLI_BIG_GLOBALS_p_stVpt;
 float GLI_BIG_GLOBALS_xGlobalAlpha;
-extern int g_p_stCurrentMatrix;
-int g_p_stCurrentViewport;
+int g_p_stCurrentMatrix;
 unsigned char GLI_g_bDynShadowIsOn;
+int g_p_stCurrentViewport;
 int Global_CharacterModuleBeingDisplayed;
 int g_p_stRawRLIsForThisObject;
 unsigned int AGO_g_ulNbLights;

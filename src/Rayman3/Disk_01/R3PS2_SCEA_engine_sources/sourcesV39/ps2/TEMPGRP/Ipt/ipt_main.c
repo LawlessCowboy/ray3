@@ -184,6 +184,7 @@ int IPT_g_c_szValidExtraKeyForChat;
 IPT_tdstLineCommand_ IPT_g_hLineCommand;
 IPT_tdstInput_ IPT_g_hInputStructure;
 int IPT_gd_hKeyAndPadDefine;
+
 extern stDevice INO_g_a_stDIDevice[];
 extern signed char INO_fn_cStopFFBEffectWithFade(unsigned int ulCurrentTime, stDevice* pDevice, float xFadeOutStopValue, float xFadeOutTime);
 extern void INO_fn_vStopAllFFBEffectForAllDevice(void);
@@ -443,7 +444,7 @@ void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber
  */
 signed char IPT_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime)
 {
-    return INO_fn_cCreateAndLaunchConstantFFBEffect(ulCurrentTime, *(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260), xFadeInStartValue, xFadeInTime, xConstantValue, xConstantTime, xFadeOutStopValue, xFadeOutTime);
+    return INO_fn_cCreateAndLaunchConstantFFBEffect(ulCurrentTime, IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hDeviceHandle, xFadeInStartValue, xFadeInTime, xConstantValue, xConstantTime, xFadeOutStopValue, xFadeOutTime);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1131–1131 */
@@ -455,7 +456,7 @@ signed char IPT_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime,
  */
 void IPT_fn_vStopPreCreatedFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber)
 {
-    INO_fn_vStopPreCreatedFFBEffect(ulCurrentTime, *(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260), cEffectNumber);
+    INO_fn_vStopPreCreatedFFBEffect(ulCurrentTime, IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hDeviceHandle, cEffectNumber);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1124–1124 */
@@ -467,7 +468,7 @@ void IPT_fn_vStopPreCreatedFFBEffect(unsigned int ulCurrentTime, unsigned char u
  */
 void IPT_fn_vStartPreCreatedFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber)
 {
-    INO_fn_vStartPreCreatedFFBEffect(ulCurrentTime, *(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260), cEffectNumber);
+    INO_fn_vStartPreCreatedFFBEffect(ulCurrentTime, IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hDeviceHandle, cEffectNumber);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1119–1119 */
@@ -491,7 +492,7 @@ void IPT_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices(void)
  */
 void IPT_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice(unsigned char ucPadNumber)
 {
-    INO_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice(*(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260));
+    INO_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice(IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hDeviceHandle);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1108–1108 */
@@ -503,7 +504,7 @@ void IPT_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice(unsigned char ucPadNu
  */
 void IPT_fn_vDeletePreCreatedConstantFFBEffect(unsigned char ucPadNumber, signed char cEffectNumber)
 {
-    INO_fn_vDeletePreCreatedConstantFFBEffect(*(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260), cEffectNumber);
+    INO_fn_vDeletePreCreatedConstantFFBEffect(IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hDeviceHandle, cEffectNumber);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1097–1097 */
@@ -515,7 +516,7 @@ void IPT_fn_vDeletePreCreatedConstantFFBEffect(unsigned char ucPadNumber, signed
  */
 signed char IPT_fn_cPreCreateConstantFFBEffect(unsigned char ucPadNumber, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime)
 {
-    return INO_fn_cPreCreateConstantFFBEffect(*(stDevice**)((char*)&D_7D35C0 + ucPadNumber * 260), xFadeInStartValue, xFadeInTime, xConstantValue, xConstantTime, xFadeOutStopValue, xFadeOutTime);
+    return INO_fn_cPreCreateConstantFFBEffect(IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hDeviceHandle, xFadeInStartValue, xFadeInTime, xConstantValue, xConstantTime, xFadeOutStopValue, xFadeOutTime);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1042–1060 */
@@ -715,7 +716,7 @@ unsigned char IPT_fn_bModifyIPTAction(IPT_tdstEntryElement_* _hElementToChange, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void IPT_fn_hSearchElementInOptionWithKeyWord(short _swEntryType, short swPadNumber, short _swKeyValue)
+IPT_tdstEntryElement_* IPT_fn_hSearchElementInOptionWithKeyWord(short _swEntryType, short swPadNumber, short _swKeyValue)
 {
     IPT_tdstKeyWordElement_* hNextElement;
     IPT_tdstEntryElement_* hAction;

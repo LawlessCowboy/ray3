@@ -11,7 +11,7 @@
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd13CMicroManager::fs_vSetPanOn(unsigned char bPanOn)
+void fs_vSetPanOn__Q24usnd13CMicroManagerFb(unsigned char bPanOn)
 {
     /* TODO: decompile from asm/... */
 }

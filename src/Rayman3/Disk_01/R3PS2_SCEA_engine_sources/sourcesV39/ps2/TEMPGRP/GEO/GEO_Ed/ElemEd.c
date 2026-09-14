@@ -65,6 +65,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -92,7 +93,7 @@ struct GEO_tdstSprite_ {
     int d_xThresholds; /* +0x8 */
     MTH2D_tdstVector_* d_xSizeOfSprite; /* +0xc */
     MTH2D_tdstVector_* d_xDisplacementOfSprite; /* +0x10 */
-    GLI_tdstMaterial_* d_hVisualMaterial; /* +0x14 */
+    GLI_tdstMaterial_** d_hVisualMaterial; /* +0x14 */
 };
 
 struct GEO_tdstFaceMapDescriptor_ {
@@ -152,7 +153,7 @@ struct GEO_tdstElementSprite_ {
 struct GEO_tdstElementLines_ {
     float xThickness; /* +0x0 */
     GEO_tdstDoubledIndex_* d_stListOfLineIndex; /* +0x4 */
-    GLI_tdstMaterial_* d_hListOfLinesVisualMaterial; /* +0x8 */
+    GLI_tdstMaterial_** d_hListOfLinesVisualMaterial; /* +0x8 */
     GEO_tdstColor_* d_stListOfLinesReceivedLightIntensity; /* +0xc */
     short xNbLines; /* +0x10 */
     short xIndexOfParallelBox; /* +0x12 */

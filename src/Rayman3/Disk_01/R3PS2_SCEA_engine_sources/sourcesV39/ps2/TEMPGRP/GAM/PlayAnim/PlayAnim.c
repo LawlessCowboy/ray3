@@ -225,6 +225,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -258,7 +259,7 @@ struct stSwapInfo_ {
     GEO_tdstGeometricObject_ stGeoObjTemp; /* +0x0 */
     GEO_tdstGeometricObject_ stGeoObjTempSHW; /* +0x60 */
     int ax_pstGeoObjTemp[2]; /* +0xc0 */
-    PO_tdstPhysicalObject_* pp_stPhysicalObject; /* +0xc8 */
+    PO_tdstPhysicalObject_** pp_stPhysicalObject; /* +0xc8 */
     PO_tdstPhysicalObject_* p_stPhysicalObject; /* +0xcc */
     PO_tdstPhysicalObject_ stPhysicalObject; /* +0xd0 */
     GEO_tdstVisualSet_ stVisualSet; /* +0xe0 */
@@ -325,6 +326,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -365,6 +367,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -401,6 +404,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -771,6 +775,7 @@ struct DNM_stDynamicsComplexBlock {
     MTH3D_tdstVector_ m_stFallTranslation; /* +0x20 */
     stMACDPID m_stExternalDatas; /* +0x2c */
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xac..0xaf */
     MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
     MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
 };
@@ -815,6 +820,7 @@ struct GLI_tdst2DVertex_ {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */
@@ -964,6 +970,7 @@ struct SECT_tdstListOfSOSectorsInSoundInteraction_ {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -1334,6 +1341,7 @@ struct tdstEngineTimerStructure_ {
     unsigned int ulUsefulDeltaTime; /* +0x50 */
     unsigned int ulPauseTime; /* +0x54 */
     float xFrameLength; /* +0x58 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x5c..0x5f */
     _stTimerCount stRealTimeCount; /* +0x60 */
     _stTimerCount stPauseTime; /* +0x70 */
     unsigned int ulTickPerMS; /* +0x80 */
@@ -1493,7 +1501,7 @@ struct LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn {
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_* p_pstChildList; /* +0x18 */
+    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
 
@@ -1613,6 +1621,7 @@ struct tdstEngineStructure_ {
     unsigned char eInputMode; /* +0x5b */
     unsigned char eDisplayFixMode; /* +0x5c */
     unsigned int ulDisplayMode; /* +0x60 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x64..0x67 */
     tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
     unsigned char ucNumberOfPlayersInMultiMode; /* +0xf0 */
     unsigned char ucNumberOfColumnsInMultiMode; /* +0xf1 */
@@ -1637,6 +1646,7 @@ struct tdstEngineStructure_ {
     HIE_tdstSuperObject_* h_DbgCamCharacter; /* +0x630 */
     tdstLanguageStructure_* p_stLanguageTable; /* +0x634 */
     FIL_tdstFileNameList_* hLevelNameList; /* +0x638 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x63c..0x63f */
     MAT_tdstTransformation_ stMainCharacterPosition; /* +0x640 */
     MAT_tdstTransformation_ stMainCameraPosition; /* +0x6a0 */
     int lSubMapNumber; /* +0x700 */
@@ -1662,7 +1672,7 @@ struct tdstEngineStructure_ {
     unsigned int ulNumberOfSOLAllocated; /* +0x1b78 */
     unsigned int ulNumberOfSOLLoaded; /* +0x1b7c */
     unsigned int ulNumberOfNonPersitentLinksPerSOL; /* +0x1b80 */
-    tdstSuperObjectLinks_* p_hSOL; /* +0x1b84 */
+    tdstSuperObjectLinks_** p_hSOL; /* +0x1b84 */
     tdstGraphChainedListNode_* p_GraphChainedList; /* +0x1b88 */
     CINE_Manager_* stCineManager; /* +0x1b8c */
 };
@@ -1689,7 +1699,7 @@ unsigned int GLI_g_ForceDestructAllSDLs;
 float g_fGlobalAccelerationFactorForAnims;
 int gp_stMorphData;
 int HIE_gs_lCurrentFrame;
-int (*fn_iCompareMorphData)(stMorphData*, stMorphData*);
+/* fn_iCompareMorphData is declared by its recovered definition below. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 25–31 */
 /* addr: 0x00274d10  size: 48 bytes */
@@ -1765,7 +1775,6 @@ void ANI_fn_vFreeze(HIE_tdstSuperObject_* hSuperObjPerso)
  */
 tdstState_* fn_hMergeAnimForInterpolation(tdstAnim3d_* p_stPreviousAnim, unsigned short uwPreviousFrame, tdstState_* h_WantedState, unsigned short uwFirstFrameInWantedState, HIE_tdstSuperObject_* p_stSuperObject, unsigned int ulNbFramesForIntermAnim, float xNLParameter)
 {
-    unsigned char bBTLevel;
     unsigned char bBTLevel;
     tdstAnim3d_* p_stIntermediateAnim;
     unsigned int ulNewNbCouples;
@@ -1861,7 +1870,7 @@ void fn_vComputeGeometricJobs(HIE_tdstSuperObject_* p_stActorSO)
     unsigned char bDeformationInAnim;
     unsigned short uwCurrentChannel;
     unsigned int ulNbVertices;
-    PO_tdstPhysicalObject_* pp_stPhysicalObject;
+    PO_tdstPhysicalObject_** pp_stPhysicalObject;
     HIE_tdstSuperObject_* p_stWorkSO;
     /* TODO: decompile from asm/... */
 }
@@ -2089,11 +2098,10 @@ MTH3D_tdstMatrix_* PLA_fn_stGetAngularSpeedMatrix(HIE_tdstSuperObject_* p_stSupe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLA_fn_stGetLinearSpeedVector(HIE_tdstSuperObject_* p_stSuperObject, float xLastFrame)
+MTH3D_tdstVector_* PLA_fn_stGetLinearSpeedVector(HIE_tdstSuperObject_* p_stSuperObject, float xLastFrame)
 {
     float xInvFramePassed;
     int iFramePassed;
-    MTH3D_tdstVector_ stCopy;
     MTH3D_tdstVector_ stCopy;
     MTH3D_tdstVector_* p_stVector;
     float xRatio;
@@ -2397,7 +2405,6 @@ unsigned char PLA_fn_bSetNewStateWithRandom(HIE_tdstSuperObject_* p_stSuperObjec
 unsigned char PLA_fn_bSetNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_WantedState, unsigned char _bForce, unsigned char _bHandleSkippedEventsIfRelevant, unsigned char _bIgnoreTransitions, unsigned int ulNbFrameForIntermAnim, float xNLParameter, unsigned char bProportionnal)
 {
     float xForcedFrame;
-    int lNewStartTime;
     int lNewStartTime;
     float xFirstFrameInTargetState;
     unsigned short uwFirstFrameInTargetState;
@@ -2747,7 +2754,7 @@ void PLA_fn_vReleaseAllObjectsInHeap(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLA_fn_hFindNextFreeSupObj(void)
+HIE_tdstSuperObject_* PLA_fn_hFindNextFreeSupObj(void)
 {
     HIE_tdstSuperObject_* p_stSO_Child;
     /* TODO: decompile from asm/... */
@@ -3008,17 +3015,12 @@ void PLA_fn_vComputeNextFrame(HIE_tdstSuperObject_* p_stSuperObject)
 unsigned char PLA_fn_bDoAnimPlayerForCharacter(HIE_tdstSuperObject_* p_stSuperObject, unsigned char bNoDisplay, unsigned char _bHandleSkippedEventsIfRelevant)
 {
     unsigned int ulAnimLength;
-    unsigned int ulAnimLength;
     unsigned char bBTLevel;
     int lValue;
     unsigned int ulAddFrame;
     unsigned char ucEventCount;
     int i;
     tdstEvent_* p_stEvent;
-    unsigned char bBTLevel;
-    unsigned char bBTLevel;
-    unsigned int ulAddFrame;
-    int lValue;
     unsigned char ucStateSpeed;
     tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
     tdstSubAnimInUse_* hNextSubAnim;
@@ -3348,13 +3350,6 @@ void PLA_fn_vDoFrame(tdstAnim3d_* p_stCurrentAnim, float xCurrentFrame, HIE_tdst
 {
     HIE_tdstSuperObject_* hChild;
     CINE_tdstChannelLink_* hElement;
-    int bFound;
-    unsigned char uc2;
-    unsigned char ucAmount2;
-    unsigned char ucAmount1;
-    float xMorphingInterpolationRatio;
-    float axRatio[10];
-    unsigned char uc;
     int bFound;
     unsigned char uc2;
     unsigned char ucAmount2;

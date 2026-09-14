@@ -11,7 +11,7 @@
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd34sallocator<P19CLinkCallbackResObj>::deallocate(void* _P)
+void deallocate__Q24usnd34sallocator<P19CLinkCallbackResObj>FPvUi(void* _P)
 {
     /* TODO: decompile from asm/... */
 }
@@ -23,7 +23,7 @@ void Q24usnd34sallocator<P19CLinkCallbackResObj>::deallocate(void* _P)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd34sallocator<P19CSoundSemaphoreInfo>::deallocate(void* _P)
+void deallocate__Q24usnd34sallocator<P19CSoundSemaphoreInfo>FPvUi(void* _P)
 {
     /* TODO: decompile from asm/... */
 }
@@ -67,7 +67,7 @@ unsigned char CLinkTypeActorCont::mfn_bExecuteActorType(int s32_CmdId, int s32_T
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd13sallocator<i>::deallocate(void* _P)
+void deallocate__Q24usnd13sallocator<i>FPvUi(void* _P)
 {
     /* TODO: decompile from asm/... */
 }

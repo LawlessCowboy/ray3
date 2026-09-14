@@ -1926,6 +1926,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -1983,6 +1984,7 @@ struct tdstSubAnimInUse_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -2022,6 +2024,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -2058,6 +2061,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -2874,7 +2878,7 @@ struct MTH3D_tdstMatrix_ {
 };
 
 struct tdstIntelligence_ {
-    tdstScriptAI_* p_p_stScriptAI; /* +0x0 */
+    tdstScriptAI_** p_p_stScriptAI; /* +0x0 */
     tdstNodeInterpret_* p_stCurrentSchedule; /* +0x4 */
     tdstComport_* p_stCurrentComport; /* +0x8 */
     tdstComport_* p_stPrevComport; /* +0xc */
@@ -2901,7 +2905,7 @@ struct tdstElement3d_ {
 };
 
 struct tdstDsgMem_ {
-    tdstDsgVar_* p_p_stDsgVar; /* +0x0 */
+    tdstDsgVar_** p_p_stDsgVar; /* +0x0 */
     int p_cDsgMemBufferInit; /* +0x4 */
     int p_cDsgMemBuffer; /* +0x8 */
 };
@@ -2954,7 +2958,7 @@ tdstConditionEntry_ a_stConditionTable[178];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stEvalCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int lValue = 0;
     int bValue;

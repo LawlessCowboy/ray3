@@ -4,11 +4,6 @@
 
 #include <stddef.h>
 
-typedef struct tdstGetSetParam_ {
-    unsigned char uDummy[12];
-    int eType;
-} tdstGetSetParam_;
-
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
@@ -61,6 +56,7 @@ typedef struct RGBAComponent_ RGBAComponent_;
 typedef union RGBAStruct_ RGBAStruct_;
 typedef union tduGetSetParamForNode_ tduGetSetParamForNode_;
 typedef union anon_0 anon_0;
+typedef union anon_4 anon_4;
 typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct tdstPLA_DeformationLink_ tdstPLA_DeformationLink_;
@@ -73,6 +69,7 @@ typedef struct tdstActionTable_ tdstActionTable_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
 typedef struct tdstDsgVarInfo_ tdstDsgVarInfo_;
 typedef struct tdstActionParam_ tdstActionParam_;
+typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct tdstActionTableEntry_ tdstActionTableEntry_;
 typedef struct tdstDsgVar_ tdstDsgVar_;
 typedef struct tdstMorphChannelList_ tdstMorphChannelList_;
@@ -216,6 +213,61 @@ typedef enum tdeDsgVarTypeId_ {
     eDsgVarType_VisualMatArray = 34,
     eNbDsgVarType = 35,
 } tdeDsgVarTypeId_;
+
+/* Shared AI parameter value tag recovered from the neighbouring AI/GAM
+ * translation units.  ActParam has stack instances of tdstGetSetParam_, so
+ * the tag and its containing aggregate must be complete in this TU. */
+typedef enum tdeVariableType_ {
+    E_vt_None = 0,
+    E_vt_Boolean = 1,
+    E_vt__128To127 = 2,
+    E_vt_0To255 = 3,
+    E_vt__32768To32767 = 4,
+    E_vt_0To65535 = 5,
+    E_vt_Integer = 6,
+    E_vt_PositiveInteger = 7,
+    E_vt_Float = 8,
+    E_vt_String = 9,
+    E_vt_WayPoint = 10,
+    E_vt_Perso = 11,
+    E_vt_List = 12,
+    E_vt_1bit = 13,
+    E_vt_2bit = 14,
+    E_vt_3bit = 15,
+    E_vt_4bit = 16,
+    E_vt_5bit = 17,
+    E_vt_6bit = 18,
+    E_vt_7bit = 19,
+    E_vt_MetaActionReturn = 20,
+    E_vt_Vector = 21,
+    E_vt_Module = 22,
+    E_vt_DsgVarId = 23,
+    E_vt_Action = 24,
+    E_vt_Button = 25,
+    E_vt_Mask = 26,
+    E_vt_Surface = 27,
+    E_vt_LipsSynchro = 28,
+    E_vt_ObjectTable = 29,
+    E_vt_SuperObject = 30,
+    E_vt_Environment = 31,
+    E_vt_Family = 32,
+    E_vt_SoundEvent = 33,
+    E_vt_Comport = 34,
+    E_vt_Font = 35,
+    E_vt_Text = 36,
+    E_vt_ParticleGenerator = 37,
+    E_vt_GameMaterial = 38,
+    E_vt_VisualMaterial = 39,
+    E_vt_Color = 40,
+    E_vt_Model = 41,
+    E_vt_Array = 42,
+    E_vt_Light = 43,
+    E_vt_Caps = 44,
+    E_vt_Graph = 45,
+    E_vt_SOLinks = 46,
+    E_vt_Cine = 47,
+    E_Nb_vt = 48,
+} tdeVariableType_;
 
 typedef enum e_ucListViewport_ {
     CAM_e_NoViewport = -1,
@@ -2058,6 +2110,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -2236,6 +2289,7 @@ struct tdstInternalStructurCineinfo_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -2278,6 +2332,15 @@ struct tduGetSetParam_ {
     WP_tdstGraph_* hGraph; /* +0x0 */
     tdstMacro_* p_stMacro; /* +0x0 */
     CINE_tdstCine_* p_stCine; /* +0x0 */
+};
+
+union anon_4 {
+    tduGetSetParam_ uParam; /* +0x0 */
+};
+
+struct tdstGetSetParam_ {
+    anon_4 uDummy; /* +0x0 */
+    tdeVariableType_ eType; /* +0xc */
 };
 
 struct tdstStandardGame_ {
@@ -2360,7 +2423,7 @@ struct tdstMorphChannelList_ {
 };
 
 struct tdstIntelligence_ {
-    tdstScriptAI_* p_p_stScriptAI; /* +0x0 */
+    tdstScriptAI_** p_p_stScriptAI; /* +0x0 */
     tdstNodeInterpret_* p_stCurrentSchedule; /* +0x4 */
     tdstComport_* p_stCurrentComport; /* +0x8 */
     tdstComport_* p_stPrevComport; /* +0xc */
@@ -2488,7 +2551,7 @@ struct MOR_stMorphObject_ {
 };
 
 struct tdstDsgMem_ {
-    tdstDsgVar_* p_p_stDsgVar; /* +0x0 */
+    tdstDsgVar_** p_p_stDsgVar; /* +0x0 */
     int p_cDsgMemBufferInit; /* +0x4 */
     int p_cDsgMemBuffer; /* +0x8 */
 };
@@ -2632,6 +2695,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -2668,6 +2732,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */

@@ -77,6 +77,7 @@ struct CBankDesc {
     /* C++ base sset at +0x0. */
     CPS2IdObjLoader* mroLoader; /* +0x10 */
     sstring mostringName; /* +0x14 */
+    CResData* mfn_poAddCResDataAlone(CUUID* ro_cuuid);
 };
 
 struct sTreeNode {

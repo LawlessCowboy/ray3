@@ -89,6 +89,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -118,6 +119,7 @@ struct COL_tdstGVForCollision_ {
     COL_tdstCollideObject_* p_stDynamicColObj; /* +0x6c */
     MAT_tdstTransformation_* p_stT0DynamicGeomObjMatrix; /* +0x70 */
     MAT_tdstTransformation_* p_stT1DynamicGeomObjMatrix; /* +0x74 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x78..0x7f */
     MAT_tdstTransformation_ stInvMatrix; /* +0x80 */
     MAT_tdstTransformation_ stD2ST0TransformMatrix; /* +0xe0 */
     MAT_tdstTransformation_ stD2ST1TransformMatrix; /* +0x140 */
@@ -234,7 +236,7 @@ struct COL_tdstOctree_ {
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_* p_pstChildList; /* +0x18 */
+    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
 
@@ -354,9 +356,6 @@ int COL_g_lMaxNumberOfCollisions;
  */
 void COL_fn_vAddInStaticCollisionTable(float _xT, MTH3D_tdstVector_* _p_stTranslation, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, GMT_tdstGameMaterial_* _hDynMat, GMT_tdstGameMaterial_* _hStatMat, short _xDynamicGeomEntity, short _xStaticGeomEntity, void* _p_vParameter1, short _sParameter2, MTH3D_tdstVector_* _p_stMovement, float _xSphereRadius, MTH3D_tdstVector_* _p_stEndPosition)
 {
-    COL_tdstCollisionCase_* end;
-    COL_tdstCollisionCase_* p;
-    int iNumberOfElementToCopy;
     COL_tdstCollisionCase_* end;
     COL_tdstCollisionCase_* p;
     int iNumberOfElementToCopy;

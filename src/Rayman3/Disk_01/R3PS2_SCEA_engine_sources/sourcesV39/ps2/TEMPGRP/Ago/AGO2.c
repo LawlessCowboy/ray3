@@ -292,6 +292,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -331,6 +332,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -367,6 +369,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -587,6 +590,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -941,57 +945,7 @@ int g_PadCircle;
 float g_ffFrameTime;
 float g_fTimeDifference;
 float g_AGO_AnimTimeScale;
-unsigned char (*AGO2_CreateSerialCameraParticleRain)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ProcessRainNearCameraParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit)(AGO2_Part_*);
-void (*GLI_v_StopDrawingRain)(GLD_tdstViewportAttributes_*);
-void (*AGO2_DisplayRainParticleSpriteGroup)(AGO2_Part_*);
-void (*GLI_v_StartDrawingRain)(GLD_tdstViewportAttributes_*);
-unsigned char (*AGO2_CreateCylinder)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ProcessDieAtOnce)(AGO2_Part_*);
-void (*AGO2_DisplayAuraStorm)(AGO2_Part_*);
-void (*AGO2_DisplayCylinder)(AGO2_Part_*);
-unsigned char (*AGO2_CreateIce)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ProcessIce)(AGO2_Part_*);
-void (*AGO2_DisplayIce)(AGO2_Part_*);
-unsigned char (*AGO2_CreateForceField)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ProcessForceField)(AGO2_Part_*);
-void (*AGO2_DisplayForceField)(AGO2_Part_*);
-unsigned char (*AGO2_CreateBalloon)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ProcessBalloon)(AGO2_Part_*);
-void (*AGO2_DisplayBalloon)(AGO2_Part_*);
-unsigned char (*AGO2_CreateFireWall)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ProcessEmpty)(AGO2_Part_*);
-void (*AGO2_DisplayFireWall2)(AGO2_Part_*);
-unsigned char (*AGO2_CreateFFRing)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_DisplayFFWhirl)(AGO2_Part_*);
-void (*AGO2_DisplayFFRing)(AGO2_Part_*);
-void (*AGO2_DisplayFireWall)(AGO2_Part_*);
-unsigned char (*AGO2_CreateFire)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ShrinkFire)(AGO2_Part_*);
-void (*AGO2_FadeFire)(AGO2_Part_*);
-void (*AGO2_ProcessFire)(AGO2_Part_*);
-void (*AGO2_DisplayFlow)(AGO2_Part_*);
-unsigned char (*AGO2_CreateBees)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ProcessBees)(AGO2_Part_*);
-void (*AGO2_DisplayBees)(AGO2_Part_*);
-unsigned char (*AGO2_CreateSerialCameraParticleLeaves)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ProcessLeavesParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit)(AGO2_Part_*);
-void (*AGO2_DisplayLeaves)(AGO2_Part_*);
-unsigned char (*AGO2_CreateSerialCameraParticleSnow)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ProcessSnowParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit)(AGO2_Part_*);
-unsigned char (*AGO2_CreateFlow)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_FadeFlow)(AGO2_Part_*);
-void (*AGO2_ProcessFlow)(AGO2_Part_*);
-void (*AGO2_DisplayFlowMotionBlur)(AGO2_Part_*);
-unsigned char (*AGO2_CreateLightning)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ProcessLightning)(AGO2_Part_*);
-void (*AGO2_DisplayLightning)(AGO2_Part_*);
-void (*AGO2_ProcessRainParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit)(AGO2_Part_*);
-unsigned char (*AGO2_CreateOrdinaryParticle)(unsigned int, AGO2_Part_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, AGO_V4D_*, void*, void*, float, float, float, float, HIE_tdstSuperObject_*, unsigned int);
-void (*AGO2_ShrinkNormal)(AGO2_Part_*);
-void (*AGO2_FadeNormal)(AGO2_Part_*);
-void (*AGO2_ProcessSimpleParticleWithSpeedAndGravity)(AGO2_Part_*);
-void (*AGO2_DisplayOrdinarySprite)(AGO2_Part_*);
+/* Function symbols are declared by their recovered definitions below. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 139–240 */
 /* addr: 0x001e0dc0  size: 532 bytes */
@@ -2232,8 +2186,6 @@ unsigned char AGO2_CreateBalloon(AGO2_Part_* p, AGO_V4D_* Direction, float xPara
     float xNorm;
     int y;
     int x;
-    int y;
-    int x;
     int j;
     float SqrtOneMinusSquaredZ2;
     float SqrtOneMinusSquaredZ;
@@ -2738,8 +2690,6 @@ void AGO2_DisplayFireWall2(AGO2_Part_* p)
     int i;
     MTH3D_tdstVector_ Pos;
     float xNorm;
-    float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ v2;
     MTH3D_tdstVector_ v1;
     MTH3D_tdstVector_ pdir;
@@ -2833,8 +2783,6 @@ void AGO2_DisplayFireWall(AGO2_Part_* p)
     int i;
     MTH3D_tdstVector_ Pos;
     float xNorm;
-    float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ v2;
     MTH3D_tdstVector_ v1;
     MTH3D_tdstVector_ pdir;
@@ -2871,8 +2819,6 @@ void AGO2_DisplayFireWall(AGO2_Part_* p)
  */
 unsigned char AGO2_CreateFireWall(AGO2_Part_* p, float xParam1)
 {
-    float* p2;
-    float* p1;
     float* p2;
     float* p1;
     AGO2_Part_* pp;
@@ -3110,7 +3056,6 @@ void AGO2_DisplayBees(AGO2_Part_* p)
 void AGO2_ProcessBees(AGO2_Part_* p)
 {
     float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ v2;
     float Val;
     float TimeDiff;
@@ -3337,17 +3282,11 @@ void AGO2_DisplayLeaves(AGO2_Part_* p)
 void AGO2_ProcessLeavesParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2_Part_* p)
 {
     float xNorm;
-    float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ V2;
     float RandomValueZ;
     float RandomValueY;
     float RandomValueX;
     float RandomValue;
-    float xNorm;
-    float xNorm;
-    float xNorm;
-    float xNorm;
     float sin1;
     float cos1;
     MTH3D_tdstVector_ Norm;
@@ -3457,10 +3396,6 @@ void AGO2_ProcessLeavesParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AG
 unsigned char AGO2_CreateSerialCameraParticleLeaves(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, unsigned int ParticleNumber)
 {
     float xNorm;
-    float xNorm;
-    float xNorm;
-    float* p2;
-    float* p1;
     float* p2;
     float* p1;
     MTH3D_tdstVector_ V2;
@@ -3614,8 +3549,6 @@ void AGO2_ProcessSnowParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2
  */
 unsigned char AGO2_CreateSerialCameraParticleSnow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, unsigned int ParticleNumber)
 {
-    float* p2;
-    float* p1;
     float* p2;
     float* p1;
     AGO2_RainParticle_* pParticleArrayOrg;
@@ -3883,8 +3816,6 @@ void AGO2_ProcessRainParticleGroupWithSpeedAndGravityAndKillWithLowerZLimit(AGO2
  */
 unsigned char AGO2_CreateSerialCameraParticleRain(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, unsigned int ParticleNumber)
 {
-    float* p2;
-    float* p1;
     float* p2;
     float* p1;
     AGO2_RainParticle_* pParticleArrayOrg;
@@ -4254,7 +4185,7 @@ void AGO2_vClearParticlesOfThatType(unsigned int PartType)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_bIsTypeAlreadyExists(unsigned int PartType)
+AGO2_Part_* AGO2_bIsTypeAlreadyExists(unsigned int PartType)
 {
     unsigned int i;
     /* TODO: decompile from asm/... */
@@ -4448,10 +4379,8 @@ void AGO2_vDestroyAllParts(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_vCreatePart(unsigned int ulParticleType, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
+AGO2_Part_* AGO2_vCreatePart(unsigned int ulParticleType, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
 {
-    float* p2;
-    float* p1;
     float* p2;
     float* p1;
     AGO2_Part_* p;

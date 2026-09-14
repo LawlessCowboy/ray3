@@ -13,6 +13,10 @@ typedef struct SAI_tdstListEntry_ SAI_tdstListEntry_;
 typedef struct SAI_tdstInternalStructure_ SAI_tdstInternalStructure_;
 typedef struct RND_tdstRandom_ RND_tdstRandom_;
 
+/* Random module state is defined by RND_Main.c and shared by this init TU. */
+extern unsigned char g_ucRNDModuleId;
+extern RND_tdstRandom_ RND_g_stRandomStructure;
+
 struct tdstPointerData_ {
     int p_vPointer; /* +0x0 */
     unsigned short uwBlocAndModuleID; /* +0x4 */
@@ -53,14 +57,16 @@ struct SAI_tdstInternalStructure_ {
 };
 
 struct RND_tdstRandom_ {
-    char a_ucPadding[0xcc];
+    unsigned int ulSizeOfTable;
+    unsigned int a_ulIndex[50];
     unsigned int hLastUsedIndex;
+    unsigned int ulMaxValueInTable;
+    float xInverseMaxValueInTable;
+    int p_ulTable;
 };
 
 unsigned char g_ucSAIModuleId;
 SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
-extern unsigned char g_ucRNDModuleId;
-extern RND_tdstRandom_ RND_g_stRandomStructure;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\Sai_main.c lines 60–69 */
 /* addr: 0x003191b0  size: 56 bytes */

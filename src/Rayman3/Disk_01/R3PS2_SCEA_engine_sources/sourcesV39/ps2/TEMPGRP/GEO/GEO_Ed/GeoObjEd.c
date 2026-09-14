@@ -57,6 +57,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -115,6 +116,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -127,6 +129,7 @@ struct GLI_tdst2DVertex_ {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */
@@ -247,10 +250,6 @@ void GEO_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedS
 void GEO_vTurnLookAt(GEO_tdstGeometricObject_* p_stObj, GLD_tdstViewportAttributes_* hVpt, GLI_tdstCamera_* _pstCameraFromPushBuffer, MAT_tdstTransformation_* p_stCurrentMatrix)
 {
     float xNorm;
-    float xNorm;
-    float xNorm;
-    float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ stZ;
     MTH3D_tdstVector_ stY;
     MTH3D_tdstVector_ stX;
@@ -283,7 +282,7 @@ unsigned char GEO_bIsLookAt(GEO_tdstGeometricObject_* p_stObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GEO_vCreateTMPGeometricObjectWithEdges(GEO_tdstGeometricObject_* p_hObject, short xNbPoints, short xNbElements, short xNbEdges)
+void GEO_vCreateTMPGeometricObjectWithEdges(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements, short xNbEdges)
 {
     /* TODO: decompile from asm/... */
 }
@@ -301,7 +300,7 @@ void GEO_vCreateTMPGeometricObjectWithEdges(GEO_tdstGeometricObject_* p_hObject,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GEO_vCreateTMPGeometricObject(GEO_tdstGeometricObject_* p_hObject, short xNbPoints, short xNbElements)
+void GEO_vCreateTMPGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements)
 {
     /* TODO: decompile from asm/... */
 }

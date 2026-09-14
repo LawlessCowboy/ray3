@@ -35,7 +35,6 @@ struct stDevice {
 
 struct anon_0 {
     unsigned char m_ucStatus; /* +0x0 */
-    unsigned short m_uwDirections; /* +0x2 */
 };
 
 struct stAxisCaps {

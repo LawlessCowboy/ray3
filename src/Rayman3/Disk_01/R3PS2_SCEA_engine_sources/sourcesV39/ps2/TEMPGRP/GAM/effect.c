@@ -112,7 +112,7 @@ struct tdstWaterStreakEffect_ {
     float xFoamXZoom; /* +0x10 */
     float xFoamYZoom; /* +0x14 */
     int lFoamFrameCounter; /* +0x18 */
-    GEO_tdstGeometricObject_* a_hFoamObjectTable; /* +0x1c */
+    GEO_tdstGeometricObject_** a_hFoamObjectTable; /* +0x1c */
     float xAttenuationCoeff; /* +0x20 */
     float xLifeTimeFrequency; /* +0x24 */
     int lLifeTime; /* +0x28 */
@@ -140,6 +140,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -158,6 +159,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */

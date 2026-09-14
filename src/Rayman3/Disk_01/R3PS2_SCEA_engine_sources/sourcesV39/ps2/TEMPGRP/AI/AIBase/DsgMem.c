@@ -32,7 +32,7 @@ typedef struct CINE_tdstChannelLink_ CINE_tdstChannelLink_;
 typedef struct RGBAComponent_ RGBAComponent_;
 typedef union RGBAStruct_ RGBAStruct_;
 typedef union tduGetSetParam_ tduGetSetParam_;
-typedef struct anon_0 anon_0;
+typedef union anon_0 anon_0;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct tdstList_ tdstList_;
 typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
@@ -1994,7 +1994,7 @@ union tduGetSetParam_ {
     CINE_tdstCine_* p_stCine; /* +0x0 */
 };
 
-struct anon_0 {
+union anon_0 {
     tduGetSetParam_ uParam; /* +0x0 */
 };
 
@@ -2006,7 +2006,7 @@ struct tdstGetSetParam_ {
 struct tdstList_ {
     unsigned char ucNbElt; /* +0x0 */
     unsigned char ucMaxSize; /* +0x1 */
-    HIE_tdstSuperObject_* p_hTabElt; /* +0x4 */
+    HIE_tdstSuperObject_** p_hTabElt; /* +0x4 */
 };
 
 struct tdstPLA_Hierarchy_ {
@@ -2086,6 +2086,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -2172,12 +2173,14 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
 
 struct tdstSuperObjectLinks_ {
     HIE_tdstSuperObject_* h_SPORef; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ POS_SPO_Init; /* +0x10 */
     unsigned int ulNbLinkedObjects; /* +0x70 */
     unsigned int ulNbLinksAllocated; /* +0x74 */
@@ -2529,7 +2532,7 @@ struct tdstEngineObject_ {
 };
 
 struct tdstIntelligence_ {
-    tdstScriptAI_* p_p_stScriptAI; /* +0x0 */
+    tdstScriptAI_** p_p_stScriptAI; /* +0x0 */
     tdstNodeInterpret_* p_stCurrentSchedule; /* +0x4 */
     tdstComport_* p_stCurrentComport; /* +0x8 */
     tdstComport_* p_stPrevComport; /* +0xc */
@@ -2594,7 +2597,7 @@ struct tdstActionTableEntry_ {
 };
 
 struct tdstDsgMem_ {
-    tdstDsgVar_* p_p_stDsgVar; /* +0x0 */
+    tdstDsgVar_** p_p_stDsgVar; /* +0x0 */
     int p_cDsgMemBufferInit; /* +0x4 */
     int p_cDsgMemBuffer; /* +0x8 */
 };
@@ -2841,6 +2844,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -2877,6 +2881,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -3201,10 +3206,10 @@ unsigned char fn_ucSetDsgVarList(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarWayPoint(void* pMyVarAddr, int unused, tduGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarWayPoint(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     WP_tdstWayPoint_* m_hWayPoint;
-    m_hWayPoint = p_stGetSetParam->m_hWayPoint;
+    m_hWayPoint = p_stGetSetParam->uDummy.uParam.m_hWayPoint;
     *(WP_tdstWayPoint_**)pMyVarAddr = m_hWayPoint;
     return 1;
 }
@@ -3218,10 +3223,10 @@ unsigned char fn_ucSetDsgVarWayPoint(void* pMyVarAddr, int unused, tduGetSetPara
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarGraph(void* pMyVarAddr, int unused, tduGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarGraph(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     WP_tdstGraph_* hGraph;
-    hGraph = p_stGetSetParam->hGraph;
+    hGraph = p_stGetSetParam->uDummy.uParam.hGraph;
     *(WP_tdstGraph_**)pMyVarAddr = hGraph;
     return 1;
 }
@@ -3235,7 +3240,7 @@ unsigned char fn_ucSetDsgVarGraph(void* pMyVarAddr, int unused, tduGetSetParam_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarCaps(void* pMyVarAddr, int unused, tduGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarCaps(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     unsigned int xMask;
     xMask = *(unsigned int*)p_stGetSetParam;
@@ -3252,10 +3257,10 @@ unsigned char fn_ucSetDsgVarCaps(void* pMyVarAddr, int unused, tduGetSetParam_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarText(void* pMyVarAddr, int unused, tduGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarText(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     int hText;
-    hText = p_stGetSetParam->hText;
+    hText = p_stGetSetParam->uDummy.uParam.hText;
     *(int*)pMyVarAddr = hText;
     return 1;
 }
@@ -3305,10 +3310,10 @@ unsigned char fn_ucSetDsgVarComport(void* pMyVarAddr, tdstGetSetParam_* p_stGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarAction(void* pMyVarAddr, int unused, tduGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarAction(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstState_* hAction;
-    hAction = p_stGetSetParam->tdxstHandleToState;
+    hAction = p_stGetSetParam->uDummy.uParam.tdxstHandleToState;
     *(tdstState_**)pMyVarAddr = hAction;
     return 1;
 }
@@ -3322,7 +3327,7 @@ unsigned char fn_ucSetDsgVarAction(void* pMyVarAddr, int unused, tduGetSetParam_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarLight(void* pMyVarAddr, int unused, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarLight(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     GLI_tdstLight_* p_stLight;
     p_stLight = p_stGetSetParam->uDummy.uParam.p_stLight;
@@ -3339,7 +3344,7 @@ unsigned char fn_ucSetDsgVarLight(void* pMyVarAddr, int unused, tdstGetSetParam_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarSoundEvent(void* pMyVarAddr, int unused, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarSoundEvent(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     _SND_tdstBlockEvent* pSoundEvent;
     pSoundEvent = p_stGetSetParam->uDummy.uParam.pSoundEvent;
@@ -3356,7 +3361,7 @@ unsigned char fn_ucSetDsgVarSoundEvent(void* pMyVarAddr, int unused, tdstGetSetP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarInput(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarInput(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     IPT_tdstEntryElement_* hEntryElement;
     hEntryElement = *(IPT_tdstEntryElement_**)p_stGetSetParam;
@@ -3375,10 +3380,10 @@ unsigned char fn_ucSetDsgVarInput(void* pMyVarAddr, unsigned char ucIndex, tdstG
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarSOLinks(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam, tdstGetSetParam_* p_stValue)
+unsigned char fn_ucSetDsgVarSOLinks(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstSuperObjectLinks_* p_stSOL;
-    p_stSOL = p_stValue->uDummy.uParam.hSOLinks;
+    p_stSOL = p_stGetSetParam->uDummy.uParam.hSOLinks;
 
     if (p_stSOL != NULL)
         *(tdstSuperObjectLinks_**)pMyVarAddr = p_stSOL;
@@ -3399,10 +3404,10 @@ unsigned char fn_ucSetDsgVarSOLinks(void* pMyVarAddr, tdstGetSetParam_* p_stGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarSuperObject(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam, tdstGetSetParam_* p_stValue)
+unsigned char fn_ucSetDsgVarSuperObject(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     HIE_tdstSuperObject_* p_stObject;
-    p_stObject = p_stValue->uDummy.uParam.hSuperObject;
+    p_stObject = p_stGetSetParam->uDummy.uParam.hSuperObject;
 
     if (p_stObject != NULL)
         *(HIE_tdstSuperObject_**)pMyVarAddr = p_stObject;
@@ -3516,7 +3521,7 @@ unsigned char fn_ucGetDsgVarVisualMaterial(void* pMyVarAddr, tdstGetSetParam_* p
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarGameMaterial(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarGameMaterial(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     GMT_tdstGameMaterial_* hGameMaterial;
     hGameMaterial = *(GMT_tdstGameMaterial_**)pMyVarAddr;
@@ -3637,7 +3642,7 @@ unsigned char fn_ucGetDsgVar_128To127(void* pMyVarAddr, tdstGetSetParam_* p_stGe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarBoolean(void* pMyVarAddr, int unused, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarBoolean(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     char value = *(char*)pMyVarAddr;
     p_stGetSetParam->uDummy.uParam.lValue = value;
@@ -3674,7 +3679,7 @@ unsigned char fn_ucGetDsgVarList(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarText(void* pMyVarAddr, int unused, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarText(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
 {
     int hText;
     hText = *(int*)pMyVarAddr;
@@ -3716,7 +3721,7 @@ unsigned char fn_ucGetDsgVarComport(void* pMyVarAddr, tdstGetSetParam_* p_stGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarAction(void* pMyVarAddr, int unused, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarAction(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstState_* hAction;
     hAction = *(tdstState_**)pMyVarAddr;
@@ -3735,7 +3740,7 @@ unsigned char fn_ucGetDsgVarAction(void* pMyVarAddr, int unused, tdstGetSetParam
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarWayPoint(void* pMyVarAddr, int unused, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarWayPoint(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     p_stGetSetParam->uDummy.uParam.m_hWayPoint = *(WP_tdstWayPoint_**)pMyVarAddr;
     p_stGetSetParam->eType = E_vt_WayPoint;
@@ -3752,7 +3757,7 @@ unsigned char fn_ucGetDsgVarWayPoint(void* pMyVarAddr, int unused, tdstGetSetPar
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarGraph(void* pMyVarAddr, int unused, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarGraph(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     p_stGetSetParam->uDummy.uParam.hGraph = *(WP_tdstGraph_**)pMyVarAddr;
     p_stGetSetParam->eType = E_vt_Graph;
@@ -3769,7 +3774,7 @@ unsigned char fn_ucGetDsgVarGraph(void* pMyVarAddr, int unused, tdstGetSetParam_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarCaps(void* pMyVarAddr, int unused, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarCaps(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
 {
     p_stGetSetParam->uDummy.uParam.xMask = *(unsigned short*)pMyVarAddr;
     p_stGetSetParam->eType = E_vt_Caps;
@@ -3881,7 +3886,7 @@ unsigned char fn_ucGetDsgVarSoundEvent(void* pMyVarAddr, tdstGetSetParam_* p_stG
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarInput(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarInput(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
 {
     IPT_tdstEntryElement_* hEntryElement;
     hEntryElement = *(IPT_tdstEntryElement_**)pMyVarAddr;
@@ -3918,7 +3923,7 @@ unsigned char fn_ucGetDsgVarPerso(void* pMyVarAddr, tdstGetSetParam_* p_stGetSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarFloat(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarFloat(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     *(float*)p_stGetSetParam = *(float*)pMyVarAddr;
     *((tdeVariableType_*)((char*)p_stGetSetParam + 12)) = E_vt_Float;

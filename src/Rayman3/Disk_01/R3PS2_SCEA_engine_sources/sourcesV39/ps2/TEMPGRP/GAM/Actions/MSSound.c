@@ -8,7 +8,6 @@
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
-typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
 typedef struct WP_tdstListOfArc_ WP_tdstListOfArc_;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
@@ -66,16 +65,10 @@ typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct tdstCineinfo_ tdstCineinfo_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
+typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct tdstDynam_ tdstDynam_;
 typedef struct SECT_tdstListOfSOSectorsInGraphicInteraction_ SECT_tdstListOfSOSectorsInGraphicInteraction_;
 typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
-
-struct GEO_tdstColor_ {
-    float xR; /* +0x0 */
-    float xG; /* +0x4 */
-    float xB; /* +0x8 */
-    float xA; /* +0xc */
-};
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt;
 typedef struct GEO_tdstVisualSet_ GEO_tdstVisualSet_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
@@ -128,6 +121,14 @@ typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
 typedef struct DNM_stDynamicsBaseBlock DNM_stDynamicsBaseBlock;
 typedef struct tdstAveragePosition_ tdstAveragePosition_;
 typedef struct MTH_stMove MTH_stMove;
+
+/* Recovered aggregate used by fn_pCreateSphere's local material colour. */
+struct GEO_tdstColor_ {
+    float xR; /* +0x0 */
+    float xG; /* +0x4 */
+    float xB; /* +0x8 */
+    float xA; /* +0xc */
+};
 
 typedef enum anon_enum_00838041 {
     DNM_eMIC_Error = -1,
@@ -189,13 +190,17 @@ struct HIE_tdstSuperObject_ {
     int hVisualBoundingVolume; /* +0x34 */
     int hCollideBoundingVolume; /* +0x38 */
     int stSemiLookAtVector; /* +0x3c */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x40..0x47 */
     float fTransparenceLevel; /* +0x48 */
     unsigned int ulOutlineColor; /* +0x4c */
     int lDisplayPrioriry; /* +0x50 */
     int lIL_Status; /* +0x54 */
     int stIL_AmbientColor; /* +0x58 */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x5c..0x63 */
     int stIL_ParallelDirection; /* +0x64 */
+    unsigned char _extractor_padding_02[8]; /* implicitly added by extractor; +0x68..0x6f */
     int stIL_ParallelColor; /* +0x70 */
+    unsigned char _extractor_padding_03[8]; /* implicitly added by extractor; +0x74..0x7b */
     unsigned char ucSuperImposedOnWhichViewport; /* +0x7c */
     unsigned char bIsSPO; /* +0x7d */
     unsigned char xTransition; /* +0x7e */
@@ -203,6 +208,7 @@ struct HIE_tdstSuperObject_ {
 
 struct CINE_tdstCine_ {
     int hActorList; /* +0x0 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
     CINE_tdstCine_* hNextBrotherDyn; /* +0xc */
     CINE_tdstCine_* hPrevBrotherDyn; /* +0x10 */
     LST2_tdstAnchorToCINE_tdxHandleToCineDyn* hFatherDyn; /* +0x14 */
@@ -213,7 +219,9 @@ struct CINE_tdstCine_ {
 
 struct tdstSightAxisSystem_ {
     int SightAxis; /* +0x0 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
     int FirstComplementaryAxis; /* +0xc */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x10..0x17 */
     int SecondComplementaryAxis; /* +0x18 */
 };
 
@@ -221,15 +229,25 @@ struct DNM_stReport {
     unsigned int m_ulPrevSurfaceState; /* +0x0 */
     unsigned int m_ulCurrSurfaceState; /* +0x4 */
     int m_stObstacle; /* +0x8 */
+    unsigned char _extractor_padding_00[36]; /* implicitly added by extractor; +0xc..0x2f */
     int m_stGround; /* +0x30 */
+    unsigned char _extractor_padding_01[36]; /* implicitly added by extractor; +0x34..0x57 */
     int m_stWall; /* +0x58 */
+    unsigned char _extractor_padding_02[36]; /* implicitly added by extractor; +0x5c..0x7f */
     int m_stCharacter; /* +0x80 */
+    unsigned char _extractor_padding_03[36]; /* implicitly added by extractor; +0x84..0xa7 */
     int m_stWater; /* +0xa8 */
+    unsigned char _extractor_padding_04[36]; /* implicitly added by extractor; +0xac..0xcf */
     int m_stCeil; /* +0xd0 */
+    unsigned char _extractor_padding_05[36]; /* implicitly added by extractor; +0xd4..0xf7 */
     int m_stAbsolutePrevSpeed; /* +0xf8 */
+    unsigned char _extractor_padding_06[24]; /* implicitly added by extractor; +0xfc..0x113 */
     int m_stAbsoluteCurrSpeed; /* +0x114 */
+    unsigned char _extractor_padding_07[24]; /* implicitly added by extractor; +0x118..0x12f */
     int m_stAbsolutePrevPosition; /* +0x130 */
+    unsigned char _extractor_padding_08[24]; /* implicitly added by extractor; +0x134..0x14b */
     int m_stAbsoluteCurrPosition; /* +0x14c */
+    unsigned char _extractor_padding_09[24]; /* implicitly added by extractor; +0x150..0x167 */
     char m_cBitField; /* +0x168 */
 };
 
@@ -272,13 +290,21 @@ struct DNM_stDynamicsAdvancedBlock {
     float m_xSlideFactorZ; /* +0x1c */
     float m_xPreviousSlide; /* +0x20 */
     int m_stMaxSpeed; /* +0x24 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x28..0x2f */
     int m_stStreamSpeed; /* +0x30 */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x34..0x3b */
     int m_stAddSpeed; /* +0x3c */
+    unsigned char _extractor_padding_02[8]; /* implicitly added by extractor; +0x40..0x47 */
     int m_stLimit; /* +0x48 */
+    unsigned char _extractor_padding_03[8]; /* implicitly added by extractor; +0x4c..0x53 */
     int m_stCollisionTranslation; /* +0x54 */
+    unsigned char _extractor_padding_04[8]; /* implicitly added by extractor; +0x58..0x5f */
     int m_stInertiaTranslation; /* +0x60 */
+    unsigned char _extractor_padding_05[8]; /* implicitly added by extractor; +0x64..0x6b */
     int m_stGroundNormal; /* +0x6c */
+    unsigned char _extractor_padding_06[8]; /* implicitly added by extractor; +0x70..0x77 */
     int m_stWallNormal; /* +0x78 */
+    unsigned char _extractor_padding_07[8]; /* implicitly added by extractor; +0x7c..0x83 */
     char m_cCollideCounter; /* +0x84 */
 };
 
@@ -308,11 +334,13 @@ struct stMorphData {
     unsigned char ucNbTarget; /* +0x4 */
     int ucAlign; /* +0x5 */
     int a_xIndexTargetMT; /* +0x8 */
+    unsigned char _extractor_padding_00[16]; /* implicitly added by extractor; +0xc..0x1b */
     int a_ucMorphingAmountMT; /* +0x1c */
 };
 
 struct tdstMSSound_ {
     int stRollOff; /* +0x0 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
     HIE_tdstSuperObject_* hMechaCharacter; /* +0xc */
 };
 
@@ -326,7 +354,9 @@ struct tdstTransparentSuperObjectForCamera_ {
 
 struct MTH3D_tdstMatrix_ {
     int stCol_0; /* +0x0 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
     int stCol_1; /* +0xc */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x10..0x17 */
     int stCol_2; /* +0x18 */
 };
 
@@ -387,6 +417,7 @@ struct CINE_tdstCineActor_ {
     int stSubAnim; /* +0x0 */
     tdstSubAnimInUse_* hSubAnimInUse; /* +0x4 */
     int szAnimation; /* +0x8 */
+    unsigned char _extractor_padding_00[252]; /* implicitly added by extractor; +0xc..0x107 */
     tdstEngineObject_* p_stActor; /* +0x108 */
     tdstState_* p_stStateAfterCine; /* +0x10c */
     tdstState_* p_stStateDuringCine; /* +0x110 */
@@ -429,6 +460,7 @@ struct CINE_tdstCineActor_ {
     _SND_tdstBlockEvent* pAmbianceRequestEnd; /* +0x16c */
     CINE_tdstCine_* pCine; /* +0x170 */
     int hChannelLink; /* +0x174 */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x178..0x17f */
     CINE_tdstCineActor_* hNextBrotherDyn; /* +0x180 */
     CINE_tdstCineActor_* hPrevBrotherDyn; /* +0x184 */
     LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn* hFatherDyn; /* +0x188 */
@@ -484,7 +516,9 @@ struct tdstFrame3d_ {
     MTH3D_tdstMatrix_* p_stAngularSpeedMatrix; /* +0x4 */
     MTH3D_tdstVector_* p_stLinearSpeedVector; /* +0x8 */
     int stHierarchy; /* +0xc */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x10..0x13 */
     int stDeformation; /* +0x14 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x18..0x1b */
     tdstAnim3d_* p_stAnim; /* +0x1c */
     unsigned short uwFrameNumber; /* +0x20 */
     unsigned char ucMatrixUpdated; /* +0x22 */
@@ -511,7 +545,9 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     int stGLIObjectMatrix; /* +0x20 */
+    unsigned char _extractor_padding_01[92]; /* implicitly added by extractor; +0x24..0x7f */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
     unsigned char ucRepeatAnimation; /* +0x88 */
@@ -529,6 +565,7 @@ struct tdst3dData_ {
     unsigned int ulNumberOfChannels; /* +0xac */
     tdstAChannel_* hFirstActiveChannel; /* +0xb0 */
     int stFrame3d; /* +0xb4 */
+    unsigned char _extractor_padding_02[32]; /* implicitly added by extractor; +0xb8..0xd7 */
     LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphChannelList; /* +0xd8 */
     unsigned int ulStartTime; /* +0xdc */
     unsigned int ulTimeDelay; /* +0xe0 */
@@ -547,7 +584,9 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_03[12]; /* implicitly added by extractor; +0x114..0x11f */
     int stLastEventGlobalPosition; /* +0x120 */
+    unsigned char _extractor_padding_04[92]; /* implicitly added by extractor; +0x124..0x17f */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
     unsigned char ucBrainComputationFrequency; /* +0x182 */
@@ -556,18 +595,22 @@ struct tdst3dData_ {
     unsigned char ucTransparency; /* +0x186 */
     unsigned char bDiscreetSpeed; /* +0x187 */
     int stLightDirForDynamicShadow; /* +0x188 */
+    unsigned char _extractor_padding_05[8]; /* implicitly added by extractor; +0x18c..0x193 */
     unsigned char ucIsShadowClosed; /* +0x194 */
     unsigned char ucShadowRecLevel; /* +0x195 */
     unsigned char ucLightComputationFrequency; /* +0x196 */
     char cLightCounter; /* +0x197 */
     int stSHWDeformationVector; /* +0x198 */
+    unsigned char _extractor_padding_06[8]; /* implicitly added by extractor; +0x19c..0x1a3 */
     float xSHWHeight; /* +0x1a4 */
     float xDistNoInterpol; /* +0x1a8 */
     float xDistNoMorphing; /* +0x1ac */
     float xDistNoDEnv; /* +0x1b0 */
     int hForSubAnimInUseArray; /* +0x1b4 */
+    unsigned char _extractor_padding_07[8]; /* implicitly added by extractor; +0x1b8..0x1bf */
     CINE_tdstCineActor_* h_CurrentCineActor; /* +0x1c0 */
     int hSkinMaterial; /* +0x1c4 */
+    unsigned char _extractor_padding_08[12]; /* implicitly added by extractor; +0x1c8..0x1d3 */
     unsigned int NbSkinMaterials; /* +0x1d4 */
     int xSkinIndex; /* +0x1d8 */
 };
@@ -586,6 +629,7 @@ struct tdstSectInfo_ {
     HIE_tdstSuperObject_* hCurrentSector; /* +0x0 */
     SECT_tdstListOfSOCharacters_* hNodeInSector; /* +0x4 */
     int stPreviousPosition; /* +0x8 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0xc..0x13 */
     HIE_tdstSuperObject_* hSectorSynchroCharacter; /* +0x14 */
 };
 
@@ -599,11 +643,17 @@ struct tdstCineinfo_ {
     tdstInternalStructurCineinfo_* hVisibility; /* +0x8 */
     tdstInternalStructurCineinfo_* hWork; /* +0xc */
     int stLastFailedOrigin; /* +0x10 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x14..0x1b */
     int stLastFailedWanted; /* +0x1c */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x20..0x27 */
     int stForceTarget; /* +0x28 */
+    unsigned char _extractor_padding_02[8]; /* implicitly added by extractor; +0x2c..0x33 */
     int stForcePosition; /* +0x34 */
+    unsigned char _extractor_padding_03[8]; /* implicitly added by extractor; +0x38..0x3f */
     int stForceRefAxisY; /* +0x40 */
+    unsigned char _extractor_padding_04[8]; /* implicitly added by extractor; +0x44..0x4b */
     int stForceRefAxisZ; /* +0x4c */
+    unsigned char _extractor_padding_05[8]; /* implicitly added by extractor; +0x50..0x57 */
     float xApexRatio; /* +0x58 */
     float xLastDeltaCut; /* +0x5c */
     int eState; /* +0x60 */
@@ -615,9 +665,12 @@ struct tdstCineinfo_ {
     unsigned char ucPerIAFlags; /* +0x75 */
     char cLastCutAngleSens; /* +0x76 */
     int AveragePosition; /* +0x78 */
+    unsigned char _extractor_padding_06[220]; /* implicitly added by extractor; +0x7c..0x157 */
     int stSightAxisSystem; /* +0x158 */
+    unsigned char _extractor_padding_07[32]; /* implicitly added by extractor; +0x15c..0x17b */
     unsigned char bCanDoBestPos; /* +0x17c */
     int a10_stTransparentSuperObjectForCamera; /* +0x180 */
+    unsigned char _extractor_padding_08[196]; /* implicitly added by extractor; +0x184..0x247 */
     short xNumberOfTransparentSuperObjectForCamera; /* +0x248 */
     float fTransparency; /* +0x24c */
     float fTransparencySpeed; /* +0x250 */
@@ -654,7 +707,9 @@ struct tdstStandardGame_ {
     unsigned char ucImportance; /* +0x38 */
     unsigned char ucOptional; /* +0x39 */
     int a_xCustomFloats; /* +0x3c */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x40..0x43 */
     int a_lCustomLongs; /* +0x44 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x48..0x4b */
     int a_stCustomVectors; /* +0x4c */
 };
 
@@ -672,7 +727,9 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     int xBoudingSphereCenter; /* +0x30 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x34..0x3f */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
     short xNbOctreeEdges; /* +0x46 */
@@ -698,7 +755,9 @@ struct SECT_tdstListOfSOSectorsInGraphicInteraction_ {
 
 struct tdstInternalStructurCineinfo_ {
     int stShiftTarget; /* +0x0 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
     int stShiftPos; /* +0xc */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x10..0x17 */
     float xDistMin; /* +0x18 */
     float xDistMax; /* +0x1c */
     float xBoundDistMin; /* +0x20 */
@@ -746,19 +805,24 @@ struct GEO_tdstVisualSet_ {
 
 struct MTH4D_tdstMatrix_ {
     int stCol_0; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     int stCol_1; /* +0x10 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x14..0x1f */
     int stCol_2; /* +0x20 */
+    unsigned char _extractor_padding_02[12]; /* implicitly added by extractor; +0x24..0x2f */
     int stCol_3; /* +0x30 */
 };
 
 struct WP_tdstWayPoint_ {
     int m_stVertex; /* +0x0 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
     float m_xRadius; /* +0xc */
     HIE_tdstSuperObject_* m_hSuperObject; /* +0x10 */
 };
 
 struct GEO_tdstParallelBox_ {
     int stMinPoint; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     int stMaxPoint; /* +0x10 */
 };
 
@@ -797,6 +861,7 @@ struct tdstMSWay_ {
 
 struct COL_tdstBoundingSphere_ {
     int stCenterPoint; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     float xRadius; /* +0x10 */
 };
 
@@ -806,7 +871,9 @@ struct tdstMSLight_ {
     unsigned char bGiroPhare; /* +0x2 */
     unsigned char bPulsing; /* +0x3 */
     int stOffsetVect; /* +0x4 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x8..0xf */
     int stAngle; /* +0x10 */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x14..0x1b */
     float xStepGiro; /* +0x1c */
     float xStepPulse; /* +0x20 */
     float xMaxRangePulse; /* +0x24 */
@@ -854,10 +921,15 @@ struct DNM_stDynamicsComplexBlock {
     float m_xTiltAngle; /* +0xc */
     float m_xHangingLimit; /* +0x10 */
     int m_stContact; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     int m_stFallTranslation; /* +0x20 */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x24..0x2b */
     int m_stExternalDatas; /* +0x2c */
+    unsigned char _extractor_padding_02[120]; /* implicitly added by extractor; +0x30..0xa7 */
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_03[4]; /* implicitly added by extractor; +0xac..0xaf */
     int m_stAbsolutePreviousMatrix; /* +0xb0 */
+    unsigned char _extractor_padding_04[92]; /* implicitly added by extractor; +0xb4..0x10f */
     int m_stPrevPreviousMatrix; /* +0x110 */
 };
 
@@ -870,6 +942,7 @@ struct GMT_tdstCollideMaterial_ {
     short wTypeOfZone; /* +0x0 */
     unsigned short xIdentifier; /* +0x2 */
     int stDirection; /* +0x4 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x8..0xf */
     float xCoeff; /* +0x10 */
     unsigned short wTypeForAi; /* +0x14 */
 };
@@ -890,7 +963,9 @@ struct HIE_tdstModifierObject_ {
 
 struct MAT_tdstTransformation_ {
     int eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     int stTransformMatrix; /* +0x10 */
+    unsigned char _extractor_padding_01[60]; /* implicitly added by extractor; +0x14..0x4f */
     int stScaleVector; /* +0x50 */
 };
 
@@ -901,18 +976,25 @@ struct WP_tdstGraph_ {
 struct stMACDPID {
     float m_xData0; /* +0x0 */
     int m_stData1; /* +0x4 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x8..0xf */
     int m_stData2; /* +0x10 */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x14..0x1b */
     int m_stData3; /* +0x1c */
+    unsigned char _extractor_padding_02[8]; /* implicitly added by extractor; +0x20..0x27 */
     float m_xData3; /* +0x28 */
     float m_xData4; /* +0x2c */
     float m_xData5; /* +0x30 */
     int m_stData6; /* +0x34 */
+    unsigned char _extractor_padding_03[12]; /* implicitly added by extractor; +0x38..0x43 */
     int m_stData7; /* +0x44 */
+    unsigned char _extractor_padding_04[12]; /* implicitly added by extractor; +0x48..0x53 */
     char m_cData8; /* +0x54 */
     unsigned short m_uwData9; /* +0x56 */
     int m_stData10; /* +0x58 */
+    unsigned char _extractor_padding_05[8]; /* implicitly added by extractor; +0x5c..0x63 */
     float m_xData11; /* +0x64 */
     int m_stData12; /* +0x68 */
+    unsigned char _extractor_padding_06[8]; /* implicitly added by extractor; +0x6c..0x73 */
     float m_xData13; /* +0x74 */
     unsigned char m_bData14; /* +0x78 */
 };
@@ -998,6 +1080,7 @@ struct anon_1 {
 
 struct DNM_stParsingDatas {
     int stPosition; /* +0x0 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
     float xOutAlpha; /* +0xc */
     int stVector; /* +0x10 */
 };
@@ -1010,14 +1093,23 @@ struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn {
 
 struct SECT_tdstSector_ {
     int stListOfCharacters; /* +0x0 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
     int stListOfStaticLights; /* +0xc */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x10..0x13 */
     int stListOfDNMLights; /* +0x14 */
+    unsigned char _extractor_padding_02[8]; /* implicitly added by extractor; +0x18..0x1f */
     int stListOfSectorsInGraphicInteraction; /* +0x20 */
+    unsigned char _extractor_padding_03[4]; /* implicitly added by extractor; +0x24..0x27 */
     int stListOfSectorsInCollisionInteraction; /* +0x28 */
+    unsigned char _extractor_padding_04[4]; /* implicitly added by extractor; +0x2c..0x2f */
     int stListOfSectorsInActivityInteraction; /* +0x30 */
+    unsigned char _extractor_padding_05[4]; /* implicitly added by extractor; +0x34..0x37 */
     int stListOfSectorsInSoundInteraction; /* +0x38 */
+    unsigned char _extractor_padding_06[4]; /* implicitly added by extractor; +0x3c..0x3f */
     int stListOfSoundEvent; /* +0x40 */
+    unsigned char _extractor_padding_07[4]; /* implicitly added by extractor; +0x44..0x47 */
     int stMinMaxPoints; /* +0x48 */
+    unsigned char _extractor_padding_08[20]; /* implicitly added by extractor; +0x4c..0x5f */
     float xZFar; /* +0x60 */
     unsigned char xVirtual; /* +0x64 */
     char cCameraType; /* +0x65 */
@@ -1040,8 +1132,11 @@ struct SECT_tdstSector_ {
 
 struct stColliderInfo_ {
     int a_stColliderActors; /* +0x0 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     int a_stColliderVectors; /* +0x8 */
+    unsigned char _extractor_padding_01[20]; /* implicitly added by extractor; +0xc..0x1f */
     int a_xColliderReals; /* +0x20 */
+    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x24..0x27 */
     unsigned char ucColliderType; /* +0x28 */
     unsigned char ucColliderPriority; /* +0x29 */
     int a2_ucUnused; /* +0x2a */
@@ -1077,14 +1172,18 @@ union _SND_tduRefEvt {
 
 struct DNM_stDynamics {
     int m_tdstDynamicsBaseBlock; /* +0x0 */
+    unsigned char _extractor_padding_00[364]; /* implicitly added by extractor; +0x4..0x16f */
     int m_tdstDynamicsAdvancedBlock; /* +0x170 */
+    unsigned char _extractor_padding_01[140]; /* implicitly added by extractor; +0x174..0x1ff */
     int m_tdstDynamicsComplexBlock; /* +0x200 */
 };
 
 struct DNM_stObstacle {
     float m_xRate; /* +0x0 */
     int m_stNorm; /* +0x4 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x8..0xf */
     int m_stContact; /* +0x10 */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x14..0x1b */
     GMT_tdstGameMaterial_* hMyMaterial; /* +0x1c */
     GMT_tdstGameMaterial_* hCollidedMaterial; /* +0x20 */
     HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
@@ -1106,27 +1205,40 @@ struct DNM_stDynamicsBaseBlock {
     float m_xSlide; /* +0x1c */
     float m_xRebound; /* +0x20 */
     int m_stImposeSpeed; /* +0x24 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x28..0x2f */
     int m_stProposeSpeed; /* +0x30 */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x34..0x3b */
     int m_stPreviousSpeed; /* +0x3c */
+    unsigned char _extractor_padding_02[8]; /* implicitly added by extractor; +0x40..0x47 */
     int m_stScale; /* +0x48 */
+    unsigned char _extractor_padding_03[8]; /* implicitly added by extractor; +0x4c..0x53 */
     int m_stSpeedAnim; /* +0x54 */
+    unsigned char _extractor_padding_04[8]; /* implicitly added by extractor; +0x58..0x5f */
     int m_stSafeTranslation; /* +0x60 */
+    unsigned char _extractor_padding_05[8]; /* implicitly added by extractor; +0x64..0x6b */
     int m_stAddTranslation; /* +0x6c */
+    unsigned char _extractor_padding_06[16]; /* implicitly added by extractor; +0x70..0x7f */
     int m_stPreviousMatrix; /* +0x80 */
+    unsigned char _extractor_padding_07[92]; /* implicitly added by extractor; +0x84..0xdf */
     int m_stCurrentMatrix; /* +0xe0 */
+    unsigned char _extractor_padding_08[92]; /* implicitly added by extractor; +0xe4..0x13f */
     int m_stImposeRotationMatrix; /* +0x140 */
+    unsigned char _extractor_padding_09[32]; /* implicitly added by extractor; +0x144..0x163 */
     unsigned char m_ucNbFrame; /* +0x164 */
     DNM_stReport* m_pstReport; /* +0x168 */
 };
 
 struct tdstAveragePosition_ {
     int a_CheckedSpeed; /* +0x0 */
+    unsigned char _extractor_padding_00[92]; /* implicitly added by extractor; +0x4..0x5f */
     int a_CheckedPos; /* +0x60 */
+    unsigned char _extractor_padding_01[92]; /* implicitly added by extractor; +0x64..0xbf */
     int a_CheckedTime; /* +0xc0 */
 };
 
 struct MTH_stMove {
     int m_stLinear; /* +0x0 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
     int m_stAngular; /* +0xc */
 };
 

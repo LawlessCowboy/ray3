@@ -1672,8 +1672,12 @@ def _known_member_size(member: VarInfo, enum_names: set[str]) -> int | None:
         return 1
     if spelling in {'short', 'signed short', 'unsigned short'}:
         return 2
-    if spelling in {'int', 'signed int', 'unsigned int', 'float', 'long',
-                    'signed long', 'unsigned long'}:
+    if spelling in {'long', 'signed long', 'unsigned long'}:
+        # CodeWarrior PS2 uses an 8-byte long in aggregate layout.  Treating
+        # it as a 32-bit C long makes the offset recovery insert a spurious
+        # four-byte gap before the next member (notably _stTimerCount).
+        return 8
+    if spelling in {'int', 'signed int', 'unsigned int', 'float'}:
         return 4
     return None
 
@@ -1771,7 +1775,12 @@ def generate_c_stub(file_info: FileInfo, func_list: list[FuncInfo],
     if file_info.globals_:
         lines.append('')
 
+    emitted_functions: set[tuple] = set()
     for func in func_list:
+        function_key = (func.addr, func.name) if func.addr else (0, func.name)
+        if function_key in emitted_functions:
+            continue
+        emitted_functions.add(function_key)
         # Line range comment
         if func.first_line and func.last_line:
             lines.append(f'/* {os.path.basename(file_info.path)}'
@@ -1813,8 +1822,12 @@ def generate_c_stub(file_info: FileInfo, func_list: list[FuncInfo],
             continue
 
         # Local variable stubs
+        emitted_local_names: set[str] = set()
         for loc in func.locals_:
             lname = safe_param_name(loc.name, 0)
+            if lname in emitted_local_names:
+                continue
+            emitted_local_names.add(lname)
             lines.append(f'    {format_declaration(loc.type_str, lname)};')
 
         lines.append(f'    /* TODO: decompile from asm/... */')

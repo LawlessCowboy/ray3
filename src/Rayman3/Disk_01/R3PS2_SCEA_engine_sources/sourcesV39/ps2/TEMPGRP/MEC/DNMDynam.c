@@ -168,6 +168,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -233,6 +234,7 @@ struct DNM_stDynamicsComplexBlock {
     MTH3D_tdstVector_ m_stFallTranslation; /* +0x20 */
     stMACDPID m_stExternalDatas; /* +0x2c */
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xac..0xaf */
     MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
     MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
 };
@@ -291,6 +293,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -410,7 +413,6 @@ DNM_stMecReport g_stReport;
  */
 float CAM_fn_xComputeHorizontalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ)
 {
-    float xNorm;
     float xNorm;
     float xAngle;
     MTH_stRotation stRotation;

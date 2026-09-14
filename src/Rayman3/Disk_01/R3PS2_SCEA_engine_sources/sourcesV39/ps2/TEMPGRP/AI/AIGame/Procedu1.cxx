@@ -23,6 +23,21 @@ typedef struct tdstMSLight_ tdstMSLight_;
 typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
 
+/* These shared value types are referenced by locals in this TU.  The
+ * extractor previously emitted only forward declarations when their debug
+ * records were owned by another source file. */
+typedef enum tdeProcedureId_ { eProcedureId_Dummy = 0 } tdeProcedureId_;
+typedef enum tdeVariableType_ { eVariableType_Dummy = 0 } tdeVariableType_;
+struct MTH3D_tdstVector_ { float xX; float xY; float xZ; };
+struct MAT_tdstTransformation_ { int eType; unsigned char data[100]; };
+typedef union tduGetSetParam_ {
+    int lValue;
+    float xValue;
+    MTH3D_tdstVector_ stVectorValue;
+    void* pValue;
+} tduGetSetParam_;
+struct tdstGetSetParam_ { tduGetSetParam_ uParam; tdeVariableType_ eType; };
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6566–6587 */
 /* addr: 0x0022f360  size: 176 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -39,7 +54,7 @@ typedef struct tdstStandardGame_ tdstStandardGame_;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stReleaseAnalogJoystick(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stReleaseAnalogJoystick(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned char ucPadNumber;
     tdstGetSetParam_ stParam;
@@ -74,7 +89,7 @@ void fn_p_stReleaseAnalogJoystick(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSetAnalogJoystickAxes2(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSetAnalogJoystickAxes2(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     IPT_tdstEntryElement_* hJoystickAxeZ;
     IPT_tdstEntryElement_* hJoystickAxeY;
@@ -190,7 +205,7 @@ tdstNodeInterpret_* fn_p_stSHWSetShadowMode(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stTemporalChangeSighting(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stTemporalChangeSighting(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     float xNorm;
     unsigned int ulCurrentBits;
@@ -699,10 +714,9 @@ tdstNodeInterpret_* fn_p_stInitKeyBoardDirections(HIE_tdstSuperObject_* p_SuperO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSetAnalogJoystickAxes(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSetAnalogJoystickAxes(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned int ulBounds;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
     HIE_tdstSuperObject_* p_stResultOwnerPerso;
     unsigned char ucVarId;
     AI_tdstMind_* p_stMind;
@@ -1059,25 +1073,18 @@ void fn_p_stSetAnalogJoystickAxes(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stReadAnalogJoystickMario(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stReadAnalogJoystickMario(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     MAT_tdstTransformation_ stTransform;
     tdstDynam_* hDynam;
     float xDynamicRotation;
     float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ Vtmp;
     MTH3D_tdstVector_ VectTmp;
-    float xNorm;
-    MTH3D_tdstVector_ Vtmp;
-    MTH3D_tdstVector_ VectTmp;
-    float xNorm;
-    float xNorm;
     unsigned char bVectorToTargetIsNull;
     MTH3D_tdstVector_ stK;
     MTH3D_tdstVector_ stJ;
     MTH3D_tdstVector_ stI;
-    float xNorm;
     MTH3D_tdstVector_ stCamV2;
     MTH3D_tdstVector_ stCamV1;
     MTH3D_tdstVector_ stCamV0;
@@ -1349,7 +1356,7 @@ tdstNodeInterpret_* fn_p_stShadow(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_SetMechanicClimbSpeedLimit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_SetMechanicClimbSpeedLimit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdstGetSetParam_ stValue;
@@ -1581,7 +1588,7 @@ tdstNodeInterpret_* fn_p_PlatformLink(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stChangeActorSpoFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stChangeActorSpoFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     unsigned int ulMask;
@@ -2302,7 +2309,7 @@ tdstNodeInterpret_* fn_p_SetMechanic3RealParameter(HIE_tdstSuperObject_* p_Super
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_SetMechanicRealParameter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_SetMechanicRealParameter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdeProcedureId_ eProcedureId;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
@@ -2665,7 +2672,7 @@ tdstNodeInterpret_* fn_p_stChangeScreen(HIE_tdstSuperObject_* p_SuperObjPerso, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stOptionChangerProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stOptionChangerProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     IPT_tdstEntryElement_* IPT_xHandleToChange;
     unsigned char ucWhichTest;
@@ -2719,7 +2726,7 @@ void fn_p_stOptionChangerProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stWorldMapProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stWorldMapProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned char ucVarId;
     tdeProcedureId_ eProcedureId;
@@ -3033,8 +3040,6 @@ tdstNodeInterpret_* fn_p_st3DProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
     DNM_stDynamics* pstDynamic;
     HIE_tdstSuperObject_* hChild;
     float xNorm;
-    float xNorm;
-    float xNorm;
     unsigned char b_ucKisUp;
     MTH3D_tdstVector_ stK;
     MTH3D_tdstVector_ stJ;
@@ -3044,7 +3049,6 @@ tdstNodeInterpret_* fn_p_st3DProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
     MTH3D_tdstVector_ stV2;
     MTH3D_tdstVector_ stV1;
     MTH3D_tdstVector_ stScale;
-    float xNorm;
     tdstDynam_* hDynam;
     float xAngle;
     unsigned char ucChannel;
@@ -3252,7 +3256,7 @@ void AI_vProcessSetPersoAtModulePosition(AI_tdstBatchOrder_* p_stBatchOrder)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stBatchSynchroPersoWithPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stBatchSynchroPersoWithPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     AI_tdstBatchOrder_* p_stBatchOrder;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
@@ -3297,7 +3301,7 @@ void fn_p_stBatchSynchroPersoWithPerso(HIE_tdstSuperObject_* p_SuperObjPerso, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stBatchSetPersoOrientation(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stBatchSetPersoOrientation(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     AI_tdstBatchOrder_* p_stBatchOrder;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
@@ -3335,7 +3339,7 @@ void fn_p_stBatchSetPersoOrientation(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stBatchSetPersoAtModulePosition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stBatchSetPersoAtModulePosition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     AI_tdstBatchOrder_* p_stBatchOrder;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
@@ -3398,7 +3402,7 @@ void fn_p_stBatchSetPersoAtModulePosition(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stChangePersoHorizSighting(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stChangePersoHorizSighting(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     float xNorm;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
@@ -3588,13 +3592,6 @@ tdstNodeInterpret_* fn_p_st3DProc_ForReorientation(HIE_tdstSuperObject_* p_Super
 void AI_vComputeNewRotationMatrix(MAT_tdstTransformation_* hMatrix, unsigned short uwMode)
 {
     float xNorm;
-    float xNorm;
-    float xNorm;
-    float xNorm;
-    float xNorm;
-    float xNorm;
-    float xNorm;
-    float xNorm;
     MTH3D_tdstVector_ stTmp;
     MTH3D_tdstVector_ stK;
     MTH3D_tdstVector_ stJ;
@@ -3779,7 +3776,7 @@ tdstNodeInterpret_* fn_p_stIntToText(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stStringProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stStringProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     short wStringLength;
     short wNewCharacter;

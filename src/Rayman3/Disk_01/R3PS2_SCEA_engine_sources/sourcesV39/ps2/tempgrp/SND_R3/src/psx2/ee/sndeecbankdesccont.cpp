@@ -179,6 +179,7 @@ struct CExtraEventActor {
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x8..0xb */
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
@@ -197,6 +198,7 @@ struct CPS2IdObjLoader {
 struct CBankDescCont {
     /* C++ base smap at +0x0. */
     CPS2IdObjLoader moLoader; /* +0x10 */
+    CBankDesc* mfn_poAddBankDesc(char* pch_FileName);
 };
 
 struct CResObj {
@@ -505,7 +507,7 @@ void _NilElmt__Q24usnd9streebase(char* pch_FilePath)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CBankDescCont::mfn_poAddBankDesc(char* pch_FileName)
+CBankDesc* CBankDescCont::mfn_poAddBankDesc(char* pch_FileName)
 {
     sstring o_Key;
     /* TODO: decompile from asm/... */

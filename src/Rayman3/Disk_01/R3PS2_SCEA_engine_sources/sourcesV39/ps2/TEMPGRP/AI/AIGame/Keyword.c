@@ -135,8 +135,6 @@ typedef struct tdstDsgVar_ tdstDsgVar_;
 typedef struct tdstProhibit_ tdstProhibit_;
 typedef struct tdstListOfMacro_ tdstListOfMacro_;
 
-tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
-
 typedef enum tdeMetaActionId_ {
     eMetaAction_FrozenWait = 0,
     eMetaAction_ExecuteAction = 1,
@@ -2158,6 +2156,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -2419,6 +2418,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -2464,7 +2464,7 @@ struct tdstMorphChannelList_ {
 };
 
 struct tdstIntelligence_ {
-    tdstScriptAI_* p_p_stScriptAI; /* +0x0 */
+    tdstScriptAI_** p_p_stScriptAI; /* +0x0 */
     tdstNodeInterpret_* p_stCurrentSchedule; /* +0x4 */
     tdstComport_* p_stCurrentComport; /* +0x8 */
     tdstComport_* p_stPrevComport; /* +0xc */
@@ -2501,7 +2501,7 @@ struct WP_tdstGraph_ {
 };
 
 struct tdstDsgMem_ {
-    tdstDsgVar_* p_p_stDsgVar; /* +0x0 */
+    tdstDsgVar_** p_p_stDsgVar; /* +0x0 */
     int p_cDsgMemBufferInit; /* +0x4 */
     int p_cDsgMemBuffer; /* +0x8 */
 };
@@ -2783,6 +2783,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -2819,6 +2820,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -2951,6 +2953,12 @@ unsigned char g_ucNRule;
 int g_p_stIntelligence;
 char gcGlobAleat;
 
+/* Implemented by AIBase/Intell.c; keep the cross-TU return type visible. */
+tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(
+    HIE_tdstSuperObject_* p_SuperObjPerso,
+    tdstNodeInterpret_* p_stTree,
+    tdstGetSetParam_* p_stValue);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 488–536 */
 /* addr: 0x00221b80  size: 592 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2987,7 +2995,7 @@ char gcGlobAleat;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stEngineGotoKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEngineGotoKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int i;
     tdstNodeInterpret_* p_stTempTree;
@@ -3012,7 +3020,7 @@ void fn_p_stEngineGotoKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stEndWhileKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stEndWhileKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stValue;
     tdst_WhileInfo_* p_stWhileInfo;
@@ -3055,7 +3063,7 @@ tdstNodeInterpret_* fn_p_stBeginWhileKeyWord(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stWhileKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stWhileKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdstGetSetParam_ stValue;
     tdst_WhileInfo_* p_stWhileInfo;
@@ -3143,7 +3151,7 @@ tdstNodeInterpret_* fn_p_stSkipWhile(tdstNodeInterpret_* p_stTreeInit)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stIfKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stIfKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeKeyWordId_ eKeyId;
     char cInvert;
@@ -3167,7 +3175,7 @@ void fn_p_stIfKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stIfNotU64(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stIfNotU64(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeKeyWordId_ eKeyId;
     /* TODO: decompile from asm/... */
@@ -3188,7 +3196,7 @@ void fn_p_stIfNotU64(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stIfDebug(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stIfDebug(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeKeyWordId_ eKeyId;
     /* TODO: decompile from asm/... */
@@ -3229,7 +3237,7 @@ tdstNodeInterpret_* fn_p_stThenKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoVMTKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoVMTKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.hVisualMaterial = NULL;
     p_stValue->eType = E_vt_VisualMaterial;
@@ -3245,7 +3253,7 @@ tdstNodeInterpret_* fn_p_stNoVMTKeyWord(int unused, tdstNodeInterpret_* p_stTree
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoGMTKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoGMTKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.hGameMaterial = NULL;
     p_stValue->eType = E_vt_GameMaterial;
@@ -3261,7 +3269,7 @@ tdstNodeInterpret_* fn_p_stNoGMTKeyWord(int unused, tdstNodeInterpret_* p_stTree
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoGraphKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoGraphKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.hGraph = NULL;
     p_stValue->eType = E_vt_Graph;
@@ -3277,7 +3285,7 @@ tdstNodeInterpret_* fn_p_stNoGraphKeyWord(int unused, tdstNodeInterpret_* p_stTr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stCapsNullKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stCapsNullKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     *(unsigned int *)&p_stValue->uDummy.uParam.xMask = 0;
     p_stValue->eType = E_vt_Caps;
@@ -3293,7 +3301,7 @@ tdstNodeInterpret_* fn_p_stCapsNullKeyWord(int unused, tdstNodeInterpret_* p_stT
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEmptyTextKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEmptyTextKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.hText = -1;
     p_stValue->eType = E_vt_Text;
@@ -3309,7 +3317,7 @@ tdstNodeInterpret_* fn_p_stEmptyTextKeyWord(int unused, tdstNodeInterpret_* p_st
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNowhereKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNowhereKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.m_hWayPoint = NULL;
     p_stValue->eType = E_vt_WayPoint;
@@ -3326,7 +3334,7 @@ tdstNodeInterpret_* fn_p_stNowhereKeyWord(int unused, tdstNodeInterpret_* p_stTr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNobodyKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNobodyKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.p_stEngObjValue = NULL;
     p_stValue->eType = E_vt_Perso;
@@ -3343,7 +3351,7 @@ tdstNodeInterpret_* fn_p_stNobodyKeyWord(int unused, tdstNodeInterpret_* p_stTre
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoSoundEventKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoSoundEventKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.pSoundEvent = NULL;
     p_stValue->eType = E_vt_SoundEvent;
@@ -3360,7 +3368,7 @@ tdstNodeInterpret_* fn_p_stNoSoundEventKeyWord(int unused, tdstNodeInterpret_* p
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoSOLinksWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoSOLinksWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.hSOLinks = NULL;
     p_stValue->eType = E_vt_SOLinks;
@@ -3377,7 +3385,7 @@ tdstNodeInterpret_* fn_p_stNoSOLinksWord(int unused, tdstNodeInterpret_* p_stTre
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoSuperObjectKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoSuperObjectKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.hSuperObject = NULL;
     p_stValue->eType = E_vt_SuperObject;
@@ -3394,7 +3402,7 @@ tdstNodeInterpret_* fn_p_stNoSuperObjectKeyWord(int unused, tdstNodeInterpret_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoInputKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoInputKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     *(unsigned int *)&p_stValue->uDummy.uParam.xMask = 0;
     p_stValue->eType = E_vt_Button;
@@ -3412,7 +3420,7 @@ tdstNodeInterpret_* fn_p_stNoInputKeyWord(int unused, tdstNodeInterpret_* p_stTr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stMainActorKeyWord(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stMainActorKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -3441,7 +3449,7 @@ tdstNodeInterpret_* fn_p_stMeKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stNoActionKeyWord(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stNoActionKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.p_stMacro = NULL;
     p_stValue->eType = E_vt_Action;

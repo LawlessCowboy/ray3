@@ -227,7 +227,6 @@ void fn_vResetAllocator(anon_0* pstAllocator)
 void CheckMenu2DTextures(void)
 {
     char* EndOfDMAList1;
-    char* EndOfDMAList1;
     GLI_tdstMaterial_* pMat;
     int loaded;
     /* TODO: decompile from asm/... */
@@ -376,7 +375,7 @@ void InitPS2Menu2DTextures(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void M2D_iLoadMenuTexture(GLI_tdstTexture_* pp_stTexture, char* TxrName)
+void M2D_iLoadMenuTexture(GLI_tdstTexture_** pp_stTexture, char* TxrName)
 {
     int i;
     /* TODO: decompile from asm/... */

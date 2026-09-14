@@ -343,6 +343,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -372,6 +373,7 @@ struct tagListData {
     unsigned int uiSDLIndicesSize; /* +0x20 */
     unsigned int uiSDLBits; /* +0x24 */
     unsigned long ModFlgs; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     float (*pLastExecDmaBuffer)[4]; /* +0x30 */
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };
@@ -745,6 +747,7 @@ struct tagGLprimbuf {
     int pCode; /* +0xc */
     float (*pData)[4]; /* +0x10 */
     int pTexUnit; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     _sceDmaTag tagDma; /* +0x20 */
     sceGifTag tagGif; /* +0x30 */
     int vData[4]; /* +0x40 */
@@ -869,8 +872,8 @@ struct C_Sdl {
     unsigned int m_NbReservedRefs; /* +0x18 */
     unsigned int m_NbFaces; /* +0x1c */
     unsigned int m_NbElements; /* +0x20 */
-    C_SdlRef* m_ppRefs; /* +0x24 */
-    tag_stVU1Parameters* m_ppP; /* +0x28 */
+    C_SdlRef** m_ppRefs; /* +0x24 */
+    tag_stVU1Parameters** m_ppP; /* +0x28 */
     unsigned int m_LastFrameUsed; /* +0x2c */
     unsigned int m_LastFrameInterpolated; /* +0x30 */
     unsigned int m_bIsTransparent; /* +0x34 */
@@ -878,6 +881,18 @@ struct C_Sdl {
     int m_SkinIndex; /* +0x3c */
     GLI_tdstMaterial_* m_SkinMaterial; /* +0x40 */
     int m_bIsBlinking; /* +0x44 */
+    void StealthDestroy(void);
+    void Draw(int bProcessRefs);
+    void End(void);
+    void Start(void);
+    void UpdateFogs(void);
+    void ProcessAllRefs(void);
+    void Preprocess(void);
+    void AddRef(C_SdlRef* pRef);
+    void Destruct(void);
+    void RemoveSPOInterpol(HIE_tdstSuperObject_* pSPO);
+    void Init(void);
+    void __dl(void* ptr);
 };
 
 struct sceGsSt {
@@ -952,14 +967,19 @@ struct tagGsSetTex {
     sceGifTag gifTag; /* +0x0 */
     sceGsTexflush texflush; /* +0x10 */
     long texflushaddr; /* +0x18 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x1c..0x1f */
     sceGsTex0 tex0; /* +0x20 */
     long tex0addr; /* +0x28 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x2c..0x2f */
     sceGsTex1 tex1; /* +0x30 */
     long tex1addr; /* +0x38 */
+    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x3c..0x3f */
     sceGsMiptbp1 miptbp1; /* +0x40 */
     long miptbp1addr; /* +0x48 */
+    unsigned char _extractor_padding_03[4]; /* implicitly added by extractor; +0x4c..0x4f */
     sceGsMiptbp2 miptbp2; /* +0x50 */
     long miptbp2addr; /* +0x58 */
+    unsigned char _extractor_padding_04[4]; /* implicitly added by extractor; +0x5c..0x5f */
     sceGsClamp clamp; /* +0x60 */
     long clampaddr; /* +0x68 */
 };
@@ -1066,6 +1086,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -1077,6 +1098,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -1113,6 +1135,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -1197,6 +1220,9 @@ struct HIE_tdstModifierObject_ {
 
 struct C_CharacterSdl {
     /* C++ base C_Sdl at +0x0. */
+    void PreprocessLightingForCheap(HIE_tdstSuperObject_* pSPO);
+    void PreprocessLighting(HIE_tdstSuperObject_* pSPO);
+    void Start(void);
 };
 
 struct tag_GLtexture_set {
@@ -1362,6 +1388,7 @@ struct GLI_tdstLight_ {
     float xBigAlpha; /* +0x18 */
     float xLittleTangent; /* +0x1c */
     float xBigTangent; /* +0x20 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x24..0x2f */
     MAT_tdstTransformation_ stMatrix; /* +0x30 */
     GEO_tdstColor_ stColor; /* +0x90 */
     float SqNear; /* +0xa0 */
@@ -1560,10 +1587,13 @@ struct tagGsLoadImage {
     sceGifTag gifTag; /* +0x0 */
     sceGsBitbltbuf bitbltbuf; /* +0x10 */
     long bitbltbufaddr; /* +0x18 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x1c..0x1f */
     sceGsTrxpos trxpos; /* +0x20 */
     long trxposaddr; /* +0x28 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x2c..0x2f */
     sceGsTrxreg trxreg; /* +0x30 */
     long trxregaddr; /* +0x38 */
+    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x3c..0x3f */
     sceGsTrxdir trxdir; /* +0x40 */
     long trxdiraddr; /* +0x48 */
 };
@@ -1605,6 +1635,7 @@ struct tagGLcontext {
     float fIndexClearValue; /* +0x100 */
     unsigned int eAlphaTestFunc; /* +0x104 */
     float fAlphaTestRef; /* +0x108 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x10c..0x10f */
     float vAccumClearValue[4]; /* +0x110 */
     unsigned int eBlendSrcFactor; /* +0x120 */
     unsigned int eBlendDstFactor; /* +0x124 */
@@ -1629,6 +1660,7 @@ struct tagGLcontext {
     unsigned int nTextureEnableBits; /* +0x17c */
     tag_GLtexture_set TextureSet[2]; /* +0x180 */
     tag_GLtexture_set* pCurTexture; /* +0x240 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x244..0x24f */
     tagGsLoadImage stGsLoadImage; /* +0x250 */
     tagGsSetTex astGsSetTex[2]; /* +0x2a0 */
     tagGsSetTex* pstCurGsSetTex; /* +0x380 */
@@ -1687,7 +1719,7 @@ struct tagGLcontext {
     tagGLlistcalls* pPreListCalls; /* +0x5ce0 */
     tagGLprimbuf* pCurPrimBuf; /* +0x5ce4 */
     stParamBegin* pCurParamBegin; /* +0x5ce8 */
-    tagGLprimbuf* ppCurPrimBufHead; /* +0x5cec */
+    tagGLprimbuf** ppCurPrimBufHead; /* +0x5cec */
     float (*pCurListVData)[4]; /* +0x5cf0 */
     int pCurListVCode; /* +0x5cf4 */
     int pCurListTexUnit; /* +0x5cf8 */
@@ -1730,6 +1762,7 @@ struct tagGLcontext {
     float fPixelZoomY; /* +0x5ff8 */
     unsigned int nClipBits; /* +0x5ffc */
     int iMaxClipPlanes; /* +0x6000 */
+    unsigned char _extractor_padding_02[12]; /* implicitly added by extractor; +0x6004..0x600f */
     float avClipPlane[6][4]; /* +0x6010 */
     unsigned int eMatrixMode; /* +0x6070 */
     float (*pCurMatrix)[4][4]; /* +0x6074 */
@@ -1740,6 +1773,7 @@ struct tagGLcontext {
     float DepthRange[2]; /* +0x60a0 */
     float vacurColor[2][4]; /* +0x60b0 */
     float (*pvcurColor)[4]; /* +0x60d0 */
+    unsigned char _extractor_padding_03[12]; /* implicitly added by extractor; +0x60d4..0x60df */
     float vcurNormal[4]; /* +0x60e0 */
     float vacurTexCoords[2][4]; /* +0x60f0 */
     unsigned int iCurTextureSet; /* +0x6110 */
@@ -1747,6 +1781,7 @@ struct tagGLcontext {
     unsigned char bFinalCompile; /* +0x6118 */
     float valistColor[2][4]; /* +0x6120 */
     float (*pvlistColor)[4]; /* +0x6140 */
+    unsigned char _extractor_padding_04[12]; /* implicitly added by extractor; +0x6144..0x614f */
     float vlistNormal[4]; /* +0x6150 */
     float valistTexCoords[2][4]; /* +0x6160 */
     unsigned int ilistTexSet; /* +0x6180 */
@@ -1768,10 +1803,12 @@ struct tagGLcontext {
     float ModelViewMatrix[4][4]; /* +0x62b0 */
     float NormalMatrix[4][4]; /* +0x62f0 */
     unsigned int nModelViewStackDepth; /* +0x6330 */
+    unsigned char _extractor_padding_05[12]; /* implicitly added by extractor; +0x6334..0x633f */
     float ModelViewStack[16][4][4]; /* +0x6340 */
     float ProjectionMatrix[4][4]; /* +0x6740 */
     float GuardBandProjectionMatrix[4][4]; /* +0x6780 */
     unsigned int nProjectionStackDepth; /* +0x67c0 */
+    unsigned char _extractor_padding_06[12]; /* implicitly added by extractor; +0x67c4..0x67cf */
     float ProjectionStack[4][4][4]; /* +0x67d0 */
     float NearFarStack[4][2]; /* +0x68d0 */
     float TextureMatrix[2][4][4]; /* +0x68f0 */
@@ -1849,6 +1886,7 @@ struct tagGLcontext {
     float (*pCBuf1_b)[4]; /* +0x6c90 */
     float (*pTBuf1_b)[4]; /* +0x6c94 */
     tagstVIFCode* pMSCAL; /* +0x6c98 */
+    unsigned char _extractor_padding_07[4]; /* implicitly added by extractor; +0x6c9c..0x6c9f */
     unsigned char VU1Package[10000]; /* +0x6ca0 */
 };
 
@@ -2032,7 +2070,9 @@ struct tagGScontext {
     tagsceGsReg FINISH; /* +0x1a0 */
     sceGsLabel LABEL; /* +0x1a8 */
     /* aggregate */ int ModFlgs; /* +0x1b0 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x1b4..0x1b7 */
     /* aggregate */ int GlobalModFlgs; /* +0x1b8 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x1bc..0x1bf */
     QWORD PackageBuffer[518]; /* +0x1c0 */
     int iBufCount; /* +0x2220 */
     QWORD* pqCurrent; /* +0x2224 */
@@ -2398,7 +2438,7 @@ void C_Sdl::Draw(int bProcessRefs)
  */
 void C_Sdl::End(void)
 {
-    tagListData* ppListData;
+    tagListData** ppListData;
     /* TODO: decompile from asm/... */
 }
 
@@ -2468,7 +2508,7 @@ void C_CharacterSdl::PreprocessLightingForCheap(HIE_tdstSuperObject_* pSPO)
     float (*pMatrix)[4][4];
     tag_stVU1MatriceL* pMatriceLighting;
     tag_stVU1MatriceTinSDL* pMTinSDL;
-    tag_stVU1Parameters* ppP;
+    tag_stVU1Parameters** ppP;
     /* TODO: decompile from asm/... */
 }
 
@@ -2591,7 +2631,7 @@ void C_CharacterSdl::PreprocessLighting(HIE_tdstSuperObject_* pSPO)
     float (*pMatrix)[4][4];
     tag_stVU1MatriceL* pMatriceLighting;
     tag_stVU1MatriceTinSDL* pMTinSDL;
-    tag_stVU1Parameters* ppP;
+    tag_stVU1Parameters** ppP;
     /* TODO: decompile from asm/... */
 }
 
@@ -2746,7 +2786,7 @@ void C_Sdl::Start(void)
  */
 void C_Sdl::UpdateFogs(void)
 {
-    C_SdlRef* ppRefs;
+    C_SdlRef** ppRefs;
     float FogEnd;
     float FogStart;
     unsigned int FogColor;
@@ -2952,9 +2992,6 @@ void C_Sdl::ProcessAllRefs(void)
 void C_Sdl::Preprocess(void)
 {
     C_SdlRef_FogParameters* pFogRef;
-    C_SdlRef_FogParameters* pFogRef;
-    unsigned int* pFogColorSearcher;
-    C_SdlRef_FogParameters* pFogRef;
     unsigned int* pFogColorSearcher;
     char* pNextPointer;
     tag_stVU1MatriceL* pMatriceLighting;
@@ -2964,7 +3001,7 @@ void C_Sdl::Preprocess(void)
     unsigned int uiMask;
     tag_stVU1MatriceTinSDL* pMTinSDL;
     tag_stMultiTextureParameters* pMTP;
-    tag_stVU1Parameters* ppP;
+    tag_stVU1Parameters** ppP;
     int j;
     int refindex;
     int i;

@@ -4,16 +4,22 @@
 
 #include <stddef.h>
 
+typedef struct _stCriticalSection _stCriticalSection;
+struct _stCriticalSection {
+    int Sid;
+    int OwnerThreadId;
+    int ReentrancyCount;
+};
+
+extern unsigned char HMU_g_bHMU_CS_Created;
+extern _stCriticalSection g_stHMU_CS;
+extern void PS2_fn_vCreateCriticalSection(_stCriticalSection* p_stCS);
+extern int INOPS2_fn_wJoyCheckConnectionFast(short _wJoystickNum);
+extern int INOPS2_fn_wJoyCheckConnection(short _wJoystickNum);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct stDevice stDevice;
 typedef struct anon_0 anon_0;
-typedef struct _stCriticalSection _stCriticalSection;
-
-struct _stCriticalSection {
-    int Sid; /* +0x0 */
-    int OwnerThreadId; /* +0x4 */
-    int ReentrancyCount; /* +0x8 */
-};
 
 struct stDevice {
     unsigned short m_uwType; /* +0x0 */
@@ -29,9 +35,6 @@ struct anon_0 {
 };
 
 short (*INOPS2_fn_wReadJoystick)(stDevice*);
-extern unsigned char HMU_g_bHMU_CS_Created;
-extern _stCriticalSection g_stHMU_CS;
-extern void PS2_fn_vCreateCriticalSection(_stCriticalSection* p_stCS);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\joyinit.c lines 47–53 */
 /* addr: 0x002ee650  size: 48 bytes */
@@ -84,5 +87,7 @@ short INO_fn_wIsJoystickConnectedFast(stDevice* _hDev)
  */
 short INO_fn_wIsJoystickConnected(stDevice* _hDev)
 {
-    /* TODO: decompile from asm/... */
+    if (_hDev->m_uwType == 0x10)
+        return INOPS2_fn_wJoyCheckConnection(_hDev->m_wPort);
+    return -1;
 }

@@ -23,7 +23,7 @@ typedef struct sTreeLink sTreeLink;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q34usnd9streebase13iterator_base::_Inc(void)
+void _Inc__Q34usnd9streebase13iterator_baseFv(void)
 {
     sTreeLink* _pLink;
     /* TODO: decompile from asm/... */
@@ -48,7 +48,7 @@ void Q34usnd9streebase13iterator_base(sTreeLink* _pLink)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char Q34usnd9streebase13iterator_baseC::__eq(iterator_base* _roIt)
+unsigned char __eq__Q34usnd9streebase13iterator_baseCFRCQ34usnd9streebase13iterator_base(iterator_base* _roIt)
 {
     /* TODO: decompile from asm/... */
 }
@@ -69,7 +69,7 @@ unsigned char Q34usnd9streebase13iterator_baseC::__eq(iterator_base* _roIt)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q34usnd9streebase13iterator_base::_Dec(void)
+void _Dec__Q34usnd9streebase13iterator_baseFv(void)
 {
     sTreeLink* _pLink;
     /* TODO: decompile from asm/... */

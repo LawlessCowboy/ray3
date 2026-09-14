@@ -10,6 +10,9 @@ typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 
+/* Defined by GAM/SOL.c; referenced by this platform-specific helper. */
+extern unsigned char GAM_g_ucNbMovedOnes;
+
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
     MAT_eTransform_Identity = 1,
@@ -45,12 +48,12 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
 
 int gs_hFirstSubMapPosition;
-extern unsigned char GAM_g_ucNbMovedOnes;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\SubMapPs.c lines 34–34 */
 /* addr: 0x00282aa0  size: 8 bytes */

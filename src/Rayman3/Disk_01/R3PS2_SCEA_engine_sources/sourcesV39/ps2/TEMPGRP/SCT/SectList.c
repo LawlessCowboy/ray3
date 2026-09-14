@@ -39,15 +39,19 @@ typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
 typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
+/* SAI's private table state is referenced by the recovered wrapper below.
+ * The original project supplied this through its shared SAI declarations;
+ * extraction leaves each translation unit self-contained, so retain the
+ * ABI-visible two-pointer layout and external linkage here. */
 typedef struct SAI_tdstInternalStructure_ SAI_tdstInternalStructure_;
-
 struct SAI_tdstInternalStructure_ {
-    void* p_stFirstEntry;
-    void* p_stLastEntry;
+    void *p_stFirstEntry; /* +0x0 */
+    void *p_stLastEntry; /* +0x4 */
 };
-
 extern SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
-extern unsigned char SAI_fn_bInsertAnElementInList(SAI_tdstInternalStructure_*, void*, unsigned int, unsigned short, unsigned short);
+extern unsigned char SAI_fn_bInsertAnElementInList(
+    SAI_tdstInternalStructure_ *, void *, unsigned int,
+    unsigned short, unsigned short);
 
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
@@ -125,6 +129,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -277,6 +282,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */

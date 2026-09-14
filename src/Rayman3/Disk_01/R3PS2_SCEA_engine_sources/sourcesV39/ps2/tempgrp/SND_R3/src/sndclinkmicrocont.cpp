@@ -58,6 +58,11 @@ struct sTreeNode {
 
 struct CLinkMicroCont {
     /* C++ base smap at +0x0. */
+    CLinkMicroCont* mfn_roGetInstance(void);
+    unsigned char mfn_bSynchroMicroInstance(void);
+    unsigned char mfn_bSetMicroInterface(_tdstAllRetMicroSound* pst_IMicro);
+    unsigned char mfn_bRemoveMicroInstance(int s32_MicroId);
+    int mfn_s32AddMicroInstance(void);
 };
 
 struct iterator_base {
@@ -74,6 +79,7 @@ struct CLinkMicro {
     _tdstAllRetMicroSound* mrstIMicro; /* +0x0 */
     int ms32MicroId; /* +0x4 */
     CMicrophone* mroMicro; /* +0x8 */
+    unsigned char mfn_bApplyPositionAndVelocity(void);
 };
 
 struct _tdstAllRetMicroSound {
@@ -163,7 +169,7 @@ struct streebase {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char _NilElmt__Q24usnd9streebase(void)
+unsigned char CLinkMicro::mfn_bApplyPositionAndVelocity(void)
 {
     _stVector st_Tangent;
     _stVector st_Normal;
@@ -184,7 +190,7 @@ unsigned char _NilElmt__Q24usnd9streebase(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CLinkMicroCont::mfn_roGetInstance(void)
+CLinkMicroCont* CLinkMicroCont::mfn_roGetInstance(void)
 {
     CLinkMicroCont o_LinkMicroCont;
     signed char init;

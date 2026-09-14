@@ -67,6 +67,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -185,7 +186,7 @@ int GLI_hGetRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, void* hISI, int lDrawModeMask)
+void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lDrawModeMask)
 {
     g_p_stRawRLIsForThisObject = 0;
     g_p_stRLIForNextObjectToDraw = 0;
@@ -283,7 +284,7 @@ GEO_tdstGeometricObject_* GLI_hGetVisualSetGeometricForADistance(GEO_tdstVisualS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vGetVisualSetLOD(GEO_tdstVisualSet_* p_stVisualSet, int lNumberOfLodToGet, float* p_xThreshold, GEO_tdstGeometricObject_* h_stObject)
+void GLI_vGetVisualSetLOD(GEO_tdstVisualSet_* p_stVisualSet, int lNumberOfLodToGet, float* p_xThreshold, GEO_tdstGeometricObject_** h_stObject)
 {
     if (lNumberOfLodToGet < p_stVisualSet->xNbLodDefinitions) {
         *p_xThreshold = ((float*)p_stVisualSet->d_xThresholdsTable)[lNumberOfLodToGet];

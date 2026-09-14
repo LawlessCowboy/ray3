@@ -28,6 +28,11 @@ struct C_BaseFx {
 
 struct C_FxList {
     tdstBaseFxListElement_* pFirst; /* +0x0 */
+    C_BaseFx* SearchElement(void* pSearchKey);
+    void vAddElement(C_BaseFx* pElement);
+    void DeleteAllSDLs(void);
+    void DeleteAllNoFree(void);
+    void DeleteAll(void);
 };
 
 int PS2glAllocator64;
@@ -65,7 +70,7 @@ void ~C_(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-C_BaseFx* C_::SearchElement(void* pSearchKey)
+C_BaseFx* C_FxList::SearchElement(void* pSearchKey)
 {
     tdstBaseFxListElement_* p;
     /* TODO: decompile from asm/... */
@@ -86,7 +91,7 @@ C_BaseFx* C_::SearchElement(void* pSearchKey)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_::vAddElement(C_BaseFx* pElement)
+void C_FxList::vAddElement(C_BaseFx* pElement)
 {
     tdstBaseFxListElement_* p2;
     tdstBaseFxListElement_* p;
@@ -106,7 +111,7 @@ void C_::vAddElement(C_BaseFx* pElement)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_::DeleteAllSDLs(void)
+void C_FxList::DeleteAllSDLs(void)
 {
     tdstBaseFxListElement_* pNext;
     tdstBaseFxListElement_* p;
@@ -127,7 +132,7 @@ void C_::DeleteAllSDLs(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_::DeleteAllNoFree(void)
+void C_FxList::DeleteAllNoFree(void)
 {
     tdstBaseFxListElement_* pNext;
     tdstBaseFxListElement_* p;
@@ -148,7 +153,7 @@ void C_::DeleteAllNoFree(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_::DeleteAll(void)
+void C_FxList::DeleteAll(void)
 {
     tdstBaseFxListElement_* pNext;
     tdstBaseFxListElement_* p;

@@ -35,7 +35,7 @@ void ~Q24usnd7sstring(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd7sstring::AttachBuffer(char* szBuffer)
+void AttachBuffer__Q24usnd7sstringFPc(char* szBuffer)
 {
     /* TODO: decompile from asm/... */
 }
@@ -52,7 +52,7 @@ void Q24usnd7sstring::AttachBuffer(char* szBuffer)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd7sstring::_Init(char* czData, unsigned int uiSize)
+void _Init__Q24usnd7sstringFPCcUi(char* czData, unsigned int uiSize)
 {
     /* TODO: decompile from asm/... */
 }
@@ -68,7 +68,7 @@ void Q24usnd7sstring::_Init(char* czData, unsigned int uiSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char Q24usnd7sstringC::__lt(sstring* roString)
+unsigned char __lt__Q24usnd7sstringCFRCQ24usnd7sstring(sstring* roString)
 {
     /* TODO: decompile from asm/... */
 }
@@ -82,7 +82,7 @@ unsigned char Q24usnd7sstringC::__lt(sstring* roString)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned short Q24usnd7sstringC::length(void)
+unsigned short length__Q24usnd7sstringCFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -94,7 +94,7 @@ unsigned short Q24usnd7sstringC::length(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd7sstringC::c_str(void)
+void c_str__Q24usnd7sstringCFv(void)
 {
     /* TODO: decompile from asm/... */
 }

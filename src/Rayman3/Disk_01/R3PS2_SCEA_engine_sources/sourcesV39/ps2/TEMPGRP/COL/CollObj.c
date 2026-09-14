@@ -127,6 +127,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -184,7 +185,7 @@ struct COL_tdstDoubledIndex_ {
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_* p_pstChildList; /* +0x18 */
+    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
 
@@ -239,6 +240,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -345,15 +347,15 @@ int gs_hVisualMaterial;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-COL_tdstCollideObject_* COL_fn_hTransformTableOfObjectInOneObjectForGAM(COL_tdstCollideObject_* _hGeoObj, COL_tdstCollideObject_* a_hTableOfGeoObj, short xNbOfObjects)
+COL_tdstCollideObject_* COL_fn_hTransformTableOfObjectInOneObjectForGAM(COL_tdstCollideObject_* _hGeoObj, COL_tdstCollideObject_** a_hTableOfGeoObj, short xNbOfObjects)
 {
     unsigned int ulSize;
     short* p_xCurrentElementTypeSource;
     short xNbSubElt;
     void** p_hCurrentElementSourceEnd;
     void** p_hCurrentElementSource;
-    COL_tdstCollideObject_* p_hGeoObjInTableEnd;
-    COL_tdstCollideObject_* p_hGeoObjInTableAtIndex;
+    COL_tdstCollideObject_** p_hGeoObjInTableEnd;
+    COL_tdstCollideObject_** p_hGeoObjInTableAtIndex;
     COL_tdstIndexedAlignedBox_* p_stIBTargetEnd;
     COL_tdstIndexedAlignedBox_* p_stIBTarget;
     COL_tdstElementAlignedBoxes_* p_stEBTarget;
@@ -572,7 +574,7 @@ short COL_xGetCollideObjectNumberOfPoints(COL_tdstCollideObject_* hObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_vCreateCollideObject(COL_tdstCollideObject_* p_hObject, short xNbPoints, short xNbElements)
+void COL_vCreateCollideObject(COL_tdstCollideObject_** p_hObject, short xNbPoints, short xNbElements)
 {
     /* TODO: decompile from asm/... */
 }

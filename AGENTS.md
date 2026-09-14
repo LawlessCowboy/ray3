@@ -134,6 +134,17 @@ Use categories such as `compiler`, `source-layout`, `abi`, `relocation`, or
 
 ## Reporting
 
+## Regressed recorded matches
+
+When a function is recorded as `MATCH` but the verifier now reports a
+mismatch, inspect recent history before rewriting the source. Use
+`git log --oneline -- SOURCE` and `git show COMMIT -- SOURCE` to identify the
+last matching implementation and the change that introduced the regression.
+Compare that version with the current source and restore only the relevant
+natural-C declaration, ABI parameter, layout, or body change. Re-run
+`python3 tools/match.py check FUNCTION --diff` before recording the result;
+do not blindly revert another worker's unrelated fixes.
+
 Report only the function name, `MATCH` result, and any reusable insight. If
 blocked, report the first differing offset from `tools/match.py check`, the
 candidate source construct, and whether the problem appears to be source,

@@ -96,6 +96,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -116,7 +117,7 @@ struct GEO_tdstParallelBox_ {
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_* p_pstChildList; /* +0x18 */
+    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
 
@@ -267,6 +268,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -460,7 +462,7 @@ int COL_g_lFacesTagCounter;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bDetectIntersectGeomObjWithGeomObj(COL_tdstCollideObject_* p_stGeomObj1, MAT_tdstTransformation_* _p_stMatrix1, COL_tdstCollideObject_* p_stGeomObj2, MAT_tdstTransformation_* _p_stMatrix2, GMT_tdstGameMaterial_* _p_hMat1, GMT_tdstGameMaterial_* _p_hMat2)
+unsigned char INT_fn_bDetectIntersectGeomObjWithGeomObj(COL_tdstCollideObject_* p_stGeomObj1, MAT_tdstTransformation_* _p_stMatrix1, COL_tdstCollideObject_* p_stGeomObj2, MAT_tdstTransformation_* _p_stMatrix2, GMT_tdstGameMaterial_** _p_hMat1, GMT_tdstGameMaterial_** _p_hMat2)
 {
     short xEdgeIndex;
     short xVertexIndex;
@@ -719,7 +721,6 @@ unsigned char INT_fn_bGetInclusionPointInCollideObject(MTH3D_tdstVector_* p_stPo
  */
 unsigned char INT_fn_bDetectIntersectSegmentWithFaceOfCollideObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstCollideObject_* p_stGeomObj)
 {
-    short xData;
     short xData;
     short xNbElements;
     GMT_tdstCollideMaterial_* hCollidedCollideMaterial;
@@ -992,8 +993,6 @@ unsigned char INT_fn_bIntersectSegmentWithFaceOfCollideObject(MTH3D_tdstVector_*
 {
     GMT_tdstCollideMaterial_* hCM;
     short xData;
-    short xData;
-    GMT_tdstCollideMaterial_* hCM;
     GMT_tdstGameMaterial_* hMaterial;
     short xNbElements;
     float aDEF_xSelectedT[100];

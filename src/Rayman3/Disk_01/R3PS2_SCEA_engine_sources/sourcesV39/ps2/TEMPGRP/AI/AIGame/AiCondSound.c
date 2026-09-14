@@ -2268,6 +2268,7 @@ struct tdstListOfMacro_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -2432,6 +2433,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -2581,7 +2583,7 @@ struct tdstStandardGame_ {
 };
 
 struct tdstIntelligence_ {
-    tdstScriptAI_* p_p_stScriptAI; /* +0x0 */
+    tdstScriptAI_** p_p_stScriptAI; /* +0x0 */
     tdstNodeInterpret_* p_stCurrentSchedule; /* +0x4 */
     tdstComport_* p_stCurrentComport; /* +0x8 */
     tdstComport_* p_stPrevComport; /* +0xc */
@@ -2686,6 +2688,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -2722,6 +2725,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -2830,7 +2834,7 @@ struct tdstGetSetParam_ {
 };
 
 struct tdstDsgMem_ {
-    tdstDsgVar_* p_p_stDsgVar; /* +0x0 */
+    tdstDsgVar_** p_p_stDsgVar; /* +0x0 */
     int p_cDsgMemBufferInit; /* +0x4 */
     int p_cDsgMemBuffer; /* +0x8 */
 };
@@ -2933,11 +2937,15 @@ struct tdstTransition_ {
     unsigned char ucLinkingType; /* +0x8 */
 };
 
+/* Cross-translation-unit declarations omitted from the recovered source. */
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso,
+                                    tdstNodeInterpret_* p_stTree,
+                                    tdstGetSetParam_* p_stValue);
+int SND_fn_bGetStereoSound(void);
+int SND_fn_bIsTypePlayingSound(int s32_TypeId);
+
 int g_lSoundObjectTypeVoice;
 int g_lSoundObjectTypeMusic;
-
-extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
-extern int SND_fn_bGetStereoSound(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiCondSound.c lines 70–81 */
 /* addr: 0x0024bca0  size: 56 bytes */
@@ -2952,7 +2960,7 @@ extern int SND_fn_bGetStereoSound(void);
 tdstNodeInterpret_* fn_p_stIsEventValid(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     int st_Param[4];
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)&st_Param);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)st_Param);
     *p_lValue = st_Param[0] ? 1 : 0;
     return p_stTree;
 }
@@ -2975,11 +2983,25 @@ tdstNodeInterpret_* fn_p_stIsEventValid(HIE_tdstSuperObject_* p_SuperObjPerso, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stIsTypePlaying(tdstNodeInterpret_* p_stTree, int* p_lValue)
+tdstNodeInterpret_* fn_p_stIsTypePlaying(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdeCondId_ eCondId;
     int s32_TypeId;
-    /* TODO: decompile from asm/... */
+    (void)p_SuperObjPerso;
+    s32_TypeId = 0;
+    eCondId = *(tdeCondId_*)((char*)p_stTree - 8);
+    switch (eCondId) {
+    case 0xb0:
+        s32_TypeId = g_lSoundObjectTypeMusic;
+        break;
+    case 0xaf:
+        s32_TypeId = g_lSoundObjectTypeVoice;
+        break;
+    default:
+        break;
+    }
+    *p_lValue = SND_fn_bIsTypePlayingSound(s32_TypeId);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiCondSound.c lines 29–32 */

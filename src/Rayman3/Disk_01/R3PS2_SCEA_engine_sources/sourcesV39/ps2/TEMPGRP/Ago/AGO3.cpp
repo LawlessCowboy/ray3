@@ -192,6 +192,8 @@ struct AGO3_Chain {
     float m_fIntermediateSize; /* +0x70 */
     float m_fLinkType; /* +0x74 */
     float m_fMainSize; /* +0x78 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stEndingPosition, GLI_tdstMaterial_* pMat1, float fLinkType);
     void Process(void);
 };
 
@@ -231,6 +233,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -243,6 +246,7 @@ struct GLI_tdst2DVertex_ {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */
@@ -294,6 +298,9 @@ struct AGO3_LightExplosion {
     AGO3_LE_SpriteData m_a_stCloud[12]; /* +0x50 */
     AGO3_LE_SpriteData m_a_stParticle[20]; /* +0x200 */
     unsigned int m_a_ulParticleID[20]; /* +0x4d0 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fSize);
     void DesInit(void);
 };
 
@@ -388,6 +395,7 @@ struct AGO3_SimpleSparks {
     float m_fTransparency; /* +0x34 */
     unsigned int m_NbParticles; /* +0x38 */
     float m_fSize; /* +0x3c */
+    void Display(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
     void DesInit(void);
     void Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fParameter);
@@ -405,6 +413,7 @@ struct WP_tdstGraphNode_ {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -434,6 +443,9 @@ struct AGO3_CanRipple {
     MTH3D_tdstVector_ m_stInitialPosition; /* +0x84 */
     MTH3D_tdstVector_ m_stAdditionnalVector; /* +0x90 */
     int m_bRegeneration; /* +0x9c */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fStartStop);
 };
 
 struct AGO3_WEF_SpriteData {
@@ -455,6 +467,10 @@ struct AGO3_WaveEnvelopedFist {
     unsigned int m_a_ulFirstSet[2]; /* +0x5c */
     unsigned int m_a_ulColor[2]; /* +0x64 */
     AGO3_WEF_SpriteData m_stSprite[2][64]; /* +0x6c */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fColor);
+    void DesInit(void);
 };
 
 union HIE_tduLinkedObject_ {
@@ -544,6 +560,9 @@ struct AGO3Smoke_InternalData_ {
 struct AGO3_Smoke {
     /* C++ base AGO3_Part at +0x0. */
     AGO3Smoke_InternalData_ m_Sprites[8]; /* +0x30 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1);
 };
 
 struct AGO3_ScoreDisplay {
@@ -555,10 +574,14 @@ struct AGO3_ScoreDisplay {
     float m_fTransparency; /* +0x40 */
     float m_fCurrentFadeTime; /* +0x44 */
     unsigned int m_dwScoreID; /* +0x48 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fScore);
 };
 
 struct AGO3_Part {
     float m_fCreationTime; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     C_Vector m_Position; /* +0x10 */
     GLI_tdstMaterial_* m_pMat1; /* +0x20 */
     unsigned char m_Finished; /* +0x24 */
@@ -580,6 +603,10 @@ struct AGO3_LinkChainComputing {
     float m_fImpulseDuration; /* +0x768 */
     float m_fImpulseTime; /* +0x76c */
     int m_bImpulse; /* +0x770 */
+    void DesInit(void);
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stEndingDirection, GLI_tdstMaterial_* pMat1, float fFist);
 };
 
 struct AGO3_TFS_SpriteData {
@@ -621,6 +648,10 @@ struct AGO3_HurricaneUpper {
     MTH3D_tdstVector_ m_Position; /* +0x490 */
     float m_fTime; /* +0x49c */
     float m_fEndTime; /* +0x4a0 */
+    AGO3_HurricaneUpper(void);
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1);
     int Kill_Enabled(void);
 };
 
@@ -641,6 +672,10 @@ struct AGO3_Transition {
     char m_szDots[12]; /* +0x6c */
     unsigned int m_dwNbDots; /* +0x78 */
     unsigned int m_dwNbDisplayedDots; /* +0x7c */
+    void DisplayLoadingMessage(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void DesInit(void);
+    void Display(GLD_tdstViewportAttributes_* hVp);
 };
 
 struct MTH3D_tdstMatrix_ {
@@ -663,6 +698,9 @@ struct AGO3_ShootSmoke {
     float m_a_fXYNoise[14][3]; /* +0x84 */
     float m_a_fScale[14]; /* +0x12c */
     float m_a_fTransparency[14]; /* +0x164 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1);
 };
 
 struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCollisionInteractionOpt {
@@ -689,6 +727,8 @@ struct AGO3_SwirlingBubbles {
     int m_bAlive; /* +0x58 */
     int m_bGenerationInProgress; /* +0x5c */
     AGO3_SB_SpriteData m_stSprite[512]; /* +0x60 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
     void DesInit(void);
 };
 
@@ -706,6 +746,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -716,8 +757,6 @@ struct GEO_tdstGeometricObject_ {
     unsigned int bIsStatic; /* +0x54 */
     unsigned int glDisplayList; /* +0x58 */
     unsigned char bVTForSinus; /* +0x5c */
-    void DesInit(void);
-    void Display(void);
 };
 
 struct AGO3_DigitalScoreDisplay {
@@ -733,7 +772,12 @@ struct AGO3_DigitalScoreDisplay {
     float m_fCurrentHalfFrequency; /* +0x60 */
     float m_fImpulse; /* +0x64 */
     unsigned int m_hHandleID; /* +0x68 */
-    void Display(void);
+    void DisplayScore(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fScoreToAdd);
+    void DesInit(void);
+    void SetSizes(float fContainerWidthPercentage);
+    void Display(GLD_tdstViewportAttributes_* hVp);
 };
 
 struct SECT_tdstListOfSOSectorsInCollisionInteraction_ {
@@ -769,6 +813,8 @@ struct AGO3_SpriteDurationFade {
     float m_fCurrentFadeOutTime; /* +0x4c */
     float m_fInvFadeInDurationAlpha; /* +0x50 */
     float m_fInvFadeOutDurationAlpha; /* +0x54 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
 };
 
 union _SND_tduRefEvt {
@@ -789,6 +835,8 @@ struct AGO3_SpriteZoom {
     float m_fCurrentTime; /* +0x3c */
     float m_fCurrentZoom; /* +0x40 */
     float m_fCurrentSize; /* +0x44 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
 };
 
 struct AGO3_SMUV_Scroll_ {
@@ -824,6 +872,10 @@ struct AGO3_WaveEnvelopedFist2 {
     unsigned int m_a_ulFirstSet[2]; /* +0x5c */
     unsigned int m_a_ulColor[2]; /* +0x64 */
     AGO3_WEF_SpriteData m_stSprite[2][64]; /* +0x6c */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fColor);
+    void DesInit(void);
 };
 
 struct LST2_tdstAnchorTotdxHandleToNodeCameraDyn {
@@ -859,6 +911,8 @@ struct AGO3_GrowingUVAnimatedFireBall {
     float m_fCurrentV; /* +0x38 */
     float m_fAnimationTime; /* +0x3c */
     float m_fAngleSpeed; /* +0x40 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
 };
 
 struct tdstPLA_Hierarchy_ {
@@ -879,6 +933,8 @@ struct AGO3_OrientedTarget {
     float m_fTiltedAngle; /* +0x3c */
     float m_fSize; /* +0x40 */
     float m_a_fSpriteVertex[4][3]; /* +0x44 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
     void DesInit(void);
 };
 
@@ -886,7 +942,10 @@ struct AGO3_BeamWithUVs {
     /* C++ base AGO3_Part at +0x0. */
     float m_fSize; /* +0x30 */
     float m_fRepetition; /* +0x34 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x38..0x3f */
     C_Vector m_Direction; /* +0x40 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
 };
 
 struct GEO_tdstEdge_ {
@@ -971,6 +1030,7 @@ struct tdstEngineTimerStructure_ {
     unsigned int ulUsefulDeltaTime; /* +0x50 */
     unsigned int ulPauseTime; /* +0x54 */
     float xFrameLength; /* +0x58 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x5c..0x5f */
     _stTimerCount stRealTimeCount; /* +0x60 */
     _stTimerCount stPauseTime; /* +0x70 */
     unsigned int ulTickPerMS; /* +0x80 */
@@ -1007,6 +1067,7 @@ struct tdstEngineStructure_ {
     unsigned char eInputMode; /* +0x5b */
     unsigned char eDisplayFixMode; /* +0x5c */
     unsigned int ulDisplayMode; /* +0x60 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x64..0x67 */
     tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
     unsigned char ucNumberOfPlayersInMultiMode; /* +0xf0 */
     unsigned char ucNumberOfColumnsInMultiMode; /* +0xf1 */
@@ -1031,6 +1092,7 @@ struct tdstEngineStructure_ {
     HIE_tdstSuperObject_* h_DbgCamCharacter; /* +0x630 */
     tdstLanguageStructure_* p_stLanguageTable; /* +0x634 */
     FIL_tdstFileNameList_* hLevelNameList; /* +0x638 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x63c..0x63f */
     MAT_tdstTransformation_ stMainCharacterPosition; /* +0x640 */
     MAT_tdstTransformation_ stMainCameraPosition; /* +0x6a0 */
     int lSubMapNumber; /* +0x700 */
@@ -1056,7 +1118,7 @@ struct tdstEngineStructure_ {
     unsigned int ulNumberOfSOLAllocated; /* +0x1b78 */
     unsigned int ulNumberOfSOLLoaded; /* +0x1b7c */
     unsigned int ulNumberOfNonPersitentLinksPerSOL; /* +0x1b80 */
-    tdstSuperObjectLinks_* p_hSOL; /* +0x1b84 */
+    tdstSuperObjectLinks_** p_hSOL; /* +0x1b84 */
     tdstGraphChainedListNode_* p_GraphChainedList; /* +0x1b88 */
     CINE_Manager_* stCineManager; /* +0x1b8c */
 };
@@ -1098,6 +1160,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -1134,6 +1197,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -1184,6 +1248,9 @@ struct AGO3_CustomRipple {
     float m_fTotalDuration; /* +0x794 */
     float m_fStartEndRippleTime; /* +0x798 */
     unsigned int m_dwAutoStartStop; /* +0x79c */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fStartStop);
 };
 
 struct tdstSubAnimInUse_ {
@@ -1214,7 +1281,10 @@ struct AGO3_SpriteDurationFade2 {
     float m_fCurrentTime; /* +0x3c */
     float m_fTransparency; /* +0x40 */
     float m_fCurrentFadeTime; /* +0x44 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x48..0x4f */
     C_Vector m_BottomPos; /* +0x50 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
 };
 
 struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn {
@@ -1286,7 +1356,10 @@ struct AGO3_GrowingUVAnimatedFireBallMoving {
     float m_fCurrentV; /* +0x38 */
     float m_fAnimationTime; /* +0x3c */
     float m_fAngleSpeed; /* +0x40 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x44..0x4f */
     C_Vector m_Direction; /* +0x50 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
 };
 
 struct AGO3_FistSmoke {
@@ -1297,6 +1370,10 @@ struct AGO3_FistSmoke {
     unsigned int m_a_ulFirstFree[2]; /* +0x40 */
     unsigned int m_a_ulFirstSet[2]; /* +0x48 */
     AGO3_FS_SpriteData m_stSprite[2][50]; /* +0x50 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed);
+    void DesInit(void);
 };
 
 struct SECT_tdstListOfSOSectorsInGraphicInteraction_ {
@@ -1367,6 +1444,10 @@ struct AGO3_SphericalRadiance {
     float m_fOuterRadius; /* +0x54c */
     int m_bHalfSphere; /* +0x550 */
     unsigned int m_hHandleID; /* +0x554 */
+    AGO3_SphericalRadiance(void);
+    void DesInit(void);
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
 };
 
 struct tdstStandardGame_ {
@@ -1425,6 +1506,9 @@ struct AGO3_TurningFistSmoke {
     unsigned int m_a_ulFirstFree[2]; /* +0x40 */
     unsigned int m_a_ulFirstSet[2]; /* +0x48 */
     AGO3_TFS_SpriteData m_stSprite[2][50]; /* +0x50 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed);
 };
 
 struct AGO3_ScrollMatUV {
@@ -1433,6 +1517,10 @@ struct AGO3_ScrollMatUV {
     float m_fDuration; /* +0x34 */
     float m_fInverseOfDuration; /* +0x38 */
     AGO3_SMUV_Scroll_ m_a_stScroll[2]; /* +0x3c */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void DesInit(void);
+    void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fDuration);
 };
 
 struct stPOINT {
@@ -1444,6 +1532,8 @@ struct AGO3_Target {
     /* C++ base AGO3_Part at +0x0. */
     float m_fSize; /* +0x30 */
     float m_fOrientation; /* +0x34 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
 };
 
 struct AGO3_Snowboard_SnowEffect {
@@ -1469,6 +1559,12 @@ struct AGO3_Snowboard_SnowEffect {
     float m_fDistance; /* +0x98c */
     float m_fVPosition; /* +0x990 */
     float m_fUPosition; /* +0x994 */
+    void Display(GLD_tdstViewportAttributes_* hVp);
+    void Process(void);
+    void GeneratePartsOnLanding(void);
+    void GeneratePartsOnAir(void);
+    void GeneratePartsOnGround(void);
+    void Init(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fParameter);
     void DesInit(void);
 };
 
@@ -1524,6 +1620,7 @@ struct stMorphData {
 
 struct AGO3_GrowingFireBall {
     /* C++ base AGO3_GrowingUVAnimatedFireBall at +0x0. */
+    void Display(GLD_tdstViewportAttributes_* hVp);
 };
 
 struct tdstLanguageStructure_ {
@@ -1672,7 +1769,7 @@ void AGO3_vKill(int iHandle)
  */
 unsigned int AGO3_dwGetLastHandle(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_hLastAllocatedAGO3;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7682–8292 */
@@ -1867,8 +1964,6 @@ unsigned int AGO3_dwGetLastHandle(void)
 void AGO3_vAddPart(unsigned int PartNumber, MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParam1, MTH3D_tdstVector_* V1)
 {
     int iParam1;
-    unsigned int i;
-    MTH3D_tdstVector_ Pos2;
     unsigned int i;
     MTH3D_tdstVector_ Pos2;
     AGO3_Part* p;
@@ -2229,8 +2324,6 @@ void AGO3_LinkChainComputing::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3
     float fOneMinusCoef;
     float fCoef;
     float fLength;
-    MTH3D_tdstVector_ v1;
-    MTH3D_tdstVector_ v2;
     float fR;
     unsigned int ulFirst;
     unsigned int ulNbLinks;
@@ -2712,7 +2805,7 @@ void AGO3_CustomRipple::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_SpriteDuration::Display(GLD_tdstViewportAttributes_* hVp)
+void AGO3_SpriteDurationFade2::Display(GLD_tdstViewportAttributes_* hVp)
 {
     /* TODO: decompile from asm/... */
 }
@@ -2732,7 +2825,7 @@ void AGO3_SpriteDuration::Display(GLD_tdstViewportAttributes_* hVp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_SpriteDuration::Process(void)
+void AGO3_SpriteDurationFade2::Process(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -3112,7 +3205,6 @@ void AGO3_DigitalScoreDisplay::DisplayScore(GLD_tdstViewportAttributes_* hVp)
     float fY2;
     float fX2;
     float fY1;
-    float fY;
     float fX;
     int iScoreID;
     unsigned int i;
@@ -3322,7 +3414,6 @@ void AGO3_DigitalScoreDisplay::Process(void)
 {
     float fGlowingStrength;
     float fVibrationPos;
-    int i;
     int i;
     int bCarryWasDone;
     int bOkToCarry;
@@ -4066,7 +4157,6 @@ void AGO3_LightExplosion::Process(void)
 void AGO3_LightExplosion::Init(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fSize)
 {
     float fNorm;
-    float fNorm;
     float fSpriteAngle;
     float s2;
     float c2;
@@ -4376,7 +4466,7 @@ void AGO3_SphericalRadiance::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_SphericalRadiance(void)
+AGO3_SphericalRadiance::AGO3_SphericalRadiance(void)
 {
     float fAcceleration;
     /* TODO: decompile from asm/... */
@@ -4614,8 +4704,6 @@ void AGO3_SwirlingBubbles::Process(void)
     unsigned int ulBubble;
     AGO3_SB_SpriteData* pSpriteData;
     MTH3D_tdstVector_* pV1;
-    AGO3_SB_SpriteData* pSpriteData;
-    unsigned int ulBubble;
     float fSin;
     float fCos;
     float fNorm1;
@@ -5135,7 +5223,7 @@ void AGO3_HurricaneUpper::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_HurricaneUpper(void)
+AGO3_HurricaneUpper::AGO3_HurricaneUpper(void)
 {
     AGO3_HU_SpriteData* pSpriteData;
     unsigned int i;
@@ -5401,7 +5489,7 @@ void AGO3_SpriteZoom::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_SpriteDuration::Display(GLD_tdstViewportAttributes_* hVp)
+void AGO3_SpriteDurationFade::Display(GLD_tdstViewportAttributes_* hVp)
 {
     /* TODO: decompile from asm/... */
 }
@@ -5422,7 +5510,7 @@ void AGO3_SpriteDuration::Display(GLD_tdstViewportAttributes_* hVp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_SpriteDuration::Process(void)
+void AGO3_SpriteDurationFade::Process(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -5488,7 +5576,7 @@ void AGO3_SpriteDuration::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_::Display(GLD_tdstViewportAttributes_* hVp)
+void AGO3_FistSmoke::Display(GLD_tdstViewportAttributes_* hVp)
 {
     float fSizeInterval;
     float fTransparencyInterval;
@@ -5580,7 +5668,7 @@ void AGO3_::Display(GLD_tdstViewportAttributes_* hVp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_::Process(void)
+void AGO3_FistSmoke::Process(void)
 {
     C_Vector a_stSpriteDirection[2];
     unsigned int iSprite;
@@ -5739,7 +5827,7 @@ void AGO3_::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed)
+void AGO3_FistSmoke::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed)
 {
     unsigned int ulDirSwitch;
     AGO3_FS_SpriteData* pSpriteData;
@@ -5770,7 +5858,7 @@ void AGO3_::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GL
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_::DesInit(void)
+void AGO3_FistSmoke::DesInit(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -5824,9 +5912,8 @@ void AGO3_::DesInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_Turning::Display(GLD_tdstViewportAttributes_* hVp)
+void AGO3_TurningFistSmoke::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    float fSize;
     float fSize;
     unsigned int iSprite;
     unsigned int i;
@@ -5917,7 +6004,7 @@ void AGO3_Turning::Display(GLD_tdstViewportAttributes_* hVp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_Turning::Process(void)
+void AGO3_TurningFistSmoke::Process(void)
 {
     float fSpeed;
     C_Vector a_stSpriteDirection[2];
@@ -6074,7 +6161,7 @@ void AGO3_Turning::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_Turning::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed)
+void AGO3_TurningFistSmoke::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed)
 {
     AGO3_TFS_SpriteData* pSpriteData;
     unsigned int ulFirstEntry;
@@ -6281,7 +6368,7 @@ void AGO3_ShootSmoke::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDir
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_WaveEnveloped::Display(GLD_tdstViewportAttributes_* hVp)
+void AGO3_WaveEnvelopedFist2::Display(GLD_tdstViewportAttributes_* hVp)
 {
     unsigned int ulIndex;
     float fSize;
@@ -6386,7 +6473,7 @@ void AGO3_WaveEnveloped::Display(GLD_tdstViewportAttributes_* hVp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_WaveEnveloped::Process(void)
+void AGO3_WaveEnvelopedFist2::Process(void)
 {
     MTH3D_tdstVector_* pPosition;
     unsigned int i;
@@ -6445,7 +6532,7 @@ void AGO3_WaveEnveloped::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_WaveEnveloped::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fColor)
+void AGO3_WaveEnvelopedFist2::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fColor)
 {
     float fOneMinusColor;
     AGO3_WEF_SpriteData* pSpriteData;
@@ -6466,7 +6553,7 @@ void AGO3_WaveEnveloped::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* p
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_WaveEnveloped::DesInit(void)
+void AGO3_WaveEnvelopedFist2::DesInit(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -6524,7 +6611,7 @@ void AGO3_WaveEnveloped::DesInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_WaveEnveloped::Display(GLD_tdstViewportAttributes_* hVp)
+void AGO3_WaveEnvelopedFist::Display(GLD_tdstViewportAttributes_* hVp)
 {
     unsigned int i;
     float fSize;
@@ -6629,7 +6716,7 @@ void AGO3_WaveEnveloped::Display(GLD_tdstViewportAttributes_* hVp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_WaveEnveloped::Process(void)
+void AGO3_WaveEnvelopedFist::Process(void)
 {
     MTH3D_tdstVector_* pPosition;
     unsigned int i;
@@ -6697,7 +6784,7 @@ void AGO3_WaveEnveloped::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_WaveEnveloped::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fColor)
+void AGO3_WaveEnvelopedFist::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fColor)
 {
     float fOneMinusColor;
     AGO3_WEF_SpriteData* pSpriteData;
@@ -6718,7 +6805,7 @@ void AGO3_WaveEnveloped::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* p
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_WaveEnveloped::DesInit(void)
+void AGO3_WaveEnvelopedFist::DesInit(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -6925,7 +7012,7 @@ void AGO3_Target::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_Growing::Display(GLD_tdstViewportAttributes_* hVp)
+void AGO3_GrowingFireBall::Display(GLD_tdstViewportAttributes_* hVp)
 {
     /* TODO: decompile from asm/... */
 }
@@ -6944,7 +7031,7 @@ void AGO3_Growing::Display(GLD_tdstViewportAttributes_* hVp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_GrowingUVAnimated::Display(GLD_tdstViewportAttributes_* hVp)
+void AGO3_GrowingUVAnimatedFireBall::Display(GLD_tdstViewportAttributes_* hVp)
 {
     /* TODO: decompile from asm/... */
 }
@@ -6963,7 +7050,7 @@ void AGO3_GrowingUVAnimated::Display(GLD_tdstViewportAttributes_* hVp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_GrowingUVAnimated::Display(GLD_tdstViewportAttributes_* hVp)
+void AGO3_GrowingUVAnimatedFireBallMoving::Display(GLD_tdstViewportAttributes_* hVp)
 {
     /* TODO: decompile from asm/... */
 }
@@ -7010,7 +7097,7 @@ void AGO3_GrowingUVAnimated::Display(GLD_tdstViewportAttributes_* hVp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_GrowingUVAnimated::Process(void)
+void AGO3_GrowingUVAnimatedFireBallMoving::Process(void)
 {
     C_Vector Temp;
     int CurrentFrame;
@@ -7046,7 +7133,7 @@ void AGO3_GrowingUVAnimated::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_GrowingUVAnimated::Process(void)
+void AGO3_GrowingUVAnimatedFireBall::Process(void)
 {
     int CurrentFrame;
     float TotalTime;
@@ -7309,7 +7396,7 @@ void AGO3_Transition::DesInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_Transition::Display(void)
+void AGO3_Transition::Display(GLD_tdstViewportAttributes_* hVp)
 {
     /* TODO: decompile from asm/... */
 }
@@ -7345,7 +7432,7 @@ void AGO3_Snowboard_SnowEffect::DesInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_DigitalScoreDisplay::Display(void)
+void AGO3_DigitalScoreDisplay::Display(GLD_tdstViewportAttributes_* hVp)
 {
     /* TODO: decompile from asm/... */
 }
@@ -7383,7 +7470,7 @@ void AGO3_SwirlingBubbles::DesInit(void)
  */
 int AGO3_HurricaneUpper::Kill_Enabled(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2757–2760 */
@@ -7398,4 +7485,10 @@ int AGO3_HurricaneUpper::Kill_Enabled(void)
 void AGO3_Chain::Process(void)
 {
     /* TODO: decompile from asm/... */
+}
+
+/* Originally emitted under Action.c, but this C++ member must be compiled
+ * in the translation unit that declares AGO3_ScrollMatUV. */
+void AGO3_ScrollMatUV::Display(GLD_tdstViewportAttributes_* hVp)
+{
 }

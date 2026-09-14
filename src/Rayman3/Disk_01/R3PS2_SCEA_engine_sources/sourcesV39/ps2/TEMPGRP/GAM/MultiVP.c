@@ -543,6 +543,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -555,6 +556,7 @@ struct GLI_tdst2DVertex_ {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */
@@ -813,6 +815,7 @@ struct tdstEngineTimerStructure_ {
     unsigned int ulUsefulDeltaTime; /* +0x50 */
     unsigned int ulPauseTime; /* +0x54 */
     float xFrameLength; /* +0x58 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x5c..0x5f */
     _stTimerCount stRealTimeCount; /* +0x60 */
     _stTimerCount stPauseTime; /* +0x70 */
     unsigned int ulTickPerMS; /* +0x80 */
@@ -869,6 +872,7 @@ struct tdstEngineStructure_ {
     unsigned char eInputMode; /* +0x5b */
     unsigned char eDisplayFixMode; /* +0x5c */
     unsigned int ulDisplayMode; /* +0x60 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x64..0x67 */
     tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
     unsigned char ucNumberOfPlayersInMultiMode; /* +0xf0 */
     unsigned char ucNumberOfColumnsInMultiMode; /* +0xf1 */
@@ -893,6 +897,7 @@ struct tdstEngineStructure_ {
     HIE_tdstSuperObject_* h_DbgCamCharacter; /* +0x630 */
     tdstLanguageStructure_* p_stLanguageTable; /* +0x634 */
     FIL_tdstFileNameList_* hLevelNameList; /* +0x638 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x63c..0x63f */
     MAT_tdstTransformation_ stMainCharacterPosition; /* +0x640 */
     MAT_tdstTransformation_ stMainCameraPosition; /* +0x6a0 */
     int lSubMapNumber; /* +0x700 */
@@ -918,7 +923,7 @@ struct tdstEngineStructure_ {
     unsigned int ulNumberOfSOLAllocated; /* +0x1b78 */
     unsigned int ulNumberOfSOLLoaded; /* +0x1b7c */
     unsigned int ulNumberOfNonPersitentLinksPerSOL; /* +0x1b80 */
-    tdstSuperObjectLinks_* p_hSOL; /* +0x1b84 */
+    tdstSuperObjectLinks_** p_hSOL; /* +0x1b84 */
     tdstGraphChainedListNode_* p_GraphChainedList; /* +0x1b88 */
     CINE_Manager_* stCineManager; /* +0x1b8c */
 };
@@ -974,6 +979,7 @@ struct DNM_stDynamicsComplexBlock {
     MTH3D_tdstVector_ m_stFallTranslation; /* +0x20 */
     stMACDPID m_stExternalDatas; /* +0x2c */
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xac..0xaf */
     MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
     MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
 };
@@ -1037,6 +1043,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -1073,6 +1080,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -1303,6 +1311,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -1486,7 +1495,7 @@ struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt {
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_* p_pstChildList; /* +0x18 */
+    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
 

@@ -14,7 +14,7 @@ typedef struct spair spair;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_KfnC::__cl(spair* _X)
+void __cl__Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_KfnCFRCQ24usnd32spair<Ci,P19CSoundSemaphoreInfo>(spair* _X)
 {
     /* TODO: decompile from asm/... */
 }

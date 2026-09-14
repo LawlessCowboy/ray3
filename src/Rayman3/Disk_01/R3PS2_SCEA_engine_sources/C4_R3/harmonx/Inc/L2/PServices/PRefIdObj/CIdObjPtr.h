@@ -16,7 +16,7 @@ typedef struct CWaveFileIdObj CWaveFileIdObj;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CUUID* Q24usnd27CIdObjPtr<Q24usnd8CResData>C::f_roGetId(void)
+CUUID* f_roGetId__Q24usnd27CIdObjPtr<Q24usnd8CResData>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -29,7 +29,7 @@ CUUID* Q24usnd27CIdObjPtr<Q24usnd8CResData>C::f_roGetId(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CWaveFileIdObj* Q24usnd34CIdObjPtr<Q24usnd14CWave::__opPQ24usnd14CWaveFileIdObj(void)
+CWaveFileIdObj* __opPQ24usnd14CWaveFileIdObj__Q24usnd34CIdObjPtr<Q24usnd14CWaveFileIdObj>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }

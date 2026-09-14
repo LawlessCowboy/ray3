@@ -115,9 +115,18 @@ struct CExtraEventActor {
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x8..0xb */
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
+    unsigned char mfn_bSynchroniseActorInstance(void);
+    unsigned char mfn_bExecuteActorInstance(int s32_CmdId, int s32_ChannelId);
+    CExtraEventActor* mfn_poAddExtraEventActorInstance(int s32_ChannelId, CEventResData* poResData);
+    CExtraEventActor* mfn_poGetExtraEventActorInstance(int s32_ChannelId, CEventResData* po_ResData);
+    void f_vInsertAfter(CLinkActor* pParam);
+    void f_vIsolate(void);
+    void f_vDesInit(void);
+    void f_vInit(CLinkTypeActor* ro_Type, int s32_ObjectId);
 };
 
 struct CResObj {
@@ -378,7 +387,7 @@ struct CResType {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ms_oPool__14CLinkActorPool(void)
+void CLinkActorPool::ms_oPool(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -411,7 +420,7 @@ void CLinkActorPool::f_vSalvageActor(CLinkActor* poActor)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CLinkActorPool::fs_poGetAnActor(void)
+CLinkActor* CLinkActorPool::fs_poGetAnActor(void)
 {
     CLinkActor* poActor;
     /* TODO: decompile from asm/... */
@@ -468,7 +477,6 @@ unsigned char CLinkActor::mfn_bSynchroniseActorInstance(void)
  */
 unsigned char CLinkActor::mfn_bExecuteActorInstance(int s32_CmdId, int s32_ChannelId)
 {
-    CExtraEventActor* poEEActor;
     CExtraEventActor* poEEActor;
     unsigned char b_Answer;
     /* TODO: decompile from asm/... */

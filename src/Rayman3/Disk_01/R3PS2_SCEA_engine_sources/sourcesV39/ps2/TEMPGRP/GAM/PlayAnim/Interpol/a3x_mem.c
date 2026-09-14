@@ -19,8 +19,6 @@ typedef struct stMorphData stMorphData;
 typedef struct tdstStackInfos_ tdstStackInfos_;
 typedef struct tdstA3dGENERAL_ForTransitions_ tdstA3dGENERAL_ForTransitions_;
 
-void fn_v_InitSinTab(void);
-
 struct tdstEvent_ {
     tdstEventInTable_* p_stfEventInTBL; /* +0x0 */
     unsigned short usEventNumberInTBL; /* +0x4 */
@@ -281,7 +279,7 @@ void fn_vReleaseMergeA3dGeneral(unsigned short _uwIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stFindFreeMergeA3dGeneral(unsigned short* p_uwIndex)
+tdstA3dGENERAL_ForTransitions_* fn_p_stFindFreeMergeA3dGeneral(unsigned short* p_uwIndex)
 {
     int i;
     unsigned int ulTest;

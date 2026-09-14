@@ -39,6 +39,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -85,7 +86,7 @@ MAT_tdstTransformation_ g_aDEF_stMatrixStack[1];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xCreateMaterial(GLI_tdstMaterial_* hMaterial)
+void GLI_xCreateMaterial(GLI_tdstMaterial_** hMaterial)
 {
     /* TODO: decompile from asm/... */
 }

@@ -4,11 +4,18 @@
 
 #include <stddef.h>
 
+typedef struct FIL_tdstInternalGeneral_ FIL_tdstInternalGeneral_;
+struct FIL_tdstInternalGeneral_ {
+    unsigned char ucDisplayInformation; /* +0x0 */
+};
+extern unsigned char g_ucFILModuleId;
+extern FIL_tdstInternalGeneral_ g_stInternalGeneral;
+extern unsigned char Erm_fn_ucInitErrMsg(unsigned char);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct anon_0 anon_0;
 typedef struct stSCEFile stSCEFile;
 typedef struct anon_1 anon_1;
-typedef struct FIL_tdstInternalGeneral_ FIL_tdstInternalGeneral_;
 
 struct anon_0 {
     int BaseNameStart; /* +0x0 */
@@ -36,12 +43,7 @@ struct anon_1 {
     int p_lEntries; /* +0x83c */
 };
 
-struct FIL_tdstInternalGeneral_ {
-    unsigned char ucDisplayInformation;
-};
-
-unsigned char g_ucFILModuleId;
-extern FIL_tdstInternalGeneral_ g_stInternalGeneral;
+unsigned char g_ucFMNModuleId;
 static int gs_lTotalSize;
 static int gs_iUseCounter;
 unsigned int BitLongCount;

@@ -24,115 +24,23 @@ typedef union anon_0 anon_0;
 extern float g_DistanceWaypointMin;
 extern float g_DistanceWaypointMax;
 
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-};
+struct MTH4D_tdstVector_ { float xX; float xY; float xZ; float xW; };
+union tduGetSetParam_ { int lValue; float xValue; void *pValue; };
+struct _stTimerCount { unsigned long m_ulLowPart; unsigned long m_ulHighPart; };
+struct tdstEngineTimerStructure_ { unsigned int ulTrameNumber; short sTimerHandle; unsigned int ulCurrentTimerCount; unsigned int ulDeltaTimerCount; unsigned int a_ulCounter[16]; unsigned int ulUsefulDeltaTime; unsigned int ulPauseTime; float xFrameLength; _stTimerCount stRealTimeCount; _stTimerCount stPauseTime; unsigned int ulTickPerMS; };
+struct tdstPLA_Hierarchy_ { unsigned int ulNbOfCouples; tdstCouple_* d_stCouples; };
+union RGBAStruct_ { int Color; };
+union HIE_tduLinkedObject_ { int p_Void; };
+struct LST2_tdstAnchorTotdxHandleToStateOpt { tdstState_* hFirstElementOpt; int lNumberOfElementsOpt; };
+struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt { tdstObjectsTablesList_* hFirstElementOpt; int lNumberOfElementsOpt; };
+struct LST2_tdstAnchorTotdxHandleToTransitionOpt { void* hFirstElementOpt; int lNumberOfElementsOpt; };
+struct LST2_tdstAnchorTotdxHandleToProhibitOpt { void* hFirstElementOpt; int lNumberOfElementsOpt; };
+struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn { void* hFirstElementDyn; void* hLastElementDyn; int lNumberOfElementsDyn; };
+union anon_0 { int uDummy; };
 
-struct _stTimerCount {
-    unsigned long m_ulLowPart; /* +0x0 */
-    unsigned long m_ulHighPart; /* +0x8 */
-};
-
-struct tdstEngineTimerStructure_ {
-    unsigned int ulTrameNumber; /* +0x0 */
-    short sTimerHandle; /* +0x4 */
-    unsigned int ulCurrentTimerCount; /* +0x8 */
-    unsigned int ulDeltaTimerCount; /* +0xc */
-    unsigned int a_ulCounter[16]; /* +0x10 */
-    unsigned int ulUsefulDeltaTime; /* +0x50 */
-    unsigned int ulPauseTime; /* +0x54 */
-    float xFrameLength; /* +0x58 */
-    _stTimerCount stRealTimeCount; /* +0x60 */
-    _stTimerCount stPauseTime; /* +0x70 */
-    unsigned int ulTickPerMS; /* +0x80 */
-};
-
-struct tdstPLA_Hierarchy_ {
-    unsigned int ulNbOfCouples; /* +0x0 */
-    tdstCouple_* d_stCouples; /* +0x4 */
-};
-
-union RGBAStruct_ {
-    int Color; /* +0x0 */
-};
-
-union HIE_tduLinkedObject_ {
-    int p_Void; /* +0x0 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToStateOpt {
-    tdstState_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt {
-    tdstObjectsTablesList_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToTransitionOpt {
-    void* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToProhibitOpt {
-    void* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn {
-    void* hFirstElementDyn; /* +0x0 */
-    void* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-union anon_0 {
-    int uDummy; /* +0x0 */
-};
-
-typedef enum MAT_tdeTranformationType_ {
-    MAT_eTransform_Uninitialized = 0,
-    MAT_eTransform_Identity = 1,
-    MAT_eTransform_Translation = 2,
-    MAT_eTransform_Zoom = 3,
-    MAT_eTransform_Scale = 4,
-    MAT_eTransform_Rotation = 5,
-    MAT_eTransform_RotationZoom = 6,
-    MAT_eTransform_RotationScale = 7,
-    MAT_eTransform_ComplexRotationScale = 8,
-    MAT_eTransform_Undefined = 9,
-} MAT_tdeTranformationType_;
-
-typedef enum tdeObjectTreeInit_ {
-    OTI_WhenGameStart = 0,
-    OTI_MapLoaded = 1,
-    OTI_ReinitTheMap = 2,
-    OTI_LoadSavedGame = 3,
-    OTI_PlayerDead = 4,
-    OTI_WhenGoOutOfZone = 4,
-    OTI_Always = 4,
-    OTI_AlwaysCreated = 5,
-} tdeObjectTreeInit_;
-
-typedef enum tdeMetaActionId_ {
-    eMetaAction_FrozenWait = 0,
-    eMetaAction_ExecuteAction = 1,
-    eMetaAction_ExecuteActionSmooth = 2,
-    eMetaAction_WaitEndOfAction = 3,
-    eMetaAction_WaitEndOfAnim = 4,
-    eMetaAction_CamCineMoveAToBTgtC = 5,
-    eMetaAction_CamCineMoveAToBTgtAC = 6,
-    eMetaAction_CamCinePosATgtB = 7,
-    eMetaAction_CamCinePosAMoveTgtBToC = 8,
-    eMetaAction_CamCinePosATgtBTurnPosH = 9,
-    eMetaAction_CamCinePosATgtBTurnTgtH = 10,
-    eMetaAction_CamCinePosATgtBTurnPosV = 11,
-    eMetaAction_CamCinePosATgtBTurnTgtV = 12,
-    eNbMetaAction = 13,
-} tdeMetaActionId_;
+typedef enum MAT_tdeTranformationType_ { MAT_eTransform_Uninitialized = 0, MAT_eTransform_Identity = 1, MAT_eTransform_Translation = 2, MAT_eTransform_Zoom = 3, MAT_eTransform_Scale = 4, MAT_eTransform_Rotation = 5, MAT_eTransform_RotationZoom = 6, MAT_eTransform_RotationScale = 7, MAT_eTransform_ComplexRotationScale = 8, MAT_eTransform_Undefined = 9 } MAT_tdeTranformationType_;
+typedef enum tdeObjectTreeInit_ { OTI_WhenGameStart = 0, OTI_MapLoaded = 1, OTI_ReinitTheMap = 2, OTI_LoadSavedGame = 3, OTI_PlayerDead = 4, OTI_WhenGoOutOfZone = 4, OTI_Always = 4, OTI_AlwaysCreated = 5 } tdeObjectTreeInit_;
+typedef enum tdeMetaActionId_ { eMetaAction_FrozenWait = 0, eMetaAction_ExecuteAction = 1, eMetaAction_ExecuteActionSmooth = 2, eMetaAction_WaitEndOfAction = 3, eMetaAction_WaitEndOfAnim = 4, eMetaAction_CamCineMoveAToBTgtC = 5, eMetaAction_CamCineMoveAToBTgtAC = 6, eMetaAction_CamCinePosATgtB = 7, eMetaAction_CamCinePosAMoveTgtBToC = 8, eMetaAction_CamCinePosATgtBTurnPosH = 9, eMetaAction_CamCinePosATgtBTurnTgtH = 10, eMetaAction_CamCinePosATgtBTurnPosV = 11, eMetaAction_CamCinePosATgtBTurnTgtV = 12, eNbMetaAction = 13 } tdeMetaActionId_;
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;
@@ -1001,7 +909,7 @@ typedef enum tdeCondId_ {
 } tdeCondId_;
 
 struct tdstIntelligence_ {
-    tdstScriptAI_* p_p_stScriptAI; /* +0x0 */
+    tdstScriptAI_** p_p_stScriptAI; /* +0x0 */
     tdstNodeInterpret_* p_stCurrentSchedule; /* +0x4 */
     tdstComport_* p_stCurrentComport; /* +0x8 */
     tdstComport_* p_stPrevComport; /* +0xc */
@@ -1100,7 +1008,7 @@ struct GEO_tdstVisualSet_ {
 };
 
 struct tdstDsgMem_ {
-    tdstDsgVar_* p_p_stDsgVar; /* +0x0 */
+    tdstDsgVar_** p_p_stDsgVar; /* +0x0 */
     int p_cDsgMemBufferInit; /* +0x4 */
     int p_cDsgMemBuffer; /* +0x8 */
 };
@@ -1111,6 +1019,7 @@ struct tdstAChannel_ {
     tdstAChannel_* p_stNextActiveChannel; /* +0x8 */
     tdstAChannel_* p_stFatherChannel; /* +0xc */
     /* aggregate */ int ax_InterpolatedPositions; /* +0x10 */
+    unsigned char _extractor_padding_00[116]; /* implicitly added by extractor; +0x14..0x87 */
     unsigned char ucNbInterpolatedPositions; /* +0x88 */
     unsigned char bControlledChannel; /* +0x89 */
     unsigned char bLipsChannel; /* +0x8a */
@@ -1145,39 +1054,6 @@ struct MTH3D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
-};
-
-union tduGetSetParam_ {
-    float xValue; /* +0x0 */
-    int lValue; /* +0x0 */
-    unsigned int ulValue; /* +0x0 */
-    short wValue; /* +0x0 */
-    unsigned short uwValue; /* +0x0 */
-    char cValue; /* +0x0 */
-    unsigned char ucValue; /* +0x0 */
-    RGBAStruct_ ColorValue; /* +0x0 */
-    int szString; /* +0x0 */
-    tdstEngineObject_* p_stEngObjValue; /* +0x0 */
-    tdstState_* tdxstHandleToState; /* +0x0 */
-    HIE_tdstSuperObject_* hSuperObject; /* +0x0 */
-    tdstSuperObjectLinks_* hSOLinks; /* +0x0 */
-    WP_tdstWayPoint_* m_hWayPoint; /* +0x0 */
-    unsigned short xMask; /* +0x0 */
-    tdstLipsSynchroTable_* hLipsSynchro; /* +0x0 */
-    tdstObjectsTablesList_* hObjectTable; /* +0x0 */
-    tdstFamilyList_* hFamily; /* +0x0 */
-    _SND_tdstBlockEvent* pSoundEvent; /* +0x0 */
-    tdstComport_* pComport; /* +0x0 */
-    int hText; /* +0x0 */
-    tdstParticleGenerator_* hParticleGenerator; /* +0x0 */
-    GMT_tdstGameMaterial_* hGameMaterial; /* +0x0 */
-    GLI_tdstMaterial_* hVisualMaterial; /* +0x0 */
-    AI_tdstAIModel_* p_stModel; /* +0x0 */
-    MTH3D_tdstVector_ stVectorValue; /* +0x0 */
-    GLI_tdstLight_* p_stLight; /* +0x0 */
-    WP_tdstGraph_* hGraph; /* +0x0 */
-    tdstMacro_* p_stMacro; /* +0x0 */
-    CINE_tdstCine_* p_stCine; /* +0x0 */
 };
 
 struct HIE_tdstSuperObject_ {
@@ -1345,6 +1221,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -1550,6 +1427,7 @@ struct GLI_tdst2DVertex_ {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */
@@ -1801,20 +1679,30 @@ struct tdstEngineStructure_ {
     unsigned char eInputMode; /* +0x5b */
     unsigned char eDisplayFixMode; /* +0x5c */
     unsigned int ulDisplayMode; /* +0x60 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x64..0x67 */
     tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
     unsigned char ucNumberOfPlayersInMultiMode; /* +0xf0 */
     unsigned char ucNumberOfColumnsInMultiMode; /* +0xf1 */
     unsigned char ucMiniScreenRatioInMultiMode; /* +0xf2 */
     /* aggregate */ int a_hSO_CurrentMainPlayers; /* +0xf4 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0xf8..0x103 */
     short hGLDDevice; /* +0x104 */
     /* aggregate */ int a_hGLDViewport; /* +0x106 */
+    unsigned char _extractor_padding_02[6]; /* implicitly added by extractor; +0x10a..0x10f */
     /* aggregate */ int a_stViewportAttr; /* +0x110 */
+    unsigned char _extractor_padding_03[556]; /* implicitly added by extractor; +0x114..0x33f */
     /* aggregate */ int a_p_stGameViewportCamera; /* +0x340 */
+    unsigned char _extractor_padding_04[16]; /* implicitly added by extractor; +0x344..0x353 */
     /* aggregate */ int a_hGLDFixViewport; /* +0x354 */
+    unsigned char _extractor_padding_05[8]; /* implicitly added by extractor; +0x358..0x35f */
     /* aggregate */ int a_stFixViewportAttr; /* +0x360 */
+    unsigned char _extractor_padding_06[556]; /* implicitly added by extractor; +0x364..0x58f */
     /* aggregate */ int a_stFixAttributes3D; /* +0x590 */
+    unsigned char _extractor_padding_07[36]; /* implicitly added by extractor; +0x594..0x5b7 */
     /* aggregate */ int a_p_stFixCamera; /* +0x5b8 */
+    unsigned char _extractor_padding_08[16]; /* implicitly added by extractor; +0x5bc..0x5cb */
     /* aggregate */ int a_stGameAttributes3D; /* +0x5cc */
+    unsigned char _extractor_padding_09[36]; /* implicitly added by extractor; +0x5d0..0x5f3 */
     tdstViewportManagement_* a_hViewportArray; /* +0x5f4 */
     LST2_tdstAnchorTotdxHandleToNodeCameraDyn hCameraList; /* +0x5f8 */
     int hDrawSem; /* +0x604 */
@@ -1825,6 +1713,7 @@ struct tdstEngineStructure_ {
     HIE_tdstSuperObject_* h_DbgCamCharacter; /* +0x630 */
     tdstLanguageStructure_* p_stLanguageTable; /* +0x634 */
     FIL_tdstFileNameList_* hLevelNameList; /* +0x638 */
+    unsigned char _extractor_padding_10[4]; /* implicitly added by extractor; +0x63c..0x63f */
     MAT_tdstTransformation_ stMainCharacterPosition; /* +0x640 */
     MAT_tdstTransformation_ stMainCameraPosition; /* +0x6a0 */
     int lSubMapNumber; /* +0x700 */
@@ -1850,7 +1739,7 @@ struct tdstEngineStructure_ {
     unsigned int ulNumberOfSOLAllocated; /* +0x1b78 */
     unsigned int ulNumberOfSOLLoaded; /* +0x1b7c */
     unsigned int ulNumberOfNonPersitentLinksPerSOL; /* +0x1b80 */
-    tdstSuperObjectLinks_* p_hSOL; /* +0x1b84 */
+    tdstSuperObjectLinks_** p_hSOL; /* +0x1b84 */
     tdstGraphChainedListNode_* p_GraphChainedList; /* +0x1b88 */
     CINE_Manager_* stCineManager; /* +0x1b8c */
 };
@@ -1892,6 +1781,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -1928,6 +1818,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -1949,14 +1840,9 @@ struct tdst3dData_ {
     LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn hForSubAnimInUseArray; /* +0x1b4 */
     CINE_tdstCineActor_* h_CurrentCineActor; /* +0x1c0 */
     /* aggregate */ int hSkinMaterial; /* +0x1c4 */
+    unsigned char _extractor_padding_02[12]; /* implicitly added by extractor; +0x1c8..0x1d3 */
     unsigned int NbSkinMaterials; /* +0x1d4 */
     /* aggregate */ int xSkinIndex; /* +0x1d8 */
-};
-
-struct MTH3D_tdstMatrix_ {
-    MTH3D_tdstVector_ stCol_0; /* +0x0 */
-    MTH3D_tdstVector_ stCol_1; /* +0xc */
-    MTH3D_tdstVector_ stCol_2; /* +0x18 */
 };
 
 tdstEngineStructure_ g_stEngineStructure;
@@ -2004,7 +1890,7 @@ unsigned char fn_ucFrozenWait(HIE_tdstSuperObject_* p_SuperObjPerso)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stFrozenWaitInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stFrozenWaitInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     /* TODO: decompile from asm/... */
 }

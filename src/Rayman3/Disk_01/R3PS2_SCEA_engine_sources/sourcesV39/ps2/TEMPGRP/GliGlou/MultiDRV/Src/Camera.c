@@ -52,7 +52,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
-    unsigned int _extractor_pad_04[3]; /* implicitly added by extractor; +0x4..0xf */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -71,7 +71,7 @@ struct MTH3D_tdstVector_ {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
-    unsigned int _extractor_pad_04[3]; /* implicitly added by extractor; +0x4..0xf */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */
@@ -94,7 +94,6 @@ struct GLI_tdstCamera_ {
     unsigned char ucCameraTransparency; /* +0xe8 */
     float xTranspDist; /* +0xec */
     unsigned char bCameraIsMirrored; /* +0xf0 */
-    unsigned char _extractor_pad_f1[15]; /* implicitly added by extractor; +0xf1..0xff */
 };
 
 struct GLD_tdstViewportAttributes_ {
@@ -128,9 +127,6 @@ struct GLD_tdstViewportAttributes_ {
     short hDevice; /* +0x6c */
     short hViewport; /* +0x6e */
 };
-
-int GLD_bGetViewportAttributes(short hDevice, short hViewport,
-                               GLD_tdstViewportAttributes_* p_stAttributes);
 
 struct GEO_tdstDoubledIndex_ {
     short a2_xIndex[2]; /* +0x0 */
@@ -174,6 +170,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -289,7 +286,7 @@ void GLI_fn_vSetCameraMirrorMode(GLI_tdstCamera_* p_stCam, unsigned char _bMirro
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xGetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_** p_stCam)
+void GLI_xGetViewportCamera(int hDevice, int hViewport, GLI_tdstCamera_** p_stCam)
 {
     GLD_tdstViewportAttributes_ stViewAttrib;
     if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib))

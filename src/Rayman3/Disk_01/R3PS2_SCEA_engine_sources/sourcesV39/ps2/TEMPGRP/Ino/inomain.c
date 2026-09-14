@@ -62,7 +62,7 @@ int INO_gs_a_tdhDevice[2];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void INO_fn_hCreateJoystickDevice(short _wPort)
+stDevice* INO_fn_hCreateJoystickDevice(short _wPort)
 {
     stDevice* p_stDev;
     /* TODO: decompile from asm/... */
@@ -76,7 +76,7 @@ void INO_fn_hCreateJoystickDevice(short _wPort)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short INO_fn_wInvalidateHandle(stDevice* hDev)
+short INO_fn_wInvalidateHandle(stDevice** hDev)
 {
     *(unsigned int*)hDev = 0;
     return 1;
@@ -109,7 +109,7 @@ int INO_fn_wIsJoyConnected(int JoyNb)
 {
     stDevice* hDev;
     int iResult;
-    stDevice* p_hDevice;
+    stDevice** p_hDevice;
     short xIndex;
     /* TODO: decompile from asm/... */
 }
@@ -182,7 +182,7 @@ short INO_fn_wReadAllDevices(unsigned short _uwType, short _wMode)
     stDevice* hDev;
     short wOneGood;
     short wResult;
-    stDevice* p_hDevice;
+    stDevice** p_hDevice;
     short xIndex;
     /* TODO: decompile from asm/... */
 }
@@ -243,7 +243,7 @@ short INO_fn_wActivateDevice(stDevice* _hDev)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void INO_fn_hCreateDevice(unsigned short _uwType, short _wPort, short _wHistoricSize)
+stDevice* INO_fn_hCreateDevice(unsigned short _uwType, short _wPort, short _wHistoricSize)
 {
     stDevice* p_stDev;
     /* TODO: decompile from asm/... */

@@ -58,6 +58,10 @@ unsigned int _heap_size;
 unsigned int _end;
 unsigned int _stack_size;
 unsigned int _start;
+extern int SignalSema(int sid);
+extern int WaitSema(int sid);
+extern int CreateSema(SemaParam* param);
+extern void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 71–380 */
 /* addr: 0x00318410  size: 924 bytes */
@@ -135,7 +139,6 @@ unsigned int _start;
  */
 int PS2_fn_lInit(void)
 {
-    int i;
     int i;
     int MTid;
     char* mes;
@@ -277,7 +280,12 @@ void PS2_fn_v_CreateTransitionThread(void)
 void PS2_fn_vCreateSwitchSemaphores(void)
 {
     SemaParam S;
-    /* TODO: decompile from asm/... */
+    S.initCount = 0;
+    S.maxCount = 1;
+    LoadSuspendSid = CreateSema(&S);
+    S.initCount = 0;
+    S.maxCount = 1;
+    ContextSaveSid = CreateSema(&S);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 315–315 */
@@ -289,7 +297,7 @@ void PS2_fn_vCreateSwitchSemaphores(void)
  */
 void PS2_fn_vSignalEndOfDisplay(void)
 {
-    /* TODO: decompile from asm/... */
+    SignalSema(DisplaySid);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 289–298 */
@@ -308,7 +316,9 @@ void PS2_fn_vSignalEndOfDisplay(void)
 void PS2_fn_vCreateDisplaySemaphore(void)
 {
     SemaParam S;
-    /* TODO: decompile from asm/... */
+    S.maxCount = 1;
+    S.initCount = 0;
+    DisplaySid = CreateSema(&S);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 282–282 */
@@ -320,7 +330,7 @@ void PS2_fn_vCreateDisplaySemaphore(void)
  */
 void PS2_fn_vWaitTransitionOff(void)
 {
-    /* TODO: decompile from asm/... */
+    WaitSema(TOffSid);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 272–272 */
@@ -332,7 +342,7 @@ void PS2_fn_vWaitTransitionOff(void)
  */
 void PS2_fn_vWaitTransitionOn(void)
 {
-    /* TODO: decompile from asm/... */
+    WaitSema(TOnSid);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 262–262 */
@@ -344,7 +354,7 @@ void PS2_fn_vWaitTransitionOn(void)
  */
 void PS2_fn_vTriggerTransitionOff(void)
 {
-    /* TODO: decompile from asm/... */
+    SignalSema(TOffSid);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 252–252 */
@@ -356,7 +366,7 @@ void PS2_fn_vTriggerTransitionOff(void)
  */
 void PS2_fn_vTriggerTransitionOn(void)
 {
-    /* TODO: decompile from asm/... */
+    SignalSema(TOnSid);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 229–245 */
@@ -393,7 +403,7 @@ void PS2_fn_vCreateTransitionSemaphores(void)
  */
 void PS2_fn_vLeaveGLCriticalSection(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2_fn_vLeaveCriticalSection(&stGL_CS);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 218–218 */

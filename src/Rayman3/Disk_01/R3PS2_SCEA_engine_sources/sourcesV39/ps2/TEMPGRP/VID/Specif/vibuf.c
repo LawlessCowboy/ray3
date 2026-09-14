@@ -33,7 +33,9 @@ struct anon_1 {
 
 struct anon_2 {
     long pts; /* +0x0 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     long dts; /* +0x8 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0xc..0xf */
     int pos; /* +0x10 */
     int len; /* +0x14 */
 };
@@ -50,6 +52,7 @@ struct anon_3 {
     int sema; /* +0x40 */
     int isActive; /* +0x44 */
     long totalBytes; /* +0x48 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4c..0x4f */
     anon_2* ts; /* +0x50 */
     int n_ts; /* +0x54 */
     int count_ts; /* +0x58 */

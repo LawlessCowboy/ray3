@@ -17,6 +17,7 @@ import re
 import struct
 import subprocess
 import sys
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 try:
@@ -29,6 +30,7 @@ except ImportError:
     spimdisasm = None
 from dataclasses import dataclass
 from datetime import date
+from collections import Counter
 from pathlib import Path
 
 from extract_debug import (DebugParser, STT_FUNC, STT_OBJECT, parse_line_blob,
@@ -38,6 +40,13 @@ from extract_debug import (DebugParser, STT_FUNC, STT_OBJECT, parse_line_blob,
 ROOT = Path(__file__).resolve().parent.parent
 SRC_ROOT = ROOT / 'src' / 'Rayman3'
 BUILD_ROOT = ROOT / 'build' / 'match'
+
+# Multiple recorded functions commonly belong to one translation unit.  Keep
+# each fingerprint's object build atomic when verify-recorded is run with
+# several workers; otherwise concurrent callers can race on the shared
+# temporary object path.
+_compile_locks: dict[Path, threading.Lock] = {}
+_compile_locks_guard = threading.Lock()
 INDEX_PATH = BUILD_ROOT / 'source-index.json'
 COMPILEABILITY_PATH = BUILD_ROOT / 'compileability.json'
 MANIFEST_PATH = ROOT / 'config' / 'matches.json'
@@ -250,6 +259,13 @@ def source_index(target_symbols: list[Symbol], main: Section) -> list[dict]:
                for symbol in target_symbols if symbol.type == STT_FUNC}
     entries_by_address: dict[int, dict] = {}
     for path in SRC_ROOT.rglob('*'):
+        # Extraction experiments left nested and development trees beside the
+        # canonical source root.  They can contain the same address comments;
+        # indexing them first silently redirects manifest entries to stale
+        # files.  Only the shipped Disk_01 tree is valid for matching.
+        relative = path.relative_to(ROOT).as_posix()
+        if '/Rayman3/Rayman3/' in relative or relative.startswith('src/Rayman3/dev/'):
+            continue
         if path.suffix.lower() not in {'.c', '.cpp', '.cxx', '.h', '.hpp', '.hxx'}:
             continue
         text = path.read_text(encoding='utf-8', errors='replace')
@@ -374,21 +390,26 @@ def compile_source(source: Path) -> tuple[Path | None, str]:
     fingerprint.update(mwcc.read_bytes())
     fingerprint.update(' '.join(MWCC_FLAGS).encode())
     output = BUILD_ROOT / 'objects' / f'{fingerprint.hexdigest()}.o'
-    if output.exists():
-        return output, 'cached'
-    output.parent.mkdir(parents=True, exist_ok=True)
-    temporary = output.with_suffix('.tmp.o')
-    env = os.environ.copy()
-    env['MWCIncludes'] = str(includes)
-    cmd = [str(wibo), str(mwcc), '-I' + str(ROOT / 'include'), *MWCC_FLAGS,
-           str(source), '-o', str(temporary)]
-    result = subprocess.run(cmd, cwd=ROOT, env=env, text=True,
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    if result.returncode:
-        temporary.unlink(missing_ok=True)
-        return None, result.stdout[-4000:]
-    temporary.replace(output)
-    return output, 'compiled'
+    with _compile_locks_guard:
+        lock = _compile_locks.setdefault(output, threading.Lock())
+    with lock:
+        if output.exists():
+            return output, 'cached'
+        output.parent.mkdir(parents=True, exist_ok=True)
+        # Include the process id in the temporary name so an interrupted or
+        # independently launched verifier cannot clobber this build.
+        temporary = output.with_name(output.stem + f'.{os.getpid()}.tmp.o')
+        env = os.environ.copy()
+        env['MWCIncludes'] = str(includes)
+        cmd = [str(wibo), str(mwcc), '-I' + str(ROOT / 'include'), *MWCC_FLAGS,
+               str(source), '-o', str(temporary)]
+        result = subprocess.run(cmd, cwd=ROOT, env=env, text=True,
+                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        if result.returncode:
+            temporary.unlink(missing_ok=True)
+            return None, result.stdout[-4000:]
+        temporary.replace(output)
+        return output, 'compiled'
 
 
 def load_compileability() -> dict:
@@ -845,12 +866,35 @@ def command_verify_recorded(args: argparse.Namespace) -> int:
     manifest = load_manifest()
     recorded = [record for record in manifest.get('functions', {}).values()
                 if record.get('status') == 'MATCH']
-    targets = [by_address.get(int(record['address'], 16)) for record in recorded]
-    targets = [entry for entry in targets if entry is not None]
+    targets = []
+    for record in recorded:
+        entry = by_address.get(int(record['address'], 16))
+        # Older records can predate address comments in a regenerated source
+        # (notably C++ methods and a few recovered wrappers).  The manifest
+        # still contains authoritative ownership, so use it as a fallback
+        # rather than passing a source-less index entry into compile_source.
+        if entry is None or entry.get('source') is None:
+            source = record.get('source')
+            if source and (ROOT / source).exists():
+                entry = {
+                    'address': int(record['address'], 16),
+                    'size': int(record.get('size', 0)),
+                    'name': record['name'],
+                    'source': source,
+                    'language': 'C++' if Path(source).suffix.lower() in {'.cpp', '.cxx'} else 'C',
+                    'todo': False,
+                    'line_map': [],
+                    'difficulty': {'score': 0, 'label': 'unknown',
+                                   'model': 'unknown', 'thinking': 'unknown'},
+                }
+        if entry is not None:
+            targets.append(entry)
     jobs = max(1, args.jobs)
     results = []
     with ThreadPoolExecutor(max_workers=jobs) as pool:
         futures = {pool.submit(compare, entry): entry for entry in targets}
+        completed = 0
+        live_matches = 0
         for future in as_completed(futures):
             entry = futures[future]
             try:
@@ -858,6 +902,11 @@ def command_verify_recorded(args: argparse.Namespace) -> int:
             except Exception as error:  # keep the audit running for other functions
                 result = {'status': 'ERROR', 'entry': entry, 'detail': str(error)}
             results.append(result)
+            completed += 1
+            live_matches += result.get('status') == 'MATCH'
+            print(f"progress {completed}/{len(targets)} "
+                  f"verified={live_matches} failed={completed - live_matches}",
+                  flush=True)
     failures = [result for result in results if result.get('status') != 'MATCH']
     for result in sorted(results, key=lambda item: item['entry']['address']):
         entry = result['entry']
@@ -867,7 +916,21 @@ def command_verify_recorded(args: argparse.Namespace) -> int:
             print(f"{result['status']} {entry['name']}"
                   f" first_difference={result.get('first_difference')}"
                   f" detail={result.get('detail', '')}")
-    print(f"verified {len(results) - len(failures)}/{len(results)} recorded matches")
+    # Keep the headline count, but also make it immediately clear whether a
+    # failure is a real code mismatch or a TU/object problem.  A regenerated
+    # source file can invalidate many recorded functions at once, and the old
+    # single number obscured that distinction.
+    by_status = Counter(result.get('status', 'ERROR') for result in results)
+    print(f"verified {by_status.get('MATCH', 0)}/{len(results)} recorded matches")
+    if failures:
+        summary = ', '.join(f"{status}={count}" for status, count in
+                           sorted(by_status.items()) if status != 'MATCH')
+        print(f"failures by status: {summary}")
+        by_source = Counter(result['entry'].get('source', '<unknown>')
+                            for result in failures)
+        print('failing translation units:')
+        for source, count in by_source.most_common():
+            print(f"  {count} {source}")
     return 1 if failures else 0
 
 
@@ -948,6 +1011,48 @@ def command_worklist(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_batch(args: argparse.Namespace) -> int:
+    """Emit source-grouped work packages for the matching workers.
+
+    Grouping by TU keeps compiler context and cached objects hot, while the
+    default excludes both recorded matches and previously attempted functions
+    so workers do not repeatedly receive stale assignments.
+    """
+    _, symbols, main, _, _ = target_context()
+    entries = cached_source_index(symbols, main)
+    compileability = load_compileability()
+    manifest = load_manifest()
+    matched = {int(r['address'], 16) for r in manifest.get('functions', {}).values()
+               if r.get('status') == 'MATCH'}
+    attempted = {int(r['address'], 16) for r in manifest.get('attempts', [])
+                 if r.get('address')}
+    groups: dict[str, list[dict]] = {}
+    for entry in entries:
+        if (not entry.get('todo') or not entry.get('source')
+                or not source_compileable(entry['source'], compileability)
+                or entry['address'] in matched
+                or (not args.include_attempted and entry['address'] in attempted)):
+            continue
+        difficulty = entry['difficulty']
+        if args.model and difficulty['model'] != args.model:
+            continue
+        if args.difficulty and difficulty['label'] != args.difficulty:
+            continue
+        groups.setdefault(entry['source'], []).append(entry)
+    ranked = sorted(groups.items(), key=lambda item: (
+        -len(item[1]), sum(x['size'] for x in item[1]), item[0]))
+    for source, group in ranked[:args.sources]:
+        group.sort(key=lambda e: (e['difficulty']['score'], e['size'], e['address']))
+        print(f"TU {source} functions={len(group)}")
+        for entry in group[:args.per_source]:
+            d = entry['difficulty']
+            print(f"  0x{entry['address']:08x} {entry['size']:4d} {d['label']:8s} "
+                  f"{d['model']}/{d['thinking']} {entry['name']}")
+    print(f"{sum(len(g) for _, g in ranked[:args.sources])} functions in "
+          f"{min(args.sources, len(ranked))} source groups")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
@@ -1001,6 +1106,14 @@ def main() -> int:
     preflight_parser.add_argument('--refresh-index', action='store_true')
     preflight_parser.set_defaults(func=command_preflight)
     sub.add_parser('worklist').set_defaults(func=command_worklist)
+    batch_parser = sub.add_parser('batch', help='emit source-grouped worker assignments')
+    batch_parser.add_argument('--sources', type=int, default=3)
+    batch_parser.add_argument('--per-source', type=int, default=20)
+    batch_parser.add_argument('--include-attempted', action='store_true')
+    batch_parser.add_argument('--difficulty', choices=['trivial', 'easy', 'moderate', 'complex', 'expert'])
+    batch_parser.add_argument('--model', choices=['gpt-5.4-mini', 'gpt-5.6-luna',
+                                                   'gpt-5.6-terra', 'gpt-5.6-sol'])
+    batch_parser.set_defaults(func=command_batch)
     args = parser.parse_args()
     if args.command == 'insight' and args.action == 'add' and not args.text:
         parser.error('insight add requires text')

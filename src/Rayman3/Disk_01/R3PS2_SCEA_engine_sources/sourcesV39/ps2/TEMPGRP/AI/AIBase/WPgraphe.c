@@ -12,6 +12,7 @@ typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
 typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
 typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
+
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct tdstAlwaysActiveCharacter_ tdstAlwaysActiveCharacter_;
 typedef struct tdstCollSet_ tdstCollSet_;
@@ -50,6 +51,9 @@ typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct LST2_tdstAnchorToWP_tdhGraphNodeDyn LST2_tdstAnchorToWP_tdhGraphNodeDyn;
 typedef struct WP_tdstGraph_ WP_tdstGraph_;
+/* Forward declaration required by the recovered source ordering.  The
+ * random-path wrapper precedes the full definition in the original TU. */
+WP_tdstGraph_* WPG_fn_lBuildOrderedPath(WP_tdstGraph_*, WP_tdstWayPoint_*, int, int);
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt;
 typedef struct WP_tdstGraphNode_ WP_tdstGraphNode_;
@@ -2006,6 +2010,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -2024,6 +2029,7 @@ struct MTH3D_tdstVector_ {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */
@@ -2069,8 +2075,6 @@ struct LST2_tdstAnchorToWP_tdhGraphNodeDyn {
 struct WP_tdstGraph_ {
     LST2_tdstAnchorToWP_tdhGraphNodeDyn m_hListOfNode; /* +0x0 */
 };
-
-WP_tdstGraph_* WPG_fn_lBuildOrderedPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hStartWP, int bIsCircular, int bIsRandom);
 
 struct HIE_tdstSuperObject_ {
     unsigned int ulTypeOfLinkedObject; /* +0x0 */
@@ -2154,6 +2158,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -2167,7 +2172,7 @@ struct GEO_tdstGeometricObject_ {
 };
 
 struct tdstIntelligence_ {
-    tdstScriptAI_* p_p_stScriptAI; /* +0x0 */
+    tdstScriptAI_** p_p_stScriptAI; /* +0x0 */
     tdstNodeInterpret_* p_stCurrentSchedule; /* +0x4 */
     tdstComport_* p_stCurrentComport; /* +0x8 */
     tdstComport_* p_stPrevComport; /* +0xc */
@@ -2211,7 +2216,7 @@ struct LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt {
 };
 
 struct tdstDsgMem_ {
-    tdstDsgVar_* p_p_stDsgVar; /* +0x0 */
+    tdstDsgVar_** p_p_stDsgVar; /* +0x0 */
     int p_cDsgMemBufferInit; /* +0x4 */
     int p_cDsgMemBuffer; /* +0x8 */
 };
@@ -2415,6 +2420,7 @@ struct GEO_tdstParallelBox_ {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -2628,6 +2634,7 @@ struct tdstEngineTimerStructure_ {
     unsigned int ulUsefulDeltaTime; /* +0x50 */
     unsigned int ulPauseTime; /* +0x54 */
     float xFrameLength; /* +0x58 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x5c..0x5f */
     _stTimerCount stRealTimeCount; /* +0x60 */
     _stTimerCount stPauseTime; /* +0x70 */
     unsigned int ulTickPerMS; /* +0x80 */
@@ -2935,6 +2942,7 @@ struct tdstEngineStructure_ {
     unsigned char eInputMode; /* +0x5b */
     unsigned char eDisplayFixMode; /* +0x5c */
     unsigned int ulDisplayMode; /* +0x60 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x64..0x67 */
     tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
     unsigned char ucNumberOfPlayersInMultiMode; /* +0xf0 */
     unsigned char ucNumberOfColumnsInMultiMode; /* +0xf1 */
@@ -2959,6 +2967,7 @@ struct tdstEngineStructure_ {
     HIE_tdstSuperObject_* h_DbgCamCharacter; /* +0x630 */
     tdstLanguageStructure_* p_stLanguageTable; /* +0x634 */
     FIL_tdstFileNameList_* hLevelNameList; /* +0x638 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x63c..0x63f */
     MAT_tdstTransformation_ stMainCharacterPosition; /* +0x640 */
     MAT_tdstTransformation_ stMainCameraPosition; /* +0x6a0 */
     int lSubMapNumber; /* +0x700 */
@@ -2984,7 +2993,7 @@ struct tdstEngineStructure_ {
     unsigned int ulNumberOfSOLAllocated; /* +0x1b78 */
     unsigned int ulNumberOfSOLLoaded; /* +0x1b7c */
     unsigned int ulNumberOfNonPersitentLinksPerSOL; /* +0x1b80 */
-    tdstSuperObjectLinks_* p_hSOL; /* +0x1b84 */
+    tdstSuperObjectLinks_** p_hSOL; /* +0x1b84 */
     tdstGraphChainedListNode_* p_GraphChainedList; /* +0x1b88 */
     CINE_Manager_* stCineManager; /* +0x1b8c */
 };
@@ -3003,6 +3012,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -3039,6 +3049,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -3305,7 +3316,7 @@ WP_tdstGraph_* WPG_fn_lBuildOrderedPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_*
     int* d_hListOfDestWeight;
     unsigned int* d_hListOfDestCaps;
     int* d_hListOfTypeOfWP;
-    WP_tdstWayPoint_* d_hListOfDestWP;
+    WP_tdstWayPoint_** d_hListOfDestWP;
     int iIndexOfBestNode;
     unsigned int ulCapsOfBestNode;
     int lBestArcWeight;
@@ -3316,7 +3327,7 @@ WP_tdstGraph_* WPG_fn_lBuildOrderedPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_*
     int iCount;
     int iNbElementInTheGraph;
     WP_tdstGraphNode_* hFirstNode;
-    WP_tdstGraphNode_* d_hListOfWPNode;
+    WP_tdstGraphNode_** d_hListOfWPNode;
     WP_tdstGraphNode_* hCurrentNode;
     WP_tdstGraph_* tdhNewPath;
     /* TODO: decompile from asm/... */
@@ -3370,8 +3381,8 @@ WP_tdstGraph_* WPG_fn_hBuildOrderedPathFromAtoB(WP_tdstGraph_* _hGraph, WP_tdstG
     int iNbElementInTheGraph;
     int j;
     int i;
-    WP_tdstGraphNode_* p_hListOfResultNodes;
-    WP_tdstGraphNode_* p_hListOfUsefulNodes;
+    WP_tdstGraphNode_** p_hListOfResultNodes;
+    WP_tdstGraphNode_** p_hListOfUsefulNodes;
     int lSizeOfResult;
     WP_tdstGraphNode_* param0;
     /* TODO: decompile from asm/... */
@@ -3434,10 +3445,10 @@ WP_tdstGraph_* WPG_fn_hBuildOrderedPathFromAtoB(WP_tdstGraph_* _hGraph, WP_tdstG
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, WP_tdstGraphNode_* _p_hListOfUsefulNodes, int _iNbOfElementInTheGraph, WP_tdstGraphNode_* _p_hListOfResultNodes, int bIsRandom)
+int WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, WP_tdstGraphNode_** _p_hListOfUsefulNodes, int _iNbOfElementInTheGraph, WP_tdstGraphNode_** _p_hListOfResultNodes, int bIsRandom)
 {
     WP_tdstArc_* hElement;
-    WP_tdstGraphNode_* ap_hListOfTmpResultNodes;
+    WP_tdstGraphNode_** ap_hListOfTmpResultNodes;
     int lBestWeight;
     int lSizeOfResultForNextNode;
     int lSizeOfResult;
@@ -3573,8 +3584,8 @@ WP_tdstGraph_* WPG_fn_lShortestPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSr
     int* d_iValuationOfExplored;
     int* d_iWayOfReached;
     int* d_iWayOfExplored;
-    WP_tdstGraphNode_* d_hReached;
-    WP_tdstGraphNode_* d_hExplored;
+    WP_tdstGraphNode_** d_hReached;
+    WP_tdstGraphNode_** d_hExplored;
     WP_tdstArc_* hArc;
     WP_tdstGraphNode_* hNeighbor;
     WP_tdstGraphNode_* param0;
@@ -3604,7 +3615,7 @@ WP_tdstGraph_* WPG_fn_lShortestPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void WPG_fn_hGetNearestGraph(MTH3D_tdstVector_* _p_stPos)
+WP_tdstGraph_* WPG_fn_hGetNearestGraph(MTH3D_tdstVector_* _p_stPos)
 {
     WP_tdstGraph_* hCloserGraph;
     float xTmp;

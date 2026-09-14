@@ -33,7 +33,7 @@ struct SemaParam {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int channel_debug_printf(int channel, const char *format, ...)
+int channel_debug_printf(int a0, int a1, ...)
 {
     return 0;
 }

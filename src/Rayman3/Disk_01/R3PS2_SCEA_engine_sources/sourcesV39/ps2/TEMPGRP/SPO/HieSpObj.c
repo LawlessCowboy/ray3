@@ -26,6 +26,14 @@ typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
+typedef struct GLI_tdstDataOfElement_ GLI_tdstDataOfElement_;
+typedef struct PIC_tdstPickedObject_ PIC_tdstPickedObject_;
+
+typedef enum PIC_tdeModePicking_ {
+    PIC_C_ModePickingFace = 0,
+    PIC_C_ModePickingEdge = 1,
+    PIC_C_ModePickingPoint = 2,
+} PIC_tdeModePicking_;
 
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
@@ -76,6 +84,21 @@ struct MTH3D_tdstVector_ {
     float xZ; /* +0x8 */
 };
 
+struct GLI_tdstDataOfElement_ {
+    MTH3D_tdstVector_ stHit;
+    float xDistance;
+    short xElements;
+    short xIndexOfFace;
+    short xIndexOfEdge;
+    short xIndexOfPoint;
+};
+
+struct PIC_tdstPickedObject_ {
+    PIC_tdeModePicking_ xModePicking;
+    short xNbElements;
+    GLI_tdstDataOfElement_ aDEF_stDataOfElement[3];
+};
+
 struct HIE_tdstSuperObject_ {
     unsigned int ulTypeOfLinkedObject; /* +0x0 */
     HIE_tduLinkedObject_ hLinkedObject; /* +0x4 */
@@ -114,6 +137,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -141,6 +165,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -263,7 +288,6 @@ int gd_hFixSPOSave[32];
 short fn_xIntersectSegmentWithRepositioningSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, HIE_tdstPickInfo_* p_stPickInfo, short* p_xNbPickInfo)
 {
     tdstPhysicalCollSet_* hCollSet;
-    tdstPhysicalCollSet_* hCollSet;
     MTH3D_tdstVector_* p_stMaxPoint;
     MTH3D_tdstVector_* p_stMinPoint;
     unsigned int ulSpoFlags;
@@ -332,7 +356,7 @@ MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrix(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void HIE_fn_pGetCurrentInCamCoordsMatrixFastPS2(void)
+MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrixFastPS2(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -661,7 +685,7 @@ HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void HIE_fn_p_stCreateSuperObjectTab(int lSize)
+HIE_tdstSuperObject_* HIE_fn_p_stCreateSuperObjectTab(int lSize)
 {
     int lIndex;
     HIE_tdstSuperObject_* hNewSuperObject;
@@ -838,7 +862,7 @@ void HIE_fn_SO_vSetSuperimposedFlag(HIE_tdstSuperObject_* _hSO)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void HIE_fn_hGetElementFormFixViewport(short xIndex)
+HIE_tdstSuperObject_* HIE_fn_hGetElementFormFixViewport(short xIndex)
 {
     /* TODO: decompile from asm/... */
 }

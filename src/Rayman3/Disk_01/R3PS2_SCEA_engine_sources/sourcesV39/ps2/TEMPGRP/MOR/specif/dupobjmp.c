@@ -40,6 +40,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -186,7 +187,7 @@ void MOR_fn_vDeletePhysicalObject(PO_tdstPhysicalObject_* _pPhysicalObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MOR_fn_vDeleteGeometricObject(GEO_tdstGeometricObject_* p_hObj)
+void MOR_fn_vDeleteGeometricObject(GEO_tdstGeometricObject_** p_hObj)
 {
     GEO_tdstGeometricObject_* p_hObject;
     int lElementCounter;

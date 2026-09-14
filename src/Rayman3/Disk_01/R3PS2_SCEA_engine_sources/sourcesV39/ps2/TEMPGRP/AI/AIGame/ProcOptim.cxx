@@ -12,6 +12,22 @@ typedef struct _tdstCheapCharacterList _tdstCheapCharacterList;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
 
+/* These declarations are used by the recovered local-variable records below.
+ * The extractor retained the names but this TU did not receive the shared
+ * engine header definitions.  Keep the records complete so MWCC can compile
+ * the translation unit; their members will be recovered from the owning
+ * shared types before these functions are decompiled. */
+typedef int tdeProcedureId_;
+typedef int tdeFuncId_;
+struct MTH3D_tdstVector_ {
+    float x;
+    float y;
+    float z;
+};
+struct tdstGetSetParam_ {
+    unsigned char _raw[64];
+};
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 643–677 */
 /* addr: 0x002290b0  size: 196 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -39,7 +55,7 @@ typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSetCheapCharacterOptions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSetCheapCharacterOptions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     _tdstCheapCharacterList* pCheapList;
     tdeProcedureId_ eProcedureId;
@@ -115,7 +131,7 @@ tdstNodeInterpret_* fn_p_stSetCheapCharacterListAura(HIE_tdstSuperObject_* p_Sup
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stActivateCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stActivateCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     _tdstCheapCharacterList* pCheapList;
     tdeProcedureId_ eProcedureId;
@@ -138,7 +154,7 @@ void fn_p_stActivateCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stResetCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stResetCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
     /* TODO: decompile from asm/... */
@@ -169,7 +185,7 @@ void fn_p_stResetCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stAddCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stAddCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned int ulInd;
     MTH3D_tdstVector_ stPosition;
@@ -220,7 +236,7 @@ void fn_p_stAddCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSetCheapCharacterPos(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSetCheapCharacterPos(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdeProcedureId_ eProcedureId;
     _tdstCheapCharacterList* pCheapList;
@@ -247,7 +263,7 @@ void fn_p_stSetCheapCharacterPos(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNode
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSetCheapCharacterMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSetCheapCharacterMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned int ulInd;
     tdstGetSetParam_ stParam;
@@ -272,7 +288,7 @@ void fn_p_stSetCheapCharacterMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSetCheapCharacterRefObj(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSetCheapCharacterRefObj(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned int ulInd;
     HIE_tdstSuperObject_* hCharacter;
@@ -296,7 +312,7 @@ void fn_p_stSetCheapCharacterRefObj(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSetCheapCharacterTimer(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSetCheapCharacterTimer(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned int ulInd;
     tdstGetSetParam_ stParam;
@@ -322,7 +338,7 @@ void fn_p_stSetCheapCharacterTimer(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stSetCheapCharacterDistance(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSetCheapCharacterDistance(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned int ulInd;
     float fDistance;
@@ -349,7 +365,7 @@ void fn_p_stSetCheapCharacterDistance(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
     unsigned int ulRes;
@@ -379,7 +395,7 @@ void fn_p_stGetCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stTestCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stTestCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     HIE_tdstSuperObject_* hCharacter;
     unsigned int ulTestRes;
@@ -406,7 +422,7 @@ void fn_p_stTestCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stCreateCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stCreateCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     unsigned int ulMax;

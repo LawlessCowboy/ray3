@@ -51,8 +51,10 @@ struct SAI_tdstListEntry_ {
     unsigned char ucDummy; /* +0x13 */
 };
 
-unsigned char g_ucSAIModuleId;
+/* Defined by Sai_main.c; this private TU accesses the shared SAI state. */
 extern SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
+
+unsigned char g_ucSAIModuleId;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 32–45 */
 /* addr: 0x003191f0  size: 56 bytes */

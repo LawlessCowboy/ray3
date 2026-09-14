@@ -33,7 +33,7 @@ struct MTH3D_tdstVector_ {
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_* p_pstChildList; /* +0x18 */
+    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
 
@@ -167,8 +167,9 @@ short COL_g_xOctreeMaxDepth;
 short COL_g_xTotalNumberOfFacesLimit;
 short COL_g_xNumberOfFacesLimit;
 
-void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_* d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes);
-void COL_fn_vExploreRecursiveOctreeWithBox(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stMinSituation, MTH3D_tdstVector_* p_stMaxSituation, COL_tdstOctreeNode_* d_pstSelectedNode, short* p_xNumberOfSelectedNodes);
+/* The recursive helpers are defined below their public entry points. */
+void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, COL_tdstOctreeNode_**, float*, short*);
+void COL_fn_vExploreRecursiveOctreeWithBox(COL_tdstOctreeNode_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, COL_tdstOctreeNode_**, short*);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\OctreeGO.c lines 912–924 */
 /* addr: 0x00257bc0  size: 44 bytes */
@@ -182,7 +183,7 @@ void COL_fn_vExploreRecursiveOctreeWithBox(COL_tdstOctreeNode_* p_stNodeToBeExpl
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vExploreOctreeWithSegment(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_* d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
+void COL_fn_vExploreOctreeWithSegment(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
 {
     *p_xNumberOfSelectedNodes = 0;
     COL_g_xSelectedDepth = 0;
@@ -217,7 +218,7 @@ void COL_fn_vExploreOctreeWithSegment(COL_tdstOctree_* p_stOctree, MTH3D_tdstVec
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_* d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
+void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
 {
     float xT;
     /* TODO: decompile from asm/... */
@@ -235,7 +236,7 @@ void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_* p_stNodeToBe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vExploreOctreeWithBox(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, COL_tdstOctreeNode_* d_pstSelectedNode, short* p_xNumberOfSelectedNodes)
+void COL_fn_vExploreOctreeWithBox(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, COL_tdstOctreeNode_** d_pstSelectedNode, short* p_xNumberOfSelectedNodes)
 {
     *p_xNumberOfSelectedNodes = 0;
     COL_g_xSelectedDepth = 0;
@@ -272,7 +273,7 @@ void COL_fn_vExploreOctreeWithBox(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vExploreRecursiveOctreeWithBox(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stMinSituation, MTH3D_tdstVector_* p_stMaxSituation, COL_tdstOctreeNode_* d_pstSelectedNode, short* p_xNumberOfSelectedNodes)
+void COL_fn_vExploreRecursiveOctreeWithBox(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stMinSituation, MTH3D_tdstVector_* p_stMaxSituation, COL_tdstOctreeNode_** d_pstSelectedNode, short* p_xNumberOfSelectedNodes)
 {
     /* TODO: decompile from asm/... */
 }

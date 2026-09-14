@@ -38,6 +38,12 @@ struct TEX_tdstPalette_ {
     unsigned char a1024_uccolors[1024]; /* +0x0 */
 };
 
+/* These debug symbols are 32-bit pointers to the channel tables, not the
+ * table storage itself.  The original TU received their declarations from
+ * its platform headers; retain the ELF symbol size (4 bytes) here. */
+extern int *gs_aDEFTableOfTextureMemoryChannels;
+extern int *gs_aDEFTableOfTextureAlreadyRead;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Texture.c lines 59–67 */
 /* addr: 0x002ab2d0  size: 80 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -52,9 +58,6 @@ struct TEX_tdstPalette_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern int gs_aDEFTableOfTextureMemoryChannels[];
-extern int gs_aDEFTableOfTextureAlreadyRead[];
-
 void GLI_fn_vUnallocTextureInChannel(unsigned char _ucChannel)
 {
     int lTextureCounter;

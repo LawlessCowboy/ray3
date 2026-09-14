@@ -11,7 +11,7 @@
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_Base::DeleteSDLs(void)
+void C_BaseFx::DeleteSDLs(void)
 {
     /* TODO: decompile from asm/... */
 }

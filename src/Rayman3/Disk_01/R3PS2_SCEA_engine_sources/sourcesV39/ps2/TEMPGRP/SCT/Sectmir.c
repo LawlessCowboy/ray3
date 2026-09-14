@@ -134,6 +134,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -166,6 +167,7 @@ struct LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -268,6 +270,7 @@ struct GLI_tdstLight_ {
     float xBigAlpha; /* +0x18 */
     float xLittleTangent; /* +0x1c */
     float xBigTangent; /* +0x20 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x24..0x2f */
     MAT_tdstTransformation_ stMatrix; /* +0x30 */
     GEO_tdstColor_ stColor; /* +0x90 */
     float SqNear; /* +0xa0 */
@@ -389,6 +392,7 @@ struct stPOINT {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */
@@ -809,7 +813,6 @@ void SCT_fn_vSendSectorWhereIAmToViewportWithMirror(MTH3D_tdstVector_* _p_stAbso
 {
     float xNorm;
     MTH3D_tdstVector_ VectTmp;
-    float xNorm;
     unsigned int ulCustomBit;
     float fDot;
     MAT_tdstTransformation_ stTmpMatrix;
@@ -829,7 +832,6 @@ void SCT_fn_vSendSectorWhereIAmToViewportWithMirror(MTH3D_tdstVector_* _p_stAbso
     short idxPt3;
     short idxPt2;
     short idxPt1;
-    SECT_tdstSector_* hSectorObject;
     SECT_tdstSector_* hSectorObject;
     MTH3D_tdstVector_ stTempVectorForMultiplication;
     char OneWasDrawn;
@@ -905,7 +907,7 @@ int fn_iZCompare(void* arg1, void* arg2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SCT_fn_vFindAllMirrorsInVisibleSector(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, HIE_tdstSuperObject_* p_hHandleOfMirror, GEO_tdstGeometricObject_* p_hHandleOfGometricMirror, HIE_tdstSuperObject_* p_hSectorOfMirror, short* p_shNbOfMirrors)
+void SCT_fn_vFindAllMirrorsInVisibleSector(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGometricMirror, HIE_tdstSuperObject_** p_hSectorOfMirror, short* p_shNbOfMirrors)
 {
     short shTempNbOfMirrors;
     short i;

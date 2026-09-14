@@ -260,6 +260,7 @@ struct CExtraEventActor {
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x8..0xb */
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */

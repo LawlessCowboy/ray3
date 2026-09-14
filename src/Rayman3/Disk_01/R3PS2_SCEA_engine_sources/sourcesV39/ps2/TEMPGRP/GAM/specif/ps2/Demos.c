@@ -216,12 +216,6 @@ typedef enum e_ucCameraStates_ {
     CAM_e_TempState_ApexMode = 5,
 } e_ucCameraStates_;
 
-typedef enum anon_enum_008f192e {
-    DNM_eMIC_Error = -1,
-    DNM_eCamera = 0,
-    DNM_eBase = 1,
-} anon_enum_008f192e;
-
 typedef enum anon_enum_008f274c {
     EVT_INVALID = 0,
     EVT_SON_PLAY = 1,
@@ -641,6 +635,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -652,6 +647,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -688,6 +684,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -929,6 +926,7 @@ struct DNM_stDynamicsComplexBlock {
     MTH3D_tdstVector_ m_stFallTranslation; /* +0x20 */
     stMACDPID m_stExternalDatas; /* +0x2c */
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xac..0xaf */
     MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
     MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
 };
@@ -967,6 +965,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -1337,6 +1336,7 @@ struct GLI_tdst2DVertex_ {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */
@@ -1370,6 +1370,7 @@ struct tdstViewportManagement_ {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -1500,6 +1501,7 @@ struct tdstEngineTimerStructure_ {
     unsigned int ulUsefulDeltaTime; /* +0x50 */
     unsigned int ulPauseTime; /* +0x54 */
     float xFrameLength; /* +0x58 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x5c..0x5f */
     _stTimerCount stRealTimeCount; /* +0x60 */
     _stTimerCount stPauseTime; /* +0x70 */
     unsigned int ulTickPerMS; /* +0x80 */
@@ -1528,6 +1530,7 @@ struct tdstTransition_ {
 
 struct tdstSuperObjectLinks_ {
     HIE_tdstSuperObject_* h_SPORef; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ POS_SPO_Init; /* +0x10 */
     unsigned int ulNbLinkedObjects; /* +0x70 */
     unsigned int ulNbLinksAllocated; /* +0x74 */
@@ -1603,6 +1606,7 @@ struct tdstEngineStructure_ {
     unsigned char eInputMode; /* +0x5b */
     unsigned char eDisplayFixMode; /* +0x5c */
     unsigned int ulDisplayMode; /* +0x60 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x64..0x67 */
     tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
     unsigned char ucNumberOfPlayersInMultiMode; /* +0xf0 */
     unsigned char ucNumberOfColumnsInMultiMode; /* +0xf1 */
@@ -1627,6 +1631,7 @@ struct tdstEngineStructure_ {
     HIE_tdstSuperObject_* h_DbgCamCharacter; /* +0x630 */
     tdstLanguageStructure_* p_stLanguageTable; /* +0x634 */
     FIL_tdstFileNameList_* hLevelNameList; /* +0x638 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x63c..0x63f */
     MAT_tdstTransformation_ stMainCharacterPosition; /* +0x640 */
     MAT_tdstTransformation_ stMainCameraPosition; /* +0x6a0 */
     int lSubMapNumber; /* +0x700 */
@@ -1652,7 +1657,7 @@ struct tdstEngineStructure_ {
     unsigned int ulNumberOfSOLAllocated; /* +0x1b78 */
     unsigned int ulNumberOfSOLLoaded; /* +0x1b7c */
     unsigned int ulNumberOfNonPersitentLinksPerSOL; /* +0x1b80 */
-    tdstSuperObjectLinks_* p_hSOL; /* +0x1b84 */
+    tdstSuperObjectLinks_** p_hSOL; /* +0x1b84 */
     tdstGraphChainedListNode_* p_GraphChainedList; /* +0x1b88 */
     CINE_Manager_* stCineManager; /* +0x1b8c */
 };
@@ -2890,8 +2895,6 @@ void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag)
 {
     CINE_tdstCine_* hCine;
     short s16CineNumber;
-    CINE_tdstCine_* hCine;
-    short s16CineNumber;
     unsigned int ulNbFramesForIntermAnim;
     unsigned short uwFirstFrameInWantedState;
     tdstState_* h_ResultState;
@@ -2905,17 +2908,13 @@ void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag)
     unsigned short wSO_Number;
     unsigned char ucMode;
     unsigned char ucIndex;
-    short wSO_Number;
     unsigned short uwBlockId;
-    short wSO_Number;
-    tdstDemoSOList_* p_stListElement;
     tdstDemoSOList_* p_stListElement;
     tdstStandardGame_* hStdGame;
     unsigned int ulCurrentBits;
     unsigned int ulMask;
     unsigned char bSetOrClear;
     unsigned char ucBitIndex;
-    short wSO_Number;
     char* pcNewPosition;
     unsigned char bActivate;
     unsigned char ucCharIndex;
@@ -2923,78 +2922,47 @@ void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag)
     MTH3D_tdstVector_ stPosition;
     short* param0;
     short a3_fCompressedVector[3];
-    unsigned char ucListIndex;
     unsigned char u8Max;
-    short wSO_Number;
-    tdstDemoSOList_* p_stListElement;
     unsigned short u16SubAnim;
-    short wSO_Number;
     unsigned int ulLoop;
     unsigned char bMerge;
-    tdstDemoSOList_* param0;
     short s16Frame;
     unsigned short u16LoopAndFlags;
-    unsigned short u16SubAnim;
-    short wSO_Number;
     MTH3D_tdstVector_ stTranslationVector;
-    short wSO_Number;
     MAT_tdstTransformation_ stRotationMatrix;
     HIE_tdstSuperObject_* hSpo;
-    tdstDemoSOList_* p_stListElement;
     short s16CompressedFloat;
     unsigned short u16Type;
-    short wSO_Number;
-    MTH3D_tdstVector_ stTranslationVector;
-    short wSO_Number;
     HIE_tdstSuperObject_* hSector;
     HIE_tdstSuperObject_* p_SuperObjPersoTreated;
     tdstMSLight_* h_MSLight;
     short bOnlyLocal;
     short bLocal;
-    short wSO_Number;
     short bOnOff;
-    short wSO_Number;
     GEO_tdstColor_ stColor;
-    short wSO_Number;
     int bFrameMode;
     int iStringNumber;
-    int iStringNumber;
-    int iStringNumber;
     unsigned int ulTransparence;
-    int iStringNumber;
     unsigned int ulBlue;
     unsigned int ulGreen;
     unsigned int ulRed;
-    int iStringNumber;
     char* szTableString;
     int hText;
     int NumeroVp;
     float xParameter;
     char* p_szString;
     unsigned int ulStringLen;
-    MTH3D_tdstVector_ stPosition;
-    int iStringNumber;
     unsigned char ucObj2;
     unsigned char ucObj1;
-    tdstDemoSOList_* p_stListElement;
-    short wSO_Number;
     tdstFamilyList_* hFamily;
     unsigned short uwFamilyIndex;
     unsigned short uwTableIndex;
-    short wSO_Number;
     int i;
     tdstObjectsTablesList_* hObjectTable;
-    tdstDemoSOList_* p_stListElement;
-    unsigned short uwTableIndex;
-    short wSO_Number;
     unsigned int ulFlag;
-    tdstDemoSOList_* p_stListElement;
-    short wSO_Number;
     unsigned char ucSet;
-    unsigned int ulMask;
     unsigned int ulFlags;
     unsigned int ulFlagId;
-    short wSO_Number;
     float x3;
     float x2;
     float x1;
@@ -3005,30 +2973,18 @@ void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag)
     char cChar;
     unsigned char ucSubCommand;
     int temposwitch;
-    short wSO_Number;
     int lSoundObjetType;
     _SND_tduRefEvt uRefEvt;
     int iTranslatedAGOHandle;
     int iAGOHandle;
-    int iTranslatedAGOHandle;
     unsigned short uwShort;
-    short* param0;
-    short a3_fCompressedVector[3];
-    unsigned short uwBlockId;
     GLI_tdstMaterial_* hVisualMaterial;
     MTH3D_tdstVector_ stDirection;
-    MTH3D_tdstVector_ stPosition;
     unsigned int PartType;
-    MTH3D_tdstVector_ stTranslationVector;
     tdstDemoCompressedTransform_ stCompressedTransform;
     unsigned char ucChannelNumber;
-    unsigned short wSO_Number;
     int lValue;
-    unsigned char ucChannelNumber;
-    unsigned short wSO_Number;
     unsigned char ucTransparencyValue;
-    unsigned char ucChannelNumber;
-    unsigned short wSO_Number;
     unsigned char a10_ucParam[10];
     char szOutputMsg[8];
     GLI_tdstMaterial_* hSkinVisualMaterial;
@@ -3369,8 +3325,6 @@ void DEMO_fn_vAllocateMemory(void)
  */
 void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* _p_stCompressedTransform)
 {
-    MTH4D_tdstMatrix_ stMatrix;
-    MTH4D_tdstVector_* p_stVector;
     MTH4D_tdstMatrix_ stMatrix;
     MTH4D_tdstVector_* p_stVector;
     unsigned short uwFormerType;

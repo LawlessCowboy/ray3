@@ -13,8 +13,6 @@ typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
 
-extern float GLI_BIG_GLOBALS_xGlobalAlpha;
-
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
     MAT_eTransform_Identity = 1,
@@ -57,6 +55,7 @@ struct GLI_tdstAligned2DVector_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -69,6 +68,7 @@ struct MTH3D_tdstVector_ {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */

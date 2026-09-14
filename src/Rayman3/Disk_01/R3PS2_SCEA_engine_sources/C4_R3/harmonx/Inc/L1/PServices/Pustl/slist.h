@@ -18,7 +18,7 @@ typedef struct iterator iterator;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-iterator* Q34usnd73slist<P19CLinkCallbackResObj,Q24usnd34sallocator<P19CLinkCallbackResObj>>8iterator::__pp(void)
+iterator* __pp__Q34usnd73slist<P19CLinkCallbackResObj,Q24usnd34sallocator<P19CLinkCallbackResObj>>8iteratorFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -48,7 +48,7 @@ void Q34usnd73slist<P19CLinkCallbackResObj,Q24usnd34sallocator<P19CLinkCallbackR
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-_Node* Q24usnd73slist<P19CLinkCallbackResObj,Q24usnd34sallocator<P19CLinkCallbackResObj>>::_Buynode(_Node* _Narg, _Node* _Parg)
+_Node* _Buynode__Q24usnd73slist<P19CLinkCallbackResObj,Q24usnd34sallocator<P19CLinkCallbackResObj>>FPQ34usnd73slist<P19CLinkCallbackResObj,Q24usnd34sallocator<P19CLinkCallbackResObj>>5_NodePQ34usnd73slist<P19CLinkCallbackResObj,Q24usnd34sallocator<P19CLinkCallbackResObj>>5_Node(_Node* _Narg, _Node* _Parg)
 {
     _Node* _S;
     /* TODO: decompile from asm/... */
@@ -64,7 +64,7 @@ _Node* Q24usnd73slist<P19CLinkCallbackResObj,Q24usnd34sallocator<P19CLinkCallbac
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-iterator* Q34usnd31slist<i,Q24usnd13sallocator<i>>8iterator::__pp(void)
+iterator* __pp__Q34usnd31slist<i,Q24usnd13sallocator<i>>8iteratorFv(void)
 {
     /* TODO: decompile from asm/... */
 }

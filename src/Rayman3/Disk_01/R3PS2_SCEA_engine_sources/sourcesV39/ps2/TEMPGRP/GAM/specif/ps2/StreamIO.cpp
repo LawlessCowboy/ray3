@@ -4,10 +4,6 @@
 
 #include <stddef.h>
 
-extern unsigned int fs_uiGetSize(unsigned int);
-extern unsigned int func_801C20D0(unsigned int, unsigned int, char*, unsigned int, unsigned int, unsigned int, unsigned int);
-extern void func_801C20E0(unsigned int);
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\StreamIO.cpp lines 93–111 */
 /* addr: 0x0028dc80  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

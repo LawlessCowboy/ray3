@@ -574,6 +574,7 @@ struct tdstElement3d_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -585,6 +586,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -621,6 +623,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -707,6 +710,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -886,6 +890,7 @@ struct DNM_stDynamicsComplexBlock {
     MTH3D_tdstVector_ m_stFallTranslation; /* +0x20 */
     stMACDPID m_stExternalDatas; /* +0x2c */
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xac..0xaf */
     MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
     MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
 };
@@ -1121,11 +1126,6 @@ struct AI_tdstMind_ {
     tdstDsgMem_* p_stDsgMem; /* +0xc */
     unsigned char bDoingIntel; /* +0x10 */
 };
-
-extern void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode);
-extern void SECT_fn_vIsolateDNMLightsListNode(SECT_tdstListOfDNMLights_* hNode);
-extern SECT_tdstListOfDNMLights_* fn_hMSLightGetLightNodeInSector(tdstMSLight_* hMSLight);
-extern unsigned char PLD_fn_bIsInFix(void* Ptr);
 
 int g_hCharacterLauchingSoundEvents;
 int SECT_hFatherSector;
@@ -1441,7 +1441,7 @@ void fn_vSectInfoInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectI
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_bIsInFix(tdstEngineObject_* p_stObject)
+int fn_bIsInFix(tdstEngineObject_* p_stObject)
 {
     return PLD_fn_bIsInFix(p_stObject);
 }

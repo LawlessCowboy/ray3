@@ -9,6 +9,7 @@ typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct GEO_tdstVisualSet_ GEO_tdstVisualSet_;
 typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct GLI_tdstSinEffectAmp_ GLI_tdstSinEffectAmp_;
 
 struct GEO_tdstColor_ {
     float xR; /* +0x0 */
@@ -18,9 +19,15 @@ struct GEO_tdstColor_ {
 };
 
 struct MTH3D_tdstVector_ {
-    int xX; /* +0x0 */
-    int xY; /* +0x4 */
-    int xZ; /* +0x8 */
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+};
+
+struct GLI_tdstSinEffectAmp_ {
+    int xX;
+    int xY;
+    int xZ;
 };
 
 static float GLI_gsWaterPlaneRefraction;
@@ -45,7 +52,7 @@ float a3_xSinEffectBaseMeshSaved[3];
 char g_cSinusEffectFlag;
 float xSinusEffectDepthStart;
 MTH3D_tdstVector_ stSinEffectVector;
-MTH3D_tdstVector_ stSinEffectAmp;
+GLI_tdstSinEffectAmp_ stSinEffectAmp;
 int a3_lSinEffectFreqRLI[3];
 float a3_xSinEffectBaseRLI[3];
 int a3_lSinEffectFreqMesh[3];
@@ -97,7 +104,7 @@ char g_cSinusEffectState;
  */
 GEO_tdstVisualSet_* GLI_p_stCreateTMPVisualSet(int lNbLOD)
 {
-    GEO_tdstGeometricObject_* ppGeo;
+    GEO_tdstGeometricObject_** ppGeo;
     short xLodCounter;
     GEO_tdstVisualSet_* p_stLocalVS;
     /* TODO: decompile from asm/... */
@@ -330,7 +337,7 @@ void GLI_vUpdateEffectData(unsigned int _ulDeltaT)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_fn_SinusEffect_vSetAmplitude(MTH3D_tdstVector_* _p_stAmpVector)
+void GLI_fn_SinusEffect_vSetAmplitude(GLI_tdstSinEffectAmp_* _p_stAmpVector)
 {
     stSinEffectAmp.xX = _p_stAmpVector->xX;
     stSinEffectAmp.xY = _p_stAmpVector->xY;

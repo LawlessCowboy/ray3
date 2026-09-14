@@ -1066,7 +1066,6 @@ int MC_Boot(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, 
     int Bidon;
     unsigned int ulValue;
     int ReturnValue;
-    char str[255];
     /* TODO: decompile from asm/... */
 }
 

@@ -138,6 +138,7 @@ struct CExtraEventActor {
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x8..0xb */
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
@@ -487,7 +488,7 @@ static int g_bUseNearestMicro;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ms_fVolReduction__6Jingle(int oValue)
+void Jingle::ms_fVolReduction(int oValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -625,7 +626,6 @@ void SND_fn_vSynchroSound(void)
     CLinkCallbackResObjCont o_Singleton;
     signed char init;
     int inPause;
-    signed char init;
     /* TODO: decompile from asm/... */
 }
 
@@ -792,15 +792,11 @@ int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_Type
     CResData* po_ResData;
     int s32_SemId;
     CSoundSemaphore* po_Channel;
-    CExtraEventActor* po_EventActor;
-    CLinkTypeActor* po_TypeActor;
-    CLinkActor* po_LinkActor;
     CEventResData* ro_EventResData;
     int s32_Answer;
     int s32_SoundHandle;
     signed char init;
     int s32_Handle;
-    signed char init;
     /* TODO: decompile from asm/... */
 }
 

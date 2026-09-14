@@ -15,7 +15,7 @@ typedef struct sstring sstring;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char Q24usnd23less<PQ24usnd8CResData>C::__cl(CResData* _X, CResData* _Y)
+unsigned char __cl__Q24usnd23less<PQ24usnd8CResData>CFRCPQ24usnd8CResDataRCPQ24usnd8CResData(CResData** _X, CResData** _Y)
 {
     /* TODO: decompile from asm/... */
 }
@@ -27,7 +27,7 @@ unsigned char Q24usnd23less<PQ24usnd8CResData>C::__cl(CResData* _X, CResData* _Y
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char Q24usnd21less<Q24usnd7sstring>C::__cl(sstring* _X, sstring* _Y)
+unsigned char __cl__Q24usnd21less<Q24usnd7sstring>CFRCQ24usnd7sstringRCQ24usnd7sstring(sstring* _X, sstring* _Y)
 {
     /* TODO: decompile from asm/... */
 }
@@ -39,7 +39,7 @@ unsigned char Q24usnd21less<Q24usnd7sstring>C::__cl(sstring* _X, sstring* _Y)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char Q24usnd7less<i>C::__cl(int& _X, int& _Y)
+unsigned char __cl__Q24usnd7less<i>CFRCiRCi(int& _X, int& _Y)
 {
     /* TODO: decompile from asm/... */
 }

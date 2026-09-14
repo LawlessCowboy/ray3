@@ -3,7 +3,6 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
-int sprintf(char*, const char*, ...);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -154,6 +153,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -248,6 +248,7 @@ struct DNM_stDynamicsComplexBlock {
     MTH3D_tdstVector_ m_stFallTranslation; /* +0x20 */
     stMACDPID m_stExternalDatas; /* +0x2c */
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xac..0xaf */
     MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
     MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
 };
@@ -417,6 +418,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -658,6 +660,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -694,6 +697,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -1001,7 +1005,7 @@ unsigned char MC_fn_ucIsCharacterInMainCharacterList(HIE_tdstSuperObject_* hChar
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GAM_p_stGetBlockEventSlotMemory(int s32_Index)
+_SND_tdstBlockEvent* GAM_p_stGetBlockEventSlotMemory(int s32_Index)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1083,7 +1087,7 @@ int GAM_fn_bInitSoundTypes(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, int unused, char* pch_Buffer)
+int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, char* pch_Buffer)
 {
     sprintf(pch_Buffer, "Object type ambiance n\xb0 %d\n", s32_ObjectId);
     return 1;
@@ -1102,7 +1106,7 @@ int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, int unused, char* pch_Buffer)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeMusicInfo(int s32_ObjectId, int unused, char* pch_String)
+int fn_bObjectTypeMusicInfo(int s32_ObjectId, char* pch_String)
 {
     sprintf(pch_String, "Object type music n\xb0 %d\n", s32_ObjectId);
     return 1;
@@ -1195,9 +1199,9 @@ int fn_bObjectTypeAnimationRollOff(int s32_ObjectId, _RollOffParam* pst_RollOff)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeAnimationLinkBis(int s32_ObjectId, int unused, int s32_MicroId)
+int fn_bObjectTypeAnimationLinkBis(int s32_Unused, int s32_ObjectId, int s32_MicroId)
 {
-    return fn_bObjectTypeAnimationLink(s32_ObjectId, s32_MicroId);
+    return fn_bObjectTypeAnimationLink(s32_Unused, s32_MicroId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 367–416 */
@@ -1595,7 +1599,7 @@ HIE_tdstSuperObject_* fn_hGetSuperObjectActorHandle(int s32_ObjectId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bRetObjectRollOffNull(int s32_ObjectId, int s32_ChannelId, _RollOffParam* pst_RollOff)
+int fn_bRetObjectRollOffNull(int s32_Unused0, int s32_Unused1, _RollOffParam* pst_RollOff)
 {
     int b_Answer = 0;
     if (pst_RollOff != NULL)
@@ -1631,7 +1635,7 @@ int fn_bRetObjectLinkBisNull(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectPositionNull(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector)
+int fn_bObjectPositionNull(int s32_Unused0, int s32_Unused1, _stVector* pst_Vector)
 {
     int b_Answer = 0;
     if (pst_Vector != NULL)
@@ -1681,7 +1685,7 @@ int fn_s32RetObjectSwitchNull(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vRetObjectExtraCoefNull(int s32_ObjectId, _SND_tduRefEvt u_SoundEvent, int* pr_Pitch, int* pr_Pan, int* pr_Vol)
+void fn_vRetObjectExtraCoefNull(int s32_Unused, _SND_tduRefEvt u_Unused, int* pr_Pitch, int* pr_Pan, int* pr_Vol)
 {
     if (pr_Pitch != NULL)
         *pr_Pitch = 0x10000;

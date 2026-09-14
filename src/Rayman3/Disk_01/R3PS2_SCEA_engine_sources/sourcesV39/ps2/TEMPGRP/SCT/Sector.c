@@ -245,6 +245,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -287,6 +288,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -664,7 +666,7 @@ void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SCT_fn_vTestChangeSectorWithHistory(MTH3D_tdstVector_* _p_stAfterAbsolutePosition, HIE_tdstSuperObject_* _p_hSectorSOWhereIWas)
+void SCT_fn_vTestChangeSectorWithHistory(MTH3D_tdstVector_* _p_stAfterAbsolutePosition, HIE_tdstSuperObject_** _p_hSectorSOWhereIWas)
 {
     int iInd;
     HIE_tdstSuperObject_* param0;

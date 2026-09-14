@@ -375,6 +375,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -842,6 +843,7 @@ struct stMACDPID {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -856,6 +858,7 @@ struct DNM_stDynamicsComplexBlock {
     MTH3D_tdstVector_ m_stFallTranslation; /* +0x20 */
     stMACDPID m_stExternalDatas; /* +0x2c */
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xac..0xaf */
     MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
     MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
 };
@@ -885,6 +888,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -921,6 +925,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -1232,7 +1237,7 @@ struct tdstZdxIndexList_ {
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_* p_pstChildList; /* +0x18 */
+    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
 
@@ -1558,9 +1563,12 @@ unsigned char fn_bGetCharacterForceCollisionWhenNotMoving(HIE_tdstSuperObject_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vCollSetSetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet, unsigned char _bValue)
+void fn_vCollSetSetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet, int _bValue)
 {
-    /* TODO: decompile from asm/... */
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 0x40;
+    else
+        _hCollSet->ucCollisionFlag &= 0xbf;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 695–697 */
@@ -1572,9 +1580,12 @@ void fn_vCollSetSetCharacterNoCollisionZdeWithProjectile(tdstCollSet_* _hCollSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vCollSetSetCharacterNoCollisionWithOtherSectors(tdstCollSet_* _hCollSet, unsigned char _bValue)
+void fn_vCollSetSetCharacterNoCollisionWithOtherSectors(tdstCollSet_* _hCollSet, int _bValue)
 {
-    /* TODO: decompile from asm/... */
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 0x20;
+    else
+        _hCollSet->ucCollisionFlag &= 0xdf;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 689–691 */
@@ -1586,9 +1597,12 @@ void fn_vCollSetSetCharacterNoCollisionWithOtherSectors(tdstCollSet_* _hCollSet,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vCollSetSetCharacterNoCollisionWithMainCharacter(tdstCollSet_* _hCollSet, unsigned char _bValue)
+void fn_vCollSetSetCharacterNoCollisionWithMainCharacter(tdstCollSet_* _hCollSet, int _bValue)
 {
-    /* TODO: decompile from asm/... */
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 8;
+    else
+        _hCollSet->ucCollisionFlag &= 0xf7;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 683–685 */
@@ -1600,9 +1614,12 @@ void fn_vCollSetSetCharacterNoCollisionWithMainCharacter(tdstCollSet_* _hCollSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vCollSetSetCharacterNoCollisionWithSecondaryCharacter(tdstCollSet_* _hCollSet, unsigned char _bValue)
+void fn_vCollSetSetCharacterNoCollisionWithSecondaryCharacter(tdstCollSet_* _hCollSet, int _bValue)
 {
-    /* TODO: decompile from asm/... */
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 4;
+    else
+        _hCollSet->ucCollisionFlag &= 0xfb;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 677–679 */
@@ -1614,9 +1631,12 @@ void fn_vCollSetSetCharacterNoCollisionWithSecondaryCharacter(tdstCollSet_* _hCo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vCollSetSetCharacterNoCollisionWithProjectile(tdstCollSet_* _hCollSet, unsigned char _bValue)
+void fn_vCollSetSetCharacterNoCollisionWithProjectile(tdstCollSet_* _hCollSet, int _bValue)
 {
-    /* TODO: decompile from asm/... */
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 2;
+    else
+        _hCollSet->ucCollisionFlag &= 0xfd;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 671–673 */
@@ -1628,9 +1648,12 @@ void fn_vCollSetSetCharacterNoCollisionWithProjectile(tdstCollSet_* _hCollSet, u
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vCollSetSetCharacterNoCollisionWithMap(tdstCollSet_* _hCollSet, unsigned char _bValue)
+void fn_vCollSetSetCharacterNoCollisionWithMap(tdstCollSet_* _hCollSet, int _bValue)
 {
-    /* TODO: decompile from asm/... */
+    if (_bValue != 0)
+        _hCollSet->ucCollisionFlag |= 1;
+    else
+        _hCollSet->ucCollisionFlag &= 0xfe;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 666–667 */

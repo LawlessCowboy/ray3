@@ -112,7 +112,7 @@ unsigned char CBankDescCont::mfn_bRemoveBankDesc(char* pch_FileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd12CResObjState::f_vExecCmd(unsigned int uiIndex, void* pvParam)
+void f_vExecCmd__Q24usnd12CResObjStateFUiPv(unsigned int uiIndex, void* pvParam)
 {
     int ppvParams[2];
     CBoolRefParam oBoolRef;

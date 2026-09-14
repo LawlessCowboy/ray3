@@ -2312,7 +2312,7 @@ struct _RollOffParam {
 };
 
 struct tdstIntelligence_ {
-    tdstScriptAI_* p_p_stScriptAI; /* +0x0 */
+    tdstScriptAI_** p_p_stScriptAI; /* +0x0 */
     tdstNodeInterpret_* p_stCurrentSchedule; /* +0x4 */
     tdstComport_* p_stCurrentComport; /* +0x8 */
     tdstComport_* p_stPrevComport; /* +0xc */
@@ -2354,6 +2354,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -2423,6 +2424,7 @@ struct AI_tdstMind_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -2456,6 +2458,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -2492,6 +2495,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -2929,7 +2933,7 @@ struct GEO_tdstDoubledIndex_ {
 };
 
 struct tdstDsgMem_ {
-    tdstDsgVar_* p_p_stDsgVar; /* +0x0 */
+    tdstDsgVar_** p_p_stDsgVar; /* +0x0 */
     int p_cDsgMemBufferInit; /* +0x4 */
     int p_cDsgMemBuffer; /* +0x8 */
 };
@@ -3000,7 +3004,13 @@ int GROS_ANTIBUG_DE_LA_MORT_QUI_TUE;
 unsigned char g_ucUseDefaultActionReturn;
 unsigned char g_ucNewActionReturn;
 
-tdstNodeInterpret_* fn_p_stEvalSubRoutine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue, tdstMacro_* p_stMacro);
+/* Defined in List.c; the recovered declaration is required for pointer return
+ * type checking when evaluating a macro node. */
+tdstNodeInterpret_* fn_p_stEvalSubRoutine(
+    HIE_tdstSuperObject_* p_SuperObjPerso,
+    tdstNodeInterpret_* p_stTree,
+    tdstGetSetParam_* p_stValue,
+    tdstMacro_* p_stMacro);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 59–59 */
 /* addr: 0x001fc4d0  size: 8 bytes */
@@ -3022,8 +3032,9 @@ void fn_vSetFieldTypeComport(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalCineRef(int unused, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stEvalCineRef(void* p_stContext, tdstNodeInterpret_* p_stTree)
 {
+    (void)p_stContext;
     p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
     return p_stTree;
 }
@@ -3169,7 +3180,7 @@ unsigned char fn_ucIntelligenceRulesEngine(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     unsigned char ucDepthInit;
     unsigned char ucActionReturn;
@@ -3183,7 +3194,7 @@ void fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -3217,7 +3228,7 @@ void fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stEvalMetaAction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalMetaAction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdstNodeInterpret_* p_stTreeInit;
     tdeMetaActionId_ eMetaActionId;
@@ -3283,7 +3294,7 @@ tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_* p_stTree)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stEvalProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdstNodeInterpret_* (*p_fn_p_stProcedureFunctionPtr)(HIE_tdstSuperObject_*, tdstNodeInterpret_*);
     /* TODO: decompile from asm/... */
@@ -3325,8 +3336,9 @@ tdstNodeInterpret_* fn_p_stEvalFunction(HIE_tdstSuperObject_* p_SuperObjPerso, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalNULL(int unused, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stEvalNULL(void* p_stContext, tdstNodeInterpret_* p_stTree)
 {
+    (void)p_stContext;
     p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
     return p_stTree;
 }
@@ -3461,7 +3473,7 @@ tdstNodeInterpret_* fn_p_stEvalComportRef(tdstNodeInterpret_* p_stTree, tdstGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalEndMacro(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalEndMacro(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.lValue = 0;
     p_stValue->eType = E_vt_MetaActionReturn;
@@ -3478,7 +3490,7 @@ tdstNodeInterpret_* fn_p_stEvalEndMacro(int unused, tdstNodeInterpret_* p_stTree
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalBeginMacro(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalBeginMacro(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.lValue = 0;
     p_stValue->eType = E_vt_MetaActionReturn;
@@ -3494,7 +3506,7 @@ tdstNodeInterpret_* fn_p_stEvalBeginMacro(int unused, tdstNodeInterpret_* p_stTr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalEndOfTree(int unused, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalEndOfTree(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.lValue = 16;
     p_stValue->eType = E_vt_MetaActionReturn;
@@ -3632,7 +3644,7 @@ tdstNodeInterpret_* fn_p_stEvalWayPointRef(tdstNodeInterpret_* p_stTree, tdstGet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalConstantVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalConstantVector(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     ((int *)&p_stValue->uDummy.uParam)[0] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[0];
     ((int *)&p_stValue->uDummy.uParam)[1] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[1];
@@ -3661,7 +3673,7 @@ tdstNodeInterpret_* fn_p_stEvalConstantVector(HIE_tdstSuperObject_* p_SuperObjPe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stEvalVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     /* TODO: decompile from asm/... */
 }

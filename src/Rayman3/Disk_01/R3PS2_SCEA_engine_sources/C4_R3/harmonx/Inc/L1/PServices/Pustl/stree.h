@@ -6,6 +6,7 @@
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CIndexAllocator CIndexAllocator;
+typedef struct CLinkTypeActorCont CLinkTypeActorCont;
 typedef struct CResData CResData;
 typedef struct CUUID CUUID;
 typedef struct TTypedVar TTypedVar;
@@ -17,6 +18,7 @@ typedef struct sTreeNode sTreeNode;
 typedef struct sallocator sallocator;
 typedef struct spair spair;
 typedef struct sstring sstring;
+typedef struct stree stree;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\C4_R3\harmonx\Inc\L1\PServices\Pustl\stree.h lines 495–495 */
 /* addr: 0x00186dd0  size: 8 bytes */
@@ -25,7 +27,7 @@ typedef struct sstring sstring;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>::_Lmost(void)
+sTreeNode** _Lmost__Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -37,7 +39,7 @@ sTreeNode* Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>C::size(void)
+unsigned int size__Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -49,7 +51,7 @@ unsigned int Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q2
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>C::end(void)
+void end__Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -64,7 +66,7 @@ void Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13C
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-const_iterator Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>C::find(char&& _Kv)
+const_iterator find__Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>CFRCPCc(char&& _Kv)
 {
     const_iterator _oIt;
     /* TODO: decompile from asm/... */
@@ -88,7 +90,7 @@ const_iterator Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>C::_Lbound(char&& _Kv)
+sTreeNode* _Lbound__Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>CFRCPCc(char&& _Kv)
 {
     sTreeNode* _pNode2;
     sTreeNode* _pNode;
@@ -114,7 +116,7 @@ void Q34usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13C
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>C::_GetHead(void)
+sTreeNode* _GetHead__Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -126,7 +128,7 @@ sTreeNode* Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24u
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>::_Key(sTreeNode* _pNode)
+void _Key__Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>FPQ34usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>9sTreeNode(sTreeNode* _pNode)
 {
     /* TODO: decompile from asm/... */
 }
@@ -138,7 +140,7 @@ void Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13C
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q34usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>14const_iteratorC::_Mynode(void)
+sTreeNode* _Mynode__Q34usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>14const_iteratorCFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -150,7 +152,7 @@ sTreeNode* Q34usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24u
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-const_iterator Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>C::lower_bound(char&& _Kv)
+const_iterator lower_bound__Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>4_Kfn,Q24usnd13CStringIsLess,Q24usnd14sallocator<Ui>>CFRCPCc(char&& _Kv)
 {
     /* TODO: decompile from asm/... */
 }
@@ -173,7 +175,7 @@ const_iterator Q24usnd155stree<PCc,Q24usnd14spair<CPCc,Ui>,Q34usnd59smap<PCc,Ui,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj>,Q34usnd101smap<Q24usnd5CUUID,PQ24usnd6CIdObj,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>::erase(iterator* _oIt1, iterator* _oIt2)
+void erase__Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj>,Q34usnd101smap<Q24usnd5CUUID,PQ24usnd6CIdObj,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>FQ34usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj>,Q34usnd101smap<Q24usnd5CUUID,PQ24usnd6CIdObj,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>8iteratorQ34usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj>,Q34usnd101smap<Q24usnd5CUUID,PQ24usnd6CIdObj,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>8iterator(iterator* _oIt1, iterator* _oIt2)
 {
     /* TODO: decompile from asm/... */
 }
@@ -194,7 +196,7 @@ void Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj>,Q34usnd101smap<Q24usnd5CUUID,PQ24usnd6CIdObj,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>::_Erase(sTreeNode* _pNode)
+void _Erase__Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj>,Q34usnd101smap<Q24usnd5CUUID,PQ24usnd6CIdObj,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>FPQ34usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj>,Q34usnd101smap<Q24usnd5CUUID,PQ24usnd6CIdObj,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>9sTreeNode(sTreeNode* _pNode)
 {
     sTreeNode* _pNode2;
     /* TODO: decompile from asm/... */
@@ -207,7 +209,7 @@ void Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj>,Q34usnd101smap<Q24usnd5CUUID,PQ24usnd6CIdObj,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>C::_GetHead(void)
+sTreeNode* _GetHead__Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj>,Q34usnd101smap<Q24usnd5CUUID,PQ24usnd6CIdObj,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -230,7 +232,7 @@ sTreeNode* Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2IdObjInfo>,Q34usnd123smap<Q24usnd5CUUID,Q24usnd13CPS2IdObjInfo,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>::erase(iterator* _oIt1, iterator* _oIt2)
+void erase__Q24usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2IdObjInfo>,Q34usnd123smap<Q24usnd5CUUID,Q24usnd13CPS2IdObjInfo,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>FQ34usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2IdObjInfo>,Q34usnd123smap<Q24usnd5CUUID,Q24usnd13CPS2IdObjInfo,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>8iteratorQ34usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2IdObjInfo>,Q34usnd123smap<Q24usnd5CUUID,Q24usnd13CPS2IdObjInfo,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>8iterator(iterator* _oIt1, iterator* _oIt2)
 {
     /* TODO: decompile from asm/... */
 }
@@ -254,7 +256,7 @@ void Q24usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2Id
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2IdObjInfo>,Q34usnd123smap<Q24usnd5CUUID,Q24usnd13CPS2IdObjInfo,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>::_Erase(sTreeNode* _pNode)
+void _Erase__Q24usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2IdObjInfo>,Q34usnd123smap<Q24usnd5CUUID,Q24usnd13CPS2IdObjInfo,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>FPQ34usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2IdObjInfo>,Q34usnd123smap<Q24usnd5CUUID,Q24usnd13CPS2IdObjInfo,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>9sTreeNode(sTreeNode* _pNode)
 {
     sTreeNode* _pNode2;
     /* TODO: decompile from asm/... */
@@ -267,7 +269,7 @@ void Q24usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2Id
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2IdObjInfo>,Q34usnd123smap<Q24usnd5CUUID,Q24usnd13CPS2IdObjInfo,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>C::_GetHead(void)
+sTreeNode* _GetHead__Q24usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2IdObjInfo>,Q34usnd123smap<Q24usnd5CUUID,Q24usnd13CPS2IdObjInfo,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -304,7 +306,7 @@ void ~Q24usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2I
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2IdObjInfo>,Q34usnd123smap<Q24usnd5CUUID,Q24usnd13CPS2IdObjInfo,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>::_Init(void)
+void _Init__Q24usnd294stree<Q24usnd5CUUID,Q24usnd44spair<CQ24usnd5CUUID,Q24usnd13CPS2IdObjInfo>,Q34usnd123smap<Q24usnd5CUUID,Q24usnd13CPS2IdObjInfo,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -337,7 +339,7 @@ void ~Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj>,Q34usnd101smap<Q24usnd5CUUID,PQ24usnd6CIdObj,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>::_Init(void)
+void _Init__Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj>,Q34usnd101smap<Q24usnd5CUUID,PQ24usnd6CIdObj,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>4_Kfn,Q24usnd19less<Q24usnd5CUUID>,Q24usnd27sallocator<PQ24usnd6CIdObj>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -360,7 +362,7 @@ void Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>::erase(iterator* _oIt1, iterator* _oIt2)
+void erase__Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>FQ34usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>8iteratorQ34usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>8iterator(iterator* _oIt1, iterator* _oIt2)
 {
     /* TODO: decompile from asm/... */
 }
@@ -381,7 +383,7 @@ void Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CL
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>::_Erase(sTreeNode* _pNode)
+void _Erase__Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>FPQ34usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>9sTreeNode(sTreeNode* _pNode)
 {
     sTreeNode* _pNode2;
     /* TODO: decompile from asm/... */
@@ -394,7 +396,7 @@ void Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CL
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>C::_GetHead(void)
+sTreeNode* _GetHead__Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -406,7 +408,7 @@ sTreeNode* Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUU
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>::_Lmost(void)
+sTreeNode** _Lmost__Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -441,7 +443,7 @@ sTreeNode* Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUU
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>::insert(CUUID* _roValue)
+void insert__Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>FRCQ24usnd5CUUID(CUUID* _roValue)
 {
     iterator _oIt;
     unsigned char _Ans;
@@ -479,7 +481,7 @@ void Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CL
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>::_Insert(sTreeNode* _pNode, sTreeNode* _pNode2, CUUID* _roValue)
+void _Insert__Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>FPQ34usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>9sTreeNodePQ34usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>9sTreeNodeRCQ24usnd5CUUID(sTreeNode* _pNode, sTreeNode* _pNode2, CUUID* _roValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -497,7 +499,7 @@ void Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CL
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>::_Buynode(sTreeLink* _pParent, _Redbl _eColor)
+sTreeNode* _Buynode__Q24usnd156stree<Q24usnd5CUUID,Q24usnd5CUUID,Q34usnd63sset<Q24usnd5CUUID,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>4_Kfn,7CLesser,Q24usnd25sallocator<Q24usnd5CUUID>>FPQ34usnd9streebase9sTreeLinkQ34usnd9streebase6_Redbl(sTreeLink* _pParent, _Redbl _eColor)
 {
     sTreeNode* _pNode;
     /* TODO: decompile from asm/... */
@@ -553,7 +555,7 @@ void Q24usnd250stree<Q24usnd5CUUID,Q24usnd37spair<CQ24usnd5CUUID,PQ24usnd6CIdObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>::erase(iterator* _oIt1, iterator* _oIt2)
+void erase__Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>FQ34usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>8iteratorQ34usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>8iterator(iterator* _oIt1, iterator* _oIt2)
 {
     /* TODO: decompile from asm/... */
 }
@@ -575,7 +577,7 @@ void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>::_Erase(sTreeNode* _pNode)
+void _Erase__Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>FPQ34usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>9sTreeNode(sTreeNode* _pNode)
 {
     sTreeNode* _pNode2;
     /* TODO: decompile from asm/... */
@@ -588,7 +590,7 @@ void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>C::_GetHead(void)
+sTreeNode* _GetHead__Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -627,7 +629,7 @@ void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>::erase(iterator* _oIt1, iterator* _oIt2)
+void erase__Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>FQ34usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>8iteratorQ34usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>8iterator(iterator* _oIt1, iterator* _oIt2)
 {
     /* TODO: decompile from asm/... */
 }
@@ -648,7 +650,7 @@ void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>::_Erase(sTreeNode* _pNode)
+void _Erase__Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>FPQ34usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>9sTreeNode(sTreeNode* _pNode)
 {
     sTreeNode* _pNode2;
     /* TODO: decompile from asm/... */
@@ -661,7 +663,7 @@ void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>C::_GetHead(void)
+sTreeNode* _GetHead__Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -673,7 +675,7 @@ sTreeNode* Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ2
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>::_Lmost(void)
+sTreeNode** _Lmost__Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -703,7 +705,7 @@ sTreeNode* Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ2
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>::insert(CResData* _roValue)
+void insert__Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>FRCPQ24usnd8CResData(CResData** _roValue)
 {
     iterator _oIt;
     unsigned char _Ans;
@@ -741,7 +743,7 @@ void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>::_Insert(sTreeNode* _pNode, sTreeNode* _pNode2, CResData* _roValue)
+void _Insert__Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>FPQ34usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>9sTreeNodePQ34usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>9sTreeNodeRCPQ24usnd8CResData(sTreeNode* _pNode, sTreeNode* _pNode2, CResData** _roValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -772,7 +774,7 @@ void Q34usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>C::_Lbound(CResData* _Kv)
+sTreeNode* _Lbound__Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>CFRCPQ24usnd8CResData(CResData** _Kv)
 {
     sTreeNode* _pNode2;
     sTreeNode* _pNode;
@@ -786,7 +788,7 @@ void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CResData* Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>::_Key(sTreeNode* _pNode)
+CResData** _Key__Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>FPQ34usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>9sTreeNode(sTreeNode* _pNode)
 {
     /* TODO: decompile from asm/... */
 }
@@ -798,7 +800,7 @@ CResData* Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q34usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>8iteratorC::_Mynode(void)
+sTreeNode* _Mynode__Q34usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>8iteratorCFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -810,7 +812,7 @@ sTreeNode* Q34usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ2
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>::end(void)
+void end__Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -822,7 +824,7 @@ void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-iterator Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>::lower_bound(CResData* _Kv)
+iterator lower_bound__Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_Kfn,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>FRCPQ24usnd8CResData(CResData** _Kv)
 {
     /* TODO: decompile from asm/... */
 }
@@ -834,7 +836,7 @@ iterator Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24u
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>::_Lmost(void)
+sTreeNode** _Lmost__Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -846,7 +848,7 @@ sTreeNode* Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sstring* Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>::_Key(sTreeNode* _pNode)
+sstring* _Key__Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>FPQ34usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>9sTreeNode(sTreeNode* _pNode)
 {
     /* TODO: decompile from asm/... */
 }
@@ -858,7 +860,7 @@ sstring* Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBank
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q34usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>8iteratorC::_Mynode(void)
+sTreeNode* _Mynode__Q34usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>8iteratorCFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -870,7 +872,7 @@ sTreeNode* Q34usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>::end(void)
+void end__Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -882,7 +884,7 @@ void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-iterator Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>::lower_bound(sstring* _Kv)
+iterator lower_bound__Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>FRCQ24usnd7sstring(sstring* _Kv)
 {
     /* TODO: decompile from asm/... */
 }
@@ -905,7 +907,7 @@ iterator Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBank
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>C::_Lbound(sstring* _Kv)
+sTreeNode* _Lbound__Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>CFRCQ24usnd7sstring(sstring* _Kv)
 {
     sTreeNode* _pNode2;
     sTreeNode* _pNode;
@@ -940,7 +942,7 @@ void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>::insert(spair* _roValue)
+void insert__Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>FRCQ24usnd35spair<CQ24usnd7sstring,P9CBankDesc>(spair* _roValue)
 {
     iterator _oIt;
     unsigned char _Ans;
@@ -978,7 +980,7 @@ void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>::_Insert(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue)
+void _Insert__Q24usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>FPQ34usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>9sTreeNodePQ34usnd243stree<Q24usnd7sstring,Q24usnd35spair<CQ24usnd7sstring,P9CBankDesc>,Q34usnd97smap<Q24usnd7sstring,P9CBankDesc,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>4_Kfn,Q24usnd21less<Q24usnd7sstring>,Q24usnd23sallocator<P9CBankDesc>>9sTreeNodeRCQ24usnd35spair<CQ24usnd7sstring,P9CBankDesc>(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1006,7 +1008,7 @@ void Q24usnd224stree<PQ24usnd8CResData,PQ24usnd8CResData,Q34usnd95sset<PQ24usnd8
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>::_Key(sTreeNode* _pNode)
+void _Key__Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>FPQ34usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>9sTreeNode(sTreeNode* _pNode)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1018,7 +1020,7 @@ void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q34usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>8iteratorC::_Mynode(void)
+sTreeNode* _Mynode__Q34usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>8iteratorCFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1030,7 +1032,7 @@ sTreeNode* Q34usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>::end(void)
+void end__Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1042,7 +1044,7 @@ void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-iterator Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>::lower_bound(int& _Kv)
+iterator lower_bound__Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>FRCi(int& _Kv)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1061,7 +1063,7 @@ iterator Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>C::_Lbound(int& _Kv)
+sTreeNode* _Lbound__Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>CFRCi(int& _Kv)
 {
     sTreeNode* _pNode2;
     sTreeNode* _pNode;
@@ -1075,7 +1077,7 @@ void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>::_Lmost(void)
+sTreeNode** _Lmost__Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1105,7 +1107,7 @@ sTreeNode* Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>::insert(spair* _roValue)
+void insert__Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>FRCQ24usnd28spair<Ci,P15CSoundSemaphore>(spair* _roValue)
 {
     iterator _oIt;
     unsigned char _Ans;
@@ -1143,7 +1145,7 @@ void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>::_Insert(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue)
+void _Insert__Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>FPQ34usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>9sTreeNodePQ34usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>9sTreeNodeRCQ24usnd28spair<Ci,P15CSoundSemaphore>(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1167,7 +1169,7 @@ void Q34usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>C::_GetHead(void)
+sTreeNode* _GetHead__Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1202,7 +1204,7 @@ void Q34usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>::erase(iterator* _oIt1, iterator* _oIt2)
+void erase__Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>FQ34usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>8iteratorQ34usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>8iterator(iterator* _oIt1, iterator* _oIt2)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1223,7 +1225,7 @@ void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>::_Erase(sTreeNode* _pNode)
+void _Erase__Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>FPQ34usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15CSoundSemaphore,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>4_Kfn,Q24usnd7less<i>,Q24usnd30sallocator<P15CSoundSemaphore>>9sTreeNode(sTreeNode* _pNode)
 {
     sTreeNode* _pNode2;
     /* TODO: decompile from asm/... */
@@ -1236,7 +1238,7 @@ void Q24usnd199stree<i,Q24usnd28spair<Ci,P15CSoundSemaphore>,Q34usnd82smap<i,P15
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>::_Key(sTreeNode* _pNode)
+void _Key__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>FPQ34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>9sTreeNode(sTreeNode* _pNode)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1248,7 +1250,7 @@ void Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>8iteratorC::_Mynode(void)
+sTreeNode* _Mynode__Q34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>8iteratorCFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1260,7 +1262,7 @@ sTreeNode* Q34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>::end(void)
+void end__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1272,7 +1274,7 @@ void Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-iterator Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>::lower_bound(int& _Kv)
+iterator lower_bound__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>FRCi(int& _Kv)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1291,7 +1293,7 @@ iterator Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90sm
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>C::_Lbound(int& _Kv)
+sTreeNode* _Lbound__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>CFRCi(int& _Kv)
 {
     sTreeNode* _pNode2;
     sTreeNode* _pNode;
@@ -1318,7 +1320,7 @@ void usnd::_Destroy<Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>>(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>8iterator::__pp(void)
+iterator* __pp__Q34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>8iteratorFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1342,7 +1344,7 @@ void Q34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>C::_GetHead(void)
+sTreeNode* _GetHead__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1366,7 +1368,7 @@ void Q34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>::_Lmost(void)
+sTreeNode** _Lmost__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1416,7 +1418,7 @@ unsigned char CSoundSemaphore::mfn_bAddSoundRequest(int s32_ObjectId, int s32_Ty
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>::insert(spair* _roValue)
+void insert__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>FRCQ24usnd32spair<Ci,P19CSoundSemaphoreInfo>(spair* _roValue)
 {
     iterator _oIt;
     unsigned char _Ans;
@@ -1454,7 +1456,7 @@ void Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>::_Insert(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue)
+void _Insert__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>FPQ34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>9sTreeNodePQ34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>9sTreeNodeRCQ24usnd32spair<Ci,P19CSoundSemaphoreInfo>(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1494,7 +1496,7 @@ void ~CSoundSemaphore(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>::erase(iterator* _oIt1, iterator* _oIt2)
+void erase__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>FQ34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>8iteratorQ34usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i,P19CSoundSemaphoreInfo,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>4_Kfn,Q24usnd7less<i>,Q24usnd34sallocator<P19CSoundSemaphoreInfo>>8iterator(iterator* _oIt1, iterator* _oIt2)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1510,7 +1512,7 @@ void Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd90smap<i
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CLinkTypeActorCont::mfn_roGetInstance(void)
+CLinkTypeActorCont* CLinkTypeActorCont::mfn_roGetInstance(void)
 {
     CLinkTypeActorCont o_LinkTypeActorCont;
     signed char init;
@@ -1535,7 +1537,7 @@ void CLinkTypeActorCont::mfn_roGetInstance(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>::erase(iterator* _oIt1, iterator* _oIt2)
+void erase__Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>FQ34usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>8iteratorQ34usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>8iterator(iterator* _oIt1, iterator* _oIt2)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1556,7 +1558,7 @@ void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14C
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>::_Erase(sTreeNode* _pNode)
+void _Erase__Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>FPQ34usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>9sTreeNode(sTreeNode* _pNode)
 {
     sTreeNode* _pNode2;
     /* TODO: decompile from asm/... */
@@ -1569,7 +1571,7 @@ void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14C
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>C::_GetHead(void)
+sTreeNode* _GetHead__Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1586,7 +1588,7 @@ sTreeNode* Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>::_Init(void)
+void _Init__Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1602,7 +1604,7 @@ void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14C
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>C::_Lbound(void)
+void CLinkTypeActorCont::mfn_vSynchroActorInstance(void)
 {
     iterator it;
     /* TODO: decompile from asm/... */
@@ -1622,7 +1624,7 @@ void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14C
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void _pNode2(sTreeNode* _pNode)
+sTreeNode* _pNode2(sTreeNode* _pNode)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1634,7 +1636,7 @@ void _pNode2(sTreeNode* _pNode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>::_Key(sTreeNode* _pNode)
+void _Key__Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>FPQ34usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>9sTreeNode(sTreeNode* _pNode)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1646,7 +1648,7 @@ void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14C
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q34usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>8iteratorC::_Mynode(void)
+sTreeNode* _Mynode__Q34usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>8iteratorCFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1658,7 +1660,7 @@ sTreeNode* Q34usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void this(void)
+stree* this(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1670,7 +1672,7 @@ void this(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-iterator Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>::lower_bound(int& _Kv)
+iterator lower_bound__Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>FRCi(int& _Kv)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1733,7 +1735,7 @@ int CLinkTypeActorCont::mfn_s32AddActorType(int s32_VolId, _tdstAllRetObjectSoun
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>::insert(spair* _roValue)
+void insert__Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>FRCQ24usnd27spair<Ci,P14CLinkTypeActor>(spair* _roValue)
 {
     iterator _oIt;
     unsigned char _Ans;
@@ -1771,7 +1773,7 @@ void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14C
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>::_Insert(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue)
+void _Insert__Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>FPQ34usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>9sTreeNodePQ34usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14CLinkTypeActor,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>4_Kfn,Q24usnd7less<i>,Q24usnd29sallocator<P14CLinkTypeActor>>9sTreeNodeRCQ24usnd27spair<Ci,P14CLinkTypeActor>(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1783,7 +1785,7 @@ void Q24usnd195stree<i,Q24usnd27spair<Ci,P14CLinkTypeActor>,Q34usnd80smap<i,P14C
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>C::_GetHead(void)
+sTreeNode* _GetHead__Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>CFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1795,7 +1797,7 @@ sTreeNode* Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P1
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>::_Lmost(void)
+sTreeNode** _Lmost__Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1818,7 +1820,7 @@ sTreeNode* Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P1
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>::erase(iterator* _oIt1, iterator* _oIt2)
+void erase__Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>FQ34usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>8iteratorQ34usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>8iterator(iterator* _oIt1, iterator* _oIt2)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1839,7 +1841,7 @@ void Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLink
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>::_Erase(sTreeNode* _pNode)
+void _Erase__Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>FPQ34usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>9sTreeNode(sTreeNode* _pNode)
 {
     sTreeNode* _pNode2;
     /* TODO: decompile from asm/... */
@@ -1857,7 +1859,7 @@ void Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLink
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>::_Init(void)
+void _Init__Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1881,7 +1883,7 @@ void Q34usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLink
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>::_Key(sTreeNode* _pNode)
+void _Key__Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>FPQ34usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>9sTreeNode(sTreeNode* _pNode)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1893,7 +1895,7 @@ void Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLink
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-sTreeNode* Q34usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>8iteratorC::_Mynode(void)
+sTreeNode* _Mynode__Q34usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>8iteratorCFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1905,7 +1907,7 @@ sTreeNode* Q34usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P1
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>::end(void)
+void end__Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1929,7 +1931,7 @@ void Q34usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLink
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-iterator Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>::lower_bound(int& _Kv)
+iterator lower_bound__Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>FRCi(int& _Kv)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1948,7 +1950,7 @@ iterator Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10C
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>C::_Lbound(int& _Kv)
+sTreeNode* _Lbound__Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>CFRCi(int& _Kv)
 {
     sTreeNode* _pNode2;
     sTreeNode* _pNode;
@@ -1980,7 +1982,7 @@ void Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLink
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>::insert(spair* _roValue)
+void insert__Q24usnd179stree<i,Q24usnd23spair<Ci,P10CLinkMicro>,Q34usnd72smap<i,P10CLinkMicro,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>4_Kfn,Q24usnd7less<i>,Q24usnd25sallocator<P10CLinkMicro>>FRCQ24usnd23spair<Ci,P10CLinkMicro>(spair* _roValue)
 {
     iterator _oIt;
     unsigned char _Ans;

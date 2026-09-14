@@ -161,6 +161,7 @@ struct CExtraEventActor {
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x8..0xb */
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
@@ -172,6 +173,11 @@ struct CLinkTypeActor {
     int ms32TypeId; /* +0x80 */
     int ms32LineId; /* +0x84 */
     _tdstAllRetObjectSound mstIActor; /* +0x88 */
+    unsigned char mfn_bSoundPlaying(void);
+    unsigned char mfn_bExecuteActorInTypeActorInstance(int s32_CmdId, int s32_ObjectId);
+    void mfn_vSynchronizeActorInTypeActorInstance(void);
+    CLinkActor* mfn_poAddActorInTypeActorInstance(int s32_ObjectId);
+    CLinkActor* mfn_poGetActorFromIdInTypeActorInstance(int s32_ActorId);
 };
 
 struct CPitchActorModifier {

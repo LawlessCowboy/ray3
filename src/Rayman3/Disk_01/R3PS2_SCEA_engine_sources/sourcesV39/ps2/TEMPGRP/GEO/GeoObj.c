@@ -74,6 +74,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -159,7 +160,7 @@ struct GEO_tdstElementPoints_ {
 struct GEO_tdstElementLines_ {
     float xThickness; /* +0x0 */
     GEO_tdstDoubledIndex_* d_stListOfLineIndex; /* +0x4 */
-    GLI_tdstMaterial_* d_hListOfLinesVisualMaterial; /* +0x8 */
+    GLI_tdstMaterial_** d_hListOfLinesVisualMaterial; /* +0x8 */
     GEO_tdstColor_* d_stListOfLinesReceivedLightIntensity; /* +0xc */
     short xNbLines; /* +0x10 */
     short xIndexOfParallelBox; /* +0x12 */
@@ -409,7 +410,6 @@ unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short 
 void GEO_vGetNormalOfGeometricObjectElement(GEO_tdstGeometricObject_* hObject, short xElementIndex, short xDataElementIndex, MTH3D_tdstVector_* p_stNormal)
 {
     GEO_tdstElementFaceMapDescriptors_* param0;
-    GEO_tdstElementIndexedTriangles_* param0;
     /* TODO: decompile from asm/... */
 }
 
@@ -478,7 +478,7 @@ void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_* p_hObject, short xNbPoints, short xNbElements)
+void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements)
 {
     /* TODO: decompile from asm/... */
 }

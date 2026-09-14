@@ -281,7 +281,7 @@ void COL_vCreateElementSpheres(COL_tdstCollideObject_* hObject, short* p_hElemen
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_vGetGameMaterialOfIndexedTriangles(COL_tdstCollideObject_* hObject, short hElement, GMT_tdstGameMaterial_* p_hMaterial)
+void COL_vGetGameMaterialOfIndexedTriangles(COL_tdstCollideObject_* hObject, short hElement, GMT_tdstGameMaterial_** p_hMaterial)
 {
     *(GMT_tdstGameMaterial_**)p_hMaterial = (*(COL_tdstElementIndexedTriangles_***)&hObject->d_stListOfElements)[hElement]->hMaterial;
 }

@@ -21,6 +21,7 @@ struct _usnd_STimerStruct {
     void (*m_pfnCallback)(unsigned int, unsigned int); /* +0x0 */
     unsigned int m_uiUserParam; /* +0x4 */
     unsigned long m_uiTime; /* +0x8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xc..0xf */
     unsigned int m_uiPeriod; /* +0x10 */
     unsigned char m_bDelete; /* +0x14 */
     unsigned char m_bCall; /* +0x15 */
@@ -254,7 +255,7 @@ unsigned int usnd_uiSetTimer(unsigned int uiDelay, void (*pfnCallback)(unsigned 
  */
 void usnd_vTimerLoop__FPv(void)
 {
-    _usnd_STimerStruct* ppSTS;
+    _usnd_STimerStruct** ppSTS;
     /* TODO: decompile from asm/... */
 }
 
@@ -265,7 +266,7 @@ void usnd_vTimerLoop__FPv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" unsigned int usnd_uiDesinitTimers(void)
+unsigned int usnd_uiDesinitTimers(void)
 {
     return 1;
 }
@@ -314,7 +315,7 @@ unsigned int usnd_uiInitTimers(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" void usnd_vUpdateTimers(void)
+void usnd_vUpdateTimers(void)
 {
 }
 

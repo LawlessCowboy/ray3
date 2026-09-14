@@ -710,7 +710,7 @@ unsigned char IPT_fn_bGetKeyboardCancelInertiaForPadNumber(unsigned char ucPadNu
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void IPT_fn_vGetKeyboardAxesForPadNumber(unsigned char ucPadNumber, IPT_tdstEntryElement_* p_hLeft, IPT_tdstEntryElement_* p_hRight, IPT_tdstEntryElement_* p_hUp, IPT_tdstEntryElement_* p_hDown, IPT_tdstEntryElement_* p_hSpeedUp)
+void IPT_fn_vGetKeyboardAxesForPadNumber(unsigned char ucPadNumber, IPT_tdstEntryElement_** p_hLeft, IPT_tdstEntryElement_** p_hRight, IPT_tdstEntryElement_** p_hUp, IPT_tdstEntryElement_** p_hDown, IPT_tdstEntryElement_** p_hSpeedUp)
 {
     /* TODO: decompile from asm/... */
 }

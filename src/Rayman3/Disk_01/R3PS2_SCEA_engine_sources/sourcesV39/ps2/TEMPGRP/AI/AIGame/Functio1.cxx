@@ -174,7 +174,7 @@ typedef struct tdstStandardGame_ tdstStandardGame_;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stCreditsManagementFunctions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stCreditsManagementFunctions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int begin;
     char* hText;
@@ -187,23 +187,13 @@ void fn_p_stCreditsManagementFunctions(HIE_tdstSuperObject_* p_SuperObjPerso, td
     tdstGetSetParam_ stParam;
     long offset;
     int r;
-    int i;
     char buffer[101];
     int end;
-    char* hText;
-    unsigned int begin;
     unsigned int pages;
     unsigned int caract;
-    unsigned int ligne;
-    unsigned int lLanguage;
     unsigned int lChapter;
-    tdstGetSetParam_ stParam;
     __sFILE* pCreditsFile;
     unsigned int header;
-    unsigned int r;
-    unsigned int i;
-    char buffer[101];
-    __sFILE* pCreditsFile;
     tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
 }
@@ -512,7 +502,7 @@ tdstNodeInterpret_* fn_p_stTextToInt(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetLanguageText(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetLanguageText(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdstGetSetParam_ stParam;
     /* TODO: decompile from asm/... */
@@ -528,7 +518,7 @@ void fn_p_stGetLanguageText(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInter
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetNbLanguages(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetNbLanguages(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -543,7 +533,7 @@ void fn_p_stGetNbLanguages(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stV
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetCurrentLanguageId(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetCurrentLanguageId(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -737,7 +727,7 @@ tdstNodeInterpret_* fn_p_GetBooleanInArray(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_ComputeJumpImpulsion(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_ComputeJumpImpulsion(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdstDynam_* h_Dynam;
     DNM_stDynamics* p_stDynamic;
@@ -1100,7 +1090,6 @@ tdstNodeInterpret_* fn_p_GetMechanicParameter(HIE_tdstSuperObject_* p_SuperObjPe
 tdstNodeInterpret_* fn_p_stVectorAndAngle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     float xNorm;
-    float xNorm;
     float xAngle;
     float xCos;
     float xSin;
@@ -1232,11 +1221,8 @@ tdstNodeInterpret_* fn_p_stComputeRebondVector(HIE_tdstSuperObject_* p_SuperObjP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetFirstCollisionInfo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetFirstCollisionInfo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
     HIE_tdstSuperObject_* p_stResultOwnerPerso;
     tdstGetSetParam_ stParam;
     unsigned char ucVarId;
@@ -1291,7 +1277,7 @@ void fn_p_stGetFirstCollisionInfo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetCollisionWithCollideMaterial(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetCollisionWithCollideMaterial(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int bCompute;
     unsigned int xTestedMask;
@@ -1344,7 +1330,7 @@ void fn_p_stGetCollisionWithCollideMaterial(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetCollision(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetCollision(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int bCompute;
     unsigned int ulMode;
@@ -1524,18 +1510,13 @@ tdstNodeInterpret_* fn_p_stGetLastCollisionActor(HIE_tdstSuperObject_* p_SuperOb
 tdstNodeInterpret_* fn_p_stGetCollidePoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     GMT_tdstCollideMaterial_* hCollideMat;
-    GMT_tdstCollideMaterial_* hCollideMat;
     MTH3D_tdstVector_ stVec;
-    GMT_tdstCollideMaterial_* hCollideMat;
-    DNM_stObstacle* p_stObstacle;
     DNM_stObstacle* p_stObstacle;
     int lWhichObstacle;
     MTH3D_tdstVector_ stNullVector;
-    int lWhichObstacle;
     unsigned int ulSurfState;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     unsigned short xMask;
-    DNM_stObstacle* p_stObstacle;
     DNM_stReport* p_stDynamReport;
     tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
@@ -1624,7 +1605,6 @@ tdstNodeInterpret_* fn_p_stNamesFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
     char* pszString;
     short wIndexInString;
     short wCpt;
-    char* pszString;
     stTfmtLineResults_* d_stLineResults;
     stTfmtStatus_ stStatus;
     unsigned char ucCurrentLine;
@@ -1697,8 +1677,6 @@ tdstNodeInterpret_* fn_p_st3DFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
     MTH3D_tdstVector_ stV1;
     tdstDynam_* h_Dynam;
     DNM_stDynamics* p_stDynamic;
-    MTH3D_tdstVector_ stV2;
-    MTH3D_tdstVector_ stV1;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     MTH3D_tdstVector_ stDstVector;
     int lGlobalAxis;
@@ -1860,14 +1838,12 @@ tdstNodeInterpret_* fn_p_stGetNormalCollideVector(HIE_tdstSuperObject_* p_SuperO
 {
     float xNorm;
     MTH3D_tdstVector_ VectTmp;
-    MTH3D_tdstVector_ VectTmp;
     HIE_tdstSuperObject_* p_stResultOwnerPerso;
     tdstGetSetParam_ stParam;
     AI_tdstMind_* p_stMind;
     unsigned char ucVarId;
     float xTmp;
     MTH3D_tdstVector_ stVertical;
-    float xNorm;
     unsigned int ulSurfState;
     int lWhichObstacle;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
@@ -1887,7 +1863,7 @@ tdstNodeInterpret_* fn_p_stGetNormalCollideVector(HIE_tdstSuperObject_* p_SuperO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetDTFunction(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetDTFunction(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -2034,7 +2010,6 @@ tdstNodeInterpret_* fn_p_stCode4LitPositionZDx(HIE_tdstSuperObject_* p_SuperObjP
  */
 tdstNodeInterpret_* fn_p_stCode4VecteurPointAxe(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    float xNorm;
     float xNorm;
     MTH3D_tdstVector_ stPVector;
     tdeFuncId_ eFuncId;

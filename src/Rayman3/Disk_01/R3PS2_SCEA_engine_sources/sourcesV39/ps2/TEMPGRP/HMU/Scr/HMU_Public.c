@@ -6,8 +6,6 @@
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct HMU_tdstMemoryStructure_ HMU_tdstMemoryStructure_;
-unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void);
-unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
 
 typedef enum e_ucHMUStaticBlocks {
     E_ucHMUFirstMemoryBlock = 0,

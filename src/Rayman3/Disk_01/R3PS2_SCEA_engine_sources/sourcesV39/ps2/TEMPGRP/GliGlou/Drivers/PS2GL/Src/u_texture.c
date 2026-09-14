@@ -229,10 +229,6 @@ void GLI_vUpdateCharacterVAReal(float (*pDestPV)[4], GEO_tdstElementIndexedTrian
     int i;
     int j;
     unsigned int* p;
-    int i;
-    int j;
-    int i;
-    int j;
     char* pSprWork;
     char* pSprDest;
     unsigned int NbPointsToTransfert;

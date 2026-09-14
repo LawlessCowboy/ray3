@@ -39,6 +39,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -275,7 +276,6 @@ void MAT_fn_vSetScale(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _
     MTH4D_tdstMatrix_ TmpMat;
     float xScaleConversion;
     MTH4D_tdstVector_* p_stOriginalScale;
-    MTH4D_tdstMatrix_* p_stMatrix;
     /* TODO: decompile from asm/... */
 }
 
@@ -350,7 +350,6 @@ void MAT_fn_vSetZoom(MAT_tdstTransformation_* _hTransform, float _xZoomFactor)
     MTH4D_tdstMatrix_ TmpMat;
     float xScaleConversion;
     MTH4D_tdstVector_* p_stOriginalScale;
-    MTH4D_tdstMatrix_* p_stMatrix;
     /* TODO: decompile from asm/... */
 }
 

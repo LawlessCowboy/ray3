@@ -16,10 +16,6 @@ struct _stCriticalSection {
 unsigned char HMU_g_bHMU_CS_Created;
 _stCriticalSection g_stHMU_CS;
 
-extern void PS2_fn_vCreateCriticalSection(_stCriticalSection* p_stCS);
-extern void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS);
-extern void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS);
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Sync.c lines 37–37 */
 /* addr: 0x002ee5e0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -27,10 +23,6 @@ extern void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-
-
-
 unsigned char HMU_fn_bIsInitialized(void)
 {
     return HMU_g_bHMU_CS_Created;

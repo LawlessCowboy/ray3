@@ -14,13 +14,6 @@ typedef struct GLD_tdstDeviceAttributes_ GLD_tdstDeviceAttributes_;
 typedef struct GLD_stDevice GLD_stDevice;
 typedef struct tdstBlockInfo_ tdstBlockInfo_;
 typedef struct tdstGliCaps_ tdstGliCaps_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-
-struct MTH3D_tdstVector_ {
-    float x;
-    float y;
-    float z;
-};
 
 struct GLD_tdstViewportAttributes_ {
     unsigned int dwInitialHeight; /* +0x0 */
@@ -123,6 +116,12 @@ struct tdstGliCaps_ {
     float fRefreshRate; /* +0x38 */
 };
 
+struct MTH3D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+};
+
 unsigned char g_ucGLDModuleId;
 int GLD_RenderingCounter;
 int g_bGLDSwapInProgress;
@@ -134,8 +133,8 @@ int g_pstGLDDevices[16];
 tdstBlockInfo_ g_a_stGLDBlocksInfo[4];
 tdstGliCaps_ GLI_g_stCaps;
 void (*GLD_vCloseErr)(void);
-extern MTH3D_tdstVector_ stWaterPlaneNormale;
 extern float fWaterPlaneDistance;
+extern MTH3D_tdstVector_ stWaterPlaneNormale;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 313–315 */
 /* addr: 0x002ac030  size: 40 bytes */
@@ -145,7 +144,7 @@ extern float fWaterPlaneDistance;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSetWaterplane(int unused, MTH3D_tdstVector_* p_stNormale, float xDistance)
+void GLI_vSetWaterplane(int _unused, MTH3D_tdstVector_* p_stNormale, float xDistance)
 {
     stWaterPlaneNormale = *p_stNormale;
     fWaterPlaneDistance = xDistance;
@@ -159,8 +158,9 @@ void GLI_vSetWaterplane(int unused, MTH3D_tdstVector_* p_stNormale, float xDista
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bSetBackgroundColorForDevice(short hDev, unsigned int crRGB)
+int GLD_bSetBackgroundColorForDevice(short hDevice, unsigned int crRGB)
 {
+    (void)hDevice;
     GLI_gs_lBackGroundColor = crRGB;
     return 1;
 }
@@ -303,7 +303,7 @@ int GLD_bSetViewportPosition(short hVP, GLD_tdstViewportAttributes_* pstViewAttr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bWriteToViewportFinished(void* unused, short hVP)
+int GLD_bWriteToViewportFinished(int _unused, short hVP)
 {
     GLD_stDevice* p_stDev;
     int lVP;

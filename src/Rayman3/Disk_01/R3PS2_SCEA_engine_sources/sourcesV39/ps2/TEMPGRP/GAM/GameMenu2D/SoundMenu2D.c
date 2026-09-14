@@ -26,8 +26,6 @@ int g_lSoundVolumeLineSound;
 int g_lSoundVolumeLineMusic;
 int g_lSoundVolumeLineVoices;
 
-extern void SND_fn_vSetStereoSound(int b_Stereo);
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\SoundMenu2D.c lines 113–113 */
 /* addr: 0x0029fd50  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

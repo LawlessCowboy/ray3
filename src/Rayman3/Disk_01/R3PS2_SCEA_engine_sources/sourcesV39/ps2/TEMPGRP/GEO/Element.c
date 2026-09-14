@@ -31,8 +31,6 @@ typedef struct GEO_tdstElementSpheres_ GEO_tdstElementSpheres_;
 typedef struct GEO_tdstIndexedSphere_ GEO_tdstIndexedSphere_;
 typedef struct GEO_tdstIndexedAlignedBox_ GEO_tdstIndexedAlignedBox_;
 
-extern float GEO_g_xZFar;
-
 struct MTH4D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
@@ -54,6 +52,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -216,6 +215,9 @@ struct GEO_tdstIndexedAlignedBox_ {
 };
 
 unsigned char g_ucGEOModuleId;
+
+/* Defined by the GEO culling module; shared by the element helpers. */
+extern float GEO_g_xZFar;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 64–64 */
 /* addr: 0x002a1500  size: 8 bytes */
@@ -400,7 +402,7 @@ void GEO_vCreateElementSpheres(GEO_tdstGeometricObject_* hObject, short* p_hElem
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GEO_p_stAllocElementIndexedTriangles(short xNbFaces, short xNbElementUV, short xNbUVStages)
+GEO_tdstElementIndexedTriangles_* GEO_p_stAllocElementIndexedTriangles(short xNbFaces, short xNbElementUV, short xNbUVStages)
 {
     GEO_tdstElementIndexedTriangles_* p_stLocalElement;
     /* TODO: decompile from asm/... */

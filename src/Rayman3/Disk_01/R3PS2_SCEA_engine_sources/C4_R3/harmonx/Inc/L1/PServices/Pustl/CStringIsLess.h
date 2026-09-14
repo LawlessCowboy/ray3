@@ -11,7 +11,7 @@
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char Q24usnd13CStringIsLessC::__cl(char* rszKey1, char* rszKey2)
+unsigned char __cl__Q24usnd13CStringIsLessCFPCcPCc(char* rszKey1, char* rszKey2)
 {
     /* TODO: decompile from asm/... */
 }

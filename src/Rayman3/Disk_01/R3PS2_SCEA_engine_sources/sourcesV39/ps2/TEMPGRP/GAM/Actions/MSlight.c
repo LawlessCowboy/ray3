@@ -11,6 +11,7 @@ typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
 typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
+typedef struct pointer pointer;
 typedef struct tdstAChannel_ tdstAChannel_;
 typedef struct tdstCineinfo_ tdstCineinfo_;
 typedef struct tdstCollSet_ tdstCollSet_;
@@ -90,12 +91,12 @@ typedef struct tdstAnim3d_ tdstAnim3d_;
 typedef struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn;
 typedef struct tdstFrame3d_ tdstFrame3d_;
 
+/* Cross-TU light helpers need their real prototypes so MWCC keeps float
+ * arguments in the PS2 float ABI and can form the original tail call. */
 void GLI_vGetLightAlphas(GLI_tdstLight_* p_stLight, float* p_xLittleAlpha, float* p_xBigAlpha);
 void GLI_vSetLightAlphas(GLI_tdstLight_* p_stLight, float xLittleAlpha, float xBigAlpha);
 void GLI_vSetLightNearFar(GLI_tdstLight_* p_stLight, float xNear, float xFar);
-void GLI_xSetLightState(GLI_tdstLight_* p_stLight, int ucOnOff);
-void GLI_xGetLightState(GLI_tdstLight_* p_stLight, unsigned char* p_ucOnOff);
-void GLI_vSetLightType(GLI_tdstLight_* p_stLight, int lTypeOfLight);
+void GLI_xSetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor);
 
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
@@ -121,19 +122,15 @@ typedef enum tdeObjectTreeInit_ {
     OTI_AlwaysCreated = 5,
 } tdeObjectTreeInit_;
 
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
 struct tdstMSLight_ {
     unsigned char bLocalLight; /* +0x0 */
     unsigned char bOnlyLocalLight; /* +0x1 */
     unsigned char bGiroPhare; /* +0x2 */
     unsigned char bPulsing; /* +0x3 */
-    MTH3D_tdstVector_ stOffsetVect; /* +0x4 */
-    MTH3D_tdstVector_ stAngle; /* +0x10 */
+    int stOffsetVect; /* +0x4 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x8..0xf */
+    int stAngle; /* +0x10 */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x14..0x1b */
     float xStepGiro; /* +0x1c */
     float xStepPulse; /* +0x20 */
     float xMaxRangePulse; /* +0x24 */
@@ -149,7 +146,9 @@ struct tdstMSLight_ {
 
 struct MAT_tdstTransformation_ {
     int eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     int stTransformMatrix; /* +0x10 */
+    unsigned char _extractor_padding_01[60]; /* implicitly added by extractor; +0x14..0x4f */
     int stScaleVector; /* +0x50 */
 };
 
@@ -160,6 +159,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -178,6 +178,7 @@ struct tdst3dData_ {
     unsigned int ulNumberOfChannels; /* +0xac */
     tdstAChannel_* hFirstActiveChannel; /* +0xb0 */
     int stFrame3d; /* +0xb4 */
+    unsigned char _extractor_padding_01[32]; /* implicitly added by extractor; +0xb8..0xd7 */
     LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphChannelList; /* +0xd8 */
     unsigned int ulStartTime; /* +0xdc */
     unsigned int ulTimeDelay; /* +0xe0 */
@@ -196,6 +197,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_02[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -205,18 +207,22 @@ struct tdst3dData_ {
     unsigned char ucTransparency; /* +0x186 */
     unsigned char bDiscreetSpeed; /* +0x187 */
     int stLightDirForDynamicShadow; /* +0x188 */
+    unsigned char _extractor_padding_03[8]; /* implicitly added by extractor; +0x18c..0x193 */
     unsigned char ucIsShadowClosed; /* +0x194 */
     unsigned char ucShadowRecLevel; /* +0x195 */
     unsigned char ucLightComputationFrequency; /* +0x196 */
     char cLightCounter; /* +0x197 */
     int stSHWDeformationVector; /* +0x198 */
+    unsigned char _extractor_padding_04[8]; /* implicitly added by extractor; +0x19c..0x1a3 */
     float xSHWHeight; /* +0x1a4 */
     float xDistNoInterpol; /* +0x1a8 */
     float xDistNoMorphing; /* +0x1ac */
     float xDistNoDEnv; /* +0x1b0 */
     int hForSubAnimInUseArray; /* +0x1b4 */
+    unsigned char _extractor_padding_05[8]; /* implicitly added by extractor; +0x1b8..0x1bf */
     CINE_tdstCineActor_* h_CurrentCineActor; /* +0x1c0 */
     int hSkinMaterial; /* +0x1c4 */
+    unsigned char _extractor_padding_06[12]; /* implicitly added by extractor; +0x1c8..0x1d3 */
     unsigned int NbSkinMaterials; /* +0x1d4 */
     int xSkinIndex; /* +0x1d8 */
 };
@@ -249,7 +255,9 @@ struct tdstStandardGame_ {
     unsigned char ucImportance; /* +0x38 */
     unsigned char ucOptional; /* +0x39 */
     int a_xCustomFloats; /* +0x3c */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x40..0x43 */
     int a_lCustomLongs; /* +0x44 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x48..0x4b */
     int a_stCustomVectors; /* +0x4c */
 };
 
@@ -282,13 +290,17 @@ struct HIE_tdstSuperObject_ {
     int hVisualBoundingVolume; /* +0x34 */
     int hCollideBoundingVolume; /* +0x38 */
     int stSemiLookAtVector; /* +0x3c */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x40..0x47 */
     float fTransparenceLevel; /* +0x48 */
     unsigned int ulOutlineColor; /* +0x4c */
     int lDisplayPrioriry; /* +0x50 */
     int lIL_Status; /* +0x54 */
     int stIL_AmbientColor; /* +0x58 */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x5c..0x63 */
     int stIL_ParallelDirection; /* +0x64 */
+    unsigned char _extractor_padding_02[8]; /* implicitly added by extractor; +0x68..0x6f */
     int stIL_ParallelColor; /* +0x70 */
+    unsigned char _extractor_padding_03[8]; /* implicitly added by extractor; +0x74..0x7b */
     unsigned char ucSuperImposedOnWhichViewport; /* +0x7c */
     unsigned char bIsSPO; /* +0x7d */
     unsigned char xTransition; /* +0x7e */
@@ -308,7 +320,9 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     int xBoudingSphereCenter; /* +0x30 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x34..0x3f */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
     short xNbOctreeEdges; /* +0x46 */
@@ -370,6 +384,7 @@ struct tdstCouple_ {
 
 struct GEO_tdstParallelBox_ {
     int stMinPoint; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     int stMaxPoint; /* +0x10 */
 };
 
@@ -470,6 +485,7 @@ struct CINE_tdstCineActor_ {
     int stSubAnim; /* +0x0 */
     tdstSubAnimInUse_* hSubAnimInUse; /* +0x4 */
     int szAnimation; /* +0x8 */
+    unsigned char _extractor_padding_00[252]; /* implicitly added by extractor; +0xc..0x107 */
     tdstEngineObject_* p_stActor; /* +0x108 */
     tdstState_* p_stStateAfterCine; /* +0x10c */
     tdstState_* p_stStateDuringCine; /* +0x110 */
@@ -537,15 +553,24 @@ struct SECT_tdstListOfSOSectorsInActivityInteraction_ {
     HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
 };
 
+struct MTH3D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+};
+
 struct SECT_tdstSector_ {
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn stListOfCharacters; /* +0x0 */
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt stListOfStaticLights; /* +0xc */
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn stListOfDNMLights; /* +0x14 */
     int stListOfSectorsInGraphicInteraction; /* +0x20 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x24..0x27 */
     int stListOfSectorsInCollisionInteraction; /* +0x28 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x2c..0x2f */
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt stListOfSectorsInActivityInteraction; /* +0x30 */
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt stListOfSectorsInSoundInteraction; /* +0x38 */
     int stListOfSoundEvent; /* +0x40 */
+    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x44..0x47 */
     MTH3D_tdstVector_ stMinMaxPoints[2]; /* +0x48 */
     float xZFar; /* +0x60 */
     unsigned char xVirtual; /* +0x64 */
@@ -623,6 +648,7 @@ struct stMorphData {
     unsigned char ucNbTarget; /* +0x4 */
     int ucAlign; /* +0x5 */
     int a_xIndexTargetMT; /* +0x8 */
+    unsigned char _extractor_padding_00[16]; /* implicitly added by extractor; +0xc..0x1b */
     int a_ucMorphingAmountMT; /* +0x1c */
 };
 
@@ -651,6 +677,7 @@ struct GMT_tdstCollideMaterial_ {
     short wTypeOfZone; /* +0x0 */
     unsigned short xIdentifier; /* +0x2 */
     int stDirection; /* +0x4 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x8..0xf */
     float xCoeff; /* +0x10 */
     unsigned short wTypeForAi; /* +0x14 */
 };
@@ -685,14 +712,19 @@ struct tdstEvent_ {
 
 struct MTH3D_tdstMatrix_ {
     int stCol_0; /* +0x0 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
     int stCol_1; /* +0xc */
+    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x10..0x17 */
     int stCol_2; /* +0x18 */
 };
 
 struct MTH4D_tdstMatrix_ {
     int stCol_0; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     int stCol_1; /* +0x10 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x14..0x1f */
     int stCol_2; /* +0x20 */
+    unsigned char _extractor_padding_02[12]; /* implicitly added by extractor; +0x24..0x2f */
     int stCol_3; /* +0x30 */
 };
 
@@ -728,6 +760,7 @@ struct tdstFrame3d_ {
     MTH3D_tdstVector_* p_stLinearSpeedVector; /* +0x8 */
     tdstPLA_Hierarchy_ stHierarchy; /* +0xc */
     int stDeformation; /* +0x14 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x18..0x1b */
     tdstAnim3d_* p_stAnim; /* +0x1c */
     unsigned short uwFrameNumber; /* +0x20 */
     unsigned char ucMatrixUpdated; /* +0x22 */
@@ -1069,7 +1102,11 @@ GLI_tdstLight_* fn_p_stMSLightGetLight(tdstMSLight_* h_MSLight)
 void fn_vMSLightSetColorRGBA(tdstMSLight_* h_MSLight, float xR, float xG, float xB, float xA)
 {
     GEO_tdstColor_ stColor;
-    /* TODO: decompile from asm/... */
+    stColor.xR = xR;
+    stColor.xG = xG;
+    stColor.xB = xB;
+    stColor.xA = xA;
+    GLI_xSetLightColor(h_MSLight->p_stLight, &stColor);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1035–1039 */
@@ -1140,6 +1177,13 @@ void fn_vMSLightSetOnOff(tdstMSLight_* h_MSLight, unsigned char ucOnOff)
     GLI_xSetLightState(h_MSLight->p_stLight, (int)ucOnOff);
 }
 
+/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\GAM\\Actions\\MSlight.c line 1009 */
+/* addr: 0x00270900  size: 12 bytes */
+void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, unsigned short lTypeOfLight)
+{
+    GLI_vSetLightType(h_MSLight->p_stLight, lTypeOfLight);
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1003–1008 */
 /* addr: 0x002708d0  size: 36 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1157,18 +1201,6 @@ unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight)
     return lOnOff;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 999–999 */
-/* addr: 0x00270900  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 999
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, int lTypeOfLight)
-{
-    GLI_vSetLightType(h_MSLight->p_stLight, (unsigned short)lTypeOfLight);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 714–714 */
 /* addr: 0x00270910  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1176,9 +1208,9 @@ void fn_vMSLightSetTypeOfLight(tdstMSLight_* h_MSLight, int lTypeOfLight)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-SECT_tdstListOfDNMLights_* fn_hMSLightGetLightNodeInSector(tdstMSLight_* _hMSLight)
+/* function pointer */ int fn_hMSLightGetLightNodeInSector(tdstMSLight_* _hMSLight)
 {
-    return _hMSLight->hLightInSector;
+    return (int)_hMSLight->hLightInSector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 685–698 */

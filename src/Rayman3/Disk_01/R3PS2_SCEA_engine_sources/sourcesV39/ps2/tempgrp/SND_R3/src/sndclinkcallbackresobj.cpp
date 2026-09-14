@@ -141,6 +141,7 @@ struct CLinkCallbackResObj {
     CResObj* mroResObj; /* +0x4 */
     void (*mpfnProc)(int); /* +0x8 */
     int ms32Param; /* +0xc */
+    unsigned char mfn_bSynchroCallbackResObj(void);
 };
 
 struct CUUID {

@@ -191,6 +191,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -217,11 +218,17 @@ struct DMMBloc {
     unsigned int m_MemoryBlocSize; /* +0x4 */
     unsigned int m_BlocAlignment; /* +0x8 */
     DMM_tdstFreeBloc_* m_pFreeBlocsChain; /* +0xc */
-    DMM_tdstFreeBloc_* m_pHashTable; /* +0x10 */
+    DMM_tdstFreeBloc_** m_pHashTable; /* +0x10 */
     unsigned int m_HashTableSize; /* +0x14 */
     DMM_tdstFreeBloc_* m_pFreeBlocsChainEnd; /* +0x18 */
     unsigned int m_UsedMemory; /* +0x1c */
     int m_AllocMode; /* +0x20 */
+    void realloc_nofail(void* _pointer, unsigned int _size, unsigned int* p_bCouldntDoIt);
+    void reduce(void* _pointer, unsigned int _size);
+    void memalign(unsigned int _alignment, unsigned int _size);
+    void add_FreeBloc(DMM_tdstFreeBloc_* pFreeBloc);
+    void remove_from_hashtable(DMM_tdstFreeBloc_* pFreeBloc);
+    void remove_FreeBloc(DMM_tdstFreeBloc_* pFreeBloc);
 };
 
 struct tagGLlistdatas {
@@ -302,7 +309,7 @@ struct DMM_tdstFreeBloc_ {
 
 struct C_InstanceList {
     unsigned int m_NbInstances; /* +0x0 */
-    _SDC_Instance_* m_pList; /* +0x4 */
+    _SDC_Instance_** m_pList; /* +0x4 */
 };
 
 struct tdstSubAnim_ {
@@ -525,6 +532,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -689,6 +697,7 @@ struct tagListData {
     unsigned int uiSDLIndicesSize; /* +0x20 */
     unsigned int uiSDLBits; /* +0x24 */
     unsigned long ModFlgs; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     float (*pLastExecDmaBuffer)[4]; /* +0x30 */
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };
@@ -802,6 +811,7 @@ struct tagGLprimbuf {
     int pCode; /* +0xc */
     float (*pData)[4]; /* +0x10 */
     int pTexUnit; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     _sceDmaTag tagDma; /* +0x20 */
     sceGifTag tagGif; /* +0x30 */
     int vData[4]; /* +0x40 */
@@ -874,6 +884,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -910,6 +921,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -1043,6 +1055,7 @@ struct GLI_tdstLight_ {
     float xBigAlpha; /* +0x18 */
     float xLittleTangent; /* +0x1c */
     float xBigTangent; /* +0x20 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x24..0x2f */
     MAT_tdstTransformation_ stMatrix; /* +0x30 */
     GEO_tdstColor_ stColor; /* +0x90 */
     float SqNear; /* +0xa0 */
@@ -1148,8 +1161,8 @@ struct C_Sdl {
     unsigned int m_NbReservedRefs; /* +0x18 */
     unsigned int m_NbFaces; /* +0x1c */
     unsigned int m_NbElements; /* +0x20 */
-    C_SdlRef* m_ppRefs; /* +0x24 */
-    tag_stVU1Parameters* m_ppP; /* +0x28 */
+    C_SdlRef** m_ppRefs; /* +0x24 */
+    tag_stVU1Parameters** m_ppP; /* +0x28 */
     unsigned int m_LastFrameUsed; /* +0x2c */
     unsigned int m_LastFrameInterpolated; /* +0x30 */
     unsigned int m_bIsTransparent; /* +0x34 */

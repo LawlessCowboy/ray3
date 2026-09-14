@@ -38,9 +38,6 @@ typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
-typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
-typedef struct tdstGetSetParam_ tdstGetSetParam_;
-extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
 typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
 typedef struct tdstFrame3d_ tdstFrame3d_;
@@ -52,10 +49,12 @@ typedef struct MTH_stRotation MTH_stRotation;
 typedef struct MTH_stMove MTH_stMove;
 typedef struct DNM_stReport DNM_stReport;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
 typedef struct tdstEngineObject_ tdstEngineObject_;
 typedef struct tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_2 anon_2;
+typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct tdstComport_ tdstComport_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
 typedef struct COL_tdstBoundingSphere_ COL_tdstBoundingSphere_;
@@ -187,6 +186,8 @@ typedef struct anon_6 anon_6;
 typedef struct tdstListOfMacro_ tdstListOfMacro_;
 typedef struct anon_7 anon_7;
 typedef union RGBAStruct_ RGBAStruct_;
+
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 
 typedef enum tdeFieldId_ {
     eField_Position = 0,
@@ -2040,6 +2041,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -2085,6 +2087,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -2121,6 +2124,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -2142,6 +2146,7 @@ struct tdst3dData_ {
     LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn hForSubAnimInUseArray; /* +0x1b4 */
     CINE_tdstCineActor_* h_CurrentCineActor; /* +0x1c0 */
     /*type_0x23*/ int hSkinMaterial; /* +0x1c4 */
+    unsigned char _extractor_padding_02[12]; /* implicitly added by extractor; +0x1c8..0x1d3 */
     unsigned int NbSkinMaterials; /* +0x1d4 */
     short xSkinIndex[4]; /* +0x1d8 */
 };
@@ -2621,7 +2626,9 @@ struct stMACDPID {
     float m_xData4; /* +0x2c */
     float m_xData5; /* +0x30 */
     /*type_0x23*/ int m_stData6; /* +0x34 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x38..0x43 */
     /*type_0x23*/ int m_stData7; /* +0x44 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x48..0x53 */
     char m_cData8; /* +0x54 */
     unsigned short m_uwData9; /* +0x56 */
     MTH3D_tdstVector_ m_stData10; /* +0x58 */
@@ -2641,6 +2648,7 @@ struct DNM_stDynamicsComplexBlock {
     MTH3D_tdstVector_ m_stFallTranslation; /* +0x20 */
     stMACDPID m_stExternalDatas; /* +0x2c */
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xac..0xaf */
     MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
     MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
 };
@@ -2725,6 +2733,7 @@ struct tdstFamilyList_ {
     LST2_tdstAnchorTotdxHandleToSubAnimOpt hForSubAnimArray; /* +0x18 */
     tdstObjectsTablesList_* h_DefaultObjectsTable; /* +0x20 */
     /*type_0x23*/ int hForObjectsTablesList; /* +0x24 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x28..0x2b */
     COL_tdstBoundingSphere_* hBoundingSphere; /* +0x2c */
     tdstLipsSynchValue_* ax_stLipsSynchValues; /* +0x30 */
     unsigned int ulNumberLipSynchValues; /* +0x34 */
@@ -2738,6 +2747,7 @@ struct tdstFamilyList_ {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -2750,6 +2760,7 @@ struct tdstEngineTimerStructure_ {
     unsigned int ulUsefulDeltaTime; /* +0x50 */
     unsigned int ulPauseTime; /* +0x54 */
     float xFrameLength; /* +0x58 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x5c..0x5f */
     _stTimerCount stRealTimeCount; /* +0x60 */
     _stTimerCount stPauseTime; /* +0x70 */
     unsigned int ulTickPerMS; /* +0x80 */
@@ -2812,6 +2823,7 @@ struct tdstEngineStructure_ {
     unsigned char eInputMode; /* +0x5b */
     unsigned char eDisplayFixMode; /* +0x5c */
     unsigned int ulDisplayMode; /* +0x60 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x64..0x67 */
     tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
     unsigned char ucNumberOfPlayersInMultiMode; /* +0xf0 */
     unsigned char ucNumberOfColumnsInMultiMode; /* +0xf1 */
@@ -2836,6 +2848,7 @@ struct tdstEngineStructure_ {
     HIE_tdstSuperObject_* h_DbgCamCharacter; /* +0x630 */
     tdstLanguageStructure_* p_stLanguageTable; /* +0x634 */
     FIL_tdstFileNameList_* hLevelNameList; /* +0x638 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x63c..0x63f */
     MAT_tdstTransformation_ stMainCharacterPosition; /* +0x640 */
     MAT_tdstTransformation_ stMainCameraPosition; /* +0x6a0 */
     int lSubMapNumber; /* +0x700 */
@@ -2861,7 +2874,7 @@ struct tdstEngineStructure_ {
     unsigned int ulNumberOfSOLAllocated; /* +0x1b78 */
     unsigned int ulNumberOfSOLLoaded; /* +0x1b7c */
     unsigned int ulNumberOfNonPersitentLinksPerSOL; /* +0x1b80 */
-    tdstSuperObjectLinks_* p_hSOL; /* +0x1b84 */
+    tdstSuperObjectLinks_** p_hSOL; /* +0x1b84 */
     tdstGraphChainedListNode_* p_GraphChainedList; /* +0x1b88 */
     CINE_Manager_* stCineManager; /* +0x1b8c */
 };
@@ -2925,6 +2938,7 @@ struct GLI_tdst2DVertex_ {
 
 struct GLI_tdstCamera_ {
     int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ stMatrix; /* +0x10 */
     float xAlphaX; /* +0x70 */
     float xAlphaY; /* +0x74 */
@@ -3001,6 +3015,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -3131,7 +3146,7 @@ struct tdstMacro_ {
 };
 
 struct tdstIntelligence_ {
-    tdstScriptAI_* p_p_stScriptAI; /* +0x0 */
+    tdstScriptAI_** p_p_stScriptAI; /* +0x0 */
     tdstNodeInterpret_* p_stCurrentSchedule; /* +0x4 */
     tdstComport_* p_stCurrentComport; /* +0x8 */
     tdstComport_* p_stPrevComport; /* +0xc */
@@ -3147,7 +3162,7 @@ struct PO_tdstPhysicalObject_ {
 };
 
 struct tdstDsgMem_ {
-    tdstDsgVar_* p_p_stDsgVar; /* +0x0 */
+    tdstDsgVar_** p_p_stDsgVar; /* +0x0 */
     int p_cDsgMemBufferInit; /* +0x4 */
     int p_cDsgMemBuffer; /* +0x8 */
 };
@@ -3313,13 +3328,13 @@ struct _reent {
     _Bigint* _result; /* +0x40 */
     int _result_k; /* +0x44 */
     _Bigint* _p5s; /* +0x48 */
-    _Bigint* _freelist; /* +0x4c */
+    _Bigint** _freelist; /* +0x4c */
     int _cvtlen; /* +0x50 */
     int _cvtbuf; /* +0x54 */
     anon_3 _new; /* +0x58 */
     _atexit* _atexit; /* +0x148 */
     _atexit _atexit0; /* +0x14c */
-    void (*_sig_func)(int); /* +0x1d4 */
+    void (**_sig_func)(int); /* +0x1d4 */
     _glue __sglue; /* +0x1d8 */
     __sFILE __sf[3]; /* +0x1e4 */
 };
@@ -3365,6 +3380,7 @@ struct stMorphData {
 
 struct tdstLanguageStructure_ {
     /*type_0x23*/ int szLanguageCode; /* +0x0 */
+    unsigned char _extractor_padding_00[16]; /* implicitly added by extractor; +0x4..0x13 */
     /*type_0x23*/ int szLanguageText; /* +0x14 */
 };
 
@@ -3438,7 +3454,7 @@ struct tdstAnim3d_ {
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_* p_pstChildList; /* +0x18 */
+    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
 
@@ -3446,8 +3462,11 @@ struct anon_4 {
     unsigned int _unused_rand; /* +0x0 */
     int _strtok_last; /* +0x4 */
     /*type_0x23*/ int _asctime_buf; /* +0x8 */
+    unsigned char _extractor_padding_00[24]; /* implicitly added by extractor; +0xc..0x23 */
     /*type_0x23*/ int _localtime_buf; /* +0x24 */
+    unsigned char _extractor_padding_01[32]; /* implicitly added by extractor; +0x28..0x47 */
     int _gamma_signgam; /* +0x48 */
+    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x4c..0x4f */
     int _rand_next; /* +0x50 */
 };
 
@@ -3487,7 +3506,7 @@ struct MOR_stMorphVector_ {
 struct tdstList_ {
     unsigned char ucNbElt; /* +0x0 */
     unsigned char ucMaxSize; /* +0x1 */
-    HIE_tdstSuperObject_* p_hTabElt; /* +0x4 */
+    HIE_tdstSuperObject_** p_hTabElt; /* +0x4 */
 };
 
 struct MOR_stMorphObject_ {
@@ -3599,7 +3618,7 @@ tdstNodeInterpret_* fn_p_st_AGO_GetHandle(tdstNodeInterpret_* p_stTree, tdstGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_st_GetPadInversions(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_st_GetPadInversions(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
@@ -3641,9 +3660,11 @@ tdstNodeInterpret_* fn_p_stIsMcValid(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_st_SFX_IsWaterCirclesPossible(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_st_SFX_IsWaterCirclesPossible(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    *(int *)p_stValue = 0;
+    *(int *)((char *)p_stValue + 0xc) = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2842–2845 */
@@ -3655,9 +3676,11 @@ tdstNodeInterpret_* fn_p_st_SFX_IsWaterCirclesPossible(tdstNodeInterpret_* p_stT
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_st_SFX_IsLightReflectionPossible(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_st_SFX_IsLightReflectionPossible(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    *(int *)p_stValue = 0;
+    *(int *)((char *)p_stValue + 0xc) = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2812–2815 */
@@ -3669,9 +3692,11 @@ tdstNodeInterpret_* fn_p_st_SFX_IsLightReflectionPossible(tdstNodeInterpret_* p_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_st_SFX_GetWaterCirclesStatus(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_st_SFX_GetWaterCirclesStatus(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    *(int *)p_stValue = 0;
+    *(int *)((char *)p_stValue + 0xc) = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2788–2791 */
@@ -3683,9 +3708,11 @@ tdstNodeInterpret_* fn_p_st_SFX_GetWaterCirclesStatus(tdstNodeInterpret_* p_stTr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_st_SFX_GetLightReflectionStatus(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_st_SFX_GetLightReflectionStatus(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    *(int *)p_stValue = 0;
+    *(int *)((char *)p_stValue + 0xc) = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2753–2767 */
@@ -3767,7 +3794,7 @@ tdstNodeInterpret_* fn_p_stMCFunc(tdstNodeInterpret_* p_stTree, tdstGetSetParam_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stScreenFunctions(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stScreenFunctions(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
     /* TODO: decompile from asm/... */
@@ -3835,7 +3862,7 @@ void fn_p_stScreenFunctions(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_st
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stFFBFunctions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stFFBFunctions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     unsigned int ulCurrentTime;
     MTH3D_tdstVector_ stFadeOut;
@@ -3861,7 +3888,7 @@ void fn_p_stFFBFunctions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpre
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetTransitionSectorIDFunction(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetTransitionSectorIDFunction(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -4062,7 +4089,7 @@ tdstNodeInterpret_* fn_p_st_GetActiveMainActors(HIE_tdstSuperObject_* p_SuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_iGetActiveMainActors(HIE_tdstSuperObject_* pp_SuperObjArray)
+int fn_iGetActiveMainActors(HIE_tdstSuperObject_** pp_SuperObjArray)
 {
     tdstNodeMainCharacter_* hMCN;
     HIE_tdstSuperObject_* hMainChar;
@@ -4146,9 +4173,11 @@ void fn_vReInitAllDynamicActors(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetFrameLength(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetFrameLength(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    *(float *)p_stValue = *(float *)0x5383c0;
+    *(int *)((char *)p_stValue + 0xc) = 8;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2225–2244 */
@@ -4451,7 +4480,7 @@ tdstNodeInterpret_* fn_p_stGameMaterialFunction(HIE_tdstSuperObject_* p_SuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stMiscFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stMiscFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     MAT_tdstTransformation_ stMatrix;
     HIE_tdstSuperObject_* p_SuperObjPersoGenerated;
@@ -4586,7 +4615,7 @@ tdstNodeInterpret_* fn_p_stListFunction(HIE_tdstSuperObject_* p_SuperObjPerso, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stTimeFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stTimeFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     unsigned int ulSavedTime;
     unsigned int ulCurrentTime;
@@ -4675,7 +4704,7 @@ tdstNodeInterpret_* fn_p_stHitPointsAndHitPointsMaxFunction(HIE_tdstSuperObject_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stRealFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stRealFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     float xTmp;
     float xResult;
@@ -4770,7 +4799,7 @@ void fn_p_stRealFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpre
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stVectorFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stVectorFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     MTH3D_tdstVector_ stVertex;
     float xNorm;
@@ -4812,7 +4841,7 @@ tdstNodeInterpret_* fn_p_stGlobalToLocal(HIE_tdstSuperObject_* p_SuperObjPerso, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stDummyFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stDummyFunction(int lUnused, tdstNodeInterpret_* p_stTree)
 {
     return p_stTree;
 }
@@ -5649,7 +5678,6 @@ tdstNodeInterpret_* fn_p_stDistanceToPersoCenter(HIE_tdstSuperObject_* p_SuperOb
     MTH3D_tdstVector_* p_stCenter1;
     MTH3D_tdstVector_ stCenter1;
     COL_tdstBoundingSphere_* hBoundingSphere2;
-    COL_tdstBoundingSphere_* hBoundingSphere1;
     /* TODO: decompile from asm/... */
 }
 

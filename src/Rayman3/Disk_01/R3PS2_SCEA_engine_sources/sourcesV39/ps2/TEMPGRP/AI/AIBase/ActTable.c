@@ -28,7 +28,7 @@ typedef struct tdstAnim3d_ tdstAnim3d_;
 typedef struct RGBAComponent_ RGBAComponent_;
 typedef union RGBAStruct_ RGBAStruct_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef union tduGetSetParam_ tduGetSetParam_;
+typedef struct tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn;
 typedef struct CINE_tdstCineActor_ CINE_tdstCineActor_;
@@ -1864,7 +1864,7 @@ struct MTH3D_tdstVector_ {
     float xZ; /* +0x8 */
 };
 
-union tduGetSetParam_ {
+struct tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -2082,6 +2082,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -2095,7 +2096,7 @@ struct GEO_tdstGeometricObject_ {
 };
 
 struct tdstIntelligence_ {
-    tdstScriptAI_* p_p_stScriptAI; /* +0x0 */
+    tdstScriptAI_** p_p_stScriptAI; /* +0x0 */
     tdstNodeInterpret_* p_stCurrentSchedule; /* +0x4 */
     tdstComport_* p_stCurrentComport; /* +0x8 */
     tdstComport_* p_stPrevComport; /* +0xc */
@@ -2290,6 +2291,7 @@ struct CINE_tdstCine_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -2427,7 +2429,7 @@ struct tdstFrame3d_ {
 };
 
 struct tdstDsgMem_ {
-    tdstDsgVar_* p_p_stDsgVar; /* +0x0 */
+    tdstDsgVar_** p_p_stDsgVar; /* +0x0 */
     int p_cDsgMemBufferInit; /* +0x4 */
     int p_cDsgMemBuffer; /* +0x8 */
 };
@@ -2623,6 +2625,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -2659,6 +2662,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -2896,7 +2900,7 @@ void fn_vSetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char ucNEntry)
+tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char ucNEntry)
 {
     /* TODO: decompile from asm/... */
 }
@@ -2919,7 +2923,7 @@ void fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char uc
  */
 void fn_vInitActionTable(tdstIntelligence_* p_stIntelligence)
 {
-    register unsigned char ucNbEntries;
+    unsigned char ucNbEntries;
     unsigned char ucNEntry;
     /* TODO: decompile from asm/... */
 }
@@ -2948,9 +2952,9 @@ void fn_vInitActionTable(tdstIntelligence_* p_stIntelligence)
  */
 void fn_vUnuseAllRulesFromSchedule(tdstIntelligence_* p_stIntelligence)
 {
-    tdstActionTable_* p_stActionTable;
+    tdstActionTableEntry_* p_stEntry;
     unsigned char ucCurrentEntry;
-    const unsigned char ucNbEntries;
+    unsigned char ucNbEntries;
     /* TODO: decompile from asm/... */
 }
 

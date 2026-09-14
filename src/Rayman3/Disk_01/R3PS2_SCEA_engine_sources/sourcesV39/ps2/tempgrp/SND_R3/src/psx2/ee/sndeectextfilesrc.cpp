@@ -34,6 +34,9 @@ struct CTextFileSrc {
     char mchBuffer[2048]; /* +0x44 */
     int mpchCurrent; /* +0x844 */
     unsigned int mdwPosition; /* +0x848 */
+    unsigned char mfn_bRead(sstring* ro_Sentence);
+    void mfn_pchParseChar(void);
+    unsigned char mfn_bOpen(char* pch_FilePath);
 };
 
 struct CPS2FileSrcFlow {
@@ -78,7 +81,7 @@ struct CSrcFlow {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CResData* ms_czNil__Q24usnd7sstring(CUUID* ro_cuuid)
+CResData* CBankDesc::mfn_poAddCResData(CUUID* ro_cuuid)
 {
     CUUID aId[20];
     int nb;
@@ -116,7 +119,7 @@ CResData* ms_czNil__Q24usnd7sstring(CUUID* ro_cuuid)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CText::mfn_bRead(sstring* ro_Sentence)
+unsigned char CTextFileSrc::mfn_bRead(sstring* ro_Sentence)
 {
     char* pch_StringNext;
     unsigned int dw_Size;
@@ -148,7 +151,7 @@ unsigned char CText::mfn_bRead(sstring* ro_Sentence)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CText::mfn_pchParseChar(void)
+void CTextFileSrc::mfn_pchParseChar(void)
 {
     char* pch_SlashR;
     char* pch_SlashN;
@@ -171,7 +174,7 @@ void CText::mfn_pchParseChar(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CText::mfn_bOpen(char* pch_FilePath)
+unsigned char CTextFileSrc::mfn_bOpen(char* pch_FilePath)
 {
     /* TODO: decompile from asm/... */
 }

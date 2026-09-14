@@ -21,6 +21,14 @@ typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
 typedef struct COL_tdstOctreeNode_ COL_tdstOctreeNode_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 
+/* Four collision-set handles are laid out consecutively in the debug type. */
+struct tdstPhysicalCollSet_ {
+    COL_tdstCollideObject_* hZdm; /* +0x0 */
+    COL_tdstCollideObject_* hZdd; /* +0x4 */
+    COL_tdstCollideObject_* hZde; /* +0x8 */
+    COL_tdstCollideObject_* hZdr; /* +0xc */
+};
+
 typedef enum PIC_tdeModePicking_ {
     PIC_C_ModePickingFace = 0,
     PIC_C_ModePickingEdge = 1,
@@ -42,13 +50,6 @@ typedef enum MAT_tdeTranformationType_ {
 
 struct GEO_tdstDoubledIndex_ {
     short a2_xIndex[2]; /* +0x0 */
-};
-
-struct tdstPhysicalCollSet_ {
-    COL_tdstCollideObject_* hZdm; /* +0x0 */
-    COL_tdstCollideObject_* hZdd; /* +0x4 */
-    COL_tdstCollideObject_* hZde; /* +0x8 */
-    COL_tdstCollideObject_* hZdr; /* +0xc */
 };
 
 struct MTH3D_tdstVector_ {
@@ -78,6 +79,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -140,6 +142,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -152,7 +155,7 @@ struct GEO_tdstParallelBox_ {
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_* p_pstChildList; /* +0x18 */
+    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
 

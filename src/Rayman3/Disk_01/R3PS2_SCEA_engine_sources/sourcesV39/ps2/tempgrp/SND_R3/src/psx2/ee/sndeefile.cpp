@@ -78,13 +78,14 @@ struct _reent {
     _Bigint* _result; /* +0x40 */
     int _result_k; /* +0x44 */
     _Bigint* _p5s; /* +0x48 */
-    _Bigint* _freelist; /* +0x4c */
+    _Bigint** _freelist; /* +0x4c */
     int _cvtlen; /* +0x50 */
     int _cvtbuf; /* +0x54 */
     /* aggregate */ int _new; /* +0x58 */
+    unsigned char _extractor_padding_00[236]; /* implicitly added by extractor; +0x5c..0x147 */
     _atexit* _atexit; /* +0x148 */
     _atexit _atexit0; /* +0x14c */
-    void (*_sig_func)(int); /* +0x1d4 */
+    void (**)(int) _sig_func; /* +0x1d4 */
     _glue __sglue; /* +0x1d8 */
     __sFILE __sf[3]; /* +0x1e4 */
 };

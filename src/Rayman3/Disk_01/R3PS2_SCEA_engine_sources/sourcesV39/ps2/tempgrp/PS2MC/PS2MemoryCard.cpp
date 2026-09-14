@@ -203,6 +203,7 @@ struct C_PS2MC_Manager {
     int m_iTotalNumberOfFilesInMC; /* +0x86c8 */
     unsigned int m_uiNextEntry; /* +0x86cc */
     int m_p_uiNbFilesFound; /* +0x86d0 */
+    unsigned char _extractor_padding_00[44]; /* implicitly added by extractor; +0x86d4..0x86ff */
     sceMcTblGetDir m_pDirInfo[120]; /* +0x8700 */
     int m_FastGetSavedGamesHeaders; /* +0xa500 */
     int m_bPreBootCheckWasDone; /* +0xa504 */
@@ -213,6 +214,25 @@ struct C_PS2MC_Manager {
     unsigned char m_pLoadSaveBuffer[990]; /* +0xa515 */
     int m_pScreenShotLoadBuffer; /* +0xa8f4 */
     int m_bFirstBootCheckHasBeenDone; /* +0xa8f8 */
+    void AutoSaveGame(char* _pData, char* _pFileName);
+    void SaveGame(char* _pData, char* _pFileName);
+    void CalculateCheckSum(char* pDataOrg, unsigned int ulSize);
+    void ManageSaveScreenShot(void);
+    void ManageLoadScreenShot(void);
+    void ManageLoadGame(void);
+    void ManageSaveGame(void);
+    void ManageAreYouSureBeforeSave(void);
+    void ManageAutoSaveGame(void);
+    void ManageFormatting(void);
+    void ManageBootCheck(void);
+    void ManagePreBootCheck(void);
+    void ManageGetScreenshotsEntries(void);
+    void ManageGetSavedGamesEntries(void);
+    void ManageCheckOneDirectory(void);
+    void UpdateStatus(void);
+    void CreateIconFile(void);
+    void FillIconSys(char* _szTitleName, char bPhoto);
+    unsigned int Init(unsigned int _Port, unsigned int _Slot);
 };
 
 struct MC_tdstFileEntry {
@@ -1959,15 +1979,12 @@ void C_PS2MC_Manager::ManageFormatting(void)
 void C_PS2MC_Manager::ManageBootCheck(void)
 {
     int NameIndex;
-    int NameIndex;
     ESceeResult Result;
     _SceeMemCardFunctionResult functionResult;
     int FirstBootCheck;
     int b_InWarningMode;
     int Copy_m_bNeedToCheckAndWarnForMCFull;
     int LoopCount;
-    signed char init;
-    signed char init;
     signed char init;
     /* TODO: decompile from asm/... */
 }

@@ -18,7 +18,7 @@ typedef struct CIndexAllocator CIndexAllocator;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>::_Charalloc(unsigned int _N)
+void _Charalloc__Q24usnd42CIndexAllocator<Q24usnd13CPS2IdObjInfo,40>FUi(unsigned int _N)
 {
     char* pcData;
     /* TODO: decompile from asm/... */

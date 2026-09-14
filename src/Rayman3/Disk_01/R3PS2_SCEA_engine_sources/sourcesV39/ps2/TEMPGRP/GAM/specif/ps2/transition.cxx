@@ -14,7 +14,7 @@
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_pfnCurrentTransitionDeallocator(void)
+void (*)(void*) fn_pfnCurrentTransitionDeallocator(void)
 {
     int TransitionNumber;
     /* TODO: decompile from asm/... */
@@ -28,7 +28,7 @@ void fn_pfnCurrentTransitionDeallocator(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_pfnCurrentTransitionAllocator(void)
+void* (*)(unsigned int) fn_pfnCurrentTransitionAllocator(void)
 {
     /* TODO: decompile from asm/... */
 }

@@ -227,6 +227,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -272,6 +273,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -308,6 +310,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -801,6 +804,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -1071,6 +1075,7 @@ struct DNM_stDynamicsComplexBlock {
     MTH3D_tdstVector_ m_stFallTranslation; /* +0x20 */
     stMACDPID m_stExternalDatas; /* +0x2c */
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xac..0xaf */
     MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
     MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
 };
@@ -1274,7 +1279,7 @@ struct DNM_stParsingDatas {
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_* p_pstChildList; /* +0x18 */
+    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
 
@@ -1336,7 +1341,6 @@ struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn {
 unsigned char g_ucZDCVisible;
 int g_hStaticCollisionGeoObj;
 int g_hCollisionGeoObj;
-int (*fn_iCmpZoneSetIndex)(void*, void*);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 70–90 */
 /* addr: 0x0026ac50  size: 224 bytes */
@@ -1467,7 +1471,7 @@ COL_tdstCollideObject_* fn_hMakeOneObjectFromManyOthers(unsigned char _ucZoneTyp
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_hStaticMakeOneObjectFromManyZdx(unsigned char _ucZoneType, HIE_tdstSuperObject_* _hCharacter)
+COL_tdstCollideObject_* fn_hStaticMakeOneObjectFromManyZdx(unsigned char _ucZoneType, HIE_tdstSuperObject_* _hCharacter)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1479,7 +1483,7 @@ void fn_hStaticMakeOneObjectFromManyZdx(unsigned char _ucZoneType, HIE_tdstSuper
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_hMakeOneObjectFromManyZdx(unsigned char _ucZoneType, HIE_tdstSuperObject_* _hCharacter)
+COL_tdstCollideObject_* fn_hMakeOneObjectFromManyZdx(unsigned char _ucZoneType, HIE_tdstSuperObject_* _hCharacter)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1500,7 +1504,7 @@ void fn_hMakeOneObjectFromManyZdx(unsigned char _ucZoneType, HIE_tdstSuperObject
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_* _p_hSuperObjTable, unsigned short* _p_uwNumber)
+void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_** _p_hSuperObjTable, unsigned short* _p_uwNumber)
 {
     int lCurrentNumberOfObjects;
     int lMaxNumberOfObjects;
@@ -1537,7 +1541,7 @@ void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucM
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vDetectAllObjectsInThisModule(HIE_tdstSuperObject_* _hCharacter, COL_tdstCollideObject_* _hModule, MAT_tdstTransformation_* _p_stMatrix, HIE_tdstSuperObject_* _p_hSuperObjTable, int _lMaxNumberOfObjects, int* _lCurrentNumberOfObjects)
+void fn_vDetectAllObjectsInThisModule(HIE_tdstSuperObject_* _hCharacter, COL_tdstCollideObject_* _hModule, MAT_tdstTransformation_* _p_stMatrix, HIE_tdstSuperObject_** _p_hSuperObjTable, int _lMaxNumberOfObjects, int* _lCurrentNumberOfObjects)
 {
     int i;
     SECT_tdstListOfSOSectorsInActivityInteraction_* hActivityList;
@@ -1715,7 +1719,7 @@ unsigned char fn_bThisTypeFromOneVsThisTypeFromTwo(HIE_tdstSuperObject_* _hChara
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vThisTypeVsThisType(HIE_tdstSuperObject_* _hCharacter, unsigned short _wCharacterMask, unsigned short _wOthersMask, HIE_tdstSuperObject_* _p_hObjectTable, unsigned short* _p_uwNumber)
+void fn_vThisTypeVsThisType(HIE_tdstSuperObject_* _hCharacter, unsigned short _wCharacterMask, unsigned short _wOthersMask, HIE_tdstSuperObject_** _p_hObjectTable, unsigned short* _p_uwNumber)
 {
     unsigned short uwMaxNumber;
     unsigned short uwCurrentNumber;
@@ -1805,7 +1809,7 @@ unsigned char fn_bThisZdeFromOneVsAllZdeFromTwo(HIE_tdstSuperObject_* _hCharacte
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, MAT_tdstTransformation_* _p_hMatrix)
+COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, MAT_tdstTransformation_** _p_hMatrix)
 {
     tdstPhysicalCollSet_* hPhyCollSet;
     HIE_tdstSuperObject_* hModuleIfZoom;
@@ -1907,7 +1911,7 @@ unsigned char fn_bIsThisZdeInClashWithCharacterZdeOfTypes(COL_tdstCollideObject_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vGetAllCharactersInContactWithThisModuleZde(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucChannelNumber, HIE_tdstSuperObject_* _hSuperObjTable, unsigned short _wMaterialMask, int _lMaxNumberOfObjects, int* _p_lCurrentNumberofObjects)
+void fn_vGetAllCharactersInContactWithThisModuleZde(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucChannelNumber, HIE_tdstSuperObject_** _hSuperObjTable, unsigned short _wMaterialMask, int _lMaxNumberOfObjects, int* _p_lCurrentNumberofObjects)
 {
     tdstPhysicalCollSet_* hPhyCollSet;
     COL_tdstCollideObject_* hGeoObj;
@@ -1957,9 +1961,8 @@ void fn_vGetAllCharactersInContactWithThisModuleZde(HIE_tdstSuperObject_* _hSupe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vGetAllCharacterInContactWithThisGeoObj(HIE_tdstSuperObject_* _hSuperObj, COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_* _hSuperObjTable, unsigned short _wMaterialMask, int _lMaxNumberOfObjects, int* _p_lCurrentNumberOfObjects)
+void fn_vGetAllCharacterInContactWithThisGeoObj(HIE_tdstSuperObject_* _hSuperObj, COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_** _hSuperObjTable, unsigned short _wMaterialMask, int _lMaxNumberOfObjects, int* _p_lCurrentNumberOfObjects)
 {
-    tdstCollSet_* hCollSet;
     tdstCollSet_* hCollSet;
     int bNoCollisionWithProjectile;
     int bThisActorIsAProjectile;
@@ -1985,7 +1988,7 @@ void fn_vGetAllCharacterInContactWithThisGeoObj(HIE_tdstSuperObject_* _hSuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vGetAllCharactersInContactWithThisZde(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_* _hSuperObjTable, unsigned short* _p_uwNumber, unsigned short _wMaterialMask)
+void fn_vGetAllCharactersInContactWithThisZde(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_** _hSuperObjTable, unsigned short* _p_uwNumber, unsigned short _wMaterialMask)
 {
     int lCurrentNumberOfObjects;
     int lMaxNumberOfObjects;

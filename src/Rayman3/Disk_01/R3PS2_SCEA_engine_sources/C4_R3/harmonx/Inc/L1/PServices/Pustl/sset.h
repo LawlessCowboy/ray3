@@ -14,7 +14,7 @@ typedef struct CResData CResData;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CResData* Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_KfnC::__cl(CResData* _X)
+CResData** __cl__Q34usnd95sset<PQ24usnd8CResData,Q24usnd23less<PQ24usnd8CResData>,Q24usnd29sallocator<PQ24usnd8CResData>>4_KfnCFRCPQ24usnd8CResData(CResData** _X)
 {
     /* TODO: decompile from asm/... */
 }

@@ -3,7 +3,6 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
-extern int printf(const char *, ...);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn;

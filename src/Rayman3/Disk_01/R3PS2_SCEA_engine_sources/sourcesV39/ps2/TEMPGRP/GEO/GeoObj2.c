@@ -107,7 +107,7 @@ struct GEO_tdstElementPoints_ {
 struct GEO_tdstElementLines_ {
     float xThickness; /* +0x0 */
     GEO_tdstDoubledIndex_* d_stListOfLineIndex; /* +0x4 */
-    GLI_tdstMaterial_* d_hListOfLinesVisualMaterial; /* +0x8 */
+    GLI_tdstMaterial_** d_hListOfLinesVisualMaterial; /* +0x8 */
     GEO_tdstColor_* d_stListOfLinesReceivedLightIntensity; /* +0xc */
     short xNbLines; /* +0x10 */
     short xIndexOfParallelBox; /* +0x12 */
@@ -134,6 +134,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -197,7 +198,7 @@ struct GEO_tdstSprite_ {
     int d_xThresholds; /* +0x8 */
     MTH2D_tdstVector_* d_xSizeOfSprite; /* +0xc */
     MTH2D_tdstVector_* d_xDisplacementOfSprite; /* +0x10 */
-    GLI_tdstMaterial_* d_hVisualMaterial; /* +0x14 */
+    GLI_tdstMaterial_** d_hVisualMaterial; /* +0x14 */
 };
 
 struct GEO_tdstDoubledIndex_ {
@@ -302,17 +303,13 @@ struct GEO_tdstIndexedAlignedBox_ {
 void GEO_xComputeObjectNormals(GEO_tdstGeometricObject_* p_stObj)
 {
     float xNorm;
-    float xNorm;
-    float xNorm;
     short xIndex;
     GEO_tdstElementFaceMapDescriptors_* p_stLocalElementFMD;
     GEO_tdstFaceMapTriangle_* p_stITLastFMD;
     GEO_tdstFaceMapTriangle_* param0;
     GEO_tdstElementIndexedTriangles_* p_stLocalElement;
     GEO_tdstTripledIndex_* p_stITLast;
-    GEO_tdstTripledIndex_* param0;
     MTH3D_tdstVector_ stNormalResult;
-    MTH3D_tdstVector_* param0;
     MTH3D_tdstVector_* p_stVertex;
     /* TODO: decompile from asm/... */
 }

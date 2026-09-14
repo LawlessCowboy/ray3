@@ -165,6 +165,19 @@ struct CExtraEventActor {
     unsigned char mbWaitForKill; /* +0x48 */
     unsigned char mbAllSoundPaused; /* +0x49 */
     CResObjParams m_oResObjParams; /* +0x4c */
+    unsigned char mfn_bExecute(int s32_CmdId, CUUID* roId);
+    unsigned char mfn_bPlay(CEventResData* ro_EventResData, int s32_EventId, void (*pfn_Proc)(int));
+    unsigned char fn_bIsSoundPlaying(int s32_Handle);
+    unsigned char fn_bIsSoundPlaying(CResData* po_ResData);
+    unsigned char fn_bIsResourcesAllowed(CResData* ro_ResData);
+    unsigned char mfn_bApplyPositionAndVelocity(void);
+    unsigned char mfn_bApplyAllParams(unsigned char bforce);
+    unsigned char mfn_bApplySectorActivation(void);
+    void f_vDesInit(void);
+    void f_vInit(CLinkTypeActor* ro_ActorType, int s32_ACPObjectId, int s32_ACPChannelId, CEventResData* poResData);
+    void f_vInitActorObj(int s32_ACPObjectId);
+    void f_vInsertAfter(CExtraEventActor* pParam);
+    void f_vIsolate(void);
 };
 
 struct iterator_base {
@@ -174,6 +187,7 @@ struct iterator_base {
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x8..0xb */
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
@@ -351,6 +365,8 @@ struct TBaseVarType {
 
 struct CMusicMarkerNotifTarget {
     /* C++ base CVarNotifTarget at +0x0. */
+    void fv_vVarChanged(CVar* roVar);
+    void fv_vVarDestroyed(void);
 };
 
 struct CVarData {
@@ -555,6 +571,7 @@ struct iterator {
 
 struct CMarkerNotifTarget {
     /* C++ base CNotifTarget at +0x0. */
+    void fv_vNotify(void* pvParams);
 };
 
 unsigned int g_uiLastSwitchValue;
@@ -629,7 +646,7 @@ void CExtraEventActorPool::f_vSalvageActor(CExtraEventActor* poEventActor)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CExtraEventActorPool::fs_poGetAnActor(int s32_ACPObjectId)
+CExtraEventActor* CExtraEventActorPool::fs_poGetAnActor(int s32_ACPObjectId)
 {
     CExtraEventActor* poEventActor;
     /* TODO: decompile from asm/... */
@@ -1199,7 +1216,7 @@ void CExtraEventActor::f_vIsolate(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q216CExtraEventActor13CResObjParams::fv_vAddRef(void)
+void fv_vAddRef__Q216CExtraEventActor13CResObjParamsFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1220,7 +1237,7 @@ void Q216CExtraEventActor13CResObjParams::fv_vAddRef(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q216CExtraEventActor13CResObjParams::fv_vRelease(void)
+void fv_vRelease__Q216CExtraEventActor13CResObjParamsFv(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1268,7 +1285,7 @@ int SND_fn_iGetNbMusicMarkerSlots(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_p_stGetMusicMarkerSlots(void)
+stMusicMarkerSlot* SND_fn_p_stGetMusicMarkerSlots(void)
 {
     /* TODO: decompile from asm/... */
 }

@@ -4,8 +4,10 @@
 
 #include <stddef.h>
 
-class CLinkMicroCont
-{
+/* The original header is not present in the recovered source set.  These
+ * declarations are the interface consumed by this translation unit; the
+ * complete recovered class is defined in sndclinkmicrocont.cpp. */
+class CLinkMicroCont {
 public:
     static CLinkMicroCont& mfn_roGetInstance(void);
     int mfn_s32AddMicroInstance(void);
@@ -20,7 +22,7 @@ public:
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" int SND_fn_lCreateMicroSound(void)
+int SND_fn_lCreateMicroSound(void)
 {
     return CLinkMicroCont::mfn_roGetInstance().mfn_s32AddMicroInstance();
 }

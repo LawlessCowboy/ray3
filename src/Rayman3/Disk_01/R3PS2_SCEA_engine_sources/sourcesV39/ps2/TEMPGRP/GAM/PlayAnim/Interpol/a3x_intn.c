@@ -661,6 +661,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -744,6 +745,7 @@ struct DNM_stDynamicsComplexBlock {
     MTH3D_tdstVector_ m_stFallTranslation; /* +0x20 */
     stMACDPID m_stExternalDatas; /* +0x2c */
     HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xac..0xaf */
     MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
     MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
 };
@@ -856,6 +858,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbEdges; /* +0x24 */
     short xNbParallelBoxes; /* +0x26 */
     float xBoudingSphereRadius; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
     GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
     short xNbEdgesDI; /* +0x44 */
@@ -1010,6 +1013,7 @@ struct tdst3dData_ {
     tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
     tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
     tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
     MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
@@ -1046,6 +1050,7 @@ struct tdst3dData_ {
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
+    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
     MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
@@ -1870,7 +1875,7 @@ void fn_vDeleteIntermediateAnimation(tdstAnim3d_* p_stTempoAnim)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame, unsigned int ulNumberOfFramesForIntermAnim, float xNLParameter)
+tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, tdstAnim3d_* p_stNextAnim, unsigned short uwPreviousFrame, unsigned short uwNextFrame, unsigned int ulNumberOfFramesForIntermAnim, float xNLParameter)
 {
     unsigned short* p_NextFrameNumOfNTTO;
     unsigned short* p_CurrentFrameNumOfNTTO;
@@ -1907,7 +1912,7 @@ void fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, tdstAnim3
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetHierarchy(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned int* p_ulNewNbCouples)
+tdstCouple_* fn_p_stGetHierarchy(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned int* p_ulNewNbCouples)
 {
     tdstOnlyFrame_* p_stCurrentOnlyFrame;
     tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
@@ -2141,7 +2146,7 @@ void fn_vUpdateFrameForInterAnim(tdstFrame3d_* _p_stFrame, tdstAnim3d_* _p_stAni
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetLinearSpeedVectorForInterAnim(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
+MTH3D_tdstVector_* fn_p_stGetLinearSpeedVectorForInterAnim(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
 {
     MTH3D_tdstVector_ stNextSpeed;
     MTH3D_tdstVector_ stPreviousSpeed;
@@ -2173,7 +2178,7 @@ void fn_p_stGetLinearSpeedVectorForInterAnim(tdstAnim3d_* _p_stAnim3d, unsigned 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, MTH3D_tdstMatrix_* p_stMatrix)
+MTH3D_tdstMatrix_* fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, MTH3D_tdstMatrix_* p_stMatrix)
 {
     float a4_xQuatOri[4];
     tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
@@ -2197,7 +2202,7 @@ void fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetLinearSpeedVector(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
+MTH3D_tdstVector_* fn_p_stGetLinearSpeedVector(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
 {
     tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
     /* TODO: decompile from asm/... */

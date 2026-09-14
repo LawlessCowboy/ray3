@@ -37,6 +37,9 @@ struct tdstGetSetParam_ { tduGetSetParam_ uParam; tdeVariableType_ eType; };
 typedef struct stTfmtStatus_ { unsigned char data[48]; } stTfmtStatus_;
 
 static HIE_tdstSuperObject_* g_hCharacterMaskedForResearch;
+unsigned char g_ucAIModuleId;
+float g_DistanceWaypointMin;
+float g_DistanceWaypointMax;
 float g_xDistanceActMin;
 float g_xDistanceActMax;
 
@@ -154,7 +157,7 @@ tdstNodeInterpret_* fn_p_stSAV2_DoVarsNeedToBeSet(tdstNodeInterpret_* p_stTree, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stFunctPS2(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stFunctPS2(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     unsigned int Val1;
     tdeFuncId_ eFuncId;
@@ -248,7 +251,7 @@ void fn_p_stFunctPS2(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stFunctTurnToPosition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stFunctTurnToPosition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     float xNorm;
     unsigned int ulCurrentBits;
@@ -377,7 +380,7 @@ tdstNodeInterpret_* fn_p_stGetNearestActorInCurrentSector(HIE_tdstSuperObject_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_hGetNearestActorInSectorWithAnyCustombit(HIE_tdstSuperObject_* _hMe, HIE_tdstSuperObject_* _hSector, unsigned int _ulFilterCustomBits, tdeFuncId_ _eFuncId)
+HIE_tdstSuperObject_* fn_hGetNearestActorInSectorWithAnyCustombit(HIE_tdstSuperObject_* _hMe, HIE_tdstSuperObject_* _hSector, unsigned int _ulFilterCustomBits, tdeFuncId_ _eFuncId)
 {
     unsigned int ulStCustomBits;
     MTH3D_tdstVector_ stActorsPosition;
@@ -1664,7 +1667,7 @@ tdstNodeInterpret_* fn_p_stCode4PersoLePlusProche(HIE_tdstSuperObject_* p_SuperO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_hGetClosestPersoInSector(HIE_tdstSuperObject_* _hCloserSO, float* _p_xBestDist, float* _p_xPrevWeight, HIE_tdstSuperObject_* _hMe, MTH3D_tdstVector_* _p_stMyVector, MTH3D_tdstVector_* _p_stActorSighting, MAT_tdstTransformation_* _p_stGlobToPerso, HIE_tdstSuperObject_* _hSector, unsigned int _ulFilterCustomBits, float _xXWeight, float _x2DWeight, float _x3DWeight, float _xCosXoY, float _xCosYoZ, tdstFamilyList_* _hFamily, tdeFuncId_ _eFuncId)
+HIE_tdstSuperObject_* fn_hGetClosestPersoInSector(HIE_tdstSuperObject_* _hCloserSO, float* _p_xBestDist, float* _p_xPrevWeight, HIE_tdstSuperObject_* _hMe, MTH3D_tdstVector_* _p_stMyVector, MTH3D_tdstVector_* _p_stActorSighting, MAT_tdstTransformation_* _p_stGlobToPerso, HIE_tdstSuperObject_* _hSector, unsigned int _ulFilterCustomBits, float _xXWeight, float _x2DWeight, float _x3DWeight, float _xCosXoY, float _xCosYoZ, tdstFamilyList_* _hFamily, tdeFuncId_ _eFuncId)
 {
     float xXYZ;
     float xXY;
@@ -1862,7 +1865,7 @@ unsigned char fn_vGetZoneCenter(COL_tdstCollideObject_* _hGeoObj, MTH3D_tdstVect
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stCode4PointsDeMagie(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stCode4PointsDeMagie(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
     tdstGetSetParam_ stParam;
@@ -1917,7 +1920,7 @@ void fn_p_stCode4PointsDeMagie(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeIn
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stCode4PointsDair(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stCode4PointsDair(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
     tdstGetSetParam_ stParam;
@@ -2175,7 +2178,7 @@ void fn_p_stCode4PointsDair(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInter
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stCode4TextAffiche(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stCode4TextAffiche(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     unsigned int ulCptDelay;
     unsigned int ulTmpDelay;

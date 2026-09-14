@@ -41,7 +41,7 @@ struct _stVector {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd12TTypedVar<f>::f_vSetValue(float oValue)
+void f_vSetValue__Q24usnd12TTypedVar<f>Ff(float oValue)
 {
     /* TODO: decompile from asm/... */
 }

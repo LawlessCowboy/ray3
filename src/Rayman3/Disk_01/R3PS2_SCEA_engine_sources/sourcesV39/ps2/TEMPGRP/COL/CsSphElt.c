@@ -56,6 +56,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -69,7 +70,7 @@ struct MTH3D_tdstVector_ {
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_* p_pstChildList; /* +0x18 */
+    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
 
@@ -98,6 +99,7 @@ struct COL_tdstGVForCollision_ {
     COL_tdstCollideObject_* p_stDynamicColObj; /* +0x6c */
     MAT_tdstTransformation_* p_stT0DynamicGeomObjMatrix; /* +0x70 */
     MAT_tdstTransformation_* p_stT1DynamicGeomObjMatrix; /* +0x74 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x78..0x7f */
     MAT_tdstTransformation_ stInvMatrix; /* +0x80 */
     MAT_tdstTransformation_ stD2ST0TransformMatrix; /* +0xe0 */
     MAT_tdstTransformation_ stD2ST1TransformMatrix; /* +0x140 */
@@ -393,7 +395,6 @@ int COL_g_lFacesTagCounter;
  */
 void COL_fn_vCollideStaticSphereWithStaticAlignedBox(COL_tdstGVForCollision_* p_stGV)
 {
-    float xNorm;
     float xNorm;
     MTH3D_tdstVector_ tempNormal;
     MTH3D_tdstVector_ tempHit;
@@ -728,7 +729,6 @@ void COL_fn_vCollideStaticElementSpheresWithStaticOctree(COL_tdstGVForCollision_
     MTH3D_tdstVector_* pV2;
     MTH3D_tdstVector_* pV1;
     short xData;
-    short xData;
     short xStaticEdgeIndex;
     short xDynamicIndexedSphereIndex;
     short xNbElements;
@@ -853,10 +853,6 @@ void COL_fn_vCollideStaticSphereWithStaticSphere(COL_tdstGVForCollision_* p_stGV
     MTH3D_tdstVector_ stHit;
     float xT;
     float xNorm;
-    MTH3D_tdstVector_ stEndPosition;
-    MTH3D_tdstVector_ stTempDistance;
-    MTH3D_tdstVector_ stTempHit;
-    MTH3D_tdstVector_ stTempNormal;
     MTH3D_tdstVector_ stCenterToCenter;
     MTH3D_tdstVector_ stMovementVector;
     float xRadiusSum;
@@ -1079,10 +1075,6 @@ unsigned char COL_fn_bCollideStaticSphereWithStaticIndexedTriangle(COL_tdstGVFor
     MTH3D_tdstVector_ stHit;
     float xT;
     MTH3D_tdstVector_ stT1Center;
-    MTH3D_tdstVector_ stEndPosition;
-    MTH3D_tdstVector_ stTempNormal;
-    MTH3D_tdstVector_ stTempHit;
-    MTH3D_tdstVector_ stTempDistance;
     float xDistance;
     MTH3D_tdstVector_ stMovementVector;
     MTH3D_tdstVector_ stSegmentVector;
@@ -1302,11 +1294,6 @@ void COL_fn_vCollideStaticSphereWithStaticEdge(COL_tdstGVForCollision_* p_stGV, 
     float xT;
     float xNorm;
     MTH3D_tdstVector_ stTemporaryForDotProduct;
-    short xEdgeEntity;
-    MTH3D_tdstVector_ stEndPosition;
-    MTH3D_tdstVector_ stTempDistance;
-    MTH3D_tdstVector_ stTempNormal;
-    MTH3D_tdstVector_ stTempHit;
     float xDotProduct;
     MTH3D_tdstVector_ stMovementVector;
     /* TODO: decompile from asm/... */

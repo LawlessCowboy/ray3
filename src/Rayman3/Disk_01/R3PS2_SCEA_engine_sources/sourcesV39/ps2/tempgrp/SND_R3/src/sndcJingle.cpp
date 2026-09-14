@@ -33,7 +33,7 @@ struct JingleElt {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CResData* ms_fVolReduction__6Jingle(void)
+CResData* Jingle::ms_fVolReduction(void)
 {
     /* TODO: decompile from asm/... */
 }

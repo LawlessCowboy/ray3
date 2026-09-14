@@ -106,6 +106,14 @@ struct PostponedPlay {
     void (*m_pProc)(int); /* +0x14 */
     CExtraEventActor* m_pEActor; /* +0x18 */
     unsigned int m_u32EngineContext; /* +0x1c */
+    void ms_uiMaxPlay(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue);
+    unsigned char fs_bIsPending(CExtraEventActor* pEActor);
+    void fs_vEmpty(void);
+    unsigned char fs_bExecute(int s32_CmdId, CUUID* roId, CExtraEventActor* pEActor);
+    unsigned char fs_bIsSoundPlaying(int s32_Handle, CExtraEventActor* pEActor);
+    unsigned char fs_bIsSoundPlaying(CResData* po_ResData, CExtraEventActor* pEActor);
+    void fs_vSynchro(void);
+    unsigned char fs_bPlay(CEventResData* ro_EventResData, int s32_Handle, void (*pfn_Proc)(int), CExtraEventActor* pEActor);
 };
 
 struct CStringIsLess {
@@ -163,6 +171,7 @@ struct CExtraEventActor {
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x8..0xb */
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
@@ -414,7 +423,7 @@ struct CActorModifiers {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ms_uiMaxPlay__13PostponedPlay(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue)
+void PostponedPlay::ms_uiMaxPlay(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue)
 {
     /* TODO: decompile from asm/... */
 }

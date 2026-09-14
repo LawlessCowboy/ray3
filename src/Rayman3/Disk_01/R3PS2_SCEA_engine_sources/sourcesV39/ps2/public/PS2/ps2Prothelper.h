@@ -91,7 +91,7 @@ float GetDS(stFile_* pCache)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void pFD(char* format)
+stFile_* pFD(char* format)
 {
     char* args;
     stFile_* pCache;

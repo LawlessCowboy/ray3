@@ -340,6 +340,7 @@ struct CVar {
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x8..0xb */
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
@@ -485,6 +486,7 @@ struct iterator {
 struct CWaveFile {
     unsigned int m_uiDataOffset; /* +0x4 */
     unsigned long m_ulDataSize; /* +0x8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xc..0xf */
     unsigned int m_uiNbMarkers; /* +0x10 */
 };
 

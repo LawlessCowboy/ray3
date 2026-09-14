@@ -14,7 +14,7 @@
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Q24usnd12TTypedVar<f>::f_oGetValue(void)
+void f_oGetValue__Q24usnd12TTypedVar<f>Fv(void)
 {
     /* TODO: decompile from asm/... */
 }

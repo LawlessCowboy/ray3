@@ -4,13 +4,15 @@
 
 #include <stddef.h>
 
+/* Defined by transition.c; referenced by this PS2 stream helper TU. */
+extern unsigned char g_bDoTransition;
+
 unsigned int g_DEMO_u32ActiveBuffer;
 unsigned int g_DEMO_u32StreamFileHandle;
 unsigned int g_DEMO_u32StreamRequestHandle;
 unsigned int g_DEMO_u32StreamFileOffset;
 char g_DEMO_aEventBuffer[2][131072];
 unsigned int g_DEMO_u32PlayMode;
-extern unsigned char g_bDoTransition;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\DemoStr.c lines 75–75 */
 /* addr: 0x0028db40  size: 8 bytes */

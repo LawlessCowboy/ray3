@@ -150,6 +150,7 @@ struct CExtraEventActor {
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x8..0xb */
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
@@ -333,6 +334,8 @@ struct SwitchData {
     SwitchData* m_pNext; /* +0x8 */
     unsigned int m_uiDefault; /* +0xc */
     unsigned int m_nbElt; /* +0x10 */
+    unsigned char f_bFindData(CResData* pData);
+    void f_vUpdateWaves(char* pTex, unsigned int nbTex, CPS2IdObjLoader* pLoader);
 };
 
 struct sTreeLink {
@@ -486,7 +489,7 @@ struct CActorResData {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void ms_NULL__Q24usnd5CUUID(int s32_ObjectId, int s32_TypeId, int s32_HandleId, int iVolumeLine)
+void Jingle::fs_vAddJingle(int s32_ObjectId, int s32_TypeId, int s32_HandleId, int iVolumeLine)
 {
     int uVol;
     JingleList* pList;
@@ -516,7 +519,7 @@ void ms_NULL__Q24usnd5CUUID(int s32_ObjectId, int s32_TypeId, int s32_HandleId, 
  */
 void SwitchMgr::fs_vAddDataToDelete(CResData* pData)
 {
-    CResData* pDel;
+    CResData** pDel;
     int i;
     /* TODO: decompile from asm/... */
 }

@@ -46,6 +46,7 @@ struct MTH4D_tdstMatrix_ {
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
@@ -543,11 +544,7 @@ void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _
 void MAT_fn_vFastInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource)
 {
     MTH4D_tdstVector_* p_stVec;
-    MTH4D_tdstVector_* p_stVec;
     float xZoom;
-    MTH4D_tdstVector_* p_stVec;
-    MTH4D_tdstMatrix_* p_stTranspMatrix;
-    MTH4D_tdstVector_* p_stVec;
     MTH4D_tdstMatrix_* p_stTranspMatrix;
     MTH4D_tdstVector_* p_stScale;
     MTH4D_tdstMatrix_* p_stMatrixSource;
@@ -656,11 +653,7 @@ void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _h
     float xQZ;
     float xQY;
     float xQX;
-    MTH4D_tdstVector_* p_stVec;
     float xZoom;
-    MTH4D_tdstVector_* p_stVec;
-    MTH4D_tdstMatrix_* p_stTranspMatrix;
-    MTH4D_tdstVector_* p_stVec;
     MTH4D_tdstMatrix_* p_stTranspMatrix;
     MTH4D_tdstVector_* p_stScale;
     MTH4D_tdstMatrix_* p_stMatrixSource;

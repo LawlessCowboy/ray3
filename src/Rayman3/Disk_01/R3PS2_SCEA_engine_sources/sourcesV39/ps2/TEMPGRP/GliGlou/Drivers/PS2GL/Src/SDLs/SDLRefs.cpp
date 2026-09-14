@@ -43,8 +43,8 @@ struct C_Sdl {
     unsigned int m_NbReservedRefs; /* +0x18 */
     unsigned int m_NbFaces; /* +0x1c */
     unsigned int m_NbElements; /* +0x20 */
-    C_SdlRef* m_ppRefs; /* +0x24 */
-    tag_stVU1Parameters* m_ppP; /* +0x28 */
+    C_SdlRef** m_ppRefs; /* +0x24 */
+    tag_stVU1Parameters** m_ppP; /* +0x28 */
     unsigned int m_LastFrameUsed; /* +0x2c */
     unsigned int m_LastFrameInterpolated; /* +0x30 */
     unsigned int m_bIsTransparent; /* +0x34 */
@@ -98,10 +98,16 @@ struct C_SdlRef_LocalMatrix {
     /* C++ base C_SdlRef at +0x0. */
     float OldMat[4][4]; /* +0x20 */
     int m_bNoInterpolation; /* +0x60 */
+    void ProcessNoInterpol(void);
+    void ProcessWithInterpol(void);
+    void Process(void);
 };
 
 struct C_SdlRef_TextureIdMatrix {
     /* C++ base C_SdlRef at +0x0. */
+    void ProcessNoInterpol(void);
+    void ProcessWithInterpol(void);
+    void Process(void);
 };
 
 struct GLI_tdstUVTransformation {
@@ -127,6 +133,7 @@ struct tagListData {
     unsigned int uiSDLIndicesSize; /* +0x20 */
     unsigned int uiSDLBits; /* +0x24 */
     unsigned long ModFlgs; /* +0x28 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     float (*pLastExecDmaBuffer)[4]; /* +0x30 */
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };
@@ -134,11 +141,18 @@ struct tagListData {
 struct C_SdlRef_LocalMatrixForCheap {
     /* C++ base C_SdlRef at +0x0. */
     int m_pcActivity; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     float OldMat[4][4]; /* +0x20 */
+    void ProcessWithInterpol(void);
+    void ProcessNoInterpol(void);
+    void Process(void);
 };
 
 struct C_SdlRef_PointLighting {
     /* C++ base C_SdlRef at +0x0. */
+    void ProcessNoInterpol(void);
+    void ProcessWithInterpol(void);
+    void Process(void);
 };
 
 struct GLI_tdstMultiTextureMaterial {
@@ -161,6 +175,9 @@ struct C_SdlRef_TextureMatrix {
     /* C++ base C_SdlRef at +0x0. */
     int m_fpOffsetU; /* +0x14 */
     int m_fpOffsetV; /* +0x18 */
+    void ProcessNoInterpol(void);
+    void ProcessWithInterpol(void);
+    void Process(void);
 };
 
 union unFunction {
@@ -185,6 +202,9 @@ struct C_SdlRef_FogParameters {
     int m_pDestFogColor; /* +0x14 */
     int m_pDestFogStart; /* +0x18 */
     int m_pDestFogEnd; /* +0x1c */
+    void ProcessNoInterpol(void);
+    void ProcessWithInterpol(void);
+    void Process(void);
 };
 
 struct C_SdlRef {
@@ -192,7 +212,12 @@ struct C_SdlRef {
     unsigned int m_uIndexInList; /* +0x4 */
     int m_vpOriginPointer; /* +0x8 */
     int m_vpDestinationPointer; /* +0xc */
+    void ProcessNoInterpol(void);
+    void ProcessWithInterpol(void);
+    void Process(void);
+    void __dl(void* ptr);
 };
+
 
 struct _sceDmaTag {
     unsigned short qwc; /* +0x0 */
@@ -236,6 +261,7 @@ struct tagGLprimbuf {
     int pCode; /* +0xc */
     float (*pData)[4]; /* +0x10 */
     int pTexUnit; /* +0x14 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     _sceDmaTag tagDma; /* +0x20 */
     sceGifTag tagGif; /* +0x30 */
     int vData[4]; /* +0x40 */
@@ -248,6 +274,9 @@ struct C_SdlRef_TextureOffset {
     float m_dv; /* +0x1c */
     int m_fpOffsetU; /* +0x20 */
     int m_fpOffsetV; /* +0x24 */
+    void ProcessNoInterpol(void);
+    void ProcessWithInterpol(void);
+    void Process(void);
 };
 
 struct tag_stVU1Parameters {
@@ -308,10 +337,17 @@ struct GLI_tdstMaterial_ {
     GLI_tdstMultiTextureMaterial a_stMultiMaterial[4]; /* +0x88 */
 };
 
+/* The cache class is declared in SDLInstance.cpp; this TU also defines one
+ * of its out-of-line methods, so retain the owning object layout here. */
+struct C_SdlCache {
+    tdstSDLCacheEntry_* m_pList; /* +0x0 */
+    void AddSdlInstance(_SDC_Instance_* pInstance);
+};
+
 float g_ffFrameTimeLastFrame;
 int GLI_G_pProcessSDLs[2048];
 unsigned int GLI_G_iNbSdlsInThisFrame;
-anon_0 __vt__22C_SdlRef_FogParameters;
+unsigned int __vt__22C_SdlRef_FogParameters;
 float g_fFogEnd;
 float GLI_g_OOStartMinusEnd;
 unsigned int GLI_g_CurrentSDLFogColor;
@@ -323,13 +359,13 @@ unsigned int AGO_g_ulNbLights;
 AGO_Light_ AGO_g_pLightList[8];
 int PS2glLiberator;
 int PS2glAllocator64;
-anon_4 __vt__22C_SdlRef_TextureOffset;
-anon_6 __vt__24C_SdlRef_TextureIdMatrix;
-anon_7 __vt__22C_SdlRef_TextureMatrix;
-anon_3 __vt__28C_SdlRef_LocalMatrixForCheap;
-anon_2 __vt__20C_SdlRef_LocalMatrix;
-anon_5 __vt__22C_SdlRef_PointLighting;
-anon_1 __vt__8C_SdlRef;
+unsigned int __vt__22C_SdlRef_TextureOffset;
+unsigned int __vt__24C_SdlRef_TextureIdMatrix;
+unsigned int __vt__22C_SdlRef_TextureMatrix;
+unsigned int __vt__28C_SdlRef_LocalMatrixForCheap;
+unsigned int __vt__20C_SdlRef_LocalMatrix;
+unsigned int __vt__22C_SdlRef_PointLighting;
+unsigned int __vt__8C_SdlRef;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 42–50 */
 /* addr: 0x002d7720  size: 72 bytes */
@@ -388,7 +424,7 @@ void fn_vAddSdlToProcessLater(C_Sdl* pSdl)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_SdlRef_::ProcessNoInterpol(void)
+void C_SdlRef_FogParameters::ProcessNoInterpol(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -400,7 +436,7 @@ void C_SdlRef_::ProcessNoInterpol(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_SdlRef_::ProcessWithInterpol(void)
+void C_SdlRef_FogParameters::ProcessWithInterpol(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -415,7 +451,7 @@ void C_SdlRef_::ProcessWithInterpol(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_SdlRef_::Process(void)
+void C_SdlRef_FogParameters::Process(void)
 {
     /* TODO: decompile from asm/... */
 }
@@ -613,7 +649,7 @@ void C_SdlRef_TextureMatrix::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_SdlRef_LocalMatrix::ProcessWithInterpol(void)
+void C_SdlRef_LocalMatrixForCheap::ProcessWithInterpol(void)
 {
     float (*pSrc)[4][4];
     float (*pDest)[4][4];
@@ -632,7 +668,7 @@ void C_SdlRef_LocalMatrix::ProcessWithInterpol(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_SdlRef_LocalMatrix::ProcessNoInterpol(void)
+void C_SdlRef_LocalMatrixForCheap::ProcessNoInterpol(void)
 {
     float (*pSrc)[4][4];
     float (*pDest)[4][4];
@@ -651,7 +687,7 @@ void C_SdlRef_LocalMatrix::ProcessNoInterpol(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_SdlRef_LocalMatrix::Process(void)
+void C_SdlRef_LocalMatrixForCheap::Process(void)
 {
     float (*pDest)[4][4];
     /* TODO: decompile from asm/... */

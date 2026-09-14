@@ -25,6 +25,12 @@ typedef enum _Redbl {
 
 struct CSoundSemaphoreCont {
     /* C++ base smap at +0x0. */
+    unsigned char mfn_bRemoveSoundSemaphore(int s32_ChannelId);
+    unsigned char mfn_bSynchroSoundSemaphore(void);
+    CSoundSemaphore* mfn_poAddSoundSemaphore(int s32_ChannelId, int s32_ChannelSize);
+    CSoundSemaphore* mfn_poFindSoundSemaphore(int s32_ChannelId);
+    void mfn_vDelete(void);
+    CSoundSemaphoreCont* mfn_roGetInstance(void);
 };
 
 struct spair {
@@ -230,7 +236,7 @@ void ~CSoundSemaphoreCont(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CSoundSemaphoreCont::mfn_roGetInstance(void)
+CSoundSemaphoreCont* CSoundSemaphoreCont::mfn_roGetInstance(void)
 {
     CSoundSemaphoreCont oSingleton;
     signed char init;

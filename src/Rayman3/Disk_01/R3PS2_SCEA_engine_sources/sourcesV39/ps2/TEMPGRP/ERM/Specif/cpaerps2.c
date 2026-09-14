@@ -4,8 +4,6 @@
 
 #include <stddef.h>
 
-extern void Erm_fn_v_PrintErrMsgCore(char*, char*, char*);
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ERM\Specif\cpaerps2.c lines 162–162 */
 /* addr: 0x00258410  size: 28 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

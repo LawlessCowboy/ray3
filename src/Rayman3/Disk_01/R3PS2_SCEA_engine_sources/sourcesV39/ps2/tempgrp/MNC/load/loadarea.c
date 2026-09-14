@@ -241,7 +241,7 @@ void MNC_fn_vUnLoadAreaWithDeallocator(unsigned int _u32AreaId, void (*_fn_vDeal
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId, void* (*_fn_pvAllocator)(unsigned int))
+void* (*)(unsigned int) MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId)
 {
     unsigned int u32Area;
     int fh;

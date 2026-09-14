@@ -410,10 +410,6 @@ int SVG_fn_s32SetFileCoherence2(int _iPort, int _iSlot, char* _szFileName)
 int SVG_fn_s32WriteToFile(int _iPort, int _iSlot, char* _szFileName, void* _pData, unsigned int _u32DataSize)
 {
     unsigned int u32RetryCount;
-    unsigned int u32RetryCount;
-    unsigned int u32RetryCount;
-    unsigned int u32RetryCount;
-    unsigned int u32RetryCount;
     int iFd;
     int iResult;
     /* TODO: decompile from asm/... */
@@ -442,8 +438,6 @@ int SVG_fn_s32WriteToFile(int _iPort, int _iSlot, char* _szFileName, void* _pDat
  */
 int SVG_fn_s32ReadFromFile(int _iPort, int _iSlot, char* _szFileName, void* _pData, unsigned int _u32DataSize)
 {
-    unsigned int u32RetryCount;
-    unsigned int u32RetryCount;
     unsigned int u32RetryCount;
     char real_name[256];
     int iFd;
@@ -699,8 +693,6 @@ int SVG_fn_s32MakeDir(int _iPort, int _iSlot, char* _szSonyCompliantDirName)
  */
 int SVG_fn_s32DestroySaveGame(int _iPort, int _iSlot, char* _szSonyCompliantDirName)
 {
-    unsigned int u32RetryCount;
-    unsigned int u32RetryCount;
     unsigned int u32RetryCount;
     anon_0 a18_stGetDirTable[18];
     int s32Count;
