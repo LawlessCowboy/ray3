@@ -2031,9 +2031,12 @@ void GLI_vComputeEdges(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSetDynShadowParam(unsigned char bOnOff, unsigned int ulNewLevel, float fNewLenght, unsigned char bCloseState)
+void GLI_vSetDynShadowParam(unsigned char bOnOff, float fNewLenght, unsigned int ulNewLevel, unsigned char bCloseState)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_bDynShadowIsOn = bOnOff;
+    GLI_g_fDynShadowLenght = fNewLenght;
+    GLI_g_ulDynShadowLevel = ulNewLevel;
+    GLI_g_bDynShadowClosed = bCloseState;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 148–148 */

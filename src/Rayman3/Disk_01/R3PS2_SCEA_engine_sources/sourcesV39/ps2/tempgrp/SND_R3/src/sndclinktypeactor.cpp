@@ -369,7 +369,7 @@ anon_0 __vt__14CLinkTypeActor;
  */
 int fn_s32GhostObjectCoordinate__Fi(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 200–232 */

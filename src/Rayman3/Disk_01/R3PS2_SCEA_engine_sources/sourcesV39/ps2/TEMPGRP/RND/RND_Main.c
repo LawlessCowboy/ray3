@@ -12,13 +12,21 @@ typedef struct RND_tdstRandom_ RND_tdstRandom_;
 typedef struct SemaParam SemaParam;
 
 struct SemaParam {
-    int attr;
-    int option;
-    int initCount;
+    int currentCount;
     int maxCount;
-    int waitThreads;
-    int waitMode;
+    int initCount;
+    int numWaitThreads;
+    unsigned int attr;
+    unsigned int option;
 };
+
+struct _stCriticalSection {
+    int Sid;
+    int OwnerThreadId;
+    int ReentrancyCount;
+};
+
+extern int CreateSema(SemaParam* param);
 
 struct MTH3D_tdstVector_ {
     float xX; /* +0x0 */
@@ -62,7 +70,11 @@ RND_tdstRandom_ RND_g_stRandomStructure;
 void PS2_fn_vCreateCriticalSection(_stCriticalSection* p_stCS)
 {
     SemaParam S;
-    /* TODO: decompile from asm/... */
+    S.initCount = 1;
+    S.maxCount = 1;
+    p_stCS->Sid = CreateSema(&S);
+    p_stCS->OwnerThreadId = -1;
+    p_stCS->ReentrancyCount = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\RND\RND_Main.c lines 249–252 */

@@ -1881,7 +1881,7 @@ tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* 
  */
 void fn_vCollSetSetColliderReal(tdstCollSet_* _hCollSet, short _wIndex, float _xReal)
 {
-    /* TODO: decompile from asm/... */
+    if (_wIndex >= 0 && _wIndex < 2) *(_hCollSet->stColliderInfo.a_xColliderReals + _wIndex) = _xReal;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 553–555 */
@@ -1895,7 +1895,7 @@ void fn_vCollSetSetColliderReal(tdstCollSet_* _hCollSet, short _wIndex, float _x
  */
 void fn_vCollSetSetColliderActor(tdstCollSet_* _hCollSet, short _wIndex, HIE_tdstSuperObject_* _hActor)
 {
-    /* TODO: decompile from asm/... */
+    if (_wIndex >= 0 && _wIndex < 2) *(_hCollSet->stColliderInfo.a_stColliderActors + _wIndex) = (int)_hActor;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 547–549 */
@@ -1909,7 +1909,8 @@ void fn_vCollSetSetColliderActor(tdstCollSet_* _hCollSet, short _wIndex, HIE_tds
  */
 void fn_vCollSetSetColliderVector(tdstCollSet_* _hCollSet, short _wIndex, MTH3D_tdstVector_* _p_stVector)
 {
-    /* TODO: decompile from asm/... */
+    if (_wIndex >= 0 && _wIndex < 2)
+        _hCollSet->stColliderInfo.a_stColliderVectors[_wIndex] = *_p_stVector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 543–543 */

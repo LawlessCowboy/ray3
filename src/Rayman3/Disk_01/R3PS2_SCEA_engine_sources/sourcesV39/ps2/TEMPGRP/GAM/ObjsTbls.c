@@ -1245,7 +1245,7 @@ tdstObjectsTableElement_* fn_d_hGetInitObjectsTable(tdstObjectsTablesList_* h_Ob
  */
 void fn_vReInitObjectTable(tdstObjectsTablesList_* param0)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(param0->d_stObjectsTable, param0->d_stInitObjectsTable, param0->wNumberOfElement * 20);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjsTbls.c lines 132–135 */

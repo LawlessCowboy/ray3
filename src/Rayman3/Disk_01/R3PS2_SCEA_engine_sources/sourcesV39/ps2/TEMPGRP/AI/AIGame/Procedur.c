@@ -3727,8 +3727,12 @@ tdstNodeInterpret_* fn_p_stGcSetActiveMcSlot(HIE_tdstSuperObject_* p_SuperObjPer
  */
 tdstNodeInterpret_* fn_p_stSFX_ActivateWaterCircles(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    int stParam[4];
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
+    if (stParam[3] == E_vt_Float) {
+        (void)(int)*(volatile float*)stParam;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6834–6848 */
@@ -3747,7 +3751,7 @@ tdstNodeInterpret_* fn_p_stSFX_ActivateWaterCircles(HIE_tdstSuperObject_* p_Supe
  */
 tdstNodeInterpret_* fn_p_stSFX_ActivateLightReflection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stParam;
+    int stParam[4];
     /* TODO: decompile from asm/... */
 }
 
@@ -3843,9 +3847,13 @@ tdstNodeInterpret_* fn_p_stSetCurrentValueAsInit(HIE_tdstSuperObject_* p_SuperOb
  */
 tdstNodeInterpret_* fn_p_stDemoProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stParam;
+    int stParam[4];
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    eProcedureId = *(tdeProcedureId_*)((char*)p_stTree - 8);
+    if (eProcedureId != eProc_ExitFromDemo) {
+        return p_stTree;
+    }
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)&stParam[0]);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6591–6609 */
@@ -3866,9 +3874,14 @@ tdstNodeInterpret_* fn_p_stDemoProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
  */
 tdstNodeInterpret_* fn_p_stBulletTimeProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    eProcedureId = *(tdeProcedureId_*)((char*)p_stTree - 8);
+    if (eProcedureId == eProc_SetFakeSpeedPercentage) {
+        int stParam[4];
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
+        g_iFalseTime = stParam[0];
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6569–6588 */
@@ -3889,9 +3902,14 @@ tdstNodeInterpret_* fn_p_stBulletTimeProc(HIE_tdstSuperObject_* p_SuperObjPerso,
  */
 tdstNodeInterpret_* fn_p_stMCProc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    eProcedureId = *(tdeProcedureId_*)((char*)p_stTree - 8);
+    if (eProcedureId == eProc_SetSaveGameAccessType) {
+        int stParam[4];
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
+        MC_ManagmentState = stParam[0];
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6519–6565 */

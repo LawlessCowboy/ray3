@@ -7,6 +7,7 @@
 typedef void* (*MNC_tfnAllocator_)(unsigned int);
 
 extern void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+extern void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct anon_0 anon_0;
@@ -276,7 +277,7 @@ MNC_tfnAllocator_ MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int
  */
 void MNC_fn_vDefaultDeallocator(void* pvPointer)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vFree(&pvPointer, 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\MNC\load\loadarea.c lines 135–135 */

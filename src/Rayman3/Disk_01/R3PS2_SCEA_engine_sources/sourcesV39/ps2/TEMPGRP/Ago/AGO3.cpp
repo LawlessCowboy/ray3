@@ -1709,7 +1709,7 @@ void Toby_DestroyAll(void)
  */
 void AGO3_LinkChainComputing::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 8339–8354 */
@@ -7386,7 +7386,7 @@ void AGO3_vInit(void)
  */
 void AGO3_Transition::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7047–7047 */
@@ -7422,7 +7422,7 @@ void AGO3_OrientedTarget::DesInit(void)
  */
 void AGO3_Snowboard_SnowEffect::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4955–4955 */
@@ -7458,7 +7458,7 @@ void AGO3_LightExplosion::DesInit(void)
  */
 void AGO3_SwirlingBubbles::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2944–2944 */

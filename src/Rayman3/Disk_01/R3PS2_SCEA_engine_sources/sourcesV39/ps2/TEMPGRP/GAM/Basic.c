@@ -1568,7 +1568,12 @@ char SAV2_g_LevelNameToSave[20];
  */
 void fn_vLastDesinitAlwaysStructure(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_vKillAllAlways();
+    if (*(int *)0x346150 != 0) {
+        *(int *)0x346164 = 0;
+        *(int *)0x346160 = 0;
+        *(int *)0x346168 = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 2111–2111 */
@@ -1625,7 +1630,10 @@ void GAM_fn_vGetRandomMapAndDemoName(char** pp_cMapName, char** pp_cDemoName)
  */
 void fn_vResetEngineFromPaused(void)
 {
-    /* TODO: decompile from asm/... */
+    HIE_gs_lCurrentFrame = g_lCurrentFrameSave;
+    *(unsigned char *)0x538a04 = 0;
+    fn_vLoadEngineClock();
+    SND_fn_vResumeSound();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1827–1840 */
@@ -1644,7 +1652,10 @@ void fn_vResetEngineFromPaused(void)
  */
 void fn_vSetEngineInPaused(void)
 {
-    /* TODO: decompile from asm/... */
+    *(unsigned char *)0x538a04 = 1;
+    g_lCurrentFrameSave = HIE_gs_lCurrentFrame;
+    fn_vSaveEngineClock();
+    SND_fn_vPauseSound();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1791–1792 */
@@ -2060,7 +2071,7 @@ void fn_vSetGLIDisplayFlag(unsigned int* p_DisplayMode, unsigned int ulFlag, uns
  */
 void fn_vSetDisplayFlag(unsigned int ulFlag, unsigned char ucValue)
 {
-    /* TODO: decompile from asm/... */
+    fn_vSetGLIDisplayFlag(&g_stEngineStructure.ulDisplayMode, ulFlag, ucValue);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 605–608 */
@@ -2073,7 +2084,10 @@ void fn_vSetDisplayFlag(unsigned int ulFlag, unsigned char ucValue)
  */
 unsigned char fn_bIsNextLevelNameValid(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char bIsValid;
+
+    bIsValid = (*(char *)0x53831f == 0) ^ 1;
+    return bIsValid;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 599–600 */

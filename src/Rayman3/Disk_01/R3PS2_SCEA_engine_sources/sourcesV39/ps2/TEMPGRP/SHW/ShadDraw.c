@@ -888,7 +888,9 @@ int HIE_g_lNbMatrixInStack;
  */
 void SECT_fn_vGetMinPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMinPoint)
 {
-    /* TODO: decompile from asm/... */
+    *(unsigned int*)&_p_stMinPoint->xX = *(unsigned int*)&_hSector->stMinMaxPoints[0].xX;
+    *(unsigned int*)&_p_stMinPoint->xY = *(unsigned int*)&_hSector->stMinMaxPoints[0].xY;
+    *(unsigned int*)&_p_stMinPoint->xZ = *(unsigned int*)&_hSector->stMinMaxPoints[0].xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 802–1214 */

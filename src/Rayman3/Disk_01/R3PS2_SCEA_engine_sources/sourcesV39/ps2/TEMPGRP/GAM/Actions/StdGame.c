@@ -1276,8 +1276,7 @@ void fn_vStandardGameSetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex, i
     tdstStandardGame_* p_stStandardGame;
     if ((_lIndex < 2) && (_lIndex >= 0))
     {
-        p_stObject = _hSO->hLinkedObject.p_stCharacter;
-        p_stStandardGame = p_stObject->h_StandardGame;
+        p_stStandardGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame;
         p_stStandardGame->a_lCustomLongs[_lIndex] = _lValue;
     }
 }
@@ -1316,8 +1315,7 @@ void fn_vStandardGameSetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex, 
     tdstStandardGame_* p_stStandardGame;
     if ((_lIndex < 2) && (_lIndex >= 0))
     {
-        p_stObject = _hSO->hLinkedObject.p_stCharacter;
-        p_stStandardGame = p_stObject->h_StandardGame;
+        p_stStandardGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame;
         p_stStandardGame->a_xCustomFloats[_lIndex] = _xValue;
     }
 }
@@ -1362,8 +1360,8 @@ unsigned char fn_ucStandardGameGetTransparencyZoneMaxSO(HIE_tdstSuperObject_* hS
     tdstStandardGame_* hStdGame;
     hStdGame = hSupObj->hLinkedObject.p_stCharacter->h_StandardGame;
     if (hStdGame != NULL)
-        return (unsigned char)hStdGame->ucTransparencyZoneMax;
-    return (unsigned char)0x50;
+        return ((unsigned int)hStdGame->ucTransparencyZoneMax & 0xff);
+    return 0x50;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 643–645 */
@@ -1380,8 +1378,8 @@ unsigned char fn_ucStandardGameGetTransparencyZoneMinSO(HIE_tdstSuperObject_* hS
     tdstStandardGame_* hStdGame;
     hStdGame = hSupObj->hLinkedObject.p_stCharacter->h_StandardGame;
     if (hStdGame != NULL)
-        return (unsigned char)hStdGame->ucTransparencyZoneMin;
-    return (unsigned char)0x50;
+        return ((unsigned int)hStdGame->ucTransparencyZoneMin & 0xff);
+    return 0x46;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 638–639 */

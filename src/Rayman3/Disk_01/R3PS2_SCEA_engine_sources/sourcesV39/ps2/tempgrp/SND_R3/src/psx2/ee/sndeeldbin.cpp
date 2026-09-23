@@ -787,7 +787,7 @@ unsigned char fn_s8Digit__FUc(unsigned char s8_Digit)
  */
 int SND_fn_bDesInitDataLoadSnd(void)
 {
-    /* TODO: decompile from asm/... */
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 99–104 */

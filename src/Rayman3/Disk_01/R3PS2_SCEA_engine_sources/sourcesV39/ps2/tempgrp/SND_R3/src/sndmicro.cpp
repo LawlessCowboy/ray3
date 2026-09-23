@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+extern "C" void f_vValueChanged__Q24usnd4CVarFv(void*);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _tdstAllRetMicroSound _tdstAllRetMicroSound;
 typedef struct _stVector _stVector;
@@ -43,9 +45,10 @@ struct _stVector {
  */
 /* The recovered template qualifier is not valid C++ in an identifier; the
  * MWCC symbol spelling omits the angle-bracket type argument here. */
-void f_vSetValue__Q24usnd12TTypedVarFf(float oValue)
+void f_vSetValue__Q24usnd12TTypedVarFf(void* pThis, float oValue)
 {
-    /* TODO: decompile from asm/... */
+    f_vValueChanged__Q24usnd4CVarFv(pThis);
+    *(float*)((char*)pThis + 0x1c) = oValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndmicro.cpp lines 38–40 */

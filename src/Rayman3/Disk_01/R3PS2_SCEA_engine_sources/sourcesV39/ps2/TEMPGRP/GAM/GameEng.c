@@ -1950,7 +1950,10 @@ void fn_vDestructAllFatherSonLinks(void)
  */
 void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* h_SupObject)
 {
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* h_Character = h_SupObject->hLinkedObject.p_stSuperObject;
+    HIE_fn_vChangeFather(h_SupObject,
+                         (HIE_tdstSuperObject_*)gp_stDynamicWorld,
+                         *(unsigned char*)((char*)h_Character->hLinkedObject.p_stSuperObject + 0x28));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 933–1458 */

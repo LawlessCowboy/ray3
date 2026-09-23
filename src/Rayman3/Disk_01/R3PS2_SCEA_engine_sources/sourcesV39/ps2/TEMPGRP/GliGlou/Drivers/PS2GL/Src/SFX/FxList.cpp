@@ -30,6 +30,7 @@ struct C_BaseFx {
 
 struct C_FxList {
     tdstBaseFxListElement_* pFirst; /* +0x0 */
+    C_FxList();
     C_BaseFx* SearchElement(void* pSearchKey);
     void vAddElement(C_BaseFx* pElement);
     void DeleteAllSDLs(void);
@@ -184,7 +185,7 @@ void C_FxList_destructor2(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_FxList_ctor(void)
+C_FxList::C_FxList(void)
 {
-    /* TODO: decompile from asm/... */
+    pFirst = 0;
 }

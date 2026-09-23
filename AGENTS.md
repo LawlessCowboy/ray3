@@ -112,11 +112,16 @@ After a mismatch, use `python3 tools/match.py classify FUNCTION` for an
 initial routing label such as `abi-narrow-type`, `relocation/global-layout`,
 `tail-call/dispatch`, or `codegen/scheduling` before retrying or escalating.
 
-## m2c seeds for advanced functions
+## m2c-first workflow for advanced functions
 
-For large or advanced functions (roughly 100+ bytes, many basic blocks,
-loops, calls, or substantial stack traffic), workers may generate a
-starting-point candidate with:
+For every large or advanced function (roughly 100+ bytes, many basic blocks,
+loops, calls, or substantial stack traffic), workers must generate an m2c
+starting-point candidate before attempting handwritten reconstruction. This is
+an iteration aid, not a claim about the original source. Keep the seed in
+`m2c-seeds/` and use it to establish the target's control-flow skeleton,
+stack slots, calls, and likely memory accesses.
+
+Generate the seed with:
 
 ```sh
 python3 tools/m2c_seed.py FUNCTION --output m2c-seeds/FUNCTION.c
@@ -132,11 +137,42 @@ python3 -m pip install 'm2c @ git+https://github.com/matt-kempster/m2c.git'
 
 m2c output is scaffolding only. Do not copy it over canonical source or claim
 a match from visual similarity. Preserve the generated seed outside
-`src/Rayman3/`, then transfer only evidence-supported natural C into the
-leased source file and verify every iteration with `tools/match.py check
-FUNCTION --diff`. Use the debug signature, line map, recovered layouts, and
-relocation names to correct m2c's guessed types, globals, and calls. For
-small wrappers, direct reconstruction is usually faster than a seed.
+`src/Rayman3/`, then transfer evidence-supported natural C into the leased
+source file in two phases:
+
+1. **Compile first.** Make the seed-derived candidate compile in the owning
+   translation unit with the project compiler. Resolve syntax, missing types,
+   declarations, and helper/global names using the debug signature and nearby
+   source context. Run `python3 tools/match.py check FUNCTION` as soon as it
+   compiles; a non-matching but compilable baseline is required before tuning.
+   Before transferring code, compare the m2c seed line-by-line with the
+   recovered debug C scaffold in the canonical TU. Keep the scaffold's
+   recovered signature, aggregate field names/offsets, local declarations,
+   source order, and line-boundary comments when m2c guessed them poorly;
+   import only m2c control-flow and instruction-shape evidence that agrees
+   with that debug evidence.
+2. **Refine against the target.** Use `check FUNCTION --diff` after every
+   meaningful change. Compare all Rabbitizer-decoded differences and the
+   target line map, then adjust natural control flow, declaration types and
+   lifetime, loop form, field/layout accesses, calls, and source ordering.
+   Record only a verified `MATCH`; record a useful failed attempt with its
+   concrete diagnosis. Never force progress with assembly, intrinsics, or
+   guessed opcodes.
+
+Use `python3 tools/large_match.py start FUNCTION` to create the seed, source
+snapshot, and an automatic canonical baseline check, then
+`python3 tools/large_match.py check FUNCTION --note "hypothesis"` for every
+verifier iteration. The helper saves the complete decoded diff, classifies the
+residual, hashes the candidate source, and keeps the hypothesis history under
+`build/large-match/`. Add reusable observations with
+`python3 tools/large_match.py note FUNCTION "observation"`. This gives future
+workers a reproducible baseline and prevents repeated experiments from being
+mistaken for independent evidence.
+
+Use the debug signature, line map, recovered layouts, and relocation names to
+correct m2c's guessed types, globals, and calls. For genuinely small wrappers
+under the threshold, direct reconstruction remains acceptable and usually
+faster than a seed.
 
 ## Constraints
 

@@ -277,7 +277,10 @@ int GEO_lGetIndexedTriangleNbFaces(GEO_tdstGeometricObject_* hObject, short hEle
 void GEO_vSetIndexedUVOfFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short xUV1, short xUV2, short xUV3)
 {
     GEO_tdstElementIndexedTriangles_* param0;
-    /* TODO: decompile from asm/... */
+    param0 = hObject->d_stListOfElements[hElement];
+    ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripledIndexUV)[xIndexOfFace].a3_xIndex[0] = xUV1;
+    ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripledIndexUV)[xIndexOfFace].a3_xIndex[1] = xUV2;
+    ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripledIndexUV)[xIndexOfFace].a3_xIndex[2] = xUV3;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 209–216 */
@@ -296,5 +299,8 @@ void GEO_vSetIndexedUVOfFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject
 void GEO_vGetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short* p_xPoint1, short* p_xPoint2, short* p_xPoint3)
 {
     GEO_tdstElementIndexedTriangles_* param0;
-    /* TODO: decompile from asm/... */
+    param0 = hObject->d_stListOfElements[hElement];
+    *p_xPoint1 = ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripled)[xIndexOfFace].a3_xIndex[0];
+    *p_xPoint2 = ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripled)[xIndexOfFace].a3_xIndex[1];
+    *p_xPoint3 = ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripled)[xIndexOfFace].a3_xIndex[2];
 }

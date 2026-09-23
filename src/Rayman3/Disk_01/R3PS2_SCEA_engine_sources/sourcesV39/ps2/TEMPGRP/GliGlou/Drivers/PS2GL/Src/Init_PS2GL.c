@@ -2767,7 +2767,9 @@ void GLIPS2_vCleanReinitForResChange(void)
  */
 void MC_SwapBuffers(void)
 {
-    /* TODO: decompile from asm/... */
+    SND_fn_vSynchroSound();
+    PS2auxSwapBuffers();
+    GLI_vReinitFrame(1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 3940–3955 */
@@ -3266,7 +3268,8 @@ void GLI_vProcessColoredFade(void)
  */
 void GLIPS2_vActualizeClock(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_fInitialColoredFadeTime = 0;
+    g_BlackScreenUntilNextMap = 5;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1659–1675 */
@@ -3294,7 +3297,21 @@ void GLIPS2_vActualizeClock(void)
  */
 void GLI_vDoCompleteFade(int bFadeOut, float* pRGBColor, float fTimeInSeconds)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_a3_fFadeColor[0] = pRGBColor[0];
+    GLI_g_a3_fFadeColor[1] = pRGBColor[1];
+    GLI_g_a3_fFadeColor[2] = pRGBColor[2];
+    if (bFadeOut)
+    {
+        GLI_g_fCurrentColoredFadeValue = 0.0f;
+        GLI_g_fCurrentColoredFadeDirection = 1.0f / fTimeInSeconds;
+    }
+    else
+    {
+        GLI_g_fCurrentColoredFadeValue = 1.0f;
+        GLI_g_fCurrentColoredFadeDirection = -1.0f / fTimeInSeconds;
+    }
+    GLI_g_fInitialColoredFadeValue = GLI_g_fCurrentColoredFadeValue;
+    GLI_g_fInitialColoredFadeTime = g_ffFrameTime;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1636–1648 */
@@ -3549,7 +3566,7 @@ void GLI_fn_vSetSwapBufferCallback(void (*f)(void))
  */
 void GLI_fn_vSwapBufferCallback(void)
 {
-    /* TODO: decompile from asm/... */
+    /* TODO: requires the original CP0 Count access macro. */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 462–600 */
@@ -3706,7 +3723,9 @@ void GLI_fn_vFirstInitOpenGL(void)
  */
 int DummyDMAHandler(void)
 {
-    /* TODO: decompile from asm/... */
+    scePrintf("DMA HANDLER CALLED !!!\n");
+    sceGsResetPath();
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 430–434 */

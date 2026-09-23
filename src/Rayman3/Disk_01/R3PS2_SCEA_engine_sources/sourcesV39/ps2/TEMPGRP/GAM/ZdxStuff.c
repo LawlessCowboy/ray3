@@ -2058,7 +2058,7 @@ int fn_bHadToCorrectActivationList(tdstCsaList_* _p_stCsaList)
  */
 int fn_iCmpZoneSetIndex(void* p_stZSE1, void* p_stZSE2)
 {
-    /* TODO: decompile from asm/... */
+    return *(unsigned short*)((char*)p_stZSE1 + 4) - *(unsigned short*)((char*)p_stZSE2 + 4);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 231–294 */

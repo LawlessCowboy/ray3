@@ -813,9 +813,14 @@ void HIE_fn_SO_SetSuperImposedClipping(HIE_tdstSuperObject_* _hSO, int _lTop, in
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void HIE_fn_SO_vSetOutLineMode(HIE_tdstSuperObject_* _hSO, unsigned char bMode, unsigned int ulColor)
+void HIE_fn_SO_vSetOutLineMode(HIE_tdstSuperObject_* _hSO, int bMode, unsigned int ulColor)
 {
-    /* TODO: decompile from asm/... */
+    if (bMode != 0) {
+        _hSO->ulFlags |= 0x80000;
+    } else {
+        _hSO->ulFlags &= ~0x80000;
+    }
+    _hSO->ulOutlineColor = ulColor;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 83–107 */
@@ -856,7 +861,13 @@ void HIE_fn_SO_vClearSuperimposedFlag(HIE_tdstSuperObject_* _hSO)
  */
 void HIE_fn_SO_vSetSuperimposedFlag(HIE_tdstSuperObject_* _hSO)
 {
-    /* TODO: decompile from asm/... */
+    if ((_hSO->ulFlags & 0x20) != 0x20) {
+        _hSO->ulFlags |= 0x21;
+        if (g_xFixIndex < 0x20) {
+            gd_hFixSPO[g_xFixIndex] = (int)_hSO;
+            g_xFixIndex++;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 54–58 */
@@ -869,5 +880,8 @@ void HIE_fn_SO_vSetSuperimposedFlag(HIE_tdstSuperObject_* _hSO)
  */
 HIE_tdstSuperObject_* HIE_fn_hGetElementFormFixViewport(short xIndex)
 {
-    /* TODO: decompile from asm/... */
+    if (xIndex < g_xFixIndex) {
+        return (HIE_tdstSuperObject_*)gd_hFixSPO[xIndex];
+    }
+    return NULL;
 }

@@ -17,6 +17,7 @@ typedef struct less less;
 typedef struct stree stree;
 typedef struct sset sset;
 typedef struct CMicrophone CMicrophone;
+namespace usnd { struct CVar; }
 
 /* The allocator is an empty STL support object in this recovered layout. */
 struct sallocator {};
@@ -24,7 +25,7 @@ struct sallocator {};
 /* Only the callback body is emitted in this TU; its class declaration was
  * absent from the extracted source. */
 struct CMusicMarkerNotifTarget {
-    void fv_vVarAccessed(void);
+    void fv_vVarAccessed(usnd::CVar&);
 };
 
 typedef enum _Redbl {
@@ -120,7 +121,6 @@ struct CMicrophone {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CMusicMarkerNotifTarget::fv_vVarAccessed(void)
+void CMusicMarkerNotifTarget::fv_vVarAccessed(usnd::CVar&)
 {
-    /* TODO: decompile from asm/... */
 }

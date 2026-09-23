@@ -1402,8 +1402,8 @@ char gcGlobAleat;
 int g_a_pfnDynamicFunction[2];
 tdstEngineStructure_ g_stEngineStructure;
 int g_InGameMenu2DActivated;
-DNM_stDynamics* (*MEC_p_stDynamicsBaseMechanics)(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float);
-DNM_stDynamics* (*DNM_p_stDynamicsCameraMechanics)(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float);
+DNM_stDynamics* MEC_p_stDynamicsBaseMechanics(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float);
+DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 33–34 */
 /* addr: 0x00262510  size: 12 bytes */
@@ -1535,5 +1535,6 @@ void fn_h_GetCurrentDNMIdCard(HIE_tdstSuperObject_* p_SuperObjPerso)
  */
 void InitArrayOfDynamicFunction(DNM_stDynamics* (**p_fnDynamicFunction)(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float))
 {
-    /* TODO: decompile from asm/... */
+    p_fnDynamicFunction[0] = DNM_p_stDynamicsCameraMechanics;
+    p_fnDynamicFunction[1] = MEC_p_stDynamicsBaseMechanics;
 }
