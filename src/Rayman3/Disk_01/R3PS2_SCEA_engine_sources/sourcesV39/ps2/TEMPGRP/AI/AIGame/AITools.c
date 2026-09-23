@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+extern char* FON_fn_szGetTextPointerForHandle(int hString);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
@@ -39,7 +41,7 @@ typedef union tduIdInterpret_ tduIdInterpret_;
 typedef struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn;
 typedef struct RGBAComponent_ RGBAComponent_;
 typedef union RGBAStruct_ RGBAStruct_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_3 anon_3;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
@@ -2027,7 +2029,7 @@ union RGBAStruct_ {
     RGBAComponent_ Component; /* +0x0 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -3211,7 +3213,15 @@ unsigned char fn_ucIsThereFloatIfYesConvertItToInteger(tdstGetSetParam_* p_stPar
  */
 float fn_xRealModuloAround(float xFrom, float xModulus, float xValue)
 {
-    /* TODO: decompile from asm/... */
+    xValue -= xFrom;
+    while (xValue < 0.0f) {
+        xValue += xModulus;
+    }
+    while (xValue >= xModulus) {
+        xValue -= xModulus;
+    }
+    xValue += xFrom;
+    return xValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 362–371 */
@@ -3249,7 +3259,15 @@ DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso)
 float fn_xComputeBestEcartDirectionAngle(float xAngleFollowed, float xAngleToFollow)
 {
     float xDeltaAngle;
-    /* TODO: decompile from asm/... */
+    xDeltaAngle = xAngleToFollow - xAngleFollowed;
+    if (xDeltaAngle > 0.0f) {
+        if (xDeltaAngle > (float)3.14159265358979323846) {
+            xDeltaAngle -= (float)6.28318530717958647692;
+        }
+    } else if (xDeltaAngle < -(float)3.14159265358979323846) {
+        xDeltaAngle += (float)6.28318530717958647692;
+    }
+    return xDeltaAngle;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 291–311 */
@@ -3371,8 +3389,14 @@ void fn_vGetCenterOfBoundingVolume(HIE_tdstSuperObject_* hPerso, MTH3D_tdstVecto
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue)
+char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue)
 {
     char* pszString;
-    /* TODO: decompile from asm/... */
+    pszString = 0;
+    if (p_stValue->eType == E_vt_String) {
+        pszString = (char*)p_stValue->uDummy.uParam.szString;
+    } else if (p_stValue->eType == E_vt_Text) {
+        pszString = FON_fn_szGetTextPointerForHandle(p_stValue->uDummy.uParam.hText);
+    }
+    return pszString;
 }

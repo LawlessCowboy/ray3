@@ -408,6 +408,7 @@ MAT_tdstTransformation_ Global_tempCamStackMatrix;
 unsigned int HIE_g_lNbMatrixInCameraStack;
 MAT_tdstTransformation_ HIE_g_a_stCameraMatrixStack[51];
 int g_p_stCurrentInCamCoordsMatrix;
+typedef struct { MTH4D_tdstVector_ aVector[6]; } HIE_tdstCameraMatrixData;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieMtStk.c lines 632–723 */
 /* addr: 0x003200c0  size: 476 bytes */
@@ -501,7 +502,16 @@ void HIE_fn_vFastPS2PushMatrix(HIE_tdstSuperObject_* _hSprObj)
  */
 unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* _hVpt)
 {
-    /* TODO: decompile from asm/... */
+    HIE_tdstCameraMatrixData *p_stSource;
+    HIE_tdstCameraMatrixData *p_stDestination;
+
+    HIE_g_lNbMatrixInCameraStack = 0;
+    p_stSource = (void *)(*(int *)((unsigned char *)_hVpt + 0x68) + 0x10);
+    p_stDestination = (void *)HIE_g_a_stCameraMatrixStack;
+    *p_stDestination = *p_stSource;
+    HIE_g_lNbMatrixInCameraStack++;
+    g_p_stCurrentInCamCoordsMatrix = (int)((unsigned char *)p_stDestination + (HIE_g_lNbMatrixInCameraStack - 1) * 0x60);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieMtStk.c lines 58–65 */

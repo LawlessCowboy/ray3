@@ -1485,7 +1485,14 @@ void MEC_vImposeRelativeRotation(DNM_stDynamics* p_stDynamic, MTH3D_tdstMatrix_*
 void MEC_vImposeRotationVector(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stX, MTH3D_tdstVector_* p_stY, MTH3D_tdstVector_* p_stZ)
 {
     MTH3D_tdstMatrix_* p_stImposeRotationMatrix;
-    /* TODO: decompile from asm/... */
+    if (!(p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80))
+    {
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_0 = *p_stX;
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_1 = *p_stY;
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_2 = *p_stZ;
+        p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags |= 0x20000000;
+        p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags |= 0x20000000;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 785–807 */

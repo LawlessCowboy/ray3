@@ -2182,7 +2182,7 @@ float g_LeftHandedIdentityMatrix[16];
 unsigned int GLI_g_NumberInList;
 unsigned int hCurrentSDL;
 int PS2glLiberator;
-int PS2glAllocator64;
+void* (*PS2glAllocator64)(unsigned int);
 int Global_pCurrentActor;
 int GLI_g_CurrentSkinMaterial;
 int GLI_g_CurrentSkinIndex;
@@ -2207,7 +2207,7 @@ int __vt__24C_SdlRef_TextureIdMatrix;
 int HIE_gs_lCurrentFrame;
 
 struct C_InstanceList {
-    static void __nw(unsigned int Size);
+    static void* __nw(unsigned int Size);
 };
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 25–25 */
@@ -2217,9 +2217,9 @@ struct C_InstanceList {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_InstanceList::__nw(unsigned int Size)
+void* C_InstanceList::__nw(unsigned int Size)
 {
-    /* TODO: decompile from asm/... */
+    return PS2glAllocator64(Size);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 1290–1332 */

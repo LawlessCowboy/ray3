@@ -290,7 +290,16 @@ void GLI_vStartNormalRecomp(void)
 void GLI_vRecomputeCharacterNormals(_SDC_Instance_* pInstance, unsigned int* pInstanceNormals, GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* pPoints, unsigned int xNbPoints, unsigned int NbVertices)
 {
     GLI_tdstNormalsToRecompute_* p;
-    /* TODO: decompile from asm/... */
+    if (GLI_g_NbNormalsToRecompute < 50)
+    {
+        p = &GLI_g_NormalsToRecomputeArray[GLI_g_NbNormalsToRecompute++];
+        p->pInstance = pInstance;
+        p->pInstanceNormals = (int)pInstanceNormals;
+        p->p_stEIT = p_stEIT;
+        p->pPoints = pPoints;
+        p->xNbPoints = xNbPoints;
+        p->NbVertices = NbVertices;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 1157–1385 */

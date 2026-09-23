@@ -841,7 +841,12 @@ void fn_vChangeCurrentSelectedChar(void)
  */
 void fn_vDecreaseGrad(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_aNbGradOn[g_CurrentSelection] > 0) {
+        g_aNbGradOn[g_CurrentSelection]--;
+        if (aMenu2DPages[g_CurrentMenu2DPage].eTypePage == eAudioOptionTypePage) {
+            fn_vUpdateVolumeLineGameMenu2D(g_CurrentSelection, g_aNbGradOn[g_CurrentSelection], 10);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1014–1023 */
@@ -860,7 +865,12 @@ void fn_vDecreaseGrad(void)
  */
 void fn_vIncreaseGrad(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_aNbGradOn[g_CurrentSelection] < 10) {
+        g_aNbGradOn[g_CurrentSelection]++;
+    }
+    if (aMenu2DPages[g_CurrentMenu2DPage].eTypePage == eAudioOptionTypePage) {
+        fn_vUpdateVolumeLineGameMenu2D(g_CurrentSelection, g_aNbGradOn[g_CurrentSelection], 10);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 984–998 */

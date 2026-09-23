@@ -24,6 +24,11 @@ typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct GEO_tdstIndexedSphere_ GEO_tdstIndexedSphere_;
 typedef struct GEO_tdstElementSpheres_ GEO_tdstElementSpheres_;
 
+struct GEO_tdstElementIndexedTriangles_ {
+    unsigned char _padding[12];
+    volatile short* d_stListOfFaces;
+};
+
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
     MAT_eTransform_Identity = 1,
@@ -106,7 +111,7 @@ struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPointsNormals; /* +0x4 */
     int d_dfVertexTransparency; /* +0x8 */
     int d_xListOfElementsTypes; /* +0xc */
-    int d_stListOfElements; /* +0x10 */
+    GEO_tdstElementIndexedTriangles_** d_stListOfElements; /* +0x10 */
     GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
     GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
     unsigned int ulType; /* +0x1c */
@@ -176,7 +181,10 @@ int gs_hVisualMaterial;
 void GEO_vSetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short xPoint1, short xPoint2, short xPoint3)
 {
     GEO_tdstElementIndexedTriangles_* param0;
-    /* TODO: decompile from asm/... */
+    param0 = hObject->d_stListOfElements[hElement];
+    *(short*)((char*)param0->d_stListOfFaces + xIndexOfFace * 6) = xPoint1;
+    *(short*)((char*)param0->d_stListOfFaces + xIndexOfFace * 6 + 2) = xPoint2;
+    *(short*)((char*)param0->d_stListOfFaces + xIndexOfFace * 6 + 4) = xPoint3;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoBdvEd.c lines 273–342 */

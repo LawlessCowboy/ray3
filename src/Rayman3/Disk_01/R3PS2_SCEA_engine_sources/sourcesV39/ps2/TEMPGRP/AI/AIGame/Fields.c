@@ -3091,6 +3091,17 @@ struct SCT_tdstListOfSoundEvent_ {
 
 unsigned char AI_g_ucLastMarioPadUsed;
 
+extern void IPT_fn_vSetRotationAngleForPadNumber(unsigned char, float);
+extern float IPT_fn_xGetRotationAngleForPadNumber(unsigned char);
+extern void IPT_fn_vSetTrueAnalogForceForPadNumber(unsigned char, float);
+extern float IPT_fn_xGetTrueAnalogForceForPadNumber(unsigned char);
+extern void IPT_fn_vSetAnalogForceForPadNumber(unsigned char, float);
+extern float IPT_fn_xGetAnalogForceForPadNumber(unsigned char);
+extern void IPT_fn_vSetVAxisForPadNumber(unsigned char, short);
+extern short IPT_fn_wGetVAxisForPadNumber(unsigned char);
+extern void IPT_fn_vSetHAxisForPadNumber(unsigned char, short);
+extern short IPT_fn_wGetHAxisForPadNumber(unsigned char);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 439–439 */
 /* addr: 0x00211890  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3160,9 +3171,10 @@ unsigned char fn_ucGetFieldSystemDate(void* p_stContext, tdstGetSetParam_* p_stG
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetFieldPadSector(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetFieldPadSector(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    IPT_fn_vSetSectorForPadNumber(AI_g_ucLastMarioPadUsed, *(int*)p_stGetSetParam);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 385–389 */
@@ -3176,9 +3188,11 @@ unsigned char fn_ucSetFieldPadSector(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetFieldPadSector(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetFieldPadSector(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    *(int*)p_stGetSetParam = IPT_fn_xGetSectorForPadNumber(AI_g_ucLastMarioPadUsed);
+    *(tdeVariableType_*)((char*)p_stGetSetParam + 0xC) = E_vt_Integer;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 378–382 */
@@ -3192,9 +3206,10 @@ unsigned char fn_ucGetFieldPadSector(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetFieldPadRotationAngle(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetFieldPadRotationAngle(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    IPT_fn_vSetRotationAngleForPadNumber(AI_g_ucLastMarioPadUsed, *(float*)p_stGetSetParam);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 371–375 */
@@ -3208,9 +3223,11 @@ unsigned char fn_ucSetFieldPadRotationAngle(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetFieldPadRotationAngle(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetFieldPadRotationAngle(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    *(float*)p_stGetSetParam = IPT_fn_xGetRotationAngleForPadNumber(AI_g_ucLastMarioPadUsed);
+    *(tdeVariableType_*)((char*)p_stGetSetParam + 0xC) = E_vt_Float;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 364–368 */
@@ -3224,9 +3241,10 @@ unsigned char fn_ucGetFieldPadRotationAngle(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetFieldPadTrueAnalogForce(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetFieldPadTrueAnalogForce(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    IPT_fn_vSetTrueAnalogForceForPadNumber(AI_g_ucLastMarioPadUsed, *(float*)p_stGetSetParam);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 357–361 */
@@ -3240,9 +3258,11 @@ unsigned char fn_ucSetFieldPadTrueAnalogForce(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetFieldPadTrueAnalogForce(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetFieldPadTrueAnalogForce(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    *(float*)p_stGetSetParam = IPT_fn_xGetTrueAnalogForceForPadNumber(AI_g_ucLastMarioPadUsed);
+    *(tdeVariableType_*)((char*)p_stGetSetParam + 0xC) = E_vt_Float;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 350–354 */
@@ -3256,9 +3276,10 @@ unsigned char fn_ucGetFieldPadTrueAnalogForce(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetFieldPadAnalogForce(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetFieldPadAnalogForce(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    IPT_fn_vSetAnalogForceForPadNumber(AI_g_ucLastMarioPadUsed, *(float*)p_stGetSetParam);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 343–347 */
@@ -3272,9 +3293,11 @@ unsigned char fn_ucSetFieldPadAnalogForce(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetFieldPadAnalogForce(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetFieldPadAnalogForce(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    *(float*)p_stGetSetParam = IPT_fn_xGetAnalogForceForPadNumber(AI_g_ucLastMarioPadUsed);
+    *(tdeVariableType_*)((char*)p_stGetSetParam + 0xC) = E_vt_Float;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 336–340 */
@@ -3288,9 +3311,11 @@ unsigned char fn_ucGetFieldPadAnalogForce(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetFieldPadVerticalAxis(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char pad = AI_g_ucLastMarioPadUsed;
+    IPT_fn_vSetVAxisForPadNumber(pad, *(short*)p_stGetSetParam);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 329–333 */
@@ -3303,9 +3328,11 @@ unsigned char fn_ucSetFieldPadVerticalAxis(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetFieldPadVerticalAxis(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    *(short*)p_stGetSetParam = IPT_fn_wGetVAxisForPadNumber(AI_g_ucLastMarioPadUsed);
+    *(tdeVariableType_*)((char*)p_stGetSetParam + 0xC) = E_vt_Integer;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 320–326 */
@@ -3319,9 +3346,11 @@ unsigned char fn_ucGetFieldPadVerticalAxis(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetFieldPadHorizontalAxis(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetFieldPadHorizontalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char pad = AI_g_ucLastMarioPadUsed;
+    IPT_fn_vSetHAxisForPadNumber(pad, *(short*)p_stGetSetParam);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 313–317 */
@@ -3334,9 +3363,11 @@ unsigned char fn_ucSetFieldPadHorizontalAxis(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetFieldPadHorizontalAxis(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetFieldPadHorizontalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    *(short*)p_stGetSetParam = IPT_fn_wGetHAxisForPadNumber(AI_g_ucLastMarioPadUsed);
+    *(tdeVariableType_*)((char*)p_stGetSetParam + 0xC) = E_vt_Integer;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 306–310 */

@@ -6,8 +6,10 @@
 
 typedef struct C_SdlRef C_SdlRef;
 struct C_SdlRef {
-    void __nw(unsigned int Size);
+    static void* __nw(unsigned int Size);
 };
+
+extern void* (*PS2glAllocator64)(unsigned int);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct PS2GL_VU1_InterpolMatrixData_ PS2GL_VU1_InterpolMatrixData_;
@@ -98,9 +100,9 @@ unsigned int GLI_g_FrameNumber;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_SdlRef::__nw(unsigned int Size)
+void* C_SdlRef::__nw(unsigned int Size)
 {
-    /* TODO: decompile from asm/... */
+    return PS2glAllocator64(Size);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInterpol.cpp lines 460–488 */

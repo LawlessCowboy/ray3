@@ -2983,7 +2983,14 @@ unsigned char fn_ucGetTreeNbParam(tdstNodeInterpret_* p_stTree)
  */
 unsigned char fn_ucChangeComportIntell(tdstIntelligence_* p_stIntelligence, tdstComport_* p_stComport)
 {
-    /* TODO: decompile from asm/... */
+    p_stIntelligence->p_stPrevComport = p_stIntelligence->p_stCurrentComport;
+    p_stIntelligence->p_stCurrentComport = p_stComport;
+    fn_vInitActionTable(p_stIntelligence);
+    if (p_stComport->p_stSchedule == NULL)
+        p_stIntelligence->p_stCurrentSchedule = NULL;
+    else
+        p_stIntelligence->p_stCurrentSchedule = p_stComport->p_stSchedule->p_stNodeInterpret;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\StrIntel.c lines 58–61 */
@@ -2998,5 +3005,14 @@ unsigned char fn_ucChangeComportIntell(tdstIntelligence_* p_stIntelligence, tdst
  */
 void fn_vReinitComport(tdstIntelligence_* p_stIntelligence)
 {
-    /* TODO: decompile from asm/... */
+    tdstComport_* p_stComport = (tdstComport_*)p_stIntelligence->ulNoComportInit;
+
+    p_stIntelligence->p_stPrevComport = p_stIntelligence->p_stCurrentComport;
+    p_stIntelligence->p_stCurrentComport = p_stComport;
+    fn_vInitActionTable(p_stIntelligence);
+    if (p_stComport->p_stSchedule == NULL)
+        p_stIntelligence->p_stCurrentSchedule = NULL;
+    else
+        p_stIntelligence->p_stCurrentSchedule = p_stComport->p_stSchedule->p_stNodeInterpret;
+    p_stIntelligence->p_stPrevComport = p_stIntelligence->p_stCurrentComport;
 }

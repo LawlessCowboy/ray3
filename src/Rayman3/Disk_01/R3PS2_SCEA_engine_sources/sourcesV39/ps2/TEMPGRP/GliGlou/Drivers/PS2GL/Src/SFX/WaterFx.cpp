@@ -2136,7 +2136,14 @@ void AE_Filter_BrightNess_n_Contrast(float* AE_Bright_Cont)
 void WaterFx_SetPosition(float* PositionInWater, float* NewPosition)
 {
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+    p = WaterFx_g_List.pFirst;
+    if (p == 0)
+        return;
+    do
+    {
+        ((C_WaterFx*)p->pFx)->SetPosition(PositionInWater, NewPosition);
+        p = p->pNext;
+    } while (p != 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1338–1345 */
@@ -2173,7 +2180,14 @@ void WaterFx_SetPerturbationMode(float* Position, int PerturbationMode, float St
 void WaterFx_Perturb(float* Position, float Strength)
 {
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+    p = WaterFx_g_List.pFirst;
+    if (p == 0)
+        return;
+    do
+    {
+        ((C_WaterFx*)p->pFx)->Perturb(Position, Strength);
+        p = p->pNext;
+    } while (p != 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1303–1316 */

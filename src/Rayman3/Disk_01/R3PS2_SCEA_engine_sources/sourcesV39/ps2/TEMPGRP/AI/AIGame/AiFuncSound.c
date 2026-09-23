@@ -3071,7 +3071,10 @@ tdstNodeInterpret_* fn_p_stOptionGetHandleState(HIE_tdstSuperObject_* p_SuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stOptionGetHandle(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stOptionGetHandle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    (void)p_SuperObjPerso;
+    *(int*)p_stValue = SND_fn_hGetCurrentSoundHandle();
+    *(int*)((char*)p_stValue + 0xC) = 6;
+    return p_stTree;
 }

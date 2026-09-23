@@ -18,6 +18,11 @@ typedef struct tdstStandardGame_ tdstStandardGame_;
 
 typedef int tdeCondId_;
 typedef int tdstGetSetParam_;
+typedef struct {
+    unsigned char pad[0x1b71];
+    unsigned char xDemoMode;
+} tdstEngineStructure_;
+extern tdstEngineStructure_ g_stEngineStructure;
 struct MTH3D_tdstVector_ {
     float xX;
     float xY;
@@ -178,9 +183,10 @@ tdstNodeInterpret_* fn_p_stTooFarCondition(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stDemoCondition(tdstNodeInterpret_* p_stTree, int* p_lValue)
+tdstNodeInterpret_* fn_p_stDemoCondition(void* p_unknown, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    /* TODO: decompile from asm/... */
+    *p_lValue = g_stEngineStructure.xDemoMode;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 812–816 */

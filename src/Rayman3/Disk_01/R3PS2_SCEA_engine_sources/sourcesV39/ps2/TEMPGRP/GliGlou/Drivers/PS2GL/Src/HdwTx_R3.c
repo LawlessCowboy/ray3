@@ -1506,7 +1506,11 @@ void GLI_xCreateMaterialPS2GL(GLI_tdstMaterial_** hMaterial)
  */
 int GLI_bLoadSnapShotTexture(char* _pFileName)
 {
-    /* TODO: decompile from asm/... */
+    if (GLI_g_ScreenShotLoadingBuffer == 0) {
+        GLI_g_ScreenShotLoadingBuffer = (int)malloc(81924);
+    }
+    PS2MC_fn_vLoadScreenShot(_pFileName, (char*)GLI_g_ScreenShotLoadingBuffer);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2257–2257 */
@@ -2295,7 +2299,20 @@ void GLI_DRV_vUnLoadTextures(void)
  */
 void GLI_vUnloadTexturePartial(unsigned char ucChannel)
 {
-    /* TODO: decompile from asm/... */
+    int i;
+    unsigned char channel;
+    int offset;
+
+    channel = ucChannel;
+    offset = 0;
+    i = 0;
+    do {
+        if ((channel & 0xfe) == *(int*)((char*)GLI_g_BaseChannelForThisBloc + offset)) {
+            GLI_vFreeTextureBloc(i);
+        }
+        i++;
+        offset += 4;
+    } while (i < 4);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 498–538 */

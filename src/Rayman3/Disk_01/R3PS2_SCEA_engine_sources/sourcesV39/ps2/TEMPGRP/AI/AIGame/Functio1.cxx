@@ -219,9 +219,10 @@ tdstNodeInterpret_* fn_p_stCreditsManagementFunctions(HIE_tdstSuperObject_* p_Su
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_stGetXBoxRegion(tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stGetXBoxRegion(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    (void)p_stTree;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3897–3912 */
@@ -379,9 +380,11 @@ tdstNodeInterpret_* fn_p_stGetMSSoundValues(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGetVideoOptions(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetVideoOptions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->data[0] = 1;
+    p_stValue->data[3] = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3517–3525 */
@@ -422,7 +425,7 @@ tdstNodeInterpret_* fn_p_stGetBrightness(tdstNodeInterpret_* p_stTree)
 tdstNodeInterpret_* fn_p_stGetNameResolution(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     char szName[60];
-    /* TODO: decompile from asm/... */
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3465–3465 */
@@ -444,9 +447,10 @@ tdstNodeInterpret_* fn_p_stIsDisplayModeAvailable(HIE_tdstSuperObject_* p_SuperO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSaveCurrentResolution(tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSaveCurrentResolution(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    /* TODO: decompile from asm/... */
+    (void)p_SuperObjPerso;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3421–3430 */
@@ -534,7 +538,9 @@ tdstNodeInterpret_* fn_p_stGetLanguageText(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 tdstNodeInterpret_* fn_p_stGetNbLanguages(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->data[0] = 0;
+    p_stValue->data[3] = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3326–3328 */
@@ -549,7 +555,9 @@ tdstNodeInterpret_* fn_p_stGetNbLanguages(tdstNodeInterpret_* p_stTree, tdstGetS
  */
 tdstNodeInterpret_* fn_p_stGetCurrentLanguageId(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->data[0] = 0;
+    p_stValue->data[3] = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3315–3317 */
@@ -561,7 +569,7 @@ tdstNodeInterpret_* fn_p_stGetCurrentLanguageId(tdstNodeInterpret_* p_stTree, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGetDriversAvailable(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetDriversAvailable(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     /* TODO: decompile from asm/... */
 }

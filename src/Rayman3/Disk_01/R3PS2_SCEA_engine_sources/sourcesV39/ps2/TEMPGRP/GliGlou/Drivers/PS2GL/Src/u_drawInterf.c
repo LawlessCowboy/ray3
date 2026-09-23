@@ -2312,6 +2312,13 @@ unsigned char rdata[32];
 void (*GLI_vProgressCallBackPtr)(unsigned int);
 int CD_ProgressCallBack;
 
+extern int rand(void);
+extern int sprintf(char*, const char*, ...);
+extern char* PLD_szPrependGamedataName(char*);
+extern int CD_OpenFileWithNameConversion(char*);
+extern char D_0035ADA0[];
+void GLI_vShowVignetteFromHandle(int);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 78–80 */
 /* addr: 0x002b5790  size: 84 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2325,7 +2332,10 @@ int CD_ProgressCallBack;
  */
 float FRR(float a, float b)
 {
-    /* TODO: decompile from asm/... */
+    float r;
+
+    r = (float)rand() / 2147483648.0f;
+    return a + (b - a) * r;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 2774–2820 */
@@ -2442,7 +2452,9 @@ void GLI_vLoadCarton(char* levelname)
 {
     int FileHandle;
     char TempString[512];
-    /* TODO: decompile from asm/... */
+    sprintf(TempString, D_0035ADA0, levelname);
+    GLI_vShowVignetteFromHandle(CD_OpenFileWithNameConversion(
+        PLD_szPrependGamedataName(TempString)));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 2101–2223 */

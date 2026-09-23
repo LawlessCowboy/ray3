@@ -24,6 +24,26 @@ struct AGO2_MEM_FreeZone_ {
     unsigned int Size; /* +0x8 */
 };
 
+struct MTH3D_tdstVector_ {
+    float xX;
+    float xY;
+    float xZ;
+};
+
+struct MTH4D_tdstMatrix_ {
+    char _pad[0x40];
+    MTH3D_tdstVector_ stPos;
+};
+
+struct HIE_tdstSuperObject_ {
+    char _pad[0x24];
+    MTH4D_tdstMatrix_* hGlobalMatrix;
+};
+
+typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
+extern tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
+extern HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
+
 static unsigned int g_AGO2_MEM_NbOfAllocatedBlocs;
 static unsigned int g_AGO2_MEM_CurrentHandle;
 static unsigned int g_AGO2_MEM_NumberOfFreeZones;
@@ -48,7 +68,11 @@ void AGO_GetMainCharacterPosition(MTH3D_tdstVector_* pPos)
 {
     MTH4D_tdstMatrix_* pMat;
     HIE_tdstSuperObject_* hMainCharacterObjet;
-    /* TODO: decompile from asm/... */
+    hMainCharacterObjet = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
+    pMat = hMainCharacterObjet->hGlobalMatrix;
+    pPos->xX = pMat->stPos.xX;
+    pPos->xY = pMat->stPos.xY;
+    pPos->xZ = pMat->stPos.xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2_Mem.c lines 365–467 */
@@ -263,8 +287,19 @@ void AGO2_MEM_Init(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO2_MEM_GetPointerFromHandle(unsigned int Handle)
+char* AGO2_MEM_GetPointerFromHandle(unsigned int Handle)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    unsigned int Offset;
+
+    i = 0;
+    Offset = 0;
+    while ((i < g_AGO2_MEM_NbOfAllocatedBlocs) && (Handle != *(unsigned int*)((char*)g_AGO2_MEM_HandleDescriptors + Offset))) {
+        Offset += 16;
+        i++;
+    }
+    if (i == g_AGO2_MEM_NbOfAllocatedBlocs) {
+        return 0;
+    }
+    return (char*)(g_AGO2_MEM_HandleDescriptors[i].Pointer + 16);
 }

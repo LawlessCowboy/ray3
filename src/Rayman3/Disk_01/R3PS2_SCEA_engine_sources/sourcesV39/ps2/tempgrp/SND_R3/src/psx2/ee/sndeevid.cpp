@@ -33,7 +33,13 @@ struct CPS2StreamVBRenderer {
 };
 
 struct CPS2Renderer {
-    /* C++ base C2DRenderer at +0x0. */
+    virtual void vUnknown0(void);
+    virtual void vUnknown1(void);
+    virtual void vUnknown2(void);
+    virtual void vUnknown3(void);
+    virtual void vUnknown4(void);
+    virtual void vUnknown5(void);
+    virtual void vStop(unsigned int);
 };
 
 struct CPS2IOPPullDMA {
@@ -75,11 +81,34 @@ struct CPS2Channel {
     ESTATE m_eState; /* +0x8 */
 };
 
+class CLinkTypeActor;
+extern "C" void* __vt__10CLinkActor;
+
+class CExtraEventActor {
+public:
+    CExtraEventActor(void);
+
+private:
+    unsigned char m_aucData[0x68];
+};
+
+class CLinkActor {
+public:
+    CLinkActor(void);
+
+    CLinkTypeActor* mpoType;
+    int ms32ACPObjectId;
+    void* m_pvTable;
+    CExtraEventActor m_oExtraActors;
+    CLinkActor* m_poNext;
+    CLinkActor* m_poPrevious;
+};
+
 int g_pxBufferAudio;
 static unsigned int gs_PosRead;
 static unsigned int gs_NbBytesInBuffer;
 static int gs_poBox;
-static int gs_poRenderer;
+static CPS2Renderer* gs_poRenderer;
 static unsigned int gs_uiChannel;
 static unsigned int gs_uiSndVidCritSect;
 static unsigned int gs_TotalSizeReceived;
@@ -97,9 +126,10 @@ int SND_g_iEnoughSound;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_iTransferIOPData__FPvUi(void)
+/* TODO: recovered constructor body. */
+CLinkActor::CLinkActor(void)
+    : m_pvTable(&__vt__10CLinkActor), mpoType(0), m_poNext(0), m_poPrevious(0)
 {
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeevid.cpp lines 301–317 */
@@ -164,7 +194,8 @@ void SND_VID_fn_vInitVideoSound(unsigned int _nbVoices, unsigned int _iFrequency
  */
 void SND_VID_fn_vStopVideoSound(void)
 {
-    /* TODO: decompile from asm/... */
+    gs_poRenderer->vStop(gs_uiChannel);
+    gs_SoundStarted = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeevid.cpp lines 225–241 */

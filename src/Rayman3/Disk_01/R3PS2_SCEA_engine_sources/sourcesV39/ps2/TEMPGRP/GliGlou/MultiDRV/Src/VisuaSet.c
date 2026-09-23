@@ -31,7 +31,7 @@ struct GEO_tdstVisualSet_ {
     short xType; /* +0x6 */
     int d_xThresholdsTable; /* +0x8 */
     GEO_tduVSObject_* d_p_stLodDefinitions; /* +0xc */
-    int d_hRLI; /* +0x10 */
+    void* d_hRLI; /* +0x10 */
     int lNumberOfRLI; /* +0x14 */
 };
 
@@ -130,6 +130,8 @@ int g_p_stLightMapUForNextObjectToDraw;
 int g_p_stRawRLIsForThisObject;
 int g_p_stRLIForNextObjectToDraw;
 
+void ISI_hComputeBlendRLI(void* hRLI1, void* hRLI2, short xNumISILOD, float xPercent);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 116–117 */
 /* addr: 0x002ab360  size: 16 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -158,7 +160,11 @@ void TEX_vSetTextureQualityLevel(GLI_tdstTexture_* p_stTexture, char ucTextQuali
  */
 void GLI_hComputeBlendRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex1, unsigned char ucIndex2, short xNumISILOD, float xPercent)
 {
-    /* TODO: decompile from asm/... */
+    if (ucIndex1 >= hVisualSet->lNumberOfRLI)
+        return;
+    if (ucIndex2 >= hVisualSet->lNumberOfRLI)
+        return;
+    ISI_hComputeBlendRLI(((void**)hVisualSet->d_hRLI)[ucIndex1], ((void**)hVisualSet->d_hRLI)[ucIndex2], xNumISILOD, xPercent);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 449–452 */
@@ -271,7 +277,16 @@ int GLI_lGetVisualSetNumbertOfLOD(GEO_tdstVisualSet_* p_stVisualSet)
 GEO_tdstGeometricObject_* GLI_hGetVisualSetGeometricForADistance(GEO_tdstVisualSet_* p_stVSE, float xThreshold)
 {
     int lLod;
-    /* TODO: decompile from asm/... */
+    int lOffset;
+    lLod = 0;
+    lOffset = 0;
+    while (lLod < p_stVSE->xNbLodDefinitions - 1) {
+        if (*(float*)((char*)p_stVSE->d_xThresholdsTable + lOffset + 4) > xThreshold)
+            break;
+        lOffset += 4;
+        lLod++;
+    }
+    return p_stVSE->d_p_stLodDefinitions[lLod].p_stGeometricObject;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 178–183 */

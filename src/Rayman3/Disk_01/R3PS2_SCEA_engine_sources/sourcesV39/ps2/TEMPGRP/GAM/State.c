@@ -170,10 +170,18 @@ tdstState_* fn_h_TmpStateAlloc(void)
  */
 int fn_hIfExistProhibitedState(tdstState_* h_State, tdstState_* h_TargetState)
 {
-    int max;
-    int i;
     tdstProhibit_* p_stProhibit;
-    /* TODO: decompile from asm/... */
+    int i;
+    int max;
+
+    p_stProhibit = h_State->hForProhibitArray.hFirstElementOpt;
+    max = h_State->hForProhibitArray.lNumberOfElementsOpt;
+    for (i = 0; (p_stProhibit != NULL) && (i < max); p_stProhibit++, i++)
+    {
+        if (p_stProhibit->h_ProhibitedState == h_TargetState)
+            return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 315–323 */
@@ -192,7 +200,17 @@ tdstTransition_* fn_hIfExistTransitionalWithTargetState(tdstState_* h_State, tds
 {
     tdstTransition_* p_stTransition;
     int i;
-    /* TODO: decompile from asm/... */
+
+    p_stTransition = h_State->hForTransitionArray.hFirstElementOpt;
+    i = 0;
+    while (i < h_State->hForTransitionArray.lNumberOfElementsOpt)
+    {
+        if (p_stTransition->h_TargetState == h_TargetState)
+            return p_stTransition;
+        i++;
+        p_stTransition++;
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 299–299 */

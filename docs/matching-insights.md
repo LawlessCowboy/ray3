@@ -67,3 +67,5 @@ compiler option, construct, and outcome.
 - [debug-format] LNK_fn_p_SetLag raw debug signature decoded only one tdstNodeInterpret_* parameter, but target ABI returns ; adding the omitted leading HIE_tdstSuperObject_* parameter and returning the second argument reproduces the exact 8-byte thunk. Treat similar one-parameter callback wrappers as possible signature-gap cases and validate register usage. (2026-09-14)
 
 - [compiler] SDLRefs printf probe: under MWCC PS2 3.0 O3, a C++ member method calling extern "C" printf emits a 0x20-byte stack-frame jal even with void/non-variadic declarations; target SDLRefs methods are 12-byte lui/j tail thunks. Recovered target literals are @820="Dummy interpol reference called !!\\n" and @823="Dummy reference called !!\\n". This points to a project macro/special declaration or compiler-context difference, not unknown string contents. (2026-09-14)
+
+- [compiler] MWCC PS2 3.0 preserves independent byte-offset and element-index induction variables in a variable-bound handle scan; accessing the handle through (char*)base + Offset and incrementing Offset before i reproduces the target's addiu 0x10/addiu 1 loop order. (2026-09-15)

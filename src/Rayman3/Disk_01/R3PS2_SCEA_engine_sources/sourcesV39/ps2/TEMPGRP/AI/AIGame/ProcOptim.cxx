@@ -28,6 +28,22 @@ struct tdstGetSetParam_ {
     unsigned char _raw[64];
 };
 
+typedef struct _tdstCheapCharacter {
+    unsigned char _raw[36];
+    char cActivity;
+    unsigned char _padding[11];
+} _tdstCheapCharacter;
+
+struct _tdstCheapCharacterList {
+    unsigned char _raw0[16];
+    _tdstCheapCharacter List[40];
+    unsigned char _raw1[80];
+};
+
+extern _tdstCheapCharacterList g_aListOfCheapCharacterList[10];
+extern unsigned int g_lNbListOfCheapCharacterList;
+extern "C" void HIE_fn_CleanAllListOfFakeInstanceToViewport(void);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 643–677 */
 /* addr: 0x002290b0  size: 196 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -503,7 +519,7 @@ unsigned int TestPositionOfCheapCharacter(unsigned int ulIndList, HIE_tdstSuperO
  */
 void ActivateCheapCharacter(unsigned int ulInd, unsigned int ulIndChar, unsigned char bActivate)
 {
-    /* TODO: decompile from asm/... */
+    g_aListOfCheapCharacterList[ulInd].List[ulIndChar].cActivity = bActivate ? 1 : 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 137–152 */
@@ -643,5 +659,6 @@ void InitCheapCharacterList(unsigned int ulInd, unsigned int ulMax, HIE_tdstSupe
  */
 void InitListOfCheapCharacterList(void)
 {
-    /* TODO: decompile from asm/... */
+    HIE_fn_CleanAllListOfFakeInstanceToViewport();
+    g_lNbListOfCheapCharacterList = 0;
 }

@@ -1480,8 +1480,12 @@ int SAV2_LastError(void)
  */
 void SAV2_fn_p_szGetSaveNameOfSaveNumber(void)
 {
-    int start;
-    /* TODO: decompile from asm/... */
+    static int start;
+
+    if (start++ < 10)
+    {
+        printf("function %s not implemented\n", "SAV2_fn_p_szGetSaveNameOfSaveNumber");
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1473–1478 */
@@ -1495,7 +1499,11 @@ void SAV2_fn_p_szGetSaveNameOfSaveNumber(void)
  */
 unsigned char SAV2_fn_ucGetNumberOfExistingSave(void)
 {
-    /* TODO: decompile from asm/... */
+    if (SAV2_g_hExistSaveOnDisk)
+    {
+        return FIL_fn_ulGetNumberOfFiles((FIL_tdstFileNameList_*)SAV2_g_hExistSaveOnDisk);
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1447–1470 */
@@ -1511,8 +1519,13 @@ unsigned char SAV2_fn_ucGetNumberOfExistingSave(void)
  */
 unsigned char SAV2_fn_bActualizeExistingSave(void)
 {
-    int start;
-    /* TODO: decompile from asm/... */
+    static int start;
+
+    if (start++ < 10)
+    {
+        printf("function %s not implemented\n", "SAV2_fn_bActualizeExistingSave");
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1419–1436 */

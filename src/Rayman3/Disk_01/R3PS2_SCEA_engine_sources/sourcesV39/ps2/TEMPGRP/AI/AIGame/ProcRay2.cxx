@@ -41,6 +41,11 @@ typedef union tduGetSetParam_ {
 struct tdstGetSetParam_ { tduGetSetParam_ uParam; tdeVariableType_ eType; };
 struct GEO_tdstColor_ { float xR; float xG; float xB; float xA; };
 
+extern "C" tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso,
+                                                 tdstNodeInterpret_* p_stTree,
+                                                 tdstGetSetParam_* p_stValue);
+extern "C" char TEXT_gc_ViewportFixed;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 4225–4241 */
 /* addr: 0x0022a130  size: 96 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2661,5 +2666,6 @@ tdstNodeInterpret_* fn_p_stTextIntegerParameter(HIE_tdstSuperObject_* p_SuperObj
 tdstNodeInterpret_* fn_p_stTextSuperImposed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    TEXT_gc_ViewportFixed = stParam.uParam.lValue;
 }

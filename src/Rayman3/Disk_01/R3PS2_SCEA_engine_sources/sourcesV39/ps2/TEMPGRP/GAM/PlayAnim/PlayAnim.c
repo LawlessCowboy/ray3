@@ -1699,6 +1699,8 @@ unsigned int GLI_g_ForceDestructAllSDLs;
 float g_fGlobalAccelerationFactorForAnims;
 int gp_stMorphData;
 int HIE_gs_lCurrentFrame;
+void fn_v3dDataSetFrameRate(tdst3dData_* h_3dData, unsigned char ucFrameRate);
+void GLI_vCleanDispTemporaryDataSPO(HIE_tdstSuperObject_* h_SuperObject);
 /* fn_iCompareMorphData is declared by its recovered definition below. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 25–31 */
@@ -1715,7 +1717,11 @@ int HIE_gs_lCurrentFrame;
 void ANI_fn_vFreeze(HIE_tdstSuperObject_* hSuperObjPerso)
 {
     tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/... */
+
+    h_Current3dData = hSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData;
+    if (h_Current3dData->ucFrameRate != 0) {
+        fn_v3dDataSetFrameRate(h_Current3dData, 0);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 4450–4597 */
@@ -1932,7 +1938,17 @@ void fn_vClearPlayanimTempGeometricObjects(void)
 void fn_vPutBackOldGeometricObjectsBeforeAnimPlayer(void)
 {
     unsigned int ulCount;
-    /* TODO: decompile from asm/... */
+    unsigned int ulOffset;
+    stSwapInfo_* p_stSwapInfo;
+
+    for (ulCount = 0, ulOffset = 0; ulCount < gulSwapAllocationIndex; ulCount++, ulOffset += 0x100) {
+        p_stSwapInfo = (stSwapInfo_*)((char*)gax_stSwapInfo + ulOffset);
+        p_stSwapInfo->p_stPhysicalObject->_hVisualSet->d_p_stLodDefinitions->p_stGeometricObject->d_stListOfEdgesDI =
+            p_stSwapInfo->stVisualSet.d_p_stLodDefinitions->p_stGeometricObject->d_stListOfEdgesDI;
+        p_stSwapInfo->p_stPhysicalObject->_hVisualSet->d_p_stLodDefinitions->p_stGeometricObject->xNbEdgesDI =
+            p_stSwapInfo->stVisualSet.d_p_stLodDefinitions->p_stGeometricObject->xNbEdgesDI;
+        *p_stSwapInfo->pp_stPhysicalObject = p_stSwapInfo->p_stPhysicalObject;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 3043–3051 */
@@ -2730,10 +2746,21 @@ void PLA_fn_vCleanMorphTargets(tdstEngineObject_* p_stObject)
  */
 void PLA_fn_vReleaseAllObjectsInHeap(void)
 {
-    unsigned short* p_uwStateOfSupObj;
-    HIE_tdstSuperObject_* p_stSO;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* p_stSO;
+    unsigned short* p_uwStateOfSupObj;
+
+    p_uwStateOfSupObj = PLA_g_a_wStateOfSupObjHeap;
+    p_stSO = (HIE_tdstSuperObject_*)PLA_g_d_stSupObjHeap;
+    i = 0;
+    do {
+        if (*p_uwStateOfSupObj != 0) {
+            GLI_vCleanDispTemporaryDataSPO(p_stSO);
+        }
+        i++;
+        p_uwStateOfSupObj++;
+        p_stSO = (HIE_tdstSuperObject_*)((char*)p_stSO + 0x80);
+    } while (i < 1024);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 1778–1840 */

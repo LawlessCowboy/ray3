@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+static unsigned int g_uTextureCount;
+static unsigned int g_uTextureCapacity;
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CVarAccess CVarAccess;
 typedef struct JingleList JingleList;
@@ -630,7 +633,8 @@ void SwitchMgr::fs_vUpdateWaves(CPS2IdObjLoader* pLoader)
  */
 void SwitchMgr::fs_vClearTexture(void)
 {
-    /* TODO: decompile from asm/... */
+    g_uTextureCapacity = 0;
+    g_uTextureCount = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 292–311 */

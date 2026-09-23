@@ -146,6 +146,12 @@ struct IPT_tdstKeyWordElement_ {
 
 IPT_tdstInput_ IPT_g_hInputStructure;
 
+extern IPT_tdstEntryElement_* D_7D3608[3900];
+extern IPT_tdstEntryElement_* D_7D360C[3900];
+extern IPT_tdstEntryElement_* D_7D3610[3900];
+extern IPT_tdstEntryElement_* D_7D3614[3900];
+extern IPT_tdstEntryElement_* D_7D3618[3900];
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 44–44 */
 /* addr: 0x002f7480  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -772,7 +778,11 @@ void IPT_fn_vSetKeyboardCancelInertiaForPadNumber(unsigned char ucPadNumber, uns
  */
 void IPT_fn_vSetKeyboardAxesForPadNumber(unsigned char ucPadNumber, IPT_tdstEntryElement_* hLeft, IPT_tdstEntryElement_* hRight, IPT_tdstEntryElement_* hUp, IPT_tdstEntryElement_* hDown, IPT_tdstEntryElement_* hSpeedUp)
 {
-    /* TODO: decompile from asm/... */
+    D_7D3608[ucPadNumber * 65] = hUp;
+    D_7D360C[ucPadNumber * 65] = hDown;
+    D_7D3610[ucPadNumber * 65] = hLeft;
+    D_7D3614[ucPadNumber * 65] = hRight;
+    D_7D3618[ucPadNumber * 65] = hSpeedUp;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 52–54 */

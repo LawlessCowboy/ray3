@@ -1808,13 +1808,11 @@ unsigned char fn_ucGetHitPointsMax(tdstEngineObject_* _p_stObject)
  */
 unsigned char fn_ucSubHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    tdstStandardGame_* hStandardGame = _p_stObject->h_StandardGame;
-    int value = hStandardGame->ucHitPoints - _ucValue;
-    unsigned char* pHitPoints = &hStandardGame->ucHitPoints;
+    int value = _p_stObject->h_StandardGame->ucHitPoints - _ucValue;
     if (value > 0)
-        *pHitPoints = (signed char)*pHitPoints - _ucValue;
+        _p_stObject->h_StandardGame->ucHitPoints = (signed char)_p_stObject->h_StandardGame->ucHitPoints - _ucValue;
     else
-        *pHitPoints = 0;
+        _p_stObject->h_StandardGame->ucHitPoints = 0;
     return _p_stObject->h_StandardGame->ucHitPoints;
 }
 

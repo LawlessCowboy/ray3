@@ -3172,9 +3172,20 @@ WP_tdstListOfArc_* WPG_fn_hGetArcList(WP_tdstGraphNode_* hSrcNode)
  */
 WP_tdstWayPoint_* WPG_fn_hGetWaypointOfGraph(WP_tdstGraph_* hGraph, int iIndex, int* _plTypeOfWP)
 {
-    int i;
     WP_tdstGraphNode_* hElement;
-    /* TODO: decompile from asm/... */
+    int i;
+
+    hElement = hGraph->m_hListOfNode.hFirstElementDyn;
+    i = 0;
+    if (iIndex > 0) {
+        do {
+            hElement = hElement->hNextBrotherDyn;
+            i++;
+        } while (i < iIndex);
+    }
+
+    *_plTypeOfWP = hElement->m_lTypeOfWP;
+    return hElement->m_hWayPoint;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1480–1480 */

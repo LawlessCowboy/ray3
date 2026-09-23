@@ -735,13 +735,15 @@ struct tdstAnim3d_ {
 };
 
 unsigned char PAUSE_g_ucPauseCause;
+extern void fn_vResetEngineFromPaused(void);
+extern int INOPS2_fn_wJoyCheckConnection(short _wJoystickNum);
 static unsigned int PAUSE_g_ulTimePause;
 int RUMBLE_g_lConfigState;
 unsigned int RUMBLE_g_ulFrequency;
 unsigned int RUMBLE_g_ulPower;
 int RUMBLE_g_bRequest;
 unsigned char g_bCONSOLE_ENGINE;
-unsigned char g_EngineWasPausedAutomatically;
+int g_EngineWasPausedAutomatically;
 unsigned int uDevicePaused;
 unsigned int g_ulMoviesBit2;
 unsigned int g_ulMoviesBit1;
@@ -863,7 +865,12 @@ void fn_vRedrawPauseStringIfRequired(void)
  */
 void fn_vUnpauseFromMemoryCard(void)
 {
-    /* TODO: decompile from asm/... */
+    PAUSE_g_ucPauseCause &= ~2;
+    if ((PAUSE_g_ucPauseCause == 0) && g_EngineWasPausedAutomatically)
+    {
+        fn_vResetEngineFromPaused();
+        g_EngineWasPausedAutomatically = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 1021–1028 */
@@ -982,7 +989,13 @@ void fn_vManageControlerDisconnection(void)
 void GAM_fn_vCheckJoyConnections(void)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    i = 0;
+    do
+    {
+        INOPS2_fn_wJoyCheckConnection(i);
+        i++;
+    } while (i <= 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 596–597 */

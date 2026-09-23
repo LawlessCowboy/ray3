@@ -166,7 +166,8 @@ int SVG_fn_iGetChangeInMC0(void)
  */
 void SVG_fn_vSetMC0AsChanged(void)
 {
-    /* TODO: decompile from asm/... */
+    gs_iSceMcOpWarned = 0;
+    gs_iSceMcOpChanged = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 224–267 */
@@ -829,7 +830,10 @@ unsigned char SVG_fn_bIsActivVmsConnected(void)
  */
 int SVG_fn_bGetActiveVms(void)
 {
-    /* TODO: decompile from asm/... */
+    int iReturn;
+
+    iReturn = SVG_gs_lActiveVmsNumber;
+    return iReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1701–1713 */

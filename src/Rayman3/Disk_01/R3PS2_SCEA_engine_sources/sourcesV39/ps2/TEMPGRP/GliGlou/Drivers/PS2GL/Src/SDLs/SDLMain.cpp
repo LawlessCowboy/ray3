@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+extern int printf(const char*, ...);
 
 typedef int anon_0;
 typedef int anon_1;
@@ -2200,7 +2201,7 @@ void CSpriteController(unsigned int NbSprites)
  */
 void GLI_vPrintSDLStatsAfter(void)
 {
-    /* TODO: decompile from asm/... */
+    printf("SDL after: %d %d", GLI_g_NbSDLs, GLI_g_SDLIsBlinking);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1315–1315 */
@@ -2212,7 +2213,7 @@ void GLI_vPrintSDLStatsAfter(void)
  */
 void GLI_vPrintSDLStatsBefore(void)
 {
-    /* TODO: decompile from asm/... */
+    printf("SDL before: %d %d", GLI_g_NbSDLs, GLI_g_SDLIsBlinking);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1277–1304 */
@@ -2286,7 +2287,13 @@ void GLIPS2_vRecurseRemoveInterpolationForSPOs(HIE_tdstSuperObject_* _hLinkedSpo
  */
 void GLI_vSetOptimizedSDC(int flag)
 {
-    /* TODO: decompile from asm/... */
+    if (flag == 1) {
+        SDL_g_OptimizedSDC = 1;
+        SDL_g_HasDrawn = 0;
+    } else {
+        SDL_g_HasDrawn = 0;
+        SDL_g_OptimizedSDC = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1201–1222 */

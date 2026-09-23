@@ -44,7 +44,14 @@ int readBufEndGet(anon_0* b, int size)
  */
 int readBufBeginGet(anon_0* b, unsigned char** ptr)
 {
-    /* TODO: decompile from asm/... */
+    int size;
+
+    if (b->count != 0)
+    {
+        size = b->size;
+        *ptr = b->data + (b->put - b->count) % size;
+    }
+    return b->count;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\readbuf.c lines 64–70 */

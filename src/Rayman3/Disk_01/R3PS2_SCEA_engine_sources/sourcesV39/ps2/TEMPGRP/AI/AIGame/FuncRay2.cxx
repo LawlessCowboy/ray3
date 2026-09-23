@@ -43,6 +43,10 @@ float g_DistanceWaypointMax;
 float g_xDistanceActMin;
 float g_xDistanceActMax;
 
+extern "C" tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso,
+                                                 tdstNodeInterpret_* p_stTree,
+                                                 tdstGetSetParam_* p_stValue);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 4091–4099 */
 /* addr: 0x0021b6e0  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -54,11 +58,17 @@ float g_xDistanceActMax;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEmptyText(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEmptyText(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
-    char szString[1];
-    /* TODO: decompile from asm/... */
+    static char szString[1];
+
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    if (eFuncId == 236) {
+        p_stValue->uParam.pValue = szString;
+        p_stValue->eType = (tdeVariableType_)9;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 4063–4082 */
@@ -106,12 +116,22 @@ tdstNodeInterpret_* fn_p_stTextComparison(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSAV2_DoVarsNeedToBeSet(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stSAV2_DoVarsNeedToBeSet(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int lValue;
     tdeFuncId_ eFuncId;
-    int SAV2_NotInitialized;
-    /* TODO: decompile from asm/... */
+    static int SAV2_NotInitialized;
+
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    if (eFuncId == 233) {
+        lValue = SAV2_NotInitialized;
+        SAV2_NotInitialized = 0;
+    } else {
+        lValue = 0;
+    }
+    p_stValue->uParam.lValue = lValue;
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3649–4032 */
@@ -684,7 +704,10 @@ tdstNodeInterpret_* fn_p_stGetScrollSpeed(HIE_tdstSuperObject_* p_SuperObjPerso,
  */
 tdstNodeInterpret_* fn_p_stCapabilityFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    p_stValue->uParam.lValue = 1 << *(unsigned char*)&p_stValue->uParam;
+    p_stValue->eType = (tdeVariableType_)44;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 2855–2881 */

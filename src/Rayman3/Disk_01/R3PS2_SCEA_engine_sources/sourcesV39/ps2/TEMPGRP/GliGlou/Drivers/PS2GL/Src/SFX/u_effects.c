@@ -1956,7 +1956,12 @@ void GLIPS2_vSetMirrorAE_Blur(unsigned int bOnOff, float fVal)
  */
 void GLIPS2_vSetMirrorAE_WaterFx(unsigned int bOnOff, float fSpeed, float fAmp)
 {
-    /* TODO: decompile from asm/... */
+    if (bOnOff)
+        AE_MirrorFX |= 8;
+    else
+        AE_MirrorFX &= ~8;
+    AE_MirrorWaterFX_Speed = fSpeed;
+    AE_MirrorWaterFX_Ampl = fAmp;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5795–5801 */
@@ -2037,7 +2042,14 @@ void GLIPS2_vSetAE_WaterFX(unsigned int bOnOff)
  */
 void GLIPS2_vSetAE_ColorCorrection(unsigned int bOnOff, float fPreContrast, float fR, float fG, float fB)
 {
-    /* TODO: decompile from asm/... */
+    if (bOnOff)
+        GLI_g_AfterEffect = 6;
+    else
+        GLI_g_AfterEffect = 0;
+    AE_Bright_Cont[0] = fR;
+    AE_Bright_Cont[1] = fG;
+    AE_Bright_Cont[2] = fB;
+    AE_Bright_Cont[3] = fPreContrast;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5746–5748 */
@@ -2071,7 +2083,15 @@ void GLIPS2_vSetAE_ZoomBlur(unsigned int bOnOff, float fIntensity)
  */
 void GLIPS2_vSetAE_AutoGlow(unsigned int bOnOff, float fR, float fG, float fB, float fBrightness, float fDirection)
 {
-    /* TODO: decompile from asm/... */
+    if (bOnOff)
+        GLI_g_AfterEffect = 8;
+    else
+        GLI_g_AfterEffect = 0;
+    AE_Glow[0] = fR;
+    AE_Glow[1] = fG;
+    AE_Glow[2] = fB;
+    AE_Glow[3] = fBrightness;
+    AE_GlowDirection = fDirection;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5723–5728 */
@@ -2088,7 +2108,14 @@ void GLIPS2_vSetAE_AutoGlow(unsigned int bOnOff, float fR, float fG, float fB, f
  */
 void GLIPS2_vSetAE_Glow(unsigned int bOnOff, float fR, float fG, float fB, float fBrightness)
 {
-    /* TODO: decompile from asm/... */
+    if (bOnOff)
+        GLI_g_AfterEffect = 3;
+    else
+        GLI_g_AfterEffect = 0;
+    AE_Glow[0] = fR;
+    AE_Glow[1] = fG;
+    AE_Glow[2] = fB;
+    AE_Glow[3] = fBrightness;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5711–5715 */
@@ -2118,7 +2145,13 @@ void GLIPS2_vSetAE_CartoonEmboss(unsigned int bOnOff, float Blend)
  */
 void GLIPS2_vSetAE_DepthBlur(unsigned int bOnOff, float fNear, float fFar, float fAlpha)
 {
-    /* TODO: decompile from asm/... */
+    if (bOnOff)
+        GLI_g_AfterEffect = 1;
+    else
+        GLI_g_AfterEffect = 0;
+    G_DEPTH_BLUR_DISTNEAR = fNear;
+    G_DEPTH_BLUR_DISTFAR = fFar;
+    G_DEPTH_BLUR_MAX_ALPHA = fAlpha;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5680–5685 */

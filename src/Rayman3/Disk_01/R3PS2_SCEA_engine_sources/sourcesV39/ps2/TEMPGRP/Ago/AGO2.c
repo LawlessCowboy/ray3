@@ -4128,7 +4128,10 @@ unsigned char AGO2_CreateOrdinaryParticle(void)
  */
 void AGO2_ProcessSimpleParticleWithSpeedAndGravity(AGO2_Part_* p)
 {
-    /* TODO: decompile from asm/... */
+    p->Direction.xZ -= 9.81f * g_fTimeDifference;
+    p->Position.xX += p->Direction.xX * g_fTimeDifference;
+    p->Position.xY += p->Direction.xY * g_fTimeDifference;
+    p->Position.xZ += p->Direction.xZ * g_fTimeDifference;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 896–907 */
@@ -4186,7 +4189,14 @@ void AGO2_vClearParticlesOfThatTypeWithChannel(unsigned int PartType, unsigned i
 void AGO2_vClearParticlesOfThatType(unsigned int PartType)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    unsigned int Offset;
+    AGO2_Part_* pParticle;
+    for (i = 0, Offset = 0; i < g_ulNumberOfAgos2; Offset += sizeof(AGO2_Part_), i++) {
+        pParticle = (AGO2_Part_*)((char*)g_pAGO2Parts + Offset);
+        if (PartType == pParticle->ulBaseID) {
+            pParticle->ulType |= 1;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 782–786 */

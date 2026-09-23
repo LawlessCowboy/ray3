@@ -168,6 +168,7 @@ struct AGO_Part_ {
     int pTempTexture; /* +0x7c */
     unsigned int Displayed; /* +0x80 */
     unsigned int Channel; /* +0x84 */
+    unsigned char _extractor_padding_01[8]; /* +0x88..0x8f */
 };
 
 struct tdstSubAnimInUse_ {
@@ -1189,6 +1190,7 @@ float AGO_gExtraParameter1[3];
 float g_AGO_AnimTimeLag;
 float g_AGO_AnimTimeScale;
 AGO_Part_ g_AGO[501];
+void AGO_vDestroyAllParts(void);
 unsigned int AGO_g_PreviousCurrentFrame;
 unsigned int AGO_g_CurrentFrame;
 int GLI_g_AnimatedTextureToUse;
@@ -1359,7 +1361,18 @@ void AGO_vClearUnwanted110AGOsForDemos(void)
 {
     AGO_Part_* p;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    unsigned int Offset;
+
+    for (i = 0, Offset = 0; i < g_ulNumberOfAgos; i++, Offset += 0x90)
+    {
+        p = (AGO_Part_*)((char*)g_AGO + Offset);
+        if (((p->ulType & 0xff) == 17) && ((p->ulType & 0x1000000) != 0x1000000))
+        {
+            p->ulType |= 0x1000000;
+        }
+    }
+
+    AGO_vDestroyAllParts();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 8011–8066 */
@@ -1501,7 +1514,14 @@ void AGO_vCreateTriangle(float* c1, float* c2, float* c3, void* VisualMat, float
 void AGO_Define_OrthogonalVectorsV1Flat(MTH3D_tdstVector_* p_stDirection, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2)
 {
     float fNorm1;
-    /* TODO: decompile from asm/... */
+
+    fNorm1 = 1.0f / ((-p_stDirection->xY * -p_stDirection->xY) + (p_stDirection->xX * p_stDirection->xX));
+    p_stV1->xX = -p_stDirection->xY * fNorm1;
+    p_stV1->xY = p_stDirection->xX * fNorm1;
+    p_stV1->xZ = 0.0f;
+    p_stV2->xX = p_stDirection->xZ * p_stV1->xY - p_stDirection->xY * p_stV1->xZ;
+    p_stV2->xY = p_stV1->xX * p_stDirection->xZ - p_stDirection->xX * p_stV1->xZ;
+    p_stV2->xZ = p_stDirection->xX * p_stV1->xY - p_stDirection->xY * p_stV1->xX;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 7764–7792 */

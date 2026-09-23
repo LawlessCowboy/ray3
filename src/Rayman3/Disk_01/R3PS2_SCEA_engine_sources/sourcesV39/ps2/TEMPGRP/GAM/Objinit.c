@@ -1491,6 +1491,14 @@ int HIE_g_hCurrentMatrix;
 int HIE_g_a_hMatrixStack[50];
 int HIE_g_lNbMatrixInStack;
 unsigned char g_ucGameModuleId;
+typedef struct SectorCache_ SectorCache_;
+struct SectorCache_ {
+    unsigned long sector;
+    unsigned char valid;
+    unsigned char pad[7];
+    unsigned long access;
+};
+extern SectorCache_ GLOBAL_SectorCache[128];
 int gp_stInactiveDynamicWorld;
 int gp_stDynamicWorld;
 int g_lSoundObjectTypeAnim;
@@ -1516,7 +1524,32 @@ tdstStructureHandleFunction_ g_a_stStructureHandleFunction;
 void InitSectorCache(void)
 {
     int i;
-    /* TODO: decompile from asm/... */
+    for (i = 0; i < 128; i += 8) {
+        GLOBAL_SectorCache[i].sector = 0;
+        GLOBAL_SectorCache[i].valid = 0;
+        GLOBAL_SectorCache[i].access = 0;
+        GLOBAL_SectorCache[i + 1].sector = 0;
+        GLOBAL_SectorCache[i + 1].valid = 0;
+        GLOBAL_SectorCache[i + 1].access = 0;
+        GLOBAL_SectorCache[i + 2].sector = 0;
+        GLOBAL_SectorCache[i + 2].valid = 0;
+        GLOBAL_SectorCache[i + 2].access = 0;
+        GLOBAL_SectorCache[i + 3].sector = 0;
+        GLOBAL_SectorCache[i + 3].valid = 0;
+        GLOBAL_SectorCache[i + 3].access = 0;
+        GLOBAL_SectorCache[i + 4].sector = 0;
+        GLOBAL_SectorCache[i + 4].valid = 0;
+        GLOBAL_SectorCache[i + 4].access = 0;
+        GLOBAL_SectorCache[i + 5].sector = 0;
+        GLOBAL_SectorCache[i + 5].valid = 0;
+        GLOBAL_SectorCache[i + 5].access = 0;
+        GLOBAL_SectorCache[i + 6].sector = 0;
+        GLOBAL_SectorCache[i + 6].valid = 0;
+        GLOBAL_SectorCache[i + 6].access = 0;
+        GLOBAL_SectorCache[i + 7].sector = 0;
+        GLOBAL_SectorCache[i + 7].valid = 0;
+        GLOBAL_SectorCache[i + 7].access = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 1003–1004 */

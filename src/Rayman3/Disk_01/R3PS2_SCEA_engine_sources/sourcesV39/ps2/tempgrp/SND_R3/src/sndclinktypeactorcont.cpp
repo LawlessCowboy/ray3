@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+extern char* strncpy(char*, const char*, unsigned int);
+
 typedef int sallocator;
 
 /* Recovered aggregate layouts from MWCC debug type records. */
@@ -585,9 +587,9 @@ unsigned char CLinkTypeActorCont::mfn_bInitActorResData(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bGhostObjectInfo__FiiPci(char* pch_String, int s32_Size)
+int fn_bGhostObjectInfo__FiiPci(int s32_Unused0, int s32_Unused1, char* pch_String, int s32_Size)
 {
-    /* TODO: decompile from asm/... */
+    return strncpy(pch_String, "Ghost", s32_Size) != NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 99–108 */
@@ -602,10 +604,17 @@ int fn_bGhostObjectInfo__FiiPci(char* pch_String, int s32_Size)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bGhostObjectRollOff__FiiP13_RollOffParam(_RollOffParam* pst_RollOff)
+int fn_bGhostObjectRollOff__FiiP13_RollOffParam(int s32_Unused0, int s32_Unused1, _RollOffParam* pst_RollOff)
 {
     int b_Answer;
-    /* TODO: decompile from asm/... */
+    b_Answer = 0;
+    if (pst_RollOff != NULL) {
+        pst_RollOff->rDistBackGround = 0;
+        b_Answer = 1;
+        pst_RollOff->rDistSatur = 0;
+        pst_RollOff->ucBackgroundVol = 0;
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 94–94 */
@@ -617,7 +626,7 @@ int fn_bGhostObjectRollOff__FiiP13_RollOffParam(_RollOffParam* pst_RollOff)
  */
 int fn_bGhostObjectLinkBis__Fiii(void)
 {
-    /* TODO: decompile from asm/... */
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 86–93 */
@@ -632,10 +641,17 @@ int fn_bGhostObjectLinkBis__Fiii(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectPosition__FiiP9_stVector(_stVector* pst_Vector)
+int fn_bObjectPosition__FiiP9_stVector(int s32_Unused0, int s32_Unused1, _stVector* pst_Vector)
 {
     int b_Answer;
-    /* TODO: decompile from asm/... */
+    b_Answer = 0;
+    if (pst_Vector != NULL) {
+        pst_Vector->f32x = 0;
+        b_Answer = 1;
+        pst_Vector->f32y = 0;
+        pst_Vector->f32z = 0;
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 81–81 */

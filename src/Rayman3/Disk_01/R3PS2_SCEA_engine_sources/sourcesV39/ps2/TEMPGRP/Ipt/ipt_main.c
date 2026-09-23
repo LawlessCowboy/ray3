@@ -627,7 +627,12 @@ void IPT_fn_szGetStringOf(IPT_tdstEntryElement_* _hElement)
 void IPT_fn_vResetIPTValueToDefault(IPT_tdstEntryElement_* _hElement)
 {
     unsigned long i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < _hElement->ulNumberOfKeyWordElement; i++)
+    {
+        *(float *)&_hElement->d_stKeyWordElementArray[i].u_ElementUnion =
+            *(float *)&_hElement->d_stKeyWordElementArray[i].u_ElementUnionDefault;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 778–872 */

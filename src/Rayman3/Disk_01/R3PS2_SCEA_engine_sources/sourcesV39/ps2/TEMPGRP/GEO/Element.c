@@ -270,7 +270,8 @@ void GEO_vSetRadiusOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hEleme
  */
 void GEO_vSetPointsOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, short xTopPoint, short xBasePoint)
 {
-    /* TODO: decompile from asm/... */
+    ((short *)((char *)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones))[xNumberOfCone * 6] = xTopPoint;
+    ((short *)((char *)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones + 2))[xNumberOfCone * 6] = xBasePoint;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 550–568 */

@@ -3271,6 +3271,17 @@ unsigned int g_ulMode;
 MTH3D_tdstVector_ g_stCollideParameterVector;
 MTH3D_tdstVector_ g_stCollideParameterPoint;
 
+typedef struct {
+    unsigned int xX;
+    unsigned int xY;
+    unsigned int xZ;
+} tdstRawVector;
+
+void fn_vComputeCollideResult(HIE_tdstSuperObject_* hSender);
+DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso);
+void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO);
+void MAT_fn_vGetRotationVectorBaseI(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 332–345 */
 /* addr: 0x0024bd90  size: 100 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3288,7 +3299,17 @@ MTH3D_tdstVector_ g_stCollideParameterPoint;
  */
 void fn_CollisionRayCast(HIE_tdstSuperObject_* hSender, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode)
 {
-    /* TODO: decompile from asm/... */
+    ((tdstRawVector*)&g_stCollideParameterPoint)->xX = ((tdstRawVector*)p_vPoint)->xX;
+    ((tdstRawVector*)&g_stCollideParameterPoint)->xY = ((tdstRawVector*)p_vPoint)->xY;
+    ((tdstRawVector*)&g_stCollideParameterPoint)->xZ = ((tdstRawVector*)p_vPoint)->xZ;
+    ((tdstRawVector*)&g_stCollideParameterVector)->xX = ((tdstRawVector*)p_vDirection)->xX;
+    ((tdstRawVector*)&g_stCollideParameterVector)->xY = ((tdstRawVector*)p_vDirection)->xY;
+    ((tdstRawVector*)&g_stCollideParameterVector)->xZ = ((tdstRawVector*)p_vDirection)->xZ;
+    g_ulMode = ulMode;
+    g_hColMatHit = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    g_hSuperObjectHit = 0;
+    g_ulCollideTimeCounter = 0;
+    fn_vComputeCollideResult(hSender);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 295–308 */
@@ -3423,7 +3444,11 @@ float fn_xAngleVectorXOY(MTH3D_tdstVector_* stVectorU, MTH3D_tdstVector_* stVect
 int fn_bCollideWithGround(HIE_tdstSuperObject_* hPerso)
 {
     DNM_stReport* p_stDynamReport;
-    /* TODO: decompile from asm/... */
+    p_stDynamReport = fn_pstGetDNMReport(hPerso);
+    if (p_stDynamReport == 0) {
+        return 0;
+    }
+    return (p_stDynamReport->m_ulCurrSurfaceState & 1) == 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 106–130 */
@@ -3462,7 +3487,8 @@ void fn_GetPersoBanking(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSupe
  */
 void fn_GetPersoHorizon(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSuperObjPerso)
 {
-    /* TODO: decompile from asm/... */
+    HIE_fn_vUpdateGlobalMatrix(hSuperObjPerso);
+    MAT_fn_vGetRotationVectorBaseI(hSuperObjPerso->hGlobalMatrix, p_stDest);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 86–86 */

@@ -1346,7 +1346,7 @@ void PS2ASM_SearchBlocInChain(void* Chain, void* Bloc)
  */
 void GLI_vDraw2DRectangleWithColor(float xXMin, float xXMax, float xYMin, float xYMax, GLI_tdstMaterial_* hMaterial, unsigned int ulColor)
 {
-    /* TODO: decompile from asm/... */
+    return pSpriteController->Draw2DRectangleWithColor(xXMin, xXMax, xYMin, xYMax, hMaterial, ulColor);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\VUSprites.cpp lines 2482–2482 */
@@ -1358,7 +1358,7 @@ void GLI_vDraw2DRectangleWithColor(float xXMin, float xXMax, float xYMin, float 
  */
 void GLI_vDrawFireSpriteGroup(GLI_tdstMaterial_* param0, float (*pData)[4], unsigned int NbParticles)
 {
-    /* TODO: decompile from asm/... */
+    return pSpriteController->DrawFireSpriteGroup(param0, pData, NbParticles);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\VUSprites.cpp lines 2476–2476 */

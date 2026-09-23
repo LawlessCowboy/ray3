@@ -585,6 +585,8 @@ struct CMarkerNotifTarget {
 
 unsigned int g_uiLastSwitchValue;
 unsigned int g_uiNextSwitchValue;
+int g_iNbMusicMarkerSlots;
+stMusicMarkerSlot* g_pMusicMarkerSlots;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 83–138 */
 /* addr: 0x001cd970  size: 384 bytes */
@@ -1260,7 +1262,7 @@ void fv_vRelease__Q216CExtraEventActor13CResObjParamsFv(void)
  */
 void SND_fn_iSetNbMusicMarkerSlots(int iNB)
 {
-    /* TODO: decompile from asm/... */
+    g_iNbMusicMarkerSlots = iNB;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 131–131 */
@@ -1272,7 +1274,7 @@ void SND_fn_iSetNbMusicMarkerSlots(int iNB)
  */
 void SND_fn_p_stSetMusicMarkerSlots(stMusicMarkerSlot* p_stPointer)
 {
-    /* TODO: decompile from asm/... */
+    g_pMusicMarkerSlots = p_stPointer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 126–126 */
@@ -1284,7 +1286,7 @@ void SND_fn_p_stSetMusicMarkerSlots(stMusicMarkerSlot* p_stPointer)
  */
 int SND_fn_iGetNbMusicMarkerSlots(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_iNbMusicMarkerSlots;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 121–121 */
@@ -1296,7 +1298,7 @@ int SND_fn_iGetNbMusicMarkerSlots(void)
  */
 stMusicMarkerSlot* SND_fn_p_stGetMusicMarkerSlots(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_pMusicMarkerSlots;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 92–109 */
@@ -1337,5 +1339,4 @@ void CMusicMarkerNotifTarget::fv_vVarChanged(CVar* roVar)
  */
 void CMusicMarkerNotifTarget::fv_vVarDestroyed(void)
 {
-    /* TODO: decompile from asm/... */
 }

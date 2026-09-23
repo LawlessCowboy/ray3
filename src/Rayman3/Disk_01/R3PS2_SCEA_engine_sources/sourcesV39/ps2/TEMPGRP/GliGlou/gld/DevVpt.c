@@ -86,7 +86,7 @@ struct GLD_tdstDeviceAttributes_ {
 
 struct GLD_stDevice {
     GLD_tdstDeviceAttributes_ stDevAttrib; /* +0x0 */
-    int pstViewports[16]; /* +0x60 */
+    GLD_stViewport* pstViewports[16]; /* +0x60 */
     int bIsLocked; /* +0xa0 */
     unsigned int dwStyleBeforeSwap; /* +0xa4 */
     unsigned int dwExStyleBeforeSwap; /* +0xa8 */
@@ -129,7 +129,7 @@ int g_bGLDBlockSwaping;
 static int gs_bAdjustInProgress;
 unsigned int GLI_g_ulFrameLength;
 int GLI_gs_lBackGroundColor;
-int g_pstGLDDevices[16];
+GLD_stDevice* g_pstGLDDevices[16];
 tdstBlockInfo_ g_a_stGLDBlocksInfo[4];
 tdstGliCaps_ GLI_g_stCaps;
 void (*GLD_vCloseErr)(void);
@@ -178,10 +178,14 @@ int GLD_bSetBackgroundColorForDevice(short hDevice, unsigned int crRGB)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bGiveSpecificAttributesToViewport(short hVP, void* p_vSpecAttrib)
+int GLD_bGiveSpecificAttributesToViewport(short hDev, short hVP, void* p_vSpecAttrib)
 {
-    short hDev;
-    /* TODO: decompile from asm/... */
+    GLD_stDevice* pstDev;
+
+    hDev = hVP / 16;
+    pstDev = g_pstGLDDevices[hDev];
+    pstDev->pstViewports[(short)(hVP % 16)]->stViewAttrib.p_vSpecificToXD = (int)p_vSpecAttrib;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1191–1231 */
@@ -370,7 +374,8 @@ int GLD_bEndWriteToDevice(void)
  */
 int GLD_bBeginWriteToDevice(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vReinitViewport();
+    return GLI_DRV_bBeginScene();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 794–825 */
@@ -545,9 +550,11 @@ int GLD_bCreateDevice(GLD_tdstDeviceAttributes_* pstDevAttrib, short* phDev)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bClearViewportWithChoice(short sChoice)
+int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vReinitViewport();
+    GLI_DRV_vClearDevice(sChoice & 2, sChoice & 1, GLI_gs_lBackGroundColor);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 166–273 */

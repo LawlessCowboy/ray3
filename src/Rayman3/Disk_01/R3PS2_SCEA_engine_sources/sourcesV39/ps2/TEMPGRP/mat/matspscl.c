@@ -62,7 +62,9 @@ struct MTH3D_tdstVector_ {
  */
 void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _hTransform)
 {
-    /* TODO: decompile from asm/... */
+    _hTransform->eType = MAT_eTransform_Identity;
+    _hTransform->stTransformMatrix.stCol_0.xX = 1.0f; _hTransform->stTransformMatrix.stCol_0.xY = 0.0f; _hTransform->stTransformMatrix.stCol_0.xZ = 0.0f; _hTransform->stTransformMatrix.stCol_0.xW = 0.0f; _hTransform->stTransformMatrix.stCol_1.xX = 0.0f; _hTransform->stTransformMatrix.stCol_1.xY = 1.0f; _hTransform->stTransformMatrix.stCol_1.xZ = 0.0f; _hTransform->stTransformMatrix.stCol_1.xW = 0.0f; _hTransform->stTransformMatrix.stCol_2.xX = 0.0f; _hTransform->stTransformMatrix.stCol_2.xY = 0.0f; _hTransform->stTransformMatrix.stCol_2.xZ = 1.0f; _hTransform->stTransformMatrix.stCol_2.xW = 0.0f; _hTransform->stTransformMatrix.stCol_3.xX = 0.0f; _hTransform->stTransformMatrix.stCol_3.xY = 0.0f; _hTransform->stTransformMatrix.stCol_3.xZ = 0.0f; _hTransform->stTransformMatrix.stCol_3.xW = 1.0f;
+    _hTransform->stScaleVector.xX = 1.0f; _hTransform->stScaleVector.xY = 1.0f; _hTransform->stScaleVector.xZ = 1.0f; _hTransform->stScaleVector.xW = 1.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matspscl.c lines 725–756 */

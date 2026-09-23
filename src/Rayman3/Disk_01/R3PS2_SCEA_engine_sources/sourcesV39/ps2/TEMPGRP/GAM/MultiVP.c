@@ -1632,6 +1632,8 @@ struct CINE_tdstChannelLink_ {
 tdstEngineStructure_ g_stEngineStructure;
 unsigned char g_ucGameModuleId;
 
+int GLD_bDeleteViewport(short hDev, short hVP);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 23–23 */
 /* addr: 0x00266540  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1777,7 +1779,12 @@ void fn_vReputGameViewportCamera(void)
  */
 void GAM_fn_vDestroyGameDeviceAndViewPorts(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char uc_ViewPortIndex;
+    int lViewportOffset;
+
+    for (uc_ViewPortIndex = 0, lViewportOffset = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++, lViewportOffset += 2) {
+        GLD_bDeleteViewport(g_stEngineStructure.hGLDDevice, *(short*)((char*)&g_stEngineStructure + 0x354 + lViewportOffset));
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 504–525 */
@@ -2146,7 +2153,10 @@ void GAM_MultiVP_fn_vInvertViewPorts(unsigned char _ucVPIndex1, unsigned char _u
  */
 void GAM_MultiVP_fn_vSetAspectRatio(unsigned char _ucRatio)
 {
-    /* TODO: decompile from asm/... */
+    if (_ucRatio != g_stEngineStructure.ucMiniScreenRatioInMultiMode) {
+        g_stEngineStructure.ucMiniScreenRatioInMultiMode = _ucRatio;
+        GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 119–141 */
@@ -2210,7 +2220,19 @@ void GAM_MultiVP_fn_vSetPlayerForViewPort(unsigned char _ucViewPortIndex, HIE_td
  */
 void GAM_MultiVP_fn_vSetNumberOfPlayers(unsigned char _ucNumberOfPlayers, unsigned char _ucNumberOfColumns)
 {
-    /* TODO: decompile from asm/... */
+    if ((int)_ucNumberOfPlayers <= 0) {
+        _ucNumberOfPlayers = 1;
+    }
+    if ((int)_ucNumberOfColumns <= 0) {
+        _ucNumberOfColumns = 1;
+    }
+    if (_ucNumberOfPlayers < 5) {
+        g_stEngineStructure.ucNumberOfPlayersInMultiMode = _ucNumberOfPlayers;
+    } else {
+        g_stEngineStructure.ucNumberOfPlayersInMultiMode = 4;
+    }
+    g_stEngineStructure.ucNumberOfColumnsInMultiMode = _ucNumberOfColumns;
+    GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 72–73 */

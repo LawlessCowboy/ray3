@@ -103,6 +103,12 @@ struct tm {
     int tm_isdst; /* +0x20 */
 };
 
+extern "C" int fclose(__sFILE*);
+extern "C" __sFILE* fopen(char*, char*);
+extern "C" int fseek(__sFILE*, long, int);
+extern "C" long ftell(__sFILE*);
+extern "C" unsigned int fread(void*, unsigned int, unsigned int, __sFILE*);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 58–59 */
 /* addr: 0x0018a120  size: 16 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -113,7 +119,7 @@ struct tm {
  */
 int usnd_feof(__sFILE* stream)
 {
-    /* TODO: decompile from asm/... */
+    return (stream->_flags & 0x20) != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 48–48 */
@@ -125,7 +131,7 @@ int usnd_feof(__sFILE* stream)
  */
 unsigned int usnd_fread(void* buffer, unsigned int size, unsigned int count, __sFILE* stream)
 {
-    /* TODO: decompile from asm/... */
+    return fread(buffer, size, count, stream);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 43–43 */
@@ -137,7 +143,7 @@ unsigned int usnd_fread(void* buffer, unsigned int size, unsigned int count, __s
  */
 long usnd_ftell(__sFILE* stream)
 {
-    /* TODO: decompile from asm/... */
+    return ftell(stream);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 36–39 */
@@ -156,7 +162,8 @@ long usnd_ftell(__sFILE* stream)
  */
 int usnd_fseek(__sFILE* stream, long offset, int origin)
 {
-    /* TODO: decompile from asm/... */
+    fseek(stream, offset, origin);
+    return (int)ftell(stream);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 17–17 */
@@ -168,7 +175,7 @@ int usnd_fseek(__sFILE* stream, long offset, int origin)
  */
 int usnd_fclose(__sFILE* stream)
 {
-    /* TODO: decompile from asm/... */
+    return fclose(stream);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 12–12 */
@@ -180,5 +187,5 @@ int usnd_fclose(__sFILE* stream)
  */
 __sFILE* usnd_fopen(char* filename, char* mode)
 {
-    /* TODO: decompile from asm/... */
+    return fopen(filename, mode);
 }

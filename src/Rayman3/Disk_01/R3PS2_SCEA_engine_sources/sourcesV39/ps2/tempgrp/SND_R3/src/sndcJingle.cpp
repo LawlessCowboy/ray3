@@ -5,7 +5,31 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct CResData CResData;
+namespace usnd {
+struct CResData {
+    void* m_pVtable;
+    void* m_pId;
+    void* m_pData;
+};
+
+template <class T> struct CIdObjPtr {
+    struct Holder {
+        int m_iPad0;
+        int m_iPad1;
+        int m_iPad2;
+        T* m_pObject;
+    }* m_pHolder;
+    T& operator*(void) const;
+    T* operator->(void) const;
+};
+}
+
+usnd::CResData* usnd::CIdObjPtr<usnd::CResData>::operator->(void) const
+{
+    return m_pHolder->m_pObject;
+}
+
+typedef usnd::CResData CResData;
 typedef struct JingleList JingleList;
 typedef struct JingleElt JingleElt;
 
@@ -35,6 +59,13 @@ struct JingleElt {
     int m_TypeId; /* +0xc */
     int m_HandleId; /* +0x10 */
 };
+
+usnd::CResData& usnd::CIdObjPtr<usnd::CResData>::operator*(void) const
+{
+    return *m_pHolder->m_pObject;
+}
+
+template struct usnd::CIdObjPtr<usnd::CResData>;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcJingle.cpp lines 271–273 */
 /* addr: 0x001d0790  size: 12 bytes */

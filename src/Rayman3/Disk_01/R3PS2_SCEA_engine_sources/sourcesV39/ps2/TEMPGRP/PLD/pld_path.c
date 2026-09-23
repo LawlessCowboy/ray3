@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+extern int sprintf(char*, const char*, ...);
+extern char* strcpy(char*, const char*);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct tdstDataPath_ tdstDataPath_;
 
@@ -329,7 +332,7 @@ void MNC_fn_pcGetCurrentDirectory(void)
  */
 void PLD_szLanguageName(char* szName)
 {
-    /* TODO: decompile from asm/... */
+    sprintf(PLD_g_szAreaFileName, "Language%s", szName);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 306–309 */
@@ -347,7 +350,7 @@ void PLD_szLanguageName(char* szName)
  */
 void PLD_szKeyFramesName(char* szName)
 {
-    /* TODO: decompile from asm/... */
+    sprintf(PLD_g_szAreaFileName, "KeyFrames%s", szName);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 300–303 */
@@ -365,7 +368,7 @@ void PLD_szKeyFramesName(char* szName)
  */
 void PLD_szLvlKeyFramesName(char* szName)
 {
-    /* TODO: decompile from asm/... */
+    sprintf(PLD_g_szAreaFileName, "LvlKeyFrames%s", szName);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 296–296 */
@@ -395,7 +398,7 @@ void PLD_szFixKeyFramesName(void)
  */
 void PLD_szAnimationName(char* szName)
 {
-    /* TODO: decompile from asm/... */
+    sprintf(PLD_g_szAreaFileName, "Animation%s", szName);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 280–284 */
@@ -413,7 +416,7 @@ void PLD_szAnimationName(char* szName)
  */
 void PLD_szVertexBufferName(char* szName)
 {
-    /* TODO: decompile from asm/... */
+    sprintf(PLD_g_szAreaFileName, "VertexBuffer%s", szName);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 273–277 */
@@ -431,7 +434,7 @@ void PLD_szVertexBufferName(char* szName)
  */
 void PLD_szTransitionName(char* szName)
 {
-    /* TODO: decompile from asm/... */
+    sprintf(PLD_g_szAreaFileName, "Transition%s", szName);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 266–270 */
@@ -449,7 +452,7 @@ void PLD_szTransitionName(char* szName)
  */
 void PLD_szLevelName(char* szName)
 {
-    /* TODO: decompile from asm/... */
+    sprintf(PLD_g_szAreaFileName, "Level%s", szName);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 262–262 */

@@ -227,8 +227,12 @@ int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen)
  */
 int Int100ToBCD(int val)
 {
-    int lReturn;
-    /* TODO: decompile from asm/... */
+    int lReturn = 0;
+    val %= 100;
+    lReturn = val % 10;
+    val /= 10;
+    lReturn += val << 4;
+    return lReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1596–1604 */

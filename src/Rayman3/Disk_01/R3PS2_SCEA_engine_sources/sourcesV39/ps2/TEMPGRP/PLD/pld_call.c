@@ -3426,7 +3426,7 @@ union GEO_tduVSObject_ {
 
 struct _tdstFixInfo {
     unsigned int ulNbObject; /* +0x0 */
-    int a20_stObjects[20]; /* +0x4 */
+    void* a20_stObjects[20]; /* +0x4 */
 };
 
 struct tdstHierarchy_ {
@@ -4648,7 +4648,11 @@ int g_pcFixTimeStamp;
 void PLD_fn_vReinitPositionOfFixCharacters(void)
 {
     unsigned long i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < g_NbPersoWithSettingsInFix; i++) {
+        g_a_SettingsOfPerso[i].hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix = g_a_SettingsOfPerso[i].tdstMatrix;
+        *g_a_SettingsOfPerso[i].hCharacter->hGlobalMatrix = g_a_SettingsOfPerso[i].tdstMatrix;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2767–2779 */
@@ -5349,12 +5353,47 @@ void CheckForTutorial(char* Name)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimize_for_size off
 void PLD_fn_vClearAnimationsBanks(int iStartBank, int iNumberOfBanks)
 {
     int iEndBank;
     int i;
-    /* TODO: decompile from asm/... */
+
+    iEndBank = iStartBank + iNumberOfBanks;
+    if (iStartBank < iEndBank) {
+        i = iStartBank;
+        do {
+            g_tdstStackInfos[i][0].ulMaxPos = 0;
+            g_ax_pA3dGENERAL[i] = 0;
+            g_tdstStackInfos[i][1].ulMaxPos = 0;
+            g_ax_pVectors[i] = 0;
+            g_tdstStackInfos[i][2].ulMaxPos = 0;
+            g_ax_pQuaternions[i] = 0;
+            g_tdstStackInfos[i][3].ulMaxPos = 0;
+            g_ax_pHierarchies[i] = 0;
+            g_tdstStackInfos[i][4].ulMaxPos = 0;
+            g_ax_pNTTO[i] = 0;
+            g_tdstStackInfos[i][5].ulMaxPos = 0;
+            g_ax_pOnlyFrames[i] = 0;
+            g_tdstStackInfos[i][6].ulMaxPos = 0;
+            g_ax_pChannels[i] = 0;
+            g_tdstStackInfos[i][7].ulMaxPos = 0;
+            g_ax_pFramesNumOfNTTO[i] = 0;
+            g_tdstStackInfos[i][8].ulMaxPos = 0;
+            g_ax_pFramesKFIndex[i] = 0;
+            g_tdstStackInfos[i][9].ulMaxPos = 0;
+            g_ax_pKeyFrames[i] = 0;
+            g_tdstStackInfos[i][10].ulMaxPos = 0;
+            g_ax_pEvents[i] = 0;
+            g_tdstStackInfos[i][11].ulMaxPos = 0;
+            g_ax_pMorphData[i] = 0;
+            g_tdstStackInfos[i][12].ulMaxPos = 0;
+            g_ax_pDeformations[i] = 0;
+            i++;
+        } while (i < iEndBank);
+    }
 }
+#pragma optimize_for_size reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1152–1192 */
 /* addr: 0x0012e290  size: 928 bytes */
@@ -5635,5 +5674,20 @@ unsigned char PLD_fn_bIsInFix(void* Ptr)
 {
     unsigned int ulNbObject;
     unsigned int ulI;
-    /* TODO: decompile from asm/... */
+    unsigned int ulOffset;
+
+    ulNbObject = g_stFixInfo.ulNbObject;
+    if (0 < ulNbObject) {
+        ulI = 0;
+        ulOffset = 0;
+        do {
+            if (*(void**)((char*)&g_stFixInfo + ulOffset + 4) == Ptr) {
+                return 1;
+            }
+            ulI++;
+            ulOffset += 4;
+        } while (ulI < ulNbObject);
+    }
+
+    return 0;
 }

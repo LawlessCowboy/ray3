@@ -3437,7 +3437,12 @@ tdstNodeInterpret_* fn_p_stMainActorKeyWord(HIE_tdstSuperObject_* p_SuperObjPers
  */
 tdstNodeInterpret_* fn_p_stMeKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    if (p_SuperObjPerso->ulTypeOfLinkedObject == 2)
+        p_stValue->uDummy.uParam.p_stEngObjValue = p_SuperObjPerso->hLinkedObject.p_stCharacter;
+    else
+        p_stValue->uDummy.uParam.p_stEngObjValue = NULL;
+    p_stValue->eType = E_vt_Perso;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 74–76 */

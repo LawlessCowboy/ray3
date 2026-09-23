@@ -2826,11 +2826,9 @@ void GLI_vDisplayAllShadows(void)
 void GLI_SendShadowElementToViewport(int param0, GEO_tdstGeometricObject_* p_stObj)
 {
     float* pVert;
-    GLI_tdstMaterial_* pMaterial;
     GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
     pVert = (float*)p_stObj->d_stListOfPoints;
-    pMaterial = *(GLI_tdstMaterial_**)p_stObj->d_stListOfElements;
-    GLI_vAddShadowObject(pVert, pVert + 3, pVert + 6, pVert + 9, pMaterial);
+    GLI_vAddShadowObject(pVert, pVert + 3, pVert + 6, pVert + 9, *(GLI_tdstMaterial_**)p_stObj->d_stListOfElements);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1519–1554 */

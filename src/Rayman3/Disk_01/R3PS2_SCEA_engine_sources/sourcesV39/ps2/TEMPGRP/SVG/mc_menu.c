@@ -139,10 +139,10 @@ void MC_AddString(int Number, char* String)
  */
 void MC_SetBackgroundMaterial(void* pMaterial)
 {
-    volatile void** localMaterial;
-    localMaterial = (volatile void**)&pMaterial;
+    volatile int material;
+    material = (int)pMaterial;
     if (MC_g_MemoryCardOperationBackGroundTexture == 0) {
-        MC_g_MemoryCardOperationBackGroundTexture = (int)*localMaterial;
+        MC_g_MemoryCardOperationBackGroundTexture = material;
     }
 }
 

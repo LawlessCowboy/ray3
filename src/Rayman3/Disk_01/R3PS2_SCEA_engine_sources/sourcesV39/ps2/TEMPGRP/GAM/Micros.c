@@ -630,6 +630,22 @@ struct _stVector {
     float f32z; /* +0x8 */
 };
 
+struct tdstNodeMainCharacter_ {
+    HIE_tdstSuperObject_* hNewCharacterForTheNextFrame;
+    HIE_tdstSuperObject_* hCharacter;
+    tdstNodeMainCharacter_* hNextBrotherDyn;
+};
+
+typedef struct {
+    tdstNodeMainCharacter_* hFirstElementDyn;
+    tdstNodeMainCharacter_* hLastElementDyn;
+    int lNumberOfElementsDyn;
+} tdstMainCharacterList;
+
+extern volatile tdstMainCharacterList D_538920;
+
+int fn_bObjectTypeAnimationVelocity(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector);
+
 struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn {
     tdstSubAnimInUse_* hFirstElementDyn; /* +0x0 */
     tdstSubAnimInUse_* hLastElementDyn; /* +0x4 */
@@ -993,8 +1009,15 @@ int ga_pstBlockEventSlotMemory[10];
  */
 unsigned char MC_fn_ucIsCharacterInMainCharacterList(HIE_tdstSuperObject_* hCharacter)
 {
-    tdstNodeMainCharacter_* hMainCharNode;
-    /* TODO: decompile from asm/... */
+    tdstNodeMainCharacter_* hMainCharNode = D_538920.hFirstElementDyn;
+
+    while (hMainCharNode != NULL) {
+        if (hMainCharNode->hCharacter == hCharacter) {
+            return 1;
+        }
+        hMainCharNode = hMainCharNode->hNextBrotherDyn;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 764–765 */
@@ -1385,7 +1408,12 @@ void fn_s32ObjectTypeAnimationExtraCoef(int s32_ObjectId, int* pitch, int* pan, 
 int fn_s32ObjectTypeAnimationVZ(int s32_ObjectId)
 {
     _stVector st_Answer;
-    /* TODO: decompile from asm/... */
+    int s32_Answer;
+
+    st_Answer.f32z = 0.0f;
+    fn_bObjectTypeAnimationVelocity(s32_ObjectId, -1, &st_Answer);
+    s32_Answer = st_Answer.f32z * 65536.0f;
+    return s32_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 181–187 */
@@ -1430,7 +1458,12 @@ int fn_s32ObjectTypeAnimationVY(int s32_ObjectId)
 int fn_s32ObjectTypeAnimationVX(int s32_ObjectId)
 {
     _stVector st_Answer;
-    /* TODO: decompile from asm/... */
+    int s32_Answer;
+
+    st_Answer.f32x = 0.0f;
+    fn_bObjectTypeAnimationVelocity(s32_ObjectId, -1, &st_Answer);
+    s32_Answer = st_Answer.f32x * 65536.0f;
+    return s32_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 165–171 */

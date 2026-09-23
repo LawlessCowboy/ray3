@@ -874,7 +874,10 @@ void SCT_fn_vSendSectorWhereIAmToViewportWithMirror(MTH3D_tdstVector_* _p_stAbso
  */
 int fn_iZCompare(void* arg1, void* arg2)
 {
-    /* TODO: decompile from asm/... */
+    float x;
+    x = ((MTH3D_tdstVector_*)arg2)->xZ -
+        ((MTH3D_tdstVector_*)arg1)->xZ;
+    return x;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 162–235 */

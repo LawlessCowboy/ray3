@@ -108,8 +108,10 @@ void GLI_fn_vFreeSurfaceForBlit(void)
  */
 void fn_vSetUnusedTextures(void)
 {
-    int start;
-    /* TODO: decompile from asm/... */
+    if (gs_keepit2++ < 10)
+    {
+        printf("function %s not implemented\n", "fn_vSetUnusedTextures");
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\GliPs2Unused.c lines 261–261 */
@@ -121,8 +123,10 @@ void fn_vSetUnusedTextures(void)
  */
 void fn_RemoveTextureFromMaterial(void)
 {
-    int start;
-    /* TODO: decompile from asm/... */
+    if (gs_keepit1++ < 10)
+    {
+        printf("function %s not implemented\n", "fn_RemoveTextureFromMaterial");
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\GliPs2Unused.c lines 209–211 */
@@ -164,7 +168,8 @@ void GLI_xSendListToViewport(GLD_tdstViewportAttributes_* p_stVpt)
  */
 void GLI_xClearViewingList(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vReinitViewport();
+    GLI_DRV_xClearViewingList();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\GliPs2Unused.c lines 192–192 */

@@ -176,7 +176,12 @@ void Mmg_fn_vFirstInitMmgModule(unsigned char ucMaxNbChannel)
  */
 void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel)
 {
-    /* TODO: decompile from asm/... */
+    ((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)[ucChannel].ucMode = ucNewMode;
+    ((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)[ucChannel].ucModuleId = ucModuleId;
+    if (ucNewMode != 0xFF) {
+        ((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)[ucChannel].p_vTdstBlockInfoOrTdstDynInfo =
+            g_a_p_stMmgModuleBlocksInfo[ucModuleId] + ucNewMode * 4;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4221–4264 */

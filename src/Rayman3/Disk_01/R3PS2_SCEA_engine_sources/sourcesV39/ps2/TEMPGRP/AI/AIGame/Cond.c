@@ -3589,10 +3589,15 @@ tdstNodeInterpret_* fn_p_st_UserEvent_IsSet(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
+
 tdstNodeInterpret_* fn_p_st_HandledCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    struct { tdstEngineObject_* p_stEngObjValue; unsigned char pad[12]; } stParam;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_ *)&stParam);
+    *p_lValue = ((*(unsigned int *)((char *)0x540000 - 0x7c98)) ==
+        stParam.p_stEngObjValue->h_StandardGame->ulLastTrame);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1437–1449 */

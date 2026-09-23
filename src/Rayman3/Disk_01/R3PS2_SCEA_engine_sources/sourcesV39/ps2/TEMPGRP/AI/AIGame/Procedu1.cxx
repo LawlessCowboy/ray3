@@ -38,6 +38,10 @@ typedef union tduGetSetParam_ {
 } tduGetSetParam_;
 struct tdstGetSetParam_ { tduGetSetParam_ uParam; tdeVariableType_ eType; };
 
+extern "C" tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso,
+                                                 tdstNodeInterpret_* p_stTree,
+                                                 tdstGetSetParam_* p_stValue);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6566–6587 */
 /* addr: 0x0022f360  size: 176 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -235,7 +239,7 @@ tdstNodeInterpret_* fn_p_stTemporalChangeSighting(HIE_tdstSuperObject_* p_SuperO
 tdstNodeInterpret_* fn_p_stSetVideoOptions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6105–6115 */
@@ -267,7 +271,7 @@ tdstNodeInterpret_* fn_p_stChangeBrightness(HIE_tdstSuperObject_* p_SuperObjPers
 tdstNodeInterpret_* fn_p_stSelectResolution(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6058–6067 */
@@ -282,7 +286,7 @@ tdstNodeInterpret_* fn_p_stSelectResolution(HIE_tdstSuperObject_* p_SuperObjPers
 tdstNodeInterpret_* fn_p_stSelectDriver(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6029–6047 */

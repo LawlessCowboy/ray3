@@ -181,7 +181,8 @@ GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedAlignedBox(COL_tdstCollideOb
  */
 void COL_vGetMinMaxPointOfIndexedAlignedBox(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfAlignedBox, short* p_xMinPoint, short* p_xMaxPoint)
 {
-    /* TODO: decompile from asm/... */
+    *p_xMinPoint = (*(COL_tdstElementAlignedBoxes_***)&hObject->d_stListOfElements)[hElement]->d_stListOfAlignedBoxes[xNumberOfAlignedBox].xMinPoint;
+    *p_xMaxPoint = ((short *)((char *)(*(COL_tdstElementAlignedBoxes_***)&hObject->d_stListOfElements)[hElement]->d_stListOfAlignedBoxes + 2))[xNumberOfAlignedBox * 4];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 507–525 */

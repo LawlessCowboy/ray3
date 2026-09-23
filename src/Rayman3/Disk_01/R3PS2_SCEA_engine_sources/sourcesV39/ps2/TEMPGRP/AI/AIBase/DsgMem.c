@@ -3275,11 +3275,13 @@ unsigned char fn_ucSetDsgVarText(void* pMyVarAddr, void* param0, tdstGetSetParam
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarVector(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarVector(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
-    MTH3D_tdstVector_* p_stVertex;
-    p_stVertex = &p_stGetSetParam->uDummy.uParam.stVectorValue;
-    *(MTH3D_tdstVector_*)pMyVarAddr = *p_stVertex;
+    unsigned int* p_stVertex;
+    p_stVertex = (unsigned int*)p_stGetSetParam;
+    ((unsigned int*)pMyVarAddr)[0] = p_stVertex[0];
+    ((unsigned int*)pMyVarAddr)[1] = p_stVertex[1];
+    ((unsigned int*)pMyVarAddr)[2] = p_stVertex[2];
     return 1;
 }
 
@@ -3293,12 +3295,12 @@ unsigned char fn_ucSetDsgVarVector(void* pMyVarAddr, tdstGetSetParam_* p_stGetSe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarComport(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetDsgVarComport(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstComport_* p_stComport;
     p_stComport = p_stGetSetParam->uDummy.uParam.pComport;
     *(tdstComport_**)pMyVarAddr = p_stComport;
-    return 1;
+    return p_stComport != NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 995–997 */

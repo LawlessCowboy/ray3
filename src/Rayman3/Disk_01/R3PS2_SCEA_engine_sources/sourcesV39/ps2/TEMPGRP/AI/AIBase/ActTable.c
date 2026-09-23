@@ -2919,12 +2919,9 @@ void fn_vSetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperOb
  */
 tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char ucNEntry)
 {
-    tdstActionTableEntry_* p_stEntry;
-
-    p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry + ucNEntry;
-    g_ucUseDefaultActionReturn = p_stEntry->bUseDefaultActionReturn;
-    g_ucNewActionReturn = p_stEntry->ucNewActionReturn;
-    return p_stEntry->p_stNode;
+    g_ucUseDefaultActionReturn = *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x66) + ucNEntry * sizeof(tdstActionTableEntry_));
+    g_ucNewActionReturn = *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x67) + ucNEntry * sizeof(tdstActionTableEntry_));
+    return *(tdstNodeInterpret_**)((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x60) + ucNEntry * sizeof(tdstActionTableEntry_));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActTable.c lines 328–341 */

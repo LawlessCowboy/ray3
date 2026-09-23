@@ -532,7 +532,7 @@ int SND_fn_bIsTypePlayingSound(int s32_TypeId)
  */
 _SND_tdstBlockEvent* SND_fn_pstGetLastEventForObjectTypeSound(void)
 {
-    /* TODO: decompile from asm/... */
+    return (_SND_tdstBlockEvent*)0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 1029–1029 */

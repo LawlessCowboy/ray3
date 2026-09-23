@@ -941,7 +941,8 @@ float g_AGO_AnimTimeScale;
  */
 GLI_tdstMaterial_* fn_hGetVisualMaterialFromIndex(unsigned short uwIndex)
 {
-    /* TODO: decompile from asm/... */
+    extern GLI_tdstMaterial_* GLI_g_StaticCopyOfArrayOfVisualMaterial[];
+    return GLI_g_StaticCopyOfArrayOfVisualMaterial[uwIndex];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 949–953 */
@@ -958,7 +959,12 @@ GLI_tdstMaterial_* fn_hGetVisualMaterialFromIndex(unsigned short uwIndex)
  */
 int GLI_Material_fn_lSetTextureOp(GLI_tdstMaterial_* _hVisualMat, int _lIndex, int _lTextureOp)
 {
-    /* TODO: decompile from asm/... */
+    char* p_cOperator = &_hVisualMat->a_stMultiMaterial[0].c_Operator;
+    if (_lIndex < 0 || _lIndex >= 4)
+        return 0;
+    p_cOperator += ((_lIndex * 5) << 4);
+    *p_cOperator = _lTextureOp;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 813–880 */

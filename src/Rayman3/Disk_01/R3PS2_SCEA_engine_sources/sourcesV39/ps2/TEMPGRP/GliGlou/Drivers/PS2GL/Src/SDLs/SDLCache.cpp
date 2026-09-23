@@ -932,7 +932,7 @@ struct C_Sdl {
     int m_SkinIndex; /* +0x3c */
     GLI_tdstMaterial_* m_SkinMaterial; /* +0x40 */
     int m_bIsBlinking; /* +0x44 */
-    void __nw(unsigned int Size);
+    static void* __nw(unsigned int Size);
 };
 
 struct CINE_tdstCineActor_ {
@@ -1142,7 +1142,7 @@ struct LST2_tdstAnchorTotdxHandleToFamilyListDyn {
 int GLI_g_SdlCache;
 int PS2glLiberator;
 unsigned int GLI_g_FrameNumber;
-int PS2glAllocator64;
+extern void* PS2glAllocator64;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 79–79 */
 /* addr: 0x002d7540  size: 12 bytes */
@@ -1151,9 +1151,10 @@ int PS2glAllocator64;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_Sdl::__nw(unsigned int Size)
+void* C_Sdl::__nw(unsigned int Size)
 {
-    /* TODO: decompile from asm/... */
+    void* p = PS2glAllocator64;
+    return p;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 133–136 */

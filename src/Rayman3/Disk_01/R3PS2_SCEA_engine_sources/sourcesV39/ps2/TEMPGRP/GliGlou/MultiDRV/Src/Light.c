@@ -782,7 +782,12 @@ void GLI_xCreateLight(GLI_tdstLight_** h_stLight, int lTypeOfLight)
 void GLI_xSetViewportLightsOnOff(unsigned char bOnOff)
 {
     int i;
-    /* TODO: decompile from asm/... */
+    int lOnOff = 0;
+    if (bOnOff == 0)
+        lOnOff = 1;
+    GLI_g_ExcluLightIsOn = lOnOff;
+    for (i = 0; i < gs_CurrentNumberOfLightInViewport; i++)
+        ((GLI_tdstLight_*)gs_aDEF_p_CurrentListOfLight[i])->bValid = bOnOff;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 388–388 */

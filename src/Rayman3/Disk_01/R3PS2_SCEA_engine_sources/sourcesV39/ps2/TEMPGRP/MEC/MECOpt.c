@@ -602,10 +602,17 @@ void MEC_fn_vPositionLimit(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define MTH3D_AddVector(a, b, c) { \
+    (a)->xX = (b)->xX + (c)->xX; \
+    (a)->xY = (b)->xY + (c)->xY; \
+    (a)->xZ = (b)->xZ + (c)->xZ; \
+}
+
 void MEC_fn_vAdditionnalTranslation(DNM_stDynamics* p_stDynamic)
 {
     MTH3D_tdstVector_* p_stAdditionnalTranslation;
-    /* TODO: decompile from asm/... */
+    p_stAdditionnalTranslation = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation;
+    MTH3D_AddVector((MTH3D_tdstVector_*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3, p_stAdditionnalTranslation);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECOpt.c lines 405–405 */
@@ -633,10 +640,15 @@ void MEC_fn_vImposeRotation(DNM_stDynamics* p_stDynamic)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MEC_fn_vAddStream(DNM_stDynamics* p_stDynamic, float xDT, unsigned char bSlide)
+extern void MEC_fn_vComputeStream(MTH3D_tdstVector_*, DNM_stDynamics*, int);
+
+void MEC_fn_vAddStream(DNM_stDynamics* p_stDynamic, int xDT, unsigned char bSlide)
 {
     MTH3D_tdstVector_ stTranslation;
-    /* TODO: decompile from asm/... */
+    MEC_fn_vComputeStream(&stTranslation, p_stDynamic, xDT);
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xX += stTranslation.xX;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xY += stTranslation.xY;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xZ += stTranslation.xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECOpt.c lines 343–373 */

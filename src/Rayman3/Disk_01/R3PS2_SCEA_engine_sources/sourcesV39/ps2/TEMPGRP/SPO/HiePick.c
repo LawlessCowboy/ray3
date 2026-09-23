@@ -836,6 +836,8 @@ int HIE_g_a_hMatrixStack[50];
 int HIE_g_lNbMatrixInStack;
 unsigned char SHW_g_bCurrentlyDrawingShadow;
 
+char HIE_cDetectObjectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, char cTypeOfSearch, int* a_lHandleOnResult, short* p_NbOfObjectsFound);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 31–38 */
 /* addr: 0x00320430  size: 56 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -852,7 +854,10 @@ unsigned char SHW_g_bCurrentlyDrawingShadow;
 MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void)
 {
     MAT_tdstTransformation_* hReturn;
-    /* TODO: decompile from asm/... */
+
+    hReturn = (MAT_tdstTransformation_ *)HMU_fn_p_vMalloc(0x60, 0);
+    MAT_fn_vSetIdentity(hReturn);
+    return hReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 1307–1316 */
@@ -870,11 +875,14 @@ MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char HIE_bDetectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj)
+int HIE_bDetectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj)
 {
     short NumberOfObjectsFound;
     int lResult;
-    /* TODO: decompile from asm/... */
+
+    lResult = 0;
+    NumberOfObjectsFound = 0;
+    return 1 ^ (HIE_cDetectObjectIntersectSegmentWithSuperObject(p_stVertexA, p_stVectAB, _hSprObj, 0, &lResult, &NumberOfObjectsFound) == 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 1081–1298 */

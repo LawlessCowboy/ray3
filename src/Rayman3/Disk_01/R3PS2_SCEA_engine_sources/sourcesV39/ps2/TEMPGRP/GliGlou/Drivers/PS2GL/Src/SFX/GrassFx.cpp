@@ -1054,6 +1054,7 @@ struct tagListNode {
 
 struct C_FxList {
     tdstBaseFxListElement_* pFirst; /* +0x0 */
+    void DeleteAll(void);
 };
 
 struct sceGsTexa {
@@ -1376,7 +1377,7 @@ void GLI_vSetDummyLighting(void)
  */
 void GrassFx_vDesinit(void)
 {
-    /* TODO: decompile from asm/... */
+    GrassFx_g_List.DeleteAll();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 542–556 */

@@ -252,7 +252,9 @@ unsigned char IPT_fn_bAKeyJustPressed(void)
  */
 float IPT_fn_xGetAnalogicValue(IPT_tdstEntryElement_* _hEntryElement)
 {
-    /* TODO: decompile from asm/... */
+    if (_hEntryElement != NULL)
+        return _hEntryElement->xAnalogicValue;
+    return 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 125–126 */
@@ -279,7 +281,8 @@ unsigned char IPT_fn_bIsInvalidated(IPT_tdstEntryElement_* _hEntryElement)
  */
 unsigned char IPT_fn_bIsJustInvalidated(IPT_tdstEntryElement_* _hEntryElement)
 {
-    /* TODO: decompile from asm/... */
+    return ((_hEntryElement != NULL) && (_hEntryElement->lState == -1)) ?
+        (unsigned char)1 : (unsigned char)0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 115–116 */
@@ -292,7 +295,8 @@ unsigned char IPT_fn_bIsJustInvalidated(IPT_tdstEntryElement_* _hEntryElement)
  */
 unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement)
 {
-    /* TODO: decompile from asm/... */
+    return ((_hEntryElement != NULL) && (_hEntryElement->lState > 0)) ?
+        (unsigned char)1 : (unsigned char)0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 110–111 */

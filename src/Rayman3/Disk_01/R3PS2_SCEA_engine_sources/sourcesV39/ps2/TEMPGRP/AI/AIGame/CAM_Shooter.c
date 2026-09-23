@@ -79,7 +79,7 @@ typedef struct WP_tdstGraphNode_ WP_tdstGraphNode_;
 typedef struct _stTimerCount _stTimerCount;
 typedef struct tdstEngineTimerStructure_ tdstEngineTimerStructure_;
 typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_3 anon_3;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn;
@@ -2433,17 +2433,14 @@ struct CAM_Shooter_ {
     int iViewportIndex; /* +0x27c */
     unsigned char iMode; /* +0x280 */
     MTH3D_tdstVector_ vCeilingCollisionPoint; /* +0x284 */
-    long iOldInputAxisZ; /* +0x290 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x294..0x297 */
-    long iAxisVThreshold; /* +0x298 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x29c..0x29f */
-    unsigned long m_ulOldButtons; /* +0x2a0 */
-    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x2a4..0x2a7 */
-    unsigned long m_ulJustPressedButtons; /* +0x2a8 */
-    unsigned char _extractor_padding_03[4]; /* implicitly added by extractor; +0x2ac..0x2af */
+    int iOldInputAxisZ; /* +0x290 */
+    int iAxisVThreshold; /* +0x294 */
+    unsigned int m_ulOldButtons; /* +0x298 */
+    unsigned int m_ulJustPressedButtons; /* +0x29c */
     GMT_tdstGameMaterial_* hWaterGMT; /* +0x2b0 */
     float xViewFinderWidth_2; /* +0x2b4 */
     float xViewFinderHeight_2; /* +0x2b8 */
+    unsigned char _extractor_padding_03[20];
 };
 
 struct tdstLanguageStructure_ {
@@ -2559,7 +2556,7 @@ struct tdstPLA_Deformation_ {
     tdstPLA_DeformationLink_* d_stDeformationLinks; /* +0x4 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -3454,7 +3451,7 @@ struct CAM_Shooter_CV_ {
 float xMouseSensitivityFactor[4];
 int bGCubeVersion;
 float xCameraDelayAlign;
-int hCineInfo;
+tdstCineinfo_* hCineInfo;
 int lInputAxisV;
 int lInputAxisZ;
 int lInputAxisY;
@@ -4462,7 +4459,13 @@ tdstNodeInterpret_* fn_p_GetMainActorComports(HIE_tdstSuperObject_* p_SuperObjPe
  */
 tdstNodeInterpret_* fn_p_StrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    CAM_Shooter_* pcs;
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    *(int *)p_stValue = fn_StrafeLockMode(pcs);
+    p_stValue->eType = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 279–292 */
@@ -4524,7 +4527,13 @@ tdstNodeInterpret_* fn_p_InitStrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstN
  */
 tdstNodeInterpret_* fn_p_MarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    CAM_Shooter_* pcs;
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    *(int *)p_stValue = fn_MarioMode(pcs);
+    p_stValue->eType = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 250–263 */

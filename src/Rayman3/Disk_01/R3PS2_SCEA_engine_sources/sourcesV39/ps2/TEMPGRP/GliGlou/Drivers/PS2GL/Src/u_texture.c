@@ -22,6 +22,12 @@ int TBF_g_CurrentFileBuffer;
 int TBF_g_CurrentFileSize;
 int TBF_g_CurrentFileAllocation;
 int TBF_g_UseTBFWriteCache;
+extern int sceWrite(int, void*, int);
+extern int sceClose(int);
+extern void* memcpy(void*, const void*, size_t);
+extern void free(void*);
+extern void TBF_ChangeCacheSize(int);
+extern int GetTotalSizeWithMipMaps(int);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 89–401 */
 /* addr: 0x002bdcd0  size: 1356 bytes */
@@ -350,7 +356,19 @@ void TBF_pReadFix(void)
 void TBF_vCreateEmptyTexture(void)
 {
     S_TXR_Header_ Header;
-    /* TODO: decompile from asm/... */
+    if (TBF_g_CurrentFile >= 0) {
+        Header.VersionID = 0x0AB9FC72;
+        Header.Flags = 0;
+        Header.SizeX = 0;
+        Header.SizeY = 0;
+        if (TBF_g_UseTBFWriteCache != 0) {
+            TBF_ChangeCacheSize(0x10);
+            memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, &Header, 0x10);
+            TBF_g_CurrentFileSize += 0x10;
+        } else {
+            sceWrite(TBF_g_CurrentFile, &Header, 0x10);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 272–315 */
@@ -386,7 +404,47 @@ void TBF_vWriteTexture(void* pTextureData, unsigned int SizeX, unsigned int Size
     S_TXR_Header_ Header;
     int iDataSize;
     int iPaletteSize;
-    /* TODO: decompile from asm/... */
+    unsigned int Type;
+    Header.VersionID = 0x0AB9FC72;
+    Header.Flags = Flags;
+    Header.SizeX = SizeX;
+    Header.SizeY = SizeY;
+    if (TBF_g_CurrentFile < 0)
+        return;
+    Type = Flags & 0xF;
+    if (Type == 1) {
+        iPaletteSize = 0x40;
+        iDataSize = (SizeX * SizeY) >> 1;
+    } else if (Type == 2) {
+        iPaletteSize = 0;
+        iDataSize = SizeX * SizeY * 2;
+    } else if (Type == 3) {
+        iPaletteSize = 0;
+        iDataSize = SizeX * SizeY * 3;
+    } else if (Type == 4) {
+        iPaletteSize = 0x400;
+        iDataSize = SizeX * SizeY * 4;
+        if ((Flags & 0x1000) != 0)
+            iDataSize = GetTotalSizeWithMipMaps(iDataSize);
+    } else {
+        iPaletteSize = 0;
+        iDataSize = 0;
+    }
+    if (TBF_g_UseTBFWriteCache != 0) {
+        TBF_ChangeCacheSize(0x10);
+        memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, &Header, 0x10);
+        TBF_g_CurrentFileSize += 0x10;
+    } else {
+        sceWrite(TBF_g_CurrentFile, &Header, 0x10);
+    }
+    iDataSize += iPaletteSize;
+    if (TBF_g_UseTBFWriteCache != 0) {
+        TBF_ChangeCacheSize(iDataSize);
+        memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, pTextureData, iDataSize);
+        TBF_g_CurrentFileSize += iDataSize;
+    } else {
+        sceWrite(TBF_g_CurrentFile, pTextureData, iDataSize);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 258–265 */
@@ -403,7 +461,20 @@ void TBF_vWriteTexture(void* pTextureData, unsigned int SizeX, unsigned int Size
  */
 void TBF_vClose(void)
 {
-    /* TODO: decompile from asm/... */
+    int Result;
+    Result = -1;
+    if (TBF_g_CurrentFile >= 0) {
+        if (TBF_g_UseTBFWriteCache != 0 && TBF_g_CurrentFileBuffer != 0) {
+            sceWrite(TBF_g_CurrentFile, (void*)TBF_g_CurrentFileBuffer, TBF_g_CurrentFileSize);
+            free((void*)TBF_g_CurrentFileBuffer);
+            TBF_g_CurrentFileBuffer = 0;
+            TBF_g_CurrentFileAllocation = 0;
+            TBF_g_CurrentFileSize = 0;
+        }
+        sceClose(TBF_g_CurrentFile);
+        Result = -1;
+    }
+    TBF_g_CurrentFile = Result;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 219–251 */

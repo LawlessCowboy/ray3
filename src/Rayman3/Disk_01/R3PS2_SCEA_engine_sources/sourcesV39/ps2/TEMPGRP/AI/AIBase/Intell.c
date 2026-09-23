@@ -3248,7 +3248,12 @@ tdstNodeInterpret_* fn_p_stEvalMetaAction(HIE_tdstSuperObject_* p_SuperObjPerso,
 tdstNodeInterpret_* fn_p_stSkipThisArgument(tdstNodeInterpret_* p_stTree)
 {
     unsigned char ucDepth;
-    /* TODO: decompile from asm/... */
+    ucDepth = p_stTree->ucDepth;
+    p_stTree++;
+    while (p_stTree->ucDepth > ucDepth && p_stTree->eType != 8) {
+        p_stTree++;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1244–1250 */
@@ -3264,7 +3269,11 @@ tdstNodeInterpret_* fn_p_stSkipThisArgument(tdstNodeInterpret_* p_stTree)
 tdstNodeInterpret_* fn_p_stSwapNextParameter2(tdstNodeInterpret_* p_stTree)
 {
     unsigned char ucDepth;
-    /* TODO: decompile from asm/... */
+    ucDepth = (p_stTree - 1)->ucDepth;
+    while (p_stTree->ucDepth > ucDepth && p_stTree->eType != 8) {
+        p_stTree++;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1232–1239 */
@@ -3280,7 +3289,12 @@ tdstNodeInterpret_* fn_p_stSwapNextParameter2(tdstNodeInterpret_* p_stTree)
 tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_* p_stTree)
 {
     unsigned char ucDepth;
-    /* TODO: decompile from asm/... */
+    ucDepth = p_stTree->ucDepth;
+    p_stTree++;
+    while (p_stTree->ucDepth >= ucDepth && p_stTree->eType != 8) {
+        p_stTree++;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1185–1223 */

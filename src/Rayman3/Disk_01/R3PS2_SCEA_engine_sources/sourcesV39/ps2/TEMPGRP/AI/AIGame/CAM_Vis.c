@@ -3361,6 +3361,8 @@ char cJustBetterPos;
 CAM_tdstCameraConstants_ CAM_g_stCameraConstants;
 tdstEngineStructure_ g_stEngineStructure;
 int CAM_fni_ComparePositions(void*, void*);
+void CAM_fn_vResetArrayOfTransparentSuperObject(tdstCineinfo_*);
+char CAM_fn_cSendMultiSegment(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, float, float, int, tdstCineinfo_*);
 char CAM_fn_cCameraCantSee(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
 char CAM_fn_cCameraCantGoFailure(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
 
@@ -3861,9 +3863,11 @@ void CAM_fn_vFillVectorArray(CAM_tdstUpdateCamera_* _p_stStruct, char _cMode)
  */
 int CAM_fni_ComparePositions(void* _pv_Elem1, void* _pv_Elem2)
 {
-    float xPound2;
     float xPound1;
-    /* TODO: decompile from asm/... */
+    float xPound2;
+    xPound1 = *((float*)_pv_Elem1 + 3);
+    xPound2 = *((float*)_pv_Elem2 + 3);
+    return (xPound2 > xPound1) ? -1 : ((xPound2 == xPound1) ? 0 : 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 852–922 */
@@ -4015,7 +4019,11 @@ char CAM_fn_cIsWantedPosIncorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdst
  */
 char CAM_fn_cCameraCantSee(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stSourcePos, MTH3D_tdstVector_* _p_stTargetPos)
 {
-    /* TODO: decompile from asm/... */
+    if (cCanTestStatic)
+    {
+        CAM_fn_vResetArrayOfTransparentSuperObject(_p_stStruct->hCineinfo);
+    }
+    return CAM_fn_cSendMultiSegment(_p_stStruct, _p_stSourcePos, _p_stTargetPos, CAM_g_stCameraConstants.xRayCameraSphereToSee1, CAM_g_stCameraConstants.xRayCameraSphereToSee2, CAM_g_stCameraConstants.xNumRayCameraCanSee, _p_stStruct->hCineinfo);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 611–636 */

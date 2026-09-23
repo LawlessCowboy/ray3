@@ -63,7 +63,7 @@ typedef struct tdstPLA_DeformationLink_ tdstPLA_DeformationLink_;
 typedef struct tdstScriptAI_ tdstScriptAI_;
 typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
 typedef struct tdstActionTable_ tdstActionTable_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
@@ -2294,7 +2294,7 @@ struct MAT_tdstTransformation_ {
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -2990,7 +2990,13 @@ tdstNodeInterpret_* fn_p_stDefaultActionInit(HIE_tdstSuperObject_* p_SuperObjPer
  */
 MTH3D_tdstVector_* fn_p_stGetActionParamp_stVertex(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    /* TODO: decompile from asm/... */
+    tdstIntelligence_* p_stIntelligence;
+
+    if (p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->bDoingIntel)
+        p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence;
+    else
+        p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex;
+    return &p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActParam.c lines 141–150 */
@@ -3017,7 +3023,13 @@ void fn_vSetActionParamp_stVertex(unsigned char ucN, HIE_tdstSuperObject_* p_Sup
  */
 tdstState_* fn_xGetActionParamStateValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    /* TODO: decompile from asm/... */
+    tdstIntelligence_* p_stIntelligence;
+
+    if (p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->bDoingIntel)
+        p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence;
+    else
+        p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex;
+    return p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].tdxstHandleToState;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActParam.c lines 125–126 */
@@ -3030,7 +3042,13 @@ tdstState_* fn_xGetActionParamStateValue(unsigned char ucN, HIE_tdstSuperObject_
  */
 void fn_vSetActionParamStateValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, tdstState_* hState)
 {
-    /* TODO: decompile from asm/... */
+    tdstIntelligence_* p_stIntelligence;
+
+    if (p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->bDoingIntel)
+        p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence;
+    else
+        p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex;
+    p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].tdxstHandleToState = hState;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActParam.c lines 119–120 */

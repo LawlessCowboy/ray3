@@ -175,7 +175,8 @@ int mpegTS(anon_6* cbts)
  */
 int mpegRestartDMA(void)
 {
-    /* TODO: decompile from asm/... */
+    viBufRestartDMA((anon_3*)&videoDec.mpeg);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 371–375 */
@@ -193,7 +194,8 @@ int mpegRestartDMA(void)
  */
 int mpegStopDMA(void)
 {
-    /* TODO: decompile from asm/... */
+    viBufStopDMA((anon_3*)&videoDec.mpeg);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 360–364 */
@@ -210,7 +212,8 @@ int mpegStopDMA(void)
  */
 int mpegNodata(void)
 {
-    /* TODO: decompile from asm/... */
+    viBufAddDMA((anon_3*)&videoDec.mpeg);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 350–353 */
@@ -228,7 +231,8 @@ int mpegNodata(void)
  */
 int mpegError(anon_5* cberror)
 {
-    /* TODO: decompile from asm/... */
+    videoDec.state = 0;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 290–343 */
@@ -382,7 +386,8 @@ unsigned int videoDecGetState(anon_0* vd)
  */
 int videoDecAbort(anon_0* vd)
 {
-    /* TODO: decompile from asm/... */
+    *(unsigned int*)((unsigned char*)vd + 0xa8) = 1;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 137–142 */

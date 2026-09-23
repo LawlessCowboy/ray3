@@ -170,7 +170,21 @@ int g_hBGMaterialForMenu2D;
 void fn_vResetAllocator(anon_0* pstAllocator)
 {
     unsigned int u32Address;
-    /* TODO: decompile from asm/... */
+
+    u32Address = (unsigned int)pstAllocator->hUsedBy;
+    pstAllocator->MaxSize = u32Address;
+    u32Address = pstAllocator->MaxSize + 4;
+    pstAllocator->MaxSize = u32Address;
+
+    u32Address = pstAllocator->MaxSize;
+    if ((u32Address & 0xF) != 0)
+    {
+        u32Address &= -0x10;
+        u32Address += 0x10;
+    }
+
+    pstAllocator->MaxSize = u32Address;
+    channel_debug_printf(-1, "@332", pstAllocator->MaxSize - 4);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 345–426 */

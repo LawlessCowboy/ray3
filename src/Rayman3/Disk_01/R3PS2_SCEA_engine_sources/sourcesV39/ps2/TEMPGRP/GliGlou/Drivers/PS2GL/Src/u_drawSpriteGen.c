@@ -1993,12 +1993,75 @@ void GLI_vSendEITToSpriteGeneratorNew(GEO_tdstElementIndexedTriangles_* p_stEIT,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define SPRITEGEN_TRANSFORM_VERTEX(dest, src) \
+    do { \
+        (dest)->xX = GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_0.xX * (src)->xX + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_1.xX * (src)->xY + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_2.xX * (src)->xZ + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_3.xX; \
+        (dest)->xY = GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_0.xY * (src)->xX + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_1.xY * (src)->xY + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_2.xY * (src)->xZ + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_3.xY; \
+        (dest)->xZ = GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_0.xZ * (src)->xX + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_1.xZ * (src)->xY + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_2.xZ * (src)->xZ + GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix.stCol_3.xZ; \
+    } while (0)
+
 float SpriteGenCalculateNorm(MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax)
 {
     float MinNorme;
     MTH3D_tdstVector_ SourceVect;
     MTH3D_tdstVector_ DistVect;
-    /* TODO: decompile from asm/... */
+
+    SourceVect = *p_stMin;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
+
+    SourceVect.xX = p_stMax->xX;
+    SourceVect.xY = p_stMax->xY;
+    SourceVect.xZ = p_stMax->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
+
+    SourceVect.xX = p_stMin->xX;
+    SourceVect.xY = p_stMax->xY;
+    SourceVect.xZ = p_stMax->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
+
+    SourceVect.xX = p_stMin->xX;
+    SourceVect.xY = p_stMin->xY;
+    SourceVect.xZ = p_stMax->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
+
+    SourceVect.xX = p_stMax->xX;
+    SourceVect.xY = p_stMin->xY;
+    SourceVect.xZ = p_stMax->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
+
+    SourceVect.xX = p_stMax->xX;
+    SourceVect.xY = p_stMax->xY;
+    SourceVect.xZ = p_stMin->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
+
+    SourceVect.xX = p_stMax->xX;
+    SourceVect.xY = p_stMin->xY;
+    SourceVect.xZ = p_stMin->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
+
+    SourceVect.xX = p_stMin->xX;
+    SourceVect.xY = p_stMax->xY;
+    SourceVect.xZ = p_stMin->xZ;
+    SPRITEGEN_TRANSFORM_VERTEX(&DistVect, &SourceVect);
+    if (DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ < MinNorme)
+        MinNorme = DistVect.xX * DistVect.xX + DistVect.xY * DistVect.xY + DistVect.xZ * DistVect.xZ;
+
+    GLI_g_CurrentSpriteGenIndex = 0;
+    GLI_g_SpriteGenNorme = 10000;
+    return __builtin_sqrt(MinNorme);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 774–954 */

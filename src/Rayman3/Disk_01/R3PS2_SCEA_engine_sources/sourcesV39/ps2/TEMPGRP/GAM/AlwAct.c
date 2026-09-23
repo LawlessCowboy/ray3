@@ -1402,7 +1402,11 @@ void fn_vDestroyAllHierarchy(HIE_tdstSuperObject_* p_stSuperObject)
 void fn_vReInitAllMiscFlagForAlwaysActiveState(void)
 {
     tdstAlwaysActiveCharacter_* hCharNode;
-    /* TODO: decompile from asm/... */
+    hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn;
+    if (hCharNode != (tdstAlwaysActiveCharacter_*)0) do {
+        hCharNode->hAlwActSuperObject->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags |= 0x40;
+        hCharNode = hCharNode->hNextBrotherDyn;
+    } while (hCharNode != (tdstAlwaysActiveCharacter_*)0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 174–178 */
@@ -1418,7 +1422,11 @@ void fn_vReInitAllMiscFlagForAlwaysActiveState(void)
 void fn_vReInitAllDynamicAlwaysActiveState(void)
 {
     tdstAlwaysActiveCharacter_* hCharNode;
-    /* TODO: decompile from asm/... */
+    hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn;
+    if (hCharNode != (tdstAlwaysActiveCharacter_*)0) do {
+        hCharNode->bDynamicAlwaysActive = 1;
+        hCharNode = hCharNode->hNextBrotherDyn;
+    } while (hCharNode != (tdstAlwaysActiveCharacter_*)0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 137–168 */

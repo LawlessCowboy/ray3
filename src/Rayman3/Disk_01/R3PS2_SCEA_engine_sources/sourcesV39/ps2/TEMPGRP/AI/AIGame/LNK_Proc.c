@@ -3292,6 +3292,14 @@ MTH3D_tdstVector_ g_stCollideParameterVector;
 MTH3D_tdstVector_ g_stCollideParameterPoint;
 MTH3D_tdstVector_ g_stCollideResultVector;
 
+typedef struct {
+    unsigned int xX;
+    unsigned int xY;
+    unsigned int xZ;
+} tdstRawVector;
+
+void fn_vComputeCollideResult(HIE_tdstSuperObject_* hSender);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 2351–2382 */
 /* addr: 0x0023c860  size: 1348 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -4306,7 +4314,16 @@ void fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, M
  */
 void fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode)
 {
-    /* TODO: decompile from asm/... */
+    g_stCollideParameterPoint.xX = p_vPoint->xX;
+    g_stCollideParameterPoint.xY = p_vPoint->xY;
+    g_stCollideParameterPoint.xZ = p_vPoint->xZ;
+    g_stCollideParameterVector.xX = p_vDirection->xX;
+    g_stCollideParameterVector.xY = p_vDirection->xY;
+    g_stCollideParameterVector.xZ = p_vDirection->xZ;
+    g_ulMode = ulMode;
+    g_ulCollideTimeCounter = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    g_hSuperObjectHit = 0;
+    fn_vComputeCollideResult(p_link->p_LinkSPO);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 931–1004 */

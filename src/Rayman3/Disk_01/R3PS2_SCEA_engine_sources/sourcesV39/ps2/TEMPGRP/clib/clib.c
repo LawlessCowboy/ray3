@@ -50,10 +50,14 @@ void itoa(int value, char* buffer, int radix)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Strcat(char* s1, char* s2)
+char* Strcat(char* s1, char* s2)
 {
     char* pcIndex;
-    /* TODO: decompile from asm/... */
+    pcIndex = s1;
+    while (*pcIndex != '\0')
+        pcIndex++;
+    strcpy(pcIndex, s2);
+    return s1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\clib\clib.c lines 57–67 */
@@ -71,7 +75,15 @@ void Strcat(char* s1, char* s2)
 char* Strrchr(char* string, int ch)
 {
     char* start;
-    /* TODO: decompile from asm/... */
+    start = string;
+    while (*string++) {
+    }
+    ch = (char)ch;
+    while (--string != start && *string != (char)ch) {
+    }
+    if (*string == (char)ch)
+        return string;
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\clib\clib.c lines 40–53 */

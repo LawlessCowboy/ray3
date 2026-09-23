@@ -813,7 +813,12 @@ GLI_tdstLight_* HIE_fn_hGetSuperObjectLight(HIE_tdstSuperObject_* p_SuperObjPers
  */
 void fn_vMSLightSetRLIParameter(tdstMSLight_* hMSLight, int lNbRLI, int lIndex1, int lIndex2, int lPercent)
 {
-    /* TODO: decompile from asm/... */
+    if (hMSLight != NULL) {
+        hMSLight->ucNbRLIUse = lNbRLI;
+        hMSLight->ucFirstRLI = lIndex1;
+        hMSLight->ucSecondRLI = lIndex2;
+        hMSLight->ucBlendPercent = (float)(unsigned char)lPercent;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1308–1313 */
@@ -827,8 +832,23 @@ void fn_vMSLightSetRLIParameter(tdstMSLight_* hMSLight, int lNbRLI, int lIndex1,
  */
 unsigned char fn_ucGetNumberOfRLIFromCharacter(HIE_tdstSuperObject_* hSprObj, unsigned char* p_ucIndex1, unsigned char* p_ucIndex2, float* p_xPercent)
 {
+    tdstEngineObject_* hCharacter;
+    tdstMSLight_* hMSLight;
     unsigned char ucNbRLIUse;
-    /* TODO: decompile from asm/... */
+    float xPercent;
+    ucNbRLIUse = 0;
+    if (hSprObj->ulTypeOfLinkedObject == 2) {
+        hCharacter = hSprObj->hLinkedObject.p_stCharacter;
+        hMSLight = hCharacter->h_MSLight;
+        if (hMSLight != NULL) {
+            *p_ucIndex1 = hMSLight->ucFirstRLI;
+            *p_ucIndex2 = hMSLight->ucSecondRLI;
+            xPercent = hMSLight->ucBlendPercent;
+            *p_xPercent = xPercent / 100.0f;
+            ucNbRLIUse = hMSLight->ucNbRLIUse;
+        }
+    }
+    return ucNbRLIUse;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1159–1256 */

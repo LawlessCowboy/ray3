@@ -113,6 +113,7 @@ struct CExtraEventActor {
     unsigned char mbWaitForKill; /* +0x48 */
     unsigned char mbAllSoundPaused; /* +0x49 */
     CResObjParams m_oResObjParams; /* +0x4c */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x64..0x67 */
 };
 
 struct CLinkActor {
@@ -134,8 +135,8 @@ struct CLinkActor {
 };
 
 struct CLinkActorPool {
-    void ms_oPool(void);
-    void f_vSalvageActor(CLinkActor*);
+    static CLinkActor ms_oPool;
+    static void f_vSalvageActor(CLinkActor*);
     CLinkActor* fs_poGetAnActor(void);
 };
 
@@ -397,10 +398,7 @@ struct CResType {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CLinkActorPool::ms_oPool(void)
-{
-    /* TODO: decompile from asm/... */
-}
+CLinkActor CLinkActorPool::ms_oPool;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 241–242 */
 /* addr: 0x001ccf30  size: 48 bytes */
@@ -412,7 +410,11 @@ void CLinkActorPool::ms_oPool(void)
  */
 void CLinkActorPool::f_vSalvageActor(CLinkActor* poActor)
 {
-    /* TODO: decompile from asm/... */
+    poActor->m_poNext = ms_oPool.m_poNext;
+    poActor->m_poPrevious = &ms_oPool;
+    if (poActor->m_poNext != 0)
+        poActor->m_poNext->m_poPrevious = poActor;
+    ms_oPool.m_poNext = poActor;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 227–237 */
@@ -561,7 +563,11 @@ CExtraEventActor* CLinkActor::mfn_poGetExtraEventActorInstance(int s32_ChannelId
  */
 void CLinkActor::f_vInsertAfter(CLinkActor* pParam)
 {
-    /* TODO: decompile from asm/... */
+    m_poNext = pParam->m_poNext;
+    m_poPrevious = pParam;
+    if (m_poNext != 0)
+        m_poNext->m_poPrevious = this;
+    pParam->m_poNext = this;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 96–103 */
@@ -578,7 +584,12 @@ void CLinkActor::f_vInsertAfter(CLinkActor* pParam)
  */
 void CLinkActor::f_vIsolate(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_poPrevious != 0)
+        m_poPrevious->m_poNext = m_poNext;
+    if (m_poNext != 0)
+        m_poNext->m_poPrevious = m_poPrevious;
+    m_poNext = 0;
+    m_poPrevious = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 81–91 */

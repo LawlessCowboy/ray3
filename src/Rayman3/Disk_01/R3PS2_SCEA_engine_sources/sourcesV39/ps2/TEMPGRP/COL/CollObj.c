@@ -472,7 +472,12 @@ void COL_fn_vGetInfoFromGeometricSphere(MTH3D_tdstVector_* _p_stSphereCenter, fl
 {
     COL_tdstIndexedSphere_* p_stOneSphere;
     MTH3D_tdstVector_* p_stCenter;
-    /* TODO: decompile from asm/... */
+    p_stOneSphere = (*(COL_tdstElementSpheres_***)&_hBoundingVolume->d_stListOfElements)[0]->d_stListOfSpheres;
+    p_stCenter = &_hBoundingVolume->d_stListOfPoints[p_stOneSphere->xCenterPoint];
+    ((int*)_p_stSphereCenter)[0] = ((int*)p_stCenter)[0];
+    ((int*)_p_stSphereCenter)[1] = ((int*)p_stCenter)[1];
+    ((int*)_p_stSphereCenter)[2] = ((int*)p_stCenter)[2];
+    *_p_xSphereRadius = p_stOneSphere->xRadius;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1593–1593 */

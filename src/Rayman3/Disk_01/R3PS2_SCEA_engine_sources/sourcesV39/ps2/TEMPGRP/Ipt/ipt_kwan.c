@@ -282,7 +282,14 @@ unsigned char IPT_fn_bIsKeyWordValid_Sequence(IPT_tdstKeyWordElement_* _hKeyWord
  */
 unsigned char IPT_fn_bIsKeyWordValid_ActionInvalidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn;
+    g_h_ActualEntryInput = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsInvalidated(((IPT_tdstKeyWordElement_*)g_h_ActualEntryInput)->u_ElementUnion.hEntryElement) == 1)
+        ucReturn = 1;
+    else
+        ucReturn = 0;
+    g_h_ActualEntryInput += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 1036–1044 */
@@ -302,7 +309,14 @@ unsigned char IPT_fn_bIsKeyWordValid_ActionInvalidated(IPT_tdstKeyWordElement_* 
  */
 unsigned char IPT_fn_bIsKeyWordValid_ActionJustInvalidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn;
+    g_h_ActualEntryInput = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsJustInvalidated(((IPT_tdstKeyWordElement_*)g_h_ActualEntryInput)->u_ElementUnion.hEntryElement) == 1)
+        ucReturn = 1;
+    else
+        ucReturn = 0;
+    g_h_ActualEntryInput += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 1023–1031 */
@@ -322,7 +336,14 @@ unsigned char IPT_fn_bIsKeyWordValid_ActionJustInvalidated(IPT_tdstKeyWordElemen
  */
 unsigned char IPT_fn_bIsKeyWordValid_ActionValidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn;
+    g_h_ActualEntryInput = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsValidated(((IPT_tdstKeyWordElement_*)g_h_ActualEntryInput)->u_ElementUnion.hEntryElement) == 1)
+        ucReturn = 1;
+    else
+        ucReturn = 0;
+    g_h_ActualEntryInput += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 1010–1018 */
@@ -342,7 +363,14 @@ unsigned char IPT_fn_bIsKeyWordValid_ActionValidated(IPT_tdstKeyWordElement_* _h
  */
 unsigned char IPT_fn_bIsKeyWordValid_ActionJustValidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn;
+    g_h_ActualEntryInput = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsJustValidated(((IPT_tdstKeyWordElement_*)g_h_ActualEntryInput)->u_ElementUnion.hEntryElement) == 1)
+        ucReturn = 1;
+    else
+        ucReturn = 0;
+    g_h_ActualEntryInput += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 958–1005 */

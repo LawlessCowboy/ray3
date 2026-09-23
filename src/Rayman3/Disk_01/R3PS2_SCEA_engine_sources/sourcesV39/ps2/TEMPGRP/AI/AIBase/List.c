@@ -3162,10 +3162,15 @@ HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vGetAllCharactersInContactWithThisZde(HIE_tdstSuperObject_*, unsigned char, unsigned char, HIE_tdstSuperObject_**, unsigned short*, unsigned short);
+void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_*, unsigned char, unsigned char, HIE_tdstSuperObject_**, unsigned short*);
+
 unsigned char fn_ucAtLeastOnePersoInZde(HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId, unsigned short xMask)
 {
     unsigned short uwNbDetectedPerso;
-    /* TODO: decompile from asm/... */
+    uwNbDetectedPerso = 1;
+    fn_vGetAllCharactersInContactWithThisZde(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso, xMask);
+    return uwNbDetectedPerso != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 399–403 */
@@ -3186,7 +3191,9 @@ unsigned char fn_ucAtLeastOnePersoInZde(HIE_tdstSuperObject_* p_stPerso, unsigne
 unsigned char fn_ucAtLeastOnePersoInZdd(HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId)
 {
     unsigned short uwNbDetectedPerso;
-    /* TODO: decompile from asm/... */
+    uwNbDetectedPerso = 1;
+    fn_vGetAllObjectsInZdd(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso);
+    return uwNbDetectedPerso != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 386–395 */
@@ -3564,7 +3571,18 @@ char fn_bFindModelInList(tdstList_* p_List, AI_tdstAIModel_* _p_stModel)
 char fn_bFindPersoInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
 {
     unsigned char ucPosition;
-    /* TODO: decompile from asm/... */
+
+    if (!p_List->ucNbElt)
+        return 0;
+
+    ucPosition = 0;
+    while (ucPosition < p_List->ucNbElt)
+    {
+        if (p_List->p_hTabElt[ucPosition] == p_Perso)
+            break;
+        ucPosition++;
+    }
+    return ucPosition < p_List->ucNbElt;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 51–67 */

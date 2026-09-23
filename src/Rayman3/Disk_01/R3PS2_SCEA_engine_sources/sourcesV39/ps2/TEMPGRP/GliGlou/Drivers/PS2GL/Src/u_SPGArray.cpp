@@ -80,6 +80,7 @@ typedef struct sceGsPrmode sceGsPrmode;
 typedef struct sceGsSignal sceGsSignal;
 typedef struct tagGScontext tagGScontext;
 
+
 struct C_LoadingScreen {
     int LoadTexture(char* TextureFileName, unsigned int** ppTextureData, unsigned int* pTextureName);
 };
@@ -96,6 +97,7 @@ struct C_VertexArrayContainer {
     float m_Matrix[4][4]; /* +0x30 */
     GLI_tdstMaterial_* m_pMat; /* +0x70 */
     int m_AnimatedTextureToUse; /* +0x74 */
+    ~C_VertexArrayContainer();
     void UnAcquireAndDraw(unsigned int NbSprites);
     void SetMatrix(float (*pMatrix)[4][4]);
 };
@@ -1225,7 +1227,14 @@ void VAC_SetMaterial(void* hContainer, GLI_tdstMaterial_* pMat)
  */
 void VAC_UnAcquireAndDraw(void* hContainer, unsigned int NbSprites)
 {
-    /* TODO: decompile from asm/... */
+    C_VertexArrayContainer* pContainer;
+    pContainer = (C_VertexArrayContainer*)hContainer;
+    pContainer->UnAcquireAndDraw(NbSprites + VAC_g_CurrentNbSprites);
+    VAC_g_CurrentpV = 0;
+    VAC_g_CurrentpC = 0;
+    VAC_g_CurrentpT = 0;
+    VAC_g_NbSpritesLefts = 0;
+    VAC_g_CurrentNbSprites = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 365–371 */
@@ -1277,7 +1286,10 @@ void VAC_ReinitForNewFrame(void* hContainer)
 void VAC_Destroy(void* hContainer)
 {
     C_VertexArrayContainer* pContainer;
-    /* TODO: decompile from asm/... */
+    pContainer = (C_VertexArrayContainer*)hContainer;
+    if (pContainer != 0) {
+        delete pContainer;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 341–345 */
@@ -1370,7 +1382,12 @@ void C_VertexArrayContainer::UnAcquireAndDraw(unsigned int NbSprites)
  */
 void C_VertexArrayContainer::SetMatrix(float (*pMatrix)[4][4])
 {
-    /* TODO: decompile from asm/... */
+    if (pMatrix != 0) {
+        m_bMatrixWasSet = 1;
+        m_Matrix = *pMatrix;
+    } else {
+        m_bMatrixWasSet = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 146–154 */

@@ -759,6 +759,9 @@ struct C_Sdl {
     GLI_tdstMaterial_* m_SkinMaterial; /* +0x40 */
     int m_bIsBlinking; /* +0x44 */
     void UpdateFogs(void);
+    void Draw(int);
+    void Preprocess(void);
+    void End(void);
 };
 
 struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn {
@@ -1270,7 +1273,7 @@ void SDL_UpdateFogs(unsigned int hSDL)
  */
 void SDL_Draw(unsigned int hSDL)
 {
-    /* TODO: decompile from asm/... */
+    ((C_Sdl*)hSDL)->Draw(1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 88–88 */
@@ -1282,7 +1285,7 @@ void SDL_Draw(unsigned int hSDL)
  */
 void SDL_Preprocess(unsigned int hSDL)
 {
-    /* TODO: decompile from asm/... */
+    ((C_Sdl*)hSDL)->Preprocess();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 80–80 */
@@ -1294,7 +1297,7 @@ void SDL_Preprocess(unsigned int hSDL)
  */
 void SDL_End(unsigned int hSDL)
 {
-    /* TODO: decompile from asm/... */
+    ((C_Sdl*)hSDL)->End();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 71–72 */

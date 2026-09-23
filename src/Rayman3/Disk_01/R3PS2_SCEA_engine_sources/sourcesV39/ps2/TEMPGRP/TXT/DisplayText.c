@@ -4982,7 +4982,19 @@ void TXT_vAffiche(GLD_tdstViewportAttributes_* p_stVpt, float fFrameLenght)
  */
 void JFFTXT_vModifyCaracter(int StringNumber, int Position, int newcar)
 {
-    /* TODO: decompile from asm/... */
+    _JFFTXT_* p;
+    unsigned char* s;
+
+    if (StringNumber < 200)
+    {
+        p = &g_JFFTXT[StringNumber];
+        if (p->pString != 0)
+        {
+            s = (unsigned char*)p->pString;
+            s += Position;
+            *s = newcar;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 363–445 */

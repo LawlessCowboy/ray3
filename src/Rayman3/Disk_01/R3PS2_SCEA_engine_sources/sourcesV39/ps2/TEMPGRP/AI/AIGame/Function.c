@@ -188,6 +188,7 @@ typedef struct anon_7 anon_7;
 typedef union RGBAStruct_ RGBAStruct_;
 
 tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+HIE_tdstSuperObject_* GAM_fn_hGetCurrentSector(HIE_tdstSuperObject_* _hCharacter);
 
 typedef enum tdeFieldId_ {
     eField_Position = 0,
@@ -3586,7 +3587,7 @@ int gp_SuperObjPersoGenerated[30];
 float TEXT_gaf_FloatParameters[10];
 int TEXT_gai_IntParameters[10];
 unsigned int g_ulSpoMask;
-int SECT_hFatherSector;
+HIE_tdstSuperObject_* SECT_hFatherSector;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2983–2995 */
 /* addr: 0x002120d0  size: 64 bytes */
@@ -3602,7 +3603,10 @@ int SECT_hFatherSector;
 tdstNodeInterpret_* fn_p_st_AGO_GetHandle(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int iHandle;
-    /* TODO: decompile from asm/... */
+    iHandle = AGO3_dwGetLastHandle();
+    *(int *)p_stValue = iHandle;
+    *(int *)((char *)p_stValue + 0xc) = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2954–2969 */
@@ -3636,7 +3640,10 @@ tdstNodeInterpret_* fn_p_st_GetPadInversions(tdstNodeInterpret_* p_stTree, tdstG
  */
 tdstNodeInterpret_* fn_p_st_FormatMC(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    *(int *)p_stValue = 0;
+    *(int *)((char *)p_stValue + 0xc) = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2889–2889 */
@@ -3780,7 +3787,12 @@ tdstNodeInterpret_* fn_p_stMonitoringSetVariable(HIE_tdstSuperObject_* p_SuperOb
 tdstNodeInterpret_* fn_p_stMCFunc(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    eFuncId = *(tdeFuncId_ *)((char *)p_stTree - 8);
+    if (eFuncId == 0x1b5) {
+        *(int *)p_stValue = 0;
+        *(int *)((char *)p_stValue + 0xc) = 6;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2654–2675 */
@@ -3797,7 +3809,12 @@ tdstNodeInterpret_* fn_p_stMCFunc(tdstNodeInterpret_* p_stTree, tdstGetSetParam_
 tdstNodeInterpret_* fn_p_stScreenFunctions(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    eFuncId = *(tdeFuncId_ *)((char *)p_stTree - 8);
+    if (eFuncId == 0x1b4) {
+        *(int *)p_stValue = GLI_g_50_or_60_HzMode;
+        *(int *)((char *)p_stValue + 0xc) = 6;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2587–2641 */
@@ -3890,7 +3907,12 @@ tdstNodeInterpret_* fn_p_stFFBFunctions(HIE_tdstSuperObject_* p_SuperObjPerso, t
  */
 tdstNodeInterpret_* fn_p_stGetTransitionSectorIDFunction(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* pSector;
+    pSector = GAM_fn_hGetCurrentSector(SECT_hFatherSector);
+    pSector = *(HIE_tdstSuperObject_ **)((char *)pSector + 4);
+    *(int *)p_stValue = *(int *)((char *)pSector + 0x8c);
+    *(int *)((char *)p_stValue + 0xc) = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2525–2573 */
@@ -5590,7 +5612,13 @@ tdstNodeInterpret_* fn_p_stGetRadiusWP(HIE_tdstSuperObject_* p_SuperObjPerso, td
  */
 tdstNodeInterpret_* fn_p_stGetMyAbsolutePosition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    void *pData;
+    pData = *(void **)((char *)p_SuperObjPerso + 0x24);
+    *(int *)p_stValue = *(int *)((char *)pData + 0x40);
+    *(int *)((char *)p_stValue + 4) = *(int *)((char *)pData + 0x44);
+    *(int *)((char *)p_stValue + 8) = *(int *)((char *)pData + 0x48);
+    *(int *)((char *)p_stValue + 0xc) = 0x15;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 236–245 */

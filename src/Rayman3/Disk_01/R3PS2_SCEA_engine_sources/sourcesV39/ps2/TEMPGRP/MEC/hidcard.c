@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+extern void* memset(void*, int, unsigned int);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct DNM_stReport DNM_stReport;
@@ -29,5 +30,6 @@ typedef enum anon_enum_00bb26b6 {
  */
 DNM_stReport* DNM_p_stReportDefaultInit(DNM_stReport* _p_stReport)
 {
-    /* TODO: decompile from asm/... */
+    memset(_p_stReport, 0, 0x16C);
+    return _p_stReport;
 }

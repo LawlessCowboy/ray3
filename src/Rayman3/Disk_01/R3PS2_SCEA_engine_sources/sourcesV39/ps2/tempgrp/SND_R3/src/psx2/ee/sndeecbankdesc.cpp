@@ -136,10 +136,11 @@ struct spair {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void _NilElmt__Q24usnd9streebase(unsigned int uiSize)
+extern "C" void HMU_fn_pvSndMalloc(unsigned int u32Size);
+
+void usnd_malloc(unsigned int uiSize)
 {
-    void* ptr;
-    /* TODO: decompile from asm/... */
+    return HMU_fn_pvSndMalloc(uiSize);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesc.cpp lines 97–103 */

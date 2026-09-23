@@ -1931,7 +1931,12 @@ void fn_v3dDataSetUserEventFlag(tdst3dData_* h_3dData, unsigned char _ucFlagInde
 int fn_b3dDataGetUserEventFlag(tdst3dData_* h_3dData, unsigned char _ucFlagIndex, MAT_tdstTransformation_* _p_stPosition)
 {
     unsigned char ucMask;
-    /* TODO: decompile from asm/... */
+    ucMask = 1 << _ucFlagIndex;
+    if (_p_stPosition != NULL)
+    {
+        *_p_stPosition = h_3dData->stLastEventGlobalPosition;
+    }
+    return h_3dData->ucUserEventFlags & ucMask;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 891–894 */
