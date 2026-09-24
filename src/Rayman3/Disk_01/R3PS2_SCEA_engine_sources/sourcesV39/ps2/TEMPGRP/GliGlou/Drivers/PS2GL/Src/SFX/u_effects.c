@@ -2167,7 +2167,11 @@ void GLIPS2_vSetAE_DepthBlur(unsigned int bOnOff, float fNear, float fFar, float
  */
 void GLIPS2_vReinitAfterEffects(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_AfterEffect = 0;
+    AE_MirrorFX = 0;
+    GLI_g_bFullScreenWaterEffect = 0;
+    GLI_g_MotionBlurIntensity = 0.0f;
+    GLI_g_CartoonBlendVal = 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5526–5644 */
@@ -4047,7 +4051,7 @@ void GLIPS2_vProcessMatrixDeformations(void)
  */
 void GLIPS2_vReinitMatrixDeformations(void)
 {
-    /* TODO: decompile from asm/... */
+    WaterFrame ^= 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2309–2332 */
@@ -5169,7 +5173,7 @@ void GLIPS2_vSetWaterDeformation(int Val)
  */
 void ActivateOldMovieEffect(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_OldMovieEffect = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 965–972 */
@@ -5468,7 +5472,7 @@ void GLI_vProcessMirrorAfterEffect(void)
  */
 void GLIPS2_vSetMirrorBlur(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_MirrorAfterEffect = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 401–483 */

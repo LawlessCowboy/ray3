@@ -35,7 +35,7 @@ typedef struct tdstAnim3d_ tdstAnim3d_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_1 anon_1;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
@@ -2038,7 +2038,7 @@ struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt {
     int lNumberOfElementsOpt; /* +0x4 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -3367,9 +3367,12 @@ tdstNodeInterpret_* fn_p_stEvalNULL(void* p_stContext, tdstNodeInterpret_* p_stT
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalGraph(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalGraph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hGraph = p_stTree->uDummy.uParam.hGraph;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Graph;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 892–894 */
@@ -3382,9 +3385,12 @@ tdstNodeInterpret_* fn_p_stEvalGraph(tdstNodeInterpret_* p_stTree, tdstGetSetPar
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalCaps(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalCaps(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Caps;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 883–885 */
@@ -3397,9 +3403,12 @@ tdstNodeInterpret_* fn_p_stEvalCaps(tdstNodeInterpret_* p_stTree, tdstGetSetPara
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalLight(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalLight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.p_stLight = p_stTree->uDummy.uParam.p_stLight;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Light;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 874–876 */
@@ -3412,9 +3421,12 @@ tdstNodeInterpret_* fn_p_stEvalLight(tdstNodeInterpret_* p_stTree, tdstGetSetPar
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalVisualMaterialRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalVisualMaterialRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hVisualMaterial = p_stTree->uDummy.uParam.hVisualMaterial;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_VisualMaterial;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 866–868 */
@@ -3427,9 +3439,12 @@ tdstNodeInterpret_* fn_p_stEvalVisualMaterialRef(tdstNodeInterpret_* p_stTree, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalGameMaterialRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalGameMaterialRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hGameMaterial = p_stTree->uDummy.uParam.hGameMaterial;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_GameMaterial;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 854–859 */
@@ -3442,9 +3457,12 @@ tdstNodeInterpret_* fn_p_stEvalGameMaterialRef(tdstNodeInterpret_* p_stTree, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalParticleGenerator(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalParticleGenerator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hParticleGenerator = p_stTree->uDummy.uParam.hParticleGenerator;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_ParticleGenerator;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 840–847 */
@@ -3457,9 +3475,12 @@ tdstNodeInterpret_* fn_p_stEvalParticleGenerator(tdstNodeInterpret_* p_stTree, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalTextRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalTextRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hText = p_stTree->uDummy.uParam.hText;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Text;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 826–833 */
@@ -3472,9 +3493,12 @@ tdstNodeInterpret_* fn_p_stEvalTextRef(tdstNodeInterpret_* p_stTree, tdstGetSetP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalComportRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalComportRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.pComport = p_stTree->uDummy.uParam.pComport;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Comport;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 816–819 */
@@ -3487,11 +3511,12 @@ tdstNodeInterpret_* fn_p_stEvalComportRef(tdstNodeInterpret_* p_stTree, tdstGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalEndMacro(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalEndMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.lValue = 0;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
     p_stValue->eType = E_vt_MetaActionReturn;
-    return p_stTree + 1;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 807–810 */
@@ -3504,11 +3529,12 @@ tdstNodeInterpret_* fn_p_stEvalEndMacro(tdstNodeInterpret_* p_stTree, tdstGetSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalBeginMacro(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalBeginMacro(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.lValue = 0;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
     p_stValue->eType = E_vt_MetaActionReturn;
-    return p_stTree + 1;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 798–800 */
@@ -3520,11 +3546,11 @@ tdstNodeInterpret_* fn_p_stEvalBeginMacro(tdstNodeInterpret_* p_stTree, tdstGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalEndOfTree(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalEndOfTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     p_stValue->uDummy.uParam.lValue = 16;
     p_stValue->eType = E_vt_MetaActionReturn;
-    return p_stTree + 1;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 784–791 */
@@ -3537,9 +3563,12 @@ tdstNodeInterpret_* fn_p_stEvalEndOfTree(tdstNodeInterpret_* p_stTree, tdstGetSe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalFamilyRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalFamilyRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hFamily = p_stTree->uDummy.uParam.hFamily;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Family;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 770–777 */
@@ -3552,9 +3581,12 @@ tdstNodeInterpret_* fn_p_stEvalFamilyRef(tdstNodeInterpret_* p_stTree, tdstGetSe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalSoundEventRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalSoundEventRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.pSoundEvent = p_stTree->uDummy.uParam.pSoundEvent;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_SoundEvent;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 756–763 */
@@ -3567,9 +3599,12 @@ tdstNodeInterpret_* fn_p_stEvalSoundEventRef(tdstNodeInterpret_* p_stTree, tdstG
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalLipsSynchroRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalLipsSynchroRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.hLipsSynchro = p_stTree->uDummy.uParam.hLipsSynchro;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_LipsSynchro;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 742–749 */
@@ -3582,9 +3617,12 @@ tdstNodeInterpret_* fn_p_stEvalLipsSynchroRef(tdstNodeInterpret_* p_stTree, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalString(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalString(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.szString = p_stTree->uDummy.uParam.szString;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_String;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 728–735 */
@@ -3597,9 +3635,12 @@ tdstNodeInterpret_* fn_p_stEvalString(tdstNodeInterpret_* p_stTree, tdstGetSetPa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalMask(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalMask(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.uwValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Mask;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 714–721 */
@@ -3612,9 +3653,12 @@ tdstNodeInterpret_* fn_p_stEvalMask(tdstNodeInterpret_* p_stTree, tdstGetSetPara
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalDsgVarId(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalDsgVarId(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_DsgVarId;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 700–707 */
@@ -3627,9 +3671,12 @@ tdstNodeInterpret_* fn_p_stEvalDsgVarId(tdstNodeInterpret_* p_stTree, tdstGetSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalModuleRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalModuleRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.p_stModel = p_stTree->uDummy.uParam.p_stModel;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Module;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 686–693 */
@@ -3642,9 +3689,12 @@ tdstNodeInterpret_* fn_p_stEvalModuleRef(tdstNodeInterpret_* p_stTree, tdstGetSe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalWayPointRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalWayPointRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.m_hWayPoint = p_stTree->uDummy.uParam.m_hWayPoint;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_WayPoint;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 672–679 */

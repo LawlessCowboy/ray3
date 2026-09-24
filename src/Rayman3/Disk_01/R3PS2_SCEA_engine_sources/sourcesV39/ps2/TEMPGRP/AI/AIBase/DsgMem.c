@@ -3036,10 +3036,12 @@ unsigned char fn_ucSetDsgVarArray(void* pMyVarAddr, unsigned char ucIndex, tdstG
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarVisualMaterial(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+int fn_ucSetDsgVarVisualMaterial(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
     GLI_tdstMaterial_* hVisualMaterial;
-    /* TODO: decompile from asm/... */
+    hVisualMaterial = p_stGetSetParam->uDummy.uParam.hVisualMaterial;
+    *(GLI_tdstMaterial_**)pMyVarAddr = hVisualMaterial;
+    return (hVisualMaterial == NULL) ^ 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 1136–1142 */
@@ -3052,10 +3054,12 @@ unsigned char fn_ucSetDsgVarVisualMaterial(void* pMyVarAddr, tdstGetSetParam_* p
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarGameMaterial(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+int fn_ucSetDsgVarGameMaterial(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
     GMT_tdstGameMaterial_* hGameMaterial;
-    /* TODO: decompile from asm/... */
+    hGameMaterial = p_stGetSetParam->uDummy.uParam.hGameMaterial;
+    *(GMT_tdstGameMaterial_**)pMyVarAddr = hGameMaterial;
+    return (hGameMaterial == NULL) ^ 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 1126–1131 */
@@ -3295,12 +3299,12 @@ unsigned char fn_ucSetDsgVarVector(void* pMyVarAddr, void* param0, tdstGetSetPar
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetDsgVarComport(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
+int fn_ucSetDsgVarComport(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstComport_* p_stComport;
     p_stComport = p_stGetSetParam->uDummy.uParam.pComport;
     *(tdstComport_**)pMyVarAddr = p_stComport;
-    return p_stComport != NULL;
+    return (p_stComport == NULL) ^ 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 995–997 */
@@ -3502,10 +3506,13 @@ unsigned char fn_ucGetDsgVarArray(void* pMyVarAddr, unsigned char ucIndex, tdstG
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarVisualMaterial(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarVisualMaterial(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
     GLI_tdstMaterial_* hVisualMaterial;
-    /* TODO: decompile from asm/... */
+    hVisualMaterial = *(GLI_tdstMaterial_**)pMyVarAddr;
+    p_stGetSetParam->uDummy.uParam.hVisualMaterial = hVisualMaterial;
+    p_stGetSetParam->eType = E_vt_VisualMaterial;
+    return hVisualMaterial != NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 782–789 */
@@ -3542,10 +3549,10 @@ unsigned char fn_ucGetDsgVarGameMaterial(void* pMyVarAddr, void* param0, tdstGet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarPositiveInteger(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarPositiveInteger(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
     p_stGetSetParam->uDummy.uParam.ulValue = *(unsigned int*)pMyVarAddr;
-    p_stGetSetParam->eType = E_vt_PositiveInteger;
+    p_stGetSetParam->eType = E_vt_Integer;
     return 1;
 }
 
@@ -3559,7 +3566,7 @@ unsigned char fn_ucGetDsgVarPositiveInteger(void* pMyVarAddr, tdstGetSetParam_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarInteger(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarInteger(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
     p_stGetSetParam->uDummy.uParam.lValue = *(int*)pMyVarAddr;
     p_stGetSetParam->eType = E_vt_Integer;
@@ -3576,10 +3583,10 @@ unsigned char fn_ucGetDsgVarInteger(void* pMyVarAddr, tdstGetSetParam_* p_stGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVar0To65535(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVar0To65535(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
-    p_stGetSetParam->uDummy.uParam.uwValue = *(unsigned short*)pMyVarAddr;
-    p_stGetSetParam->eType = E_vt_0To65535;
+    p_stGetSetParam->uDummy.uParam.ulValue = *(unsigned short*)pMyVarAddr;
+    p_stGetSetParam->eType = E_vt_Integer;
     return 1;
 }
 
@@ -3593,10 +3600,10 @@ unsigned char fn_ucGetDsgVar0To65535(void* pMyVarAddr, tdstGetSetParam_* p_stGet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVar_32768To32767(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVar_32768To32767(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
-    p_stGetSetParam->uDummy.uParam.wValue = *(short*)pMyVarAddr;
-    p_stGetSetParam->eType = E_vt__32768To32767;
+    p_stGetSetParam->uDummy.uParam.lValue = *(short*)pMyVarAddr;
+    p_stGetSetParam->eType = E_vt_Integer;
     return 1;
 }
 
@@ -3610,10 +3617,10 @@ unsigned char fn_ucGetDsgVar_32768To32767(void* pMyVarAddr, tdstGetSetParam_* p_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVar0To255(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVar0To255(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
-    p_stGetSetParam->uDummy.uParam.ucValue = *(unsigned char*)pMyVarAddr;
-    p_stGetSetParam->eType = E_vt_0To255;
+    p_stGetSetParam->uDummy.uParam.ulValue = *(unsigned char*)pMyVarAddr;
+    p_stGetSetParam->eType = E_vt_Integer;
     return 1;
 }
 
@@ -3627,10 +3634,10 @@ unsigned char fn_ucGetDsgVar0To255(void* pMyVarAddr, tdstGetSetParam_* p_stGetSe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVar_128To127(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVar_128To127(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
-    p_stGetSetParam->uDummy.uParam.cValue = *(char*)pMyVarAddr;
-    p_stGetSetParam->eType = E_vt__128To127;
+    p_stGetSetParam->uDummy.uParam.lValue = *(char*)pMyVarAddr;
+    p_stGetSetParam->eType = E_vt_Integer;
     return 1;
 }
 
@@ -3662,9 +3669,9 @@ unsigned char fn_ucGetDsgVarBoolean(void* pMyVarAddr, void* param0, tdstGetSetPa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarList(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarList(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
-    p_stGetSetParam->uDummy.uParam.p_stEngObjValue = *(tdstEngineObject_**)pMyVarAddr;
+    p_stGetSetParam->uDummy.uParam.p_stEngObjValue = pMyVarAddr;
     p_stGetSetParam->eType = E_vt_List;
     return 1;
 }
@@ -3776,9 +3783,9 @@ unsigned char fn_ucGetDsgVarGraph(void* pMyVarAddr, void* param0, tdstGetSetPara
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarCaps(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarCaps(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
-    p_stGetSetParam->uDummy.uParam.xMask = *(unsigned short*)pMyVarAddr;
+    p_stGetSetParam->uDummy.uParam.ulValue = *(unsigned int*)pMyVarAddr;
     p_stGetSetParam->eType = E_vt_Caps;
     return 1;
 }

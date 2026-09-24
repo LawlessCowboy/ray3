@@ -61,6 +61,8 @@ unsigned int _start;
 extern int SignalSema(int sid);
 extern int WaitSema(int sid);
 extern int CreateSema(SemaParam* param);
+extern void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS);
+extern void PS2_fn_vCreateCriticalSection(_stCriticalSection* p_stCS);
 extern void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 71–380 */
@@ -415,7 +417,7 @@ void PS2_fn_vLeaveGLCriticalSection(void)
  */
 void PS2_fn_vEnterGLCriticalSection(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2_fn_vEnterCriticalSection(&stGL_CS);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 211–211 */
@@ -427,7 +429,7 @@ void PS2_fn_vEnterGLCriticalSection(void)
  */
 void PS2_fn_vCreateGLCriticalSection(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2_fn_vCreateCriticalSection(&stGL_CS);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 168–204 */

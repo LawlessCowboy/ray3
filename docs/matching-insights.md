@@ -97,3 +97,9 @@ compiler option, construct, and outcome.
 - [compiler] MWCC PS2 symbolic FP inline-asm operands accept scalar C float lvalues but reject aggregate-member expressions such as vector.x directly with 'illegal operand'; assign the component to a scalar temporary before applying recovered mula.s/madda.s/madd.s, sqrt.s, or abs.s helper macros. (2026-09-24)
 
 - [compiler] MWCC PS2 3.0 C++ exceptions default to on under the baseline invocation and suppress level-3 tail-call optimization: adding `#pragma exceptions off` changed usnd_memcmp/usnd_memcpy/usnd_memset from 28-byte jal frames to exact 8-byte j thunks, and usnd_vDeleteCritSect from 40 bytes to the exact 20-byte tail jump. Use this only where retail C++ wrappers prove exception-free tail calls. (2026-09-24)
+
+- [debug-format] MWCC PS2 treats unsigned long as 8 bytes; an extractor-inserted 4-byte pad between consecutive unsigned long fields in _stTimerCount made each timer record 8 bytes too large and shifted later tdstEngineStructure fields. Removing that pad fixed the stCineManager relocation by 0x10 in CineDef.c. (2026-09-24)
+
+- [debug-format] GLI_vSetDynShadowParam's recovered four-parameter declaration was ABI-incomplete: target callers populate a1 with an object pointer, f12 with length, a2 with level, and a3 with close-state. Restoring an ignored void* second parameter yields the exact 20-byte target (a0/f12/a2/a3 stores). Use caller register setup to audit debug signatures when hard-float parameters appear to compress GPR numbering. (2026-09-24)
+
+- [compiler] MWCC PS2 function-local #pragma optimization_level 1 preserves simple load/store optimization but leaves jr delay slots as nop (exact for SVG_fn_bGetActiveVms and SVG_fn_vSetMC0AsChanged); level 0 additionally spills and reloads an int parameter at stack offset 0 (exact for SVG_fn_SetAsCurrentMemoryCard). (2026-09-24)

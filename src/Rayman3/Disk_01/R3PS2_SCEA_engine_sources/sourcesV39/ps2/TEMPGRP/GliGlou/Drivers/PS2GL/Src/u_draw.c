@@ -3842,7 +3842,7 @@ void DrawTriangles(void)
  */
 void GLI_vAddShadowVolumeDisplayList(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_NumberOfShadowVolumes++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 254–256 */

@@ -61,7 +61,6 @@ void MAT_fn_vNormQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma fp_contract on
 float MTH_fn_xSqrAddSqrAddSqrOpt2(float a, float b, float c)
 {
     float xRet;
@@ -69,7 +68,6 @@ float MTH_fn_xSqrAddSqrAddSqrOpt2(float a, float b, float c)
     xRet = a * a + b * b + c * c;
     return xRet;
 }
-#pragma fp_contract reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsppla.c lines 92–95 */
 /* addr: 0x002fa230  size: 52 bytes */

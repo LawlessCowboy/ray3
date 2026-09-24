@@ -164,11 +164,13 @@ int SVG_fn_iGetChangeInMC0(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 1
 void SVG_fn_vSetMC0AsChanged(void)
 {
-    gs_iSceMcOpWarned = 0;
     gs_iSceMcOpChanged = 1;
+    gs_iSceMcOpWarned = 0;
 }
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 224–267 */
 /* addr: 0x00133b90  size: 124 bytes */
@@ -289,10 +291,12 @@ int SVG_fn_s32GetFileSize(int _iPort, int _iSlot, char* _szFileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 0
 int SVG_fn_SetAsCurrentMemoryCard(int cmc)
 {
-    /* TODO: decompile from asm/... */
+    gUpdateFielInfo = cmc;
 }
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 434–468 */
 /* addr: 0x00134210  size: 428 bytes */
@@ -828,6 +832,7 @@ unsigned char SVG_fn_bIsActivVmsConnected(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 1
 int SVG_fn_bGetActiveVms(void)
 {
     int iReturn;
@@ -835,6 +840,7 @@ int SVG_fn_bGetActiveVms(void)
     iReturn = SVG_gs_lActiveVmsNumber;
     return iReturn;
 }
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1701–1713 */
 /* addr: 0x001368d0  size: 392 bytes */

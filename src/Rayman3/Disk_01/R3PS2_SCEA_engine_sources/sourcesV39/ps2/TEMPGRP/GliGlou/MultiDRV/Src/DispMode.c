@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+extern unsigned int GetCop0(int reg);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstDisplayMode_ GLI_tdstDisplayMode_;
 typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
@@ -78,7 +80,8 @@ int g_bDrawingBlackFrame;
 void GLI_fn_vTimerPS2Counter(unsigned int* pCount)
 {
     unsigned int counter;
-    /* TODO: decompile from asm/... */
+    counter = GetCop0(9);
+    *pCount = counter;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\DispMode.c lines 616–619 */

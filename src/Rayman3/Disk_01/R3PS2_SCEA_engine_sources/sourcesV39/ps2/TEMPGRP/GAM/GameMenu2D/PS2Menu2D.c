@@ -406,7 +406,8 @@ void M2D_iLoadMenuTexture(GLI_tdstTexture_** pp_stTexture, char* TxrName)
  */
 void M2D_StartTitlesLoading(void)
 {
-    /* TODO: decompile from asm/... */
+    gs_iNbTitleTextures = 0;
+    gs_eTextureType = eM2D_TITLE;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 156–158 */
@@ -420,7 +421,8 @@ void M2D_StartTitlesLoading(void)
  */
 void M2D_StartFixLoading(void)
 {
-    /* TODO: decompile from asm/... */
+    gs_iNbFixTextures = 0;
+    gs_eTextureType = eM2D_FIX;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 152–152 */
@@ -432,7 +434,7 @@ void M2D_StartFixLoading(void)
  */
 void M2D_StartBGLoading(void)
 {
-    /* TODO: decompile from asm/... */
+    gs_eTextureType = eM2D_BG;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 130–142 */

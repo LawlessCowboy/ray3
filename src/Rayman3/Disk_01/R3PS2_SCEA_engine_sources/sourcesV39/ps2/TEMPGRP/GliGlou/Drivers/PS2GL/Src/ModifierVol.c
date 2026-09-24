@@ -2031,7 +2031,7 @@ void GLI_vComputeEdges(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vSetDynShadowParam(unsigned char bOnOff, float fNewLenght, unsigned int ulNewLevel, unsigned char bCloseState)
+void GLI_vSetDynShadowParam(unsigned char bOnOff, void* pUnused, float fNewLenght, unsigned int ulNewLevel, unsigned char bCloseState)
 {
     GLI_g_bDynShadowIsOn = bOnOff;
     GLI_g_fDynShadowLenght = fNewLenght;

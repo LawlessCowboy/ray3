@@ -3092,9 +3092,9 @@ void DEMO_fn_vLoadFromFile(char* szDemoName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DEMO_fn_pcGetAddressForEventOffset(unsigned int u32Offset)
+char* DEMO_fn_pcGetAddressForEventOffset(unsigned int u32Offset)
 {
-    /* TODO: decompile from asm/... */
+    return (char*)gp_DEMO_AllocatedMemory + u32Offset - 8;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1794–1795 */
@@ -3107,7 +3107,7 @@ void DEMO_fn_pcGetAddressForEventOffset(unsigned int u32Offset)
  */
 unsigned int DEMO_fn_u32GetCurrentEventOffset(void)
 {
-    /* TODO: decompile from asm/... */
+    return gp_DEMO_CurrentPosInMemory - gp_DEMO_AllocatedMemory + 8;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1735–1780 */
@@ -3214,7 +3214,8 @@ void DEMO_fn_vPrepareForReadNow(void)
  */
 void DEMO_fn_vAllocateMemory(void)
 {
-    /* TODO: decompile from asm/... */
+    gp_DEMO_AllocatedMemory = 0;
+    g_szMapNameToLoadWhenDemoFinished[0] = '\0';
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 887–1066 */

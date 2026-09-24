@@ -2417,9 +2417,11 @@ unsigned int LoadingInProgress;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int g_lNumberOfBlackTriangles;
+
 void GLI_DRV_vNoBlackPolygon(void)
 {
-    /* TODO: decompile from asm/... */
+    g_lNumberOfBlackTriangles = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4327–4342 */

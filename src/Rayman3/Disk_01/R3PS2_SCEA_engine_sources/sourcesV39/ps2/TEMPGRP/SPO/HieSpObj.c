@@ -307,6 +307,8 @@ short fn_xIntersectSegmentWithRepositioningSuperObject(MTH3D_tdstVector_* p_stVe
     /* TODO: decompile from asm/... */
 }
 
+MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrixFastPS2(void);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 730–730 */
 /* addr: 0x003214c0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -316,7 +318,7 @@ short fn_xIntersectSegmentWithRepositioningSuperObject(MTH3D_tdstVector_* p_stVe
  */
 MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrix(void)
 {
-    /* TODO: decompile from asm/... */
+    return HIE_fn_pGetCurrentInCamCoordsMatrixFastPS2();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 688–726 */
@@ -370,7 +372,7 @@ MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrixFastPS2(void)
  */
 void HIE_fn_vStartPS2MatStack(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2_MatStackIndex = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 655–664 */
@@ -782,7 +784,7 @@ void HIE_fn_SO_SwitchSuperImposedTab(int lParam)
  */
 void HIE_fn_SO_UnsetSuperImposedClipping(HIE_tdstSuperObject_* _hSO)
 {
-    /* TODO: decompile from asm/... */
+    _hSO->ulFlags &= ~0x40000;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 129–137 */

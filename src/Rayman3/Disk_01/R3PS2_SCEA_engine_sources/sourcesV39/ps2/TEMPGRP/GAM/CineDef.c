@@ -2490,7 +2490,6 @@ struct SECT_tdstListOfSOCharacters_ {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -3697,7 +3696,7 @@ void CINE_CheckEndCineActor(CINE_tdstCineActor_* hCineActor)
  */
 void CINE_fn_pResetCineList(void)
 {
-    /* TODO: decompile from asm/... */
+    g_stEngineStructure.stCineManager = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 146–160 */

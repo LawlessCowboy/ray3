@@ -4,7 +4,7 @@
 
 #include <stddef.h>
 
-extern void (*sceCdCbfunc)(void);
+extern int CD_ProgressCallBack;
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct stFile_ stFile_;
@@ -59,7 +59,7 @@ unsigned char loadbufRootDir[2048];
  */
 void CD_SetCallBack(void* FunctionPointer)
 {
-    sceCdCbfunc = (void (*)(void))FunctionPointer;
+    CD_ProgressCallBack = (int)FunctionPointer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\sceecd.c lines 427–481 */
