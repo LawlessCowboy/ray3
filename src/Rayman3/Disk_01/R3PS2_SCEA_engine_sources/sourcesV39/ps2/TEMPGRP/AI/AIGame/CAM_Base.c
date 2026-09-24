@@ -3702,9 +3702,18 @@ void CAM_fn_vComputeSpeed(CAM_tdstUpdateCamera_* _p_stStruct)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vComputeMovePos(CAM_tdstUpdateCamera_* _p_stStruct);
+char CAM_fn_cDynChangeTheta(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stTestedPos);
+
 void CAM_fn_vComputeMovePosWithDynTheta(CAM_tdstUpdateCamera_* _p_stStruct)
 {
-    /* TODO: decompile from asm/... */
+    CAM_fn_vComputeMovePos(_p_stStruct);
+    if (((_p_stStruct->hCineinfo->ucVolIAFlags & 2) == 0) &&
+        (_p_stStruct->hCineinfoWork->hSuperObjectTargeted != NULL) &&
+        (cNoDynChangeTheta == 0) &&
+        CAM_fn_cDynChangeTheta(_p_stStruct, &_p_stStruct->stWantedCameraPos)) {
+        CAM_fn_vComputeMovePos(_p_stStruct);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 770–872 */
@@ -3838,8 +3847,30 @@ char CAM_fn_cDynChangeTheta(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector
  */
 void CAM_fn_vComputeRealWantedPos(CAM_tdstUpdateCamera_* _p_stStruct)
 {
+    int* p_lWantedCameraPos;
     CAM_tdstUpdateCamera_ stTempStruct;
-    /* TODO: decompile from asm/... */
+
+    memcpy(&stTempStruct, _p_stStruct, sizeof(CAM_tdstUpdateCamera_));
+    if (_p_stStruct->hCineinfo->ucPerIAFlags & 2) {
+        memcpy(&gst_Ideal, _p_stStruct->hCineinfoVisibility, sizeof(tdstInternalStructurCineinfo_));
+        gst_Ideal.xDistMin = _p_stStruct->hCineinfoWork->xDistMin;
+        gst_Ideal.xDistMax = _p_stStruct->hCineinfoWork->xDistMax;
+    } else {
+        memcpy(&gst_Ideal, _p_stStruct->hCineinfoWork, sizeof(tdstInternalStructurCineinfo_));
+    }
+    gst_Ideal.uwIAFlags |= 0x40;
+    stTempStruct.hCineinfoWork = &gst_Ideal;
+    CAM_fn_vComputeMovePos(&stTempStruct);
+    if (((stTempStruct.hCineinfo->ucVolIAFlags & 2) == 0) &&
+        (stTempStruct.hCineinfoWork->hSuperObjectTargeted != NULL) &&
+        (cNoDynChangeTheta == 0) &&
+        CAM_fn_cDynChangeTheta(&stTempStruct, &stTempStruct.stWantedCameraPos)) {
+        CAM_fn_vComputeMovePos(&stTempStruct);
+    }
+    p_lWantedCameraPos = (int*)&stTempStruct.stWantedCameraPos;
+    *(int*)&_p_stStruct->stRealWantedCameraPos.xX = p_lWantedCameraPos[0];
+    *(int*)&_p_stStruct->stRealWantedCameraPos.xY = p_lWantedCameraPos[1];
+    *(int*)&_p_stStruct->stRealWantedCameraPos.xZ = p_lWantedCameraPos[2];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 595–615 */
@@ -3864,7 +3895,29 @@ void CAM_fn_vRotateCameraAxis(MTH3D_tdstVector_* _p_stCameraAxis, float _xHorAng
 {
     float xNorm;
     MTH_stRotation stRotation;
-    /* TODO: decompile from asm/... */
+
+    stRotation.m_xAngle = _xHorAngle;
+    ((int*)&stRotation.m_stAxis)[0] = ((int*)_p_stRefAxisZ)[0];
+    ((int*)&stRotation.m_stAxis)[1] = ((int*)_p_stRefAxisZ)[1];
+    ((int*)&stRotation.m_stAxis)[2] = ((int*)_p_stRefAxisZ)[2];
+    MTH_p_stRotationMulVector(&stRotation, _p_stCameraAxis, _p_stCameraAxis);
+
+    stRotation.m_stAxis.xX = _p_stRefAxisZ->xZ * _p_stCameraAxis->xY - _p_stRefAxisZ->xY * _p_stCameraAxis->xZ;
+    stRotation.m_stAxis.xY = _p_stRefAxisZ->xX * _p_stCameraAxis->xZ - _p_stRefAxisZ->xZ * _p_stCameraAxis->xX;
+    stRotation.m_stAxis.xZ = _p_stRefAxisZ->xY * _p_stCameraAxis->xX - _p_stRefAxisZ->xX * _p_stCameraAxis->xY;
+
+    xNorm = __builtin_sqrtf(stRotation.m_stAxis.xX * stRotation.m_stAxis.xX +
+                            stRotation.m_stAxis.xY * stRotation.m_stAxis.xY +
+                            stRotation.m_stAxis.xZ * stRotation.m_stAxis.xZ);
+    if (xNorm != 0.0f) {
+        xNorm = 1.0f / xNorm;
+        stRotation.m_stAxis.xX *= xNorm;
+        stRotation.m_stAxis.xY *= xNorm;
+        stRotation.m_stAxis.xZ *= xNorm;
+    }
+
+    stRotation.m_xAngle = _xVerAngle;
+    MTH_p_stRotationMulVector(&stRotation, _p_stCameraAxis, _p_stCameraAxis);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 506–578 */

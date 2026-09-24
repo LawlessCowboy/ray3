@@ -36,7 +36,28 @@ MTH3D_tdstVector_ COL_g_a6_stBoxSidesNormal[6];
  */
 float INT_fn_xDistancePointToLine(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, float* p_xT, MTH3D_tdstVector_* p_stHit)
 {
-    /* TODO: decompile from asm/... */
+    if ((p_stVectAB->xX != 0.0f) || (p_stVectAB->xY != 0.0f) || (p_stVectAB->xZ != 0.0f))
+    {
+        *p_xT = ((p_stPoint->xX - p_stVertexA->xX) * p_stVectAB->xX +
+                 (p_stPoint->xY - p_stVertexA->xY) * p_stVectAB->xY +
+                 (p_stPoint->xZ - p_stVertexA->xZ) * p_stVectAB->xZ) /
+                (p_stVectAB->xX * p_stVectAB->xX +
+                 p_stVectAB->xY * p_stVectAB->xY +
+                 p_stVectAB->xZ * p_stVectAB->xZ);
+
+        p_stHit->xX = p_stVertexA->xX + *p_xT * p_stVectAB->xX;
+        p_stHit->xY = p_stVertexA->xY + *p_xT * p_stVectAB->xY;
+        p_stHit->xZ = p_stVertexA->xZ + *p_xT * p_stVectAB->xZ;
+    }
+    else
+    {
+        *p_xT = 0.0f;
+        *p_stHit = *p_stVertexA;
+    }
+
+    return __builtin_sqrt((p_stHit->xX - p_stPoint->xX) * (p_stHit->xX - p_stPoint->xX) +
+                          (p_stHit->xY - p_stPoint->xY) * (p_stHit->xY - p_stPoint->xY) +
+                          (p_stHit->xZ - p_stPoint->xZ) * (p_stHit->xZ - p_stPoint->xZ));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1826–1997 */
@@ -834,7 +855,20 @@ unsigned char INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D
 unsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
 {
     unsigned int ulOutCode;
-    /* TODO: decompile from asm/... */
+    ulOutCode = 0;
+    if (p_stPoint->xX < p_stMinPoint->xX)
+        ulOutCode |= 1;
+    else if (p_stPoint->xX > p_stMaxPoint->xX)
+        ulOutCode |= 2;
+    if (p_stPoint->xY < p_stMinPoint->xY)
+        ulOutCode |= 4;
+    else if (p_stPoint->xY > p_stMaxPoint->xY)
+        ulOutCode |= 8;
+    if (p_stPoint->xZ < p_stMinPoint->xZ)
+        ulOutCode |= 16;
+    else if (p_stPoint->xZ > p_stMaxPoint->xZ)
+        ulOutCode |= 32;
+    return ulOutCode;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 195–196 */
@@ -847,7 +881,10 @@ unsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3
  */
 unsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, float xRadius1, MTH3D_tdstVector_* p_stCenter2, float xRadius2)
 {
-    /* TODO: decompile from asm/... */
+    return ((p_stCenter1->xX - p_stCenter2->xX) * (p_stCenter1->xX - p_stCenter2->xX) +
+            (p_stCenter1->xY - p_stCenter2->xY) * (p_stCenter1->xY - p_stCenter2->xY) +
+            (p_stCenter1->xZ - p_stCenter2->xZ) * (p_stCenter1->xZ - p_stCenter2->xZ)) <=
+           ((xRadius1 + xRadius2) * (xRadius1 + xRadius2));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 139–178 */
@@ -878,7 +915,20 @@ unsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, 
 unsigned char INT_fn_bIntersectSphereWithBox(MTH3D_tdstVector_* p_stCenter, float xRadius, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
 {
     float xDist;
-    /* TODO: decompile from asm/... */
+    xDist = 0.0f;
+    if (p_stCenter->xX < p_stMinPoint->xX)
+        xDist += (p_stCenter->xX - p_stMinPoint->xX) * (p_stCenter->xX - p_stMinPoint->xX);
+    else if (p_stCenter->xX > p_stMaxPoint->xX)
+        xDist += (p_stCenter->xX - p_stMaxPoint->xX) * (p_stCenter->xX - p_stMaxPoint->xX);
+    if (p_stCenter->xY < p_stMinPoint->xY)
+        xDist += (p_stCenter->xY - p_stMinPoint->xY) * (p_stCenter->xY - p_stMinPoint->xY);
+    else if (p_stCenter->xY > p_stMaxPoint->xY)
+        xDist += (p_stCenter->xY - p_stMaxPoint->xY) * (p_stCenter->xY - p_stMaxPoint->xY);
+    if (p_stCenter->xZ < p_stMinPoint->xZ)
+        xDist += (p_stCenter->xZ - p_stMinPoint->xZ) * (p_stCenter->xZ - p_stMinPoint->xZ);
+    else if (p_stCenter->xZ > p_stMaxPoint->xZ)
+        xDist += (p_stCenter->xZ - p_stMaxPoint->xZ) * (p_stCenter->xZ - p_stMaxPoint->xZ);
+    return xDist < xRadius * xRadius;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 108–120 */
@@ -891,7 +941,12 @@ unsigned char INT_fn_bIntersectSphereWithBox(MTH3D_tdstVector_* p_stCenter, floa
  */
 unsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2)
 {
-    /* TODO: decompile from asm/... */
+    return (((p_stMinPoint1->xX > p_stMinPoint2->xX) ? p_stMinPoint1->xX : p_stMinPoint2->xX) <=
+            ((p_stMaxPoint1->xX < p_stMaxPoint2->xX) ? p_stMaxPoint1->xX : p_stMaxPoint2->xX)) &&
+           (((p_stMinPoint1->xY > p_stMinPoint2->xY) ? p_stMinPoint1->xY : p_stMinPoint2->xY) <=
+            ((p_stMaxPoint1->xY < p_stMaxPoint2->xY) ? p_stMaxPoint1->xY : p_stMaxPoint2->xY)) &&
+           (((p_stMinPoint1->xZ > p_stMinPoint2->xZ) ? p_stMinPoint1->xZ : p_stMinPoint2->xZ) <=
+            ((p_stMaxPoint1->xZ < p_stMaxPoint2->xZ) ? p_stMaxPoint1->xZ : p_stMaxPoint2->xZ));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 49–91 */

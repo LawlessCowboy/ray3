@@ -1230,8 +1230,8 @@ GEO_tdstGeometricObject_* MOR_fn_xCopyGeometricObjectForMorph(GEO_tdstGeometricO
  */
 void MOR_fn_vRemoveMorph2(HIE_tdstSuperObject_* hSuperObject)
 {
-    MOR_stMorphStruct_* mp;
     short i;
+    MOR_stMorphStruct_* mp;
     /* TODO: decompile from asm/... */
 }
 
@@ -1383,7 +1383,21 @@ unsigned char MOR_fn_bIsCharacterMorphed(HIE_tdstSuperObject_* _hActorSuperObjec
 {
     MOR_stMorphStruct_* mp;
     short i;
-    /* TODO: decompile from asm/... */
+    int lOffset;
+
+    i = 0;
+    lOffset = 0;
+    while (i < 50) {
+        mp = (MOR_stMorphStruct_ *)((char *)g_MorphTasksList + lOffset);
+        if (mp->bInUse) {
+            if (mp->hActorSuperObject == _hActorSuperObject) {
+                return 1;
+            }
+        }
+        lOffset += sizeof(MOR_stMorphStruct_);
+        i++;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1301–1332 */

@@ -81,11 +81,8 @@ ISI_tdstColor_* ISI_fn_dGetVertexRLI(void* _hISI)
 int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD)
 {
     ISI_tdstISI_* hISI;
-    int* pLightMap;
-
     hISI = (ISI_tdstISI_*)_hISI;
-    pLightMap = (int*)((char*)hISI->d_stISILOD + 8);
-    return pLightMap[(int)_xNumISILOD * 3];
+    return ((int*)((char*)hISI->d_stISILOD + 8))[(int)_xNumISILOD * 3];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 680–685 */

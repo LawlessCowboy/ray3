@@ -1441,7 +1441,14 @@ int MSWay_fn_lGetNumberWayPointInPath(tdstMSWay_* hWay)
  */
 void MSWay_fn_vSetPath(tdstMSWay_* hWay, WP_tdstGraph_* hPath, char _bIsCircular)
 {
-    /* TODO: decompile from asm/... */
+    if ((hWay != 0) && (hPath != 0)) {
+        if (hWay->m_hPath != 0) {
+            WPG_fn_vDestroy(hWay->m_hPath);
+        }
+        hWay->m_hPath = hPath;
+        hWay->m_lIndex = 0;
+        hWay->m_bIsCircular = _bIsCircular;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 311–329 */

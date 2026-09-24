@@ -12651,6 +12651,183 @@
       "status": "MISMATCH",
       "target_size": 48,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00254f50",
+      "candidate_size": 88,
+      "first_difference": 0,
+      "implementation": "unsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, float xRadius1, MTH3D_tdstVector_* p_stCenter2, float xRadius2)\n{\n    return ((p_stCenter1->xX - p_stCenter2->xX) * (p_stCenter1->xX - p_stCenter2->xX) +\n            (p_stCenter1->xY - p_stCenter2->xY) * (p_stCenter1->xY - p_stCenter2->xY) +\n            (p_stCenter1->xZ - p_stCenter2->xZ) * (p_stCenter1->xZ - p_stCenter2->xZ)) <=\n           ((xRadius1 + xRadius2) * (xRadius1 + xRadius2));\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "INT_fn_bIntersectSphereWithSphere",
+      "reason": "Natural squared-distance <= squared-radius-sum candidate is 88/84 bytes; first difference +0x0. Target loads XYZ pairs in order and uses a three-instruction mula/madda/madd chain before radius arithmetic, while MWCC schedules Y/X/radius/Z and emits an extra scalar multiply/accumulate instruction. Direct, reassociated, scalar-local, vector-local, parameter-update, optimize_for_size, and schedule-off variants did not reproduce target source shape.",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "MISMATCH",
+      "target_size": 84,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002550b0",
+      "candidate_size": 292,
+      "first_difference": 2,
+      "implementation": "unsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2)\n{\n    return (((p_stMinPoint1->xX > p_stMinPoint2->xX) ? p_stMinPoint1->xX : p_stMinPoint2->xX) <=\n            ((p_stMaxPoint1->xX < p_stMaxPoint2->xX) ? p_stMaxPoint1->xX : p_stMaxPoint2->xX)) &&\n           (((p_stMinPoint1->xY > p_stMinPoint2->xY) ? p_stMinPoint1->xY : p_stMinPoint2->xY) <=\n            ((p_stMaxPoint1->xY < p_stMaxPoint2->xY) ? p_stMaxPoint1->xY : p_stMaxPoint2->xY)) &&\n           (((p_stMinPoint1->xZ > p_stMinPoint2->xZ) ? p_stMinPoint1->xZ : p_stMinPoint2->xZ) <=\n            ((p_stMaxPoint1->xZ < p_stMaxPoint2->xZ) ? p_stMaxPoint1->xZ : p_stMaxPoint2->xZ));\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "INT_fn_bIntersectBoxWithBox",
+      "reason": "Natural per-axis AABB overlap logic compiles to 292/172 bytes; first differing word begins at +0x0 (reported byte +0x2). Target uses branchless PS2 max.s/min.s for each interval, while conditional-operator min/max lowers to branch sequences. Existing controlled builtin probes in the manifest report __min/__max and __fmin/__fmax lower to calls, indicating missing original macro/intrinsic compiler context.",
+      "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "MISMATCH",
+      "target_size": 172,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002525e0",
+      "candidate_size": 340,
+      "first_difference": 0,
+      "implementation": "float INT_fn_xDistancePointToLine(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, float* p_xT, MTH3D_tdstVector_* p_stHit)\n{\n    if ((p_stVectAB->xX != 0.0f) || (p_stVectAB->xY != 0.0f) || (p_stVectAB->xZ != 0.0f))\n    {\n        *p_xT = ((p_stPoint->xX - p_stVertexA->xX) * p_stVectAB->xX +\n                 (p_stPoint->xY - p_stVertexA->xY) * p_stVectAB->xY +\n                 (p_stPoint->xZ - p_stVertexA->xZ) * p_stVectAB->xZ) /\n                (p_stVectAB->xX * p_stVectAB->xX +\n                 p_stVectAB->xY * p_stVectAB->xY +\n                 p_stVectAB->xZ * p_stVectAB->xZ);\n\n        p_stHit->xX = p_stVertexA->xX + *p_xT * p_stVectAB->xX;\n        p_stHit->xY = p_stVertexA->xY + *p_xT * p_stVectAB->xY;\n        p_stHit->xZ = p_stVertexA->xZ + *p_xT * p_stVectAB->xZ;\n    }\n    else\n    {\n        *p_xT = 0.0f;\n        *p_stHit = *p_stVertexA;\n    }\n\n    return __builtin_sqrt((p_stHit->xX - p_stPoint->xX) * (p_stHit->xX - p_stPoint->xX) +\n                          (p_stHit->xY - p_stPoint->xY) * (p_stHit->xY - p_stPoint->xY) +\n                          (p_stHit->xZ - p_stPoint->xZ) * (p_stHit->xZ - p_stPoint->xZ));\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "INT_fn_xDistancePointToLine",
+      "reason": "Natural projection/zero-vector fallback/distance candidate compiles to 340/312 bytes; first difference +0x0 because unresolved __builtin_sqrt forces a stack frame and helper calls. The unresolved relocation is +0x138/type4/__builtin_sqrt; target ends with inline sqrt.s at +0x124. Baseline compiler also fails the standalone PS2SQRTF __builtin_sqrt scaffold, so this is missing compiler-specific intrinsic context rather than guessed opcodes.",
+      "size": 312,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "MISMATCH",
+      "target_size": 312,
+      "unresolved_relocations": [
+        {
+          "offset": 312,
+          "symbol": "__builtin_sqrt",
+          "type": 4
+        }
+      ]
+    },
+    {
+      "address": "0x00311560",
+      "candidate_size": 224,
+      "first_difference": 0,
+      "implementation": "void MEC_fn_vComputeInertiaTranslation(DNM_stDynamics* p_stDynamic, float xDT)\n{\n    unsigned char bSlide;\n    MTH3D_tdstVector_ stVector;\n\n    bSlide = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamPrority != 1.0f;\n    stVector.xX = xDT * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xX;\n    stVector.xY = xDT * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xY;\n    stVector.xZ = xDT * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xZ;\n    if (bSlide) {\n        stVector.xX *= p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide;\n        stVector.xY *= p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide;\n        stVector.xZ *= p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide;\n    }\n    stVector.xX += p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xX;\n    stVector.xY += p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xY;\n    stVector.xZ += p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xZ;\n    p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation = stVector;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MEC_fn_vComputeInertiaTranslation",
+      "reason": "exact 224-byte size and correct data offsets; first diff +0x0, slide comparison/common-factor scheduling and final aggregate copy form remain",
+      "size": 224,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 224,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00313ef0",
+      "candidate_size": 100,
+      "first_difference": 20,
+      "implementation": "unsigned char MEC_fn_bCanCrashActor(DNM_stMecObstacle* p_stCollideObstacle)\n{\n    HIE_tdstSuperObject_* hSupObj;\n\n    hSupObj = p_stCollideObstacle->mp_stSupObj;\n    if (hSupObj == NULL)\n        return 0;\n    if (hSupObj->ulTypeOfLinkedObject != 2) {\n    repeat:\n        hSupObj = hSupObj->hFatherDyn;\n        if (hSupObj == NULL) {\n        } else if (hSupObj->ulTypeOfLinkedObject == 2) {\n        } else {\n            goto repeat;\n        }\n    }\n    return ((fn_ulStandardGameGetCustomBitsSO(hSupObj) & 0x40) ^ 0x40) != 0;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MEC_fn_bCanCrashActor",
+      "reason": "correct custom-bit call/relocation; first diff +0x14, compiler folds hierarchy null/type loop to 100 bytes versus target 112-byte CFG",
+      "size": 112,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 112,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00311160",
+      "candidate_size": 140,
+      "first_difference": 4,
+      "implementation": "void MEC_fn_vRepeatMove(DNM_stDynamics* p_stDynamic)\n{\n    MTH3D_tdstVector_ stVector;\n    MAT_tdstTransformation_* hCurrentMatrix;\n    MAT_tdstTransformation_* hPreviousMatrix;\n\n    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;\n    hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;\n    stVector.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX - hPreviousMatrix->stTransformMatrix.stCol_3.xX;\n    stVector.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY - hPreviousMatrix->stTransformMatrix.stCol_3.xY;\n    stVector.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hPreviousMatrix->stTransformMatrix.stCol_3.xZ;\n    if (hPreviousMatrix->eType == MAT_eTransform_Identity)\n        hPreviousMatrix->eType = MAT_eTransform_Translation;\n    *(int*)((char*)hPreviousMatrix + 0x40) = *(int*)((char*)hCurrentMatrix + 0x40);\n    *(int*)((char*)hPreviousMatrix + 0x44) = *(int*)((char*)hCurrentMatrix + 0x44);\n    *(int*)((char*)hPreviousMatrix + 0x48) = *(int*)((char*)hCurrentMatrix + 0x48);\n    hPreviousMatrix->stTransformMatrix.stCol_3.xW = 1.0f;\n    MAT_fn_vTranslate(hCurrentMatrix, &stVector);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MEC_fn_vRepeatMove",
+      "reason": "correct matrix offsets, translation arithmetic, and MAT_fn_vTranslate relocation; first diff +0x4, setup/copy scheduling yields 140 versus 144 bytes",
+      "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 144,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x003111f0",
+      "candidate_size": 200,
+      "first_difference": 10,
+      "implementation": "void MEC_fn_vNormalMode(DNM_stDynamics* p_stDynamic, int lMode)\n{\n    MTH3D_tdstVector_ stVector;\n    MTH3D_tdstVector_* p_stSpeed;\n    MAT_tdstTransformation_* hCurrentMatrix;\n    MAT_tdstTransformation_* hPreviousMatrix;\n\n    p_stSpeed = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed;\n    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;\n    hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;\n    stVector.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xX - hPreviousMatrix->stTransformMatrix.stCol_3.xX);\n    stVector.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xY - hPreviousMatrix->stTransformMatrix.stCol_3.xY);\n    stVector.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hPreviousMatrix->stTransformMatrix.stCol_3.xZ);\n    if (hPreviousMatrix->eType == MAT_eTransform_Identity)\n        hPreviousMatrix->eType = MAT_eTransform_Translation;\n    *(MTH3D_tdstVector_*)((char*)hPreviousMatrix + 0x40) = stVector;\n    hPreviousMatrix->stTransformMatrix.stCol_3.xW = 1.0f;\n    p_stSpeed->xX *= (float)lMode;\n    p_stSpeed->xY *= (float)lMode;\n    p_stSpeed->xZ *= (float)lMode;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MEC_fn_vNormalMode",
+      "reason": "exact 200-byte size, offsets and control flow; first differing word contains +0x8 register allocation/scheduling, aggregate copy uses FP rather than target integer loads",
+      "size": 200,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 200,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x003112c0",
+      "candidate_size": 204,
+      "first_difference": 9,
+      "implementation": "void MEC_fn_vSlowMode(DNM_stDynamics* p_stDynamic, int lMode)\n{\n    float xInvMode;\n    MTH3D_tdstVector_ stVector;\n    MTH3D_tdstVector_* p_stSpeed;\n    MAT_tdstTransformation_* hCurrentMatrix;\n    MAT_tdstTransformation_* hPreviousMatrix;\n\n    xInvMode = 1.0f / (float)lMode;\n    p_stSpeed = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed;\n    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;\n    hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;\n    stVector.xX = hPreviousMatrix->stTransformMatrix.stCol_3.xX + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xX - hPreviousMatrix->stTransformMatrix.stCol_3.xX);\n    stVector.xY = hPreviousMatrix->stTransformMatrix.stCol_3.xY + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xY - hPreviousMatrix->stTransformMatrix.stCol_3.xY);\n    stVector.xZ = hPreviousMatrix->stTransformMatrix.stCol_3.xZ + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hPreviousMatrix->stTransformMatrix.stCol_3.xZ);\n    if (hCurrentMatrix->eType == MAT_eTransform_Identity)\n        hCurrentMatrix->eType = MAT_eTransform_Translation;\n    *(MTH3D_tdstVector_*)((char*)hCurrentMatrix + 0x40) = stVector;\n    hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;\n    p_stSpeed->xX *= xInvMode;\n    p_stSpeed->xY *= xInvMode;\n    p_stSpeed->xZ *= xInvMode;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MEC_fn_vSlowMode",
+      "reason": "exact 204-byte size, offsets and control flow; first differing word contains +0x8 register allocation/scheduling, aggregate copy uses FP rather than target integer loads",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 204,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00313ef0",
+      "candidate_size": 100,
+      "first_difference": 20,
+      "implementation": "unsigned char MEC_fn_bCanCrashActor(DNM_stMecObstacle* p_stCollideObstacle)\n{\n    HIE_tdstSuperObject_* hSupObj;\n\n    hSupObj = p_stCollideObstacle->mp_stSupObj;\n    if (hSupObj == NULL)\n        return 0;\n    if (hSupObj->ulTypeOfLinkedObject != 2) {\n        do {\n            hSupObj = hSupObj->hFatherDyn;\n            if (hSupObj == NULL)\n                break;\n        } while (hSupObj->ulTypeOfLinkedObject != 2);\n    }\n    return ((fn_ulStandardGameGetCustomBitsSO(hSupObj) & 0x40) ^ 0x40) != 0;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MEC_fn_bCanCrashActor",
+      "reason": "natural 100-byte hierarchy walk with correct custom-bit relocation; first diff +0x14, target retains 12 bytes of null-exit branch structure folded by compiler",
+      "size": 112,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 112,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00315ef0",
+      "candidate_size": 100,
+      "first_difference": 5,
+      "implementation": "unsigned char MOR_fn_bIsCharacterMorphed(HIE_tdstSuperObject_* _hActorSuperObject)\n{\n    MOR_stMorphStruct_* mp;\n    short i;\n    int lOffset;\n\n    i = 0;\n    lOffset = 0;\n    while (i < 50) {\n        mp = (MOR_stMorphStruct_ *)((char *)g_MorphTasksList + lOffset);\n        if (mp->bInUse) {\n            if (mp->hActorSuperObject == _hActorSuperObject) {\n                return 1;\n            }\n        }\n        lOffset += sizeof(MOR_stMorphStruct_);\n        i++;\n    }\n    return 0;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-terra",
+      "name": "MOR_fn_bIsCharacterMorphed",
+      "reason": "m2c-derived explicit byte-stride loop matches target control flow and accesses but is 100 vs 104 bytes: compiler allocates index in a2 and mp in a1, target uses index a1 and mp a2, with target retaining an extra loop-header nop.",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MISMATCH",
+      "target_size": 104,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002052b0",
+      "candidate_size": 356,
+      "first_difference": 0,
+      "implementation": "void CAM_fn_vRotateCameraAxis(MTH3D_tdstVector_* _p_stCameraAxis, float _xHorAngle, float _xVerAngle, MTH3D_tdstVector_* _p_stRefAxisZ)\n{\n    float xNorm;\n    MTH_stRotation stRotation;\n\n    stRotation.m_xAngle = _xHorAngle;\n    ((int*)&stRotation.m_stAxis)[0] = ((int*)_p_stRefAxisZ)[0];\n    ((int*)&stRotation.m_stAxis)[1] = ((int*)_p_stRefAxisZ)[1];\n    ((int*)&stRotation.m_stAxis)[2] = ((int*)_p_stRefAxisZ)[2];\n    MTH_p_stRotationMulVector(&stRotation, _p_stCameraAxis, _p_stCameraAxis);\n\n    stRotation.m_stAxis.xX = _p_stRefAxisZ->xZ * _p_stCameraAxis->xY - _p_stRefAxisZ->xY * _p_stCameraAxis->xZ;\n    stRotation.m_stAxis.xY = _p_stRefAxisZ->xX * _p_stCameraAxis->xZ - _p_stRefAxisZ->xZ * _p_stCameraAxis->xX;\n    stRotation.m_stAxis.xZ = _p_stRefAxisZ->xY * _p_stCameraAxis->xX - _p_stRefAxisZ->xX * _p_stCameraAxis->xY;\n\n    xNorm = __builtin_sqrtf(stRotation.m_stAxis.xX * stRotation.m_stAxis.xX +\n                            stRotation.m_stAxis.xY * stRotation.m_stAxis.xY +\n                            stRotation.m_stAxis.xZ * stRotation.m_stAxis.xZ);\n    if (xNorm != 0.0f) {\n        xNorm = 1.0f / xNorm;\n        stRotation.m_stAxis.xX *= xNorm;\n        stRotation.m_stAxis.xY *= xNorm;\n        stRotation.m_stAxis.xZ *= xNorm;\n    }\n\n    stRotation.m_xAngle = _xVerAngle;\n    MTH_p_stRotationMulVector(&stRotation, _p_stCameraAxis, _p_stCameraAxis);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "CAM_fn_vRotateCameraAxis",
+      "reason": "Target uses inline sqrt.s at +0xc4, but baseline treats __builtin_sqrtf as unresolved call at candidate +0xd8 (same known intrinsic-context gap as PS2SQRTF); candidate is 356/320 and extra stack/register saves begin at +0x0. Wordwise initial axis copy and two rotation-call relocations are correct.",
+      "size": 320,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MISMATCH",
+      "target_size": 320,
+      "unresolved_relocations": [
+        {
+          "offset": 216,
+          "symbol": "__builtin_sqrtf",
+          "type": 4
+        }
+      ]
     }
   ],
   "data": {},
@@ -13709,6 +13886,22 @@
       "name": "fn_szGetStringFromTextOrStringParam",
       "size": 64,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AITools.c",
+      "status": "MATCH"
+    },
+    "0x00204a50": {
+      "address": "0x00204a50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "CAM_fn_vComputeMovePosWithDynTheta",
+      "size": 108,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MATCH"
+    },
+    "0x00205180": {
+      "address": "0x00205180",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "CAM_fn_vComputeRealWantedPos",
+      "size": 296,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
       "status": "MATCH"
     },
     "0x002062b0": {
@@ -15972,6 +16165,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "MSWay_fn_lGetNumberWayPointInPath",
       "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSWay.c",
+      "status": "MATCH"
+    },
+    "0x00271c10": {
+      "address": "0x00271c10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MSWay_fn_vSetPath",
+      "size": 100,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSWay.c",
       "status": "MATCH"
     },

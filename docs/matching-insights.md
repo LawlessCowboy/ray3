@@ -69,3 +69,7 @@ compiler option, construct, and outcome.
 - [compiler] SDLRefs printf probe: under MWCC PS2 3.0 O3, a C++ member method calling extern "C" printf emits a 0x20-byte stack-frame jal even with void/non-variadic declarations; target SDLRefs methods are 12-byte lui/j tail thunks. Recovered target literals are @820="Dummy interpol reference called !!\\n" and @823="Dummy reference called !!\\n". This points to a project macro/special declaration or compiler-context difference, not unknown string contents. (2026-09-14)
 
 - [compiler] MWCC PS2 3.0 preserves independent byte-offset and element-index induction variables in a variable-bound handle scan; accessing the handle through (char*)base + Offset and incrementing Offset before i reproduces the target's addiu 0x10/addiu 1 loop order. (2026-09-15)
+
+- [compiler] MWCC PS2 3.0 baseline does not recognize __builtin_sqrt in recovered C: both PS2SQRTF and INT_fn_xDistancePointToLine lower it through fptodp plus an unresolved __builtin_sqrt call, while retail targets use inline sqrt.s. Exact matches need the original compiler-specific intrinsic/macro context. (2026-09-23)
+
+- [source-layout] MECTools.c DNM_stDynamicsBaseBlock needs extractor padding +0x78..0x7f before m_stPreviousMatrix and +0x16c..0x16f before the advanced block; target accesses then align at previous=0x80, current=0xe0, advanced=0x170, while all three recorded MECTools matches remain MATCH. (2026-09-23)
