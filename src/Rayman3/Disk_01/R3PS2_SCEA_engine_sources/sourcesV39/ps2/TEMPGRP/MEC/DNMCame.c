@@ -4,6 +4,48 @@
 
 #include <stddef.h>
 
+/* Recovered PS2 MTH scalar helpers used by the original vector macros. */
+#define MTH_ABS_TO(_result, _value) \
+    asm { abs.s _result, _value }
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_SQRT_TO_SYNC(_result, _value) \
+    asm { sqrt.s _result, _value }          \
+    asm { nop }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+#define MTH_CROSS_TO(_result, _a, _b, _c, _d) \
+    asm { mula.s _a, _b }                       \
+    asm { msub.s _result, _c, _d }
+#define MTH_CROSS_COMPONENT_TO(_destination, _leftA, _rightB, _leftC, _rightD) \
+    do {                                                                        \
+        float _mthLeftA;                                                        \
+        float _mthRightB;                                                       \
+        float _mthLeftC;                                                        \
+        float _mthRightD;                                                       \
+        float _mthResult;                                                       \
+        _mthRightB = (_rightB);                                                 \
+        _mthLeftA = (_leftA);                                                   \
+        _mthRightD = (_rightD);                                                 \
+        _mthLeftC = (_leftC);                                                   \
+        MTH_CROSS_TO(_mthResult, _mthLeftA, _mthRightB, _mthLeftC, _mthRightD); \
+        (_destination) = _mthResult;                                            \
+    } while (0)
+#define MTH_EPSILON_TO(_result)                 \
+    do {                                        \
+        unsigned long _mthBits;                 \
+        asm { lui _mthBits, 0x3A83 }            \
+        asm { ori _mthBits, _mthBits, 0x126F }  \
+        asm { mtc1 _mthBits, _result }          \
+    } while (0)
+#define MTH_FLOAT_BITS_TO(_result, _bits)       \
+    do {                                        \
+        unsigned long _mthBits = (_bits);       \
+        asm { mtc1 _mthBits, _result }          \
+    } while (0)
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -148,6 +190,11 @@ struct MTH3D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
 };
+
+typedef union CAM_tduVectorCopy_ {
+    MTH3D_tdstVector_ stVector;
+    unsigned int auWords[3];
+} CAM_tduVectorCopy_;
 
 struct SECT_tdstListOfSOSectorsInGraphicInteraction_ {
     short wLevelOfDetail; /* +0x0 */
@@ -1209,11 +1256,151 @@ DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics* _p_stDynamics, H
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vComputeCameraSystemAxis(HIE_tdstSuperObject_* _h_SupObj, MTH3D_tdstVector_* _p_stNewPosition, MTH3D_tdstVector_* _p_stNewTarget, MTH3D_tdstVector_* _p_stAxisX, MTH3D_tdstVector_* _p_stAxisY, MTH3D_tdstVector_* _p_stAxisZ)
+void CAM_fn_vComputeCameraSystemAxis(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, MTH3D_tdstVector_* _p_stNewPosition, MTH3D_tdstVector_* _p_stNewTarget, MTH3D_tdstVector_* _p_stAxisX, MTH3D_tdstVector_* _p_stAxisY, MTH3D_tdstVector_* _p_stAxisZ)
 {
-    float xNorm;
-    MTH3D_tdstVector_ stYVector;
-    /* TODO: decompile from asm/... */
+    float xYValue;
+    float xZValue;
+    float xAbsoluteValue;
+    float xValue;
+    float xSquaredNorm;
+    float xEpsilon;
+    float xLimit;
+    float xFinalZ;
+    int var_v1;
+    int temp_v1;
+    int var_v0;
+    int var_v1_2;
+    CAM_tduVectorCopy_ stYVector;
+    MTH3D_tdstVector_* p_stAxisY;
+
+    MTH_EPSILON_TO(xEpsilon);
+    _p_stAxisY->xX = _p_stNewPosition->xX - _p_stNewTarget->xX;
+    _p_stAxisY->xY = _p_stNewPosition->xY - _p_stNewTarget->xY;
+    _p_stAxisY->xZ = _p_stNewPosition->xZ - _p_stNewTarget->xZ;
+
+    stYVector.auWords[0] = ((CAM_tduVectorCopy_*)_p_stAxisY)->auWords[0];
+    stYVector.auWords[1] = ((CAM_tduVectorCopy_*)_p_stAxisY)->auWords[1];
+    stYVector.auWords[2] = ((CAM_tduVectorCopy_*)_p_stAxisY)->auWords[2];
+    xValue = _p_stAxisY->xX;
+    p_stAxisY = _p_stAxisY;
+    MTH_ABS_TO(xAbsoluteValue, xValue);
+    var_v1 = 1;
+    if (!(xAbsoluteValue < xEpsilon)) {
+        var_v1 = 0;
+    }
+    if (var_v1 != 0) {
+        float xLocalEpsilon;
+        var_v1 = 1;
+        xAbsoluteValue = p_stAxisY->xY;
+        MTH_EPSILON_TO(xLocalEpsilon);
+        MTH_ABS_TO(xAbsoluteValue, xAbsoluteValue);
+        if (!(xAbsoluteValue < xLocalEpsilon)) {
+            var_v1 = 0;
+        }
+    }
+    temp_v1 = var_v1 != 0;
+    var_v0 = temp_v1 & 0xFF;
+    if (temp_v1 != 0) {
+        float xLocalEpsilon;
+        var_v1_2 = 1;
+        xAbsoluteValue = p_stAxisY->xZ;
+        MTH_EPSILON_TO(xLocalEpsilon);
+        MTH_ABS_TO(xAbsoluteValue, xAbsoluteValue);
+        if (!(xAbsoluteValue < xLocalEpsilon)) {
+            var_v1_2 = 0;
+        }
+        var_v0 = var_v1_2 & 0xFF;
+    }
+    if (var_v0 == 0) {
+        xYValue = p_stAxisY->xY;
+        xZValue = p_stAxisY->xZ;
+        MTH_SQR3_TO(xSquaredNorm, xValue, xYValue, xZValue);
+        MTH_SQRT_TO_SYNC(xZValue, xSquaredNorm);
+        if (xZValue != 0.0f) {
+            xZValue = 1.0f / xZValue;
+            p_stAxisY->xX = xZValue * xValue;
+            p_stAxisY->xY = xZValue * p_stAxisY->xY;
+            p_stAxisY->xZ = xZValue * p_stAxisY->xZ;
+        }
+    }
+
+    MTH_fn_vVectorPlaneProjection(&stYVector.stVector, &stYVector.stVector, _p_stAxisZ, _p_stAxisZ);
+    {
+        float xX = stYVector.stVector.xX;
+        float xY = stYVector.stVector.xY;
+        float xZ = stYVector.stVector.xZ;
+        unsigned long ulLimitBits;
+        MTH_SQR3_TO(xSquaredNorm, xX, xY, xZ);
+        asm { lui ulLimitBits, 0x3E4C }
+        MTH_SQRT_TO(xY, xSquaredNorm);
+        asm { ori ulLimitBits, ulLimitBits, 0xCCCD }
+        asm { mtc1 ulLimitBits, xLimit }
+        if (xY < xLimit) {
+            MAT_fn_vGetRotationVectorBaseK(_h_SupObj->hGlobalMatrix, _p_stAxisZ);
+        }
+    }
+
+    MTH_CROSS_COMPONENT_TO(_p_stAxisX->xX, p_stAxisY->xY, _p_stAxisZ->xZ,
+                          p_stAxisY->xZ, _p_stAxisZ->xY);
+    MTH_CROSS_COMPONENT_TO(_p_stAxisX->xY, p_stAxisY->xZ, _p_stAxisZ->xX,
+                          p_stAxisY->xX, _p_stAxisZ->xZ);
+    MTH_CROSS_COMPONENT_TO(_p_stAxisX->xZ, p_stAxisY->xX, _p_stAxisZ->xY,
+                          p_stAxisY->xY, _p_stAxisZ->xX);
+
+    if ((_p_stAxisX->xX == 0.0f) && (_p_stAxisX->xY == 0.0f) && (_p_stAxisX->xZ == 0.0f)) {
+        MAT_fn_vGetRotationVectorBaseK(_h_SupObj->hGlobalMatrix, _p_stAxisZ);
+        MTH_CROSS_COMPONENT_TO(_p_stAxisX->xX, p_stAxisY->xY, _p_stAxisZ->xZ,
+                              p_stAxisY->xZ, _p_stAxisZ->xY);
+        MTH_CROSS_COMPONENT_TO(_p_stAxisX->xY, p_stAxisY->xZ, _p_stAxisZ->xX,
+                              p_stAxisY->xX, _p_stAxisZ->xZ);
+        MTH_CROSS_COMPONENT_TO(_p_stAxisX->xZ, p_stAxisY->xX, _p_stAxisZ->xY,
+                              p_stAxisY->xY, _p_stAxisZ->xX);
+    }
+
+    {
+        float xY = _p_stAxisX->xY;
+        float xZ = _p_stAxisX->xZ;
+        float xX = _p_stAxisX->xX;
+        MTH_SQR3_TO(xSquaredNorm, xX, xY, xZ);
+        MTH_SQRT_TO_SYNC(xZ, xSquaredNorm);
+        if (xZ != 0.0f) {
+            xZ = 1.0f / xZ;
+            _p_stAxisX->xX = xZ * xX;
+            _p_stAxisX->xY = xZ * _p_stAxisX->xY;
+            _p_stAxisX->xZ = xZ * _p_stAxisX->xZ;
+        }
+    }
+
+    MTH_CROSS_COMPONENT_TO(_p_stAxisZ->xX, _p_stAxisX->xY, p_stAxisY->xZ,
+                          _p_stAxisX->xZ, p_stAxisY->xY);
+    MTH_CROSS_COMPONENT_TO(_p_stAxisZ->xY, _p_stAxisX->xZ, p_stAxisY->xX,
+                          _p_stAxisX->xX, p_stAxisY->xZ);
+    {
+        float xLeftA;
+        float xRightB;
+        float xLeftC;
+        float xRightD;
+        xRightB = p_stAxisY->xY;
+        xLeftA = _p_stAxisX->xX;
+        xRightD = p_stAxisY->xX;
+        xLeftC = _p_stAxisX->xY;
+        MTH_CROSS_TO(xFinalZ, xLeftA, xRightB, xLeftC, xRightD);
+        _p_stAxisZ->xZ = xFinalZ;
+    }
+
+    {
+        float xY = _p_stAxisZ->xY;
+        float xZ = xFinalZ;
+        float xX = _p_stAxisZ->xX;
+        MTH_SQR3_TO(xSquaredNorm, xX, xY, xZ);
+        MTH_SQRT_TO_SYNC(xZ, xSquaredNorm);
+        if (xZ != 0.0f) {
+            xZ = 1.0f / xZ;
+            _p_stAxisZ->xX = xZ * xX;
+            _p_stAxisZ->xY = xZ * _p_stAxisZ->xY;
+            _p_stAxisZ->xZ = xZ * _p_stAxisZ->xZ;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 829–1209 */

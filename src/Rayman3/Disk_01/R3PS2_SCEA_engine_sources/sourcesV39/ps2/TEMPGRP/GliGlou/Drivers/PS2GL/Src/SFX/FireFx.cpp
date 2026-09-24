@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+#pragma exceptions off
+
 typedef int anon_0;
 typedef int anon_1;
 
@@ -1061,6 +1063,7 @@ struct tdstStandardGame_ {
 
 struct C_FxList {
     tdstBaseFxListElement_* pFirst; /* +0x0 */
+    void DeleteAll(void);
 };
 
 struct tdstLipsSynchValue_ {
@@ -1326,7 +1329,7 @@ void FireFx_vAddObjectToDisplay(GEO_tdstGeometricObject_* pObj)
  */
 void FireFx_vDesinit(void)
 {
-    /* TODO: decompile from asm/... */
+    FireFx_g_List.DeleteAll();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 317–339 */

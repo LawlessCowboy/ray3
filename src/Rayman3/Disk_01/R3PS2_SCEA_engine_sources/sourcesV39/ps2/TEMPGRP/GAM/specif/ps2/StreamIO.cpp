@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+#pragma exceptions off
+
 extern "C" unsigned int fs_uiGetSize__Q24usnd11CPS2FileMgrFUi(unsigned int);
 extern "C" unsigned int fs_uiRead__Q24usnd11CPS2FileMgrFUiUiUiUiUiPFPv_vPv(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, void (*)(void), void*);
 extern "C" unsigned int fs_bSync__Q24usnd11CPS2FileMgrFUib(unsigned int, unsigned int);

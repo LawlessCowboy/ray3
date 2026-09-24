@@ -3378,17 +3378,22 @@ void fn_vDecompressTransform(MAT_tdstTransformation_* hTransform, tdstDemoCompre
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimize_for_size off
 CINE_tdstCine_* CINE_fn_hGetCineAtIndex(int iPos)
 {
     int iIndex;
     CINE_tdstCine_* hCine;
     hCine = g_stEngineStructure.stCineManager->hCineList.hFirstElementDyn;
     iIndex = 0;
-    for (; iIndex < iPos; iIndex++) {
-        hCine = hCine->hNextBrotherDyn;
+    if (0 < iPos) {
+        do {
+            hCine = hCine->hNextBrotherDyn;
+            iIndex++;
+        } while (iIndex < iPos);
     }
     return hCine;
 }
+#pragma optimize_for_size reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 677–782 */
 /* addr: 0x00287930  size: 796 bytes */

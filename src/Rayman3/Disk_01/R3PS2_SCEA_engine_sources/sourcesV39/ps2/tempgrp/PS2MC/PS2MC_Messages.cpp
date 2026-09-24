@@ -1550,6 +1550,7 @@ void PS2MC_SetRequiredDataSizeForMessages(unsigned int _Size)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma exceptions off
 unsigned int PS2MC_GetCurrentMessageAnswer(void)
 {
     return PS2MC_g_MessageHandler.GetAnswer();
@@ -1566,6 +1567,7 @@ void PS2MC_DisplayCurrentMessage(void)
 {
     PS2MC_g_MessageHandler.Display();
 }
+#pragma exceptions reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3726–3726 */
 /* addr: 0x00331ea0  size: 120 bytes */

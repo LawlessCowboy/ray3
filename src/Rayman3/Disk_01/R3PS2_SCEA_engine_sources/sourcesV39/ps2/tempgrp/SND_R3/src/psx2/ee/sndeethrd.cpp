@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+#pragma exceptions off
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _SHiResTime _SHiResTime;
 typedef struct _usnd_STimerStruct _usnd_STimerStruct;

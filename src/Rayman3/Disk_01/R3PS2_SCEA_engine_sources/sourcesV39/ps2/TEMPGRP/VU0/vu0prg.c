@@ -4,11 +4,13 @@
 
 #include <stddef.h>
 
-static unsigned int VU0_gs_LastMPRGLoaded;
+extern unsigned int VU0_gs_LastMPRGLoaded __attribute__((section(".data")));
 static unsigned int gs_uiPRGADRESS[2];
 int VU0_g_keepit1;
-unsigned int CollideVu0Microcode;
-unsigned int PlayAnimMPG;
+extern unsigned int CollideVu0Microcode[];
+extern unsigned int PlayAnimMPG[];
+
+#pragma optimization_level 1
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VU0\vu0prg.c lines 115–116 */
 /* addr: 0x0013b7f0  size: 96 bytes */
@@ -20,7 +22,14 @@ unsigned int PlayAnimMPG;
  */
 void VU0_fn_vLoadPrgCollision(void)
 {
-    return;
+    if (VU0_gs_LastMPRGLoaded != (unsigned int)&CollideVu0Microcode) {
+        VU0_gs_LastMPRGLoaded = (unsigned int)&CollideVu0Microcode;
+        *(volatile unsigned int*)0x10008020 = 0;
+        *(volatile unsigned int*)0x10008030 =
+            (unsigned int)&CollideVu0Microcode;
+        *(volatile unsigned int*)0x1000E010 = 1;
+        *(volatile unsigned int*)0x10008000 = 0x145;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VU0\vu0prg.c lines 107–108 */
@@ -33,8 +42,16 @@ void VU0_fn_vLoadPrgCollision(void)
  */
 void VU0_fn_vLoadPrgPlayAnim(void)
 {
-    return;
+    if (VU0_gs_LastMPRGLoaded != (unsigned int)&PlayAnimMPG) {
+        VU0_gs_LastMPRGLoaded = (unsigned int)&PlayAnimMPG;
+        *(volatile unsigned int*)0x10008020 = 0;
+        *(volatile unsigned int*)0x10008030 = (unsigned int)&PlayAnimMPG;
+        *(volatile unsigned int*)0x1000E010 = 1;
+        *(volatile unsigned int*)0x10008000 = 0x145;
+    }
 }
+
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VU0\vu0prg.c lines 60–77 */
 /* addr: 0x0013b8b0  size: 144 bytes */

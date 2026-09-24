@@ -5,7 +5,25 @@
 #include <stddef.h>
 
 /* Recovered from the original PS2 MTH floating-point helper convention. */
-#define MTH_SQRT_IN_PLACE(_value) asm { sqrt.s _value, _value }
+#define MTH_SQRT_IN_PLACE(_value) \
+    asm { sqrt.s _value, _value } \
+    asm { nop }
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }  \
+    asm { nop }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                       \
+    asm { madda.s _y, _y }                      \
+    asm { madd.s _result, _z, _z }
+#define MTH_VECTOR_NORM_TO(_result, _vector)           \
+    do {                                                   \
+        float _mthX = (_vector).xX;                        \
+        float _mthY = (_vector).xY;                        \
+        float _mthZ = (_vector).xZ;                        \
+        float _mthSquared;                                 \
+        MTH_SQR3_TO(_mthSquared, _mthX, _mthY, _mthZ);    \
+        MTH_SQRT_TO(_result, _mthSquared);                 \
+    } while (0)
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;
@@ -3574,20 +3592,29 @@ unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
     {
         if (*(char *)pcs->abExternDsgVarBoolean[3])
         {
-            xNorm = (pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX) *
-                    (pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX) +
-                    (pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY) *
-                    (pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY) +
-                    (pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ) *
-                    (pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ);
-            MTH_SQRT_IN_PLACE(xNorm);
-            if (xNorm < 1.0f)
+            float xDistanceX;
+            float xDistanceY;
+            float xDistanceZ;
+            float xDistanceSquared;
+            float xDistance;
+
+            xDistanceX = pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX;
+            xDistanceY = pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY;
+            xDistanceZ = pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ;
+            MTH_SQR3_TO(xDistanceSquared, xDistanceX, xDistanceY, xDistanceZ);
+            MTH_SQRT_TO(xDistance, xDistanceSquared);
+            if (xDistance < 1.0f)
             {
+                tdstCineinfo_* hLocalCineInfo;
+                HIE_tdstSuperObject_* pLocalTargetActor;
+
                 CAM_fn_vInitCompleteCineinfo(hCineInfo);
-                hCineInfo->hCurrent->hSuperObjectTargeted = pcs->pTargetActor;
-                hCineInfo->hVisibility->hSuperObjectTargeted = pcs->pTargetActor;
-                hCineInfo->hWork->hSuperObjectTargeted = pcs->pTargetActor;
-                CAM_fn_vUpdateTargetPosition(hCineInfo);
+                hLocalCineInfo = hCineInfo;
+                pLocalTargetActor = pcs->pTargetActor;
+                hLocalCineInfo->hCurrent->hSuperObjectTargeted = pLocalTargetActor;
+                hLocalCineInfo->hVisibility->hSuperObjectTargeted = pLocalTargetActor;
+                hLocalCineInfo->hWork->hSuperObjectTargeted = pLocalTargetActor;
+                CAM_fn_vUpdateTargetPosition(hLocalCineInfo);
                 switch (pcs->iMode)
                 {
                 case 2:
@@ -3601,9 +3628,10 @@ unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
                     break;
                 }
                 fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
-                hCineInfo->stForceRefAxisY = pcs->vRefAxis;
-                hCineInfo->stForceRefAxisZ = vVectorZ;
-                CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
+                hLocalCineInfo = hCineInfo;
+                hLocalCineInfo->stForceRefAxisY = pcs->vRefAxis;
+                hLocalCineInfo->stForceRefAxisZ = vVectorZ;
+                CAM_fn_vSetResetInternalFlag(hLocalCineInfo, &hLocalCineInfo->hCurrent->uwIAFlags, &hLocalCineInfo->hVisibility->uwIAFlags, &hLocalCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
                 pcs->ulAlignDelayTime = 0;
                 *(char *)pcs->abExternDsgVarBoolean[3] = 0;
             }
@@ -3650,31 +3678,45 @@ unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
                 fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f + xNorm * fabsf(xD2r));
                 fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
                 vTemp1.xZ = 0.0f;
-                xNorm = vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ;
-                MTH_SQRT_IN_PLACE(xNorm);
-                if (xNorm != 0.0f)
+                if (vTemp1.xX != 0.0f || vTemp1.xY != 0.0f || vTemp1.xZ != 0.0f)
                 {
-                    pcs->vRefAxis.xX = vTemp1.xX / xNorm;
-                    pcs->vRefAxis.xY = vTemp1.xY / xNorm;
-                    pcs->vRefAxis.xZ = vTemp1.xZ / xNorm;
+                    float xInvNorm;
+
+                    MTH_VECTOR_NORM_TO(xInvNorm, vTemp1);
+                    if (xInvNorm != 0.0f)
+                    {
+                        xInvNorm = 1.0f / xInvNorm;
+                        pcs->vRefAxis.xX = xInvNorm * vTemp1.xX;
+                        pcs->vRefAxis.xY = xInvNorm * vTemp1.xY;
+                        pcs->vRefAxis.xZ = xInvNorm * vTemp1.xZ;
+                    }
+                    else
+                        pcs->vRefAxis = vTemp1;
                 }
                 else
-                    pcs->vRefAxis = vTemp1;
+                    fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
             }
             else
             {
                 fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
                 vTemp1.xZ = 0.0f;
-                xNorm = vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ;
-                MTH_SQRT_IN_PLACE(xNorm);
-                if (xNorm != 0.0f)
+                if (vTemp1.xX != 0.0f || vTemp1.xY != 0.0f || vTemp1.xZ != 0.0f)
                 {
-                    pcs->vRefAxis.xX = vTemp1.xX / xNorm;
-                    pcs->vRefAxis.xY = vTemp1.xY / xNorm;
-                    pcs->vRefAxis.xZ = vTemp1.xZ / xNorm;
+                    float xInvNorm;
+
+                    MTH_VECTOR_NORM_TO(xInvNorm, vTemp1);
+                    if (xInvNorm != 0.0f)
+                    {
+                        xInvNorm = 1.0f / xInvNorm;
+                        pcs->vRefAxis.xX = xInvNorm * vTemp1.xX;
+                        pcs->vRefAxis.xY = xInvNorm * vTemp1.xY;
+                        pcs->vRefAxis.xZ = xInvNorm * vTemp1.xZ;
+                    }
+                    else
+                        pcs->vRefAxis = vTemp1;
                 }
                 else
-                    pcs->vRefAxis = vTemp1;
+                    fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
                 fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);
             }
         }
@@ -3683,16 +3725,23 @@ unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
             pcs->pLockedActor = 0;
             fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
             vTemp1.xZ = 0.0f;
-            xNorm = vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ;
-            MTH_SQRT_IN_PLACE(xNorm);
-            if (xNorm != 0.0f)
+            if (vTemp1.xX != 0.0f || vTemp1.xY != 0.0f || vTemp1.xZ != 0.0f)
             {
-                pcs->vRefAxis.xX = vTemp1.xX / xNorm;
-                pcs->vRefAxis.xY = vTemp1.xY / xNorm;
-                pcs->vRefAxis.xZ = vTemp1.xZ / xNorm;
+                float xInvNorm;
+
+                MTH_VECTOR_NORM_TO(xInvNorm, vTemp1);
+                if (xInvNorm != 0.0f)
+                {
+                    xInvNorm = 1.0f / xInvNorm;
+                    pcs->vRefAxis.xX = xInvNorm * vTemp1.xX;
+                    pcs->vRefAxis.xY = xInvNorm * vTemp1.xY;
+                    pcs->vRefAxis.xZ = xInvNorm * vTemp1.xZ;
+                }
+                else
+                    pcs->vRefAxis = vTemp1;
             }
             else
-                pcs->vRefAxis = vTemp1;
+                fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
             fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);
         }
 
@@ -3829,62 +3878,134 @@ unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
         vTemp2 = *pcs->pTargetActor_position;
         vTemp2.xZ += 1.5f;
         vTemp1.xX = vTemp1.xY = vTemp1.xZ = 0.0f;
-        fn_GetPersoHorizon(&vTemp1, pcs->pCamera);
-        vTemp1.xX *= 0.7f;
-        vTemp1.xY *= 0.7f;
-        vTemp1.xZ *= 0.7f;
-        pcs->vCollisionDirectionV.xX = vTemp1.xX - pcs->xDistMax * pcs->vCameraSighting.xX;
-        pcs->vCollisionDirectionV.xY = vTemp1.xY - pcs->xDistMax * pcs->vCameraSighting.xY;
-        pcs->vCollisionDirectionV.xZ = vTemp1.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;
-        fn_CollisionRayCast(pcs->pCamera, &vTemp2, &pcs->vCollisionDirectionV, 0);
         xNorm = pcs->xDistMax;
+        {
+            float xCameraDistanceX;
+            float xCameraDistanceY;
+            float xCameraDistanceZ;
+            MTH3D_tdstVector_ vCollisionDirection;
+            MTH3D_tdstVector_ vCollisionPoint;
+
+            xCameraDistanceX = xNorm * pcs->vCameraSighting.xX;
+            xCameraDistanceY = xNorm * pcs->vCameraSighting.xY;
+            xCameraDistanceZ = xNorm * pcs->vCameraSighting.xZ;
+            vCollisionPoint.xX = 0.0f;
+            vCollisionPoint.xY = 0.0f;
+            vCollisionPoint.xZ = 0.0f;
+            fn_GetPersoHorizon(&vTemp1, pcs->pCamera);
+            vTemp1.xX *= 0.7f;
+            vTemp1.xY *= 0.7f;
+            vTemp1.xZ *= 0.7f;
+            vCollisionDirection.xX = vTemp1.xX - xCameraDistanceX;
+            vCollisionDirection.xY = vTemp1.xY - xCameraDistanceY;
+            vCollisionDirection.xZ = vTemp1.xZ - xCameraDistanceZ;
+            fn_CollisionRayCast(pcs->pCamera, &vTemp2, &vCollisionDirection, 0);
         if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)
         {
-            if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
+            if (pcs->hWaterGMT)
             {
-                xD2r = (g_stCollideResultPoint.xX - vTemp2.xX) * (g_stCollideResultPoint.xX - vTemp2.xX) + (g_stCollideResultPoint.xY - vTemp2.xY) * (g_stCollideResultPoint.xY - vTemp2.xY) + (g_stCollideResultPoint.xZ - vTemp2.xZ) * (g_stCollideResultPoint.xZ - vTemp2.xZ);
-                MTH_SQRT_IN_PLACE(xD2r);
-                if (xD2r < xNorm)
+                if (g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
                 {
-                    xNorm = xD2r;
-                    pcs->vCollisionPoint = g_stCollideResultPoint;
+                    float xCollisionX;
+                    float xCollisionY;
+                    float xCollisionZ;
+                    float xCollisionDistance;
+
+                    xCollisionX = g_stCollideResultPoint.xX - vTemp2.xX - vTemp1.xX;
+                    xCollisionY = g_stCollideResultPoint.xY - vTemp2.xY - vTemp1.xY;
+                    xCollisionZ = g_stCollideResultPoint.xZ - vTemp2.xZ - vTemp1.xZ;
+                    MTH_SQR3_TO(xCollisionDistance, xCollisionX, xCollisionY, xCollisionZ);
+                    MTH_SQRT_IN_PLACE(xCollisionDistance);
+                    if (xCollisionDistance < xNorm)
+                    {
+                        xNorm = xCollisionDistance;
+                        vCollisionPoint = g_stCollideResultPoint;
+                    }
+                }
+            }
+            else
+            {
+                float xCollisionX;
+                float xCollisionY;
+                float xCollisionZ;
+                float xCollisionDistance;
+
+                xCollisionX = g_stCollideResultPoint.xX - vTemp2.xX - vTemp1.xX;
+                xCollisionY = g_stCollideResultPoint.xY - vTemp2.xY - vTemp1.xY;
+                xCollisionZ = g_stCollideResultPoint.xZ - vTemp2.xZ - vTemp1.xZ;
+                MTH_SQR3_TO(xCollisionDistance, xCollisionX, xCollisionY, xCollisionZ);
+                MTH_SQRT_IN_PLACE(xCollisionDistance);
+                if (xCollisionDistance < xNorm)
+                {
+                    xNorm = xCollisionDistance;
+                    vCollisionPoint = g_stCollideResultPoint;
                 }
             }
         }
         vTemp1.xX = -vTemp1.xX;
         vTemp1.xY = -vTemp1.xY;
         vTemp1.xZ = -vTemp1.xZ;
-        pcs->vCollisionDirectionV.xX = vTemp1.xX - pcs->xDistMax * pcs->vCameraSighting.xX;
-        pcs->vCollisionDirectionV.xY = vTemp1.xY - pcs->xDistMax * pcs->vCameraSighting.xY;
-        pcs->vCollisionDirectionV.xZ = vTemp1.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;
-        fn_CollisionRayCast(pcs->pCamera, &vTemp2, &pcs->vCollisionDirectionV, 0);
+        vCollisionDirection.xX = vTemp1.xX - xCameraDistanceX;
+        vCollisionDirection.xY = vTemp1.xY - xCameraDistanceY;
+        vCollisionDirection.xZ = vTemp1.xZ - xCameraDistanceZ;
+        fn_CollisionRayCast(pcs->pCamera, &vTemp2, &vCollisionDirection, 0);
         if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)
         {
-            if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
+            if (pcs->hWaterGMT)
             {
-                xD2r = (g_stCollideResultPoint.xX - vTemp2.xX) * (g_stCollideResultPoint.xX - vTemp2.xX) + (g_stCollideResultPoint.xY - vTemp2.xY) * (g_stCollideResultPoint.xY - vTemp2.xY) + (g_stCollideResultPoint.xZ - vTemp2.xZ) * (g_stCollideResultPoint.xZ - vTemp2.xZ);
-                MTH_SQRT_IN_PLACE(xD2r);
-                if (xD2r < xNorm)
+                if (g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
                 {
-                    xNorm = xD2r;
-                    pcs->vCollisionPoint = g_stCollideResultPoint;
+                    float xCollisionX;
+                    float xCollisionY;
+                    float xCollisionZ;
+                    float xCollisionDistance;
+
+                    xCollisionX = g_stCollideResultPoint.xX - vTemp2.xX - vTemp1.xX;
+                    xCollisionY = g_stCollideResultPoint.xY - vTemp2.xY - vTemp1.xY;
+                    xCollisionZ = g_stCollideResultPoint.xZ - vTemp2.xZ - vTemp1.xZ;
+                    MTH_SQR3_TO(xCollisionDistance, xCollisionX, xCollisionY, xCollisionZ);
+                    MTH_SQRT_IN_PLACE(xCollisionDistance);
+                    if (xCollisionDistance < xNorm)
+                    {
+                        xNorm = xCollisionDistance;
+                        vCollisionPoint = g_stCollideResultPoint;
+                    }
+                }
+            }
+            else
+            {
+                float xCollisionX;
+                float xCollisionY;
+                float xCollisionZ;
+                float xCollisionDistance;
+
+                xCollisionX = g_stCollideResultPoint.xX - vTemp2.xX - vTemp1.xX;
+                xCollisionY = g_stCollideResultPoint.xY - vTemp2.xY - vTemp1.xY;
+                xCollisionZ = g_stCollideResultPoint.xZ - vTemp2.xZ - vTemp1.xZ;
+                MTH_SQR3_TO(xCollisionDistance, xCollisionX, xCollisionY, xCollisionZ);
+                MTH_SQRT_IN_PLACE(xCollisionDistance);
+                if (xCollisionDistance < xNorm)
+                {
+                    xNorm = xCollisionDistance;
+                    vCollisionPoint = g_stCollideResultPoint;
                 }
             }
         }
-        if (pcs->vCollisionPoint.xX != 0.0f || pcs->vCollisionPoint.xY != 0.0f || pcs->vCollisionPoint.xZ != 0.0f)
+        if (vCollisionPoint.xX != 0.0f || vCollisionPoint.xY != 0.0f || vCollisionPoint.xZ != 0.0f)
         {
             xNorm -= 0.6f;
             if (xNorm < 1.3f)
                 xNorm = 1.3f;
-            pcs->vCollisionPoint.xX -= vTemp1.xX;
-            pcs->vCollisionPoint.xY -= vTemp1.xY;
-            pcs->vCollisionPoint.xZ -= vTemp1.xZ;
+            vCollisionPoint.xX -= vTemp1.xX;
+            vCollisionPoint.xY -= vTemp1.xY;
+            vCollisionPoint.xZ -= vTemp1.xZ;
             pcs->xDistMax = xNorm;
             if (xNorm < 2.0f)
             {
                 CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
                 CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
             }
+        }
         }
 
         fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);

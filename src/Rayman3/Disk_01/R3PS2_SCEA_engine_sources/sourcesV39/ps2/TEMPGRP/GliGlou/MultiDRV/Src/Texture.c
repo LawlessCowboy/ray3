@@ -61,13 +61,18 @@ extern int *gs_aDEFTableOfTextureAlreadyRead;
 void GLI_fn_vUnallocTextureInChannel(unsigned char _ucChannel)
 {
     int lTextureCounter;
+    int lTextureOffset;
 
-    for (lTextureCounter = 0; lTextureCounter < 0x190; lTextureCounter++) {
-        if (gs_aDEFTableOfTextureMemoryChannels[lTextureCounter] == _ucChannel) {
-            gs_aDEFTableOfTextureMemoryChannels[lTextureCounter] = 0xC0DE0005;
-            gs_aDEFTableOfTextureAlreadyRead[lTextureCounter] = 0;
+    lTextureCounter = 0;
+    lTextureOffset = 0;
+    do {
+        if (*(int*)((char*)gs_aDEFTableOfTextureMemoryChannels + lTextureOffset) == _ucChannel) {
+            *(int*)((char*)gs_aDEFTableOfTextureMemoryChannels + lTextureOffset) = 0xC0DE0005;
+            *(int*)((char*)gs_aDEFTableOfTextureAlreadyRead + lTextureOffset) = 0;
         }
-    }
+        lTextureCounter++;
+        lTextureOffset += 4;
+    } while (lTextureCounter < 0x190);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Texture.c lines 258–258 */

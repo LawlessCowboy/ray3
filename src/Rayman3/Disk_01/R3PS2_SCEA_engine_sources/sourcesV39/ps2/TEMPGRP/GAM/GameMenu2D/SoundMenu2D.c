@@ -26,6 +26,8 @@ int g_lSoundVolumeLineSound;
 int g_lSoundVolumeLineMusic;
 int g_lSoundVolumeLineVoices;
 
+void SND_fn_vSetStereoSound(int bStereo);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\SoundMenu2D.c lines 113–113 */
 /* addr: 0x0029fd50  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -47,12 +49,14 @@ int M2D_fn_iNbTexturesNeededForMenu(void)
  */
 void fn_vSetStereoGameMenu2D(unsigned int uiSet)
 {
+    int bStereo;
+
     if (uiSet == 1) {
-        uiSet = 1;
+        bStereo = 1;
     } else {
-        uiSet = 0;
+        bStereo = 0;
     }
-    SND_fn_vSetStereoSound(uiSet);
+    SND_fn_vSetStereoSound(bStereo);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\SoundMenu2D.c lines 129–169 */

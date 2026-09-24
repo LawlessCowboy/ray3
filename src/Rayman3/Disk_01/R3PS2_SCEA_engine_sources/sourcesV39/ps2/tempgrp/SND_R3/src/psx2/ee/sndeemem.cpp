@@ -4,10 +4,12 @@
 
 #include <stddef.h>
 
-extern void* memset(void*, int, unsigned int);
-extern int memcmp(const void*, const void*, unsigned int);
-extern void* memcpy(void*, const void*, unsigned int);
+extern "C" void* memset(void*, int, unsigned int);
+extern "C" int memcmp(const void*, const void*, unsigned int);
+extern "C" void* memcpy(void*, const void*, unsigned int);
 extern void HMU_fn_vSndFree(void**);
+
+#pragma exceptions off
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeemem.cpp lines 90–90 */
 /* addr: 0x0018af40  size: 8 bytes */
@@ -16,7 +18,7 @@ extern void HMU_fn_vSndFree(void**);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void usnd_memset(void* pvDest, unsigned char uiVal, unsigned int uiSize)
+extern "C" void usnd_memset(void* pvDest, unsigned char uiVal, unsigned int uiSize)
 {
     memset(pvDest, uiVal & 0xFF, uiSize);
 }
@@ -28,7 +30,7 @@ void usnd_memset(void* pvDest, unsigned char uiVal, unsigned int uiSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int usnd_memcmp(void* pvDest, void* pvSrc, unsigned int uiSize)
+extern "C" int usnd_memcmp(void* pvDest, void* pvSrc, unsigned int uiSize)
 {
     return memcmp(pvDest, pvSrc, uiSize);
 }
@@ -40,7 +42,7 @@ int usnd_memcmp(void* pvDest, void* pvSrc, unsigned int uiSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void usnd_memcpy(void* pvDest, void* pvSrc, unsigned int uiSize)
+extern "C" void usnd_memcpy(void* pvDest, void* pvSrc, unsigned int uiSize)
 {
     memcpy(pvDest, pvSrc, uiSize);
 }

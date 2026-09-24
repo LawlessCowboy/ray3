@@ -182,7 +182,7 @@ void GLI_fn_vOpenBigFileTextures(void)
 void GLI_vIniTextRead(void)
 {
     GLI_fn_vUnallocAllTextures();
-    gs_aDEFTableOfTextureAlreadyRead = 0;
+    gs_lNumberOfTextureToCreate = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Tex.c lines 161–175 */

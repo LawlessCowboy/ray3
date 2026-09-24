@@ -1172,7 +1172,7 @@ struct C_Sdl {
     int m_bIsBlinking; /* +0x44 */
 };
 
-int PS2GL_pMemoryBloc;
+DMMBloc* PS2GL_pMemoryBloc;
 int PS2GL_SDL_DataBuffer;
 int GLI_g_SdlCache;
 
@@ -1249,7 +1249,7 @@ void CheckAllocMode(void)
  */
 void SetAllocMode(int mode)
 {
-    /* TODO: decompile from asm/... */
+    PS2GL_pMemoryBloc->m_AllocMode = mode;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 1329–1337 */

@@ -1392,15 +1392,21 @@ void fn_vUpdateSPOFlagsOfChannelForActivation(HIE_tdstSuperObject_* _hSOChannel,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 1
+
 void fn_vLooseControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel)
 {
     tdstAChannel_* p_stChannel;
 
-    if ((p_stChannel = *(tdstAChannel_**)((char*)_hActor->h_3dData + 0xa8)) != NULL)
+    p_stChannel = *(tdstAChannel_**)((char*)_hActor->h_3dData + 0xa8);
+    if (p_stChannel != NULL)
     {
-        ((unsigned char*)p_stChannel + (unsigned int)_uwChannel * sizeof(tdstAChannel_) + 0x8a)[0] = 0;
+        *((unsigned char*)&p_stChannel->bLipsChannel
+            + (unsigned int)_uwChannel * sizeof(tdstAChannel_)) = 0;
     }
 }
+
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 194–214 */
 /* addr: 0x0025dd20  size: 112 bytes */
