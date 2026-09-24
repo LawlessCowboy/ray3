@@ -1161,9 +1161,14 @@ unsigned int fn_ulCollSetSizeOf(void)
  */
 DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj)
 {
-    if (hSupObj->hLinkedObject.p_stCharacter->h_Dynam == NULL)
-        return NULL;
-    return hSupObj->hLinkedObject.p_stCharacter->h_Dynam->p_stDynamics;
+    DNM_stDynamics* p_stDynamics = NULL;
+
+    if (hSupObj->hLinkedObject.p_stCharacter != NULL)
+    {
+        if (hSupObj->hLinkedObject.p_stCharacter->h_Dynam != NULL)
+            p_stDynamics = hSupObj->hLinkedObject.p_stCharacter->h_Dynam->p_stDynamics;
+    }
+    return p_stDynamics;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 539–539 */

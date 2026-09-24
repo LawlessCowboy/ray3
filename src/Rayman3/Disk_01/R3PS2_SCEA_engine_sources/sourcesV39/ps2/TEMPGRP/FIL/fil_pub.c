@@ -49,7 +49,7 @@ FIL_tdstInternalGeneral_ g_stInternalGeneral;
  */
 int Erm_fn_iMessageBox(char* _szText, char* _szTitle)
 {
-    printf("%s", _szTitle, _szText);
+    printf("Erm_SCE_fn_iMessageBox(%s,%s)\n", _szTitle, _szText);
     return 0;
 }
 

@@ -3354,27 +3354,24 @@ void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* _p_stCompress
  */
 float fn_fUncompressNumber(short n)
 {
-    unsigned int ulValue;
-    unsigned int mantissa;
-    int expf;
     unsigned int sign_bit;
+    unsigned int expf;
+    unsigned int mantissa;
+    unsigned int ulValue;
     union {
         unsigned int ul;
         float f;
     } value;
 
-    ulValue = n;
-    expf = n & 0x7c00;
     sign_bit = n & 0x8000;
+    expf = (n & 0x7c00) >> 10;
     mantissa = n & 0x3ff;
-    expf >>= 10;
     if (expf != 0)
     {
         expf += 0x70;
         expf <<= 23;
     }
-    mantissa <<= 13;
-    sign_bit <<= 16;
-    value.ul = sign_bit | expf | mantissa;
+    ulValue = (mantissa << 13) | ((sign_bit << 16) | expf);
+    value.ul = ulValue;
     return value.f;
 }

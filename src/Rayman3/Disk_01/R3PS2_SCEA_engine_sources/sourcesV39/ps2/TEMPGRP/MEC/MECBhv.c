@@ -1631,6 +1631,11 @@ void MEC_fn_vWallObstacleManagement(MTH3D_tdstVector_* pstResultMove,
                                     MTH3D_tdstVector_* pstWallNormal,
                                     unsigned char bAngleLimit);
 void MEC_fn_vComputeSpeed(DNM_stDynamics* p_stDynamic, float xDT);
+void MEC_fn_vCollideBaseMechanic(DNM_stDynamics* p_stDynamic,
+                                 HIE_tdstSuperObject_* hSupObj,
+                                 int lObstacle,
+                                 DNM_stMecObstacle* a_stObstacle,
+                                 float xDT);
 void MTH4D_fn_vCopy3DTo4DVector(MTH4D_tdstVector_* p_stDestination,
                                 MTH3D_tdstVector_* p_stSource);
 
@@ -1671,20 +1676,18 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
     volatile MTH3D_tdstVector_ stResult5;
     volatile MTH3D_tdstVector_ stResult6;
     volatile MTH3D_tdstVector_ stResult7;
-    MAT_tdstTransformation_* hPreviousMatrix;
     MAT_tdstTransformation_* hCurrentMatrix;
+    MAT_tdstTransformation_* hPreviousMatrix;
     MAT_tdstTransformation_ stPreviousMatrix;
     MAT_tdstTransformation_ stPOS_UpPosition;
     MAT_tdstTransformation_* p_stPOS_UpPosition;
     MAT_tdstTransformation_ a2_stPosition[2];
     MTH4D_tdstVector_* p_stCurrentPosition;
-    MAT_tdstTransformation_* p_stCandidateMatrix;
     MTH4D_tdstVector_* p_stSavedPosition;
     MTH4D_tdstVector_* p_stPreviousPosition;
     float* p_xCandidateY;
     float* p_xPreviousY;
     float* p_xPreviousZ;
-    float* p_xCurrentY;
     float xSpeedZ;
     float xFactor;
     float xSlide;
@@ -1710,19 +1713,18 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
     p_stObstacle = 0;
     p_stGroundObstacle = 0;
     lObstacle = 0;
-    p_stTmpObstacle = (DNM_stMecObstacle*)&g_a_stObstacle;
     hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
     hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
     p_stPOS_UpPosition = 0;
     xWallDistance = 3.402822e38f;
     xSpeedZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_xSlopeLimit;
     xFactor = -xSpeedZ;
-    stAdjustVector.xX = 0.0f;
-    stAdjustVector.xY = 0.0f;
-    stAdjustVector.xZ = 0.0f;
     stVertical.xX = 0.0f;
     stVertical.xY = 0.0f;
     stVertical.xZ = 1.0f;
+    stAdjustVector.xX = 0.0f;
+    stAdjustVector.xY = 0.0f;
+    stAdjustVector.xZ = 0.0f;
 
     if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0) {
         p_stObstacle = &p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_stGround;
@@ -1731,7 +1733,6 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
     stPreviousMatrix = *hCurrentMatrix;
     a2_stPosition[0] = *hPreviousMatrix;
     p_stSavedPosition = &stPreviousMatrix.stTransformMatrix.stCol_3;
-    p_stCandidateMatrix = &a2_stPosition[0];
     if (fn_ucCollSetGetCollComputeFrequencySO(hSupObj) >= 2) {
         a2_stPosition[1] = *hPreviousMatrix;
         if (a2_stPosition[1].eType == MAT_eTransform_Identity) {
@@ -1745,35 +1746,34 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
     }
 
     p_stCurrentPosition = &hCurrentMatrix->stTransformMatrix.stCol_3;
+    stMove.xX = p_stCurrentPosition->xX -
+                hPreviousMatrix->stTransformMatrix.stCol_3.xX;
+    stMove.xY = p_stCurrentPosition->xY -
+                hPreviousMatrix->stTransformMatrix.stCol_3.xY;
+    stMove.xZ = p_stCurrentPosition->xZ -
+                hPreviousMatrix->stTransformMatrix.stCol_3.xZ;
     p_stPreviousPosition = &hPreviousMatrix->stTransformMatrix.stCol_3;
-    p_xCandidateY = &p_stCandidateMatrix->stTransformMatrix.stCol_3.xY;
-    p_xPreviousY = &p_stPreviousPosition->xY;
-    p_xPreviousZ = &p_stPreviousPosition->xZ;
-    p_xCurrentY = &p_stCurrentPosition->xY;
-    stMove.xX = p_stCurrentPosition->xX - p_stPreviousPosition->xX;
-    stMove.xY = *p_xCurrentY - *p_xPreviousY;
-    stMove.xZ = p_stCurrentPosition->xZ - *p_xPreviousZ;
 
     if (((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x10) ? 1 : 0) &&
         (g_lCallCounter == 0) &&
-        MEC_fn_bCollision(&lObstacle, p_stTmpObstacle, p_stDynamic, hSupObj,
+        MEC_fn_bCollision(&lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle, p_stDynamic, hSupObj,
                           hPreviousMatrix, hPreviousMatrix, 1)) {
-        MEC_fn_vDeleteBaseBackFace(lObstacle, p_stTmpObstacle, p_stDynamic);
-        MEC_fn_vDeleteNullTranslationObstacle(lObstacle, p_stTmpObstacle);
+        MEC_fn_vDeleteBaseBackFace(lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle, p_stDynamic);
+        MEC_fn_vDeleteNullTranslationObstacle(lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle);
         MEC_fn_vComputeAdjustVector(&stAdjustVector, p_stDynamic, lObstacle,
-                                    p_stTmpObstacle, lObstacle);
+                                    (DNM_stMecObstacle*)&g_a_stObstacle, lObstacle);
         MAT_fn_vTranslate(hPreviousMatrix, &stAdjustVector);
     }
 
     g_lCallCounter++;
     if (g_lCallCounter >= 4) {
         p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x02000000;
-        if (MEC_fn_bCollision(&lObstacle, p_stTmpObstacle, p_stDynamic, hSupObj,
+        if (MEC_fn_bCollision(&lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle, p_stDynamic, hSupObj,
                               hPreviousMatrix, hPreviousMatrix, 1)) {
-            MEC_fn_vDeleteBaseBackFace(lObstacle, p_stTmpObstacle, p_stDynamic);
-            MEC_fn_vDeleteNullTranslationObstacle(lObstacle, p_stTmpObstacle);
+            MEC_fn_vDeleteBaseBackFace(lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle, p_stDynamic);
+            MEC_fn_vDeleteNullTranslationObstacle(lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle);
             MEC_fn_vComputeAdjustVector(&stAdjustVector, p_stDynamic, lObstacle,
-                                        p_stTmpObstacle, lObstacle);
+                                        (DNM_stMecObstacle*)&g_a_stObstacle, lObstacle);
             MAT_fn_vTranslate(hPreviousMatrix, &stAdjustVector);
         }
         if (hCurrentMatrix->eType == MAT_eTransform_Identity) {
@@ -1833,11 +1833,11 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
 
     if (((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) &&
         (p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != 0)) {
-        stVector.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX -
+        stVector.xX = p_stCurrentPosition->xX -
                       p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix.stTransformMatrix.stCol_3.xX;
-        stVector.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY -
+        stVector.xY = p_stCurrentPosition->xY -
                       p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix.stTransformMatrix.stCol_3.xY;
-        stVector.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ -
+        stVector.xZ = p_stCurrentPosition->xZ -
                       p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix.stTransformMatrix.stCol_3.xZ;
         xTranslationX = stVector.xX;
         xTranslationY = stVector.xY;
@@ -1880,13 +1880,13 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                      .m_stCollisionTranslation);
             p_stPOS_UpPosition = &stPOS_UpPosition;
         }
-        if (MEC_fn_bCollision(&lObstacle, p_stTmpObstacle, p_stDynamic, hSupObj,
+        if (MEC_fn_bCollision(&lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle, p_stDynamic, hSupObj,
                               p_stPOS_UpPosition, hCurrentMatrix,
                               !((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &
                                  0x400000) ? 1 : 0))) {
-            MEC_fn_vEdgeAnalysis(p_stDynamic, lObstacle, p_stTmpObstacle, 0);
+            MEC_fn_vEdgeAnalysis(p_stDynamic, lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle, 0);
             MEC_fn_vCollideBaseMechanic(p_stDynamic, hSupObj, lObstacle,
-                                        p_stTmpObstacle, xDT);
+                                        (DNM_stMecObstacle*)&g_a_stObstacle, xDT);
         } else {
             p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= 0xFFFEFFFF;
         }
@@ -1910,42 +1910,53 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
         if (stPreviousMatrix.eType == MAT_eTransform_Identity) {
             stPreviousMatrix.eType = MAT_eTransform_Translation;
         }
-        stResult0.xX = p_stPreviousPosition->xX + stTangentMove.xX;
-        stResult0.xY = *p_xPreviousY + stTangentMove.xY;
-        stResult0.xZ = *p_xPreviousZ + stTangentMove.xZ;
-        p_stSavedPosition->xX = stResult0.xX;
-        p_stSavedPosition->xY = stResult0.xY;
-        p_stSavedPosition->xZ = stResult0.xZ;
+        p_xPreviousY = &p_stPreviousPosition->xY;
+        p_xPreviousZ = &p_stPreviousPosition->xZ;
+        p_stSavedPosition->xX = p_stPreviousPosition->xX + stTangentMove.xX;
+        p_stSavedPosition->xY = *p_xPreviousY + stTangentMove.xY;
+        p_stSavedPosition->xZ = *p_xPreviousZ + stTangentMove.xZ;
         p_stSavedPosition->xW = 1.0f;
         stDownVector.xX = xFactor * p_stNormal->xX;
         stDownVector.xY = xFactor * p_stNormal->xY;
         stDownVector.xZ = xFactor * p_stNormal->xZ;
         MAT_fn_vTranslate(&stPreviousMatrix, &stDownVector);
 
-        stResult1.xX = p_stPreviousPosition->xX + stTangentMove.xX;
-        stResult1.xY = *p_xPreviousY + stTangentMove.xY;
-        stResult1.xZ = *p_xPreviousZ + stTangentMove.xZ;
-        p_stCandidateMatrix->stTransformMatrix.stCol_3.xX = stResult1.xX;
-        *p_xCandidateY = stResult1.xY;
-        p_stCandidateMatrix->stTransformMatrix.stCol_3.xZ = stResult1.xZ;
+        stResult0.xX = p_stPreviousPosition->xX + stTangentMove.xX;
+        stResult0.xY = *p_xPreviousY + stTangentMove.xY;
+        stResult0.xZ = *p_xPreviousZ + stTangentMove.xZ;
+        a2_stPosition[0].stTransformMatrix.stCol_3.xX = stResult0.xX;
+        a2_stPosition[0].stTransformMatrix.stCol_3.xY = stResult0.xY;
+        a2_stPosition[0].stTransformMatrix.stCol_3.xZ = stResult0.xZ;
         if (a2_stPosition[0].eType == MAT_eTransform_Identity) {
             a2_stPosition[0].eType = MAT_eTransform_Translation;
         }
-        p_stCandidateMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+        a2_stPosition[0].stTransformMatrix.stCol_3.xW = 1.0f;
+        p_xCandidateY = &a2_stPosition[0].stTransformMatrix.stCol_3.xY;
 
         lObstacle2 = 0;
-        if (MEC_fn_bCollision(&lObstacle2, p_stTmpObstacle, p_stDynamic, hSupObj,
+        if (MEC_fn_bCollision(&lObstacle2, (DNM_stMecObstacle*)&g_a_stObstacle, p_stDynamic, hSupObj,
                               &a2_stPosition[0], &stPreviousMatrix, 1)) {
             for (lCounter = 0; lCounter < lObstacle2; lCounter++) {
-                p_stWallObstacle = &p_stTmpObstacle[lCounter];
+                p_stWallObstacle = &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter];
                 if ((p_stWallObstacle->m_xCollidedEntity != 99) &&
                     !MEC_fn_bWallNormal(p_stDynamic, &p_stWallObstacle->m_stNorm)) {
                     p_stWallObstacle->m_xCollidedEntity = 99;
                 }
             }
             MEC_fn_vReportCollision(p_stDynamic, hSupObj, lObstacle2,
-                                    p_stTmpObstacle, 0);
+                                    (DNM_stMecObstacle*)&g_a_stObstacle, 0);
         }
+
+        stResult1.xX = p_stPreviousPosition->xX + stTangentMove.xX;
+        stResult1.xY = *p_xPreviousY + stTangentMove.xY;
+        stResult1.xZ = *p_xPreviousZ + stTangentMove.xZ;
+        a2_stPosition[0].stTransformMatrix.stCol_3.xX = stResult1.xX;
+        *p_xCandidateY = stResult1.xY;
+        a2_stPosition[0].stTransformMatrix.stCol_3.xZ = stResult1.xZ;
+        if (a2_stPosition[0].eType == MAT_eTransform_Identity) {
+            a2_stPosition[0].eType = MAT_eTransform_Translation;
+        }
+        a2_stPosition[0].stTransformMatrix.stCol_3.xW = 1.0f;
 
         xFactor = xSpeedZ * xNorm;
         if (xFactor < 0.35f) {
@@ -1958,7 +1969,7 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
 
         COL_g_lMaxNumberOfCollisions = 75 - lObstacle2;
         lObstacle = 0;
-        MEC_fn_bCollision(&lObstacle, p_stTmpObstacle + lObstacle2,
+        MEC_fn_bCollision(&lObstacle, ((DNM_stMecObstacle*)&g_a_stObstacle) + lObstacle2,
                           p_stDynamic, hSupObj, &stPreviousMatrix,
                           &a2_stPosition[0], 1);
         COL_g_lMaxNumberOfCollisions = 75;
@@ -1967,91 +1978,92 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
         if (lObstacle != 0) {
             p_stGroundObstacle = (DNM_stMecObstacle*)MEC_fn_pSelectGround(
                 p_stDynamic, lObstacle - lObstacle2,
-                p_stTmpObstacle + lObstacle2, &stTangentMove, &bFirstGround);
+                ((DNM_stMecObstacle*)&g_a_stObstacle) + lObstacle2, &stTangentMove, &bFirstGround);
             bStep = 0;
             if (p_stGroundObstacle != 0) {
                 bStep = MEC_fn_bDetectStep(
                     p_stDynamic, lObstacle - lObstacle2,
-                    p_stTmpObstacle + lObstacle2, p_stGroundObstacle,
+                    ((DNM_stMecObstacle*)&g_a_stObstacle) + lObstacle2, p_stGroundObstacle,
                     &stTangentMove);
             }
             if (!bStep && (g_lCallCounter == 1)) {
                 MEC_fn_vEdgeAnalysis(
                     p_stDynamic, lObstacle - lObstacle2,
-                    p_stTmpObstacle + lObstacle2, p_stGroundObstacle);
+                    ((DNM_stMecObstacle*)&g_a_stObstacle) + lObstacle2, p_stGroundObstacle);
             }
             if (bFirstGround) {
-                MEC_fn_vDeleteWallEdge(lObstacle, p_stTmpObstacle, p_stDynamic);
+                MEC_fn_vDeleteWallEdge(lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle, p_stDynamic);
             }
-            MEC_fn_vDeleteUnderGroundWall(lObstacle, p_stTmpObstacle,
+            MEC_fn_vDeleteUnderGroundWall(lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle,
                                           p_stDynamic, p_stGroundObstacle);
-            MEC_fn_vDeleteOnGroundBackFace(lObstacle, p_stTmpObstacle,
+            MEC_fn_vDeleteOnGroundBackFace(lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle,
                                            p_stDynamic, &stAbsoluteTangentMove,
                                            p_stGroundObstacle);
             if (MEC_fn_bMainActor(hSupObj) && (g_lCallCounter == 1)) {
-                MEC_fn_vCrashAnalysis(p_stDynamic, lObstacle, p_stTmpObstacle);
+                MEC_fn_vCrashAnalysis(p_stDynamic, lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle);
             }
 
             p_stMobileObstacle = 0;
             p_stWallObstacle = 0;
             lObstacleCounter = 0;
-            for (lCounter = 0; lCounter < lObstacle2; lCounter++) {
-                p_stTmpObstacle = &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter];
-                if ((p_stTmpObstacle->m_xCollidedEntity != 99) &&
-                    (p_stTmpObstacle->m_xRate < 0.0f)) {
-                    MEC_fn_bGroundNormal(p_stDynamic, &p_stTmpObstacle->m_stNorm);
+            if (lObstacle2 != 0) {
+                for (lCounter = 0; lCounter < lObstacle2; lCounter++) {
+                    p_stTmpObstacle = &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter];
+                    if ((p_stTmpObstacle->m_xCollidedEntity != 99) &&
+                        (p_stTmpObstacle->m_xRate < 0.0f)) {
+                        MEC_fn_bGroundNormal(p_stDynamic, &p_stTmpObstacle->m_stNorm);
+                    }
                 }
             }
 
-            p_stTmpObstacle = (DNM_stMecObstacle*)&g_a_stObstacle;
             for (lCounter = 0; lCounter < lObstacle; lCounter++) {
-                if (p_stTmpObstacle[lCounter].m_xCollidedEntity == 99) {
+                if (((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_xCollidedEntity == 99) {
                     continue;
                 }
                 if (MEC_fn_bGroundNormal(p_stDynamic,
-                                         &p_stTmpObstacle[lCounter].m_stNorm)) {
-                    if (p_stGroundObstacle == &p_stTmpObstacle[lCounter]) {
+                                         &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_stNorm)) {
+                    if (p_stGroundObstacle == &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter]) {
                         lObstacleCounter = lCounter;
                     }
                 } else {
-                    if (((p_stTmpObstacle[lCounter].m_eType & 2) == 2) &&
+                    if (((((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_eType & 2) == 2) &&
                         (p_stMobileObstacle == 0)) {
-                        hSupObjCol = p_stTmpObstacle[lCounter].mp_stSupObj;
+                        hSupObjCol = ((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].mp_stSupObj;
                         if ((hSupObjCol != 0) && !MEC_fn_bMainActor(hSupObjCol) &&
                             ((fn_ulStandardGameGetCustomBitsSO(
                                   MEC_fn_hGetFatherActor(hSupObjCol)) &
                               0x04000000) == 0x04000000)) {
                             if (!MEC_fn_bGroundNormal(
                                     p_stDynamic,
-                                    &p_stTmpObstacle[lCounter].m_stNorm)) {
-                                p_stMobileObstacle = &p_stTmpObstacle[lCounter];
+                                    &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_stNorm)) {
+                                p_stMobileObstacle = &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter];
                             }
                             if (MEC_fn_bCeilObstacle(
-                                    p_stDynamic, &p_stTmpObstacle[lCounter]) &&
+                                    p_stDynamic, &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter]) &&
                                 (g_lCallCounter == 1)) {
-                                p_stTmpObstacle[lCounter].m_xCollidedEntity = 99;
+                                ((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_xCollidedEntity = 99;
                             }
                         }
                     }
                     if (MEC_fn_bWallNormal(
                             p_stDynamic,
-                            &p_stTmpObstacle[lCounter].m_stNorm)) {
-                    stVector.xX = p_stTmpObstacle[lCounter].m_stContact.xX -
+                            &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_stNorm)) {
+                    stVector.xX = ((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_stContact.xX -
                                   hPreviousMatrix->stTransformMatrix.stCol_3.xX;
-                    stVector.xY = p_stTmpObstacle[lCounter].m_stContact.xY -
+                    stVector.xY = ((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_stContact.xY -
                                   hPreviousMatrix->stTransformMatrix.stCol_3.xY;
-                    stVector.xZ = p_stTmpObstacle[lCounter].m_stContact.xZ -
+                    stVector.xZ = ((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_stContact.xZ -
                                   hPreviousMatrix->stTransformMatrix.stCol_3.xZ;
                     xTangentX = stVector.xX;
                     xTangentY = stVector.xY;
                     MTH_SQR2_TO(xTmpReal, xTangentX, xTangentY);
                     if (xTmpReal < xWallDistance) {
                         xWallDistance = xTmpReal;
-                        p_stWallObstacle = &p_stTmpObstacle[lCounter];
+                        p_stWallObstacle = &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter];
                         lObstacleCounter = lCounter;
                     }
                     } else if (p_stWallObstacle == 0) {
-                        p_stWallObstacle = &p_stTmpObstacle[lCounter];
+                        p_stWallObstacle = &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter];
                         lObstacleCounter = lCounter;
                     }
                 }
@@ -2130,18 +2142,18 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                     p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x02000000;
                     stGroundNormal = p_stGroundObstacle->m_stNorm;
 
-                    if (MEC_fn_bCollision(&lObstacle, p_stTmpObstacle,
+                    if (MEC_fn_bCollision(&lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle,
                                           p_stDynamic, hSupObj,
                                           hCurrentMatrix, hCurrentMatrix, 1)) {
                         MEC_fn_vDeleteBaseBackFace(
-                            lObstacle, p_stTmpObstacle, p_stDynamic);
+                            lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle, p_stDynamic);
                         MEC_fn_vDeleteNullTranslationObstacle(
-                            lObstacle, p_stTmpObstacle);
+                            lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle);
                         for (lCounter = 0; lCounter < lObstacle; lCounter++) {
                             if ((p_stWallObstacle == 0) &&
-                                (p_stTmpObstacle[lCounter].m_xCollidedEntity != 99) &&
-                                ((p_stTmpObstacle[lCounter].m_eType & 2) == 2)) {
-                                p_stWallObstacle = &p_stTmpObstacle[lCounter];
+                                (((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_xCollidedEntity != 99) &&
+                                ((((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_eType & 2) == 2)) {
+                                p_stWallObstacle = &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter];
                             }
                         }
                         if (p_stWallObstacle != 0) {
@@ -2185,25 +2197,22 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                             hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
 
                             if (MEC_fn_bCollision(
-                                    &lObstacle, p_stTmpObstacle,
+                                    &lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle,
                                     p_stDynamic, hSupObj,
                                     hCurrentMatrix, hCurrentMatrix, 1)) {
                                 MEC_fn_vDeleteBaseBackFace(
-                                    lObstacle, p_stTmpObstacle, p_stDynamic);
+                                    lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle, p_stDynamic);
                                 MEC_fn_vDeleteNullTranslationObstacle(
-                                    lObstacle, p_stTmpObstacle);
+                                    lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle);
                                 MEC_fn_vComputeAdjustVector(
                                     &stAdjustVector, p_stDynamic, lObstacle,
-                                    p_stTmpObstacle, lObstacle);
-                                stResult4.xX =
-                                    hCurrentMatrix->stTransformMatrix.stCol_3.xX +
-                                    stAdjustVector.xX;
-                                stResult4.xY =
-                                    hCurrentMatrix->stTransformMatrix.stCol_3.xY +
-                                    stAdjustVector.xY;
-                                stResult4.xZ =
-                                    hCurrentMatrix->stTransformMatrix.stCol_3.xZ +
-                                    stAdjustVector.xZ;
+                                    (DNM_stMecObstacle*)&g_a_stObstacle, lObstacle);
+                                stResult4.xX = p_stCurrentPosition->xX +
+                                              stAdjustVector.xX;
+                                stResult4.xY = p_stCurrentPosition->xY +
+                                              stAdjustVector.xY;
+                                stResult4.xZ = p_stCurrentPosition->xZ +
+                                              stAdjustVector.xZ;
                                 if (hPreviousMatrix->eType == MAT_eTransform_Identity) {
                                     hPreviousMatrix->eType = MAT_eTransform_Translation;
                                 }
@@ -2249,9 +2258,9 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                         }
                     }
                     p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x02000000;
-                    stVector.xX = hPreviousMatrix->stTransformMatrix.stCol_3.xX;
-                    stVector.xY = hPreviousMatrix->stTransformMatrix.stCol_3.xY;
-                    stVector.xZ = hPreviousMatrix->stTransformMatrix.stCol_3.xZ;
+                    stVector.xX = p_stPreviousPosition->xX;
+                    stVector.xY = *p_xPreviousY;
+                    stVector.xZ = *p_xPreviousZ;
                     if (hCurrentMatrix->eType == MAT_eTransform_Identity) {
                         hCurrentMatrix->eType = MAT_eTransform_Translation;
                     }
@@ -2295,18 +2304,18 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                         }
                     }
 
-                    else if (MEC_fn_bCollision(&lObstacle, p_stTmpObstacle,
+                    else if (MEC_fn_bCollision(&lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle,
                                           p_stDynamic, hSupObj,
                                           hCurrentMatrix, hCurrentMatrix, 1)) {
                         MEC_fn_vDeleteBaseBackFace(
-                            lObstacle, p_stTmpObstacle, p_stDynamic);
+                            lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle, p_stDynamic);
                         MEC_fn_vDeleteNullTranslationObstacle(
-                            lObstacle, p_stTmpObstacle);
+                            lObstacle, (DNM_stMecObstacle*)&g_a_stObstacle);
                         for (lCounter = 0; lCounter < lObstacle; lCounter++) {
-                            if ((p_stTmpObstacle[lCounter].m_xCollidedEntity != 99) &&
-                                ((p_stTmpObstacle[lCounter].m_eType & 2) == 2) &&
+                            if ((((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_xCollidedEntity != 99) &&
+                                ((((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_eType & 2) == 2) &&
                                 (p_stMobileObstacle == 0)) {
-                                hSupObjCol = p_stTmpObstacle[lCounter].mp_stSupObj;
+                                hSupObjCol = ((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].mp_stSupObj;
                                 if ((hSupObjCol != 0) &&
                                     !MEC_fn_bMainActor(hSupObjCol) &&
                                     ((fn_ulStandardGameGetCustomBitsSO(
@@ -2314,14 +2323,14 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                                       0x04000000) == 0x04000000) &&
                                     MEC_fn_bCeilObstacle(
                                         p_stDynamic,
-                                        &p_stTmpObstacle[lCounter])) {
-                                    p_stTmpObstacle[lCounter].m_xCollidedEntity = 99;
+                                        &((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter])) {
+                                    ((DNM_stMecObstacle*)&g_a_stObstacle)[lCounter].m_xCollidedEntity = 99;
                                 }
                             }
                         }
                         MEC_fn_vComputeAdjustVector(
                             &stAdjustVector, p_stDynamic, lObstacle,
-                            p_stTmpObstacle, lObstacle);
+                            (DNM_stMecObstacle*)&g_a_stObstacle, lObstacle);
                         MAT_fn_vTranslate(hCurrentMatrix, &stAdjustVector);
                     }
 
@@ -2332,12 +2341,12 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                 MEC_fn_vComputeAdjustVector(
                     &stAdjustVector, p_stDynamic,
                     lObstacle - lObstacle2,
-                    p_stTmpObstacle + lObstacle2,
+                    ((DNM_stMecObstacle*)&g_a_stObstacle) + lObstacle2,
                     lObstacle - lObstacle2);
                 if (lObstacle2 != 0) {
                     MEC_fn_vComputeAdjustVector(
                             &stAdjustVector1, p_stDynamic, lObstacle2,
-                        p_stTmpObstacle, lObstacle2);
+                        (DNM_stMecObstacle*)&g_a_stObstacle, lObstacle2);
                 } else {
                     stAdjustVector1.xX = 0.0f;
                     stAdjustVector1.xY = 0.0f;

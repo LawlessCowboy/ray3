@@ -1906,13 +1906,9 @@ tdstNodeInterpret_* fn_p_stFrozenWaitInit(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucWaitEndOfAnim(HIE_tdstSuperObject_* p_SuperObjPerso)
+int fn_ucWaitEndOfAnim(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    unsigned char ucResult;
-    ucResult = 4;
-    if (PLA_fn_bTestIfEndOfAnim(p_SuperObjPerso))
-        ucResult = 1;
-    return ucResult;
+    return PLA_fn_bTestIfEndOfAnim(p_SuperObjPerso) ? 4 : 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 132–136 */

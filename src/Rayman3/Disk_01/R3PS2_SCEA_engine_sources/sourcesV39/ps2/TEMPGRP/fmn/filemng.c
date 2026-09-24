@@ -87,10 +87,11 @@ void FIL_fn_vFirstInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void FMN_SCE_AddBaseDirectory(char* buffer)
+char* FMN_SCE_AddBaseDirectory(char* buffer)
 {
-    char s_szFileName[256];
+    static char s_szFileName[256];
     strcpy(s_szFileName, buffer);
+    return s_szFileName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\filemng.c lines 940–944 */

@@ -1661,14 +1661,14 @@ void CAM_fn_vInvalidateViewports(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* _h_SprObj)
+int CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* _h_SprObj)
 {
     if (_h_SprObj->ulTypeOfLinkedObject != 2)
         return 0;
     {
         int lNumberOfElementsDyn;
         lNumberOfElementsDyn = _h_SprObj->hLinkedObject.p_stSuperObject->lNumberOfElementsDyn;
-        return (unsigned int)lNumberOfElementsDyn >= 1;
+        return (lNumberOfElementsDyn == 0) ^ 1;
     }
 }
 
