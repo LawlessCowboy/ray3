@@ -1202,7 +1202,7 @@ void fn_vDrawAreYouSurePage(void)
  */
 void fn_vChangeAreYouSureValue(void)
 {
-    /* TODO: decompile from asm/... */
+    g_AreYouSureValue = 1 - g_AreYouSureValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 593–593 */

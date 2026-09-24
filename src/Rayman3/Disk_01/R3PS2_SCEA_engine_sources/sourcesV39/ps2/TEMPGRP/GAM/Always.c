@@ -1897,7 +1897,11 @@ unsigned char fn_ucIsAnAlwaysModel(tdstEngineObject_* p_stEngineObject)
  */
 unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int result;
+
+    result = 1;
+    result = (p_stEngineObject->h_StandardGame->ucMiscFlags & 0x10) ? result : 0;
+    return (unsigned char)result;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 379–389 */

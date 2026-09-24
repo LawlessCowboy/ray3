@@ -328,7 +328,8 @@ void GLI_xSetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_* p_s
  */
 void GLI_xSetCameraRatio(GLI_tdstCamera_* p_stCam, float xRatio)
 {
-    /* TODO: decompile from asm/... */
+    p_stCam->xRatio = xRatio;
+    p_stCam->xAlphaY = p_stCam->xAlphaX * xRatio;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Camera.c lines 218–220 */
@@ -358,7 +359,9 @@ void GLI_xGetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float* p_xAlphaX, fl
  */
 void GLI_xSetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float xAlphaX, float xRatio)
 {
-    /* TODO: decompile from asm/... */
+    p_stCam->xAlphaX = xAlphaX;
+    p_stCam->xRatio = xRatio;
+    p_stCam->xAlphaY = xAlphaX * xRatio;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Camera.c lines 146–202 */

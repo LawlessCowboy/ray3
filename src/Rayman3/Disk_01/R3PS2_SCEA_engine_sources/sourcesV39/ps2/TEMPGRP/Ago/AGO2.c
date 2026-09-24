@@ -2599,9 +2599,13 @@ void AGO2_DisplayFFRing(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateFFRing(AGO2_Part_* p, float xParam1)
+unsigned char AGO2_CreateFFRing(int unused, AGO2_Part_* p, float xParam1)
 {
-    /* TODO: decompile from asm/... */
+    (void)unused;
+    p->xSize[0] = xParam1;
+    p->xSize[1] = 1.0f;
+    p->xTransparency = 255.0f;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2553–2640 */

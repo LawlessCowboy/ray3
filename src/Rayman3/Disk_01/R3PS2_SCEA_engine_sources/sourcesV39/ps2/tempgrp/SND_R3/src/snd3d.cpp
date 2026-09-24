@@ -73,6 +73,14 @@ struct Jingle {
     static void ms_fVolReduction(int);
 };
 
+namespace usnd {
+struct CPS2Box {
+    static void fs_vSetMono(bool);
+};
+}
+
+extern "C" void usnd_vLeaveCritSect(unsigned int);
+
 typedef enum tdeEventType {
     EPLAYEVENT = 0,
     ESTOPEVENT = 1,
@@ -582,7 +590,8 @@ void SND_fn_vSetPan(int b_pan)
  */
 void SND_fn_vSetStereoSound(int b_Stereo)
 {
-    /* TODO: decompile from asm/... */
+    g_bInStereo = b_Stereo;
+    return usnd::CPS2Box::fs_vSetMono(b_Stereo ^ 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 934–934 */
@@ -649,7 +658,7 @@ void SND_fn_vSynchroSound(void)
  */
 void SND_fn_vResetLastMarker(void)
 {
-    /* TODO: decompile from asm/... */
+    /* TODO: identify the recovered marker global at GP offset -0x7D34. */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 790–790 */
@@ -661,7 +670,7 @@ void SND_fn_vResetLastMarker(void)
  */
 int SND_fn_s32GetLastMarker(void)
 {
-    /* TODO: decompile from asm/... */
+    /* TODO: identify the recovered marker global at GP offset -0x7D34. */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 767–767 */
@@ -914,7 +923,8 @@ int SND_fn_hGetCurrentSoundHandle(void)
  */
 void SND_fn_vClearLastTheme(void)
 {
-    /* TODO: decompile from asm/... */
+    g_oLastTheme.Id = 0;
+    g_oLastSavedTheme.Id = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 278–286 */
@@ -944,7 +954,7 @@ int SND_fn_bGetLastTheme(_SND_tduRefEvt* p_RefEvt)
  */
 void fn_vUnlockSound__Fv(void)
 {
-    /* TODO: decompile from asm/... */
+    return usnd_vLeaveCritSect(gs_uiCritSect);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 237–255 */

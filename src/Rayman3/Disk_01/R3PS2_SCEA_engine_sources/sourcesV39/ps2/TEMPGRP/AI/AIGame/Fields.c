@@ -3313,8 +3313,7 @@ unsigned char fn_ucGetFieldPadAnalogForce(void* p_stContext, tdstGetSetParam_* p
  */
 unsigned char fn_ucSetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    unsigned char pad = AI_g_ucLastMarioPadUsed;
-    IPT_fn_vSetVAxisForPadNumber(pad, *(short*)p_stGetSetParam);
+    IPT_fn_vSetVAxisForPadNumber(AI_g_ucLastMarioPadUsed, *(short*)p_stGetSetParam);
     return 1;
 }
 
@@ -3348,8 +3347,7 @@ unsigned char fn_ucGetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* 
  */
 unsigned char fn_ucSetFieldPadHorizontalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    unsigned char pad = AI_g_ucLastMarioPadUsed;
-    IPT_fn_vSetHAxisForPadNumber(pad, *(short*)p_stGetSetParam);
+    IPT_fn_vSetHAxisForPadNumber(AI_g_ucLastMarioPadUsed, *(short*)p_stGetSetParam);
     return 1;
 }
 
@@ -3399,10 +3397,15 @@ unsigned char fn_ucSetFieldPadGlobalVector(tdstGetSetParam_* p_stGetSetParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetFieldPadGlobalVector(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetFieldPadGlobalVector(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     MTH3D_tdstVector_ stVector;
-    /* TODO: decompile from asm/... */
+    IPT_fn_vGetGlobalVectorForPadNumber(AI_g_ucLastMarioPadUsed, &stVector);
+    ((unsigned int*)p_stGetSetParam)[0] = ((unsigned int*)&stVector)[0];
+    ((unsigned int*)p_stGetSetParam)[1] = ((unsigned int*)&stVector)[1];
+    ((unsigned int*)p_stGetSetParam)[2] = ((unsigned int*)&stVector)[2];
+    p_stGetSetParam->eType = E_vt_Vector;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 281–290 */

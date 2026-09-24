@@ -444,6 +444,8 @@ struct GEO_tdstGeometricObject_ {
 
 struct C_FxList {
     tdstBaseFxListElement_* pFirst; /* +0x0 */
+    void DeleteAll();
+    void DeleteAllSDLs();
 };
 
 struct tdstViewportManagement_ {
@@ -2235,7 +2237,7 @@ void WaterFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
  */
 void WaterFx_vDesinit(void)
 {
-    /* TODO: decompile from asm/... */
+    WaterFx_g_List.DeleteAll();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1276–1276 */
@@ -2247,7 +2249,7 @@ void WaterFx_vDesinit(void)
  */
 void WaterFx_vDestroySDLs(void)
 {
-    /* TODO: decompile from asm/... */
+    WaterFx_g_List.DeleteAllSDLs();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1248–1272 */

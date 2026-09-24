@@ -1516,5 +1516,8 @@ unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterListAndDynamicallyActiv
  */
 unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterList(HIE_tdstSuperObject_* hCharacter)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char bReturn;
+    bReturn = 1;
+    bReturn = (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 0x40) ? bReturn : 0;
+    return bReturn;
 }

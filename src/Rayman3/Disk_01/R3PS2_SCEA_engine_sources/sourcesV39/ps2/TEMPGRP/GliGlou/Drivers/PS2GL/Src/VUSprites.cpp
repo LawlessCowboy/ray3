@@ -159,18 +159,22 @@ struct CSpriteController {
     unsigned int m_DepthTestDisabled; /* +0xb0 */
     void Draw2DRectangleWithColor(float xXMin, float xXMax, float xYMin, float xYMax, GLI_tdstMaterial_* hMaterial, unsigned int ulColor);
     void Icon2D_Percent(float xXMin, float xYMin, float xXMax, float xYMax, GLI_tdstMaterial_* hMaterial);
+    void Icon2D_Percent(GLD_tdstViewportAttributes_* p_stViewport, float xXMin, float xYMin, float xXMax, float xYMax, GLI_tdstMaterial_* hMaterial);
     void Icon2D_Rotate_Percent_and_UVs(float xXMin, float xXMax, float xYMin, float xYMax, float xU1, float xU2, float xV1, float xV2, float xAngle, GLI_tdstMaterial_* hMaterial);
     void Sprite2DWithUV(float xXMin, float xXMax, float xYMin, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
+    void Sprite2DWithUV(GLD_tdstViewportAttributes_* p_stViewport, float xXMin, float xXMax, float xYMin, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
     void DrawWorldQuadWithUVsAndAlpha(float* x1, float* x2, float* x3, float* x4, float u1, float v1, float u2, float v2, float fAlpha1, float fAlpha2, float fAlpha3, float fAlpha4, GLI_tdstMaterial_* pMaterial);
     void WorldQuadWithUVAndFade(float* x1, float* x2, float* x3, float* x4, float u1, float v1, float u2, float v2, GLI_tdstMaterial_* pMaterial, float fPercentage);
     void WorldQuadWithUV(float* x1, float* x2, float* x3, float* x4, float u1, float v1, float u2, float v2, GLI_tdstMaterial_* pMaterial);
     void WorldQuad(float* x1, float* x2, float* x3, float* x4, GLI_tdstMaterial_* pMaterial);
     int WorldPlanarSprite(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float fSizeX, float fSizeY);
+    int WorldPlanarSprite(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float fSizeX, float fSizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime);
     void WorldOrthoPlanarOriented(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2, float fAngle);
     int WorldOrthoPlanarSpriteColor(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2, unsigned int ulColor);
     int WorldOrthoPlanarSprite(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2);
     void SemiLookatSprite(MTH3D_tdstVector_* a3_fPosition, MTH3D_tdstVector_* a3_fPosition2, GLI_tdstMaterial_* pMaterial, float fSizeX);
     int SimpleSpriteOriented_WithUVs(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, float fAngle);
+    int SimpleSpriteOriented_WithUVs(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime, float fAngle);
     int SimpleSprite_UVAnim(GLI_tdstMaterial_* pMaterial, MTH3D_tdstVector_* pPosition, float SizeX, float SizeY, float AnimTime);
     int SimpleSpriteColor(GLI_tdstMaterial_* pMaterial, MTH3D_tdstVector_* pPosition, float SizeX, float SizeY, unsigned int ulColor);
     void DrawFireSpriteGroup(GLI_tdstMaterial_* pMaterial, float (*pData)[4], unsigned int NbParticles);
@@ -1382,7 +1386,7 @@ void GLI_vDrawWorldQuadWithUVsAndAlpha(GLD_tdstViewportAttributes_* param0, floa
  */
 int GLI_vDrawWorldPlanarSprite(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* pMaterial, float fscaleX, float fscaleY, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime)
 {
-    /* TODO: decompile from asm/... */
+    return pSpriteController->WorldPlanarSprite(param0, pMaterial, fscaleX, fscaleY, _p_stViewport, AnimTime);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\VUSprites.cpp lines 2459–2459 */
@@ -1541,7 +1545,7 @@ void GLI_xSetMaterialTextureForTXT(GLI_tdstMaterial_* pMat, GLI_tdstTexture_* pT
  */
 void GLI_vDraw2DSpriteWithPercent(GLD_tdstViewportAttributes_* _p_stViewport, float XMin, float YMin, float XMax, float YMax, GLI_tdstMaterial_* hMaterial)
 {
-    /* TODO: decompile from asm/... */
+    return pSpriteController->Icon2D_Percent(_p_stViewport, XMin, YMin, XMax, YMax, hMaterial);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\VUSprites.cpp lines 2376–2379 */
@@ -1581,7 +1585,7 @@ void GLI_vDraw2DSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* _p_stViewpo
  */
 void GLI_vDraw2DSpriteWithUVWithOptimization(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xXMax, float xYMin, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial)
 {
-    /* TODO: decompile from asm/... */
+    return pSpriteController->Sprite2DWithUV(p_stVpt, xXMin, xXMax, xYMin, xYMax, xUMin, xUMax, xVMin, xVMax, hMaterial);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\VUSprites.cpp lines 2356–2357 */
@@ -1619,7 +1623,7 @@ void GLI_vDisableDepthTest(void)
  */
 int GLI_vDrawWorldSpriteWithUVsOrientedOpt(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime, float fAngle)
 {
-    /* TODO: decompile from asm/... */
+    return pSpriteController->SimpleSpriteOriented_WithUVs(param0, hVisualMaterial, SizeX, SizeY, U1, V1, U2, V2, _p_stViewport, AnimTime, fAngle);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\VUSprites.cpp lines 2331–2331 */
@@ -1631,7 +1635,7 @@ int GLI_vDrawWorldSpriteWithUVsOrientedOpt(MTH3D_tdstVector_* param0, GLI_tdstMa
  */
 void GLI_vInitSpritesForThisViewport(GLD_tdstViewportAttributes_* _p_stViewport)
 {
-    /* TODO: decompile from asm/... */
+    return pSpriteController->InitSpritesForViewport(_p_stViewport);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\VUSprites.cpp lines 2326–2326 */
@@ -1655,7 +1659,7 @@ int GLI_vDrawWorldSpriteColor(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* p
  */
 int GLI_vDrawWorldSpriteWithUVAnimation(GLI_tdstMaterial_* pMaterial, MTH3D_tdstVector_* pPosition, float SizeX, float SizeY, float AnimTime)
 {
-    /* TODO: decompile from asm/... */
+    return pSpriteController->SimpleSprite_UVAnim(pMaterial, pPosition, SizeX, SizeY, AnimTime);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\VUSprites.cpp lines 2316–2316 */

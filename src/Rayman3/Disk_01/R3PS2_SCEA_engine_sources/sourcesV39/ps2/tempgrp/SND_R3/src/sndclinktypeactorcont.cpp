@@ -663,7 +663,7 @@ int fn_bObjectPosition__FiiP9_stVector(int s32_Unused0, int s32_Unused1, _stVect
  */
 int fn_bGhostObjectLink__Fii(void)
 {
-    /* TODO: decompile from asm/... */
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 80–80 */
@@ -675,7 +675,7 @@ int fn_bGhostObjectLink__Fii(void)
  */
 int fn_s32GhostObjectSwitch__Fii(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 73–79 */
@@ -705,5 +705,5 @@ void fn_vGhostObjectExtraCoef__Fi14_SND_tduRefEvtPiPiPi(int* pr_Pitch, int* pr_P
  */
 unsigned char fn_u8GhostObjectReverb__Fi(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }

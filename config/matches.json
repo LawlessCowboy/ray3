@@ -14541,6 +14541,531 @@
           "type": 7
         }
       ]
+    },
+    {
+      "address": "0x0024e420",
+      "candidate_size": 28,
+      "first_difference": 0,
+      "implementation": "short COL_xGetElementType(COL_tdstCollideObject_* hObject, short xElement)\n{\n    return ((short*)hObject->d_xListOfElementsTypes)[xElement];\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6-luna",
+      "name": "COL_xGetElementType",
+      "reason": "Retried with typed short-array indexing; residual remains MWCC scheduling/order: candidate loads hObject field at +0x0 before sign-extending index, target sign-extends and scales xElement before field load. Same instruction-order mismatch persists.",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c",
+      "status": "MISMATCH",
+      "target_size": 28,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a9720",
+      "candidate_size": 28,
+      "first_difference": 8,
+      "implementation": "GLI_tdstMaterial_* fn_hGetVisualMaterialFromIndex(unsigned short uwIndex)\n{\n    extern GLI_tdstMaterial_* GLI_g_StaticCopyOfArrayOfVisualMaterial[];\n    return GLI_g_StaticCopyOfArrayOfVisualMaterial[uwIndex];\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "fn_hGetVisualMaterialFromIndex",
+      "reason": "Natural array indexing resolves through the named absolute array relocation, while target loads the array base from GP offset -0x7AF4. The recovered global declaration/symbol mapping cannot express the observed GP-relative access; requires global-data/debug-symbol evidence.",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MISMATCH",
+      "target_size": 24,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a9d70",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "GLI_xGetMaterialTextureScrollingCoef",
+      "reason": "Target stores two floats through $a3 and $t0, plus a flag through $a2; recovered signature declares only three output pointers after material, leaving the $t0 destination without a declared argument. Struct offsets 0xBC/0xC0 correspond to nested UV fields, but signature evidence must be resolved before writing natural C.",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MISMATCH",
+      "target_size": 28,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a4000",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GEO_vSetElementVisibleInPortalFlag(GEO_tdstGeometricObject_* hObject, short hElement, unsigned char bVisible)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "GEO_vSetElementVisibleInPortalFlag",
+      "reason": "Target accesses element pointer +0x34 to store the visibility byte. Recovered GEO_tdstElementIndexedTriangles_ declaration ends at 0x30 and has no field at +0x34; need corrected aggregate layout/field evidence before adding a named natural-C access.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/ElemEd.c",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0031a950",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void SCT_fn_vInitMaterialForGoThrough(void)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "SCT_fn_vInitMaterialForGoThrough",
+      "reason": "Target writes 1 to GP offset -0x79C0. Existing recovered globals map to -0x6504/-0x6510; no matching declaration is identified, so assigning a guessed global would conceal a likely missing/misaddressed symbol.",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectmir.c",
+      "status": "MISMATCH",
+      "target_size": 12,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00272080",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GAM_fn_vChangeCharacterForMicro(HIE_tdstSuperObject_* _hCharacter)\n{\n    /* TODO: global symbol at 0x00542D30 is not recovered in this TU. */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "GAM_fn_vChangeCharacterForMicro",
+      "reason": "Target requires loading an unrecovered global pointer at 0x00542D30, then storing _hCharacter->hLinkedObject.p_stCharacter at offset 0x10; this TU has no evidence-supported declaration/name for that global.",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MS_Micro.c",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a50c0",
+      "candidate_size": 32,
+      "first_difference": 8,
+      "implementation": "void GLI_fn_vInitRenderParameters(void)\n{\n    xSaveFogIsOn = 0;\n    bIsWriteEnable = 1;\n    ucSaveCyclingMode[1] = 0xff;\n    ucSaveCyclingMode[0] = 0xff;\n    ucSaveFunction = 0xff;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "GLI_fn_vInitRenderParameters",
+      "reason": "Retried from full attempt history with two natural assignment-order variants. All target stores, values, and relocations are present, but CodeWarrior emits ucSaveCyclingMode[1] before xSaveFogIsOn and bIsWriteEnable regardless of this source ordering; target emits fog, write-enable, cycling mode [1], then [0], with ucSaveFunction in the return delay slot. Residual is store scheduling/source-line mapping.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Domat_PS2GL.c",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0024e420",
+      "candidate_size": 28,
+      "first_difference": 0,
+      "implementation": "short COL_xGetElementType(COL_tdstCollideObject_* hObject, short xElement)\n{\n    return ((short*)hObject->d_xListOfElementsTypes)[xElement];\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6-luna",
+      "name": "COL_xGetElementType",
+      "reason": "Reviewed full attempt history; typed indexing was already tried. Two controlled natural-C variants (copy short index to local; then sequence a typed pointer local after it) compile identically and retain the same first differences: +0x0 candidate lw field before target index sign-extension/scale; +0x10 candidate adds index to field-base register in opposite order. Restored simplest typed-index form. Likely scheduler/evaluation ordering; further progress may need a compiler/source-layout hypothesis.",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c",
+      "status": "MISMATCH",
+      "target_size": 28,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d11c0",
+      "candidate_size": 32,
+      "first_difference": 0,
+      "implementation": "void GLI_vInitSpritesForThisViewport(GLD_tdstViewportAttributes_* _p_stViewport)\n{\n    return pSpriteController->InitSpritesForViewport(_p_stViewport);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "GLI_vInitSpritesForThisViewport",
+      "reason": "natural controller forwarding resolves correct symbol, but MWCC emits stack-frame jal/jr instead of target tail j; source shape or debug signature needed to enable sibling-call generation",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MISMATCH",
+      "target_size": 12,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d10c0",
+      "candidate_size": 40,
+      "first_difference": 0,
+      "implementation": "void GLI_vDraw2DSpriteWithPercent(GLD_tdstViewportAttributes_* _p_stViewport, float XMin, float YMin, float XMax, float YMax, GLI_tdstMaterial_* hMaterial)\n{\n    return pSpriteController->Icon2D_Percent(_p_stViewport, XMin, YMin, XMax, YMax, hMaterial);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "GLI_vDraw2DSpriteWithPercent",
+      "reason": "natural Icon2D_Percent forwarding resolves correct symbol and argument order, but MWCC emits stack-frame jal/jr rather than target tail j",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d1160",
+      "candidate_size": 40,
+      "first_difference": 0,
+      "implementation": "void GLI_vDraw2DSpriteWithUVWithOptimization(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xXMax, float xYMin, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial)\n{\n    return pSpriteController->Sprite2DWithUV(p_stVpt, xXMin, xXMax, xYMin, xYMax, xUMin, xUMax, xVMin, xVMax, hMaterial);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "GLI_vDraw2DSpriteWithUVWithOptimization",
+      "reason": "natural Sprite2DWithUV forwarding resolves correct symbol and arguments, but MWCC emits stack-frame jal/jr rather than target tail j",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d11e0",
+      "candidate_size": 40,
+      "first_difference": 0,
+      "implementation": "int GLI_vDrawWorldSpriteWithUVAnimation(GLI_tdstMaterial_* pMaterial, MTH3D_tdstVector_* pPosition, float SizeX, float SizeY, float AnimTime)\n{\n    return pSpriteController->SimpleSprite_UVAnim(pMaterial, pPosition, SizeX, SizeY, AnimTime);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "GLI_vDrawWorldSpriteWithUVAnimation",
+      "reason": "natural UVAnim forwarding resolves correct symbol and arguments, but MWCC emits stack-frame jal/jr rather than target tail j",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d0e60",
+      "candidate_size": 52,
+      "first_difference": 0,
+      "implementation": "int GLI_vDrawWorldPlanarSprite(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* pMaterial, float fscaleX, float fscaleY, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime)\n{\n    return pSpriteController->WorldPlanarSprite(param0, pMaterial, fscaleX, fscaleY, _p_stViewport, AnimTime);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "GLI_vDrawWorldPlanarSprite",
+      "reason": "overloaded WorldPlanarSprite forwarding resolves correct symbol and args, but compiler emits stack-frame jal/jr instead of tail j",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d11a0",
+      "candidate_size": 52,
+      "first_difference": 0,
+      "implementation": "int GLI_vDrawWorldSpriteWithUVsOrientedOpt(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime, float fAngle)\n{\n    return pSpriteController->SimpleSpriteOriented_WithUVs(param0, hVisualMaterial, SizeX, SizeY, U1, V1, U2, V2, _p_stViewport, AnimTime, fAngle);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "GLI_vDrawWorldSpriteWithUVsOrientedOpt",
+      "reason": "overloaded oriented UV forwarding resolves correct target and argument order, but compiler emits stack-frame jal/jr instead of tail j",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002e9ea0",
+      "candidate_size": 28,
+      "first_difference": 0,
+      "implementation": "void WaterFx_vDesinit(void)\n{\n    WaterFx_g_List.DeleteAll();\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "WaterFx_vDesinit",
+      "reason": "C_FxList::DeleteAll forwarding resolves expected relocation and GP object, but MWCC emits stack-frame jal/jr instead of target tail j",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002e9eb0",
+      "candidate_size": 28,
+      "first_difference": 0,
+      "implementation": "void WaterFx_vDestroySDLs(void)\n{\n    WaterFx_g_List.DeleteAllSDLs();\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "WaterFx_vDestroySDLs",
+      "reason": "C_FxList::DeleteAllSDLs forwarding resolves expected relocation and GP object, but MWCC emits stack-frame jal/jr instead of target tail j",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001cf600",
+      "candidate_size": null,
+      "first_difference": null,
+      "implementation": "",
+      "line_offsets_equal": null,
+      "model": "gpt-6-luna",
+      "name": "fv_vVarDestroyed__23CMusicMarkerNotifTargetFRQ24usnd4CVar",
+      "reason": "compiler object has no symbol for recovered method name after correcting CVar-reference signature; likely ABI/debug-name mapping or declaration mismatch",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "OBJECT_ERROR",
+      "target_size": null,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ce2f0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "fv_vNotify__18CMarkerNotifTargetFPvPv",
+      "reason": "two pointer dereferences are target-supported but final byte store requires unrecovered global at GP -0x7D34; do not invent global mapping",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d7530",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "",
+      "line_offsets_equal": true,
+      "model": "gpt-6-luna",
+      "name": "__dl__5C_SdlFPv",
+      "reason": "target dispatches indirectly through unrecovered function pointer at GP -0x7F98; no evidence-supported source symbol in assigned TU",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MISMATCH",
+      "target_size": 12,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00186830",
+      "candidate_size": null,
+      "first_difference": null,
+      "implementation": "",
+      "line_offsets_equal": null,
+      "model": "gpt-6-luna",
+      "name": "f_vSetValue__Q24usnd12TTypedVar<i>Fi",
+      "reason": "OBJECT_ERROR: compiled object has no function symbol with the recovered template-instantiation name; target signature/mangling cannot be matched from current TU scaffold.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "OBJECT_ERROR",
+      "target_size": null,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00186d10",
+      "candidate_size": 8,
+      "first_difference": 4,
+      "implementation": "int SND_fn_s32GetLastMarker(void)\n{\n    /* TODO: identify the recovered marker global at GP offset -0x7D34. */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "SND_fn_s32GetLastMarker",
+      "reason": "Target reads signed byte from GP offset -0x7D34, but no recovered global declaration/name maps to that offset in the assigned TU.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00186d00",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void SND_fn_vResetLastMarker(void)\n{\n    /* TODO: identify the recovered marker global at GP offset -0x7D34. */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "SND_fn_vResetLastMarker",
+      "reason": "Target stores 0x2A to GP offset -0x7D34, but no recovered global declaration/name maps to that offset in the assigned TU.",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MISMATCH",
+      "target_size": 12,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00186900",
+      "candidate_size": 36,
+      "first_difference": 0,
+      "implementation": "void SND_fn_vSetStereoSound(int b_Stereo)\n{\n    g_bInStereo = b_Stereo;\n    return usnd::CPS2Box::fs_vSetMono(b_Stereo ^ 1);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "SND_fn_vSetStereoSound",
+      "reason": "Store and boolean normalization match target; MWCC emits a call plus stack frame instead of target tail jump to fs_vSetMono__Q24usnd7CPS2BoxFb.",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MISMATCH",
+      "target_size": 16,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001877f0",
+      "candidate_size": 28,
+      "first_difference": 0,
+      "implementation": "void fn_vUnlockSound__Fv(void)\n{\n    return usnd_vLeaveCritSect(gs_uiCritSect);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "fn_vUnlockSound__Fv",
+      "reason": "Recovered global load and callee match, but MWCC emits a call plus stack frame instead of target tail jump with the load in its delay slot.",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MISMATCH",
+      "target_size": 8,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211ab0",
+      "candidate_size": 36,
+      "first_difference": 8,
+      "implementation": "unsigned char fn_ucSetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)\n{\n    IPT_fn_vSetVAxisForPadNumber(AI_g_ucLastMarioPadUsed, *(short*)p_stGetSetParam);\n    return 1;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6-luna",
+      "name": "fn_ucSetFieldPadVerticalAxis",
+      "reason": "Residual target mismatch after natural C reconstruction; see recorded full matcher diagnostic.",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211b20",
+      "candidate_size": 36,
+      "first_difference": 8,
+      "implementation": "unsigned char fn_ucSetFieldPadHorizontalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)\n{\n    IPT_fn_vSetHAxisForPadNumber(AI_g_ucLastMarioPadUsed, *(short*)p_stGetSetParam);\n    return 1;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6-luna",
+      "name": "fn_ucSetFieldPadHorizontalAxis",
+      "reason": "Residual target mismatch after natural C reconstruction; see recorded full matcher diagnostic.",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211bb0",
+      "candidate_size": 84,
+      "first_difference": 30,
+      "implementation": "unsigned char fn_ucGetFieldPadGlobalVector(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)\n{\n    MTH3D_tdstVector_ stVector;\n    IPT_fn_vGetGlobalVectorForPadNumber(AI_g_ucLastMarioPadUsed, &stVector);\n    ((unsigned int*)p_stGetSetParam)[0] = ((unsigned int*)&stVector)[0];\n    ((unsigned int*)p_stGetSetParam)[1] = ((unsigned int*)&stVector)[1];\n    ((unsigned int*)p_stGetSetParam)[2] = ((unsigned int*)&stVector)[2];\n    p_stGetSetParam->eType = E_vt_Vector;\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "fn_ucGetFieldPadGlobalVector",
+      "reason": "Residual target mismatch after natural C reconstruction; see recorded full matcher diagnostic.",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 80,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211ab0",
+      "candidate_size": 36,
+      "first_difference": 8,
+      "implementation": "unsigned char fn_ucSetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)\n{\n    IPT_fn_vSetVAxisForPadNumber(AI_g_ucLastMarioPadUsed, *(short*)p_stGetSetParam);\n    return 1;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6-luna",
+      "name": "fn_ucSetFieldPadVerticalAxis",
+      "reason": "first differing word +0x8: candidate loads *(short*)p_stGetSetParam before the pad global; target loads the pad global before jal and loads the short in its delay slot. Likely MWCC argument evaluation/scheduling.",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211b20",
+      "candidate_size": 36,
+      "first_difference": 8,
+      "implementation": "unsigned char fn_ucSetFieldPadHorizontalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)\n{\n    IPT_fn_vSetHAxisForPadNumber(AI_g_ucLastMarioPadUsed, *(short*)p_stGetSetParam);\n    return 1;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6-luna",
+      "name": "fn_ucSetFieldPadHorizontalAxis",
+      "reason": "first differing word +0x8: candidate loads *(short*)p_stGetSetParam before the pad global; target loads the pad global before jal and loads the short in its delay slot. Likely MWCC argument evaluation/scheduling.",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211bb0",
+      "candidate_size": 84,
+      "first_difference": 30,
+      "implementation": "unsigned char fn_ucGetFieldPadGlobalVector(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)\n{\n    MTH3D_tdstVector_ stVector;\n    IPT_fn_vGetGlobalVectorForPadNumber(AI_g_ucLastMarioPadUsed, &stVector);\n    ((unsigned int*)p_stGetSetParam)[0] = ((unsigned int*)&stVector)[0];\n    ((unsigned int*)p_stGetSetParam)[1] = ((unsigned int*)&stVector)[1];\n    ((unsigned int*)p_stGetSetParam)[2] = ((unsigned int*)&stVector)[2];\n    p_stGetSetParam->eType = E_vt_Vector;\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "fn_ucGetFieldPadGlobalVector",
+      "reason": "function body and call are reconstructed; candidate is 84 bytes vs target 80. First residual at +0x1c: candidate computes the vector stack address where target loads the first word, followed by different copy scheduling and an extra epilogue instruction.",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 80,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b64e0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void AskForLevelStartWithName(void)\n{\n    extern void AskForLevelStart(void);\n    AskForLevelStart();\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "AskForLevelStartWithName",
+      "reason": "recovered void signature compiles to a tail call (8 bytes); target has a 36-byte frame, calls AskForLevelStart, then returns global D_538301 in v0. Return-value/global evidence conflicts with recovered void signature.",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawInterf.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b6510",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void AskForLevelStartWithName(void)\n{\n    extern void AskForLevelStart(void);\n    AskForLevelStart();\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "AskForLevelStart",
+      "reason": "target calls strcpy(D_538301, @1139), but this translation unit has no recovered declarations/mappings for the destination global or source string. Preserve TODO rather than inventing symbol or string.",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawInterf.c",
+      "status": "MISMATCH",
+      "target_size": 40,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002be710",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void TBF_vCreateLevelTRSBloc(void)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "TBF_vCreateLevelTRSBloc",
+      "reason": "Target calls printf and stores -1 at GP offset -0x7A98; the matching source global and @506 format string are not recovered in this translation unit.",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_texture.c",
+      "status": "MISMATCH",
+      "target_size": 40,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002be740",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void TBF_vCreateLevelTRSBloc(void)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "TBF_vCreateLevel",
+      "reason": "Target calls printf and stores -1 at GP offset -0x7A98; the matching source global and @506 format string are not recovered in this translation unit.",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_texture.c",
+      "status": "MISMATCH",
+      "target_size": 40,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002be770",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void TBF_vCreateFix(void)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6-luna",
+      "name": "TBF_vCreateFix",
+      "reason": "Target calls printf and stores -1 at GP offset -0x7A98; the matching source global and @506 format string are not recovered in this translation unit.",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_texture.c",
+      "status": "MISMATCH",
+      "target_size": 40,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -14785,6 +15310,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
       "status": "MATCH"
     },
+    "0x00132e40": {
+      "address": "0x00132e40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "videoDecSetStream",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
+      "status": "MATCH"
+    },
     "0x00132f90": {
       "address": "0x00132f90",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -14881,6 +15414,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
       "status": "MATCH"
     },
+    "0x00186910": {
+      "address": "0x00186910",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SND_fn_vSetDopplerFactorSound",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MATCH"
+    },
+    "0x00186d20": {
+      "address": "0x00186d20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SND_fn_vChangeVolumeSound",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MATCH"
+    },
+    "0x001877b0": {
+      "address": "0x001877b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SND_fn_vClearLastTheme",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MATCH"
+    },
     "0x001895d0": {
       "address": "0x001895d0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -14969,6 +15526,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactorcont.cpp",
       "status": "MATCH"
     },
+    "0x001cc9c0": {
+      "address": "0x001cc9c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bGhostObjectLink__Fii",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactorcont.cpp",
+      "status": "MATCH"
+    },
+    "0x001cc9d0": {
+      "address": "0x001cc9d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_s32GhostObjectSwitch__Fii",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactorcont.cpp",
+      "status": "MATCH"
+    },
+    "0x001cca10": {
+      "address": "0x001cca10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_u8GhostObjectReverb__Fi",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactorcont.cpp",
+      "status": "MATCH"
+    },
     "0x001cca20": {
       "address": "0x001cca20",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -15022,6 +15603,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "SND_fn_iGetSwitchMaterial",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cf360": {
+      "address": "0x001cf360",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fv_vAddRef__Q216CExtraEventActor13CResObjParamsFv",
+      "size": 16,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
       "status": "MATCH"
     },
@@ -15606,6 +16195,158 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_p_stEvalNULL",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcdd0": {
+      "address": "0x001fcdd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalGraph",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcdf0": {
+      "address": "0x001fcdf0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalCaps",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fce10": {
+      "address": "0x001fce10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalLight",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fce30": {
+      "address": "0x001fce30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalVisualMaterialRef",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fce50": {
+      "address": "0x001fce50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalGameMaterialRef",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fce70": {
+      "address": "0x001fce70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalParticleGenerator",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fce90": {
+      "address": "0x001fce90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalTextRef",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fceb0": {
+      "address": "0x001fceb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalComportRef",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fced0": {
+      "address": "0x001fced0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalEndMacro",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcef0": {
+      "address": "0x001fcef0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalBeginMacro",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcf10": {
+      "address": "0x001fcf10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalEndOfTree",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcf30": {
+      "address": "0x001fcf30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalFamilyRef",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcf50": {
+      "address": "0x001fcf50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalSoundEventRef",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcf70": {
+      "address": "0x001fcf70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalLipsSynchroRef",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcf90": {
+      "address": "0x001fcf90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalString",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcfb0": {
+      "address": "0x001fcfb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalMask",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcfd0": {
+      "address": "0x001fcfd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalDsgVarId",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fcff0": {
+      "address": "0x001fcff0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalModuleRef",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fd010": {
+      "address": "0x001fd010",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalWayPointRef",
+      "size": 28,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
       "status": "MATCH"
     },
@@ -16649,6 +17390,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollElts.c",
       "status": "MATCH"
     },
+    "0x0024cb30": {
+      "address": "0x0024cb30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "COL_lGetIndexedSphereNbSpheres",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollElts.c",
+      "status": "MATCH"
+    },
     "0x0024cc80": {
       "address": "0x0024cc80",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -16862,6 +17611,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_hGetFirstAlwaysActiveCharNode",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/AlwAct.c",
+      "status": "MATCH"
+    },
+    "0x0025b130": {
+      "address": "0x0025b130",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bGetIfCharacterIsInAlwaysActiveCharacterList",
+      "size": 32,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/AlwAct.c",
       "status": "MATCH"
     },
@@ -17207,6 +17964,22 @@
       "name": "MC_fn_vSetCharacterInMainCharacterNode",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/MainChar.c",
+      "status": "MATCH"
+    },
+    "0x00265550": {
+      "address": "0x00265550",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_p_stGetBlockEventSlotMemory",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Micros.c",
+      "status": "MATCH"
+    },
+    "0x00265570": {
+      "address": "0x00265570",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_vSaveBlockEventSlotMemory",
+      "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Micros.c",
       "status": "MATCH"
     },
     "0x00265ab0": {
@@ -18145,6 +18918,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MS_Micro.c",
       "status": "MATCH"
     },
+    "0x00273010": {
+      "address": "0x00273010",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMicroCopyClone",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MS_Micro.c",
+      "status": "MATCH"
+    },
     "0x00273330": {
       "address": "0x00273330",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -18897,6 +19678,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
       "status": "MATCH"
     },
+    "0x002961d0": {
+      "address": "0x002961d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vChangeAreYouSureValue",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MATCH"
+    },
     "0x002961f0": {
       "address": "0x002961f0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -19079,6 +19868,14 @@
       "name": "GEO_hGetParallelBox",
       "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GeoObj.c",
+      "status": "MATCH"
+    },
+    "0x002a4020": {
+      "address": "0x002a4020",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GEO_vSetVisualMaterialOfIndexedTriangles",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/ElemEd.c",
       "status": "MATCH"
     },
     "0x002a4080": {
@@ -19473,11 +20270,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"
     },
+    "0x002a9f50": {
+      "address": "0x002a9f50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xSetMaterialDiffuseCoef",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
     "0x002a9fa0": {
       "address": "0x002a9fa0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_xGetMaterialColor",
       "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
+    "0x002a9fd0": {
+      "address": "0x002a9fd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xSetMaterialColor",
+      "size": 80,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"
     },
@@ -19873,10 +20686,26 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
       "status": "MATCH"
     },
+    "0x002b1360": {
+      "address": "0x002b1360",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xSetCameraRatio",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
+      "status": "MATCH"
+    },
     "0x002b1380": {
       "address": "0x002b1380",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_xGetCameraAspectAndRatio",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
+      "status": "MATCH"
+    },
+    "0x002b13a0": {
+      "address": "0x002b13a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xSetCameraAspectAndRatio",
       "size": 20,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
       "status": "MATCH"
@@ -21697,6 +22526,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
       "status": "MATCH"
     },
+    "0x0031d050": {
+      "address": "0x0031d050",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SECT_fn_vGetMaxPointInBorder",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
+      "status": "MATCH"
+    },
     "0x0031d070": {
       "address": "0x0031d070",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -21831,6 +22668,14 @@
       "name": "TXT_fn_vLoadInit",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/StructForFonts.c",
+      "status": "MATCH"
+    },
+    "0x00324450": {
+      "address": "0x00324450",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "TXT_vReinitStates",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
       "status": "MATCH"
     },
     "0x00326c00": {

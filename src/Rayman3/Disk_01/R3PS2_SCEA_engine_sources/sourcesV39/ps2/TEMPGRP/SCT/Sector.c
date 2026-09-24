@@ -859,5 +859,7 @@ SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void)
  */
 void SECT_fn_vGetMaxPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMaxPoint)
 {
-    /* TODO: decompile from asm/... */
+    ((unsigned int*)_p_stMaxPoint)[0] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[0];
+    ((unsigned int*)_p_stMaxPoint)[1] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[1];
+    ((unsigned int*)_p_stMaxPoint)[2] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[2];
 }

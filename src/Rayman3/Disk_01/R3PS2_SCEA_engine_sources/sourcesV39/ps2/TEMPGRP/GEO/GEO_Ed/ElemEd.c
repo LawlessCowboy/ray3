@@ -232,7 +232,7 @@ void GEO_vSetElementVisibleInPortalFlag(GEO_tdstGeometricObject_* hObject, short
  */
 void GEO_vSetVisualMaterialOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, GLI_tdstMaterial_* hVisualMaterial)
 {
-    /* TODO: decompile from asm/... */
+    hObject->d_stListOfElements[hElement]->hVisualMaterial = hVisualMaterial;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 325–326 */

@@ -229,7 +229,7 @@ void COL_vSetRadiusOfIndexedSphere(COL_tdstCollideObject_* hObject, short hEleme
  */
 short COL_lGetIndexedSphereNbSpheres(COL_tdstCollideObject_* _hObject, short hElement)
 {
-    /* TODO: decompile from asm/... */
+    return (*(COL_tdstElementSpheres_***)&_hObject->d_stListOfElements)[hElement]->xNbSpheres;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 363–365 */

@@ -4182,7 +4182,11 @@ void TXT_vAfficheSpecial(char* String, float* a3_Pos)
  */
 void TXT_vReinitStates(void)
 {
-    /* TODO: decompile from asm/... */
+    g_ucCurrentNumFont = 0;
+    g_ucCurrentNumTextureFont = 50;
+    g_fCurrentSizeFontW = 1.0f;
+    g_fCurrentSizeFontH = 1.0f;
+    g_fInterLetterRatio = 1.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1694–1709 */

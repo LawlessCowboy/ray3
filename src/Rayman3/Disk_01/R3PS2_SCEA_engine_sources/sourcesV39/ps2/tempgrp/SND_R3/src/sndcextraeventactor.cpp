@@ -140,6 +140,7 @@ struct C3DDirection {
 
 struct CResObjParams {
     /* C++ base CInterface at +0x0. */
+    unsigned int m_pvCInterface; /* +0x0 */
     CResObjParams* m_poNext; /* +0x4 */
     CResObjParams* m_poPrevious; /* +0x8 */
     unsigned int m_uiNbRefs; /* +0xc */
@@ -375,7 +376,7 @@ struct TBaseVarType {
 struct CMusicMarkerNotifTarget {
     /* C++ base CVarNotifTarget at +0x0. */
     void fv_vVarChanged(CVar* roVar);
-    void fv_vVarDestroyed(void);
+    void fv_vVarDestroyed(CVar& roVar);
 };
 
 struct CVarData {
@@ -580,7 +581,7 @@ struct iterator {
 
 struct CMarkerNotifTarget {
     /* C++ base CNotifTarget at +0x0. */
-    void fv_vNotify(void* pvParams);
+    void fv_vNotify(void* pvParams, void* pvValue);
 };
 
 unsigned int g_uiLastSwitchValue;
@@ -816,7 +817,7 @@ int SND_fn_iGetSwitchMaterial(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CMarkerNotifTarget::fv_vNotify(void* pvParams)
+void CMarkerNotifTarget::fv_vNotify(void* pvParams, void* pvValue)
 {
     /* TODO: decompile from asm/... */
 }
@@ -1227,9 +1228,9 @@ void CExtraEventActor::f_vIsolate(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fv_vAddRef__Q216CExtraEventActor13CResObjParamsFv(void)
+void fv_vAddRef__Q216CExtraEventActor13CResObjParamsFv(CResObjParams* pParams)
 {
-    /* TODO: decompile from asm/... */
+    pParams->m_uiNbRefs++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 156–168 */
@@ -1337,6 +1338,6 @@ void CMusicMarkerNotifTarget::fv_vVarChanged(CVar* roVar)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CMusicMarkerNotifTarget::fv_vVarDestroyed(void)
+void CMusicMarkerNotifTarget::fv_vVarDestroyed(CVar& roVar)
 {
 }

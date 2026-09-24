@@ -632,8 +632,7 @@ void COL_vSetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p
  */
 short COL_xGetElementType(COL_tdstCollideObject_* hObject, short xElement)
 {
-    xElement *= 2;
-    return *(short*)((char*)hObject->d_xListOfElementsTypes + xElement);
+    return ((short*)hObject->d_xListOfElementsTypes)[xElement];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1179–1193 */

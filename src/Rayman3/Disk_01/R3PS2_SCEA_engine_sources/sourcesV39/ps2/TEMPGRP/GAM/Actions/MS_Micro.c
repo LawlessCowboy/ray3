@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+extern void* memcpy(void*, const void*, size_t);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -1164,7 +1166,7 @@ unsigned int fn_ulMSWaySizeOf(void)
  */
 void GAM_fn_vChangeCharacterForMicro(HIE_tdstSuperObject_* _hCharacter)
 {
-    /* TODO: decompile from asm/... */
+    /* TODO: global symbol at 0x00542D30 is not recovered in this TU. */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 794–818 */
@@ -1797,7 +1799,7 @@ void fn_vMicroSetActivationFlag(tdstEngineObject_* hEngObj, tdstMicro_* h_MS_Mic
  */
 void fn_vMicroCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(_p_stObjectDest->h_Micro, _p_stObjectSrc->h_Micro, 8);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 257–276 */

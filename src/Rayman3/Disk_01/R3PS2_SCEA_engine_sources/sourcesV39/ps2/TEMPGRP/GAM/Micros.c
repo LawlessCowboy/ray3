@@ -1030,7 +1030,7 @@ unsigned char MC_fn_ucIsCharacterInMainCharacterList(HIE_tdstSuperObject_* hChar
  */
 _SND_tdstBlockEvent* GAM_p_stGetBlockEventSlotMemory(int s32_Index)
 {
-    /* TODO: decompile from asm/... */
+    return (_SND_tdstBlockEvent*)ga_pstBlockEventSlotMemory[s32_Index];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 751–752 */
@@ -1043,7 +1043,7 @@ _SND_tdstBlockEvent* GAM_p_stGetBlockEventSlotMemory(int s32_Index)
  */
 void GAM_fn_vSaveBlockEventSlotMemory(_SND_tdstBlockEvent* pst_BlockEvent, int s32_Index)
 {
-    /* TODO: decompile from asm/... */
+    ga_pstBlockEventSlotMemory[s32_Index] = (int)pst_BlockEvent;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 629–739 */

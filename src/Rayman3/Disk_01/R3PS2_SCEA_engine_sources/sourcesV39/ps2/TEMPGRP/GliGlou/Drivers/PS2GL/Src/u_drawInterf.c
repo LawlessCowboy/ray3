@@ -2634,7 +2634,8 @@ void ChangeClippingMode(void)
  */
 void AskForLevelStartWithName(void)
 {
-    /* TODO: decompile from asm/... */
+    extern void AskForLevelStart(void);
+    AskForLevelStart();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 1257–1609 */

@@ -446,7 +446,8 @@ void videoDecBeginPut(anon_0* vd, unsigned char** ptr0, int* len0, unsigned char
  */
 int videoDecSetStream(anon_0* vd, int strType, int ch, int (*cb)(anon_2*, anon_3*, void*), void* data)
 {
-    /* TODO: decompile from asm/... */
+    sceMpegAddStrCallback(vd, strType, ch, cb, data);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 59–81 */
