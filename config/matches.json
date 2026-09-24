@@ -12828,6 +12828,1384 @@
           "type": 4
         }
       ]
+    },
+    {
+      "address": "0x0024aed0",
+      "candidate_size": 52,
+      "first_difference": 0,
+      "implementation": "tdstNodeInterpret_* fn_p_stSetInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stParam;\n\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    SND_fn_vSetStereoSound(stParam.uDummy.uParam.ucValue);\n    return p_stTree;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.6-terra",
+      "name": "fn_p_stSetInStereoMode",
+      "reason": "Natural eval-tree/stereo call has correct size and line map but differs at first relocated eval-tree call.",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
+      "status": "MISMATCH",
+      "target_size": 52,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0024ae80",
+      "candidate_size": 60,
+      "first_difference": 0,
+      "implementation": "tdstNodeInterpret_* fn_p_stSetPrevMusicFadeOut(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stParam;\n\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    SND_fn_vSetMusicFadeOut(stParam.uDummy.uParam.xValue);\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-terra",
+      "name": "fn_p_stSetPrevMusicFadeOut",
+      "reason": "Eval-tree/fade-out reconstruction uses only 60 of 68 target bytes; target includes explicit fp conversion helper calls.",
+      "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
+      "status": "MISMATCH",
+      "target_size": 68,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b8d00",
+      "candidate_size": 172,
+      "first_difference": 28,
+      "implementation": "int GLI_fn_vInitGeometricObjectFromArray(GEO_tdstGeometricObject_* pObj)\n{\n    GEO_tdstElementIndexedTriangles_* p_stEIT;\n    unsigned int j;\n    int iTypeOffset;\n    int iElementOffset;\n\n    if (pObj != NULL) {\n        for (j = 0, iTypeOffset = 0, iElementOffset = 0;\n             j < pObj->xNbElements;\n             iTypeOffset += 2, iElementOffset += 4, j++) {\n            if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) != 1) {\n                continue;\n            }\n            p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);\n            if (p_stEIT == NULL) {\n                continue;\n            }\n            GLI_vCleanSpecificStructure(p_stEIT->glDisplayList);\n            p_stEIT->glDisplayList = 0;\n        }\n    }\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "GLI_fn_vInitGeometricObjectFromArray",
+      "reason": "172/180 bytes, relocation/call correct; first diff +0x1c. Explicit recovered element offsets reproduce target saved registers, but target retains nop-separated increment/condition labels at +0x6c/+0x7c that current recovered int handle fields do not generate.",
+      "size": 180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawHier.c",
+      "status": "MISMATCH",
+      "target_size": 180,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b7bd0",
+      "candidate_size": 204,
+      "first_difference": 24,
+      "implementation": "int GLI_vDMAObjectIsCompliant(GEO_tdstGeometricObject_* pObj)\n{\n    GEO_tdstElementIndexedTriangles_* p_stEIT;\n    int j;\n    int iTypeOffset;\n    int iElementOffset;\n\n    if (GEO_bIsLookAt()) {\n        return 0;\n    }\n\n    for (j = 0, iTypeOffset = 0, iElementOffset = 0;\n         j < pObj->xNbElements;\n         iTypeOffset += 2, iElementOffset += 4, j++) {\n        if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) == 1) {\n            p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);\n            if ((p_stEIT != NULL) && (p_stEIT->hVisualMaterial != NULL) &&\n                ((p_stEIT->hVisualMaterial->lNumberOfDisplayNode >= 2) ||\n                 (p_stEIT->hVisualMaterial->lMaterialAdditionnalType & 6))) {\n                    return 0;\n            }\n        } else {\n            return 0;\n        }\n    }\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "GLI_vDMAObjectIsCompliant",
+      "reason": "204/204 bytes and GEO_bIsLookAt relocation exact; first diff +0x18. Residual is return-delay-slot and loop-label scheduling (target nops at +0x18/+0xac), with recovered material accesses and rejection control flow correct.",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawHier.c",
+      "status": "MISMATCH",
+      "target_size": 204,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b91f0",
+      "candidate_size": 224,
+      "first_difference": 0,
+      "implementation": "void GLI_PS2GL_BuildSpecifForPO(PO_tdstPhysicalObject_* PO)\n{\n    GEO_tdstElementIndexedTriangles_* p_stEIT;\n    int j;\n    GEO_tdstGeometricObject_* pObj;\n    short i;\n    short xNbLodDefinitions;\n    GEO_tdstVisualSet_* hVisualSet;\n    int iLodOffset;\n    int iTypeOffset;\n    int iElementOffset;\n\n    if (PO != NULL) {\n        hVisualSet = PO->_hVisualSet;\n        if (hVisualSet != NULL) {\n            xNbLodDefinitions = hVisualSet->xNbLodDefinitions;\n            if (xNbLodDefinitions == 0) {\n                xNbLodDefinitions = 1;\n            }\n            for (i = 0, iLodOffset = 0;\n                 i < xNbLodDefinitions;\n                 i++, iLodOffset += 4) {\n                pObj = *(GEO_tdstGeometricObject_**)((int)hVisualSet->d_p_stLodDefinitions + iLodOffset);\n                if (pObj != NULL) {\n                    pObj->glDisplayList = 0;\n                    j = 0;\n                    pObj->bIsStatic = 0;\n                    iTypeOffset = 0;\n                    GLI_BIG_GLOBALS_p_stObj = (int)pObj;\n                    iElementOffset = 0;\n                    for (; j < pObj->xNbElements;\n                         iTypeOffset += 2, iElementOffset += 4, j++) {\n                        if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) != 1) {\n                            continue;\n                        }\n                        p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);\n                        if (p_stEIT == NULL) {\n                            continue;\n                        }\n                        p_stEIT->glDisplayList = 0;\n                    }\n                }\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "GLI_PS2GL_BuildSpecifForPO",
+      "reason": "224/236 bytes, GLI_BIG_GLOBALS_p_stObj relocation and all field accesses correct; first diff +0x0. Residual is induction register allocation and three missing loop-label nops caused by recovered array handles being plain int/pointer fields rather than original macro types.",
+      "size": 236,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawHier.c",
+      "status": "MISMATCH",
+      "target_size": 236,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b8c10",
+      "candidate_size": 228,
+      "first_difference": 28,
+      "implementation": "void GLI_PS2GL_CleanSpecifForPO(PO_tdstPhysicalObject_* PO)\n{\n    GEO_tdstGeometricObject_* pObj;\n    short i;\n    short xNbLodDefinitions;\n    GEO_tdstVisualSet_* hVisualSet;\n    int iLodOffset;\n\n    if ((((unsigned int)PO & 0xffffff00) != 0) && (PO != NULL)) {\n        hVisualSet = PO->_hVisualSet;\n        if ((((unsigned int)hVisualSet & 0xffffff00) != 0) &&\n            (hVisualSet != NULL) && (hVisualSet->xType == 0)) {\n            xNbLodDefinitions = hVisualSet->xNbLodDefinitions;\n            if (xNbLodDefinitions == 0) {\n                xNbLodDefinitions = 1;\n            }\n            if (hVisualSet->d_p_stLodDefinitions != (GEO_tduVSObject_*)-1) {\n                if (hVisualSet->d_p_stLodDefinitions != NULL) {\n                    for (i = 0, iLodOffset = 0;\n                         i < xNbLodDefinitions;\n                         i++, iLodOffset += 4) {\n                        pObj = *(GEO_tdstGeometricObject_**)((int)hVisualSet->d_p_stLodDefinitions + iLodOffset);\n                        if (pObj == NULL) {\n                            continue;\n                        }\n                        GLI_vCleanGeoObj(pObj);\n                    }\n                }\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "GLI_PS2GL_CleanSpecifForPO",
+      "reason": "228/236 bytes and GLI_vCleanGeoObj relocation exact; first diff +0x1c. Pointer validity checks and LOD walk are correct; residual is saved-register assignment plus missing null-path/loop-exit nops at target +0x9c/+0xcc.",
+      "size": 236,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawHier.c",
+      "status": "MISMATCH",
+      "target_size": 236,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b8910",
+      "candidate_size": 184,
+      "first_difference": 20,
+      "implementation": "void GLI_vCleanAllSpecificData(void)\n{\n    GLD_bSetBackgroundColorForDevice(0, 0);\n    g_fFogColor[0] = 0.0f;\n    g_fFogEnd = 3000.0f;\n    g_fFogColor[1] = 0.0f;\n    g_fFogStart = 2000.0f;\n    GLI_g_CurrentSDLFogColor = 0;\n    g_fFogColor[2] = 0.0f;\n    GLI_g_OOStartMinusEnd = -0.001f;\n    TXT_vInit();\n    MC_SetBackgroundMaterial(0);\n    GLI_vCleanInterpolData();\n    GLI_vCleanAllSDLs();\n    VAC_Destroy(GLI_g_hVAContainer);\n    GLI_g_hVAContainer = 0;\n    GLI_vDeleteSdlCache();\n    WaterFx_vDesinit();\n    GrassFx_vDesinit();\n    FireFx_vDesinit();\n    DestroyDummySDL();\n    GLI_vForceDeleteAllWaitingPointers();\n    GLI_vPrintSDLStatsAfter();\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-5.6-sol",
+      "name": "GLI_vCleanAllSpecificData",
+      "reason": "184/184 bytes with line map ok and teardown calls exact; first diff +0x14. Recovered float assignments lower 3000 through mtc1/cvt and -0.001 through a literal-pool relocation, while retail uses raw integer bit-pattern stores; preserving recovered float types leaves one unresolved literal relocation.",
+      "size": 184,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawHier.c",
+      "status": "MISMATCH",
+      "target_size": 184,
+      "unresolved_relocations": [
+        {
+          "offset": 68,
+          "symbol": "@93",
+          "type": 8
+        }
+      ]
+    },
+    {
+      "address": "0x002f1280",
+      "candidate_size": 104,
+      "first_difference": 0,
+      "implementation": "void INO_fn_vStopPreCreatedFFBEffect(unsigned int ulCurrentTime, stDevice* hDev, signed char cEffectNumber)\n{\n    if ((hDev != NULL) && (INO_gs_a_bIsForceFeedBack[hDev->m_wPort])) {\n        if ((cEffectNumber != -1) && (cEffectNumber < 20)) {\n            INO_g_a_stDIDevice[hDev->m_wPort].m_stForceFeedBackPrecreated[cEffectNumber].m_ulInUseUntil = ulCurrentTime;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "INO_fn_vStopPreCreatedFFBEffect",
+      "reason": "first diff +0x0; candidate 104 vs target 136 bytes; correct device/effect bounds and field relocation, but MWCC folds nested guards while target preserves non-fallthrough exit branches",
+      "size": 136,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c",
+      "status": "MISMATCH",
+      "target_size": 136,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002f0b10",
+      "candidate_size": 136,
+      "first_difference": 16,
+      "implementation": "void INO_fn_vStopAllFFBEffectForAllDevice(unsigned int ulCurrentTime)\n{\n    signed char i;\n\n    for (i = 0; i < 2; i++) {\n        signed char j;\n        int effectOffset;\n\n        for (j = 0, effectOffset = 0; j < 3; j++, effectOffset += sizeof(INO_stForceFeedBack)) {\n            if ((j != -1) && (j < 3)) {\n                ((INO_stDIDevice*)((char*)&INO_g_a_stDIDevice[i] + effectOffset))->m_stForceFeedBack[0].m_ulInUseUntil = ulCurrentTime;\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "INO_fn_vStopAllFFBEffectForAllDevice",
+      "reason": "first diff +0x10; candidate 136 vs target 156 bytes; setup/relocations match through +0xc, residual is loop scheduling and sign-extension/NOP placement",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c",
+      "status": "MISMATCH",
+      "target_size": 156,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002f0c60",
+      "candidate_size": 120,
+      "first_difference": 0,
+      "implementation": "void INO_fn_vStopFFBEffect(unsigned int ulCurrentTime, stDevice* hDev, signed char cEffectNumber)\n{\n    if ((hDev != NULL) && (INO_gs_a_bIsForceFeedBack[hDev->m_wPort])) {\n        if ((cEffectNumber != -1) && (cEffectNumber < 3)) {\n            if ((cEffectNumber != -1) && (cEffectNumber < 3)) {\n                INO_g_a_stDIDevice[hDev->m_wPort].m_stForceFeedBack[cEffectNumber].m_ulInUseUntil = ulCurrentTime;\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "INO_fn_vStopFFBEffect",
+      "reason": "first diff +0x0; candidate 120 vs target 164 bytes; correct repeated effect validation and store target, but target retains extra branch blocks and signed-index conversions",
+      "size": 164,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c",
+      "status": "MISMATCH",
+      "target_size": 164,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002f0bb0",
+      "candidate_size": 136,
+      "first_difference": 0,
+      "implementation": "void INO_fn_vStopAllFFBEffectForDevice(unsigned int ulCurrentTime, stDevice* hDev)\n{\n    short wDev;\n\n    if (hDev != NULL) {\n        signed char i;\n        int effectOffset;\n\n        wDev = hDev->m_wPort;\n        if (INO_gs_a_bIsForceFeedBack[wDev]) {\n            for (i = 0, effectOffset = 0; i < 3; i++, effectOffset += sizeof(INO_stForceFeedBack)) {\n                if ((i != -1) && (i < 3)) {\n                    ((INO_stDIDevice*)((char*)&INO_g_a_stDIDevice[wDev] + effectOffset))->m_stForceFeedBack[0].m_ulInUseUntil = ulCurrentTime;\n                }\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "INO_fn_vStopAllFFBEffectForDevice",
+      "reason": "first diff +0x0; candidate 136 vs target 172 bytes; correct device check, loop bounds, stride and store, residual is guard branch shape plus target NOP/sign-extension schedule",
+      "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c",
+      "status": "MISMATCH",
+      "target_size": 172,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002f13d0",
+      "candidate_size": 148,
+      "first_difference": 2,
+      "implementation": "void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices(void)\n{\n    short j;\n    short i;\n\n    for (i = 0; i < 2; i++) {\n        for (j = 0; j < 20; j++) {\n            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ulInUseSince = 0;\n            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ulInUseUntil = 0;\n            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ucFadeInStartValue = 0;\n            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ulFadeInTime = 0;\n            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ucConstantValue = 0;\n            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_lConstantTime = 0;\n            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ucFadeOutStopValue = 0;\n            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ulFadeOutTime = 0;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "INO_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices",
+      "reason": "first diff +0x2; candidate 148 vs target 156 bytes; correct two-by-twenty loops and all eight field stores, residual is pointer-strength-reduction/register scheduling",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c",
+      "status": "MISMATCH",
+      "target_size": 156,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001db5a0",
+      "candidate_size": 4400,
+      "first_difference": 0,
+      "implementation": "void AGO_vProcessPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p_stViewport)\n{\n    float pos2;\n    float pos1;\n    float pos0;\n    float sinz;\n    float cosz;\n    float siny;\n    float cosy;\n    float sinx;\n    float cosx;\n    float Angle;\n    float Cos1;\n    float Sin1;\n    MTH3D_tdstVector_ V2;\n    MTH3D_tdstVector_ V1;\n    float* pp;\n    float untransparency;\n    float unscale;\n    float* pp2;\n    int i;\n    int Finished;\n    float Val2;\n    float Val1;\n    float TempValue;\n    AGO_Part_* p;\n\n    p = &g_AGO[ulPartNumber];\n\n    switch ((unsigned char)p->ulType)\n    {\n    case 16:\n        p->a3_fDirection[2] += 4.0f * -9.81f * g_fTimeDifference;\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 1:\n        case 4:\n        p->a3_fDirection[2] += -9.81f * g_fTimeDifference;\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 5:\n        p->a3_fDirection[2] += -3.5f * g_fTimeDifference;\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 3:\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 24:\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        p->a3_fDirection[2] *= powf(p->a3_fAdditionnalVector[0], g_fTimeDifference);\n        break;\n\n    case 14:\n    case 10:\n        Finished = 0;\n        pp = p->a3_fPosition;\n        pp2 = p->a3_fDirection;\n        for (i = 0; i < 3; i++, pp++, pp2++)\n        {\n            TempValue = *pp2 - *pp;\n            Val2 = fabsf(TempValue);\n            if (Val2 <= 0.1f)\n            {\n                Finished++;\n            }\n            else\n            {\n                p->a3_fInitialPosition[i] = *pp;\n                if ((p->ulType & 0xff) == 14)\n                    Val1 = 6.5f * TempValue * g_fTimeDifference;\n                else\n                    Val1 = 1.5f * TempValue * g_fTimeDifference;\n                if (fabsf(Val1) < Val2)\n                    *pp += Val1;\n                else\n                {\n                    *pp = *pp2;\n                    Finished++;\n                }\n            }\n        }\n        if (Finished != 0)\n            p->ulType |= 0x1000000;\n        break;\n\n    case 18:\n        for (i = 0; i < 3; i++)\n            p->a3_fPosition[i] += p->a3_fInitialPosition[i];\n        p->LimitParam.fTimeLimit += 1.0f;\n        if (p->LimitParam.fTimeLimit >= 8.0f)\n            p->ulType |= 0x1000000;\n        break;\n\n    case 9:\n        Val1 = -1.6f * g_fTimeDifference;\n        p->a3_fDirection[0] += Val1;\n        p->a3_fDirection[1] += Val1;\n        p->a3_fDirection[2] += Val1;\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 7:\n    case 11:\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 19:\n        p->a3_fPosition[0] += -0.2f + 0.4f * (float)rand() / 2147483648.0f;\n        p->a3_fPosition[1] += -0.2f + 0.4f * (float)rand() / 2147483648.0f;\n        p->a3_fPosition[2] += 0.2f + 0.3f * (float)rand() / 2147483648.0f;\n        unscale = 6.0f + 4.0f * (float)rand() / 2147483648.0f;\n        untransparency = 50.0f * (float)rand() / 2147483648.0f;\n        p->fScale[0] -= unscale * g_fTimeDifference;\n        p->fScale[1] -= unscale * g_fTimeDifference;\n        p->Transparency -= (100.0f + untransparency) * g_fTimeDifference;\n        if ((p->fScale[0] <= 0.0f) || (p->fScale[1] <= 0.0f) || (p->Transparency <= 0.0f))\n        {\n            p->Transparency = 0.0f;\n            p->fScale[0] = 0.01f;\n            p->fScale[1] = 0.01f;\n            p->ulType |= 0x1000000;\n        }\n        break;\n\n    case 8:\n        if (p->a3_fInitialPosition[0] < 0.25f)\n        {\n            p->a3_fInitialPosition[0] *= 1.51f;\n            p->a3_fInitialPosition[1] *= 1.1f;\n        }\n        else if (p->a3_fInitialPosition[0] < 0.5f)\n        {\n            p->a3_fInitialPosition[0] *= 1.1f;\n            p->a3_fInitialPosition[1] *= 1.01f;\n        }\n        else\n        {\n            p->a3_fInitialPosition[0] *= 0.9f;\n            p->a3_fInitialPosition[1] *= 0.98f;\n        }\n        break;\n\n    case 12:\n        p->fAnimTimeScale += 6.5f * g_fTimeDifference * *((float*)&p->AnimTime);\n        *((float*)&p->AnimTime) += 0.2f * g_fTimeDifference;\n        p->LimitParam.fTimeLimit -= g_fTimeDifference;\n        if (p->LimitParam.fTimeLimit <= 0.01f)\n            p->ulType |= 0x1000000;\n        Sin1 = p->LimitParam.fTimeLimit * PS2_dl_sinf(p->fAnimTimeScale);\n        Cos1 = p->LimitParam.fTimeLimit * PS2_dl_cosf(p->fAnimTimeScale);\n        AGO_Define_OrthogonalVectors((MTH3D_tdstVector_*)p->a3_fDirection, &V1, &V2);\n        for (i = 0; i < 3; i++)\n            p->a3_fPosition[i] = p->a3_fInitialPosition[i] + ((float*)&V1)[i] * Sin1 + ((float*)&V2)[i] * Cos1;\n        break;\n\n    case 6:\n        pos0 = p->a3_fInitialPosition[0] * g_ffFrameTime;\n        pos1 = p->a3_fInitialPosition[1] * g_ffFrameTime;\n        pos2 = p->a3_fInitialPosition[2] * g_ffFrameTime;\n        cosx = PS2_dl_cosf(pos0);\n        sinx = PS2_dl_sinf(pos0);\n        cosy = PS2_dl_cosf(pos1);\n        siny = PS2_dl_sinf(pos1);\n        cosz = PS2_dl_cosf(pos2);\n        sinz = PS2_dl_sinf(pos2);\n        pos0 = 0.5f * (cosz * (-siny * cosx) - cosx * sinz) + 0.707106f * (cosy * cosz);\n        pos1 = 0.5f * ((sinx * siny * cosz) - (sinx * sinz)) + 0.707106f * (cosy * sinz);\n        pos2 = 0.5f * (cosy * cosx) - 0.707106f * siny;\n        p->a3_fPosition[0] = p->a3_fDirection[0] + p->LimitParam.fTimeLimit * pos0;\n        p->a3_fPosition[1] = p->a3_fDirection[1] + p->LimitParam.fTimeLimit * pos1;\n        p->a3_fPosition[2] = p->a3_fDirection[2] + p->LimitParam.fTimeLimit * pos2;\n        p->LimitParam.fTimeLimit -= 4.5f * g_fTimeDifference;\n        if (p->LimitParam.fTimeLimit <= 0.01f)\n            p->ulType |= 0x1000000;\n        break;\n    }\n\n    if (((p->ulType & 0x20000) != 0) && (g_AGO_PloufMaterial != 0) && ((p->ulType & 0x80000) == 0))\n    {\n        if (p->a3_fPosition[2] <= p->LimitParam.f_ZLimit)\n        {\n            p->a3_fPosition[2] = p->LimitParam.f_ZLimit;\n            p->ulType = 0x10003100;\n            p->fScale[0] = 0.1f;\n            p->fScale[1] = 0.1f;\n            p->fCreationTime = g_ffFrameTime;\n            p->Transparency = 250.0f;\n            p->VisualMaterial = g_AGO_PloufMaterial;\n        }\n    }\n\n    unscale = 0.0f;\n    switch (p->ulType & 0xf00)\n    {\n    case 0x900:\n        p->fScale[0] += 5.3f * g_fTimeDifference;\n        p->fScale[1] += 20.5f * g_fTimeDifference;\n        break;\n    case 0xa00:\n        p->fScale[0] += 60.0f * g_fTimeDifference;\n        p->fScale[1] -= 16.5f * g_fTimeDifference;\n        if (p->fScale[0] >= 5.0f)\n            p->ulType = (p->ulType & ~0xf00) | 0xb00;\n        break;\n    case 0xb00:\n        p->fScale[0] -= 60.0f * g_fTimeDifference;\n        if (p->fScale[0] <= 1.0f)\n        {\n            p->fScale[0] = 2.0f;\n            p->ulType = (p->ulType & ~0xf00) | 0xd00;\n        }\n        break;\n    case 0xd00:\n        p->fScale[0] -= 16.5f * g_fTimeDifference;\n        p->fScale[1] += 61.5f * g_fTimeDifference;\n        if (p->fScale[1] >= 10.0f)\n            p->ulType |= 0x1000000;\n        break;\n    case 0x800:\n        unscale = 0.05f;\n        break;\n    case 0x100:\n        unscale = 1.3f;\n        break;\n    case 0x200:\n        unscale = 3.7f;\n        break;\n    case 0x300:\n        unscale = 6.5f;\n        break;\n    case 0x400:\n        unscale = 9.5f;\n        break;\n    case 0x500:\n        unscale = -0.5f;\n        break;\n    case 0x700:\n        p->fScale[0] += p->a2_fScaleSpeed[0] * g_fTimeDifference;\n        p->fScale[1] += p->a2_fScaleSpeed[1] * g_fTimeDifference;\n        break;\n    case 0x600:\n        unscale = -0.2f;\n        break;\n    }\n\n    if (unscale != 0.0f)\n    {\n        unscale *= g_fTimeDifference;\n        p->fScale[0] += unscale;\n        p->fScale[1] += unscale;\n    }\n\n    if ((p->ulType & 0xf00) == 0xe00)\n    {\n        unscale = (float)rand() / 2147483648.0f;\n        p->fScale[0] = unscale;\n        p->fScale[1] = unscale;\n    }\n    else if ((p->ulType & 0xf00) == 0xf00)\n    {\n        unscale = 0.2f + 0.40000004f * (float)rand() / 2147483648.0f;\n        p->fScale[0] = unscale;\n        p->fScale[1] = unscale;\n    }\n\n    if (p->fScale[0] <= 0.0f)\n    {\n        p->fScale[0] = 0.01f;\n        p->ulType |= 0x1000000;\n    }\n    if (p->fScale[1] <= 0.0f)\n    {\n        p->fScale[1] = 0.01f;\n        p->ulType |= 0x1000000;\n    }\n\n    switch (p->ulType & 0xf000)\n    {\n    case 0x8000:\n        if ((g_ffFrameTime - p->fCreationTime) > p->LimitParam.fTimeLimit)\n            p->ulType = (p->ulType & 0xffff0fff) | 0x3000;\n        break;\n    case 0x7000:\n        p->Transparency += 350.0f * g_fTimeDifference;\n        if (p->Transparency >= 255.0f)\n        {\n            p->Transparency = 255.0f;\n            p->ulType = (p->ulType & 0xffff0fff) | 0x8000;\n            p->fCreationTime = g_ffFrameTime;\n        }\n        break;\n    case 0x1000:\n        p->Transparency -= 100.0f * g_fTimeDifference;\n        break;\n    case 0x2000:\n        p->Transparency -= 160.0f * g_fTimeDifference;\n        break;\n    case 0x3000:\n        p->Transparency -= 260.0f * g_fTimeDifference;\n        break;\n    case 0x4000:\n        p->Transparency -= 350.0f * g_fTimeDifference;\n        break;\n    case 0x5000:\n        p->Transparency -= 850.0f * g_fTimeDifference;\n        break;\n    case 0x6000:\n        p->Transparency -= 2500.0f * g_fTimeDifference;\n        break;\n    case 0xf000:\n        if ((p->CreationFrame != AGO_g_PreviousCurrentFrame) && (AGO_G_CurrentVU1Frame == 1))\n        {\n            p->ulType |= 0x1000000;\n            p->Transparency = 0.0f;\n        }\n        break;\n    case 0x9000:\n        p->Transparency = 100.0f + 155.0f * (float)rand() / 2147483648.0f;\n        break;\n    case 0xa000:\n        p->Transparency += 100.0f * g_fTimeDifference;\n        break;\n    case 0xb000:\n        p->Transparency = 255.0f * (1.0f - ((g_ffFrameTime - p->fCreationTime) / p->LimitParam.fTimeLimit));\n        break;\n    case 0xc000:\n        p->Transparency -= p->fShadeSpeed * g_fTimeDifference;\n        break;\n    }\n\n    if ((p->Transparency < 0.0f) && ((p->ulType & 0xf000) != 0x7000))\n    {\n        p->ulType |= 0x1000000;\n        p->Transparency = 0.0f;\n    }\n\n    if ((p->ulType & 0x1000000) == 0)\n        AGO_vDisplayPart(ulPartNumber, _p_stViewport);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "AGO_vProcessPart",
+      "reason": "first diff +0x0; candidate 4400/4608 bytes; structured AGO_Part reconstruction compiles, but MWCC lowers first byte switch as branch chain instead of target @4398 jump table, inflating stack/register allocation",
+      "size": 4608,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 4608,
+      "unresolved_relocations": [
+        {
+          "offset": 240,
+          "symbol": "@333",
+          "type": 8
+        },
+        {
+          "offset": 340,
+          "symbol": "@334",
+          "type": 8
+        },
+        {
+          "offset": 796,
+          "symbol": "@335",
+          "type": 8
+        },
+        {
+          "offset": 1132,
+          "symbol": "@336",
+          "type": 8
+        },
+        {
+          "offset": 1344,
+          "symbol": "@338",
+          "type": 8
+        },
+        {
+          "offset": 1364,
+          "symbol": "@337",
+          "type": 8
+        },
+        {
+          "offset": 1396,
+          "symbol": "@338",
+          "type": 8
+        },
+        {
+          "offset": 1416,
+          "symbol": "@337",
+          "type": 8
+        },
+        {
+          "offset": 1448,
+          "symbol": "@340",
+          "type": 8
+        },
+        {
+          "offset": 1468,
+          "symbol": "@339",
+          "type": 8
+        },
+        {
+          "offset": 1728,
+          "symbol": "@341",
+          "type": 8
+        },
+        {
+          "offset": 1736,
+          "symbol": "@341",
+          "type": 8
+        },
+        {
+          "offset": 1792,
+          "symbol": "@342",
+          "type": 8
+        },
+        {
+          "offset": 1808,
+          "symbol": "@343",
+          "type": 8
+        },
+        {
+          "offset": 1848,
+          "symbol": "@343",
+          "type": 8
+        },
+        {
+          "offset": 1864,
+          "symbol": "@344",
+          "type": 8
+        },
+        {
+          "offset": 1880,
+          "symbol": "@345",
+          "type": 8
+        },
+        {
+          "offset": 1896,
+          "symbol": "@346",
+          "type": 8
+        },
+        {
+          "offset": 1948,
+          "symbol": "@339",
+          "type": 8
+        },
+        {
+          "offset": 1988,
+          "symbol": "@341",
+          "type": 8
+        },
+        {
+          "offset": 2388,
+          "symbol": "@347",
+          "type": 8
+        },
+        {
+          "offset": 2432,
+          "symbol": "@347",
+          "type": 8
+        },
+        {
+          "offset": 2480,
+          "symbol": "@347",
+          "type": 8
+        },
+        {
+          "offset": 2528,
+          "symbol": "@341",
+          "type": 8
+        },
+        {
+          "offset": 2648,
+          "symbol": "@335",
+          "type": 8
+        },
+        {
+          "offset": 2656,
+          "symbol": "@335",
+          "type": 8
+        },
+        {
+          "offset": 2816,
+          "symbol": "@348",
+          "type": 8
+        },
+        {
+          "offset": 3164,
+          "symbol": "@349",
+          "type": 8
+        },
+        {
+          "offset": 3172,
+          "symbol": "@350",
+          "type": 8
+        },
+        {
+          "offset": 3180,
+          "symbol": "@351",
+          "type": 8
+        },
+        {
+          "offset": 3272,
+          "symbol": "@337",
+          "type": 8
+        },
+        {
+          "offset": 3424,
+          "symbol": "@352",
+          "type": 8
+        },
+        {
+          "offset": 3440,
+          "symbol": "@339",
+          "type": 8
+        },
+        {
+          "offset": 3488,
+          "symbol": "@341",
+          "type": 8
+        },
+        {
+          "offset": 3540,
+          "symbol": "@341",
+          "type": 8
+        }
+      ]
+    },
+    {
+      "address": "0x001d5f00",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void AGO_vAddParticleContd(unsigned int PartType, MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)\n{\n    float fSizeY;\n    float fSizeX;\n    MTH4D_tdstVector_ Normal;\n    float Pos1[3];\n    unsigned int i;\n    int j;\n    AGO_V4D_ Vector4;\n    AGO_V4D_ Vector3;\n    AGO_V4D_ Vector2;\n    AGO_V4D_ Vector1;\n    AGO_V4D_ NDirection;\n    AGO_V4D_ NPosition;\n    float* p2;\n    float* p1;\n    float fNorm;\n    AGO_Part_* p;\n    float Color[4];\n    float sx;\n    float Norm;\n    float SPEED;\n    float DIST;\n    float R2;\n    float R1;\n    MTH3D_tdstVector_ V2;\n    MTH3D_tdstVector_ V1;\n    unsigned int can;\n    unsigned int IntParam;\n    float Direction[4];\n    float param2;\n    float multiplier;\n    float Pos2[3];\n    float V4[3];\n    float V3[3];\n    float fNorm1;\n    unsigned int Limit;\n    float scale;\n    float Pos[3];\n    AGO_V4D_ Dest;\n    float ZAngle;\n    float YAngle;\n    float XAngle;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "AGO_vAddParticle",
+      "reason": "first diff +0x0; m2c initially failed on missing @3556 jump table; recovered 68 retail ELF entries and generated seed, but 28KB seed still has 185 unresolved fields/globals/COP1 accumulator sites before safe natural-C transfer",
+      "size": 7616,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 7616,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001dc7a0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void AGO_vDisplayPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p_stViewport);\n\nvoid AGO_vProcessPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p_stViewport)\n{\n    float pos2;\n    float pos1;\n    float pos0;\n    float sinz;\n    float cosz;\n    float siny;\n    float cosy;\n    float sinx;\n    float cosx;\n    float Angle;\n    float Cos1;\n    float Sin1;\n    MTH3D_tdstVector_ V2;\n    MTH3D_tdstVector_ V1;\n    float* pp;\n    float untransparency;\n    float unscale;\n    float* pp2;\n    int i;\n    int Finished;\n    float Val2;\n    float Val1;\n    float TempValue;\n    AGO_Part_* p;\n\n    p = &g_AGO[ulPartNumber];\n\n    switch ((unsigned char)p->ulType)\n    {\n    case 16:\n        p->a3_fDirection[2] += 4.0f * -9.81f * g_fTimeDifference;\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 1:\n        case 4:\n        p->a3_fDirection[2] += -9.81f * g_fTimeDifference;\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 5:\n        p->a3_fDirection[2] += -3.5f * g_fTimeDifference;\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 3:\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 24:\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        p->a3_fDirection[2] *= powf(p->a3_fAdditionnalVector[0], g_fTimeDifference);\n        break;\n\n    case 14:\n    case 10:\n        Finished = 0;\n        pp = p->a3_fPosition;\n        pp2 = p->a3_fDirection;\n        for (i = 0; i < 3; i++, pp++, pp2++)\n        {\n            TempValue = *pp2 - *pp;\n            Val2 = fabsf(TempValue);\n            if (Val2 <= 0.1f)\n            {\n                Finished++;\n            }\n            else\n            {\n                p->a3_fInitialPosition[i] = *pp;\n                if ((p->ulType & 0xff) == 14)\n                    Val1 = 6.5f * TempValue * g_fTimeDifference;\n                else\n                    Val1 = 1.5f * TempValue * g_fTimeDifference;\n                if (fabsf(Val1) < Val2)\n                    *pp += Val1;\n                else\n                {\n                    *pp = *pp2;\n                    Finished++;\n                }\n            }\n        }\n        if (Finished != 0)\n            p->ulType |= 0x1000000;\n        break;\n\n    case 18:\n        for (i = 0; i < 3; i++)\n            p->a3_fPosition[i] += p->a3_fInitialPosition[i];\n        p->LimitParam.fTimeLimit += 1.0f;\n        if (p->LimitParam.fTimeLimit >= 8.0f)\n            p->ulType |= 0x1000000;\n        break;\n\n    case 9:\n        Val1 = -1.6f * g_fTimeDifference;\n        p->a3_fDirection[0] += Val1;\n        p->a3_fDirection[1] += Val1;\n        p->a3_fDirection[2] += Val1;\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 7:\n    case 11:\n        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;\n        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;\n        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;\n        break;\n\n    case 19:\n        p->a3_fPosition[0] += -0.2f + 0.4f * (float)rand() / 2147483648.0f;\n        p->a3_fPosition[1] += -0.2f + 0.4f * (float)rand() / 2147483648.0f;\n        p->a3_fPosition[2] += 0.2f + 0.3f * (float)rand() / 2147483648.0f;\n        unscale = 6.0f + 4.0f * (float)rand() / 2147483648.0f;\n        untransparency = 50.0f * (float)rand() / 2147483648.0f;\n        p->fScale[0] -= unscale * g_fTimeDifference;\n        p->fScale[1] -= unscale * g_fTimeDifference;\n        p->Transparency -= (100.0f + untransparency) * g_fTimeDifference;\n        if ((p->fScale[0] <= 0.0f) || (p->fScale[1] <= 0.0f) || (p->Transparency <= 0.0f))\n        {\n            p->Transparency = 0.0f;\n            p->fScale[0] = 0.01f;\n            p->fScale[1] = 0.01f;\n            p->ulType |= 0x1000000;\n        }\n        break;\n\n    case 8:\n        if (p->a3_fInitialPosition[0] < 0.25f)\n        {\n            p->a3_fInitialPosition[0] *= 1.51f;\n            p->a3_fInitialPosition[1] *= 1.1f;\n        }\n        else if (p->a3_fInitialPosition[0] < 0.5f)\n        {\n            p->a3_fInitialPosition[0] *= 1.1f;\n            p->a3_fInitialPosition[1] *= 1.01f;\n        }\n        else\n        {\n            p->a3_fInitialPosition[0] *= 0.9f;\n            p->a3_fInitialPosition[1] *= 0.98f;\n        }\n        break;\n\n    case 12:\n        p->fAnimTimeScale += 6.5f * g_fTimeDifference * *((float*)&p->AnimTime);\n        *((float*)&p->AnimTime) += 0.2f * g_fTimeDifference;\n        p->LimitParam.fTimeLimit -= g_fTimeDifference;\n        if (p->LimitParam.fTimeLimit <= 0.01f)\n            p->ulType |= 0x1000000;\n        Sin1 = p->LimitParam.fTimeLimit * PS2_dl_sinf(p->fAnimTimeScale);\n        Cos1 = p->LimitParam.fTimeLimit * PS2_dl_cosf(p->fAnimTimeScale);\n        AGO_Define_OrthogonalVectors((MTH3D_tdstVector_*)p->a3_fDirection, &V1, &V2);\n        for (i = 0; i < 3; i++)\n            p->a3_fPosition[i] = p->a3_fInitialPosition[i] + ((float*)&V1)[i] * Sin1 + ((float*)&V2)[i] * Cos1;\n        break;\n\n    case 6:\n        pos0 = p->a3_fInitialPosition[0] * g_ffFrameTime;\n        pos1 = p->a3_fInitialPosition[1] * g_ffFrameTime;\n        pos2 = p->a3_fInitialPosition[2] * g_ffFrameTime;\n        cosx = PS2_dl_cosf(pos0);\n        sinx = PS2_dl_sinf(pos0);\n        cosy = PS2_dl_cosf(pos1);\n        siny = PS2_dl_sinf(pos1);\n        cosz = PS2_dl_cosf(pos2);\n        sinz = PS2_dl_sinf(pos2);\n        pos0 = 0.5f * (cosz * (-siny * cosx) - cosx * sinz) + 0.707106f * (cosy * cosz);\n        pos1 = 0.5f * ((sinx * siny * cosz) - (sinx * sinz)) + 0.707106f * (cosy * sinz);\n        pos2 = 0.5f * (cosy * cosx) - 0.707106f * siny;\n        p->a3_fPosition[0] = p->a3_fDirection[0] + p->LimitParam.fTimeLimit * pos0;\n        p->a3_fPosition[1] = p->a3_fDirection[1] + p->LimitParam.fTimeLimit * pos1;\n        p->a3_fPosition[2] = p->a3_fDirection[2] + p->LimitParam.fTimeLimit * pos2;\n        p->LimitParam.fTimeLimit -= 4.5f * g_fTimeDifference;\n        if (p->LimitParam.fTimeLimit <= 0.01f)\n            p->ulType |= 0x1000000;\n        break;\n    }\n\n    if (((p->ulType & 0x20000) != 0) && (g_AGO_PloufMaterial != 0) && ((p->ulType & 0x80000) == 0))\n    {\n        if (p->a3_fPosition[2] <= p->LimitParam.f_ZLimit)\n        {\n            p->a3_fPosition[2] = p->LimitParam.f_ZLimit;\n            p->ulType = 0x10003100;\n            p->fScale[0] = 0.1f;\n            p->fScale[1] = 0.1f;\n            p->fCreationTime = g_ffFrameTime;\n            p->Transparency = 250.0f;\n            p->VisualMaterial = g_AGO_PloufMaterial;\n        }\n    }\n\n    unscale = 0.0f;\n    switch (p->ulType & 0xf00)\n    {\n    case 0x900:\n        p->fScale[0] += 5.3f * g_fTimeDifference;\n        p->fScale[1] += 20.5f * g_fTimeDifference;\n        break;\n    case 0xa00:\n        p->fScale[0] += 60.0f * g_fTimeDifference;\n        p->fScale[1] -= 16.5f * g_fTimeDifference;\n        if (p->fScale[0] >= 5.0f)\n            p->ulType = (p->ulType & ~0xf00) | 0xb00;\n        break;\n    case 0xb00:\n        p->fScale[0] -= 60.0f * g_fTimeDifference;\n        if (p->fScale[0] <= 1.0f)\n        {\n            p->fScale[0] = 2.0f;\n            p->ulType = (p->ulType & ~0xf00) | 0xd00;\n        }\n        break;\n    case 0xd00:\n        p->fScale[0] -= 16.5f * g_fTimeDifference;\n        p->fScale[1] += 61.5f * g_fTimeDifference;\n        if (p->fScale[1] >= 10.0f)\n            p->ulType |= 0x1000000;\n        break;\n    case 0x800:\n        unscale = 0.05f;\n        break;\n    case 0x100:\n        unscale = 1.3f;\n        break;\n    case 0x200:\n        unscale = 3.7f;\n        break;\n    case 0x300:\n        unscale = 6.5f;\n        break;\n    case 0x400:\n        unscale = 9.5f;\n        break;\n    case 0x500:\n        unscale = -0.5f;\n        break;\n    case 0x700:\n        p->fScale[0] += p->a2_fScaleSpeed[0] * g_fTimeDifference;\n        p->fScale[1] += p->a2_fScaleSpeed[1] * g_fTimeDifference;\n        break;\n    case 0x600:\n        unscale = -0.2f;\n        break;\n    }\n\n    if (unscale != 0.0f)\n    {\n        unscale *= g_fTimeDifference;\n        p->fScale[0] += unscale;\n        p->fScale[1] += unscale;\n    }\n\n    if ((p->ulType & 0xf00) == 0xe00)\n    {\n        unscale = (float)rand() / 2147483648.0f;\n        p->fScale[0] = unscale;\n        p->fScale[1] = unscale;\n    }\n    else if ((p->ulType & 0xf00) == 0xf00)\n    {\n        unscale = 0.2f + 0.40000004f * (float)rand() / 2147483648.0f;\n        p->fScale[0] = unscale;\n        p->fScale[1] = unscale;\n    }\n\n    if (p->fScale[0] <= 0.0f)\n    {\n        p->fScale[0] = 0.01f;\n        p->ulType |= 0x1000000;\n    }\n    if (p->fScale[1] <= 0.0f)\n    {\n        p->fScale[1] = 0.01f;\n        p->ulType |= 0x1000000;\n    }\n\n    switch (p->ulType & 0xf000)\n    {\n    case 0x8000:\n        if ((g_ffFrameTime - p->fCreationTime) > p->LimitParam.fTimeLimit)\n            p->ulType = (p->ulType & 0xffff0fff) | 0x3000;\n        break;\n    case 0x7000:\n        p->Transparency += 350.0f * g_fTimeDifference;\n        if (p->Transparency >= 255.0f)\n        {\n            p->Transparency = 255.0f;\n            p->ulType = (p->ulType & 0xffff0fff) | 0x8000;\n            p->fCreationTime = g_ffFrameTime;\n        }\n        break;\n    case 0x1000:\n        p->Transparency -= 100.0f * g_fTimeDifference;\n        break;\n    case 0x2000:\n        p->Transparency -= 160.0f * g_fTimeDifference;\n        break;\n    case 0x3000:\n        p->Transparency -= 260.0f * g_fTimeDifference;\n        break;\n    case 0x4000:\n        p->Transparency -= 350.0f * g_fTimeDifference;\n        break;\n    case 0x5000:\n        p->Transparency -= 850.0f * g_fTimeDifference;\n        break;\n    case 0x6000:\n        p->Transparency -= 2500.0f * g_fTimeDifference;\n        break;\n    case 0xf000:\n        if ((p->CreationFrame != AGO_g_PreviousCurrentFrame) && (AGO_G_CurrentVU1Frame == 1))\n        {\n            p->ulType |= 0x1000000;\n            p->Transparency = 0.0f;\n        }\n        break;\n    case 0x9000:\n        p->Transparency = 100.0f + 155.0f * (float)rand() / 2147483648.0f;\n        break;\n    case 0xa000:\n        p->Transparency += 100.0f * g_fTimeDifference;\n        break;\n    case 0xb000:\n        p->Transparency = 255.0f * (1.0f - ((g_ffFrameTime - p->fCreationTime) / p->LimitParam.fTimeLimit));\n        break;\n    case 0xc000:\n        p->Transparency -= p->fShadeSpeed * g_fTimeDifference;\n        break;\n    }\n\n    if ((p->Transparency < 0.0f) && ((p->ulType & 0xf000) != 0x7000))\n    {\n        p->ulType |= 0x1000000;\n        p->Transparency = 0.0f;\n    }\n\n    if ((p->ulType & 0x1000000) == 0)\n        AGO_vDisplayPart(ulPartNumber, _p_stViewport);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "AGO_vDisplayPart",
+      "reason": "first diff +0x0; audited 36KB m2c seed against debug scaffold; 214 unresolved field/global/COP1 accumulator sites prevent evidence-safe natural-C transfer",
+      "size": 5992,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 5992,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001d1ee0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void AGO_vAddParticleContd(unsigned int PartType, MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)\n{\n    float fSizeY;\n    float fSizeX;\n    MTH4D_tdstVector_ Normal;\n    float Pos1[3];\n    unsigned int i;\n    int j;\n    AGO_V4D_ Vector4;\n    AGO_V4D_ Vector3;\n    AGO_V4D_ Vector2;\n    AGO_V4D_ Vector1;\n    AGO_V4D_ NDirection;\n    AGO_V4D_ NPosition;\n    float* p2;\n    float* p1;\n    float fNorm;\n    AGO_Part_* p;\n    float Color[4];\n    float sx;\n    float Norm;\n    float SPEED;\n    float DIST;\n    float R2;\n    float R1;\n    MTH3D_tdstVector_ V2;\n    MTH3D_tdstVector_ V1;\n    unsigned int can;\n    unsigned int IntParam;\n    float Direction[4];\n    float param2;\n    float multiplier;\n    float Pos2[3];\n    float V4[3];\n    float V3[3];\n    float fNorm1;\n    unsigned int Limit;\n    float scale;\n    float Pos[3];\n    AGO_V4D_ Dest;\n    float ZAngle;\n    float YAngle;\n    float XAngle;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "AGO_vAddParticleContd",
+      "reason": "first diff +0x0; audited 85KB seed against debug scaffold; 384 unresolved field/global/COP1 accumulator sites and guessed call signatures remain before evidence-safe natural-C transfer",
+      "size": 16408,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 16408,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00241ad0",
+      "candidate_size": 5384,
+      "first_difference": 0,
+      "implementation": "unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)\n{\n    float xNorm;\n    float xD2r;\n    MTH3D_tdstVector_ vTemp2;\n    MTH3D_tdstVector_ vTemp1;\n\n    fn_GetPersoSighting(&pcs->vCameraSighting, pcs->pCamera);\n    if (*(char *)pcs->abExternDsgVarBoolean[0])\n    {\n        if (*(char *)pcs->abExternDsgVarBoolean[3])\n        {\n            vTemp1.xX = pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX;\n            vTemp1.xY = pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY;\n            vTemp1.xZ = pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ;\n            xNorm = __builtin_sqrtf(vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ);\n            if (xNorm < 1.0f)\n            {\n                CAM_fn_vInitCompleteCineinfo(hCineInfo);\n                hCineInfo->hCurrent->hSuperObjectTargeted = pcs->pTargetActor;\n                hCineInfo->hVisibility->hSuperObjectTargeted = pcs->pTargetActor;\n                hCineInfo->hWork->hSuperObjectTargeted = pcs->pTargetActor;\n                CAM_fn_vUpdateTargetPosition(hCineInfo);\n                switch (pcs->iMode)\n                {\n                case 2:\n                    fn_InitMarioMode(pcs);\n                    break;\n                case 1:\n                    fn_InitBackMode(pcs);\n                    break;\n                case 3:\n                    fn_InitStrafeLockMode(pcs);\n                    break;\n                }\n                fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);\n                hCineInfo->stForceRefAxisY = pcs->vRefAxis;\n                hCineInfo->stForceRefAxisZ = vVectorZ;\n                CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n                pcs->ulAlignDelayTime = 0;\n                *(char *)pcs->abExternDsgVarBoolean[3] = 0;\n            }\n        }\n\n        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;\n        pcs->xTheta_Min = -0.8f;\n        pcs->xTheta_Max = 1.2f;\n        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;\n        pcs->xDistMax = stCamShooter_CV.xDistMax_Init;\n\n        lInputAxisV = *(int *)pcs->aiExternDsgVarInt[0];\n        lInputAxisZ = *(int *)pcs->aiExternDsgVarInt[1];\n        lInputAxisY = pcs->bIsBot ? 0 : *(int *)pcs->aiExternDsgVarInt[2];\n        lInputAxisX = *(int *)pcs->aiExternDsgVarInt[3];\n        bMovedCameraY = lInputAxisV < -25 || lInputAxisV >= 26;\n        bMovedCameraX = lInputAxisZ < -25 || lInputAxisZ >= 26;\n        if (pcs->bMouseDriven)\n        {\n            bMovedY = lInputAxisY != 0;\n            bMovedX = lInputAxisX != 0;\n        }\n        else\n        {\n            bMovedY = lInputAxisY < -25 || lInputAxisY >= 26;\n            bMovedX = lInputAxisX < -25 || lInputAxisX >= 26;\n        }\n\n        if (*(char *)pcs->abExternDsgVarBoolean[1])\n        {\n            pcs->pLockedActor = *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[0];\n            if (fn_bIsValidObject(pcs->pLockedActor))\n            {\n                vTemp1.xX = pcs->pTargetActor_position->xX - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX;\n                vTemp1.xY = pcs->pTargetActor_position->xY - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY;\n                vTemp1.xZ = pcs->pTargetActor_position->xZ - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;\n                vTemp2 = vTemp1;\n                vTemp2.xZ = 0.0f;\n                xD2r = fn_xAngleVectorVertical(&vTemp1, &vTemp2);\n                if (vTemp1.xZ == 0.0f)\n                    xNorm = 0.0f;\n                else\n                    xNorm = vTemp1.xZ / fabsf(vTemp1.xZ);\n                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f + xNorm * fabsf(xD2r));\n                fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);\n                vTemp1.xZ = 0.0f;\n                xNorm = __builtin_sqrtf(vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ);\n                if (xNorm != 0.0f)\n                {\n                    pcs->vRefAxis.xX = vTemp1.xX / xNorm;\n                    pcs->vRefAxis.xY = vTemp1.xY / xNorm;\n                    pcs->vRefAxis.xZ = vTemp1.xZ / xNorm;\n                }\n                else\n                    pcs->vRefAxis = vTemp1;\n            }\n            else\n            {\n                fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);\n                vTemp1.xZ = 0.0f;\n                xNorm = __builtin_sqrtf(vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ);\n                if (xNorm != 0.0f)\n                {\n                    pcs->vRefAxis.xX = vTemp1.xX / xNorm;\n                    pcs->vRefAxis.xY = vTemp1.xY / xNorm;\n                    pcs->vRefAxis.xZ = vTemp1.xZ / xNorm;\n                }\n                else\n                    pcs->vRefAxis = vTemp1;\n                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);\n            }\n        }\n        else\n        {\n            pcs->pLockedActor = 0;\n            fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);\n            vTemp1.xZ = 0.0f;\n            xNorm = __builtin_sqrtf(vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ);\n            if (xNorm != 0.0f)\n            {\n                pcs->vRefAxis.xX = vTemp1.xX / xNorm;\n                pcs->vRefAxis.xY = vTemp1.xY / xNorm;\n                pcs->vRefAxis.xZ = vTemp1.xZ / xNorm;\n            }\n            else\n                pcs->vRefAxis = vTemp1;\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);\n        }\n\n        hCineInfo->stForceRefAxisY = pcs->vRefAxis;\n        hCineInfo->stForceRefAxisZ = vVectorZ;\n        CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n\n        if (!g_stEngineStructure.bEngineIsInPaused)\n        {\n            if (pcs->axExternDsgVarFloat[0])\n                xD2r = *(float *)pcs->axExternDsgVarFloat[0] * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;\n            else\n                xD2r = 0.001f * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;\n\n            if (lInputAxisX < -25)\n                xNorm = 0.45f * (((float)(lInputAxisX + 25) / 75.0f) * ((float)(lInputAxisX + 25) / 75.0f));\n            else if (lInputAxisX >= 26)\n                xNorm = 0.45f * (-((float)(lInputAxisX - 25) / 75.0f) * ((float)(lInputAxisX - 25) / 75.0f));\n            else\n                xNorm = 0.0f;\n            if (!(fabsf(pcs->xThetaLock - xNorm) < xD2r))\n                xNorm = pcs->xThetaLock + (pcs->xThetaLock < xNorm ? xD2r : -xD2r);\n            pcs->xThetaLock = xNorm;\n\n            if (lInputAxisY < -25)\n                xNorm = 0.45f * (((float)(lInputAxisY + 25) / 75.0f) * ((float)(lInputAxisY + 25) / 75.0f));\n            else if (lInputAxisY >= 26)\n                xNorm = 0.45f * (-((float)(lInputAxisY - 25) / 75.0f) * ((float)(lInputAxisY - 25) / 75.0f));\n            else\n                xNorm = 0.0f;\n            if (!(fabsf(pcs->xAlphaLock - xNorm) < xD2r))\n                pcs->xAlphaLock += pcs->xAlphaLock < xNorm ? xD2r : -xD2r;\n            else\n                pcs->xAlphaLock = xNorm;\n        }\n\n        vTemp2 = *pcs->pTargetActor_position;\n        vTemp2.xZ += 1.0f;\n        if (*(char *)pcs->abExternDsgVarBoolean[1])\n        {\n            pcs->pLockedActor = *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[0];\n            if (fn_bIsValidObject(pcs->pLockedActor))\n            {\n                AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderRedIconUV1, &stCamShooter_CV.vViewFinderRedIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);\n                vTemp1.xX = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX;\n                vTemp1.xY = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY;\n                vTemp1.xZ = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ + 1.0f;\n                xNorm = __builtin_sqrtf((vTemp1.xX - vTemp2.xX) * (vTemp1.xX - vTemp2.xX) + (vTemp1.xY - vTemp2.xY) * (vTemp1.xY - vTemp2.xY) + (vTemp1.xZ - vTemp2.xZ) * (vTemp1.xZ - vTemp2.xZ));\n                fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);\n                vTemp1.xX *= xNorm;\n                vTemp1.xY *= xNorm;\n                vTemp1.xZ *= xNorm;\n                vTemp1.xZ = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ + 1.0f - vTemp2.xZ;\n                if (pcs->xAlphaLock != 0.0f)\n                    fn_RotateVectorByAngle(&vTemp1, pcs->xAlphaLock, &vVectorZ);\n                if (pcs->xThetaLock != 0.0f)\n                {\n                    fn_GetPersoHorizon(&pcs->vRayCastDirection, pcs->pCamera);\n                    fn_RotateVectorByAngle(&vTemp1, pcs->xThetaLock, &pcs->vRayCastDirection);\n                }\n                pcs->vViewFinderPosition.xX = vTemp2.xX + vTemp1.xX;\n                pcs->vViewFinderPosition.xY = vTemp2.xY + vTemp1.xY;\n                pcs->vViewFinderPosition.xZ = vTemp2.xZ + vTemp1.xZ;\n            }\n            else\n                AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);\n        }\n        else\n        {\n            AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);\n            fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);\n            if (pcs->xAlphaLock != 0.0f)\n                fn_RotateVectorByAngle(&vTemp1, pcs->xAlphaLock, &vVectorZ);\n            if (pcs->xThetaLock != 0.0f)\n            {\n                fn_GetPersoHorizon(&vTemp2, pcs->pCamera);\n                fn_RotateVectorByAngle(&vTemp1, pcs->xThetaLock, &vTemp2);\n            }\n            vTemp1.xX *= 5.0f;\n            vTemp1.xY *= 5.0f;\n            vTemp1.xZ *= 5.0f;\n            pcs->vViewFinderPosition.xX = pcs->pTargetActor_position->xX + vTemp1.xX;\n            pcs->vViewFinderPosition.xY = pcs->pTargetActor_position->xY + vTemp1.xY;\n            pcs->vViewFinderPosition.xZ = pcs->pTargetActor_position->xZ + 1.0f + vTemp1.xZ;\n        }\n\n        fn_vGetViewportCoordinates(&pcs->v2DViewFinderPosition, &pcs->vViewFinderPosition, pcs->p_stViewport);\n        if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)\n            pcs->v2DViewFinderPosition.xY *= 2.0f;\n        if (pcs->v2DViewFinderPosition.xX >= -5.0f && pcs->v2DViewFinderPosition.xX <= 105.0f && pcs->v2DViewFinderPosition.xY >= 0.0f)\n        {\n            vTemp1.xX = pcs->vViewFinderPosition.xX - pcs->pTargetActor_position->xX;\n            vTemp1.xY = pcs->vViewFinderPosition.xY - pcs->pTargetActor_position->xY;\n            vTemp1.xZ = pcs->vViewFinderPosition.xZ - (pcs->pTargetActor_position->xZ + 1.0f);\n            xNorm = __builtin_sqrtf(vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ);\n            if (xNorm != 0.0f)\n            {\n                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xX = vTemp1.xX / xNorm;\n                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xY = vTemp1.xY / xNorm;\n                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xZ = vTemp1.xZ / xNorm;\n            }\n            else\n                *(MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0] = vTemp1;\n        }\n        else\n        {\n            pcs->v2DViewFinderPosition.xX = -300.0f;\n            pcs->v2DViewFinderPosition.xY = -300.0f;\n            pcs->v2DViewFinderPosition.xZ = 0.0f;\n            fn_GetPersoSighting((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0], pcs->pTargetActor);\n        }\n\n        vTemp1 = pcs->v2DViewFinderPosition;\n        vTemp2.xX = pcs->v2DViewFinderPosition.xX - pcs->xViewFinderWidth_2;\n        vTemp2.xY = pcs->v2DViewFinderPosition.xY - pcs->xViewFinderHeight_2;\n        vTemp1.xX += pcs->xViewFinderWidth_2;\n        vTemp1.xY += pcs->xViewFinderHeight_2;\n        AGO_vSetIcon(pcs->iViewportIndex, pcs->iViewFinderIconId, &vTemp2.xX, &vTemp1.xX, 255.0f, stCamShooter_CV.hVMTViewFinder_red);\n\n        pcs->xTheta_Current = hCineInfo->hCurrent->xAngleTheta;\n        if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb &&\n            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&\n            pcs->xTheta_Current < pcs->xTheta_Default)\n        {\n            xNorm = 3.0f + (pcs->xDistMax_Default - 3.0f) * ((pcs->xTheta_Current - pcs->xTheta_Min) / (pcs->xTheta_Default - pcs->xTheta_Min));\n            if (pcs->xDistMax > xNorm)\n                pcs->xDistMax = xNorm;\n        }\n\n        fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);\n        pcs->xTargetAngle = fn_xAngleVectorXOY(&pcs->vCameraSighting, &vTemp1);\n        vTemp2 = *pcs->pTargetActor_position;\n        vTemp2.xZ += 1.5f;\n        vTemp1.xX = vTemp1.xY = vTemp1.xZ = 0.0f;\n        fn_GetPersoHorizon(&vTemp1, pcs->pCamera);\n        vTemp1.xX *= 0.7f;\n        vTemp1.xY *= 0.7f;\n        vTemp1.xZ *= 0.7f;\n        pcs->vCollisionDirectionV.xX = vTemp1.xX - pcs->xDistMax * pcs->vCameraSighting.xX;\n        pcs->vCollisionDirectionV.xY = vTemp1.xY - pcs->xDistMax * pcs->vCameraSighting.xY;\n        pcs->vCollisionDirectionV.xZ = vTemp1.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;\n        fn_CollisionRayCast(pcs->pCamera, &vTemp2, &pcs->vCollisionDirectionV, 0);\n        xNorm = pcs->xDistMax;\n        if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)\n        {\n            if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)\n            {\n                xD2r = __builtin_sqrtf((g_stCollideResultPoint.xX - vTemp2.xX) * (g_stCollideResultPoint.xX - vTemp2.xX) + (g_stCollideResultPoint.xY - vTemp2.xY) * (g_stCollideResultPoint.xY - vTemp2.xY) + (g_stCollideResultPoint.xZ - vTemp2.xZ) * (g_stCollideResultPoint.xZ - vTemp2.xZ));\n                if (xD2r < xNorm)\n                {\n                    xNorm = xD2r;\n                    pcs->vCollisionPoint = g_stCollideResultPoint;\n                }\n            }\n        }\n        vTemp1.xX = -vTemp1.xX;\n        vTemp1.xY = -vTemp1.xY;\n        vTemp1.xZ = -vTemp1.xZ;\n        pcs->vCollisionDirectionV.xX = vTemp1.xX - pcs->xDistMax * pcs->vCameraSighting.xX;\n        pcs->vCollisionDirectionV.xY = vTemp1.xY - pcs->xDistMax * pcs->vCameraSighting.xY;\n        pcs->vCollisionDirectionV.xZ = vTemp1.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;\n        fn_CollisionRayCast(pcs->pCamera, &vTemp2, &pcs->vCollisionDirectionV, 0);\n        if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)\n        {\n            if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)\n            {\n                xD2r = __builtin_sqrtf((g_stCollideResultPoint.xX - vTemp2.xX) * (g_stCollideResultPoint.xX - vTemp2.xX) + (g_stCollideResultPoint.xY - vTemp2.xY) * (g_stCollideResultPoint.xY - vTemp2.xY) + (g_stCollideResultPoint.xZ - vTemp2.xZ) * (g_stCollideResultPoint.xZ - vTemp2.xZ));\n                if (xD2r < xNorm)\n                {\n                    xNorm = xD2r;\n                    pcs->vCollisionPoint = g_stCollideResultPoint;\n                }\n            }\n        }\n        if (pcs->vCollisionPoint.xX != 0.0f || pcs->vCollisionPoint.xY != 0.0f || pcs->vCollisionPoint.xZ != 0.0f)\n        {\n            xNorm -= 0.6f;\n            if (xNorm < 1.3f)\n                xNorm = 1.3f;\n            pcs->vCollisionPoint.xX -= vTemp1.xX;\n            pcs->vCollisionPoint.xY -= vTemp1.xY;\n            pcs->vCollisionPoint.xZ -= vTemp1.xZ;\n            pcs->xDistMax = xNorm;\n            if (xNorm < 2.0f)\n            {\n                CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n                CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n            }\n        }\n\n        fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);\n        pcs->xTargetAngle = fn_xAngleVectorXOY(&pcs->vCameraSighting, &vTemp1);\n        if (fabsf(pcs->xTargetAngle) > 0.2f &&\n            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&\n            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb)\n        {\n            pcs->bFastAlign = 1;\n            pcs->xFastAlign_StartDistance = pcs->xDistMax;\n        }\n        if (pcs->bFastAlign)\n        {\n            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);\n            xNorm = fabsf(pcs->xTargetAngle);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 180.0f);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 180.0f);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 1, 1, 180.0f);\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n            if (xNorm > 1.5707964f)\n            {\n                xD2r = 6.0f + ((xNorm - 1.5707964f) / 1.5707964f) * (pcs->xFastAlign_StartDistance - 6.0f);\n                if (pcs->xDistMax > xD2r)\n                    pcs->xDistMax = xD2r;\n            }\n            else if (xNorm > 0.2f)\n            {\n                xD2r = 6.0f + ((xNorm - 1.5707964f) / 1.5707964f) * (pcs->xDistMax_Default - 6.0f);\n                if (pcs->xDistMax > xD2r)\n                    pcs->xDistMax = xD2r;\n            }\n            else\n                pcs->bFastAlign = 0;\n        }\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23C, 0, 1, pcs->xDistMax);\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23D, 0, 1, pcs->xDistMax);\n        return 0;\n    }\n    return 2;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "fn_StrafeLockMode",
+      "reason": "Structured field-level reconstruction compiles (candidate 5184/6128 bytes; 164/181 relocations). Residual starts in prologue/register allocation; vector-macro source shape still differs, plus missing collision/control-flow expansions.",
+      "size": 6128,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Shooter.c",
+      "status": "MISMATCH",
+      "target_size": 6128,
+      "unresolved_relocations": [
+        {
+          "offset": 196,
+          "symbol": "__builtin_sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 544,
+          "symbol": "@254",
+          "type": 8
+        },
+        {
+          "offset": 552,
+          "symbol": "@255",
+          "type": 8
+        },
+        {
+          "offset": 1040,
+          "symbol": "@256",
+          "type": 8
+        },
+        {
+          "offset": 1100,
+          "symbol": "__builtin_sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 1264,
+          "symbol": "__builtin_sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 1372,
+          "symbol": "@256",
+          "type": 8
+        },
+        {
+          "offset": 1460,
+          "symbol": "__builtin_sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 1568,
+          "symbol": "@256",
+          "type": 8
+        },
+        {
+          "offset": 1836,
+          "symbol": "@257",
+          "type": 8
+        },
+        {
+          "offset": 1884,
+          "symbol": "@258",
+          "type": 8
+        },
+        {
+          "offset": 1936,
+          "symbol": "@258",
+          "type": 8
+        },
+        {
+          "offset": 2056,
+          "symbol": "@258",
+          "type": 8
+        },
+        {
+          "offset": 2108,
+          "symbol": "@258",
+          "type": 8
+        },
+        {
+          "offset": 2472,
+          "symbol": "__builtin_sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 3292,
+          "symbol": "__builtin_sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 3836,
+          "symbol": "@259",
+          "type": 8
+        },
+        {
+          "offset": 3876,
+          "symbol": "@259",
+          "type": 8
+        },
+        {
+          "offset": 4132,
+          "symbol": "__builtin_sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 4484,
+          "symbol": "__builtin_sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 4620,
+          "symbol": "@260",
+          "type": 8
+        },
+        {
+          "offset": 4624,
+          "symbol": "@261",
+          "type": 8
+        },
+        {
+          "offset": 4848,
+          "symbol": "@262",
+          "type": 8
+        },
+        {
+          "offset": 5136,
+          "symbol": "@263",
+          "type": 8
+        },
+        {
+          "offset": 5212,
+          "symbol": "@262",
+          "type": 8
+        }
+      ]
+    },
+    {
+      "address": "0x00241ad0",
+      "candidate_size": 5248,
+      "first_difference": 0,
+      "implementation": "unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)\n{\n    float xNorm;\n    float xD2r;\n    MTH3D_tdstVector_ vTemp2;\n    MTH3D_tdstVector_ vTemp1;\n\n    fn_GetPersoSighting(&pcs->vCameraSighting, pcs->pCamera);\n    if (*(char *)pcs->abExternDsgVarBoolean[0])\n    {\n        if (*(char *)pcs->abExternDsgVarBoolean[3])\n        {\n            vTemp1.xX = pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX;\n            vTemp1.xY = pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY;\n            vTemp1.xZ = pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ;\n            xNorm = sqrtf(vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ);\n            if (xNorm < 1.0f)\n            {\n                CAM_fn_vInitCompleteCineinfo(hCineInfo);\n                hCineInfo->hCurrent->hSuperObjectTargeted = pcs->pTargetActor;\n                hCineInfo->hVisibility->hSuperObjectTargeted = pcs->pTargetActor;\n                hCineInfo->hWork->hSuperObjectTargeted = pcs->pTargetActor;\n                CAM_fn_vUpdateTargetPosition(hCineInfo);\n                switch (pcs->iMode)\n                {\n                case 2:\n                    fn_InitMarioMode(pcs);\n                    break;\n                case 1:\n                    fn_InitBackMode(pcs);\n                    break;\n                case 3:\n                    fn_InitStrafeLockMode(pcs);\n                    break;\n                }\n                fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);\n                hCineInfo->stForceRefAxisY = pcs->vRefAxis;\n                hCineInfo->stForceRefAxisZ = vVectorZ;\n                CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n                pcs->ulAlignDelayTime = 0;\n                *(char *)pcs->abExternDsgVarBoolean[3] = 0;\n            }\n        }\n\n        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;\n        pcs->xTheta_Min = -0.8f;\n        pcs->xTheta_Max = 1.2f;\n        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;\n        pcs->xDistMax = stCamShooter_CV.xDistMax_Init;\n\n        lInputAxisV = *(int *)pcs->aiExternDsgVarInt[0];\n        lInputAxisZ = *(int *)pcs->aiExternDsgVarInt[1];\n        lInputAxisY = pcs->bIsBot ? 0 : *(int *)pcs->aiExternDsgVarInt[2];\n        lInputAxisX = *(int *)pcs->aiExternDsgVarInt[3];\n        bMovedCameraY = lInputAxisV < -25 || lInputAxisV >= 26;\n        bMovedCameraX = lInputAxisZ < -25 || lInputAxisZ >= 26;\n        if (pcs->bMouseDriven)\n        {\n            bMovedY = lInputAxisY != 0;\n            bMovedX = lInputAxisX != 0;\n        }\n        else\n        {\n            bMovedY = lInputAxisY < -25 || lInputAxisY >= 26;\n            bMovedX = lInputAxisX < -25 || lInputAxisX >= 26;\n        }\n\n        if (*(char *)pcs->abExternDsgVarBoolean[1])\n        {\n            pcs->pLockedActor = *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[0];\n            if (fn_bIsValidObject(pcs->pLockedActor))\n            {\n                vTemp1.xX = pcs->pTargetActor_position->xX - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX;\n                vTemp1.xY = pcs->pTargetActor_position->xY - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY;\n                vTemp1.xZ = pcs->pTargetActor_position->xZ - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;\n                vTemp2 = vTemp1;\n                vTemp2.xZ = 0.0f;\n                xD2r = fn_xAngleVectorVertical(&vTemp1, &vTemp2);\n                if (vTemp1.xZ == 0.0f)\n                    xNorm = 0.0f;\n                else\n                    xNorm = vTemp1.xZ / fabsf(vTemp1.xZ);\n                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f + xNorm * fabsf(xD2r));\n                fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);\n                vTemp1.xZ = 0.0f;\n                xNorm = sqrtf(vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ);\n                if (xNorm != 0.0f)\n                {\n                    pcs->vRefAxis.xX = vTemp1.xX / xNorm;\n                    pcs->vRefAxis.xY = vTemp1.xY / xNorm;\n                    pcs->vRefAxis.xZ = vTemp1.xZ / xNorm;\n                }\n                else\n                    pcs->vRefAxis = vTemp1;\n            }\n            else\n            {\n                fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);\n                vTemp1.xZ = 0.0f;\n                xNorm = sqrtf(vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ);\n                if (xNorm != 0.0f)\n                {\n                    pcs->vRefAxis.xX = vTemp1.xX / xNorm;\n                    pcs->vRefAxis.xY = vTemp1.xY / xNorm;\n                    pcs->vRefAxis.xZ = vTemp1.xZ / xNorm;\n                }\n                else\n                    pcs->vRefAxis = vTemp1;\n                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);\n            }\n        }\n        else\n        {\n            pcs->pLockedActor = 0;\n            fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);\n            vTemp1.xZ = 0.0f;\n            xNorm = sqrtf(vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ);\n            if (xNorm != 0.0f)\n            {\n                pcs->vRefAxis.xX = vTemp1.xX / xNorm;\n                pcs->vRefAxis.xY = vTemp1.xY / xNorm;\n                pcs->vRefAxis.xZ = vTemp1.xZ / xNorm;\n            }\n            else\n                pcs->vRefAxis = vTemp1;\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);\n        }\n\n        hCineInfo->stForceRefAxisY = pcs->vRefAxis;\n        hCineInfo->stForceRefAxisZ = vVectorZ;\n        CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n\n        if (!g_stEngineStructure.bEngineIsInPaused)\n        {\n            if (pcs->axExternDsgVarFloat[0])\n                xD2r = *(float *)pcs->axExternDsgVarFloat[0] * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;\n            else\n                xD2r = 0.001f * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;\n\n            if (lInputAxisX < -25)\n                xNorm = 0.45f * (((float)(lInputAxisX + 25) / 75.0f) * ((float)(lInputAxisX + 25) / 75.0f));\n            else if (lInputAxisX >= 26)\n                xNorm = 0.45f * (-((float)(lInputAxisX - 25) / 75.0f) * ((float)(lInputAxisX - 25) / 75.0f));\n            else\n                xNorm = 0.0f;\n            if (!(fabsf(pcs->xThetaLock - xNorm) < xD2r))\n                xNorm = pcs->xThetaLock + (pcs->xThetaLock < xNorm ? xD2r : -xD2r);\n            pcs->xThetaLock = xNorm;\n\n            if (lInputAxisY < -25)\n                xNorm = 0.45f * (((float)(lInputAxisY + 25) / 75.0f) * ((float)(lInputAxisY + 25) / 75.0f));\n            else if (lInputAxisY >= 26)\n                xNorm = 0.45f * (-((float)(lInputAxisY - 25) / 75.0f) * ((float)(lInputAxisY - 25) / 75.0f));\n            else\n                xNorm = 0.0f;\n            if (!(fabsf(pcs->xAlphaLock - xNorm) < xD2r))\n                pcs->xAlphaLock += pcs->xAlphaLock < xNorm ? xD2r : -xD2r;\n            else\n                pcs->xAlphaLock = xNorm;\n        }\n\n        vTemp2 = *pcs->pTargetActor_position;\n        vTemp2.xZ += 1.0f;\n        if (*(char *)pcs->abExternDsgVarBoolean[1])\n        {\n            pcs->pLockedActor = *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[0];\n            if (fn_bIsValidObject(pcs->pLockedActor))\n            {\n                AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderRedIconUV1, &stCamShooter_CV.vViewFinderRedIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);\n                vTemp1.xX = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX;\n                vTemp1.xY = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY;\n                vTemp1.xZ = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ + 1.0f;\n                xNorm = sqrtf((vTemp1.xX - vTemp2.xX) * (vTemp1.xX - vTemp2.xX) + (vTemp1.xY - vTemp2.xY) * (vTemp1.xY - vTemp2.xY) + (vTemp1.xZ - vTemp2.xZ) * (vTemp1.xZ - vTemp2.xZ));\n                fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);\n                vTemp1.xX *= xNorm;\n                vTemp1.xY *= xNorm;\n                vTemp1.xZ *= xNorm;\n                vTemp1.xZ = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ + 1.0f - vTemp2.xZ;\n                if (pcs->xAlphaLock != 0.0f)\n                    fn_RotateVectorByAngle(&vTemp1, pcs->xAlphaLock, &vVectorZ);\n                if (pcs->xThetaLock != 0.0f)\n                {\n                    fn_GetPersoHorizon(&pcs->vRayCastDirection, pcs->pCamera);\n                    fn_RotateVectorByAngle(&vTemp1, pcs->xThetaLock, &pcs->vRayCastDirection);\n                }\n                pcs->vViewFinderPosition.xX = vTemp2.xX + vTemp1.xX;\n                pcs->vViewFinderPosition.xY = vTemp2.xY + vTemp1.xY;\n                pcs->vViewFinderPosition.xZ = vTemp2.xZ + vTemp1.xZ;\n            }\n            else\n                AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);\n        }\n        else\n        {\n            AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);\n            fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);\n            if (pcs->xAlphaLock != 0.0f)\n                fn_RotateVectorByAngle(&vTemp1, pcs->xAlphaLock, &vVectorZ);\n            if (pcs->xThetaLock != 0.0f)\n            {\n                fn_GetPersoHorizon(&vTemp2, pcs->pCamera);\n                fn_RotateVectorByAngle(&vTemp1, pcs->xThetaLock, &vTemp2);\n            }\n            vTemp1.xX *= 5.0f;\n            vTemp1.xY *= 5.0f;\n            vTemp1.xZ *= 5.0f;\n            pcs->vViewFinderPosition.xX = pcs->pTargetActor_position->xX + vTemp1.xX;\n            pcs->vViewFinderPosition.xY = pcs->pTargetActor_position->xY + vTemp1.xY;\n            pcs->vViewFinderPosition.xZ = pcs->pTargetActor_position->xZ + 1.0f + vTemp1.xZ;\n        }\n\n        fn_vGetViewportCoordinates(&pcs->v2DViewFinderPosition, &pcs->vViewFinderPosition, pcs->p_stViewport);\n        if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)\n            pcs->v2DViewFinderPosition.xY *= 2.0f;\n        if (pcs->v2DViewFinderPosition.xX >= -5.0f && pcs->v2DViewFinderPosition.xX <= 105.0f && pcs->v2DViewFinderPosition.xY >= 0.0f)\n        {\n            vTemp1.xX = pcs->vViewFinderPosition.xX - pcs->pTargetActor_position->xX;\n            vTemp1.xY = pcs->vViewFinderPosition.xY - pcs->pTargetActor_position->xY;\n            vTemp1.xZ = pcs->vViewFinderPosition.xZ - (pcs->pTargetActor_position->xZ + 1.0f);\n            xNorm = sqrtf(vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ);\n            if (xNorm != 0.0f)\n            {\n                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xX = vTemp1.xX / xNorm;\n                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xY = vTemp1.xY / xNorm;\n                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xZ = vTemp1.xZ / xNorm;\n            }\n            else\n                *(MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0] = vTemp1;\n        }\n        else\n        {\n            pcs->v2DViewFinderPosition.xX = -300.0f;\n            pcs->v2DViewFinderPosition.xY = -300.0f;\n            pcs->v2DViewFinderPosition.xZ = 0.0f;\n            fn_GetPersoSighting((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0], pcs->pTargetActor);\n        }\n\n        vTemp1 = pcs->v2DViewFinderPosition;\n        vTemp2.xX = pcs->v2DViewFinderPosition.xX - pcs->xViewFinderWidth_2;\n        vTemp2.xY = pcs->v2DViewFinderPosition.xY - pcs->xViewFinderHeight_2;\n        vTemp1.xX += pcs->xViewFinderWidth_2;\n        vTemp1.xY += pcs->xViewFinderHeight_2;\n        AGO_vSetIcon(pcs->iViewportIndex, pcs->iViewFinderIconId, &vTemp2.xX, &vTemp1.xX, 255.0f, stCamShooter_CV.hVMTViewFinder_red);\n\n        pcs->xTheta_Current = hCineInfo->hCurrent->xAngleTheta;\n        if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb &&\n            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&\n            pcs->xTheta_Current < pcs->xTheta_Default)\n        {\n            xNorm = 3.0f + (pcs->xDistMax_Default - 3.0f) * ((pcs->xTheta_Current - pcs->xTheta_Min) / (pcs->xTheta_Default - pcs->xTheta_Min));\n            if (pcs->xDistMax > xNorm)\n                pcs->xDistMax = xNorm;\n        }\n\n        fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);\n        pcs->xTargetAngle = fn_xAngleVectorXOY(&pcs->vCameraSighting, &vTemp1);\n        vTemp2 = *pcs->pTargetActor_position;\n        vTemp2.xZ += 1.5f;\n        vTemp1.xX = vTemp1.xY = vTemp1.xZ = 0.0f;\n        fn_GetPersoHorizon(&vTemp1, pcs->pCamera);\n        vTemp1.xX *= 0.7f;\n        vTemp1.xY *= 0.7f;\n        vTemp1.xZ *= 0.7f;\n        pcs->vCollisionDirectionV.xX = vTemp1.xX - pcs->xDistMax * pcs->vCameraSighting.xX;\n        pcs->vCollisionDirectionV.xY = vTemp1.xY - pcs->xDistMax * pcs->vCameraSighting.xY;\n        pcs->vCollisionDirectionV.xZ = vTemp1.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;\n        fn_CollisionRayCast(pcs->pCamera, &vTemp2, &pcs->vCollisionDirectionV, 0);\n        xNorm = pcs->xDistMax;\n        if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)\n        {\n            if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)\n            {\n                xD2r = sqrtf((g_stCollideResultPoint.xX - vTemp2.xX) * (g_stCollideResultPoint.xX - vTemp2.xX) + (g_stCollideResultPoint.xY - vTemp2.xY) * (g_stCollideResultPoint.xY - vTemp2.xY) + (g_stCollideResultPoint.xZ - vTemp2.xZ) * (g_stCollideResultPoint.xZ - vTemp2.xZ));\n                if (xD2r < xNorm)\n                {\n                    xNorm = xD2r;\n                    pcs->vCollisionPoint = g_stCollideResultPoint;\n                }\n            }\n        }\n        vTemp1.xX = -vTemp1.xX;\n        vTemp1.xY = -vTemp1.xY;\n        vTemp1.xZ = -vTemp1.xZ;\n        pcs->vCollisionDirectionV.xX = vTemp1.xX - pcs->xDistMax * pcs->vCameraSighting.xX;\n        pcs->vCollisionDirectionV.xY = vTemp1.xY - pcs->xDistMax * pcs->vCameraSighting.xY;\n        pcs->vCollisionDirectionV.xZ = vTemp1.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;\n        fn_CollisionRayCast(pcs->pCamera, &vTemp2, &pcs->vCollisionDirectionV, 0);\n        if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)\n        {\n            if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)\n            {\n                xD2r = sqrtf((g_stCollideResultPoint.xX - vTemp2.xX) * (g_stCollideResultPoint.xX - vTemp2.xX) + (g_stCollideResultPoint.xY - vTemp2.xY) * (g_stCollideResultPoint.xY - vTemp2.xY) + (g_stCollideResultPoint.xZ - vTemp2.xZ) * (g_stCollideResultPoint.xZ - vTemp2.xZ));\n                if (xD2r < xNorm)\n                {\n                    xNorm = xD2r;\n                    pcs->vCollisionPoint = g_stCollideResultPoint;\n                }\n            }\n        }\n        if (pcs->vCollisionPoint.xX != 0.0f || pcs->vCollisionPoint.xY != 0.0f || pcs->vCollisionPoint.xZ != 0.0f)\n        {\n            xNorm -= 0.6f;\n            if (xNorm < 1.3f)\n                xNorm = 1.3f;\n            pcs->vCollisionPoint.xX -= vTemp1.xX;\n            pcs->vCollisionPoint.xY -= vTemp1.xY;\n            pcs->vCollisionPoint.xZ -= vTemp1.xZ;\n            pcs->xDistMax = xNorm;\n            if (xNorm < 2.0f)\n            {\n                CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n                CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n            }\n        }\n\n        fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);\n        pcs->xTargetAngle = fn_xAngleVectorXOY(&pcs->vCameraSighting, &vTemp1);\n        if (fabsf(pcs->xTargetAngle) > 0.2f &&\n            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&\n            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb)\n        {\n            pcs->bFastAlign = 1;\n            pcs->xFastAlign_StartDistance = pcs->xDistMax;\n        }\n        if (pcs->bFastAlign)\n        {\n            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);\n            xNorm = fabsf(pcs->xTargetAngle);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 180.0f);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 180.0f);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 1, 1, 180.0f);\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n            if (xNorm > 1.5707964f)\n            {\n                xD2r = 6.0f + ((xNorm - 1.5707964f) / 1.5707964f) * (pcs->xFastAlign_StartDistance - 6.0f);\n                if (pcs->xDistMax > xD2r)\n                    pcs->xDistMax = xD2r;\n            }\n            else if (xNorm > 0.2f)\n            {\n                xD2r = 6.0f + ((xNorm - 1.5707964f) / 1.5707964f) * (pcs->xDistMax_Default - 6.0f);\n                if (pcs->xDistMax > xD2r)\n                    pcs->xDistMax = xD2r;\n            }\n            else\n                pcs->bFastAlign = 0;\n        }\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23C, 0, 1, pcs->xDistMax);\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23D, 0, 1, pcs->xDistMax);\n        return 0;\n    }\n    return 2;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "fn_StrafeLockMode",
+      "reason": "Natural-C seed transfer compiles; 5248/6128 text bytes and 164/189 relocations, first diff +0x0. Remaining control-flow/register allocation plus sqrtf lowering and local-constant relocations; signature/layout verified.",
+      "size": 6128,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Shooter.c",
+      "status": "MISMATCH",
+      "target_size": 6128,
+      "unresolved_relocations": [
+        {
+          "offset": 188,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 524,
+          "symbol": "@254",
+          "type": 8
+        },
+        {
+          "offset": 532,
+          "symbol": "@255",
+          "type": 8
+        },
+        {
+          "offset": 1020,
+          "symbol": "@256",
+          "type": 8
+        },
+        {
+          "offset": 1072,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 1220,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 1320,
+          "symbol": "@256",
+          "type": 8
+        },
+        {
+          "offset": 1400,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 1500,
+          "symbol": "@256",
+          "type": 8
+        },
+        {
+          "offset": 1768,
+          "symbol": "@257",
+          "type": 8
+        },
+        {
+          "offset": 1816,
+          "symbol": "@258",
+          "type": 8
+        },
+        {
+          "offset": 1868,
+          "symbol": "@258",
+          "type": 8
+        },
+        {
+          "offset": 1988,
+          "symbol": "@258",
+          "type": 8
+        },
+        {
+          "offset": 2040,
+          "symbol": "@258",
+          "type": 8
+        },
+        {
+          "offset": 2396,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 3204,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 3740,
+          "symbol": "@259",
+          "type": 8
+        },
+        {
+          "offset": 3780,
+          "symbol": "@259",
+          "type": 8
+        },
+        {
+          "offset": 4028,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 4360,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 4484,
+          "symbol": "@260",
+          "type": 8
+        },
+        {
+          "offset": 4488,
+          "symbol": "@261",
+          "type": 8
+        },
+        {
+          "offset": 4712,
+          "symbol": "@262",
+          "type": 8
+        },
+        {
+          "offset": 5000,
+          "symbol": "@263",
+          "type": 8
+        },
+        {
+          "offset": 5076,
+          "symbol": "@262",
+          "type": 8
+        }
+      ]
+    },
+    {
+      "address": "0x00243d80",
+      "candidate_size": 5820,
+      "first_difference": 0,
+      "implementation": "unsigned char fn_MarioMode(CAM_Shooter_* pcs)\n{\n    float xAngularSpeed;\n\n    if (*(char *)pcs->abExternDsgVarBoolean[3])\n    {\n        xAngularSpeed = sqrtf(\n            (pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX) * (pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX) +\n            (pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY) * (pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY) +\n            (pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ) * (pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ));\n        if (xAngularSpeed < 1.0f)\n        {\n            CAM_fn_vInitCompleteCineinfo(hCineInfo);\n            hCineInfo->hCurrent->hSuperObjectTargeted = pcs->pTargetActor;\n            hCineInfo->hVisibility->hSuperObjectTargeted = pcs->pTargetActor;\n            hCineInfo->hWork->hSuperObjectTargeted = pcs->pTargetActor;\n            CAM_fn_vUpdateTargetPosition(hCineInfo);\n            switch (pcs->iMode)\n            {\n            case 2:\n                fn_InitMarioMode(pcs);\n                break;\n            case 1:\n                fn_InitBackMode(pcs);\n                break;\n            case 3:\n                fn_InitStrafeLockMode(pcs);\n                break;\n            }\n            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);\n            hCineInfo->stForceRefAxisY = pcs->vRefAxis;\n            hCineInfo->stForceRefAxisZ = vVectorZ;\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n            pcs->ulAlignDelayTime = 0;\n            *(char *)pcs->abExternDsgVarBoolean[3] = 0;\n        }\n    }\n    if (*(char *)pcs->abExternDsgVarBoolean[0] && !pcs->bIsBot)\n        return 3;\n\n    lInputAxisV = *(int *)pcs->aiExternDsgVarInt[0];\n    lInputAxisZ = *(int *)pcs->aiExternDsgVarInt[1];\n    lInputAxisY = pcs->bIsBot ? 0 : *(int *)pcs->aiExternDsgVarInt[2];\n    lInputAxisX = *(int *)pcs->aiExternDsgVarInt[3];\n    bMovedCameraY = lInputAxisV < -25 || lInputAxisV >= 26;\n    bMovedCameraX = lInputAxisZ < -25 || lInputAxisZ >= 26;\n    if (pcs->bMouseDriven)\n    {\n        bMovedY = lInputAxisY != 0;\n        bMovedX = lInputAxisX != 0;\n    }\n    else\n    {\n        bMovedY = lInputAxisY < -25 || lInputAxisY >= 26;\n        bMovedX = lInputAxisX < -25 || lInputAxisX >= 26;\n    }\n\n    pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_mario;\n    pcs->xTheta_Min = -0.6f;\n    pcs->xTheta_Max = 1.3f;\n    pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_mario;\n    pcs->xDistMax = stCamShooter_CV.xDistMax_Init_mario;\n    fn_GetPersoSighting(&pcs->vCameraSighting, pcs->pCamera);\n\n    xAngularSpeed = bMovedY ? (float)(lInputAxisY < 0 ? lInputAxisY + 25 : lInputAxisY - 25) : 0.0f;\n    fn_GetPersoHorizon(&pcs->vProposedSpeed, pcs->pCamera);\n    pcs->vProposedSpeed.xX *= xAngularSpeed;\n    pcs->vProposedSpeed.xY *= xAngularSpeed;\n    pcs->vProposedSpeed.xZ *= xAngularSpeed;\n    xAngularSpeed = bMovedX ? (float)((lInputAxisX < 0 ? 25 : -25) - lInputAxisX) : 0.0f;\n    fn_GetPersoBanking(&pcs->vCheckCollisionShift, pcs->pCamera);\n    pcs->vProposedSpeed.xX += xAngularSpeed * pcs->vCheckCollisionShift.xX;\n    pcs->vProposedSpeed.xY += xAngularSpeed * pcs->vCheckCollisionShift.xY;\n    pcs->vProposedSpeed.xZ += xAngularSpeed * pcs->vCheckCollisionShift.xZ;\n    if (pcs->vProposedSpeed.xX != 0.0f || pcs->vProposedSpeed.xY != 0.0f || pcs->vProposedSpeed.xZ != 0.0f)\n    {\n        xAngularSpeed = sqrtf(pcs->vProposedSpeed.xX * pcs->vProposedSpeed.xX + pcs->vProposedSpeed.xY * pcs->vProposedSpeed.xY + pcs->vProposedSpeed.xZ * pcs->vProposedSpeed.xZ);\n        if (xAngularSpeed != 0.0f)\n        {\n            pcs->vProposedSpeed.xX /= xAngularSpeed;\n            pcs->vProposedSpeed.xY /= xAngularSpeed;\n            pcs->vProposedSpeed.xZ /= xAngularSpeed;\n        }\n    }\n\n    if (pcs->bAlignCamera)\n    {\n        fn_GetPersoHorizon(&pcs->vActualSpeed, pcs->pCamera);\n        if (pcs->xTargetAngle > 0.0f)\n        {\n            pcs->vActualSpeed.xX = -pcs->vActualSpeed.xX;\n            pcs->vActualSpeed.xY = -pcs->vActualSpeed.xY;\n            pcs->vActualSpeed.xZ = -pcs->vActualSpeed.xZ;\n        }\n    }\n    else\n    {\n        pcs->vActualSpeed.xX = pcs->vOldSighting.xX - pcs->vCameraSighting.xX;\n        pcs->vActualSpeed.xY = pcs->vOldSighting.xY - pcs->vCameraSighting.xY;\n        pcs->vActualSpeed.xZ = pcs->vOldSighting.xZ - pcs->vCameraSighting.xZ;\n        xAngularSpeed = sqrtf(pcs->vActualSpeed.xX * pcs->vActualSpeed.xX + pcs->vActualSpeed.xY * pcs->vActualSpeed.xY + pcs->vActualSpeed.xZ * pcs->vActualSpeed.xZ);\n        if (xAngularSpeed > 0.01f)\n        {\n            pcs->vActualSpeed.xX /= xAngularSpeed;\n            pcs->vActualSpeed.xY /= xAngularSpeed;\n            pcs->vActualSpeed.xZ /= xAngularSpeed;\n        }\n        else\n        {\n            pcs->vActualSpeed.xX = 0.0f;\n            pcs->vActualSpeed.xY = 0.0f;\n            pcs->vActualSpeed.xZ = 0.0f;\n        }\n    }\n\n    if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Climb)\n    {\n        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_Climb;\n        pcs->xDistMax = stCamShooter_CV.xDistMax_Init_Climb;\n        if (!pcs->bWasClimbing)\n        {\n            pcs->bWasClimbing = 1;\n            pcs->bStartAlignCamera = 1;\n        }\n    }\n    else\n    {\n        pcs->bWasClimbing = 0;\n        if (pcs->bLowCeiling)\n        {\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n            pcs->xTheta_Default = 0.1f;\n            bMovedX = 0;\n        }\n        else if (!fn_bCollideWithGround(pcs->pTargetSkin) && pcs->pTargetActor_speed->xZ < -0.2f &&\n                 pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb)\n        {\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n            xAngularSpeed = 1.1f * sqrtf(pcs->pTargetActor_speed->xX * pcs->pTargetActor_speed->xX + pcs->pTargetActor_speed->xY * pcs->pTargetActor_speed->xY + pcs->pTargetActor_speed->xZ * pcs->pTargetActor_speed->xZ);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, xAngularSpeed);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 1, 1, xAngularSpeed);\n        }\n        else\n            pcs->bRaiseCamera = 0;\n    }\n\n    fn_GetPersoSighting(&pcs->vCheckCollisionShift, pcs->pTargetActor);\n    pcs->xTargetAngle = fn_xAngleVectorXOY(&pcs->vCameraSighting, &pcs->vCheckCollisionShift);\n\n    if (!g_stEngineStructure.bEngineIsInPaused)\n    {\n        if (!pcs->bIsDigitalInput)\n        {\n            if (!bMovedX)\n            {\n                pcs->xDeltaTheta_User /= 2.0f;\n                if (fabsf(pcs->xDeltaTheta_User) < 0.05f)\n                {\n                    pcs->xDeltaTheta_User = 0.0f;\n                    pcs->xTheta_User = pcs->xTheta_Default;\n                }\n                else\n                    pcs->xTheta_User = pcs->xTheta_Default + pcs->xDeltaTheta_User;\n            }\n            else\n            {\n                xAngularSpeed = (float)lInputAxisX;\n                xAngularSpeed = (xAngularSpeed < 0.0f ? xAngularSpeed + 12.0f : xAngularSpeed - 12.0f);\n                xAngularSpeed = ((float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime * xAngularSpeed) / 13000.0f;\n                pcs->xDeltaTheta_User -= xAngularSpeed * fabsf(xAngularSpeed);\n                pcs->xTheta_User = pcs->xTheta_Default + pcs->xDeltaTheta_User;\n            }\n        }\n        if (pcs->xTheta_User > pcs->xTheta_Max)\n        {\n            pcs->xTheta_User = pcs->xTheta_Max;\n            pcs->xDeltaTheta_User = pcs->xTheta_Max - pcs->xTheta_Default;\n        }\n        if (pcs->xTheta_User < pcs->xTheta_Min)\n        {\n            pcs->xTheta_User = pcs->xTheta_Min;\n            pcs->xDeltaTheta_User = pcs->xTheta_Min - pcs->xTheta_Default;\n        }\n    }\n\n    if (!pcs->bAlignCamera)\n    {\n        if (bMovedY)\n        {\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 6.0f);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 67.0f);\n            pcs->ulAlignDelayTime = 0;\n            xAngularSpeed = (float)(lInputAxisY > 0 ? lInputAxisY - 12 : lInputAxisY + 12);\n            fn_RotateVectorByAngle(&pcs->vRefAxis, (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime * (-0.000025f * xAngularSpeed), &vVectorZ);\n        }\n        else if (!pcs->bSideCollision)\n        {\n            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pCamera);\n            pcs->vRefAxis.xZ = 0.0f;\n            xAngularSpeed = sqrtf(pcs->vRefAxis.xX * pcs->vRefAxis.xX + pcs->vRefAxis.xY * pcs->vRefAxis.xY + pcs->vRefAxis.xZ * pcs->vRefAxis.xZ);\n            if (xAngularSpeed != 0.0f)\n            {\n                pcs->vRefAxis.xX /= xAngularSpeed;\n                pcs->vRefAxis.xY /= xAngularSpeed;\n                pcs->vRefAxis.xZ /= xAngularSpeed;\n            }\n            else\n                fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);\n        }\n    }\n    if (fn_bCollideWithGround(pcs->pTargetSkin) && fabsf(pcs->xTargetAngle) > 1.9634955f)\n        CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n\n    pcs->vTheoreticalPosition.xX = pcs->pTargetActor_position->xX + hCineInfo->hCurrent->stShiftPos.xX;\n    pcs->vTheoreticalPosition.xY = pcs->pTargetActor_position->xY + hCineInfo->hCurrent->stShiftPos.xY;\n    pcs->vTheoreticalPosition.xZ = pcs->pTargetActor_position->xZ + hCineInfo->hCurrent->stShiftPos.xZ;\n    pcs->vCheckCollisionShift.xX = pcs->xDistMax * pcs->vRefAxis.xX;\n    pcs->vCheckCollisionShift.xY = pcs->xDistMax * pcs->vRefAxis.xY;\n    pcs->vCheckCollisionShift.xZ = pcs->xDistMax * pcs->vRefAxis.xZ;\n    pcs->vCheckCollisionShift1 = pcs->vRefAxis;\n    fn_RotateVectorByAngle(&pcs->vCheckCollisionShift1, -1.5707964f, &vVectorZ);\n    fn_RotateVectorByAngle(&pcs->vCheckCollisionShift, pcs->xTheta_User, &pcs->vCheckCollisionShift1);\n    pcs->vTheoreticalPosition.xX += pcs->vCheckCollisionShift.xX;\n    pcs->vTheoreticalPosition.xY += pcs->vCheckCollisionShift.xY;\n    pcs->vTheoreticalPosition.xZ += pcs->vCheckCollisionShift.xZ;\n\n    pcs->vRayCastOrigin = *pcs->pTargetActor_position;\n    xAngularSpeed = -hCineInfo->hWork->stShiftTarget.xY;\n    pcs->vRayCastOrigin.xX += xAngularSpeed * pcs->vCameraSighting.xX;\n    pcs->vRayCastOrigin.xY += xAngularSpeed * pcs->vCameraSighting.xY;\n    pcs->vRayCastOrigin.xZ += xAngularSpeed * pcs->vCameraSighting.xZ;\n    if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Hang ||\n        pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Climb)\n        pcs->vRayCastOrigin.xZ += 3.5f;\n    else\n        pcs->vRayCastOrigin.xZ += 1.5f;\n\n    pcs->vCollisionDirectionV.xX = pcs->vTheoreticalPosition.xX - pcs->vRayCastOrigin.xX;\n    pcs->vCollisionDirectionV.xY = pcs->vTheoreticalPosition.xY - pcs->vRayCastOrigin.xY;\n    pcs->vCollisionDirectionV.xZ = pcs->vTheoreticalPosition.xZ - pcs->vRayCastOrigin.xZ;\n    fn_GetPersoHorizon(&pcs->vCheckCollisionShift, pcs->pCamera);\n    fn_CreateRaycastDirection(pcs, &pcs->vRayCastDirection, &pcs->vCollisionDirectionV);\n    fn_CollisionRayCast(pcs->pCamera, &pcs->vRayCastOrigin, &pcs->vRayCastDirection, 0);\n    pcs->bCollision = g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f;\n    pcs->vNormalCollision = g_stCollideResultVector;\n    pcs->vCollisionPoint = g_stCollideResultPoint;\n    if (pcs->bCollision)\n        fn_PutCameraAgainstWall(pcs, sqrtf(\n            (pcs->vRayCastOrigin.xX - pcs->vCollisionPoint.xX) * (pcs->vRayCastOrigin.xX - pcs->vCollisionPoint.xX) +\n            (pcs->vRayCastOrigin.xY - pcs->vCollisionPoint.xY) * (pcs->vRayCastOrigin.xY - pcs->vCollisionPoint.xY) +\n            (pcs->vRayCastOrigin.xZ - pcs->vCollisionPoint.xZ) * (pcs->vRayCastOrigin.xZ - pcs->vCollisionPoint.xZ)));\n    else\n        pcs->bObstacleCollision = 0;\n\n    if (bMovedCameraY || bMovedCameraX || bMovedY || bMovedX)\n        pcs->ulAlignDelayTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;\n    else if ((float)(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pcs->ulAlignDelayTime) > xCameraDelayAlign || *(char *)pcs->abExternDsgVarBoolean[2])\n    {\n        pcs->ulAlignDelayTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;\n        pcs->bAutoAlign = 1;\n        pcs->bStartAlignCamera = 1;\n    }\n\n    if (pcs->bStartAlignCamera)\n    {\n        if (!pcs->bAlignCamera)\n        {\n            pcs->bAlignCamera = 1;\n            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);\n        }\n        fn_GetPersoNegativeSighting(&pcs->vCheckCollisionShift, pcs->pCamera);\n        if (fabsf(fn_xAngleVectorXOY(&pcs->vCheckCollisionShift, &pcs->vRefAxis)) > 0.1f && !pcs->bSideCollision)\n        {\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n        }\n        else\n        {\n            pcs->bAutoAlign = 0;\n            pcs->bAlignCamera = 0;\n            pcs->bStartAlignCamera = 0;\n        }\n    }\n    else if (!bMovedY && !pcs->bAlignCamera && !pcs->bFastAlign)\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x241, 1, 1, 3.2f);\n\n    if (!pcs->bVerticalCollision && !pcs->bObstacleCollision)\n        pcs->xTheta_Current = pcs->xTheta_User;\n    else if (pcs->xTheta_User < pcs->xTheta_Default)\n    {\n        pcs->xTheta_Current = pcs->xTheta_Imposed + pcs->xTheta_User - pcs->xTheta_Default;\n        if (pcs->xTheta_Current < 0.2f)\n            pcs->xTheta_Current = 0.2f;\n    }\n    else\n        pcs->xTheta_Current = pcs->xTheta_User > pcs->xTheta_Imposed ? pcs->xTheta_User : pcs->xTheta_Imposed;\n    pcs->xTheta_Imposed = pcs->xTheta_Current;\n\n    if (pcs->xTheta_User < pcs->xTheta_Default)\n        xAngularSpeed = 4.5f + ((pcs->xDistMax_Default - 4.5f) * (pcs->xTheta_User - pcs->xTheta_Min)) / (pcs->xTheta_Default - pcs->xTheta_Min);\n    else\n        xAngularSpeed = 2.0f + ((pcs->xDistMax_Default - 2.0f) * (pcs->xTheta_User - pcs->xTheta_Max)) / (pcs->xTheta_Default - pcs->xTheta_Max);\n    if (xAngularSpeed < pcs->xDistMax_Default && pcs->xDistMax > xAngularSpeed)\n        pcs->xDistMax = xAngularSpeed;\n\n    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, pcs->xTheta_Current);\n    hCineInfo->stForceRefAxisY = pcs->vRefAxis;\n    hCineInfo->stForceRefAxisZ = vVectorZ;\n    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23C, 0, 1, pcs->xDistMax);\n    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23D, 0, 1, pcs->xDistMax);\n    if (fabsf(pcs->xDistMax - pcs->xOldDistMax) > 0.2f || pcs->bObstacleCollision)\n    {\n        CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 180.0f);\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 1, 1, 180.0f);\n    }\n    pcs->xOldDistMax = pcs->xDistMax;\n    if (!pcs->bFastAlign)\n    {\n        xAngularSpeed = 3.5f * (pcs->xDistMax / 10.0f);\n        if (xAngularSpeed > 3.5f || bMovedY || bMovedX)\n            xAngularSpeed = 3.5f;\n        else if (xAngularSpeed < 1.0f)\n            xAngularSpeed = 1.0f;\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 0, 1, xAngularSpeed);\n    }\n\n    if (pcs->xTargetAngle < -1.5707964f || pcs->xTargetAngle > 1.5707964f)\n    {\n        AGO_vSetIcon(pcs->iViewportIndex, pcs->iViewFinderIconId, &vVectorZ.xX, &vVectorZ.xX, 0.0f, stCamShooter_CV.hVMTViewFinder_red);\n        fn_GetPersoSighting((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0], pcs->pTargetActor);\n    }\n    else\n    {\n        fn_GetPersoSighting(&pcs->vRayCastDirection, pcs->pTargetActor);\n        pcs->vRayCastOrigin = *pcs->pTargetActor_position;\n        pcs->vRayCastOrigin.xZ += 1.0f;\n        pcs->vRayCastDirection.xX *= 200.0f;\n        pcs->vRayCastDirection.xY *= 200.0f;\n        pcs->vRayCastDirection.xZ *= 200.0f;\n        fn_CollisionRayCast(pcs->pCamera, &pcs->vRayCastOrigin, &pcs->vRayCastDirection, g_stEngineStructure.bEngineIsInPaused ? 1 : 2);\n        if (g_hSuperObjectHit && ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->ulTypeOfLinkedObject == 2 && (HIE_tdstSuperObject_ *)g_hSuperObjectHit != pcs->pTargetSkin)\n        {\n            pcs->vViewFinderPosition.xX = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xX;\n            pcs->vViewFinderPosition.xY = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xY;\n            pcs->vViewFinderPosition.xZ = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xZ + 1.0f;\n            *(int *)pcs->apExternDsgVarPerso[1] = 0;\n        }\n        else if (g_hSuperObjectHit)\n        {\n            pcs->vViewFinderPosition = g_stCollideResultPoint;\n            *(int *)pcs->apExternDsgVarPerso[1] = 0;\n        }\n        else\n        {\n            pcs->vViewFinderPosition.xX = pcs->vRayCastOrigin.xX + pcs->vRayCastDirection.xX;\n            pcs->vViewFinderPosition.xY = pcs->vRayCastOrigin.xY + pcs->vRayCastDirection.xY;\n            pcs->vViewFinderPosition.xZ = pcs->vRayCastOrigin.xZ + pcs->vRayCastDirection.xZ;\n            *(int *)pcs->apExternDsgVarPerso[1] = 0;\n        }\n        fn_vGetViewportCoordinates(&pcs->v2DViewFinderPosition, &pcs->vViewFinderPosition, pcs->p_stViewport);\n        if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)\n            pcs->v2DViewFinderPosition.xY *= 2.0f;\n        if (pcs->v2DViewFinderPosition.xX < -5.0f || pcs->v2DViewFinderPosition.xX > 105.0f || pcs->v2DViewFinderPosition.xY < 0.0f)\n        {\n            pcs->v2DViewFinderPosition.xX = -300.0f;\n            pcs->v2DViewFinderPosition.xY = -300.0f;\n            pcs->v2DViewFinderPosition.xZ = 0.0f;\n            fn_GetPersoSighting((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0], pcs->pTargetActor);\n        }\n        else\n        {\n            pcs->vCheckCollisionShift.xX = pcs->vViewFinderPosition.xX - pcs->vRayCastOrigin.xX;\n            pcs->vCheckCollisionShift.xY = pcs->vViewFinderPosition.xY - pcs->vRayCastOrigin.xY;\n            pcs->vCheckCollisionShift.xZ = pcs->vViewFinderPosition.xZ - pcs->vRayCastOrigin.xZ;\n            xAngularSpeed = sqrtf(pcs->vCheckCollisionShift.xX * pcs->vCheckCollisionShift.xX + pcs->vCheckCollisionShift.xY * pcs->vCheckCollisionShift.xY + pcs->vCheckCollisionShift.xZ * pcs->vCheckCollisionShift.xZ);\n            if (xAngularSpeed != 0.0f)\n            {\n                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xX = pcs->vCheckCollisionShift.xX / xAngularSpeed;\n                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xY = pcs->vCheckCollisionShift.xY / xAngularSpeed;\n                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xZ = pcs->vCheckCollisionShift.xZ / xAngularSpeed;\n            }\n        }\n        pcs->vCheckCollisionShift = pcs->v2DViewFinderPosition;\n        pcs->vCheckCollisionShift1.xX = pcs->v2DViewFinderPosition.xX - pcs->xViewFinderWidth_2;\n        pcs->vCheckCollisionShift1.xY = pcs->v2DViewFinderPosition.xY - pcs->xViewFinderHeight_2;\n        pcs->vCheckCollisionShift.xX += pcs->xViewFinderWidth_2;\n        pcs->vCheckCollisionShift.xY += pcs->xViewFinderHeight_2;\n        AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);\n        AGO_vSetIcon(pcs->iViewportIndex, pcs->iViewFinderIconId, &pcs->vCheckCollisionShift1.xX, &pcs->vCheckCollisionShift.xX, 140.0f, stCamShooter_CV.hVMTViewFinder_red);\n    }\n    pcs->vOldPosition = *pcs->vCameraPosition;\n    pcs->vOldSighting = pcs->vCameraSighting;\n    return 0;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "fn_MarioMode",
+      "reason": "Natural-C seed transfer compiles; 5820/10052 text bytes and 190/213 relocations, first diff +0x0. Residual is source-shape/register scheduling with sqrtf lowering and local-constant relocations; recovered signature/layout retained.",
+      "size": 10052,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Shooter.c",
+      "status": "MISMATCH",
+      "target_size": 10052,
+      "unresolved_relocations": [
+        {
+          "offset": 88,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 668,
+          "symbol": "@566",
+          "type": 8
+        },
+        {
+          "offset": 676,
+          "symbol": "@261",
+          "type": 8
+        },
+        {
+          "offset": 1020,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 1252,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 1260,
+          "symbol": "@567",
+          "type": 8
+        },
+        {
+          "offset": 1472,
+          "symbol": "@568",
+          "type": 8
+        },
+        {
+          "offset": 1508,
+          "symbol": "@569",
+          "type": 8
+        },
+        {
+          "offset": 1728,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 1736,
+          "symbol": "@570",
+          "type": 8
+        },
+        {
+          "offset": 1900,
+          "symbol": "@571",
+          "type": 8
+        },
+        {
+          "offset": 2476,
+          "symbol": "@572",
+          "type": 8
+        },
+        {
+          "offset": 2564,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 2676,
+          "symbol": "@573",
+          "type": 8
+        },
+        {
+          "offset": 2904,
+          "symbol": "@574",
+          "type": 8
+        },
+        {
+          "offset": 3528,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 3804,
+          "symbol": "@568",
+          "type": 8
+        },
+        {
+          "offset": 3988,
+          "symbol": "@575",
+          "type": 8
+        },
+        {
+          "offset": 4084,
+          "symbol": "@262",
+          "type": 8
+        },
+        {
+          "offset": 4504,
+          "symbol": "@262",
+          "type": 8
+        },
+        {
+          "offset": 4792,
+          "symbol": "@574",
+          "type": 8
+        },
+        {
+          "offset": 4812,
+          "symbol": "@263",
+          "type": 8
+        },
+        {
+          "offset": 5504,
+          "symbol": "sqrtf",
+          "type": 4
+        }
+      ]
+    },
+    {
+      "address": "0x00246bd0",
+      "candidate_size": 6048,
+      "first_difference": 0,
+      "implementation": "unsigned char fn_BackMode(CAM_Shooter_* pcs)\n{\n    MTH3D_tdstVector_ vPos;\n\n    if (*(char *)pcs->abExternDsgVarBoolean[3])\n    {\n        vPos.xX = pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX;\n        vPos.xY = pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY;\n        vPos.xZ = pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ;\n        if (sqrtf(vPos.xX * vPos.xX + vPos.xY * vPos.xY + vPos.xZ * vPos.xZ) < 1.0f)\n        {\n            CAM_fn_vInitCompleteCineinfo(hCineInfo);\n            hCineInfo->hCurrent->hSuperObjectTargeted = pcs->pTargetActor;\n            hCineInfo->hVisibility->hSuperObjectTargeted = pcs->pTargetActor;\n            hCineInfo->hWork->hSuperObjectTargeted = pcs->pTargetActor;\n            CAM_fn_vUpdateTargetPosition(hCineInfo);\n            switch (pcs->iMode)\n            {\n            case 2:\n                fn_InitMarioMode(pcs);\n                break;\n            case 1:\n                fn_InitBackMode(pcs);\n                break;\n            case 3:\n                fn_InitStrafeLockMode(pcs);\n                break;\n            }\n            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);\n            hCineInfo->stForceRefAxisY = pcs->vRefAxis;\n            hCineInfo->stForceRefAxisZ = vVectorZ;\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n            pcs->ulAlignDelayTime = 0;\n            *(char *)pcs->abExternDsgVarBoolean[3] = 0;\n        }\n    }\n\n    fn_GetPersoSighting(&pcs->vCameraSighting, pcs->pCamera);\n    lInputAxisV = *(int *)pcs->aiExternDsgVarInt[0];\n    lInputAxisZ = *(int *)pcs->aiExternDsgVarInt[1];\n    lInputAxisY = pcs->bIsBot ? 0 : *(int *)pcs->aiExternDsgVarInt[2];\n    lInputAxisX = *(int *)pcs->aiExternDsgVarInt[3];\n    bMovedCameraY = lInputAxisV < -25 || lInputAxisV >= 26;\n    bMovedCameraX = lInputAxisZ < -25 || lInputAxisZ >= 26;\n    if (pcs->bMouseDriven)\n    {\n        bMovedY = lInputAxisY != 0;\n        bMovedX = lInputAxisX != 0;\n    }\n    else\n    {\n        bMovedY = lInputAxisY < -25 || lInputAxisY >= 26;\n        bMovedX = lInputAxisX < -25 || lInputAxisX >= 26;\n    }\n\n    pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;\n    pcs->xTheta_Min = -0.8f;\n    pcs->xTheta_Max = 1.2f;\n    pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;\n    pcs->xDistMax = stCamShooter_CV.xDistMax_Init;\n    if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Climb)\n    {\n        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_Climb;\n        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_Climb;\n        pcs->xDistMax = stCamShooter_CV.xDistMax_Init_Climb;\n        if (!pcs->bWasClimbing)\n        {\n            pcs->bWasClimbing = 1;\n            pcs->ulDelayTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;\n            pcs->bStartAlignCamera = 1;\n        }\n        else if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pcs->ulDelayTime < 1000)\n        {\n            vPos.xX = pcs->pTargetActor_speed->xX;\n            vPos.xY = pcs->pTargetActor_speed->xY;\n            vPos.xZ = pcs->pTargetActor_speed->xZ;\n            if (sqrtf(vPos.xX * vPos.xX + vPos.xY * vPos.xY + vPos.xZ * vPos.xZ) < 0.1f)\n            {\n                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 8.0f);\n                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 1.0f);\n            }\n            else\n            {\n                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 16.0f);\n                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 2.0f);\n            }\n        }\n    }\n    else if (pcs->bWasClimbing)\n    {\n        pcs->bWasClimbing = 0;\n        pcs->ulDelayTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;\n        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_Climb;\n        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_Climb;\n        pcs->xDistMax = stCamShooter_CV.xDistMax_Init_Climb;\n    }\n    else if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pcs->ulDelayTime < 1000 && fn_bCollideWithGround(pcs->pTargetSkin))\n    {\n        pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_Climb;\n        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_Climb;\n        pcs->xDistMax = stCamShooter_CV.xDistMax_Init_Climb;\n    }\n    else if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pcs->ulDelayTime < 2000 &&\n             pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Wait)\n    {\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 16.0f);\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 1.0f);\n    }\n\n    fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);\n    hCineInfo->stForceRefAxisY = pcs->vRefAxis;\n    hCineInfo->stForceRefAxisZ = vVectorZ;\n    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n\n    fn_CollisionRayCast(pcs->pCamera, pcs->vCameraPosition, &vVectorZ, 0);\n    pcs->vCeilingCollisionPoint = g_stCollideResultPoint;\n    if (bMovedX && (lInputAxisX <= 0 ||\n        (pcs->vCeilingCollisionPoint.xX == 0.0f && pcs->vCeilingCollisionPoint.xY == 0.0f && pcs->vCeilingCollisionPoint.xZ == 0.0f)) &&\n        !*(char *)pcs->abExternDsgVarBoolean[2])\n    {\n        if (pcs->bMouseDriven)\n            vPos.xX = (-(float)lInputAxisX * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime) / stCamShooter_CV.xMouseFactorY;\n        else\n        {\n            vPos.xX = (float)(lInputAxisX < 0 ? lInputAxisX + 12 : lInputAxisX - 12) * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 11000.0f;\n            vPos.xX = lInputAxisX < 0 ? -(vPos.xX * vPos.xX) : vPos.xX * vPos.xX;\n        }\n        pcs->xDeltaTheta_User -= vPos.xX;\n        pcs->xTheta_User = pcs->xTheta_Default + pcs->xDeltaTheta_User;\n        if (pcs->xTheta_User > pcs->xTheta_Max)\n        {\n            pcs->xTheta_User = pcs->xTheta_Max;\n            pcs->xDeltaTheta_User = pcs->xTheta_Max - pcs->xTheta_Default;\n        }\n        else if (pcs->xTheta_User < pcs->xTheta_Min)\n        {\n            pcs->xTheta_User = pcs->xTheta_Min;\n            pcs->xDeltaTheta_User = pcs->xTheta_Min - pcs->xTheta_Default;\n        }\n    }\n    else if (*(char *)pcs->abExternDsgVarBoolean[2])\n    {\n        pcs->xTheta_Current = pcs->xTheta_Default;\n        pcs->xTheta_User = pcs->xTheta_Default;\n        pcs->xDeltaTheta_User = 0.0f;\n    }\n    pcs->iOldInputAxisZ = lInputAxisX;\n\n    if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Hang ||\n        pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Climb)\n    {\n        if (bMovedY)\n        {\n            if (pcs->bMouseDriven)\n                vPos.xX = (float)lInputAxisY * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / stCamShooter_CV.xMouseFactorX;\n            else\n            {\n                vPos.xX = (float)(lInputAxisY < 0 ? lInputAxisY + 12 : lInputAxisY - 12) * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 13000.0f;\n                vPos.xX = lInputAxisY < 0 ? -(vPos.xX * vPos.xX) : vPos.xX * vPos.xX;\n            }\n            pcs->xAlpha_User -= vPos.xX;\n            if (pcs->xAlpha_User > 1.0f)\n                pcs->xAlpha_User = 1.0f;\n            else if (pcs->xAlpha_User < -1.0f)\n                pcs->xAlpha_User = -1.0f;\n        }\n    }\n    else\n        pcs->xAlpha_User = 0.0f;\n\n    fn_GetPersoSighting(&pcs->vRayCastDirection, pcs->pTargetActor);\n    pcs->vRayCastOrigin = *pcs->pTargetActor_position;\n    pcs->vRayCastOrigin.xZ += 1.0f;\n    if (pcs->bMouseDriven)\n    {\n        pcs->vRayCastDirection.xZ = 0.0f;\n        vPos.xX = sqrtf(pcs->vRayCastDirection.xX * pcs->vRayCastDirection.xX + pcs->vRayCastDirection.xY * pcs->vRayCastDirection.xY);\n        if (vPos.xX != 0.0f)\n        {\n            pcs->vRayCastDirection.xX *= 200.0f / vPos.xX;\n            pcs->vRayCastDirection.xY *= 200.0f / vPos.xX;\n        }\n    }\n    else\n    {\n        vPos.xX = sqrtf(pcs->vRayCastDirection.xX * pcs->vRayCastDirection.xX + pcs->vRayCastDirection.xY * pcs->vRayCastDirection.xY + pcs->vRayCastDirection.xZ * pcs->vRayCastDirection.xZ);\n        if (vPos.xX != 0.0f)\n        {\n            pcs->vRayCastDirection.xX *= 200.0f / vPos.xX;\n            pcs->vRayCastDirection.xY *= 200.0f / vPos.xX;\n            pcs->vRayCastDirection.xZ *= 200.0f / vPos.xX;\n        }\n    }\n    *(int *)pcs->apExternDsgVarPerso[1] = 0;\n    fn_CollisionRayCast(pcs->pCamera, &pcs->vRayCastOrigin, &pcs->vRayCastDirection, pcs->bAutoAim ? 2 : 0);\n    if (g_hSuperObjectHit)\n    {\n        if (((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->ulTypeOfLinkedObject == 2 && (HIE_tdstSuperObject_ *)g_hSuperObjectHit != pcs->pTargetSkin)\n        {\n            pcs->vViewFinderPosition.xX = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xX;\n            pcs->vViewFinderPosition.xY = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xY;\n            pcs->vViewFinderPosition.xZ = ((HIE_tdstSuperObject_ *)g_hSuperObjectHit)->hGlobalMatrix->stTransformMatrix.stCol_3.xZ + 1.0f;\n            *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[1] = (HIE_tdstSuperObject_ *)g_hSuperObjectHit;\n        }\n        else\n            pcs->vViewFinderPosition = g_stCollideResultPoint;\n    }\n    else\n    {\n        pcs->vViewFinderPosition.xX = pcs->vRayCastOrigin.xX + pcs->vRayCastDirection.xX;\n        pcs->vViewFinderPosition.xY = pcs->vRayCastOrigin.xY + pcs->vRayCastDirection.xY;\n        pcs->vViewFinderPosition.xZ = pcs->vRayCastOrigin.xZ + pcs->vRayCastDirection.xZ;\n        fn_GetPersoSighting((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0], pcs->pTargetActor);\n    }\n\n    fn_vGetViewportCoordinates(&vPos, &pcs->vViewFinderPosition, pcs->p_stViewport);\n    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)\n        vPos.xY *= 2.0f;\n    if (pcs->bMouseDriven)\n    {\n        pcs->vCheckCollisionShift.xX = vPos.xX - pcs->v2DViewFinderPosition.xX;\n        pcs->vCheckCollisionShift.xY = vPos.xY - pcs->v2DViewFinderPosition.xY;\n        pcs->vCheckCollisionShift.xZ = vPos.xZ - pcs->v2DViewFinderPosition.xZ;\n        if (pcs->v2DViewFinderPosition.xZ > 3.0f ||\n            sqrtf(pcs->vCheckCollisionShift.xX * pcs->vCheckCollisionShift.xX + pcs->vCheckCollisionShift.xY * pcs->vCheckCollisionShift.xY + pcs->vCheckCollisionShift.xZ * pcs->vCheckCollisionShift.xZ) < 0.5f)\n            pcs->v2DViewFinderPosition = vPos;\n        else\n        {\n            pcs->v2DViewFinderPosition.xX += 0.5f * pcs->vCheckCollisionShift.xX;\n            pcs->v2DViewFinderPosition.xY += 0.5f * pcs->vCheckCollisionShift.xY;\n            pcs->v2DViewFinderPosition.xZ += 0.5f * pcs->vCheckCollisionShift.xZ;\n        }\n    }\n    else\n        pcs->v2DViewFinderPosition = vPos;\n\n    pcs->vDirection.xX = pcs->vViewFinderPosition.xX - pcs->vRayCastOrigin.xX;\n    pcs->vDirection.xY = pcs->vViewFinderPosition.xY - pcs->vRayCastOrigin.xY;\n    pcs->vDirection.xZ = pcs->vViewFinderPosition.xZ - pcs->vRayCastOrigin.xZ;\n    vPos.xX = sqrtf(pcs->vDirection.xX * pcs->vDirection.xX + pcs->vDirection.xY * pcs->vDirection.xY + pcs->vDirection.xZ * pcs->vDirection.xZ);\n    if (vPos.xX != 0.0f)\n    {\n        ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xX = pcs->vDirection.xX / vPos.xX;\n        ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xY = pcs->vDirection.xY / vPos.xX;\n        ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xZ = pcs->vDirection.xZ / vPos.xX;\n    }\n    pcs->vCheckCollisionShift1 = pcs->v2DViewFinderPosition;\n    pcs->vCheckCollisionShift = pcs->v2DViewFinderPosition;\n    pcs->vCheckCollisionShift1.xX -= pcs->xViewFinderWidth_2;\n    pcs->vCheckCollisionShift1.xY -= pcs->xViewFinderHeight_2;\n    pcs->vCheckCollisionShift.xX += pcs->xViewFinderWidth_2;\n    pcs->vCheckCollisionShift.xY += pcs->xViewFinderHeight_2;\n    if (*(int *)pcs->apExternDsgVarPerso[1])\n        AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderRedIconUV1, &stCamShooter_CV.vViewFinderRedIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);\n    else\n        AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);\n    AGO_vSetIcon(pcs->iViewportIndex, pcs->iViewFinderIconId, &pcs->vCheckCollisionShift1.xX, &pcs->vCheckCollisionShift.xX, 255.0f, stCamShooter_CV.hVMTViewFinder_red);\n\n    pcs->xTheta_Current = pcs->xTheta_User;\n    if (!pcs->bMouseDriven)\n    {\n        fn_GetPersoSighting(&vPos, pcs->pTargetActor);\n        pcs->xTargetAngle = fn_xAngleVectorXOY(&pcs->vCameraSighting, &vPos);\n        if (fabsf(pcs->xTargetAngle) > 0.2f &&\n            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&\n            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb)\n        {\n            pcs->bFastAlign = 1;\n            pcs->xFastAlign_StartDistance = pcs->xDistMax;\n        }\n        if (pcs->bFastAlign)\n        {\n            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);\n            vPos.xX = fabsf(pcs->xTargetAngle);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 180.0f);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 180.0f);\n            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 1, 1, 180.0f);\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n            if (vPos.xX > 1.5707964f)\n                vPos.xY = 6.0f + ((vPos.xX - 1.5707964f) / 1.5707964f) * (pcs->xFastAlign_StartDistance - 6.0f);\n            else if (vPos.xX > 0.2f)\n                vPos.xY = 6.0f + ((vPos.xX - 1.5707964f) / 1.5707964f) * (pcs->xDistMax_Default - 6.0f);\n            else\n            {\n                pcs->bFastAlign = 0;\n                vPos.xY = pcs->xDistMax;\n            }\n            if (pcs->xDistMax > vPos.xY)\n                pcs->xDistMax = vPos.xY;\n        }\n    }\n\n    vPos = *pcs->pTargetActor_position;\n    vPos.xZ += 1.5f;\n    fn_GetPersoHorizon(&pcs->vCheckCollisionShift, pcs->pCamera);\n    pcs->vCheckCollisionShift.xX *= 0.7f;\n    pcs->vCheckCollisionShift.xY *= 0.7f;\n    pcs->vCheckCollisionShift.xZ *= 0.7f;\n    pcs->vCollisionDirectionV.xX = pcs->vCheckCollisionShift.xX - pcs->xDistMax * pcs->vCameraSighting.xX;\n    pcs->vCollisionDirectionV.xY = pcs->vCheckCollisionShift.xY - pcs->xDistMax * pcs->vCameraSighting.xY;\n    pcs->vCollisionDirectionV.xZ = pcs->vCheckCollisionShift.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;\n    fn_CollisionRayCast(pcs->pCamera, &vPos, &pcs->vCollisionDirectionV, 0);\n    pcs->vCollisionPoint.xX = 0.0f;\n    pcs->vCollisionPoint.xY = 0.0f;\n    pcs->vCollisionPoint.xZ = 0.0f;\n    pcs->xOldDistMax = pcs->xDistMax;\n    if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)\n    {\n        if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)\n        {\n            pcs->xOldDistMax = sqrtf(\n                (g_stCollideResultPoint.xX - vPos.xX) * (g_stCollideResultPoint.xX - vPos.xX) +\n                (g_stCollideResultPoint.xY - vPos.xY) * (g_stCollideResultPoint.xY - vPos.xY) +\n                (g_stCollideResultPoint.xZ - vPos.xZ) * (g_stCollideResultPoint.xZ - vPos.xZ));\n            if (pcs->xOldDistMax < pcs->xDistMax)\n                pcs->vCollisionPoint = g_stCollideResultPoint;\n        }\n    }\n    pcs->vCheckCollisionShift.xX = -pcs->vCheckCollisionShift.xX;\n    pcs->vCheckCollisionShift.xY = -pcs->vCheckCollisionShift.xY;\n    pcs->vCheckCollisionShift.xZ = -pcs->vCheckCollisionShift.xZ;\n    pcs->vCollisionDirectionV.xX = pcs->vCheckCollisionShift.xX - pcs->xDistMax * pcs->vCameraSighting.xX;\n    pcs->vCollisionDirectionV.xY = pcs->vCheckCollisionShift.xY - pcs->xDistMax * pcs->vCameraSighting.xY;\n    pcs->vCollisionDirectionV.xZ = pcs->vCheckCollisionShift.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;\n    fn_CollisionRayCast(pcs->pCamera, &vPos, &pcs->vCollisionDirectionV, 0);\n    if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)\n    {\n        if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)\n        {\n            vPos.xX = sqrtf(\n                (g_stCollideResultPoint.xX - pcs->pTargetActor_position->xX) * (g_stCollideResultPoint.xX - pcs->pTargetActor_position->xX) +\n                (g_stCollideResultPoint.xY - pcs->pTargetActor_position->xY) * (g_stCollideResultPoint.xY - pcs->pTargetActor_position->xY) +\n                (g_stCollideResultPoint.xZ - pcs->pTargetActor_position->xZ - 1.5f) * (g_stCollideResultPoint.xZ - pcs->pTargetActor_position->xZ - 1.5f));\n            if (vPos.xX < pcs->xOldDistMax)\n            {\n                pcs->xOldDistMax = vPos.xX;\n                pcs->vCollisionPoint = g_stCollideResultPoint;\n            }\n        }\n    }\n    if (pcs->vCollisionPoint.xX != 0.0f || pcs->vCollisionPoint.xY != 0.0f || pcs->vCollisionPoint.xZ != 0.0f)\n    {\n        pcs->xOldDistMax -= 0.6f;\n        if (pcs->xOldDistMax < 1.3f)\n            pcs->xOldDistMax = 1.3f;\n        pcs->xDistMax = pcs->xOldDistMax;\n        if (pcs->xDistMax < 2.0f)\n        {\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);\n        }\n    }\n\n    if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb &&\n        pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&\n        pcs->xTheta_Current < pcs->xTheta_Default)\n    {\n        vPos.xX = 3.0f + (pcs->xDistMax_Default - 3.0f) * ((pcs->xTheta_Current - pcs->xTheta_Min) / (pcs->xTheta_Default - pcs->xTheta_Min));\n        if (pcs->xDistMax > vPos.xX)\n            pcs->xDistMax = vPos.xX;\n    }\n    if (pcs->xDistMax < 4.0f && pcs->vCollisionPoint.xZ > 0.0f)\n    {\n        vPos = hCineInfo->hCurrent->stShiftTarget;\n        vPos.xZ += (4.0f - pcs->xDistMax) / 3.0f;\n        fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 1, 1, &vPos);\n    }\n    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23C, 0, 1, pcs->xDistMax);\n    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23D, 0, 1, pcs->xDistMax);\n    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, pcs->xTheta_Current);\n    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, pcs->xAlpha_User);\n\n    if (pcs->bMouseDriven && fabsf((float)lInputAxisY) > 400.0f)\n    {\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 290.0f);\n        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 290.0f);\n        vPos.xX = pcs->pTargetActor_position->xX + hCineInfo->hWork->stShiftTarget.xX;\n        vPos.xY = pcs->pTargetActor_position->xY + hCineInfo->hWork->stShiftTarget.xY;\n        vPos.xZ = pcs->pTargetActor_position->xZ + hCineInfo->hWork->stShiftTarget.xZ;\n        fn_GetPersoNegativeSighting(&pcs->vDirection, pcs->pTargetActor);\n        fn_GetPersoHorizon(&pcs->vCheckCollisionShift, pcs->pTargetActor);\n        pcs->vDirection.xX *= pcs->xDistMax;\n        pcs->vDirection.xY *= pcs->xDistMax;\n        pcs->vDirection.xZ *= pcs->xDistMax;\n        fn_RotateVectorByAngle(&pcs->vDirection, pcs->xTheta_Current, &pcs->vCheckCollisionShift);\n        fn_RotateVectorByAngle(&pcs->vDirection, pcs->xAlpha_User, &vVectorZ);\n        hCineInfo->stForcePosition.xX = vPos.xX + pcs->vDirection.xX;\n        hCineInfo->stForcePosition.xY = vPos.xY + pcs->vDirection.xY;\n        hCineInfo->stForcePosition.xZ = vPos.xZ + pcs->vDirection.xZ;\n        CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);\n    }\n    return 0;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "fn_BackMode",
+      "reason": "Natural-C seed transfer compiles; 6048/8388 text bytes and 214/233 relocations, first diff +0x0. Remaining source-shape/register scheduling includes omitted actor-sphere targeting detail, sqrtf lowering, and local constants; ABI/layout verified.",
+      "size": 8388,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Shooter.c",
+      "status": "MISMATCH",
+      "target_size": 8388,
+      "unresolved_relocations": [
+        {
+          "offset": 140,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 696,
+          "symbol": "@254",
+          "type": 8
+        },
+        {
+          "offset": 704,
+          "symbol": "@255",
+          "type": 8
+        },
+        {
+          "offset": 932,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 940,
+          "symbol": "@568",
+          "type": 8
+        },
+        {
+          "offset": 2496,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 2604,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 3136,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 3364,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 3756,
+          "symbol": "@262",
+          "type": 8
+        },
+        {
+          "offset": 4048,
+          "symbol": "@263",
+          "type": 8
+        },
+        {
+          "offset": 4112,
+          "symbol": "@262",
+          "type": 8
+        },
+        {
+          "offset": 4284,
+          "symbol": "@259",
+          "type": 8
+        },
+        {
+          "offset": 4312,
+          "symbol": "@259",
+          "type": 8
+        },
+        {
+          "offset": 4328,
+          "symbol": "@259",
+          "type": 8
+        },
+        {
+          "offset": 4588,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 4944,
+          "symbol": "sqrtf",
+          "type": 4
+        },
+        {
+          "offset": 5080,
+          "symbol": "@260",
+          "type": 8
+        },
+        {
+          "offset": 5092,
+          "symbol": "@261",
+          "type": 8
+        }
+      ]
+    },
+    {
+      "address": "0x002fa460",
+      "candidate_size": 1132,
+      "first_difference": 0,
+      "implementation": "unsigned char MAT_fn_bAreEquivalentWithEps(MAT_tdstTransformation_* _hTransform1, MAT_tdstTransformation_* _hTransform2, float _xEps)\n{\n    MTH4D_tdstVector_* p_stTrans2;\n    MTH4D_tdstVector_* p_stTrans1;\n    MTH4D_tdstVector_* p_stScale2;\n    MTH4D_tdstVector_* p_stScale1;\n    unsigned char bEquivalent;\n\n    if (_hTransform1->eType != _hTransform2->eType)\n    {\n        bEquivalent = 0;\n    }\n    else\n    {\n        switch (_hTransform1->eType)\n        {\n        case MAT_eTransform_Identity:\n            bEquivalent = 1;\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n            p_stScale1 = &_hTransform1->stScaleVector;\n            p_stScale2 = &_hTransform2->stScaleVector;\n            bEquivalent = (fabsf(p_stScale1->xX - p_stScale2->xX) < _xEps) &&\n                          (fabsf(p_stScale1->xY - p_stScale2->xY) < _xEps) &&\n                          (fabsf(p_stScale1->xX - p_stScale2->xZ) < _xEps);\n            if (!bEquivalent)\n            {\n                break;\n            }\n\n        case MAT_eTransform_Translation:\n            p_stTrans1 = &_hTransform1->stTransformMatrix.stCol_3;\n            p_stTrans2 = &_hTransform2->stTransformMatrix.stCol_3;\n            bEquivalent = (fabsf(p_stTrans1->xX - p_stTrans2->xX) < _xEps) &&\n                          (fabsf(p_stTrans1->xY - p_stTrans2->xY) < _xEps) &&\n                          (fabsf(p_stTrans1->xX - p_stTrans2->xZ) < _xEps);\n            break;\n\n        case MAT_eTransform_Rotation:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n        case MAT_eTransform_ComplexRotationScale:\n            bEquivalent =\n                (fabsf(_hTransform1->stTransformMatrix.stCol_0.xX - _hTransform2->stTransformMatrix.stCol_0.xX) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_0.xY - _hTransform2->stTransformMatrix.stCol_0.xY) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_0.xZ - _hTransform2->stTransformMatrix.stCol_0.xZ) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_0.xW - _hTransform2->stTransformMatrix.stCol_0.xW) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_1.xX - _hTransform2->stTransformMatrix.stCol_1.xX) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_1.xY - _hTransform2->stTransformMatrix.stCol_1.xY) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_1.xZ - _hTransform2->stTransformMatrix.stCol_1.xZ) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_1.xW - _hTransform2->stTransformMatrix.stCol_1.xW) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_2.xX - _hTransform2->stTransformMatrix.stCol_2.xX) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_2.xY - _hTransform2->stTransformMatrix.stCol_2.xY) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_2.xZ - _hTransform2->stTransformMatrix.stCol_2.xZ) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_2.xW - _hTransform2->stTransformMatrix.stCol_2.xW) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_3.xX - _hTransform2->stTransformMatrix.stCol_3.xX) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_3.xY - _hTransform2->stTransformMatrix.stCol_3.xY) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_3.xZ - _hTransform2->stTransformMatrix.stCol_3.xZ) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_3.xW - _hTransform2->stTransformMatrix.stCol_3.xW) < _xEps);\n            break;\n\n        default:\n            bEquivalent = 0;\n            break;\n        }\n    }\n\n    return bEquivalent;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MAT_fn_bAreEquivalentWithEps",
+      "reason": "Natural switch/fallthrough and field accesses reconstructed from jump table and decoded target, including target repeated-X third scale/translation terms. Blocking residual is compiler context: target lowers 22 absolute values to abs.s with no calls/prologue; baseline recovered TU with natural fabsf emits jal fabsf (1132-byte candidate vs 1124-byte target), while natural conditional absolute-value variants emit 1620-1796 bytes. m2c seed also fails because local jump table symbol @1145 is not recognized/provided.",
+      "size": 1124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MISMATCH",
+      "target_size": 1124,
+      "unresolved_relocations": [
+        {
+          "offset": 76,
+          "symbol": "@63",
+          "type": 5
+        },
+        {
+          "offset": 80,
+          "symbol": "@63",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x002faec0",
+      "candidate_size": 2452,
+      "first_difference": 20,
+      "implementation": "void MAT_fn_vComposeWithoutTranslation(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB)\n{\n    unsigned char bTestScale;\n    unsigned char bComposeMatrixes;\n    MAT_tdstTransformation_* hResult;\n    MAT_tdstTransformation_ stTemp;\n    static unsigned int uiSimplification;\n    static unsigned int uiTotal;\n\n    if ((_hA->eType == MAT_eTransform_Identity) ||\n        (_hA->eType == MAT_eTransform_Translation))\n    {\n        if (_hDest != _hB)\n        {\n            *_hDest = *_hB;\n        }\n        return;\n    }\n\n    if (_hB->eType == MAT_eTransform_Identity)\n    {\n        if (_hDest != _hA)\n        {\n            *_hDest = *_hA;\n        }\n        return;\n    }\n\n    if ((_hDest == _hA) || (_hDest == _hB))\n    {\n        hResult = &stTemp;\n        stTemp.eType = MAT_eTransform_Identity;\n    }\n    else\n    {\n        hResult = _hDest;\n    }\n\n    hResult->stScaleVector.xX = 1.0f;\n    hResult->stScaleVector.xY = 1.0f;\n    hResult->stScaleVector.xZ = 1.0f;\n    hResult->stScaleVector.xW = 1.0f;\n    bComposeMatrixes = 0;\n    bTestScale = 0;\n\n    switch (_hA->eType)\n    {\n    case MAT_eTransform_Rotation:\n    case MAT_eTransform_RotationZoom:\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Rotation:\n            hResult->eType = MAT_eTransform_Rotation;\n            bComposeMatrixes = 1;\n            break;\n\n        case MAT_eTransform_Zoom:\n            hResult->eType = MAT_eTransform_RotationZoom;\n            bTestScale = 1;\n            MAT_SCALE_MATRIX(hResult, _hA, _hB);\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_RotationZoom:\n            hResult->eType = MAT_eTransform_RotationZoom;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_Scale:\n        case MAT_eTransform_RotationScale:\n            hResult->eType = MAT_eTransform_RotationScale;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = MAT_eTransform_ComplexRotationScale;\n            bComposeMatrixes = 1;\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    case MAT_eTransform_Zoom:\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Rotation:\n            hResult->eType = MAT_eTransform_RotationZoom;\n            MAT_SCALE_MATRIX(hResult, _hB, _hA);\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hA->stScaleVector);\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = _hB->eType;\n            MAT_SCALE_MATRIX(hResult, _hB, _hA);\n            bTestScale = 1;\n            if (_hB->eType != MAT_eTransform_ComplexRotationScale)\n            {\n                MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            }\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    case MAT_eTransform_Scale:\n    case MAT_eTransform_RotationScale:\n    case MAT_eTransform_ComplexRotationScale:\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n            hResult->eType = _hA->eType;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_Rotation:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = MAT_eTransform_ComplexRotationScale;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    default:\n        break;\n    }\n\n    if (bComposeMatrixes)\n    {\n        MTH4D_fn_vSpecializedMulMatrixMatrixWithoutBuffer(&hResult->stTransformMatrix,\n                                                         &_hA->stTransformMatrix,\n                                                         &_hB->stTransformMatrix);\n    }\n\n    MAT_COPY_VECTOR(hResult->stTransformMatrix.stCol_3, _hB->stTransformMatrix.stCol_3);\n\n    if (bTestScale)\n    {\n        uiTotal++;\n        switch (hResult->eType)\n        {\n        case MAT_eTransform_Scale:\n            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&\n                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))\n            {\n                hResult->eType = MAT_eTransform_Zoom;\n                uiSimplification++;\n            }\n        case MAT_eTransform_Zoom:\n            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)\n            {\n                hResult->eType = MAT_eTransform_Translation;\n                uiSimplification++;\n            }\n            break;\n\n        case MAT_eTransform_RotationScale:\n            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&\n                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))\n            {\n                hResult->eType = MAT_eTransform_RotationZoom;\n                uiSimplification++;\n            }\n        case MAT_eTransform_RotationZoom:\n            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)\n            {\n                uiSimplification++;\n                hResult->eType = MAT_eTransform_Rotation;\n            }\n            break;\n\n        default:\n            break;\n        }\n    }\n\n    if (_hDest != hResult)\n    {\n        *_hDest = *hResult;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MAT_fn_vComposeWithoutTranslation",
+      "reason": "Repaired m2c jump-table input and reconstructed the full natural dispatch, alias-temporary handling, scale/matrix cases, translation copy, and scale simplification. Compiles to 2452/2480 bytes; first difference +0x14. Target fast paths use six explicitly unrolled lq/sq aggregate-copy pairs, while natural aligned struct assignment compiles as a counted lq/sq loop and changes register allocation. Later epsilon tests also compile as unresolved fabsf calls rather than target inline abs.s, and recovered local-static names do not bind target uiTotal$472/uiSimplification$471. Blocker appears missing original copy/absolute-value macro and debug source context, not control-flow reconstruction.",
+      "size": 2480,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MISMATCH",
+      "target_size": 2480,
+      "unresolved_relocations": [
+        {
+          "offset": 2000,
+          "symbol": "uiTotal$99",
+          "type": 7
+        },
+        {
+          "offset": 2012,
+          "symbol": "uiTotal$99",
+          "type": 7
+        },
+        {
+          "offset": 2088,
+          "symbol": "@300",
+          "type": 8
+        },
+        {
+          "offset": 2124,
+          "symbol": "@300",
+          "type": 8
+        },
+        {
+          "offset": 2152,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2160,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2184,
+          "symbol": "@300",
+          "type": 8
+        },
+        {
+          "offset": 2212,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2224,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2244,
+          "symbol": "@300",
+          "type": 8
+        },
+        {
+          "offset": 2280,
+          "symbol": "@300",
+          "type": 8
+        },
+        {
+          "offset": 2308,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2316,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2340,
+          "symbol": "@300",
+          "type": 8
+        },
+        {
+          "offset": 2360,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2372,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        }
+      ]
+    },
+    {
+      "address": "0x002faec0",
+      "candidate_size": 2484,
+      "first_difference": 20,
+      "implementation": "void MAT_fn_vComposeWithoutTranslation(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB)\n{\n    unsigned char bTestScale;\n    unsigned char bComposeMatrixes;\n    MAT_tdstTransformation_* hResult;\n    MAT_tdstTransformation_ stTemp;\n    static unsigned int uiSimplification;\n    static unsigned int uiTotal;\n\n    if ((_hA->eType == MAT_eTransform_Identity) ||\n        (_hA->eType == MAT_eTransform_Translation))\n    {\n        if (_hDest != _hB)\n        {\n            MAT_COPY_TRANSFORMATION(_hDest, _hB);\n        }\n        return;\n    }\n\n    if (_hB->eType == MAT_eTransform_Identity)\n    {\n        if (_hDest != _hA)\n        {\n            MAT_COPY_TRANSFORMATION(_hDest, _hA);\n        }\n        return;\n    }\n\n    if ((_hDest == _hA) || (_hDest == _hB))\n    {\n        hResult = &stTemp;\n        stTemp.eType = MAT_eTransform_Identity;\n    }\n    else\n    {\n        hResult = _hDest;\n    }\n\n    hResult->stScaleVector.xX = 1.0f;\n    hResult->stScaleVector.xY = 1.0f;\n    hResult->stScaleVector.xZ = 1.0f;\n    hResult->stScaleVector.xW = 1.0f;\n    bComposeMatrixes = 0;\n    bTestScale = 0;\n\n    switch (_hA->eType)\n    {\n    case MAT_eTransform_Rotation:\n    case MAT_eTransform_RotationZoom:\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Rotation:\n            hResult->eType = MAT_eTransform_Rotation;\n            bComposeMatrixes = 1;\n            break;\n\n        case MAT_eTransform_Zoom:\n            hResult->eType = MAT_eTransform_RotationZoom;\n            bTestScale = 1;\n            MAT_SCALE_MATRIX(hResult, _hA, _hB);\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_RotationZoom:\n            hResult->eType = MAT_eTransform_RotationZoom;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_Scale:\n        case MAT_eTransform_RotationScale:\n            hResult->eType = MAT_eTransform_RotationScale;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = MAT_eTransform_ComplexRotationScale;\n            bComposeMatrixes = 1;\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    case MAT_eTransform_Zoom:\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Rotation:\n            hResult->eType = MAT_eTransform_RotationZoom;\n            MAT_SCALE_MATRIX(hResult, _hB, _hA);\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hA->stScaleVector);\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = _hB->eType;\n            MAT_SCALE_MATRIX(hResult, _hB, _hA);\n            bTestScale = 1;\n            if (_hB->eType != MAT_eTransform_ComplexRotationScale)\n            {\n                MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            }\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    case MAT_eTransform_Scale:\n    case MAT_eTransform_RotationScale:\n    case MAT_eTransform_ComplexRotationScale:\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n            hResult->eType = _hA->eType;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_Rotation:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = MAT_eTransform_ComplexRotationScale;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    default:\n        break;\n    }\n\n    if (bComposeMatrixes)\n    {\n        MTH4D_fn_vSpecializedMulMatrixMatrixWithoutBuffer(&hResult->stTransformMatrix,\n                                                         &_hA->stTransformMatrix,\n                                                         &_hB->stTransformMatrix);\n    }\n\n    MAT_COPY_VECTOR(hResult->stTransformMatrix.stCol_3, _hB->stTransformMatrix.stCol_3);\n\n    if (bTestScale)\n    {\n        uiTotal++;\n        switch (hResult->eType)\n        {\n        case MAT_eTransform_Scale:\n            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&\n                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))\n            {\n                hResult->eType = MAT_eTransform_Zoom;\n                uiSimplification++;\n            }\n        case MAT_eTransform_Zoom:\n            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)\n            {\n                hResult->eType = MAT_eTransform_Translation;\n                uiSimplification++;\n            }\n            break;\n\n        case MAT_eTransform_RotationScale:\n            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&\n                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))\n            {\n                hResult->eType = MAT_eTransform_RotationZoom;\n                uiSimplification++;\n            }\n        case MAT_eTransform_RotationZoom:\n            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)\n            {\n                uiSimplification++;\n                hResult->eType = MAT_eTransform_Rotation;\n            }\n            break;\n\n        default:\n            break;\n        }\n    }\n\n    if (_hDest != hResult)\n    {\n        MAT_COPY_TRANSFORMATION(_hDest, hResult);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MAT_fn_vComposeWithoutTranslation",
+      "reason": "Generated a repaired m2c seed with all five retail jump tables, then reconstructed the complete natural dispatch, alias temporary, scale/matrix specialization, translation preservation, and type simplification. Best natural aligned-vector field-copy candidate is 2484/2480 bytes with first difference +0x14. Target assigns dest/B/result to s1/s0/s2 and groups six lq loads/stores; candidate assigns s2/s1/s0 and interleaves natural vector copies. Grouped aggregate temporaries spill and enlarge the frame; whole-struct assignment emits a counted loop. Remaining epsilon paths call unresolved fabsf rather than target inline abs.s, and local-static suffixes do not bind uiTotal$472/uiSimplification$471. This is missing original aggregate-copy/absolute-value macro and local-static debug context.",
+      "size": 2480,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MISMATCH",
+      "target_size": 2480,
+      "unresolved_relocations": [
+        {
+          "offset": 280,
+          "symbol": "@313",
+          "type": 5
+        },
+        {
+          "offset": 288,
+          "symbol": "@313",
+          "type": 6
+        },
+        {
+          "offset": 324,
+          "symbol": "@314",
+          "type": 5
+        },
+        {
+          "offset": 332,
+          "symbol": "@314",
+          "type": 6
+        },
+        {
+          "offset": 980,
+          "symbol": "@315",
+          "type": 5
+        },
+        {
+          "offset": 988,
+          "symbol": "@315",
+          "type": 6
+        },
+        {
+          "offset": 1680,
+          "symbol": "@316",
+          "type": 5
+        },
+        {
+          "offset": 1688,
+          "symbol": "@316",
+          "type": 6
+        },
+        {
+          "offset": 2020,
+          "symbol": "uiTotal$99",
+          "type": 7
+        },
+        {
+          "offset": 2032,
+          "symbol": "uiTotal$99",
+          "type": 7
+        },
+        {
+          "offset": 2108,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 2144,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 2172,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2180,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2204,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 2232,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2244,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2264,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 2300,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 2328,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2336,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2360,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 2380,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        },
+        {
+          "offset": 2392,
+          "symbol": "uiSimplification$98",
+          "type": 7
+        }
+      ]
+    },
+    {
+      "address": "0x002fb870",
+      "candidate_size": 1932,
+      "first_difference": 20,
+      "implementation": "void MAT_fn_vComposeWithoutTranslation(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB)\n{\n    unsigned char bTestScale;\n    unsigned char bComposeMatrixes;\n    MAT_tdstTransformation_* hResult;\n    MAT_tdstTransformation_ stTemp;\n    static unsigned int uiSimplification;\n    static unsigned int uiTotal;\n\n    if ((_hA->eType == MAT_eTransform_Identity) ||\n        (_hA->eType == MAT_eTransform_Translation))\n    {\n        if (_hDest != _hB)\n        {\n            MAT_COPY_TRANSFORMATION(_hDest, _hB);\n        }\n        return;\n    }\n\n    if (_hB->eType == MAT_eTransform_Identity)\n    {\n        if (_hDest != _hA)\n        {\n            MAT_COPY_TRANSFORMATION(_hDest, _hA);\n        }\n        return;\n    }\n\n    if ((_hDest == _hA) || (_hDest == _hB))\n    {\n        hResult = &stTemp;\n        stTemp.eType = MAT_eTransform_Identity;\n    }\n    else\n    {\n        hResult = _hDest;\n    }\n\n    hResult->stScaleVector.xX = 1.0f;\n    hResult->stScaleVector.xY = 1.0f;\n    hResult->stScaleVector.xZ = 1.0f;\n    hResult->stScaleVector.xW = 1.0f;\n    bComposeMatrixes = 0;\n    bTestScale = 0;\n\n    switch (_hA->eType)\n    {\n    case MAT_eTransform_Rotation:\n    case MAT_eTransform_RotationZoom:\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Rotation:\n            hResult->eType = MAT_eTransform_Rotation;\n            bComposeMatrixes = 1;\n            break;\n\n        case MAT_eTransform_Zoom:\n            hResult->eType = MAT_eTransform_RotationZoom;\n            bTestScale = 1;\n            MAT_SCALE_MATRIX(hResult, _hA, _hB);\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_RotationZoom:\n            hResult->eType = MAT_eTransform_RotationZoom;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_Scale:\n        case MAT_eTransform_RotationScale:\n            hResult->eType = MAT_eTransform_RotationScale;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = MAT_eTransform_ComplexRotationScale;\n            bComposeMatrixes = 1;\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    case MAT_eTransform_Zoom:\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Rotation:\n            hResult->eType = MAT_eTransform_RotationZoom;\n            MAT_SCALE_MATRIX(hResult, _hB, _hA);\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hA->stScaleVector);\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = _hB->eType;\n            MAT_SCALE_MATRIX(hResult, _hB, _hA);\n            bTestScale = 1;\n            if (_hB->eType != MAT_eTransform_ComplexRotationScale)\n            {\n                MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            }\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    case MAT_eTransform_Scale:\n    case MAT_eTransform_RotationScale:\n    case MAT_eTransform_ComplexRotationScale:\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n            hResult->eType = _hA->eType;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_Rotation:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = MAT_eTransform_ComplexRotationScale;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    default:\n        break;\n    }\n\n    if (bComposeMatrixes)\n    {\n        MTH4D_fn_vSpecializedMulMatrixMatrixWithoutBuffer(&hResult->stTransformMatrix,\n                                                         &_hA->stTransformMatrix,\n                                                         &_hB->stTransformMatrix);\n    }\n\n    MAT_COPY_VECTOR(hResult->stTransformMatrix.stCol_3, _hB->stTransformMatrix.stCol_3);\n\n    if (bTestScale)\n    {\n        uiTotal++;\n        switch (hResult->eType)\n        {\n        case MAT_eTransform_Scale:\n            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&\n                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))\n            {\n                hResult->eType = MAT_eTransform_Zoom;\n                uiSimplification++;\n            }\n        case MAT_eTransform_Zoom:\n            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)\n            {\n                hResult->eType = MAT_eTransform_Translation;\n                uiSimplification++;\n            }\n            break;\n\n        case MAT_eTransform_RotationScale:\n            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&\n                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))\n            {\n                hResult->eType = MAT_eTransform_RotationZoom;\n                uiSimplification++;\n            }\n        case MAT_eTransform_RotationZoom:\n            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)\n            {\n                uiSimplification++;\n                hResult->eType = MAT_eTransform_Rotation;\n            }\n            break;\n\n        default:\n            break;\n        }\n    }\n\n    if (_hDest != hResult)\n    {\n        MAT_COPY_TRANSFORMATION(_hDest, hResult);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MAT_fn_vCompose",
+      "reason": "Repaired the missing five m2c jump tables from retail ELF data and reconstructed the full natural compose: identity fast paths, alias temporary, all nested type dispatches, specialized matrix multiply, transformed-translation call, scale simplification, and final copy. Candidate reaches uiTotal at +0x5d8 versus target +0x5dc, showing the main dispatch/call skeleton is within one instruction, but total is 1932/2000 and first difference +0x14. Target unrolled six-qword copies group loads/stores and allocate dest/result as s0/s1; natural aligned per-vector copies interleave them and swap registers. The 64-byte post-dispatch gap is the six epsilon absolute values: recovered fabsf emits unresolved calls while retail uses inline abs.s. Local statics also bind as uiTotal$321/uiSimplification$320 instead of target $392/$391. Missing original copy/absolute-value macro and static debug context blocks a natural exact match.",
+      "size": 2000,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MISMATCH",
+      "target_size": 2000,
+      "unresolved_relocations": [
+        {
+          "offset": 1496,
+          "symbol": "uiTotal$321",
+          "type": 7
+        },
+        {
+          "offset": 1508,
+          "symbol": "uiTotal$321",
+          "type": 7
+        },
+        {
+          "offset": 1572,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 1608,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 1632,
+          "symbol": "uiSimplification$320",
+          "type": 7
+        },
+        {
+          "offset": 1640,
+          "symbol": "uiSimplification$320",
+          "type": 7
+        },
+        {
+          "offset": 1664,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 1688,
+          "symbol": "uiSimplification$320",
+          "type": 7
+        },
+        {
+          "offset": 1700,
+          "symbol": "uiSimplification$320",
+          "type": 7
+        },
+        {
+          "offset": 1720,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 1756,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 1780,
+          "symbol": "uiSimplification$320",
+          "type": 7
+        },
+        {
+          "offset": 1788,
+          "symbol": "uiSimplification$320",
+          "type": 7
+        },
+        {
+          "offset": 1812,
+          "symbol": "@312",
+          "type": 8
+        },
+        {
+          "offset": 1832,
+          "symbol": "uiSimplification$320",
+          "type": 7
+        },
+        {
+          "offset": 1844,
+          "symbol": "uiSimplification$320",
+          "type": 7
+        }
+      ]
+    },
+    {
+      "address": "0x002fa460",
+      "candidate_size": 1132,
+      "first_difference": 0,
+      "implementation": "unsigned char MAT_fn_bAreEquivalentWithEps(MAT_tdstTransformation_* _hTransform1, MAT_tdstTransformation_* _hTransform2, float _xEps)\n{\n    MTH4D_tdstVector_* p_stTrans2;\n    MTH4D_tdstVector_* p_stTrans1;\n    MTH4D_tdstVector_* p_stScale2;\n    MTH4D_tdstVector_* p_stScale1;\n    unsigned char bEquivalent;\n\n    if (_hTransform1->eType != _hTransform2->eType)\n    {\n        bEquivalent = 0;\n    }\n    else\n    {\n        switch (_hTransform1->eType)\n        {\n        case MAT_eTransform_Identity:\n            bEquivalent = 1;\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n            p_stScale1 = &_hTransform1->stScaleVector;\n            p_stScale2 = &_hTransform2->stScaleVector;\n            bEquivalent = (fabsf(p_stScale1->xX - p_stScale2->xX) < _xEps) &&\n                          (fabsf(p_stScale1->xY - p_stScale2->xY) < _xEps) &&\n                          (fabsf(p_stScale1->xX - p_stScale2->xZ) < _xEps);\n            if (!bEquivalent)\n            {\n                break;\n            }\n\n        case MAT_eTransform_Translation:\n            p_stTrans1 = &_hTransform1->stTransformMatrix.stCol_3;\n            p_stTrans2 = &_hTransform2->stTransformMatrix.stCol_3;\n            bEquivalent = (fabsf(p_stTrans1->xX - p_stTrans2->xX) < _xEps) &&\n                          (fabsf(p_stTrans1->xY - p_stTrans2->xY) < _xEps) &&\n                          (fabsf(p_stTrans1->xX - p_stTrans2->xZ) < _xEps);\n            break;\n\n        case MAT_eTransform_Rotation:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n        case MAT_eTransform_ComplexRotationScale:\n            bEquivalent =\n                (fabsf(_hTransform1->stTransformMatrix.stCol_0.xX - _hTransform2->stTransformMatrix.stCol_0.xX) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_0.xY - _hTransform2->stTransformMatrix.stCol_0.xY) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_0.xZ - _hTransform2->stTransformMatrix.stCol_0.xZ) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_0.xW - _hTransform2->stTransformMatrix.stCol_0.xW) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_1.xX - _hTransform2->stTransformMatrix.stCol_1.xX) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_1.xY - _hTransform2->stTransformMatrix.stCol_1.xY) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_1.xZ - _hTransform2->stTransformMatrix.stCol_1.xZ) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_1.xW - _hTransform2->stTransformMatrix.stCol_1.xW) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_2.xX - _hTransform2->stTransformMatrix.stCol_2.xX) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_2.xY - _hTransform2->stTransformMatrix.stCol_2.xY) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_2.xZ - _hTransform2->stTransformMatrix.stCol_2.xZ) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_2.xW - _hTransform2->stTransformMatrix.stCol_2.xW) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_3.xX - _hTransform2->stTransformMatrix.stCol_3.xX) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_3.xY - _hTransform2->stTransformMatrix.stCol_3.xY) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_3.xZ - _hTransform2->stTransformMatrix.stCol_3.xZ) < _xEps) &&\n                (fabsf(_hTransform1->stTransformMatrix.stCol_3.xW - _hTransform2->stTransformMatrix.stCol_3.xW) < _xEps);\n            break;\n\n        default:\n            bEquivalent = 0;\n            break;\n        }\n    }\n\n    return bEquivalent;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MAT_fn_bAreEquivalentWithEps",
+      "reason": "Reconstructed the natural type switch and fallthrough from retail jump-table data, including the target-observed repeated lhs-X comparisons against rhs-Z in scale and translation cases. Candidate is 1132/1124 with first difference +0x0: natural fabsf introduces a stack frame and 22 calls, while all 22 retail absolute values are inline abs.s with zero calls. Conditional-expression absolute-value variants compiled to 1620-1796 bytes. Original m2c start is blocked by missing local table @1145; a repaired table confirmed the same control-flow skeleton. Exact match requires the missing project absolute-value macro/compiler header context.",
+      "size": 1124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MISMATCH",
+      "target_size": 1124,
+      "unresolved_relocations": [
+        {
+          "offset": 76,
+          "symbol": "@63",
+          "type": 5
+        },
+        {
+          "offset": 80,
+          "symbol": "@63",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x002fa460",
+      "candidate_size": 1068,
+      "first_difference": 8,
+      "implementation": "int MAT_fn_bAreEquivalentWithEps(MAT_tdstTransformation_* _hTransform1, MAT_tdstTransformation_* _hTransform2, float _xEps)\n{\n    MTH4D_tdstVector_* p_stTrans2;\n    MTH4D_tdstVector_* p_stTrans1;\n    MTH4D_tdstVector_* p_stScale2;\n    MTH4D_tdstVector_* p_stScale1;\n    int bEquivalent;\n    float xDelta;\n\n    if (_hTransform1->eType != _hTransform2->eType)\n    {\n        bEquivalent = 0;\n    }\n    else\n    {\n        switch (_hTransform1->eType)\n        {\n        case MAT_eTransform_Identity:\n            bEquivalent = 1;\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n            p_stScale1 = &_hTransform1->stScaleVector;\n            p_stScale2 = &_hTransform2->stScaleVector;\n            xDelta = p_stScale1->xX - p_stScale2->xX;\n            MTH_ABS_IN_PLACE(xDelta);\n            bEquivalent = xDelta < _xEps;\n            if (bEquivalent)\n            {\n                xDelta = p_stScale1->xY - p_stScale2->xY;\n                MTH_ABS_IN_PLACE(xDelta);\n                bEquivalent = xDelta < _xEps;\n            }\n            if (bEquivalent)\n            {\n                xDelta = p_stScale1->xZ - p_stScale2->xZ;\n                MTH_ABS_IN_PLACE(xDelta);\n                bEquivalent = xDelta < _xEps;\n            }\n            if (!bEquivalent)\n            {\n                break;\n            }\n\n        case MAT_eTransform_Translation:\n            p_stTrans1 = &_hTransform1->stTransformMatrix.stCol_3;\n            p_stTrans2 = &_hTransform2->stTransformMatrix.stCol_3;\n            xDelta = p_stTrans1->xX - p_stTrans2->xX;\n            MTH_ABS_IN_PLACE(xDelta);\n            bEquivalent = xDelta < _xEps;\n            if (bEquivalent)\n            {\n                xDelta = p_stTrans1->xY - p_stTrans2->xY;\n                MTH_ABS_IN_PLACE(xDelta);\n                bEquivalent = xDelta < _xEps;\n            }\n            if (bEquivalent)\n            {\n                xDelta = p_stTrans1->xZ - p_stTrans2->xZ;\n                MTH_ABS_IN_PLACE(xDelta);\n                bEquivalent = xDelta < _xEps;\n            }\n            break;\n\n        case MAT_eTransform_Rotation:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n        case MAT_eTransform_ComplexRotationScale:\n            bEquivalent = 1;\n#define MAT_CHECK_ABS(_a, _b) do { \\\n                if (bEquivalent) { \\\n                    xDelta = (_a) - (_b); \\\n                    MTH_ABS_IN_PLACE(xDelta); \\\n                    bEquivalent = xDelta < _xEps; \\\n                } \\\n            } while (0)\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_0.xX, _hTransform2->stTransformMatrix.stCol_0.xX);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_0.xY, _hTransform2->stTransformMatrix.stCol_0.xY);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_0.xZ, _hTransform2->stTransformMatrix.stCol_0.xZ);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_0.xW, _hTransform2->stTransformMatrix.stCol_0.xW);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xX, _hTransform2->stTransformMatrix.stCol_1.xX);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xY, _hTransform2->stTransformMatrix.stCol_1.xY);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xZ, _hTransform2->stTransformMatrix.stCol_1.xZ);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xW, _hTransform2->stTransformMatrix.stCol_1.xW);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xX, _hTransform2->stTransformMatrix.stCol_2.xX);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xY, _hTransform2->stTransformMatrix.stCol_2.xY);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xZ, _hTransform2->stTransformMatrix.stCol_2.xZ);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xW, _hTransform2->stTransformMatrix.stCol_2.xW);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xX, _hTransform2->stTransformMatrix.stCol_3.xX);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xY, _hTransform2->stTransformMatrix.stCol_3.xY);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xZ, _hTransform2->stTransformMatrix.stCol_3.xZ);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xW, _hTransform2->stTransformMatrix.stCol_3.xW);\n#undef MAT_CHECK_ABS\n            break;\n\n        default:\n            bEquivalent = 0;\n            break;\n        }\n    }\n\n    return bEquivalent;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MAT_fn_bAreEquivalentWithEps",
+      "reason": "Recovered symbolic MTH_ABS_IN_PLACE asm macro emits exact sub.s/abs.s/c.lt.s triplets, but explicit temporary/if sequencing changes branch shape and leaves candidate 1068 bytes versus target 1124; next step is recover the original chained macro/control-flow idiom.",
+      "size": 1124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MISMATCH",
+      "target_size": 1124,
+      "unresolved_relocations": [
+        {
+          "offset": 40,
+          "symbol": "@129",
+          "type": 5
+        },
+        {
+          "offset": 44,
+          "symbol": "@129",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x002fa460",
+      "candidate_size": 1124,
+      "first_difference": 36,
+      "implementation": "unsigned char MAT_fn_bAreEquivalentWithEps(MAT_tdstTransformation_* _hTransform1, MAT_tdstTransformation_* _hTransform2, float _xEps)\n{\n    MTH4D_tdstVector_* p_stTrans1;\n    MTH4D_tdstVector_* p_stTrans2;\n    MTH4D_tdstVector_* p_stScale1;\n    MTH4D_tdstVector_* p_stScale2;\n    unsigned char bEquivalent;\n    int bTest;\n    float xDelta;\n\n    if (_hTransform1->eType != _hTransform2->eType)\n    {\n        bEquivalent = 0;\n    }\n    else\n    {\n        switch (_hTransform1->eType)\n        {\n        case MAT_eTransform_Identity:\n            bEquivalent = 1;\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n            p_stScale1 = &_hTransform1->stScaleVector;\n            p_stScale2 = &_hTransform2->stScaleVector;\n            xDelta = p_stScale1->xX - p_stScale2->xX;\n            MTH_ABS_IN_PLACE(xDelta);\n            bTest = xDelta < _xEps;\n            if (bTest)\n            {\n                xDelta = p_stScale1->xY - p_stScale2->xY;\n                MTH_ABS_IN_PLACE(xDelta);\n                bTest = xDelta < _xEps;\n            }\n            if (bTest = !!bTest)\n            {\n                xDelta = p_stScale1->xX - p_stScale2->xZ;\n                MTH_ABS_IN_PLACE(xDelta);\n                bTest = xDelta < _xEps;\n            }\n            bEquivalent = bTest;\n            if (!bEquivalent)\n            {\n                break;\n            }\n\n        case MAT_eTransform_Translation:\n            p_stTrans1 = &_hTransform1->stTransformMatrix.stCol_3;\n            p_stTrans2 = &_hTransform2->stTransformMatrix.stCol_3;\n            xDelta = p_stTrans1->xX - p_stTrans2->xX;\n            MTH_ABS_IN_PLACE(xDelta);\n            bTest = xDelta < _xEps;\n            if (bTest)\n            {\n                xDelta = p_stTrans1->xY - p_stTrans2->xY;\n                MTH_ABS_IN_PLACE(xDelta);\n                bTest = xDelta < _xEps;\n            }\n            if (bTest = !!bTest)\n            {\n                xDelta = p_stTrans1->xX - p_stTrans2->xZ;\n                MTH_ABS_IN_PLACE(xDelta);\n                bTest = xDelta < _xEps;\n            }\n            bEquivalent = bTest;\n            break;\n\n        case MAT_eTransform_Rotation:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n        case MAT_eTransform_ComplexRotationScale:\n            xDelta = _hTransform1->stTransformMatrix.stCol_0.xX - _hTransform2->stTransformMatrix.stCol_0.xX;\n            MTH_ABS_IN_PLACE(xDelta);\n            bTest = xDelta < _xEps;\n            if (bTest)\n            {\n                xDelta = _hTransform1->stTransformMatrix.stCol_0.xY - _hTransform2->stTransformMatrix.stCol_0.xY;\n                MTH_ABS_IN_PLACE(xDelta);\n                bTest = xDelta < _xEps;\n            }\n#define MAT_CHECK_ABS(_a, _b) do { \\\n                if (bTest = !!bTest) { \\\n                    xDelta = (_a) - (_b); \\\n                    MTH_ABS_IN_PLACE(xDelta); \\\n                    bTest = xDelta < _xEps; \\\n                } \\\n            } while (0)\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_0.xZ, _hTransform2->stTransformMatrix.stCol_0.xZ);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_0.xW, _hTransform2->stTransformMatrix.stCol_0.xW);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xX, _hTransform2->stTransformMatrix.stCol_1.xX);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xY, _hTransform2->stTransformMatrix.stCol_1.xY);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xZ, _hTransform2->stTransformMatrix.stCol_1.xZ);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xW, _hTransform2->stTransformMatrix.stCol_1.xW);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xX, _hTransform2->stTransformMatrix.stCol_2.xX);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xY, _hTransform2->stTransformMatrix.stCol_2.xY);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xZ, _hTransform2->stTransformMatrix.stCol_2.xZ);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xW, _hTransform2->stTransformMatrix.stCol_2.xW);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xX, _hTransform2->stTransformMatrix.stCol_3.xX);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xY, _hTransform2->stTransformMatrix.stCol_3.xY);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xZ, _hTransform2->stTransformMatrix.stCol_3.xZ);\n            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xW, _hTransform2->stTransformMatrix.stCol_3.xW);\n#undef MAT_CHECK_ABS\n            bEquivalent = bTest;\n            break;\n\n        default:\n            bEquivalent = 0;\n            break;\n        }\n    }\n    return bEquivalent;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "MAT_fn_bAreEquivalentWithEps",
+      "reason": "Candidate reproduces all 281 target instructions and exact 1124-byte size using unsigned-char result plus int predicate temporary and symbolic abs helper. Verification is blocked only by anonymous switch-table relocation naming: candidate @139 versus retail @1145 at +0x24/+0x28; matcher resolves relocations by exact symbol name and reports 0/2 unresolved despite byte-identical decoded code after the table address.",
+      "size": 1124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MISMATCH",
+      "target_size": 1124,
+      "unresolved_relocations": [
+        {
+          "offset": 36,
+          "symbol": "@139",
+          "type": 5
+        },
+        {
+          "offset": 40,
+          "symbol": "@139",
+          "type": 6
+        }
+      ]
     }
   ],
   "data": {},
@@ -19054,6 +20432,14 @@
       "name": "MAT_fn_vInitTransformationWithNormQuaternion",
       "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsppla.c",
+      "status": "MATCH"
+    },
+    "0x002fa460": {
+      "address": "0x002fa460",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MAT_fn_bAreEquivalentWithEps",
+      "size": 1124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
       "status": "MATCH"
     },
     "0x002fd530": {

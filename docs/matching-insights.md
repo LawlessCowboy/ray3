@@ -73,3 +73,21 @@ compiler option, construct, and outcome.
 - [compiler] MWCC PS2 3.0 baseline does not recognize __builtin_sqrt in recovered C: both PS2SQRTF and INT_fn_xDistancePointToLine lower it through fptodp plus an unresolved __builtin_sqrt call, while retail targets use inline sqrt.s. Exact matches need the original compiler-specific intrinsic/macro context. (2026-09-23)
 
 - [source-layout] MECTools.c DNM_stDynamicsBaseBlock needs extractor padding +0x78..0x7f before m_stPreviousMatrix and +0x16c..0x16f before the advanced block; target accesses then align at previous=0x80, current=0xe0, advanced=0x170, while all three recorded MECTools matches remain MATCH. (2026-09-23)
+
+- [compiler] MWCC PS2 3.0 baseline lowers a plain float fabsf declaration to jal calls, while MAT_fn_bAreEquivalentWithEps and both MAT compose targets use inline abs.s; natural conditional absolute-value forms instead emit branch-heavy 1620-1796-byte code. Exact abs.s reconstruction needs the original project macro/header compiler context. (2026-09-24)
+
+- [compiler] Exact MWCC PS2 3.0 probe: plain fabsf, __builtin_fabsf, __fabs, __fabsf, C++ abs(float), conditional sign tests, and union bit-mask forms do not emit abs.s under the project profile; ordinary fabs forms remain relocatable calls. This points to a missing project/SDK macro or inline-header construct, not an O3/O4 flag difference. (2026-09-24)
+
+- [compiler] MWCCPS2 3.0 contains internal intrinsic __I_abs_s with signature __I_abs_s(long destination_reg, long source_reg); immediate register IDs are required and it emits abs.s directly (verified __I_abs_s(0,1) -> abs.s f0,f1). Natural abs_s(x), __abs_s(x), and __builtin_abs_s(x) are treated as external calls/conversions, so a project macro would need to wrap the internal register-form intrinsic or use an SDK inline helper. (2026-09-24)
+
+- [compiler] Compiler binary intrinsic table exposes __I_abs_s with signature =D,S and opcode abs.s; direct calls require immediate physical FPU register IDs and emit the instruction, but do not create a C float value or influence MWCC register allocation. In a natural  probe, MWCC kept x in f1/f12, proving the intrinsic cannot be wrapped generically without the original register-binding/assembly convention. (2026-09-24)
+
+- [compiler] Probe x=x-y; __I_abs_s(0,12); return x: MWCC kept x in f1/f12, so the direct intrinsic did not bind the C value to the requested source register. It cannot be wrapped generically without the original register-binding or assembly convention. (2026-09-24)
+
+- [compiler] MWCC PS2 3.0 accepts a function-level asm definition such as `asm float f(float x) { abs.s $f0, $f12 }` and an inline `asm volatile { abs.s $f0, $f0 }` block; the former emits a standalone 4-byte wrapper using ABI f12->f0, while the latter preserves statement order but MWCC treats registers as unconstrained (it may allocate the C temporary in f1). This confirms the missing abs.s path likely came from an SDK asm helper/macro, not a normal fabs function or __I_abs_s wrapper; do not use inline asm in canonical sources. (2026-09-24)
+
+- [compiler] MWCC PS2 inline asm accepts numeric FPU names (`$f0`, `$f12`) in asm function bodies, but SDK-style aliases such as `$fv0` and `$fa0` are rejected as undefined identifiers; any original wrapper must use numeric registers or a macro layer that expands aliases before MWCC parsing. (2026-09-24)
+
+- [compiler] MWCC PS2 3.0 symbolic inline-asm operands bind C float lvalues to allocated FPU registers: `float d=x-y; asm { abs.s d,d }` emits exact `sub.s f0,f12,f13; abs.s f0,f0; c.lt.s f0,f14`. A header macro `#define MTH_ABS_IN_PLACE(v) asm { abs.s v,v }` preserves the same sequence for pointer loads and chained comparisons; plain and volatile asm are byte-identical, while asm functions never inline even with `-inline all`. (2026-09-24)
+
+- [compiler] MWCC PS2 3.0: to preserve chained-&& lowering around a statement-form symbolic abs helper, keep comparisons in an int temporary and gate later blocks with `if (test = !!test)`. This emits the target `sltu test,zero,test; beqz test` pair; assigning to an unsigned-char result only at case exit emits one final `andi`, reproducing MAT_fn_bAreEquivalentWithEps instruction-for-instruction. (2026-09-24)

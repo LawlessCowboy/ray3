@@ -3189,7 +3189,10 @@ tdstNodeInterpret_* fn_p_stSetRollOffDistances(HIE_tdstSuperObject_* p_SuperObjP
 tdstNodeInterpret_* fn_p_stSetPrevMusicFadeOut(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    SND_fn_vSetMusicFadeOut(stParam.uDummy.uParam.xValue);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 577–583 */
@@ -3206,7 +3209,10 @@ tdstNodeInterpret_* fn_p_stSetPrevMusicFadeOut(HIE_tdstSuperObject_* p_SuperObjP
 tdstNodeInterpret_* fn_p_stSetInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    SND_fn_vSetStereoSound(stParam.uDummy.uParam.ucValue);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 564–572 */

@@ -464,6 +464,24 @@ def patch_relocation(code: bytearray, offset: int, reloc_type: int,
     return True
 
 
+def infer_anonymous_hi_lo_address(target_bytes: bytes, hi_offset: int,
+                                  lo_offset: int) -> int | None:
+    """Recover a linked address from a local HI16/LO16 relocation pair.
+
+    MWCC emits anonymous symbols for local switch tables.  The retail ELF has
+    a different synthetic name for the same table, so name-based lookup cannot
+    resolve it.  The linked instruction pair still contains the complete
+    address: HI16 contributes the upper half and the following LO16 addend is
+    sign-extended.  This is deliberately limited to adjacent HI/LO words and
+    is only used for anonymous object symbols (``@N``) in ``compare``.
+    """
+    if hi_offset < 0 or lo_offset < 0 or lo_offset + 4 > len(target_bytes):
+        return None
+    hi_word, = struct.unpack_from('<I', target_bytes, hi_offset)
+    lo_word, = struct.unpack_from('<I', target_bytes, lo_offset)
+    return (((hi_word & 0xFFFF) << 16) + signed16(lo_word & 0xFFFF)) & 0xFFFFFFFF
+
+
 def compare(entry: dict, verbose: bool = False, source_override: Path | None = None) -> dict:
     sections, target_symbols, main, _, target_names = target_context()
     source = source_override or ROOT / entry['source']
@@ -497,6 +515,7 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
     gp = gp_symbol.value if gp_symbol else 0
     unresolved = []
     relocations = []
+    relocation_records = []
     for rel_section in obj_sections:
         if rel_section.type != 9 or rel_section.info != candidate.shndx:
             continue
@@ -506,11 +525,39 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
             relative = offset - candidate.value
             symbol = obj_symbols[symbol_index] if symbol_index < len(obj_symbols) else None
             target_symbol = target_names.get(symbol.name) if symbol and symbol.name else None
-            relocations.append({'offset': relative, 'type': reloc_type,
-                                'symbol': symbol.name if symbol else ''})
+            record = {'offset': relative, 'type': reloc_type,
+                      'symbol': symbol.name if symbol else ''}
+            relocations.append(record)
+            relocation_records.append((record, target_symbol))
             if target_symbol is None or not patch_relocation(candidate_bytes, relative, reloc_type,
                                                                target_symbol.value, gp):
-                unresolved.append(relocations[-1])
+                unresolved.append(record)
+
+    # Local switch/jump tables are emitted as anonymous MWCC symbols (for
+    # example ``@139``).  Their names are object-local and cannot match the
+    # retail ELF's independently generated name.  For an adjacent HI16/LO16
+    # pair, recover the linked address from the target instruction words and
+    # apply it to the candidate.  Keep this narrowly scoped to anonymous
+    # symbols so unresolved named globals still fail loudly.
+    unresolved_by_key = {(entry['offset'], entry['type'], entry['symbol']): entry
+                         for entry in unresolved}
+    for record, target_symbol in relocation_records:
+        name = record['symbol']
+        if target_symbol is not None or not name.startswith('@') or record['type'] != 5:
+            continue
+        lo = next((other for other, other_target in relocation_records
+                   if other['symbol'] == name and other['type'] == 6
+                   and other['offset'] == record['offset'] + 4), None)
+        if lo is None:
+            continue
+        address = infer_anonymous_hi_lo_address(target_bytes, record['offset'], lo['offset'])
+        if address is None:
+            continue
+        if (patch_relocation(candidate_bytes, record['offset'], 5, address, gp)
+                and patch_relocation(candidate_bytes, lo['offset'], 6, address, gp)):
+            unresolved_by_key.pop((record['offset'], record['type'], name), None)
+            unresolved_by_key.pop((lo['offset'], lo['type'], name), None)
+    unresolved = list(unresolved_by_key.values())
     code_equal = bytes(candidate_bytes) == target_bytes
     line_symbol = next((symbol for symbol in obj_symbols
                         if symbol.name == '.line_' + entry['name']), None)

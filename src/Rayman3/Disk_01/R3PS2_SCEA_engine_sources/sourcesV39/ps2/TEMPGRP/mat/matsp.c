@@ -4,6 +4,58 @@
 
 #include <stddef.h>
 
+/* Recovered from the original PS2 MTH floating-point helper convention. */
+#define MTH_ABS_IN_PLACE(_value) asm { abs.s _value, _value }
+
+#define MAT_COPY_VECTOR(_stDest, _stSource) do { \
+    (_stDest).xX = (_stSource).xX; \
+    (_stDest).xY = (_stSource).xY; \
+    (_stDest).xZ = (_stSource).xZ; \
+    (_stDest).xW = (_stSource).xW; \
+} while (0)
+
+#define MAT_COPY_ROTATION_AND_SCALE(_hDest, _hSource) do { \
+    MAT_COPY_VECTOR((_hDest)->stTransformMatrix.stCol_0, (_hSource)->stTransformMatrix.stCol_0); \
+    MAT_COPY_VECTOR((_hDest)->stTransformMatrix.stCol_1, (_hSource)->stTransformMatrix.stCol_1); \
+    MAT_COPY_VECTOR((_hDest)->stTransformMatrix.stCol_2, (_hSource)->stTransformMatrix.stCol_2); \
+    MAT_COPY_VECTOR((_hDest)->stScaleVector, (_hSource)->stScaleVector); \
+} while (0)
+
+#define MAT_COPY_TRANSFORMATION(_hDest, _hSource) do { \
+    (_hDest)->eType = (_hSource)->eType; \
+    (_hDest)->stTransformMatrix.stCol_0 = (_hSource)->stTransformMatrix.stCol_0; \
+    (_hDest)->stTransformMatrix.stCol_1 = (_hSource)->stTransformMatrix.stCol_1; \
+    (_hDest)->stTransformMatrix.stCol_2 = (_hSource)->stTransformMatrix.stCol_2; \
+    (_hDest)->stTransformMatrix.stCol_3 = (_hSource)->stTransformMatrix.stCol_3; \
+    (_hDest)->stScaleVector = (_hSource)->stScaleVector; \
+} while (0)
+
+#define MAT_MULTIPLY_SCALES(_hDest, _hA, _hB) do { \
+    (_hDest)->stScaleVector.xX = (_hA)->stScaleVector.xX * (_hB)->stScaleVector.xX; \
+    (_hDest)->stScaleVector.xY = (_hA)->stScaleVector.xY * (_hB)->stScaleVector.xY; \
+    (_hDest)->stScaleVector.xZ = (_hA)->stScaleVector.xZ * (_hB)->stScaleVector.xZ; \
+    (_hDest)->stScaleVector.xW = 1.0f; \
+} while (0)
+
+#define MAT_SCALE_MATRIX(_hDest, _hMatrix, _hScale) do { \
+    (_hDest)->stTransformMatrix.stCol_0.xX = (_hScale)->stScaleVector.xX * (_hMatrix)->stTransformMatrix.stCol_0.xX; \
+    (_hDest)->stTransformMatrix.stCol_0.xY = (_hScale)->stScaleVector.xX * (_hMatrix)->stTransformMatrix.stCol_0.xY; \
+    (_hDest)->stTransformMatrix.stCol_0.xZ = (_hScale)->stScaleVector.xX * (_hMatrix)->stTransformMatrix.stCol_0.xZ; \
+    (_hDest)->stTransformMatrix.stCol_0.xW = 1.0f; \
+    (_hDest)->stTransformMatrix.stCol_1.xX = (_hScale)->stScaleVector.xY * (_hMatrix)->stTransformMatrix.stCol_1.xX; \
+    (_hDest)->stTransformMatrix.stCol_1.xY = (_hScale)->stScaleVector.xY * (_hMatrix)->stTransformMatrix.stCol_1.xY; \
+    (_hDest)->stTransformMatrix.stCol_1.xZ = (_hScale)->stScaleVector.xY * (_hMatrix)->stTransformMatrix.stCol_1.xZ; \
+    (_hDest)->stTransformMatrix.stCol_1.xW = 1.0f; \
+    (_hDest)->stTransformMatrix.stCol_2.xX = (_hScale)->stScaleVector.xZ * (_hMatrix)->stTransformMatrix.stCol_2.xX; \
+    (_hDest)->stTransformMatrix.stCol_2.xY = (_hScale)->stScaleVector.xZ * (_hMatrix)->stTransformMatrix.stCol_2.xY; \
+    (_hDest)->stTransformMatrix.stCol_2.xZ = (_hScale)->stScaleVector.xZ * (_hMatrix)->stTransformMatrix.stCol_2.xZ; \
+    (_hDest)->stTransformMatrix.stCol_2.xW = 1.0f; \
+    MAT_COPY_VECTOR((_hDest)->stTransformMatrix.stCol_3, (_hMatrix)->stTransformMatrix.stCol_3); \
+    (_hDest)->stTransformMatrix.stCol_0.xW = 0.0f; \
+    (_hDest)->stTransformMatrix.stCol_1.xW = 0.0f; \
+    (_hDest)->stTransformMatrix.stCol_2.xW = 0.0f; \
+} while (0)
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
@@ -35,27 +87,34 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
     MTH4D_tdstVector_ stCol_1; /* +0x10 */
     MTH4D_tdstVector_ stCol_2; /* +0x20 */
     MTH4D_tdstVector_ stCol_3; /* +0x30 */
-};
+} __attribute__((aligned(16)));
 
 struct MAT_tdstTransformation_ {
     MAT_tdeTranformationType_ eType; /* +0x0 */
     unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
     MTH4D_tdstVector_ stScaleVector; /* +0x50 */
-};
+} __attribute__((aligned(16)));
 
 struct MTH3D_tdstMatrix_ {
     MTH3D_tdstVector_ stCol_0; /* +0x0 */
     MTH3D_tdstVector_ stCol_1; /* +0xc */
     MTH3D_tdstVector_ stCol_2; /* +0x18 */
 };
+
+void MTH4D_fn_vSpecializedMulMatrixMatrixWithoutBuffer(MTH4D_tdstMatrix_* _p_stResult,
+                                                       MTH4D_tdstMatrix_* _p_stA,
+                                                       MTH4D_tdstMatrix_* _p_stB);
+void MTH4D_fn_vMulMatrixVertexWithoutBuffer(MTH4D_tdstVector_* _p_stResult,
+                                            MTH4D_tdstMatrix_* _p_stMatrix,
+                                            MTH4D_tdstVector_* _p_stVector);
 
 unsigned char g_ucMATModuleId;
 int MAT_g_hTransformationIdentity;
@@ -116,12 +175,116 @@ void MAT_fn_vInitTransformationWithNonDiagonalScale(MAT_tdstTransformation_* _hT
  */
 unsigned char MAT_fn_bAreEquivalentWithEps(MAT_tdstTransformation_* _hTransform1, MAT_tdstTransformation_* _hTransform2, float _xEps)
 {
-    MTH4D_tdstVector_* p_stTrans2;
     MTH4D_tdstVector_* p_stTrans1;
-    MTH4D_tdstVector_* p_stScale2;
+    MTH4D_tdstVector_* p_stTrans2;
     MTH4D_tdstVector_* p_stScale1;
+    MTH4D_tdstVector_* p_stScale2;
     unsigned char bEquivalent;
-    /* TODO: decompile from asm/... */
+    int bTest;
+    float xDelta;
+
+    if (_hTransform1->eType != _hTransform2->eType)
+    {
+        bEquivalent = 0;
+    }
+    else
+    {
+        switch (_hTransform1->eType)
+        {
+        case MAT_eTransform_Identity:
+            bEquivalent = 1;
+            break;
+
+        case MAT_eTransform_Zoom:
+        case MAT_eTransform_Scale:
+            p_stScale1 = &_hTransform1->stScaleVector;
+            p_stScale2 = &_hTransform2->stScaleVector;
+            xDelta = p_stScale1->xX - p_stScale2->xX;
+            MTH_ABS_IN_PLACE(xDelta);
+            bTest = xDelta < _xEps;
+            if (bTest)
+            {
+                xDelta = p_stScale1->xY - p_stScale2->xY;
+                MTH_ABS_IN_PLACE(xDelta);
+                bTest = xDelta < _xEps;
+            }
+            if (bTest = !!bTest)
+            {
+                xDelta = p_stScale1->xX - p_stScale2->xZ;
+                MTH_ABS_IN_PLACE(xDelta);
+                bTest = xDelta < _xEps;
+            }
+            bEquivalent = bTest;
+            if (!bEquivalent)
+            {
+                break;
+            }
+
+        case MAT_eTransform_Translation:
+            p_stTrans1 = &_hTransform1->stTransformMatrix.stCol_3;
+            p_stTrans2 = &_hTransform2->stTransformMatrix.stCol_3;
+            xDelta = p_stTrans1->xX - p_stTrans2->xX;
+            MTH_ABS_IN_PLACE(xDelta);
+            bTest = xDelta < _xEps;
+            if (bTest)
+            {
+                xDelta = p_stTrans1->xY - p_stTrans2->xY;
+                MTH_ABS_IN_PLACE(xDelta);
+                bTest = xDelta < _xEps;
+            }
+            if (bTest = !!bTest)
+            {
+                xDelta = p_stTrans1->xX - p_stTrans2->xZ;
+                MTH_ABS_IN_PLACE(xDelta);
+                bTest = xDelta < _xEps;
+            }
+            bEquivalent = bTest;
+            break;
+
+        case MAT_eTransform_Rotation:
+        case MAT_eTransform_RotationZoom:
+        case MAT_eTransform_RotationScale:
+        case MAT_eTransform_ComplexRotationScale:
+            xDelta = _hTransform1->stTransformMatrix.stCol_0.xX - _hTransform2->stTransformMatrix.stCol_0.xX;
+            MTH_ABS_IN_PLACE(xDelta);
+            bTest = xDelta < _xEps;
+            if (bTest)
+            {
+                xDelta = _hTransform1->stTransformMatrix.stCol_0.xY - _hTransform2->stTransformMatrix.stCol_0.xY;
+                MTH_ABS_IN_PLACE(xDelta);
+                bTest = xDelta < _xEps;
+            }
+#define MAT_CHECK_ABS(_a, _b) do { \
+                if (bTest = !!bTest) { \
+                    xDelta = (_a) - (_b); \
+                    MTH_ABS_IN_PLACE(xDelta); \
+                    bTest = xDelta < _xEps; \
+                } \
+            } while (0)
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_0.xZ, _hTransform2->stTransformMatrix.stCol_0.xZ);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_0.xW, _hTransform2->stTransformMatrix.stCol_0.xW);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xX, _hTransform2->stTransformMatrix.stCol_1.xX);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xY, _hTransform2->stTransformMatrix.stCol_1.xY);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xZ, _hTransform2->stTransformMatrix.stCol_1.xZ);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_1.xW, _hTransform2->stTransformMatrix.stCol_1.xW);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xX, _hTransform2->stTransformMatrix.stCol_2.xX);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xY, _hTransform2->stTransformMatrix.stCol_2.xY);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xZ, _hTransform2->stTransformMatrix.stCol_2.xZ);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_2.xW, _hTransform2->stTransformMatrix.stCol_2.xW);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xX, _hTransform2->stTransformMatrix.stCol_3.xX);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xY, _hTransform2->stTransformMatrix.stCol_3.xY);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xZ, _hTransform2->stTransformMatrix.stCol_3.xZ);
+            MAT_CHECK_ABS(_hTransform1->stTransformMatrix.stCol_3.xW, _hTransform2->stTransformMatrix.stCol_3.xW);
+#undef MAT_CHECK_ABS
+            bEquivalent = bTest;
+            break;
+
+        default:
+            bEquivalent = 0;
+            break;
+        }
+    }
+    return bEquivalent;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsp.c lines 1684–1726 */
@@ -321,9 +484,217 @@ void MAT_fn_vComposeWithoutTranslation(MAT_tdstTransformation_* _hDest, MAT_tdst
     unsigned char bComposeMatrixes;
     MAT_tdstTransformation_* hResult;
     MAT_tdstTransformation_ stTemp;
-    unsigned int uiSimplification;
-    unsigned int uiTotal;
-    /* TODO: decompile from asm/... */
+    static unsigned int uiSimplification;
+    static unsigned int uiTotal;
+
+    if ((_hA->eType == MAT_eTransform_Identity) ||
+        (_hA->eType == MAT_eTransform_Translation))
+    {
+        if (_hDest != _hB)
+        {
+            MAT_COPY_TRANSFORMATION(_hDest, _hB);
+        }
+        return;
+    }
+
+    if (_hB->eType == MAT_eTransform_Identity)
+    {
+        if (_hDest != _hA)
+        {
+            MAT_COPY_TRANSFORMATION(_hDest, _hA);
+        }
+        return;
+    }
+
+    if ((_hDest == _hA) || (_hDest == _hB))
+    {
+        hResult = &stTemp;
+        stTemp.eType = MAT_eTransform_Identity;
+    }
+    else
+    {
+        hResult = _hDest;
+    }
+
+    hResult->stScaleVector.xX = 1.0f;
+    hResult->stScaleVector.xY = 1.0f;
+    hResult->stScaleVector.xZ = 1.0f;
+    hResult->stScaleVector.xW = 1.0f;
+    bComposeMatrixes = 0;
+    bTestScale = 0;
+
+    switch (_hA->eType)
+    {
+    case MAT_eTransform_Rotation:
+    case MAT_eTransform_RotationZoom:
+        switch (_hB->eType)
+        {
+        case MAT_eTransform_Translation:
+            hResult->eType = _hA->eType;
+            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);
+            break;
+
+        case MAT_eTransform_Rotation:
+            hResult->eType = MAT_eTransform_Rotation;
+            bComposeMatrixes = 1;
+            break;
+
+        case MAT_eTransform_Zoom:
+            hResult->eType = MAT_eTransform_RotationZoom;
+            bTestScale = 1;
+            MAT_SCALE_MATRIX(hResult, _hA, _hB);
+            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);
+            break;
+
+        case MAT_eTransform_RotationZoom:
+            hResult->eType = MAT_eTransform_RotationZoom;
+            bComposeMatrixes = 1;
+            bTestScale = 1;
+            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);
+            break;
+
+        case MAT_eTransform_Scale:
+        case MAT_eTransform_RotationScale:
+            hResult->eType = MAT_eTransform_RotationScale;
+            bComposeMatrixes = 1;
+            bTestScale = 1;
+            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);
+            break;
+
+        case MAT_eTransform_ComplexRotationScale:
+            hResult->eType = MAT_eTransform_ComplexRotationScale;
+            bComposeMatrixes = 1;
+            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);
+            break;
+
+        default:
+            break;
+        }
+        break;
+
+    case MAT_eTransform_Zoom:
+        switch (_hB->eType)
+        {
+        case MAT_eTransform_Translation:
+            hResult->eType = _hA->eType;
+            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);
+            break;
+
+        case MAT_eTransform_Rotation:
+            hResult->eType = MAT_eTransform_RotationZoom;
+            MAT_SCALE_MATRIX(hResult, _hB, _hA);
+            MAT_COPY_VECTOR(hResult->stScaleVector, _hA->stScaleVector);
+            break;
+
+        case MAT_eTransform_Zoom:
+        case MAT_eTransform_Scale:
+        case MAT_eTransform_RotationZoom:
+        case MAT_eTransform_RotationScale:
+        case MAT_eTransform_ComplexRotationScale:
+            hResult->eType = _hB->eType;
+            MAT_SCALE_MATRIX(hResult, _hB, _hA);
+            bTestScale = 1;
+            if (_hB->eType != MAT_eTransform_ComplexRotationScale)
+            {
+                MAT_MULTIPLY_SCALES(hResult, _hA, _hB);
+            }
+            break;
+
+        default:
+            break;
+        }
+        break;
+
+    case MAT_eTransform_Scale:
+    case MAT_eTransform_RotationScale:
+    case MAT_eTransform_ComplexRotationScale:
+        switch (_hB->eType)
+        {
+        case MAT_eTransform_Translation:
+            hResult->eType = _hA->eType;
+            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);
+            break;
+
+        case MAT_eTransform_Zoom:
+        case MAT_eTransform_Scale:
+            hResult->eType = _hA->eType;
+            bComposeMatrixes = 1;
+            bTestScale = 1;
+            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);
+            break;
+
+        case MAT_eTransform_Rotation:
+        case MAT_eTransform_RotationZoom:
+        case MAT_eTransform_RotationScale:
+        case MAT_eTransform_ComplexRotationScale:
+            hResult->eType = MAT_eTransform_ComplexRotationScale;
+            bComposeMatrixes = 1;
+            bTestScale = 1;
+            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);
+            break;
+
+        default:
+            break;
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    if (bComposeMatrixes)
+    {
+        MTH4D_fn_vSpecializedMulMatrixMatrixWithoutBuffer(&hResult->stTransformMatrix,
+                                                         &_hA->stTransformMatrix,
+                                                         &_hB->stTransformMatrix);
+    }
+
+    MAT_COPY_VECTOR(hResult->stTransformMatrix.stCol_3, _hB->stTransformMatrix.stCol_3);
+
+    if (bTestScale)
+    {
+        uiTotal++;
+        switch (hResult->eType)
+        {
+        case MAT_eTransform_Scale:
+            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&
+                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
+            {
+                hResult->eType = MAT_eTransform_Zoom;
+                uiSimplification++;
+            }
+        case MAT_eTransform_Zoom:
+            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
+            {
+                hResult->eType = MAT_eTransform_Translation;
+                uiSimplification++;
+            }
+            break;
+
+        case MAT_eTransform_RotationScale:
+            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&
+                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
+            {
+                hResult->eType = MAT_eTransform_RotationZoom;
+                uiSimplification++;
+            }
+        case MAT_eTransform_RotationZoom:
+            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
+            {
+                uiSimplification++;
+                hResult->eType = MAT_eTransform_Rotation;
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    if (_hDest != hResult)
+    {
+        MAT_COPY_TRANSFORMATION(_hDest, hResult);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsp.c lines 707–1014 */
@@ -445,9 +816,216 @@ void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _
     unsigned char bComposeMatrixes;
     MAT_tdstTransformation_* hResult;
     MAT_tdstTransformation_ stTemp;
-    unsigned int uiSimplification;
-    unsigned int uiTotal;
-    /* TODO: decompile from asm/... */
+    static unsigned int uiSimplification;
+    static unsigned int uiTotal;
+
+    if (_hA->eType == MAT_eTransform_Identity)
+    {
+        MAT_COPY_TRANSFORMATION(_hDest, _hB);
+        return;
+    }
+
+    if (_hB->eType == MAT_eTransform_Identity)
+    {
+        MAT_COPY_TRANSFORMATION(_hDest, _hA);
+        return;
+    }
+
+    if ((_hDest == _hA) || (_hDest == _hB))
+    {
+        hResult = &stTemp;
+        stTemp.eType = MAT_eTransform_Identity;
+    }
+    else
+    {
+        hResult = _hDest;
+    }
+
+    bComposeMatrixes = 0;
+    bComposeTranslations = 0;
+    bTestScale = 0;
+
+    switch (_hA->eType)
+    {
+    case MAT_eTransform_Translation:
+        hResult->eType = _hB->eType;
+        hResult->stTransformMatrix.stCol_3.xX = _hA->stTransformMatrix.stCol_3.xX + _hB->stTransformMatrix.stCol_3.xX;
+        hResult->stTransformMatrix.stCol_3.xY = _hA->stTransformMatrix.stCol_3.xY + _hB->stTransformMatrix.stCol_3.xY;
+        hResult->stTransformMatrix.stCol_3.xZ = _hA->stTransformMatrix.stCol_3.xZ + _hB->stTransformMatrix.stCol_3.xZ;
+        hResult->stTransformMatrix.stCol_3.xW = 1.0f;
+        MAT_COPY_ROTATION_AND_SCALE(hResult, _hB);
+        break;
+
+    case MAT_eTransform_Rotation:
+    case MAT_eTransform_RotationZoom:
+        bComposeTranslations = 1;
+        switch (_hB->eType)
+        {
+        case MAT_eTransform_Translation:
+            hResult->eType = _hA->eType;
+            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);
+            break;
+
+        case MAT_eTransform_Rotation:
+            hResult->eType = _hA->eType;
+            bComposeMatrixes = 1;
+            MAT_COPY_VECTOR(hResult->stScaleVector, _hA->stScaleVector);
+            break;
+
+        case MAT_eTransform_Zoom:
+        case MAT_eTransform_RotationZoom:
+            hResult->eType = MAT_eTransform_RotationZoom;
+            bComposeMatrixes = 1;
+            bTestScale = 1;
+            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);
+            break;
+
+        case MAT_eTransform_Scale:
+        case MAT_eTransform_RotationScale:
+            hResult->eType = MAT_eTransform_RotationScale;
+            bComposeMatrixes = 1;
+            bTestScale = 1;
+            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);
+            break;
+
+        case MAT_eTransform_ComplexRotationScale:
+            hResult->eType = MAT_eTransform_ComplexRotationScale;
+            bComposeMatrixes = 1;
+            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);
+            break;
+
+        default:
+            break;
+        }
+        break;
+
+    case MAT_eTransform_Zoom:
+        bComposeTranslations = 1;
+        switch (_hB->eType)
+        {
+        case MAT_eTransform_Translation:
+            hResult->eType = _hA->eType;
+            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);
+            break;
+
+        case MAT_eTransform_Rotation:
+            hResult->eType = MAT_eTransform_RotationZoom;
+            bComposeMatrixes = 1;
+            MAT_COPY_VECTOR(hResult->stScaleVector, _hA->stScaleVector);
+            break;
+
+        case MAT_eTransform_Zoom:
+        case MAT_eTransform_Scale:
+        case MAT_eTransform_RotationZoom:
+        case MAT_eTransform_RotationScale:
+            bTestScale = 1;
+        case MAT_eTransform_ComplexRotationScale:
+            hResult->eType = _hB->eType;
+            bComposeMatrixes = 1;
+            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);
+            break;
+
+        default:
+            break;
+        }
+        break;
+
+    case MAT_eTransform_Scale:
+    case MAT_eTransform_RotationScale:
+    case MAT_eTransform_ComplexRotationScale:
+        bComposeTranslations = 1;
+        switch (_hB->eType)
+        {
+        case MAT_eTransform_Translation:
+            hResult->eType = _hA->eType;
+            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);
+            break;
+
+        case MAT_eTransform_Zoom:
+        case MAT_eTransform_Scale:
+            hResult->eType = _hA->eType;
+            bComposeMatrixes = 1;
+            bTestScale = 1;
+            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);
+            break;
+
+        case MAT_eTransform_Rotation:
+        case MAT_eTransform_RotationZoom:
+        case MAT_eTransform_RotationScale:
+            bTestScale = 1;
+        case MAT_eTransform_ComplexRotationScale:
+            hResult->eType = MAT_eTransform_ComplexRotationScale;
+            bComposeMatrixes = 1;
+            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);
+            break;
+
+        default:
+            break;
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    if (bComposeMatrixes)
+    {
+        MTH4D_fn_vSpecializedMulMatrixMatrixWithoutBuffer(&hResult->stTransformMatrix,
+                                                         &_hA->stTransformMatrix,
+                                                         &_hB->stTransformMatrix);
+    }
+    else if (bComposeTranslations)
+    {
+        MTH4D_fn_vMulMatrixVertexWithoutBuffer(&hResult->stTransformMatrix.stCol_3,
+                                               &_hA->stTransformMatrix,
+                                               &_hB->stTransformMatrix.stCol_3);
+        hResult->stTransformMatrix.stCol_3.xW = 1.0f;
+    }
+
+    if (bTestScale)
+    {
+        uiTotal++;
+        switch (hResult->eType)
+        {
+        case MAT_eTransform_Scale:
+            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&
+                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
+            {
+                hResult->eType = MAT_eTransform_Zoom;
+                uiSimplification++;
+            }
+        case MAT_eTransform_Zoom:
+            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
+            {
+                hResult->eType = MAT_eTransform_Translation;
+                uiSimplification++;
+            }
+            break;
+
+        case MAT_eTransform_RotationScale:
+            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&
+                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
+            {
+                hResult->eType = MAT_eTransform_RotationZoom;
+                uiSimplification++;
+            }
+        case MAT_eTransform_RotationZoom:
+            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
+            {
+                uiSimplification++;
+                hResult->eType = MAT_eTransform_Rotation;
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    if (_hDest != hResult)
+    {
+        MAT_COPY_TRANSFORMATION(_hDest, hResult);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsp.c lines 532–695 */

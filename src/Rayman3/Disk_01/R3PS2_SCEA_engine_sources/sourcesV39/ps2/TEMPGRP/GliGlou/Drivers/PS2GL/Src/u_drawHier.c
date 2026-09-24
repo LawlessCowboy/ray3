@@ -2139,7 +2139,28 @@ int GLI_vDMAObjectIsCompliant(GEO_tdstGeometricObject_* pObj)
 {
     GEO_tdstElementIndexedTriangles_* p_stEIT;
     int j;
-    /* TODO: decompile from asm/... */
+    int iTypeOffset;
+    int iElementOffset;
+
+    if (GEO_bIsLookAt()) {
+        return 0;
+    }
+
+    for (j = 0, iTypeOffset = 0, iElementOffset = 0;
+         j < pObj->xNbElements;
+         iTypeOffset += 2, iElementOffset += 4, j++) {
+        if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) == 1) {
+            p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);
+            if ((p_stEIT != NULL) && (p_stEIT->hVisualMaterial != NULL) &&
+                ((p_stEIT->hVisualMaterial->lNumberOfDisplayNode >= 2) ||
+                 (p_stEIT->hVisualMaterial->lMaterialAdditionnalType & 6))) {
+                    return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1373–1638 */
@@ -2558,7 +2579,27 @@ void GLI_vCleanAllSDLs(void)
  */
 void GLI_vCleanAllSpecificData(void)
 {
-    /* TODO: decompile from asm/... */
+    GLD_bSetBackgroundColorForDevice(0, 0);
+    g_fFogColor[0] = 0.0f;
+    g_fFogEnd = 3000.0f;
+    g_fFogColor[1] = 0.0f;
+    g_fFogStart = 2000.0f;
+    GLI_g_CurrentSDLFogColor = 0;
+    g_fFogColor[2] = 0.0f;
+    GLI_g_OOStartMinusEnd = -0.001f;
+    TXT_vInit();
+    MC_SetBackgroundMaterial(0);
+    GLI_vCleanInterpolData();
+    GLI_vCleanAllSDLs();
+    VAC_Destroy(GLI_g_hVAContainer);
+    GLI_g_hVAContainer = 0;
+    GLI_vDeleteSdlCache();
+    WaterFx_vDesinit();
+    GrassFx_vDesinit();
+    FireFx_vDesinit();
+    DestroyDummySDL();
+    GLI_vForceDeleteAllWaitingPointers();
+    GLI_vPrintSDLStatsAfter();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 729–729 */
@@ -2680,7 +2721,31 @@ void GLI_PS2GL_CleanSpecifForPO(PO_tdstPhysicalObject_* PO)
     short i;
     short xNbLodDefinitions;
     GEO_tdstVisualSet_* hVisualSet;
-    /* TODO: decompile from asm/... */
+    int iLodOffset;
+
+    if ((((unsigned int)PO & 0xffffff00) != 0) && (PO != NULL)) {
+        hVisualSet = PO->_hVisualSet;
+        if ((((unsigned int)hVisualSet & 0xffffff00) != 0) &&
+            (hVisualSet != NULL) && (hVisualSet->xType == 0)) {
+            xNbLodDefinitions = hVisualSet->xNbLodDefinitions;
+            if (xNbLodDefinitions == 0) {
+                xNbLodDefinitions = 1;
+            }
+            if (hVisualSet->d_p_stLodDefinitions != (GEO_tduVSObject_*)-1) {
+                if (hVisualSet->d_p_stLodDefinitions != NULL) {
+                    for (i = 0, iLodOffset = 0;
+                         i < xNbLodDefinitions;
+                         i++, iLodOffset += 4) {
+                        pObj = *(GEO_tdstGeometricObject_**)((int)hVisualSet->d_p_stLodDefinitions + iLodOffset);
+                        if (pObj == NULL) {
+                            continue;
+                        }
+                        GLI_vCleanGeoObj(pObj);
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 538–563 */
@@ -2707,7 +2772,25 @@ int GLI_fn_vInitGeometricObjectFromArray(GEO_tdstGeometricObject_* pObj)
 {
     GEO_tdstElementIndexedTriangles_* p_stEIT;
     unsigned int j;
-    /* TODO: decompile from asm/... */
+    int iTypeOffset;
+    int iElementOffset;
+
+    if (pObj != NULL) {
+        for (j = 0, iTypeOffset = 0, iElementOffset = 0;
+             j < pObj->xNbElements;
+             iTypeOffset += 2, iElementOffset += 4, j++) {
+            if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) != 1) {
+                continue;
+            }
+            p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);
+            if (p_stEIT == NULL) {
+                continue;
+            }
+            GLI_vCleanSpecificStructure(p_stEIT->glDisplayList);
+            p_stEIT->glDisplayList = 0;
+        }
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 534–534 */
@@ -2894,7 +2977,43 @@ void GLI_PS2GL_BuildSpecifForPO(PO_tdstPhysicalObject_* PO)
     short i;
     short xNbLodDefinitions;
     GEO_tdstVisualSet_* hVisualSet;
-    /* TODO: decompile from asm/... */
+    int iLodOffset;
+    int iTypeOffset;
+    int iElementOffset;
+
+    if (PO != NULL) {
+        hVisualSet = PO->_hVisualSet;
+        if (hVisualSet != NULL) {
+            xNbLodDefinitions = hVisualSet->xNbLodDefinitions;
+            if (xNbLodDefinitions == 0) {
+                xNbLodDefinitions = 1;
+            }
+            for (i = 0, iLodOffset = 0;
+                 i < xNbLodDefinitions;
+                 i++, iLodOffset += 4) {
+                pObj = *(GEO_tdstGeometricObject_**)((int)hVisualSet->d_p_stLodDefinitions + iLodOffset);
+                if (pObj != NULL) {
+                    pObj->glDisplayList = 0;
+                    j = 0;
+                    pObj->bIsStatic = 0;
+                    iTypeOffset = 0;
+                    GLI_BIG_GLOBALS_p_stObj = (int)pObj;
+                    iElementOffset = 0;
+                    for (; j < pObj->xNbElements;
+                         iTypeOffset += 2, iElementOffset += 4, j++) {
+                        if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) != 1) {
+                            continue;
+                        }
+                        p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);
+                        if (p_stEIT == NULL) {
+                            continue;
+                        }
+                        p_stEIT->glDisplayList = 0;
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 190–223 */

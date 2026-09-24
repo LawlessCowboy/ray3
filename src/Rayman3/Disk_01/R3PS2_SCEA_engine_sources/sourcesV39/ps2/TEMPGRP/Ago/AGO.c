@@ -4771,6 +4771,8 @@ void CreateType5AGO(MTH3D_tdstVector_* p_stPosition, void* hVisualMaterial, floa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO_vDisplayPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p_stViewport);
+
 void AGO_vProcessPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p_stViewport)
 {
     float pos2;
@@ -4797,7 +4799,336 @@ void AGO_vProcessPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p
     float Val1;
     float TempValue;
     AGO_Part_* p;
-    /* TODO: decompile from asm/... */
+
+    p = &g_AGO[ulPartNumber];
+
+    switch ((unsigned char)p->ulType)
+    {
+    case 16:
+        p->a3_fDirection[2] += 4.0f * -9.81f * g_fTimeDifference;
+        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;
+        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;
+        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;
+        break;
+
+    case 1:
+    case 4:
+        p->a3_fDirection[2] += -9.81f * g_fTimeDifference;
+        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;
+        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;
+        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;
+        break;
+
+    case 5:
+        p->a3_fDirection[2] += -3.5f * g_fTimeDifference;
+        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;
+        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;
+        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;
+        break;
+
+    case 3:
+        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;
+        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;
+        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;
+        break;
+
+    case 24:
+        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;
+        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;
+        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;
+        p->a3_fDirection[2] *= powf(p->a3_fAdditionnalVector[0], g_fTimeDifference);
+        break;
+
+    case 14:
+    case 10:
+        Finished = 0;
+        pp = p->a3_fPosition;
+        pp2 = p->a3_fDirection;
+        for (i = 0; i < 3; i++, pp++, pp2++)
+        {
+            TempValue = *pp2 - *pp;
+            Val2 = fabsf(TempValue);
+            if (Val2 <= 0.1f)
+            {
+                Finished++;
+            }
+            else
+            {
+                p->a3_fInitialPosition[i] = *pp;
+                if ((p->ulType & 0xff) == 14)
+                    Val1 = 6.5f * TempValue * g_fTimeDifference;
+                else
+                    Val1 = 1.5f * TempValue * g_fTimeDifference;
+                if (fabsf(Val1) < Val2)
+                    *pp += Val1;
+                else
+                {
+                    *pp = *pp2;
+                    Finished++;
+                }
+            }
+        }
+        if (Finished != 0)
+            p->ulType |= 0x1000000;
+        break;
+
+    case 18:
+        for (i = 0; i < 3; i++)
+            p->a3_fPosition[i] += p->a3_fInitialPosition[i];
+        p->LimitParam.fTimeLimit += 1.0f;
+        if (p->LimitParam.fTimeLimit >= 8.0f)
+            p->ulType |= 0x1000000;
+        break;
+
+    case 9:
+        Val1 = -1.6f * g_fTimeDifference;
+        p->a3_fDirection[0] += Val1;
+        p->a3_fDirection[1] += Val1;
+        p->a3_fDirection[2] += Val1;
+        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;
+        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;
+        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;
+        break;
+
+    case 7:
+    case 11:
+        p->a3_fPosition[0] += p->a3_fDirection[0] * g_fTimeDifference;
+        p->a3_fPosition[1] += p->a3_fDirection[1] * g_fTimeDifference;
+        p->a3_fPosition[2] += p->a3_fDirection[2] * g_fTimeDifference;
+        break;
+
+    case 19:
+        p->a3_fPosition[0] += -0.2f + 0.4f * (float)rand() / 2147483648.0f;
+        p->a3_fPosition[1] += -0.2f + 0.4f * (float)rand() / 2147483648.0f;
+        p->a3_fPosition[2] += 0.2f + 0.3f * (float)rand() / 2147483648.0f;
+        unscale = 6.0f + 4.0f * (float)rand() / 2147483648.0f;
+        untransparency = 50.0f * (float)rand() / 2147483648.0f;
+        p->fScale[0] -= unscale * g_fTimeDifference;
+        p->fScale[1] -= unscale * g_fTimeDifference;
+        p->Transparency -= (100.0f + untransparency) * g_fTimeDifference;
+        if ((p->fScale[0] <= 0.0f) || (p->fScale[1] <= 0.0f) || (p->Transparency <= 0.0f))
+        {
+            p->Transparency = 0.0f;
+            p->fScale[0] = 0.01f;
+            p->fScale[1] = 0.01f;
+            p->ulType |= 0x1000000;
+        }
+        break;
+
+    case 8:
+        if (p->a3_fInitialPosition[0] < 0.25f)
+        {
+            p->a3_fInitialPosition[0] *= 1.51f;
+            p->a3_fInitialPosition[1] *= 1.1f;
+        }
+        else if (p->a3_fInitialPosition[0] < 0.5f)
+        {
+            p->a3_fInitialPosition[0] *= 1.1f;
+            p->a3_fInitialPosition[1] *= 1.01f;
+        }
+        else
+        {
+            p->a3_fInitialPosition[0] *= 0.9f;
+            p->a3_fInitialPosition[1] *= 0.98f;
+        }
+        break;
+
+    case 12:
+        p->fAnimTimeScale += 6.5f * g_fTimeDifference * *((float*)&p->AnimTime);
+        *((float*)&p->AnimTime) += 0.2f * g_fTimeDifference;
+        p->LimitParam.fTimeLimit -= g_fTimeDifference;
+        if (p->LimitParam.fTimeLimit <= 0.01f)
+            p->ulType |= 0x1000000;
+        Sin1 = p->LimitParam.fTimeLimit * PS2_dl_sinf(p->fAnimTimeScale);
+        Cos1 = p->LimitParam.fTimeLimit * PS2_dl_cosf(p->fAnimTimeScale);
+        AGO_Define_OrthogonalVectors((MTH3D_tdstVector_*)p->a3_fDirection, &V1, &V2);
+        for (i = 0; i < 3; i++)
+            p->a3_fPosition[i] = p->a3_fInitialPosition[i] + ((float*)&V1)[i] * Sin1 + ((float*)&V2)[i] * Cos1;
+        break;
+
+    case 6:
+        pos0 = p->a3_fInitialPosition[0] * g_ffFrameTime;
+        pos1 = p->a3_fInitialPosition[1] * g_ffFrameTime;
+        pos2 = p->a3_fInitialPosition[2] * g_ffFrameTime;
+        cosx = PS2_dl_cosf(pos0);
+        sinx = PS2_dl_sinf(pos0);
+        cosy = PS2_dl_cosf(pos1);
+        siny = PS2_dl_sinf(pos1);
+        cosz = PS2_dl_cosf(pos2);
+        sinz = PS2_dl_sinf(pos2);
+        pos0 = 0.5f * (cosz * (-siny * cosx) - cosx * sinz) + 0.707106f * (cosy * cosz);
+        pos1 = 0.5f * ((sinx * siny * cosz) - (sinx * sinz)) + 0.707106f * (cosy * sinz);
+        pos2 = 0.5f * (cosy * cosx) - 0.707106f * siny;
+        p->a3_fPosition[0] = p->a3_fDirection[0] + p->LimitParam.fTimeLimit * pos0;
+        p->a3_fPosition[1] = p->a3_fDirection[1] + p->LimitParam.fTimeLimit * pos1;
+        p->a3_fPosition[2] = p->a3_fDirection[2] + p->LimitParam.fTimeLimit * pos2;
+        p->LimitParam.fTimeLimit -= 4.5f * g_fTimeDifference;
+        if (p->LimitParam.fTimeLimit <= 0.01f)
+            p->ulType |= 0x1000000;
+        break;
+    }
+
+    if (((p->ulType & 0x20000) != 0) && (g_AGO_PloufMaterial != 0) && ((p->ulType & 0x80000) == 0))
+    {
+        if (p->a3_fPosition[2] <= p->LimitParam.f_ZLimit)
+        {
+            p->a3_fPosition[2] = p->LimitParam.f_ZLimit;
+            p->ulType = 0x10003100;
+            p->fScale[0] = 0.1f;
+            p->fScale[1] = 0.1f;
+            p->fCreationTime = g_ffFrameTime;
+            p->Transparency = 250.0f;
+            p->VisualMaterial = g_AGO_PloufMaterial;
+        }
+    }
+
+    unscale = 0.0f;
+    switch (p->ulType & 0xf00)
+    {
+    case 0x900:
+        p->fScale[0] += 5.3f * g_fTimeDifference;
+        p->fScale[1] += 20.5f * g_fTimeDifference;
+        break;
+    case 0xa00:
+        p->fScale[0] += 60.0f * g_fTimeDifference;
+        p->fScale[1] -= 16.5f * g_fTimeDifference;
+        if (p->fScale[0] >= 5.0f)
+            p->ulType = (p->ulType & ~0xf00) | 0xb00;
+        break;
+    case 0xb00:
+        p->fScale[0] -= 60.0f * g_fTimeDifference;
+        if (p->fScale[0] <= 1.0f)
+        {
+            p->fScale[0] = 2.0f;
+            p->ulType = (p->ulType & ~0xf00) | 0xd00;
+        }
+        break;
+    case 0xd00:
+        p->fScale[0] -= 16.5f * g_fTimeDifference;
+        p->fScale[1] += 61.5f * g_fTimeDifference;
+        if (p->fScale[1] >= 10.0f)
+            p->ulType |= 0x1000000;
+        break;
+    case 0x800:
+        unscale = 0.05f;
+        break;
+    case 0x100:
+        unscale = 1.3f;
+        break;
+    case 0x200:
+        unscale = 3.7f;
+        break;
+    case 0x300:
+        unscale = 6.5f;
+        break;
+    case 0x400:
+        unscale = 9.5f;
+        break;
+    case 0x500:
+        unscale = -0.5f;
+        break;
+    case 0x700:
+        p->fScale[0] += p->a2_fScaleSpeed[0] * g_fTimeDifference;
+        p->fScale[1] += p->a2_fScaleSpeed[1] * g_fTimeDifference;
+        break;
+    case 0x600:
+        unscale = -0.2f;
+        break;
+    }
+
+    if (unscale != 0.0f)
+    {
+        unscale *= g_fTimeDifference;
+        p->fScale[0] += unscale;
+        p->fScale[1] += unscale;
+    }
+
+    if ((p->ulType & 0xf00) == 0xe00)
+    {
+        unscale = (float)rand() / 2147483648.0f;
+        p->fScale[0] = unscale;
+        p->fScale[1] = unscale;
+    }
+    else if ((p->ulType & 0xf00) == 0xf00)
+    {
+        unscale = 0.2f + 0.40000004f * (float)rand() / 2147483648.0f;
+        p->fScale[0] = unscale;
+        p->fScale[1] = unscale;
+    }
+
+    if (p->fScale[0] <= 0.0f)
+    {
+        p->fScale[0] = 0.01f;
+        p->ulType |= 0x1000000;
+    }
+    if (p->fScale[1] <= 0.0f)
+    {
+        p->fScale[1] = 0.01f;
+        p->ulType |= 0x1000000;
+    }
+
+    switch (p->ulType & 0xf000)
+    {
+    case 0x8000:
+        if ((g_ffFrameTime - p->fCreationTime) > p->LimitParam.fTimeLimit)
+            p->ulType = (p->ulType & 0xffff0fff) | 0x3000;
+        break;
+    case 0x7000:
+        p->Transparency += 350.0f * g_fTimeDifference;
+        if (p->Transparency >= 255.0f)
+        {
+            p->Transparency = 255.0f;
+            p->ulType = (p->ulType & 0xffff0fff) | 0x8000;
+            p->fCreationTime = g_ffFrameTime;
+        }
+        break;
+    case 0x1000:
+        p->Transparency -= 100.0f * g_fTimeDifference;
+        break;
+    case 0x2000:
+        p->Transparency -= 160.0f * g_fTimeDifference;
+        break;
+    case 0x3000:
+        p->Transparency -= 260.0f * g_fTimeDifference;
+        break;
+    case 0x4000:
+        p->Transparency -= 350.0f * g_fTimeDifference;
+        break;
+    case 0x5000:
+        p->Transparency -= 850.0f * g_fTimeDifference;
+        break;
+    case 0x6000:
+        p->Transparency -= 2500.0f * g_fTimeDifference;
+        break;
+    case 0xf000:
+        if ((p->CreationFrame != AGO_g_PreviousCurrentFrame) && (AGO_G_CurrentVU1Frame == 1))
+        {
+            p->ulType |= 0x1000000;
+            p->Transparency = 0.0f;
+        }
+        break;
+    case 0x9000:
+        p->Transparency = 100.0f + 155.0f * (float)rand() / 2147483648.0f;
+        break;
+    case 0xa000:
+        p->Transparency += 100.0f * g_fTimeDifference;
+        break;
+    case 0xb000:
+        p->Transparency = 255.0f * (1.0f - ((g_ffFrameTime - p->fCreationTime) / p->LimitParam.fTimeLimit));
+        break;
+    case 0xc000:
+        p->Transparency -= p->fShadeSpeed * g_fTimeDifference;
+        break;
+    }
+
+    if ((p->Transparency < 0.0f) && ((p->ulType & 0xf000) != 0x7000))
+    {
+        p->ulType |= 0x1000000;
+        p->Transparency = 0.0f;
+    }
+
+    if ((p->ulType & 0x1000000) == 0)
+        AGO_vDisplayPart(ulPartNumber, _p_stViewport);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 2581–3258 */

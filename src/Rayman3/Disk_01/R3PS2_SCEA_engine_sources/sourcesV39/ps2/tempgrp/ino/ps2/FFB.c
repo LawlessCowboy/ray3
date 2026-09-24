@@ -220,7 +220,17 @@ signed char INO_fn_cStopFFBEffectWithFade(unsigned int ulCurrentTime, stDevice* 
 void INO_fn_vStopAllFFBEffectForAllDevice(unsigned int ulCurrentTime)
 {
     signed char i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < 2; i++) {
+        signed char j;
+        int effectOffset;
+
+        for (j = 0, effectOffset = 0; j < 3; j++, effectOffset += sizeof(INO_stForceFeedBack)) {
+            if ((j != -1) && (j < 3)) {
+                ((INO_stDIDevice*)((char*)&INO_g_a_stDIDevice[i] + effectOffset))->m_stForceFeedBack[0].m_ulInUseUntil = ulCurrentTime;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 366–371 */
@@ -238,7 +248,20 @@ void INO_fn_vStopAllFFBEffectForAllDevice(unsigned int ulCurrentTime)
 void INO_fn_vStopAllFFBEffectForDevice(unsigned int ulCurrentTime, stDevice* hDev)
 {
     short wDev;
-    /* TODO: decompile from asm/... */
+
+    if (hDev != NULL) {
+        signed char i;
+        int effectOffset;
+
+        wDev = hDev->m_wPort;
+        if (INO_gs_a_bIsForceFeedBack[wDev]) {
+            for (i = 0, effectOffset = 0; i < 3; i++, effectOffset += sizeof(INO_stForceFeedBack)) {
+                if ((i != -1) && (i < 3)) {
+                    ((INO_stDIDevice*)((char*)&INO_g_a_stDIDevice[wDev] + effectOffset))->m_stForceFeedBack[0].m_ulInUseUntil = ulCurrentTime;
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 340–348 */
@@ -254,7 +277,13 @@ void INO_fn_vStopAllFFBEffectForDevice(unsigned int ulCurrentTime, stDevice* hDe
  */
 void INO_fn_vStopFFBEffect(unsigned int ulCurrentTime, stDevice* hDev, signed char cEffectNumber)
 {
-    /* TODO: decompile from asm/... */
+    if ((hDev != NULL) && (INO_gs_a_bIsForceFeedBack[hDev->m_wPort])) {
+        if ((cEffectNumber != -1) && (cEffectNumber < 3)) {
+            if ((cEffectNumber != -1) && (cEffectNumber < 3)) {
+                INO_g_a_stDIDevice[hDev->m_wPort].m_stForceFeedBack[cEffectNumber].m_ulInUseUntil = ulCurrentTime;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 264–313 */
@@ -324,7 +353,11 @@ signed char INO_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime,
  */
 void INO_fn_vStopPreCreatedFFBEffect(unsigned int ulCurrentTime, stDevice* hDev, signed char cEffectNumber)
 {
-    /* TODO: decompile from asm/... */
+    if ((hDev != NULL) && (INO_gs_a_bIsForceFeedBack[hDev->m_wPort])) {
+        if ((cEffectNumber != -1) && (cEffectNumber < 20)) {
+            INO_g_a_stDIDevice[hDev->m_wPort].m_stForceFeedBackPrecreated[cEffectNumber].m_ulInUseUntil = ulCurrentTime;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 212–230 */
@@ -362,7 +395,19 @@ void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices(void)
 {
     short j;
     short i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 20; j++) {
+            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ulInUseSince = 0;
+            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ulInUseUntil = 0;
+            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ucFadeInStartValue = 0;
+            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ulFadeInTime = 0;
+            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ucConstantValue = 0;
+            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_lConstantTime = 0;
+            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ucFadeOutStopValue = 0;
+            INO_g_a_stDIDevice[i].m_stForceFeedBackPrecreated[j].m_ulFadeOutTime = 0;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 186–190 */
