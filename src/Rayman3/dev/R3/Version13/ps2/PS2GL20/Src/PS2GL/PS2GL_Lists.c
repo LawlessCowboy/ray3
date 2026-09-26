@@ -2319,7 +2319,7 @@ unsigned char impPS2glIsList(unsigned int list)
  */
 void impPS2glListBase(unsigned int base)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.uiListBase = base;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1531–1570 */

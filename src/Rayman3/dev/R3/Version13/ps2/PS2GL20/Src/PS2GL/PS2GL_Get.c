@@ -876,9 +876,9 @@ void impPS2glGetTexEnvfv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glGetString(void)
+unsigned int impPS2glGetString(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1475–1475 */
@@ -1092,7 +1092,7 @@ void impPS2glGetLightfv(void)
  */
 unsigned int impPS2glGetError(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1323–1323 */
@@ -1102,9 +1102,11 @@ unsigned int impPS2glGetError(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glGet(unsigned int type, unsigned int pname, void* params);
+
 void impPS2glGetDoublev(unsigned int pname, double* params)
 {
-    /* TODO: decompile from asm/... */
+    PS2glGet(0x140A, pname, params);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1318–1318 */
@@ -1116,7 +1118,7 @@ void impPS2glGetDoublev(unsigned int pname, double* params)
  */
 void impPS2glGetFloatv(unsigned int pname, float* params)
 {
-    /* TODO: decompile from asm/... */
+    PS2glGet(0x1406, pname, params);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1313–1313 */
@@ -1128,7 +1130,7 @@ void impPS2glGetFloatv(unsigned int pname, float* params)
  */
 void impPS2glGetIntegerv(unsigned int pname, int* params)
 {
-    /* TODO: decompile from asm/... */
+    PS2glGet(0x1404, pname, params);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1308–1308 */
@@ -1140,5 +1142,5 @@ void impPS2glGetIntegerv(unsigned int pname, int* params)
  */
 void impPS2glGetBooleanv(unsigned int pname, unsigned char* params)
 {
-    /* TODO: decompile from asm/... */
+    PS2glGet(0x140B, pname, params);
 }

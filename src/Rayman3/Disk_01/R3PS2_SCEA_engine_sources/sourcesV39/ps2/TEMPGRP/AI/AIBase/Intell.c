@@ -3196,7 +3196,7 @@ tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_Su
  */
 tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    return a_stTypeTable[p_stTree->eType].p_fn_p_stEvalTypePtr(p_SuperObjPerso, p_stTree, p_stValue);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1293–1478 */
@@ -3752,9 +3752,12 @@ tdstNodeInterpret_* fn_p_stEvalVector(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalReal(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalReal(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    *(float *)&p_stValue->uDummy.uParam.ulValue = *(float *)&p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Float;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 583–589 */
@@ -3769,9 +3772,12 @@ tdstNodeInterpret_* fn_p_stEvalReal(tdstNodeInterpret_* p_stTree, tdstGetSetPara
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalActionRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalActionRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Action;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 570–576 */
@@ -3786,9 +3792,12 @@ tdstNodeInterpret_* fn_p_stEvalActionRef(tdstNodeInterpret_* p_stTree, tdstGetSe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalPersoRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalPersoRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Perso;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 560–563 */
@@ -3803,9 +3812,12 @@ tdstNodeInterpret_* fn_p_stEvalPersoRef(tdstNodeInterpret_* p_stTree, tdstGetSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalObjectTableRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalObjectTableRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_ObjectTable;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 544–551 */
@@ -3820,9 +3832,12 @@ tdstNodeInterpret_* fn_p_stEvalObjectTableRef(tdstNodeInterpret_* p_stTree, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalSOLinksRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalSOLinksRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_SOLinks;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 530–537 */
@@ -3837,9 +3852,12 @@ tdstNodeInterpret_* fn_p_stEvalSOLinksRef(tdstNodeInterpret_* p_stTree, tdstGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalSuperObjectRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalSuperObjectRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_SuperObject;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 512–522 */
@@ -3852,9 +3870,12 @@ tdstNodeInterpret_* fn_p_stEvalSuperObjectRef(tdstNodeInterpret_* p_stTree, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalButton(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalButton(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Button;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 500–505 */
@@ -3867,9 +3888,12 @@ tdstNodeInterpret_* fn_p_stEvalButton(tdstNodeInterpret_* p_stTree, tdstGetSetPa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalConstant(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalConstant(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 326–345 */
@@ -3900,9 +3924,12 @@ tdstNodeInterpret_* fn_p_stEvalField(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalModelRef(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalModelRef(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Model;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 310–312 */
@@ -3915,9 +3942,12 @@ tdstNodeInterpret_* fn_p_stEvalModelRef(tdstNodeInterpret_* p_stTree, tdstGetSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalColor(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalColor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.ulValue = p_stTree->uDummy.uParam.ulValue;
+    p_stTree = (tdstNodeInterpret_*)((char*)p_stTree + 8);
+    p_stValue->eType = E_vt_Color;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 302–302 */

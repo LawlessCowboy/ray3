@@ -930,6 +930,7 @@ float g_BaseTimeForParticleAnimation;
 float gs_fCoefOfMultiplicationForScolledTextures;
 tdstGliCaps_ GLI_g_stCaps;
 float g_AGO_AnimTimeScale;
+extern GLI_tdstMaterial_* GLI_g_StaticCopyOfArrayOfVisualMaterial[];
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 2358–2359 */
 /* addr: 0x002a9720  size: 24 bytes */
@@ -941,7 +942,6 @@ float g_AGO_AnimTimeScale;
  */
 GLI_tdstMaterial_* fn_hGetVisualMaterialFromIndex(unsigned short uwIndex)
 {
-    extern GLI_tdstMaterial_* GLI_g_StaticCopyOfArrayOfVisualMaterial[];
     return GLI_g_StaticCopyOfArrayOfVisualMaterial[uwIndex];
 }
 

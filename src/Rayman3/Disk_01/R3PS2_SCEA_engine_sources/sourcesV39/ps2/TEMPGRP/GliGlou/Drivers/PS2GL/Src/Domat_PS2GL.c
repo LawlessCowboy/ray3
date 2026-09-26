@@ -92,8 +92,8 @@ void GLI_fn_vInitRenderParameters(void)
 {
     xSaveFogIsOn = 0;
     bIsWriteEnable = 1;
-    ucSaveCyclingMode[1] = 0xff;
     ucSaveCyclingMode[0] = 0xff;
+    ucSaveCyclingMode[1] = 0xff;
     ucSaveFunction = 0xff;
 }
 

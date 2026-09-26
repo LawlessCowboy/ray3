@@ -484,6 +484,204 @@ def infer_anonymous_hi_lo_address(target_bytes: bytes, hi_offset: int,
     return (((hi_word & 0xFFFF) << 16) + signed16(lo_word & 0xFFFF)) & 0xFFFFFFFF
 
 
+# Registers whose identity is fixed by the MIPS EABI at calls and returns.
+_GPR_ARGS = [('g', n) for n in range(4, 12)]          # a0-a3, t0-t3 (EABI a4-a7)
+_FPR_ARGS = [('f', n) for n in range(12, 20)]
+_CALLER_SAVED = ([('g', n) for n in list(range(1, 16)) + [24, 25, 31]]
+                 + [('f', n) for n in range(0, 20)])
+_RETURN_REGS = [('g', 2), ('f', 0)]      # EE GPRs are 64-bit: v0 alone
+_PRESERVED = ([('g', n) for n in list(range(16, 24)) + [28, 29, 30]]
+              + [('f', n) for n in range(20, 32)])
+
+
+def _register_operands(instr) -> tuple[list, list, int]:
+    """Return (reads, writes, register-field mask) for a decoded instruction."""
+    reads, writes, mask = [], [], 0
+    for field, shift, kind, reads_fn, writes_fn in (
+            ('rs', 21, 'g', 'readsRs', 'modifiesRs'),
+            ('rt', 16, 'g', 'readsRt', 'modifiesRt'),
+            ('rd', 11, 'g', 'readsRd', 'modifiesRd'),
+            ('fs', 11, 'f', 'readsFs', 'modifiesFs'),
+            ('ft', 16, 'f', 'readsFt', 'modifiesFt'),
+            ('fd', 6, 'f', 'readsFd', 'modifiesFd')):
+        is_read = getattr(instr, reads_fn)()
+        is_written = getattr(instr, writes_fn)()
+        if not (is_read or is_written):
+            continue
+        register = (kind, (instr.getRaw() >> shift) & 0x1F)
+        mask |= 0x1F << shift
+        if is_read:
+            reads.append(register)
+        if is_written:
+            writes.append(register)
+    return reads, writes, mask
+
+
+def register_equivalent(candidate: bytes, target: bytes,
+                        register_jumps_are_tail_calls: bool = False) -> tuple[bool, str]:
+    """Decide whether two functions differ only by a consistent register renaming.
+
+    Every instruction must have the same opcode and identical non-register
+    fields (immediates, stack offsets, branch displacements, relocated
+    addresses).  Registers may differ only per value: a forward dataflow over
+    the basic blocks tracks a bijective candidate->target register pairing,
+    rebinding on each write and keeping only pairs that agree on every path at
+    a join.  An unpaired read must use the same register on both sides, and the
+    EABI argument, return, and preserved registers must map to themselves at
+    calls, tail calls, and returns.  Anything the decoder cannot classify is
+    compared literally, so the check errs towards rejecting.  ``jr`` through a
+    non-``ra`` register is treated as a tail call only when the caller knows
+    the function has no switch table; otherwise it is rejected.
+    """
+    if len(candidate) != len(target) or len(candidate) % 4:
+        return False, 'size differs'
+    category = rabbitizer.InstrCategory.R5900
+    words = len(candidate) // 4
+    cand = [rabbitizer.Instruction(int.from_bytes(candidate[i * 4:i * 4 + 4], 'little'),
+                                   category=category) for i in range(words)]
+    targ = [rabbitizer.Instruction(int.from_bytes(target[i * 4:i * 4 + 4], 'little'),
+                                   category=category) for i in range(words)]
+    operands = []
+    for index, (c, t) in enumerate(zip(cand, targ)):
+        if c.uniqueId != t.uniqueId:
+            return False, f'+0x{index * 4:x}: opcode differs'
+        c_reads, c_writes, mask = _register_operands(c)
+        t_reads, t_writes, t_mask = _register_operands(t)
+        if mask != t_mask or (c.getRaw() & ~mask) != (t.getRaw() & ~mask):
+            return False, f'+0x{index * 4:x}: non-register fields differ'
+        if c.isBranchLikely() or (c.isJumptableJump() and not register_jumps_are_tail_calls):
+            return False, f'+0x{index * 4:x}: branch-likely/jump table not supported'
+        operands.append((list(zip(c_reads, t_reads)), list(zip(c_writes, t_writes))))
+
+    # Basic blocks: leaders are the entry, branch targets, and the instruction
+    # after each delay slot.  A transfer takes effect after its delay slot.
+    leaders = {0}
+    for index, instr in enumerate(cand):
+        if instr.isBranch():
+            destination = index + instr.getBranchOffsetGeneric() // 4
+            if not 0 <= destination < words:
+                return False, f'+0x{index * 4:x}: branch leaves function'
+            leaders.add(destination)
+        if instr.isBranch() or instr.isJump():
+            leaders.add(index + 2)
+    starts = sorted(leader for leader in leaders if leader < words)
+    block_of = {}
+    blocks = []
+    for number, start in enumerate(starts):
+        end = starts[number + 1] if number + 1 < len(starts) else words
+        blocks.append((start, end))
+        block_of[start] = number
+    successors = []
+    for start, end in blocks:
+        succ = []
+        transfer = next((i for i in range(start, end)
+                         if cand[i].isBranch() or cand[i].isJump()), None)
+        if transfer is None:
+            if end < words:
+                succ.append(block_of[end])
+        else:
+            instr = cand[transfer]
+            if instr.isBranch():
+                succ.append(block_of[transfer + instr.getBranchOffsetGeneric() // 4])
+                if not instr.isUnconditionalBranch() and end < words:
+                    succ.append(block_of[end])
+            elif instr.isFunctionCall() and end < words:
+                succ.append(block_of[end])
+        successors.append(succ)
+
+    # State: (pairs, dirty_c, dirty_t, conflict).  ``pairs`` maps a candidate
+    # register to the target register holding the same value; ``dirty_*``
+    # hold registers written or clobbered on some path (an unpaired read of
+    # one is rejected); ``conflict`` holds registers whose pairing disagreed
+    # at a join, which must not reach a call argument or return value.
+    # Clobbered-but-unpaired registers are otherwise harmless leftovers.
+    def fixed(pairs: dict, conflict: set, registers: list) -> bool:
+        reverse = {t: c for c, t in pairs.items()}
+        for register in registers:
+            if register in pairs or register in reverse:
+                if pairs.get(register) != register:
+                    return False
+            elif register in conflict:
+                return False
+        return True
+
+    def run_block(number: int, state: tuple) -> tuple[tuple | None, str]:
+        pairs, dirty_c, dirty_t = dict(state[0]), set(state[1]), set(state[2])
+        conflict = set(state[3])
+        start, end = blocks[number]
+        for index in range(start, end):
+            instr = cand[index]
+            reads, writes = operands[index]
+            reverse = {t: c for c, t in pairs.items()}
+            for c_reg, t_reg in reads:
+                if c_reg == ('g', 0) or t_reg == ('g', 0):
+                    if c_reg != t_reg:
+                        return None, f'+0x{index * 4:x}: $zero read differs'
+                    continue
+                if c_reg in pairs:
+                    if pairs[c_reg] != t_reg:
+                        return None, f'+0x{index * 4:x}: register value mismatch'
+                elif (t_reg in reverse or c_reg != t_reg
+                      or c_reg in dirty_c or t_reg in dirty_t):
+                    return None, f'+0x{index * 4:x}: unpaired register read differs'
+            if instr.isFunctionCall():
+                if not fixed(pairs, conflict, _GPR_ARGS + _FPR_ARGS):
+                    return None, f'+0x{index * 4:x}: call arguments in different registers'
+            elif instr.isJrRa():
+                if not fixed(pairs, conflict, _RETURN_REGS + _PRESERVED):
+                    return None, f'+0x{index * 4:x}: return registers differ'
+            elif instr.isJump():  # tail call through j or jr
+                if not fixed(pairs, conflict, _GPR_ARGS + _FPR_ARGS + _PRESERVED):
+                    return None, f'+0x{index * 4:x}: tail-call registers differ'
+            for c_reg, t_reg in writes:
+                if c_reg == ('g', 0) and t_reg == ('g', 0):
+                    continue
+                pairs = {c: t for c, t in pairs.items() if c != c_reg and t != t_reg}
+                pairs[c_reg] = t_reg
+                dirty_c.add(c_reg)
+                dirty_t.add(t_reg)
+                conflict.discard(c_reg)
+                conflict.discard(t_reg)
+        transfer = next((i for i in range(start, end)
+                         if cand[i].isBranch() or cand[i].isJump()), None)
+        if transfer is not None and cand[transfer].isFunctionCall():
+            # The callee clobbers caller-saved registers and returns its
+            # result in the same registers on both sides.
+            pairs = {c: t for c, t in pairs.items()
+                     if c not in _CALLER_SAVED and t not in _CALLER_SAVED}
+            dirty_c |= set(_CALLER_SAVED)
+            dirty_t |= set(_CALLER_SAVED)
+            conflict -= set(_CALLER_SAVED)
+            for register in _RETURN_REGS + [('g', 31)]:  # results; jal's link
+                pairs[register] = register
+        return (pairs, dirty_c, dirty_t, frozenset(conflict)), ''
+
+    in_states: list[tuple | None] = [None] * len(blocks)
+    in_states[0] = ({}, set(), set(), frozenset())
+    work = [0]
+    while work:
+        number = work.pop()
+        out, reason = run_block(number, in_states[number])
+        if out is None:
+            return False, reason
+        for successor in successors[number]:
+            previous = in_states[successor]
+            if previous is None:
+                merged = out
+            else:
+                kept = {c: t for c, t in previous[0].items() if out[0].get(c) == t}
+                dropped = ({r for pair in previous[0].items() for r in pair
+                            if pair[0] not in kept}
+                           | {r for pair in out[0].items() for r in pair
+                              if kept.get(pair[0]) != pair[1]})
+                merged = (kept, previous[1] | out[1], previous[2] | out[2],
+                          frozenset(previous[3] | out[3] | dropped))
+            if merged != previous:
+                in_states[successor] = merged
+                work.append(successor)
+    return True, 'registers differ only by consistent renaming'
+
+
 def compare(entry: dict, verbose: bool = False, source_override: Path | None = None) -> dict:
     sections, target_symbols, main, _, target_names = target_context()
     source = source_override or ROOT / entry['source']
@@ -569,6 +767,16 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
     candidate_offsets = [offset for offset, _ in candidate_lines]
     lines_equal = bool(target_offsets) and candidate_offsets == target_offsets
     status = 'MATCH' if (code_equal and not unresolved and candidate.size == entry['size']) else 'MISMATCH'
+    equivalence = ''
+    if (status == 'MISMATCH' and not unresolved and candidate.size == entry['size']
+            and rabbitizer is not None):
+        # MWCC switch tables are anonymous ``@N`` objects; without any such
+        # relocation a ``jr`` through a register is a tail call.
+        no_tables = not any(r['symbol'].startswith('@') for r in relocations)
+        equivalent, equivalence = register_equivalent(bytes(candidate_bytes), target_bytes,
+                                                      register_jumps_are_tail_calls=no_tables)
+        if equivalent:
+            status = 'EQUIVALENT'
     first_difference = None
     for offset, (got, want) in enumerate(zip(candidate_bytes, target_bytes)):
         if got != want:
@@ -582,7 +790,7 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
         'code_equal': code_equal, 'line_offsets_equal': lines_equal,
         'candidate_lines': candidate_lines, 'target_lines': entry['line_map'],
         'relocations': relocations, 'unresolved_relocations': unresolved,
-        'first_difference': first_difference,
+        'first_difference': first_difference, 'equivalence': equivalence,
         'candidate_hex': bytes(candidate_bytes).hex() if verbose else '',
         'target_hex': target_bytes.hex() if verbose else '',
     }
@@ -633,6 +841,8 @@ def coverage() -> dict:
                     for record in data_records if record.get('status') == 'MATCH']
     return {
         'matched_functions': len([r for r in function_records if r.get('status') == 'MATCH']),
+        'equivalent_functions': len([r for r in function_records
+                                     if r.get('status') == 'EQUIVALENT']),
         'total_functions': len({(s.value, s.size) for s in symbols if s.type == STT_FUNC and s.size
                                 and main.addr <= s.value < main.addr + main.size}),
         'code_bytes_matched': intervals_size(matched_code),
@@ -649,6 +859,8 @@ def print_coverage(result: dict) -> None:
     def pct(value: int, total: int) -> str:
         return f'{(100 * value / total):.4f}%' if total else 'n/a'
     print(f"functions: {result['matched_functions']}/{result['total_functions']}")
+    if result.get('equivalent_functions'):
+        print(f"register-equivalent (not matching): {result['equivalent_functions']}")
     print(f"code bytes: {result['code_bytes_matched']}/{result['code_bytes_total']} "
           f"({pct(result['code_bytes_matched'], result['code_bytes_total'])})")
     print(f"data bytes: {result['data_bytes_matched']}/{result['data_bytes_total']} "
@@ -856,6 +1068,8 @@ def command_check(args: argparse.Namespace) -> int:
               f"build={result['build']}")
         if result['first_difference'] is not None:
             print(f"first difference: +0x{result['first_difference']:x}")
+        if result.get('equivalence'):
+            print(f"register equivalence: {result['equivalence']}")
         if result['unresolved_relocations']:
             print('unresolved relocations: ' + ', '.join(
                 f"+0x{x['offset']:x}/type{x['type']}/{x['symbol'] or '?'}"
@@ -875,6 +1089,22 @@ def command_check(args: argparse.Namespace) -> int:
         }
         save_manifest(manifest)
         print('recorded verified match')
+    if args.record_equivalent and result['status'] == 'EQUIVALENT':
+        manifest = load_manifest()
+        key = f"0x{entry['address']:08x}"
+        existing = manifest.setdefault('functions', {}).get(key, {})
+        if existing.get('status') == 'MATCH':
+            print('not recorded: function is already recorded as MATCH')
+        else:
+            manifest['functions'][key] = {
+                'address': key, 'name': entry['name'], 'size': entry['size'],
+                'source': entry['source'], 'status': 'EQUIVALENT',
+                'compiler_profile': 'mwccps2-3.0-011126-o3',
+            }
+            save_manifest(manifest)
+            print('recorded verified register-equivalent function')
+    elif args.record_equivalent:
+        print(f"not recorded: verifier status is {result['status']}, not EQUIVALENT")
     if args.record_attempt:
         manifest = load_manifest()
         source_path = ROOT / entry['source']
@@ -1212,6 +1442,9 @@ def main() -> int:
     check_parser.add_argument('--diff', action='store_true')
     check_parser.add_argument('--json', action='store_true')
     check_parser.add_argument('--record', action='store_true')
+    check_parser.add_argument('--record-equivalent', action='store_true',
+                              help='record a verifier-confirmed EQUIVALENT '
+                                   '(differs only by consistent register renaming)')
     check_parser.add_argument('--record-attempt', action='store_true',
                               help='record this attempt, including mismatch diagnostics')
     check_parser.add_argument('--model', help='model that attempted the function')

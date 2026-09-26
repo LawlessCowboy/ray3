@@ -219,7 +219,7 @@ int GEO_lCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* 
  */
 void GEO_vSetElementVisibleInPortalFlag(GEO_tdstGeometricObject_* hObject, short hElement, unsigned char bVisible)
 {
-    /* TODO: decompile from asm/... */
+    hObject->d_stListOfElements[hElement]->bVisibleInPortal = bVisible;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 351–352 */

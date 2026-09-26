@@ -1301,7 +1301,7 @@ int PS2glAllocator64;
  */
 void PS2glSwapBufferNotifyFunc(void (*Func)(void))
 {
-    /* TODO: decompile from asm/... */
+    SwapBufferNotifyFunc = (int)Func;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1492–1548 */
@@ -2890,5 +2890,5 @@ void PS2glClearBuffers(void)
  */
 void PS2GL_SetProgressiveScanMode(int bOnOff)
 {
-    /* TODO: decompile from asm/... */
+    PS2GL_g_bProgressiveScan = bOnOff;
 }

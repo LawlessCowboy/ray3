@@ -423,7 +423,7 @@ struct tagPS2glApiTable {
 };
 
 tagPS2glApiTable g_PS2glApiTableImp;
-int g_pPS2glApiTable;
+tagPS2glApiTable* g_pPS2glApiTable;
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6162–6164 */
 /* addr: 0x0013b940  size: 16 bytes */
@@ -1218,9 +1218,9 @@ void PS2glTexCoord4iv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord4fv(void)
+void PS2glTexCoord4fv(float* v)
 {
-    /* TODO: decompile from asm/... */
+    g_pPS2glApiTable->pfn_PS2glTexCoord4fv(v);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4440–4442 */

@@ -3688,13 +3688,14 @@ unsigned char fn_ucGetDsgVarList(void* pMyVarAddr, unsigned char ucIndex, tdstGe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarText(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarText(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
-    int hText;
-    hText = *(int*)pMyVarAddr;
+    int eType = E_vt_Text;
+    int hText = *(int*)pMyVarAddr;
     p_stGetSetParam->uDummy.uParam.hText = hText;
-    p_stGetSetParam->eType = E_vt_Text;
-    return 1;
+    p_stGetSetParam->eType = eType;
+    hText = ~hText;
+    return (unsigned char)(((unsigned int)hText < 1u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 691–697 */
@@ -3709,13 +3710,15 @@ unsigned char fn_ucGetDsgVarText(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarComport(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarComport(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstComport_* p_stComport;
+    int eType;
     p_stComport = *(tdstComport_**)pMyVarAddr;
+    eType = E_vt_Comport;
     p_stGetSetParam->uDummy.uParam.pComport = p_stComport;
-    p_stGetSetParam->eType = E_vt_Comport;
-    return 1;
+    p_stGetSetParam->eType = eType;
+    return (unsigned char)(((unsigned int)p_stComport < 1u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 680–686 */
@@ -3730,13 +3733,15 @@ unsigned char fn_ucGetDsgVarComport(void* pMyVarAddr, tdstGetSetParam_* p_stGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarAction(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarAction(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstState_* hAction;
+    int eType;
     hAction = *(tdstState_**)pMyVarAddr;
+    eType = E_vt_Action;
     p_stGetSetParam->uDummy.uParam.tdxstHandleToState = hAction;
-    p_stGetSetParam->eType = E_vt_Action;
-    return 1;
+    p_stGetSetParam->eType = eType;
+    return (unsigned char)(((unsigned int)hAction < 1u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 672–675 */
@@ -3823,10 +3828,15 @@ unsigned char fn_ucGetDsgVarVector(void* pMyVarAddr, tdstGetSetParam_* p_stGetSe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarSOLinks(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarSOLinks(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     tdstSuperObjectLinks_* hSOL;
-    /* TODO: decompile from asm/... */
+    int eType;
+    hSOL = *(tdstSuperObjectLinks_**)pMyVarAddr;
+    eType = E_vt_SOLinks;
+    p_stGetSetParam->uDummy.uParam.hSOLinks = hSOL;
+    p_stGetSetParam->eType = eType;
+    return (unsigned char)(((unsigned int)hSOL < 1u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 617–623 */
@@ -3841,10 +3851,15 @@ unsigned char fn_ucGetDsgVarSOLinks(void* pMyVarAddr, tdstGetSetParam_* p_stGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarSuperObject(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarSuperObject(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     HIE_tdstSuperObject_* hSuperObject;
-    /* TODO: decompile from asm/... */
+    int eType;
+    hSuperObject = *(HIE_tdstSuperObject_**)pMyVarAddr;
+    eType = E_vt_SuperObject;
+    p_stGetSetParam->uDummy.uParam.hSuperObject = hSuperObject;
+    p_stGetSetParam->eType = eType;
+    return (unsigned char)(((unsigned int)hSuperObject < 1u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 605–611 */
@@ -3859,10 +3874,15 @@ unsigned char fn_ucGetDsgVarSuperObject(void* pMyVarAddr, tdstGetSetParam_* p_st
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarLight(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarLight(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     GLI_tdstLight_* hEntryElement;
-    /* TODO: decompile from asm/... */
+    int eType;
+    hEntryElement = *(GLI_tdstLight_**)pMyVarAddr;
+    eType = E_vt_Light;
+    p_stGetSetParam->uDummy.uParam.p_stLight = hEntryElement;
+    p_stGetSetParam->eType = eType;
+    return (unsigned char)(((unsigned int)hEntryElement < 1u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 594–600 */
@@ -3877,10 +3897,15 @@ unsigned char fn_ucGetDsgVarLight(void* pMyVarAddr, tdstGetSetParam_* p_stGetSet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarSoundEvent(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarSoundEvent(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     _SND_tdstBlockEvent* hEntryElement;
-    /* TODO: decompile from asm/... */
+    int eType;
+    hEntryElement = *(_SND_tdstBlockEvent**)pMyVarAddr;
+    eType = E_vt_SoundEvent;
+    p_stGetSetParam->uDummy.uParam.pSoundEvent = hEntryElement;
+    p_stGetSetParam->eType = eType;
+    return (unsigned char)(((unsigned int)hEntryElement < 1u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 583–589 */
@@ -3895,13 +3920,15 @@ unsigned char fn_ucGetDsgVarSoundEvent(void* pMyVarAddr, tdstGetSetParam_* p_stG
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarInput(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarInput(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
     IPT_tdstEntryElement_* hEntryElement;
+    int eType;
     hEntryElement = *(IPT_tdstEntryElement_**)pMyVarAddr;
+    eType = E_vt_Button;
     *(IPT_tdstEntryElement_**)p_stGetSetParam = hEntryElement;
-    *((tdeVariableType_*)((char*)p_stGetSetParam + 12)) = E_vt_Button;
-    return !((unsigned int)hEntryElement);
+    *((tdeVariableType_*)((char*)p_stGetSetParam + 12)) = eType;
+    return (unsigned char)(((unsigned int)hEntryElement < 1u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 572–578 */

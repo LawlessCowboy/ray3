@@ -1317,6 +1317,8 @@ tag_stDoubleBufAdd g_stDoubleBufAdd;
 int PS2glLiberator;
 int PS2glAllocator;
 
+void impPS2glAccum(unsigned int op, float value);
+
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 507–507 */
 /* addr: 0x00161b20  size: 12 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1326,7 +1328,7 @@ int PS2glAllocator;
  */
 void plyPS2glAccum(anon_29* param0)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glAccum(*(unsigned int*)param0, *(float*)((unsigned char*)param0 + 4));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1897–1904 */
@@ -2345,7 +2347,7 @@ void internalReadFastRgbaPixels(int x, int y, int width, int height, unsigned in
  */
 void impPS2glReadBuffer(unsigned int mode)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.eBlendSrcFactor = mode;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1060–1069 */

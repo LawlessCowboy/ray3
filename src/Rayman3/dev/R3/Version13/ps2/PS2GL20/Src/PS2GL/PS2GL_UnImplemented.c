@@ -91,7 +91,7 @@ void impPS2glSelectBuffer(void)
  */
 int impPS2glRenderMode(void)
 {
-    /* TODO: decompile from asm/... */
+    return 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_UnImplemented.c lines 283–283 */

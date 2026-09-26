@@ -467,7 +467,7 @@ char GLI_cGlobalFogIsOn;
  */
 void SCT_fn_vInitMaterialForGoThrough(void)
 {
-    /* TODO: decompile from asm/... */
+    g_bMirrorOnly = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 952–964 */

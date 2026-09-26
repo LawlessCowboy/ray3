@@ -380,7 +380,7 @@ void PLD_szLvlKeyFramesName(char* szName)
  */
 void PLD_szFixKeyFramesName(void)
 {
-    strcpy(PLD_g_szAreaFileName, "FixKeyFrames");
+    strcpy(PLD_g_szAreaFileName, "FixKf");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 287–291 */
@@ -464,5 +464,5 @@ void PLD_szLevelName(char* szName)
  */
 void PLD_szFixName(void)
 {
-    strcpy(PLD_g_szAreaFileName, "Fix");
+    strcpy(PLD_g_szAreaFileName, "fix");
 }

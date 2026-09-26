@@ -9,7 +9,6 @@ typedef struct _stTimerCount _stTimerCount;
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -99,9 +98,12 @@ void fn_vTimerWait(unsigned int ulTicksToWait)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vTimerGetCounter(_stTimerCount* p_stValue)
+void fn_vTimerGetCounter(void* unused, _stTimerCount* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int count;
+    __asm__ volatile("mfc0 %0, $9" : "=r"(count));
+    p_stValue->m_ulLowPart = count;
+    p_stValue->m_ulHighPart = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\specif\TimerPrv.c lines 89–89 */

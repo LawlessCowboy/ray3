@@ -1493,7 +1493,7 @@ void MEC_fn_vComputeStream(MTH3D_tdstVector_* p_stStream, DNM_stDynamics* p_stDy
  */
 void MEC_fn_vSetInitialFrameTranslation(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector)
 {
-    /* TODO: decompile from asm/... */
+    MAT_fn_vTranslate((MAT_tdstTransformation_*)((unsigned char*)p_stDynamic + 0xE0), p_stVector);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1283–1289 */
@@ -1875,7 +1875,7 @@ void MEC_fn_vAdjustScaleVector(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p
  */
 void MEC_fn_vTranslateMatrixOff(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stMatrixTranslation)
 {
-    /* TODO: decompile from asm/... */
+    MAT_fn_vTranslate((MAT_tdstTransformation_*)((unsigned char*)p_stDynamic + 0xE0), p_stMatrixTranslation);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 759–780 */

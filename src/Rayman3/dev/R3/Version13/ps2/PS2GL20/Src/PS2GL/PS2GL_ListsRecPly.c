@@ -2620,6 +2620,61 @@ void plyPS2glLightModeliv(anon_105*);
 void plyPS2glLightModelf(anon_6*);
 void plyPS2glLightModelfv(anon_47*);
 void impPS2glInitNames(void);
+void impPS2glStencilMask(unsigned int);
+void impPS2glShadeModel(unsigned int);
+void impPS2glReadBuffer(unsigned int);
+void impPS2glPushName(unsigned int);
+void impPS2glPushClientAttrib(unsigned int);
+void impPS2glPushAttrib(unsigned int);
+void impPS2glPolygonStipple(void*);
+void impPS2glPointSize(float);
+void impPS2glPassThrough(float);
+void impPS2glMultMatrixf(void*);
+void impPS2glMultMatrixd(void*);
+void impPS2glMatrixMode(unsigned int);
+void impPS2glLogicOp(unsigned int);
+void impPS2glLoadName(unsigned int);
+void impPS2glLoadMatrixf(void*);
+void impPS2glLoadMatrixd(void*);
+void impPS2glListBase(unsigned int);
+void impPS2glLineWidth(float);
+void impPS2glIndexubv(void*);
+void impPS2glIndexub(unsigned char);
+void impPS2glIndexsv(void*);
+void impPS2glIndexs(short);
+void impPS2glIndexiv(void*);
+void impPS2glIndexi(int);
+void impPS2glIndexfv(void*);
+void impPS2glIndexf(float);
+void impPS2glIndexMask(unsigned int);
+void impPS2glFrontFace(unsigned int);
+void impPS2glEvalPoint1(int);
+void impPS2glEvalCoord1fv(void*);
+void impPS2glEvalCoord1f(float);
+void impPS2glEnableClientState(unsigned int);
+void impPS2glEnable(unsigned int);
+void impPS2glEdgeFlagv(void*);
+void impPS2glEdgeFlag(unsigned char);
+void impPS2glDrawBuffer(unsigned int);
+void impPS2glDisableClientState(unsigned int);
+void impPS2glDisable(unsigned int);
+void impPS2glDepthMask(unsigned char);
+void impPS2glDepthFunc(unsigned int);
+void impPS2glCullFace(unsigned int);
+void impPS2glClearStencil(int);
+void impPS2glClearIndex(float);
+void impPS2glClearDepth(double);
+void impPS2glClear(unsigned int);
+void impPS2glCallList(unsigned int);
+void impPS2glArrayElement(int);
+void impPS2glClientActiveTextureARB(unsigned int);
+void impPS2glActiveTextureARB(unsigned int);
+void impPS2glRasterPos2s(short, short);
+void impPS2glRasterPos2i(int, int);
+void impPS2glRasterPos2f(float, float);
+void impPS2glPolygonOffset(float, float);
+void impPS2glPolygonMode(unsigned int, unsigned int);
+void impPS2glPixelZoom(float, float);
 void plyPS2glIndexubv(anon_130*);
 void plyPS2glIndexub(anon_135*);
 void plyPS2glIndexsv(anon_137*);
@@ -5164,7 +5219,7 @@ void recPS2glStencilMask(unsigned int mask)
  */
 void plyPS2glStencilMask(anon_21* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glStencilMask(pParam->mask);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4666–4673 */
@@ -5228,7 +5283,7 @@ void recPS2glShadeModel(unsigned int mode)
  */
 void plyPS2glShadeModel(anon_162* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glShadeModel(pParam->mode);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4621–4629 */
@@ -5571,7 +5626,7 @@ void recPS2glReadBuffer(unsigned int mode)
  */
 void plyPS2glReadBuffer(anon_25* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glReadBuffer(pParam->mode);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4404–4406 */
@@ -5968,7 +6023,7 @@ void recPS2glRasterPos2s(short x, short y)
  */
 void plyPS2glRasterPos2s(anon_45* param0)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glRasterPos2s(param0->x, param0->y);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4155–4157 */
@@ -6014,7 +6069,7 @@ void recPS2glRasterPos2i(int x, int y)
  */
 void plyPS2glRasterPos2i(anon_62* param0)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glRasterPos2i(param0->x, param0->y);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4126–4128 */
@@ -6062,7 +6117,7 @@ void recPS2glRasterPos2f(float x, float y)
  */
 void plyPS2glRasterPos2f(anon_13* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glRasterPos2f(pParam->x, pParam->y);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4097–4099 */
@@ -6120,7 +6175,7 @@ void recPS2glPushName(unsigned int name)
  */
 void plyPS2glPushName(anon_85* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glPushName(pParam->name);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4062–4065 */
@@ -6166,7 +6221,7 @@ void recPS2glPushClientAttrib(unsigned int mask)
  */
 void plyPS2glPushClientAttrib(anon_189* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glPushClientAttrib(pParam->mask);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4032–4037 */
@@ -6196,7 +6251,7 @@ void recPS2glPushAttrib(unsigned int mask)
  */
 void plyPS2glPushAttrib(anon_1* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glPushAttrib(pParam->mask);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4010–4017 */
@@ -6327,7 +6382,7 @@ void recPS2glPolygonStipple(unsigned char* mask)
  */
 void plyPS2glPolygonStipple(anon_184* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glPolygonStipple((void*)(pParam->mask));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3935–3941 */
@@ -6361,7 +6416,7 @@ void recPS2glPolygonOffset(float factor, float units)
  */
 void plyPS2glPolygonOffset(anon_92* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glPolygonOffset(pParam->factor, pParam->units);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3913–3919 */
@@ -6393,7 +6448,7 @@ void recPS2glPolygonMode(unsigned int face, unsigned int mode)
  */
 void plyPS2glPolygonMode(anon_50* param0)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glPolygonMode(param0->face, param0->mode);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3892–3897 */
@@ -6425,7 +6480,7 @@ void recPS2glPointSize(float size)
  */
 void plyPS2glPointSize(anon_124* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glPointSize(pParam->size);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3871–3877 */
@@ -6459,7 +6514,7 @@ void recPS2glPixelZoom(float xfactor, float yfactor)
  */
 void plyPS2glPixelZoom(anon_0* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glPixelZoom(pParam->xfactor, pParam->yfactor);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3849–3855 */
@@ -6666,7 +6721,7 @@ void recPS2glPassThrough(float token)
  */
 void plyPS2glPassThrough(anon_110* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glPassThrough(pParam->token);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3703–3719 */
@@ -6943,7 +6998,7 @@ void recPS2glMultMatrixf(float* m)
  */
 void plyPS2glMultMatrixf(anon_117* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glMultMatrixf((void*)(pParam->m));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3556–3561 */
@@ -6974,7 +7029,7 @@ void recPS2glMultMatrixd(double* m)
  */
 void plyPS2glMultMatrixd(anon_107* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glMultMatrixd((void*)(pParam->m));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3536–3541 */
@@ -7004,7 +7059,7 @@ void recPS2glMatrixMode(unsigned int mode)
  */
 void plyPS2glMatrixMode(anon_108* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glMatrixMode(pParam->mode);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3507–3521 */
@@ -7464,7 +7519,7 @@ void recPS2glLogicOp(unsigned int opcode)
  */
 void plyPS2glLogicOp(anon_174* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glLogicOp(pParam->opcode);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3170–3175 */
@@ -7494,7 +7549,7 @@ void recPS2glLoadName(unsigned int name)
  */
 void plyPS2glLoadName(anon_177* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glLoadName(pParam->name);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3150–3155 */
@@ -7525,7 +7580,7 @@ void recPS2glLoadMatrixf(float* m)
  */
 void plyPS2glLoadMatrixf(anon_168* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glLoadMatrixf((void*)(pParam->m));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3130–3135 */
@@ -7556,7 +7611,7 @@ void recPS2glLoadMatrixd(double* m)
  */
 void plyPS2glLoadMatrixd(anon_160* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glLoadMatrixd((void*)(pParam->m));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3112–3115 */
@@ -7602,7 +7657,7 @@ void recPS2glListBase(unsigned int base)
  */
 void plyPS2glListBase(anon_86* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glListBase(pParam->base);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3082–3087 */
@@ -7634,7 +7689,7 @@ void recPS2glLineWidth(float width)
  */
 void plyPS2glLineWidth(anon_87* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glLineWidth(pParam->width);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3061–3067 */
@@ -7996,7 +8051,7 @@ void recPS2glIndexubv(unsigned char* c)
  */
 void plyPS2glIndexubv(anon_130* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glIndexubv((void*)(pParam->c));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2788–2793 */
@@ -8026,7 +8081,7 @@ void recPS2glIndexub(unsigned char c)
  */
 void plyPS2glIndexub(anon_135* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glIndexub(pParam->c);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2768–2773 */
@@ -8056,7 +8111,7 @@ void recPS2glIndexsv(short* c)
  */
 void plyPS2glIndexsv(anon_137* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glIndexsv((void*)(pParam->c));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2748–2753 */
@@ -8086,7 +8141,7 @@ void recPS2glIndexs(short c)
  */
 void plyPS2glIndexs(anon_140* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glIndexs(pParam->c);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2728–2733 */
@@ -8116,7 +8171,7 @@ void recPS2glIndexiv(int* c)
  */
 void plyPS2glIndexiv(anon_141* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glIndexiv((void*)(pParam->c));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2708–2713 */
@@ -8146,7 +8201,7 @@ void recPS2glIndexi(int c)
  */
 void plyPS2glIndexi(anon_146* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glIndexi(pParam->c);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2688–2693 */
@@ -8176,7 +8231,7 @@ void recPS2glIndexfv(float* c)
  */
 void plyPS2glIndexfv(anon_148* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glIndexfv((void*)(pParam->c));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2668–2673 */
@@ -8208,7 +8263,7 @@ void recPS2glIndexf(float c)
  */
 void plyPS2glIndexf(anon_152* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glIndexf(pParam->c);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2651–2653 */
@@ -8266,7 +8321,7 @@ void recPS2glIndexMask(unsigned int mask)
  */
 void plyPS2glIndexMask(anon_36* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glIndexMask(pParam->mask);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2613–2619 */
@@ -8369,7 +8424,7 @@ void recPS2glFrontFace(unsigned int mode)
  */
 void plyPS2glFrontFace(anon_163* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glFrontFace(pParam->mode);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2530–2541 */
@@ -8575,7 +8630,7 @@ void recPS2glEvalPoint1(int i)
  */
 void plyPS2glEvalPoint1(anon_73* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glEvalPoint1(pParam->i);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2392–2401 */
@@ -8751,7 +8806,7 @@ void recPS2glEvalCoord1fv(float* u)
  */
 void plyPS2glEvalCoord1fv(anon_183* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glEvalCoord1fv((void*)(pParam->u));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2281–2286 */
@@ -8783,7 +8838,7 @@ void recPS2glEvalCoord1f(float u)
  */
 void plyPS2glEvalCoord1f(anon_186* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glEvalCoord1f(pParam->u);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2264–2266 */
@@ -8875,7 +8930,7 @@ void recPS2glEnableClientState(unsigned int array)
  */
 void plyPS2glEnableClientState(anon_156* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glEnableClientState(pParam->array);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2180–2185 */
@@ -8905,7 +8960,7 @@ void recPS2glEnable(unsigned int cap)
  */
 void plyPS2glEnable(anon_159* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glEnable(pParam->cap);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2160–2165 */
@@ -8935,7 +8990,7 @@ void recPS2glEdgeFlagv(unsigned char* flag)
  */
 void plyPS2glEdgeFlagv(anon_161* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glEdgeFlagv((void*)(pParam->flag));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2140–2145 */
@@ -8965,7 +9020,7 @@ void recPS2glEdgeFlag(unsigned char flag)
  */
 void plyPS2glEdgeFlag(anon_164* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glEdgeFlag(pParam->flag);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2116–2125 */
@@ -9068,7 +9123,7 @@ void recPS2glDrawBuffer(unsigned int mode)
  */
 void plyPS2glDrawBuffer(anon_84* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glDrawBuffer(pParam->mode);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2025–2059 */
@@ -9192,7 +9247,7 @@ void recPS2glDisableClientState(unsigned int array)
  */
 void plyPS2glDisableClientState(anon_171* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glDisableClientState(pParam->array);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1937–1942 */
@@ -9222,7 +9277,7 @@ void recPS2glDisable(unsigned int cap)
  */
 void plyPS2glDisable(anon_172* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glDisable(pParam->cap);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1916–1922 */
@@ -9284,7 +9339,7 @@ void recPS2glDepthMask(unsigned char flag)
  */
 void plyPS2glDepthMask(anon_144* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glDepthMask(pParam->flag);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1875–1880 */
@@ -9314,7 +9369,7 @@ void recPS2glDepthFunc(unsigned int func)
  */
 void plyPS2glDepthFunc(anon_147* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glDepthFunc(pParam->func);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1855–1860 */
@@ -9344,7 +9399,7 @@ void recPS2glCullFace(unsigned int mode)
  */
 void plyPS2glCullFace(anon_151* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glCullFace(pParam->mode);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1828–1840 */
@@ -10661,7 +10716,7 @@ void recPS2glClearStencil(int s)
  */
 void plyPS2glClearStencil(anon_93* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glClearStencil(pParam->s);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1140–1145 */
@@ -10693,7 +10748,7 @@ void recPS2glClearIndex(float c)
  */
 void plyPS2glClearIndex(anon_96* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glClearIndex(pParam->c);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1120–1125 */
@@ -10723,7 +10778,7 @@ void recPS2glClearDepth(double depth)
  */
 void plyPS2glClearDepth(anon_98* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glClearDepth(pParam->depth);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1097–1105 */
@@ -10827,7 +10882,7 @@ void recPS2glClear(unsigned int mask)
  */
 void plyPS2glClear(anon_81* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glClear(pParam->mask);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1026–1033 */
@@ -10892,7 +10947,7 @@ void recPS2glCallList(unsigned int list)
  */
 void plyPS2glCallList(anon_170* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glCallList(pParam->list);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 983–989 */
@@ -11232,7 +11287,7 @@ void recPS2glArrayElement(int i)
  */
 void plyPS2glArrayElement(anon_166* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glArrayElement(pParam->i);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 573–579 */
@@ -11294,7 +11349,7 @@ void recPS2glClientActiveTextureARB(unsigned int texture)
  */
 void plyPS2glClientActiveTextureARB(anon_138* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glClientActiveTextureARB(pParam->texture);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 535–540 */
@@ -11324,7 +11379,7 @@ void recPS2glActiveTextureARB(unsigned int texture)
  */
 void plyPS2glActiveTextureARB(anon_138* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glActiveTextureARB(pParam->texture);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 511–517 */

@@ -1668,7 +1668,7 @@ void fn_vSetEngineInPaused(void)
  */
 unsigned char fn_bIsEngineInPause(void)
 {
-    return *(unsigned char *)0x53f004;
+    return *(unsigned char *)0x538a04;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1292–1429 */
@@ -1697,7 +1697,7 @@ void GAM_fn_vTreatExeParameters(void)
  */
 unsigned char GAM_fn_vGetLoadingLevel(unsigned int _uiLevelTag)
 {
-    /* TODO: decompile from asm/... */
+    return (GAM_g_uwLoadingLevel & _uiLevelTag) != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1264–1279 */
@@ -1854,7 +1854,7 @@ unsigned char GAM_fn_bIsEngineInLevelMode(void)
  */
 unsigned char GAM_fn_bIsEngineInFixMode(void)
 {
-    return GAM_gs_tdeLoadingMode ? 0 : 1;
+    return GAM_gs_tdeLoadingMode == GAM_eFixLoading ? 1 : 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1089–1089 */
@@ -2084,10 +2084,10 @@ void fn_vSetDisplayFlag(unsigned int ulFlag, unsigned char ucValue)
  */
 unsigned char fn_bIsNextLevelNameValid(void)
 {
-    unsigned char bIsValid;
+    char cValue;
 
-    bIsValid = (*(char *)0x53831f == 0) ^ 1;
-    return bIsValid;
+    cValue = g_stEngineStructure.szNextLevelName[0];
+    return !!cValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 599–600 */
@@ -2113,7 +2113,7 @@ void fn_vFreeNextLevelName(void)
  */
 char* fn_p_szGetNextLevelName(void)
 {
-    return (char *)((char *)0x54000000 - 0x7ce1);
+    return g_stEngineStructure.szNextLevelName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 584–585 */
@@ -2193,7 +2193,7 @@ void fn_vSetLevelName(char* _szName)
  */
 char* fn_p_szGetFirstLevelName(void)
 {
-    return (char *)((char *)0x54000000 - 0x7cc3);
+    return g_stEngineStructure.szFirstLevelName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 508–508 */

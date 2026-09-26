@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+typedef struct { float f[4]; } __attribute__((aligned(16))) quad;
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct tagGLtexblock tagGLtexblock;
 typedef struct _sceDmaTag _sceDmaTag;
@@ -1647,9 +1649,9 @@ void impPS2glClipPlane(unsigned int plane, double* equation)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void impPS2glMultiTexCoord4fvARB(float* v)
+void impPS2glMultiTexCoord4fvARB(unsigned int texture, float* v)
 {
-    /* TODO: decompile from asm/... */
+    *(volatile quad*)(*(volatile int*)(0x0038caf4)) = *(volatile quad*)v;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1774–1776 */
@@ -2106,7 +2108,7 @@ void impPS2glMultiTexCoord1sARB(unsigned int texture, short s)
  */
 void impPS2glTexCoord4fv(float* v)
 {
-    /* TODO: decompile from asm/... */
+    *(volatile quad*)(*(volatile int*)(0x0038caf4)) = *(volatile quad*)v;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1599–1601 */
@@ -2270,7 +2272,9 @@ void impPS2glTexCoord3sv(short* v)
  */
 void impPS2glTexCoord3f(float s, float t, float r)
 {
-    /* TODO: decompile from asm/... */
+    *(volatile float *)(0x0038cad0) = s;
+    *(volatile float *)(0x0038cad4) = t;
+    *(volatile float *)(0x0038cad8) = r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1501–1503 */
@@ -2323,7 +2327,10 @@ void impPS2glTexCoord3s(short s, short t, short r)
  */
 void impPS2glTexCoord2fv(float* v)
 {
-    /* TODO: decompile from asm/... */
+    float v1 = v[1];
+    float v0 = v[0];
+    *(volatile float *)(0x0038cad0) = v0;
+    *(volatile float *)(0x0038cad4) = v1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1480–1482 */
@@ -2377,7 +2384,8 @@ void impPS2glTexCoord2sv(short* v)
  */
 void impPS2glTexCoord2f(float s, float t)
 {
-    /* TODO: decompile from asm/... */
+    *(volatile float *)(0x0038cad0) = s;
+    *(volatile float *)(0x0038cad4) = t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1448–1450 */
@@ -2430,7 +2438,8 @@ void impPS2glTexCoord2s(short s, short t)
  */
 void impPS2glTexCoord1fv(float* v)
 {
-    /* TODO: decompile from asm/... */
+    *(volatile float *)(0x0038cad0) = v[0];
+    *(volatile int *)(0x0038cad4) = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1427–1429 */
@@ -2484,7 +2493,8 @@ void impPS2glTexCoord1sv(short* v)
  */
 void impPS2glTexCoord1f(float s)
 {
-    /* TODO: decompile from asm/... */
+    *(volatile float *)(0x0038cad0) = s;
+    *(volatile int *)(0x0038cad4) = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1395–1397 */

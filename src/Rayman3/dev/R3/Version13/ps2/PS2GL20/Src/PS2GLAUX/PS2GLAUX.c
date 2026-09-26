@@ -1472,7 +1472,7 @@ void PS2auxInitDisplayMode(unsigned int eMode)
  */
 void PS2auxSwapBuffers(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2glSwapBuffers();
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 240–257 */

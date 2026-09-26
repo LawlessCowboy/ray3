@@ -2114,7 +2114,7 @@ void impPS2glClear(unsigned int mask)
  */
 void impPS2glClearStencil(int s)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.bPointLighting = s;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 384–388 */
@@ -2127,7 +2127,7 @@ void impPS2glClearStencil(int s)
  */
 void impPS2glClearIndex(float c)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vScissorBox[1] = c;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 373–379 */
@@ -2304,7 +2304,7 @@ void impPS2glScissor(int x, int y, int width, int height)
  */
 void impPS2glPointSize(float size)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.fPointSize = size;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 279–281 */
@@ -2317,7 +2317,7 @@ void impPS2glPointSize(float size)
  */
 void impPS2glLogicOp(unsigned int opcode)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.nTextureEnableBits = opcode;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 269–274 */
