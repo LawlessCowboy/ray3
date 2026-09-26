@@ -25,6 +25,8 @@
 /src/dev/
 /src/sourcesV39/
 /src/ø£
+# extract_debug.py run without --strip-prefix nests a duplicate Disk_01 here.
+/src/Rayman3/Rayman3/
 
 # Local tooling state and Python products.
 /.agents/

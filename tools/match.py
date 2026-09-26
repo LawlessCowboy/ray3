@@ -260,12 +260,14 @@ def source_index(target_symbols: list[Symbol], main: Section) -> list[dict]:
                for symbol in target_symbols if symbol.type == STT_FUNC}
     entries_by_address: dict[int, dict] = {}
     for path in SRC_ROOT.rglob('*'):
-        # Extraction experiments left nested and development trees beside the
-        # canonical source root.  They can contain the same address comments;
-        # indexing them first silently redirects manifest entries to stale
-        # files.  Only the shipped Disk_01 tree is valid for matching.
+        # An extraction run without --strip-prefix left a nested duplicate of
+        # Disk_01 at src/Rayman3/Rayman3/.  It repeats the same address
+        # comments; indexing it first silently redirects manifest entries to
+        # stale files.  src/Rayman3/dev/ is canonical: PS2GL's debug source
+        # paths are D:\dev\R3\Version13\ps2\PS2GL20\... and none of its
+        # functions exist under Disk_01.
         relative = path.relative_to(ROOT).as_posix()
-        if '/Rayman3/Rayman3/' in relative or relative.startswith('src/Rayman3/dev/'):
+        if '/Rayman3/Rayman3/' in relative:
             continue
         if path.suffix.lower() not in {'.c', '.cpp', '.cxx', '.h', '.hpp', '.hxx'}:
             continue

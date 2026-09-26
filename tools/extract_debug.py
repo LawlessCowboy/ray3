@@ -150,6 +150,7 @@ class VarInfo:
     bit_offset: Optional[int] = None
     bit_width: Optional[int] = None
     address: int = 0         # linked address for file-level globals
+    is_function: bool = False  # global list entry is a function declaration
 
 
 @dataclass
@@ -168,6 +169,7 @@ class FuncInfo:
     language: str = 'C'
     compiler: str = ''
     signature_trusted: bool = True
+    signature_completed: bool = False  # params filled from a declaration record
 
 
 @dataclass
@@ -1162,6 +1164,15 @@ class DebugParser:
                     var.type_str = self._type_names.get(
                         type_ref, self._type_reprs.get(type_ref, UNKNOWN_AGGREGATE_TYPE)
                     )
+                    # A global whose record refers directly to a subroutine
+                    # type is a declared function, not a function-pointer
+                    # object: every such entry in the retail ELF names a
+                    # .symtab function (usually at that function's address)
+                    # and none names a data object.  Emitting it as
+                    # ``R (*name)(P)`` conflicts with a same-TU definition.
+                    var.is_function = (
+                        self._type_tags.get(type_ref) == DW_TAG_SUBROUTINE_TYPE
+                        and var.type_str.endswith(')') and '(*)(' in var.type_str)
                 self._cur_file.globals_.append(var)
             for type_pos, next_pos, kind, tag, name_pos in type_records:
                 name = self._type_names.get(type_pos)
@@ -1460,6 +1471,104 @@ def format_declaration(type_str: str, name: str) -> str:
     return f'{type_str} {name}'
 
 
+def format_function_declaration(return_type: str, declarator: str) -> str:
+    """Place ``name(params)`` inside a pointer-to-array/function return type.
+
+    ``float (*)[4]`` returning ``f(void)`` must be spelled
+    ``float (*f(void))[4]``; ``float (*)[4] f(void)`` is not valid C.
+    """
+    if '(*)' in return_type:
+        return return_type.replace('(*)', f'(*{declarator})', 1)
+    return f'{return_type} {declarator}'
+
+
+def split_function_type(type_str: str) -> tuple[str, str]:
+    """Split a recovered ``R (*)(P)`` spelling into ``R`` and ``P``."""
+    depth = 0
+    for index in range(len(type_str) - 1, -1, -1):
+        if type_str[index] == ')':
+            depth += 1
+        elif type_str[index] == '(':
+            depth -= 1
+            if depth == 0:
+                break
+    marker = type_str.rfind('(*)', 0, index + 1)
+    if marker < 0 or type_str[marker + 3:index].strip():
+        raise ValueError(f'not a function type: {type_str!r}')
+    return type_str[:marker].rstrip(), type_str[index + 1:-1]
+
+
+def format_global_declaration(global_: VarInfo, name: str) -> str:
+    storage = 'static ' if global_.role == 'static' else ''
+    if global_.is_function:
+        return_type, params = split_function_type(global_.type_str)
+        return f'{storage}{format_function_declaration(return_type, f"{name}({params})")};'
+    return f'{storage}{format_declaration(global_.type_str, name)};'
+
+
+def split_parameter_types(params: str) -> list[str]:
+    """Split a recovered parameter list at top-level commas."""
+    if params.strip() in ('', 'void'):
+        return []
+    parts, depth, start = [], 0, 0
+    for index, char in enumerate(params):
+        if char in '([':
+            depth += 1
+        elif char in ')]':
+            depth -= 1
+        elif char == ',' and depth == 0:
+            parts.append(params[start:index].strip())
+            start = index + 1
+    parts.append(params[start:].strip())
+    return parts
+
+
+def complete_signatures_from_declarations(file_info: FileInfo) -> int:
+    """Restore parameters that a definition's debug record omitted.
+
+    MWCC omits unreferenced parameters from a definition's debug record, but
+    a same-TU declaration record keeps the full prototype.  For example the
+    target AGO2_CreateCylinder reads its part pointer from a1 and floats from
+    f12/f13: its definition records (AGO2_Part_*, float, float), while the
+    declaration records the complete 16-parameter callback prototype.  Only
+    complete a definition whose recovered parameter types are an in-order
+    subsequence of the declaration; keep the recovered names where they fit.
+    """
+    declarations = {global_.name: global_ for global_ in file_info.globals_
+                    if global_.is_function}
+    completed = 0
+    for func in file_info.functions:
+        declaration = declarations.get(func.name)
+        if declaration is None:
+            continue
+        try:
+            return_type, params = split_function_type(declaration.type_str)
+        except ValueError:
+            continue
+        declared = split_parameter_types(params)
+        if ([param.type_str for param in func.params] == declared
+                and func.return_type == return_type):
+            continue
+        rebuilt, next_param = [], 0
+        for declared_type in declared:
+            if (next_param < len(func.params)
+                    and func.params[next_param].type_str == declared_type):
+                rebuilt.append(func.params[next_param])
+                next_param += 1
+            else:
+                rebuilt.append(VarInfo(name='', type_str=declared_type, role='param'))
+        if next_param != len(func.params):
+            continue
+        # An omitted return record leaves the parser's ``void`` default.
+        if func.return_type != return_type and func.return_type != 'void':
+            continue
+        func.return_type = return_type
+        func.params = rebuilt
+        func.signature_completed = True
+        completed += 1
+    return completed
+
+
 def func_signature(f: FuncInfo) -> str:
     params = []
     for idx, p in enumerate(f.params):
@@ -1468,7 +1577,7 @@ def func_signature(f: FuncInfo) -> str:
     if not params:
         params = ['void']
     param_str = ', '.join(params)
-    return f'{f.return_type} {f.name}({param_str})'
+    return format_function_declaration(f.return_type, f'{f.name}({param_str})')
 
 
 def aggregate_is_union(type_info: TypeInfo) -> bool:
@@ -1599,7 +1708,8 @@ def generate_type_definitions(file_info: FileInfo) -> list[str]:
         if method_name == class_name or method_name == f'~{class_name}':
             declaration = f'{method_name}({param_str});'
         else:
-            declaration = f'{function.return_type} {method_name}({param_str});'
+            declaration = format_function_declaration(
+                function.return_type, f'{method_name}({param_str})') + ';'
         methods_by_type.setdefault(class_name, []).append(declaration)
 
     # C does not support a useful forward declaration for an enum.  Define
@@ -1769,9 +1879,8 @@ def generate_c_stub(file_info: FileInfo, func_list: list[FuncInfo],
     lines.extend(generate_type_definitions(file_info))
 
     for global_index, global_ in enumerate(file_info.globals_):
-        storage = 'static ' if global_.role == 'static' else ''
         global_name = safe_global_name(global_, global_index)
-        lines.append(f'{storage}{format_declaration(global_.type_str, global_name)};')
+        lines.append(format_global_declaration(global_, global_name))
     if file_info.globals_:
         lines.append('')
 
@@ -1794,6 +1903,8 @@ def generate_c_stub(file_info: FileInfo, func_list: list[FuncInfo],
             lines.append(f'/* addr: 0x{func.addr:08x}  size: {func.size} bytes */')
         if not func.signature_trusted:
             lines.append('/* Debug signature rejected: type-record data leaked into it. */')
+        if func.signature_completed:
+            lines.append('/* Signature completed from the same-TU declaration record (MWCC omits unreferenced parameters from definitions). */')
 
         if func.line_map:
             lines.append('/* Target MWCC statement boundaries (code offset -> source line):')
@@ -2065,8 +2176,13 @@ def main():
 
     # Normalize after concatenating all independently emitted debug chunks;
     # duplicates often only become visible at this per-source merge stage.
+    completed_signatures = 0
     for file_info in merged.values():
         normalize_file_info(file_info)
+        completed_signatures += complete_signatures_from_declarations(file_info)
+    if completed_signatures:
+        print(f'  Completed {completed_signatures} definition signatures from '
+              'same-TU declaration records')
 
     print(f'  {len(merged)} unique source files after merge', flush=True)
 
