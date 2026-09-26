@@ -434,9 +434,11 @@ tagPS2glApiTable* g_pPS2glApiTable;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColorTableEXT(void)
+asm void PS2glColorTableEXT(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColorTableEXT(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6142–6144 */
@@ -448,9 +450,11 @@ void PS2glColorTableEXT(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor4usvARB(void)
+asm void PS2glMultiColor4usvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4usvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6114–6116 */
@@ -462,9 +466,11 @@ void PS2glMultiColor4usvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor4uivARB(void)
+asm void PS2glMultiColor4uivARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4uivARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6086–6088 */
@@ -476,9 +482,11 @@ void PS2glMultiColor4uivARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor4ubvARB(void)
+asm void PS2glMultiColor4ubvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4ubvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6058–6060 */
@@ -490,9 +498,11 @@ void PS2glMultiColor4ubvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor4svARB(void)
+asm void PS2glMultiColor4svARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4svARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6030–6032 */
@@ -504,9 +514,11 @@ void PS2glMultiColor4svARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor4ivARB(void)
+asm void PS2glMultiColor4ivARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4ivARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6002–6004 */
@@ -518,9 +530,11 @@ void PS2glMultiColor4ivARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor4fvARB(void)
+asm void PS2glMultiColor4fvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4fvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5974–5976 */
@@ -532,9 +546,11 @@ void PS2glMultiColor4fvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor4dvARB(void)
+asm void PS2glMultiColor4dvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4dvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5946–5948 */
@@ -546,9 +562,11 @@ void PS2glMultiColor4dvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor4bvARB(void)
+asm void PS2glMultiColor4bvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor4bvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5918–5920 */
@@ -560,9 +578,11 @@ void PS2glMultiColor4bvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor3usvARB(void)
+asm void PS2glMultiColor3usvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3usvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5890–5892 */
@@ -574,9 +594,11 @@ void PS2glMultiColor3usvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor3uivARB(void)
+asm void PS2glMultiColor3uivARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3uivARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5862–5864 */
@@ -588,9 +610,11 @@ void PS2glMultiColor3uivARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor3ubvARB(void)
+asm void PS2glMultiColor3ubvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3ubvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5834–5836 */
@@ -602,9 +626,11 @@ void PS2glMultiColor3ubvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor3svARB(void)
+asm void PS2glMultiColor3svARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3svARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5806–5808 */
@@ -616,9 +642,11 @@ void PS2glMultiColor3svARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor3ivARB(void)
+asm void PS2glMultiColor3ivARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3ivARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5778–5780 */
@@ -630,9 +658,11 @@ void PS2glMultiColor3ivARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor3fvARB(void)
+asm void PS2glMultiColor3fvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3fvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5750–5752 */
@@ -644,9 +674,11 @@ void PS2glMultiColor3fvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor3dvARB(void)
+asm void PS2glMultiColor3dvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3dvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5722–5724 */
@@ -658,9 +690,11 @@ void PS2glMultiColor3dvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiColor3bvARB(void)
+asm void PS2glMultiColor3bvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiColor3bvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5692–5694 */
@@ -672,9 +706,11 @@ void PS2glMultiColor3bvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord4svARB(void)
+asm void PS2glMultiTexCoord4svARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4svARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5664–5666 */
@@ -686,9 +722,11 @@ void PS2glMultiTexCoord4svARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord4ivARB(void)
+asm void PS2glMultiTexCoord4ivARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4ivARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5636–5638 */
@@ -700,9 +738,11 @@ void PS2glMultiTexCoord4ivARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord4fvARB(void)
+asm void PS2glMultiTexCoord4fvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4fvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5608–5610 */
@@ -714,9 +754,11 @@ void PS2glMultiTexCoord4fvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord4dvARB(void)
+asm void PS2glMultiTexCoord4dvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord4dvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5580–5582 */
@@ -728,9 +770,11 @@ void PS2glMultiTexCoord4dvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord3svARB(void)
+asm void PS2glMultiTexCoord3svARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3svARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5552–5554 */
@@ -742,9 +786,11 @@ void PS2glMultiTexCoord3svARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord3ivARB(void)
+asm void PS2glMultiTexCoord3ivARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3ivARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5524–5526 */
@@ -756,9 +802,11 @@ void PS2glMultiTexCoord3ivARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord3fvARB(void)
+asm void PS2glMultiTexCoord3fvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3fvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5496–5498 */
@@ -770,9 +818,11 @@ void PS2glMultiTexCoord3fvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord3dvARB(void)
+asm void PS2glMultiTexCoord3dvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord3dvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5468–5470 */
@@ -784,9 +834,11 @@ void PS2glMultiTexCoord3dvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord2svARB(void)
+asm void PS2glMultiTexCoord2svARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2svARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5440–5442 */
@@ -798,9 +850,11 @@ void PS2glMultiTexCoord2svARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord2ivARB(void)
+asm void PS2glMultiTexCoord2ivARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2ivARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5412–5414 */
@@ -812,9 +866,11 @@ void PS2glMultiTexCoord2ivARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord2fvARB(void)
+asm void PS2glMultiTexCoord2fvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2fvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5384–5386 */
@@ -826,9 +882,11 @@ void PS2glMultiTexCoord2fvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMultiTexCoord2dvARB(void)
+asm void PS2glMultiTexCoord2dvARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMultiTexCoord2dvARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5229–5231 */
@@ -840,9 +898,11 @@ void PS2glMultiTexCoord2dvARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glActiveTextureARB(void)
+asm void PS2glActiveTextureARB(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glActiveTextureARB(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5197–5199 */
@@ -854,9 +914,11 @@ void PS2glActiveTextureARB(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glSetGsRegister(void)
+asm void PS2glSetGsRegister(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glSetGsRegister(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5182–5184 */
@@ -868,9 +930,11 @@ void PS2glSetGsRegister(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glViewport(void)
+asm void PS2glViewport(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glViewport(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5168–5170 */
@@ -882,9 +946,11 @@ void PS2glViewport(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertexPointer(void)
+asm void PS2glVertexPointer(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertexPointer(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5154–5156 */
@@ -896,9 +962,11 @@ void PS2glVertexPointer(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex4sv(void)
+asm void PS2glVertex4sv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex4sv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5126–5128 */
@@ -910,9 +978,11 @@ void PS2glVertex4sv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex4iv(void)
+asm void PS2glVertex4iv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex4iv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5098–5100 */
@@ -924,9 +994,11 @@ void PS2glVertex4iv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex4fv(void)
+asm void PS2glVertex4fv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex4fv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5084–5086 */
@@ -938,9 +1010,11 @@ void PS2glVertex4fv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex4f(void)
+asm void PS2glVertex4f(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex4f(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5070–5072 */
@@ -952,9 +1026,11 @@ void PS2glVertex4f(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex4dv(void)
+asm void PS2glVertex4dv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex4dv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5042–5044 */
@@ -966,9 +1042,11 @@ void PS2glVertex4dv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex3sv(void)
+asm void PS2glVertex3sv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3sv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5014–5016 */
@@ -980,9 +1058,11 @@ void PS2glVertex3sv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex3iv(void)
+asm void PS2glVertex3iv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3iv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4986–4988 */
@@ -994,9 +1074,11 @@ void PS2glVertex3iv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex3fv(void)
+asm void PS2glVertex3fv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3fv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4972–4974 */
@@ -1008,9 +1090,11 @@ void PS2glVertex3fv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex3f(void)
+asm void PS2glVertex3f(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3f(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4958–4960 */
@@ -1022,9 +1106,11 @@ void PS2glVertex3f(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex3dv(void)
+asm void PS2glVertex3dv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3dv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4944–4946 */
@@ -1036,9 +1122,11 @@ void PS2glVertex3dv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex3d(void)
+asm void PS2glVertex3d(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex3d(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4930–4932 */
@@ -1050,9 +1138,11 @@ void PS2glVertex3d(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex2sv(void)
+asm void PS2glVertex2sv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex2sv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4902–4904 */
@@ -1064,9 +1154,11 @@ void PS2glVertex2sv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex2iv(void)
+asm void PS2glVertex2iv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex2iv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4874–4876 */
@@ -1078,9 +1170,11 @@ void PS2glVertex2iv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex2fv(void)
+asm void PS2glVertex2fv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex2fv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4860–4862 */
@@ -1092,9 +1186,11 @@ void PS2glVertex2fv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex2f(void)
+asm void PS2glVertex2f(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex2f(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4846–4848 */
@@ -1106,9 +1202,11 @@ void PS2glVertex2f(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glVertex2dv(void)
+asm void PS2glVertex2dv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glVertex2dv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4818–4820 */
@@ -1120,9 +1218,11 @@ void PS2glVertex2dv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTranslatef(void)
+asm void PS2glTranslatef(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTranslatef(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4748–4750 */
@@ -1134,9 +1234,11 @@ void PS2glTranslatef(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexParameteri(void)
+asm void PS2glTexParameteri(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexParameteri(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4706–4708 */
@@ -1148,9 +1250,11 @@ void PS2glTexParameteri(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexImage2D(void)
+asm void PS2glTexImage2D(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexImage2D(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4552–4554 */
@@ -1162,9 +1266,11 @@ void PS2glTexImage2D(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexEnvf(void)
+asm void PS2glTexEnvf(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexEnvf(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4538–4540 */
@@ -1176,9 +1282,11 @@ void PS2glTexEnvf(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoordPointer(void)
+asm void PS2glTexCoordPointer(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoordPointer(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4524–4526 */
@@ -1190,9 +1298,11 @@ void PS2glTexCoordPointer(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord4sv(void)
+asm void PS2glTexCoord4sv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4sv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4496–4498 */
@@ -1204,9 +1314,11 @@ void PS2glTexCoord4sv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord4iv(void)
+asm void PS2glTexCoord4iv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4iv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4468–4470 */
@@ -1218,9 +1330,11 @@ void PS2glTexCoord4iv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord4fv(float* v)
+asm void PS2glTexCoord4fv(void)
 {
-    g_pPS2glApiTable->pfn_PS2glTexCoord4fv(v);
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4fv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4440–4442 */
@@ -1232,9 +1346,11 @@ void PS2glTexCoord4fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord4dv(void)
+asm void PS2glTexCoord4dv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord4dv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4412–4414 */
@@ -1246,9 +1362,11 @@ void PS2glTexCoord4dv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord3sv(void)
+asm void PS2glTexCoord3sv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3sv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4384–4386 */
@@ -1260,9 +1378,11 @@ void PS2glTexCoord3sv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord3iv(void)
+asm void PS2glTexCoord3iv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3iv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4356–4358 */
@@ -1274,9 +1394,11 @@ void PS2glTexCoord3iv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord3fv(void)
+asm void PS2glTexCoord3fv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3fv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4328–4330 */
@@ -1288,9 +1410,11 @@ void PS2glTexCoord3fv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord3dv(void)
+asm void PS2glTexCoord3dv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord3dv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4300–4302 */
@@ -1302,9 +1426,11 @@ void PS2glTexCoord3dv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord2sv(void)
+asm void PS2glTexCoord2sv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2sv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4272–4274 */
@@ -1316,9 +1442,11 @@ void PS2glTexCoord2sv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord2iv(void)
+asm void PS2glTexCoord2iv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2iv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4244–4246 */
@@ -1330,9 +1458,11 @@ void PS2glTexCoord2iv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord2fv(void)
+asm void PS2glTexCoord2fv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2fv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4230–4232 */
@@ -1344,9 +1474,11 @@ void PS2glTexCoord2fv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord2f(void)
+asm void PS2glTexCoord2f(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2f(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4216–4218 */
@@ -1358,9 +1490,11 @@ void PS2glTexCoord2f(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glTexCoord2dv(void)
+asm void PS2glTexCoord2dv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glTexCoord2dv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4006–4008 */
@@ -1372,9 +1506,11 @@ void PS2glTexCoord2dv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glScissor(void)
+asm void PS2glScissor(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glScissor(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3137–3139 */
@@ -1386,9 +1522,11 @@ void PS2glScissor(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glOrtho(void)
+asm void PS2glOrtho(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glOrtho(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3123–3125 */
@@ -1400,9 +1538,11 @@ void PS2glOrtho(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glNormalPointer(void)
+asm void PS2glNormalPointer(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNormalPointer(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3109–3111 */
@@ -1414,9 +1554,11 @@ void PS2glNormalPointer(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glNormal3sv(void)
+asm void PS2glNormal3sv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNormal3sv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3081–3083 */
@@ -1428,9 +1570,11 @@ void PS2glNormal3sv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glNormal3iv(void)
+asm void PS2glNormal3iv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNormal3iv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3053–3055 */
@@ -1442,9 +1586,11 @@ void PS2glNormal3iv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glNormal3fv(void)
+asm void PS2glNormal3fv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNormal3fv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3025–3027 */
@@ -1456,9 +1602,11 @@ void PS2glNormal3fv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glNormal3dv(void)
+asm void PS2glNormal3dv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNormal3dv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2969–2971 */
@@ -1470,9 +1618,11 @@ void PS2glNormal3dv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glNewList(void)
+asm void PS2glNewList(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glNewList(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2927–2929 */
@@ -1484,9 +1634,11 @@ void PS2glNewList(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMatrixMode(void)
+asm void PS2glMatrixMode(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMatrixMode(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2899–2901 */
@@ -1498,9 +1650,11 @@ void PS2glMatrixMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMateriali(void)
+asm void PS2glMateriali(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMateriali(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2885–2887 */
@@ -1512,9 +1666,11 @@ void PS2glMateriali(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glMaterialfv(void)
+asm void PS2glMaterialfv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glMaterialfv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2717–2719 */
@@ -1526,9 +1682,11 @@ void PS2glMaterialfv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glLoadMatrixf(void)
+asm void PS2glLoadMatrixf(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLoadMatrixf(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2689–2691 */
@@ -1540,9 +1698,11 @@ void PS2glLoadMatrixf(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glLoadIdentity(void)
+asm void PS2glLoadIdentity(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLoadIdentity(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2619–2621 */
@@ -1554,9 +1714,11 @@ void PS2glLoadIdentity(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glLighti(void)
+asm void PS2glLighti(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLighti(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2605–2607 */
@@ -1568,9 +1730,11 @@ void PS2glLighti(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glLightfv(void)
+asm void PS2glLightfv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLightfv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2563–2565 */
@@ -1582,9 +1746,11 @@ void PS2glLightfv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glLightModeli(void)
+asm void PS2glLightModeli(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLightModeli(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2549–2551 */
@@ -1596,9 +1762,11 @@ void PS2glLightModeli(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glLightModelfv(void)
+asm void PS2glLightModelfv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glLightModelfv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2490–2492 */
@@ -1610,9 +1778,11 @@ void PS2glLightModelfv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char PS2glIsEnabled(void)
+asm unsigned char PS2glIsEnabled(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glIsEnabled(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2280–2282 */
@@ -1624,9 +1794,11 @@ unsigned char PS2glIsEnabled(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glHint(void)
+asm void PS2glHint(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glHint(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1943–1945 */
@@ -1638,9 +1810,11 @@ void PS2glHint(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glGetIntegerv(void)
+asm void PS2glGetIntegerv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glGetIntegerv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1929–1931 */
@@ -1652,9 +1826,11 @@ void PS2glGetIntegerv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glGetFloatv(void)
+asm void PS2glGetFloatv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glGetFloatv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1858–1860 */
@@ -1666,9 +1842,11 @@ void PS2glGetFloatv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glGenTextures(void)
+asm void PS2glGenTextures(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glGenTextures(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1843–1845 */
@@ -1680,9 +1858,11 @@ void PS2glGenTextures(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int PS2glGenLists(void)
+asm unsigned int PS2glGenLists(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glGenLists(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1801–1803 */
@@ -1694,9 +1874,11 @@ unsigned int PS2glGenLists(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glFogiv(void)
+asm void PS2glFogiv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFogiv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1787–1789 */
@@ -1708,9 +1890,11 @@ void PS2glFogiv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glFogi(void)
+asm void PS2glFogi(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFogi(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1773–1775 */
@@ -1722,9 +1906,11 @@ void PS2glFogi(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glFogfv(void)
+asm void PS2glFogfv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFogfv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1759–1761 */
@@ -1736,9 +1922,11 @@ void PS2glFogfv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glFogf(void)
+asm void PS2glFogf(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFogf(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1745–1747 */
@@ -1750,9 +1938,11 @@ void PS2glFogf(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glFlush(void)
+asm void PS2glFlush(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFlush(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1731–1733 */
@@ -1764,9 +1954,11 @@ void PS2glFlush(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glFinish(void)
+asm void PS2glFinish(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glFinish(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1535–1537 */
@@ -1778,9 +1970,11 @@ void PS2glFinish(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glEndList(void)
+asm void PS2glEndList(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glEndList(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1521–1523 */
@@ -1792,9 +1986,11 @@ void PS2glEndList(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glEnd(void)
+asm void PS2glEnd(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glEnd(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1507–1509 */
@@ -1806,9 +2002,11 @@ void PS2glEnd(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glEnableClientState(void)
+asm void PS2glEnableClientState(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glEnableClientState(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1493–1495 */
@@ -1820,9 +2018,11 @@ void PS2glEnableClientState(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glEnable(void)
+asm void PS2glEnable(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glEnable(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1395–1397 */
@@ -1834,9 +2034,11 @@ void PS2glEnable(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glDrawArrays(void)
+asm void PS2glDrawArrays(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDrawArrays(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1381–1383 */
@@ -1848,9 +2050,11 @@ void PS2glDrawArrays(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glDisableClientState(void)
+asm void PS2glDisableClientState(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDisableClientState(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1367–1369 */
@@ -1862,9 +2066,11 @@ void PS2glDisableClientState(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glDisable(void)
+asm void PS2glDisable(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDisable(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1353–1355 */
@@ -1876,9 +2082,11 @@ void PS2glDisable(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glDepthRange(void)
+asm void PS2glDepthRange(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDepthRange(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1339–1341 */
@@ -1890,9 +2098,11 @@ void PS2glDepthRange(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glDepthMask(void)
+asm void PS2glDepthMask(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDepthMask(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1325–1327 */
@@ -1904,9 +2114,11 @@ void PS2glDepthMask(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glDepthFunc(void)
+asm void PS2glDepthFunc(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDepthFunc(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1311–1313 */
@@ -1918,9 +2130,11 @@ void PS2glDepthFunc(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glDeleteTextures(void)
+asm void PS2glDeleteTextures(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDeleteTextures(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1297–1299 */
@@ -1932,9 +2146,11 @@ void PS2glDeleteTextures(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glDeleteLists(void)
+asm void PS2glDeleteLists(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glDeleteLists(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1283–1285 */
@@ -1946,9 +2162,11 @@ void PS2glDeleteLists(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glCullFace(void)
+asm void PS2glCullFace(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glCullFace(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1199–1201 */
@@ -1960,9 +2178,11 @@ void PS2glCullFace(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColorPointer(void)
+asm void PS2glColorPointer(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColorPointer(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1171–1173 */
@@ -1974,9 +2194,11 @@ void PS2glColorPointer(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColorMask(void)
+asm void PS2glColorMask(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColorMask(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1157–1159 */
@@ -1988,9 +2210,11 @@ void PS2glColorMask(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor4usv(void)
+asm void PS2glColor4usv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4usv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1129–1131 */
@@ -2002,9 +2226,11 @@ void PS2glColor4usv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor4uiv(void)
+asm void PS2glColor4uiv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4uiv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1101–1103 */
@@ -2016,9 +2242,11 @@ void PS2glColor4uiv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor4ubv(void)
+asm void PS2glColor4ubv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4ubv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1073–1075 */
@@ -2030,9 +2258,11 @@ void PS2glColor4ubv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor4sv(void)
+asm void PS2glColor4sv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4sv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1045–1047 */
@@ -2044,9 +2274,11 @@ void PS2glColor4sv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor4iv(void)
+asm void PS2glColor4iv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4iv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1017–1019 */
@@ -2058,9 +2290,11 @@ void PS2glColor4iv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor4fv(void)
+asm void PS2glColor4fv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4fv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1003–1005 */
@@ -2072,9 +2306,11 @@ void PS2glColor4fv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor4f(void)
+asm void PS2glColor4f(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4f(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 989–991 */
@@ -2086,9 +2322,11 @@ void PS2glColor4f(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor4dv(void)
+asm void PS2glColor4dv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4dv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 961–963 */
@@ -2100,9 +2338,11 @@ void PS2glColor4dv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor4bv(void)
+asm void PS2glColor4bv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor4bv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 933–935 */
@@ -2114,9 +2354,11 @@ void PS2glColor4bv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor3usv(void)
+asm void PS2glColor3usv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3usv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 905–907 */
@@ -2128,9 +2370,11 @@ void PS2glColor3usv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor3uiv(void)
+asm void PS2glColor3uiv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3uiv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 877–879 */
@@ -2142,9 +2386,11 @@ void PS2glColor3uiv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor3ubv(void)
+asm void PS2glColor3ubv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3ubv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 849–851 */
@@ -2156,9 +2402,11 @@ void PS2glColor3ubv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor3sv(void)
+asm void PS2glColor3sv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3sv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 821–823 */
@@ -2170,9 +2418,11 @@ void PS2glColor3sv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor3iv(void)
+asm void PS2glColor3iv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3iv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 793–795 */
@@ -2184,9 +2434,11 @@ void PS2glColor3iv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor3fv(void)
+asm void PS2glColor3fv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3fv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 779–781 */
@@ -2198,9 +2450,11 @@ void PS2glColor3fv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor3f(void)
+asm void PS2glColor3f(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3f(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 765–767 */
@@ -2212,9 +2466,11 @@ void PS2glColor3f(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor3dv(void)
+asm void PS2glColor3dv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3dv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 737–739 */
@@ -2226,9 +2482,11 @@ void PS2glColor3dv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glColor3bv(void)
+asm void PS2glColor3bv(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glColor3bv(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 653–655 */
@@ -2240,9 +2498,11 @@ void PS2glColor3bv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glClearColor(void)
+asm void PS2glClearColor(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glClearColor(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 625–627 */
@@ -2254,9 +2514,11 @@ void PS2glClearColor(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glClear(void)
+asm void PS2glClear(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glClear(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 583–585 */
@@ -2268,9 +2530,11 @@ void PS2glClear(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glBlendFunc(void)
+asm void PS2glBlendFunc(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glBlendFunc(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 555–557 */
@@ -2282,9 +2546,11 @@ void PS2glBlendFunc(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glBindTexture(void)
+asm void PS2glBindTexture(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glBindTexture(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 541–543 */
@@ -2296,9 +2562,11 @@ void PS2glBindTexture(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glBegin(void)
+asm void PS2glBegin(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glBegin(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 527–529 */
@@ -2310,9 +2578,11 @@ void PS2glBegin(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glArrayElement(void)
+asm void PS2glArrayElement(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glArrayElement(v0)
+    jr v1; nop
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 498–500 */
@@ -2324,7 +2594,9 @@ void PS2glArrayElement(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glAlphaFunc(void)
+asm void PS2glAlphaFunc(void)
 {
-    /* TODO: decompile from asm/... */
+    lw v0, g_pPS2glApiTable
+    lw v1, tagPS2glApiTable.pfn_PS2glAlphaFunc(v0)
+    jr v1; nop
 }

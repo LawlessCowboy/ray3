@@ -70,6 +70,14 @@ For cross-project Metrowerks context, read `docs/mwcc-reference.md`; it is
 methodology only. Never copy another project's compiler version or flags into
 this project's baseline without a local reproduction.
 
+`check` may also report `EQUIVALENT`: the code is identical except for a
+consistent per-value register renaming, verified by dataflow with EABI
+registers fixed at calls and returns. It is not a match and does not count in
+coverage. Only the verifier assigns it; a coordinator records it with
+`python3 tools/match.py check FUNCTION --record-equivalent`, which never
+overrides a recorded `MATCH`. Keep working towards `MATCH`, since an
+equivalent function stays in the worklist.
+
 For a persistent mismatch, use `docs/mwcc-probe-playbook.md` to classify it
 and run one controlled natural-C experiment at a time.
 
@@ -157,7 +165,7 @@ source file in two phases:
    lifetime, loop form, field/layout accesses, calls, and source ordering.
    Record only a verified `MATCH`; record a useful failed attempt with its
    concrete diagnosis. Never force progress with assembly, intrinsics, or
-   guessed opcodes.
+   guessed opcodes (see Constraints for the evidence-backed asm exception).
 
 Use `python3 tools/large_match.py start FUNCTION` to create the seed, source
 snapshot, and an automatic canonical baseline check, then
@@ -178,6 +186,23 @@ faster than a seed.
 
 - Do not use inline assembly, hand-written opcodes, or intrinsics to force a
   match. Investigate compiler options, source structure, and macros first.
+  The only exception is where target evidence shows the original itself was
+  assembly, and the evidence must be stated in the attempt or insight:
+  - Instructions MWCC cannot emit from C under the baseline, such as `abs.s`,
+    `sqrt.s`, or the R5900 accumulator ops `mula.s`/`madda.s`/`madd.s`. Use
+    the file's existing MTH-style asm macros or a small `inline` C wrapper
+    around a statement-level `asm` block (e.g. `MTH_xAbs`), containing only
+    the non-C instruction; everything around it stays C.
+  - Whole hand-written asm functions, identified by one line-map entry per
+    instruction together with register or idiom choices MWCC does not produce
+    for the equivalent C elsewhere in the ELF. `PS2GL_ApiTable.c` is the
+    reference case: `asm void PS2glX(void) { lw v0, g_pPS2glApiTable;
+    lw v1, tagPS2glApiTable.pfn_PS2glX(v0); jr v1; nop }`, with the delay-slot
+    `nop` on the `jr` line.
+
+  Never use asm to repair register allocation or scheduling in
+  compiler-generated code. That residual belongs to the permuter, or is
+  recorded as `EQUIVALENT`.
 - Prefer natural structured control flow over explicit `goto` statements when
   reconstructing source; explicit gotos were uncommon in ordinary gameplay
   code. Use one only when the target control-flow/line-map evidence cannot be

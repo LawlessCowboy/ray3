@@ -1639,7 +1639,12 @@ void MEC_fn_vCollideBaseMechanic(DNM_stDynamics* p_stDynamic,
 void MTH4D_fn_vCopy3DTo4DVector(MTH4D_tdstVector_* p_stDestination,
                                 MTH3D_tdstVector_* p_stSource);
 
-#define MAT_M_vSetTranslation(_hMatrix, _p_stTrans) { if ((_hMatrix)->eType == MAT_eTransform_Identity) (_hMatrix)->eType = MAT_eTransform_Translation; *(int*)&(_hMatrix)->stTransformMatrix.stCol_3.xX = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xX; *(int*)&(_hMatrix)->stTransformMatrix.stCol_3.xY = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xY; *(int*)&(_hMatrix)->stTransformMatrix.stCol_3.xZ = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xZ; (_hMatrix)->stTransformMatrix.stCol_3.xW = 1.0f; }
+inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2) { float _r; asm { mula.s _x1, _x2 } asm { madda.s _y1, _y2 } asm { madd.s _r, _z1, _z2 } return _r; }
+inline float MTH_xSqr3(float _x, float _y, float _z) { float _r; asm { mula.s _x, _x } asm { madda.s _y, _y } asm { madd.s _r, _z, _z } return _r; }
+inline float MTH_xAbs(float _x) { float _r; asm { abs.s _r, _x } return _r; }
+#define MTH3D_M_bIsNullVectorWithEps(_p, _eps) ((MTH_xAbs((_p)->xX) < (_eps)) && (MTH_xAbs((_p)->xY) < (_eps)) && (MTH_xAbs((_p)->xZ) < (_eps)))
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+#define MAT_M_vSetTranslation(_hMatrix, _p_stTrans) { if (((volatile MAT_tdstTransformation_*)(_hMatrix))->eType == MAT_eTransform_Identity) ((volatile MAT_tdstTransformation_*)(_hMatrix))->eType = MAT_eTransform_Translation; *(int*)&((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xX = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xX; *(int*)&((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xY = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xY; *(int*)&((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xZ = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xZ; ((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xW = 1.0f; }
 #pragma optimize_for_size off
 void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT)
 {
@@ -1657,16 +1662,16 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
     unsigned char bNullVector;
     unsigned char bFlag;
     MTH3D_tdstVector_* p_stNormal;
-    volatile MTH3D_tdstVector_ stGroundNormal;
+    MTH3D_tdstVector_ stGroundNormal;
     volatile MTH3D_tdstVector_ stSafeTranslation;
     MTH3D_tdstVector_ stWallMove;
     MTH3D_tdstVector_ stAdjustVector1;
     MTH3D_tdstVector_ stAdjustVector;
-    MTH3D_tdstVector_ stAbsoluteTangentMove;
-    MTH3D_tdstVector_ stTangentMove;
-    volatile MTH3D_tdstVector_ stVertical;
+    volatile MTH3D_tdstVector_ stAbsoluteTangentMove;
+    volatile MTH3D_tdstVector_ stTangentMove;
+    MTH3D_tdstVector_ stVertical;
     MTH3D_tdstVector_ stMove;
-    MTH3D_tdstVector_ stDownVector;
+    volatile MTH3D_tdstVector_ stDownVector;
     MTH3D_tdstVector_ stUpVector;
     MTH3D_tdstVector_ stVector;
     volatile MTH3D_tdstVector_ stResult0;
@@ -1733,7 +1738,6 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
 
     stPreviousMatrix = *hCurrentMatrix;
     a2_stPosition[0] = *hPreviousMatrix;
-    p_stSavedPosition = &stPreviousMatrix.stTransformMatrix.stCol_3;
     if (fn_ucCollSetGetCollComputeFrequencySO(hSupObj) >= 2) {
         a2_stPosition[1] = *hPreviousMatrix;
         MAT_M_vSetTranslation(&a2_stPosition[1], &p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation);
@@ -1787,22 +1791,14 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
         }
     }
 
-    xTranslationX = stMove.xX;
-    xTranslationY = stMove.xY;
-    xTranslationZ = stMove.xZ;
-    xNormalX = p_stNormal->xX;
-    xNormalY = p_stNormal->xY;
-    xNormalZ = p_stNormal->xZ;
-    MTH_DOT3_TO(xSlide, xTranslationX, xNormalX,
-                xTranslationY, xNormalY, xTranslationZ, xNormalZ);
-    stTangentMove.xX = stMove.xX - xSlide * p_stNormal->xX;
-    stTangentMove.xY = stMove.xY - xSlide * p_stNormal->xY;
-    xTmpReal = xSlide * p_stNormal->xZ;
-    stTangentMove.xZ = stMove.xZ - xTmpReal;
-    xTangentX = stTangentMove.xX;
-    xTangentY = stTangentMove.xY;
-    xTangentZ = stTangentMove.xZ;
-    MTH_SQR3_TO(xSquaredNorm, xTangentX, xTangentY, xTangentZ);
+    xSlide = MTH_xDot3(stMove.xX, p_stNormal->xX, stMove.xY, p_stNormal->xY, stMove.xZ, p_stNormal->xZ);
+    stSafeTranslation.xX = xSlide * p_stNormal->xX;
+    stSafeTranslation.xY = xSlide * p_stNormal->xY;
+    stSafeTranslation.xZ = xSlide * p_stNormal->xZ;
+    stTangentMove.xX = stMove.xX - stSafeTranslation.xX;
+    stTangentMove.xY = stMove.xY - stSafeTranslation.xY;
+    stTangentMove.xZ = stMove.xZ - stSafeTranslation.xZ;
+    xSquaredNorm = MTH_xSqr3(stTangentMove.xX, stTangentMove.xY, stTangentMove.xZ);
     MTH_SQRT_TO(xNorm, xSquaredNorm);
 
     bFirstGround = 1;
@@ -1822,28 +1818,18 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
 
     if (((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) &&
         ((unsigned char)(p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != 0))) {
-        stVector.xX = p_stCurrentPosition->xX -
-                      p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix.stTransformMatrix.stCol_3.xX;
-        stVector.xY = p_stCurrentPosition->xY -
-                      p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix.stTransformMatrix.stCol_3.xY;
-        stVector.xZ = p_stCurrentPosition->xZ -
-                      p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix.stTransformMatrix.stCol_3.xZ;
-        xTranslationX = stVector.xX;
-        xTranslationY = stVector.xY;
-        xTranslationZ = stVector.xZ;
-        xNormalX = p_stNormal->xX;
-        xNormalY = p_stNormal->xY;
-        xNormalZ = p_stNormal->xZ;
-        MTH_DOT3_TO(xFactor, xTranslationX, xNormalX,
-                    xTranslationY, xNormalY, xTranslationZ, xNormalZ);
+        stAbsoluteTangentMove.xX = p_stCurrentPosition->xX - p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix.stTransformMatrix.stCol_3.xX;
+        stAbsoluteTangentMove.xY = p_stCurrentPosition->xY - p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix.stTransformMatrix.stCol_3.xY;
+        stAbsoluteTangentMove.xZ = p_stCurrentPosition->xZ - p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix.stTransformMatrix.stCol_3.xZ;
+        xFactor = MTH_xDot3(stAbsoluteTangentMove.xX, p_stNormal->xX, stAbsoluteTangentMove.xY, p_stNormal->xY, stAbsoluteTangentMove.xZ, p_stNormal->xZ);
         stSafeTranslation.xX = xFactor * p_stNormal->xX;
         stSafeTranslation.xY = xFactor * p_stNormal->xY;
         stSafeTranslation.xZ = xFactor * p_stNormal->xZ;
-        stAbsoluteTangentMove.xX = stVector.xX - stSafeTranslation.xX;
-        stAbsoluteTangentMove.xY = stVector.xY - stSafeTranslation.xY;
-        stAbsoluteTangentMove.xZ = stVector.xZ - stSafeTranslation.xZ;
+        stAbsoluteTangentMove.xX -= stSafeTranslation.xX;
+        stAbsoluteTangentMove.xY -= stSafeTranslation.xY;
+        stAbsoluteTangentMove.xZ -= stSafeTranslation.xZ;
     } else {
-        stAbsoluteTangentMove = stTangentMove;
+        MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stAbsoluteTangentMove, (MTH3D_tdstVector_*)&stTangentMove);
     }
 
     xTangentX = stAbsoluteTangentMove.xX;
@@ -1896,15 +1882,13 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
             xFactor = xTmpReal;
         }
 
-        if (stPreviousMatrix.eType == MAT_eTransform_Identity) {
-            stPreviousMatrix.eType = MAT_eTransform_Translation;
-        }
+        p_stSavedPosition = &stPreviousMatrix.stTransformMatrix.stCol_3;
+        MAT_M_vSetTranslation(&stPreviousMatrix, p_stPreviousPosition);
         p_xPreviousY = &p_stPreviousPosition->xY;
         p_xPreviousZ = &p_stPreviousPosition->xZ;
-        p_stSavedPosition->xX = p_stPreviousPosition->xX + stTangentMove.xX;
-        p_stSavedPosition->xY = *p_xPreviousY + stTangentMove.xY;
-        p_stSavedPosition->xZ = *p_xPreviousZ + stTangentMove.xZ;
-        p_stSavedPosition->xW = 1.0f;
+        p_stSavedPosition->xX = p_stSavedPosition->xX + stTangentMove.xX;
+        p_stSavedPosition->xY = p_stSavedPosition->xY + stTangentMove.xY;
+        p_stSavedPosition->xZ = p_stSavedPosition->xZ + stTangentMove.xZ;
         stDownVector.xX = xFactor * p_stNormal->xX;
         stDownVector.xY = xFactor * p_stNormal->xY;
         stDownVector.xZ = xFactor * p_stNormal->xZ;
@@ -1913,14 +1897,7 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
         stResult0.xX = p_stPreviousPosition->xX + stTangentMove.xX;
         stResult0.xY = *p_xPreviousY + stTangentMove.xY;
         stResult0.xZ = *p_xPreviousZ + stTangentMove.xZ;
-        a2_stPosition[0].stTransformMatrix.stCol_3.xX = stResult0.xX;
-        a2_stPosition[0].stTransformMatrix.stCol_3.xY = stResult0.xY;
-        a2_stPosition[0].stTransformMatrix.stCol_3.xZ = stResult0.xZ;
-        if (a2_stPosition[0].eType == MAT_eTransform_Identity) {
-            a2_stPosition[0].eType = MAT_eTransform_Translation;
-        }
-        a2_stPosition[0].stTransformMatrix.stCol_3.xW = 1.0f;
-        p_xCandidateY = &a2_stPosition[0].stTransformMatrix.stCol_3.xY;
+        MAT_M_vSetTranslation(&a2_stPosition[0], (MTH3D_tdstVector_*)&stResult0);
 
         lObstacle2 = 0;
         if (MEC_fn_bCollision(&lObstacle2, g_a_stObstacle, p_stDynamic, hSupObj,
@@ -1936,21 +1913,14 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                                     g_a_stObstacle, 0);
         }
 
-        stResult1.xX = p_stPreviousPosition->xX + stTangentMove.xX;
-        stResult1.xY = *p_xPreviousY + stTangentMove.xY;
-        stResult1.xZ = *p_xPreviousZ + stTangentMove.xZ;
-        a2_stPosition[0].stTransformMatrix.stCol_3.xX = stResult1.xX;
-        *p_xCandidateY = stResult1.xY;
-        a2_stPosition[0].stTransformMatrix.stCol_3.xZ = stResult1.xZ;
-        if (a2_stPosition[0].eType == MAT_eTransform_Identity) {
-            a2_stPosition[0].eType = MAT_eTransform_Translation;
-        }
-        a2_stPosition[0].stTransformMatrix.stCol_3.xW = 1.0f;
-
         xFactor = xSpeedZ * xNorm;
         if (xFactor < 0.35f) {
             xFactor = 0.35f;
         }
+        stResult1.xX = p_stPreviousPosition->xX + stTangentMove.xX;
+        stResult1.xY = *p_xPreviousY + stTangentMove.xY;
+        stResult1.xZ = *p_xPreviousZ + stTangentMove.xZ;
+        MAT_M_vSetTranslation(&a2_stPosition[0], (MTH3D_tdstVector_*)&stResult1);
         stUpVector.xX = xFactor * p_stNormal->xX;
         stUpVector.xY = xFactor * p_stNormal->xY;
         stUpVector.xZ = xFactor * p_stNormal->xZ;
@@ -2110,7 +2080,7 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                            (g_lCallCounter == 1)) {
                     p_stWallObstacle = 0;
                     p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x02000000;
-                    stGroundNormal = p_stGroundObstacle->m_stNorm;
+                    MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&stGroundNormal, (MTH3D_tdstVector_*)&p_stGroundObstacle->m_stNorm);
 
                     if (MEC_fn_bCollision(&lObstacle, g_a_stObstacle,
                                           p_stDynamic, hSupObj,
@@ -2120,10 +2090,11 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                         MEC_fn_vDeleteNullTranslationObstacle(
                             lObstacle, g_a_stObstacle);
                         for (lCounter = 0; lCounter < lObstacle; lCounter++) {
+                            p_stTmpObstacle = &(g_a_stObstacle)[lCounter];
                             if ((p_stWallObstacle == 0) &&
-                                ((unsigned char)((g_a_stObstacle)[lCounter].m_xCollidedEntity != 99)) &&
-                                (((g_a_stObstacle)[lCounter].m_eType & 2) == 2)) {
-                                p_stWallObstacle = &(g_a_stObstacle)[lCounter];
+                                ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99)) &&
+                                ((p_stTmpObstacle->m_eType & 2) == 2)) {
+                                p_stWallObstacle = p_stTmpObstacle;
                             }
                         }
                         if (p_stWallObstacle != 0) {
@@ -2181,22 +2152,13 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                                 stResult5.xX = stResult4.xX + stMove.xX;
                                 stResult5.xY = stResult4.xY + stMove.xY;
                                 stResult5.xZ = stResult4.xZ + stMove.xZ;
-                                hCurrentMatrix->stTransformMatrix.stCol_3.xX = stResult5.xX;
-                                hCurrentMatrix->stTransformMatrix.stCol_3.xY = stResult5.xY;
-                                hCurrentMatrix->stTransformMatrix.stCol_3.xZ = stResult5.xZ;
+                                MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&hCurrentMatrix->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stResult5);
                                 hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
                             }
                         }
                     }
 
-                    xTangentX = stMove.xX;
-                    xTangentY = stMove.xY;
-                    xTangentZ = stMove.xZ;
-                    MTH_ABS_TO(xAbsX, xTangentX);
-                    MTH_ABS_TO(xAbsY, xTangentY);
-                    MTH_ABS_TO(xAbsZ, xTangentZ);
-                    bNullVector = (xAbsX < 0.001f) && (xAbsY < 0.001f) &&
-                                  (xAbsZ < 0.001f);
+                    bNullVector = MTH3D_M_bIsNullVectorWithEps(&stMove, 0.001f);
                     if (!bNullVector) {
                         MEC_fn_vGroundObstacleManagement(
                             p_stDynamic, hSupObj, xDT);
@@ -2216,9 +2178,7 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                         }
                     }
                     p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x02000000;
-                    stVector.xX = p_stPreviousPosition->xX;
-                    stVector.xY = *p_xPreviousY;
-                    stVector.xZ = *p_xPreviousZ;
+                    MTH3D_M_vCopyVector(&stVector, (MTH3D_tdstVector_*)p_stPreviousPosition);
                     MAT_M_vSetTranslation(hCurrentMatrix, &stVector);
 
                     MEC_fn_vWallObstacleManagement(
@@ -2233,15 +2193,7 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                         stAdjustVector.xX = stMove.xX - stWallMove.xX;
                         stAdjustVector.xY = stMove.xY - stWallMove.xY;
                         stAdjustVector.xZ = stMove.xZ - stWallMove.xZ;
-                        xTangentX = stWallMove.xX;
-                        xTangentY = stWallMove.xY;
-                        xTangentZ = stWallMove.xZ;
-                        MTH_ABS_TO(xAbsX, xTangentX);
-                        MTH_ABS_TO(xAbsY, xTangentY);
-                        MTH_ABS_TO(xAbsZ, xTangentZ);
-                        bNullVector = (xAbsX < 0.001f) &&
-                                      (xAbsY < 0.001f) &&
-                                      (xAbsZ < 0.001f);
+                        bNullVector = MTH3D_M_bIsNullVectorWithEps(&stWallMove, 0.001f);
                         if (!bNullVector) {
                             MEC_fn_vGroundObstacleManagement(
                                 p_stDynamic, hSupObj, xDT);
@@ -2258,10 +2210,11 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                         MEC_fn_vDeleteNullTranslationObstacle(
                             lObstacle, g_a_stObstacle);
                         for (lCounter = 0; lCounter < lObstacle; lCounter++) {
-                            if ((unsigned char)(((g_a_stObstacle)[lCounter].m_xCollidedEntity != 99)) &&
-                                (((g_a_stObstacle)[lCounter].m_eType & 2) == 2) &&
+                            p_stTmpObstacle = &(g_a_stObstacle)[lCounter];
+                            if ((unsigned char)((p_stTmpObstacle->m_xCollidedEntity != 99)) &&
+                                ((p_stTmpObstacle->m_eType & 2) == 2) &&
                                 (p_stMobileObstacle == 0)) {
-                                hSupObjCol = (g_a_stObstacle)[lCounter].mp_stSupObj;
+                                hSupObjCol = p_stTmpObstacle->mp_stSupObj;
                                 if ((hSupObjCol != 0) &&
                                     !MEC_fn_bMainActor(hSupObjCol) &&
                                     ((fn_ulStandardGameGetCustomBitsSO(
@@ -2269,8 +2222,8 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                                       0x04000000) == 0x04000000) &&
                                     MEC_fn_bCeilObstacle(
                                         p_stDynamic,
-                                        &(g_a_stObstacle)[lCounter])) {
-                                    (g_a_stObstacle)[lCounter].m_xCollidedEntity = 99;
+                                        p_stTmpObstacle)) {
+                                    p_stTmpObstacle->m_xCollidedEntity = 99;
                                 }
                             }
                         }
@@ -2299,77 +2252,42 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                     stAdjustVector1.xZ = 0.0f;
                 }
 
-                if (lObstacle2 != 0) {
-                    xTangentX = stAdjustVector.xX;
-                    xTangentY = stAdjustVector.xY;
-                    xTangentZ = stAdjustVector.xZ;
-                    MTH_ABS_TO(xAbsX, xTangentX);
-                    MTH_ABS_TO(xAbsY, xTangentY);
-                    MTH_ABS_TO(xAbsZ, xTangentZ);
-                    bNullVector = (xAbsX < 0.001f) &&
-                                  (xAbsY < 0.001f) &&
-                                  (xAbsZ < 0.001f);
-                    if (!bNullVector) {
+                bNullVector = (lObstacle2 == 0) || MTH3D_M_bIsNullVectorWithEps((MTH3D_tdstVector_*)&stAdjustVector, 0.001f) || MTH3D_M_bIsNullVectorWithEps(&stAdjustVector1, 0.001f);
+                if (bNullVector) {
+                    stAdjustVector.xX += stAdjustVector1.xX;
+                    stAdjustVector.xY += stAdjustVector1.xY;
+                    stAdjustVector.xZ += stAdjustVector1.xZ;
+                } else {
                     xTangentX = stAdjustVector1.xX;
                     xTangentY = stAdjustVector1.xY;
                     xTangentZ = stAdjustVector1.xZ;
-                    MTH_ABS_TO(xAbsX, xTangentX);
-                    MTH_ABS_TO(xAbsY, xTangentY);
-                    MTH_ABS_TO(xAbsZ, xTangentZ);
-                    bNullVector = (xAbsX < 0.001f) &&
-                                  (xAbsY < 0.001f) &&
-                                  (xAbsZ < 0.001f);
-                        if (!bNullVector) {
-                        MTH_SQR3_TO(xSquaredNorm, xTangentX,
-                                    xTangentY, xTangentZ);
-                        MTH_SQRT_TO(xNorm, xSquaredNorm);
-                        if (xNorm != 0.0f) {
-                            xNorm = 1.0f / xNorm;
-                            stDownVector.xX = stAdjustVector1.xX * xNorm;
-                            stDownVector.xY = stAdjustVector1.xY * xNorm;
-                            stDownVector.xZ = stAdjustVector1.xZ * xNorm;
-                        } else {
-                            stDownVector = stAdjustVector1;
-                        }
-                        xTranslationX = stAdjustVector.xX;
-                        xTranslationY = stAdjustVector.xY;
-                        xTranslationZ = stAdjustVector.xZ;
-                        xNormalX = stDownVector.xX;
-                        xNormalY = stDownVector.xY;
-                        xNormalZ = stDownVector.xZ;
-                        MTH_DOT3_TO(xFactor,
-                                    xTranslationX, xNormalX,
-                                    xTranslationY, xNormalY,
-                                    xTranslationZ, xNormalZ);
-                        MTH_SQR3_TO(xSquaredNorm,
-                                    xTranslationX, xTranslationY,
-                                    xTranslationZ);
-                        MTH_SQRT_TO(xNorm, xSquaredNorm);
-                        if (xFactor < xNorm) {
-                            stAdjustVector.xX -=
-                                xFactor * stDownVector.xX;
-                            stAdjustVector.xY -=
-                                xFactor * stDownVector.xY;
-                            stAdjustVector.xZ -=
-                                xFactor * stDownVector.xZ;
-                            stAdjustVector.xX += stAdjustVector1.xX;
-                            stAdjustVector.xY += stAdjustVector1.xY;
-                            stAdjustVector.xZ += stAdjustVector1.xZ;
-                        }
-                        } else {
-                            stAdjustVector.xX += stAdjustVector1.xX;
-                            stAdjustVector.xY += stAdjustVector1.xY;
-                            stAdjustVector.xZ += stAdjustVector1.xZ;
-                        }
+                    MTH_SQR3_TO(xSquaredNorm, xTangentX,
+                                xTangentY, xTangentZ);
+                    MTH_SQRT_TO(xNorm, xSquaredNorm);
+                    if (xNorm != 0.0f) {
+                        xNorm = 1.0f / xNorm;
+                        stDownVector.xX = stAdjustVector1.xX * xNorm;
+                        stDownVector.xY = stAdjustVector1.xY * xNorm;
+                        stDownVector.xZ = stAdjustVector1.xZ * xNorm;
                     } else {
+                        stDownVector = stAdjustVector1;
+                    }
+                    xFactor = MTH_xDot3(stAdjustVector.xX, stDownVector.xX, stAdjustVector.xY, stDownVector.xY, stAdjustVector.xZ, stDownVector.xZ);
+                    MTH_SQR3_TO(xSquaredNorm,
+                                xTranslationX, xTranslationY,
+                                xTranslationZ);
+                    MTH_SQRT_TO(xNorm, xSquaredNorm);
+                    if (xFactor < xNorm) {
+                        stAdjustVector.xX -=
+                            xFactor * stDownVector.xX;
+                        stAdjustVector.xY -=
+                            xFactor * stDownVector.xY;
+                        stAdjustVector.xZ -=
+                            xFactor * stDownVector.xZ;
                         stAdjustVector.xX += stAdjustVector1.xX;
                         stAdjustVector.xY += stAdjustVector1.xY;
                         stAdjustVector.xZ += stAdjustVector1.xZ;
                     }
-                } else {
-                    stAdjustVector.xX += stAdjustVector1.xX;
-                    stAdjustVector.xY += stAdjustVector1.xY;
-                    stAdjustVector.xZ += stAdjustVector1.xZ;
                 }
 
                 stVector.xX =
@@ -2397,21 +2315,12 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
                 MEC_fn_vWallObstacleManagement(
                     &stWallMove, p_stDynamic, &stMove,
                     p_stNormal, &p_stWallObstacle->m_stNorm, 0);
-                xTangentX = stWallMove.xX;
-                xTangentY = stWallMove.xY;
-                xTangentZ = stWallMove.xZ;
-                MTH_ABS_TO(xAbsX, xTangentX);
-                MTH_ABS_TO(xAbsY, xTangentY);
-                MTH_ABS_TO(xAbsZ, xTangentZ);
-                bNullVector = (xAbsX < 0.001f) && (xAbsY < 0.001f) &&
-                              (xAbsZ < 0.001f);
+                bNullVector = MTH3D_M_bIsNullVectorWithEps(&stWallMove, 0.001f);
                 if (!bNullVector) {
                     MEC_fn_vGroundObstacleManagement(
                         p_stDynamic, hSupObj, xDT);
                 } else {
-                    hCurrentMatrix->stTransformMatrix.stCol_3.xX = stVector.xX;
-                    hCurrentMatrix->stTransformMatrix.stCol_3.xY = stVector.xY;
-                    hCurrentMatrix->stTransformMatrix.stCol_3.xZ = stVector.xZ;
+                    MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&hCurrentMatrix->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&stVector);
                     hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
                 }
             } else {
