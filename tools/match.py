@@ -64,7 +64,7 @@ MODEL_ORDER = {
 }
 MWCC_FLAGS = [
     '-c', '-g', '-opt', 'level=3', '-farcall', 'off', '-sdatathreshold', '8',
-    '-inline', 'off', '-strings', 'reuse,nopool', '-enum', 'int',
+    '-inline', 'on', '-strings', 'reuse,nopool', '-enum', 'int',
 ]
 
 

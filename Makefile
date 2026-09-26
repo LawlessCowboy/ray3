@@ -35,7 +35,7 @@ TOOLS_DIR := tools
 # - inline=off, strings=reuse,nopool, and enum=int are compiler defaults and
 #   currently have no evidence of project-wide override.
 MWCC_FLAGS := -c -g -opt level=3 -farcall off -sdatathreshold 8 \
-              -inline off -strings reuse,nopool -enum int
+              -inline on -strings reuse,nopool -enum int
 CPPFLAGS := -I$(INCLUDE_DIR)
 
 # Escaping spaces keeps GNU make paths such as "Program Files/..." intact.

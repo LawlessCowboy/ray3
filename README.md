@@ -70,7 +70,7 @@ The evidence-backed baseline compiler profile is:
 
 ```text
 -g -opt level=3 -farcall off -sdatathreshold 8 \
-   -inline off -strings reuse,nopool -enum int
+   -inline on -strings reuse,nopool -enum int
 ```
 
 `-opt level=3` and `-opt level=4` have been byte-identical for every current
