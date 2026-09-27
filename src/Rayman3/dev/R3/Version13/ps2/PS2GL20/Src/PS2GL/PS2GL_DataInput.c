@@ -1943,7 +1943,8 @@ void impPS2glMultiTexCoord2svARB(unsigned int texture, short* v)
  */
 void impPS2glMultiTexCoord2fARB(unsigned int texture, float s, float t)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = s;
+    g_PS2glContext.vacurTexCoords[texture][1] = t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1662–1664 */
@@ -2630,9 +2631,10 @@ void impPS2glLightfv(unsigned int light, unsigned int pname, float* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glLightf(unsigned int light, unsigned int pname, float param);
 void impPS2glLighti(unsigned int light, unsigned int pname, int param)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glLightf(light, pname, (float)param);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1235–1269 */

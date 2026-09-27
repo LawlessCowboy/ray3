@@ -2936,7 +2936,19 @@ void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg)
 int WPARCLST_fn_lGetWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int* p_lWeight)
 {
     WP_tdstArc_* hElement;
-    /* TODO: decompile from asm/... */
+    if (hListOfArc && hNode) {
+        hElement = hListOfArc->m_hArc.hFirstElementDyn;
+        if (hElement) {
+            do {
+                if (hElement->m_hNode == hNode) {
+                    *p_lWeight = hElement->m_lWeight;
+                    return 0;
+                }
+                hElement = hElement->hNextBrotherDyn;
+            } while (hElement);
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 245–255 */
@@ -2956,7 +2968,19 @@ int WPARCLST_fn_lGetWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNo
 int WPARCLST_fn_lChangeWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight)
 {
     WP_tdstArc_* hElement;
-    /* TODO: decompile from asm/... */
+    if (hListOfArc && hNode) {
+        hElement = hListOfArc->m_hArc.hFirstElementDyn;
+        if (hElement) {
+            do {
+                if (hElement->m_hNode == hNode) {
+                    hElement->m_lWeight = lWeight;
+                    return 0;
+                }
+                hElement = hElement->hNextBrotherDyn;
+            } while (hElement);
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 229–238 */

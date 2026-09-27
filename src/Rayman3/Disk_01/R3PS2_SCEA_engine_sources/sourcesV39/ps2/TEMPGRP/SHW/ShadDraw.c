@@ -1158,12 +1158,26 @@ void shw_fn_vInternalDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj);
+unsigned char fn_bIsTransitionInProgress(void);
+/* Target +0x54 and +0x6c contain COP0 writes, which cannot be expressed
+ * in C. Retain only those evidenced original assembly operations. */
+inline void SHW_vClearCop0Register24(void)
+{
+    asm { mtc0 zero, $24 }
+}
 void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask)
 {
     short xLevelOfQualityOfShadows;
     int bTransitionInProgress;
     unsigned long ulCustomBits;
-    /* TODO: decompile from asm/... */
+    ulCustomBits = fn_ulStandardGameGetCustomBitsSO(_hHandleOfCharacter);
+    bTransitionInProgress = fn_bIsTransitionInProgress();
+    if ((ulCustomBits & 0x100) && !bTransitionInProgress) {
+        SHW_vClearCop0Register24();
+        shw_fn_vInternalDrawShadow(_p_stVpt, _hHandleOfCharacter, _hSprObjSector, _lSectorDrawmask);
+        SHW_vClearCop0Register24();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 684–695 */
@@ -1184,7 +1198,14 @@ void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObje
 unsigned char SHW_bDidCharacterHaveAShadowLastFrame(HIE_tdstSuperObject_* _hHandleOfCharacter)
 {
     int i;
-    /* TODO: decompile from asm/... */
+    i = 0;
+    while (i < g_xIndexOfShadow) {
+        if ((HIE_tdstSuperObject_*)p_hHandleOfShadowedSuperObject[i] == _hHandleOfCharacter) {
+            return 1;
+        }
+        i++;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 559–648 */

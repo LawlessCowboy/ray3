@@ -355,8 +355,17 @@ void fn_vTVS(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLI_fn_vCloseBigFileTextures(void);
+/* Pointer return/argument roles are established by this wrapper's target ABI;
+ * the recovered callee scaffolds currently omit them. */
+extern "C" char* MNC_fn_pcGetCurrentDirectory(void);
+extern "C" char* FMN_SCE_ConvertPath2DVD(char* buffer);
+extern "C" void GLI_fn_vOpenBigFileTextures(char* filename);
+extern "C" int sprintf(char*, const char*, ...);
 void GAM_fn_vLoadTextures(void)
 {
     char Texture_BF_Name[255];
-    /* TODO: decompile from asm/... */
+    GLI_fn_vCloseBigFileTextures();
+    sprintf(Texture_BF_Name, "%s\\%s", MNC_fn_pcGetCurrentDirectory(), "TEXTURES.CNT;1");
+    GLI_fn_vOpenBigFileTextures(FMN_SCE_ConvertPath2DVD(Texture_BF_Name));
 }

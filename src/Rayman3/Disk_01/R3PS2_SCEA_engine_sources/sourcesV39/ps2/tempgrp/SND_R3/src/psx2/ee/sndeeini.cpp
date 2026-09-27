@@ -53,7 +53,8 @@ typedef struct CInitParams CInitParams;
 typedef struct CLinkTypeActorCont CLinkTypeActorCont;
 typedef struct smultimap smultimap;
 typedef struct TTypedVar TTypedVar;
-typedef struct CPS2BoxReverbAttribute CPS2BoxReverbAttribute;
+namespace usnd { struct CPS2BoxReverbAttribute; }
+typedef usnd::CPS2BoxReverbAttribute CPS2BoxReverbAttribute;
 typedef struct tdstRegionChunk tdstRegionChunk;
 typedef struct streebase streebase;
 typedef struct CEdiWaveFile CEdiWaveFile;
@@ -126,6 +127,7 @@ struct CResObjParams {
 };
 
 struct CExtraEventActor {
+    static int ss32CurrentRefreshChannel;
     CExtraEventActor* m_poNext; /* +0x0 */
     CExtraEventActor* m_poPrevious; /* +0x4 */
     TTypedVar* m_poIntSwitchVar; /* +0x8 */
@@ -384,6 +386,8 @@ struct CInitParams {
 };
 
 struct CLinkTypeActorCont {
+    static CLinkTypeActorCont* mfn_roGetInstance();
+    static _RollOffParam moACPRolloff;
     /* C++ base smap at +0x0. */
     CActorResData* m_poStandardActorResData; /* +0x10 */
     CActorResData* m_poMusicActorResData; /* +0x14 */
@@ -399,7 +403,7 @@ struct TTypedVar {
     float m_oValue; /* +0x1c */
 };
 
-struct CPS2BoxReverbAttribute {
+struct usnd::CPS2BoxReverbAttribute {
     unsigned int m_iMode; /* +0x0 */
     unsigned int m_iDepthL; /* +0x4 */
     unsigned int m_iDepthR; /* +0x8 */
@@ -515,9 +519,20 @@ int gv_iCD_Opened;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+namespace usnd {
+struct CL2PS2CoreMgr {
+    static void fs_vDesInit();
+};
+struct CPS2Box {
+    static void fs_vSetReverbOn(unsigned int channel, bool on);
+    static void fs_vSetReverbAttribute(unsigned int channel, CPS2BoxReverbAttribute* attribute);
+};
+}
+
 void SND_fn_p_stPS2SetReverbOn(int s32_Channels, int s32_On)
 {
-    /* TODO: decompile from asm/... */
+    if (s32_Channels & 1) usnd::CPS2Box::fs_vSetReverbOn(0, s32_On != 0);
+    if (s32_Channels & 1) usnd::CPS2Box::fs_vSetReverbOn(1, s32_On != 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 366–376 */
@@ -537,11 +552,19 @@ void SND_fn_p_stPS2SetReverbOn(int s32_Channels, int s32_On)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimize_for_size off
 void SND_fn_p_stPS2ChangeReverb(int s32_Channels, int s32_Mode, int s32_Vol, int s32_Delay, int s32_FeedBack)
 {
     CPS2BoxReverbAttribute sRevAttr;
-    /* TODO: decompile from asm/... */
+    sRevAttr.m_iMode = s32_Mode;
+    sRevAttr.m_iDepthR = sRevAttr.m_iDepthL = s32_Vol * 0x3fff / 127;
+    sRevAttr.m_iFeedback = s32_FeedBack;
+    sRevAttr.m_iDelay = s32_Delay;
+    if (s32_Channels & 1) usnd::CPS2Box::fs_vSetReverbAttribute(0, &sRevAttr);
+    if (s32_Channels & 2) usnd::CPS2Box::fs_vSetReverbAttribute(1, &sRevAttr);
 }
+
+#pragma optimize_for_size reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 356–358 */
 /* addr: 0x00189e10  size: 48 bytes */
@@ -568,7 +591,7 @@ void SND_fn_vSetDefaultRollOff(_RollOffParam* pst_RollOff)
  */
 void SND_fn_vGetDefaultRollOff(_RollOffParam* pst_RollOff)
 {
-    /* TODO: decompile from asm/... */
+    CLinkTypeActorCont::mfn_roGetInstance(); *pst_RollOff = CLinkTypeActorCont::moACPRolloff;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 309–328 */
@@ -588,9 +611,18 @@ void SND_fn_vGetDefaultRollOff(_RollOffParam* pst_RollOff)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void SND_fn_vKillAllObjectSound(void);
+extern "C" void SND_fn_vSynchroSound(void);
 int SND_fn_iDesInitSound(void)
 {
-    /* TODO: decompile from asm/... */
+    SND_fn_vKillAllObjectSound();
+    SND_fn_vSynchroSound();
+    for (CExtraEventActor::ss32CurrentRefreshChannel = 0; CExtraEventActor::ss32CurrentRefreshChannel < 5; CExtraEventActor::ss32CurrentRefreshChannel++) {
+        SND_fn_vSynchroSound();
+        SND_fn_vSynchroSound();
+    }
+    usnd::CL2PS2CoreMgr::fs_vDesInit();
+    return 3;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 216–290 */

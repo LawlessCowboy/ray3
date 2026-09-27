@@ -1532,7 +1532,17 @@ void CAM_fn_vRestoreTransparencyOnSuperObject(tdstCineinfo_* _hCineinfo)
 {
     tdstTransparentSuperObjectForCamera_* param0;
     tdstTransparentSuperObjectForCamera_* p_stFirst;
-    /* TODO: decompile from asm/... */
+    p_stFirst = _hCineinfo->a10_stTransparentSuperObjectForCamera;
+    param0 = p_stFirst + _hCineinfo->xNumberOfTransparentSuperObjectForCamera;
+    if (p_stFirst < param0) {
+        do {
+            if (p_stFirst->hSuperObject) {
+                p_stFirst->hSuperObject->lDrawModeMask = p_stFirst->lInitialDrawMask;
+                p_stFirst->hSuperObject->fTransparenceLevel = p_stFirst->fInitialTransparenceLevel;
+            }
+            p_stFirst++;
+        } while (p_stFirst < param0);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 1197–1229 */
@@ -1719,9 +1729,16 @@ void CAM_fn_vRemindTime(tdstCineinfo_* _hCineinfo, float _dt)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define CAM_M_vCopyHistoryVector(dst, src) do { \
+    *(unsigned int*)&(dst).xX = *(unsigned int*)&(src).xX; \
+    *(unsigned int*)&(dst).xY = *(unsigned int*)&(src).xY; \
+    *(unsigned int*)&(dst).xZ = *(unsigned int*)&(src).xZ; \
+} while (0)
+
 void CAM_fn_vRemindPos(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Pos)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(&_hCineinfo->AveragePosition.a_CheckedPos[0], &_hCineinfo->AveragePosition.a_CheckedPos[1], 7 * sizeof(MTH3D_tdstVector_));
+    CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedPos[7], _p_Pos->m_stLinear);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 893–896 */
@@ -1738,7 +1755,8 @@ void CAM_fn_vRemindPos(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Pos)
  */
 void CAM_fn_vRemindSpeed(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Speed)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(&_hCineinfo->AveragePosition.a_CheckedSpeed[0], &_hCineinfo->AveragePosition.a_CheckedSpeed[1], 7 * sizeof(MTH3D_tdstVector_));
+    CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedSpeed[7], _p_Speed->m_stLinear);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 868–886 */
@@ -1769,7 +1787,18 @@ void CAM_fn_vRemindSpeed(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_Speed)
 void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo)
 {
     unsigned int ulIndex;
-    /* TODO: decompile from asm/... */
+    for (ulIndex = 0; ulIndex < 8; ulIndex++) {
+        if (_hCineinfo->AveragePosition.a_CheckedTime[ulIndex] != 0.0f)
+            break;
+    }
+    if (ulIndex >= 8) {
+        MTH4D_tdstVector_* p_stPosition = &_hCineinfo->hWork->hSuperObjectTargeted->hGlobalMatrix->stTransformMatrix.stCol_3;
+        for (ulIndex = 0; ulIndex < 8; ulIndex++) {
+            _hCineinfo->AveragePosition.a_CheckedTime[ulIndex] = 0.03;
+            _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xX = 0.0f; _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xY = 0.0f; _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xZ = 0.0f;
+            CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedPos[ulIndex], *p_stPosition);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 855–858 */
@@ -1856,7 +1885,10 @@ void CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_* _hCineinfo)
  */
 void CAM_fn_vSetCineinfoVisibilityFromCurrent(tdstCineinfo_* _hCineinfo)
 {
-    /* TODO: decompile from asm/... */
+    if (!(_hCineinfo->ucPerIAFlags & 2)) {
+        memcpy(_hCineinfo->hVisibility, _hCineinfo->hCurrent, sizeof(tdstInternalStructurCineinfo_));
+        _hCineinfo->ucPerIAFlags |= 2;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 706–713 */
@@ -1940,7 +1972,12 @@ void CAM_fn_vCineinfoCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObj
  */
 void CAM_fn_vCineinfoDesinit(tdstEngineObject_* _p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!_p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 526–576 */

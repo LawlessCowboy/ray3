@@ -2737,9 +2737,20 @@ void ClearScreenAfterInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CD_SetCallBack(void* FunctionPointer);
+void GLI_vProgressCallBack(unsigned int NbBytesReadThisTime);
 void GLI_vSetProgressCallBack(unsigned int SizeToRead)
 {
-    /* TODO: decompile from asm/... */
+    if (SizeToRead == 0 || CD_ProgressCallBack == 0) {
+        g_ProgressSizeToRead = SizeToRead;
+        g_ProgressSizeHaveRead = 0;
+        g_ProgressTime = 0;
+        if (SizeToRead == 0) {
+            CD_SetCallBack(NULL);
+            return;
+        }
+        CD_SetCallBack((void*)GLI_vProgressCallBack);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 349–406 */

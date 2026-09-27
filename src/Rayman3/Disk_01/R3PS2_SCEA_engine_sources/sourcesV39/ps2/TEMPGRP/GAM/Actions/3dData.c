@@ -1604,10 +1604,19 @@ unsigned char g_ucGameModuleId;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CINE_CheckEndCineActor(CINE_tdstCineActor_* hActor);
 unsigned char CINE_fn_bIsCinePlaying(CINE_tdstCine_* hCine)
 {
     CINE_tdstCineActor_* hElement;
-    /* TODO: decompile from asm/... */
+    hElement = hCine->hActorList.hFirstElementDyn;
+    if (hElement != NULL) {
+        do {
+            CINE_CheckEndCineActor(hElement);
+            if (hElement->bPlayingAnim) return 1;
+            hElement = hElement->hNextBrotherDyn;
+        } while (hElement != NULL);
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1210–1228 */
@@ -1730,10 +1739,22 @@ int fn_bTestSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSu
  */
 int fn_bTestCustomBitSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSubAnim, unsigned int ulBitNumber)
 {
-    tdstSubAnimInUse_* hNextSubAnimInUse;
-    tdstSubAnimInUse_* param0;
     tdstSubAnim_* hSubAnimInFamily;
-    /* TODO: decompile from asm/... */
+    tdstSubAnimInUse_* param0;
+    tdstSubAnimInUse_* hNextSubAnimInUse;
+    hSubAnimInFamily = &_hCharacter->hLinkedObject.p_stCharacter->h_3dData->h_Family->hForSubAnimArray.hFirstElementOpt[ulNumberOfSubAnim];
+    param0 = _hCharacter->hLinkedObject.p_stCharacter->h_3dData->hForSubAnimInUseArray.hFirstElementDyn;
+    hNextSubAnimInUse = param0 ? param0->hNextBrotherDyn : NULL;
+    if (param0 != NULL) {
+        do {
+            if (param0->p_stTheSubAnim == hSubAnimInFamily) {
+                return (param0->ulCustombit & (1U << ulBitNumber)) != 0;
+            }
+            param0 = hNextSubAnimInUse;
+            hNextSubAnimInUse = param0 ? param0->hNextBrotherDyn : NULL;
+        } while (param0 != NULL);
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1096–1119 */
@@ -1762,11 +1783,27 @@ int fn_bTestCustomBitSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulN
 void fn_vSetCustombitSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSubAnim, unsigned int ulBitNumber, int bValue)
 {
     unsigned int ulMask;
-    tdstSubAnimInUse_* hNextSubAnimInUse;
-    tdstSubAnimInUse_* hSubAnimInUse;
     tdstSubAnim_* hSubAnimInFamily;
+    unsigned int ulClearMask;
+    tdstSubAnimInUse_* hSubAnimInUse;
+    tdstSubAnimInUse_* hNextSubAnimInUse;
     tdst3dData_* h3dData;
-    /* TODO: decompile from asm/... */
+    h3dData = _hCharacter->hLinkedObject.p_stCharacter->h_3dData;
+    hSubAnimInFamily = &h3dData->h_Family->hForSubAnimArray.hFirstElementOpt[ulNumberOfSubAnim];
+    hSubAnimInUse = h3dData->hForSubAnimInUseArray.hFirstElementDyn;
+    hNextSubAnimInUse = hSubAnimInUse ? hSubAnimInUse->hNextBrotherDyn : NULL;
+    if (hSubAnimInUse != NULL) {
+        ulMask = 1U << ulBitNumber;
+        ulClearMask = ~ulMask;
+        do {
+            if (hSubAnimInUse->p_stTheSubAnim == hSubAnimInFamily) {
+                if (!bValue) hSubAnimInUse->ulCustombit &= ulClearMask;
+                else hSubAnimInUse->ulCustombit |= ulMask;
+            }
+            hSubAnimInUse = hNextSubAnimInUse;
+            hNextSubAnimInUse = hSubAnimInUse ? hSubAnimInUse->hNextBrotherDyn : NULL;
+        } while (hSubAnimInUse != NULL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1064–1091 */
@@ -1893,9 +1930,17 @@ void fn_vFreeArrayOfElts3d(tdst3dData_* h_3dData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
 void fn_vAllocArrayOfElts3d(tdst3dData_* h_3dData, unsigned short _wNumberOfElts3d)
 {
-    /* TODO: decompile from asm/... */
+    if (h_3dData->wSizeOfArrayOfElts3d < _wNumberOfElts3d) {
+        if (h_3dData->stFrame3d.p_stArrayOfElts3d != NULL) {
+            HMU_fn_vFree((void**)&h_3dData->stFrame3d.p_stArrayOfElts3d, 1);
+        }
+        h_3dData->stFrame3d.p_stArrayOfElts3d = (tdstElement3d_*)HMU_fn_p_vMalloc(_wNumberOfElts3d * sizeof(tdstElement3d_), 1);
+        h_3dData->wSizeOfArrayOfElts3d = _wNumberOfElts3d;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 923–930 */
@@ -2033,10 +2078,17 @@ void fn_v3dDataSetGlobalAccelerationFactor(float fFactor)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern tdstEngineStructure_ g_stEngineStructure;
+signed char fn_scGetSpeedInState(tdstState_* h_State);
 void fn_v3dDataFactorFrameRate(tdst3dData_* _h3dData, unsigned int _ulFactor100)
 {
     unsigned char ucFrameRate;
-    /* TODO: decompile from asm/... */
+    ucFrameRate = fn_scGetSpeedInState(_h3dData->h_CurrentState) * _ulFactor100 / 100L;
+    if (ucFrameRate > 1) {
+        _h3dData->ulStartTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount -
+            (_h3dData->ucFrameRate * (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - _h3dData->ulStartTime)) / ucFrameRate;
+        _h3dData->ucFrameRate = ucFrameRate;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 807–814 */
@@ -2049,10 +2101,16 @@ void fn_v3dDataFactorFrameRate(tdst3dData_* _h3dData, unsigned int _ulFactor100)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern float g_fGlobalAccelerationFactorForAnims;
 void fn_v3dDataSetFrameRate(tdst3dData_* h_3dData, unsigned char ucFrameRate)
 {
     unsigned char ucFrameRate2;
-    /* TODO: decompile from asm/... */
+    ucFrameRate2 = ucFrameRate * g_fGlobalAccelerationFactorForAnims;
+    if (ucFrameRate > 1) {
+        h_3dData->ulStartTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount -
+            (h_3dData->ucFrameRate * (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - h_3dData->ulStartTime)) / ucFrameRate2;
+    }
+    h_3dData->ucFrameRate = ucFrameRate2;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 661–678 */
@@ -2100,9 +2158,12 @@ void fn_v3dDataCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags);
 void fn_v3dDataInitValueSAI(tdst3dData_* h_3dData)
 {
-    /* TODO: decompile from asm/... */
+    SAI_fn_bInsertArrayInTable(&h_3dData->stGLIObjectMatrix.eType, 4, 50);
+    SAI_fn_bInsertArrayInTable(&h_3dData->stGLIObjectMatrix.stTransformMatrix, 64, 50);
+    SAI_fn_bInsertArrayInTable(&h_3dData->stGLIObjectMatrix.stScaleVector, 16, 50);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 606–606 */

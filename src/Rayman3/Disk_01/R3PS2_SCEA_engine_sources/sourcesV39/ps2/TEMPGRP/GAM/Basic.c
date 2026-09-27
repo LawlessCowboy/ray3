@@ -1682,9 +1682,16 @@ unsigned char fn_bIsEngineInPause(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int GLI_fnl_InitDll(void);
+int Erm_fn_iMessageBox();
+void exit(int);
 void GAM_fn_vTreatExeParameters(void)
 {
-    /* TODO: decompile from asm/... */
+    g_cIsLevelOk = 0;
+    if (!GLI_fnl_InitDll()) {
+        Erm_fn_iMessageBox("Graphics Dll not found, run install", "Setup problem", 0x40010);
+        exit(-1);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1284–1287 */

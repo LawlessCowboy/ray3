@@ -36,6 +36,90 @@ typedef union tduGetSetParam_ { int lValue; float xValue; MTH3D_tdstVector_ stVe
 struct tdstGetSetParam_ { tduGetSetParam_ uParam; tdeVariableType_ eType; };
 typedef struct stTfmtStatus_ { unsigned char data[48]; } stTfmtStatus_;
 
+/* Recovered WP layouts, as in WParc.c. */
+struct LST2_tdstAnchorToWP_tdhGraphNodeDyn {
+    WP_tdstGraphNode_* hFirstElementDyn;
+    WP_tdstGraphNode_* hLastElementDyn;
+    int lNumberOfElementsDyn;
+};
+struct WP_tdstGraphNode_ {
+    WP_tdstGraphNode_* hNextBrotherDyn;
+    WP_tdstGraphNode_* hPrevBrotherDyn;
+    LST2_tdstAnchorToWP_tdhGraphNodeDyn* hFatherDyn;
+    WP_tdstWayPoint_* m_hWayPoint;
+    int m_lTypeOfWP;
+    int m_lTypeOfWPInit;
+    WP_tdstListOfArc_* m_hListOfArc;
+};
+struct WP_tdstGraph_ {
+    LST2_tdstAnchorToWP_tdhGraphNodeDyn m_hListOfNode;
+};
+
+/* Recovered HIE layouts, as in MECTools.c. */
+struct GEO_tdstGeometricObject_;
+struct PO_tdstPhysicalObject_;
+struct IPO_tdstInstanciatedPhysicalObject_;
+struct SECT_tdstSector_;
+struct GLI_tdstLight_;
+struct HIE_tdstModifierObject_;
+union HIE_tduLinkedObject_ {
+    HIE_tdstSuperObject_* p_stSuperObject;
+    GEO_tdstGeometricObject_* p_stGeometricObject;
+    PO_tdstPhysicalObject_* p_stPhysicalObject;
+    IPO_tdstInstanciatedPhysicalObject_* p_stInstanciatedPhysicalObject;
+    SECT_tdstSector_* p_stSector;
+    tdstEngineObject_* p_stCharacter;
+    GLI_tdstLight_* p_stLight;
+    HIE_tdstModifierObject_* p_stModifierObject;
+    int p_Void;
+};
+struct HIE_tdstSuperObject_ {
+    unsigned int ulTypeOfLinkedObject;
+    HIE_tduLinkedObject_ hLinkedObject;
+    HIE_tdstSuperObject_* hFirstElementDyn;
+    HIE_tdstSuperObject_* hLastElementDyn;
+    int lNumberOfElementsDyn;
+    HIE_tdstSuperObject_* hNextBrotherDyn;
+    HIE_tdstSuperObject_* hPrevBrotherDyn;
+    HIE_tdstSuperObject_* hFatherDyn;
+    MAT_tdstTransformation_* hLocalMatrix;
+    MAT_tdstTransformation_* hGlobalMatrix;
+    int lLastComputeFrame;
+    int lDrawModeMask;
+    unsigned int ulFlags;
+    int hVisualBoundingVolume;
+    int hCollideBoundingVolume;
+    MTH3D_tdstVector_ stSemiLookAtVector;
+    float fTransparenceLevel;
+    unsigned int ulOutlineColor;
+    int lDisplayPrioriry;
+    int lIL_Status;
+    MTH3D_tdstVector_ stIL_AmbientColor;
+    MTH3D_tdstVector_ stIL_ParallelDirection;
+    MTH3D_tdstVector_ stIL_ParallelColor;
+    unsigned char ucSuperImposedOnWhichViewport;
+    unsigned char bIsSPO;
+    unsigned char xTransition;
+};
+
+/* Recovered CINE layouts also present in MECTools.c. */
+struct CINE_tdstCineActor_;
+struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn;
+struct LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn {
+    CINE_tdstCineActor_* hFirstElementDyn;
+    CINE_tdstCineActor_* hLastElementDyn;
+    int lNumberOfElementsDyn;
+};
+struct CINE_tdstCine_ {
+    LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn hActorList;
+    CINE_tdstCine_* hNextBrotherDyn;
+    CINE_tdstCine_* hPrevBrotherDyn;
+    LST2_tdstAnchorToCINE_tdxHandleToCineDyn* hFatherDyn;
+    unsigned char bPlaying;
+    int lGenerateEvent;
+    char szName[255];
+};
+
 static HIE_tdstSuperObject_* g_hCharacterMaskedForResearch;
 unsigned char g_ucAIModuleId;
 float g_DistanceWaypointMin;
@@ -46,6 +130,18 @@ float g_xDistanceActMax;
 extern "C" tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso,
                                                  tdstNodeInterpret_* p_stTree,
                                                  tdstGetSetParam_* p_stValue);
+extern "C" unsigned int TMR_fn_ulFastGetInternalCounter(void);
+extern "C" int GAM_fn_lGetNbPersoActive(void);
+extern "C" void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+extern "C" char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
+extern "C" CINE_tdstCine_* CINE_fn_pFindCine(char* szName);
+extern "C" unsigned char fn_ucGetFunctionUltraOperator(tdeFuncId_ eFuncId);
+extern "C" void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+extern "C" unsigned int fn_ulGetCapabilities(tdstEngineObject_* _p_stObject);
+extern "C" WP_tdstGraph_* WPG_fn_hGetNearestGraph(MTH3D_tdstVector_* p_stPos);
+extern "C" unsigned short PLA_fn_uwGetNbFrameInCurrAnim(HIE_tdstSuperObject_* hSuperObject);
+extern "C" int strcasecmp(const char*, const char*);
+extern "C" void fn_vGetScrollSpeedMatCollided(HIE_tdstSuperObject_* p_stSuperObj, MTH3D_tdstVector_* p_stVector, unsigned int ulObstacleType, int ulMTIndex);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 4091–4099 */
 /* addr: 0x0021b6e0  size: 44 bytes */
@@ -100,7 +196,17 @@ tdstNodeInterpret_* fn_p_stTextComparison(HIE_tdstSuperObject_* p_SuperObjPerso,
     char* szString1;
     int lValue;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    lValue = 0;
+    if (eFuncId == 235) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        szString1 = fn_szGetStringFromTextOrStringParam(p_stValue);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        szString2 = fn_szGetStringFromTextOrStringParam(p_stValue);
+        lValue = strcasecmp(szString1, szString2);
+    }
+    p_stValue->uParam.lValue = lValue; p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 4042–4054 */
@@ -303,10 +409,14 @@ tdstNodeInterpret_* fn_p_stFunctTurnToPosition(HIE_tdstSuperObject_* p_SuperObjP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGetCPUCounter(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+/* The target uses a1/a2 for tree/value, retaining the standard callback's
+ * unused a0 superobject parameter omitted by the recovered debug signature. */
+tdstNodeInterpret_* fn_p_stGetCPUCounter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     unsigned int ulValue;
-    /* TODO: decompile from asm/... */
+    ulValue = TMR_fn_ulFastGetInternalCounter();
+    p_stValue->uParam.lValue = ulValue; p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3418–3435 */
@@ -326,10 +436,36 @@ tdstNodeInterpret_* fn_p_stGetCPUCounter(tdstNodeInterpret_* p_stTree, tdstGetSe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Target +0x60..0x68 uses the R5900 accumulator MTH dot-product idiom,
+ * which MWCC cannot emit from a C arithmetic expression. */
+inline float MTH_xDotProduct(MTH3D_tdstVector_* left, MTH3D_tdstVector_* right)
+{
+    float rz, lz, ry, ly, rx, lx;
+    rx = right->xX; lx = left->xX;
+    ry = right->xY; ly = left->xY;
+    rz = right->xZ; lz = left->xZ;
+    float dot;
+    asm { mula.s lx, rx }
+    asm { madda.s ly, ry }
+    asm { madd.s dot, lz, rz }
+    return dot;
+}
 tdstNodeInterpret_* fn_p_stDotProduct(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     MTH3D_tdstVector_ stV1;
-    /* TODO: decompile from asm/... */
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    {
+        float x = p_stValue->uParam.stVectorValue.xX;
+        float y = p_stValue->uParam.stVectorValue.xY;
+        float z = p_stValue->uParam.stVectorValue.xZ;
+        ((MTH3D_tdstVector_*)&stV1)->xX = x;
+        ((MTH3D_tdstVector_*)&stV1)->xY = y;
+        ((MTH3D_tdstVector_*)&stV1)->xZ = z;
+    }
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    p_stValue->uParam.xValue = MTH_xDotProduct(&stV1, &p_stValue->uParam.stVectorValue);
+    p_stValue->eType = (tdeVariableType_)8;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3372–3406 */
@@ -505,7 +641,22 @@ tdstNodeInterpret_* fn_p_stCINEGetGenerateEvent(HIE_tdstSuperObject_* p_SuperObj
     char* p_szString;
     tdstGetSetParam_ stParam;
     CINE_tdstCine_* hCine;
-    /* TODO: decompile from asm/... */
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    if (eFuncId == 234) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_szString = fn_szGetStringFromTextOrStringParam(&stParam);
+        hCine = CINE_fn_pFindCine(p_szString);
+        lLastEvent = 0;
+        if (hCine != NULL) {
+            lLastEvent = hCine->lGenerateEvent;
+            hCine->lGenerateEvent = 0;
+        }
+        p_stValue->uParam.lValue = lLastEvent; p_stValue->eType = (tdeVariableType_)6;
+        return p_stTree;
+    } else {
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3128–3140 */
@@ -524,10 +675,19 @@ tdstNodeInterpret_* fn_p_stCINEGetGenerateEvent(HIE_tdstSuperObject_* p_SuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGetNbActivePerso(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+/* Target a1/a2 retain the standard interpreter callback ABI. */
+tdstNodeInterpret_* fn_p_stGetNbActivePerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    if (eFuncId == 161) {
+        p_stValue->uParam.lValue = GAM_fn_lGetNbPersoActive();
+        p_stValue->eType = (tdeVariableType_)6;
+        return p_stTree;
+    } else {
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3074–3113 */
@@ -625,7 +785,15 @@ tdstNodeInterpret_* fn_p_stGetNbFrame(HIE_tdstSuperObject_* p_SuperObjPerso, tds
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    if (eFuncId == 213) {
+        p_stValue->uParam.lValue = PLA_fn_uwGetNbFrameInCurrAnim(hNewSuperObjPerso);
+        p_stValue->eType = (tdeVariableType_)6;
+        return p_stTree;
+    }
+    fn_vOnAIErm_M_UpdateLastError(39, NULL);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 2952–2977 */
@@ -656,10 +824,24 @@ tdstNodeInterpret_* fn_p_stGetNbFrame(HIE_tdstSuperObject_* p_SuperObjPerso, tds
 tdstNodeInterpret_* fn_p_stMTGetScrollSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     unsigned int ulObstacleType;
-    MTH3D_tdstVector_ stVector;
+    /* Integer view preserves the target's bitwise vector-result copy. */
+    union { MTH3D_tdstVector_ stVector; unsigned int vectorBits[3]; };
     tdstGetSetParam_ stParam;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    if (eFuncId == 212) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulObstacleType = stParam.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vGetScrollSpeedMatCollided(p_SuperObjPerso, &stVector, ulObstacleType, stParam.uParam.lValue);
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = vectorBits[0];
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = vectorBits[1];
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = vectorBits[2];
+        p_stValue->eType = (tdeVariableType_)21;
+        return p_stTree;
+    }
+    fn_vOnAIErm_M_UpdateLastError(39, NULL);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 2921–2949 */
@@ -685,11 +867,23 @@ tdstNodeInterpret_* fn_p_stMTGetScrollSpeed(HIE_tdstSuperObject_* p_SuperObjPers
  */
 tdstNodeInterpret_* fn_p_stGetScrollSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    MTH3D_tdstVector_ stVector;
+    union { MTH3D_tdstVector_ stVector; unsigned int vectorBits[3]; };
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdstGetSetParam_ stParam;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    if (eFuncId == 211) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vGetScrollSpeedMatCollided(hNewSuperObjPerso, &stVector, stParam.uParam.lValue, -1);
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = vectorBits[0];
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = vectorBits[1];
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = vectorBits[2];
+        p_stValue->eType = (tdeVariableType_)21;
+        return p_stTree;
+    }
+    fn_vOnAIErm_M_UpdateLastError(39, NULL);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 2886–2905 */
@@ -727,7 +921,11 @@ tdstNodeInterpret_* fn_p_stPersoCapabilityFunction(HIE_tdstSuperObject_* p_Super
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     unsigned int ubf32Capabilities;
-    /* TODO: decompile from asm/... */
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(*((tdeFuncId_*)p_stTree - 2)), p_SuperObjPerso, &hNewSuperObjPerso);
+    ubf32Capabilities = fn_ulGetCapabilities(hNewSuperObjPerso->ulTypeOfLinkedObject != 2 ? NULL : hNewSuperObjPerso->hLinkedObject.p_stCharacter);
+    p_stValue->uParam.lValue = ubf32Capabilities;
+    p_stValue->eType = (tdeVariableType_)44;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 2764–2848 */
@@ -806,12 +1004,30 @@ tdstNodeInterpret_* fn_p_stGetSituationOnRail(HIE_tdstSuperObject_* p_SuperObjPe
  */
 tdstNodeInterpret_* fn_p_stMiscFuncOnTypeOfWP(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    WP_tdstGraphNode_* hTheNode;
-    WP_tdstGraphNode_* hCurrentNode;
     WP_tdstWayPoint_* param0;
+    WP_tdstGraphNode_* hCurrentNode;
+    WP_tdstGraphNode_* hTheNode;
     WP_tdstGraph_* hGraph;
     int lTypeOfWP;
-    /* TODO: decompile from asm/... */
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    hGraph = (WP_tdstGraph_*)p_stValue->uParam.pValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    param0 = (WP_tdstWayPoint_*)p_stValue->uParam.pValue;
+    hTheNode = NULL;
+    hCurrentNode = hGraph->m_hListOfNode.hFirstElementDyn;
+    if (hCurrentNode != NULL) {
+        do {
+            if (hCurrentNode->m_hWayPoint == param0) {
+                hTheNode = hCurrentNode;
+                break;
+            }
+            hCurrentNode = hCurrentNode->hNextBrotherDyn;
+        } while (hCurrentNode != NULL);
+    }
+    lTypeOfWP = 0;
+    if (hTheNode != NULL) lTypeOfWP = hTheNode->m_lTypeOfWP;
+    p_stValue->uParam.lValue = lTypeOfWP; p_stValue->eType = (tdeVariableType_)44;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 2457–2697 */
@@ -1211,9 +1427,20 @@ tdstNodeInterpret_* fn_p_stCloserAndCollisionWPInGraph(HIE_tdstSuperObject_* p_S
 tdstNodeInterpret_* fn_p_stGetCloserNetwork(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     WP_tdstGraph_* hGraph;
-    MTH3D_tdstVector_ stPos;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    MTH3D_tdstVector_ stPos = p_stValue->uParam.stVectorValue;
+    switch (eFuncId) {
+    case 166:
+        hGraph = WPG_fn_hGetNearestGraph(&stPos);
+        p_stValue->uParam.pValue = hGraph; p_stValue->eType = (tdeVariableType_)45;
+        return p_stTree;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 1713–1926 */

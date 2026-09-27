@@ -74,12 +74,23 @@ struct Jingle {
 };
 
 namespace usnd {
+struct CMicroManager {
+    static CMicroManager& fs_roGetInst(void);
+    static void fs_vSetPanOn(bool);
+};
 struct CPS2Box {
     static void fs_vSetMono(bool);
 };
 }
 
 extern "C" void usnd_vLeaveCritSect(unsigned int);
+
+struct CSoundSemaphoreCont {
+    /* The singleton call has no incoming this argument in the target. */
+    static CSoundSemaphoreCont* mfn_roGetInstance(void);
+    unsigned char mfn_bRemoveSoundSemaphore(int);
+    CSoundSemaphore* mfn_poAddSoundSemaphore(int, int);
+};
 
 typedef enum tdeEventType {
     EPLAYEVENT = 0,
@@ -577,7 +588,7 @@ int SND_fn_bGetStereoSound(void)
  */
 void SND_fn_vSetPan(int b_pan)
 {
-    /* TODO: decompile from asm/... */
+    usnd::CMicroManager::fs_roGetInst(); usnd::CMicroManager::fs_vSetPanOn(b_pan == 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 946–947 */
@@ -880,7 +891,10 @@ int SND_fn_s32SendRequestSemaphoreSound(int s32_SemaphoreId, int s32_ObjectId, i
 int SND_fn_bRemoveSemaphoreSound(int s32_SemaphoreId)
 {
     int b_Answer;
-    /* TODO: decompile from asm/... */
+    b_Answer = 0;
+    if (CSoundSemaphoreCont::mfn_roGetInstance()->mfn_bRemoveSoundSemaphore(s32_SemaphoreId))
+        b_Answer = 1;
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 333–340 */
@@ -897,7 +911,10 @@ int SND_fn_bRemoveSemaphoreSound(int s32_SemaphoreId)
 int SND_fn_s32AddSemaphoreSound(int s32_SemaphoreId, int s32_SemaphoreSize)
 {
     int s32_Answer;
-    /* TODO: decompile from asm/... */
+    s32_Answer = -3;
+    if (CSoundSemaphoreCont::mfn_roGetInstance()->mfn_poAddSoundSemaphore(s32_SemaphoreId, s32_SemaphoreSize))
+        s32_Answer = s32_SemaphoreId;
+    return s32_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 323–324 */
@@ -942,7 +959,13 @@ void SND_fn_vClearLastTheme(void)
 int SND_fn_bGetLastTheme(_SND_tduRefEvt* p_RefEvt)
 {
     int bRet;
-    /* TODO: decompile from asm/... */
+    bRet = 0;
+    if (g_oLastSavedTheme.Id && p_RefEvt) {
+        *p_RefEvt = g_oLastSavedTheme;
+        g_oLastTheme.Id = 0; g_oLastSavedTheme.Id = 0;
+        bRet = 1;
+    }
+    return bRet;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 264–264 */
