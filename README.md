@@ -15,8 +15,8 @@ or compiler binaries.
 
 Checked with `python3 tools/match.py coverage` at each matching commit:
 
-- Functions: **1,399 / 7,832** (plus 4 register-equivalent, not counted)
-- Code: **34,376 / 2,268,104 bytes** (**1.5156%**)
+- Functions: **1,666 / 7,832** (plus 4 register-equivalent, not counted)
+- Code: **53,252 / 2,268,104 bytes** (**2.3479%**)
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
   started yet.
 
@@ -71,7 +71,7 @@ The evidence-backed baseline compiler profile is:
 ```text
 -g -opt level=3 -farcall off -sdatathreshold 8 \
    -inline on -strings reuse,nopool -enum int \
-   -Cpp_exceptions off
+   -Cpp_exceptions off -pragma "fast_fptosi on"
 ```
 
 `-opt level=3` and `-opt level=4` have been byte-identical for every current

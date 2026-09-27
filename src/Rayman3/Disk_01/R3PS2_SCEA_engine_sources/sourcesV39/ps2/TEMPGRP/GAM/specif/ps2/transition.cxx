@@ -8,11 +8,10 @@ typedef void (*transition_deallocator_t)(void*);
 typedef void* (*transition_allocator_t)(unsigned int);
 typedef int anon_enum_0093e9cf;
 
-extern int D_58843C;
-extern int g_stTransitionAllocator;
-extern void fn_vResetAllocator(int*);
-extern void fn_vFreeAllocator(int*, void*);
-extern void* fn_pvAllocAllocator(int*, unsigned int);
+extern int g_stTransitionAllocator[2][3];
+extern "C" void fn_vResetAllocator(int*);
+extern "C" void fn_vFreeAllocator(int*, void*);
+extern "C" void* fn_pvAllocAllocator(int*, unsigned int);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 278–283 */
 /* addr: 0x0028d810  size: 72 bytes */
@@ -52,7 +51,7 @@ transition_allocator_t fn_pfnCurrentTransitionAllocator(void)
  */
 void fn_vResetTransitionAllocatorEven(void)
 {
-    fn_vResetAllocator(&D_58843C);
+    fn_vResetAllocator(g_stTransitionAllocator[1]);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 252–252 */
@@ -64,7 +63,7 @@ void fn_vResetTransitionAllocatorEven(void)
  */
 void fn_vTransitionDeallocatorEven(void* pvPointer)
 {
-    fn_vFreeAllocator(&D_58843C, pvPointer);
+    fn_vFreeAllocator(g_stTransitionAllocator[1], pvPointer);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 246–246 */
@@ -76,7 +75,7 @@ void fn_vTransitionDeallocatorEven(void* pvPointer)
  */
 void* fn_pvTransitionAllocatorEven(unsigned int u32Size)
 {
-    return fn_pvAllocAllocator(&D_58843C, u32Size);
+    return fn_pvAllocAllocator(g_stTransitionAllocator[1], u32Size);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 241–241 */
@@ -88,7 +87,7 @@ void* fn_pvTransitionAllocatorEven(unsigned int u32Size)
  */
 void fn_vResetTransitionAllocatorOdd(void)
 {
-    fn_vResetAllocator(&g_stTransitionAllocator);
+    fn_vResetAllocator(g_stTransitionAllocator[0]);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 235–235 */
@@ -100,7 +99,7 @@ void fn_vResetTransitionAllocatorOdd(void)
  */
 void fn_vTransitionDeallocatorOdd(void* pvPointer)
 {
-    fn_vFreeAllocator(&g_stTransitionAllocator, pvPointer);
+    fn_vFreeAllocator(g_stTransitionAllocator[0], pvPointer);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 229–229 */
@@ -112,7 +111,7 @@ void fn_vTransitionDeallocatorOdd(void* pvPointer)
  */
 void* fn_pvTransitionAllocatorOdd(unsigned int u32Size)
 {
-    return fn_pvAllocAllocator(&g_stTransitionAllocator, u32Size);
+    return fn_pvAllocAllocator(g_stTransitionAllocator[0], u32Size);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 210–225 */

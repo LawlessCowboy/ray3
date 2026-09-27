@@ -2521,6 +2521,12 @@ struct anon_189 {
 };
 
 tagPS2glApiTable g_PS2glApiTableList;
+tagGLlistnode* PS2glListAllocNode(int cbParams);
+void recPS2glVertex4f(float x, float y, float z, float w);
+void recPS2glRasterPos2s(short x, short y);
+void recPS2glRasterPos2i(int x, int y);
+void recPS2glRasterPos2f(float x, float y);
+void recPS2glEvalCoord2f(float u, float v);
 int pLastBeginParam;
 static float vOldGifTag[4];
 void plyPS2glGetColorTableParameterfvEXT(anon_78*);
@@ -2819,7 +2825,12 @@ void recPS2glGetColorTableParameterfvEXT(unsigned int target, unsigned int pname
 {
     anon_78* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_78));
+    pParam = (anon_78*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->params = (int)params;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glGetColorTableParameterfvEXT;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6135–6135 */
@@ -2853,7 +2864,12 @@ void recPS2glGetColorTableParameterivEXT(unsigned int target, unsigned int pname
 {
     anon_132* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_132));
+    pParam = (anon_132*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->params = (int)params;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glGetColorTableParameterivEXT;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6111–6111 */
@@ -2888,7 +2904,13 @@ void recPS2glGetColorTableEXT(unsigned int target, unsigned int format, unsigned
 {
     anon_38* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_38));
+    pParam = (anon_38*)pNode->aParams;
+    pParam->target = target;
+    pParam->format = format;
+    pParam->type = type;
+    pParam->data = (int)data;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glGetColorTableEXT;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 6086–6086 */
@@ -3041,7 +3063,13 @@ void recPS2glViewport(int x, int y, int width, int height)
 {
     anon_37* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_37));
+    pParam = (anon_37*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->height = height;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glViewport;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5964–5964 */
@@ -3063,10 +3091,12 @@ void plyPS2glViewport(anon_37* pParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimize_for_size off
 void recPS2glVertex4sv(short* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(v[0] / 32767.0f, v[1] / 32767.0f, v[2] / 32767.0f, v[3] / 32767.0f);
 }
+#pragma optimize_for_size reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5936–5936 */
 /* addr: 0x001550c0  size: 60 bytes */
@@ -3077,7 +3107,7 @@ void recPS2glVertex4sv(short* v)
  */
 void recPS2glVertex4iv(int* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(v[0] / 2147483648.0f, v[1] / 2147483648.0f, v[2] / 2147483648.0f, v[3] / 2147483648.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5891–5932 */
@@ -3144,7 +3174,7 @@ void recPS2glVertex4fv(float* v)
  */
 void recPS2glVertex4dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f((float)v[0], (float)v[1], (float)v[2], (float)v[3]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5882–5882 */
@@ -3154,10 +3184,12 @@ void recPS2glVertex4dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimize_for_size off
 void recPS2glVertex3sv(short* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(v[0] / 32767.0f, v[1] / 32767.0f, v[2] / 32767.0f, 1.0f);
 }
+#pragma optimize_for_size reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5877–5877 */
 /* addr: 0x00155340  size: 60 bytes */
@@ -3168,7 +3200,7 @@ void recPS2glVertex3sv(short* v)
  */
 void recPS2glVertex3iv(int* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(v[0] / 2147483648.0f, v[1] / 2147483648.0f, v[2] / 2147483648.0f, 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5872–5872 */
@@ -3180,7 +3212,7 @@ void recPS2glVertex3iv(int* v)
  */
 void recPS2glVertex3fv(float* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(v[0], v[1], v[2], 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5866–5868 */
@@ -3194,7 +3226,7 @@ void recPS2glVertex3fv(float* v)
  */
 void recPS2glVertex3dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f((float)v[0], (float)v[1], (float)v[2], 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5862–5862 */
@@ -3204,10 +3236,12 @@ void recPS2glVertex3dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimize_for_size off
 void recPS2glVertex2sv(short* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(v[0] / 32767.0f, v[1] / 32767.0f, 0.0f, 1.0f);
 }
+#pragma optimize_for_size reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5857–5857 */
 /* addr: 0x00155450  size: 48 bytes */
@@ -3218,7 +3252,7 @@ void recPS2glVertex2sv(short* v)
  */
 void recPS2glVertex2iv(int* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(v[0] / 2147483648.0f, v[1] / 2147483648.0f, 0.0f, 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5852–5852 */
@@ -3230,7 +3264,7 @@ void recPS2glVertex2iv(int* v)
  */
 void recPS2glVertex2fv(float* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(v[0], v[1], 0.0f, 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5846–5848 */
@@ -3244,7 +3278,7 @@ void recPS2glVertex2fv(float* v)
  */
 void recPS2glVertex2dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f((float)v[0], (float)v[1], 0.0f, 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5842–5842 */
@@ -3254,10 +3288,12 @@ void recPS2glVertex2dv(double* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimize_for_size off
 void recPS2glVertex4s(short x, short y, short z, short w)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(x / 32767.0f, y / 32767.0f, z / 32767.0f, w / 32767.0f);
 }
+#pragma optimize_for_size reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5837–5837 */
 /* addr: 0x00155550  size: 68 bytes */
@@ -3268,7 +3304,7 @@ void recPS2glVertex4s(short x, short y, short z, short w)
  */
 void recPS2glVertex4i(int x, int y, int z, int w)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(x / 2147483648.0f, y / 2147483648.0f, z / 2147483648.0f, w / 2147483648.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5831–5833 */
@@ -3282,7 +3318,7 @@ void recPS2glVertex4i(int x, int y, int z, int w)
  */
 void recPS2glVertex4d(double X, double Y, double Z, double W)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f((float)X, (float)Y, (float)Z, (float)W);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5780–5828 */
@@ -3349,10 +3385,12 @@ void recPS2glVertex4f(float x, float y, float z, float w)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimize_for_size off
 void recPS2glVertex3s(short x, short y, short z)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(x / 32767.0f, y / 32767.0f, z / 32767.0f, 1.0f);
 }
+#pragma optimize_for_size reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5771–5771 */
 /* addr: 0x00155840  size: 64 bytes */
@@ -3363,7 +3401,7 @@ void recPS2glVertex3s(short x, short y, short z)
  */
 void recPS2glVertex3i(int x, int y, int z)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(x / 2147483648.0f, y / 2147483648.0f, z / 2147483648.0f, 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5766–5766 */
@@ -3375,7 +3413,7 @@ void recPS2glVertex3i(int x, int y, int z)
  */
 void recPS2glVertex3f(float x, float y, float z)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(x, y, z, 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5760–5762 */
@@ -3389,7 +3427,7 @@ void recPS2glVertex3f(float x, float y, float z)
  */
 void recPS2glVertex3d(double x, double y, double z)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f((float)x, (float)y, (float)z, 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5756–5756 */
@@ -3399,10 +3437,12 @@ void recPS2glVertex3d(double x, double y, double z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimize_for_size off
 void recPS2glVertex2s(short x, short y)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(x / 32767.0f, y / 32767.0f, 0.0f, 1.0f);
 }
+#pragma optimize_for_size reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5751–5751 */
 /* addr: 0x00155950  size: 56 bytes */
@@ -3413,7 +3453,7 @@ void recPS2glVertex2s(short x, short y)
  */
 void recPS2glVertex2i(int x, int y)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(x / 2147483648.0f, y / 2147483648.0f, 0.0f, 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5746–5746 */
@@ -3425,7 +3465,7 @@ void recPS2glVertex2i(int x, int y)
  */
 void recPS2glVertex2f(float x, float y)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f(x, y, 0.0f, 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5740–5742 */
@@ -3439,7 +3479,7 @@ void recPS2glVertex2f(float x, float y)
  */
 void recPS2glVertex2d(double x, double y)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glVertex4f((float)x, (float)y, 0.0f, 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5724–5731 */
@@ -3459,11 +3499,17 @@ void recPS2glVertex2d(double x, double y)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glTranslatef(float x, float y, float z)
 {
-    anon_133* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    anon_133* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_133));
+    pParam = (anon_133*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTranslatef;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5720–5720 */
@@ -3489,8 +3535,9 @@ void plyPS2glTranslatef(anon_133* pParam)
  */
 void recPS2glTranslated(double x, double y, double z)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glTranslatef((float)x, (float)y, (float)z);
 }
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5687–5700 */
 /* addr: 0x00155af0  size: 176 bytes */
@@ -3529,9 +3576,10 @@ void recPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoff
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int width, int height, unsigned int format, unsigned int type, void* pixels);
 void plyPS2glTexSubImage2D(anon_28* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glTexSubImage2D(pParam->target, pParam->level, pParam->xoffset, pParam->yoffset, pParam->width, pParam->height, pParam->format, pParam->type, *(void**)&pParam->pixels);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5653–5664 */
@@ -3567,9 +3615,11 @@ void recPS2glTexSubImage1D(unsigned int target, int level, int xoffset, int widt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glTexSubImage1D(unsigned int, int, int, int, unsigned int, unsigned int, void*);
+
 void plyPS2glTexSubImage1D(anon_176* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glTexSubImage1D(pParam->target, pParam->level, pParam->xoffset, pParam->width, pParam->format, pParam->type, (void*)pParam->pixels);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5619–5632 */
@@ -3632,7 +3682,12 @@ void recPS2glTexParameteri(unsigned int target, unsigned int pname, int param)
 {
     anon_109* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_109));
+    pParam = (anon_109*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexParameteri;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5591–5591 */
@@ -3707,7 +3762,12 @@ void recPS2glTexParameterf(unsigned int target, unsigned int pname, float param)
 {
     anon_101* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_101));
+    pParam = (anon_101*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexParameterf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5537–5537 */
@@ -3759,9 +3819,10 @@ void recPS2glTexImage2D(unsigned int target, int level, int components, int widt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glTexImage2D(unsigned int target, int level, int components, int width, int height, int border, unsigned int format, unsigned int type, void* pixels);
 void plyPS2glTexImage2D(anon_49* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glTexImage2D(pParam->target, pParam->level, pParam->components, pParam->width, pParam->height, pParam->border, pParam->format, pParam->type, *(void**)&pParam->pixels);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5476–5488 */
@@ -3798,9 +3859,10 @@ void recPS2glTexImage1D(unsigned int target, int level, int components, int widt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glTexImage1D(unsigned int target, int level, int components, int width, int border, unsigned int format, unsigned int type, void* pixels);
 void plyPS2glTexImage1D(anon_175* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glTexImage1D(pParam->target, pParam->level, pParam->components, pParam->width, pParam->border, pParam->format, pParam->type, *(void**)&pParam->pixels);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5441–5454 */
@@ -3863,7 +3925,12 @@ void recPS2glTexGeni(unsigned int coord, unsigned int pname, int param)
 {
     anon_103* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_103));
+    pParam = (anon_103*)pNode->aParams;
+    pParam->coord = coord;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGeni;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5413–5413 */
@@ -3934,11 +4001,17 @@ void plyPS2glTexGenfv(anon_153* pParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glTexGenf(unsigned int coord, unsigned int pname, float param)
 {
-    anon_79* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    anon_79* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_79));
+    pParam = (anon_79*)pNode->aParams;
+    pParam->coord = coord;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexGenf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5359–5359 */
@@ -4005,8 +4078,9 @@ void plyPS2glTexGendv(anon_122* pParam)
  */
 void recPS2glTexGend(unsigned int coord, unsigned int pname, double param)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glTexGenf(coord, pname, (float)param);
 }
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5295–5309 */
 /* addr: 0x00156520  size: 156 bytes */
@@ -4068,7 +4142,12 @@ void recPS2glTexEnvi(unsigned int target, unsigned int pname, int param)
 {
     anon_8* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_8));
+    pParam = (anon_8*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexEnvi;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5267–5267 */
@@ -4143,7 +4222,12 @@ void recPS2glTexEnvf(unsigned int target, unsigned int pname, float param)
 {
     anon_71* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_71));
+    pParam = (anon_71*)pNode->aParams;
+    pParam->target = target;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glTexEnvf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5212–5212 */
@@ -5163,9 +5247,13 @@ void recPS2glTexCoord1sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glSaveListCall(unsigned int eCode, float (*pData)[4]);
+
 void recPS2glTexCoord1f(float s)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.valistTexCoords[0][0] = s;
+    if (!g_PS2glContext.bFinalCompile)
+        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4737–4739 */
@@ -5235,7 +5323,12 @@ void recPS2glStencilOp(unsigned int fail, unsigned int zfail, unsigned int zpass
 {
     anon_16* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_16));
+    pParam = (anon_16*)pNode->aParams;
+    pParam->fail = fail;
+    pParam->zfail = zfail;
+    pParam->zpass = zpass;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glStencilOp;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4706–4706 */
@@ -5265,7 +5358,9 @@ void plyPS2glStencilOp(anon_16* pParam)
 void recPS2glStencilMask(unsigned int mask)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_21));
+    ((anon_21*)pNode->aParams)->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glStencilMask;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4684–4684 */
@@ -5299,7 +5394,12 @@ void recPS2glStencilFunc(unsigned int func, int ref, unsigned int mask)
 {
     anon_100* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_100));
+    pParam = (anon_100*)pNode->aParams;
+    pParam->func = func;
+    pParam->ref = ref;
+    pParam->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glStencilFunc;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4662–4662 */
@@ -5329,7 +5429,9 @@ void plyPS2glStencilFunc(anon_100* pParam)
 void recPS2glShadeModel(unsigned int mode)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_162));
+    ((anon_162*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glShadeModel;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4640–4640 */
@@ -5364,7 +5466,13 @@ void recPS2glScissor(int x, int y, int width, int height)
 {
     anon_46* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_46));
+    pParam = (anon_46*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->height = height;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glScissor;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4617–4617 */
@@ -5396,11 +5504,17 @@ void plyPS2glScissor(anon_46* pParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glScalef(float x, float y, float z)
 {
-    anon_112* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    anon_112* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_112));
+    pParam = (anon_112*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glScalef;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4592–4592 */
@@ -5426,8 +5540,9 @@ void plyPS2glScalef(anon_112* pParam)
  */
 void recPS2glScaled(double x, double y, double z)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glScalef((float)x, (float)y, (float)z);
 }
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4564–4572 */
 /* addr: 0x00158b50  size: 104 bytes */
@@ -5447,11 +5562,18 @@ void recPS2glScaled(double x, double y, double z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glRotatef(float angle, float x, float y, float z)
 {
-    anon_131* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    anon_131* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_131));
+    pParam = (anon_131*)pNode->aParams;
+    pParam->angle = angle;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRotatef;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4560–4560 */
@@ -5477,23 +5599,11 @@ void plyPS2glRotatef(anon_131* pParam)
  */
 void recPS2glRotated(double angle, double x, double y, double z)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glRotatef((float)angle, (float)x, (float)y, (float)z);
 }
+#pragma auto_inline reset
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4537–4539 */
-/* addr: 0x00158c80  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4537
- *   +0x0018 -> line 4538
- *   +0x004c -> line 4539
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRectsv(short* v1, short* v2)
-{
-    /* TODO: decompile from asm/... */
-}
-
+#pragma auto_inline on
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4524–4532 */
 /* addr: 0x00158cf0  size: 104 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5514,8 +5624,30 @@ void recPS2glRects(short x1, short y1, short x2, short y2)
 {
     anon_58* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_58));
+    pParam = (anon_58*)pNode->aParams;
+    pParam->x1 = x1;
+    pParam->y1 = y1;
+    pParam->x2 = x2;
+    pParam->y2 = y2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRects;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4537–4539 */
+/* addr: 0x00158c80  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4537
+ *   +0x0018 -> line 4538
+ *   +0x004c -> line 4539
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRectsv(short* v1, short* v2)
+{
+    recPS2glRects(v1[0], v1[1], v2[0], v2[1]);
+}
+
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4520–4520 */
 /* addr: 0x00158d60  size: 24 bytes */
@@ -5529,20 +5661,7 @@ void plyPS2glRects(anon_58* pParam)
     impPS2glRects(pParam->x1, pParam->y1, pParam->x2, pParam->y2);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4504–4506 */
-/* addr: 0x00158d80  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4504
- *   +0x0018 -> line 4505
- *   +0x004c -> line 4506
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRectiv(int* v1, int* v2)
-{
-    /* TODO: decompile from asm/... */
-}
-
+#pragma auto_inline on
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4491–4499 */
 /* addr: 0x00158df0  size: 104 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5563,8 +5682,30 @@ void recPS2glRecti(int x1, int y1, int x2, int y2)
 {
     anon_39* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_39));
+    pParam = (anon_39*)pNode->aParams;
+    pParam->x1 = x1;
+    pParam->y1 = y1;
+    pParam->x2 = x2;
+    pParam->y2 = y2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRecti;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4504–4506 */
+/* addr: 0x00158d80  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4504
+ *   +0x0018 -> line 4505
+ *   +0x004c -> line 4506
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRectiv(int* v1, int* v2)
+{
+    recPS2glRecti(v1[0], v1[1], v2[0], v2[1]);
+}
+
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4487–4487 */
 /* addr: 0x00158e60  size: 24 bytes */
@@ -5578,20 +5719,7 @@ void plyPS2glRecti(anon_39* pParam)
     impPS2glRecti(pParam->x1, pParam->y1, pParam->x2, pParam->y2);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4471–4473 */
-/* addr: 0x00158e80  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4471
- *   +0x0018 -> line 4472
- *   +0x004c -> line 4473
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRectfv(float* v1, float* v2)
-{
-    /* TODO: decompile from asm/... */
-}
-
+#pragma auto_inline on
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4458–4466 */
 /* addr: 0x00158ef0  size: 104 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5612,10 +5740,32 @@ void recPS2glRectfv(float* v1, float* v2)
  */
 void recPS2glRectf(float x1, float y1, float x2, float y2)
 {
-    anon_10* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    anon_10* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_10));
+    pParam = (anon_10*)pNode->aParams;
+    pParam->x1 = x1;
+    pParam->y1 = y1;
+    pParam->x2 = x2;
+    pParam->y2 = y2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRectf;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4471–4473 */
+/* addr: 0x00158e80  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4471
+ *   +0x0018 -> line 4472
+ *   +0x004c -> line 4473
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRectfv(float* v1, float* v2)
+{
+    recPS2glRectf(v1[0], v1[1], v2[0], v2[1]);
+}
+
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4454–4454 */
 /* addr: 0x00158f60  size: 20 bytes */
@@ -5640,7 +5790,7 @@ void plyPS2glRectf(anon_10* pParam)
  */
 void recPS2glRectdv(double* v1, double* v2)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glRectf((float)v1[0], (float)v1[1], (float)v2[0], (float)v2[1]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4431–4433 */
@@ -5654,7 +5804,7 @@ void recPS2glRectdv(double* v1, double* v2)
  */
 void recPS2glRectd(double x1, double y1, double x2, double y2)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glRectf((float)x1, (float)y1, (float)x2, (float)y2);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4421–4426 */
@@ -5672,7 +5822,9 @@ void recPS2glRectd(double x1, double y1, double x2, double y2)
 void recPS2glReadBuffer(unsigned int mode)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_25));
+    ((anon_25*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glReadBuffer;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4417–4417 */
@@ -5687,20 +5839,7 @@ void plyPS2glReadBuffer(anon_25* pParam)
     impPS2glReadBuffer(pParam->mode);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4404–4406 */
-/* addr: 0x00159110  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4404
- *   +0x0018 -> line 4405
- *   +0x004c -> line 4406
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRasterPos4sv(short* v)
-{
-    /* TODO: decompile from asm/... */
-}
-
+#pragma auto_inline on
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4391–4399 */
 /* addr: 0x00159180  size: 104 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5721,8 +5860,30 @@ void recPS2glRasterPos4s(short x, short y, short z, short w)
 {
     anon_7* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_7));
+    pParam = (anon_7*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pParam->w = w;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos4s;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4404–4406 */
+/* addr: 0x00159110  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4404
+ *   +0x0018 -> line 4405
+ *   +0x004c -> line 4406
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRasterPos4sv(short* v)
+{
+    recPS2glRasterPos4s(v[0], v[1], v[2], v[3]);
+}
+
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4387–4387 */
 /* addr: 0x001591f0  size: 24 bytes */
@@ -5736,20 +5897,7 @@ void plyPS2glRasterPos4s(anon_7* pParam)
     impPS2glRasterPos4s(pParam->x, pParam->y, pParam->z, pParam->w);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4371–4373 */
-/* addr: 0x00159210  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4371
- *   +0x0018 -> line 4372
- *   +0x004c -> line 4373
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRasterPos4iv(int* v)
-{
-    /* TODO: decompile from asm/... */
-}
-
+#pragma auto_inline on
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4358–4366 */
 /* addr: 0x00159280  size: 104 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5770,8 +5918,30 @@ void recPS2glRasterPos4i(int x, int y, int z, int w)
 {
     anon_149* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_149));
+    pParam = (anon_149*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pParam->w = w;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos4i;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4371–4373 */
+/* addr: 0x00159210  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4371
+ *   +0x0018 -> line 4372
+ *   +0x004c -> line 4373
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRasterPos4iv(int* v)
+{
+    recPS2glRasterPos4i(v[0], v[1], v[2], v[3]);
+}
+
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4354–4354 */
 /* addr: 0x001592f0  size: 24 bytes */
@@ -5785,20 +5955,7 @@ void plyPS2glRasterPos4i(anon_149* pParam)
     impPS2glRasterPos4i(pParam->x, pParam->y, pParam->z, pParam->w);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4338–4340 */
-/* addr: 0x00159310  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4338
- *   +0x0018 -> line 4339
- *   +0x004c -> line 4340
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRasterPos4fv(float* v)
-{
-    /* TODO: decompile from asm/... */
-}
-
+#pragma auto_inline on
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4325–4333 */
 /* addr: 0x00159380  size: 104 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5819,10 +5976,32 @@ void recPS2glRasterPos4fv(float* v)
  */
 void recPS2glRasterPos4f(float x, float y, float z, float w)
 {
-    anon_125* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    anon_125* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_125));
+    pParam = (anon_125*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pParam->w = w;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos4f;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4338–4340 */
+/* addr: 0x00159310  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4338
+ *   +0x0018 -> line 4339
+ *   +0x004c -> line 4340
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRasterPos4fv(float* v)
+{
+    recPS2glRasterPos4f(v[0], v[1], v[2], v[3]);
+}
+
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4321–4321 */
 /* addr: 0x001593f0  size: 20 bytes */
@@ -5847,7 +6026,7 @@ void plyPS2glRasterPos4f(anon_125* pParam)
  */
 void recPS2glRasterPos4dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glRasterPos4f((float)v[0], (float)v[1], (float)v[2], (float)v[3]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4298–4300 */
@@ -5861,23 +6040,10 @@ void recPS2glRasterPos4dv(double* v)
  */
 void recPS2glRasterPos4d(double x, double y, double z, double w)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glRasterPos4f((float)x, (float)y, (float)z, (float)w);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4291–4293 */
-/* addr: 0x00159550  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4291
- *   +0x0014 -> line 4292
- *   +0x0040 -> line 4293
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRasterPos3sv(short* v)
-{
-    /* TODO: decompile from asm/... */
-}
-
+#pragma auto_inline on
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4279–4286 */
 /* addr: 0x001595b0  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5897,8 +6063,29 @@ void recPS2glRasterPos3s(short x, short y, short z)
 {
     anon_57* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_57));
+    pParam = (anon_57*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos3s;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4291–4293 */
+/* addr: 0x00159550  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4291
+ *   +0x0014 -> line 4292
+ *   +0x0040 -> line 4293
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRasterPos3sv(short* v)
+{
+    recPS2glRasterPos3s(v[0], v[1], v[2]);
+}
+
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4275–4275 */
 /* addr: 0x00159610  size: 20 bytes */
@@ -5912,20 +6099,7 @@ void plyPS2glRasterPos3s(anon_57* pParam)
     impPS2glRasterPos3s(pParam->x, pParam->y, pParam->z);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4260–4262 */
-/* addr: 0x00159630  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4260
- *   +0x0014 -> line 4261
- *   +0x0040 -> line 4262
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRasterPos3iv(int* v)
-{
-    /* TODO: decompile from asm/... */
-}
-
+#pragma auto_inline on
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4248–4255 */
 /* addr: 0x00159690  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5945,8 +6119,29 @@ void recPS2glRasterPos3i(int x, int y, int z)
 {
     anon_34* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_34));
+    pParam = (anon_34*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos3i;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4260–4262 */
+/* addr: 0x00159630  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4260
+ *   +0x0014 -> line 4261
+ *   +0x0040 -> line 4262
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRasterPos3iv(int* v)
+{
+    recPS2glRasterPos3i(v[0], v[1], v[2]);
+}
+
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4244–4244 */
 /* addr: 0x001596f0  size: 20 bytes */
@@ -5960,20 +6155,7 @@ void plyPS2glRasterPos3i(anon_34* pParam)
     impPS2glRasterPos3i(pParam->x, pParam->y, pParam->z);
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4229–4231 */
-/* addr: 0x00159710  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4229
- *   +0x0014 -> line 4230
- *   +0x0040 -> line 4231
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRasterPos3fv(float* v)
-{
-    /* TODO: decompile from asm/... */
-}
-
+#pragma auto_inline on
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4217–4224 */
 /* addr: 0x00159770  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -5993,10 +6175,31 @@ void recPS2glRasterPos3fv(float* v)
  */
 void recPS2glRasterPos3f(float x, float y, float z)
 {
-    anon_76* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    anon_76* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_76));
+    pParam = (anon_76*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->z = z;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos3f;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4229–4231 */
+/* addr: 0x00159710  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4229
+ *   +0x0014 -> line 4230
+ *   +0x0040 -> line 4231
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRasterPos3fv(float* v)
+{
+    recPS2glRasterPos3f(v[0], v[1], v[2]);
+}
+
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4213–4213 */
 /* addr: 0x001597d0  size: 16 bytes */
@@ -6021,7 +6224,7 @@ void plyPS2glRasterPos3f(anon_76* pParam)
  */
 void recPS2glRasterPos3dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glRasterPos3f((float)v[0], (float)v[1], (float)v[2]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4191–4193 */
@@ -6035,21 +6238,7 @@ void recPS2glRasterPos3dv(double* v)
  */
 void recPS2glRasterPos3d(double x, double y, double z)
 {
-    /* TODO: decompile from asm/... */
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4184–4186 */
-/* addr: 0x001598e0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4184
- *   +0x0010 -> line 4185
- *   +0x0034 -> line 4186
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRasterPos2sv(short* v)
-{
-    /* TODO: decompile from asm/... */
+    recPS2glRasterPos3f((float)x, (float)y, (float)z);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4173–4179 */
@@ -6065,12 +6254,32 @@ void recPS2glRasterPos2sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glRasterPos2s(short x, short y)
 {
     anon_45* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_45));
+    pParam = (anon_45*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos2s;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4184–4186 */
+/* addr: 0x001598e0  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4184
+ *   +0x0010 -> line 4185
+ *   +0x0034 -> line 4186
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRasterPos2sv(short* v)
+{
+    recPS2glRasterPos2s(v[0], v[1]);
+}
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4169–4169 */
 /* addr: 0x00159980  size: 12 bytes */
@@ -6082,20 +6291,6 @@ void recPS2glRasterPos2s(short x, short y)
 void plyPS2glRasterPos2s(anon_45* param0)
 {
     impPS2glRasterPos2s(param0->x, param0->y);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4155–4157 */
-/* addr: 0x00159990  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4155
- *   +0x0010 -> line 4156
- *   +0x0034 -> line 4157
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRasterPos2iv(int* v)
-{
-    /* TODO: decompile from asm/... */
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4144–4150 */
@@ -6111,12 +6306,32 @@ void recPS2glRasterPos2iv(int* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glRasterPos2i(int x, int y)
 {
     anon_62* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_62));
+    pParam = (anon_62*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos2i;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4155–4157 */
+/* addr: 0x00159990  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4155
+ *   +0x0010 -> line 4156
+ *   +0x0034 -> line 4157
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRasterPos2iv(int* v)
+{
+    recPS2glRasterPos2i(v[0], v[1]);
+}
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4140–4140 */
 /* addr: 0x00159a30  size: 12 bytes */
@@ -6128,20 +6343,6 @@ void recPS2glRasterPos2i(int x, int y)
 void plyPS2glRasterPos2i(anon_62* param0)
 {
     impPS2glRasterPos2i(param0->x, param0->y);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4126–4128 */
-/* addr: 0x00159a40  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4126
- *   +0x0010 -> line 4127
- *   +0x0034 -> line 4128
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glRasterPos2fv(float* v)
-{
-    /* TODO: decompile from asm/... */
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4115–4121 */
@@ -6159,12 +6360,32 @@ void recPS2glRasterPos2fv(float* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glRasterPos2f(float x, float y)
 {
-    anon_13* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    anon_13* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_13));
+    pParam = (anon_13*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glRasterPos2f;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4126–4128 */
+/* addr: 0x00159a40  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4126
+ *   +0x0010 -> line 4127
+ *   +0x0034 -> line 4128
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glRasterPos2fv(float* v)
+{
+    recPS2glRasterPos2f(v[0], v[1]);
+}
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4111–4111 */
 /* addr: 0x00159ae0  size: 12 bytes */
@@ -6189,7 +6410,7 @@ void plyPS2glRasterPos2f(anon_13* pParam)
  */
 void recPS2glRasterPos2dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glRasterPos2f((float)v[0], (float)v[1]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4090–4092 */
@@ -6203,7 +6424,7 @@ void recPS2glRasterPos2dv(double* v)
  */
 void recPS2glRasterPos2d(double x, double y)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glRasterPos2f(x, y);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4080–4085 */
@@ -6221,7 +6442,9 @@ void recPS2glRasterPos2d(double x, double y)
 void recPS2glPushName(unsigned int name)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_85));
+    ((anon_85*)pNode->aParams)->name = name;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPushName;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4076–4076 */
@@ -6249,7 +6472,8 @@ void plyPS2glPushName(anon_85* pParam)
 void recPS2glPushMatrix(void)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glPushMatrix;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4052–4057 */
@@ -6267,7 +6491,9 @@ void recPS2glPushMatrix(void)
 void recPS2glPushClientAttrib(unsigned int mask)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_189));
+    ((anon_189*)pNode->aParams)->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPushClientAttrib;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4048–4048 */
@@ -6297,7 +6523,9 @@ void plyPS2glPushClientAttrib(anon_189* pParam)
 void recPS2glPushAttrib(unsigned int mask)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_1));
+    ((anon_1*)pNode->aParams)->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPushAttrib;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4028–4028 */
@@ -6361,7 +6589,8 @@ void plyPS2glPrioritizeTextures(anon_67* pParam)
 void recPS2glPopName(void)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glPopName;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3982–3985 */
@@ -6377,7 +6606,8 @@ void recPS2glPopName(void)
 void recPS2glPopMatrix(void)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glPopMatrix;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3974–3977 */
@@ -6393,7 +6623,8 @@ void recPS2glPopMatrix(void)
 void recPS2glPopClientAttrib(void)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glPopClientAttrib;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3966–3969 */
@@ -6409,7 +6640,8 @@ void recPS2glPopClientAttrib(void)
 void recPS2glPopAttrib(void)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glPopAttrib;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3956–3961 */
@@ -6462,7 +6694,11 @@ void recPS2glPolygonOffset(float factor, float units)
 {
     anon_92* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_92));
+    pParam = (anon_92*)pNode->aParams;
+    pParam->factor = factor;
+    pParam->units = units;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPolygonOffset;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3931–3931 */
@@ -6494,7 +6730,11 @@ void recPS2glPolygonMode(unsigned int face, unsigned int mode)
 {
     anon_50* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_50));
+    pParam = (anon_50*)pNode->aParams;
+    pParam->face = face;
+    pParam->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPolygonMode;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3909–3909 */
@@ -6526,7 +6766,9 @@ void plyPS2glPolygonMode(anon_50* param0)
 void recPS2glPointSize(float size)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_124));
+    ((anon_124*)pNode->aParams)->size = size;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPointSize;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3888–3888 */
@@ -6560,7 +6802,11 @@ void recPS2glPixelZoom(float xfactor, float yfactor)
 {
     anon_0* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_0));
+    pParam = (anon_0*)pNode->aParams;
+    pParam->xfactor = xfactor;
+    pParam->yfactor = yfactor;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelZoom;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3867–3867 */
@@ -6592,7 +6838,11 @@ void recPS2glPixelTransferi(unsigned int pname, int param)
 {
     anon_54* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_54));
+    pParam = (anon_54*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelTransferi;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3845–3845 */
@@ -6624,7 +6874,11 @@ void recPS2glPixelTransferf(unsigned int pname, float param)
 {
     anon_4* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_4));
+    pParam = (anon_4*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPixelTransferf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3823–3823 */
@@ -6767,7 +7021,9 @@ void plyPS2glPixelMapfv(anon_51* pParam)
 void recPS2glPassThrough(float token)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_110));
+    ((anon_110*)pNode->aParams)->token = token;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glPassThrough;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3730–3730 */
@@ -7013,7 +7269,11 @@ void recPS2glNewList(unsigned int list, unsigned int mode)
 {
     anon_63* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_63));
+    pParam = (anon_63*)pNode->aParams;
+    pParam->list = list;
+    pParam->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glNewList;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3593–3593 */
@@ -7105,7 +7365,9 @@ void plyPS2glMultMatrixd(anon_107* pParam)
 void recPS2glMatrixMode(unsigned int mode)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_108));
+    ((anon_108*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMatrixMode;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3532–3532 */
@@ -7180,7 +7442,12 @@ void recPS2glMateriali(unsigned int face, unsigned int pname, int param)
 {
     anon_35* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_35));
+    pParam = (anon_35*)pNode->aParams;
+    pParam->face = face;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMateriali;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3479–3479 */
@@ -7255,7 +7522,12 @@ void recPS2glMaterialf(unsigned int face, unsigned int pname, float param)
 {
     anon_52* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_52));
+    pParam = (anon_52*)pNode->aParams;
+    pParam->face = face;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMaterialf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3424–3424 */
@@ -7290,11 +7562,20 @@ void plyPS2glMaterialf(anon_52* pParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glMapGrid2f(int un, float u1, float u2, int vn, float v1, float v2)
 {
-    anon_113* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    anon_113* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_113));
+    pParam = (anon_113*)pNode->aParams;
+    pParam->un = un;
+    pParam->u1 = u1;
+    pParam->u2 = u2;
+    pParam->vn = vn;
+    pParam->v1 = v1;
+    pParam->v2 = v2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMapGrid2f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3397–3397 */
@@ -7320,8 +7601,9 @@ void plyPS2glMapGrid2f(anon_113* pParam)
  */
 void recPS2glMapGrid2d(int un, double u1, double u2, int vn, double v1, double v2)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glMapGrid2f(un, (float)u1, (float)u2, vn, (float)v1, (float)v2);
 }
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3367–3374 */
 /* addr: 0x0015aec0  size: 88 bytes */
@@ -7338,11 +7620,17 @@ void recPS2glMapGrid2d(int un, double u1, double u2, int vn, double v1, double v
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glMapGrid1f(int un, float u1, float u2)
 {
-    anon_88* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    anon_88* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_88));
+    pParam = (anon_88*)pNode->aParams;
+    pParam->un = un;
+    pParam->u1 = u1;
+    pParam->u2 = u2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glMapGrid1f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3363–3363 */
@@ -7368,8 +7656,9 @@ void plyPS2glMapGrid1f(anon_88* pParam)
  */
 void recPS2glMapGrid1d(int un, double u1, double u2)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glMapGrid1f(un, (float)u1, (float)u2);
 }
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3329–3343 */
 /* addr: 0x0015afb0  size: 224 bytes */
@@ -7413,9 +7702,11 @@ void recPS2glMap2f(unsigned int target, float u1, float u2, int ustride, int uor
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Full callback signature is preserved in tagPS2glApiTable. */
+void impPS2glMap2f(unsigned int target, float u1, float u2, int ustride, int uorder, float v1, float v2, int vstride, int vorder, float* points);
 void plyPS2glMap2f(anon_94* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glMap2f(pParam->target, pParam->u1, pParam->u2, pParam->ustride, pParam->uorder, pParam->v1, pParam->v2, pParam->vstride, pParam->vorder, *(float**)&pParam->points);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3285–3305 */
@@ -7565,7 +7856,9 @@ void plyPS2glMap1d(anon_167* pParam)
 void recPS2glLogicOp(unsigned int opcode)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_174));
+    ((anon_174*)pNode->aParams)->opcode = opcode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLogicOp;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3186–3186 */
@@ -7595,7 +7888,9 @@ void plyPS2glLogicOp(anon_174* pParam)
 void recPS2glLoadName(unsigned int name)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_177));
+    ((anon_177*)pNode->aParams)->name = name;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLoadName;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3166–3166 */
@@ -7685,7 +7980,8 @@ void plyPS2glLoadMatrixd(anon_160* pParam)
 void recPS2glLoadIdentity(void)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glLoadIdentity;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3102–3107 */
@@ -7703,7 +7999,9 @@ void recPS2glLoadIdentity(void)
 void recPS2glListBase(unsigned int base)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_86));
+    ((anon_86*)pNode->aParams)->base = base;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glListBase;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3098–3098 */
@@ -7735,7 +8033,9 @@ void plyPS2glListBase(anon_86* pParam)
 void recPS2glLineWidth(float width)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_87));
+    ((anon_87*)pNode->aParams)->width = width;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLineWidth;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3078–3078 */
@@ -7767,7 +8067,11 @@ void recPS2glLineStipple(int factor, unsigned short pattern)
 {
     anon_48* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_48));
+    pParam = (anon_48*)pNode->aParams;
+    pParam->factor = factor;
+    pParam->pattern = pattern;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLineStipple;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3057–3057 */
@@ -7827,7 +8131,12 @@ void recPS2glLighti(unsigned int light, unsigned int pname, int param)
 {
     anon_61* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_61));
+    pParam = (anon_61*)pNode->aParams;
+    pParam->light = light;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLighti;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2996–2996 */
@@ -7882,10 +8191,13 @@ void recPS2glLightfv(unsigned int light, unsigned int pname, float* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* memcpy(void* dest, const void* src, unsigned int count);
+void impPS2glLightfv(unsigned int light, unsigned int pname, float* params);
 void plyPS2glLightfv(anon_118* pParam)
 {
     float vParam[4];
-    /* TODO: decompile from asm/... */
+    memcpy(vParam, pParam->params, sizeof(vParam));
+    impPS2glLightfv(pParam->light, pParam->pname, vParam);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2937–2944 */
@@ -7907,7 +8219,12 @@ void recPS2glLightf(unsigned int light, unsigned int pname, float param)
 {
     anon_77* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_77));
+    pParam = (anon_77*)pNode->aParams;
+    pParam->light = light;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2933–2933 */
@@ -7979,7 +8296,11 @@ void recPS2glLightModeli(unsigned int pname, int param)
 {
     anon_74* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_74));
+    pParam = (anon_74*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightModeli;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2882–2882 */
@@ -8051,7 +8372,11 @@ void recPS2glLightModelf(unsigned int pname, float param)
 {
     anon_6* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_6));
+    pParam = (anon_6*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightModelf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2833–2833 */
@@ -8079,7 +8404,8 @@ void plyPS2glLightModelf(anon_6* param0)
 void recPS2glInitNames(void)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(0);
+    pNode->pfns.pfnPlayVoid = impPS2glInitNames;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2808–2813 */
@@ -8097,7 +8423,9 @@ void recPS2glInitNames(void)
 void recPS2glIndexubv(unsigned char* c)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_130));
+    ((anon_130*)pNode->aParams)->c = (int)c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexubv;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2804–2804 */
@@ -8127,7 +8455,9 @@ void plyPS2glIndexubv(anon_130* pParam)
 void recPS2glIndexub(unsigned char c)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_135));
+    ((anon_135*)pNode->aParams)->c = c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexub;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2784–2784 */
@@ -8157,7 +8487,9 @@ void plyPS2glIndexub(anon_135* pParam)
 void recPS2glIndexsv(short* c)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_137));
+    ((anon_137*)pNode->aParams)->c = (int)c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexsv;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2764–2764 */
@@ -8187,7 +8519,9 @@ void plyPS2glIndexsv(anon_137* pParam)
 void recPS2glIndexs(short c)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_140));
+    ((anon_140*)pNode->aParams)->c = c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexs;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2744–2744 */
@@ -8217,7 +8551,9 @@ void plyPS2glIndexs(anon_140* pParam)
 void recPS2glIndexiv(int* c)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_141));
+    ((anon_141*)pNode->aParams)->c = (int)c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexiv;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2724–2724 */
@@ -8247,7 +8583,9 @@ void plyPS2glIndexiv(anon_141* pParam)
 void recPS2glIndexi(int c)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_146));
+    ((anon_146*)pNode->aParams)->c = c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexi;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2704–2704 */
@@ -8277,7 +8615,9 @@ void plyPS2glIndexi(anon_146* pParam)
 void recPS2glIndexfv(float* c)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_148));
+    ((anon_148*)pNode->aParams)->c = (int)c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexfv;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2684–2684 */
@@ -8306,10 +8646,13 @@ void plyPS2glIndexfv(anon_148* pParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glIndexf(float c)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_152));
+    ((anon_152*)pNode->aParams)->c = c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2664–2664 */
@@ -8335,7 +8678,7 @@ void plyPS2glIndexf(anon_152* pParam)
  */
 void recPS2glIndexdv(double* c)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glIndexf((float)c[0]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2644–2646 */
@@ -8349,8 +8692,9 @@ void recPS2glIndexdv(double* c)
  */
 void recPS2glIndexd(double c)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glIndexf((float)c);
 }
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2634–2639 */
 /* addr: 0x0015bed0  size: 56 bytes */
@@ -8367,7 +8711,9 @@ void recPS2glIndexd(double c)
 void recPS2glIndexMask(unsigned int mask)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_36));
+    ((anon_36*)pNode->aParams)->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glIndexMask;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2630–2630 */
@@ -8399,7 +8745,11 @@ void recPS2glHint(unsigned int target, unsigned int mode)
 {
     anon_123* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_123));
+    pParam = (anon_123*)pNode->aParams;
+    pParam->target = target;
+    pParam->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glHint;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2609–2609 */
@@ -8440,7 +8790,16 @@ void recPS2glFrustum(double left, double right, double bottom, double top, doubl
     unsigned int tmp;
     anon_142* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_142) + 4);
+    tmp = (unsigned int)pNode; pNode = (tagGLlistnode*)(tmp + ((~tmp + 1) & 7));
+    pParam = (anon_142*)pNode->aParams;
+    pParam->left = left;
+    pParam->right = right;
+    pParam->bottom = bottom;
+    pParam->top = top;
+    pParam->zNear = zNear;
+    pParam->zFar = zFar;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFrustum;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2577–2577 */
@@ -8470,7 +8829,9 @@ void plyPS2glFrustum(anon_142* pParam)
 void recPS2glFrontFace(unsigned int mode)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_163));
+    ((anon_163*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFrontFace;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2552–2552 */
@@ -8542,7 +8903,11 @@ void recPS2glFogi(unsigned int pname, int param)
 {
     anon_23* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_23));
+    pParam = (anon_23*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFogi;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2504–2504 */
@@ -8614,7 +8979,11 @@ void recPS2glFogf(unsigned int pname, float param)
 {
     anon_15* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_15));
+    pParam = (anon_15*)pNode->aParams;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glFogf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2455–2455 */
@@ -8646,7 +9015,11 @@ void recPS2glEvalPoint2(int i, int j)
 {
     anon_68* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_68));
+    pParam = (anon_68*)pNode->aParams;
+    pParam->i = i;
+    pParam->j = j;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalPoint2;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2433–2433 */
@@ -8676,7 +9049,9 @@ void plyPS2glEvalPoint2(anon_68* param0)
 void recPS2glEvalPoint1(int i)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_73));
+    ((anon_73*)pNode->aParams)->i = i;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalPoint1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2412–2412 */
@@ -8712,7 +9087,14 @@ void recPS2glEvalMesh2(unsigned int mode, int i1, int i2, int j1, int j2)
 {
     anon_95* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_95));
+    pParam = (anon_95*)pNode->aParams;
+    pParam->mode = mode;
+    pParam->i1 = i1;
+    pParam->i2 = i2;
+    pParam->j1 = j1;
+    pParam->j2 = j2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalMesh2;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2388–2388 */
@@ -8746,7 +9128,12 @@ void recPS2glEvalMesh1(unsigned int mode, int i1, int i2)
 {
     anon_43* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_43));
+    pParam = (anon_43*)pNode->aParams;
+    pParam->mode = mode;
+    pParam->i1 = i1;
+    pParam->i2 = i2;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalMesh1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2362–2362 */
@@ -8759,20 +9146,6 @@ void recPS2glEvalMesh1(unsigned int mode, int i1, int i2)
 void plyPS2glEvalMesh1(anon_43* pParam)
 {
     impPS2glEvalMesh1(pParam->mode, pParam->i1, pParam->i2);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2347–2349 */
-/* addr: 0x0015c460  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2347
- *   +0x0010 -> line 2348
- *   +0x0034 -> line 2349
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glEvalCoord2fv(float* u)
-{
-    /* TODO: decompile from asm/... */
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2336–2342 */
@@ -8790,12 +9163,32 @@ void recPS2glEvalCoord2fv(float* u)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glEvalCoord2f(float u, float v)
 {
-    anon_55* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    anon_55* pParam;
+    pNode = PS2glListAllocNode(sizeof(anon_55));
+    pParam = (anon_55*)pNode->aParams;
+    pParam->u = u;
+    pParam->v = v;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalCoord2f;
 }
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2347–2349 */
+/* addr: 0x0015c460  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2347
+ *   +0x0010 -> line 2348
+ *   +0x0034 -> line 2349
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void recPS2glEvalCoord2fv(float* u)
+{
+    recPS2glEvalCoord2f(u[0], u[1]);
+}
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2332–2332 */
 /* addr: 0x0015c500  size: 12 bytes */
@@ -8820,7 +9213,7 @@ void plyPS2glEvalCoord2f(anon_55* pParam)
  */
 void recPS2glEvalCoord2dv(double* u)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glEvalCoord2f((float)u[0], (float)u[1]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2311–2313 */
@@ -8834,7 +9227,7 @@ void recPS2glEvalCoord2dv(double* u)
  */
 void recPS2glEvalCoord2d(double u, double v)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glEvalCoord2f((float)u, (float)v);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2301–2306 */
@@ -8852,7 +9245,9 @@ void recPS2glEvalCoord2d(double u, double v)
 void recPS2glEvalCoord1fv(float* u)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_183));
+    ((anon_183*)pNode->aParams)->u = (int)u;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalCoord1fv;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2297–2297 */
@@ -8881,10 +9276,13 @@ void plyPS2glEvalCoord1fv(anon_183* pParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glEvalCoord1f(float u)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_186));
+    ((anon_186*)pNode->aParams)->u = u;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEvalCoord1f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2277–2277 */
@@ -8910,7 +9308,7 @@ void plyPS2glEvalCoord1f(anon_186* pParam)
  */
 void recPS2glEvalCoord1dv(double* u)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glEvalCoord1f((float)u[0]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2257–2259 */
@@ -8924,8 +9322,9 @@ void recPS2glEvalCoord1dv(double* u)
  */
 void recPS2glEvalCoord1d(double u)
 {
-    /* TODO: decompile from asm/... */
+    recPS2glEvalCoord1f((float)u);
 }
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2210–2242 */
 /* addr: 0x0015c720  size: 228 bytes */
@@ -8976,7 +9375,9 @@ void recPS2glEnd(void)
 void recPS2glEnableClientState(unsigned int array)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_156));
+    ((anon_156*)pNode->aParams)->array = array;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEnableClientState;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2196–2196 */
@@ -9006,7 +9407,9 @@ void plyPS2glEnableClientState(anon_156* pParam)
 void recPS2glEnable(unsigned int cap)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_159));
+    ((anon_159*)pNode->aParams)->cap = cap;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEnable;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2176–2176 */
@@ -9036,7 +9439,9 @@ void plyPS2glEnable(anon_159* pParam)
 void recPS2glEdgeFlagv(unsigned char* flag)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_161));
+    ((anon_161*)pNode->aParams)->flag = (int)flag;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEdgeFlagv;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2156–2156 */
@@ -9066,7 +9471,9 @@ void plyPS2glEdgeFlagv(anon_161* pParam)
 void recPS2glEdgeFlag(unsigned char flag)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_164));
+    ((anon_164*)pNode->aParams)->flag = flag;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glEdgeFlag;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2136–2136 */
@@ -9169,7 +9576,9 @@ void plyPS2glDrawElements(anon_11* pParam)
 void recPS2glDrawBuffer(unsigned int mode)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_84));
+    ((anon_84*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDrawBuffer;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2070–2070 */
@@ -9293,7 +9702,9 @@ void plyPS2glDrawArrays(anon_80* pParam)
 void recPS2glDisableClientState(unsigned int array)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_171));
+    ((anon_171*)pNode->aParams)->array = array;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDisableClientState;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1953–1953 */
@@ -9323,7 +9734,9 @@ void plyPS2glDisableClientState(anon_171* pParam)
 void recPS2glDisable(unsigned int cap)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_172));
+    ((anon_172*)pNode->aParams)->cap = cap;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDisable;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1933–1933 */
@@ -9355,7 +9768,11 @@ void recPS2glDepthRange(double zNear, double zFar)
 {
     anon_75* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_75));
+    pParam = (anon_75*)pNode->aParams;
+    pParam->zNear = zNear;
+    pParam->zFar = zFar;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDepthRange;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1912–1912 */
@@ -9385,7 +9802,9 @@ void plyPS2glDepthRange(anon_75* param0)
 void recPS2glDepthMask(unsigned char flag)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_144));
+    ((anon_144*)pNode->aParams)->flag = flag;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDepthMask;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1891–1891 */
@@ -9415,7 +9834,9 @@ void plyPS2glDepthMask(anon_144* pParam)
 void recPS2glDepthFunc(unsigned int func)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_147));
+    ((anon_147*)pNode->aParams)->func = func;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDepthFunc;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1871–1871 */
@@ -9445,7 +9866,9 @@ void plyPS2glDepthFunc(anon_147* pParam)
 void recPS2glCullFace(unsigned int mode)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_151));
+    ((anon_151*)pNode->aParams)->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCullFace;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1851–1851 */
@@ -9484,7 +9907,17 @@ void recPS2glCopyTexSubImage2D(unsigned int target, int level, int xoffset, int 
 {
     anon_90* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_90));
+    pParam = (anon_90*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->xoffset = xoffset;
+    pParam->yoffset = yoffset;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->height = height;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexSubImage2D;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1824–1824 */
@@ -9494,9 +9927,11 @@ void recPS2glCopyTexSubImage2D(unsigned int target, int level, int xoffset, int 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glCopyTexSubImage2D(unsigned int, int, int, int, int, int, int, int);
+
 void plyPS2glCopyTexSubImage2D(anon_90* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glCopyTexSubImage2D(pParam->target, pParam->level, pParam->xoffset, pParam->yoffset, pParam->x, pParam->y, pParam->width, pParam->height);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1796–1806 */
@@ -9521,7 +9956,15 @@ void recPS2glCopyTexSubImage1D(unsigned int target, int level, int xoffset, int 
 {
     anon_91* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_91));
+    pParam = (anon_91*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->xoffset = xoffset;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexSubImage1D;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1792–1792 */
@@ -9560,7 +10003,17 @@ void recPS2glCopyTexImage2D(unsigned int target, int level, unsigned int interna
 {
     anon_24* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_24));
+    pParam = (anon_24*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->internalFormat = internalFormat;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->height = height;
+    pParam->border = border;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexImage2D;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1760–1760 */
@@ -9570,9 +10023,11 @@ void recPS2glCopyTexImage2D(unsigned int target, int level, unsigned int interna
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glCopyTexImage2D(unsigned int, int, unsigned int, int, int, int, int, int);
+
 void plyPS2glCopyTexImage2D(anon_24* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glCopyTexImage2D(pParam->target, pParam->level, pParam->internalFormat, pParam->x, pParam->y, pParam->width, pParam->height, pParam->border);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1731–1742 */
@@ -9598,7 +10053,16 @@ void recPS2glCopyTexImage1D(unsigned int target, int level, unsigned int interna
 {
     anon_14* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_14));
+    pParam = (anon_14*)pNode->aParams;
+    pParam->target = target;
+    pParam->level = level;
+    pParam->internalFormat = internalFormat;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->border = border;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyTexImage1D;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1727–1727 */
@@ -9608,9 +10072,11 @@ void recPS2glCopyTexImage1D(unsigned int target, int level, unsigned int interna
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glCopyTexImage1D(unsigned int, int, unsigned int, int, int, int, int);
+
 void plyPS2glCopyTexImage1D(anon_14* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glCopyTexImage1D(pParam->target, pParam->level, pParam->internalFormat, pParam->x, pParam->y, pParam->width, pParam->border);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1701–1710 */
@@ -9634,7 +10100,14 @@ void recPS2glCopyPixels(int x, int y, int width, int height, unsigned int type)
 {
     anon_27* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_27));
+    pParam = (anon_27*)pNode->aParams;
+    pParam->x = x;
+    pParam->y = y;
+    pParam->width = width;
+    pParam->height = height;
+    pParam->type = type;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCopyPixels;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1697–1697 */
@@ -9666,7 +10139,11 @@ void recPS2glColorMaterial(unsigned int face, unsigned int mode)
 {
     anon_32* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_32));
+    pParam = (anon_32*)pNode->aParams;
+    pParam->face = face;
+    pParam->mode = mode;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glColorMaterial;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1646–1646 */
@@ -9701,7 +10178,13 @@ void recPS2glColorMask(unsigned char red, unsigned char green, unsigned char blu
 {
     anon_154* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_154));
+    pParam = (anon_154*)pNode->aParams;
+    pParam->red = red;
+    pParam->green = green;
+    pParam->blue = blue;
+    pParam->alpha = alpha;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glColorMask;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1622–1622 */
@@ -10762,7 +11245,9 @@ void plyPS2glClipPlane(anon_89* param0)
 void recPS2glClearStencil(int s)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_93));
+    ((anon_93*)pNode->aParams)->s = s;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearStencil;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1156–1156 */
@@ -10794,7 +11279,9 @@ void plyPS2glClearStencil(anon_93* pParam)
 void recPS2glClearIndex(float c)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_96));
+    ((anon_96*)pNode->aParams)->c = c;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearIndex;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1136–1136 */
@@ -10824,7 +11311,9 @@ void plyPS2glClearIndex(anon_96* pParam)
 void recPS2glClearDepth(double depth)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_98));
+    ((anon_98*)pNode->aParams)->depth = depth;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearDepth;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1116–1116 */
@@ -10861,7 +11350,13 @@ void recPS2glClearColor(float red, float green, float blue, float alpha)
 {
     anon_136* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_136));
+    pParam = (anon_136*)pNode->aParams;
+    pParam->red = red;
+    pParam->green = green;
+    pParam->blue = blue;
+    pParam->alpha = alpha;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearColor;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1093–1093 */
@@ -10898,7 +11393,13 @@ void recPS2glClearAccum(float red, float green, float blue, float alpha)
 {
     anon_20* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_20));
+    pParam = (anon_20*)pNode->aParams;
+    pParam->red = red;
+    pParam->green = green;
+    pParam->blue = blue;
+    pParam->alpha = alpha;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClearAccum;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1067–1067 */
@@ -10928,7 +11429,9 @@ void plyPS2glClearAccum(anon_20* pParam)
 void recPS2glClear(unsigned int mask)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_81));
+    ((anon_81*)pNode->aParams)->mask = mask;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClear;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1044–1044 */
@@ -10993,7 +11496,9 @@ void plyPS2glCallLists(anon_111* pParam)
 void recPS2glCallList(unsigned int list)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_170));
+    ((anon_170*)pNode->aParams)->list = list;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glCallList;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1000–1000 */
@@ -11025,7 +11530,11 @@ void recPS2glBlendFunc(unsigned int sfactor, unsigned int dfactor)
 {
     anon_65* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_65));
+    pParam = (anon_65*)pNode->aParams;
+    pParam->sfactor = sfactor;
+    pParam->dfactor = dfactor;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glBlendFunc;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 979–979 */
@@ -11078,9 +11587,11 @@ void recPS2glBitmap(int width, int height, float xorig, float yorig, float xmove
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glBitmap(int, int, float, float, float, float, unsigned char*);
+
 void plyPS2glBitmap(anon_83* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glBitmap(pParam->width, pParam->height, pParam->xorig, pParam->yorig, pParam->xmove, pParam->ymove, (unsigned char*)pParam->bitmap);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 929–935 */
@@ -11100,7 +11611,11 @@ void recPS2glBindTexture(unsigned int target, unsigned int texture)
 {
     anon_40* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_40));
+    pParam = (anon_40*)pNode->aParams;
+    pParam->target = target;
+    pParam->texture = texture;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glBindTexture;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 925–925 */
@@ -11187,7 +11702,47 @@ void recPS2glBegin(unsigned int mode)
 int Mode2Prim(unsigned int mode)
 {
     int iReturn;
-    /* TODO: decompile from asm/... */
+    switch (mode) {
+    case 4:
+        iReturn = 3;
+        break;
+    case 5:
+    case 8:
+        if (g_PS2glContext.nTextureEnableBits & 8)
+            iReturn = 3;
+        else
+            iReturn = 4;
+        break;
+    case 6:
+    case 9:
+        if (g_PS2glContext.nTextureEnableBits & 8)
+            iReturn = 3;
+        else
+            iReturn = 5;
+        break;
+    case 7:
+        iReturn = 3;
+        break;
+    case 1:
+        iReturn = 1;
+        break;
+    case 3:
+        iReturn = 2;
+        break;
+    case 2:
+        iReturn = 2;
+        break;
+    case 0:
+        iReturn = 0;
+        break;
+    case 10:
+        iReturn = 6;
+        break;
+    default:
+        iReturn = 3;
+        break;
+    }
+    return iReturn;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 718–803 */
@@ -11333,7 +11888,9 @@ void plyPS2glBegin(anon_64* pParam)
 void recPS2glArrayElement(int i)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_166));
+    ((anon_166*)pNode->aParams)->i = i;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glArrayElement;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 590–590 */
@@ -11365,7 +11922,11 @@ void recPS2glAlphaFunc(unsigned int func, float ref)
 {
     anon_60* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_60));
+    pParam = (anon_60*)pNode->aParams;
+    pParam->func = func;
+    pParam->ref = ref;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glAlphaFunc;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 569–569 */
@@ -11395,7 +11956,9 @@ void plyPS2glAlphaFunc(anon_60* param0)
 void recPS2glClientActiveTextureARB(unsigned int texture)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_138));
+    ((anon_138*)pNode->aParams)->texture = texture;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glClientActiveTextureARB;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 546–546 */
@@ -11425,7 +11988,9 @@ void plyPS2glClientActiveTextureARB(anon_138* pParam)
 void recPS2glActiveTextureARB(unsigned int texture)
 {
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_138));
+    ((anon_138*)pNode->aParams)->texture = texture;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glActiveTextureARB;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 531–531 */
@@ -11457,5 +12022,9 @@ void recPS2glAccum(unsigned int op, float value)
 {
     anon_29* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_29));
+    pParam = (anon_29*)pNode->aParams;
+    pParam->op = op;
+    pParam->value = value;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glAccum;
 }

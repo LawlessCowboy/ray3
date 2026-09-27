@@ -3803,9 +3803,17 @@ void TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned char g_NbFont;
+extern unsigned char g_ucNbFontBitmap;
+void TXT_ChangeDefaultColor(float xR, float xG, float xB);
+void TXT_vInit(void);
+
 void fn_vInitFont(void)
 {
-    /* TODO: decompile from asm/... */
+    g_NbFont = 0;
+    g_ucNbFontBitmap = 0;
+    TXT_ChangeDefaultColor(1.0f, 1.0f, 1.0f);
+    TXT_vInit();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1955–2043 */

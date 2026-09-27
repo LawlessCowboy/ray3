@@ -1701,9 +1701,14 @@ void fn_vInitAllObjectTree(tdeObjectTreeInit_ eObjIniType, HIE_tdstSuperObject_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void HIE_fn_vInitMatrixStack(void);
+void fn_vInitAlwaysModel(tdeObjectTreeInit_ eObjIniType);
+
 void fn_vInitAllObjectsWhenPlayerDead(void)
 {
-    /* TODO: decompile from asm/... */
+    HIE_fn_vInitMatrixStack();
+    fn_vInitAllObjectTree(OTI_PlayerDead, (HIE_tdstSuperObject_*)gp_stDynamicWorld); fn_vInitAllObjectTree(OTI_PlayerDead, (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld);
+    fn_vInitAlwaysModel(OTI_PlayerDead);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 658–722 */
@@ -1873,7 +1878,9 @@ void fn_vReInitActorsWhenSectorBecomesActive(HIE_tdstSuperObject_* _hSector)
  */
 void fn_vInitAllObjectsWhenSavedGameJustLoaded(void)
 {
-    /* TODO: decompile from asm/... */
+    HIE_fn_vInitMatrixStack();
+    fn_vInitAllObjectTree(OTI_LoadSavedGame, (HIE_tdstSuperObject_*)gp_stDynamicWorld); fn_vInitAllObjectTree(OTI_LoadSavedGame, (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld);
+    fn_vInitAlwaysModel(OTI_LoadSavedGame);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 476–494 */

@@ -1267,7 +1267,10 @@ void MEC_fn_vUpdateSpeed(HIE_tdstSuperObject_* hSupObj)
  */
 void DNM_fn_vSetHangingLimit(DNM_stDynamics* p_stDynamic, float xValue)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != 0)
+        p_stDynamic->m_tdstDynamicsComplexBlock.m_xHangingLimit = xValue - p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+    else
+        p_stDynamic->m_tdstDynamicsComplexBlock.m_xHangingLimit = xValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 1018–1044 */

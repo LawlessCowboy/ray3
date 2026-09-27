@@ -1703,7 +1703,8 @@ void CAM_fn_vAverageSpeed(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_td
  */
 void CAM_fn_vRemindTime(tdstCineinfo_* _hCineinfo, float _dt)
 {
-    /* TODO: decompile from asm/... */
+    memcpy(&_hCineinfo->AveragePosition.a_CheckedTime[0], &_hCineinfo->AveragePosition.a_CheckedTime[1], 7 * sizeof(float));
+    _hCineinfo->AveragePosition.a_CheckedTime[7] = _dt;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 902–905 */
@@ -1871,7 +1872,10 @@ void CAM_fn_vSetCineinfoVisibilityFromCurrent(tdstCineinfo_* _hCineinfo)
  */
 void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* _hCineinfo)
 {
-    /* TODO: decompile from asm/... */
+    if (!(_hCineinfo->ucVolIAFlags & 1)) {
+        _hCineinfo->ucVolIAFlags |= 1;
+        memcpy(_hCineinfo->hWork, _hCineinfo->hCurrent, sizeof(tdstInternalStructurCineinfo_));
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 669–669 */

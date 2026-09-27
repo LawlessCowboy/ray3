@@ -549,7 +549,12 @@ void HIE_fn_vInitGlobalMatrixFrameCounter(int lValue)
  */
 void HIE_fn_vInvalidateOneGlobalMatrix(HIE_tdstSuperObject_* _hSprObj)
 {
-    /* TODO: decompile from asm/... */
+    if (_hSprObj->lLastComputeFrame != -1) {
+        if (HIE_gs_lCurrentFrame != 0)
+            _hSprObj->lLastComputeFrame = HIE_gs_lCurrentFrame - 1;
+        else
+            _hSprObj->lLastComputeFrame = HIE_gs_lCurrentFrame - 2;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 386–388 */

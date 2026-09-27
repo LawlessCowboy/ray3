@@ -77,8 +77,23 @@ typedef struct sceGsPrmode sceGsPrmode;
 typedef struct tagGScontext tagGScontext;
 
 struct C_BaseFx {
+    /* Recovered fields also present in SFX/FxList.cpp. */
+    unsigned int m_FogIsOn_saved; /* +0x0 */
+    unsigned int m_FogColor_saved; /* +0x4 */
+    float m_fFogOOStartMinusEnd_saved; /* +0x8 */
+    float m_fFogEnd_saved; /* +0xc */
+    unsigned int m_FogIsOn; /* +0x10 */
+    unsigned int m_FogColor; /* +0x14 */
+    float m_fFogOOStartMinusEnd; /* +0x18 */
+    float m_fFogEnd; /* +0x1c */
+    int m_pSearchKey; /* +0x20 */
     void SetCurrentFog(void);
 };
+
+extern int GLI_BIG_GLOBALS_xFogIsOn;
+extern float g_fFogEnd;
+extern float GLI_g_OOStartMinusEnd;
+extern unsigned int GLI_g_CurrentSDLFogColor;
 
 struct tag_GLtexture {
     float vTexBorderColor[4]; /* +0x0 */
@@ -1111,7 +1126,10 @@ tagGLcontext g_PS2glContext;
  */
 void C_BaseFx::SetCurrentFog(void)
 {
-    /* TODO: decompile from asm/... */
+    m_FogColor = GLI_g_CurrentSDLFogColor;
+    m_fFogOOStartMinusEnd = GLI_g_OOStartMinusEnd;
+    m_fFogEnd = g_fFogEnd;
+    m_FogIsOn = GLI_BIG_GLOBALS_xFogIsOn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 555–555 */

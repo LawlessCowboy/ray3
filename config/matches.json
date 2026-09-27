@@ -15231,6 +15231,733 @@
       "status": "MISMATCH",
       "target_size": 16,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00272510",
+      "candidate_size": 80,
+      "first_difference": 24,
+      "implementation": "int fn_rGetMicroTangentZ(int s32_ObjectId)\n{\n    _stVector st_Vector;\n    int r_Answer;\n\n    r_Answer = 0;\n    if (fn_bGetMicroTangent(s32_ObjectId, &st_Vector)) {\n        r_Answer = (int)(st_Vector.f32z * 65536.0f);\n    }\n    return r_Answer;\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "fn_rGetMicroTangentZ",
+      "reason": "Logic exact (r_Answer=0; if (fn_bGetMicroTangent(id,&v)) r_Answer = v.f32z*65536.0f; return r_Answer), needs fast_fptosi (now baseline). Only residual: MWCC fills the beqz delay slot with the return move (daddu v0,s0) copied from the branch target, target leaves nop. Tried init-in-declaration, if/else, implicit vs cast, ternaries, duplicated return - all unchanged. Same shape for the 9 Tangent/Normal/Velocity XYZ getters.",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MS_Micro.c",
+      "status": "MISMATCH",
+      "target_size": 80,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00280440",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GAM_fn_vSetVolumeMenu(int s32_Value)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GAM_fn_vSetVolumeMenu",
+      "reason": "Target clamps s32_Value to 0..127 and stores it to a non-small global, then calls the sound volume setter with a gp-relative handle and the stored value (line 182 = clamp+store, 183 = call). The clamp/store uses $at (slti $at / lui $at; sw a0,lo($at)), which MWCC does not emit for C: it looks like assembler pseudo-instruction expansion (blt/sw-to-symbol) from an asm macro. Same shape for GAM_fn_vSetVolumeAmbiance/Voice/Music. Needs a probe of which asm macro form reproduces the $at sequences.",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/gamopt.c",
+      "status": "MISMATCH",
+      "target_size": 76,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001524c0",
+      "candidate_size": 12,
+      "first_difference": 0,
+      "implementation": "void impPS2glListBase(unsigned int base)\n{\n    g_PS2glContext.uiListBase = base;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "impPS2glListBase",
+      "reason": "Existing g_PS2glContext.uiListBase = base has correct instructions and line offsets; +0x0/+0x8 resolved global address differs by 0x10060, indicating global/layout extraction issue.",
+      "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MISMATCH",
+      "target_size": 12,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001404c0",
+      "candidate_size": 20,
+      "first_difference": 0,
+      "implementation": "void impPS2glEdgeFlagPointer(int stride, void* pointer)\n{\n    g_PS2glContext.EdgeFlagArray.stride = stride;\n    g_PS2glContext.EdgeFlagArray.pointer = (int)pointer;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "impPS2glEdgeFlagPointer",
+      "reason": "Natural EdgeFlagArray stride/pointer stores reproduce size and line offsets; first difference +0x0, all residuals are g_PS2glContext relocation addresses 0x10060 below target. Recovered context layout/global relocation issue.",
+      "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Array.c",
+      "status": "MISMATCH",
+      "target_size": 20,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0014eb50",
+      "candidate_size": 24,
+      "first_difference": 12,
+      "implementation": "void impPS2glFrontFace(unsigned int mode)\n{\n    g_PS2glContext.eFrontFaceMode = mode;\n    g_PS2glContext.bCullfaceChanged = 1;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "impPS2glFrontFace",
+      "reason": "Natural eFrontFaceMode assignment and bCullfaceChanged=1 reproduce instruction shape and line offsets; first difference +0xc is global HI16, changed flag LO16 is eight bytes below recovered target layout.",
+      "size": 24,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_EnableDisable.c",
+      "status": "MISMATCH",
+      "target_size": 24,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0014eb70",
+      "candidate_size": 24,
+      "first_difference": 12,
+      "implementation": "void impPS2glCullFace(unsigned int mode)\n{\n    g_PS2glContext.eCullFaceMode = mode;\n    g_PS2glContext.bCullfaceChanged = 1;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "impPS2glCullFace",
+      "reason": "Natural eCullFaceMode assignment and bCullfaceChanged=1 reproduce instruction shape and line offsets; first difference +0xc is global HI16, changed flag LO16 is eight bytes below recovered target layout.",
+      "size": 24,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_EnableDisable.c",
+      "status": "MISMATCH",
+      "target_size": 24,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001855e0",
+      "candidate_size": 28,
+      "first_difference": 4,
+      "implementation": "void VU1StopWorkingOnFakeSwapBuffer(void)\n{\n    g_PS2glContext.pVIFInBuf = (float (*)[4])s_InBuf_saved;\n    g_PS2glContext.pVIFIBufTail = (float (*)[4])s_InBufTail_saved;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "VU1StopWorkingOnFakeSwapBuffer",
+      "reason": "Restoring pVIFInBuf and pVIFIBufTail from saved globals matches instruction shape and line offsets; +0x4 first differs on g_PS2glContext HI16, LO16 fields are 0x84 below debug offsets. Global/layout extraction residual.",
+      "size": 28,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_VU1_Pipeline.c",
+      "status": "MISMATCH",
+      "target_size": 28,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00144a90",
+      "candidate_size": 36,
+      "first_difference": 0,
+      "implementation": "void impPS2glTexCoord4fv(float* v)\n{\n    *(volatile quad*)(*(volatile int*)(0x0038caf4)) = *(volatile quad*)v;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "impPS2glTexCoord4f",
+      "reason": "Recovered context vector component stores match all instruction shape and line offsets; first difference +0x0, g_PS2glContext HI16/LO16 resolve 0x10070 below target. Layout/global relocation evidence blocks further body tuning.",
+      "size": 36,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0014b290",
+      "candidate_size": 36,
+      "first_difference": 0,
+      "implementation": "void impPS2glNormal3fv(float* v)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "impPS2glNormal3f",
+      "reason": "Recovered context vector component stores match all instruction shape and line offsets; first difference +0x0, g_PS2glContext HI16/LO16 resolve 0x10070 below target. Layout/global relocation evidence blocks further body tuning.",
+      "size": 36,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0014db60",
+      "candidate_size": 36,
+      "first_difference": 0,
+      "implementation": "void impPS2glColor4fv(float* v)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "impPS2glColor4f",
+      "reason": "Recovered context vector component stores match all instruction shape and line offsets; first difference +0x0, g_PS2glContext HI16/LO16 resolve 0x10070 below target. Layout/global relocation evidence blocks further body tuning.",
+      "size": 36,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00155c90",
+      "candidate_size": 32,
+      "first_difference": 0,
+      "implementation": "void plyPS2glTexSubImage1D(anon_176*);\nvoid plyPS2glTexParameteri(anon_109*);\nvoid plyPS2glTexParameteriv(anon_41*);\nvoid plyPS2glTexParameterf(anon_101*);\nvoid plyPS2glTexParameterfv(anon_22*);\nvoid plyPS2glTexImage2D(anon_49*);\nvoid plyPS2glTexImage1D(anon_175*);\nvoid plyPS2glTexGeni(anon_103*);\nvoid plyPS2glTexGeniv(anon_26*);\nvoid plyPS2glTexGenf(anon_79*);\nvoid plyPS2glTexGenfv(anon_153*);\nvoid plyPS2glTexGendv(anon_122*);\nvoid plyPS2glTexEnviv(anon_106*);\nvoid plyPS2glTexEnvi(anon_8*);\nvoid plyPS2glTexEnvfv(anon_97*);\nvoid plyPS2glTexEnvf(anon_71*);\nvoid plyPS2glStencilOp(anon_16*);\nvoid plyPS2glStencilMask(anon_21*);\nvoid plyPS2glStencilFunc(anon_100*);\nvoid plyPS2glShadeModel(anon_162*);\nvoid plyPS2glScissor(anon_46*);\nvoid plyPS2glScalef(anon_112*);\nvoid plyPS2glRotatef(anon_131*);\nvoid plyPS2glRects(anon_58*);\nvoid plyPS2glRecti(anon_39*);\nvoid plyPS2glRectf(anon_10*);\nvoid plyPS2glReadBuffer(anon_25*);\nvoid plyPS2glRasterPos4s(anon_7*);\nvoid plyPS2glRasterPos4i(anon_149*);\nvoid plyPS2glRasterPos4f(anon_125*);\nvoid plyPS2glRasterPos3s(anon_57*);\nvoid plyPS2glRasterPos3i(anon_34*);\nvoid plyPS2glRasterPos3f(anon_76*);\nvoid plyPS2glRasterPos2s(anon_45*);\nvoid plyPS2glRasterPos2i(anon_62*);\nvoid plyPS2glRasterPos2f(anon_13*);\nvoid plyPS2glPushName(anon_85*);\nvoid impPS2glPushMatrix(void);\nvoid plyPS2glPushClientAttrib(anon_189*);\nvoid plyPS2glPushAttrib(anon_1*);\nvoid plyPS2glPrioritizeTextures(anon_67*);\nvoid impPS2glPopName(void);\nvoid impPS2glPopMatrix(void);\nvoid impPS2glPopClientAttrib(void);\nvoid impPS2glPopAttrib(void);\nvoid plyPS2glPolygonStipple(anon_184*);\nvoid plyPS2glPolygonOffset(anon_92*);\nvoid plyPS2glPolygonMode(anon_50*);\nvoid plyPS2glPointSize(anon_124*);\nvoid plyPS2glPixelZoom(anon_0*);\nvoid plyPS2glPixelTransferi(anon_54*);\nvoid plyPS2glPixelTransferf(anon_4*);\nvoid plyPS2glPixelMapusv(anon_59*);\nvoid plyPS2glPixelMapuiv(anon_12*);\nvoid plyPS2glPixelMapfv(anon_51*);\nvoid plyPS2glPassThrough(anon_110*);\nvoid plyPS2glOrtho(anon_82*);\nvoid plyPS2glNewList(anon_63*);\nvoid plyPS2glMultMatrixf(anon_117*);\nvoid plyPS2glMultMatrixd(anon_107*);\nvoid plyPS2glMatrixMode(anon_108*);\nvoid plyPS2glMaterialiv(anon_115*);\nvoid plyPS2glMateriali(anon_35*);\nvoid plyPS2glMaterialfv(anon_134*);\nvoid plyPS2glMaterialf(anon_52*);\nvoid plyPS2glMapGrid2f(anon_113*);\nvoid plyPS2glMapGrid1f(anon_88*);\nvoid plyPS2glMap2f(anon_94*);\nvoid plyPS2glMap2d(anon_44*);\nvoid plyPS2glMap1f(anon_3*);\nvoid plyPS2glMap1d(anon_167*);\nvoid plyPS2glLogicOp(anon_174*);\nvoid plyPS2glLoadName(anon_177*);\nvoid plyPS2glLoadMatrixf(anon_168*);\nvoid plyPS2glLoadMatrixd(anon_160*);\nvoid impPS2glLoadIdentity(void);\nvoid plyPS2glListBase(anon_86*);\nvoid plyPS2glLineWidth(anon_87*);\nvoid plyPS2glLineStipple(anon_48*);\nvoid plyPS2glLighti(anon_61*);\nvoid plyPS2glLightf(anon_77*);\nvoid plyPS2glLightfv(anon_118*);\nvoid plyPS2glLightModeli(anon_74*);\nvoid plyPS2glLightModeliv(anon_105*);\nvoid plyPS2glLightModelf(anon_6*);\nvoid plyPS2glLightModelfv(anon_47*);\nvoid impPS2glInitNames(void);\nvoid impPS2glStencilMask(unsigned int);\nvoid impPS2glShadeModel(unsigned int);\nvoid impPS2glReadBuffer(unsigned int);\nvoid impPS2glPushName(unsigned int);\nvoid impPS2glPushClientAttrib(unsigned int);\nvoid impPS2glPushAttrib(unsigned int);\nvoid impPS2glPolygonStipple(void*);\nvoid impPS2glPointSize(float);\nvoid impPS2glPassThrough(float);\nvoid impPS2glMultMatrixf(void*);\nvoid impPS2glMultMatrixd(void*);\nvoid impPS2glMatrixMode(unsigned int);\nvoid impPS2glLogicOp(unsigned int);\nvoid impPS2glLoadName(unsigned int);\nvoid impPS2glLoadMatrixf(void*);\nvoid impPS2glLoadMatrixd(void*);\nvoid impPS2glListBase(unsigned int);\nvoid impPS2glLineWidth(float);\nvoid impPS2glLightModelfv(unsigned int, int);\nvoid impPS2glLightModelf(unsigned int, float);\nvoid impPS2glLightModeliv(unsigned int, int);\nvoid impPS2glLightModeli(unsigned int, int);\nvoid impPS2glHint(unsigned int, unsigned int);\nvoid impPS2glFrustum(double, double, double, double, double, double);\nvoid impPS2glFogiv(unsigned int, int);\nvoid impPS2glFogi(unsigned int, int);\nvoid impPS2glFogfv(unsigned int, int);\nvoid impPS2glFogf(unsigned int, float);\nvoid impPS2glEvalPoint2(int, int);\nvoid impPS2glEvalMesh2(unsigned int, int, int, int, int);\nvoid impPS2glEvalMesh1(unsigned int, int, int);\nvoid impPS2glEvalCoord2f(float, float);\nvoid impPS2glDrawPixels(unsigned int, unsigned int, unsigned int, unsigned int, int);\nvoid impPS2glDrawElements(unsigned int, int, unsigned int, int);\nvoid impPS2glDepthRange(double, double);\nvoid impPS2glCopyTexSubImage1D(unsigned int, int, int, int, int, int);\nvoid impPS2glCopyPixels(int, int, int, int, unsigned int);\nvoid impPS2glColorMaterial(unsigned int, unsigned int);\nvoid impPS2glColorMask(unsigned char, unsigned char, unsigned char, unsigned char);\nvoid impPS2glClipPlane(unsigned int, double*);\nvoid impPS2glClearColor(float, float, float, float);\nvoid impPS2glClearAccum(float, float, float, float);\nvoid impPS2glCallLists(int, unsigned int, int);\nvoid impPS2glBlendFunc(unsigned int, unsigned int);\nvoid impPS2glBindTexture(unsigned int, unsigned int);\nvoid impPS2glAlphaFunc(unsigned int, float);\nvoid impPS2glIndexubv(void*);\nvoid impPS2glIndexub(unsigned char);\nvoid impPS2glIndexsv(void*);\nvoid impPS2glIndexs(short);\nvoid impPS2glIndexiv(void*);\nvoid impPS2glIndexi(int);\nvoid impPS2glIndexfv(void*);\nvoid impPS2glIndexf(float);\nvoid impPS2glIndexMask(unsigned int);\nvoid impPS2glFrontFace(unsigned int);\nvoid impPS2glEvalPoint1(int);\nvoid impPS2glEvalCoord1fv(void*);\nvoid impPS2glEvalCoord1f(float);\nvoid impPS2glEnableClientState(unsigned int);\nvoid impPS2glEnable(unsigned int);\nvoid impPS2glEdgeFlagv(void*);\nvoid impPS2glEdgeFlag(unsigned char);\nvoid impPS2glDrawBuffer(unsigned int);\nvoid impPS2glDisableClientState(unsigned int);\nvoid impPS2glDisable(unsigned int);\nvoid impPS2glDepthMask(unsigned char);\nvoid impPS2glDepthFunc(unsigned int);\nvoid impPS2glCullFace(unsigned int);\nvoid impPS2glClearStencil(int);\nvoid impPS2glClearIndex(float);\nvoid impPS2glClearDepth(double);\nvoid impPS2glClear(unsigned int);\nvoid impPS2glCallList(unsigned int);\nvoid impPS2glArrayElement(int);\nvoid impPS2glClientActiveTextureARB(unsigned int);\nvoid impPS2glActiveTextureARB(unsigned int);\nvoid impPS2glRasterPos2s(short, short);\nvoid impPS2glRasterPos2i(int, int);\nvoid impPS2glRasterPos2f(float, float);\nvoid impPS2glPolygonOffset(float, float);\nvoid impPS2glPolygonMode(unsigned int, unsigned int);\nvoid impPS2glPixelZoom(float, float);\nvoid impPS2glTexParameteriv(unsigned int, unsigned int, int);\nvoid impPS2glTexParameterfv(unsigned int, unsigned int, int);\nvoid impPS2glTexGeniv(unsigned int, unsigned int, int);\nvoid impPS2glTexGenfv(unsigned int, unsigned int, int);\nvoid impPS2glTexGendv(unsigned int, unsigned int, int);\nvoid impPS2glTexEnviv(unsigned int, unsigned int, int);\nvoid impPS2glTexEnvfv(unsigned int, unsigned int, int);\nvoid impPS2glGetColorTableParameterfvEXT(unsigned int, unsigned int, int);\nvoid impPS2glGetColorTableParameterivEXT(unsigned int, unsigned int, int);\nvoid impPS2glRects(short, short, short, short);\nvoid impPS2glRasterPos4s(short, short, short, short);\nvoid impPS2glRasterPos3s(short, short, short);\nvoid impPS2glTranslatef(float, float, float);\nvoid impPS2glTexParameterf(unsigned int, unsigned int, float);\nvoid impPS2glTexGenf(unsigned int, unsigned int, float);\nvoid impPS2glTexEnvf(unsigned int, unsigned int, float);\nvoid impPS2glScalef(float, float, float);\nvoid impPS2glRotatef(float, float, float, float);\nvoid impPS2glRectf(float, float, float, float);\nvoid impPS2glRasterPos4f(float, float, float, float);\nvoid impPS2glRasterPos3f(float, float, float);\nvoid impPS2glPixelTransferf(unsigned int, float);\nvoid impPS2glMaterialf(unsigned int, unsigned int, float);\nvoid impPS2glMapGrid2f(int, float, float, int, float, float);\nvoid impPS2glMapGrid1f(int, float, float);\nvoid impPS2glMap1f(unsigned int, float, float, int, int, int);\nvoid impPS2glLightf(unsigned int, unsigned int, float);\nvoid impPS2glGetColorTableEXT(unsigned int, unsigned int, unsigned int, int);\nvoid impPS2glColorSubTableEXT(unsigned int, int, int, unsigned int, unsigned int, int);\nvoid impPS2glColorTableEXT(unsigned int, unsigned int, int, unsigned int, unsigned int, int);\nvoid plyPS2glIndexubv(anon_130*);\nvoid plyPS2glIndexub(anon_135*);\nvoid plyPS2glIndexsv(anon_137*);\nvoid plyPS2glIndexs(anon_140*);\nvoid plyPS2glIndexiv(anon_141*);\nvoid plyPS2glIndexi(anon_146*);\nvoid plyPS2glIndexfv(anon_148*);\nvoid plyPS2glIndexf(anon_152*);\nvoid plyPS2glIndexMask(anon_36*);\nvoid plyPS2glHint(anon_123*);\nvoid plyPS2glFrustum(anon_142*);\nvoid plyPS2glFrontFace(anon_163*);\nvoid plyPS2glFogi(anon_23*);\nvoid plyPS2glFogiv(anon_69*);\nvoid plyPS2glFogf(anon_15*);\nvoid plyPS2glFogfv(anon_70*);\nvoid plyPS2glEvalPoint2(anon_68*);\nvoid plyPS2glEvalPoint1(anon_73*);\nvoid plyPS2glEvalMesh2(anon_95*);\nvoid plyPS2glEvalMesh1(anon_43*);\nvoid plyPS2glEvalCoord2f(anon_55*);\nvoid plyPS2glEvalCoord1fv(anon_183*);\nvoid plyPS2glEvalCoord1f(anon_186*);\nvoid plyPS2glEnableClientState(anon_156*);\nvoid plyPS2glEnable(anon_159*);\nvoid plyPS2glEdgeFlagv(anon_161*);\nvoid plyPS2glEdgeFlag(anon_164*);\nvoid plyPS2glDrawPixels(anon_5*);\nvoid plyPS2glDrawElements(anon_11*);\nvoid plyPS2glDrawBuffer(anon_84*);\nint iDmaTagCount;\nint g_aDmaTag;\nvoid plyPS2glDrawArrays(anon_80*);\ntagGScontext g_gsContext;\nvoid plyPS2glDisableClientState(anon_171*);\nvoid plyPS2glDisable(anon_172*);\nvoid plyPS2glDepthRange(anon_75*);\nvoid plyPS2glDepthMask(anon_144*);\nvoid plyPS2glDepthFunc(anon_147*);\nvoid plyPS2glCullFace(anon_151*);\nvoid plyPS2glCopyTexSubImage2D(anon_90*);\nvoid plyPS2glCopyTexSubImage1D(anon_91*);\nvoid plyPS2glCopyTexImage2D(anon_24*);\nvoid plyPS2glCopyTexImage1D(anon_14*);\nvoid plyPS2glCopyPixels(anon_27*);\nvoid plyPS2glColorPointer(anon_104*);\nvoid plyPS2glColorMaterial(anon_32*);\nvoid plyPS2glColorMask(anon_154*);\nvoid plyPS2glClipPlane(anon_89*);\nvoid plyPS2glClearStencil(anon_93*);\nvoid plyPS2glClearIndex(anon_96*);\nvoid plyPS2glClearDepth(anon_98*);\nvoid plyPS2glClearColor(anon_136*);\nvoid plyPS2glClearAccum(anon_20*);\nvoid plyPS2glClear(anon_81*);\nvoid plyPS2glCallLists(anon_111*);\nvoid plyPS2glCallList(anon_170*);\nvoid plyPS2glBlendFunc(anon_65*);\nvoid plyPS2glBitmap(anon_83*);\nvoid plyPS2glBindTexture(anon_40*);\nvoid plyPS2glBegin(anon_64*);\nvoid plyPS2glArrayElement(anon_166*);\nvoid plyPS2glAlphaFunc(anon_60*);\nvoid plyPS2glClientActiveTextureARB(anon_138*);\nvoid plyPS2glActiveTextureARB(anon_138*);\nvoid plyPS2glAccum(anon_29*);\n\n/* D:\\dev\\R3\\Version13\\ps2\\PS2GL20\\Src\\PS2GL\\PS2GL_ListsRecPly.c lines 6139\u20136148 */\n/* addr: 0x00154c20  size: 88 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 6139\n *   +0x0020 -> line 6140\n *   +0x0028 -> line 6143\n *   +0x002c -> line 6147\n *   +0x0030 -> line 6144\n *   +0x0034 -> line 6147\n *   +0x0038 -> line 6145\n *   +0x003c -> line 6147\n *   +0x0040 -> line 6148\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\nvoid recPS2glGetColorTableParameterfvEXT(unsigned int target, unsigned int pname, float* params)\n{\n    anon_78* pParam;\n    tagGLlistnode* pNode;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "plyPS2glTexSubImage1D",
+      "reason": "First difference +0x0: int pixels scaffold field requires pointer cast for recovered impPS2glTexSubImage1D signature, hoisting final load and eliminating target v0 parameter copy (32/36 bytes). Companion all-integer CopyTexImage1D matches direct field call. Preserve declaration; pointer-type extraction evidence.",
+      "size": 36,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00161270",
+      "candidate_size": 32,
+      "first_difference": 0,
+      "implementation": "void plyPS2glBitmap(anon_83*);\nvoid plyPS2glBindTexture(anon_40*);\nvoid plyPS2glBegin(anon_64*);\nvoid plyPS2glArrayElement(anon_166*);\nvoid plyPS2glAlphaFunc(anon_60*);\nvoid plyPS2glClientActiveTextureARB(anon_138*);\nvoid plyPS2glActiveTextureARB(anon_138*);\nvoid plyPS2glAccum(anon_29*);\n\n/* D:\\dev\\R3\\Version13\\ps2\\PS2GL20\\Src\\PS2GL\\PS2GL_ListsRecPly.c lines 6139\u20136148 */\n/* addr: 0x00154c20  size: 88 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 6139\n *   +0x0020 -> line 6140\n *   +0x0028 -> line 6143\n *   +0x002c -> line 6147\n *   +0x0030 -> line 6144\n *   +0x0034 -> line 6147\n *   +0x0038 -> line 6145\n *   +0x003c -> line 6147\n *   +0x0040 -> line 6148\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\nvoid recPS2glGetColorTableParameterfvEXT(unsigned int target, unsigned int pname, float* params)\n{\n    anon_78* pParam;\n    tagGLlistnode* pNode;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "plyPS2glBitmap",
+      "reason": "First difference +0x0: recovered int bitmap requires pointer cast; it hoists bitmap load and removes target v0 base copy (32/36 bytes). Target calls API bitmap pointer signature; probable recovered field type issue.",
+      "size": 36,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00158700",
+      "candidate_size": 56,
+      "first_difference": 4,
+      "implementation": "void recPS2glTexCoord1fv(float* v)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "recPS2glTexCoord1f",
+      "reason": "Natural valistTexCoords update plus conditional PS2glSaveListCall matches size, control flow, call, and line offsets; +0x4 g_PS2glContext relocation differs, field offsets are 0x70/0x74 below debug layout. Recovered layout issue.",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 56,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00159e60",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void recPS2glPolygonStipple(unsigned char* mask)\n{\n    tagGLlistnode* pNode;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "recPS2glPolygonStipple",
+      "reason": "Debug extraction blocker; source left untouched. PS2glListSaveParam is recovered void(void*,int), but target callers store v0 at +0x2c and callee +0xa0 explicitly returns saved allocated pointer. Preserve declaration pending return-type correction. Stub first differs +0x0.",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 72,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0015a9c0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void recPS2glMultMatrixf(float* m)\n{\n    tagGLlistnode* pNode;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "recPS2glMultMatrixf",
+      "reason": "Debug extraction blocker; source left untouched. PS2glListSaveParam is recovered void(void*,int), but target callers store v0 at +0x2c and callee +0xa0 explicitly returns saved allocated pointer. Preserve declaration pending return-type correction. Stub first differs +0x0.",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 72,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0015aa20",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void recPS2glMultMatrixd(double* m)\n{\n    tagGLlistnode* pNode;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "recPS2glMultMatrixd",
+      "reason": "Debug extraction blocker; source left untouched. PS2glListSaveParam is recovered void(void*,int), but target callers store v0 at +0x2c and callee +0xa0 explicitly returns saved allocated pointer. Preserve declaration pending return-type correction. Stub first differs +0x0.",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 72,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0015b420",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void recPS2glLoadMatrixf(float* m)\n{\n    tagGLlistnode* pNode;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "recPS2glLoadMatrixf",
+      "reason": "Debug extraction blocker; source left untouched. PS2glListSaveParam is recovered void(void*,int), but target callers store v0 at +0x2c and callee +0xa0 explicitly returns saved allocated pointer. Preserve declaration pending return-type correction. Stub first differs +0x0.",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 72,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0015b480",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void recPS2glLoadMatrixd(double* m)\n{\n    tagGLlistnode* pNode;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "recPS2glLoadMatrixd",
+      "reason": "Debug extraction blocker; source left untouched. PS2glListSaveParam is recovered void(void*,int), but target callers store v0 at +0x2c and callee +0xa0 explicitly returns saved allocated pointer. Preserve declaration pending return-type correction. Stub first differs +0x0.",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 72,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00161490",
+      "candidate_size": 180,
+      "first_difference": 12,
+      "implementation": "int Mode2Prim(unsigned int mode)\n{\n    int iReturn;\n    switch (mode) {\n    case 4:\n        iReturn = 3;\n        break;\n    case 5:\n    case 8:\n        if (g_PS2glContext.nTextureEnableBits & 8)\n            iReturn = 3;\n        else\n            iReturn = 4;\n        break;\n    case 6:\n    case 9:\n        if (g_PS2glContext.nTextureEnableBits & 8)\n            iReturn = 3;\n        else\n            iReturn = 5;\n        break;\n    case 7:\n        iReturn = 3;\n        break;\n    case 1:\n        iReturn = 1;\n        break;\n    case 3:\n        iReturn = 2;\n        break;\n    case 2:\n        iReturn = 2;\n        break;\n    case 0:\n        iReturn = 0;\n        break;\n    case 10:\n        iReturn = 6;\n        break;\n    default:\n        iReturn = 3;\n        break;\n    }\n    return iReturn;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "Mode2Prim",
+      "reason": "180/180 and all line offsets match; every non-relocation word identical. First diff +0xc unresolved anonymous jump table @2109 (target @3506 at 0x34c270), paired +0x14. Context nTextureEnableBits loads +0x34/+0x58 resolve 0x386b50 instead of debug-target 0x386b5c: recovered struct layout short 12 bytes. Seed-only normalized assembly and m2c scaffold retained.",
+      "size": 180,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 180,
+      "unresolved_relocations": [
+        {
+          "offset": 12,
+          "symbol": "@2109",
+          "type": 5
+        },
+        {
+          "offset": 20,
+          "symbol": "@2109",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x0015ba90",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void recPS2glLightModelfv(unsigned int pname, float* params)\n{\n    anon_47* pParam;\n    tagGLlistnode* pNode;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "recPS2glLightModelfv",
+      "reason": "Confirmed return-type extraction blocker: target and m2c seed store PS2glListSaveParam return value, owning recovered declaration says void(void*,int). Source left untouched; initial stub differs +0x0. Preserve signature and seed for correction.",
+      "size": 144,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 144,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0015c190",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void recPS2glFogfv(unsigned int pname, float* params)\n{\n    anon_70* pParam;\n    tagGLlistnode* pNode;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "recPS2glFogfv",
+      "reason": "Confirmed return-type extraction blocker: target and m2c seed store PS2glListSaveParam return value, owning recovered declaration says void(void*,int). Source left untouched; initial stub differs +0x0. Preserve signature and seed for correction.",
+      "size": 144,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 144,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00155e00",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void recPS2glTexParameterfv(unsigned int target, unsigned int pname, float* params)\n{\n    anon_22* pParam;\n    tagGLlistnode* pNode;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "recPS2glTexParameterfv",
+      "reason": "Confirmed return-type extraction blocker: target and m2c seed store PS2glListSaveParam return value, owning recovered declaration says void(void*,int). Source left untouched; initial stub differs +0x0. Preserve signature and seed for correction.",
+      "size": 164,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 164,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00179a80",
+      "candidate_size": 132,
+      "first_difference": 4,
+      "implementation": "void dmaSendGsPackage(anon_10* pPackage, unsigned long ulLength)\n{\n    _sceDmaTag* pDmaTag;\n    pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;\n    pDmaTag->qwc = ulLength;\n    pDmaTag->mark = 0;\n    pDmaTag->id = 0x10;\n    pDmaTag->p[0] = 0x11000000;\n    pDmaTag->p[1] = 0x50000000 | ulLength;\n    memcpy(pDmaTag + 1, pPackage, ulLength * 16);\n    g_PS2glContext.pVIFIBufTail += ulLength + 1;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "dmaSendGsPackage",
+      "reason": "All 132 bytes and line offsets agree except six g_PS2glContext pVIFIBufTail relocation words: first +0x4, recovered layout resolves 0x37d520 versus retail 0x38d5a4. Preserved recovered structure; implicit memcpy call reproduces target non-narrowed size expression.",
+      "size": 132,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GSPackage.c",
+      "status": "MISMATCH",
+      "target_size": 132,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001797e0",
+      "candidate_size": 276,
+      "first_difference": 92,
+      "implementation": "void GsFlushBuffer(void)\n{\n    if (g_gsContext.iBufCount > 1) {\n        g_gsContext.pCurTag->EOP = 1;\n        dmaSendGsPackage(g_gsContext.PackageBuffer, g_gsContext.iBufCount);\n    }\n    GsResetBuffer();\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "GsFlushBuffer",
+      "reason": "276/276 bytes and exact line offsets; only six VIF input-buffer-tail relocation words differ, first +0x5c. Inlined dmaSendGsPackage inherits recovered g_PS2glContext layout address 0x37d520 vs retail 0x38d5a4.",
+      "size": 276,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GSPackage.c",
+      "status": "MISMATCH",
+      "target_size": 276,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001799c0",
+      "candidate_size": 180,
+      "first_difference": 50,
+      "implementation": "void impPS2glSetGsRegister(int address, unsigned long value, unsigned long mask)\n{\n    anon_10 qwTemp;\n    int iOffset;\n    if (address < 0 || address >= 128)\n        return;\n    iOffset = iRegisterTable[address];\n    if (iOffset >= 0) {\n        *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3)) = (value & ~mask) | (mask & *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3)));\n        *(unsigned long*)&g_gsContext.ModFlgs |= 1UL << iOffset;\n    } else {\n        qwTemp.u64Data[0] = value & ~mask;\n        qwTemp.u64Data[1] = 0;\n        qwTemp.ubData[8] = address;\n        GsSendData(14, &qwTemp);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "impPS2glSetGsRegister",
+      "reason": "180/180 bytes correct control flow calls and data addresses; first +0x32, flag-word alias retains base address instead of target direct global load/store, causing scheduling/register differences. Nine natural shape experiments and 297 bounded permuter iterations found no match; seed and large-match history retained.",
+      "size": 180,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GSPackage.c",
+      "status": "MISMATCH",
+      "target_size": 180,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fbd10",
+      "candidate_size": 136,
+      "first_difference": 0,
+      "implementation": "unsigned char fn_ucGetDsgVar(unsigned char ucId, unsigned char ucIndex, AI_tdstMind_* p_stPerso, tdstGetSetParam_* p_stGetSetParam)\n{\n    return fn_p_fn_pGetDsgVarGetFunctionPtr(DSG_VAR_INFO_FIELD(p_stPerso, ucId, eDsgVarTypeId, tdeDsgVarTypeId_))((void*)(*(char**)&p_stPerso->p_stDsgMem->p_cDsgMemBuffer + DSG_VAR_INFO_FIELD(p_stPerso, ucId, ulOffsetInDsgMem, unsigned int)), ucIndex, p_stGetSetParam);\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "fn_ucGetDsgVar",
+      "reason": "Correct callback and metadata accesses but compiler defers buffer-address computation past getter lookup: 136/124 bytes, first +0 stack frame 0x60 vs 0x40. Eight source variants and 177 bounded permuter iterations; narrower short-offset permuter improvement rejected as unsupported. Seed and history retained.",
+      "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MISMATCH",
+      "target_size": 124,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00187790",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "int SND_fn_hGetCurrentSoundHandle(void)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "SND_fn_hGetCurrentSoundHandle",
+      "reason": "Initial +0 stub; target reads shared local-static symbols s32_SoundHandle$1241 at 0x36ab24 and init$1242 at 0x36ab28, but getter scaffold has no locals and their lexical owner/helper was not recovered. Exact named relocation resolver cannot map recreated local-static numeric suffixes; preserved source pending debug/symbol scope recovery.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00187a60",
+      "candidate_size": null,
+      "first_difference": null,
+      "implementation": "",
+      "line_offsets_equal": null,
+      "model": "gpt-6",
+      "name": "__opPQ24usnd8CResData__Q24usnd27CIdObjPtr<Q24usnd8CResData>CFv",
+      "reason": "OBJECT_ERROR: owning source at address 0x187a60 instead declares CResData* _NilElmt__Q24usnd9streebase(void), not the indexed const CIdObjPtr conversion operator. Preserve conflicting declaration pending debug extraction/ownership repair.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
+      "status": "OBJECT_ERROR",
+      "target_size": null,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00188cb0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void SND_fn_vStartLoad(void)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "SND_fn_vStartLoad",
+      "reason": "Initial +0 stub retained: required allocator fn_pvMallocInBinaryPreservingTheCurrentMode is recovered as void(unsigned int) despite retail using v0 pointer, as signature confirms. Do not silently replace recovered return type to assign g_pSoundCache.",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
+      "status": "MISMATCH",
+      "target_size": 52,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00189600",
+      "candidate_size": 68,
+      "first_difference": 6,
+      "implementation": "void fs_vUppercase__FPc(char* p)\n{\n    for (; *p; p++) {\n        if (*p >= 'a' && *p <= 'z')\n            *p -= 'a' - 'A';\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "fs_vUppercase__FPc",
+      "reason": "First difference +0x6: natural for/while uppercase loop produces 68/76 bytes; target has join/condition NOPs and different initial branch delay-slot scheduling. Isolated schedule-off and optimization-level-2 probes produce 76 bytes but incorrect instruction scheduling; no compiler pragmas retained.",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
+      "status": "MISMATCH",
+      "target_size": 76,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001cdaf0",
+      "candidate_size": 64,
+      "first_difference": 8,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "f_vSalvageActor__20CExtraEventActorPoolFP16CExtraEventActor",
+      "reason": "First +0x8 branch displacement: correct actor ABI/static pool, control/data flow and six relocations; target retains NOP at +0x2c while candidate schedules pool LUI there, 64/68 bytes. Direct body and inlined matched InsertAfter identical. Permuter prepare cannot locate C++ member definition. Static declaration correction supported by target a0 actor accesses and neighboring CLinkActorPool.",
+      "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MISMATCH",
+      "target_size": 68,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d0f90",
+      "candidate_size": 32,
+      "first_difference": 1,
+      "implementation": "void GLI_vDrawWorldSemiLookatSpriteWithUVs(void)\n{\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "GLI_vDrawWorldSemiLookatSprite",
+      "reason": "First +0x1: forwarding recovered wrapper arguments produces GPR shuffles, target instead moves f14->f13 and f15->f14. Callee signature corrected to symbol-proven fiff suffix, but recovered wrapper ABI remains inconsistent with target. Needs raw debug parameter recovery, not scheduling tuning.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002586d0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "int CD_OpenFileWithNameConversion(char* RawFileName)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "CD_OpenFileWithNameConversion",
+      "reason": "Initial stub differs +0x0. Target forwards v0 returned by FMN_SCE_ConvertPath2DVD to CD_OpenFile, but filemng.c recovers conversion function as void(char*). Preserve signature evidence; no guessed pointer return declaration or source body added.",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/fmn/cdread.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001745e0",
+      "candidate_size": 36,
+      "first_difference": 20,
+      "implementation": "void impPS2glTexEnviv(unsigned int target, unsigned int pname, int* params)\n{\n    float (*param0)[4];\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "impPS2glTexEnvi",
+      "reason": "Only differing word +0x14 is pCurTexture relocation: compiled g_PS2glContext+0x234 vs target/debug +0x240 (12-byte layout drift). Natural enum guards/store and line offsets match. Recovered vScissorBox follows char +0xe0 but lacks padding/alignment for debug +0xf0; preserve layout evidence rather than alter shared aggregate.",
+      "size": 36,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MISMATCH",
+      "target_size": 36,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d7840",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "Process__22C_SdlRef_FogParametersFv",
+      "reason": "Initial stub +0x0. Target writes current fog globals through pointer fields +0x14/+0x18/+0x1c, but recovered derived class omits C_SdlRef base entirely. Recovered base is 16 bytes vs required 20-byte base/vtable layout. Preserve extraction evidence; no invented base padding or numeric-offset access.",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLRefs.cpp",
+      "status": "MISMATCH",
+      "target_size": 40,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0017fd90",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void PS2GL_fn_pvEndOfDMABuffer(int BufferNb)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "PS2GL_fn_pvEndOfDMABuffer",
+      "reason": "Initial +0x0. Recovered signature void(int), but target computes and returns a masked DMA-buffer address in v0 (final dsll32/dsrl32). Preserve wrong-return-type evidence instead of inventing pointer return; target also references global context field near known layout drift.",
+      "size": 40,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_InitContext.c",
+      "status": "MISMATCH",
+      "target_size": 40,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0025c3f0",
+      "candidate_size": 44,
+      "first_difference": 28,
+      "implementation": "void GAM_fn_vSetEngineInFixMode(void)\n{\n    GAM_gs_tdeLoadingMode = GAM_eFixLoading;\n    HMU_fn_vSetMemoriesInFixMode();\n    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetFixNormalMemoryBlock());\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "GAM_fn_vSetEngineInFixMode",
+      "reason": "Only difference +0x1c: promotion of recovered unsigned-char HMU_fn_ucGetFixNormalMemoryBlock return to recovered int GLI_vSignalCurrentMemoryChannel parameter emits andi 0xff; target daddu forwards without mask. All calls/global access/line offsets exact. Preserve declarations pending ABI/debug recovery.",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Basic.c",
+      "status": "MISMATCH",
+      "target_size": 44,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0025c3c0",
+      "candidate_size": 48,
+      "first_difference": 32,
+      "implementation": "void GAM_fn_vSetEngineInLevelMode(void)\n{\n    GAM_gs_tdeLoadingMode = GAM_eLevelLoading;\n    HMU_fn_vSetMemoriesInLevelMode();\n    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock());\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "GAM_fn_vSetEngineInLevelMode",
+      "reason": "Only difference +0x20: promotion of recovered unsigned-char HMU_fn_ucGetLevelNormalMemoryBlock return to recovered int GLI_vSignalCurrentMemoryChannel parameter emits andi 0xff; target daddu forwards without mask. All calls/global access/line offsets exact; ABI/debug declaration mismatch.",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Basic.c",
+      "status": "MISMATCH",
+      "target_size": 48,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00302e00",
+      "candidate_size": 44,
+      "first_difference": 0,
+      "implementation": "void DNM_fn_vSetHangingLimit(DNM_stDynamics* p_stDynamic, float xValue)\n{\n    if (p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != 0)\n        p_stDynamic->m_tdstDynamicsComplexBlock.m_xHangingLimit = xValue - p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;\n    else\n        p_stDynamic->m_tdstDynamicsComplexBlock.m_xHangingLimit = xValue;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "DNM_fn_vSetHangingLimit",
+      "reason": "First +0x0: natural platform-relative height setter uses recovered DNM fields, but compiled platform/hanging-limit offsets 0x294/0x1fc vs target/debug 0x2a8/0x210 (20-byte aggregate layout drift). Target additionally materializes pointer test via sltu. Preserve recovered layout; do not hide offset mismatch.",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECBase.c",
+      "status": "MISMATCH",
+      "target_size": 48,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001d0390",
+      "candidate_size": 48,
+      "first_difference": 0,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "fs_vEmpty__13PostponedPlayFv",
+      "reason": "First +0x0 branch displacement: natural while loop matches queue transfers and all six relocations, but compiles 48/52 bytes by moving initial head load into branch delay slot and omitting target condition-label NOP. Permuter prepare cannot find recovered C++ member definition; loop scheduling residual retained with m2c seed and full diff.",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndpostponedplay.cpp",
+      "status": "MISMATCH",
+      "target_size": 52,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00132de0",
+      "candidate_size": 52,
+      "first_difference": 20,
+      "implementation": "int videoDecDelete(anon_0* vd)\n{\n    viBufDelete(&vd->vibuf);\n    sceMpegDelete(&vd->mpeg);\n    return 1;\n}",
+      "line_offsets_equal": true,
+      "model": "gpt-6",
+      "name": "videoDecDelete",
+      "reason": "Only difference +0x14: &vd->vibuf compiles as +0x70, target/debug +0x48. Recovered MPEG structure adds four-byte padding after baseline eight-byte long fields, inflating aggregate. Body/calls/line map otherwise exact; preserve layout rather than numeric-offset workaround.",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
+      "status": "MISMATCH",
+      "target_size": 52,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00132b50",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void videoDecMain(anon_0* vd)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "videoDecMain",
+      "reason": "Initial stub +0x0. Target calls viBufReset(&vd->vibuf), decBs0(vd), then state=3; vd->vibuf required +0x48 but sibling videoDecDelete experiment confirms recovered aggregate compiles +0x70 due extra padding around long fields. Shared debug-layout blocker; no duplicate body tuning.",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
+      "status": "MISMATCH",
+      "target_size": 56,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00262ab0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void fn_h_GetCurrentDNMIdCard(HIE_tdstSuperObject_* p_SuperObjPerso)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "fn_h_GetCurrentDNMIdCard",
+      "reason": "Initial +0x0. Recovered function returns void, but target returns zero for null current card and otherwise propagates called helper return in v0. Wrong recovered return signature; preserve evidence without guessed type.",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ia_dnm.c",
+      "status": "MISMATCH",
+      "target_size": 56,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0012f6b0",
+      "candidate_size": 60,
+      "first_difference": 8,
+      "implementation": "void VIDSPE_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality)\n{\n    switch (ucVideoQuality)\n    {\n    case 0:\n        g_stVideoQuality.ucTransfertQuality = 0;\n        break;\n    case 1:\n        break;\n    case 3:\n        break;\n    case 4:\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "VIDSPE_fn_vSetVideoQuality",
+      "reason": "Caller VID_fn_vSetVideoQuality proves omitted ucBPP argument. Natural switch cases 0,1,3,4 compiles 60/64, first +0x8 branch distance; target leaves NOP at +0x14 whereas candidate schedules addiu v1,1 there. schedule off gives 68/64; separate breaks unchanged. Bounded permuter handoff did not find MATCH.",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/VID_Specif.c",
+      "status": "MISMATCH",
+      "target_size": 64,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002db100",
+      "candidate_size": 60,
+      "first_difference": 36,
+      "implementation": "void SDL_AddRef(unsigned int hSDL, unsigned int hRef)\n{\n    C_SdlRef* pSdlRef;\n    C_Sdl* pSdl;\n    pSdlRef = (C_SdlRef*)hRef;\n    pSdl = (C_Sdl*)hSDL;\n    if (pSdl && pSdlRef)\n    {\n        pSdl->AddRef(pSdlRef);\n    }\n    else\n    {\n        printf(\"Ooops !! One parameter is null in SDL_AddRef\\n\");\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "SDL_AddRef",
+      "reason": "Natural null-guard/AddRef/printf is 60/60 bytes and every non-relocation instruction matches. Exact retail string recovered from ELF at 0x35bb70. First +0x24 unresolved local literal @65 (retail @712), also +0x2c. Object-symbol relocation blocker, not source logic.",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
+      "status": "MISMATCH",
+      "target_size": 60,
+      "unresolved_relocations": [
+        {
+          "offset": 36,
+          "symbol": "@65",
+          "type": 5
+        },
+        {
+          "offset": 44,
+          "symbol": "@65",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x0026f040",
+      "candidate_size": 64,
+      "first_difference": 32,
+      "implementation": "float fn_xCollSetGetColliderReal(tdstCollSet_* _hCollSet, short _wIndex)\n{\n    int index = _wIndex;\n    float (*pReals)[2];\n    return (index >= 0 && index < 2) ? ((float*)(pReals = &_hCollSet->stColliderInfo.a_xColliderReals))[index] : 0.0f;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "fn_xCollSetGetColliderReal",
+      "reason": "Natural signed bounds and array access: direct indexing 56/64; typed array-address forms 60/64. 8 controlled variants plus bounded permuter; verified best candidate is 64/64 with all branches/data offsets exact, first +0x20 array-base addiu before index sll, three instruction ordering/register differences. Scheduling residual; handoff retained in build/permuter.",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MISMATCH",
+      "target_size": 64,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0026f100",
+      "candidate_size": 64,
+      "first_difference": 1,
+      "implementation": "HIE_tdstSuperObject_* fn_stCollSetGetColliderActor(tdstCollSet_* _hCollSet, short _wIndex)\n{\n    return (_wIndex >= 0 && _wIndex < 2) ? ((HIE_tdstSuperObject_**)&_hCollSet->stColliderInfo.a_stColliderActors)[_wIndex] : NULL;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-6",
+      "name": "fn_stCollSetGetColliderActor",
+      "reason": "Natural signed bounds and typed actor-array access: 64/68, first +0x1 index register a1 vs v1; base calculation scheduled into +0x18 delay slot where target has NOP. Direct indexing, byte stride, integer address, reversed addition and int local tested. Shared scheduling/address-expression residual with fn_xCollSetGetColliderReal; permuter handoff prepared.",
+      "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MISMATCH",
+      "target_size": 68,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -15483,6 +16210,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
       "status": "MATCH"
     },
+    "0x00132f60": {
+      "address": "0x00132f60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "vagStop",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/audiodec.c",
+      "status": "MATCH"
+    },
     "0x00132f90": {
       "address": "0x00132f90",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -15497,6 +16232,14 @@
       "name": "vagInit",
       "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/audiodec.c",
+      "status": "MATCH"
+    },
+    "0x00133120": {
+      "address": "0x00133120",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MNC_fn_pcUnLoadArea",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/MNC/load/loadarea.c",
       "status": "MATCH"
     },
     "0x00133900": {
@@ -15545,6 +16288,14 @@
       "name": "SVG_fn_bGetActiveVms",
       "size": 12,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
+    "0x00138fc0": {
+      "address": "0x00138fc0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_MemoryCardChanged",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
       "status": "MATCH"
     },
     "0x0013b7f0": {
@@ -16723,6 +17474,22 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
       "status": "MATCH"
     },
+    "0x001524a0": {
+      "address": "0x001524a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glIsList",
+      "size": 32,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
+    "0x00154c20": {
+      "address": "0x00154c20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glGetColorTableParameterfvEXT",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00154c80": {
       "address": "0x00154c80",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -16731,11 +17498,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00154ca0": {
+      "address": "0x00154ca0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glGetColorTableParameterivEXT",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00154d00": {
       "address": "0x00154d00",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glGetColorTableParameterivEXT",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00154d20": {
+      "address": "0x00154d20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glGetColorTableEXT",
+      "size": 104,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16763,11 +17546,203 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00154fd0": {
+      "address": "0x00154fd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glViewport",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00155040": {
       "address": "0x00155040",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glViewport",
       "size": 24,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155060": {
+      "address": "0x00155060",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex4sv",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001550c0": {
+      "address": "0x001550c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex4iv",
+      "size": 60,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155270": {
+      "address": "0x00155270",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex4dv",
+      "size": 120,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001552f0": {
+      "address": "0x001552f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex3sv",
+      "size": 80,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155340": {
+      "address": "0x00155340",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex3iv",
+      "size": 60,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155380": {
+      "address": "0x00155380",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex3fv",
+      "size": 28,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001553a0": {
+      "address": "0x001553a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex3dv",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155410": {
+      "address": "0x00155410",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex2sv",
+      "size": 64,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155450": {
+      "address": "0x00155450",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex2iv",
+      "size": 48,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155480": {
+      "address": "0x00155480",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex2fv",
+      "size": 28,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001554a0": {
+      "address": "0x001554a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex2dv",
+      "size": 84,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155500": {
+      "address": "0x00155500",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex4s",
+      "size": 68,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155550": {
+      "address": "0x00155550",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex4i",
+      "size": 68,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001555a0": {
+      "address": "0x001555a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex4d",
+      "size": 140,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001557f0": {
+      "address": "0x001557f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex3s",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155840": {
+      "address": "0x00155840",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex3i",
+      "size": 64,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155880": {
+      "address": "0x00155880",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex3f",
+      "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001558a0": {
+      "address": "0x001558a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex3d",
+      "size": 112,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155910": {
+      "address": "0x00155910",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex2s",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155950": {
+      "address": "0x00155950",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex2i",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155990": {
+      "address": "0x00155990",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex2f",
+      "size": 24,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001559b0": {
+      "address": "0x001559b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glVertex2d",
+      "size": 80,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155a00": {
+      "address": "0x00155a00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glTranslatef",
+      "size": 88,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16779,11 +17754,35 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00155a70": {
+      "address": "0x00155a70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glTranslated",
+      "size": 128,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155ba0": {
+      "address": "0x00155ba0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "plyPS2glTexSubImage2D",
+      "size": 68,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00155d60": {
       "address": "0x00155d60",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glTexParameteriv",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00155d80": {
+      "address": "0x00155d80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glTexParameteri",
+      "size": 88,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16803,6 +17802,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00155ed0": {
+      "address": "0x00155ed0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glTexParameterf",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00155f30": {
       "address": "0x00155f30",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -16811,11 +17818,35 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00156000": {
+      "address": "0x00156000",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "plyPS2glTexImage2D",
+      "size": 68,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00156100": {
+      "address": "0x00156100",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "plyPS2glTexImage1D",
+      "size": 40,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x001561e0": {
       "address": "0x001561e0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glTexGeniv",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00156200": {
+      "address": "0x00156200",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glTexGeni",
+      "size": 88,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16835,6 +17866,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00156350": {
+      "address": "0x00156350",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glTexGenf",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x001563b0": {
       "address": "0x001563b0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -16851,11 +17890,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x001564b0": {
+      "address": "0x001564b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glTexGend",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x001565c0": {
       "address": "0x001565c0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glTexEnviv",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001565e0": {
+      "address": "0x001565e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glTexEnvi",
+      "size": 88,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16875,11 +17930,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00156730": {
+      "address": "0x00156730",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glTexEnvf",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00156790": {
       "address": "0x00156790",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glTexEnvf",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00158830": {
+      "address": "0x00158830",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glStencilOp",
+      "size": 88,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16891,11 +17962,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x001588b0": {
+      "address": "0x001588b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glStencilMask",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x001588f0": {
       "address": "0x001588f0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glStencilMask",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00158900": {
+      "address": "0x00158900",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glStencilFunc",
+      "size": 88,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16907,11 +17994,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00158980": {
+      "address": "0x00158980",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glShadeModel",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x001589c0": {
       "address": "0x001589c0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glShadeModel",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001589d0": {
+      "address": "0x001589d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glScissor",
+      "size": 104,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16923,11 +18026,35 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00158a60": {
+      "address": "0x00158a60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glScalef",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00158ac0": {
       "address": "0x00158ac0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glScalef",
       "size": 16,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00158ad0": {
+      "address": "0x00158ad0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glScaled",
+      "size": 128,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00158b50": {
+      "address": "0x00158b50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRotatef",
+      "size": 104,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16939,11 +18066,51 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00158be0": {
+      "address": "0x00158be0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRotated",
+      "size": 152,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00158c80": {
+      "address": "0x00158c80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRectsv",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00158cf0": {
+      "address": "0x00158cf0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRects",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00158d60": {
       "address": "0x00158d60",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glRects",
       "size": 24,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00158d80": {
+      "address": "0x00158d80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRectiv",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00158df0": {
+      "address": "0x00158df0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRecti",
+      "size": 104,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16955,11 +18122,51 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00158e80": {
+      "address": "0x00158e80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRectfv",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00158ef0": {
+      "address": "0x00158ef0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRectf",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00158f60": {
       "address": "0x00158f60",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glRectf",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00158f80": {
+      "address": "0x00158f80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRectdv",
+      "size": 160,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159020": {
+      "address": "0x00159020",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRectd",
+      "size": 152,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001590c0": {
+      "address": "0x001590c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glReadBuffer",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16971,11 +18178,43 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00159110": {
+      "address": "0x00159110",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos4sv",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159180": {
+      "address": "0x00159180",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos4s",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x001591f0": {
       "address": "0x001591f0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glRasterPos4s",
       "size": 24,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159210": {
+      "address": "0x00159210",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos4iv",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159280": {
+      "address": "0x00159280",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos4i",
+      "size": 104,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -16987,11 +18226,59 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00159310": {
+      "address": "0x00159310",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos4fv",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159380": {
+      "address": "0x00159380",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos4f",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x001593f0": {
       "address": "0x001593f0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glRasterPos4f",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159410": {
+      "address": "0x00159410",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos4dv",
+      "size": 148,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001594b0": {
+      "address": "0x001594b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos4d",
+      "size": 152,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159550": {
+      "address": "0x00159550",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos3sv",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001595b0": {
+      "address": "0x001595b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos3s",
+      "size": 88,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17003,11 +18290,43 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00159630": {
+      "address": "0x00159630",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos3iv",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159690": {
+      "address": "0x00159690",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos3i",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x001596f0": {
       "address": "0x001596f0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glRasterPos3i",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159710": {
+      "address": "0x00159710",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos3fv",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159770": {
+      "address": "0x00159770",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos3f",
+      "size": 88,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17019,11 +18338,59 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x001597e0": {
+      "address": "0x001597e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos3dv",
+      "size": 124,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159860": {
+      "address": "0x00159860",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos3d",
+      "size": 128,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001598e0": {
+      "address": "0x001598e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos2sv",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159930": {
+      "address": "0x00159930",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos2s",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00159980": {
       "address": "0x00159980",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glRasterPos2s",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159990": {
+      "address": "0x00159990",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos2iv",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x001599e0": {
+      "address": "0x001599e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos2i",
+      "size": 72,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17035,11 +18402,51 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00159a40": {
+      "address": "0x00159a40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos2fv",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159a90": {
+      "address": "0x00159a90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos2f",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00159ae0": {
       "address": "0x00159ae0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glRasterPos2f",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159af0": {
+      "address": "0x00159af0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos2dv",
+      "size": 100,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159b60": {
+      "address": "0x00159b60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glRasterPos2d",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159bd0": {
+      "address": "0x00159bd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPushName",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17051,11 +18458,35 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00159c20": {
+      "address": "0x00159c20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPushMatrix",
+      "size": 40,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159c50": {
+      "address": "0x00159c50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPushClientAttrib",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00159c90": {
       "address": "0x00159c90",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glPushClientAttrib",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159ca0": {
+      "address": "0x00159ca0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPushAttrib",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17075,11 +18506,51 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00159da0": {
+      "address": "0x00159da0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPopName",
+      "size": 40,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159dd0": {
+      "address": "0x00159dd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPopMatrix",
+      "size": 40,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159e00": {
+      "address": "0x00159e00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPopClientAttrib",
+      "size": 40,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159e30": {
+      "address": "0x00159e30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPopAttrib",
+      "size": 40,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00159eb0": {
       "address": "0x00159eb0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glPolygonStipple",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159ec0": {
+      "address": "0x00159ec0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPolygonOffset",
+      "size": 72,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17091,11 +18562,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00159f20": {
+      "address": "0x00159f20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPolygonMode",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00159f70": {
       "address": "0x00159f70",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glPolygonMode",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00159f80": {
+      "address": "0x00159f80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPointSize",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17107,6 +18594,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00159fd0": {
+      "address": "0x00159fd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPixelZoom",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015a020": {
       "address": "0x0015a020",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -17115,11 +18610,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015a030": {
+      "address": "0x0015a030",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPixelTransferi",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015a080": {
       "address": "0x0015a080",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glPixelTransferi",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015a090": {
+      "address": "0x0015a090",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPixelTransferf",
+      "size": 72,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17155,11 +18666,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015a2a0": {
+      "address": "0x0015a2a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glPassThrough",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015a2e0": {
       "address": "0x0015a2e0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glPassThrough",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015a960": {
+      "address": "0x0015a960",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glNewList",
+      "size": 72,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17187,6 +18714,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015aa80": {
+      "address": "0x0015aa80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glMatrixMode",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015aac0": {
       "address": "0x0015aac0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -17200,6 +18735,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glMaterialiv",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015ab90": {
+      "address": "0x0015ab90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glMateriali",
+      "size": 88,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17219,11 +18762,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015ace0": {
+      "address": "0x0015ace0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glMaterialf",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015ad40": {
       "address": "0x0015ad40",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glMaterialf",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015ad60": {
+      "address": "0x0015ad60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glMapGrid2f",
+      "size": 136,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17235,11 +18794,43 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015ae10": {
+      "address": "0x0015ae10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glMapGrid2d",
+      "size": 176,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015aec0": {
+      "address": "0x0015aec0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glMapGrid1f",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015af20": {
       "address": "0x0015af20",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glMapGrid1f",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015af40": {
+      "address": "0x0015af40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glMapGrid1d",
+      "size": 112,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015b090": {
+      "address": "0x0015b090",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "plyPS2glMap2f",
+      "size": 48,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17259,11 +18850,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015b380": {
+      "address": "0x0015b380",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glLogicOp",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015b3c0": {
       "address": "0x0015b3c0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glLogicOp",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015b3d0": {
+      "address": "0x0015b3d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glLoadName",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17291,11 +18898,35 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015b4e0": {
+      "address": "0x0015b4e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glLoadIdentity",
+      "size": 40,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015b510": {
+      "address": "0x0015b510",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glListBase",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015b550": {
       "address": "0x0015b550",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glListBase",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015b560": {
+      "address": "0x0015b560",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glLineWidth",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17307,6 +18938,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015b5b0": {
+      "address": "0x0015b5b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glLineStipple",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015b600": {
       "address": "0x0015b600",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -17315,11 +18954,35 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015b770": {
+      "address": "0x0015b770",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glLighti",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015b7d0": {
       "address": "0x0015b7d0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glLighti",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015b8d0": {
+      "address": "0x0015b8d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "plyPS2glLightfv",
+      "size": 64,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015b910": {
+      "address": "0x0015b910",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glLightf",
+      "size": 88,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17339,6 +19002,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015ba30": {
+      "address": "0x0015ba30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glLightModeli",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015ba80": {
       "address": "0x0015ba80",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -17355,11 +19026,35 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015bb30": {
+      "address": "0x0015bb30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glLightModelf",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015bb80": {
       "address": "0x0015bb80",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glLightModelf",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015bb90": {
+      "address": "0x0015bb90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glInitNames",
+      "size": 40,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015bbc0": {
+      "address": "0x0015bbc0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glIndexubv",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17371,11 +19066,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015bc10": {
+      "address": "0x0015bc10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glIndexub",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015bc50": {
       "address": "0x0015bc50",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glIndexub",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015bc60": {
+      "address": "0x0015bc60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glIndexsv",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17387,11 +19098,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015bcb0": {
+      "address": "0x0015bcb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glIndexs",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015bcf0": {
       "address": "0x0015bcf0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glIndexs",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015bd00": {
+      "address": "0x0015bd00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glIndexiv",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17403,11 +19130,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015bd50": {
+      "address": "0x0015bd50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glIndexi",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015bd90": {
       "address": "0x0015bd90",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glIndexi",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015bda0": {
+      "address": "0x0015bda0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glIndexfv",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17419,11 +19162,43 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015bdf0": {
+      "address": "0x0015bdf0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glIndexf",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015be30": {
       "address": "0x0015be30",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glIndexf",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015be40": {
+      "address": "0x0015be40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glIndexdv",
+      "size": 64,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015be80": {
+      "address": "0x0015be80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glIndexd",
+      "size": 68,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015bed0": {
+      "address": "0x0015bed0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glIndexMask",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17435,6 +19210,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015bf20": {
+      "address": "0x0015bf20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glHint",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015bf70": {
       "address": "0x0015bf70",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -17443,11 +19226,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015bf80": {
+      "address": "0x0015bf80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glFrustum",
+      "size": 152,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015c020": {
       "address": "0x0015c020",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glFrustum",
       "size": 32,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c040": {
+      "address": "0x0015c040",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glFrontFace",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17467,6 +19266,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015c130": {
+      "address": "0x0015c130",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glFogi",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015c180": {
       "address": "0x0015c180",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -17483,11 +19290,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015c230": {
+      "address": "0x0015c230",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glFogf",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015c280": {
       "address": "0x0015c280",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glFogf",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c290": {
+      "address": "0x0015c290",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalPoint2",
+      "size": 72,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17499,11 +19322,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015c2f0": {
+      "address": "0x0015c2f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalPoint1",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015c330": {
       "address": "0x0015c330",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glEvalPoint1",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c340": {
+      "address": "0x0015c340",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalMesh2",
+      "size": 120,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17515,11 +19354,35 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015c3e0": {
+      "address": "0x0015c3e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalMesh1",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015c440": {
       "address": "0x0015c440",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glEvalMesh1",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c460": {
+      "address": "0x0015c460",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalCoord2fv",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c4b0": {
+      "address": "0x0015c4b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalCoord2f",
+      "size": 72,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17531,11 +19394,43 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015c510": {
+      "address": "0x0015c510",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalCoord2dv",
+      "size": 100,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c580": {
+      "address": "0x0015c580",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalCoord2d",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c5f0": {
+      "address": "0x0015c5f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalCoord1fv",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015c630": {
       "address": "0x0015c630",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glEvalCoord1fv",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c640": {
+      "address": "0x0015c640",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalCoord1f",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17547,11 +19442,43 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015c690": {
+      "address": "0x0015c690",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalCoord1dv",
+      "size": 64,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c6d0": {
+      "address": "0x0015c6d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEvalCoord1d",
+      "size": 68,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c810": {
+      "address": "0x0015c810",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEnableClientState",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015c850": {
       "address": "0x0015c850",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glEnableClientState",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c860": {
+      "address": "0x0015c860",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEnable",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17563,11 +19490,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015c8b0": {
+      "address": "0x0015c8b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEdgeFlagv",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015c8f0": {
       "address": "0x0015c8f0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glEdgeFlagv",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015c900": {
+      "address": "0x0015c900",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glEdgeFlag",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17595,11 +19538,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015cb10": {
+      "address": "0x0015cb10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glDrawBuffer",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015cb50": {
       "address": "0x0015cb50",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glDrawBuffer",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015ce90": {
+      "address": "0x0015ce90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glDisableClientState",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17611,11 +19570,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015cee0": {
+      "address": "0x0015cee0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glDisable",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015cf20": {
       "address": "0x0015cf20",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glDisable",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015cf30": {
+      "address": "0x0015cf30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glDepthRange",
+      "size": 72,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17627,11 +19602,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015cf90": {
+      "address": "0x0015cf90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glDepthMask",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015cfd0": {
       "address": "0x0015cfd0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glDepthMask",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015cfe0": {
+      "address": "0x0015cfe0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glDepthFunc",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17643,11 +19634,43 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015d030": {
+      "address": "0x0015d030",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glCullFace",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015d070": {
       "address": "0x0015d070",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glCullFace",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015d080": {
+      "address": "0x0015d080",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glCopyTexSubImage2D",
+      "size": 168,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015d130": {
+      "address": "0x0015d130",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "plyPS2glCopyTexSubImage2D",
+      "size": 40,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015d160": {
+      "address": "0x0015d160",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glCopyTexSubImage1D",
+      "size": 136,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17659,6 +19682,46 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015d210": {
+      "address": "0x0015d210",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glCopyTexImage2D",
+      "size": 168,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015d2c0": {
+      "address": "0x0015d2c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "plyPS2glCopyTexImage2D",
+      "size": 40,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015d2f0": {
+      "address": "0x0015d2f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glCopyTexImage1D",
+      "size": 152,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015d390": {
+      "address": "0x0015d390",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "plyPS2glCopyTexImage1D",
+      "size": 36,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015d3c0": {
+      "address": "0x0015d3c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glCopyPixels",
+      "size": 120,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015d440": {
       "address": "0x0015d440",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -17667,11 +19730,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015d460": {
+      "address": "0x0015d460",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glColorMaterial",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015d4b0": {
       "address": "0x0015d4b0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glColorMaterial",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015d4c0": {
+      "address": "0x0015d4c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glColorMask",
+      "size": 104,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17691,11 +19770,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00160da0": {
+      "address": "0x00160da0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glClearStencil",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00160de0": {
       "address": "0x00160de0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glClearStencil",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00160df0": {
+      "address": "0x00160df0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glClearIndex",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17707,11 +19802,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00160e40": {
+      "address": "0x00160e40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glClearDepth",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00160e80": {
       "address": "0x00160e80",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glClearDepth",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00160e90": {
+      "address": "0x00160e90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glClearColor",
+      "size": 104,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17723,11 +19834,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00160f20": {
+      "address": "0x00160f20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glClearAccum",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00160f90": {
       "address": "0x00160f90",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glClearAccum",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00160fb0": {
+      "address": "0x00160fb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glClear",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17747,11 +19874,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00161110": {
+      "address": "0x00161110",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glCallList",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00161150": {
       "address": "0x00161150",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glCallList",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00161160": {
+      "address": "0x00161160",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glBlendFunc",
+      "size": 72,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17763,11 +19906,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x001612a0": {
+      "address": "0x001612a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glBindTexture",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x001612f0": {
       "address": "0x001612f0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glBindTexture",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00161980": {
+      "address": "0x00161980",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glArrayElement",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17779,11 +19938,27 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x001619d0": {
+      "address": "0x001619d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glAlphaFunc",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00161a20": {
       "address": "0x00161a20",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glAlphaFunc",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00161a30": {
+      "address": "0x00161a30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glClientActiveTextureARB",
+      "size": 56,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -17795,12 +19970,36 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x00161a80": {
+      "address": "0x00161a80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glActiveTextureARB",
+      "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00161ac0": {
       "address": "0x00161ac0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glActiveTextureARB",
       "size": 8,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00161ad0": {
+      "address": "0x00161ad0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glAccum",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00161b20": {
+      "address": "0x00161b20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "plyPS2glAccum",
+      "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
       "status": "MATCH"
     },
     "0x00165600": {
@@ -17865,6 +20064,14 @@
       "name": "impPS2glPixelMapfv",
       "size": 8,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MATCH"
+    },
+    "0x0016d780": {
+      "address": "0x0016d780",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glTexImage1D",
+      "size": 48,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
     },
     "0x00174e80": {
@@ -18291,6 +20498,22 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GSPackage.c",
       "status": "MATCH"
     },
+    "0x00179900": {
+      "address": "0x00179900",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GsResetBuffer",
+      "size": 88,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GSPackage.c",
+      "status": "MATCH"
+    },
+    "0x00179960": {
+      "address": "0x00179960",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glGetGsRegister",
+      "size": 96,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GSPackage.c",
+      "status": "MATCH"
+    },
     "0x0017d030": {
       "address": "0x0017d030",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -18555,6 +20778,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Get.c",
       "status": "MATCH"
     },
+    "0x00185d40": {
+      "address": "0x00185d40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2auxInitDisplayMode",
+      "size": 44,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GLAUX/PS2GLAUX.c",
+      "status": "MATCH"
+    },
     "0x00185d70": {
       "address": "0x00185d70",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -18569,6 +20800,22 @@
       "name": "DefaultHandleExpose",
       "size": 8,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GLAUX/PS2GLAUX.c",
+      "status": "MATCH"
+    },
+    "0x00186670": {
+      "address": "0x00186670",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SND_fn_vSetRetMicroSound",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndmicro.cpp",
+      "status": "MATCH"
+    },
+    "0x001866a0": {
+      "address": "0x001866a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SND_fn_vDestroyMicroSound",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndmicro.cpp",
       "status": "MATCH"
     },
     "0x001866d0": {
@@ -18643,11 +20890,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
       "status": "MATCH"
     },
+    "0x00188cf0": {
+      "address": "0x00188cf0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SND_fn_pstGetBlockEventFromId",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
+      "status": "MATCH"
+    },
     "0x001895d0": {
       "address": "0x001895d0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "SND_fn_bDesInitDataLoadSnd",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
+      "status": "MATCH"
+    },
+    "0x001895e0": {
+      "address": "0x001895e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SND_fn_bInitDataLoadSnd",
+      "size": 32,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
       "status": "MATCH"
     },
@@ -18723,6 +20986,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
       "status": "MATCH"
     },
+    "0x0018aa00": {
+      "address": "0x0018aa00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "usnd_uiGetTime",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
+      "status": "MATCH"
+    },
+    "0x0018aef0": {
+      "address": "0x0018aef0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "usnd_uiRand",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
+      "status": "MATCH"
+    },
     "0x0018af40": {
       "address": "0x0018af40",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -18753,6 +21032,22 @@
       "name": "usnd_malloc",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeecbankdesc.cpp",
+      "status": "MATCH"
+    },
+    "0x001c9bd0": {
+      "address": "0x001c9bd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SND_fn_vResumeAllObjectTypeSound",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001c9c10": {
+      "address": "0x001c9c10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SND_fn_vPauseAllObjectTypeSound",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndactor.cpp",
       "status": "MATCH"
     },
     "0x001cc970": {
@@ -18856,6 +21151,22 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "SND_fn_iGetSwitchMaterial",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cf2f0": {
+      "address": "0x001cf2f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "f_vInsertAfter__16CExtraEventActorFP16CExtraEventActor",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cf320": {
+      "address": "0x001cf320",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "f_vIsolate__16CExtraEventActorFv",
+      "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
       "status": "MATCH"
     },
@@ -19003,6 +21314,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/Tobies.c",
       "status": "MATCH"
     },
+    "0x001ea5c0": {
+      "address": "0x001ea5c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "DesInit__23AGO3_LinkChainComputingFv",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001ea700": {
       "address": "0x001ea700",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -19027,6 +21346,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001f9ed0": {
+      "address": "0x001f9ed0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "DesInit__15AGO3_TransitionFv",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f9ee0": {
       "address": "0x001f9ee0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -19043,6 +21370,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001f9f00": {
+      "address": "0x001f9f00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "DesInit__25AGO3_Snowboard_SnowEffectFv",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f9f10": {
       "address": "0x001f9f10",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -19056,6 +21391,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "DesInit__19AGO3_LightExplosionFv",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f9f30": {
+      "address": "0x001f9f30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "DesInit__20AGO3_SwirlingBubblesFv",
+      "size": 16,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
@@ -19155,6 +21498,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "MATCH"
     },
+    "0x001fb820": {
+      "address": "0x001fb820",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVar",
+      "size": 148,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fb8c0": {
+      "address": "0x001fb8c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVarArray",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
     "0x001fb940": {
       "address": "0x001fb940",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -19168,6 +21527,70 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_ucSetDsgVarGameMaterial",
       "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fb980": {
+      "address": "0x001fb980",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVarPositiveInteger",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fb9c0": {
+      "address": "0x001fb9c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVarInteger",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fba00": {
+      "address": "0x001fba00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVar0To65535",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fba40": {
+      "address": "0x001fba40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVar_32768To32767",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fba80": {
+      "address": "0x001fba80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVar0To255",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fbac0": {
+      "address": "0x001fbac0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVar_128To127",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fbb00": {
+      "address": "0x001fbb00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVarBoolean",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fbb40": {
+      "address": "0x001fbb40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVarList",
+      "size": 68,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "MATCH"
     },
@@ -19264,6 +21687,30 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_ucSetDsgVarSuperObject",
       "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fbc90": {
+      "address": "0x001fbc90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVarPerso",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fbce0": {
+      "address": "0x001fbce0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetDsgVarFloat",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fbd90": {
+      "address": "0x001fbd90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetDsgVarArray",
+      "size": 120,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "MATCH"
     },
@@ -19376,6 +21823,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_ucGetDsgVarCaps",
       "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fc0f0": {
+      "address": "0x001fc0f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetDsgVarPerso",
+      "size": 88,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "MATCH"
     },
@@ -20603,6 +23058,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcOptim.cxx",
       "status": "MATCH"
     },
+    "0x0022cf20": {
+      "address": "0x0022cf20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fni_CompareFloatLess",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcRay2.cxx",
+      "status": "MATCH"
+    },
+    "0x0022cf60": {
+      "address": "0x0022cf60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fni_CompareFloatGreater",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcRay2.cxx",
+      "status": "MATCH"
+    },
     "0x0022f330": {
       "address": "0x0022f330",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -20979,6 +23450,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
       "status": "MATCH"
     },
+    "0x00259980": {
+      "address": "0x00259980",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vInitAllObjectsWhenPlayerDead",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
+    "0x00259f00": {
+      "address": "0x00259f00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vInitAllObjectsWhenSavedGameJustLoaded",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
     "0x00259fa0": {
       "address": "0x00259fa0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -21339,6 +23826,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Initeng.c",
       "status": "MATCH"
     },
+    "0x00264be0": {
+      "address": "0x00264be0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vDesInitDeadLoop",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Initeng.c",
+      "status": "MATCH"
+    },
     "0x002650a0": {
       "address": "0x002650a0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -21416,6 +23911,22 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_bObjectTypeAnimationLinkBis",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Micros.c",
+      "status": "MATCH"
+    },
+    "0x00265f50": {
+      "address": "0x00265f50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_s32ObjectTypeAnimationVZ",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Micros.c",
+      "status": "MATCH"
+    },
+    "0x00265ff0": {
+      "address": "0x00265ff0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_s32ObjectTypeAnimationVX",
+      "size": 60,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Micros.c",
       "status": "MATCH"
     },
@@ -21675,6 +24186,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ToolCam.c",
       "status": "MATCH"
     },
+    "0x0026ad30": {
+      "address": "0x0026ad30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_lGetZdxListNumberOfElements",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZdxStuff.c",
+      "status": "MATCH"
+    },
     "0x0026b0a0": {
       "address": "0x0026b0a0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -21705,6 +24224,22 @@
       "name": "fn_iCmpZoneSetIndex",
       "size": 16,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZdxStuff.c",
+      "status": "MATCH"
+    },
+    "0x0026d010": {
+      "address": "0x0026d010",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vFreeTransitionAllocatedMemory",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZeMem.c",
+      "status": "MATCH"
+    },
+    "0x0026d040": {
+      "address": "0x0026d040",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vFreeLevelAllowedMemory",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/Brain.c",
       "status": "MATCH"
     },
     "0x0026d080": {
@@ -21787,6 +24322,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/cineinfo.c",
       "status": "MATCH"
     },
+    "0x0026d910": {
+      "address": "0x0026d910",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "CAM_fn_vRemindTime",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/cineinfo.c",
+      "status": "MATCH"
+    },
     "0x0026dad0": {
       "address": "0x0026dad0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -21808,6 +24351,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "CAM_fn_vSetCineinfoCurrentFromVisibility",
       "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/cineinfo.c",
+      "status": "MATCH"
+    },
+    "0x0026dce0": {
+      "address": "0x0026dce0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "CAM_fn_vSetCineinfoWorkFromCurrent",
+      "size": 64,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/cineinfo.c",
       "status": "MATCH"
     },
@@ -21849,6 +24400,14 @@
       "name": "CAM_fn_ulCineinfoSizeOf",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/cineinfo.c",
+      "status": "MATCH"
+    },
+    "0x0026ec20": {
+      "address": "0x0026ec20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucCollSetGetCollComputeFrequencySO",
+      "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
       "status": "MATCH"
     },
     "0x0026ec70": {
@@ -22363,6 +24922,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/SectInfo.c",
       "status": "MATCH"
     },
+    "0x00273910": {
+      "address": "0x00273910",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_hGetCurrentSector",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/SectInfo.c",
+      "status": "MATCH"
+    },
     "0x00273950": {
       "address": "0x00273950",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -22651,6 +25218,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_mem.c",
       "status": "MATCH"
     },
+    "0x0027fb00": {
+      "address": "0x0027fb00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vRedrawPauseStringIfRequired",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/gamopt.c",
+      "status": "MATCH"
+    },
     "0x0027fb40": {
       "address": "0x0027fb40",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -22875,6 +25450,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
       "status": "MATCH"
     },
+    "0x0028aaf0": {
+      "address": "0x0028aaf0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SAV2_fn_vUpdateVibrations",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GamSave2.c",
+      "status": "MATCH"
+    },
     "0x0028ab90": {
       "address": "0x0028ab90",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -22969,6 +25552,54 @@
       "name": "fn_lGetTransitionBloc",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/transition.c",
+      "status": "MATCH"
+    },
+    "0x0028d890": {
+      "address": "0x0028d890",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vResetTransitionAllocatorEven",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/transition.cxx",
+      "status": "MATCH"
+    },
+    "0x0028d8a0": {
+      "address": "0x0028d8a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vTransitionDeallocatorEven",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/transition.cxx",
+      "status": "MATCH"
+    },
+    "0x0028d8b0": {
+      "address": "0x0028d8b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_pvTransitionAllocatorEven",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/transition.cxx",
+      "status": "MATCH"
+    },
+    "0x0028d8c0": {
+      "address": "0x0028d8c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vResetTransitionAllocatorOdd",
+      "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/transition.cxx",
+      "status": "MATCH"
+    },
+    "0x0028d8d0": {
+      "address": "0x0028d8d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vTransitionDeallocatorOdd",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/transition.cxx",
+      "status": "MATCH"
+    },
+    "0x0028d8e0": {
+      "address": "0x0028d8e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_pvTransitionAllocatorOdd",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/transition.cxx",
       "status": "MATCH"
     },
     "0x0028dac0": {
@@ -23147,6 +25778,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
       "status": "MATCH"
     },
+    "0x0029a1f0": {
+      "address": "0x0029a1f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vInitInGameMenu2D",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
     "0x0029c270": {
       "address": "0x0029c270",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -23233,6 +25872,14 @@
       "name": "M2D_fn_iNbTexturesNeededForMenu",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/SoundMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x002a0880": {
+      "address": "0x002a0880",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GEO_xInitGEOError",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/Culling.c",
       "status": "MATCH"
     },
     "0x002a1480": {
@@ -23416,6 +26063,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_vSecondInitPS2GL",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Init_PS2GL.c",
+      "status": "MATCH"
+    },
+    "0x002a7e70": {
+      "address": "0x002a7e70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_DRV_xInitDriver",
+      "size": 64,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Init_PS2GL.c",
       "status": "MATCH"
     },
@@ -23667,6 +26322,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"
     },
+    "0x002a9d30": {
+      "address": "0x002a9d30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xSetMaterialTextureScrollingOnOff",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
     "0x002a9d90": {
       "address": "0x002a9d90",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -23800,6 +26463,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_vIniTextRead",
       "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Tex.c",
+      "status": "MATCH"
+    },
+    "0x002ab110": {
+      "address": "0x002ab110",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_TEX_vKillMemoryChannel",
+      "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Tex.c",
       "status": "MATCH"
     },
@@ -24160,6 +26831,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_xSetCameraAspectAndRatio",
       "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
+      "status": "MATCH"
+    },
+    "0x002b1470": {
+      "address": "0x002b1470",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xSetCameraNearFar",
+      "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
       "status": "MATCH"
     },
@@ -24531,6 +27210,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_NewSprites.c",
       "status": "MATCH"
     },
+    "0x002cdca0": {
+      "address": "0x002cdca0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "LS_fn_iRemainingSizeToLoad",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_LoadingScreen.cpp",
+      "status": "MATCH"
+    },
     "0x002cef80": {
       "address": "0x002cef80",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -24595,11 +27282,59 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
       "status": "MATCH"
     },
+    "0x002d0e30": {
+      "address": "0x002d0e30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDrawWorldQuadWithUVsAndAlpha",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
     "0x002d0e60": {
       "address": "0x002d0e60",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_vDrawWorldPlanarSprite",
       "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d0e80": {
+      "address": "0x002d0e80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDrawWorldQuadOpt",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d0eb0": {
+      "address": "0x002d0eb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDrawWorldOrthoPlanarOrientedSprite",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d0ee0": {
+      "address": "0x002d0ee0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDrawWorldOrthoPlanarSpriteColor",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d0f20": {
+      "address": "0x002d0f20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDrawWorldOrthoPlanarSprite",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d0f50": {
+      "address": "0x002d0f50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDrawWorldSpriteWithUVsOpt",
+      "size": 48,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
       "status": "MATCH"
     },
@@ -24627,11 +27362,43 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
       "status": "MATCH"
     },
+    "0x002d0fd0": {
+      "address": "0x002d0fd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDrawWorldQuadWithUVsAndFade",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d1000": {
+      "address": "0x002d1000",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDrawWorldQuadWithUVsOpt",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
     "0x002d10c0": {
       "address": "0x002d10c0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_vDraw2DSpriteWithPercent",
       "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d10e0": {
+      "address": "0x002d10e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDraw2DSpriteAndRotateWithPercentAndUVs",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d1120": {
+      "address": "0x002d1120",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vDraw2DSpriteWithPercentAndUVs",
+      "size": 56,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
       "status": "MATCH"
     },
@@ -24689,6 +27456,22 @@
       "name": "GLI_vDrawWorldSpriteOpt",
       "size": 12,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d52d0": {
+      "address": "0x002d52d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "StopSpriteList__17CSpriteControllerFv",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d75c0": {
+      "address": "0x002d75c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vInitSdlCache",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCache.cpp",
       "status": "MATCH"
     },
     "0x002d7ec0": {
@@ -24779,6 +27562,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
+    "0x002de9e0": {
+      "address": "0x002de9e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLIPS2_vSetMirrorAE_ColorCorrection",
+      "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
     "0x002dea40": {
       "address": "0x002dea40",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -24835,6 +27626,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
+    "0x002deb70": {
+      "address": "0x002deb70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLIPS2_vSetAE_CartoonEmboss",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
     "0x002debd0": {
       "address": "0x002debd0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -24883,6 +27682,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
+    "0x002e6420": {
+      "address": "0x002e6420",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLIPS2_vSetDepthBlurMode",
+      "size": 92,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
     "0x002e83e0": {
       "address": "0x002e83e0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -24896,6 +27703,22 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "ActivateOldMovieEffect",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
+    "0x002e8400": {
+      "address": "0x002e8400",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "ReinitOldMovieEffect",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
+    "0x002e8420": {
+      "address": "0x002e8420",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "ProcessOldMovieEffect",
+      "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
@@ -24937,6 +27760,14 @@
       "name": "__ct__8C_FxListFv",
       "size": 12,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FxList.cpp",
+      "status": "MATCH"
+    },
+    "0x002ece60": {
+      "address": "0x002ece60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SetCurrentFog__8C_BaseFxFv",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Picture.cpp",
       "status": "MATCH"
     },
     "0x002ece90": {
@@ -26075,6 +28906,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/SectList.c",
       "status": "MATCH"
     },
+    "0x0031bed0": {
+      "address": "0x0031bed0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_iZCompare",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectmir.c",
+      "status": "MATCH"
+    },
     "0x0031c310": {
       "address": "0x0031c310",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -26235,6 +29074,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieSpObj.c",
       "status": "MATCH"
     },
+    "0x00321f50": {
+      "address": "0x00321f50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "HIE_fn_vInvalidateOneGlobalMatrix",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieSpObj.c",
+      "status": "MATCH"
+    },
     "0x00321f90": {
       "address": "0x00321f90",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -26313,6 +29160,14 @@
       "name": "TXT_fn_vLoadInit",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/StructForFonts.c",
+      "status": "MATCH"
+    },
+    "0x003236a0": {
+      "address": "0x003236a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vInitFont",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
       "status": "MATCH"
     },
     "0x00324450": {
@@ -26416,6 +29271,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "PS2MC_fn_vDoBootCheck",
       "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MATCH"
+    },
+    "0x0032b090": {
+      "address": "0x0032b090",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2MC_fn_vStartMachine",
+      "size": 40,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
       "status": "MATCH"
     },

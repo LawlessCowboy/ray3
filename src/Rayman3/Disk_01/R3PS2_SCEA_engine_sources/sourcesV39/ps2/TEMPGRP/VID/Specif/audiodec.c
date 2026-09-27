@@ -9,6 +9,9 @@ static float g_s_fStartedSince;
 static int g_s_CurrentFrame;
 static int g_s_SoundIsPlaying;
 
+void SND_VID_fn_vStopVideoSound(void);
+void SND_VID_fn_vDesinitVideoSound(void);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\audiodec.c lines 150–158 */
 /* addr: 0x00132f60  size: 36 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -21,7 +24,9 @@ static int g_s_SoundIsPlaying;
  */
 int vagStop(void)
 {
-    /* TODO: decompile from asm/... */
+    SND_VID_fn_vStopVideoSound();
+    g_s_SoundIsPlaying = 0;
+    SND_VID_fn_vDesinitVideoSound();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\audiodec.c lines 146–146 */

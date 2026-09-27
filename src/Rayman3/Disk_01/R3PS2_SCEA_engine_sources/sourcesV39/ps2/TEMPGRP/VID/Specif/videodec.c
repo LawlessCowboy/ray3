@@ -402,9 +402,13 @@ int videoDecAbort(anon_0* vd)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int viBufDelete(anon_4* f);
+
 int videoDecDelete(anon_0* vd)
 {
-    /* TODO: decompile from asm/... */
+    viBufDelete(&vd->vibuf);
+    sceMpegDelete(&vd->mpeg);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 119–119 */

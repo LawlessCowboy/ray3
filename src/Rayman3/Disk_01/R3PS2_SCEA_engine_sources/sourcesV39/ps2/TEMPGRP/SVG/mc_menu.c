@@ -915,10 +915,18 @@ int MC_Formatted(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int MC_Present(void);
+int SVG_fn_iGetChangeInMC0(void);
+
+#pragma schedule off
 int MC_MemoryCardChanged(void)
 {
-    /* TODO: decompile from asm/... */
+    if (MC_Present() == 0)
+        return 0;
+    else
+        return SVG_fn_iGetChangeInMC0();
 }
+#pragma schedule reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1654–1657 */
 /* addr: 0x00139000  size: 32 bytes */

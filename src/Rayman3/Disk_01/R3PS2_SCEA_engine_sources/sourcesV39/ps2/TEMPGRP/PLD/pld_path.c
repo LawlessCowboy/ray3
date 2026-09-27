@@ -348,9 +348,10 @@ void PLD_szLanguageName(char* szName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLD_szKeyFramesName(char* szName)
+char* PLD_szKeyFramesName(char* szName)
 {
-    sprintf(PLD_g_szAreaFileName, "KeyFrames%s", szName);
+    sprintf(PLD_g_szAreaFileName, "%sKf", szName, szName);
+    return PLD_g_szAreaFileName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 300–303 */
@@ -366,9 +367,10 @@ void PLD_szKeyFramesName(char* szName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLD_szLvlKeyFramesName(char* szName)
+char* PLD_szLvlKeyFramesName(char* szName)
 {
-    sprintf(PLD_g_szAreaFileName, "LvlKeyFrames%s", szName);
+    sprintf(PLD_g_szAreaFileName, "%s/%sKf", szName, szName);
+    return PLD_g_szAreaFileName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 296–296 */
@@ -414,9 +416,10 @@ void PLD_szAnimationName(char* szName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLD_szVertexBufferName(char* szName)
+char* PLD_szVertexBufferName(char* szName)
 {
-    sprintf(PLD_g_szAreaFileName, "VertexBuffer%s", szName);
+    sprintf(PLD_g_szAreaFileName, "%s\\%s_vb", szName, szName);
+    return PLD_g_szAreaFileName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 273–277 */
@@ -450,9 +453,10 @@ void PLD_szTransitionName(char* szName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLD_szLevelName(char* szName)
+char* PLD_szLevelName(char* szName)
 {
-    sprintf(PLD_g_szAreaFileName, "Level%s", szName);
+    sprintf(PLD_g_szAreaFileName, "%s\\%s", szName, szName);
+    return PLD_g_szAreaFileName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 262–262 */

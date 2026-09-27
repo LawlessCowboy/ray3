@@ -13,6 +13,7 @@ typedef struct ThreadParam ThreadParam;
 typedef struct SemaParam SemaParam;
 
 extern "C" void DeleteSema(int);
+extern "C" int rand(void);
 
 struct _SHiResTime {
     unsigned int m_uiHighWord; /* +0x0 */
@@ -336,7 +337,7 @@ void usnd_vUpdateTimers(void)
  */
 unsigned int usnd_uiGetTime(void)
 {
-    /* TODO: decompile from asm/... */
+    return (usnd_guiTickT0 * 1000) / 2500;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 294–308 */
@@ -498,5 +499,7 @@ unsigned int usnd_uiComputeAbsolutePath(char* szAbsFP, char* szRelFP, char* szRe
 unsigned int usnd_uiRand(unsigned int uiMaxRandValue)
 {
     unsigned long ulRandomValue;
-    /* TODO: decompile from asm/... */
+    ulRandomValue = rand();
+    ulRandomValue = (ulRandomValue * uiMaxRandValue) / 0x7fffffff;
+    return ulRandomValue;
 }

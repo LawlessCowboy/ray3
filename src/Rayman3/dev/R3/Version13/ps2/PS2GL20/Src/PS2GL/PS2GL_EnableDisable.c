@@ -1226,7 +1226,8 @@ void impPS2glHint(unsigned int target, unsigned int mode)
  */
 void impPS2glFrontFace(unsigned int mode)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.eFrontFaceMode = mode;
+    g_PS2glContext.bCullfaceChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 1017–1019 */
@@ -1242,7 +1243,8 @@ void impPS2glFrontFace(unsigned int mode)
  */
 void impPS2glCullFace(unsigned int mode)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.eCullFaceMode = mode;
+    g_PS2glContext.bCullfaceChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 712–1012 */

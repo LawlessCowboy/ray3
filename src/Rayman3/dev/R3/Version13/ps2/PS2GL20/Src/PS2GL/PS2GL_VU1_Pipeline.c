@@ -2512,7 +2512,8 @@ void VU1FlushFakeSwapBuffer(void)
  */
 void VU1StopWorkingOnFakeSwapBuffer(void)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.pVIFInBuf = (float (*)[4])s_InBuf_saved;
+    g_PS2glContext.pVIFIBufTail = (float (*)[4])s_InBufTail_saved;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 308–313 */

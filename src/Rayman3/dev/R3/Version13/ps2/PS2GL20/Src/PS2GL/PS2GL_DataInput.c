@@ -2164,7 +2164,10 @@ void impPS2glTexCoord4sv(short* v)
  */
 void impPS2glTexCoord4f(float s, float t, float r, float q)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = s;
+    g_PS2glContext.vacurTexCoords[0][1] = t;
+    g_PS2glContext.vacurTexCoords[0][2] = r;
+    g_PS2glContext.vacurTexCoords[0][3] = q;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1559–1561 */
@@ -3528,7 +3531,10 @@ void impPS2glNormal3bv(signed char* v)
  */
 void impPS2glNormal3f(float nx, float ny, float nz)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vcurNormal[0] = nx;
+    g_PS2glContext.vcurNormal[1] = ny;
+    g_PS2glContext.vcurNormal[2] = nz;
+    g_PS2glContext.vcurNormal[3] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 759–761 */
@@ -4329,7 +4335,10 @@ void impPS2glColor4d(double R, double G, double B, double A)
  */
 void impPS2glColor4f(float red, float green, float blue, float alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = red;
+    g_PS2glContext.vacurColor[0][1] = green;
+    g_PS2glContext.vacurColor[0][2] = blue;
+    g_PS2glContext.vacurColor[0][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 395–397 */

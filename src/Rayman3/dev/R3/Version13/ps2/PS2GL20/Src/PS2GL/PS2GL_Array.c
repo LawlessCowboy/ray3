@@ -3070,7 +3070,8 @@ void impPS2glIndexPointer(unsigned int type, int stride, void* pointer)
  */
 void impPS2glEdgeFlagPointer(int stride, void* pointer)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.EdgeFlagArray.stride = stride;
+    g_PS2glContext.EdgeFlagArray.pointer = (int)pointer;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 24–34 */

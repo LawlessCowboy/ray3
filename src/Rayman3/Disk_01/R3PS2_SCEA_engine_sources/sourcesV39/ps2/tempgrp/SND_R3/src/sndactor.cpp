@@ -221,6 +221,9 @@ struct _RollOffParam {
 };
 
 struct CLinkTypeActorCont {
+    /* Recovered singleton and command signatures. */
+    static CLinkTypeActorCont* mfn_roGetInstance(void);
+    unsigned char mfn_bExecuteActorType(int s32_CmdId, int s32_TypeId);
     /* C++ base smap at +0x0. */
     CActorResData* m_poStandardActorResData; /* +0x10 */
     CActorResData* m_poMusicActorResData; /* +0x14 */
@@ -475,7 +478,7 @@ void SND_fn_vPauseSound(void)
  */
 void SND_fn_vResumeAllObjectTypeSound(int s32_TypeId)
 {
-    /* TODO: decompile from asm/... */
+    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(3, s32_TypeId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 102–104 */
@@ -489,7 +492,7 @@ void SND_fn_vResumeAllObjectTypeSound(int s32_TypeId)
  */
 void SND_fn_vPauseAllObjectTypeSound(int s32_TypeId)
 {
-    /* TODO: decompile from asm/... */
+    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, s32_TypeId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 95–100 */

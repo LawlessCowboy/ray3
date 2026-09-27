@@ -603,6 +603,7 @@ struct AGO3_LinkChainComputing {
     float m_fImpulseDuration; /* +0x768 */
     float m_fImpulseTime; /* +0x76c */
     int m_bImpulse; /* +0x770 */
+    static int m_hHandle;
     void DesInit(void);
     void Display(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
@@ -674,6 +675,7 @@ struct AGO3_Transition {
     unsigned int m_dwNbDisplayedDots; /* +0x7c */
     void DisplayLoadingMessage(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
+    static int m_hHandle;
     void DesInit(void);
     void Display(GLD_tdstViewportAttributes_* hVp);
 };
@@ -729,6 +731,7 @@ struct AGO3_SwirlingBubbles {
     AGO3_SB_SpriteData m_stSprite[512]; /* +0x60 */
     void Display(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
+    static int m_hHandle;
     void DesInit(void);
 };
 
@@ -1565,6 +1568,7 @@ struct AGO3_Snowboard_SnowEffect {
     void GeneratePartsOnAir(void);
     void GeneratePartsOnGround(void);
     void Init(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* pMat1, float fParameter);
+    static int m_hHandle;
     void DesInit(void);
 };
 
@@ -1707,8 +1711,11 @@ void Toby_DestroyAll(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int AGO3_LinkChainComputing::m_hHandle;
+
 void AGO3_LinkChainComputing::DesInit(void)
 {
+    m_hHandle = 0;
     ((AGO3_Part*)this)->m_Finished = 1;
 }
 
@@ -7384,8 +7391,11 @@ void AGO3_vInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int AGO3_Transition::m_hHandle;
+
 void AGO3_Transition::DesInit(void)
 {
+    m_hHandle = 0;
     ((AGO3_Part*)this)->m_Finished = 1;
 }
 
@@ -7420,8 +7430,11 @@ void AGO3_OrientedTarget::DesInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int AGO3_Snowboard_SnowEffect::m_hHandle;
+
 void AGO3_Snowboard_SnowEffect::DesInit(void)
 {
+    m_hHandle = 0;
     ((AGO3_Part*)this)->m_Finished = 1;
 }
 
@@ -7456,8 +7469,11 @@ void AGO3_LightExplosion::DesInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int AGO3_SwirlingBubbles::m_hHandle;
+
 void AGO3_SwirlingBubbles::DesInit(void)
 {
+    m_hHandle = 0;
     ((AGO3_Part*)this)->m_Finished = 1;
 }
 

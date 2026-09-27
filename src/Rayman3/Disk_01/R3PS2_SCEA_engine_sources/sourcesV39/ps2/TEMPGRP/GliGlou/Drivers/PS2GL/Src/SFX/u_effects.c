@@ -1981,7 +1981,12 @@ void GLIPS2_vSetMirrorAE_WaterFx(unsigned int bOnOff, float fSpeed, float fAmp)
  */
 void GLIPS2_vSetMirrorAE_ColorCorrection(unsigned int bOnOff, float fPreContrast, float fR, float fG, float fB)
 {
-    /* TODO: decompile from asm/... */
+    if (bOnOff) AE_MirrorFX |= 4; else AE_MirrorFX &= ~4;
+    AE_Bright_Cont_M[0] = fR;
+    AE_Bright_Cont_M[1] = fG;
+    AE_Bright_Cont_M[2] = fB;
+    AE_Bright_Cont_M[3] = fPreContrast;
+    AE_Bright_Cont_M[4] = 1.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5788–5788 */
@@ -2130,7 +2135,10 @@ void GLIPS2_vSetAE_Glow(unsigned int bOnOff, float fR, float fG, float fB, float
  */
 void GLIPS2_vSetAE_CartoonEmboss(unsigned int bOnOff, float Blend)
 {
-    /* TODO: decompile from asm/... */
+    if (bOnOff) GLI_g_AfterEffect = 10; else GLI_g_AfterEffect = 0;
+    if (Blend < 0.0f) Blend = 0.0f;
+    if (!(Blend <= 1.0f)) Blend = 1.0f;
+    GLI_g_CartoonBlendVal = Blend;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5701–5705 */
@@ -4522,7 +4530,11 @@ void AE_PrepareMatrixEffect(void)
  */
 void GLIPS2_vSetDepthBlurMode(float Near, float Far, float Intensity)
 {
-    /* TODO: decompile from asm/... */
+    if (Intensity <= 0.0f) GLI_g_AfterEffect = 0; else GLI_g_AfterEffect = 1;
+    if (!(Intensity <= 1.0f)) Intensity = 1.0f;
+    G_DEPTH_BLUR_DISTNEAR = Near;
+    G_DEPTH_BLUR_DISTFAR = Far;
+    G_DEPTH_BLUR_MAX_ALPHA = 0.5f * Intensity;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1818–1865 */
@@ -5191,7 +5203,13 @@ void ActivateOldMovieEffect(void)
  */
 void ReinitOldMovieEffect(void)
 {
-    /* TODO: decompile from asm/... */
+    AGO_g_OldMovieMaterial = 0;
+    GLI_g_OldMovieEffect = 0;
+    GLI_g_MirrorAfterEffect = 0;
+    GLI_g_bFullScreenWaterEffect = 0;
+    GLI_g_AfterEffect = 0;
+    GLI_g_MotionBlurIntensity = 0;
+    g_bHasWaterEffect = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 941–955 */
@@ -5206,9 +5224,12 @@ void ReinitOldMovieEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AE_BlackAndWhite(void);
+
 void ProcessOldMovieEffect(void)
 {
-    /* TODO: decompile from asm/... */
+    if (GLI_g_OldMovieEffect == 1)
+        AE_BlackAndWhite();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 760–925 */

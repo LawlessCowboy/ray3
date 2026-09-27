@@ -1586,7 +1586,8 @@ void fn_vCorrectAllActivationLists(tdstEngineObject_* _p_stObject)
  */
 unsigned char fn_ucCollSetGetCollComputeFrequencySO(HIE_tdstSuperObject_* hSuperObj)
 {
-    /* TODO: decompile from asm/... */
+    tdstCollSet_* hCollSet = hSuperObj ? hSuperObj->hLinkedObject.p_stCharacter->h_CollSet : NULL;
+    return hCollSet ? (unsigned char)(hCollSet ? hCollSet->ucCollComputeFrequency : 1) : 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 723–724 */
@@ -1947,7 +1948,9 @@ void fn_vCollSetSetColliderPriority(tdstCollSet_* _hCollSet, unsigned char _ucPr
  */
 float fn_xCollSetGetColliderReal(tdstCollSet_* _hCollSet, short _wIndex)
 {
-    /* TODO: decompile from asm/... */
+    int index = _wIndex;
+    float (*pReals)[2];
+    return (index >= 0 && index < 2) ? ((float*)(pReals = &_hCollSet->stColliderInfo.a_xColliderReals))[index] : 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 520–526 */
@@ -1981,7 +1984,7 @@ MTH3D_tdstVector_ fn_stCollSetGetColliderVector(tdstCollSet_* _hCollSet, short _
  */
 HIE_tdstSuperObject_* fn_stCollSetGetColliderActor(tdstCollSet_* _hCollSet, short _wIndex)
 {
-    /* TODO: decompile from asm/... */
+    return (_wIndex >= 0 && _wIndex < 2) ? ((HIE_tdstSuperObject_**)&_hCollSet->stColliderInfo.a_stColliderActors)[_wIndex] : NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 509–509 */

@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+extern "C" int printf(const char*, ...);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
@@ -740,6 +742,7 @@ struct SECT_tdstListOfSOCharacters_ {
 };
 
 struct C_Sdl {
+    void AddRef(C_SdlRef* pRef);
     int m_SDL_Size; /* +0x0 */
     unsigned int m_SDL_InitSize; /* +0x4 */
     unsigned int m_bReduce; /* +0x8 */
@@ -1329,7 +1332,16 @@ void SDL_AddRef(unsigned int hSDL, unsigned int hRef)
 {
     C_SdlRef* pSdlRef;
     C_Sdl* pSdl;
-    /* TODO: decompile from asm/... */
+    pSdlRef = (C_SdlRef*)hRef;
+    pSdl = (C_Sdl*)hSDL;
+    if (pSdl && pSdlRef)
+    {
+        pSdl->AddRef(pSdlRef);
+    }
+    else
+    {
+        printf("Ooops !! One parameter is null in SDL_AddRef\n");
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 30–42 */

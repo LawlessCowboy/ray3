@@ -129,6 +129,10 @@ static MTH3D_tdstVector_ gs_stGlobalNormPlaneUp;
 static MTH3D_tdstVector_ gs_stGlobalNormPlaneRight;
 static MTH3D_tdstVector_ gs_stGlobalNormPlaneLeft;
 
+extern unsigned char g_ucGEOModuleId;
+extern unsigned char Erm_fn_ucInitErrMsg(void);
+extern void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 23–38 */
 /* addr: 0x002a0880  size: 60 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -143,7 +147,9 @@ static MTH3D_tdstVector_ gs_stGlobalNormPlaneLeft;
  */
 void GEO_xInitGEOError(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_ucGEOModuleId == 255)
+        g_ucGEOModuleId = Erm_fn_ucInitErrMsg();
+    GLI_vSignalCurrentMemoryChannel(255);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 349–538 */

@@ -1932,9 +1932,15 @@ void fn_vReinitTheMap(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vDestructAllFatherSonLinks(void);
+void fn_vKillAllAlways(void);
+void AGO_vInit(void);
+
 void fn_vDesInitDeadLoop(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_vDestructAllFatherSonLinks();
+    fn_vKillAllAlways();
+    AGO_vInit();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 998–1122 */

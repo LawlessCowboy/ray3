@@ -1250,7 +1250,10 @@ void GAM_fn_vSectInfoTestChangeSectorForCharacter(HIE_tdstSuperObject_* _hCharac
  */
 HIE_tdstSuperObject_* GAM_fn_hGetCurrentSector(HIE_tdstSuperObject_* _hCharacter)
 {
-    /* TODO: decompile from asm/... */
+    if (_hCharacter->ulTypeOfLinkedObject != 2)
+        return 0;
+    else
+        return _hCharacter->hLinkedObject.p_stCharacter->h_SectInfo ? _hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hCurrentSector : 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 485–485 */

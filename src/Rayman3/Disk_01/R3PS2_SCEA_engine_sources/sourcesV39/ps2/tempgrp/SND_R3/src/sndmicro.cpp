@@ -10,6 +10,14 @@ extern "C" void f_vValueChanged__Q24usnd4CVarFv(void*);
 typedef struct _tdstAllRetMicroSound _tdstAllRetMicroSound;
 typedef struct _stVector _stVector;
 
+/* Member signatures from sndclinkmicrocont.cpp and retail symbol names.
+ * The singleton call has no receiver; no container layout is needed here. */
+struct CLinkMicroCont {
+    static CLinkMicroCont* mfn_roGetInstance(void);
+    unsigned char mfn_bSetMicroInterface(const _tdstAllRetMicroSound* pst_IMicro);
+    unsigned char mfn_bRemoveMicroInstance(int s32_MicroId);
+};
+
 struct _tdstAllRetMicroSound {
     int (*X)(int); /* +0x0 */
     int (*Y)(int); /* +0x4 */
@@ -62,7 +70,7 @@ void f_vSetValue__Q24usnd12TTypedVarFf(void* pThis, float oValue)
  */
 void SND_fn_vSetRetMicroSound(_tdstAllRetMicroSound* pst_IMicro)
 {
-    /* TODO: decompile from asm/... */
+    CLinkMicroCont::mfn_roGetInstance()->mfn_bSetMicroInterface(pst_IMicro);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndmicro.cpp lines 34–36 */
@@ -76,5 +84,5 @@ void SND_fn_vSetRetMicroSound(_tdstAllRetMicroSound* pst_IMicro)
  */
 void SND_fn_vDestroyMicroSound(int s32_MicroId)
 {
-    /* TODO: decompile from asm/... */
+    CLinkMicroCont::mfn_roGetInstance()->mfn_bRemoveMicroInstance(s32_MicroId);
 }

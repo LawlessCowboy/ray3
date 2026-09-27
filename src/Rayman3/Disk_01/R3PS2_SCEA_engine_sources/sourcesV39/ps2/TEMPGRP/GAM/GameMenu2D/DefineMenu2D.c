@@ -2456,9 +2456,15 @@ void fn_vReinitGrayedEntries(int PageNumber)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vInitMaterialForMenu(void);
+void fn_vInitMenuPages(void);
+void GLI_vProcessRegisteredTextures(void);
+
 void fn_vInitInGameMenu2D(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_vInitMaterialForMenu();
+    fn_vInitMenuPages();
+    GLI_vProcessRegisteredTextures();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1137–1394 */

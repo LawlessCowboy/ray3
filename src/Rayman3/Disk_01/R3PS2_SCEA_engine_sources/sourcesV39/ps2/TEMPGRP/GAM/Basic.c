@@ -1794,9 +1794,17 @@ void GAM_fn_vSetEngineInTransitionMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void HMU_fn_vSetMemoriesInLevelMode(void);
+void HMU_fn_vSetMemoriesInFixMode(void);
+unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
+unsigned char HMU_fn_ucGetFixNormalMemoryBlock(void);
+void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
+
 void GAM_fn_vSetEngineInLevelMode(void)
 {
-    /* TODO: decompile from asm/... */
+    GAM_gs_tdeLoadingMode = GAM_eLevelLoading;
+    HMU_fn_vSetMemoriesInLevelMode();
+    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock());
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1135–1164 */
@@ -1811,7 +1819,9 @@ void GAM_fn_vSetEngineInLevelMode(void)
  */
 void GAM_fn_vSetEngineInFixMode(void)
 {
-    /* TODO: decompile from asm/... */
+    GAM_gs_tdeLoadingMode = GAM_eFixLoading;
+    HMU_fn_vSetMemoriesInFixMode();
+    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetFixNormalMemoryBlock());
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1130–1131 */

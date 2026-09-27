@@ -22,7 +22,9 @@ typedef struct _RollOffParam _RollOffParam;
 typedef struct CExtraEventActor CExtraEventActor;
 struct CExtraEventActorPool {
     int _placeholder;
-    void f_vSalvageActor(CExtraEventActor*);
+    static CExtraEventActor ms_oPosPool;
+    /* Target uses a0 as the actor, with no implicit pool argument. */
+    static void f_vSalvageActor(CExtraEventActor*);
     CExtraEventActor* fs_poGetAnActor(int);
 };
 typedef struct iterator_base iterator_base;
@@ -627,6 +629,28 @@ unsigned int ms_czNil__Q24usnd7sstring(void* uiIOPAddr, unsigned int uiSize)
     /* TODO: decompile from asm/... */
 }
 
+#pragma auto_inline on
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 243–248 */
+/* addr: 0x001cf2f0  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 243
+ *   +0x0008 -> line 244
+ *   +0x000c -> line 245
+ *   +0x0018 -> line 246
+ *   +0x001c -> line 248
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void CExtraEventActor::f_vInsertAfter(CExtraEventActor* pParam)
+{
+    m_poNext = pParam->m_poNext;
+    m_poPrevious = pParam;
+    if (m_poNext)
+        m_poNext->m_poPrevious = this;
+    pParam->m_poNext = this;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 1002–1006 */
 /* addr: 0x001cdaf0  size: 68 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -638,8 +662,12 @@ unsigned int ms_czNil__Q24usnd7sstring(void* uiIOPAddr, unsigned int uiSize)
  */
 void CExtraEventActorPool::f_vSalvageActor(CExtraEventActor* poEventActor)
 {
-    /* TODO: decompile from asm/... */
+    if (poEventActor->ms32ACPObjectId != -1) {
+        poEventActor->f_vInsertAfter(&ms_oPosPool);
+    }
 }
+
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 985–998 */
 /* addr: 0x001cdb40  size: 244 bytes */
@@ -1187,21 +1215,6 @@ void CExtraEventActor_ctor(void)
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 243–248 */
-/* addr: 0x001cf2f0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 243
- *   +0x0008 -> line 244
- *   +0x000c -> line 245
- *   +0x0018 -> line 246
- *   +0x001c -> line 248
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void CExtraEventActor::f_vInsertAfter(CExtraEventActor* pParam)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 232–239 */
 /* addr: 0x001cf320  size: 52 bytes */
@@ -1217,7 +1230,11 @@ void CExtraEventActor::f_vInsertAfter(CExtraEventActor* pParam)
  */
 void CExtraEventActor::f_vIsolate(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_poPrevious)
+        m_poPrevious->m_poNext = m_poNext;
+    if (m_poNext)
+        m_poNext->m_poPrevious = m_poPrevious;
+    m_poPrevious = m_poNext = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 173–174 */

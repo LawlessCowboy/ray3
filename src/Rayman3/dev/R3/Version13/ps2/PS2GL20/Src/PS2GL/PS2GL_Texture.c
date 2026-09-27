@@ -3139,7 +3139,7 @@ void impPS2glTexImage2D(unsigned int target, int level, int components, int widt
  */
 void impPS2glTexImage1D(unsigned int target, int level, int components, int width, int border, unsigned int format, unsigned int type, void* pixels)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glTexImage2D(target, level, components, width, 1, border, format, type, pixels);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 2646–3041 */
@@ -4525,7 +4525,8 @@ void impPS2glTexEnvf(unsigned int target, unsigned int pname, float param)
  */
 void impPS2glTexEnvi(unsigned int target, unsigned int pname, int param)
 {
-    /* TODO: decompile from asm/... */
+    if (target == 0x2300 && pname == 0x2200)
+        g_PS2glContext.pCurTexture->eTexEnvMode = param;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1152–1171 */

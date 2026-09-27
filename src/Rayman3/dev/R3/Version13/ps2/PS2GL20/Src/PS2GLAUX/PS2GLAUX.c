@@ -1458,9 +1458,15 @@ void PS2auxInitPosition(int x, int y, int w, int h)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glInit(void);
+
 void PS2auxInitDisplayMode(unsigned int eMode)
 {
-    /* TODO: decompile from asm/... */
+    g_eDisplayMode = eMode;
+    if (!g_bInitDisplayModeInvoked) {
+        g_bInitDisplayModeInvoked = 1;
+        PS2glInit();
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 337–337 */

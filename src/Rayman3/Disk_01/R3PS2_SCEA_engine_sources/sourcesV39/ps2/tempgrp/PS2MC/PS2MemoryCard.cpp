@@ -626,7 +626,11 @@ void PS2MC_fn_vDoBootCheck(void)
  */
 void PS2MC_fn_vStartMachine(void)
 {
-    /* TODO: decompile from asm/... */
+    C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager;
+    pManager->m_MemoryCardInternalStatus.type = -10;
+    pManager->m_uiState = (unsigned char)STATE_IDLE;
+    pManager->m_uiSubState = 0;
+    pManager->m_uiNextState = (unsigned char)STATE_IDLE;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5223–5223 */

@@ -1488,7 +1488,7 @@ tdstNodeInterpret_* fn_p_stSortArray(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  */
 int fni_CompareFloatLess(void* _pv_Elem1, void* _pv_Elem2)
 {
-    /* TODO: decompile from asm/... */
+    return *(float*)_pv_Elem2 < *(float*)_pv_Elem1 ? -1 : (*(float*)_pv_Elem2 == *(float*)_pv_Elem1 ? 0 : 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 1981–1982 */
@@ -1501,7 +1501,7 @@ int fni_CompareFloatLess(void* _pv_Elem1, void* _pv_Elem2)
  */
 int fni_CompareFloatGreater(void* _pv_Elem1, void* _pv_Elem2)
 {
-    /* TODO: decompile from asm/... */
+    return *(float*)_pv_Elem2 > *(float*)_pv_Elem1 ? -1 : (*(float*)_pv_Elem2 == *(float*)_pv_Elem1 ? 0 : 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 1971–1972 */

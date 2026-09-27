@@ -1136,7 +1136,8 @@ void GLI_vAddLifeBars(float PosRightX, float PosBottomY, float CirclePerCent, fl
 int LS_fn_iRemainingSizeToLoad(void)
 {
     int iReturn;
-    /* TODO: decompile from asm/... */
+    iReturn = g_ProgressSizeToRead - g_ProgressSizeHaveRead;
+    return iReturn > 0 ? iReturn : 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 765–778 */

@@ -2304,9 +2304,11 @@ unsigned int impPS2glGenLists(int range)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tagListData** PS2glSearchList(unsigned int list);
+
 unsigned char impPS2glIsList(unsigned int list)
 {
-    /* TODO: decompile from asm/... */
+    return PS2glSearchList(list) != 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1578–1579 */

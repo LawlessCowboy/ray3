@@ -1140,9 +1140,16 @@ unsigned char g_ucGameModuleId;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
+void GLI_TEX_vKillMemoryChannel(unsigned char ucCurrentChannel);
+void PLD_fn_vUnLoadLevel(void);
+void HMU_fn_vSetMemoriesInFixMode(void);
+
 void fn_vFreeLevelAllowedMemory(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_TEX_vKillMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock());
+    PLD_fn_vUnLoadLevel();
+    HMU_fn_vSetMemoriesInFixMode();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Brain.c lines 325–325 */

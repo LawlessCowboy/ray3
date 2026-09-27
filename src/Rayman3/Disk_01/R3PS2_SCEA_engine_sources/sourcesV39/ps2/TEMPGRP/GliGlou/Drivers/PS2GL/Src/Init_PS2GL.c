@@ -3538,9 +3538,20 @@ void GLI_DRV_vClearDevice(int ZBuffer, int ColorBuffer, unsigned int Color)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned int PS2glGenLists(int range);
+extern void GLI_vAllocateTempLists(void);
+extern void ClearScreenAfterInit(void);
+extern void PS2glSwapBufferNotifyFunc(void (*Func)(void));
+extern void GLI_fn_vInitRenderParameters(void);
+void GLI_fn_vSwapBufferCallback(void);
+
 void GLI_DRV_xInitDriver(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_GeneralDisplayList = PS2glGenLists(1);
+    GLI_vAllocateTempLists();
+    ClearScreenAfterInit();
+    PS2glSwapBufferNotifyFunc(GLI_fn_vSwapBufferCallback);
+    GLI_fn_vInitRenderParameters();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 627–627 */

@@ -56,7 +56,13 @@ COL_tdstCollideObject_* fn_hIsThisZoneActive(HIE_tdstSuperObject_* _hCharacter, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PLD_fn_vUnLoadTransition(void);
+void fn_vSetLevelHasTransitionMemory(unsigned char _ucLevelHasTransitionMemory);
+void HMU_fn_vSetMemoriesInFixMode(void);
+
 void fn_vFreeTransitionAllocatedMemory(void)
 {
-    /* TODO: decompile from asm/... */
+    PLD_fn_vUnLoadTransition();
+    fn_vSetLevelHasTransitionMemory(0);
+    HMU_fn_vSetMemoriesInFixMode();
 }

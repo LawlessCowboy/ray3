@@ -1195,7 +1195,9 @@ int GLI_lGetMaterialNumberOfAnimatedTexture(GLI_tdstMaterial_* hMaterial)
  */
 void GLI_xSetMaterialTextureScrollingOnOff(GLI_tdstMaterial_* hMaterial, int bSwitch)
 {
-    /* TODO: decompile from asm/... */
+    /* Retail tests the same U-translation value twice. */
+    if (!bSwitch || hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0] != 0.0f || hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0] != 0.0f)
+        hMaterial->lIncrementIsEnable = bSwitch;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 355–358 */

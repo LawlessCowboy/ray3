@@ -407,10 +407,18 @@ void GLI_xGetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xSetCameraNearFar(GLI_tdstCamera_* p_stCam, float xFar)
+/* MultiVP's target call supplies near in f12 and far in f13; the unused
+ * near parameter was omitted by debug extraction. */
+#pragma optimize_for_size off
+void GLI_xSetCameraNearFar(GLI_tdstCamera_* p_stCam, float xNear, float xFar)
 {
-    /* TODO: decompile from asm/... */
+    p_stCam->xNear = 0.25f;
+    if (xFar == 0.0f)
+        p_stCam->xFar = 100000.0f;
+    else
+        p_stCam->xFar = xFar;
 }
+#pragma optimize_for_size reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Camera.c lines 56–57 */
 /* addr: 0x002b14b0  size: 44 bytes */

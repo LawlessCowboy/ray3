@@ -845,9 +845,15 @@ void fn_vChangeStorageBank(unsigned char ucStorageBank)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bIsEngineInPause(void);
+void TXT_vRedrawStringByNumber(int Num);
+
 void fn_vRedrawPauseStringIfRequired(void)
 {
-    /* TODO: decompile from asm/... */
+    if (fn_bIsEngineInPause()) {
+        if (PAUSE_g_ucPauseCause & 5)
+            TXT_vRedrawStringByNumber(g_PauseStringNumber);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 1031–1041 */

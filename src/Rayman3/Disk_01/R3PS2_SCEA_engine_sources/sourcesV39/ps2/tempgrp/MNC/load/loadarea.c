@@ -79,9 +79,14 @@ unsigned char MNC_fn_bGetPointerInfo(void* _pvAddress, int* _piAreaId, int* _piO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void HMU_fn_vSetMemoriesInBinaryMode(void);
+void MNC_fn_vDefaultDeallocator(void* pvPointer);
+void MNC_fn_vUnLoadAreaWithDeallocator(unsigned int _u32AreaId, void (*_fn_vDeallocator)(void*));
+
 void MNC_fn_pcUnLoadArea(unsigned int _u32AreaId)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vSetMemoriesInBinaryMode();
+    MNC_fn_vUnLoadAreaWithDeallocator(_u32AreaId, MNC_fn_vDefaultDeallocator);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\MNC\load\loadarea.c lines 741–747 */

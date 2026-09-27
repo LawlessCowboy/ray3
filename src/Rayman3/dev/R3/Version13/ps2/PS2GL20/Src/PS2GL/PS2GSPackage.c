@@ -1432,6 +1432,75 @@ void GsSendData(signed char type, anon_10* pdata)
     /* TODO: decompile from asm/... */
 }
 
+
+#pragma auto_inline on
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 350–354 */
+/* addr: 0x00179900  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 352
+ *   +0x0004 -> line 351
+ *   +0x0008 -> line 352
+ *   +0x000c -> line 351
+ *   +0x0014 -> line 350
+ *   +0x0018 -> line 351
+ *   +0x001c -> line 354
+ *   +0x0020 -> line 353
+ *   +0x002c -> line 354
+ *   +0x0030 -> line 353
+ *   +0x0034 -> line 354
+ *   +0x0038 -> line 350
+ *   +0x003c -> line 354
+ *   +0x0040 -> line 350
+ *   +0x0044 -> line 354
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void gifSetTag(anon_1* pTag, unsigned short nLoop, unsigned char EOP, unsigned char PRE, unsigned short PRIM, unsigned short FLG, unsigned char nReg, unsigned char* pRegs);
+void GsResetBuffer(void)
+{
+    g_gsContext.iBufCount = 1;
+    g_gsContext.pqCurrent = &g_gsContext.PackageBuffer[1];
+    g_gsContext.iRegs = 0;
+    g_gsContext.pCurTag = (anon_1*)&g_gsContext.PackageBuffer[0];
+    gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
+}
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 136–148 */
+/* addr: 0x00179a80  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 136
+ *   +0x0004 -> line 137
+ *   +0x0008 -> line 136
+ *   +0x000c -> line 141
+ *   +0x0010 -> line 136
+ *   +0x0014 -> line 142
+ *   +0x0018 -> line 137
+ *   +0x0020 -> line 143
+ *   +0x002c -> line 145
+ *   +0x0030 -> line 139
+ *   +0x0034 -> line 145
+ *   +0x0038 -> line 140
+ *   +0x003c -> line 145
+ *   +0x0040 -> line 141
+ *   +0x0044 -> line 142
+ *   +0x0048 -> line 145
+ *   +0x0050 -> line 147
+ *   +0x0074 -> line 148
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void dmaSendGsPackage(anon_10* pPackage, unsigned long ulLength)
+{
+    _sceDmaTag* pDmaTag;
+    pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
+    pDmaTag->qwc = ulLength;
+    pDmaTag->mark = 0;
+    pDmaTag->id = 0x10;
+    pDmaTag->p[0] = 0x11000000;
+    pDmaTag->p[1] = 0x50000000 | ulLength;
+    memcpy(pDmaTag + 1, pPackage, ulLength * 16);
+    g_PS2glContext.pVIFIBufTail += ulLength + 1;
+}
+#pragma auto_inline reset
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 358–369 */
 /* addr: 0x001797e0  size: 276 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1454,33 +1523,11 @@ void GsSendData(signed char type, anon_10* pdata)
  */
 void GsFlushBuffer(void)
 {
-    /* TODO: decompile from asm/... */
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 350–354 */
-/* addr: 0x00179900  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 352
- *   +0x0004 -> line 351
- *   +0x0008 -> line 352
- *   +0x000c -> line 351
- *   +0x0014 -> line 350
- *   +0x0018 -> line 351
- *   +0x001c -> line 354
- *   +0x0020 -> line 353
- *   +0x002c -> line 354
- *   +0x0030 -> line 353
- *   +0x0034 -> line 354
- *   +0x0038 -> line 350
- *   +0x003c -> line 354
- *   +0x0040 -> line 350
- *   +0x0044 -> line 354
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GsResetBuffer(void)
-{
-    /* TODO: decompile from asm/... */
+    if (g_gsContext.iBufCount > 1) {
+        g_gsContext.pCurTag->EOP = 1;
+        dmaSendGsPackage(g_gsContext.PackageBuffer, g_gsContext.iBufCount);
+    }
+    GsResetBuffer();
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 337–344 */
@@ -1499,7 +1546,13 @@ void GsResetBuffer(void)
 void impPS2glGetGsRegister(int address, unsigned long* pValue)
 {
     int iOffset;
-    /* TODO: decompile from asm/... */
+    if (address < 0 || address >= 128)
+        return;
+    iOffset = iRegisterTable[address];
+    if (iOffset >= 0)
+        *pValue = *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3));
+    else
+        *pValue = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 312–331 */
@@ -1531,35 +1584,16 @@ void impPS2glSetGsRegister(int address, unsigned long value, unsigned long mask)
 {
     anon_10 qwTemp;
     int iOffset;
-    /* TODO: decompile from asm/... */
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 136–148 */
-/* addr: 0x00179a80  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 136
- *   +0x0004 -> line 137
- *   +0x0008 -> line 136
- *   +0x000c -> line 141
- *   +0x0010 -> line 136
- *   +0x0014 -> line 142
- *   +0x0018 -> line 137
- *   +0x0020 -> line 143
- *   +0x002c -> line 145
- *   +0x0030 -> line 139
- *   +0x0034 -> line 145
- *   +0x0038 -> line 140
- *   +0x003c -> line 145
- *   +0x0040 -> line 141
- *   +0x0044 -> line 142
- *   +0x0048 -> line 145
- *   +0x0050 -> line 147
- *   +0x0074 -> line 148
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void dmaSendGsPackage(anon_10* pPackage, unsigned long ulLength)
-{
-    _sceDmaTag* pDmaTag;
-    /* TODO: decompile from asm/... */
+    if (address < 0 || address >= 128)
+        return;
+    iOffset = iRegisterTable[address];
+    if (iOffset >= 0) {
+        *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3)) = (value & ~mask) | (mask & *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3)));
+        *(unsigned long*)&g_gsContext.ModFlgs |= 1UL << iOffset;
+    } else {
+        qwTemp.u64Data[0] = value & ~mask;
+        qwTemp.u64Data[1] = 0;
+        qwTemp.ubData[8] = address;
+        GsSendData(14, &qwTemp);
+    }
 }

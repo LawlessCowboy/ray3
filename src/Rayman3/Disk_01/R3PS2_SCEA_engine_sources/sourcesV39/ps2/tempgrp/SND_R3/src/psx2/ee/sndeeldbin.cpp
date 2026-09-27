@@ -683,10 +683,16 @@ void SND_fn_vStartLoad(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+struct CIdObjPtrMgr;
+extern "C" CIdObjPtrMgr& fs_roGetInst__Q24usnd12CIdObjPtrMgrFv(void);
+extern "C" CIdObj* f_poGetIdObj__Q24usnd12CIdObjPtrMgrFRCQ24usnd5CUUID(CIdObjPtrMgr* pThis, const CUUID& id);
 _SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId)
 {
     CEventResData* po_Answer;
-    /* TODO: decompile from asm/... */
+    CUUID id;
+    id.m_uiHighWord = 1; id.m_uiLowWord = u32_EvtId;
+    po_Answer = (CEventResData*)f_poGetIdObj__Q24usnd12CIdObjPtrMgrFRCQ24usnd5CUUID(&fs_roGetInst__Q24usnd12CIdObjPtrMgrFv(), id);
+    return (_SND_tdstBlockEvent*)po_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 238–261 */
@@ -801,9 +807,11 @@ int SND_fn_bDesInitDataLoadSnd(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bSetLanguage(void);
 int SND_fn_bInitDataLoadSnd(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_bSetLanguage();
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 89–94 */
@@ -819,5 +827,8 @@ int SND_fn_bInitDataLoadSnd(void)
  */
 void fs_vUppercase__FPc(char* p)
 {
-    /* TODO: decompile from asm/... */
+    for (; *p; p++) {
+        if (*p >= 'a' && *p <= 'z')
+            *p -= 'a' - 'A';
+    }
 }

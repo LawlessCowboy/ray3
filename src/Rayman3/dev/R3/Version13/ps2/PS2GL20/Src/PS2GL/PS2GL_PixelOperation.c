@@ -1328,7 +1328,7 @@ void impPS2glAccum(unsigned int op, float value);
  */
 void plyPS2glAccum(anon_29* param0)
 {
-    impPS2glAccum(*(unsigned int*)param0, *(float*)((unsigned char*)param0 + 4));
+    impPS2glAccum(*(unsigned int*)param0, ((float*)param0)[1]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1897–1904 */

@@ -525,6 +525,7 @@ struct SECT_tdstListOfSOCharacters_ {
 
 struct C_SdlCache {
     tdstSDLCacheEntry_* m_pList; /* +0x0 */
+    C_SdlCache() : m_pList(0) {}
     unsigned int FindOldestSDLInstanceAndRemoveIt(void);
     void RemoveSdlInstance(_SDC_Instance_* pInstance);
 };
@@ -1183,7 +1184,7 @@ void GLI_vDeleteSdlCache(void)
  */
 void GLI_vInitSdlCache(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_SdlCache = (int)new C_SdlCache;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 93–124 */

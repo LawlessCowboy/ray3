@@ -233,7 +233,11 @@ int GLI_lGetLog2n(int ln)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vUnloadTexturePartial(unsigned char ucChannel);
+void GLI_fn_vUnallocTextureInChannel(unsigned char _ucChannel);
+
 void GLI_TEX_vKillMemoryChannel(unsigned char ucCurrentChannel)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vUnloadTexturePartial(ucCurrentChannel);
+    GLI_fn_vUnallocTextureInChannel(ucCurrentChannel);
 }

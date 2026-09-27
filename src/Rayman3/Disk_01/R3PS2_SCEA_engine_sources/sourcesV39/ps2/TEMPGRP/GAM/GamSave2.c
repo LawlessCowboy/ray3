@@ -1427,10 +1427,17 @@ void SAV2_fn_vActualizeMenuOptionsAfterLoad(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime);
+void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime);
+
 void SAV2_fn_vUpdateVibrations(void)
 {
     unsigned int ulCurrentTime;
-    /* TODO: decompile from asm/... */
+    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    if (MENU_g_bVibration)
+        IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulCurrentTime);
+    else
+        IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1506–1519 */

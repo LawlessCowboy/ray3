@@ -101,6 +101,9 @@ struct C3DDirection {
 };
 
 struct PostponedPlay {
+    static PostponedPlay* ms_pFirst;
+    static PostponedPlay* ms_pFree;
+    static PostponedPlay* ms_pLast;
     PostponedPlay* m_pNext; /* +0x0 */
     PostponedPlay* m_pPrev; /* +0x4 */
     CEventResData* m_pData; /* +0x8 */
@@ -463,7 +466,13 @@ unsigned char PostponedPlay::fs_bIsPending(CExtraEventActor* pEActor)
  */
 void PostponedPlay::fs_vEmpty(void)
 {
-    /* TODO: decompile from asm/... */
+    while (ms_pFirst) {
+        PostponedPlay* e = ms_pFirst;
+        ms_pFirst = e->m_pNext;
+        e->m_pNext = ms_pFree;
+        ms_pFree = e;
+    }
+    ms_pLast = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 127–142 */

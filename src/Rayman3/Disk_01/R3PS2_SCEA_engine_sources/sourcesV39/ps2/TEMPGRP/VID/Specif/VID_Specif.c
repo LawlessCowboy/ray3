@@ -96,7 +96,19 @@ void VIDSPE_fn_vPlayVideoNow(char* p_szDirectFileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void VIDSPE_fn_vSetVideoQuality(unsigned char ucVideoQuality)
+/* VID_fn_vSetVideoQuality tail-forwards both arguments; ucBPP is unused. */
+void VIDSPE_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality)
 {
-    /* TODO: decompile from asm/... */
+    switch (ucVideoQuality)
+    {
+    case 0:
+        g_stVideoQuality.ucTransfertQuality = 0;
+        break;
+    case 1:
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    }
 }
