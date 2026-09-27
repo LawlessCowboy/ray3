@@ -1386,7 +1386,11 @@ int fn_rGetMicroTangentX(int s32_ObjectId)
 {
     _stVector st_Vector;
     int r_Answer;
-    /* TODO: decompile from asm/... */
+    r_Answer = 0;
+    if (fn_bGetMicroTangent(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32x * 65536.0f);
+    }
+    return r_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 637–685 */
@@ -1454,7 +1458,11 @@ int fn_rGetMicroNormalZ(int s32_ObjectId)
 {
     _stVector st_Vector;
     int r_Answer;
-    /* TODO: decompile from asm/... */
+    r_Answer = 0;
+    if (fn_bGetMicroNormal(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32z * 65536.0f);
+    }
+    return r_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 608–616 */
@@ -1474,7 +1482,11 @@ int fn_rGetMicroNormalY(int s32_ObjectId)
 {
     _stVector st_Vector;
     int r_Answer;
-    /* TODO: decompile from asm/... */
+    r_Answer = 0;
+    if (fn_bGetMicroNormal(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32y * 65536.0f);
+    }
+    return r_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 598–606 */
@@ -1494,7 +1506,11 @@ int fn_rGetMicroNormalX(int s32_ObjectId)
 {
     _stVector st_Vector;
     int r_Answer;
-    /* TODO: decompile from asm/... */
+    r_Answer = 0;
+    if (fn_bGetMicroNormal(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32x * 65536.0f);
+    }
+    return r_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 549–596 */
@@ -1562,7 +1578,11 @@ int fn_rGetMicroVelocityZ(int s32_ObjectId)
 {
     _stVector st_Vector;
     int r_Answer;
-    /* TODO: decompile from asm/... */
+    r_Answer = 0;
+    if (fn_bGetMicroVelocity(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32z * 65536.0f);
+    }
+    return r_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 520–528 */
@@ -1582,7 +1602,11 @@ int fn_rGetMicroVelocityY(int s32_ObjectId)
 {
     _stVector st_Vector;
     int r_Answer;
-    /* TODO: decompile from asm/... */
+    r_Answer = 0;
+    if (fn_bGetMicroVelocity(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32y * 65536.0f);
+    }
+    return r_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 510–518 */
@@ -1602,7 +1626,11 @@ int fn_rGetMicroVelocityX(int s32_ObjectId)
 {
     _stVector st_Vector;
     int r_Answer;
-    /* TODO: decompile from asm/... */
+    r_Answer = 0;
+    if (fn_bGetMicroVelocity(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32x * 65536.0f);
+    }
+    return r_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 454–508 */

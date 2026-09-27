@@ -4053,24 +4053,7 @@ void TXT_vAfficheSimpleWithShadow(GLD_tdstViewportAttributes_* stVpt, char* Stri
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1854–1861 */
-/* addr: 0x00323f90  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1854
- *   +0x0008 -> line 1859
- *   +0x000c -> line 1854
- *   +0x0010 -> line 1856
- *   +0x0014 -> line 1859
- *   +0x0058 -> line 1860
- *   +0x005c -> line 1861
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void TXT_vAfficheSimpleWithColor(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z, unsigned int ulTextColor)
-{
-    unsigned int ulOldDefaultColor;
-    /* TODO: decompile from asm/... */
-}
+#pragma auto_inline on
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1827–1851 */
 /* addr: 0x00324000  size: 88 bytes */
@@ -4096,8 +4079,43 @@ void TXT_vAfficheSimple(GLD_tdstViewportAttributes_* stVpt, char* String, float 
 {
     _JFFTXT_* p;
     _JFFTXT_ DummyString;
-    /* TODO: decompile from asm/... */
+    p = &DummyString;
+    if (String) {
+        p->pString = (int)String;
+        p->ucTransparency = 255;
+        p->a3_Pos[0] = x;
+        p->a3_Pos[1] = y;
+        p->a3_Pos[2] = z;
+        p->ulColor = TXT_g_ulDefaultColor;
+        p->bOther = 0;
+        g_GLI_bForceAAAColor = 0;
+        TXT_g_GettingExtents = 0;
+        TXT_vDrawString(stVpt, p);
+        GLI_vEnd2DSpritesWithUVs();
+    }
 }
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1854–1861 */
+/* addr: 0x00323f90  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1854
+ *   +0x0008 -> line 1859
+ *   +0x000c -> line 1854
+ *   +0x0010 -> line 1856
+ *   +0x0014 -> line 1859
+ *   +0x0058 -> line 1860
+ *   +0x005c -> line 1861
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_vAfficheSimpleWithColor(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z, unsigned int ulTextColor)
+{
+    unsigned int ulOldDefaultColor;
+    ulOldDefaultColor = TXT_g_ulDefaultColor;
+    TXT_g_ulDefaultColor = ulTextColor;
+    TXT_vAfficheSimple(stVpt, String, x, y, z);
+    TXT_g_ulDefaultColor = ulOldDefaultColor;
+}
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1736–1824 */
 /* addr: 0x00324060  size: 1008 bytes */
@@ -4864,7 +4882,9 @@ float fn_fDrawAChar(float fX, float fY, unsigned char cChar)
  */
 void TXT_ChangeDefaultColor(float xR, float xG, float xB)
 {
-    /* TODO: decompile from asm/... */
+    TXT_g_ulDefaultColor = (int)(xR * 255.0f) << 16;
+    TXT_g_ulDefaultColor |= (int)(xG * 255.0f) << 8;
+    TXT_g_ulDefaultColor |= (int)(xB * 255.0f);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 850–868 */
@@ -5071,7 +5091,13 @@ void JFFTXT_vExtendText(int StringNumber, int ID, float xParameter)
 void TXT_vSetFrameMode(int StringNumber, unsigned char bOnOff)
 {
     _JFFTXT_* param0;
-    /* TODO: decompile from asm/... */
+    if (StringNumber < 200) {
+        param0 = &g_JFFTXT[StringNumber];
+        if (bOnOff)
+            param0->bOther |= 8;
+        else
+            param0->bOther &= ~8;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 322–327 */
@@ -5176,7 +5202,19 @@ void TXT_vSetColor(int StringNumber, unsigned int ulRed, unsigned int ulGreen, u
 void JFFTXT_vAddText(int StringNumber, MTH3D_tdstVector_* p_stPosition, unsigned char* pszString, unsigned char ucParameter)
 {
     _JFFTXT_* p;
-    /* TODO: decompile from asm/... */
+    if (StringNumber < 200) {
+        p = &g_JFFTXT[StringNumber];
+        p->pString = (int)pszString;
+        p->ulColor = TXT_g_ulDefaultColor;
+        p->ucTransparency = ucParameter;
+        p->ucDrawThisStringDuringSaveGame = 1;
+        p->bFrozenDisplay = 0;
+        p->a3_Pos[0] = p_stPosition->xX;
+        p->a3_Pos[1] = p_stPosition->xY;
+        p->a3_Pos[2] = p_stPosition->xZ;
+        p->bOther = 0;
+        p->DestinationViewport = 255;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 235–256 */
@@ -5246,5 +5284,8 @@ void MJ_JFFTXT_vAddText(int ViewportNumber, int StringNumber, MTH3D_tdstVector_*
  */
 void TXT_PauseInvIWantToDrawThisStringNumber(int _iStringNumber)
 {
-    /* TODO: decompile from asm/... */
+    _JFFTXT_* p;
+    if (_iStringNumber < 0 || _iStringNumber >= 200)
+        return;
+    p = &g_JFFTXT[_iStringNumber]; p->ucDrawThisStringDuringPauseInventory = 1;
 }

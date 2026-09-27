@@ -3165,9 +3165,14 @@ void DEMO_fn_vCloseFirstInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void DEMO_fn_vPrepareForReadNow(void);
+
 void DEMO_fn_vPrepareForRead(int _iNbFramesToWait)
 {
-    /* TODO: decompile from asm/... */
+    g_DEMO_KeybTest = 2;
+    if (!_iNbFramesToWait) DEMO_fn_vPrepareForReadNow();
+    else g_iNbFramesToWaitBeforePlaying = _iNbFramesToWait;
+    g_DEMO_AutoPlay = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1320–1364 */

@@ -1560,9 +1560,19 @@ void InitSectorCache(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline unsigned char GAM_bIsIdToLoad(stListOfFamiliesToLoad_* pList, unsigned char ucId)
+{
+    unsigned char bFound = 0;
+    unsigned int i = 0;
+    for (; !bFound && i < pList->u32NbElements; i++) {
+        bFound = ucId == pList->a_ucId[i];
+    }
+    return bFound;
+}
+
 unsigned char GAM_fn_bIsActorToLoad(unsigned char ucActorId)
 {
-    /* TODO: decompile from asm/... */
+    return GAM_bIsIdToLoad(&GAM_g_stTheListOfActorsToLoad, ucActorId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 989–998 */
@@ -1606,7 +1616,7 @@ void GAM_fn_vInitActorsToLoad(void)
  */
 unsigned char GAM_fn_bIsFamilyToLoad(unsigned char ucFamilyId)
 {
-    /* TODO: decompile from asm/... */
+    return GAM_bIsIdToLoad(&GAM_g_stTheListOfFamiliesToLoad, ucFamilyId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 958–967 */
@@ -1781,9 +1791,17 @@ void fn_vSnifThePlayerIsDeadWithResurrectionAt(HIE_tdstSuperObject_* _hCharacter
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _hTransform);
+extern void SND_fn_vKillAllObjectSound(void);
+extern void fn_vChangeEngineMode(unsigned char eNewMode);
+
 void fn_vSnifThePlayerIsDead(void)
 {
-    /* TODO: decompile from asm/... */
+    MAT_fn_vSetIdentity(&g_stEngineStructure.stMainCharacterPosition);
+    MAT_fn_vSetIdentity(&g_stEngineStructure.stMainCameraPosition);
+    g_stEngineStructure.bResurection = 0;
+    SND_fn_vKillAllObjectSound();
+    fn_vChangeEngineMode(8);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 608–614 */
@@ -1798,9 +1816,14 @@ void fn_vSnifThePlayerIsDead(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void CAM_fn_vReInitCameras(void);
+
 void fn_vForceReinitAllObjects(void)
 {
-    /* TODO: decompile from asm/... */
+    HIE_fn_vInitMatrixStack();
+    fn_vInitAllObjectTree(OTI_ReinitTheMap, (HIE_tdstSuperObject_*)gp_stDynamicWorld); fn_vInitAllObjectTree(OTI_ReinitTheMap, (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld);
+    fn_vInitAlwaysModel(OTI_ReinitTheMap);
+    CAM_fn_vReInitCameras();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 548–592 */
@@ -1896,9 +1919,16 @@ void fn_vInitAllObjectsWhenSavedGameJustLoaded(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bLevelHadTransitionMemory(void);
 void fn_vInitAllObjectsWhenMapJustLoaded(void)
 {
-    /* TODO: decompile from asm/... */
+    HIE_fn_vInitMatrixStack();
+    if (!fn_bLevelHadTransitionMemory()) {
+        fn_vInitAllObjectTree(OTI_MapLoaded, (HIE_tdstSuperObject_*)gp_stDynamicWorld);
+    } else {
+        fn_vInitAllObjectTree(OTI_MapLoaded, (HIE_tdstSuperObject_*)gp_stNewDynamicWorld);
+    }
+    fn_vInitAlwaysModel(OTI_MapLoaded);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 473–473 */

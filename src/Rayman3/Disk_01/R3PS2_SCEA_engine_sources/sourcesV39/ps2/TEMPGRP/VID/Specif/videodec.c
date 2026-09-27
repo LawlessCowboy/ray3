@@ -355,10 +355,15 @@ int videoDecFlush(anon_0* vd)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int viBufPutTs(anon_4* f, anon_1* ts);
 int videoDecPutTs(anon_0* vd, long pts_val, long dts_val, unsigned char* start, int len)
 {
     anon_1 ts;
-    /* TODO: decompile from asm/... */
+    ts.pts = pts_val;
+    ts.dts = dts_val;
+    ts.pos = start - (unsigned char*)vd->vibuf.data;
+    ts.len = len;
+    return viBufPutTs(&videoDec.vibuf, &ts);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 161–161 */

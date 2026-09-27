@@ -2572,9 +2572,12 @@ void AGO3_OrientedTarget::Display(GLD_tdstViewportAttributes_* hVp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned int AGO_G_CurrentVU1Frame;
+
 void AGO3_OrientedTarget::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    if (AGO_G_CurrentVU1Frame == 2)
+        ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6761–6777 */
@@ -7002,7 +7005,8 @@ void AGO3_Target::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_Target::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    if (AGO_G_CurrentVU1Frame == 2)
+        ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 617–621 */
@@ -7290,9 +7294,12 @@ void AGO3_Part::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* This caller preserves the viewport/time arguments omitted from the callee's debug definition. */
+extern "C" int GLI_vDrawWorldSpriteOpt(MTH3D_tdstVector_* Pos, GLI_tdstMaterial_* Material, float SizeX, float SizeY, GLD_tdstViewportAttributes_* viewport, int AnimTime);
+
 void AGO3_Part::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, 1.0f, 1.0f, hVp, 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 266–289 */
@@ -7500,7 +7507,8 @@ int AGO3_HurricaneUpper::Kill_Enabled(void)
  */
 void AGO3_Chain::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    if (AGO_G_CurrentVU1Frame == 2)
+        ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* Originally emitted under Action.c, but this C++ member must be compiled

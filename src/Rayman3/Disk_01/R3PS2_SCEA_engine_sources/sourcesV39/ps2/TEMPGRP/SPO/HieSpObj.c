@@ -492,10 +492,13 @@ void HIE_fn_vChangeFather(HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
 void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_* _hSprObj)
 {
     MAT_tdstTransformation_ stLocalMatrix;
-    /* TODO: decompile from asm/... */
+    MAT_fn_vInvert(&stLocalMatrix, _hSprObj->hFatherDyn->hGlobalMatrix);
+    MAT_fn_vCompose(_hSprObj->hLocalMatrix, &stLocalMatrix, _hSprObj->hGlobalMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 423–437 */
@@ -715,7 +718,24 @@ HIE_tdstSuperObject_* HIE_fn_p_stCreateSuperObjectTab(int lSize)
  */
 void HIE_fn_vIsolate(HIE_tdstSuperObject_* _hSprObj)
 {
-    /* TODO: decompile from asm/... */
+    if (_hSprObj->hNextBrotherDyn) {
+        _hSprObj->hNextBrotherDyn->hPrevBrotherDyn = _hSprObj->hPrevBrotherDyn;
+    }
+    if (_hSprObj->hPrevBrotherDyn) {
+        _hSprObj->hPrevBrotherDyn->hNextBrotherDyn = _hSprObj->hNextBrotherDyn;
+    }
+    if (_hSprObj->hFatherDyn) {
+        _hSprObj->hFatherDyn->lNumberOfElementsDyn--;
+        if (_hSprObj->hFatherDyn->hFirstElementDyn == _hSprObj) {
+            _hSprObj->hFatherDyn->hFirstElementDyn = _hSprObj->hNextBrotherDyn;
+        }
+        if (_hSprObj->hFatherDyn->hLastElementDyn == _hSprObj) {
+            _hSprObj->hFatherDyn->hLastElementDyn = _hSprObj->hPrevBrotherDyn;
+        }
+    }
+    _hSprObj->hNextBrotherDyn = NULL;
+    _hSprObj->hPrevBrotherDyn = NULL;
+    _hSprObj->hFatherDyn = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 151–184 */
@@ -805,9 +825,13 @@ void HIE_fn_SO_UnsetSuperImposedClipping(HIE_tdstSuperObject_* _hSO)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int _lRight);
 void HIE_fn_SO_SetSuperImposedClipping(HIE_tdstSuperObject_* _hSO, int _lTop, int _lLeft, int _lBottom, int _lRight)
 {
-    /* TODO: decompile from asm/... */
+    if ((_hSO->ulFlags & 0x20) == 0x20) {
+        _hSO->ulFlags |= 0x40000;
+        GAM_fn_vSetFixClippingCoordinates(_lTop, _lLeft, _lBottom, _lRight);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 112–118 */
@@ -851,7 +875,21 @@ void HIE_fn_SO_vSetOutLineMode(HIE_tdstSuperObject_* _hSO, int bMode, unsigned i
 void HIE_fn_SO_vClearSuperimposedFlag(HIE_tdstSuperObject_* _hSO)
 {
     short xIndex;
-    /* TODO: decompile from asm/... */
+    if ((_hSO->ulFlags & 0x20) == 0x20) {
+        _hSO->ulFlags &= ~0x21;
+        if (g_xFixIndex) {
+            for (xIndex = 0; xIndex < 32; xIndex++) {
+                if ((HIE_tdstSuperObject_*)gd_hFixSPO[xIndex] == _hSO) {
+                    g_xFixIndex--;
+                    if (g_xFixIndex) {
+                        gd_hFixSPO[xIndex] = gd_hFixSPO[g_xFixIndex];
+                    }
+                    gd_hFixSPO[g_xFixIndex] = 0;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 62–77 */

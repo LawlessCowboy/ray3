@@ -1147,9 +1147,14 @@ void GLI_vLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial)
  */
 void GLI_vSetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial, int lTextureNumber)
 {
-    int lNumber;
     GLI_tdstAnimatedTextureNode_* p_Node;
-    /* TODO: decompile from asm/... */
+    int lNumber = 1;
+    p_Node = hMaterial->p_stFistAnimatedTExtureNode;
+    while (p_Node && lNumber != lTextureNumber) {
+        lNumber++;
+        p_Node = p_Node->p_stNextDisplayNode;
+    }
+    hMaterial->p_stActualAnimatedTExtureNode = p_Node ? p_Node : hMaterial->p_stFistAnimatedTExtureNode;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 473–484 */
@@ -1167,9 +1172,17 @@ void GLI_vSetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial, int lTex
  */
 int GLI_lGetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial)
 {
-    int lNumber;
+    int lNumber = 1;
     GLI_tdstAnimatedTextureNode_* p_Node;
-    /* TODO: decompile from asm/... */
+    p_Node = hMaterial->p_stFistAnimatedTExtureNode;
+    while (p_Node != hMaterial->p_stActualAnimatedTExtureNode) {
+        lNumber++;
+        p_Node = p_Node->p_stNextDisplayNode;
+    }
+    if (p_Node == hMaterial->p_stActualAnimatedTExtureNode)
+        return lNumber;
+    else
+        return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 436–436 */

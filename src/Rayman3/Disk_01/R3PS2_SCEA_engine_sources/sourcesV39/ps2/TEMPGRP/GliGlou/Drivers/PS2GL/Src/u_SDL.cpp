@@ -2457,9 +2457,15 @@ void GLI_vRemoveRefs(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLI_vInitGLProjectionMatrix(void);
+extern "C" void PS2glGetFloatv(unsigned int pname, float* params);
+
 void GLIPS2_vPrepareCullingForThisFrame(GLD_tdstViewportAttributes_* p_stVpt)
 {
-    /* TODO: decompile from asm/... */
+    g_p_stCurrentViewport = (int)p_stVpt;
+    GLI_g_ProjectionMode = 11;
+    GLI_vInitGLProjectionMatrix();
+    PS2glGetFloatv(0x0ba7, &a16_fProjectionMatrix[0][0]);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 3394–3394 */

@@ -1055,6 +1055,9 @@ struct tagListNode {
 struct C_FxList {
     tdstBaseFxListElement_* pFirst; /* +0x0 */
     void DeleteAll(void);
+    void DeleteAllNoFree(void);
+    C_BaseFx* SearchElement(void* pSearchKey);
+    void vAddElement(C_BaseFx* pElement);
 };
 
 struct sceGsTexa {
@@ -1398,7 +1401,15 @@ void GrassFx_vDesinit(void)
 void GrassFx_vProcessAndDisplay(void)
 {
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+    p = GrassFx_g_ListToDisplay.pFirst;
+    if (!p) {
+        return;
+    }
+    while (p) {
+        ((C_GrassFx*)p->pFx)->Display();
+        p = p->pNext;
+    }
+    GrassFx_g_ListToDisplay.DeleteAllNoFree();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 532–539 */
@@ -1415,7 +1426,10 @@ void GrassFx_vProcessAndDisplay(void)
 void GrassFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
     C_GrassFx* p;
-    /* TODO: decompile from asm/... */
+    p = (C_GrassFx*)GrassFx_g_List.SearchElement(p_stEIT);
+    if (p) {
+        GrassFx_g_ListToDisplay.vAddElement((C_BaseFx*)p);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 518–529 */

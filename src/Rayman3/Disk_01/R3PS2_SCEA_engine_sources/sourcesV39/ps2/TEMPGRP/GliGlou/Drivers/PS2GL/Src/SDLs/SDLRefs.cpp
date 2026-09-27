@@ -417,7 +417,8 @@ void GLI_vUpdateAllSPORefs(void)
  */
 void fn_vAddSdlToProcessLater(C_Sdl* pSdl)
 {
-    /* TODO: decompile from asm/... */
+    if (GLI_G_iNbSdlsInThisFrame < 2048)
+        GLI_G_pProcessSDLs[GLI_G_iNbSdlsInThisFrame++] = (int)pSdl;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 441–441 */

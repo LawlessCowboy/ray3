@@ -891,9 +891,15 @@ void fn_vUnpauseFromMemoryCard(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void fn_vSetEngineInPaused(void);
+
 void fn_vPauseFromMemoryCard(void)
 {
-    /* TODO: decompile from asm/... */
+    if (!fn_bIsEngineInPause()) {
+        g_EngineWasPausedAutomatically = 1;
+        fn_vSetEngineInPaused();
+    }
+    PAUSE_g_ucPauseCause |= 2;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 1015–1018 */
@@ -1110,9 +1116,16 @@ int fn_bLoadCurrentGameOptions(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
+extern void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume);
+
 void fn_vInitDefaultValuesForSoundVolumes(void)
 {
-    /* TODO: decompile from asm/... */
+    g_stGameOptions.s32VolumeMusic = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
+    g_stGameOptions.s32VolumeSound = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
+    g_stGameOptions.s32VolumeVoice = 127; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
+    g_stGameOptions.s32VolumeAmbiance = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance);
+    g_stGameOptions.s32VolumeMenu = 90; SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 182–183 */
@@ -1138,7 +1151,8 @@ void GAM_fn_vSetVolumeMenu(int s32_Value)
  */
 void GAM_fn_vSetVolumeAmbiance(int s32_Value)
 {
-    /* TODO: decompile from asm/... */
+    g_stGameOptions.s32VolumeAmbiance = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 172–173 */
@@ -1151,7 +1165,8 @@ void GAM_fn_vSetVolumeAmbiance(int s32_Value)
  */
 void GAM_fn_vSetVolumeVoice(int s32_Value)
 {
-    /* TODO: decompile from asm/... */
+    g_stGameOptions.s32VolumeVoice = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 165–169 */
@@ -1167,7 +1182,9 @@ void GAM_fn_vSetVolumeVoice(int s32_Value)
  */
 void GAM_fn_vSetVolumeSound(int s32_Value)
 {
-    /* TODO: decompile from asm/... */
+    g_stGameOptions.s32VolumeSound = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound);
+    VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 161–162 */
@@ -1180,7 +1197,8 @@ void GAM_fn_vSetVolumeSound(int s32_Value)
  */
 void GAM_fn_vSetVolumeMusic(int s32_Value)
 {
-    /* TODO: decompile from asm/... */
+    g_stGameOptions.s32VolumeMusic = 0 > (127 < s32_Value ? 127 : s32_Value) ? 0 : (127 < s32_Value ? 127 : s32_Value);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 157–158 */

@@ -12,6 +12,15 @@ extern int g_stTransitionAllocator[2][3];
 extern "C" void fn_vResetAllocator(int*);
 extern "C" void fn_vFreeAllocator(int*, void*);
 extern "C" void* fn_pvAllocAllocator(int*, unsigned int);
+extern int g_lTransitionBloc;
+extern unsigned char g_bLoadInProgress;
+extern unsigned char g_bDoTransition;
+extern "C" void PS2_fn_vWaitTransitionOff(void);
+extern "C" int sceGsSyncPath(int, int);
+extern "C" void* fn_pvTransitionAllocatorEven(unsigned int u32Size);
+extern "C" void* fn_pvTransitionAllocatorOdd(unsigned int u32Size);
+extern "C" void fn_vTransitionDeallocatorEven(void* pvPointer);
+extern "C" void fn_vTransitionDeallocatorOdd(void* pvPointer);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 278–283 */
 /* addr: 0x0028d810  size: 72 bytes */
@@ -26,7 +35,10 @@ extern "C" void* fn_pvAllocAllocator(int*, unsigned int);
 transition_deallocator_t fn_pfnCurrentTransitionDeallocator(void)
 {
     int TransitionNumber;
-    /* TODO: decompile from asm/... */
+    TransitionNumber = g_lTransitionBloc;
+    if (g_bDoTransition)
+        TransitionNumber = TransitionNumber == 1 ? 2 : 1;
+    return TransitionNumber == 2 ? fn_vTransitionDeallocatorOdd : fn_vTransitionDeallocatorEven;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 264–265 */
@@ -39,7 +51,7 @@ transition_deallocator_t fn_pfnCurrentTransitionDeallocator(void)
  */
 transition_allocator_t fn_pfnCurrentTransitionAllocator(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_lTransitionBloc == 2 ? fn_pvTransitionAllocatorOdd : fn_pvTransitionAllocatorEven;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 258–258 */
@@ -175,7 +187,9 @@ void fn_vOneTrameThread(void)
  */
 void fn_vEndTransitionSynchro(void)
 {
-    /* TODO: decompile from asm/... */
+    g_bLoadInProgress = 0;
+    PS2_fn_vWaitTransitionOff();
+    sceGsSyncPath(0, 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 10–23 */

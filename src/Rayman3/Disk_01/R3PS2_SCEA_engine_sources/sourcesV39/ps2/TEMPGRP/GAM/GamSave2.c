@@ -1548,8 +1548,11 @@ unsigned char SAV2_fn_bActualizeExistingSave(void)
  */
 unsigned char SAV2_fn_bRemoveSaveFromDisk(void)
 {
-    int start;
-    /* TODO: decompile from asm/... */
+    static int start;
+    if (start++ < 10)
+        printf("function %s not implemented\n", "SAV2_fn_bRemoveSaveFromDisk");
+    SAV2_ExitCode = 0;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1300–1414 */
@@ -1651,9 +1654,14 @@ unsigned char SAV2_fn_bUpdateAllDataFromLoadedFile(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void PS2MC_fn_vLoadGame(char* _pFileName);
+
 unsigned char SAV2_fn_bReadAllFromDisk(char* p_szSaveName)
 {
-    /* TODO: decompile from asm/... */
+    printf("Trying to Load \"%s\" from MC\n", p_szSaveName);
+    SAV2_ExitCode = 0;
+    PS2MC_fn_vLoadGame(p_szSaveName);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 649–987 */

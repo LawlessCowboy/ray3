@@ -40,6 +40,7 @@ int GLI_BIG_GLOBALS_xFogIsOn;
 int GLI_BIG_GLOBALS_p_stActiveFog;
 float Fog_RandomValue;
 char g_bForceWhiteFog;
+extern float GLI_g_xBrightness;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Fog.c lines 485–491 */
 /* addr: 0x002a8560  size: 68 bytes */
@@ -55,7 +56,11 @@ char g_bForceWhiteFog;
  */
 void GLI_fn_vSetBrightness(int _lValue)
 {
-    /* TODO: decompile from asm/... */
+    if (_lValue < 0)
+        _lValue = 0;
+    else if (_lValue >= 100)
+        _lValue = 100;
+    GLI_g_xBrightness = (float)_lValue / 100.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Fog.c lines 266–268 */

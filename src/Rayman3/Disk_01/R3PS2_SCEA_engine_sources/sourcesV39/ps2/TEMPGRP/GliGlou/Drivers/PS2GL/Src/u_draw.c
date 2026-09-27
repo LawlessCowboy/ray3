@@ -3087,9 +3087,15 @@ void GLI_CalculateBoundingBoxForElement(GEO_tdstElementIndexedTriangles_* p_stEI
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void SDL_UpdateFogs(unsigned int hSDL);
+extern void SDL_Draw(unsigned int hSDL);
+
 void GLI_vDMASendTransparentObject(unsigned int DisplayList)
 {
-    /* TODO: decompile from asm/... */
+    if (GLI_g_ListOfDMADL_Current < 100) {
+        GLI_g_ListOfDMADL[GLI_g_ListOfDMADL_Current++] = DisplayList;
+        SDL_UpdateFogs(DisplayList);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1327–1334 */
@@ -3104,7 +3110,8 @@ void GLI_vDMASendTransparentObject(unsigned int DisplayList)
  */
 void GLI_vDMASendObject(unsigned int hSdl)
 {
-    /* TODO: decompile from asm/... */
+    SDL_UpdateFogs(hSdl);
+    SDL_Draw(hSdl);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1164–1218 */
@@ -3401,9 +3408,16 @@ void TakeCareOfCinemascopePS2(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_DRV_vSetCommonGLRenderStates(void);
+extern void GLI_vClearSendMatStates(void);
+
 void GLI_vReinitViewport(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_DRV_vSetCommonGLRenderStates();
+    GLI_g_ProjectionMode = 0xffff;
+    GLI_vClearSendMatStates();
+    GLI_g_LastSuperObj = 0;
+    g_PS2glContext.usDontUpdateBits = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 894–919 */
@@ -3463,9 +3477,18 @@ void glFrustumf(float left, float right, float bottom, float top, float zNear, f
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void GLI_xRefreshAnimatedTexture(GLI_tdstMaterial_* hMaterial);
+
 GLI_tdstTexture_* GLI_xRefreshAnimatedTextureIfNeeded(GLI_tdstMaterial_* hVisualMaterial)
 {
-    /* TODO: decompile from asm/... */
+    if (hVisualMaterial) {
+        if (hVisualMaterial->lNumberOfDisplayNode > 1) {
+            GLI_BIG_GLOBALS_hCurrentMaterial = (int)hVisualMaterial;
+            GLI_xRefreshAnimatedTexture(hVisualMaterial);
+        }
+        return hVisualMaterial->p_stTexture;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 786–858 */

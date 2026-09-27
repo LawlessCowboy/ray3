@@ -224,6 +224,7 @@ struct CLinkTypeActorCont {
     /* Recovered singleton and command signatures. */
     static CLinkTypeActorCont* mfn_roGetInstance(void);
     unsigned char mfn_bExecuteActorType(int s32_CmdId, int s32_TypeId);
+    CLinkTypeActor* mfn_poGetActorTypeFromId(int s32_TypeId);
     /* C++ base smap at +0x0. */
     CActorResData* m_poStandardActorResData; /* +0x10 */
     CActorResData* m_poMusicActorResData; /* +0x14 */
@@ -348,6 +349,7 @@ struct streebase {
 };
 
 struct CLinkTypeActor {
+    unsigned char mfn_bExecuteActorInTypeActorInstance(int s32_CmdId, int s32_ObjectId);
     CLinkActor m_oActors; /* +0x0 */
     TTypedVar* mroVolumeModifier; /* +0x7c */
     int ms32TypeId; /* +0x80 */
@@ -507,7 +509,8 @@ void SND_fn_vPauseAllObjectTypeSound(int s32_TypeId)
  */
 void SND_fn_vKillAllObjectTypeSound(int s32_TypeId)
 {
-    /* TODO: decompile from asm/... */
+    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, s32_TypeId);
+    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(1, s32_TypeId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 89–93 */
@@ -524,7 +527,9 @@ void SND_fn_vKillAllObjectTypeSound(int s32_TypeId)
 void SND_fn_vKillObjectSound2(int s32_ObjectId, int s32_TypeId)
 {
     CLinkTypeActor* poType;
-    /* TODO: decompile from asm/... */
+    poType = CLinkTypeActorCont::mfn_roGetInstance()->mfn_poGetActorTypeFromId(s32_TypeId);
+    if (poType)
+        poType->mfn_bExecuteActorInTypeActorInstance(1, s32_ObjectId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 62–84 */

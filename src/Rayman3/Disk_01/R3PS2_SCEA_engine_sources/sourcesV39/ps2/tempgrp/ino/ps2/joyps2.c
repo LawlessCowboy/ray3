@@ -259,7 +259,10 @@ short INOPS2_fn_wRegisterJoystick(short _wJoystickNum)
  */
 short INOPS2_fn_wInit(void)
 {
-    /* TODO: decompile from asm/... */
+    if (gs_iScePadInit)
+        return 1;
+    gs_iScePadInit = scePadInit(0);
+    return gs_iScePadInit == 1 ? 1 : -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 325–587 */

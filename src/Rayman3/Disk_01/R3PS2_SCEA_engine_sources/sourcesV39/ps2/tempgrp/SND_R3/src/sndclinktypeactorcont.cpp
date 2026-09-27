@@ -691,9 +691,16 @@ int fn_s32GhostObjectSwitch__Fii(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vGhostObjectExtraCoef__Fi14_SND_tduRefEvtPiPiPi(int* pr_Pitch, int* pr_Pan, int* pr_Vol)
+/* The callback type and mangled signature retain the two unused leading
+ * parameters; the target receives the output pointers in a2, a3 and t0. */
+void fn_vGhostObjectExtraCoef__Fi14_SND_tduRefEvtPiPiPi(int Object, _SND_tduRefEvt Event, int* pr_Pitch, int* pr_Pan, int* pr_Vol)
 {
-    /* TODO: decompile from asm/... */
+    if (pr_Pitch)
+        *pr_Pitch = 65536;
+    if (pr_Pan)
+        *pr_Pan = 4194304;
+    if (pr_Vol)
+        *pr_Vol = 4194304;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 71–71 */

@@ -89,7 +89,13 @@ int strFileRead(anon_0* file, void* buff, int size)
  */
 int strFileClose(anon_0* file)
 {
-    /* TODO: decompile from asm/... */
+    if (file->isOnCD) {
+        sceCdStStop();
+        sceSifFreeIopHeap(file->iopBuf);
+    } else {
+        sceClose(file->fd);
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\strfile.c lines 55–186 */

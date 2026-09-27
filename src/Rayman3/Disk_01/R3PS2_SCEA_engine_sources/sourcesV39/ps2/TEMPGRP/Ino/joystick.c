@@ -35,9 +35,19 @@ struct stDevice {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned char INO_gs_ucINOInitOK;
+extern int INO_gs_a_tdhDevice[2];
+extern short INOPS2_fn_wInit(void);
+
 short INO_fn_wInit(void)
 {
-    /* TODO: decompile from asm/... */
+    if (!INO_gs_ucINOInitOK) {
+        memset(INO_gs_a_tdhDevice, 0, sizeof(INO_gs_a_tdhDevice));
+        if (INOPS2_fn_wInit() == 1) {
+            INO_gs_ucINOInitOK = 1;
+        }
+    }
+    return INO_gs_ucINOInitOK;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\joystick.c lines 36–37 */

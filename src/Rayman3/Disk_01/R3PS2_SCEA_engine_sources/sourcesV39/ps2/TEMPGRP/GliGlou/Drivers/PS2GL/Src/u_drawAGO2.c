@@ -2334,10 +2334,18 @@ void GLI_vDisplaySerialParticleRain(GLD_tdstViewportAttributes_* param0, AGO2_Ra
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void VAC_SetMaterial(void* hContainer, GLI_tdstMaterial_* pMat);
+extern void VAC_UnAcquireAndDraw(void* hContainer, unsigned int NbSprites);
+
 void GLI_v_StopDrawingRain(void)
 {
     float savedalpha;
-    /* TODO: decompile from asm/... */
+    savedalpha = GLI_BIG_GLOBALS_xGlobalAlpha;
+    GLI_BIG_GLOBALS_xGlobalAlpha = 0.5f;
+    GLI_g_CurrentStage = 0;
+    VAC_SetMaterial((void*)GLI_g_hVAContainer, (GLI_tdstMaterial_*)GLI_g_RainMaterial);
+    GLI_BIG_GLOBALS_xGlobalAlpha = savedalpha;
+    VAC_UnAcquireAndDraw((void*)GLI_g_hVAContainer, 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 435–441 */
