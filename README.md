@@ -15,10 +15,21 @@ or compiler binaries.
 
 Checked with `python3 tools/match.py coverage` at each matching commit:
 
-- Functions: **1,822 / 7,832** (plus 4 register-equivalent, not counted)
-- Code: **67,184 / 2,268,104 bytes** (**2.9621%**)
+| Scope | Functions | Code bytes |
+| --- | --- | --- |
+| **Game code** | **1,242 / 4,164** (+5 register-equivalent) | **45,428 / 1,511,580** (**3.0053%**) |
+| Library code | 598 / 3,668 | 22,228 / 756,524 (2.9382%) |
+| **Total** | **1,840 / 7,832** (+5 register-equivalent) | **67,656 / 2,268,104** (**2.9829%**) |
+
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
   started yet.
+- Register-equivalent functions differ only by register renaming and are not
+  counted as matched.
+- *Game code* is the engine and game sources (including the SND_R3 sound glue)
+  plus compiler-generated helpers linked among them. *Library code* is PS2GL,
+  the harmonx sound middleware, the Metrowerks C/C++ runtime, the SCE SDK and
+  other functions built without debug information. The split is computed by
+  `code_category()` in `tools/match.py`.
 
 ## Status
 

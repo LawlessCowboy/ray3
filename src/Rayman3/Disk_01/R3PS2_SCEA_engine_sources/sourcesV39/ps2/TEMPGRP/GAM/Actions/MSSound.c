@@ -1311,6 +1311,17 @@ GEO_tdstGeometricObject_* fn_pCreateSphere(float x, float y, float z, float xRad
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 358–358 */
+/* addr: 0x002711f0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 358
+ * Recovered from .line/.symtab; the extractor emitted no debug record.
+ */
+void fn_vMSSoundSetMechaCharacter(tdstMSSound_* h_MSSound, HIE_tdstSuperObject_* _hMechaCharacter)
+{
+    *(HIE_tdstSuperObject_* *)((unsigned char*)h_MSSound + 0xC) = _hMechaCharacter;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 353–353 */
 /* addr: 0x00271200  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

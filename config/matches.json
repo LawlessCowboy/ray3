@@ -18573,6 +18573,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/overlib.c",
       "status": "MATCH"
     },
+    "0x00100480": {
+      "address": "0x00100480",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2_fn_vCreatemallocCriticalSection",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/overlib.c",
+      "status": "MATCH"
+    },
     "0x0012bed0": {
       "address": "0x0012bed0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -28205,6 +28213,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
       "status": "MATCH"
     },
+    "0x002711f0": {
+      "address": "0x002711f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vMSSoundSetMechaCharacter",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSSound.c",
+      "status": "MATCH"
+    },
     "0x00271200": {
       "address": "0x00271200",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -29555,6 +29571,142 @@
       "name": "GEO_bIsLookAt",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/GeoObjEd.c",
+      "status": "MATCH"
+    },
+    "0x002a4df0": {
+      "address": "0x002a4df0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4e40": {
+      "address": "0x002a4e40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_xTestCollideIdentifierTypeOfGameMaterial",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4e80": {
+      "address": "0x002a4e80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_hGetCollideMaterial",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4e90": {
+      "address": "0x002a4e90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_hGetSoundMaterial",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4ea0": {
+      "address": "0x002a4ea0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_b_ulIsValid",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4ed0": {
+      "address": "0x002a4ed0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_vInitGameMaterialErrorAndMemory",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4f00": {
+      "address": "0x002a4f00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_vDestroyFor3DOS",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4f30": {
+      "address": "0x002a4f30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_vCopyFor3DOS",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4f50": {
+      "address": "0x002a4f50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_hCreateFor3DOS",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4f90": {
+      "address": "0x002a4f90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_vInitFor3DOS",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4fc0": {
+      "address": "0x002a4fc0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_vResetEntireMask",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4fd0": {
+      "address": "0x002a4fd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_xMultipleTestCollideIdentifier",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a4ff0": {
+      "address": "0x002a4ff0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_xTestCollideMaterialTypeOfIdentifier",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "EQUIVALENT"
+    },
+    "0x002a5030": {
+      "address": "0x002a5030",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_wGetCollideMaterialTypeForAi",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a5040": {
+      "address": "0x002a5040",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_xGetCollideMaterialCoeff",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a5050": {
+      "address": "0x002a5050",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_p_stGetCollideMaterialDirectionHandle",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
+      "status": "MATCH"
+    },
+    "0x002a5060": {
+      "address": "0x002a5060",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GMT_fn_hGetCollideMaterialIdentifier",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
       "status": "MATCH"
     },
     "0x002a5070": {

@@ -105,3 +105,13 @@ float PS2_dl_sinf(float val)
     float f2;
     /* TODO: decompile from asm/... */
 }
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\rm3\overlib.c lines 72–72 */
+/* addr: 0x00100480  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 72
+ * Recovered from .line/.symtab; the extractor emitted no debug record.
+ */
+void PS2_fn_vCreatemallocCriticalSection(void)
+{
+}

@@ -827,6 +827,62 @@ def function_source_excerpt(source: Path, name: str) -> str:
     return text[max(0, text.rfind('\n', 0, marker) + 1):]
 
 
+LIBRARY_SOURCE_MARKERS = ('/harmonx/', '/PS2GL20/', '/Program Files/')
+# Anonymous assembly blocks and soft-float helpers linked between game objects.
+LIBRARY_UNOWNED_NAMES = re.compile(r'^(\.text|dp[a-z]+)$|usnd|^_*sce')
+# Longest run of unowned functions still attributed to surrounding game code.
+GAME_HELPER_RUN_LIMIT = 8
+
+
+def code_category(entries: list[dict]) -> dict[int, str]:
+    """Split ELF functions into ``game`` and ``library`` code.
+
+    Owned functions follow their recovered source path: the harmonx sound
+    middleware, PS2GL and the Metrowerks runtime are library code; the engine,
+    game and SND_R3 glue are game code.  Functions without recovered source
+    (built without debug info: SCE SDK, C/C++ runtime, most of harmonx) are
+    library code unless they form a short run (at most GAME_HELPER_RUN_LIMIT)
+    whose nearest owned neighbours in link order are both game code, which
+    catches compiler-generated game helpers such as AGO3 constructors,
+    ``__arraydtor`` thunks and MTH4D operators.
+    """
+    ordered = sorted(entries, key=lambda entry: entry['address'])
+    owned = [None] * len(ordered)
+    for index, entry in enumerate(ordered):
+        source = entry['source']
+        if source is not None:
+            path = '/' + source.replace('\\', '/')
+            owned[index] = ('library' if any(marker in path for marker in LIBRARY_SOURCE_MARKERS)
+                            else 'game')
+    previous, following = [None] * len(ordered), [None] * len(ordered)
+    last = None
+    for index in range(len(ordered)):
+        previous[index] = last
+        last = owned[index] or last
+    last = None
+    for index in reversed(range(len(ordered))):
+        following[index] = last
+        last = owned[index] or last
+    run_length = [0] * len(ordered)
+    start = 0
+    while start < len(ordered):
+        end = start
+        while end < len(ordered) and (owned[end] is None) == (owned[start] is None):
+            end += 1
+        for index in range(start, end):
+            run_length[index] = end - start
+        start = end
+    categories = {}
+    for index, entry in enumerate(ordered):
+        category = owned[index]
+        if category is None:
+            category = ('game' if previous[index] == following[index] == 'game'
+                        and run_length[index] <= GAME_HELPER_RUN_LIMIT
+                        and not LIBRARY_UNOWNED_NAMES.match(entry['name']) else 'library')
+        categories[entry['address']] = category
+    return categories
+
+
 def coverage() -> dict:
     _, symbols, main, _, _ = target_context()
     manifest = load_manifest()
@@ -840,6 +896,24 @@ def coverage() -> dict:
                     for record in function_records if record.get('status') == 'MATCH']
     matched_data = [(int(record['address'], 16), int(record['address'], 16) + record['size'])
                     for record in data_records if record.get('status') == 'MATCH']
+    entries = cached_source_index(symbols, main)
+    categories = code_category(entries)
+    split = {}
+    for category in ('game', 'library'):
+        members = [entry for entry in entries if categories[entry['address']] == category]
+        addresses = {entry['address'] for entry in members}
+        split[category] = {
+            'matched_functions': len([r for r in function_records if r.get('status') == 'MATCH'
+                                      and int(r['address'], 16) in addresses]),
+            'equivalent_functions': len([r for r in function_records
+                                         if r.get('status') == 'EQUIVALENT'
+                                         and int(r['address'], 16) in addresses]),
+            'total_functions': len(members),
+            'code_bytes_matched': intervals_size([span for span in matched_code
+                                                  if span[0] in addresses]),
+            'code_bytes_total': intervals_size([(entry['address'], entry['address'] + entry['size'])
+                                                for entry in members]),
+        }
     return {
         'matched_functions': len([r for r in function_records if r.get('status') == 'MATCH']),
         'equivalent_functions': len([r for r in function_records
@@ -853,6 +927,7 @@ def coverage() -> dict:
                                    and main.addr <= s.value < main.addr + main.size}),
         'data_bytes_matched': intervals_size(matched_data),
         'data_bytes_total': intervals_size(data),
+        'split': split,
     }
 
 
@@ -864,6 +939,11 @@ def print_coverage(result: dict) -> None:
         print(f"register-equivalent (not matching): {result['equivalent_functions']}")
     print(f"code bytes: {result['code_bytes_matched']}/{result['code_bytes_total']} "
           f"({pct(result['code_bytes_matched'], result['code_bytes_total'])})")
+    for category, part in result.get('split', {}).items():
+        print(f"  {category + ':':8s} functions {part['matched_functions']}/{part['total_functions']}"
+              f" (+{part['equivalent_functions']} equivalent), code bytes "
+              f"{part['code_bytes_matched']}/{part['code_bytes_total']} "
+              f"({pct(part['code_bytes_matched'], part['code_bytes_total'])})")
     print(f"data bytes: {result['data_bytes_matched']}/{result['data_bytes_total']} "
           f"({pct(result['data_bytes_matched'], result['data_bytes_total'])})")
     print(f"data objects: {result['data_objects_matched']}/{result['data_objects_total']}")
