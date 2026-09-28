@@ -206,7 +206,9 @@ struct stMACDPID {
     float m_xData4; /* +0x2c */
     float m_xData5; /* +0x30 */
     int m_stData6; /* +0x34 */
+    unsigned char _extractor_padding_00[12]; /* explicit retail gap; +0x38..0x43 */
     int m_stData7; /* +0x44 */
+    unsigned char _extractor_padding_01[12]; /* explicit retail gap; +0x48..0x53 */
     char m_cData8; /* +0x54 */
     unsigned short m_uwData9; /* +0x56 */
     /* aggregate */ int m_stData10; /* +0x58 */

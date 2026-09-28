@@ -3760,7 +3760,7 @@ unsigned char fn_ucGetDsgVarComport(void* pMyVarAddr, void* param0, tdstGetSetPa
     eType = E_vt_Comport;
     p_stGetSetParam->uDummy.uParam.pComport = p_stComport;
     p_stGetSetParam->eType = eType;
-    return (unsigned char)(((unsigned int)p_stComport < 1u) ^ 1u);
+    return (unsigned char)(((unsigned int)p_stComport == 0u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 680–686 */
@@ -3878,7 +3878,7 @@ unsigned char fn_ucGetDsgVarSOLinks(void* pMyVarAddr, void* param0, tdstGetSetPa
     eType = E_vt_SOLinks;
     p_stGetSetParam->uDummy.uParam.hSOLinks = hSOL;
     p_stGetSetParam->eType = eType;
-    return (unsigned char)(((unsigned int)hSOL < 1u) ^ 1u);
+    return (unsigned char)(((unsigned int)hSOL == 0u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 617–623 */
@@ -3901,7 +3901,7 @@ unsigned char fn_ucGetDsgVarSuperObject(void* pMyVarAddr, void* param0, tdstGetS
     eType = E_vt_SuperObject;
     p_stGetSetParam->uDummy.uParam.hSuperObject = hSuperObject;
     p_stGetSetParam->eType = eType;
-    return (unsigned char)(((unsigned int)hSuperObject < 1u) ^ 1u);
+    return (unsigned char)(((unsigned int)hSuperObject == 0u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 605–611 */
@@ -3924,7 +3924,7 @@ unsigned char fn_ucGetDsgVarLight(void* pMyVarAddr, void* param0, tdstGetSetPara
     eType = E_vt_Light;
     p_stGetSetParam->uDummy.uParam.p_stLight = hEntryElement;
     p_stGetSetParam->eType = eType;
-    return (unsigned char)(((unsigned int)hEntryElement < 1u) ^ 1u);
+    return (unsigned char)(((unsigned int)hEntryElement == 0u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 594–600 */
@@ -3947,7 +3947,7 @@ unsigned char fn_ucGetDsgVarSoundEvent(void* pMyVarAddr, void* param0, tdstGetSe
     eType = E_vt_SoundEvent;
     p_stGetSetParam->uDummy.uParam.pSoundEvent = hEntryElement;
     p_stGetSetParam->eType = eType;
-    return (unsigned char)(((unsigned int)hEntryElement < 1u) ^ 1u);
+    return (unsigned char)(((unsigned int)hEntryElement == 0u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 583–589 */

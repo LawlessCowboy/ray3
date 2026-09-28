@@ -2458,10 +2458,11 @@ struct CAM_Shooter_ {
     int iAxisVThreshold; /* +0x294 */
     unsigned int m_ulOldButtons; /* +0x298 */
     unsigned int m_ulJustPressedButtons; /* +0x29c */
+    unsigned char _extractor_padding_04[16]; /* explicit retail gap; +0x2a0..0x2af */
     GMT_tdstGameMaterial_* hWaterGMT; /* +0x2b0 */
     float xViewFinderWidth_2; /* +0x2b4 */
     float xViewFinderHeight_2; /* +0x2b8 */
-    unsigned char _extractor_padding_03[20];
+    unsigned char _extractor_padding_03[4];
 };
 
 struct tdstLanguageStructure_ {

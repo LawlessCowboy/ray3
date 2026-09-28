@@ -2468,6 +2468,7 @@ struct tdstAChannel_ {
     tdstAChannel_* p_stNextActiveChannel; /* +0x8 */
     tdstAChannel_* p_stFatherChannel; /* +0xc */
     int ax_InterpolatedPositions[2]; /* +0x10 */
+    unsigned char _extractor_padding_00[112]; /* explicit retail gap; +0x18..0x87 */
     unsigned char ucNbInterpolatedPositions; /* +0x88 */
     unsigned char bControlledChannel; /* +0x89 */
     unsigned char bLipsChannel; /* +0x8a */

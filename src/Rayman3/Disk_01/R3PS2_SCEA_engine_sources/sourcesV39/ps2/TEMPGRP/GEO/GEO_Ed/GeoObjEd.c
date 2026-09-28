@@ -52,6 +52,7 @@ struct GEO_tdstGeometricObject_ {
     GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
     GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
     unsigned char ulType; /* +0x1c */
+    unsigned char _extractor_padding_01[3]; /* explicit retail gap; +0x1d..0x1f */
     short xNbPoints; /* +0x20 */
     short xNbElements; /* +0x22 */
     short xNbEdges; /* +0x24 */

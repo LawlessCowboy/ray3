@@ -61,7 +61,9 @@ struct tdstFrame3d_ {
     int p_stAngularSpeedMatrix; /* +0x4 */
     int p_stLinearSpeedVector; /* +0x8 */
     int stHierarchy; /* +0xc */
+    unsigned char _extractor_padding_00[4]; /* explicit retail gap; +0x10..0x13 */
     int stDeformation; /* +0x14 */
+    unsigned char _extractor_padding_01[4]; /* explicit retail gap; +0x18..0x1b */
     int p_stAnim; /* +0x1c */
     unsigned short uwFrameNumber; /* +0x20 */
     unsigned char ucMatrixUpdated; /* +0x22 */

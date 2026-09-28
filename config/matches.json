@@ -22669,6 +22669,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
       "status": "MATCH"
     },
+    "0x00164c00": {
+      "address": "0x00164c00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glReadBuffer",
+      "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MATCH"
+    },
     "0x00164c10": {
       "address": "0x00164c10",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -22922,6 +22930,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glTexImage1D",
       "size": 48,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x001745e0": {
+      "address": "0x001745e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glTexEnvi",
+      "size": 36,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
     },
@@ -23373,6 +23389,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Fragment.c",
       "status": "MATCH"
     },
+    "0x0017d040": {
+      "address": "0x0017d040",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glClearIndex",
+      "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Fragment.c",
+      "status": "MATCH"
+    },
     "0x0017d140": {
       "address": "0x0017d140",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -23410,6 +23434,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glLogicOp",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Fragment.c",
+      "status": "MATCH"
+    },
+    "0x0017d320": {
+      "address": "0x0017d320",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glDepthMask",
+      "size": 84,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Fragment.c",
       "status": "MATCH"
     },
@@ -23627,6 +23659,14 @@
       "name": "impPS2glGetBooleanv",
       "size": 20,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Get.c",
+      "status": "MATCH"
+    },
+    "0x00184060": {
+      "address": "0x00184060",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2GL_SetDestinationFrame",
+      "size": 76,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_VU1_Pipeline.c",
       "status": "MATCH"
     },
     "0x00185170": {
@@ -24757,6 +24797,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "EQUIVALENT"
     },
+    "0x001fbf80": {
+      "address": "0x001fbf80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetDsgVarComport",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
     "0x001fbfc0": {
       "address": "0x001fbfc0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -24778,6 +24826,38 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_ucGetDsgVarCaps",
       "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fc050": {
+      "address": "0x001fc050",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetDsgVarSOLinks",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fc070": {
+      "address": "0x001fc070",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetDsgVarSuperObject",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fc090": {
+      "address": "0x001fc090",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetDsgVarLight",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fc0b0": {
+      "address": "0x001fc0b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetDsgVarSoundEvent",
+      "size": 32,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "MATCH"
     },

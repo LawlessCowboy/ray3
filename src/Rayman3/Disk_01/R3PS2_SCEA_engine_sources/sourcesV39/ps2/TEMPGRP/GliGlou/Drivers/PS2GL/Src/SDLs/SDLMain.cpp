@@ -1636,6 +1636,7 @@ struct tagGLcontext {
     unsigned int uiStaticDisplayListMaxSize; /* +0xd8 */
     unsigned int uiStaticDisplayListBits; /* +0xdc */
     signed char ucSDLObjectReserveSize; /* +0xe0 */
+    unsigned char _extractor_padding_08[15]; /* explicit retail gap; +0xe1..0xef */
     float vScissorBox[4]; /* +0xf0 */
     float fIndexClearValue; /* +0x100 */
     unsigned int eAlphaTestFunc; /* +0x104 */
@@ -1700,6 +1701,7 @@ struct tagGLcontext {
     tag_GLlight Lights[8]; /* +0x5840 */
     unsigned char bLocalViewer; /* +0x5bc0 */
     unsigned char bLightModelTwoSide; /* +0x5bc1 */
+    unsigned char _extractor_padding_09[14]; /* explicit retail gap; +0x5bc2..0x5bcf */
     float vAmbient[4]; /* +0x5bd0 */
     unsigned int eColorControl; /* +0x5be0 */
     unsigned char bLightModelDiffuseOnly; /* +0x5be4 */
@@ -1774,8 +1776,10 @@ struct tagGLcontext {
     float (*pCurStack)[4][4]; /* +0x6078 */
     int piCurStackDepth; /* +0x607c */
     float ViewOrg[2]; /* +0x6080 */
+    unsigned char _extractor_padding_10[8]; /* explicit retail gap; +0x6088..0x608f */
     float ViewPort[4]; /* +0x6090 */
     float DepthRange[2]; /* +0x60a0 */
+    unsigned char _extractor_padding_11[8]; /* explicit retail gap; +0x60a8..0x60af */
     float vacurColor[2][4]; /* +0x60b0 */
     float (*pvcurColor)[4]; /* +0x60d0 */
     unsigned char _extractor_padding_03[12]; /* implicitly added by extractor; +0x60d4..0x60df */
@@ -1784,6 +1788,7 @@ struct tagGLcontext {
     unsigned int iCurTextureSet; /* +0x6110 */
     float (*pvcurTextCoord)[4]; /* +0x6114 */
     unsigned char bFinalCompile; /* +0x6118 */
+    unsigned char _extractor_padding_12[7]; /* explicit retail gap; +0x6119..0x611f */
     float valistColor[2][4]; /* +0x6120 */
     float (*pvlistColor)[4]; /* +0x6140 */
     unsigned char _extractor_padding_04[12]; /* implicitly added by extractor; +0x6144..0x614f */
@@ -1798,6 +1803,7 @@ struct tagGLcontext {
     float RasterMultiTexCoords[2][4]; /* +0x61c0 */
     float (*pvRasterTexCoord)[4]; /* +0x61e0 */
     unsigned char bEdgeFlag; /* +0x61e4 */
+    unsigned char _extractor_padding_13[11]; /* explicit retail gap; +0x61e5..0x61ef */
     float mFrustumNormal[4][4]; /* +0x61f0 */
     float mGuardBandNormal[4][4]; /* +0x6230 */
     float vZNearFar[4]; /* +0x6270 */
@@ -1818,6 +1824,7 @@ struct tagGLcontext {
     float NearFarStack[4][2]; /* +0x68d0 */
     float TextureMatrix[2][4][4]; /* +0x68f0 */
     unsigned int nTextureStackDepths[2]; /* +0x6970 */
+    unsigned char _extractor_padding_14[8]; /* explicit retail gap; +0x6978..0x697f */
     float TextureStacks[2][4][4][4]; /* +0x6980 */
     float (*pTextureMatrix)[4][4]; /* +0x6b80 */
     int pnTextureStackDepth; /* +0x6b84 */
