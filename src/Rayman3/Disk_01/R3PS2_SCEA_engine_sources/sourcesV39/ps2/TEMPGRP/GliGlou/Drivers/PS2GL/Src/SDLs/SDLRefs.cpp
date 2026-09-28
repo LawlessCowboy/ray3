@@ -136,7 +136,6 @@ struct tagListData {
     unsigned int uiSDLIndicesSize; /* +0x20 */
     unsigned int uiSDLBits; /* +0x24 */
     unsigned long ModFlgs; /* +0x28 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     float (*pLastExecDmaBuffer)[4]; /* +0x30 */
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };

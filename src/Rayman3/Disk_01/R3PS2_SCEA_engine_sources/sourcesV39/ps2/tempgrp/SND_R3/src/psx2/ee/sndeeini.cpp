@@ -491,7 +491,6 @@ struct iterator {
 struct CWaveFile {
     unsigned int m_uiDataOffset; /* +0x4 */
     unsigned long m_ulDataSize; /* +0x8 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xc..0xf */
     unsigned int m_uiNbMarkers; /* +0x10 */
 };
 

@@ -32,17 +32,11 @@ struct anon_2 {
     int frameCount; /* +0x8 */
     unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xc..0xf */
     long pts; /* +0x10 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x14..0x17 */
     long dts; /* +0x18 */
-    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x1c..0x1f */
     unsigned long flags; /* +0x20 */
-    unsigned char _extractor_padding_03[4]; /* implicitly added by extractor; +0x24..0x27 */
     long pts2nd; /* +0x28 */
-    unsigned char _extractor_padding_04[4]; /* implicitly added by extractor; +0x2c..0x2f */
     long dts2nd; /* +0x30 */
-    unsigned char _extractor_padding_05[4]; /* implicitly added by extractor; +0x34..0x37 */
     unsigned long flags2nd; /* +0x38 */
-    unsigned char _extractor_padding_06[4]; /* implicitly added by extractor; +0x3c..0x3f */
     int sys; /* +0x40 */
 };
 
@@ -70,7 +64,6 @@ struct anon_4 {
     int sema; /* +0x40 */
     int isActive; /* +0x44 */
     long totalBytes; /* +0x48 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4c..0x4f */
     anon_1* ts; /* +0x50 */
     int n_ts; /* +0x54 */
     int count_ts; /* +0x58 */
@@ -88,9 +81,7 @@ struct anon_0 {
 
 struct anon_1 {
     long pts; /* +0x0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     long dts; /* +0x8 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0xc..0xf */
     int pos; /* +0x10 */
     int len; /* +0x14 */
 };
@@ -104,7 +95,6 @@ struct anon_6 {
     anon_enum_00034440 type; /* +0x0 */
     unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     long pts; /* +0x8 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0xc..0xf */
     long dts; /* +0x10 */
 };
 
@@ -114,7 +104,6 @@ struct anon_7 {
     int data; /* +0x8 */
     unsigned int len; /* +0xc */
     long pts; /* +0x10 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x14..0x17 */
     long dts; /* +0x18 */
 };
 
@@ -175,7 +164,7 @@ int mpegTS(anon_6* cbts)
  */
 int mpegRestartDMA(void)
 {
-    viBufRestartDMA((anon_3*)&videoDec.mpeg);
+    viBufRestartDMA((anon_3*)&videoDec.vibuf);
     return 1;
 }
 
@@ -194,7 +183,7 @@ int mpegRestartDMA(void)
  */
 int mpegStopDMA(void)
 {
-    viBufStopDMA((anon_3*)&videoDec.mpeg);
+    viBufStopDMA((anon_3*)&videoDec.vibuf);
     return 1;
 }
 
@@ -375,10 +364,7 @@ int videoDecPutTs(anon_0* vd, long pts_val, long dts_val, unsigned char* start, 
  */
 unsigned int videoDecGetState(anon_0* vd)
 {
-    /* The recovered nested aggregate currently overstates its size; the
-     * debug target places state at +0xa8. Keep the access explicit until the
-     * nested video-decoder layout is fully recovered. */
-    return *(unsigned int*)((unsigned char*)vd + 0xa8);
+    return vd->state;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 150–152 */

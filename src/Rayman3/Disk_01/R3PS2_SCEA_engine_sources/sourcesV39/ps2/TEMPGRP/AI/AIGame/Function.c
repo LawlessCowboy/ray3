@@ -2749,7 +2749,6 @@ struct tdstFamilyList_ {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -3601,7 +3600,7 @@ HIE_tdstSuperObject_* SECT_hFatherSector;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_st_AGO_GetHandle(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_st_AGO_GetHandle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int iHandle;
     iHandle = AGO3_dwGetLastHandle();

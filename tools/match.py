@@ -485,6 +485,21 @@ def infer_anonymous_hi_lo_address(target_bytes: bytes, hi_offset: int,
     return (((hi_word & 0xFFFF) << 16) + signed16(lo_word & 0xFFFF)) & 0xFFFFFFFF
 
 
+def local_static_target(symbol: Symbol, target_symbols: list[Symbol]) -> Symbol | None:
+    """Pair a function-local static (``name$N``) with its retail counterpart.
+
+    MWCC numbers local statics per compilation, so ``s_szFileName$11`` in a
+    candidate object corresponds to ``s_szFileName$456`` in the retail ELF.
+    Accept the retail symbol only when exactly one has the same base name and
+    size; otherwise leave the relocation unresolved.
+    """
+    base = symbol.name.rsplit('$', 1)[0]
+    matches = [entry for entry in target_symbols
+               if entry.name.rsplit('$', 1)[0] == base and '$' in entry.name
+               and entry.size == symbol.size and entry.value]
+    return matches[0] if len(matches) == 1 else None
+
+
 def anonymous_object_matches(name: str, address: int, obj_sections: list[Section],
                              obj_symbols: list[Symbol], target_sections: list[Section]) -> bool:
     """Check an anonymous literal's bytes against the retail data it maps to.
@@ -756,6 +771,8 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
             target_symbol = (target_names.get(symbol.name)
                              if symbol and symbol.name and not symbol.name.startswith('@')
                              else None)
+            if target_symbol is None and symbol and '$' in symbol.name[1:]:
+                target_symbol = local_static_target(symbol, target_symbols)
             record = {'offset': relative, 'type': reloc_type,
                       'symbol': symbol.name if symbol else ''}
             relocations.append(record)

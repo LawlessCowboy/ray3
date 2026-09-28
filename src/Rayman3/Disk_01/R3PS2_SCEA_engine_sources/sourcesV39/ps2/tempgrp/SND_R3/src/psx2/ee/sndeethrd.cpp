@@ -24,7 +24,6 @@ struct _usnd_STimerStruct {
     void (*m_pfnCallback)(unsigned int, unsigned int); /* +0x0 */
     unsigned int m_uiUserParam; /* +0x4 */
     unsigned long m_uiTime; /* +0x8 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xc..0xf */
     unsigned int m_uiPeriod; /* +0x10 */
     unsigned char m_bDelete; /* +0x14 */
     unsigned char m_bCall; /* +0x15 */

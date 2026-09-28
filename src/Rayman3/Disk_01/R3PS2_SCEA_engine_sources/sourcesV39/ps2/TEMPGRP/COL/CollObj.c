@@ -606,7 +606,7 @@ void COL_vCreateCollideObject(COL_tdstCollideObject_** p_hObject, short xNbPoint
  */
 void COL_vGetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
 {
-    *p_stPoint = hObject->d_stListOfPoints[xIndexOfPoint * 3];
+    *p_stPoint = hObject->d_stListOfPoints[xIndexOfPoint];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1368–1369 */
@@ -619,7 +619,7 @@ void COL_vGetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p
  */
 void COL_vSetPointOfObject(COL_tdstCollideObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
 {
-    hObject->d_stListOfPoints[xIndexOfPoint * 3] = *p_stPoint;
+    hObject->d_stListOfPoints[xIndexOfPoint] = *p_stPoint;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1352–1353 */

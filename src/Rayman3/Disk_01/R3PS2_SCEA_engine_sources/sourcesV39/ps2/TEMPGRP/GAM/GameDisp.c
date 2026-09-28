@@ -1146,7 +1146,6 @@ struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCollisionInteractionOpt {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -1532,7 +1531,7 @@ struct tdstEngineStructure_ {
     GLD_tdstViewportAttributes_ a_stFixViewportAttr[5]; /* +0x360 */
     GLI_tdstSpecificAttributesFor3D_ a_stFixAttributes3D[5]; /* +0x590 */
     int a_p_stFixCamera[5]; /* +0x5b8 */
-    GLI_tdstSpecificAttributesFor3D_ a_stGameAttributes3D[3]; /* +0x5cc; debug aggregate overstates this array by two entries */
+    GLI_tdstSpecificAttributesFor3D_ a_stGameAttributes3D[5]; /* +0x5cc */
     tdstViewportManagement_* a_hViewportArray; /* +0x5f4 */
     LST2_tdstAnchorTotdxHandleToNodeCameraDyn hCameraList; /* +0x5f8 */
     int hDrawSem; /* +0x604 */

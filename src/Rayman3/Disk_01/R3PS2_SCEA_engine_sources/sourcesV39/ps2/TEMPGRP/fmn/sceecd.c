@@ -34,7 +34,6 @@ struct anon_1 {
 
 struct SectorCache_ {
     unsigned long SectorNumber; /* +0x0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     char bValid; /* +0x8 */
     unsigned long lastaccess; /* +0x10 */
 };

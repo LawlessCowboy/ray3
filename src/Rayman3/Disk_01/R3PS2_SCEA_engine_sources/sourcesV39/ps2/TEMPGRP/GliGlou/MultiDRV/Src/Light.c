@@ -812,7 +812,7 @@ void GLI_vClearListOfLightInViewport(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vPopLightsInViewport(unsigned int lNbLightsToPop)
+void GLI_vPopLightsInViewport(int lUnused, unsigned int lNbLightsToPop)
 {
     gs_CurrentNumberOfLightInViewport -= lNbLightsToPop;
     if (gs_CurrentNumberOfLightInViewport < 0)

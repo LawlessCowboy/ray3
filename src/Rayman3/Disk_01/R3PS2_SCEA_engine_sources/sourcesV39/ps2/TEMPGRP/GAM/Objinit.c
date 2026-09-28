@@ -658,7 +658,6 @@ struct LST2_tdstAnchorToWP_tdhGraphNodeDyn {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -1524,31 +1523,10 @@ tdstStructureHandleFunction_ g_a_stStructureHandleFunction;
 void InitSectorCache(void)
 {
     int i;
-    for (i = 0; i < 128; i += 8) {
+    for (i = 0; i < 16; i++) {
         GLOBAL_SectorCache[i].sector = 0;
         GLOBAL_SectorCache[i].valid = 0;
         GLOBAL_SectorCache[i].access = 0;
-        GLOBAL_SectorCache[i + 1].sector = 0;
-        GLOBAL_SectorCache[i + 1].valid = 0;
-        GLOBAL_SectorCache[i + 1].access = 0;
-        GLOBAL_SectorCache[i + 2].sector = 0;
-        GLOBAL_SectorCache[i + 2].valid = 0;
-        GLOBAL_SectorCache[i + 2].access = 0;
-        GLOBAL_SectorCache[i + 3].sector = 0;
-        GLOBAL_SectorCache[i + 3].valid = 0;
-        GLOBAL_SectorCache[i + 3].access = 0;
-        GLOBAL_SectorCache[i + 4].sector = 0;
-        GLOBAL_SectorCache[i + 4].valid = 0;
-        GLOBAL_SectorCache[i + 4].access = 0;
-        GLOBAL_SectorCache[i + 5].sector = 0;
-        GLOBAL_SectorCache[i + 5].valid = 0;
-        GLOBAL_SectorCache[i + 5].access = 0;
-        GLOBAL_SectorCache[i + 6].sector = 0;
-        GLOBAL_SectorCache[i + 6].valid = 0;
-        GLOBAL_SectorCache[i + 6].access = 0;
-        GLOBAL_SectorCache[i + 7].sector = 0;
-        GLOBAL_SectorCache[i + 7].valid = 0;
-        GLOBAL_SectorCache[i + 7].access = 0;
     }
 }
 

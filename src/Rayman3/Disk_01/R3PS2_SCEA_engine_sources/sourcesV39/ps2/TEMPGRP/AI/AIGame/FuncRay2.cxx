@@ -124,8 +124,8 @@ static HIE_tdstSuperObject_* g_hCharacterMaskedForResearch;
 unsigned char g_ucAIModuleId;
 float g_DistanceWaypointMin;
 float g_DistanceWaypointMax;
-float g_xDistanceActMin;
-float g_xDistanceActMax;
+extern float g_DistanceActMin;
+extern float g_DistanceActMax;
 
 extern "C" tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso,
                                                  tdstNodeInterpret_* p_stTree,
@@ -2480,7 +2480,7 @@ tdstNodeInterpret_* fn_p_stCode4TextAffiche(HIE_tdstSuperObject_* p_SuperObjPers
  */
 void fn_vSetDistanceActMax(float xDistACT)
 {
-    g_xDistanceActMax = xDistACT;
+    g_DistanceActMax = xDistACT;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 70–70 */
@@ -2492,7 +2492,7 @@ void fn_vSetDistanceActMax(float xDistACT)
  */
 void fn_vSetDistanceActMin(float xDistACT)
 {
-    g_xDistanceActMin = xDistACT;
+    g_DistanceActMin = xDistACT;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 64–66 */
@@ -2505,6 +2505,6 @@ void fn_vSetDistanceActMin(float xDistACT)
  */
 void fn_vInitDistanceAct(void)
 {
-    g_xDistanceActMin = 0.0f;
-    g_xDistanceActMax = 0.0f;
+    g_DistanceActMin = 0.0f;
+    g_DistanceActMax = 0.0f;
 }

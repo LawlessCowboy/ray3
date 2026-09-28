@@ -1359,9 +1359,7 @@ unsigned char fn_ucStandardGameGetTransparencyZoneMaxSO(HIE_tdstSuperObject_* hS
 {
     tdstStandardGame_* hStdGame;
     hStdGame = hSupObj->hLinkedObject.p_stCharacter->h_StandardGame;
-    if (hStdGame != NULL)
-        return ((unsigned int)hStdGame->ucTransparencyZoneMax & 0xff);
-    return 0x50;
+    return hStdGame ? hStdGame->ucTransparencyZoneMax : 0x50;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 643–645 */
@@ -1377,9 +1375,7 @@ unsigned char fn_ucStandardGameGetTransparencyZoneMinSO(HIE_tdstSuperObject_* hS
 {
     tdstStandardGame_* hStdGame;
     hStdGame = hSupObj->hLinkedObject.p_stCharacter->h_StandardGame;
-    if (hStdGame != NULL)
-        return ((unsigned int)hStdGame->ucTransparencyZoneMin & 0xff);
-    return 0x46;
+    return hStdGame ? hStdGame->ucTransparencyZoneMin : 0x46;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 638–639 */

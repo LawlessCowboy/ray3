@@ -431,9 +431,8 @@ tdstNodeInterpret_* fn_p_stCreditsManagementFunctions(HIE_tdstSuperObject_* p_Su
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGetXBoxRegion(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetXBoxRegion(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    (void)p_stTree;
     return p_stTree;
 }
 
@@ -676,7 +675,7 @@ tdstNodeInterpret_* fn_p_stGetNameResolution(HIE_tdstSuperObject_* p_SuperObjPer
  */
 tdstNodeInterpret_* fn_p_stIsDisplayModeAvailable(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3451–3451 */

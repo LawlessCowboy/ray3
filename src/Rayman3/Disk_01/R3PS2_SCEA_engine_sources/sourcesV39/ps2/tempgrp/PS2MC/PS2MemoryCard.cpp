@@ -306,7 +306,6 @@ struct _SceeMemCardFunctionResult {
 
 int g_EngineHasBeenPausedBecauseOfMC;
 int g_GameHasNotStartedTheFirstBootCheck;
-int PS2MC_g_MemoryCardManagerOnHold;
 PS2MC_tdstIconDescription PS2MC_g_IconDesc[3];
 static int PS2MC_g_Manager;
 static sceMcTblGetDir PS2MC_fileListTable[20];
@@ -393,7 +392,7 @@ void PS2MC_DisableAutoSave(void)
 {
     C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager;
     pManager->m_bAutoSaveEnabled = 0;
-    PS2MC_g_MemoryCardManagerOnHold = 0;
+    g_UserWarnedAboutAutoSave = 0;
     pManager->m_bAutoSaveWasntEvenTried = 0;
 }
 

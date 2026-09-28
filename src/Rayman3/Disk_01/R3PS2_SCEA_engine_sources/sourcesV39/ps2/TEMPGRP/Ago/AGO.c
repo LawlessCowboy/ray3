@@ -211,7 +211,6 @@ struct tdstEngineObject_ {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -1076,9 +1075,7 @@ struct LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt {
 struct AGO_Bitmap_ {
     float a_fCoords[4]; /* +0x0 */
     unsigned long ulWidth; /* +0x10 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x14..0x17 */
     unsigned long ulHeight; /* +0x18 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x1c..0x1f */
     int p_vBitmapSurface; /* +0x20 */
     unsigned char ucDestinationViewport; /* +0x24 */
 };

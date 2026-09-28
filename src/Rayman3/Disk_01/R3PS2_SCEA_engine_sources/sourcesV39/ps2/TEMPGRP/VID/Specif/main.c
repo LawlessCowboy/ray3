@@ -46,7 +46,6 @@ struct anon_1 {
     int data; /* +0x8 */
     unsigned int len; /* +0xc */
     long pts; /* +0x10 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x14..0x17 */
     long dts; /* +0x18 */
 };
 
@@ -56,17 +55,11 @@ struct anon_3 {
     int frameCount; /* +0x8 */
     unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xc..0xf */
     long pts; /* +0x10 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x14..0x17 */
     long dts; /* +0x18 */
-    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x1c..0x1f */
     unsigned long flags; /* +0x20 */
-    unsigned char _extractor_padding_03[4]; /* implicitly added by extractor; +0x24..0x27 */
     long pts2nd; /* +0x28 */
-    unsigned char _extractor_padding_04[4]; /* implicitly added by extractor; +0x2c..0x2f */
     long dts2nd; /* +0x30 */
-    unsigned char _extractor_padding_05[4]; /* implicitly added by extractor; +0x34..0x37 */
     unsigned long flags2nd; /* +0x38 */
-    unsigned char _extractor_padding_06[4]; /* implicitly added by extractor; +0x3c..0x3f */
     int sys; /* +0x40 */
 };
 
@@ -94,7 +87,6 @@ struct anon_14 {
     int sema; /* +0x40 */
     int isActive; /* +0x44 */
     long totalBytes; /* +0x48 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4c..0x4f */
     anon_12* ts; /* +0x50 */
     int n_ts; /* +0x54 */
     int count_ts; /* +0x58 */
@@ -193,9 +185,7 @@ struct anon_8 {
 
 struct anon_12 {
     long pts; /* +0x0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     long dts; /* +0x8 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0xc..0xf */
     int pos; /* +0x10 */
     int len; /* +0x14 */
 };

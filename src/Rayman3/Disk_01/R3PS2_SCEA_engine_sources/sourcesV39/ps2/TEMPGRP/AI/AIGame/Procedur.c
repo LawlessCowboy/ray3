@@ -2899,7 +2899,6 @@ struct tdstFogParams_ {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
@@ -3498,7 +3497,6 @@ struct _stMenuPause {
     int pszVmsString; /* +0x2c */
     char szVmsStringToDraw[256]; /* +0x30 */
     long lVmsPad; /* +0x130 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x134..0x137 */
     int iPadStringNumber; /* +0x138 */
     MTH3D_tdstVector_ stPadPosition; /* +0x13c */
     float xPadParameterInit; /* +0x148 */
@@ -5683,7 +5681,7 @@ tdstNodeInterpret_* fn_p_stDummy(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNode
 {
     tdeProcedureId_ eProcedureId;
     eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
-    printf("ProcedureDummy %d, spo=0x%x!\n", eProcedureId, p_SuperObjPerso);
+    printf("ProcedureDummy %d, spo=0x%x!!\n", eProcedureId, p_SuperObjPerso);
     return p_stTree;
 }
 

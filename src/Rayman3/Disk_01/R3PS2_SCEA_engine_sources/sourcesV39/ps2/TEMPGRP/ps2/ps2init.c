@@ -100,25 +100,18 @@ struct anon_23 {
 struct anon_0 {
     anon_19 frame1; /* +0x0 */
     unsigned long frame1addr; /* +0x8 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xc..0xf */
     anon_6 zbuf1; /* +0x10 */
     long zbuf1addr; /* +0x18 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x1c..0x1f */
     anon_2 xyoffset1; /* +0x20 */
     long xyoffset1addr; /* +0x28 */
-    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x2c..0x2f */
     anon_18 scissor1; /* +0x30 */
     long scissor1addr; /* +0x38 */
-    unsigned char _extractor_padding_03[4]; /* implicitly added by extractor; +0x3c..0x3f */
     anon_14 prmodecont; /* +0x40 */
     long prmodecontaddr; /* +0x48 */
-    unsigned char _extractor_padding_04[4]; /* implicitly added by extractor; +0x4c..0x4f */
     anon_1 colclamp; /* +0x50 */
     long colclampaddr; /* +0x58 */
-    unsigned char _extractor_padding_05[4]; /* implicitly added by extractor; +0x5c..0x5f */
     anon_13 dthe; /* +0x60 */
     long dtheaddr; /* +0x68 */
-    unsigned char _extractor_padding_06[4]; /* implicitly added by extractor; +0x6c..0x6f */
     anon_23 test1; /* +0x70 */
     long test1addr; /* +0x78 */
 };
@@ -180,19 +173,14 @@ struct anon_15 {
 struct anon_8 {
     anon_23 testa; /* +0x0 */
     long testaaddr; /* +0x8 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xc..0xf */
     anon_10 prim; /* +0x10 */
     long primaddr; /* +0x18 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x1c..0x1f */
     anon_15 rgbaq; /* +0x20 */
     long rgbaqaddr; /* +0x28 */
-    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x2c..0x2f */
     anon_4 xyz2a; /* +0x30 */
     long xyz2aaddr; /* +0x38 */
-    unsigned char _extractor_padding_03[4]; /* implicitly added by extractor; +0x3c..0x3f */
     anon_4 xyz2b; /* +0x40 */
     long xyz2baddr; /* +0x48 */
-    unsigned char _extractor_padding_04[4]; /* implicitly added by extractor; +0x4c..0x4f */
     anon_23 testb; /* +0x50 */
     long testbaddr; /* +0x58 */
 };

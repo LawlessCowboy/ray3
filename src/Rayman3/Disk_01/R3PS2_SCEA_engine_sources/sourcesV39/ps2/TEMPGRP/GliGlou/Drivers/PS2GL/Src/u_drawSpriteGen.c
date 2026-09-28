@@ -468,13 +468,10 @@ struct tagGsLoadImage {
     anon_2 gifTag; /* +0x0 */
     anon_14 bitbltbuf; /* +0x10 */
     long bitbltbufaddr; /* +0x18 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x1c..0x1f */
     anon_20 trxpos; /* +0x20 */
     long trxposaddr; /* +0x28 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x2c..0x2f */
     anon_25 trxreg; /* +0x30 */
     long trxregaddr; /* +0x38 */
-    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x3c..0x3f */
     anon_19 trxdir; /* +0x40 */
     long trxdiraddr; /* +0x48 */
 };
@@ -546,19 +543,14 @@ struct tagGsSetTex {
     anon_2 gifTag; /* +0x0 */
     anon_16 texflush; /* +0x10 */
     long texflushaddr; /* +0x18 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x1c..0x1f */
     anon_34 tex0; /* +0x20 */
     long tex0addr; /* +0x28 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x2c..0x2f */
     anon_41 tex1; /* +0x30 */
     long tex1addr; /* +0x38 */
-    unsigned char _extractor_padding_02[4]; /* implicitly added by extractor; +0x3c..0x3f */
     anon_29 miptbp1; /* +0x40 */
     long miptbp1addr; /* +0x48 */
-    unsigned char _extractor_padding_03[4]; /* implicitly added by extractor; +0x4c..0x4f */
     anon_35 miptbp2; /* +0x50 */
     long miptbp2addr; /* +0x58 */
-    unsigned char _extractor_padding_04[4]; /* implicitly added by extractor; +0x5c..0x5f */
     anon_23 clamp; /* +0x60 */
     long clampaddr; /* +0x68 */
 };
@@ -1191,7 +1183,6 @@ struct tagListData {
     unsigned int uiSDLIndicesSize; /* +0x20 */
     unsigned int uiSDLBits; /* +0x24 */
     unsigned long ModFlgs; /* +0x28 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
     float (*pLastExecDmaBuffer)[4]; /* +0x30 */
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };

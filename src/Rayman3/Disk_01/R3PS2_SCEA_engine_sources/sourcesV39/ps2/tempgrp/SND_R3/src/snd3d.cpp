@@ -510,6 +510,8 @@ unsigned int gs_uiCritSect;
 int g_bInStereo;
 static int g_bUseNearestMicro;
 
+char g_szMarker[2];
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 132–132 */
 /* addr: 0x00186830  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -669,7 +671,7 @@ void SND_fn_vSynchroSound(void)
  */
 void SND_fn_vResetLastMarker(void)
 {
-    /* TODO: identify the recovered marker global at GP offset -0x7D34. */
+    g_szMarker[0] = '*';
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 790–790 */
@@ -681,7 +683,7 @@ void SND_fn_vResetLastMarker(void)
  */
 int SND_fn_s32GetLastMarker(void)
 {
-    /* TODO: identify the recovered marker global at GP offset -0x7D34. */
+    return g_szMarker[0];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 767–767 */

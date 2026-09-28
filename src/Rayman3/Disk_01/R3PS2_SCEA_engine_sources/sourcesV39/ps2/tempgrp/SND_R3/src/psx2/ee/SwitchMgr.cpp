@@ -4,8 +4,6 @@
 
 #include <stddef.h>
 
-static unsigned int g_uTextureCount;
-static unsigned int g_uTextureCapacity;
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CVarAccess CVarAccess;
@@ -481,6 +479,8 @@ struct Jingle {
 };
 
 struct SwitchMgr {
+    static unsigned int ms_nbTex;
+    static unsigned int ms_nbTexMax;
     void fs_vAddDataToDelete(CResData*);
     void fs_vStopAll(void);
     void fs_vUpdateWaves(CPS2IdObjLoader*);
@@ -488,6 +488,9 @@ struct SwitchMgr {
     void fs_vAddTexture(unsigned int);
     void fs_vAdd(CSwitchResData*);
 };
+
+unsigned int SwitchMgr::ms_nbTex;
+unsigned int SwitchMgr::ms_nbTexMax;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 31–61 */
 /* addr: 0x001d0a40  size: 364 bytes */
@@ -633,8 +636,8 @@ void SwitchMgr::fs_vUpdateWaves(CPS2IdObjLoader* pLoader)
  */
 void SwitchMgr::fs_vClearTexture(void)
 {
-    g_uTextureCapacity = 0;
-    g_uTextureCount = 0;
+    SwitchMgr::ms_nbTexMax = 0;
+    SwitchMgr::ms_nbTex = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 292–311 */

@@ -3193,7 +3193,6 @@ struct stCharSettings {
     unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
     MAT_tdstTransformation_ tdstMatrix; /* +0x10 */
     unsigned long ulFlags; /* +0x70 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x74..0x77 */
     unsigned char ucTransparency; /* +0x78 */
 };
 
@@ -4055,7 +4054,6 @@ struct GLI_tdstLight_ {
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x4..0x7 */
     unsigned long m_ulHighPart; /* +0x8 */
 };
 
