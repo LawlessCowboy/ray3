@@ -710,5 +710,9 @@ void impPS2glClientActiveTextureARB(unsigned int texture)
 {
     tagGLcontext* gc;
     int unit;
-    /* TODO: decompile from asm/... */
+    gc = &g_PS2glContext;
+    unit = texture;
+    if (unit < 0 || unit >= 2)
+        return;
+    gc->iCurClientTextureSet = unit;
 }

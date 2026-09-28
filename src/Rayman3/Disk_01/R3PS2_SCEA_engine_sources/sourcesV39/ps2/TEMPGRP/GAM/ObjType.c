@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+extern void* memcpy(void*, const void*, size_t);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -258,6 +259,14 @@ struct tdstObjectsTableElement_ {
     unsigned char ucPhoneme;
     unsigned char ucIntensity;
     unsigned char ucExpression;
+};
+
+/* Shared recovered layout from GAM/Actions/3dData.c. */
+struct tdstObjectsTablesList_ {
+    tdstObjectsTableElement_* d_stObjectsTable;
+    tdstObjectsTableElement_* d_stInitObjectsTable;
+    unsigned short wNumberOfElement;
+    unsigned short wZDxUsed;
 };
 
 struct HIE_tdstSuperObject_ {
@@ -1152,6 +1161,7 @@ struct DNM_stReport {
 };
 
 tdstObjectType_ g_stObjectTypes;
+extern int strcasecmp(const char*, const char*);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 96–113 */
 /* addr: 0x00267ee0  size: 184 bytes */
@@ -1168,7 +1178,16 @@ tdstObjectType_ g_stObjectTypes;
 void fn_vExchangeTwoObjectsInCurrentObjectsTable(HIE_tdstSuperObject_* p_stSuperObject, unsigned short w_ObjectA, unsigned short w_ObjectB)
 {
     tdstObjectsTableElement_ stObjectsTableElement;
-    /* TODO: decompile from asm/... */
+    if (p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable) {
+        memcpy(&stObjectsTableElement,
+               &p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectB],
+               sizeof(stObjectsTableElement));
+        memcpy(&p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectB],
+               &p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectA],
+               sizeof(stObjectsTableElement));
+        memcpy(&p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[w_ObjectA],
+               &stObjectsTableElement, sizeof(stObjectsTableElement));
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 533–539 */
@@ -1242,10 +1261,21 @@ void fn_szFindModelTypeNameOfModelType(int otType)
  */
 int fn_otFindFamilyTypeOfFamilyTypeName(char* szType)
 {
+    int otType;
     unsigned int i;
     tdstObjectTypeElement_* hHandleToObjectTypeElement;
-    int otType;
-    /* TODO: decompile from asm/... */
+    i = 0;
+    hHandleToObjectTypeElement = g_stObjectTypes.hFamilyType.hFirstElementDyn;
+    otType = -1;
+    if (hHandleToObjectTypeElement) {
+        do {
+            if (!strcasecmp(szType, (char*)hHandleToObjectTypeElement->szName))
+                otType = i;
+            hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn;
+            i++;
+        } while (hHandleToObjectTypeElement);
+    }
+    return otType;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 184–187 */

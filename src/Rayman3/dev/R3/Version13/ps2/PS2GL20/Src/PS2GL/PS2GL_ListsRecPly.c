@@ -5119,9 +5119,13 @@ void recPS2glTexCoord2sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glSaveListCall(unsigned int eCode, float (*pData)[4]);
 void recPS2glTexCoord2f(float s, float t)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.valistTexCoords[0][0] = s;
+    g_PS2glContext.valistTexCoords[0][1] = t;
+    if (!g_PS2glContext.bFinalCompile)
+        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4796–4798 */
@@ -5185,7 +5189,9 @@ void recPS2glTexCoord2s(short s, short t)
  */
 void recPS2glTexCoord1fv(float* v)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.valistTexCoords[0][0] = v[0];
+    if (!g_PS2glContext.bFinalCompile)
+        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4775–4777 */
@@ -5247,8 +5253,6 @@ void recPS2glTexCoord1sv(short* v)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glSaveListCall(unsigned int eCode, float (*pData)[4]);
-
 void recPS2glTexCoord1f(float s)
 {
     g_PS2glContext.valistTexCoords[0][0] = s;
@@ -5301,7 +5305,9 @@ void recPS2glTexCoord1i(int s)
  */
 void recPS2glTexCoord1s(short s)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.valistTexCoords[0][0] = (float)s / 32767.0f;
+    if (!g_PS2glContext.bFinalCompile)
+        PS2glSaveListCall(3, &g_PS2glContext.valistTexCoords[0]);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 4710–4717 */
@@ -7751,9 +7757,10 @@ void recPS2glMap2d(unsigned int target, double u1, double u2, int ustride, int u
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glMap2d(unsigned int target, double u1, double u2, int ustride, int uorder, double v1, double v2, int vstride, int vorder, double* points);
 void plyPS2glMap2d(anon_44* pParam)
 {
-    /* TODO: decompile from asm/... */
+    impPS2glMap2d(pParam->target, pParam->u1, pParam->u2, pParam->ustride, pParam->uorder, pParam->v1, pParam->v2, pParam->vstride, pParam->vorder, (double*)pParam->points);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3251–3261 */

@@ -3,6 +3,15 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+extern "C" int printf(const char*, ...);
+extern "C" void fn_vInterruptMenu2D(int bPauseMenu);
+extern "C" char* strcpy(char*, const char*);
+extern "C" char* Strcat(char*, char*);
+extern "C" int strcmp(const char*, const char*);
+extern "C" void* memset(void*, int, size_t);
+extern "C" void* memcpy(void*, const void*, size_t);
+extern "C" int sprintf(char*, const char*, ...);
+extern "C" void SVG_fn_szAsciiToSJIS(char*, unsigned short, char*, unsigned short*);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct sceMcIconSys sceMcIconSys;
@@ -214,6 +223,7 @@ struct C_PS2MC_Manager {
     unsigned char m_pLoadSaveBuffer[990]; /* +0xa515 */
     int m_pScreenShotLoadBuffer; /* +0xa8f4 */
     int m_bFirstBootCheckHasBeenDone; /* +0xa8f8 */
+    C_PS2MC_Manager();
     void AutoSaveGame(char* _pData, char* _pFileName);
     void SaveGame(char* _pData, char* _pFileName);
     void CalculateCheckSum(char* pDataOrg, unsigned int ulSize);
@@ -313,9 +323,30 @@ unsigned int GLI_g_ChristianSlaterMode;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Shared text-entry layout recovered in TXT/DisplayText.c. */
+struct _JFFTXT_ {
+    int pString;
+    float a3_Pos[3];
+    float xTempSize;
+    unsigned int ulColor;
+    unsigned char ucTransparency;
+    unsigned char bFrozenDisplay;
+    unsigned char bOther;
+    int EffectParameter;
+    unsigned char ucForcedColor;
+    unsigned char DestinationViewport;
+    unsigned char ucDrawThisStringDuringPauseGame;
+    unsigned char ucDrawThisStringDuringPauseInventory;
+    unsigned char ucDrawThisStringDuringSaveGame;
+};
+extern "C" _JFFTXT_ g_JFFTXT[200];
+
 void TXT_PauseGameIWantToDrawThisStringNumber(int _iStringNumber)
 {
-    /* TODO: decompile from asm/... */
+    _JFFTXT_* p;
+    if (_iStringNumber < 0 || _iStringNumber >= 200)
+        return;
+    p = &g_JFFTXT[_iStringNumber]; p->ucDrawThisStringDuringPauseGame = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5542–5554 */
@@ -446,7 +477,7 @@ void* PS2MC_fn_pGetLoadGameBuffer(void)
  */
 void PS2MC_fn_vLoadScreenShot(char* _pFileName, char* _pBuffer)
 {
-    /* TODO: decompile from asm/... */
+    C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; pManager->m_Flags[7] = 0; strcpy(pManager->m_aGameName, _pFileName); strcpy(pManager->m_aDirExtension, "P"); Strcat(pManager->m_aDirExtension, _pFileName); strcpy(pManager->m_aFullFileName, pManager->m_aFilePrefix); Strcat(pManager->m_aFullFileName, "P"); Strcat(pManager->m_aFullFileName, _pFileName); pManager->m_pScreenShotLoadBuffer = (int)_pBuffer; fn_vInterruptMenu2D(1); pManager->m_uiIdleState = (unsigned char)STATE_LOAD_SCREENSHOT;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5434–5436 */
@@ -464,7 +495,7 @@ void PS2MC_fn_vLoadScreenShot(char* _pFileName, char* _pBuffer)
  */
 void PS2MC_fn_vLoadGame(char* _pFileName)
 {
-    /* TODO: decompile from asm/... */
+    C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; if (!strcmp(_pFileName, "PSONE")) GLI_g_ChristianSlaterMode = 1; else GLI_g_ChristianSlaterMode = 0; pManager->m_Flags[6] = 0; strcpy(pManager->m_aGameName, _pFileName); strcpy(pManager->m_aDirExtension, "S"); Strcat(pManager->m_aDirExtension, _pFileName); strcpy(pManager->m_aFullFileName, pManager->m_aFilePrefix); Strcat(pManager->m_aFullFileName, "S"); Strcat(pManager->m_aFullFileName, _pFileName); fn_vInterruptMenu2D(1); pManager->m_uiIdleState = (unsigned char)STATE_LOAD_GAME;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5420–5421 */
@@ -497,7 +528,7 @@ void* PS2MC_GetScreenShotPreviewData(void)
  */
 void PS2MC_fn_vSaveScreenShot(char* _pData, char* _pFileName)
 {
-    /* TODO: decompile from asm/... */
+    C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; pManager->m_pDataToSave = (int)_pData; pManager->CalculateCheckSum((char*)pManager->m_pDataToSave, 0x14004); char* pData = (char*)pManager->m_pDataToSave; pData[0x14000] = pManager->m_ulCheckSum >> 24; pData[0x14001] = pManager->m_ulCheckSum >> 16; pData[0x14002] = pManager->m_ulCheckSum >> 8; pData[0x14003] = pManager->m_ulCheckSum; pManager->m_Flags[5] = 0; strcpy(pManager->m_aGameName, _pFileName); strcpy(pManager->m_aDirExtension, "P"); Strcat(pManager->m_aDirExtension, _pFileName); strcpy(pManager->m_aFullFileName, pManager->m_aFilePrefix); Strcat(pManager->m_aFullFileName, "P"); Strcat(pManager->m_aFullFileName, _pFileName); fn_vInterruptMenu2D(1); pManager->m_uiCurrentSavingProcedure = (unsigned char)STATE_SAVE_SCREENSHOT; pManager->m_uiIdleState = (unsigned char)STATE_SAVE_ARE_YOU_SURE;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5388–5389 */
@@ -510,7 +541,7 @@ void PS2MC_fn_vSaveScreenShot(char* _pData, char* _pFileName)
  */
 void PS2MC_fn_vEnablePrompts(void)
 {
-    /* TODO: decompile from asm/... */
+    C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; if (!pManager->m_bPromptIsOn) { pManager->m_bPromptIsOn = 1; pManager->m_MemoryCardInternalStatus.type = -10; pManager->m_uiState = (unsigned char)STATE_PROMPT_LAST_ERROR; pManager->m_uiSubState = 0; pManager->m_uiNextState = (unsigned char)STATE_IDLE; }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5374–5376 */
@@ -522,9 +553,11 @@ void PS2MC_fn_vEnablePrompts(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void PS2MC_RemoveCurrentMessage(void);
+
 void PS2MC_fn_vStopPrompts(void)
 {
-    /* TODO: decompile from asm/... */
+    C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; PS2MC_RemoveCurrentMessage(); pManager->m_bPromptIsOn = 0; if (pManager->m_bCurrentlyWarningAboutMCRemoval) { pManager->m_bCurrentlyWarningAboutMCRemoval = 0; pManager->m_bMemoryCardWasRemovedWhilePromptWasOff = 1; }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5363–5364 */
@@ -559,7 +592,7 @@ unsigned int PS2MC_fn_iGetFunctionResult(PS2MC_tdstFunctionFlags FlagID)
  */
 void PS2MC_fn_vGetMemoryCardScreenShotsHeaders(MC_tdstFileEntry* _p_stEntryArray, unsigned int _NbMaxEntries, unsigned int* _p_uiNbFilesFound)
 {
-    /* TODO: decompile from asm/... */
+    C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; pManager->m_pCurrentFileEntryArray = _p_stEntryArray; pManager->m_uiCurrentNbEntriesInArray = _NbMaxEntries; pManager->m_uiNextEntry = 0; pManager->m_Flags[3] = 0; pManager->m_p_uiNbFilesFound = (int)_p_uiNbFilesFound; *(unsigned int*)pManager->m_p_uiNbFilesFound = 0; fn_vInterruptMenu2D(1); pManager->m_uiIdleState = (unsigned char)STATE_GET_SCREENSHOTS_ENTRIES;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5327–5329 */
@@ -577,7 +610,7 @@ void PS2MC_fn_vGetMemoryCardScreenShotsHeaders(MC_tdstFileEntry* _p_stEntryArray
  */
 void PS2MC_fn_vGetMemoryCardFileHeaders(MC_tdstFileEntry* _p_stEntryArray, unsigned int _NbMaxEntries, unsigned int* _p_uiNbFilesFound, int bFast)
 {
-    /* TODO: decompile from asm/... */
+    C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; pManager->m_FastGetSavedGamesHeaders = bFast; pManager->m_pCurrentFileEntryArray = _p_stEntryArray; pManager->m_uiCurrentNbEntriesInArray = _NbMaxEntries; pManager->m_uiNextEntry = 0; pManager->m_Flags[2] = 0; pManager->m_p_uiNbFilesFound = (int)_p_uiNbFilesFound; *(unsigned int*)pManager->m_p_uiNbFilesFound = 0; fn_vInterruptMenu2D(1); pManager->m_uiIdleState = (unsigned char)STATE_GET_SAVED_GAMES_ENTRIES;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5274–5291 */
@@ -598,7 +631,13 @@ void PS2MC_fn_vGetMemoryCardFileHeaders(MC_tdstFileEntry* _p_stEntryArray, unsig
  */
 void PS2MC_fn_vSaveGame(char* _pData, char* _pFileName, unsigned int SaveGameSizeInBytes)
 {
-    /* TODO: decompile from asm/... */
+    if (SaveGameSizeInBytes != 986)
+        printf("\n\n************************\nPS2MC -> CAN'T SAVE !!!\nWrong SaveGame Size\nPlease redifine PS2MC_ACTUAL_SAVED_GAME_SIZE in PS2MC\\PS2MemoryCard.cpp to %d\n\n\n", SaveGameSizeInBytes);
+    C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager;
+    if (!pManager->m_bPromptIsOn)
+        pManager->AutoSaveGame(_pData, _pFileName);
+    else
+        pManager->SaveGame(_pData, _pFileName);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5260–5261 */
@@ -659,7 +698,9 @@ void PS2MC_fn_vUpdateStatus(void)
  */
 unsigned int PS2MC_fn_uiInit(unsigned int Port, unsigned int Slot)
 {
-    /* TODO: decompile from asm/... */
+    C_PS2MC_Manager* pManager = new C_PS2MC_Manager;
+    PS2MC_g_Manager = (int)pManager;
+    return pManager->Init(Port, Slot);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5037–5062 */
@@ -764,7 +805,14 @@ void C_PS2MC_Manager::CalculateCheckSum(char* pDataOrg, unsigned int ulSize)
 {
     unsigned char* pData;
     int i;
-    /* TODO: decompile from asm/... */
+    pData = (unsigned char*)pDataOrg;
+    m_ulCheckSum = 0;
+    i = ulSize - 4;
+    if (i != 0) {
+        do {
+            m_ulCheckSum = m_ulCheckSum * 3 + ((i & 1) + 1) * (*pData++ + (i & 1));
+        } while (--i != 0);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 4394–4881 */
@@ -2707,12 +2755,26 @@ void C_PS2MC_Manager::CreateIconFile(void)
  */
 void C_PS2MC_Manager::FillIconSys(char* _szTitleName, char bPhoto)
 {
-    float ambient[4];
-    float lightcol[3][4];
-    float lightdir[3][4];
-    int bgcolor[4][4];
     char Title[66];
-    /* TODO: decompile from asm/... */
+    int bgcolor[4][4] = {{128, 0, 0, 0}, {0, 128, 0, 0}, {0, 0, 128, 0}, {128, 128, 128, 0}};
+    float lightdir[3][4] = {{0.5f, 0.5f, 0.5f, 0}, {0, -0.4f, -0.1f, 0}, {-0.5f, -0.5f, 0.5f, 0}};
+    float lightcol[3][4] = {{0.48f, 0.48f, 0.03f, 0}, {0.5f, 0.33f, 0.2f, 0}, {0.14f, 0.14f, 0.38f, 0}};
+    float ambient[4] = {0.5f, 0.5f, 0.5f, 0};
+    memset(&m_iconSys, 0, sizeof(m_iconSys));
+    strcpy((char*)m_iconSys.Head, "PS2D");
+    if (bPhoto)
+        sprintf(Title, "%s\n%s", "Rayman3 Photo", _szTitleName);
+    else
+        sprintf(Title, "%s\n%s", "Rayman3 Data", _szTitleName);
+    SVG_fn_szAsciiToSJIS((char*)m_iconSys.TitleName, 33, Title, &m_iconSys.OffsLF);
+    m_iconSys.TransRate = 0x60;
+    memcpy(m_iconSys.BgColor, bgcolor, sizeof(bgcolor));
+    memcpy(m_iconSys.LightDir, lightdir, sizeof(lightdir));
+    memcpy(m_iconSys.LightColor, lightcol, sizeof(lightcol));
+    memcpy(m_iconSys.Ambient, ambient, sizeof(ambient));
+    strcpy((char*)m_iconSys.FnameView, (char*)PS2MC_g_IconDesc[0].szFileNameSave);
+    strcpy((char*)m_iconSys.FnameCopy, (char*)PS2MC_g_IconDesc[0].szFileNameSave);
+    strcpy((char*)m_iconSys.FnameDel, (char*)PS2MC_g_IconDesc[0].szFileNameSave);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 580–693 */

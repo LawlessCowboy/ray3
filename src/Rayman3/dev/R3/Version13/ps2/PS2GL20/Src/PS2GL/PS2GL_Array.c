@@ -2580,7 +2580,12 @@ void PS2glInternalDrawArrays(unsigned int mode, int first, int count, int flag, 
  */
 void WaitDMAFromSPR(void)
 {
-    /* TODO: decompile from asm/... */
+    g_stSPRInfo.uiState &= ~1;
+    /* Target +0x10..+0x2c is one source-line DMA wait macro: six nops,
+     * bc0f back to the first nop, and its delay slot. COP0 condition-flag
+     * polling has no C equivalent; retain only this original asm region.
+     * MWCC moves one preceding nop into the branch delay slot. */
+    asm { wait_dma_from_spr: nop; nop; nop; nop; nop; nop; nop; bc0f wait_dma_from_spr; nop }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 982–1010 */
@@ -2996,7 +3001,10 @@ void impPS2glEnableClientState(unsigned int array)
  */
 void impPS2glVertexPointer(int size, unsigned int type, int stride, void* pointer)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.VertexArray.size = size;
+    g_PS2glContext.VertexArray.type = type;
+    g_PS2glContext.VertexArray.stride = stride;
+    g_PS2glContext.VertexArray.pointer = (int)pointer;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 64–74 */
@@ -3041,7 +3049,9 @@ void impPS2glTexCoordPointer(int size, unsigned int type, int stride, void* poin
  */
 void impPS2glNormalPointer(unsigned int type, int stride, void* pointer)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.NormalArray.type = type;
+    g_PS2glContext.NormalArray.stride = stride;
+    g_PS2glContext.NormalArray.pointer = (int)pointer;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 46–49 */
@@ -3056,7 +3066,9 @@ void impPS2glNormalPointer(unsigned int type, int stride, void* pointer)
  */
 void impPS2glIndexPointer(unsigned int type, int stride, void* pointer)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.IndexArray.type = type;
+    g_PS2glContext.IndexArray.stride = stride;
+    g_PS2glContext.IndexArray.pointer = (int)pointer;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 39–41 */

@@ -2189,7 +2189,9 @@ void impPS2glClearAccum(float red, float green, float blue, float alpha)
  */
 void impPS2glShadeModel(unsigned int mode)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.eShadeModel = mode;
+    g_gsContext.PRMODE.IIP = (mode == 0x1d01);
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 334–334 */
@@ -2333,7 +2335,9 @@ void impPS2glLogicOp(unsigned int opcode)
  */
 void impPS2glDepthMask(unsigned char flag)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.eDepthWriteMask = flag;
+    g_gsContext.ZBUF_1.ZMSK = !flag;
+    g_gsContext.ModFlgs.ZBUF_1_Modified = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 246–264 */

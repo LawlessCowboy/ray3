@@ -1225,7 +1225,18 @@ void PS2glBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDs
     float (*pDst)[4];
     float (*param0)[4];
     int i;
-    /* TODO: decompile from asm/... */
+    pDst = pBuf + iDstStart;
+    param0 = pBuf + iSrcStart;
+    i = iSrcStart;
+    if (i > 0) {
+        do {
+            ((__int128*)pDst)[2] = ((__int128*)param0)[2];
+            ((__int128*)pDst)[1] = ((__int128*)param0)[1];
+            ((__int128*)pDst)[0] = ((__int128*)param0)[0];
+            param0--;
+            pDst -= 3;
+        } while (--i > 0);
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 2431–2456 */
@@ -1899,10 +1910,17 @@ void VU1UpdateParameters(tagGLcontext* pctx, unsigned int Mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glBegin(unsigned int mode);
+void impPS2glEnd(void);
 void PS2GL_SetDestinationFrame(unsigned int DestinationFrame)
 {
     unsigned int saved;
-    /* TODO: decompile from asm/... */
+    PS2GL_CurrentDestinationFrame = DestinationFrame;
+    saved = g_PS2glContext.nLightBits;
+    g_PS2glContext.nLightBits |= 0x400;
+    impPS2glBegin(4);
+    impPS2glEnd();
+    g_PS2glContext.nLightBits = saved;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1298–1332 */
@@ -2141,10 +2159,24 @@ void VU1ReUpdateMatrice(PS2GL_VU1_InterpolMatrixData_* pInterpolData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void sceVu0UnitMatrix(float m[4][4]);
 void VU1UpdateDiffusePointLightingParam(tagGLcontext* pctx)
 {
     tag_stVU1MatriceL* pstMatriceL;
-    /* TODO: decompile from asm/... */
+    pstMatriceL = (tag_stVU1MatriceL*)pctx->pVIFIBufTail;
+    pctx->bLightsChanged = 0;
+    pctx->bMaterialChanged = 0;
+    sceVu0UnitMatrix(pstMatriceL->mDiffuseLightColor);
+    sceVu0UnitMatrix(pstMatriceL->mDiffuseLightPosition);
+    sceVu0UnitMatrix(pstMatriceL->mSpecularLightColor);
+    sceVu0UnitMatrix(pstMatriceL->mSpecularLightReflection);
+    /* The packet stores the 54321.0f / 12345.0f marker bit patterns directly. */
+    *(unsigned int*)&pstMatriceL->mDiffuseLightColor[0][0] = 0x47543100;
+    *(unsigned int*)&pstMatriceL->mSpecularLightReflection[3][3] = 0x4640e400;
+    pstMatriceL->ivUnpackCode[0] = pstMatriceL->ivUnpackCode[1] = 0;
+    pstMatriceL->ivUnpackCode[2] = 0x01000404;
+    pstMatriceL->ivUnpackCode[3] = 0x6c10000c;
+    pctx->pVIFIBufTail += sizeof(*pstMatriceL) / sizeof(*pctx->pVIFIBufTail);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 776–971 */
@@ -2389,7 +2421,15 @@ void VU1UpdateMatriceOutsideSDL(tagGLcontext* pctx)
  */
 void VU1_RE_UpdateMatriceOutsideSDL(tag_stVU1MatriceToutSDL* pstMatriceToutSDL, float (*NewModelView)[4][4])
 {
-    /* TODO: decompile from asm/... */
+    __int128 v3, v2, v1, v0;
+    v0 = ((const volatile __int128*)NewModelView)[0];
+    v1 = ((const volatile __int128*)NewModelView)[1];
+    v2 = ((const volatile __int128*)NewModelView)[2];
+    v3 = ((const volatile __int128*)NewModelView)[3];
+    ((__int128*)pstMatriceToutSDL->mWorldView)[0] = v0;
+    ((__int128*)pstMatriceToutSDL->mWorldView)[1] = v1;
+    ((__int128*)pstMatriceToutSDL->mWorldView)[2] = v2;
+    ((__int128*)pstMatriceToutSDL->mWorldView)[3] = v3;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 512–632 */
@@ -2470,7 +2510,7 @@ unsigned char VU1UpdateMatriceInsideSDL(tagGLcontext* pctx, unsigned int* pMask)
  */
 unsigned int VU1BufferFreeSpace(void)
 {
-    /* TODO: decompile from asm/... */
+    return uiMaxVifDmaBufLength - (g_PS2glContext.pVIFIBufTail - g_PS2glContext.pVIFInBuf) - 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 322–334 */
@@ -2536,7 +2576,10 @@ void VU1StopWorkingOnFakeSwapBuffer(void)
  */
 void VU1StartWorkingOnFakeSwapBuffer(void)
 {
-    /* TODO: decompile from asm/... */
+    s_InBuf_saved = (int)g_PS2glContext.pVIFInBuf;
+    s_InBufTail_saved = (int)g_PS2glContext.pVIFIBufTail;
+    g_PS2glContext.pVIFInBuf = (float (*)[4])PS2GL_FakeSwapBuffer;
+    g_PS2glContext.pVIFIBufTail = (float (*)[4])PS2GL_FakeSwapBuffer;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 291–298 */

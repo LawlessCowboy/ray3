@@ -11,6 +11,9 @@ struct FIL_tdstInternalGeneral_ {
 extern unsigned char g_ucFILModuleId;
 extern FIL_tdstInternalGeneral_ g_stInternalGeneral;
 extern unsigned char Erm_fn_ucInitErrMsg(unsigned char);
+extern void GLI_PrintDebugString(void);
+extern int sceCdDiskReady(int);
+extern void FMN_SCE_ConvertPathDos2Unix(char*);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct anon_0 anon_0;
@@ -107,5 +110,7 @@ char* FMN_SCE_AddBaseDirectory(char* buffer)
  */
 void FMN_SCE_ConvertPath2DVD(char* buffer)
 {
-    /* TODO: decompile from asm/... */
+    GLI_PrintDebugString();
+    sceCdDiskReady(0);
+    FMN_SCE_ConvertPathDos2Unix(buffer);
 }

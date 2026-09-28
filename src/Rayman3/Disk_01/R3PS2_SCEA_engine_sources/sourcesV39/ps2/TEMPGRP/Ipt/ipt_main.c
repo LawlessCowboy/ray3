@@ -186,6 +186,12 @@ IPT_tdstInput_ IPT_g_hInputStructure;
 int IPT_gd_hKeyAndPadDefine;
 
 extern stDevice INO_g_a_stDIDevice[];
+extern void INO_fn_vForceFeedBackRunTime(unsigned int, stDevice*);
+extern short INO_fn_wDeactivateDevice(stDevice*);
+extern short INO_fn_wActivateDevice(stDevice*);
+extern short INO_fn_wInvalidateHandle(stDevice**);
+extern void INO_fn_vRelease(void);
+extern void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices(void);
 extern signed char INO_fn_cStopFFBEffectWithFade(unsigned int ulCurrentTime, stDevice* pDevice, float xFadeOutStopValue, float xFadeOutTime);
 extern void INO_fn_vStopAllFFBEffectForAllDevice(void);
 extern void INO_fn_vStopAllFFBEffectForDevice(unsigned int ulCurrentTime, stDevice* pDevice);
@@ -360,7 +366,10 @@ void IPT_fn_vActualizeHistoric(void)
 void IPT_fn_vForceFeedBackRunTime(unsigned int ulCurrentTime)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    if (ulCurrentTime != 0) {
+        for (i = 1; i < 18; i++)
+            INO_fn_vForceFeedBackRunTime(ulCurrentTime, IPT_g_hInputStructure.a_stDevice[i].hDeviceHandle);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1182–1182 */
@@ -564,7 +573,29 @@ unsigned char IPT_fn_ucScanForAnASCIIKey(void)
 void IPT_fn_vSetUniqueValueForHandle(IPT_tdstEntryElement_* _hElement, unsigned int _ulValue)
 {
     IPT_tdstKeyWordElement_* hNextElement;
-    /* TODO: decompile from asm/... */
+    if (_hElement == NULL || _ulValue == 0 || _ulValue == -1)
+        return;
+    hNextElement = _hElement->d_stKeyWordElementArray;
+    if (hNextElement->u_ElementUnion.swKeyWord == -4088 ||
+        hNextElement->u_ElementUnion.swKeyWord == -4087 ||
+        hNextElement->u_ElementUnion.swKeyWord == -4086 ||
+        hNextElement->u_ElementUnion.swKeyWord == -4080 ||
+        hNextElement->u_ElementUnion.swKeyWord == -4079 ||
+        hNextElement->u_ElementUnion.swKeyWord == -4078 ||
+        hNextElement->u_ElementUnion.swKeyWord == -4077 ||
+        hNextElement->u_ElementUnion.swKeyWord == -4076 ||
+        hNextElement->u_ElementUnion.swKeyWord == -4075 ||
+        hNextElement->u_ElementUnion.swKeyWord == -4074 ||
+        hNextElement->u_ElementUnion.swKeyWord == -4073 ||
+        hNextElement->u_ElementUnion.swKeyWord == -4085) {
+        hNextElement->u_ElementUnion.swKeyWord = ((_ulValue & 0xff000000) >> 24) - 4095;
+        hNextElement++;
+        if (_hElement->ulNumberOfKeyWordElement == 3) {
+            hNextElement->u_ElementUnion.swPadNumber = (_ulValue & 0x00ff0000) >> 16;
+            hNextElement++;
+        }
+        hNextElement->u_ElementUnion.swKey = _ulValue;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 914–954 */
@@ -592,7 +623,30 @@ unsigned int IPT_fn_ulGetUniqueValueForHandle(IPT_tdstEntryElement_* _hElement)
 {
     unsigned int ulReturn;
     IPT_tdstKeyWordElement_* hNextElement;
-    /* TODO: decompile from asm/... */
+    if (_hElement == NULL)
+        return -1;
+    hNextElement = _hElement->d_stKeyWordElementArray;
+    if (hNextElement->u_ElementUnion.swKeyWord != -4088 &&
+        hNextElement->u_ElementUnion.swKeyWord != -4087 &&
+        hNextElement->u_ElementUnion.swKeyWord != -4086 &&
+        hNextElement->u_ElementUnion.swKeyWord != -4080 &&
+        hNextElement->u_ElementUnion.swKeyWord != -4079 &&
+        hNextElement->u_ElementUnion.swKeyWord != -4078 &&
+        hNextElement->u_ElementUnion.swKeyWord != -4077 &&
+        hNextElement->u_ElementUnion.swKeyWord != -4076 &&
+        hNextElement->u_ElementUnion.swKeyWord != -4075 &&
+        hNextElement->u_ElementUnion.swKeyWord != -4074 &&
+        hNextElement->u_ElementUnion.swKeyWord != -4073 &&
+        hNextElement->u_ElementUnion.swKeyWord != -4085)
+        return -1;
+    ulReturn = (hNextElement->u_ElementUnion.swKeyWord + 4095) << 24;
+    hNextElement++;
+    if (_hElement->ulNumberOfKeyWordElement == 3) {
+        ulReturn |= hNextElement->u_ElementUnion.swPadNumber << 16;
+        hNextElement++;
+    }
+    ulReturn |= hNextElement->u_ElementUnion.swKey;
+    return ulReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 888–907 */
@@ -698,7 +752,13 @@ unsigned char IPT_fn_bChangeIPTValue(IPT_tdstEntryElement_* _hElement, unsigned 
 unsigned char IPT_fn_bModifyIPTAction(IPT_tdstEntryElement_* _hElementToChange, IPT_tdstEntryElement_* _hReplacingElement)
 {
     int lI;
-    /* TODO: decompile from asm/... */
+    for (lI = 0; lI < (int)_hElementToChange->ulNumberOfKeyWordElement; lI++) {
+        if (_hElementToChange->d_stKeyWordElementArray[lI].u_ElementUnion.swKeyWord == -4090) {
+            _hElementToChange->d_stKeyWordElementArray[lI + 1].u_ElementUnion.hEntryElement = _hReplacingElement;
+            return 1;
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 724–762 */
@@ -727,7 +787,24 @@ IPT_tdstEntryElement_* IPT_fn_hSearchElementInOptionWithKeyWord(short _swEntryTy
     IPT_tdstEntryElement_* hAction;
     IPT_tdstEntryElement_* hEntryElement;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    hAction = NULL;
+    for (i = 0; i < IPT_g_hInputStructure.ulNumberOfEntryElement; i++) {
+        hEntryElement = &IPT_g_hInputStructure.d_stEntryElementArray[i];
+        if (hEntryElement->p_szEntryName) {
+            if (_swEntryType == -4074) {
+                hNextElement = hEntryElement->d_stKeyWordElementArray;
+                if (hNextElement->u_ElementUnion.swKeyWord == -4074) {
+                    hNextElement++;
+                    if (hNextElement->u_ElementUnion.swPadNumber == swPadNumber) {
+                        hNextElement++;
+                        if (hNextElement->u_ElementUnion.swKey == _swKeyValue)
+                            hAction = hEntryElement;
+                    }
+                }
+            }
+        }
+    }
+    return hAction;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 687–705 */
@@ -748,7 +825,13 @@ IPT_tdstEntryElement_* IPT_fn_hSearchElementInOptionWithKeyWord(short _swEntryTy
 void IPT_fn_vActiveJoystickControl(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    for (i = 2; i < 18; i++) {
+        if (IPT_g_hInputStructure.a_stDevice[i].ucValideAndActiveDevice == 1) {
+            IPT_g_hInputStructure.a_stDevice[i].ucValideAndActiveDevice = 2;
+            if (INO_fn_wActivateDevice(IPT_g_hInputStructure.a_stDevice[i].hDeviceHandle))
+                IPT_g_hInputStructure.ucOnePadActivate = 2;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 673–684 */
@@ -768,7 +851,12 @@ void IPT_fn_vActiveJoystickControl(void)
 void IPT_fn_vDesactiveJoystickAndPadControl(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    for (i = 2; i < 18; i++) {
+        if (IPT_g_hInputStructure.a_stDevice[i].ucValideAndActiveDevice == 2) {
+            IPT_g_hInputStructure.a_stDevice[i].ucValideAndActiveDevice = 1;
+            INO_fn_wDeactivateDevice(IPT_g_hInputStructure.a_stDevice[i].hDeviceHandle);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 562–567 */
@@ -822,9 +910,13 @@ void IPT_fn_vActivateEntryElement(IPT_tdstEntryElement_* _hEntryElement)
  */
 void IPT_fn_vActivateAllEntryElements(void)
 {
-    unsigned int ulI;
     IPT_tdstEntryElement_* hEntryElement;
-    /* TODO: decompile from asm/... */
+    unsigned int ulI;
+    for (ulI = 0, hEntryElement = IPT_g_hInputStructure.d_stEntryElementArray;
+         ulI < IPT_g_hInputStructure.ulNumberOfEntryElement;
+         ulI++, hEntryElement++) {
+        if (hEntryElement != NULL) { hEntryElement->bIsActivate = 1; hEntryElement->lState = -2; }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 467–467 */
@@ -863,7 +955,13 @@ unsigned char IPT_fn_bIsEnabled(void)
 void IPT_fn_vResetInputEntry(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    for (i = 0; i < IPT_g_hInputStructure.ulNumberOfEntryElement; i++) {
+        IPT_g_hInputStructure.d_stEntryElementArray[i].lState = -2;
+        IPT_g_hInputStructure.d_stEntryElementArray[i].xAnalogicValue = 0.0f;
+    }
+    for (i = 0; i < 18; i++) {
+        IPT_g_hInputStructure.a_stDevice[i].stPadReadingOutput.wHorizontalAxis = 0; IPT_g_hInputStructure.a_stDevice[i].stPadReadingOutput.wVerticalAxis = 0; IPT_g_hInputStructure.a_stDevice[i].stPadReadingOutput.xAnalogForce = 0.0f; IPT_g_hInputStructure.a_stDevice[i].stPadReadingOutput.xRotationAngle = 0.0f; IPT_g_hInputStructure.a_stDevice[i].stPadReadingOutput.xTrueAnalogForce = 0.0f; IPT_g_hInputStructure.a_stDevice[i].stPadReadingOutput.lSector = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 382–405 */
@@ -878,11 +976,16 @@ void IPT_fn_vResetInputEntry(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimize_for_size off
 void IPT_fn_vDesinitInput(void)
 {
     int i;
-    /* TODO: decompile from asm/... */
+    INO_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices();
+    for (i = 0; i < 18; i++)
+        INO_fn_wInvalidateHandle(&IPT_g_hInputStructure.a_stDevice[i].hDeviceHandle);
+    INO_fn_vRelease();
 }
+#pragma optimize_for_size reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 60–178 */
 /* addr: 0x002f72a0  size: 304 bytes */

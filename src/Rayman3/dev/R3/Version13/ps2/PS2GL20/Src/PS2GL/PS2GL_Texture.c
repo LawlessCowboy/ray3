@@ -4809,7 +4809,7 @@ void impPS2glGenTextures(int n, unsigned int* textures)
  */
 unsigned char impPS2glIsTexture(unsigned int texture)
 {
-    /* TODO: decompile from asm/... */
+    return texture >= 512 ? 0 : g_PS2glContext.aTexName[texture].bAllocated;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 656–735 */

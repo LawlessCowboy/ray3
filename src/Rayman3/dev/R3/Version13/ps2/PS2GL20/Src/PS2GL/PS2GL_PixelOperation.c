@@ -1318,6 +1318,14 @@ int PS2glLiberator;
 int PS2glAllocator;
 
 void impPS2glAccum(unsigned int op, float value);
+void impPS2glRasterPos4fv(float* v1);
+void PS2glFreeTexBlockSafe(int iBlock, int iSize);
+unsigned char PS2glIsEnabled(unsigned int cap);
+void PS2glDisable(unsigned int cap);
+void PS2glEnable(unsigned int cap);
+void GsSendData(unsigned int reg, anon_3* data);
+void GsUpdate(void);
+void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned long* pDestPSM);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 507–507 */
 /* addr: 0x00161b20  size: 12 bytes */
@@ -1519,9 +1527,12 @@ void AE_MoveGreenToAlpha(void)
  */
 void AE_SetDrawTarget(int BufferID)
 {
-    unsigned long DestPSM;
     unsigned long DestBP;
-    /* TODO: decompile from asm/... */
+    unsigned long DestPSM;
+    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
+    g_gsContext.FRAME_1.FBP = DestBP; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    g_gsContext.FRAME_1.PSM = DestPSM; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    GsUpdate();
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1793–1810 */
@@ -1634,7 +1645,7 @@ void AE_SetTexture(int BufferID)
  */
 int AE_GetZBufferBase(void)
 {
-    /* TODO: decompile from asm/... */
+    return g_stDoubleBuf.draw01.zbuf1.ZBP;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1689–1744 */
@@ -1736,7 +1747,18 @@ void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned
  */
 void AE_End(void)
 {
-    /* TODO: decompile from asm/... */
+    g_gsContext.FRAME_1.FBP = AE_g_iOldBP; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    g_gsContext.FRAME_1.PSM = AE_g_iOldPSM; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    g_gsContext.FRAME_1.FBMSK = AE_g_iOldMSK; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    g_PS2glContext.bTexCubeChanged = 1;
+    g_PS2glContext.abTex2DChanged[0] = 1;
+    g_PS2glContext.abTex1DChanged[0] = 1;
+    if (AE_g_bOldDepthTest)
+        PS2glEnable(0xB71);
+    AE_g_qOldAlpha.ubData[8] = 0x42; GsSendData(0xE, &AE_g_qOldAlpha);
+    *(anon_3*)&g_gsContext.ALPHA_1 = AE_g_qOldAlpha;
+    GsUpdate();
+    AE_g_UseAlphaTestValues = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1646–1657 */
@@ -1769,7 +1791,14 @@ void AE_End(void)
  */
 void AE_Begin(void)
 {
-    /* TODO: decompile from asm/... */
+    AE_g_iOldPSM = g_gsContext.FRAME_1.PSM;
+    AE_g_iOldBP = g_gsContext.FRAME_1.FBP;
+    AE_g_iOldMSK = g_gsContext.FRAME_1.FBMSK;
+    if (g_stBufferInfo.iAuxBufferSize)
+        PS2glFreeTexBlockSafe(0, g_stBufferInfo.iAuxBufferSize);
+    AE_g_bOldDepthTest = PS2glIsEnabled(0xB71);
+    PS2glDisable(0xB71);
+    AE_g_qOldAlpha = *(anon_3*)&g_gsContext.ALPHA_1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1617–1622 */
@@ -2368,7 +2397,11 @@ void impPS2glReadBuffer(unsigned int mode)
 void impPS2glRasterPos4sv(short* v)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = (float)v[3];
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1048–1057 */
@@ -2394,7 +2427,11 @@ void impPS2glRasterPos4sv(short* v)
 void impPS2glRasterPos4s(short x, short y, short z, short w)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = (float)w;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1036–1045 */
@@ -2413,7 +2450,11 @@ void impPS2glRasterPos4s(short x, short y, short z, short w)
 void impPS2glRasterPos4iv(int* v)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = (float)v[3];
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1024–1033 */
@@ -2439,7 +2480,11 @@ void impPS2glRasterPos4iv(int* v)
 void impPS2glRasterPos4i(int x, int y, int z, int w)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = (float)w;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 939–1021 */
@@ -2542,7 +2587,11 @@ void impPS2glRasterPos4fv(float* v1)
 void impPS2glRasterPos4f(float x, float y, float z, float w)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = x;
+    v1[1] = y;
+    v1[2] = z;
+    v1[3] = w;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 915–924 */
@@ -2561,7 +2610,11 @@ void impPS2glRasterPos4f(float x, float y, float z, float w)
 void impPS2glRasterPos4dv(double* v)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = (float)v[3];
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 903–912 */
@@ -2580,7 +2633,11 @@ void impPS2glRasterPos4dv(double* v)
 void impPS2glRasterPos4d(double x, double y, double z, double w)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = (float)w;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 891–900 */
@@ -2603,7 +2660,11 @@ void impPS2glRasterPos4d(double x, double y, double z, double w)
 void impPS2glRasterPos3sv(short* v)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 879–888 */
@@ -2629,7 +2690,11 @@ void impPS2glRasterPos3sv(short* v)
 void impPS2glRasterPos3s(short x, short y, short z)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 867–876 */
@@ -2650,7 +2715,11 @@ void impPS2glRasterPos3s(short x, short y, short z)
 void impPS2glRasterPos3iv(int* v)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 855–864 */
@@ -2676,7 +2745,11 @@ void impPS2glRasterPos3iv(int* v)
 void impPS2glRasterPos3i(int x, int y, int z)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 843–852 */
@@ -2696,7 +2769,11 @@ void impPS2glRasterPos3i(int x, int y, int z)
 void impPS2glRasterPos3fv(float* v)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = v[0];
+    v1[1] = v[1];
+    v1[2] = v[2];
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 831–840 */
@@ -2717,7 +2794,11 @@ void impPS2glRasterPos3fv(float* v)
 void impPS2glRasterPos3f(float x, float y, float z)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = x;
+    v1[1] = y;
+    v1[2] = z;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 819–828 */
@@ -2738,7 +2819,11 @@ void impPS2glRasterPos3f(float x, float y, float z)
 void impPS2glRasterPos3dv(double* v)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = (float)v[2];
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 807–816 */
@@ -2759,7 +2844,11 @@ void impPS2glRasterPos3dv(double* v)
 void impPS2glRasterPos3d(double x, double y, double z)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = (float)z;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 795–804 */
@@ -2782,7 +2871,11 @@ void impPS2glRasterPos3d(double x, double y, double z)
 void impPS2glRasterPos2sv(short* v)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 783–792 */
@@ -2805,7 +2898,11 @@ void impPS2glRasterPos2sv(short* v)
 void impPS2glRasterPos2s(short x, short y)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 771–780 */
@@ -2827,7 +2924,11 @@ void impPS2glRasterPos2s(short x, short y)
 void impPS2glRasterPos2iv(int* v)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 759–768 */
@@ -2850,7 +2951,11 @@ void impPS2glRasterPos2iv(int* v)
 void impPS2glRasterPos2i(int x, int y)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 747–756 */
@@ -2871,7 +2976,11 @@ void impPS2glRasterPos2i(int x, int y)
 void impPS2glRasterPos2fv(float* v)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = v[0];
+    v1[1] = v[1];
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 735–744 */
@@ -2892,7 +3001,11 @@ void impPS2glRasterPos2fv(float* v)
 void impPS2glRasterPos2f(float x, float y)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = x;
+    v1[1] = y;
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 723–732 */
@@ -2913,7 +3026,11 @@ void impPS2glRasterPos2f(float x, float y)
 void impPS2glRasterPos2dv(double* v)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)v[0];
+    v1[1] = (float)v[1];
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 711–720 */
@@ -2934,7 +3051,11 @@ void impPS2glRasterPos2dv(double* v)
 void impPS2glRasterPos2d(double x, double y)
 {
     float v1[4];
-    /* TODO: decompile from asm/... */
+    v1[0] = (float)x;
+    v1[1] = (float)y;
+    v1[2] = 0.0f;
+    v1[3] = 1.0f;
+    impPS2glRasterPos4fv(v1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 708–708 */

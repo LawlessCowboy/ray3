@@ -3307,6 +3307,8 @@ struct SECT_tdstSector_ {
 
 tdstEngineStructure_ g_stEngineStructure;
 int GLI_g_bWideScreenMode;
+extern char IPO_fn_bRLITransitionInProgress(void);
+extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1814–1816 */
 /* addr: 0x0020dc30  size: 16 bytes */
@@ -3372,9 +3374,12 @@ tdstNodeInterpret_* fn_p_stCineIsPlaying(HIE_tdstSuperObject_* p_SuperObjPerso, 
  */
 tdstNodeInterpret_* fn_p_stComparisonOfObjectsCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    tdstGetSetParam_ stParam2;
-    tdstGetSetParam_ stParam1;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam2 = {0};
+    tdstGetSetParam_ stParam1 = {0};
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+    *p_lValue = stParam1.uDummy.uParam.p_stEngObjValue == stParam2.uDummy.uParam.p_stEngObjValue;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1711–1733 */
@@ -3417,7 +3422,17 @@ tdstNodeInterpret_* fn_p_stScreenCondition(tdstNodeInterpret_* p_stTree, int* p_
 {
     int lValue;
     tdeCondId_ eCondId;
-    /* TODO: decompile from asm/... */
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    lValue = 0;
+    switch (eCondId) {
+    case eCond_IsWidescreen:
+        lValue = GLI_g_bWideScreenMode;
+        break;
+    case eCond_EngineIsInPAL:
+        break;
+    }
+    *p_lValue = lValue;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1627–1665 */
@@ -3495,7 +3510,15 @@ tdstNodeInterpret_* fn_p_stRLITransitionCondition(tdstNodeInterpret_* p_stTree, 
 {
     int lValue;
     tdeCondId_ eCondId;
-    /* TODO: decompile from asm/... */
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    lValue = 0;
+    switch (eCondId) {
+    case eCond_IsRLITransitionInProgress:
+        lValue = IPO_fn_bRLITransitionInProgress();
+        break;
+    }
+    *p_lValue = lValue;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1545–1573 */
@@ -3589,8 +3612,6 @@ tdstNodeInterpret_* fn_p_st_UserEvent_IsSet(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
-
 tdstNodeInterpret_* fn_p_st_HandledCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     struct { tdstEngineObject_* p_stEngObjValue; unsigned char pad[12]; } stParam;

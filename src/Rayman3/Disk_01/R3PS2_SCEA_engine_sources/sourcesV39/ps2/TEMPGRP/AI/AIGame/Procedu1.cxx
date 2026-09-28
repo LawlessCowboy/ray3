@@ -38,9 +38,70 @@ typedef union tduGetSetParam_ {
 } tduGetSetParam_;
 struct tdstGetSetParam_ { tduGetSetParam_ uParam; tdeVariableType_ eType; };
 
+union tduIdInterpret_ { tdeProcedureId_ eProcedureId; };
+union tduGetSetParamForNode_ { int lValue; unsigned int ulValue; float xValue; void* pValue; unsigned char ucValue; };
+union tduNodeDummy_ { tduIdInterpret_ uId; tduGetSetParamForNode_ uParam; };
+struct tdstNodeInterpret_ {
+    tduNodeDummy_ uDummy;
+    unsigned short uwNodeToSkip;
+    unsigned char ucDepth;
+    unsigned char eType;
+};
+
+/* Recovered HIE layout shared with ProcRay2.cxx. */
+struct GEO_tdstGeometricObject_;
+struct PO_tdstPhysicalObject_;
+struct IPO_tdstInstanciatedPhysicalObject_;
+struct SECT_tdstSector_;
+struct GLI_tdstLight_;
+struct HIE_tdstModifierObject_;
+union HIE_tduLinkedObject_ {
+    HIE_tdstSuperObject_* p_stSuperObject;
+    GEO_tdstGeometricObject_* p_stGeometricObject;
+    PO_tdstPhysicalObject_* p_stPhysicalObject;
+    IPO_tdstInstanciatedPhysicalObject_* p_stInstanciatedPhysicalObject;
+    SECT_tdstSector_* p_stSector;
+    tdstEngineObject_* p_stCharacter;
+    GLI_tdstLight_* p_stLight;
+    HIE_tdstModifierObject_* p_stModifierObject;
+    int p_Void;
+};
+struct HIE_tdstSuperObject_ {
+    unsigned int ulTypeOfLinkedObject;
+    HIE_tduLinkedObject_ hLinkedObject;
+    HIE_tdstSuperObject_* hFirstElementDyn;
+    HIE_tdstSuperObject_* hLastElementDyn;
+    int lNumberOfElementsDyn;
+    HIE_tdstSuperObject_* hNextBrotherDyn;
+    HIE_tdstSuperObject_* hPrevBrotherDyn;
+    HIE_tdstSuperObject_* hFatherDyn;
+    MAT_tdstTransformation_* hLocalMatrix;
+    MAT_tdstTransformation_* hGlobalMatrix;
+    int lLastComputeFrame;
+    int lDrawModeMask;
+    unsigned int ulFlags;
+    int hVisualBoundingVolume;
+    int hCollideBoundingVolume;
+    MTH3D_tdstVector_ stSemiLookAtVector;
+    float fTransparenceLevel;
+    unsigned int ulOutlineColor;
+    int lDisplayPrioriry;
+    int lIL_Status;
+    MTH3D_tdstVector_ stIL_AmbientColor;
+    MTH3D_tdstVector_ stIL_ParallelDirection;
+    MTH3D_tdstVector_ stIL_ParallelColor;
+    unsigned char ucSuperImposedOnWhichViewport;
+    unsigned char bIsSPO;
+    unsigned char xTransition;
+};
+
 extern "C" tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso,
                                                  tdstNodeInterpret_* p_stTree,
                                                  tdstGetSetParam_* p_stValue);
+extern "C" void GLI_fn_vSetBrightness(int);
+extern "C" unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_);
+extern "C" void fn_vGetUltraOperatorPerso(int, HIE_tdstSuperObject_*, HIE_tdstSuperObject_**);
+extern "C" float MEC_g_xClimbSpeedLimit;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6566–6587 */
 /* addr: 0x0022f360  size: 176 bytes */
@@ -256,7 +317,9 @@ tdstNodeInterpret_* fn_p_stSetVideoOptions(HIE_tdstSuperObject_* p_SuperObjPerso
 tdstNodeInterpret_* fn_p_stChangeBrightness(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    GLI_fn_vSetBrightness(stParam.uParam.lValue);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6078–6096 */
@@ -1186,7 +1249,13 @@ tdstNodeInterpret_* fn_p_stActivationZDR(HIE_tdstSuperObject_* p_SuperObjPerso, 
 {
     HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    if (stParam.uParam.lValue)
+        hPerso->ulFlags = hPerso->ulFlags & ~1;
+    else
+        hPerso->ulFlags |= 1;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 4648–4687 */
@@ -1364,7 +1433,10 @@ tdstNodeInterpret_* fn_p_SetMechanicClimbSpeedLimit(HIE_tdstSuperObject_* p_Supe
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    MEC_g_xClimbSpeedLimit = stValue.uParam.xValue;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 4264–4326 */

@@ -1116,7 +1116,21 @@ void impPS2glFrustum(double left, double right, double bottom, double top, doubl
  */
 void impPS2glPopMatrix(void)
 {
-    /* TODO: decompile from asm/... */
+    __int128 v3, v2, v1, v0;
+    __int128* dest;
+    const volatile __int128* src;
+    --*(int*)g_PS2glContext.piCurStackDepth;
+    src = (const volatile __int128*)--g_PS2glContext.pCurStack;
+    dest = (__int128*)g_PS2glContext.pCurMatrix;
+    v0 = src[0];
+    v1 = src[1];
+    v2 = src[2];
+    v3 = src[3];
+    dest[0] = v0;
+    dest[1] = v1;
+    dest[2] = v2;
+    dest[3] = v3;
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 490–492 */
@@ -1132,7 +1146,18 @@ void impPS2glPopMatrix(void)
  */
 void impPS2glPushMatrix(void)
 {
-    /* TODO: decompile from asm/... */
+    __int128 v3, v2, v1, v0;
+    __int128* dest = (__int128*)g_PS2glContext.pCurStack++;
+    const volatile __int128* src = (const volatile __int128*)g_PS2glContext.pCurMatrix;
+    v0 = src[0];
+    v1 = src[1];
+    v2 = src[2];
+    v3 = src[3];
+    dest[0] = v0;
+    dest[1] = v1;
+    dest[2] = v2;
+    dest[3] = v3;
+    ++*(int*)g_PS2glContext.piCurStackDepth;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 481–484 */
@@ -1149,7 +1174,17 @@ void impPS2glPushMatrix(void)
  */
 void impPS2glLoadIdentity(void)
 {
-    /* TODO: decompile from asm/... */
+    __int128 v3, v2, v1, v0;
+    __int128* dest = (__int128*)g_PS2glContext.pCurMatrix;
+    v0 = ((const volatile __int128*)matIdentity)[0];
+    v1 = ((const volatile __int128*)matIdentity)[1];
+    v2 = ((const volatile __int128*)matIdentity)[2];
+    v3 = ((const volatile __int128*)matIdentity)[3];
+    dest[0] = v0;
+    dest[1] = v1;
+    dest[2] = v2;
+    dest[3] = v3;
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 473–476 */
@@ -1166,7 +1201,18 @@ void impPS2glLoadIdentity(void)
  */
 void impPS2glLoadMatrixf(float* m)
 {
-    /* TODO: decompile from asm/... */
+    __int128 v3, v2, v1, v0;
+    __int128* dest;
+    v0 = ((const volatile __int128*)m)[0];
+    v1 = ((const volatile __int128*)m)[1];
+    v2 = ((const volatile __int128*)m)[2];
+    v3 = ((const volatile __int128*)m)[3];
+    dest = (__int128*)g_PS2glContext.pCurMatrix;
+    dest[0] = v0;
+    dest[1] = v1;
+    dest[2] = v2;
+    dest[3] = v3;
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 458–465 */
@@ -1305,9 +1351,11 @@ void impPS2glRotated(double angle, double x, double y, double z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
 void impPS2glMultMatrixf(float* m)
 {
-    /* TODO: decompile from asm/... */
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, (float (*)[4])m);
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 377–385 */

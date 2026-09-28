@@ -3,6 +3,15 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+extern char* strcpy(char*, const char*);
+extern void* memcpy(void*, const void*, size_t);
+extern void* malloc(size_t);
+extern void free(void*);
+extern void* memset(void*, int, size_t);
+extern int SVG_fn_bGetActiveVms(void);
+extern unsigned char fn_bLoadUnknowFileFromSlot(int, char*, void**, int*);
+extern int SVG_fn_s32ReadFromFile(int, int, char*, void*, unsigned int);
+extern int SVG_fn_s32ReadUnknownFile(int, int, char*, void**, unsigned int*);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct tdstSaveBuffer_ tdstSaveBuffer_;
@@ -77,6 +86,9 @@ struct anon_3 {
     unsigned char year; /* +0x7 */
 };
 
+extern int SVG_fn_s32GetFileInfo(int, int, char*, anon_2*);
+extern void sceScfGetLocalTimefromRTC(anon_3*);
+
 int VMS_g_a8_lDriveNo[8];
 int VMS_lSynchroEnabled;
 int VMS_lInitOk;
@@ -134,10 +146,17 @@ int VMS_lInitFilenameList(int drive, int* lListSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 0
 int VMS_lGetFilenameInList(int lFileIndex, char* pcFilename)
 {
-    /* TODO: decompile from asm/... */
+    if (lFileIndex >= VMS_lFilenameListSize || VMS_lFilenameListSize <= 0) {
+        strcpy(pcFilename, "");
+        return -1;
+    }
+    strcpy(pcFilename, VMS_ax_cFilenameList[lFileIndex]);
+    return 0;
 }
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1332–1345 */
 /* addr: 0x00136da0  size: 128 bytes */
@@ -153,13 +172,20 @@ int VMS_lGetFilenameInList(int lFileIndex, char* pcFilename)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 0
 void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen)
 {
     int ucEncryptKey2;
     int ucEncryptKey;
     int lI;
-    /* TODO: decompile from asm/... */
+    ucEncryptKey = 0x224896eb;
+    for (lI = 0; lI < lLen; lI++) {
+        ucEncryptKey2 = ucEncryptKey >> 12;
+        p_ucBuffer[lI] ^= (unsigned char)ucEncryptKey2;
+        ucEncryptKey *= 0x3a41c471;
+    }
 }
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1354–1367 */
 /* addr: 0x00136e20  size: 128 bytes */
@@ -175,13 +201,20 @@ void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 0
 void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen)
 {
     int ucEncryptKey2;
     int ucEncryptKey;
     int lI;
-    /* TODO: decompile from asm/... */
+    ucEncryptKey = 0x224896eb;
+    for (lI = 0; lI < lLen; lI++) {
+        ucEncryptKey2 = ucEncryptKey >> 12;
+        p_ucBuffer[lI] ^= (unsigned char)ucEncryptKey2;
+        ucEncryptKey *= 0x3a41c471;
+    }
 }
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1377–1387 */
 /* addr: 0x00136ea0  size: 104 bytes */
@@ -286,13 +319,34 @@ int BCDToInt100(int val)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 0
 int VMS_lGetFileDate(int drive, char* fname, anon_1* fDate)
 {
     anon_3 t;
     int lRet;
     anon_2 info;
-    /* TODO: decompile from asm/... */
+    if (fDate == NULL) return -1;
+    lRet = SVG_fn_s32GetFileInfo((&g_axPadMapping)[drive].iPort,
+        (&g_axPadMapping)[drive].iSlot, fname, &info);
+    if (!lRet)
+        return 0;
+    memset(&t, 0, sizeof(t));
+    t.second = Int100ToBCD(info._Modify.Sec);
+    t.minute = Int100ToBCD(info._Modify.Min);
+    t.hour = Int100ToBCD(info._Modify.Hour);
+    t.day = Int100ToBCD(info._Modify.Day);
+    t.month = Int100ToBCD(info._Modify.Month);
+    t.year = Int100ToBCD(info._Modify.Year);
+    sceScfGetLocalTimefromRTC(&t);
+    fDate->year = BCDToInt100(t.year);
+    fDate->month = BCDToInt100(t.month);
+    fDate->day = BCDToInt100(t.day);
+    fDate->hour = BCDToInt100(t.hour);
+    fDate->minute = BCDToInt100(t.minute);
+    fDate->second = BCDToInt100(t.second);
+    return 1;
 }
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1894–1910 */
 /* addr: 0x001371e0  size: 192 bytes */
@@ -308,11 +362,19 @@ int VMS_lGetFileDate(int drive, char* fname, anon_1* fDate)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 0
 int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, void** bufData, int* fileSize)
 {
     int ret;
-    /* TODO: decompile from asm/... */
+    if (VMS_lInitOk != 1)
+        return -1;
+    ret = SVG_fn_s32ReadUnknownFile((&g_axPadMapping)[drive].iPort,
+        (&g_axPadMapping)[drive].iSlot, fname, bufData, (unsigned int*)fileSize);
+    if (ret != 1)
+        return 0;
+    return 1;
 }
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2034–2061 */
 /* addr: 0x001372a0  size: 264 bytes */
@@ -332,12 +394,27 @@ int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, void** bufData, in
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 0
+#pragma peephole on
 int VMS_lGetVmsCommentFromFile(int drive, char* fileName, char* comment)
 {
     unsigned char* buf;
     int ret;
-    /* TODO: decompile from asm/... */
+    buf = malloc(512);
+    if (VMS_lInitOk != 1 || buf == NULL)
+        return -1;
+    ret = SVG_fn_s32ReadFromFile((&g_axPadMapping)[drive].iPort,
+        (&g_axPadMapping)[drive].iSlot, fileName, buf, 16);
+    if (ret != 1) {
+        free(buf);
+        return -1;
+    }
+    memcpy(comment, buf, 16);
+    free(buf);
+    return ret;
 }
+#pragma peephole reset
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2199–2256 */
 /* addr: 0x001373b0  size: 276 bytes */
@@ -366,12 +443,37 @@ int VMS_lGetVmsCommentFromFile(int drive, char* fileName, char* comment)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 0
+#pragma peephole on
 tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName)
 {
     int lNumActiveVms;
     tdstSaveBuffer_* p_stBuffer;
-    /* TODO: decompile from asm/... */
+    lNumActiveVms = SVG_fn_bGetActiveVms();
+    if (lNumActiveVms == -1)
+        return NULL;
+    if (_szFileName == NULL)
+        return NULL;
+    p_stBuffer = malloc(sizeof(tdstSaveBuffer_));
+    memset(p_stBuffer, 0, sizeof(tdstSaveBuffer_));
+    if (p_stBuffer == NULL)
+        return NULL;
+    p_stBuffer->lCurrentPosition = 0;
+    p_stBuffer->cFileMode = 'r';
+    p_stBuffer->szFileName = (int)_szFileName;
+    if (!fn_bLoadUnknowFileFromSlot(lNumActiveVms, (char*)p_stBuffer->szFileName,
+        (void**)&p_stBuffer->szSaveBuffer, &p_stBuffer->lSize)) {
+        free(p_stBuffer);
+        return NULL;
+    }
+    if (!p_stBuffer->szSaveBuffer) {
+        free(p_stBuffer);
+        return NULL;
+    }
+    return p_stBuffer;
 }
+#pragma peephole reset
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2292–2304 */
 /* addr: 0x001374d0  size: 216 bytes */
@@ -387,10 +489,17 @@ tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 0
 int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_stBuffer)
 {
-    /* TODO: decompile from asm/... */
+    if (_p_stBuffer->cFileMode == 'w') return 0;
+    if (_p_stBuffer->lCurrentPosition + _lSize * _lNumber >= _p_stBuffer->lSize)
+        return 0;
+    memcpy(_p_vData, (void*)(_p_stBuffer->szSaveBuffer + _p_stBuffer->lCurrentPosition), _lSize * _lNumber);
+    _p_stBuffer->lCurrentPosition = _p_stBuffer->lCurrentPosition + _lSize * _lNumber;
+    return 1;
 }
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2311–2342 */
 /* addr: 0x001375b0  size: 292 bytes */

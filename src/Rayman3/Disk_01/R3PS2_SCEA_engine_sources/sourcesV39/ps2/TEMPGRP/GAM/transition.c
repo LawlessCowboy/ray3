@@ -1452,9 +1452,17 @@ void fn_vBbInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned short GAM_fn_uwGetEngineLoading(void);
+extern void GAM_fn_vPushAllocMode(GAM_eLoadingMode);
+extern int fn_bIsInFix(tdstEngineObject_*);
+
 void fn_vPushAllocModeAccordingToObject(void* _p_stSuperObject)
 {
-    /* TODO: decompile from asm/... */
+    if (_p_stSuperObject == 0)
+        GAM_fn_vPushAllocMode(GAM_eFixLoading);
+    else {
+        tdstEngineObject_* p_stObject = ((HIE_tdstSuperObject_*)_p_stSuperObject)->ulTypeOfLinkedObject != 2 ? 0 : ((HIE_tdstSuperObject_*)_p_stSuperObject)->hLinkedObject.p_stCharacter; GAM_eLoadingMode eCurrentMode = GAM_fn_uwGetEngineLoading(); if (fn_bIsInFix(p_stObject)) GAM_fn_vPushAllocMode(GAM_eFixLoading); else GAM_fn_vPushAllocMode(eCurrentMode);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 504–519 */
@@ -1472,7 +1480,11 @@ void fn_vPushAllocModeAccordingToObject(void* _p_stSuperObject)
 void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject)
 {
     GAM_eLoadingMode eCurrentMode;
-    /* TODO: decompile from asm/... */
+    eCurrentMode = GAM_fn_uwGetEngineLoading();
+    if (fn_bIsInFix(p_stObject))
+        GAM_fn_vPushAllocMode(GAM_eFixLoading);
+    else
+        GAM_fn_vPushAllocMode(eCurrentMode);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 487–487 */
@@ -1539,12 +1551,63 @@ int fn_lGetTransitionBloc(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef enum tdeObjectTreeInit_ {
+    OTI_WhenGameStart = 0,
+    OTI_MapLoaded = 1,
+    OTI_ReinitTheMap = 2,
+    OTI_LoadSavedGame = 3,
+    OTI_PlayerDead = 4,
+    OTI_WhenGoOutOfZone = 4,
+    OTI_Always = 4,
+    OTI_AlwaysCreated = 5
+} tdeObjectTreeInit_;
+
+extern void PS2_fn_vFlipThreadsPriority(void);
+extern void GLI_vCleanAllSpecificData(void);
+extern void fn_vRemoveAllMicros(void);
+extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_*);
+extern void fn_vDesinitOneObject(tdstEngineObject_*, tdeObjectTreeInit_);
+extern void PLD_fn_vUnLoadTransition(void);
+extern void* memcpy(void*, const void*, unsigned int);
+
 void fn_vEndTransition(void)
 {
     tdstGraphChainedListNode_* p_GraphChainedListNode;
     HIE_tdstSuperObject_* hNextCharacter;
     HIE_tdstSuperObject_* hCharacter;
-    /* TODO: decompile from asm/... */
+    g_bTransitionInProgress = 0;
+    g_bEngineCallOneTrameWhileLoading = 0;
+    PS2_fn_vFlipThreadsPriority();
+    g_a_hSOCurrentMainSector[0] = 0; g_a_hSOCurrentMainSector[1] = 0; g_a_hSOCurrentMainSector[2] = 0; g_a_hSOCurrentMainSector[3] = 0;
+    GLI_vCleanAllSpecificData();
+    fn_vRemoveAllMicros();
+    hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter);
+    while (hCharacter) {
+        if (hCharacter->ulTypeOfLinkedObject == 2) {
+            hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hNodeInSector->hPrevBrotherDyn = 0;
+            hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hNodeInSector->hNextBrotherDyn = 0;
+            hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hNodeInSector->hFatherDyn = 0;
+            fn_vDesinitOneObject(hCharacter->ulTypeOfLinkedObject != 2 ? 0 : hCharacter->hLinkedObject.p_stCharacter, OTI_MapLoaded);
+            { HIE_tdstSuperObject_* hFather = (HIE_tdstSuperObject_*)gp_stNewDynamicWorld; if (hCharacter->hNextBrotherDyn) hCharacter->hNextBrotherDyn->hPrevBrotherDyn = hCharacter->hPrevBrotherDyn; if (hCharacter->hPrevBrotherDyn) hCharacter->hPrevBrotherDyn->hNextBrotherDyn = hCharacter->hNextBrotherDyn; if (hCharacter->hFatherDyn) { hCharacter->hFatherDyn->lNumberOfElementsDyn--; if (hCharacter->hFatherDyn->hFirstElementDyn == hCharacter) hCharacter->hFatherDyn->hFirstElementDyn = hCharacter->hNextBrotherDyn; if (hCharacter->hFatherDyn->hLastElementDyn == hCharacter) hCharacter->hFatherDyn->hLastElementDyn = hCharacter->hPrevBrotherDyn; } hCharacter->hNextBrotherDyn = 0; hCharacter->hPrevBrotherDyn = 0; hCharacter->hFatherDyn = 0; hCharacter->hNextBrotherDyn = 0; hCharacter->hPrevBrotherDyn = hFather->hLastElementDyn; hCharacter->hFatherDyn = hFather; if (hFather->hFirstElementDyn == 0) hFather->hFirstElementDyn = hCharacter; else hFather->hLastElementDyn->hNextBrotherDyn = hCharacter; hFather->hLastElementDyn = hCharacter; hFather->lNumberOfElementsDyn++; }
+        }
+        hCharacter = hNextCharacter; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter);
+    }
+    gp_stActualWorld = gp_stNewActualWorld;
+    gp_stDynamicWorld = gp_stNewDynamicWorld;
+    gp_stInactiveDynamicWorld = gp_stNewInactiveDynamicWorld;
+    SECT_hFatherSector = SECT_hNewFatherSector;
+    p_GraphChainedListNode = g_stEngineStructure.p_GraphChainedList;
+    while (p_GraphChainedListNode) {
+        if (p_GraphChainedListNode->p_NextGraphChainedListNode == (tdstGraphChainedListNode_*)g_p_stCurrentGraphNode) {
+            p_GraphChainedListNode->p_NextGraphChainedListNode = 0;
+            break;
+        }
+        p_GraphChainedListNode = p_GraphChainedListNode->p_NextGraphChainedListNode;
+    }
+    memcpy(&g_stEngineStructure.hMainCharacterList, &g_pstMainCharacterList, sizeof(g_pstMainCharacterList));
+    PLD_fn_vUnLoadTransition();
+    g_stEngineStructure.a_hViewportArray = (tdstViewportManagement_*)g_pstBinaryViewport;
+    g_stEngineStructure.stCineManager = (CINE_Manager_*)g_stNewCineManager;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 331–341 */
@@ -1562,9 +1625,19 @@ void fn_vEndTransition(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void);
+extern unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void);
+extern void PS2_fn_vLeaveGLCriticalSection(void);
+extern void PS2_fn_vTriggerTransitionOn(void);
+extern void PS2_fn_vFlipThreadsPriority(void);
+
 void fn_vBeginTransition(void)
 {
-    /* TODO: decompile from asm/... */
+    g_bTransitionInProgress = 1;
+    g_bTransitionIsRunning = 1;
+    g_bLoadInProgress = 1;
+    g_bEngineCallOneTrameWhileLoading = 1;
+    g_bLoadingIsFinished = 0; ucCurrentNormalMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualNormalMemoryBlockUsed(); ucCurrentTempMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualTempMemoryBlockUsed(); PS2_fn_vLeaveGLCriticalSection(); PS2_fn_vTriggerTransitionOn(); PS2_fn_vFlipThreadsPriority();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 201–244 */
@@ -1612,10 +1685,16 @@ void fn_vInitTransitionHierarchy(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void fn_vMicroInit(tdstEngineObject_*, tdeObjectTreeInit_);
+
 void fn_vPlugMicroOnSO(HIE_tdstSuperObject_* hSO)
 {
     tdstEngineObject_* pEO;
-    /* TODO: decompile from asm/... */
+    if (hSO->ulTypeOfLinkedObject == 2) {
+        pEO = hSO->hLinkedObject.p_stCharacter;
+        if (pEO->h_Micro)
+            fn_vMicroInit(pEO, OTI_MapLoaded);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 161–161 */

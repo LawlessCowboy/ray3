@@ -467,6 +467,7 @@ struct AGO3_WaveEnvelopedFist {
     unsigned int m_a_ulFirstSet[2]; /* +0x5c */
     unsigned int m_a_ulColor[2]; /* +0x64 */
     AGO3_WEF_SpriteData m_stSprite[2][64]; /* +0x6c */
+    static int m_hHandle;
     void Display(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
     void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fColor);
@@ -875,6 +876,7 @@ struct AGO3_WaveEnvelopedFist2 {
     unsigned int m_a_ulFirstSet[2]; /* +0x5c */
     unsigned int m_a_ulColor[2]; /* +0x64 */
     AGO3_WEF_SpriteData m_stSprite[2][64]; /* +0x6c */
+    static int m_hHandle;
     void Display(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
     void Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1, float fColor);
@@ -1373,6 +1375,7 @@ struct AGO3_FistSmoke {
     unsigned int m_a_ulFirstFree[2]; /* +0x40 */
     unsigned int m_a_ulFirstSet[2]; /* +0x48 */
     AGO3_FS_SpriteData m_stSprite[2][50]; /* +0x50 */
+    static int m_hHandle;
     void Display(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
     void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed);
@@ -5868,9 +5871,14 @@ void AGO3_FistSmoke::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDire
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int AGO3_FistSmoke::m_hHandle;
 void AGO3_FistSmoke::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    m_a_ulNbAGOs[0] = m_a_ulNbAGOs[1] = 0;
+    m_a_ulFirstFree[0] = m_a_ulFirstFree[1] = 0;
+    m_a_ulFirstSet[0] = m_a_ulFirstSet[1] = 0;
+    m_hHandle = 0;
+    ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1929–1989 */
@@ -6563,9 +6571,14 @@ void AGO3_WaveEnvelopedFist2::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMateria
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int AGO3_WaveEnvelopedFist2::m_hHandle;
 void AGO3_WaveEnvelopedFist2::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    m_a_ulNbAGOs[0] = m_a_ulNbAGOs[1] = 0;
+    m_a_ulFirstFree[0] = m_a_ulFirstFree[1] = 0;
+    m_a_ulFirstSet[0] = m_a_ulFirstSet[1] = 0;
+    m_hHandle = 0;
+    ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1146–1217 */
@@ -6815,9 +6828,14 @@ void AGO3_WaveEnvelopedFist::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int AGO3_WaveEnvelopedFist::m_hHandle;
 void AGO3_WaveEnvelopedFist::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    m_a_ulNbAGOs[0] = m_a_ulNbAGOs[1] = 0;
+    m_a_ulFirstFree[0] = m_a_ulFirstFree[1] = 0;
+    m_a_ulFirstSet[0] = m_a_ulFirstSet[1] = 0;
+    m_hHandle = 0;
+    ((AGO3_Part*)this)->m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 888–898 */
