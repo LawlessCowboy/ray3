@@ -70,7 +70,7 @@ typedef struct CINE_tdstCine_ CINE_tdstCine_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_1 anon_1;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct WP_tdstGraphNode_ WP_tdstGraphNode_;
@@ -2038,7 +2038,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct GEO_tdstParallelBox_ {
     MTH4D_tdstVector_ stMinPoint; /* +0x0 */
@@ -2292,7 +2292,7 @@ struct tdstStandardGame_ {
     MTH3D_tdstVector_ a_stCustomVectors[2]; /* +0x4c */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

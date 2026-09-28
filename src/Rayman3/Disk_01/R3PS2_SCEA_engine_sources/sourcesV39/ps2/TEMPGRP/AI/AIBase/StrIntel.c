@@ -102,7 +102,7 @@ typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt;
 typedef struct SECT_tdstSector_ SECT_tdstSector_;
 typedef struct tdstElement3d_ tdstElement3d_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstActionParam_ tdstActionParam_;
 typedef struct tdstActionTableEntry_ tdstActionTableEntry_;
 typedef struct tdstActionTable_ tdstActionTable_;
@@ -2048,7 +2048,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct GEO_tdstParallelBox_ {
     MTH4D_tdstVector_ stMinPoint; /* +0x0 */
@@ -2616,7 +2616,7 @@ struct tdstElement3d_ {
     unsigned char ucAnimLevel; /* +0x5 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

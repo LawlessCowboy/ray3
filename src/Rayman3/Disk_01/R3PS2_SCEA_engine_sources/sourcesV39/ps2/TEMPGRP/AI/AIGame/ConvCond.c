@@ -62,7 +62,7 @@ typedef struct tdstSightAxisSystem_ tdstSightAxisSystem_;
 typedef struct tdstTransparentSuperObjectForCamera_ tdstTransparentSuperObjectForCamera_;
 typedef struct tdstCineinfo_ tdstCineinfo_;
 typedef struct LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_1 anon_1;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct tdstLipsSynchValue_ tdstLipsSynchValue_;
@@ -1910,7 +1910,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
@@ -2341,7 +2341,7 @@ struct LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt {
     int lNumberOfElementsOpt; /* +0x4 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

@@ -113,7 +113,7 @@ typedef struct LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn LST2_tdstAnch
 typedef struct WP_tdstArc_ WP_tdstArc_;
 typedef struct COL_tdstBoundingSphere_ COL_tdstBoundingSphere_;
 typedef struct tdstEngineTimerStructure_ tdstEngineTimerStructure_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstActionParam_ tdstActionParam_;
 typedef struct tdstActionTableEntry_ tdstActionTableEntry_;
 typedef struct tdstGraphChainedListNode_ tdstGraphChainedListNode_;
@@ -1999,7 +1999,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
@@ -2639,7 +2639,7 @@ struct tdstEngineTimerStructure_ {
     unsigned int ulTickPerMS; /* +0x80 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

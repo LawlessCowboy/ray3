@@ -115,7 +115,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
@@ -859,10 +859,20 @@ int Global_CharacterModuleBeingDisplayed;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern HIE_tdstSuperObject_* gd_hFixSPO[32];
+extern short g_xFixIndex;
+extern short g_xFixIndexSave;
+extern unsigned char g_ucContext;
+
 void SPO_ReinitSuperimposedArray(void)
 {
     short xIndex;
-    /* TODO: decompile from asm/... */
+
+    for (xIndex = 0; xIndex < g_xFixIndex; xIndex++)
+        gd_hFixSPO[xIndex]->ulFlags &= ~0x21;
+    g_xFixIndex = 0;
+    g_ucContext = 0;
+    g_xFixIndexSave = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\Specif\HiePcDrw.c lines 357–443 */

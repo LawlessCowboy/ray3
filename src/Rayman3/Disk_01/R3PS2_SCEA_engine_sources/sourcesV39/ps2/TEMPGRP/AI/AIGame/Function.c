@@ -52,7 +52,7 @@ typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
 typedef struct tdstEngineObject_ tdstEngineObject_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_2 anon_2;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct tdstComport_ tdstComport_;
@@ -2031,7 +2031,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
@@ -2275,7 +2275,7 @@ struct tdstEngineObject_ {
     tdstMSSound_* h_MSSound; /* +0x28 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -5595,10 +5595,17 @@ tdstNodeInterpret_* fn_p_stBezierBt3WP(HIE_tdstSuperObject_* p_SuperObjPerso, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+float WP_fnx_WayPoint_GetRadius(WP_tdstWayPoint_* hWayPoint);
+
 tdstNodeInterpret_* fn_p_stGetRadiusWP(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     float xReal;
-    /* TODO: decompile from asm/... */
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    xReal = WP_fnx_WayPoint_GetRadius(p_stValue->uDummy.uParam.m_hWayPoint);
+    p_stValue->uDummy.uParam.xValue = xReal;
+    p_stValue->eType = E_vt_Float;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 259–261 */

@@ -50,7 +50,7 @@ typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
 typedef struct RGBAComponent_ RGBAComponent_;
 typedef union RGBAStruct_ RGBAStruct_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstPLA_DeformationLink_ tdstPLA_DeformationLink_;
 typedef struct SECT_tdstListOfStaticLights_ SECT_tdstListOfStaticLights_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn;
@@ -1948,7 +1948,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
@@ -2125,7 +2125,7 @@ union RGBAStruct_ {
     RGBAComponent_ Component; /* +0x0 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

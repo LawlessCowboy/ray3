@@ -245,7 +245,7 @@ struct GEO_tdstGeometricObject_ {
     unsigned int bIsStatic; /* +0x54 */
     unsigned int glDisplayList; /* +0x58 */
     unsigned char bVTForSinus; /* +0x5c */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */

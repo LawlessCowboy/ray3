@@ -2094,7 +2094,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
@@ -3061,7 +3061,9 @@ void fn_vSetActionParamStateValue(unsigned char ucN, HIE_tdstSuperObject_* p_Sup
  */
 int fn_lGetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    /* TODO: decompile from asm/... */
+    tdstActionTable_* p_stActionTable;
+    p_stActionTable = (p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->bDoingIntel ? p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence : p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex)->p_stActionTable;
+    return p_stActionTable->p_stEntry[p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].lValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActParam.c lines 114–115 */
@@ -3074,7 +3076,9 @@ int fn_lGetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObj
  */
 void fn_vSetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, int lValue)
 {
-    /* TODO: decompile from asm/... */
+    tdstActionTable_* p_stActionTable;
+    p_stActionTable = (p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->bDoingIntel ? p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence : p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex)->p_stActionTable;
+    p_stActionTable->p_stEntry[p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].lValue = lValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActParam.c lines 92–93 */
@@ -3087,5 +3091,7 @@ void fn_vSetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperOb
  */
 float fn_xGetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    /* TODO: decompile from asm/... */
+    tdstActionTable_* p_stActionTable;
+    p_stActionTable = (p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->bDoingIntel ? p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence : p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex)->p_stActionTable;
+    return p_stActionTable->p_stEntry[p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].xValue;
 }

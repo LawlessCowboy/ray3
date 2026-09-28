@@ -1874,9 +1874,13 @@ void fn_vInitDistanceWaypoint(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_lGetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);
+
 unsigned char fn_ucFrozenWait(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    /* TODO: decompile from asm/... */
+    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount < (unsigned int)fn_lGetActionParamlValue(0, p_SuperObjPerso))
+        return 1;
+    return 4;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 157–198 */

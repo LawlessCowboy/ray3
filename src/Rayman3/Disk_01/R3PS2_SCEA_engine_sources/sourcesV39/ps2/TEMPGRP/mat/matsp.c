@@ -107,7 +107,7 @@ struct MTH3D_tdstMatrix_ {
     MTH3D_tdstVector_ stCol_0; /* +0x0 */
     MTH3D_tdstVector_ stCol_1; /* +0xc */
     MTH3D_tdstVector_ stCol_2; /* +0x18 */
-};
+} __attribute__((aligned(16)));
 
 void MTH4D_fn_vSpecializedMulMatrixMatrixWithoutBuffer(MTH4D_tdstMatrix_* _p_stResult,
                                                        MTH4D_tdstMatrix_* _p_stA,

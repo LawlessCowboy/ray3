@@ -63,7 +63,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
@@ -163,7 +163,6 @@ struct DNM_stDynamicsBaseBlock {
     MTH3D_tdstVector_ m_stSafeTranslation; /* +0x60 */
     MTH3D_tdstVector_ m_stAddTranslation; /* +0x6c */
     MAT_tdstTransformation_ m_stPreviousMatrix; /* +0x80 */
-    unsigned char _extractor_padding_matrix[8]; /* implicitly added by extractor */
     MAT_tdstTransformation_ m_stCurrentMatrix; /* +0xe0 */
     MTH3D_tdstMatrix_ m_stImposeRotationMatrix; /* +0x140 */
     unsigned char m_ucNbFrame; /* +0x164 */

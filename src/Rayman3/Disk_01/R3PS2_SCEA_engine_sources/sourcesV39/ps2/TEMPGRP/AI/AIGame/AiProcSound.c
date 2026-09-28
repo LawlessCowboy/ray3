@@ -66,7 +66,7 @@ typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
 typedef struct tdstIntelligence_ tdstIntelligence_;
 typedef struct LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn;
 typedef struct AI_tdstAIModel_ AI_tdstAIModel_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_0 anon_0;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct COL_tdstBoundingSphere_ COL_tdstBoundingSphere_;
@@ -2337,7 +2337,7 @@ struct AI_tdstAIModel_ {
     unsigned char ucSecondPassDone; /* +0x10 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -2386,7 +2386,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct COL_tdstBoundingSphere_ {
     MTH4D_tdstVector_ stCenterPoint; /* +0x0 */

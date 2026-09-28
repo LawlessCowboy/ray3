@@ -4,6 +4,9 @@
 
 #include <stddef.h>
 
+/* This unit was built without optimization. */
+#pragma optimization_level 0
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct SVG_stMCStatus_ SVG_stMCStatus_;
 typedef struct anon_1 anon_1;
@@ -148,11 +151,8 @@ int SVG_fn_iGetChangeInMC0AndReset(void)
  */
 int SVG_fn_iGetChangeInMC0(void)
 {
-    int iReturn;
-
     SVG_fn_vCheckStatusChangeInMC0();
-    iReturn = gs_iSceMcOpChanged;
-    return iReturn;
+    return gs_iSceMcOpChanged;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 188–190 */
@@ -164,13 +164,11 @@ int SVG_fn_iGetChangeInMC0(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 1
 void SVG_fn_vSetMC0AsChanged(void)
 {
     gs_iSceMcOpChanged = 1;
     gs_iSceMcOpWarned = 0;
 }
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 224–267 */
 /* addr: 0x00133b90  size: 124 bytes */
@@ -291,12 +289,10 @@ int SVG_fn_s32GetFileSize(int _iPort, int _iSlot, char* _szFileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 0
 int SVG_fn_SetAsCurrentMemoryCard(int cmc)
 {
     gUpdateFielInfo = cmc;
 }
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 434–468 */
 /* addr: 0x00134210  size: 428 bytes */
@@ -728,7 +724,9 @@ int SVG_fn_s32SaveGame(int _iPort, int _iSlot, char* _szSonyCompliantName, char*
 {
     int bSavingOptions;
     char* Name;
-    /* TODO: decompile from asm/... */
+
+    bSavingOptions = 0;
+    return SauvePartieMenu(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, Name, bSavingOptions);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1252–1292 */
@@ -805,7 +803,9 @@ int SVG_fn_s32LoadGameReal(int _iPort, int _iSlot, char* _szSonyCompliantName, v
  */
 unsigned char SVG_fn_bIsVmsConnected(int _lVmsNumber)
 {
-    /* TODO: decompile from asm/... */
+    if ((_lVmsNumber < 0) || (_lVmsNumber > 7))
+        return 0;
+    return gs_a_stCardStatus[_lVmsNumber].iStatus != -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1604–1613 */
@@ -821,7 +821,9 @@ unsigned char SVG_fn_bIsVmsConnected(int _lVmsNumber)
  */
 unsigned char SVG_fn_bIsActivVmsConnected(void)
 {
-    /* TODO: decompile from asm/... */
+    if ((SVG_gs_lActiveVmsNumber < 0) || (SVG_gs_lActiveVmsNumber > 7))
+        return 0;
+    return SVG_fn_bIsVmsConnected(SVG_gs_lActiveVmsNumber);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1668–1669 */
@@ -832,15 +834,10 @@ unsigned char SVG_fn_bIsActivVmsConnected(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 1
 int SVG_fn_bGetActiveVms(void)
 {
-    int iReturn;
-
-    iReturn = SVG_gs_lActiveVmsNumber;
-    return iReturn;
+    return SVG_gs_lActiveVmsNumber;
 }
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mcmngr.c lines 1701–1713 */
 /* addr: 0x001368d0  size: 392 bytes */

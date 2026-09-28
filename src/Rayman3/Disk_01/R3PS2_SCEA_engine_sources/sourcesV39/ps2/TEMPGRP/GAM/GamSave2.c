@@ -65,7 +65,7 @@ typedef struct RGBAComponent_ RGBAComponent_;
 typedef struct tdstSubAnimInUse_ tdstSubAnimInUse_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
 typedef union RGBAStruct_ RGBAStruct_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_0 anon_0;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn;
@@ -335,7 +335,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct GEO_tdstParallelBox_ {
     MTH4D_tdstVector_ stMinPoint; /* +0x0 */
@@ -483,7 +483,7 @@ union RGBAStruct_ {
     RGBAComponent_ Component; /* +0x0 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -1108,7 +1108,7 @@ int MENU_g_bInversionHor;
 int GLI_g_bWideScreenMode;
 float GLI_g_ScreenPos_DY;
 float GLI_g_ScreenPos_DX;
-SVG_stMCStatus_ g_axPadMapping;
+SVG_stMCStatus_ g_axPadMapping[2];
 int g_a_p_stMmgModuleBlocksInfo[255];
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 36–464 */
@@ -1439,6 +1439,8 @@ void SAV2_fn_vUpdateVibrations(void)
         IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
 }
 
+int SVG_fn_s32Query(int _iPort, int _iSlot, int* _p_iFreeClusters);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1506–1519 */
 /* addr: 0x0028ab30  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1459,7 +1461,9 @@ int SAV2_CheckMCStatus(int _id)
 {
     int Value;
     int Bidon;
-    /* TODO: decompile from asm/... */
+    Value = 0;
+    Bidon = SVG_fn_s32Query(g_axPadMapping[_id].iPort, g_axPadMapping[_id].iSlot, &Value);
+    return (Bidon == 0) ^ 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1502–1503 */

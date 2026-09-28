@@ -82,7 +82,7 @@ typedef struct tdstTransparentSuperObjectForCamera_ tdstTransparentSuperObjectFo
 typedef struct tdstCineinfo_ tdstCineinfo_;
 typedef struct tdstAChannel_ tdstAChannel_;
 typedef union RGBAStruct_ RGBAStruct_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstActionParam_ tdstActionParam_;
 typedef struct tdstActionTableEntry_ tdstActionTableEntry_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
@@ -1898,7 +1898,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
@@ -2461,7 +2461,7 @@ union RGBAStruct_ {
     RGBAComponent_ Component; /* +0x0 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

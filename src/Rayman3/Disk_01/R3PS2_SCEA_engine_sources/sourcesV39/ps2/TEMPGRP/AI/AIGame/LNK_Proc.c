@@ -59,7 +59,7 @@ typedef struct LST2_tdstAnchorTotdxHandleToNodeCameraDyn LST2_tdstAnchorTotdxHan
 typedef struct tdstNodeCamera_ tdstNodeCamera_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_1 anon_1;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct tdstIntelligence_ tdstIntelligence_;
@@ -2287,7 +2287,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
@@ -2296,7 +2296,7 @@ struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_3; /* +0x30 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

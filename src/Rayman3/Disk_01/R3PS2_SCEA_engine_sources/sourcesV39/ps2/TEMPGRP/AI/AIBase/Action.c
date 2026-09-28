@@ -63,7 +63,7 @@ typedef struct stMorphData stMorphData;
 typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
 typedef struct tdstSubAnimInUse_ tdstSubAnimInUse_;
 typedef struct tdstActionTable_ tdstActionTable_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstDsgVarInfo_ tdstDsgVarInfo_;
 typedef struct tdstActionParam_ tdstActionParam_;
 typedef struct tdstActionTableEntry_ tdstActionTableEntry_;
@@ -1908,7 +1908,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct COL_tdstBoundingSphere_ {
     MTH4D_tdstVector_ stCenterPoint; /* +0x0 */
@@ -2296,7 +2296,7 @@ struct tdstActionTable_ {
     unsigned char ucCurrentEntry; /* +0x6 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

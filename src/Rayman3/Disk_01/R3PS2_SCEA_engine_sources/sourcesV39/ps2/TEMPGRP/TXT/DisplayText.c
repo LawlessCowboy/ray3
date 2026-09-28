@@ -77,7 +77,7 @@ typedef struct tdstAChannel_ tdstAChannel_;
 typedef struct WP_tdstGraphNode_ WP_tdstGraphNode_;
 typedef struct tdstViewportManagement_ tdstViewportManagement_;
 typedef struct LST2_tdstAnchorTotdxHandleToFamilyListDyn LST2_tdstAnchorTotdxHandleToFamilyListDyn;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstMacro_ tdstMacro_;
 typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
 typedef struct _stTimerCount _stTimerCount;
@@ -2051,7 +2051,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
@@ -2568,7 +2568,7 @@ struct LST2_tdstAnchorTotdxHandleToFamilyListDyn {
     int lNumberOfElementsDyn; /* +0x8 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

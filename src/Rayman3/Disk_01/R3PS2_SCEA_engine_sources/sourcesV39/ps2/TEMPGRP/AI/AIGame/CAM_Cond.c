@@ -85,7 +85,7 @@ typedef struct WP_tdstGraph_ WP_tdstGraph_;
 typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
 typedef struct tdstMacro_ tdstMacro_;
 typedef struct tdstDsgVar_ tdstDsgVar_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstActionParam_ tdstActionParam_;
 typedef struct tdstActionTableEntry_ tdstActionTableEntry_;
 typedef union anon_0 anon_0;
@@ -1930,7 +1930,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct COL_tdstBoundingSphere_ {
     MTH4D_tdstVector_ stCenterPoint; /* +0x0 */
@@ -2493,7 +2493,7 @@ struct tdstDsgVar_ {
     unsigned char ucNbDsgVar; /* +0xc */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

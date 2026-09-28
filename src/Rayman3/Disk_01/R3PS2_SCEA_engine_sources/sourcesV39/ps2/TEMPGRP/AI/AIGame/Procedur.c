@@ -41,7 +41,7 @@ typedef struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn LST2_tdstAnchorTotdxH
 typedef struct tdst3dData_ tdst3dData_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_6 anon_6;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn;
@@ -2033,7 +2033,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
@@ -2194,7 +2194,7 @@ struct HIE_tdstSuperObject_ {
     unsigned char xTransition; /* +0x7e */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

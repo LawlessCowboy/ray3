@@ -66,7 +66,7 @@ typedef struct _RollOffParam _RollOffParam;
 typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
 typedef struct stInterpolatedPosition stInterpolatedPosition;
 typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 typedef struct LST2_tdstAnchorTotdxHandleToStateOpt LST2_tdstAnchorTotdxHandleToStateOpt;
@@ -2029,7 +2029,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct GEO_tdstParallelBox_ {
     MTH4D_tdstVector_ stMinPoint; /* +0x0 */
@@ -2239,7 +2239,7 @@ struct tdstInternalStructurCineinfo_ {
     unsigned char bDebugCamera; /* +0x7a */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */

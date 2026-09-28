@@ -2121,7 +2121,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct COL_tdstBoundingSphere_ {
     MTH4D_tdstVector_ stCenterPoint; /* +0x0 */
@@ -3308,10 +3308,18 @@ tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_* p_stTree)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* (*fn_p_fn_pGetProcedureFunctionPtr(tdeProcedureId_ eProcedureId))(HIE_tdstSuperObject_*, tdstNodeInterpret_*);
+
 tdstNodeInterpret_* fn_p_stEvalProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdstNodeInterpret_* (*p_fn_p_stProcedureFunctionPtr)(HIE_tdstSuperObject_*, tdstNodeInterpret_*);
-    /* TODO: decompile from asm/... */
+
+    p_fn_p_stProcedureFunctionPtr = fn_p_fn_pGetProcedureFunctionPtr(p_stTree->uDummy.uId.eProcedureId);
+    ucProcedureActionReturn = 0;
+    p_stTree = p_fn_p_stProcedureFunctionPtr(p_SuperObjPerso, ++p_stTree);
+    p_stValue->uDummy.uParam.ulValue = ucProcedureActionReturn & ~4;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1177–1177 */
@@ -3336,10 +3344,14 @@ void fn_vSetProcedureActionReturn(unsigned char ucActionReturn)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* (*fn_p_fn_pGetFunctionFunctionPtr(tdeFuncId_ eFuncId))(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
+
 tdstNodeInterpret_* fn_p_stEvalFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdstNodeInterpret_* (*p_fn_p_stFunctionFunctionPtr)(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
-    /* TODO: decompile from asm/... */
+
+    p_fn_p_stFunctionFunctionPtr = fn_p_fn_pGetFunctionFunctionPtr(p_stTree->uDummy.uId.eFuncId);
+    return p_fn_p_stFunctionFunctionPtr(p_SuperObjPerso, p_stTree + 1, p_stValue);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 918–919 */
@@ -3909,9 +3921,16 @@ tdstNodeInterpret_* fn_p_stEvalConstant(HIE_tdstSuperObject_* p_SuperObjPerso, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+
 tdstNodeInterpret_* fn_p_stEvalField(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char bResult;
+    bResult = fn_ucGetFieldValue(p_stTree->uDummy.uId.eFieldId, p_SuperObjPerso, p_stValue);
+    if (!bResult)
+        fn_vOnAIErm_M_UpdateLastError(10, 0);
+    return ++p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 319–321 */

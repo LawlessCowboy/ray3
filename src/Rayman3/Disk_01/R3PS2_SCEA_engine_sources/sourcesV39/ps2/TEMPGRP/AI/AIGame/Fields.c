@@ -42,7 +42,7 @@ typedef struct SECT_tdstListOfDNMLights_ SECT_tdstListOfDNMLights_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct tdstSubAnimInUse_ tdstSubAnimInUse_;
-typedef struct tduGetSetParam_ tduGetSetParam_;
+typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct anon_0 anon_0;
 typedef struct tdstGetSetParam_ tdstGetSetParam_;
 typedef struct _RollOffParam _RollOffParam;
@@ -2090,7 +2090,7 @@ struct tdstSubAnimInUse_ {
     unsigned char bMerge; /* +0x26 */
 };
 
-struct tduGetSetParam_ {
+union tduGetSetParam_ {
     float xValue; /* +0x0 */
     int lValue; /* +0x0 */
     unsigned int ulValue; /* +0x0 */
@@ -2214,7 +2214,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
@@ -3408,6 +3408,8 @@ unsigned char fn_ucGetFieldPadGlobalVector(void* p_stContext, tdstGetSetParam_* 
     return 1;
 }
 
+void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 281–290 */
 /* addr: 0x00211c00  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3426,7 +3428,16 @@ unsigned char fn_ucGetFieldPadGlobalVector(void* p_stContext, tdstGetSetParam_* 
  */
 unsigned char fn_ucGetFieldAbsoluteAxisZ(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    /* The retail code passes null axis pointers and copies through them. */
+    MTH3D_tdstVector_* p_stVecI = 0;
+    MTH3D_tdstVector_* p_stVecJ = 0;
+    MTH3D_tdstVector_* p_stVecK = 0;
+    MAT_fn_vGetRotationVectors(hSuperObjPerso->hGlobalMatrix, p_stVecI, p_stVecJ, p_stVecK);
+    ((unsigned int*)p_stGetSetParam)[0] = ((unsigned int*)p_stVecK)[0];
+    ((unsigned int*)p_stGetSetParam)[1] = ((unsigned int*)p_stVecK)[1];
+    ((unsigned int*)p_stGetSetParam)[2] = ((unsigned int*)p_stVecK)[2];
+    p_stGetSetParam->eType = E_vt_Vector;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 269–278 */
@@ -3447,7 +3458,16 @@ unsigned char fn_ucGetFieldAbsoluteAxisZ(HIE_tdstSuperObject_* hSuperObjPerso, t
  */
 unsigned char fn_ucGetFieldAbsoluteAxisY(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    /* The retail code passes null axis pointers and copies through them. */
+    MTH3D_tdstVector_* p_stVecI = 0;
+    MTH3D_tdstVector_* p_stVecJ = 0;
+    MTH3D_tdstVector_* p_stVecK = 0;
+    MAT_fn_vGetRotationVectors(hSuperObjPerso->hGlobalMatrix, p_stVecI, p_stVecJ, p_stVecK);
+    ((unsigned int*)p_stGetSetParam)[0] = ((unsigned int*)p_stVecJ)[0];
+    ((unsigned int*)p_stGetSetParam)[1] = ((unsigned int*)p_stVecJ)[1];
+    ((unsigned int*)p_stGetSetParam)[2] = ((unsigned int*)p_stVecJ)[2];
+    p_stGetSetParam->eType = E_vt_Vector;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 256–266 */
@@ -3468,7 +3488,16 @@ unsigned char fn_ucGetFieldAbsoluteAxisY(HIE_tdstSuperObject_* hSuperObjPerso, t
  */
 unsigned char fn_ucGetFieldAbsoluteAxisX(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    /* The retail code passes null axis pointers and copies through them. */
+    MTH3D_tdstVector_* p_stVecI = 0;
+    MTH3D_tdstVector_* p_stVecJ = 0;
+    MTH3D_tdstVector_* p_stVecK = 0;
+    MAT_fn_vGetRotationVectors(hSuperObjPerso->hGlobalMatrix, p_stVecI, p_stVecJ, p_stVecK);
+    ((unsigned int*)p_stGetSetParam)[0] = ((unsigned int*)p_stVecI)[0];
+    ((unsigned int*)p_stGetSetParam)[1] = ((unsigned int*)p_stVecI)[1];
+    ((unsigned int*)p_stGetSetParam)[2] = ((unsigned int*)p_stVecI)[2];
+    p_stGetSetParam->eType = E_vt_Vector;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 231–252 */

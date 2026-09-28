@@ -547,7 +547,13 @@ void IPT_fn_vSetGlobalVectorForPadNumber(unsigned char ucPadNumber, MTH3D_tdstVe
  */
 void IPT_fn_vSetAllOutputValueForPadNumber(unsigned char ucPadNumber, MTH3D_tdstVector_* p_stGlobalVector, short wHorizontalAxis, short wVerticalAxis, float xAnalogForce, float xTrueAnalogForce, float xRotationAngle, int lSector)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.stGlobalVector = *p_stGlobalVector;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.wHorizontalAxis = wHorizontalAxis;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.wVerticalAxis = wVerticalAxis;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.xAnalogForce = xAnalogForce;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.xTrueAnalogForce = xTrueAnalogForce;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.xRotationAngle = xRotationAngle;
+    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].stPadReadingOutput.lSector = lSector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 127–129 */
@@ -713,7 +719,11 @@ unsigned char IPT_fn_bGetKeyboardCancelInertiaForPadNumber(unsigned char ucPadNu
  */
 void IPT_fn_vGetKeyboardAxesForPadNumber(unsigned char ucPadNumber, IPT_tdstEntryElement_** p_hLeft, IPT_tdstEntryElement_** p_hRight, IPT_tdstEntryElement_** p_hUp, IPT_tdstEntryElement_** p_hDown, IPT_tdstEntryElement_** p_hSpeedUp)
 {
-    /* TODO: decompile from asm/... */
+    *p_hUp = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyUp;
+    *p_hDown = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyDown;
+    *p_hLeft = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyLeft;
+    *p_hRight = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyRight;
+    *p_hSpeedUp = IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeySpeedUp;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 72–74 */

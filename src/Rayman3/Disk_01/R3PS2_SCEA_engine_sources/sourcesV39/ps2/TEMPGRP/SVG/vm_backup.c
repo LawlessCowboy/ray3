@@ -3,6 +3,9 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+
+/* This unit was built without optimization. */
+#pragma optimization_level 0
 extern char* strcpy(char*, const char*);
 extern void* memcpy(void*, const void*, size_t);
 extern void* malloc(size_t);
@@ -146,7 +149,6 @@ int VMS_lInitFilenameList(int drive, int* lListSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 0
 int VMS_lGetFilenameInList(int lFileIndex, char* pcFilename)
 {
     if (lFileIndex >= VMS_lFilenameListSize || VMS_lFilenameListSize <= 0) {
@@ -156,7 +158,6 @@ int VMS_lGetFilenameInList(int lFileIndex, char* pcFilename)
     strcpy(pcFilename, VMS_ax_cFilenameList[lFileIndex]);
     return 0;
 }
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1332–1345 */
 /* addr: 0x00136da0  size: 128 bytes */
@@ -172,7 +173,6 @@ int VMS_lGetFilenameInList(int lFileIndex, char* pcFilename)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 0
 void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen)
 {
     int ucEncryptKey2;
@@ -185,7 +185,6 @@ void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen)
         ucEncryptKey *= 0x3a41c471;
     }
 }
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1354–1367 */
 /* addr: 0x00136e20  size: 128 bytes */
@@ -201,7 +200,6 @@ void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 0
 void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen)
 {
     int ucEncryptKey2;
@@ -214,7 +212,6 @@ void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen)
         ucEncryptKey *= 0x3a41c471;
     }
 }
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1377–1387 */
 /* addr: 0x00136ea0  size: 104 bytes */
@@ -228,7 +225,6 @@ void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 0
 int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen)
 {
     int lCheckSum;
@@ -241,7 +237,6 @@ int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen)
 
     return lCheckSum;
 }
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1585–1593 */
 /* addr: 0x00136f10  size: 136 bytes */
@@ -317,7 +312,6 @@ int BCDToInt100(int val)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 0
 int VMS_lGetFileDate(int drive, char* fname, anon_1* fDate)
 {
     anon_3 t;
@@ -344,7 +338,6 @@ int VMS_lGetFileDate(int drive, char* fname, anon_1* fDate)
     fDate->second = BCDToInt100(t.second);
     return 1;
 }
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1894–1910 */
 /* addr: 0x001371e0  size: 192 bytes */
@@ -360,7 +353,6 @@ int VMS_lGetFileDate(int drive, char* fname, anon_1* fDate)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 0
 int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, void** bufData, int* fileSize)
 {
     int ret;
@@ -372,7 +364,6 @@ int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, void** bufData, in
         return 0;
     return 1;
 }
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2034–2061 */
 /* addr: 0x001372a0  size: 264 bytes */
@@ -392,7 +383,6 @@ int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, void** bufData, in
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 0
 #pragma peephole on
 int VMS_lGetVmsCommentFromFile(int drive, char* fileName, char* comment)
 {
@@ -412,7 +402,6 @@ int VMS_lGetVmsCommentFromFile(int drive, char* fileName, char* comment)
     return ret;
 }
 #pragma peephole reset
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2199–2256 */
 /* addr: 0x001373b0  size: 276 bytes */
@@ -441,7 +430,6 @@ int VMS_lGetVmsCommentFromFile(int drive, char* fileName, char* comment)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 0
 #pragma peephole on
 tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName)
 {
@@ -471,7 +459,6 @@ tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName)
     return p_stBuffer;
 }
 #pragma peephole reset
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2292–2304 */
 /* addr: 0x001374d0  size: 216 bytes */
@@ -487,7 +474,6 @@ tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 0
 int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_stBuffer)
 {
     if (_p_stBuffer->cFileMode == 'w') return 0;
@@ -497,7 +483,6 @@ int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_
     _p_stBuffer->lCurrentPosition = _p_stBuffer->lCurrentPosition + _lSize * _lNumber;
     return 1;
 }
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2311–2342 */
 /* addr: 0x001375b0  size: 292 bytes */

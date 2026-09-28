@@ -142,7 +142,7 @@ struct MTH4D_tdstVector_ {
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-};
+} __attribute__((aligned(16)));
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
@@ -1089,9 +1089,21 @@ void MEC_fn_vDynamicComputeAbsoluteMatrix(DNM_stDynamics* p_stDynamic, HIE_tdstS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* hSupObj);
+
 void MEC_fn_vFreePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int ulFlags;
+
+    ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags;
+    ulFlags &= ~0x40000000;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40000000) ? 1 : 0))
+    {
+        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = 0;
+        fn_vReputCharacterSuperObjectAtTheWorld(hSupObj);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 143–146 */
