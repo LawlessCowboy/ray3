@@ -13,7 +13,7 @@
  */
 void Erm_fn_v_PrintErrMsgWithPersonalMsg(char* param0, char* p_cTxt2, char* p_cTxt3)
 {
-    Erm_fn_v_PrintErrMsgCore("%s %s", p_cTxt2, p_cTxt3);
+    printf("Erm_fn_v_PrintErrMsgWithPersonalMsg(%s,%s,%s)\n", param0, p_cTxt2, p_cTxt3);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ERM\Specif\cpaerps2.c lines 129–129 */
@@ -25,5 +25,5 @@ void Erm_fn_v_PrintErrMsgWithPersonalMsg(char* param0, char* p_cTxt2, char* p_cT
  */
 void Erm_fn_v_PrintErrMsg(char* p_cTxt1, char* p_cTxt2)
 {
-    Erm_fn_v_PrintErrMsgCore("%s %s", p_cTxt1, p_cTxt2);
+    printf("Erm_fn_v_PrintErrMsg(%s,%s)\n", p_cTxt1, p_cTxt2);
 }

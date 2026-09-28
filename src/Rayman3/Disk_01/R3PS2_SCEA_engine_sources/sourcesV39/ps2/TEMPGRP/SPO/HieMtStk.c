@@ -565,9 +565,10 @@ unsigned char HIE_fn_bLoadIdentity(void)
  */
 void HIE_fn_vInitMatrixStack(void)
 {
-    MAT_fn_vSetIdentity(g_p_stCurrentMatrix);
-    HIE_g_lNbMatrixInStack = 1;
-    HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack];
+    HIE_g_lNbMatrixInStack = 0;
+    MAT_fn_vSetIdentity((MAT_tdstTransformation_*)HIE_g_a_hMatrixStack[0]);
+    HIE_g_lNbMatrixInStack++;
+    g_p_stCurrentMatrix = (MAT_tdstTransformation_*)(HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1]);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieMtStk.c lines 41–44 */
@@ -590,6 +591,6 @@ void HIE_fn_vCreateMatrixStack(void)
 
     p_stMatrix = (MAT_tdstTransformation_ *)HMU_fn_p_vMalloc(0x60, 0);
     MAT_fn_vSetIdentity(p_stMatrix);
-    g_p_stCurrentMatrix = p_stMatrix;
+    HIE_g_a_hMatrixStack[0] = (int)p_stMatrix;
     HIE_g_lNbMatrixInStack = 1;
 }

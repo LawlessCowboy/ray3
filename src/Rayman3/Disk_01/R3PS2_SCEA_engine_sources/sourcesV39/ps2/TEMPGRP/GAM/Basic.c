@@ -2101,10 +2101,7 @@ void fn_vSetDisplayFlag(unsigned int ulFlag, unsigned char ucValue)
  */
 unsigned char fn_bIsNextLevelNameValid(void)
 {
-    char cValue;
-
-    cValue = g_stEngineStructure.szNextLevelName[0];
-    return !!cValue;
+    return (unsigned char)((g_stEngineStructure.szNextLevelName[0] == 0u) ^ 1u);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 599–600 */

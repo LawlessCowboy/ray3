@@ -465,9 +465,14 @@ char GLI_cGlobalFogIsOn;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Shared with Sectdraw.c: the retail ELF has a single local
+ * bNotCreateDefaultMaterial, and Sectmir.c's code is linked directly after
+ * Sectdraw.c's, consistent with Sectdraw.c including this file. */
+static int bNotCreateDefaultMaterial;
+
 void SCT_fn_vInitMaterialForGoThrough(void)
 {
-    g_bMirrorOnly = 1;
+    bNotCreateDefaultMaterial = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 952–964 */

@@ -33,10 +33,10 @@ struct GLI_tdstTexture_ {
     char a255_cFileName[128]; /* +0x4a */
 };
 
-static int bIsWriteEnable;
+static int bIsWriteEnable = 1;
 static short xSaveFogIsOn;
-static unsigned char ucSaveCyclingMode[2];
-static unsigned char ucSaveFunction;
+static unsigned char ucSaveCyclingMode[2] = { 0xff, 0xff };
+static unsigned char ucSaveFunction = 0xff;
 static unsigned int gs_ulDepthBufferTestEnabled;
 int p_stLightMapTexture;
 int g_lNumberOfBlackTriangles;
@@ -90,10 +90,10 @@ int GLI_DRV_bBeginScene(void)
  */
 void GLI_fn_vInitRenderParameters(void)
 {
-    xSaveFogIsOn = 0;
     bIsWriteEnable = 1;
-    ucSaveCyclingMode[0] = 0xff;
-    ucSaveCyclingMode[1] = 0xff;
+    xSaveFogIsOn = 0;
+
+    ucSaveCyclingMode[0] = ucSaveCyclingMode[1] = 0xff;
     ucSaveFunction = 0xff;
 }
 

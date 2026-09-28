@@ -1166,7 +1166,7 @@ unsigned int fn_ulMSWaySizeOf(void)
  */
 void GAM_fn_vChangeCharacterForMicro(HIE_tdstSuperObject_* _hCharacter)
 {
-    /* TODO: global symbol at 0x00542D30 is not recovered in this TU. */
+    g_stIndexMicrosList.hMicrosList.hFirstElementDyn->hMicroObj = _hCharacter->hLinkedObject.p_stCharacter;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 794–818 */

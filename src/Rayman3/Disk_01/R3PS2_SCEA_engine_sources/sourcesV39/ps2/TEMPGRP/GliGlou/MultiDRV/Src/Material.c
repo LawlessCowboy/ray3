@@ -931,6 +931,7 @@ float gs_fCoefOfMultiplicationForScolledTextures;
 tdstGliCaps_ GLI_g_stCaps;
 float g_AGO_AnimTimeScale;
 extern GLI_tdstMaterial_* GLI_g_StaticCopyOfArrayOfVisualMaterial[];
+extern GLI_tdstMaterial_** GLI_g_pArrayOfVisualMaterial;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 2358–2359 */
 /* addr: 0x002a9720  size: 24 bytes */
@@ -942,7 +943,7 @@ extern GLI_tdstMaterial_* GLI_g_StaticCopyOfArrayOfVisualMaterial[];
  */
 GLI_tdstMaterial_* fn_hGetVisualMaterialFromIndex(unsigned short uwIndex)
 {
-    return GLI_g_StaticCopyOfArrayOfVisualMaterial[uwIndex];
+    return GLI_g_pArrayOfVisualMaterial[uwIndex];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 949–953 */
@@ -1223,9 +1224,11 @@ void GLI_xSetMaterialTextureScrollingOnOff(GLI_tdstMaterial_* hMaterial, int bSw
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed)
+void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed)
 {
-    /* TODO: decompile from asm/... */
+    *p_fUSpeed = hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0];
+    *p_fVSpeed = hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[1];
+    *p_bSwitch = hMaterial->lIncrementIsEnable;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 341–346 */
@@ -1259,9 +1262,15 @@ void GLI_xSetMaterialTextureDecalage(GLI_tdstMaterial_* hMaterial, float fUSpeed
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xSetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int bSwitch, float fUSpeed, float fVSpeed)
+void GLI_xSetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int bSwitch, float fUSpeed, float fVSpeed)
 {
-    /* TODO: decompile from asm/... */
+    hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0] = fUSpeed;
+    hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[1] = fVSpeed;
+    hMaterial->fAddU = hMaterial->fConstantAddU = fUSpeed;
+    hMaterial->fAddV = hMaterial->fConstantAddV = fVSpeed;
+    hMaterial->lIncrementIsEnable = bSwitch;
+    if (fUSpeed == 0.0f && fVSpeed == 0.0f)
+        hMaterial->lIncrementIsEnable = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 289–301 */

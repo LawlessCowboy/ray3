@@ -429,7 +429,7 @@ float GEO_xGetZFarTransparencyLevel(void)
 void GEO_vSetZFarTransparencyZone(float _xZ)
 {
     GEO_g_xZFarTransparencyZone = _xZ;
-    if (0.0f != _xZ)
+    if (_xZ)
         GEO_g_xOoZFarTransparencyZone = 1.0f / _xZ;
 }
 

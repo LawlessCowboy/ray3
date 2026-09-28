@@ -17,9 +17,9 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **1,242 / 4,164** (+5 register-equivalent) | **45,428 / 1,511,580** (**3.0053%**) |
-| Library code | 598 / 3,668 | 22,228 / 756,524 (2.9382%) |
-| **Total** | **1,840 / 7,832** (+5 register-equivalent) | **67,656 / 2,268,104** (**2.9829%**) |
+| **Game code** | **1,295 / 4,164** (+5 register-equivalent) | **49,476 / 1,511,580** (**3.2731%**) |
+| Library code | 599 / 3,668 | 22,408 / 756,524 (2.9620%) |
+| **Total** | **1,894 / 7,832** (+5 register-equivalent) | **71,884 / 2,268,104** (**3.1693%**) |
 
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
   started yet.
@@ -81,8 +81,9 @@ The evidence-backed baseline compiler profile is:
 
 ```text
 -g -opt level=3 -farcall off -sdatathreshold 8 \
-   -inline on -strings reuse,nopool -enum int \
-   -Cpp_exceptions off -pragma "fast_fptosi on"
+   -inline on -strings reuse,nopool,readonly -enum int \
+   -Cpp_exceptions off -pragma "fast_fptosi on" -pragma "padloop on" \
+   -pragma "optimize_for_size off"
 ```
 
 `-opt level=3` and `-opt level=4` have been byte-identical for every current

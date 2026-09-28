@@ -251,7 +251,7 @@ int SND_g_iEnoughSound;
  */
 void ErrMessage(char* message)
 {
-    printf("[Error] %s\n", message);
+    printf("[ Error ] %s\n", message);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 518–522 */

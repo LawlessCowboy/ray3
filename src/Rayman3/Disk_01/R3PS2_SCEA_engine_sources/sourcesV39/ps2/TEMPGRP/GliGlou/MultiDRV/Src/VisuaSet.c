@@ -131,6 +131,9 @@ int g_p_stRawRLIsForThisObject;
 int g_p_stRLIForNextObjectToDraw;
 
 void ISI_hComputeBlendRLI(void* hRLI1, void* hRLI2, short xNumISILOD, float xPercent);
+ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD);
+int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD);
+void GLI_xSendObjectToViewportWithLightsFlag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask, unsigned int ulSuperObjectFlag);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 116–117 */
 /* addr: 0x002ab360  size: 16 bytes */
@@ -192,10 +195,10 @@ int GLI_hGetRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lDrawModeMask)
+void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask)
 {
-    g_p_stRawRLIsForThisObject = 0;
     g_p_stRLIForNextObjectToDraw = 0;
+    g_p_stRawRLIsForThisObject = 0;
     g_p_stLightMapUForNextObjectToDraw = 0;
     if (p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject)
         GLI_xSendObjectToViewportWithLights(p_stVpt, p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject, lDrawModeMask);
@@ -221,9 +224,25 @@ void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_lSendVisualSetToViewportWithRLI2Flag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lDrawModeMask, void* hISI, unsigned int ulSuperObjectFlag)
+void GLI_lSendVisualSetToViewportWithRLI2Flag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask, void* hISI, unsigned int ulSuperObjectFlag)
 {
-    /* TODO: decompile from asm/... */
+    if (hISI)
+    {
+        g_p_stRLIForNextObjectToDraw = (int)ISI_fn_dGetVertexRLILOD(hISI, 0);
+        g_p_stRawRLIsForThisObject = (int)ISI_fn_dGetVertexRLILOD(hISI, 0);
+        g_p_stLightMapUForNextObjectToDraw = ISI_fn_dGetVertexRLILODLightMapU(hISI, 0);
+    }
+    else
+    {
+        g_p_stRLIForNextObjectToDraw = 0;
+        g_p_stRawRLIsForThisObject = 0;
+        g_p_stLightMapUForNextObjectToDraw = 0;
+    }
+    if (p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject)
+        GLI_xSendObjectToViewportWithLightsFlag(p_stVpt, p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject, lDrawModeMask, ulSuperObjectFlag);
+    g_p_stRLIForNextObjectToDraw = 0;
+    g_p_stRawRLIsForThisObject = 0;
+    g_p_stLightMapUForNextObjectToDraw = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 229–252 */
@@ -246,9 +265,25 @@ void GLI_lSendVisualSetToViewportWithRLI2Flag(GLD_tdstViewportAttributes_* p_stV
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_lSendVisualSetToViewportWithRLI2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lDrawModeMask, void* hISI)
+void GLI_lSendVisualSetToViewportWithRLI2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask, void* hISI)
 {
-    /* TODO: decompile from asm/... */
+    if (hISI)
+    {
+        g_p_stRLIForNextObjectToDraw = (int)ISI_fn_dGetVertexRLILOD(hISI, 0);
+        g_p_stRawRLIsForThisObject = (int)ISI_fn_dGetVertexRLILOD(hISI, 0);
+        g_p_stLightMapUForNextObjectToDraw = ISI_fn_dGetVertexRLILODLightMapU(hISI, 0);
+    }
+    else
+    {
+        g_p_stRLIForNextObjectToDraw = 0;
+        g_p_stRawRLIsForThisObject = 0;
+        g_p_stLightMapUForNextObjectToDraw = 0;
+    }
+    if (p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject)
+        GLI_xSendObjectToViewportWithLights(p_stVpt, p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject, lDrawModeMask);
+    g_p_stRLIForNextObjectToDraw = 0;
+    g_p_stRawRLIsForThisObject = 0;
+    g_p_stLightMapUForNextObjectToDraw = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 206–206 */

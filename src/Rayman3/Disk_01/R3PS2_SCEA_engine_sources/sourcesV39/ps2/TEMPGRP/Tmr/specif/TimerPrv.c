@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+/* fn_vTimerGetCounter is inlined into its callers here yet still emitted as a
+ * callable function, which MWCC only does with automatic inlining. */
+#pragma auto_inline on
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _stTimerCount _stTimerCount;
 
@@ -37,6 +41,22 @@ short TMR_fn_wInitLibrary(void)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\specif\TimerPrv.c lines 113–114 */
+/* addr: 0x00323650  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 113
+ *   +0x0010 -> line 114
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vTimerGetCounter(void* unused, _stTimerCount* p_stValue)
+{
+    unsigned int count;
+    __asm__ volatile("mfc0 %0, $9" : "=r"(count));
+    p_stValue->m_ulLowPart = count;
+    p_stValue->m_ulHighPart = 0;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\specif\TimerPrv.c lines 210–214 */
 /* addr: 0x003235b0  size: 36 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -50,7 +70,7 @@ short TMR_fn_wInitLibrary(void)
 unsigned int TMR_fn_ulFastGetInternalCounter(void)
 {
     _stTimerCount st;
-    GLI_fn_vTimerPS2Counter(&st.m_ulLowPart);
+    fn_vTimerGetCounter(0, &st);
     return st.m_ulLowPart;
 }
 
@@ -87,23 +107,11 @@ void fn_vTimerWait(unsigned int ulTicksToWait)
 {
     _stTimerCount st;
     unsigned int ulTick;
-    /* TODO: decompile from asm/... */
-}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\specif\TimerPrv.c lines 113–114 */
-/* addr: 0x00323650  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 113
- *   +0x0010 -> line 114
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vTimerGetCounter(void* unused, _stTimerCount* p_stValue)
-{
-    unsigned int count;
-    __asm__ volatile("mfc0 %0, $9" : "=r"(count));
-    p_stValue->m_ulLowPart = count;
-    p_stValue->m_ulHighPart = 0;
+    fn_vTimerGetCounter(0, &st);
+    ulTick = st.m_ulLowPart;
+    while (st.m_ulLowPart - ulTick < ulTicksToWait)
+        fn_vTimerGetCounter(0, &st);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\specif\TimerPrv.c lines 89–89 */

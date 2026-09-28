@@ -64,8 +64,8 @@ MODEL_ORDER = {
 }
 MWCC_FLAGS = [
     '-c', '-g', '-opt', 'level=3', '-farcall', 'off', '-sdatathreshold', '8',
-    '-inline', 'on', '-strings', 'reuse,nopool', '-enum', 'int',
-    '-Cpp_exceptions', 'off', '-pragma', 'fast_fptosi on',
+    '-inline', 'on', '-strings', 'reuse,nopool,readonly', '-enum', 'int',
+    '-Cpp_exceptions', 'off', '-pragma', 'fast_fptosi on', '-pragma', 'padloop on', '-pragma', 'optimize_for_size off',
 ]
 
 
@@ -475,14 +475,39 @@ def infer_anonymous_hi_lo_address(target_bytes: bytes, hi_offset: int,
     a different synthetic name for the same table, so name-based lookup cannot
     resolve it.  The linked instruction pair still contains the complete
     address: HI16 contributes the upper half and the following LO16 addend is
-    sign-extended.  This is deliberately limited to adjacent HI/LO words and
-    is only used for anonymous object symbols (``@N``) in ``compare``.
+    sign-extended.  The caller pairs each HI16 with the nearest following
+    LO16 of the same anonymous object symbol (``@N``) in ``compare``.
     """
     if hi_offset < 0 or lo_offset < 0 or lo_offset + 4 > len(target_bytes):
         return None
     hi_word, = struct.unpack_from('<I', target_bytes, hi_offset)
     lo_word, = struct.unpack_from('<I', target_bytes, lo_offset)
     return (((hi_word & 0xFFFF) << 16) + signed16(lo_word & 0xFFFF)) & 0xFFFFFFFF
+
+
+def anonymous_object_matches(name: str, address: int, obj_sections: list[Section],
+                             obj_symbols: list[Symbol], target_sections: list[Section]) -> bool:
+    """Check an anonymous literal's bytes against the retail data it maps to.
+
+    String and constant literals (``@N`` objects in unrelocated data) must
+    carry identical bytes at the inferred retail address.  Objects whose
+    section has relocations, such as switch tables of code labels, cannot be
+    compared byte-for-byte and keep the address-only HI16/LO16 inference.
+    """
+    symbol = next((entry for entry in obj_symbols if entry.name == name), None)
+    if symbol is None or not symbol.size or not 0 < symbol.shndx < len(obj_sections):
+        return True
+    if any(section.type == 9 and section.info == symbol.shndx for section in obj_sections):
+        return True
+    obj_section = obj_sections[symbol.shndx]
+    if obj_section.type == 8:  # SHT_NOBITS
+        return True
+    candidate = obj_section.data[symbol.value:symbol.value + symbol.size]
+    for section in target_sections:
+        if section.addr and section.type != 8 and section.addr <= address < section.addr + section.size:
+            start = address - section.addr
+            return section.data[start:start + symbol.size] == candidate
+    return False
 
 
 # Registers whose identity is fixed by the MIPS EABI at calls and returns.
@@ -725,7 +750,12 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
                 continue
             relative = offset - candidate.value
             symbol = obj_symbols[symbol_index] if symbol_index < len(obj_symbols) else None
-            target_symbol = target_names.get(symbol.name) if symbol and symbol.name else None
+            # Anonymous ``@N`` names are object-local: the retail ELF reuses
+            # the same spellings for unrelated literals in other units, so a
+            # name lookup would bind to the wrong object.
+            target_symbol = (target_names.get(symbol.name)
+                             if symbol and symbol.name and not symbol.name.startswith('@')
+                             else None)
             record = {'offset': relative, 'type': reloc_type,
                       'symbol': symbol.name if symbol else ''}
             relocations.append(record)
@@ -746,13 +776,18 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
         name = record['symbol']
         if target_symbol is not None or not name.startswith('@') or record['type'] != 5:
             continue
-        lo = next((other for other, other_target in relocation_records
-                   if other['symbol'] == name and other['type'] == 6
-                   and other['offset'] == record['offset'] + 4), None)
+        # MWCC may schedule unrelated instructions between the HI16 and its
+        # LO16, so pair with the nearest following LO16 of the same symbol.
+        lo = min((other for other, other_target in relocation_records
+                  if other['symbol'] == name and other['type'] == 6
+                  and other['offset'] > record['offset']),
+                 key=lambda other: other['offset'], default=None)
         if lo is None:
             continue
         address = infer_anonymous_hi_lo_address(target_bytes, record['offset'], lo['offset'])
         if address is None:
+            continue
+        if not anonymous_object_matches(name, address, obj_sections, obj_symbols, sections):
             continue
         if (patch_relocation(candidate_bytes, record['offset'], 5, address, gp)
                 and patch_relocation(candidate_bytes, lo['offset'], 6, address, gp)):
@@ -1036,7 +1071,7 @@ def command_signature(args: argparse.Namespace) -> int:
     print('target ABI evidence:')
     for instruction_offset in range(0, len(target) - 3, 4):
         word = struct.unpack_from('<I', target, instruction_offset)[0]
-        mnemonic = rabbitizer.Instruction(word).disassemble() if rabbitizer else f'0x{word:08x}'
+        mnemonic = rabbitizer.Instruction(word, category=rabbitizer.InstrCategory.R5900).disassemble() if rabbitizer else f'0x{word:08x}'
         print(f'  +0x{instruction_offset:04x}: {mnemonic}')
     return 0
 
@@ -1112,8 +1147,8 @@ def format_word_diff(candidate_hex: str, target_hex: str, relocations: list[dict
                  or (want and is_control_transfer(want_value)) else ' ')
         flags += 'D' if delay_slot else ' '
         flags += f' {relocation_note}' if relocation_note else ''
-        got_asm = rabbitizer.Instruction(got_value).disassemble() if rabbitizer and got else ''
-        want_asm = rabbitizer.Instruction(want_value).disassemble() if rabbitizer and want else ''
+        got_asm = rabbitizer.Instruction(got_value, category=rabbitizer.InstrCategory.R5900).disassemble() if rabbitizer and got else ''
+        want_asm = rabbitizer.Instruction(want_value, category=rabbitizer.InstrCategory.R5900).disassemble() if rabbitizer and want else ''
         got_target = branch_target(got_value, offset, function_address) if got else None
         want_target = branch_target(want_value, offset, function_address) if want else None
         if got_target is not None:

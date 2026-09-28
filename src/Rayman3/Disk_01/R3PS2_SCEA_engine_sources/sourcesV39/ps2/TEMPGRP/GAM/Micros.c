@@ -1110,7 +1110,7 @@ int GAM_fn_bInitSoundTypes(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, char* pch_Buffer)
+int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, int s32_Unused, char* pch_Buffer)
 {
     sprintf(pch_Buffer, "Object type ambiance n\xb0 %d\n", s32_ObjectId);
     return 1;
@@ -1129,7 +1129,7 @@ int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, char* pch_Buffer)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeMusicInfo(int s32_ObjectId, char* pch_String)
+int fn_bObjectTypeMusicInfo(int s32_ObjectId, int s32_Unused, char* pch_String)
 {
     sprintf(pch_String, "Object type music n\xb0 %d\n", s32_ObjectId);
     return 1;

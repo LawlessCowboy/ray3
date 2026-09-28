@@ -228,22 +228,20 @@ void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimization_level 0
 int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen)
 {
     int lCheckSum;
     int i;
 
     lCheckSum = 0;
-    i = 0;
 
-    while (i < lLen)
-    {
+    for (i = 0; i < lLen; i++)
         lCheckSum += p_ucBuffer[i];
-        i++;
-    }
 
     return lCheckSum;
 }
+#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1585–1593 */
 /* addr: 0x00136f10  size: 136 bytes */

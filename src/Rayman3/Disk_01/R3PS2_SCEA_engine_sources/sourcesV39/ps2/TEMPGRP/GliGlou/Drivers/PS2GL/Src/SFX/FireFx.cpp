@@ -1258,6 +1258,27 @@ float GLI_BIG_GLOBALS_xGlobalAlpha;
 tdstEngineStructure_ g_stEngineStructure;
 int PS2glLiberator;
 
+/* The target writes COP0 register 24 (mtc0 zero, $24) around the effect
+ * loops; C cannot express it.  MWCC appends a hazard nop to an asm mtc0 unless
+ * the block says .set noreorder, so the closing write carries its nop
+ * explicitly where the target has one. */
+inline void FireFx_vClearCop0Register24(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    }
+}
+
+inline void FireFx_vClearCop0Register24Sync(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    nop
+    }
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 108–124 */
 /* addr: 0x002ec460  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1373,7 +1394,18 @@ void FireFx_vDisplay(void)
 void FireFx_vProcess(void)
 {
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+
+    p = FireFx_g_ListToDisplay.pFirst;
+    if (p)
+    {
+        FireFx_vClearCop0Register24();
+        while (p)
+        {
+            ((C_FireFx*)p->pFx)->Process();
+            p = p->pNext;
+        }
+        FireFx_vClearCop0Register24Sync();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 191–244 */

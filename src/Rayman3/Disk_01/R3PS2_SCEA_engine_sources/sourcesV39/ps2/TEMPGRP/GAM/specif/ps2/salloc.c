@@ -4,6 +4,11 @@
 
 #include <stddef.h>
 
+/* fn_vResetAllocator is inlined into fn_vInitAllocator yet still emitted as a
+ * callable function (transition.cxx calls it), which MWCC only does with
+ * automatic inlining; -inline auto project-wide regresses other units. */
+#pragma auto_inline on
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct anon_0 anon_0;
 typedef struct anon_1 anon_1;
@@ -57,7 +62,7 @@ void fn_vGetScreenShotDefaultName(void)
  */
 void fn_vFreeAllocator(anon_0* pstAllocator, void* pvClientAddress)
 {
-    channel_debug_printf(-1, "Free allocator %p\n", pvClientAddress);
+    channel_debug_printf(-1, "(%08x)->trfree (%08x)\n", pstAllocator, pvClientAddress);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\salloc.c lines 64–96 */
@@ -86,6 +91,29 @@ void fn_pvAllocAllocator(anon_0* pstAllocator, unsigned int u32Size)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\salloc.c lines 27–46 */
+/* addr: 0x0029f620  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 27
+ *   +0x0008 -> line 32
+ *   +0x0014 -> line 34
+ *   +0x0018 -> line 38
+ *   +0x0034 -> line 46
+ *   +0x0038 -> line 40
+ *   +0x003c -> line 46
+ *   +0x0044 -> line 40
+ *   +0x0048 -> line 46
+ * Recovered from .line/.symtab; the extractor emitted no debug record.
+ */
+void fn_vResetAllocator(anon_0* pstAllocator)
+{
+    pstAllocator->pcTop = pstAllocator->pcBase;
+    pstAllocator->pcTop += 4;
+    pstAllocator->pcTop = (pstAllocator->pcTop & 0xF) ? (pstAllocator->pcTop & -0x10) + 0x10 : pstAllocator->pcTop;
+    pstAllocator->pcTop -= 4;
+    channel_debug_printf(-1, "(%08x)->trreset()\n", pstAllocator);
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\salloc.c lines 52–58 */
 /* addr: 0x0029f5c0  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -97,18 +125,7 @@ void fn_pvAllocAllocator(anon_0* pstAllocator, unsigned int u32Size)
  */
 void fn_vInitAllocator(anon_0* pstAllocator, unsigned int u32Size, char* pcBuffer)
 {
-    char* pcTop;
-
     pstAllocator->u32Limit = u32Size;
     pstAllocator->pcBase = (int)pcBuffer;
-    pstAllocator->pcTop = (int)pcBuffer;
-    pcTop = (char*)pstAllocator->pcTop + 4;
-    pstAllocator->pcTop = (int)pcTop;
-
-    if ((pstAllocator->pcTop & 0xF) != 0)
-    {
-        pstAllocator->pcTop = (pstAllocator->pcTop & -0x10) + 0x10;
-    }
-
-    channel_debug_printf(-1, "@332", pstAllocator->pcTop - 4);
+    fn_vResetAllocator(pstAllocator);
 }

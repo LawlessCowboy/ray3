@@ -30,13 +30,20 @@ TOOLS_DIR := tools
 # - Debug sections are present in the target.
 # - level=3 and level=4 are codegen-equivalent in every current MWCCPS2 probe;
 #   level=3 is selected as the conservative spelling.
-# - Do not use -opt all/full or -opt speed: target-shaped loop evidence differs.
+# - optimize_for_size off (speed): the target unrolls loops (e.g. by 8 in
+#   PS2M2D_vReinitMenuTextures); adding it regressed no recorded match. The
+#   command-line spelling -opt speed,level=3 has no effect, so use the pragma.
 # - farcall=off and sdatathreshold=8 have direct target evidence.
-# - inline=off, strings=reuse,nopool, and enum=int are compiler defaults and
-#   currently have no evidence of project-wide override.
+# - inline=on, -Cpp_exceptions off and fast_fptosi were each adopted after
+#   whole-repo probes with no recorded-match regressions.
+# - strings=readonly: retail never addresses a string literal through GP small
+#   data; without it, literals of 8 bytes or less land in .sdata.
+# - padloop: R5900 short-loop workaround; retail pads short loops with nops.
+# - enum=int is the compiler default.
 MWCC_FLAGS := -c -g -opt level=3 -farcall off -sdatathreshold 8 \
-              -inline on -strings reuse,nopool -enum int \
-              -Cpp_exceptions off -pragma "fast_fptosi on"
+              -inline on -strings reuse,nopool,readonly -enum int \
+              -Cpp_exceptions off -pragma "fast_fptosi on" -pragma "padloop on" \
+              -pragma "optimize_for_size off"
 CPPFLAGS := -I$(INCLUDE_DIR)
 
 # Escaping spaces keeps GNU make paths such as "Program Files/..." intact.

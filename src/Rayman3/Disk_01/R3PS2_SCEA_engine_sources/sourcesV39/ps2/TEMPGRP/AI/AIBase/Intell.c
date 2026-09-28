@@ -3708,13 +3708,13 @@ tdstNodeInterpret_* fn_p_stEvalWayPointRef(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stEvalConstantVector(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stEvalConstantVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     ((int *)&p_stValue->uDummy.uParam)[0] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[0];
     ((int *)&p_stValue->uDummy.uParam)[1] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[1];
     ((int *)&p_stValue->uDummy.uParam)[2] = ((int *)p_stTree->uDummy.uParam.p_stVectorValue)[2];
     p_stValue->eType = E_vt_Vector;
-    return (tdstNodeInterpret_ *)((char *)p_stTree + 8);
+    return ++p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 606–665 */

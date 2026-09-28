@@ -1160,11 +1160,24 @@ void shw_fn_vInternalDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstS
  */
 unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj);
 unsigned char fn_bIsTransitionInProgress(void);
-/* Target +0x54 and +0x6c contain COP0 writes, which cannot be expressed
- * in C. Retain only those evidenced original assembly operations. */
+/* Target +0x54 and +0x6c contain COP0 writes (mtc0 zero, $24), which cannot
+ * be expressed in C. MWCC appends a hazard nop to an asm mtc0 unless the block
+ * says .set noreorder; the target has no nop after the first write and one
+ * after the second, so the second block carries it explicitly. */
 inline void SHW_vClearCop0Register24(void)
 {
-    asm { mtc0 zero, $24 }
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    }
+}
+inline void SHW_vClearCop0Register24Sync(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    nop
+    }
 }
 void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask)
 {
@@ -1176,7 +1189,7 @@ void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObje
     if ((ulCustomBits & 0x100) && !bTransitionInProgress) {
         SHW_vClearCop0Register24();
         shw_fn_vInternalDrawShadow(_p_stVpt, _hHandleOfCharacter, _hSprObjSector, _lSectorDrawmask);
-        SHW_vClearCop0Register24();
+        SHW_vClearCop0Register24Sync();
     }
 }
 

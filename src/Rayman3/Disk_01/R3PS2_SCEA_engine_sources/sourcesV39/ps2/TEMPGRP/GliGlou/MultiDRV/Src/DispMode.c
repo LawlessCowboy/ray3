@@ -77,10 +77,12 @@ int g_bDrawingBlackFrame;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The target reads COP0 Count with mfc0, which MWCC cannot emit from C;
+ * only that instruction is written as asm. */
 void GLI_fn_vTimerPS2Counter(unsigned int* pCount)
 {
-    unsigned int counter;
-    counter = GetCop0(9);
+    register unsigned int counter;
+    asm { mfc0 counter, $9 }
     *pCount = counter;
 }
 

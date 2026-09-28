@@ -11,6 +11,7 @@ struct tdstA3dGENERAL_ {
     int data[15];
 };
 extern tdstA3dGENERAL_* g_ax_pA3dGENERAL;
+extern tdstA3dGENERAL_* gp_stA3dGENERAL;
 
 float xEps;
 float ax_AcosTab[8192];
@@ -26,7 +27,7 @@ short ax_SinTab[8192];
  */
 tdstA3dGENERAL_* fn_p_GetA3dGENERAL(unsigned short _uwNumOfA3dGENERAL)
 {
-    return g_ax_pA3dGENERAL + _uwNumOfA3dGENERAL;
+    return gp_stA3dGENERAL + _uwNumOfA3dGENERAL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 534–591 */

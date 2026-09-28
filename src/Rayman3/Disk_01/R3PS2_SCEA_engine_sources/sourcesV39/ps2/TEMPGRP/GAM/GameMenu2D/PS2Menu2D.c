@@ -4,6 +4,7 @@
 
 #include <stddef.h>
 
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct anon_0 anon_0;
@@ -152,41 +153,10 @@ tdstMenu2DPages_ aMenu2DPages[35];
 int g_hFixMaterialForMenu2D;
 int g_hBGMaterialForMenu2D;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 27–46 */
-/* addr: 0x0029f620  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 27
- *   +0x0008 -> line 32
- *   +0x0014 -> line 34
- *   +0x0018 -> line 38
- *   +0x0034 -> line 46
- *   +0x0038 -> line 40
- *   +0x003c -> line 46
- *   +0x0044 -> line 40
- *   +0x0048 -> line 46
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vResetAllocator(anon_0* pstAllocator)
-{
-    unsigned int u32Address;
-
-    u32Address = (unsigned int)pstAllocator->hUsedBy;
-    pstAllocator->MaxSize = u32Address;
-    u32Address = pstAllocator->MaxSize + 4;
-    pstAllocator->MaxSize = u32Address;
-
-    u32Address = pstAllocator->MaxSize;
-    if ((u32Address & 0xF) != 0)
-    {
-        u32Address &= -0x10;
-        u32Address += 0x10;
-    }
-
-    pstAllocator->MaxSize = u32Address;
-    channel_debug_printf(-1, "@332", pstAllocator->MaxSize - 4);
-}
-
+/* fn_vResetAllocator (0x0029f620, lines 27-46) is attributed to this file by
+ * its debug record, but it belongs to salloc.c: it is linked between
+ * salloc.c's functions and this file's, fn_vInitAllocator inlines it, and its
+ * format string sits with salloc.c's.  It is reconstructed there. */
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 345–426 */
 /* addr: 0x0029f670  size: 488 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -303,7 +273,13 @@ int PS2M2D_vCheckMaterialInCache(GLI_tdstMaterial_* pMaterial)
 void PS2M2D_vReinitMenuTextures(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < 16; i++)
+    {
+        g_MenuTextureCache[i].pAssociatedMaterial = 0;
+        g_MenuTextureCache[i].UsedTime = 0;
+    }
+    gs_ulTextureCacheFrameNumber = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 241–281 */
