@@ -12,9 +12,9 @@ extern void* malloc(size_t);
 extern void free(void*);
 extern void* memset(void*, int, size_t);
 extern int SVG_fn_bGetActiveVms(void);
-extern unsigned char fn_bLoadUnknowFileFromSlot(int, char*, void**, int*);
+extern unsigned char fn_bLoadUnknowFileFromSlot();
 extern int SVG_fn_s32ReadFromFile(int, int, char*, void*, unsigned int);
-extern int SVG_fn_s32ReadUnknownFile(int, int, char*, void**, unsigned int*);
+extern int SVG_fn_s32ReadUnknownFile();
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct tdstSaveBuffer_ tdstSaveBuffer_;
@@ -128,12 +128,43 @@ char VMS_ax_cFilenameList[160][33];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern char* SVG_fn_szGetSonyCompliantDirName();
+extern int sprintf(char*, const char*, ...);
+extern int SVG_fn_s32ReadNextName();
+
 int VMS_lInitFilenameList(int drive, int* lListSize)
 {
     char wildcardName[33];
     char filename[33];
     int lRet;
-    /* TODO: decompile from asm/... */
+
+    if (VMS_lInitOk != 1)
+        return 0;
+
+    VMS_lFilenameListSize = 0;
+    *lListSize = -1;
+
+    sprintf(wildcardName, "%s*", SVG_fn_szGetSonyCompliantDirName(""));
+
+    if ((lRet = SVG_fn_s32ReadNextName((&g_axPadMapping)[drive].iPort, (&g_axPadMapping)[drive].iSlot, wildcardName, 0, filename)) == 0)
+        return 0;
+    if (filename[0] == 0)
+        return 0;
+
+    strcpy(VMS_ax_cFilenameList[VMS_lFilenameListSize++], filename);
+
+    while (VMS_lFilenameListSize < 160) {
+        lRet = SVG_fn_s32ReadNextName((&g_axPadMapping)[drive].iPort, (&g_axPadMapping)[drive].iSlot, wildcardName, 1, filename);
+        switch (lRet) {
+        case 0:
+            *lListSize = VMS_lFilenameListSize;
+            return 1;
+        case 1:
+            strcpy(VMS_ax_cFilenameList[VMS_lFilenameListSize++], filename);
+            break;
+        }
+    }
+    return lRet;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 890–900 */
@@ -254,10 +285,11 @@ int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen)
 int Int100ToBCD(int val)
 {
     int lReturn = 0;
+
     val %= 100;
+
     lReturn = val % 10;
-    val /= 10;
-    lReturn += val << 4;
+    lReturn += (val / 10) << 4;
     return lReturn;
 }
 
@@ -359,7 +391,7 @@ int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, void** bufData, in
     if (VMS_lInitOk != 1)
         return -1;
     ret = SVG_fn_s32ReadUnknownFile((&g_axPadMapping)[drive].iPort,
-        (&g_axPadMapping)[drive].iSlot, fname, bufData, (unsigned int*)fileSize);
+        (&g_axPadMapping)[drive].iSlot, fname, bufData, fileSize);
     if (ret != 1)
         return 0;
     return 1;
@@ -447,8 +479,8 @@ tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName)
     p_stBuffer->lCurrentPosition = 0;
     p_stBuffer->cFileMode = 'r';
     p_stBuffer->szFileName = (int)_szFileName;
-    if (!fn_bLoadUnknowFileFromSlot(lNumActiveVms, (char*)p_stBuffer->szFileName,
-        (void**)&p_stBuffer->szSaveBuffer, &p_stBuffer->lSize)) {
+    if (!fn_bLoadUnknowFileFromSlot(lNumActiveVms, p_stBuffer->szFileName,
+        &p_stBuffer->szSaveBuffer, &p_stBuffer->lSize)) {
         free(p_stBuffer);
         return NULL;
     }
@@ -502,9 +534,41 @@ int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned char fn_bSaveFileInSlot(int drive, int fileName, int vmsComment, int bootRomComment,
+    int gameName, int iconPalette, int iconData, unsigned short nbIcon, unsigned short iconSpeed,
+    int visualData, unsigned short visualType, int saveBuffer, int saveSize);
+
 int VMS_fn_bFclose(tdstSaveBuffer_* _p_stBuffer)
 {
     int bReturn;
     int lNumActiveVms;
-    /* TODO: decompile from asm/... */
+
+    bReturn = 1;
+
+    lNumActiveVms = SVG_fn_bGetActiveVms();
+    if (lNumActiveVms == -1)
+        bReturn = 0;
+
+    if (_p_stBuffer->cFileMode == 'w' && bReturn == 1) {
+        if (!fn_bSaveFileInSlot(lNumActiveVms,
+                                _p_stBuffer->szFileName,
+                                _p_stBuffer->szVmsComment,
+                                _p_stBuffer->szBootRomComment,
+                                _p_stBuffer->szGameName,
+                                _p_stBuffer->p_vIconPalette,
+                                _p_stBuffer->p_vIconData,
+                                _p_stBuffer->uwNbIcon,
+                                _p_stBuffer->uwIconSpeed,
+                                _p_stBuffer->p_vVisualData,
+                                _p_stBuffer->uwVisualType,
+                                _p_stBuffer->szSaveBuffer,
+                                _p_stBuffer->lCurrentPosition + 1)) {
+            bReturn = 0;
+        }
+    }
+
+    free((void*)_p_stBuffer->szSaveBuffer);
+    free(_p_stBuffer);
+
+    return bReturn;
 }

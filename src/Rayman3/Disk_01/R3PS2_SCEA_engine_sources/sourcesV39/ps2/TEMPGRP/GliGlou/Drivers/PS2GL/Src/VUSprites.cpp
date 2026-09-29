@@ -830,7 +830,7 @@ struct tag_GLlight {
     float fConstantAttenuation; /* +0x5c */
     float fLinearAttenuation; /* +0x60 */
     float fQuadraticAttenuation; /* +0x64 */
-};
+} __attribute__((aligned(16)));
 
 struct tag_GLmaterial {
     float vAmbient[4]; /* +0x0 */
@@ -841,7 +841,7 @@ struct tag_GLmaterial {
     float fAmbientIndex; /* +0x44 */
     float fDiffuseIndex; /* +0x48 */
     float fSpecularIndex; /* +0x4c */
-};
+} __attribute__((aligned(16)));
 
 struct tagListNodeSingle {
     unsigned int nIndex; /* +0x0 */
@@ -1645,7 +1645,7 @@ void GLI_vInitSpritesForThisViewport(GLD_tdstViewportAttributes_* _p_stViewport)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLI_vDrawWorldSpriteColor(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, unsigned int ulColor)
+int GLI_vDrawWorldSpriteColor(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime, unsigned int ulColor)
 {
     return pSpriteController->SimpleSpriteColor(pMaterial, pPosition, SizeX, SizeY, ulColor);
 }

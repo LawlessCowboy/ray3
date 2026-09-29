@@ -412,7 +412,7 @@ struct tag_GLlight {
     float fConstantAttenuation; /* +0x5c */
     float fLinearAttenuation; /* +0x60 */
     float fQuadraticAttenuation; /* +0x64 */
-};
+} __attribute__((aligned(16)));
 
 struct tagPS2glApiTable {
     void (*pfn_PS2glAccum)(unsigned int, float); /* +0x0 */
@@ -1054,7 +1054,7 @@ struct tag_GLmaterial {
     float fAmbientIndex; /* +0x44 */
     float fDiffuseIndex; /* +0x48 */
     float fSpecularIndex; /* +0x4c */
-};
+} __attribute__((aligned(16)));
 
 struct tagGLArrayInfo {
     int size; /* +0x0 */
@@ -1500,6 +1500,8 @@ struct tagGScontext {
 };
 
 tagGLcontext g_PS2glContext;
+
+void PS2glFlushBuffer(int bForce);
 tagPS2glApiTable g_PS2glApiTableList;
 int g_pPS2glApiTable;
 tagGScontext g_gsContext;
@@ -1630,7 +1632,9 @@ void PS2glAssembleQuads(void)
  */
 void impPS2glGetClipPlane(unsigned int plane, double* equation)
 {
-    /* TODO: decompile from asm/... */
+    if ((plane < 0x3000) || (plane >= 0x3000 + g_PS2glContext.iMaxClipPlanes))
+        return;
+    *(quad*)equation = *(quad*)g_PS2glContext.avClipPlane[plane - 0x3000];
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1787–1791 */
@@ -1645,7 +1649,9 @@ void impPS2glGetClipPlane(unsigned int plane, double* equation)
  */
 void impPS2glClipPlane(unsigned int plane, double* equation)
 {
-    /* TODO: decompile from asm/... */
+    if ((plane < 0x3000) || (plane >= 0x3000 + g_PS2glContext.iMaxClipPlanes))
+        return;
+    *(quad*)g_PS2glContext.avClipPlane[plane - 0x3000] = *(quad*)equation;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1780–1781 */
@@ -1658,7 +1664,7 @@ void impPS2glClipPlane(unsigned int plane, double* equation)
  */
 void impPS2glMultiTexCoord4fvARB(unsigned int texture, float* v)
 {
-    *(volatile quad*)(*(volatile int*)(0x0038caf4)) = *(volatile quad*)v;
+    *(quad*)g_PS2glContext.pvcurTextCoord = *(quad*)v;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1774–1776 */
@@ -1672,7 +1678,8 @@ void impPS2glMultiTexCoord4fvARB(unsigned int texture, float* v)
  */
 void impPS2glMultiTexCoord4dvARB(unsigned int texture, double* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r, q;
+    q = (float)v[3]; r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r; g_PS2glContext.vacurTexCoords[texture][3] = q;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1769–1771 */
@@ -1685,7 +1692,8 @@ void impPS2glMultiTexCoord4dvARB(unsigned int texture, double* v)
  */
 void impPS2glMultiTexCoord4ivARB(unsigned int texture, int* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r, q;
+    q = (float)v[3] / 2147483648.0f; r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r; g_PS2glContext.vacurTexCoords[texture][3] = q;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1763–1765 */
@@ -1698,7 +1706,8 @@ void impPS2glMultiTexCoord4ivARB(unsigned int texture, int* v)
  */
 void impPS2glMultiTexCoord4svARB(unsigned int texture, short* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r, q;
+    q = (float)v[3] / 32767.0f; r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r; g_PS2glContext.vacurTexCoords[texture][3] = q;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1755–1759 */
@@ -1722,7 +1731,10 @@ void impPS2glMultiTexCoord4svARB(unsigned int texture, short* v)
  */
 void impPS2glMultiTexCoord4fARB(unsigned int texture, float s, float t, float r, float q)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = s;
+    g_PS2glContext.vacurTexCoords[texture][1] = t;
+    g_PS2glContext.vacurTexCoords[texture][2] = r;
+    g_PS2glContext.vacurTexCoords[texture][3] = q;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1749–1751 */
@@ -1736,7 +1748,7 @@ void impPS2glMultiTexCoord4fARB(unsigned int texture, float s, float t, float r,
  */
 void impPS2glMultiTexCoord4dARB(unsigned int texture, double s, double t, double r, double q)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = (float)t; g_PS2glContext.vacurTexCoords[texture][2] = (float)r; g_PS2glContext.vacurTexCoords[texture][3] = (float)q;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1744–1746 */
@@ -1749,7 +1761,7 @@ void impPS2glMultiTexCoord4dARB(unsigned int texture, double s, double t, double
  */
 void impPS2glMultiTexCoord4iARB(unsigned int texture, int s, int t, int r, int q)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][3] = (float)q / 2147483648.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1738–1740 */
@@ -1762,7 +1774,7 @@ void impPS2glMultiTexCoord4iARB(unsigned int texture, int s, int t, int r, int q
  */
 void impPS2glMultiTexCoord4sARB(unsigned int texture, short s, short t, short r, short q)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 32767.0f; g_PS2glContext.vacurTexCoords[texture][3] = (float)q / 32767.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1732–1733 */
@@ -1775,7 +1787,8 @@ void impPS2glMultiTexCoord4sARB(unsigned int texture, short s, short t, short r,
  */
 void impPS2glMultiTexCoord3fvARB(unsigned int texture, float* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r;
+    r = v[2]; t = v[1]; s = v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1726–1728 */
@@ -1789,7 +1802,8 @@ void impPS2glMultiTexCoord3fvARB(unsigned int texture, float* v)
  */
 void impPS2glMultiTexCoord3dvARB(unsigned int texture, double* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r;
+    r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1722–1723 */
@@ -1802,7 +1816,8 @@ void impPS2glMultiTexCoord3dvARB(unsigned int texture, double* v)
  */
 void impPS2glMultiTexCoord3ivARB(unsigned int texture, int* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r;
+    r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1717–1718 */
@@ -1815,7 +1830,8 @@ void impPS2glMultiTexCoord3ivARB(unsigned int texture, int* v)
  */
 void impPS2glMultiTexCoord3svARB(unsigned int texture, short* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r;
+    r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t; g_PS2glContext.vacurTexCoords[texture][2] = r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1710–1713 */
@@ -1838,7 +1854,9 @@ void impPS2glMultiTexCoord3svARB(unsigned int texture, short* v)
  */
 void impPS2glMultiTexCoord3fARB(unsigned int texture, float s, float t, float r)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = s;
+    g_PS2glContext.vacurTexCoords[texture][1] = t;
+    g_PS2glContext.vacurTexCoords[texture][2] = r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1704–1706 */
@@ -1852,7 +1870,7 @@ void impPS2glMultiTexCoord3fARB(unsigned int texture, float s, float t, float r)
  */
 void impPS2glMultiTexCoord3dARB(unsigned int texture, double s, double t, double r)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = (float)t; g_PS2glContext.vacurTexCoords[texture][2] = (float)r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1700–1701 */
@@ -1865,7 +1883,7 @@ void impPS2glMultiTexCoord3dARB(unsigned int texture, double s, double t, double
  */
 void impPS2glMultiTexCoord3iARB(unsigned int texture, int s, int t, int r)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 2147483648.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1695–1696 */
@@ -1878,7 +1896,7 @@ void impPS2glMultiTexCoord3iARB(unsigned int texture, int s, int t, int r)
  */
 void impPS2glMultiTexCoord3sARB(unsigned int texture, short s, short t, short r)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[texture][2] = (float)r / 32767.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1689–1690 */
@@ -1891,7 +1909,7 @@ void impPS2glMultiTexCoord3sARB(unsigned int texture, short s, short t, short r)
  */
 void impPS2glMultiTexCoord2fvARB(unsigned int texture, float* v)
 {
-    /* TODO: decompile from asm/... */
+    float t = v[1], s = v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1683–1685 */
@@ -1905,7 +1923,8 @@ void impPS2glMultiTexCoord2fvARB(unsigned int texture, float* v)
  */
 void impPS2glMultiTexCoord2dvARB(unsigned int texture, double* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t;
+    t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1679–1680 */
@@ -1918,7 +1937,8 @@ void impPS2glMultiTexCoord2dvARB(unsigned int texture, double* v)
  */
 void impPS2glMultiTexCoord2ivARB(unsigned int texture, int* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t;
+    t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1674–1675 */
@@ -1931,7 +1951,8 @@ void impPS2glMultiTexCoord2ivARB(unsigned int texture, int* v)
  */
 void impPS2glMultiTexCoord2svARB(unsigned int texture, short* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t;
+    t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][0] = s; g_PS2glContext.vacurTexCoords[texture][1] = t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1668–1670 */
@@ -1965,7 +1986,7 @@ void impPS2glMultiTexCoord2fARB(unsigned int texture, float s, float t)
  */
 void impPS2glMultiTexCoord2dARB(unsigned int texture, double s, double t)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = (float)t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1658–1659 */
@@ -1978,7 +1999,7 @@ void impPS2glMultiTexCoord2dARB(unsigned int texture, double s, double t)
  */
 void impPS2glMultiTexCoord2iARB(unsigned int texture, int s, int t)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 2147483648.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1653–1654 */
@@ -1991,7 +2012,7 @@ void impPS2glMultiTexCoord2iARB(unsigned int texture, int s, int t)
  */
 void impPS2glMultiTexCoord2sARB(unsigned int texture, short s, short t)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = (float)t / 32767.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1647–1648 */
@@ -2004,7 +2025,7 @@ void impPS2glMultiTexCoord2sARB(unsigned int texture, short s, short t)
  */
 void impPS2glMultiTexCoord1fvARB(unsigned int texture, float* v)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = v[0]; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1641–1643 */
@@ -2018,7 +2039,7 @@ void impPS2glMultiTexCoord1fvARB(unsigned int texture, float* v)
  */
 void impPS2glMultiTexCoord1dvARB(unsigned int texture, double* v)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)v[0]; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1637–1638 */
@@ -2031,7 +2052,7 @@ void impPS2glMultiTexCoord1dvARB(unsigned int texture, double* v)
  */
 void impPS2glMultiTexCoord1ivARB(unsigned int texture, int* v)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1632–1633 */
@@ -2044,7 +2065,7 @@ void impPS2glMultiTexCoord1ivARB(unsigned int texture, int* v)
  */
 void impPS2glMultiTexCoord1svARB(unsigned int texture, short* v)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1626–1628 */
@@ -2078,7 +2099,7 @@ void impPS2glMultiTexCoord1fARB(unsigned int texture, float s)
  */
 void impPS2glMultiTexCoord1dARB(unsigned int texture, double s)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1616–1617 */
@@ -2091,7 +2112,7 @@ void impPS2glMultiTexCoord1dARB(unsigned int texture, double s)
  */
 void impPS2glMultiTexCoord1iARB(unsigned int texture, int s)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1611–1612 */
@@ -2104,7 +2125,7 @@ void impPS2glMultiTexCoord1iARB(unsigned int texture, int s)
  */
 void impPS2glMultiTexCoord1sARB(unsigned int texture, short s)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[texture][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[texture][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1605–1606 */
@@ -2117,7 +2138,7 @@ void impPS2glMultiTexCoord1sARB(unsigned int texture, short s)
  */
 void impPS2glTexCoord4fv(float* v)
 {
-    *(volatile quad*)(*(volatile int*)(0x0038caf4)) = *(volatile quad*)v;
+    *(quad*)g_PS2glContext.pvcurTextCoord = *(quad*)v;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1599–1601 */
@@ -2131,7 +2152,8 @@ void impPS2glTexCoord4fv(float* v)
  */
 void impPS2glTexCoord4dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r, q;
+    q = (float)v[3]; r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r; g_PS2glContext.vacurTexCoords[0][3] = q;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1594–1596 */
@@ -2144,7 +2166,8 @@ void impPS2glTexCoord4dv(double* v)
  */
 void impPS2glTexCoord4iv(int* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r, q;
+    q = (float)v[3] / 2147483648.0f; r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r; g_PS2glContext.vacurTexCoords[0][3] = q;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1588–1590 */
@@ -2157,7 +2180,8 @@ void impPS2glTexCoord4iv(int* v)
  */
 void impPS2glTexCoord4sv(short* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r, q;
+    q = (float)v[3] / 32767.0f; r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r; g_PS2glContext.vacurTexCoords[0][3] = q;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1567–1584 */
@@ -2190,7 +2214,7 @@ void impPS2glTexCoord4f(float s, float t, float r, float q)
  */
 void impPS2glTexCoord4d(double s, double t, double r, double q)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = (float)t; g_PS2glContext.vacurTexCoords[0][2] = (float)r; g_PS2glContext.vacurTexCoords[0][3] = (float)q;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1554–1556 */
@@ -2203,7 +2227,7 @@ void impPS2glTexCoord4d(double s, double t, double r, double q)
  */
 void impPS2glTexCoord4i(int s, int t, int r, int q)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][3] = (float)q / 2147483648.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1548–1550 */
@@ -2216,7 +2240,7 @@ void impPS2glTexCoord4i(int s, int t, int r, int q)
  */
 void impPS2glTexCoord4s(short s, short t, short r, short q)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 32767.0f; g_PS2glContext.vacurTexCoords[0][3] = (float)q / 32767.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1542–1543 */
@@ -2244,7 +2268,8 @@ void impPS2glTexCoord3fv(float* v)
  */
 void impPS2glTexCoord3dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r;
+    r = (float)v[2]; t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1532–1533 */
@@ -2257,7 +2282,8 @@ void impPS2glTexCoord3dv(double* v)
  */
 void impPS2glTexCoord3iv(int* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r;
+    r = (float)v[2] / 2147483648.0f; t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1527–1528 */
@@ -2270,7 +2296,8 @@ void impPS2glTexCoord3iv(int* v)
  */
 void impPS2glTexCoord3sv(short* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t, r;
+    r = (float)v[2] / 32767.0f; t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t; g_PS2glContext.vacurTexCoords[0][2] = r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1509–1523 */
@@ -2285,9 +2312,9 @@ void impPS2glTexCoord3sv(short* v)
  */
 void impPS2glTexCoord3f(float s, float t, float r)
 {
-    *(volatile float *)(0x0038cad0) = s;
-    *(volatile float *)(0x0038cad4) = t;
-    *(volatile float *)(0x0038cad8) = r;
+    g_PS2glContext.vacurTexCoords[0][0] = s;
+    g_PS2glContext.vacurTexCoords[0][1] = t;
+    g_PS2glContext.vacurTexCoords[0][2] = r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1501–1503 */
@@ -2301,7 +2328,7 @@ void impPS2glTexCoord3f(float s, float t, float r)
  */
 void impPS2glTexCoord3d(double s, double t, double r)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = (float)t; g_PS2glContext.vacurTexCoords[0][2] = (float)r;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1497–1498 */
@@ -2314,7 +2341,7 @@ void impPS2glTexCoord3d(double s, double t, double r)
  */
 void impPS2glTexCoord3i(int s, int t, int r)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 2147483648.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1492–1493 */
@@ -2327,7 +2354,7 @@ void impPS2glTexCoord3i(int s, int t, int r)
  */
 void impPS2glTexCoord3s(short s, short t, short r)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 32767.0f; g_PS2glContext.vacurTexCoords[0][2] = (float)r / 32767.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1486–1487 */
@@ -2340,10 +2367,7 @@ void impPS2glTexCoord3s(short s, short t, short r)
  */
 void impPS2glTexCoord2fv(float* v)
 {
-    float v1 = v[1];
-    float v0 = v[0];
-    *(volatile float *)(0x0038cad0) = v0;
-    *(volatile float *)(0x0038cad4) = v1;
+    float t = v[1], s = v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1480–1482 */
@@ -2357,7 +2381,8 @@ void impPS2glTexCoord2fv(float* v)
  */
 void impPS2glTexCoord2dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t;
+    t = (float)v[1]; s = (float)v[0]; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1476–1477 */
@@ -2370,7 +2395,8 @@ void impPS2glTexCoord2dv(double* v)
  */
 void impPS2glTexCoord2iv(int* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t;
+    t = (float)v[1] / 2147483648.0f; s = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1471–1472 */
@@ -2383,7 +2409,8 @@ void impPS2glTexCoord2iv(int* v)
  */
 void impPS2glTexCoord2sv(short* v)
 {
-    /* TODO: decompile from asm/... */
+    float s, t;
+    t = (float)v[1] / 32767.0f; s = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][0] = s; g_PS2glContext.vacurTexCoords[0][1] = t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1456–1467 */
@@ -2397,8 +2424,8 @@ void impPS2glTexCoord2sv(short* v)
  */
 void impPS2glTexCoord2f(float s, float t)
 {
-    *(volatile float *)(0x0038cad0) = s;
-    *(volatile float *)(0x0038cad4) = t;
+    g_PS2glContext.vacurTexCoords[0][0] = s;
+    g_PS2glContext.vacurTexCoords[0][1] = t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1448–1450 */
@@ -2412,7 +2439,7 @@ void impPS2glTexCoord2f(float s, float t)
  */
 void impPS2glTexCoord2d(double s, double t)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = (float)t;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1444–1445 */
@@ -2425,7 +2452,7 @@ void impPS2glTexCoord2d(double s, double t)
  */
 void impPS2glTexCoord2i(int s, int t)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 2147483648.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1439–1440 */
@@ -2438,7 +2465,7 @@ void impPS2glTexCoord2i(int s, int t)
  */
 void impPS2glTexCoord2s(short s, short t)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = (float)t / 32767.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1433–1434 */
@@ -2451,8 +2478,7 @@ void impPS2glTexCoord2s(short s, short t)
  */
 void impPS2glTexCoord1fv(float* v)
 {
-    *(volatile float *)(0x0038cad0) = v[0];
-    *(volatile int *)(0x0038cad4) = 0;
+    g_PS2glContext.vacurTexCoords[0][0] = v[0]; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1427–1429 */
@@ -2466,7 +2492,7 @@ void impPS2glTexCoord1fv(float* v)
  */
 void impPS2glTexCoord1dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)v[0]; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1423–1424 */
@@ -2479,7 +2505,7 @@ void impPS2glTexCoord1dv(double* v)
  */
 void impPS2glTexCoord1iv(int* v)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1418–1419 */
@@ -2492,7 +2518,7 @@ void impPS2glTexCoord1iv(int* v)
  */
 void impPS2glTexCoord1sv(short* v)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)v[0] / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1403–1414 */
@@ -2506,8 +2532,8 @@ void impPS2glTexCoord1sv(short* v)
  */
 void impPS2glTexCoord1f(float s)
 {
-    *(volatile float *)(0x0038cad0) = s;
-    *(volatile int *)(0x0038cad4) = 0;
+    g_PS2glContext.vacurTexCoords[0][0] = s;
+    g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1395–1397 */
@@ -2521,7 +2547,7 @@ void impPS2glTexCoord1f(float s)
  */
 void impPS2glTexCoord1d(double s)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1391–1392 */
@@ -2534,7 +2560,7 @@ void impPS2glTexCoord1d(double s)
  */
 void impPS2glTexCoord1i(int s)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 2147483648.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1386–1387 */
@@ -2547,7 +2573,7 @@ void impPS2glTexCoord1i(int s)
  */
 void impPS2glTexCoord1s(short s)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurTexCoords[0][0] = (float)s / 32767.0f; g_PS2glContext.vacurTexCoords[0][1] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1356–1379 */
@@ -2700,25 +2726,25 @@ void impPS2glLightf(unsigned int light, unsigned int pname, float param)
  */
 void impPS2glLightModeliv(unsigned int pname, int* params)
 {
-    float v[4];
-    /* TODO: decompile from asm/... */
-}
+    switch (pname) {
+    case 0xF00:
+        g_PS2glContext.bLightModelDiffuseOnly = (params[0] != 0);
+        break;
+    case 0xB51:
+        g_PS2glContext.bLocalViewer = (params[0] != 0);
+        break;
+    case 0xB52:
+        g_PS2glContext.bLightModelTwoSide = (params[0] != 0);
+        break;
+    case 0xB53: {
+        float v[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+        v[0] = (float)params[0] / 2147483648.0f; v[1] = (float)params[1] / 2147483648.0f; v[2] = (float)params[2] / 2147483648.0f; v[3] = (float)params[3] / 2147483648.0f;
+        *(quad*)g_PS2glContext.vAmbient = *(quad*)v;
+        break;
+    }
+    }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1194–1207 */
-/* addr: 0x001456b0  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1194
- *   +0x0030 -> line 1199
- *   +0x0090 -> line 1200
- *   +0x0098 -> line 1202
- *   +0x00a8 -> line 1206
- *   +0x00b0 -> line 1207
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void impPS2glLightModelfv(unsigned int pname, float* params)
-{
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.bLightsChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1175–1189 */
@@ -2735,10 +2761,53 @@ void impPS2glLightModelfv(unsigned int pname, float* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void impPS2glLightModeli(unsigned int pname, int param)
 {
-    /* TODO: decompile from asm/... */
+    switch (pname) {
+    case 0xF00:
+        g_PS2glContext.bLightModelDiffuseOnly = (param != 0);
+        break;
+    case 0xB51:
+        g_PS2glContext.bLocalViewer = (param != 0);
+        break;
+    case 0xB52:
+        g_PS2glContext.bLightModelTwoSide = (param != 0);
+        break;
+    }
+
+    g_PS2glContext.bLightsChanged = 1;
 }
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1194–1207 */
+/* addr: 0x001456b0  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1194
+ *   +0x0030 -> line 1199
+ *   +0x0090 -> line 1200
+ *   +0x0098 -> line 1202
+ *   +0x00a8 -> line 1206
+ *   +0x00b0 -> line 1207
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void impPS2glLightModelfv(unsigned int pname, float* params)
+{
+    switch (pname) {
+    case 0xF00:
+    case 0xB51:
+    case 0xB52:
+        impPS2glLightModeli(pname, (int)params[0]);
+        break;
+    case 0xB53:
+        *(quad*)g_PS2glContext.vAmbient = *(quad*)params;
+        break;
+    }
+
+    g_PS2glContext.bLightsChanged = 1;
+}
+
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1156–1170 */
 /* addr: 0x001457d0  size: 172 bytes */
@@ -2756,7 +2825,19 @@ void impPS2glLightModeli(unsigned int pname, int param)
  */
 void impPS2glLightModelf(unsigned int pname, float param)
 {
-    /* TODO: decompile from asm/... */
+    switch (pname) {
+    case 0xF00:
+        g_PS2glContext.bLightModelDiffuseOnly = (param != 0.0f);
+        break;
+    case 0xB51:
+        g_PS2glContext.bLocalViewer = (param != 0.0f);
+        break;
+    case 0xB52:
+        g_PS2glContext.bLightModelTwoSide = (param != 0.0f);
+        break;
+    }
+
+    g_PS2glContext.bLightsChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1141–1151 */
@@ -2806,7 +2887,35 @@ void impPS2glMaterialiv(unsigned int face, unsigned int pname, int* params)
  */
 void impPS2glMaterialfv(unsigned int face, unsigned int pname, float* params)
 {
-    /* TODO: decompile from asm/... */
+    tag_GLmaterial* pMaterial;
+
+    if (face == 0x408) {
+        impPS2glMaterialfv(0x404, pname, params);
+        impPS2glMaterialfv(0x405, pname, params);
+        return;
+    }
+
+    if (face == 0x404)
+        pMaterial = &g_PS2glContext.Materials[0];
+    else
+        pMaterial = &g_PS2glContext.Materials[1];
+
+    switch (pname) {
+    case 0x1602: *(quad*)pMaterial->vDiffuse = *(quad*)params;
+    case 0x1200: *(quad*)pMaterial->vAmbient = *(quad*)params; break;
+    case 0x1201: *(quad*)pMaterial->vDiffuse = *(quad*)params; break;
+    case 0x1202: *(quad*)pMaterial->vSpecular = *(quad*)params; break;
+    case 0x1600: *(quad*)pMaterial->vEmission = *(quad*)params; break;
+    case 0x1601:
+        pMaterial->fShininess = params[0]; break;
+    case 0x1603:
+        pMaterial->fAmbientIndex = params[0];
+        pMaterial->fDiffuseIndex = params[1];
+        pMaterial->fSpecularIndex = params[2];
+        break;
+    }
+
+    g_PS2glContext.bMaterialChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1102–1103 */
@@ -2819,7 +2928,7 @@ void impPS2glMaterialfv(unsigned int face, unsigned int pname, float* params)
  */
 void impPS2glMateriali(unsigned int face, unsigned int pname, int param)
 {
-    /* TODO: decompile from asm/... */
+    if (pname == 0x1601) { switch (face) { case 0x408: g_PS2glContext.Materials[0].fShininess = (float)param; case 0x405: g_PS2glContext.Materials[1].fShininess = (float)param; break; case 0x404: g_PS2glContext.Materials[0].fShininess = (float)param; break; }  g_PS2glContext.bMaterialChanged = 1; }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1082–1097 */
@@ -2838,7 +2947,20 @@ void impPS2glMateriali(unsigned int face, unsigned int pname, int param)
  */
 void impPS2glMaterialf(unsigned int face, unsigned int pname, float param)
 {
-    /* TODO: decompile from asm/... */
+    if (pname == 0x1601) {
+        switch (face) {
+        case 0x408:
+            g_PS2glContext.Materials[0].fShininess = param;
+        case 0x405:
+            g_PS2glContext.Materials[1].fShininess = param;
+            break;
+        case 0x404:
+            g_PS2glContext.Materials[0].fShininess = param;
+            break;
+        }
+
+        g_PS2glContext.bMaterialChanged = 1;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1049–1077 */
@@ -3329,7 +3451,24 @@ void impPS2glVertex4d(double X, double Y, double Z, double W)
  */
 void impPS2glVertex4f(float x, float y, float z, float w)
 {
-    /* TODO: decompile from asm/... */
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) {
+        if (g_PS2glContext.eBeginMode == 7)
+            PS2glAssembleQuads();
+        PS2glFlushBuffer(0);
+    }
+
+    (*g_PS2glContext.pVBuf)[0] = x;
+    (*g_PS2glContext.pVBuf)[1] = y;
+    (*g_PS2glContext.pVBuf)[2] = z;
+    (*g_PS2glContext.pVBuf++)[3] = w;
+
+    *(quad*)g_PS2glContext.pNBuf++ = *(quad*)g_PS2glContext.vcurNormal;
+    *(quad*)g_PS2glContext.pCBuf++ = *(quad*)g_PS2glContext.vacurColor[0];
+    *(quad*)g_PS2glContext.pCBuf_b++ = *(quad*)g_PS2glContext.vacurColor[1];
+    *(quad*)g_PS2glContext.pTBuf++ = *(quad*)g_PS2glContext.vacurTexCoords[0];
+    *(quad*)g_PS2glContext.pTBuf_b++ = *(quad*)g_PS2glContext.vacurTexCoords[1];
+
+    g_PS2glContext.iBufCount++;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 839–841 */
@@ -3473,7 +3612,10 @@ void impPS2glVertex2d(double x, double y)
  */
 void impPS2glNormal3fv(float* v)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vcurNormal[0] = v[0];
+    g_PS2glContext.vcurNormal[1] = v[1];
+    g_PS2glContext.vcurNormal[2] = v[2];
+    g_PS2glContext.vcurNormal[3] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 787–789 */
@@ -3487,7 +3629,8 @@ void impPS2glNormal3fv(float* v)
  */
 void impPS2glNormal3dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    float nx, ny, nz;
+    nz = (float)v[2]; ny = (float)v[1]; nx = (float)v[0]; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 783–784 */
@@ -3500,7 +3643,8 @@ void impPS2glNormal3dv(double* v)
  */
 void impPS2glNormal3iv(int* v)
 {
-    /* TODO: decompile from asm/... */
+    float nx, ny, nz;
+    nz = (float)v[2] / 2147483648.0f; ny = (float)v[1] / 2147483648.0f; nx = (float)v[0] / 2147483648.0f; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 778–779 */
@@ -3513,7 +3657,8 @@ void impPS2glNormal3iv(int* v)
  */
 void impPS2glNormal3sv(short* v)
 {
-    /* TODO: decompile from asm/... */
+    float nx, ny, nz;
+    nz = (float)v[2] / 32767.0f; ny = (float)v[1] / 32767.0f; nx = (float)v[0] / 32767.0f; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 773–774 */
@@ -3526,7 +3671,8 @@ void impPS2glNormal3sv(short* v)
  */
 void impPS2glNormal3bv(signed char* v)
 {
-    /* TODO: decompile from asm/... */
+    float nx, ny, nz;
+    nz = (float)v[2] / 127.0f; ny = (float)v[1] / 127.0f; nx = (float)v[0] / 127.0f; g_PS2glContext.vcurNormal[0] = nx; g_PS2glContext.vcurNormal[1] = ny; g_PS2glContext.vcurNormal[2] = nz; g_PS2glContext.vcurNormal[3] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 765–769 */
@@ -3559,7 +3705,7 @@ void impPS2glNormal3f(float nx, float ny, float nz)
  */
 void impPS2glNormal3d(double nx, double ny, double nz)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vcurNormal[0] = (float)nx; g_PS2glContext.vcurNormal[1] = (float)ny; g_PS2glContext.vcurNormal[2] = (float)nz; g_PS2glContext.vcurNormal[3] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 755–756 */
@@ -3572,7 +3718,7 @@ void impPS2glNormal3d(double nx, double ny, double nz)
  */
 void impPS2glNormal3i(int nx, int ny, int nz)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vcurNormal[0] = (float)nx / 2147483648.0f; g_PS2glContext.vcurNormal[1] = (float)ny / 2147483648.0f; g_PS2glContext.vcurNormal[2] = (float)nz / 2147483648.0f; g_PS2glContext.vcurNormal[3] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 750–751 */
@@ -3585,7 +3731,7 @@ void impPS2glNormal3i(int nx, int ny, int nz)
  */
 void impPS2glNormal3s(short nx, short ny, short nz)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vcurNormal[0] = (float)nx / 32767.0f; g_PS2glContext.vcurNormal[1] = (float)ny / 32767.0f; g_PS2glContext.vcurNormal[2] = (float)nz / 32767.0f; g_PS2glContext.vcurNormal[3] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 745–746 */
@@ -3598,7 +3744,7 @@ void impPS2glNormal3s(short nx, short ny, short nz)
  */
 void impPS2glNormal3b(signed char nx, signed char ny, signed char nz)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vcurNormal[0] = (float)nx / 127.0f; g_PS2glContext.vcurNormal[1] = (float)ny / 127.0f; g_PS2glContext.vcurNormal[2] = (float)nz / 127.0f; g_PS2glContext.vcurNormal[3] = 0.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 735–737 */
@@ -3611,7 +3757,8 @@ void impPS2glNormal3b(signed char nx, signed char ny, signed char nz)
  */
 void impPS2glMultiColor4usvARB(unsigned int texture, unsigned short* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 65535.0f; blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 729–731 */
@@ -3624,7 +3771,8 @@ void impPS2glMultiColor4usvARB(unsigned int texture, unsigned short* v)
  */
 void impPS2glMultiColor4uivARB(unsigned int texture, unsigned int* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 4294967295.0f; blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 723–725 */
@@ -3637,7 +3785,8 @@ void impPS2glMultiColor4uivARB(unsigned int texture, unsigned int* v)
  */
 void impPS2glMultiColor4ubvARB(unsigned int texture, unsigned char* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 255.0f; blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 717–719 */
@@ -3650,7 +3799,8 @@ void impPS2glMultiColor4ubvARB(unsigned int texture, unsigned char* v)
  */
 void impPS2glMultiColor4svARB(unsigned int texture, short* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 32767.0f; blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 711–713 */
@@ -3663,7 +3813,8 @@ void impPS2glMultiColor4svARB(unsigned int texture, short* v)
  */
 void impPS2glMultiColor4ivARB(unsigned int texture, int* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 2147483648.0f; blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 703–707 */
@@ -3685,7 +3836,10 @@ void impPS2glMultiColor4ivARB(unsigned int texture, int* v)
  */
 void impPS2glMultiColor4fvARB(unsigned int texture, float* v)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = v[0];
+    g_PS2glContext.vacurColor[texture][1] = v[1];
+    g_PS2glContext.vacurColor[texture][2] = v[2];
+    g_PS2glContext.vacurColor[texture][3] = v[3];
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 697–699 */
@@ -3699,7 +3853,8 @@ void impPS2glMultiColor4fvARB(unsigned int texture, float* v)
  */
 void impPS2glMultiColor4dvARB(unsigned int texture, double* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3]; blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 693–694 */
@@ -3712,7 +3867,8 @@ void impPS2glMultiColor4dvARB(unsigned int texture, double* v)
  */
 void impPS2glMultiColor4bvARB(unsigned int texture, signed char* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 127.0f; blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 688–689 */
@@ -3725,7 +3881,8 @@ void impPS2glMultiColor4bvARB(unsigned int texture, signed char* v)
  */
 void impPS2glMultiColor3usvARB(unsigned int texture, unsigned short* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 683–684 */
@@ -3738,7 +3895,8 @@ void impPS2glMultiColor3usvARB(unsigned int texture, unsigned short* v)
  */
 void impPS2glMultiColor3uivARB(unsigned int texture, unsigned int* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 678–679 */
@@ -3751,7 +3909,8 @@ void impPS2glMultiColor3uivARB(unsigned int texture, unsigned int* v)
  */
 void impPS2glMultiColor3ubvARB(unsigned int texture, unsigned char* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 673–674 */
@@ -3764,7 +3923,8 @@ void impPS2glMultiColor3ubvARB(unsigned int texture, unsigned char* v)
  */
 void impPS2glMultiColor3svARB(unsigned int texture, short* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 668–669 */
@@ -3777,7 +3937,8 @@ void impPS2glMultiColor3svARB(unsigned int texture, short* v)
  */
 void impPS2glMultiColor3ivARB(unsigned int texture, int* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 663–664 */
@@ -3790,7 +3951,8 @@ void impPS2glMultiColor3ivARB(unsigned int texture, int* v)
  */
 void impPS2glMultiColor3fvARB(unsigned int texture, float* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = v[2]; green = v[1]; red = v[0]; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 657–659 */
@@ -3804,7 +3966,8 @@ void impPS2glMultiColor3fvARB(unsigned int texture, float* v)
  */
 void impPS2glMultiColor3dvARB(unsigned int texture, double* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 653–654 */
@@ -3817,7 +3980,8 @@ void impPS2glMultiColor3dvARB(unsigned int texture, double* v)
  */
 void impPS2glMultiColor3bvARB(unsigned int texture, signed char* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 647–649 */
@@ -3830,7 +3994,7 @@ void impPS2glMultiColor3bvARB(unsigned int texture, signed char* v)
  */
 void impPS2glMultiColor4usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 65535.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 641–643 */
@@ -3843,7 +4007,7 @@ void impPS2glMultiColor4usARB(unsigned int texture, unsigned short red, unsigned
  */
 void impPS2glMultiColor4uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 4294967295.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 635–637 */
@@ -3856,7 +4020,7 @@ void impPS2glMultiColor4uiARB(unsigned int texture, unsigned int red, unsigned i
  */
 void impPS2glMultiColor4ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 255.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 629–631 */
@@ -3869,7 +4033,7 @@ void impPS2glMultiColor4ubARB(unsigned int texture, unsigned char red, unsigned 
  */
 void impPS2glMultiColor4sARB(unsigned int texture, short red, short green, short blue, short alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 32767.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 623–625 */
@@ -3882,7 +4046,7 @@ void impPS2glMultiColor4sARB(unsigned int texture, short red, short green, short
  */
 void impPS2glMultiColor4iARB(unsigned int texture, int red, int green, int blue, int alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 2147483648.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 617–619 */
@@ -3896,7 +4060,7 @@ void impPS2glMultiColor4iARB(unsigned int texture, int red, int green, int blue,
  */
 void impPS2glMultiColor4dARB(unsigned int texture, double R, double G, double B, double A)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)R; g_PS2glContext.vacurColor[texture][1] = (float)G; g_PS2glContext.vacurColor[texture][2] = (float)B; g_PS2glContext.vacurColor[texture][3] = (float)A;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 610–614 */
@@ -3920,7 +4084,10 @@ void impPS2glMultiColor4dARB(unsigned int texture, double R, double G, double B,
  */
 void impPS2glMultiColor4fARB(unsigned int texture, float red, float green, float blue, float alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = red;
+    g_PS2glContext.vacurColor[texture][1] = green;
+    g_PS2glContext.vacurColor[texture][2] = blue;
+    g_PS2glContext.vacurColor[texture][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 604–606 */
@@ -3933,7 +4100,7 @@ void impPS2glMultiColor4fARB(unsigned int texture, float red, float green, float
  */
 void impPS2glMultiColor4bARB(unsigned int texture, signed char red, signed char green, signed char blue, signed char alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[texture][3] = (float)alpha / 127.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 598–600 */
@@ -3946,7 +4113,7 @@ void impPS2glMultiColor4bARB(unsigned int texture, signed char red, signed char 
  */
 void impPS2glMultiColor3usARB(unsigned int texture, unsigned short red, unsigned short green, unsigned short blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 593–594 */
@@ -3959,7 +4126,7 @@ void impPS2glMultiColor3usARB(unsigned int texture, unsigned short red, unsigned
  */
 void impPS2glMultiColor3uiARB(unsigned int texture, unsigned int red, unsigned int green, unsigned int blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 588–589 */
@@ -3972,7 +4139,7 @@ void impPS2glMultiColor3uiARB(unsigned int texture, unsigned int red, unsigned i
  */
 void impPS2glMultiColor3ubARB(unsigned int texture, unsigned char red, unsigned char green, unsigned char blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 583–584 */
@@ -3985,7 +4152,7 @@ void impPS2glMultiColor3ubARB(unsigned int texture, unsigned char red, unsigned 
  */
 void impPS2glMultiColor3sARB(unsigned int texture, short red, short green, short blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 578–579 */
@@ -3998,7 +4165,7 @@ void impPS2glMultiColor3sARB(unsigned int texture, short red, short green, short
  */
 void impPS2glMultiColor3iARB(unsigned int texture, int red, int green, int blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 573–574 */
@@ -4011,7 +4178,7 @@ void impPS2glMultiColor3iARB(unsigned int texture, int red, int green, int blue)
  */
 void impPS2glMultiColor3fARB(unsigned int texture, float red, float green, float blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = red; g_PS2glContext.vacurColor[texture][1] = green; g_PS2glContext.vacurColor[texture][2] = blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 567–569 */
@@ -4025,7 +4192,7 @@ void impPS2glMultiColor3fARB(unsigned int texture, float red, float green, float
  */
 void impPS2glMultiColor3dARB(unsigned int texture, double red, double green, double blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red; g_PS2glContext.vacurColor[texture][1] = (float)green; g_PS2glContext.vacurColor[texture][2] = (float)blue; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 563–564 */
@@ -4038,7 +4205,7 @@ void impPS2glMultiColor3dARB(unsigned int texture, double red, double green, dou
  */
 void impPS2glMultiColor3bARB(unsigned int texture, signed char red, signed char green, signed char blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[texture][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[texture][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[texture][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[texture][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 556–558 */
@@ -4051,7 +4218,8 @@ void impPS2glMultiColor3bARB(unsigned int texture, signed char red, signed char 
  */
 void impPS2glColor4usv(unsigned short* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 65535.0f; blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 550–552 */
@@ -4064,7 +4232,8 @@ void impPS2glColor4usv(unsigned short* v)
  */
 void impPS2glColor4uiv(unsigned int* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 4294967295.0f; blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 544–546 */
@@ -4077,7 +4246,8 @@ void impPS2glColor4uiv(unsigned int* v)
  */
 void impPS2glColor4ubv(unsigned char* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 255.0f; blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 538–540 */
@@ -4090,7 +4260,8 @@ void impPS2glColor4ubv(unsigned char* v)
  */
 void impPS2glColor4sv(short* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 32767.0f; blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 532–534 */
@@ -4103,7 +4274,8 @@ void impPS2glColor4sv(short* v)
  */
 void impPS2glColor4iv(int* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 2147483648.0f; blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 511–528 */
@@ -4119,7 +4291,10 @@ void impPS2glColor4iv(int* v)
  */
 void impPS2glColor4fv(float* v)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = v[0];
+    g_PS2glContext.vacurColor[0][1] = v[1];
+    g_PS2glContext.vacurColor[0][2] = v[2];
+    g_PS2glContext.vacurColor[0][3] = v[3];
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 503–505 */
@@ -4133,7 +4308,8 @@ void impPS2glColor4fv(float* v)
  */
 void impPS2glColor4dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3]; blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 499–500 */
@@ -4146,7 +4322,8 @@ void impPS2glColor4dv(double* v)
  */
 void impPS2glColor4bv(signed char* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue, alpha;
+    alpha = (float)v[3] / 127.0f; blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 494–495 */
@@ -4159,7 +4336,8 @@ void impPS2glColor4bv(signed char* v)
  */
 void impPS2glColor3usv(unsigned short* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 65535.0f; green = (float)v[1] / 65535.0f; red = (float)v[0] / 65535.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 489–490 */
@@ -4172,7 +4350,8 @@ void impPS2glColor3usv(unsigned short* v)
  */
 void impPS2glColor3uiv(unsigned int* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 4294967295.0f; green = (float)v[1] / 4294967295.0f; red = (float)v[0] / 4294967295.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 484–485 */
@@ -4185,7 +4364,8 @@ void impPS2glColor3uiv(unsigned int* v)
  */
 void impPS2glColor3ubv(unsigned char* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 255.0f; green = (float)v[1] / 255.0f; red = (float)v[0] / 255.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 479–480 */
@@ -4198,7 +4378,8 @@ void impPS2glColor3ubv(unsigned char* v)
  */
 void impPS2glColor3sv(short* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 32767.0f; green = (float)v[1] / 32767.0f; red = (float)v[0] / 32767.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 474–475 */
@@ -4211,7 +4392,8 @@ void impPS2glColor3sv(short* v)
  */
 void impPS2glColor3iv(int* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 2147483648.0f; green = (float)v[1] / 2147483648.0f; red = (float)v[0] / 2147483648.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 469–470 */
@@ -4224,7 +4406,8 @@ void impPS2glColor3iv(int* v)
  */
 void impPS2glColor3fv(float* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = v[2]; green = v[1]; red = v[0]; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 463–465 */
@@ -4238,7 +4421,8 @@ void impPS2glColor3fv(float* v)
  */
 void impPS2glColor3dv(double* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2]; green = (float)v[1]; red = (float)v[0]; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 459–460 */
@@ -4251,7 +4435,8 @@ void impPS2glColor3dv(double* v)
  */
 void impPS2glColor3bv(signed char* v)
 {
-    /* TODO: decompile from asm/... */
+    float red, green, blue;
+    blue = (float)v[2] / 127.0f; green = (float)v[1] / 127.0f; red = (float)v[0] / 127.0f; g_PS2glContext.vacurColor[0][0] = red; g_PS2glContext.vacurColor[0][1] = green; g_PS2glContext.vacurColor[0][2] = blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 453–455 */
@@ -4264,7 +4449,7 @@ void impPS2glColor3bv(signed char* v)
  */
 void impPS2glColor4us(unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 65535.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 447–449 */
@@ -4277,7 +4462,7 @@ void impPS2glColor4us(unsigned short red, unsigned short green, unsigned short b
  */
 void impPS2glColor4ui(unsigned int red, unsigned int green, unsigned int blue, unsigned int alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 4294967295.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 441–443 */
@@ -4290,7 +4475,7 @@ void impPS2glColor4ui(unsigned int red, unsigned int green, unsigned int blue, u
  */
 void impPS2glColor4ub(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 255.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 435–437 */
@@ -4303,7 +4488,7 @@ void impPS2glColor4ub(unsigned char red, unsigned char green, unsigned char blue
  */
 void impPS2glColor4s(short red, short green, short blue, short alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 32767.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 429–431 */
@@ -4316,7 +4501,7 @@ void impPS2glColor4s(short red, short green, short blue, short alpha)
  */
 void impPS2glColor4i(int red, int green, int blue, int alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 2147483648.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 423–425 */
@@ -4330,7 +4515,7 @@ void impPS2glColor4i(int red, int green, int blue, int alpha)
  */
 void impPS2glColor4d(double R, double G, double B, double A)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)R; g_PS2glContext.vacurColor[0][1] = (float)G; g_PS2glContext.vacurColor[0][2] = (float)B; g_PS2glContext.vacurColor[0][3] = (float)A;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 403–420 */
@@ -4362,7 +4547,7 @@ void impPS2glColor4f(float red, float green, float blue, float alpha)
  */
 void impPS2glColor4b(signed char red, signed char green, signed char blue, signed char alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[0][3] = (float)alpha / 127.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 389–391 */
@@ -4375,7 +4560,7 @@ void impPS2glColor4b(signed char red, signed char green, signed char blue, signe
  */
 void impPS2glColor3us(unsigned short red, unsigned short green, unsigned short blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 65535.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 65535.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 65535.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 384–385 */
@@ -4388,7 +4573,7 @@ void impPS2glColor3us(unsigned short red, unsigned short green, unsigned short b
  */
 void impPS2glColor3ui(unsigned int red, unsigned int green, unsigned int blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 4294967295.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 4294967295.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 4294967295.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 379–380 */
@@ -4401,7 +4586,7 @@ void impPS2glColor3ui(unsigned int red, unsigned int green, unsigned int blue)
  */
 void impPS2glColor3ub(unsigned char red, unsigned char green, unsigned char blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 255.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 255.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 255.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 374–375 */
@@ -4414,7 +4599,7 @@ void impPS2glColor3ub(unsigned char red, unsigned char green, unsigned char blue
  */
 void impPS2glColor3s(short red, short green, short blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 32767.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 32767.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 32767.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 369–370 */
@@ -4427,7 +4612,7 @@ void impPS2glColor3s(short red, short green, short blue)
  */
 void impPS2glColor3i(int red, int green, int blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 2147483648.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 2147483648.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 2147483648.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 364–365 */
@@ -4454,7 +4639,7 @@ void impPS2glColor3f(float red, float green, float blue)
  */
 void impPS2glColor3d(double red, double green, double blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red; g_PS2glContext.vacurColor[0][1] = (float)green; g_PS2glContext.vacurColor[0][2] = (float)blue; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 354–355 */
@@ -4467,7 +4652,7 @@ void impPS2glColor3d(double red, double green, double blue)
  */
 void impPS2glColor3b(signed char red, signed char green, signed char blue)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vacurColor[0][0] = (float)red / 127.0f; g_PS2glContext.vacurColor[0][1] = (float)green / 127.0f; g_PS2glContext.vacurColor[0][2] = (float)blue / 127.0f; g_PS2glContext.vacurColor[0][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 277–303 */
@@ -4486,7 +4671,10 @@ void impPS2glColor3b(signed char red, signed char green, signed char blue)
  */
 void impPS2glEnd(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 127–274 */
@@ -4572,9 +4760,25 @@ void impPS2glBegin(unsigned int mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int sceGsSyncPath(int mode, unsigned short timeout);
+extern int printf(const char*, ...);
+extern void sceDevVu1Pause(void);
+extern int sceDevVif1Reset(void);
+extern void sceDevVu1Reset(void);
+extern void sceDevGifReset(void);
+extern void sceDevVu1Exec(unsigned short addr);
+extern void PS2glFlushNotify(void);
+extern void GsUpdate(void);
+extern void VU1FlushBuffer(void);
+
 void impPS2glFinish(void)
 {
-    /* TODO: decompile from asm/... */
+    int iRet;
+
+    g_PS2glContext.uiCurrentDmaBuffer++; while (sceGsSyncPath(1, 0) & 4) { if (sceGsSyncPath(0, 100)) { printf("****** VU1 busy ...\n"); sceDevVu1Pause(); sceDevVif1Reset(); sceDevVu1Reset(); sceDevGifReset(); sceDevVu1Exec(0); break; } } PS2glFlushNotify(); if (*(unsigned long*)&g_gsContext.ModFlgs) GsUpdate(); VU1FlushBuffer();
+
+    iRet = sceGsSyncPath(0, 0); if (iRet) { printf("\n\n************************************************\n************ sceGsSyncPath timeout.*************\n************************************************\n\n"); Bug_Please_ReloadMenu_40 = 1; }
+    if (iRet) printf("In PS2glFinish, SyncPath failure!\n");
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 84–109 */
@@ -4595,7 +4799,8 @@ void impPS2glFinish(void)
  */
 void impPS2glFlush(void)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.uiCurrentDmaBuffer++;
+    while (sceGsSyncPath(1, 0) & 4) { if (sceGsSyncPath(0, 100)) { printf("****** VU1 busy ...\n"); sceDevVu1Pause(); sceDevVif1Reset(); sceDevVu1Reset(); sceDevGifReset(); sceDevVu1Exec(0); break; } } PS2glFlushNotify(); if (*(unsigned long*)&g_gsContext.ModFlgs) GsUpdate(); VU1FlushBuffer();
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 47–74 */

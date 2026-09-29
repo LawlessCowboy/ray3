@@ -765,7 +765,8 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
     for rel_section in obj_sections:
         if rel_section.type != 9 or rel_section.info != candidate.shndx:
             continue
-        for offset, symbol_index, reloc_type in parse_relocations(rel_section):
+        section_relocations = list(parse_relocations(rel_section))
+        for offset, symbol_index, reloc_type in section_relocations:
             if not candidate.value <= offset < candidate.value + candidate.size:
                 continue
             relative = offset - candidate.value
@@ -782,8 +783,18 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
                       'symbol': symbol.name if symbol else ''}
             relocations.append(record)
             relocation_records.append((record, target_symbol))
+            # A HI16 addend is completed by its paired LO16 (the nearest
+            # following LO16 against the same symbol): the sign-extended low
+            # half can carry into the high half, e.g. g_PS2glContext+0x60e0.
+            lo_addend = 0
+            if reloc_type == 5:
+                pair = min((other for other in section_relocations
+                            if other[2] == 6 and other[1] == symbol_index and other[0] > offset),
+                           default=None)
+                if pair is not None and pair[0] + 4 <= len(section.data):
+                    lo_addend = signed16(struct.unpack_from('<I', section.data, pair[0])[0] & 0xFFFF)
             if target_symbol is None or not patch_relocation(candidate_bytes, relative, reloc_type,
-                                                               target_symbol.value, gp):
+                                                               target_symbol.value + lo_addend, gp):
                 unresolved.append(record)
 
     # Local switch/jump tables are emitted as anonymous MWCC symbols (for

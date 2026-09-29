@@ -1734,7 +1734,7 @@ struct tag_GLlight {
     float fConstantAttenuation; /* +0x5c */
     float fLinearAttenuation; /* +0x60 */
     float fQuadraticAttenuation; /* +0x64 */
-};
+} __attribute__((aligned(16)));
 
 struct SCT_tdstListOfSoundEvent_ {
     HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
@@ -1833,7 +1833,7 @@ struct tag_GLmaterial {
     float fAmbientIndex; /* +0x44 */
     float fDiffuseIndex; /* +0x48 */
     float fSpecularIndex; /* +0x4c */
-};
+} __attribute__((aligned(16)));
 
 struct tagGLtexname {
     unsigned char bAllocated; /* +0x0 */
