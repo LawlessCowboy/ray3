@@ -255,10 +255,72 @@ struct tdstDataPath_ {
     char szVideo[256]; /* +0xd00 */
 };
 
-int a_p_fn_szNameFunction[217];
+char* (*a_p_fn_szNameFunction[217])(char*);
+extern unsigned char GAM_fn_vGetLoadingLevel(unsigned int _uiLevelTag);
+extern char* Strcat(char*, const char*);
 unsigned char bUseMultiPath;
 char PLD_g_szAreaFileName[256];
 tdstDataPath_ g_stDataPath;
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 360–380 */
+/* addr: 0x0012f210  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 360
+ *   +0x0008 -> line 376
+ *   +0x0040 -> line 380
+ *   +0x0044 -> line 379
+ *   +0x004c -> line 380
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+char* MNC_fn_pcGetCurrentDirectory(void)
+{
+    static char str[256];
+    /* The PC build's directory lookup occupied these lines. */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    sprintf(str, "%s%s", bUseMultiPath ? g_stDataPath.szGameData : "DATA", "BIN");
+
+
+    return str;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 386–393 */
+/* addr: 0x0012f190  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 386
+ *   +0x000c -> line 389
+ *   +0x0014 -> line 390
+ *   +0x006c -> line 393
+ *   +0x0070 -> line 392
+ *   +0x0078 -> line 393
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+char* PLD_szPrependGamedataName(char* szName)
+{
+    char szTmpCopy[256];
+
+    strcpy(szTmpCopy, szName);
+    sprintf(PLD_g_szAreaFileName, "%s\\%s", MNC_fn_pcGetCurrentDirectory(), szTmpCopy);
+
+    return PLD_g_szAreaFileName;
+}
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 410–412 */
 /* addr: 0x0012f0c0  size: 204 bytes */
@@ -277,44 +339,9 @@ tdstDataPath_ g_stDataPath;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLD_szLocationFromAreaId(_tdeAreaName eAreaId, char* szName)
+char* PLD_szLocationFromAreaId(_tdeAreaName eAreaId, char* szName)
 {
-    char str[256];
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 386–393 */
-/* addr: 0x0012f190  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 386
- *   +0x000c -> line 389
- *   +0x0014 -> line 390
- *   +0x006c -> line 393
- *   +0x0070 -> line 392
- *   +0x0078 -> line 393
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PLD_szPrependGamedataName(char* szName)
-{
-    char szTmpCopy[256];
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 360–380 */
-/* addr: 0x0012f210  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 360
- *   +0x0008 -> line 376
- *   +0x0040 -> line 380
- *   +0x0044 -> line 379
- *   +0x004c -> line 380
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void MNC_fn_pcGetCurrentDirectory(void)
-{
-    /* TODO: decompile from asm/... */
+    char* str = a_p_fn_szNameFunction[eAreaId](szName); if (GAM_fn_vGetLoadingLevel(2)) Strcat(str, "MP"); return PLD_szPrependGamedataName(str);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 312–315 */
@@ -330,9 +357,10 @@ void MNC_fn_pcGetCurrentDirectory(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLD_szLanguageName(char* szName)
+char* PLD_szLanguageName(char* szName)
 {
-    sprintf(PLD_g_szAreaFileName, "Language%s", szName);
+    sprintf(PLD_g_szAreaFileName, "Texts/%s", szName);
+    return PLD_g_szAreaFileName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 306–309 */
@@ -398,9 +426,10 @@ void PLD_szFixKeyFramesName(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLD_szAnimationName(char* szName)
+char* PLD_szAnimationName(char* szName)
 {
-    sprintf(PLD_g_szAreaFileName, "Animation%s", szName);
+    sprintf(PLD_g_szAreaFileName, "%s", szName);
+    return PLD_g_szAreaFileName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 280–284 */
@@ -435,9 +464,10 @@ char* PLD_szVertexBufferName(char* szName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLD_szTransitionName(char* szName)
+char* PLD_szTransitionName(char* szName)
 {
-    sprintf(PLD_g_szAreaFileName, "Transition%s", szName);
+    sprintf(PLD_g_szAreaFileName, "%s\\transit", szName);
+    return PLD_g_szAreaFileName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_path.c lines 266–270 */

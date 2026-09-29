@@ -3732,12 +3732,11 @@ unsigned char fn_ucGetDsgVarList(void* pMyVarAddr, unsigned char ucIndex, tdstGe
  */
 unsigned char fn_ucGetDsgVarText(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
-    int eType = E_vt_Text;
     int hText = *(int*)pMyVarAddr;
-    p_stGetSetParam->uDummy.uParam.hText = hText;
-    p_stGetSetParam->eType = eType;
-    hText = ~hText;
-    return (unsigned char)(((unsigned int)hText < 1u) ^ 1u);
+
+    p_stGetSetParam->uDummy.uParam.hText = hText; p_stGetSetParam->eType = E_vt_Text;
+
+    if (hText == -1) return 0; return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 691–697 */
@@ -3777,13 +3776,11 @@ unsigned char fn_ucGetDsgVarComport(void* pMyVarAddr, void* param0, tdstGetSetPa
  */
 unsigned char fn_ucGetDsgVarAction(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
-    tdstState_* hAction;
-    int eType;
-    hAction = *(tdstState_**)pMyVarAddr;
-    eType = E_vt_Action;
-    p_stGetSetParam->uDummy.uParam.tdxstHandleToState = hAction;
-    p_stGetSetParam->eType = eType;
-    return (unsigned char)(((unsigned int)hAction < 1u) ^ 1u);
+    tdstState_* hAction = *(tdstState_**)pMyVarAddr;
+    p_stGetSetParam->uDummy.uParam.tdxstHandleToState = hAction; p_stGetSetParam->eType = E_vt_Action;
+
+
+    if (hAction == NULL) return 0; return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 672–675 */
@@ -3964,13 +3961,11 @@ unsigned char fn_ucGetDsgVarSoundEvent(void* pMyVarAddr, void* param0, tdstGetSe
  */
 unsigned char fn_ucGetDsgVarInput(void* pMyVarAddr, void* param0, tdstGetSetParam_* p_stGetSetParam)
 {
-    IPT_tdstEntryElement_* hEntryElement;
-    int eType;
-    hEntryElement = *(IPT_tdstEntryElement_**)pMyVarAddr;
-    eType = E_vt_Button;
-    *(IPT_tdstEntryElement_**)p_stGetSetParam = hEntryElement;
-    *((tdeVariableType_*)((char*)p_stGetSetParam + 12)) = eType;
-    return (unsigned char)(((unsigned int)hEntryElement < 1u) ^ 1u);
+    IPT_tdstEntryElement_* hEntryElement = *(IPT_tdstEntryElement_**)pMyVarAddr;
+
+    *(IPT_tdstEntryElement_**)&p_stGetSetParam->uDummy.uParam = hEntryElement; p_stGetSetParam->eType = E_vt_Button;
+
+    if (hEntryElement == NULL) return 0; return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 572–578 */

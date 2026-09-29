@@ -48,8 +48,8 @@ int readBufBeginGet(anon_0* b, unsigned char** ptr)
 
     if (b->count != 0)
     {
-        size = b->size;
-        *ptr = b->data + (b->put - b->count) % size;
+
+        *ptr = b->data + (b->put - b->count + b->size) % b->size;
     }
     return b->count;
 }

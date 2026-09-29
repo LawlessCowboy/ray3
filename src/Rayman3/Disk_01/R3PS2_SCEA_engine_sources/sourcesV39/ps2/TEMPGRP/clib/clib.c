@@ -14,9 +14,10 @@ int LogPassages[1000];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-float PS2SQRTF(float x)
+asm float PS2SQRTF(float x)
 {
-    return __builtin_sqrt(x);
+    jr ra
+    sqrt.s f0, f12
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\clib\clib.c lines 84–93 */

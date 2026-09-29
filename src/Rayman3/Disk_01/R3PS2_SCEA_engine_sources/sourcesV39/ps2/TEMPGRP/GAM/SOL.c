@@ -2105,15 +2105,9 @@ void fn_v_SetRotationMechanicsImmediateTeleportation(DNM_stDynamics* _p_stDynami
  */
 void fn_v_SetOneSpoImmediateTeleportation(HIE_tdstSuperObject_* _hLinkedSpo, MTH3D_tdstVector_* _p_stTranslation)
 {
-    unsigned int* pMatrix;
-    pMatrix = (unsigned int*)_hLinkedSpo->hGlobalMatrix;
-    if (pMatrix[0] != MAT_eTransform_Identity)
-        pMatrix[0] = MAT_eTransform_Translation;
-    pMatrix[16] = ((unsigned int*)_p_stTranslation)[0];
-    pMatrix[17] = ((unsigned int*)_p_stTranslation)[1];
-    pMatrix[18] = ((unsigned int*)_p_stTranslation)[2];
-    pMatrix[19] = 0x3f800000;
-    _hLinkedSpo->lLastComputeFrame = g_bNoInterpolationForThisSPOMove;
+    unsigned int* pMatrix = (unsigned int*)_hLinkedSpo->hGlobalMatrix; if (pMatrix[0] == MAT_eTransform_Identity) pMatrix[0] = MAT_eTransform_Translation; pMatrix[16] = ((unsigned int*)_p_stTranslation)[0]; pMatrix[17] = ((unsigned int*)_p_stTranslation)[1]; pMatrix[18] = ((unsigned int*)_p_stTranslation)[2]; pMatrix[19] = 0x3f800000;
+    _hLinkedSpo->lLastComputeFrame = HIE_gs_lCurrentFrame;
+    HIE_fn_vComputeNewRelativeMatrix(_hLinkedSpo);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 607–616 */

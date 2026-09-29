@@ -1724,7 +1724,14 @@ void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)
  */
 unsigned char fn_ucSubHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    /* TODO: decompile from asm/... */
+    int value = _ucValue; unsigned char* p = &_p_stObject->h_StandardGame->ucHitPointsMax; if (*p - value > 0)
+        *p = (char)*p - value;
+    else
+
+        *p = 0;
+
+    { unsigned char m = _p_stObject->h_StandardGame->ucHitPointsMax; unsigned char* p2 = &_p_stObject->h_StandardGame->ucHitPoints; unsigned char hp = *p2; if (hp <= m) *p2 = hp; else *p2 = m; }
+    return _p_stObject->h_StandardGame->ucHitPointsMax;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 87–91 */
@@ -1739,20 +1746,10 @@ unsigned char fn_ucSubHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char
  */
 void fn_vAddHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    int value;
-    unsigned char max;
-    unsigned char maxMax;
-    value = _ucValue;
-    max = _p_stObject->h_StandardGame->ucHitPointsMax;
-    maxMax = _p_stObject->h_StandardGame->ucHitPointsMaxMax;
-    if (maxMax < value + max)
-    {
-        _p_stObject->h_StandardGame->ucHitPointsMax = _p_stObject->h_StandardGame->ucHitPointsMaxMax;
-    }
+    int value = _ucValue; tdstStandardGame_* h = _p_stObject->h_StandardGame; unsigned char m = h->ucHitPointsMaxMax; unsigned char* p = &h->ucHitPointsMax; if (value + *p <= m)
+        *p = value + (char)*p;
     else
-    {
-        _p_stObject->h_StandardGame->ucHitPointsMax = value + (signed char)max;
-    }
+        *p = m;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 82–83 */
@@ -1827,20 +1824,10 @@ unsigned char fn_ucSubHitPoints(tdstEngineObject_* _p_stObject, unsigned char _u
  */
 void fn_vAddHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
-    unsigned int value;
-    unsigned char hitPointsMax;
-    unsigned char hitPoints;
-    value = _ucValue;
-    hitPointsMax = _p_stObject->h_StandardGame->ucHitPointsMax;
-    hitPoints = _p_stObject->h_StandardGame->ucHitPoints;
-    if (hitPointsMax < value + hitPoints)
-    {
-        _p_stObject->h_StandardGame->ucHitPoints = _p_stObject->h_StandardGame->ucHitPointsMax;
-    }
+    int value = _ucValue; tdstStandardGame_* h = _p_stObject->h_StandardGame; unsigned char m = h->ucHitPointsMax; unsigned char* p = &h->ucHitPoints; if (value + *p <= m)
+        *p = value + (char)*p;
     else
-    {
-        _p_stObject->h_StandardGame->ucHitPoints = value + (signed char)hitPoints;
-    }
+        *p = m;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 48–49 */

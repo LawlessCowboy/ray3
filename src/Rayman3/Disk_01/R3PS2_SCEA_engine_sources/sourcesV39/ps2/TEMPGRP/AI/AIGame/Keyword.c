@@ -3437,10 +3437,7 @@ tdstNodeInterpret_* fn_p_stMainActorKeyWord(HIE_tdstSuperObject_* p_SuperObjPers
  */
 tdstNodeInterpret_* fn_p_stMeKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    if (p_SuperObjPerso->ulTypeOfLinkedObject == 2)
-        p_stValue->uDummy.uParam.p_stEngObjValue = p_SuperObjPerso->hLinkedObject.p_stCharacter;
-    else
-        p_stValue->uDummy.uParam.p_stEngObjValue = NULL;
+    p_stValue->uDummy.uParam.p_stEngObjValue = (p_SuperObjPerso->ulTypeOfLinkedObject != 2) ? NULL : p_SuperObjPerso->hLinkedObject.p_stCharacter;
     p_stValue->eType = E_vt_Perso;
     return p_stTree;
 }

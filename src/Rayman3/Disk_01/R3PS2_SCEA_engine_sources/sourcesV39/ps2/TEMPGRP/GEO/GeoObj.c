@@ -449,19 +449,7 @@ void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject)
  */
 void GEO_vGetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
 {
-    MTH3D_tdstVector_* p_stCurrentPoint;
-    p_stCurrentPoint = hObject->d_stListOfPoints + xIndexOfPoint;
-    {
-        float xY;
-        float xX;
-        float xZ;
-        xZ = p_stCurrentPoint->xX;
-        xY = p_stCurrentPoint->xY;
-        xX = p_stCurrentPoint->xZ;
-        p_stPoint->xX = xZ;
-        p_stPoint->xY = xY;
-        p_stPoint->xZ = xX;
-    }
+    *p_stPoint = hObject->d_stListOfPoints[xIndexOfPoint];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 378–379 */
@@ -474,19 +462,7 @@ void GEO_vGetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_*
  */
 void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint)
 {
-    MTH3D_tdstVector_* p_stCurrentPoint;
-    p_stCurrentPoint = hObject->d_stListOfPoints + xIndexOfPoint;
-    {
-        float xY;
-        float xX;
-        float xZ;
-        xZ = p_stPoint->xX;
-        xY = p_stPoint->xY;
-        xX = p_stPoint->xZ;
-        p_stCurrentPoint->xX = xZ;
-        p_stCurrentPoint->xY = xY;
-        p_stCurrentPoint->xZ = xX;
-    }
+    hObject->d_stListOfPoints[xIndexOfPoint] = *p_stPoint;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 347–351 */

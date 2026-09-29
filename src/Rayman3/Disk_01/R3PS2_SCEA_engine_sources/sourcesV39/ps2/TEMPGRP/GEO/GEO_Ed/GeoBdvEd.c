@@ -24,9 +24,15 @@ typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct GEO_tdstIndexedSphere_ GEO_tdstIndexedSphere_;
 typedef struct GEO_tdstElementSpheres_ GEO_tdstElementSpheres_;
 
+typedef struct GEO_tdstTripledIndex_ {
+    short a3_xIndex[3]; /* +0x0 */
+} GEO_tdstTripledIndex_;
 struct GEO_tdstElementIndexedTriangles_ {
-    unsigned char _padding[12];
-    volatile short* d_stListOfFaces;
+    GLI_tdstMaterial_* hVisualMaterial; /* +0x0 */
+    short xNbFaces; /* +0x4 */
+    short xNbElementUV; /* +0x6 */
+    short xNbUVStages; /* +0x8 */
+    GEO_tdstTripledIndex_* d_stListOfFacesTripled; /* +0xc */
 };
 
 typedef enum MAT_tdeTranformationType_ {
@@ -182,9 +188,9 @@ void GEO_vSetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hEl
 {
     GEO_tdstElementIndexedTriangles_* param0;
     param0 = hObject->d_stListOfElements[hElement];
-    *(short*)((char*)param0->d_stListOfFaces + xIndexOfFace * 6) = xPoint1;
-    *(short*)((char*)param0->d_stListOfFaces + xIndexOfFace * 6 + 2) = xPoint2;
-    *(short*)((char*)param0->d_stListOfFaces + xIndexOfFace * 6 + 4) = xPoint3;
+    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 0))[xIndexOfFace].a3_xIndex[0] = xPoint1;
+    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 1))[xIndexOfFace].a3_xIndex[0] = xPoint2;
+    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 2))[xIndexOfFace].a3_xIndex[0] = xPoint3;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoBdvEd.c lines 273–342 */

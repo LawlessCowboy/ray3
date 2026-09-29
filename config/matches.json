@@ -18858,6 +18858,201 @@
       "status": "MISMATCH",
       "target_size": 56,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002f7870",
+      "candidate_size": 68,
+      "first_difference": 40,
+      "implementation": "void IPT_fn_vSetKeyAndPadButtonForPadNumber(unsigned char ucPadNumber, unsigned char ucButtonNumber, IPT_tdstEntryElement_* hPadButton, IPT_tdstEntryElement_* hKeyButton)\n{\n    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickButtons[ucButtonNumber] = (int)hPadButton;\n    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyButtons[ucButtonNumber] = (int)hKeyButton;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "IPT_fn_vSetKeyAndPadButtonForPadNumber",
+      "reason": "Stores match except retail keeps an unfolded 'addiu +0x0' after adding pad*0x104 to &a_stDevice[2].hJoystickButtons before adding button*4; MWCC folds every tried access form (casts, &[0], pointer+index).",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/IPT_Pad.c",
+      "status": "MISMATCH",
+      "target_size": 76,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00321fc0",
+      "candidate_size": 56,
+      "first_difference": 28,
+      "implementation": "HIE_tdstSuperObject_* HIE_fn_hGetChildNumber(HIE_tdstSuperObject_* _hParent, int _lNumber)\n{\n    short i;\n    HIE_tdstSuperObject_* hChild;\n    for (i = 0, hChild = _hParent->hFirstElementDyn; i < _lNumber; i++, hChild = hChild->hNextBrotherDyn) ;\n\n    return hChild;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "HIE_fn_hGetChildNumber",
+      "reason": "Only residual is the unexplained padloop-family nop at the loop condition label (retail +0x1c nop); body and exit otherwise identical.",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieSpObj.c",
+      "status": "MISMATCH",
+      "target_size": 60,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0032aab0",
+      "candidate_size": 24,
+      "first_difference": 0,
+      "implementation": "void PS2MC_vClearFlag(int FlagID)\n{\n    C_PS2MC_Manager* pManager;\n    pManager = (C_PS2MC_Manager*)PS2MC_g_Manager;\n    pManager->m_Flags[FlagID] = -1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PS2MC_vClearFlag",
+      "reason": "Retail adds m_Flags' +0x2c to the manager pointer before adding FlagID*4 and loads PS2MC_g_Manager first; array-cast forms reproduce the unfolded +0x2c but allocate base/index registers in the opposite order.",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MemoryCard.cpp",
+      "status": "MISMATCH",
+      "target_size": 28,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0029fd60",
+      "candidate_size": 24,
+      "first_difference": 4,
+      "implementation": "void fn_vSetStereoGameMenu2D(unsigned int uiSet)\n{\n    int bStereo;\n\n    if (uiSet == 1) {\n        bStereo = 1;\n    } else {\n        bStereo = 0;\n    }\n    SND_fn_vSetStereoSound(bStereo);\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "fn_vSetStereoGameMenu2D",
+      "reason": "Retail uses the unoptimised ternary shape (bne+nop, b with a0=1 in delay, a0=0) with no conversion; int/unsigned/enum arms collapse to the compact form, char/short/long arms add conversions.",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/SoundMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 32,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0024c960",
+      "candidate_size": 52,
+      "first_difference": 0,
+      "implementation": "GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedAlignedBox(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfAlignedBox)\n{\n    COL_tdstElementAlignedBoxes_* pElement;\n    COL_tdstIndexedAlignedBox_* pBox;\n    pElement = (*(COL_tdstElementAlignedBoxes_***)&hObject->d_stListOfElements)[hElement];\n    pBox = pElement->d_stListOfAlignedBoxes;\n    return pBox[xNumberOfAlignedBox].hMaterial;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "COL_hGetGameMaterialOfIndexedAlignedBox",
+      "reason": "Retail adds hMaterial's +4 to the box list before adding index*8 (unfolded member offset, same family as GEO face accessors); a struct-cast reproduces the unfolding but base/index registers are then swapped.",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollElts.c",
+      "status": "MISMATCH",
+      "target_size": 56,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a1510",
+      "candidate_size": 60,
+      "first_difference": 48,
+      "implementation": "void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, GLI_tdstMaterial_* hVisualMaterial)\n{\n    GEO_tdstIndexedCone_* p_stCone;\n    p_stCone = (*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones + xNumberOfCone;\n    ((GLI_tdstMaterial_ **)((char *)p_stCone + 8))[0] = hVisualMaterial;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GEO_vSetVisualMaterialOfIndexedCone",
+      "reason": "Unfolded member offset family: retail adds hVisualMaterial's +8 to the cone list, then idx*12. The struct-cast trick reproduces the unfolding, but the idx*12 scaling is scheduled after the base load instead of before it.",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/Element.c",
+      "status": "MISMATCH",
+      "target_size": 64,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211d20",
+      "candidate_size": 124,
+      "first_difference": 76,
+      "implementation": "unsigned char fn_ucGetFieldNormSpeed(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)\n{\n    MTH3D_tdstVector_* p_stCurrSpeed;\n    DNM_stDynamics* pstDynamic;\n    tdstDynam_* h_Dynam;\n\n    h_Dynam = hSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;\n\n    p_stGetSetParam->eType = E_vt_Float;\n\n    if (h_Dynam)\n    {\n\n        pstDynamic = fn_p_stDynamGetDynamics(h_Dynam);\n        if (pstDynamic)\n        {\n\n            p_stCurrSpeed = &pstDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed; p_stGetSetParam->uDummy.uParam.xValue = MTH_xSqrt(MTH_xSqr3(p_stCurrSpeed->xX, p_stCurrSpeed->xY, p_stCurrSpeed->xZ));\n            return 1;\n        }\n    }\n\n\n    p_stGetSetParam->uDummy.uParam.xValue = 0.0f;\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_ucGetFieldNormSpeed",
+      "reason": "Everything matches except scheduling around the sqrt sync: retail puts the return's li v0,1 before sqrt.s and then two nops; with asm nops MWCC places li after them, and without nops li lands correctly but the nops are missing.",
+      "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 124,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00267ff0",
+      "candidate_size": 56,
+      "first_difference": 36,
+      "implementation": "unsigned char fn_ucFindPersonalIdOfPersonalType(int otType)\n{\n    tdstObjectTypeElement_* hHandleToObjectTypeElement;\n    unsigned int i;\n    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hPersonalType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;\n    return hHandleToObjectTypeElement->ucPermanentId;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_ucFindPersonalIdOfPersonalType",
+      "reason": "For-loop list form matches except the short-loop padding: candidate pads the 5-instruction loop with 3 nops, retail with 2 (retail loop is 7 instructions including delay slot, ours 8). Padloop threshold differs from the baseline compiler.",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ObjType.c",
+      "status": "MISMATCH",
+      "target_size": 52,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0026ef70",
+      "candidate_size": 44,
+      "first_difference": 20,
+      "implementation": "void fn_vCollSetSetColliderReal(tdstCollSet_* _hCollSet, short _wIndex, float _xReal)\n{\n    if (_wIndex >= 0 && _wIndex < 2) *(_hCollSet->stColliderInfo.a_xColliderReals + _wIndex) = _xReal;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vCollSetSetColliderReal",
+      "reason": "Retail adds stColliderInfo array offset before index*4 and fills the beqz delay slot with the index sll. ((T*)&arr)[i] reproduces the unfolded offset but leaves the delay slot empty and scales after the base add.",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MISMATCH",
+      "target_size": 44,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0026efa0",
+      "candidate_size": 44,
+      "first_difference": 20,
+      "implementation": "void fn_vCollSetSetColliderActor(tdstCollSet_* _hCollSet, short _wIndex, HIE_tdstSuperObject_* _hActor)\n{\n    if (_wIndex >= 0 && _wIndex < 2) *(_hCollSet->stColliderInfo.a_stColliderActors + _wIndex) = (int)_hActor;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vCollSetSetColliderActor",
+      "reason": "Retail adds stColliderInfo array offset before index*4 and fills the beqz delay slot with the index sll. ((T*)&arr)[i] reproduces the unfolded offset but leaves the delay slot empty and scales after the base add.",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/CollSet.c",
+      "status": "MISMATCH",
+      "target_size": 44,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0031c340",
+      "candidate_size": 52,
+      "first_difference": 44,
+      "implementation": "void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot)\n{\n    HIE_tdstSuperObject_* hCurrentSector;\n    SECT_tdstSector_* param0;\n\n    hCurrentSector = hSectorRoot->hFirstElementDyn;\n    if (hCurrentSector)\n    {\n        do\n        {\n            param0 = hCurrentSector->hLinkedObject.p_stSector;\n            param0->cCurrentActivity = -1;\n            param0->ucInList = 0;\n            param0->h_PreviousSectorInList = 0;\n            param0->h_NextSectorInList = 0;\n            hCurrentSector = hCurrentSector->hNextBrotherDyn;\n        } while (hCurrentSector);\n    }\n    SECT_fnvInitGlobalsForActivity();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "SECT_fn_vInitActivationSector",
+      "reason": "Identical except retail has an extra nop between the loop exit label and the tail-call j (padloop-family exit nop that no source shape reproduces).",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
+      "status": "MISMATCH",
+      "target_size": 56,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0026d5f0",
+      "candidate_size": 76,
+      "first_difference": 68,
+      "implementation": "void CAM_fn_vResetArrayOfTransparentSuperObject(tdstCineinfo_* _hCineinfo)\n{\n    tdstTransparentSuperObjectForCamera_* param0;\n    tdstTransparentSuperObjectForCamera_* p_stFirst;\n    p_stFirst = _hCineinfo->a10_stTransparentSuperObjectForCamera;\n    param0 = p_stFirst + _hCineinfo->xNumberOfTransparentSuperObjectForCamera;\n    if (p_stFirst < param0) {\n        do {\n            p_stFirst->bIncrease = 0;\n            p_stFirst++;\n        } while (p_stFirst < param0);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CAM_fn_vResetArrayOfTransparentSuperObject",
+      "reason": "Identical except retail has an extra nop after the loop's back-branch delay slot before jr ra (loop-exit nop family, also SECT_fn_vInitActivationSector).",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/cineinfo.c",
+      "status": "MISMATCH",
+      "target_size": 80,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00132b90",
+      "candidate_size": 68,
+      "first_difference": 0,
+      "implementation": "int videoDecIsFlushed(anon_0* vd)\n{\n    return viBufCount(&vd->vibuf) == 0 && sceMpegIsRefBuffEmpty(&vd->mpeg);\n\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "videoDecIsFlushed",
+      "reason": "Retail materialises the && result in a callee-saved s0 preset to 0 across both calls (frame 0x30, s0+s1); baseline keeps it in v0 with branches to separate returns (frame 0x20). Ternary, explicit local and != 0 forms all fail.",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
+      "status": "MISMATCH",
+      "target_size": 84,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -18974,6 +19169,38 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_call.c",
       "status": "MATCH"
     },
+    "0x0012f0c0": {
+      "address": "0x0012f0c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PLD_szLocationFromAreaId",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_path.c",
+      "status": "MATCH"
+    },
+    "0x0012f190": {
+      "address": "0x0012f190",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PLD_szPrependGamedataName",
+      "size": 128,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_path.c",
+      "status": "MATCH"
+    },
+    "0x0012f210": {
+      "address": "0x0012f210",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MNC_fn_pcGetCurrentDirectory",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_path.c",
+      "status": "MATCH"
+    },
+    "0x0012f270": {
+      "address": "0x0012f270",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PLD_szLanguageName",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_path.c",
+      "status": "MATCH"
+    },
     "0x0012f2b0": {
       "address": "0x0012f2b0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -18998,11 +19225,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_path.c",
       "status": "MATCH"
     },
+    "0x0012f350": {
+      "address": "0x0012f350",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PLD_szAnimationName",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_path.c",
+      "status": "MATCH"
+    },
     "0x0012f390": {
       "address": "0x0012f390",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "PLD_szVertexBufferName",
       "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_path.c",
+      "status": "MATCH"
+    },
+    "0x0012f3d0": {
+      "address": "0x0012f3d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PLD_szTransitionName",
+      "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_path.c",
       "status": "MATCH"
     },
@@ -19078,6 +19321,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/readbuf.c",
       "status": "MATCH"
     },
+    "0x00131310": {
+      "address": "0x00131310",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "readBufBeginGet",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/readbuf.c",
+      "status": "MATCH"
+    },
     "0x00131370": {
       "address": "0x00131370",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -19142,6 +19393,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
       "status": "MATCH"
     },
+    "0x00132970": {
+      "address": "0x00132970",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "mpegTS",
+      "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
+      "status": "MATCH"
+    },
     "0x001329c0": {
       "address": "0x001329c0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -19155,6 +19414,30 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "mpegStopDMA",
       "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
+      "status": "MATCH"
+    },
+    "0x00132a20": {
+      "address": "0x00132a20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "mpegNodata",
+      "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
+      "status": "MATCH"
+    },
+    "0x00132a50": {
+      "address": "0x00132a50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "mpegError",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
+      "status": "MATCH"
+    },
+    "0x00132b50": {
+      "address": "0x00132b50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "videoDecMain",
+      "size": 56,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
       "status": "MATCH"
     },
@@ -26820,12 +27103,20 @@
       "name": "fn_ucGetDsgVarText",
       "size": 32,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
-      "status": "EQUIVALENT"
+      "status": "MATCH"
     },
     "0x001fbf80": {
       "address": "0x001fbf80",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_ucGetDsgVarComport",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fbfa0": {
+      "address": "0x001fbfa0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetDsgVarAction",
       "size": 32,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "MATCH"
@@ -26882,6 +27173,14 @@
       "address": "0x001fc0b0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_ucGetDsgVarSoundEvent",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
+    "0x001fc0d0": {
+      "address": "0x001fc0d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetDsgVarInput",
       "size": 32,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "MATCH"
@@ -27315,6 +27614,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "WPG_fn_hGetArcList",
       "size": 24,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x001fef20": {
+      "address": "0x001fef20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "WPG_fn_hGetWaypointOfGraph",
+      "size": 64,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
       "status": "MATCH"
     },
@@ -27846,6 +28153,54 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
       "status": "MATCH"
     },
+    "0x00211ab0": {
+      "address": "0x00211ab0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetFieldPadVerticalAxis",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
+    "0x00211ae0": {
+      "address": "0x00211ae0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetFieldPadVerticalAxis",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
+    "0x00211b20": {
+      "address": "0x00211b20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetFieldPadHorizontalAxis",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
+    "0x00211b50": {
+      "address": "0x00211b50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetFieldPadHorizontalAxis",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
+    "0x00211b90": {
+      "address": "0x00211b90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSetFieldPadGlobalVector",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
+    "0x00211bb0": {
+      "address": "0x00211bb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetFieldPadGlobalVector",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
     "0x00211c00": {
       "address": "0x00211c00",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -27867,6 +28222,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_ucGetFieldAbsoluteAxisX",
       "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
+    "0x00211da0": {
+      "address": "0x00211da0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetFieldSpeed",
+      "size": 116,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
       "status": "MATCH"
     },
@@ -27918,6 +28281,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
       "status": "MATCH"
     },
+    "0x00212060": {
+      "address": "0x00212060",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetFieldPrevComportReflex",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
+    "0x00212090": {
+      "address": "0x00212090",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucGetFieldPrevComportIntell",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
     "0x002120c0": {
       "address": "0x002120c0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -27931,6 +28310,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_p_st_AGO_GetHandle",
       "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00212110": {
+      "address": "0x00212110",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_st_GetPadInversions",
+      "size": 136,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
@@ -27982,6 +28369,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
+    "0x002123c0": {
+      "address": "0x002123c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stMCFunc",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x002123f0": {
+      "address": "0x002123f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stScreenFunctions",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00212690": {
+      "address": "0x00212690",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stGetTransitionSectorIDFunction",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
     "0x00213050": {
       "address": "0x00213050",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -28003,6 +28414,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_p_stGetRadiusWP",
       "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00216b80": {
+      "address": "0x00216b80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stGetMyAbsolutePosition",
+      "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
@@ -28091,6 +28510,30 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_p_stGetLanguageText",
       "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MATCH"
+    },
+    "0x00217e90": {
+      "address": "0x00217e90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stGetNbLanguages",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MATCH"
+    },
+    "0x00217eb0": {
+      "address": "0x00217eb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stGetCurrentLanguageId",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MATCH"
+    },
+    "0x00217ed0": {
+      "address": "0x00217ed0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stGetDriversAvailable",
+      "size": 20,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
       "status": "MATCH"
     },
@@ -28323,6 +28766,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_p_stNoInputKeyWord",
       "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MATCH"
+    },
+    "0x002225a0": {
+      "address": "0x002225a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stMeKeyWord",
+      "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
       "status": "MATCH"
     },
@@ -28790,6 +29241,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AICommonTools.c",
       "status": "MATCH"
     },
+    "0x0024c7d0": {
+      "address": "0x0024c7d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2SQRTF",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/clib/clib.c",
+      "status": "MATCH"
+    },
     "0x0024c940": {
       "address": "0x0024c940",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -29238,6 +29697,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Basic.c",
       "status": "MATCH"
     },
+    "0x0025c420": {
+      "address": "0x0025c420",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_bIsEngineInTransitionMode",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Basic.c",
+      "status": "MATCH"
+    },
+    "0x0025c440": {
+      "address": "0x0025c440",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_bIsEngineInLevelMode",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Basic.c",
+      "status": "MATCH"
+    },
     "0x0025c470": {
       "address": "0x0025c470",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -29446,6 +29921,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
       "status": "MATCH"
     },
+    "0x00262380": {
+      "address": "0x00262380",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_ucSubHitPointsMax",
+      "size": 100,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/HitPts.c",
+      "status": "MATCH"
+    },
+    "0x002623f0": {
+      "address": "0x002623f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vAddHitPointsMax",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/HitPts.c",
+      "status": "MATCH"
+    },
     "0x00262430": {
       "address": "0x00262430",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -29475,6 +29966,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_ucSubHitPoints",
       "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/HitPts.c",
+      "status": "MATCH"
+    },
+    "0x002624a0": {
+      "address": "0x002624a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vAddHitPoints",
+      "size": 64,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/HitPts.c",
       "status": "MATCH"
     },
@@ -31182,6 +31681,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/SOL.c",
       "status": "MATCH"
     },
+    "0x002823f0": {
+      "address": "0x002823f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_v_SetOneSpoImmediateTeleportation",
+      "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/SOL.c",
+      "status": "MATCH"
+    },
     "0x00282980": {
       "address": "0x00282980",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -31822,6 +32329,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
       "status": "MATCH"
     },
+    "0x0029c290": {
+      "address": "0x0029c290",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vR3SetCurrentEnvNumber",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x0029c2e0": {
+      "address": "0x0029c2e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vUpdatePlayerGameName",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MATCH"
+    },
     "0x0029d090": {
       "address": "0x0029d090",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -32006,6 +32529,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GeoObj.c",
       "status": "MATCH"
     },
+    "0x002a2100": {
+      "address": "0x002a2100",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GEO_vGetPointOfObject",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GeoObj.c",
+      "status": "MATCH"
+    },
+    "0x002a2140": {
+      "address": "0x002a2140",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GEO_vSetPointOfObject",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GeoObj.c",
+      "status": "MATCH"
+    },
     "0x002a4000": {
       "address": "0x002a4000",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -32022,12 +32561,44 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/ElemEd.c",
       "status": "MATCH"
     },
+    "0x002a4040": {
+      "address": "0x002a4040",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GEO_vSetUVOfIndexedTriangles",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/ElemEd.c",
+      "status": "MATCH"
+    },
     "0x002a4080": {
       "address": "0x002a4080",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GEO_lGetIndexedTriangleNbFaces",
       "size": 32,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/ElemEd.c",
+      "status": "MATCH"
+    },
+    "0x002a40a0": {
+      "address": "0x002a40a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GEO_vSetIndexedUVOfFaceOfIndexedTriangles",
+      "size": 92,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/ElemEd.c",
+      "status": "MATCH"
+    },
+    "0x002a4100": {
+      "address": "0x002a4100",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GEO_vGetFaceOfIndexedTriangles",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/ElemEd.c",
+      "status": "MATCH"
+    },
+    "0x002a4170": {
+      "address": "0x002a4170",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GEO_vSetFaceOfIndexedTriangles",
+      "size": 92,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/GeoBdvEd.c",
       "status": "MATCH"
     },
     "0x002a4b90": {
@@ -32451,6 +33022,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_vSetLightNearFar",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
+      "status": "MATCH"
+    },
+    "0x002a8b80": {
+      "address": "0x002a8b80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xSetLightMatrix",
+      "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Light.c",
       "status": "MATCH"
     },
@@ -33142,11 +33721,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
       "status": "MATCH"
     },
+    "0x002b1430": {
+      "address": "0x002b1430",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_xGetCameraMatrix",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
+      "status": "MATCH"
+    },
     "0x002b1470": {
       "address": "0x002b1470",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_xSetCameraNearFar",
       "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
+      "status": "MATCH"
+    },
+    "0x002b14b0": {
+      "address": "0x002b14b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vCopyCamera",
+      "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Camera.c",
       "status": "MATCH"
     },
@@ -34486,6 +35081,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_anal.c",
       "status": "MATCH"
     },
+    "0x002f5c10": {
+      "address": "0x002f5c10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_bIsJustValidated",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_anal.c",
+      "status": "MATCH"
+    },
     "0x002f6720": {
       "address": "0x002f6720",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -34926,6 +35529,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ISI/ISI.c",
       "status": "MATCH"
     },
+    "0x002fa220": {
+      "address": "0x002fa220",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MTH_fn_xSqrAddSqrAddSqrOpt2",
+      "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsppla.c",
+      "status": "MATCH"
+    },
     "0x002fa230": {
       "address": "0x002fa230",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -35051,6 +35662,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "MEC_fn_vTranslateMatrixOff",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x00313ec0": {
+      "address": "0x00313ec0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MEC_fn_bDynamicsNeedCollide",
+      "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },
@@ -35243,6 +35862,46 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "PS2_fn_vCreateCriticalSection",
       "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/RND/RND_Main.c",
+      "status": "MATCH"
+    },
+    "0x00318ef0": {
+      "address": "0x00318ef0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "RND_fn_xGetRealRandomValue",
+      "size": 188,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/RND/RND_Main.c",
+      "status": "MATCH"
+    },
+    "0x00318fb0": {
+      "address": "0x00318fb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "RND_fn_lGetLongRandomValue",
+      "size": 160,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/RND/RND_Main.c",
+      "status": "EQUIVALENT"
+    },
+    "0x00319050": {
+      "address": "0x00319050",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "RND_fn_ulGetUnsignedLongRandomValue",
+      "size": 160,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/RND/RND_Main.c",
+      "status": "MATCH"
+    },
+    "0x003190f0": {
+      "address": "0x003190f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "RDN_fn_vSetRandomSeed",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/RND/RND_Main.c",
+      "status": "MATCH"
+    },
+    "0x00319130": {
+      "address": "0x00319130",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "RND_fn_hReserveANewHandleIndex",
+      "size": 116,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/RND/RND_Main.c",
       "status": "MATCH"
     },
@@ -35598,6 +36257,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieSpObj.c",
       "status": "MATCH"
     },
+    "0x003221a0": {
+      "address": "0x003221a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "HIE_fn_hForceGetSuperObjectPrevBrother",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieSpObj.c",
+      "status": "MATCH"
+    },
+    "0x003221c0": {
+      "address": "0x003221c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "HIE_fn_hForceGetSuperObjectNextBrother",
+      "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieSpObj.c",
+      "status": "MATCH"
+    },
     "0x00322330": {
       "address": "0x00322330",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -35652,6 +36327,14 @@
       "name": "SPO_ReinitSuperimposedArray",
       "size": 96,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/Specif/HiePcDrw.c",
+      "status": "MATCH"
+    },
+    "0x00322b80": {
+      "address": "0x00322b80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "HIE_vSetCharactereRLI",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Tmr/Timer.c",
       "status": "MATCH"
     },
     "0x003235b0": {

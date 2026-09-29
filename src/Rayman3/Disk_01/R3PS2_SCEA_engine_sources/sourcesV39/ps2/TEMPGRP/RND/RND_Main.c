@@ -96,8 +96,10 @@ void PS2_fn_vCreateCriticalSection(_stCriticalSection* p_stCS)
  */
 float RND_fn_xGetRealRandomValue(unsigned int _lIndexNumber, float _xMin, float _xMax)
 {
-    float xValue;
-    /* TODO: decompile from asm/... */
+    float xValue = _xMin + RND_g_stRandomStructure.xInverseMaxValueInTable * ((_xMax - _xMin) * (float)((unsigned int*)RND_g_stRandomStructure.p_ulTable)[RND_g_stRandomStructure.a_ulIndex[_lIndexNumber]]);
+    RND_g_stRandomStructure.a_ulIndex[_lIndexNumber]++; RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] += RND_BaseSeed % 255; if (RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] >= RND_g_stRandomStructure.ulSizeOfTable) RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] = 0;
+
+    return xValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\RND\RND_Main.c lines 237–241 */
@@ -117,8 +119,11 @@ float RND_fn_xGetRealRandomValue(unsigned int _lIndexNumber, float _xMin, float 
  */
 int RND_fn_lGetLongRandomValue(unsigned int _lIndexNumber, int _lMin, int _lMax)
 {
-    int lValue;
-    /* TODO: decompile from asm/... */
+    int lValue = _lMin + ((_lMax + 1 - _lMin) * ((unsigned int*)RND_g_stRandomStructure.p_ulTable)[RND_g_stRandomStructure.a_ulIndex[_lIndexNumber]]) / (RND_g_stRandomStructure.ulMaxValueInTable + 1);
+
+    RND_g_stRandomStructure.a_ulIndex[_lIndexNumber]++; RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] += RND_BaseSeed % 255; if (RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] >= RND_g_stRandomStructure.ulSizeOfTable) RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] = 0;
+
+    return lValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\RND\RND_Main.c lines 217–221 */
@@ -138,8 +143,11 @@ int RND_fn_lGetLongRandomValue(unsigned int _lIndexNumber, int _lMin, int _lMax)
  */
 unsigned int RND_fn_ulGetUnsignedLongRandomValue(unsigned int _lIndexNumber, unsigned int _ulMin, unsigned int _ulMax)
 {
-    unsigned int ulValue;
-    /* TODO: decompile from asm/... */
+    unsigned int ulValue = _ulMin + ((_ulMax + 1 - _ulMin) * ((unsigned int*)RND_g_stRandomStructure.p_ulTable)[RND_g_stRandomStructure.a_ulIndex[_lIndexNumber]]) / (RND_g_stRandomStructure.ulMaxValueInTable + 1);
+
+    RND_g_stRandomStructure.a_ulIndex[_lIndexNumber]++; RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] += RND_BaseSeed % 255; if (RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] >= RND_g_stRandomStructure.ulSizeOfTable) RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] = 0;
+
+    return ulValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\RND\RND_Main.c lines 205–211 */
@@ -155,7 +163,12 @@ unsigned int RND_fn_ulGetUnsignedLongRandomValue(unsigned int _lIndexNumber, uns
  */
 void RDN_fn_vSetRandomSeed(unsigned int _lIndexNumber, int _lNewSeed)
 {
-    /* TODO: decompile from asm/... */
+    if (_lNewSeed < 0)
+        _lNewSeed = 0;
+    else
+        _lNewSeed = _lNewSeed % (int)RND_g_stRandomStructure.ulSizeOfTable;
+
+    RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] = _lNewSeed;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\RND\RND_Main.c lines 116–122 */
@@ -176,5 +189,11 @@ void RDN_fn_vSetRandomSeed(unsigned int _lIndexNumber, int _lNewSeed)
  */
 unsigned int RND_fn_hReserveANewHandleIndex(void)
 {
-    /* TODO: decompile from asm/... */
+    if (RND_g_stRandomStructure.hLastUsedIndex > 50)
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(7, g_ucRNDModuleId, 0, 5, -1, 255, 255, NULL);
+    }
+
+    RND_g_stRandomStructure.hLastUsedIndex++;
+    return RND_g_stRandomStructure.hLastUsedIndex - 1;
 }

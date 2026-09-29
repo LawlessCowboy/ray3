@@ -2388,7 +2388,7 @@ float MEC_fn_xGetSlide(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObsta
  */
 int MEC_fn_bDynamicsNeedCollide(DNM_stDynamics* p_stDynamic)
 {
-    /* TODO: decompile from asm/... */
+    return !MAT_fn_bAreEquivalent(&p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix, &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 152–159 */

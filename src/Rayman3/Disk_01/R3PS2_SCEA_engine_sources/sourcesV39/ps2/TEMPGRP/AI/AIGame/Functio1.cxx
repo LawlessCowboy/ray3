@@ -189,6 +189,17 @@ struct tdstEngineStructure_ {
     HIE_tdstSuperObject_* h_StdCamCaracter; /* +0x62c */
     HIE_tdstSuperObject_* h_DbgCamCharacter; /* +0x630 */
     tdstLanguageStructure_* p_stLanguageTable; /* +0x634 */
+    void* hLevelNameList; /* +0x638 */
+    unsigned char _extractor_padding_01[0x1b6b - 0x63c]; /* +0x63c: matrices, level and demo names */
+    unsigned char ucNumberOfDemos; /* +0x1b6b */
+    unsigned char ucNumberOfLevels; /* +0x1b6c */
+    unsigned char ucCurrentLevel; /* +0x1b6d */
+    unsigned char ucPreviousLevel; /* +0x1b6e */
+    unsigned char ucExitIdToQuitPrevLevel; /* +0x1b6f */
+    unsigned char ucLevelGlobalCounter; /* +0x1b70 */
+    unsigned char xDemoMode; /* +0x1b71 */
+    unsigned char ucCurrentLanguage; /* +0x1b72 */
+    unsigned char ucNbLanguages; /* +0x1b73 */
 };
 extern "C" tdstEngineStructure_ g_stEngineStructure;
 
@@ -781,10 +792,9 @@ tdstNodeInterpret_* fn_p_stGetLanguageText(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGetNbLanguages(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetNbLanguages(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    p_stValue->uParam.lValue = 0;
-    p_stValue->eType = (tdeVariableType_)6;
+    p_stValue->uParam.lValue = g_stEngineStructure.ucNbLanguages; p_stValue->eType = (tdeVariableType_)6;
     return p_stTree;
 }
 
@@ -798,10 +808,9 @@ tdstNodeInterpret_* fn_p_stGetNbLanguages(tdstNodeInterpret_* p_stTree, tdstGetS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGetCurrentLanguageId(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetCurrentLanguageId(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    p_stValue->uParam.lValue = 0;
-    p_stValue->eType = (tdeVariableType_)6;
+    p_stValue->uParam.lValue = g_stEngineStructure.ucCurrentLanguage; p_stValue->eType = (tdeVariableType_)6;
     return p_stTree;
 }
 
@@ -816,7 +825,8 @@ tdstNodeInterpret_* fn_p_stGetCurrentLanguageId(tdstNodeInterpret_* p_stTree, td
  */
 tdstNodeInterpret_* fn_p_stGetDriversAvailable(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uParam.lValue = 0; p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3289–3303 */

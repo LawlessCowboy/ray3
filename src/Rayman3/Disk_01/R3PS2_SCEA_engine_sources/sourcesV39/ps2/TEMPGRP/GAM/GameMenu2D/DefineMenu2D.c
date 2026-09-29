@@ -1703,7 +1703,7 @@ char g_CurrentNameForSavePage;
 int g_CurrentLineForSelection;
 int g_CurrentColForSelection;
 int GLI_g_50_or_60_HzMode;
-char g_CurrentSaveName;
+extern char g_CurrentSaveName[];
 char SAV2_g_LevelNameToSave[20];
 int GLI_g_bWideScreenMode;
 tdstGameOptions_ g_stGameOptions;
@@ -3005,10 +3005,17 @@ void fn_vR3SetNbBonusOpen(unsigned int ulNum)
  */
 void fn_vR3SetCurrentEnvNumber(unsigned int ulNum)
 {
-    if (ulNum > (unsigned int)g_MaxIndCurrentEnv)
-        g_MaxIndCurrentEnv = ulNum;
-    if (ulNum != (unsigned int)g_IndCurrentEnv)
-        g_IndCurrentEnv = ulNum;
+    g_IndCurrentEnv = ulNum;
+    if (g_IndCurrentEnv > g_MaxIndCurrentEnv)
+        g_MaxIndCurrentEnv = g_IndCurrentEnv;
+    if (g_IndCurrentEnv != g_CurrentEnvInit)
+    {
+
+
+
+        g_CurrentEnvScoreAtBeginingOfLevel = g_aEnvValue[g_IndCurrentEnv].ulScore;
+        g_CurrentEnvInit = g_IndCurrentEnv;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 386–386 */
@@ -3020,7 +3027,7 @@ void fn_vR3SetCurrentEnvNumber(unsigned int ulNum)
  */
 void fn_vUpdatePlayerGameName(void)
 {
-    return;
+    strcpy(g_CurrentSaveName, g_aFileEntryArray[g_CurrentSelection + aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry].Name);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 368–381 */

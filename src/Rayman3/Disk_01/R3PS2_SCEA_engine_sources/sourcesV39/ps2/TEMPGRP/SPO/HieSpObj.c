@@ -590,7 +590,9 @@ HIE_tdstSuperObject_* HIE_fn_hGetChildNumber(HIE_tdstSuperObject_* _hParent, int
 {
     short i;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+    for (i = 0, hChild = _hParent->hFirstElementDyn; i < _lNumber; i++, hChild = hChild->hNextBrotherDyn) ;
+
+    return hChild;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 364–373 */
@@ -639,8 +641,10 @@ int HIE_fn_vRecUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO)
  */
 HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectPrevBrother(HIE_tdstSuperObject_* _hSprObj)
 {
-    return _hSprObj ? _hSprObj->hPrevBrotherDyn : _hSprObj;
-}
+    if ((unsigned char)(_hSprObj != NULL)) return _hSprObj->hPrevBrotherDyn;
+
+
+    return _hSprObj; }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 332–335 */
 /* addr: 0x003221c0  size: 28 bytes */
@@ -652,8 +656,10 @@ HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectPrevBrother(HIE_tdstSuperObject
  */
 HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* _hSprObj)
 {
-    return _hSprObj ? _hSprObj->hNextBrotherDyn : _hSprObj;
-}
+    if ((unsigned char)(_hSprObj != NULL)) return _hSprObj->hNextBrotherDyn;
+
+
+    return _hSprObj; }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 272–325 */
 /* addr: 0x003221e0  size: 328 bytes */

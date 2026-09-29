@@ -1840,11 +1840,7 @@ void GAM_fn_vSetEngineInFixMode(void)
  */
 unsigned char GAM_fn_bIsEngineInTransitionMode(void)
 {
-    unsigned char ucLoadingMode = GAM_gs_tdeLoadingMode;
-
-    if (ucLoadingMode == GAM_eTransitionLoading)
-        return 1;
-    return 0;
+    return GAM_gs_tdeLoadingMode == GAM_eTransitionLoading ? 1 : 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1124–1125 */
@@ -1857,7 +1853,7 @@ unsigned char GAM_fn_bIsEngineInTransitionMode(void)
  */
 unsigned char GAM_fn_bIsEngineInLevelMode(void)
 {
-    /* TODO: decompile from asm/... */
+    return (GAM_gs_tdeLoadingMode == GAM_eLevelLoading) ? (char)1 : (char)0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1118–1119 */

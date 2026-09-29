@@ -3622,10 +3622,23 @@ tdstNodeInterpret_* fn_p_st_AGO_GetHandle(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_st_GetPadInversions(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_st_GetPadInversions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    tdeFuncId_ eFuncId = *(tdeFuncId_ *)((char *)p_stTree - 8);
+
+    switch (eFuncId)
+    {
+
+        case 0x6a:
+            p_stValue->uDummy.uParam.xValue = MENU_g_bInversionHor ? -1.0f : 1.0f; p_stValue->eType = E_vt_Float;
+            break;
+
+        case 0x6b:
+            p_stValue->uDummy.uParam.xValue = MENU_g_bInversionVert ? -1.0f : 1.0f; p_stValue->eType = E_vt_Float;
+            break;
+
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2919–2934 */
@@ -3784,13 +3797,15 @@ tdstNodeInterpret_* fn_p_stMonitoringSetVariable(HIE_tdstSuperObject_* p_SuperOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stMCFunc(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stMCFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
     eFuncId = *(tdeFuncId_ *)((char *)p_stTree - 8);
-    if (eFuncId == 0x1b5) {
-        *(int *)p_stValue = 0;
-        *(int *)((char *)p_stValue + 0xc) = 6;
+    switch (eFuncId)
+    {
+        case 0x1b5:
+            p_stValue->uDummy.uParam.lValue = 0; p_stValue->eType = (tdeVariableType_)6;
+            break;
     }
     return p_stTree;
 }
@@ -3806,13 +3821,15 @@ tdstNodeInterpret_* fn_p_stMCFunc(tdstNodeInterpret_* p_stTree, tdstGetSetParam_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stScreenFunctions(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stScreenFunctions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
     eFuncId = *(tdeFuncId_ *)((char *)p_stTree - 8);
-    if (eFuncId == 0x1b4) {
-        *(int *)p_stValue = GLI_g_50_or_60_HzMode;
-        *(int *)((char *)p_stValue + 0xc) = 6;
+    switch (eFuncId)
+    {
+        case 0x1b4:
+            p_stValue->uDummy.uParam.lValue = GLI_g_50_or_60_HzMode; p_stValue->eType = (tdeVariableType_)6;
+            break;
     }
     return p_stTree;
 }
@@ -3905,13 +3922,9 @@ tdstNodeInterpret_* fn_p_stFFBFunctions(HIE_tdstSuperObject_* p_SuperObjPerso, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGetTransitionSectorIDFunction(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+tdstNodeInterpret_* fn_p_stGetTransitionSectorIDFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    HIE_tdstSuperObject_* pSector;
-    pSector = GAM_fn_hGetCurrentSector(SECT_hFatherSector);
-    pSector = *(HIE_tdstSuperObject_ **)((char *)pSector + 4);
-    *(int *)p_stValue = *(int *)((char *)pSector + 0x8c);
-    *(int *)((char *)p_stValue + 0xc) = 6;
+    p_stValue->uDummy.uParam.lValue = GAM_fn_hGetCurrentSector(g_stEngineStructure.h_StdCamCaracter)->hLinkedObject.p_stSector->xTransition; p_stValue->eType = (tdeVariableType_)6;
     return p_stTree;
 }
 
@@ -5619,12 +5632,7 @@ tdstNodeInterpret_* fn_p_stGetRadiusWP(HIE_tdstSuperObject_* p_SuperObjPerso, td
  */
 tdstNodeInterpret_* fn_p_stGetMyAbsolutePosition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    void *pData;
-    pData = *(void **)((char *)p_SuperObjPerso + 0x24);
-    *(int *)p_stValue = *(int *)((char *)pData + 0x40);
-    *(int *)((char *)p_stValue + 4) = *(int *)((char *)pData + 0x44);
-    *(int *)((char *)p_stValue + 8) = *(int *)((char *)pData + 0x48);
-    *(int *)((char *)p_stValue + 0xc) = 0x15;
+    *(int*)&p_stValue->uDummy.uParam.stVectorValue.xX = *(int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xX; *(int*)&p_stValue->uDummy.uParam.stVectorValue.xY = *(int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xY; *(int*)&p_stValue->uDummy.uParam.stVectorValue.xZ = *(int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xZ; p_stValue->eType = E_vt_Vector;
     return p_stTree;
 }
 

@@ -309,7 +309,7 @@ unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement)
  */
 unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement)
 {
-    if (_hEntryElement == NULL)
-        return 0;
-    return _hEntryElement->lState == 1;
+    return (_hEntryElement && (_hEntryElement->lState == 1)) ? (unsigned char)1 : (unsigned char)0;
+
+
 }

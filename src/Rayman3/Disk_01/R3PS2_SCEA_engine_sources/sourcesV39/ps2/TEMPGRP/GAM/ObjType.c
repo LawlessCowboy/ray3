@@ -1218,13 +1218,7 @@ unsigned char fn_ucFindPersonalIdOfPersonalType(int otType)
 {
     tdstObjectTypeElement_* hHandleToObjectTypeElement;
     unsigned int i;
-    hHandleToObjectTypeElement = g_stObjectTypes.hPersonalType.hFirstElementDyn;
-    i = 0;
-    while (i < (unsigned int)otType)
-    {
-        hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn;
-        i++;
-    }
+    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hPersonalType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;
     return hHandleToObjectTypeElement->ucPermanentId;
 }
 

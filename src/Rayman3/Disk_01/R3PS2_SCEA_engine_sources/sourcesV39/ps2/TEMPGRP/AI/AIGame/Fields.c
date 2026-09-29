@@ -3100,7 +3100,7 @@ extern float IPT_fn_xGetAnalogForceForPadNumber(unsigned char);
 extern void IPT_fn_vSetVAxisForPadNumber(unsigned char, short);
 extern short IPT_fn_wGetVAxisForPadNumber(unsigned char);
 extern void IPT_fn_vSetHAxisForPadNumber(unsigned char, short);
-extern short IPT_fn_wGetHAxisForPadNumber(unsigned char);
+extern short IPT_fn_vGetHAxisForPadNumber(unsigned char);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 439–439 */
 /* addr: 0x00211890  size: 8 bytes */
@@ -3313,7 +3313,7 @@ unsigned char fn_ucGetFieldPadAnalogForce(void* p_stContext, tdstGetSetParam_* p
  */
 unsigned char fn_ucSetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    IPT_fn_vSetVAxisForPadNumber(AI_g_ucLastMarioPadUsed, *(short*)p_stGetSetParam);
+    IPT_fn_vSetVAxisForPadNumber(AI_g_ucLastMarioPadUsed, (short)p_stGetSetParam->uDummy.uParam.lValue);
     return 1;
 }
 
@@ -3329,8 +3329,7 @@ unsigned char fn_ucSetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* 
  */
 unsigned char fn_ucGetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    *(short*)p_stGetSetParam = IPT_fn_wGetVAxisForPadNumber(AI_g_ucLastMarioPadUsed);
-    *(tdeVariableType_*)((char*)p_stGetSetParam + 0xC) = E_vt_Integer;
+    p_stGetSetParam->uDummy.uParam.lValue = IPT_fn_wGetVAxisForPadNumber(AI_g_ucLastMarioPadUsed); p_stGetSetParam->eType = E_vt_Integer;
     return 1;
 }
 
@@ -3347,7 +3346,7 @@ unsigned char fn_ucGetFieldPadVerticalAxis(void* p_stContext, tdstGetSetParam_* 
  */
 unsigned char fn_ucSetFieldPadHorizontalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    IPT_fn_vSetHAxisForPadNumber(AI_g_ucLastMarioPadUsed, *(short*)p_stGetSetParam);
+    IPT_fn_vSetHAxisForPadNumber(AI_g_ucLastMarioPadUsed, (short)p_stGetSetParam->uDummy.uParam.lValue);
     return 1;
 }
 
@@ -3363,8 +3362,7 @@ unsigned char fn_ucSetFieldPadHorizontalAxis(void* p_stContext, tdstGetSetParam_
  */
 unsigned char fn_ucGetFieldPadHorizontalAxis(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    *(short*)p_stGetSetParam = IPT_fn_wGetHAxisForPadNumber(AI_g_ucLastMarioPadUsed);
-    *(tdeVariableType_*)((char*)p_stGetSetParam + 0xC) = E_vt_Integer;
+    p_stGetSetParam->uDummy.uParam.lValue = IPT_fn_vGetHAxisForPadNumber(AI_g_ucLastMarioPadUsed); p_stGetSetParam->eType = E_vt_Integer;
     return 1;
 }
 
@@ -3379,7 +3377,7 @@ unsigned char fn_ucGetFieldPadHorizontalAxis(void* p_stContext, tdstGetSetParam_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucSetFieldPadGlobalVector(tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucSetFieldPadGlobalVector(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
     IPT_fn_vSetGlobalVectorForPadNumber(AI_g_ucLastMarioPadUsed, (MTH3D_tdstVector_*)p_stGetSetParam);
     return 1;
@@ -3399,12 +3397,10 @@ unsigned char fn_ucSetFieldPadGlobalVector(tdstGetSetParam_* p_stGetSetParam)
  */
 unsigned char fn_ucGetFieldPadGlobalVector(void* p_stContext, tdstGetSetParam_* p_stGetSetParam)
 {
-    MTH3D_tdstVector_ stVector;
-    IPT_fn_vGetGlobalVectorForPadNumber(AI_g_ucLastMarioPadUsed, &stVector);
-    ((unsigned int*)p_stGetSetParam)[0] = ((unsigned int*)&stVector)[0];
-    ((unsigned int*)p_stGetSetParam)[1] = ((unsigned int*)&stVector)[1];
-    ((unsigned int*)p_stGetSetParam)[2] = ((unsigned int*)&stVector)[2];
-    p_stGetSetParam->eType = E_vt_Vector;
+    union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;
+
+    IPT_fn_vGetGlobalVectorForPadNumber(AI_g_ucLastMarioPadUsed, &uVector.stVector);
+    ((unsigned int*)p_stGetSetParam)[0] = uVector.a3_ulWord[0]; ((unsigned int*)p_stGetSetParam)[1] = uVector.a3_ulWord[1]; ((unsigned int*)p_stGetSetParam)[2] = uVector.a3_ulWord[2]; p_stGetSetParam->eType = E_vt_Vector;
     return 1;
 }
 
@@ -3520,12 +3516,35 @@ unsigned char fn_ucGetFieldAbsoluteAxisX(HIE_tdstSuperObject_* hSuperObjPerso, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+inline float MTH_xSqr3(float _x, float _y, float _z) { float _r; asm { mula.s _x, _x } asm { madda.s _y, _y } asm { madd.s _r, _z, _z } return _r; }
+inline float MTH_xSqrt(float _x) { float _r; asm { sqrt.s _r, _x } asm { nop } asm { nop } return _r; }
+
 unsigned char fn_ucGetFieldNormSpeed(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     MTH3D_tdstVector_* p_stCurrSpeed;
     DNM_stDynamics* pstDynamic;
     tdstDynam_* h_Dynam;
-    /* TODO: decompile from asm/... */
+
+    h_Dynam = hSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+
+    p_stGetSetParam->eType = E_vt_Float;
+
+    if (h_Dynam)
+    {
+
+        pstDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+        if (pstDynamic)
+        {
+
+            p_stCurrSpeed = &pstDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed; p_stGetSetParam->uDummy.uParam.xValue = MTH_xSqrt(MTH_xSqr3(p_stCurrSpeed->xX, p_stCurrSpeed->xY, p_stCurrSpeed->xZ));
+            return 1;
+        }
+    }
+
+
+    p_stGetSetParam->uDummy.uParam.xValue = 0.0f;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 207–228 */
@@ -3553,7 +3572,25 @@ unsigned char fn_ucGetFieldSpeed(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSe
 {
     DNM_stDynamics* p_stDynamic;
     tdstDynam_* h_Dynam;
-    /* TODO: decompile from asm/... */
+
+    h_Dynam = hSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+
+    p_stGetSetParam->eType = E_vt_Vector;
+    if (h_Dynam)
+    {
+
+        p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+        if (p_stDynamic)
+        {
+
+            *(MTH3D_tdstVector_*)p_stGetSetParam = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed;
+
+            return 1;
+        }
+    }
+
+    ((MTH3D_tdstVector_*)p_stGetSetParam)->xX = 0.0f; ((MTH3D_tdstVector_*)p_stGetSetParam)->xY = 0.0f; ((MTH3D_tdstVector_*)p_stGetSetParam)->xZ = 0.0f;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 178–194 */
@@ -3707,7 +3744,8 @@ unsigned char fn_ucGetFieldShadowScaleX(HIE_tdstSuperObject_* hSuperObjPerso, td
  */
 unsigned char fn_ucGetFieldPrevComportReflex(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    p_stGetSetParam->uDummy.uParam.pComport = hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex->p_stPrevComport; p_stGetSetParam->eType = E_vt_Comport;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 79–81 */
@@ -3722,7 +3760,8 @@ unsigned char fn_ucGetFieldPrevComportReflex(HIE_tdstSuperObject_* hSuperObjPers
  */
 unsigned char fn_ucGetFieldPrevComportIntell(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
-    /* TODO: decompile from asm/... */
+    p_stGetSetParam->uDummy.uParam.pComport = hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stPrevComport; p_stGetSetParam->eType = E_vt_Comport;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 68–68 */

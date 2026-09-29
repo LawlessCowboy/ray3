@@ -3174,14 +3174,7 @@ WP_tdstWayPoint_* WPG_fn_hGetWaypointOfGraph(WP_tdstGraph_* hGraph, int iIndex, 
     WP_tdstGraphNode_* hElement;
     int i;
 
-    hElement = hGraph->m_hListOfNode.hFirstElementDyn;
-    i = 0;
-    if (iIndex > 0) {
-        do {
-            hElement = hElement->hNextBrotherDyn;
-            i++;
-        } while (i < iIndex);
-    }
+    for (i = 0, hElement = hGraph->m_hListOfNode.hFirstElementDyn; i < iIndex; i++, hElement = hElement->hNextBrotherDyn) ;
 
     *_plTypeOfWP = hElement->m_lTypeOfWP;
     return hElement->m_hWayPoint;

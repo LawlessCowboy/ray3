@@ -452,16 +452,7 @@ void GLI_vSetLightNearFar(GLI_tdstLight_* p_stLight, float xNear, float xFar)
  */
 void GLI_xSetLightMatrix(GLI_tdstLight_* p_stLight, MAT_tdstTransformation_* p_stMatrix)
 {
-    unsigned int* pDst;
-    unsigned int* pSrc;
-    int i;
-
-    pDst = (unsigned int*)&p_stLight->stMatrix;
-    pSrc = (unsigned int*)p_stMatrix;
-    for (i = 0; i < 32; i++)
-    {
-        pDst[i] = pSrc[i];
-    }
+    p_stLight->stMatrix = *p_stMatrix;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 691–692 */

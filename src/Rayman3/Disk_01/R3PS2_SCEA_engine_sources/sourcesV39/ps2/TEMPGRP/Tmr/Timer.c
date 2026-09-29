@@ -44,9 +44,20 @@ unsigned int a3_ulTimerFrequency[3];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned char g_ucNbRLIUse;
+extern char g_ucIndex1;
+extern char g_ucIndex2;
+extern float g_xPercent;
+
 void HIE_vSetCharactereRLI(unsigned char ucNbRLI, unsigned char ucIndex1, unsigned char ucIndex2, float xPercent)
 {
-    /* TODO: decompile from asm/... */
+    if (ucNbRLI <= 2 || ucNbRLI >= 0)
+    {
+        g_ucNbRLIUse = ucNbRLI;
+        g_ucIndex1 = (char)ucIndex1 - 1;
+        g_ucIndex2 = (char)ucIndex2 - 1;
+        g_xPercent = xPercent;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 551–561 */

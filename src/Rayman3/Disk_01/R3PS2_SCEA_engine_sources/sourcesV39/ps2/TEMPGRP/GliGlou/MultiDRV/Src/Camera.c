@@ -391,8 +391,8 @@ void GLI_xSetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_s
  */
 void GLI_xGetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_stMatrix)
 {
-    *(MTH4D_tdstMatrix_*)p_stMatrix = p_stCam->stMatrix.stTransformMatrix;
-    *(MTH4D_tdstVector_*)((unsigned char*)p_stMatrix + 0x40) = p_stCam->stMatrix.stScaleVector;
+    *p_stMatrix = p_stCam->stMatrix;
+
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Camera.c lines 109–114 */
@@ -430,8 +430,5 @@ void GLI_xSetCameraNearFar(GLI_tdstCamera_* p_stCam, float xNear, float xFar)
  */
 void GLI_vCopyCamera(GLI_tdstCamera_* p_stCamDest, GLI_tdstCamera_* p_stCamSource)
 {
-    int i;
-    for (i = 0; i < 8; i++) {
-        ((MTH4D_tdstMatrix_*)p_stCamDest)[i] = ((MTH4D_tdstMatrix_*)p_stCamSource)[i];
-    }
+    *p_stCamDest = *p_stCamSource;
 }

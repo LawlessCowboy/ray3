@@ -245,7 +245,7 @@ void GEO_vSetVisualMaterialOfIndexedTriangles(GEO_tdstGeometricObject_* hObject,
  */
 void GEO_vSetUVOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfUV, ACP_tdst2DUVValues_* p_stUV)
 {
-    /* TODO: decompile from asm/... */
+    hObject->d_stListOfElements[hElement]->d_stListOfElementUV[xIndexOfUV] = *p_stUV;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 310–311 */
@@ -278,9 +278,9 @@ void GEO_vSetIndexedUVOfFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject
 {
     GEO_tdstElementIndexedTriangles_* param0;
     param0 = hObject->d_stListOfElements[hElement];
-    ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripledIndexUV)[xIndexOfFace].a3_xIndex[0] = xUV1;
-    ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripledIndexUV)[xIndexOfFace].a3_xIndex[1] = xUV2;
-    ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripledIndexUV)[xIndexOfFace].a3_xIndex[2] = xUV3;
+    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripledIndexUV->a3_xIndex + 0))[xIndexOfFace].a3_xIndex[0] = xUV1;
+    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripledIndexUV->a3_xIndex + 1))[xIndexOfFace].a3_xIndex[0] = xUV2;
+    ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripledIndexUV->a3_xIndex + 2))[xIndexOfFace].a3_xIndex[0] = xUV3;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 209–216 */
@@ -300,7 +300,7 @@ void GEO_vGetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hEl
 {
     GEO_tdstElementIndexedTriangles_* param0;
     param0 = hObject->d_stListOfElements[hElement];
-    *p_xPoint1 = ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripled)[xIndexOfFace].a3_xIndex[0];
-    *p_xPoint2 = ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripled)[xIndexOfFace].a3_xIndex[1];
-    *p_xPoint3 = ((GEO_tdstTripledIndex_*)param0->d_stListOfFacesTripled)[xIndexOfFace].a3_xIndex[2];
+    *p_xPoint1 = ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 0))[xIndexOfFace].a3_xIndex[0];
+    *p_xPoint2 = ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 1))[xIndexOfFace].a3_xIndex[0];
+    *p_xPoint3 = ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripled->a3_xIndex + 2))[xIndexOfFace].a3_xIndex[0];
 }

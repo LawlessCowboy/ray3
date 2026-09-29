@@ -125,6 +125,14 @@ int (*g_mpegRestartDMA)(anon_2*, anon_3*, void*);
 int (*g_mpegStopDMA)(anon_2*, anon_3*, void*);
 int (*g_mpegNodata)(anon_2*, anon_3*, void*);
 int (*g_mpegError)(anon_2*, anon_5*, void*);
+extern int printf(const char*, ...);
+extern void switchThread(void);
+extern int viBufAddDMA(anon_4* f);
+extern int viBufReset(anon_4* f);
+extern int viBufGetTs(anon_4* f, anon_1* ts);
+extern int viBufCount(anon_4* f);
+extern int sceMpegIsRefBuffEmpty(anon_2* mp);
+int decBs0(anon_0* vd);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 394–401 */
 /* addr: 0x00132970  size: 68 bytes */
@@ -143,10 +151,15 @@ int (*g_mpegError)(anon_2*, anon_5*, void*);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int mpegTS(anon_6* cbts)
+int mpegTS(anon_2* mp, anon_6* cbts, void* anyData)
 {
     anon_1 ts;
-    /* TODO: decompile from asm/... */
+
+
+    viBufGetTs(&videoDec.vibuf, &ts);
+    cbts->pts = ts.pts;
+    cbts->dts = ts.dts;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 382–386 */
@@ -199,9 +212,10 @@ int mpegStopDMA(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int mpegNodata(void)
+int mpegNodata(anon_2* mp, anon_3* cbdata, void* anyData)
 {
-    viBufAddDMA((anon_3*)&videoDec.mpeg);
+    switchThread();
+    viBufAddDMA(&videoDec.vibuf);
     return 1;
 }
 
@@ -218,9 +232,9 @@ int mpegNodata(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int mpegError(anon_5* cberror)
+int mpegError(anon_2* mp, anon_5* cberror, void* anyData)
 {
-    videoDec.state = 0;
+    printf("%s\n", (char*)cberror->errMessage);
     return 1;
 }
 
@@ -270,7 +284,12 @@ int decBs0(anon_0* vd)
  */
 void videoDecMain(anon_0* vd)
 {
-    /* TODO: decompile from asm/... */
+    viBufReset(&vd->vibuf);
+
+
+    decBs0(vd);
+
+    vd->state = 3;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 259–262 */
@@ -284,7 +303,8 @@ void videoDecMain(anon_0* vd)
  */
 int videoDecIsFlushed(anon_0* vd)
 {
-    /* TODO: decompile from asm/... */
+    return viBufCount(&vd->vibuf) == 0 && sceMpegIsRefBuffEmpty(&vd->mpeg);
+
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 222–251 */
