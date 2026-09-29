@@ -358,8 +358,13 @@ def target_context() -> tuple[list[Section], list[Symbol], Section, dict[int, Sy
     addresses = {}
     names = {}
     for symbol in symbols:
-        if symbol.name:
-            names.setdefault(symbol.name, symbol)
+        # A global definition takes precedence over earlier local symbols of
+        # the same name (for example the size-0 local ``rdata`` labels that
+        # precede the global ``rdata[32]`` pad buffer); an external reference
+        # in a candidate object can only link to the global.
+        if symbol.name and (symbol.name not in names or
+                            (symbol.info >> 4 == 1 and names[symbol.name].info >> 4 != 1)):
+            names[symbol.name] = symbol
         if symbol.value and symbol.type in {STT_FUNC, STT_OBJECT}:
             addresses.setdefault(symbol.value, symbol)
     return sections, symbols, main, addresses, names

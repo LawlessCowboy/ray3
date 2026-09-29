@@ -19128,11 +19128,155 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/vm_backup.c",
       "status": "MATCH"
     },
+    "0x00137930": {
+      "address": "0x00137930",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_SetBackgroundMaterial",
+      "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137960": {
+      "address": "0x00137960",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_XButtonPressed",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137a00": {
+      "address": "0x00137a00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_TriangleButtonPressed",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137aa0": {
+      "address": "0x00137aa0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_SquareButtonPressed",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137b40": {
+      "address": "0x00137b40",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_XorOButtonsPressed",
+      "size": 180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137c00": {
+      "address": "0x00137c00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_XorTriangleButtonsPressed",
+      "size": 180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137cc0": {
+      "address": "0x00137cc0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_SquareOrTriangleButtonsPressed",
+      "size": 180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137d80": {
+      "address": "0x00137d80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_WaitForXAndOButtonRelease",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137dd0": {
+      "address": "0x00137dd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_WaitForXAndTriangleButtonRelease",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137e20": {
+      "address": "0x00137e20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_WaitForSquareAndTriangleButtonRelease",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137e70": {
+      "address": "0x00137e70",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_WaitForXButtonRelease",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137ec0": {
+      "address": "0x00137ec0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_WaitForTriangleButtonRelease",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00137f10": {
+      "address": "0x00137f10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_WaitForSquareButtonRelease",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00138f00": {
+      "address": "0x00138f00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_Present",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00138f60": {
+      "address": "0x00138f60",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_Formatted",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
     "0x00138fc0": {
       "address": "0x00138fc0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "MC_MemoryCardChanged",
       "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00139000": {
+      "address": "0x00139000",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_AknowledgeMemoryCard",
+      "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00139090": {
+      "address": "0x00139090",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MC_Format",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x0013b070": {
+      "address": "0x0013b070",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "SauvePartieMenu",
+      "size": 96,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
       "status": "MATCH"
     },

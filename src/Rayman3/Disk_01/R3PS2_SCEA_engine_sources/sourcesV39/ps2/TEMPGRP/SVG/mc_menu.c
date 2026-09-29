@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+/* This unit was built without optimization. */
+#pragma optimization_level 0
+#pragma peephole on
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct SVG_stMCStatus_ SVG_stMCStatus_;
 
@@ -55,7 +59,7 @@ int MC_ManagmentState;
 char MC_Strings[32][768];
 int MC_g_MemoryCardOperationBackGroundTexture;
 int MC_g_GroupSaveGameAndOptions;
-unsigned int paddata;
+volatile unsigned int paddata;
 unsigned char rdata[32];
 char MC_SavedString[765];
 unsigned int TXT_g_ulDefaultColor;
@@ -139,11 +143,8 @@ void MC_AddString(int Number, char* String)
  */
 void MC_SetBackgroundMaterial(void* pMaterial)
 {
-    volatile int material;
-    material = (int)pMaterial;
-    if (MC_g_MemoryCardOperationBackGroundTexture == 0) {
-        MC_g_MemoryCardOperationBackGroundTexture = material;
-    }
+    if (MC_g_MemoryCardOperationBackGroundTexture == 0)
+        MC_g_MemoryCardOperationBackGroundTexture = (int)pMaterial;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 411–432 */
@@ -162,9 +163,31 @@ void MC_SetBackgroundMaterial(void* pMaterial)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int scePadRead(int port, int slot, unsigned char* rdata);
+
+/* The pad-reading helpers keep the redundant byte masks after each lbu and
+ * optimise their argument set-up: level 2 without the peephole pass. */
+#pragma optimization_level 2
+#pragma peephole off
+
 int MC_XButtonPressed(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x40)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 435–452 */
@@ -185,7 +208,22 @@ int MC_XButtonPressed(void)
  */
 int MC_TriangleButtonPressed(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x10)
+    {
+        return 4;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 455–472 */
@@ -206,7 +244,22 @@ int MC_TriangleButtonPressed(void)
  */
 int MC_SquareButtonPressed(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x80)
+    {
+        return 5;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 501–532 */
@@ -229,7 +282,26 @@ int MC_SquareButtonPressed(void)
  */
 int MC_XorOButtonsPressed(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x40)
+    {
+        return 1;
+    }
+    else if (paddata & 0x20)
+    {
+        return 2;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 535–566 */
@@ -252,7 +324,26 @@ int MC_XorOButtonsPressed(void)
  */
 int MC_XorTriangleButtonsPressed(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x40)
+    {
+        return 1;
+    }
+    else if (paddata & 0x10)
+    {
+        return 4;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 569–590 */
@@ -275,8 +366,30 @@ int MC_XorTriangleButtonsPressed(void)
  */
 int MC_SquareOrTriangleButtonsPressed(void)
 {
-    /* TODO: decompile from asm/... */
+    MC_AskToReconnectPad(0);
+
+    if (scePadRead(0, 0, rdata) > 0)
+    {
+        paddata = 0xffff ^ ((rdata[2] << 8) | rdata[3]);
+    }
+    else
+    {
+        paddata = 0;
+    }
+
+    if (paddata & 0x80)
+    {
+        return 5;
+    }
+    else if (paddata & 0x10)
+    {
+        return 4;
+    }
+    return 0;
 }
+
+#pragma optimization_level 0
+#pragma peephole on
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 595–602 */
 /* addr: 0x00137d80  size: 72 bytes */
@@ -880,11 +993,20 @@ int MC_Load(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int SVG_fn_s32Query(int _iPort, int _iSlot, int* _pFormatted);
+int SVG_fn_s32QueryAndCheckSpace(int _iPort, int _iSlot, int* _pFormatted, int _bCheckSpace, int _iNeeded);
+
 int MC_Present(void)
 {
     int Value;
     int Bidon;
-    /* TODO: decompile from asm/... */
+    Bidon = 0;
+    Value = SVG_fn_s32Query(0, 0, &Bidon);
+    if (Value == 0)
+    {
+        return 0;
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1632–1636 */
@@ -901,7 +1023,9 @@ int MC_Present(void)
 int MC_Formatted(void)
 {
     int Bidon;
-    /* TODO: decompile from asm/... */
+    Bidon = 0;
+    if (SVG_fn_s32QueryAndCheckSpace(0, 0, &Bidon, 1, 0) == -11) return 0;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1644–1650 */
@@ -918,7 +1042,6 @@ int MC_Formatted(void)
 int MC_Present(void);
 int SVG_fn_iGetChangeInMC0(void);
 
-#pragma schedule off
 int MC_MemoryCardChanged(void)
 {
     if (MC_Present() == 0)
@@ -926,7 +1049,6 @@ int MC_MemoryCardChanged(void)
     else
         return SVG_fn_iGetChangeInMC0();
 }
-#pragma schedule reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1654–1657 */
 /* addr: 0x00139000  size: 32 bytes */
@@ -939,9 +1061,7 @@ int MC_MemoryCardChanged(void)
  */
 void MC_AknowledgeMemoryCard(void)
 {
-    int result;
-    result = SVG_fn_iGetChangeInMC0AndReset();
-    (void)result;
+    SVG_fn_iGetChangeInMC0AndReset();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1663–1678 */
@@ -976,9 +1096,16 @@ int MC_SaveGameAlreadyExist(char* SavingName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int SVG_fn_s32Format(int _iPort, int _iSlot);
+
 int MC_Format(void)
 {
-    /* TODO: decompile from asm/... */
+    switch (SVG_fn_s32Format(0, 0)) {
+    case 0:
+        return 1;
+    default:
+        return 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 1750–1914 */
@@ -1692,5 +1819,5 @@ int LoadPartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _sz
  */
 int SauvePartieMenu(int _iPort, int _iSlot, char* _szSonyCompliantName, char* _szTitle, void* _pData, unsigned int _u32DataSize, char* SavingName, int bSavingOptions)
 {
-    /* TODO: decompile from asm/... */
+    return LoadPartieMenu(_iPort, _iSlot, _szSonyCompliantName, _szTitle, _pData, _u32DataSize, SavingName, bSavingOptions);
 }
