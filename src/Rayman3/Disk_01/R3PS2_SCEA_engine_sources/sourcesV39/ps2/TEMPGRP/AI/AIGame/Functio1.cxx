@@ -640,7 +640,7 @@ tdstNodeInterpret_* fn_p_stGetVideoOptions(HIE_tdstSuperObject_* p_SuperObjPerso
  * preserves p_stTree from a1 across printf. */
 tdstNodeInterpret_* fn_p_stGetBrightness(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    printf("jt :  fn_p_stGetBrightness non implementee dans functio1.cxx\n");
+    printf("jt :  fn_p_stGetBrightness non implementee dans functio1.cxx");
     return p_stTree;
 }
 
@@ -705,9 +705,10 @@ tdstNodeInterpret_* fn_p_stSaveCurrentResolution(HIE_tdstSuperObject_* p_SuperOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGetCurrentResolution(tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stGetCurrentResolution(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    /* TODO: decompile from asm/... */
+    printf(" jt : fn_p_stGetCurrentResolution non implémentée dans functi1.cxx");
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3402â€“3411 */
@@ -724,9 +725,10 @@ tdstNodeInterpret_* fn_p_stGetCurrentResolution(tdstNodeInterpret_* p_stTree)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stGetNbAvailableResolution(tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stGetNbAvailableResolution(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    /* TODO: decompile from asm/... */
+    printf(" jt : fn_p_stGetNbAvailableResolution pas implémentée dasn functio1.cxx");
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3362â€“3373 */

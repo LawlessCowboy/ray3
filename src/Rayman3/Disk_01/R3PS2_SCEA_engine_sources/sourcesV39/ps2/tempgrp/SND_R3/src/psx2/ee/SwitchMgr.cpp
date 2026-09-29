@@ -93,19 +93,37 @@ typedef enum tdeEventType {
     ESTOPANDGO = 6,
 } tdeEventType;
 
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
-    float m_oValue; /* +0x1c */
+struct sstring {
+    int m_pcData; /* +0x0 */
 };
 
 struct CStringIsLess {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     CStringIsLess key_compare; /* +0xd */
+};
+
+struct sset {
+    stree _Tr; /* +0x0 */
+};
+
+struct CVar {
+    CSndVarType* m_poType; /* +0x4 */
+    sset m_NotifTargets; /* +0x8 */
+    sstring m_strName; /* +0x18 */
+};
+
+struct TTypedVar : CVar {
+    float m_oValue; /* +0x1c */
 };
 
 struct CSndVarType {
@@ -186,12 +204,21 @@ struct CLinkTypeActor {
     _tdstAllRetObjectSound mstIActor; /* +0x88 */
 };
 
-struct sstring {
-    int m_pcData; /* +0x0 */
+struct CUUID {
+    unsigned int m_uiHighWord; /* +0x0 */
+    unsigned int m_uiLowWord; /* +0x4 */
 };
 
-struct CResData {
-    /* C++ base CRefIdObj at +0x0. */
+struct CIdObj {
+    /* C++ base CRTTIClass at +0x0. */
+    CUUID m_oId; /* +0x4 */
+};
+
+struct CRefIdObj : CIdObj {
+    unsigned char m_bMarkFlag; /* +0xc */
+};
+
+struct CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
 };
@@ -273,8 +300,12 @@ struct CActorProgramContext {
     CCritSect m_oMutex; /* +0x4c */
 };
 
-struct CActorResObj {
-    /* C++ base CResObj at +0x0. */
+struct CResObj {
+    CResType* m_roType; /* +0x4 */
+    CResData* m_poResData; /* +0x8 */
+};
+
+struct CActorResObj : CResObj {
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -316,20 +347,10 @@ struct CSwitchElement {
     unsigned int m_uiValue; /* +0x4 */
 };
 
-struct CUUID {
-    unsigned int m_uiHighWord; /* +0x0 */
-    unsigned int m_uiLowWord; /* +0x4 */
-};
-
 struct SwitchElt {
     unsigned int m_uiVal; /* +0x0 */
     CResData* m_pData; /* +0x4 */
     CUUID m_oId; /* +0x8 */
-};
-
-struct CIdObj {
-    /* C++ base CRTTIClass at +0x0. */
-    CUUID m_oId; /* +0x4 */
 };
 
 struct SwitchData {
@@ -358,19 +379,13 @@ struct CActorModifiers {
     unsigned char m_bResultChanged; /* +0x20 */
 };
 
-struct sset {
-    stree _Tr; /* +0x0 */
-};
-
-struct CLinkTypeActorCont {
-    /* C++ base smap at +0x0. */
+struct CLinkTypeActorCont : smap {
     CActorResData* m_poStandardActorResData; /* +0x10 */
     CActorResData* m_poMusicActorResData; /* +0x14 */
     CResData* m_poMusicProgramResData; /* +0x18 */
 };
 
-struct CSwitchResData {
-    /* C++ base CResData at +0x0. */
+struct CSwitchResData : CResData {
     unsigned int m_uiNbElmts; /* +0x18 */
     unsigned int m_uiInfoType; /* +0x1c */
     unsigned int m_uiDefaultIndex; /* +0x20 */
@@ -395,11 +410,6 @@ struct CPS2IdObjLoader {
     smap m_oIndex; /* +0x10 */
 };
 
-struct CResObj {
-    CResType* m_roType; /* +0x4 */
-    CResData* m_poResData; /* +0x8 */
-};
-
 struct _stVector {
     float f32x; /* +0x0 */
     float f32y; /* +0x4 */
@@ -421,21 +431,8 @@ union _SND_tduRefEvt {
     _SND_tdstBlockEvent* pstPtr; /* +0x0 */
 };
 
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
+struct sTreeNode : sTreeLink {
     spair m_oValue; /* +0x10 */
-};
-
-struct CVar {
-    CSndVarType* m_poType; /* +0x4 */
-    sset m_NotifTargets; /* +0x8 */
-    sstring m_strName; /* +0x18 */
-};
-
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
 };
 
 struct iterator {
@@ -454,19 +451,13 @@ struct CBoolRefParam {
     unsigned int m_uiValue; /* +0x8 */
 };
 
-struct CRefIdObj {
-    /* C++ base CIdObj at +0x0. */
-    unsigned char m_bMarkFlag; /* +0xc */
-};
-
 struct CIndexAllocator {
     CAllocBlock* m_poAllocBlocks; /* +0x0 */
     char m_cRootNodeBuffer[40]; /* +0x4 */
     unsigned int m_uiNbAllocs; /* +0x2c */
 };
 
-struct CActorResData {
-    /* C++ base CResData at +0x0. */
+struct CActorResData : CResData {
     unsigned char m_b3DRes; /* +0x18 */
     sset m_oProgramList; /* +0x1c */
     smap m_oVariables; /* +0x2c */
@@ -488,6 +479,64 @@ struct SwitchMgr {
     void fs_vAddTexture(unsigned int);
     void fs_vAdd(CSwitchResData*);
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 unsigned int SwitchMgr::ms_nbTex;
 unsigned int SwitchMgr::ms_nbTexMax;

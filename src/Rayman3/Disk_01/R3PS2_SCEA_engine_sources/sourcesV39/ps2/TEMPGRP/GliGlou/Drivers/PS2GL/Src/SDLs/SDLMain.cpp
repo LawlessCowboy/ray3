@@ -702,8 +702,14 @@ struct GEO_tdstParallelBox_ {
     MTH4D_tdstVector_ stMaxPoint; /* +0x10 */
 };
 
-struct C_SdlRef_FogParameters {
-    /* C++ base C_SdlRef at +0x0. */
+struct C_SdlRef {
+    unsigned int m_uRefType; /* +0x0 */
+    unsigned int m_uIndexInList; /* +0x4 */
+    int m_vpOriginPointer; /* +0x8 */
+    int m_vpDestinationPointer; /* +0xc */
+};
+
+struct C_SdlRef_FogParameters : C_SdlRef {
     int m_pDestFogColor; /* +0x14 */
     int m_pDestFogStart; /* +0x18 */
     int m_pDestFogEnd; /* +0x1c */
@@ -1279,13 +1285,6 @@ struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn {
     int lNumberOfElementsDyn; /* +0x8 */
 };
 
-struct C_SdlRef {
-    unsigned int m_uRefType; /* +0x0 */
-    unsigned int m_uIndexInList; /* +0x4 */
-    int m_vpOriginPointer; /* +0x8 */
-    int m_vpDestinationPointer; /* +0xc */
-};
-
 struct sceGsXyzf {
     unsigned long X : 16; /* bit 0, byte +0x0 */
     unsigned long Y : 16; /* bit 16, byte +0x0 */
@@ -1485,8 +1484,7 @@ struct sceGsZbuf {
     unsigned long pad33 : 31; /* bit 33, byte +0x0 */
 };
 
-struct C_SdlRef_LocalMatrix {
-    /* C++ base C_SdlRef at +0x0. */
+struct C_SdlRef_LocalMatrix : C_SdlRef {
     float OldMat[4][4]; /* +0x20 */
     int m_bNoInterpolation; /* +0x60 */
 };
@@ -2111,6 +2109,163 @@ struct tdstObjectsTableElement_ {
     unsigned char ucIntensity; /* +0xf */
     unsigned char ucExpression; /* +0x10 */
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 unsigned int GLI_g_MaxSDLSize;
 unsigned int GLI_g_NbSDLs;

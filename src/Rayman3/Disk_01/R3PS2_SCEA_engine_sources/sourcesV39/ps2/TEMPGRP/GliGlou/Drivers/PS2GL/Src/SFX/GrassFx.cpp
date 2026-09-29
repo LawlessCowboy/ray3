@@ -851,8 +851,19 @@ struct tagGLlistdatas {
     int apData[3]; /* +0x4 */
 };
 
-struct C_GrassFx {
-    /* C++ base C_BaseFx at +0x0. */
+struct C_BaseFx {
+    unsigned int m_FogIsOn_saved; /* +0x0 */
+    unsigned int m_FogColor_saved; /* +0x4 */
+    float m_fFogOOStartMinusEnd_saved; /* +0x8 */
+    float m_fFogEnd_saved; /* +0xc */
+    unsigned int m_FogIsOn; /* +0x10 */
+    unsigned int m_FogColor; /* +0x14 */
+    float m_fFogOOStartMinusEnd; /* +0x18 */
+    float m_fFogEnd; /* +0x1c */
+    int m_pSearchKey; /* +0x20 */
+};
+
+struct C_GrassFx : C_BaseFx {
     GEO_tdstElementIndexedTriangles_* m_p_stEIT; /* +0x28 */
     SDC_VertexArrays_* m_pSDC; /* +0x2c */
     GLI_tdstMaterial_* m_hGrassVisualMaterial; /* +0x30 */
@@ -942,18 +953,6 @@ struct SDC_VertexArrays_ {
 struct tdstBaseFxListElement_ {
     C_BaseFx* pFx; /* +0x0 */
     tdstBaseFxListElement_* pNext; /* +0x4 */
-};
-
-struct C_BaseFx {
-    unsigned int m_FogIsOn_saved; /* +0x0 */
-    unsigned int m_FogColor_saved; /* +0x4 */
-    float m_fFogOOStartMinusEnd_saved; /* +0x8 */
-    float m_fFogEnd_saved; /* +0xc */
-    unsigned int m_FogIsOn; /* +0x10 */
-    unsigned int m_FogColor; /* +0x14 */
-    float m_fFogOOStartMinusEnd; /* +0x18 */
-    float m_fFogEnd; /* +0x1c */
-    int m_pSearchKey; /* +0x20 */
 };
 
 struct sceGsRgbaq {
@@ -1296,6 +1295,92 @@ struct tagGScontext {
     sceGifTag* pCurTag; /* +0x2228 */
     signed char iRegs; /* +0x222c */
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 C_FxList GrassFx_g_List;
 C_FxList GrassFx_g_ListToDisplay;

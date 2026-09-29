@@ -149,8 +149,30 @@ struct CIdObjPtr {
     CLookupElement* m_poElmt; /* +0x0 */
 };
 
-struct CEventResData {
-    /* C++ base CResData at +0x0. */
+struct sstring {
+    int m_pcData; /* +0x0 */
+};
+
+struct CUUID {
+    unsigned int m_uiHighWord; /* +0x0 */
+    unsigned int m_uiLowWord; /* +0x4 */
+};
+
+struct CIdObj {
+    /* C++ base CRTTIClass at +0x0. */
+    CUUID m_oId; /* +0x4 */
+};
+
+struct CRefIdObj : CIdObj {
+    unsigned char m_bMarkFlag; /* +0xc */
+};
+
+struct CResData : CRefIdObj {
+    unsigned int m_uiVersionId; /* +0x10 */
+    sstring m_strName; /* +0x14 */
+};
+
+struct CEventResData : CResData {
     float m_fCoeffA; /* +0x18 */
     float m_fCoeffB; /* +0x1c */
     float m_fCoeffC; /* +0x20 */
@@ -207,18 +229,19 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     less key_compare; /* +0xd */
 };
 
 struct sset {
     stree _Tr; /* +0x0 */
-};
-
-struct sstring {
-    int m_pcData; /* +0x0 */
 };
 
 struct CVar {
@@ -288,8 +311,7 @@ struct CVolumeActorModifier {
     /* C++ base CActorModifiers at +0x0. */
 };
 
-struct CActorResObj {
-    /* C++ base CResObj at +0x0. */
+struct CActorResObj : CResObj {
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -311,19 +333,13 @@ struct CActorModifiers {
     unsigned char m_bResultChanged; /* +0x20 */
 };
 
-struct CUUID {
-    unsigned int m_uiHighWord; /* +0x0 */
-    unsigned int m_uiLowWord; /* +0x4 */
-};
-
 struct CLookupElement {
     int m_iNbRef; /* +0x0 */
     CUUID m_oId; /* +0x4 */
     CIdObj* m_poIdObj; /* +0xc */
 };
 
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
+struct TTypedVar : CVar {
     float m_oValue; /* +0x1c */
 };
 
@@ -348,31 +364,9 @@ struct CStringIsLess {
     /* C++ base binary_function at +0x0. */
 };
 
-struct CIdObj {
-    /* C++ base CRTTIClass at +0x0. */
-    CUUID m_oId; /* +0x4 */
-};
-
-struct CRefIdObj {
-    /* C++ base CIdObj at +0x0. */
-    unsigned char m_bMarkFlag; /* +0xc */
-};
-
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
-};
-
 struct CProgramContext {
     CVarAccess* m_poGlobVarAcc; /* +0x4 */
     CVarAccess* m_poOwnerVarAcc; /* +0x8 */
-};
-
-struct CResData {
-    /* C++ base CRefIdObj at +0x0. */
-    unsigned int m_uiVersionId; /* +0x10 */
-    sstring m_strName; /* +0x14 */
 };
 
 struct sTreeLink {
@@ -390,6 +384,49 @@ struct CResType {
     int m_czResDataClassName; /* +0x38 */
     smap m_oCommands; /* +0x3c */
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 96–96 */
 /* addr: 0x001cced0  size: 96 bytes */

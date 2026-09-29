@@ -84,8 +84,13 @@ struct CStringIsLess {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     CStringIsLess key_compare; /* +0xd */
 };
@@ -135,8 +140,21 @@ struct sstring {
     int m_pcData; /* +0x0 */
 };
 
-struct CResData {
-    /* C++ base CRefIdObj at +0x0. */
+struct CUUID {
+    unsigned int m_uiHighWord; /* +0x0 */
+    unsigned int m_uiLowWord; /* +0x4 */
+};
+
+struct CIdObj {
+    /* C++ base CRTTIClass at +0x0. */
+    CUUID m_oId; /* +0x4 */
+};
+
+struct CRefIdObj : CIdObj {
+    unsigned char m_bMarkFlag; /* +0xc */
+};
+
+struct CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
 };
@@ -151,16 +169,6 @@ struct CLinkCallbackResObj {
 
 struct CLinkCallbackResObjCont {
     unsigned char mfn_bSynchroCallbackInstance(void);
-};
-
-struct CUUID {
-    unsigned int m_uiHighWord; /* +0x0 */
-    unsigned int m_uiLowWord; /* +0x4 */
-};
-
-struct CIdObj {
-    /* C++ base CRTTIClass at +0x0. */
-    CUUID m_oId; /* +0x4 */
 };
 
 struct CCritSect {
@@ -186,8 +194,7 @@ struct CActorProgramContext {
     CCritSect m_oMutex; /* +0x4c */
 };
 
-struct CActorResObj {
-    /* C++ base CResObj at +0x0. */
+struct CActorResObj : CResObj {
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -198,12 +205,6 @@ struct CActorResObj {
     unsigned char m_b2DParamsComputed; /* +0x84 */
     CVolumeActorModifier m_oVolModifier; /* +0x88 */
     CActorProgramContext m_oProgramContext; /* +0xac */
-};
-
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
 };
 
 struct CActorModifiers {
@@ -226,10 +227,34 @@ struct sTreeLink {
     _Redbl m_eColor; /* +0xc */
 };
 
-struct CRefIdObj {
-    /* C++ base CIdObj at +0x0. */
-    unsigned char m_bMarkFlag; /* +0xc */
-};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkcallbackresobj.cpp lines 49–67 */
 /* addr: 0x001c9830  size: 244 bytes */

@@ -89,8 +89,13 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     less key_compare; /* +0xd */
 };
@@ -172,8 +177,12 @@ struct CActorProgramContext {
     CCritSect m_oMutex; /* +0x4c */
 };
 
-struct CActorResObj {
-    /* C++ base CResObj at +0x0. */
+struct CResObj {
+    CResType* m_roType; /* +0x4 */
+    CResData* m_poResData; /* +0x8 */
+};
+
+struct CActorResObj : CResObj {
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -193,8 +202,17 @@ struct CCmdInterface {
     int m_czInterfaceName; /* +0x30 */
 };
 
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
+struct sset {
+    stree _Tr; /* +0x0 */
+};
+
+struct CVar {
+    CSndVarType* m_poType; /* +0x4 */
+    sset m_NotifTargets; /* +0x8 */
+    sstring m_strName; /* +0x18 */
+};
+
+struct TTypedVar : CVar {
     float m_oValue; /* +0x1c */
 };
 
@@ -272,12 +290,26 @@ struct CLinkActor {
     CLinkActor* m_poPrevious; /* +0x78 */
 };
 
-struct sset {
-    stree _Tr; /* +0x0 */
+struct CUUID {
+    unsigned int m_uiHighWord; /* +0x0 */
+    unsigned int m_uiLowWord; /* +0x4 */
 };
 
-struct CActorResData {
-    /* C++ base CResData at +0x0. */
+struct CIdObj {
+    /* C++ base CRTTIClass at +0x0. */
+    CUUID m_oId; /* +0x4 */
+};
+
+struct CRefIdObj : CIdObj {
+    unsigned char m_bMarkFlag; /* +0xc */
+};
+
+struct CResData : CRefIdObj {
+    unsigned int m_uiVersionId; /* +0x10 */
+    sstring m_strName; /* +0x14 */
+};
+
+struct CActorResData : CResData {
     unsigned char m_b3DRes; /* +0x18 */
     sset m_oProgramList; /* +0x1c */
     smap m_oVariables; /* +0x2c */
@@ -317,35 +349,17 @@ struct CSndVarType {
     int m_czTypeName; /* +0x8 */
 };
 
-struct CResObj {
-    CResType* m_roType; /* +0x4 */
-    CResData* m_poResData; /* +0x8 */
-};
-
-struct CResData {
-    /* C++ base CRefIdObj at +0x0. */
-    unsigned int m_uiVersionId; /* +0x10 */
-    sstring m_strName; /* +0x14 */
-};
-
 struct spair {
     int first; /* +0x0 */
     CLinkTypeActor* second; /* +0x4 */
 };
 
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
+struct sTreeNode : sTreeLink {
     spair m_oValue; /* +0x10 */
 };
 
 struct CStringIsLess {
     /* C++ base binary_function at +0x0. */
-};
-
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
 };
 
 struct CLinkTypeActor {
@@ -357,21 +371,6 @@ struct CLinkTypeActor {
     _tdstAllRetObjectSound mstIActor; /* +0x88 */
 };
 
-struct CRefIdObj {
-    /* C++ base CIdObj at +0x0. */
-    unsigned char m_bMarkFlag; /* +0xc */
-};
-
-struct CUUID {
-    unsigned int m_uiHighWord; /* +0x0 */
-    unsigned int m_uiLowWord; /* +0x4 */
-};
-
-struct CIdObj {
-    /* C++ base CRTTIClass at +0x0. */
-    CUUID m_oId; /* +0x4 */
-};
-
 struct CProgramContext {
     CVarAccess* m_poGlobVarAcc; /* +0x4 */
     CVarAccess* m_poOwnerVarAcc; /* +0x8 */
@@ -379,12 +378,6 @@ struct CProgramContext {
 
 struct iterator {
     /* C++ base iterator_base at +0x0. */
-};
-
-struct CVar {
-    CSndVarType* m_poType; /* +0x4 */
-    sset m_NotifTargets; /* +0x8 */
-    sstring m_strName; /* +0x18 */
 };
 
 struct CActorModifiers {
@@ -395,6 +388,51 @@ struct CActorModifiers {
     float m_fResultValue; /* +0x1c */
     unsigned char m_bResultChanged; /* +0x20 */
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 int g_pauseCnt;
 

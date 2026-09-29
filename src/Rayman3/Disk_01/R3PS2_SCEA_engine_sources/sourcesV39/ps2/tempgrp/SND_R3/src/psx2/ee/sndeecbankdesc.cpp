@@ -54,8 +54,13 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     CIndexAllocator allocator; /* +0xc */
     less key_compare; /* +0x3c */
 };
@@ -64,8 +69,7 @@ struct smap {
     stree _Tr; /* +0x0 */
 };
 
-struct CRefIdObj {
-    /* C++ base CIdObj at +0x0. */
+struct CRefIdObj : CIdObj {
     unsigned char m_bMarkFlag; /* +0xc */
 };
 
@@ -73,22 +77,14 @@ struct sstring {
     int m_pcData; /* +0x0 */
 };
 
-struct CBankDesc {
-    /* C++ base sset at +0x0. */
+struct sset {
+    stree _Tr; /* +0x0 */
+};
+
+struct CBankDesc : sset {
     CPS2IdObjLoader* mroLoader; /* +0x10 */
     sstring mostringName; /* +0x14 */
     CResData* mfn_poAddCResDataAlone(CUUID* ro_cuuid);
-};
-
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
-    CResData* m_oValue; /* +0x10 */
-};
-
-struct CResData {
-    /* C++ base CRefIdObj at +0x0. */
-    unsigned int m_uiVersionId; /* +0x10 */
-    sstring m_strName; /* +0x14 */
 };
 
 struct sTreeLink {
@@ -98,13 +94,18 @@ struct sTreeLink {
     _Redbl m_eColor; /* +0xc */
 };
 
+struct sTreeNode : sTreeLink {
+    CResData* m_oValue; /* +0x10 */
+};
+
+struct CResData : CRefIdObj {
+    unsigned int m_uiVersionId; /* +0x10 */
+    sstring m_strName; /* +0x14 */
+};
+
 struct CPS2IdObjLoader {
     smap m_oIdObjsCache; /* +0x0 */
     smap m_oIndex; /* +0x10 */
-};
-
-struct sset {
-    stree _Tr; /* +0x0 */
 };
 
 struct CAllocBlock {
@@ -118,16 +119,29 @@ struct iterator {
     /* C++ base iterator_base at +0x0. */
 };
 
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
-};
-
 struct spair {
     iterator first; /* +0x0 */
     unsigned char second; /* +0x4 */
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesc.cpp lines 57–57 */
 /* addr: 0x0018af90  size: 8 bytes */

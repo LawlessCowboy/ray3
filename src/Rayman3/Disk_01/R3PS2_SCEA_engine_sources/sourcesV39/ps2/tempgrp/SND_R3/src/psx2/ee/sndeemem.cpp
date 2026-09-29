@@ -7,7 +7,7 @@
 extern "C" void* memset(void*, int, unsigned int);
 extern "C" int memcmp(const void*, const void*, unsigned int);
 extern "C" void* memcpy(void*, const void*, unsigned int);
-extern void HMU_fn_vSndFree(void**);
+extern "C" void HMU_fn_vSndFree(void**);
 
 #pragma exceptions off
 

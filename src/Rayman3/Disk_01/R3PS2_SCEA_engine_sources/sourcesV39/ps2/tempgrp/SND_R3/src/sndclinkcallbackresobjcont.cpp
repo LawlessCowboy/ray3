@@ -81,8 +81,17 @@ struct CProgramContext {
     CVarAccess* m_poOwnerVarAcc; /* +0x8 */
 };
 
-struct CRefIdObj {
-    /* C++ base CIdObj at +0x0. */
+struct CUUID {
+    unsigned int m_uiHighWord; /* +0x0 */
+    unsigned int m_uiLowWord; /* +0x4 */
+};
+
+struct CIdObj {
+    /* C++ base CRTTIClass at +0x0. */
+    CUUID m_oId; /* +0x4 */
+};
+
+struct CRefIdObj : CIdObj {
     unsigned char m_bMarkFlag; /* +0xc */
 };
 
@@ -96,8 +105,13 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     less key_compare; /* +0xd */
 };
@@ -126,15 +140,9 @@ struct sstring {
     int m_pcData; /* +0x0 */
 };
 
-struct CResData {
-    /* C++ base CRefIdObj at +0x0. */
+struct CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
-};
-
-struct CUUID {
-    unsigned int m_uiHighWord; /* +0x0 */
-    unsigned int m_uiLowWord; /* +0x4 */
 };
 
 struct C2DParams {
@@ -161,17 +169,6 @@ struct C3DParam {
     V3Ds m_oPos; /* +0x0 */
     V3Ds m_oSpeed; /* +0xc */
     C3DDirection m_oDir; /* +0x18 */
-};
-
-struct CIdObj {
-    /* C++ base CRTTIClass at +0x0. */
-    CUUID m_oId; /* +0x4 */
-};
-
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
 };
 
 struct CCritSect {
@@ -215,8 +212,7 @@ struct CActorProgramContext {
     CCritSect m_oMutex; /* +0x4c */
 };
 
-struct CActorResObj {
-    /* C++ base CResObj at +0x0. */
+struct CActorResObj : CResObj {
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -252,6 +248,39 @@ struct CActorModifiers {
     float m_fResultValue; /* +0x1c */
     unsigned char m_bResultChanged; /* +0x20 */
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkcallbackresobjcont.cpp lines 54–61 */
 /* addr: 0x0018d120  size: 352 bytes */

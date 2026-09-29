@@ -721,8 +721,19 @@ struct SECT_tdstListOfSOCharacters_ {
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn* hFatherDyn; /* +0xc */
 };
 
-struct C_FireFx {
-    /* C++ base C_BaseFx at +0x0. */
+struct C_BaseFx {
+    unsigned int m_FogIsOn_saved; /* +0x0 */
+    unsigned int m_FogColor_saved; /* +0x4 */
+    float m_fFogOOStartMinusEnd_saved; /* +0x8 */
+    float m_fFogEnd_saved; /* +0xc */
+    unsigned int m_FogIsOn; /* +0x10 */
+    unsigned int m_FogColor; /* +0x14 */
+    float m_fFogOOStartMinusEnd; /* +0x18 */
+    float m_fFogEnd; /* +0x1c */
+    int m_pSearchKey; /* +0x20 */
+};
+
+struct C_FireFx : C_BaseFx {
     C_Vector m_Position; /* +0x30 */
     GLI_tdstMaterial_* m_pMat1; /* +0x40 */
     C_Vector* m_pData; /* +0x44 */
@@ -797,18 +808,6 @@ struct PO_tdstPhysicalObject_ {
     tdstPhysicalCollSet_* _hCollideSet; /* +0x4 */
     COL_tdstBoundingSphere_* _hVisualBoundingVolume; /* +0x8 */
     COL_tdstBoundingSphere_* _hCollideBoundingVolume; /* +0xc */
-};
-
-struct C_BaseFx {
-    unsigned int m_FogIsOn_saved; /* +0x0 */
-    unsigned int m_FogColor_saved; /* +0x4 */
-    float m_fFogOOStartMinusEnd_saved; /* +0x8 */
-    float m_fFogEnd_saved; /* +0xc */
-    unsigned int m_FogIsOn; /* +0x10 */
-    unsigned int m_FogColor; /* +0x14 */
-    float m_fFogOOStartMinusEnd; /* +0x18 */
-    float m_fFogEnd; /* +0x1c */
-    int m_pSearchKey; /* +0x20 */
 };
 
 struct tdstPLA_Deformation_ {
@@ -1247,6 +1246,111 @@ struct tdstEngineObject_ {
     tdstMicro_* h_Micro; /* +0x24 */
     tdstMSSound_* h_MSSound; /* +0x28 */
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 C_FxList FireFx_g_List;
 C_FxList FireFx_g_ListToDisplay;

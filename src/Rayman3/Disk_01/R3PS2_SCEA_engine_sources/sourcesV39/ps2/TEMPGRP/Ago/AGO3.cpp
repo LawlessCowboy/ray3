@@ -175,14 +175,30 @@ typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Undefined = 9,
 } MAT_tdeTranformationType_;
 
+extern "C" float g_fTimeDifference;
+extern "C" void AGO2_MEM_FreeFromHandle(unsigned int Handle);
+
+struct C_Vector {
+    float Vector[4]; /* +0x0 */
+} __attribute__((aligned(16)));
+
+struct AGO3_Part {
+    float m_fCreationTime; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
+    C_Vector m_Position; /* +0x10 */
+    GLI_tdstMaterial_* m_pMat1; /* +0x20 */
+    unsigned char m_Finished; /* +0x24 */
+    void Process(void);
+    void Display(GLD_tdstViewportAttributes_* hVp);
+};
+
 struct MTH3D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
 };
 
-struct AGO3_Chain {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_Chain : AGO3_Part {
     MTH3D_tdstVector_ m_stPos; /* +0x30 */
     MTH3D_tdstVector_ m_stVector; /* +0x3c */
     MTH3D_tdstVector_ m_stIntermediateVector; /* +0x48 */
@@ -287,8 +303,7 @@ struct AGO3_LE_SpriteData {
     MTH3D_tdstVector_ stDirection; /* +0x18 */
 };
 
-struct AGO3_LightExplosion {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_LightExplosion : AGO3_Part {
     int m_pLightMat; /* +0x30 */
     MTH3D_tdstVector_ m_stDirection; /* +0x34 */
     float m_fSize; /* +0x40 */
@@ -389,8 +404,7 @@ struct tdstFamilyList_ {
     unsigned char ucProperties; /* +0x43 */
 };
 
-struct AGO3_SimpleSparks {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_SimpleSparks : AGO3_Part {
     unsigned int m_hArray; /* +0x30 */
     float m_fTransparency; /* +0x34 */
     unsigned int m_NbParticles; /* +0x38 */
@@ -431,8 +445,7 @@ struct AGO3_CR_SpriteData {
     unsigned int ulType; /* +0xc */
 };
 
-struct AGO3_CanRipple {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_CanRipple : AGO3_Part {
     float m_fMainSize; /* +0x30 */
     float m_fTime; /* +0x34 */
     float m_fTime2; /* +0x38 */
@@ -457,8 +470,7 @@ struct AGO3_WEF_SpriteData {
     MTH3D_tdstVector_ a_stIntermediatePosition[10]; /* +0x30 */
 };
 
-struct AGO3_WaveEnvelopedFist {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_WaveEnvelopedFist : AGO3_Part {
     float m_fMainSize; /* +0x30 */
     MTH3D_tdstVector_ m_a_stPosition[2]; /* +0x34 */
     unsigned int m_a_ulNbAGOs[2]; /* +0x4c */
@@ -532,9 +544,6 @@ struct tdstLipsSynchValue_ {
     float xZ; /* +0xc */
 };
 
-struct C_Vector {
-    float Vector[4]; /* +0x0 */
-};
 
 struct AGO3_FS_SpriteData {
     float fSize; /* +0x0 */
@@ -557,16 +566,14 @@ struct AGO3Smoke_InternalData_ {
     float fCurrentAnimTime; /* +0x34 */
 };
 
-struct AGO3_Smoke {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_Smoke : AGO3_Part {
     AGO3Smoke_InternalData_ m_Sprites[8]; /* +0x30 */
     void Display(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
     void Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1);
 };
 
-struct AGO3_ScoreDisplay {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_ScoreDisplay : AGO3_Part {
     float m_fMainSize; /* +0x30 */
     float m_fDisplayDuration; /* +0x34 */
     float m_fFadeDuration; /* +0x38 */
@@ -579,18 +586,8 @@ struct AGO3_ScoreDisplay {
     void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fScore);
 };
 
-struct AGO3_Part {
-    float m_fCreationTime; /* +0x0 */
-    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
-    C_Vector m_Position; /* +0x10 */
-    GLI_tdstMaterial_* m_pMat1; /* +0x20 */
-    unsigned char m_Finished; /* +0x24 */
-    void Process(void);
-    void Display(GLD_tdstViewportAttributes_* hVp);
-};
 
-struct AGO3_LinkChainComputing {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_LinkChainComputing : AGO3_Part {
     MTH3D_tdstVector_ m_stInitialFistPosition[2]; /* +0x30 */
     int m_bInitWasDone; /* +0x48 */
     int m_bCanDisplay; /* +0x4c */
@@ -636,8 +633,7 @@ struct AGO3_HU_SpriteData {
     MTH3D_tdstVector_* pstAdditionnalVector; /* +0x10 */
 };
 
-struct AGO3_HurricaneUpper {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_HurricaneUpper : AGO3_Part {
     float m_fMainSize; /* +0x30 */
     float m_fMainRotation; /* +0x34 */
     AGO3_HU_SpriteData m_a_stSprite[25]; /* +0x38 */
@@ -661,8 +657,7 @@ struct SECT_tdstListOfSOSectorsInSoundInteraction_ {
     int lVolume; /* +0x4 */
 };
 
-struct AGO3_Transition {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_Transition : AGO3_Part {
     float m_fFadeDelay; /* +0x30 */
     float m_fDelayBeforeMessage; /* +0x34 */
     float m_fTime; /* +0x38 */
@@ -686,8 +681,7 @@ struct MTH3D_tdstMatrix_ {
     MTH3D_tdstVector_ stCol_2; /* +0x18 */
 };
 
-struct AGO3_ShootSmoke {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_ShootSmoke : AGO3_Part {
     float m_fLaps1; /* +0x30 */
     float m_fLaps2; /* +0x34 */
     unsigned int m_ulNumSprites; /* +0x38 */
@@ -718,8 +712,7 @@ struct AGO3_SB_SpriteData {
     float fTimeBeforeDeath; /* +0x20 */
 };
 
-struct AGO3_SwirlingBubbles {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_SwirlingBubbles : AGO3_Part {
     MTH3D_tdstVector_ m_stDirection; /* +0x30 */
     MTH3D_tdstVector_ m_stLastPos; /* +0x3c */
     float m_fAngle; /* +0x48 */
@@ -762,8 +755,7 @@ struct GEO_tdstGeometricObject_ {
     unsigned char bVTForSinus; /* +0x5c */
 };
 
-struct AGO3_DigitalScoreDisplay {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_DigitalScoreDisplay : AGO3_Part {
     int m_bFirstTime; /* +0x30 */
     unsigned int m_dwScore; /* +0x34 */
     float m_fScore; /* +0x38 */
@@ -804,8 +796,7 @@ struct tdstAnim3d_ {
     unsigned char ucFlagMergeAnim; /* +0xf */
 };
 
-struct AGO3_SpriteDurationFade {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_SpriteDurationFade : AGO3_Part {
     float m_fMainSize; /* +0x30 */
     float m_fDisplayDuration; /* +0x34 */
     float m_fFadeInDuration; /* +0x38 */
@@ -830,8 +821,7 @@ struct SCT_tdstListOfSoundEvent_ {
     _SND_tduRefEvt uSoundEvent; /* +0x4 */
 };
 
-struct AGO3_SpriteZoom {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_SpriteZoom : AGO3_Part {
     float m_fMainSize; /* +0x30 */
     float m_fDisplayDuration; /* +0x34 */
     float m_fZoomPercentage; /* +0x38 */
@@ -866,8 +856,7 @@ struct CINE_tdstCine_ {
     char szName[255]; /* +0x20 */
 };
 
-struct AGO3_WaveEnvelopedFist2 {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_WaveEnvelopedFist2 : AGO3_Part {
     float m_fMainSize; /* +0x30 */
     MTH3D_tdstVector_ m_a_stPosition[2]; /* +0x34 */
     unsigned int m_a_ulNbAGOs[2]; /* +0x4c */
@@ -908,8 +897,7 @@ struct tdstAChannel_ {
     unsigned char bActiveChannel; /* +0x8b */
 };
 
-struct AGO3_GrowingUVAnimatedFireBall {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_GrowingUVAnimatedFireBall : AGO3_Part {
     float m_fSize; /* +0x30 */
     float m_fCurrentU; /* +0x34 */
     float m_fCurrentV; /* +0x38 */
@@ -931,8 +919,7 @@ struct stRECT {
     int bottom; /* +0xc */
 };
 
-struct AGO3_OrientedTarget {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_OrientedTarget : AGO3_Part {
     MTH3D_tdstVector_ m_stDirection; /* +0x30 */
     float m_fTiltedAngle; /* +0x3c */
     float m_fSize; /* +0x40 */
@@ -942,8 +929,7 @@ struct AGO3_OrientedTarget {
     void DesInit(void);
 };
 
-struct AGO3_BeamWithUVs {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_BeamWithUVs : AGO3_Part {
     float m_fSize; /* +0x30 */
     float m_fRepetition; /* +0x34 */
     unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x38..0x3f */
@@ -1227,8 +1213,7 @@ struct tdst3dData_ {
     short xSkinIndex[4]; /* +0x1d8 */
 };
 
-struct AGO3_CustomRipple {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_CustomRipple : AGO3_Part {
     float m_fMainSize; /* +0x30 */
     float m_fTime; /* +0x34 */
     float m_fTime2; /* +0x38 */
@@ -1277,8 +1262,7 @@ struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt {
     int lNumberOfElementsOpt; /* +0x4 */
 };
 
-struct AGO3_SpriteDurationFade2 {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_SpriteDurationFade2 : AGO3_Part {
     float m_fMainSize; /* +0x30 */
     float m_fDisplayDuration; /* +0x34 */
     float m_fFadeDuration; /* +0x38 */
@@ -1353,8 +1337,7 @@ struct SECT_tdstSector_ {
     _SND_tduRefEvt hTransitionSoundEvent; /* +0x90 */
 };
 
-struct AGO3_GrowingUVAnimatedFireBallMoving {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_GrowingUVAnimatedFireBallMoving : AGO3_Part {
     float m_fSize; /* +0x30 */
     float m_fCurrentU; /* +0x34 */
     float m_fCurrentV; /* +0x38 */
@@ -1366,8 +1349,7 @@ struct AGO3_GrowingUVAnimatedFireBallMoving {
     void Process(void);
 };
 
-struct AGO3_FistSmoke {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_FistSmoke : AGO3_Part {
     float m_fMainSize; /* +0x30 */
     unsigned int m_ulFist; /* +0x34 */
     unsigned int m_a_ulNbAGOs[2]; /* +0x38 */
@@ -1432,8 +1414,7 @@ struct AGO3_SR_Scroll_ {
     unsigned int ulAcceleratorType; /* +0xc */
 };
 
-struct AGO3_SphericalRadiance {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_SphericalRadiance : AGO3_Part {
     MTH3D_tdstVector_ m_P1; /* +0x30 */
     MTH3D_tdstVector_ m_P2; /* +0x3c */
     MTH3D_tdstVector_ m_Dir1; /* +0x48 */
@@ -1503,8 +1484,7 @@ struct tdstEventInTable_ {
     unsigned int u32SemaphoreId; /* +0x8 */
 };
 
-struct AGO3_TurningFistSmoke {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_TurningFistSmoke : AGO3_Part {
     float m_fMainSize; /* +0x30 */
     unsigned int m_ulFist; /* +0x34 */
     unsigned int m_a_ulNbAGOs[2]; /* +0x38 */
@@ -1516,8 +1496,7 @@ struct AGO3_TurningFistSmoke {
     void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed);
 };
 
-struct AGO3_ScrollMatUV {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_ScrollMatUV : AGO3_Part {
     float m_fCurrentTime; /* +0x30 */
     float m_fDuration; /* +0x34 */
     float m_fInverseOfDuration; /* +0x38 */
@@ -1533,16 +1512,14 @@ struct stPOINT {
     int y; /* +0x4 */
 };
 
-struct AGO3_Target {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_Target : AGO3_Part {
     float m_fSize; /* +0x30 */
     float m_fOrientation; /* +0x34 */
     void Display(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
 };
 
-struct AGO3_Snowboard_SnowEffect {
-    /* C++ base AGO3_Part at +0x0. */
+struct AGO3_Snowboard_SnowEffect : AGO3_Part {
     float m_fWidth; /* +0x30 */
     float m_fLength; /* +0x34 */
     float m_fMaxVerticalAngle; /* +0x38 */
@@ -6286,7 +6263,9 @@ void AGO3_ShootSmoke::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_ShootSmoke::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_fTime > 1.3f)
+        m_Finished = 1;
+    m_fTime += g_fTimeDifference;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 1553–1578 */
@@ -7239,7 +7218,10 @@ void AGO3_SimpleSparks::Process(void)
  */
 void AGO3_SimpleSparks::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_hArray) {
+        AGO2_MEM_FreeFromHandle(m_hArray);
+        m_hArray = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 395–426 */

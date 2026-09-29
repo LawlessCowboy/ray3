@@ -36,8 +36,13 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     less key_compare; /* +0xd */
 };
@@ -54,8 +59,7 @@ struct spair {
     CLinkMicro* second; /* +0x4 */
 };
 
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
+struct sTreeNode : sTreeLink {
     spair m_oValue; /* +0x10 */
 };
 
@@ -109,11 +113,6 @@ struct sset {
     stree _Tr; /* +0x0 */
 };
 
-struct CMicrophone {
-    /* C++ base C3DParam at +0x0. */
-    sset m_oNotifTargets; /* +0x34 */
-};
-
 struct V3Ds {
     float fX; /* +0x0 */
     float fY; /* +0x4 */
@@ -125,6 +124,16 @@ struct C3DDirection {
     V3Ds m_oTop; /* +0xc */
 };
 
+struct C3DParam {
+    V3Ds m_oPos; /* +0x0 */
+    V3Ds m_oSpeed; /* +0xc */
+    C3DDirection m_oDir; /* +0x18 */
+};
+
+struct CMicrophone : C3DParam {
+    sset m_oNotifTargets; /* +0x34 */
+};
+
 struct smap {
     stree _Tr; /* +0x0 */
 };
@@ -133,17 +142,23 @@ struct iterator {
     /* C++ base iterator_base at +0x0. */
 };
 
-struct C3DParam {
-    V3Ds m_oPos; /* +0x0 */
-    V3Ds m_oSpeed; /* +0xc */
-    C3DDirection m_oDir; /* +0x18 */
-};
 
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
-};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkmicrocont.cpp lines 37–87 */
 /* addr: 0x001cf620  size: 284 bytes */

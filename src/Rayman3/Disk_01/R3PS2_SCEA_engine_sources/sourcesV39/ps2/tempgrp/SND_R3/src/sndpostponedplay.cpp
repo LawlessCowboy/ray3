@@ -113,7 +113,7 @@ struct PostponedPlay {
     CExtraEventActor* m_pEActor; /* +0x18 */
     unsigned int m_u32EngineContext; /* +0x1c */
     void ms_uiMaxPlay(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue);
-    unsigned char fs_bIsPending(CExtraEventActor* pEActor);
+    static unsigned char fs_bIsPending(CExtraEventActor* pEActor);
     void fs_vEmpty(void);
     unsigned char fs_bExecute(int s32_CmdId, CUUID* roId, CExtraEventActor* pEActor);
     unsigned char fs_bIsSoundPlaying(int s32_Handle, CExtraEventActor* pEActor);
@@ -126,8 +126,13 @@ struct CStringIsLess {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     CStringIsLess key_compare; /* +0xd */
 };
@@ -202,8 +207,11 @@ struct sstring {
     int m_pcData; /* +0x0 */
 };
 
-struct CResData {
-    /* C++ base CRefIdObj at +0x0. */
+struct CRefIdObj : CIdObj {
+    unsigned char m_bMarkFlag; /* +0xc */
+};
+
+struct CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
 };
@@ -230,8 +238,7 @@ struct CIdObjPtr {
     CLookupElement* m_poElmt; /* +0x0 */
 };
 
-struct CEventResData {
-    /* C++ base CResData at +0x0. */
+struct CEventResData : CResData {
     float m_fCoeffA; /* +0x18 */
     float m_fCoeffB; /* +0x1c */
     float m_fCoeffC; /* +0x20 */
@@ -286,8 +293,7 @@ struct CVolumeActorModifier {
     /* C++ base CActorModifiers at +0x0. */
 };
 
-struct CActorResObj {
-    /* C++ base CResObj at +0x0. */
+struct CActorResObj : CResObj {
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -300,24 +306,22 @@ struct CActorResObj {
     CActorProgramContext m_oProgramContext; /* +0xac */
 };
 
-struct CRefIdObj {
-    /* C++ base CIdObj at +0x0. */
-    unsigned char m_bMarkFlag; /* +0xc */
-};
-
 union _SND_tduRefEvt {
     unsigned int Id; /* +0x0 */
     _SND_tdstBlockEvent* pstPtr; /* +0x0 */
 };
 
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
+struct sset {
+    stree _Tr; /* +0x0 */
 };
 
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
+struct CVar {
+    CSndVarType* m_poType; /* +0x4 */
+    sset m_NotifTargets; /* +0x8 */
+    sstring m_strName; /* +0x18 */
+};
+
+struct TTypedVar : CVar {
     float m_oValue; /* +0x1c */
 };
 
@@ -341,10 +345,6 @@ struct CResType {
     CCmdInterface m_oInterface; /* +0x4 */
     int m_czResDataClassName; /* +0x38 */
     smap m_oCommands; /* +0x3c */
-};
-
-struct sset {
-    stree _Tr; /* +0x0 */
 };
 
 struct _tdstAllRetObjectSound {
@@ -385,12 +385,6 @@ struct CProgramContext {
     CVarAccess* m_poOwnerVarAcc; /* +0x8 */
 };
 
-struct CVar {
-    CSndVarType* m_poType; /* +0x4 */
-    sset m_NotifTargets; /* +0x8 */
-    sstring m_strName; /* +0x18 */
-};
-
 struct CActorModifiers {
     /* C++ base CVarNotifTarget at +0x0. */
     CActorResObj* m_pActor; /* +0x4 */
@@ -399,6 +393,49 @@ struct CActorModifiers {
     float m_fResultValue; /* +0x1c */
     unsigned char m_bResultChanged; /* +0x20 */
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 452–478 */
 /* addr: 0x001d0210  size: 312 bytes */
@@ -447,7 +484,9 @@ void PostponedPlay::ms_uiMaxPlay(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _
 unsigned char PostponedPlay::fs_bIsPending(CExtraEventActor* pEActor)
 {
     PostponedPlay* e;
-    /* TODO: decompile from asm/... */
+    for (e = ms_pFirst; e && e->m_pEActor != pEActor; e = e->m_pNext)
+        ;
+    return e != NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 151–161 */

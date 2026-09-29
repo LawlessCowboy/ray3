@@ -22,16 +22,6 @@ typedef enum ESTATE {
     EPAUSED = 2,
 } ESTATE;
 
-struct CPS2StreamVBRenderer {
-    /* C++ base CPS2Renderer at +0x0. */
-    float m_fPan; /* +0x4 */
-    float m_fVolume; /* +0x8 */
-    unsigned int m_uiFromOut; /* +0xc */
-    unsigned int m_uiIOPRendAddr; /* +0x10 */
-    unsigned int m_uiNbChannels; /* +0x14 */
-    CPS2IopChannel* m_pstChannel; /* +0x18 */
-};
-
 struct CPS2Renderer {
     virtual void vUnknown0(void);
     virtual void vUnknown1(void);
@@ -42,8 +32,20 @@ struct CPS2Renderer {
     virtual void vStop(unsigned int);
 };
 
-struct CPS2IOPPullDMA {
-    /* C++ base CPS2IOPRemotePulledBox at +0x0. */
+struct CPS2StreamVBRenderer : CPS2Renderer {
+    float m_fPan; /* +0x4 */
+    float m_fVolume; /* +0x8 */
+    unsigned int m_uiFromOut; /* +0xc */
+    unsigned int m_uiIOPRendAddr; /* +0x10 */
+    unsigned int m_uiNbChannels; /* +0x14 */
+    CPS2IopChannel* m_pstChannel; /* +0x18 */
+};
+
+struct CPS2IOPRemotePulledBox {
+    /* C++ base CPS2IOPPulledBox at +0x0. */
+};
+
+struct CPS2IOPPullDMA : CPS2IOPRemotePulledBox {
     unsigned int (*m_pfnFunc)(void*, unsigned int); /* +0x8 */
 };
 
@@ -52,8 +54,12 @@ struct CPS2IOPPulledBox {
     unsigned int m_uiIOPPulledBoxAddr; /* +0x4 */
 };
 
-struct CPS2IopChannel {
-    /* C++ base CPS2Channel at +0x0. */
+struct CPS2Channel {
+    CPS2Renderer* m_poRenderer; /* +0x4 */
+    ESTATE m_eState; /* +0x8 */
+};
+
+struct CPS2IopChannel : CPS2Channel {
     unsigned int m_uiIOPChannelAddr; /* +0xc */
 };
 
@@ -68,18 +74,19 @@ struct CBaseRenderer {
     /* C++ base CPullingBox at +0x0. */
 };
 
-struct CPS2IOPRemotePulledBox {
-    /* C++ base CPS2IOPPulledBox at +0x0. */
-};
-
 struct C2DRenderer {
     /* C++ base CBaseRenderer at +0x0. */
 };
 
-struct CPS2Channel {
-    CPS2Renderer* m_poRenderer; /* +0x4 */
-    ESTATE m_eState; /* +0x8 */
-};
+
+
+
+
+
+
+
+
+
 
 class CLinkTypeActor;
 extern "C" void* __vt__10CLinkActor;

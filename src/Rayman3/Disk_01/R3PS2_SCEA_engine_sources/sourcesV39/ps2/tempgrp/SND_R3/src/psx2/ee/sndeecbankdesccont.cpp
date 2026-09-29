@@ -100,8 +100,14 @@ struct spair {
     unsigned char second; /* +0x4 */
 };
 
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
+struct sTreeLink {
+    sTreeLink* m_poLeft; /* +0x0 */
+    sTreeLink* m_poParent; /* +0x4 */
+    sTreeLink* m_poRight; /* +0x8 */
+    _Redbl m_eColor; /* +0xc */
+};
+
+struct sTreeNode : sTreeLink {
     spair m_oValue; /* +0x10 */
 };
 
@@ -124,8 +130,13 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     less key_compare; /* +0xd */
 };
@@ -134,8 +145,16 @@ struct smap {
     stree _Tr; /* +0x0 */
 };
 
-struct CResData {
-    /* C++ base CRefIdObj at +0x0. */
+struct CIdObj {
+    /* C++ base CRTTIClass at +0x0. */
+    CUUID m_oId; /* +0x4 */
+};
+
+struct CRefIdObj : CIdObj {
+    unsigned char m_bMarkFlag; /* +0xc */
+};
+
+struct CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
 };
@@ -187,8 +206,17 @@ struct CLinkActor {
     CLinkActor* m_poPrevious; /* +0x78 */
 };
 
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
+struct sset {
+    stree _Tr; /* +0x0 */
+};
+
+struct CVar {
+    CSndVarType* m_poType; /* +0x4 */
+    sset m_NotifTargets; /* +0x8 */
+    sstring m_strName; /* +0x18 */
+};
+
+struct TTypedVar : CVar {
     float m_oValue; /* +0x1c */
 };
 
@@ -197,8 +225,7 @@ struct CPS2IdObjLoader {
     smap m_oIndex; /* +0x10 */
 };
 
-struct CBankDescCont {
-    /* C++ base smap at +0x0. */
+struct CBankDescCont : smap {
     CPS2IdObjLoader moLoader; /* +0x10 */
     CBankDesc* mfn_poAddBankDesc(char* pch_FileName);
 };
@@ -212,22 +239,11 @@ struct iterator_base {
     sTreeLink* _Ptr; /* +0x0 */
 };
 
-struct sset {
-    stree _Tr; /* +0x0 */
-};
-
-struct CVar {
-    CSndVarType* m_poType; /* +0x4 */
-    sset m_NotifTargets; /* +0x8 */
-    sstring m_strName; /* +0x18 */
-};
-
 struct CCritSect {
     unsigned int m_uiCS; /* +0x0 */
 };
 
-struct CBankDesc {
-    /* C++ base sset at +0x0. */
+struct CBankDesc : sset {
     CPS2IdObjLoader* mroLoader; /* +0x10 */
     sstring mostringName; /* +0x14 */
 };
@@ -250,21 +266,13 @@ struct CResObjState {
     unsigned int m_uiLockCount; /* +0x24 */
 };
 
-struct sTreeLink {
-    sTreeLink* m_poLeft; /* +0x0 */
-    sTreeLink* m_poParent; /* +0x4 */
-    sTreeLink* m_poRight; /* +0x8 */
-    _Redbl m_eColor; /* +0xc */
-};
-
 struct CRolloffParam {
     float m_fStabilisationDistance; /* +0x0 */
     float m_fSaturationDistance; /* +0x4 */
     float m_fStabilisationVolume; /* +0x8 */
 };
 
-struct CActorResData {
-    /* C++ base CResData at +0x0. */
+struct CActorResData : CResData {
     unsigned char m_b3DRes; /* +0x18 */
     sset m_oProgramList; /* +0x1c */
     smap m_oVariables; /* +0x2c */
@@ -346,8 +354,7 @@ struct C2DParams {
     float m_fSpace; /* +0xc */
 };
 
-struct CActorResObj {
-    /* C++ base CResObj at +0x0. */
+struct CActorResObj : CResObj {
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -424,17 +431,6 @@ struct PostponedPlay {
     unsigned int m_u32EngineContext; /* +0x1c */
 };
 
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
-};
-
-struct CIdObj {
-    /* C++ base CRTTIClass at +0x0. */
-    CUUID m_oId; /* +0x4 */
-};
-
 struct CStringIsLess {
     /* C++ base binary_function at +0x0. */
 };
@@ -444,8 +440,7 @@ union _SND_tduRefEvt {
     _SND_tdstBlockEvent* pstPtr; /* +0x0 */
 };
 
-struct CLinkTypeActorCont {
-    /* C++ base smap at +0x0. */
+struct CLinkTypeActorCont : smap {
     CActorResData* m_poStandardActorResData; /* +0x10 */
     CActorResData* m_poMusicActorResData; /* +0x14 */
     CResData* m_poMusicProgramResData; /* +0x18 */
@@ -466,8 +461,7 @@ struct CLookupElement {
     CIdObj* m_poIdObj; /* +0xc */
 };
 
-struct CEventResData {
-    /* C++ base CResData at +0x0. */
+struct CEventResData : CResData {
     float m_fCoeffA; /* +0x18 */
     float m_fCoeffB; /* +0x1c */
     float m_fCoeffC; /* +0x20 */
@@ -476,10 +470,62 @@ struct CEventResData {
     CIdObjPtr m_pTargetRes; /* +0x2c */
 };
 
-struct CRefIdObj {
-    /* C++ base CIdObj at +0x0. */
-    unsigned char m_bMarkFlag; /* +0xc */
-};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesccont.cpp lines 30–40 */
 /* addr: 0x0018beb0  size: 304 bytes */

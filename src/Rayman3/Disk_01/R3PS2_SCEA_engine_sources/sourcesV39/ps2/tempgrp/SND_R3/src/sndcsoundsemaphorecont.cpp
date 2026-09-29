@@ -40,8 +40,14 @@ struct spair {
     CSoundSemaphore* second; /* +0x4 */
 };
 
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
+struct sTreeLink {
+    sTreeLink* m_poLeft; /* +0x0 */
+    sTreeLink* m_poParent; /* +0x4 */
+    sTreeLink* m_poRight; /* +0x8 */
+    _Redbl m_eColor; /* +0xc */
+};
+
+struct sTreeNode : sTreeLink {
     spair m_oValue; /* +0x10 */
 };
 
@@ -53,8 +59,13 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     less key_compare; /* +0xd */
 };
@@ -63,28 +74,25 @@ struct iterator_base {
     sTreeLink* _Ptr; /* +0x0 */
 };
 
-struct sTreeLink {
-    sTreeLink* m_poLeft; /* +0x0 */
-    sTreeLink* m_poParent; /* +0x4 */
-    sTreeLink* m_poRight; /* +0x8 */
-    _Redbl m_eColor; /* +0xc */
+struct smap {
+    stree _Tr; /* +0x0 */
 };
 
-struct CSoundSemaphore {
-    /* C++ base smap at +0x0. */
+struct CSoundSemaphore : smap {
     unsigned int mu32ChannelId; /* +0x10 */
     unsigned int mu32ChannelSize; /* +0x14 */
 };
 
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
-};
 
-struct smap {
-    stree _Tr; /* +0x0 */
-};
+
+
+
+
+
+
+
+
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphorecont.cpp lines 57–59 */
 /* addr: 0x001c9dd0  size: 64 bytes */

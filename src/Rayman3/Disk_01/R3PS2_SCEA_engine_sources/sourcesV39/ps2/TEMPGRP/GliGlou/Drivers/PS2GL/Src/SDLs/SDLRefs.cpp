@@ -97,8 +97,18 @@ struct AGO_Light_ {
     float Distance; /* +0x2c */
 };
 
-struct C_SdlRef_LocalMatrix {
-    /* C++ base C_SdlRef at +0x0. */
+struct C_SdlRef {
+    unsigned int m_uRefType; /* +0x0 */
+    unsigned int m_uIndexInList; /* +0x4 */
+    int m_vpOriginPointer; /* +0x8 */
+    int m_vpDestinationPointer; /* +0xc */
+    void ProcessNoInterpol(void);
+    void ProcessWithInterpol(void);
+    void Process(void);
+    void __dl(void* ptr);
+};
+
+struct C_SdlRef_LocalMatrix : C_SdlRef {
     float OldMat[4][4]; /* +0x20 */
     int m_bNoInterpolation; /* +0x60 */
     void ProcessNoInterpol(void);
@@ -140,8 +150,7 @@ struct tagListData {
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };
 
-struct C_SdlRef_LocalMatrixForCheap {
-    /* C++ base C_SdlRef at +0x0. */
+struct C_SdlRef_LocalMatrixForCheap : C_SdlRef {
     int m_pcActivity; /* +0x14 */
     unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     float OldMat[4][4]; /* +0x20 */
@@ -173,8 +182,7 @@ struct GLI_tdstMultiTextureMaterial {
     float fScaleV; /* +0x4c */
 };
 
-struct C_SdlRef_TextureMatrix {
-    /* C++ base C_SdlRef at +0x0. */
+struct C_SdlRef_TextureMatrix : C_SdlRef {
     int m_fpOffsetU; /* +0x14 */
     int m_fpOffsetV; /* +0x18 */
     void ProcessNoInterpol(void);
@@ -199,8 +207,7 @@ struct tagGLlistcalls {
     tagGLlistnode aNodes[1]; /* +0x8 */
 };
 
-struct C_SdlRef_FogParameters {
-    /* C++ base C_SdlRef at +0x0. */
+struct C_SdlRef_FogParameters : C_SdlRef {
     int m_pDestFogColor; /* +0x14 */
     int m_pDestFogStart; /* +0x18 */
     int m_pDestFogEnd; /* +0x1c */
@@ -208,18 +215,6 @@ struct C_SdlRef_FogParameters {
     void ProcessWithInterpol(void);
     void Process(void);
 };
-
-struct C_SdlRef {
-    unsigned int m_uRefType; /* +0x0 */
-    unsigned int m_uIndexInList; /* +0x4 */
-    int m_vpOriginPointer; /* +0x8 */
-    int m_vpDestinationPointer; /* +0xc */
-    void ProcessNoInterpol(void);
-    void ProcessWithInterpol(void);
-    void Process(void);
-    void __dl(void* ptr);
-};
-
 
 struct _sceDmaTag {
     unsigned short qwc; /* +0x0 */
@@ -269,8 +264,7 @@ struct tagGLprimbuf {
     int vData[4]; /* +0x40 */
 };
 
-struct C_SdlRef_TextureOffset {
-    /* C++ base C_SdlRef at +0x0. */
+struct C_SdlRef_TextureOffset : C_SdlRef {
     GLI_tdstMaterial_* m_hMaterial; /* +0x14 */
     float m_du; /* +0x18 */
     float m_dv; /* +0x1c */
@@ -339,12 +333,39 @@ struct GLI_tdstMaterial_ {
     GLI_tdstMultiTextureMaterial a_stMultiMaterial[4]; /* +0x88 */
 };
 
-/* The cache class is declared in SDLInstance.cpp; this TU also defines one
- * of its out-of-line methods, so retain the owning object layout here. */
 struct C_SdlCache {
     tdstSDLCacheEntry_* m_pList; /* +0x0 */
     void AddSdlInstance(_SDC_Instance_* pInstance);
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* The cache class is declared in SDLInstance.cpp; this TU also defines one
+ * of its out-of-line methods, so retain the owning object layout here. */
 
 float g_ffFrameTimeLastFrame;
 int GLI_G_pProcessSDLs[2048];

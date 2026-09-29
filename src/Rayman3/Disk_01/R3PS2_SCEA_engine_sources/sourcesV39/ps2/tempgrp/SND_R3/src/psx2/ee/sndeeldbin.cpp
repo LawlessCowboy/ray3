@@ -185,19 +185,19 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     CIndexAllocator allocator; /* +0xc */
     less key_compare; /* +0x3c */
 };
 
-struct CSwitchResData {
-    /* C++ base CResData at +0x0. */
-    unsigned int m_uiNbElmts; /* +0x18 */
-    unsigned int m_uiInfoType; /* +0x1c */
-    unsigned int m_uiDefaultIndex; /* +0x20 */
-    float m_fVolume; /* +0x24 */
-    CSwitchElement* m_paElements; /* +0x28 */
+struct sstring {
+    int m_pcData; /* +0x0 */
 };
 
 struct CUUID {
@@ -205,13 +205,26 @@ struct CUUID {
     unsigned int m_uiLowWord; /* +0x4 */
 };
 
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
-    CUUID m_oValue; /* +0x10 */
+struct CIdObj {
+    /* C++ base CRTTIClass at +0x0. */
+    CUUID m_oId; /* +0x4 */
 };
 
-struct smap {
-    stree _Tr; /* +0x0 */
+struct CRefIdObj : CIdObj {
+    unsigned char m_bMarkFlag; /* +0xc */
+};
+
+struct CResData : CRefIdObj {
+    unsigned int m_uiVersionId; /* +0x10 */
+    sstring m_strName; /* +0x14 */
+};
+
+struct CSwitchResData : CResData {
+    unsigned int m_uiNbElmts; /* +0x18 */
+    unsigned int m_uiInfoType; /* +0x1c */
+    unsigned int m_uiDefaultIndex; /* +0x20 */
+    float m_fVolume; /* +0x24 */
+    CSwitchElement* m_paElements; /* +0x28 */
 };
 
 struct sTreeLink {
@@ -221,18 +234,25 @@ struct sTreeLink {
     _Redbl m_eColor; /* +0xc */
 };
 
+struct sTreeNode : sTreeLink {
+    CUUID m_oValue; /* +0x10 */
+};
+
+struct smap {
+    stree _Tr; /* +0x0 */
+};
+
 struct _tdstRandomElement {
     _tduRefRes uRes; /* +0x0 */
     int rProb; /* +0x4 */
     int bCanBeChosenTwice; /* +0x8 */
 };
 
-struct sstring {
-    int m_pcData; /* +0x0 */
+struct sset {
+    stree _Tr; /* +0x0 */
 };
 
-struct CBankDesc {
-    /* C++ base sset at +0x0. */
+struct CBankDesc : sset {
     CPS2IdObjLoader* mroLoader; /* +0x10 */
     sstring mostringName; /* +0x14 */
 };
@@ -278,8 +298,7 @@ struct CPS2IdObjLoader {
     smap m_oIndex; /* +0x10 */
 };
 
-struct CPS2FileSrcFlow {
-    /* C++ base CSrcFlow at +0x0. */
+struct CPS2FileSrcFlow : CSrcFlow {
     unsigned int m_uiFileHandle; /* +0x8 */
     unsigned int m_uiFileOffset; /* +0xc */
     unsigned int m_uiSize; /* +0x10 */
@@ -421,14 +440,7 @@ struct CSwitchElement {
     unsigned int m_uiValue; /* +0x4 */
 };
 
-struct CResData {
-    /* C++ base CRefIdObj at +0x0. */
-    unsigned int m_uiVersionId; /* +0x10 */
-    sstring m_strName; /* +0x14 */
-};
-
-struct CEventResData {
-    /* C++ base CResData at +0x0. */
+struct CEventResData : CResData {
     float m_fCoeffA; /* +0x18 */
     float m_fCoeffB; /* +0x1c */
     float m_fCoeffC; /* +0x20 */
@@ -437,12 +449,7 @@ struct CEventResData {
     CIdObjPtr m_pTargetRes; /* +0x2c */
 };
 
-struct sset {
-    stree _Tr; /* +0x0 */
-};
-
-struct CBankDescCont {
-    /* C++ base smap at +0x0. */
+struct CBankDescCont : smap {
     CPS2IdObjLoader moLoader; /* +0x10 */
 };
 
@@ -458,21 +465,10 @@ struct _tdstRangeSplitMem {
     int rCoefMagCD; /* +0x20 */
 };
 
-struct CIdObj {
-    /* C++ base CRTTIClass at +0x0. */
-    CUUID m_oId; /* +0x4 */
-};
-
 struct CLookupElement {
     int m_iNbRef; /* +0x0 */
     CUUID m_oId; /* +0x4 */
     CIdObj* m_poIdObj; /* +0xc */
-};
-
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
 };
 
 struct CTextFile {
@@ -487,19 +483,13 @@ struct _tdstSwitchElement {
     int hIndice; /* +0x4 */
 };
 
-struct CRefIdObj {
-    /* C++ base CIdObj at +0x0. */
-    unsigned char m_bMarkFlag; /* +0xc */
-};
-
 struct CPS2IdObjInfo {
     CUUID m_oId; /* +0x0 */
     unsigned int m_uiOffset; /* +0x8 */
     sstring m_strFileName; /* +0xc */
 };
 
-struct CTextFileSrc {
-    /* C++ base CTextFile at +0x0. */
+struct CTextFileSrc : CTextFile {
     anon_enum_001a8842 eCTextFileSrc; /* +0x34 */
     int mpchBuffer1; /* +0x38 */
     int mpchBuffer2; /* +0x3c */
@@ -508,6 +498,63 @@ struct CTextFileSrc {
     int mpchCurrent; /* +0x844 */
     unsigned int mdwPosition; /* +0x848 */
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 int CD_ProgressCallBack;
 static int gro_BankCont;

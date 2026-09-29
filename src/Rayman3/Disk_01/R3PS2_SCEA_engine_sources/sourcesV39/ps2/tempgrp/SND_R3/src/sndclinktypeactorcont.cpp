@@ -118,8 +118,14 @@ struct spair {
     CIdObj* second; /* +0x8 */
 };
 
-struct sTreeNode {
-    /* C++ base sTreeLink at +0x0. */
+struct sTreeLink {
+    sTreeLink* m_poLeft; /* +0x0 */
+    sTreeLink* m_poParent; /* +0x4 */
+    sTreeLink* m_poRight; /* +0x8 */
+    _Redbl m_eColor; /* +0xc */
+};
+
+struct sTreeNode : sTreeLink {
     spair m_oValue; /* +0x10 */
 };
 
@@ -160,14 +166,27 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     less key_compare; /* +0xd */
 };
 
-struct CResData {
-    /* C++ base CRefIdObj at +0x0. */
+struct CIdObj {
+    /* C++ base CRTTIClass at +0x0. */
+    CUUID m_oId; /* +0x4 */
+};
+
+struct CRefIdObj : CIdObj {
+    unsigned char m_bMarkFlag; /* +0xc */
+};
+
+struct CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
 };
@@ -209,8 +228,11 @@ struct CLinkActor {
     CLinkActor* m_poPrevious; /* +0x78 */
 };
 
-struct CLinkTypeActorCont {
-    /* C++ base smap at +0x0. */
+struct smap {
+    stree _Tr; /* +0x0 */
+};
+
+struct CLinkTypeActorCont : smap {
     CActorResData* m_poStandardActorResData; /* +0x10 */
     CActorResData* m_poMusicActorResData; /* +0x14 */
     CResData* m_poMusicProgramResData; /* +0x18 */
@@ -271,10 +293,6 @@ struct CResObjState {
     unsigned int m_uiLockCount; /* +0x24 */
 };
 
-struct smap {
-    stree _Tr; /* +0x0 */
-};
-
 struct CCritSect {
     unsigned int m_uiCS; /* +0x0 */
 };
@@ -288,8 +306,12 @@ struct CActorProgramContext {
     CCritSect m_oMutex; /* +0x4c */
 };
 
-struct CActorResObj {
-    /* C++ base CResObj at +0x0. */
+struct CResObj {
+    CResType* m_roType; /* +0x4 */
+    CResData* m_poResData; /* +0x8 */
+};
+
+struct CActorResObj : CResObj {
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -306,29 +328,16 @@ struct iterator_base {
     sTreeLink* _Ptr; /* +0x0 */
 };
 
-struct CResObj {
-    CResType* m_roType; /* +0x4 */
-    CResData* m_poResData; /* +0x8 */
-};
-
 struct sset {
     stree _Tr; /* +0x0 */
 };
 
-struct CActorResData {
-    /* C++ base CResData at +0x0. */
+struct CActorResData : CResData {
     unsigned char m_b3DRes; /* +0x18 */
     sset m_oProgramList; /* +0x1c */
     smap m_oVariables; /* +0x2c */
     CRolloffParam m_oRolloff; /* +0x3c */
     CVarAccess* m_poGlobalVarAccess; /* +0x48 */
-};
-
-struct sTreeLink {
-    sTreeLink* m_poLeft; /* +0x0 */
-    sTreeLink* m_poParent; /* +0x4 */
-    sTreeLink* m_poRight; /* +0x8 */
-    _Redbl m_eColor; /* +0xc */
 };
 
 struct CAllocBlock {
@@ -402,21 +411,19 @@ struct CIndexAllocator {
     unsigned int m_uiNbAllocs; /* +0x2c */
 };
 
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
+struct CVar {
+    CSndVarType* m_poType; /* +0x4 */
+    sset m_NotifTargets; /* +0x8 */
+    sstring m_strName; /* +0x18 */
+};
+
+struct TTypedVar : CVar {
     float m_oValue; /* +0x1c */
 };
 
-struct CBankDesc {
-    /* C++ base sset at +0x0. */
+struct CBankDesc : sset {
     CPS2IdObjLoader* mroLoader; /* +0x10 */
     sstring mostringName; /* +0x14 */
-};
-
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
 };
 
 struct CPS2IdObjLoader {
@@ -424,8 +431,7 @@ struct CPS2IdObjLoader {
     smap m_oIndex; /* +0x10 */
 };
 
-struct CBankDescCont {
-    /* C++ base smap at +0x0. */
+struct CBankDescCont : smap {
     CPS2IdObjLoader moLoader; /* +0x10 */
 };
 
@@ -435,26 +441,64 @@ struct slist {
     unsigned int _Size; /* +0x8 */
 };
 
-struct CVar {
-    CSndVarType* m_poType; /* +0x4 */
-    sset m_NotifTargets; /* +0x8 */
-    sstring m_strName; /* +0x18 */
-};
-
-struct CIdObj {
-    /* C++ base CRTTIClass at +0x0. */
-    CUUID m_oId; /* +0x4 */
-};
-
-struct CRefIdObj {
-    /* C++ base CIdObj at +0x0. */
-    unsigned char m_bMarkFlag; /* +0xc */
-};
-
 union _SND_tduRefEvt {
     unsigned int Id; /* +0x0 */
     _SND_tdstBlockEvent* pstPtr; /* +0x0 */
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 static _tdstAllRetObjectSound gst_IGhostActor;
 

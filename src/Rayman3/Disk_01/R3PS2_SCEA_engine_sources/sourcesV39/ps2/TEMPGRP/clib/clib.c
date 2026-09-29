@@ -101,13 +101,10 @@ char* Strrchr(char* string, int ch)
 char* Strchr(char* s, int c)
 {
     char* pcIndex;
-    char* result;
     pcIndex = s;
     while (*pcIndex != '\0' && *pcIndex != (char)c)
         pcIndex++;
     if (*pcIndex)
-        result = pcIndex;
-    else
-        result = NULL;
-    return result;
+        return pcIndex;
+    return NULL;
 }
