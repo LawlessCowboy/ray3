@@ -97,15 +97,18 @@ struct AGO_Light_ {
     float Distance; /* +0x2c */
 };
 
+extern "C" int printf(const char*, ...);
+
 struct C_SdlRef {
     unsigned int m_uRefType; /* +0x0 */
     unsigned int m_uIndexInList; /* +0x4 */
     int m_vpOriginPointer; /* +0x8 */
     int m_vpDestinationPointer; /* +0xc */
-    void ProcessNoInterpol(void);
-    void ProcessWithInterpol(void);
-    void Process(void);
-    void __dl(void* ptr);
+    /* vtable pointer at +0x10: Process is the first virtual slot. */
+    virtual void Process(void);
+    virtual void ProcessNoInterpol(void);
+    virtual void ProcessWithInterpol(void);
+    void operator delete(void* ptr);
 };
 
 struct C_SdlRef_LocalMatrix : C_SdlRef {
@@ -116,8 +119,7 @@ struct C_SdlRef_LocalMatrix : C_SdlRef {
     void Process(void);
 };
 
-struct C_SdlRef_TextureIdMatrix {
-    /* C++ base C_SdlRef at +0x0. */
+struct C_SdlRef_TextureIdMatrix : C_SdlRef {
     void ProcessNoInterpol(void);
     void ProcessWithInterpol(void);
     void Process(void);
@@ -159,8 +161,7 @@ struct C_SdlRef_LocalMatrixForCheap : C_SdlRef {
     void Process(void);
 };
 
-struct C_SdlRef_PointLighting {
-    /* C++ base C_SdlRef at +0x0. */
+struct C_SdlRef_PointLighting : C_SdlRef {
     void ProcessNoInterpol(void);
     void ProcessWithInterpol(void);
     void Process(void);
@@ -370,7 +371,6 @@ struct C_SdlCache {
 float g_ffFrameTimeLastFrame;
 int GLI_G_pProcessSDLs[2048];
 unsigned int GLI_G_iNbSdlsInThisFrame;
-unsigned int __vt__22C_SdlRef_FogParameters;
 float g_fFogEnd;
 float GLI_g_OOStartMinusEnd;
 unsigned int GLI_g_CurrentSDLFogColor;
@@ -382,13 +382,6 @@ unsigned int AGO_g_ulNbLights;
 AGO_Light_ AGO_g_pLightList[8];
 int PS2glLiberator;
 int PS2glAllocator64;
-unsigned int __vt__22C_SdlRef_TextureOffset;
-unsigned int __vt__24C_SdlRef_TextureIdMatrix;
-unsigned int __vt__22C_SdlRef_TextureMatrix;
-unsigned int __vt__28C_SdlRef_LocalMatrixForCheap;
-unsigned int __vt__20C_SdlRef_LocalMatrix;
-unsigned int __vt__22C_SdlRef_PointLighting;
-unsigned int __vt__8C_SdlRef;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 42–50 */
 /* addr: 0x002d7720  size: 72 bytes */
@@ -450,7 +443,7 @@ void fn_vAddSdlToProcessLater(C_Sdl* pSdl)
  */
 void C_SdlRef_FogParameters::ProcessNoInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    Process();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 436–436 */
@@ -462,7 +455,7 @@ void C_SdlRef_FogParameters::ProcessNoInterpol(void)
  */
 void C_SdlRef_FogParameters::ProcessWithInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    Process();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 429–432 */
@@ -489,7 +482,7 @@ void C_SdlRef_FogParameters::Process(void)
  */
 void C_SdlRef_TextureOffset::ProcessNoInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    Process();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 400–417 */
@@ -514,9 +507,6 @@ void C_SdlRef_TextureOffset::ProcessNoInterpol(void)
  */
 void C_SdlRef_TextureOffset::ProcessWithInterpol(void)
 {
-    float dt;
-    float dv;
-    float du;
     /* TODO: decompile from asm/... */
 }
 
@@ -556,7 +546,7 @@ void C_SdlRef_TextureOffset::Process(void)
  */
 void C_SdlRef_TextureIdMatrix::ProcessNoInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    Process();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 359–359 */
@@ -568,7 +558,7 @@ void C_SdlRef_TextureIdMatrix::ProcessNoInterpol(void)
  */
 void C_SdlRef_TextureIdMatrix::ProcessWithInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    Process();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 340–355 */
@@ -591,8 +581,20 @@ void C_SdlRef_TextureIdMatrix::ProcessWithInterpol(void)
  */
 void C_SdlRef_TextureIdMatrix::Process(void)
 {
-    float (*param0)[4];
-    /* TODO: decompile from asm/... */
+    float (*param0)[4] = (float (*)[4])m_vpDestinationPointer;
+
+    if (param0)
+    {
+        param0[0][0] = 1.0f;
+        param0[0][1] = 0.0f;
+        param0[0][2] = 0.0f;
+        param0[1][0] = 0.0f;
+        param0[1][1] = 1.0f;
+        param0[1][2] = 0.0f;
+        param0[2][0] = 0.0f;
+        param0[2][1] = 0.0f;
+        param0[2][2] = 1.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 334–334 */
@@ -604,7 +606,7 @@ void C_SdlRef_TextureIdMatrix::Process(void)
  */
 void C_SdlRef_TextureMatrix::ProcessNoInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    Process();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 329–329 */
@@ -616,7 +618,7 @@ void C_SdlRef_TextureMatrix::ProcessNoInterpol(void)
  */
 void C_SdlRef_TextureMatrix::ProcessWithInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    Process();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 258–325 */
@@ -782,7 +784,7 @@ void C_SdlRef_LocalMatrix::Process(void)
  */
 void C_SdlRef_PointLighting::ProcessNoInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    Process();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 76–76 */
@@ -794,7 +796,7 @@ void C_SdlRef_PointLighting::ProcessNoInterpol(void)
  */
 void C_SdlRef_PointLighting::ProcessWithInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    Process();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 58–72 */
@@ -835,7 +837,7 @@ void C_SdlRef_PointLighting::Process(void)
  */
 void C_SdlRef::ProcessNoInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    printf("Dummy interpol reference called !!\n");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 39–39 */
@@ -847,7 +849,7 @@ void C_SdlRef::ProcessNoInterpol(void)
  */
 void C_SdlRef::ProcessWithInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    printf("Dummy interpol reference called !!\n");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 34–34 */
@@ -859,7 +861,7 @@ void C_SdlRef::ProcessWithInterpol(void)
  */
 void C_SdlRef::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    printf("Dummy reference called !!\n");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 23–23 */
@@ -869,7 +871,7 @@ void C_SdlRef::Process(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_SdlRef::__dl(void* ptr)
+void C_SdlRef::operator delete(void* ptr)
 {
-    /* TODO: decompile from asm/... */
+    ((void (*)(void*))PS2glLiberator)(ptr);
 }
