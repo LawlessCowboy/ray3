@@ -757,7 +757,7 @@ void fn_vValidateAllOption(void)
  */
 int GAM_fn_iGetCurrentLanguageNb(void)
 {
-    return *(unsigned char*)0x539e72;
+    return g_stEngineStructure.ucCurrentLanguage;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\GamSave.c lines 1051–1075 */

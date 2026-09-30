@@ -29665,6 +29665,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Basic.c",
       "status": "MATCH"
     },
+    "0x0025c050": {
+      "address": "0x0025c050",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vResetEngineFromPaused",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Basic.c",
+      "status": "MATCH"
+    },
     "0x0025c080": {
       "address": "0x0025c080",
       "compiler_profile": "mwccps2-3.0-011126-o3",

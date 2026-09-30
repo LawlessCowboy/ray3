@@ -4210,8 +4210,7 @@ void fn_vReInitAllDynamicActors(void)
  */
 tdstNodeInterpret_* fn_p_stGetFrameLength(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    *(float *)p_stValue = *(float *)0x5383c0;
-    *(int *)((char *)p_stValue + 0xc) = 8;
+    p_stValue->uDummy.uParam.xValue = g_stEngineStructure.stEngineTimer.xFrameLength; p_stValue->eType = E_vt_Float;
     return p_stTree;
 }
 

@@ -2615,7 +2615,7 @@ void GLI_vShowVignetteFromHandle(int FileHandle)
  */
 void ChangeClippingMode(void)
 {
-    *(volatile unsigned int*)0x386a84 = 3;
+    g_PS2glContext.eClippingFunction = 3;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 1613–1616 */

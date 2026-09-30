@@ -3615,7 +3615,7 @@ tdstNodeInterpret_* fn_p_st_HandledCondition(HIE_tdstSuperObject_* p_SuperObjPer
 {
     struct { tdstEngineObject_* p_stEngObjValue; unsigned char pad[12]; } stParam;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_ *)&stParam);
-    *p_lValue = ((*(unsigned int *)((char *)0x540000 - 0x7c98)) ==
+    *p_lValue = (g_stEngineStructure.stEngineTimer.ulTrameNumber ==
         stParam.p_stEngObjValue->h_StandardGame->ulLastTrame);
     return p_stTree;
 }

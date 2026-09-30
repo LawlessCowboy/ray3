@@ -1544,6 +1544,15 @@ GAM_eLoadingMode g_a_cAllocModeStack[10];
 stLoadingLevelProperty GAM_g_a_stLoadingLevel_Properties[2];
 char g_sLanguage[255];
 tdstEngineStructure_ g_stEngineStructure;
+/* g_stAlways is defined in GameEng.c; the layout matches its debug record. */
+typedef struct tdstAlways_ {
+    unsigned int ulMaxNumberOfAlways; /* +0x0 */
+    unsigned char ALW_h_LstAlwaysModel[12]; /* +0x4: LST2 dynamic anchor */
+    HIE_tdstSuperObject_* d_stAlwaysSuperObject; /* +0x10 */
+    tdstEngineObject_* d_stAlwaysEngineObjectInit; /* +0x14 */
+    HIE_tdstSuperObject_** d_hAlwaysGenerator; /* +0x18 */
+} tdstAlways_;
+extern tdstAlways_ g_stAlways;
 int HIE_gs_lCurrentFrame;
 char g_cIsLevelOk;
 unsigned char g_bLevelHasTransitionMemory;
@@ -1568,10 +1577,10 @@ char SAV2_g_LevelNameToSave[20];
 void fn_vLastDesinitAlwaysStructure(void)
 {
     fn_vKillAllAlways();
-    if (*(int *)0x346150 != 0) {
-        *(int *)0x346164 = 0;
-        *(int *)0x346160 = 0;
-        *(int *)0x346168 = 0;
+    if (g_stAlways.ulMaxNumberOfAlways != 0) {
+        g_stAlways.d_stAlwaysEngineObjectInit = NULL;
+        g_stAlways.d_stAlwaysSuperObject = NULL;
+        g_stAlways.d_hAlwaysGenerator = NULL;
     }
 }
 
@@ -1630,7 +1639,7 @@ void GAM_fn_vGetRandomMapAndDemoName(char** pp_cMapName, char** pp_cDemoName)
 void fn_vResetEngineFromPaused(void)
 {
     HIE_gs_lCurrentFrame = g_lCurrentFrameSave;
-    *(unsigned char *)0x538a04 = 0;
+    g_stEngineStructure.bEngineIsInPaused = 0;
     fn_vLoadEngineClock();
     SND_fn_vResumeSound();
 }
@@ -1651,7 +1660,7 @@ void fn_vResetEngineFromPaused(void)
  */
 void fn_vSetEngineInPaused(void)
 {
-    *(unsigned char *)0x538a04 = 1;
+    g_stEngineStructure.bEngineIsInPaused = 1;
     g_lCurrentFrameSave = HIE_gs_lCurrentFrame;
     fn_vSaveEngineClock();
     SND_fn_vPauseSound();
@@ -1667,7 +1676,7 @@ void fn_vSetEngineInPaused(void)
  */
 unsigned char fn_bIsEngineInPause(void)
 {
-    return *(unsigned char *)0x538a04;
+    return g_stEngineStructure.bEngineIsInPaused;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1292–1429 */
@@ -2109,7 +2118,7 @@ unsigned char fn_bIsNextLevelNameValid(void)
  */
 void fn_vFreeNextLevelName(void)
 {
-    *(unsigned char *)0x53831f = 0;
+    g_stEngineStructure.szNextLevelName[0] = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 594–595 */
@@ -2135,7 +2144,7 @@ char* fn_p_szGetNextLevelName(void)
  */
 int fn_lGetSubMapNumber(void)
 {
-    return *(int *)0x538a00;
+    return g_stEngineStructure.lSubMapNumber;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 561–580 */

@@ -96,20 +96,25 @@ struct tdstTransition_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* g_stObjectTypes is defined in ObjType.c. */
+typedef struct tdstObjectTypeElement_ tdstObjectTypeElement_;
+typedef struct LST2_tdstAnchorTotdhHandleToObjectTypeElementDyn {
+    tdstObjectTypeElement_* hFirstElementDyn; /* +0x0 */
+    tdstObjectTypeElement_* hLastElementDyn; /* +0x4 */
+    int lNumberOfElementsDyn; /* +0x8 */
+} LST2_tdstAnchorTotdhHandleToObjectTypeElementDyn;
+typedef struct tdstObjectType_ {
+    LST2_tdstAnchorTotdhHandleToObjectTypeElementDyn hFamilyType; /* +0x0 */
+    LST2_tdstAnchorTotdhHandleToObjectTypeElementDyn hModelType; /* +0xc */
+    LST2_tdstAnchorTotdhHandleToObjectTypeElementDyn hPersonalType; /* +0x18 */
+} tdstObjectType_;
+extern tdstObjectType_ g_stObjectTypes;
+
 void fn_vFirstInitObjectTypeStructure(void)
 {
-    unsigned int* puObjectTypeStructure;
-
-    puObjectTypeStructure = (unsigned int*)0x5382c0;
-    puObjectTypeStructure[0] = 0;
-    puObjectTypeStructure[1] = 0;
-    puObjectTypeStructure[2] = 0;
-    puObjectTypeStructure[3] = 0;
-    puObjectTypeStructure[4] = 0;
-    puObjectTypeStructure[5] = 0;
-    puObjectTypeStructure[6] = 0;
-    puObjectTypeStructure[7] = 0;
-    puObjectTypeStructure[8] = 0;
+    g_stObjectTypes.hFamilyType.hFirstElementDyn = NULL; g_stObjectTypes.hFamilyType.hLastElementDyn = NULL; g_stObjectTypes.hFamilyType.lNumberOfElementsDyn = 0;
+    g_stObjectTypes.hModelType.hFirstElementDyn = NULL; g_stObjectTypes.hModelType.hLastElementDyn = NULL; g_stObjectTypes.hModelType.lNumberOfElementsDyn = 0;
+    g_stObjectTypes.hPersonalType.hFirstElementDyn = NULL; g_stObjectTypes.hPersonalType.hLastElementDyn = NULL; g_stObjectTypes.hPersonalType.lNumberOfElementsDyn = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 397–399 */

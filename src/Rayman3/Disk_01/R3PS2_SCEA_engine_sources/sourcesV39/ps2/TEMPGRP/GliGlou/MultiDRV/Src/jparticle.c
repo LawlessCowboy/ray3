@@ -42,9 +42,19 @@ float J_g_NoiseLevel;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* g_stLensFlare is defined in spritegli.c. */
+typedef struct stLensFlareTab_ {
+    int p_vReference[10]; /* +0x0 */
+    int lApparitionTrame[10]; /* +0x28 */
+    int lCounter[10]; /* +0x50 */
+    char bIntersect[10]; /* +0x78 */
+    int lNumberOfLensFlare; /* +0x84 */
+} stLensFlareTab_;
+extern stLensFlareTab_ g_stLensFlare;
+
 void GLI_vInitLensFlare(void)
 {
-    *(int*)0x5E5004 = 0;
+    g_stLensFlare.lNumberOfLensFlare = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\jparticle.c lines 229–412 */

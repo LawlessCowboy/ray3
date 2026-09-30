@@ -218,7 +218,8 @@ def _control_flow(words: list[int], address: int) -> list[list[int]]:
     return succ
 
 
-def recover_relocations(code: bytes, address: int, symbolizer: RetailSymbolizer
+def recover_relocations(code: bytes, address: int, symbolizer: RetailSymbolizer,
+                        sites: dict | None = None
                         ) -> tuple[bytearray, list[tuple[int, int, str]]]:
     """Recover (offset, type, symbol) relocations from linked MIPS code.
 
@@ -291,6 +292,8 @@ def recover_relocations(code: bytes, address: int, symbolizer: RetailSymbolizer
                 name, addend = resolved
                 relocs[offset] = (R_MIPS_GPREL16, name)
                 patched[index] = (word & 0xFFFF0000) | (addend & 0xFFFF)
+                if sites is not None:
+                    sites[offset] = ((symbolizer.gp + simm) & 0xFFFFFFFF, [])
             continue
         luis = (states[index] or {}).get(rs, frozenset())
         hi_values = {hi_value for _, hi_value in luis}
@@ -305,6 +308,8 @@ def recover_relocations(code: bytes, address: int, symbolizer: RetailSymbolizer
         hi, lo = _hi_lo(addend)
         relocs[offset] = (R_MIPS_LO16, name)
         patched[index] = (word & 0xFFFF0000) | lo
+        if sites is not None:
+            sites[offset] = (target, [lui_offset for lui_offset, _ in luis])
         for lui_offset, _ in luis:
             if lui_offset not in relocs:
                 relocs[lui_offset] = (R_MIPS_HI16, name)
@@ -431,17 +436,49 @@ def render(result: dict, context, helpers: dict, fmt: str = 'plain',
     start = main.offset + entry['address'] - main.addr
     target_code = target_path.read_bytes()[start:start + entry['size']]
     symbol = result['candidate_symbol']
-    code, relocs = recover_relocations(target_code, entry['address'], symbolizer)
+    sites: dict[int, tuple[int, list[int]]] = {}
+    code, relocs = recover_relocations(target_code, entry['address'], symbolizer, sites)
     build = ROOT / 'build' / 'asmdiff'
     build.mkdir(parents=True, exist_ok=True)
-    target_obj = build / 'target.o'
-    target_obj.write_bytes(build_object(symbol, code, relocs))
 
     obj_path = ROOT / result['object']
     obj_sections = read_sections(obj_path)
     obj_symbols = parse_symbols(obj_sections)
     candidate_code, candidate_relocs = candidate_function(
         obj_sections, obj_symbols, symbol, target_symbols, local_static_target)
+    # An address can be both inside one object and just before the next
+    # (array[-1] indexing).  When the candidate names a retail symbol close to
+    # the address at the same site, use that spelling on the retail side too.
+    candidate_by_site = {(off, typ): name for off, typ, name in candidate_relocs}
+    renamed: dict[int, tuple[str, int]] = {}
+    for off, typ, name in relocs:
+        if typ not in (R_MIPS_LO16, R_MIPS_GPREL16) or off not in sites:
+            continue
+        wanted = candidate_by_site.get((off, typ))
+        retail = target_names.get(wanted) if wanted and wanted != name else None
+        if retail is None:
+            continue
+        address_value, luis = sites[off]
+        addend = address_value - retail.value
+        if -0x40 <= addend < max(retail.size, 1):
+            renamed[off] = (wanted, addend)
+            for lui_offset in luis:
+                renamed[lui_offset] = (wanted, addend)
+    if renamed:
+        words = [struct.unpack_from('<I', code, i)[0] for i in range(0, len(code), 4)]
+        new_relocs = []
+        for off, typ, name in relocs:
+            if off in renamed:
+                name, addend = renamed[off]
+                hi, lo = _hi_lo(addend)
+                word = words[off // 4]
+                words[off // 4] = (word & 0xFFFF0000) | (hi if typ == R_MIPS_HI16 else lo)
+            new_relocs.append((off, typ, name))
+        relocs = new_relocs
+        code = bytearray(b''.join(struct.pack('<I', w) for w in words))
+    target_obj = build / 'target.o'
+    target_obj.write_bytes(build_object(symbol, code, relocs))
+
     # Anonymous candidate data (switch tables, float pools) has object-local
     # @N names; when the retail side has an anonymous or unnamed object at the
     # same relocation, show the retail name on both sides.
