@@ -280,7 +280,8 @@ def recover_relocations(code: bytes, address: int, symbolizer: RetailSymbolizer,
         opcode, rs, _, imm, simm = _decode(word)
         if opcode in (2, 3):
             target = ((address + offset + 4) & 0xF0000000) | ((word & 0x03FFFFFF) << 2)
-            if not address <= target < address + len(code) and target in symbolizer.functions:
+            # Calls to the function's own start (recursion) are relocated too.
+            if (opcode == 3 or not address <= target < address + len(code)) and target in symbolizer.functions:
                 relocs[offset] = (R_MIPS_26, symbolizer.functions[target])
                 patched[index] = word & 0xFC000000
             continue
@@ -376,11 +377,29 @@ def build_object(name: str, code: bytes, relocs: list[tuple[int, int, str]]) -> 
     return bytes(image)
 
 
+_R5900_SQRT = re.compile(r'^(\s*[0-9a-f]+:\t)([0-9a-f]{8})(\s+)c1\t0x[0-9a-f]+\s*$', re.M)
+
+
+def _decode_r5900_fpu(dump: str) -> str:
+    """Spell R5900 ``sqrt.s fd, ft`` that objdump prints as ``c1 0x...``.
+
+    The R5900 encodes the operand in ft (bits 16-20) rather than fs, and
+    GNU objdump's mips:5900 table leaves the instruction undecoded.
+    """
+    def replace(match: re.Match) -> str:
+        word = int(match.group(2), 16)
+        if word >> 21 == 0x230 and word & 0x3F == 0x04:  # COP1, fmt S, funct sqrt
+            ft, fd = (word >> 16) & 31, (word >> 6) & 31
+            return f'{match.group(1)}{match.group(2)}{match.group(3)}sqrt.s\t$f{fd},$f{ft}'
+        return match.group(0)
+    return _R5900_SQRT.sub(replace, dump)
+
+
 def objdump_function(path: Path, symbol: str) -> str:
-    return subprocess.run(
+    return _decode_r5900_fpu(subprocess.run(
         [OBJDUMP, '-m', 'mips:5900', '-drz', '-j', '.text', f'--disassemble={symbol}', str(path)],
         check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-        errors='replace').stdout
+        errors='replace').stdout)
 
 
 def candidate_function(obj_sections, obj_symbols, symbol_name: str, target_symbols,
