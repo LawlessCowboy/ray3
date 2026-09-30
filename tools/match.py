@@ -860,6 +860,7 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
         'candidate_lines': candidate_lines, 'target_lines': entry['line_map'],
         'relocations': relocations, 'unresolved_relocations': unresolved,
         'first_difference': first_difference, 'equivalence': equivalence,
+        'candidate_symbol': candidate.name,
         'candidate_hex': bytes(candidate_bytes).hex() if verbose else '',
         'target_hex': target_bytes.hex() if verbose else '',
     }
@@ -1197,13 +1198,38 @@ def format_word_diff(candidate_hex: str, target_hex: str, relocations: list[dict
     return '\n'.join(lines)
 
 
+def format_line_map(candidate_lines: list[tuple[int, int]],
+                    target_lines: list[tuple[int, int]]) -> str:
+    candidate_line_map = dict(candidate_lines)
+    target_line_map = dict(target_lines)
+    lines = ['line map: offset  candidate-line  target-line']
+    for offset in sorted(set(candidate_line_map) | set(target_line_map)):
+        lines.append(f'          +0x{offset:04x}  {candidate_line_map.get(offset, "-")!s:<14} '
+                     f'{target_line_map.get(offset, "-")}')
+    return '\n'.join(lines)
+
+
+def asm_differ_view(result: dict, args: argparse.Namespace) -> bool:
+    """Print asm-differ's aligned, symbolized diff; False if it is unavailable."""
+    try:
+        import asmdiff
+        fmt = 'color' if args.color or (args.color is None and sys.stdout.isatty()) else 'plain'
+        print(asmdiff.render(result, target_context(), {
+            'read_sections': read_sections, 'parse_symbols': parse_symbols,
+            'local_static_target': local_static_target}, fmt=fmt))
+        return True
+    except Exception as error:  # fall back to the positional word table
+        print(f'(asm-differ view unavailable: {error}; showing word table)')
+        return False
+
+
 def command_check(args: argparse.Namespace) -> int:
     _, symbols, main, _, _ = target_context()
     entry = find_entry(args.function, cached_source_index(symbols, main))
     if entry['source'] is None:
         print(f"SOURCE_UNRECOVERED {entry['name']}: no debug-owned source template")
         return 1
-    result = compare(entry, args.diff)
+    result = compare(entry, args.diff or args.diff_words)
     if args.json:
         print(json.dumps(result, indent=2))
     elif result['status'] == 'COMPILE_ERROR':
@@ -1223,12 +1249,15 @@ def command_check(args: argparse.Namespace) -> int:
             print('unresolved relocations: ' + ', '.join(
                 f"+0x{x['offset']:x}/type{x['type']}/{x['symbol'] or '?'}"
                 for x in result['unresolved_relocations']))
-        if args.diff:
+        shown = bool(args.diff) and asm_differ_view(result, args)
+        if args.diff_words or (args.diff and not shown):
             print('candidate:', result['candidate_hex'])
             print('target:   ', result['target_hex'])
             print(format_word_diff(result['candidate_hex'], result['target_hex'],
                                    result['relocations'], entry['address'],
                                    result['candidate_lines'], result['target_lines']))
+        elif shown:
+            print(format_line_map(result['candidate_lines'], result['target_lines']))
     if args.record and result['status'] == 'MATCH':
         manifest = load_manifest()
         manifest.setdefault('functions', {})[f"0x{entry['address']:08x}"] = {
@@ -1588,7 +1617,12 @@ def main() -> int:
     classify_parser.set_defaults(func=command_classify)
     check_parser = sub.add_parser('check')
     check_parser.add_argument('function')
-    check_parser.add_argument('--diff', action='store_true')
+    check_parser.add_argument('--diff', action='store_true',
+                              help='aligned asm-differ view with symbol names (falls back to --diff-words)')
+    check_parser.add_argument('--diff-words', action='store_true',
+                              help='positional four-byte word table with relocation-resolved bytes')
+    check_parser.add_argument('--color', action=argparse.BooleanOptionalAction, default=None,
+                              help='colour the asm-differ view (default: when stdout is a terminal)')
     check_parser.add_argument('--json', action='store_true')
     check_parser.add_argument('--record', action='store_true')
     check_parser.add_argument('--record-equivalent', action='store_true',

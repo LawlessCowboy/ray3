@@ -39,15 +39,28 @@ baseline profile is encoded in `tools/match.py` and the Makefile.
    python3 tools/match.py check FUNCTION --diff
    ```
 
-   This prints the entire function as side-by-side four-byte PS2 instruction
-   words **and Rabbitizer-decoded mnemonics** after named relocations have
-   been resolved. Every differing word is marked `!`; `B` identifies a branch,
-   `D` its delay slot, and `Rtype:symbol` names a candidate relocation. Local
-   branch destinations are labelled `L_....`, followed by a candidate/target
-   line-map table. Inspect every `!`, then compare those offsets with the
-   matching target `asm/.../*.s` file. A lone relocation/immediate mismatch
-   often indicates a symbol, layout, or signature issue; several adjacent
-   non-relocation words usually indicate source shape or compiler scheduling.
+   This prints an aligned, symbolized diff from asm-differ (TARGET on the
+   left, CANDIDATE on the right), followed by the candidate/target line-map
+   table. Retail operands are named from the ELF: calls, `%hi`/`%lo` pairs
+   (paired along branch edges) and `$gp`-relative globals show symbol names,
+   and string literals show their contents (for example `%lo("Texts/%s")`),
+   so a wrong format string or global is visible directly. Alignment means one
+   extra or missing instruction appears as a single `<`/`>` row instead of
+   shifting everything after it. Row markers: `r` register-only difference,
+   `i` immediate/relocation difference, `s` stack-offset difference,
+   `|` different instruction, `<`/`>` instruction only on one side. A retail
+   `lui`/`%lo` pair that the candidate spells as raw numbers means the source
+   hard-codes an absolute address instead of naming the global.
+
+   `--diff-words` prints the older positional table: four-byte words and
+   Rabbitizer mnemonics after relocations are resolved, `!` on every
+   differing word, `B`/`D` for branches and delay slots, `Rtype:symbol` for
+   candidate relocations. Use it for exact byte evidence; both flags together
+   print both views. The asm-differ view needs a local checkout (see
+   `tools/asmdiff.py`); without it `--diff` falls back to the word table.
+   A lone relocation/immediate mismatch often indicates a symbol, layout, or
+   signature issue; several adjacent non-relocation differences usually
+   indicate source shape or compiler scheduling.
    For a suspected signature error, run `python3 tools/match.py signature
    FUNCTION` to see source, raw-debug, decoded type, and target ABI evidence.
    Do not claim a match based solely on visually similar assembly.
@@ -160,7 +173,7 @@ source file in two phases:
    import only m2c control-flow and instruction-shape evidence that agrees
    with that debug evidence.
 2. **Refine against the target.** Use `check FUNCTION --diff` after every
-   meaningful change. Compare all Rabbitizer-decoded differences and the
+   meaningful change. Compare all aligned differences (and `--diff-words` for exact bytes) and the
    target line map, then adjust natural control flow, declaration types and
    lifetime, loop form, field/layout accesses, calls, and source ordering.
    Record only a verified `MATCH`; record a useful failed attempt with its

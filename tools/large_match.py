@@ -129,7 +129,7 @@ def command_check(args: argparse.Namespace) -> int:
     directory.mkdir(parents=True, exist_ok=True)
     if not snapshot.exists():
         snapshot.write_bytes(source.read_bytes())
-    result = run(sys.executable, "tools/match.py", "check", function, "--diff")
+    result = run(sys.executable, "tools/match.py", "check", function, "--diff", "--diff-words")
     state = load_state(function)
     iteration = len(state.get("iterations", [])) + 1
     diff_path = directory / f"iteration-{iteration:03d}.diff"

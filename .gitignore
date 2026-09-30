@@ -10,6 +10,10 @@
 /tools/decomp-permuter/
 /tools/permuter-venv/
 
+# Local asm-differ checkout and its virtual environment (see tools/asmdiff.py).
+/tools/asm-differ/
+/tools/asm-differ-venv/
+
 # The original scratch/compiler directory contains MWCC binaries, Wibo, probe
 # inputs/objects, and duplicate ELF copies.  Maintained scripts live in tools/.
 /Compiler/
