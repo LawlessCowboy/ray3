@@ -2148,7 +2148,7 @@ void impPS2glClearIndex(float c)
  */
 void impPS2glClearDepth(double depth)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.fDepthClearValue = (float)depth;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 361–370 */
@@ -2164,7 +2164,10 @@ void impPS2glClearDepth(double depth)
  */
 void impPS2glClearColor(float red, float green, float blue, float alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vColorClearValue[0] = red;
+    g_PS2glContext.vColorClearValue[1] = green;
+    g_PS2glContext.vColorClearValue[2] = blue;
+    g_PS2glContext.vColorClearValue[3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 348–356 */
@@ -2180,7 +2183,10 @@ void impPS2glClearColor(float red, float green, float blue, float alpha)
  */
 void impPS2glClearAccum(float red, float green, float blue, float alpha)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.vAccumClearValue[0] = red;
+    g_PS2glContext.vAccumClearValue[1] = green;
+    g_PS2glContext.vAccumClearValue[2] = blue;
+    g_PS2glContext.vAccumClearValue[3] = alpha;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 339–341 */

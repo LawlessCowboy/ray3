@@ -4086,9 +4086,14 @@ void GLI_vUpdateAllVAs(void)
  */
 void GLI_vRemoveCharacterVAFromProcessList(float (*pDest)[4])
 {
-    GLI_tdstVAToUpdate_* p;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    GLI_tdstVAToUpdate_* p;
+    for (i = 0; i < GLI_g_NbVAToUpdate; i++)
+    {
+        p = &GLI_VAToUpdate[i];
+        if (p->pDestPV == pDest)
+            p->pDestPV = NULL;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 341–365 */

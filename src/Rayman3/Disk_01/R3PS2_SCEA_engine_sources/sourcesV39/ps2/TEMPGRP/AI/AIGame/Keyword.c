@@ -3211,9 +3211,14 @@ tdstNodeInterpret_* fn_p_stIfDebug(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stElseKeyWord(tdstNodeInterpret_* p_stTree)
+tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_* p_stTree);
+
+/* Debug info lists only p_stTree, but the target reads it from $a1: keyword ABI. */
+tdstNodeInterpret_* fn_p_stElseKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    tdstNodeInterpret_* p_stNext;
+
+    if ((p_stTree - 1)->uwNodeToSkip) return (tdstNodeInterpret_*)((p_stTree - 1)->uwNodeToSkip * sizeof(tdstNodeInterpret_) + (char*)(p_stTree - 1)); else { p_stNext = fn_p_stSwapNextParameter(p_stTree); (p_stTree - 1)->uwNodeToSkip = (unsigned short)(p_stNext - (p_stTree - 1)); return p_stNext; }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 188–188 */

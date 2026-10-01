@@ -151,7 +151,31 @@ float MAT_fn_xGetMaxScaleNonOpt(MAT_tdstTransformation_* _hTransform)
  */
 void MAT_fn_vGetScale(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stScaleVector)
 {
-    /* TODO: decompile from asm/... */
+    switch (_hTransform->eType)
+    {
+    case MAT_eTransform_Identity:
+    case MAT_eTransform_Translation:
+    case MAT_eTransform_Rotation:
+        _p_stScaleVector->xX = 1.0f; _p_stScaleVector->xY = 1.0f; _p_stScaleVector->xZ = 1.0f;
+        break;
+
+
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_Scale:
+    case MAT_eTransform_RotationZoom:
+    case MAT_eTransform_RotationScale:
+        *(int*)&_p_stScaleVector->xX = *(int*)&_hTransform->stScaleVector.xX; *(int*)&_p_stScaleVector->xY = *(int*)&_hTransform->stScaleVector.xY; *(int*)&_p_stScaleVector->xZ = *(int*)&_hTransform->stScaleVector.xZ;
+        break;
+
+
+
+    case MAT_eTransform_ComplexRotationScale:
+        _p_stScaleVector->xX = 1.0f; _p_stScaleVector->xY = 1.0f; _p_stScaleVector->xZ = 1.0f;
+        break;
+
+
+
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matspscl.c lines 427–521 */

@@ -1027,9 +1027,23 @@ void GLI_vRefreshMultiTexturePart(GLI_tdstMaterial_* _pst_Material)
  */
 void GLI_Material_fn_vInitMultiTexturePart(GLI_tdstMaterial_* _hVisualMat)
 {
-    anon_0* pst_LastMTM;
     anon_0* pst_MTM;
-    /* TODO: decompile from asm/... */
+    anon_0* pst_LastMTM;
+
+
+    memset(_hVisualMat->a_stMultiMaterial, 0, sizeof(_hVisualMat->a_stMultiMaterial));
+    _hVisualMat->ulNbTextureStages = 0;
+
+    pst_MTM = _hVisualMat->a_stMultiMaterial;
+    pst_LastMTM = pst_MTM + 4;
+
+    for (; pst_MTM < pst_LastMTM; pst_MTM++)
+    {
+        pst_MTM->st_UVStaticPos.stMat[0][0] = 1.0f;
+        pst_MTM->st_UVStaticPos.stMat[1][1] = 1.0f;
+        pst_MTM->st_UVDynamicPos.stMat[0][0] = 1.0f;
+        pst_MTM->st_UVDynamicPos.stMat[1][1] = 1.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 612–714 */

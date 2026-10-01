@@ -1237,6 +1237,7 @@ int GLI_g_AnimatedTextureToUse;
 float myColorRange[4];
 float myColorRange2[4];
 extern DelayedFrees_ GLI_g_DelayedFrees[2000];
+extern int DelayedFreesInit;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 92–98 */
 /* addr: 0x002cc110  size: 116 bytes */
@@ -1255,24 +1256,12 @@ extern DelayedFrees_ GLI_g_DelayedFrees[2000];
 void GLI_vInitDelayedFrees(void)
 {
     unsigned int i;
+    DelayedFreesInit = 1;
+    for (i = 0; i < 2000; i++)
+    {
 
-    GLI_g_AnimatedTextureToUse = 1;
-    for (i = 0; i < 0x7D0; i += 8) {
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[0] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[2] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[3] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[5] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[6] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[8] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[9] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[11] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[12] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[13] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[14] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[15] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[16] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[17] = 0;
-        ((unsigned int *)(GLI_g_DelayedFrees + i))[18] = 0;
+        GLI_g_DelayedFrees[i].Pointer = 0;
+        GLI_g_DelayedFrees[i].DisplayList = 0;
     }
 }
 

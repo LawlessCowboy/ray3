@@ -2985,6 +2985,9 @@ tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlFunction(HIE_tdstSuperObject_* 
     /* TODO: decompile from asm/... */
 }
 
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+int SND_fn_bIsSoundPlaying(_SND_tduRefEvt u_RefEvt);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiFuncSound.c lines 114–130 */
 /* addr: 0x0024ba70  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3003,7 +3006,18 @@ tdstNodeInterpret_* fn_p_stIsSoundPlaying(HIE_tdstSuperObject_* p_SuperObjPerso,
     _SND_tduRefEvt u_RefEvt;
     unsigned char bIsPlaying;
     tdstGetSetParam_ st_Param;
-    /* TODO: decompile from asm/... */
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+    u_RefEvt.Id = st_Param.uDummy.uParam.ulValue;
+
+
+
+    bIsPlaying = SND_fn_bIsSoundPlaying(u_RefEvt);
+
+
+    p_stValue->uDummy.uParam.lValue = bIsPlaying;
+    p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiFuncSound.c lines 78–108 */

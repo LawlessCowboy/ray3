@@ -2277,7 +2277,7 @@ unsigned int GLI_g_SDLIsBlinking;
 anon_2 __vt__14C_CharacterSdl;
 unsigned int GLI_g_InstanceLists;
 tagGLcontext g_PS2glContext;
-int PS2glLiberator;
+void (*PS2glLiberator)(void);
 anon_1 __vt__8C_SdlRef;
 int GLI_g_ChristianSlaterMode;
 tagGScontext g_gsContext;
@@ -3272,5 +3272,5 @@ void C_Sdl::Init(void)
  */
 void C_Sdl::__dl(void* ptr)
 {
-    /* TODO: decompile from asm/... */
+    PS2glLiberator();
 }

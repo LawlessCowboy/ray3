@@ -3235,11 +3235,19 @@ float fn_xRealModuloAround(float xFrom, float xModulus, float xValue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+
 DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     DNM_stDynamics* p_stDynamics;
     tdstDynam_* h_Dynam;
-    /* TODO: decompile from asm/... */
+
+
+
+    if (!(h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam))
+        return NULL;
+
+    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam); return (p_stDynamics == NULL) ? NULL : p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 317–333 */

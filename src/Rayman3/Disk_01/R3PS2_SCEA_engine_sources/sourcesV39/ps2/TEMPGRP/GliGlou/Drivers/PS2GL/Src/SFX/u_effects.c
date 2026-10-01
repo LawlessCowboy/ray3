@@ -5158,7 +5158,15 @@ void GLI_vProcessPSX_FX(void)
  */
 void GLIPS2_vCreateWaterEffect(unsigned int Type, float X1, float Y1, float X2, float Y2, float Z)
 {
-    /* TODO: decompile from asm/... */
+    GLIPS2_WaterMin[0] = X1;
+    g_bHasWaterEffect = Type;
+    GLIPS2_WaterMin[1] = Y1;
+    GLIPS2_WaterMax[0] = X2;
+    GLIPS2_WaterMax[1] = Y2;
+    GLIPS2_WaterMin[2] = Z;
+    GLIPS2_WaterMax[2] = Z;
+    GLIPS2_WaterMin[3] = 1.0f;
+    GLIPS2_WaterMax[3] = 1.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 982–982 */

@@ -1276,8 +1276,8 @@ void fn_vStandardGameSetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex, i
     tdstStandardGame_* p_stStandardGame;
     if ((_lIndex < 2) && (_lIndex >= 0))
     {
-        p_stStandardGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame;
-        p_stStandardGame->a_lCustomLongs[_lIndex] = _lValue;
+        int* p_lCustomLong;
+        p_stStandardGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame; p_lCustomLong = &p_stStandardGame->a_lCustomLongs[_lIndex]; *p_lCustomLong = _lValue;
     }
 }
 
@@ -1293,9 +1293,10 @@ void fn_vStandardGameSetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex, i
 int fn_lStandardGameGetCustomLongSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
 {
     int lValue = 0;
+    int* p_lCustomLong;
     if ((_lIndex < 2) && (_lIndex >= 0))
     {
-        lValue = _hSO->hLinkedObject.p_stCharacter->h_StandardGame->a_lCustomLongs[_lIndex];
+        p_lCustomLong = &_hSO->hLinkedObject.p_stCharacter->h_StandardGame->a_lCustomLongs[_lIndex]; lValue = *p_lCustomLong;
     }
     return lValue;
 }
@@ -1315,8 +1316,8 @@ void fn_vStandardGameSetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex, 
     tdstStandardGame_* p_stStandardGame;
     if ((_lIndex < 2) && (_lIndex >= 0))
     {
-        p_stStandardGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame;
-        p_stStandardGame->a_xCustomFloats[_lIndex] = _xValue;
+        float* p_xCustomFloat;
+        p_stStandardGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame; p_xCustomFloat = &p_stStandardGame->a_xCustomFloats[_lIndex]; *p_xCustomFloat = _xValue;
     }
 }
 
@@ -1333,17 +1334,14 @@ void fn_vStandardGameSetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex, 
 float fn_xStandardGameGetCustomFloatSO(HIE_tdstSuperObject_* _hSO, long _lIndex)
 {
     tdstEngineObject_* p_stObject;
+    float* p_xCustomFloat;
     tdstStandardGame_* p_stStandardGame;
     float xValue;
     if ((_lIndex < 2) && (_lIndex >= 0))
-    {
-        p_stObject = _hSO->hLinkedObject.p_stCharacter;
-        p_stStandardGame = p_stObject->h_StandardGame;
-        xValue = p_stStandardGame->a_xCustomFloats[_lIndex];
-    }
-    else
-        xValue = 0.0f;
-    return xValue;
+
+    { p_stObject = _hSO->hLinkedObject.p_stCharacter; p_stStandardGame = p_stObject->h_StandardGame; p_xCustomFloat = &p_stStandardGame->a_xCustomFloats[_lIndex]; xValue = *p_xCustomFloat; }
+
+    else xValue = 0.0f; return xValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 649–651 */

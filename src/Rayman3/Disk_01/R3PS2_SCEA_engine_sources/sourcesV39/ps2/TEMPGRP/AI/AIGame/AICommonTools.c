@@ -3514,7 +3514,8 @@ void fn_GetPersoNegativeSighting(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObjec
  */
 void fn_GetPersoSighting(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSuperObjPerso)
 {
-    /* TODO: decompile from asm/... */
+    MAT_fn_vGetRotationVectorBaseJ(hSuperObjPerso->hGlobalMatrix, p_stDest);
+    p_stDest->xX = -p_stDest->xX; p_stDest->xY = -p_stDest->xY; p_stDest->xZ = -p_stDest->xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 52–52 */

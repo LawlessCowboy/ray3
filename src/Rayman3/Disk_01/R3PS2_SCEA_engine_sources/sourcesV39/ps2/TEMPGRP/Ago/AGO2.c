@@ -4171,7 +4171,14 @@ void AGO2_DisplayOrdinarySprite(AGO2_Part_* p)
 void AGO2_vClearParticlesOfThatTypeWithChannel(unsigned int PartType, unsigned int Channel)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    for (i = 0; i < g_ulNumberOfAgos2; i++)
+    {
+
+        if ((PartType == g_pAGO2Parts[i].ulBaseID) && (Channel == g_pAGO2Parts[i].Channel))
+
+            g_pAGO2Parts[i].ulType |= 1;
+
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 790–799 */

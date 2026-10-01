@@ -447,7 +447,7 @@ int PS2MC_HasToCheckMCFull(void)
  */
 int PS2MC_GetCurrentMemoryCardStatus(void)
 {
-    return ((C_PS2MC_Manager*)PS2MC_g_Manager)->m_MemoryCardModuleMode;
+    C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; if (*(int*)&pManager->m_MemoryCardInternalStatus != -10) return pManager->m_MemoryCardInternalStatus.type; else return pManager->m_PreviousMemoryCardInternalStatus.type;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5459–5460 */

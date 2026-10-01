@@ -4814,7 +4814,7 @@ void impPS2glGenTextures(int n, unsigned int* textures)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char impPS2glIsTexture(unsigned int texture)
+int impPS2glIsTexture(unsigned int texture)
 {
     return texture >= 512 ? 0 : g_PS2glContext.aTexName[texture].bAllocated;
 }

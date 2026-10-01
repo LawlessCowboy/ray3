@@ -738,6 +738,9 @@ int g_iFalseTimeFixedTime;
 int g_iNoCropTime;
 _stTimerCount g_stRealTimerCountPaused;
 _stTimerCount g_stRealTimerCount;
+
+short TMR_fn_wSetTimerValue(short wTimerHandle, _stTimerCount* p_stValue);
+short TMR_fn_wStartTimer(short wTimerHandle);
 float GAM_g_a_xMat[5];
 tdstEngineStructure_ g_stEngineStructure;
 unsigned int g_uiAnotherRandom;
@@ -798,7 +801,14 @@ void fn_vInitCSOList(tdstAChannel_** p_hChannelArray, unsigned int ulNumberOfCha
  */
 void fn_vLoadEngineClock(void)
 {
-    /* TODO: decompile from asm/... */
+    g_stEngineStructure.stEngineTimer.stRealTimeCount = g_stEngineStructure.stEngineTimer.stPauseTime;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount = g_stEngineStructure.stEngineTimer.ulPauseTime;
+    TMR_fn_wSetTimerValue(g_stEngineStructure.stEngineTimer.sTimerHandle, &g_stEngineStructure.stEngineTimer.stRealTimeCount);
+
+    g_stRealTimerCount = g_stRealTimerCountPaused;
+
+
+    TMR_fn_wStartTimer(g_stEngineStructure.stEngineTimer.sTimerHandle);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 463–492 */

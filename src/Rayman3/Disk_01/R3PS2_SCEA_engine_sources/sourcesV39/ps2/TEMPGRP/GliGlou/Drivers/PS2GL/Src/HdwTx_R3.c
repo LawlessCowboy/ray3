@@ -1275,6 +1275,13 @@ unsigned char GLI_g_GlobalBpp;
 unsigned int GLI_g_ExternalTextureHeader;
 unsigned int GLI_g_ulNumberOfLoadedTexture;
 int Bug_Please_ReloadMenu_40;
+extern int GLI_g_Previous_Material_Was_Opaque;
+extern int GLI_g_p_stLastTexture;
+extern int GLI_g_LastCyclingMode;
+extern int GLI_g_LastTextureMode;
+extern unsigned int GLI_g_DontRefreshAnimated;
+extern int g_TextMatrixIsIdentity;
+extern unsigned int GLI_g_CurrentStage;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 95–102 */
 /* addr: 0x002c4800  size: 36 bytes */
@@ -1292,11 +1299,13 @@ int Bug_Please_ReloadMenu_40;
  */
 void GLI_vClearSendMatStates(void)
 {
-    /* These state slots are maintained by the PS2GL material sender. */
-    GLI_g_GlobalBpp = 0;
-    GLI_g_ExternalTextureHeader = 0;
-    GLI_g_ulNumberOfLoadedTexture = 0;
-    Bug_Please_ReloadMenu_40 = 0;
+    GLI_g_Previous_Material_Was_Opaque = 0;
+    GLI_g_p_stLastTexture = 0;
+    GLI_g_LastCyclingMode = 0xff;
+    GLI_g_LastTextureMode = 0;
+    GLI_g_DontRefreshAnimated = 0;
+    g_TextMatrixIsIdentity = 0;
+    GLI_g_CurrentStage = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2488–2512 */

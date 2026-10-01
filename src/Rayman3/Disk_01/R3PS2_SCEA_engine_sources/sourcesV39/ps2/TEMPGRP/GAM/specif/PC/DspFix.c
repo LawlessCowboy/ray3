@@ -1422,11 +1422,28 @@ int g_InGameMenu2DActivated;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+struct tdstSubMapPosition_ {
+    int lSubMap; /* +0x0 */
+    MAT_tdstTransformation_* hPosition; /* +0x4 */
+    tdstSubMapPosition_* p_stNextPosition; /* +0x8 */
+};
+extern tdstSubMapPosition_* gs_hFirstSubMapPosition;
+
 MAT_tdstTransformation_* GAM_fn_hGetSubMapPosition(int _lSubMapNumber, int _lEntryNumber)
 {
     int lAbsolute;
     tdstSubMapPosition_* hSubMapPosition;
-    /* TODO: decompile from asm/... */
+    lAbsolute = ((unsigned short)_lSubMapNumber << 16) + (unsigned short)_lEntryNumber;
+    hSubMapPosition = gs_hFirstSubMapPosition;
+
+    while (hSubMapPosition != NULL)
+    {
+        if (hSubMapPosition->lSubMap == lAbsolute)
+            return hSubMapPosition->hPosition;
+
+        hSubMapPosition = hSubMapPosition->p_stNextPosition;
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\DspFix.c lines 170–175 */

@@ -3112,5 +3112,17 @@ void HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(HIE_tdstSuperObje
  */
 void CHEAP_StoreMatrix__FPP17MTH4D_tdstMatrix_(MTH4D_tdstMatrix_** pCurrentMatrix)
 {
-    /* TODO: decompile from asm/... */
+    MTH4D_tdstMatrix_* pSrc = &PS2_MatStack[PS2_MatStackIndex - 1].stTransformMatrix; MTH4D_tdstMatrix_* pDst = *pCurrentMatrix; asm {
+        lqc2 vf1, 0x0(pSrc)
+        lqc2 vf2, 0x10(pSrc)
+        lqc2 vf3, 0x20(pSrc)
+        lqc2 vf4, 0x30(pSrc)
+        sqc2 vf1, 0x0(pDst)
+        sqc2 vf2, 0x10(pDst)
+        sqc2 vf3, 0x20(pDst)
+        sqc2 vf4, 0x30(pDst)
+    }
+
+
+    (*pCurrentMatrix)++;
 }

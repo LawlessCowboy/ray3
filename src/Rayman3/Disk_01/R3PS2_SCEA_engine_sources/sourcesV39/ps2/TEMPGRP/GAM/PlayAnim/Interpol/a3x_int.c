@@ -163,5 +163,9 @@ void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat)
  */
 void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS)
 {
-    /* TODO: decompile from asm/... */
+    float xCoef = 1.0f / 32767.0f;
+    _a4_xQuatD[0] = _a4_xQuatS[0] * xCoef;
+    _a4_xQuatD[1] = _a4_xQuatS[1] * xCoef;
+    _a4_xQuatD[2] = _a4_xQuatS[2] * xCoef;
+    _a4_xQuatD[3] = _a4_xQuatS[3] * xCoef;
 }

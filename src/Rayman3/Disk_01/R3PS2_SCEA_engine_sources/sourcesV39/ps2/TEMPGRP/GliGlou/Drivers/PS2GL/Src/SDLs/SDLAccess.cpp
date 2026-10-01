@@ -1312,7 +1312,8 @@ void SDL_End(unsigned int hSDL)
  */
 void SDL_Start(unsigned int hSDL)
 {
-    /* TODO: decompile from asm/... */
+    hCurrentSDL = hSDL;
+    ((void (*)(void))*(unsigned int*)(*(unsigned int*)((char*)hSDL + 0x48) + 8))();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 49–64 */

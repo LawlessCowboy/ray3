@@ -3844,13 +3844,13 @@ unsigned char fn_ucGetDsgVarCaps(void* pMyVarAddr, unsigned char ucIndex, tdstGe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucGetDsgVarVector(void* pMyVarAddr, tdstGetSetParam_* p_stGetSetParam)
+unsigned char fn_ucGetDsgVarVector(void* pMyVarAddr, unsigned char ucIndex, tdstGetSetParam_* p_stGetSetParam)
 {
-    MTH3D_tdstVector_* p_stVertex;
-    p_stVertex = pMyVarAddr;
-    p_stGetSetParam->uDummy.uParam.stVectorValue.xX = p_stVertex->xX;
-    p_stGetSetParam->uDummy.uParam.stVectorValue.xY = p_stVertex->xY;
-    p_stGetSetParam->uDummy.uParam.stVectorValue.xZ = p_stVertex->xZ;
+    unsigned int* pSrc = (unsigned int*)pMyVarAddr;
+    unsigned int* pDst = (unsigned int*)&p_stGetSetParam->uDummy.uParam.stVectorValue;
+    pDst[0] = pSrc[0];
+    pDst[1] = pSrc[1];
+    pDst[2] = pSrc[2];
     p_stGetSetParam->eType = E_vt_Vector;
     return 1;
 }

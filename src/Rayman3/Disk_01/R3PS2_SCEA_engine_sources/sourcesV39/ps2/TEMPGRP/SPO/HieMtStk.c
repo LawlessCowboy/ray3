@@ -535,16 +535,11 @@ unsigned char HIE_fn_bLoadIdentity(void)
 {
     unsigned int uIndex;
     MAT_tdstTransformation_* p_stMatrix;
+    if (HIE_g_lNbMatrixInStack == 50) return 0;
 
-    if (HIE_g_lNbMatrixInStack == 0x32) {
-        return 0;
-    }
-
-    p_stMatrix = (MAT_tdstTransformation_ *)((unsigned char *)0x820000 - 0x74F0);
-    MAT_fn_vSetIdentity(p_stMatrix);
+    HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack] = HIE_g_a_hMatrixStack[0];
     HIE_g_lNbMatrixInStack++;
-    uIndex = (unsigned int)HIE_g_lNbMatrixInStack << 2;
-    HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack];
+    g_p_stCurrentMatrix = (MAT_tdstTransformation_*)(HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1]);
     return 1;
 }
 

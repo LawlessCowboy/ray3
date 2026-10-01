@@ -90,10 +90,11 @@ int GLI_DRV_bBeginScene(void)
  */
 void GLI_fn_vInitRenderParameters(void)
 {
-    bIsWriteEnable = 1;
     xSaveFogIsOn = 0;
+    bIsWriteEnable = 1;
 
-    ucSaveCyclingMode[0] = ucSaveCyclingMode[1] = 0xff;
+    ucSaveCyclingMode[1] = 0xff;
+    ucSaveCyclingMode[0] = 0xff;
     ucSaveFunction = 0xff;
 }
 

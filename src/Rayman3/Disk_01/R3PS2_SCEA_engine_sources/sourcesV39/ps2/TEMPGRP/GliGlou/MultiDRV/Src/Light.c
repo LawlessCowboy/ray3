@@ -819,7 +819,7 @@ void GLI_vPopLightsInViewport(int lUnused, unsigned int lNbLightsToPop)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vAddLightToViewport(GLI_tdstLight_* p_stLight)
+void GLI_vAddLightToViewport(int lUnused, GLI_tdstLight_* p_stLight)
 {
     if (gs_CurrentNumberOfLightInViewport != 300)
     {

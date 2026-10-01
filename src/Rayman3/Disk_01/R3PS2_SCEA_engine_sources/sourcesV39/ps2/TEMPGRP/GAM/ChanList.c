@@ -1401,8 +1401,9 @@ void fn_vLooseControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uw
     p_stChannel = *(tdstAChannel_**)((char*)_hActor->h_3dData + 0xa8);
     if (p_stChannel != NULL)
     {
+        unsigned int lChannel = (unsigned int)_uwChannel;
         *((unsigned char*)&p_stChannel->bLipsChannel
-            + (unsigned int)_uwChannel * sizeof(tdstAChannel_)) = 0;
+            + lChannel * sizeof(tdstAChannel_)) = 0;
     }
 }
 

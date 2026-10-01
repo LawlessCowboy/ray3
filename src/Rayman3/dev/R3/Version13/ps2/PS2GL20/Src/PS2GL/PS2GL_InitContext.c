@@ -1812,9 +1812,10 @@ void PS2glGet(unsigned int type, unsigned int pname, void* params)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2GL_fn_pvEndOfDMABuffer(int BufferNb)
+void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb)
 {
-    /* TODO: decompile from asm/... */
+    return (void*)(((unsigned int)g_PS2glContext.pVIFDMABuf +
+        ((BufferNb + 1) * uiMaxVifDmaBufLength << 4)) & ~0xf);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 837–891 */

@@ -1159,9 +1159,30 @@ int PS2glAllocator64;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" float GLI_g_SDL_pNonInterpolatedCameraMatrix[4][4];
+extern "C" float GLI_g_SDL_pNonInterpolatedCameraMatrixMirror[4][4];
+extern "C" float GLI_g_PreviousCameraMatrix[4][4];
+extern "C" float GLI_g_PreviousCameraMatrixMirror[4][4];
+
+/* VU0 macro-mode matrix copy (lqc2/sqc2 are not emitted by MWCC from C). */
+inline void PS2_M_vCopyMatrix(float (*_src)[4], float (*_dst)[4])
+{
+    asm {
+        lqc2 vf1, 0x0(_src)
+        lqc2 vf2, 0x10(_src)
+        lqc2 vf3, 0x20(_src)
+        lqc2 vf4, 0x30(_src)
+        sqc2 vf1, 0x0(_dst)
+        sqc2 vf2, 0x10(_dst)
+        sqc2 vf3, 0x20(_dst)
+        sqc2 vf4, 0x30(_dst)
+    }
+}
+
 void GLI_vSaveCameraMatrix(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2_M_vCopyMatrix(GLI_g_SDL_pNonInterpolatedCameraMatrix, GLI_g_PreviousCameraMatrix);
+    PS2_M_vCopyMatrix(GLI_g_SDL_pNonInterpolatedCameraMatrixMirror, GLI_g_PreviousCameraMatrixMirror);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 193–224 */

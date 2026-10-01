@@ -1142,7 +1142,7 @@ struct LST2_tdstAnchorTotdxHandleToFamilyListDyn {
 int GLI_g_SdlCache;
 int PS2glLiberator;
 unsigned int GLI_g_FrameNumber;
-extern void* PS2glAllocator64;
+extern void* (*PS2glAllocator64)(unsigned int);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 79–79 */
 /* addr: 0x002d7540  size: 12 bytes */
@@ -1153,8 +1153,7 @@ extern void* PS2glAllocator64;
  */
 void* C_Sdl::__nw(unsigned int Size)
 {
-    void* p = PS2glAllocator64;
-    return p;
+    return PS2glAllocator64(Size);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 133–136 */

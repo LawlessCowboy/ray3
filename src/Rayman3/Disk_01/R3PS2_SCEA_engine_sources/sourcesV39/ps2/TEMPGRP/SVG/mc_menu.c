@@ -1159,7 +1159,21 @@ int MC_HasEnoughtSpace(void)
 {
     int Bidon;
     unsigned int ulValue;
-    /* TODO: decompile from asm/... */
+    ulValue = 0;
+    Bidon = 0;
+
+
+
+    ulValue = 0xdf;
+
+    SVG_fn_s32QueryAndCheckSpace(0, 0, &Bidon, 1, 0);
+    if ((unsigned int)Bidon < ulValue)
+    {
+        return 0;
+    }
+
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 2126–2218 */

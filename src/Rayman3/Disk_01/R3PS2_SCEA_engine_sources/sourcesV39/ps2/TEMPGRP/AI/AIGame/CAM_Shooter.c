@@ -5493,10 +5493,26 @@ void fn_InitCSH_Common(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+
 tdstNodeInterpret_* fn_p_SetGCubeVersion(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+
+
+
+
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    bGCubeVersion = stValue.uDummy.uParam.ulValue;
+
+    if (bGCubeVersion)
+        xCameraDelayAlign = 500.0f;
+    else
+        xCameraDelayAlign = 2000.0f;
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 593–624 */

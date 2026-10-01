@@ -1289,7 +1289,7 @@ void MOR_fn_vDoMorph(short _xIndex)
  */
 PO_tdstPhysicalObject_* MOR_fn_hGetMorphedObject(short _xIndex)
 {
-    return D_7D5384[(int)_xIndex].hBaseObject;
+    return g_MorphTasksList[(int)_xIndex].pMorphedPhysicalObject;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1440–1457 */

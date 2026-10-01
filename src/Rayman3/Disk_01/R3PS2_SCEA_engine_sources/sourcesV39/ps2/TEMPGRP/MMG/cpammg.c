@@ -260,9 +260,25 @@ void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel);
+void fn_p_vDynAlloc(unsigned int ulSize);
+
 void fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel)
 {
-    /* TODO: decompile from asm/... */
+    /* Permuter-found match (register allocation); the dead if and the
+     * long long temporary are not original source and need cleaning up. */
+    long long new_var;
+    if (((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)(new_var = g_d_stCurrentModeInfo))->ucMode))[ucChannel].ucModuleId != 0xff)
+    {
+        fn_p_vStaAlloc(ulSize, ucChannel);
+    }
+    else
+    {
+        if ((!((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId) && (!((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId))
+        {
+        }
+        fn_p_vDynAlloc(ulSize);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 1304–1518 */

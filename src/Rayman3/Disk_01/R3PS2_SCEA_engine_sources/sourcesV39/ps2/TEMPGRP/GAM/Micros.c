@@ -1438,7 +1438,12 @@ int fn_s32ObjectTypeAnimationVZ(int s32_ObjectId)
 int fn_s32ObjectTypeAnimationVY(int s32_ObjectId)
 {
     _stVector st_Answer;
-    /* TODO: decompile from asm/... */
+    int s32_Answer;
+
+    st_Answer.f32y = 0.0f;
+    fn_bObjectTypeAnimationVelocity(s32_ObjectId, -1, &st_Answer);
+    s32_Answer = st_Answer.f32y * 65536.0f;
+    return s32_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 173–179 */

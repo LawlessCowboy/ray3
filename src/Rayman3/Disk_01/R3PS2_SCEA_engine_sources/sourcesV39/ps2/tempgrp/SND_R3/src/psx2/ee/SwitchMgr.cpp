@@ -6,13 +6,16 @@
 
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct CVarAccess CVarAccess;
+namespace usnd { struct CVarAccess; }
+typedef usnd::CVarAccess CVarAccess;
 typedef struct JingleList JingleList;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct TTypedVar TTypedVar;
-typedef struct CStringIsLess CStringIsLess;
+namespace usnd { struct CStringIsLess; }
+typedef usnd::CStringIsLess CStringIsLess;
 typedef struct stree stree;
-typedef struct CSndVarType CSndVarType;
+namespace usnd { struct CSndVarType; }
+typedef usnd::CSndVarType CSndVarType;
 typedef struct _RollOffParam _RollOffParam;
 typedef struct CResObjParams CResObjParams;
 typedef struct CExtraEventActor CExtraEventActor;
@@ -20,51 +23,76 @@ typedef struct CLinkActor CLinkActor;
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
 typedef struct CLinkTypeActor CLinkTypeActor;
 typedef struct sstring sstring;
-typedef struct CResData CResData;
+namespace usnd { struct CResData; }
+typedef usnd::CResData CResData;
 typedef struct less less;
-typedef struct CResObjState CResObjState;
+namespace usnd { struct CResObjState; }
+typedef usnd::CResObjState CResObjState;
 typedef struct V3Ds V3Ds;
-typedef struct C3DDirection C3DDirection;
-typedef struct C3DParam C3DParam;
-typedef struct CPitchActorModifier CPitchActorModifier;
-typedef struct CRolloffParam CRolloffParam;
+namespace usnd { struct C3DDirection; }
+typedef usnd::C3DDirection C3DDirection;
+namespace usnd { struct C3DParam; }
+typedef usnd::C3DParam C3DParam;
+namespace usnd { struct CPitchActorModifier; }
+typedef usnd::CPitchActorModifier CPitchActorModifier;
+namespace usnd { struct CRolloffParam; }
+typedef usnd::CRolloffParam CRolloffParam;
 typedef struct C2DParams C2DParams;
-typedef struct CVolumeActorModifier CVolumeActorModifier;
+namespace usnd { struct CVolumeActorModifier; }
+typedef usnd::CVolumeActorModifier CVolumeActorModifier;
 typedef struct smap smap;
-typedef struct CCritSect CCritSect;
-typedef struct CActorProgramContext CActorProgramContext;
-typedef struct CActorResObj CActorResObj;
+namespace usnd { struct CCritSect; }
+typedef usnd::CCritSect CCritSect;
+namespace usnd { struct CActorProgramContext; }
+typedef usnd::CActorProgramContext CActorProgramContext;
+namespace usnd { struct CActorResObj; }
+typedef usnd::CActorResObj CActorResObj;
 typedef struct iterator_base iterator_base;
-typedef struct CCmdInterface CCmdInterface;
-typedef struct CResType CResType;
+namespace usnd { struct CCmdInterface; }
+typedef usnd::CCmdInterface CCmdInterface;
+namespace usnd { struct CResType; }
+typedef usnd::CResType CResType;
 typedef struct CIdObjPtr CIdObjPtr;
 typedef struct CSwitchElement CSwitchElement;
-typedef struct CUUID CUUID;
+namespace usnd { struct CUUID; }
+typedef usnd::CUUID CUUID;
 typedef struct SwitchElt SwitchElt;
-typedef struct CIdObj CIdObj;
+namespace usnd { struct CIdObj; }
+typedef usnd::CIdObj CIdObj;
 typedef struct SwitchData SwitchData;
 typedef struct sTreeLink sTreeLink;
-typedef struct CActorModifiers CActorModifiers;
+namespace usnd { struct CActorModifiers; }
+typedef usnd::CActorModifiers CActorModifiers;
 typedef struct sset sset;
 typedef struct CLinkTypeActorCont CLinkTypeActorCont;
-typedef struct CSwitchResData CSwitchResData;
+namespace usnd { struct CSwitchResData; }
+typedef usnd::CSwitchResData CSwitchResData;
 typedef struct spair spair;
 typedef struct CAllocBlock CAllocBlock;
-typedef struct CPS2IdObjLoader CPS2IdObjLoader;
-typedef struct CResObj CResObj;
+namespace usnd { struct CPS2IdObjLoader; }
+typedef usnd::CPS2IdObjLoader CPS2IdObjLoader;
+namespace usnd { struct CResObj; }
+typedef usnd::CResObj CResObj;
 typedef struct _stVector _stVector;
-typedef struct CProgramContext CProgramContext;
+namespace usnd { struct CProgramContext; }
+typedef usnd::CProgramContext CProgramContext;
 typedef union CVal CVal;
 typedef union _SND_tduRefEvt _SND_tduRefEvt;
 typedef struct sTreeNode sTreeNode;
-typedef struct CVar CVar;
+namespace usnd { struct CVar; }
+typedef usnd::CVar CVar;
 typedef struct streebase streebase;
 typedef struct iterator iterator;
-typedef struct CLookupElement CLookupElement;
-typedef struct CBoolRefParam CBoolRefParam;
-typedef struct CRefIdObj CRefIdObj;
-typedef struct CIndexAllocator CIndexAllocator;
-typedef struct CActorResData CActorResData;
+namespace usnd { struct CLookupElement; }
+typedef usnd::CLookupElement CLookupElement;
+namespace usnd { struct CBoolRefParam; }
+typedef usnd::CBoolRefParam CBoolRefParam;
+namespace usnd { struct CRefIdObj; }
+typedef usnd::CRefIdObj CRefIdObj;
+namespace usnd { struct CIndexAllocator; }
+typedef usnd::CIndexAllocator CIndexAllocator;
+namespace usnd { struct CActorResData; }
+typedef usnd::CActorResData CActorResData;
 
 typedef struct sallocator sallocator;
 struct sallocator { int data[8]; };
@@ -97,7 +125,7 @@ struct sstring {
     int m_pcData; /* +0x0 */
 };
 
-struct CStringIsLess {
+struct usnd::CStringIsLess {
     /* C++ base binary_function at +0x0. */
 };
 
@@ -116,7 +144,7 @@ struct sset {
     stree _Tr; /* +0x0 */
 };
 
-struct CVar {
+struct usnd::CVar {
     CSndVarType* m_poType; /* +0x4 */
     sset m_NotifTargets; /* +0x8 */
     sstring m_strName; /* +0x18 */
@@ -126,7 +154,7 @@ struct TTypedVar : CVar {
     float m_oValue; /* +0x1c */
 };
 
-struct CSndVarType {
+struct usnd::CSndVarType {
     tdeType m_eType; /* +0x4 */
     int m_czTypeName; /* +0x8 */
 };
@@ -204,21 +232,21 @@ struct CLinkTypeActor {
     _tdstAllRetObjectSound mstIActor; /* +0x88 */
 };
 
-struct CUUID {
+struct usnd::CUUID {
     unsigned int m_uiHighWord; /* +0x0 */
     unsigned int m_uiLowWord; /* +0x4 */
 };
 
-struct CIdObj {
+struct usnd::CIdObj {
     /* C++ base CRTTIClass at +0x0. */
     CUUID m_oId; /* +0x4 */
 };
 
-struct CRefIdObj : CIdObj {
+struct usnd::CRefIdObj : CIdObj {
     unsigned char m_bMarkFlag; /* +0xc */
 };
 
-struct CResData : CRefIdObj {
+struct usnd::CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
 };
@@ -227,7 +255,7 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct CResObjState {
+struct usnd::CResObjState {
     CResObj* m_poResObj; /* +0x0 */
     unsigned int m_uiInstance; /* +0x4 */
     unsigned char m_bPlayable; /* +0x8 */
@@ -251,22 +279,22 @@ struct V3Ds {
     float fZ; /* +0x8 */
 };
 
-struct C3DDirection {
+struct usnd::C3DDirection {
     V3Ds m_oFront; /* +0x0 */
     V3Ds m_oTop; /* +0xc */
 };
 
-struct C3DParam {
+struct usnd::C3DParam {
     V3Ds m_oPos; /* +0x0 */
     V3Ds m_oSpeed; /* +0xc */
     C3DDirection m_oDir; /* +0x18 */
 };
 
-struct CPitchActorModifier {
+struct usnd::CPitchActorModifier {
     /* C++ base CActorModifiers at +0x0. */
 };
 
-struct CRolloffParam {
+struct usnd::CRolloffParam {
     float m_fStabilisationDistance; /* +0x0 */
     float m_fSaturationDistance; /* +0x4 */
     float m_fStabilisationVolume; /* +0x8 */
@@ -279,7 +307,7 @@ struct C2DParams {
     float m_fSpace; /* +0xc */
 };
 
-struct CVolumeActorModifier {
+struct usnd::CVolumeActorModifier {
     /* C++ base CActorModifiers at +0x0. */
 };
 
@@ -287,11 +315,11 @@ struct smap {
     stree _Tr; /* +0x0 */
 };
 
-struct CCritSect {
+struct usnd::CCritSect {
     unsigned int m_uiCS; /* +0x0 */
 };
 
-struct CActorProgramContext {
+struct usnd::CActorProgramContext {
     /* C++ base CProgramContext at +0x0. */
     /* C++ base CVarAccess at +0xc. */
     CResObjState m_oObjStates; /* +0x10 */
@@ -300,12 +328,12 @@ struct CActorProgramContext {
     CCritSect m_oMutex; /* +0x4c */
 };
 
-struct CResObj {
+struct usnd::CResObj {
     CResType* m_roType; /* +0x4 */
     CResData* m_poResData; /* +0x8 */
 };
 
-struct CActorResObj : CResObj {
+struct usnd::CActorResObj : CResObj {
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -322,14 +350,14 @@ struct iterator_base {
     sTreeLink* _Ptr; /* +0x0 */
 };
 
-struct CCmdInterface {
+struct usnd::CCmdInterface {
     smap m_oCommands; /* +0x0 */
     smap m_oInterfaces; /* +0x10 */
     smap m_oSubInterfaces; /* +0x20 */
     int m_czInterfaceName; /* +0x30 */
 };
 
-struct CResType {
+struct usnd::CResType {
     unsigned char m_b2D; /* +0x0 */
     unsigned char m_b3D; /* +0x1 */
     unsigned char m_bPlayable; /* +0x2 */
@@ -370,7 +398,7 @@ struct sTreeLink {
     _Redbl m_eColor; /* +0xc */
 };
 
-struct CActorModifiers {
+struct usnd::CActorModifiers {
     /* C++ base CVarNotifTarget at +0x0. */
     CActorResObj* m_pActor; /* +0x4 */
     smap m_oVariables; /* +0x8 */
@@ -385,7 +413,7 @@ struct CLinkTypeActorCont : smap {
     CResData* m_poMusicProgramResData; /* +0x18 */
 };
 
-struct CSwitchResData : CResData {
+struct usnd::CSwitchResData : CResData {
     unsigned int m_uiNbElmts; /* +0x18 */
     unsigned int m_uiInfoType; /* +0x1c */
     unsigned int m_uiDefaultIndex; /* +0x20 */
@@ -405,7 +433,7 @@ struct CAllocBlock {
     int m_pcBufferPos; /* +0xc */
 };
 
-struct CPS2IdObjLoader {
+struct usnd::CPS2IdObjLoader {
     smap m_oIdObjsCache; /* +0x0 */
     smap m_oIndex; /* +0x10 */
 };
@@ -416,7 +444,7 @@ struct _stVector {
     float f32z; /* +0x8 */
 };
 
-struct CProgramContext {
+struct usnd::CProgramContext {
     CVarAccess* m_poGlobVarAcc; /* +0x4 */
     CVarAccess* m_poOwnerVarAcc; /* +0x8 */
 };
@@ -439,25 +467,25 @@ struct iterator {
     /* C++ base iterator_base at +0x0. */
 };
 
-struct CLookupElement {
+struct usnd::CLookupElement {
     int m_iNbRef; /* +0x0 */
     CUUID m_oId; /* +0x4 */
     CIdObj* m_poIdObj; /* +0xc */
 };
 
-struct CBoolRefParam {
+struct usnd::CBoolRefParam {
     unsigned int uiRefType; /* +0x0 */
     CVal m_uValue; /* +0x4 */
     unsigned int m_uiValue; /* +0x8 */
 };
 
-struct CIndexAllocator {
+struct usnd::CIndexAllocator {
     CAllocBlock* m_poAllocBlocks; /* +0x0 */
     char m_cRootNodeBuffer[40]; /* +0x4 */
     unsigned int m_uiNbAllocs; /* +0x2c */
 };
 
-struct CActorResData : CResData {
+struct usnd::CActorResData : CResData {
     unsigned char m_b3DRes; /* +0x18 */
     sset m_oProgramList; /* +0x1c */
     smap m_oVariables; /* +0x2c */
@@ -741,7 +769,9 @@ void SwitchMgr::fs_vAdd(CSwitchResData* pSwitchData)
 unsigned char SwitchData::f_bFindData(CResData* pData)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    for (i = 0; (i < m_nbElt) && (m_pElt[i].m_pData != pData); i++) ;
+
+    return i != m_nbElt;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 149–201 */

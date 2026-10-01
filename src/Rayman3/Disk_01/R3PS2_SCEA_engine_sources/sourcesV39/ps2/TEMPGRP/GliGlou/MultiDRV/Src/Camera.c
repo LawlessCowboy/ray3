@@ -378,7 +378,58 @@ void GLI_xSetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float xAlphaX, float
  */
 void GLI_xSetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_stMatrix)
 {
-    /* TODO: decompile from asm/... */
+    p_stCam->stMatrix = *p_stMatrix;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if (GLI_g_StereoVisionMode == 2)
+        p_stCam->stMatrix.stTransformMatrix.stCol_3.xX += 0.4f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Camera.c lines 129–130 */

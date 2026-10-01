@@ -5242,7 +5242,28 @@ void JFFTXT_vAddText(int StringNumber, MTH3D_tdstVector_* p_stPosition, unsigned
 void MJ_JFFTXT_vAddText3D(int ViewportNumber, int StringNumber, MTH3D_tdstVector_* p_stPosition, float xSize, unsigned char* pszString, unsigned char ucParameter)
 {
     _JFFTXT_* p;
-    /* TODO: decompile from asm/... */
+    if (StringNumber < 200)
+    {
+
+        p = &g_JFFTXT[StringNumber];
+        p->pString = (int)pszString;
+        p->ulColor = TXT_g_ulDefaultColor;
+        p->ucTransparency = ucParameter;
+        p->bFrozenDisplay = 0;
+        p->a3_Pos[0] = p_stPosition->xX;
+        p->a3_Pos[1] = p_stPosition->xY;
+        p->a3_Pos[2] = p_stPosition->xZ;
+        p->xTempSize = xSize;
+        p->bOther = 0x60;
+        if (ViewportNumber == 0)
+        {
+            p->DestinationViewport = 0xff;
+        }
+        else
+        {
+            p->DestinationViewport = ViewportNumber - 1;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 181–202 */
@@ -5268,7 +5289,27 @@ void MJ_JFFTXT_vAddText3D(int ViewportNumber, int StringNumber, MTH3D_tdstVector
 void MJ_JFFTXT_vAddText(int ViewportNumber, int StringNumber, MTH3D_tdstVector_* p_stPosition, unsigned char* pszString, unsigned char ucParameter)
 {
     _JFFTXT_* p;
-    /* TODO: decompile from asm/... */
+    if (StringNumber < 200)
+    {
+
+        p = &g_JFFTXT[StringNumber];
+        p->pString = (int)pszString;
+        p->ulColor = TXT_g_ulDefaultColor;
+        p->ucTransparency = ucParameter;
+        p->bFrozenDisplay = 0;
+        p->a3_Pos[0] = p_stPosition->xX;
+        p->a3_Pos[1] = p_stPosition->xY;
+        p->a3_Pos[2] = p_stPosition->xZ;
+        p->bOther = 0;
+        if (ViewportNumber == 0)
+        {
+            p->DestinationViewport = 0xff;
+        }
+        else
+        {
+            p->DestinationViewport = ViewportNumber - 1;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 169–174 */

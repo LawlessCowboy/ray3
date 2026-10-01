@@ -50,11 +50,13 @@ int M2D_fn_iNbTexturesNeededForMenu(void)
 void fn_vSetStereoGameMenu2D(unsigned int uiSet)
 {
     int bStereo;
-
-    if (uiSet == 1) {
+    switch (uiSet) {
+    case 1:
         bStereo = 1;
-    } else {
+        break;
+    default:
         bStereo = 0;
+        break;
     }
     SND_fn_vSetStereoSound(bStereo);
 }

@@ -1065,6 +1065,10 @@ unsigned char g_bInGameMenu;
 unsigned int SCT_g_DrawingMirrored;
 char GLI_cGlobalFogIsOn;
 
+extern HIE_tdstSuperObject_* SECT_g_hActiveSectorList_Head;
+extern HIE_tdstSuperObject_* SECT_g_hActiveSectorList_Tail;
+extern unsigned short SECT_g_uwActiveSectorList_NumberOfElements;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 24–47 */
 /* addr: 0x00319c90  size: 96 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1085,8 +1089,31 @@ char GLI_cGlobalFogIsOn;
  */
 void SECT_fn_vAddSectorInList(HIE_tdstSuperObject_* _hSectorSO)
 {
-    SECT_tdstSector_* hSector;
-    /* TODO: decompile from asm/... */
+    SECT_tdstSector_* hSector = _hSectorSO->hLinkedObject.p_stSector;
+
+    if (!hSector->ucInList)
+    {
+
+
+        if (SECT_g_hActiveSectorList_Tail)
+        {
+
+
+            SECT_g_hActiveSectorList_Tail->hLinkedObject.p_stSector->h_NextSectorInList = _hSectorSO;
+            hSector->h_PreviousSectorInList = SECT_g_hActiveSectorList_Tail;
+
+            SECT_g_hActiveSectorList_Tail = _hSectorSO;
+        }
+        else
+        {
+            SECT_g_hActiveSectorList_Head = SECT_g_hActiveSectorList_Tail = _hSectorSO;
+            hSector->h_PreviousSectorInList = NULL;
+        }
+
+        hSector->h_NextSectorInList = NULL;
+        hSector->ucInList = 1;
+        SECT_g_uwActiveSectorList_NumberOfElements++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 739–1053 */
