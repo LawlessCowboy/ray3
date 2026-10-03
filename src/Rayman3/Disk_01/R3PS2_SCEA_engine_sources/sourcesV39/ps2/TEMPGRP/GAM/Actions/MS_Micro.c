@@ -1799,7 +1799,11 @@ int fn_bGetMicroPosition(int s32_ObjectId, _stVector* pst_Vector)
 tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex)
 {
     tdstIndexMicros_* hMicro;
-    /* TODO: decompile from asm/... */
+
+    for (hMicro = g_stIndexMicrosList.hMicrosList.hFirstElementDyn; hMicro != NULL; hMicro = hMicro->hNextBrotherDyn)
+        if (hMicro->lIndex == lIndex)
+            return hMicro->hMicroObj;
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 309–327 */

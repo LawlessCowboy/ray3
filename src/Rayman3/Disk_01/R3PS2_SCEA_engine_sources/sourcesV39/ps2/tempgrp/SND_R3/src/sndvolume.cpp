@@ -1261,5 +1261,11 @@ unsigned char fn_bCreateVolumeModifier__FPCcf(char* pch_Buffer, float f32x_Volum
  */
 float int2dB__Fi(int s32_volume)
 {
-    /* TODO: decompile from asm/... */
+    if (s32_volume < 0)
+        s32_volume = 0;
+
+    if (s32_volume > 127)
+        s32_volume = 127;
+
+    return dB[s32_volume];
 }

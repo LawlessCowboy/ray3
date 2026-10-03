@@ -3175,6 +3175,9 @@ tdstNodeInterpret_* fn_p_stSetRollOffDistances(HIE_tdstSuperObject_* p_SuperObjP
     /* TODO: decompile from asm/... */
 }
 
+/* Debug info lists no parameters; callers pass a float in $f12. */
+void SND_fn_vSetMusicFadeOut(float xFadeOut);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 587–593 */
 /* addr: 0x0024ae80  size: 68 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3190,8 +3193,9 @@ tdstNodeInterpret_* fn_p_stSetPrevMusicFadeOut(HIE_tdstSuperObject_* p_SuperObjP
 {
     tdstGetSetParam_ stParam;
 
+
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    SND_fn_vSetMusicFadeOut(stParam.uDummy.uParam.xValue);
+    SND_fn_vSetMusicFadeOut((double)stParam.uDummy.uParam.xValue);
     return p_stTree;
 }
 
@@ -3215,6 +3219,9 @@ tdstNodeInterpret_* fn_p_stSetInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso
     return p_stTree;
 }
 
+/* Debug info lists no parameters; callers pass a 16.16 fixed-point int. */
+void SND_fn_vSetDopplerFactorSound(long lFactor);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 564–572 */
 /* addr: 0x0024af10  size: 80 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3231,8 +3238,12 @@ tdstNodeInterpret_* fn_p_stSetInStereoMode(HIE_tdstSuperObject_* p_SuperObjPerso
 tdstNodeInterpret_* fn_p_stSetDopplerEffect(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ st_Param;
+
+
+
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
-    SND_fn_vSetDopplerFactorSound(st_Param.uDummy.uParam.xValue * 65536.0f);
+
+    SND_fn_vSetDopplerFactorSound((long)(st_Param.uDummy.uParam.xValue * 65536.0f));
     return p_stTree;
 }
 

@@ -4,6 +4,12 @@
 
 #include <stddef.h>
 
+/* R5900 accumulator multiply-add (mula.s/madda.s/madd.s), as in MECBhv.c. */
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
@@ -3452,7 +3458,12 @@ void CAM_fn_vComputeAnglesBetweenTwoVectors(MTH3D_tdstVector_* _p_stSourceVector
  */
 unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MTH3D_tdstVector_* _p_stVector2, float _xEpsilon)
 {
-    /* TODO: decompile from asm/... */
+    float xDx, xDy, xDz, xSqrNorm;
+    xDx = _p_stVector1->xX - _p_stVector2->xX; xDy = _p_stVector1->xY - _p_stVector2->xY; xDz = _p_stVector1->xZ - _p_stVector2->xZ;
+    MTH_SQR3_TO(xSqrNorm, xDx, xDy, xDz);
+
+
+    if (xSqrNorm > _xEpsilon * _xEpsilon) return 0; return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 360–389 */

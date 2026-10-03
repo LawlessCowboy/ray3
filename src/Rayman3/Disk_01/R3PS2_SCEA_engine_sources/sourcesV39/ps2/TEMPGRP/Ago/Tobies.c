@@ -129,7 +129,7 @@ void Toby_SetTransparency(unsigned int IDNumber, float fAlphaValue)
         fAlphaValue = 0.0f;
     if (fAlphaValue > 1.0f)
         fAlphaValue = 1.0f;
-    ((_Toby_*)Toby_g_Container)[IDNumber].fTransparency = fAlphaValue;
+    *(float*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + IDNumber * sizeof(_Toby_)) = fAlphaValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\Tobies.c lines 105–105 */

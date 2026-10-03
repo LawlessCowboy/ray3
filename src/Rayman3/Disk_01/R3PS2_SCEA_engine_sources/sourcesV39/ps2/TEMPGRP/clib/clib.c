@@ -35,9 +35,19 @@ asm float PS2SQRTF(float x)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void itoa(int value, char* buffer, int radix)
+/* Debug info says void, but the buffer (or NULL) is returned in $v0, and
+ * callers pass the value as a long. */
+char* itoa(long value, char* buffer, int radix)
 {
-    /* TODO: decompile from asm/... */
+    if (radix == 10)
+    {
+        sprintf(buffer, "%i", value);
+        return buffer;
+    }
+
+
+    printf("jt : itoa partiellement impl\xe9ment\xe9 dans clibc.c");
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\clib\clib.c lines 72–78 */

@@ -3022,6 +3022,20 @@ unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSu
     /* TODO: decompile from asm/... */
 }
 
+/* Engine float-to-int conversion: retail converts through $f30 at 164 sites
+ * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
+ * never picks for its own conversions. */
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Getset.c lines 139–144 */
 /* addr: 0x001fc330  size: 60 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3037,8 +3051,7 @@ unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSu
 void fn_vGetFieldType0To255(tdstGetSetParam_* p_stGetSetParam)
 {
     if (p_stGetSetParam->eType == E_vt_Float) {
-        p_stGetSetParam->uDummy.lValue = (int)p_stGetSetParam->uDummy.xValue;
-        p_stGetSetParam->eType = E_vt_Integer;
+        p_stGetSetParam->uDummy.lValue = MTH_M_xRealToLong(p_stGetSetParam->uDummy.xValue); p_stGetSetParam->eType = E_vt_Integer;
     }
 }
 
@@ -3057,7 +3070,7 @@ void fn_vGetFieldType0To255(tdstGetSetParam_* p_stGetSetParam)
 void fn_vGetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam)
 {
     if (p_stGetSetParam->eType == E_vt_Float) {
-        p_stGetSetParam->uDummy.lValue = *(volatile float *)p_stGetSetParam;
+        p_stGetSetParam->uDummy.lValue = MTH_M_xRealToLong(p_stGetSetParam->uDummy.xValue);
         p_stGetSetParam->eType = E_vt_Integer;
     }
 }

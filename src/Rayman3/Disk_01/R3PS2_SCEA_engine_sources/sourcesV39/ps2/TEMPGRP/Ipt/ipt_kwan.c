@@ -283,12 +283,12 @@ unsigned char IPT_fn_bIsKeyWordValid_Sequence(IPT_tdstKeyWordElement_* _hKeyWord
 unsigned char IPT_fn_bIsKeyWordValid_ActionInvalidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
     unsigned char ucReturn;
-    g_h_ActualEntryInput = (int)(_hKeyWordElement + 1);
-    if ((unsigned char)IPT_fn_bIsInvalidated(((IPT_tdstKeyWordElement_*)g_h_ActualEntryInput)->u_ElementUnion.hEntryElement) == 1)
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsInvalidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
         ucReturn = 1;
     else
         ucReturn = 0;
-    g_h_ActualEntryInput += 12;
+    IPT_g_hNextParameter += 12;
     return ucReturn;
 }
 
@@ -310,12 +310,12 @@ unsigned char IPT_fn_bIsKeyWordValid_ActionInvalidated(IPT_tdstKeyWordElement_* 
 unsigned char IPT_fn_bIsKeyWordValid_ActionJustInvalidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
     unsigned char ucReturn;
-    g_h_ActualEntryInput = (int)(_hKeyWordElement + 1);
-    if ((unsigned char)IPT_fn_bIsJustInvalidated(((IPT_tdstKeyWordElement_*)g_h_ActualEntryInput)->u_ElementUnion.hEntryElement) == 1)
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsJustInvalidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
         ucReturn = 1;
     else
         ucReturn = 0;
-    g_h_ActualEntryInput += 12;
+    IPT_g_hNextParameter += 12;
     return ucReturn;
 }
 
@@ -337,12 +337,12 @@ unsigned char IPT_fn_bIsKeyWordValid_ActionJustInvalidated(IPT_tdstKeyWordElemen
 unsigned char IPT_fn_bIsKeyWordValid_ActionValidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
     unsigned char ucReturn;
-    g_h_ActualEntryInput = (int)(_hKeyWordElement + 1);
-    if ((unsigned char)IPT_fn_bIsValidated(((IPT_tdstKeyWordElement_*)g_h_ActualEntryInput)->u_ElementUnion.hEntryElement) == 1)
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsValidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
         ucReturn = 1;
     else
         ucReturn = 0;
-    g_h_ActualEntryInput += 12;
+    IPT_g_hNextParameter += 12;
     return ucReturn;
 }
 
@@ -364,12 +364,12 @@ unsigned char IPT_fn_bIsKeyWordValid_ActionValidated(IPT_tdstKeyWordElement_* _h
 unsigned char IPT_fn_bIsKeyWordValid_ActionJustValidated(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
     unsigned char ucReturn;
-    g_h_ActualEntryInput = (int)(_hKeyWordElement + 1);
-    if ((unsigned char)IPT_fn_bIsJustValidated(((IPT_tdstKeyWordElement_*)g_h_ActualEntryInput)->u_ElementUnion.hEntryElement) == 1)
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    if ((unsigned char)IPT_fn_bIsJustValidated(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.hEntryElement) == 1)
         ucReturn = 1;
     else
         ucReturn = 0;
-    g_h_ActualEntryInput += 12;
+    IPT_g_hNextParameter += 12;
     return ucReturn;
 }
 

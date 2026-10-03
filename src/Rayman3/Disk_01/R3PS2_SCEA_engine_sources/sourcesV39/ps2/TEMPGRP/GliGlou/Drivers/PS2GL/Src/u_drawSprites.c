@@ -1619,6 +1619,8 @@ void GLI_vEnd2DSpritesWithUVs(void)
     GLI_vEndNewSprite();
 }
 
+void PS2glColor4f(float red, float green, float blue, float alpha);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSprites.c lines 684–699 */
 /* addr: 0x002bce50  size: 84 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1636,15 +1638,19 @@ void GLI_vEnd2DSpritesWithUVs(void)
  */
 void GLI_vEndWorldSprites(void)
 {
+
+
+
+
     GLI_vEndNewSprite();
 
-    if (GLI_BIG_GLOBALS_lHierachDrawMask)
+    if (PS2_gs_glBeginPending2)
     {
-        PS2glColor4f(0.5f, 1.0f, 0.5f, 1.0f);
+        PS2glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
         PS2glEnd();
-        GLI_BIG_GLOBALS_lCurrentDrawMask = 0;
-        GLI_BIG_GLOBALS_hCurrentMaterial = 0;
-        GLI_BIG_GLOBALS_lHierachDrawMask = 0;
+        PS2_gs_CurrentSpriteMaterial = 0;
+        PS2_gs_glBeginPending2 = 0;
+        PS2_gs_glBeginPendingCounter2 = 0;
     }
 }
 

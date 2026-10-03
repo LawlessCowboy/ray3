@@ -1137,7 +1137,8 @@ void fn_vInitDefaultValuesForSoundVolumes(void)
  */
 void GAM_fn_vSetVolumeMenu(int s32_Value)
 {
-    /* TODO: decompile from asm/... */
+    g_stGameOptions.s32VolumeMenu = (0 > (s32_Value > 127 ? 127 : s32_Value)) ? 0 : (s32_Value > 127 ? 127 : s32_Value);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 177–178 */

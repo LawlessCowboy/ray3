@@ -89,6 +89,9 @@ void MNC_fn_pcUnLoadArea(unsigned int _u32AreaId)
     MNC_fn_vUnLoadAreaWithDeallocator(_u32AreaId, MNC_fn_vDefaultDeallocator);
 }
 
+char* MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId, MNC_tfnAllocator_ _pfnAllocator);
+void* MNC_fn_pvDefaultAllocator(unsigned int u32Size);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\MNC\load\loadarea.c lines 741–747 */
 /* addr: 0x00133160  size: 68 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -99,9 +102,13 @@ void MNC_fn_pcUnLoadArea(unsigned int _u32AreaId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MNC_fn_pcLoadArea(char* _szAreaName, unsigned int _u32AreaId)
+char* MNC_fn_pcLoadArea(char* _szAreaName, unsigned int _u32AreaId)
 {
-    /* TODO: decompile from asm/... */
+
+    HMU_fn_vSetMemoriesInBinaryMode();
+
+
+    return MNC_fn_pcLoadAreaWithAllocator(_szAreaName, _u32AreaId, MNC_fn_pvDefaultAllocator);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\MNC\load\loadarea.c lines 694–736 */
@@ -251,7 +258,10 @@ void MNC_fn_vUnLoadAreaWithDeallocator(unsigned int _u32AreaId, void (*_fn_vDeal
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-MNC_tfnAllocator_ MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId)
+/* The debug record lists two parameters and an allocator return, but the
+ * target saves a third argument ($a2 -> $s6) and MNC_fn_pcLoadArea passes the
+ * allocator there, so the real signature takes it and returns the area. */
+char* MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId, MNC_tfnAllocator_ _pfnAllocator)
 {
     unsigned int u32Area;
     int fh;

@@ -3628,10 +3628,47 @@ unsigned int g_ulOverRideRayTraceSpoMask;
  */
 tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 
+/* Old-style declarations: the debug records list no parameters, but the
+ * callers pass one. */
+int fn_bBbStartMonitoring();
+int fn_bBbStopMonitoring();
+void GAM_fn_vSetLoadingLevel(char* _szLevelTag);
+void Toby_Destroy(unsigned int IDNumber);
+void Toby_SetTransparency(unsigned int IDNumber, float fAlphaValue);
+void Toby_SetMaterial(void* unused, GLI_tdstMaterial_* hVisualMaterial);
+
+/* Engine float-to-int conversion: retail converts through $f30 at 164 sites
+ * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
+ * never picks for its own conversions. */
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
 tdstNodeInterpret_* fn_p_stAllowNormalsRecomputing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    long lValue;
+
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+
+    if (lValue == 0)
+
+        p_SuperObjPerso->ulFlags &= ~0x200000;
+
+
+    else
+        p_SuperObjPerso->ulFlags |= 0x200000;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6916–6940 */
@@ -3725,11 +3762,16 @@ tdstNodeInterpret_* fn_p_stGcSetActiveMcSlot(HIE_tdstSuperObject_* p_SuperObjPer
  */
 tdstNodeInterpret_* fn_p_stSFX_ActivateWaterCircles(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    int stParam[4];
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, (tdstGetSetParam_*)stParam);
-    if (stParam[3] == E_vt_Float) {
-        (void)(int)*(volatile float*)stParam;
-    }
+    tdstGetSetParam_ stParam;
+    long lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    if (stParam.eType == E_vt_Float) lValue = MTH_M_xRealToLong(stParam.uDummy.uParam.xValue);
+
+
+
+
+
+
     return p_stTree;
 }
 
@@ -3749,8 +3791,17 @@ tdstNodeInterpret_* fn_p_stSFX_ActivateWaterCircles(HIE_tdstSuperObject_* p_Supe
  */
 tdstNodeInterpret_* fn_p_stSFX_ActivateLightReflection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    int stParam[4];
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam;
+    long lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    if (stParam.eType == E_vt_Float) lValue = MTH_M_xRealToLong(stParam.uDummy.uParam.xValue);
+
+
+
+
+
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6754–6777 */
@@ -3770,7 +3821,30 @@ tdstNodeInterpret_* fn_p_stSFX_ActivateLightReflection(HIE_tdstSuperObject_* p_S
 tdstNodeInterpret_* fn_p_stWaterEffect_GenerateSplash(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    long lValue;
+
+
+
+
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+
+
+
+
+
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6737–6750 */
@@ -4007,7 +4081,19 @@ tdstNodeInterpret_* fn_p_stValidateMemoryCard(HIE_tdstSuperObject_* p_SuperObjPe
 tdstNodeInterpret_* fn_p_stTobySetMaterial(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    int lValue;
+
+
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+
+    Toby_SetMaterial((void*)lValue, stParam.uDummy.uParam.hVisualMaterial);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6445–6454 */
@@ -4029,7 +4115,14 @@ tdstNodeInterpret_* fn_p_stTobySetMaterial(HIE_tdstSuperObject_* p_SuperObjPerso
 tdstNodeInterpret_* fn_p_stTobyDestroy(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    int lValue;
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+
+    Toby_Destroy(lValue);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6427–6441 */
@@ -4054,7 +4147,20 @@ tdstNodeInterpret_* fn_p_stTobyDestroy(HIE_tdstSuperObject_* p_SuperObjPerso, td
 tdstNodeInterpret_* fn_p_stTobySetTransparency(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    int lValue;
+
+
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+
+    Toby_SetTransparency(lValue, stParam.uDummy.uParam.xValue);
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6407–6423 */
@@ -4136,7 +4242,11 @@ tdstNodeInterpret_* fn_p_stCreateToby(HIE_tdstSuperObject_* p_SuperObjPerso, tds
 tdstNodeInterpret_* fn_p_stMonitoringStop(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_bBbStopMonitoring((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6369–6375 */
@@ -4157,7 +4267,11 @@ tdstNodeInterpret_* fn_p_stMonitoringStop(HIE_tdstSuperObject_* p_SuperObjPerso,
 tdstNodeInterpret_* fn_p_stMonitoringStart(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_bBbStartMonitoring((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 6347–6365 */
@@ -4555,7 +4669,36 @@ tdstNodeInterpret_* fn_p_stLoadingLevel(HIE_tdstSuperObject_* p_SuperObjPerso, t
 {
     tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+
+
+    if (eProcedureId != eProc_SkipLoading_SetLoadingLevel) return p_stTree;
+    else
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+
+        switch ((char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue))
+        {
+        case 1:
+            GAM_fn_vSetLoadingLevel("S");
+            break;
+
+        case 2:
+            GAM_fn_vSetLoadingLevel("M");
+            break;
+
+
+
+        default:
+            GAM_fn_vSetLoadingLevel(NULL);
+            
+        }
+
+
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5721–5767 */
@@ -4678,7 +4821,20 @@ tdstNodeInterpret_* fn_p_stSetVSyncWait(HIE_tdstSuperObject_* p_SuperObjPerso, t
 {
     tdeProcedureId_ eProcedureId;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    long lValue;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+
+    switch (eProcedureId)
+    {
+    case eProc_SetVsyncWait:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (stParam.eType == E_vt_Float) lValue = MTH_M_xRealToLong(stParam.uDummy.uParam.xValue);
+
+        return p_stTree;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5564–5609 */
@@ -6693,8 +6849,18 @@ void fn_vInternalChangeComportProcedure(tdstIntelligence_* p_stAimedPersoIntelli
 tdstNodeInterpret_* fn_p_stTraceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stValue;
-    int s_iActivated;
-    /* TODO: decompile from asm/... */
+    static int s_iActivated;
+
+
+
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+    if (s_iActivated)
+        printf("trace_%d\n", (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2317–2317 */

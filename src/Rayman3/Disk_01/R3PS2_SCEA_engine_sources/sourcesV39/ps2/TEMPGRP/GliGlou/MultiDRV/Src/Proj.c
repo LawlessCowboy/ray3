@@ -95,6 +95,22 @@ struct GLI_tdstCamera_ {
     unsigned char bCameraIsMirrored; /* +0xf0 */
 };
 
+/* R5900 min.s/max.s (48 retail game sites in 15 functions); MWCC compiles
+ * the C comparison as compare-and-branch instead. */
+inline float MTH_M_xMin(float _xA, float _xB)
+{
+    float _xResult;
+    asm { min.s _xResult, _xA, _xB }
+    return _xResult;
+}
+
+inline float MTH_M_xMax(float _xA, float _xB)
+{
+    float _xResult;
+    asm { max.s _xResult, _xA, _xB }
+    return _xResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Proj.c lines 210–220 */
 /* addr: 0x002aac80  size: 52 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -111,9 +127,10 @@ struct GLI_tdstCamera_ {
 void GLI_vSetGlobalAlpha(float Alpha)
 {
     float fAlpha;
-
-    fAlpha = Alpha * 0.003921569f;
-    fAlpha = (fAlpha > 1.0f) ? 1.0f : fAlpha;
-    fAlpha = (fAlpha < 0.0f) ? 0.0f : fAlpha;
+    float fCoef = 0.003921569f;
+    float fZero = 0.0f;
+    fAlpha = Alpha * fCoef;
+    fAlpha = MTH_M_xMin(fAlpha, 1.0f);
+    fAlpha = MTH_M_xMax(fAlpha, fZero);
     GLI_BIG_GLOBALS_xGlobalAlpha = fAlpha;
 }

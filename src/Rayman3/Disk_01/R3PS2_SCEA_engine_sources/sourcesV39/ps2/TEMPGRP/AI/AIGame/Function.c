@@ -4353,6 +4353,20 @@ int fn_lAddColor(int color1, int color2)
     /* TODO: decompile from asm/... */
 }
 
+/* Engine float-to-int conversion: retail converts through $f30 at 164 sites
+ * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
+ * never picks for its own conversions. */
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 1991–2005 */
 /* addr: 0x00213580  size: 144 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -4372,7 +4386,19 @@ int fn_lAddColor(int color1, int color2)
 tdstNodeInterpret_* fn_p_stEvalRedOrGreenOrBlueOrAlpha(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* lValue)
 {
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    *lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+
+
+
+
+
+
+    if (*lValue > 100) *lValue = 100;
+    else if (*lValue < 0) *lValue = 0;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 1869–1969 */

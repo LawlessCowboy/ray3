@@ -1530,6 +1530,24 @@ char* FON_fn_szGetTextPointerForHandle(int hString)
     if (hString == -1) return NULL; if (hString < 20000) return ((char**)FON_g_stGeneral.d_sLanguageArray[g_stEngineStructure.ucCurrentLanguage].d_pTextsArray)[hString]; return *(char**)((char*)FON_g_stGeneral.p_stCommonLanguage->d_pTextsArray - 80000 + hString * 4);
 }
 
+signed char fn_scGetSpeedInState(tdstState_* h_State);
+void fn_v3dDataSetFrameRate(tdst3dData_* h_3dData, unsigned char ucFrameRate);
+void PLA_fn_vSetCurrFrame(HIE_tdstSuperObject_* p_stSuperObject, short _wFrame);
+
+/* Engine float-to-int conversion: retail converts through $f30 at 164 sites
+ * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
+ * never picks for its own conversions. */
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Anim.c lines 42–51 */
 /* addr: 0x00274c90  size: 120 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1545,5 +1563,12 @@ char* FON_fn_szGetTextPointerForHandle(int hString)
 void ANI_fn_vUnFreeze(HIE_tdstSuperObject_* hSuperObjPerso)
 {
     tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/... */
+    h_Current3dData = hSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData;
+
+    if (h_Current3dData->ucFrameRate == 0)
+    {
+        fn_v3dDataSetFrameRate(h_Current3dData, fn_scGetSpeedInState(h_Current3dData->h_CurrentState));
+
+        PLA_fn_vSetCurrFrame(hSuperObjPerso, (unsigned short)MTH_M_xRealToLong(h_Current3dData->xCurrentFrame) + 1);
+    }
 }

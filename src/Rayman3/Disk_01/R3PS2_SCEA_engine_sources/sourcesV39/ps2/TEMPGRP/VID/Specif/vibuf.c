@@ -210,14 +210,9 @@ int viBufModifyPts(anon_3* f, anon_2* new_ts)
 void viBufFlush(anon_3* f)
 {
     WaitSema(f->sema);
-    {
-        int value = f->readBytes + 0x7ff;
-        if (value < 0)
-            value = (value + 0x7ff) >> 11;
-        else
-            value >>= 11;
-        f->readBytes = value << 11;
-    }
+
+    f->readBytes = (f->readBytes + 0x7ff) / 0x800 * 0x800;
+
     SignalSema(f->sema);
 }
 

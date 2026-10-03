@@ -3123,6 +3123,11 @@ struct SECT_tdstListOfSOSectorsInActivityInteraction_ {
 
 tdstEngineStructure_ g_stEngineStructure;
 
+void WPG_fn_vSetAllocMode(void);
+void WPG_fn_vClearAllocMode(void);
+/* Debug info says void; the allocation is returned in $v0. */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 56–71 */
 /* addr: 0x001feeb0  size: 80 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3140,7 +3145,21 @@ tdstEngineStructure_ g_stEngineStructure;
 WP_tdstListOfArc_* WPARCLST_fn_hInit(void)
 {
     WP_tdstListOfArc_* hList;
-    return 0;
+
+
+    WPG_fn_vSetAllocMode();
+
+
+
+    hList = (WP_tdstListOfArc_*)HMU_fn_p_vMalloc(sizeof(WP_tdstListOfArc_), 1);
+
+    if (hList)
+    {
+        hList->m_hArc.hFirstElementDyn = NULL; hList->m_hArc.hLastElementDyn = NULL; hList->m_hArc.lNumberOfElementsDyn = 0;
+    }
+    WPG_fn_vClearAllocMode();
+
+    return hList;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1660–1662 */

@@ -2928,6 +2928,14 @@ unsigned char g_ucUseDefaultActionReturn;
 unsigned char g_ucAIModuleId;
 unsigned char g_ucMmgModuleId;
 
+struct tdstList_ {
+    unsigned char ucNbElt; /* +0x0 */
+    unsigned char ucMaxSize; /* +0x1 */
+    HIE_tdstSuperObject_** p_hTabElt; /* +0x4 */
+};
+
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\StrIntel.c lines 37–46 */
 /* addr: 0x001fe850  size: 76 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2942,7 +2950,15 @@ unsigned char g_ucMmgModuleId;
  */
 void fn_vPutInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
 {
-    /* TODO: decompile from asm/... */
+
+    if (p_List->ucNbElt < p_List->ucMaxSize)
+    {
+        p_List->p_hTabElt[p_List->ucNbElt++] = p_Perso;
+    }
+
+
+    else
+        fn_vOnAIErm_M_UpdateLastError(14, NULL);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\StrIntel.c lines 96–109 */

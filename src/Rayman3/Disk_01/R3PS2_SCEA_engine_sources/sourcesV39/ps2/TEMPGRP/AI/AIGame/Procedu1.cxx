@@ -27,7 +27,7 @@ typedef struct tdstStandardGame_ tdstStandardGame_;
  * extractor previously emitted only forward declarations when their debug
  * records were owned by another source file. */
 typedef enum tdeProcedureId_ { eProcedureId_Dummy = 0 } tdeProcedureId_;
-typedef enum tdeVariableType_ { eVariableType_Dummy = 0 } tdeVariableType_;
+typedef enum tdeVariableType_ { eVariableType_Dummy = 0, E_vt_Integer = 6, E_vt_Float = 8 } tdeVariableType_;
 struct MTH3D_tdstVector_ { float xX; float xY; float xZ; };
 struct MAT_tdstTransformation_ { int eType; unsigned char data[100]; };
 typedef union tduGetSetParam_ {
@@ -3792,6 +3792,25 @@ tdstNodeInterpret_* fn_p_stRealToText(HIE_tdstSuperObject_* p_SuperObjPerso, tds
     /* TODO: decompile from asm/... */
 }
 
+extern "C" char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
+/* The debug record says void itoa(int, ...); it returns the buffer and callers
+ * pass the long result unextended. */
+extern "C" char* itoa(long value, char* buffer, int radix);
+
+/* Engine float-to-int conversion: retail converts through $f30 at 164 sites
+ * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
+ * never picks for its own conversions. */
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 462–489 */
 /* addr: 0x00238c10  size: 152 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3816,7 +3835,31 @@ tdstNodeInterpret_* fn_p_stIntToText(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
 {
     char* pszString;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    long lValue;
+
+
+
+
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    pszString = fn_szGetStringFromTextOrStringParam(&stParam);
+
+
+
+
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uParam.xValue) : stParam.uParam.lValue;
+
+    itoa(lValue, pszString, 10);
+
+
+
+
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 357–454 */

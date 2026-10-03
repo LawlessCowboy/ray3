@@ -2012,7 +2012,13 @@ void fn_v3dDataSetLightComputationFrequency(tdst3dData_* h_3dData, unsigned char
  */
 unsigned char fn_b3dDataCanComputeBrain(HIE_tdstSuperObject_* _hCharacter)
 {
-    /* TODO: decompile from asm/... */
+    if (_hCharacter && _hCharacter->hLinkedObject.p_stCharacter->h_3dData)
+
+
+
+        return _hCharacter->hLinkedObject.p_stCharacter->h_3dData->cBrainCounter == 0;
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 866–874 */

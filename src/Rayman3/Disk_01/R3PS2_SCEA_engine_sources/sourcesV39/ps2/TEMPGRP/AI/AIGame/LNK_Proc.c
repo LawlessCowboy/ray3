@@ -4699,6 +4699,8 @@ tdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, 
     /* TODO: decompile from asm/... */
 }
 
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 282–292 */
 /* addr: 0x002414e0  size: 84 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -4717,7 +4719,16 @@ tdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, 
 tdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    agoType = stValue.uDummy.uParam.lValue;
+    if (agoType < 0) agoType = 0;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    agoXParam = stValue.uDummy.uParam.xValue;
+
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 179–275 */

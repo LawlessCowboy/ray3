@@ -369,6 +369,10 @@ void fn_vAllocBuffers64(void)
     /* TODO: decompile from asm/... */
 }
 
+int GetThreadId(void);
+int ReferThreadStatus(int tid, ThreadParam* info);
+int RotateThreadReadyQueue(int prio);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 297–301 */
 /* addr: 0x00130c80  size: 48 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -382,7 +386,9 @@ void fn_vAllocBuffers64(void)
 void switchThread(void)
 {
     ThreadParam th_param;
-    /* TODO: decompile from asm/... */
+
+    ReferThreadStatus(GetThreadId(), &th_param);
+    RotateThreadReadyQueue(th_param.currentPriority);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 151–290 */

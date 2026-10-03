@@ -1508,6 +1508,8 @@ void fn_vTransferSpeedInformationPLA_DNM(HIE_tdstSuperObject_* p_SuperObjPerso, 
     /* TODO: decompile from asm/... */
 }
 
+int fn_hGetStateMechanicsIdCard(tdstState_* h_State);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 77–85 */
 /* addr: 0x00262ab0  size: 56 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1518,9 +1520,18 @@ void fn_vTransferSpeedInformationPLA_DNM(HIE_tdstSuperObject_* p_SuperObjPerso, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_h_GetCurrentDNMIdCard(HIE_tdstSuperObject_* p_SuperObjPerso)
+/* Debug info says void, but the callee's handle is returned in $v0. */
+int fn_h_GetCurrentDNMIdCard(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    /* TODO: decompile from asm/... */
+    tdstState_* h_State;
+
+
+
+    h_State = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_CurrentState;
+
+    if (h_State == NULL) return 0;
+
+    return fn_hGetStateMechanicsIdCard(h_State);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 61–63 */

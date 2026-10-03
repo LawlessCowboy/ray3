@@ -1919,7 +1919,15 @@ unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject)
 void fn_vInitAlwaysModel(tdeObjectTreeInit_ eObjIniType)
 {
     tdstAlwaysModelList_* h_AlwaysModelChild;
-    /* TODO: decompile from asm/... */
+
+
+
+
+
+    for (h_AlwaysModelChild = g_stAlways.ALW_h_LstAlwaysModel.hFirstElementDyn; h_AlwaysModelChild != NULL; h_AlwaysModelChild = h_AlwaysModelChild->hNextBrotherDyn)
+    {
+        fn_vInitOneObject(h_AlwaysModelChild->p_stAlwaysObject, eObjIniType);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 344–367 */

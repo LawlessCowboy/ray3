@@ -1462,7 +1462,49 @@ tdst_EntryActions_ g_st_3DOS_EntryActions;
  */
 void fn_vLastDesinitEngine(void)
 {
-    /* TODO: decompile from asm/... */
+    GAM_fn_vSetEngineInFixMode();
+
+
+
+
+
+    GAM_fn_vDestroyGameDeviceAndViewPorts();
+
+
+
+
+
+
+    IPT_fn_vDesinitInput();
+
+
+
+
+
+
+
+
+
+
+
+
+
+    SND_fn_bDesInitDataLoadSnd();
+    SND_fn_iDesInitSound();
+
+
+
+
+
+
+    fn_vLastDesinitFamilyStructure();
+
+
+    DEMO_fn_vDesInitGame();
+
+
+
+
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Input.c lines 1028–1156 */

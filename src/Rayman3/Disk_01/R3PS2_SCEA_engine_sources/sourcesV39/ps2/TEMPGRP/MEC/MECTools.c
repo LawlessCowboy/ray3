@@ -1800,6 +1800,22 @@ float MEC_fn_xConvertScale(float xValue, unsigned char bAdjust)
     /* TODO: decompile from asm/... */
 }
 
+/* Truncation through the engine's $f30 conversion: retail keeps the integer
+ * in $f30 and converts it straight back ("cvt.w.s $f30, x; mfc1 r, $f30;
+ * cvt.s.w y, $f30"), which only hand-written asm produces. */
+inline float MTH_M_xTruncate(float _xValue)
+{
+    long _lResult;
+    float _xResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+        cvt.s.w _xResult, f30
+    }
+    return _xResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 888–892 */
 /* addr: 0x003124d0  size: 104 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1813,9 +1829,10 @@ float MEC_fn_xConvertScale(float xValue, unsigned char bAdjust)
  */
 void MEC_fn_vRoundVector(MTH3D_tdstVector_* p_stVector, float xEpsilon)
 {
-    p_stVector->xX = (int)(p_stVector->xX / xEpsilon) * xEpsilon;
-    p_stVector->xY = (int)(p_stVector->xY / xEpsilon) * xEpsilon;
-    p_stVector->xZ = (int)(p_stVector->xZ / xEpsilon) * xEpsilon;
+    float xTmp;
+    xTmp = MTH_M_xTruncate(p_stVector->xX / xEpsilon); p_stVector->xX = xTmp * xEpsilon;
+    xTmp = MTH_M_xTruncate(p_stVector->xY / xEpsilon); p_stVector->xY = xTmp * xEpsilon;
+    xTmp = MTH_M_xTruncate(p_stVector->xZ / xEpsilon); p_stVector->xZ = xTmp * xEpsilon;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 849–868 */

@@ -3743,6 +3743,10 @@ tdstNodeInterpret_* CAM_fn_p_stForceBestPos(HIE_tdstSuperObject_* p_SuperObjPers
     /* TODO: decompile from asm/... */
 }
 
+unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcedureId);
+void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* hCineinfo);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 1667–1689 */
 /* addr: 0x00207e90  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3757,7 +3761,27 @@ tdstNodeInterpret_* CAM_fn_p_stForceBestPos(HIE_tdstSuperObject_* p_SuperObjPers
 tdstNodeInterpret_* CAM_fn_p_stReset(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     HIE_tdstSuperObject_* hCamera;
-    /* TODO: decompile from asm/... */
+
+
+
+
+
+
+
+
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+
+
+
+
+
+
+
+
+    CAM_fn_vInitCompleteCineinfo(hCamera->hLinkedObject.p_stCharacter->h_Cineinfo);
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 1565–1648 */

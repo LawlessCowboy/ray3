@@ -19734,6 +19734,353 @@
           "type": 7
         }
       ]
+    },
+    {
+      "address": "0x002a5c30",
+      "candidate_size": 172,
+      "first_difference": 4,
+      "implementation": "void CheckData(void)\n{\n    int i;\n    static int Toto[1][32];\n    static int TotoT[1];\n\n    if (Oldpaddata == 0)\n        return;\n\n\n\n    for (i = 0; i < 1; i++)\n    {\n\n        if (Oldpaddata != Toto[i][TotoT[i]])\n            TotoT[i] = 0;\n        else\n        {\n            if (paddata == 0)\n            {\n\n\n                TotoT[i]++;\n                if (Toto[i][TotoT[i]] == -1)\n                {\n\n                    TotoT[i] = 0;\n                    switch (i)\n                    {\n                    case 0:\n                        GLI_g_OkToTestCC = !GLI_g_OkToTestCC;\n                        break;\n                    }\n                }\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CheckData",
+      "reason": "relocs now 7/7 after static pairing fix. Only residual: retail nop at +0x4c (own line 1359, beq target) and unfilled 'b' delay slot; label, empty do/while/if, volatile read, temp, schedule/peephole/opt pragmas all leave 172/176",
+      "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Init_PS2GL.c",
+      "status": "MISMATCH",
+      "target_size": 176,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0022cfe0",
+      "candidate_size": 52,
+      "first_difference": 20,
+      "implementation": "extern \"C\" int fni_CompareIntegerLess(void*, void*);\nextern \"C\" int fni_CompareIntegerGreater(void*, void*);\nextern \"C\" void qsort(void*, size_t, size_t, int (*)(void*, void*));\nextern \"C\" void HIE_fn_SO_vSetOutLineMode(HIE_tdstSuperObject_*, int, unsigned int);\nextern \"C\" void fn_vSetCapabilities(tdstEngineObject_*, unsigned int);\nextern \"C\" void fn_vAddCapabilities(tdstEngineObject_*, unsigned int);\nextern \"C\" void fn_vSubCapabilities(tdstEngineObject_*, unsigned int);\nextern \"C\" void fn_vChangeCapabilities(tdstEngineObject_*, unsigned int, int);\nextern \"C\" tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_*, tdstNodeInterpret_*, HIE_tdstSuperObject_**);\nextern \"C\" unsigned char fn_ucGetDsgVarComport(void*, void*, tdstGetSetParam_*);\nextern \"C\" tdstNodeInterpret_* fn_p_stEvalSubRoutine(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*, tdstMacro_*);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\AI\\AIGame\\ProcRay2.cxx lines 4225\u20134241 */\n/* addr: 0x0022a130  size: 96 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 4225\n *   +0x0010 -> line 4226\n *   +0x0014 -> line 4230\n *   +0x0020 -> line 4232\n *   +0x0034 -> line 4235\n *   +0x003c -> line 4237\n *   +0x0048 -> line 4240\n *   +0x004c -> line 4241\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\ntdstNodeInterpret_* fn_p_stSetCinemascopeRatio(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stParam;\n    tdeProcedureId_ eProcedureId;\n    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    switch (eProcedureId) {\n    case 0x237:\n        fn_vSetCinemascopeRatio(stParam.uParam.lValue);\n    default:\n        fn_vOnAIErm_M_UpdateLastError(39, 0);\n    }\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fni_CompareIntegerLess",
+      "reason": "nested ternary is right except retail leaves the bne delay slot as nop and puts li v0,1 at the branch target; ours copies the target instruction into the slot (known delay-slot fill difference). 6 shapes tried",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcRay2.cxx",
+      "status": "MISMATCH",
+      "target_size": 56,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0022cfa0",
+      "candidate_size": 52,
+      "first_difference": 20,
+      "implementation": "extern \"C\" int fni_CompareIntegerGreater(void*, void*);\nextern \"C\" void qsort(void*, size_t, size_t, int (*)(void*, void*));\nextern \"C\" void HIE_fn_SO_vSetOutLineMode(HIE_tdstSuperObject_*, int, unsigned int);\nextern \"C\" void fn_vSetCapabilities(tdstEngineObject_*, unsigned int);\nextern \"C\" void fn_vAddCapabilities(tdstEngineObject_*, unsigned int);\nextern \"C\" void fn_vSubCapabilities(tdstEngineObject_*, unsigned int);\nextern \"C\" void fn_vChangeCapabilities(tdstEngineObject_*, unsigned int, int);\nextern \"C\" tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_*, tdstNodeInterpret_*, HIE_tdstSuperObject_**);\nextern \"C\" unsigned char fn_ucGetDsgVarComport(void*, void*, tdstGetSetParam_*);\nextern \"C\" tdstNodeInterpret_* fn_p_stEvalSubRoutine(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*, tdstMacro_*);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\AI\\AIGame\\ProcRay2.cxx lines 4225\u20134241 */\n/* addr: 0x0022a130  size: 96 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 4225\n *   +0x0010 -> line 4226\n *   +0x0014 -> line 4230\n *   +0x0020 -> line 4232\n *   +0x0034 -> line 4235\n *   +0x003c -> line 4237\n *   +0x0048 -> line 4240\n *   +0x004c -> line 4241\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\ntdstNodeInterpret_* fn_p_stSetCinemascopeRatio(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stParam;\n    tdeProcedureId_ eProcedureId;\n    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    switch (eProcedureId) {\n    case 0x237:\n        fn_vSetCinemascopeRatio(stParam.uParam.lValue);\n    default:\n        fn_vOnAIErm_M_UpdateLastError(39, 0);\n    }\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fni_CompareIntegerGreater",
+      "reason": "nested ternary is right except retail leaves the bne delay slot as nop and puts li v0,1 at the branch target; ours copies the target instruction into the slot (known delay-slot fill difference). 6 shapes tried",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcRay2.cxx",
+      "status": "MISMATCH",
+      "target_size": 56,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fc330",
+      "candidate_size": 60,
+      "first_difference": 34,
+      "implementation": "void fn_vGetFieldType0To255(tdstGetSetParam_* p_stGetSetParam)\n{\n    if (p_stGetSetParam->eType == E_vt_Float) {\n        p_stGetSetParam->uDummy.lValue = MTH_M_xRealToLong(p_stGetSetParam->uDummy.xValue); p_stGetSetParam->eType = E_vt_Integer;\n    }\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "fn_vGetFieldType0To255",
+      "reason": "needs the f30 MTH_M_xRealToLong asm helper (now in file); residual is the result register: retail mfc1 a1 then schedules li v1,6 before sw a1, ours reuses v1 so the store follows mfc1 directly. Permuter cannot parse asm. eType-first order gives right registers but wrong store order",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Getset.c",
+      "status": "MISMATCH",
+      "target_size": 60,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fc370",
+      "candidate_size": 52,
+      "first_difference": 0,
+      "implementation": "void fn_vGetFieldTypeInteger(tdstGetSetParam_* p_stGetSetParam)\n{\n    if (p_stGetSetParam->eType == E_vt_Float) {\n        p_stGetSetParam->uDummy.lValue = *(volatile float *)p_stGetSetParam;\n        p_stGetSetParam->eType = E_vt_Integer;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vGetFieldTypeInteger",
+      "reason": "needs the f30 MTH_M_xRealToLong asm helper (now in file); residual is the result register: retail mfc1 a1 then schedules li v1,6 before sw a1, ours reuses v1 so the store follows mfc1 directly. Permuter cannot parse asm. eType-first order gives right registers but wrong store order",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Getset.c",
+      "status": "MISMATCH",
+      "target_size": 60,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002250f0",
+      "candidate_size": 96,
+      "first_difference": 56,
+      "implementation": "tdstNodeInterpret_* fn_p_stSetVSyncWait(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdeProcedureId_ eProcedureId;\n    tdstGetSetParam_ stParam;\n    long lValue;\n\n    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;\n\n\n    switch (eProcedureId)\n    {\n    case eProc_SetVsyncWait:\n        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n        if (stParam.eType == E_vt_Float) lValue = MTH_M_xRealToLong(stParam.uDummy.uParam.xValue);\n\n        return p_stTree;\n    }\n    return p_stTree;\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stSetVSyncWait",
+      "reason": "f30 helper + switch with return in case gives right code; only residual is the bne delay slot: ours copies the branch target's move v0,a1 into it, retail leaves nop (recurring conditional-branch target-fill difference)",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MISMATCH",
+      "target_size": 96,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00239910",
+      "candidate_size": 120,
+      "first_difference": 32,
+      "implementation": "tdstNodeInterpret_* fn_p_stTraceProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stValue;\n    static int s_iActivated;\n\n\n\n\n\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n\n    if (s_iActivated)\n        printf(\"trace_%d\\n\", (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);\n\n    return p_stTree;\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stTraceProcedure",
+      "reason": "static s_iActivated + printf(trace_%d, f30 ternary getter) is right; residual is the beqz delay slot: ours copies the return block's move v0,s0, retail leaves nop",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MISMATCH",
+      "target_size": 120,
+      "unresolved_relocations": [
+        {
+          "offset": 84,
+          "symbol": "@440",
+          "type": 5
+        },
+        {
+          "offset": 92,
+          "symbol": "@440",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x00223bf0",
+      "candidate_size": 108,
+      "first_difference": 52,
+      "implementation": "tdstNodeInterpret_* fn_p_stWaterEffect_GenerateSplash(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stParam;\n    long lValue;\n\n\n\n\n\n\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n\n\n\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n\n\n\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    lValue = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;\n\n\n\n\n\n\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stWaterEffect_GenerateSplash",
+      "reason": "three evals + dead f30 conversion right; retail computes &stParam.eType into s0 in the third jal's delay slot and loads through it (4 bytes longer); plain field access folds to lw 0x3c(sp)",
+      "size": 112,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MISMATCH",
+      "target_size": 112,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00223c80",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "tdstNodeInterpret_* fn_p_stWaterEffect_SetRandomPerturbationGeneration(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stParam;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stWaterEffect_SetRandomPerturbationGeneration",
+      "reason": "two evals each followed by a dead f30 conversion; like GenerateSplash, retail keeps &stParam.eType in s0 (addiu s0,sp,0x4c) and loads through it; plain field, pointer local and inline getter all fold to lw 0x4c(sp)",
+      "size": 128,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MISMATCH",
+      "target_size": 128,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00201340",
+      "candidate_size": 172,
+      "first_difference": 20,
+      "implementation": "unsigned char fn_ucIsThereFloatIfYesConvertItToInteger(tdstGetSetParam_* p_stParam)\n{\n    int lValue;\n    unsigned char ucIsThereFloat;\n    ucIsThereFloat = (p_stParam->eType == E_vt_Float);\n    if (ucIsThereFloat)\n    {\n\n\n\n        if ((p_stParam->uDummy.uParam.xValue < 2147483648.0f) && (p_stParam->uDummy.uParam.xValue > -2147483648.0f))\n\n            lValue = MTH_M_xRealToLong(p_stParam->uDummy.uParam.xValue);\n        else if (p_stParam->uDummy.uParam.xValue > 0.0f)\n            lValue = 0x7FFFFFFF;\n\n        else\n            lValue = 0x80000001;\n\n        p_stParam->uDummy.uParam.lValue = lValue;\n        p_stParam->eType = E_vt_Integer;\n    }\n\n    return ucIsThereFloat;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_ucIsThereFloatIfYesConvertItToInteger",
+      "reason": "range-checked f30 conversion with saturation right; residuals are scheduling: retail fills the first bc1f delay slot with the next lui and shares one 'lui v1,0x8000' across both saturation paths, ours duplicates it (172 vs 164)",
+      "size": 164,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AITools.c",
+      "status": "MISMATCH",
+      "target_size": 164,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00274c90",
+      "candidate_size": 120,
+      "first_difference": 72,
+      "implementation": "void ANI_fn_vUnFreeze(HIE_tdstSuperObject_* hSuperObjPerso)\n{\n    tdst3dData_* h_Current3dData;\n    h_Current3dData = hSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData;\n\n    if (h_Current3dData->ucFrameRate == 0)\n    {\n        fn_v3dDataSetFrameRate(h_Current3dData, fn_scGetSpeedInState(h_Current3dData->h_CurrentState));\n\n        PLA_fn_vSetCurrFrame(hSuperObjPerso, (unsigned short)MTH_M_xRealToLong(h_Current3dData->xCurrentFrame) + 1);\n    }\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "ANI_fn_vUnFreeze",
+      "reason": "f30 helper + real prototypes give 120/120; only residual: retail schedules 'move a0,s1' (call arg) between mfc1 and the (unsigned short) andi, ours does andi first; temps/casts/arg order tried",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Anim.c",
+      "status": "MISMATCH",
+      "target_size": 120,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00224e50",
+      "candidate_size": 212,
+      "first_difference": 32,
+      "implementation": "tdstNodeInterpret_* fn_p_stLoadingLevel(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stParam;\n    tdeProcedureId_ eProcedureId;\n    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;\n\n\n\n    if (eProcedureId != eProc_SkipLoading_SetLoadingLevel) return p_stTree;\n    else\n    {\n        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n\n\n        switch ((char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue))\n        {\n        case 1:\n            GAM_fn_vSetLoadingLevel(\"S\");\n            break;\n\n        case 2:\n            GAM_fn_vSetLoadingLevel(\"M\");\n            break;\n\n\n\n        default:\n            GAM_fn_vSetLoadingLevel(NULL);\n            \n        }\n\n\n    }\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stLoadingLevel",
+      "reason": "early-return if + f30 getter + switch((char)...) {1:'S' return; 2:'M' break; default NULL} gives the right blocks; residual is delay-slot filling: retail hoists each case's lui %hi(str) into the beq slots, ours leaves nops and a dead duplicate 'move a0,zero' (212 vs 200)",
+      "size": 200,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MISMATCH",
+      "target_size": 200,
+      "unresolved_relocations": [
+        {
+          "offset": 136,
+          "symbol": "@239",
+          "type": 5
+        },
+        {
+          "offset": 144,
+          "symbol": "@239",
+          "type": 6
+        },
+        {
+          "offset": 156,
+          "symbol": "@240",
+          "type": 5
+        },
+        {
+          "offset": 164,
+          "symbol": "@240",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x002aac80",
+      "candidate_size": 52,
+      "first_difference": 17,
+      "implementation": "void GLI_vSetGlobalAlpha(float Alpha)\n{\n    float fAlpha;\n    float fCoef = 0.003921569f;\n    float fZero = 0.0f;\n    fAlpha = Alpha * fCoef;\n    fAlpha = MTH_M_xMin(fAlpha, 1.0f);\n    fAlpha = MTH_M_xMax(fAlpha, fZero);\n    GLI_BIG_GLOBALS_xGlobalAlpha = fAlpha;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vSetGlobalAlpha",
+      "reason": "needs R5900 min.s/max.s (48 retail game sites): MTH_M_xMin/xMax inline asm wrappers added; best (coef/zero locals, 1.0f literal) is 52/52 with only the 1.0/0.0 FPR assignment (f1/f2) swapped",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Proj.c",
+      "status": "MISMATCH",
+      "target_size": 52,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0012f6b0",
+      "candidate_size": 60,
+      "first_difference": 8,
+      "implementation": "void VIDSPE_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality)\n{\n    switch (ucVideoQuality)\n    {\n    case 0:\n        g_stVideoQuality.ucTransfertQuality = 0;\n        break;\n    case 1:\n        break;\n    case 3:\n        break;\n    case 4:\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "VIDSPE_fn_vSetVideoQuality",
+      "reason": "switch with case 0 store and empty cases 1/3/4: retail leaves the 'beq ==3' delay slot as nop (60 vs 64 bytes); case order/fallthrough/default variants all fill it with li v1,1",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/VID_Specif.c",
+      "status": "MISMATCH",
+      "target_size": 64,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00223160",
+      "candidate_size": 68,
+      "first_difference": 8,
+      "implementation": "void fn_vSetVectorComponentForAffectOperator(unsigned char ucXYZflag, MTH3D_tdstVector_* p_stVector, float xReal)\n{\n    switch (ucXYZflag)\n    {\n    case 1:\n        p_stVector->xX = xReal;\n        break;\n    case 2:\n        p_stVector->xY = xReal;\n        break;\n    case 3:\n        p_stVector->xZ = xReal;\n        break;\n    default:\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vSetVectorComponentForAffectOperator",
+      "reason": "3-case switch: retail leaves the second compare's beq delay slot as nop (same as VIDSPE_fn_vSetVideoQuality), ours fills it with the next li; 4 bytes short",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Operator.c",
+      "status": "MISMATCH",
+      "target_size": 72,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fea50",
+      "candidate_size": 76,
+      "first_difference": 0,
+      "implementation": "int WPARCLST_fn_lChangeWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight)\n{\n    WP_tdstArc_* hElement;\n    if (hListOfArc && hNode) {\n        hElement = hListOfArc->m_hArc.hFirstElementDyn;\n        if (hElement) {\n            do {\n                if (hElement->m_hNode == hNode) {\n                    hElement->m_lWeight = lWeight;\n                    return 0;\n                }\n                hElement = hElement->hNextBrotherDyn;\n            } while (hElement);\n        }\n    }\n    return -1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "WPARCLST_fn_lChangeWeight",
+      "reason": "logic right; residual is the first beqz delay slot: ours copies the return block's li v0,-1, retail leaves nop (return-block delay-fill difference)",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WParc.c",
+      "status": "MISMATCH",
+      "target_size": 76,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00200c20",
+      "candidate_size": 68,
+      "first_difference": 36,
+      "implementation": "unsigned char fn_ucFrozenWait(HIE_tdstSuperObject_* p_SuperObjPerso)\n{\n    int lReturn;\n\n\n\n    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount < (unsigned int)fn_lGetActionParamlValue(0, p_SuperObjPerso))\n        lReturn = 1;\n    else\n        lReturn = 4;\n\n\n\n\n\n\n\n\n    return lReturn;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_ucFrozenWait",
+      "reason": "int local returned as unsigned char gives the andi; residual: ours if-converts (li 4 in the beqz slot, li 1 after), retail keeps an explicit if/else with nop slot and b",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ActMain.c",
+      "status": "MISMATCH",
+      "target_size": 76,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ea410",
+      "candidate_size": 76,
+      "first_difference": 49,
+      "implementation": "void Toby_SetTransparency(unsigned int IDNumber, float fAlphaValue)\n{\n    if (fAlphaValue < 0.0f)\n        fAlphaValue = 0.0f;\n    if (fAlphaValue > 1.0f)\n        fAlphaValue = 1.0f;\n    *(float*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + IDNumber * sizeof(_Toby_)) = fAlphaValue;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Toby_SetTransparency",
+      "reason": "clamp + byte-pointer member form gives retail's container+8 then index; residual: ours hoists the index sll into the bc1t delay slot, retail leaves nop (76 vs 80)",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/Tobies.c",
+      "status": "MISMATCH",
+      "target_size": 80,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0025ff20",
+      "candidate_size": 84,
+      "first_difference": 24,
+      "implementation": "void fn_vToggleCinemascope(int bValue)\n{\n    if (bValue && (g_bCinemascopeOn != 1))\n    {\n\n        g_bCinemascopeOn = bValue;\n        g_a2_ulSize[0] = 100;\n        g_a2_ulSize[1] = 100;\n        g_a2_ulPos[0] = 0;\n        g_a2_ulPos[1] = 0;\n    }\n\n    else if (!bValue && (g_bCinemascopeOn == 1))\n        g_bCinemascopeOn = -1;\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "fn_vToggleCinemascope",
+      "reason": "if/else-if logic and stores right; only the scheduling of the five gp-relative stores differs (retail keeps source order on/size0/size1/pos0/pos1, ours moves pos0 first)",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
+      "status": "MISMATCH",
+      "target_size": 84,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002414e0",
+      "candidate_size": 80,
+      "first_difference": 32,
+      "implementation": "tdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stValue;\n\n\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n    agoType = stValue.uDummy.uParam.lValue;\n    if (agoType < 0) agoType = 0;\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n    agoXParam = stValue.uDummy.uParam.xValue;\n\n\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "LNK_fn_p_SetAgo",
+      "reason": "two evals + clamp right; retail reloads agoType from memory after storing it before the < 0 test (lw after sw), ours reuses v0; volatile/assignment-expression/ternary variants don't reproduce it",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/LNK_Proc.c",
+      "status": "MISMATCH",
+      "target_size": 84,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00132b90",
+      "candidate_size": 84,
+      "first_difference": 32,
+      "implementation": "int videoDecIsFlushed(anon_0* vd)\n{\n    int ret;\n    ret = 0;\n    if (!viBufCount(&vd->vibuf) && sceMpegIsRefBuffEmpty(&vd->mpeg))\n\n        ret = 1;\n    return ret;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "videoDecIsFlushed",
+      "reason": "int ret flag + && condition right; residual is the return-block delay fill: ours copies move v0,s0 into the bnez slot, retail keeps move a0,s1 there",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c",
+      "status": "MISMATCH",
+      "target_size": 84,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -19847,6 +20194,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "PLD_fn_vClearAnimationsBanks",
       "size": 420,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_call.c",
+      "status": "MATCH"
+    },
+    "0x0012f060": {
+      "address": "0x0012f060",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PLD_fn_bIsInFix",
+      "size": 84,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_call.c",
       "status": "MATCH"
     },
@@ -19986,11 +20341,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/VID_Pub.c",
       "status": "MATCH"
     },
+    "0x00130870": {
+      "address": "0x00130870",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "InitGlDevice",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/disp.c",
+      "status": "MATCH"
+    },
     "0x001308d0": {
       "address": "0x001308d0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "ErrMessage",
       "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/main.c",
+      "status": "MATCH"
+    },
+    "0x00130c80": {
+      "address": "0x00130c80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "switchThread",
+      "size": 48,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/main.c",
       "status": "MATCH"
     },
@@ -20056,6 +20427,14 @@
       "name": "strFileClose",
       "size": 76,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/strfile.c",
+      "status": "MATCH"
+    },
+    "0x00131ca0": {
+      "address": "0x00131ca0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "viBufFlush",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
       "status": "MATCH"
     },
     "0x00131cf0": {
@@ -20207,6 +20586,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "MNC_fn_pcUnLoadArea",
       "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/MNC/load/loadarea.c",
+      "status": "MATCH"
+    },
+    "0x00133160": {
+      "address": "0x00133160",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MNC_fn_pcLoadArea",
+      "size": 68,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/MNC/load/loadarea.c",
       "status": "MATCH"
     },
@@ -26626,6 +27013,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_MultiTexture.c",
       "status": "MATCH"
     },
+    "0x00186600": {
+      "address": "0x00186600",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "int2dB__Fi",
+      "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndvolume.cpp",
+      "status": "MATCH"
+    },
     "0x00186670": {
       "address": "0x00186670",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -27570,6 +27965,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
       "status": "MATCH"
     },
+    "0x001fb760": {
+      "address": "0x001fb760",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_bDoIntelligencePerso",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MATCH"
+    },
     "0x001fb7a0": {
       "address": "0x001fb7a0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -28386,6 +28789,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
       "status": "MATCH"
     },
+    "0x001fe850": {
+      "address": "0x001fe850",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vPutInList",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/StrIntel.c",
+      "status": "MATCH"
+    },
     "0x001fe900": {
       "address": "0x001fe900",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -28408,6 +28819,14 @@
       "name": "fn_vOnAIErm_M_UpdateLastError",
       "size": 36,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WParc.c",
+      "status": "MATCH"
+    },
+    "0x001feeb0": {
+      "address": "0x001feeb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "WPARCLST_fn_hInit",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
       "status": "MATCH"
     },
     "0x001fef00": {
@@ -28600,6 +29019,22 @@
       "name": "CAM_fn_p_stCameraMode",
       "size": 40,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MATCH"
+    },
+    "0x00207e90": {
+      "address": "0x00207e90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "CAM_fn_p_stReset",
+      "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MATCH"
+    },
+    "0x0020a970": {
+      "address": "0x0020a970",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "CAM_fn_bEqualVectorWithEpsilon",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Tool.c",
       "status": "MATCH"
     },
     "0x0020cbc0": {
@@ -29210,6 +29645,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
+    "0x00213580": {
+      "address": "0x00213580",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stEvalRedOrGreenOrBlueOrAlpha",
+      "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
     "0x00214d00": {
       "address": "0x00214d00",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -29626,6 +30069,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Operator.c",
       "status": "MATCH"
     },
+    "0x002239d0": {
+      "address": "0x002239d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stAllowNormalsRecomputing",
+      "size": 148,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
     "0x00223b20": {
       "address": "0x00223b20",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -29642,6 +30093,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
       "status": "MATCH"
     },
+    "0x00223b50": {
+      "address": "0x00223b50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stSFX_ActivateWaterCircles",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x00223ba0": {
+      "address": "0x00223ba0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stSFX_ActivateLightReflection",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
     "0x00223c60": {
       "address": "0x00223c60",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -29655,6 +30122,46 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_p_stDemoProc",
       "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x00223f90": {
+      "address": "0x00223f90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stTobySetMaterial",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x00224020": {
+      "address": "0x00224020",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stTobyDestroy",
+      "size": 108,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x00224090": {
+      "address": "0x00224090",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stTobySetTransparency",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x002242c0": {
+      "address": "0x002242c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stMonitoringStop",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x00224330": {
+      "address": "0x00224330",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stMonitoringStart",
+      "size": 104,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
       "status": "MATCH"
     },
@@ -29938,6 +30445,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedu1.cxx",
       "status": "MATCH"
     },
+    "0x00238c10": {
+      "address": "0x00238c10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stIntToText",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedu1.cxx",
+      "status": "MATCH"
+    },
     "0x00239990": {
       "address": "0x00239990",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -29994,11 +30509,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Shooter.c",
       "status": "MATCH"
     },
+    "0x0024ae80": {
+      "address": "0x0024ae80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stSetPrevMusicFadeOut",
+      "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
+      "status": "MATCH"
+    },
     "0x0024aed0": {
       "address": "0x0024aed0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_p_stSetInStereoMode",
       "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
+      "status": "MATCH"
+    },
+    "0x0024af10": {
+      "address": "0x0024af10",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_p_stSetDopplerEffect",
+      "size": 80,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
       "status": "MATCH"
     },
@@ -30079,6 +30610,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "PS2SQRTF",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/clib/clib.c",
+      "status": "MATCH"
+    },
+    "0x0024c7e0": {
+      "address": "0x0024c7e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "itoa",
+      "size": 84,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/clib/clib.c",
       "status": "MATCH"
     },
@@ -30208,6 +30747,14 @@
       "name": "COL_fn_vComputeBoundingBoxOfSphere",
       "size": 76,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Box.c",
+      "status": "MATCH"
+    },
+    "0x002533f0": {
+      "address": "0x002533f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "INT_fn_bGetInclusionPointInSphere",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
       "status": "MATCH"
     },
     "0x00254ea0": {
@@ -30490,6 +31037,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Always.c",
       "status": "MATCH"
     },
+    "0x0025be80": {
+      "address": "0x0025be80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vInitAlwaysModel",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Always.c",
+      "status": "MATCH"
+    },
     "0x0025bf80": {
       "address": "0x0025bf80",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -30698,6 +31253,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Clock.c",
       "status": "MATCH"
     },
+    "0x0025e6a0": {
+      "address": "0x0025e6a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vFirstInitEngineClock",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Collisio.c",
+      "status": "MATCH"
+    },
     "0x0025f0a0": {
       "address": "0x0025f0a0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -30866,6 +31429,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ia_dnm.c",
       "status": "MATCH"
     },
+    "0x00262ab0": {
+      "address": "0x00262ab0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_h_GetCurrentDNMIdCard",
+      "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ia_dnm.c",
+      "status": "MATCH"
+    },
     "0x00262af0": {
       "address": "0x00262af0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -30896,6 +31467,14 @@
       "name": "fn_vDesInitDeadLoop",
       "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Initeng.c",
+      "status": "MATCH"
+    },
+    "0x00265050": {
+      "address": "0x00265050",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vLastDesinitEngine",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Input.c",
       "status": "MATCH"
     },
     "0x002650a0": {
@@ -32338,6 +32917,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
       "status": "MATCH"
     },
+    "0x0027ab90": {
+      "address": "0x0027ab90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_iCompareMorphData",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MATCH"
+    },
     "0x0027b330": {
       "address": "0x0027b330",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -32487,6 +33074,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_vInitDefaultValuesForSoundVolumes",
       "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/gamopt.c",
+      "status": "MATCH"
+    },
+    "0x00280440": {
+      "address": "0x00280440",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GAM_fn_vSetVolumeMenu",
+      "size": 76,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/gamopt.c",
       "status": "MATCH"
     },
@@ -32791,6 +33386,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "fn_v3dDataSetLightComputationFrequency",
       "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
+    "0x00289250": {
+      "address": "0x00289250",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_b3dDataCanComputeBrain",
+      "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
       "status": "MATCH"
     },
@@ -34818,6 +35421,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
       "status": "MATCH"
     },
+    "0x002b3560": {
+      "address": "0x002b3560",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_vSetUnusedTextures",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
+      "status": "MATCH"
+    },
+    "0x002b35a0": {
+      "address": "0x002b35a0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "fn_RemoveTextureFromMaterial",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/GliPs2Unused.c",
+      "status": "MATCH"
+    },
     "0x002b35e0": {
       "address": "0x002b35e0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -34991,6 +35610,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "GLI_vEnd2DSpritesWithUVs",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSprites.c",
+      "status": "MATCH"
+    },
+    "0x002bce50": {
+      "address": "0x002bce50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "GLI_vEndWorldSprites",
+      "size": 84,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSprites.c",
       "status": "MATCH"
     },
@@ -36274,6 +36901,38 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
       "status": "MATCH"
     },
+    "0x002f3550": {
+      "address": "0x002f3550",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_bIsKeyWordValid_ActionInvalidated",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f35b0": {
+      "address": "0x002f35b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_bIsKeyWordValid_ActionJustInvalidated",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f3610": {
+      "address": "0x002f3610",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_bIsKeyWordValid_ActionValidated",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
+    "0x002f3670": {
+      "address": "0x002f3670",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "IPT_fn_bIsKeyWordValid_ActionJustValidated",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
+      "status": "MATCH"
+    },
     "0x002f5b50": {
       "address": "0x002f5b50",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -36887,6 +37546,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "MEC_fn_vSetInitialFrameTranslation",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x003124d0": {
+      "address": "0x003124d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MEC_fn_vRoundVector",
+      "size": 104,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },

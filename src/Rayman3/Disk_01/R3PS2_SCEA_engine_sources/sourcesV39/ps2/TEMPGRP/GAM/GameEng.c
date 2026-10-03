@@ -1633,6 +1633,10 @@ int HIE_g_hCurrentMatrix;
 int HIE_g_a_hMatrixStack[50];
 int HIE_g_lNbMatrixInStack;
 
+extern int g_bCinemascopeOn;
+extern unsigned int g_a2_ulPos[2];
+extern unsigned int g_a2_ulSize[2];
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 224–234 */
 /* addr: 0x0025ff20  size: 84 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1650,7 +1654,18 @@ int HIE_g_lNbMatrixInStack;
  */
 void fn_vToggleCinemascope(int bValue)
 {
-    /* TODO: decompile from asm/... */
+    if (bValue && (g_bCinemascopeOn != 1))
+    {
+
+        g_bCinemascopeOn = bValue;
+        g_a2_ulSize[0] = 100;
+        g_a2_ulSize[1] = 100;
+        g_a2_ulPos[0] = 0;
+        g_a2_ulPos[1] = 0;
+    }
+
+    else if (!bValue && (g_bCinemascopeOn == 1))
+        g_bCinemascopeOn = -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 2045–2085 */

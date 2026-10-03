@@ -1878,9 +1878,23 @@ int fn_lGetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObj
 
 unsigned char fn_ucFrozenWait(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
+    int lReturn;
+
+
+
     if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount < (unsigned int)fn_lGetActionParamlValue(0, p_SuperObjPerso))
-        return 1;
-    return 4;
+        lReturn = 1;
+    else
+        lReturn = 4;
+
+
+
+
+
+
+
+
+    return lReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 157–198 */

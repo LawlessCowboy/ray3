@@ -56,8 +56,6 @@ struct tdstGliCaps_ {
 };
 
 float GLI_g_NegVect[4];
-static int gs_keepit2;
-static int gs_keepit1;
 int GLD_RenderingCounter;
 int GLD_p_lRenderingCounter;
 static int gs_bIsWindowed;
@@ -108,10 +106,7 @@ void GLI_fn_vFreeSurfaceForBlit(void)
  */
 void fn_vSetUnusedTextures(void)
 {
-    if (gs_keepit2++ < 10)
-    {
-        printf("function %s not implemented\n", "fn_vSetUnusedTextures");
-    }
+    static int start = 0; if (start++ < 10) printf("function %s not implemented\n", "fn_vSetUnusedTextures");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\GliPs2Unused.c lines 261–261 */
@@ -123,10 +118,7 @@ void fn_vSetUnusedTextures(void)
  */
 void fn_RemoveTextureFromMaterial(void)
 {
-    if (gs_keepit1++ < 10)
-    {
-        printf("function %s not implemented\n", "fn_RemoveTextureFromMaterial");
-    }
+    static int start = 0; if (start++ < 10) printf("function %s not implemented\n", "fn_RemoveTextureFromMaterial");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\GliPs2Unused.c lines 209–211 */

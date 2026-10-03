@@ -1342,6 +1342,171 @@ int COL_g_lNbElementsInTable;
 int COL_g_stCollisionCaseReal;
 unsigned char g_ucIsEdInGhostMode;
 
+typedef struct _stTimerCount _stTimerCount;
+typedef struct tdstEngineTimerStructure_ tdstEngineTimerStructure_;
+typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
+typedef struct GLI_tdstSpecificAttributesFor3D_ GLI_tdstSpecificAttributesFor3D_;
+typedef struct LST2_tdstAnchorTotdxHandleToNodeCameraDyn LST2_tdstAnchorTotdxHandleToNodeCameraDyn;
+typedef struct LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn;
+typedef struct LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn;
+typedef struct tdstEngineStructure_ tdstEngineStructure_;
+typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
+typedef struct tdstNodeCamera_ tdstNodeCamera_;
+typedef struct tdstAlwaysActiveCharacter_ tdstAlwaysActiveCharacter_;
+typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
+typedef struct tdstViewportManagement_ tdstViewportManagement_;
+typedef struct tdstLanguageStructure_ tdstLanguageStructure_;
+typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;
+typedef struct tdstSuperObjectLinks_ tdstSuperObjectLinks_;
+typedef struct tdstGraphChainedListNode_ tdstGraphChainedListNode_;
+typedef struct CINE_Manager_ CINE_Manager_;
+
+struct _stTimerCount {
+    unsigned long m_ulLowPart; /* +0x0 */
+    unsigned long m_ulHighPart; /* +0x8 */
+};
+
+struct tdstEngineTimerStructure_ {
+    unsigned int ulTrameNumber; /* +0x0 */
+    short sTimerHandle; /* +0x4 */
+    unsigned int ulCurrentTimerCount; /* +0x8 */
+    unsigned int ulDeltaTimerCount; /* +0xc */
+    unsigned int a_ulCounter[16]; /* +0x10 */
+    unsigned int ulUsefulDeltaTime; /* +0x50 */
+    unsigned int ulPauseTime; /* +0x54 */
+    float xFrameLength; /* +0x58 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x5c..0x5f */
+    _stTimerCount stRealTimeCount; /* +0x60 */
+    _stTimerCount stPauseTime; /* +0x70 */
+    unsigned int ulTickPerMS; /* +0x80 */
+};
+
+struct GLD_tdstViewportAttributes_ {
+    unsigned int dwInitialHeight; /* +0x0 */
+    unsigned int dwInitialWidth; /* +0x4 */
+    unsigned int dwHeight; /* +0x8 */
+    unsigned int dwWidth; /* +0xc */
+    unsigned int dwTopInPix; /* +0x10 */
+    unsigned int dwBottomInPix; /* +0x14 */
+    unsigned int dwLeftInPix; /* +0x18 */
+    unsigned int dwRightInPix; /* +0x1c */
+    unsigned int dwTopInPixForClip; /* +0x20 */
+    unsigned int dwBottomInPixForClip; /* +0x24 */
+    unsigned int dwLeftInPixForClip; /* +0x28 */
+    unsigned int dwRightInPixForClip; /* +0x2c */
+    unsigned int dwWidthInPercent; /* +0x30 */
+    unsigned int dwHeightInPercent; /* +0x34 */
+    unsigned int dwClipTopInPix; /* +0x38 */
+    unsigned int dwClipBottomInPix; /* +0x3c */
+    unsigned int dwClipLeftInPix; /* +0x40 */
+    unsigned int dwClipRightInPix; /* +0x44 */
+    unsigned int dwClipTopInPerMille; /* +0x48 */
+    unsigned int dwClipBottomInPerMille; /* +0x4c */
+    unsigned int dwClipLeftInPerMille; /* +0x50 */
+    unsigned int dwClipRightInPerMille; /* +0x54 */
+    int iOffsetPosX; /* +0x58 */
+    int iOffsetPosY; /* +0x5c */
+    int p_cVirtualScreen; /* +0x60 */
+    int lPitch; /* +0x64 */
+    int p_vSpecificToXD; /* +0x68 */
+    short hDevice; /* +0x6c */
+    short hViewport; /* +0x6e */
+};
+
+struct GLI_tdstSpecificAttributesFor3D_ {
+    GLI_tdstCamera_* p_stCam; /* +0x0 */
+    float xNear; /* +0x4 */
+};
+
+struct LST2_tdstAnchorTotdxHandleToNodeCameraDyn {
+    tdstNodeCamera_* hFirstElementDyn; /* +0x0 */
+    tdstNodeCamera_* hLastElementDyn; /* +0x4 */
+    int lNumberOfElementsDyn; /* +0x8 */
+};
+
+struct LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn {
+    tdstAlwaysActiveCharacter_* hFirstElementDyn; /* +0x0 */
+    tdstAlwaysActiveCharacter_* hLastElementDyn; /* +0x4 */
+    int lNumberOfElementsDyn; /* +0x8 */
+};
+
+struct LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn {
+    tdstNodeMainCharacter_* hFirstElementDyn; /* +0x0 */
+    tdstNodeMainCharacter_* hLastElementDyn; /* +0x4 */
+    int lNumberOfElementsDyn; /* +0x8 */
+};
+
+struct tdstEngineStructure_ {
+    unsigned char eEngineMode; /* +0x0 */
+    char szLevelName[30]; /* +0x1 */
+    char szNextLevelName[30]; /* +0x1f */
+    char szFirstLevelName[30]; /* +0x3d */
+    unsigned char eInputMode; /* +0x5b */
+    unsigned char eDisplayFixMode; /* +0x5c */
+    unsigned int ulDisplayMode; /* +0x60 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x64..0x67 */
+    tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
+    unsigned char ucNumberOfPlayersInMultiMode; /* +0xf0 */
+    unsigned char ucNumberOfColumnsInMultiMode; /* +0xf1 */
+    unsigned char ucMiniScreenRatioInMultiMode; /* +0xf2 */
+    int a_hSO_CurrentMainPlayers[4]; /* +0xf4 */
+    short hGLDDevice; /* +0x104 */
+    short a_hGLDViewport[5]; /* +0x106 */
+    GLD_tdstViewportAttributes_ a_stViewportAttr[5]; /* +0x110 */
+    int a_p_stGameViewportCamera[5]; /* +0x340 */
+    short a_hGLDFixViewport[5]; /* +0x354 */
+    GLD_tdstViewportAttributes_ a_stFixViewportAttr[5]; /* +0x360 */
+    GLI_tdstSpecificAttributesFor3D_ a_stFixAttributes3D[5]; /* +0x590 */
+    int a_p_stFixCamera[5]; /* +0x5b8 */
+    GLI_tdstSpecificAttributesFor3D_ a_stGameAttributes3D[5]; /* +0x5cc */
+    tdstViewportManagement_* a_hViewportArray; /* +0x5f4 */
+    LST2_tdstAnchorTotdxHandleToNodeCameraDyn hCameraList; /* +0x5f8 */
+    int hDrawSem; /* +0x604 */
+    LST2_tdstAnchorTotdxHandleToFamilyListDyn hFamilyList; /* +0x608 */
+    LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn hAlwaysActiveCharactersList; /* +0x614 */
+    LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn hMainCharacterList; /* +0x620 */
+    HIE_tdstSuperObject_* h_StdCamCaracter; /* +0x62c */
+    HIE_tdstSuperObject_* h_DbgCamCharacter; /* +0x630 */
+    tdstLanguageStructure_* p_stLanguageTable; /* +0x634 */
+    FIL_tdstFileNameList_* hLevelNameList; /* +0x638 */
+    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x63c..0x63f */
+    MAT_tdstTransformation_ stMainCharacterPosition; /* +0x640 */
+    MAT_tdstTransformation_ stMainCameraPosition; /* +0x6a0 */
+    int lSubMapNumber; /* +0x700 */
+    unsigned char bEngineIsInPaused; /* +0x704 */
+    unsigned char bEngineHasInPaused; /* +0x705 */
+    unsigned char bEngineIsInSaveGamePart; /* +0x706 */
+    char a_szLevelName[150][30]; /* +0x707 */
+    char a_szDemoName[30][12]; /* +0x189b */
+    char a_szDemoLevelName[30][12]; /* +0x1a03 */
+    unsigned char ucNumberOfDemos; /* +0x1b6b */
+    unsigned char ucNumberOfLevels; /* +0x1b6c */
+    unsigned char ucCurrentLevel; /* +0x1b6d */
+    unsigned char ucPreviousLevel; /* +0x1b6e */
+    unsigned char ucExitIdToQuitPrevLevel; /* +0x1b6f */
+    unsigned char ucLevelGlobalCounter; /* +0x1b70 */
+    unsigned char xDemoMode; /* +0x1b71 */
+    unsigned char ucCurrentLanguage; /* +0x1b72 */
+    unsigned char ucNbLanguages; /* +0x1b73 */
+    unsigned char bEngineFrozen; /* +0x1b74 */
+    unsigned char bResurection; /* +0x1b75 */
+    char cCameraMode; /* +0x1b76 */
+    unsigned char ucCurrentImportance; /* +0x1b77 */
+    unsigned int ulNumberOfSOLAllocated; /* +0x1b78 */
+    unsigned int ulNumberOfSOLLoaded; /* +0x1b7c */
+    unsigned int ulNumberOfNonPersitentLinksPerSOL; /* +0x1b80 */
+    tdstSuperObjectLinks_** p_hSOL; /* +0x1b84 */
+    tdstGraphChainedListNode_* p_GraphChainedList; /* +0x1b88 */
+    CINE_Manager_* stCineManager; /* +0x1b8c */
+};
+
+extern tdstEngineStructure_ g_stEngineStructure;
+short TMR_fn_wInitLibrary(void);
+short TMR_fn_wCreateTimer(short wTimerType);
+/* The debug record says unsigned int (void), but callers pass a timer type
+ * and divide the result with __udivdi3, so it returns a 64-bit count. */
+unsigned long long fn_ulTimerTickPerSecond(short wTimerType);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 72–79 */
 /* addr: 0x0025e6a0  size: 80 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1355,7 +1520,12 @@ unsigned char g_ucIsEdInGhostMode;
  */
 void fn_vFirstInitEngineClock(void)
 {
-    /* TODO: decompile from asm/... */
+
+    TMR_fn_wInitLibrary();
+
+
+    g_stEngineStructure.stEngineTimer.sTimerHandle = TMR_fn_wCreateTimer(1);
+    g_stEngineStructure.stEngineTimer.ulTickPerMS = fn_ulTimerTickPerSecond(1) / 1000;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Collisio.c lines 607–702 */

@@ -243,6 +243,12 @@ void DesinitGlDevice(void)
     /* TODO: decompile from asm/... */
 }
 
+void GLI_vChangeVideoModeForVideos(void);
+void PS2glHint(unsigned int target, unsigned int mode);
+void PS2glGenTextures(int n, int* textures);
+/* Debug info says void; the allocation is returned in $v0. */
+void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 92–119 */
 /* addr: 0x00130870  size: 84 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -260,5 +266,30 @@ void DesinitGlDevice(void)
  */
 void InitGlDevice(void)
 {
-    /* TODO: decompile from asm/... */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    GLI_vChangeVideoModeForVideos();
+
+    PS2glHint(0x450, 3);
+    PS2glHint(0x444, 0);
+
+
+    gs_pOrg = (int)fn_pvMallocInBinaryPreservingTheCurrentMode(0x20040);
+
+
+
+    PS2glGenTextures(16, s_iTexGlTable);
 }

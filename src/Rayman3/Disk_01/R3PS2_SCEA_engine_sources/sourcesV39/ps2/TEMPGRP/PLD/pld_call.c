@@ -5670,22 +5670,15 @@ void PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName)
  */
 unsigned char PLD_fn_bIsInFix(void* Ptr)
 {
-    unsigned int ulNbObject;
     unsigned int ulI;
+    unsigned int ulNbObject;
     unsigned int ulOffset;
-
-    ulNbObject = g_stFixInfo.ulNbObject;
-    if (0 < ulNbObject) {
-        ulI = 0;
-        ulOffset = 0;
-        do {
-            if (*(void**)((char*)&g_stFixInfo + ulOffset + 4) == Ptr) {
-                return 1;
-            }
-            ulI++;
-            ulOffset += 4;
-        } while (ulI < ulNbObject);
+    /* Permuter result: the redundant double assignment fixes register order (clean up later). */
+    ulNbObject = (ulNbObject = g_stFixInfo.ulNbObject);
+    for (ulI = 0; ulI < ulNbObject; ulI++)
+    {
+        if (g_stFixInfo.a20_stObjects[ulI] == Ptr)
+            return 1;
     }
-
     return 0;
 }

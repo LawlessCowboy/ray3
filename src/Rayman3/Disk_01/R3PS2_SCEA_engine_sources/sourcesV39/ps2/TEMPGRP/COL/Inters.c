@@ -4,6 +4,12 @@
 
 #include <stddef.h>
 
+/* R5900 accumulator multiply-add (mula.s/madda.s/madd.s), as in MECBhv.c. */
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 
@@ -336,20 +342,8 @@ unsigned char INT_fn_bFastRejectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_
  */
 unsigned char INT_fn_bGetInclusionPointInSphere(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
 {
-    float xDx;
-    float xDy;
-    float xDz;
-    float xDistSq;
-
-    xDx = p_stPoint->xX - p_stSphereCenter->xX;
-    xDy = p_stPoint->xY - p_stSphereCenter->xY;
-    xDz = p_stPoint->xZ - p_stSphereCenter->xZ;
-    xDistSq = (xDx * xDx) + (xDy * xDy) + (xDz * xDz);
-    if (xDistSq <= (xSphereRadius * xSphereRadius)) {
-        return 1;
-    }
-
-    return 0;
+    float xDx, xDy, xDz, xSqrNorm;
+    xDz = p_stPoint->xZ - p_stSphereCenter->xZ; xDy = p_stPoint->xY - p_stSphereCenter->xY; xDx = p_stPoint->xX - p_stSphereCenter->xX; MTH_SQR3_TO(xSqrNorm, xDx, xDy, xDz); return (xSqrNorm <= xSphereRadius * xSphereRadius);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1283–1322 */

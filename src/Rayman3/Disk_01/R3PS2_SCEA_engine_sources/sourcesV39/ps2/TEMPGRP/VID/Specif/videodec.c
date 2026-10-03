@@ -303,8 +303,12 @@ void videoDecMain(anon_0* vd)
  */
 int videoDecIsFlushed(anon_0* vd)
 {
-    return viBufCount(&vd->vibuf) == 0 && sceMpegIsRefBuffEmpty(&vd->mpeg);
+    int ret;
+    ret = 0;
+    if (!viBufCount(&vd->vibuf) && sceMpegIsRefBuffEmpty(&vd->mpeg))
 
+        ret = 1;
+    return ret;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 222–251 */

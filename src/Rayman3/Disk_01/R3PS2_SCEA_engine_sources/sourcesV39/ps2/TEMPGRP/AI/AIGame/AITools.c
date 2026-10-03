@@ -3174,6 +3174,20 @@ unsigned char fn_ucAreThereFloatIfYesConvertThem(tdstGetSetParam_* p_stParam1, t
     /* TODO: decompile from asm/... */
 }
 
+/* Engine float-to-int conversion: retail converts through $f30 at 164 sites
+ * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
+ * never picks for its own conversions. */
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 413–430 */
 /* addr: 0x00201340  size: 164 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3194,7 +3208,26 @@ unsigned char fn_ucIsThereFloatIfYesConvertItToInteger(tdstGetSetParam_* p_stPar
 {
     int lValue;
     unsigned char ucIsThereFloat;
-    /* TODO: decompile from asm/... */
+    ucIsThereFloat = (p_stParam->eType == E_vt_Float);
+    if (ucIsThereFloat)
+    {
+
+
+
+        if ((p_stParam->uDummy.uParam.xValue < 2147483648.0f) && (p_stParam->uDummy.uParam.xValue > -2147483648.0f))
+
+            lValue = MTH_M_xRealToLong(p_stParam->uDummy.uParam.xValue);
+        else if (p_stParam->uDummy.uParam.xValue > 0.0f)
+            lValue = 0x7FFFFFFF;
+
+        else
+            lValue = 0x80000001;
+
+        p_stParam->uDummy.uParam.lValue = lValue;
+        p_stParam->eType = E_vt_Integer;
+    }
+
+    return ucIsThereFloat;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 380–396 */

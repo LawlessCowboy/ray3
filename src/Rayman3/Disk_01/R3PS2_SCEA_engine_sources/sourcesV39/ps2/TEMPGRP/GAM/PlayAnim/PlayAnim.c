@@ -3452,7 +3452,17 @@ void PLA_fn_vStopCurrentMorphAnim(HIE_tdstSuperObject_* p_stSuperObject)
  */
 int fn_iCompareMorphData(stMorphData* p_stFirstElement, stMorphData* p_stSecondElement)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stFirstElement->uwChannelNumber < p_stSecondElement->uwChannelNumber)
+        return -1;
+    if (p_stFirstElement->uwChannelNumber > p_stSecondElement->uwChannelNumber)
+        return 1;
+
+
+
+    if (p_stFirstElement->uwFrameNumber < p_stSecondElement->uwFrameNumber)
+        return -1;
+
+    return p_stFirstElement->uwFrameNumber > p_stSecondElement->uwFrameNumber;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 226–238 */
