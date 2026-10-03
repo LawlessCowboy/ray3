@@ -102,8 +102,9 @@ def _string_label(data: bytes, offset: int) -> str | None:
     if len(text) > 48:
         text = text[:45] + '...'
     # objdump and asm-differ split relocation rows on whitespace; keep the
-    # label ASCII so objdump's output decodes cleanly.
-    return json.dumps(text, ensure_ascii=True).replace(' ', '_')
+    # label ASCII so objdump's output decodes cleanly.  Spaces become an
+    # explicit \x20 escape: rendering them as '_' hid real underscores.
+    return json.dumps(text, ensure_ascii=True).replace(' ', '\\x20')
 
 
 class RetailSymbolizer:

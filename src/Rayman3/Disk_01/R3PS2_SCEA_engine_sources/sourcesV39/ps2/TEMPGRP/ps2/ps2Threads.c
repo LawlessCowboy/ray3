@@ -393,7 +393,12 @@ void PS2_fn_vTriggerTransitionOn(void)
 void PS2_fn_vCreateTransitionSemaphores(void)
 {
     SemaParam S;
-    /* TODO: decompile from asm/... */
+    S.initCount = 0;
+    S.maxCount = 1;
+    TOnSid = CreateSema(&S);
+    S.initCount = 0;
+    S.maxCount = 1;
+    TOffSid = CreateSema(&S);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 224–224 */

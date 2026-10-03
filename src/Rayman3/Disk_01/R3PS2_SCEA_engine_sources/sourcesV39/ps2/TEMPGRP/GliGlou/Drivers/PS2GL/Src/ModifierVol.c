@@ -1464,7 +1464,7 @@ int GLI_BIG_GLOBALS_p_stVpt;
 int GLI_BIG_GLOBALS_gs_st_CameraMatrix;
 int GLI_BIG_GLOBALS_p_stCurrentCamera;
 unsigned int SCT_g_DrawingMirrored;
-int PS2glLiberator;
+void (*PS2glLiberator)(void*);
 int PS2glAllocator64;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 22–53 */
@@ -1856,7 +1856,15 @@ void GLI_vDrawDynamicShadow(void)
  */
 void GLI_vClearShadowVolumes(void)
 {
-    /* TODO: decompile from asm/... */
+    if (GLI_g_GlobalShadowColorArray)
+    {
+        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[0][0]);
+        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[0][1]);
+        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[1][0]);
+        PS2glLiberator((void*)GLI_g_GlobalShadowVertexArray[1][1]);
+        PS2glLiberator((void*)GLI_g_GlobalShadowColorArray);
+        GLI_g_GlobalShadowColorArray = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 337–416 */

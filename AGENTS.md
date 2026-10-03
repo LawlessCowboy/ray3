@@ -1,7 +1,8 @@
 # Rayman 3 matching workflow
 
 Read this before making any matching change. The project uses the Korean PS2
-ELF with CodeWarrior PS2 3.0 (2001-11-26) through Wibo. The only accepted
+ELF with CodeWarrior PS2 through Wibo: game sources build with 3.0.1
+(2002-01-23) and the PS2GL library with 3.0 (2001-11-26). The only accepted
 baseline profile is encoded in `tools/match.py` and the Makefile.
 
 ## Worker loop

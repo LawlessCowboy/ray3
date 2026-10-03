@@ -1793,6 +1793,12 @@ void GAM_vAllocateSaveBloc(void)
     PS2_g_SaveBloc = malloc(0x1000);
 }
 
+SAV2_tdeDataType_ SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType);
+/* ucType is decoded as SAV2_tdeDataType_, but callers narrow it to a byte
+ * (andi 0xff), matching its uc prefix. */
+void SAV2_fn_vDeclareAField(char* p_szElementName, unsigned char ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave);
+void SAV2_fn_vSetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 591–596 */
 /* addr: 0x0028bcc0  size: 92 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1805,7 +1811,10 @@ void GAM_vAllocateSaveBloc(void)
  */
 void SAV2_fn_vSetValueForSave(char* p_szElementName, void* p_stParam)
 {
-    /* TODO: decompile from asm/... */
+
+
+    SAV2_fn_vDeclareAField(p_szElementName, SAV2_fn_eGiveElementTypeFromAIType(((tdstGetSetParam_*)p_stParam)->eType), 1, 1, 1);
+    SAV2_fn_vSetAValueAtIndex(p_szElementName, 0, p_stParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 583–588 */
@@ -2085,7 +2094,7 @@ void SAV2_fn_vDeleteAField(char* p_szElementName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SAV2_fn_vDeclareAField(char* p_szElementName, SAV2_tdeDataType_ ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave)
+void SAV2_fn_vDeclareAField(char* p_szElementName, unsigned char ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave)
 {
     /* TODO: decompile from asm/... */
 }
@@ -2128,7 +2137,16 @@ unsigned char SAV2_fn_bIsExist(char* p_szElementName)
 SAV2_tdstElement_* SAV2_fn_p_stFindElementByName(char* p_szElementName)
 {
     SAV2_tdstElement_* p_stElement;
-    /* TODO: decompile from asm/... */
+
+
+
+    for (p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stElement != NULL; p_stElement = p_stElement->hNextBrotherDyn)
+    {
+        if (strcasecmp((char*)p_stElement->p_szElementName, p_szElementName) == 0)
+            return p_stElement;
+    }
+
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 246–272 */
@@ -2183,7 +2201,8 @@ void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType)
+/* Debug info says void; the element type is returned in $v0. */
+SAV2_tdeDataType_ SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType)
 {
     SAV2_tdeDataType_ eDataType;
     /* TODO: decompile from asm/... */

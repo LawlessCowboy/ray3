@@ -1565,10 +1565,27 @@ unsigned char GAM_fn_bIsActorToLoad(unsigned char ucActorId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_ucFindPersonalIdOfPersonalType(int otObjectPersonalType);
+
+static inline void GAM_vAddIdToLoad(stListOfFamiliesToLoad_* pList, unsigned char ucId)
+{
+    unsigned int i;
+    for (i = 0; i < pList->u32NbElements; i++) {
+        if (pList->a_ucId[i] == ucId)
+            return;
+    }
+    pList->a_ucId[pList->u32NbElements++] = ucId;
+}
+
 void GAM_fn_vSetActorToLoad(tdstEngineObject_* p_stEngineObject)
 {
     unsigned char ucActorPermanentId;
-    /* TODO: decompile from asm/... */
+
+    ucActorPermanentId = fn_ucFindPersonalIdOfPersonalType(p_stEngineObject->h_StandardGame->otObjectPersonalType);
+
+
+
+    GAM_vAddIdToLoad(&GAM_g_stTheListOfActorsToLoad, ucActorPermanentId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 984–985 */

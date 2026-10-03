@@ -944,5 +944,15 @@ void MEC_fn_vGravitySpeed(DNM_stDynamics* p_stDynamic, float xDT)
     float xZ;
     MAT_tdstTransformation_* hCurrentMatrix;
     float xGravity;
-    /* TODO: decompile from asm/... */
+
+    xGravity = p_stDynamic->m_tdstDynamicsBaseBlock.m_xGravity;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x8000) ? 1 : 0) return;
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+
+    xZ = -1.0f * xGravity * xDT;
+    xZ = xZ + p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
+    xZ = xZ * xDT;
+
+    xZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ + xZ;
+    if (hCurrentMatrix->eType == MAT_eTransform_Identity) hCurrentMatrix->eType = MAT_eTransform_Translation; hCurrentMatrix->stTransformMatrix.stCol_3.xZ = xZ;
 }

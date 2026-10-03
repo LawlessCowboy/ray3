@@ -1905,7 +1905,10 @@ void fn_vClearDynamicHierarchy(HIE_tdstSuperObject_* _hSOCurrentSector)
  */
 unsigned char GAM_fn_bIsCharacterActive(HIE_tdstSuperObject_* hSuperObj)
 {
-    /* TODO: decompile from asm/... */
+    /* hFather is not in the debug locals (probably a macro temporary); the cached
+       father load is what gives retail's register order. */
+    HIE_tdstSuperObject_* hFather = hSuperObj->hFatherDyn;
+    return ((hFather == (HIE_tdstSuperObject_*)gp_stDynamicWorld || hFather->hFatherDyn == (HIE_tdstSuperObject_*)gp_stDynamicWorld) && ((unsigned char)(((((hSuperObj->ulTypeOfLinkedObject != 2) ? NULL : hSuperObj->hLinkedObject.p_stCharacter)->h_StandardGame->ucMiscFlags & 4) ? 1 : 0)) == 1));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1561–1579 */

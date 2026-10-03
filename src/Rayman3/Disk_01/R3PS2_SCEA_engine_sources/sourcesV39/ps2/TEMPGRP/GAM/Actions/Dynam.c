@@ -1325,7 +1325,37 @@ void fn_vDynamFree(tdstEngineObject_* p_stObject)
 void fn_v_DynamicFree(tdstDynam_* h_Dynam)
 {
     DNM_stDynamics* p_stDynamic;
-    /* TODO: decompile from asm/... */
+
+
+    if ((p_stDynamic = h_Dynam->p_stDynamics) != NULL)
+    {
+
+
+
+
+
+
+
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x40000) ? 1 : 0)
+        {
+            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+                HMU_fn_vFree((void**)&p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport, 1);
+            HMU_fn_vFree((void**)&p_stDynamic, 1);
+        }
+
+
+
+
+
+
+
+
+
+
+
+        h_Dynam->p_stDynamics = NULL;
+        p_stDynamic = NULL;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 209–286 */

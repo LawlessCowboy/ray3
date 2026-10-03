@@ -251,5 +251,14 @@ unsigned char SAI_fn_bFreeAnElementFromList(SAI_tdstInternalStructure_* p_stInte
 SAI_tdstListEntry_* fn_hSearchAnElementInList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_vData, unsigned short eUserFlags)
 {
     SAI_tdstListEntry_* hListEntry;
-    /* TODO: decompile from asm/... */
+
+    hListEntry = p_stInternalStructure->p_stFirstEntry; while (hListEntry != NULL)
+    {
+        if ((void*)hListEntry->p_vDataPointer == p_vData && (hListEntry->eFlags & 0x3ff) == eUserFlags)
+            return hListEntry;
+
+        hListEntry = hListEntry->p_stNextEntry;
+    }
+
+    return NULL;
 }

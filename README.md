@@ -17,9 +17,9 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **1,553 / 4,164** (+5 register-equivalent) | **67,152 / 1,511,580** (**4.4425%**) |
+| **Game code** | **1,657 / 4,164** (+5 register-equivalent) | **80,560 / 1,511,580** (**5.3295%**) |
 | Library code | 764 / 3,668 | 41,396 / 756,524 (5.4719%) |
-| **Total** | **2,317 / 7,832** (+5 register-equivalent) | **108,548 / 2,268,104** (**4.7858%**) |
+| **Total** | **2,421 / 7,832** (+5 register-equivalent) | **121,956 / 2,268,104** (**5.3770%**) |
 
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
   started yet.
@@ -62,7 +62,10 @@ SHA-1 is `c2c3f5c2ccceedc6745b4738102409f27bbb9f10`.
 
 The optional compile workflow additionally needs:
 
-- Metrowerks CodeWarrior PS2 3.0, preferably the 26 November 2001 build;
+- Metrowerks CodeWarrior PS2 compilers 3.0 (26 November 2001), 3.0.1
+  (23 January 2002) and 3.0.3 (16 July 2002), as packaged by
+  [decomp.me](https://github.com/decompme/compilers), placed under
+  `Compiler/mwcps2-<version>/`;
 - [Wibo](https://github.com/decompals/wibo) (or an equivalent way to run that
   Windows compiler); and
 - the matching PS2 SDK headers/libraries.
@@ -104,6 +107,19 @@ compiler exactly reproduces `fn_pstAllocMind`, including the target's `sd/ld`
 RA save and `daddu` zero idiom; the previously tested 2.4 Build 0017 instead
 emits `sq/lq` and `pextlb`. A later 3.0 Build 38 produces the same matching code,
 so the precise 3.0 build remains to be discriminated with additional functions.
+
+Whole-repo sweeps over every recorded match and attempt then picked the
+compiler per owner. Game sources build with **3.0.1 (2002-01-23)**: 27 more
+game matches than 3.0 and none lost. The files listed in
+`config/compiler-3.0.3-sources.txt` build with **3.0.3 (2002-07-16)**, because
+each of them matches strictly more functions under it. Retail game code sits
+between those two builds, and no file has matches that only one build can
+produce on both sides, which fits per-file builds made at different times.
+PS2GL keeps **3.0 (2001-11-26)**, since it loses about 90 matches under the
+later builds. Every other PS2 CodeWarrior release that could be found (decomp.me's
+3.0b22/b38/b50/b52 and 3.0.1bXX builds, and the R3.03–R3.6 installers on the
+Internet Archive) was probed and loses matches. `tools/match.py` and the Makefile
+select the compiler automatically, and `MWCC=` overrides it for probes.
 
 To inspect regenerated source without changing the working tree, use a
 temporary output directory:

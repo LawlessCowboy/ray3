@@ -75,7 +75,16 @@ void HIE_vSetCharactereRLI(unsigned char ucNbRLI, unsigned char ucIndex1, unsign
  */
 short TMR_fn_wWait(unsigned int ulTimeToWait)
 {
-    /* TODO: decompile from asm/... */
+
+    if (!TimerLibOk)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    fn_vTimerWait(ulTimeToWait * 294912);
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 443–475 */

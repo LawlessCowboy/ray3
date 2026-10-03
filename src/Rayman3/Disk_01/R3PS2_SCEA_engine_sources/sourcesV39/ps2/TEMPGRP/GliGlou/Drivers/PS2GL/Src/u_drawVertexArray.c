@@ -217,10 +217,19 @@ void GLI_vPrepareDisplayingAGOs(GLD_tdstViewportAttributes_* _p_stViewport)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vRecomputeCharacterNormalsReal(unsigned int* pInstanceNormals, GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* pPoints, unsigned int xNbPoints, unsigned int NbVertices, unsigned int* pVBLWait);
+
 void GLI_vRecomputeNormalsWhileWaitingForVBL(void)
 {
     GLI_tdstNormalsToRecompute_* p;
-    /* TODO: decompile from asm/... */
+
+
+    while (GLI_g_CurrentNormalToRecompute < GLI_g_NbNormalsToRecompute && g_waiting)
+    {
+        p = &GLI_g_NormalsToRecomputeArray[GLI_g_CurrentNormalToRecompute];
+        GLI_vRecomputeCharacterNormalsReal((unsigned int*)p->pInstanceNormals, p->p_stEIT, p->pPoints, p->xNbPoints, p->NbVertices, (unsigned int*)&g_waiting);
+        GLI_g_CurrentNormalToRecompute++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 1462–1464 */
@@ -436,7 +445,8 @@ void GLI_vRecomputeCharacterNormals(_SDC_Instance_* pInstance, unsigned int* pIn
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vRecomputeCharacterNormalsReal(unsigned int* pInstanceNormals, GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* pPoints, unsigned int xNbPoints, unsigned int* pVBLWait)
+/* Callers pass NbVertices in t0 and pVBLWait in t1 (the callee saves t1); the debug record drops NbVertices. */
+void GLI_vRecomputeCharacterNormalsReal(unsigned int* pInstanceNormals, GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* pPoints, unsigned int xNbPoints, unsigned int NbVertices, unsigned int* pVBLWait)
 {
     unsigned int FMask;
     unsigned int Mask;
@@ -471,10 +481,21 @@ void GLI_vRecomputeCharacterNormalsReal(unsigned int* pInstanceNormals, GEO_tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern float powf(float, float);
+
 void InitNormalPacker(void)
 {
     float fadd;
-    /* TODO: decompile from asm/... */
+
+    fadd = powf(2.0f, 23.0f);
+    GLI_g_NormalPacker[0] = fadd;
+    GLI_g_NormalPacker[1] = fadd;
+    GLI_g_NormalPacker[2] = fadd;
+    GLI_g_NormalPacker[3] = fadd;
+    GLI_g_MulVal[0] = 127.0f;
+    GLI_g_MulVal[1] = 127.0f;
+    GLI_g_MulVal[2] = 127.0f;
+    GLI_g_MulVal[3] = 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 951–994 */

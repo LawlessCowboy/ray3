@@ -1468,7 +1468,24 @@ void MSWay_fn_vSetPath(tdstMSWay_* hWay, WP_tdstGraph_* hPath, char _bIsCircular
  */
 void MSWay_fn_vDesinitPath(tdstMSWay_* hWay)
 {
-    /* TODO: decompile from asm/... */
+    if (hWay)
+    {
+
+
+        if (fn_bScriptTransitionDeallocationCondition())
+        {
+            if (hWay->m_hPath)
+            {
+
+
+
+                WPG_fn_vDestroy(hWay->m_hPath);
+            }
+        }
+        hWay->m_hPath = NULL;
+        hWay->m_lIndex = -1;
+        hWay->m_bIsCircular = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 267–273 */

@@ -1131,9 +1131,27 @@ struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Only the leading member of the engine structure is used in this TU. */
+struct tdstEngineStructure_ {
+    unsigned char eEngineMode; /* +0x0 */
+    unsigned char _extractor_padding_rest[0x1b8f]; /* +0x1..0x1b8f: members unused in this TU */
+};
+extern struct tdstEngineStructure_ g_stEngineStructure;
+extern unsigned char g_ucGameModuleId;
+
 void fn_vChangeEngineMode(unsigned char eNewMode)
 {
-    /* TODO: decompile from asm/... */
+    if (g_stEngineStructure.eEngineMode == 0)
+
+        Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 49, -1, 255, 255, NULL);
+
+    if (eNewMode == 0 || eNewMode >= 12)
+
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 19, -1, 255, 255, NULL);
+    }
+
+    g_stEngineStructure.eEngineMode = eNewMode;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Caps.c lines 54–71 */
@@ -1153,7 +1171,23 @@ void fn_vChangeEngineMode(unsigned char eNewMode)
  */
 void fn_vChangeCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities, int lValue)
 {
-    /* TODO: decompile from asm/... */
+    switch (lValue)
+    {
+    case 0:
+    case 2:
+        _p_stObject->h_StandardGame->ubf32Capabilities |= _ubf32Capabilities;
+        break;
+    case 1:
+    case 3:
+        _p_stObject->h_StandardGame->ubf32Capabilities = _ubf32Capabilities;
+        break;
+    case 4:
+        _p_stObject->h_StandardGame->ubf32Capabilities -= _p_stObject->h_StandardGame->ubf32Capabilities & _ubf32Capabilities;
+        break;
+    case 5:
+        _p_stObject->h_StandardGame->ubf32Capabilities = 0;
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Caps.c lines 49–50 */

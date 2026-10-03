@@ -2864,7 +2864,16 @@ void AGO2_ProcessEmpty(void)
 void AGO2_ShrinkFire(AGO2_Part_* p)
 {
     float Value;
-    /* TODO: decompile from asm/... */
+
+    Value = 1.0f - g_fTimeDifference * p->xShrinkingSpeed;
+
+    p->xSize[0] *= Value;
+    p->xSize[1] *= Value;
+
+    if (p->xSize[0] < 0.01f)
+
+
+        p->ulType |= 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2251–2300 */
@@ -2993,6 +3002,17 @@ unsigned char AGO2_CreateFire(AGO2_Part_* p, AGO_V4D_* Position, unsigned int Pa
     /* TODO: decompile from asm/... */
 }
 
+extern char* AGO2_MEM_GetPointerFromHandle(unsigned int Handle);
+/* Callers pass the viewport first and the two sizes in f12/f13; the recovered
+   GLI_vDisplaySerialLeaves definition drops them (Bees/Flow keep them). */
+extern void GLI_vDisplaySerialLeaves(GLD_tdstViewportAttributes_* pViewport, AGO2_LeavesParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
+extern void GLI_vDisplaySerialFlow(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
+extern int printf(const char*, ...);
+/* AGO2_DisplayBees passes pMaterial2 in t0 as well; the recovered definition omits it. */
+extern void GLI_vDisplaySerialBees(GLD_tdstViewportAttributes_* pViewport, AGO2_BeeParticle_* _pParticleArray_, int NumberOfParticles, void* pMaterial, void* pMaterial2, float sx, float sy);
+extern void GLI_vDisplaySerialFlowBlured(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
+extern void GLI_vDisplaySerialParticleRain(GLD_tdstViewportAttributes_* param0, AGO2_RainParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2116–2133 */
 /* addr: 0x001e5470  size: 108 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3010,7 +3030,17 @@ unsigned char AGO2_CreateFire(AGO2_Part_* p, AGO_V4D_* Position, unsigned int Pa
 void AGO2_DisplayBees(AGO2_Part_* p)
 {
     AGO2_FlowParticle_* pParticleArray;
-    /* TODO: decompile from asm/... */
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialBees((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, (AGO2_BeeParticle_*)pParticleArray, p->GroupNumber, (void*)p->pMaterial1, (void*)p->pMaterial2, p->xSize[0], p->xSize[1]);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2056–2112 */
@@ -3154,6 +3184,7 @@ unsigned char AGO2_CreateBees(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4
     /* TODO: decompile from asm/... */
 }
 
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1958–1975 */
 /* addr: 0x001e5db0  size: 104 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3171,7 +3202,17 @@ unsigned char AGO2_CreateBees(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4
 void AGO2_DisplayLeaves(AGO2_Part_* p)
 {
     AGO2_LeavesParticle_* pParticleArray;
-    /* TODO: decompile from asm/... */
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_LeavesParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialLeaves((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1799–1954 */
@@ -3586,7 +3627,18 @@ unsigned char AGO2_CreateSerialCameraParticleSnow(unsigned int ulParticleType, A
 void AGO2_DisplayRainParticleSpriteGroup(AGO2_Part_* p)
 {
     AGO2_RainParticle_* pParticleArray;
-    /* TODO: decompile from asm/... */
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_RainParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        if (p->GroupNumber)
+            GLI_vDisplaySerialParticleRain((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1418–1499 */
@@ -3949,7 +4001,17 @@ void AGO2_FadeFlow(AGO2_Part_* p)
 void AGO2_DisplayFlowMotionBlur(AGO2_Part_* p)
 {
     AGO2_FlowParticle_* pParticleArray;
-    /* TODO: decompile from asm/... */
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialFlowBlured((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1134–1151 */
@@ -3969,7 +4031,17 @@ void AGO2_DisplayFlowMotionBlur(AGO2_Part_* p)
 void AGO2_DisplayFlow(AGO2_Part_* p)
 {
     AGO2_FlowParticle_* pParticleArray;
-    /* TODO: decompile from asm/... */
+
+    if (p->hGroup)
+    {
+        pParticleArray = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+        if (!pParticleArray)
+        {
+            printf("AGO2MEM DECONNE UN MAX !!!\n");
+            return;
+        }
+        GLI_vDisplaySerialFlow((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, pParticleArray, p->GroupNumber, (void*)p->pMaterial1, p->xSize[0], p->xSize[1]);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1082–1131 */
@@ -4083,7 +4155,11 @@ unsigned char AGO2_CreateFlow(AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direc
  */
 void AGO2_ShrinkNormal(AGO2_Part_* p)
 {
-    /* TODO: decompile from asm/... */
+    p->xSize[0] -= g_fTimeDifference * p->xShrinkingSpeed;
+    p->xSize[1] -= g_fTimeDifference * p->xShrinkingSpeed;
+    if (p->xSize[0] <= 0.0f || p->xSize[1] <= 0.0f)
+
+        p->ulType |= 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 950–960 */
@@ -4104,7 +4180,15 @@ void AGO2_ShrinkNormal(AGO2_Part_* p)
  */
 void AGO2_FadeNormal(AGO2_Part_* p)
 {
-    /* TODO: decompile from asm/... */
+    p->xTransparency -= g_fTimeDifference * p->xTransparencySpeed;
+    if (p->xTransparency < 0.0f)
+    {
+        p->xTransparency = 0.0f;
+        p->ulType |= 1;
+    }
+    else if (p->xTransparency >= 255.0f)
+
+        p->xTransparency = 255.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 937–937 */
@@ -4149,9 +4233,22 @@ void AGO2_ProcessSimpleParticleWithSpeedAndGravity(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Retail callers pass the viewport (a2) and animation time (a3) as well as the
+   four parameters in VUSprites.cpp's recovered definition. */
+extern int GLI_vDrawWorldSpriteOpt(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime);
+extern void GLI_vSetGlobalAlpha(float Alpha);
+
 void AGO2_DisplayOrdinarySprite(AGO2_Part_* p)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vSetGlobalAlpha(p->xTransparency);
+    if (GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&p->Position, (GLI_tdstMaterial_*)p->pMaterial1, p->xSize[0], p->xSize[1], (GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport, p->AnimTime))
+
+
+
+
+
+
+        p->ulType |= 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 804–813 */
@@ -4225,7 +4322,10 @@ void AGO2_vClearParticlesOfThatType(unsigned int PartType)
 AGO2_Part_* AGO2_bIsTypeAlreadyExists(unsigned int PartType)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    i = 0;
+    for (; i < g_ulNumberOfAgos2 && g_pAGO2Parts[i].ulBaseID != PartType; i++);
+    if (i == g_ulNumberOfAgos2) return NULL;
+    return &g_pAGO2Parts[i];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 675–776 */

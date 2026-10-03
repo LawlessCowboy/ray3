@@ -3426,13 +3426,42 @@ void fn_vGetViewportCoordinates(MTH3D_tdstVector_* pDestination2D, MTH3D_tdstVec
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Declared without a narrow return type here: retail passes the result on without an andi. */
+int fn_ucGetFunctionUltraOperator(tdeFuncId_ eFuncId);
+void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 tdstNodeInterpret_* CAM_fn_p_stGetSetMirrorFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
     unsigned char bValue;
     tdstCineinfo_* hCineinfo;
     HIE_tdstSuperObject_* hCamera;
-    /* TODO: decompile from asm/... */
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hCamera);
+
+    hCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+
+    switch (eFuncId)
+    {
+    case eFct_Cam_SetMirrorFlag:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        bValue = p_stValue->uDummy.uParam.ucValue;
+        CAM_fn_vSetMirrorFlag(hCineinfo, bValue);
+        p_stValue->uDummy.uParam.lValue = (long)bValue; p_stValue->eType = E_vt_Integer;
+
+        p_stValue->uDummy.uParam.ucValue = bValue; return p_stTree;
+
+
+    case eFct_Cam_GetMirrorFlag:
+        bValue = CAM_fn_bGetMirrorFlag(hCineinfo);
+        p_stValue->uDummy.uParam.lValue = (long)bValue; p_stValue->eType = E_vt_Integer;
+        return p_stTree;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Fnct.c lines 868–889 */
@@ -3449,9 +3478,14 @@ tdstNodeInterpret_* CAM_fn_p_stGetSetMirrorFlag(HIE_tdstSuperObject_* p_SuperObj
  */
 tdstNodeInterpret_* CAM_fn_p_stGetSetTransparencyFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    long lValue;
+    unsigned char lValue; /* debug record: long; retail re-narrows the result with andi before the int store */
     HIE_tdstSuperObject_* hCamera;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator((p_stTree - 1)->uDummy.uId.eFuncId), p_SuperObjPerso, &hCamera);
+
+    lValue = CAM_fn_ucGetTransparencyFlag(hCamera->hLinkedObject.p_stCharacter->h_Cineinfo);
+    p_stValue->uDummy.uParam.lValue = lValue; p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Fnct.c lines 777–855 */
@@ -3603,12 +3637,26 @@ tdstNodeInterpret_* CAM_fn_p_stGetCameraOfViewport(HIE_tdstSuperObject_* p_Super
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo);
+char fn_cGetSectorCameraType(HIE_tdstSuperObject_* _hSprObjSector);
+
 tdstNodeInterpret_* CAM_fn_p_stGetSectorCameraType(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     HIE_tdstSuperObject_* hCurrentSectorCamera;
     int lType;
     HIE_tdstSuperObject_* hCamera;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator((p_stTree - 1)->uDummy.uId.eFuncId), p_SuperObjPerso, &hCamera);
+
+    hCurrentSectorCamera = fn_h_SectInfoGetCurrentSector(hCamera->hLinkedObject.p_stCharacter->h_SectInfo);
+
+    lType = fn_cGetSectorCameraType(hCurrentSectorCamera);
+
+
+
+
+    p_stValue->uDummy.uParam.lValue = (long)lType; p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Fnct.c lines 491–539 */

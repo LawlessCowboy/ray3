@@ -1506,7 +1506,19 @@ unsigned short g_DEMO_KeybTest;
  */
 unsigned char fn_ucToTableElement(int _n)
 {
-    /* TODO: decompile from asm/... */
+    if (_n < 0x20)
+        _n = 0;
+    else if (_n >= 0x61 && _n < 0x7b)
+        _n -= 0x40;
+    else if (_n >= 0x41 && _n < 0x5b)
+        _n -= 0x20;
+    else if (_n >= 0xa0)
+        _n -= 0x40;
+    else
+        _n -= 0x20;
+
+
+    return (unsigned char)_n;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 525–525 */

@@ -55,6 +55,13 @@ INSIGHTS_PATH = ROOT / 'docs' / 'matching-insights.md'
 TARGET_PATH = ROOT / 'SLKA_250.78'
 DEFAULT_WIBO = ROOT / 'wibo-x86_64'
 DEFAULT_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0-011126' / 'mwccps2.exe'
+# Game sources match MWCC 3.0.1 (2002-01-23) better than 3.0 (2001-11-26):
+# whole-repo sweep +27 game matches and no losses (3.0.3 gave +45/-21), while
+# PS2GL loses matches under the later builds, so the library stays on 3.0.
+# ``MWCC`` in the environment overrides both (probes, sweeps).
+GAME_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0.1-020123' / 'mwccps2.exe'
+LATE_GAME_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0.3-020716' / 'mwccps2.exe'
+LATE_GAME_SOURCES_PATH = ROOT / 'config' / 'compiler-3.0.3-sources.txt'
 DEFAULT_INCLUDES = ROOT / 'include' / 'mwcc'
 MODEL_ORDER = {
     'gpt-5.4-mini': 0,
@@ -73,17 +80,56 @@ GAME_SOURCE_ROOT = Path('src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources')
 GAME_MWCC_FLAGS = ['-pragma', 'dividefix on']
 
 
-def mwcc_flags(owner: Path | str) -> list[str]:
-    """Return the compiler flags for a translation unit, by its owning source."""
+def is_game_source(owner: Path | str) -> bool:
     path = Path(owner)
     if path.is_absolute():
         try:
             path = path.relative_to(ROOT)
         except ValueError:
-            return list(MWCC_FLAGS)
-    if path.parts[:len(GAME_SOURCE_ROOT.parts)] == GAME_SOURCE_ROOT.parts:
+            return False
+    return path.parts[:len(GAME_SOURCE_ROOT.parts)] == GAME_SOURCE_ROOT.parts
+
+
+def mwcc_flags(owner: Path | str) -> list[str]:
+    """Return the compiler flags for a translation unit, by its owning source."""
+    if is_game_source(owner):
         return MWCC_FLAGS + GAME_MWCC_FLAGS
     return list(MWCC_FLAGS)
+
+
+def _relative_owner(owner: Path | str) -> str:
+    path = Path(owner)
+    if path.is_absolute():
+        try:
+            path = path.relative_to(ROOT)
+        except ValueError:
+            return path.as_posix()
+    return path.as_posix()
+
+
+_LATE_GAME_SOURCES: set[str] | None = None
+
+
+def late_game_sources() -> set[str]:
+    """Game files built with 3.0.3 (config/compiler-3.0.3-sources.txt)."""
+    global _LATE_GAME_SOURCES
+    if _LATE_GAME_SOURCES is None:
+        lines = LATE_GAME_SOURCES_PATH.read_text().splitlines() if LATE_GAME_SOURCES_PATH.exists() else []
+        _LATE_GAME_SOURCES = {line.strip() for line in lines if line.strip() and not line.startswith('#')}
+    return _LATE_GAME_SOURCES
+
+
+def owner_compiler(owner: Path | str) -> tuple[Path, str]:
+    """(compiler, profile name) for a translation unit's owning source."""
+    if not is_game_source(owner):
+        return DEFAULT_MWCC, 'mwccps2-3.0-011126-o3'
+    if _relative_owner(owner) in late_game_sources():
+        return LATE_GAME_MWCC, 'mwccps2-3.0.3-020716-o3'
+    return GAME_MWCC, 'mwccps2-3.0.1-020123-o3'
+
+
+def compiler_profile(owner: Path | str) -> str:
+    return owner_compiler(owner)[1]
 
 
 @dataclass
@@ -365,7 +411,30 @@ def cached_source_index(target_symbols: list[Symbol], main: Section,
     return entries
 
 
+_TARGET_CONTEXT = None
+_TARGET_CONTEXT_LOCK = threading.Lock()
+
+
+def retail_image() -> bytes:
+    """The retail ELF image, read once per process."""
+    return target_context_cached()[5]
+
+
 def target_context() -> tuple[list[Section], list[Symbol], Section, dict[int, Symbol], dict[str, Symbol]]:
+    """Parsed retail ELF, cached per process (verify-recorded used to
+    re-parse the whole symbol table for every function)."""
+    return target_context_cached()[:5]
+
+
+def target_context_cached():
+    global _TARGET_CONTEXT
+    with _TARGET_CONTEXT_LOCK:
+        if _TARGET_CONTEXT is None:
+            _TARGET_CONTEXT = (*_load_target_context(), TARGET_PATH.read_bytes())
+        return _TARGET_CONTEXT
+
+
+def _load_target_context() -> tuple[list[Section], list[Symbol], Section, dict[int, Symbol], dict[str, Symbol]]:
     if not TARGET_PATH.exists():
         raise FileNotFoundError('retail ELF missing: place it at SLKA_250.78')
     sections = read_sections(TARGET_PATH)
@@ -399,9 +468,10 @@ def find_entry(query: str, entries: list[dict]) -> dict:
     return matches[0]
 
 
-def tool_paths() -> tuple[Path, Path, Path]:
+def tool_paths(owner: Path | str | None = None) -> tuple[Path, Path, Path]:
     wibo = Path(os.environ.get('WIBO', DEFAULT_WIBO))
-    mwcc = Path(os.environ.get('MWCC', DEFAULT_MWCC))
+    default = owner_compiler(owner)[0] if owner is not None else DEFAULT_MWCC
+    mwcc = Path(os.environ.get('MWCC', default))
     includes = Path(os.environ.get('MWC_INCLUDES', DEFAULT_INCLUDES))
     return wibo, mwcc, includes
 
@@ -410,7 +480,7 @@ def compile_source(source: Path, owner: Path | str | None = None) -> tuple[Path 
     """Compile a source file; ``owner`` (the canonical source path) selects
     the flags when ``source`` is a candidate copy such as a permuter output."""
     flags = mwcc_flags(owner if owner is not None else source)
-    wibo, mwcc, includes = tool_paths()
+    wibo, mwcc, includes = tool_paths(owner if owner is not None else source)
     for path, label in ((wibo, 'Wibo'), (mwcc, 'MWCC'), (includes, 'MWC include directory')):
         if not path.exists():
             return None, f'{label} missing: {path}'
@@ -819,7 +889,7 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
     section = obj_sections[candidate.shndx]
     candidate_bytes = bytearray(section.data[candidate.value:candidate.value + candidate.size])
     target_offset = main.offset + entry['address'] - main.addr
-    target_bytes = TARGET_PATH.read_bytes()[target_offset:target_offset + entry['size']]
+    target_bytes = retail_image()[target_offset:target_offset + entry['size']]
     gp_symbol = target_names.get('_gp')
     gp = gp_symbol.value if gp_symbol else 0
     unresolved = []
@@ -1129,6 +1199,13 @@ def command_list(args: argparse.Namespace) -> int:
                and (not args.compileable or source_compileable(e['source'], compileability))
                and (not args.difficulty or e['difficulty']['label'] == args.difficulty)
                and (not args.model or e['difficulty']['model'] == args.model)]
+    if args.skip_residuals:
+        image = retail_image()
+        matches = [e for e in matches if not known_residual(
+            e['address'], image[main.offset + e['address'] - main.addr:][:e['size']])]
+    if args.unattempted:
+        attempted = {a['name'] for a in manifest.get('attempts', [])}
+        matches = [e for e in matches if e['name'] not in attempted]
     for entry in sorted(matches, key=lambda e: (e['difficulty']['score'], e['size'], e['address']))[:args.limit]:
         difficulty = entry['difficulty']
         print(f"0x{entry['address']:08x} {entry['size']:4d} {entry['language']:3s} "
@@ -1336,7 +1413,7 @@ def command_check(args: argparse.Namespace) -> int:
         manifest.setdefault('functions', {})[f"0x{entry['address']:08x}"] = {
             'address': f"0x{entry['address']:08x}", 'name': entry['name'], 'size': entry['size'],
             'source': entry['source'], 'status': 'MATCH',
-            'compiler_profile': 'mwccps2-3.0-011126-o3',
+            'compiler_profile': compiler_profile(entry['source']),
         }
         save_manifest(manifest)
         print('recorded verified match')
@@ -1350,7 +1427,7 @@ def command_check(args: argparse.Namespace) -> int:
             manifest['functions'][key] = {
                 'address': key, 'name': entry['name'], 'size': entry['size'],
                 'source': entry['source'], 'status': 'EQUIVALENT',
-                'compiler_profile': 'mwccps2-3.0-011126-o3',
+                'compiler_profile': compiler_profile(entry['source']),
             }
             save_manifest(manifest)
             print('recorded verified register-equivalent function')
@@ -1378,6 +1455,37 @@ def command_check(args: argparse.Namespace) -> int:
         save_manifest(manifest)
         print('recorded attempt')
     return 0 if result['status'] == 'MATCH' else 1
+
+
+def _is_branch_word(word: int) -> bool:
+    op = word >> 26
+    return (op in (1, 2, 3, 4, 5, 6, 7, 0x14, 0x15, 0x16, 0x17)
+            or (op == 0 and (word & 0x3F) in (8, 9))
+            or (op in (0x11, 0x12) and ((word >> 21) & 0x1F) == 8))
+
+
+def known_residual(address: int, code: bytes) -> str | None:
+    """Name a target-side residual family the current compilers cannot emit.
+
+    ``alignment-nop``: a nop that is not a delay slot, is a branch target, and
+    sits at 4 mod 8 so the next instruction lands on an 8-byte boundary.
+    Retail emits these at loop heads/exits; no MWCC build or source shape we
+    have reproduces them (see docs/matching-insights.md).
+    """
+    words = struct.unpack_from(f'<{len(code) // 4}I', code)
+    targets = set()
+    for index, word in enumerate(words):
+        op = word >> 26
+        if _is_branch_word(word) and op not in (2, 3) and not (op == 0):
+            offset = word & 0xFFFF
+            offset -= 0x10000 if offset & 0x8000 else 0
+            targets.add(address + index * 4 + 4 + offset * 4)
+    for index, word in enumerate(words):
+        pc = address + index * 4
+        if (word == 0 and pc % 8 == 4 and index and not _is_branch_word(words[index - 1])
+                and pc in targets):
+            return 'alignment-nop'
+    return None
 
 
 def classify_result(result: dict) -> str:
@@ -1415,14 +1523,90 @@ def command_classify(args: argparse.Namespace) -> int:
     _, symbols, main, _, _ = target_context()
     entry = find_entry(args.function, cached_source_index(symbols, main))
     result = compare(entry, verbose=True)
+    code = retail_image()[main.offset + entry['address'] - main.addr:][:entry['size']]
     print(json.dumps({'name': entry['name'], 'status': result.get('status'),
                       'class': classify_result(result),
+                      'known_residual': known_residual(entry['address'], code),
                       'first_difference': result.get('first_difference'),
                       'candidate_size': result.get('candidate_size'),
                       'target_size': result.get('target_size'),
                       'unresolved_relocations': result.get('unresolved_relocations', []),
                       'line_offsets_equal': result.get('line_offsets_equal')}, indent=2))
     return 0 if result.get('status') == 'MATCH' else 1
+
+
+def function_body_span(text: str, name: str) -> tuple[int, int]:
+    """Span of the body (between the definition's braces) of ``name``."""
+    found = list(re.finditer(r'^[^\n;]*\b%s\s*\([^;{]*\)\s*\{\n' % re.escape(name), text, re.M))
+    if len(found) != 1:
+        raise ValueError(f'{len(found)} definitions of {name!r} found')
+    start = found[0].end()
+    depth, index = 1, start
+    while depth and index < len(text):
+        depth += {'{': 1, '}': -1}.get(text[index], 0)
+        index += 1
+    return start, index - 1
+
+
+def diff_row_count(result: dict) -> int:
+    candidate = bytes.fromhex(result.get('candidate_hex', ''))
+    target = bytes.fromhex(result.get('target_hex', ''))
+    rows = sum(candidate[i:i + 4] != target[i:i + 4] for i in range(0, min(len(candidate), len(target)), 4))
+    return rows + abs(len(candidate) - len(target)) // 4
+
+
+def command_try(args: argparse.Namespace) -> int:
+    """Compile whole-body variants of one function and keep the first MATCH.
+
+    The variants file holds complete function bodies (locals included)
+    separated by lines containing only ``----``.  The canonical source is
+    restored after every non-matching variant; ``--apply N`` writes variant N
+    without testing, for inspecting it with ``check --diff``.
+    """
+    _, symbols, main, _, _ = target_context()
+    entry = find_entry(args.function, cached_source_index(symbols, main))
+    path = ROOT / entry['source']
+    original = path.read_text(encoding='utf-8', errors='replace')
+    start, end = function_body_span(original, entry['name'])
+    variants = [v.strip('\n') for v in re.split(r'^----$', Path(args.variants).read_text(), flags=re.M)]
+
+    def write(variant: str) -> None:
+        path.write_text(original[:start] + variant + '\n' + original[end:], encoding='utf-8')
+
+    if args.apply is not None:
+        write(variants[args.apply])
+        print(f'applied variant {args.apply}')
+        return 0
+    fallback = None   # first MATCH whose line map still differs
+    try:
+        for number, variant in enumerate(variants):
+            write(variant)
+            result = compare(entry, verbose=True)
+            status = result.get('status')
+            lines_ok = result.get('line_offsets_equal', True)
+            detail = ''
+            if status == 'MISMATCH':
+                detail = (f"size {result.get('candidate_size')}/{result.get('target_size')} "
+                          f"rows={diff_row_count(result)} first=+0x{result.get('first_difference') or 0:x} "
+                          f"lines={'ok' if lines_ok else 'different'}")
+            elif status == 'MATCH' and not lines_ok:
+                detail = 'lines=different'
+            print(f'{number:2d} {status} {detail}')
+            if status == 'MATCH' and lines_ok:
+                print(f'kept variant {number}')
+                return 0
+            if status == 'MATCH' and fallback is None:
+                fallback = number
+    except BaseException:
+        path.write_text(original, encoding='utf-8')
+        raise
+    if fallback is not None:
+        write(variants[fallback])
+        print(f'kept variant {fallback} (bytes match; line map differs)')
+        return 0
+    path.write_text(original, encoding='utf-8')
+    print('no variant matched; source restored')
+    return 1
 
 
 def load_leases() -> dict:
@@ -1675,6 +1859,10 @@ def main() -> int:
     list_parser.add_argument('--refresh-index', action='store_true')
     list_parser.add_argument('--compileable', action='store_true')
     list_parser.add_argument('--include-unowned', action='store_true')
+    list_parser.add_argument('--skip-residuals', action='store_true',
+                             help='hide functions with a known compiler-build residual (alignment nops)')
+    list_parser.add_argument('--unattempted', action='store_true',
+                             help='hide functions with a recorded attempt')
     list_parser.add_argument('--difficulty', choices=['trivial', 'easy', 'moderate', 'complex', 'expert'])
     list_parser.add_argument('--model', choices=['gpt-5.4-mini', 'gpt-5.6-luna',
                                                   'gpt-5.6-terra', 'gpt-5.6-sol'])
@@ -1685,6 +1873,11 @@ def main() -> int:
     signature_parser = sub.add_parser('signature')
     signature_parser.add_argument('function')
     signature_parser.set_defaults(func=command_signature)
+    try_parser = sub.add_parser('try', help='test whole-body variants, keep the first MATCH')
+    try_parser.add_argument('function')
+    try_parser.add_argument('variants', help='file of function bodies separated by ---- lines')
+    try_parser.add_argument('--apply', type=int, help='write variant N without testing')
+    try_parser.set_defaults(func=command_try)
     classify_parser = sub.add_parser('classify', help='classify a mismatch for worker routing')
     classify_parser.add_argument('function')
     classify_parser.set_defaults(func=command_classify)

@@ -796,7 +796,15 @@ unsigned int fn_ulDynamSizeOf(void)
 GLI_tdstLight_* HIE_fn_hGetSuperObjectLight(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     tdstMSLight_* hMSLight;
-    /* TODO: decompile from asm/... */
+
+    if (p_SuperObjPerso->ulTypeOfLinkedObject == 2)
+    {
+
+        hMSLight = ((p_SuperObjPerso->ulTypeOfLinkedObject != 2) ? NULL : p_SuperObjPerso->hLinkedObject.p_stCharacter)->h_MSLight;
+
+        return (hMSLight != NULL) ? ((hMSLight->bLocalLight == 0) ? NULL : hMSLight->p_stLight) : NULL;
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1327–1333 */

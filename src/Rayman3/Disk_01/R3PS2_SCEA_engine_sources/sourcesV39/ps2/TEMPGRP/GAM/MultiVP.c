@@ -2135,7 +2135,14 @@ void GAM_MultiVP_fn_vAutoAssociateMainPlayersForViewPorts(void)
  */
 void GAM_MultiVP_fn_vInvertViewPorts(unsigned char _ucVPIndex1, unsigned char _ucVPIndex2)
 {
-    /* TODO: decompile from asm/... */
+    if ((_ucVPIndex1 >= g_stEngineStructure.ucNumberOfPlayersInMultiMode) || (_ucVPIndex2 >= g_stEngineStructure.ucNumberOfPlayersInMultiMode) || (_ucVPIndex1 == _ucVPIndex2))
+
+
+
+        return;
+
+    GAM_MultiVP_fn_vInvertOneVP(0, _ucVPIndex1, _ucVPIndex2);
+    GAM_MultiVP_fn_vInvertOneVP(1, _ucVPIndex1, _ucVPIndex2);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 147–154 */
@@ -2199,10 +2206,22 @@ unsigned char GAM_MultiVP_fn_vGetViewPortFromPlayer(HIE_tdstSuperObject_* hCamer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int _lViewportNumber);
+void CAM_fn_vCineInfoSetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hIntCineinfo, HIE_tdstSuperObject_* _hSuperObject);
+
 void GAM_MultiVP_fn_vSetPlayerForViewPort(unsigned char _ucViewPortIndex, HIE_tdstSuperObject_* hCameraTargetSO)
 {
     HIE_tdstSuperObject_* hSprObjCamera;
-    /* TODO: decompile from asm/... */
+
+    if (_ucViewPortIndex > g_stEngineStructure.ucNumberOfPlayersInMultiMode)
+        return;
+
+
+    hSprObjCamera = CAM_fn_hGetActiveCamera(_ucViewPortIndex);
+    if (hSprObjCamera)
+        CAM_fn_vCineInfoSetSuperObjectTargeted(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent, hCameraTargetSO);
+
+    g_stEngineStructure.a_hSO_CurrentMainPlayers[_ucViewPortIndex] = (int)hCameraTargetSO;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 80–90 */

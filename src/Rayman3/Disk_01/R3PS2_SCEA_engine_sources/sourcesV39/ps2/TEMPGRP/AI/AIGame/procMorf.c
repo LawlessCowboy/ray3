@@ -3066,11 +3066,24 @@ tdstNodeInterpret_* fn_p_stMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Declared without a narrow return type here: retail passes the result on without an andi. */
+int fn_ucGetConditionUltraOperator(tdeCondId_ eCondId);
+void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+unsigned char MOR_fn_bIsChannelMorphed(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex);
+
 tdstNodeInterpret_* fn_p_stIsMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator((p_stTree - 1)->uDummy.uId.eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+    *p_lValue = (long)MOR_fn_bIsChannelMorphed(p_SuperObjPerso, stValue.uDummy.uParam.wValue);
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 226–264 */
@@ -3093,6 +3106,9 @@ tdstNodeInterpret_* fn_p_stIsMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcId);
+short MOR_fn_xStopMorph(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex);
+
 tdstNodeInterpret_* fn_p_stStopMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstMorphChannelList_* p_stMorph_Next;
@@ -3100,7 +3116,34 @@ tdstNodeInterpret_* fn_p_stStopMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdeProcedureId_ eProcId;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+
+    eProcId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    switch (eProcId)
+    {
+
+    case eProc_StopMorph:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+        MOR_fn_xStopMorph(p_SuperObjPerso, stValue.uDummy.uParam.wValue);
+
+        break;
+
+
+
+
+
+    case eProc_StopAllMorph:
+        for (p_stMorph = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->hMorphChannelList->hFirstElementDyn, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL; p_stMorph; p_stMorph = p_stMorph_Next, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL)
+        {
+            MOR_fn_xStopMorph(p_SuperObjPerso, p_stMorph->uwChannelNumber);
+        }
+        break;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 126–211 */

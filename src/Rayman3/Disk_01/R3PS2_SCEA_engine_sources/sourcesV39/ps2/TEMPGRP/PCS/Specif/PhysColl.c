@@ -201,7 +201,25 @@ short MOR_fn_xPrepareMorph(HIE_tdstSuperObject_* _hActorSuperObject, short _xSta
  */
 COL_tdstCollideObject_* PCS_fn_hGetGeoObjOfPhysicalCollSet(unsigned char ucZoneType, tdstPhysicalCollSet_* _hPhyCollSet)
 {
-    /* TODO: decompile from asm/... */
+    switch (ucZoneType)
+    {
+    case 0:
+
+        return _hPhyCollSet->hZdd;
+    case 1:
+
+        return _hPhyCollSet->hZdm;
+    case 3:
+
+        return _hPhyCollSet->hZdr;
+    case 2:
+
+        return _hPhyCollSet->hZde;
+    }
+
+
+
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PCS\Specif\PhysColl.c lines 99–99 */

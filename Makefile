@@ -11,11 +11,16 @@ INCLUDE_DIR := include
 BUILD_DIR := build
 OBJ_DIR := $(BUILD_DIR)/obj
 
-# CodeWarrior PS2 3.0 (2001-11-26) and Wibo are intentionally not distributed.
+# CodeWarrior PS2 compilers and Wibo are intentionally not distributed.
+# Game sources use 3.0.1 (2002-01-23); the PS2GL library uses 3.0 (2001-11-26).
 # Set these to local installations, for example:
-#   make WIBO=/path/to/wibo-x86_64 MWCC=/path/to/mwccps2.exe
+#   make WIBO=/path/to/wibo-x86_64 MWCC=/path/to/3.0/mwccps2.exe GAME_MWCC=/path/to/3.0.1/mwccps2.exe
 WIBO ?= wibo-x86_64
 MWCC ?= mwccps2.exe
+GAME_MWCC ?= $(MWCC)
+# Game files listed here build with 3.0.3 (2002-07-16) instead; see the file header.
+LATE_GAME_MWCC ?= $(GAME_MWCC)
+LATE_GAME_SOURCES := $(patsubst src/Rayman3/%,%,$(shell grep -v '^\#' config/compiler-3.0.3-sources.txt))
 MWCC_RUN := $(WIBO) $(MWCC)
 
 # MWCC searches this directory for angle-bracket standard headers.  The small
@@ -66,7 +71,7 @@ objects: $(OBJECTS)
 # makes one pattern rule work for C, CPP, and CXX paths without collisions.
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%
 	@mkdir -p "$(@D)"
-	$(MWCC_ENV) $(MWCC_RUN) $(CPPFLAGS) $(MWCC_FLAGS) $(if $(findstring /$(GAME_SOURCE_ROOT)/,/$<),$(GAME_MWCC_FLAGS)) "$<" -o "$@"
+	$(MWCC_ENV) $(WIBO) $(if $(filter $(LATE_GAME_SOURCES),$(patsubst $(SRC_DIR)/%,%,$<)),$(LATE_GAME_MWCC),$(if $(findstring /$(GAME_SOURCE_ROOT)/,/$<),$(GAME_MWCC),$(MWCC))) $(CPPFLAGS) $(MWCC_FLAGS) $(if $(findstring /$(GAME_SOURCE_ROOT)/,/$<),$(GAME_MWCC_FLAGS)) "$<" -o "$@"
 
 extract:
 	@test -n "$(TARGET)" || (echo "Set TARGET=/path/to/SLKA_250.78"; exit 2)
@@ -78,6 +83,7 @@ list:
 
 dry-run:
 	@printf 'MWCC: %s\n' "$(MWCC_RUN)"
+	@printf 'Game MWCC: %s\n' "$(GAME_MWCC)"
 	@printf 'Flags: %s %s\n' "$(CPPFLAGS)" "$(MWCC_FLAGS)"
 	@printf 'Game-source flags: %s\n' "$(GAME_MWCC_FLAGS)"
 	@printf 'Sources: %s\n' "$(words $(SOURCES))"

@@ -2441,7 +2441,30 @@ void fn_vNextSelectionNoWrap(void)
 void fn_vReinitGrayedEntries(int PageNumber)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < 10; i++)
+    {
+        aMenu2DPages[PageNumber].abGrayed[i] = 0;
+    }
+
+    if (g_2DMenuID == 3)
+        aMenu2DPages[g_GamePage].abGrayed[2] = 1;
+
+
+    if (!g_EndOfGameIsDone)
+    {
+        aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
+    }
+
+
+
+
+
+
+
+
+
+    g_MustCheckMC = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1400–1409 */
@@ -2760,9 +2783,46 @@ void fn_vInitMaterialForMenu(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void fn_vDeinitSoundInGameMenu2D(unsigned int uiResume);
+extern void GAM_fn_vSetVolumeMusic(int s32_Value);
+extern void GAM_fn_vSetVolumeSound(int s32_Value);
+extern void GAM_fn_vSetVolumeMenu(int s32_Value);
+extern void GAM_fn_vSetVolumeAmbiance(int s32_Value);
+extern void GAM_fn_vSetVolumeVoice(int s32_Value);
+extern void PS2M2D_vReinitMenuTextures(void);
+extern void GLI_vFreeTempMaterial(int* ppMaterial);
+extern void fn_vLoadEngineClock(void);
+extern void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber);
+
 void DesinitGameMenu2D(void)
 {
-    /* TODO: decompile from asm/... */
+    g_CurrentSelection = 0;
+    g_EndRevisit = 0;
+    g_ExitForbidden = 0;
+
+    fn_vDeinitSoundInGameMenu2D((g_2DMenuID != 2) ? 1 : 0);
+
+    if (g_CurrentMenu2DPage == g_AudioOptionPage)
+    {
+        GAM_fn_vSetVolumeMusic(g_aNbGradOn[0] * 127 / 10); GAM_fn_vSetVolumeSound(g_aNbGradOn[1] * 127 / 10); GAM_fn_vSetVolumeMenu(g_aNbGradOn[1] * 127 / 10); GAM_fn_vSetVolumeAmbiance(g_aNbGradOn[1] * 127 / 10); GAM_fn_vSetVolumeVoice(g_aNbGradOn[2] * 127 / 10);
+    }
+
+    PS2M2D_vReinitMenuTextures();
+    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[0]);
+    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[1]);
+    g_bAlbumInitialized = 0;
+    g_bAlbumIsWorking = 0;
+    g_bAlbumLoadInProgress = 0;
+
+    if (g_stEngineStructure.bEngineFrozen)
+        fn_vLoadEngineClock();
+
+    if (g_MenuVibrationEffect != -1)
+    {
+        IPT_fn_vStopFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, (signed char)g_MenuVibrationEffect);
+
+        g_MenuVibrationEffect = -1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 622–646 */
@@ -2784,10 +2844,31 @@ void DesinitGameMenu2D(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void fn_vLoadEngineClock(void);
+extern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+extern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+
 void CloseInGameMenu2D(void)
 {
     unsigned int ulCurrentTime;
-    /* TODO: decompile from asm/... */
+
+    DesinitGameMenu2D();
+
+    if (g_stEngineStructure.bEngineFrozen)
+        fn_vLoadEngineClock();
+    g_stEngineStructure.bEngineFrozen = 0;
+
+    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    g_InGameMenu2DActivated = 0;
+
+    if (MENU_g_bVibration)
+    {
+        IPT_fn_vResumeAllConstantFFBEffectForAllDevices(ulCurrentTime);
+    }
+    else
+    {
+        IPT_fn_vPauseAllConstantFFBEffectForAllDevices(ulCurrentTime);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 584–605 */

@@ -1753,15 +1753,24 @@ void fn_vThisTypeVsThisType(HIE_tdstSuperObject_* _hCharacter, unsigned short _w
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, MAT_tdstTransformation_** _p_hMatrix);
+/* Declared without a narrow return type here: retail tests the result without an andi. */
+long INT_fn_bDetectIntersectGeomObjWithGeomObj(COL_tdstCollideObject_* p_stGeomObj1, MAT_tdstTransformation_* _p_stMatrix1, COL_tdstCollideObject_* p_stGeomObj2, MAT_tdstTransformation_* _p_stMatrix2, GMT_tdstGameMaterial_** _p_hMat1, GMT_tdstGameMaterial_** _p_hMat2);
+
 unsigned char fn_bThisZdeFromOneVsThisZdeFromTwo(HIE_tdstSuperObject_* _hCharacterONE, unsigned char _ucModuleOrCharacterForONE, unsigned char _ucChannelNumberForONE, HIE_tdstSuperObject_* _hCharacterTWO, unsigned char _ucModuleOrCharacterForTWO, unsigned char _ucChannelNumberForTWO)
 {
-    GMT_tdstGameMaterial_* hMat2;
-    GMT_tdstGameMaterial_* hMat1;
-    COL_tdstCollideObject_* hGeoObj2;
-    COL_tdstCollideObject_* hGeoObj1;
-    MAT_tdstTransformation_* p_stMatrix2;
     MAT_tdstTransformation_* p_stMatrix1;
-    /* TODO: decompile from asm/... */
+    MAT_tdstTransformation_* p_stMatrix2;
+    COL_tdstCollideObject_* hGeoObj1;
+    COL_tdstCollideObject_* hGeoObj2;
+    GMT_tdstGameMaterial_* hMat1;
+    GMT_tdstGameMaterial_* hMat2;
+    /* TODO: decompile from asm/... */    hGeoObj1 = ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(_hCharacterONE, 2, _ucModuleOrCharacterForONE, _ucChannelNumberForONE, &p_stMatrix1);
+    hGeoObj2 = ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(_hCharacterTWO, 2, _ucModuleOrCharacterForTWO, _ucChannelNumberForTWO, &p_stMatrix2);
+    if (!hGeoObj1 || !hGeoObj2)
+        return 0;
+
+    return INT_fn_bDetectIntersectGeomObjWithGeomObj(hGeoObj1, p_stMatrix1, hGeoObj2, p_stMatrix2, &hMat1, &hMat2) != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1704–1712 */
@@ -1778,11 +1787,19 @@ unsigned char fn_bThisZdeFromOneVsThisZdeFromTwo(HIE_tdstSuperObject_* _hCharact
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bIsThisZdeInClashWithCharacterZdeOfTypes(COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_* _hCharacter, unsigned short _wMaterialMask);
+
 unsigned char fn_bThisZdeFromOneVsAllZdeFromTwo(HIE_tdstSuperObject_* _hCharacterONE, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_* _hCharacterTWO, unsigned short _wMaterialMask)
 {
     COL_tdstCollideObject_* hGeoObj;
     MAT_tdstTransformation_* p_stMatrix;
-    /* TODO: decompile from asm/... */
+
+
+    hGeoObj = ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(_hCharacterONE, 2, _ucModuleOrCharacter, _ucChannelNumber, &p_stMatrix);
+
+    if (hGeoObj) return fn_bIsThisZdeInClashWithCharacterZdeOfTypes(hGeoObj, p_stMatrix, _hCharacterTWO, _wMaterialMask);
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1641–1690 */

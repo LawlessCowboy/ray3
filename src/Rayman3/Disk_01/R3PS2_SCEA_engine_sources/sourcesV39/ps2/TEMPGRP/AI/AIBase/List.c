@@ -3142,7 +3142,18 @@ tdstNodeInterpret_* fn_p_stListSelect(tdstList_* p_List, char b_cInverse, tdstNo
  */
 HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition)
 {
-    /* TODO: decompile from asm/... */
+    if (p_List->ucNbElt == 0)
+        return NULL;
+
+
+    if (ucPosition >= p_List->ucNbElt && ucPosition != 0xff)
+        return NULL;
+
+
+    if (ucPosition == 0xff)
+        return *(p_List->p_hTabElt - 1 + p_List->ucNbElt);
+
+    return p_List->p_hTabElt[ucPosition];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 406–410 */

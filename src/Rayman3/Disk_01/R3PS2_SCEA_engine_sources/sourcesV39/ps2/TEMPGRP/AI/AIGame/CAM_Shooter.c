@@ -5377,13 +5377,133 @@ unsigned char fn_BackMode(CAM_Shooter_* pcs)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void CAM_fn_vChangeARealParameter(tdstCineinfo_* _hCineInfo, float* _p_xInitialValue, float* _p_xCurrentValue, float* _p_xVisibilityValue, float* _p_xWorkValue, int _lTypeOfChange, int _lChangingMode, float _xValue);
+
 void fn_ChangeCameraRealParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eProcedureId, int lTypeOfChange, int lChangingMode, float xValue)
 {
     float* p_xWorkValue;
     float* p_xVisibilityValue;
     float* p_xCurrentValue;
     float* p_xInitialValue;
-    /* TODO: decompile from asm/... */
+
+    p_xInitialValue = NULL;
+    p_xCurrentValue = NULL;
+    p_xVisibilityValue = NULL;
+    p_xWorkValue = NULL;
+
+    switch (eProcedureId)
+    {
+    case 0x23C:
+        p_xInitialValue = &hCineInfo->hInit->xDistMin;
+        p_xCurrentValue = &hCineInfo->hCurrent->xDistMin;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xDistMin;
+        p_xWorkValue = &hCineInfo->hWork->xDistMin;
+        break;
+    case 0x23D:
+        p_xInitialValue = &hCineInfo->hInit->xDistMax;
+        p_xCurrentValue = &hCineInfo->hCurrent->xDistMax;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xDistMax;
+        p_xWorkValue = &hCineInfo->hWork->xDistMax;
+        break;
+    case 0x23E:
+        p_xInitialValue = &hCineInfo->hInit->xBoundDistMin;
+        p_xCurrentValue = &hCineInfo->hCurrent->xBoundDistMin;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xBoundDistMin;
+        p_xWorkValue = &hCineInfo->hWork->xBoundDistMin;
+        break;
+    case 0x23F:
+        p_xInitialValue = &hCineInfo->hInit->xBoundDistMax;
+        p_xCurrentValue = &hCineInfo->hCurrent->xBoundDistMax;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xBoundDistMax;
+        p_xWorkValue = &hCineInfo->hWork->xBoundDistMax;
+        break;
+    case 0x240:
+        p_xInitialValue = &hCineInfo->hInit->xAngleAlpha;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleAlpha;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleAlpha;
+        p_xWorkValue = &hCineInfo->hWork->xAngleAlpha;
+        break;
+    case 0x241:
+        p_xInitialValue = &hCineInfo->hInit->xAngleShiftAlpha;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleShiftAlpha;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleShiftAlpha;
+        p_xWorkValue = &hCineInfo->hWork->xAngleShiftAlpha;
+        break;
+    case 0x242:
+        p_xInitialValue = &hCineInfo->hInit->xAngleTheta;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleTheta;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleTheta;
+        p_xWorkValue = &hCineInfo->hWork->xAngleTheta;
+        break;
+    case 0x243:
+        p_xInitialValue = &hCineInfo->hInit->xAngleShiftTheta;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleShiftTheta;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleShiftTheta;
+        p_xWorkValue = &hCineInfo->hWork->xAngleShiftTheta;
+        break;
+    case 0x244:
+        p_xInitialValue = &hCineInfo->hInit->xLinearSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xLinearSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xLinearSpeed;
+        break;
+    case 0x245:
+        p_xInitialValue = &hCineInfo->hInit->xLinearIncreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xLinearIncreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearIncreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xLinearIncreaseSpeed;
+        break;
+    case 0x246:
+        p_xInitialValue = &hCineInfo->hInit->xLinearDecreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xLinearDecreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearDecreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xLinearDecreaseSpeed;
+        break;
+    case 0x247:
+        p_xInitialValue = &hCineInfo->hInit->xAngularSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngularSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xAngularSpeed;
+        break;
+    case 0x248:
+        p_xInitialValue = &hCineInfo->hInit->xAngularIncreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngularIncreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularIncreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xAngularIncreaseSpeed;
+        break;
+    case 0x249:
+        p_xInitialValue = &hCineInfo->hInit->xAngularDecreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngularDecreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularDecreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xAngularDecreaseSpeed;
+        break;
+    case 0x24A:
+        p_xInitialValue = &hCineInfo->hInit->xTargetSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xTargetSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xTargetSpeed;
+        break;
+    case 0x24B:
+        p_xInitialValue = &hCineInfo->hInit->xTargetIncreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xTargetIncreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetIncreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xTargetIncreaseSpeed;
+        break;
+    case 0x24C:
+        p_xInitialValue = &hCineInfo->hInit->xTargetDecreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xTargetDecreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetDecreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xTargetDecreaseSpeed;
+        break;
+    case 0x24D:
+        p_xInitialValue = &hCineInfo->hInit->xFocal;
+        p_xCurrentValue = &hCineInfo->hCurrent->xFocal;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xFocal;
+        p_xWorkValue = &hCineInfo->hWork->xFocal;
+        break;
+    }
+
+    CAM_fn_vChangeARealParameter(hCineInfo, p_xInitialValue, p_xCurrentValue, p_xVisibilityValue, p_xWorkValue, lTypeOfChange, lChangingMode, xValue);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 708–730 */
@@ -5416,7 +5536,29 @@ void fn_ChangeCameraVectorParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eP
     MTH3D_tdstVector_* p_vVisibilityVectorValue;
     MTH3D_tdstVector_* p_vCurrentVectorValue;
     MTH3D_tdstVector_* p_vInitialVectorValue;
-    /* TODO: decompile from asm/... */
+
+    p_vInitialVectorValue = NULL;
+    p_vCurrentVectorValue = NULL;
+    p_vVisibilityVectorValue = NULL;
+    p_vWorkVectorValue = NULL;
+
+    switch (eProcedureId)
+    {
+    case 0x23A:
+        p_vInitialVectorValue = &hCineInfo->hInit->stShiftTarget;
+        p_vCurrentVectorValue = &hCineInfo->hCurrent->stShiftTarget;
+        p_vVisibilityVectorValue = &hCineInfo->hVisibility->stShiftTarget;
+        p_vWorkVectorValue = &hCineInfo->hWork->stShiftTarget;
+        break;
+    case 0x23B:
+        p_vInitialVectorValue = &hCineInfo->hInit->stShiftPos;
+        p_vCurrentVectorValue = &hCineInfo->hCurrent->stShiftPos;
+        p_vVisibilityVectorValue = &hCineInfo->hVisibility->stShiftPos;
+        p_vWorkVectorValue = &hCineInfo->hWork->stShiftPos;
+        break;
+    }
+
+    CAM_fn_vChangeAVectorParameter(hCineInfo, p_vInitialVectorValue, p_vCurrentVectorValue, p_vVisibilityVectorValue, p_vWorkVectorValue, lTypeOfChange, lChangingMode, p_stValue);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 657–691 */
@@ -5890,7 +6032,13 @@ tdstNodeInterpret_* fn_p_InitMarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeIn
  */
 tdstNodeInterpret_* fn_p_BackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    CAM_Shooter_* pcs;
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    *(int *)p_stValue = (long)fn_BackMode(pcs);
+    p_stValue->eType = 6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 216–232 */

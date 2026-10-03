@@ -1274,5 +1274,7 @@ unsigned short fn_uwGetObjectTableNumberOfelements(tdstObjectsTablesList_* _hTar
  */
 void fn_vCopyObjectFromObjectTabletoAnother(tdstObjectsTablesList_* _hTargetTable, tdstObjectsTablesList_* _hSourceTable, unsigned short _uwTargetObject, unsigned short _uwSourceObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!_hTargetTable || !_hSourceTable) return;
+
+    _hTargetTable->d_stObjectsTable[_uwTargetObject] = _hSourceTable->d_stObjectsTable[_uwSourceObject];
 }
