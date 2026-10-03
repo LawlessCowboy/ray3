@@ -90,6 +90,9 @@ int PS2_fn_iGetCDMediaMode(void)
     return 2;
 }
 
+/* Debug info says void, but the result is passed on to CD_OpenFile. */
+char* FMN_SCE_ConvertPath2DVD(char* buffer);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 914–916 */
 /* addr: 0x002586d0  size: 36 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -101,7 +104,7 @@ int PS2_fn_iGetCDMediaMode(void)
  */
 int CD_OpenFileWithNameConversion(char* RawFileName)
 {
-    /* TODO: decompile from asm/... */
+    return CD_OpenFile(FMN_SCE_ConvertPath2DVD(RawFileName));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 455–456 */

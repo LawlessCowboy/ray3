@@ -1467,7 +1467,9 @@ void GLI_vDrawWorldSemiLookatSpriteWithUVs(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vDrawWorldSemiLookatSprite(MTH3D_tdstVector_* param0, MTH3D_tdstVector_* a3_fPosition2, GLI_tdstMaterial_* pMaterial, float fSizeX, int bFade, float Alpha1, float Alpha2)
+/* The debug record lists 7 parameters, but all three retail callers pass a0-a3/t0 and
+ * f12-f15 (a3 and f13 unused here), so the real signature has two more. */
+void GLI_vDrawWorldSemiLookatSprite(MTH3D_tdstVector_* param0, MTH3D_tdstVector_* a3_fPosition2, GLI_tdstMaterial_* pMaterial, int param3, float fSizeX, float fParam5, int bFade, float Alpha1, float Alpha2)
 {
     pSpriteController->SemiLookatSprite(param0, a3_fPosition2, pMaterial, fSizeX, bFade, Alpha1, Alpha2);
 }

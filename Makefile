@@ -40,10 +40,15 @@ TOOLS_DIR := tools
 #   data; without it, literals of 8 bytes or less land in .sdata.
 # - padloop: R5900 short-loop workaround; retail pads short loops with nops.
 # - enum=int is the compiler default.
+# - dividefix (game sources only): retail game code has two nops between a
+#   div.s and a following branch or call (202 of 204 sites); the PS2GL library
+#   has none (114 of 117), and enabling it there loses 89 library matches.
 MWCC_FLAGS := -c -g -opt level=3 -farcall off -sdatathreshold 8 \
               -inline on -strings reuse,nopool,readonly -enum int \
               -Cpp_exceptions off -pragma "fast_fptosi on" -pragma "padloop on" \
               -pragma "optimize_for_size off"
+GAME_SOURCE_ROOT := Disk_01/R3PS2_SCEA_engine_sources
+GAME_MWCC_FLAGS := -pragma "dividefix on"
 CPPFLAGS := -I$(INCLUDE_DIR)
 
 # Escaping spaces keeps GNU make paths such as "Program Files/..." intact.
@@ -61,7 +66,7 @@ objects: $(OBJECTS)
 # makes one pattern rule work for C, CPP, and CXX paths without collisions.
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%
 	@mkdir -p "$(@D)"
-	$(MWCC_ENV) $(MWCC_RUN) $(CPPFLAGS) $(MWCC_FLAGS) "$<" -o "$@"
+	$(MWCC_ENV) $(MWCC_RUN) $(CPPFLAGS) $(MWCC_FLAGS) $(if $(findstring /$(GAME_SOURCE_ROOT)/,/$<),$(GAME_MWCC_FLAGS)) "$<" -o "$@"
 
 extract:
 	@test -n "$(TARGET)" || (echo "Set TARGET=/path/to/SLKA_250.78"; exit 2)
@@ -74,6 +79,7 @@ list:
 dry-run:
 	@printf 'MWCC: %s\n' "$(MWCC_RUN)"
 	@printf 'Flags: %s %s\n' "$(CPPFLAGS)" "$(MWCC_FLAGS)"
+	@printf 'Game-source flags: %s\n' "$(GAME_MWCC_FLAGS)"
 	@printf 'Sources: %s\n' "$(words $(SOURCES))"
 	@printf 'Objects: %s\n' "$(words $(OBJECTS))"
 

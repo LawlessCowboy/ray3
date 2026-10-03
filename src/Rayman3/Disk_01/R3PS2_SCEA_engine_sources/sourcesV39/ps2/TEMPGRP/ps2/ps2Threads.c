@@ -466,6 +466,9 @@ void PS2_fn_v_CreateEngineThread(void)
     /* TODO: decompile from asm/... */
 }
 
+int GetThreadId(void);
+int ReferThreadStatus(int tid, ThreadParam* info);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 155–164 */
 /* addr: 0x00318cb0  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -477,9 +480,17 @@ void PS2_fn_v_CreateEngineThread(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2_fn_uiGetStackBaseAddress(void)
+/* Debug info says void, but the stack base is returned in $v0 (ui prefix). */
+unsigned int PS2_fn_uiGetStackBaseAddress(void)
 {
     ThreadParam T;
     int Tid;
-    /* TODO: decompile from asm/... */
+
+
+
+    Tid = GetThreadId();
+
+    ReferThreadStatus(Tid, &T);
+
+    return T.stack;
 }

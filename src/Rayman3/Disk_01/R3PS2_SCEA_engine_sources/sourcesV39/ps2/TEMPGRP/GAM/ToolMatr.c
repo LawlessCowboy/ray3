@@ -76,12 +76,9 @@ struct MTH3D_tdstVector_ {
  */
 HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int _lViewportNumber)
 {
-    if (_lViewportNumber < 5) {
-        if (_lViewportNumber >= 0)
-            return g_stEngineStructure.a_hViewportArray[_lViewportNumber].hActiveCamera;
-        return NULL;
-    }
-    return NULL;
+    tdstViewportManagement_* p_stViewport;
+    if ((_lViewportNumber >= 5) || (_lViewportNumber < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[_lViewportNumber];
+    return p_stViewport->hActiveCamera;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolMatr.c lines 128–149 */

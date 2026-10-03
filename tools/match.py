@@ -67,6 +67,23 @@ MWCC_FLAGS = [
     '-inline', 'on', '-strings', 'reuse,nopool,readonly', '-enum', 'int',
     '-Cpp_exceptions', 'off', '-pragma', 'fast_fptosi on', '-pragma', 'padloop on', '-pragma', 'optimize_for_size off',
 ]
+# The game sources were built with the R5900 divide workaround (two nops
+# between div.s and a following branch or call); the PS2GL library was not.
+GAME_SOURCE_ROOT = Path('src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources')
+GAME_MWCC_FLAGS = ['-pragma', 'dividefix on']
+
+
+def mwcc_flags(owner: Path | str) -> list[str]:
+    """Return the compiler flags for a translation unit, by its owning source."""
+    path = Path(owner)
+    if path.is_absolute():
+        try:
+            path = path.relative_to(ROOT)
+        except ValueError:
+            return list(MWCC_FLAGS)
+    if path.parts[:len(GAME_SOURCE_ROOT.parts)] == GAME_SOURCE_ROOT.parts:
+        return MWCC_FLAGS + GAME_MWCC_FLAGS
+    return list(MWCC_FLAGS)
 
 
 @dataclass
@@ -389,7 +406,10 @@ def tool_paths() -> tuple[Path, Path, Path]:
     return wibo, mwcc, includes
 
 
-def compile_source(source: Path) -> tuple[Path | None, str]:
+def compile_source(source: Path, owner: Path | str | None = None) -> tuple[Path | None, str]:
+    """Compile a source file; ``owner`` (the canonical source path) selects
+    the flags when ``source`` is a candidate copy such as a permuter output."""
+    flags = mwcc_flags(owner if owner is not None else source)
     wibo, mwcc, includes = tool_paths()
     for path, label in ((wibo, 'Wibo'), (mwcc, 'MWCC'), (includes, 'MWC include directory')):
         if not path.exists():
@@ -397,7 +417,7 @@ def compile_source(source: Path) -> tuple[Path | None, str]:
     fingerprint = hashlib.sha1()
     fingerprint.update(source.read_bytes())
     fingerprint.update(mwcc.read_bytes())
-    fingerprint.update(' '.join(MWCC_FLAGS).encode())
+    fingerprint.update(' '.join(flags).encode())
     output = BUILD_ROOT / 'objects' / f'{fingerprint.hexdigest()}.o'
     with _compile_locks_guard:
         lock = _compile_locks.setdefault(output, threading.Lock())
@@ -410,7 +430,7 @@ def compile_source(source: Path) -> tuple[Path | None, str]:
         temporary = output.with_name(output.stem + f'.{os.getpid()}.tmp.o')
         env = os.environ.copy()
         env['MWCIncludes'] = str(includes)
-        cmd = [str(wibo), str(mwcc), '-I' + str(ROOT / 'include'), *MWCC_FLAGS,
+        cmd = [str(wibo), str(mwcc), '-I' + str(ROOT / 'include'), *flags,
                str(source), '-o', str(temporary)]
         result = subprocess.run(cmd, cwd=ROOT, env=env, text=True,
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -490,19 +510,62 @@ def infer_anonymous_hi_lo_address(target_bytes: bytes, hi_offset: int,
     return (((hi_word & 0xFFFF) << 16) + signed16(lo_word & 0xFFFF)) & 0xFFFFFFFF
 
 
-def local_static_target(symbol: Symbol, target_symbols: list[Symbol]) -> Symbol | None:
+def local_static_base(name: str) -> str:
+    """Base name of a function-local static: ``str$12`` and
+    ``str$localstatic3$Func`` (the retail spelling in some units) give ``str``."""
+    return name.split('$', 1)[0]
+
+
+def local_static_target(symbol: Symbol, target_symbols: list[Symbol],
+                        address: int | None = None) -> Symbol | None:
     """Pair a function-local static (``name$N``) with its retail counterpart.
 
     MWCC numbers local statics per compilation, so ``s_szFileName$11`` in a
-    candidate object corresponds to ``s_szFileName$456`` in the retail ELF.
-    Accept the retail symbol only when exactly one has the same base name and
-    size; otherwise leave the relocation unresolved.
+    candidate object corresponds to ``s_szFileName$456`` in the retail ELF,
+    and some retail units spell them ``name$localstaticN$Function``.  When the
+    caller recovers the linked ``address`` from the target instruction, accept
+    the retail static with the same base name at exactly that address; this
+    disambiguates common names such as C++ ``init$N`` guards.  Otherwise
+    accept the retail symbol only when exactly one has the same base name and
+    size, and leave the relocation unresolved if not.
     """
-    base = symbol.name.rsplit('$', 1)[0]
-    matches = [entry for entry in target_symbols
-               if entry.name.rsplit('$', 1)[0] == base and '$' in entry.name
-               and entry.size == symbol.size and entry.value]
+    base = local_static_base(symbol.name)
+    named = [entry for entry in target_symbols
+             if '$' in entry.name and local_static_base(entry.name) == base and entry.value]
+    if address is not None:
+        at_address = [entry for entry in named if entry.value == address]
+        if len(at_address) == 1:
+            return at_address[0]
+    matches = [entry for entry in named if entry.size == symbol.size]
     return matches[0] if len(matches) == 1 else None
+
+
+def relocation_target_address(target_bytes: bytes, candidate_bytes: bytes, offset: int,
+                              reloc_type: int, pair_offset: int | None, gp: int) -> int | None:
+    """Recover the symbol address a retail instruction refers to.
+
+    The candidate's instruction holds the relocation addend (REL format); the
+    retail instruction holds the linked address plus that addend.  GPREL16
+    is relative to ``_gp``; a HI16/LO16 pair needs both words (``pair_offset``
+    is the other half).  Returns None when the words are out of range.
+    """
+    def word(data: bytes, at: int) -> int | None:
+        return struct.unpack_from('<I', data, at)[0] if 0 <= at and at + 4 <= len(data) else None
+    if reloc_type == 7:
+        target, candidate = word(target_bytes, offset), word(candidate_bytes, offset)
+        if target is None or candidate is None:
+            return None
+        return (gp + signed16(target & 0xFFFF) - signed16(candidate & 0xFFFF)) & 0xFFFFFFFF
+    if reloc_type in (5, 6) and pair_offset is not None:
+        hi, lo = (offset, pair_offset) if reloc_type == 5 else (pair_offset, offset)
+        words = [word(target_bytes, hi), word(target_bytes, lo),
+                 word(candidate_bytes, hi), word(candidate_bytes, lo)]
+        if None in words:
+            return None
+        linked = ((words[0] & 0xFFFF) << 16) + signed16(words[1] & 0xFFFF)
+        addend = ((words[2] & 0xFFFF) << 16) + signed16(words[3] & 0xFFFF)
+        return (linked - addend) & 0xFFFFFFFF
+    return None
 
 
 def anonymous_object_matches(name: str, address: int, obj_sections: list[Section],
@@ -731,7 +794,7 @@ def register_equivalent(candidate: bytes, target: bytes,
 def compare(entry: dict, verbose: bool = False, source_override: Path | None = None) -> dict:
     sections, target_symbols, main, _, target_names = target_context()
     source = source_override or ROOT / entry['source']
-    obj_path, build_state = compile_source(source)
+    obj_path, build_state = compile_source(source, owner=entry.get('source') or source)
     if obj_path is None:
         return {'status': 'COMPILE_ERROR', 'entry': entry, 'detail': build_state}
     obj_sections = read_sections(obj_path)
@@ -778,7 +841,17 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
                              if symbol and symbol.name and not symbol.name.startswith('@')
                              else None)
             if target_symbol is None and symbol and '$' in symbol.name[1:]:
-                target_symbol = local_static_target(symbol, target_symbols)
+                pair_offset = None
+                if reloc_type in (5, 6):
+                    others = [other[0] for other in section_relocations
+                              if other[2] == (6 if reloc_type == 5 else 5)
+                              and other[1] == symbol_index
+                              and (other[0] > offset if reloc_type == 5 else other[0] < offset)]
+                    if others:
+                        pair_offset = (min(others) if reloc_type == 5 else max(others)) - candidate.value
+                address = relocation_target_address(target_bytes, section.data[candidate.value:candidate.value + candidate.size],
+                                                    relative, reloc_type, pair_offset, gp)
+                target_symbol = local_static_target(symbol, target_symbols, address)
             record = {'offset': relative, 'type': reloc_type,
                       'symbol': symbol.name if symbol else ''}
             relocations.append(record)

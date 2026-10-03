@@ -99,7 +99,8 @@ void GLI_fn_vTimerPS2Counter(unsigned int* pCount)
  */
 void GLI_fn_vDoCompleteFadeOut(void)
 {
-    GLI_g_CompleteFadeDirection = -0.1f;
+    float fSpeed = 0.1f;
+    GLI_g_CompleteFadeDirection = -fSpeed;
     GLI_g_CompleteFadeCurrentValue = 1.0f - GLI_g_CompleteFadeDirection;
 }
 

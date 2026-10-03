@@ -929,7 +929,8 @@ int SND_fn_s32AddSemaphoreSound(int s32_SemaphoreId, int s32_SemaphoreSize)
  */
 int SND_fn_hGetCurrentSoundHandle(void)
 {
-    /* TODO: decompile from asm/... */
+    static int s32_SoundHandle = -2;
+    return s32_SoundHandle;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 295–297 */

@@ -224,17 +224,18 @@ tdstNodeInterpret_* fn_p_stTextComparison(HIE_tdstSuperObject_* p_SuperObjPerso,
  */
 tdstNodeInterpret_* fn_p_stSAV2_DoVarsNeedToBeSet(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    int lValue;
-    tdeFuncId_ eFuncId;
     static int SAV2_NotInitialized;
+    tdeFuncId_ eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    int lValue = 0;
 
-    eFuncId = *((tdeFuncId_*)p_stTree - 2);
-    if (eFuncId == 233) {
+
+    if (eFuncId == 233)
+    {
         lValue = SAV2_NotInitialized;
         SAV2_NotInitialized = 0;
-    } else {
-        lValue = 0;
     }
+
+
     p_stValue->uParam.lValue = lValue;
     p_stValue->eType = (tdeVariableType_)6;
     return p_stTree;

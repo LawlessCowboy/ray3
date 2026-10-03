@@ -2433,9 +2433,12 @@ unsigned char MEC_fn_bCanCrashActor(DNM_stMecObstacle* p_stCollideObstacle)
  */
 int MEC_fn_bCeilObstacle(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle)
 {
-    float dynamic = *(float*)((char*)p_stDynamic + 0x18);
-    float obstacle = *(float*)((char*)p_stObstacle + 0xC);
-    return obstacle < -dynamic;
+    float xLimit;
+    float xNegCos = -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope;
+    xLimit = xNegCos;
+    if (p_stObstacle->m_stNorm.xZ < xLimit)
+        return 1;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 60–62 */

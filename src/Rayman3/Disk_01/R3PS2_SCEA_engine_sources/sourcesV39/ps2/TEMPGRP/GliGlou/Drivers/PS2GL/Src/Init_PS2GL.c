@@ -2342,6 +2342,11 @@ float GLI_g_GOAL_FRAME;
 unsigned int GLI_g_NbHysteresisFrames;
 unsigned int GLI_g_NbHystChangeFrames;
 unsigned int GLI_g_HysteresisNotYet;
+void GLIPS2_vChangeResolutionNTSCProgressive(void);
+int toupper(int c);
+char* strstr(const char* s1, const char* s2);
+unsigned int PS2glInternalGetScreenCalebration(unsigned int target);
+void fn_vInitFrameLenght(void);
 unsigned int GLI_g_bInMenu;
 int GLI_g_iWasAskedToChangeLevel;
 int GLI_g_iWasAskedForASnapshot;
@@ -2395,7 +2400,7 @@ int MC_g_MemoryCardOperationBackGroundTexture;
 tdstEngineStructure_ g_stEngineStructure;
 _GL_BUFFERINFO g_stBufferInfo;
 int PS2GL_thingsToDoWhenYoureDead;
-void (*GLI_vRecomputeNormalsWhileWaitingForVBL)(void);
+void GLI_vRecomputeNormalsWhileWaitingForVBL(void);
 unsigned int GLI_g_ulDynShadowCpt;
 float GLI_g_CompleteFadeCurrentValue;
 float GLI_g_CompleteFadeDirection;
@@ -2520,7 +2525,19 @@ void GLI_fn_vSwitchTo50Hz(void)
  */
 void GLI_fn_vSwitchToProgressive60Hz(void)
 {
-    /* TODO: decompile from asm/... */
+    if (GLI_g_50_or_60_HzMode != 0x46)
+    {
+        GLIPS2_vChangeResolutionNTSCProgressive();
+        GLI_g_50_or_60_HzMode = 0x46;
+
+        g_xVideoFrameDurationInSeconds = 1.0f / 60.0f;
+        fn_vInitFrameLenght();
+
+        GLI_g_ScreenPos_DXBase = (float)PS2glInternalGetScreenCalebration(0xf43);
+        GLI_g_ScreenPos_DYBase = (float)PS2glInternalGetScreenCalebration(0xf44);
+
+
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4228–4241 */
@@ -2789,7 +2806,25 @@ void MC_SwapBuffers(void)
  */
 void GLI_HysteresisLevelStart(char* levelname)
 {
-    /* TODO: decompile from asm/... */
+    char buffer[256];
+    int i;
+    if (levelname)
+    {
+        for (i = 0; levelname[i] != 0; i++) *(char*)((int)buffer + i) = (char)toupper(levelname[i]); *(char*)((int)buffer + i) = 0; if (strstr(buffer, "MENU") ? 1 : 0)
+            GLI_g_HysteresisNotYet = 300000000;
+        else
+
+
+            GLI_g_HysteresisNotYet = 30;
+    }
+    else
+    {
+        if (GLI_g_HysteresisNotYet < 30)
+            GLI_g_HysteresisNotYet = 30;
+    }
+
+    GLI_g_NbHystChangeFrames = 0;
+    GLI_g_NbHysteresisFrames = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1349–1379 */
@@ -2816,9 +2851,40 @@ void GLI_HysteresisLevelStart(char* levelname)
 void CheckData(void)
 {
     int i;
-    int Toto[1][32];
-    int TotoT[1];
-    /* TODO: decompile from asm/... */
+    static int Toto[1][32];
+    static int TotoT[1];
+
+    if (Oldpaddata == 0)
+        return;
+
+
+
+    for (i = 0; i < 1; i++)
+    {
+
+        if (Oldpaddata != Toto[i][TotoT[i]])
+            TotoT[i] = 0;
+        else
+        {
+            if (paddata == 0)
+            {
+
+
+                TotoT[i]++;
+                if (Toto[i][TotoT[i]] == -1)
+                {
+
+                    TotoT[i] = 0;
+                    switch (i)
+                    {
+                    case 0:
+                        GLI_g_OkToTestCC = !GLI_g_OkToTestCC;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 2695–2920 */
@@ -3336,7 +3402,24 @@ void GLI_vDoCompleteFade(int bFadeOut, float* pRGBColor, float fTimeInSeconds)
  */
 void GLI_vCleanInterpolData(void)
 {
-    /* TODO: decompile from asm/... */
+    sceGsSyncPath(0,0);
+    Fog_RandomValue = (float)rand() / 2147483648.0f;
+    GLI_g_ulDynShadowCpt = 0;
+    PS2_fn_vSignalEndOfDisplay();
+    PS2GL_thingsToDoWhenYoureDead = (int)GLI_vRecomputeNormalsWhileWaitingForVBL;
+    GLI_g_EnableSwapBufferCallback = 1;
+    PS2glFakeSwapBuffers();
+    GLI_g_EnableSwapBufferCallback = 0;
+    PS2GL_thingsToDoWhenYoureDead = 0;
+    GLI_vRemoveRefs();
+    GLI_vReinitFrame(1);
+    PS2glGsSyncPath();
+    VU1_FlushPreviousBuffer();
+    GLI_vDeleteAllWaitingPointers();
+    fn_vClearPlayanimTempGeometricObjects();
+    MOR_fn_vTerminateMorphsForThisFrame();
+    GLI_vSaveCameraMatrix();
+    PS2glGsSyncPath();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1442–1467 */
@@ -3762,7 +3845,7 @@ int MyDMAInterruptHandler(void)
  */
 void GLI_vEndSoundCounter(void)
 {
-    /* TODO: decompile from asm/... */
+
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 378–378 */

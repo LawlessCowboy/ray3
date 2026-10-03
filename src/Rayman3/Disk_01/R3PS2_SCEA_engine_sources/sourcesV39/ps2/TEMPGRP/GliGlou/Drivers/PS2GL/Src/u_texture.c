@@ -18,6 +18,7 @@ struct S_TXR_Header_ {
 };
 
 int TBF_g_CurrentFile;
+int printf(const char* format, ...);
 int TBF_g_CurrentFileBuffer;
 int TBF_g_CurrentFileSize;
 int TBF_g_CurrentFileAllocation;
@@ -491,7 +492,35 @@ void TBF_vClose(void)
  */
 void TBF_vCreateLevelTRSBloc(void)
 {
-    /* TODO: decompile from asm/... */
+
+
+
+
+
+    printf("\n\nOULA !! MasterPS2 mode, and no Fix Big texture file !!\n\n");
+    TBF_g_CurrentFile = -1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 186–216 */
@@ -508,7 +537,33 @@ void TBF_vCreateLevelTRSBloc(void)
  */
 void TBF_vCreateLevel(void)
 {
-    /* TODO: decompile from asm/... */
+
+
+
+
+
+    printf("\n\nOULA !! MasterPS2 mode, and no Fix Big texture file !!\n\n");
+    TBF_g_CurrentFile = -1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 150–183 */
@@ -525,5 +580,34 @@ void TBF_vCreateLevel(void)
  */
 void TBF_vCreateFix(void)
 {
-    /* TODO: decompile from asm/... */
+
+
+
+
+
+
+    printf("\n\nOULA !! MasterPS2 mode, and no Fix Big texture file !!\n\n");
+    TBF_g_CurrentFile = -1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

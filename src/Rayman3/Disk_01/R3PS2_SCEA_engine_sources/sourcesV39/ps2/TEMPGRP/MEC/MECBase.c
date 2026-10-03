@@ -1266,8 +1266,10 @@ void MEC_fn_vUpdateSpeed(HIE_tdstSuperObject_* hSupObj)
  */
 void DNM_fn_vSetHangingLimit(DNM_stDynamics* p_stDynamic, float xValue)
 {
-    if (p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != 0)
+    unsigned char bPlatform = (p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != NULL);
+    if (bPlatform)
         p_stDynamic->m_tdstDynamicsComplexBlock.m_xHangingLimit = xValue - p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+
     else
         p_stDynamic->m_tdstDynamicsComplexBlock.m_xHangingLimit = xValue;
 }
