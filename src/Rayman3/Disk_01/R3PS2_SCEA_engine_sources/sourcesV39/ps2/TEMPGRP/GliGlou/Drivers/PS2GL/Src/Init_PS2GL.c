@@ -3831,9 +3831,17 @@ int DummyDMAHandler(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* mfc0 (COP0 Count), sync and ei have no C form under MWCC; only those
+ * instructions are asm. */
 int MyDMAInterruptHandler(void)
 {
-    /* TODO: decompile from asm/... */
+    register unsigned int counter;
+    asm { mfc0 counter, $9 }
+    VU1FinishCounter = counter;
+    Vu1CallCounter++;
+    asm { sync }
+    asm { ei }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 385–385 */

@@ -2305,6 +2305,8 @@ tagGScontext g_gsContext;
 tagGLcontext g_PS2glContext;
 unsigned int paddata;
 tdstEngineStructure_ g_stEngineStructure;
+char* strcpy(char* _pszDst, const char* _pszSrc);
+void AskForLevelStart(void);
 unsigned char rdata[32];
 void (*GLI_vProgressCallBackPtr)(unsigned int);
 int CD_ProgressCallBack;
@@ -2629,10 +2631,10 @@ void ChangeClippingMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AskForLevelStartWithName(void)
+char* AskForLevelStartWithName(void)
 {
-    extern void AskForLevelStart(void);
     AskForLevelStart();
+    return g_stEngineStructure.szLevelName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 1257–1609 */
@@ -2657,7 +2659,8 @@ void AskForLevelStart(void)
     unsigned int NbLevels;
     unsigned int chosen;
     int CurrentLevelNum;
-    /* TODO: decompile from asm/... */
+
+    strcpy(g_stEngineStructure.szLevelName, "MENUMAP");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 616–616 */
