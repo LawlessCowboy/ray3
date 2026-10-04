@@ -21357,6 +21357,36 @@
       "status": "MISMATCH",
       "target_size": 328,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ca630",
+      "candidate_size": 244,
+      "first_difference": 20,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "mfn_vDelete__19CSoundSemaphoreContFv",
+      "reason": "Loop/erase skeleton right (for i<30000 while begin()!=end(): delete (*begin()).second; erase(begin()) via inline erase(iterator){usnd_free(base_erase((it++)._Ptr))}, copy ctor iterator(const iterator&):iterator_base(p)). Residual: retail line 51 dereferences _HeadLink->m_poLeft with no iterator ctor call, and copies the erase argument bitwise into a separate slot; calling _Tr.erase(begin()) directly gets 228/228 with only the line-51 ctor and slot offsets different",
+      "size": 228,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcsoundsemaphorecont.cpp",
+      "status": "MISMATCH",
+      "target_size": 228,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ca540",
+      "candidate_size": 252,
+      "first_difference": 8,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "mfn_poFindSoundSemaphore__19CSoundSemaphoreContFi",
+      "reason": "Inline Dinkumware find (lower_bound, base operator==, _Mynode/_Key/less::operator() out of line, ternary end():it) reproduces every call. The only residual is one extra iterator copy from smap::find's 'return _Tr.find(k)', which retail elides. Calling _Tr.find directly removes a level and changes inlining (end() gets inlined)",
+      "size": 240,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcsoundsemaphorecont.cpp",
+      "status": "MISMATCH",
+      "target_size": 240,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -28457,6 +28487,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndslider.cpp",
       "status": "MATCH"
     },
+    "0x00186700": {
+      "address": "0x00186700",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_fn_s32GetVolumeLineSound",
+      "size": 92,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndslider.cpp",
+      "status": "MATCH"
+    },
+    "0x00186760": {
+      "address": "0x00186760",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_fn_vSetVolumeLineSound",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndslider.cpp",
+      "status": "MATCH"
+    },
     "0x00186890": {
       "address": "0x00186890",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -28799,6 +28845,38 @@
       "name": "SND_fn_vKillObjectSound2",
       "size": 80,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001c9dd0": {
+      "address": "0x001c9dd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_fn_lAddObjectTypeSound2",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcsoundsemaphorecont.cpp",
+      "status": "MATCH"
+    },
+    "0x001ca720": {
+      "address": "0x001ca720",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "__dt__19CSoundSemaphoreContFv",
+      "size": 252,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcsoundsemaphorecont.cpp",
+      "status": "MATCH"
+    },
+    "0x001caa20": {
+      "address": "0x001caa20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_roGetInstance__19CSoundSemaphoreContFv",
+      "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcsoundsemaphorecont.cpp",
+      "status": "MATCH"
+    },
+    "0x001cb6b0": {
+      "address": "0x001cb6b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "__ct__15CSoundSemaphoreFUiUi",
+      "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcsoundsemaphore.cpp",
       "status": "MATCH"
     },
     "0x001cc970": {

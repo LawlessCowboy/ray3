@@ -957,6 +957,24 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
                          for entry in unresolved}
     for record, target_symbol in relocation_records:
         name = record['symbol']
+        if target_symbol is None and name.startswith('@') and record['type'] == 7:
+            # A gp-relative anonymous constant (for example the zero object
+            # MWCC copies to value-initialize an empty class temporary): the
+            # retail word holds the linked offset, and the literal bytes must
+            # agree at that address.
+            address = relocation_target_address(target_bytes, candidate_bytes, record['offset'],
+                                                7, None, gp)
+            obj_symbol = next((entry for entry in obj_symbols if entry.name == name), None)
+            in_bss = (obj_symbol is not None and 0 < obj_symbol.shndx < len(obj_sections)
+                      and obj_sections[obj_symbol.shndx].type == 8)
+            in_retail_data = address is not None and any(
+                section.addr and section.type != 8 and section.addr <= address < section.addr + section.size
+                for section in sections)
+            if (address is not None and not (in_bss and in_retail_data)
+                    and anonymous_object_matches(name, address, obj_sections, obj_symbols, sections)
+                    and patch_relocation(candidate_bytes, record['offset'], 7, address, gp)):
+                unresolved_by_key.pop((record['offset'], record['type'], name), None)
+            continue
         if target_symbol is not None or not name.startswith('@') or record['type'] != 5:
             continue
         # MWCC may schedule unrelated instructions between the HI16 and its

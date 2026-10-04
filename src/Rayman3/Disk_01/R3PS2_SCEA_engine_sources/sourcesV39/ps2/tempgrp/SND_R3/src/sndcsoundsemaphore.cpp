@@ -4,60 +4,87 @@
 
 #include <stddef.h>
 
-/* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct spair spair;
-typedef struct sTreeNode sTreeNode;
-typedef struct less less;
-typedef struct stree stree;
-typedef struct iterator iterator;
-typedef struct CSoundSemaphoreInfo CSoundSemaphoreInfo;
-typedef struct CSoundSemaphore CSoundSemaphore;
-typedef struct iterator_base iterator_base;
-typedef struct sTreeLink sTreeLink;
-typedef struct streebase streebase;
-typedef struct smap smap;
-typedef struct sallocator sallocator;
-struct sallocator { int data[4]; };
-
-typedef enum _Redbl {
-    _Red = 0,
-    _Black = 1,
-} _Redbl;
-
-struct spair {
-    int first; /* +0x0 */
-    CSoundSemaphoreInfo* second; /* +0x4 */
-};
-
-struct sTreeLink {
-    sTreeLink* m_poLeft; /* +0x0 */
-    sTreeLink* m_poParent; /* +0x4 */
-    sTreeLink* m_poRight; /* +0x8 */
-    _Redbl m_eColor; /* +0xc */
-};
-
-struct sTreeNode : sTreeLink {
-    spair m_oValue; /* +0x10 */
-};
-
-struct less {
-    /* C++ base binary_function at +0x0. */
-};
-
+/* Recovered aggregate layouts from MWCC debug type records.  The usnd
+ * containers are a renamed Dinkumware red-black tree; only the members this
+ * translation unit needs are declared.  Members defined in the class body are
+ * inline, the others are out-of-line template instances. */
+namespace usnd {
 struct streebase {
+    enum _Redbl {
+        _Red = 0,
+        _Black = 1
+    };
+    struct sTreeLink {
+        sTreeLink* m_poLeft; /* +0x0 */
+        sTreeLink* m_poParent; /* +0x4 */
+        sTreeLink* m_poRight; /* +0x8 */
+        _Redbl m_eColor; /* +0xc */
+    };
+    struct iterator_base {
+        iterator_base(void) {}
+        iterator_base(sTreeLink* po_Link);
+        void _Inc(void);
+        sTreeLink* _Ptr; /* +0x0 */
+    };
+    streebase(bool b_Multi) : _Multi(b_Multi) {}
+    static sTreeLink _NilElmt;
     sTreeLink* _HeadLink; /* +0x0 */
     unsigned char _Multi; /* +0x4 */
     unsigned int _Size; /* +0x8 */
 };
 
-struct stree : streebase {
-    sallocator allocator; /* +0xc */
-    less key_compare; /* +0xd */
+template <class T> struct binary_function {
 };
 
-struct iterator {
-    /* C++ base iterator_base at +0x0. */
+template <class T> struct less : binary_function<T> {
 };
+
+template <class T> struct sallocator {
+};
+
+template <class T1, class T2> struct spair {
+    T1 first;
+    T2 second;
+};
+
+template <class K, class V, class KFN, class CMP, class ALLOC>
+struct stree : streebase {
+    struct sTreeNode : sTreeLink {
+        V m_oValue; /* +0x10 */
+    };
+    struct iterator : iterator_base {
+        iterator(void) {}
+        iterator(sTreeLink* po_Link) : iterator_base(po_Link) {}
+    };
+    stree(const CMP& ro_Pred, bool b_Multi, const ALLOC& ro_Alloc) : streebase(b_Multi), allocator(ro_Alloc), key_compare(ro_Pred)
+    {
+        _Init();
+    }
+    void _Init(void)
+    {
+        _HeadLink = _Buynode(&_NilElmt, _Red);
+        _Size = 0;
+        _GetHead()->m_poLeft = _HeadLink;
+        _GetHead()->m_poRight = _HeadLink;
+    }
+    /* Called out of line from the inlined _Init in this unit (inline in
+       sndcsoundsemaphorecont.cpp's out-of-line _Init instance). */
+    sTreeLink* _GetHead(void) const;
+    sTreeLink* _Buynode(sTreeLink* po_Parent, _Redbl e_Color);
+    ALLOC allocator; /* +0xc */
+    CMP key_compare; /* +0xd */
+};
+
+template <class K, class T, class CMP, class ALLOC>
+struct smap {
+    struct _Kfn {
+    };
+    typedef stree<K, spair<const K, T>, _Kfn, CMP, ALLOC> _Imp;
+    typedef typename _Imp::iterator iterator;
+    smap(const CMP& ro_Pred = CMP(), const ALLOC& ro_Alloc = ALLOC()) : _Tr(ro_Pred, false, ro_Alloc) {}
+    _Imp _Tr; /* +0x0 */
+};
+}
 
 struct CSoundSemaphoreInfo {
     int ms32ObjectId; /* +0x0 */
@@ -65,31 +92,12 @@ struct CSoundSemaphoreInfo {
     int ms32HandleId; /* +0x8 */
 };
 
-struct smap {
-    stree _Tr; /* +0x0 */
-};
-
-struct CSoundSemaphore : smap {
+struct CSoundSemaphore : usnd::smap<int, CSoundSemaphoreInfo*, usnd::less<int>, usnd::sallocator<CSoundSemaphoreInfo*> > {
     unsigned int mu32ChannelId; /* +0x10 */
     unsigned int mu32ChannelSize; /* +0x14 */
     CSoundSemaphore(unsigned int, unsigned int);
     void f_vSynchro(void);
 };
-
-struct iterator_base {
-    sTreeLink* _Ptr; /* +0x0 */
-};
-
-
-
-
-
-
-
-
-
-
-
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphore.cpp lines 442–448 */
 /* addr: 0x001caab0  size: 80 bytes */
@@ -174,7 +182,6 @@ void _Erase__Q24usnd215stree<i,Q24usnd32spair<Ci,P19CSoundSemaphoreInfo>,Q34usnd
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CSoundSemaphore::CSoundSemaphore(unsigned int u32_ChannelId, unsigned int u32_ChannelSize)
+CSoundSemaphore::CSoundSemaphore(unsigned int u32_ChannelId, unsigned int u32_ChannelSize) : mu32ChannelId(u32_ChannelId), mu32ChannelSize(u32_ChannelSize)
 {
-    /* TODO: decompile from asm/... */
 }

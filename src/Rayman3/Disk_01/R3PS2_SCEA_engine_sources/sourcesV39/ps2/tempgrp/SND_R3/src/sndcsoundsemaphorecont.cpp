@@ -4,83 +4,150 @@
 
 #include <stddef.h>
 
-typedef int sallocator;
-
-/* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
-typedef struct CSoundSemaphoreCont CSoundSemaphoreCont;
-typedef struct spair spair;
-typedef struct sTreeNode sTreeNode;
-typedef struct iterator iterator;
-typedef struct less less;
-typedef struct stree stree;
-typedef struct iterator_base iterator_base;
-typedef struct sTreeLink sTreeLink;
-typedef struct CSoundSemaphore CSoundSemaphore;
-typedef struct streebase streebase;
-typedef struct smap smap;
 
-typedef enum _Redbl {
-    _Red = 0,
-    _Black = 1,
-} _Redbl;
+extern "C" void* usnd_malloc(unsigned int ui_Size);
+extern "C" void usnd_free(void* pv_Ptr);
 
-struct CSoundSemaphoreCont {
-    /* C++ base smap at +0x0. */
-    unsigned char mfn_bRemoveSoundSemaphore(int s32_ChannelId);
-    unsigned char mfn_bSynchroSoundSemaphore(void);
-    CSoundSemaphore* mfn_poAddSoundSemaphore(int s32_ChannelId, int s32_ChannelSize);
-    CSoundSemaphore* mfn_poFindSoundSemaphore(int s32_ChannelId);
-    void mfn_vDelete(void);
-    CSoundSemaphoreCont* mfn_roGetInstance(void);
-};
-
-struct spair {
-    int first; /* +0x0 */
-    CSoundSemaphore* second; /* +0x4 */
-};
-
-struct sTreeLink {
-    sTreeLink* m_poLeft; /* +0x0 */
-    sTreeLink* m_poParent; /* +0x4 */
-    sTreeLink* m_poRight; /* +0x8 */
-    _Redbl m_eColor; /* +0xc */
-};
-
-struct sTreeNode : sTreeLink {
-    spair m_oValue; /* +0x10 */
-};
-
-struct iterator {
-    /* C++ base iterator_base at +0x0. */
-};
-
-struct less {
-    /* C++ base binary_function at +0x0. */
-};
-
+/* The usnd containers are a renamed Dinkumware red-black tree; only the
+ * members this translation unit needs are declared.  Members defined in the
+ * class body are inline, the others are out-of-line template instances. */
+namespace usnd {
 struct streebase {
+    enum _Redbl {
+        _Red = 0,
+        _Black = 1
+    };
+    struct sTreeLink {
+        sTreeLink* m_poLeft; /* +0x0 */
+        sTreeLink* m_poParent; /* +0x4 */
+        sTreeLink* m_poRight; /* +0x8 */
+        _Redbl m_eColor; /* +0xc */
+    };
+    struct iterator_base {
+        iterator_base(void) {}
+        iterator_base(sTreeLink* po_Link);
+        void _Inc(void);
+        bool operator==(const iterator_base& ro_It) const;
+        sTreeLink* _Ptr; /* +0x0 */
+    };
+    streebase(bool b_Multi) : _Multi(b_Multi) {}
+    sTreeLink* base_erase(sTreeLink* po_Node);
+    static sTreeLink _NilElmt;
     sTreeLink* _HeadLink; /* +0x0 */
     unsigned char _Multi; /* +0x4 */
     unsigned int _Size; /* +0x8 */
 };
 
+template <class T> struct binary_function {
+};
+
+template <class T> struct less : binary_function<T> {
+    bool operator()(const T& ro_Left, const T& ro_Right) const;
+};
+
+template <class T> struct sallocator {
+};
+
+template <class T1, class T2> struct spair {
+    T1 first;
+    T2 second;
+};
+
+template <class K, class V, class KFN, class CMP, class ALLOC>
 struct stree : streebase {
-    sallocator allocator; /* +0xc */
-    less key_compare; /* +0xd */
+    struct sTreeNode : sTreeLink {
+        V m_oValue; /* +0x10 */
+    };
+    struct iterator : iterator_base {
+        iterator(void) {}
+        iterator(sTreeLink* po_Link) : iterator_base(po_Link) {}
+        iterator(const iterator& ro_It) : iterator_base(ro_It._Ptr) {}
+        V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
+        iterator& operator++(void) { _Inc(); return *this; }
+        iterator operator++(int) { iterator oTmp = *this; ++*this; return oTmp; }
+        bool operator!=(const iterator& ro_It) const { return !(_Ptr == ro_It._Ptr); }
+        sTreeNode* _Mynode(void) const;
+    };
+    stree(const CMP& ro_Pred, bool b_Multi, const ALLOC& ro_Alloc) : streebase(b_Multi), allocator(ro_Alloc), key_compare(ro_Pred)
+    {
+        _Init();
+    }
+    ~stree()
+    {
+        erase(begin(), end());
+        usnd_free(_HeadLink);
+        _HeadLink = 0;
+        _Size = 0;
+    }
+    void _Init(void)
+    {
+        _HeadLink = _Buynode(&_NilElmt, _Red);
+        _Size = 0;
+        _GetHead()->m_poLeft = _HeadLink;
+        _GetHead()->m_poRight = _HeadLink;
+    }
+    sTreeLink* _GetHead(void) const
+    {
+        return _HeadLink;
+    }
+    sTreeLink* _Buynode(sTreeLink* po_Parent, _Redbl e_Color)
+    {
+        sTreeNode* poNode = (sTreeNode*)usnd_malloc(sizeof(sTreeNode));
+        poNode->m_poParent = po_Parent;
+        poNode->m_eColor = e_Color;
+        return poNode;
+    }
+    sTreeLink*& _Lmost(void)
+    {
+        return _GetHead()->m_poLeft;
+    }
+    iterator begin(void) { return iterator(_Lmost()); }
+    iterator end(void) { return iterator(_HeadLink); }
+    iterator erase(iterator o_First, iterator o_Last);
+    iterator lower_bound(const K& ro_Key);
+    static const K& _Key(sTreeNode* po_Node);
+    iterator find(const K& ro_Key)
+    {
+        iterator oIt = lower_bound(ro_Key);
+        return (oIt == end() || key_compare(ro_Key, _Key(oIt._Mynode()))) ? end() : oIt;
+    }
+    void erase(iterator o_It)
+    {
+        usnd_free(base_erase((o_It++)._Ptr));
+    }
+    ALLOC allocator; /* +0xc */
+    CMP key_compare; /* +0xd */
 };
 
-struct iterator_base {
-    sTreeLink* _Ptr; /* +0x0 */
-};
-
+template <class K, class T, class CMP, class ALLOC>
 struct smap {
-    stree _Tr; /* +0x0 */
+    struct _Kfn {
+    };
+    typedef stree<K, spair<const K, T>, _Kfn, CMP, ALLOC> _Imp;
+    typedef typename _Imp::iterator iterator;
+    smap(const CMP& ro_Pred = CMP(), const ALLOC& ro_Alloc = ALLOC()) : _Tr(ro_Pred, false, ro_Alloc) {}
+    iterator begin(void) { return _Tr.begin(); }
+    iterator end(void) { return _Tr.end(); }
+    void erase(iterator o_It) { _Tr.erase(o_It); }
+    iterator find(const K& ro_Key) { return _Tr.find(ro_Key); }
+    _Imp _Tr; /* +0x0 */
+};
+}
+
+struct CSoundSemaphore {
+    ~CSoundSemaphore();
 };
 
-struct CSoundSemaphore : smap {
-    unsigned int mu32ChannelId; /* +0x10 */
-    unsigned int mu32ChannelSize; /* +0x14 */
+struct CSoundSemaphoreCont : usnd::smap<int, CSoundSemaphore*, usnd::less<int>, usnd::sallocator<CSoundSemaphore*> > {
+    ~CSoundSemaphoreCont();
+    void operator delete(void* pv_Ptr) { usnd_free(pv_Ptr); }
+    unsigned char mfn_bRemoveSoundSemaphore(int s32_ChannelId);
+    unsigned char mfn_bSynchroSoundSemaphore(void);
+    CSoundSemaphore* mfn_poAddSoundSemaphore(int s32_ChannelId, int s32_ChannelSize);
+    CSoundSemaphore* mfn_poFindSoundSemaphore(int s32_ChannelId);
+    void mfn_vDelete(void);
+    static CSoundSemaphoreCont& mfn_roGetInstance(void);
 };
 
 
@@ -103,9 +170,14 @@ struct CSoundSemaphore : smap {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int CSoundSemaphoreCont_ctor(_tdstAllRetObjectSound* pst_IActor, int s32_VolId)
+struct CLinkTypeActorCont {
+    static CLinkTypeActorCont& mfn_roGetInstance(void);
+    int mfn_s32AddActorType(int s32_VolId, const _tdstAllRetObjectSound* pst_IActor);
+};
+
+extern "C" int SND_fn_lAddObjectTypeSound2(_tdstAllRetObjectSound* pst_IActor, int s32_VolId)
 {
-    /* TODO: decompile from asm/... */
+    return CLinkTypeActorCont::mfn_roGetInstance().mfn_s32AddActorType(s32_VolId, pst_IActor);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphorecont.cpp lines 110–124 */
@@ -196,8 +268,14 @@ CSoundSemaphore* CSoundSemaphoreCont::mfn_poAddSoundSemaphore(int s32_ChannelId,
  */
 CSoundSemaphore* CSoundSemaphoreCont::mfn_poFindSoundSemaphore(int s32_ChannelId)
 {
-    CSoundSemaphore* po_Answer;
-    /* TODO: decompile from asm/... */
+    CSoundSemaphore* po_Answer = NULL;
+
+    iterator it = find(s32_ChannelId);
+    if (it != end())
+    {
+        po_Answer = (*it).second;
+    }
+    return po_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphorecont.cpp lines 45–55 */
@@ -216,7 +294,12 @@ CSoundSemaphore* CSoundSemaphoreCont::mfn_poFindSoundSemaphore(int s32_ChannelId
 void CSoundSemaphoreCont::mfn_vDelete(void)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; (begin() != end()) && (i < 30000); i++)
+    {
+        delete (*begin()).second;
+        erase(begin());
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphorecont.cpp lines 37–42 */
@@ -229,10 +312,14 @@ void CSoundSemaphoreCont::mfn_vDelete(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CSoundSemaphoreCont_destructor(void)
+CSoundSemaphoreCont::~CSoundSemaphoreCont()
 {
     iterator it;
-    /* TODO: decompile from asm/... */
+
+    for (it = begin(); it != end(); ++it)
+    {
+        delete (*it).second;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphorecont.cpp lines 30–33 */
@@ -246,9 +333,9 @@ void CSoundSemaphoreCont_destructor(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CSoundSemaphoreCont* CSoundSemaphoreCont::mfn_roGetInstance(void)
+CSoundSemaphoreCont& CSoundSemaphoreCont::mfn_roGetInstance(void)
 {
-    CSoundSemaphoreCont oSingleton;
-    signed char init;
-    /* TODO: decompile from asm/... */
+    static CSoundSemaphoreCont oSingleton;
+
+    return oSingleton;
 }
