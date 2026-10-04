@@ -21342,6 +21342,21 @@
           "type": 4
         }
       ]
+    },
+    {
+      "address": "0x001d1080",
+      "candidate_size": 324,
+      "first_difference": 40,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fs_vAdd__9SwitchMgrFPQ24usnd14CSwitchResData",
+      "reason": "Everything matches except the final m_pElt[m_uiDefault].m_pData store: retail forms (m_pElt+4) + m_uiDefault*16 (unfolded member-offset family). ((CResData**)((char*)m_pElt+4))[m_uiDefault*4] gives 328/328 with only a v1/a1 swap; natural form kept",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
+      "status": "MISMATCH",
+      "target_size": 328,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -29138,6 +29153,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
       "status": "MATCH"
     },
+    "0x001d0bb0": {
+      "address": "0x001d0bb0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fs_vAddDataToDelete__9SwitchMgrFPQ24usnd8CResData",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
+      "status": "MATCH"
+    },
+    "0x001d0c80": {
+      "address": "0x001d0c80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fs_vStopAll__9SwitchMgrFv",
+      "size": 528,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
+      "status": "MATCH"
+    },
+    "0x001d0e90": {
+      "address": "0x001d0e90",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fs_vUpdateWaves__9SwitchMgrFPQ24usnd15CPS2IdObjLoader",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
+      "status": "MATCH"
+    },
     "0x001d0fe0": {
       "address": "0x001d0fe0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -29159,6 +29198,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "f_bFindData__10SwitchDataFPQ24usnd8CResData",
       "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
+      "status": "MATCH"
+    },
+    "0x001d1220": {
+      "address": "0x001d1220",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "f_vUpdateWaves__10SwitchDataFPcUiPQ24usnd15CPS2IdObjLoader",
+      "size": 488,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
       "status": "MATCH"
     },
