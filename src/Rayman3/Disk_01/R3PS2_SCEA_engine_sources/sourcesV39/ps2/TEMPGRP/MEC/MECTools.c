@@ -1285,12 +1285,15 @@ void MEC_fn_vRepeatMove(DNM_stDynamics* p_stDynamic)
     stVector.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX - hPreviousMatrix->stTransformMatrix.stCol_3.xX;
     stVector.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY - hPreviousMatrix->stTransformMatrix.stCol_3.xY;
     stVector.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hPreviousMatrix->stTransformMatrix.stCol_3.xZ;
-    if (hPreviousMatrix->eType == MAT_eTransform_Identity)
-        hPreviousMatrix->eType = MAT_eTransform_Translation;
-    *(int*)((char*)hPreviousMatrix + 0x40) = *(int*)((char*)hCurrentMatrix + 0x40);
-    *(int*)((char*)hPreviousMatrix + 0x44) = *(int*)((char*)hCurrentMatrix + 0x44);
-    *(int*)((char*)hPreviousMatrix + 0x48) = *(int*)((char*)hCurrentMatrix + 0x48);
-    hPreviousMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+    {
+        MTH3D_tdstVector_* p_stTranslation = (MTH3D_tdstVector_*)&hCurrentMatrix->stTransformMatrix.stCol_3;
+        if (hPreviousMatrix->eType == MAT_eTransform_Identity)
+            hPreviousMatrix->eType = MAT_eTransform_Translation;
+        *(int*)&hPreviousMatrix->stTransformMatrix.stCol_3.xX = *(int*)&p_stTranslation->xX;
+        *(int*)&hPreviousMatrix->stTransformMatrix.stCol_3.xY = *(int*)&p_stTranslation->xY;
+        *(int*)&hPreviousMatrix->stTransformMatrix.stCol_3.xZ = *(int*)&p_stTranslation->xZ;
+        hPreviousMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+    }
     MAT_fn_vTranslate(hCurrentMatrix, &stVector);
 }
 
@@ -1480,7 +1483,17 @@ void MEC_fn_vComputeInertiaTranslation(DNM_stDynamics* p_stDynamic, float xDT)
 void MEC_fn_vComputeStream(MTH3D_tdstVector_* p_stStream, DNM_stDynamics* p_stDynamic, float xDT, unsigned char bSlide)
 {
     float xMultFactor;
-    /* TODO: decompile from asm/... */
+
+    xMultFactor = xDT * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor;
+    p_stStream->xX = xMultFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xX;
+    p_stStream->xY = xMultFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xY;
+    p_stStream->xZ = xMultFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xZ;
+    if (bSlide)
+    {
+        p_stStream->xX = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide * p_stStream->xX;
+        p_stStream->xY = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide * p_stStream->xY;
+        p_stStream->xZ = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide * p_stStream->xZ;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1321–1321 */
@@ -1510,11 +1523,12 @@ void MEC_fn_vSetInitialFrameTranslation(DNM_stDynamics* p_stDynamic, MTH3D_tdstV
 HIE_tdstSuperObject_* MEC_fn_hGetFatherActor(HIE_tdstSuperObject_* hSupObj)
 {
     HIE_tdstSuperObject_* hActor;
-    hActor = hSupObj;
-    while (*(int*)hActor != 2) {
-        hActor = *(HIE_tdstSuperObject_**)((char*)hActor + 0x1C);
+
+    for (hActor = hSupObj; hActor->ulTypeOfLinkedObject != 2; )
+    {
+        hActor = hActor->hFatherDyn;
         if (hActor == NULL)
-            break;
+            return hActor;
     }
     return hActor;
 }
@@ -1929,6 +1943,9 @@ void MEC_fn_vTranslateMatrixOn(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p
     /* TODO: decompile from asm/... */
 }
 
+void MAT_fn_vNormalize(MAT_tdstTransformation_* _hTransform);
+void MAT_fn_vSetScale(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stScale);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 750–755 */
 /* addr: 0x003128c0  size: 64 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1941,7 +1958,8 @@ void MEC_fn_vTranslateMatrixOn(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p
  */
 void MEC_fn_vCorrectMatrix(DNM_stDynamics* p_stDynamic, MAT_tdstTransformation_* hMatrix)
 {
-    /* TODO: decompile from asm/... */
+    MAT_fn_vNormalize(hMatrix);
+    MAT_fn_vSetScale(hMatrix, &p_stDynamic->m_tdstDynamicsBaseBlock.m_stScale);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 731–745 */
@@ -1959,9 +1977,17 @@ void MEC_fn_vCorrectMatrix(DNM_stDynamics* p_stDynamic, MAT_tdstTransformation_*
  */
 void MEC_fn_vInitMatrix(DNM_stDynamics* p_stDynamic)
 {
-    MAT_tdstTransformation_* hPreviousMatrix;
     MAT_tdstTransformation_* hCurrentMatrix;
-    /* TODO: decompile from asm/... */
+    MAT_tdstTransformation_* hPreviousMatrix;
+
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+    hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0)
+    {
+        p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix = *hPreviousMatrix;
+        p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix = *hCurrentMatrix;
+    }
+    *hPreviousMatrix = *hCurrentMatrix;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 703–718 */
@@ -1978,8 +2004,17 @@ void MEC_fn_vInitMatrix(DNM_stDynamics* p_stDynamic)
  */
 void MEC_fn_vComputeSpeed(DNM_stDynamics* p_stDynamic, float xDT)
 {
-    MTH3D_tdstVector_ stSpeed;
-    /* TODO: decompile from asm/... */
+    union { MTH3D_tdstVector_ stSpeed; unsigned int a3_ulWord[3]; } uSpeed;
+
+    uSpeed.stSpeed.xX = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xX - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX;
+    uSpeed.stSpeed.xY = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xY - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY;
+    uSpeed.stSpeed.xZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xZ - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ;
+    uSpeed.stSpeed.xX /= xDT;
+    uSpeed.stSpeed.xY /= xDT;
+    uSpeed.stSpeed.xZ /= xDT;
+    ((unsigned int*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed)[0] = uSpeed.a3_ulWord[0];
+    ((unsigned int*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed)[1] = uSpeed.a3_ulWord[1];
+    ((unsigned int*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed)[2] = uSpeed.a3_ulWord[2];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 648–692 */
@@ -2372,7 +2407,14 @@ void MEC_fn_vComputeCollisionTranslation(int lObstacle, DNM_stMecObstacle* p_stO
 float MEC_fn_xGetRebound(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle)
 {
     float xRebound;
-    /* TODO: decompile from asm/... */
+
+    if (p_stObstacle == NULL)
+        return 0.0f;
+
+    xRebound = 0.0f;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x80) ? 1 : 0)
+        xRebound = p_stDynamic->m_tdstDynamicsBaseBlock.m_xRebound;
+    return xRebound;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 186–194 */
@@ -2389,7 +2431,14 @@ float MEC_fn_xGetRebound(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObs
 float MEC_fn_xGetSlide(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle)
 {
     float xSlide;
-    /* TODO: decompile from asm/... */
+
+    if (p_stObstacle == NULL)
+        return 0.0f;
+
+    xSlide = 0.0f;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x80) ? 1 : 0)
+        xSlide = p_stDynamic->m_tdstDynamicsBaseBlock.m_xSlide;
+    return xSlide;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 172–178 */

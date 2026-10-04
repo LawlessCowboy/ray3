@@ -21111,6 +21111,51 @@
       "status": "MISMATCH",
       "target_size": 212,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fe390",
+      "candidate_size": 328,
+      "first_difference": 53,
+      "implementation": "void fn_vSortListByFamily(tdstList_* p_List, tdstFamilyList_* hFamily)\n{\n    HIE_tdstSuperObject_* hSupObjElt;\n    HIE_tdstSuperObject_** p_hSupObjElt;\n    unsigned char ucJ;\n    unsigned char ucI;\n\n    ucJ = 0;\n    p_hSupObjElt = (HIE_tdstSuperObject_**)HMU_fn_p_vMalloc(p_List->ucNbElt, 1);\n    for (ucI = 0; ucI < p_List->ucNbElt; ucI++)\n    {\n        hSupObjElt = p_List->p_hTabElt[ucI];\n        if (hSupObjElt->hLinkedObject.p_stCharacter->h_3dData->h_Family == hFamily)\n            p_hSupObjElt[ucJ++] = hSupObjElt;\n    }\n\n    p_List->ucNbElt = 0;\n    for (ucI = 0; ucI < ucJ; ucI++)\n    {\n        hSupObjElt = p_hSupObjElt[ucI];\n        if (p_List->ucNbElt < p_List->ucMaxSize)\n            p_List->p_hTabElt[p_List->ucNbElt++] = hSupObjElt;\n        else\n            fn_vOnAIErm_M_UpdateLastError(14, NULL);\n    }\n\n    HMU_fn_vFree((void**)&p_hSupObjElt, 1);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vSortListByFamily",
+      "reason": "Structure exact; ucI and hSupObjElt swap a0/a1 in the first loop. Declaration permutations, CSE of p_hTabElt[ucI] and split increment did not change the allocation.",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MISMATCH",
+      "target_size": 328,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fe1c0",
+      "candidate_size": 464,
+      "first_difference": 41,
+      "implementation": "void fn_vSortListByModel(tdstList_* p_stList, AI_tdstAIModel_* _p_stModel)\n{\n    unsigned char ucJ;\n    unsigned char ucI;\n    HIE_tdstSuperObject_** p_hSupObjElt;\n    unsigned char ucPos;\n    HIE_tdstSuperObject_* hPerso;\n\n    ucPos = 0;\n    ucJ = 0;\n    p_hSupObjElt = (HIE_tdstSuperObject_**)HMU_fn_p_vMalloc(p_stList->ucNbElt, 1);\n    hPerso = fn_p_stGetPersoInList(p_stList, 0);\n    while (hPerso != NULL)\n    {\n        if ((hPerso->hLinkedObject.p_stCharacter->h_Brain != NULL) && (hPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stAIModel == _p_stModel))\n            p_hSupObjElt[ucJ++] = hPerso;\n        ucPos++;\n        hPerso = fn_p_stGetPersoInList(p_stList, ucPos);\n    }\n\n    p_stList->ucNbElt = 0;\n    for (ucI = 0; ucI < ucJ; ucI++)\n    {\n        hPerso = p_hSupObjElt[ucI];\n        if (p_stList->ucNbElt < p_stList->ucMaxSize)\n            p_stList->p_hTabElt[p_stList->ucNbElt++] = hPerso;\n        else\n            fn_vOnAIErm_M_UpdateLastError(14, NULL);\n    }\n\n    HMU_fn_vFree((void**)&p_hSupObjElt, 1);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vSortListByModel",
+      "reason": "Retail inlines fn_p_stGetPersoInList twice (auto_inline around its definition reproduces size and structure); residual is that helper's own nb/ucPosition register swap and nb re-zero-extension, shared with fn_p_stGetPersoInList.",
+      "size": 464,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MISMATCH",
+      "target_size": 464,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00313ef0",
+      "candidate_size": 104,
+      "first_difference": 20,
+      "implementation": "unsigned char MEC_fn_bCanCrashActor(DNM_stMecObstacle* p_stCollideObstacle)\n{\n    HIE_tdstSuperObject_* hSupObj;\n\n    hSupObj = p_stCollideObstacle->mp_stSupObj;\n    if (hSupObj == NULL)\n        return 0;\n    if (hSupObj->ulTypeOfLinkedObject != 2) {\n        do {\n            hSupObj = hSupObj->hFatherDyn;\n            if (hSupObj == NULL)\n                break;\n        } while (hSupObj->ulTypeOfLinkedObject != 2);\n    }\n    return ((fn_ulStandardGameGetCustomBitsSO(hSupObj) & 0x40) ^ 0x40) != 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_bCanCrashActor",
+      "reason": "Line 157 spans the whole father walk (an inlined helper or macro): retail peels the type!=2 test, then on NULL father branches past the loop-exit alignment nop straight to the call. Inlining MEC_fn_hGetFatherActor (auto_inline) gives the jump-to-test loop instead; peeled do/while, goto and && forms leave the NULL exit on the nop join.",
+      "size": 112,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 112,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -30131,6 +30176,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
       "status": "MATCH"
     },
+    "0x001fd7f0": {
+      "address": "0x001fd7f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stListSelect",
+      "size": 272,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
     "0x001fd980": {
       "address": "0x001fd980",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -30160,6 +30213,38 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vAffectZddInList",
       "size": 212,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
+    "0x001fdca0": {
+      "address": "0x001fdca0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vAddList",
+      "size": 292,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
+    "0x001fddd0": {
+      "address": "0x001fddd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vDiffList",
+      "size": 292,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
+    "0x001fdf00": {
+      "address": "0x001fdf00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vInterList",
+      "size": 268,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
+    "0x001fe010": {
+      "address": "0x001fe010",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vUnionList",
+      "size": 420,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
       "status": "MATCH"
     },
@@ -40691,6 +40776,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECPfm.c",
       "status": "MATCH"
     },
+    "0x00311160": {
+      "address": "0x00311160",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_vRepeatMove",
+      "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
     "0x00311530": {
       "address": "0x00311530",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -40699,11 +40792,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },
+    "0x00311640": {
+      "address": "0x00311640",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_vComputeStream",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
     "0x003116b0": {
       "address": "0x003116b0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MEC_fn_vSetInitialFrameTranslation",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x003116c0": {
+      "address": "0x003116c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_hGetFatherActor",
+      "size": 56,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },
@@ -40728,6 +40837,46 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MEC_fn_vTranslateMatrixOff",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x003128c0": {
+      "address": "0x003128c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_vCorrectMatrix",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x00312900": {
+      "address": "0x00312900",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_vInitMatrix",
+      "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x003129b0": {
+      "address": "0x003129b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_vComputeSpeed",
+      "size": 128,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x00313e40": {
+      "address": "0x00313e40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_xGetRebound",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x00313e80": {
+      "address": "0x00313e80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_xGetSlide",
+      "size": 64,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },
