@@ -1365,7 +1365,12 @@ int fn_rGetMicroTangentY(int s32_ObjectId)
 {
     _stVector st_Vector;
     int r_Answer;
-    /* TODO: decompile from asm/... */
+
+    r_Answer = 0;
+    if (fn_bGetMicroTangent(s32_ObjectId, &st_Vector)) {
+        r_Answer = st_Vector.f32y * 65536.0f;
+    }
+    return r_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 687–695 */

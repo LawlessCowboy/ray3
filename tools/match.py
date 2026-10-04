@@ -1559,7 +1559,7 @@ def command_try(args: argparse.Namespace) -> int:
     _, symbols, main, _, _ = target_context()
     entry = find_entry(args.function, cached_source_index(symbols, main))
     path = ROOT / entry['source']
-    original = path.read_text(encoding='utf-8', errors='replace')
+    original = path.read_text(encoding='utf-8', errors='surrogateescape')
     start, end = function_body_span(original, entry['name'])
     variants = [v.strip('\n') for v in re.split(r'^----$', Path(args.variants).read_text(), flags=re.M)]
     # A variant may also be a whole definition; keep only its body.
@@ -1571,7 +1571,7 @@ def command_try(args: argparse.Namespace) -> int:
         variants[number] = variant[body_start:body_end].strip('\n')
 
     def write(variant: str) -> None:
-        path.write_text(original[:start] + variant + '\n' + original[end:], encoding='utf-8')
+        path.write_text(original[:start] + variant + '\n' + original[end:], encoding='utf-8', errors='surrogateescape')
 
     if args.apply is not None:
         write(variants[args.apply])
@@ -1602,13 +1602,13 @@ def command_try(args: argparse.Namespace) -> int:
             if status == 'MATCH' and fallback is None:
                 fallback = number
     except BaseException:
-        path.write_text(original, encoding='utf-8')
+        path.write_text(original, encoding='utf-8', errors='surrogateescape')
         raise
     if fallback is not None:
         write(variants[fallback])
         print(f'kept variant {fallback} (bytes match; line map differs)')
         return 0
-    path.write_text(original, encoding='utf-8')
+    path.write_text(original, encoding='utf-8', errors='surrogateescape')
     print('no variant matched; source restored')
     return 1
 

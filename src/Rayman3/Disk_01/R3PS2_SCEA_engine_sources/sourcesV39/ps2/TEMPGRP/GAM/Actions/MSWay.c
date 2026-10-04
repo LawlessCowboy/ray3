@@ -1350,9 +1350,9 @@ unsigned int MSWay_fn_ulGetCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iInde
 WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex)
 {
     int lNbOfElts;
-    int k;
-    int i;
     WP_tdstGraphNode_* hElement;
+    int i;
+    int k;
 
     if ((hWay != NULL) && (hWay->m_hPath != NULL))
     {
@@ -1370,10 +1370,8 @@ WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex)
             if ((iIndex < 0) || (iIndex >= lNbOfElts))
                 return NULL;
         }
-        k = lNbOfElts - iIndex;
-        hElement = hWay->m_hPath->m_hListOfNode.hFirstElementDyn;
-        for (i = 0; i < k - 1; i++)
-            hElement = hElement->hNextBrotherDyn;
+        k = lNbOfElts - iIndex - 1;
+        for (i = 0, hElement = hWay->m_hPath->m_hListOfNode.hFirstElementDyn; i < k; i++, hElement = hElement->hNextBrotherDyn) ;
         return hElement->m_hWayPoint;
     }
     return NULL;

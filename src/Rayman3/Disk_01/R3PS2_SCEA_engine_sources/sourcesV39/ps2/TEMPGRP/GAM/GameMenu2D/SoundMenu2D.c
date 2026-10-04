@@ -49,16 +49,12 @@ int M2D_fn_iNbTexturesNeededForMenu(void)
  */
 void fn_vSetStereoGameMenu2D(unsigned int uiSet)
 {
-    int bStereo;
-    switch (uiSet) {
-    case 1:
-        bStereo = 1;
-        break;
-    default:
-        bStereo = 0;
-        break;
+    if (uiSet == 1) {
+        uiSet = 1;
+    } else {
+        uiSet = 0;
     }
-    SND_fn_vSetStereoSound(bStereo);
+    SND_fn_vSetStereoSound(uiSet);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\SoundMenu2D.c lines 129–169 */
