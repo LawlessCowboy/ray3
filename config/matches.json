@@ -21081,6 +21081,36 @@
       "status": "MISMATCH",
       "target_size": 28,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fd900",
+      "candidate_size": 120,
+      "first_difference": 2,
+      "implementation": "HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition)\n{\n    if (p_List->ucNbElt == 0)\n        return NULL;\n\n    if ((ucPosition >= p_List->ucNbElt) && (ucPosition != 0xff))\n        return NULL;\n\n    if (ucPosition == 0xff)\n        return (p_List->p_hTabElt - 1)[p_List->ucNbElt];\n    else\n        return p_List->p_hTabElt[ucPosition];\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stGetPersoInList",
+      "reason": "Retail keeps ucNbElt from the first lbu unextended and swaps the nb/ucPosition registers; the 0xff branch is (base-4)+nb*4 unfolded. (p_hTabElt - 1)[nb] gives the right shape but re-zero-extends nb and folds -4; operand-order and cast variants did not fix it.",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MISMATCH",
+      "target_size": 120,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fda00",
+      "candidate_size": 212,
+      "first_difference": 4,
+      "implementation": "void fn_vAffectTypeZdeWithTypeZdeInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned short xPersoMask, unsigned short xOthersMask)\n{\n    unsigned short uwNbDetectedPerso;\n    unsigned short uwI;\n\n    p_List->ucNbElt = 0;\n    uwNbDetectedPerso = p_List->ucMaxSize;\n    fn_vThisTypeVsThisType(p_stPerso, xPersoMask, xOthersMask, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso);\n    for (uwI = 0; uwI < uwNbDetectedPerso; uwI++)\n    {\n        HIE_tdstSuperObject_* p_stFound = (HIE_tdstSuperObject_*)g_a_hPersoInZone[uwI];\n        if (p_List->ucNbElt < p_List->ucMaxSize)\n            p_List->p_hTabElt[p_List->ucNbElt++] = p_stFound;\n        else\n            fn_vOnAIErm_M_UpdateLastError(14, NULL);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vAffectTypeZdeWithTypeZdeInList",
+      "reason": "Same body as the matched fn_vAffectZdeInList with fn_vThisTypeVsThisType; retail materialises &g_a_hPersoInZone into a3 during argument setup, candidate hoists it to the prologue (scheduling only).",
+      "size": 212,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MISMATCH",
+      "target_size": 212,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -30117,6 +30147,70 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
       "status": "MATCH"
     },
+    "0x001fdae0": {
+      "address": "0x001fdae0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vAffectZdeInList",
+      "size": 220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
+    "0x001fdbc0": {
+      "address": "0x001fdbc0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vAffectZddInList",
+      "size": 212,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
+    "0x001fe4e0": {
+      "address": "0x001fe4e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vDeletePersoAtPositionInList",
+      "size": 184,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
+    "0x001fe5a0": {
+      "address": "0x001fe5a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_bFindPersoAndDeleteInList",
+      "size": 180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
+    "0x001fe660": {
+      "address": "0x001fe660",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_bFindFamilyInList",
+      "size": 100,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
+    "0x001fe6d0": {
+      "address": "0x001fe6d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_bFindModelInList",
+      "size": 108,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
+    "0x001fe740": {
+      "address": "0x001fe740",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_bFindPersoInList",
+      "size": 92,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
+    "0x001fe7a0": {
+      "address": "0x001fe7a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vInsertPersoAtPositionInList",
+      "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
     "0x001fe850": {
       "address": "0x001fe850",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -31013,6 +31107,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
+    "0x00212260": {
+      "address": "0x00212260",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_st_SinusEffect_GetPosition",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
     "0x002123c0": {
       "address": "0x002123c0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -31037,11 +31139,51 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
+    "0x00212820": {
+      "address": "0x00212820",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_st_TXT_Function",
+      "size": 232,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00212a60": {
+      "address": "0x00212a60",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_st_RLIFunction",
+      "size": 112,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00212d40": {
+      "address": "0x00212d40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_st_MultiPlayerFunction",
+      "size": 192,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
     "0x00213050": {
       "address": "0x00213050",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stGetFrameLength",
       "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00213070": {
+      "address": "0x00213070",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_st_SPO_GetDrawFlag",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x002134b0": {
+      "address": "0x002134b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_lAddColor",
+      "size": 200,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
@@ -31053,11 +31195,51 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
+    "0x00214100": {
+      "address": "0x00214100",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stTimeFunction",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00214c70": {
+      "address": "0x00214c70",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stGlobalToLocal",
+      "size": 136,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
     "0x00214d00": {
       "address": "0x00214d00",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stDummyFunction",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00214d10": {
+      "address": "0x00214d10",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stLocalToGlobal",
+      "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00215180": {
+      "address": "0x00215180",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stMathAbsoluteValue",
+      "size": 92,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00215810": {
+      "address": "0x00215810",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stGetWpAbsolutePosition",
+      "size": 148,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
@@ -31074,6 +31256,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stGetMyAbsolutePosition",
       "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00216bc0": {
+      "address": "0x00216bc0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stGetPersoAbsolutePosition",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00216f20": {
+      "address": "0x00216f20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stR3GetValue",
+      "size": 152,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },

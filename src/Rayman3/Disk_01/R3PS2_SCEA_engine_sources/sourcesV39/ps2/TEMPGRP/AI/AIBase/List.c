@@ -2946,6 +2946,10 @@ struct tdstListOfMacro_ {
 
 int g_a_hPersoInZone[256];
 unsigned char g_ucAIModuleId;
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+void Erm_fn_v_UpdateLastError();
+void fn_vThisTypeVsThisType(HIE_tdstSuperObject_* _hCharacter, unsigned short _wCharacterMask, unsigned short _wOthersMask, HIE_tdstSuperObject_** _p_hObjectTable, unsigned short* _p_uwNumber);
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 216–296 */
 /* addr: 0x001fd340  size: 436 bytes */
@@ -3145,15 +3149,13 @@ HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucP
     if (p_List->ucNbElt == 0)
         return NULL;
 
-
-    if (ucPosition >= p_List->ucNbElt && ucPosition != 0xff)
+    if ((ucPosition >= p_List->ucNbElt) && (ucPosition != 0xff))
         return NULL;
 
-
     if (ucPosition == 0xff)
-        return *(p_List->p_hTabElt - 1 + p_List->ucNbElt);
-
-    return p_List->p_hTabElt[ucPosition];
+        return (p_List->p_hTabElt - 1)[p_List->ucNbElt];
+    else
+        return p_List->p_hTabElt[ucPosition];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 406–410 */
@@ -3228,7 +3230,18 @@ void fn_vAffectTypeZdeWithTypeZdeInList(tdstList_* p_List, HIE_tdstSuperObject_*
 {
     unsigned short uwNbDetectedPerso;
     unsigned short uwI;
-    /* TODO: decompile from asm/... */
+
+    p_List->ucNbElt = 0;
+    uwNbDetectedPerso = p_List->ucMaxSize;
+    fn_vThisTypeVsThisType(p_stPerso, xPersoMask, xOthersMask, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso);
+    for (uwI = 0; uwI < uwNbDetectedPerso; uwI++)
+    {
+        HIE_tdstSuperObject_* p_stFound = (HIE_tdstSuperObject_*)g_a_hPersoInZone[uwI];
+        if (p_List->ucNbElt < p_List->ucMaxSize)
+            p_List->p_hTabElt[p_List->ucNbElt++] = p_stFound;
+        else
+            fn_vOnAIErm_M_UpdateLastError(14, NULL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 372–381 */
@@ -3256,7 +3269,18 @@ void fn_vAffectZdeInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, uns
 {
     unsigned short uwNbDetectedPerso;
     unsigned short uwI;
-    /* TODO: decompile from asm/... */
+
+    p_List->ucNbElt = 0;
+    uwNbDetectedPerso = p_List->ucMaxSize;
+    fn_vGetAllCharactersInContactWithThisZde(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso, xMask);
+    for (uwI = 0; uwI < uwNbDetectedPerso; uwI++)
+    {
+        HIE_tdstSuperObject_* p_stFound = (HIE_tdstSuperObject_*)g_a_hPersoInZone[uwI];
+        if (p_List->ucNbElt < p_List->ucMaxSize)
+            p_List->p_hTabElt[p_List->ucNbElt++] = p_stFound;
+        else
+            fn_vOnAIErm_M_UpdateLastError(14, NULL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 359–368 */
@@ -3285,7 +3309,18 @@ void fn_vAffectZddInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, uns
 {
     unsigned short uwNbDetectedPerso;
     unsigned short uwI;
-    /* TODO: decompile from asm/... */
+
+    p_List->ucNbElt = 0;
+    uwNbDetectedPerso = p_List->ucMaxSize;
+    fn_vGetAllObjectsInZdd(p_stPerso, ucModulOrCharact, xZoneId, (HIE_tdstSuperObject_**)g_a_hPersoInZone, &uwNbDetectedPerso);
+    for (uwI = 0; uwI < uwNbDetectedPerso; uwI++)
+    {
+        HIE_tdstSuperObject_* p_stFound = (HIE_tdstSuperObject_*)g_a_hPersoInZone[uwI];
+        if (p_List->ucNbElt < p_List->ucMaxSize)
+            p_List->p_hTabElt[p_List->ucNbElt++] = p_stFound;
+        else
+            fn_vOnAIErm_M_UpdateLastError(14, NULL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 336–354 */
@@ -3505,7 +3540,18 @@ void fn_vSortListByFamily(tdstList_* p_List, tdstFamilyList_* hFamily)
 void fn_vDeletePersoAtPositionInList(tdstList_* p_List, unsigned char ucPosition)
 {
     unsigned char ucI;
-    /* TODO: decompile from asm/... */
+
+    if (ucPosition == 0xff)
+        ucPosition = p_List->ucNbElt - 1;
+
+    if (ucPosition <= p_List->ucNbElt - 1)
+    {
+        for (ucI = ucPosition; ucI <= p_List->ucNbElt - 2; ucI++)
+            p_List->p_hTabElt[ucI] = p_List->p_hTabElt[ucI + 1];
+        p_List->ucNbElt--;
+    }
+    else
+        Erm_fn_v_UpdateLastError(67, g_ucAIModuleId, 0, 16, -1, 255, 255, NULL);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 157–168 */
@@ -3529,7 +3575,18 @@ char fn_bFindPersoAndDeleteInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Per
 {
     unsigned char ucPosition;
     unsigned char ucI;
-    /* TODO: decompile from asm/... */
+
+    for (ucPosition = 0; (ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition] != p_Perso); ucPosition++)
+        ;
+
+    if (p_List->p_hTabElt[ucPosition] == p_Perso)
+    {
+        for (ucI = ucPosition; ucI <= p_List->ucNbElt - 2; ucI++)
+            p_List->p_hTabElt[ucI] = p_List->p_hTabElt[ucI + 1];
+        p_List->ucNbElt--;
+        return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 132–145 */
@@ -3547,7 +3604,15 @@ char fn_bFindPersoAndDeleteInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Per
 char fn_bFindFamilyInList(tdstList_* p_List, tdstFamilyList_* hFamily)
 {
     unsigned char ucPosition;
-    /* TODO: decompile from asm/... */
+
+    ucPosition = 0;
+    if (p_List->ucNbElt == 0)
+        return 0;
+
+    for (; (ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition]->hLinkedObject.p_stCharacter->h_3dData->h_Family != hFamily); ucPosition++)
+        ;
+
+    return ucPosition < p_List->ucNbElt;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 102–115 */
@@ -3565,7 +3630,15 @@ char fn_bFindFamilyInList(tdstList_* p_List, tdstFamilyList_* hFamily)
 char fn_bFindModelInList(tdstList_* p_List, AI_tdstAIModel_* _p_stModel)
 {
     unsigned char ucPosition;
-    /* TODO: decompile from asm/... */
+
+    ucPosition = 0;
+    if (p_List->ucNbElt == 0)
+        return 0;
+
+    for (; (ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition]->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stAIModel != _p_stModel); ucPosition++)
+        ;
+
+    return ucPosition < p_List->ucNbElt;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 77–85 */
@@ -3583,16 +3656,13 @@ char fn_bFindPersoInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
 {
     unsigned char ucPosition;
 
-    if (!p_List->ucNbElt)
+    ucPosition = 0;
+    if (p_List->ucNbElt == 0)
         return 0;
 
-    ucPosition = 0;
-    while (ucPosition < p_List->ucNbElt)
-    {
-        if (p_List->p_hTabElt[ucPosition] == p_Perso)
-            break;
+    while ((ucPosition < p_List->ucNbElt) && (p_List->p_hTabElt[ucPosition] != p_Perso))
         ucPosition++;
-    }
+
     return ucPosition < p_List->ucNbElt;
 }
 
@@ -3620,5 +3690,16 @@ char fn_bFindPersoInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
 void fn_vInsertPersoAtPositionInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso, unsigned char ucPosition)
 {
     unsigned char ucI;
-    /* TODO: decompile from asm/... */
+
+    ucPosition = (ucPosition < p_List->ucNbElt + 1) ? ucPosition : p_List->ucNbElt + 1;
+
+    if (p_List->ucNbElt < p_List->ucMaxSize)
+    {
+        for (ucI = p_List->ucNbElt; ucI > ucPosition; ucI--)
+            p_List->p_hTabElt[ucI] = p_List->p_hTabElt[ucI - 1];
+        p_List->p_hTabElt[ucPosition] = p_Perso;
+        p_List->ucNbElt++;
+    }
+    else
+        fn_vOnAIErm_M_UpdateLastError(14, NULL);
 }
