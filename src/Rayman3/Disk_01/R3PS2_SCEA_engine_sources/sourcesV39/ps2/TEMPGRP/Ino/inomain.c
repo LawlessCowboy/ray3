@@ -62,7 +62,9 @@ int INO_gs_a_tdhDevice[2];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-stDevice* INO_fn_hCreateJoystickDevice(short _wPort)
+/* INO_fn_hCreateDevice passes _wHistoricSize in a1; the debug record only
+ * lists _wPort, so the unused second parameter was dropped from it. */
+stDevice* INO_fn_hCreateJoystickDevice(short _wPort, short _wHistoricSize)
 {
     stDevice* p_stDev;
     /* TODO: decompile from asm/... */
@@ -130,10 +132,32 @@ int INO_fn_wIsJoyConnected(int JoyNb)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+short INO_fn_wIsJoystickConnectedFast(stDevice* _hDev);
+
 short INO_fn_wIsConnectedFast(stDevice* _hDev)
 {
     short wResult;
-    /* TODO: decompile from asm/... */
+
+    switch (_hDev->m_uwType)
+    {
+    case 0x10:
+        wResult = INO_fn_wIsJoystickConnectedFast(_hDev);
+        break;
+    default:
+        wResult = -1;
+        break;
+    }
+
+    if (wResult == 1)
+    {
+        _hDev->m_p_stState->m_ucStatus |= 1;
+    }
+    else
+    {
+        _hDev->m_p_stState->m_ucStatus &= ~1;
+    }
+
+    return wResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 333–387 */
@@ -187,6 +211,33 @@ short INO_fn_wReadAllDevices(unsigned short _uwType, short _wMode)
     /* TODO: decompile from asm/... */
 }
 
+/* Inlined helpers (no out-of-line copies in the ELF); bodies recovered from
+ * the expansions in INO_fn_wActivateDevice/INO_fn_wDeactivateDevice. */
+inline short INO_fn_wIsInit(void)
+{
+    return INO_gs_ucINOInitOK ? 1 : 0;
+}
+
+inline short INO_fn_wIsHandleValid(stDevice* _hDev)
+{
+    stDevice** p_hDevice;
+    short xIndex;
+    short wResult = 0;
+
+    if (_hDev && (INO_gs_ucINOInitOK ? 1 : 0))
+    {
+        for (xIndex = INO_gs_xNbDevice - 1, p_hDevice = (stDevice**)&INO_gs_a_tdhDevice[xIndex]; xIndex >= 0; xIndex--, p_hDevice--)
+        {
+            if (*p_hDevice == _hDev)
+            {
+                wResult = 1;
+                break;
+            }
+        }
+    }
+    return wResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 318–327 */
 /* addr: 0x002eec30  size: 176 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -203,7 +254,13 @@ short INO_fn_wReadAllDevices(unsigned short _uwType, short _wMode)
  */
 short INO_fn_wDeactivateDevice(stDevice* _hDev)
 {
-    /* TODO: decompile from asm/... */
+    if (INO_fn_wIsInit() && INO_fn_wIsHandleValid(_hDev))
+    {
+        _hDev->m_p_stState->m_ucStatus &= ~2;
+        return 1;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 305–314 */
@@ -222,7 +279,14 @@ short INO_fn_wDeactivateDevice(stDevice* _hDev)
  */
 short INO_fn_wActivateDevice(stDevice* _hDev)
 {
-    /* TODO: decompile from asm/... */
+    if (INO_fn_wIsInit())
+    if (INO_fn_wIsHandleValid(_hDev))
+    {
+        _hDev->m_p_stState->m_ucStatus |= 2;
+        return 1;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 196–238 */
@@ -246,7 +310,34 @@ short INO_fn_wActivateDevice(stDevice* _hDev)
 stDevice* INO_fn_hCreateDevice(unsigned short _uwType, short _wPort, short _wHistoricSize)
 {
     stDevice* p_stDev;
-    /* TODO: decompile from asm/... */
+
+    if (!(INO_gs_ucINOInitOK ? 1 : 0))
+    {
+        return NULL;
+    }
+
+    if (INO_gs_xNbDevice >= 2)
+    {
+        return NULL;
+    }
+
+    switch (_uwType)
+    {
+    case 0x10:
+        p_stDev = INO_fn_hCreateJoystickDevice(_wPort, _wHistoricSize);
+        break;
+    default:
+        p_stDev = NULL;
+        break;
+    }
+
+    if (p_stDev)
+    {
+        INO_gs_a_tdhDevice[INO_gs_xNbDevice] = (int)p_stDev;
+        INO_gs_xNbDevice++;
+    }
+
+    return p_stDev;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 169–181 */

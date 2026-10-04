@@ -1178,7 +1178,12 @@ void fn_vBrainCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _
  */
 void fn_vBrainDesinit(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_Brain) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Brain.c lines 232–274 */

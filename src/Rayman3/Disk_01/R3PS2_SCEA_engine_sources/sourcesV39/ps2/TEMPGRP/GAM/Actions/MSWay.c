@@ -1466,6 +1466,7 @@ void MSWay_fn_vSetPath(tdstMSWay_* hWay, WP_tdstGraph_* hPath, char _bIsCircular
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void MSWay_fn_vDesinitPath(tdstMSWay_* hWay)
 {
     if (hWay)
@@ -1521,7 +1522,15 @@ void fn_vMSWayCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _
 void fn_vMSWayDesinit(tdstEngineObject_* p_stObject)
 {
     tdstMSWay_* hMSWay;
-    /* TODO: decompile from asm/... */
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    hMSWay = p_stObject->h_MSWay;
+    if (!hMSWay) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    MSWay_fn_vDesinitPath(hMSWay);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 208–228 */
@@ -1540,11 +1549,26 @@ void fn_vMSWayDesinit(tdstEngineObject_* p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma dont_inline on
 void fn_vMSWayInit(tdstEngineObject_* p_stObject)
 {
     tdstMSWay_* hMSWay;
-    /* TODO: decompile from asm/... */
+
+    fn_vPushAllocModeAccordingToEngineObject(p_stObject);
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    hMSWay = p_stObject->h_MSWay;
+    if (!hMSWay) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    MSWay_fn_vDesinitPath(hMSWay);
+
+    GAM_fn_vPopAllocMode();
 }
+#pragma dont_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 178–194 */
 /* addr: 0x00271ef0  size: 200 bytes */
@@ -1563,8 +1587,17 @@ void fn_vMSWayInit(tdstEngineObject_* p_stObject)
 void fn_vMSWayFree(tdstEngineObject_* p_stObject)
 {
     tdstMSWay_* hMSWay;
-    /* TODO: decompile from asm/... */
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    hMSWay = p_stObject->h_MSWay;
+    if (!hMSWay) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    MSWay_fn_vDesinitPath(hMSWay);
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 145–155 */
 /* addr: 0x00271fc0  size: 172 bytes */

@@ -1633,6 +1633,7 @@ tdstEngineStructure_ g_stEngineStructure;
 unsigned char g_ucGameModuleId;
 
 int GLD_bDeleteViewport(short hDev, short hVP);
+void GLI_xSetViewportCamera(short hDev, short hVP, int p_stCamera);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 23–23 */
 /* addr: 0x00266540  size: 8 bytes */
@@ -1765,7 +1766,8 @@ void fn_vChangeViewPortPercent(unsigned char _ucVPIndex, unsigned int _ulMode, u
 void fn_vReputGameViewportCamera(void)
 {
     unsigned char uc_ViewPortIndex;
-    /* TODO: decompile from asm/... */
+
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++) GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], g_stEngineStructure.a_p_stGameViewportCamera[uc_ViewPortIndex]);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 529–531 */

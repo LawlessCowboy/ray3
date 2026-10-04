@@ -3364,6 +3364,11 @@ void CAM_fn_vResetArrayOfTransparentSuperObject(tdstCineinfo_*);
 char CAM_fn_cSendMultiSegment(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, float, float, int, tdstCineinfo_*);
 char CAM_fn_cCameraCantSee(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
 char CAM_fn_cCameraCantGoFailure(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+char CAM_fn_cFindNewGoodIdealPos(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, char);
+void CAM_fn_vMakeAsNewIdealPosition(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*);
+void CAM_fn_vForceCameraPos(HIE_tdstSuperObject_*, MTH3D_tdstVector_*);
+void CAM_fn_vForceCameraTgt(HIE_tdstSuperObject_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1735–1774 */
 /* addr: 0x0020b280  size: 392 bytes */
@@ -3637,7 +3642,13 @@ void CAM_fn_vTestBadDistance(CAM_tdstUpdateCamera_* _p_stStruct)
  */
 void CAM_fn_vComputeFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
 {
-    /* TODO: decompile from asm/... */
+    if (_p_stStruct->hCineinfo->eState == CAM_e_State_FailureVisibility)
+    {
+        CAM_fn_vForceCameraPos(_p_stStruct->hSuperObjCamera, &_p_stStruct->hCineinfo->stLastFailedWanted);
+        CAM_fn_vForceCameraTgt(_p_stStruct->hSuperObjCamera, &_p_stStruct->stCptPos.stTarget, &_p_stStruct->stCptPos.stRefAxisZ);
+        MTH3D_M_vCopyVector(&_p_stStruct->stCurrentCameraPos, &_p_stStruct->hCineinfo->stLastFailedWanted);
+        CAM_fn_vMakeAsNewIdealPosition(_p_stStruct, &_p_stStruct->hCineinfo->stLastFailedWanted);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1185–1212 */
@@ -3660,8 +3671,18 @@ void CAM_fn_vComputeFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
 void CAM_fn_vForceFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
 {
     char cMode;
-    MTH3D_tdstVector_ stComputeVector;
-    /* TODO: decompile from asm/... */
+    union { MTH3D_tdstVector_ v; unsigned int a[3]; } stComputeVector;
+
+    cMode = 5;
+    if (CAM_g_stCameraConstants.wFlags & 4)
+        cMode |= 8;
+    if (CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector.v, cMode))
+    {
+        _p_stStruct->hCineinfo->eState = CAM_e_State_FailureVisibility;
+        ((unsigned int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[0] = stComputeVector.a[0];
+        ((unsigned int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[1] = stComputeVector.a[1];
+        ((unsigned int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[2] = stComputeVector.a[2];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1090–1166 */

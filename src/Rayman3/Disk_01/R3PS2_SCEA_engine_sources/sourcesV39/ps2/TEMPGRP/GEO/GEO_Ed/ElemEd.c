@@ -193,6 +193,28 @@ struct GEO_tdstColor_ {
     float xA; /* +0xc */
 };
 
+/* Minimal layouts for the camera access below (full definitions in DevVpt.c/Camera.c). */
+struct GLD_tdstViewportAttributes_ {
+    unsigned char _pad_00[0x68];
+    int p_vSpecificToXD; /* +0x68 */
+};
+
+typedef struct GLI_tdstSpecificAttributesFor3D_ {
+    int p_stCam; /* +0x0 */
+} GLI_tdstSpecificAttributesFor3D_;
+
+typedef struct GLI_tdstCamera_ {
+    int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* +0x4..0xf */
+    MAT_tdstTransformation_ stMatrix; /* +0x10 */
+} GLI_tdstCamera_;
+
+void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
+/* Culling.c's debug record omits a parameter: the callee reads the composed
+ * matrix from a2 and _lCullingResult from t0, and callers pass the object
+ * matrix in a3. */
+int GEO_lMainCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stShereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, MAT_tdstTransformation_* p_stObjectMatrix, int _lCullingResult);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 174–187 */
 /* addr: 0x002a3f80  size: 128 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -206,7 +228,9 @@ struct GEO_tdstColor_ {
 int GEO_lCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stSphereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, int _lCullingResult)
 {
     MAT_tdstTransformation_ stTempMatrix;
-    /* TODO: decompile from asm/... */
+
+    MAT_fn_vCompose(&stTempMatrix, &((GLI_tdstCamera_*)((GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD)->p_stCam)->stMatrix, p_stMatrix);
+    return GEO_lMainCullingSphere(p_stVpt, p_stSphereCenter, xRadius, &stTempMatrix, p_stMatrix, _lCullingResult);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 1168–1169 */

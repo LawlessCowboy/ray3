@@ -1037,7 +1037,8 @@ unsigned char IPO_g_ucNextRadiosityIndex;
 unsigned char IPO_g_ucRadiosityIndexToReach;
 unsigned char IPO_g_ucRadiosityIndexToAdd;
 float IPO_g_fAddWantedRatio;
-int IPO_g_a_szAdditionnalRLITables[10];
+char* IPO_g_a_szAdditionnalRLITables[10];
+int strcasecmp(const char*, const char*);
 ISI_tdstColor_ IPO_g_tdstBlack;
 int gp_stActualWorld;
 tdstEngineStructure_ g_stEngineStructure;
@@ -1513,7 +1514,19 @@ char IPO_fn_bRLITransitionInProgress(void)
 unsigned char IPO_fn_ucGetRLITableIndex(char* _szRLITableName)
 {
     int lI;
-    /* TODO: decompile from asm/... */
+
+    for (lI = 0; lI < IPO_g_ucNumberOfRLITables; lI++)
+    {
+        if (IPO_g_a_szAdditionnalRLITables[lI] != NULL)
+        {
+            if (strcasecmp(IPO_g_a_szAdditionnalRLITables[lI], _szRLITableName) == 0)
+            {
+                return (unsigned char)lI;
+            }
+        }
+    }
+
+    return 0xff;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 150–183 */

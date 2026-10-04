@@ -338,9 +338,14 @@ struct stMorphData {
     int a_ucMorphingAmountMT; /* +0x1c */
 };
 
+struct _RollOffParam {
+    int rDistSatur; /* +0x0 */
+    int rDistBackGround; /* +0x4 */
+    unsigned char ucBackgroundVol; /* +0x8 */
+};
+
 struct tdstMSSound_ {
-    int stRollOff; /* +0x0 */
-    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
+    _RollOffParam stRollOff; /* +0x0 */
     HIE_tdstSuperObject_* hMechaCharacter; /* +0xc */
 };
 
@@ -1055,12 +1060,6 @@ struct CINE_tdstChannelLink_ {
     LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn* hFatherDyn; /* +0x10 */
 };
 
-struct _RollOffParam {
-    int rDistSatur; /* +0x0 */
-    int rDistBackGround; /* +0x4 */
-    unsigned char ucBackgroundVol; /* +0x8 */
-};
-
 struct SCT_tdstListOfSoundEvent_ {
     HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
     int uSoundEvent; /* +0x4 */
@@ -1408,7 +1407,12 @@ void fn_vMSSoundCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_*
  */
 void fn_vMSSoundDesinit(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_MSSound) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 238–263 */
@@ -1431,6 +1435,8 @@ void fn_vMSSoundInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectIn
     /* TODO: decompile from asm/... */
 }
 
+int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 212–224 */
 /* addr: 0x002713f0  size: 180 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1446,7 +1452,19 @@ void fn_vMSSoundInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectIn
  */
 void fn_vMSSoundFree(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_MSSound) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    {
+        _RollOffParam* p_stRollOff = &p_stObject->h_MSSound->stRollOff;
+        SAI_fn_bRemoveValueFromTable(&p_stRollOff->rDistSatur, 0x32);
+        SAI_fn_bRemoveValueFromTable(&p_stRollOff->rDistBackGround, 0x32);
+        SAI_fn_bRemoveValueFromTable(&p_stRollOff->ucBackgroundVol, 0x32);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 177–188 */

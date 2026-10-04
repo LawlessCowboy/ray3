@@ -1569,6 +1569,13 @@ def command_try(args: argparse.Namespace) -> int:
     original = path.read_text(encoding='utf-8', errors='replace')
     start, end = function_body_span(original, entry['name'])
     variants = [v.strip('\n') for v in re.split(r'^----$', Path(args.variants).read_text(), flags=re.M)]
+    # A variant may also be a whole definition; keep only its body.
+    for number, variant in enumerate(variants):
+        try:
+            body_start, body_end = function_body_span(variant + '\n', entry['name'])
+        except ValueError:
+            continue
+        variants[number] = variant[body_start:body_end].strip('\n')
 
     def write(variant: str) -> None:
         path.write_text(original[:start] + variant + '\n' + original[end:], encoding='utf-8')
@@ -1591,6 +1598,10 @@ def command_try(args: argparse.Namespace) -> int:
                           f"lines={'ok' if lines_ok else 'different'}")
             elif status == 'MATCH' and not lines_ok:
                 detail = 'lines=different'
+            elif status == 'COMPILE_ERROR':
+                errors = [l.strip() for l in str(result.get('detail') or '').splitlines()
+                          if 'Error' in l or re.match(r'#\s+\d+:', l.strip())]
+                detail = ' '.join(errors[:2])
             print(f'{number:2d} {status} {detail}')
             if status == 'MATCH' and lines_ok:
                 print(f'kept variant {number}')
