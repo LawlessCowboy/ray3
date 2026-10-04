@@ -84,7 +84,10 @@ struct _RollOffParam {
 };
 
 struct CResObjParams {
-    /* C++ base CInterface at +0x0. */
+    /* C++ base CInterface at +0x0: vtable pointer (retail
+     * __vt__Q216CExtraEventActor13CResObjParams: fv_vRelease, fv_vAddRef). */
+    virtual void fv_vRelease(void);
+    virtual void fv_vAddRef(void);
     CResObjParams* m_poNext; /* +0x4 */
     CResObjParams* m_poPrevious; /* +0x8 */
     unsigned int m_uiNbRefs; /* +0xc */
@@ -113,25 +116,33 @@ struct CExtraEventActor {
     unsigned char mbWaitForKill; /* +0x48 */
     unsigned char mbAllSoundPaused; /* +0x49 */
     CResObjParams m_oResObjParams; /* +0x4c */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x64..0x67 */
+    void f_vIsolate(void);
+    void f_vDesInit(void);
+    unsigned char mfn_bApplyAllParams(bool b_Force);
 };
+
+struct CExtraEventActorPool {
+    static void f_vSalvageActor(CExtraEventActor* poActor);
+};
+
+namespace usnd { struct CEventResData; }
+extern "C" void usnd_free(void* pv);
 
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x8..0xb */
+    virtual ~CLinkActor(); /* vtable pointer at +0x8 (retail __vt__10CLinkActor) */
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
     unsigned char mfn_bSynchroniseActorInstance(void);
     unsigned char mfn_bExecuteActorInstance(int s32_CmdId, int s32_ChannelId);
-    CExtraEventActor* mfn_poAddExtraEventActorInstance(int s32_ChannelId, CEventResData* poResData);
-    CExtraEventActor* mfn_poGetExtraEventActorInstance(int s32_ChannelId, CEventResData* po_ResData);
+    CExtraEventActor* mfn_poAddExtraEventActorInstance(int s32_ChannelId, const usnd::CEventResData* poResData);
+    CExtraEventActor* mfn_poGetExtraEventActorInstance(int s32_ChannelId, const usnd::CEventResData* po_ResData);
     void f_vInsertAfter(CLinkActor* pParam);
     void f_vIsolate(void);
     void f_vDesInit(void);
     void f_vInit(CLinkTypeActor* ro_Type, int s32_ObjectId);
-    ~CLinkActor();
 };
 
 struct CLinkActorPool {
@@ -223,6 +234,8 @@ struct CLinkTypeActor {
     int ms32TypeId; /* +0x80 */
     int ms32LineId; /* +0x84 */
     _tdstAllRetObjectSound mstIActor; /* +0x88 */
+    virtual ~CLinkTypeActor(); /* vtable pointer at +0xc4 (retail __vt__14CLinkTypeActor) */
+    static void operator delete(void* pv) { usnd_free(pv); }
 };
 
 struct less {
@@ -435,6 +448,10 @@ struct CResType {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+CLinkTypeActor::~CLinkTypeActor()
+{
+}
+
 CLinkActor CLinkActorPool::ms_oPool;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 241–242 */
@@ -491,9 +508,13 @@ CLinkActor* CLinkActorPool::fs_poGetAnActor(void)
  */
 unsigned char CLinkActor::mfn_bSynchroniseActorInstance(void)
 {
-    CExtraEventActor* poEEActor;
     unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
+    CExtraEventActor* poEEActor;
+
+    b_Answer = 0;
+    for (poEEActor = m_oExtraActors.m_poNext; poEEActor != NULL; poEEActor = poEEActor->m_poNext)
+        b_Answer = poEEActor->mfn_bApplyAllParams(false) || b_Answer;
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 176–204 */
@@ -555,7 +576,7 @@ unsigned char CLinkActor::mfn_bExecuteActorInstance(int s32_CmdId, int s32_Chann
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CExtraEventActor* CLinkActor::mfn_poAddExtraEventActorInstance(int s32_ChannelId, CEventResData* poResData)
+CExtraEventActor* CLinkActor::mfn_poAddExtraEventActorInstance(int s32_ChannelId, const usnd::CEventResData* poResData)
 {
     CExtraEventActor* poEventActor;
     int s32_InstanceId;
@@ -580,11 +601,18 @@ CExtraEventActor* CLinkActor::mfn_poAddExtraEventActorInstance(int s32_ChannelId
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CExtraEventActor* CLinkActor::mfn_poGetExtraEventActorInstance(int s32_ChannelId, CEventResData* po_ResData)
+CExtraEventActor* CLinkActor::mfn_poGetExtraEventActorInstance(int s32_ChannelId, const usnd::CEventResData* po_ResData)
 {
     CExtraEventActor* poEEActor;
     tdeEventType e_Type;
-    /* TODO: decompile from asm/... */
+
+    e_Type = po_ResData ? *(const tdeEventType*)((const char*)po_ResData + 0x28) : (tdeEventType)0;
+    for (poEEActor = m_oExtraActors.m_poNext; poEEActor != NULL; poEEActor = poEEActor->m_poNext)
+    {
+        if ((poEEActor->meExtraCoeff == e_Type) && (poEEActor->ms32ACPChannelId == s32_ChannelId))
+            return poEEActor;
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 107–112 */
@@ -645,7 +673,15 @@ void CLinkActor::f_vIsolate(void)
  */
 void CLinkActor::f_vDesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    CExtraEventActor* poEEActor;
+
+    while ((poEEActor = m_oExtraActors.m_poNext) != NULL)
+    {
+        poEEActor->f_vIsolate();
+        poEEActor->f_vDesInit();
+        CExtraEventActorPool::f_vSalvageActor(poEEActor);
+    }
+    mpoType = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 74–78 */

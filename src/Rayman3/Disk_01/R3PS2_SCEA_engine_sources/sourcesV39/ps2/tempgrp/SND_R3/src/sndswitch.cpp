@@ -96,7 +96,10 @@ struct _RollOffParam {
 };
 
 struct CResObjParams {
-    /* C++ base CInterface at +0x0. */
+    /* C++ base CInterface at +0x0: vtable pointer (retail
+     * __vt__Q216CExtraEventActor13CResObjParams: fv_vRelease, fv_vAddRef). */
+    virtual void fv_vRelease(void);
+    virtual void fv_vAddRef(void);
     CResObjParams* m_poNext; /* +0x4 */
     CResObjParams* m_poPrevious; /* +0x8 */
     unsigned int m_uiNbRefs; /* +0xc */

@@ -93,7 +93,10 @@ struct _tdstAllRetObjectSound {
 };
 
 struct CResObjParams {
-    /* C++ base CInterface at +0x0. */
+    /* C++ base CInterface at +0x0: vtable pointer (retail
+     * __vt__Q216CExtraEventActor13CResObjParams: fv_vRelease, fv_vAddRef). */
+    virtual void fv_vRelease(void);
+    virtual void fv_vAddRef(void);
     CResObjParams* m_poNext; /* +0x4 */
     CResObjParams* m_poPrevious; /* +0x8 */
     unsigned int m_uiNbRefs; /* +0xc */
@@ -527,7 +530,13 @@ CLinkActor* CLinkTypeActor::mfn_poAddActorInTypeActorInstance(int s32_ObjectId)
 CLinkActor* CLinkTypeActor::mfn_poGetActorFromIdInTypeActorInstance(int s32_ActorId)
 {
     CLinkActor* poActor;
-    /* TODO: decompile from asm/... */
+
+    for (poActor = m_oActors.m_poNext; poActor != NULL; poActor = poActor->m_poNext)
+    {
+        if (poActor->ms32ACPObjectId == s32_ActorId)
+            return poActor;
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 53–62 */

@@ -28829,11 +28829,43 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
       "status": "MATCH"
     },
+    "0x001cccf0": {
+      "address": "0x001cccf0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_poGetActorFromIdInTypeActorInstance__14CLinkTypeActorFi",
+      "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cced0": {
+      "address": "0x001cced0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "__dt__14CLinkTypeActorFv",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkactor.cpp",
+      "status": "MATCH"
+    },
     "0x001ccf30": {
       "address": "0x001ccf30",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "f_vSalvageActor__14CLinkActorPoolFP10CLinkActor",
       "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cd000": {
+      "address": "0x001cd000",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_bSynchroniseActorInstance__10CLinkActorFv",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cd2a0": {
+      "address": "0x001cd2a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_poGetExtraEventActorInstance__10CLinkActorFiPCQ24usnd13CEventResData",
+      "size": 92,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkactor.cpp",
       "status": "MATCH"
     },
@@ -28850,6 +28882,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "f_vIsolate__10CLinkActorFv",
       "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cd370": {
+      "address": "0x001cd370",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "f_vDesInit__10CLinkActorFv",
+      "size": 84,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkactor.cpp",
       "status": "MATCH"
     },
