@@ -496,19 +496,80 @@ struct usnd::CActorResData : CResData {
     CVarAccess* m_poGlobalVarAccess; /* +0x48 */
 };
 
-struct Jingle {
-    void fs_vAddJingle(int, int, int, int);
+extern "C" void* usnd_malloc(unsigned int ui_Size);
+extern "C" int SND_fn_s32GetVolumeLineSound(int s32_LineId);
+extern "C" void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
+
+struct JingleElt {
+    JingleElt(int s32_ObjectId, int s32_TypeId, int s32_HandleId)
+    {
+        m_pNext = NULL;
+        m_pPrev = NULL;
+        m_ObjectId = s32_ObjectId;
+        m_TypeId = s32_TypeId;
+        m_HandleId = s32_HandleId;
+    }
+    void* operator new(size_t ui_Size)
+    {
+        JingleElt* p = ms_pFree;
+        if (p)
+            ms_pFree = p->m_pNext;
+        else
+            p = (JingleElt*)usnd_malloc(ui_Size);
+        return p;
+    }
+    JingleElt* m_pNext; /* +0x0 */
+    JingleElt* m_pPrev; /* +0x4 */
+    int m_ObjectId; /* +0x8 */
+    int m_TypeId; /* +0xc */
+    int m_HandleId; /* +0x10 */
+    static JingleElt* ms_pFree;
 };
+
+struct JingleList {
+    JingleList(int iVolumeLine, int uOldVol)
+    {
+        m_pNext = NULL;
+        m_pPrev = NULL;
+        m_pFirst = NULL;
+        m_iVolumeLine = iVolumeLine;
+        m_uOldVol = uOldVol;
+    }
+    void* operator new(size_t ui_Size)
+    {
+        JingleList* p = ms_pFree;
+        if (p)
+            ms_pFree = p->m_pNext;
+        else
+            p = (JingleList*)usnd_malloc(ui_Size);
+        return p;
+    }
+    int m_iVolumeLine; /* +0x0 */
+    int m_uOldVol; /* +0x4 */
+    JingleList* m_pNext; /* +0x8 */
+    JingleList* m_pPrev; /* +0xc */
+    JingleElt* m_pFirst; /* +0x10 */
+    static JingleList* ms_pFree;
+};
+
+struct Jingle {
+    static JingleList* ms_pFirst;
+    static void fs_vAddJingle(int, int, int, int);
+};
+
+extern "C" void usnd_free(void* pv_Ptr);
+extern "C" void usnd_memcpy(void* pvDest, void* pvSrc, unsigned int uiSize);
 
 struct SwitchMgr {
     static unsigned int ms_nbTex;
     static unsigned int ms_nbTexMax;
-    void fs_vAddDataToDelete(CResData*);
-    void fs_vStopAll(void);
-    void fs_vUpdateWaves(CPS2IdObjLoader*);
-    void fs_vClearTexture(void);
-    void fs_vAddTexture(unsigned int);
-    void fs_vAdd(CSwitchResData*);
+    static char* ms_pTex;
+    static void fs_vAddDataToDelete(CResData*);
+    static void fs_vStopAll(void);
+    static void fs_vUpdateWaves(CPS2IdObjLoader*);
+    static void fs_vClearTexture(void);
+    static void fs_vAddTexture(unsigned int);
+    static void fs_vAdd(CSwitchResData*);
 };
 
 
@@ -595,7 +656,35 @@ void Jingle::fs_vAddJingle(int s32_ObjectId, int s32_TypeId, int s32_HandleId, i
 {
     int uVol;
     JingleList* pList;
-    /* TODO: decompile from asm/... */
+
+    for (pList = ms_pFirst; pList && (pList->m_iVolumeLine != iVolumeLine); pList = pList->m_pNext)
+        ;
+    if (pList == NULL)
+    {
+        uVol = SND_fn_s32GetVolumeLineSound(iVolumeLine);
+        pList = new JingleList(iVolumeLine, uVol);
+        if (pList)
+        {
+            pList->m_pNext = ms_pFirst;
+            pList->m_pPrev = NULL;
+            if (ms_pFirst)
+                ms_pFirst->m_pPrev = pList;
+            ms_pFirst = pList;
+            SND_fn_vSetVolumeLineSound(iVolumeLine, uVol);
+        }
+    }
+    if (pList)
+    {
+        JingleElt* pElt = new JingleElt(s32_ObjectId, s32_TypeId, s32_HandleId);
+        if (pElt)
+        {
+            pElt->m_pNext = pList->m_pFirst;
+            pElt->m_pPrev = NULL;
+            if (pList->m_pFirst)
+                pList->m_pFirst->m_pPrev = pElt;
+            pList->m_pFirst = pElt;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 432–461 */
@@ -740,7 +829,20 @@ void SwitchMgr::fs_vClearTexture(void)
 void SwitchMgr::fs_vAddTexture(unsigned int uiTexture)
 {
     char* pTex;
-    /* TODO: decompile from asm/... */
+
+    if (ms_nbTexMax == ms_nbTex)
+    {
+        ms_nbTexMax += 16;
+        pTex = (char*)usnd_malloc(ms_nbTexMax);
+        if (ms_pTex)
+        {
+            usnd_memcpy(pTex, ms_pTex, ms_nbTex);
+            usnd_free(ms_pTex);
+        }
+        ms_pTex = pTex;
+    }
+    ms_pTex[ms_nbTex] = uiTexture;
+    ms_nbTex++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 235–242 */

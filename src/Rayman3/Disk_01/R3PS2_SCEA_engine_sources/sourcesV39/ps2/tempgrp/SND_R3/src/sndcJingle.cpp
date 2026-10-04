@@ -37,14 +37,19 @@ typedef struct JingleElt JingleElt;
  * emitted from several sound-manager TUs, while the original class body is
  * not present in this extracted source. */
 struct Jingle {
-    static CResData* ms_fVolReduction(void);
+    static float ms_fVolReduction;
+    static JingleList* ms_pFirst;
     static int fs_uGetOldVolume(int, int);
     static int fs_uGetVolume(int, int);
     static void fs_vSynchronise(void);
     static void fs_vAddJingle(int, int, int, int);
 };
 
+extern "C" int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, int s32_HandleId);
+extern "C" void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
+
 struct JingleList {
+    ~JingleList();
     int m_iVolumeLine; /* +0x0 */
     int m_uOldVol; /* +0x4 */
     JingleList* m_pNext; /* +0x8 */
@@ -58,6 +63,7 @@ struct JingleElt {
     int m_ObjectId; /* +0x8 */
     int m_TypeId; /* +0xc */
     int m_HandleId; /* +0x10 */
+    static JingleElt* ms_pFree;
 };
 
 usnd::CResData& usnd::CIdObjPtr<usnd::CResData>::operator*(void) const
@@ -66,19 +72,6 @@ usnd::CResData& usnd::CIdObjPtr<usnd::CResData>::operator*(void) const
 }
 
 template struct usnd::CIdObjPtr<usnd::CResData>;
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcJingle.cpp lines 271–273 */
-/* addr: 0x001d0790  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 271
- *   +0x0004 -> line 273
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-CResData* Jingle::ms_fVolReduction(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcJingle.cpp lines 146–154 */
 /* addr: 0x001d0800  size: 68 bytes */
@@ -93,7 +86,15 @@ CResData* Jingle::ms_fVolReduction(void)
  */
 int Jingle::fs_uGetOldVolume(int uVol, int iVolumeLine)
 {
-    /* TODO: decompile from asm/... */
+    JingleList* pList;
+
+    for (pList = ms_pFirst; pList && (pList->m_iVolumeLine != iVolumeLine); pList = pList->m_pNext)
+        ;
+    if (pList)
+    {
+        uVol = pList->m_uOldVol;
+    }
+    return uVol;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcJingle.cpp lines 130–139 */
@@ -110,7 +111,16 @@ int Jingle::fs_uGetOldVolume(int uVol, int iVolumeLine)
  */
 int Jingle::fs_uGetVolume(int uVol, int iVolumeLine)
 {
-    /* TODO: decompile from asm/... */
+    JingleList* pList;
+
+    for (pList = ms_pFirst; pList && (pList->m_iVolumeLine != iVolumeLine); pList = pList->m_pNext)
+        ;
+    if (pList)
+    {
+        pList->m_uOldVol = uVol;
+        uVol = (unsigned char)(unsigned int)(pList->m_uOldVol * ms_fVolReduction);
+    }
+    return uVol;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcJingle.cpp lines 80–124 */
@@ -139,9 +149,51 @@ int Jingle::fs_uGetVolume(int uVol, int iVolumeLine)
  */
 void Jingle::fs_vSynchronise(void)
 {
-    int vol;
     int line;
+    int vol;
     JingleElt* pElt;
     JingleList* pList;
-    /* TODO: decompile from asm/... */
+
+    pList = ms_pFirst;
+    while (pList)
+    {
+        pElt = pList->m_pFirst;
+        switch (SND_fn_s32GetSoundHandleState(pElt->m_ObjectId, pElt->m_TypeId, pElt->m_HandleId))
+        {
+        case 0:
+        case 1:
+            break;
+        case -1:
+        case 2:
+        case 3:
+        default:
+            if (pElt->m_pNext)
+                pElt->m_pNext->m_pPrev = pElt->m_pPrev;
+            if (pElt->m_pPrev)
+                pElt->m_pPrev->m_pNext = pElt->m_pNext;
+            else
+                pList->m_pFirst = pElt->m_pNext;
+            pElt->m_pNext = JingleElt::ms_pFree;
+            JingleElt::ms_pFree = pElt;
+            break;
+        }
+        if (pList->m_pFirst == NULL)
+        {
+            line = pList->m_iVolumeLine;
+            vol = pList->m_uOldVol;
+            if (pList->m_pNext)
+                pList->m_pNext->m_pPrev = pList->m_pPrev;
+            if (pList->m_pPrev)
+                pList->m_pPrev->m_pNext = pList->m_pNext;
+            else
+                ms_pFirst = pList->m_pNext;
+            delete pList;
+            pList = pList->m_pNext;
+            SND_fn_vSetVolumeLineSound(line, vol);
+        }
+        else
+        {
+            pList = pList->m_pNext;
+        }
+    }
 }

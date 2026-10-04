@@ -21,7 +21,8 @@ typedef struct CLinkActor CLinkActor;
 typedef struct CLinkTypeActor CLinkTypeActor;
 typedef struct sallocator sallocator;
 typedef int anon_0;
-struct sallocator { int data[4]; };
+struct sallocator {
+};
 typedef struct CPitchActorModifier CPitchActorModifier;
 typedef struct CRolloffParam CRolloffParam;
 typedef struct C2DParams C2DParams;
@@ -169,24 +170,6 @@ struct CExtraEventActor {
     CResObjParams m_oResObjParams; /* +0x4c */
 };
 
-namespace usnd {
-struct CResObj;
-/* Interface layout from retail __vt__Q24usnd20CActorProgramContext. */
-struct CActorProgramContext {
-    virtual void fv_vAddRunningObj(CResObj& ro_Obj, void* pv_UserData, int s32_Data, bool b_Flag, CResObj* po_Parent);
-    virtual bool fv_bAddRunningObj(CResObj& ro_Obj, CResObj& ro_Parent, bool b_Flag);
-    virtual void fv_vRemoveRunningObj(CResObj& ro_Obj);
-    virtual unsigned int fv_uiGetAllRunningObjs(CResObj** ppo_Objs, unsigned int ui_Max);
-    virtual void fv_vCallHandler(const char* sz_Name, void* pv_Param);
-    virtual void fv_vAddRunningObjRef(CResObj& ro_Obj);
-    virtual void fv_vReleaseRunningObjRef(CResObj& ro_Obj);
-    virtual bool fv_bAreThereRunningObjs(void);
-};
-}
-
-/* usnd::CActorResObj keeps its program context at +0xac. */
-#define SND_M_poActorContext(_poObj) ((usnd::CActorProgramContext*)((char*)(_poObj) + 0xac))
-
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
@@ -221,8 +204,22 @@ struct CLinkTypeActor {
     CLinkActor* mfn_poGetActorFromIdInTypeActorInstance(int s32_ActorId);
 };
 
-struct CPitchActorModifier {
-    /* C++ base CActorModifiers at +0x0. */
+struct CActorModifiers {
+    /* C++ base CVarNotifTarget at +0x0; virtual order from retail
+       __vt__Q24usnd15CActorModifiers. */
+    virtual void fv_vVarChanged(CVar& ro_Var);
+    virtual void fv_vVarDestroyed(CVar& ro_Var);
+    virtual void fv_vVarAccessed(CVar& ro_Var);
+    virtual void fv_vAddModifier(CVar& ro_Var, float f_Value);
+    virtual void fv_vRemoveModifier(CVar& ro_Var);
+    CActorResObj* m_pActor; /* +0x4 */
+    smap m_oVariables; /* +0x8 */
+    float m_fDirectValue; /* +0x18 */
+    float m_fResultValue; /* +0x1c */
+    unsigned char m_bResultChanged; /* +0x20 */
+};
+
+struct CPitchActorModifier : CActorModifiers {
 };
 
 struct CRolloffParam {
@@ -242,8 +239,7 @@ struct sstring {
     int m_pcData; /* +0x0 */
 };
 
-struct CVolumeActorModifier {
-    /* C++ base CActorModifiers at +0x0. */
+struct CVolumeActorModifier : CActorModifiers {
 };
 
 struct CResObjState {
@@ -269,8 +265,19 @@ struct CCritSect {
 };
 
 struct CActorProgramContext {
-    /* C++ base CProgramContext at +0x0. */
+    /* C++ base CProgramContext at +0x0; virtual order from retail
+       __vt__Q24usnd20CActorProgramContext. */
+    virtual void fv_vAddRunningObj(CResObj& ro_Obj, void* pv_UserData, int s32_Data, bool b_Flag, CResObj* po_Parent);
+    virtual bool fv_bAddRunningObj(CResObj& ro_Obj, CResObj& ro_Parent, bool b_Flag);
+    virtual void fv_vRemoveRunningObj(CResObj& ro_Obj);
+    virtual unsigned int fv_uiGetAllRunningObjs(CResObj** ppo_Objs, unsigned int ui_Max);
+    virtual void fv_vCallHandler(const char* sz_Name, void* pv_Param);
+    virtual void fv_vAddRunningObjRef(CResObj& ro_Obj);
+    virtual void fv_vReleaseRunningObjRef(CResObj& ro_Obj);
+    virtual bool fv_bAreThereRunningObjs(void);
+    unsigned int a2_ulProgramContextData[2]; /* +0x4 */
     /* C++ base CVarAccess at +0xc. */
+    unsigned int ulVarAccessVptr; /* +0xc */
     CResObjState m_oObjStates; /* +0x10 */
     CActorResObj* m_pActor; /* +0x38 */
     smap m_oVariables; /* +0x3c */
@@ -278,6 +285,7 @@ struct CActorProgramContext {
 };
 
 struct CResObj {
+    virtual ~CResObj();
     CResType* m_roType; /* +0x4 */
     CResData* m_poResData; /* +0x8 */
 };
@@ -364,14 +372,6 @@ struct CResType {
     smap m_oCommands; /* +0x3c */
 };
 
-struct CActorModifiers {
-    /* C++ base CVarNotifTarget at +0x0. */
-    CActorResObj* m_pActor; /* +0x4 */
-    smap m_oVariables; /* +0x8 */
-    float m_fDirectValue; /* +0x18 */
-    float m_fResultValue; /* +0x1c */
-    unsigned char m_bResultChanged; /* +0x20 */
-};
 
 struct sTreeLink {
     sTreeLink* m_poLeft; /* +0x0 */
@@ -465,13 +465,13 @@ unsigned char CLinkTypeActor::mfn_bSoundPlaying(void)
     unsigned char bRet;
 
     bRet = 0;
-    for (poActor = m_oActors.m_poNext; poActor && (poActor->ms32ACPObjectId != -1) && !bRet; poActor = poActor->m_poNext)
+    for (poActor = m_oActors.m_poNext; poActor && (poActor->ms32ACPObjectId != -1) && bRet == 0; poActor = poActor->m_poNext)
     {
-        for (pExtraActor = poActor->m_oExtraActors.m_poNext; pExtraActor && !bRet; pExtraActor = pExtraActor->m_poNext)
-            bRet = SND_M_poActorContext(pExtraActor->mpoActorObj)->fv_bAreThereRunningObjs();
+        for (pExtraActor = poActor->m_oExtraActors.m_poNext; pExtraActor && bRet == 0; pExtraActor = pExtraActor->m_poNext)
+            bRet = pExtraActor->mpoActorObj->m_oProgramContext.fv_bAreThereRunningObjs();
     }
-    if (!bRet && poActor && (pExtraActor = poActor->m_oExtraActors.m_poNext))
-        bRet = SND_M_poActorContext(pExtraActor->mpoActorObj)->fv_uiGetAllRunningObjs(NULL, 0) >= 2;
+    if (bRet == 0 && poActor && (pExtraActor = poActor->m_oExtraActors.m_poNext))
+        bRet = pExtraActor->mpoActorObj->m_oProgramContext.fv_uiGetAllRunningObjs(NULL, 0) >= 2;
     return bRet;
 }
 

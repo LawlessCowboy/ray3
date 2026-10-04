@@ -21321,6 +21321,27 @@
       "status": "MISMATCH",
       "target_size": 88,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001d0850",
+      "candidate_size": 100,
+      "first_difference": 0,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fs_uGetVolume__6JingleFii",
+      "reason": "Control flow, loads and stores match; the only residual is (unsigned char)(unsigned int)(float) lowering: retail inlines the c.le.s 2^31/trunc.w.s/or 0x80000000 unsigned conversion, while our MWCC calls fptoui (known compiler-build residual, see insights)",
+      "size": 148,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcJingle.cpp",
+      "status": "MISMATCH",
+      "target_size": 148,
+      "unresolved_relocations": [
+        {
+          "offset": 72,
+          "symbol": "fptoui",
+          "type": 4
+        }
+      ]
     }
   ],
   "data": {},
@@ -28829,6 +28850,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
       "status": "MATCH"
     },
+    "0x001cca30": {
+      "address": "0x001cca30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_bSoundPlaying__14CLinkTypeActorFv",
+      "size": 220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
+      "status": "MATCH"
+    },
     "0x001ccb10": {
       "address": "0x001ccb10",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -29085,11 +29114,43 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcJingle.cpp",
       "status": "MATCH"
     },
+    "0x001d0800": {
+      "address": "0x001d0800",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fs_uGetOldVolume__6JingleFii",
+      "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcJingle.cpp",
+      "status": "MATCH"
+    },
+    "0x001d08f0": {
+      "address": "0x001d08f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fs_vSynchronise__6JingleFv",
+      "size": 336,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcJingle.cpp",
+      "status": "MATCH"
+    },
+    "0x001d0a40": {
+      "address": "0x001d0a40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fs_vAddJingle__6JingleFiiii",
+      "size": 364,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
+      "status": "MATCH"
+    },
     "0x001d0fe0": {
       "address": "0x001d0fe0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fs_vClearTexture__9SwitchMgrFv",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
+      "status": "MATCH"
+    },
+    "0x001d0ff0": {
+      "address": "0x001d0ff0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fs_vAddTexture__9SwitchMgrFUi",
+      "size": 136,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
       "status": "MATCH"
     },
