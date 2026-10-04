@@ -169,13 +169,42 @@ struct CExtraEventActor {
     CResObjParams m_oResObjParams; /* +0x4c */
 };
 
+namespace usnd {
+struct CResObj;
+/* Interface layout from retail __vt__Q24usnd20CActorProgramContext. */
+struct CActorProgramContext {
+    virtual void fv_vAddRunningObj(CResObj& ro_Obj, void* pv_UserData, int s32_Data, bool b_Flag, CResObj* po_Parent);
+    virtual bool fv_bAddRunningObj(CResObj& ro_Obj, CResObj& ro_Parent, bool b_Flag);
+    virtual void fv_vRemoveRunningObj(CResObj& ro_Obj);
+    virtual unsigned int fv_uiGetAllRunningObjs(CResObj** ppo_Objs, unsigned int ui_Max);
+    virtual void fv_vCallHandler(const char* sz_Name, void* pv_Param);
+    virtual void fv_vAddRunningObjRef(CResObj& ro_Obj);
+    virtual void fv_vReleaseRunningObjRef(CResObj& ro_Obj);
+    virtual bool fv_bAreThereRunningObjs(void);
+};
+}
+
+/* usnd::CActorResObj keeps its program context at +0xac. */
+#define SND_M_poActorContext(_poObj) ((usnd::CActorProgramContext*)((char*)(_poObj) + 0xac))
+
 struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x8..0xb */
+    virtual ~CLinkActor(); /* vtable pointer at +0x8 */
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
+    unsigned char mfn_bSynchroniseActorInstance(void);
+    unsigned char mfn_bExecuteActorInstance(int s32_CmdId, int s32_ChannelId);
+    void f_vInsertAfter(CLinkActor* pParam);
+    void f_vIsolate(void);
+    void f_vDesInit(void);
+    void f_vInit(CLinkTypeActor& ro_Type, int s32_ObjectId);
+};
+
+struct CLinkActorPool {
+    static void f_vSalvageActor(CLinkActor* poActor);
+    static CLinkActor* fs_poGetAnActor(void);
 };
 
 struct CLinkTypeActor {
@@ -188,7 +217,7 @@ struct CLinkTypeActor {
     unsigned char mfn_bSoundPlaying(void);
     unsigned char mfn_bExecuteActorInTypeActorInstance(int s32_CmdId, int s32_ObjectId);
     void mfn_vSynchronizeActorInTypeActorInstance(void);
-    CLinkActor* mfn_poAddActorInTypeActorInstance(int s32_ObjectId);
+    CLinkActor* mfn_poAddActorInTypeActorInstance(int s32_ObjectId, int s32_Unused);
     CLinkActor* mfn_poGetActorFromIdInTypeActorInstance(int s32_ActorId);
 };
 
@@ -434,7 +463,16 @@ unsigned char CLinkTypeActor::mfn_bSoundPlaying(void)
     CExtraEventActor* pExtraActor;
     CLinkActor* poActor;
     unsigned char bRet;
-    /* TODO: decompile from asm/... */
+
+    bRet = 0;
+    for (poActor = m_oActors.m_poNext; poActor && (poActor->ms32ACPObjectId != -1) && !bRet; poActor = poActor->m_poNext)
+    {
+        for (pExtraActor = poActor->m_oExtraActors.m_poNext; pExtraActor && !bRet; pExtraActor = pExtraActor->m_poNext)
+            bRet = SND_M_poActorContext(pExtraActor->mpoActorObj)->fv_bAreThereRunningObjs();
+    }
+    if (!bRet && poActor && (pExtraActor = poActor->m_oExtraActors.m_poNext))
+        bRet = SND_M_poActorContext(pExtraActor->mpoActorObj)->fv_uiGetAllRunningObjs(NULL, 0) >= 2;
+    return bRet;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 170–194 */
@@ -464,7 +502,24 @@ unsigned char CLinkTypeActor::mfn_bExecuteActorInTypeActorInstance(int s32_CmdId
 {
     CLinkActor* poActor;
     unsigned char bAnswer;
-    /* TODO: decompile from asm/... */
+
+    bAnswer = 0;
+    if (s32_ObjectId != -2)
+    {
+        poActor = mfn_poGetActorFromIdInTypeActorInstance(s32_ObjectId);
+        if (poActor)
+            bAnswer = poActor->mfn_bExecuteActorInstance(s32_CmdId, -2);
+    }
+    else
+    {
+        for (poActor = m_oActors.m_poNext; poActor; poActor = poActor->m_poNext)
+        {
+            bAnswer = poActor->mfn_bExecuteActorInstance(s32_CmdId, -2);
+            if (!bAnswer)
+                break;
+        }
+    }
+    return bAnswer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 151–167 */
@@ -487,9 +542,23 @@ unsigned char CLinkTypeActor::mfn_bExecuteActorInTypeActorInstance(int s32_CmdId
  */
 void CLinkTypeActor::mfn_vSynchronizeActorInTypeActorInstance(void)
 {
-    CLinkActor* poTempActor;
     CLinkActor* poActor;
-    /* TODO: decompile from asm/... */
+    CLinkActor* poTempActor;
+
+    poActor = m_oActors.m_poNext;
+    while (poActor)
+    {
+        if (!poActor->mfn_bSynchroniseActorInstance())
+        {
+            poTempActor = poActor;
+            poActor = poActor->m_poNext;
+            poTempActor->f_vIsolate();
+            poTempActor->f_vDesInit();
+            CLinkActorPool::f_vSalvageActor(poTempActor);
+        }
+        else
+            poActor = poActor->m_poNext;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 79–91 */
@@ -507,10 +576,17 @@ void CLinkTypeActor::mfn_vSynchronizeActorInTypeActorInstance(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CLinkActor* CLinkTypeActor::mfn_poAddActorInTypeActorInstance(int s32_ObjectId)
+CLinkActor* CLinkTypeActor::mfn_poAddActorInTypeActorInstance(int s32_ObjectId, int s32_Unused)
 {
     CLinkActor* poActor;
-    /* TODO: decompile from asm/... */
+
+    poActor = mfn_poGetActorFromIdInTypeActorInstance(s32_ObjectId);
+    if (poActor)
+        return poActor;
+    poActor = CLinkActorPool::fs_poGetAnActor();
+    poActor->f_vInit(*this, s32_ObjectId);
+    poActor->f_vInsertAfter(&m_oActors);
+    return poActor;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 68–76 */
@@ -527,6 +603,7 @@ CLinkActor* CLinkTypeActor::mfn_poAddActorInTypeActorInstance(int s32_ObjectId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 CLinkActor* CLinkTypeActor::mfn_poGetActorFromIdInTypeActorInstance(int s32_ActorId)
 {
     CLinkActor* poActor;
@@ -538,6 +615,7 @@ CLinkActor* CLinkTypeActor::mfn_poGetActorFromIdInTypeActorInstance(int s32_Acto
     }
     return NULL;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 53–62 */
 /* addr: 0x001ccd30  size: 404 bytes */

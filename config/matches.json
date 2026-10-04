@@ -28829,6 +28829,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
       "status": "MATCH"
     },
+    "0x001ccb10": {
+      "address": "0x001ccb10",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_bExecuteActorInTypeActorInstance__14CLinkTypeActorFii",
+      "size": 180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001ccbd0": {
+      "address": "0x001ccbd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_vSynchronizeActorInTypeActorInstance__14CLinkTypeActorFv",
+      "size": 116,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001ccc50": {
+      "address": "0x001ccc50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_poAddActorInTypeActorInstance__14CLinkTypeActorFii",
+      "size": 160,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
+      "status": "MATCH"
+    },
     "0x001cccf0": {
       "address": "0x001cccf0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
