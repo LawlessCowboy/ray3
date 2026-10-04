@@ -21156,6 +21156,66 @@
       "status": "MISMATCH",
       "target_size": 112,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x003112c0",
+      "candidate_size": 200,
+      "first_difference": 9,
+      "implementation": "void MEC_fn_vSlowMode(DNM_stDynamics* p_stDynamic, int lMode)\n{\n    float xInvMode;\n    union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;\n    MTH3D_tdstVector_* p_stSpeed;\n    MAT_tdstTransformation_* hCurrentMatrix;\n    MAT_tdstTransformation_* hPreviousMatrix;\n\n    xInvMode = 1.0f / (float)lMode;\n    p_stSpeed = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed;\n    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;\n    hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;\n    uVector.stVector.xX = hPreviousMatrix->stTransformMatrix.stCol_3.xX + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xX - hPreviousMatrix->stTransformMatrix.stCol_3.xX);\n    uVector.stVector.xY = hPreviousMatrix->stTransformMatrix.stCol_3.xY + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xY - hPreviousMatrix->stTransformMatrix.stCol_3.xY);\n    uVector.stVector.xZ = hPreviousMatrix->stTransformMatrix.stCol_3.xZ + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hPreviousMatrix->stTransformMatrix.stCol_3.xZ);\n    if (hCurrentMatrix->eType == MAT_eTransform_Identity)\n        hCurrentMatrix->eType = MAT_eTransform_Translation;\n    ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[0] = uVector.a3_ulWord[0];\n    ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[1] = uVector.a3_ulWord[1];\n    ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[2] = uVector.a3_ulWord[2];\n    hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;\n    p_stSpeed->xX = xInvMode * p_stSpeed->xX;\n    p_stSpeed->xY = xInvMode * p_stSpeed->xY;\n    p_stSpeed->xZ = xInvMode * p_stSpeed->xZ;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vSlowMode",
+      "reason": "Union word copy reproduces the direct lw/sw translation set; residual: retail computes the three translation differences up front, reloads prev components, and scales the speed through folded offsets (no p_stSpeed register); candidate keeps p_stSpeed and the matrix pointer live early.",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 204,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x003111f0",
+      "candidate_size": 196,
+      "first_difference": 10,
+      "implementation": "void MEC_fn_vNormalMode(DNM_stDynamics* p_stDynamic, int lMode)\n{\n    union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;\n    MTH3D_tdstVector_* p_stSpeed;\n    MAT_tdstTransformation_* hCurrentMatrix;\n    MAT_tdstTransformation_* hPreviousMatrix;\n\n    p_stSpeed = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed;\n    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;\n    hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;\n    uVector.stVector.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xX - hPreviousMatrix->stTransformMatrix.stCol_3.xX);\n    uVector.stVector.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xY - hPreviousMatrix->stTransformMatrix.stCol_3.xY);\n    uVector.stVector.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hPreviousMatrix->stTransformMatrix.stCol_3.xZ);\n    if (hPreviousMatrix->eType == MAT_eTransform_Identity)\n        hPreviousMatrix->eType = MAT_eTransform_Translation;\n    ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[0] = uVector.a3_ulWord[0];\n    ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[1] = uVector.a3_ulWord[1];\n    ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[2] = uVector.a3_ulWord[2];\n    hPreviousMatrix->stTransformMatrix.stCol_3.xW = 1.0f;\n    p_stSpeed->xX = (float)lMode * p_stSpeed->xX;\n    p_stSpeed->xY = (float)lMode * p_stSpeed->xY;\n    p_stSpeed->xZ = (float)lMode * p_stSpeed->xZ;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vNormalMode",
+      "reason": "Union word copy reproduces the direct lw/sw translation set; residual: retail computes the three translation differences up front, reloads prev components, and scales the speed through folded offsets (no p_stSpeed register); candidate keeps p_stSpeed and the matrix pointer live early.",
+      "size": 200,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 200,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00311560",
+      "candidate_size": 224,
+      "first_difference": 0,
+      "implementation": "void MEC_fn_vComputeInertiaTranslation(DNM_stDynamics* p_stDynamic, float xDT)\n{\n    unsigned char bSlide;\n    MTH3D_tdstVector_ stVector;\n\n    bSlide = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamPrority != 1.0f;\n    stVector.xX = xDT * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xX;\n    stVector.xY = xDT * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xY;\n    stVector.xZ = xDT * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xZ;\n    if (bSlide) {\n        stVector.xX *= p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide;\n        stVector.xY *= p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide;\n        stVector.xZ *= p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide;\n    }\n    stVector.xX += p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xX;\n    stVector.xY += p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xY;\n    stVector.xZ += p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xZ;\n    p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation = stVector;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vComputeInertiaTranslation",
+      "reason": "Shape is MEC_fn_vComputeStream into a stack vector (&stVector.xY/.xZ pointers) plus AddTranslation and a word copy to m_stInertiaTranslation. Inlining ComputeStream via auto_inline gets close, but retail computes bSlide first and reloads m_xPreviousSlide per component.",
+      "size": 224,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 224,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00312790",
+      "candidate_size": 320,
+      "first_difference": 6,
+      "implementation": "void MEC_fn_vTranslateMatrixOn(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stMatrixTranslation)\n{\n    MAT_tdstTransformation_* hPreviousMatrix;\n    MAT_tdstTransformation_* hCurrentMatrix;\n\n    hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;\n    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;\n    {\n        MTH3D_tdstVector_* p_stPrevTrans = (MTH3D_tdstVector_*)&hPreviousMatrix->stTransformMatrix.stCol_3;\n        int lX = MTH_M_xRealToLong(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX);\n        int lY = MTH_M_xRealToLong(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY);\n        p_stMatrixTranslation->xX = (float)lX;\n        p_stMatrixTranslation->xY = (float)lY;\n        p_stMatrixTranslation->xZ = MTH_M_xTruncate(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ);\n        {\n            union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;\n            uVector.stVector.xX = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xX - p_stMatrixTranslation->xX;\n            uVector.stVector.xY = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xY - p_stMatrixTranslation->xY;\n            uVector.stVector.xZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xZ - p_stMatrixTranslation->xZ;\n            if (hCurrentMatrix->eType == MAT_eTransform_Identity)\n                hCurrentMatrix->eType = MAT_eTransform_Translation;\n            ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[0] = uVector.a3_ulWord[0];\n            ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[1] = uVector.a3_ulWord[1];\n            ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[2] = uVector.a3_ulWord[2];\n            hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;\n        }\n        {\n            union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;\n            uVector.stVector.xX = p_stPrevTrans->xX - p_stMatrixTranslation->xX;\n            uVector.stVector.xY = p_stPrevTrans->xY - p_stMatrixTranslation->xY;\n            uVector.stVector.xZ = p_stPrevTrans->xZ - p_stMatrixTranslation->xZ;\n            if (hPreviousMatrix->eType == MAT_eTransform_Identity)\n                hPreviousMatrix->eType = MAT_eTransform_Translation;\n            ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[0] = uVector.a3_ulWord[0];\n            ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[1] = uVector.a3_ulWord[1];\n            ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[2] = uVector.a3_ulWord[2];\n            hPreviousMatrix->stTransformMatrix.stCol_3.xW = 1.0f;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vTranslateMatrixOn",
+      "reason": "Two MAT set-translation blocks with union word copies, prev translation truncated via the f30 macro. Retail truncates x,y,z first and forwards f30 into the z int->float convert (cvt.s.w f0,f30 after a dead mfc1); candidate reconverts via mtc1, and the hPrev/hCur pointer registers swap.",
+      "size": 300,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 300,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -40776,6 +40836,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECPfm.c",
       "status": "MATCH"
     },
+    "0x003110a0": {
+      "address": "0x003110a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_vUpdatePlatform",
+      "size": 184,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
     "0x00311160": {
       "address": "0x00311160",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -40813,6 +40881,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MEC_fn_hGetFatherActor",
       "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x00311700": {
+      "address": "0x00311700",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_vDeleteNullTranslationObstacle",
+      "size": 200,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x003119c0": {
+      "address": "0x003119c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_vDeleteNoCollidedGroundFace",
+      "size": 160,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },

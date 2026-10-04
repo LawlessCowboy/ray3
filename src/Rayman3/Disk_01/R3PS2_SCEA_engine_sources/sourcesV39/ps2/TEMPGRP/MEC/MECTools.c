@@ -1226,6 +1226,10 @@ unsigned char MEC_fn_vBasePlatformManagement(DNM_stDynamics* p_stDynamic, HIE_td
     /* TODO: decompile from asm/... */
 }
 
+DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj);
+int DNM_fn_eIdentityCardGetType(void* _hCurrent);
+void MEC_fn_vDynamicComputeAbsoluteMatrix(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MAT_tdstTransformation_* hPreviousMatrix, MAT_tdstTransformation_* hInvPreviousMatrix, MAT_tdstTransformation_* hCurrentMatrix);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 37–67 */
 /* addr: 0x003110a0  size: 184 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1247,11 +1251,25 @@ unsigned char MEC_fn_vBasePlatformManagement(DNM_stDynamics* p_stDynamic, HIE_td
  */
 void MEC_fn_vUpdatePlatform(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MAT_tdstTransformation_* hPreviousReferenceMatrix, MAT_tdstTransformation_* hInvPreviousReferenceMatrix)
 {
-    DNM_stDynamics* p_stChildDynamic;
     void* hIdCard;
-    HIE_tdstSuperObject_* hChild;
     MAT_tdstTransformation_* hCurrentMatrix;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hChild;
+    DNM_stDynamics* p_stChildDynamic;
+
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+    for (hChild = hSupObj->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+    {
+        if (hChild->ulTypeOfLinkedObject == 2)
+        {
+            p_stChildDynamic = fn_p_stDynamGetDynamicsSO(hChild);
+            if (p_stChildDynamic != NULL)
+            {
+                hIdCard = (void*)p_stChildDynamic->m_tdstDynamicsBaseBlock.m_pCurrentIdCard;
+                if ((hIdCard != NULL) && (DNM_fn_eIdentityCardGetType(hIdCard) == 1))
+                    MEC_fn_vDynamicComputeAbsoluteMatrix(p_stChildDynamic, hChild, hPreviousReferenceMatrix, hInvPreviousReferenceMatrix, hCurrentMatrix);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1489–1502 */
@@ -1325,7 +1343,7 @@ void MEC_fn_vRepeatMove(DNM_stDynamics* p_stDynamic)
  */
 void MEC_fn_vNormalMode(DNM_stDynamics* p_stDynamic, int lMode)
 {
-    MTH3D_tdstVector_ stVector;
+    union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;
     MTH3D_tdstVector_* p_stSpeed;
     MAT_tdstTransformation_* hCurrentMatrix;
     MAT_tdstTransformation_* hPreviousMatrix;
@@ -1333,16 +1351,18 @@ void MEC_fn_vNormalMode(DNM_stDynamics* p_stDynamic, int lMode)
     p_stSpeed = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed;
     hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
     hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
-    stVector.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xX - hPreviousMatrix->stTransformMatrix.stCol_3.xX);
-    stVector.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xY - hPreviousMatrix->stTransformMatrix.stCol_3.xY);
-    stVector.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hPreviousMatrix->stTransformMatrix.stCol_3.xZ);
+    uVector.stVector.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xX - hPreviousMatrix->stTransformMatrix.stCol_3.xX);
+    uVector.stVector.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xY - hPreviousMatrix->stTransformMatrix.stCol_3.xY);
+    uVector.stVector.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ - (float)lMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hPreviousMatrix->stTransformMatrix.stCol_3.xZ);
     if (hPreviousMatrix->eType == MAT_eTransform_Identity)
         hPreviousMatrix->eType = MAT_eTransform_Translation;
-    *(MTH3D_tdstVector_*)((char*)hPreviousMatrix + 0x40) = stVector;
+    ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[0] = uVector.a3_ulWord[0];
+    ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[1] = uVector.a3_ulWord[1];
+    ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[2] = uVector.a3_ulWord[2];
     hPreviousMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
-    p_stSpeed->xX *= (float)lMode;
-    p_stSpeed->xY *= (float)lMode;
-    p_stSpeed->xZ *= (float)lMode;
+    p_stSpeed->xX = (float)lMode * p_stSpeed->xX;
+    p_stSpeed->xY = (float)lMode * p_stSpeed->xY;
+    p_stSpeed->xZ = (float)lMode * p_stSpeed->xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1442–1463 */
@@ -1370,7 +1390,7 @@ void MEC_fn_vNormalMode(DNM_stDynamics* p_stDynamic, int lMode)
 void MEC_fn_vSlowMode(DNM_stDynamics* p_stDynamic, int lMode)
 {
     float xInvMode;
-    MTH3D_tdstVector_ stVector;
+    union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;
     MTH3D_tdstVector_* p_stSpeed;
     MAT_tdstTransformation_* hCurrentMatrix;
     MAT_tdstTransformation_* hPreviousMatrix;
@@ -1379,16 +1399,18 @@ void MEC_fn_vSlowMode(DNM_stDynamics* p_stDynamic, int lMode)
     p_stSpeed = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed;
     hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
     hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
-    stVector.xX = hPreviousMatrix->stTransformMatrix.stCol_3.xX + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xX - hPreviousMatrix->stTransformMatrix.stCol_3.xX);
-    stVector.xY = hPreviousMatrix->stTransformMatrix.stCol_3.xY + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xY - hPreviousMatrix->stTransformMatrix.stCol_3.xY);
-    stVector.xZ = hPreviousMatrix->stTransformMatrix.stCol_3.xZ + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hPreviousMatrix->stTransformMatrix.stCol_3.xZ);
+    uVector.stVector.xX = hPreviousMatrix->stTransformMatrix.stCol_3.xX + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xX - hPreviousMatrix->stTransformMatrix.stCol_3.xX);
+    uVector.stVector.xY = hPreviousMatrix->stTransformMatrix.stCol_3.xY + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xY - hPreviousMatrix->stTransformMatrix.stCol_3.xY);
+    uVector.stVector.xZ = hPreviousMatrix->stTransformMatrix.stCol_3.xZ + xInvMode * (hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hPreviousMatrix->stTransformMatrix.stCol_3.xZ);
     if (hCurrentMatrix->eType == MAT_eTransform_Identity)
         hCurrentMatrix->eType = MAT_eTransform_Translation;
-    *(MTH3D_tdstVector_*)((char*)hCurrentMatrix + 0x40) = stVector;
+    ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[0] = uVector.a3_ulWord[0];
+    ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[1] = uVector.a3_ulWord[1];
+    ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[2] = uVector.a3_ulWord[2];
     hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
-    p_stSpeed->xX *= xInvMode;
-    p_stSpeed->xY *= xInvMode;
-    p_stSpeed->xZ *= xInvMode;
+    p_stSpeed->xX = xInvMode * p_stSpeed->xX;
+    p_stSpeed->xY = xInvMode * p_stSpeed->xY;
+    p_stSpeed->xZ = xInvMode * p_stSpeed->xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1378–1399 */
@@ -1533,6 +1555,19 @@ HIE_tdstSuperObject_* MEC_fn_hGetFatherActor(HIE_tdstSuperObject_* hSupObj)
     return hActor;
 }
 
+/* abs.s has no C form under MWCC; only that instruction is asm. */
+inline float MTH_xAbs(float xValue)
+{
+    float xResult;
+    asm { abs.s xResult, xValue }
+    return xResult;
+}
+
+inline unsigned char MTH3D_M_bIsNullVector(MTH3D_tdstVector_* p_stVector)
+{
+    return (MTH_xAbs(p_stVector->xX) < 0.001f) && (MTH_xAbs(p_stVector->xY) < 0.001f) && (MTH_xAbs(p_stVector->xZ) < 0.001f);
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1263–1269 */
 /* addr: 0x00311700  size: 200 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1550,9 +1585,15 @@ HIE_tdstSuperObject_* MEC_fn_hGetFatherActor(HIE_tdstSuperObject_* hSupObj)
  */
 void MEC_fn_vDeleteNullTranslationObstacle(int lObstacle, DNM_stMecObstacle* a_stObstacle)
 {
-    DNM_stMecObstacle* p_stTmpObstacle;
     int lCounter;
-    /* TODO: decompile from asm/... */
+    DNM_stMecObstacle* p_stTmpObstacle;
+
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        p_stTmpObstacle = &a_stObstacle[lCounter];
+        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99) && MTH3D_M_bIsNullVector(&p_stTmpObstacle->m_stTranslation))
+            p_stTmpObstacle->m_xCollidedEntity = 99;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1188–1234 */
@@ -1606,6 +1647,16 @@ void MEC_fn_vDeleteHangingObstacle(int lObstacle, DNM_stMecObstacle* p_stObstacl
     /* TODO: decompile from asm/... */
 }
 
+#define GMT_C_InvalidCollideMaterial ((GMT_tdstCollideMaterial_*)-1)
+
+/* Retail evaluates this test with its own collide-material temporary, as an
+ * inlined helper (the original name is not in the debug data). */
+inline unsigned char MEC_fn_bMaterialHasType4(GMT_tdstGameMaterial_* hMaterial)
+{
+    GMT_tdstCollideMaterial_* hCollideMaterial = hMaterial->hCollideMaterial;
+    return (hCollideMaterial != GMT_C_InvalidCollideMaterial) && ((hCollideMaterial->xIdentifier & 0x10) == 0x10);
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1167–1180 */
 /* addr: 0x003119c0  size: 160 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1623,9 +1674,15 @@ void MEC_fn_vDeleteHangingObstacle(int lObstacle, DNM_stMecObstacle* p_stObstacl
  */
 void MEC_fn_vDeleteNoCollidedGroundFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic)
 {
-    DNM_stMecObstacle* p_stCurrentObstacle;
     int lCounter;
-    /* TODO: decompile from asm/... */
+    DNM_stMecObstacle* p_stCurrentObstacle;
+
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        p_stCurrentObstacle = &p_stObstacle[lCounter];
+        if ((unsigned char)(p_stCurrentObstacle->m_xCollidedEntity != 99) && ((p_stCurrentObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0) && MEC_fn_bMaterialHasType4(p_stCurrentObstacle->hMyMaterial))
+            p_stCurrentObstacle->m_xCollidedEntity = 99;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1105–1156 */
@@ -1908,6 +1965,18 @@ void MEC_fn_vTranslateMatrixOff(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* 
     MAT_fn_vTranslate((MAT_tdstTransformation_*)((unsigned char*)p_stDynamic + 0xE0), p_stMatrixTranslation);
 }
 
+/* Engine float-to-int macro: retail converts through f30. */
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 759–780 */
 /* addr: 0x00312790  size: 300 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1940,7 +2009,41 @@ void MEC_fn_vTranslateMatrixOn(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p
 {
     MAT_tdstTransformation_* hPreviousMatrix;
     MAT_tdstTransformation_* hCurrentMatrix;
-    /* TODO: decompile from asm/... */
+
+    hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+    {
+        MTH3D_tdstVector_* p_stPrevTrans = (MTH3D_tdstVector_*)&hPreviousMatrix->stTransformMatrix.stCol_3;
+        int lX = MTH_M_xRealToLong(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX);
+        int lY = MTH_M_xRealToLong(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY);
+        p_stMatrixTranslation->xX = (float)lX;
+        p_stMatrixTranslation->xY = (float)lY;
+        p_stMatrixTranslation->xZ = MTH_M_xTruncate(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ);
+        {
+            union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;
+            uVector.stVector.xX = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xX - p_stMatrixTranslation->xX;
+            uVector.stVector.xY = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xY - p_stMatrixTranslation->xY;
+            uVector.stVector.xZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xZ - p_stMatrixTranslation->xZ;
+            if (hCurrentMatrix->eType == MAT_eTransform_Identity)
+                hCurrentMatrix->eType = MAT_eTransform_Translation;
+            ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[0] = uVector.a3_ulWord[0];
+            ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[1] = uVector.a3_ulWord[1];
+            ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[2] = uVector.a3_ulWord[2];
+            hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+        }
+        {
+            union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;
+            uVector.stVector.xX = p_stPrevTrans->xX - p_stMatrixTranslation->xX;
+            uVector.stVector.xY = p_stPrevTrans->xY - p_stMatrixTranslation->xY;
+            uVector.stVector.xZ = p_stPrevTrans->xZ - p_stMatrixTranslation->xZ;
+            if (hPreviousMatrix->eType == MAT_eTransform_Identity)
+                hPreviousMatrix->eType = MAT_eTransform_Translation;
+            ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[0] = uVector.a3_ulWord[0];
+            ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[1] = uVector.a3_ulWord[1];
+            ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[2] = uVector.a3_ulWord[2];
+            hPreviousMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+        }
+    }
 }
 
 void MAT_fn_vNormalize(MAT_tdstTransformation_* _hTransform);
