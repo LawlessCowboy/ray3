@@ -2,8 +2,11 @@
 
 Read this before making any matching change. The project uses the Korean PS2
 ELF with CodeWarrior PS2 through Wibo: game sources build with 3.0.1
-(2002-01-23) and the PS2GL library with 3.0 (2001-11-26). The only accepted
-baseline profile is encoded in `tools/match.py` and the Makefile.
+(2002-01-23), or 3.0.3 (2002-07-16) for the files in
+`config/compiler-3.0.3-sources.txt`, and the PS2GL library with 3.0
+(2001-11-26). Game sources also take `-pragma "dividefix on" -inline deferred
+-O3,p`. The only accepted baseline profile is encoded in `tools/match.py` and
+the Makefile.
 
 ## Worker loop
 
@@ -213,6 +216,10 @@ faster than a seed.
     reference case: `asm void PS2glX(void) { lw v0, g_pPS2glApiTable;
     lw v1, tagPS2glApiTable.pfn_PS2glX(v0); jr v1; nop }`, with the delay-slot
     `nop` on the `jr` line.
+
+  Retail loop-head alignment nops (a `nop` branch target at 4 mod 8) are
+  emitted by the game baseline's `-O3,p` from plain C; never add asm nops for
+  them. A remaining nop mismatch means the loop or join shape is wrong.
 
   Never use asm to repair register allocation or scheduling in
   compiler-generated code. That residual belongs to the permuter, or is
