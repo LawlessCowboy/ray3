@@ -17,9 +17,9 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **1,674 / 4,164** (+5 register-equivalent) | **83,068 / 1,511,580** (**5.4954%**) |
+| **Game code** | **1,708 / 4,164** (+5 register-equivalent) | **89,224 / 1,511,580** (**5.9027%**) |
 | Library code | 764 / 3,668 | 41,396 / 756,524 (5.4719%) |
-| **Total** | **2,438 / 7,832** (+5 register-equivalent) | **124,464 / 2,268,104** (**5.4876%**) |
+| **Total** | **2,472 / 7,832** (+5 register-equivalent) | **130,620 / 2,268,104** (**5.7590%**) |
 
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
   started yet.
@@ -90,8 +90,11 @@ The evidence-backed baseline compiler profile is:
 ```
 
 Game sources (`Disk_01/R3PS2_SCEA_engine_sources`) additionally use
-`-pragma "dividefix on"`: retail game code pads a `div.s` followed by a branch
-or call with two nops, while the PS2GL library code does not.
+`-pragma "dividefix on" -inline deferred`: retail game code pads a `div.s`
+followed by a branch or call with two nops, while the PS2GL library code does
+not; and retail game objects list functions in reverse source order, which is
+what deferred inlining emits (it also lets a function inline a helper defined
+later in our address-ordered sources).
 
 `-opt level=3` and `-opt level=4` have been byte-identical for every current
 probe. Level 3 is therefore the conservative project spelling, not proof that

@@ -1500,7 +1500,23 @@ void fn_vSetHitPointsToInitValue(tdstEngineObject_* _p_stObject)
  */
 void fn_vStdGameDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_StandardGame) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_AlwaysCreated:
+    case OTI_ReinitTheMap:
+    case OTI_MapLoaded:
+    case OTI_PlayerDead:
+    case OTI_LoadSavedGame:
+        p_stObject->h_StandardGame->ucMiscFlags &= ~2;
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 380–487 */
@@ -1572,6 +1588,11 @@ void fn_vStdGameInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectIn
     /* TODO: decompile from asm/... */
 }
 
+int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
+typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 352–366 */
 /* addr: 0x00274980  size: 240 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1589,8 +1610,26 @@ void fn_vStdGameInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectIn
  */
 void fn_vStdGameFree(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_StandardGame) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 5)
+        SAI_fn_bRemoveValueFromTable(&p_stObject->h_StandardGame->ucMiscFlags, 0x200);
+
+    if (p_stObject == MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter)
+    {
+        tdstStandardGame_* hStdGame = p_stObject->h_StandardGame;
+        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPoints, 0x80);
+        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPointsMax, 0x80);
+        SAI_fn_bRemoveValueFromTable(&hStdGame->ucHitPointsMaxMax, 0x80);
+    }
 }
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 305–316 */
 /* addr: 0x00274a70  size: 276 bytes */
@@ -1608,5 +1647,34 @@ void fn_vStdGameFree(tdstEngineObject_* p_stObject)
  */
 void fn_vStdGameAlloc(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_StandardGame) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstStandardGame_* hStdGame = (tdstStandardGame_*)HMU_fn_p_vMalloc(sizeof(tdstStandardGame_), 0);
+        hStdGame->ulAICustomBits = 0;
+        hStdGame->ucTransparencyZoneMin = 70;
+        hStdGame->ucTransparencyZoneMax = 80;
+        hStdGame->ucMiscFlags &= ~1;
+        hStdGame->ucMiscFlags |= 2;
+        hStdGame->ucHitPoints = 0;
+        hStdGame->ucHitPointsMax = 0;
+        hStdGame->ucTooFarLimit = 70;
+        hStdGame->eInitFlagWhenOutOfZone = 5;
+        hStdGame->eInitFlagWhenDeadOrTaken = 2;
+        p_stObject->h_StandardGame = hStdGame;
+    }
+
+    {
+        tdstStandardGame_* hStdGame = p_stObject->h_StandardGame;
+        hStdGame->ucSaveHitPoints = hStdGame->ucHitPoints;
+        hStdGame->ucSaveHitPointsMax = hStdGame->ucHitPointsMax;
+        hStdGame->ucSaveMiscFlags = hStdGame->ucMiscFlags & 7;
+        hStdGame->ulSaveCustomBits = hStdGame->ulCustomBits;
+        hStdGame->ulSaveAICustomBits = hStdGame->ulAICustomBits;
+    }
 }

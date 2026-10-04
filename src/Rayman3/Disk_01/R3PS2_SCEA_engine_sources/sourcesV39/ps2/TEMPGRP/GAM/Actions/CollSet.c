@@ -1503,7 +1503,18 @@ void CS_fn_vSetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_*
  */
 unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    switch (_ucZoneType)
+    {
+    case 0:
+        return _hCollSet->ulFBZddPriviligedZones;
+    case 3:
+        return _hCollSet->ulFBZdrPriviligedZones;
+    case 2:
+        return _hCollSet->ulFBZdePriviligedZones;
+    case 1:
+        return _hCollSet->ulFBZdmPriviligedZones;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 824–840 */
@@ -1520,7 +1531,18 @@ unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneT
  */
 tdstZoneSetList_* fn_hGetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet)
 {
-    /* TODO: decompile from asm/... */
+    switch (_ucZoneType)
+    {
+    case 0:
+        return _hCollSet->hZddCurrentActivation;
+    case 3:
+        return _hCollSet->hZdrCurrentActivation;
+    case 2:
+        return _hCollSet->hZdeCurrentActivation;
+    case 1:
+        return _hCollSet->hZdmCurrentActivation;
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 804–819 */
@@ -1537,7 +1559,21 @@ tdstZoneSetList_* fn_hGetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCol
  */
 void fn_vSetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, tdstZoneSetList_* _hCurrentZoneSet)
 {
-    /* TODO: decompile from asm/... */
+    switch (_ucZoneType)
+    {
+    case 0:
+        _hCollSet->hZddCurrentActivation = _hCurrentZoneSet;
+        break;
+    case 3:
+        _hCollSet->hZdrCurrentActivation = _hCurrentZoneSet;
+        break;
+    case 2:
+        _hCollSet->hZdeCurrentActivation = _hCurrentZoneSet;
+        break;
+    case 1:
+        _hCollSet->hZdmCurrentActivation = _hCurrentZoneSet;
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 737–792 */
@@ -1838,6 +1874,23 @@ unsigned char CS_fn_ucGetCharacterPriority(tdstCollSet_* _hCollSet)
     return _hCollSet->ucCharacterPriority;
 }
 
+/* Header inline (no out-of-line copy in the ELF). */
+inline tdstCsaList_* CS_fn_hGetActivationListInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet)
+{
+    switch (_ucZoneType)
+    {
+    case 0:
+        return _hCollSet->hZddActivationList;
+    case 2:
+        return _hCollSet->hZdeActivationList;
+    case 1:
+        return _hCollSet->hZdmActivationList;
+    case 3:
+        return _hCollSet->hZdrActivationList;
+    }
+    return NULL;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 590–593 */
 /* addr: 0x0026ee80  size: 124 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1849,7 +1902,9 @@ unsigned char CS_fn_ucGetCharacterPriority(tdstCollSet_* _hCollSet)
  */
 tdstCsaList_* CS_fn_hGetActivationList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj)
 {
-    /* TODO: decompile from asm/... */
+    tdstCollSet_* hCollSet = hSuperObj ? hSuperObj->hLinkedObject.p_stCharacter->h_CollSet : NULL;
+
+    return hCollSet ? CS_fn_hGetActivationListInCollSet(ucZoneType, hCollSet) : NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 566–586 */
@@ -1868,7 +1923,23 @@ tdstCsaList_* CS_fn_hGetActivationList(unsigned char ucZoneType, HIE_tdstSuperOb
  */
 tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj)
 {
-    /* TODO: decompile from asm/... */
+    tdstCollSet_* hCollSet = hSuperObj->hLinkedObject.p_stCharacter->h_CollSet;
+
+    if (!hCollSet)
+        return NULL;
+
+    switch (ucZoneType)
+    {
+    case 0:
+        return hCollSet->hZddList;
+    case 2:
+        return hCollSet->hZdeList;
+    case 1:
+        return hCollSet->hZdmList;
+    case 3:
+        return hCollSet->hZdrList;
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 559–561 */
@@ -1970,8 +2041,9 @@ float fn_xCollSetGetColliderReal(tdstCollSet_* _hCollSet, short _wIndex)
  */
 MTH3D_tdstVector_ fn_stCollSetGetColliderVector(tdstCollSet_* _hCollSet, short _wIndex)
 {
-    MTH3D_tdstVector_ stNullVect;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stNullVect = { 0.0f, 0.0f, 0.0f };
+
+    return ((_wIndex >= 0) && (_wIndex < 2)) ? _hCollSet->stColliderInfo.a_stColliderVectors[_wIndex] : stNullVect;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 514–517 */
@@ -2072,8 +2144,43 @@ void fn_vCollSetDesinit(tdstEngineObject_* p_stObject)
  */
 void fn_vCollSetInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_CollSet) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_WhenGameStart:
+    case OTI_MapLoaded:
+    case OTI_LoadSavedGame:
+        {
+            tdstCollSet_* hCollSet = p_stObject->h_CollSet;
+            SAI_fn_bInsertCharInTable(&hCollSet->ucCollisionFlag, 0x13);
+            SAI_fn_bInsertCharInTable(&hCollSet->ucCollComputeFrequency, 0x13);
+        }
+        p_stObject->h_CollSet->stColliderInfo.ucColliderPriority = 0;
+        p_stObject->h_CollSet->ulFBZddPriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdePriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdmPriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdrPriviligedZones = 0;
+        break;
+    case OTI_ReinitTheMap:
+    case OTI_PlayerDead:
+        p_stObject->h_CollSet->stColliderInfo.ucColliderPriority = 0;
+        p_stObject->h_CollSet->ulFBZddPriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdePriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdmPriviligedZones = 0;
+        p_stObject->h_CollSet->ulFBZdrPriviligedZones = 0;
+        break;
+    case OTI_AlwaysCreated:
+        break;
+    }
 }
+
+int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 382–394 */
 /* addr: 0x0026f340  size: 168 bytes */
@@ -2090,8 +2197,21 @@ void fn_vCollSetInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectIn
  */
 void fn_vCollSetFree(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_CollSet) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstCollSet_* hCollSet = p_stObject->h_CollSet;
+        SAI_fn_bRemoveValueFromTable(&hCollSet->ucCollisionFlag, 0x13);
+        SAI_fn_bRemoveValueFromTable(&hCollSet->ucCollComputeFrequency, 0x13);
+    }
 }
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 344–368 */
 /* addr: 0x0026f3f0  size: 96 bytes */
@@ -2123,8 +2243,32 @@ void fn_vCollSetFree(tdstEngineObject_* p_stObject)
 tdstCollSet_* fn_h_CollSetRealAlloc(void)
 {
     tdstCollSet_* h_CollSet;
-    /* TODO: decompile from asm/... */
+
+    h_CollSet = (tdstCollSet_*)HMU_fn_p_vMalloc(sizeof(tdstCollSet_), 0);
+
+    h_CollSet->ucCharacterPriority = 0;
+    h_CollSet->hZddList = NULL;
+    h_CollSet->hZdeList = NULL;
+    h_CollSet->hZdmList = NULL;
+    h_CollSet->hZdrList = NULL;
+    h_CollSet->hZddActivationList = NULL;
+    h_CollSet->hZdeActivationList = NULL;
+    h_CollSet->hZdmActivationList = NULL;
+    h_CollSet->hZdrActivationList = NULL;
+
+    h_CollSet->stColliderInfo.ucColliderPriority = 0;
+
+    h_CollSet->ulFBZddPriviligedZones = 0;
+    h_CollSet->ulFBZdePriviligedZones = 0;
+    h_CollSet->ulFBZdmPriviligedZones = 0;
+    h_CollSet->ulFBZdrPriviligedZones = 0;
+    h_CollSet->ucCollComputeFrequency = 1;
+
+    return h_CollSet;
 }
+
+tdstCollSet_* fn_h_CollSetRealAlloc(void);
+int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 319–330 */
 /* addr: 0x0026f450  size: 180 bytes */
@@ -2142,5 +2286,18 @@ tdstCollSet_* fn_h_CollSetRealAlloc(void)
  */
 void fn_vCollSetAlloc(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_CollSet) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    p_stObject->h_CollSet = fn_h_CollSetRealAlloc();
+
+    {
+        tdstCollSet_* hCollSet = p_stObject->h_CollSet;
+        SAI_fn_bInsertCharInTable(&hCollSet->ucCollisionFlag, 0x13);
+        SAI_fn_bInsertCharInTable(&hCollSet->ucCollComputeFrequency, 0x13);
+    }
 }

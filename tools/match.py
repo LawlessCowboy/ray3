@@ -76,8 +76,11 @@ MWCC_FLAGS = [
 ]
 # The game sources were built with the R5900 divide workaround (two nops
 # between div.s and a following branch or call); the PS2GL library was not.
+# They were also built with deferred inlining: retail objects list functions
+# in reverse source order, which is what '-inline deferred' emits, and it lets
+# a function inline a helper defined later in our (ELF-ordered) files.
 GAME_SOURCE_ROOT = Path('src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources')
-GAME_MWCC_FLAGS = ['-pragma', 'dividefix on']
+GAME_MWCC_FLAGS = ['-pragma', 'dividefix on', '-inline', 'deferred']
 
 
 def is_game_source(owner: Path | str) -> bool:

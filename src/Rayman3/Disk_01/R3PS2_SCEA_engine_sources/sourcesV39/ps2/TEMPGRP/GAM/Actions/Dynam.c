@@ -1270,6 +1270,11 @@ void fn_vDynamDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectI
     /* TODO: decompile from asm/... */
 }
 
+void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject);
+void GAM_fn_vPopAllocMode(void);
+void DNM_fn_vInitBaseMechanic(DNM_stDynamics* p_stDynamic);
+void* memset(void*, int, unsigned int);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 369–399 */
 /* addr: 0x0026f8f0  size: 136 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1286,7 +1291,26 @@ void fn_vDynamDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectI
  */
 void fn_vDynamInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
-    /* TODO: decompile from asm/... */
+    fn_vPushAllocModeAccordingToEngineObject(p_stObject);
+
+    switch (eObjectInit)
+    {
+    case OTI_WhenGameStart:
+    case OTI_MapLoaded:
+    case OTI_ReinitTheMap:
+    case OTI_LoadSavedGame:
+    case OTI_PlayerDead:
+        if (!g_cInitializingTransitionSPO)
+        {
+            DNM_fn_vInitBaseMechanic(p_stObject->h_Dynam->p_stDynamics);
+            memset(p_stObject->h_Dynam->p_stParsingDatas, 0, sizeof(DNM_stParsingDatas));
+        }
+        break;
+    case OTI_AlwaysCreated:
+        break;
+    }
+
+    GAM_fn_vPopAllocMode();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 335–349 */
@@ -1413,6 +1437,9 @@ void fn_v_DynamicAlloc(tdstDynam_* h_Dynam, eDynamicSize_ eSize, unsigned char b
     /* TODO: decompile from asm/... */
 }
 
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 182–195 */
 /* addr: 0x0026fd10  size: 208 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1429,5 +1456,17 @@ void fn_v_DynamicAlloc(tdstDynam_* h_Dynam, eDynamicSize_ eSize, unsigned char b
  */
 void fn_vDynamAlloc(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_Dynam) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstDynam_* hDynam = (tdstDynam_*)HMU_fn_p_vMalloc(sizeof(tdstDynam_), 0);
+        hDynam->p_stParsingDatas = (DNM_stParsingDatas*)HMU_fn_p_vMalloc(sizeof(DNM_stParsingDatas), 0);
+        p_stObject->h_Dynam = hDynam;
+    }
+    fn_v_DynamicAlloc(p_stObject->h_Dynam, eDynamicSizeBase, 0, fn_ucIsAnAlwaysObject(p_stObject));
 }

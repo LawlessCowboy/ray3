@@ -1823,7 +1823,22 @@ tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex)
  */
 void fn_vMicroSetActivationFlag(tdstEngineObject_* hEngObj, tdstMicro_* h_MS_Micro, unsigned char _bActive)
 {
-    /* TODO: decompile from asm/... */
+    if (_bActive)
+    {
+        if (!h_MS_Micro->bIsActive)
+        {
+            fn_vAddMicro(hEngObj);
+        }
+    }
+    else
+    {
+        if (h_MS_Micro->bIsActive)
+        {
+            fn_vDeleteMicro(hEngObj);
+        }
+    }
+
+    h_MS_Micro->bIsActive = _bActive;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 294–294 */
@@ -1877,7 +1892,26 @@ void fn_vMicroDesinit(tdstEngineObject_* p_stObject)
  */
 void fn_vMicroInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_Micro) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_MapLoaded:
+    case OTI_ReinitTheMap:
+        if (p_stObject->h_Micro->bIsActive)
+            fn_vAddMicro(p_stObject);
+        break;
+    case OTI_WhenGameStart:
+    case OTI_LoadSavedGame:
+    case OTI_PlayerDead:
+    case OTI_AlwaysCreated:
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 197–208 */
@@ -1901,6 +1935,10 @@ void fn_vMicroFree(tdstEngineObject_* p_stObject)
         Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
     }
 }
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void);
+void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 146–173 */
 /* addr: 0x00273210  size: 284 bytes */
@@ -1928,8 +1966,33 @@ void fn_vMicroFree(tdstEngineObject_* p_stObject)
  */
 void fn_vMicroAlloc(tdstEngineObject_* p_stObject)
 {
-    MTH3D_tdstVector_ stK;
-    MTH3D_tdstVector_ stJ;
     MTH3D_tdstVector_ stI;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stJ;
+    MTH3D_tdstVector_ stK;
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_Micro) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstMicro_* hMicro = (tdstMicro_*)HMU_fn_p_vMalloc(sizeof(tdstMicro_), 0);
+        hMicro->hMicroMatrix = GEO_fn_hCreateMatrix();
+        p_stObject->h_Micro = hMicro;
+    }
+
+    stJ.xX = -1.0f; stJ.xY = 0.0f; stJ.xZ = 0.0f;
+    stK.xX = 0.0f; stK.xY = 0.0f; stK.xZ = 1.0f;
+    if (p_stObject->h_Cineinfo)
+    {
+        stI.xX = 0.0f; stI.xY = -1.0f; stI.xZ = 0.0f;
+    }
+    else
+    {
+        stI.xX = 0.0f; stI.xY = 1.0f; stI.xZ = 0.0f;
+    }
+
+    MAT_fn_vSetRotationVectors(p_stObject->h_Micro->hMicroMatrix, &stI, &stJ, &stK);
 }

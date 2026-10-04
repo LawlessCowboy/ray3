@@ -1130,6 +1130,12 @@ unsigned int fn_ulMSSoundSizeOf(void)
     return 0x10;
 }
 
+int WPG_fn_lGetLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int* p_lWeight);
+int WPG_fn_lChangeLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight);
+int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int* p_ulCapability);
+int WPG_fn_lChangeLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int ulCapability, int lValue);
+WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 571–594 */
 /* addr: 0x002715a0  size: 200 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1154,7 +1160,27 @@ int MSWay_fn_lChangeWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, in
     int lNbOfElts;
     WP_tdstWayPoint_* hWayPoint2;
     WP_tdstWayPoint_* hWayPoint1;
-    /* TODO: decompile from asm/... */
+
+    if ((hWay != NULL) && (hWay->m_hPath != NULL))
+    {
+        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        if (hWay->m_bIsCircular)
+        {
+            iIndex %= lNbOfElts;
+            if (iIndex < 0)
+                iIndex += lNbOfElts;
+        }
+        if ((iIndex >= 0) && (iIndex < lNbOfElts))
+        {
+            hWayPoint1 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex);
+            hWayPoint2 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex + 1);
+            if (hWayPoint2 != NULL)
+            {
+                return WPG_fn_lChangeLinkWeight(hWay->m_hPath, hWayPoint1, hWayPoint2, lWeight);
+            }
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 542–568 */
@@ -1182,7 +1208,27 @@ int MSWay_fn_lGetWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex)
     int lValue;
     WP_tdstWayPoint_* hWayPoint2;
     WP_tdstWayPoint_* hWayPoint1;
-    /* TODO: decompile from asm/... */
+
+    if ((hWay != NULL) && (hWay->m_hPath != NULL))
+    {
+        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        if (hWay->m_bIsCircular)
+        {
+            iIndex %= lNbOfElts;
+            if (iIndex < 0)
+                iIndex += lNbOfElts;
+        }
+        if ((iIndex >= 0) && (iIndex < lNbOfElts))
+        {
+            hWayPoint1 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex);
+            hWayPoint2 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex + 1);
+            if (hWayPoint2 != NULL)
+            {
+                return (WPG_fn_lGetLinkWeight(hWay->m_hPath, hWayPoint1, hWayPoint2, &lValue) == -1) ? 0 : lValue;
+            }
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 516–539 */
@@ -1209,7 +1255,27 @@ int MSWay_fn_lChangeCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, unsi
     int lNbOfElts;
     WP_tdstWayPoint_* hWayPoint2;
     WP_tdstWayPoint_* hWayPoint1;
-    /* TODO: decompile from asm/... */
+
+    if ((hWay != NULL) && (hWay->m_hPath != NULL))
+    {
+        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        if (hWay->m_bIsCircular)
+        {
+            iIndex %= lNbOfElts;
+            if (iIndex < 0)
+                iIndex += lNbOfElts;
+        }
+        if ((iIndex >= 0) && (iIndex < lNbOfElts))
+        {
+            hWayPoint1 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex);
+            hWayPoint2 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex + 1);
+            if (hWayPoint2 != NULL)
+            {
+                return WPG_fn_lChangeLinkCapabilities(hWay->m_hPath, hWayPoint1, hWayPoint2, ulNewCaps, lValue);
+            }
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 487–513 */
@@ -1237,7 +1303,27 @@ unsigned int MSWay_fn_ulGetCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iInde
     unsigned int ulNewCaps;
     WP_tdstWayPoint_* hWayPoint2;
     WP_tdstWayPoint_* hWayPoint1;
-    /* TODO: decompile from asm/... */
+
+    if ((hWay != NULL) && (hWay->m_hPath != NULL))
+    {
+        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        if (hWay->m_bIsCircular)
+        {
+            iIndex %= lNbOfElts;
+            if (iIndex < 0)
+                iIndex += lNbOfElts;
+        }
+        if ((iIndex >= 0) && (iIndex < lNbOfElts))
+        {
+            hWayPoint1 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex);
+            hWayPoint2 = MSWay_fn_hGetWayPointOfPath(hWay, iIndex + 1);
+            if (hWayPoint2 != NULL)
+            {
+                return (WPG_fn_lGetLinkCapabilities(hWay->m_hPath, hWayPoint1, hWayPoint2, &ulNewCaps) == -1) ? 0 : ulNewCaps;
+            }
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 457–484 */
@@ -1267,7 +1353,30 @@ WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex)
     int k;
     int i;
     WP_tdstGraphNode_* hElement;
-    /* TODO: decompile from asm/... */
+
+    if ((hWay != NULL) && (hWay->m_hPath != NULL))
+    {
+        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        if (hWay->m_bIsCircular)
+        {
+            if (lNbOfElts == 0)
+                return NULL;
+            iIndex %= lNbOfElts;
+            if (iIndex < 0)
+                iIndex += lNbOfElts;
+        }
+        else
+        {
+            if ((iIndex < 0) || (iIndex >= lNbOfElts))
+                return NULL;
+        }
+        k = lNbOfElts - iIndex;
+        hElement = hWay->m_hPath->m_hListOfNode.hFirstElementDyn;
+        for (i = 0; i < k - 1; i++)
+            hElement = hElement->hNextBrotherDyn;
+        return hElement->m_hWayPoint;
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 423–449 */
@@ -1293,7 +1402,30 @@ WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex)
 int MSWay_fn_lIncrementCurrentIndexInPath(tdstMSWay_* hWay, int iStep)
 {
     int lNbOfElts;
-    /* TODO: decompile from asm/... */
+
+    if (hWay == NULL)
+        return -1;
+
+    if (hWay->m_hPath != NULL)
+    {
+        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        if (hWay->m_bIsCircular)
+        {
+            hWay->m_lIndex += iStep;
+            hWay->m_lIndex %= lNbOfElts;
+            if (hWay->m_lIndex < 0)
+                hWay->m_lIndex += lNbOfElts;
+            return hWay->m_lIndex;
+        }
+
+        if ((hWay->m_lIndex + iStep >= 0) && (hWay->m_lIndex + iStep < lNbOfElts))
+        {
+            hWay->m_lIndex += iStep;
+            return hWay->m_lIndex;
+        }
+    }
+
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 404–415 */
@@ -1342,7 +1474,24 @@ int MSWay_fn_lLookForWPInMSWay(tdstMSWay_* _hWay, WP_tdstWayPoint_* _hWayPoint)
 int MSWay_fn_lSetCurrentIndexInPath(tdstMSWay_* hWay, int _lIndex)
 {
     int lNbOfElts;
-    /* TODO: decompile from asm/... */
+
+    if ((hWay != NULL) && (hWay->m_hPath != NULL))
+    {
+        lNbOfElts = hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        if (hWay->m_bIsCircular)
+        {
+            _lIndex %= lNbOfElts;
+            if (_lIndex < 0)
+                _lIndex += lNbOfElts;
+        }
+        if (_lIndex >= lNbOfElts)
+            _lIndex = lNbOfElts - 1;
+        if (_lIndex < 0)
+            _lIndex = 0;
+        hWay->m_lIndex = _lIndex;
+        return hWay->m_lIndex;
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 372–375 */
@@ -1466,7 +1615,6 @@ void MSWay_fn_vSetPath(tdstMSWay_* hWay, WP_tdstGraph_* hPath, char _bIsCircular
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma auto_inline on
 void MSWay_fn_vDesinitPath(tdstMSWay_* hWay)
 {
     if (hWay)
@@ -1489,6 +1637,25 @@ void MSWay_fn_vDesinitPath(tdstMSWay_* hWay)
     }
 }
 
+/* Statement-macro form of MSWay_fn_vDesinitPath: retail expands it on one
+ * source line in fn_vMSWayDesinit, fn_vMSWayFree and fn_vMSWayCopyClone,
+ * while other callers call the function. */
+#define MSWay_M_vDesinitPath(_hWay)                                            \
+    {                                                                          \
+        tdstMSWay_* _hMacroWay = (_hWay);                                      \
+        if (_hMacroWay)                                                        \
+        {                                                                      \
+            if (fn_bScriptTransitionDeallocationCondition())                   \
+            {                                                                  \
+                if (_hMacroWay->m_hPath)                                       \
+                    WPG_fn_vDestroy(_hMacroWay->m_hPath);                      \
+            }                                                                  \
+            _hMacroWay->m_hPath = NULL;                                        \
+            _hMacroWay->m_lIndex = -1;                                         \
+            _hMacroWay->m_bIsCircular = 0;                                     \
+        }                                                                      \
+    }
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 267–273 */
 /* addr: 0x00271ce0  size: 136 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1502,7 +1669,11 @@ void MSWay_fn_vDesinitPath(tdstMSWay_* hWay)
  */
 void fn_vMSWayCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
-    /* TODO: decompile from asm/... */
+    MSWay_M_vDesinitPath(_p_stObjectDest->h_MSWay);
+
+    memcpy(_p_stObjectDest->h_MSWay, _p_stObjectSrc->h_MSWay, sizeof(tdstMSWay_));
+
+    MSWay_fn_vDesinitPath(_p_stObjectDest->h_MSWay);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 242–253 */
@@ -1530,7 +1701,7 @@ void fn_vMSWayDesinit(tdstEngineObject_* p_stObject)
     if (!hMSWay) {
         Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
     }
-    MSWay_fn_vDesinitPath(hMSWay);
+    MSWay_M_vDesinitPath(hMSWay);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 208–228 */
@@ -1549,7 +1720,6 @@ void fn_vMSWayDesinit(tdstEngineObject_* p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma dont_inline on
 void fn_vMSWayInit(tdstEngineObject_* p_stObject)
 {
     tdstMSWay_* hMSWay;
@@ -1568,7 +1738,6 @@ void fn_vMSWayInit(tdstEngineObject_* p_stObject)
 
     GAM_fn_vPopAllocMode();
 }
-#pragma dont_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 178–194 */
 /* addr: 0x00271ef0  size: 200 bytes */
@@ -1595,9 +1764,10 @@ void fn_vMSWayFree(tdstEngineObject_* p_stObject)
     if (!hMSWay) {
         Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
     }
-    MSWay_fn_vDesinitPath(hMSWay);
+    MSWay_M_vDesinitPath(hMSWay);
 }
-#pragma auto_inline reset
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 145–155 */
 /* addr: 0x00271fc0  size: 172 bytes */
@@ -1614,5 +1784,16 @@ void fn_vMSWayFree(tdstEngineObject_* p_stObject)
  */
 void fn_vMSWayAlloc(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_MSWay) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstMSWay_* hMSWay = (tdstMSWay_*)HMU_fn_p_vMalloc(sizeof(tdstMSWay_), 0);
+        MSWay_fn_vDesinitPath(hMSWay);
+        p_stObject->h_MSWay = hMSWay;
+    }
 }

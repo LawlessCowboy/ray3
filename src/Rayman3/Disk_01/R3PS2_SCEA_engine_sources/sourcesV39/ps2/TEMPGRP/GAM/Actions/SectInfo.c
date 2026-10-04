@@ -1291,6 +1291,7 @@ HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* hCharacter)
 {
     SECT_fn_vIsolateCharListNode(hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hNodeInSector);
@@ -1318,7 +1319,17 @@ void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* hCharacter)
 void fn_vInsertLightInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hCharacter)
 {
     tdstMSLight_* hMSLight;
-    /* TODO: decompile from asm/... */
+
+    hMSLight = hCharacter->hLinkedObject.p_stCharacter->h_MSLight;
+
+    if (fn_bMSLightGetLocalLight(hMSLight))
+    {
+        if (fn_bMSLightGetOnlyLocalLight(hMSLight)) hCharacter->ulFlags |= 0x20000; else hCharacter->ulFlags &= ~0x20000;
+        return;
+    }
+
+    SECT_fn_vIsolateDNMLightsListNode(fn_hMSLightGetLightNodeInSector(hMSLight));
+    SECT_fn_vAddTailDNMLightsListNode(hSector, fn_hMSLightGetLightNodeInSector(hMSLight));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 401–416 */
@@ -1376,6 +1387,8 @@ void fn_vSectInfoCopyClone(void)
 {
 }
 
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* _hStdGame);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 300–322 */
 /* addr: 0x00273c80  size: 284 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1393,8 +1406,26 @@ void fn_vSectInfoCopyClone(void)
  */
 void fn_vSectInfoDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_SectInfo) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_MapLoaded:
+    case OTI_ReinitTheMap:
+    case OTI_LoadSavedGame:
+    case OTI_AlwaysCreated:
+    case OTI_PlayerDead:
+        if (fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame))
+            fn_vRemoveObjectInSectorList(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame));
+        break;
+    }
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 229–287 */
 /* addr: 0x00273da0  size: 712 bytes */
@@ -1461,6 +1492,9 @@ void fn_vSectInfoFree(tdstEngineObject_* p_stObject)
     p_stObject->h_SectInfo = NULL;
 }
 
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 143–153 */
 /* addr: 0x00274090  size: 172 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1476,5 +1510,16 @@ void fn_vSectInfoFree(tdstEngineObject_* p_stObject)
  */
 void fn_vSectInfoAlloc(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_SectInfo) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstSectInfo_* hSectInfo = (tdstSectInfo_*)HMU_fn_p_vMalloc(sizeof(tdstSectInfo_), 0);
+        hSectInfo->hNodeInSector = SECT_fn_hCreateElementLstCharacter();
+        p_stObject->h_SectInfo = hSectInfo;
+    }
 }

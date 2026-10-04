@@ -1432,7 +1432,31 @@ void fn_vMSSoundDesinit(tdstEngineObject_* p_stObject)
  */
 void fn_vMSSoundInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_MSSound) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_WhenGameStart:
+    case OTI_ReinitTheMap:
+    case OTI_LoadSavedGame:
+        break;
+    case OTI_MapLoaded:
+        {
+            _RollOffParam* p_stRollOff = &p_stObject->h_MSSound->stRollOff;
+            SAI_fn_bInsertLongInTable(&p_stRollOff->rDistSatur, 0x32);
+            SAI_fn_bInsertLongInTable(&p_stRollOff->rDistBackGround, 0x32);
+            SAI_fn_bInsertCharInTable(&p_stRollOff->ucBackgroundVol, 0x32);
+        }
+        p_stObject->h_MSSound->hMechaCharacter = NULL;
+        break;
+    case OTI_PlayerDead:
+        break;
+    }
 }
 
 int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
@@ -1467,6 +1491,11 @@ void fn_vMSSoundFree(tdstEngineObject_* p_stObject)
     }
 }
 
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void SND_fn_vGetDefaultRollOff(_RollOffParam* p_stRollOff);
+int SAI_fn_bInsertLongInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 177–188 */
 /* addr: 0x002714b0  size: 216 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1485,5 +1514,24 @@ void fn_vMSSoundFree(tdstEngineObject_* p_stObject)
  */
 void fn_vMSSoundAlloc(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_MSSound) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstMSSound_* hMSSound = (tdstMSSound_*)HMU_fn_p_vMalloc(sizeof(tdstMSSound_), 0);
+        SND_fn_vGetDefaultRollOff(&hMSSound->stRollOff);
+        hMSSound->hMechaCharacter = NULL;
+        p_stObject->h_MSSound = hMSSound;
+    }
+
+    {
+        _RollOffParam* p_stRollOff = &p_stObject->h_MSSound->stRollOff;
+        SAI_fn_bInsertLongInTable(&p_stRollOff->rDistSatur, 0x32);
+        SAI_fn_bInsertLongInTable(&p_stRollOff->rDistBackGround, 0x32);
+        SAI_fn_bInsertCharInTable(&p_stRollOff->ucBackgroundVol, 0x32);
+    }
 }

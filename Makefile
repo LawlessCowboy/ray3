@@ -48,12 +48,16 @@ TOOLS_DIR := tools
 # - dividefix (game sources only): retail game code has two nops between a
 #   div.s and a following branch or call (202 of 204 sites); the PS2GL library
 #   has none (114 of 117), and enabling it there loses 89 library matches.
+# - inline deferred (game sources only): retail game objects list functions in
+#   reverse source order, which is what deferred inlining emits; it also lets
+#   a function inline a helper defined later in our ELF-ordered files. A
+#   whole-game sweep lost no recorded match.
 MWCC_FLAGS := -c -g -opt level=3 -farcall off -sdatathreshold 8 \
               -inline on -strings reuse,nopool,readonly -enum int \
               -Cpp_exceptions off -pragma "fast_fptosi on" -pragma "padloop on" \
               -pragma "optimize_for_size off"
 GAME_SOURCE_ROOT := Disk_01/R3PS2_SCEA_engine_sources
-GAME_MWCC_FLAGS := -pragma "dividefix on"
+GAME_MWCC_FLAGS := -pragma "dividefix on" -inline deferred
 CPPFLAGS := -I$(INCLUDE_DIR)
 
 # Escaping spaces keeps GNU make paths such as "Program Files/..." intact.

@@ -1228,6 +1228,9 @@ void fn_vBrainFree(void)
 {
 }
 
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+AI_tdstMind_* fn_pstAllocMind(void);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Brain.c lines 154–164 */
 /* addr: 0x0026d320  size: 188 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1243,5 +1246,18 @@ void fn_vBrainFree(void)
  */
 void fn_vBrainAlloc(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_Brain) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstBrain_* hBrain = (tdstBrain_*)HMU_fn_p_vMalloc(sizeof(tdstBrain_), 0);
+        hBrain->p_stMind = fn_pstAllocMind();
+        hBrain->hLastCollidedGoThroughMaterial = (GMT_tdstGameMaterial_*)0xCDCDCDCD;
+        hBrain->bWarnMechanicsFlag = 0;
+        p_stObject->h_Brain = hBrain;
+    }
 }

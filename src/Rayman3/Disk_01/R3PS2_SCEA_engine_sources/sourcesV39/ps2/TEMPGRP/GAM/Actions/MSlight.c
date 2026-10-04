@@ -1241,6 +1241,9 @@ unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight)
     return (int)_hMSLight->hLightInSector;
 }
 
+void* memcpy(void*, const void*, unsigned int);
+void GLI_vCopyLight(GLI_tdstLight_* p_stDest, GLI_tdstLight_* p_stSrc);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 685–698 */
 /* addr: 0x00270920  size: 120 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1259,7 +1262,18 @@ unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight)
  */
 void fn_vLightCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
-    /* TODO: decompile from asm/... */
+    GLI_tdstLight_* p_stLight;
+    SECT_tdstListOfDNMLights_* hLightInSector;
+
+    p_stLight = _p_stObjectDest->h_MSLight->p_stLight;
+    hLightInSector = _p_stObjectDest->h_MSLight->hLightInSector;
+
+    memcpy(_p_stObjectDest->h_MSLight, _p_stObjectSrc->h_MSLight, sizeof(tdstMSLight_));
+
+    _p_stObjectDest->h_MSLight->p_stLight = p_stLight;
+
+    GLI_vCopyLight(_p_stObjectDest->h_MSLight->p_stLight, _p_stObjectSrc->h_MSLight->p_stLight);
+    _p_stObjectDest->h_MSLight->hLightInSector = hLightInSector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 652–671 */
@@ -1314,6 +1328,9 @@ void fn_vLightInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit
     /* TODO: decompile from asm/... */
 }
 
+void GLI_vRemoveLightForInit(GLI_tdstLight_* p_stLight, unsigned short eUserFlags);
+int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 525–538 */
 /* addr: 0x00270c10  size: 276 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1329,7 +1346,27 @@ void fn_vLightInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit
  */
 void fn_vLightFree(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_MSLight) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstMSLight_* hMSLight = p_stObject->h_MSLight;
+        GLI_vRemoveLightForInit(hMSLight->p_stLight, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->stOffsetVect, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->stAngle, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->bPulsing, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->xStepPulse, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->xMaxRangePulse, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->bLocalLight, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->bOnlyLocalLight, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->bGiroPhare, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->xStepGiro, 0x32);
+        SAI_fn_bRemoveValueFromTable(&hMSLight->xGiroAngle, 0x32);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 486–497 */
