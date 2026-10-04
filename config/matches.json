@@ -39783,6 +39783,54 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
       "status": "MATCH"
     },
+    "0x002dadc0": {
+      "address": "0x002dadc0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SDL_REF_GetNewFogRef",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
+      "status": "MATCH"
+    },
+    "0x002dae30": {
+      "address": "0x002dae30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SDL_REF_GetNewTextureOffsetRef",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
+      "status": "MATCH"
+    },
+    "0x002daec0": {
+      "address": "0x002daec0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SDL_REF_GetNewPointLightingDataRef",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
+      "status": "MATCH"
+    },
+    "0x002daf30": {
+      "address": "0x002daf30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SDL_REF_GetNewTextureIdMatrixRef",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
+      "status": "MATCH"
+    },
+    "0x002dafa0": {
+      "address": "0x002dafa0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SDL_REF_GetNewTextureMatrixRef",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
+      "status": "MATCH"
+    },
+    "0x002db010": {
+      "address": "0x002db010",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SDL_REF_GetNewLocalMatrixRef",
+      "size": 108,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
+      "status": "MATCH"
+    },
     "0x002db080": {
       "address": "0x002db080",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -39831,11 +39879,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
       "status": "MATCH"
     },
+    "0x002db0e0": {
+      "address": "0x002db0e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SDL_Start",
+      "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
+      "status": "MATCH"
+    },
     "0x002db100": {
       "address": "0x002db100",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SDL_AddRef",
       "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
+      "status": "MATCH"
+    },
+    "0x002db140": {
+      "address": "0x002db140",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SDL_Destroy",
+      "size": 96,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
       "status": "MATCH"
     },

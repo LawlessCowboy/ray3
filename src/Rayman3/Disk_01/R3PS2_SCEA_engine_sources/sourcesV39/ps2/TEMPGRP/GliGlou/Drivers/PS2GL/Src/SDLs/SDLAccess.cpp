@@ -294,6 +294,89 @@ struct C_SdlRef {
     unsigned int m_uIndexInList; /* +0x4 */
     int m_vpOriginPointer; /* +0x8 */
     int m_vpDestinationPointer; /* +0xc */
+    /* vtable pointer at +0x10 (retail __vt__8C_SdlRef). */
+    C_SdlRef(void* pOrigin, unsigned int uIndex)
+    {
+        m_uIndexInList = uIndex;
+        m_uRefType = 0;
+        m_vpOriginPointer = (int)pOrigin;
+        m_vpDestinationPointer = 0;
+    }
+    virtual void Process(void);
+    virtual void ProcessWithInterpol(void);
+    virtual void ProcessNoInterpol(void);
+    static void* operator new(unsigned int uSize);
+};
+
+struct C_SdlRef_LocalMatrix : C_SdlRef {
+    unsigned char _padding_00[12]; /* +0x14..0x1f */
+    float OldMat[4][4] __attribute__((aligned(16))); /* +0x20 */
+    int m_bNoInterpolation; /* +0x60 */
+    C_SdlRef_LocalMatrix(void* pOrigin, unsigned int uIndex) : C_SdlRef(pOrigin, uIndex)
+    {
+        m_uRefType = 1;
+        m_bNoInterpolation = 1;
+    }
+    void Process(void);
+    void ProcessWithInterpol(void);
+    void ProcessNoInterpol(void);
+};
+
+struct C_SdlRef_TextureOffset : C_SdlRef {
+    GLI_tdstMaterial_* m_hMaterial; /* +0x14 */
+    float m_du; /* +0x18 */
+    float m_dv; /* +0x1c */
+    int m_fpOffsetU; /* +0x20 */
+    int m_fpOffsetV; /* +0x24 */
+    C_SdlRef_TextureOffset(float du, float dv, unsigned int uIndex, GLI_tdstMaterial_* hMaterial) : C_SdlRef(0, uIndex)
+    {
+        m_uRefType = 2;
+        m_du = du;
+        m_dv = dv;
+        m_hMaterial = hMaterial;
+    }
+    void Process(void);
+    void ProcessWithInterpol(void);
+    void ProcessNoInterpol(void);
+};
+
+struct C_SdlRef_FogParameters : C_SdlRef {
+    int m_pDestFogColor; /* +0x14 */
+    int m_pDestFogStart; /* +0x18 */
+    int m_pDestFogEnd; /* +0x1c */
+    C_SdlRef_FogParameters(unsigned int uIndex) : C_SdlRef(0, uIndex)
+    {
+        m_pDestFogColor = 0;
+        m_pDestFogStart = 0;
+        m_pDestFogEnd = 0;
+        m_uRefType = 4;
+    }
+    void Process(void);
+    void ProcessWithInterpol(void);
+    void ProcessNoInterpol(void);
+};
+
+struct C_SdlRef_TextureMatrix : C_SdlRef {
+    int m_fpOffsetU; /* +0x14 */
+    int m_fpOffsetV; /* +0x18 */
+    C_SdlRef_TextureMatrix(void* pOrigin, unsigned int uIndex) : C_SdlRef(pOrigin, uIndex) { m_uRefType = 8; }
+    void Process(void);
+    void ProcessWithInterpol(void);
+    void ProcessNoInterpol(void);
+};
+
+struct C_SdlRef_TextureIdMatrix : C_SdlRef {
+    C_SdlRef_TextureIdMatrix(void* pOrigin, unsigned int uIndex) : C_SdlRef(pOrigin, uIndex) { m_uRefType = 0x10; }
+    void Process(void);
+    void ProcessWithInterpol(void);
+    void ProcessNoInterpol(void);
+};
+
+struct C_SdlRef_PointLighting : C_SdlRef {
+    C_SdlRef_PointLighting(void* pOrigin, unsigned int uIndex) : C_SdlRef(pOrigin, uIndex) { m_uRefType = 0x20; }
+    void Process(void);
+    void ProcessWithInterpol(void);
+    void ProcessNoInterpol(void);
 };
 
 struct tdstEvent_ {
@@ -761,6 +844,11 @@ struct C_Sdl {
     int m_SkinIndex; /* +0x3c */
     GLI_tdstMaterial_* m_SkinMaterial; /* +0x40 */
     int m_bIsBlinking; /* +0x44 */
+    /* vtable pointer at +0x48 (retail __vt__5C_Sdl: Start). */
+    virtual void Start(void);
+    ~C_Sdl() { Destruct(); }
+    void Destruct(void);
+    static void operator delete(void* p);
     void UpdateFogs(void);
     void Draw(int);
     void Preprocess(void);
@@ -1155,7 +1243,7 @@ void CHEAP_CountMatrices__FP20HIE_tdstSuperObject_PUi(HIE_tdstSuperObject_* pSPO
  */
 unsigned int SDL_REF_GetNewFogRef(unsigned int Index)
 {
-    /* TODO: decompile from asm/... */
+    return (unsigned int)new C_SdlRef_FogParameters(Index);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 170–175 */
@@ -1169,7 +1257,7 @@ unsigned int SDL_REF_GetNewFogRef(unsigned int Index)
  */
 unsigned int SDL_REF_GetNewTextureOffsetRef(float du, float dv, unsigned int Index, GLI_tdstMaterial_* hMaterial)
 {
-    /* TODO: decompile from asm/... */
+    return (unsigned int)new C_SdlRef_TextureOffset(du, dv, Index, hMaterial);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 158–163 */
@@ -1183,7 +1271,7 @@ unsigned int SDL_REF_GetNewTextureOffsetRef(float du, float dv, unsigned int Ind
  */
 unsigned int SDL_REF_GetNewPointLightingDataRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
 {
-    /* TODO: decompile from asm/... */
+    return (unsigned int)new C_SdlRef_PointLighting(pSPO, Index);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 150–155 */
@@ -1197,7 +1285,7 @@ unsigned int SDL_REF_GetNewPointLightingDataRef(HIE_tdstSuperObject_* pSPO, unsi
  */
 unsigned int SDL_REF_GetNewTextureIdMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
 {
-    /* TODO: decompile from asm/... */
+    return (unsigned int)new C_SdlRef_TextureIdMatrix(pSPO, Index);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 142–147 */
@@ -1211,7 +1299,7 @@ unsigned int SDL_REF_GetNewTextureIdMatrixRef(HIE_tdstSuperObject_* pSPO, unsign
  */
 unsigned int SDL_REF_GetNewTextureMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
 {
-    /* TODO: decompile from asm/... */
+    return (unsigned int)new C_SdlRef_TextureMatrix(pSPO, Index);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 126–131 */
@@ -1225,7 +1313,7 @@ unsigned int SDL_REF_GetNewTextureMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned
  */
 unsigned int SDL_REF_GetNewLocalMatrixRef(HIE_tdstSuperObject_* pSPO, unsigned int Index)
 {
-    /* TODO: decompile from asm/... */
+    return (unsigned int)new C_SdlRef_LocalMatrix(pSPO, Index);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 116–117 */
@@ -1313,7 +1401,7 @@ void SDL_End(unsigned int hSDL)
 void SDL_Start(unsigned int hSDL)
 {
     hCurrentSDL = hSDL;
-    ((void (*)(void))*(unsigned int*)(*(unsigned int*)((char*)hSDL + 0x48) + 8))();
+    ((C_Sdl*)hSDL)->Start();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 49–64 */
@@ -1360,5 +1448,12 @@ void SDL_AddRef(unsigned int hSDL, unsigned int hRef)
 void SDL_Destroy(unsigned int* phSDL)
 {
     C_Sdl* pSdl;
-    /* TODO: decompile from asm/... */
+
+    if (phSDL)
+    {
+        pSdl = (C_Sdl*)*phSDL;
+        if (pSdl)
+            delete pSdl;
+        *phSDL = 0;
+    }
 }
