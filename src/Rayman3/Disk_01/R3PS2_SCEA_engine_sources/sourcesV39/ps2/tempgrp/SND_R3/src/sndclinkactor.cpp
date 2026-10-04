@@ -594,13 +594,29 @@ unsigned char CLinkActor::mfn_bExecuteActorInstance(int s32_CmdId, int s32_Chann
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 CExtraEventActor* CLinkActor::mfn_poAddExtraEventActorInstance(int s32_ChannelId, const usnd::CEventResData* poResData)
 {
+    static int s32_InstanceId = 0;
     CExtraEventActor* poEventActor;
-    int s32_InstanceId;
-    signed char init;
-    /* TODO: decompile from asm/... */
+
+    poEventActor = mfn_poGetExtraEventActorInstance(s32_ChannelId, poResData);
+    if (poEventActor)
+        return poEventActor;
+
+    poEventActor = CExtraEventActorPool::fs_poGetAnActor(ms32ACPObjectId);
+    poEventActor->f_vInit(*mpoType, ms32ACPObjectId, s32_ChannelId, poResData);
+    if (!poEventActor->mfn_bIsValid())
+    {
+        poEventActor->f_vDesInit();
+        CExtraEventActorPool::f_vSalvageActor(poEventActor);
+        return NULL;
+    }
+    poEventActor->f_vInsertAfter(&m_oExtraActors);
+    s32_InstanceId++;
+    return poEventActor;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 121–138 */
 /* addr: 0x001cd2a0  size: 92 bytes */
@@ -619,6 +635,7 @@ CExtraEventActor* CLinkActor::mfn_poAddExtraEventActorInstance(int s32_ChannelId
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 CExtraEventActor* CLinkActor::mfn_poGetExtraEventActorInstance(int s32_ChannelId, const usnd::CEventResData* po_ResData)
 {
     CExtraEventActor* poEEActor;
@@ -632,6 +649,7 @@ CExtraEventActor* CLinkActor::mfn_poGetExtraEventActorInstance(int s32_ChannelId
     }
     return NULL;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 107–112 */
 /* addr: 0x001cd300  size: 36 bytes */
@@ -719,26 +737,9 @@ void CLinkActor::f_vDesInit(void)
  */
 void CLinkActor::f_vInit(CLinkTypeActor& ro_Type, int s32_ObjectId)
 {
-    CExtraEventActor* poEEActor;
-
     mpoType = &ro_Type;
     ms32ACPObjectId = s32_ObjectId;
-    static int s32_InstanceId = 0;
-    if (mfn_poGetExtraEventActorInstance(-1, NULL) == NULL)
-    {
-        poEEActor = CExtraEventActorPool::fs_poGetAnActor(ms32ACPObjectId);
-        poEEActor->f_vInit(*mpoType, ms32ACPObjectId, -1, NULL);
-        if (!poEEActor->mfn_bIsValid())
-        {
-            poEEActor->f_vDesInit();
-            CExtraEventActorPool::f_vSalvageActor(poEEActor);
-        }
-        else
-        {
-            poEEActor->f_vInsertAfter(&m_oExtraActors);
-            s32_InstanceId++;
-        }
-    }
+    mfn_poAddExtraEventActorInstance(-1, NULL);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 69–71 */

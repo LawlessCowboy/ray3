@@ -28869,6 +28869,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkactor.cpp",
       "status": "MATCH"
     },
+    "0x001cd160": {
+      "address": "0x001cd160",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_poAddExtraEventActorInstance__10CLinkActorFiPCQ24usnd13CEventResData",
+      "size": 316,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkactor.cpp",
+      "status": "MATCH"
+    },
     "0x001cd2a0": {
       "address": "0x001cd2a0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
