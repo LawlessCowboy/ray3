@@ -29169,11 +29169,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/Tobies.c",
       "status": "MATCH"
     },
+    "0x001ea500": {
+      "address": "0x001ea500",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Toby_DestroyAll",
+      "size": 180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001ea5c0": {
       "address": "0x001ea5c0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "DesInit__23AGO3_LinkChainComputingFv",
       "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001ea670": {
+      "address": "0x001ea670",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO3_vKill",
+      "size": 136,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
@@ -29233,6 +29249,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001f1c00": {
+      "address": "0x001f1c00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DesInit__24AGO3_DigitalScoreDisplayFv",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f1f50": {
       "address": "0x001f1f50",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -29246,6 +29270,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "Process__17AGO3_ScoreDisplayFv",
       "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f3160": {
+      "address": "0x001f3160",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Display__22AGO3_SphericalRadianceFP27GLD_tdstViewportAttributes_",
+      "size": 180,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
@@ -29345,6 +29377,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001f96f0": {
+      "address": "0x001f96f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Process__30AGO3_GrowingUVAnimatedFireBallFv",
+      "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f9780": {
+      "address": "0x001f9780",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Display__17AGO3_SimpleSparksFP27GLD_tdstViewportAttributes_",
+      "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f9980": {
       "address": "0x001f9980",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -29366,6 +29414,30 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "Display__9AGO3_PartFP27GLD_tdstViewportAttributes_",
       "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f9c40": {
+      "address": "0x001f9c40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO3_vBurryDiedParts",
+      "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f9cf0": {
+      "address": "0x001f9cf0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO3_vDisplayAll",
+      "size": 180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f9e20": {
+      "address": "0x001f9e20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO3_vInit",
+      "size": 172,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
