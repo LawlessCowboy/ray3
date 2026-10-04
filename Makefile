@@ -52,12 +52,16 @@ TOOLS_DIR := tools
 #   reverse source order, which is what deferred inlining emits; it also lets
 #   a function inline a helper defined later in our ELF-ordered files. A
 #   whole-game sweep lost no recorded match.
+# - -O3,p (game sources only): the UNIX-style speed spelling, unlike
+#   '-opt level=3' with the optimize_for_size pragma, pads loop-head branch
+#   targets to 8 bytes with a nop as retail game code does (+48 matches, none
+#   lost; the PS2GL library loses 89 with it).
 MWCC_FLAGS := -c -g -opt level=3 -farcall off -sdatathreshold 8 \
               -inline on -strings reuse,nopool,readonly -enum int \
               -Cpp_exceptions off -pragma "fast_fptosi on" -pragma "padloop on" \
               -pragma "optimize_for_size off"
 GAME_SOURCE_ROOT := Disk_01/R3PS2_SCEA_engine_sources
-GAME_MWCC_FLAGS := -pragma "dividefix on" -inline deferred
+GAME_MWCC_FLAGS := -pragma "dividefix on" -inline deferred -O3,p
 CPPFLAGS := -I$(INCLUDE_DIR)
 
 # Escaping spaces keeps GNU make paths such as "Program Files/..." intact.

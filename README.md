@@ -17,9 +17,9 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **1,708 / 4,164** (+5 register-equivalent) | **89,224 / 1,511,580** (**5.9027%**) |
+| **Game code** | **1,759 / 4,164** (+5 register-equivalent) | **95,708 / 1,511,580** (**6.3317%**) |
 | Library code | 764 / 3,668 | 41,396 / 756,524 (5.4719%) |
-| **Total** | **2,472 / 7,832** (+5 register-equivalent) | **130,620 / 2,268,104** (**5.7590%**) |
+| **Total** | **2,523 / 7,832** (+5 register-equivalent) | **137,104 / 2,268,104** (**6.0449%**) |
 
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
   started yet.
@@ -90,11 +90,18 @@ The evidence-backed baseline compiler profile is:
 ```
 
 Game sources (`Disk_01/R3PS2_SCEA_engine_sources`) additionally use
-`-pragma "dividefix on" -inline deferred`: retail game code pads a `div.s`
-followed by a branch or call with two nops, while the PS2GL library code does
-not; and retail game objects list functions in reverse source order, which is
-what deferred inlining emits (it also lets a function inline a helper defined
-later in our address-ordered sources).
+`-pragma "dividefix on" -inline deferred -O3,p`:
+
+- retail game code pads a `div.s` followed by a branch or call with two nops,
+  while the PS2GL library code does not;
+- retail game objects list functions in reverse source order, which is what
+  deferred inlining emits (it also lets a function inline a helper defined
+  later in our address-ordered sources);
+- `-O3,p` is not equivalent to `-opt level=3` plus the `optimize_for_size`
+  pragma: it pads loop-head branch targets to 8 bytes with a nop and changes
+  some scheduling, exactly as retail game code does (+48 game matches, none
+  lost). The PS2GL library loses 89 matches with it, so it keeps the base
+  flags.
 
 `-opt level=3` and `-opt level=4` have been byte-identical for every current
 probe. Level 3 is therefore the conservative project spelling, not proof that
@@ -114,8 +121,8 @@ so the precise 3.0 build remains to be discriminated with additional functions.
 Whole-repo sweeps over every recorded match and attempt then picked the
 compiler per owner. Game sources build with **3.0.1 (2002-01-23)**: 27 more
 game matches than 3.0 and none lost. The files listed in
-`config/compiler-3.0.3-sources.txt` build with **3.0.3 (2002-07-16)**, because
-each of them matches strictly more functions under it. Retail game code sits
+`config/compiler-3.0.3-sources.txt` (10 files) build with **3.0.3 (2002-07-16)**,
+because each of them matches more functions under it. Retail game code sits
 between those two builds, and no file has matches that only one build can
 produce on both sides, which fits per-file builds made at different times.
 PS2GL keeps **3.0 (2001-11-26)**, since it loses about 90 matches under the

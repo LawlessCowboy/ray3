@@ -1313,6 +1313,8 @@ void fn_vDynamInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit
     GAM_fn_vPopAllocMode();
 }
 
+void fn_v_DynamicFree(tdstDynam_* h_Dynam);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 335–349 */
 /* addr: 0x0026f980  size: 232 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1328,7 +1330,13 @@ void fn_vDynamInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit
  */
 void fn_vDynamFree(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_Dynam) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    fn_v_DynamicFree(p_stObject->h_Dynam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 290–319 */
@@ -1346,6 +1354,7 @@ void fn_vDynamFree(tdstEngineObject_* p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void fn_v_DynamicFree(tdstDynam_* h_Dynam)
 {
     DNM_stDynamics* p_stDynamic;
@@ -1381,6 +1390,7 @@ void fn_v_DynamicFree(tdstDynam_* h_Dynam)
         p_stDynamic = NULL;
     }
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 209–286 */
 /* addr: 0x0026faf0  size: 540 bytes */

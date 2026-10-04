@@ -80,7 +80,11 @@ MWCC_FLAGS = [
 # in reverse source order, which is what '-inline deferred' emits, and it lets
 # a function inline a helper defined later in our (ELF-ordered) files.
 GAME_SOURCE_ROOT = Path('src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources')
-GAME_MWCC_FLAGS = ['-pragma', 'dividefix on', '-inline', 'deferred']
+# '-O3,p' (UNIX-style level 3 + speed) is not the same as '-opt level=3' plus
+# the optimize_for_size pragma: it makes MWCC pad loop-head branch targets to
+# 8-byte boundaries with a nop and changes some scheduling, as retail game
+# code does (whole-game sweep: +48 matches, none lost; the library loses 89).
+GAME_MWCC_FLAGS = ['-pragma', 'dividefix on', '-inline', 'deferred', '-O3,p']
 
 
 def is_game_source(owner: Path | str) -> bool:
@@ -1470,24 +1474,10 @@ def _is_branch_word(word: int) -> bool:
 def known_residual(address: int, code: bytes) -> str | None:
     """Name a target-side residual family the current compilers cannot emit.
 
-    ``alignment-nop``: a nop that is not a delay slot, is a branch target, and
-    sits at 4 mod 8 so the next instruction lands on an 8-byte boundary.
-    Retail emits these at loop heads/exits; no MWCC build or source shape we
-    have reproduces them (see docs/matching-insights.md).
+    No family is currently known.  The former ``alignment-nop`` family (a
+    branch-target nop at 4 mod 8) turned out to be emitted by '-O3,p', which
+    game sources now use, so those functions are ordinary candidates again.
     """
-    words = struct.unpack_from(f'<{len(code) // 4}I', code)
-    targets = set()
-    for index, word in enumerate(words):
-        op = word >> 26
-        if _is_branch_word(word) and op not in (2, 3) and not (op == 0):
-            offset = word & 0xFFFF
-            offset -= 0x10000 if offset & 0x8000 else 0
-            targets.add(address + index * 4 + 4 + offset * 4)
-    for index, word in enumerate(words):
-        pc = address + index * 4
-        if (word == 0 and pc % 8 == 4 and index and not _is_branch_word(words[index - 1])
-                and pc in targets):
-            return 'alignment-nop'
     return None
 
 
@@ -1874,7 +1864,7 @@ def main() -> int:
     list_parser.add_argument('--compileable', action='store_true')
     list_parser.add_argument('--include-unowned', action='store_true')
     list_parser.add_argument('--skip-residuals', action='store_true',
-                             help='hide functions with a known compiler-build residual (alignment nops)')
+                             help='hide functions with a known compiler-build residual (none currently)')
     list_parser.add_argument('--unattempted', action='store_true',
                              help='hide functions with a recorded attempt')
     list_parser.add_argument('--difficulty', choices=['trivial', 'easy', 'moderate', 'complex', 'expert'])

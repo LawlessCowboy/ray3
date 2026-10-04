@@ -1440,6 +1440,8 @@ void CAM_fn_vLoadCameraConstants(void)
 }
 #pragma optimize_for_size reset
 
+unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 917–938 */
 /* addr: 0x0026e7c0  size: 212 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1458,7 +1460,43 @@ void CAM_fn_vLoadCameraConstants(void)
 unsigned char CS_fn_eGetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, short _wIndex)
 {
     unsigned int ulFB;
-    /* TODO: decompile from asm/... */
+
+    ulFB = CS_fn_ulGetPrivilegedActivationZoneInCollSet(_ucZoneType, _hCollSet);
+
+    if (!ulFB)
+        return 0;
+
+    ulFB &= 3 << (short)(_wIndex * 2);
+    switch ((unsigned char)(ulFB >> (short)(_wIndex * 2)))
+    {
+    case 0:
+        return 0;
+    case 1:
+        return 1;
+    case 2:
+        return 2;
+    }
+    return 3;
+}
+
+/* Header inline (no out-of-line copy in the ELF). */
+inline void CS_fn_vSetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, unsigned int _ulFB)
+{
+    switch (_ucZoneType)
+    {
+    case 0:
+        _hCollSet->ulFBZddPriviligedZones = _ulFB;
+        break;
+    case 3:
+        _hCollSet->ulFBZdrPriviligedZones = _ulFB;
+        break;
+    case 2:
+        _hCollSet->ulFBZdePriviligedZones = _ulFB;
+        break;
+    case 1:
+        _hCollSet->ulFBZdmPriviligedZones = _ulFB;
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 889–908 */
@@ -1486,7 +1524,24 @@ void CS_fn_vSetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_*
 {
     short wDecal;
     unsigned int ulFB;
-    /* TODO: decompile from asm/... */
+
+    wDecal = _wIndex * 2;
+    ulFB = CS_fn_ulGetPrivilegedActivationZoneInCollSet(_ucZoneType, _hCollSet);
+    switch (_ePrivilege)
+    {
+    case 0:
+        ulFB &= ~(3 << wDecal);
+        break;
+    case 1:
+        ulFB &= ~(3 << wDecal);
+        ulFB |= 1 << wDecal;
+        break;
+    case 2:
+        ulFB &= ~(3 << wDecal);
+        ulFB |= 2 << wDecal;
+        break;
+    }
+    CS_fn_vSetPrivilegedActivationZoneInCollSet(_ucZoneType, _hCollSet, ulFB);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 845–861 */
@@ -1501,6 +1556,7 @@ void CS_fn_vSetPrivilegedActivationZone(unsigned char _ucZoneType, tdstCollSet_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet)
 {
     switch (_ucZoneType)
@@ -1516,6 +1572,7 @@ unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneT
     }
     return 0;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 824–840 */
 /* addr: 0x0026ea40  size: 92 bytes */
