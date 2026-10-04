@@ -55,6 +55,12 @@ struct C_Sdl {
     int m_SkinIndex; /* +0x3c */
     GLI_tdstMaterial_* m_SkinMaterial; /* +0x40 */
     int m_bIsBlinking; /* +0x44 */
+    void ProcessAllRefs(void);
+};
+
+struct tdstSDLCacheEntry_ {
+    _SDC_Instance_* pInstance; /* +0x0 */
+    tdstSDLCacheEntry_* pNext; /* +0x4 */
 };
 
 struct tagGLlistdatas {
@@ -104,14 +110,16 @@ struct C_SdlRef {
     unsigned int m_uIndexInList; /* +0x4 */
     int m_vpOriginPointer; /* +0x8 */
     int m_vpDestinationPointer; /* +0xc */
-    /* vtable pointer at +0x10: Process is the first virtual slot. */
+    /* vtable pointer at +0x10; retail __vt__8C_SdlRef order: Process,
+     * ProcessWithInterpol, ProcessNoInterpol. */
     virtual void Process(void);
-    virtual void ProcessNoInterpol(void);
     virtual void ProcessWithInterpol(void);
+    virtual void ProcessNoInterpol(void);
     void operator delete(void* ptr);
 };
 
 struct C_SdlRef_LocalMatrix : C_SdlRef {
+    unsigned char _extractor_padding_00[12]; /* 16-byte matrix alignment; +0x14..0x1f */
     float OldMat[4][4]; /* +0x20 */
     int m_bNoInterpolation; /* +0x60 */
     void ProcessNoInterpol(void);
@@ -374,6 +382,41 @@ unsigned int GLI_G_iNbSdlsInThisFrame;
 float g_fFogEnd;
 float GLI_g_OOStartMinusEnd;
 unsigned int GLI_g_CurrentSDLFogColor;
+extern "C" void InterpolateMatrixAndStoreWithThreshold(float* pDest, float* pSrc, float* pDest2);
+
+/* VU0 copy of one matrix to two destinations (lqc2/sqc2 have no C form). */
+inline void PS2_M_vCopyMatrix2(float (*_src)[4], float (*_dst)[4], float (*_dst2)[4])
+{
+    asm {
+        lqc2 vf1, 0x0(_src)
+        lqc2 vf2, 0x10(_src)
+        lqc2 vf3, 0x20(_src)
+        lqc2 vf4, 0x30(_src)
+        sqc2 vf1, 0x0(_dst)
+        sqc2 vf2, 0x10(_dst)
+        sqc2 vf3, 0x20(_dst)
+        sqc2 vf4, 0x30(_dst)
+        sqc2 vf1, 0x0(_dst2)
+        sqc2 vf2, 0x10(_dst2)
+        sqc2 vf3, 0x20(_dst2)
+        sqc2 vf4, 0x30(_dst2)
+    }
+}
+
+/* VU0 macro-mode matrix copy (lqc2/sqc2 are not emitted by MWCC from C). */
+inline void PS2_M_vCopyMatrix(float (*_src)[4], float (*_dst)[4])
+{
+    asm {
+        lqc2 vf1, 0x0(_src)
+        lqc2 vf2, 0x10(_src)
+        lqc2 vf3, 0x20(_src)
+        lqc2 vf4, 0x30(_src)
+        sqc2 vf1, 0x0(_dst)
+        sqc2 vf2, 0x10(_dst)
+        sqc2 vf3, 0x20(_dst)
+        sqc2 vf4, 0x30(_dst)
+    }
+}
 float g_ffFrameTime;
 float GLI_g_SDL_pHalfVect[4];
 float GLI_g_SDL_pInterpolatedCameraMatrix[4][4];
@@ -398,7 +441,11 @@ int PS2glAllocator64;
 void C_SdlCache::AddSdlInstance(_SDC_Instance_* pInstance)
 {
     tdstSDLCacheEntry_* p;
-    /* TODO: decompile from asm/... */
+
+    p = ((tdstSDLCacheEntry_* (*)(int))PS2glAllocator64)(8);
+    p->pInstance = pInstance;
+    p->pNext = m_pList;
+    m_pList = p;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 464–475 */
@@ -416,7 +463,12 @@ void C_SdlCache::AddSdlInstance(_SDC_Instance_* pInstance)
 void GLI_vUpdateAllSPORefs(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < GLI_G_iNbSdlsInThisFrame; i++)
+    {
+        if (GLI_G_pProcessSDLs[i])
+            ((C_Sdl*)GLI_G_pProcessSDLs[i])->ProcessAllRefs();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 459–461 */
@@ -470,7 +522,9 @@ void C_SdlRef_FogParameters::ProcessWithInterpol(void)
  */
 void C_SdlRef_FogParameters::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    *(unsigned int*)m_pDestFogColor = GLI_g_CurrentSDLFogColor;
+    *(float*)m_pDestFogStart = GLI_g_OOStartMinusEnd;
+    *(float*)m_pDestFogEnd = g_fFogEnd;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 421–421 */
@@ -507,7 +561,25 @@ void C_SdlRef_TextureOffset::ProcessNoInterpol(void)
  */
 void C_SdlRef_TextureOffset::ProcessWithInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    float fU;
+    float fV;
+
+    if (m_fpOffsetU)
+    {
+        if (m_hMaterial && (m_hMaterial->lIncrementIsEnable == 2))
+        {
+            fU = m_hMaterial->fAddU;
+            fV = m_hMaterial->fAddV;
+        }
+        else
+        {
+            float fTime = 1000.0f * (g_ffFrameTime - 0.5f * (g_ffFrameTime - g_ffFrameTimeLastFrame));
+            fU = m_du * fTime;
+            fV = m_dv * fTime;
+        }
+        *(float*)m_fpOffsetU = fU - (float)(int)fU;
+        *(float*)m_fpOffsetV = fV - (float)(int)fV;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 377–393 */
@@ -531,10 +603,25 @@ void C_SdlRef_TextureOffset::ProcessWithInterpol(void)
  */
 void C_SdlRef_TextureOffset::Process(void)
 {
-    float dt;
-    float dv;
-    float du;
-    /* TODO: decompile from asm/... */
+    float fU;
+    float fV;
+
+    if (m_fpOffsetU)
+    {
+        if (m_hMaterial && (m_hMaterial->lIncrementIsEnable == 2))
+        {
+            fU = m_hMaterial->fAddU;
+            fV = m_hMaterial->fAddV;
+        }
+        else
+        {
+            float fTime = 1000.0f * g_ffFrameTime;
+            fU = m_du * fTime;
+            fV = m_dv * fTime;
+        }
+        *(float*)m_fpOffsetU = fU - (float)(int)fU;
+        *(float*)m_fpOffsetV = fV - (float)(int)fV;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 365–365 */
@@ -659,7 +746,43 @@ void C_SdlRef_TextureMatrix::ProcessWithInterpol(void)
  */
 void C_SdlRef_TextureMatrix::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    float* pDest = (float*)m_vpDestinationPointer;
+    if (pDest && GLI_g_SDL_pInterpolatedCameraMatrix)
+    {
+        float* pCamera = &GLI_g_SDL_pInterpolatedCameraMatrix[0][0];
+        float* pHalf = GLI_g_SDL_pHalfVect;
+        float* pObject = (float*)(*(char**)((char*)m_vpOriginPointer + 0x24) + 0x10);
+        asm
+        {
+            lqc2 vf5, 0x0(pHalf)
+            lqc2 vf1, 0x0(pCamera)
+            lqc2 vf2, 0x10(pCamera)
+            lqc2 vf3, 0x20(pCamera)
+            lqc2 vf10, 0x0(pObject)
+            lqc2 vf11, 0x10(pObject)
+            lqc2 vf12, 0x20(pObject)
+            vsub.xyzw vf13, vf13, vf13
+            vsub.xyzw vf14, vf14, vf14
+            vsub.xyzw vf15, vf15, vf15
+            vmulax.xyz ACC, vf1, vf10
+            vmadday.xyz ACC, vf2, vf10
+            vmaddz.xyz vf13, vf3, vf10
+            vmulax.xyz ACC, vf1, vf11
+            vmadday.xyz ACC, vf2, vf11
+            vmaddz.xyz vf14, vf3, vf11
+            vmulax.xyz ACC, vf1, vf12
+            vmadday.xyz ACC, vf2, vf12
+            vmaddz.xyz vf15, vf3, vf12
+            vmul.xyzw vf13, vf13, vf5
+            vmul.xyzw vf14, vf14, vf5
+            vmul.xyzw vf15, vf15, vf5
+            sqc2 vf13, 0x0(pDest)
+            sqc2 vf14, 0x10(pDest)
+            sqc2 vf15, 0x20(pDest)
+        }
+        *(float*)m_fpOffsetU = 0.5f;
+        *(float*)m_fpOffsetV = 0.5f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 235–250 */
@@ -677,9 +800,14 @@ void C_SdlRef_TextureMatrix::Process(void)
  */
 void C_SdlRef_LocalMatrixForCheap::ProcessWithInterpol(void)
 {
-    float (*pSrc)[4][4];
-    float (*pDest)[4][4];
-    /* TODO: decompile from asm/... */
+    float* pDest = (float*)m_vpDestinationPointer;
+    float* pSrc = (float*)m_vpOriginPointer;
+    if (pDest)
+    {
+        InterpolateMatrixAndStoreWithThreshold(pDest, pSrc, &OldMat[0][0]);
+        if (*(char*)m_pcActivity == 0)
+            ((float (*)[4])m_vpDestinationPointer)[3][2] -= 50000.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 218–231 */
@@ -696,9 +824,14 @@ void C_SdlRef_LocalMatrixForCheap::ProcessWithInterpol(void)
  */
 void C_SdlRef_LocalMatrixForCheap::ProcessNoInterpol(void)
 {
-    float (*pSrc)[4][4];
-    float (*pDest)[4][4];
-    /* TODO: decompile from asm/... */
+    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
+    float (*pSrc)[4] = (float (*)[4])m_vpOriginPointer;
+    if (pDest)
+    {
+        PS2_M_vCopyMatrix2(pSrc, pDest, OldMat);
+        if (*(char*)m_pcActivity == 0)
+            pDest[3][2] -= 50000.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 200–211 */
@@ -715,8 +848,13 @@ void C_SdlRef_LocalMatrixForCheap::ProcessNoInterpol(void)
  */
 void C_SdlRef_LocalMatrixForCheap::Process(void)
 {
-    float (*pDest)[4][4];
-    /* TODO: decompile from asm/... */
+    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
+    if (pDest)
+    {
+        PS2_M_vCopyMatrix(OldMat, pDest);
+        if (*(char*)m_pcActivity == 0)
+            pDest[3][2] -= 50000.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 149–159 */
@@ -736,9 +874,11 @@ void C_SdlRef_LocalMatrixForCheap::Process(void)
  */
 void C_SdlRef_LocalMatrix::ProcessNoInterpol(void)
 {
-    float (*pSrc)[4][4];
-    float (*pDest)[4][4];
-    /* TODO: decompile from asm/... */
+    char* pOrigin = (char*)m_vpOriginPointer;
+    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
+    PS2_M_vCopyMatrix2((float (*)[4])(*(char**)(pOrigin + 0x24) + 0x10), pDest, OldMat);
+    if (GLI_g_SDLIsBlinking || ((*(int*)(pOrigin + 0x30) & 2) == 2))
+        pDest[3][2] -= 50000.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 126–143 */
@@ -757,7 +897,17 @@ void C_SdlRef_LocalMatrix::ProcessNoInterpol(void)
  */
 void C_SdlRef_LocalMatrix::ProcessWithInterpol(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_bNoInterpolation)
+    {
+        ProcessNoInterpol();
+        m_bNoInterpolation = 0;
+    }
+    else
+    {
+        InterpolateMatrixAndStoreWithThreshold((float*)m_vpDestinationPointer, (float*)(*(char**)((char*)m_vpOriginPointer + 0x24) + 0x10), &OldMat[0][0]);
+        if (GLI_g_SDLIsBlinking || ((*(int*)((char*)m_vpOriginPointer + 0x30) & 2) == 2))
+            ((float (*)[4])m_vpDestinationPointer)[3][2] -= 50000.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 110–120 */
@@ -772,7 +922,10 @@ void C_SdlRef_LocalMatrix::ProcessWithInterpol(void)
  */
 void C_SdlRef_LocalMatrix::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
+    PS2_M_vCopyMatrix(OldMat, pDest);
+    if (GLI_g_SDLIsBlinking || ((*(int*)((char*)m_vpOriginPointer + 0x30) & 2) == 2))
+        pDest[3][2] -= 50000.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 81–81 */
@@ -821,11 +974,27 @@ void C_SdlRef_PointLighting::ProcessWithInterpol(void)
  */
 void C_SdlRef_PointLighting::Process(void)
 {
-    unsigned int CurrentLight;
-    float* pDestEnd;
     float* pDest;
-    AGO_Light_* pLgt;
-    /* TODO: decompile from asm/... */
+    float* pEnd;
+    unsigned int i;
+
+    pDest = (float*)m_vpDestinationPointer;
+    pEnd = pDest + 64;
+    for (i = 0; i < AGO_g_ulNbLights; i++)
+    {
+        AGO_Light_* pLight = &AGO_g_pLightList[i];
+        pDest[0] = pLight->Position[0];
+        pDest[1] = pLight->Position[1];
+        pDest[2] = pLight->Position[2];
+        pDest[3] = pLight->SqFar;
+        pDest[4] = pLight->Color[0];
+        pDest[5] = pLight->Color[1];
+        pDest[6] = pLight->Color[2];
+        pDest[7] = pLight->Color[3];
+        pDest += 8;
+    }
+    while (pDest < pEnd)
+        *pDest++ = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLRefs.cpp lines 44–44 */
