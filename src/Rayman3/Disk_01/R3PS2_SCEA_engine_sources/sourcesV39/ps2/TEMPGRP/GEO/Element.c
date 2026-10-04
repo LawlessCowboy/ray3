@@ -254,7 +254,7 @@ void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, shor
  */
 void GEO_vSetRadiusOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, float xRadius)
 {
-    ((float *)((char *)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones + 4))[xNumberOfCone * 3] = xRadius;
+    *(float *)((GEO_tdstIndexedCone_ *)((char *)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones + 4) + xNumberOfCone) = xRadius;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 634–638 */

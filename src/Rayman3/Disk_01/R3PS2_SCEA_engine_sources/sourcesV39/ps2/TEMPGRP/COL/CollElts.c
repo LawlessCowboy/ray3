@@ -235,11 +235,7 @@ short COL_lGetIndexedSphereNbSpheres(COL_tdstCollideObject_* _hObject, short hEl
  */
 GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedSphere(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfSphere)
 {
-    int lIndex;
-    COL_tdstElementSpheres_* pElement;
-    lIndex = (int)xNumberOfSphere;
-    pElement = (*(COL_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement];
-    return *(GMT_tdstGameMaterial_**)((char*)pElement->d_stListOfSpheres + lIndex * 12 + 4);
+    return *(GMT_tdstGameMaterial_ **)(xNumberOfSphere * 12 + (int)&(*(COL_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres->hMaterial);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 286–304 */
