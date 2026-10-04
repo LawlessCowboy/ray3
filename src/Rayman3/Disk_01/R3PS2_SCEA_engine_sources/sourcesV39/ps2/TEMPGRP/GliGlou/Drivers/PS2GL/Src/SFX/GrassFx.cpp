@@ -861,6 +861,9 @@ struct C_BaseFx {
     float m_fFogOOStartMinusEnd; /* +0x18 */
     float m_fFogEnd; /* +0x1c */
     int m_pSearchKey; /* +0x20 */
+    /* vtable pointer at +0x24 (retail __vt__8C_BaseFx: ~C_BaseFx, DeleteSDLs). */
+    virtual ~C_BaseFx();
+    virtual void DeleteSDLs(void);
 };
 
 struct C_GrassFx : C_BaseFx {
@@ -1484,15 +1487,17 @@ void GrassFx_vDesinit(void)
 void GrassFx_vProcessAndDisplay(void)
 {
     tdstBaseFxListElement_* p;
+
     p = GrassFx_g_ListToDisplay.pFirst;
-    if (!p) {
-        return;
+    if (p)
+    {
+        while (p)
+        {
+            ((C_GrassFx*)p->pFx)->Display();
+            p = p->pNext;
+        }
+        GrassFx_g_ListToDisplay.DeleteAllNoFree();
     }
-    while (p) {
-        ((C_GrassFx*)p->pFx)->Display();
-        p = p->pNext;
-    }
-    GrassFx_g_ListToDisplay.DeleteAllNoFree();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 532–539 */

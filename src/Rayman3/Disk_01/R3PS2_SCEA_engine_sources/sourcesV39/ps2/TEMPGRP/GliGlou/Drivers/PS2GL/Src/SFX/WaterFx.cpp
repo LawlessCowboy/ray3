@@ -446,6 +446,8 @@ struct C_FxList {
     tdstBaseFxListElement_* pFirst; /* +0x0 */
     void DeleteAll();
     void DeleteAllSDLs();
+    C_BaseFx* SearchElement(void* pSearchKey);
+    void vAddElement(C_BaseFx* pElement);
 };
 
 struct tdstViewportManagement_ {
@@ -721,6 +723,10 @@ struct C_BaseFx {
     float m_fFogOOStartMinusEnd; /* +0x18 */
     float m_fFogEnd; /* +0x1c */
     int m_pSearchKey; /* +0x20 */
+    /* vtable pointer at +0x24 (retail __vt__8C_BaseFx: ~C_BaseFx, DeleteSDLs). */
+    virtual ~C_BaseFx();
+    virtual void DeleteSDLs(void);
+    void SetCurrentFog(void);
 };
 
 struct stInterpolatedPosition {
@@ -2129,7 +2135,6 @@ int WaterFx_hVisualMaterial;
 static char gs_cWATERFXISACTIVE;
 C_FxList WaterFx_g_List;
 C_FxList WaterFx_g_ListToDisplay;
-void* __vt__9C_WaterFx;
 unsigned int GLI_g_NumberInList;
 tagGLcontext g_PS2glContext;
 int GLI_g_HasVertexTransparency;
@@ -2141,7 +2146,10 @@ tdstEngineStructure_ g_stEngineStructure;
 int PS2glLiberator;
 int PS2glAllocator64;
 int G_pSO;
-void* __vt__8C_BaseFx;
+
+extern "C" void SDL_Destroy(unsigned int* phSDL);
+
+extern "C" void SDL_UpdateFogs(unsigned int hSDL);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 72–153 */
 /* addr: 0x002e9780  size: 1264 bytes */
@@ -2277,14 +2285,9 @@ void AE_Filter_BrightNess_n_Contrast(float* AE_Bright_Cont)
 void WaterFx_SetPosition(float* PositionInWater, float* NewPosition)
 {
     tdstBaseFxListElement_* p;
-    p = WaterFx_g_List.pFirst;
-    if (p == 0)
-        return;
-    do
-    {
+
+    for (p = WaterFx_g_List.pFirst; p != 0; p = p->pNext)
         ((C_WaterFx*)p->pFx)->SetPosition(PositionInWater, NewPosition);
-        p = p->pNext;
-    } while (p != 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1338–1345 */
@@ -2321,14 +2324,9 @@ void WaterFx_SetPerturbationMode(float* Position, int PerturbationMode, float St
 void WaterFx_Perturb(float* Position, float Strength)
 {
     tdstBaseFxListElement_* p;
-    p = WaterFx_g_List.pFirst;
-    if (p == 0)
-        return;
-    do
-    {
+
+    for (p = WaterFx_g_List.pFirst; p != 0; p = p->pNext)
         ((C_WaterFx*)p->pFx)->Perturb(Position, Strength);
-        p = p->pNext;
-    } while (p != 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1303–1316 */
@@ -2364,7 +2362,14 @@ void WaterFx_vAddObjectEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexe
 void WaterFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
     C_WaterFx* p;
-    /* TODO: decompile from asm/... */
+
+    p = (C_WaterFx*)WaterFx_g_List.SearchElement(p_stEIT);
+    if (p)
+    {
+        WaterFx_g_ListToDisplay.vAddElement(p);
+        if (p->m_pSDL)
+            SDL_UpdateFogs(p->m_pSDL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1282–1282 */
@@ -3126,7 +3131,9 @@ void JR_GetABCForInterpolation__FPfPfPfPfPf(float* p1, float* p2, float* p3, flo
  */
 void C_WaterFx::DeleteSDLs(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_pSDL)
+        SDL_Destroy(&m_pSDL);
+    m_pSDL = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 130–138 */

@@ -731,6 +731,10 @@ struct C_BaseFx {
     float m_fFogOOStartMinusEnd; /* +0x18 */
     float m_fFogEnd; /* +0x1c */
     int m_pSearchKey; /* +0x20 */
+    /* vtable pointer at +0x24 (retail __vt__8C_BaseFx: ~C_BaseFx, DeleteSDLs). */
+    virtual ~C_BaseFx();
+    virtual void DeleteSDLs(void);
+    void SetCurrentFog(void);
 };
 
 struct C_FireFx : C_BaseFx {
@@ -1063,6 +1067,8 @@ struct tdstStandardGame_ {
 struct C_FxList {
     tdstBaseFxListElement_* pFirst; /* +0x0 */
     void DeleteAll(void);
+    C_BaseFx* SearchElement(void* pSearchKey);
+    void vAddElement(C_BaseFx* pElement);
 };
 
 struct tdstLipsSynchValue_ {
@@ -1382,6 +1388,8 @@ inline void FireFx_vClearCop0Register24Sync(void)
     }
 }
 
+extern "C" void SDL_UpdateFogs(unsigned int hSDL);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 108–124 */
 /* addr: 0x002ec460  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1405,9 +1413,40 @@ inline void FireFx_vClearCop0Register24Sync(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_Water(void)
+/* C_WaterFx (layout as in WaterFx.cpp); its constructor is emitted in this unit. */
+struct C_WaterFx : C_BaseFx {
+    int m_pGrids[2]; /* +0x28 */
+    unsigned char _padding_30[0xb0]; /* +0x30..0xdf */
+    unsigned int m_ulCurrentBuffer; /* +0xe0 */
+    unsigned char _padding_e4[0x10]; /* +0xe4..0xf3 */
+    unsigned int m_pSDL; /* +0xf4 */
+    unsigned int m_bPerturbated; /* +0xf8 */
+    float m_fPerturbationStrength; /* +0xfc */
+    int m_bTransparent; /* +0x100 */
+    unsigned int m_NbVertices; /* +0x104 */
+    float (*m_pV)[4]; /* +0x108 */
+    int m_pT; /* +0x10c */
+    int m_pC; /* +0x110 */
+    int m_pIndices; /* +0x114 */
+    C_WaterFx();
+};
+
+C_WaterFx::C_WaterFx()
 {
-    /* TODO: decompile from asm/... */
+    m_pGrids[0] = 0;
+    m_pGrids[1] = 0;
+    m_pIndices = 0;
+    m_pV = 0;
+    m_pT = 0;
+    m_pC = 0;
+    m_pSDL = 0;
+    m_ulCurrentBuffer = 0;
+    m_bPerturbated = 0;
+    m_bTransparent = 0;
+    m_pSearchKey = 0;
+
+    m_bPerturbated = 0;
+    m_fPerturbationStrength = 50.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 364–373 */
@@ -1441,7 +1480,13 @@ void FireFx_vAddObject(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* hVisualM
 void FireFx_vAddObjectToDisplay(GEO_tdstGeometricObject_* pObj)
 {
     C_FireFx* p;
-    /* TODO: decompile from asm/... */
+
+    p = (C_FireFx*)FireFx_g_List.SearchElement(pObj);
+    if (p)
+    {
+        FireFx_g_ListToDisplay.vAddElement(p);
+        p->SetCurrentFog();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 345–345 */
@@ -1502,11 +1547,13 @@ void FireFx_vProcess(void)
     if (p)
     {
         FireFx_vClearCop0Register24();
-        while (p)
+        goto test;
+        do
         {
             ((C_FireFx*)p->pFx)->Process();
             p = p->pNext;
-        }
+test:       ;
+        } while (p);
         FireFx_vClearCop0Register24Sync();
     }
 }

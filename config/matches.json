@@ -21291,6 +21291,36 @@
       "status": "MISMATCH",
       "target_size": 172,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ec6e0",
+      "candidate_size": 88,
+      "first_difference": 24,
+      "implementation": "void FireFx_vProcess(void)\n{\n    tdstBaseFxListElement_* p;\n\n    p = FireFx_g_ListToDisplay.pFirst;\n    if (p)\n    {\n        FireFx_vClearCop0Register24();\n        goto test;\n        do\n        {\n            ((C_FireFx*)p->pFx)->Process();\n            p = p->pNext;\ntest:       ;\n        } while (p);\n        FireFx_vClearCop0Register24Sync();\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "FireFx_vProcess",
+      "reason": "Retail enters the list loop by jumping to its test, with the cop0 $24 clear (mtbpc) in the branch delay slot; MWCC peels the first test instead. for/while/goto forms, with or without .set noreorder in the clear helper, did not reproduce the jump-to-test entry.",
+      "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 88,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002dc2d0",
+      "candidate_size": 88,
+      "first_difference": 16,
+      "implementation": "void GrassFx_vProcessAndDisplay(void)\n{\n    tdstBaseFxListElement_* p;\n\n    p = GrassFx_g_ListToDisplay.pFirst;\n    if (p)\n    {\n        while (p)\n        {\n            ((C_GrassFx*)p->pFx)->Display();\n            p = p->pNext;\n        }\n        GrassFx_g_ListToDisplay.DeleteAllNoFree();\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GrassFx_vProcessAndDisplay",
+      "reason": "Same unresolved loop-entry shape as FireFx_vProcess: retail branches to the loop's bottom test (bnez to the padded test block) after an empty-list early exit, MWCC peels the first test. if/return, if-block, for and while forms and -O2/-O3,s/-O4,p all peel.",
+      "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/GrassFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 88,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -40111,6 +40141,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
+    "0x002e9c70": {
+      "address": "0x002e9c70",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WaterFx_SetPosition",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MATCH"
+    },
+    "0x002e9d70": {
+      "address": "0x002e9d70",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WaterFx_Perturb",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MATCH"
+    },
+    "0x002e9e50": {
+      "address": "0x002e9e50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WaterFx_vAddEITToDisplay",
+      "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MATCH"
+    },
     "0x002e9ea0": {
       "address": "0x002e9ea0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -40127,12 +40181,76 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
       "status": "MATCH"
     },
+    "0x002ec310": {
+      "address": "0x002ec310",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DeleteSDLs__9C_WaterFxFv",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MATCH"
+    },
+    "0x002ec460": {
+      "address": "0x002ec460",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "__ct__9C_WaterFxFv",
+      "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
+      "status": "MATCH"
+    },
+    "0x002ec600": {
+      "address": "0x002ec600",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "FireFx_vAddObjectToDisplay",
+      "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
+      "status": "MATCH"
+    },
     "0x002ec650": {
       "address": "0x002ec650",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "FireFx_vDesinit",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
+      "status": "MATCH"
+    },
+    "0x002ecba0": {
+      "address": "0x002ecba0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SearchElement__8C_FxListFPv",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FxList.cpp",
+      "status": "MATCH"
+    },
+    "0x002ecc00": {
+      "address": "0x002ecc00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "vAddElement__8C_FxListFP8C_BaseFx",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FxList.cpp",
+      "status": "MATCH"
+    },
+    "0x002ecc80": {
+      "address": "0x002ecc80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DeleteAllSDLs__8C_FxListFv",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FxList.cpp",
+      "status": "MATCH"
+    },
+    "0x002eccd0": {
+      "address": "0x002eccd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DeleteAllNoFree__8C_FxListFv",
+      "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FxList.cpp",
+      "status": "MATCH"
+    },
+    "0x002ecd30": {
+      "address": "0x002ecd30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DeleteAll__8C_FxListFv",
+      "size": 116,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FxList.cpp",
       "status": "MATCH"
     },
     "0x002ece50": {

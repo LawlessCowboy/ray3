@@ -26,6 +26,9 @@ struct C_BaseFx {
     float m_fFogOOStartMinusEnd; /* +0x18 */
     float m_fFogEnd; /* +0x1c */
     int m_pSearchKey; /* +0x20 */
+    /* vtable pointer at +0x24 (retail __vt__8C_BaseFx: ~C_BaseFx, DeleteSDLs). */
+    virtual ~C_BaseFx();
+    virtual void DeleteSDLs(void);
 };
 
 struct C_FxList {
@@ -76,7 +79,13 @@ void C_FxList_destructor(void)
 C_BaseFx* C_FxList::SearchElement(void* pSearchKey)
 {
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+
+    p = pFirst;
+    while (p && (p->pFx->m_pSearchKey != (int)pSearchKey))
+        p = p->pNext;
+    if (p && (p->pFx->m_pSearchKey == (int)pSearchKey))
+        return p->pFx;
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 97–115 */
@@ -96,9 +105,21 @@ C_BaseFx* C_FxList::SearchElement(void* pSearchKey)
  */
 void C_FxList::vAddElement(C_BaseFx* pElement)
 {
-    tdstBaseFxListElement_* p2;
+    tdstBaseFxListElement_* pNew;
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+
+    pNew = ((tdstBaseFxListElement_* (*)(int))PS2glAllocator64)(8);
+    pNew->pFx = pElement;
+    pNew->pNext = NULL;
+    if (pFirst == NULL)
+    {
+        pFirst = pNew;
+        return;
+    }
+    p = pFirst;
+    while (p->pNext)
+        p = p->pNext;
+    p->pNext = pNew;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 82–92 */
@@ -116,9 +137,16 @@ void C_FxList::vAddElement(C_BaseFx* pElement)
  */
 void C_FxList::DeleteAllSDLs(void)
 {
-    tdstBaseFxListElement_* pNext;
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+    tdstBaseFxListElement_* pNext;
+
+    p = pFirst;
+    while (p)
+    {
+        pNext = p->pNext;
+        p->pFx->DeleteSDLs();
+        p = pNext;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 68–79 */
@@ -137,9 +165,17 @@ void C_FxList::DeleteAllSDLs(void)
  */
 void C_FxList::DeleteAllNoFree(void)
 {
-    tdstBaseFxListElement_* pNext;
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+    tdstBaseFxListElement_* pNext;
+
+    p = pFirst;
+    while (p)
+    {
+        pNext = p->pNext;
+        ((void (*)(void*))PS2glLiberator)(p);
+        p = pNext;
+    }
+    pFirst = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 53–65 */
@@ -158,9 +194,18 @@ void C_FxList::DeleteAllNoFree(void)
  */
 void C_FxList::DeleteAll(void)
 {
-    tdstBaseFxListElement_* pNext;
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+    tdstBaseFxListElement_* pNext;
+
+    p = pFirst;
+    while (p)
+    {
+        pNext = p->pNext;
+        delete p->pFx;
+        ((void (*)(void*))PS2glLiberator)(p);
+        p = pNext;
+    }
+    pFirst = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 47–49 */
