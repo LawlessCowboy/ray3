@@ -21216,6 +21216,51 @@
       "status": "MISMATCH",
       "target_size": 300,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001f9db0",
+      "candidate_size": 124,
+      "first_difference": 20,
+      "implementation": "void AGO3_vProcessAll(void)\n{\n    unsigned int* p;\n    unsigned int i;\n\n    if (AGO_g_PreviousCurrentFrame != g_stEngineStructure.stEngineTimer.ulCurrentTimerCount)\n    {\n        for (p = AGO3_g_Parts, i = 2048; i != 0; i--, p++)\n        {\n            if (*p)\n                ((AGO3_Part*)AGO2_MEM_GetPointerFromHandle(*p))->Process();\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO3_vProcessAll",
+      "reason": "AGO3_Part needs virtual ~dtor/DesInit/Process/Display (retail vtable at +0x28, Process slot 0x10; added). Under 3.0.1 the candidate gets -O3,p loop nops that retail lacks; the 3.0 build drops them and leaves only a p/i register swap and lui scheduling. A whole-file sweep matches the same 31 AGO3.cpp functions under 3.0/3.0.1/3.0.3.",
+      "size": 112,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 112,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001f94d0",
+      "candidate_size": 128,
+      "first_difference": 41,
+      "implementation": "",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "Display__30AGO3_GrowingUVAnimatedFireBallFP27GLD_tdstViewportAttributes_",
+      "reason": "Exact except the 0.25f / -0.25f constants land in swapped FPRs (retail materialises -0.25 first); operand order, locals and literal spellings did not change it.",
+      "size": 128,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 128,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001f9550",
+      "candidate_size": 128,
+      "first_difference": 41,
+      "implementation": "",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "Display__36AGO3_GrowingUVAnimatedFireBallMovingFP27GLD_tdstViewportAttributes_",
+      "reason": "Exact except the 0.25f / -0.25f constants land in swapped FPRs (retail materialises -0.25 first); operand order, locals and literal spellings did not change it.",
+      "size": 128,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 128,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -29140,11 +29185,99 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001ecd80": {
+      "address": "0x001ecd80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DesInit__22AGO3_SphericalRadianceFv",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001ed3f0": {
+      "address": "0x001ed3f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Process__23AGO3_LinkChainComputingFv",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001ee150": {
+      "address": "0x001ee150",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO3_DisplayTransitionMessage",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001ee590": {
       "address": "0x001ee590",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "Process__19AGO3_OrientedTargetFv",
       "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001eef50": {
+      "address": "0x001eef50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Display__24AGO3_SpriteDurationFade2FP27GLD_tdstViewportAttributes_",
+      "size": 132,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001eefe0": {
+      "address": "0x001eefe0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Process__24AGO3_SpriteDurationFade2Fv",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f1f50": {
+      "address": "0x001f1f50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO3_DisplayDigitalScore",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f2050": {
+      "address": "0x001f2050",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Process__17AGO3_ScoreDisplayFv",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f56f0": {
+      "address": "0x001f56f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DesInit__16AGO3_ScrollMatUVFv",
+      "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f5900": {
+      "address": "0x001f5900",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Display__15AGO3_SpriteZoomFP27GLD_tdstViewportAttributes_",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f5a20": {
+      "address": "0x001f5a20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Display__23AGO3_SpriteDurationFadeFP27GLD_tdstViewportAttributes_",
+      "size": 116,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f5aa0": {
+      "address": "0x001f5aa0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Process__23AGO3_SpriteDurationFadeFv",
+      "size": 128,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
@@ -29180,6 +29313,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001f8dd0": {
+      "address": "0x001f8dd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Display__16AGO3_BeamWithUVsFP27GLD_tdstViewportAttributes_",
+      "size": 100,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f8e40": {
       "address": "0x001f8e40",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -29193,6 +29334,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "Process__11AGO3_TargetFv",
       "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f9450": {
+      "address": "0x001f9450",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Display__20AGO3_GrowingFireBallFP27GLD_tdstViewportAttributes_",
+      "size": 116,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },

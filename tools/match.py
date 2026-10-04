@@ -1531,6 +1531,13 @@ def command_classify(args: argparse.Namespace) -> int:
 def function_body_span(text: str, name: str) -> tuple[int, int]:
     """Span of the body (between the definition's braces) of ``name``."""
     found = list(re.finditer(r'^[^\n;]*\b%s\s*\([^;{]*\)\s*\{\n' % re.escape(name), text, re.M))
+    method = re.match(r'^(\w+?)__(\d+)(\w+)$', name)
+    if not found and method:
+        # CodeWarrior C++ mangling: Method__<len>Class<signature>.
+        length = int(method.group(2))
+        cls = method.group(3)[:length]
+        found = list(re.finditer(r'^[^\n;]*\b%s\s*\([^;{]*\)\s*\{\n'
+                                 % re.escape(f'{cls}::{method.group(1)}'), text, re.M))
     if len(found) != 1:
         raise ValueError(f'{len(found)} definitions of {name!r} found')
     start = found[0].end()

@@ -17,9 +17,9 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **1,843 / 4,164** (+5 register-equivalent) | **107,904 / 1,511,580** (**7.1385%**) |
+| **Game code** | **1,856 / 4,164** (+5 register-equivalent) | **109,056 / 1,511,580** (**7.2147%**) |
 | Library code | 764 / 3,668 | 41,396 / 756,524 (5.4719%) |
-| **Total** | **2,607 / 7,832** (+5 register-equivalent) | **149,300 / 2,268,104** (**6.5826%**) |
+| **Total** | **2,620 / 7,832** (+5 register-equivalent) | **150,452 / 2,268,104** (**6.6334%**) |
 
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
   started yet.

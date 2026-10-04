@@ -188,8 +188,11 @@ struct AGO3_Part {
     C_Vector m_Position; /* +0x10 */
     GLI_tdstMaterial_* m_pMat1; /* +0x20 */
     unsigned char m_Finished; /* +0x24 */
-    void Process(void);
-    void Display(GLD_tdstViewportAttributes_* hVp);
+    /* vtable pointer at +0x28; retail slots: +0x0c DesInit, +0x10 Process, +0x14 Display. */
+    virtual ~AGO3_Part();
+    virtual void DesInit(void);
+    virtual void Process(void);
+    virtual void Display(GLD_tdstViewportAttributes_* hVp);
 };
 
 struct MTH3D_tdstVector_ {
@@ -767,6 +770,7 @@ struct AGO3_DigitalScoreDisplay : AGO3_Part {
     float m_fCurrentHalfFrequency; /* +0x60 */
     float m_fImpulse; /* +0x64 */
     unsigned int m_hHandleID; /* +0x68 */
+    static int m_a_hHandle[2];
     void DisplayScore(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
     void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fScoreToAdd);
@@ -1430,6 +1434,7 @@ struct AGO3_SphericalRadiance : AGO3_Part {
     float m_fOuterRadius; /* +0x54c */
     int m_bHalfSphere; /* +0x550 */
     unsigned int m_hHandleID; /* +0x554 */
+    static int m_a_hHandle[10];
     AGO3_SphericalRadiance(void);
     void DesInit(void);
     void Display(GLD_tdstViewportAttributes_* hVp);
@@ -1601,8 +1606,7 @@ struct stMorphData {
     unsigned char a_ucMorphingAmountMT[10]; /* +0x1c */
 };
 
-struct AGO3_GrowingFireBall {
-    /* C++ base AGO3_GrowingUVAnimatedFireBall at +0x0. */
+struct AGO3_GrowingFireBall : AGO3_GrowingUVAnimatedFireBall {
     void Display(GLD_tdstViewportAttributes_* hVp);
 };
 
@@ -1650,6 +1654,8 @@ struct WP_tdstGraph_ {
 
 int p_fCosTable;
 unsigned int AGO3_g_Parts[2048];
+extern "C" unsigned int AGO_g_PreviousCurrentFrame;
+extern "C" tdstEngineStructure_ g_stEngineStructure;
 unsigned int g_hLastAllocatedAGO3;
 int g_bReInitAGO;
 unsigned int g_dwAGOHandle;
@@ -1660,6 +1666,17 @@ int AGO_g_WeirdAura;
 float UpMul;
 int AGO3_g_Impose_SUB_BlendingMode;
 static int AGO3_C_WaveEnvelopedFistShape[51];
+
+extern "C" void GLI_xSetMaterialTextureDecalage(GLI_tdstMaterial_* hMaterial, float fUSpeed, float fVSpeed, int unused, int bSwitch);
+extern "C" char* AGO2_MEM_GetPointerFromHandle(unsigned int Handle);
+extern "C" void GLI_vEndWorldSprites(void);
+extern "C" GLI_tdstTexture_* GLI_xRefreshAnimatedTextureIfNeeded(GLI_tdstMaterial_* hVisualMaterial);
+extern "C" void GLI_vDrawWorldSemiLookatSprite(MTH3D_tdstVector_* param0, MTH3D_tdstVector_* a3_fPosition2, GLI_tdstMaterial_* pMaterial, int param3, float fSizeX, float fParam5, int bFade, float Alpha1, float Alpha2);
+extern "C" int GLI_vDrawWorldSpriteWithUVsOrientedOpt(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime, float fAngle);
+extern "C" float g_ffFrameTime;
+extern "C" void GLI_vSetGlobalAlpha(float Alpha);
+extern "C" int GLI_vDrawWorldSpriteOpt(MTH3D_tdstVector_* Pos, GLI_tdstMaterial_* Material, float SizeX, float SizeY, GLD_tdstViewportAttributes_* viewport, int AnimTime);
+extern "C" void GLI_vDrawWorldSemiLookatSpriteWithUVs(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* hMaterial, GLD_tdstViewportAttributes_* hVp, float fSize, float fU0, float fV0, float fU1, float fV1);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 51–66 */
 /* addr: 0x001ea500  size: 180 bytes */
@@ -1966,7 +1983,8 @@ void AGO3_vAddPart(unsigned int PartNumber, MTH3D_tdstVector_* pPosition, MTH3D_
  */
 void AGO3_SphericalRadiance::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    ((AGO3_Part*)this)->m_Finished = 1;
+    m_a_hHandle[m_hHandleID] = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7505–7643 */
@@ -2107,7 +2125,14 @@ void AGO3_LinkChainComputing::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_LinkChainComputing::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    m_bCanDisplay = m_bInitWasDone;
+    if (m_bImpulse)
+    {
+        m_fImpulseTime -= g_fTimeDifference;
+        if (m_fImpulseTime < 0.0f)
+            m_fImpulseTime += m_fImpulseDuration;
+    }
+    m_bInitWasDone = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7234–7486 */
@@ -2426,7 +2451,9 @@ void AGO3_Transition::Process(void)
  */
 void AGO3_DisplayTransitionMessage(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    if (AGO3_Transition::m_hHandle)
+        ((AGO3_Transition*)AGO2_MEM_GetPointerFromHandle(AGO3_Transition::m_hHandle))->DisplayLoadingMessage(hVp);
+    GLI_vEndWorldSprites();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6849–6972 */
@@ -2796,7 +2823,13 @@ void AGO3_CustomRipple::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdst
  */
 void AGO3_SpriteDurationFade2::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    if (m_fTransparency > 0.0f)
+    {
+        GLI_xRefreshAnimatedTextureIfNeeded(m_pMat1);
+        GLI_vDrawWorldSemiLookatSprite((MTH3D_tdstVector_*)&m_BottomPos, (MTH3D_tdstVector_*)&m_Position, m_pMat1, (int)hVp, m_fMainSize, 1.0f, 0, m_fTransparency, m_fTransparency);
+    }
+    else
+        m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6388–6395 */
@@ -2816,7 +2849,12 @@ void AGO3_SpriteDurationFade2::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_SpriteDurationFade2::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_fCurrentTime > m_fDisplayDuration)
+    {
+        m_fCurrentFadeTime += g_fTimeDifference;
+        m_fTransparency = 255.0f * ((m_fFadeDuration - m_fCurrentFadeTime) / m_fFadeDuration);
+    }
+    m_fCurrentTime += g_fTimeDifference;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6296–6330 */
@@ -3714,7 +3752,8 @@ void AGO3_DigitalScoreDisplay::SetSizes(float fContainerWidthPercentage)
  */
 void AGO3_DisplayDigitalScore(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    if (AGO3_DigitalScoreDisplay::m_a_hHandle[1])
+        ((AGO3_DigitalScoreDisplay*)AGO2_MEM_GetPointerFromHandle(AGO3_DigitalScoreDisplay::m_a_hHandle[1]))->DisplayScore(hVp);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4791–4815 */
@@ -3754,7 +3793,12 @@ void AGO3_ScoreDisplay::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_ScoreDisplay::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_fCurrentTime > m_fDisplayDuration)
+    {
+        m_fCurrentFadeTime += g_fTimeDifference;
+        m_fTransparency = 255.0f * ((m_fFadeDuration - m_fCurrentFadeTime) / m_fFadeDuration);
+    }
+    m_fCurrentTime += g_fTimeDifference;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4753–4775 */
@@ -5366,7 +5410,8 @@ void AGO3_ScrollMatUV::Process(void)
  */
 void AGO3_ScrollMatUV::DesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    ((AGO3_Part*)this)->m_Finished = 1;
+    GLI_xSetMaterialTextureDecalage(m_pMat1, m_a_stScroll[0].fOriginalValue, m_a_stScroll[1].fOriginalValue, 0, 2);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2593–2644 */
@@ -5439,7 +5484,8 @@ void AGO3_ScrollMatUV::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDi
  */
 void AGO3_SpriteZoom::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fCurrentSize, m_fCurrentSize, hVp, 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2509–2526 */
@@ -5480,7 +5526,13 @@ void AGO3_SpriteZoom::Process(void)
  */
 void AGO3_SpriteDurationFade::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    if (m_fTransparency > 0.0f)
+    {
+        GLI_vSetGlobalAlpha(m_fTransparency);
+        GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fMainSize, m_fMainSize, hVp, 1);
+    }
+    else
+        m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2425–2440 */
@@ -5501,7 +5553,16 @@ void AGO3_SpriteDurationFade::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_SpriteDurationFade::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_fCurrentTime < m_fFadeInDuration)
+        m_fTransparency = m_fCurrentTime * m_fInvFadeInDurationAlpha;
+    else if (m_fCurrentTime > m_fDisplayDuration)
+    {
+        m_fCurrentFadeOutTime += g_fTimeDifference;
+        m_fTransparency = m_fInvFadeOutDurationAlpha * (m_fFadeOutDuration - m_fCurrentFadeOutTime);
+    }
+    else
+        m_fTransparency = 255.0f;
+    m_fCurrentTime += g_fTimeDifference;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2278–2358 */
@@ -6832,7 +6893,8 @@ void AGO3_WaveEnvelopedFist::DesInit(void)
  */
 void AGO3_BeamWithUVs::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vDrawWorldSemiLookatSpriteWithUVs((MTH3D_tdstVector_*)&m_Position, (MTH3D_tdstVector_*)&m_Direction, m_pMat1, hVp, m_fSize, 0.0f, 0.0f, 1.0f, m_fRepetition);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 884–885 */
@@ -7021,7 +7083,8 @@ void AGO3_Target::Process(void)
  */
 void AGO3_GrowingFireBall::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, 0.0f, 0.0f, 1.0f, 1.0f, hVp, 1, g_ffFrameTime * m_fAngleSpeed);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 610–614 */
@@ -7040,7 +7103,8 @@ void AGO3_GrowingFireBall::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_GrowingUVAnimatedFireBall::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vSetGlobalAlpha(50.0f);
+    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, m_fCurrentU, m_fCurrentV, 0.25f + m_fCurrentU, -0.25f + m_fCurrentV, hVp, 1, g_ffFrameTime * m_fAngleSpeed);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 603–606 */
@@ -7059,7 +7123,8 @@ void AGO3_GrowingUVAnimatedFireBall::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_GrowingUVAnimatedFireBallMoving::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vSetGlobalAlpha(50.0f);
+    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, m_fCurrentU, m_fCurrentV, 0.25f + m_fCurrentU, -0.25f + m_fCurrentV, hVp, 1, g_ffFrameTime * m_fAngleSpeed);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 578–600 */
@@ -7372,7 +7437,15 @@ void AGO3_vProcessAll(void)
 {
     unsigned int* p;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    if (AGO_g_PreviousCurrentFrame != g_stEngineStructure.stEngineTimer.ulCurrentTimerCount)
+    {
+        for (p = AGO3_g_Parts, i = 2048; i != 0; i--, p++)
+        {
+            if (*p)
+                ((AGO3_Part*)AGO2_MEM_GetPointerFromHandle(*p))->Process();
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 191–197 */
