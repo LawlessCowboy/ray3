@@ -3010,7 +3010,15 @@ MTH3D_tdstVector_* fn_p_stGetActionParamp_stVertex(unsigned char ucN, HIE_tdstSu
  */
 void fn_vSetActionParamp_stVertex(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, MTH3D_tdstVector_* p_stVertex)
 {
-    /* TODO: decompile from asm/... */
+    tdstIntelligence_* p_stIntelligence;
+
+    if (p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->bDoingIntel)
+        p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence;
+    else
+        p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex;
+    p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xX = p_stVertex->xX;
+    p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xY = p_stVertex->xY;
+    p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xZ = p_stVertex->xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActParam.c lines 130–131 */

@@ -432,5 +432,10 @@ void M2D_StartBGLoading(void)
 void FreeMenu2DTextures(void)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    g_stTPBackground.hUsedBy = NULL;
+    for (i = 0; i < sizeof(g_ax_stTPFix) / sizeof(g_ax_stTPFix[0]); i++)
+        g_ax_stTPFix[i].hUsedBy = NULL;
+    for (i = 0; i < sizeof(g_ax_stTPTitles) / sizeof(g_ax_stTPTitles[0]); i++)
+        g_ax_stTPTitles[i].hUsedBy = NULL;
 }

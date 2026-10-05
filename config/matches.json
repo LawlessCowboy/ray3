@@ -21498,6 +21498,21 @@
       "status": "MISMATCH",
       "target_size": 244,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fa1d0",
+      "candidate_size": 204,
+      "first_difference": 52,
+      "implementation": "void fn_vSetActionParamp_stVertex(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, MTH3D_tdstVector_* p_stVertex)\n{\n    tdstIntelligence_* p_stIntelligence;\n\n    if (p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->bDoingIntel)\n        p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence;\n    else\n        p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex;\n    p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xX = p_stVertex->xX;\n    p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xY = p_stVertex->xY;\n    p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xZ = p_stVertex->xZ;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vSetActionParamp_stVertex",
+      "reason": "Same intelligence/action-table access as the matched getters, 204/204. Residual: retail copies the x/y/z components with integer lw/sw (word copy), while float member assignment gives lwc1/swc1 plus addu operand-order changes. The parameter union has no word view (cf. the union word-copy insight)",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/ActParam.c",
+      "status": "MISMATCH",
+      "target_size": 204,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -36646,6 +36661,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_mem.c",
       "status": "MATCH"
     },
+    "0x0027f960": {
+      "address": "0x0027f960",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stFindFreeMergeA3dGeneral",
+      "size": 100,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_mem.c",
+      "status": "MATCH"
+    },
     "0x0027f9d0": {
       "address": "0x0027f9d0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -37742,6 +37765,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/PS2Menu2D.c",
       "status": "MATCH"
     },
+    "0x0029fcb0": {
+      "address": "0x0029fcb0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "FreeMenu2DTextures",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/PS2Menu2D.c",
+      "status": "MATCH"
+    },
     "0x0029fd50": {
       "address": "0x0029fd50",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -38644,6 +38675,14 @@
       "name": "GLI_xGetMaterialAmbientCoef",
       "size": 36,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
+    "0x002aa220": {
+      "address": "0x002aa220",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_xInitMatrixStack",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Menu.c",
       "status": "MATCH"
     },
     "0x002aa2b0": {

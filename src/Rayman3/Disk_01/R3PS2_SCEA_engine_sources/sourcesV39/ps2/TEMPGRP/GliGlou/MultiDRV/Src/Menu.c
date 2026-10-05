@@ -196,6 +196,18 @@ float ga_fColor1_PC[3];
 float ga_fColor2_PC[3];
 float ga_fColor3_PC[3];
 
+typedef struct MAT_tdstTransformation_ {
+    int eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* +0x4..0xf */
+    float stTransformMatrix[4][4]; /* +0x10 */
+    float stScaleVector[4]; /* +0x50 */
+} MAT_tdstTransformation_;
+
+extern MAT_tdstTransformation_ g_aDEF_stMatrixStack[1];
+extern int g_lNbMatrixInStack;
+extern MAT_tdstTransformation_* g_p_stCurrentMatrix;
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Menu.c lines 14–36 */
 /* addr: 0x002aa220  size: 140 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -218,5 +230,9 @@ float ga_fColor3_PC[3];
 void GLI_xInitMatrixStack(void)
 {
     short xI;
-    /* TODO: decompile from asm/... */
+
+    g_lNbMatrixInStack = 0;
+    for (xI = 0; xI < 1; xI++)
+        MAT_fn_vSetIdentity(&g_aDEF_stMatrixStack[xI]);
+    g_p_stCurrentMatrix = &g_aDEF_stMatrixStack[g_lNbMatrixInStack++];
 }

@@ -281,9 +281,23 @@ void fn_vReleaseMergeA3dGeneral(unsigned short _uwIndex)
  */
 tdstA3dGENERAL_ForTransitions_* fn_p_stFindFreeMergeA3dGeneral(unsigned short* p_uwIndex)
 {
-    int i;
     unsigned int ulTest;
-    /* TODO: decompile from asm/... */
+    int i;
+
+    ulTest = 1;
+    i = 0;
+    while ((ulTest & ulFreePlaceInMergeStack) && (i < 32))
+    {
+        ulTest <<= 1;
+        i++;
+    }
+    if (i < 32)
+    {
+        ulFreePlaceInMergeStack |= ulTest;
+        *p_uwIndex = (unsigned short)i;
+        return &a32_stA3dGENERALTransitionArray[i];
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_mem.c lines 375–375 */
