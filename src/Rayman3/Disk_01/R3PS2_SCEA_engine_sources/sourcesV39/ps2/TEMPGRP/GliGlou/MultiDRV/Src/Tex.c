@@ -142,9 +142,17 @@ void GLI_vComputeTextures(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int GLI_lGetLog2n(int ln);
+
 void GLI_vRealyComputeLod(GLI_tdstTexture_* p_stTexture)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stTexture->lHeight <= 1 || p_stTexture->lWidth <= 1)
+        return;
+
+    if (GLI_lGetLog2n(p_stTexture->lHeight) < GLI_lGetLog2n(p_stTexture->lWidth))
+        p_stTexture->lNumberOfLod = GLI_lGetLog2n(p_stTexture->lHeight) + 1;
+    else
+        p_stTexture->lNumberOfLod = GLI_lGetLog2n(p_stTexture->lWidth) + 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Tex.c lines 236–236 */

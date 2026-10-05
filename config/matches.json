@@ -39495,6 +39495,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
       "status": "MATCH"
     },
+    "0x002aaf40": {
+      "address": "0x002aaf40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vRealyComputeLod",
+      "size": 148,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Tex.c",
+      "status": "MATCH"
+    },
     "0x002aafe0": {
       "address": "0x002aafe0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
