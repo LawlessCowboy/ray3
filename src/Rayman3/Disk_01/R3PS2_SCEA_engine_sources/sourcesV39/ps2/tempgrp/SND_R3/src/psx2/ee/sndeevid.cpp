@@ -91,7 +91,6 @@ struct C2DRenderer {
 
 
 class CLinkTypeActor;
-extern "C" void* __vt__10CLinkActor;
 
 class CExtraEventActor {
 public:
@@ -105,10 +104,10 @@ class CLinkActor {
 public:
     CLinkActor(void);
 
-    CLinkTypeActor* mpoType;
-    int ms32ACPObjectId;
-    void* m_pvTable;
-    CExtraEventActor m_oExtraActors;
+    CLinkTypeActor* mpoType; /* +0x0 */
+    int ms32ACPObjectId; /* +0x4 */
+    virtual ~CLinkActor(); /* vtable pointer at +0x8 */
+    CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext;
     CLinkActor* m_poPrevious;
 };
@@ -143,10 +142,10 @@ inline void SND_VID_vClearCop0Register24(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* TODO: recovered constructor body. */
-CLinkActor::CLinkActor(void)
-    : m_pvTable(&__vt__10CLinkActor), mpoType(0), m_poNext(0), m_poPrevious(0)
+CLinkActor::CLinkActor(void) : mpoType(0)
 {
+    m_poNext = 0;
+    m_poPrevious = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeevid.cpp lines 301–317 */

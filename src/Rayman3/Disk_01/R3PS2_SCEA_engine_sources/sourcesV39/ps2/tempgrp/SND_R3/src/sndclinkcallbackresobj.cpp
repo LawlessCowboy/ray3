@@ -23,10 +23,9 @@ typedef struct sstring sstring;
 typedef struct CResData CResData;
 typedef struct CLinkCallbackResObj CLinkCallbackResObj;
 typedef struct CLinkCallbackResObjCont CLinkCallbackResObjCont;
-typedef struct iterator iterator;
 typedef struct sallocator sallocator;
-struct sallocator { int data[4]; };
-struct iterator { int data[4]; };
+struct sallocator {
+};
 typedef struct CUUID CUUID;
 typedef struct CIdObj CIdObj;
 typedef struct CCritSect CCritSect;
@@ -95,12 +94,29 @@ struct stree : streebase {
     CStringIsLess key_compare; /* +0xd */
 };
 
-struct CVolumeActorModifier {
-    /* C++ base CActorModifiers at +0x0. */
-};
-
 struct smap {
     stree _Tr; /* +0x0 */
+};
+
+struct CActorModifiers {
+    /* C++ base CVarNotifTarget at +0x0; virtual order from retail
+       __vt__Q24usnd15CActorModifiers. */
+    virtual void fv_vVarChanged(struct CVar& ro_Var);
+    virtual void fv_vVarDestroyed(struct CVar& ro_Var);
+    virtual void fv_vVarAccessed(struct CVar& ro_Var);
+    virtual void fv_vAddModifier(struct CVar& ro_Var, float f_Value);
+    virtual void fv_vRemoveModifier(struct CVar& ro_Var);
+    CActorResObj* m_pActor; /* +0x4 */
+    smap m_oVariables; /* +0x8 */
+    float m_fDirectValue; /* +0x18 */
+    float m_fResultValue; /* +0x1c */
+    unsigned char m_bResultChanged; /* +0x20 */
+};
+
+struct CPitchActorModifier : CActorModifiers {
+};
+
+struct CVolumeActorModifier : CActorModifiers {
 };
 
 struct CCmdInterface {
@@ -127,6 +143,7 @@ struct C2DParams {
 };
 
 struct CResObj {
+    virtual ~CResObj();
     CResType* m_roType; /* +0x4 */
     CResData* m_poResData; /* +0x8 */
 };
@@ -164,19 +181,62 @@ struct CLinkCallbackResObj {
     CResObj* mroResObj; /* +0x4 */
     void (*mpfnProc)(int); /* +0x8 */
     int ms32Param; /* +0xc */
+    ~CLinkCallbackResObj();
     unsigned char mfn_bSynchroCallbackResObj(void);
 };
 
-struct CLinkCallbackResObjCont {
+extern "C" void usnd_free(void* pv_Ptr);
+
+namespace usnd {
+template <class T> struct sallocator {
+};
+
+/* Renamed Dinkumware list; members in the class body are inline. */
+template <class T, class ALLOC> struct slist {
+    struct _Node {
+        _Node* _Next; /* +0x0 */
+        _Node* _Prev; /* +0x4 */
+        T _Value; /* +0x8 */
+    };
+    struct const_iterator {
+        const_iterator(void) {}
+        const_iterator(_Node* po_Node);
+        const_iterator(const const_iterator& ro_It);
+        const T& operator*(void) const { return _Ptr->_Value; }
+        const_iterator& operator++(void) { _Ptr = _Ptr->_Next; return *this; }
+        const_iterator operator++(int) { const_iterator oTmp = *this; ++*this; return oTmp; }
+        bool operator!=(const const_iterator& ro_It) const { return !(_Ptr == ro_It._Ptr); }
+        _Node* _Mynode(void) const { return _Ptr; }
+        _Node* _Ptr; /* +0x0 */
+    };
+    struct iterator : const_iterator {
+        iterator(void) {}
+        iterator(_Node* po_Node) { _Ptr = po_Node; }
+        T& operator*(void) const { return _Ptr->_Value; }
+    };
+    iterator begin(void) { return iterator(_Head->_Next); }
+    iterator end(void) { return iterator(_Head); }
+    iterator erase(iterator o_It)
+    {
+        _Node* poNode = (o_It++)._Mynode();
+        poNode->_Prev->_Next = poNode->_Next;
+        poNode->_Next->_Prev = poNode->_Prev;
+        usnd_free(poNode);
+        --_Size;
+        return o_It;
+    }
+    ALLOC allocator; /* +0x0 */
+    _Node* _Head; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+}
+
+struct CLinkCallbackResObjCont : usnd::slist<CLinkCallbackResObj*, usnd::sallocator<CLinkCallbackResObj*> > {
     unsigned char mfn_bSynchroCallbackInstance(void);
 };
 
 struct CCritSect {
     unsigned int m_uiCS; /* +0x0 */
-};
-
-struct CPitchActorModifier {
-    /* C++ base CActorModifiers at +0x0. */
 };
 
 struct CRolloffParam {
@@ -186,8 +246,19 @@ struct CRolloffParam {
 };
 
 struct CActorProgramContext {
-    /* C++ base CProgramContext at +0x0. */
+    /* C++ base CProgramContext at +0x0; virtual order from retail
+       __vt__Q24usnd20CActorProgramContext. */
+    virtual void fv_vAddRunningObj(CResObj& ro_Obj, void* pv_UserData, int s32_Data, bool b_Flag, CResObj* po_Parent);
+    virtual bool fv_bAddRunningObj(CResObj& ro_Obj, CResObj& ro_Parent, bool b_Flag);
+    virtual void fv_vRemoveRunningObj(CResObj& ro_Obj);
+    virtual unsigned int fv_uiGetAllRunningObjs(CResObj** ppo_Objs, unsigned int ui_Max);
+    virtual void fv_vCallHandler(const char* sz_Name, void* pv_Param);
+    virtual void fv_vAddRunningObjRef(CResObj& ro_Obj);
+    virtual void fv_vReleaseRunningObjRef(CResObj& ro_Obj);
+    virtual bool fv_bAreThereRunningObjs(void);
+    unsigned int a2_ulProgramContextData[2]; /* +0x4 */
     /* C++ base CVarAccess at +0xc. */
+    unsigned int ulVarAccessVptr; /* +0xc */
     CResObjState m_oObjStates; /* +0x10 */
     CActorResObj* m_pActor; /* +0x38 */
     smap m_oVariables; /* +0x3c */
@@ -205,15 +276,6 @@ struct CActorResObj : CResObj {
     unsigned char m_b2DParamsComputed; /* +0x84 */
     CVolumeActorModifier m_oVolModifier; /* +0x88 */
     CActorProgramContext m_oProgramContext; /* +0xac */
-};
-
-struct CActorModifiers {
-    /* C++ base CVarNotifTarget at +0x0. */
-    CActorResObj* m_pActor; /* +0x4 */
-    smap m_oVariables; /* +0x8 */
-    float m_fDirectValue; /* +0x18 */
-    float m_fResultValue; /* +0x1c */
-    unsigned char m_bResultChanged; /* +0x20 */
 };
 
 struct less {
@@ -279,7 +341,21 @@ unsigned char CLinkCallbackResObjCont::mfn_bSynchroCallbackInstance(void)
 {
     CLinkCallbackResObj* ro_LinkCallback;
     iterator it;
-    /* TODO: decompile from asm/... */
+
+    for (it = begin(); it != end();)
+    {
+        ro_LinkCallback = *it;
+        if (!ro_LinkCallback->mfn_bSynchroCallbackResObj())
+        {
+            it = erase(it);
+            delete ro_LinkCallback;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkcallbackresobj.cpp lines 57–100 */
@@ -309,6 +385,18 @@ unsigned char CLinkCallbackResObj::mfn_bSynchroCallbackResObj(void)
     int i;
     int nb;
     int aResObj[100];
-    unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
+    unsigned char b_Answer = 0;
+
+    nb = mroActorObj->m_oProgramContext.fv_uiGetAllRunningObjs((CResObj**)aResObj, 100);
+    for (i = 0; i < nb; i++)
+    {
+        if (mroResObj == ((CResObj**)aResObj)[i])
+        {
+            b_Answer = 1;
+            break;
+        }
+    }
+    if (!b_Answer && mpfnProc)
+        mpfnProc(ms32Param);
+    return b_Answer;
 }
