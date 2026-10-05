@@ -36940,6 +36940,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
       "status": "MATCH"
     },
+    "0x0027b0e0": {
+      "address": "0x0027b0e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vDesInitAllSubEvents",
+      "size": 196,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/playevts.c",
+      "status": "MATCH"
+    },
     "0x0027b330": {
       "address": "0x0027b330",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",

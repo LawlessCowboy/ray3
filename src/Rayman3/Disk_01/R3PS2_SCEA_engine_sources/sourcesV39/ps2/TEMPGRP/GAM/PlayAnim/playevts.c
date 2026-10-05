@@ -1305,12 +1305,29 @@ void fn_vPlaySubEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* _hCharacter, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stSuperObject);
+tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d, int lParam1, int lParam2);
+void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
+
 void fn_vDesInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
 {
-    unsigned char i;
-    unsigned char ucNumberOfEvents;
     tdstEvent_* p_stEvent;
-    /* TODO: decompile from asm/... */
+    unsigned char ucNumberOfEvents;
+    unsigned char i;
+
+    if (hNewSubAnimInUse->d_ucEventActivation)
+    {
+        ucNumberOfEvents = hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->ucNumberOfEvents;
+        p_stEvent = fn_p_GetEventsAddress(hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim, 0, 0);
+        for (i = 0; i < ucNumberOfEvents; i++, p_stEvent++)
+        {
+            if (p_stEvent->p_stfEventInTBL->ucFirstCall == 0xFF)
+                fn_vPlayEvent(p_stEvent, 2, _hCharacter);
+        }
+        HMU_fn_vFree((void**)&hNewSubAnimInUse->d_ucEventActivation, 1);
+        hNewSubAnimInUse->d_ucEventActivation = 0;
+        hNewSubAnimInUse->ucNextEvent = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 728–779 */
@@ -1435,7 +1452,7 @@ unsigned short fn_uwGetNbEngineFrameSinceLastMechEvent(HIE_tdstSuperObject_* p_s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vPlayEvent(tdstEvent_* p_stEvent, HIE_tdstSuperObject_* p_stSuperObject)
+void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stSuperObject)
 {
     unsigned int ulCustomBits;
     int s32_SemaphoreId;
