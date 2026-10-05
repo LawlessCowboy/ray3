@@ -3371,9 +3371,16 @@ unsigned char fn_ucCamCinePosAMoveTgtBToC(HIE_tdstSuperObject_* p_SuperObjPerso)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_lGetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);
+
 unsigned char fn_ucCamCinePosATgtB(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    /* TODO: decompile from asm/... */
+    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount >= (unsigned int)(fn_lGetActionParamlValue(3, p_SuperObjPerso) + fn_lGetActionParamlValue(2, p_SuperObjPerso)))
+    {
+        p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits &= ~0x8000;
+        return 4;
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 347–404 */

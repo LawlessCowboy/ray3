@@ -697,9 +697,19 @@ tagGLcontext g_PS2glContext;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glViewport(int x, int y, int width, int height);
+void PS2glMatrixMode(unsigned int mode);
+void PS2glLoadIdentity(void);
+void PS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
+
 void DefaultHandleReshape(int w, int h)
 {
-    /* TODO: decompile from asm/... */
+    PS2glViewport(0, 0, w, h);
+    PS2glMatrixMode(0x1701); /* GL_PROJECTION */
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, (float)w, 0.0f, (float)h, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1700); /* GL_MODELVIEW */
+    PS2glLoadIdentity();
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_MultiTexture.c lines 40–49 */

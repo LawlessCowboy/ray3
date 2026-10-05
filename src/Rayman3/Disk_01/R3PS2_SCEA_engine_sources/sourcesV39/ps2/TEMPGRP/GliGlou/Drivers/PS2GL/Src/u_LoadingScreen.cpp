@@ -1118,9 +1118,36 @@ float light_specular0[4];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+struct LifeBarStruct_ {
+    float PosRightX; /* +0x0 */
+    float PosBottomY; /* +0x4 */
+    float CirclePerCent; /* +0x8 */
+    float CurrentLife; /* +0xc */
+    float MaxLife; /* +0x10 */
+    float CenterIcon; /* +0x14 */
+    float fAlpha; /* +0x18 */
+    GLI_tdstMaterial_* pMat; /* +0x1c */
+};
+
+extern struct LifeBarStruct_ GLI_g_TheLifeBar;
+extern unsigned int GLI_g_LifeBarIsInit;
+
 void GLI_vAddLifeBars(float PosRightX, float PosBottomY, float CirclePerCent, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_TheLifeBar.PosRightX = PosRightX;
+    GLI_g_TheLifeBar.PosBottomY = PosBottomY;
+    GLI_g_TheLifeBar.CirclePerCent = CirclePerCent;
+    GLI_g_TheLifeBar.CurrentLife = CurrentLife;
+    GLI_g_TheLifeBar.MaxLife = MaxLife;
+    GLI_g_TheLifeBar.CenterIcon = CenterIcon;
+    GLI_g_TheLifeBar.pMat = pMat;
+    GLI_g_TheLifeBar.fAlpha = fAlpha;
+    GLI_g_LifeBarIsInit = 1;
+    if (GLI_g_TheLifeBar.MaxLife > 100.0f)
+    {
+        GLI_g_TheLifeBar.CurrentLife = 100.0f * GLI_g_TheLifeBar.CurrentLife / GLI_g_TheLifeBar.MaxLife;
+        GLI_g_TheLifeBar.MaxLife = 100.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 782–786 */

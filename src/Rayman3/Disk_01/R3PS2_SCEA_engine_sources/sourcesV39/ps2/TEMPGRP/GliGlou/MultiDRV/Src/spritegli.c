@@ -168,9 +168,38 @@ int GLI_g_AnimatedTextureToUse;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+struct GLI_SpecificPS2GL_Structure_ {
+    unsigned int Flags; /* +0x0 */
+    int pVertexArrayHandles; /* +0x4 */
+    int glDisplayLists; /* +0x8 */
+    unsigned short NbStages; /* +0xc */
+    unsigned short WasOutlinedOrDynamicallyLit; /* +0xe */
+    unsigned int LastFrame; /* +0x10 */
+    float stMin[3]; /* +0x14 */
+    float stMax[3]; /* +0x20 */
+    unsigned int BoundingBoxValid; /* +0x2c */
+    int pTempVAPos[4]; /* +0x30 */
+    int pTempVAOther[4]; /* +0x40 */
+    unsigned int SpriteGenArray; /* +0x50 */
+};
+
+extern void (*PS2glLiberator)(void*);
+
 void GLI_vCleanSpecificStructure(GLI_SpecificPS2GL_Structure_* pTemp)
 {
-    /* TODO: decompile from asm/... */
+    if (pTemp)
+    {
+        pTemp->Flags = 0;
+        if (pTemp->SpriteGenArray)
+            PS2glLiberator((void*)pTemp->SpriteGenArray);
+        pTemp->SpriteGenArray = 0;
+        if (pTemp->glDisplayLists)
+            PS2glLiberator((void*)pTemp->glDisplayLists);
+        if (pTemp->pVertexArrayHandles)
+            PS2glLiberator((void*)pTemp->pVertexArrayHandles);
+        pTemp->pVertexArrayHandles = 0;
+        PS2glLiberator(pTemp);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\spritegli.c lines 789–811 */

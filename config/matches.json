@@ -28764,6 +28764,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_VU1_Pipeline.c",
       "status": "MATCH"
     },
+    "0x00185930": {
+      "address": "0x00185930",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "VU1SendPackage",
+      "size": 136,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GLAUX/PS2GLAUX.c",
+      "status": "MATCH"
+    },
     "0x00185d40": {
       "address": "0x00185d40",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -28786,6 +28794,14 @@
       "name": "DefaultHandleExpose",
       "size": 8,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GLAUX/PS2GLAUX.c",
+      "status": "MATCH"
+    },
+    "0x00186200": {
+      "address": "0x00186200",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "DefaultHandleReshape",
+      "size": 140,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_MultiTexture.c",
       "status": "MATCH"
     },
     "0x00186290": {
@@ -31570,6 +31586,14 @@
       "name": "fn_szGetStringFromTextOrStringParam",
       "size": 64,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AITools.c",
+      "status": "MATCH"
+    },
+    "0x00202270": {
+      "address": "0x00202270",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucCamCinePosATgtB",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
       "status": "MATCH"
     },
     "0x00204a50": {
@@ -39420,6 +39444,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_draw.c",
       "status": "MATCH"
     },
+    "0x002b0640": {
+      "address": "0x002b0640",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vCleanSpecificStructure",
+      "size": 136,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/spritegli.c",
+      "status": "MATCH"
+    },
     "0x002b0860": {
       "address": "0x002b0860",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -40026,6 +40058,14 @@
       "name": "GLI_vDesinitLifeBars",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_NewSprites.c",
+      "status": "MATCH"
+    },
+    "0x002cdc10": {
+      "address": "0x002cdc10",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vAddLifeBars",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_LoadingScreen.cpp",
       "status": "MATCH"
     },
     "0x002cdca0": {

@@ -1293,9 +1293,27 @@ int SwapBufferNotifyFunc;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef struct tagSPRInfo {
+    unsigned int uiState; /* +0x0 */
+} tagSPRInfo;
+
+extern tagSPRInfo g_stSPRInfo;
+int sceGsSyncPath(int mode, unsigned short timeout);
+int printf(const char* fmt, ...);
+void WaitDMAFromSPR(void);
+void FlushCache(int operation);
+
 void VU1SendPackage(_sceDmaTag* pTag)
 {
-    /* TODO: decompile from asm/... */
+    if (sceGsSyncPath(0, 0))
+        printf("In VU1SendPackage, SyncPath failure!\n");
+    if (g_stSPRInfo.uiState & 1)
+        WaitDMAFromSPR();
+    FlushCache(0);
+    *(volatile unsigned int*)0x10009020 = 0;
+    *(volatile unsigned int*)0x10009030 = (unsigned int)pTag;
+    *(volatile unsigned int*)0x1000E010 = 2;
+    *(volatile unsigned int*)0x10009000 = 0x145;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 584–643 */
