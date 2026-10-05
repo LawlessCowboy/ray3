@@ -2097,12 +2097,14 @@ int fn_b3dDataGetUserEventFlag(tdst3dData_* h_3dData, unsigned char _ucFlagIndex
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void fn_v3dDataSetLightComputationFrequency(tdst3dData_* h_3dData, unsigned char _ucFrequency)
 {
     h_3dData->ucLightComputationFrequency = _ucFrequency;
     if (h_3dData->cLightCounter >= h_3dData->ucLightComputationFrequency)
         h_3dData->cLightCounter = 0;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 878–885 */
 /* addr: 0x00289250  size: 52 bytes */
@@ -2162,12 +2164,14 @@ void fn_v3dDataUpdateBrainCounter(HIE_tdstSuperObject_* _hCharacter)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void fn_v3dDataSetBrainComputationFrequency(tdst3dData_* h_3dData, unsigned char _ucFrequency)
 {
     h_3dData->ucBrainComputationFrequency = _ucFrequency;
     if (h_3dData->cBrainCounter >= h_3dData->ucBrainComputationFrequency)
         h_3dData->cBrainCounter = 0;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 832–835 */
 /* addr: 0x00289310  size: 44 bytes */
@@ -2439,11 +2443,56 @@ void fn_v3dDataInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectIni
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
+void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, tdstEngineObject_* p_stObject);
+void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList);
+
 void fn_v3dDataFree(tdstEngineObject_* p_stObject)
 {
     tdstSubAnimInUse_* hNextSubAnim;
     tdstSubAnimInUse_* hThisSubAnim;
-    /* TODO: decompile from asm/... */
+
+    if (p_stObject == NULL)
+    {
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_3dData == NULL)
+    {
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    {
+        tdst3dData_* h_3dData = p_stObject->h_3dData;
+        SAI_fn_bRemoveValueFromTable(&h_3dData->stGLIObjectMatrix, 0x32);
+        SAI_fn_bRemoveValueFromTable(&h_3dData->stGLIObjectMatrix.stTransformMatrix, 0x32);
+        SAI_fn_bRemoveValueFromTable(&h_3dData->stGLIObjectMatrix.stScaleVector, 0x32);
+    }
+    PLA_fn_vDesInitAllChildOfCharacter(NULL, p_stObject);
+    fn_vFreeMorphList(&p_stObject->h_3dData->hMorphChannelList);
+    
+    for (hThisSubAnim = p_stObject->h_3dData->hForSubAnimInUseArray.hFirstElementDyn,
+         hNextSubAnim = hThisSubAnim ? hThisSubAnim->hNextBrotherDyn : NULL;
+         hThisSubAnim;
+         hThisSubAnim = hNextSubAnim, hNextSubAnim = hThisSubAnim ? hThisSubAnim->hNextBrotherDyn : NULL)
+    {
+        if (hThisSubAnim->hNextBrotherDyn)
+            hThisSubAnim->hNextBrotherDyn->hPrevBrotherDyn = hThisSubAnim->hPrevBrotherDyn;
+        if (hThisSubAnim->hPrevBrotherDyn)
+            hThisSubAnim->hPrevBrotherDyn->hNextBrotherDyn = hThisSubAnim->hNextBrotherDyn;
+        if (hThisSubAnim->hFatherDyn)
+        {
+            hThisSubAnim->hFatherDyn->lNumberOfElementsDyn--;
+            if (hThisSubAnim->hFatherDyn->hFirstElementDyn == hThisSubAnim)
+                hThisSubAnim->hFatherDyn->hFirstElementDyn = hThisSubAnim->hNextBrotherDyn;
+            if (hThisSubAnim->hFatherDyn->hLastElementDyn == hThisSubAnim)
+                hThisSubAnim->hFatherDyn->hLastElementDyn = hThisSubAnim->hPrevBrotherDyn;
+        }
+        hThisSubAnim->hNextBrotherDyn = NULL;
+        hThisSubAnim->hPrevBrotherDyn = NULL;
+        hThisSubAnim->hFatherDyn = NULL;
+        HMU_fn_vFree((void**)&hThisSubAnim, 1);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 286–368 */
@@ -2519,8 +2568,64 @@ void fn_v3dDataFree(tdstEngineObject_* p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
+int RND_fn_lGetLongRandomValue(unsigned int ulChannel, int lMin, int lMax);
+
 tdst3dData_* fn_h_3dDataRealAlloc(void)
 {
     tdst3dData_* h_3dData;
-    /* TODO: decompile from asm/... */
+
+    h_3dData = (tdst3dData_*)HMU_fn_p_vMalloc(sizeof(tdst3dData_), 0);
+    MAT_fn_vSetIdentity(&h_3dData->stGLIObjectMatrix);
+    h_3dData->ucFlagEndState = 0;
+    h_3dData->ucFlagEndOfAnim = 0;
+    h_3dData->ucFlagModifState = 0;
+    h_3dData->xForcedFrame = 0.0f;
+    h_3dData->stFrame3d.p_stArrayOfElts3d = NULL;
+    h_3dData->wSizeOfArrayOfElts3d = 0;
+    h_3dData->hMorphChannelList = NULL;
+    h_3dData->h_StateInLastFrame = NULL;
+    h_3dData->h_WantedState = NULL;
+    h_3dData->h_CurrentState = NULL;
+    h_3dData->h_CurrentObjectsTable = NULL;
+    h_3dData->h_InitialObjectsTable = NULL;
+    h_3dData->ulStartTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    h_3dData->bSkipCurrentFrame = 0;
+    h_3dData->ulTimeDelay = 0;
+    h_3dData->xLastFrame = -1.0f;
+    h_3dData->bStateJustModified = 0;
+    h_3dData->uwNbEngineFrameSinceLastMechEvent = 0xFFFF;
+    h_3dData->ucFrameRate = 0;
+    h_3dData->lDrawMask = -1;
+    h_3dData->lDrawMaskInit = -1;
+    h_3dData->xShadowScaleX = 1.0f;
+    h_3dData->xShadowScaleY = 1.0f;
+    h_3dData->xShadowQuality = 2;
+    h_3dData->ucIsShadowClosed = 0;
+    h_3dData->stLightDirForDynamicShadow.xX = 0.0f;
+    h_3dData->stLightDirForDynamicShadow.xY = 0.0f;
+    h_3dData->stLightDirForDynamicShadow.xZ = -1.0f;
+    h_3dData->ucShadowRecLevel = 5;
+    h_3dData->p_stShadowTexture = NULL;
+    h_3dData->p_stShadowVisualMaterial = NULL;
+    h_3dData->stSHWDeformationVector.xX = 0.0f;
+    h_3dData->stSHWDeformationVector.xY = 0.0f;
+    h_3dData->stSHWDeformationVector.xZ = 0.0f;
+    h_3dData->xSHWHeight = 0.2f;
+    fn_v3dDataSetBrainComputationFrequency(h_3dData, 1);
+    h_3dData->cBrainCounter = -1;
+    h_3dData->uwBrainMainCounter = (unsigned short)RND_fn_lGetLongRandomValue(0, 1, 17);
+    fn_v3dDataSetLightComputationFrequency(h_3dData, 1);
+    h_3dData->cLightCounter = -1;
+    h_3dData->ucTransparency = 255;
+    h_3dData->bDiscreetSpeed = 0;
+    h_3dData->xDistNoInterpol = 30.0f;
+    h_3dData->xDistNoDEnv = 50.0f;
+    h_3dData->xDistNoMorphing = 10.0f;
+    h_3dData->hForSubAnimInUseArray.hFirstElementDyn = NULL;
+    h_3dData->hForSubAnimInUseArray.hLastElementDyn = NULL;
+    h_3dData->hForSubAnimInUseArray.lNumberOfElementsDyn = 0;
+    h_3dData->NbSkinMaterials = 0;
+    h_3dData->d_ucEventActivation = 0;
+    return h_3dData;
 }
