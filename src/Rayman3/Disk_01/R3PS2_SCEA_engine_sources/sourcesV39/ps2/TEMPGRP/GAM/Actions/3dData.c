@@ -2336,11 +2336,58 @@ unsigned int fn_ul3dDataSizeOf(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StandardGame);
+void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, tdstEngineObject_* p_stObject);
+void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList);
+
 void fn_v3dDataDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
     tdstSubAnimInUse_* hNextSubAnim;
     tdstSubAnimInUse_* hThisSubAnim;
-    /* TODO: decompile from asm/... */
+
+    if (p_stObject == NULL)
+    {
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_3dData == NULL)
+    {
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    switch (eObjectInit)
+    {
+    case OTI_ReinitTheMap:
+        break;
+    case OTI_MapLoaded:
+        PLA_fn_vDesInitAllChildOfCharacter(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), p_stObject);
+        fn_vFreeMorphList(&p_stObject->h_3dData->hMorphChannelList);
+        break;
+    case OTI_PlayerDead:
+        break;
+    }
+    for (hThisSubAnim = p_stObject->h_3dData->hForSubAnimInUseArray.hFirstElementDyn,
+         hNextSubAnim = hThisSubAnim ? hThisSubAnim->hNextBrotherDyn : NULL;
+         hThisSubAnim;
+         hThisSubAnim = hNextSubAnim, hNextSubAnim = hThisSubAnim ? hThisSubAnim->hNextBrotherDyn : NULL)
+    {
+        if (hThisSubAnim->hNextBrotherDyn)
+            hThisSubAnim->hNextBrotherDyn->hPrevBrotherDyn = hThisSubAnim->hPrevBrotherDyn;
+        if (hThisSubAnim->hPrevBrotherDyn)
+            hThisSubAnim->hPrevBrotherDyn->hNextBrotherDyn = hThisSubAnim->hNextBrotherDyn;
+        if (hThisSubAnim->hFatherDyn)
+        {
+            hThisSubAnim->hFatherDyn->lNumberOfElementsDyn--;
+            if (hThisSubAnim->hFatherDyn->hFirstElementDyn == hThisSubAnim)
+                hThisSubAnim->hFatherDyn->hFirstElementDyn = hThisSubAnim->hNextBrotherDyn;
+            if (hThisSubAnim->hFatherDyn->hLastElementDyn == hThisSubAnim)
+                hThisSubAnim->hFatherDyn->hLastElementDyn = hThisSubAnim->hPrevBrotherDyn;
+        }
+        hThisSubAnim->hNextBrotherDyn = NULL;
+        hThisSubAnim->hPrevBrotherDyn = NULL;
+        hThisSubAnim->hFatherDyn = NULL;
+        HMU_fn_vFree((void**)&hThisSubAnim, 1);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 422–555 */

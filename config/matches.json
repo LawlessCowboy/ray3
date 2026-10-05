@@ -37536,6 +37536,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
       "status": "MATCH"
     },
+    "0x002895a0": {
+      "address": "0x002895a0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_v3dDataDesinit",
+      "size": 480,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
     "0x00289c50": {
       "address": "0x00289c50",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
