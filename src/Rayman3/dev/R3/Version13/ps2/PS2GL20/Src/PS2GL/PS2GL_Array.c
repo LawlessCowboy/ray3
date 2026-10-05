@@ -2969,7 +2969,30 @@ void impPS2glArrayElement(int iIndex)
 void impPS2glDisableClientState(unsigned int array)
 {
     unsigned int uMask;
-    /* TODO: decompile from asm/... */
+
+    uMask = 0xFFFFFFFF;
+    switch (array)
+    {
+    case 0x8074: /* GL_VERTEX_ARRAY */
+        uMask = ~0x20;
+        break;
+    case 0x8075: /* GL_NORMAL_ARRAY */
+        uMask = ~0x8;
+        break;
+    case 0x8076: /* GL_COLOR_ARRAY */
+        uMask = (g_PS2glContext.iCurClientTextureSet == 0) ? ~0x1 : ~0x80;
+        break;
+    case 0x8077: /* GL_INDEX_ARRAY */
+        uMask = ~0x4;
+        break;
+    case 0x8078: /* GL_TEXTURE_COORD_ARRAY */
+        uMask = (g_PS2glContext.iCurClientTextureSet == 0) ? ~0x10 : ~0x40;
+        break;
+    case 0x8079: /* GL_EDGE_FLAG_ARRAY */
+        uMask = ~0x2;
+        break;
+    }
+    g_PS2glContext.nClientEnableBits &= uMask;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 89–126 */
@@ -2992,7 +3015,30 @@ void impPS2glDisableClientState(unsigned int array)
 void impPS2glEnableClientState(unsigned int array)
 {
     unsigned int uMask;
-    /* TODO: decompile from asm/... */
+
+    uMask = 0;
+    switch (array)
+    {
+    case 0x8074: /* GL_VERTEX_ARRAY */
+        uMask = 0x20;
+        break;
+    case 0x8075: /* GL_NORMAL_ARRAY */
+        uMask = 0x8;
+        break;
+    case 0x8076: /* GL_COLOR_ARRAY */
+        uMask = (g_PS2glContext.iCurClientTextureSet == 0) ? 0x1 : 0x80;
+        break;
+    case 0x8077: /* GL_INDEX_ARRAY */
+        uMask = 0x4;
+        break;
+    case 0x8078: /* GL_TEXTURE_COORD_ARRAY */
+        uMask = (g_PS2glContext.iCurClientTextureSet == 0) ? 0x10 : 0x40;
+        break;
+    case 0x8079: /* GL_EDGE_FLAG_ARRAY */
+        uMask = 0x2;
+        break;
+    }
+    g_PS2glContext.nClientEnableBits |= uMask;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 79–83 */

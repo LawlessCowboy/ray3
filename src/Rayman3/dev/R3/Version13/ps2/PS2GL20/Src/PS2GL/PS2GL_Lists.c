@@ -2447,7 +2447,30 @@ int PS2glCountListObject(tagListData* pData)
  */
 void PS2glAddPrimBuffer(tagGLprimbuf* pBuf, unsigned char EOP)
 {
-    /* TODO: decompile from asm/... */
+    pBuf->bEOP = EOP;
+    if (g_PS2glContext.pCurPrimBuf == NULL)
+    {
+        *g_PS2glContext.ppCurPrimBufHead = pBuf;
+        if (g_PS2glContext.pCurListData->pPrimBufTail)
+        {
+            g_PS2glContext.pCurListData->pPrimBufTail->pNext = pBuf;
+        }
+        else
+        {
+            g_PS2glContext.pCurListData->pPrimBufHead = pBuf;
+            g_PS2glContext.pCurListData->pPrimBufTail = pBuf;
+        }
+    }
+    else
+    {
+        g_PS2glContext.pCurPrimBuf->pNext = pBuf;
+        g_PS2glContext.pCurPrimBuf->tagDma.next = &pBuf->tagDma;
+    }
+    g_PS2glContext.pCurPrimBuf = pBuf;
+    pBuf->tagDma.next = NULL;
+    pBuf->pNext = NULL;
+    if (EOP)
+        g_PS2glContext.pCurListData->pPrimBufTail = pBuf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 686–1339 */
@@ -3170,7 +3193,26 @@ void PS2glComputeBSfromBB(float* pfvBS, float* pBB)
 void PS2glMergeBB(float* pDstBB, float* pSrcBB)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    if (pSrcBB)
+    {
+        for (i = 0; i < 3; i++, pDstBB += 2, pSrcBB += 2)
+        {
+            if (pDstBB[0] > pSrcBB[0])
+                pDstBB[0] = pSrcBB[0];
+            if (pDstBB[1] < pSrcBB[1])
+                pDstBB[1] = pSrcBB[1];
+        }
+    }
+    else
+    {
+        pDstBB[0] = 16777215.0f;
+        pDstBB[1] = -16777215.0f;
+        pDstBB[2] = 16777215.0f;
+        pDstBB[3] = -16777215.0f;
+        pDstBB[4] = 16777215.0f;
+        pDstBB[5] = -16777215.0f;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 563–635 */
