@@ -561,7 +561,7 @@ def patch_relocation(code: bytearray, offset: int, reloc_type: int,
     elif reloc_type == 6:  # R_MIPS_LO16
         word = (word & 0xFFFF0000) | ((symbol_address + signed16(word & 0xFFFF)) & 0xFFFF)
         struct.pack_into('<I', code, offset, word)
-    elif reloc_type == 7:  # R_MIPS_GPREL16
+    elif reloc_type in (7, 8):  # R_MIPS_GPREL16, R_MIPS_LITERAL (both S + A - GP)
         word = (word & 0xFFFF0000) | ((symbol_address - gp + signed16(word & 0xFFFF)) & 0xFFFF)
         struct.pack_into('<I', code, offset, word)
     else:
@@ -628,7 +628,7 @@ def relocation_target_address(target_bytes: bytes, candidate_bytes: bytes, offse
     """
     def word(data: bytes, at: int) -> int | None:
         return struct.unpack_from('<I', data, at)[0] if 0 <= at and at + 4 <= len(data) else None
-    if reloc_type == 7:
+    if reloc_type in (7, 8):
         target, candidate = word(target_bytes, offset), word(candidate_bytes, offset)
         if target is None or candidate is None:
             return None
@@ -957,13 +957,13 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
                          for entry in unresolved}
     for record, target_symbol in relocation_records:
         name = record['symbol']
-        if target_symbol is None and name.startswith('@') and record['type'] == 7:
+        if target_symbol is None and name.startswith('@') and record['type'] in (7, 8):
             # A gp-relative anonymous constant (for example the zero object
             # MWCC copies to value-initialize an empty class temporary): the
             # retail word holds the linked offset, and the literal bytes must
             # agree at that address.
             address = relocation_target_address(target_bytes, candidate_bytes, record['offset'],
-                                                7, None, gp)
+                                                record['type'], None, gp)
             obj_symbol = next((entry for entry in obj_symbols if entry.name == name), None)
             in_bss = (obj_symbol is not None and 0 < obj_symbol.shndx < len(obj_sections)
                       and obj_sections[obj_symbol.shndx].type == 8)
@@ -972,7 +972,7 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
                 for section in sections)
             if (address is not None and not (in_bss and in_retail_data)
                     and anonymous_object_matches(name, address, obj_sections, obj_symbols, sections)
-                    and patch_relocation(candidate_bytes, record['offset'], 7, address, gp)):
+                    and patch_relocation(candidate_bytes, record['offset'], record['type'], address, gp)):
                 unresolved_by_key.pop((record['offset'], record['type'], name), None)
             continue
         if target_symbol is not None or not name.startswith('@') or record['type'] != 5:

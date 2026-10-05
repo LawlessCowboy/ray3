@@ -50,6 +50,8 @@ template <class T> struct sallocator {
 };
 
 template <class T1, class T2> struct spair {
+    spair(void) {}
+    spair(const T1& ro_First, const T2& ro_Second) : first(ro_First), second(ro_Second) {}
     T1 first;
     T2 second;
 };
@@ -106,6 +108,7 @@ struct stree : streebase {
     iterator end(void) { return iterator(_HeadLink); }
     iterator erase(iterator o_First, iterator o_Last);
     iterator lower_bound(const K& ro_Key);
+    spair<iterator, bool> insert(const V& ro_Value);
     static const K& _Key(sTreeNode* po_Node);
     iterator find(const K& ro_Key)
     {
@@ -131,12 +134,18 @@ struct smap {
     iterator end(void) { return _Tr.end(); }
     void erase(iterator o_It) { _Tr.erase(o_It); }
     iterator find(const K& ro_Key) { return _Tr.find(ro_Key); }
+    spair<iterator, bool> insert(const spair<const K, T>& ro_Value) { return _Tr.insert(ro_Value); }
     _Imp _Tr; /* +0x0 */
 };
 }
 
-struct CSoundSemaphore {
+struct CSoundSemaphore : usnd::smap<int, struct CSoundSemaphoreInfo*, usnd::less<int>, usnd::sallocator<struct CSoundSemaphoreInfo*> > {
+    CSoundSemaphore(unsigned int u32_ChannelId, unsigned int u32_ChannelSize);
     ~CSoundSemaphore();
+    void* operator new(size_t ui_Size) { return usnd_malloc(ui_Size); }
+    void f_vSynchro(void);
+    unsigned int mu32ChannelId; /* +0x10 */
+    unsigned int mu32ChannelSize; /* +0x14 */
 };
 
 struct CSoundSemaphoreCont : usnd::smap<int, CSoundSemaphore*, usnd::less<int>, usnd::sallocator<CSoundSemaphore*> > {
@@ -222,7 +231,12 @@ unsigned char CSoundSemaphoreCont::mfn_bRemoveSoundSemaphore(int s32_ChannelId)
 unsigned char CSoundSemaphoreCont::mfn_bSynchroSoundSemaphore(void)
 {
     iterator it_Cont;
-    /* TODO: decompile from asm/... */
+
+    for (it_Cont = begin(); it_Cont != end(); ++it_Cont)
+    {
+        (*it_Cont).second->f_vSynchro();
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphorecont.cpp lines 71–95 */
@@ -246,8 +260,30 @@ unsigned char CSoundSemaphoreCont::mfn_bSynchroSoundSemaphore(void)
  */
 CSoundSemaphore* CSoundSemaphoreCont::mfn_poAddSoundSemaphore(int s32_ChannelId, int s32_ChannelSize)
 {
-    CSoundSemaphore* po_Answer;
-    /* TODO: decompile from asm/... */
+    CSoundSemaphore* po_Answer = NULL;
+
+    if ((s32_ChannelId == -3) || (s32_ChannelId == -2) || (s32_ChannelId == -1))
+        return po_Answer;
+
+    iterator it = find(s32_ChannelId);
+    if (it != end())
+    {
+        po_Answer = (*it).second;
+    }
+    if (po_Answer)
+    {
+        if (po_Answer->mu32ChannelSize != s32_ChannelSize)
+            po_Answer->mu32ChannelSize = s32_ChannelSize;
+    }
+    else
+    {
+        po_Answer = new CSoundSemaphore(s32_ChannelId, s32_ChannelSize);
+        if (po_Answer)
+        {
+            insert(usnd::spair<const int, CSoundSemaphore*>(s32_ChannelId, po_Answer));
+        }
+    }
+    return po_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphorecont.cpp lines 58–67 */

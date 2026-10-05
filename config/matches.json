@@ -21387,6 +21387,21 @@
       "status": "MISMATCH",
       "target_size": 240,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ca0c0",
+      "candidate_size": 396,
+      "first_difference": 0,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "mfn_poAddSoundSemaphore__19CSoundSemaphoreContFii",
+      "reason": "Skeleton right (reject -3/-2/-1; find; reuse or resize; else new CSoundSemaphore plus insert(spair)). Residual: retail tests -3/-2/-1 with separate beq (mine folds into a range test; a switch is worse), binds find's key to a temporary copy while the parameter stays in s3, and shares FindSoundSemaphore's smap::find return-copy issue",
+      "size": 392,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcsoundsemaphorecont.cpp",
+      "status": "MISMATCH",
+      "target_size": 392,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -28852,6 +28867,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SND_fn_lAddObjectTypeSound2",
       "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcsoundsemaphorecont.cpp",
+      "status": "MATCH"
+    },
+    "0x001ca030": {
+      "address": "0x001ca030",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_bSynchroSoundSemaphore__19CSoundSemaphoreContFv",
+      "size": 124,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcsoundsemaphorecont.cpp",
       "status": "MATCH"
     },
