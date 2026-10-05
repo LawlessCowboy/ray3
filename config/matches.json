@@ -38414,6 +38414,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/Element.c",
       "status": "MATCH"
     },
+    "0x002a19e0": {
+      "address": "0x002a19e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GEO_vCreateElementIndexedTriangles",
+      "size": 180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GeoObj.c",
+      "status": "MATCH"
+    },
     "0x002a1bc0": {
       "address": "0x002a1bc0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -38436,6 +38444,14 @@
       "name": "GEO_vSetPointOfObject",
       "size": 56,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GeoObj.c",
+      "status": "MATCH"
+    },
+    "0x002a3ed0": {
+      "address": "0x002a3ed0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GEO_fn_vUpdateMinMaxBoxWithPoint",
+      "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/CullEd.c",
       "status": "MATCH"
     },
     "0x002a3f80": {
@@ -38508,6 +38524,14 @@
       "name": "GEO_bIsLookAt",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/GeoObjEd.c",
+      "status": "MATCH"
+    },
+    "0x002a4d30": {
+      "address": "0x002a4d30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GEO_hAllocTMPGeometricObject",
+      "size": 184,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/ClipTRIANGLES.c",
       "status": "MATCH"
     },
     "0x002a4df0": {

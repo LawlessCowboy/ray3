@@ -64,8 +64,8 @@ struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
     MTH3D_tdstVector_* d_stListOfPointsNormals; /* +0x4 */
     int d_dfVertexTransparency; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
-    int d_stListOfElements; /* +0x10 */
+    short* d_xListOfElementsTypes; /* +0xc */
+    void** d_stListOfElements; /* +0x10 */
     GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
     GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
     unsigned int ulType; /* +0x1c */
@@ -210,10 +210,22 @@ struct GEO_tdstElementAlignedBoxes_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* GEO_p_stAllocElementIndexedTriangles(short xNbFaces, short xNbElementUV, short xNbUVStages);
+
 void GEO_vCreateElementIndexedTriangles(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbFaces, short xNbElementUV, short xNbUVStages)
 {
     short xElementToBuild;
-    /* TODO: decompile from asm/... */
+
+    for (xElementToBuild = 0; xElementToBuild < hObject->xNbElements; xElementToBuild++)
+    {
+        if (hObject->d_xListOfElementsTypes[xElementToBuild] == 0)
+            break;
+    }
+    if (xElementToBuild == hObject->xNbElements)
+        return;
+    hObject->d_xListOfElementsTypes[xElementToBuild] = 1;
+    *p_hElement = xElementToBuild;
+    hObject->d_stListOfElements[xElementToBuild] = GEO_p_stAllocElementIndexedTriangles(xNbFaces, xNbElementUV, xNbUVStages);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 1029–1061 */

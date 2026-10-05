@@ -144,5 +144,16 @@ float GEO_g_xZFar;
  */
 void GEO_fn_vUpdateMinMaxBoxWithPoint(MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, MTH3D_tdstVector_* p_stPoint)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stPoint->xX < p_stMinPoint->xX)
+        p_stMinPoint->xX = p_stPoint->xX;
+    else if (p_stPoint->xX > p_stMaxPoint->xX)
+        p_stMaxPoint->xX = p_stPoint->xX;
+    if (p_stPoint->xY < p_stMinPoint->xY)
+        p_stMinPoint->xY = p_stPoint->xY;
+    else if (p_stPoint->xY > p_stMaxPoint->xY)
+        p_stMaxPoint->xY = p_stPoint->xY;
+    if (p_stPoint->xZ < p_stMinPoint->xZ)
+        p_stMinPoint->xZ = p_stPoint->xZ;
+    else if (p_stPoint->xZ > p_stMaxPoint->xZ)
+        p_stMaxPoint->xZ = p_stPoint->xZ;
 }
