@@ -4,7 +4,20 @@
 
 #include <stddef.h>
 
-extern "C" void f_vValueChanged__Q24usnd4CVarFv(void*);
+namespace usnd {
+struct CVar {
+    virtual ~CVar();
+    void f_vValueChanged(void);
+    void* m_poType; /* +0x4 */
+    unsigned int a4_ulNotifTargets[4]; /* +0x8: sset m_NotifTargets */
+    char* m_strName; /* +0x18 */
+};
+
+template <class T> struct TTypedVar : CVar {
+    void f_vSetValue(T oValue);
+    T m_oValue; /* +0x1c */
+};
+}
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _tdstAllRetMicroSound _tdstAllRetMicroSound;
@@ -51,12 +64,14 @@ struct _stVector {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* The recovered template qualifier is not valid C++ in an identifier; the
- * MWCC symbol spelling omits the angle-bracket type argument here. */
-void f_vSetValue__Q24usnd12TTypedVarFf(void* pThis, float oValue)
+namespace usnd {
+template <class T> void TTypedVar<T>::f_vSetValue(T oValue)
 {
-    f_vValueChanged__Q24usnd4CVarFv(pThis);
-    *(float*)((char*)pThis + 0x1c) = oValue;
+    m_oValue = oValue;
+    f_vValueChanged();
+}
+
+template struct TTypedVar<float>;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndmicro.cpp lines 38–40 */

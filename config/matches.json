@@ -21438,6 +21438,51 @@
       "status": "MISMATCH",
       "target_size": 284,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0018a1b0",
+      "candidate_size": 96,
+      "first_difference": 16,
+      "implementation": "void usnd_vLeaveCritSect(unsigned int uiCS)\n{\n    gs_uiCSCount[uiCS - 1]--;\n    if (gs_uiCSCount[uiCS - 1] == 0)\n    {\n        gs_uiCSThread[uiCS - 1] = (unsigned int)-1;\n        SignalSema(uiCS - 1);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "usnd_vLeaveCritSect",
+      "reason": "Unfolded-offset family: retail addresses gs_uiCSCount[uiCS-1] as (base + -4) + 0 + uiCS*4 (li -4, addu, addiu 0), while natural gs_uiCSCount[uiCS-1] gives 96/100 with a folded base. Pointer, pre-decrement and cast spellings don't reproduce it",
+      "size": 100,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
+      "status": "MISMATCH",
+      "target_size": 100,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0018a2d0",
+      "candidate_size": 160,
+      "first_difference": 56,
+      "implementation": "void usnd_vEnterCritSect(unsigned int uiCS)\n{\n    unsigned int uiThreadId;\n\n    uiThreadId = GetThreadId();\n    if (gs_uiCSThread[uiCS - 1] == uiThreadId)\n    {\n        gs_uiCSCount[uiCS - 1]++;\n    }\n    else\n    {\n        WaitSema(uiCS - 1);\n        gs_uiCSThread[uiCS - 1] = uiThreadId;\n        gs_uiCSCount[uiCS - 1] = 1;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "usnd_vEnterCritSect",
+      "reason": "Same as usnd_vLeaveCritSect: the first, CSE'd gs_uiCSThread[uiCS-1] address is built as (base + -4) + 0 + idx*4 with the base first in addu; natural indexing folds it (160/164). Index spellings and static arrays don't help (unfolded-offset family)",
+      "size": 164,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
+      "status": "MISMATCH",
+      "target_size": 164,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0018aa40",
+      "candidate_size": 156,
+      "first_difference": 13,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "usnd_uiTimerHandler__Fi",
+      "reason": "Body, T0_MODE ack, 64-bit tick compare, iSignalSema and sync/ei (allowed asm) all right, 156/156. Residual: retail enters the timer-list loop by jumping to the test (b; bnez at bottom), while for/while/!=NULL forms emit a beqz guard (jump-to-test loop-entry family)",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
+      "status": "MISMATCH",
+      "target_size": 156,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -28514,6 +28559,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndvolume.cpp",
       "status": "MATCH"
     },
+    "0x00186660": {
+      "address": "0x00186660",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "f_vSetValue__Q24usnd12TTypedVar<f>Ff",
+      "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndmicro.cpp",
+      "status": "MATCH"
+    },
     "0x00186670": {
       "address": "0x00186670",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -28791,6 +28844,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "usnd_vDeleteCritSect",
       "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
+      "status": "MATCH"
+    },
+    "0x0018a3a0": {
+      "address": "0x0018a3a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "usnd_uiCreateCritSect",
+      "size": 96,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
       "status": "MATCH"
     },
@@ -29135,6 +29196,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SND_VID_fn_vStopVideoSound",
       "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
+      "status": "MATCH"
+    },
+    "0x001cd770": {
+      "address": "0x001cd770",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_VID_fn_vResumeVideoSound",
+      "size": 124,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
       "status": "MATCH"
     },

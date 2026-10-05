@@ -30,6 +30,8 @@ struct CPS2Renderer {
     virtual void vUnknown4(void);
     virtual void vUnknown5(void);
     virtual void vStop(unsigned int);
+    virtual void fv_vPause(unsigned int ui_Channel);
+    virtual void fv_vResume(unsigned int ui_Channel);
 };
 
 struct CPS2StreamVBRenderer : CPS2Renderer {
@@ -120,8 +122,16 @@ static unsigned int gs_uiChannel;
 static unsigned int gs_uiSndVidCritSect;
 static unsigned int gs_TotalSizeReceived;
 static unsigned int gs_SoundStarted;
-static unsigned int gs_SoundRunning;
+static volatile unsigned int gs_SoundRunning;
 int SND_g_iEnoughSound;
+extern volatile int gv_iCD_Opened;
+
+/* The busy waits clear COP0 register 24 (mtc0 zero, $24), as in FireFx.cpp;
+   C cannot express the COP0 write. */
+inline void SND_VID_vClearCop0Register24(void)
+{
+    asm { mtc0 zero, $24 }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeevid.cpp lines 55–58 */
 /* addr: 0x001cd560  size: 68 bytes */
@@ -220,7 +230,11 @@ void SND_VID_fn_vStopVideoSound(void)
  */
 void SND_VID_fn_vResumeVideoSound(void)
 {
-    /* TODO: decompile from asm/... */
+    while (gv_iCD_Opened)
+        SND_VID_vClearCop0Register24();
+    gs_poRenderer->fv_vResume(gs_uiChannel);
+    while (!gs_SoundRunning)
+        SND_VID_vClearCop0Register24();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeevid.cpp lines 151–205 */

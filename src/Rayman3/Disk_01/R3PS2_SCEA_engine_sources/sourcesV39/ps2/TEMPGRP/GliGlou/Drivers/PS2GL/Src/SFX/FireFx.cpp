@@ -1547,13 +1547,11 @@ void FireFx_vProcess(void)
     if (p)
     {
         FireFx_vClearCop0Register24();
-        goto test;
-        do
+        while (p)
         {
             ((C_FireFx*)p->pFx)->Process();
             p = p->pNext;
-test:       ;
-        } while (p);
+        }
         FireFx_vClearCop0Register24Sync();
     }
 }

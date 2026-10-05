@@ -1556,6 +1556,11 @@ def function_body_span(text: str, name: str) -> tuple[int, int]:
         cls = method.group(3)[:length]
         found = list(re.finditer(r'^[^\n;]*\b%s\s*\([^;{]*\)\s*\{\n'
                                  % re.escape(f'{cls}::{method.group(1)}'), text, re.M))
+    free = re.match(r'^(\w+?)__F\w*$', name)
+    if not found and free:
+        # CodeWarrior C++ mangling of a free function: Name__F<signature>.
+        found = list(re.finditer(r'^[^\n;]*\b%s\s*\([^;{]*\)\s*\{\n' % re.escape(free.group(1)),
+                                 text, re.M))
     if len(found) != 1:
         raise ValueError(f'{len(found)} definitions of {name!r} found')
     start = found[0].end()

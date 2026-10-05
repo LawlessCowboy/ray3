@@ -13,6 +13,11 @@ typedef struct ThreadParam ThreadParam;
 typedef struct SemaParam SemaParam;
 
 extern "C" void DeleteSema(int);
+extern "C" int CreateSema(SemaParam* pst_Param);
+extern "C" int SignalSema(int);
+extern "C" int iSignalSema(int);
+extern "C" int WaitSema(int);
+extern "C" int GetThreadId(void);
 extern "C" int rand(void);
 
 struct _SHiResTime {
@@ -82,7 +87,12 @@ unsigned int gs_uiCritSect;
  */
 void usnd_vLeaveCritSect(unsigned int uiCS)
 {
-    /* TODO: decompile from asm/... */
+    gs_uiCSCount[uiCS - 1]--;
+    if (gs_uiCSCount[uiCS - 1] == 0)
+    {
+        gs_uiCSThread[uiCS - 1] = (unsigned int)-1;
+        SignalSema(uiCS - 1);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 670–686 */
@@ -130,7 +140,18 @@ unsigned int usnd_uiTryToEnterCritSect(unsigned int uiCS)
 void usnd_vEnterCritSect(unsigned int uiCS)
 {
     unsigned int uiThreadId;
-    /* TODO: decompile from asm/... */
+
+    uiThreadId = GetThreadId();
+    if (gs_uiCSThread[uiCS - 1] == uiThreadId)
+    {
+        gs_uiCSCount[uiCS - 1]++;
+    }
+    else
+    {
+        WaitSema(uiCS - 1);
+        gs_uiCSThread[uiCS - 1] = uiThreadId;
+        gs_uiCSCount[uiCS - 1] = 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 640–642 */
@@ -174,7 +195,14 @@ unsigned int usnd_uiCreateCritSect(void)
 {
     unsigned int uiSem;
     SemaParam sem;
-    /* TODO: decompile from asm/... */
+
+    sem.initCount = 1;
+    sem.maxCount = 1;
+    uiSem = CreateSema(&sem);
+    gs_nbSem++;
+    gs_uiCSCount[uiSem] = 0;
+    gs_uiCSThread[uiSem] = (unsigned int)-1;
+    return uiSem + 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 590–601 */
@@ -360,9 +388,29 @@ unsigned int usnd_uiGetTime(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int usnd_uiTimerHandler__Fi(void)
+/* sync/ei (the SDK ExitHandler sequence) are asm in retail; MWCC has no C
+   form for them. */
+int usnd_uiTimerHandler(int)
 {
-    /* TODO: decompile from asm/... */
+    _usnd_STimerStruct* pTimer;
+    int bSignal = 0;
+
+    *(volatile unsigned int*)0x10000010 |= 0x100;
+    usnd_guiTickT0++;
+    for (pTimer = (_usnd_STimerStruct*)g_sTimers; pTimer; pTimer = pTimer->m_next)
+    {
+        if (pTimer->m_uiTime == usnd_guiTickT0)
+        {
+            pTimer->m_uiTime += pTimer->m_uiPeriod;
+            pTimer->m_bCall = 1;
+            bSignal = 1;
+        }
+    }
+    if (bSignal == 1)
+        iSignalSema(g_uiTimerSem);
+    asm { sync }
+    asm { ei }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 179–205 */
