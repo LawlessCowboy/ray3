@@ -21603,6 +21603,36 @@
       "status": "MISMATCH",
       "target_size": 172,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00154b90",
+      "candidate_size": 132,
+      "first_difference": 56,
+      "implementation": "tagListData** PS2glSearchList(unsigned int list);\nvoid PS2glCallSDL(tagListData* pListData);\nvoid PS2glExecuteListData(tagListData* pData);\n\nvoid impPS2glCallList(unsigned int list)\n{\n    tagListData** ppListData;\n    tagListData* pListData;\n\n    ppListData = PS2glSearchList(list);\n    pListData = *ppListData;\n    if (pListData->pDmaBuffer)\n        PS2glCallSDL(pListData);\n    else\n        PS2glExecuteListData(pListData);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PS2glSearchList",
+      "reason": "Everything matches except the node-loop guard: retail branches to a separate 'move v0,zero' (return NULL) with a nop delay slot, while MWCC here retargets the guard to jr ra and fills the delay slot with move v0,zero. for/while/do/!=NULL/(cast)0 spellings don't change it",
+      "size": 132,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MISMATCH",
+      "target_size": 132,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b53e0",
+      "candidate_size": 124,
+      "first_difference": 12,
+      "implementation": "void GLI_v_StartDrawingRain(GLD_tdstViewportAttributes_* pViewport)\n{\n    float ModelView[4][4];\n\n    GLI_g_p_stCurrentCam = *(int*)pViewport->p_vSpecificToXD;\n    PS2_M_vMulMatrixColumnsByVector((float (*)[4])&((GLI_tdstCamera_*)GLI_g_p_stCurrentCam)->stMatrix.stTransformMatrix, GLI_g_NegVect, ModelView);\n    ModelView[3][3] = 1.0f;\n    VAC_Acquire((void*)GLI_g_hVAContainer, &ModelView, NULL);\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "GLI_v_StartDrawingRain",
+      "reason": "VU0 matrix-columns-by-vector (allowed lqc2/vmul/sqc2 asm), camera fetch, ModelView[3][3]=1 and VAC_Acquire all match (124/124). Residual: two scheduling rows, where retail computes &ModelView (addiu a1,sp,0x10) before the GLI_g_NegVect %lo add. Helper parameter orders and inline-asm pointer locals in any order don't change it",
+      "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawAGO2.c",
+      "status": "MISMATCH",
+      "target_size": 124,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -24956,6 +24986,22 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glListBase",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
+    "0x00153d50": {
+      "address": "0x00153d50",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glComputeBSfromBB",
+      "size": 124,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "EQUIVALENT"
+    },
+    "0x00154320": {
+      "address": "0x00154320",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glResetPrimBuffer",
+      "size": 108,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
       "status": "MATCH"
     },

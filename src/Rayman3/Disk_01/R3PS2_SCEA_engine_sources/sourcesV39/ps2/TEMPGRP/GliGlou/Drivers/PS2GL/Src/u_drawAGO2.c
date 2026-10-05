@@ -2364,10 +2364,37 @@ void GLI_v_StopDrawingRain(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int VAC_Acquire(void* hContainer, float (*pMatrix)[4][4], GLI_tdstMaterial_* pMat);
+
+/* Multiplies each column of a 4x4 matrix by a vector on VU0 (macro mode);
+   the VU0 instructions have no C form. */
+inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])
+{
+    asm {
+        lqc2 vf5, 0x0(_vec)
+        lqc2 vf1, 0x0(_src)
+        lqc2 vf2, 0x10(_src)
+        lqc2 vf3, 0x20(_src)
+        lqc2 vf4, 0x30(_src)
+        vmul.xyzw vf1, vf1, vf5
+        vmul.xyzw vf2, vf2, vf5
+        vmul.xyzw vf3, vf3, vf5
+        vmul.xyzw vf4, vf4, vf5
+        sqc2 vf1, 0x0(_dst)
+        sqc2 vf2, 0x10(_dst)
+        sqc2 vf3, 0x20(_dst)
+        sqc2 vf4, 0x30(_dst)
+    }
+}
+
 void GLI_v_StartDrawingRain(GLD_tdstViewportAttributes_* pViewport)
 {
     float ModelView[4][4];
-    /* TODO: decompile from asm/... */
+
+    GLI_g_p_stCurrentCam = *(int*)pViewport->p_vSpecificToXD;
+    PS2_M_vMulMatrixColumnsByVector((float (*)[4])&((GLI_tdstCamera_*)GLI_g_p_stCurrentCam)->stMatrix.stTransformMatrix, GLI_g_NegVect, ModelView);
+    ModelView[3][3] = 1.0f;
+    VAC_Acquire((void*)GLI_g_hVAContainer, &ModelView, NULL);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 347–424 */

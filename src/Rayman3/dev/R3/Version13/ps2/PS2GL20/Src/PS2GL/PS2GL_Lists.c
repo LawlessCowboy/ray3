@@ -3122,12 +3122,27 @@ void PS2glListSaveBuffer(unsigned char EOP)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* sqrt.s has no C form under the baseline (MWCC calls sqrtf). */
+inline float PS2gl_xSqrt(float x)
+{
+    float r;
+    asm { sqrt.s r, x }
+    return r;
+}
+
 void PS2glComputeBSfromBB(float* pfvBS, float* pBB)
 {
-    float fDepth;
     float fHeight;
+    float fDepth;
     float fWidth;
-    /* TODO: decompile from asm/... */
+
+    fWidth = 0.5f * (pBB[1] - pBB[0]);
+    fHeight = 0.5f * (pBB[3] - pBB[2]);
+    fDepth = 0.5f * (pBB[5] - pBB[4]);
+    pfvBS[0] = pBB[0] + fWidth;
+    pfvBS[1] = pBB[2] + fHeight;
+    pfvBS[2] = pBB[4] + fDepth;
+    pfvBS[3] = PS2gl_xSqrt(g_fBSMultiplicator * (fWidth * fWidth + fHeight * fHeight + fDepth * fDepth));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 641–665 */
@@ -3391,7 +3406,13 @@ void PS2glListAssembleQuads(void)
  */
 void PS2glResetPrimBuffer(void)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.pVBuf = g_PS2glContext.pVBuf0;
+    g_PS2glContext.pNBuf = g_PS2glContext.pNBuf0;
+    g_PS2glContext.pCBuf = g_PS2glContext.pCBuf0;
+    g_PS2glContext.pTBuf = g_PS2glContext.pTBuf0;
+    g_PS2glContext.pCBuf_b = g_PS2glContext.pCBuf0_b;
+    g_PS2glContext.pTBuf_b = g_PS2glContext.pTBuf0_b;
+    g_PS2glContext.iBufCount = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 361–387 */
@@ -3714,9 +3735,23 @@ tagListData** PS2glAddLists(unsigned int list, int range)
  */
 tagListData** PS2glSearchList(unsigned int list)
 {
-    int iOffset;
-    int I;
-    tagListNode* pNode;
     tagListNodeSingle* pSingleIndex;
-    /* TODO: decompile from asm/... */
+    int iOffset;
+    tagListNode* pNode;
+    int I;
+
+    pNode = g_PS2glContext.ListPool.pFirstNode;
+    pSingleIndex = g_PS2glContext.ListPool.aSingleIndex;
+    for (I = 0; I < 64; I++, pSingleIndex++)
+    {
+        if (pSingleIndex->nIndex == list)
+            return &pSingleIndex->pData;
+    }
+    for (; pNode; pNode = pNode->pNext)
+    {
+        iOffset = list - pNode->nIndex;
+        if ((iOffset >= 0) && (iOffset < pNode->iSize))
+            return (tagListData**)&pNode->apData[iOffset];
+    }
+    return NULL;
 }
