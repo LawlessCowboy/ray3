@@ -1263,14 +1263,14 @@ float a4_xQuater1[4];
 MTH3D_tdstVector_ g_stTempoVector;
 int gp_stNTTO;
 int gp_FramesNumOfNTTO;
-int gp_stOnlyFrames;
+tdstOnlyFrame_* gp_stOnlyFrames;
 int gp_stChannels;
-int gp_a3_xVectors;
+MTH3D_tdstVector_* gp_a3_xVectors;
 int gp_stKeyFrames;
 int gp_FramesKFIndex;
-int gp_a4_xQuaternions;
+short (*gp_a4_xQuaternions)[4];
 unsigned char g_bNoSpeedForIntermAnim;
-int gp_stHierarchies;
+tdstCouple_* gp_stHierarchies;
 int gp_stDeformations;
 int gp_stMorphData;
 int gp_stEvents;
@@ -1912,11 +1912,21 @@ tdstAnim3d_* fn_p_stCreateIntermediateAnimation(tdstAnim3d_* p_stPreviousAnim, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstA3dGENERAL_* fn_p_GetA3dGENERAL(unsigned short uwNum, unsigned int ulFrame);
+
 tdstCouple_* fn_p_stGetHierarchy(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, unsigned int* p_ulNewNbCouples)
 {
     tdstOnlyFrame_* p_stCurrentOnlyFrame;
     tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    /* TODO: decompile from asm/... */
+
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        _uwFrame = _p_stAnim3d->uwNumberOfFrames - 1;
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
+    p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
+    *p_ulNewNbCouples = p_stCurrentOnlyFrame->uwHierarchyNbCouples;
+    if (p_stCurrentOnlyFrame->uwHierarchyNbCouples)
+        return &gp_stHierarchies[p_stCurrentOnlyFrame->uwNumOfFirstHierarchyCouple];
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 970–1145 */
@@ -2178,11 +2188,26 @@ MTH3D_tdstVector_* fn_p_stGetLinearSpeedVectorForInterAnim(tdstAnim3d_* _p_stAni
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat);
+void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS);
+
 MTH3D_tdstMatrix_* fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame, MTH3D_tdstMatrix_* p_stMatrix)
 {
     float a4_xQuatOri[4];
     tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    /* TODO: decompile from asm/... */
+
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        return NULL;
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
+    _uwFrame -= p_stCurrentA3dGENERAL->uwStartFrame;
+    {
+        tdstOnlyFrame_* p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
+        if (p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat == 0xFFFF)
+            return NULL;
+        fn_v_ExpandQuat(a4_xQuatOri, gp_a4_xQuaternions[p_stCurrentOnlyFrame->uwNumOfAngularSpeedQuat]);
+    }
+    fn_v_QuatToMatrix((float (*)[3])p_stMatrix, a4_xQuatOri);
+    return p_stMatrix;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 667–703 */
@@ -2205,7 +2230,19 @@ MTH3D_tdstMatrix_* fn_p_stGetAngularSpeedMatrix(tdstAnim3d_* _p_stAnim3d, unsign
 MTH3D_tdstVector_* fn_p_stGetLinearSpeedVector(tdstAnim3d_* _p_stAnim3d, unsigned short _uwFrame)
 {
     tdstA3dGENERAL_* p_stCurrentA3dGENERAL;
-    /* TODO: decompile from asm/... */
+
+    if (_p_stAnim3d->ucFlagMergeAnim)
+        return fn_p_stGetLinearSpeedVectorForInterAnim(_p_stAnim3d, _uwFrame);
+    if (_uwFrame >= _p_stAnim3d->uwNumberOfFrames)
+        return NULL;
+    p_stCurrentA3dGENERAL = fn_p_GetA3dGENERAL(_p_stAnim3d->uwNumOfA3dGENERAL, _uwFrame);
+    _uwFrame -= p_stCurrentA3dGENERAL->uwStartFrame;
+    {
+        tdstOnlyFrame_* p_stCurrentOnlyFrame = &gp_stOnlyFrames[p_stCurrentA3dGENERAL->uwNumOfFirstOnlyFrame + _uwFrame];
+        if (p_stCurrentOnlyFrame->uwNumOfSpeedVector == 0xFFFF)
+            return NULL;
+        return &gp_a3_xVectors[p_stCurrentOnlyFrame->uwNumOfSpeedVector];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 517–654 */
