@@ -1323,8 +1323,41 @@ void COL_fn_vCollideStaticSphereWithStaticEdge(COL_tdstGVForCollision_* p_stGV, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Recovered PS2 MTH scalar helpers: sqrt.s and the R5900 accumulator ops
+   have no C form under the baseline. */
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+
 void COL_fn_vEnlargeSphereIfNecessary(COL_tdstGVForCollision_* p_stGV)
 {
     float xNewRadius;
-    /* TODO: decompile from asm/... */
+    float xX, xY, xZ;
+    float xSqrLength;
+    float xLength;
+
+    p_stGV->xSwapRadius = p_stGV->xDynamicRadius;
+    *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX; *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY; *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;
+
+    xX = p_stGV->stDinST01Vector.xX; xY = p_stGV->stDinST01Vector.xY; xZ = p_stGV->stDinST01Vector.xZ; MTH_SQR3_TO(xSqrLength, xX, xY, xZ)
+
+    if (xSqrLength < 0.001f)
+    {
+        p_stGV->bUseEnlargeSphere = 0;
+    }
+    else
+    {
+        MTH_SQRT_TO(xLength, xSqrLength)
+        xNewRadius = (xLength + 2.0f * p_stGV->xDynamicRadius) / 2.0f;
+
+        p_stGV->stDinST0Point.xX += 0.5f * xX;
+        p_stGV->stDinST0Point.xY += 0.5f * xY;
+        p_stGV->stDinST0Point.xZ += 0.5f * xZ;
+
+        p_stGV->xDynamicRadius = xNewRadius;
+        p_stGV->bUseEnlargeSphere = 1;
+    }
 }

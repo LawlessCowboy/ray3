@@ -136,11 +136,45 @@ DNM_stMecReport g_stReport;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Recovered PS2 MTH dot product: the R5900 accumulator ops have no C form
+   under the baseline. */
+#define MTH_DOT3_TO(_result, _ax, _bx, _ay, _by, _az, _bz) \
+    asm { mula.s _ax, _bx }                                 \
+    asm { madda.s _ay, _by }                                \
+    asm { madd.s _result, _az, _bz }
+
 void MTH_fn_vVectorPlaneProjection(MTH3D_tdstVector_* _p_stResult, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stPlaneNorm, MTH3D_tdstVector_* _p_stProjDirection)
 {
     float xDotProduct;
     float xAlpha;
     MTH3D_tdstVector_* p_stTmp;
     MTH3D_tdstVector_ a_stVector[1];
-    /* TODO: decompile from asm/... */
+
+    p_stTmp = a_stVector;
+    if (_p_stProjDirection != _p_stPlaneNorm)
+    {
+        float xAX, xBX, xAY, xBY, xAZ, xBZ;
+        xBX = _p_stPlaneNorm->xX; xAX = _p_stProjDirection->xX; xBY = _p_stPlaneNorm->xY; xAY = _p_stProjDirection->xY; xBZ = _p_stPlaneNorm->xZ; xAZ = _p_stProjDirection->xZ; MTH_DOT3_TO(xDotProduct, xAX, xBX, xAY, xBY, xAZ, xBZ)
+    }
+    else
+        xDotProduct = 1.0f;
+
+    if (xDotProduct != 0.0f)
+    {
+        {
+            float xAX, xBX, xAY, xBY, xAZ, xBZ;
+            float xDot;
+            xBX = _p_stPlaneNorm->xX; xAX = _p_stSource->xX; xBY = _p_stPlaneNorm->xY; xAY = _p_stSource->xY; xBZ = _p_stPlaneNorm->xZ; xAZ = _p_stSource->xZ; MTH_DOT3_TO(xDot, xAX, xBX, xAY, xBY, xAZ, xBZ) xAlpha = -xDot;
+        }
+        xAlpha /= xDotProduct;
+
+        *(int*)&p_stTmp->xX = *(int*)&_p_stProjDirection->xX; *(int*)&p_stTmp->xY = *(int*)&_p_stProjDirection->xY; *(int*)&p_stTmp->xZ = *(int*)&_p_stProjDirection->xZ;
+        p_stTmp->xX = xAlpha * p_stTmp->xX; p_stTmp->xY = xAlpha * p_stTmp->xY; p_stTmp->xZ = xAlpha * p_stTmp->xZ;
+
+        if (_p_stResult != _p_stSource)
+        {
+            *(int*)&_p_stResult->xX = *(int*)&_p_stSource->xX; *(int*)&_p_stResult->xY = *(int*)&_p_stSource->xY; *(int*)&_p_stResult->xZ = *(int*)&_p_stSource->xZ;
+        }
+        _p_stResult->xX = _p_stResult->xX + p_stTmp->xX; _p_stResult->xY = _p_stResult->xY + p_stTmp->xY; _p_stResult->xZ = _p_stResult->xZ + p_stTmp->xZ;
+    }
 }

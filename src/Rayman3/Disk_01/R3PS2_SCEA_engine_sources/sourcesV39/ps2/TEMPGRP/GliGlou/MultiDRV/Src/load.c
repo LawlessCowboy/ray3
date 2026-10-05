@@ -215,5 +215,35 @@ int GLI_Precalc_IsMaterialTransparent(GLI_tdstMaterial_* hVisualMaterial)
     anon_0* pMat;
     GLI_tdstTexturePS2GL_* p_stSpecParam;
     int ReturnValue;
-    /* TODO: decompile from asm/... */
+
+    ReturnValue = 0;
+    if (hVisualMaterial)
+    {
+        if (hVisualMaterial->ulNbTextureStages)
+        {
+            pMat = hVisualMaterial->a_stMultiMaterial;
+            if (pMat)
+            {
+                if (pMat->c_Operator != 2 && pMat->c_Operator != 6 && pMat->c_Operator != 8)
+                    ReturnValue = 1;
+            }
+        }
+        else if (hVisualMaterial->p_stTexture && (p_stSpecParam = (GLI_tdstTexturePS2GL_*)hVisualMaterial->p_stTexture->p_stSpecParam))
+        {
+            if (p_stSpecParam->TextureID)
+            {
+                pMat = hVisualMaterial->a_stMultiMaterial;
+                if (pMat)
+                {
+                    if ((hVisualMaterial->p_stTexture->lTextureCaps & 2) == 2 || (hVisualMaterial->p_stTexture->lTextureCaps & 0x100) == 0x100 || (hVisualMaterial->a_stMultiMaterial[0].ulTextureProperties & 0x40))
+                        ReturnValue = 0;
+                    else if ((hVisualMaterial->p_stTexture->lTextureCaps & 8) == 8 || (hVisualMaterial->p_stTexture->lTextureCaps & 0x20) == 0x20)
+                        ReturnValue = 1;
+                    else if (hVisualMaterial->a_stMultiMaterial[0].ulTextureProperties & 0x20)
+                        ReturnValue = 1;
+                }
+            }
+        }
+    }
+    return ReturnValue;
 }

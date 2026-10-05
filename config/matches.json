@@ -21759,6 +21759,66 @@
       "status": "MISMATCH",
       "target_size": 196,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00181f30",
+      "candidate_size": 100,
+      "first_difference": 12,
+      "implementation": "void PS2glListBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart)\n{\n    float (*pDst)[4];\n    float (*param0)[4];\n    int i;\n\n    pDst = pBuf + iDstStart;\n    param0 = pBuf + iSrcStart;\n    for (i = iSrcStart; i > 0; i--)\n    {\n        if (i & 1)\n        {\n            *(__int128*)pDst[1] = *(__int128*)param0[2];\n            *(__int128*)pDst[2] = *(__int128*)param0[1];\n        }\n        else\n        {\n            *(__int128*)pDst[2] = *(__int128*)param0[2];\n            *(__int128*)pDst[1] = *(__int128*)param0[1];\n        }\n        *(__int128*)pDst[0] = *(__int128*)param0[0];\n        param0--;\n        pDst -= 3;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PS2glListBufferTriangleStripToTriangle",
+      "reason": "Exact except one missing nop at the else-branch target +0x34 (addr 4 mod 8): the -O3,p branch-target alignment pad. PS2GL builds without -O3,p, so PS2GL_Pipeline.c may need the game flag per file (baseline change, needs approval).",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Pipeline.c",
+      "status": "MISMATCH",
+      "target_size": 104,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00252510",
+      "candidate_size": 208,
+      "first_difference": 34,
+      "implementation": "void COL_fn_vEnlargeSphereIfNecessary(COL_tdstGVForCollision_* p_stGV)\n{\n    float xNewRadius;\n    float xX, xY, xZ;\n    float xSqrLength;\n    float xLength;\n\n    p_stGV->xSwapRadius = p_stGV->xDynamicRadius;\n    *(int*)&p_stGV->stSwapDinST0Point.xX = *(int*)&p_stGV->stDinST0Point.xX; *(int*)&p_stGV->stSwapDinST0Point.xY = *(int*)&p_stGV->stDinST0Point.xY; *(int*)&p_stGV->stSwapDinST0Point.xZ = *(int*)&p_stGV->stDinST0Point.xZ;\n\n    xX = p_stGV->stDinST01Vector.xX; xY = p_stGV->stDinST01Vector.xY; xZ = p_stGV->stDinST01Vector.xZ; MTH_SQR3_TO(xSqrLength, xX, xY, xZ)\n\n    if (xSqrLength < 0.001f)\n    {\n        p_stGV->bUseEnlargeSphere = 0;\n    }\n    else\n    {\n        MTH_SQRT_TO(xLength, xSqrLength)\n        xNewRadius = (xLength + 2.0f * p_stGV->xDynamicRadius) / 2.0f;\n\n        p_stGV->stDinST0Point.xX += 0.5f * xX;\n        p_stGV->stDinST0Point.xY += 0.5f * xY;\n        p_stGV->stDinST0Point.xZ += 0.5f * xZ;\n\n        p_stGV->xDynamicRadius = xNewRadius;\n        p_stGV->bUseEnlargeSphere = 1;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "COL_fn_vEnlargeSphereIfNecessary",
+      "reason": "208/208 with MTH_SQR3_TO (mula/madda/madd) and MTH_SQRT_TO asm macros, int word copy of swap point, natural nops before sqrt; residual is FP scheduling of the 2.0/0.5 constants and the 0.5*vector multiplies (retail does y first, loads radius and point.x before), permuter candidate",
+      "size": 208,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CsSphElt.c",
+      "status": "MISMATCH",
+      "target_size": 208,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00302b40",
+      "candidate_size": 272,
+      "first_difference": 120,
+      "implementation": "void MTH_fn_vVectorPlaneProjection(MTH3D_tdstVector_* _p_stResult, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stPlaneNorm, MTH3D_tdstVector_* _p_stProjDirection)\n{\n    float xDotProduct;\n    float xAlpha;\n    MTH3D_tdstVector_* p_stTmp;\n    MTH3D_tdstVector_ a_stVector[1];\n\n    p_stTmp = a_stVector;\n    if (_p_stProjDirection != _p_stPlaneNorm)\n    {\n        float xAX, xBX, xAY, xBY, xAZ, xBZ;\n        xBX = _p_stPlaneNorm->xX; xAX = _p_stProjDirection->xX; xBY = _p_stPlaneNorm->xY; xAY = _p_stProjDirection->xY; xBZ = _p_stPlaneNorm->xZ; xAZ = _p_stProjDirection->xZ; MTH_DOT3_TO(xDotProduct, xAX, xBX, xAY, xBY, xAZ, xBZ)\n    }\n    else\n        xDotProduct = 1.0f;\n\n    if (xDotProduct != 0.0f)\n    {\n        {\n            float xAX, xBX, xAY, xBY, xAZ, xBZ;\n            float xDot;\n            xBX = _p_stPlaneNorm->xX; xAX = _p_stSource->xX; xBY = _p_stPlaneNorm->xY; xAY = _p_stSource->xY; xBZ = _p_stPlaneNorm->xZ; xAZ = _p_stSource->xZ; MTH_DOT3_TO(xDot, xAX, xBX, xAY, xBY, xAZ, xBZ) xAlpha = -xDot;\n        }\n        xAlpha /= xDotProduct;\n\n        *(int*)&p_stTmp->xX = *(int*)&_p_stProjDirection->xX; *(int*)&p_stTmp->xY = *(int*)&_p_stProjDirection->xY; *(int*)&p_stTmp->xZ = *(int*)&_p_stProjDirection->xZ;\n        p_stTmp->xX = xAlpha * p_stTmp->xX; p_stTmp->xY = xAlpha * p_stTmp->xY; p_stTmp->xZ = xAlpha * p_stTmp->xZ;\n\n        if (_p_stResult != _p_stSource)\n        {\n            *(int*)&_p_stResult->xX = *(int*)&_p_stSource->xX; *(int*)&_p_stResult->xY = *(int*)&_p_stSource->xY; *(int*)&_p_stResult->xZ = *(int*)&_p_stSource->xZ;\n        }\n        _p_stResult->xX = _p_stResult->xX + p_stTmp->xX; _p_stResult->xY = _p_stResult->xY + p_stTmp->xY; _p_stResult->xZ = _p_stResult->xZ + p_stTmp->xZ;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MTH_fn_vVectorPlaneProjection",
+      "reason": "272/272, one row: retail schedules the line-56 copy's first lw between the madd.s dot asm and neg.s (xAlpha = -dot); ours emits neg.s right after the asm. Tried single asm block, inline-function dot, combined -dot/x, statement reorders. Block-scoped asm operand locals fixed the first dot's FP registers.",
+      "size": 272,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMRepor.c",
+      "status": "MISMATCH",
+      "target_size": 272,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002653e0",
+      "candidate_size": 196,
+      "first_difference": 24,
+      "implementation": "int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFamilyList_* p_stFamily)\n{\n    unsigned int i;\n\n    for (i = 0; i < p_stFamily->ulNumberLipSynchValues; i++)\n    {\n        if (p_stFamily->ax_stLipsSynchValues[i].cCode == cPhonem)\n        {\n            p_stVector->xX = p_stFamily->ax_stLipsSynchValues[i].xX;\n            p_stVector->xY = p_stFamily->ax_stLipsSynchValues[i].xY;\n            p_stVector->xZ = p_stFamily->ax_stLipsSynchValues[i].xZ;\n            return 1;\n        }\n    }\n\n    p_stVector->xX = 1.0f;\n    p_stVector->xY = 1.0f;\n    p_stVector->xZ = 1.0f;\n\n    if (cPhonem == 0x32)\n    {\n        SND_fn_vResetLastMarker();\n        return 0;\n    }\n\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_bGetVectorFromPhonem",
+      "reason": "Natural ax[i].xX gives 196/204 (offset folded into lwc1). Retail computes (ax+4)+i*16 per component; ((float*)&ax[0].xX)[i*4] reproduces that at 204/204, but MWCC then hoists 'addiu v0,t2,4' into the bne delay slot where retail evaluates sll a1 first and keeps nop, plus one loop-alignment nop. Likely needs the original lip-synch accessor macro shape.",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/MainChar.c",
+      "status": "MISMATCH",
+      "target_size": 204,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -31043,6 +31103,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
       "status": "MATCH"
     },
+    "0x001fc620": {
+      "address": "0x001fc620",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucIntelligenceScheduleEngine",
+      "size": 216,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
     "0x001fca30": {
       "address": "0x001fca30",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -38619,6 +38687,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/GeoBdvEd.c",
       "status": "MATCH"
     },
+    "0x002a4450": {
+      "address": "0x002a4450",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GEO_fn_vComputeBoundingSphereOfOneSphereAndOnePoint",
+      "size": 216,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/GeoBdvEd.c",
+      "status": "MATCH"
+    },
     "0x002a4b90": {
       "address": "0x002a4b90",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -39203,6 +39279,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Linear.c",
       "status": "MATCH"
     },
+    "0x002a9630": {
+      "address": "0x002a9630",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_Precalc_IsMaterialTransparent",
+      "size": 236,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/load.c",
+      "status": "MATCH"
+    },
     "0x002a9720": {
       "address": "0x002a9720",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -39353,6 +39437,14 @@
       "name": "GLI_xGetMaterialAmbientCoef",
       "size": 36,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
+    "0x002aa0f0": {
+      "address": "0x002aa0f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_xCreateMaterial",
+      "size": 304,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Matstack.c",
       "status": "MATCH"
     },
     "0x002aa220": {
@@ -43099,6 +43191,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SAI/SAI_Priv.c",
       "status": "MATCH"
     },
+    "0x00319870": {
+      "address": "0x00319870",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SAI_fn_eVerifyFlags",
+      "size": 276,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SAI/SAI_Pub.c",
+      "status": "MATCH"
+    },
     "0x00319990": {
       "address": "0x00319990",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -43112,6 +43212,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SAI_fn_bInsertArrayInTable",
       "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SAI/SAI_Pub.c",
+      "status": "MATCH"
+    },
+    "0x003199c0": {
+      "address": "0x003199c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SAI_fn_p_vGetTableValuePointerOf",
+      "size": 216,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SAI/SAI_Pub.c",
       "status": "MATCH"
     },

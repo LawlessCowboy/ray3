@@ -1387,10 +1387,81 @@ tdstEngineStructure_ g_stEngineStructure;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef struct LST2_tdstAnchorTotdxHandleToStateOpt LST2_tdstAnchorTotdxHandleToStateOpt;
+typedef struct LST2_tdstAnchorTotdxHandleToSubAnimOpt LST2_tdstAnchorTotdxHandleToSubAnimOpt;
+typedef struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt;
+typedef struct tdstLipsSynchValue_ tdstLipsSynchValue_;
+
+struct LST2_tdstAnchorTotdxHandleToStateOpt {
+    tdstState_* hFirstElementOpt; /* +0x0 */
+    int lNumberOfElementsOpt; /* +0x4 */
+};
+
+struct LST2_tdstAnchorTotdxHandleToSubAnimOpt {
+    tdstSubAnim_* hFirstElementOpt; /* +0x0 */
+    int lNumberOfElementsOpt; /* +0x4 */
+};
+
+struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt {
+    tdstObjectsTablesList_* hFirstElementOpt; /* +0x0 */
+    int lNumberOfElementsOpt; /* +0x4 */
+};
+
+struct tdstLipsSynchValue_ {
+    char cCode; /* +0x0 */
+    float xX; /* +0x4 */
+    float xY; /* +0x8 */
+    float xZ; /* +0xc */
+};
+
+struct tdstFamilyList_ {
+    tdstFamilyList_* hNextBrotherDyn; /* +0x0 */
+    tdstFamilyList_* hPrevBrotherDyn; /* +0x4 */
+    LST2_tdstAnchorTotdxHandleToFamilyListDyn* hFatherDyn; /* +0x8 */
+    int otObjectFamilyType; /* +0xc */
+    LST2_tdstAnchorTotdxHandleToStateOpt hForStateArray; /* +0x10 */
+    LST2_tdstAnchorTotdxHandleToSubAnimOpt hForSubAnimArray; /* +0x18 */
+    tdstObjectsTablesList_* h_DefaultObjectsTable; /* +0x20 */
+    LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt hForObjectsTablesList; /* +0x24 */
+    COL_tdstBoundingSphere_* hBoundingSphere; /* +0x2c */
+    tdstLipsSynchValue_* ax_stLipsSynchValues; /* +0x30 */
+    unsigned int ulNumberLipSynchValues; /* +0x34 */
+    unsigned int ulLipsChannel; /* +0x38 */
+    unsigned int ulNumberOfChannels; /* +0x3c */
+    unsigned char ucPriority; /* +0x40 */
+    unsigned char ucOptimized; /* +0x41 */
+    unsigned char ucStorageBank; /* +0x42 */
+    unsigned char ucProperties; /* +0x43 */
+};
+
+void SND_fn_vResetLastMarker(void);
+
 int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFamilyList_* p_stFamily)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < p_stFamily->ulNumberLipSynchValues; i++)
+    {
+        if (p_stFamily->ax_stLipsSynchValues[i].cCode == cPhonem)
+        {
+            p_stVector->xX = p_stFamily->ax_stLipsSynchValues[i].xX;
+            p_stVector->xY = p_stFamily->ax_stLipsSynchValues[i].xY;
+            p_stVector->xZ = p_stFamily->ax_stLipsSynchValues[i].xZ;
+            return 1;
+        }
+    }
+
+    p_stVector->xX = 1.0f;
+    p_stVector->xY = 1.0f;
+    p_stVector->xZ = 1.0f;
+
+    if (cPhonem == 0x32)
+    {
+        SND_fn_vResetLastMarker();
+        return 0;
+    }
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 136–136 */

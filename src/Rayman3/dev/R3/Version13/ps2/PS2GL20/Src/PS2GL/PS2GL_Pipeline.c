@@ -792,5 +792,23 @@ void PS2glListBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int
     float (*pDst)[4];
     float (*param0)[4];
     int i;
-    /* TODO: decompile from asm/... */
+
+    pDst = pBuf + iDstStart;
+    param0 = pBuf + iSrcStart;
+    for (i = iSrcStart; i > 0; i--)
+    {
+        if (i & 1)
+        {
+            *(__int128*)pDst[1] = *(__int128*)param0[2];
+            *(__int128*)pDst[2] = *(__int128*)param0[1];
+        }
+        else
+        {
+            *(__int128*)pDst[2] = *(__int128*)param0[2];
+            *(__int128*)pDst[1] = *(__int128*)param0[1];
+        }
+        *(__int128*)pDst[0] = *(__int128*)param0[0];
+        param0--;
+        pDst -= 3;
+    }
 }
