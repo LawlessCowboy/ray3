@@ -1477,7 +1477,15 @@ COL_tdstBoundingSphere_* fn_vGetBoundingVolumeOfFamily(tdstFamilyList_* h_Family
  */
 void fn_vDesinitFamilyStructureForPriority(unsigned char ucPriority)
 {
-    tdstFamilyList_* p_stNextFamily;
     tdstFamilyList_* p_stThisFamily;
-    /* TODO: decompile from asm/... */
+    tdstFamilyList_* p_stNextFamily;
+
+    for (p_stThisFamily = g_stEngineStructure.hFamilyList.hFirstElementDyn, p_stNextFamily = p_stThisFamily ? p_stThisFamily->hNextBrotherDyn : NULL; p_stThisFamily;
+         p_stThisFamily = p_stNextFamily, p_stNextFamily = p_stThisFamily ? p_stThisFamily->hNextBrotherDyn : NULL)
+    {
+        if (p_stThisFamily->ucPriority == ucPriority)
+        {
+            if (p_stThisFamily->hNextBrotherDyn) p_stThisFamily->hNextBrotherDyn->hPrevBrotherDyn = p_stThisFamily->hPrevBrotherDyn; if (p_stThisFamily->hPrevBrotherDyn) p_stThisFamily->hPrevBrotherDyn->hNextBrotherDyn = p_stThisFamily->hNextBrotherDyn; if (p_stThisFamily->hFatherDyn) { p_stThisFamily->hFatherDyn->lNumberOfElementsDyn--; if (p_stThisFamily->hFatherDyn->hFirstElementDyn == p_stThisFamily) p_stThisFamily->hFatherDyn->hFirstElementDyn = p_stThisFamily->hNextBrotherDyn; if (p_stThisFamily->hFatherDyn->hLastElementDyn == p_stThisFamily) p_stThisFamily->hFatherDyn->hLastElementDyn = p_stThisFamily->hPrevBrotherDyn; } p_stThisFamily->hNextBrotherDyn = NULL; p_stThisFamily->hPrevBrotherDyn = NULL; p_stThisFamily->hFatherDyn = NULL;
+        }
+    }
 }

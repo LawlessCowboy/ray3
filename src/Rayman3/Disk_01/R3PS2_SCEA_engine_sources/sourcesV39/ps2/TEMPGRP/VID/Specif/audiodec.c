@@ -64,9 +64,28 @@ int vagSynchroToWait(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_fn_vTimerPS2Counter(unsigned int* pCount);
+void SND_VID_fn_vResumeVideoSound(void);
+
 int vagUpdateSound(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int ulTimer;
+
+    GLI_fn_vTimerPS2Counter(&ulTimer); g_s_fStartedSince += (float)(ulTimer - g_s_TimerSnd) / 294912000.0f; g_s_TimerSnd = ulTimer;
+
+    g_s_CurrentFrame += 2;
+
+    if (g_s_SoundIsPlaying <= 0)
+        g_s_SoundIsPlaying++;
+    else if (g_s_SoundIsPlaying == 1)
+    {
+        SND_VID_fn_vResumeVideoSound();
+        GLI_fn_vTimerPS2Counter(&g_s_TimerSnd);
+        g_s_SoundIsPlaying++;
+        g_s_fStartedSince = 0;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\audiodec.c lines 44–55 */

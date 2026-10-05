@@ -1629,9 +1629,14 @@ int g_InGameMenu2DActivated;
  */
 void fn_vLastDesinitFamilyStructure(void)
 {
-    tdstFamilyList_* p_stNextFamily;
     tdstFamilyList_* param0;
-    /* TODO: decompile from asm/... */
+    tdstFamilyList_* p_stNextFamily;
+
+    for (param0 = g_stEngineStructure.hFamilyList.hFirstElementDyn, p_stNextFamily = param0 ? param0->hNextBrotherDyn : NULL; param0;
+         param0 = p_stNextFamily, p_stNextFamily = param0 ? param0->hNextBrotherDyn : NULL)
+    {
+        if (param0->hNextBrotherDyn) param0->hNextBrotherDyn->hPrevBrotherDyn = param0->hPrevBrotherDyn; if (param0->hPrevBrotherDyn) param0->hPrevBrotherDyn->hNextBrotherDyn = param0->hNextBrotherDyn; if (param0->hFatherDyn) { param0->hFatherDyn->lNumberOfElementsDyn--; if (param0->hFatherDyn->hFirstElementDyn == param0) param0->hFatherDyn->hFirstElementDyn = param0->hNextBrotherDyn; if (param0->hFatherDyn->hLastElementDyn == param0) param0->hFatherDyn->hLastElementDyn = param0->hPrevBrotherDyn; } param0->hNextBrotherDyn = NULL; param0->hPrevBrotherDyn = NULL; param0->hFatherDyn = NULL;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 561–815 */

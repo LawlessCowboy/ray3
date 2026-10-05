@@ -207,20 +207,19 @@ void GLI_vIniTextRead(void)
  */
 int GLI_lGetLog2n(int ln)
 {
-    if (ln >= 0x2001) return 13;
-    if (ln >= 0x1001) return 12;
-    if (ln >= 0x801) return 11;
-    if (ln >= 0x401) return 10;
-    if (ln >= 0x201) return 9;
-    if (ln >= 0x101) return 8;
-    if (ln >= 0x81) return 7;
-    if (ln >= 0x41) return 6;
-    if (ln >= 0x21) return 5;
-    if (ln >= 0x11) return 4;
-    if (ln >= 9) return 3;
-    if (ln >= 5) return 2;
-    if (ln >= 3) return 1;
-    return 0;
+    return ln > 0x2000 ? 13 :
+           ln > 0x1000 ? 12 :
+           ln > 0x800 ? 11 :
+           ln > 0x400 ? 10 :
+           ln > 0x200 ? 9 :
+           ln > 0x100 ? 8 :
+           ln > 0x80 ? 7 :
+           ln > 0x40 ? 6 :
+           ln > 0x20 ? 5 :
+           ln > 0x10 ? 4 :
+           ln > 8 ? 3 :
+           ln > 4 ? 2 :
+           ln > 2;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Tex.c lines 142–146 */

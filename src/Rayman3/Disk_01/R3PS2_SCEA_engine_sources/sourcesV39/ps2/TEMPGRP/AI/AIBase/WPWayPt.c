@@ -2913,10 +2913,43 @@ void WPG_fn_vSetAllocMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
+inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    MTH4D_tdstVector_* p_stVtmp;
+
+    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
+    *(unsigned int*)&Vtmp.xX = ((unsigned int*)VectA)[0]; *(unsigned int*)&Vtmp.xY = ((unsigned int*)VectA)[1]; *(unsigned int*)&Vtmp.xZ = ((unsigned int*)VectA)[2];
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
+}
+
 void WP_fnv_WayPoint_ComputeLocation(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _p_stVertex)
 {
     MTH3D_tdstVector_ stWPVertex;
-    /* TODO: decompile from asm/... */
+
+    if (_hWayPoint->m_hSuperObject)
+    {
+        stWPVertex = _hWayPoint->m_stVertex;
+        MAT_fn_vApplyOnVertex(_p_stVertex, _hWayPoint->m_hSuperObject->hGlobalMatrix, &stWPVertex);
+    }
+    else
+        *_p_stVertex = _hWayPoint->m_stVertex;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPWayPt.c lines 343–344 */

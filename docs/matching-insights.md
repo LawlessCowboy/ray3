@@ -289,3 +289,7 @@ compiler option, construct, and outcome.
 - [compiler] MWCC PS2 3.0.1 lowers a small sparse switch (no jump table) as beq tests in reverse source order of the case labels: case 2 / case 1 / case 4 in source emits tests for 4, 1, 2 (fn_v3dDataDesinit). Use the retail test order reversed to order the cases, and keep empty 'case X: break;' labels, which still get their own test. (2026-10-05)
 
 - [source-layout] Extractor fields typed int that are really pointers (e.g. GEO_tdstGeometricObject_::d_xListOfElementsTypes) change codegen when indexed through a cast: ((short*)obj->field)[i] emits addu idx,base (operand order swapped), while a real pointer field, or *(short**)&obj->field, emits addu base,idx as in retail. Retype such fields to their pointer type when an index addu is the only residual. (2026-10-05)
+
+- [source-layout] Jump-table switches with nothing after them: when retail leaves the range-check beqz delay slot as nop (instead of hoisting the table lui into it), each case ends in 'return;' rather than 'break;' (impPS2glGetPointerv matched byte-for-byte with lines ok; default:/int-cast variants did not change it). (2026-10-05)
+
+- [source-layout] Long if/return threshold chains that retail compiles with slti into $at (not v0) and the return value loaded in the branch delay slot are one multi-line ternary 'return a ? 13 : b ? 12 : ... : ln > 2;', one line per arm; the if/return form uses v0 for the compare and leaves nops (GLI_lGetLog2n MATCH). (2026-10-05)

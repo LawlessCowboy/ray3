@@ -44,7 +44,7 @@ char g_cSinusEffectFlagSaved;
 char g_cSinusEffectStateSaved;
 float xSinusEffectDepthStartSaved;
 MTH3D_tdstVector_ stSinEffectVectorSaved;
-MTH3D_tdstVector_ stSinEffectAmpSaved;
+GLI_tdstSinEffectAmp_ stSinEffectAmpSaved; /* debug record: MTH3D_tdstVector_; retail save/restore copies need the same 8-aligned type as stSinEffectAmp */
 int a3_lSinEffectFreqRLISaved[3];
 float a3_xSinEffectBaseRLISaved[3];
 int a3_lSinEffectFreqMeshSaved[3];
@@ -140,7 +140,21 @@ GEO_tdstVisualSet_* GLI_p_stCreateTMPVisualSet(int lNbLOD)
  */
 void GLI_vRestoreSinusContext(void)
 {
-    /* TODO: decompile from asm/... */
+    int i;
+
+    for (i = 0; i < 3; i++)
+    {
+        a3_xSinEffectBaseMesh[i] = a3_xSinEffectBaseMeshSaved[i];
+        a3_lSinEffectFreqMesh[i] = a3_lSinEffectFreqMeshSaved[i];
+        a3_xSinEffectBaseRLI[i] = a3_xSinEffectBaseRLISaved[i];
+        a3_lSinEffectFreqRLI[i] = a3_lSinEffectFreqRLISaved[i];
+    }
+
+    stSinEffectAmp = stSinEffectAmpSaved;
+    stSinEffectVector = stSinEffectVectorSaved;
+    xSinusEffectDepthStart = xSinusEffectDepthStartSaved;
+    g_cSinusEffectState = g_cSinusEffectStateSaved;
+    g_cSinusEffectFlag = g_cSinusEffectFlagSaved;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1159–1169 */
@@ -173,7 +187,21 @@ void GLI_vRestoreSinusContext(void)
  */
 void GLI_vSaveSinusContext(void)
 {
-    /* TODO: decompile from asm/... */
+    int i;
+
+    for (i = 0; i < 3; i++)
+    {
+        a3_xSinEffectBaseMeshSaved[i] = a3_xSinEffectBaseMesh[i];
+        a3_lSinEffectFreqMeshSaved[i] = a3_lSinEffectFreqMesh[i];
+        a3_xSinEffectBaseRLISaved[i] = a3_xSinEffectBaseRLI[i];
+        a3_lSinEffectFreqRLISaved[i] = a3_lSinEffectFreqRLI[i];
+    }
+
+    stSinEffectAmpSaved = stSinEffectAmp;
+    stSinEffectVectorSaved = stSinEffectVector;
+    xSinusEffectDepthStartSaved = xSinusEffectDepthStart;
+    g_cSinusEffectStateSaved = g_cSinusEffectState;
+    g_cSinusEffectFlagSaved = g_cSinusEffectFlag;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1154–1154 */

@@ -921,7 +921,27 @@ void impPS2glGetPolygonStipple(void)
  */
 void impPS2glGetPointerv(unsigned int pname, void** params)
 {
-    /* TODO: decompile from asm/... */
+    switch (pname)
+    {
+    case 0x808E:
+        *params = (void*)g_PS2glContext.VertexArray.pointer;
+        return;
+    case 0x808F:
+        *params = (void*)g_PS2glContext.NormalArray.pointer;
+        return;
+    case 0x8090:
+        *params = (void*)g_PS2glContext.ColorArray[g_PS2glContext.iCurClientTextureSet].pointer;
+        return;
+    case 0x8091:
+        *params = (void*)g_PS2glContext.IndexArray.pointer;
+        return;
+    case 0x8092:
+        *params = (void*)g_PS2glContext.TexArray[g_PS2glContext.iCurClientTextureSet].pointer;
+        return;
+    case 0x8093:
+        *params = (void*)g_PS2glContext.EdgeFlagArray.pointer;
+        return;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1437–1437 */

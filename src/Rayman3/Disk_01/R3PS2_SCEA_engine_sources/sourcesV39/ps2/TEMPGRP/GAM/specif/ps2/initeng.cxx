@@ -217,9 +217,63 @@ void fn_vInitLevelLoop(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef struct tdstEngineStructure_ tdstEngineStructure_;
+struct tdstEngineStructure_ {
+    unsigned char eEngineMode; /* +0x0 */
+    char szLevelName[30]; /* +0x1 */
+};
+
+extern "C" {
+extern tdstEngineStructure_ g_stEngineStructure;
+extern unsigned char g_ucGameModuleId;
+extern unsigned int g_FixMemHasBeenSet;
+
+void HMU_fn_vFirstInit(void);
+unsigned char Erm_fn_ucInitErrMsg(void);
+void GAM_fn_vReadUbiIniFileForGame(void);
+void GAM_fn_vTreatExeParameters(void);
+void GEO_xInitGEOError(void);
+void IPT_fn_vFirstInitInput(void);
+void RND_fn_vFirstInitRandom(void);
+void SAI_fn_vFirstInit(void);
+void FIL_fn_vFirstInit(void);
+void FON_fn_vFirstInit(void);
+void AI_fn_vFirstInit(void);
+void SAV2_fn_vFirstInit(void);
+void fn_vInitAndRegisterAllScriptSections(void);
+void HMU_fn_vInitNormalFixMemory(unsigned int ulSize);
+void HMU_fn_vInitTempFixMemory(unsigned int ulSize);
+void HMU_fn_vInitBinaryMemory(unsigned int ulSize);
+void GAM_fn_vSetEngineInFixMode(void);
+}
+
 void fn_vInitEngineWhenInitApplication(void)
 {
-    /* TODO: decompile from asm/... */
+    HMU_fn_vFirstInit();
+
+    if (g_ucGameModuleId == 0xFF)
+        g_ucGameModuleId = Erm_fn_ucInitErrMsg();
+
+    GAM_fn_vReadUbiIniFileForGame();
+    GAM_fn_vTreatExeParameters();
+
+    g_stEngineStructure.eEngineMode = 1;
+
+    GEO_xInitGEOError();
+    IPT_fn_vFirstInitInput();
+    RND_fn_vFirstInitRandom();
+    SAI_fn_vFirstInit();
+    FIL_fn_vFirstInit();
+    FON_fn_vFirstInit();
+    AI_fn_vFirstInit();
+    SAV2_fn_vFirstInit();
+    fn_vInitAndRegisterAllScriptSections();
+
+    HMU_fn_vInitNormalFixMemory(460000);
+    HMU_fn_vInitTempFixMemory(1400000);
+    HMU_fn_vInitBinaryMemory(13841203);
+    g_FixMemHasBeenSet = 1;
+    GAM_fn_vSetEngineInFixMode();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 171–534 */
