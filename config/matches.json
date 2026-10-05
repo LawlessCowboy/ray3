@@ -21919,6 +21919,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/main.c",
       "status": "MATCH"
     },
+    "0x00131070": {
+      "address": "0x00131070",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "vagCallbackLeft",
+      "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/read.c",
+      "status": "MATCH"
+    },
     "0x001312d0": {
       "address": "0x001312d0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -31287,6 +31295,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WParc.c",
       "status": "MATCH"
     },
+    "0x001feaa0": {
+      "address": "0x001feaa0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPARCLST_fn_lGetCapabilities",
+      "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WParc.c",
+      "status": "MATCH"
+    },
     "0x001feeb0": {
       "address": "0x001feeb0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -34607,6 +34623,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ia_dnm.c",
       "status": "MATCH"
     },
+    "0x00262b10": {
+      "address": "0x00262b10",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_hSuperObjectGetLastCollidedCharacter",
+      "size": 164,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ia_dnm1.cxx",
+      "status": "MATCH"
+    },
+    "0x00262bc0": {
+      "address": "0x00262bc0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vSuperObjectSetLastCollidedCharacter",
+      "size": 100,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ia_dnm1.cxx",
+      "status": "MATCH"
+    },
     "0x00264780": {
       "address": "0x00264780",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -37543,11 +37575,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/transition.cxx",
       "status": "MATCH"
     },
+    "0x0028d8f0": {
+      "address": "0x0028d8f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vInitTransitionAllocPools",
+      "size": 92,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/transition.cxx",
+      "status": "MATCH"
+    },
     "0x0028da30": {
       "address": "0x0028da30",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vEndTransitionSynchro",
       "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/transition.cxx",
+      "status": "MATCH"
+    },
+    "0x0028da60": {
+      "address": "0x0028da60",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vHandleMemoryBlockSwitch",
+      "size": 84,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/transition.cxx",
       "status": "MATCH"
     },
@@ -37629,6 +37677,14 @@
       "name": "DEMO_fn_vStopEventFlow",
       "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/DemoStr.c",
+      "status": "MATCH"
+    },
+    "0x0028dc80": {
+      "address": "0x0028dc80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DEMO_bInitEventFlow",
+      "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/StreamIO.cpp",
       "status": "MATCH"
     },
     "0x0028dce0": {
@@ -39892,6 +39948,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "LS_fn_iRemainingSizeToLoad",
       "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_LoadingScreen.cpp",
+      "status": "MATCH"
+    },
+    "0x002cec70": {
+      "address": "0x002cec70",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "FreeTexture__15C_LoadingScreenFPPUiPUi",
+      "size": 96,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_LoadingScreen.cpp",
       "status": "MATCH"
     },

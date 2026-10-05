@@ -140,10 +140,19 @@ void* fn_pvTransitionAllocatorOdd(unsigned int u32Size)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void* HMU_fn_p_vMalloc(unsigned int ulSize, int lFlags);
+extern "C" void fn_vInitAllocator(int* p_stAllocator, unsigned int u32Size, char* pcBuffer);
+extern "C" void fn_vInitTransitionAllocPools(unsigned int u32Size);
+
 void fn_vInitTransitionAllocPools(unsigned int u32Size)
 {
     char* pcBuffer;
-    /* TODO: decompile from asm/... */
+
+    pcBuffer = (char*)HMU_fn_p_vMalloc(u32Size, 0);
+    fn_vInitAllocator(g_stTransitionAllocator[0], u32Size, pcBuffer);
+
+    pcBuffer = (char*)HMU_fn_p_vMalloc(u32Size, 0);
+    fn_vInitAllocator(g_stTransitionAllocator[1], u32Size, pcBuffer);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\transition.cxx lines 103–143 */
@@ -206,7 +215,25 @@ void fn_vEndTransitionSynchro(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void);
+extern "C" unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void);
+extern "C" void HMU_fn_vSetActualNormalMemoryBlock(unsigned char ucBlock);
+extern "C" void HMU_fn_vSetActualTempMemoryBlock(unsigned char ucBlock);
+extern "C" void fn_vHandleMemoryBlockSwitch(anon_enum_0093e9cf eEvent);
+extern "C" unsigned char ucCurrentNormalMemoryBlockBeforePlayingOneTrame;
+extern "C" unsigned char ucCurrentTempMemoryBlockBeforePlayingOneTrame;
+
 void fn_vHandleMemoryBlockSwitch(anon_enum_0093e9cf eEvent)
 {
-    /* TODO: decompile from asm/... */
+    switch (eEvent)
+    {
+    case 0:
+        ucCurrentNormalMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualNormalMemoryBlockUsed();
+        ucCurrentTempMemoryBlockBeforePlayingOneTrame = HMU_fn_ucGetActualTempMemoryBlockUsed();
+        break;
+    case 1:
+        HMU_fn_vSetActualNormalMemoryBlock(ucCurrentNormalMemoryBlockBeforePlayingOneTrame);
+        HMU_fn_vSetActualTempMemoryBlock(ucCurrentTempMemoryBlockBeforePlayingOneTrame);
+        break;
+    }
 }

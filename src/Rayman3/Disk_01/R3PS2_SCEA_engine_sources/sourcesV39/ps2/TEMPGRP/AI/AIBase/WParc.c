@@ -3001,7 +3001,19 @@ int WPARCLST_fn_lChangeWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* 
 int WPARCLST_fn_lGetCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int* p_ulCapability)
 {
     WP_tdstArc_* hElement;
-    /* TODO: decompile from asm/... */
+
+    if (hListOfArc && hNode)
+    {
+        for (hElement = hListOfArc->m_hArc.hFirstElementDyn; hElement; hElement = hElement->hNextBrotherDyn)
+        {
+            if (hElement->m_hNode == hNode)
+            {
+                *p_ulCapability = hElement->m_ulCapability;
+                return 0;
+            }
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 187–213 */

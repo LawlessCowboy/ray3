@@ -116,9 +116,17 @@ anon_6 videoDec;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int vagCallbackLeft(anon_1* str)
+int SND_VID_fn_iAddIOPData(unsigned char* pData, int iSize);
+void switchThread(void);
+
+/* MPEG stream callback: (sceMpeg* mp, sceMpegCbDataStr* str, void* data);
+   only the stream data is used. */
+int vagCallbackLeft(void* mp, anon_1* str, void* data)
 {
-    /* TODO: decompile from asm/... */
+    VID_g_iHasAudio = 1;
+    while (SND_VID_fn_iAddIOPData((unsigned char*)str->data + 4, str->len - 4) < 0)
+        switchThread();
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\read.c lines 41–74 */

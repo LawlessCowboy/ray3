@@ -27,8 +27,19 @@ extern "C" void fs_vClose__Q24usnd11CPS2FileMgrFUi(unsigned int);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned int g_DEMO_u32ActiveBuffer;
+extern unsigned int g_DEMO_u32StreamFileHandle;
+extern unsigned int g_DEMO_u32StreamFileOffset;
+extern unsigned int g_DEMO_u32StreamRequestHandle;
+extern char g_DEMO_aEventBuffer[2][131072];
+extern "C" unsigned int fn_uiOpenStream(char* szFileName);
+extern "C" unsigned int fn_uiReadStream(unsigned int u32FileHandle, unsigned int u32FilePos, char* pcBuffer, unsigned int u32Size, unsigned int u32Priority);
+
 unsigned char DEMO_bInitEventFlow(char* szFileName)
 {
+    g_DEMO_u32StreamFileHandle = fn_uiOpenStream(szFileName);
+    g_DEMO_u32StreamFileOffset = 0;
+    g_DEMO_u32StreamRequestHandle = fn_uiReadStream(g_DEMO_u32StreamFileHandle, 0, g_DEMO_aEventBuffer[g_DEMO_u32ActiveBuffer ^ 1], 131072, 127);
     return 1;
 }
 

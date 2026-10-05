@@ -1086,7 +1086,8 @@ int LS_iThreadID;
 unsigned int g_ProgressSizeHaveRead;
 unsigned int g_ProgressSizeToRead;
 int _gp;
-int PS2glLiberator;
+void (*PS2glLiberator)(void*);
+extern "C" void PS2glDeleteTextures(int n, const unsigned int* textures);
 int PS2glAllocator64;
 tagGScontext g_gsContext;
 tagGLcontext g_PS2glContext;
@@ -1510,7 +1511,16 @@ void C_LoadingScreen::DrawQuad(float X1, float Y1, float X2, float Y2, float U1,
  */
 void C_LoadingScreen::FreeTexture(unsigned int** ppTextureData, unsigned int* pTextureName)
 {
-    /* TODO: decompile from asm/... */
+    if (*pTextureName)
+    {
+        PS2glDeleteTextures(1, pTextureName);
+        *pTextureName = 0;
+    }
+    if (*ppTextureData)
+    {
+        PS2glLiberator(*ppTextureData);
+        *ppTextureData = NULL;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 268–300 */
