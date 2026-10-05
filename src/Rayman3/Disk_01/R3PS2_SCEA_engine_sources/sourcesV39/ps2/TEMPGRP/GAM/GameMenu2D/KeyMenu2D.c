@@ -926,13 +926,33 @@ void fn_vEncrypt(unsigned char* _LastKey, int length)
  */
 void fn_vXorEncrypt(unsigned char* _LastKey, int length, int direction)
 {
-    int last_val;
     int i;
     unsigned char* p;
     unsigned int pval;
     unsigned int val2;
     unsigned int val;
-    /* TODO: decompile from asm/... */
+    int last_val;
+
+    i = 0;
+    p = _LastKey;
+    if (direction < 0)
+    {
+        p = _LastKey + length - 1;
+        i = length - 1;
+        length = -1;
+    }
+    val = 0;
+    last_val = 0;
+    while (i != length)
+    {
+        pval = *p;
+        val2 = val ^ last_val;
+        last_val = val;
+        *p = pval ^ val2;
+        val = (val + pval + 2 - direction) & 0x1f;
+        i += direction;
+        p += direction;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 111–147 */

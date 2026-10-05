@@ -21528,6 +21528,36 @@
       "status": "MISMATCH",
       "target_size": 144,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002f9220",
+      "candidate_size": 460,
+      "first_difference": 24,
+      "implementation": "void MAT_fn_vGetRotationMatrix(MAT_tdstTransformation_* _hTransform, MTH3D_tdstMatrix_* _p_stRotationMatrix)\n{\n    MTH4D_tdstMatrix_ TmpMat;\n    MTH4D_tdstMatrix_* p_stMatrix;\n    MTH4D_tdstVector_* p_stScaleVec;\n\n    switch (_hTransform->eType)\n    {\n    case MAT_eTransform_Identity:\n    case MAT_eTransform_Translation:\n    case MAT_eTransform_Zoom:\n    case MAT_eTransform_Scale:\n        _p_stRotationMatrix->stCol_0.xX = 1.0f;\n        _p_stRotationMatrix->stCol_0.xY = 0.0f;\n        _p_stRotationMatrix->stCol_0.xZ = 0.0f;\n        _p_stRotationMatrix->stCol_1.xX = 0.0f;\n        _p_stRotationMatrix->stCol_1.xY = 1.0f;\n        _p_stRotationMatrix->stCol_1.xZ = 0.0f;\n        _p_stRotationMatrix->stCol_2.xX = 0.0f;\n        _p_stRotationMatrix->stCol_2.xY = 0.0f;\n        _p_stRotationMatrix->stCol_2.xZ = 1.0f;\n        break;\n    case MAT_eTransform_Rotation:\n        ((unsigned int*)&_p_stRotationMatrix->stCol_0)[0] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_0)[0];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_0)[1] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_0)[1];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_0)[2] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_0)[2];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_1)[0] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_1)[0];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_1)[1] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_1)[1];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_1)[2] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_1)[2];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_2)[0] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_2)[0];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_2)[1] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_2)[1];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_2)[2] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_2)[2];\n        break;\n    case MAT_eTransform_RotationZoom:\n    case MAT_eTransform_RotationScale:\n        _p_stRotationMatrix->stCol_0.xX = _hTransform->stTransformMatrix.stCol_0.xX / _hTransform->stScaleVector.xX;\n        _p_stRotationMatrix->stCol_0.xY = _hTransform->stTransformMatrix.stCol_0.xY / _hTransform->stScaleVector.xX;\n        _p_stRotationMatrix->stCol_0.xZ = _hTransform->stTransformMatrix.stCol_0.xZ / _hTransform->stScaleVector.xX;\n        _p_stRotationMatrix->stCol_1.xX = _hTransform->stTransformMatrix.stCol_1.xX / _hTransform->stScaleVector.xY;\n        _p_stRotationMatrix->stCol_1.xY = _hTransform->stTransformMatrix.stCol_1.xY / _hTransform->stScaleVector.xY;\n        _p_stRotationMatrix->stCol_1.xZ = _hTransform->stTransformMatrix.stCol_1.xZ / _hTransform->stScaleVector.xY;\n        _p_stRotationMatrix->stCol_2.xX = _hTransform->stTransformMatrix.stCol_2.xX / _hTransform->stScaleVector.xZ;\n        _p_stRotationMatrix->stCol_2.xY = _hTransform->stTransformMatrix.stCol_2.xY / _hTransform->stScaleVector.xZ;\n        _p_stRotationMatrix->stCol_2.xZ = _hTransform->stTransformMatrix.stCol_2.xZ / _hTransform->stScaleVector.xZ;\n        break;\n    case MAT_eTransform_ComplexRotationScale:\n        MAT_fn_vQuatToMatrix(&TmpMat, _hTransform->stScaleVector.xX, _hTransform->stScaleVector.xY, _hTransform->stScaleVector.xZ, _hTransform->stScaleVector.xW);\n        ((unsigned int*)&_p_stRotationMatrix->stCol_0)[0] = ((unsigned int*)&TmpMat.stCol_0)[0];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_0)[1] = ((unsigned int*)&TmpMat.stCol_0)[1];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_0)[2] = ((unsigned int*)&TmpMat.stCol_0)[2];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_1)[0] = ((unsigned int*)&TmpMat.stCol_1)[0];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_1)[1] = ((unsigned int*)&TmpMat.stCol_1)[1];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_1)[2] = ((unsigned int*)&TmpMat.stCol_1)[2];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_2)[0] = ((unsigned int*)&TmpMat.stCol_2)[0];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_2)[1] = ((unsigned int*)&TmpMat.stCol_2)[1];\n        ((unsigned int*)&_p_stRotationMatrix->stCol_2)[2] = ((unsigned int*)&TmpMat.stCol_2)[2];\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MAT_fn_vGetRotationMatrix",
+      "reason": "Switch, identity, column word copies, scaled divides and quaternion case all right (460/456). Residual: retail reads TmpMat column 0 straight off sp (lw 0x20(sp)) after MAT_fn_vQuatToMatrix, while the word-copy idiom materializes &TmpMat in a register (one extra addiu)",
+      "size": 456,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsprot.c",
+      "status": "MISMATCH",
+      "target_size": 456,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a0530",
+      "candidate_size": 96,
+      "first_difference": 5,
+      "implementation": "void fn_vXorEncrypt(unsigned char* _LastKey, int length, int direction)\n{\n    int i;\n    unsigned char* p;\n    unsigned int pval;\n    unsigned int val2;\n    unsigned int val;\n    int last_val;\n\n    i = 0;\n    p = _LastKey;\n    if (direction < 0)\n    {\n        p = _LastKey + length - 1;\n        i = length - 1;\n        length = -1;\n    }\n    val = 0;\n    last_val = 0;\n    while (i != length)\n    {\n        pval = *p;\n        val2 = val ^ last_val;\n        last_val = val;\n        *p = pval ^ val2;\n        val = (val + pval + 2 - direction) & 0x1f;\n        i += direction;\n        p += direction;\n    }\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "fn_vXorEncrypt",
+      "reason": "Control flow, loads/stores and arithmetic match (96/96). Residual is temp-register numbering of i/val/last_val/pval; a 720-way declaration sweep and a 15-minute permuter run (best score 55) did not reach a match",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/KeyMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 96,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
