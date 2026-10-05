@@ -544,10 +544,29 @@ void fn_vDrawGlobalInfo(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_dwFindNextSnappedPicture(int lSnapID, char* _szFileName);
+int fn_dwFindPreviousSnappedPicture(int lSnapID, char* _szFileName);
+int GLI_bLoadSnapShotTexture(char* _pFileName, int* p_hMaterial);
+
 void fn_vNextSnapShot(void)
 {
     int lSnapID;
-    /* TODO: decompile from asm/... */
+
+    if (!g_bAlbumIsWorking)
+    {
+        lSnapID = fn_dwFindNextSnappedPicture(g_stAlbum.lSnapID, g_stAlbum.szFileName);
+        if (lSnapID != g_stAlbum.lSnapID)
+        {
+            g_stAlbum.lSnapID = lSnapID;
+            if (lSnapID != aMenu2DPages[g_AlbumPage].NbEntry)
+            {
+                g_bAlbumIsWorking = 1;
+                g_bAlbumLoadInProgress = 1;
+                GLI_bLoadSnapShotTexture(g_stAlbum.szFileName, g_hFixMaterialForAlbum);
+                g_stAlbum.bMoveForward = 1;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1593–1618 */
@@ -577,7 +596,23 @@ void fn_vNextSnapShot(void)
 void fn_vPreviousSnapShot(void)
 {
     int lSnapID;
-    /* TODO: decompile from asm/... */
+
+    if (!g_bAlbumIsWorking)
+    {
+        lSnapID = fn_dwFindPreviousSnappedPicture(g_stAlbum.lSnapID, g_stAlbum.szFileName);
+        if (lSnapID != g_stAlbum.lSnapID)
+        {
+            g_stAlbum.lSnapID = lSnapID;
+            if (lSnapID != aMenu2DPages[g_AlbumPage].NbEntry)
+            {
+                g_bAlbumIsWorking = 1;
+                g_bAlbumLoadInProgress = 1;
+                GLI_bLoadSnapShotTexture(g_stAlbum.szFileName, g_hFixMaterialForAlbum);
+                g_stAlbum.fPicturePercentage = 0.0f;
+                g_stAlbum.bMoveBackward = 1;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1472–1486 */

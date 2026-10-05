@@ -81,8 +81,31 @@ void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS)
  */
 void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS)
 {
-    int toto;
-    int MyThreadId;
     int r;
-    /* TODO: decompile from asm/... */
+    int MyThreadId;
+    int toto;
+
+    toto = 0;
+    MyThreadId = GetThreadId();
+    r = p_stCS->Sid;
+    if (PollSema(r) == r)
+    {
+        p_stCS->ReentrancyCount = 0;
+        p_stCS->OwnerThreadId = MyThreadId;
+        asm {
+        .set noreorder
+        mtc0 toto, $24
+        }
+    }
+    else if (MyThreadId == p_stCS->OwnerThreadId)
+    {
+        p_stCS->ReentrancyCount++;
+    }
+    else
+    {
+        WaitSema(p_stCS->Sid);
+        p_stCS->ReentrancyCount = 0;
+        p_stCS->OwnerThreadId = MyThreadId;
+        asm { mtc0 toto, $24 }
+    }
 }

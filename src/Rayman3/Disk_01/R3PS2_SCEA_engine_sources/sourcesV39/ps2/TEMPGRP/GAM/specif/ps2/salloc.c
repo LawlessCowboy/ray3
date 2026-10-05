@@ -85,10 +85,22 @@ void fn_vFreeAllocator(anon_0* pstAllocator, void* pvClientAddress)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_pvAllocAllocator(anon_0* pstAllocator, unsigned int u32Size)
+void* fn_pvAllocAllocator(anon_0* pstAllocator, unsigned int u32Size)
 {
     anon_1* pstBlockDescriptor;
-    /* TODO: decompile from asm/... */
+    unsigned int u32AlignedSize;
+
+    u32AlignedSize = (u32Size & 0xF) ? (u32Size & ~0xF) + 16 : u32Size;
+    pstBlockDescriptor = (anon_1*)pstAllocator->pcTop;
+    if ((unsigned int)(u32AlignedSize + ((char*)pstBlockDescriptor - (char*)pstAllocator->pcBase) + 4) > pstAllocator->u32Limit)
+    {
+        channel_debug_printf(-1, "(%08x)->tralloc(%d) fails\n", pstAllocator, u32Size);
+        return NULL;
+    }
+    pstAllocator->pcTop = (int)((char*)pstBlockDescriptor + u32AlignedSize);
+    pstBlockDescriptor->u32Size = u32Size;
+    channel_debug_printf(-1, "(%08x)->tralloc(%d) -> %08x\n", pstAllocator, u32Size, &pstBlockDescriptor->acBuffer);
+    return &pstBlockDescriptor->acBuffer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\salloc.c lines 27–46 */
