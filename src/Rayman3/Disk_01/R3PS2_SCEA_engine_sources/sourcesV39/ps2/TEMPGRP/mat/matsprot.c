@@ -432,7 +432,59 @@ void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdst
     MTH4D_tdstMatrix_ TmpMat;
     MTH4D_tdstMatrix_* p_stMatrix;
     MTH4D_tdstVector_* p_stScaleVec;
-    /* TODO: decompile from asm/... */
+
+    switch (_hTransform->eType)
+    {
+    case MAT_eTransform_Identity:
+    case MAT_eTransform_Translation:
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_Scale:
+        _p_stVecI->xX = 1.0f;
+        _p_stVecI->xY = 0.0f;
+        _p_stVecI->xZ = 0.0f;
+        _p_stVecJ->xX = 0.0f;
+        _p_stVecJ->xY = 1.0f;
+        _p_stVecJ->xZ = 0.0f;
+        _p_stVecK->xX = 0.0f;
+        _p_stVecK->xY = 0.0f;
+        _p_stVecK->xZ = 1.0f;
+        break;
+    case MAT_eTransform_Rotation:
+        ((unsigned int*)_p_stVecI)[0] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_0)[0];
+        ((unsigned int*)_p_stVecI)[1] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_0)[1];
+        ((unsigned int*)_p_stVecI)[2] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_0)[2];
+        ((unsigned int*)_p_stVecJ)[0] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_1)[0];
+        ((unsigned int*)_p_stVecJ)[1] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_1)[1];
+        ((unsigned int*)_p_stVecJ)[2] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_1)[2];
+        ((unsigned int*)_p_stVecK)[0] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_2)[0];
+        ((unsigned int*)_p_stVecK)[1] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_2)[1];
+        ((unsigned int*)_p_stVecK)[2] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_2)[2];
+        break;
+    case MAT_eTransform_RotationZoom:
+    case MAT_eTransform_RotationScale:
+        _p_stVecI->xX = (1.0f / _hTransform->stScaleVector.xX) * _hTransform->stTransformMatrix.stCol_0.xX;
+        _p_stVecI->xY = (1.0f / _hTransform->stScaleVector.xX) * _hTransform->stTransformMatrix.stCol_0.xY;
+        _p_stVecI->xZ = (1.0f / _hTransform->stScaleVector.xX) * _hTransform->stTransformMatrix.stCol_0.xZ;
+        _p_stVecJ->xX = (1.0f / _hTransform->stScaleVector.xY) * _hTransform->stTransformMatrix.stCol_1.xX;
+        _p_stVecJ->xY = (1.0f / _hTransform->stScaleVector.xY) * _hTransform->stTransformMatrix.stCol_1.xY;
+        _p_stVecJ->xZ = (1.0f / _hTransform->stScaleVector.xY) * _hTransform->stTransformMatrix.stCol_1.xZ;
+        _p_stVecK->xX = (1.0f / _hTransform->stScaleVector.xZ) * _hTransform->stTransformMatrix.stCol_2.xX;
+        _p_stVecK->xY = (1.0f / _hTransform->stScaleVector.xZ) * _hTransform->stTransformMatrix.stCol_2.xY;
+        _p_stVecK->xZ = (1.0f / _hTransform->stScaleVector.xZ) * _hTransform->stTransformMatrix.stCol_2.xZ;
+        break;
+    case MAT_eTransform_ComplexRotationScale:
+        MAT_fn_vQuatToMatrix(&TmpMat, _hTransform->stScaleVector.xX, _hTransform->stScaleVector.xY, _hTransform->stScaleVector.xZ, _hTransform->stScaleVector.xW);
+        _p_stVecI->xX = TmpMat.stCol_0.xX;
+        _p_stVecI->xY = TmpMat.stCol_0.xY;
+        _p_stVecI->xZ = TmpMat.stCol_0.xZ;
+        ((unsigned int*)_p_stVecJ)[0] = ((unsigned int*)&TmpMat.stCol_1)[0];
+        ((unsigned int*)_p_stVecJ)[1] = ((unsigned int*)&TmpMat.stCol_1)[1];
+        ((unsigned int*)_p_stVecJ)[2] = ((unsigned int*)&TmpMat.stCol_1)[2];
+        ((unsigned int*)_p_stVecK)[0] = ((unsigned int*)&TmpMat.stCol_2)[0];
+        ((unsigned int*)_p_stVecK)[1] = ((unsigned int*)&TmpMat.stCol_2)[1];
+        ((unsigned int*)_p_stVecK)[2] = ((unsigned int*)&TmpMat.stCol_2)[2];
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsprot.c lines 613–663 */
