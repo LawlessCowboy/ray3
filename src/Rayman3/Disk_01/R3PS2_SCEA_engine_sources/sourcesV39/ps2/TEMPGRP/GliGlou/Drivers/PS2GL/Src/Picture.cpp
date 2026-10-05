@@ -1147,9 +1147,22 @@ void GLI_vSavePicture(char* Name)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLI_vReduceBackBufferTo256x256(void);
+extern "C" int sceGsSyncPath(int mode, unsigned short timeout);
+extern "C" void PS2auxSwapBuffers(void);
+extern "C" int AE_GetZBufferBase(void);
+extern "C" unsigned short* PS2MC_GetScreenShotPreviewData(void);
+void GLI_vGsStoreFrameBufferIntoCompressed256x256(unsigned char* _pDestinationBuffer, short _ScreenRam, int _WIDTH, int _HEIGHT, short _CurrentPSM);
+void GLI_vGsStoreFrameBufferInto128x128x16(unsigned short* _pDestinationBuffer, short _ScreenRam, int _WIDTH, int _HEIGHT, short _CurrentPSM);
+
 void GLI_vTakePicture(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vReduceBackBufferTo256x256();
+    sceGsSyncPath(0, 0);
+    PS2auxSwapBuffers();
+    sceGsSyncPath(0, 0);
+    GLI_vGsStoreFrameBufferIntoCompressed256x256(GLI_g_aPictureData, AE_GetZBufferBase() * 32, XRES, YRES, g_gsContext.FRAME_1.PSM);
+    GLI_vGsStoreFrameBufferInto128x128x16(PS2MC_GetScreenShotPreviewData(), AE_GetZBufferBase() * 32, XRES, YRES, g_gsContext.FRAME_1.PSM);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 542–543 */

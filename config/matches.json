@@ -21729,6 +21729,21 @@
       "status": "MISMATCH",
       "target_size": 188,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00179f90",
+      "candidate_size": 168,
+      "first_difference": 4,
+      "implementation": "void impPS2glFogiv(unsigned int pname, int* params)\n{\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "impPS2glFogi",
+      "reason": "Switch in reverse source order (b65,b62,b63,b64,b61 emitting b61,b64,b63,b62,b65 tests), int-to-float stores and bFogChanged all right (168/176). Residual: retail leaves the delay slots of the 0xb64 and 0xb62 compares as nops (fill, nop, fill, nop), while MWCC here fills every compare delay slot with the next li. An if-chain behaves the same",
+      "size": 176,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Fog.c",
+      "status": "MISMATCH",
+      "target_size": 176,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -41402,6 +41417,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vSavePicture",
       "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Picture.cpp",
+      "status": "MATCH"
+    },
+    "0x002ecea0": {
+      "address": "0x002ecea0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vTakePicture",
+      "size": 172,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Picture.cpp",
       "status": "MATCH"
     },

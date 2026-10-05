@@ -1180,7 +1180,27 @@ void impPS2glFogiv(unsigned int pname, int* params)
  */
 void impPS2glFogi(unsigned int pname, int param)
 {
-    /* TODO: decompile from asm/... */
+    switch (pname)
+    {
+    case 0x0B65: /* GL_FOG_MODE */
+        g_PS2glContext.eFogMode = param;
+        break;
+    case 0x0B62: /* GL_FOG_DENSITY */
+        g_PS2glContext.fFogDensity = (float)param;
+        break;
+    case 0x0B63: /* GL_FOG_START */
+        g_PS2glContext.fFogLinearStart = (float)param;
+        break;
+    case 0x0B64: /* GL_FOG_END */
+        g_PS2glContext.fFogLinearEnd = (float)param;
+        break;
+    case 0x0B61: /* GL_FOG_INDEX */
+        g_PS2glContext.fFogIndex = (float)param;
+        break;
+    default:
+        return;
+    }
+    g_PS2glContext.bFogChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 34–48 */
