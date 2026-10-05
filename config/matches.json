@@ -21513,6 +21513,21 @@
       "status": "MISMATCH",
       "target_size": 204,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0013b8b0",
+      "candidate_size": 148,
+      "first_difference": 12,
+      "implementation": "void VU0_fn_vWaitEndLoadVU0(void)\n{\n    int Reg;\n    int i;\n\n    if (*(volatile int*)0x10008000 & 0x100)\n    {\n        Reg = VU0_g_keepit1;\n        do\n        {\n            i = (Reg + 50) & 7;\n            while ((Reg & 7) < i)\n            {\n                Reg += i & 7;\n                i--;\n            }\n        } while (*(volatile int*)0x10008000 & 0x100);\n        VU0_g_keepit1 = Reg;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "VU0_fn_vWaitEndLoadVU0",
+      "reason": "Retail is unoptimized-looking (saved regs s1/s0 in a leaf, unfilled delay slots). #pragma optimization_level 0 plus section(\".data\") for VU0_g_keepit1 reproduces the frame, loops and absolute keepit access. Residual: retail loads 0x10008000 as lui at,0x1001; lw -0x8000(at) (the level-1 form) where level 0 gives lui/ori/lw. Level 1 gives the right address form but argument registers and no frame; register/asm-nop/peephole variants don't bridge it",
+      "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VU0/vu0prg.c",
+      "status": "MISMATCH",
+      "target_size": 144,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -41731,6 +41746,46 @@
       "name": "ISI_fn_xGetNbVertexRLILOD",
       "size": 36,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ISI/ISI.c",
+      "status": "MATCH"
+    },
+    "0x002f8d90": {
+      "address": "0x002f8d90",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MAT_fn_vGetRotationVectorBaseK",
+      "size": 188,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsprot.c",
+      "status": "MATCH"
+    },
+    "0x002f8e50": {
+      "address": "0x002f8e50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MAT_fn_vGetRotationVectorBaseJ",
+      "size": 252,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsprot.c",
+      "status": "MATCH"
+    },
+    "0x002f8f50": {
+      "address": "0x002f8f50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MAT_fn_vGetRotationVectorBaseI",
+      "size": 188,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsprot.c",
+      "status": "MATCH"
+    },
+    "0x002f93f0": {
+      "address": "0x002f93f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MAT_fn_vSetZRotation",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsprot.c",
+      "status": "MATCH"
+    },
+    "0x002f9490": {
+      "address": "0x002f9490",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MAT_fn_vSetXRotation",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsprot.c",
       "status": "MATCH"
     },
     "0x002fa220": {

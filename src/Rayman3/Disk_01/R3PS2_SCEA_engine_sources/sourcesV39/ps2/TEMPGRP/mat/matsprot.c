@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+float sinf(float);
+float cosf(float);
+void MAT_fn_vQuatToMatrix(struct MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct ISI_tdstColor_ ISI_tdstColor_;
 typedef struct ISI_tdstISI_ ISI_tdstISI_;
@@ -269,7 +273,33 @@ void MAT_fn_vSetRotationMatrix(MAT_tdstTransformation_* _hTransform, MTH3D_tdstM
  */
 void MAT_fn_vGetRotationVectorBaseK(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecK)
 {
-    /* TODO: decompile from asm/... */
+    switch (_hTransform->eType)
+    {
+    case MAT_eTransform_Identity:
+    case MAT_eTransform_Translation:
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_Scale:
+        _p_stVecK->xX = 0.0f;
+        _p_stVecK->xY = 0.0f;
+        _p_stVecK->xZ = 1.0f;
+        break;
+    case MAT_eTransform_Rotation:
+        ((unsigned int*)_p_stVecK)[0] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_2)[0];
+        ((unsigned int*)_p_stVecK)[1] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_2)[1];
+        ((unsigned int*)_p_stVecK)[2] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_2)[2];
+        break;
+    case MAT_eTransform_RotationZoom:
+    case MAT_eTransform_RotationScale:
+        _p_stVecK->xX = (1.0f / _hTransform->stScaleVector.xZ) * _hTransform->stTransformMatrix.stCol_2.xX;
+        _p_stVecK->xY = (1.0f / _hTransform->stScaleVector.xZ) * _hTransform->stTransformMatrix.stCol_2.xY;
+        _p_stVecK->xZ = (1.0f / _hTransform->stScaleVector.xZ) * _hTransform->stTransformMatrix.stCol_2.xZ;
+        break;
+    case MAT_eTransform_ComplexRotationScale:
+        _p_stVecK->xX = 0.0f;
+        _p_stVecK->xY = 0.0f;
+        _p_stVecK->xZ = 1.0f;
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsprot.c lines 793–845 */
@@ -292,7 +322,35 @@ void MAT_fn_vGetRotationVectorBaseK(MAT_tdstTransformation_* _hTransform, MTH3D_
 void MAT_fn_vGetRotationVectorBaseJ(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecJ)
 {
     MTH4D_tdstMatrix_ TmpMat;
-    /* TODO: decompile from asm/... */
+
+    switch (_hTransform->eType)
+    {
+    case MAT_eTransform_Identity:
+    case MAT_eTransform_Translation:
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_Scale:
+        _p_stVecJ->xX = 0.0f;
+        _p_stVecJ->xY = 1.0f;
+        _p_stVecJ->xZ = 0.0f;
+        break;
+    case MAT_eTransform_Rotation:
+        ((unsigned int*)_p_stVecJ)[0] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_1)[0];
+        ((unsigned int*)_p_stVecJ)[1] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_1)[1];
+        ((unsigned int*)_p_stVecJ)[2] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_1)[2];
+        break;
+    case MAT_eTransform_RotationZoom:
+    case MAT_eTransform_RotationScale:
+        _p_stVecJ->xX = (1.0f / _hTransform->stScaleVector.xY) * _hTransform->stTransformMatrix.stCol_1.xX;
+        _p_stVecJ->xY = (1.0f / _hTransform->stScaleVector.xY) * _hTransform->stTransformMatrix.stCol_1.xY;
+        _p_stVecJ->xZ = (1.0f / _hTransform->stScaleVector.xY) * _hTransform->stTransformMatrix.stCol_1.xZ;
+        break;
+    case MAT_eTransform_ComplexRotationScale:
+        MAT_fn_vQuatToMatrix(&TmpMat, _hTransform->stScaleVector.xX, _hTransform->stScaleVector.xY, _hTransform->stScaleVector.xZ, _hTransform->stScaleVector.xW);
+        ((unsigned int*)_p_stVecJ)[0] = ((unsigned int*)&TmpMat.stCol_1)[0];
+        ((unsigned int*)_p_stVecJ)[1] = ((unsigned int*)&TmpMat.stCol_1)[1];
+        ((unsigned int*)_p_stVecJ)[2] = ((unsigned int*)&TmpMat.stCol_1)[2];
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsprot.c lines 746–783 */
@@ -312,7 +370,33 @@ void MAT_fn_vGetRotationVectorBaseJ(MAT_tdstTransformation_* _hTransform, MTH3D_
  */
 void MAT_fn_vGetRotationVectorBaseI(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI)
 {
-    /* TODO: decompile from asm/... */
+    switch (_hTransform->eType)
+    {
+    case MAT_eTransform_Identity:
+    case MAT_eTransform_Translation:
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_Scale:
+        _p_stVecI->xX = 1.0f;
+        _p_stVecI->xY = 0.0f;
+        _p_stVecI->xZ = 0.0f;
+        break;
+    case MAT_eTransform_Rotation:
+        ((unsigned int*)_p_stVecI)[0] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_0)[0];
+        ((unsigned int*)_p_stVecI)[1] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_0)[1];
+        ((unsigned int*)_p_stVecI)[2] = ((unsigned int*)&_hTransform->stTransformMatrix.stCol_0)[2];
+        break;
+    case MAT_eTransform_RotationZoom:
+    case MAT_eTransform_RotationScale:
+        _p_stVecI->xX = (1.0f / _hTransform->stScaleVector.xX) * _hTransform->stTransformMatrix.stCol_0.xX;
+        _p_stVecI->xY = (1.0f / _hTransform->stScaleVector.xX) * _hTransform->stTransformMatrix.stCol_0.xY;
+        _p_stVecI->xZ = (1.0f / _hTransform->stScaleVector.xX) * _hTransform->stTransformMatrix.stCol_0.xZ;
+        break;
+    case MAT_eTransform_ComplexRotationScale:
+        _p_stVecI->xX = 1.0f;
+        _p_stVecI->xY = 0.0f;
+        _p_stVecI->xZ = 0.0f;
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsprot.c lines 676–733 */
@@ -401,7 +485,36 @@ void MAT_fn_vSetZRotation(MAT_tdstTransformation_* _hTransform, float _xXAngle)
 {
     float xCos;
     float xSin;
-    /* TODO: decompile from asm/... */
+
+    xSin = sinf(_xXAngle);
+    xCos = cosf(_xXAngle);
+
+    _hTransform->eType = MAT_eTransform_Rotation;
+
+    _hTransform->stTransformMatrix.stCol_0.xX = xCos;
+    _hTransform->stTransformMatrix.stCol_0.xY = xSin;
+    _hTransform->stTransformMatrix.stCol_0.xZ = 0.0f;
+    _hTransform->stTransformMatrix.stCol_0.xW = 0.0f;
+
+    _hTransform->stTransformMatrix.stCol_1.xX = -xSin;
+    _hTransform->stTransformMatrix.stCol_1.xY = xCos;
+    _hTransform->stTransformMatrix.stCol_1.xZ = 0.0f;
+    _hTransform->stTransformMatrix.stCol_1.xW = 0.0f;
+
+    _hTransform->stTransformMatrix.stCol_2.xX = 0.0f;
+    _hTransform->stTransformMatrix.stCol_2.xY = 0.0f;
+    _hTransform->stTransformMatrix.stCol_2.xZ = 1.0f;
+    _hTransform->stTransformMatrix.stCol_2.xW = 0.0f;
+
+    _hTransform->stTransformMatrix.stCol_3.xX = 0.0f;
+    _hTransform->stTransformMatrix.stCol_3.xY = 0.0f;
+    _hTransform->stTransformMatrix.stCol_3.xZ = 0.0f;
+    _hTransform->stTransformMatrix.stCol_3.xW = 1.0f;
+
+    _hTransform->stScaleVector.xX = 1.0f;
+    _hTransform->stScaleVector.xY = 1.0f;
+    _hTransform->stScaleVector.xZ = 1.0f;
+    _hTransform->stScaleVector.xW = 1.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsprot.c lines 469–494 */
@@ -427,7 +540,36 @@ void MAT_fn_vSetXRotation(MAT_tdstTransformation_* _hTransform, float _xXAngle)
 {
     float xCos;
     float xSin;
-    /* TODO: decompile from asm/... */
+
+    xSin = sinf(_xXAngle);
+    xCos = cosf(_xXAngle);
+
+    _hTransform->eType = MAT_eTransform_Rotation;
+
+    _hTransform->stTransformMatrix.stCol_0.xX = 1.0f;
+    _hTransform->stTransformMatrix.stCol_0.xY = 0.0f;
+    _hTransform->stTransformMatrix.stCol_0.xZ = 0.0f;
+    _hTransform->stTransformMatrix.stCol_0.xW = 0.0f;
+
+    _hTransform->stTransformMatrix.stCol_1.xX = 0.0f;
+    _hTransform->stTransformMatrix.stCol_1.xY = xCos;
+    _hTransform->stTransformMatrix.stCol_1.xZ = xSin;
+    _hTransform->stTransformMatrix.stCol_1.xW = 0.0f;
+
+    _hTransform->stTransformMatrix.stCol_2.xX = 0.0f;
+    _hTransform->stTransformMatrix.stCol_2.xY = -xSin;
+    _hTransform->stTransformMatrix.stCol_2.xZ = xCos;
+    _hTransform->stTransformMatrix.stCol_2.xW = 0.0f;
+
+    _hTransform->stTransformMatrix.stCol_3.xX = 0.0f;
+    _hTransform->stTransformMatrix.stCol_3.xY = 0.0f;
+    _hTransform->stTransformMatrix.stCol_3.xZ = 0.0f;
+    _hTransform->stTransformMatrix.stCol_3.xW = 1.0f;
+
+    _hTransform->stScaleVector.xX = 1.0f;
+    _hTransform->stScaleVector.xY = 1.0f;
+    _hTransform->stScaleVector.xZ = 1.0f;
+    _hTransform->stScaleVector.xW = 1.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsprot.c lines 346–444 */

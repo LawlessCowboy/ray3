@@ -6,7 +6,7 @@
 
 extern unsigned int VU0_gs_LastMPRGLoaded __attribute__((section(".data")));
 static unsigned int gs_uiPRGADRESS[2];
-int VU0_g_keepit1;
+int VU0_g_keepit1 __attribute__((section(".data")));
 extern unsigned int CollideVu0Microcode[];
 extern unsigned int PlayAnimMPG[];
 
@@ -68,9 +68,26 @@ void VU0_fn_vLoadPrgPlayAnim(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma push
+#pragma optimization_level 0
 void VU0_fn_vWaitEndLoadVU0(void)
 {
     int Reg;
     int i;
-    /* TODO: decompile from asm/... */
+
+    if (*(volatile int*)0x10008000 & 0x100)
+    {
+        Reg = VU0_g_keepit1;
+        do
+        {
+            i = (Reg + 50) & 7;
+            while ((Reg & 7) < i)
+            {
+                Reg += i & 7;
+                i--;
+            }
+        } while (*(volatile int*)0x10008000 & 0x100);
+        VU0_g_keepit1 = Reg;
+    }
 }
+#pragma pop
