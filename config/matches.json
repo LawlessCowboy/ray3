@@ -21714,6 +21714,21 @@
       "status": "MISMATCH",
       "target_size": 156,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0028d040",
+      "candidate_size": 188,
+      "first_difference": 116,
+      "implementation": "void SAV2_fn_vFirstInit(void)\n{\n    if (g_ucSAV2ModuleId == 0xFF)\n        g_ucSAV2ModuleId = Erm_fn_ucInitErrMsg();\n    Mmg_fn_v_InitMmg(g_ucSAV2ModuleId, 1, 100000);\n    Mmg_fn_cCheckAlignmentValidity();\n    Mmg_fn_vInitSpecificBlock(0, g_ucSAV2ModuleId, g_a_p_stMmgModuleBlocksInfo[g_ucSAV2ModuleId], 0x20000, 100000, 4, 12);\n    SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn = NULL;\n    SAV2_g_stList.SAV2_ListAnchor.hLastElementDyn = NULL;\n    SAV2_g_stList.SAV2_ListAnchor.lNumberOfElementsDyn = 0;\n    SAV2_g_ulSizeByType[1] = 1;\n    SAV2_g_ulSizeByType[2] = 2;\n    SAV2_g_ulSizeByType[3] = 4;\n    SAV2_g_ulSizeByType[4] = 4;\n    SAV2_g_ulSizeByType[5] = 4;\n    SAV2_g_ulSizeByType[6] = 4;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "SAV2_fn_vFirstInit",
+      "reason": "Calls, arguments, anchor init and size table right (188/188). Residual: retail interleaves the three SAV2_g_stList anchor stores (lui at) with the first three SAV2_g_ulSizeByType byte stores, while MWCC here keeps all byte stores first. Statement order and header typing don't change it",
+      "size": 188,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/BlackBox.c",
+      "status": "MISMATCH",
+      "target_size": 188,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -42860,6 +42875,14 @@
       "name": "PS2_fn_uiGetStackBaseAddress",
       "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ps2/ps2Threads.c",
+      "status": "MATCH"
+    },
+    "0x00318ce0": {
+      "address": "0x00318ce0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "PS2_fn_vInitThreads",
+      "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ps2/ps2exceptions.c",
       "status": "MATCH"
     },
     "0x00318d90": {
