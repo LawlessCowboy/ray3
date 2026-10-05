@@ -1760,6 +1760,7 @@ void fn_vRemoveAllSubAnimations(HIE_tdstSuperObject_* _hCharacter)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 int fn_bTestSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSubAnim)
 {
     tdstSubAnimInUse_* param0;
@@ -1773,6 +1774,7 @@ int fn_bTestSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSu
     }
     return 0;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1124–1142 */
 /* addr: 0x00288a70  size: 132 bytes */
@@ -1979,13 +1981,86 @@ void fn_vRemoveSubAnimation(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNu
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hSubAnimInUse);
+
 void fn_vAddSubAnimation(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSubAnim, unsigned char bStop, unsigned int ulLoop, unsigned char bMerge, float xFrame)
 {
-    tdstSubAnimInUse_* hSubAnimInUse;
-    tdstSubAnimInUse_* hNewSubAnimInUse;
-    tdstSubAnim_* hSubAnimInFamily;
     tdst3dData_* h3dData;
-    /* TODO: decompile from asm/... */
+    tdstSubAnimInUse_* hNewSubAnimInUse;
+    tdstSubAnimInUse_* hSubAnimInUse;
+    tdstSubAnim_* hSubAnimInFamily;
+
+    h3dData = _hCharacter->hLinkedObject.p_stCharacter->h_3dData;
+    fn_vPushAllocModeAccordingToObject(_hCharacter);
+    if (fn_bTestSubAnim(_hCharacter, ulNumberOfSubAnim) == 1)
+    {
+        hSubAnimInFamily = &h3dData->h_Family->hForSubAnimArray.hFirstElementOpt[ulNumberOfSubAnim];
+        for (hSubAnimInUse = h3dData->hForSubAnimInUseArray.hFirstElementDyn; hSubAnimInUse; hSubAnimInUse = hSubAnimInUse->hNextBrotherDyn)
+        {
+            if (hSubAnimInUse->p_stTheSubAnim == hSubAnimInFamily)
+            {
+                if (xFrame > (float)(unsigned int)hSubAnimInUse->p_stTheSubAnim->p_stSubAnim->uwNumberOfFrames)
+                    xFrame = (float)(hSubAnimInUse->p_stTheSubAnim->p_stSubAnim->uwNumberOfFrames - 1);
+                if (xFrame < 0.0f)
+                    xFrame = 0.0f;
+                hSubAnimInUse->xFrameNumber = xFrame;
+                hSubAnimInUse->bStop = bStop;
+                hSubAnimInUse->ulLoop = ulLoop;
+                hSubAnimInUse->ulStartFrame = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+                fn_vInitAllSubEvents(_hCharacter, hSubAnimInUse);
+                break;
+            }
+        }
+    }
+    else
+    {
+        hSubAnimInFamily = &h3dData->h_Family->hForSubAnimArray.hFirstElementOpt[ulNumberOfSubAnim];
+        if (hSubAnimInFamily)
+        {
+            hNewSubAnimInUse = (tdstSubAnimInUse_*)HMU_fn_p_vMalloc(sizeof(tdstSubAnimInUse_), 1);
+            hNewSubAnimInUse->p_stTheSubAnim = hSubAnimInFamily;
+            hNewSubAnimInUse->ulCustombit = 0;
+            if (xFrame > (float)(unsigned int)hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->uwNumberOfFrames)
+                xFrame = (float)(hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->uwNumberOfFrames - 1);
+            if (xFrame < 0.0f)
+                xFrame = 0.0f;
+            hNewSubAnimInUse->xFrameNumber = xFrame;
+            hNewSubAnimInUse->bStop = bStop;
+            hNewSubAnimInUse->ulLoop = ulLoop;
+            hNewSubAnimInUse->bMerge = bMerge;
+            hNewSubAnimInUse->ulStartFrame = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+            fn_vInitAllSubEvents(_hCharacter, hNewSubAnimInUse);
+            hNewSubAnimInUse->hNextBrotherDyn = NULL;
+            hNewSubAnimInUse->hPrevBrotherDyn = NULL;
+            hNewSubAnimInUse->hFatherDyn = NULL;
+            if (hNewSubAnimInUse->hNextBrotherDyn)
+                hNewSubAnimInUse->hNextBrotherDyn->hPrevBrotherDyn = hNewSubAnimInUse->hPrevBrotherDyn;
+            if (hNewSubAnimInUse->hPrevBrotherDyn)
+                hNewSubAnimInUse->hPrevBrotherDyn->hNextBrotherDyn = hNewSubAnimInUse->hNextBrotherDyn;
+            if (hNewSubAnimInUse->hFatherDyn)
+            {
+                hNewSubAnimInUse->hFatherDyn->lNumberOfElementsDyn--;
+                if (hNewSubAnimInUse->hFatherDyn->hFirstElementDyn == hNewSubAnimInUse)
+                    hNewSubAnimInUse->hFatherDyn->hFirstElementDyn = hNewSubAnimInUse->hNextBrotherDyn;
+                if (hNewSubAnimInUse->hFatherDyn->hLastElementDyn == hNewSubAnimInUse)
+                    hNewSubAnimInUse->hFatherDyn->hLastElementDyn = hNewSubAnimInUse->hPrevBrotherDyn;
+            }
+            hNewSubAnimInUse->hNextBrotherDyn = NULL;
+            hNewSubAnimInUse->hPrevBrotherDyn = NULL;
+            hNewSubAnimInUse->hFatherDyn = NULL;
+            hNewSubAnimInUse->hNextBrotherDyn = NULL;
+            hNewSubAnimInUse->hPrevBrotherDyn = h3dData->hForSubAnimInUseArray.hLastElementDyn;
+            hNewSubAnimInUse->hFatherDyn = &h3dData->hForSubAnimInUseArray;
+            if (h3dData->hForSubAnimInUseArray.hFirstElementDyn == NULL)
+                h3dData->hForSubAnimInUseArray.hFirstElementDyn = hNewSubAnimInUse;
+            else
+                h3dData->hForSubAnimInUseArray.hLastElementDyn->hNextBrotherDyn = hNewSubAnimInUse;
+            h3dData->hForSubAnimInUseArray.hLastElementDyn = hNewSubAnimInUse;
+            h3dData->hForSubAnimInUseArray.lNumberOfElementsDyn++;
+        }
+    }
+    GAM_fn_vPopAllocMode();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 951–961 */
@@ -2027,7 +2102,6 @@ void fn_vFreeArrayOfElts3d(tdst3dData_* h_3dData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 void fn_vAllocArrayOfElts3d(tdst3dData_* h_3dData, unsigned short _wNumberOfElts3d)
 {
     if (h_3dData->wSizeOfArrayOfElts3d < _wNumberOfElts3d) {
