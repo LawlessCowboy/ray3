@@ -300,8 +300,8 @@ struct GEO_tdstEdge_ {
     MTH3D_tdstVector_ st_VectorPoints[2]; /* +0x4 */
 };
 
-int SECT_g_hActiveSectorList_Head;
-int SECT_g_hActiveSectorList_Tail;
+HIE_tdstSuperObject_* SECT_g_hActiveSectorList_Head;
+HIE_tdstSuperObject_* SECT_g_hActiveSectorList_Tail;
 unsigned short SECT_g_uwActiveSectorList_NumberOfElements;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 21–21 */
@@ -401,7 +401,31 @@ void SECT_fn_vDesactivateSector(HIE_tdstSuperObject_* _hSectorSO)
 void SECT_fn_vRemoveSectorFromList(HIE_tdstSuperObject_* _hSectorSO)
 {
     SECT_tdstSector_* hSector;
-    /* TODO: decompile from asm/... */
+
+    hSector = _hSectorSO->hLinkedObject.p_stSector;
+    if (hSector->ucInList)
+    {
+        if (hSector->h_PreviousSectorInList)
+            hSector->h_PreviousSectorInList->hLinkedObject.p_stSector->h_NextSectorInList = hSector->h_NextSectorInList;
+        else
+        {
+            SECT_g_hActiveSectorList_Head = hSector->h_NextSectorInList;
+            if (SECT_g_hActiveSectorList_Head)
+                SECT_g_hActiveSectorList_Head->hLinkedObject.p_stSector->h_PreviousSectorInList = NULL;
+        }
+        if (hSector->h_NextSectorInList)
+            hSector->h_NextSectorInList->hLinkedObject.p_stSector->h_PreviousSectorInList = hSector->h_PreviousSectorInList;
+        else
+        {
+            SECT_g_hActiveSectorList_Tail = hSector->h_PreviousSectorInList;
+            if (SECT_g_hActiveSectorList_Tail)
+                SECT_g_hActiveSectorList_Tail->hLinkedObject.p_stSector->h_NextSectorInList = NULL;
+        }
+        hSector->h_NextSectorInList = NULL;
+        hSector->h_PreviousSectorInList = NULL;
+        hSector->ucInList = 0;
+        SECT_g_uwActiveSectorList_NumberOfElements--;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 52–59 */

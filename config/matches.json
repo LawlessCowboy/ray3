@@ -37334,11 +37334,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
       "status": "MATCH"
     },
+    "0x002860d0": {
+      "address": "0x002860d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DEMO_fn_vLoadDemoIfNeeded",
+      "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MATCH"
+    },
     "0x00286180": {
       "address": "0x00286180",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "DEMO_fn_vAskToLoadDemo",
       "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MATCH"
+    },
+    "0x002861b0": {
+      "address": "0x002861b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DEMO_fn_vLoadFromFile",
+      "size": 168,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
       "status": "MATCH"
     },
@@ -37371,6 +37387,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "DEMO_fn_vPrepareForRead",
       "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MATCH"
+    },
+    "0x00286410": {
+      "address": "0x00286410",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DEMO_fn_vPrepareForReadNow",
+      "size": 204,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
       "status": "MATCH"
     },
@@ -43003,6 +43027,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SECT_fn_vDesactivateSector",
       "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/SectList.c",
+      "status": "MATCH"
+    },
+    "0x00319bd0": {
+      "address": "0x00319bd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SECT_fn_vRemoveSectorFromList",
+      "size": 160,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/SectList.c",
       "status": "MATCH"
     },

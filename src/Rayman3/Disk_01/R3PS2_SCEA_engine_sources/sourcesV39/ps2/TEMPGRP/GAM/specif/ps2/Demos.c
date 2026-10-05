@@ -3032,9 +3032,15 @@ void DEMO_fn_vSetTestInputDuringDemo(int _bTestInput)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void DEMO_fn_vLoadFromFile(char* szDemoName);
+
 void DEMO_fn_vLoadDemoIfNeeded(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_DEMO_LoadDemo)
+    {
+        DEMO_fn_vLoadFromFile(g_szDemoToLoad);
+        g_DEMO_LoadDemo = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1956–1959 */
@@ -3075,13 +3081,37 @@ void DEMO_fn_vAskToLoadDemo(char* pcDemoName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+char* DEMO_fn_pcBuildDemoPath(char* szFilename);
+unsigned char DEMO_bInitEventFlow(char* szFileName);
+char* DEMO_pcGetNextFlowSegment(void);
+void* memcpy(void* dst, const void* src, size_t n);
+int printf(const char* fmt, ...);
+
+#pragma auto_inline on
 void DEMO_fn_vLoadFromFile(char* szDemoName)
 {
     unsigned int Length;
     char* p_cFilename;
     char szFilename[256];
-    /* TODO: decompile from asm/... */
+
+    p_cFilename = DEMO_fn_pcBuildDemoPath(szFilename);
+    strcpy(p_cFilename, szDemoName);
+    g_DEMO_u32PlayMode = 2;
+    if (DEMO_bInitEventFlow(szFilename))
+    {
+        gp_DEMO_CurrentPosInMemory = (int)DEMO_pcGetNextFlowSegment();
+        memcpy(&gl_DEMO_NumberOfFrames, (void*)gp_DEMO_CurrentPosInMemory, 4);
+        gp_DEMO_CurrentPosInMemory += 4;
+        memcpy(&Length, (void*)gp_DEMO_CurrentPosInMemory, 4);
+        gp_DEMO_CurrentPosInMemory += 4;
+    }
+    else
+    {
+        printf("DEMO_fn_vLoadFromFile(%s): open failed\n", szFilename);
+        gl_DEMO_NumberOfFrames = -1;
+    }
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1800–1801 */
 /* addr: 0x00286260  size: 16 bytes */
@@ -3131,7 +3161,7 @@ unsigned int DEMO_fn_u32GetCurrentEventOffset(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DEMO_fn_pcBuildDemoPath(char* szFilename)
+char* DEMO_fn_pcBuildDemoPath(char* szFilename)
 {
     char ax_cName[256];
     char* p_cFilename;
@@ -3200,11 +3230,31 @@ void DEMO_fn_vPrepareForRead(int _iNbFramesToWait)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO_vInit(void);
+void CreateType28AGO(MTH3D_tdstVector_* p_stPos, MTH3D_tdstVector_* p_stDir, int lParam, float fParam);
+
 void DEMO_fn_vPrepareForReadNow(void)
 {
-    MTH3D_tdstVector_ stDir;
     MTH3D_tdstVector_ stPos;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stDir;
+    int i;
+
+    if (g_DEMO_u32PlayMode == 1)
+        gp_DEMO_CurrentPosInMemory = gp_DEMO_AllocatedMemory;
+    g_ulDEMO_ElapsedDemoTimerCount = 1;
+    g_ulDEMO_DeltaTimerCount = 32;
+    g_ulDEMO_StartDEMO_EngineTimerCount = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    gl_DEMO_CurrentFrame = 0;
+    stPos.xX = 1.0f;
+    stPos.xY = 1.0f;
+    stPos.xZ = 1000.0f;
+    stDir.xX = 1.0f;
+    stDir.xY = 1.0f;
+    stDir.xZ = 1.0f;
+    AGO_vInit();
+    CreateType28AGO(&stPos, &stDir, 0, 0.0f);
+    for (i = 0; i < 32; i++)
+        g_as32DemoAGOTable[i] = -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1266–1295 */
