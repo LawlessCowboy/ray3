@@ -772,7 +772,22 @@ int gh_st3dData;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned char g_ucGameModuleId;
+void Erm_fn_ClearLastError(unsigned int ulChannelId);
+void Erm_fn_v_UpdateLastError();
+tdst3dData_* fn_h_3dDataRealAlloc(void);
+
 void fn_v3dDataAlloc(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stObject == NULL)
+    {
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_3dData != NULL)
+    {
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+    p_stObject->h_3dData = fn_h_3dDataRealAlloc();
 }

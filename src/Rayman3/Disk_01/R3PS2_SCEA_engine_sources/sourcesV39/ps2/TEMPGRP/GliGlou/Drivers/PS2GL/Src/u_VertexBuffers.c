@@ -1016,5 +1016,8 @@ int Global_CharacterBeingDisplayed;
  */
 unsigned int GetTotalSizeWithMipMaps(unsigned int OriginalSize)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int TotalSize;
+
+    TotalSize = (unsigned int)(1.34f * (float)OriginalSize);
+    return (TotalSize + 15) & ~15;
 }

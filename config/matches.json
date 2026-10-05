@@ -21648,6 +21648,42 @@
       "status": "MISMATCH",
       "target_size": 148,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002c71c0",
+      "candidate_size": 96,
+      "first_difference": 4,
+      "implementation": "unsigned int GetTotalSizeWithMipMaps(unsigned int OriginalSize)\n{\n    unsigned int TotalSize;\n\n    TotalSize = (unsigned int)(1.34f * (float)OriginalSize);\n    return (TotalSize + 15) & ~15;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GetTotalSizeWithMipMaps",
+      "reason": "Known compiler-build residual: retail inlines the (unsigned int)float conversion (c.le.s 2^31/trunc.w.s/or), our MWCC calls fptoui. Otherwise 1.34f*(float)size rounded up to 16 matches",
+      "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_VertexBuffers.c",
+      "status": "MISMATCH",
+      "target_size": 144,
+      "unresolved_relocations": [
+        {
+          "offset": 64,
+          "symbol": "fptoui",
+          "type": 4
+        }
+      ]
+    },
+    {
+      "address": "0x002f5910",
+      "candidate_size": 160,
+      "first_difference": 22,
+      "implementation": "unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement)\n{\n    unsigned char ucReturn;\n\n    g_h_ActualEntryInput = _hEntryElement;\n    _hEntryElement->xAnalogicValue = 0.0f;\n    IPT_g_hNextParameter = _hEntryElement->d_stKeyWordElementArray;\n    if (IPT_g_hNextParameter)\n    {\n        ucReturn = 0;\n        if (IPT_p_fn_bIsKeyWordValid[(unsigned char)IPT_g_hNextParameter->u_ElementUnion.swKeyWord])\n        {\n            ucReturn = IPT_p_fn_bIsKeyWordValid[(unsigned char)IPT_g_hNextParameter->u_ElementUnion.swKeyWord]();\n        }\n        else\n        {\n            Erm_fn_ClearLastError(0);\n            Erm_fn_v_UpdateLastError(14, g_ucIPTModuleId, 0, 12, -1, 255, 255, NULL);\n        }\n        return ucReturn;\n    }\n    return 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "IPT_fn_bIsEntryActionValid",
+      "reason": "Keyword dispatch through IPT_p_fn_bIsKeyWordValid and the Erm error report match (160/152). Residual: retail tests the reloaded IPT_g_hNextParameter with beqz straight to the epilogue (v0=0 in the delay slot) and re-masks ucReturn at the end, while early-return and nested-if forms give bnez plus b",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_anal.c",
+      "status": "MISMATCH",
+      "target_size": 152,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -21913,6 +21949,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "VID_fn_vPlayVideoAfterLevel",
       "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/VID_Pub.c",
+      "status": "MATCH"
+    },
+    "0x0012f4e0": {
+      "address": "0x0012f4e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "VID_fn_vNextVideoToPlay",
+      "size": 148,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/VID_Pub.c",
       "status": "MATCH"
     },
@@ -37324,6 +37368,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
       "status": "MATCH"
     },
+    "0x00288890": {
+      "address": "0x00288890",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_vStopSubAnimationAtEnd",
+      "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
+    "0x00288a20": {
+      "address": "0x00288a20",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_bTestSubAnim",
+      "size": 76,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
     "0x00288a70": {
       "address": "0x00288a70",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -37340,11 +37400,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
       "status": "MATCH"
     },
+    "0x00289060": {
+      "address": "0x00289060",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_vFreeArrayOfElts3d",
+      "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
     "0x002890b0": {
       "address": "0x002890b0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_vAllocArrayOfElts3d",
       "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
+    "0x00289130": {
+      "address": "0x00289130",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_v3dDataSetUserEventFlag",
+      "size": 132,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
       "status": "MATCH"
     },
@@ -37369,6 +37445,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_b3dDataCanComputeBrain",
       "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
+    "0x00289290": {
+      "address": "0x00289290",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_v3dDataUpdateBrainCounter",
+      "size": 68,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
       "status": "MATCH"
     },
@@ -37404,6 +37488,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
       "status": "MATCH"
     },
+    "0x002894a0": {
+      "address": "0x002894a0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_v3dDataCopyClone",
+      "size": 148,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
     "0x00289540": {
       "address": "0x00289540",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -37418,6 +37510,14 @@
       "name": "fn_ul3dDataSizeOf",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
+    "0x00289fb0": {
+      "address": "0x00289fb0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_v3dDataAlloc",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/playanimPS2.c",
       "status": "MATCH"
     },
     "0x0028aaf0": {

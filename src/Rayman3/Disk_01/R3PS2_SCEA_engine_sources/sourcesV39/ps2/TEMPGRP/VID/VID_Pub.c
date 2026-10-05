@@ -107,10 +107,20 @@ void VID_fn_vPlayVideoAfterLevel(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int strcasecmp(const char* s1, const char* s2);
+
 void VID_fn_vNextVideoToPlay(char* p_szVideoName, unsigned char bCanBeInterrupt, unsigned char bLoop)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    VID_g_stGeneralVideos.stNextVideoToPlay.bCanBeInterrupt = bCanBeInterrupt;
+    VID_g_stGeneralVideos.stNextVideoToPlay.bLoop = bLoop;
+    VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = 0;
+    for (i = 0; i < VID_g_stGeneralVideos.ulTrueNumberOfVideos; i++)
+    {
+        if (strcasecmp((char*)VID_g_stGeneralVideos.p_stVideos[i].p_szVideoName, p_szVideoName) == 0)
+            VID_g_stGeneralVideos.stNextVideoToPlay.ucVideoNumber = (unsigned char)i;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\VID_Pub.c lines 136–136 */

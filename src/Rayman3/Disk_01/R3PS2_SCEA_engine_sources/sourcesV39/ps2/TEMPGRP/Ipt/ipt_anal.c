@@ -175,10 +175,35 @@ IPT_tdstScriptValue_ IPT_g_hScriptKeyValue;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern IPT_tdstKeyWordElement_* IPT_g_hNextParameter;
+extern IPT_tdstEntryElement_* g_h_ActualEntryInput;
+extern unsigned char (*IPT_p_fn_bIsKeyWordValid[28])(void);
+extern unsigned char g_ucIPTModuleId;
+void Erm_fn_ClearLastError(unsigned int ulChannelId);
+void Erm_fn_v_UpdateLastError();
+
 unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement)
 {
     unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+
+    g_h_ActualEntryInput = _hEntryElement;
+    _hEntryElement->xAnalogicValue = 0.0f;
+    IPT_g_hNextParameter = _hEntryElement->d_stKeyWordElementArray;
+    if (IPT_g_hNextParameter)
+    {
+        ucReturn = 0;
+        if (IPT_p_fn_bIsKeyWordValid[(unsigned char)IPT_g_hNextParameter->u_ElementUnion.swKeyWord])
+        {
+            ucReturn = IPT_p_fn_bIsKeyWordValid[(unsigned char)IPT_g_hNextParameter->u_ElementUnion.swKeyWord]();
+        }
+        else
+        {
+            Erm_fn_ClearLastError(0);
+            Erm_fn_v_UpdateLastError(14, g_ucIPTModuleId, 0, 12, -1, 255, 255, NULL);
+        }
+        return ucReturn;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 182–203 */
