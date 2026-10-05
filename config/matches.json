@@ -21588,6 +21588,21 @@
       "status": "MISMATCH",
       "target_size": 520,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002fe660",
+      "candidate_size": 172,
+      "first_difference": 0,
+      "implementation": "void MAT_fn_vNormQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW)\n{\n    float xZz;\n    float xYz;\n    float xYy;\n    float xXz;\n    float xXy;\n    float xXx;\n    float xWz;\n    float xWy;\n    float xWx;\n    float xZs;\n    float xYs;\n    float xXs;\n\n    xXs = _xX + _xX;\n    xYs = _xY + _xY;\n    xZs = _xZ + _xZ;\n    xWx = _xW * xXs;\n    xWy = _xW * xYs;\n    xWz = _xW * xZs;\n    xXx = _xX * xXs;\n    xXy = _xX * xYs;\n    xXz = _xX * xZs;\n    xYy = _xY * xYs;\n    xYz = _xY * xZs;\n    xZz = _xZ * xZs;\n\n    _p_stMatrix->stCol_0.xX = 1.0f - (xYy + xZz);\n    _p_stMatrix->stCol_1.xX = xXy + xWz;\n    _p_stMatrix->stCol_2.xX = xXz - xWy;\n    _p_stMatrix->stCol_3.xX = 0.0f;\n\n    _p_stMatrix->stCol_0.xY = xXy - xWz;\n    _p_stMatrix->stCol_1.xY = 1.0f - (xXx + xZz);\n    _p_stMatrix->stCol_2.xY = xYz + xWx;\n    _p_stMatrix->stCol_3.xY = 0.0f;\n\n    _p_stMatrix->stCol_0.xZ = xXz + xWy;\n    _p_stMatrix->stCol_1.xZ = xYz - xWx;\n    _p_stMatrix->stCol_2.xZ = 1.0f - (xXx + xYy);\n    _p_stMatrix->stCol_3.xZ = 0.0f;\n\n    _p_stMatrix->stCol_0.xW = 0.0f;\n    _p_stMatrix->stCol_1.xW = 0.0f;\n    _p_stMatrix->stCol_2.xW = 0.0f;\n    _p_stMatrix->stCol_3.xW = 1.0f;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MAT_fn_vNormQuatToMatrix",
+      "reason": "Standard quaternion-to-matrix formula with the right stores and constants (172/172). Residual is FP scheduling and register order: retail computes zs/ys/xs and the products in a different order. Statement orders of the temporaries don't change the scheduler's choice (permuter candidate)",
+      "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matutils.c",
+      "status": "MISMATCH",
+      "target_size": 172,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -23712,6 +23727,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_BufferControl.c",
       "status": "MATCH"
     },
+    "0x001409c0": {
+      "address": "0x001409c0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glFlushNotify",
+      "size": 76,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_BufferControl.c",
+      "status": "MATCH"
+    },
     "0x001439b0": {
       "address": "0x001439b0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -24886,6 +24909,30 @@
       "name": "impPS2glCullFace",
       "size": 24,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_EnableDisable.c",
+      "status": "MATCH"
+    },
+    "0x001510e0": {
+      "address": "0x001510e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glCallList",
+      "size": 68,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
+    "0x00152180": {
+      "address": "0x00152180",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glPartialDeleteLists",
+      "size": 84,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
+    "0x00152440": {
+      "address": "0x00152440",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glGenLists",
+      "size": 96,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
       "status": "MATCH"
     },
     "0x001524a0": {
@@ -39877,6 +39924,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "VAC_Destroy",
       "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SPGArray.cpp",
+      "status": "MATCH"
+    },
+    "0x002cf100": {
+      "address": "0x002cf100",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "VAC_Create",
+      "size": 56,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SPGArray.cpp",
       "status": "MATCH"
     },

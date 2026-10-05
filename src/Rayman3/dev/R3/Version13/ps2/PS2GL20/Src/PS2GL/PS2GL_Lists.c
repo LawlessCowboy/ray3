@@ -1658,11 +1658,21 @@ void impPS2glCallLists(int n, unsigned int type, void* lists)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tagListData** PS2glSearchList(unsigned int list);
+void PS2glCallSDL(tagListData* pListData);
+void PS2glExecuteListData(tagListData* pData);
+
 void impPS2glCallList(unsigned int list)
 {
     tagListData** ppListData;
     tagListData* pListData;
-    /* TODO: decompile from asm/... */
+
+    ppListData = PS2glSearchList(list);
+    pListData = *ppListData;
+    if (pListData->pDmaBuffer)
+        PS2glCallSDL(pListData);
+    else
+        PS2glExecuteListData(pListData);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2251–2358 */
@@ -2192,11 +2202,23 @@ void impPS2glNewList(unsigned int list, unsigned int mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glFreeListData(tagListData* pDataOfList);
+
 void impPS2glPartialDeleteLists(unsigned int list)
 {
     int I;
     tagListNodeSingle* pSingleIndex;
-    /* TODO: decompile from asm/... */
+
+    pSingleIndex = g_PS2glContext.ListPool.aSingleIndex;
+    for (I = 0; I < 64; I++, pSingleIndex++)
+    {
+        if (pSingleIndex->nIndex == list)
+        {
+            PS2glFreeListData(pSingleIndex->pData);
+            pSingleIndex->pData = NULL;
+            break;
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1604–1695 */
@@ -2294,10 +2316,17 @@ void impPS2glDeleteLists(unsigned int list, int range)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tagListData** PS2glAddLists(unsigned int list, int range);
+
 unsigned int impPS2glGenLists(int range)
 {
     unsigned int nIndex;
-    /* TODO: decompile from asm/... */
+
+    nIndex = g_PS2glContext.ListPool.nFreeIndex;
+    if (!PS2glAddLists(nIndex, range))
+        return 0;
+    g_PS2glContext.ListPool.nFreeIndex += range;
+    return nIndex;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1582–1584 */

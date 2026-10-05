@@ -110,7 +110,39 @@ void MAT_fn_vNormQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _
     float xZs;
     float xYs;
     float xXs;
-    /* TODO: decompile from asm/... */
+
+    xXs = _xX + _xX;
+    xYs = _xY + _xY;
+    xZs = _xZ + _xZ;
+    xWx = _xW * xXs;
+    xWy = _xW * xYs;
+    xWz = _xW * xZs;
+    xXx = _xX * xXs;
+    xXy = _xX * xYs;
+    xXz = _xX * xZs;
+    xYy = _xY * xYs;
+    xYz = _xY * xZs;
+    xZz = _xZ * xZs;
+
+    _p_stMatrix->stCol_0.xX = 1.0f - (xYy + xZz);
+    _p_stMatrix->stCol_1.xX = xXy + xWz;
+    _p_stMatrix->stCol_2.xX = xXz - xWy;
+    _p_stMatrix->stCol_3.xX = 0.0f;
+
+    _p_stMatrix->stCol_0.xY = xXy - xWz;
+    _p_stMatrix->stCol_1.xY = 1.0f - (xXx + xZz);
+    _p_stMatrix->stCol_2.xY = xYz + xWx;
+    _p_stMatrix->stCol_3.xY = 0.0f;
+
+    _p_stMatrix->stCol_0.xZ = xXz + xWy;
+    _p_stMatrix->stCol_1.xZ = xYz - xWx;
+    _p_stMatrix->stCol_2.xZ = 1.0f - (xXx + xYy);
+    _p_stMatrix->stCol_3.xZ = 0.0f;
+
+    _p_stMatrix->stCol_0.xW = 0.0f;
+    _p_stMatrix->stCol_1.xW = 0.0f;
+    _p_stMatrix->stCol_2.xW = 0.0f;
+    _p_stMatrix->stCol_3.xW = 1.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matutils.c lines 112–160 */

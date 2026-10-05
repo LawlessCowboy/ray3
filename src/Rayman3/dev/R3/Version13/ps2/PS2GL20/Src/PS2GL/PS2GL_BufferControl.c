@@ -1470,9 +1470,18 @@ void PS2glFakeSwapBuffers(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glExecSwapBuffers(void);
+
 void PS2glFlushNotify(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_stBufferInfo.bDoubleBufferMode)
+    {
+        if (bNeedSwapBuffer && (g_PS2glContext.nEnableBits & 0x20000))
+        {
+            bNeedSwapBuffer = 0;
+            PS2glExecSwapBuffers();
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1115–1381 */

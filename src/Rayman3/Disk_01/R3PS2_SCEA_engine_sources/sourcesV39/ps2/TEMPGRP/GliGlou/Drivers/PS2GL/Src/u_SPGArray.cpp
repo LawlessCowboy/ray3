@@ -94,9 +94,10 @@ struct C_VertexArrayContainer {
     unsigned int m_CurrentIndex; /* +0x20 */
     unsigned int m_bMatrixWasSet; /* +0x24 */
     unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x28..0x2f */
-    float m_Matrix[4][4]; /* +0x30 */
+    float m_Matrix[4][4] __attribute__((aligned(16))); /* +0x30 */
     GLI_tdstMaterial_* m_pMat; /* +0x70 */
     int m_AnimatedTextureToUse; /* +0x74 */
+    C_VertexArrayContainer(unsigned int NbSprites);
     ~C_VertexArrayContainer();
     void UnAcquireAndDraw(unsigned int NbSprites);
     void SetMatrix(float (*pMatrix)[4][4]);
@@ -1299,9 +1300,9 @@ void VAC_Destroy(void* hContainer)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void VAC_Create(unsigned int NbSprites)
+void* VAC_Create(unsigned int NbSprites)
 {
-    /* TODO: decompile from asm/... */
+    return new C_VertexArrayContainer(NbSprites);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 258–316 */
