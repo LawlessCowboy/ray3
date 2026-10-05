@@ -182,7 +182,7 @@ struct tdstSubAnimInUse_ {
     tdstSubAnimInUse_* hPrevBrotherDyn; /* +0x4 */
     LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn* hFatherDyn; /* +0x8 */
     tdstSubAnim_* p_stTheSubAnim; /* +0xc */
-    int d_ucEventActivation; /* +0x10 */
+    unsigned char* d_ucEventActivation; /* +0x10 */
     unsigned int ulStartFrame; /* +0x14 */
     unsigned int ulCustombit; /* +0x18 */
     unsigned int ulLoop; /* +0x1c */
@@ -1360,13 +1360,59 @@ void fn_vDesInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bIsInFix(tdstEngineObject_* p_stObject);
+unsigned char GAM_fn_bIsEngineInFixMode(void);
+unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void);
+unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
+void HMU_fn_vSetMemoriesInFixMode(void);
+void HMU_fn_vSetMemoriesInLevelMode(void);
+void HMU_fn_vSetMemoriesInTransition1Mode(void);
+void HMU_fn_vSetMemoriesInTransition2Mode(void);
+int fn_lGetTransitionBloc(void);
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+#ifndef PLAYEVTS_EVENT_PROTOS
+tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d, int lParam1, int lParam2);
+#endif
+
 void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse)
 {
-    unsigned char i;
-    unsigned char ucMemoryType;
-    unsigned char bBTLevel;
     tdstEvent_* p_stEvent;
-    /* TODO: decompile from asm/... */
+    unsigned char i;
+    unsigned char bBTLevel;
+    unsigned char ucMemoryType;
+    int lNbEvents;
+
+    ucMemoryType = 0;
+    bBTLevel = 0;
+    if (fn_bIsInFix(_hCharacter->ulTypeOfLinkedObject != 2 ? NULL : _hCharacter->hLinkedObject.p_stCharacter) && !GAM_fn_bIsEngineInFixMode())
+    {
+        ucMemoryType = HMU_fn_ucGetActualNormalMemoryBlockUsed();
+        HMU_fn_vSetMemoriesInFixMode();
+        bBTLevel = 1;
+    }
+    p_stEvent = fn_p_GetEventsAddress(hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim, 0, 0);
+    if (p_stEvent)
+    {
+        lNbEvents = hNewSubAnimInUse->p_stTheSubAnim->p_stSubAnim->ucNumberOfEvents;
+        hNewSubAnimInUse->d_ucEventActivation = (unsigned char*)HMU_fn_p_vMalloc(lNbEvents, 1);
+        hNewSubAnimInUse->ucNextEvent = 0;
+        for (i = 0; i < lNbEvents; i++, p_stEvent++)
+            hNewSubAnimInUse->d_ucEventActivation[i] = p_stEvent->p_stfEventInTBL->ucFirstCall;
+    }
+    else
+    {
+        hNewSubAnimInUse->d_ucEventActivation = NULL;
+        hNewSubAnimInUse->ucNextEvent = 0;
+    }
+    if (bBTLevel)
+    {
+        if (ucMemoryType == HMU_fn_ucGetLevelNormalMemoryBlock())
+            HMU_fn_vSetMemoriesInLevelMode();
+        else if (fn_lGetTransitionBloc() != 1)
+            HMU_fn_vSetMemoriesInTransition1Mode();
+        else
+            HMU_fn_vSetMemoriesInTransition2Mode();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 677–678 */
