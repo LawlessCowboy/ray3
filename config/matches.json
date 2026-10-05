@@ -42717,6 +42717,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/dupobjmp.c",
       "status": "MATCH"
     },
+    "0x00314ef0": {
+      "address": "0x00314ef0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MOR_fn_vDeletePhysicalObject",
+      "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/dupobjmp.c",
+      "status": "MATCH"
+    },
     "0x00315bf0": {
       "address": "0x00315bf0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -43106,6 +43114,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SCT_fn_vInitMaterialForGoThrough",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectmir.c",
+      "status": "MATCH"
+    },
+    "0x0031a960": {
+      "address": "0x0031a960",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SCT_fn_vInitMirrorFlagForAllSectors",
+      "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectmir.c",
+      "status": "MATCH"
+    },
+    "0x0031aa10": {
+      "address": "0x0031aa10",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SCT_fn_vDoPreClippingForPortal",
+      "size": 172,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectmir.c",
       "status": "MATCH"
     },

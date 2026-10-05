@@ -489,10 +489,30 @@ void SCT_fn_vInitMaterialForGoThrough(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char HIE_fn_bFindMirrorInHierarchy(HIE_tdstSuperObject_* hSO);
+void SCT_fn_vDoPreClippingForPortal(HIE_tdstSuperObject_* _hSector);
+void SCT_fn_vPreClippingForOnePortal(HIE_tdstSuperObject_* _hIPOMirror);
+
 void SCT_fn_vInitMirrorFlagForAllSectors(HIE_tdstSuperObject_* _hStaticRoot)
 {
     HIE_tdstSuperObject_* hSector;
-    /* TODO: decompile from asm/... */
+
+    for (hSector = _hStaticRoot->hFirstElementDyn; hSector; hSector = hSector->hNextBrotherDyn)
+    {
+        if (HIE_fn_bFindMirrorInHierarchy(hSector))
+        {
+            HIE_tdstSuperObject_* hChild;
+
+            hSector->lDrawModeMask &= ~0x10000000;
+            for (hChild = hSector->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+            {
+                if (hChild->ulTypeOfLinkedObject & 0x40)
+                    SCT_fn_vPreClippingForOnePortal(hChild);
+                else
+                    SCT_fn_vDoPreClippingForPortal(hChild);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 932–943 */
@@ -511,7 +531,26 @@ void SCT_fn_vInitMirrorFlagForAllSectors(HIE_tdstSuperObject_* _hStaticRoot)
 void SCT_fn_vDoPreClippingForPortal(HIE_tdstSuperObject_* _hSector)
 {
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    for (hChild = _hSector->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+    {
+        if (hChild->ulTypeOfLinkedObject & 0x40)
+        {
+            SCT_fn_vPreClippingForOnePortal(hChild);
+        }
+        else
+        {
+            HIE_tdstSuperObject_* hSubChild;
+
+            for (hSubChild = hChild->hFirstElementDyn; hSubChild; hSubChild = hSubChild->hNextBrotherDyn)
+            {
+                if (hSubChild->ulTypeOfLinkedObject & 0x40)
+                    SCT_fn_vPreClippingForOnePortal(hSubChild);
+                else
+                    SCT_fn_vDoPreClippingForPortal(hSubChild);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 874–929 */

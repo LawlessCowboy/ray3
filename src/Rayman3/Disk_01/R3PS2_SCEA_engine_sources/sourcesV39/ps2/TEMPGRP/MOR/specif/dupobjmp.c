@@ -140,10 +140,19 @@ void Mmg_fn_cCheckAlignmentValidity(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
+
+void MOR_fn_vDeleteGeometricObject(GEO_tdstGeometricObject_** p_hObj);
 void MOR_fn_vDeletePhysicalObject(PO_tdstPhysicalObject_* _pPhysicalObject)
 {
     short i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < _pPhysicalObject->_hVisualSet->xNbLodDefinitions; i++)
+        MOR_fn_vDeleteGeometricObject((GEO_tdstGeometricObject_**)&_pPhysicalObject->_hVisualSet->d_p_stLodDefinitions[i]);
+    HMU_fn_vFree((void**)&_pPhysicalObject->_hVisualSet->d_xThresholdsTable, 1);
+    HMU_fn_vFree((void**)&_pPhysicalObject->_hVisualSet->d_p_stLodDefinitions, 1);
+    HMU_fn_vFree((void**)&_pPhysicalObject->_hVisualSet, 1);
+    HMU_fn_vFree((void**)&_pPhysicalObject, 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\dupobjmp.c lines 180–243 */
