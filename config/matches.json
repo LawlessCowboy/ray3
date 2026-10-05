@@ -37360,6 +37360,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
       "status": "MATCH"
     },
+    "0x00288730": {
+      "address": "0x00288730",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_bTestSubAnimNearEnd",
+      "size": 316,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
     "0x00288870": {
       "address": "0x00288870",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -37373,6 +37381,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_vStopSubAnimationAtEnd",
       "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
+    "0x002888e0": {
+      "address": "0x002888e0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_vRemoveAllSubAnimations",
+      "size": 320,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
       "status": "MATCH"
     },
@@ -37397,6 +37413,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_vSetCustombitSubAnim",
       "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
+      "status": "MATCH"
+    },
+    "0x00288ba0": {
+      "address": "0x00288ba0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_vRemoveSubAnimation",
+      "size": 400,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c",
       "status": "MATCH"
     },
