@@ -38214,6 +38214,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
       "status": "MATCH"
     },
+    "0x0029e470": {
+      "address": "0x0029e470",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_dwFindNextSnappedPicture",
+      "size": 184,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/Specif/MemoryCard.cxx",
+      "status": "MATCH"
+    },
+    "0x0029e530": {
+      "address": "0x0029e530",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_dwFindPreviousSnappedPicture",
+      "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/Specif/MemoryCard.cxx",
+      "status": "MATCH"
+    },
     "0x0029f500": {
       "address": "0x0029f500",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",

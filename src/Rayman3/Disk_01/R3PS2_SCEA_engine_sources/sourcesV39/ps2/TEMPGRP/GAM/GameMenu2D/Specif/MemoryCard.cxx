@@ -4,6 +4,27 @@
 
 #include <stddef.h>
 
+/* Layouts from DefineMenu2D.c; only the fields this unit uses are named. */
+typedef struct tdstFileEntry_ {
+    unsigned int Reserved_Key; /* +0x0 */
+    unsigned int Reserved_Key2; /* +0x4 */
+    char Name[8]; /* +0x8 */
+    char DateTime[26]; /* +0x10 */
+    unsigned int ulScore; /* +0x2c */
+    unsigned int ulNbCage; /* +0x30 */
+} tdstFileEntry_;
+
+typedef struct tdstMenu2DPages_ {
+    unsigned char a_ucPageData[0x248]; /* +0x0 */
+    unsigned int NbEntry; /* +0x248 */
+    unsigned int CurrentFirstEntry; /* +0x24c */
+} tdstMenu2DPages_;
+
+extern tdstFileEntry_ g_aFileEntryArray[100];
+extern tdstMenu2DPages_ aMenu2DPages[35];
+extern int g_AlbumPage;
+extern "C" char* strcpy(char* dst, const char* src);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\Specif\MemoryCard.cxx lines 922–930 */
 /* addr: 0x0029d990  size: 608 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -285,7 +306,21 @@ int fn_vDefinePalVideoPages(int IndSubMenuPage)
  */
 int fn_dwFindNextSnappedPicture(int lSnapID, char* _szFileName)
 {
-    /* TODO: decompile from asm/... */
+    if (aMenu2DPages[g_AlbumPage].NbEntry && ((unsigned int)lSnapID < aMenu2DPages[g_AlbumPage].NbEntry))
+    {
+        lSnapID++;
+        strcpy(_szFileName, g_aFileEntryArray[lSnapID].Name);
+    }
+    else if (lSnapID == aMenu2DPages[g_AlbumPage].NbEntry)
+    {
+        lSnapID = 0;
+        strcpy(_szFileName, g_aFileEntryArray[0].Name);
+    }
+    else
+    {
+        lSnapID = aMenu2DPages[g_AlbumPage].NbEntry;
+    }
+    return lSnapID;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\Specif\MemoryCard.cxx lines 531–542 */
@@ -304,7 +339,16 @@ int fn_dwFindNextSnappedPicture(int lSnapID, char* _szFileName)
  */
 int fn_dwFindPreviousSnappedPicture(int lSnapID, char* _szFileName)
 {
-    /* TODO: decompile from asm/... */
+    if (lSnapID > 0)
+    {
+        lSnapID--;
+        strcpy(_szFileName, g_aFileEntryArray[lSnapID].Name);
+    }
+    else
+    {
+        lSnapID = aMenu2DPages[g_AlbumPage].NbEntry;
+    }
+    return lSnapID;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\Specif\MemoryCard.cxx lines 142–521 */
