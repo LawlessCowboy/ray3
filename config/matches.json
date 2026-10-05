@@ -21402,6 +21402,42 @@
       "status": "MISMATCH",
       "target_size": 392,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001cf740",
+      "candidate_size": 140,
+      "first_difference": 12,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "mfn_roGetInstance__14CLinkMicroContFv",
+      "reason": "Static local singleton plus inline ctor calling fn_vConstructTdstAllRetMicroSound(&mstIMicro). Calls and order match, but a user ctor body makes MWCC keep 'this' in a stack slot (sw/lw 0x1c), while retail rematerializes &o_LinkMicroCont with lui/addiu as for a compiler-generated ctor (cf. the matched CSoundSemaphoreCont::mfn_roGetInstance)",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkmicrocont.cpp",
+      "status": "MISMATCH",
+      "target_size": 156,
+      "unresolved_relocations": [
+        {
+          "offset": 116,
+          "symbol": "init$21",
+          "type": 7
+        }
+      ]
+    },
+    {
+      "address": "0x001cf620",
+      "candidate_size": 284,
+      "first_difference": 200,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "mfn_bApplyPositionAndVelocity__10CLinkMicroFv",
+      "reason": "Size, calls, CMicrophone vtable (vptr +0x30) and stack all match. Plain C a*b - c*d emits the retail mula.s/msub.s. Residual: the three top-vector products are scheduled z, x, y in retail with different FP registers; statement order of temporaries does not change it",
+      "size": 284,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkmicrocont.cpp",
+      "status": "MISMATCH",
+      "target_size": 284,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -29212,6 +29248,30 @@
       "name": "fv_vVarAccessed__23CMusicMarkerNotifTargetFRQ24usnd4CVar",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkmicro.cpp",
+      "status": "MATCH"
+    },
+    "0x001cfb20": {
+      "address": "0x001cfb20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_bSynchroMicroInstance__14CLinkMicroContFv",
+      "size": 148,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkmicrocont.cpp",
+      "status": "MATCH"
+    },
+    "0x001cfbc0": {
+      "address": "0x001cfbc0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_bSetMicroInterface__14CLinkMicroContFPC21_tdstAllRetMicroSound",
+      "size": 212,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkmicrocont.cpp",
+      "status": "MATCH"
+    },
+    "0x001cffa0": {
+      "address": "0x001cffa0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_s32AddMicroInstance__14CLinkMicroContFv",
+      "size": 236,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkmicrocont.cpp",
       "status": "MATCH"
     },
     "0x001d0390": {
