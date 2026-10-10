@@ -316,11 +316,32 @@ int GEO_lCullingBox(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MAT_fn_vInvertRotation(MAT_tdstTransformation_* _p_stDest, MAT_tdstTransformation_* _p_stSrc);
+void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _p_stTransform, MTH3D_tdstVector_* _p_stSrc);
+
 void GEO_fn_vComputeCameraParametersForCulling(GLD_tdstViewportAttributes_* p_stVpt, float _xZFar)
 {
     GLI_tdstCamera_* hCamera;
     MAT_tdstTransformation_ stMatrixInverse;
-    /* TODO: decompile from asm/... */
+
+    hCamera = *(GLI_tdstCamera_**)p_stVpt->p_vSpecificToXD;
+
+    MAT_fn_vInvertRotation(&stMatrixInverse, &hCamera->stMatrix);
+
+    gs_stCameraPosInGlobal.xX = 0.0f; gs_stCameraPosInGlobal.xY = 0.0f; gs_stCameraPosInGlobal.xZ = -1.0f;
+    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneNear, &stMatrixInverse, &gs_stCameraPosInGlobal);
+
+    *(int*)&gs_stCameraPosInGlobal.xX = ((int*)&stMatrixInverse.stTransformMatrix.stCol_3)[0]; *(int*)&gs_stCameraPosInGlobal.xY = ((int*)&stMatrixInverse.stTransformMatrix.stCol_3)[1]; *(int*)&gs_stCameraPosInGlobal.xZ = ((int*)&stMatrixInverse.stTransformMatrix.stCol_3)[2];
+
+    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneLeft, &stMatrixInverse, &hCamera->stNormPlaneRight);
+
+    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneRight, &stMatrixInverse, &hCamera->stNormPlaneLeft);
+
+    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneUp, &stMatrixInverse, &hCamera->stNormPlaneUp);
+
+    MAT_fn_vApplyOnVector(&gs_stGlobalNormPlaneDown, &stMatrixInverse, &hCamera->stNormPlaneDown);
+
+    GEO_g_xZFar = _xZFar;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 108–238 */

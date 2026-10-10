@@ -31753,6 +31753,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPWayPt.c",
       "status": "MATCH"
     },
+    "0x00200a90": {
+      "address": "0x00200a90",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "WP_fnv_WayPoint_ComputeLocation",
+      "size": 196,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPWayPt.c",
+      "status": "MATCH"
+    },
     "0x00200b60": {
       "address": "0x00200b60",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -38630,6 +38638,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GEO_xInitGEOError",
       "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/Culling.c",
+      "status": "MATCH"
+    },
+    "0x002a0fb0": {
+      "address": "0x002a0fb0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "GEO_fn_vComputeCameraParametersForCulling",
+      "size": 236,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/Culling.c",
       "status": "MATCH"
     },
