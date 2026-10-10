@@ -147,7 +147,7 @@ struct CSpriteController {
     GLI_tdstTexture_* m_pCurrentAnimTexture; /* +0x3c */
     unsigned int m_CurrentSpriteType; /* +0x40 */
     unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x44..0x4f */
-    float m_CurrentCameraMatrix[4][4]; /* +0x50 */
+    float m_CurrentCameraMatrix[4][4] __attribute__((aligned(16))); /* +0x50 */
     unsigned int m_DepthTestWasDisabled; /* +0x90 */
     unsigned int m_ForceAlphaTest; /* +0x94 */
     float m_Sprite_2D_DX; /* +0x98 */
@@ -192,6 +192,7 @@ struct CSpriteController {
     void Draw(void);
     void StopSpriteList(void);
     int StartSpriteList(GLI_tdstMaterial_* pMaterial, unsigned int SpriteType, unsigned int NbVertices);
+    CSpriteController(unsigned int MaxNbSprites);
 };
 
 struct sceGsTexflush {
@@ -1336,9 +1337,11 @@ int PS2glAllocator64;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2ASM_SearchBlocInChain(void* Chain, void* Bloc)
+void* PS2ASM_SearchBlocInChain(void* Chain, void* Bloc)
 {
-    /* TODO: decompile from asm/... */
+    while (Chain && Chain < Bloc)
+        Chain = ((void**)Chain)[2];
+    return Chain;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\VUSprites.cpp lines 2489–2489 */
@@ -1720,7 +1723,7 @@ void GLI_vEndNewSprite(void)
  */
 void GLI_vInitSpriteController(void)
 {
-    /* TODO: decompile from asm/... */
+    pSpriteController = new CSpriteController(2000);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\VUSprites.cpp lines 2208–2288 */

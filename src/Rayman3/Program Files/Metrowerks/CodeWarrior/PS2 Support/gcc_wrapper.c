@@ -48,9 +48,18 @@ int _dpflt(double left, double right)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+double __floatdidf(long long l);
+float __floatdisf(long long l);
+
 double _d_utod(unsigned int ui)
 {
-    /* TODO: decompile from asm/... */
+    unsigned long long ul = ui;
+    double d;
+
+    if ((long long)ul > 0)
+        return __floatdidf(ul);
+    d = __floatdidf((ul >> 1) | (ul & 1));
+    return d + d;
 }
 
 /* C:\Program Files\Metrowerks\CodeWarrior\PS2 Support\gcc_wrapper.c lines 37–46 */
@@ -68,5 +77,9 @@ double _d_utod(unsigned int ui)
 float _f_ulltof(unsigned long long ul)
 {
     float f;
-    /* TODO: decompile from asm/... */
+
+    if ((long long)ul > 0)
+        return __floatdisf(ul);
+    f = __floatdisf((ul >> 1) | (ul & 1));
+    return f + f;
 }

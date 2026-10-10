@@ -1829,7 +1829,8 @@ void SAV2_fn_vSetValueForSave(char* p_szElementName, void* p_stParam)
  */
 void SAV2_fn_vSetValueInPipeline(char* p_szElementName, void* p_stParam)
 {
-    /* TODO: decompile from asm/... */
+    SAV2_fn_vDeclareAField(p_szElementName, SAV2_fn_eGiveElementTypeFromAIType(((tdstGetSetParam_*)p_stParam)->eType), 1, 1, 0);
+    SAV2_fn_vSetAValueAtIndex(p_szElementName, 0, p_stParam);
 }
 
 void SAV2_fn_xGetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);

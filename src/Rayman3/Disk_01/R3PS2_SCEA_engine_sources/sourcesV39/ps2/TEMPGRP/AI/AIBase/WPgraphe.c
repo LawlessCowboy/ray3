@@ -3716,9 +3716,21 @@ void WPG_fn_vReinitAllGraphs(void)
  */
 void WPG_fn_vReinitGraph(WP_tdstGraph_* hGraph)
 {
-    WP_tdstArc_* hElement;
     WP_tdstGraphNode_* param0;
-    /* TODO: decompile from asm/... */
+    WP_tdstArc_* hElement;
+
+    if (hGraph)
+    {
+        for (param0 = hGraph->m_hListOfNode.hFirstElementDyn; param0; param0 = param0->hNextBrotherDyn)
+        {
+            param0->m_lTypeOfWP = param0->m_lTypeOfWPInit;
+            for (hElement = param0->m_hListOfArc->m_hArc.hFirstElementDyn; hElement; hElement = hElement->hNextBrotherDyn)
+            {
+                hElement->m_ulCapability = hElement->m_ulCapabilityInit;
+                hElement->m_lWeight = hElement->m_lWeightInit;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 655–679 */

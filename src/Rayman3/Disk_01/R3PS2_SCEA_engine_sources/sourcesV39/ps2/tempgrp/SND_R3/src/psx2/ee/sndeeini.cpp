@@ -695,7 +695,18 @@ int SND_fn_iInitSound(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void RackTestCB__FPv(void* param)
+extern "C" int printf(const char* format, ...);
+
+void RackTestCB(void* param)
 {
-    /* TODO: decompile from asm/... */
+    if ((int)param == 1)
+    {
+        printf(">>  Rack opened !\n");
+        gv_iCD_Opened = 1;
+    }
+    else
+    {
+        printf(">>  Rack closed and CD spining !\n");
+        gv_iCD_Opened = 0;
+    }
 }

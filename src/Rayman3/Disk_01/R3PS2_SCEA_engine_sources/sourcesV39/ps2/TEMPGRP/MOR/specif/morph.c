@@ -1273,10 +1273,18 @@ void MOR_fn_vTerminateMorphsForThisFrame(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MOR_fn_vMorphTo2(MOR_stMorphStruct_* mp);
+void MOR_fn_vMorphTo(MOR_stMorphStruct_* mp);
+
 void MOR_fn_vDoMorph(short _xIndex)
 {
     MOR_stMorphStruct_* mp;
-    /* TODO: decompile from asm/... */
+
+    mp = &g_MorphTasksList[_xIndex];
+    if (mp->ucMorphType != 5)
+        MOR_fn_vMorphTo(mp);
+    else
+        MOR_fn_vMorphTo2(mp);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1467–1468 */

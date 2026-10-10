@@ -122,9 +122,36 @@ struct GLI_tdstAnimatedTextureNode_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+struct C_Sdl {
+    int m_SDL_Size; /* +0x0 */
+    unsigned int m_SDL_InitSize; /* +0x4 */
+    unsigned int m_bReduce; /* +0x8 */
+    unsigned int m_DisplayList; /* +0xc */
+    struct tagListData* m_pListData; /* +0x10 */
+    unsigned int m_NbRefs; /* +0x14 */
+    unsigned int m_NbReservedRefs; /* +0x18 */
+    unsigned int m_NbFaces; /* +0x1c */
+    unsigned int m_NbElements; /* +0x20 */
+    struct C_SdlRef** m_ppRefs; /* +0x24 */
+    struct tag_stVU1Parameters** m_ppP; /* +0x28 */
+    unsigned int m_LastFrameUsed; /* +0x2c */
+    unsigned int m_LastFrameInterpolated; /* +0x30 */
+    unsigned int m_bIsTransparent; /* +0x34 */
+    unsigned int m_bNoInterpolation; /* +0x38 */
+    int m_SkinIndex; /* +0x3c */
+    struct GLI_tdstMaterial_* m_SkinMaterial; /* +0x40 */
+    int m_bIsBlinking; /* +0x44 */
+    virtual ~C_Sdl(); /* vtable pointer at +0x48 (retail __vt__5C_Sdl) */
+    static void* operator new(unsigned int uiSize);
+    void Init(void);
+    C_Sdl() { Init(); }
+};
+
+extern "C" unsigned int SDL_GetNew(void);
+
 unsigned int SDL_GetNew(void)
 {
-    /* TODO: decompile from asm/... */
+    return (unsigned int)new C_Sdl;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLUtils.cpp lines 167–189 */

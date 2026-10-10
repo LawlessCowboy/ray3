@@ -491,7 +491,12 @@ void SND_fn_vKillAllObjectSound(void)
  */
 void SND_fn_vResumeSound(void)
 {
-    /* TODO: decompile from asm/... */
+    g_pauseCnt--;
+    if (g_pauseCnt <= 0)
+    {
+        g_pauseCnt = 0;
+        CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(3, -2);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 115–128 */
@@ -507,7 +512,9 @@ void SND_fn_vResumeSound(void)
  */
 void SND_fn_vPauseSound(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_pauseCnt == 0)
+        CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, -2);
+    g_pauseCnt++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 106–108 */

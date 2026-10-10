@@ -1502,7 +1502,18 @@ unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterListAndDynamicallyActiv
 {
     tdstAlwaysActiveCharacter_* hCharNode;
     unsigned char bReturn;
-    /* TODO: decompile from asm/... */
+
+    bReturn = 0;
+    if ((unsigned char)((hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 0x40) ? 1 : 0))
+    {
+        for (hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn; hCharNode; hCharNode = hCharNode->hNextBrotherDyn)
+        {
+            if (hCharNode->hAlwActSuperObject == hCharacter && hCharNode->bDynamicAlwaysActive == 1)
+                bReturn = 1;
+        }
+    }
+
+    return bReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 95–96 */

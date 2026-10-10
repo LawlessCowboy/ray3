@@ -1263,12 +1263,57 @@ unsigned char SHW_bDidCharacterHaveAShadowLastFrame(HIE_tdstSuperObject_* _hHand
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SHW_fn_vSentToViewPort(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, int _lSectorDrawmask, GEO_tdstGeometricObject_* _hHandleOfGeometricShadowObject)
+void GEO_vSetVisualMaterialOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, GLI_tdstMaterial_* hVisualMaterial);
+unsigned char HIE_fn_bLoadIdentity(void);
+float GLI_vGetGlobalAlpha(void);
+float GEO_xGetZFarTransparencyLevel(void);
+void GLI_vSetGlobalAlpha(float Alpha);
+void GLI_fn_vApplyChangesToObjectVerticesAndUvs(GEO_tdstGeometricObject_* _p_stObj);
+void GLI_SendShadowElementToViewport(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask);
+
+/* Retail reads the draw mask from a3 and the shadow object from t0: the debug
+ * definition drops an unreferenced third parameter. */
+void SHW_fn_vSentToViewPort(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, void* _p_vUnused, int _lSectorDrawmask, GEO_tdstGeometricObject_* _hHandleOfGeometricShadowObject)
 {
     float fGlobalAlphaTemp;
     unsigned char bTransparenceSetting;
     int lAdditionnalDrawMask;
-    /* TODO: decompile from asm/... */
+
+    g_hShadowPolygonVisualMaterial = (int)_hHandleOfCharacter->hLinkedObject.p_stCharacter->h_3dData->p_stShadowVisualMaterial;
+    GEO_vSetVisualMaterialOfIndexedTriangles(_hHandleOfGeometricShadowObject, g_p_hHandleOfElementForShadow[g_xIndexOfShadow], (GLI_tdstMaterial_*)g_hShadowPolygonVisualMaterial);
+    bTransparenceSetting = 0;
+    lAdditionnalDrawMask = 0;
+    HIE_fn_bLoadIdentity();
+    if (fn_ulStandardGameGetCustomBitsSO(_hHandleOfCharacter) & 0x200000)
+    {
+        fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
+        GLI_vSetGlobalAlpha(GEO_xGetZFarTransparencyLevel() * _hHandleOfCharacter->fTransparenceLevel);
+        bTransparenceSetting = 1;
+        _lSectorDrawmask &= 0xFFFBFFF7;
+    }
+    else if (!(_hHandleOfCharacter->lDrawModeMask & 8))
+    {
+        _lSectorDrawmask &= 0xFFFBFFF7;
+        fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
+        GLI_vSetGlobalAlpha(_hHandleOfCharacter->fTransparenceLevel);
+        bTransparenceSetting = 1;
+    }
+    else
+    {
+        fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
+        GLI_vSetGlobalAlpha(255.0f);
+        bTransparenceSetting = 1;
+        lAdditionnalDrawMask = 0xF7FC0000;
+    }
+    GLI_fn_vApplyChangesToObjectVerticesAndUvs(_hHandleOfGeometricShadowObject);
+    GLI_SendShadowElementToViewport(_p_stVpt, _hHandleOfGeometricShadowObject, _lSectorDrawmask | lAdditionnalDrawMask);
+    if (bTransparenceSetting)
+        GLI_vSetGlobalAlpha(fGlobalAlphaTemp);
+    if (HIE_g_lNbMatrixInStack)
+    {
+        HIE_g_lNbMatrixInStack--;
+        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SHW\ShadDraw.c lines 543–543 */

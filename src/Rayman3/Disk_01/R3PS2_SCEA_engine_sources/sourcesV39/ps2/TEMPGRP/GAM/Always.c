@@ -1571,9 +1571,19 @@ void fn_vClearUnusedAlwaysInDemoMode(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline HIE_tdstSuperObject_* fn_hGetAlwaysGenerator(HIE_tdstSuperObject_* _hAlways)
+{
+    if (_hAlways)
+        return (_hAlways->hLinkedObject.p_stCharacter->h_StandardGame && _hAlways->hLinkedObject.p_stCharacter) ? g_stAlways.d_hAlwaysGenerator[(unsigned int)(_hAlways->hLinkedObject.p_stCharacter->h_StandardGame->otObjectPersonalType - 0x10000)] : NULL;
+    return NULL;
+}
+
 unsigned char fn_ucIsAlwaysGeneratedByMe(HIE_tdstSuperObject_* _hAlways, HIE_tdstSuperObject_* _hGenerator)
 {
-    /* TODO: decompile from asm/... */
+    if (_hGenerator == NULL)
+        return 0;
+
+    return fn_hGetAlwaysGenerator(_hAlways) == _hGenerator;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1187–1240 */
@@ -1883,7 +1893,17 @@ HIE_tdstSuperObject_* fn_p_stDemoAllocateAlways(int otObjectModelType, HIE_tdstS
 unsigned char fn_ucIsAnAlwaysModel(tdstEngineObject_* p_stEngineObject)
 {
     tdstAlwaysModelList_* h_AlwaysModelChild;
-    /* TODO: decompile from asm/... */
+
+    if (p_stEngineObject->h_StandardGame->otObjectPersonalType >= 0x10000)
+        return 1;
+
+    for (h_AlwaysModelChild = g_stAlways.ALW_h_LstAlwaysModel.hFirstElementDyn; h_AlwaysModelChild; h_AlwaysModelChild = h_AlwaysModelChild->hNextBrotherDyn)
+    {
+        if (p_stEngineObject->h_StandardGame->otObjectPersonalType == h_AlwaysModelChild->p_stAlwaysObject->h_StandardGame->otObjectPersonalType)
+            return 1;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 401–402 */

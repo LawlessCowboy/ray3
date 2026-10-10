@@ -144,15 +144,67 @@ int GLI_g_StaticCopyOfArrayOfVisualMaterial[256];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef struct MTH4D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+    float xW; /* +0xc */
+} __attribute__((aligned(16))) MTH4D_tdstVector_;
+
+typedef struct MTH4D_tdstMatrix_ {
+    MTH4D_tdstVector_ stCol_0; /* +0x0 */
+    MTH4D_tdstVector_ stCol_1; /* +0x10 */
+    MTH4D_tdstVector_ stCol_2; /* +0x20 */
+    MTH4D_tdstVector_ stCol_3; /* +0x30 */
+} MTH4D_tdstMatrix_;
+
+struct MAT_tdstTransformation_ {
+    int eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* +0x4..0xf */
+    MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
+    MTH4D_tdstVector_ stScaleVector; /* +0x50 */
+};
+
+struct GLI_tdstAligned3DVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+    float xW; /* +0xc */
+};
+
+/* R5900 accumulator dot product (no C form under the baseline). */
+inline float MTH3D_M_xDotProduct(float _xAX, float _xAY, float _xAZ, float _xBX, float _xBY, float _xBZ)
+{
+    float _xResult;
+    asm { mula.s _xAX, _xBX }
+    asm { madda.s _xAY, _xBY }
+    asm { madd.s _xResult, _xAZ, _xBZ }
+    return _xResult;
+}
+
 void GLI_xSerialLinearOp(int lNbOfVertex, MTH3D_tdstVector_* p_stSource, GLI_tdstAligned3DVector_* p_stDest, MAT_tdstTransformation_* p_stMatrix)
 {
-    float fSwapValue;
-    GLI_tdstAligned3DVector_* param0;
-    MTH3D_tdstVector_ stTrans;
-    MTH3D_tdstVector_ stZ;
-    MTH3D_tdstVector_ stY;
     MTH3D_tdstVector_ stX;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stY;
+    MTH3D_tdstVector_ stZ;
+    MTH3D_tdstVector_ stTrans;
+    GLI_tdstAligned3DVector_* param0;
+    float fSwapValue;
+
+    param0 = p_stDest + lNbOfVertex;
+    *(int*)&stX.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xX; *(int*)&stX.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xY; *(int*)&stX.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xZ;
+    *(int*)&stY.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xX; *(int*)&stY.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xY; *(int*)&stY.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xZ;
+    *(int*)&stZ.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xX; *(int*)&stZ.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xY; *(int*)&stZ.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xZ;
+    fSwapValue = stX.xY; stX.xY = stY.xX; stY.xX = fSwapValue;
+    fSwapValue = stX.xZ; stX.xZ = stZ.xX; stZ.xX = fSwapValue;
+    fSwapValue = stY.xZ; stY.xZ = stZ.xY; stZ.xY = fSwapValue;
+    *(int*)&stTrans.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xX; *(int*)&stTrans.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xY; *(int*)&stTrans.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xZ;
+    for (; p_stDest < param0; p_stDest++, p_stSource++)
+    {
+        p_stDest->xX = stTrans.xX + MTH3D_M_xDotProduct(stX.xX, stX.xY, stX.xZ, p_stSource->xX, p_stSource->xY, p_stSource->xZ);
+        p_stDest->xY = stTrans.xY + MTH3D_M_xDotProduct(stY.xX, stY.xY, stY.xZ, p_stSource->xX, p_stSource->xY, p_stSource->xZ);
+        p_stDest->xZ = stTrans.xZ + MTH3D_M_xDotProduct(stZ.xX, stZ.xY, stZ.xZ, p_stSource->xX, p_stSource->xY, p_stSource->xZ);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\load.c lines 2467–2503 */

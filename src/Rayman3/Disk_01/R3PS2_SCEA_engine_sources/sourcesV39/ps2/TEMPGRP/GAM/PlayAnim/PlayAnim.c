@@ -2694,10 +2694,25 @@ void PLA_fn_vInitAllChildInHeapNewAnim(HIE_tdstSuperObject_* p_stSuperObject, td
  */
 void PLA_fn_vUpdateTransparencyForModules(HIE_tdstSuperObject_* p_stSuperObject)
 {
-    unsigned char bPersoTransparencyActive;
-    HIE_tdstSuperObject_* p_stTargetSO;
+    float fTransparenceLevel;
     tdstAChannel_* p_stChannel;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* p_stTargetSO;
+    unsigned char bPersoTransparencyActive;
+
+
+    fTransparenceLevel = p_stSuperObject->fTransparenceLevel;
+    bPersoTransparencyActive = (p_stSuperObject->lDrawModeMask & 8) == 8;
+
+    for (p_stChannel = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->hFirstActiveChannel; p_stChannel; p_stChannel = p_stChannel->p_stNextActiveChannel)
+    {
+        p_stTargetSO = p_stChannel->hSupObject;
+        if ((p_stTargetSO->ulFlags & 0x10000) != 0x10000)
+        {
+            p_stTargetSO->fTransparenceLevel = fTransparenceLevel;
+            if (bPersoTransparencyActive)
+                p_stTargetSO->lDrawModeMask |= 8;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 1910–1935 */

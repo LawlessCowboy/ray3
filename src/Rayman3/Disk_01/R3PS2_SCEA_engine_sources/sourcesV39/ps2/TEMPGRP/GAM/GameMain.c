@@ -168,16 +168,18 @@ struct WP_tdstGraph_ {
 
 struct tdst3dData_ {
     int h_InitialState; /* +0x0 */
-    int h_CurrentState; /* +0x4 */
+    struct tdstState_* h_CurrentState; /* +0x4 */
     int h_FirstStateOfAction; /* +0x8 */
     int h_InitialObjectsTable; /* +0xc */
     int h_CurrentObjectsTable; /* +0x10 */
     int h_Family; /* +0x14 */
-    /* aggregate */ int stGLIObjectMatrix; /* +0x20 */
+    unsigned char _extractor_padding_g0[0x8]; /* retail gap; +0x18..0x1f */
+    unsigned char stGLIObjectMatrix[0x60]; /* +0x20 (aggregate) */
     int p_stGLIObjectAbsoluteMatrix; /* +0x80 */
     float xCurrentFrame; /* +0x84 */
     unsigned char ucRepeatAnimation; /* +0x88 */
     unsigned char ucNextEvent; /* +0x89 */
+    unsigned char _extractor_padding_g1[0x2]; /* retail gap; +0x8a..0x8b */
     int d_ucEventActivation; /* +0x8c */
     int p_stCurrentHieCouples; /* +0x90 */
     unsigned short wCurrentHieNbCouples; /* +0x94 */
@@ -187,6 +189,7 @@ struct tdst3dData_ {
     float xForcedFrame; /* +0xa0 */
     unsigned char ucFlagEndState; /* +0xa4 */
     unsigned char ucFlagEndOfAnim; /* +0xa5 */
+    unsigned char _extractor_padding_g2[0x2]; /* retail gap; +0xa6..0xa7 */
     int hArrayOfChannels; /* +0xa8 */
     unsigned int ulNumberOfChannels; /* +0xac */
     int hFirstActiveChannel; /* +0xb0 */
@@ -198,6 +201,7 @@ struct tdst3dData_ {
     float xLastFrame; /* +0xe8 */
     unsigned char bStateJustModified; /* +0xec */
     unsigned char bSkipCurrentFrame; /* +0xed */
+    unsigned char _extractor_padding_g3[0x2]; /* retail gap; +0xee..0xef */
     int p_stShadowVisualMaterial; /* +0xf0 */
     int p_stShadowTexture; /* +0xf4 */
     float xShadowScaleX; /* +0xf8 */
@@ -206,10 +210,12 @@ struct tdst3dData_ {
     unsigned short uwNbEngineFrameSinceLastMechEvent; /* +0x102 */
     unsigned char ucFrameRate; /* +0x104 */
     unsigned char ucFlagModifState; /* +0x105 */
+    unsigned char _extractor_padding_g4[0x2]; /* retail gap; +0x106..0x107 */
     int lDrawMaskInit; /* +0x108 */
     int lDrawMask; /* +0x10c */
     int lLastComputeFrame; /* +0x110 */
-    /* aggregate */ int stLastEventGlobalPosition; /* +0x120 */
+    unsigned char _extractor_padding_g5[0xc]; /* retail gap; +0x114..0x11f */
+    unsigned char stLastEventGlobalPosition[0x60]; /* +0x120 (aggregate) */
     unsigned char bAnimMatrixChanged; /* +0x180 */
     unsigned char ucUserEventFlags; /* +0x181 */
     unsigned char ucBrainComputationFrequency; /* +0x182 */
@@ -217,19 +223,19 @@ struct tdst3dData_ {
     unsigned short uwBrainMainCounter; /* +0x184 */
     unsigned char ucTransparency; /* +0x186 */
     unsigned char bDiscreetSpeed; /* +0x187 */
-    /* aggregate */ int stLightDirForDynamicShadow; /* +0x188 */
+    unsigned char stLightDirForDynamicShadow[0xc]; /* +0x188 (aggregate) */
     unsigned char ucIsShadowClosed; /* +0x194 */
     unsigned char ucShadowRecLevel; /* +0x195 */
     unsigned char ucLightComputationFrequency; /* +0x196 */
     char cLightCounter; /* +0x197 */
-    /* aggregate */ int stSHWDeformationVector; /* +0x198 */
+    unsigned char stSHWDeformationVector[0xc]; /* +0x198 (aggregate) */
     float xSHWHeight; /* +0x1a4 */
     float xDistNoInterpol; /* +0x1a8 */
     float xDistNoMorphing; /* +0x1ac */
     float xDistNoDEnv; /* +0x1b0 */
-    /* aggregate */ int hForSubAnimInUseArray; /* +0x1b4 */
-    int h_CurrentCineActor; /* +0x1c0 */
-    /* aggregate */ int hSkinMaterial; /* +0x1c4 */
+    unsigned char hForSubAnimInUseArray[0xc]; /* +0x1b4 (aggregate) */
+    struct CINE_tdstCineActor_* h_CurrentCineActor; /* +0x1c0 */
+    unsigned char hSkinMaterial[0x10]; /* +0x1c4 (aggregate) */
     unsigned int NbSkinMaterials; /* +0x1d4 */
     short xSkinIndex[4]; /* +0x1d8 */
 };
@@ -329,10 +335,25 @@ struct tdstAnim3d_ {
     unsigned char ucFlagMergeAnim; /* +0xf */
 };
 
+typedef struct DNM_stDynamicsBaseBlock DNM_stDynamicsBaseBlock;
+typedef struct DNM_stDynamicsAdvancedBlock DNM_stDynamicsAdvancedBlock;
+
+struct DNM_stDynamicsBaseBlock {
+    int m_lObjectType; /* +0x0 */
+    int m_pCurrentIdCard; /* +0x4 */
+    unsigned int ulFlags; /* +0x8 */
+    unsigned int ulEndFlags; /* +0xc */
+    unsigned char _pad_10[0x170 - 0x10];
+};
+
+struct DNM_stDynamicsAdvancedBlock {
+    unsigned char _pad_00[0x84];
+    char m_cCollideCounter; /* +0x84 */
+};
+
 struct DNM_stDynamics {
-    /* aggregate */ int m_tdstDynamicsBaseBlock; /* +0x0 */
-    /* aggregate */ int m_tdstDynamicsAdvancedBlock; /* +0x170 */
-    /* aggregate */ int m_tdstDynamicsComplexBlock; /* +0x200 */
+    DNM_stDynamicsBaseBlock m_tdstDynamicsBaseBlock; /* +0x0 */
+    DNM_stDynamicsAdvancedBlock m_tdstDynamicsAdvancedBlock; /* +0x170 */
 };
 
 struct SCT_tdstListOfSoundEvent_ {
@@ -375,6 +396,106 @@ struct SECT_tdstSector_ {
     _SND_tduRefEvt hTransitionSoundEvent; /* +0x90 */
 };
 
+/* Layouts below are taken from the matched PS2MC_Messages.cpp/sndvolume.cpp
+ * debug records; only the members this file touches are spelled out. */
+typedef struct tdstState_ tdstState_;
+typedef struct CINE_tdstCineActor_ CINE_tdstCineActor_;
+typedef struct tdstEngineObject_ tdstEngineObject_;
+typedef struct tdstStandardGame_ tdstStandardGame_;
+typedef struct tdstDynam_ tdstDynam_;
+typedef struct tdstCineinfo_ tdstCineinfo_;
+typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
+typedef struct tdstSectInfo_ tdstSectInfo_;
+typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
+typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
+typedef struct tdstEngineStructure_ tdstEngineStructure_;
+
+struct tdstState_ {
+    tdstAnim3d_* p_stAnim; /* +0x0 */
+};
+
+struct CINE_tdstCineActor_ {
+    unsigned char _pad_00[0x128];
+    unsigned char bPlayingAnim; /* +0x128 */
+};
+
+struct tdstEngineObject_ {
+    tdst3dData_* h_3dData; /* +0x0 */
+    tdstStandardGame_* h_StandardGame; /* +0x4 */
+    tdstDynam_* h_Dynam; /* +0x8 */
+    tdstBrain_* h_Brain; /* +0xc */
+    tdstCineinfo_* h_Cineinfo; /* +0x10 */
+    int h_CollSet; /* +0x14 */
+    int h_MSWay; /* +0x18 */
+    int h_MSLight; /* +0x1c */
+    tdstSectInfo_* h_SectInfo; /* +0x20 */
+    int h_Micro; /* +0x24 */
+    int h_MSSound; /* +0x28 */
+};
+
+struct tdstStandardGame_ {
+    int otObjectFamilyType; /* +0x0 */
+    int otObjectModelType; /* +0x4 */
+    int otObjectPersonalType; /* +0x8 */
+    HIE_tdstSuperObject_* h_SuperObject; /* +0xc */
+    unsigned char eInitFlagWhenOutOfZone; /* +0x10 */
+    unsigned char eInitFlagWhenDeadOrTaken; /* +0x11 */
+    unsigned int ulLastTrame; /* +0x14 */
+    unsigned int ubf32Capabilities; /* +0x18 */
+    unsigned char ucTractionFactor; /* +0x1c */
+    unsigned char ucHitPoints; /* +0x1d */
+    unsigned char ucHitPointsMax; /* +0x1e */
+    unsigned char ucHitPointsMaxMax; /* +0x1f */
+    unsigned int ulCustomBits; /* +0x20 */
+    unsigned int ulAICustomBits; /* +0x24 */
+    unsigned char ucPlatFormType; /* +0x28 */
+    unsigned char ucMiscFlags; /* +0x29 */
+};
+
+struct tdstInternalStructurCineinfo_ {
+    unsigned char _pad_00[0x70];
+    unsigned short uwDNMFlags; /* +0x70 */
+};
+
+struct tdstCineinfo_ {
+    tdstInternalStructurCineinfo_* hInit; /* +0x0 */
+    tdstInternalStructurCineinfo_* hCurrent; /* +0x4 */
+    tdstInternalStructurCineinfo_* hVisibility; /* +0x8 */
+    tdstInternalStructurCineinfo_* hWork; /* +0xc */
+};
+
+struct MAT_tdstTransformation_ {
+    int eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* +0x4..0xf */
+    float stCol_0[4]; /* +0x10 */
+    float stCol_1[4]; /* +0x20 */
+    float stCol_2[4]; /* +0x30 */
+    MTH3D_tdstVector_ stCol_3; /* +0x40 */
+};
+
+struct HIE_tdstSuperObject_ {
+    unsigned int ulTypeOfLinkedObject; /* +0x0 */
+    tdstEngineObject_* hLinkedObject; /* +0x4 */
+    HIE_tdstSuperObject_* hFirstElementDyn; /* +0x8 */
+    HIE_tdstSuperObject_* hLastElementDyn; /* +0xc */
+    int lNumberOfElementsDyn; /* +0x10 */
+    HIE_tdstSuperObject_* hNextBrotherDyn; /* +0x14 */
+    HIE_tdstSuperObject_* hPrevBrotherDyn; /* +0x18 */
+    HIE_tdstSuperObject_* hFatherDyn; /* +0x1c */
+    MAT_tdstTransformation_* hLocalMatrix; /* +0x20 */
+    MAT_tdstTransformation_* hGlobalMatrix; /* +0x24 */
+    int lLastComputeFrame; /* +0x28 */
+    int lDrawModeMask; /* +0x2c */
+    unsigned int ulFlags; /* +0x30 */
+};
+
+struct tdstEngineStructure_ {
+    unsigned char _pad_00[0x68];
+    tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
+    unsigned char _pad_01[0x1b76 - 0xf0];
+    char cCameraMode; /* +0x1b76 */
+};
+
 /* array */ int g_a_stStructureHandleFunction[12];
 unsigned char g_ucGameModuleId;
 unsigned int g_SCR_a9MemTable[9];
@@ -392,6 +513,7 @@ int g_hCollisionGeoObj;
 /* aggregate */ int g_a_hSOCurrentMainSector;
 int gp_stLight;
 unsigned char g_ucIsEdInGhostMode;
+extern unsigned short g_DEMO_KeybTest;
 int gp_stNewInactiveDynamicWorld;
 int SECT_hNewFatherSector;
 int gp_stNewDynamicWorld;
@@ -401,22 +523,137 @@ int SECT_hFatherSector;
 int gp_stDynamicWorld;
 int gp_stActualWorld;
 char g_cIsLevelOk;
-/* aggregate */ int g_stEngineStructure;
+tdstEngineStructure_ g_stEngineStructure;
 /* aggregate */ int g_st3DOSLinkTable;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMain.c lines 376–584 */
 /* addr: 0x00261f70  size: 1040 bytes */
-/* Debug signature rejected: type-record data leaked into it. */
-void fn_vTreatCharactersInSector(void)
+/* Debug signature and locals from the HitPts.c debug copy (GameMain.c
+ * lines 371-592 were compiled into that object). */
+unsigned char MC_fn_ucIsCharacterInMainCharacterList(HIE_tdstSuperObject_* hCharacter);
+tdstAnim3d_* fn_p_stGetAnimInState(tdstState_* h_State);
+unsigned char PLA_fn_bSkipCurrentFrame(HIE_tdstSuperObject_* p_stSuperObject);
+void CINE_CheckEndCineActor(CINE_tdstCineActor_* hCineActor);
+int fn_bSubAnimRunning(HIE_tdstSuperObject_* _hCharacter);
+unsigned char PLA_fn_bDoAnimPlayerForCharacter(HIE_tdstSuperObject_* p_stSuperObject, unsigned char bNoDisplay, unsigned char _bHandleSkippedEventsIfRelevant);
+void PLA_fn_vRefreshFrameNumber(HIE_tdstSuperObject_* p_stSuperObject);
+void fn_vMakeCharacterReact(HIE_tdstSuperObject_* p_stSuperObj);
+void DEMO_fn_vGetACompleteCharacterPosition(HIE_tdstSuperObject_* hSO);
+void fn_vUpdateLight(HIE_tdstSuperObject_* hSupObject);
+int CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* _h_SprObj);
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo);
+void fn_vSectInfoSetCurrentSector(tdstSectInfo_* h_SectInfo, HIE_tdstSuperObject_* hCurrentSector);
+void fn_vInsertObjectInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hCharacter);
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+unsigned char fn_bIsTransitionInProgress(void);
+void GAM_fn_vSectInfoTestChangeSectorForCharacter(HIE_tdstSuperObject_* _hCharacter);
+
+/* The target clears COP0 register 24 (mtc0 zero, $24) around the anim
+ * player; C cannot express the COP0 write.  As in ShadDraw.c, the closing
+ * write carries the hazard nop and the opening one does not. */
+inline void GAM_vClearCop0Register24(void)
 {
-    /* line map: */
-    /*   line 383 @ +0x000 */
-    /*   line 376 @ +0x000 */
-    /*   line 384 @ +0x000 */
-    /*   line 390 @ +0x000 */
-    /*   line 397 @ +0x000 */
-    /*   line 405 @ +0x000 */
-    /*   line 413 @ +0x000 */
-    /*   line 422 @ +0x000 */
-    /* TODO: decompile from asm/... */
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    }
+}
+inline void GAM_vClearCop0Register24Sync(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    nop
+    }
+}
+
+#define MTH3D_M_vCopyVector(VectDest, VectSrc) \
+    { (VectDest)->xX = (VectSrc)->xX; (VectDest)->xY = (VectSrc)->xY; (VectDest)->xZ = (VectSrc)->xZ; }
+
+inline int DNM_bIsEnd(DNM_stDynamics* p) { int b = 0; if (p->m_tdstDynamicsBaseBlock.ulEndFlags & 2) b = 1; return b; }
+inline int DNM_bIsFlag(DNM_stDynamics* p) { int b = 0; if (p->m_tdstDynamicsBaseBlock.ulFlags & 2) b = 1; return b; }
+
+void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)
+{
+    tdstAnim3d_* p_stCurrentAnim;
+    tdstState_* p_stCurrentState;
+    unsigned int ulCurrentBits;
+    unsigned char bNoDisplay;
+    unsigned char bSkip;
+    tdst3dData_* h_Current3dData;
+    unsigned char bSectorChange = 1;
+    DNM_stDynamics* p_stDynamic;
+    tdstDynam_* h_Dynam;
+    MTH3D_tdstVector_ stOldV;
+
+    hCharacter->hLinkedObject->h_StandardGame->ulLastTrame = g_stEngineStructure.stEngineTimer.ulTrameNumber;
+    stOldV = hCharacter->hGlobalMatrix->stCol_3;
+
+    if (MC_fn_ucIsCharacterInMainCharacterList(hCharacter) && g_ucIsEdInGhostMode)
+        return;
+
+    if (g_DEMO_KeybTest != 2) {
+        h_Current3dData = hCharacter->hLinkedObject->h_3dData;
+        if (h_Current3dData != NULL) {
+            p_stCurrentState = h_Current3dData->h_CurrentState;
+            ulCurrentBits = hCharacter->hLinkedObject->h_StandardGame->ulCustomBits;
+            p_stCurrentAnim = p_stCurrentState ? fn_p_stGetAnimInState(p_stCurrentState) : NULL;
+            bNoDisplay = ((p_stCurrentAnim == NULL || (((ulCurrentBits & 0x2000) && hCharacter->lNumberOfElementsDyn > 0) ? 1 : 0))
+                || (((ulCurrentBits & 0x800) && (ulCurrentBits & 0x1001)) ? 1 : 0))
+                || (((ulCurrentBits & 0x40000) && (unsigned char)((hCharacter->hLinkedObject->h_StandardGame->ucMiscFlags & 0x80) ? 1 : 0)) ? 1 : 0);
+            if (h_Current3dData->h_CurrentCineActor != NULL)
+                bNoDisplay = 0;
+
+            if (!bNoDisplay || (ulCurrentBits & 0x800000)) {
+                GAM_vClearCop0Register24();
+                bSkip = PLA_fn_bSkipCurrentFrame(hCharacter) & !h_Current3dData->bAnimMatrixChanged;
+                bSkip |= h_Current3dData->ucFlagEndState;
+                if (h_Current3dData->h_CurrentCineActor != NULL && h_Current3dData->h_CurrentCineActor->bPlayingAnim)
+                    CINE_CheckEndCineActor(h_Current3dData->h_CurrentCineActor);
+                bSkip &= !fn_bSubAnimRunning(hCharacter);
+                if (!bSkip && h_Current3dData->ucFlagEndState)
+                    h_Current3dData->xCurrentFrame = (unsigned short)(h_Current3dData->h_CurrentState->p_stAnim->uwNumberOfFrames - 1);
+                if (!bSkip)
+                    PLA_fn_bDoAnimPlayerForCharacter(hCharacter, bNoDisplay, 0);
+                else
+                    PLA_fn_vRefreshFrameNumber(hCharacter);
+                GAM_vClearCop0Register24Sync();
+            }
+            fn_vMakeCharacterReact(hCharacter);
+            if (hCharacter->hLinkedObject->h_StandardGame == NULL)
+                return;
+        }
+    } else {
+        DEMO_fn_vGetACompleteCharacterPosition(hCharacter);
+    }
+
+    fn_vUpdateLight(hCharacter);
+
+    if (g_ucIsEdInGhostMode && CAM_fn_bSuperObjectIsACamera(hCharacter)) {
+        fn_vSectInfoSetCurrentSector(hCharacter->hLinkedObject->h_SectInfo,
+            fn_h_SectInfoGetCurrentSector(MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject->h_SectInfo));
+        fn_vInsertObjectInSectorList(fn_h_SectInfoGetCurrentSector(hCharacter->hLinkedObject->h_SectInfo), hCharacter);
+        return;
+    }
+
+    if ((unsigned char)(hCharacter->ulFlags & 0x20))
+        return;
+    if (CAM_fn_bSuperObjectIsACamera(hCharacter) && g_stEngineStructure.cCameraMode == 1
+        && (hCharacter->hLinkedObject->h_Cineinfo->hWork->uwDNMFlags & 0x40))
+        return;
+
+    h_Dynam = hCharacter->hLinkedObject->h_Dynam;
+    if (h_Dynam != NULL) {
+        p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+        if (p_stDynamic != NULL) {
+            if (DNM_bIsEnd(p_stDynamic) && DNM_bIsFlag(p_stDynamic))
+                bSectorChange = !p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter;
+            else
+                bSectorChange = 1;
+        }
+    }
+    if (!fn_bIsTransitionInProgress() && bSectorChange)
+        GAM_fn_vSectInfoTestChangeSectorForCharacter(hCharacter);
 }

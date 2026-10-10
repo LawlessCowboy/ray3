@@ -2466,9 +2466,26 @@ tdstEngineStructure_ g_stEngineStructure;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int g_bGLDBlockSwaping;
+extern int g_bGLDSwapInProgress;
+int GLD_bDeleteViewport(short hDev, short hVP);
+int GLD_bDeleteDevice(short hDev);
+void exit(int status);
+
+/* Line 108 covers the whole teardown, so it was a single macro. */
+#define GLD_M_vCloseAll()                \
+    {                                    \
+        GLD_bDeleteViewport(0, 0);       \
+        g_bGLDBlockSwaping = 1;          \
+        while (g_bGLDSwapInProgress)     \
+            ;                            \
+        GLD_bDeleteDevice(0);            \
+    }
+
 void GLD_vCloseErr(void)
 {
-    /* TODO: decompile from asm/... */
+    GLD_M_vCloseAll();
+    exit(-4);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1751–1959 */

@@ -4670,9 +4670,21 @@ void PLD_fn_vReinitPositionOfFixCharacters(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int SND_fn_bUnloadBank(char* pIdStr);
+int SND_fn_bDesInitDataLoadSnd(void);
+void MNC_fn_pcUnLoadArea(unsigned int _u32AreaId);
+char* strcpy(char* s1, const char* s2);
+void free(void* ptr);
+
 void PLD_fn_vUnLoadFix(void)
 {
-    /* TODO: decompile from asm/... */
+    SND_fn_bUnloadBank("fixe");
+    SND_fn_bDesInitDataLoadSnd();
+    MNC_fn_pcUnLoadArea(0);
+    strcpy(g_stEngineStructure.szLevelName, g_stEngineStructure.szNextLevelName);
+    if (g_a_LinksOfSuperObjectInFix)
+        free((void*)g_a_LinksOfSuperObjectInFix);
+    g_a_LinksOfSuperObjectInFix = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2677–2730 */

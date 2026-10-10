@@ -406,9 +406,14 @@ void GLI_vGetLightAlphas(GLI_tdstLight_* p_stLight, float* p_xLittleAlpha, float
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+float tanf(float x);
+
 void GLI_vSetLightAlphas(GLI_tdstLight_* p_stLight, float xLittleAlpha, float xBigAlpha)
 {
-    /* TODO: decompile from asm/... */
+    p_stLight->xLittleAlpha = xLittleAlpha;
+    p_stLight->xBigAlpha = xBigAlpha;
+    p_stLight->xLittleTangent = tanf(0.5f * xLittleAlpha);
+    p_stLight->xBigTangent = tanf(0.5f * xBigAlpha);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 733–735 */

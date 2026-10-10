@@ -3733,5 +3733,18 @@ void CAM_memcpy(void* dest, void* src, int size)
     int lsize;
     int* pdest;
     int* psrc;
-    /* TODO: decompile from asm/... */
+
+    lsize = size;
+    pdest = (int*)dest;
+    psrc = (int*)src;
+    while (lsize >= 4)
+    {
+        *pdest++ = *psrc++;
+        lsize -= 4;
+    }
+    while (lsize)
+    {
+        *(char*)pdest++ = *(char*)psrc++;
+        lsize--;
+    }
 }
