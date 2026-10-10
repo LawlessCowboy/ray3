@@ -4827,5 +4827,11 @@ void impPS2glFlush(void)
 int PS2glGsSyncPath(void)
 {
     int bReturn;
-    /* TODO: decompile from asm/... */
+
+    if ((bReturn = sceGsSyncPath(0, 0)) != 0)
+    {
+        printf("\n\n************************************************\n************ sceGsSyncPath timeout.*************\n************************************************\n\n");
+        Bug_Please_ReloadMenu_40 = 1;
+    }
+    return bReturn;
 }

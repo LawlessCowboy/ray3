@@ -22065,6 +22065,21 @@
       "status": "MISMATCH",
       "target_size": 96,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0014e630",
+      "candidate_size": 72,
+      "first_difference": 24,
+      "implementation": "int PS2glGsSyncPath(void)\n{\n    int bReturn;\n\n    if ((bReturn = sceGsSyncPath(0, 0)) != 0)\n    {\n        printf(\"\\n\\n************************************************\\n************ sceGsSyncPath timeout.*************\\n************************************************\\n\\n\");\n        Bug_Please_ReloadMenu_40 = 1;\n    }\n    return bReturn;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PS2glGsSyncPath",
+      "reason": "One row: retail does 'move s0,v0; beqz s0' with the printf arg lui in the delay slot. 'if ((bReturn = f()) != 0)' gives 'beqz v0' with the move in the delay slot; a separate assignment plus 'if (bReturn)' steals the join's 'move v0,s0' into the delay slot instead.",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MISMATCH",
+      "target_size": 72,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -29301,12 +29316,36 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Get.c",
       "status": "MATCH"
     },
+    "0x0017fec0": {
+      "address": "0x0017fec0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "MyGsSyncV",
+      "size": 60,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_InitContext.c",
+      "status": "MATCH"
+    },
     "0x0017ff00": {
       "address": "0x0017ff00",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "VBLCallback",
       "size": 84,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_InitContext.c",
+      "status": "MATCH"
+    },
+    "0x00180b20": {
+      "address": "0x00180b20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glViewOrg",
+      "size": 96,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Matrix.c",
+      "status": "MATCH"
+    },
+    "0x00180b80": {
+      "address": "0x00180b80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glOrtho",
+      "size": 76,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Matrix.c",
       "status": "MATCH"
     },
     "0x001811c0": {

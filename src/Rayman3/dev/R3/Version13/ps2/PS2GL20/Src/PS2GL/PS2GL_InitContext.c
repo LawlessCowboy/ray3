@@ -1866,9 +1866,14 @@ void PS2glInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int WaitSema(int sid);
 int MyGsSyncV(void)
 {
-    /* TODO: decompile from asm/... */
+    g_waiting = 1;
+    if (PS2GL_thingsToDoWhenYoureDead)
+        ((void (*)(void))PS2GL_thingsToDoWhenYoureDead)();
+    WaitSema(VBL_Sid);
+    return g_FIELD;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 770–783 */

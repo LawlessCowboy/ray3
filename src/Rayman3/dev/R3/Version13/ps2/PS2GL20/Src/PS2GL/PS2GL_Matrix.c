@@ -709,6 +709,8 @@ struct tagGLlistdatas {
 
 float matIdentity[4][4];
 tagGLcontext g_PS2glContext;
+
+void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
 _GL_BUFFERINFO g_stBufferInfo;
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 26–644 */
@@ -923,7 +925,11 @@ void impPS2glViewport(int x, int y, int width, int height)
  */
 void PS2glViewOrg(float xOrg, float yOrg)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.ViewPort[0] = g_PS2glContext.ViewPort[0] + (xOrg - g_PS2glContext.ViewOrg[0]);
+    g_PS2glContext.bMatrixChanged = 1;
+    g_PS2glContext.ViewPort[1] = g_PS2glContext.ViewPort[1] + (yOrg - g_PS2glContext.ViewOrg[1]);
+    g_PS2glContext.ViewOrg[0] = xOrg;
+    g_PS2glContext.ViewOrg[1] = yOrg;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 637–646 */
@@ -938,10 +944,16 @@ void PS2glViewOrg(float xOrg, float yOrg)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glGenOrthoMatrix(float (*m)[4], float left, float right, float bottom, float top, float zNear, float zFar);
+void sceVu0CopyMatrix(float dest[4][4], float src[4][4]);
 void impPS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
 {
     float m[4][4];
-    /* TODO: decompile from asm/... */
+
+    PS2glGenOrthoMatrix(m, left, right, bottom, top, zNear, zFar);
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+    sceVu0CopyMatrix(g_PS2glContext.GuardBandProjectionMatrix, m);
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 615–632 */
