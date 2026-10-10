@@ -119,11 +119,13 @@ float RND_fn_xGetRealRandomValue(unsigned int _lIndexNumber, float _xMin, float 
  */
 int RND_fn_lGetLongRandomValue(unsigned int _lIndexNumber, int _lMin, int _lMax)
 {
-    int lValue = _lMin + ((_lMax + 1 - _lMin) * ((unsigned int*)RND_g_stRandomStructure.p_ulTable)[RND_g_stRandomStructure.a_ulIndex[_lIndexNumber]]) / (RND_g_stRandomStructure.ulMaxValueInTable + 1);
+{
+    int lValue = _lMin + ((_lMax + 1 - _lMin) * (int)((unsigned int*)RND_g_stRandomStructure.p_ulTable)[RND_g_stRandomStructure.a_ulIndex[_lIndexNumber]]) / (RND_g_stRandomStructure.ulMaxValueInTable + 1);
 
     RND_g_stRandomStructure.a_ulIndex[_lIndexNumber]++; RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] += RND_BaseSeed % 255; if (RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] >= RND_g_stRandomStructure.ulSizeOfTable) RND_g_stRandomStructure.a_ulIndex[_lIndexNumber] = 0;
 
     return lValue;
+}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\RND\RND_Main.c lines 217–221 */

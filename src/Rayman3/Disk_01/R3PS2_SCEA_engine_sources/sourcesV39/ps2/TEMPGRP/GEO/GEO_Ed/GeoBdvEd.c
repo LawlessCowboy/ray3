@@ -238,6 +238,15 @@ void GEO_vSetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hEl
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_SQR2_TO(_result, _x, _y) \
+    asm { mula.s _x, _x }              \
+    asm { madd.s _result, _y, _y }
+
+void GEO_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter);
+void GEO_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter, float _xSecondSphereRadius);
+
 void GEO_fn_vAddObjectToSphere(GEO_tdstGeometricObject_* _hGeometricObject, MTH3D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius)
 {
     MTH3D_tdstVector_ stSphereCenterLocal;
@@ -246,7 +255,46 @@ void GEO_fn_vAddObjectToSphere(GEO_tdstGeometricObject_* _hGeometricObject, MTH3
     int lElementCounter;
     int i;
     MTH3D_tdstVector_* p_stVertex;
-    /* TODO: decompile from asm/... */
+
+    p_stVertex = _hGeometricObject->d_stListOfPoints;
+    for (i = 0; i < _hGeometricObject->xNbPoints; i++, p_stVertex++)
+    {
+        GEO_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(_p_stSphereCenter, _p_xSphereRadius, _p_stSphereCenter, *_p_xSphereRadius, p_stVertex);
+    }
+
+    for (lElementCounter = 0; lElementCounter < _hGeometricObject->xNbElements; lElementCounter++)
+    {
+        switch (((short*)_hGeometricObject->d_xListOfElementsTypes)[lElementCounter])
+        {
+        case 3:
+            p_stLocalElementSprite = ((GEO_tdstElementSprite_**)_hGeometricObject->d_stListOfElements)[lElementCounter];
+            for (i = 0; i < p_stLocalElementSprite->xNbSprites; i++)
+            {
+                float xX;
+                float xY;
+                float xSqrNorm;
+                float xRadius;
+
+                xX = p_stLocalElementSprite->d_stListOfSprites[i].stSize.xX * (p_stLocalElementSprite->d_stListOfSprites[i].hSprite->d_xSizeOfSprite->xX + p_stLocalElementSprite->d_stListOfSprites[i].hSprite->d_xDisplacementOfSprite->xX);
+                xY = p_stLocalElementSprite->d_stListOfSprites[i].stSize.xY * (p_stLocalElementSprite->d_stListOfSprites[i].hSprite->d_xSizeOfSprite->xY + p_stLocalElementSprite->d_stListOfSprites[i].hSprite->d_xDisplacementOfSprite->xY);
+                stSphereCenterLocal = _hGeometricObject->d_stListOfPoints[p_stLocalElementSprite->d_stListOfSprites[i].xCenterPoint];
+                MTH_SQR2_TO(xSqrNorm, xX, xY) MTH_SQRT_TO(xRadius, xSqrNorm)
+                GEO_fn_vComputeBoundingSphereOfTwoSpheres(_p_stSphereCenter, _p_xSphereRadius, _p_stSphereCenter, *_p_xSphereRadius, &stSphereCenterLocal, xRadius);
+            }
+            break;
+        case 7:
+            p_stLocalElementSphere = ((GEO_tdstElementSpheres_**)_hGeometricObject->d_stListOfElements)[lElementCounter];
+            for (i = 0; i < p_stLocalElementSphere->xNbSpheres; i++)
+            {
+                stSphereCenterLocal = _hGeometricObject->d_stListOfPoints[p_stLocalElementSphere->d_stListOfSpheres[i].xCenterPoint];
+                GEO_fn_vComputeBoundingSphereOfTwoSpheres(_p_stSphereCenter, _p_xSphereRadius, _p_stSphereCenter, *_p_xSphereRadius, &stSphereCenterLocal, p_stLocalElementSphere->d_stListOfSpheres[i].xRadius);
+            }
+            break;
+        case 8:
+        case 9:
+            break;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoBdvEd.c lines 227–241 */
@@ -270,8 +318,6 @@ void GEO_fn_vAddObjectToSphere(GEO_tdstGeometricObject_* _hGeometricObject, MTH3
  */
 /* Recovered PS2 MTH scalar helpers: sqrt.s and the R5900 accumulator ops
    have no C form under the baseline. */
-#define MTH_SQRT_TO(_result, _value) \
-    asm { sqrt.s _result, _value }
 #define MTH_SQR3_TO(_result, _x, _y, _z) \
     asm { mula.s _x, _x }                  \
     asm { madda.s _y, _y }                 \

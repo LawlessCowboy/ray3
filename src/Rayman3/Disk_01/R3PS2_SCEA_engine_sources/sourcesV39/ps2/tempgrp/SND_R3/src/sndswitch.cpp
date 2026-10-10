@@ -386,11 +386,22 @@ anon_0 __vt__12CSwitchNotif;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bGetVolumeLineModifierString(int s32_ModifierId, char* pch_Buffer, int s32_Size);
+unsigned char fn_bCreateVolumeModifier(const char* pch_Buffer, float f32x_Volume);
+
 int SND_fn_s32AddVolumeLineSound(void)
 {
+    static int s32_LineId = 0;
     int s32_Answer;
     char ch_Buffer[256];
-    int s32_LineId;
-    signed char init;
-    /* TODO: decompile from asm/... */
+
+    s32_Answer = -1;
+    if (fn_bGetVolumeLineModifierString(s32_LineId, ch_Buffer, 256))
+    {
+        if (fn_bCreateVolumeModifier(ch_Buffer, 0.0f))
+        {
+            s32_Answer = s32_LineId++;
+        }
+    }
+    return s32_Answer;
 }

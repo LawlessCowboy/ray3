@@ -1212,9 +1212,57 @@ void fn_vBrainDesinit(tdstEngineObject_* p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bLevelHadTransitionMemory(void);
+void* MC_fn_hGetFirstMainCharNode(void);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(void* hMainCharNode);
+unsigned char fn_bIsInFix(tdstEngineObject_* p_stObject);
+void fn_vReinitAIWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType);
+void fn_vReinitAI(AI_tdstMind_* p_stMind);
+void fn_vSecondPassOfMindLoading(AI_tdstMind_* p_stMind, unsigned char bIsInFix, tdeObjectTreeInit_ eObjectInit);
+void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind);
+
+/* Inlined mind accessor (original name unknown). Retail loads the mind before
+ * calling fn_bIsInFix for fn_vSecondPassOfMindLoading's arguments, which MWCC
+ * only does when both arguments are calls; a plain field chain is loaded after. */
+static inline AI_tdstMind_* AI_M_p_stGetMind(tdstEngineObject_* p_stObject) { return p_stObject->h_Brain->p_stMind; }
+
 void fn_vBrainInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
-    /* TODO: decompile from asm/... */
+    if (fn_bLevelHadTransitionMemory()
+        && MC_fn_hGetFirstMainCharNode()
+        && MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())
+        && ((MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->ulTypeOfLinkedObject != 2) ? NULL : MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter) == p_stObject)
+        return;
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_Brain) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    p_stObject->h_Brain->hLastCollidedGoThroughMaterial = (GMT_tdstGameMaterial_*)0xCDCDCDCD;
+    p_stObject->h_Brain->bWarnMechanicsFlag = 0;
+
+    switch (eObjectInit)
+    {
+    case OTI_ReinitTheMap:
+    case OTI_LoadSavedGame:
+    case OTI_PlayerDead:
+        fn_vReinitAIWithFlags(p_stObject->h_Brain->p_stMind, eObjectInit);
+        break;
+    case OTI_WhenGameStart:
+        p_stObject->h_Brain->bActiveDuringTransition = 0;
+    case OTI_MapLoaded:
+        if (!(unsigned char)((p_stObject->h_StandardGame->ucMiscFlags & 8) ? 1 : 0))
+            fn_vSecondPassOfMindLoading(AI_M_p_stGetMind(p_stObject), fn_bIsInFix(p_stObject), eObjectInit);
+        else
+            fn_vReinitAI(p_stObject->h_Brain->p_stMind);
+        AI_fn_vInsertDsgVarInSAI(p_stObject->h_Brain->p_stMind);
+        break;
+    case OTI_AlwaysCreated:
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Brain.c lines 199–199 */

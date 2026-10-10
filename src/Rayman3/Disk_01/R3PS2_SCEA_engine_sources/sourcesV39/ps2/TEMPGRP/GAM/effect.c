@@ -222,13 +222,119 @@ int gp_stLight;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef struct tdstEngineObject_ tdstEngineObject_;
+typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
+typedef struct DNM_stMecMatCharacteristics DNM_stMecMatCharacteristics;
+
+union HIE_tduLinkedObject_ {
+    HIE_tdstSuperObject_* p_stSuperObject; /* +0x0 */
+    GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
+    struct PO_tdstPhysicalObject_* p_stPhysicalObject; /* +0x0 */
+    struct IPO_tdstInstanciatedPhysicalObject_* p_stInstanciatedPhysicalObject; /* +0x0 */
+    struct SECT_tdstSector_* p_stSector; /* +0x0 */
+    tdstEngineObject_* p_stCharacter; /* +0x0 */
+    struct GLI_tdstLight_* p_stLight; /* +0x0 */
+    struct HIE_tdstModifierObject_* p_stModifierObject; /* +0x0 */
+    int p_Void; /* +0x0 */
+};
+
+struct HIE_tdstSuperObject_ {
+    unsigned int ulTypeOfLinkedObject; /* +0x0 */
+    HIE_tduLinkedObject_ hLinkedObject; /* +0x4 */
+    HIE_tdstSuperObject_* hFirstElementDyn; /* +0x8 */
+    HIE_tdstSuperObject_* hLastElementDyn; /* +0xc */
+    int lNumberOfElementsDyn; /* +0x10 */
+    HIE_tdstSuperObject_* hNextBrotherDyn; /* +0x14 */
+    HIE_tdstSuperObject_* hPrevBrotherDyn; /* +0x18 */
+    HIE_tdstSuperObject_* hFatherDyn; /* +0x1c */
+    MAT_tdstTransformation_* hLocalMatrix; /* +0x20 */
+    MAT_tdstTransformation_* hGlobalMatrix; /* +0x24 */
+};
+
+struct tdstEngineObject_ {
+    struct tdst3dData_* h_3dData; /* +0x0 */
+    struct tdstStandardGame_* h_StandardGame; /* +0x4 */
+    struct tdstDynam_* h_Dynam; /* +0x8 */
+    struct tdstBrain_* h_Brain; /* +0xc */
+    struct tdstCineinfo_* h_Cineinfo; /* +0x10 */
+    struct tdstCollSet_* h_CollSet; /* +0x14 */
+    struct tdstMSWay_* h_MSWay; /* +0x18 */
+    struct tdstMSLight_* h_MSLight; /* +0x1c */
+    struct tdstSectInfo_* h_SectInfo; /* +0x20 */
+    struct tdstMicro_* h_Micro; /* +0x24 */
+    struct tdstMSSound_* h_MSSound; /* +0x28 */
+};
+
+struct DNM_stMecMatCharacteristics {
+    float m_xSlide; /* +0x0 */
+    float m_xRebound; /* +0x4 */
+};
+
+struct DNM_stMecObstacle {
+    float m_xRate; /* +0x0 */
+    MTH3D_tdstVector_ m_stNorm; /* +0x4 */
+    MTH3D_tdstVector_ m_stContact; /* +0x10 */
+    struct GMT_tdstGameMaterial_* hMyMaterial; /* +0x1c */
+    struct GMT_tdstGameMaterial_* hCollidedMaterial; /* +0x20 */
+    HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
+    int m_eType; /* +0x28 */
+    short m_xMyEntity; /* +0x2c */
+    short m_xCollidedEntity; /* +0x2e */
+    MTH3D_tdstVector_ m_stTranslation; /* +0x30 */
+    MTH3D_tdstVector_ m_stZoneMove; /* +0x3c */
+    MTH3D_tdstVector_ m_stZonePosition; /* +0x48 */
+    float m_xZoneRadius; /* +0x54 */
+    DNM_stMecMatCharacteristics m_stProperties; /* +0x58 */
+    DNM_stMecMatCharacteristics m_stMyProperties; /* +0x60 */
+};
+
+extern unsigned char g_ucIsEdInGhostMode;
+extern DNM_stMecObstacle* COL_g_stCollisionCaseReal;
+extern int COL_g_lNbElementsInTable;
+void VU0_fn_vLoadPrgCollision(void);
+int CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* _h_SprObj);
+struct tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj);
+void COL_fn_vResetNbCollidedEdges(void);
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(struct tdstSectInfo_* h_SectInfo);
+void COL_fn_vNewStaticCollisionForCharacter(HIE_tdstSuperObject_* _hCharacter, HIE_tdstSuperObject_* _hSector, MAT_tdstTransformation_* _p_stStartMatrix, MAT_tdstTransformation_* _p_stEndMatrix);
+
 int COL_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _a_stResultObstacle, HIE_tdstSuperObject_* _p_stSupObj, MAT_tdstTransformation_* _p_stStartPosition, MAT_tdstTransformation_* _p_stEndPosition)
 {
-    DNM_stMecObstacle* p_stCurrentResultObstacle;
-    int lParameter2;
-    int lResult;
+    static float xSlideCoef;
+    static float xReboundCoef;
     short i;
-    float xReboundCoef;
-    float xSlideCoef;
-    /* TODO: decompile from asm/... */
+    int lResult;
+    int lParameter2;
+    DNM_stMecObstacle* p_stCurrentResultObstacle;
+
+    lResult = 0;
+    VU0_fn_vLoadPrgCollision();
+    if (g_ucIsEdInGhostMode && CAM_fn_bSuperObjectIsACamera(_p_stSupObj))
+    {
+        _a_stResultObstacle->m_eType = 0;
+        return 0;
+    }
+    if (_p_stSupObj->hLinkedObject.p_stCharacter->h_CollSet && CS_fn_hGetZdxList(1, _p_stSupObj))
+    {
+        COL_g_stCollisionCaseReal = _a_stResultObstacle;
+        COL_g_lNbElementsInTable = 0;
+        COL_fn_vResetNbCollidedEdges();
+        COL_fn_vNewStaticCollisionForCharacter(_p_stSupObj, fn_h_SectInfoGetCurrentSector(_p_stSupObj->hLinkedObject.p_stCharacter->h_SectInfo), _p_stStartPosition, _p_stEndPosition);
+        p_stCurrentResultObstacle = _a_stResultObstacle;
+        for (i = 0; i < COL_g_lNbElementsInTable; i++)
+        {
+            lParameter2 = p_stCurrentResultObstacle->m_eType;
+            if ((lParameter2 & 1) == 1)
+                p_stCurrentResultObstacle->m_eType = 2;
+            else
+                p_stCurrentResultObstacle->m_eType = 1;
+            if (lParameter2 & 2)
+                p_stCurrentResultObstacle->m_eType |= 4;
+            p_stCurrentResultObstacle->m_stProperties.m_xSlide = xSlideCoef;
+            p_stCurrentResultObstacle->m_stProperties.m_xRebound = xReboundCoef;
+            p_stCurrentResultObstacle++;
+            lResult = i + 1;
+        }
+    }
+    return lResult;
 }

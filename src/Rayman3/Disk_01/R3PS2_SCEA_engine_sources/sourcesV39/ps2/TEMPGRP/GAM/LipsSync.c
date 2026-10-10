@@ -1359,13 +1359,58 @@ void fn_vAnalyse3DOSSpecialInputActions(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int SND_fn_s32GetLastMarker(void);
+int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFamilyList_* p_stFamily);
+void MAT_fn_vRemoveScale(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+
+/* Scoped optimization_level 4 gives retail's FPR choice for the 0.33f/0.66f
+ * interpolation constant (f3) and stLastVector.y (f2); every source order
+ * tried at level 3 swaps them (measured pragma sweep). */
+#pragma push
+#pragma optimization_level 4
 void fn_vPlayNewLipsSynchro(tdstAChannel_* p_stChannel, tdstFamilyList_* p_stFamily)
 {
     int bNoEnd;
     char cPhonem;
     MTH3D_tdstVector_ stVector;
-    char cLastPhonem;
-    unsigned long ulTrameCounter;
-    MTH3D_tdstVector_ stLastVector;
-    /* TODO: decompile from asm/... */
+    static char cLastPhonem;
+    static unsigned long ulTrameCounter;
+    static MTH3D_tdstVector_ stLastVector;
+
+    cPhonem = (char)SND_fn_s32GetLastMarker();
+    bNoEnd = fn_bGetVectorFromPhonem(&stVector, cPhonem, p_stFamily);
+    if (bNoEnd)
+    {
+        if (cLastPhonem != cPhonem)
+        {
+            ulTrameCounter = 0;
+            fn_bGetVectorFromPhonem(&stLastVector, cLastPhonem, p_stFamily);
+            cLastPhonem = cPhonem;
+        }
+        if (cPhonem != '*')
+        {
+            switch (ulTrameCounter)
+            {
+            case 0:
+            stVector.xX = stLastVector.xX + 0.33f * (stVector.xX - stLastVector.xX);
+            stVector.xY = stLastVector.xY + 0.33f * (stVector.xY - stLastVector.xY);
+            stVector.xZ = stLastVector.xZ + 0.33f * (stVector.xZ - stLastVector.xZ);
+                break;
+            case 1:
+            stVector.xX = stLastVector.xX + 0.66f * (stVector.xX - stLastVector.xX);
+            stVector.xY = stLastVector.xY + 0.66f * (stVector.xY - stLastVector.xY);
+            stVector.xZ = stLastVector.xZ + 0.66f * (stVector.xZ - stLastVector.xZ);
+                break;
+            }
+            ulTrameCounter++;
+            MAT_fn_vSetScale(p_stChannel->hSupObject->hLocalMatrix, &stVector);
+        }
+    }
+    else
+    {
+        p_stChannel->bLipsChannel = 0;
+        MAT_fn_vRemoveScale(p_stChannel->hSupObject->hLocalMatrix, p_stChannel->hSupObject->hLocalMatrix);
+        cLastPhonem = '*';
+    }
 }
+#pragma pop

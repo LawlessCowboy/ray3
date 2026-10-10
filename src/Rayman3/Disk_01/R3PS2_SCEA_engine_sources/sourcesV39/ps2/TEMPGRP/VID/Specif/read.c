@@ -162,17 +162,78 @@ int vagCallbackLeft(void* mp, anon_1* str, void* data)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int videoCallback(anon_1* str, void* data)
+void videoDecBeginPut(anon_6* vd, unsigned char** ptr0, int* len0, unsigned char** ptr1, int* len1);
+int videoDecPutTs(anon_6* vd, long pts_val, long dts_val, unsigned char* start, int len);
+void videoDecEndPut(anon_6* vd, int size);
+void ErrMessage(char* message);
+void* memcpy(void* s1, const void* s2, size_t n);
+
+#define UncAddr(val) ((unsigned char*)(((unsigned int)(val) & 0x0fffffff) | 0x20000000))
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+
+/* ezmpeg read.c helper, inlined (no retail symbol). */
+static inline int copy2(unsigned char* pd0, int d0, unsigned char* pd1, int d1, unsigned char* ps0, int s0, unsigned char* ps1, int s1)
 {
-    int d1;
-    int d0;
-    unsigned char* pd1Unc;
-    unsigned char* pd0Unc;
-    unsigned char* pd1;
-    unsigned char* pd0;
+    if (d0 + d1 < s0 + s1)
+        return 0;
+
+    if (s0 >= d0)
+    {
+        memcpy(pd0, ps0, d0);
+        memcpy(pd1, ps0 + d0, s0 - d0);
+        memcpy(pd1 + s0 - d0, ps1, s1);
+    }
+    else
+    {
+        if (s1 >= d0 - s0)
+        {
+            memcpy(pd0, ps0, s0);
+            memcpy(pd0 + s0, ps1, d0 - s0);
+            memcpy(pd1, ps1 + d0 - s0, s1 - (d0 - s0));
+        }
+        else
+        {
+            memcpy(pd0, ps0, s0);
+            memcpy(pd0 + s0, ps1, s1);
+        }
+    }
+    return s0 + s1;
+}
+
+/* MPEG stream callback: (sceMpeg* mp, sceMpegCbDataStr* str, void* data);
+   main.c's videoCallback pointer type confirms the leading sceMpeg* the
+   debug signature omits. */
+int videoCallback(void* mp, anon_1* str, void* data)
+{
     int s1;
-    int s0;
+    unsigned char* pd0Unc;
+    anon_3* rb = (anon_3*)data;
     unsigned char* ps0;
-    anon_3* rb;
-    /* TODO: decompile from asm/... */
+    unsigned char* pd1Unc;
+    int s0;
+    int len;
+    unsigned char* pd0;
+    unsigned char* pd1;
+    int d0;
+    int d1;
+
+    ps0 = (unsigned char*)str->data;
+    s0 = min(str->len, rb->data + rb->size - ps0);
+    s1 = str->len - s0;
+
+    videoDecBeginPut(&videoDec, &pd0, &d0, &pd1, &d1);
+    pd0Unc = UncAddr(pd0);
+    pd1Unc = UncAddr(pd1);
+
+    len = copy2(pd0Unc, d0, pd1Unc, d1, ps0, s0, rb->data, s1);
+
+    if (len > 0)
+    {
+        if (!videoDecPutTs(&videoDec, str->pts, str->dts, pd0, len))
+            ErrMessage("pts buffer overflow\n");
+    }
+
+    videoDecEndPut(&videoDec, len);
+
+    return (len > 0) ? 1 : 0;
 }

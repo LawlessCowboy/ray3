@@ -196,9 +196,58 @@ void MOR_fn_vDeletePhysicalObject(PO_tdstPhysicalObject_* _pPhysicalObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_DRV_vFreeVertexBuffersForElementsInObject(GEO_tdstGeometricObject_* pObj, int lFlag);
+
 void MOR_fn_vDeleteGeometricObject(GEO_tdstGeometricObject_** p_hObj)
 {
     GEO_tdstGeometricObject_* p_hObject;
     int lElementCounter;
-    /* TODO: decompile from asm/... */
+
+    p_hObject = *p_hObj;
+    p_hObject->d_stListOfEdgesDI = NULL;
+    p_hObject->xNbEdgesDI = 0;
+    GLI_DRV_vFreeVertexBuffersForElementsInObject(p_hObject, 0);
+    for (lElementCounter = 0; lElementCounter < p_hObject->xNbElements; lElementCounter++)
+    {
+        switch (((short*)p_hObject->d_xListOfElementsTypes)[lElementCounter])
+        {
+        case 5:
+            HMU_fn_vFree(&((void**)p_hObject->d_stListOfElements)[lElementCounter], 1);
+            break;
+        case 6:
+            HMU_fn_vFree(&((void**)p_hObject->d_stListOfElements)[lElementCounter], 1);
+            break;
+        case 2:
+            HMU_fn_vFree(&((void**)p_hObject->d_stListOfElements)[lElementCounter], 1);
+            break;
+        case 3:
+            HMU_fn_vFree(&((void**)p_hObject->d_stListOfElements)[lElementCounter], 1);
+            break;
+        case 7:
+            HMU_fn_vFree(&((void**)p_hObject->d_stListOfElements)[lElementCounter], 1);
+            break;
+        case 8:
+            HMU_fn_vFree(&((void**)p_hObject->d_stListOfElements)[lElementCounter], 1);
+            break;
+        case 9:
+            HMU_fn_vFree(&((void**)p_hObject->d_stListOfElements)[lElementCounter], 1);
+            break;
+        case 4:
+            HMU_fn_vFree(&((void**)p_hObject->d_stListOfElements)[lElementCounter], 1);
+            break;
+        case 1:
+            HMU_fn_vFree(&((void**)p_hObject->d_stListOfElements)[lElementCounter], 1);
+            break;
+        case 12:
+            HMU_fn_vFree(&((void**)p_hObject->d_stListOfElements)[lElementCounter], 1);
+            break;
+        }
+    }
+    HMU_fn_vFree((void**)&p_hObject->d_stListOfPoints, 1);
+    HMU_fn_vFree((void**)&p_hObject->d_xListOfElementsTypes, 1);
+    HMU_fn_vFree((void**)&p_hObject->d_stListOfElements, 1);
+    if (p_hObject->xNbEdges)
+        HMU_fn_vFree((void**)&p_hObject->d_stListOfEdges, 1);
+    HMU_fn_vFree((void**)&p_hObject, 1);
+    *p_hObj = NULL;
 }

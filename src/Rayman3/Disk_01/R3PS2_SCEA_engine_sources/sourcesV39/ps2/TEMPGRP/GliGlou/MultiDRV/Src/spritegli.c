@@ -147,7 +147,7 @@ char g_GLI_bForceAAAColor;
 unsigned char g_GLI_ForcedAAAColor[3];
 stLensFlareTab_ g_stLensFlare;
 char g_bCanResize2DSpriteWithPercentAccordingToViewportRatio;
-int gs_hDefaultMaterial;
+GLI_tdstMaterial_* gs_hDefaultMaterial;
 int GLI_gs_lBackGroundColor;
 int g_bDrawingBlackFrame;
 int GLI_g_AnimatedTextureToUse;
@@ -222,11 +222,25 @@ void GLI_vCleanSpecificStructure(GLI_SpecificPS2GL_Structure_* pTemp)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+float GLI_vGetGlobalAlpha(void);
+void GLI_vSetGlobalAlpha(float Alpha);
+
 void GLI_vClearViewportRegion(void)
 {
-    float f_SaveAlpha;
     float OldZValue;
-    /* TODO: decompile from asm/... */
+    float f_SaveAlpha;
+
+    OldZValue = GLI_g_fZValueForSprite;
+    GLI_g_fZValueForSprite = 0.0f;
+    f_SaveAlpha = GLI_vGetGlobalAlpha();
+    GLI_vSetGlobalAlpha(255.0f);
+    g_GLI_bForceAAAColor = 0;
+    gs_hDefaultMaterial->stAmbient.xR = (float)(GLI_gs_lBackGroundColor & 0xff) / 255.0f;
+    gs_hDefaultMaterial->stAmbient.xG = (float)((GLI_gs_lBackGroundColor >> 8) & 0xff) / 255.0f;
+    gs_hDefaultMaterial->stAmbient.xB = (float)((GLI_gs_lBackGroundColor >> 16) & 0xff) / 255.0f;
+    g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+    GLI_vSetGlobalAlpha(f_SaveAlpha);
+    GLI_g_fZValueForSprite = OldZValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\spritegli.c lines 757–782 */
@@ -249,8 +263,32 @@ void GLI_vClearViewportRegion(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vEndWorldSprites(void);
+void GLI_vDraw2DSpriteWithPercent(GLD_tdstViewportAttributes_* p_stVpt, float xMinX, float xMinY, float xMaxX, float xMaxY, GLI_tdstMaterial_* hMaterial);
+void GLI_vEndNewSprite(void);
+float GLI_vGetGlobalAlpha(void);
+void GLI_vSetGlobalAlpha(float Alpha);
+
 void GLI_vDisplayFrame(float* a3_fPosition, float* a3_fDirection, float _f_Transparency, GLD_tdstViewportAttributes_* _p_stViewport)
 {
     float f_SaveAlpha;
-    /* TODO: decompile from asm/... */
+
+    GLI_vEndWorldSprites();
+
+    f_SaveAlpha = GLI_vGetGlobalAlpha();
+    GLI_vSetGlobalAlpha(_f_Transparency);
+
+    gs_hDefaultMaterial->stAmbient.xR = gs_hDefaultMaterial->stAmbient.xG = gs_hDefaultMaterial->stAmbient.xB = 0.0f;
+
+    gs_hDefaultMaterial->p_stTexture = NULL;
+    GLI_g_AnimatedTextureToUse = 0;
+
+    g_bDrawingBlackFrame = 1;
+
+    GLI_vDraw2DSpriteWithPercent(_p_stViewport, a3_fPosition[0], a3_fPosition[1], a3_fDirection[0], a3_fDirection[1], gs_hDefaultMaterial);
+
+    GLI_vEndNewSprite();
+
+    g_bDrawingBlackFrame = 0;
+    GLI_vSetGlobalAlpha(f_SaveAlpha);
 }

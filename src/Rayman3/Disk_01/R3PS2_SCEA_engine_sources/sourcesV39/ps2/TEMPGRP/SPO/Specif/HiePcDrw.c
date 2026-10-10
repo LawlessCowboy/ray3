@@ -929,6 +929,21 @@ void SPO_ReinitSuperimposedArray(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+float GLI_vGetGlobalAlpha(void);
+float GEO_xGetZFarTransparencyLevel(void);
+void GLI_vSetGlobalAlpha(float Alpha);
+GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* _hPhysicalObject);
+int GLI_hGetRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex);
+void GLI_lSendVisualSetToViewportWithRLI2Flag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask, void* hISI, unsigned int ulSuperObjectFlag);
+void* GLI_hComputeBlendRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex1, unsigned char ucIndex2, short xNumISILOD, float xPercent);
+void ISI_fn_vFreeISI(void* _hISI);
+void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask);
+int IPO_fn_hGetRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject);
+PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject);
+void GLI_lSendVisualSetToViewportWithRLI2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask, void* hISI);
+void GLI_fn_vDrawMirror(int bMirror);
+void GLI_xSendObjectToViewportWithLights(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask);
+
 void fn_vSendOneModuleToViewPort(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _lDrawMask)
 {
     IPO_tdstInstanciatedPhysicalObject_* hIPO;
@@ -937,5 +952,71 @@ void fn_vSendOneModuleToViewPort(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSup
     float fGlobalAlphaTemp;
     void* hRad;
     int lType;
-    /* TODO: decompile from asm/... */
+
+    g_lDisplayPriority = 0;
+    fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
+    fCullingTransparency = GEO_xGetZFarTransparencyLevel();
+    GLI_vSetGlobalAlpha(fCullingTransparency * _hSprObj->fTransparenceLevel);
+
+    Global_CharacterModuleBeingDisplayed = (int)_hSprObj;
+
+    lType = _hSprObj->ulTypeOfLinkedObject;
+    if (lType == 8)
+    {
+        hVisualSet = PO_fn_hGetVisualSet(_hSprObj->hLinkedObject.p_stPhysicalObject);
+        if (g_ucNbRLIUse == 0)
+        {
+            GLI_lSendVisualSetToViewportWithRLI2Flag(_hVpt, hVisualSet, 0, _lDrawMask, (void*)GLI_hGetRLI(hVisualSet, 0), _hSprObj->ulFlags);
+        }
+        else if (g_ucNbRLIUse == 1)
+        {
+            GLI_lSendVisualSetToViewportWithRLI2Flag(_hVpt, hVisualSet, 0, _lDrawMask, (void*)GLI_hGetRLI(hVisualSet, g_ucIndex1), _hSprObj->ulFlags);
+        }
+        else if (g_ucNbRLIUse == 2)
+        {
+            hRad = GLI_hComputeBlendRLI(hVisualSet, g_ucIndex1, g_ucIndex2, 0, g_xPercent);
+            if (hRad)
+            {
+                GLI_lSendVisualSetToViewportWithRLI2Flag(_hVpt, hVisualSet, 0, _lDrawMask, hRad, _hSprObj->ulFlags);
+                ISI_fn_vFreeISI(hRad);
+            }
+            else
+            {
+                GLI_lSendVisualSetToViewport2(_hVpt, hVisualSet, 0, _lDrawMask);
+            }
+        }
+        else
+        {
+            GLI_lSendVisualSetToViewport2(_hVpt, hVisualSet, 0, _lDrawMask);
+        }
+    }
+    else if (lType == 0x20)
+    {
+        hIPO = _hSprObj->hLinkedObject.p_stInstanciatedPhysicalObject;
+        g_lDisplayPriority = _hSprObj->lDisplayPrioriry;
+        hRad = (void*)IPO_fn_hGetRadiosity(hIPO);
+        GLI_lSendVisualSetToViewportWithRLI2(_hVpt, PO_fn_hGetVisualSet(IPO_fn_hGetPhysicalObject(_hSprObj->hLinkedObject.p_stInstanciatedPhysicalObject)), 0, _lDrawMask, hRad);
+    }
+    else if (lType == 0x40)
+    {
+        if (bViewingInMirror)
+        {
+            hRad = (void*)IPO_fn_hGetRadiosity(_hSprObj->hLinkedObject.p_stInstanciatedPhysicalObject);
+            GLI_fn_vDrawMirror(1);
+            GLI_lSendVisualSetToViewportWithRLI2(_hVpt, PO_fn_hGetVisualSet(IPO_fn_hGetPhysicalObject(_hSprObj->hLinkedObject.p_stInstanciatedPhysicalObject)), 0, _lDrawMask, hRad);
+            GLI_fn_vDrawMirror(0);
+        }
+    }
+    else if (lType & 0x480)
+    {
+        GLI_xSendObjectToViewportWithLights(_hVpt, _hSprObj->hLinkedObject.p_stGeometricObject, _lDrawMask);
+    }
+    else if (lType & 0x80000)
+    {
+        g_cDrawAModifier = 1;
+        GLI_xSendObjectToViewportWithLights(_hVpt, _hSprObj->hLinkedObject.p_stModifierObject->p_stGeometricObject, _lDrawMask);
+        g_cDrawAModifier = 0;
+    }
+
+    GLI_vSetGlobalAlpha(fGlobalAlphaTemp);
 }

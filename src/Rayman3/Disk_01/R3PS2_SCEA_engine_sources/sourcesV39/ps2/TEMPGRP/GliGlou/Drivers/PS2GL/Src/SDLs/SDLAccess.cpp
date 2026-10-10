@@ -1226,10 +1226,19 @@ int __vt__14C_CharacterSdl;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CHEAP_CountMatrices__FP20HIE_tdstSuperObject_PUi(HIE_tdstSuperObject_* pSPO, unsigned int* pNbMatrices)
+#pragma auto_inline on
+void CHEAP_CountMatrices(HIE_tdstSuperObject_* pSPO, unsigned int* pNbMatrices)
 {
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    (*pNbMatrices)++;
+    for (hChild = pSPO->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+    {
+        if (hChild->ulTypeOfLinkedObject != 2)
+        {
+            CHEAP_CountMatrices(hChild, pNbMatrices);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLAccess.cpp lines 178–183 */

@@ -4,9 +4,6 @@
 
 #include <stddef.h>
 
-/* fn_vTimerGetCounter is inlined into its callers here yet still emitted as a
- * callable function, which MWCC only does with automatic inlining. */
-#pragma auto_inline on
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _stTimerCount _stTimerCount;
@@ -17,6 +14,28 @@ struct _stTimerCount {
 };
 
 float g_xVideoFrameDurationInSeconds;
+
+typedef struct _tdstTimer {
+    short m_wTimerType; /* +0x0 */
+    short m_wTimerState; /* +0x2 */
+    _stTimerCount m_stTimerCount_InitValue; /* +0x8 */
+    _stTimerCount m_stTimerCount_LastValue; /* +0x18 */
+    _stTimerCount m_stTimerCount_TotalValue; /* +0x28 */
+    unsigned int m_ulEventId; /* +0x38 */
+    void (*m_p_fn_vEventCallback)(void); /* +0x3c */
+} _tdstTimer;
+
+extern unsigned char g_ucTmrModuleId;
+extern short wTimerCount;
+extern short TimerLibOk;
+extern short TMR_g_wErmOK;
+extern _tdstTimer a_stTimerTab[16];
+extern unsigned int a3_ulEventFrequency[3];
+extern unsigned int a3_ulTimerFrequency[3];
+extern unsigned char Erm_fn_ucInitErrMsg(void);
+void* memset(void*, int, unsigned int);
+unsigned int fn_ulTimerTickPerSecond(short wTimerType);
+unsigned int fn_ulTimerEventTickPerSecond(short wTimerType);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\specif\TimerPrv.c lines 17–60 */
 /* addr: 0x00323510  size: 156 bytes */
@@ -38,8 +57,41 @@ float g_xVideoFrameDurationInSeconds;
  */
 short TMR_fn_wInitLibrary(void)
 {
-    /* TODO: decompile from asm/... */
+    if (TimerLibOk)
+        return 0;
+
+    memset(a_stTimerTab, 0, sizeof(a_stTimerTab));
+    wTimerCount = 0;
+    a3_ulTimerFrequency[1] = fn_ulTimerTickPerSecond(1);
+    a3_ulEventFrequency[1] = fn_ulTimerEventTickPerSecond(1);
+
+    if (!TMR_g_wErmOK)
+    {
+        if (g_ucTmrModuleId == 0xff)
+            g_ucTmrModuleId = Erm_fn_ucInitErrMsg();
+        TMR_g_wErmOK = 1;
+    }
+
+    TimerLibOk++;
+    return 0;
 }
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\specif\TimerPrv.c lines 89–89 */
+/* addr: 0x00323670  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 89
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned int fn_ulTimerEventTickPerSecond(short wTimerType)
+{
+    return 0x11940000;
+}
+
+/* fn_vTimerGetCounter is inlined into its callers here yet still emitted as a
+ * callable function, which MWCC only does with automatic inlining.  It is not
+ * enabled for TMR_fn_wInitLibrary, which calls fn_ulTimerEventTickPerSecond. */
+#pragma auto_inline on
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\specif\TimerPrv.c lines 113–114 */
 /* addr: 0x00323650  size: 24 bytes */
@@ -114,14 +166,3 @@ void fn_vTimerWait(unsigned int ulTicksToWait)
         fn_vTimerGetCounter(0, &st);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\specif\TimerPrv.c lines 89–89 */
-/* addr: 0x00323670  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 89
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int fn_ulTimerEventTickPerSecond(void)
-{
-    return 0x11940000;
-}
