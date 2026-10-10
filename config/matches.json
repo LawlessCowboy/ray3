@@ -22110,6 +22110,36 @@
       "status": "MISMATCH",
       "target_size": 124,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001002d0",
+      "candidate_size": 204,
+      "first_difference": 92,
+      "implementation": "float PS2_dl_cosf(float val)\n{\n    float x0;\n    float x1 = -0.15915493667125702f, x2 = 2.0f, x3 = 4194304.0f, x4 = 0.25f, x5 = 6.2831850051879883f, x6 = -41.341670989990234f, x7 = 81.60222625732422f, x8 = -76.57495880126953f, x9 = 39.71065902709961f;\n\n    asm {\n        abs.s   x0, val\n        mula.s  x0, x1\n        msuba.s x2, x3\n        madda.s x2, x3\n        msuba.s x0, x1\n        msub.s  x0, x2, x4\n        abs.s   x0, x0\n        sub.s   $f26, x0, x4\n\n        mul.s   x0, $f26, $f26\n        mula.s  $f26, x5\n        mul.s   $f24, $f26, x0\n        mul.s   $f25, $f24, x0\n        madda.s $f24, x6\n        mul.s   $f24, $f25, x0\n        madda.s $f25, x7\n        mul.s   $f25, $f24, x0\n        madda.s $f24, x8\n        madd.s  x0, $f25, x9\n    }\n    return x0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PS2_dl_cosf",
+      "reason": "C constants plus one hand-written asm block (evidence: one line per instruction, callee-saved $f24-$f26 in a leaf); size, constants and the asm sequence match. Residual is scheduling only: MWCC hoists the first asm instruction(s) above the $f24/$f25 saves and last constant mtc1s, retail keeps the block after them. Not fixed by .set noreorder, a label, per-instruction asm statements, scopes, decl order, -O2/O3/O4 ,p/,s, scheduling off, or compilers 3.0/3.0.1/3.0.3/3.0b38",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/overlib.c",
+      "status": "MISMATCH",
+      "target_size": 204,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001003a0",
+      "candidate_size": 220,
+      "first_difference": 24,
+      "implementation": "float PS2_dl_sinf(float val)\n{\n    float x0 = 1.5707963705062866f, x1 = -0.15915493667125702f, x2 = 2.0f, x3 = 4194304.0f, x4 = 0.25f, x5 = 6.2831850051879883f, x6 = -41.341670989990234f, x7 = 81.60222625732422f, x8 = -76.57495880126953f, x9 = 39.71065902709961f;\n\n    asm {\n        sub.s   x0, val, x0\n        abs.s   x0, x0\n        mula.s  x0, x1\n        msuba.s x2, x3\n        madda.s x2, x3\n        msuba.s x0, x1\n        msub.s  x0, x2, x4\n        abs.s   x0, x0\n        sub.s   $f26, x0, x4\n\n        mul.s   x0, $f26, $f26\n        mula.s  $f26, x5\n        mul.s   $f24, $f26, x0\n        mul.s   $f25, $f24, x0\n        madda.s $f24, x6\n        mul.s   $f24, $f25, x0\n        madda.s $f25, x7\n        mul.s   $f25, $f24, x0\n        madda.s $f24, x8\n        madd.s  x0, $f25, x9\n    }\n    return x0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PS2_dl_sinf",
+      "reason": "C constants plus one hand-written asm block (evidence: one line per instruction, callee-saved $f24-$f26 in a leaf); size, constants and the asm sequence match. Residual is scheduling only: MWCC hoists the first asm instruction(s) above the $f24/$f25 saves and last constant mtc1s, retail keeps the block after them. Not fixed by .set noreorder, a label, per-instruction asm statements, scopes, decl order, -O2/O3/O4 ,p/,s, scheduling off, or compilers 3.0/3.0.1/3.0.3/3.0b38",
+      "size": 220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/overlib.c",
+      "status": "MISMATCH",
+      "target_size": 220,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
