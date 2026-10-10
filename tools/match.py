@@ -1210,6 +1210,78 @@ def print_coverage(result: dict) -> None:
     print(f"data objects: {result['data_objects_matched']}/{result['data_objects_total']}")
 
 
+def translation_units() -> dict:
+    """Per-source completion: a TU is complete when every function it owns is MATCH."""
+    _, symbols, main, _, _ = target_context()
+    manifest = load_manifest()
+    status = {int(record['address'], 16): record.get('status')
+              for record in manifest.get('functions', {}).values()}
+    entries = cached_source_index(symbols, main)
+    categories = code_category(entries)
+    units = {}
+    for entry in entries:
+        source = entry.get('source')
+        if source is None:
+            continue
+        unit = units.setdefault(source, {
+            'source': source, 'category': categories[entry['address']],
+            'matched_functions': 0, 'equivalent_functions': 0, 'total_functions': 0,
+            'code_bytes_matched': 0, 'code_bytes_total': 0})
+        state = status.get(entry['address'])
+        unit['total_functions'] += 1
+        unit['code_bytes_total'] += entry['size']
+        if state == 'MATCH':
+            unit['matched_functions'] += 1
+            unit['code_bytes_matched'] += entry['size']
+        elif state == 'EQUIVALENT':
+            unit['equivalent_functions'] += 1
+    summary = {}
+    for category in ('game', 'library', 'total'):
+        members = [unit for unit in units.values()
+                   if category == 'total' or unit['category'] == category]
+        summary[category] = {
+            'complete': sum(unit['matched_functions'] == unit['total_functions'] for unit in members),
+            'started': sum(0 < unit['matched_functions'] < unit['total_functions'] for unit in members),
+            'total': len(members),
+        }
+    return {'summary': summary, 'units': sorted(units.values(), key=lambda unit: unit['source'])}
+
+
+def command_tus(args: argparse.Namespace) -> int:
+    result = translation_units()
+    if args.json:
+        print(json.dumps(result, indent=2))
+        return 0
+    units = result['units']
+    if args.category:
+        units = [unit for unit in units if unit['category'] == args.category]
+    if args.filter == 'complete':
+        units = [unit for unit in units if unit['matched_functions'] == unit['total_functions']]
+    elif args.filter == 'incomplete':
+        units = [unit for unit in units if unit['matched_functions'] < unit['total_functions']]
+    elif args.filter == 'started':
+        units = [unit for unit in units if 0 < unit['matched_functions'] < unit['total_functions']]
+    if args.sort == 'remaining':
+        units.sort(key=lambda unit: (unit['total_functions'] - unit['matched_functions'], unit['source']))
+    elif args.sort == 'percent':
+        units.sort(key=lambda unit: (-unit['code_bytes_matched'] / max(1, unit['code_bytes_total']),
+                                     unit['source']))
+    if not args.summary:
+        prefix = 'src/Rayman3/'
+        for unit in units:
+            name = unit['source'][len(prefix):] if unit['source'].startswith(prefix) else unit['source']
+            done = unit['matched_functions'] == unit['total_functions']
+            percent = 100 * unit['code_bytes_matched'] / max(1, unit['code_bytes_total'])
+            equivalent = f" +{unit['equivalent_functions']}eq" if unit['equivalent_functions'] else ''
+            print(f"{'DONE' if done else '    '} {unit['matched_functions']:4d}/{unit['total_functions']:<4d}"
+                  f" {percent:6.2f}% {unit['category']:7s} {name}{equivalent}")
+        print()
+    for category, part in result['summary'].items():
+        print(f"{category + ':':8s} {part['complete']}/{part['total']} TUs complete, "
+              f"{part['started']} partially matched")
+    return 0
+
+
 def command_doctor(_: argparse.Namespace) -> int:
     wibo, mwcc, includes = tool_paths()
     ok = True
@@ -1960,6 +2032,13 @@ def main() -> int:
     coverage_parser = sub.add_parser('coverage')
     coverage_parser.add_argument('--json', action='store_true')
     coverage_parser.set_defaults(func=command_coverage)
+    tus_parser = sub.add_parser('tus', help='per-translation-unit completion')
+    tus_parser.add_argument('--json', action='store_true')
+    tus_parser.add_argument('--summary', action='store_true', help='print only the totals')
+    tus_parser.add_argument('--category', choices=('game', 'library'))
+    tus_parser.add_argument('--filter', choices=('complete', 'incomplete', 'started'))
+    tus_parser.add_argument('--sort', choices=('source', 'remaining', 'percent'), default='source')
+    tus_parser.set_defaults(func=command_tus)
     verify_parser = sub.add_parser('verify-recorded',
                                    help='recompile and verify every recorded MATCH')
     verify_parser.add_argument('--jobs', type=int, default=4)

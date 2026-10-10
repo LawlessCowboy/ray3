@@ -18,9 +18,13 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
 | **Game code** | **2,024 / 4,164** (+4 register-equivalent) | **139,596 / 1,511,580** (**9.2351%**) |
-| Library code | 801 / 3,668 (+1 register-equivalent) | 45,200 / 756,524 (5.9747%) |
-| **Total** | **2,825 / 7,832** (+5 register-equivalent) | **184,796 / 2,268,104** (**8.1476%**) |
+| Library code | 804 / 3,668 (+1 register-equivalent) | 45,432 / 756,524 (6.0054%) |
+| **Total** | **2,828 / 7,832** (+5 register-equivalent) | **185,028 / 2,268,104** (**8.1578%**) |
 
+- Translation units (`python3 tools/match.py tus --summary`): **74 / 384**
+  fully matched (game 72 / 347, library 2 / 37), with 250 more partially
+  matched. Only sources recovered into `src/Rayman3/` are counted, so SDK and
+  runtime code without a source file is excluded.
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
   started yet.
 - Register-equivalent functions differ only by register renaming and are not
@@ -163,7 +167,12 @@ python3 tools/match.py list --unmatched --language C --max-lines 15
 python3 tools/match.py show fn_vInterruptMenu2D
 python3 tools/match.py check fn_vInterruptMenu2D
 python3 tools/match.py coverage
+python3 tools/match.py tus --filter started --sort remaining
 ```
+
+`tus` lists every recovered source with its matched/total functions and byte
+percentage (`DONE` marks a fully matched unit); `--summary` prints only the
+game/library/total counts, and `--category`, `--filter` and `--sort` narrow it.
 
 Before dispatching workers, build a cached readiness list and choose from it:
 
