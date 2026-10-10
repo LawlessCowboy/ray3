@@ -8,6 +8,15 @@ ELF with CodeWarrior PS2 through Wibo: game sources build with 3.0.1
 -O3,p`. The only accepted baseline profile is encoded in `tools/match.py` and
 the Makefile.
 
+## Git branches and pull requests
+
+`main` is protected. When a task explicitly calls for committing and pushing
+changes, create or use a task-specific branch based on the latest `origin/main`,
+commit the intended changes there, push that branch, and open a pull request
+targeting `main`. Do not push directly to `main` or bypass repository rules.
+This does not override workflow instructions below that prohibit a worker from
+staging or committing matching changes.
+
 ## Worker loop
 
 1. Work only in the assigned canonical source file under `src/Rayman3/`.
@@ -136,6 +145,22 @@ python3 tools/match.py lease release SOURCE --owner WORKER
 After a mismatch, use `python3 tools/match.py classify FUNCTION` for an
 initial routing label such as `abi-narrow-type`, `relocation/global-layout`,
 `tail-call/dispatch`, or `codegen/scheduling` before retrying or escalating.
+
+## Cleanup after a translation unit is complete
+
+Use `python3 tools/match.py tus` to confirm the source is marked `DONE` before
+cleaning it up. `DONE` means every function in that translation unit has a
+recorded `MATCH`; `EQUIVALENT` functions do not count. Until then, preserve the
+extractor's function address/size comments and `+offset -> line` maps because
+they help reconstruct and verify functions.
+
+After a translation unit is `DONE`, a cleanup-only change may remove those
+extractor-generated address/size and line-map comment blocks from that source
+file. Keep `TODO` markers, authored explanations, and comments that describe
+code behavior. Re-run `python3 tools/match.py check FUNCTION` for the affected
+functions after cleanup; if removing metadata changes a result from `MATCH`,
+restore the comments needed to retain the verified match. Keep cleanup separate
+from function reconstruction changes so it can be reviewed independently.
 
 ## m2c-first workflow for advanced functions
 
