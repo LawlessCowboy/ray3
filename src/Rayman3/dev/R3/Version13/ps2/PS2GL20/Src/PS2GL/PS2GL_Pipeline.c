@@ -734,7 +734,29 @@ tagGLcontext g_PS2glContext;
 void PS2glUpdateNormalMatrix(void)
 {
     float IMMV;
-    /* TODO: decompile from asm/... */
+
+    IMMV = 1.0f / (g_PS2glContext.ModelViewMatrix[0][0] * g_PS2glContext.ModelViewMatrix[1][1] * g_PS2glContext.ModelViewMatrix[2][2]
+                + g_PS2glContext.ModelViewMatrix[1][0] * g_PS2glContext.ModelViewMatrix[2][1] * g_PS2glContext.ModelViewMatrix[0][2]
+                + g_PS2glContext.ModelViewMatrix[2][0] * g_PS2glContext.ModelViewMatrix[0][1] * g_PS2glContext.ModelViewMatrix[1][2]
+                - g_PS2glContext.ModelViewMatrix[2][0] * g_PS2glContext.ModelViewMatrix[1][1] * g_PS2glContext.ModelViewMatrix[0][2]
+                - g_PS2glContext.ModelViewMatrix[0][0] * g_PS2glContext.ModelViewMatrix[2][1] * g_PS2glContext.ModelViewMatrix[1][2]
+                - g_PS2glContext.ModelViewMatrix[1][0] * g_PS2glContext.ModelViewMatrix[0][1] * g_PS2glContext.ModelViewMatrix[2][2]);
+
+    g_PS2glContext.NormalMatrix[0][0] = IMMV * (g_PS2glContext.ModelViewMatrix[1][1] * g_PS2glContext.ModelViewMatrix[2][2] - g_PS2glContext.ModelViewMatrix[1][2] * g_PS2glContext.ModelViewMatrix[2][1]);
+    g_PS2glContext.NormalMatrix[1][0] = IMMV * -(g_PS2glContext.ModelViewMatrix[0][1] * g_PS2glContext.ModelViewMatrix[2][2] - g_PS2glContext.ModelViewMatrix[0][2] * g_PS2glContext.ModelViewMatrix[2][1]);
+    g_PS2glContext.NormalMatrix[2][0] = IMMV * (g_PS2glContext.ModelViewMatrix[0][1] * g_PS2glContext.ModelViewMatrix[1][2] - g_PS2glContext.ModelViewMatrix[0][2] * g_PS2glContext.ModelViewMatrix[1][1]);
+
+    g_PS2glContext.NormalMatrix[0][1] = IMMV * -(g_PS2glContext.ModelViewMatrix[1][0] * g_PS2glContext.ModelViewMatrix[2][2] - g_PS2glContext.ModelViewMatrix[1][2] * g_PS2glContext.ModelViewMatrix[2][0]);
+    g_PS2glContext.NormalMatrix[1][1] = IMMV * (g_PS2glContext.ModelViewMatrix[0][0] * g_PS2glContext.ModelViewMatrix[2][2] - g_PS2glContext.ModelViewMatrix[0][2] * g_PS2glContext.ModelViewMatrix[2][0]);
+    g_PS2glContext.NormalMatrix[2][1] = IMMV * -(g_PS2glContext.ModelViewMatrix[0][0] * g_PS2glContext.ModelViewMatrix[1][2] - g_PS2glContext.ModelViewMatrix[0][2] * g_PS2glContext.ModelViewMatrix[1][0]);
+
+    g_PS2glContext.NormalMatrix[0][2] = IMMV * (g_PS2glContext.ModelViewMatrix[1][0] * g_PS2glContext.ModelViewMatrix[2][1] - g_PS2glContext.ModelViewMatrix[2][0] * g_PS2glContext.ModelViewMatrix[1][1]);
+    g_PS2glContext.NormalMatrix[1][2] = IMMV * -(g_PS2glContext.ModelViewMatrix[0][0] * g_PS2glContext.ModelViewMatrix[2][1] - g_PS2glContext.ModelViewMatrix[2][0] * g_PS2glContext.ModelViewMatrix[0][1]);
+    g_PS2glContext.NormalMatrix[2][2] = IMMV * (g_PS2glContext.ModelViewMatrix[0][0] * g_PS2glContext.ModelViewMatrix[1][1] - g_PS2glContext.ModelViewMatrix[1][0] * g_PS2glContext.ModelViewMatrix[0][1]);
+
+    g_PS2glContext.NormalMatrix[0][3] = g_PS2glContext.NormalMatrix[1][3] = g_PS2glContext.NormalMatrix[2][3] = 0.0f;
+    g_PS2glContext.NormalMatrix[3][0] = g_PS2glContext.NormalMatrix[3][1] = g_PS2glContext.NormalMatrix[3][2] = 0.0f;
+    g_PS2glContext.NormalMatrix[3][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Pipeline.c lines 94–104 */

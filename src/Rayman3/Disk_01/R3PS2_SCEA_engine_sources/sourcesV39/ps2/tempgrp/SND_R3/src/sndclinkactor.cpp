@@ -164,6 +164,9 @@ struct CLinkActorPool {
 };
 
 struct CResObj {
+    virtual ~CResObj();
+    virtual void fv_vExecCmd(unsigned int ui_CmdId, void* pv_Data);
+    bool f_bExecCmd(unsigned int ui_CmdId, void* pv_Data) { fv_vExecCmd(ui_CmdId, pv_Data); return true; }
     CResType* m_roType; /* +0x4 */
     CResData* m_poResData; /* +0x8 */
 };
@@ -565,9 +568,31 @@ unsigned char CLinkActor::mfn_bSynchroniseActorInstance(void)
  */
 unsigned char CLinkActor::mfn_bExecuteActorInstance(int s32_CmdId, int s32_ChannelId)
 {
-    CExtraEventActor* poEEActor;
     unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
+    CExtraEventActor* poEEActor;
+
+    b_Answer = 1;
+    if (s32_ChannelId != -2)
+    {
+        poEEActor = m_oExtraActors.m_poNext;
+        while (poEEActor != NULL)
+        {
+            if (poEEActor->ms32ACPChannelId == s32_ChannelId)
+            {
+                b_Answer = poEEActor->mpoActorObj->f_bExecCmd(s32_CmdId, NULL) && b_Answer;
+            }
+            poEEActor = poEEActor->m_poNext;
+        }
+    }
+    else
+    {
+        for (poEEActor = m_oExtraActors.m_poNext; poEEActor != NULL; poEEActor = poEEActor->m_poNext)
+        {
+            if (!(b_Answer = poEEActor->mpoActorObj->f_bExecCmd(s32_CmdId, NULL) && b_Answer))
+                break;
+        }
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 143–173 */

@@ -75,11 +75,70 @@ void Mmg_fn_vDeleteBlock(unsigned char ucBlockId, unsigned char ucMode, int p_st
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc)
+void HMU_fn_vEnterCriticalSection(void);
+void HMU_fn_vLeaveCriticalSection(void);
+unsigned char HMU_fn_ucGetActualTempMemoryBlockUsed(void);
+unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void);
+void Erm_fn_ClearLastError();
+void Erm_fn_v_UpdateLastError();
+void Mmg_fn_vDisableAllocationError(void);
+void Mmg_fn_vEnableAllocationError(void);
+void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel);
+void* fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel);
+void* memset(void* s, int c, size_t n);
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc)
 {
-    e_ucHMUStaticBlocks eMemoryBlockUse;
     void* p_vReturn;
-    /* TODO: decompile from asm/... */
+    e_ucHMUStaticBlocks eMemoryBlockUse;
+
+    HMU_fn_vEnterCriticalSection();
+    if (bTempMalloc)
+    {
+        eMemoryBlockUse = HMU_fn_ucGetActualTempMemoryBlockUsed();
+    }
+    else
+    {
+        eMemoryBlockUse = HMU_fn_ucGetActualNormalMemoryBlockUsed();
+    }
+    if (u32Size == 0)
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(10, g_ucHMUModuleId, 0, 4, -1, 255, 255, NULL);
+    }
+    if (bTempMalloc)
+    {
+        Mmg_fn_vDisableAllocationError();
+    }
+    Mmg_fn_v_SetModeAlloc(g_ucHMUModuleId, eMemoryBlockUse, 0);
+    p_vReturn = fn_p_vGenAlloc(u32Size, 0);
+    if (p_vReturn == NULL)
+    {
+        if (bTempMalloc)
+        {
+            if (!HMU_g_stMemoryStructure.bUseDynamicMemory[eMemoryBlockUse])
+            {
+                HMU_g_stMemoryStructure.bUseDynamicMemory[eMemoryBlockUse] = 1;
+            }
+            Mmg_fn_v_SetModeAlloc(g_ucHMUModuleId, 255, 0);
+            p_vReturn = fn_p_vGenAlloc(u32Size, 0);
+            if (p_vReturn == NULL)
+            {
+                Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(10, g_ucHMUModuleId, 0, 6, -1, 255, 255, NULL);
+            }
+        }
+        else
+        {
+            Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(10, g_ucHMUModuleId, 0, 8, -1, 255, 255, NULL);
+        }
+    }
+    Mmg_fn_vEnableAllocationError();
+    if (!bTempMalloc && p_vReturn != NULL)
+    {
+        memset(p_vReturn, 0, u32Size);
+    }
+    HMU_g_stMemoryStructure.u32NumberOfAllocation[eMemoryBlockUse]++;
+    HMU_fn_vLeaveCriticalSection();
+    return p_vReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Public.c lines 622–630 */

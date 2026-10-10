@@ -45,12 +45,57 @@ struct anon_1 {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef struct tdstFileEntry_ {
+    unsigned int Reserved_Key; /* +0x0 */
+    unsigned int Reserved_Key2; /* +0x4 */
+    char Name[8]; /* +0x8 */
+    char DateTime[26]; /* +0x10 */
+    unsigned int ulScore; /* +0x2c */
+    unsigned int ulNbCage; /* +0x30 */
+} tdstFileEntry_;
+
+extern tdstFileEntry_ g_aFileEntryArray[100];
+extern unsigned int PS2MC_g_NbFilesFound;
+extern char g_CurrentSaveName[];
+extern char g_CurrentNameForSavePage[10];
+extern int g_CurrentSelectedCharNumber;
+int sprintf(char* s, const char* format, ...);
+int strcmp(const char* s1, const char* s2);
+char* strcpy(char* s1, const char* s2);
+size_t strlen(const char* s);
+
 void fn_vGetScreenShotDefaultName(void)
 {
-    char TestFileName[8];
-    int i;
-    int Number;
     int Found;
+    int Number;
+    int i;
+    char TestFileName[8];
+
+    Number = 1;
+    do
+    {
+        i = 0;
+        Found = 0;
+        sprintf(TestFileName, "%s%02d", g_CurrentSaveName, Number);
+        while (i < PS2MC_g_NbFilesFound && !Found)
+        {
+            if (!strcmp(g_aFileEntryArray[i].Name, TestFileName))
+            {
+                Found = 1;
+            }
+            else
+            {
+                i++;
+            }
+        }
+        Number++;
+    } while (Found);
+    strcpy(g_CurrentNameForSavePage, TestFileName);
+    g_CurrentSelectedCharNumber = strlen(g_CurrentNameForSavePage);
+    if (g_CurrentSelectedCharNumber == 7)
+    {
+        g_CurrentSelectedCharNumber--;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\salloc.c lines 116–116 */

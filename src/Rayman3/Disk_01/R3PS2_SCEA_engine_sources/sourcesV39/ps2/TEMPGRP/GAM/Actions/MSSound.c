@@ -1300,14 +1300,62 @@ unsigned char g_ucGameModuleId;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements);
+void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint);
+void GEO_vCreateElementSpheres(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbSpheres);
+void GEO_vSetCenterPointOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, short xIndexOfPoint);
+void GEO_vSetRadiusOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, float xRadius);
+void GLI_xCreateMaterial(GLI_tdstMaterial_** hMaterial);
+void GLI_xSetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExponent, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialType(GLI_tdstMaterial_* hMaterial, unsigned int xMType);
+void GEO_vSetVisualMaterialOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, GLI_tdstMaterial_* hVisualMaterial);
+void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject);
+
 GEO_tdstGeometricObject_* fn_pCreateSphere(float x, float y, float z, float xRadius)
 {
-    GEO_tdstColor_ stColor;
-    GLI_tdstMaterial_* hMaterial;
-    short hElement;
-    MTH3D_tdstVector_ stCenter;
     GEO_tdstGeometricObject_* p_stSphere;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stCenter;
+    short hElement;
+    GLI_tdstMaterial_* hMaterial;
+    GEO_tdstColor_ stColor;
+
+    GEO_vCreateGeometricObject(&p_stSphere, 1, 1);
+    stCenter.xX = x;
+    stCenter.xY = y;
+    stCenter.xZ = z;
+    GEO_vSetPointOfObject(p_stSphere, &stCenter, 0);
+    GEO_vCreateElementSpheres(p_stSphere, &hElement, 1);
+    GEO_vSetCenterPointOfIndexedSphere(p_stSphere, hElement, 0, 0);
+    GEO_vSetRadiusOfIndexedSphere(p_stSphere, hElement, 0, xRadius);
+
+    GLI_xCreateMaterial(&hMaterial);
+    stColor.xR = 0.1f;
+    stColor.xG = 0.1f;
+    stColor.xB = 0.1f;
+    stColor.xA = 0.0f;
+    GLI_xSetMaterialAmbientCoef(hMaterial, &stColor);
+    stColor.xR = 0.7f;
+    stColor.xG = 0.7f;
+    stColor.xB = 0.7f;
+    stColor.xA = 0.0f;
+    GLI_xSetMaterialDiffuseCoef(hMaterial, &stColor);
+    stColor.xR = 0.7f;
+    stColor.xG = 0.7f;
+    stColor.xB = 0.7f;
+    stColor.xA = 0.0f;
+    GLI_xSetMaterialSpecularCoef(hMaterial, 0, &stColor);
+    stColor.xR = 0.8f;
+    stColor.xG = 0.8f;
+    stColor.xB = 0.8f;
+    stColor.xA = -400000000.0f;
+    GLI_xSetMaterialColor(hMaterial, &stColor);
+    GLI_xSetMaterialType(hMaterial, 0x7fa);
+    GEO_vSetVisualMaterialOfIndexedSphere(p_stSphere, hElement, 0, hMaterial);
+    GEO_vEndModifyObject(p_stSphere);
+    return p_stSphere;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 358–358 */
