@@ -761,10 +761,20 @@ void PS2glUpdateNormalMatrix(void)
  */
 void PS2glBufferTriangleFanToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart)
 {
-    float (*pDst)[4];
-    float (*pSrc)[4];
     int i;
-    /* TODO: decompile from asm/... */
+    float (*pSrc)[4];
+    float (*pDst)[4];
+
+    pDst = pBuf + iDstStart;
+    pSrc = pBuf + iSrcStart;
+    for (i = 0; i < iSrcStart; i++)
+    {
+        *(__int128*)pDst[2] = *(__int128*)pSrc[2];
+        *(__int128*)pDst[1] = *(__int128*)pSrc[1];
+        *(__int128*)pDst[0] = *(__int128*)pBuf[0];
+        pSrc--;
+        pDst -= 3;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Pipeline.c lines 70–89 */

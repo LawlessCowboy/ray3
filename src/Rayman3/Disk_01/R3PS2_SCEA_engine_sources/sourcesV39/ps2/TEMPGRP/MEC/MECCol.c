@@ -1699,11 +1699,38 @@ void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+HIE_tdstSuperObject_* MEC_fn_hGetFatherActor(HIE_tdstSuperObject_* hSupObj);
+DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj);
+
 void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecObstacle* p_stCollideObstacle)
 {
     HIE_tdstSuperObject_* hSupObj;
     MTH3D_tdstVector_ stVector;
     DNM_stObstacle* p_stObstacle;
     DNM_stDynamics* p_stDynamic;
-    /* TODO: decompile from asm/... */
+
+    hSupObj = p_stCollideObstacle->mp_stSupObj;
+
+    if (hSupObj)
+    {
+        hSupObj = MEC_fn_hGetFatherActor(hSupObj);
+
+        p_stDynamic = fn_p_stDynamGetDynamicsSO(hSupObj);
+        if (p_stDynamic)
+        {
+            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+            {
+                p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_ulCurrSurfaceState |= 0x80;
+
+                p_stObstacle = &p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_stCharacter;
+                p_stObstacle->m_xRate = 0.0f;
+                stVector.xX = -p_stCollideObstacle->m_stNorm.xX; stVector.xY = -p_stCollideObstacle->m_stNorm.xY; stVector.xZ = -p_stCollideObstacle->m_stNorm.xZ;
+                *(int*)&p_stObstacle->m_stNorm.xX = *(int*)&stVector.xX; *(int*)&p_stObstacle->m_stNorm.xY = *(int*)&stVector.xY; *(int*)&p_stObstacle->m_stNorm.xZ = *(int*)&stVector.xZ;
+                *(int*)&p_stObstacle->m_stContact.xX = *(int*)&p_stCollideObstacle->m_stContact.xX; *(int*)&p_stObstacle->m_stContact.xY = *(int*)&p_stCollideObstacle->m_stContact.xY; *(int*)&p_stObstacle->m_stContact.xZ = *(int*)&p_stCollideObstacle->m_stContact.xZ;
+                p_stObstacle->mp_stSupObj = hCollideSupObj;
+                p_stObstacle->hCollidedMaterial = p_stCollideObstacle->hMyMaterial;
+                p_stObstacle->hMyMaterial = p_stCollideObstacle->hCollidedMaterial;
+            }
+        }
+    }
 }

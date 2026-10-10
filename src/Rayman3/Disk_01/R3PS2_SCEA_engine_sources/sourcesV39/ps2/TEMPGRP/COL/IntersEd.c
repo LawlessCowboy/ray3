@@ -364,7 +364,47 @@ unsigned char INT_fn_bIntersectSemiAxeWithSphere(MTH3D_tdstVector_* p_stVertex1,
  */
 unsigned char INT_fn_bFastRejectIntersectSemiaxeWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
 {
-    float xMax;
     float xMin;
-    /* TODO: decompile from asm/... */
+    float xMax;
+
+    if (p_stVect12->xX > 0.0f)
+    {
+        xMin = p_stVertex1->xX;
+        xMax = p_stSphereCenter->xX + xSphereRadius;
+    }
+    else
+    {
+        xMin = p_stSphereCenter->xX - xSphereRadius;
+        xMax = p_stVertex1->xX;
+    }
+    if (xMax < xMin)
+        return 0;
+
+    if (p_stVect12->xY > 0.0f)
+    {
+        xMin = p_stVertex1->xY;
+        xMax = p_stSphereCenter->xY + xSphereRadius;
+    }
+    else
+    {
+        xMin = p_stSphereCenter->xY - xSphereRadius;
+        xMax = p_stVertex1->xY;
+    }
+    if (xMax < xMin)
+        return 0;
+
+    if (p_stVect12->xZ > 0.0f)
+    {
+        xMin = p_stVertex1->xZ;
+        xMax = p_stSphereCenter->xZ + xSphereRadius;
+    }
+    else
+    {
+        xMin = p_stSphereCenter->xZ - xSphereRadius;
+        xMax = p_stVertex1->xZ;
+    }
+    if (xMax < xMin)
+        return 0;
+
+    return 1;
 }

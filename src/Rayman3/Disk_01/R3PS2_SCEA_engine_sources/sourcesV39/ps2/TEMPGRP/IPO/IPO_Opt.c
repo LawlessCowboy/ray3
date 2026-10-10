@@ -19,12 +19,15 @@ ISI_tdstColor_ IPO_g_tdstBlack;
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_Opt.c lines 98–101 */
 /* addr: 0x002f31d0  size: 156 bytes */
 /* Debug signature rejected: type-record data leaked into it. */
+extern char* IPO_g_a_szAdditionnalRLITables[10];
+extern unsigned char IPO_g_ucNumberOfRLITables;
+extern char IPO_g_cTransitionInProgress;
+
 void IPO_fn_vLevelDesinitRLITables(void)
 {
-    /* line map: */
-    /*   line 98 @ +0x000 */
-    /*   line 98 @ +0x000 */
-    /*   line 98 @ +0x000 */
-    /*   line 101 @ +0x000 */
-    /* TODO: decompile from asm/... */
+    int i;
+
+    for (i = 0; i < IPO_g_ucNumberOfRLITables; i++) IPO_g_a_szAdditionnalRLITables[i] = NULL;
+    IPO_g_ucNumberOfRLITables = 0;
+    IPO_g_cTransitionInProgress = 0;
 }

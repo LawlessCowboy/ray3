@@ -180,15 +180,7 @@ void GLI_hComputeBlendRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex1
  */
 int GLI_hGetRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex)
 {
-    int lIndex = ucIndex & 0xff;
-    int lNumberOfRLI = hVisualSet->lNumberOfRLI;
-    int* pRLI;
-    int hRLI = 0;
-    if (lIndex < lNumberOfRLI) {
-        pRLI = (int*)hVisualSet->d_hRLI;
-        hRLI = pRLI[lIndex];
-    }
-    return hRLI;
+    return (ucIndex < hVisualSet->lNumberOfRLI) ? ((int*)hVisualSet->d_hRLI)[ucIndex] : 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 417–433 */

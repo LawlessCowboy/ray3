@@ -21819,6 +21819,96 @@
       "status": "MISMATCH",
       "target_size": 204,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0030e880",
+      "candidate_size": 240,
+      "first_difference": 24,
+      "implementation": "void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecObstacle* p_stCollideObstacle)\n{\n    HIE_tdstSuperObject_* hSupObj;\n    MTH3D_tdstVector_ stVector;\n    DNM_stObstacle* p_stObstacle;\n    DNM_stDynamics* p_stDynamic;\n\n    hSupObj = p_stCollideObstacle->mp_stSupObj;\n\n    if (hSupObj)\n    {\n        hSupObj = MEC_fn_hGetFatherActor(hSupObj);\n\n        p_stDynamic = fn_p_stDynamGetDynamicsSO(hSupObj);\n        if (p_stDynamic)\n        {\n            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)\n            {\n                p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_ulCurrSurfaceState |= 0x80;\n\n                p_stObstacle = &p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_stCharacter;\n                p_stObstacle->m_xRate = 0.0f;\n                stVector.xX = -p_stCollideObstacle->m_stNorm.xX; stVector.xY = -p_stCollideObstacle->m_stNorm.xY; stVector.xZ = -p_stCollideObstacle->m_stNorm.xZ;\n                *(int*)&p_stObstacle->m_stNorm.xX = *(int*)&stVector.xX; *(int*)&p_stObstacle->m_stNorm.xY = *(int*)&stVector.xY; *(int*)&p_stObstacle->m_stNorm.xZ = *(int*)&stVector.xZ;\n                *(int*)&p_stObstacle->m_stContact.xX = *(int*)&p_stCollideObstacle->m_stContact.xX; *(int*)&p_stObstacle->m_stContact.xY = *(int*)&p_stCollideObstacle->m_stContact.xY; *(int*)&p_stObstacle->m_stContact.xZ = *(int*)&p_stCollideObstacle->m_stContact.xZ;\n                p_stObstacle->mp_stSupObj = hCollideSupObj;\n                p_stObstacle->hCollidedMaterial = p_stCollideObstacle->hMyMaterial;\n                p_stObstacle->hMyMaterial = p_stCollideObstacle->hCollidedMaterial;\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vReportCollideActor",
+      "reason": "Control flow, calls and fields exact; residual is stack-address CSE: retail accesses the address-taken local stVector with sp-relative offsets for every int word copy (lw 0x30/0x34/0x38(sp)) while ours materializes &stVector.xY/.xZ (or the base) in registers. 3.0.3 removes the xX one only. Same family as WP_fnv_WayPoint_ComputeLocation.",
+      "size": 228,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECCol.c",
+      "status": "MISMATCH",
+      "target_size": 228,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00181df0",
+      "candidate_size": 316,
+      "first_difference": 20,
+      "implementation": "void PS2glBufferTriangleFanToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart)\n{\n    int i;\n    float (*pSrc)[4];\n    float (*pDst)[4];\n\n    pDst = pBuf + iDstStart;\n    pSrc = pBuf + iSrcStart;\n    for (i = 0; i < iSrcStart; i++)\n    {\n        *(__int128*)pDst[2] = *(__int128*)pSrc[2];\n        *(__int128*)pDst[1] = *(__int128*)pSrc[1];\n        *(__int128*)pDst[0] = *(__int128*)pBuf[0];\n        pSrc--;\n        pDst -= 3;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PS2glBufferTriangleFanToTriangle",
+      "reason": "Exact except the -O3,p loop-exit alignment nop at +0xfc. Probe: compiling PS2GL_Pipeline.c with the game flag set (-O3,p etc., same 3.0 compiler) MATCHes this and PS2glListBufferTriangleStripToTriangle with nothing lost. Per-file flag change pending approval.",
+      "size": 320,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Pipeline.c",
+      "status": "MISMATCH",
+      "target_size": 320,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00181f30",
+      "candidate_size": 100,
+      "first_difference": 12,
+      "implementation": "void PS2glListBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart)\n{\n    float (*pDst)[4];\n    float (*param0)[4];\n    int i;\n\n    pDst = pBuf + iDstStart;\n    param0 = pBuf + iSrcStart;\n    for (i = iSrcStart; i > 0; i--)\n    {\n        if (i & 1)\n        {\n            *(__int128*)pDst[1] = *(__int128*)param0[2];\n            *(__int128*)pDst[2] = *(__int128*)param0[1];\n        }\n        else\n        {\n            *(__int128*)pDst[2] = *(__int128*)param0[2];\n            *(__int128*)pDst[1] = *(__int128*)param0[1];\n        }\n        *(__int128*)pDst[0] = *(__int128*)param0[0];\n        param0--;\n        pDst -= 3;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PS2glListBufferTriangleStripToTriangle",
+      "reason": "Exact except the -O3,p alignment nop; MATCHes when PS2GL_Pipeline.c is compiled with the game flags (probe, no config change). Per-file flag change pending approval.",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Pipeline.c",
+      "status": "MISMATCH",
+      "target_size": 104,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001002d0",
+      "candidate_size": 76,
+      "first_difference": 0,
+      "implementation": "float PS2_dl_cosf(float val)\n{\n    float f0;\n    float f1 = -0.15915493667125702f;\n    float f2 = 2.0f;\n    float f3 = 4194304.0f;\n    float f4 = 0.25f;\n    float f5 = 6.3122100830078125f;\n    float f6 = -41.341670989990234f;\n    float f7 = 81.60222625732422f;\n    float f8 = -76.57495880126953f;\n    float f9 = 39.71065902709961f;\n    float f24;\n    float f25;\n    float f26;\n\n#define MTH_ABS_IN_PLACE(_x) asm { abs.s _x, _x }\n#define MTH_ABS_TO(_r, _x) asm { abs.s _r, _x }\n#define MTH_MULA(_x, _y) asm { mula.s _x, _y }\n#define MTH_MSUBA(_x, _y) asm { msuba.s _x, _y }\n#define MTH_MADDA(_x, _y) asm { madda.s _x, _y }\n#define MTH_MSUB(_r, _x, _y) asm { msub.s _r, _x, _y }\n#define MTH_MADD(_r, _x, _y) asm { madd.s _r, _x, _y }\n\n    MTH_ABS_TO(f0, val);\n    MTH_MULA(f0, f1);\n    MTH_MSUBA(f2, f3);\n    MTH_MADDA(f2, f3);\n    MTH_MSUBA(f0, f1);\n    MTH_MSUB(f0, f2, f4);\n    MTH_ABS_IN_PLACE(f0);\n    f26 = f0 - f4;\n    f0 = f26 * f26;\n    MTH_MULA(f26, f5);\n    f24 = f26 * f0;\n    f25 = f24 * f0;\n    MTH_MADDA(f24, f6);\n    f24 = f25 * f0;\n    MTH_MADDA(f25, f7);\n    f25 = f24 * f0;\n    MTH_MADDA(f24, f8);\n    MTH_MADD(f0, f25, f9);\n    return f0;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "PS2_dl_cosf",
+      "reason": "Accumulator/abs instruction sequence now matches through 0x18; residual is constant-load ordering, callee-saved f24-f26 lifetime, and post-abs register allocation. m2c cannot model R5900 accumulator ops.",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/overlib.c",
+      "status": "MISMATCH",
+      "target_size": 204,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001002d0",
+      "candidate_size": 136,
+      "first_difference": 4,
+      "implementation": "float PS2_dl_cosf(float val)\n{\n    float x0;\n    float f24;\n    float f25;\n    float f26;\n    float x1 = -0.15915493667125702f;\n    float x2 = 2.0f;\n    float x3 = 4194304.0f;\n    float f4 = 0.25f;\n    float x5 = 6.3122100830078125f;\n    float x6 = -41.341670989990234f;\n    float x7 = 81.60222625732422f;\n    float x8 = -76.57495880126953f;\n    float x9 = 39.71065902709961f;\n\n#define MTH_ABS_IN_PLACE(_x) asm { abs.s _x, _x }\n#define MTH_ABS_TO(_r, _x) asm { abs.s _r, _x }\n#define MTH_MULA(_x, _y) asm { mula.s _x, _y }\n#define MTH_MSUBA(_x, _y) asm { msuba.s _x, _y }\n#define MTH_MADDA(_x, _y) asm { madda.s _x, _y }\n#define MTH_MSUB(_r, _x, _y) asm { msub.s _r, _x, _y }\n#define MTH_MADD(_r, _x, _y) asm { madd.s _r, _x, _y }\n\n    MTH_ABS_TO(x0, val);\n    MTH_MULA(x0, x1);\n    MTH_MSUBA(x2, x3);\n    MTH_MADDA(x2, x3);\n    MTH_MSUBA(x0, x1);\n    MTH_MSUB(x0, x2, f4);\n    MTH_ABS_IN_PLACE(x0);\n    f26 = x0 - f4;\n    x0 = f26 * f26;\n    MTH_MULA(f26, x5);\n    f24 = f26 * x0;\n    f25 = f24 * x0;\n    MTH_MADDA(f24, x6);\n    f24 = f25 * x0;\n    MTH_MADDA(f25, x7);\n    f25 = f24 * x0;\n    MTH_MADDA(f24, x8);\n    MTH_MADD(x0, f25, x9);\n    return x0;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-sol",
+      "name": "PS2_dl_cosf",
+      "reason": "Neutral coefficient names plus physical f4 scratch binding align the entire accumulator tail and all polynomial operands; unresolved residual is target FP prologue/epilogue saves and initial constant ordering.",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/overlib.c",
+      "status": "MISMATCH",
+      "target_size": 204,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001002d0",
+      "candidate_size": 136,
+      "first_difference": 4,
+      "implementation": "float PS2_dl_cosf(float val)\n{\n    float x1 = -0.15915493667125702f;\n    float x2 = 2.0f;\n    float x3 = 4194304.0f;\n    float f4 = 0.25f;\n    float x5 = 6.3122100830078125f;\n    float x6 = -41.341670989990234f;\n    float x7 = 81.60222625732422f;\n    float x8 = -76.57495880126953f;\n    float x9 = 39.71065902709961f;\n    float x0;\n    float f24;\n    float f25;\n    float f26;\n\n#define MTH_ABS_IN_PLACE(_x) asm { abs.s _x, _x }\n#define MTH_ABS_TO(_r, _x) asm { abs.s _r, _x }\n#define MTH_MULA(_x, _y) asm { mula.s _x, _y }\n#define MTH_MSUBA(_x, _y) asm { msuba.s _x, _y }\n#define MTH_MADDA(_x, _y) asm { madda.s _x, _y }\n#define MTH_MSUB(_r, _x, _y) asm { msub.s _r, _x, _y }\n#define MTH_MADD(_r, _x, _y) asm { madd.s _r, _x, _y }\n\n    MTH_ABS_TO(x0, val);\n    MTH_MULA(x0, x1);\n    MTH_MSUBA(x2, x3);\n    MTH_MADDA(x2, x3);\n    MTH_MSUBA(x0, x1);\n    MTH_MSUB(x0, x2, f4);\n    MTH_ABS_IN_PLACE(x0);\n    f26 = x0 - f4;\n    x0 = f26 * f26;\n    MTH_MULA(f26, x5);\n    f24 = f26 * x0;\n    f25 = f24 * x0;\n    MTH_MADDA(f24, x6);\n    f24 = f25 * x0;\n    MTH_MADDA(f25, x7);\n    f25 = f24 * x0;\n    MTH_MADDA(f24, x8);\n    MTH_MADD(x0, f25, x9);\n    return x0;\n}",
+      "line_offsets_equal": false,
+      "model": "gpt-5.6-luna",
+      "name": "PS2_dl_cosf",
+      "reason": "Searched public PS2 decomp references; no exact implementation found. Neutral coefficient locals with physical f4 and accumulator macros reproduce the full polynomial instruction sequence, but MWCC omits target f24-f26 prologue/epilogue saves and schedules initial constants differently; declaration-order variant unchanged at 136/204.",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/overlib.c",
+      "status": "MISMATCH",
+      "target_size": 204,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -34191,6 +34281,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
       "status": "MATCH"
     },
+    "0x002555f0": {
+      "address": "0x002555f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "INT_fn_bFastRejectIntersectSemiaxeWithSphere",
+      "size": 244,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/IntersEd.c",
+      "status": "MATCH"
+    },
     "0x00257bc0": {
       "address": "0x00257bc0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -34740,6 +34838,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vInitWaterStreakEffect",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Engine.c",
+      "status": "MATCH"
+    },
+    "0x0025f2e0": {
+      "address": "0x0025f2e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vChooseTheGoodDesInit",
+      "size": 216,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Engine.c",
       "status": "MATCH"
     },
@@ -35541,6 +35647,14 @@
       "name": "fn_iCmpZoneSetIndex",
       "size": 16,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZdxStuff.c",
+      "status": "MATCH"
+    },
+    "0x0026ced0": {
+      "address": "0x0026ced0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_hIsThisZoneActive",
+      "size": 308,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZeMem.c",
       "status": "MATCH"
     },
     "0x0026d010": {
@@ -42029,6 +42143,14 @@
       "name": "IPO_fn_ucGetRLITableIndex",
       "size": 132,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MATCH"
+    },
+    "0x002f31d0": {
+      "address": "0x002f31d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "IPO_fn_vLevelDesinitRLITables",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_Opt.c",
       "status": "MATCH"
     },
     "0x002f3550": {

@@ -1506,9 +1506,43 @@ void fn_vOneTrame(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vDesInitLevelLoop(void);
+void PLD_fn_vUnLoadFix(void);
+void fn_vLastDesinitEngine(void);
+int sceGsSyncPath(int mode, unsigned short timeout);
+char* fn_p_szGetNextLevelName(void);
+void fn_vSetLevelName(char* szLevelName);
+void fn_vChangeEngineMode(unsigned char eNewMode);
+void fn_vDesInitDeadLoop(void);
+void Erm_fn_ClearLastError();
+void Erm_fn_v_UpdateLastError();
+
 void fn_vChooseTheGoodDesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    switch (g_stEngineStructure.eEngineMode)
+    {
+    case 2:
+        fn_vDesInitLevelLoop();
+        PLD_fn_vUnLoadFix();
+        fn_vLastDesinitEngine();
+        break;
+
+    case 6:
+        sceGsSyncPath(0, 0);
+        fn_vDesInitLevelLoop();
+        fn_vSetLevelName(fn_p_szGetNextLevelName());
+        fn_vChangeEngineMode(5);
+        break;
+
+    case 8:
+        fn_vDesInitDeadLoop();
+        fn_vChangeEngineMode(7);
+        break;
+
+    default:
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 18, -1, 255, 255, NULL);
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 1227–1456 */
