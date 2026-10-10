@@ -1,6 +1,6 @@
 # Rayman 3: Hoodlum Havoc — PlayStation 2 Korean decompilation
 
-This is an in-progress static-recompilation/decompilation project for the
+This is an in-progress decompilation project for the
 Korean PS2 release of *Rayman 3: Hoodlum Havoc* (`SLKA-250.78`). That build is
 especially useful because its linked ELF retains Metrowerks CodeWarrior debug
 information: original source paths, function names, many signatures, local
