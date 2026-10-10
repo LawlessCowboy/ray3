@@ -421,10 +421,57 @@ unsigned char COL_fn_bDetectCollisionStaticGeomObjWithStaticGeomObj(COL_tdstBoun
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* R5900 accumulator ops have no C form under the baseline. */
+inline float MTH4D_xSqrVector3(MTH4D_tdstVector_* p_stV)
+{
+    float xX, xY, xZ, xResult;
+
+    xZ = p_stV->xZ; xY = p_stV->xY; xX = p_stV->xX;
+    asm { mula.s xX, xX }
+    asm { madda.s xY, xY }
+    asm { madd.s xResult, xZ, xZ }
+    return xResult;
+}
+
+#define M_MAX(a, b) (((a) > (b)) ? (a) : (b))
+
+float PS2SQRTF(float x);
+
 float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* _hTransform)
 {
     MTH4D_tdstVector_* p_stScale;
     MTH4D_tdstMatrix_* p_stMatrix;
     float xMax;
-    /* TODO: decompile from asm/... */
+
+    switch (_hTransform->eType)
+    {
+    case MAT_eTransform_Identity:
+    case MAT_eTransform_Translation:
+    case MAT_eTransform_Rotation:
+        return 1.0f;
+
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_RotationZoom:
+        xMax = _hTransform->stScaleVector.xX;
+        break;
+
+    case MAT_eTransform_Scale:
+    case MAT_eTransform_RotationScale:
+        p_stScale = &_hTransform->stScaleVector;
+        xMax = M_MAX(p_stScale->xX, p_stScale->xY);
+        xMax = M_MAX(xMax, p_stScale->xZ);
+        break;
+
+    case MAT_eTransform_ComplexRotationScale:
+        p_stMatrix = &_hTransform->stTransformMatrix;
+        xMax = M_MAX(MTH4D_xSqrVector3(&p_stMatrix->stCol_0), MTH4D_xSqrVector3(&p_stMatrix->stCol_1));
+        xMax = M_MAX(xMax, MTH4D_xSqrVector3(&p_stMatrix->stCol_2));
+        xMax = PS2SQRTF(xMax);
+        return 1.4142135f * xMax;
+
+    default:
+        xMax = 1.0f;
+        break;
+    }
+    return xMax;
 }

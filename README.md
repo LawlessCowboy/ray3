@@ -17,9 +17,9 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **2,007 / 4,164** (+5 register-equivalent) | **134,364 / 1,511,580** (**8.8890%**) |
+| **Game code** | **2,016 / 4,164** (+4 register-equivalent) | **136,840 / 1,511,580** (**9.0528%**) |
 | Library code | 775 / 3,668 (+1 register-equivalent) | 42,736 / 756,524 (5.6490%) |
-| **Total** | **2,782 / 7,832** (+6 register-equivalent) | **177,100 / 2,268,104** (**7.8083%**) |
+| **Total** | **2,791 / 7,832** (+5 register-equivalent) | **179,576 / 2,268,104** (**7.9174%**) |
 
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
   started yet.
@@ -121,7 +121,7 @@ so the precise 3.0 build remains to be discriminated with additional functions.
 Whole-repo sweeps over every recorded match and attempt then picked the
 compiler per owner. Game sources build with **3.0.1 (2002-01-23)**: 27 more
 game matches than 3.0 and none lost. The files listed in
-`config/compiler-3.0.3-sources.txt` (12 files) build with **3.0.3 (2002-07-16)**,
+`config/compiler-3.0.3-sources.txt` (19 files) build with **3.0.3 (2002-07-16)**,
 because each of them matches more functions under it. Retail game code sits
 between those two builds, and no file has matches that only one build can
 produce on both sides, which fits per-file builds made at different times.

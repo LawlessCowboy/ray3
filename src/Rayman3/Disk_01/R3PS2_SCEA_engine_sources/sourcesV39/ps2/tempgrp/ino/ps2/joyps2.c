@@ -105,13 +105,26 @@ unsigned short INO_fn_uwJoyPreviousDirections(stDevice* _hDev)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* memcpy(void* dst, const void* src, size_t n);
+short fn_wJoyGetJoystickState(short _wJoystickNum, stJoystickState* _p_stJoyState, stJoystickCaps* _p_stJoyCaps);
+
 short INOPS2_fn_wReadJoystick(stDevice* _p_stDev)
 {
-    short wPort;
-    short wReturn;
-    stJoystickCaps* p_stCaps;
     stJoystickState* p_stState;
-    /* TODO: decompile from asm/... */
+    stJoystickCaps* p_stCaps;
+    short wReturn;
+    short wPort;
+
+    p_stState = (stJoystickState*)_p_stDev->m_p_stState;
+
+    p_stCaps = (stJoystickCaps*)_p_stDev->m_p_stCaps;
+    wPort = _p_stDev->m_wPort;
+
+    memcpy(_p_stDev->m_p_stLastState, p_stState, sizeof(stJoystickState));
+    wReturn = fn_wJoyGetJoystickState(wPort, p_stState, p_stCaps);
+    p_stState->m_uwDirections = 0; if (p_stState->m_a_fAxisValue[0] < -0.1f) p_stState->m_uwDirections |= 1; else if (p_stState->m_a_fAxisValue[0] > 0.1f) p_stState->m_uwDirections |= 2; if (p_stState->m_a_fAxisValue[1] > 0.1f) p_stState->m_uwDirections |= 8; else if (p_stState->m_a_fAxisValue[1] < -0.1f) p_stState->m_uwDirections |= 4;
+
+    return wReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 772–773 */

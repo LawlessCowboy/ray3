@@ -214,5 +214,43 @@ void J_New_GetInterpolPointOnEdge(J_New_ParticleFace_* pFace, J_New_InterpolPoin
     float A[4];
     int p2;
     int p1;
-    /* TODO: decompile from asm/... */
+
+    if (Edge == 0) { p1 = 0; p2 = 1; }
+    else if (Edge == 1) { p1 = 1; p2 = 2; }
+    else if (Edge == 2) { p1 = 2; p2 = 0; }
+    else p1 = 0;
+
+    A[1] = (U - pFace->pUVs[p1][0]) / (pFace->pUVs[p2][0] - pFace->pUVs[p1][0]);
+    A[0] = 1.0f - A[1];
+
+    {
+        float* pP1 = pFace->pPoints[p1];
+        float* pP2 = pFace->pPoints[p2];
+        float* pC1 = pFace->pColors[p1];
+        float* pC2 = pFace->pColors[p2];
+        float* pA = A;
+        float* pPos = pPoint->Pos;
+        float* pColor = pPoint->Color;
+
+        /* VU0 macro-mode interpolation: no C form. */
+        asm {
+            lqc2 vf2, 0x0(pP1)
+            lqc2 vf3, 0x0(pP2)
+            lqc2 vf4, 0x0(pC1)
+            lqc2 vf5, 0x0(pC2)
+            lqc2 vf6, 0x0(pA)
+            vmulx.xyz vf8, vf2, vf6
+            vmuly.xyz vf9, vf3, vf6
+            vsubx.w vf12, vf0, vf0
+            vmulx.xyzw vf10, vf4, vf6
+            vmuly.xyzw vf11, vf5, vf6
+            vadd.xyz vf12, vf8, vf9
+            vadd.xyzw vf13, vf10, vf11
+            sqc2 vf12, 0x0(pPos)
+            sqc2 vf13, 0x0(pColor)
+        }
+    }
+
+    pPoint->UVs[0] = U;
+    pPoint->UVs[1] = A[0] * pFace->pUVs[p1][1] + A[1] * pFace->pUVs[p2][1];
 }

@@ -474,9 +474,9 @@ void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdst
         break;
     case MAT_eTransform_ComplexRotationScale:
         MAT_fn_vQuatToMatrix(&TmpMat, _hTransform->stScaleVector.xX, _hTransform->stScaleVector.xY, _hTransform->stScaleVector.xZ, _hTransform->stScaleVector.xW);
-        _p_stVecI->xX = TmpMat.stCol_0.xX;
-        _p_stVecI->xY = TmpMat.stCol_0.xY;
-        _p_stVecI->xZ = TmpMat.stCol_0.xZ;
+        ((unsigned int*)_p_stVecI)[0] = ((unsigned int*)&TmpMat.stCol_0)[0];
+        ((unsigned int*)_p_stVecI)[1] = ((unsigned int*)&TmpMat.stCol_0)[1];
+        ((unsigned int*)_p_stVecI)[2] = ((unsigned int*)&TmpMat.stCol_0)[2];
         ((unsigned int*)_p_stVecJ)[0] = ((unsigned int*)&TmpMat.stCol_1)[0];
         ((unsigned int*)_p_stVecJ)[1] = ((unsigned int*)&TmpMat.stCol_1)[1];
         ((unsigned int*)_p_stVecJ)[2] = ((unsigned int*)&TmpMat.stCol_1)[2];
