@@ -146,9 +146,81 @@ MTH3D_tdstVector_* MTH_p_stRotationMulVector(MTH_stRotation* _p_stRotation, MTH3
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* PS2 MTH scalar helpers: abs.s, sqrt.s and the R5900 accumulator ops have
+   no C form under the baseline. */
+inline float MTH_xAbs(float _xValue)
+{
+    float xResult;
+    asm { abs.s xResult, _xValue }
+    return xResult;
+}
+
+inline float MTH_xSqrt(float _xValue)
+{
+    float xResult;
+    asm { sqrt.s xResult, _xValue }
+    return xResult;
+}
+
+inline float MTH3D_xSqrVector(MTH3D_tdstVector_* _p_stV)
+{
+    float xX, xY, xZ, xResult;
+    xX = _p_stV->xX; xY = _p_stV->xY; xZ = _p_stV->xZ;
+    asm { mula.s xX, xX }
+    asm { madda.s xY, xY }
+    asm { madd.s xResult, xZ, xZ }
+    return xResult;
+}
+
+inline float MTH3D_xDotProductVector(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
+{
+    float xAX, xBX, xAY, xBY, xAZ, xBZ, xResult;
+    xBX = _p_stB->xX; xAX = _p_stA->xX; xBY = _p_stB->xY; xAY = _p_stA->xY; xBZ = _p_stB->xZ; xAZ = _p_stA->xZ;
+    asm { mula.s xAX, xBX }
+    asm { madda.s xAY, xBY }
+    asm { madd.s xResult, xAZ, xBZ }
+    return xResult;
+}
+
+float acosf(float x);
+
 MTH_stRotation* MTH_p_stRotationComputeRotationWith2Vectors(MTH_stRotation* _p_stResult, MTH3D_tdstVector_* _p_stSrcUnitVector, MTH3D_tdstVector_* _p_stImaUnitVector)
 {
     float xNorm;
     MTH3D_tdstVector_* p_stAxis;
-    /* TODO: decompile from asm/... */
+
+    p_stAxis = &_p_stResult->m_stAxis;
+
+    p_stAxis->xX = _p_stSrcUnitVector->xY * _p_stImaUnitVector->xZ - _p_stSrcUnitVector->xZ * _p_stImaUnitVector->xY;
+    p_stAxis->xY = _p_stSrcUnitVector->xZ * _p_stImaUnitVector->xX - _p_stSrcUnitVector->xX * _p_stImaUnitVector->xZ;
+    p_stAxis->xZ = _p_stSrcUnitVector->xX * _p_stImaUnitVector->xY - _p_stSrcUnitVector->xY * _p_stImaUnitVector->xX;
+
+    if (MTH_xAbs(p_stAxis->xX) < 1e-5f && MTH_xAbs(p_stAxis->xY) < 1e-5f && MTH_xAbs(p_stAxis->xZ) < 1e-5f)
+    {
+        if (MTH_xAbs(_p_stSrcUnitVector->xX - _p_stImaUnitVector->xX) < 1e-5f && MTH_xAbs(_p_stSrcUnitVector->xY - _p_stImaUnitVector->xY) < 1e-5f && MTH_xAbs(_p_stSrcUnitVector->xZ - _p_stImaUnitVector->xZ) < 1e-5f)
+        {
+            _p_stResult->m_xAngle = 0.0f; p_stAxis->xX = 0.0f; p_stAxis->xY = 0.0f; p_stAxis->xZ = 0.0f;
+            return _p_stResult;
+        }
+        _p_stResult->m_xAngle = 3.1415927f;
+        return _p_stResult;
+    }
+
+    xNorm = MTH_xSqrt(MTH3D_xSqrVector(p_stAxis)); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; p_stAxis->xX = xNorm * p_stAxis->xX; p_stAxis->xY = xNorm * p_stAxis->xY; p_stAxis->xZ = xNorm * p_stAxis->xZ; }
+
+    xNorm = MTH3D_xDotProductVector(_p_stSrcUnitVector, _p_stImaUnitVector);
+    if (xNorm <= -1.0f)
+    {
+        _p_stResult->m_xAngle = 3.1415927f;
+        return _p_stResult;
+    }
+    if (xNorm >= 1.0f)
+    {
+        _p_stResult->m_xAngle = 0.0f; p_stAxis->xX = 0.0f; p_stAxis->xY = 0.0f; p_stAxis->xZ = 0.0f;
+        return _p_stResult;
+    }
+
+    _p_stResult->m_xAngle = acosf(xNorm);
+
+    return _p_stResult;
 }

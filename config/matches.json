@@ -21975,6 +21975,21 @@
       "status": "MISMATCH",
       "target_size": 372,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00302900",
+      "candidate_size": 584,
+      "first_difference": 4,
+      "implementation": "MTH_stRotation* MTH_p_stRotationComputeRotationWith2Vectors(MTH_stRotation* _p_stResult, MTH3D_tdstVector_* _p_stSrcUnitVector, MTH3D_tdstVector_* _p_stImaUnitVector)\n{\n    float xNorm;\n    MTH3D_tdstVector_* p_stAxis;\n\n    p_stAxis = &_p_stResult->m_stAxis;\n\n    p_stAxis->xX = _p_stSrcUnitVector->xY * _p_stImaUnitVector->xZ - _p_stSrcUnitVector->xZ * _p_stImaUnitVector->xY;\n    p_stAxis->xY = _p_stSrcUnitVector->xZ * _p_stImaUnitVector->xX - _p_stSrcUnitVector->xX * _p_stImaUnitVector->xZ;\n    p_stAxis->xZ = _p_stSrcUnitVector->xX * _p_stImaUnitVector->xY - _p_stSrcUnitVector->xY * _p_stImaUnitVector->xX;\n\n    if (MTH_xAbs(p_stAxis->xX) < 1e-5f && MTH_xAbs(p_stAxis->xY) < 1e-5f && MTH_xAbs(p_stAxis->xZ) < 1e-5f)\n    {\n        if (MTH_xAbs(_p_stSrcUnitVector->xX - _p_stImaUnitVector->xX) < 1e-5f && MTH_xAbs(_p_stSrcUnitVector->xY - _p_stImaUnitVector->xY) < 1e-5f && MTH_xAbs(_p_stSrcUnitVector->xZ - _p_stImaUnitVector->xZ) < 1e-5f)\n        {\n            _p_stResult->m_xAngle = 0.0f; p_stAxis->xX = 0.0f; p_stAxis->xY = 0.0f; p_stAxis->xZ = 0.0f;\n            return _p_stResult;\n        }\n        _p_stResult->m_xAngle = 3.1415927f;\n        return _p_stResult;\n    }\n\n    xNorm = MTH_xSqrt(MTH3D_xSqrVector(p_stAxis)); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; p_stAxis->xX = xNorm * p_stAxis->xX; p_stAxis->xY = xNorm * p_stAxis->xY; p_stAxis->xZ = xNorm * p_stAxis->xZ; }\n\n    xNorm = MTH3D_xDotProductVector(_p_stSrcUnitVector, _p_stImaUnitVector);\n    if (xNorm <= -1.0f)\n    {\n        _p_stResult->m_xAngle = 3.1415927f;\n        return _p_stResult;\n    }\n    if (xNorm >= 1.0f)\n    {\n        _p_stResult->m_xAngle = 0.0f; p_stAxis->xX = 0.0f; p_stAxis->xY = 0.0f; p_stAxis->xZ = 0.0f;\n        return _p_stResult;\n    }\n\n    _p_stResult->m_xAngle = acosf(xNorm);\n\n    return _p_stResult;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MTH_p_stRotationComputeRotationWith2Vectors",
+      "reason": "Control flow, calls, contracted mula/msub cross product and abs/sqrt/dot asm helpers in place (584/576). Residual: our build materializes the 1e-5f epsilon at function entry and allocates cross-product FP registers differently (retail loads eps after the cross product into f3); same under 3.0.3.",
+      "size": 576,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMMTH.c",
+      "status": "MISMATCH",
+      "target_size": 576,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
