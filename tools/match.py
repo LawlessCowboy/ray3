@@ -949,14 +949,22 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
                       'symbol': symbol.name if symbol else ''}
             relocations.append(record)
             relocation_records.append((record, target_symbol))
-            # A HI16 addend is completed by its paired LO16 (the nearest
-            # following LO16 against the same symbol): the sign-extended low
-            # half can carry into the high half, e.g. g_PS2glContext+0x60e0.
+            # A HI16 addend is completed by its paired LO16: the sign-extended
+            # low half can carry into the high half, e.g. g_PS2glContext+0x60e0.
+            # Like the linker, take the next LO16 against the same symbol in
+            # relocation-table order; MWCC lists a HI16 next to the LO16 that
+            # consumes it even when another LO16 of the symbol sits between
+            # them in the code (recPS2glMultiTexCoord4fvARB). Fall back to the
+            # nearest following LO16 by offset.
             lo_addend = 0
             if reloc_type == 5:
-                pair = min((other for other in section_relocations
-                            if other[2] == 6 and other[1] == symbol_index and other[0] > offset),
-                           default=None)
+                index = section_relocations.index((offset, symbol_index, reloc_type))
+                pair = next((other for other in section_relocations[index + 1:]
+                             if other[2] == 6 and other[1] == symbol_index), None)
+                if pair is None:
+                    pair = min((other for other in section_relocations
+                                if other[2] == 6 and other[1] == symbol_index and other[0] > offset),
+                               default=None)
                 if pair is not None and pair[0] + 4 <= len(section.data):
                     lo_addend = signed16(struct.unpack_from('<I', section.data, pair[0])[0] & 0xFFFF)
             if target_symbol is None or not patch_relocation(candidate_bytes, relative, reloc_type,

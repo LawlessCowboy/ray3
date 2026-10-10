@@ -25926,6 +25926,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x001567b0": {
+      "address": "0x001567b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glMultiTexCoord4fvARB",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x00156d80": {
       "address": "0x00156d80",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -27859,6 +27867,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glColorMask",
       "size": 24,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015db80": {
+      "address": "0x0015db80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "recPS2glMultiColor4fvARB",
+      "size": 72,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -34424,7 +34440,7 @@
     },
     "0x0024c7d0": {
       "address": "0x0024c7d0",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "PS2SQRTF",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/clib/clib.c",
@@ -34440,7 +34456,7 @@
     },
     "0x0024c840": {
       "address": "0x0024c840",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "Strcat",
       "size": 76,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/clib/clib.c",
@@ -34768,7 +34784,7 @@
     },
     "0x002593d0": {
       "address": "0x002593d0",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "InitSectorCache",
       "size": 140,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
@@ -34784,7 +34800,7 @@
     },
     "0x002594b0": {
       "address": "0x002594b0",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GAM_fn_vSetActorToLoad",
       "size": 124,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
@@ -34824,7 +34840,7 @@
     },
     "0x00259c60": {
       "address": "0x00259c60",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vSnifThePlayerIsDead",
       "size": 64,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
@@ -35752,7 +35768,7 @@
     },
     "0x00267ff0": {
       "address": "0x00267ff0",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_ucFindPersonalIdOfPersonalType",
       "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ObjType.c",
@@ -35768,7 +35784,7 @@
     },
     "0x00268100": {
       "address": "0x00268100",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_ucFindFamilyIdOfFamilyType",
       "size": 52,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ObjType.c",
@@ -39768,7 +39784,7 @@
     },
     "0x002a9720": {
       "address": "0x002a9720",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_hGetVisualMaterialFromIndex",
       "size": 24,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
@@ -39808,7 +39824,7 @@
     },
     "0x002a9cd0": {
       "address": "0x002a9cd0",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_lGetCurrentAnimatedTextureNumber",
       "size": 72,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
@@ -39832,7 +39848,7 @@
     },
     "0x002a9d70": {
       "address": "0x002a9d70",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_xGetMaterialTextureScrollingCoef",
       "size": 28,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
@@ -39848,7 +39864,7 @@
     },
     "0x002a9da0": {
       "address": "0x002a9da0",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_xSetMaterialTextureScrollingCoef",
       "size": 72,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
@@ -39872,7 +39888,7 @@
     },
     "0x002a9e90": {
       "address": "0x002a9e90",
-      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_xGetMaterialSpecularCoef",
       "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
