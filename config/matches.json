@@ -22502,6 +22502,21 @@
           "type": 6
         }
       ]
+    },
+    {
+      "address": "0x0025f0b0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void fn_vOneTrame(void)\n{\n    int i;\n    unsigned char uc_ViewPortIndex;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vOneTrame",
+      "reason": "Blocked: retail has eleven handwritten 'mtc0 $zero,$24' markers, several in jal delay slots with no hazard nops (e.g. jal GLI_vEndOfAI / mtc0). Micro-tests on 3.0, 3.0.1, 3.0.3 and 3.0b38: asm {}, block asm, .word 0x4080c000, GCC __asm__, macro and inline-function forms never fill a delay slot. 3.0.1 also adds a nop after mtc0, 3.0.3 and .word do not, and an inline asm function is never inlined. Same blocker as PS2_fn_vEnterCriticalSection. Body not written (scaffold kept).",
+      "size": 548,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Engine.c",
+      "status": "MISMATCH",
+      "target_size": 548,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -22600,6 +22615,14 @@
       "name": "fn_hGetGLDDevice",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/gameitf.c",
+      "status": "MATCH"
+    },
+    "0x0012c020": {
+      "address": "0x0012c020",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "main",
+      "size": 1092,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/rm3/winmain.c",
       "status": "MATCH"
     },
     "0x0012c470": {
@@ -35847,6 +35870,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vChooseTheGoodDesInit",
       "size": 216,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Engine.c",
+      "status": "MATCH"
+    },
+    "0x0025f3c0": {
+      "address": "0x0025f3c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vChooseTheGoodInit",
+      "size": 524,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Engine.c",
       "status": "MATCH"
     },

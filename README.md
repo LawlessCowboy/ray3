@@ -19,12 +19,12 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **2,059 / 4,164** (+4 register-equivalent) | **149,364 / 1,511,580** (**9.8813%**) |
+| **Game code** | **2,061 / 4,164** (+4 register-equivalent) | **150,980 / 1,511,580** (**9.9882%**) |
 | Library code | 807 / 3,668 (+1 register-equivalent) | 46,192 / 756,524 (6.1058%) |
-| **Total** | **2,866 / 7,832** (+5 register-equivalent) | **195,556 / 2,268,104** (**8.6220%**) |
+| **Total** | **2,868 / 7,832** (+5 register-equivalent) | **197,172 / 2,268,104** (**8.6933%**) |
 
-- Translation units (`python3 tools/match.py tus --summary`): **104 / 384**
-  fully matched (game 100 / 347, library 4 / 37), with 224 more partially
+- Translation units (`python3 tools/match.py tus --summary`): **105 / 384**
+  fully matched (game 101 / 347, library 4 / 37), with 223 more partially
   matched. Only sources recovered into `src/Rayman3/` are counted, so SDK and
   runtime code without a source file is excluded.
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not

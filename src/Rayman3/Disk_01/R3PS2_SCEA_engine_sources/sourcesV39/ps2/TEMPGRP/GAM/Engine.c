@@ -1400,9 +1400,9 @@ tdstEngineStructure_ g_stEngineStructure;
 char GLI_g_StereoVisionMode;
 char GLI_g_AfterEffect;
 unsigned char g_ucGameModuleId;
-void (*fn_vDisplayAll)(unsigned char);
-void (*fn_vEngine)(unsigned char);
-char szLastFixLoaded;
+void fn_vDisplayAll(unsigned char _ucViewPortIndex);
+void fn_vEngine(void);
+extern char szLastFixLoaded[256];
 tdstDataPath_ g_stDataPath;
 unsigned char g_bFrozenWhenStart;
 
@@ -1603,10 +1603,88 @@ void fn_vChooseTheGoodDesInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vFirstInitEngine(void);
+void fn_vFreeNextLevelName(void);
+void GAM_fn_vActualizeAllGameViewportSize(void);
+void fn_vInitGameLoop(void);
+void fn_vValidateAllOption(void);
+void fn_vStartEngineClock(void);
+void fn_vSaveEngineClock(void);
+void GLI_fn_vInitInstantFadeIn(unsigned int ulNumberOfFrame);
+void SAV2_fn_vUpdateVibrations(void);
+void IPT_fn_vDesinitInput(void);
+void PLD_fn_vLoadFix(void);
+void IPT_fn_vInitInput();
+void GLI_fn_vCloseBigFileTextures(void);
+void GAM_fn_vLoadTextures(void);
+void fn_vInitLevelLoop(void);
+void fn_vInitDeadLoop(void);
+int sprintf(char* s, const char* format, ...);
+int strcasecmp(const char* s1, const char* s2);
+
 void fn_vChooseTheGoodInit(void)
 {
     char a256_cDataDirectory[255];
-    /* TODO: decompile from asm/... */
+
+    g_stEngineStructure.ucCurrentImportance = 10;
+
+    switch (g_stEngineStructure.eEngineMode)
+    {
+    case 10:
+        g_stEngineStructure.eEngineMode = 1;
+    case 1:
+        fn_vFirstInitEngine();
+        fn_vFreeNextLevelName();
+        fn_vChangeEngineMode(3);
+    case 3:
+        GAM_fn_vActualizeAllGameViewportSize();
+        fn_vInitGameLoop();
+        p_fn_vEngine = (int)fn_vEngine;
+        p_fn_vDisplayAll = (int)fn_vDisplayAll;
+        fn_vChangeEngineMode(9);
+        fn_vValidateAllOption();
+        fn_vFreeNextLevelName();
+        fn_vStartEngineClock();
+        if (g_bFrozenWhenStart)
+        {
+            fn_vSaveEngineClock();
+            g_stEngineStructure.bEngineFrozen = 1;
+        }
+        GLI_fn_vInitInstantFadeIn(4);
+        SAV2_fn_vUpdateVibrations();
+        break;
+    case 5:
+        if (bChangedGamedataDirectory)
+        {
+            bChangedGamedataDirectory = 0;
+            sprintf(a256_cDataDirectory, "%sBIN/fix.lvl", g_stDataPath.szGameData);
+            if (strcasecmp(szLastFixLoaded, a256_cDataDirectory))
+            {
+                IPT_fn_vDesinitInput();
+                PLD_fn_vUnLoadFix();
+                PLD_fn_vLoadFix();
+                IPT_fn_vInitInput(15, 0, 0, 0);
+                GLI_fn_vCloseBigFileTextures();
+                GAM_fn_vLoadTextures();
+            }
+        }
+        p_fn_vEngine = (int)fn_vEngine;
+        p_fn_vDisplayAll = (int)fn_vDisplayAll;
+        fn_vInitLevelLoop();
+        fn_vChangeEngineMode(9);
+        fn_vValidateAllOption();
+        GLI_fn_vInitInstantFadeIn(4);
+        break;
+    case 7:
+        fn_vInitDeadLoop();
+        fn_vValidateAllOption();
+        fn_vChangeEngineMode(9);
+        GLI_fn_vInitInstantFadeIn(4);
+        break;
+    default:
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 17, -1, 255, 255, NULL);
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 439–450 */
