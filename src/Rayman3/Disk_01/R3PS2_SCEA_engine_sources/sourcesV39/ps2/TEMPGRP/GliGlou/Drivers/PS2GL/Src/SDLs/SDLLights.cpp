@@ -1646,12 +1646,74 @@ void GLI_vCalculateLightingMatricesGhost(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLI_vSetParaSphericalLight__FP14GLI_tdstLight_UiPA4_A4_fPA4_A4_fPA4_f(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4])
+extern "C" void sceVu0ScaleVector(float* v0, float* v1, float s);
+
+int GLI_vSetParaSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4])
 {
     MTH3D_tdstVector_ stVect;
     float xDamp;
     float fNorm;
-    /* TODO: decompile from asm/... */
+
+    {
+        MTH4D_tdstMatrix_* pLightMatrix = &pLight->stMatrix.stTransformMatrix;
+        float* pCenter = (float*)(GLI_BIG_GLOBALS_p_stObj + 0x30); /* p_stObj->xBoudingSphereCenter */
+        MTH4D_tdstMatrix_* pObjMatrix = &((MAT_tdstTransformation_*)g_p_stCurrentMatrix)->stTransformMatrix;
+        int iSqDist;
+
+        /* VU0 macro mode: squared distance from the light to the object's
+           bounding-sphere centre (no C form). */
+        asm {
+            lqc2 vf1, 0x0(pCenter)
+            lqc2 vf2, 0x30(pLightMatrix)
+            lqc2 vf4, 0x0(pObjMatrix)
+            vaddx.w vf1, vf0, vf0x
+            lqc2 vf5, 0x10(pObjMatrix)
+            lqc2 vf6, 0x20(pObjMatrix)
+            lqc2 vf7, 0x30(pObjMatrix)
+            vmulax.xyzw ACC, vf4, vf1x
+            vmadday.xyzw ACC, vf5, vf1y
+            vmaddaz.xyzw ACC, vf6, vf1z
+            vmaddw.xyzw vf9, vf7, vf1w
+            vsub.xyz vf10, vf2, vf9
+            vsub.w vf10, vf0, vf0
+            vmul.xyz vf11, vf10, vf10
+            vaddy.x vf11, vf11, vf11y
+            vaddz.x vf11, vf11, vf11z
+            qmfc2 iSqDist, vf11
+            mtc1 iSqDist, fNorm
+        }
+    }
+
+    if (fNorm > pLight->SqFar)
+    {
+        float* pZero = vZeroVect;
+        float* pDst = (*LightPos)[LightID];
+
+        asm {
+            lqc2 vf1, 0x0(pZero)
+            sqc2 vf1, 0x0(pDst)
+        }
+        return 0;
+    }
+
+    if (fNorm <= pLight->SqNear)
+        xDamp = 0.5f;
+    else
+        xDamp = pLight->OOSqDiv * (pLight->SqFar - fNorm);
+
+    *(int*)&stVect.xX = *(int*)&pLight->stMatrix.stTransformMatrix.stCol_2.xX; *(int*)&stVect.xY = *(int*)&pLight->stMatrix.stTransformMatrix.stCol_2.xY; *(int*)&stVect.xZ = *(int*)&pLight->stMatrix.stTransformMatrix.stCol_2.xZ;
+    (*LightPos)[LightID][0] = -stVect.xX;
+    (*LightPos)[LightID][1] = -stVect.xY;
+    (*LightPos)[LightID][2] = -stVect.xZ;
+    (*LightPos)[LightID][3] = 0.0f;
+    (*LightColor)[LightID][0] = pLight->stColor.xR;
+    (*LightColor)[LightID][1] = pLight->stColor.xG;
+    (*LightColor)[LightID][2] = pLight->stColor.xB;
+    (*LightColor)[LightID][3] = pLight->stColor.xA;
+
+    sceVu0ScaleVector((*LightColor)[LightID], (*LightColor)[LightID], xDamp);
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 146–310 */

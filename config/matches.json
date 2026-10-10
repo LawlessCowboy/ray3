@@ -21960,6 +21960,21 @@
       "status": "MISMATCH",
       "target_size": 356,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002dbea0",
+      "candidate_size": 336,
+      "first_difference": 96,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vSetParaSphericalLight__FP14GLI_tdstLight_UiPA4_A4_fPA4_A4_fPA4_f",
+      "reason": "VU0 distance asm block (lqc2..vaddz.x, qmfc2/mtc1) matches exactly. Residual: retail builds each (*LightPos)[LightID][k] address as (base+4k)+LightID*16 (unfolded) and reads the stVect copy sp-direct. ((float*)&(*LightPos)[0][k])[LightID*4] reproduces the unfolded form only under 3.0.1, which then CSEs &stVect; 3.0.3 (this file's compiler) folds both. Looks like an intermediate compiler build.",
+      "size": 372,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLLights.cpp",
+      "status": "MISMATCH",
+      "target_size": 372,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
