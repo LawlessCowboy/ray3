@@ -222,16 +222,92 @@ int gs_aDEFTableOfTextureMemoryChannels;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern char g_bForceWhiteFog;
+extern float Fog_RandomValue;
+extern tdstFogParams_* GLI_gp_stCurrentFog;
+extern tdstFogParams_* GLI_gp_stLastFog;
+extern tdstFogParams_ GLI_ga_stFogTable[16];
+void GLI_vSetFogParameters(float start, float end, float* color);
+
 void GLI_vSetFog2(float xBlendStart, float xDepthStart, float xBlendEnd, float xDepthEnd, float xInfinite, GEO_tdstColor_* p_stFogColor)
 {
-    float xFogIntensityEnd;
-    float xFogIntensityStart;
-    float xZDepthConstant;
-    float xZDepthEnd;
-    float xZDepthStart2;
-    float B;
     float A;
-    /* TODO: decompile from asm/... */
+    float B;
+    float xZDepthStart2;
+    float xZDepthEnd;
+    float xZDepthConstant;
+    float xFogIntensityStart;
+    float xFogIntensityEnd;
+
+    if (g_bForceWhiteFog)
+    {
+        GLI_gp_stCurrentFog->stColor.xR = 1.0f;
+        GLI_gp_stCurrentFog->stColor.xG = 1.0f;
+        GLI_gp_stCurrentFog->stColor.xB = 1.0f;
+        GLI_gp_stCurrentFog->stColor.xA = 1.0f;
+        xDepthEnd = 60.0f + 40.0f * Fog_RandomValue;
+        xDepthStart = 0.0f;
+        xBlendStart = 10.0f;
+        xBlendEnd = 150.0f + 55.0f * Fog_RandomValue;
+    }
+
+    if (xDepthEnd < xDepthStart)
+    {
+        GLI_gp_stCurrentFog->xDepthStart = xDepthEnd;
+        GLI_gp_stCurrentFog->xDepthEnd = xDepthStart;
+    }
+    else
+    {
+        GLI_gp_stCurrentFog->xDepthStart = xDepthStart;
+        GLI_gp_stCurrentFog->xDepthEnd = xDepthEnd;
+    }
+
+    if (xInfinite < GLI_gp_stCurrentFog->xDepthEnd)
+        GLI_gp_stCurrentFog->xInfinite = xDepthEnd;
+    else
+        GLI_gp_stCurrentFog->xInfinite = xInfinite;
+
+    if (xBlendStart < 0.0f)
+        xBlendStart = 0.0f;
+    else if (xBlendStart > 255.0f)
+        xBlendStart = 255.0f;
+
+    if (xBlendEnd < 0.0f)
+        xBlendEnd = 0.0f;
+    else if (xBlendEnd > 255.0f)
+        xBlendEnd = 255.0f;
+
+    GLI_gp_stCurrentFog->xBlendStart = xBlendStart;
+    GLI_gp_stCurrentFog->xBlendEnd = xBlendEnd;
+    GLI_gp_stCurrentFog->stColor = *p_stFogColor;
+
+    xFogIntensityStart = (1.0f / 255.0f) * xBlendStart;
+    xFogIntensityEnd = (1.0f / 255.0f) * xBlendEnd;
+
+    xZDepthConstant = xDepthEnd - xDepthStart;
+    if (xZDepthConstant)
+    {
+        A = (xFogIntensityEnd - xFogIntensityStart) / xZDepthConstant;
+        B = xFogIntensityStart - A * xDepthStart;
+        xZDepthStart2 = -B / A;
+        xZDepthEnd = (1.0f - B) / A;
+    }
+    else
+    {
+        xZDepthStart2 = 0.0f;
+        xZDepthEnd = xDepthEnd;
+    }
+
+    if (p_stFogColor->xR < 0.0f) p_stFogColor->xR = 0.0f; else if (p_stFogColor->xR > 1.0f) p_stFogColor->xR = 1.0f;
+    if (p_stFogColor->xG < 0.0f) p_stFogColor->xG = 0.0f; else if (p_stFogColor->xG > 1.0f) p_stFogColor->xG = 1.0f;
+    if (p_stFogColor->xB < 0.0f) p_stFogColor->xB = 0.0f; else if (p_stFogColor->xB > 1.0f) p_stFogColor->xB = 1.0f;
+
+    GLI_vSetFogParameters(xZDepthStart2, xZDepthEnd, (float*)p_stFogColor);
+
+    GLI_BIG_GLOBALS_p_stActiveFog = (int)GLI_gp_stCurrentFog;
+    GLI_gp_stCurrentFog++;
+    if (GLI_gp_stCurrentFog == GLI_gp_stLastFog)
+        GLI_gp_stCurrentFog = GLI_ga_stFogTable;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Init_Gli.c lines 217–217 */

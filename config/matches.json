@@ -22215,6 +22215,293 @@
       "status": "MISMATCH",
       "target_size": 452,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0027bc70",
+      "candidate_size": 528,
+      "first_difference": 20,
+      "implementation": "void fn_vInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, unsigned short uwFirstFrame)\n{\n    unsigned char ucMemoryType;\n    unsigned char bBTLevel;\n    unsigned char i;\n    tdstEvent_* p_stEvent;\n    tdstAnim3d_* p_stAnim;\n    tdst3dData_* h_3dData;\n\n    ucMemoryType = 0;\n    bBTLevel = 0;\n    if (fn_bIsInFix((p_stSuperObject->ulTypeOfLinkedObject != 2) ? NULL : p_stSuperObject->hLinkedObject.p_stCharacter) && !GAM_fn_bIsEngineInFixMode())\n    {\n        ucMemoryType = HMU_fn_ucGetActualNormalMemoryBlockUsed();\n        HMU_fn_vSetMemoriesInFixMode();\n        bBTLevel = 1;\n    }\n\n    h_3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;\n    if (h_3dData->h_CurrentState)\n    {\n        p_stAnim = fn_p_stGetAnimInState(h_3dData->h_CurrentState);\n        p_stEvent = fn_p_GetEventsAddress(p_stAnim, uwFirstFrame, h_3dData->h_CurrentObjectsTable);\n        if (p_stEvent)\n        {\n            h_3dData->d_ucEventActivation = (unsigned char*)HMU_fn_p_vMalloc(p_stAnim->ucNumberOfEvents, 1);\n            if (uwFirstFrame)\n            {\n                for (i = 0; i < p_stAnim->ucNumberOfEvents && p_stEvent[i].uwFrameNumber < uwFirstFrame; i++)\n                    ;\n                h_3dData->ucNextEvent = i;\n            }\n            else if (fn_scGetSpeedInState(h_3dData->h_CurrentState) > 0)\n            {\n                h_3dData->ucNextEvent = 0;\n            }\n            else\n            {\n                h_3dData->ucNextEvent = p_stAnim->ucNumberOfEvents - 1;\n            }\n            for (i = 0; i < p_stAnim->ucNumberOfEvents; i++)\n            {\n                h_3dData->d_ucEventActivation[i] = p_stEvent->p_stfEventInTBL->ucFirstCall;\n                p_stEvent++;\n            }\n        }\n        if (bBTLevel)\n        {\n            if (ucMemoryType == HMU_fn_ucGetLevelNormalMemoryBlock())\n                HMU_fn_vSetMemoriesInLevelMode();\n            else if (fn_lGetTransitionBloc() != 1)\n                HMU_fn_vSetMemoriesInTransition1Mode();\n            else\n                HMU_fn_vSetMemoriesInTransition2Mode();\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vInitAllEvents",
+      "reason": "Control flow, calls and size (528) exact. Retail holds h_3dData->h_CurrentState in s6 across calls, as if from a local missing from the debug list. Retail also re-extends uwFirstFrame (andi) at each use, where the candidate CSEs it into a saved register. A state local fixes the first but adds one s-register (532 bytes). fn_p_GetEventsAddress gets 3 args here (a1=frame, a2=h_CurrentObjectsTable) though its body reads only a0.",
+      "size": 528,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_cach.c",
+      "status": "MISMATCH",
+      "target_size": 528,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ed560",
+      "candidate_size": 452,
+      "first_difference": 0,
+      "implementation": "void GLI_vGsStoreFrameBufferInto128x128x16__FPUssiis(unsigned short* _DestinationBuffer, short vram, int WIDTH, int HEIGHT, short CurrentPSM)\n{\n    sceGsStoreImage StoreImage;\n    unsigned char* p_ucLine;\n    unsigned char* p_ucPixel;\n    sceDmaChan* p_stDmaVif;\n    int y;\n    int iLine;\n    unsigned int x;\n    int iColumn;\n\n    p_ucLine = (unsigned char*)malloc(WIDTH * 4);\n    p_stDmaVif = sceDmaGetChan(1);\n    sceDmaGetChan(2);\n    if (CurrentPSM == 0x31)\n        CurrentPSM = 0x30;\n    if (CurrentPSM == 1)\n        CurrentPSM = 0;\n    for (y = 0, iLine = 0; y < 256; y += 2, iLine++)\n    {\n        sceGsSetDefStoreImage(&StoreImage, vram, WIDTH / 64, CurrentPSM, 0, y, WIDTH, 1);\n        FlushCache(0);\n        sceGsExecStoreImage(&StoreImage, p_ucLine);\n        sceGsSyncPath(0, 0);\n        InvalidDCache(p_ucLine, p_ucLine + WIDTH * 4);\n        p_stDmaVif->chcr.TTE = 1;\n        p_ucPixel = p_ucLine;\n        for (x = 0, iColumn = 0; x < 256; x += 2, iColumn++)\n        {\n            _DestinationBuffer[iColumn + iLine * 128] = ((unsigned int)p_ucPixel[0] >> 3) + ((((unsigned int)p_ucPixel[2] >> 3) << 10) + 0x8000 + (((unsigned int)p_ucPixel[1] >> 3) << 5));\n            p_ucPixel += 8;\n        }\n    }\n    free(p_ucLine);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vGsStoreFrameBufferInto128x128x16__FPUssiis",
+      "reason": "Signature from the mangled name and the Picture.cpp prototype; the debug signature is corrupt. Size (452), calls, relocs and the pixel loop match, with unsigned shifts and a 112-byte aligned store-image struct. Residual: retail sign-extends CurrentPSM on entry, keeps the row counter in s4 with s3=row<<7 recomputed each outer iteration, and spills vram to 0xae(sp) (frame 0x120). The candidate strength-reduces row*128 and keeps vram in s8 (frame 0x110).",
+      "size": 452,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/HMU/Scr/HMU_Main.c",
+      "status": "MISMATCH",
+      "target_size": 452,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00317fd0",
+      "candidate_size": 528,
+      "first_difference": 116,
+      "implementation": "int PIC_bIntersectSegmentWithCollideObject(MTH3D_tdstVector_* p_stCameraPos, MTH3D_tdstVector_* p_stVertex12, COL_tdstCollideObject_* p_stObject, PIC_tdstPickedObject_* p_stPickedObject)\n{\n    short i;\n    MTH3D_tdstVector_ stSouris3D;\n    MTH3D_tdstVector_ stTemp;\n    int bReturn;\n    int bTest;\n    short xNbElements;\n\n    MTH3D_M_vAddVector(&stSouris3D, p_stCameraPos, p_stVertex12);\n    bReturn = 0;\n    bTest = INT_fn_bIntersectSegmentWithFaceOfCollideObject(p_stCameraPos, &stSouris3D, p_stVertex12, p_stObject, 3, &xNbElements, p_stPickedObject->aDEF_stDataOfElement);\n    if (bTest)\n    {\n        MAT_fn_vApplyOnVertex(&stTemp, g_p_stCurrentMatrix, p_stCameraPos);\n        for (i = 0; i < xNbElements; i++)\n        {\n            MAT_fn_vApplyOnVertex(&p_stPickedObject->aDEF_stDataOfElement[i].stHit, g_p_stCurrentMatrix, &p_stPickedObject->aDEF_stDataOfElement[i].stHit);\n            p_stPickedObject->aDEF_stDataOfElement[i].xDistance = MTH3D_M_xVectorGap(&stTemp, &p_stPickedObject->aDEF_stDataOfElement[i].stHit);\n        }\n        p_stPickedObject->xNbElements = xNbElements;\n        bReturn = 1;\n        p_stPickedObject->xModePicking = PIC_C_ModePickingFace;\n    }\n    return bReturn;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PIC_bIntersectSegmentWithCollideObject",
+      "reason": "Built from the WPWayPt MAT_fn_vApplyOnVertex VU0 inline plus an MTH_SQR3_TO/MTH_SQRT_TO distance inline. 528 vs 520 bytes, same control flow and calls. Retail copies the first transform result straight to stTemp's sp offsets and Vtmp.xX straight to 0x40(sp); the inlined version addresses stTemp through hoisted pointer registers. The apply was probably a macro, or took a by-value destination.",
+      "size": 520,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PO/Specif/PhObjs.c",
+      "status": "MISMATCH",
+      "target_size": 520,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a41d0",
+      "candidate_size": 616,
+      "first_difference": 18,
+      "implementation": "void GEO_fn_vAddObjectToSphere(GEO_tdstGeometricObject_* _hGeometricObject, MTH3D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius)\n{\n    MTH3D_tdstVector_ stSphereCenterLocal;\n    GEO_tdstElementSprite_* p_stLocalElementSprite;\n    GEO_tdstElementSpheres_* p_stLocalElementSphere;\n    int lElementCounter;\n    int i;\n    MTH3D_tdstVector_* p_stVertex;\n\n    p_stVertex = _hGeometricObject->d_stListOfPoints;\n    for (i = 0; i < _hGeometricObject->xNbPoints; i++, p_stVertex++)\n    {\n        GEO_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(_p_stSphereCenter, _p_xSphereRadius, _p_stSphereCenter, *_p_xSphereRadius, p_stVertex);\n    }\n\n    for (lElementCounter = 0; lElementCounter < _hGeometricObject->xNbElements; lElementCounter++)\n    {\n        switch (((short*)_hGeometricObject->d_xListOfElementsTypes)[lElementCounter])\n        {\n        case 3:\n            p_stLocalElementSprite = ((GEO_tdstElementSprite_**)_hGeometricObject->d_stListOfElements)[lElementCounter];\n            for (i = 0; i < p_stLocalElementSprite->xNbSprites; i++)\n            {\n                float xX;\n                float xY;\n                float xSqrNorm;\n                float xRadius;\n\n                xX = p_stLocalElementSprite->d_stListOfSprites[i].stSize.xX * (p_stLocalElementSprite->d_stListOfSprites[i].hSprite->d_xSizeOfSprite->xX + p_stLocalElementSprite->d_stListOfSprites[i].hSprite->d_xDisplacementOfSprite->xX);\n                xY = p_stLocalElementSprite->d_stListOfSprites[i].stSize.xY * (p_stLocalElementSprite->d_stListOfSprites[i].hSprite->d_xSizeOfSprite->xY + p_stLocalElementSprite->d_stListOfSprites[i].hSprite->d_xDisplacementOfSprite->xY);\n                stSphereCenterLocal = _hGeometricObject->d_stListOfPoints[p_stLocalElementSprite->d_stListOfSprites[i].xCenterPoint];\n                MTH_SQR2_TO(xSqrNorm, xX, xY) MTH_SQRT_TO(xRadius, xSqrNorm)\n                GEO_fn_vComputeBoundingSphereOfTwoSpheres(_p_stSphereCenter, _p_xSphereRadius, _p_stSphereCenter, *_p_xSphereRadius, &stSphereCenterLocal, xRadius);\n            }\n            break;\n        case 7:\n            p_stLocalElementSphere = ((GEO_tdstElementSpheres_**)_hGeometricObject->d_stListOfElements)[lElementCounter];\n            for (i = 0; i < p_stLocalElementSphere->xNbSpheres; i++)\n            {\n                stSphereCenterLocal = _hGeometricObject->d_stListOfPoints[p_stLocalElementSphere->d_stListOfSpheres[i].xCenterPoint];\n                GEO_fn_vComputeBoundingSphereOfTwoSpheres(_p_stSphereCenter, _p_xSphereRadius, _p_stSphereCenter, *_p_xSphereRadius, &stSphereCenterLocal, p_stLocalElementSphere->d_stListOfSpheres[i].xRadius);\n            }\n            break;\n        case 8:\n        case 9:\n            break;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GEO_fn_vAddObjectToSphere",
+      "reason": "Control flow, switch (3 sprites, 7 spheres, 8/9 empty), calls and relocs match; 616 vs 632 bytes. Sprite radius is a 2D norm (mula.s/madd.s/sqrt.s via file-local asm macros). Residual: retail emits the a0..a2 argument moves and &stSphereCenterLocal before the loads and asm, then pads the sqrt with nops before the jal; the candidate puts the moves after the asm. An inline norm in argument position doesn't change this. Saved-register assignment of the params also differs.",
+      "size": 632,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GEO_Ed/GeoBdvEd.c",
+      "status": "MISMATCH",
+      "target_size": 632,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00131510",
+      "candidate_size": 808,
+      "first_difference": 0,
+      "implementation": "int strFileOpen(anon_0* file, char* filename)\n{\n    int ret;\n    char* body = NULL;\n    char fn[256];\n    char devname[64];\n\n    body = index(filename, ':');\n    if (body)\n    {\n        int dlen;\n\n        dlen = body - filename;\n        strncpy(devname, filename, dlen);\n        devname[dlen] = 0;\n        body += 1;\n        if (!strcmp(devname, \"cdrom0\"))\n        {\n            int i;\n            int len = strlen(body);\n            const char* tail;\n\n            file->isOnCD = 1;\n            for (i = 0; i < len; i++)\n            {\n                if (body[i] == '/')\n                    body[i] = '\\\\';\n                body[i] = toupper(body[i]);\n            }\n            tail = (index(filename, ';')) ? \"\" : \";1\";\n            sprintf(fn, \"%s%s\", body, tail);\n        }\n        else\n        {\n            file->isOnCD = 0;\n            sprintf(fn, \"%s:%s\", devname, body);\n        }\n    }\n    else\n    {\n        body = filename;\n        strcpy(devname, \"host0\");\n        file->isOnCD = 0;\n        sprintf(fn, \"%s:%s\", devname, body);\n    }\n\n    printf(\"file: %s\\n\", fn);\n\n    if (file->isOnCD)\n    {\n        anon_2 mode;\n\n        if (!isStrFileInit)\n            isStrFileInit = 1;\n        file->iopBuf = (int)sceSifAllocIopHeap(2048 * 80 + 16);\n        sceCdStInit(80, 5, (file->iopBuf + 15) & ~15);\n        sceCdMmode(PS2_fn_iGetCDMediaMode());\n        sceCdDiskReady(0);\n        while (!SCEECdSearchFile(&last_video_fd, fn))\n            ;\n        file->fp.lsn = last_video_fd.pos;\n        file->fp.size = last_video_fd.size;\n        file->fp.name[0] = 0;\n        file->size = file->fp.size;\n        mode.trycount = 0;\n        mode.spindlctrl = 0;\n        mode.datapattern = 0;\n        while (!sceCdStStart(file->fp.lsn, &mode))\n        {\n            asm { mtc0 zero, $24 }\n        }\n        return 1;\n    }\n    else\n    {\n        sceCdDiskReady(0);\n        file->fd = sceOpen(fn, 1);\n        if (file->fd < 0)\n        {\n            printf(\"Cannot open '%s'(sceOpen)\\n\", fn);\n            return 0;\n        }\n        sceCdDiskReady(0);\n        file->size = sceLseek(file->fd, 0, 2);\n        if (file->size < 0)\n        {\n            printf(\"sceLseek() fails (%s): %d\\n\", fn, file->size);\n            sceClose(file->fd);\n            return 0;\n        }\n        sceCdDiskReady(0);\n        ret = sceLseek(file->fd, 0, 0);\n        if (ret < 0)\n        {\n            printf(\"sceLseek() fails (%s)\\n\", fn);\n            sceClose(file->fd);\n            return 0;\n        }\n    }\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "strFileOpen",
+      "reason": "Sony ezmpeg strFileOpen with Rayman changes: CD path inits only a flag, uses SCEECdSearchFile/last_video_fd retry loops and a handwritten 'mtc0 zero,$24' in the sceCdStStart retry. Uses Sony's declaration order and scopes. 808 vs 804 bytes. Retail keeps body in s0 with a real 'body += 1', enters the toupper loop by jumping to its test without strength-reducing body[i], and saves one fewer s-register (frame 0x1b0). 3.0.3, -O3, -O3,s and -O2 don't reproduce it.",
+      "size": 804,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/strfile.c",
+      "status": "MISMATCH",
+      "target_size": 804,
+      "unresolved_relocations": [
+        {
+          "offset": 60,
+          "symbol": "@97",
+          "type": 5
+        },
+        {
+          "offset": 312,
+          "symbol": "@97",
+          "type": 6
+        },
+        {
+          "offset": 88,
+          "symbol": "@92",
+          "type": 5
+        },
+        {
+          "offset": 104,
+          "symbol": "@92",
+          "type": 6
+        },
+        {
+          "offset": 112,
+          "symbol": "@96",
+          "type": 5
+        },
+        {
+          "offset": 280,
+          "symbol": "@96",
+          "type": 6
+        },
+        {
+          "offset": 224,
+          "symbol": "@94",
+          "type": 5
+        },
+        {
+          "offset": 240,
+          "symbol": "@94",
+          "type": 6
+        },
+        {
+          "offset": 228,
+          "symbol": "@93",
+          "type": 5
+        },
+        {
+          "offset": 236,
+          "symbol": "@93",
+          "type": 6
+        },
+        {
+          "offset": 244,
+          "symbol": "@95",
+          "type": 5
+        },
+        {
+          "offset": 260,
+          "symbol": "@95",
+          "type": 6
+        },
+        {
+          "offset": 316,
+          "symbol": "@96",
+          "type": 5
+        },
+        {
+          "offset": 328,
+          "symbol": "@96",
+          "type": 6
+        },
+        {
+          "offset": 344,
+          "symbol": "@98",
+          "type": 5
+        },
+        {
+          "offset": 356,
+          "symbol": "@98",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x00255250",
+      "candidate_size": 916,
+      "first_difference": 118,
+      "implementation": "unsigned char INT_fn_bIntersectSemiAxeWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, unsigned char* bBack, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal)\n{\n    float xInvR;\n    float xT1;\n    float xT2;\n    float xB;\n\n    if (!INT_fn_bFastRejectIntersectSemiaxeWithSphere(p_stVertex1, p_stVect12, p_stSphereCenter, xSphereRadius))\n        return 0;\n\n    {\n        float xDx;\n        float xDy;\n        float xDz;\n        float xVx;\n        float xVy;\n        float xVz;\n        float xA;\n\n        xDx = p_stVertex1->xX - p_stSphereCenter->xX; xDy = p_stVertex1->xY - p_stSphereCenter->xY; xDz = p_stVertex1->xZ - p_stSphereCenter->xZ;\n        xVx = p_stVect12->xX; xVy = p_stVect12->xY; xVz = p_stVect12->xZ;\n        MTH_DOT3_TO(xA, xVx, xVy, xVz, xVx, xVy, xVz)\n        MTH_DOT3_TO(xB, xVx, xVy, xVz, xDx, xDy, xDz)\n        xB = xB + xB;\n        switch (INT_fn_xTrinomeResolution(xA, xB, MTH3D_M_xSqrNormMinusSqr(xDx, xDy, xDz, xSphereRadius), &xT1, &xT2))\n        {\n        case 2:\n            *p_xT = MTH_M_xMin(xT1, xT2);\n            if (0.0f <= *p_xT)\n            {\n                *bBack = 0;\n                xInvR = 1.0f / xSphereRadius;\n        p_stHit->xX = p_stVertex1->xX + *p_xT * p_stVect12->xX;\n        p_stHit->xY = p_stVertex1->xY + *p_xT * p_stVect12->xY;\n        p_stHit->xZ = p_stVertex1->xZ + *p_xT * p_stVect12->xZ;\n        p_stNormal->xX = p_stHit->xX - p_stSphereCenter->xX;\n        p_stNormal->xY = p_stHit->xY - p_stSphereCenter->xY;\n        p_stNormal->xZ = p_stHit->xZ - p_stSphereCenter->xZ;\n        p_stNormal->xX = xInvR * p_stNormal->xX;\n        p_stNormal->xY = xInvR * p_stNormal->xY;\n        p_stNormal->xZ = xInvR * p_stNormal->xZ;\n        return 1;\n            }\n            *p_xT = MTH_M_xMax(xT1, xT2);\n            if (0.0f <= *p_xT)\n            {\n                *bBack = 1;\n                xInvR = 1.0f / xSphereRadius;\n        p_stHit->xX = p_stVertex1->xX + *p_xT * p_stVect12->xX;\n        p_stHit->xY = p_stVertex1->xY + *p_xT * p_stVect12->xY;\n        p_stHit->xZ = p_stVertex1->xZ + *p_xT * p_stVect12->xZ;\n        p_stNormal->xX = p_stHit->xX - p_stSphereCenter->xX;\n        p_stNormal->xY = p_stHit->xY - p_stSphereCenter->xY;\n        p_stNormal->xZ = p_stHit->xZ - p_stSphereCenter->xZ;\n        p_stNormal->xX = xInvR * p_stNormal->xX;\n        p_stNormal->xY = xInvR * p_stNormal->xY;\n        p_stNormal->xZ = xInvR * p_stNormal->xZ;\n        return 1;\n            }\n            break;\n        case 1:\n            if (0.0f <= xT1)\n            {\n                *bBack = 1;\n                xInvR = 1.0f / xSphereRadius;\n                *p_xT = xT1;\n        p_stHit->xX = p_stVertex1->xX + *p_xT * p_stVect12->xX;\n        p_stHit->xY = p_stVertex1->xY + *p_xT * p_stVect12->xY;\n        p_stHit->xZ = p_stVertex1->xZ + *p_xT * p_stVect12->xZ;\n        p_stNormal->xX = p_stHit->xX - p_stSphereCenter->xX;\n        p_stNormal->xY = p_stHit->xY - p_stSphereCenter->xY;\n        p_stNormal->xZ = p_stHit->xZ - p_stSphereCenter->xZ;\n        p_stNormal->xX = xInvR * p_stNormal->xX;\n        p_stNormal->xY = xInvR * p_stNormal->xY;\n        p_stNormal->xZ = xInvR * p_stNormal->xZ;\n        return 1;\n            }\n            break;\n        }\n        return 0;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "INT_fn_bIntersectSemiAxeWithSphere",
+      "reason": "Size, control flow and relocs exact (916). The dot products and |d|^2-r^2 are R5900 accumulator chains; 3.0.1 can't produce mula/madda/madda/msub from any C ordering tried (micro-tested). min.s/max.s via inline helpers as in Proj.c. Residual: retail interleaves the &xT1/&xT2 argument addiu into the chain and puts msub.s in the jal delay slot, which the candidate's asm (statements, block or inline call argument) never does. Also an f6/f7 swap for v12.x/v12.z. Every compiler build gives the same result.",
+      "size": 916,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/IntersEd.c",
+      "status": "MISMATCH",
+      "target_size": 916,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00258070",
+      "candidate_size": 444,
+      "first_difference": 156,
+      "implementation": "void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg)\n{\n    unsigned char ucI;\n    tdstLastErrorInfo_* p_stLastErrorInfo;\n\n    for (ucI = 0; ucI < 3 && g_stErmTheLastErrorInfo[ucI].uwLastErr != 0 && g_stErmTheLastErrorInfo[ucI].ulChannelId != ulChannelId; ucI++)\n        ;\n    p_stLastErrorInfo = (ucI >= 3) ? NULL : &g_stErmTheLastErrorInfo[ucI];\n\n    if (p_stLastErrorInfo == NULL)\n    {\n        Erm_fn_v_PrintErrMsg(\"Error in the Erm:\", \"There is no more Channel error to raise the new error.\\nPerhaps the constant C_ucErmNbOfErrorChannel is too low.\");\n        if (p_fn_ExitAppliCallBack)\n            ((void (*)(void))p_fn_ExitAppliCallBack)();\n        for (;;)\n            ;\n    }\n\n    if (p_stLastErrorInfo->uwLastErr != 0)\n        Erm_fn_v_PrintErrMsg(\"Strange!\\nThe last error was never treated\", \"\");\n\n    p_stLastErrorInfo->uwLastErr = uwErrNum;\n    p_stLastErrorInfo->ucLastFailedModuleId = ucModuleId;\n    p_stLastErrorInfo->ulChannelId = ulChannelId;\n\n    if (p_stLastErrorInfo->uwLastErr < uwStartOfWarningsId)\n    {\n        if (szPersonalMsg == NULL)\n            Erm_fn_v_PrintErrMsg(\"Fatale error: \", \"\");\n        else\n            Erm_fn_v_PrintErrMsgWithPersonalMsg(\"\\nFatale error: \", \"\", szPersonalMsg);\n        if (p_fn_ExitAppliCallBack)\n            ((void (*)(void))p_fn_ExitAppliCallBack)();\n        for (;;)\n            ;\n    }\n    else\n    {\n        if (szPersonalMsg == NULL)\n            Erm_fn_v_PrintErrMsg(\"Warning error: \", \"\");\n        else\n            Erm_fn_v_PrintErrMsgWithPersonalMsg(\"Warning error: \", \"\", szPersonalMsg);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Erm_fn_v_UpdateLastError",
+      "reason": "8-parameter signature (callers pass 8; szPersonalMsg read from t3, debug drops 3 unreferenced params). Full literals read from the ELF. Under 3.0.1, two 'for(;;);' halts after the exit callback lack retail's 6-nop padding (444/492). 3.0.3 pads them (492/492, 36/37 relocs) but with 5 nops plus a trailing alignment nop where retail has 6 inside the loop. while/do/for spellings all give the same result; 3.0 and 3.0b38 are worse.",
+      "size": 492,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ERM/CpaError.c",
+      "status": "MISMATCH",
+      "target_size": 492,
+      "unresolved_relocations": [
+        {
+          "offset": 216,
+          "symbol": "@156",
+          "type": 5
+        },
+        {
+          "offset": 224,
+          "symbol": "@156",
+          "type": 6
+        },
+        {
+          "offset": 220,
+          "symbol": "@105",
+          "type": 5
+        },
+        {
+          "offset": 232,
+          "symbol": "@105",
+          "type": 6
+        },
+        {
+          "offset": 272,
+          "symbol": "@158",
+          "type": 5
+        },
+        {
+          "offset": 312,
+          "symbol": "@158",
+          "type": 6
+        },
+        {
+          "offset": 276,
+          "symbol": "@157",
+          "type": 5
+        },
+        {
+          "offset": 284,
+          "symbol": "@157",
+          "type": 6
+        },
+        {
+          "offset": 280,
+          "symbol": "@105",
+          "type": 5
+        },
+        {
+          "offset": 292,
+          "symbol": "@105",
+          "type": 6
+        },
+        {
+          "offset": 304,
+          "symbol": "@105",
+          "type": 5
+        },
+        {
+          "offset": 320,
+          "symbol": "@105",
+          "type": 6
+        },
+        {
+          "offset": 356,
+          "symbol": "@159",
+          "type": 5
+        },
+        {
+          "offset": 396,
+          "symbol": "@159",
+          "type": 6
+        },
+        {
+          "offset": 360,
+          "symbol": "@159",
+          "type": 5
+        },
+        {
+          "offset": 368,
+          "symbol": "@159",
+          "type": 6
+        },
+        {
+          "offset": 364,
+          "symbol": "@105",
+          "type": 5
+        },
+        {
+          "offset": 376,
+          "symbol": "@105",
+          "type": 6
+        },
+        {
+          "offset": 388,
+          "symbol": "@105",
+          "type": 5
+        },
+        {
+          "offset": 404,
+          "symbol": "@105",
+          "type": 6
+        }
+      ]
     }
   ],
   "data": {},
@@ -22552,6 +22839,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "vagCallbackLeft",
       "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/read.c",
+      "status": "MATCH"
+    },
+    "0x001310d0": {
+      "address": "0x001310d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "videoCallback",
+      "size": 504,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/read.c",
       "status": "MATCH"
     },
@@ -29499,6 +29794,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Matrix.c",
       "status": "MATCH"
     },
+    "0x00181160": {
+      "address": "0x00181160",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glPushMatrix",
+      "size": 84,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Matrix.c",
+      "status": "MATCH"
+    },
     "0x001811c0": {
       "address": "0x001811c0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -30264,6 +30567,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "mfn_bSynchroniseActorInstance__10CLinkActorFv",
       "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cd060": {
+      "address": "0x001cd060",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_bExecuteActorInstance__10CLinkActorFii",
+      "size": 252,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinkactor.cpp",
       "status": "MATCH"
     },
@@ -32513,6 +32824,14 @@
       "name": "CAM_fn_vComputeRealWantedPos",
       "size": 296,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MATCH"
+    },
+    "0x00205ef0": {
+      "address": "0x00205ef0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_p_stIs",
+      "size": 724,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Cond.c",
       "status": "MATCH"
     },
     "0x002062b0": {
@@ -34947,6 +35266,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/OctreeGO.c",
       "status": "MATCH"
     },
+    "0x00257bf0": {
+      "address": "0x00257bf0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "COL_fn_vExploreRecursiveOctreeWithSegment",
+      "size": 600,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/OctreeGO.c",
+      "status": "MATCH"
+    },
     "0x00257e50": {
       "address": "0x00257e50",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -34977,6 +35304,14 @@
       "name": "fn_vSetGameDataPath",
       "size": 48,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/DPT/DPT.c",
+      "status": "MATCH"
+    },
+    "0x00258260": {
+      "address": "0x00258260",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Erm_fn_ClearLastError",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ERM/CpaError.c",
       "status": "MATCH"
     },
     "0x002583b0": {
@@ -35491,6 +35826,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Collisio.c",
       "status": "MATCH"
     },
+    "0x0025ef40": {
+      "address": "0x0025ef40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "COL_lHaveITakeSThgIntoTheMug",
+      "size": 340,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/effect.c",
+      "status": "MATCH"
+    },
     "0x0025f0a0": {
       "address": "0x0025f0a0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -35784,6 +36127,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vAnalyse3DOSSpecialInputActions",
       "size": 304,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/LipsSync.c",
+      "status": "MATCH"
+    },
+    "0x00265210": {
+      "address": "0x00265210",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vPlayNewLipsSynchro",
+      "size": 452,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/LipsSync.c",
       "status": "MATCH"
     },
@@ -37947,6 +38298,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_int.c",
       "status": "MATCH"
     },
+    "0x0027c0c0": {
+      "address": "0x0027c0c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_v_QuatToMatrix",
+      "size": 300,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_int.c",
+      "status": "MATCH"
+    },
     "0x0027c1f0": {
       "address": "0x0027c1f0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -39947,6 +40306,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Fog.c",
       "status": "MATCH"
     },
+    "0x002a85d0": {
+      "address": "0x002a85d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vSetFog2",
+      "size": 728,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Init_Gli.c",
+      "status": "MATCH"
+    },
     "0x002a88b0": {
       "address": "0x002a88b0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -40361,6 +40728,14 @@
       "name": "GLI_vGetGlobalAlpha",
       "size": 20,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
+      "status": "MATCH"
+    },
+    "0x002aac80": {
+      "address": "0x002aac80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vSetGlobalAlpha",
+      "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Proj.c",
       "status": "MATCH"
     },
     "0x002aaf40": {
@@ -40840,6 +41215,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vCleanSpecificStructure",
       "size": 136,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/spritegli.c",
+      "status": "MATCH"
+    },
+    "0x002b06d0": {
+      "address": "0x002b06d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vClearViewportRegion",
+      "size": 200,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/spritegli.c",
+      "status": "MATCH"
+    },
+    "0x002b07a0": {
+      "address": "0x002b07a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vDisplayFrame",
+      "size": 192,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/spritegli.c",
       "status": "MATCH"
     },
@@ -43907,6 +44298,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/dupobjmp.c",
       "status": "MATCH"
     },
+    "0x00314fa0": {
+      "address": "0x00314fa0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MOR_fn_vDeleteGeometricObject",
+      "size": 508,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/dupobjmp.c",
+      "status": "MATCH"
+    },
     "0x00315bf0": {
       "address": "0x00315bf0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -43968,6 +44367,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "PO_fn_hGetVisualSet",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ps2/ps2init.c",
+      "status": "MATCH"
+    },
+    "0x00318200": {
+      "address": "0x00318200",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "ClearVRAM",
+      "size": 528,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ps2/ps2init.c",
       "status": "MATCH"
     },
@@ -44656,6 +45063,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SPO_ReinitSuperimposedArray",
       "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/Specif/HiePcDrw.c",
+      "status": "MATCH"
+    },
+    "0x003228f0": {
+      "address": "0x003228f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vSendOneModuleToViewPort",
+      "size": 656,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/Specif/HiePcDrw.c",
       "status": "MATCH"
     },

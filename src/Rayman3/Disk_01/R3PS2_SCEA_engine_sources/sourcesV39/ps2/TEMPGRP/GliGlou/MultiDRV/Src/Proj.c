@@ -124,6 +124,11 @@ inline float MTH_M_xMax(float _xA, float _xB)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Scoped opt_propagation off keeps the named constant locals in source order;
+ * without it MWCC swaps the 1.0f and 0.0f FPRs and moves the hazard nop
+ * (measured pragma sweep; declaration order alone cannot reach it). */
+#pragma push
+#pragma opt_propagation off
 void GLI_vSetGlobalAlpha(float Alpha)
 {
     float fAlpha;
@@ -134,3 +139,4 @@ void GLI_vSetGlobalAlpha(float Alpha)
     fAlpha = MTH_M_xMax(fAlpha, fZero);
     GLI_BIG_GLOBALS_xGlobalAlpha = fAlpha;
 }
+#pragma pop

@@ -1163,6 +1163,10 @@ void impPS2glPopMatrix(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Scoped peephole off: with it the pCurStack++ store and the source pointer
+ * load keep retail's register order (measured pragma sweep; was EQUIVALENT). */
+#pragma push
+#pragma peephole off
 void impPS2glPushMatrix(void)
 {
     __int128 v3, v2, v1, v0;
@@ -1178,6 +1182,7 @@ void impPS2glPushMatrix(void)
     dest[3] = v3;
     ++*(int*)g_PS2glContext.piCurStackDepth;
 }
+#pragma pop
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 481–484 */
 /* addr: 0x001811c0  size: 64 bytes */

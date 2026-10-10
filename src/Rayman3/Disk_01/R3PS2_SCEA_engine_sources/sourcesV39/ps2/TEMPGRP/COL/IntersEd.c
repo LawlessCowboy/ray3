@@ -319,13 +319,125 @@ short COL_g_xSelectedDepth;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* R5900 accumulator dot products and min.s/max.s have no C form under the
+ * baseline (see Proj.c and DNMCame.c); scalar operands only. */
+#define MTH_DOT3_TO(_result, _ax, _ay, _az, _bx, _by, _bz) \
+    asm { mula.s _ax, _bx }                                  \
+    asm { madda.s _ay, _by }                                 \
+    asm { madd.s _result, _az, _bz }
+
+/* |d|^2 - r^2 as one accumulator chain (original name unknown). */
+inline float MTH3D_M_xSqrNormMinusSqr(float _xX, float _xY, float _xZ, float _xR)
+{
+    float _xResult;
+    asm
+    {
+        mula.s _xX, _xX
+        madda.s _xY, _xY
+        madda.s _xZ, _xZ
+        msub.s _xResult, _xR, _xR
+    }
+    return _xResult;
+}
+
+inline float MTH_M_xMin(float _xA, float _xB)
+{
+    float _xResult;
+    asm { min.s _xResult, _xA, _xB }
+    return _xResult;
+}
+
+inline float MTH_M_xMax(float _xA, float _xB)
+{
+    float _xResult;
+    asm { max.s _xResult, _xA, _xB }
+    return _xResult;
+}
+
+unsigned char INT_fn_bFastRejectIntersectSemiaxeWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);
+short INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2);
+
 unsigned char INT_fn_bIntersectSemiAxeWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, unsigned char* bBack, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal)
 {
     float xInvR;
-    float xT2;
     float xT1;
+    float xT2;
     float xB;
-    /* TODO: decompile from asm/... */
+
+    if (!INT_fn_bFastRejectIntersectSemiaxeWithSphere(p_stVertex1, p_stVect12, p_stSphereCenter, xSphereRadius))
+        return 0;
+
+    {
+        float xDx;
+        float xDy;
+        float xDz;
+        float xVx;
+        float xVy;
+        float xVz;
+        float xA;
+
+        xDx = p_stVertex1->xX - p_stSphereCenter->xX; xDy = p_stVertex1->xY - p_stSphereCenter->xY; xDz = p_stVertex1->xZ - p_stSphereCenter->xZ;
+        xVx = p_stVect12->xX; xVy = p_stVect12->xY; xVz = p_stVect12->xZ;
+        MTH_DOT3_TO(xA, xVx, xVy, xVz, xVx, xVy, xVz)
+        MTH_DOT3_TO(xB, xVx, xVy, xVz, xDx, xDy, xDz)
+        xB = xB + xB;
+        switch (INT_fn_xTrinomeResolution(xA, xB, MTH3D_M_xSqrNormMinusSqr(xDx, xDy, xDz, xSphereRadius), &xT1, &xT2))
+        {
+        case 2:
+            *p_xT = MTH_M_xMin(xT1, xT2);
+            if (0.0f <= *p_xT)
+            {
+                *bBack = 0;
+                xInvR = 1.0f / xSphereRadius;
+        p_stHit->xX = p_stVertex1->xX + *p_xT * p_stVect12->xX;
+        p_stHit->xY = p_stVertex1->xY + *p_xT * p_stVect12->xY;
+        p_stHit->xZ = p_stVertex1->xZ + *p_xT * p_stVect12->xZ;
+        p_stNormal->xX = p_stHit->xX - p_stSphereCenter->xX;
+        p_stNormal->xY = p_stHit->xY - p_stSphereCenter->xY;
+        p_stNormal->xZ = p_stHit->xZ - p_stSphereCenter->xZ;
+        p_stNormal->xX = xInvR * p_stNormal->xX;
+        p_stNormal->xY = xInvR * p_stNormal->xY;
+        p_stNormal->xZ = xInvR * p_stNormal->xZ;
+        return 1;
+            }
+            *p_xT = MTH_M_xMax(xT1, xT2);
+            if (0.0f <= *p_xT)
+            {
+                *bBack = 1;
+                xInvR = 1.0f / xSphereRadius;
+        p_stHit->xX = p_stVertex1->xX + *p_xT * p_stVect12->xX;
+        p_stHit->xY = p_stVertex1->xY + *p_xT * p_stVect12->xY;
+        p_stHit->xZ = p_stVertex1->xZ + *p_xT * p_stVect12->xZ;
+        p_stNormal->xX = p_stHit->xX - p_stSphereCenter->xX;
+        p_stNormal->xY = p_stHit->xY - p_stSphereCenter->xY;
+        p_stNormal->xZ = p_stHit->xZ - p_stSphereCenter->xZ;
+        p_stNormal->xX = xInvR * p_stNormal->xX;
+        p_stNormal->xY = xInvR * p_stNormal->xY;
+        p_stNormal->xZ = xInvR * p_stNormal->xZ;
+        return 1;
+            }
+            break;
+        case 1:
+            if (0.0f <= xT1)
+            {
+                *bBack = 1;
+                xInvR = 1.0f / xSphereRadius;
+                *p_xT = xT1;
+        p_stHit->xX = p_stVertex1->xX + *p_xT * p_stVect12->xX;
+        p_stHit->xY = p_stVertex1->xY + *p_xT * p_stVect12->xY;
+        p_stHit->xZ = p_stVertex1->xZ + *p_xT * p_stVect12->xZ;
+        p_stNormal->xX = p_stHit->xX - p_stSphereCenter->xX;
+        p_stNormal->xY = p_stHit->xY - p_stSphereCenter->xY;
+        p_stNormal->xZ = p_stHit->xZ - p_stSphereCenter->xZ;
+        p_stNormal->xX = xInvR * p_stNormal->xX;
+        p_stNormal->xY = xInvR * p_stNormal->xY;
+        p_stNormal->xZ = xInvR * p_stNormal->xZ;
+        return 1;
+            }
+            break;
+        }
+        return 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\IntersEd.c lines 439–490 */

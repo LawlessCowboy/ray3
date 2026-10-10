@@ -355,9 +355,57 @@ GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* _hPhysicalObject
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void sceGifPkInit(anon_17* pPacket, long double* pBase);
+void sceGifPkReset(anon_17* pPacket);
+void sceGifPkAddGsData(anon_17* pPacket, unsigned long data);
+void sceGifPkTerminate(anon_17* pPacket);
+unsigned int sceGifPkSize(anon_17* pPacket);
+int sceGszbufaddr(int buffer_number, int width, int height);
+void sceDmaSendN(int d, void* addr, int size);
+int sceGsSyncPath(int mode, unsigned short timeout);
+
 void ClearVRAM(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
     anon_17 gif_pkt;
-    long double mem[15];
-    /* TODO: decompile from asm/... */
+    static long double mem[15];
+
+    sceGifPkInit(&gif_pkt, (long double*)((unsigned int)mem | 0x20000000));
+    sceGifPkReset(&gif_pkt);
+
+    sceGifPkAddGsData(&gif_pkt, (unsigned long)10 | ((unsigned long)1 << 15) | ((unsigned long)1 << 60));
+    sceGifPkAddGsData(&gif_pkt, 0xe);
+
+    sceGifPkAddGsData(&gif_pkt, 1);
+    sceGifPkAddGsData(&gif_pkt, 0x1a);
+
+    sceGifPkAddGsData(&gif_pkt, (unsigned long)0x10 << 16);
+    sceGifPkAddGsData(&gif_pkt, 0x4c);
+
+    sceGifPkAddGsData(&gif_pkt, (unsigned long)sceGszbufaddr(0, 512, 512) | ((unsigned long)0x31 << 24) | ((unsigned long)1 << 32));
+    sceGifPkAddGsData(&gif_pkt, 0x4e);
+
+    sceGifPkAddGsData(&gif_pkt, 0);
+    sceGifPkAddGsData(&gif_pkt, 0x18);
+
+    sceGifPkAddGsData(&gif_pkt, ((unsigned long)1024 << 16) | ((unsigned long)1024 << 48));
+    sceGifPkAddGsData(&gif_pkt, 0x40);
+
+    sceGifPkAddGsData(&gif_pkt, ((unsigned long)1 << 16) | ((unsigned long)1 << 17));
+    sceGifPkAddGsData(&gif_pkt, 0x47);
+
+    sceGifPkAddGsData(&gif_pkt, 6);
+    sceGifPkAddGsData(&gif_pkt, 0);
+
+    sceGifPkAddGsData(&gif_pkt, (unsigned long)r | ((unsigned long)g << 8) | ((unsigned long)b << 16) | ((unsigned long)a << 24) | ((unsigned long)0x3f800000 << 32));
+    sceGifPkAddGsData(&gif_pkt, 1);
+
+    sceGifPkAddGsData(&gif_pkt, 0);
+    sceGifPkAddGsData(&gif_pkt, 4);
+
+    sceGifPkAddGsData(&gif_pkt, ((unsigned long)0x4000) | ((unsigned long)0x4000 << 16));
+    sceGifPkAddGsData(&gif_pkt, 4);
+
+    sceGifPkTerminate(&gif_pkt);
+    sceDmaSendN(dmaGIF, (void*)(gif_pkt.pBase & 0x0fffffff), sceGifPkSize(&gif_pkt));
+    sceGsSyncPath(0, 0);
 }

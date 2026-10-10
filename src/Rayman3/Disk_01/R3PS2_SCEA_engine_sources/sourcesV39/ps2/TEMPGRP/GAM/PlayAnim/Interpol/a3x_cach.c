@@ -87,6 +87,77 @@ int gp_stA3dGENERAL;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef struct tdstEngineObject_ tdstEngineObject_;
+typedef struct tdstEventInTable_ tdstEventInTable_;
+
+struct tdstEngineObject_ {
+    tdst3dData_* h_3dData; /* +0x0 */
+};
+
+struct HIE_tdstSuperObject_ {
+    unsigned int ulTypeOfLinkedObject; /* +0x0 */
+    union {
+        tdstEngineObject_* p_stCharacter; /* +0x0 */
+        int p_Void; /* +0x0 */
+    } hLinkedObject; /* +0x4 */
+};
+
+struct tdst3dData_ {
+    struct tdstState_* h_InitialState; /* +0x0 */
+    struct tdstState_* h_CurrentState; /* +0x4 */
+    struct tdstState_* h_FirstStateOfAction; /* +0x8 */
+    struct tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
+    struct tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
+    struct tdstFamilyList_* h_Family; /* +0x14 */
+    unsigned char _padding_18[0x70]; /* +0x18..0x87 */
+    unsigned char ucRepeatAnimation; /* +0x88 */
+    unsigned char ucNextEvent; /* +0x89 */
+    unsigned char* d_ucEventActivation; /* +0x8c */
+};
+
+struct tdstEventInTable_ {
+    int p_xEvent; /* +0x0 */
+    unsigned char ucTypeOfEvent; /* +0x4 */
+    unsigned char ucPriority; /* +0x5 */
+    unsigned char ucFirstCall; /* +0x6 */
+    unsigned char ucPeriod; /* +0x7 */
+    unsigned int u32SemaphoreId; /* +0x8 */
+};
+
+struct tdstEvent_ {
+    tdstEventInTable_* p_stfEventInTBL; /* +0x0 */
+    unsigned short usEventNumberInTBL; /* +0x4 */
+    unsigned short uwFrameNumber; /* +0x6 */
+    unsigned short uwChannelNumber; /* +0x8 */
+    unsigned short uwIsLocalized; /* +0xa */
+};
+
+struct tdstAnim3d_ {
+    unsigned short uwNumberOfFrames; /* +0x0 */
+    unsigned char ucFrameRate; /* +0x2 */
+    unsigned char ucMaxNumberOfElements; /* +0x3 */
+    tdstEvent_* d_stAnimEvent; /* +0x4 */
+    struct stMorphData* d_stMorphDataArray; /* +0x8 */
+    unsigned short uwNumOfA3dGENERAL; /* +0xc */
+    unsigned char ucNumberOfEvents; /* +0xe */
+    unsigned char ucFlagMergeAnim; /* +0xf */
+};
+
+int fn_bIsInFix(tdstEngineObject_* p_stObject);
+unsigned char GAM_fn_bIsEngineInFixMode(void);
+unsigned char HMU_fn_ucGetActualNormalMemoryBlockUsed(void);
+unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
+void HMU_fn_vSetMemoriesInFixMode(void);
+void HMU_fn_vSetMemoriesInLevelMode(void);
+void HMU_fn_vSetMemoriesInTransition1Mode(void);
+void HMU_fn_vSetMemoriesInTransition2Mode(void);
+int fn_lGetTransitionBloc(void);
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+tdstAnim3d_* fn_p_stGetAnimInState(struct tdstState_* h_State);
+/* Retail passes three arguments here although the a3x_intn.c body reads only the first. */
+tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d, int lFrame, struct tdstObjectsTablesList_* h_ObjectsTable);
+signed char fn_scGetSpeedInState(struct tdstState_* h_State);
+
 void fn_vInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, unsigned short uwFirstFrame)
 {
     unsigned char ucMemoryType;
@@ -95,5 +166,52 @@ void fn_vInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, unsigned short uwF
     tdstEvent_* p_stEvent;
     tdstAnim3d_* p_stAnim;
     tdst3dData_* h_3dData;
-    /* TODO: decompile from asm/... */
+
+    ucMemoryType = 0;
+    bBTLevel = 0;
+    if (fn_bIsInFix((p_stSuperObject->ulTypeOfLinkedObject != 2) ? NULL : p_stSuperObject->hLinkedObject.p_stCharacter) && !GAM_fn_bIsEngineInFixMode())
+    {
+        ucMemoryType = HMU_fn_ucGetActualNormalMemoryBlockUsed();
+        HMU_fn_vSetMemoriesInFixMode();
+        bBTLevel = 1;
+    }
+
+    h_3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+    if (h_3dData->h_CurrentState)
+    {
+        p_stAnim = fn_p_stGetAnimInState(h_3dData->h_CurrentState);
+        p_stEvent = fn_p_GetEventsAddress(p_stAnim, uwFirstFrame, h_3dData->h_CurrentObjectsTable);
+        if (p_stEvent)
+        {
+            h_3dData->d_ucEventActivation = (unsigned char*)HMU_fn_p_vMalloc(p_stAnim->ucNumberOfEvents, 1);
+            if (uwFirstFrame)
+            {
+                for (i = 0; i < p_stAnim->ucNumberOfEvents && p_stEvent[i].uwFrameNumber < uwFirstFrame; i++)
+                    ;
+                h_3dData->ucNextEvent = i;
+            }
+            else if (fn_scGetSpeedInState(h_3dData->h_CurrentState) > 0)
+            {
+                h_3dData->ucNextEvent = 0;
+            }
+            else
+            {
+                h_3dData->ucNextEvent = p_stAnim->ucNumberOfEvents - 1;
+            }
+            for (i = 0; i < p_stAnim->ucNumberOfEvents; i++)
+            {
+                h_3dData->d_ucEventActivation[i] = p_stEvent->p_stfEventInTBL->ucFirstCall;
+                p_stEvent++;
+            }
+        }
+        if (bBTLevel)
+        {
+            if (ucMemoryType == HMU_fn_ucGetLevelNormalMemoryBlock())
+                HMU_fn_vSetMemoriesInLevelMode();
+            else if (fn_lGetTransitionBloc() != 1)
+                HMU_fn_vSetMemoriesInTransition1Mode();
+            else
+                HMU_fn_vSetMemoriesInTransition2Mode();
+        }
+    }
 }

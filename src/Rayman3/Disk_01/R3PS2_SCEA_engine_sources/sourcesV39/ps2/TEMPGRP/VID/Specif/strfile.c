@@ -168,16 +168,123 @@ int strFileClose(anon_0* file)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+char* index(const char* s, int c);
+char* strncpy(char* s1, const char* s2, size_t n);
+int strcmp(const char* s1, const char* s2);
+size_t strlen(const char* s);
+char* strcpy(char* s1, const char* s2);
+int toupper(int c);
+int sprintf(char* s, const char* format, ...);
+int printf(const char* format, ...);
+void* sceSifAllocIopHeap(unsigned int size);
+int sceCdStInit(unsigned int bufmax, unsigned int bankmax, unsigned int iop_bufaddr);
+int PS2_fn_iGetCDMediaMode(void);
+int sceCdMmode(int media);
+int sceCdDiskReady(int mode);
+int SCEECdSearchFile(anon_1* fp, const char* name);
+int sceCdStStart(unsigned int lbn, anon_2* mode);
+int sceOpen(const char* filename, int flag, ...);
+int sceLseek(int fd, int offset, int where);
+int sceClose(int fd);
+
 int strFileOpen(anon_0* file, char* filename)
 {
-    anon_2 mode;
-    char* tail;
-    int len;
-    int i;
-    int dlen;
-    char devname[64];
-    char fn[256];
-    char* body;
     int ret;
-    /* TODO: decompile from asm/... */
+    char* body = NULL;
+    char fn[256];
+    char devname[64];
+
+    body = index(filename, ':');
+    if (body)
+    {
+        int dlen;
+
+        dlen = body - filename;
+        strncpy(devname, filename, dlen);
+        devname[dlen] = 0;
+        body += 1;
+        if (!strcmp(devname, "cdrom0"))
+        {
+            int i;
+            int len = strlen(body);
+            const char* tail;
+
+            file->isOnCD = 1;
+            for (i = 0; i < len; i++)
+            {
+                if (body[i] == '/')
+                    body[i] = '\\';
+                body[i] = toupper(body[i]);
+            }
+            tail = (index(filename, ';')) ? "" : ";1";
+            sprintf(fn, "%s%s", body, tail);
+        }
+        else
+        {
+            file->isOnCD = 0;
+            sprintf(fn, "%s:%s", devname, body);
+        }
+    }
+    else
+    {
+        body = filename;
+        strcpy(devname, "host0");
+        file->isOnCD = 0;
+        sprintf(fn, "%s:%s", devname, body);
+    }
+
+    printf("file: %s\n", fn);
+
+    if (file->isOnCD)
+    {
+        anon_2 mode;
+
+        if (!isStrFileInit)
+            isStrFileInit = 1;
+        file->iopBuf = (int)sceSifAllocIopHeap(2048 * 80 + 16);
+        sceCdStInit(80, 5, (file->iopBuf + 15) & ~15);
+        sceCdMmode(PS2_fn_iGetCDMediaMode());
+        sceCdDiskReady(0);
+        while (!SCEECdSearchFile(&last_video_fd, fn))
+            ;
+        file->fp.lsn = last_video_fd.pos;
+        file->fp.size = last_video_fd.size;
+        file->fp.name[0] = 0;
+        file->size = file->fp.size;
+        mode.trycount = 0;
+        mode.spindlctrl = 0;
+        mode.datapattern = 0;
+        while (!sceCdStStart(file->fp.lsn, &mode))
+        {
+            asm { mtc0 zero, $24 }
+        }
+        return 1;
+    }
+    else
+    {
+        sceCdDiskReady(0);
+        file->fd = sceOpen(fn, 1);
+        if (file->fd < 0)
+        {
+            printf("Cannot open '%s'(sceOpen)\n", fn);
+            return 0;
+        }
+        sceCdDiskReady(0);
+        file->size = sceLseek(file->fd, 0, 2);
+        if (file->size < 0)
+        {
+            printf("sceLseek() fails (%s): %d\n", fn, file->size);
+            sceClose(file->fd);
+            return 0;
+        }
+        sceCdDiskReady(0);
+        ret = sceLseek(file->fd, 0, 0);
+        if (ret < 0)
+        {
+            printf("sceLseek() fails (%s)\n", fn);
+            sceClose(file->fd);
+            return 0;
+        }
+    }
+    return 1;
 }

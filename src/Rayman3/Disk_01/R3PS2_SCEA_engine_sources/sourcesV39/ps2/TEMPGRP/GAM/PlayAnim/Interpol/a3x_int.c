@@ -135,19 +135,41 @@ float fn_xRModulus(float xValue, float xModulus)
  */
 void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat)
 {
-    float xZS;
-    float xYS;
     float xXS;
-    float xYY;
-    float xXX;
-    float xWX;
-    float xYZ;
-    float xWY;
-    float xXZ;
-    float xZZ;
-    float xWZ;
-    float xXY;
-    /* TODO: decompile from asm/... */
+    float xYS;
+    float xZS;
+    static float xWX;
+    static float xWY;
+    static float xWZ;
+    static float xXX;
+    static float xXY;
+    static float xXZ;
+    static float xYY;
+    static float xYZ;
+    static float xZZ;
+
+    xXS = _a4_xQuat[0] + _a4_xQuat[0];
+    xYS = _a4_xQuat[1] + _a4_xQuat[1];
+    xZS = _a4_xQuat[2] + _a4_xQuat[2];
+    xWX = _a4_xQuat[3] * xXS;
+    xWY = _a4_xQuat[3] * xYS;
+    xWZ = _a4_xQuat[3] * xZS;
+    xXX = _a4_xQuat[0] * xXS;
+    xXY = _a4_xQuat[0] * xYS;
+    xXZ = _a4_xQuat[0] * xZS;
+    xYY = _a4_xQuat[1] * xYS;
+    xYZ = _a4_xQuat[1] * xZS;
+    xZZ = _a4_xQuat[2] * xZS;
+
+    _a3a3_xMtx[0][0] = 1.0f - (xYY + xZZ);
+    _a3a3_xMtx[1][0] = xXY + xWZ;
+    _a3a3_xMtx[2][0] = xXZ - xWY;
+    _a3a3_xMtx[0][1] = xXY - xWZ;
+    _a3a3_xMtx[1][1] = 1.0f - (xXX + xZZ);
+    _a3a3_xMtx[2][1] = xYZ + xWX;
+    _a3a3_xMtx[0][2] = xXZ + xWY;
+    _a3a3_xMtx[1][2] = xYZ - xWX;
+    _a3a3_xMtx[2][2] = 1.0f - (xXX + xYY);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 86–90 */

@@ -566,6 +566,11 @@ unsigned char CLinkActor::mfn_bSynchroniseActorInstance(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Scoped opt_lifetimes off: both loops share one poEEActor web, which gives
+ * retail's s2 (actor) / s3 (bool temp) assignment in the -2 channel loop
+ * (measured pragma sweep). */
+#pragma push
+#pragma opt_lifetimes off
 unsigned char CLinkActor::mfn_bExecuteActorInstance(int s32_CmdId, int s32_ChannelId)
 {
     unsigned char b_Answer;
@@ -594,6 +599,7 @@ unsigned char CLinkActor::mfn_bExecuteActorInstance(int s32_CmdId, int s32_Chann
     }
     return b_Answer;
 }
+#pragma pop
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkactor.cpp lines 143–173 */
 /* addr: 0x001cd160  size: 316 bytes */

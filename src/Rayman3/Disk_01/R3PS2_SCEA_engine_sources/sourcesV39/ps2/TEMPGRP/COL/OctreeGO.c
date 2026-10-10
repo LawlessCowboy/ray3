@@ -218,10 +218,58 @@ void COL_fn_vExploreOctreeWithSegment(COL_tdstOctree_* p_stOctree, MTH3D_tdstVec
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT);
+
+/* Inlined sorted insertion (original name unknown): retail maps the whole
+ * insertion loop to the single call line 888. */
+static inline void COL_fn_vInsertNodeSortedByT(COL_tdstOctreeNode_* p_stNode, float xT, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
+{
+    short i;
+
+    for (i = *p_xNumberOfSelectedNodes; i > 0 && xT < d_xSelectedT[i - 1]; i--)
+    {
+        if (i < 100)
+        {
+            d_pstSelectedNode[i] = d_pstSelectedNode[i - 1];
+            d_xSelectedT[i] = d_xSelectedT[i - 1];
+        }
+    }
+    if (i < 100)
+    {
+        d_pstSelectedNode[i] = p_stNode;
+        d_xSelectedT[i] = xT;
+        if (*p_xNumberOfSelectedNodes < 100)
+            (*p_xNumberOfSelectedNodes)++;
+    }
+}
+
 void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
 {
     float xT;
-    /* TODO: decompile from asm/... */
+
+    COL_g_xDepth++;
+
+    if (INT_fn_bDetectIntersectSegmentWithBox(p_stVertexA, p_stVectAB, &p_stNodeToBeExplored->stMinPart, &p_stNodeToBeExplored->stMaxPart, &xT))
+    {
+        if (p_stNodeToBeExplored->p_pstChildList)
+        {
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[0], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[1], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[2], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[3], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[4], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[5], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[6], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_fn_vExploreRecursiveOctreeWithSegment(p_stNodeToBeExplored->p_pstChildList[7], p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+        }
+        else if (p_stNodeToBeExplored->d_xFaceIndexList)
+        {
+            COL_fn_vInsertNodeSortedByT(p_stNodeToBeExplored, xT, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
+            COL_g_xSelectedDepth = COL_g_xDepth;
+        }
+    }
+
+    COL_g_xDepth--;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\OctreeGO.c lines 790–802 */

@@ -1363,6 +1363,11 @@ int SND_fn_s32GetLastMarker(void);
 int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFamilyList_* p_stFamily);
 void MAT_fn_vRemoveScale(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
 
+/* Scoped optimization_level 4 gives retail's FPR choice for the 0.33f/0.66f
+ * interpolation constant (f3) and stLastVector.y (f2); every source order
+ * tried at level 3 swaps them (measured pragma sweep). */
+#pragma push
+#pragma optimization_level 4
 void fn_vPlayNewLipsSynchro(tdstAChannel_* p_stChannel, tdstFamilyList_* p_stFamily)
 {
     int bNoEnd;
@@ -1408,3 +1413,4 @@ void fn_vPlayNewLipsSynchro(tdstAChannel_* p_stChannel, tdstFamilyList_* p_stFam
         cLastPhonem = '*';
     }
 }
+#pragma pop
