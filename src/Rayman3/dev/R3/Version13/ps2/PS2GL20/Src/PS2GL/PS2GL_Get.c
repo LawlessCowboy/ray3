@@ -749,11 +749,73 @@ _GL_BUFFERINFO g_stBufferInfo;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* GS context: only the TEST_1 register and its modified flag are used here
+ * (layout from PS2GL_PixelOperation.c's tagGScontext). */
+typedef struct tagGsTest {
+    unsigned long ATE : 1; /* bit 0 */
+    unsigned long ATST : 3; /* bit 1 */
+    unsigned long AREF : 8; /* bit 4 */
+    unsigned long AFAIL : 2; /* bit 12 */
+    unsigned long DATE : 1; /* bit 14 */
+    unsigned long DATM : 1; /* bit 15 */
+    unsigned long ZTE : 1; /* bit 16 */
+    unsigned long ZTST : 2; /* bit 17 */
+    unsigned long pad19 : 45; /* bit 19 */
+} tagGsTest;
+
+typedef struct tagGsModFlags {
+    unsigned long pad0 : 37; /* PRIM..COLCLAMP */
+    unsigned long TEST_1_Modified : 1; /* bit 37 */
+    unsigned long pad38 : 26;
+} tagGsModFlags;
+
+typedef struct tagGScontextTest {
+    unsigned char _padding_000[0x128];
+    tagGsTest TEST_1; /* +0x128 */
+    unsigned char _padding_130[0x80];
+    tagGsModFlags ModFlgs; /* +0x1b0 */
+} tagGScontextTest;
+
+extern tagGScontextTest g_gsContext;
+
 void impPS2glAlphaFunc(unsigned int func, float ref)
 {
-    signed char bGsRef;
     signed char bGsFunc;
-    /* TODO: decompile from asm/... */
+    signed char bGsRef;
+
+    g_PS2glContext.eAlphaTestFunc = func;
+    g_PS2glContext.fAlphaTestRef = ref;
+    bGsFunc = 1;
+    bGsRef = (signed char)(128.0f * ref);
+    switch (func)
+    {
+    case 0x200:
+        bGsFunc = 0;
+        break;
+    case 0x207:
+        bGsFunc = 1;
+        break;
+    case 0x201:
+        bGsFunc = 2;
+        break;
+    case 0x203:
+        bGsFunc = 3;
+        break;
+    case 0x202:
+        bGsFunc = 4;
+        break;
+    case 0x206:
+        bGsFunc = 5;
+        break;
+    case 0x204:
+        bGsFunc = 6;
+        break;
+    case 0x205:
+        bGsFunc = 7;
+        break;
+    }
+    g_gsContext.TEST_1.ATST = bGsFunc; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_gsContext.TEST_1.AREF = bGsRef; g_gsContext.ModFlgs.TEST_1_Modified = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1530–1530 */
@@ -1018,12 +1080,61 @@ void impPS2glGetPixelMapfv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int printf(const char* format, ...);
+
 void PS2glSetInteger(unsigned int pname, int param)
 {
-    tagGLtexblock theDefaultTexBlock;
     int iRealBlockCount;
     int I;
-    /* TODO: decompile from asm/... */
+
+    switch (pname)
+    {
+    case 0x420:
+        g_PS2glContext.iFrameCount = param;
+        if (param % 2 == 0)
+        {
+            g_PS2glContext.iFrameBufferFront = g_PS2glContext.iFrameBuffer1;
+            g_PS2glContext.iFrameBufferBack = g_PS2glContext.iFrameBuffer0;
+        }
+        else
+        {
+            g_PS2glContext.iFrameBufferFront = g_PS2glContext.iFrameBuffer0;
+            g_PS2glContext.iFrameBufferBack = g_PS2glContext.iFrameBuffer1;
+        }
+        break;
+    case 0x421:
+        g_PS2glContext.iDepthBuffer = param;
+        break;
+    case 0x422:
+        g_PS2glContext.iDepthBufferBitDepth = param;
+        break;
+    case 0x423:
+        g_PS2glContext.iFrameBufferBitDepth = param;
+        break;
+    case 0x430:
+        g_PS2glContext.iFrameBuffer0 = param;
+        break;
+    case 0x431:
+        g_PS2glContext.iFrameBuffer1 = param;
+        break;
+    case 0x438:
+        g_PS2glContext.bFrameMode = (param == 1);
+        break;
+    case 0x440:
+    {
+        tagGLtexblock theDefaultTexBlock = { 0x3ff, 0, 0 };
+
+        iRealBlockCount = (0x400000 - (param + 0x400)) / 4096;
+        theDefaultTexBlock.nLength = iRealBlockCount;
+        if (iRealBlockCount <= 0)
+            printf("Fatal error: Improper buffer setting runs out of VRAM! There's no room for texture!\n");
+        g_PS2glContext.iMaxTexBlockCount = iRealBlockCount;
+        for (I = 0; I < 604; I++)
+            g_PS2glContext.aBlockMap[I] = theDefaultTexBlock;
+        g_PS2glContext.nTexMemBegin = param;
+        break;
+    }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Get.c lines 1364–1364 */

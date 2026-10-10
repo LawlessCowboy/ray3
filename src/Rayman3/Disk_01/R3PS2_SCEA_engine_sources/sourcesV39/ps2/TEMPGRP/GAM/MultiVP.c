@@ -2190,7 +2190,20 @@ unsigned char GAM_MultiVP_fn_vGetViewPortFromPlayer(HIE_tdstSuperObject_* hCamer
 {
     int Found;
     int i;
-    /* TODO: decompile from asm/... */
+
+    i = 0;
+    Found = 0;
+    do
+    {
+        if (g_stEngineStructure.a_hSO_CurrentMainPlayers[i] == (int)hCameraTargetSO)
+            Found = 1;
+        else
+            i++;
+    } while (i < g_stEngineStructure.ucNumberOfPlayersInMultiMode && !Found);
+
+    if (Found)
+        return i + 1;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 97–112 */

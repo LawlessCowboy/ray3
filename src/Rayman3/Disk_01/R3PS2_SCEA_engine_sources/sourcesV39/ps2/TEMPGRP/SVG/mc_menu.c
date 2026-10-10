@@ -526,9 +526,17 @@ void MC_DrawString(char* String, float YPos)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vRestoreSavedFrameBuffer(void);
+void MC_SwapBuffers(void);
+
 void MC_PrintMessage(char* String, float Y_Pos)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
+    GLI_vRestoreSavedFrameBuffer();
+    MC_DrawString(String, Y_Pos);
+    MC_SwapBuffers();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\mc_menu.c lines 768–803 */

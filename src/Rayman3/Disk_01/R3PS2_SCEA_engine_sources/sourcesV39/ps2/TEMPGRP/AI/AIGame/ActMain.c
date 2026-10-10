@@ -1908,9 +1908,14 @@ unsigned char fn_ucFrozenWait(HIE_tdstSuperObject_* p_SuperObjPerso)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* fn_p_stDefaultActionInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
+void fn_vSetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, int lValue);
+
 tdstNodeInterpret_* fn_p_stFrozenWaitInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    /* TODO: decompile from asm/... */
+    p_stTree = fn_p_stDefaultActionInit(p_SuperObjPerso, p_stTree);
+    fn_vSetActionParamlValue(0, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount + fn_lGetActionParamlValue(0, p_SuperObjPerso));
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 143–147 */

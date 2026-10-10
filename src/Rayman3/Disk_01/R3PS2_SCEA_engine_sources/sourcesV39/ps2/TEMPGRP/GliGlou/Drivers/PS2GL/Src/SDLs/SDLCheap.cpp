@@ -1191,6 +1191,8 @@ struct C_Sdl {
     int m_SkinIndex; /* +0x3c */
     GLI_tdstMaterial_* m_SkinMaterial; /* +0x40 */
     int m_bIsBlinking; /* +0x44 */
+
+    void ProcessAllRefs(void);
 };
 
 struct tagGsLoadImage {
@@ -2151,7 +2153,7 @@ struct tagstVIFCode {
 
 int CHEAP_IS_NOT_VALID;
 unsigned int G_IsLept15;
-int GLI_g_CheapSDLs[64];
+C_Sdl* GLI_g_CheapSDLs[64];
 int pCheapSDL;
 unsigned int GLI_g_CurrentNbCheapSDLs;
 unsigned int GLI_g_CurrentNbCheapSDLsForViewport;
@@ -2679,7 +2681,14 @@ void CHEAP_UpdateDeformation__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hS
 void CHEAP_UpdateAllRefs(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < GLI_g_CurrentNbCheapSDLs; i++)
+    {
+        if (GLI_g_CheapSDLs[i])
+            GLI_g_CheapSDLs[i]->ProcessAllRefs();
+    }
+
+    GLI_g_CurrentNbCheapSDLsForViewport = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCheap.cpp lines 591–627 */

@@ -198,9 +198,16 @@ void PS2_fn_vFlipThreadsPriority(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int printf(const char* format, ...);
+
 void PS2_fn_vWakeupMainThread(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_iThreadDebugOutput)
+        printf("draw T :waking up main thread\n");
+    SignalSema(LoadSuspendSid);
+    if (g_iThreadDebugOutput)
+        printf("draw T :sleeping\n");
+    WaitSema(ContextSaveSid);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 441–501 */

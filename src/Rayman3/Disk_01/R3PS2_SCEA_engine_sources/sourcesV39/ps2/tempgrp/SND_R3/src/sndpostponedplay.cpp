@@ -100,6 +100,8 @@ struct C3DDirection {
     V3Ds m_oTop; /* +0xc */
 };
 
+namespace usnd { struct CResData; }
+
 struct PostponedPlay {
     static PostponedPlay* ms_pFirst;
     static PostponedPlay* ms_pFree;
@@ -116,8 +118,8 @@ struct PostponedPlay {
     static unsigned char fs_bIsPending(CExtraEventActor* pEActor);
     void fs_vEmpty(void);
     unsigned char fs_bExecute(int s32_CmdId, CUUID* roId, CExtraEventActor* pEActor);
-    unsigned char fs_bIsSoundPlaying(int s32_Handle, CExtraEventActor* pEActor);
-    unsigned char fs_bIsSoundPlaying(CResData* po_ResData, CExtraEventActor* pEActor);
+    static unsigned char fs_bIsSoundPlaying(int s32_Handle, CExtraEventActor* pEActor);
+    static unsigned char fs_bIsSoundPlaying(usnd::CResData* po_ResData, CExtraEventActor* pEActor);
     void fs_vSynchro(void);
     unsigned char fs_bPlay(CEventResData* ro_EventResData, int s32_Handle, void (*pfn_Proc)(int), CExtraEventActor* pEActor);
 };
@@ -556,7 +558,13 @@ unsigned char PostponedPlay::fs_bExecute(int s32_CmdId, CUUID* roId, CExtraEvent
 unsigned char PostponedPlay::fs_bIsSoundPlaying(int s32_Handle, CExtraEventActor* pEActor)
 {
     PostponedPlay* e;
-    /* TODO: decompile from asm/... */
+
+    for (e = ms_pFirst; e; e = e->m_pNext)
+    {
+        if (e->m_pEActor == pEActor && e->m_s32Handle == s32_Handle)
+            return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 98–106 */
@@ -572,10 +580,16 @@ unsigned char PostponedPlay::fs_bIsSoundPlaying(int s32_Handle, CExtraEventActor
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char PostponedPlay::fs_bIsSoundPlaying(CResData* po_ResData, CExtraEventActor* pEActor)
+unsigned char PostponedPlay::fs_bIsSoundPlaying(usnd::CResData* po_ResData, CExtraEventActor* pEActor)
 {
     PostponedPlay* e;
-    /* TODO: decompile from asm/... */
+
+    for (e = ms_pFirst; e; e = e->m_pNext)
+    {
+        if (e->m_pEActor == pEActor && (void*)e->m_pData == (void*)po_ResData)
+            return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 65–92 */

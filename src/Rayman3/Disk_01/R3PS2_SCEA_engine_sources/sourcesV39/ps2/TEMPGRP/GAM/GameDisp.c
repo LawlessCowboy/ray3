@@ -1663,9 +1663,33 @@ void fn_vLastDesinitFamilyStructure(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_xSendListToViewport(GLD_tdstViewportAttributes_* p_stVpt);
+int GLD_bWriteToViewportFinished(int hDevice, short hVP);
+void AGO_vProcessAllParts(GLD_tdstViewportAttributes_* _p_stViewport);
+void AGO_vReDisplayAllParts(GLD_tdstViewportAttributes_* _p_stViewport);
+void CAM_vDisplayInfo(void);
+void Erm_fn_ClearLastError();
+void Erm_fn_v_UpdateLastError();
+
 void GAM_MultiVP_fn_vDisplayAllInOneViewPort(unsigned char _ucIndex)
 {
-    /* TODO: decompile from asm/... */
+    GLD_tdstViewportAttributes_* p_stVpt;
+
+    p_stVpt = &g_stEngineStructure.a_stViewportAttr[_ucIndex];
+    GLI_xSendListToViewport(p_stVpt);
+    GLI_xSendListToViewport(p_stVpt);
+    if (!GLD_bWriteToViewportFinished(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex]))
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 43, -1, 255, 255, NULL);
+    }
+    SCT_g_ulDisplayingAgos = 1;
+    if (_ucIndex == 0)
+        AGO_vProcessAllParts(p_stVpt);
+    else
+        AGO_vReDisplayAllParts(p_stVpt);
+    SCT_g_ulDisplayingAgos = 0;
+    GLI_xSendListToViewport(p_stVpt);
+    CAM_vDisplayInfo();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 329–505 */
@@ -1693,13 +1717,59 @@ void GAM_MultiVP_fn_vDisplayAllInOneViewPort(unsigned char _ucIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vUpdateEffectData(unsigned int _ulDeltaT);
+void CAM_fn_vActualizeAViewport(int _lViewport);
+unsigned char GAM_MultiVP_fn_bWriteFrameToViewPort(unsigned char _ucIndex);
+void GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(unsigned char ucVpNum, unsigned int* a2_ulSize, unsigned int* a2_ulPos);
+unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo);
+
 void fn_vDisplayAll(unsigned char _ucViewPortIndex)
 {
     tdstCineinfo_* h_CineInfo;
     int j;
     int i;
     tdstNodeCamera_* p_stNodeCamera;
-    /* TODO: decompile from asm/... */
+
+    if (g_bCinemascopeOn)
+    {
+        g_a2_ulSize[1] = (unsigned int)((float)g_a2_ulSize[1] - 0.1f * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime * (float)g_bCinemascopeOn);
+        if (g_a2_ulSize[1] < g_ulMinSize)
+            g_a2_ulSize[1] = g_ulMinSize;
+        if (g_a2_ulSize[1] > 100)
+            g_a2_ulSize[1] = 100;
+        g_a2_ulPos[1] = (100 - g_a2_ulSize[1]) / 2;
+        if (g_a2_ulPos[1] > (100 - g_ulMinSize) / 2)
+            g_a2_ulPos[1] = (100 - g_ulMinSize) / 2;
+        GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(0, g_a2_ulSize, g_a2_ulPos);
+        if (g_bCinemascopeOn == -1 && g_a2_ulSize[1] == 100)
+            g_bCinemascopeOn = 0;
+    }
+
+    if (g_stEngineStructure.h_DbgCamCharacter && !g_ucDebugCamera && _ucViewPortIndex)
+        return;
+    if (g_InGameMenu2DActivated)
+        return;
+
+    GLI_vUpdateEffectData(g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime);
+    CAM_fn_vActualizeAViewport(_ucViewPortIndex);
+    asm { .word 0x4080c000 }
+    GAM_MultiVP_fn_bWriteFrameToViewPort(_ucViewPortIndex);
+    asm { .word 0x4080c000 }
+    GAM_MultiVP_fn_vDisplayAllInOneViewPort(_ucViewPortIndex);
+
+    if (g_ucDebugCamera && !_ucViewPortIndex)
+    {
+        j = 0;
+        for (p_stNodeCamera = g_stEngineStructure.hCameraList.hFirstElementDyn, i = 0; p_stNodeCamera; p_stNodeCamera = p_stNodeCamera->hNextBrotherDyn, i++)
+        {
+            h_CineInfo = p_stNodeCamera->p_stSuperObjectCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+            if (CAM_fn_bCineInfoGetIsDebugCamera(h_CineInfo->hCurrent))
+                j++;
+            if (j == g_ucDebugCamera && CAM_fn_bCineInfoGetIsDebugCamera(h_CineInfo->hCurrent))
+            {
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameDisp.c lines 244–247 */

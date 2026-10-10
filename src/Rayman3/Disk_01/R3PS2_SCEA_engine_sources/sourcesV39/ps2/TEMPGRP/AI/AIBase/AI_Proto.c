@@ -3045,9 +3045,32 @@ tdstActionTable_* fn_p_stSimulateAllocActionTable(char** p_ptr, unsigned char uc
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vSetUltraOperatorPerso(HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_* hNewCurrentSuperObjPerso);
+void fn_vReinitComport(tdstIntelligence_* p_stIntelligence);
+void ReinitDesignerVariables(AI_tdstMind_* p_stMind);
+void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType);
+
+/* Inlined into fn_vReinitAIWithFlags and fn_vReinitAI: each call site
+ * attributes the whole block to one line (1421 and 1390). */
+static inline void fn_vReinitComports(AI_tdstMind_* p_stMind)
+{
+    fn_vSetUltraOperatorPerso(NULL, NULL);
+    if (p_stMind)
+    {
+        if (p_stMind->p_stIntelligence)
+            fn_vReinitComport(p_stMind->p_stIntelligence);
+        if (p_stMind->p_stReflex)
+            fn_vReinitComport(p_stMind->p_stReflex);
+    }
+}
+
 void fn_vReinitAIWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stMind)
+    {
+        fn_vReinitComports(p_stMind);
+        fn_vReinitDesignerVariablesWithFlags(p_stMind, eObjIniType);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1386–1395 */
@@ -3063,7 +3086,11 @@ void fn_vReinitAIWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniTyp
  */
 void fn_vReinitAI(AI_tdstMind_* p_stMind)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stMind)
+    {
+        fn_vReinitComports(p_stMind);
+        ReinitDesignerVariables(p_stMind);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1342–1342 */

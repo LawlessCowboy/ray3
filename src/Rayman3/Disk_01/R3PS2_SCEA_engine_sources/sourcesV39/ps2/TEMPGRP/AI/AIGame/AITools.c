@@ -3146,11 +3146,21 @@ void fn_vConvertParamToColor(tdstGetSetParam_* p_stParam, GEO_tdstColor_* p_stCo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MEC_vTurnAroundZAxis(DNM_stDynamics* p_stDynamic, float xAngle);
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+
 unsigned char fn_ucInternalTurn(HIE_tdstSuperObject_* p_SuperObjPerso, float xAngle)
 {
     tdstDynam_* h_Dynam;
     DNM_stDynamics* pstDynamic;
-    /* TODO: decompile from asm/... */
+
+    h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam && (pstDynamic = fn_p_stDynamGetDynamics(h_Dynam)))
+    {
+        MEC_vTurnAroundZAxis(pstDynamic, xAngle);
+        return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 434–451 */
@@ -3171,7 +3181,20 @@ unsigned char fn_ucInternalTurn(HIE_tdstSuperObject_* p_SuperObjPerso, float xAn
 unsigned char fn_ucAreThereFloatIfYesConvertThem(tdstGetSetParam_* p_stParam1, tdstGetSetParam_* p_stParam2)
 {
     unsigned char ucIsThereFloat;
-    /* TODO: decompile from asm/... */
+
+    ucIsThereFloat = (p_stParam1->eType == 8);
+    if (ucIsThereFloat)
+    {
+        if (p_stParam2->eType != 8)
+            p_stParam2->uDummy.uParam.xValue = (float)p_stParam2->uDummy.uParam.lValue;
+    }
+    else
+    {
+        ucIsThereFloat = (p_stParam2->eType == 8);
+        if (ucIsThereFloat)
+            p_stParam1->uDummy.uParam.xValue = (float)p_stParam1->uDummy.uParam.lValue;
+    }
+    return ucIsThereFloat;
 }
 
 /* Engine float-to-int conversion: retail converts through $f30 at 164 sites

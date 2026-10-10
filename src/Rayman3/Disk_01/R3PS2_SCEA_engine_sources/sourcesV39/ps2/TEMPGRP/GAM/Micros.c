@@ -1623,7 +1623,20 @@ HIE_tdstSuperObject_* fn_hGetSuperObjectActorHandle(int s32_ObjectId)
 {
     HIE_tdstSuperObject_* h_Object;
     HIE_tdstSuperObject_* h_Answer;
-    /* TODO: decompile from asm/... */
+
+    h_Answer = NULL;
+    if (s32_ObjectId != 0 && s32_ObjectId != -1)
+    {
+        for (h_Object = (HIE_tdstSuperObject_*)s32_ObjectId; h_Object != NULL; h_Object = h_Object->hFatherDyn)
+        {
+            if (h_Object->ulTypeOfLinkedObject == 2)
+            {
+                h_Answer = h_Object;
+                break;
+            }
+        }
+    }
+    return h_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 52–58 */

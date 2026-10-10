@@ -3013,13 +3013,31 @@ unsigned int fn_ulSizeOfDsgVar(tdeDsgVarTypeId_ eDsgVarTypeId, unsigned char ucN
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdeFieldTypeId_ fn_eGetEngineFieldType(tdeFieldId_ eFieldId);
+unsigned char (*fn_p_fn_pGetFieldGetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*);
+void (*fn_p_fn_pGetFieldTypeGetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*);
+
 unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     char ret;
     void (*p_fn_vGetFieldTypeFunction)(tdstGetSetParam_*);
     unsigned char (*p_fn_cGetFieldFunction)(HIE_tdstSuperObject_*, tdstGetSetParam_*);
     tdeFieldTypeId_ eFieldType;
-    /* TODO: decompile from asm/... */
+
+    eFieldType = fn_eGetEngineFieldType(eFieldId);
+    p_fn_cGetFieldFunction = fn_p_fn_pGetFieldGetFunctionPtr(eFieldId);
+    p_fn_vGetFieldTypeFunction = fn_p_fn_pGetFieldTypeGetFunctionPtr(eFieldType);
+
+    p_stGetSetParam->uDummy.stVectorValue.xX = 0.0f;
+    p_stGetSetParam->uDummy.stVectorValue.xY = 0.0f;
+    p_stGetSetParam->uDummy.stVectorValue.xZ = 0.0f;
+    p_stGetSetParam->eType = E_vt_None;
+
+    ret = p_fn_cGetFieldFunction(hSuperObjPerso, p_stGetSetParam);
+    if (ret == 1)
+        p_fn_vGetFieldTypeFunction(p_stGetSetParam);
+
+    return ret;
 }
 
 /* Engine float-to-int conversion: retail converts through $f30 at 164 sites
@@ -3129,12 +3147,20 @@ void fn_vGetFieldTypeComport(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char (*fn_p_fn_pGetFieldSetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*);
+void (*fn_p_fn_pGetFieldTypeSetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*);
+
 unsigned char fn_ucSetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     void (*p_fn_vSetFieldTypeFunction)(tdstGetSetParam_*);
     unsigned char (*p_fn_cSetFieldFunction)(HIE_tdstSuperObject_*, tdstGetSetParam_*);
     tdeFieldTypeId_ eFieldType;
-    /* TODO: decompile from asm/... */
+
+    eFieldType = fn_eGetEngineFieldType(eFieldId);
+    p_fn_cSetFieldFunction = fn_p_fn_pGetFieldSetFunctionPtr(eFieldId);
+    p_fn_vSetFieldTypeFunction = fn_p_fn_pGetFieldTypeSetFunctionPtr(eFieldType);
+    p_fn_vSetFieldTypeFunction(p_stGetSetParam);
+    return p_fn_cSetFieldFunction(hSuperObjPerso, p_stGetSetParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Getset.c lines 84–84 */

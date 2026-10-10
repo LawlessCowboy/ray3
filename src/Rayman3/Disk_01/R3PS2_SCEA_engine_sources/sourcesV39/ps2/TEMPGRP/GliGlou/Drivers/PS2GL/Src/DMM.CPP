@@ -225,7 +225,8 @@ struct DMMBloc {
     int m_AllocMode; /* +0x20 */
     void realloc_nofail(void* _pointer, unsigned int _size, unsigned int* p_bCouldntDoIt);
     void reduce(void* _pointer, unsigned int _size);
-    void memalign(unsigned int _alignment, unsigned int _size);
+    void* memalign(unsigned int _alignment, unsigned int _size);
+    DMMBloc(unsigned int _size, unsigned int _alignment);
     void add_FreeBloc(DMM_tdstFreeBloc_* pFreeBloc);
     void remove_from_hashtable(DMM_tdstFreeBloc_* pFreeBloc);
     void remove_FreeBloc(DMM_tdstFreeBloc_* pFreeBloc);
@@ -1337,7 +1338,8 @@ void PS2GL_malloc(unsigned int size)
  */
 void PS2GL_vInitMemoryBloc(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2GL_pMemoryBloc = new DMMBloc(0x600000, 0x40);
+    PS2GL_SDL_DataBuffer = (int)PS2GL_pMemoryBloc->memalign(PS2GL_pMemoryBloc->m_BlocAlignment, 0x17700);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 1145–1197 */
@@ -1460,7 +1462,7 @@ void DMMBloc::reduce(void* _pointer, unsigned int _size)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DMMBloc::memalign(unsigned int _alignment, unsigned int _size)
+void* DMMBloc::memalign(unsigned int _alignment, unsigned int _size)
 {
     unsigned int NewFreeBlocSize;
     unsigned int AlignedSize;

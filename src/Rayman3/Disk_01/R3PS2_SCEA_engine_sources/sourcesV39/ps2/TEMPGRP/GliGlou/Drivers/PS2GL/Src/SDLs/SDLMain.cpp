@@ -1485,6 +1485,9 @@ struct sceGsZbuf {
 };
 
 struct C_SdlRef_LocalMatrix : C_SdlRef {
+    /* +0x10: C_SdlRef vtable pointer (retail __vt__8C_SdlRef, defined in this
+     * unit as data, so not declared virtual here), then alignment padding. */
+    unsigned char _padding_00[16]; /* +0x10..0x1f */
     float OldMat[4][4]; /* +0x20 */
     int m_bNoInterpolation; /* +0x60 */
 };
@@ -3227,7 +3230,19 @@ void C_Sdl::RemoveSPOInterpol(HIE_tdstSuperObject_* pSPO)
 {
     C_SdlRef_LocalMatrix* pRef;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    if (m_NbReservedRefs)
+    {
+        for (i = 0; i < m_NbRefs; i++)
+        {
+            if (m_ppRefs[i] && m_ppRefs[i]->m_uRefType == 1)
+            {
+                pRef = (C_SdlRef_LocalMatrix*)m_ppRefs[i];
+                if (pRef->m_vpOriginPointer == (int)pSPO)
+                    pRef->m_bNoInterpolation = 1;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 94–121 */

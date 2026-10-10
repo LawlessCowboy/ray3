@@ -1381,9 +1381,19 @@ void SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vAddLightToViewport(GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstLight_* p_stLight);
+
 void SECT_fn_vSendDynamicLightsOfASector(GLD_tdstViewportAttributes_* _p_stVpt, SECT_tdstSector_* _hSectorObject)
 {
     SECT_tdstListOfDNMLights_* hPrevDNMLightsElement;
     SECT_tdstListOfDNMLights_* hDNMLightsElement;
-    /* TODO: decompile from asm/... */
+
+    hPrevDNMLightsElement = NULL;
+    for (hDNMLightsElement = _hSectorObject->stListOfDNMLights.hFirstElementDyn; hDNMLightsElement; hDNMLightsElement = hDNMLightsElement->hNextBrotherDyn)
+    {
+        if (hDNMLightsElement == hPrevDNMLightsElement)
+            break;
+        GLI_vAddLightToViewport(_p_stVpt, hDNMLightsElement->hDNMLights);
+        hPrevDNMLightsElement = hDNMLightsElement;
+    }
 }

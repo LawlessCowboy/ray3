@@ -93,10 +93,21 @@ void SAI_fn_vFirstInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char SAI_fn_bRestoreAnElementFromList(SAI_tdstListEntry_* hListEntry);
+
 unsigned char SAI_fn_bInitAllTableWhen(SAI_tdstInternalStructure_* p_stInternalStructure, unsigned short eUserFlags)
 {
     SAI_tdstListEntry_* hListEntry;
-    /* TODO: decompile from asm/... */
+
+    hListEntry = p_stInternalStructure->p_stFirstEntry;
+    while (hListEntry)
+    {
+        if ((eUserFlags & hListEntry->eFlags) == eUserFlags)
+            SAI_fn_bRestoreAnElementFromList(hListEntry);
+        hListEntry = hListEntry->p_stNextEntry;
+    }
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 305–353 */

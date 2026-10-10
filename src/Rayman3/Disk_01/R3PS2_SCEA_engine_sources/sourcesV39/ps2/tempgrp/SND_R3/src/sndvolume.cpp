@@ -1176,10 +1176,26 @@ unsigned char fn_bGetVolumeLineModifierString__FiPci(int s32_ModifierId, char* p
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_bSetLanguage__Fv(void)
+namespace usnd {
+struct CLanguageMng {
+    static CLanguageMng* fs_roGetInst(void);
+    void f_vSetCurrentLanguage(unsigned int uiLanguage);
+};
+}
+
+unsigned char fn_bSetLanguage(void)
 {
     unsigned char bRet;
-    /* TODO: decompile from asm/... */
+    unsigned char ucLanguage;
+
+    bRet = 0;
+    ucLanguage = g_stEngineStructure.ucCurrentLanguage;
+    if (ucLanguage < 6)
+    {
+        usnd::CLanguageMng::fs_roGetInst()->f_vSetCurrentLanguage(c_uiLanguages[ucLanguage]);
+        bRet = 1;
+    }
+    return bRet;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndvolume.cpp lines 141–154 */
