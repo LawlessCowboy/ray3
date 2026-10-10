@@ -34420,6 +34420,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/OctreeGO.c",
       "status": "MATCH"
     },
+    "0x00257e80": {
+      "address": "0x00257e80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "COL_fn_vExploreRecursiveOctreeWithBox",
+      "size": 432,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/OctreeGO.c",
+      "status": "MATCH"
+    },
     "0x00258030": {
       "address": "0x00258030",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -41537,6 +41545,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vGetVertexPointersFromSDCStructure",
       "size": 368,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLLights.cpp",
+      "status": "MATCH"
+    },
+    "0x002dbd30": {
+      "address": "0x002dbd30",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "GLI_vCalculateLightingMatricesGhost",
+      "size": 356,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLLights.cpp",
       "status": "MATCH"
     },
