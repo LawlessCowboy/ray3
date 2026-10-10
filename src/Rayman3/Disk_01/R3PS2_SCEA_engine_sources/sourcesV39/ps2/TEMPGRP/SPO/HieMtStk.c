@@ -502,11 +502,11 @@ void HIE_fn_vFastPS2PushMatrix(HIE_tdstSuperObject_* _hSprObj)
  */
 unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* _hVpt)
 {
-    HIE_tdstCameraMatrixData *p_stSource;
     HIE_tdstCameraMatrixData *p_stDestination;
+    HIE_tdstCameraMatrixData *p_stSource;
 
     HIE_g_lNbMatrixInCameraStack = 0;
-    p_stSource = (void *)(*(int *)((unsigned char *)_hVpt + 0x68) + 0x10);
+    p_stSource = (void *)(**(int **)((unsigned char *)_hVpt + 0x68) + 0x10);
     p_stDestination = (void *)HIE_g_a_stCameraMatrixStack;
     *p_stDestination = *p_stSource;
     HIE_g_lNbMatrixInCameraStack++;

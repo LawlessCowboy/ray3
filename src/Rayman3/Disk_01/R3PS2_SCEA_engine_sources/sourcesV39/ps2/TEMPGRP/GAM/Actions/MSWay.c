@@ -1444,10 +1444,21 @@ int MSWay_fn_lIncrementCurrentIndexInPath(tdstMSWay_* hWay, int iStep)
  */
 int MSWay_fn_lLookForWPInMSWay(tdstMSWay_* _hWay, WP_tdstWayPoint_* _hWayPoint)
 {
-    WP_tdstGraphNode_* hElement;
-    int iIndex;
+{
     int lNbOfElts;
-    /* TODO: decompile from asm/... */
+    int iIndex;
+    WP_tdstGraphNode_* hElement;
+    if ((_hWay != NULL) && (_hWay->m_hPath != NULL))
+    {
+        lNbOfElts = _hWay->m_hPath->m_hListOfNode.lNumberOfElementsDyn;
+        for (iIndex = 0, hElement = _hWay->m_hPath->m_hListOfNode.hFirstElementDyn; hElement != NULL; hElement = hElement->hNextBrotherDyn, iIndex++)
+        {
+            if (_hWayPoint == hElement->m_hWayPoint)
+                return lNbOfElts - iIndex - 1;
+        }
+    }
+    return -1;
+}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 380–396 */

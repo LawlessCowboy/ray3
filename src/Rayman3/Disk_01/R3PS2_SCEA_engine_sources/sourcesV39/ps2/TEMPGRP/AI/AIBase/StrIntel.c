@@ -2979,7 +2979,16 @@ unsigned char fn_ucGetTreeNbParam(tdstNodeInterpret_* p_stTree)
 {
     unsigned char ucDepth;
     unsigned char ucNbParam;
-    /* TODO: decompile from asm/... */
+
+    ucNbParam = 0;
+    ucDepth = (p_stTree - 1)->ucDepth;
+    while ((p_stTree->ucDepth > ucDepth) && (p_stTree->eType != E_ti_EndTree))
+    {
+        if (p_stTree->ucDepth == ucDepth + 1)
+            ucNbParam++;
+        p_stTree++;
+    }
+    return ucNbParam;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\StrIntel.c lines 64–92 */

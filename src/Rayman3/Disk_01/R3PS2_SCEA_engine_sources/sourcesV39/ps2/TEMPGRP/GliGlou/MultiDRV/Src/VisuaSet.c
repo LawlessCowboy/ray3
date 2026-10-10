@@ -130,7 +130,7 @@ int g_p_stLightMapUForNextObjectToDraw;
 int g_p_stRawRLIsForThisObject;
 int g_p_stRLIForNextObjectToDraw;
 
-void ISI_hComputeBlendRLI(void* hRLI1, void* hRLI2, short xNumISILOD, float xPercent);
+void* ISI_hComputeBlendRLI(void* hRLI1, void* hRLI2, short xNumISILOD, float xPercent);
 ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD);
 int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD);
 void GLI_xSendObjectToViewportWithLightsFlag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask, unsigned int ulSuperObjectFlag);
@@ -161,13 +161,11 @@ void TEX_vSetTextureQualityLevel(GLI_tdstTexture_* p_stTexture, char ucTextQuali
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_hComputeBlendRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex1, unsigned char ucIndex2, short xNumISILOD, float xPercent)
+void* GLI_hComputeBlendRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex1, unsigned char ucIndex2, short xNumISILOD, float xPercent)
 {
-    if (ucIndex1 >= hVisualSet->lNumberOfRLI)
-        return;
-    if (ucIndex2 >= hVisualSet->lNumberOfRLI)
-        return;
-    ISI_hComputeBlendRLI(((void**)hVisualSet->d_hRLI)[ucIndex1], ((void**)hVisualSet->d_hRLI)[ucIndex2], xNumISILOD, xPercent);
+    if ((ucIndex1 < hVisualSet->lNumberOfRLI) && (ucIndex2 < hVisualSet->lNumberOfRLI))
+        return ISI_hComputeBlendRLI(((void**)hVisualSet->d_hRLI)[ucIndex1], ((void**)hVisualSet->d_hRLI)[ucIndex2], xNumISILOD, xPercent);
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 449–452 */

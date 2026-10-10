@@ -1199,11 +1199,14 @@ void fn_vExchangeTwoObjectsInCurrentObjectsTable(HIE_tdstSuperObject_* p_stSuper
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_szFindPersonalTypeNameOfPersonalType(int otType)
+char* fn_szFindPersonalTypeNameOfPersonalType(int otType)
 {
-    unsigned int i;
     tdstObjectTypeElement_* hHandleToObjectTypeElement;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hPersonalType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;
+    if (hHandleToObjectTypeElement)
+        return (char*)hHandleToObjectTypeElement->szName;
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 414–417 */
@@ -1231,11 +1234,14 @@ unsigned char fn_ucFindPersonalIdOfPersonalType(int otType)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_szFindModelTypeNameOfModelType(int otType)
+char* fn_szFindModelTypeNameOfModelType(int otType)
 {
-    unsigned int i;
     tdstObjectTypeElement_* hHandleToObjectTypeElement;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    for (i = 0, hHandleToObjectTypeElement = g_stObjectTypes.hModelType.hFirstElementDyn; i < (unsigned int)otType; i++, hHandleToObjectTypeElement = hHandleToObjectTypeElement->hNextBrotherDyn) ;
+    if (hHandleToObjectTypeElement)
+        return (char*)hHandleToObjectTypeElement->szName;
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 203–214 */

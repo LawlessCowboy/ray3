@@ -282,6 +282,7 @@ int COL_g_lNbElementsInTable;
 int g_NbCollidedEdges;
 int g_pstGV;
 anon_0 g_aCollidedEdges[50];
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
 COL_tdstGVForCollision_ COL_g_stGVForCol;
 COL_tdstCollisionCase_ COL_g_stCollisionCase[75];
 int COL_g_lMaxNumberOfCollisions;
@@ -383,7 +384,11 @@ void COL_fn_vAddInStaticCollisionTable(float _xT, MTH3D_tdstVector_* _p_stTransl
  */
 void COL_fn_vGetCollidedEgde(int Ind, MTH3D_tdstVector_* _pV1, MTH3D_tdstVector_* _pV2, int* i)
 {
-    /* TODO: decompile from asm/... */
+{
+    MTH3D_M_vCopyVector(_pV1, &g_aCollidedEdges[Ind].A);
+    MTH3D_M_vCopyVector(_pV2, &g_aCollidedEdges[Ind].B);
+    *i = g_aCollidedEdges[Ind].Ind;
+}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 76–76 */

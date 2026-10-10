@@ -2991,10 +2991,10 @@ tdstNodeInterpret_* fn_p_stIsTypePlaying(HIE_tdstSuperObject_* p_SuperObjPerso, 
     s32_TypeId = 0;
     eCondId = *(tdeCondId_*)((char*)p_stTree - 8);
     switch (eCondId) {
-    case 0xb0:
+    case 0xaf:
         s32_TypeId = g_lSoundObjectTypeMusic;
         break;
-    case 0xaf:
+    case 0xb0:
         s32_TypeId = g_lSoundObjectTypeVoice;
         break;
     default:

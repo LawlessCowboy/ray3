@@ -85,16 +85,17 @@ char* Strcat(char* s1, char* s2)
  */
 char* Strrchr(char* string, int ch)
 {
+{
     char* start;
     start = string;
     while (*string++) {
     }
-    ch = (char)ch;
     while (--string != start && *string != (char)ch) {
     }
     if (*string == (char)ch)
         return string;
     return NULL;
+}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\clib\clib.c lines 40–53 */
@@ -111,11 +112,13 @@ char* Strrchr(char* string, int ch)
  */
 char* Strchr(char* s, int c)
 {
+{
     char* pcIndex;
     pcIndex = s;
     while (*pcIndex != '\0' && *pcIndex != (char)c)
         pcIndex++;
-    if (*pcIndex)
-        return pcIndex;
-    return NULL;
+    if (*pcIndex == '\0')
+        return NULL;
+    return pcIndex;
+}
 }

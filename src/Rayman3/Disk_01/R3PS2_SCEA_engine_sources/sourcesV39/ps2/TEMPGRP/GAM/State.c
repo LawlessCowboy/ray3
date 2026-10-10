@@ -151,10 +151,20 @@ void fn_h_TmpStateFree(tdstState_* h_State)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void* memset(void*, int, unsigned int);
+
 tdstState_* fn_h_TmpStateAlloc(void)
 {
     tdstState_* h_State;
-    /* TODO: decompile from asm/... */
+
+    h_State = (tdstState_*)HMU_fn_p_vMalloc(sizeof(tdstState_), 1);
+    if (h_State == NULL)
+        return NULL;
+    memset(h_State, 0, sizeof(tdstState_));
+    h_State->ucTransitionStatusFlag = 0;
+    h_State->scSpeedAnim = 1;
+    return h_State;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 347–361 */

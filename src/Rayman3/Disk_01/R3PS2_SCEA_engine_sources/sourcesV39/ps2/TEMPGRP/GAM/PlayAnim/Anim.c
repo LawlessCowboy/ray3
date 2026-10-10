@@ -1527,7 +1527,7 @@ extern FON_tdstGeneral_ FON_g_stGeneral;
  */
 char* FON_fn_szGetTextPointerForHandle(int hString)
 {
-    if (hString == -1) return NULL; if (hString < 20000) return ((char**)FON_g_stGeneral.d_sLanguageArray[g_stEngineStructure.ucCurrentLanguage].d_pTextsArray)[hString]; return *(char**)((char*)FON_g_stGeneral.p_stCommonLanguage->d_pTextsArray - 80000 + hString * 4);
+    if (hString == -1) return NULL; if (hString < 20000) return ((char**)FON_g_stGeneral.d_sLanguageArray[g_stEngineStructure.ucCurrentLanguage].d_pTextsArray)[hString]; return ((char**)FON_g_stGeneral.p_stCommonLanguage->d_pTextsArray)[hString - 20000];
 }
 
 signed char fn_scGetSpeedInState(tdstState_* h_State);

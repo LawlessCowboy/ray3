@@ -151,7 +151,7 @@ int GMT_fn_xMultipleTestCollideIdentifier(GMT_tdstCollideMaterial_* hCollideMate
 int GMT_fn_xTestCollideMaterialTypeOfIdentifier(GMT_tdstCollideMaterial_* hCollideMaterial, short wType)
 {
     unsigned short xMask = 1 << wType;
-    unsigned short xTmp = (short)hCollideMaterial->xIdentifier & (short)xMask;
+    unsigned short xTmp = (short)xMask & (short)hCollideMaterial->xIdentifier;
     int bResult = (xTmp == 0);
     return bResult ^ 1;
 }
