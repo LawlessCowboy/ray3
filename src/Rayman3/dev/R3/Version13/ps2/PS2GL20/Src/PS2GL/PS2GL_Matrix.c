@@ -1325,10 +1325,15 @@ void impPS2glTranslated(double x, double y, double z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glGenRotationMatrix(float angle, float x, float y, float z, float (*m)[4]);
+void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
 void impPS2glRotatef(float angle, float x, float y, float z)
 {
     float m[4][4];
-    /* TODO: decompile from asm/... */
+
+    PS2glGenRotationMatrix(angle, x, y, z, m);
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 399–406 */

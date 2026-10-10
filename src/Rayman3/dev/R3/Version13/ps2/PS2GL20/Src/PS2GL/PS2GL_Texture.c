@@ -2857,9 +2857,16 @@ tagGLtexblock* PS2glFreeTexBlock(int iBlock, int iSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glUpdateTexIndex(int iLevelByTexSize);
 void PS2glFreeTexBlockSafe(int iBlock, int iSize)
 {
-    /* TODO: decompile from asm/... */
+    g_PS2glContext.abTex1DChanged[0] = 1;
+    g_PS2glContext.abTex2DChanged[0] = 1;
+    g_PS2glContext.abTex1DChanged[1] = 1;
+    g_PS2glContext.abTex2DChanged[1] = 1;
+    g_PS2glContext.bTexCubeChanged = 1;
+    PS2glFreeTexBlock(iBlock, iSize);
+    PS2glUpdateTexIndex(-1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3439–3521 */
@@ -4518,7 +4525,8 @@ void impPS2glTexEnvfv(unsigned int target, unsigned int pname, float* params)
  */
 void impPS2glTexEnvf(unsigned int target, unsigned int pname, float param)
 {
-    /* TODO: decompile from asm/... */
+    if (target == 0x2300 && pname == 0x2200) /* GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE */
+        g_PS2glContext.pCurTexture->eTexEnvMode = (int)param;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1176–1180 */
@@ -4803,7 +4811,17 @@ void PS2glFreeTexture(tag_GLtexture* pTexture)
 void impPS2glGenTextures(int n, unsigned int* textures)
 {
     unsigned int I;
-    /* TODO: decompile from asm/... */
+
+    for (I = 0; I < 512 && n > 0; I++)
+    {
+        if (!g_PS2glContext.aTexName[I].bAllocated)
+        {
+            *textures = I;
+            n--;
+            g_PS2glContext.aTexName[I].bAllocated = 1;
+            textures++;
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 890–892 */

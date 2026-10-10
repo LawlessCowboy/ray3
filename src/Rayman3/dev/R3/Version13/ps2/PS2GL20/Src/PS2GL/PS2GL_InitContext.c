@@ -1110,8 +1110,8 @@ int PS2glAllocator;
 int PS2glAllocator64;
 int PS2glLiberator;
 int PS2glReallocator;
-int g_FIELD;
-int g_waiting;
+volatile int g_FIELD;
+volatile int g_waiting;
 int PS2GL_thingsToDoWhenYoureDead;
 int VBL_Sid;
 tagGLcontext g_PS2glContext;
@@ -1887,9 +1887,19 @@ int MyGsSyncV(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int iSignalSema(int sid);
 int VBLCallback(void)
 {
-    /* TODO: decompile from asm/... */
+    g_FIELD = (int)((*(volatile unsigned long*)0x12001000 >> 13) & 1);
+    if (g_waiting)
+    {
+        g_waiting = 0;
+        iSignalSema(VBL_Sid);
+    }
+    /* ExitHandler(): sync/ei have no C form. */
+    asm { sync }
+    asm { ei }
+    return 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 649–749 */

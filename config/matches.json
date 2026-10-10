@@ -22050,6 +22050,21 @@
       "status": "MISMATCH",
       "target_size": 72,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00175370",
+      "candidate_size": 92,
+      "first_difference": 84,
+      "implementation": "void impPS2glGenTextures(int n, unsigned int* textures)\n{\n    unsigned int I;\n\n    for (I = 0; I < 512 && n > 0; I++)\n    {\n        if (!g_PS2glContext.aTexName[I].bAllocated)\n        {\n            *textures = I;\n            n--;\n            g_PS2glContext.aTexName[I].bAllocated = 1;\n            textures++;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "impPS2glGenTextures",
+      "reason": "Exact except the -O3,p loop-exit alignment nop at +0x54; candidate for config/library-O3p-sources.txt (PS2GL_Texture.c), pending approval.",
+      "size": 96,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MISMATCH",
+      "target_size": 96,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -24771,6 +24786,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glLightModeli",
       "size": 92,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
+    "0x00145880": {
+      "address": "0x00145880",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glMaterialiv",
+      "size": 76,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
       "status": "MATCH"
     },
@@ -28454,10 +28477,26 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
       "status": "MATCH"
     },
+    "0x0016be20": {
+      "address": "0x0016be20",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glFreeTexBlockSafe",
+      "size": 76,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
     "0x0016d780": {
       "address": "0x0016d780",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glTexImage1D",
+      "size": 48,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x001745b0": {
+      "address": "0x001745b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glTexEnvf",
       "size": 48,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
@@ -28499,6 +28538,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glCopyTexImage1D",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x00175370": {
+      "address": "0x00175370",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glGenTextures",
+      "size": 96,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
     },
@@ -29254,6 +29301,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Get.c",
       "status": "MATCH"
     },
+    "0x0017ff00": {
+      "address": "0x0017ff00",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "VBLCallback",
+      "size": 84,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_InitContext.c",
+      "status": "MATCH"
+    },
     "0x001811c0": {
       "address": "0x001811c0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -29267,6 +29322,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glLoadMatrixf",
       "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Matrix.c",
+      "status": "MATCH"
+    },
+    "0x00181790": {
+      "address": "0x00181790",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glRotatef",
+      "size": 60,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Matrix.c",
       "status": "MATCH"
     },

@@ -2853,10 +2853,16 @@ void impPS2glLightModelf(unsigned int pname, float param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glMaterialfv(unsigned int face, unsigned int pname, float* params);
 void impPS2glMaterialiv(unsigned int face, unsigned int pname, int* params)
 {
     float fparams[4];
-    /* TODO: decompile from asm/... */
+
+    fparams[0] = (float)params[0];
+    fparams[1] = (float)params[1];
+    fparams[2] = (float)params[2];
+    fparams[3] = (float)params[3];
+    impPS2glMaterialfv(face, pname, fparams);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1106–1138 */
