@@ -34,7 +34,8 @@ struct sstring {
 };
 
 struct CTextFileSrc {
-    /* C++ base CTextFile at +0x0. */
+    /* C++ base CTextFile at +0x0 (defined below; 0x34 bytes). */
+    unsigned char _base_CTextFile[0x34]; /* +0x0 */
     anon_enum_001bafd7 eCTextFileSrc; /* +0x34 */
     int mpchBuffer1; /* +0x38 */
     int mpchBuffer2; /* +0x3c */
@@ -43,8 +44,8 @@ struct CTextFileSrc {
     int mpchCurrent; /* +0x844 */
     unsigned int mdwPosition; /* +0x848 */
     unsigned char mfn_bRead(sstring* ro_Sentence);
-    void mfn_pchParseChar(void);
-    unsigned char mfn_bOpen(char* pch_FilePath);
+    char* mfn_pchParseChar(void) const;
+    unsigned char mfn_bOpen(const char* pch_FilePath);
 };
 
 struct CPS2FileSrcFlow {
@@ -159,12 +160,35 @@ unsigned char CTextFileSrc::mfn_bRead(sstring* ro_Sentence)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CTextFileSrc::mfn_pchParseChar(void)
+extern "C" char* strchr(const char* s, int c);
+
+#define M_MIN(a, b) (((a) < (b)) ? (a) : (b))
+
+char* CTextFileSrc::mfn_pchParseChar(void) const
 {
     char* pch_SlashR;
     char* pch_SlashN;
     char* pch_Answer;
-    /* TODO: decompile from asm/... */
+
+    pch_SlashN = strchr((char*)mpchCurrent, '\n');
+    pch_SlashR = strchr((char*)mpchCurrent, '\r');
+
+    pch_Answer = NULL;
+    if (pch_SlashN != (char*)mpchCurrent && pch_SlashR != (char*)mpchCurrent)
+    {
+        if (!pch_SlashN && !pch_SlashR)
+            pch_Answer = (char*)mpchBufferEnd;
+        else if (!pch_SlashN)
+            pch_Answer = pch_SlashR;
+        else if (!pch_SlashR)
+            pch_Answer = pch_SlashN;
+        else
+            pch_Answer = M_MIN(pch_SlashN, pch_SlashR);
+
+        pch_Answer = M_MIN(pch_Answer, (char*)mpchBufferEnd);
+    }
+
+    return pch_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 44–59 */
@@ -182,7 +206,7 @@ void CTextFileSrc::mfn_pchParseChar(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CTextFileSrc::mfn_bOpen(char* pch_FilePath)
+unsigned char CTextFileSrc::mfn_bOpen(const char* pch_FilePath)
 {
     /* TODO: decompile from asm/... */
 }

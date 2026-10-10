@@ -29533,6 +29533,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeecbankdesc.cpp",
       "status": "MATCH"
     },
+    "0x0018bcd0": {
+      "address": "0x0018bcd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_pchParseChar__12CTextFileSrcCFv",
+      "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeectextfilesrc.cpp",
+      "status": "MATCH"
+    },
     "0x001c9930": {
       "address": "0x001c9930",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
