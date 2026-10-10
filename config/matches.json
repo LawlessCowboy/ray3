@@ -42987,6 +42987,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matspscl.c",
       "status": "MATCH"
     },
+    "0x002fe7f0": {
+      "address": "0x002fe7f0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "MAT_fn_v_MatrixToQuat",
+      "size": 520,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Mat/specif/MatPS2.c",
+      "status": "MATCH"
+    },
     "0x00301f90": {
       "address": "0x00301f90",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
