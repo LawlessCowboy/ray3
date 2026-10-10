@@ -11,6 +11,8 @@ and extraction tools, and documentation. It does **not** contain game files,
 the retail ELF, generated assembly, MWCC, Wibo, PS2 SDK files, probe fixtures,
 or compiler binaries.
 
+The startup source `crt0.s` is tracked; generated disassembly is not.
+
 ## Verified matching progress
 
 Checked with `python3 tools/match.py coverage` at each matching commit:
