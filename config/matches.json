@@ -36717,7 +36717,7 @@
       "name": "GAM_MultiVP_fn_vGetViewPortFromPlayer",
       "size": 112,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/MultiVP.c",
-      "status": "EQUIVALENT"
+      "status": "MATCH"
     },
     "0x00267ce0": {
       "address": "0x00267ce0",

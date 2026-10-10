@@ -2188,8 +2188,8 @@ void GAM_MultiVP_fn_vSetAspectRatio(unsigned char _ucRatio)
  */
 unsigned char GAM_MultiVP_fn_vGetViewPortFromPlayer(HIE_tdstSuperObject_* hCameraTargetSO)
 {
-    int Found;
     int i;
+    int Found;
 
     i = 0;
     Found = 0;
