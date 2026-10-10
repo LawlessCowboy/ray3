@@ -62,6 +62,8 @@ DEFAULT_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0-011126' / 'mwccps2.exe'
 GAME_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0.1-020123' / 'mwccps2.exe'
 LATE_GAME_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0.3-020716' / 'mwccps2.exe'
 LATE_GAME_SOURCES_PATH = ROOT / 'config' / 'compiler-3.0.3-sources.txt'
+# Library files that additionally take '-O3,p' (see that file for evidence).
+LIBRARY_O3P_SOURCES_PATH = ROOT / 'config' / 'library-O3p-sources.txt'
 DEFAULT_INCLUDES = ROOT / 'include' / 'mwcc'
 MODEL_ORDER = {
     'gpt-5.4-mini': 0,
@@ -101,6 +103,8 @@ def mwcc_flags(owner: Path | str) -> list[str]:
     """Return the compiler flags for a translation unit, by its owning source."""
     if is_game_source(owner):
         return MWCC_FLAGS + GAME_MWCC_FLAGS
+    if _relative_owner(owner) in library_o3p_sources():
+        return MWCC_FLAGS + ['-O3,p']
     return list(MWCC_FLAGS)
 
 
@@ -124,6 +128,18 @@ def late_game_sources() -> set[str]:
         lines = LATE_GAME_SOURCES_PATH.read_text().splitlines() if LATE_GAME_SOURCES_PATH.exists() else []
         _LATE_GAME_SOURCES = {line.strip() for line in lines if line.strip() and not line.startswith('#')}
     return _LATE_GAME_SOURCES
+
+
+_LIBRARY_O3P_SOURCES: set[str] | None = None
+
+
+def library_o3p_sources() -> set[str]:
+    """Library files built with '-O3,p' (config/library-O3p-sources.txt)."""
+    global _LIBRARY_O3P_SOURCES
+    if _LIBRARY_O3P_SOURCES is None:
+        lines = LIBRARY_O3P_SOURCES_PATH.read_text().splitlines() if LIBRARY_O3P_SOURCES_PATH.exists() else []
+        _LIBRARY_O3P_SOURCES = {line.strip() for line in lines if line.strip() and not line.startswith('#')}
+    return _LIBRARY_O3P_SOURCES
 
 
 def owner_compiler(owner: Path | str) -> tuple[Path, str]:

@@ -29037,6 +29037,30 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Matrix.c",
       "status": "MATCH"
     },
+    "0x00181df0": {
+      "address": "0x00181df0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glBufferTriangleFanToTriangle",
+      "size": 320,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Pipeline.c",
+      "status": "MATCH"
+    },
+    "0x00181f30": {
+      "address": "0x00181f30",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glListBufferTriangleStripToTriangle",
+      "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Pipeline.c",
+      "status": "MATCH"
+    },
+    "0x00181fa0": {
+      "address": "0x00181fa0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glBufferTriangleStripToTriangle",
+      "size": 72,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_VU1_Pipeline.c",
+      "status": "MATCH"
+    },
     "0x00184060": {
       "address": "0x00184060",
       "compiler_profile": "mwccps2-3.0-011126-o3",

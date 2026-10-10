@@ -1,0 +1,7 @@
+# Library (non-game) sources built with '-O3,p' added to the base profile.
+# Most PS2GL files match only without it (DataInput.c loses 76 functions,
+# ListsRecPly.c 13), but these keep every recorded match and gain under it:
+# their retail code has the -O3,p loop branch-target alignment nops.
+# Add a file only with that evidence. Paths are repo-relative.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Pipeline.c
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_VU1_Pipeline.c
