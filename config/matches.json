@@ -22140,6 +22140,51 @@
       "status": "MISMATCH",
       "target_size": 220,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00211d20",
+      "candidate_size": 124,
+      "first_difference": 76,
+      "implementation": "unsigned char fn_ucGetFieldNormSpeed(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)\n{\n    MTH3D_tdstVector_* p_stCurrSpeed;\n    DNM_stDynamics* pstDynamic;\n    tdstDynam_* h_Dynam;\n\n    h_Dynam = hSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;\n\n    p_stGetSetParam->eType = E_vt_Float;\n\n    if (h_Dynam)\n    {\n\n        pstDynamic = fn_p_stDynamGetDynamics(h_Dynam);\n        if (pstDynamic)\n        {\n\n            p_stCurrSpeed = &pstDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed; p_stGetSetParam->uDummy.uParam.xValue = MTH_xSqrt(MTH_xSqr3(p_stCurrSpeed->xX, p_stCurrSpeed->xY, p_stCurrSpeed->xZ));\n            return 1;\n        }\n    }\n\n\n    p_stGetSetParam->uDummy.uParam.xValue = 0.0f;\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_ucGetFieldNormSpeed",
+      "reason": "retail schedules 'li v0,1' (return 1) above sqrt.s and keeps two nops after it; inline helper with asm nops (separate or one block) keeps li after the asm under 3.0.1 and 3.0.3; nop-less helper or MTH_SQRT_TO macros hoist li correctly but MWCC then emits no hazard nops before the b",
+      "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 124,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0012f630",
+      "candidate_size": 128,
+      "first_difference": 40,
+      "implementation": "void VIDSPE_fn_vPlayVideoNow(char* p_szDirectFileName)\n{\n{\n    int bInterrupt;\n    int videoNb;\n    char* p;\n    char name[256];\n\n    videoNb = VID_g_stGeneralVideos.stNextVideoToPlay.ucVideoNumber;\n    bInterrupt = VID_g_stGeneralVideos.stNextVideoToPlay.bCanBeInterrupt;\n\n    if (p_szDirectFileName)\n        p = p_szDirectFileName;\n    else\n        p = (char*)((int*)&VID_g_stGeneralVideos.p_stVideos->p_szVideoFileName)[videoNb * 2];\n\n    strcpy(name, FMN_SCE_AddBaseDirectory(FMN_SCE_ConvertPath2DVD(p)));\n\n    movie(name, bInterrupt, gs_fVideoVolume);\n}\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "VIDSPE_fn_vPlayVideoNow",
+      "reason": "unfolded member-offset family (insight 259): ((int*)&p_stVideos->p_szVideoFileName)[n*2] gives the right instruction set and size, but retail emits sll index before lui/lw base (v1=index, v0=base); operand order, index-first sums and local order do not change it",
+      "size": 128,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/VID_Specif.c",
+      "status": "MISMATCH",
+      "target_size": 128,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00318e00",
+      "candidate_size": 156,
+      "first_difference": 52,
+      "implementation": "void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS)\n{\n    int r;\n    int MyThreadId;\n    int toto;\n\n    toto = 0;\n    MyThreadId = GetThreadId();\n    r = p_stCS->Sid;\n    if (PollSema(r) == r)\n    {\n        p_stCS->ReentrancyCount = 0;\n        p_stCS->OwnerThreadId = MyThreadId;\n        asm {\n        .set noreorder\n        mtc0 toto, $24\n        }\n    }\n    else if (MyThreadId == p_stCS->OwnerThreadId)\n    {\n        p_stCS->ReentrancyCount++;\n    }\n    else\n    {\n        WaitSema(p_stCS->Sid);\n        p_stCS->ReentrancyCount = 0;\n        p_stCS->OwnerThreadId = MyThreadId;\n        asm { mtc0 toto, $24 }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PS2_fn_vEnterCriticalSection",
+      "reason": "mtc0 $24 paths: retail moves the first path's mtc0 into the 'b epilogue' delay slot and ends the WaitSema path with mtc0+nop. Third path matches with asm { mtc0 toto, $24; nop }, but 3.0.1/3.0.3 never move a statement-level asm instruction into a delay slot (they fill it with ld ra from the epilogue); .set reorder/noreorder, asm volatile and early return do not change it",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ps2/ps2critsect.c",
+      "status": "MISMATCH",
+      "target_size": 156,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -22430,6 +22475,14 @@
       "name": "VID_fn_vSetVideoQuality",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/VID_Pub.c",
+      "status": "MATCH"
+    },
+    "0x0012f5a0": {
+      "address": "0x0012f5a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "VIDSPE_fn_vSetVideoSoundVolume",
+      "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/VID_Specif.c",
       "status": "MATCH"
     },
     "0x0012f6b0": {
@@ -43958,7 +44011,7 @@
       "name": "RND_fn_lGetLongRandomValue",
       "size": 160,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/RND/RND_Main.c",
-      "status": "EQUIVALENT"
+      "status": "MATCH"
     },
     "0x00319050": {
       "address": "0x00319050",
@@ -44518,6 +44571,14 @@
       "name": "TMR_fn_wWait",
       "size": 92,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Tmr/Timer.c",
+      "status": "MATCH"
+    },
+    "0x00323510": {
+      "address": "0x00323510",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "TMR_fn_wInitLibrary",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Tmr/specif/TimerPrv.c",
       "status": "MATCH"
     },
     "0x003235b0": {

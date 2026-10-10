@@ -44,6 +44,12 @@ static float gs_fVideoVolume;
 tdstVideoQuality_ g_stVideoQuality;
 VID_tdstGeneral_ VID_g_stGeneralVideos;
 
+char* FMN_SCE_ConvertPath2DVD(char* buffer);
+char* FMN_SCE_AddBaseDirectory(char* buffer);
+char* strcpy(char*, const char*);
+unsigned int movie(char* name, int interruptable, float fVolume);
+int printf(const char*, ...);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\VID_Specif.c lines 80–86 */
 /* addr: 0x0012f5a0  size: 140 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -58,7 +64,13 @@ VID_tdstGeneral_ VID_g_stGeneralVideos;
  */
 void VIDSPE_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume)
 {
-    /* TODO: decompile from asm/... */
+    gs_fVideoVolume = (1.0f / 127.0f) * ulVideoSoundVolume;
+    if (gs_fVideoVolume < 0.0f)
+        gs_fVideoVolume = 0.0f;
+    else if (gs_fVideoVolume > 1.0f)
+        gs_fVideoVolume = 1.0f;
+
+    printf("Video Volume Set to %d\n", ulVideoSoundVolume);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\VID_Specif.c lines 51–68 */
@@ -80,11 +92,24 @@ void VIDSPE_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume)
  */
 void VIDSPE_fn_vPlayVideoNow(char* p_szDirectFileName)
 {
+{
     int bInterrupt;
     int videoNb;
     char* p;
     char name[256];
-    /* TODO: decompile from asm/... */
+
+    videoNb = VID_g_stGeneralVideos.stNextVideoToPlay.ucVideoNumber;
+    bInterrupt = VID_g_stGeneralVideos.stNextVideoToPlay.bCanBeInterrupt;
+
+    if (p_szDirectFileName)
+        p = p_szDirectFileName;
+    else
+        p = (char*)((int*)&VID_g_stGeneralVideos.p_stVideos->p_szVideoFileName)[videoNb * 2];
+
+    strcpy(name, FMN_SCE_AddBaseDirectory(FMN_SCE_ConvertPath2DVD(p)));
+
+    movie(name, bInterrupt, gs_fVideoVolume);
+}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\VID_Specif.c lines 32–46 */
