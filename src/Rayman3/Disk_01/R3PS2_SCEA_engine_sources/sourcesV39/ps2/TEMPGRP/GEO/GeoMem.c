@@ -49,9 +49,49 @@ unsigned char g_ucGEOModuleId;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Partial layouts: only the members used here are named. */
+typedef struct GEOMEM_tdstTransformation_ {
+    unsigned char _pad_00[0x44]; /* +0x0 */
+    float xTranslationY; /* +0x44: stTransformMatrix.stCol_3.xY */
+} GEOMEM_tdstTransformation_;
+
+typedef struct GEOMEM_tdstSuperObject_ {
+    unsigned char _pad_00[0x24]; /* +0x0 */
+    GEOMEM_tdstTransformation_* hGlobalMatrix; /* +0x24 */
+} GEOMEM_tdstSuperObject_;
+
+typedef struct GEOMEM_tdstEngineStructure_ {
+    unsigned char _pad_000[0x68]; /* +0x0 */
+    unsigned int ulTrameNumber; /* +0x68: stEngineTimer.ulTrameNumber */
+    unsigned char _pad_06c[0x5c]; /* +0x6c */
+    unsigned int ulRealTimeLowPart; /* +0xc8: stEngineTimer.stRealTimeCount.m_ulLowPart */
+    unsigned char _pad_0cc[0x560]; /* +0xcc */
+    GEOMEM_tdstSuperObject_* h_StdCamCaracter; /* +0x62c */
+} GEOMEM_tdstEngineStructure_;
+
+extern GEOMEM_tdstEngineStructure_ g_stEngineStructure;
+extern unsigned int g_uiAnotherRandom;
+
 unsigned int fn_uiGetSomeBytes(unsigned int* _puiArray, unsigned int NbInts, unsigned int SomeOtherValue)
 {
     unsigned int Seeds[6];
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    unsigned int j;
+
+    Seeds[0] = g_uiAnotherRandom;
+    Seeds[1] = g_stEngineStructure.ulRealTimeLowPart;
+    Seeds[2] = g_stEngineStructure.ulTrameNumber;
+    Seeds[3] = (unsigned int)(12345.0f * g_stEngineStructure.h_StdCamCaracter->hGlobalMatrix->xTranslationY);
+    Seeds[4] = (unsigned int)_puiArray;
+    Seeds[5] = SomeOtherValue;
+
+    for (i = 0; i < NbInts; i++)
+    {
+        Seeds[0] = (Seeds[0] * 0x126CDD7 + 0x1E240) | 1;
+        for (j = 1; j < 6; j++)
+            Seeds[j] = Seeds[j - 1] ^ ((Seeds[j] + (Seeds[j - 1] >> 7)) * 0x127C3D1);
+        _puiArray[i] = Seeds[5];
+    }
+
+    return _puiArray[i - 1];
 }

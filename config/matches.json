@@ -21909,6 +21909,42 @@
       "status": "MISMATCH",
       "target_size": 204,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002cfc10",
+      "candidate_size": 256,
+      "first_difference": 18,
+      "implementation": "void J_New_GetInterpolPointOnEdge(J_New_ParticleFace_* pFace, J_New_InterpolPoint_* pPoint, unsigned int Edge, float U)\n{\n    float A[4];\n    int p2;\n    int p1;\n\n    if (Edge == 0) { p1 = 0; p2 = 1; }\n    else if (Edge == 1) { p1 = 1; p2 = 2; }\n    else if (Edge == 2) { p1 = 2; p2 = 0; }\n    else p1 = 0;\n\n    A[1] = (U - pFace->pUVs[p1][0]) / (pFace->pUVs[p2][0] - pFace->pUVs[p1][0]);\n    A[0] = 1.0f - A[1];\n\n    {\n        float* pP1 = pFace->pPoints[p1];\n        float* pP2 = pFace->pPoints[p2];\n        float* pC1 = pFace->pColors[p1];\n        float* pC2 = pFace->pColors[p2];\n        float* pA = A;\n        float* pPos = pPoint->Pos;\n        float* pColor = pPoint->Color;\n\n        /* VU0 macro-mode interpolation: no C form. */\n        asm {\n            lqc2 vf2, 0x0(pP1)\n            lqc2 vf3, 0x0(pP2)\n            lqc2 vf4, 0x0(pC1)\n            lqc2 vf5, 0x0(pC2)\n            lqc2 vf6, 0x0(pA)\n            vmulx.xyz vf8, vf2, vf6\n            vmuly.xyz vf9, vf3, vf6\n            vsubx.w vf12, vf0, vf0\n            vmulx.xyzw vf10, vf4, vf6\n            vmuly.xyzw vf11, vf5, vf6\n            vadd.xyz vf12, vf8, vf9\n            vadd.xyzw vf13, vf10, vf11\n            sqc2 vf12, 0x0(pPos)\n            sqc2 vf13, 0x0(pColor)\n        }\n    }\n\n    pPoint->UVs[0] = U;\n    pPoint->UVs[1] = A[0] * pFace->pUVs[p1][1] + A[1] * pFace->pUVs[p2][1];\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "J_New_GetInterpolPointOnEdge",
+      "reason": "VU0 asm block and control flow in place; residual is unfolded array-base addressing: retail computes &pUVs[0][0]+p*8 (a0+0x60 kept in a register, then a0+0x64 for column 1) where ours folds 0x60/0x64 into the lwc1 offsets; same family as fn_bGetVectorFromPhonem. Not fixed by 3.0.3.",
+      "size": 276,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_newSG.c",
+      "status": "MISMATCH",
+      "target_size": 276,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a06d0",
+      "candidate_size": 396,
+      "first_difference": 0,
+      "implementation": "unsigned int fn_uiGetSomeBytes(unsigned int* _puiArray, unsigned int NbInts, unsigned int SomeOtherValue)\n{\n    unsigned int Seeds[6];\n    unsigned int i;\n    unsigned int j;\n\n    Seeds[0] = g_uiAnotherRandom;\n    Seeds[1] = g_stEngineStructure.ulRealTimeLowPart;\n    Seeds[2] = g_stEngineStructure.ulTrameNumber;\n    Seeds[3] = (unsigned int)(12345.0f * g_stEngineStructure.h_StdCamCaracter->hGlobalMatrix->xTranslationY);\n    Seeds[4] = (unsigned int)_puiArray;\n    Seeds[5] = SomeOtherValue;\n\n    for (i = 0; i < NbInts; i++)\n    {\n        Seeds[0] = (Seeds[0] * 0x126CDD7 + 0x1E240) | 1;\n        for (j = 1; j < 6; j++)\n            Seeds[j] = Seeds[j - 1] ^ ((Seeds[j] + (Seeds[j - 1] >> 7)) * 0x127C3D1);\n        _puiArray[i] = Seeds[5];\n    }\n\n    return _puiArray[i - 1];\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_uiGetSomeBytes",
+      "reason": "Structure right; under 3.0.1 the (unsigned int) float conversion calls fptoui (396/428). Under MWCC 3.0.3 it inlines like retail and reaches 424/428; the remaining difference is &Seeds[5] materialized early (sw a2,0(t5)) where retail stores Seeds[5] sp-direct and computes t5 later. GeoMem.c is not on the 3.0.3 list.",
+      "size": 428,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GeoMem.c",
+      "status": "MISMATCH",
+      "target_size": 428,
+      "unresolved_relocations": [
+        {
+          "offset": 92,
+          "symbol": "fptoui",
+          "type": 4
+        }
+      ]
     }
   ],
   "data": {},
@@ -35153,6 +35189,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Input.c",
       "status": "MATCH"
     },
+    "0x002650e0": {
+      "address": "0x002650e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vAnalyse3DOSSpecialInputActions",
+      "size": 304,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/LipsSync.c",
+      "status": "MATCH"
+    },
     "0x002654b0": {
       "address": "0x002654b0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -38326,6 +38370,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_bDoTransition",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/DemoStr.c",
+      "status": "MATCH"
+    },
+    "0x0028db50": {
+      "address": "0x0028db50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DEMO_pcGetNextFlowSegment",
+      "size": 236,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/DemoStr.c",
       "status": "MATCH"
     },
@@ -42942,6 +42994,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MEC_fn_vForcePlatformLink",
       "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECPfm.c",
+      "status": "MATCH"
+    },
+    "0x00310d30": {
+      "address": "0x00310d30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_vSetPlatformLink",
+      "size": 364,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECPfm.c",
       "status": "MATCH"
     },

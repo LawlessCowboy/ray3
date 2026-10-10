@@ -54,10 +54,37 @@ unsigned char fn_bDoTransition(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DEMO_pcGetNextFlowSegment(void)
+unsigned int DEMO_fn_u32GetCurrentEventOffset(void);
+char* DEMO_fn_pcGetAddressForEventOffset(unsigned int u32Offset);
+
+/* Debug signature records no return type; the target returns the segment
+   address in v0. */
+char* DEMO_pcGetNextFlowSegment(void)
 {
     unsigned int u32CurrentOffset;
-    /* TODO: decompile from asm/... */
+
+    switch (g_DEMO_u32PlayMode)
+    {
+    case 1:
+        u32CurrentOffset = DEMO_fn_u32GetCurrentEventOffset();
+
+        if ((u32CurrentOffset & 0x1FFFF) && (u32CurrentOffset & 0x1FFFF) && (0x20000 - (u32CurrentOffset & 0x1FFFF)) < 0x20000) u32CurrentOffset += 0x20000 - (u32CurrentOffset & 0x1FFFF);
+
+        return DEMO_fn_pcGetAddressForEventOffset(u32CurrentOffset);
+
+    case 2:
+        fn_bSyncStream(g_DEMO_u32StreamRequestHandle);
+
+        g_DEMO_u32StreamFileOffset += 0x20000;
+        g_DEMO_u32ActiveBuffer ^= 1;
+
+        g_DEMO_u32StreamRequestHandle = fn_uiReadStream(g_DEMO_u32StreamFileHandle, g_DEMO_u32StreamFileOffset, g_DEMO_aEventBuffer[g_DEMO_u32ActiveBuffer ^ 1], 0x20000, 0x7F);
+
+        return g_DEMO_aEventBuffer[g_DEMO_u32ActiveBuffer];
+
+    default:
+        printf("DEMO_pcGetNextFlowSegment() : incorrect playback mode\n");
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\DemoStr.c lines 115–122 */

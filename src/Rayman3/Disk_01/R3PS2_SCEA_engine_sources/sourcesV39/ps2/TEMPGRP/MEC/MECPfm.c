@@ -1142,5 +1142,10 @@ void MEC_fn_vForcePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_
  */
 void MEC_fn_vSetPlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj)
 {
-    /* TODO: decompile from asm/... */
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40000000) ? 1 : 0))
+    {
+        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = hFatherSupObj;
+        if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL;
+        if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL; hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = hFatherSupObj->hLastElementDyn; hSupObj->hFatherDyn = hFatherSupObj; if (hFatherSupObj->hFirstElementDyn == NULL) hFatherSupObj->hFirstElementDyn = hSupObj; else hFatherSupObj->hLastElementDyn->hNextBrotherDyn = hSupObj; hFatherSupObj->hLastElementDyn = hSupObj; hFatherSupObj->lNumberOfElementsDyn++;
+    }
 }

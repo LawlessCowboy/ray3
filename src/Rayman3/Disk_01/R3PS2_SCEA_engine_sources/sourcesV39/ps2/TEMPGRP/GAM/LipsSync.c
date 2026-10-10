@@ -1257,11 +1257,79 @@ tdstBlockInfo_ g_a_stLipsSynchBlocksInfo[1];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
+typedef struct tdst_EntryActions_ tdst_EntryActions_;
+typedef struct tdstEngineStructure_ tdstEngineStructure_;
+
+/* Partial layouts: only the members used here are named. */
+struct tdst_EntryActions_ {
+    IPT_tdstEntryElement_* hScreenSnapShot; /* +0x0 */
+    IPT_tdstEntryElement_* a_hOther[51]; /* +0x4 */
+    IPT_tdstEntryElement_* hDebugCamera; /* +0xd0 */
+};
+
+struct tdstEngineStructure_ {
+    unsigned char _pad_000[0x600]; /* +0x0 */
+    int lNumberOfCameras; /* +0x600: hCameraList.lNumberOfElementsDyn */
+    unsigned char _pad_604[0x28]; /* +0x604 */
+    HIE_tdstSuperObject_* h_StdCamCaracter; /* +0x62c */
+    HIE_tdstSuperObject_* h_DbgCamCharacter; /* +0x630 */
+};
+
+extern tdst_EntryActions_ g_st_3DOS_EntryActions;
+extern tdstEngineStructure_ g_stEngineStructure;
+extern unsigned char g_ucDebugCamera;
+extern unsigned char g_ucControlFrom2ndViewport;
+
+unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement);
+void fn_vSaveEngineClock(void);
+void fn_vLoadEngineClock(void);
+HIE_tdstSuperObject_* fn_hGetDebugCamera(int index);
+void CAM_fn_vAssignCameraToAViewport(int _lViewportNumber, HIE_tdstSuperObject_* _hCamera);
+
 void fn_vAnalyse3DOSSpecialInputActions(void)
 {
     HIE_tdstSuperObject_* hCamera;
     unsigned char bDoIt;
-    /* TODO: decompile from asm/... */
+
+    bDoIt = IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hScreenSnapShot) == 1;
+    if (bDoIt)
+    {
+        fn_vSaveEngineClock();
+        fn_vLoadEngineClock();
+    }
+
+    if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hDebugCamera) == 1 && g_stEngineStructure.h_DbgCamCharacter)
+    {
+        if (g_ucDebugCamera && !g_ucControlFrom2ndViewport)
+        {
+            g_ucControlFrom2ndViewport = 1;
+            g_stEngineStructure.h_StdCamCaracter = g_stEngineStructure.h_DbgCamCharacter;
+        }
+        else if (++g_ucDebugCamera < g_stEngineStructure.lNumberOfCameras)
+        {
+            g_ucControlFrom2ndViewport = 0;
+            hCamera = fn_hGetDebugCamera(g_ucDebugCamera);
+            if (hCamera)
+            {
+                CAM_fn_vAssignCameraToAViewport(0, hCamera);
+                if (g_ucDebugCamera == 1)
+                {
+                    CAM_fn_vAssignCameraToAViewport(1, g_stEngineStructure.h_StdCamCaracter);
+                    g_stEngineStructure.h_DbgCamCharacter = g_stEngineStructure.h_StdCamCaracter;
+                }
+                g_stEngineStructure.h_StdCamCaracter = fn_hGetDebugCamera(g_ucDebugCamera);
+            }
+            else
+                g_ucDebugCamera = 0;
+        }
+        else
+        {
+            g_stEngineStructure.h_StdCamCaracter = g_stEngineStructure.h_DbgCamCharacter;
+            CAM_fn_vAssignCameraToAViewport(0, g_stEngineStructure.h_StdCamCaracter);
+            g_ucDebugCamera = 0;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\LipsSync.c lines 641–687 */
