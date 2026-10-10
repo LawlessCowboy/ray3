@@ -1051,19 +1051,81 @@ int GLI_BIG_GLOBALS_p_stObj;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg[4], float ** pUV1[4], float ** pUV2[4], float ** pUVChrome[4], float ** pNormals[4])
+struct SDC_VertexArrays_ {
+    unsigned int OptType; /* +0x0 */
+    unsigned int NbElements; /* +0x4 */
+    GLI_tdstMaterial_** pArrayOfMaterials; /* +0x8 */
+    float (**pArrayOfVertexArrays)[4]; /* +0xc */
+    unsigned int* pVertexArraySizes; /* +0x10 */
+    unsigned int* pNbTrianglesPerElement; /* +0x14 */
+    int pbIsTransparent; /* +0x18 */
+    unsigned int FrameDeformed; /* +0x1c */
+    int pSDLs; /* +0x20 */
+};
+
+void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (**pVOrg)[4], float (**pUV1)[4], float (**pUV2)[4], float (**pUVChrome)[4], float (**pNormals)[4])
 {
-    unsigned int Type;
-    unsigned int LayerTypes;
-    unsigned int bMultiTexture;
-    unsigned int NbStages;
-    unsigned int stage;
-    GLI_tdstMaterial_* hVisualMaterial;
-    float (*pVA)[4];
-    unsigned int NbVerticesAlignedUVs;
-    unsigned int NbVerticesAligned;
     unsigned int NbVertices;
-    /* TODO: decompile from asm/... */
+    unsigned int NbVerticesAligned;
+    unsigned int NbVerticesAlignedUVs;
+    float (*pVA)[4];
+    GLI_tdstMaterial_* hVisualMaterial;
+    unsigned int stage;
+    unsigned int NbStages;
+    unsigned int bMultiTexture;
+    unsigned int LayerTypes;
+    unsigned int Type;
+
+    pVA = pSDC->pArrayOfVertexArrays[iElement];
+
+    Type = pSDC->OptType & 0xF;
+    if (Type == 6 || Type == 4 || Type == 5)
+    {
+        NbVerticesAligned = ((unsigned int*)pVA)[1];
+        NbVerticesAlignedUVs = ((unsigned int*)pVA)[2];
+        pVA++;
+    }
+    else
+    {
+        NbVertices = pSDC->pNbTrianglesPerElement[iElement] * 3;
+        NbVerticesAligned = NbVertices;
+        NbVerticesAlignedUVs = (NbVertices + 3) >> 2;
+    }
+
+    *pVOrg = pVA;
+    pVA += NbVerticesAligned;
+    hVisualMaterial = pSDC->pArrayOfMaterials[iElement];
+
+    if (hVisualMaterial && hVisualMaterial->ulNbTextureStages) NbStages = hVisualMaterial->ulNbTextureStages; else NbStages = 0;
+    if (NbStages == 0) { NbStages++; bMultiTexture = 0; } else bMultiTexture = 1;
+
+    LayerTypes = 0;
+    if (bMultiTexture)
+    {
+        for (stage = 0; stage < NbStages; stage++)
+        {
+            switch (hVisualMaterial->a_stMultiMaterial[stage].c_UVSource)
+            {
+            case 0:
+                LayerTypes |= 1;
+                break;
+            case 1:
+                LayerTypes |= 2;
+                break;
+            case 4:
+                LayerTypes |= 4;
+                break;
+            }
+        }
+    }
+    else
+        LayerTypes = 1;
+
+    if (LayerTypes & 1) { *pUV1 = pVA; pVA += NbVerticesAlignedUVs; }
+    if (LayerTypes & 2) { *pUV2 = pVA; pVA += NbVerticesAlignedUVs; }
+    if (LayerTypes & 4) { *pUVChrome = pVA; pVA += NbVerticesAligned; }
+
+    *pNormals = pVA;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 939–1079 */
@@ -1445,13 +1507,78 @@ void GLI_vCalculateLightingMatrices(GLI_tdstMaterial_* pMat)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void MAT_fn_vInvert(MAT_tdstTransformation_* _p_stDest, MAT_tdstTransformation_* _p_stSrc);
+extern "C" void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _p_stTransform, MTH3D_tdstVector_* _p_stSrc);
+extern "C" void sceVu0TransposeMatrix(float (*m0)[4], float (*m1)[4]);
+
 void GLI_vCalculateLightingMatricesGhost(void)
 {
     MAT_tdstTransformation_ TempMat;
     float fNorm;
     MTH3D_tdstVector_ stVect2;
     MTH3D_tdstVector_ stVect;
-    /* TODO: decompile from asm/... */
+
+    {
+        float* pZero = vZeroVect;
+        float (*pPositions)[4] = GLI_g_LightPositions;
+        float (*pColors)[4] = GLI_g_LightColors;
+
+        /* VU0 quadword copies: lqc2/sqc2 have no C form. */
+        asm {
+            lqc2 vf1, 0x0(pZero)
+            sqc2 vf1, 0x20(pPositions)
+            sqc2 vf1, 0x30(pPositions)
+            sqc2 vf1, 0x20(pColors)
+            sqc2 vf1, 0x30(pColors)
+        }
+    }
+    {
+        float* pDst = GLI_g_AmbientLight;
+        float* pSrc = GhostAmbient;
+
+        asm {
+            lqc2 vf1, 0x0(pSrc)
+            sqc2 vf1, 0x0(pDst)
+        }
+    }
+
+    stVect.xX = 0.0f;
+    stVect.xY = 0.0f;
+    stVect.xZ = 1.0f;
+
+    MAT_fn_vInvert(&TempMat, (MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CameraMatrix);
+    MAT_fn_vApplyOnVector(&stVect2, &TempMat, &stVect);
+
+    fNorm = stVect2.xX * stVect2.xX + stVect2.xY * stVect2.xY + stVect2.xZ * stVect2.xZ;
+    fNorm = 1.0f / fNorm;
+
+    stVect2.xX = stVect2.xX * fNorm;
+    stVect2.xY = stVect2.xY * fNorm;
+    stVect2.xZ = stVect2.xZ * fNorm;
+
+    GLI_g_LightPositions[0][0] = -stVect2.xX;
+    GLI_g_LightPositions[0][1] = -stVect2.xY;
+    GLI_g_LightPositions[0][2] = -stVect2.xZ;
+    GLI_g_LightPositions[0][3] = 0.0f;
+    GLI_g_LightPositions[1][0] = stVect2.xX;
+    GLI_g_LightPositions[1][1] = stVect2.xY;
+    GLI_g_LightPositions[1][2] = stVect2.xZ;
+    GLI_g_LightPositions[1][3] = 0.0f;
+
+    {
+        float (*pColors)[4] = GLI_g_LightColors;
+        float* pParallel1 = GhostParallel1;
+        float* pParallel2 = GhostParallel2;
+
+        asm {
+            lqc2 vf1, 0x0(pParallel1)
+            lqc2 vf2, 0x0(pParallel2)
+            sqc2 vf1, 0x0(pColors)
+            sqc2 vf2, 0x10(pColors)
+        }
+    }
+
+    sceVu0TransposeMatrix(GLI_g_LightPositions, GLI_g_LightPositions);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 319–413 */

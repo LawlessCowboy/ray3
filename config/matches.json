@@ -21945,6 +21945,21 @@
           "type": 4
         }
       ]
+    },
+    {
+      "address": "0x002dbd30",
+      "candidate_size": 356,
+      "first_difference": 76,
+      "implementation": "void GLI_vCalculateLightingMatricesGhost(void)\n{\n    MAT_tdstTransformation_ TempMat;\n    float fNorm;\n    MTH3D_tdstVector_ stVect2;\n    MTH3D_tdstVector_ stVect;\n\n    {\n        float* pZero = vZeroVect;\n        float (*pPositions)[4] = GLI_g_LightPositions;\n        float (*pColors)[4] = GLI_g_LightColors;\n\n        /* VU0 quadword copies: lqc2/sqc2 have no C form. */\n        asm {\n            lqc2 vf1, 0x0(pZero)\n            sqc2 vf1, 0x20(pPositions)\n            sqc2 vf1, 0x30(pPositions)\n            sqc2 vf1, 0x20(pColors)\n            sqc2 vf1, 0x30(pColors)\n        }\n    }\n    {\n        float* pDst = GLI_g_AmbientLight;\n        float* pSrc = GhostAmbient;\n\n        asm {\n            lqc2 vf1, 0x0(pSrc)\n            sqc2 vf1, 0x0(pDst)\n        }\n    }\n\n    stVect.xX = 0.0f;\n    stVect.xY = 0.0f;\n    stVect.xZ = 1.0f;\n\n    MAT_fn_vInvert(&TempMat, (MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CameraMatrix);\n    MAT_fn_vApplyOnVector(&stVect2, &TempMat, &stVect);\n\n    fNorm = stVect2.xX * stVect2.xX + stVect2.xY * stVect2.xY + stVect2.xZ * stVect2.xZ;\n    fNorm = 1.0f / fNorm;\n\n    stVect2.xX = stVect2.xX * fNorm;\n    stVect2.xY = stVect2.xY * fNorm;\n    stVect2.xZ = stVect2.xZ * fNorm;\n\n    GLI_g_LightPositions[0][0] = -stVect2.xX;\n    GLI_g_LightPositions[0][1] = -stVect2.xY;\n    GLI_g_LightPositions[0][2] = -stVect2.xZ;\n    GLI_g_LightPositions[0][3] = 0.0f;\n    GLI_g_LightPositions[1][0] = stVect2.xX;\n    GLI_g_LightPositions[1][1] = stVect2.xY;\n    GLI_g_LightPositions[1][2] = stVect2.xZ;\n    GLI_g_LightPositions[1][3] = 0.0f;\n\n    {\n        float (*pColors)[4] = GLI_g_LightColors;\n        float* pParallel1 = GhostParallel1;\n        float* pParallel2 = GhostParallel2;\n\n        asm {\n            lqc2 vf1, 0x0(pParallel1)\n            lqc2 vf2, 0x0(pParallel2)\n            sqc2 vf1, 0x0(pColors)\n            sqc2 vf2, 0x10(pColors)\n        }\n    }\n\n    sceVu0TransposeMatrix(GLI_g_LightPositions, GLI_g_LightPositions);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vCalculateLightingMatricesGhost",
+      "reason": "MATCHes under MWCC 3.0.3 (SDLLights.cpp +1, 0 lost); under 3.0.1 one scheduling row differs (addiu a0,sp,0x10 for &TempMat). Candidate for config/compiler-3.0.3-sources.txt, pending approval.",
+      "size": 356,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLLights.cpp",
+      "status": "MISMATCH",
+      "target_size": 356,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -41515,6 +41530,14 @@
       "name": "SDL_Destroy",
       "size": 96,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLAccess.cpp",
+      "status": "MATCH"
+    },
+    "0x002db3a0": {
+      "address": "0x002db3a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vGetVertexPointersFromSDCStructure",
+      "size": 368,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLLights.cpp",
       "status": "MATCH"
     },
     "0x002dc2c0": {
