@@ -271,13 +271,46 @@ void GLI_vUpdateCharacterVAReal(float (*pDestPV)[4], GEO_tdstElementIndexedTrian
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void TBF_pReadLevelTRSBloc(char* LevelName)
+typedef void* (*transition_allocator_t)(unsigned int);
+extern int sprintf(char* s, const char* format, ...);
+extern char* PLD_szPrependGamedataName(char*);
+extern int CD_OpenFileWithNameConversion(char*);
+extern unsigned int CD_Length(int FileHandle);
+extern unsigned int CD_Seek(int FileHandle, int Position, int WhereFrom);
+extern int CD_Read(int FileHandle, char* Buffer, int Size);
+extern void CD_Close(int FileHandle);
+extern void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
+extern void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft);
+extern transition_allocator_t fn_pfnCurrentTransitionAllocator(void);
+
+void* TBF_pReadLevelTRSBloc(char* LevelName)
 {
-    char* Buffer;
-    unsigned int Length;
-    int TBF_File;
     char FileName[1024];
-    /* TODO: decompile from asm/... */
+    int TBF_File;
+    unsigned int Length;
+    char* Buffer;
+
+    printf("Reading Level textures ....\n");
+
+    sprintf(FileName, "%s\\transit.TBF", LevelName);
+
+    TBF_File = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName(FileName));
+    if (TBF_File < 0)
+        return NULL;
+
+    Length = CD_Length(TBF_File);
+    CD_Seek(TBF_File, 0, 0);
+
+    Buffer = fn_pfnCurrentTransitionAllocator()(Length + 127);
+
+    if (Length)
+        CD_Read(TBF_File, Buffer, Length);
+
+    CD_Close(TBF_File);
+
+    printf("Done reading Level textures !\n");
+
+    return Buffer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 380–408 */
@@ -300,13 +333,35 @@ void TBF_pReadLevelTRSBloc(char* LevelName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void TBF_pReadLevel(char* LevelName)
+void* TBF_pReadLevel(char* LevelName)
 {
-    char* Buffer;
-    unsigned int Length;
-    int TBF_File;
     char FileName[1024];
-    /* TODO: decompile from asm/... */
+    int TBF_File;
+    unsigned int Length;
+    char* Buffer;
+
+    printf("Reading Level textures ....\n");
+
+    sprintf(FileName, "%s\\%s.TBF", LevelName, LevelName);
+
+    Buffer = PLD_szPrependGamedataName(FileName);
+    TBF_File = CD_OpenFileWithNameConversion(Buffer);
+    if (TBF_File < 0)
+        return NULL;
+
+    Length = CD_Length(TBF_File);
+    CD_Seek(TBF_File, 0, 0);
+
+    Buffer = fn_pvMallocInBinaryPreservingTheCurrentMode(Length + 127);
+
+    LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(Length);
+    CD_Read(TBF_File, Buffer, Length);
+
+    CD_Close(TBF_File);
+
+    printf("Done reading Level textures !\n");
+
+    return Buffer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 344–369 */
@@ -331,12 +386,30 @@ void TBF_pReadLevel(char* LevelName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void TBF_pReadFix(void)
+void* TBF_pReadFix(void)
 {
-    char* Buffer;
-    unsigned int Length;
     int TBF_File;
-    /* TODO: decompile from asm/... */
+    unsigned int Length;
+    char* Buffer;
+
+    printf("Reading FIX textures...\n");
+
+    TBF_File = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName("FIX.TBF"));
+    if (TBF_File < 0)
+        return NULL;
+
+    Length = CD_Length(TBF_File);
+    CD_Seek(TBF_File, 0, 0);
+
+    Buffer = fn_pvMallocInBinaryPreservingTheCurrentMode(Length + 127);
+
+    CD_Read(TBF_File, Buffer, Length);
+
+    CD_Close(TBF_File);
+
+    printf("Done reading FIX textures !\n");
+
+    return Buffer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 322–334 */

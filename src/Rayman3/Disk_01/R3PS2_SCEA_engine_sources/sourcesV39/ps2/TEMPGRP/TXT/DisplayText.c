@@ -4913,8 +4913,26 @@ void TXT_ChangeDefaultColor(float xR, float xG, float xB)
 void TXT_vInit(void)
 {
     int i;
-    unsigned char ucInitOnlyOnce;
-    /* TODO: decompile from asm/... */
+    static unsigned char ucInitOnlyOnce = 1;
+
+    for (i = 0; i < 200; i++)
+    {
+        g_JFFTXT[i].pString = 0;
+        g_JFFTXT[i].ucTransparency = 0;
+        g_JFFTXT[i].bFrozenDisplay = 0;
+        g_JFFTXT[i].bOther = 0;
+        g_JFFTXT[i].EffectParameter = 0;
+        g_JFFTXT[i].ucDrawThisStringDuringPauseGame = 0;
+        g_JFFTXT[i].ucDrawThisStringDuringPauseInventory = 0;
+        if (ucInitOnlyOnce)
+        {
+            g_JFFTXT[i].ucDrawThisStringDuringPauseGame = 0;
+            g_JFFTXT[i].ucDrawThisStringDuringPauseInventory = 0;
+        }
+    }
+
+    ucInitOnlyOnce = 0;
+    TXT_g_ulDefaultColor = 0xffffffff;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 734–843 */

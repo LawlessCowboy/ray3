@@ -280,7 +280,15 @@ unsigned char IPT_fn_bIsValidatedPadButton(unsigned char ucPadNumber, unsigned c
 {
     IPT_tdstEntryElement_* param0;
     IPT_tdstEntryElement_* hPadButton;
-    /* TODO: decompile from asm/... */
+
+    hPadButton = (IPT_tdstEntryElement_*)IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickButtons[ucButtonNumber];
+    param0 = (IPT_tdstEntryElement_*)IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyButtons[ucButtonNumber];
+
+    if (hPadButton && hPadButton->lState > 0)
+        return 1;
+    if (param0 && param0->lState > 0)
+        return 1;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 234–245 */

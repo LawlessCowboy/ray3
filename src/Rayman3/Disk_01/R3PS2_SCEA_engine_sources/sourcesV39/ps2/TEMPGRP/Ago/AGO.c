@@ -1400,6 +1400,8 @@ void AGO_vClearUnwanted110AGOsForDemos(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void GLI_vSetGlobalAlpha(float fAlpha);
+
 void AGO_vDisplayTriangles(GLD_tdstViewportAttributes_* p_stVpt)
 {
     AGO_Triangles_* p;
@@ -5792,15 +5794,134 @@ void AGO_vDisplayPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The target writes COP0 register 24; C cannot express it. The mtbpc alias
+   lets MWCC schedule it (delay slots) as retail did. */
+inline void AGO_vClearCop0Register24(void)
+{
+    asm { mtbpc zero }
+}
+
+extern void ChangeClippingMode(void);
+extern void GLI_vPrepareDisplayingAGOs(GLD_tdstViewportAttributes_* p_stViewport);
+extern int fn_bIsEngineInPause(void);
+extern int EngineIsFrozen(void);
+extern void GLI_vRemoveLights(void);
+extern float GLI_vGetGlobalAlpha(void);
+extern int GLI_vDrawWorldOrthoPlanarSprite(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2, int param8);
+extern int GLI_vDrawWorldSpriteOpt(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime);
+extern void GLI_vEndWorldSprites(void);
+extern void GLI_v_DisplayTobies(GLD_tdstViewportAttributes_* p_stViewport);
+extern int GLI_xRefreshAnimatedTextureIfNeeded(int hMaterial);
+extern void AGO2_vDisplayAllParts(GLD_tdstViewportAttributes_* p_stViewport);
+extern void AGO3_vDisplayAll(GLD_tdstViewportAttributes_* p_stViewport);
+
+/* Target indexes g_AGO/LUM arrays by recomputing index*size (no strength
+   reduction, no unrolling). */
+#pragma opt_strength_reduction off
+#pragma opt_unroll_loops off
 void AGO_vReDisplayAllPartsREAL(GLD_tdstViewportAttributes_* _p_stViewport)
 {
-    void* NextTexture;
-    void* CurrentTexture;
+    int NextTexture;
+    int CurrentTexture;
     int Start;
     float AlphaTemp;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    tdstFootStep_* pFootStep;
+
+    AGO_vClearCop0Register24();
+    ChangeClippingMode();
+    GLI_vPrepareDisplayingAGOs(_p_stViewport);
+    if (SCT_g_DrawingMirrored == 0 && fn_bIsEngineInPause() == 0 && EngineIsFrozen() == 0)
+    {
+        GLI_vRemoveLights();
+    }
+    GLI_g_AnimatedTextureToUse = 0;
+    for (i = 0, pFootStep = AGO_g_FootSteps; i < AGO_g_NbFootSteps; i++, pFootStep++)
+    {
+        if (pFootStep->fAlpha > 0.0f)
+        {
+            GLI_vSetGlobalAlpha(255.0f * pFootStep->fAlpha);
+            GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)pFootStep, (GLI_tdstMaterial_*)pFootStep->hVisualMaterial, 0.75f, 0.75f, _p_stViewport, 1, (MTH3D_tdstVector_*)&pFootStep->Direction2, (MTH3D_tdstVector_*)&pFootStep->Direction1, 0);
+        }
+    }
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_g_AnimatedTextureToUse = 0;
+    AGO2_vDisplayAllParts(_p_stViewport);
+    AGO3_vDisplayAll(_p_stViewport);
+    GLI_v_DisplayTobies(_p_stViewport);
+    GLI_vEndWorldSprites();
+    if (LUM_g_NumberOfLums != 0)
+    {
+        GLI_g_DontRefreshAnimated = 1;
+        GLI_g_AnimatedTextureToUse = GLI_xRefreshAnimatedTextureIfNeeded(LUM_g_pMaterial);
+        GLI_vSetGlobalAlpha(255.0f);
+        for (i = 0; i < LUM_g_NumberOfLums; i++)
+        {
+            if (LUM_g_LumActivity[i] != 0)
+            {
+                GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)LUM_g_LumPositions[i], (GLI_tdstMaterial_*)LUM_g_pMaterial, 1.0f, 1.0f, _p_stViewport, 1);
+            }
+        }
+        GLI_vEndWorldSprites();
+    }
+    GLI_g_DontRefreshAnimated = 0;
+    GLI_g_AnimatedTextureToUse = 0;
+    if (g_ulNumberOfAgos == 0)
+    {
+        AGO_vDisplayTriangles(_p_stViewport);
+        AGO_vClearCop0Register24();
+        return;
+    }
+    AlphaTemp = GLI_vGetGlobalAlpha();
+    AGO_g_pCurrentMaterial = 0;
+    g_bTakeCareOfAnimationCoordination = 1;
+    AGO_g_b_DisplayingAGOs = 1;
+    if (g_ulNumberOfAgos != 0)
+    {
+        unsigned int j;
+        i = 0;
+        for (j = 0; j < g_ulNumberOfAgos; j++)
+        {
+            ((unsigned int*)&g_AGO[0].Displayed)[j * 36] = 0;
+        }
+        do
+        {
+            Start = -1;
+            CurrentTexture = ((int*)&g_AGO[0].pTempTexture)[i * 36];
+            j = i;
+            GLI_vEndWorldSprites();
+            GLI_g_AnimatedTextureToUse = CurrentTexture;
+            GLI_g_DontRefreshAnimated = 1;
+            for (; j < g_ulNumberOfAgos; j++)
+            {
+                NextTexture = ((int*)&g_AGO[0].pTempTexture)[j * 36];
+                if (NextTexture == CurrentTexture)
+                {
+                    AGO_vDisplayPart(j, _p_stViewport);
+                    ((unsigned int*)&g_AGO[0].Displayed)[j * 36] = 1;
+                }
+                else if (Start == -1 && ((unsigned int*)&g_AGO[0].Displayed)[j * 36] == 0)
+                {
+                    Start = NextTexture;
+                    i = j;
+                }
+            }
+        } while (Start != -1);
+    }
+    GLI_vEndWorldSprites();
+    GLI_g_DontRefreshAnimated = 0;
+    GLI_g_AnimatedTextureToUse = 0;
+    g_bTakeCareOfAnimationCoordination = 0;
+    AGO_g_pCurrentMaterial = 0;
+    AGO_vDisplayTriangles(_p_stViewport);
+    AGO_g_b_DisplayingAGOs = 0;
+    AGO_g_pCurrentMaterial = 0;
+    GLI_vSetGlobalAlpha(AlphaTemp);
+    g_AGO_MustReinitStaticVars = 0;
+    AGO_vClearCop0Register24();
 }
+#pragma opt_unroll_loops reset
+#pragma opt_strength_reduction reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 2364–2409 */
 /* addr: 0x001de280  size: 600 bytes */
@@ -6015,19 +6136,275 @@ void AGO_vReDisplayAllParts(GLD_tdstViewportAttributes_* _p_stViewport)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void AGO2_vProcessAllParts(void);
+extern void AGO3_vBurryDiedParts(void);
+extern void AGO3_vProcessAll(void);
+
+#pragma opt_strength_reduction off
+#pragma opt_unroll_loops off
 void AGO_vProcessAllPartsREAL(GLD_tdstViewportAttributes_* _p_stViewport)
 {
-    void* NextTexture;
-    void* CurrentTexture;
-    int Start;
     float AlphaTemp;
+    static int LastFrozen;
+    int CurrentTexture;
+    int Start;
+    unsigned int j;
     unsigned int Type;
-    unsigned int MustDestroy;
+    int NextTexture;
+    tdstFootStep_* pFootStep;
     unsigned int i;
+    unsigned int MustDestroy;
     AGO_Part_* p;
-    int LastFrozen;
-    /* TODO: decompile from asm/... */
+
+    AGO_vClearCop0Register24();
+    ChangeClippingMode();
+    GLI_vPrepareDisplayingAGOs(_p_stViewport);
+    if (SCT_g_DrawingMirrored == 0 && fn_bIsEngineInPause() == 0 && EngineIsFrozen() == 0)
+    {
+        GLI_vRemoveLights();
+    }
+
+    g_ffFrameTime = AGO_G_fCurrentTime;
+    if (g_ffLastFrameTime != 0.0f)
+    {
+        if (fn_bIsEngineInPause() != 0 || EngineIsFrozen() != 0)
+        {
+            g_fTimeDifference = 0.0f;
+            g_ffFrameTime = g_ffLastFrameTime;
+        }
+        else
+        {
+            g_fTimeDifference = g_ffFrameTime - g_ffLastFrameTime;
+            g_ffLastFrameTime = g_ffFrameTime;
+        }
+    }
+    else
+    {
+        g_fTimeDifference = 0.0f;
+        g_ffLastFrameTime = g_ffFrameTime;
+    }
+    if (g_fTimeDifference > 0.083333336f)
+    {
+        g_fTimeDifference = 0.016666668f;
+    }
+    if (g_fTimeDifference < 0.0f)
+    {
+        g_fTimeDifference = 0.0f;
+    }
+
+    if (g_bInGameMenu != 0 && LastFrozen == 0 && g_bUsingMapMondeAGOs == 0)
+    {
+        g_ulNumberOfAgos = 0;
+        LastFrozen = 1;
+        g_NumberOfZeldaAgos = 0;
+    }
+    else if (g_bInGameMenu == 0 && LastFrozen != 0 && g_bUsingMapMondeAGOs == 0)
+    {
+        LastFrozen = 0;
+        g_ulNumberOfAgos = 0;
+        g_NumberOfZeldaAgos = 0;
+    }
+
+    if (g_bForceWhiteFog != 0)
+    {
+        g_bForceWhiteFog++;
+        if (g_bForceWhiteFog == 10)
+        {
+            g_bForceWhiteFog = 0;
+        }
+    }
+
+    for (i = 0, pFootStep = AGO_g_FootSteps; i < AGO_g_NbFootSteps; i++, pFootStep++)
+    {
+        if (pFootStep->fAlpha > 0.0f)
+        {
+            pFootStep->fAlpha -= 0.01f * g_fTimeDifference;
+        }
+    }
+
+    GLI_g_AnimatedTextureToUse = 0;
+    for (i = 0, pFootStep = AGO_g_FootSteps; i < AGO_g_NbFootSteps; i++, pFootStep++)
+    {
+        if (pFootStep->fAlpha > 0.0f)
+        {
+            GLI_vSetGlobalAlpha(255.0f * pFootStep->fAlpha);
+            GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)pFootStep, (GLI_tdstMaterial_*)pFootStep->hVisualMaterial, 0.75f, 0.75f, _p_stViewport, 1, (MTH3D_tdstVector_*)&pFootStep->Direction2, (MTH3D_tdstVector_*)&pFootStep->Direction1, 0);
+        }
+    }
+    GLI_vSetGlobalAlpha(255.0f);
+    AGO2_vProcessAllParts();
+    GLI_g_AnimatedTextureToUse = 0;
+    AGO2_vDisplayAllParts(_p_stViewport);
+    AGO3_vBurryDiedParts();
+    AGO3_vProcessAll();
+    GLI_g_AnimatedTextureToUse = 0;
+    AGO3_vDisplayAll(_p_stViewport);
+    GLI_v_DisplayTobies(_p_stViewport);
+    GLI_vEndWorldSprites();
+    if (LUM_g_NumberOfLums != 0)
+    {
+        GLI_g_DontRefreshAnimated = 1;
+        GLI_g_AnimatedTextureToUse = GLI_xRefreshAnimatedTextureIfNeeded(LUM_g_pMaterial);
+        GLI_vSetGlobalAlpha(255.0f);
+        for (i = 0; i < LUM_g_NumberOfLums; i++)
+        {
+            if (LUM_g_LumActivity[i] != 0)
+            {
+                GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)LUM_g_LumPositions[i], (GLI_tdstMaterial_*)LUM_g_pMaterial, 1.0f, 1.0f, _p_stViewport, 1);
+            }
+        }
+        GLI_vEndWorldSprites();
+    }
+    GLI_g_DontRefreshAnimated = 0;
+    GLI_g_AnimatedTextureToUse = 0;
+    if (g_ulNumberOfAgos == 0)
+    {
+        AGO_vDisplayTriangles(_p_stViewport);
+        AGO_vClearCop0Register24();
+        return;
+    }
+
+    if (AGO_g_OddFrame != 0)
+    {
+        AGO_g_OddFrame = 0;
+    }
+    else
+    {
+        AGO_g_OddFrame = 1;
+    }
+    AlphaTemp = GLI_vGetGlobalAlpha();
+    i = 0;
+    g_bTakeCareOfAnimationCoordination = 1;
+    while (i < g_ulNumberOfAgos)
+    {
+        p = &g_AGO[i];
+        Type = p->ulType;
+        MustDestroy = 0;
+        if ((Type & 0x10000) != 0)
+        {
+            if (g_ffFrameTime - p->fCreationTime > p->LimitParam.fTimeLimit)
+            {
+                MustDestroy = 1;
+            }
+        }
+        else if ((Type & 0x200000) != 0)
+        {
+            p->LimitParam.fTimeLimit -= 1.0f;
+            if (p->LimitParam.fTimeLimit < 0.0f)
+            {
+                MustDestroy = 1;
+            }
+        }
+        if ((Type & 0x40000) != 0)
+        {
+            if (p->a3_fPosition[2] > p->LimitParam.f_ZLimit)
+            {
+                MustDestroy = 1;
+            }
+        }
+        else if ((Type & 0x100000) != 0)
+        {
+            if (p->a3_fPosition[2] < p->LimitParam.f_ZLimit)
+            {
+                MustDestroy = 1;
+            }
+        }
+        if (p->Transparency <= 0.0f)
+        {
+            MustDestroy = 1;
+        }
+        g_bHasTextureAnimationFinished = 0;
+        if ((p->ulType & 0x4000000) == 0)
+        {
+            g_bOneShotAnim = 1;
+        }
+        if ((unsigned char)p->ulType == 12)
+        {
+            g_AGO_AnimTimeScale = 1.0f;
+        }
+        else
+        {
+            g_AGO_AnimTimeScale = p->fAnimTimeScale;
+        }
+        if ((p->ulType & 0x400000) != 0)
+        {
+            g_bTakeCareOfAnimationCoordination = 0;
+        }
+        else
+        {
+            g_bTakeCareOfAnimationCoordination = 1;
+        }
+        g_BaseTimeForParticleAnimation = (float)p->AnimTime;
+        p->pTempTexture = GLI_xRefreshAnimatedTextureIfNeeded(p->VisualMaterial);
+        g_bOneShotAnim = 0;
+        p->Displayed = 0;
+        if (g_bHasTextureAnimationFinished != 0)
+        {
+            g_bHasTextureAnimationFinished = 0;
+            MustDestroy = 1;
+        }
+        if (MustDestroy != 0 || (p->ulType & 0x1000000) != 0)
+        {
+            if ((p->ulType & 0x20000) != 0 && (p->ulType & 0x80000) != 0)
+            {
+                if (-6.0f + 7.0f * (float)rand() / 2147483648.0f > 0.0f)
+                {
+                    AGO_vAddParticle(0x44, (MTH3D_tdstVector_*)p->a3_fPosition, (MTH3D_tdstVector_*)p->a3_fDirection, (void*)p->VisualMaterial, 1.0f);
+                }
+            }
+            p->ulType |= 0x1000000;
+            i++;
+        }
+        else
+        {
+            i++;
+        }
+    }
+
+    AGO_vDestroyAllParts();
+    AGO_g_b_DisplayingAGOs = 1;
+    AGO_g_pCurrentMaterial = 0;
+    if (g_ulNumberOfAgos != 0)
+    {
+        i = 0;
+        do
+        {
+            Start = -1;
+            CurrentTexture = *(int*)((char*)&g_AGO[0].pTempTexture + i * 0x90);
+            j = i;
+            GLI_vEndWorldSprites();
+            GLI_g_AnimatedTextureToUse = CurrentTexture;
+            GLI_g_DontRefreshAnimated = 1;
+            for (; j < g_ulNumberOfAgos; j++)
+            {
+                NextTexture = *(int*)((char*)&g_AGO[0].pTempTexture + j * 0x90);
+                if (NextTexture == CurrentTexture)
+                {
+                    AGO_vProcessPart(j, _p_stViewport);
+                    *(unsigned int*)((char*)&g_AGO[0].Displayed + j * 0x90) = 1;
+                }
+                else if (Start == -1 && *(unsigned int*)((char*)&g_AGO[0].Displayed + j * 0x90) == 0)
+                {
+                    Start = NextTexture;
+                    i = j;
+                }
+            }
+        } while (Start != -1);
+    }
+    GLI_vEndWorldSprites();
+    GLI_g_DontRefreshAnimated = 0;
+    GLI_g_AnimatedTextureToUse = 0;
+    g_bTakeCareOfAnimationCoordination = 0;
+    AGO_g_pCurrentMaterial = 0;
+    AGO_vDisplayTriangles(_p_stViewport);
+    AGO_g_b_DisplayingAGOs = 0;
+    AGO_g_pCurrentMaterial = 0;
+    GLI_vSetGlobalAlpha(AlphaTemp);
+    g_AGO_MustReinitStaticVars = 0;
+    AGO_vClearCop0Register24();
 }
+#pragma opt_unroll_loops reset
+#pragma opt_strength_reduction reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 1897–1963 */
 /* addr: 0x001decd0  size: 816 bytes */

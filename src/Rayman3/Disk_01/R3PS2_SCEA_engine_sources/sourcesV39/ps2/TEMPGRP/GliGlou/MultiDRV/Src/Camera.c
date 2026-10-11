@@ -259,9 +259,13 @@ void J_RemoveRedundantSprites(J_ParticleSprite_* pList, unsigned int NbSprites)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vReinitViewport(GLD_tdstViewportAttributes_* p_stVpt);
+
 void GLD_fn_vD3DUpdateViewMatrixFromCamera(GLD_tdstViewportAttributes_* _p_stVpt)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vReinitViewport(_p_stVpt);
+    if (*(GLI_tdstCamera_**)_p_stVpt->p_vSpecificToXD) GLI_g_fCurrentCameraxAngle = 0.75f * (180.0f * (*(GLI_tdstCamera_**)_p_stVpt->p_vSpecificToXD)->xAlphaX) / 3.1415927f;
+    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)&(*(GLI_tdstCamera_**)_p_stVpt->p_vSpecificToXD)->stMatrix;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Camera.c lines 343–343 */

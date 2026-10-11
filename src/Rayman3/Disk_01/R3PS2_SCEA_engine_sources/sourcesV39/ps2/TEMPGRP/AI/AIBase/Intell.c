@@ -3063,11 +3063,57 @@ tdstNodeInterpret_* fn_p_stEvalCineRef(void* p_stContext, tdstNodeInterpret_* p_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_ucIsRuleInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule);
+tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char ucNEntry);
+void fn_vUnuseAllRulesFromSchedule(tdstIntelligence_* p_stIntelligence);
+unsigned char fn_ucIntelligenceRulesEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence);
+unsigned char fn_ucIntelligenceScheduleEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence);
+int printf(const char* fmt, ...);
+
+static inline void fn_vSetScheduleFromActionTable(tdstIntelligence_* p_stIntelligence)
+{
+    unsigned char ucIndTabAction;
+
+    ucIndTabAction = fn_ucIsRuleInActionTable(p_stIntelligence, 0);
+    if (ucIndTabAction < p_stIntelligence->p_stActionTable->ucNbEntries)
+    {
+        p_stIntelligence->p_stCurrentSchedule = fn_p_stGetTableAction(p_stIntelligence, ucIndTabAction);
+        fn_vUnuseAllRulesFromSchedule(p_stIntelligence);
+    }
+}
+
 unsigned char fn_bIntelligenceEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence)
 {
-    unsigned char ucReturn;
     unsigned char ReturnValue;
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn;
+
+    ReturnValue = 0;
+    do
+    {
+        bSomethingDone = 0;
+        ucReturn = fn_ucIntelligenceRulesEngine(p_SuperObjPerso, p_stIntelligence);
+        if ((ucReturn & 8) != 8)
+        {
+            if ((ucReturn & 1) == 1 || bSomethingDone)
+            {
+                fn_vSetScheduleFromActionTable(p_stIntelligence);
+            }
+            else
+            {
+                ucReturn = fn_ucIntelligenceScheduleEngine(p_SuperObjPerso, p_stIntelligence);
+            }
+        }
+        ReturnValue |= bSomethingDone;
+    } while ((ucReturn & 8) == 8 && (ucReturn & 1) != 1 && !GROS_ANTIBUG_DE_LA_MORT_QUI_TUE);
+
+    if (GROS_ANTIBUG_DE_LA_MORT_QUI_TUE)
+    {
+        GROS_ANTIBUG_DE_LA_MORT_QUI_TUE = 0;
+        printf("Gros antibug qui tache tellement que meme SKIP y peut rien faire !\n");
+        iNumLoop = 0;
+    }
+
+    return ReturnValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1773–1825 */
@@ -3095,8 +3141,7 @@ unsigned char fn_bIntelligenceEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucIsRuleInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule);
-tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char ucNEntry);
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 
 unsigned char fn_ucIntelligenceScheduleEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence)
@@ -3173,14 +3218,51 @@ unsigned char fn_ucIntelligenceScheduleEngine(HIE_tdstSuperObject_* p_SuperObjPe
  */
 unsigned char fn_ucIntelligenceRulesEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence)
 {
-    int count;
-    unsigned char ucTableNbEntries;
-    char cNIntelligenceRule;
-    tdstNodeInterpret_* p_stTree;
-    tdstGetSetParam_ stValue;
-    unsigned char ucIndTabAction;
     char cNRule;
-    /* TODO: decompile from asm/... */
+    unsigned char ucIndTabAction;
+    tdstGetSetParam_ stValue;
+    tdstNodeInterpret_* p_stTree;
+    char cNIntelligenceRule;
+    unsigned char ucTableNbEntries;
+    int count;
+
+    count = 0;
+    g_p_stIntelligence = (int)p_stIntelligence;
+    ucIsInSchedule = 0;
+
+restart:
+    cNIntelligenceRule = (char)p_stIntelligence->p_stCurrentComport->ucNbRules - 1;
+    ucTableNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
+
+    for (cNRule = 0; cNRule <= cNIntelligenceRule; cNRule++)
+    {
+        g_ucNRule = cNRule + 1;
+
+        ucIndTabAction = fn_ucIsRuleInActionTable(p_stIntelligence, g_ucNRule);
+        if (ucIndTabAction < ucTableNbEntries)
+            p_stTree = fn_p_stGetTableAction(p_stIntelligence, ucIndTabAction);
+        else
+            p_stTree = p_stIntelligence->p_stCurrentComport->p_stRules[cNRule].p_stNodeInterpret;
+
+        p_stTree = fn_p_stIntelligenceEvalTreeEngine(p_SuperObjPerso, p_stTree, &stValue);
+        ucIndTabAction = stValue.uDummy.uParam.ucValue;
+
+        if ((ucIndTabAction & 1) == 1)
+            return 1;
+
+        if ((ucIndTabAction & 8) == 8)
+        {
+            bSomethingDone = 0;
+            if (++count != 200)
+                goto restart;
+            printf("AI DeadLoop : Antibug (Intell.c Line %d)\n", 1753);
+        }
+
+        if ((ucIndTabAction & 0x10) != 0x10)
+            return 0;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1628–1685 */
@@ -3215,12 +3297,8 @@ unsigned char fn_ucIntelligenceRulesEngine(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    unsigned char ucDepthInit;
-    unsigned char ucActionReturn;
-    /* TODO: decompile from asm/... */
-}
+void fn_vUnuseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence);
+void fn_vUnuseAllRulesWhichHaveGreaterNumRule(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1505–1505 */
 /* addr: 0x001fca30  size: 32 bytes */
@@ -3229,9 +3307,77 @@ tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_Su
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     return a_stTypeTable[p_stTree->eType].p_fn_p_stEvalTypePtr(p_SuperObjPerso, p_stTree, p_stValue);
+}
+#pragma auto_inline reset
+
+static inline unsigned char fn_ucGetActionReturn(unsigned char ucActionReturn, tdstNodeInterpret_* p_stTree, unsigned char ucDepthInit)
+{
+    if ((g_ucNewActionReturn & 0x20) != 0x20)
+    {
+        if (!g_ucUseDefaultActionReturn)
+        {
+            if (!((ucActionReturn & 4) == 4 && (unsigned char)(p_stTree->ucDepth == ucDepthInit)))
+            {
+                ucActionReturn &= 0x1c;
+                ucActionReturn |= g_ucNewActionReturn;
+            }
+            g_ucNewActionReturn = 0x20;
+            g_ucUseDefaultActionReturn = 1;
+        }
+        else
+            g_ucUseDefaultActionReturn = 0;
+    }
+    return ucActionReturn;
+}
+
+tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned char ucDepthInit;
+    unsigned char ucActionReturn;
+
+    while (1)
+    {
+        ucDepthInit = p_stTree->ucDepth;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        ucActionReturn = fn_ucGetActionReturn(p_stValue->uDummy.uParam.ucValue, p_stTree, ucDepthInit);
+
+        if ((ucActionReturn & 0x10) == 0x10 || (ucActionReturn & 8) == 8)
+        {
+            p_stValue->uDummy.uParam.lValue = ucActionReturn;
+            p_stValue->eType = E_vt_MetaActionReturn;
+            return p_stTree;
+        }
+
+        if ((ucActionReturn & 4) == 4)
+        {
+            fn_vUnuseCurrentActionTableEntry((tdstIntelligence_*)g_p_stIntelligence);
+        }
+
+        if ((ucActionReturn & 1) == 1)
+        {
+            fn_vUnuseAllRulesWhichHaveGreaterNumRule((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule);
+            break;
+        }
+
+        if (p_stTree->eType == 8)
+        {
+            ucActionReturn = 0x10;
+            break;
+        }
+
+        if ((ucActionReturn & 2) == 2)
+            break;
+        if (ucIsInSchedule)
+            ((tdstIntelligence_*)g_p_stIntelligence)->p_stCurrentSchedule = p_stTree;
+    }
+
+    p_stValue->uDummy.uParam.ulValue = ucActionReturn;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1293–1478 */
@@ -3263,11 +3409,68 @@ tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef unsigned char (*tdfn_MetaActionFunction_)(HIE_tdstSuperObject_*);
+typedef tdstNodeInterpret_* (*tdfn_MetaActionInitFunction_)(HIE_tdstSuperObject_*, tdstNodeInterpret_*);
+tdfn_MetaActionFunction_ fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId);
+tdfn_MetaActionInitFunction_ fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId);
+unsigned char fn_ucIsRuleAndNodeInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule, tdstNodeInterpret_* p_stNode);
+unsigned char fn_ucFindPlaceInActionTable(tdstIntelligence_* p_stIntelligence);
+void fn_vUseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence, unsigned char ucNRule, tdstNodeInterpret_* p_stNode);
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+
+/* Same walk as fn_p_stSkipThisArgument, but the retail inlined copy here
+ * reads the depth after stepping the pointer. */
+static inline tdstNodeInterpret_* fn_p_stSkipArgumentInline(tdstNodeInterpret_* p_stTree)
+{
+    unsigned char ucDepth;
+    p_stTree++;
+    ucDepth = (p_stTree - 1)->ucDepth;
+    while (p_stTree->ucDepth > ucDepth && p_stTree->eType != 8) {
+        p_stTree++;
+    }
+    return p_stTree;
+}
+
 tdstNodeInterpret_* fn_p_stEvalMetaAction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdstNodeInterpret_* p_stTreeInit;
     tdeMetaActionId_ eMetaActionId;
-    /* TODO: decompile from asm/... */
+
+    p_stTreeInit = g_ucIsInMacro ? (tdstNodeInterpret_*)g_p_stTreeMacro : p_stTree;
+    if ((((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucCurrentEntry = fn_ucIsRuleAndNodeInActionTable((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule, p_stTreeInit)) < ((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucNbEntries)
+    {
+        eMetaActionId = p_stTree->uDummy.uId.eMetaActionId;
+        if (p_stTree->uwNodeToSkip)
+        {
+            p_stTree += p_stTree->uwNodeToSkip;
+        }
+        else
+        {
+            p_stTreeInit = p_stTree;
+            p_stTree = fn_p_stSkipArgumentInline(p_stTree);
+            p_stTreeInit->uwNodeToSkip = p_stTree - p_stTreeInit;
+        }
+        p_stValue->uDummy.uParam.ulValue = fn_p_fn_pGetMetaActionFunctionPtr(eMetaActionId)(p_SuperObjPerso); p_stValue->eType = E_vt_MetaActionReturn;
+        bSomethingDone = 1;
+        return p_stTree;
+    }
+    else
+    {
+        fn_vUnuseAllRulesWhichHaveGreaterNumRule((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule);
+        if ((((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucCurrentEntry = fn_ucFindPlaceInActionTable((tdstIntelligence_*)g_p_stIntelligence)) < ((tdstIntelligence_*)g_p_stIntelligence)->p_stActionTable->ucNbEntries)
+        {
+            fn_vUseCurrentActionTableEntry((tdstIntelligence_*)g_p_stIntelligence, g_ucNRule, p_stTree);
+            eMetaActionId = p_stTree->uDummy.uId.eMetaActionId;
+            bSomethingDone = 1;
+            p_stTree = fn_p_fn_pGetMetaActionInitFunctionPtr(eMetaActionId)(p_SuperObjPerso, p_stTree + 1); p_stValue->uDummy.uParam.ulValue = fn_p_fn_pGetMetaActionFunctionPtr(eMetaActionId)(p_SuperObjPerso); p_stValue->eType = E_vt_MetaActionReturn; return p_stTree;
+        }
+        else
+        {
+            fn_vOnAIErm_M_UpdateLastError(0x18, 0);
+            p_stValue->uDummy.uParam.ulValue = 0; p_stValue->eType = E_vt_MetaActionReturn;
+            return NULL;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 1255–1264 */

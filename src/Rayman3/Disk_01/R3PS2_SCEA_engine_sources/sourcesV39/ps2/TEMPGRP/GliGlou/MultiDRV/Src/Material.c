@@ -1116,9 +1116,19 @@ void GLI_xRefreshAnimatedTexture(GLI_tdstMaterial_* hMaterial)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bIsEngineInPause(void);
+unsigned char EngineIsFrozen(void);
+
 void GLI_vRefreshAllCyclingTextures(float fCoefOfMultiplication)
 {
-    /* TODO: decompile from asm/... */
+    if (!fn_bIsEngineInPause() && !EngineIsFrozen())
+    {
+        gs_fCoefOfMultiplicationForScolledTextures = fCoefOfMultiplication;
+        gs_fCoefOfMultiplicationForAnimatedTexture += fCoefOfMultiplication;
+        if (gs_fCoefOfMultiplicationForAnimatedTexture > 10000000.0f)
+            gs_fCoefOfMultiplicationForAnimatedTexture = 0.0f;
+        gs_lActualRefreshNumberForScolledTextures++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 577–577 */

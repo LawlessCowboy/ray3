@@ -244,9 +244,28 @@ void Mmg_fn_vWhereIs(void* p_vPtr, unsigned short* p_uwModuleBlockId, void** pp_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel);
+void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS);
+void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS);
+void free(void* ptr);
+
 void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel)
 {
-    /* TODO: decompile from asm/... */
+    /* Permuter-found match (register allocation); the dead if re-reading the
+     * channel info is not original source and needs cleaning up. */
+    if (((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId != 0xff)
+    {
+        fn_vStaFree(p_vMemBlock, ucChannel);
+    }
+    else
+    {
+        PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection);
+        free((char*)p_vMemBlock - 16);
+        if (((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId && ((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId)
+        {
+        }
+        PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 2632–2745 */

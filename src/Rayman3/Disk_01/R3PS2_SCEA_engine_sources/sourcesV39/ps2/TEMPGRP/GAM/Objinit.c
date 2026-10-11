@@ -1626,10 +1626,18 @@ unsigned char GAM_fn_bIsFamilyToLoad(unsigned char ucFamilyId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_ucFindFamilyIdOfFamilyType(int otObjectFamilyType);
+static inline void GAM_vAddIdToLoad(stListOfFamiliesToLoad_* pList, unsigned char ucId);
+
 void GAM_fn_vSetFamilyToLoad(tdstFamilyList_* h_Family)
 {
     unsigned char ucFamilyPermanentId;
-    /* TODO: decompile from asm/... */
+
+    ucFamilyPermanentId = fn_ucFindFamilyIdOfFamilyType(h_Family->otObjectFamilyType);
+
+
+
+    GAM_vAddIdToLoad(&GAM_g_stTheListOfFamiliesToLoad, ucFamilyPermanentId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 953–954 */

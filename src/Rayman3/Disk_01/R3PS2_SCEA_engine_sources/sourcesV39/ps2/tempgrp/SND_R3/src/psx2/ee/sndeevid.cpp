@@ -5,16 +5,9 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct CPS2StreamVBRenderer CPS2StreamVBRenderer;
-typedef struct CPS2Renderer CPS2Renderer;
-typedef struct CPS2IOPPullDMA CPS2IOPPullDMA;
-typedef struct CPS2IOPPulledBox CPS2IOPPulledBox;
-typedef struct CPS2IopChannel CPS2IopChannel;
 typedef struct sceSifDmaData sceSifDmaData;
 typedef struct CBaseRenderer CBaseRenderer;
-typedef struct CPS2IOPRemotePulledBox CPS2IOPRemotePulledBox;
 typedef struct C2DRenderer C2DRenderer;
-typedef struct CPS2Channel CPS2Channel;
 
 typedef enum ESTATE {
     ESTOPPED = 0,
@@ -22,17 +15,25 @@ typedef enum ESTATE {
     EPAUSED = 2,
 } ESTATE;
 
+extern "C" void* usnd_malloc(unsigned int ui_Size);
+
+namespace usnd {
+
 struct CPS2Renderer {
-    virtual void vUnknown0(void);
+    virtual void vUnknown0(void* pBox, unsigned int ui0, unsigned int ui1);
     virtual void vUnknown1(void);
-    virtual void vUnknown2(void);
+    virtual unsigned int vUnknown2(void);
     virtual void vUnknown3(void);
     virtual void vUnknown4(void);
     virtual void vUnknown5(void);
     virtual void vStop(unsigned int);
     virtual void fv_vPause(unsigned int ui_Channel);
     virtual void fv_vResume(unsigned int ui_Channel);
+    virtual void vUnknown9(void);
+    virtual void vUnknown10(unsigned int ui_Channel, float fVolume);
 };
+
+struct CPS2IopChannel;
 
 struct CPS2StreamVBRenderer : CPS2Renderer {
     float m_fPan; /* +0x4 */
@@ -41,14 +42,19 @@ struct CPS2StreamVBRenderer : CPS2Renderer {
     unsigned int m_uiIOPRendAddr; /* +0x10 */
     unsigned int m_uiNbChannels; /* +0x14 */
     CPS2IopChannel* m_pstChannel; /* +0x18 */
+    CPS2StreamVBRenderer(unsigned int uiNbVoices, unsigned int uiFrequency);
+    static void* operator new(size_t uiSize) { return usnd_malloc(uiSize); }
 };
 
 struct CPS2IOPRemotePulledBox {
     /* C++ base CPS2IOPPulledBox at +0x0. */
+    unsigned char _padding_0[8]; /* +0x0..0x7 */
 };
 
 struct CPS2IOPPullDMA : CPS2IOPRemotePulledBox {
     unsigned int (*m_pfnFunc)(void*, unsigned int); /* +0x8 */
+    CPS2IOPPullDMA(unsigned int (*pfnFunc)(void*, unsigned int));
+    static void* operator new(size_t uiSize) { return usnd_malloc(uiSize); }
 };
 
 struct CPS2IOPPulledBox {
@@ -64,6 +70,9 @@ struct CPS2Channel {
 struct CPS2IopChannel : CPS2Channel {
     unsigned int m_uiIOPChannelAddr; /* +0xc */
 };
+
+}
+using namespace usnd;
 
 struct sceSifDmaData {
     unsigned int data; /* +0x0 */
@@ -125,11 +134,12 @@ static volatile unsigned int gs_SoundRunning;
 int SND_g_iEnoughSound;
 extern volatile int gv_iCD_Opened;
 
-/* The busy waits clear COP0 register 24 (mtc0 zero, $24), as in FireFx.cpp;
-   C cannot express the COP0 write. */
+/* The busy waits clear COP0 register 24 (mtbpc zero, i.e. mtc0 zero, $24), as
+   in FireFx.cpp; C cannot express the COP0 write.  The R5900 alias mtbpc is
+   used so MWCC schedules it like an ordinary instruction. */
 inline void SND_VID_vClearCop0Register24(void)
 {
-    asm { mtc0 zero, $24 }
+    asm { mtbpc zero }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeevid.cpp lines 55–58 */
@@ -192,10 +202,28 @@ void SND_VID_fn_vDesinitVideoSound(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int uiSize);
+extern "C" unsigned int usnd_uiCreateCritSect(void);
+unsigned int fn_iTransferIOPData(void* pvData, unsigned int uiSize);
+
 void SND_VID_fn_vInitVideoSound(unsigned int _nbVoices, unsigned int _iFrequency, float _fLinearVolume)
 {
     void* pAddress;
-    /* TODO: decompile from asm/... */
+
+    pAddress = fn_pvMallocInBinaryPreservingTheCurrentMode(0x40000);
+    gs_PosRead = 0;
+    gs_NbBytesInBuffer = 0;
+    g_pxBufferAudio = (int)pAddress;
+    gs_TotalSizeReceived = 0;
+    gs_SoundStarted = 0;
+    while (gv_iCD_Opened)
+        SND_VID_vClearCop0Register24();
+    gs_uiSndVidCritSect = usnd_uiCreateCritSect();
+    gs_poBox = (int)new CPS2IOPPullDMA(fn_iTransferIOPData);
+    gs_poRenderer = new CPS2StreamVBRenderer(_nbVoices, _iFrequency);
+    gs_poRenderer->vUnknown0((void*)gs_poBox, 0, 0);
+    gs_uiChannel = gs_poRenderer->vUnknown2();
+    gs_poRenderer->vUnknown10(gs_uiChannel, _fLinearVolume);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeevid.cpp lines 253–256 */

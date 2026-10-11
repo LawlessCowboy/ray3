@@ -79,6 +79,10 @@ void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The target writes COP0 register 24 (mtc0 toto, $24); C cannot express it.
+ * Spelled with the R5900 alias mtbpc, MWCC schedules it like an ordinary
+ * instruction, so it fills the delay slot of the first path's branch and
+ * gets its hazard nop on the last path, as in retail. */
 void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS)
 {
     int r;
@@ -92,10 +96,7 @@ void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS)
     {
         p_stCS->ReentrancyCount = 0;
         p_stCS->OwnerThreadId = MyThreadId;
-        asm {
-        .set noreorder
-        mtc0 toto, $24
-        }
+        asm { mtbpc toto }
     }
     else if (MyThreadId == p_stCS->OwnerThreadId)
     {
@@ -106,6 +107,6 @@ void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS)
         WaitSema(p_stCS->Sid);
         p_stCS->ReentrancyCount = 0;
         p_stCS->OwnerThreadId = MyThreadId;
-        asm { mtc0 toto, $24 }
+        asm { mtbpc toto }
     }
 }

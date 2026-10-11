@@ -1510,9 +1510,158 @@ tdst_EntryActions_ g_st_3DOS_EntryActions;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_PS2MC_Manager(void)
+typedef struct sceMcStDateTime sceMcStDateTime;
+typedef struct sceMcIconSys sceMcIconSys;
+typedef struct sceMcTblGetDir sceMcTblGetDir;
+typedef struct _SceeMemCardStatus _SceeMemCardStatus;
+typedef struct MC_tdstFileEntry MC_tdstFileEntry;
+typedef struct C_PS2MC_Manager C_PS2MC_Manager;
+
+typedef enum ESceeMemCardState {
+    EMEMCARD_STATE_NULL = 1162040319,
+    EMEMCARD_STATE_IDLE = 1162040064,
+    EMEMCARD_STATE_ENTERING_STATE = 1162040065,
+    EMEMCARD_STATE_FORMAT = 1162040066,
+    EMEMCARD_STATE_FIND_DIR = 1162040067,
+    EMEMCARD_STATE_CREATE_DIR = 1162040068,
+    EMEMCARD_STATE_GET_NUM_FILES_IN_DIR = 1162040069,
+    EMEMCARD_STATE_GET_DIR_LIST = 1162040070,
+    EMEMCARD_STATE_FIND_FILE = 1162040071,
+    EMEMCARD_STATE_LOAD_FILE = 1162040072,
+    EMEMCARD_STATE_SAVE_FILE = 1162040073,
+    EMEMCARD_STATE_NUM_STATES = 1162040074,
+} ESceeMemCardState;
+
+struct sceMcStDateTime {
+    unsigned char Resv2; /* +0x0 */
+    unsigned char Sec; /* +0x1 */
+    unsigned char Min; /* +0x2 */
+    unsigned char Hour; /* +0x3 */
+    unsigned char Day; /* +0x4 */
+    unsigned char Month; /* +0x5 */
+    unsigned short Year; /* +0x6 */
+};
+
+struct sceMcIconSys {
+    unsigned char Head[4]; /* +0x0 */
+    unsigned short Reserv1; /* +0x4 */
+    unsigned short OffsLF; /* +0x6 */
+    unsigned int Reserv2; /* +0x8 */
+    unsigned int TransRate; /* +0xc */
+    int BgColor[4][4]; /* +0x10 */
+    float LightDir[3][4]; /* +0x50 */
+    float LightColor[3][4]; /* +0x80 */
+    float Ambient[4]; /* +0xb0 */
+    unsigned char TitleName[68]; /* +0xc0 */
+    unsigned char FnameView[64]; /* +0x104 */
+    unsigned char FnameCopy[64]; /* +0x144 */
+    unsigned char FnameDel[64]; /* +0x184 */
+    unsigned char Reserve3[512]; /* +0x1c4 */
+};
+
+struct sceMcTblGetDir {
+    sceMcStDateTime _Create; /* +0x0 */
+    sceMcStDateTime _Modify; /* +0x8 */
+    unsigned int FileSizeByte; /* +0x10 */
+    unsigned short AttrFile; /* +0x14 */
+    unsigned short Reserve1; /* +0x16 */
+    unsigned int Reserve2; /* +0x18 */
+    unsigned int PdaAplNo; /* +0x1c */
+    unsigned char EntryName[32]; /* +0x20 */
+};
+
+struct _SceeMemCardStatus {
+    int type; /* +0x0 */
+    int numFreeClusters; /* +0x4 */
+    int formatStatus; /* +0x8 */
+};
+
+struct MC_tdstFileEntry {
+    unsigned int Reserved_Key; /* +0x0 */
+    unsigned int Reserved_Key2; /* +0x4 */
+    char Name[8]; /* +0x8 */
+    char DateTime[26]; /* +0x10 */
+    unsigned int ulScore; /* +0x2c */
+    unsigned int ulNbCage; /* +0x30 */
+};
+
+struct C_PS2MC_Manager {
+    int m_bActivated; /* +0x0 */
+    int m_bPromptIsOn; /* +0x4 */
+    unsigned char m_uiState; /* +0x8 */
+    unsigned char m_uiNextState; /* +0x9 */
+    unsigned char m_uiIdleState; /* +0xa */
+    unsigned int m_uiSubState; /* +0xc */
+    unsigned char m_uiCurrentSavingProcedure; /* +0x10 */
+    unsigned int m_bAutoSaveEnabled; /* +0x14 */
+    unsigned int m_bMCChanged; /* +0x18 */
+    unsigned int m_bMCChangedSinceLastSave; /* +0x1c */
+    unsigned int m_bMemoryCardWasRemovedWhilePromptWasOff; /* +0x20 */
+    unsigned int m_bNeedToWarnUserAboutAutoSaveDisabled; /* +0x24 */
+    int m_bNeedToCheckAndWarnForMCFull; /* +0x28 */
+    unsigned int m_Flags[8]; /* +0x2c */
+    int m_dirFound; /* +0x4c */
+    int m_IPausedTheEngine; /* +0x50 */
+    int m_bWillHaveToRestoreMenu2D; /* +0x54 */
+    int m_bAutoSaveWasntEvenTried; /* +0x58 */
+    sceMcIconSys m_iconSys; /* +0x5c */
+    unsigned int m_uiPort; /* +0x420 */
+    unsigned int m_uiSlot; /* +0x424 */
+    unsigned int m_pUserIconFile[8278]; /* +0x428 */
+    unsigned int m_RequiredGameDataSize; /* +0x8580 */
+    unsigned int m_RequiredPhotoSize; /* +0x8584 */
+    unsigned int m_bCurrentlyWarningAboutMCRemoval; /* +0x8588 */
+    unsigned char m_uiCheckDirReturnState; /* +0x858c */
+    unsigned int m_uiCheckDirReturnSubState; /* +0x8590 */
+    unsigned char m_uiCheckDirReturnStateError; /* +0x8594 */
+    unsigned int m_uiCheckDirReturnSubStateError; /* +0x8598 */
+    int m_uiCheckDirReturnedSize; /* +0x859c */
+    char m_aFullFileName[64]; /* +0x85a0 */
+    char m_aDirExtension[64]; /* +0x85e0 */
+    char m_aFilePrefix[64]; /* +0x8620 */
+    char m_aGameName[64]; /* +0x8660 */
+    int m_pDataToSave; /* +0x86a0 */
+    ESceeMemCardState m_MemoryCardModuleMode; /* +0x86a4 */
+    _SceeMemCardStatus m_MemoryCardInternalStatus; /* +0x86a8 */
+    _SceeMemCardStatus m_PreviousMemoryCardInternalStatus; /* +0x86b4 */
+    MC_tdstFileEntry* m_pCurrentFileEntryArray; /* +0x86c0 */
+    unsigned int m_uiCurrentNbEntriesInArray; /* +0x86c4 */
+    int m_iTotalNumberOfFilesInMC; /* +0x86c8 */
+    unsigned int m_uiNextEntry; /* +0x86cc */
+    int m_p_uiNbFilesFound; /* +0x86d0 */
+    unsigned char _extractor_padding_00[44]; /* implicitly added by extractor; +0x86d4..0x86ff */
+    sceMcTblGetDir m_pDirInfo[120]; /* +0x8700 */
+    int m_FastGetSavedGamesHeaders; /* +0xa500 */
+    int m_bPreBootCheckWasDone; /* +0xa504 */
+    int m_bPreBootCheckHadNoMC; /* +0xa508 */
+    unsigned int m_ulCheckSum; /* +0xa50c */
+    unsigned int m_uiBC_CurrentIndex; /* +0xa510 */
+    unsigned char m_AutoSaveErrorMessage; /* PS2MC_tdeMessageID stored in one byte (next member at +0xa515); +0xa514 */
+    unsigned char m_pLoadSaveBuffer[990]; /* +0xa515 */
+    int m_pScreenShotLoadBuffer; /* +0xa8f4 */
+    int m_bFirstBootCheckHasBeenDone; /* +0xa8f8 */
+    unsigned char _extractor_padding_01[4]; /* tail padding: new allocates 0xa900 bytes; +0xa8fc..0xa8ff */
+    C_PS2MC_Manager();
+};
+
+C_PS2MC_Manager::C_PS2MC_Manager()
 {
-    /* TODO: decompile from asm/... */
+    m_uiNextState = 2;
+    m_uiState = 0;
+    m_uiIdleState = 2;
+    m_bAutoSaveEnabled = 0;
+    m_bWillHaveToRestoreMenu2D = 0;
+    m_bMCChangedSinceLastSave = 0;
+    m_bPromptIsOn = 1;
+    m_bFirstBootCheckHasBeenDone = 0;
+    m_bPreBootCheckWasDone = 0;
+    m_bPreBootCheckHadNoMC = 0;
+    m_IPausedTheEngine = 0;
+    m_bCurrentlyWarningAboutMCRemoval = 0;
+    m_bActivated = 0;
+    m_bMemoryCardWasRemovedWhilePromptWasOff = 0;
+    m_bNeedToWarnUserAboutAutoSaveDisabled = 0;
+    m_bNeedToCheckAndWarnForMCFull = 3;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3746–3747 */

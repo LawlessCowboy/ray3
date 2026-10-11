@@ -1001,10 +1001,29 @@ void fn_vUnlockSound__Fv(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" unsigned int usnd_uiCreateCritSect(void);
+extern "C" unsigned int usnd_uiTryToEnterCritSect(unsigned int);
+extern "C" void usnd_vEnterCritSect(unsigned int);
+
 unsigned char fn_bLockSound__Fb(unsigned char bIgnoreIfCantAccess)
 {
     unsigned char bRet;
-    /* TODO: decompile from asm/... */
+
+    bRet = 1;
+
+    if (!gs_uiCritSect)
+        gs_uiCritSect = usnd_uiCreateCritSect();
+
+    if (bIgnoreIfCantAccess)
+    {
+        bRet = usnd_uiTryToEnterCritSect(gs_uiCritSect) == 1;
+    }
+    else
+    {
+        usnd_vEnterCritSect(gs_uiCritSect);
+    }
+
+    return bRet;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 169–225 */

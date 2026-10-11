@@ -48,9 +48,16 @@ float TestTobies[4][3];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned int g_ulNumberOfAgos2;
+extern float AGO2_g_pfCosTable[512];
+void AGO2_MEM_Init(void);
+float PS2_dl_cosf(float x);
+
 void AGO2_vReInit(void)
 {
-    /* TODO: decompile from asm/... */
+    g_ulNumberOfAgos2 = 0;
+    AGO2_MEM_Init();
+    { int i; float fAngle = 0.0f; for (i = 0; i < 512; i++) { AGO2_g_pfCosTable[i] = PS2_dl_cosf(fAngle); fAngle += 6.2831855f / 512.0f; } }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\Tobies.c lines 136–150 */

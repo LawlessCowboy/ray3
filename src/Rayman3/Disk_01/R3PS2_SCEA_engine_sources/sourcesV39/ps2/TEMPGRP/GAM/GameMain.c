@@ -562,11 +562,7 @@ inline void GAM_vClearCop0Register24(void)
 }
 inline void GAM_vClearCop0Register24Sync(void)
 {
-    asm {
-    .set noreorder
-    mtc0 zero, $24
-    nop
-    }
+    asm { mtbpc zero }
 }
 
 #define MTH3D_M_vCopyVector(VectDest, VectSrc) \
@@ -577,19 +573,23 @@ inline int DNM_bIsFlag(DNM_stDynamics* p) { int b = 0; if (p->m_tdstDynamicsBase
 
 void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)
 {
-    tdstAnim3d_* p_stCurrentAnim;
-    tdstState_* p_stCurrentState;
+    unsigned char bSectorChange = 1;
+    tdst3dData_* h_Current3dData;
     unsigned int ulCurrentBits;
     unsigned char bNoDisplay;
+    tdstAnim3d_* p_stCurrentAnim;
+    tdstState_* p_stCurrentState;
     unsigned char bSkip;
-    tdst3dData_* h_Current3dData;
-    unsigned char bSectorChange = 1;
     DNM_stDynamics* p_stDynamic;
     tdstDynam_* h_Dynam;
-    MTH3D_tdstVector_ stOldV;
+    volatile unsigned int stOldV[3];
+    tdstSectInfo_* h_MainSectInfo;
+    tdstEngineObject_* h_EngineObject;
 
     hCharacter->hLinkedObject->h_StandardGame->ulLastTrame = g_stEngineStructure.stEngineTimer.ulTrameNumber;
-    stOldV = hCharacter->hGlobalMatrix->stCol_3;
+    stOldV[0] = ((unsigned int*)&hCharacter->hGlobalMatrix->stCol_3)[0];
+    stOldV[1] = ((unsigned int*)&hCharacter->hGlobalMatrix->stCol_3)[1];
+    stOldV[2] = ((unsigned int*)&hCharacter->hGlobalMatrix->stCol_3)[2];
 
     if (MC_fn_ucIsCharacterInMainCharacterList(hCharacter) && g_ucIsEdInGhostMode)
         return;
@@ -600,15 +600,33 @@ void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)
             p_stCurrentState = h_Current3dData->h_CurrentState;
             ulCurrentBits = hCharacter->hLinkedObject->h_StandardGame->ulCustomBits;
             p_stCurrentAnim = p_stCurrentState ? fn_p_stGetAnimInState(p_stCurrentState) : NULL;
-            bNoDisplay = ((p_stCurrentAnim == NULL || (((ulCurrentBits & 0x2000) && hCharacter->lNumberOfElementsDyn > 0) ? 1 : 0))
-                || (((ulCurrentBits & 0x800) && (ulCurrentBits & 0x1001)) ? 1 : 0))
-                || (((ulCurrentBits & 0x40000) && (unsigned char)((hCharacter->hLinkedObject->h_StandardGame->ucMiscFlags & 0x80) ? 1 : 0)) ? 1 : 0);
+            {
+                int r3, r2, r1, t;
+                r1 = r2 = r3 = 1;
+                if (p_stCurrentAnim != NULL) {
+                    t = 0;
+                    if (ulCurrentBits & 0x2000) if (hCharacter->lNumberOfElementsDyn > 0) t = 1;
+                    if (!t) r1 = 0;
+                }
+                if (!r1) {
+                    t = 0;
+                    if (ulCurrentBits & 0x800) if (ulCurrentBits & 0x1001) t = 1;
+                    if (!t) r2 = 0;
+                }
+                if (!r2) {
+                    t = 0;
+                    if (ulCurrentBits & 0x40000) { int m = 0; if (hCharacter->hLinkedObject->h_StandardGame->ucMiscFlags & 0x80) m = 1; if (m & 0xff) { t = 1; } }
+                    if (!t) r3 = 0;
+                }
+                bNoDisplay = r3;
+            }
             if (h_Current3dData->h_CurrentCineActor != NULL)
                 bNoDisplay = 0;
 
             if (!bNoDisplay || (ulCurrentBits & 0x800000)) {
                 GAM_vClearCop0Register24();
-                bSkip = PLA_fn_bSkipCurrentFrame(hCharacter) & !h_Current3dData->bAnimMatrixChanged;
+                bSkip = PLA_fn_bSkipCurrentFrame(hCharacter);
+                bSkip &= !h_Current3dData->bAnimMatrixChanged;
                 bSkip |= h_Current3dData->ucFlagEndState;
                 if (h_Current3dData->h_CurrentCineActor != NULL && h_Current3dData->h_CurrentCineActor->bPlayingAnim)
                     CINE_CheckEndCineActor(h_Current3dData->h_CurrentCineActor);
@@ -623,7 +641,7 @@ void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)
             }
             fn_vMakeCharacterReact(hCharacter);
             if (hCharacter->hLinkedObject->h_StandardGame == NULL)
-                return;
+                goto end;
         }
     } else {
         DEMO_fn_vGetACompleteCharacterPosition(hCharacter);
@@ -632,8 +650,9 @@ void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)
     fn_vUpdateLight(hCharacter);
 
     if (g_ucIsEdInGhostMode && CAM_fn_bSuperObjectIsACamera(hCharacter)) {
-        fn_vSectInfoSetCurrentSector(hCharacter->hLinkedObject->h_SectInfo,
-            fn_h_SectInfoGetCurrentSector(MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject->h_SectInfo));
+        h_MainSectInfo = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject->h_SectInfo;
+        h_EngineObject = hCharacter->hLinkedObject;
+        fn_vSectInfoSetCurrentSector(h_EngineObject->h_SectInfo, fn_h_SectInfoGetCurrentSector(h_MainSectInfo));
         fn_vInsertObjectInSectorList(fn_h_SectInfoGetCurrentSector(hCharacter->hLinkedObject->h_SectInfo), hCharacter);
         return;
     }
@@ -649,11 +668,13 @@ void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)
         p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
         if (p_stDynamic != NULL) {
             if (DNM_bIsEnd(p_stDynamic) && DNM_bIsFlag(p_stDynamic))
-                bSectorChange = !p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter;
+                bSectorChange = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter == 0;
             else
                 bSectorChange = 1;
         }
     }
     if (!fn_bIsTransitionInProgress() && bSectorChange)
         GAM_fn_vSectInfoTestChangeSectorForCharacter(hCharacter);
+end:
+    return;
 }

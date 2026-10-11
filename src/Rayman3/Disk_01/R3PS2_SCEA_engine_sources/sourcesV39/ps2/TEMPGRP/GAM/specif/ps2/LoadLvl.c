@@ -338,15 +338,70 @@ int gp_stLight;
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\LoadLvl.c lines 68–100 */
 /* addr: 0x00282bb0  size: 492 bytes */
 /* Debug signature rejected: type-record data leaked into it. */
-void fn_vDisplayFix(void)
+/* Partial layouts: only the engine-structure members this function reads are
+ * named; offsets follow the full tdstEngineStructure_ recovered in Engine.c. */
+typedef struct GLD_tdstViewportAttributes_ {
+    unsigned char _data[0x70];
+} GLD_tdstViewportAttributes_;
+
+typedef struct tdstEngineStructure_ {
+    unsigned char _pad0[0x60];
+    unsigned int ulDisplayMode; /* +0x60 */
+    unsigned char _pad1[0x104 - 0x64];
+    short hGLDDevice; /* +0x104 */
+    short a_hGLDViewport[5]; /* +0x106 */
+    GLD_tdstViewportAttributes_ a_stViewportAttr[5]; /* +0x110 */
+    int a_p_stGameViewportCamera[5]; /* +0x340 */
+    short a_hGLDFixViewport[5]; /* +0x354 */
+    unsigned char _pad2[2];
+    GLD_tdstViewportAttributes_ a_stFixViewportAttr[5]; /* +0x360 */
+} tdstEngineStructure_;
+
+tdstEngineStructure_ g_stEngineStructure;
+unsigned char g_ucGameModuleId;
+int g_InGameMenu2DActivated;
+
+void GLI_xClearViewingList(void);
+int GLD_bRequestWriteToViewport(short hDevice, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib, int* pbCanWrite);
+int GLD_bWriteToViewportFinished(short hDevice, short hVP);
+void GLI_xSendListToViewport(GLD_tdstViewportAttributes_* p_stVpt);
+void GEO_fn_vComputeCameraParametersForCulling(GLD_tdstViewportAttributes_* p_stVpt, float _xZFar);
+unsigned char HIE_fn_bSendSPOToFixViewport(GLD_tdstViewportAttributes_* p_stFixViewportAttr, int _lDrawMask);
+void AGO_vDisplayGAUGES(GLD_tdstViewportAttributes_* p_stVpt);
+void AGO_fn_vDisplayBitmaps(GLD_tdstViewportAttributes_* p_stVpt);
+void fn_vDisplayInGameMenu2D(GLD_tdstViewportAttributes_* p_stVpt);
+void Erm_fn_ClearLastError(int);
+void Erm_fn_v_UpdateLastError(int, int, int, int, int, int, int, int);
+
+/* The target writes COP0 register 24 (mtc0 $zero, $24); C cannot express it.
+ * Spelled with the R5900 alias mtbpc, MWCC schedules it like retail did. */
+inline void LVL_vClearCop0Register24(void)
 {
-    /* line map: */
-    /*   line 68 @ +0x000 */
-    /*   line 80 @ +0x000 */
-    /*   line 84 @ +0x000 */
-    /*   line 87 @ +0x000 */
-    /*   line 91 @ +0x000 */
-    /*   line 97 @ +0x000 */
-    /*   line 100 @ +0x000 */
-    /* TODO: decompile from asm/... */
+    asm { mtbpc zero }
+}
+
+void fn_vDisplayFix(unsigned char _ucIndex)
+{
+    int bCanWrite;
+
+    LVL_vClearCop0Register24();
+    GLI_xClearViewingList();
+    if (!GLD_bRequestWriteToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], &g_stEngineStructure.a_stFixViewportAttr[_ucIndex], &bCanWrite))
+    {
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 42, -1, 255, 255, 0);
+    }
+    GEO_fn_vComputeCameraParametersForCulling(&g_stEngineStructure.a_stFixViewportAttr[_ucIndex], 0.0f);
+    HIE_fn_bSendSPOToFixViewport(&g_stEngineStructure.a_stFixViewportAttr[_ucIndex], g_stEngineStructure.ulDisplayMode);
+    AGO_vDisplayGAUGES(&g_stEngineStructure.a_stFixViewportAttr[_ucIndex]);
+    AGO_fn_vDisplayBitmaps(&g_stEngineStructure.a_stFixViewportAttr[_ucIndex]);
+    if (g_InGameMenu2DActivated)
+        fn_vDisplayInGameMenu2D(&g_stEngineStructure.a_stViewportAttr[_ucIndex]);
+    GLI_xSendListToViewport(&g_stEngineStructure.a_stFixViewportAttr[_ucIndex]);
+    if (!GLD_bWriteToViewportFinished(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex]))
+    {
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 43, -1, 255, 255, 0);
+    }
+    LVL_vClearCop0Register24();
 }
