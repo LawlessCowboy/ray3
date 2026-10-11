@@ -504,6 +504,8 @@ MTH3D_tdstVector_* COL_fn_pGetMinPointOfParallelBox(COL_tdstParallelBox_* _p_stP
     return (MTH3D_tdstVector_*)_p_stParallelBox;
 }
 
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1533–1543 */
 /* addr: 0x0024e0a0  size: 148 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -524,7 +526,15 @@ MTH3D_tdstVector_* COL_fn_pGetMinPointOfParallelBox(COL_tdstParallelBox_* _p_stP
 void COL_vGetNormalOfGeometricObjectElement(COL_tdstCollideObject_* hObject, short xElementIndex, short xDataElementIndex, MTH3D_tdstVector_* p_stNormal)
 {
     COL_tdstElementIndexedTriangles_* param0;
-    /* TODO: decompile from asm/... */
+
+    p_stNormal->xX = 0.0f; p_stNormal->xY = 0.0f; p_stNormal->xZ = 0.0f;
+
+    switch (*(short*)(hObject->d_xListOfElementsTypes + xElementIndex * 2)) {
+        case 1:
+            param0 = *(COL_tdstElementIndexedTriangles_**)(hObject->d_stListOfElements + xElementIndex * 4);
+            MTH3D_M_vCopyVector(p_stNormal, &param0->d_stListOfFacesNormals[xDataElementIndex]);
+            break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1509–1522 */

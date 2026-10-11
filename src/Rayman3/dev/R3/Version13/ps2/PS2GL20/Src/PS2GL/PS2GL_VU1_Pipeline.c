@@ -2520,6 +2520,25 @@ unsigned int VU1BufferFreeSpace(void)
     return uiMaxVifDmaBufLength - (g_PS2glContext.pVIFIBufTail - g_PS2glContext.pVIFInBuf) - 1;
 }
 
+int sceGsSyncPath(int mode, unsigned short timeout);
+int printf(const char* fmt, ...);
+void WaitDMAFromSPR(void);
+void FlushCache(int operation);
+
+/* PS2GLAUX.c VU1SendPackage, inlined here from its header definition. */
+inline void VU1SendPackage(_sceDmaTag* pTag)
+{
+    if (sceGsSyncPath(0, 0))
+        printf("In VU1SendPackage, SyncPath failure!\n");
+    if (g_stSPRInfo.uiState & 1)
+        WaitDMAFromSPR();
+    FlushCache(0);
+    *(volatile unsigned int*)0x10009020 = 0;
+    *(volatile unsigned int*)0x10009030 = (unsigned int)pTag;
+    *(volatile unsigned int*)0x1000E010 = 2;
+    *(volatile unsigned int*)0x10009000 = 0x145;
+}
+
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 322–334 */
 /* addr: 0x001854f0  size: 232 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2543,7 +2562,16 @@ unsigned int VU1BufferFreeSpace(void)
  */
 void VU1FlushFakeSwapBuffer(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_PS2glContext.pVIFIBufTail != g_PS2glContext.pVIFInBuf)
+    {
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->qwc = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->mark = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->id = 0x70;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[0] = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[1] = 0;
+
+        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFInBuf & 0xCFFFFFFF));
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 317–319 */
@@ -2602,7 +2630,11 @@ void VU1StartWorkingOnFakeSwapBuffer(void)
  */
 void VU1_FlushPreviousBuffer(void)
 {
-    /* TODO: decompile from asm/... */
+    if (PS2GL_G_BufferIsReady)
+    {
+        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFOutBuf & 0xCFFFFFFF));
+        PS2GL_G_BufferIsReady = 0;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 267–288 */
@@ -2636,7 +2668,24 @@ void VU1_FlushPreviousBuffer(void)
 void VU1_FlushCurrentBuffer(void)
 {
     void* pVoid;
-    /* TODO: decompile from asm/... */
+
+    if (g_PS2glContext.pVIFIBufTail != g_PS2glContext.pVIFInBuf)
+    {
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->qwc = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->mark = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->id = 0x70;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[0] = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[1] = 0;
+
+        pVoid = g_PS2glContext.pVIFInBuf;
+        g_PS2glContext.pVIFInBuf = g_PS2glContext.pVIFOutBuf;
+        g_PS2glContext.pVIFOutBuf = pVoid;
+        g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFInBuf;
+
+        PS2GL_G_BufferIsReady = 1;
+
+        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFOutBuf & 0xCFFFFFFF));
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 218–261 */
@@ -2667,5 +2716,20 @@ void VU1_FlushCurrentBuffer(void)
 void VU1FlushBuffer(void)
 {
     void* pVoid;
-    /* TODO: decompile from asm/... */
+
+    if (g_PS2glContext.pVIFIBufTail != g_PS2glContext.pVIFInBuf)
+    {
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->qwc = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->mark = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->id = 0x70;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[0] = 0;
+        ((_sceDmaTag*)g_PS2glContext.pVIFIBufTail)->p[1] = 0;
+
+        pVoid = g_PS2glContext.pVIFInBuf;
+        g_PS2glContext.pVIFInBuf = g_PS2glContext.pVIFOutBuf;
+        g_PS2glContext.pVIFOutBuf = pVoid;
+        g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFInBuf;
+
+        VU1SendPackage((_sceDmaTag*)((unsigned int)g_PS2glContext.pVIFOutBuf & 0xCFFFFFFF));
+    }
 }

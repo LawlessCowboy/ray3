@@ -1164,9 +1164,28 @@ unsigned char IPT_fn_bIsKeyWordValid_PadJustPressed(IPT_tdstKeyWordElement_* _hK
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void Erm_fn_ClearLastError(unsigned int ulChannelId);
+void Erm_fn_v_UpdateLastError();
+
+static inline unsigned char IPT_fn_bIsNextKeyWordValid(short swKeyWord)
+{
+    unsigned char ucReturn = 0;
+    if (((unsigned char (**)(void))IPT_p_fn_bIsKeyWordValid)[swKeyWord & 0xFF])
+    {
+        ucReturn = ((unsigned char (**)(void))IPT_p_fn_bIsKeyWordValid)[swKeyWord & 0xFF]();
+    }
+    else
+    {
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(14, g_ucIPTModuleId, 0, 12, -1, 255, 255, NULL);
+    }
+    return ucReturn;
+}
+
 unsigned char IPT_fn_bIsKeyWordValid_Not(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    /* TODO: decompile from asm/... */
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    return IPT_fn_bIsNextKeyWordValid(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord) ? 0 : 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 84–93 */

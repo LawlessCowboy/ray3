@@ -1079,15 +1079,16 @@ struct tagGLcontext {
     unsigned char VU1Package[10000]; /* +0x6ca0 */
 };
 
-unsigned int LoadingInProgress;
+volatile unsigned int LoadingInProgress;
 int g_iLoadingScreenBackgroundNumber;
-int pLS;
+C_LoadingScreen* pLS;
 int LS_iThreadID;
 unsigned int g_ProgressSizeHaveRead;
 unsigned int g_ProgressSizeToRead;
 int _gp;
 void (*PS2glLiberator)(void*);
 extern "C" void PS2glDeleteTextures(int n, const unsigned int* textures);
+extern "C" void PS2auxSwapBuffers(void);
 int PS2glAllocator64;
 tagGScontext g_gsContext;
 tagGLcontext g_PS2glContext;
@@ -1200,7 +1201,13 @@ void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft)
  */
 void LS_Process(void)
 {
-    /* TODO: decompile from asm/... */
+    while (pLS && (LoadingInProgress || !pLS->m_Finished)) {
+        if (pLS && (LoadingInProgress || !pLS->m_Finished))
+            pLS->Display();
+
+        if (!pLS->m_Finished)
+            PS2auxSwapBuffers();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 687–715 */

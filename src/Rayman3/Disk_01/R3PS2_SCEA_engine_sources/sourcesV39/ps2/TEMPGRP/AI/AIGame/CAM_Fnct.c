@@ -3538,6 +3538,8 @@ tdstNodeInterpret_* CAM_fn_p_stGetBestPos(HIE_tdstSuperObject_* p_SuperObjPerso,
     /* TODO: decompile from asm/... */
 }
 
+DNM_stParsingDatas* fn_p_stDynamGetParsingDatas(tdstDynam_* _hDynam);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Fnct.c lines 728–760 */
 /* addr: 0x002065f0  size: 168 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3559,7 +3561,19 @@ tdstNodeInterpret_* CAM_fn_p_stComputeCurrentTarget(HIE_tdstSuperObject_* p_Supe
     DNM_stParsingDatas* p_stParsingDatas;
     tdstDynam_* h_Dynam;
     HIE_tdstSuperObject_* hCamera;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator((p_stTree - 1)->uDummy.uId.eFuncId), p_SuperObjPerso, &hCamera);
+
+    h_Dynam = hCamera->hLinkedObject.p_stCharacter->h_Dynam;
+    if (!h_Dynam)
+        return p_stTree;
+    p_stParsingDatas = fn_p_stDynamGetParsingDatas(h_Dynam);
+    if (!p_stParsingDatas)
+        return p_stTree;
+
+    *(int*)&p_stValue->uDummy.uParam.stVectorValue.xX = *(int*)&p_stParsingDatas->stVector.xX; *(int*)&p_stValue->uDummy.uParam.stVectorValue.xY = *(int*)&p_stParsingDatas->stVector.xY; *(int*)&p_stValue->uDummy.uParam.stVectorValue.xZ = *(int*)&p_stParsingDatas->stVector.xZ;
+    p_stValue->eType = E_vt_Vector;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Fnct.c lines 646–714 */

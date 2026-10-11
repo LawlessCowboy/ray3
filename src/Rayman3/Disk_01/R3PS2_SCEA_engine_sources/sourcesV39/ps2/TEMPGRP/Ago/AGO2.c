@@ -4399,6 +4399,8 @@ void AGO2_vDisplayAllParts(GLD_tdstViewportAttributes_* _p_stViewport)
     /* TODO: decompile from asm/... */
 }
 
+void AGO2_vDestroyAllParts(void);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 634–656 */
 /* addr: 0x001e9690  size: 160 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -4418,9 +4420,24 @@ void AGO2_vDisplayAllParts(GLD_tdstViewportAttributes_* _p_stViewport)
  */
 void AGO2_vProcessAllParts(void)
 {
-    AGO2_Part_* p;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    AGO2_Part_* p;
+
+    AGO2_vDestroyAllParts();
+
+    for (i = 0; i < g_ulNumberOfAgos2; i++)
+    {
+        p = &g_pAGO2Parts[i];
+
+        if (p->pProcessFnct)
+            p->pProcessFnct(p);
+
+        if (p->pTransparencyFunction)
+            p->pTransparencyFunction(p);
+
+        if (p->pSizingFunction)
+            p->pSizingFunction(p);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 590–622 */

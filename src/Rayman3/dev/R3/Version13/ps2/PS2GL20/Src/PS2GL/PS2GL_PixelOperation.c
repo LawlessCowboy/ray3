@@ -3161,6 +3161,8 @@ void impPS2glPixelMapfv(void)
     /* TODO: decompile from asm/... */
 }
 
+void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
+
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 632–660 */
 /* addr: 0x00165680  size: 156 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3186,7 +3188,30 @@ void impPS2glDrawPixels(int width, int height, unsigned int format, unsigned int
 {
     int y;
     int x;
-    /* TODO: decompile from asm/... */
+
+    if (g_PS2glContext.bRasterPosValid)
+    {
+        x = (int)(g_PS2glContext.fRasterPos[0] + 0.5f);
+        y = (int)(g_PS2glContext.fRasterPos[1] + 0.5f);
+
+        switch (format)
+        {
+            case 0x1900:
+            case 0x1901:
+                break;
+            case 0x1902:
+            case 0x1903:
+            case 0x1904:
+            case 0x1905:
+            case 0x1906:
+            case 0x1907:
+            case 0x1908:
+            case 0x1909:
+            case 0x190A:
+                internalPS2glDrawRgbaPixels(x, y, width, height, format, type, pixels);
+                break;
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 526–629 */
@@ -3247,7 +3272,9 @@ void impPS2glDrawPixels(int width, int height, unsigned int format, unsigned int
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned int format, void* pixels)
+/* The debug record lists six parameters, but the retail body reads pixels from t2 (the seventh EABI
+ * argument register) and the caller passes type in t1, so type is restored here as an unused parameter. */
+void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels)
 {
     unsigned char* src;
     int row;

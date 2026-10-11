@@ -1057,7 +1057,7 @@ int GAM_fn_iIsGamePaused(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bLoadGameOptions(void)
+int fn_bLoadGameOptions()
 {
     unsigned char ucTmp;
     int lIndex;
@@ -1065,6 +1065,8 @@ int fn_bLoadGameOptions(void)
     int lReturn;
     /* TODO: decompile from asm/... */
 }
+
+unsigned char GAM_fn_bUpdateSavingFile(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 315–362 */
 /* addr: 0x002802e0  size: 164 bytes */
@@ -1097,7 +1099,32 @@ int fn_bLoadGameOptions(void)
 int fn_bLoadCurrentGameOptions(void)
 {
     unsigned char bReturn;
-    /* TODO: decompile from asm/... */
+
+    bReturn = 1;
+
+    GAM_fn_bUpdateSavingFile();
+
+    if (!fn_bLoadGameOptions(g_stGameOptions.szCurrentFileName))
+    {
+        if (!(unsigned char)fn_bLoadGameOptions("__ Error __"))
+            bReturn = 0;
+    }
+
+    if (!bReturn)
+    {
+        g_stGameOptions.s32VolumeSound = 0x5A;
+        g_stGameOptions.s32VolumeVoice = 0x7F;
+        g_stGameOptions.s32VolumeMusic = 0x5A;
+        g_stGameOptions.s32VolumeAmbiance = 0x5A;
+        g_stGameOptions.s32VolumeMenu = 0x5A;
+        g_stGameOptions.ulDetails = 0;
+        g_stGameOptions.ulScreenSize = 0;
+
+        g_ulMoviesBit1 = 0;
+        g_ulMoviesBit2 = 0;
+    }
+
+    return bReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 187–193 */

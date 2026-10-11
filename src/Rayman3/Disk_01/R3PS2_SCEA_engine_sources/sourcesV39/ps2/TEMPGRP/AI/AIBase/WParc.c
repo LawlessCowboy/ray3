@@ -3040,7 +3040,35 @@ int WPARCLST_fn_lGetCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode
 int WPARCLST_fn_lChangeCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int ulCapability, int lValue)
 {
     WP_tdstArc_* param0;
-    /* TODO: decompile from asm/... */
+
+    if (hListOfArc && hNode)
+    {
+        for (param0 = hListOfArc->m_hArc.hFirstElementDyn; param0; param0 = param0->hNextBrotherDyn)
+        {
+            if (param0->m_hNode == hNode)
+            {
+                switch (lValue)
+                {
+                    case 0:
+                    case 2:
+                        param0->m_ulCapability |= ulCapability;
+                        break;
+                    case 1:
+                    case 3:
+                        param0->m_ulCapability = ulCapability;
+                        break;
+                    case 4:
+                        param0->m_ulCapability &= ~ulCapability;
+                        break;
+                    case 5:
+                        param0->m_ulCapability = 0;
+                        break;
+                }
+                return 0;
+            }
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 118–146 */

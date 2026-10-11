@@ -32,7 +32,8 @@ typedef struct _stCdBlock _stCdBlock;
 typedef struct _tdstThemePart _tdstThemePart;
 typedef struct CSrcFlow CSrcFlow;
 typedef struct CAllocBlock CAllocBlock;
-typedef struct CPS2IdObjLoader CPS2IdObjLoader;
+namespace usnd { struct CPS2IdObjLoader; }
+typedef usnd::CPS2IdObjLoader CPS2IdObjLoader;
 typedef struct CPS2FileSrcFlow CPS2FileSrcFlow;
 typedef struct _tdstTypeRandomMem _tdstTypeRandomMem;
 typedef struct _stMemBlockA _stMemBlockA;
@@ -293,9 +294,11 @@ struct CAllocBlock {
     int m_pcBufferPos; /* +0xc */
 };
 
-struct CPS2IdObjLoader {
+struct usnd::CPS2IdObjLoader {
     smap m_oIdObjsCache; /* +0x0 */
     smap m_oIndex; /* +0x10 */
+    void fv_FlushCache(void);
+    void f_vClearIndex(void);
 };
 
 struct CPS2FileSrcFlow : CSrcFlow {
@@ -451,6 +454,7 @@ struct CEventResData : CResData {
 
 struct CBankDescCont : smap {
     CPS2IdObjLoader moLoader; /* +0x10 */
+    unsigned char mfn_bRemoveBankDesc(const char* pIdStr);
 };
 
 struct _tdstRangeSplitMem {
@@ -557,8 +561,8 @@ struct CTextFileSrc : CTextFile {
 
 
 int CD_ProgressCallBack;
-static int gro_BankCont;
-static int gro_BankLoader;
+static CBankDescCont* gro_BankCont;
+static CPS2IdObjLoader* gro_BankLoader;
 static char gch_Title[256];
 static char gch_SoundFolder[1024];
 static char gch_DivertSoundFolder[1024];
@@ -742,6 +746,25 @@ _SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId)
     return (_SND_tdstBlockEvent*)po_Answer;
 }
 
+struct SwitchMgr {
+    static void fs_vUpdateWaves(CPS2IdObjLoader*);
+    static void fs_vClearTexture(void);
+    static void fs_vAddTexture(unsigned int);
+};
+
+extern "C" int strncmp(const char*, const char*, unsigned int);
+extern "C" void SND_fn_vClearLastTheme(void);
+extern "C" int SND_fn_iGetSwitchMaterial(void);
+
+static inline void fs_vUpdateSwitchTextures(void)
+{
+    int iMaterial = SND_fn_iGetSwitchMaterial();
+    SwitchMgr::fs_vClearTexture();
+    if (iMaterial != -1)
+        SwitchMgr::fs_vAddTexture(iMaterial);
+    SwitchMgr::fs_vUpdateWaves(gro_BankLoader);
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 238–261 */
 /* addr: 0x00188d20  size: 168 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -761,7 +784,20 @@ _SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId)
 int SND_fn_bUnloadBank(char* pIdStr)
 {
     int b_Answer;
-    /* TODO: decompile from asm/... */
+
+    b_Answer = 0;
+    if (gro_BankCont->mfn_bRemoveBankDesc(pIdStr))
+        b_Answer = 1;
+
+    gro_BankLoader->fv_FlushCache();
+    gro_BankLoader->f_vClearIndex();
+
+    SND_fn_vClearLastTheme();
+
+    if (strncmp(pIdStr, "transit", 7))
+        fs_vUpdateSwitchTextures();
+
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 162–233 */

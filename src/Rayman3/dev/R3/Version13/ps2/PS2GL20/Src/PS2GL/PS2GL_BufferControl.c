@@ -1962,7 +1962,30 @@ void PS2glExecSwapBuffers(void)
 unsigned int PS2glInternalGetScreenCalebration(unsigned int target)
 {
     unsigned int uiReturn;
-    /* TODO: decompile from asm/... */
+
+    switch (target)
+    {
+        case 0xF43:
+            uiReturn = g_stDoubleBuf.disp[0].display.DX;
+            break;
+        case 0xF44:
+            uiReturn = g_stDoubleBuf.disp[0].display.DY;
+            break;
+        case 0xF45:
+            uiReturn = g_stDoubleBuf.disp[0].display.DW;
+            break;
+        case 0xF46:
+            if (g_stBufferInfo.bPlainBufferMode)
+                uiReturn = g_stDoubleBufAdd.display1[0].DH;
+            else
+                uiReturn = g_stDoubleBuf.disp[0].display.DH;
+            break;
+        default:
+            uiReturn = 0;
+            break;
+    }
+
+    return uiReturn;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1050–1082 */
