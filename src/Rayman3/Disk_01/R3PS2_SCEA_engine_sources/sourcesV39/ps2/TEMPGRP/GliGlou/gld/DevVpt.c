@@ -401,10 +401,22 @@ int GLD_bBeginWriteToDevice(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GLD_bGetViewportAttributes(short hVP, GLD_tdstViewportAttributes_* pstViewAttrib)
+int GLD_bGetViewportAttributes(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib)
 {
     short hDev;
-    /* TODO: decompile from asm/... */
+
+    g_bGLDBlockSwaping = 1;
+    while (g_bGLDSwapInProgress)
+        ;
+    hDev = hVP / 16;
+    {
+        GLD_stViewport* pstVpt = ((GLD_stViewport**)&g_pstGLDDevices[hDev]->pstViewports[0])[(short)(hVP % 16)];
+        pstVpt->stViewAttrib.lPitch = -1;
+        pstVpt->stViewAttrib.p_cVirtualScreen = 0;
+        memcpy(pstViewAttrib, pstVpt, sizeof(GLD_tdstViewportAttributes_));
+    }
+    g_bGLDBlockSwaping = 0;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 731–785 */

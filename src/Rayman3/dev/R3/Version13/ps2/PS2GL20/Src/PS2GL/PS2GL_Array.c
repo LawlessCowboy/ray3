@@ -2617,9 +2617,32 @@ void WaitDMAFromSPR(void)
  */
 int PS2glInternalArraysSize(unsigned int mode, int count)
 {
-    int iSizePerElement;
     int iCountPerBuf;
-    /* TODO: decompile from asm/... */
+    int iSizePerElement;
+
+    iCountPerBuf = g_PS2glContext.iBufLimit;
+    iSizePerElement = 7;
+    if (g_PS2glContext.uiBoundingSphereBits & 0xC)
+        iSizePerElement += 2;
+    if (g_PS2glContext.nTextureEnableBits & 0x200)
+        iSizePerElement += 7;
+    switch (mode)
+    {
+    case 8:
+    case 5:
+        count -= 2;
+        iCountPerBuf -= 2;
+        if (g_PS2glContext.uiDmaOmitDataBits & 0x502)
+            iCountPerBuf -= 2;
+        break;
+    case 9:
+    case 6:
+        count -= 2;
+        iCountPerBuf -= 2;
+        iSizePerElement += 4;
+        break;
+    }
+    return ((count + iCountPerBuf - 1) / iCountPerBuf) * iSizePerElement + 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 173–934 */

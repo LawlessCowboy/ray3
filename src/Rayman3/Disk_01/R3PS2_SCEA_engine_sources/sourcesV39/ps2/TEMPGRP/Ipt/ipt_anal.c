@@ -71,6 +71,8 @@ struct IPT_tdstCommandElement_ {
 
 struct anon_0 {
     unsigned char m_ucStatus; /* +0x0 */
+    unsigned char a_ucKeys[2][256]; /* +0x1 (debug record truncated; layout from IPT_fn_bAKeyJustPressed) */
+    short m_wCurrent; /* +0x202 */
 };
 
 struct stDevice {
@@ -159,8 +161,8 @@ struct IPT_tdstInput_ {
 
 IPT_tdstInput_ IPT_g_hInputStructure;
 unsigned int IPT_g_ulPadAndJoyButtonFlag;
-int IPT_gd_hKeyAndPadDefine;
-IPT_tdstScriptValue_ IPT_g_hScriptKeyValue;
+IPT_tdstKeyAndPadDefine_* IPT_gd_hKeyAndPadDefine;
+extern IPT_tdstScriptValue_ IPT_g_hScriptKeyValue[];
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 37–49 */
 /* addr: 0x002f5910  size: 152 bytes */
@@ -260,11 +262,29 @@ unsigned char IPT_fn_bAButtonPadJustPressed(void)
  */
 unsigned char IPT_fn_bAKeyJustPressed(void)
 {
-    stDevice* hKeyboard;
-    IPT_tdstKeyAndPadDefine_* p_stKeyAndPadDefine;
-    IPT_tdstScriptValue_* p_hScriptKeyValue;
     unsigned short uwKeyCode;
-    /* TODO: decompile from asm/... */
+    IPT_tdstScriptValue_* p_hScriptKeyValue;
+    IPT_tdstKeyAndPadDefine_* p_stKeyAndPadDefine;
+    stDevice* hKeyboard;
+
+    hKeyboard = IPT_g_hInputStructure.a_stDevice[1].hDeviceHandle;
+    p_hScriptKeyValue = IPT_g_hScriptKeyValue;
+    while (p_hScriptKeyValue->swKeyValue != -1)
+    {
+        uwKeyCode = p_hScriptKeyValue->swKeyValue;
+        if (hKeyboard->m_p_stState->a_ucKeys[hKeyboard->m_p_stState->m_wCurrent][p_hScriptKeyValue->swKeyValue] && !hKeyboard->m_p_stState->a_ucKeys[1 - hKeyboard->m_p_stState->m_wCurrent][p_hScriptKeyValue->swKeyValue])
+        {
+            p_stKeyAndPadDefine = IPT_gd_hKeyAndPadDefine;
+            while (p_stKeyAndPadDefine->uwBasedKey != 0xFFFF)
+            {
+                if (uwKeyCode == p_stKeyAndPadDefine->uwBasedKey)
+                    return 1;
+                p_stKeyAndPadDefine++;
+            }
+        }
+        p_hScriptKeyValue++;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 149–152 */

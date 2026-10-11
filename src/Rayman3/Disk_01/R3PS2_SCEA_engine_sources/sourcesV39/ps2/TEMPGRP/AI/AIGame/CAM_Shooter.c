@@ -5636,6 +5636,7 @@ void fn_InitCSH_Common(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* p_stStandardGame);
 
 tdstNodeInterpret_* fn_p_SetGCubeVersion(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
@@ -5757,10 +5758,25 @@ tdstNodeInterpret_* fn_p_RemoveMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, 
  */
 tdstNodeInterpret_* fn_p_AddMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_tdstSuperObject_* pMainActor;
     CAM_Shooter_* pcs;
+    HIE_tdstSuperObject_* pMainActor;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pMainActor = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    hCineInfo = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    if (fn_bIsValidObject(pMainActor) && pcs->iNumberOfMainActors < 4)
+    {
+        pc = (char*)&pcs->apMainActors;
+        *(HIE_tdstSuperObject_**)(pc + (iIndex = pcs->iNumberOfMainActors * 4)) = pMainActor;
+        pcs->iNumberOfMainActors++;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 391–450 */

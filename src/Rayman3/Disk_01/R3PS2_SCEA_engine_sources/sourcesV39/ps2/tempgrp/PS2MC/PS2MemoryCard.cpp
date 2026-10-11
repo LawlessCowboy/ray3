@@ -570,11 +570,12 @@ void PS2MC_fn_vStopPrompts(void)
  */
 unsigned int PS2MC_fn_iGetFunctionResult(PS2MC_tdstFunctionFlags FlagID)
 {
-    unsigned int ulOffset;
     char* pFlags;
-    ulOffset = ((unsigned int)FlagID & 0xff) * 4;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
     pFlags = (char*)PS2MC_g_Manager + 0x2c;
-    return *(unsigned int*)(pFlags + ulOffset);
+    return ((unsigned int*)pFlags)[iIndex = (unsigned int)FlagID & 0xff];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5345–5347 */

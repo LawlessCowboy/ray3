@@ -1637,6 +1637,9 @@ int fn_rGetMicroVelocityX(int s32_ObjectId)
     return r_Answer;
 }
 
+tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* p_stStandardGame);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 454–508 */
 /* addr: 0x00272a40  size: 420 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1786,7 +1789,26 @@ int fn_bGetMicroPosition(int s32_ObjectId, _stVector* pst_Vector)
     MTH3D_tdstVector_ st_Vertex;
     HIE_tdstSuperObject_* h_SuperObj;
     int b_Answer;
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* h_Micro;
+
+    b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        h_Micro = fn_hReturnHandleMicroFromIndex(s32_ObjectId);
+        if (h_Micro != NULL)
+        {
+            h_SuperObj = fn_h_StandardGameGetSuperObject(h_Micro->h_StandardGame);
+            if (h_SuperObj != NULL)
+            {
+                st_Vertex = *(MTH3D_tdstVector_*)&h_SuperObj->hGlobalMatrix->stTransformMatrix.stCol_3;
+                pst_Vector->f32x = st_Vertex.xX;
+                pst_Vector->f32y = st_Vertex.xY;
+                pst_Vector->f32z = st_Vertex.xZ;
+                b_Answer = 1;
+            }
+        }
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 337–343 */
@@ -1801,6 +1823,7 @@ int fn_bGetMicroPosition(int s32_ObjectId, _stVector* pst_Vector)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex)
 {
     tdstIndexMicros_* hMicro;
@@ -1810,6 +1833,7 @@ tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex)
             return hMicro->hMicroObj;
     return NULL;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 309–327 */
 /* addr: 0x00272fa0  size: 100 bytes */

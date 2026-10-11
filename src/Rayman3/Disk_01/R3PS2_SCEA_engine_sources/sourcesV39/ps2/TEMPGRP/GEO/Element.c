@@ -241,7 +241,13 @@ float GEO_xGetZFar(void)
  */
 void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, GLI_tdstMaterial_* hVisualMaterial)
 {
-    ((GLI_tdstMaterial_* *)((char *)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones + 8))[xNumberOfCone * 3] = hVisualMaterial;
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    pc = (char*)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones;
+    pc = pc + 8;
+    ((GLI_tdstMaterial_**)pc)[iIndex = (int)xNumberOfCone * 3] = hVisualMaterial;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 681–683 */
@@ -254,7 +260,13 @@ void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, shor
  */
 void GEO_vSetRadiusOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, float xRadius)
 {
-    *(float *)((GEO_tdstIndexedCone_ *)((char *)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones + 4) + xNumberOfCone) = xRadius;
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    pc = (char*)(*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[hElement]->d_stListOfCones;
+    pc = pc + 4;
+    ((float*)pc)[iIndex = (int)xNumberOfCone * 3] = xRadius;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 634–638 */
@@ -307,7 +319,13 @@ void GEO_vCreateElementCones(GEO_tdstGeometricObject_* hObject, short* p_hElemen
  */
 void GEO_vSetVisualMaterialOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, GLI_tdstMaterial_* hVisualMaterial)
 {
-    ((GLI_tdstMaterial_* *)((char *)(*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres + 4))[xNumberOfSphere * 3] = hVisualMaterial;
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    pc = (char*)(*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres;
+    pc = pc + 4;
+    ((GLI_tdstMaterial_**)pc)[iIndex = (int)xNumberOfSphere * 3] = hVisualMaterial;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 351–353 */
@@ -333,7 +351,13 @@ void GEO_vSetRadiusOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hEle
  */
 void GEO_vSetCenterPointOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfSphere, short xIndexOfPoint)
 {
-    ((short *)((char *)(*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres + 8))[xNumberOfSphere * 6] = xIndexOfPoint;
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    pc = (char*)(*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres;
+    pc = pc + 8;
+    ((short*)pc)[iIndex = (int)xNumberOfSphere * 6] = xIndexOfPoint;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 246–264 */

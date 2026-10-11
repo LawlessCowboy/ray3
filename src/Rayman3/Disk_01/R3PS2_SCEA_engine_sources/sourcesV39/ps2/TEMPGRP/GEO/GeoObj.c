@@ -446,9 +446,30 @@ void GEO_vGetNormalOfGeometricObjectElement(GEO_tdstGeometricObject_* hObject, s
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GEO_xComputeObjectNormals(GEO_tdstGeometricObject_* hObject);
+void GEO_vComputeObjectParallelBox(GEO_tdstGeometricObject_* hObject, short xIndex);
+void GEO_fn_vAddObjectToSphere(GEO_tdstGeometricObject_* hObject, MTH4D_tdstVector_* p_stCenter, float* p_xRadius);
+void GEO_xComputeIndexUsedByElements(GEO_tdstGeometricObject_* p_stObj);
+
 void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject)
 {
-    /* TODO: decompile from asm/... */
+    GEO_xComputeObjectNormals(hObject);
+    GEO_xComputeIndexUsedByElements(hObject);
+    if (hObject->xNbParallelBoxes)
+    {
+        short i;
+
+        if (hObject->d_stListOfParallelBoxes == NULL)
+            GEO_vCreateObjectListOfParallelBox(hObject, hObject->xNbParallelBoxes);
+        for (i = 0; i < hObject->xNbParallelBoxes; i++)
+            GEO_vComputeObjectParallelBox(hObject, i);
+    }
+    hObject->xBoudingSphereCenter.xX = hObject->d_stListOfPoints->xX;
+    hObject->xBoudingSphereCenter.xY = hObject->d_stListOfPoints->xY;
+    hObject->xBoudingSphereCenter.xZ = hObject->d_stListOfPoints->xZ;
+    hObject->xBoudingSphereCenter.xW = 1.0f;
+    hObject->xBoudingSphereRadius = 0.0f;
+    GEO_fn_vAddObjectToSphere(hObject, &hObject->xBoudingSphereCenter, &hObject->xBoudingSphereRadius);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 390–391 */
