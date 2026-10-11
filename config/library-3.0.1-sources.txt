@@ -1,0 +1,9 @@
+# Library (non-game) sources built with MWCC 3.0.1 (2002-01-23) instead of the
+# library baseline 3.0 (2001-11-26). Most PS2GL files lose matches under the
+# later build, but these keep every recorded match and gain under it.
+# Add a file only with that evidence. Paths are repo-relative.
+#
+# PS2GL_Array.c: PS2glInternalArraysSize matches only under 3.0.1 (3.0 leaves
+# an unfilled delay slot after the first switch compare); all 9 recorded
+# matches in the file also pass.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Array.c

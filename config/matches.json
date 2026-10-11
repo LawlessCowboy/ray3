@@ -25327,6 +25327,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Array.c",
       "status": "MATCH"
     },
+    "0x0013f2a0": {
+      "address": "0x0013f2a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glInternalArraysSize",
+      "size": 180,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Array.c",
+      "status": "MATCH"
+    },
     "0x00140290": {
       "address": "0x00140290",
       "compiler_profile": "mwccps2-3.0-011126-o3",

@@ -20,8 +20,8 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
 | **Game code** | **2,206 / 4,164** (+1 register-equivalent) | **170,000 / 1,511,580** (**11.2465%**) |
-| Library code | 847 / 3,668 (+1 register-equivalent) | 52,592 / 756,524 (6.9518%) |
-| **Total** | **3,053 / 7,832** (+2 register-equivalent) | **222,592 / 2,268,104** (**9.8140%**) |
+| Library code | 848 / 3,668 (+1 register-equivalent) | 52,772 / 756,524 (6.9756%) |
+| **Total** | **3,054 / 7,832** (+2 register-equivalent) | **222,772 / 2,268,104** (**9.8219%**) |
 
 - Translation units (`python3 tools/match.py tus --summary`): **112 / 384**
   fully matched (game 107 / 347, library 5 / 37), with 218 more partially
@@ -147,7 +147,9 @@ produce on both sides, which fits per-file builds made at different times.
 PS2GL keeps **3.0 (2001-11-26)**, since it loses about 90 matches under the
 later builds. Three PS2GL files listed in `config/library-O3p-sources.txt`
 (PS2GL_Pipeline.c, PS2GL_Texture.c, PS2GL_VU1_Pipeline.c) also take `-O3,p`: they gain matches
-under it and lose none, while most of the library loses matches with it. Every other PS2 CodeWarrior release that could be found (decomp.me's
+under it and lose none, while most of the library loses matches with it. Library files
+listed in `config/library-3.0.1-sources.txt` (currently PS2GL_Array.c) build with
+3.0.1 instead, for the same reason: they gain matches and lose none. Every other PS2 CodeWarrior release that could be found (decomp.me's
 3.0b22/b38/b50/b52 and 3.0.1bXX builds, and the R3.03–R3.6 installers on the
 Internet Archive) was probed and loses matches. `tools/match.py` and the Makefile
 select the compiler automatically, and `MWCC=` overrides it for probes.
