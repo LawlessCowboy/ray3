@@ -102,11 +102,15 @@ int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD)
 ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD)
 {
     ISI_tdstISI_* hISI;
-    ISI_tdstColor_** pISILOD;
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
 
     hISI = (ISI_tdstISI_*)_hISI;
-    pISILOD = (ISI_tdstColor_**)((char*)hISI->d_stISILOD + 4);
-    g_p_stRawRLIsForThisObject = pISILOD[(int)_xNumISILOD * 3];
+    pc = (char*)hISI->d_stISILOD;
+    pc = pc + 4;
+    g_p_stRawRLIsForThisObject = ((ISI_tdstColor_**)pc)[iIndex = (int)_xNumISILOD * 3];
     return g_p_stRawRLIsForThisObject;
 }
 

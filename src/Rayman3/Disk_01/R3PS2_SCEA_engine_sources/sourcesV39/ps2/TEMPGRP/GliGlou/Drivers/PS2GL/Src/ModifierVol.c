@@ -1727,6 +1727,23 @@ void GLI_vDrawDynamicShadowElem_OnlyLonelyEdges(GEO_tdstElementIndexedTriangles_
     /* TODO: decompile from asm/... */
 }
 
+void GLI_vDrawDynamicShadow(void);
+MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrix(void);
+
+static inline void GLI_vDrawObjectDynamicShadow(int p_stObj)
+{
+    GLI_BIG_GLOBALS_p_stObj = p_stObj;
+    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)&((GLI_tdstCamera_*)GLI_BIG_GLOBALS_p_stCurrentCamera)->stMatrix;
+    TOTOCAMMAT = ((GLI_tdstCamera_*)GLI_BIG_GLOBALS_p_stCurrentCamera)->stMatrix;
+    totocam = 1;
+    GLI_BIG_GLOBALS_lHierachDrawMask = -1;
+    GLI_BIG_GLOBALS_p_stObj = p_stObj;
+    GLI_BIG_GLOBALS_p_stVpt = 0;
+    GLI_BIG_GLOBALS_gs_st_CurrentMatrix = g_p_stCurrentMatrix;
+    GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix = *HIE_fn_pGetCurrentInCamCoordsMatrix();
+    GLI_vDrawDynamicShadow();
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 869–871 */
 /* addr: 0x002b2790  size: 196 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1740,7 +1757,7 @@ void GLI_vDrawDynamicShadowElem_OnlyLonelyEdges(GEO_tdstElementIndexedTriangles_
  */
 void GLI_vDrawVisualSetDynamicShadow(GEO_tdstVisualSet_* p_stVisualSet)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vDrawObjectDynamicShadow(*(int*)p_stVisualSet->d_p_stLodDefinitions);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 618–795 */

@@ -3036,7 +3036,28 @@ void GLI_PS2GL_BuildSpecifForPO(PO_tdstPhysicalObject_* PO)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glTexParameteri(unsigned int target, unsigned int pname, int param);
+void HIE_fn_vInitMatrixStack(void);
+
 void BuildAllSDLs(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+
+    if (GLI_g_ChristianSlaterMode)
+    {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+    }
+    else
+    {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
+    }
+    g_PS2glContext.uiStaticDisplayListMaxSize = 30000;
+
+    GLI_g_StaticVertexArraySizePrevision = 0; HIE_fn_vInitMatrixStack(); GLI_g_DMA_PreparingOpaque = 1; GLI_vDMABufferParseTree((HIE_tdstSuperObject_*)gp_stActualWorld); GLI_g_DMA_PreparingOpaque = 0; GLI_vDMABufferParseTree((HIE_tdstSuperObject_*)gp_stActualWorld);
+
+    g_PS2glContext.uiStaticDisplayListMaxSize = 5000;
 }

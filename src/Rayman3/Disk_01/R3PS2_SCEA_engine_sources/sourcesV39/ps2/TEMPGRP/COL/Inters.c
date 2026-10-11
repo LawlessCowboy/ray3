@@ -824,7 +824,17 @@ unsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MT
  */
 unsigned char INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stPoint->xX < p_stMinPoint->xX)
+        return 0;
+    if (p_stPoint->xX > p_stMaxPoint->xX)
+        return 0;
+    if (p_stPoint->xY < p_stMinPoint->xY)
+        return 0;
+    if (p_stPoint->xY > p_stMaxPoint->xY)
+        return 0;
+    if (p_stPoint->xZ < p_stMinPoint->xZ)
+        return 0;
+    return !(p_stPoint->xZ > p_stMaxPoint->xZ);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 216–230 */

@@ -1439,14 +1439,24 @@ void SND_fn_vResetLastMarker(void);
 int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFamilyList_* p_stFamily)
 {
     unsigned int i;
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
 
     for (i = 0; i < p_stFamily->ulNumberLipSynchValues; i++)
     {
         if (p_stFamily->ax_stLipsSynchValues[i].cCode == cPhonem)
         {
-            p_stVector->xX = p_stFamily->ax_stLipsSynchValues[i].xX;
-            p_stVector->xY = p_stFamily->ax_stLipsSynchValues[i].xY;
-            p_stVector->xZ = p_stFamily->ax_stLipsSynchValues[i].xZ;
+            pc = (char*)p_stFamily->ax_stLipsSynchValues;
+            pc = pc + 4;
+            p_stVector->xX = ((float*)pc)[iIndex = i * 4];
+            pc = (char*)p_stFamily->ax_stLipsSynchValues;
+            pc = pc + 8;
+            p_stVector->xY = ((float*)pc)[iIndex = i * 4];
+            pc = (char*)p_stFamily->ax_stLipsSynchValues;
+            pc = pc + 12;
+            p_stVector->xZ = ((float*)pc)[iIndex = i * 4];
             return 1;
         }
     }

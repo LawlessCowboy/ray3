@@ -33,6 +33,7 @@ struct _TobyContainer_ {
     _Toby_ pTobies[5]; /* +0x0 */
 };
 
+void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
 int Toby_g_Container;
 unsigned char bIsInitAllDone;
 int AGO_g_TobyMaterial;
@@ -83,10 +84,13 @@ void AGO2_vReInit(void)
 void Toby_AddSegment(unsigned int IDNumber, MTH3D_tdstVector_* pPos1, MTH3D_tdstVector_* pPos2)
 {
     _Toby_Part_* param0;
-    _Toby_* toby = ((_Toby_*)Toby_g_Container) + IDNumber;
-    if (toby->NbActualSegments < toby->NbAllocatedSegments)
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    iIndex = IDNumber * sizeof(_Toby_);
+    if (*(unsigned int*)((char*)&((_Toby_*)Toby_g_Container)->NbActualSegments + iIndex) < *(unsigned int*)((char*)Toby_g_Container + iIndex))
     {
-        param0 = toby->pSegments + toby->NbActualSegments++;
+        param0 = *(_Toby_Part_**)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex) + (*(unsigned int*)((char*)&((_Toby_*)Toby_g_Container)->NbActualSegments + iIndex))++;
         param0->pStart[0] = pPos1->xX;
         param0->pStart[1] = pPos1->xY;
         param0->pStart[2] = pPos1->xZ;
@@ -132,11 +136,16 @@ void Toby_Allocate(unsigned int IDNumber, unsigned int NumberOfSegments)
  */
 void Toby_SetTransparency(unsigned int IDNumber, float fAlphaValue)
 {
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
     if (fAlphaValue < 0.0f)
         fAlphaValue = 0.0f;
     if (fAlphaValue > 1.0f)
         fAlphaValue = 1.0f;
-    *(float*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + IDNumber * sizeof(_Toby_)) = fAlphaValue;
+    pc = (char*)&((_Toby_*)Toby_g_Container)->fTransparency;
+    *(float*)(pc + (iIndex = IDNumber * sizeof(_Toby_))) = fAlphaValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\Tobies.c lines 105–105 */
@@ -167,5 +176,16 @@ void Toby_SetMaterial(void* unused, GLI_tdstMaterial_* hVisualMaterial)
  */
 void Toby_Destroy(unsigned int IDNumber)
 {
-    /* TODO: decompile from asm/... */
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    iIndex = IDNumber * sizeof(_Toby_);
+    if (*(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex))
+    {
+        HMU_fn_vFree((void**)&((_Toby_*)((char*)Toby_g_Container + iIndex))->pSegments, 1);
+        *(int*)((char*)Toby_g_Container + iIndex) = 0;
+        *(int*)((char*)&((_Toby_*)Toby_g_Container)->NbActualSegments + iIndex) = 0;
+        *(int*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + iIndex) = 0;
+        *(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex) = 0;
+    }
 }

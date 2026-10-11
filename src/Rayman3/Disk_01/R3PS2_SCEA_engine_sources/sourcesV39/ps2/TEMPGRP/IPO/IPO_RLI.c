@@ -1279,10 +1279,43 @@ void IPO_fn_vInternalComputeRLI_Normal(IPO_tdstInstanciatedPhysicalObject_* _hIP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline float IPO_fn_fGetPreviousRatio(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
+{
+    if (IPO_g_cChangeMode == 2)
+    {
+        if (_hIPO->ulLastTransitionID != IPO_g_ulCurrentTransitionID)
+            return 0.0f;
+        else
+            return _hIPO->fLastRatioUsed;
+    }
+    else if (IPO_g_cChangeMode == 1)
+        return 0.0f;
+    return 0.0f;
+}
+
+#pragma auto_inline on
 void IPO_fn_vInternalComputeRLI(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio)
 {
-    /* TODO: decompile from asm/... */
+    if (IPO_g_cChangeMode == 1)
+    {
+        IPO_fn_vInternalComputeRLI_Normal(_hIPO, _fRatio);
+
+        _hIPO->fLastRatioUsed = IPO_g_fCurrentGlobalRatio;
+        _hIPO->ulLastTransitionID = IPO_g_ulCurrentTransitionID;
+
+        GLI_vResetVertexColorsForIPO(_hIPO);
+    }
+    else if (IPO_g_cChangeMode == 2)
+    {
+        IPO_fn_vInternalComputeRLI_Add(_hIPO, _fRatio, IPO_fn_fGetPreviousRatio(_hIPO));
+
+        _hIPO->fLastRatioUsed = IPO_g_fCurrentGlobalRatio;
+        _hIPO->ulLastTransitionID = IPO_g_ulCurrentTransitionID;
+
+        GLI_vResetVertexColorsForIPO(_hIPO);
+    }
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 471–477 */
 /* addr: 0x002f2680  size: 212 bytes */
@@ -1296,7 +1329,10 @@ void IPO_fn_vInternalComputeRLI(IPO_tdstInstanciatedPhysicalObject_* _hIPO, floa
  */
 void IPO_fn_vComputeRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
 {
-    /* TODO: decompile from asm/... */
+    if (IPO_g_cTransitionInProgress)
+    {
+        IPO_fn_vInternalComputeRLI(_hIPO, IPO_g_fCurrentGlobalRatio);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 448–467 */
@@ -1547,12 +1583,32 @@ unsigned char IPO_fn_ucGetRLITableIndex(char* _szRLITableName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void IPO_fn_vReInitIPO(HIE_tdstSuperObject_* _hSO)
 {
     IPO_tdstInstanciatedPhysicalObject_* hIPO;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    for (hChild = _hSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+    {
+        IPO_fn_vReInitIPO(hChild);
+    }
+
+    if (_hSO->ulTypeOfLinkedObject == 0x20)
+    {
+        hIPO = _hSO->hLinkedObject.p_stInstanciatedPhysicalObject;
+
+        GLI_vResetVertexColorsForIPO(hIPO);
+
+        if (hIPO->_hCurrentRadiosity)
+        {
+            IPO_fn_vSetRadiosityFromIndex(hIPO, 0);
+            hIPO->fLastRatioUsed = 0.0f;
+            hIPO->ulLastTransitionID = -1;
+        }
+    }
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 107–141 */
 /* addr: 0x002f3100  size: 208 bytes */
@@ -1583,5 +1639,30 @@ void IPO_fn_vReInitIPO(HIE_tdstSuperObject_* _hSO)
  */
 void IPO_fn_vLevelReInitRLI(void)
 {
-    /* TODO: decompile from asm/... */
+    IPO_g_cBlockingTransitions = 1;
+
+    IPO_g_cChangeMode = 0;
+
+    IPO_g_ulCurrentTransitionID = 0;
+
+    IPO_g_cTransitionInProgress = 0;
+
+    IPO_g_ulChangeDuration = 0;
+
+    IPO_g_ulCurrentTime = 0;
+
+    IPO_g_fCurrentIncrementRatio = 0.0f;
+    IPO_g_fCurrentGlobalRatio = 0.0f;
+    IPO_g_fPreviousGlobalRatio = 0.0f;
+
+    IPO_g_fIncrementByMilliSecond = 0.0f;
+
+    IPO_g_ucCurrentRadiosityIndex = 0;
+    IPO_g_ucNextRadiosityIndex = 0;
+    IPO_g_ucRadiosityIndexToReach = 0;
+    IPO_g_ucRadiosityIndexToAdd = 0;
+
+    IPO_g_fAddWantedRatio = 0.0f;
+
+    IPO_fn_vReInitIPO((HIE_tdstSuperObject_*)gp_stActualWorld);
 }

@@ -96,6 +96,10 @@ void VIDSPE_fn_vPlayVideoNow(char* p_szDirectFileName)
     int bInterrupt;
     int videoNb;
     char* p;
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
     char name[256];
 
     videoNb = VID_g_stGeneralVideos.stNextVideoToPlay.ucVideoNumber;
@@ -104,7 +108,10 @@ void VIDSPE_fn_vPlayVideoNow(char* p_szDirectFileName)
     if (p_szDirectFileName)
         p = p_szDirectFileName;
     else
-        p = (char*)((int*)&VID_g_stGeneralVideos.p_stVideos->p_szVideoFileName)[videoNb * 2];
+    {
+        pc = (char*)&VID_g_stGeneralVideos.p_stVideos->p_szVideoFileName;
+        p = *(char**)(pc + (iIndex = videoNb * 8));
+    }
 
     strcpy(name, FMN_SCE_AddBaseDirectory(FMN_SCE_ConvertPath2DVD(p)));
 

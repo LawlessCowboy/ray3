@@ -64,6 +64,8 @@ LATE_GAME_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0.3-020716' / 'mwccps2.exe'
 LATE_GAME_SOURCES_PATH = ROOT / 'config' / 'compiler-3.0.3-sources.txt'
 # Library files that additionally take '-O3,p' (see that file for evidence).
 LIBRARY_O3P_SOURCES_PATH = ROOT / 'config' / 'library-O3p-sources.txt'
+# Library files built with 3.0.1 (2002-01-23) instead of 3.0 (see that file).
+LIBRARY_301_SOURCES_PATH = ROOT / 'config' / 'library-3.0.1-sources.txt'
 DEFAULT_INCLUDES = ROOT / 'include' / 'mwcc'
 MODEL_ORDER = {
     'gpt-5.4-mini': 0,
@@ -142,9 +144,23 @@ def library_o3p_sources() -> set[str]:
     return _LIBRARY_O3P_SOURCES
 
 
+_LIBRARY_301_SOURCES: set[str] | None = None
+
+
+def library_301_sources() -> set[str]:
+    """Library files built with 3.0.1 (config/library-3.0.1-sources.txt)."""
+    global _LIBRARY_301_SOURCES
+    if _LIBRARY_301_SOURCES is None:
+        lines = LIBRARY_301_SOURCES_PATH.read_text().splitlines() if LIBRARY_301_SOURCES_PATH.exists() else []
+        _LIBRARY_301_SOURCES = {line.strip() for line in lines if line.strip() and not line.startswith('#')}
+    return _LIBRARY_301_SOURCES
+
+
 def owner_compiler(owner: Path | str) -> tuple[Path, str]:
     """(compiler, profile name) for a translation unit's owning source."""
     if not is_game_source(owner):
+        if _relative_owner(owner) in library_301_sources():
+            return GAME_MWCC, 'mwccps2-3.0.1-020123-lib'
         return DEFAULT_MWCC, 'mwccps2-3.0-011126-o3'
     if _relative_owner(owner) in late_game_sources():
         return LATE_GAME_MWCC, 'mwccps2-3.0.3-020716-o3'

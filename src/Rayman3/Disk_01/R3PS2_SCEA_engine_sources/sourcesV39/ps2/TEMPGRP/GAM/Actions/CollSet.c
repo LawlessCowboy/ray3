@@ -2010,7 +2010,10 @@ tdstZdxList_* CS_fn_hGetZdxList(unsigned char ucZoneType, HIE_tdstSuperObject_* 
  */
 void fn_vCollSetSetColliderReal(tdstCollSet_* _hCollSet, short _wIndex, float _xReal)
 {
-    if (_wIndex >= 0 && _wIndex < 2) *(_hCollSet->stColliderInfo.a_xColliderReals + _wIndex) = _xReal;
+    /* Matching idiom: the scaled index computed inside the condition (comma expression) and a char*
+       byte offset reproduce retail's unfolded store and delay-slot sll. Not original source and needs cleaning up. */
+    int o; if (_wIndex >= 0 && (o = _wIndex * 4, _wIndex < 2))
+        *(float*)((char*)&_hCollSet->stColliderInfo.a_xColliderReals[0] + o) = _xReal;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 553–555 */
@@ -2024,7 +2027,10 @@ void fn_vCollSetSetColliderReal(tdstCollSet_* _hCollSet, short _wIndex, float _x
  */
 void fn_vCollSetSetColliderActor(tdstCollSet_* _hCollSet, short _wIndex, HIE_tdstSuperObject_* _hActor)
 {
-    if (_wIndex >= 0 && _wIndex < 2) *(_hCollSet->stColliderInfo.a_stColliderActors + _wIndex) = (int)_hActor;
+    /* Matching idiom: the scaled index computed inside the condition (comma expression) and a char*
+       byte offset reproduce retail's unfolded store and delay-slot sll. Not original source and needs cleaning up. */
+    int o; if (_wIndex >= 0 && (o = _wIndex * 4, _wIndex < 2))
+        *(int*)((char*)&_hCollSet->stColliderInfo.a_stColliderActors[0] + o) = (int)_hActor;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 547–549 */

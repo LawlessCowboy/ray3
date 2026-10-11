@@ -160,7 +160,13 @@ short COL_lGetAlignedBoxNbBoxes(COL_tdstCollideObject_* hObject, short hElement)
  */
 GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedAlignedBox(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfAlignedBox)
 {
-    return *(GMT_tdstGameMaterial_**)((char*)(*(COL_tdstElementAlignedBoxes_***)&hObject->d_stListOfElements)[hElement]->d_stListOfAlignedBoxes + (int)xNumberOfAlignedBox * 8 + 4);
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    pc = (char*)(*(COL_tdstElementAlignedBoxes_***)&hObject->d_stListOfElements)[hElement]->d_stListOfAlignedBoxes;
+    pc = pc + 4;
+    return ((GMT_tdstGameMaterial_**)pc)[iIndex = (int)xNumberOfAlignedBox * 2];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 586–590 */
@@ -235,7 +241,13 @@ short COL_lGetIndexedSphereNbSpheres(COL_tdstCollideObject_* _hObject, short hEl
  */
 GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedSphere(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfSphere)
 {
-    return *(GMT_tdstGameMaterial_ **)(xNumberOfSphere * 12 + (int)&(*(COL_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres->hMaterial);
+    char* pc;
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    pc = (char*)(*(COL_tdstElementSpheres_***)&hObject->d_stListOfElements)[hElement]->d_stListOfSpheres;
+    pc = pc + 4;
+    return ((GMT_tdstGameMaterial_**)pc)[iIndex = xNumberOfSphere * 3];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 286–304 */
