@@ -1231,7 +1231,13 @@ void C_InstanceList::Stealth_RemoveAndDeleteInstance(_SDC_Instance_* pInstance)
 _SDC_Instance_* C_InstanceList::SearchInstance(HIE_tdstSuperObject_* pSPO, unsigned int ulElementNumber)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    if (!m_pList) m_NbInstances = 0; for (i = 0; i < m_NbInstances && (m_pList[i]->pSPO != pSPO || m_pList[i]->ulElementNumber != ulElementNumber); i++);
+
+    if (i == m_NbInstances)
+        return 0;
+
+    return m_pList[i];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInstance.cpp lines 150–164 */

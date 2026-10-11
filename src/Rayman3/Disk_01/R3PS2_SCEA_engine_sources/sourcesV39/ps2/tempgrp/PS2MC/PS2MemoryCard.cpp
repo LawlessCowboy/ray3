@@ -219,10 +219,11 @@ struct C_PS2MC_Manager {
     int m_bPreBootCheckHadNoMC; /* +0xa508 */
     unsigned int m_ulCheckSum; /* +0xa50c */
     unsigned int m_uiBC_CurrentIndex; /* +0xa510 */
-    PS2MC_tdeMessageID m_AutoSaveErrorMessage; /* +0xa514 */
+    unsigned char m_AutoSaveErrorMessage; /* PS2MC_tdeMessageID stored in one byte (next member at +0xa515); +0xa514 */
     unsigned char m_pLoadSaveBuffer[990]; /* +0xa515 */
     int m_pScreenShotLoadBuffer; /* +0xa8f4 */
     int m_bFirstBootCheckHasBeenDone; /* +0xa8f8 */
+    unsigned char _extractor_padding_01[4]; /* tail padding: new allocates 0xa900 bytes; +0xa8fc..0xa8ff */
     C_PS2MC_Manager();
     void AutoSaveGame(char* _pData, char* _pFileName);
     void SaveGame(char* _pData, char* _pFileName);

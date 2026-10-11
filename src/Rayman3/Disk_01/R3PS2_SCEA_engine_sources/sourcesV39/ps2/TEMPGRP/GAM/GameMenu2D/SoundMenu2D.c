@@ -102,11 +102,40 @@ void fn_vUpdateVolumeLineGameMenu2D(unsigned int uiLine, unsigned int uiValue, u
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int SND_fn_s32SendRequestSound(int lObjectId, int lPersoId, int lObjectType, _SND_tduRefEvt uEvent, int lParam1, int lParam2);
+void SND_fn_vResumeSound(void);
+
 void fn_vPlaySoundInGameMenu2D(unsigned int uiGameMenuSoundID)
 {
     int uiTypeId;
     _SND_tduRefEvt u_RefEvt;
-    /* TODO: decompile from asm/... */
+
+    if (uiGameMenuSoundID < 11 && g_aSoundEvent[uiGameMenuSoundID])
+    {
+        switch (uiGameMenuSoundID)
+        {
+        case 5:
+            uiTypeId = g_lSoundObjectTypeVoice;
+            break;
+        case 6:
+            uiTypeId = g_lSoundObjectTypeMusic;
+            break;
+        case 7:
+            uiTypeId = g_lSoundObjectTypeAnim;
+            break;
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        default:
+            uiTypeId = g_lSoundObjectTypeMenu;
+            break;
+        }
+
+        u_RefEvt.pstPtr = (_SND_tdstBlockEvent*)g_aSoundEvent[uiGameMenuSoundID];
+        SND_fn_s32SendRequestSound(-1, -1, uiTypeId, u_RefEvt, 0, 0);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\SoundMenu2D.c lines 71–83 */
@@ -125,5 +154,9 @@ void fn_vPlaySoundInGameMenu2D(unsigned int uiGameMenuSoundID)
  */
 void fn_vDeinitSoundInGameMenu2D(unsigned int uiResume)
 {
-    /* TODO: decompile from asm/... */
+    if (g_aSoundEvent[1]) { _SND_tduRefEvt u_RefEvt; u_RefEvt.pstPtr = (_SND_tdstBlockEvent*)g_aSoundEvent[1]; SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMenu, u_RefEvt, 0, 0); }
+    if (g_aSoundEvent[9]) { _SND_tduRefEvt u_RefEvt; u_RefEvt.pstPtr = (_SND_tdstBlockEvent*)g_aSoundEvent[9]; SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMenu, u_RefEvt, 0, 0); }
+
+    if (uiResume == 1)
+        SND_fn_vResumeSound();
 }

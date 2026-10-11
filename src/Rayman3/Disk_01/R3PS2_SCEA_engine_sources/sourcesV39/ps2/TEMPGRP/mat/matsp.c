@@ -363,7 +363,22 @@ void MAT_fn_vInitTransformationAndType(MAT_tdstTransformation_* _hTransform, MAT
  */
 void MAT_fn_vTranslate(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stTranslation)
 {
-    /* TODO: decompile from asm/... */
+    switch (_hTransform->eType)
+    {
+    case MAT_eTransform_Identity:
+        _hTransform->eType = MAT_eTransform_Translation;
+        *(int*)&_hTransform->stTransformMatrix.stCol_3.xX = *(int*)&_p_stTranslation->xX; *(int*)&_hTransform->stTransformMatrix.stCol_3.xY = *(int*)&_p_stTranslation->xY; *(int*)&_hTransform->stTransformMatrix.stCol_3.xZ = *(int*)&_p_stTranslation->xZ; _hTransform->stTransformMatrix.stCol_3.xW = 1.0f;
+        break;
+    case MAT_eTransform_Translation:
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_Scale:
+    case MAT_eTransform_Rotation:
+    case MAT_eTransform_RotationZoom:
+    case MAT_eTransform_RotationScale:
+    case MAT_eTransform_ComplexRotationScale:
+        _hTransform->stTransformMatrix.stCol_3.xX = _hTransform->stTransformMatrix.stCol_3.xX + _p_stTranslation->xX; _hTransform->stTransformMatrix.stCol_3.xY = _hTransform->stTransformMatrix.stCol_3.xY + _p_stTranslation->xY; _hTransform->stTransformMatrix.stCol_3.xZ = _hTransform->stTransformMatrix.stCol_3.xZ + _p_stTranslation->xZ;
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsp.c lines 1031–1322 */

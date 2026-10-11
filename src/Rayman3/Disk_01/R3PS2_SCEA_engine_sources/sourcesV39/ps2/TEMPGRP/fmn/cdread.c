@@ -230,7 +230,27 @@ int CD_Read(int FileHandle, char* Buffer, int Size)
 unsigned int CD_Seek(int FileHandle, int Position, int WhereFrom)
 {
     _CD_FILE_Internal_* p;
-    /* TODO: decompile from asm/... */
+
+    p = &gs_CD_Files[FileHandle];
+    switch (WhereFrom)
+    {
+    case 1:
+        p->CurrentPosition += Position;
+        break;
+    case 0:
+        p->CurrentPosition = Position;
+        break;
+    case 2:
+        p->CurrentPosition = p->FileSize - Position - 1;
+        break;
+    }
+
+    if (p->CurrentPosition < 0)
+        p->CurrentPosition = 0;
+    if (p->CurrentPosition >= p->FileSize)
+        p->CurrentPosition = p->FileSize - 1;
+
+    return p->CurrentPosition;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 244–245 */

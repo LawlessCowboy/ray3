@@ -1418,10 +1418,24 @@ int fn_lGetZdxListNumberOfElements(unsigned char ucZoneType, HIE_tdstSuperObject
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void COL_vCreateCollideObject(COL_tdstCollideObject_** p_hObject, short xNbPoints, short xNbElements);
+void COL_vCreateElementSpheres(COL_tdstCollideObject_* hObject, short* p_hElement, short xNbSpheres);
+void COL_vCreateElementAlignedBoxes(COL_tdstCollideObject_* hObject, short* p_hElement, short xNbAlignedBoxes);
+void COL_vEndModifyObject(COL_tdstCollideObject_* hObject);
+
 void fn_vFirstTimeInitCollisionGeometricObject(void)
 {
     short hElement;
-    /* TODO: decompile from asm/... */
+
+    COL_vCreateCollideObject((COL_tdstCollideObject_**)&g_hCollisionGeoObj, 30, 4);
+    COL_vCreateElementSpheres((COL_tdstCollideObject_*)g_hCollisionGeoObj, &hElement, 10);
+    COL_vCreateElementAlignedBoxes((COL_tdstCollideObject_*)g_hCollisionGeoObj, &hElement, 10);
+    COL_vEndModifyObject((COL_tdstCollideObject_*)g_hCollisionGeoObj);
+
+    COL_vCreateCollideObject((COL_tdstCollideObject_**)&g_hStaticCollisionGeoObj, 30, 4);
+    COL_vCreateElementSpheres((COL_tdstCollideObject_*)g_hStaticCollisionGeoObj, &hElement, 10);
+    COL_vCreateElementAlignedBoxes((COL_tdstCollideObject_*)g_hStaticCollisionGeoObj, &hElement, 10);
+    COL_vEndModifyObject((COL_tdstCollideObject_*)g_hStaticCollisionGeoObj);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2290–2344 */

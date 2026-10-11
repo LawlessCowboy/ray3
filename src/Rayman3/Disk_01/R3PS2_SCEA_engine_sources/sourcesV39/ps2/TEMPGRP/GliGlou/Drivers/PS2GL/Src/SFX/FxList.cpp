@@ -34,6 +34,7 @@ struct C_BaseFx {
 struct C_FxList {
     tdstBaseFxListElement_* pFirst; /* +0x0 */
     C_FxList();
+    ~C_FxList();
     C_BaseFx* SearchElement(void* pSearchKey);
     void vAddElement(C_BaseFx* pElement);
     void DeleteAllSDLs(void);
@@ -43,7 +44,7 @@ struct C_FxList {
 
 int PS2glAllocator64;
 int PS2glLiberator;
-anon_0 __vt__8C_BaseFx;
+
 int GLI_BIG_GLOBALS_xFogIsOn;
 float g_fFogEnd;
 float GLI_g_OOStartMinusEnd;
@@ -61,9 +62,31 @@ unsigned int GLI_g_CurrentSDLFogColor;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_FxList_destructor(void)
+typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
+
+struct C_Vector {
+    float Vector[4]; /* +0x0 */
+} __attribute__((aligned(16)));
+
+struct C_FireFx : C_BaseFx {
+    C_Vector m_Position; /* +0x30 */
+    GLI_tdstMaterial_* m_pMat1; /* +0x40 */
+    C_Vector* m_pData; /* +0x44 */
+    unsigned int m_NbParticles; /* +0x48 */
+    virtual ~C_FireFx();
+};
+
+inline C_BaseFx::~C_BaseFx()
 {
-    /* TODO: decompile from asm/... */
+}
+
+C_FireFx::~C_FireFx()
+{
+    if (m_pData)
+    {
+        ((void (*)(void*))PS2glLiberator)(m_pData);
+        m_pData = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 124–129 */
@@ -192,6 +215,7 @@ void C_FxList::DeleteAllNoFree(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void C_FxList::DeleteAll(void)
 {
     tdstBaseFxListElement_* p;
@@ -207,6 +231,7 @@ void C_FxList::DeleteAll(void)
     }
     pFirst = NULL;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 47–49 */
 /* addr: 0x002ecdb0  size: 160 bytes */
@@ -217,9 +242,9 @@ void C_FxList::DeleteAll(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_FxList_destructor2(void)
+C_FxList::~C_FxList()
 {
-    /* TODO: decompile from asm/... */
+    DeleteAll();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 43–44 */

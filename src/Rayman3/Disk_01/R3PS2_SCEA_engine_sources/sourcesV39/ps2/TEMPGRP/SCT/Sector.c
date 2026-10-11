@@ -611,7 +611,7 @@ void SECT_fn_vAddTailDNMLightsListNode(HIE_tdstSuperObject_* hSector, SECT_tdstL
  */
 void SECT_fn_vIsolateDNMLightsListNode(SECT_tdstListOfDNMLights_* hNode)
 {
-    /* TODO: decompile from asm/... */
+    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 492–493 */
@@ -650,7 +650,7 @@ void SECT_fn_vAddTailCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOf
  */
 void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode)
 {
-    /* TODO: decompile from asm/... */
+    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 360–409 */

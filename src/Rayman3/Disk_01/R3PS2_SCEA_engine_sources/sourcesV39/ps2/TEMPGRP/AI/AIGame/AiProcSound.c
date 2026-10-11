@@ -2983,13 +2983,33 @@ int g_lSoundObjectTypeAnim;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void SND_fn_p_stPS2SetReverbOn(int s32_Channels, int s32_On);
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+
 tdstNodeInterpret_* fn_p_stSoundProcedurePS2SetReverbOn(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    int s32_Channels;
     int s32_On;
     tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    int s32_Channels;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Channels = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_On = stParam.uDummy.uParam.lValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_SND_PS2SetReverbOn:
+        SND_fn_p_stPS2SetReverbOn(s32_Channels, s32_On);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(40, 0);
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 764–799 */
@@ -3440,11 +3460,42 @@ tdstNodeInterpret_* fn_p_stSoundProcedurePause(HIE_tdstSuperObject_* p_SuperObjP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSoundProcedureStopRequest(tdstNodeInterpret_* p_stTree)
+void SND_fn_vKillAllObjectTypeSound(int s32_TypeId);
+
+tdstNodeInterpret_* fn_p_stSoundProcedureStopRequest(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     int s32_TypeId;
     tdeProcedureId_ e_ProcedureId;
-    /* TODO: decompile from asm/... */
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_StopMenuSnd:
+        s32_TypeId = g_lSoundObjectTypeMenu;
+        break;
+    case eProc_SND_StopSound:
+        s32_TypeId = g_lSoundObjectTypeAnim;
+        break;
+    case eProc_SND_StopMusic:
+        s32_TypeId = g_lSoundObjectTypeMusic;
+        break;
+    case eProc_SND_StopAmbiance:
+        s32_TypeId = g_lSoundObjectTypeAmbiance;
+        break;
+    case eProc_SND_StopVoice:
+        s32_TypeId = g_lSoundObjectTypeVoice;
+        break;
+    case eProc_SND_StopAllRequests:
+        s32_TypeId = -2;
+        break;
+    default:
+        s32_TypeId = -1;
+    }
+
+    SND_fn_vKillAllObjectTypeSound(s32_TypeId);
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 181–223 */
