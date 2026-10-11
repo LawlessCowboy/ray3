@@ -2465,6 +2465,12 @@ void GLI_vChangeVideoModeForVideos(void)
     /* TODO: decompile from asm/... */
 }
 
+void PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void PS2glClearColor(float red, float green, float blue, float alpha);
+void PS2glClear(unsigned int mask);
+void GLI_fn_vEndOfDisplay(void);
+void GLI_vEndOfAI(void);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4297–4310 */
 /* addr: 0x002a5350  size: 172 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2489,7 +2495,18 @@ void GLI_vChangeVideoModeForVideos(void)
  */
 void ClearScreenAndWait2Frames(void)
 {
-    /* TODO: decompile from asm/... */
+    g_BlackScreenUntilNextMap = 5;
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4100);
+    GLI_fn_vEndOfDisplay();
+    GLI_vEndOfAI();
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4100);
+    GLI_fn_vEndOfDisplay();
+    GLI_vEndOfAI();
+    g_BlackScreenUntilNextMap = 5;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4275–4275 */
@@ -2540,6 +2557,8 @@ void GLI_fn_vSwitchToProgressive60Hz(void)
     }
 }
 
+void GLIPS2_vChangeResolutionNTSC(void);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4228–4241 */
 /* addr: 0x002a54d0  size: 180 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2561,7 +2580,17 @@ void GLI_fn_vSwitchToProgressive60Hz(void)
  */
 void GLI_fn_vSwitchTo60Hz(void)
 {
-    /* TODO: decompile from asm/... */
+    if (GLI_g_50_or_60_HzMode != 60)
+    {
+        GLIPS2_vChangeResolutionNTSC();
+        GLI_g_50_or_60_HzMode = 60;
+
+        g_xVideoFrameDurationInSeconds = 1.0f / 60.0f;
+        fn_vInitFrameLenght();
+
+        GLI_g_ScreenPos_DXBase = (float)PS2glInternalGetScreenCalebration(0xf43);
+        GLI_g_ScreenPos_DYBase = (float)PS2glInternalGetScreenCalebration(0xf44);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4184–4215 */
@@ -2673,6 +2702,18 @@ void GLIPS2_vInitOtherVideoStuff(void)
     /* TODO: decompile from asm/... */
 }
 
+void GLI_vUpdateAllRefs(int iMode);
+void GLI_vReinitFrame(unsigned int SwapBuffers);
+void GLI_vUpdateAllMatricesOutSDL(void);
+void GLI_vFinalUpdateAllNormalMatrix(void);
+void GLIPS2_vInitOtherVideoStuff(void);
+void PS2GL_SetProgressiveScanMode(int bOnOff);
+void PS2auxInitDisplayMode(unsigned int eMode);
+void PS2auxInitPosition(int x, int y, int w, int h);
+void PS2glViewport(int x, int y, int width, int height);
+void PS2auxInitWindow(const char* title);
+void GLIPS2_vCleanReinitForResChange(void);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4140–4159 */
 /* addr: 0x002a5900  size: 184 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2702,7 +2743,23 @@ void GLIPS2_vInitOtherVideoStuff(void)
  */
 void GLIPS2_vChangeResolutionNTSCProgressive(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vUpdateAllRefs(0);
+    GLI_vReinitFrame(1);
+    GLI_vUpdateAllMatricesOutSDL();
+    GLI_vFinalUpdateAllNormalMatrix();
+    GLIPS2_vInitOtherVideoStuff();
+    PS2GL_SetProgressiveScanMode(1);
+    PS2auxInitDisplayMode(0x992);
+    PS2auxInitPosition(100, 100, 640, 448);
+    PS2glViewport(0, 0, 640, 448);
+    PS2auxInitWindow("truc");
+    XRESf = 640.0f;
+    YRESf = 448.0f;
+    XRES = 640;
+    YRES = 448;
+    GLIPS2_vInitOtherVideoStuff();
+    if (!g_ResChangeVideo)
+        GLIPS2_vCleanReinitForResChange();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4116–4136 */
@@ -2734,8 +2791,36 @@ void GLIPS2_vChangeResolutionNTSCProgressive(void)
  */
 void GLIPS2_vChangeResolutionNTSC(void)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vUpdateAllRefs(0);
+    GLI_vReinitFrame(1);
+    GLI_vUpdateAllMatricesOutSDL();
+    GLI_vFinalUpdateAllNormalMatrix();
+    GLIPS2_vInitOtherVideoStuff();
+    PS2GL_SetProgressiveScanMode(0);
+    PS2auxInitDisplayMode(0x992);
+    PS2auxInitPosition(100, 100, 640, 448);
+    PS2glViewport(0, 0, 640, 448);
+    PS2auxInitWindow("truc");
+    XRESf = 640.0f;
+    YRESf = 448.0f;
+    XRES = 640;
+    YRES = 448;
+    GLIPS2_vInitOtherVideoStuff();
+    if (!g_ResChangeVideo)
+        GLIPS2_vCleanReinitForResChange();
 }
+
+void PS2glFinish(void);
+void GLI_vCleanAllSDLs(void);
+void VAC_Destroy(void* hContainer);
+void* VAC_Create(unsigned int NbSprites);
+void GLI_vDeleteSdlCache(void);
+void WaterFx_vDestroySDLs(void);
+void DestroyDummySDL(void);
+void GLI_vForceDeleteAllWaitingPointers(void);
+void GLI_vInitSdlCache(void);
+void BuildAllSDLs(void);
+void WaterFx_vInit(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4084–4113 */
 /* addr: 0x002a5a80  size: 180 bytes */
@@ -2767,7 +2852,28 @@ void GLIPS2_vChangeResolutionNTSC(void)
  */
 void GLIPS2_vCleanReinitForResChange(void)
 {
-    /* TODO: decompile from asm/... */
+    GLIPS2_vInitOtherVideoStuff();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    GLI_vCleanAllSDLs();
+    VAC_Destroy((void*)GLI_g_hVAContainer);
+    GLI_g_hVAContainer = 0;
+    GLI_vDeleteSdlCache();
+    GLI_vRemoveRefs();
+    WaterFx_vDestroySDLs();
+    DestroyDummySDL();
+    GLI_vForceDeleteAllWaitingPointers();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+
+    GLI_vInitSdlCache();
+    GLI_g_hVAContainer = (int)VAC_Create(1000);
+    BuildAllSDLs();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    WaterFx_vInit();
+    PS2glFinish();
+    PS2auxSwapBuffers();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4016–4022 */
@@ -3657,9 +3763,14 @@ void GLI_fn_vSetSwapBufferCallback(void (*f)(void))
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* COP0 Count read: mfc0 has no C form under MWCC; only that instruction is asm. */
 void GLI_fn_vSwapBufferCallback(void)
 {
-    /* TODO: requires the original CP0 Count access macro. */
+    register unsigned int counter;
+    asm { mfc0 counter, $9 }
+    StartFrame = counter;
+    if (GLI_g_EnableSwapBufferCallback && GLI_p_fn_vClientSwapBufferCallback)
+        GLI_p_fn_vClientSwapBufferCallback();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 462–600 */

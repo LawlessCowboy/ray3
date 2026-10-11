@@ -811,6 +811,8 @@ void fn_vLoadEngineClock(void)
     TMR_fn_wStartTimer(g_stEngineStructure.stEngineTimer.sTimerHandle);
 }
 
+short TMR_fn_wReadTimer(short wTimerHandle, _stTimerCount* p_stTimerCount);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 463–492 */
 /* addr: 0x0025dfb0  size: 172 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -834,10 +836,31 @@ void fn_vLoadEngineClock(void)
  */
 void fn_vSaveEngineClock(void)
 {
-    unsigned int ulDeltaTime;
     _stTimerCount stCurrentTimerCount;
-    /* TODO: decompile from asm/... */
+    unsigned int ulDeltaTime;
+
+    TMR_fn_wReadTimer(g_stEngineStructure.stEngineTimer.sTimerHandle, &stCurrentTimerCount);
+
+    if (stCurrentTimerCount.m_ulHighPart == g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulHighPart)
+    {
+        ulDeltaTime = (unsigned int)stCurrentTimerCount.m_ulLowPart - (unsigned int)g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
+    }
+    else if (stCurrentTimerCount.m_ulLowPart >= g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart)
+    {
+        ulDeltaTime = stCurrentTimerCount.m_ulLowPart - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
+    }
+    else
+    {
+        ulDeltaTime = stCurrentTimerCount.m_ulLowPart + (0xFFFFFFFF - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart + 1);
+    }
+
+    g_stEngineStructure.stEngineTimer.stPauseTime = stCurrentTimerCount;
+
+    g_stEngineStructure.stEngineTimer.ulPauseTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount + ulDeltaTime / g_stEngineStructure.stEngineTimer.ulTickPerMS;
 }
+
+void fn_vFakeTimer(_stTimerCount* pstCurrentTimerCount);
+unsigned int fn_ulDetermineUsefulDT(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 370–455 */
 /* addr: 0x0025e060  size: 396 bytes */
@@ -889,11 +912,52 @@ void fn_vSaveEngineClock(void)
  */
 void fn_vActualizeEngineClock(void)
 {
-    unsigned int ulDeltaTime;
-    _stTimerCount stCurrentTimerCount;
+    static unsigned int s_ulTimeRemainder;
     unsigned int i;
-    unsigned int s_ulTimeRemainder;
-    /* TODO: decompile from asm/... */
+    _stTimerCount stCurrentTimerCount;
+    unsigned int ulDeltaTime;
+
+    g_stEngineStructure.stEngineTimer.ulTrameNumber++;
+
+    TMR_fn_wReadTimer(g_stEngineStructure.stEngineTimer.sTimerHandle, &stCurrentTimerCount);
+
+    if (g_iFalseTime)
+        fn_vFakeTimer(&stCurrentTimerCount);
+    else
+        g_stRealTimerCount = stCurrentTimerCount;
+
+    if (stCurrentTimerCount.m_ulHighPart == g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulHighPart)
+    {
+        ulDeltaTime = (unsigned int)stCurrentTimerCount.m_ulLowPart - (unsigned int)g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
+    }
+    else if (stCurrentTimerCount.m_ulLowPart >= g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart)
+    {
+        ulDeltaTime = stCurrentTimerCount.m_ulLowPart - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart;
+    }
+    else
+    {
+        ulDeltaTime = stCurrentTimerCount.m_ulLowPart + (0xFFFFFFFF - g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart + 1);
+    }
+
+    ulDeltaTime += s_ulTimeRemainder;
+    g_stEngineStructure.stEngineTimer.ulDeltaTimerCount = ulDeltaTime / g_stEngineStructure.stEngineTimer.ulTickPerMS;
+    s_ulTimeRemainder = ulDeltaTime % g_stEngineStructure.stEngineTimer.ulTickPerMS;
+
+    g_stEngineStructure.stEngineTimer.stRealTimeCount = stCurrentTimerCount;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount += g_stEngineStructure.stEngineTimer.ulDeltaTimerCount;
+
+    g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime = fn_ulDetermineUsefulDT();
+
+    g_uiAnotherRandom += g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    g_uiAnotherRandom = (g_uiAnotherRandom << 2) + g_uiAnotherRandom;
+
+    for (i = 2; i < 16; i++)
+    {
+        if (g_stEngineStructure.stEngineTimer.a_ulCounter[i] == i - 1)
+            g_stEngineStructure.stEngineTimer.a_ulCounter[i] = 0;
+        else
+            g_stEngineStructure.stEngineTimer.a_ulCounter[i]++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 290–352 */
@@ -930,8 +994,30 @@ void fn_vActualizeEngineClock(void)
 void fn_vFakeTimer(_stTimerCount* pstCurrentTimerCount)
 {
     unsigned long ulDeltaTime;
-    /* TODO: decompile from asm/... */
+
+    ulDeltaTime = pstCurrentTimerCount->m_ulLowPart - g_stRealTimerCount.m_ulLowPart;
+    g_stRealTimerCount = *pstCurrentTimerCount;
+
+    if (g_iFalseTimeFixedTime)
+        ulDeltaTime = g_iFalseTimeFixedTime * 294912;
+    else
+        ulDeltaTime = (unsigned long)(0.01f * ((float)ulDeltaTime * (float)g_iFalseTime));
+
+    if (ulDeltaTime > 0x5460000)
+        ulDeltaTime = 0xB40000;
+
+    pstCurrentTimerCount->m_ulLowPart = g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart + ulDeltaTime;
+    pstCurrentTimerCount->m_ulHighPart = g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulHighPart;
+
+    while (pstCurrentTimerCount->m_ulLowPart > 0x100000000)
+        pstCurrentTimerCount->m_ulLowPart -= 0x100000000;
+
+    if (pstCurrentTimerCount->m_ulLowPart < g_stEngineStructure.stEngineTimer.stRealTimeCount.m_ulLowPart)
+        pstCurrentTimerCount->m_ulHighPart++;
 }
+
+short TMR_fn_wResetTimer(short wTimerHandle);
+void GLIPS2_vActualizeClock(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 243–268 */
 /* addr: 0x0025e300  size: 276 bytes */
@@ -959,9 +1045,23 @@ void fn_vFakeTimer(_stTimerCount* pstCurrentTimerCount)
  */
 void fn_vStartEngineClock(void)
 {
-    _stTimerCount stCurrentTimerCount;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    _stTimerCount stCurrentTimerCount;
+
+    TMR_fn_wResetTimer(g_stEngineStructure.stEngineTimer.sTimerHandle);
+    TMR_fn_wStartTimer(g_stEngineStructure.stEngineTimer.sTimerHandle);
+    TMR_fn_wReadTimer(g_stEngineStructure.stEngineTimer.sTimerHandle, &stCurrentTimerCount);
+
+    g_stEngineStructure.stEngineTimer.stRealTimeCount = stCurrentTimerCount;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount = (unsigned int)(stCurrentTimerCount.m_ulLowPart / g_stEngineStructure.stEngineTimer.ulTickPerMS);
+    g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime = fn_ulDetermineUsefulDT();
+
+    g_stEngineStructure.stEngineTimer.ulTrameNumber = 1;
+    g_stEngineStructure.stEngineTimer.a_ulCounter[0] = 1;
+    for (i = 1; i < 16; i++)
+        g_stEngineStructure.stEngineTimer.a_ulCounter[i] = 0;
+
+    GLIPS2_vActualizeClock();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 159–226 */

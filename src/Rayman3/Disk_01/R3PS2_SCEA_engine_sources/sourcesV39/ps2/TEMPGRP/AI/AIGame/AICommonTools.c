@@ -3450,6 +3450,10 @@ int fn_bCollideWithGround(HIE_tdstSuperObject_* hPerso)
     return (p_stDynamReport->m_ulCurrSurfaceState & 1) == 1;
 }
 
+void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSuperObj);
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 106–130 */
 /* addr: 0x0024c670  size: 168 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3469,9 +3473,28 @@ void fn_GetPersoBanking(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSupe
 {
     tdstDynam_* h_Dynam;
     DNM_stDynamics* p_stDynamic;
-    MTH3D_tdstVector_ stV2;
+    MAT_tdstTransformation_* hGlobalMatrix; /* Permuter-found match (register allocation): the debug record has no such local; reading the matrix early keeps it in s0 like retail. Not original source and needs cleaning up. */
     MTH3D_tdstVector_ stV1;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stV2;
+
+    HIE_fn_vUpdateGlobalMatrix(hSuperObjPerso);
+    hGlobalMatrix = hSuperObjPerso->hGlobalMatrix;
+
+    h_Dynam = hSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam)
+    {
+        p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+        if (p_stDynamic && ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 8) ? 1 : 0))
+        {
+            p_stDest->xX = 0.0f; p_stDest->xY = 0.0f; p_stDest->xZ = 1.0f;
+        }
+        else
+        {
+            p_stDest->xX = 0.0f; p_stDest->xY = 0.0f; p_stDest->xZ = 0.0f;
+        }
+    }
+
+    MAT_fn_vGetRotationVectors(hGlobalMatrix, &stV1, &stV2, p_stDest);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 91–102 */

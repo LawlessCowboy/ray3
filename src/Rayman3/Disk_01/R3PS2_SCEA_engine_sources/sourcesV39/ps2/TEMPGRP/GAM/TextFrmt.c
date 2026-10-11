@@ -1387,7 +1387,16 @@ void TFMT_ucClearNumberOfCurrentTextAffiche(HIE_tdstSuperObject_* p_SuperObjPers
 unsigned char TFMT_ucSetNumber4CurrentTextAffiche(void)
 {
     unsigned char i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < 30; i++)
+    {
+        if (g_bFreeTextAfficheBlocs[i])
+        {
+            g_bFreeTextAfficheBlocs[i] = 0;
+            break;
+        }
+    }
+    return i;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 1136–1146 */
@@ -1406,7 +1415,13 @@ unsigned char TFMT_ucSetNumber4CurrentTextAffiche(void)
 unsigned char TFMT_ucNumberOfCurrentTextAffiche(HIE_tdstSuperObject_* p_SuperObjPersoTreated)
 {
     unsigned char i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < 30; i++)
+    {
+        if ((int)p_SuperObjPersoTreated == gp_SuperObjPersoGenerated[i])
+            return i;
+    }
+    return i;
 }
 
 void* memset(void* dst, int c, size_t n);
@@ -2064,5 +2079,14 @@ void TFMT_pszReadNextChar(stTfmtStatus_* _p_stStatus, HIE_tdstSuperObject_* _hSu
  */
 void TFMT_vSetDefaultValuesCharacter(float _xCharWidth, float _xLineHeight, float _xCharZoom)
 {
-    /* TODO: decompile from asm/... */
+    int i;
+
+    g_stDefaultValuesForCharacter.m_xCharWidth = 0.0f;
+    if (_xLineHeight >= 0.0f)
+        g_stDefaultValuesForCharacter.m_xLineHeight = _xLineHeight;
+    if (_xCharZoom >= 0.0f)
+        g_stDefaultValuesForCharacter.m_xCharZoom = _xCharZoom;
+
+    for (i = 0; i < 256; i++)
+        TFMT_ga_fLetterSpacing[i] = _xCharWidth;
 }

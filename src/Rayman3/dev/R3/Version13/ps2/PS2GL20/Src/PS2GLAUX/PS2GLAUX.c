@@ -1525,9 +1525,22 @@ void PS2auxSwapBuffers(void)
  */
 unsigned int KeyDown(int key, unsigned int status)
 {
-    int i;
     unsigned int flag;
-    /* TODO: decompile from asm/... */
+    int i;
+
+    flag = 0;
+    if (g_keyTableCount)
+    {
+        for (i = 0; i < g_keyTableCount; i++)
+        {
+            if (key == keyTable[i].keyField && status == keyTable[i].keyStatus)
+            {
+                (*keyTable[i].KeyFunc)();
+                flag |= 1;
+            }
+        }
+    }
+    return flag;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 203–237 */
@@ -1573,10 +1586,42 @@ unsigned int KeyDown(int key, unsigned int status)
  */
 unsigned int MouseDown(int x, int y, unsigned int button)
 {
-    int i;
-    unsigned int flag;
     _AUX_EVENTREC info;
-    /* TODO: decompile from asm/... */
+    unsigned int flag;
+    int i;
+
+    flag = 0;
+    for (i = 0; i < g_mouseDownTableCount; i++)
+    {
+            if ((button & 1) == mouseDownTable[i].mouseField)
+            {
+                info.event = 16;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 1;
+                (*mouseDownTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 2) == mouseDownTable[i].mouseField)
+            {
+                info.event = 16;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 2;
+                (*mouseDownTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 4) == mouseDownTable[i].mouseField)
+            {
+                info.event = 16;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 4;
+                (*mouseDownTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+    }
+    return flag;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 166–200 */
@@ -1622,10 +1667,42 @@ unsigned int MouseDown(int x, int y, unsigned int button)
  */
 unsigned int MouseUp(int x, int y, unsigned int button)
 {
-    int i;
-    unsigned int flag;
     _AUX_EVENTREC info;
-    /* TODO: decompile from asm/... */
+    unsigned int flag;
+    int i;
+
+    flag = 0;
+    for (i = 0; i < g_mouseUpTableCount; i++)
+    {
+            if ((button & 1) == mouseUpTable[i].mouseField)
+            {
+                info.event = 32;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 1;
+                (*mouseUpTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 2) == mouseUpTable[i].mouseField)
+            {
+                info.event = 32;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 2;
+                (*mouseUpTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 4) == mouseUpTable[i].mouseField)
+            {
+                info.event = 32;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 4;
+                (*mouseUpTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+    }
+    return flag;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 129–163 */
@@ -1671,10 +1748,42 @@ unsigned int MouseUp(int x, int y, unsigned int button)
  */
 unsigned int MouseLoc(int x, int y, unsigned int button)
 {
-    int i;
-    unsigned int flag;
     _AUX_EVENTREC info;
-    /* TODO: decompile from asm/... */
+    unsigned int flag;
+    int i;
+
+    flag = 0;
+    for (i = 0; i < g_mouseLocTableCount; i++)
+    {
+            if ((button & 1) == mouseLocTable[i].mouseField)
+            {
+                info.event = 64;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 1;
+                (*mouseLocTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 2) == mouseLocTable[i].mouseField)
+            {
+                info.event = 64;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 2;
+                (*mouseLocTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+            if ((button & 4) == mouseLocTable[i].mouseField)
+            {
+                info.event = 64;
+                info.data[0] = x;
+                info.data[1] = y;
+                info.data[3] = 4;
+                (*mouseLocTable[i].MouseFunc)(&info);
+                flag |= 1;
+            }
+    }
+    return flag;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 126–126 */

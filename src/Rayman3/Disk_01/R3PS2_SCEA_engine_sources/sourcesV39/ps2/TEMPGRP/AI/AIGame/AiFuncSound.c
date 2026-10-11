@@ -2955,6 +2955,23 @@ int g_lSoundObjectTypeMusic;
 int g_lSoundObjectTypeVoice;
 int g_lSoundObjectTypeAnim;
 
+/* Engine float-to-int macro (MTH): retail converts through f30 with cvt.w.s, which MWCC never picks itself. */
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+int SND_fn_iGetNbMusicMarkerSlots(void);
+stMusicMarkerSlot* SND_fn_p_stGetMusicMarkerSlots(void);
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiFuncSound.c lines 137–162 */
 /* addr: 0x0024b980  size: 228 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2979,10 +2996,30 @@ int g_lSoundObjectTypeAnim;
  */
 tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    stMusicMarkerSlot* p_stMarkerSlots;
-    int lSlotId;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    int lSlotId;
+    stMusicMarkerSlot* p_stMarkerSlots;
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+
+    switch (eFuncId)
+    {
+        case eProc_SND_GetMusicMarker:
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+            lSlotId = (p_stValue->eType == E_vt_Float ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue) - 1;
+
+            if (lSlotId < SND_fn_iGetNbMusicMarkerSlots() && lSlotId >= 0)
+            {
+                p_stMarkerSlots = SND_fn_p_stGetMusicMarkerSlots();
+                p_stValue->uDummy.uParam.szString = p_stMarkerSlots[lSlotId].szBuffer; p_stValue->eType = E_vt_String;
+            }
+            break;
+        default:
+            fn_vOnAIErm_M_UpdateLastError(39, NULL);
+            break;
+    }
+
+    return p_stTree;
 }
 
 tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
@@ -3039,12 +3076,42 @@ tdstNodeInterpret_* fn_p_stIsSoundPlaying(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stOptionGetTypeVolume(tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+int SND_fn_s32GetVolumeLineSound(int s32_LineId);
+
+tdstNodeInterpret_* fn_p_stOptionGetTypeVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int s32_LineId;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+
+    switch (eFuncId)
+    {
+        case eFunc_SND_GetMenuSndVolume:
+            s32_LineId = g_lSoundVolumeLineMenu;
+            break;
+        case eFunc_SND_GetMusicVolume:
+            s32_LineId = g_lSoundVolumeLineMusic;
+            break;
+        case eFunc_SND_GetSoundVolume:
+            s32_LineId = g_lSoundVolumeLineSound;
+            break;
+        case eFunc_SND_GetVoiceVolume:
+            s32_LineId = g_lSoundVolumeLineVoices;
+            break;
+        case eFunc_SND_GetAmbianceVolume:
+            s32_LineId = g_lSoundVolumeLineAmbiance;
+            break;
+        default:
+            s32_LineId = -1;
+            break;
+    }
+
+    p_stValue->uDummy.uParam.lValue = SND_fn_s32GetVolumeLineSound(s32_LineId); p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
+
+int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, int s32_HandleId);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiFuncSound.c lines 37–73 */
 /* addr: 0x0024bb80  size: 212 bytes */
@@ -3068,11 +3135,40 @@ tdstNodeInterpret_* fn_p_stOptionGetTypeVolume(tdstNodeInterpret_* p_stTree, tds
  */
 tdstNodeInterpret_* fn_p_stOptionGetHandleState(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdstGetSetParam_ st_Param;
-    int s32_ObjectId;
-    int s32_TypeId;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    int s32_TypeId;
+    int s32_ObjectId;
+    tdstGetSetParam_ st_Param;
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    s32_ObjectId = (int)p_SuperObjPerso;
+
+    switch (eFuncId)
+    {
+        case eFunc_SND_GetSendSoundRequestHandleState:
+            s32_TypeId = g_lSoundObjectTypeAnim;
+            break;
+        case eFunc_SND_GetSendVoiceRequestHandleState:
+            s32_TypeId = g_lSoundObjectTypeVoice;
+            break;
+        case eFunc_SND_GetSendMusicRequestHandleState:
+            s32_TypeId = g_lSoundObjectTypeMusic;
+            break;
+        case eFunc_SND_GetSendAmbianceRequestHandleState:
+            s32_TypeId = g_lSoundObjectTypeAmbiance;
+            break;
+        case eFunc_SND_GetSendMenuSndRequestHandleState:
+            s32_TypeId = g_lSoundObjectTypeMenu;
+            break;
+        default:
+            s32_TypeId = -1;
+            break;
+    }
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+
+    p_stValue->uDummy.uParam.lValue = SND_fn_s32GetSoundHandleState(s32_ObjectId, s32_TypeId, st_Param.uDummy.uParam.lValue); p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiFuncSound.c lines 29–32 */

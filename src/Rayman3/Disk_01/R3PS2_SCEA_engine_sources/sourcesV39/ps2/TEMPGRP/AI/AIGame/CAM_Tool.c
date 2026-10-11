@@ -3411,7 +3411,13 @@ void CAM_fn_vGetPersoSightAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVec
  */
 float CAM_fn_xSetAngleInInterval02Pi(float _xAngle)
 {
-    /* TODO: decompile from asm/... */
+    if (_xAngle < 0.0f)
+        return _xAngle + 6.2831855f;
+
+    if (_xAngle >= 6.2831855f)
+        _xAngle -= 6.2831855f;
+
+    return _xAngle;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 477–483 */
@@ -3427,7 +3433,17 @@ float CAM_fn_xSetAngleInInterval02Pi(float _xAngle)
  */
 float CAM_fn_xSetAngleInIntervalPiPi(float _xAngle)
 {
-    /* TODO: decompile from asm/... */
+    /* The debug record lists no locals; holding pi in one keeps retail's neg.s of the loaded
+       constant for -pi instead of a second folded constant (probably a macro in the original). */
+    float xPi = 3.1415927f;
+
+    if (_xAngle > xPi)
+        return _xAngle - 6.2831855f;
+
+    if (_xAngle <= -xPi)
+        _xAngle = 6.2831855f + _xAngle;
+
+    return _xAngle;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 463–468 */

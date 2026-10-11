@@ -1811,8 +1811,9 @@ void GAM_fn_vSetEngineInTransitionMode(void)
  */
 void HMU_fn_vSetMemoriesInLevelMode(void);
 void HMU_fn_vSetMemoriesInFixMode(void);
-unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
-unsigned char HMU_fn_ucGetFixNormalMemoryBlock(void);
+/* Declared without a narrow return type here: retail passes the result on without an andi. */
+int HMU_fn_ucGetLevelNormalMemoryBlock(void);
+int HMU_fn_ucGetFixNormalMemoryBlock(void);
 void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
 
 void GAM_fn_vSetEngineInLevelMode(void)
