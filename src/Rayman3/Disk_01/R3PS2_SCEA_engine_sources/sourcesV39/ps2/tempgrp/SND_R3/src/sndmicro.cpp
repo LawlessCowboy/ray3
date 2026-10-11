@@ -57,13 +57,6 @@ struct _stVector {
     float f32z; /* +0x8 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndmicro.cpp lines 132–132 */
-/* addr: 0x00186660  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 132
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 namespace usnd {
 template <class T> void TTypedVar<T>::f_vSetValue(T oValue)
 {
@@ -74,29 +67,11 @@ template <class T> void TTypedVar<T>::f_vSetValue(T oValue)
 template struct TTypedVar<float>;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndmicro.cpp lines 38–40 */
-/* addr: 0x00186670  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 38
- *   +0x000c -> line 39
- *   +0x0020 -> line 40
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SND_fn_vSetRetMicroSound(_tdstAllRetMicroSound* pst_IMicro)
 {
     CLinkMicroCont::mfn_roGetInstance()->mfn_bSetMicroInterface(pst_IMicro);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndmicro.cpp lines 34–36 */
-/* addr: 0x001866a0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 34
- *   +0x000c -> line 35
- *   +0x0020 -> line 36
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SND_fn_vDestroyMicroSound(int s32_MicroId)
 {
     CLinkMicroCont::mfn_roGetInstance()->mfn_bRemoveMicroInstance(s32_MicroId);

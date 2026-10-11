@@ -1226,37 +1226,6 @@ struct AI_tdstMind_ {
 
 tdstBlockInfo_ g_a_stLipsSynchBlocksInfo[1];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\LipsSync.c lines 312–1015 */
-/* addr: 0x002650e0  size: 304 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 312
- *   +0x0004 -> line 411
- *   +0x0008 -> line 312
- *   +0x000c -> line 411
- *   +0x0020 -> line 424
- *   +0x0028 -> line 433
- *   +0x0030 -> line 439
- *   +0x0038 -> line 822
- *   +0x0060 -> line 826
- *   +0x0078 -> line 828
- *   +0x007c -> line 830
- *   +0x0084 -> line 832
- *   +0x00a8 -> line 835
- *   +0x00b8 -> line 836
- *   +0x00c0 -> line 838
- *   +0x00c8 -> line 839
- *   +0x00d8 -> line 840
- *   +0x00e0 -> line 841
- *   +0x00f0 -> line 843
- *   +0x00fc -> line 844
- *   +0x0104 -> line 848
- *   +0x010c -> line 850
- *   +0x0110 -> line 851
- *   +0x0120 -> line 852
- *   +0x0124 -> line 1015
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
 typedef struct tdst_EntryActions_ tdst_EntryActions_;
 typedef struct tdstEngineStructure_ tdstEngineStructure_;
@@ -1332,33 +1301,6 @@ void fn_vAnalyse3DOSSpecialInputActions(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\LipsSync.c lines 641–687 */
-/* addr: 0x00265210  size: 452 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 641
- *   +0x001c -> line 646
- *   +0x0028 -> line 651
- *   +0x002c -> line 646
- *   +0x0030 -> line 651
- *   +0x003c -> line 653
- *   +0x0044 -> line 655
- *   +0x0058 -> line 658
- *   +0x006c -> line 659
- *   +0x0070 -> line 662
- *   +0x007c -> line 664
- *   +0x009c -> line 668
- *   +0x00fc -> line 669
- *   +0x0104 -> line 672
- *   +0x0168 -> line 675
- *   +0x0174 -> line 678
- *   +0x0184 -> line 680
- *   +0x018c -> line 683
- *   +0x0190 -> line 684
- *   +0x01a0 -> line 685
- *   +0x01a8 -> line 687
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SND_fn_s32GetLastMarker(void);
 int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFamilyList_* p_stFamily);
 void MAT_fn_vRemoveScale(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);

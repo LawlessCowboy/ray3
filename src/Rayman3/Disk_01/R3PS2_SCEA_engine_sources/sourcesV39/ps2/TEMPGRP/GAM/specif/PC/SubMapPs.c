@@ -55,13 +55,6 @@ struct MAT_tdstTransformation_ {
 
 int gs_hFirstSubMapPosition;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\SubMapPs.c lines 34–34 */
-/* addr: 0x00282aa0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 34
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GAM_fn_vInitTableOfMovedOnes(void)
 {
     GAM_g_ucNbMovedOnes = 0;

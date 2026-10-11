@@ -1118,13 +1118,6 @@ struct AI_tdstMind_ {
 
 unsigned char g_ucGameModuleId;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 163–163 */
-/* addr: 0x00271590  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 163
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned int fn_ulMSSoundSizeOf(void)
 {
     return 0x10;
@@ -1136,25 +1129,6 @@ int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWay
 int WPG_fn_lChangeLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int ulCapability, int lValue);
 WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 571–594 */
-/* addr: 0x002715a0  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 571
- *   +0x001c -> line 575
- *   +0x0030 -> line 577
- *   +0x0034 -> line 578
- *   +0x0040 -> line 580
- *   +0x0050 -> line 581
- *   +0x005c -> line 583
- *   +0x0070 -> line 585
- *   +0x0078 -> line 586
- *   +0x0088 -> line 587
- *   +0x0090 -> line 589
- *   +0x00ac -> line 593
- *   +0x00b0 -> line 594
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int MSWay_fn_lChangeWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, int lWeight)
 {
     int lNbOfElts;
@@ -1183,25 +1157,6 @@ int MSWay_fn_lChangeWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, in
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 542–568 */
-/* addr: 0x00271670  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 542
- *   +0x0014 -> line 547
- *   +0x0028 -> line 549
- *   +0x002c -> line 550
- *   +0x0038 -> line 552
- *   +0x0048 -> line 553
- *   +0x0054 -> line 555
- *   +0x0068 -> line 557
- *   +0x0070 -> line 558
- *   +0x0080 -> line 559
- *   +0x0088 -> line 562
- *   +0x00c0 -> line 567
- *   +0x00c4 -> line 568
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int MSWay_fn_lGetWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex)
 {
     int lNbOfElts;
@@ -1231,25 +1186,6 @@ int MSWay_fn_lGetWeightForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex)
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 516–539 */
-/* addr: 0x00271750  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 516
- *   +0x0024 -> line 520
- *   +0x0038 -> line 522
- *   +0x003c -> line 523
- *   +0x0048 -> line 525
- *   +0x0058 -> line 526
- *   +0x0064 -> line 528
- *   +0x0078 -> line 530
- *   +0x0080 -> line 531
- *   +0x0090 -> line 532
- *   +0x0098 -> line 534
- *   +0x00b8 -> line 538
- *   +0x00bc -> line 539
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int MSWay_fn_lChangeCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, unsigned int ulNewCaps, int lValue)
 {
     int lNbOfElts;
@@ -1278,25 +1214,6 @@ int MSWay_fn_lChangeCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex, unsi
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 487–513 */
-/* addr: 0x00271830  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 487
- *   +0x0014 -> line 492
- *   +0x0028 -> line 494
- *   +0x002c -> line 495
- *   +0x0038 -> line 497
- *   +0x0048 -> line 498
- *   +0x0054 -> line 500
- *   +0x0068 -> line 502
- *   +0x0070 -> line 503
- *   +0x0080 -> line 504
- *   +0x0088 -> line 507
- *   +0x00c0 -> line 512
- *   +0x00c4 -> line 513
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned int MSWay_fn_ulGetCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iIndex)
 {
     int lNbOfElts;
@@ -1326,27 +1243,6 @@ unsigned int MSWay_fn_ulGetCapsForNextWayPointOfPath(tdstMSWay_* hWay, int iInde
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 457–484 */
-/* addr: 0x00271910  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 457
- *   +0x0014 -> line 460
- *   +0x0020 -> line 462
- *   +0x0028 -> line 468
- *   +0x0030 -> line 470
- *   +0x0040 -> line 471
- *   +0x0048 -> line 472
- *   +0x0050 -> line 475
- *   +0x0064 -> line 476
- *   +0x0070 -> line 479
- *   +0x0074 -> line 480
- *   +0x0078 -> line 479
- *   +0x007c -> line 480
- *   +0x00a8 -> line 481
- *   +0x00b0 -> line 484
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex)
 {
     int lNbOfElts;
@@ -1377,26 +1273,6 @@ WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex)
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 423–449 */
-/* addr: 0x002719d0  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 423
- *   +0x0008 -> line 424
- *   +0x0010 -> line 428
- *   +0x001c -> line 430
- *   +0x0020 -> line 431
- *   +0x002c -> line 433
- *   +0x0038 -> line 434
- *   +0x0050 -> line 435
- *   +0x0064 -> line 436
- *   +0x006c -> line 440
- *   +0x0084 -> line 443
- *   +0x0088 -> line 444
- *   +0x0090 -> line 448
- *   +0x0094 -> line 449
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int MSWay_fn_lIncrementCurrentIndexInPath(tdstMSWay_* hWay, int iStep)
 {
     int lNbOfElts;
@@ -1426,22 +1302,6 @@ int MSWay_fn_lIncrementCurrentIndexInPath(tdstMSWay_* hWay, int iStep)
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 404–415 */
-/* addr: 0x00271a70  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 404
- *   +0x0014 -> line 408
- *   +0x0018 -> line 406
- *   +0x001c -> line 408
- *   +0x0024 -> line 410
- *   +0x0030 -> line 411
- *   +0x0038 -> line 412
- *   +0x0044 -> line 413
- *   +0x0048 -> line 414
- *   +0x004c -> line 415
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int MSWay_fn_lLookForWPInMSWay(tdstMSWay_* _hWay, WP_tdstWayPoint_* _hWayPoint)
 {
 {
@@ -1461,25 +1321,6 @@ int MSWay_fn_lLookForWPInMSWay(tdstMSWay_* _hWay, WP_tdstWayPoint_* _hWayPoint)
 }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 380–396 */
-/* addr: 0x00271ad0  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 380
- *   +0x0014 -> line 382
- *   +0x0018 -> line 383
- *   +0x0024 -> line 385
- *   +0x0034 -> line 386
- *   +0x0040 -> line 388
- *   +0x004c -> line 389
- *   +0x0050 -> line 390
- *   +0x0058 -> line 391
- *   +0x005c -> line 392
- *   +0x0060 -> line 393
- *   +0x0068 -> line 395
- *   +0x006c -> line 396
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int MSWay_fn_lSetCurrentIndexInPath(tdstMSWay_* hWay, int _lIndex)
 {
     int lNbOfElts;
@@ -1503,16 +1344,6 @@ int MSWay_fn_lSetCurrentIndexInPath(tdstMSWay_* hWay, int _lIndex)
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 372–375 */
-/* addr: 0x00271b50  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 372
- *   +0x0014 -> line 373
- *   +0x001c -> line 374
- *   +0x0020 -> line 375
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int MSWay_fn_lGetFirstIndexInPath(tdstMSWay_* hWay)
 {
     if (hWay != NULL)
@@ -1523,16 +1354,6 @@ int MSWay_fn_lGetFirstIndexInPath(tdstMSWay_* hWay)
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 364–368 */
-/* addr: 0x00271b80  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 364
- *   +0x0014 -> line 365
- *   +0x0020 -> line 367
- *   +0x0024 -> line 368
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int MSWay_fn_lGetLastIndexInPath(tdstMSWay_* hWay)
 {
     if (hWay != NULL)
@@ -1543,16 +1364,6 @@ int MSWay_fn_lGetLastIndexInPath(tdstMSWay_* hWay)
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 357–360 */
-/* addr: 0x00271bb0  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 357
- *   +0x0014 -> line 358
- *   +0x001c -> line 359
- *   +0x0020 -> line 360
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int MSWay_fn_lGetCurrentIndexInPath(tdstMSWay_* hWay)
 {
     if (hWay != NULL)
@@ -1563,16 +1374,6 @@ int MSWay_fn_lGetCurrentIndexInPath(tdstMSWay_* hWay)
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 350–353 */
-/* addr: 0x00271be0  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 350
- *   +0x0014 -> line 351
- *   +0x001c -> line 352
- *   +0x0020 -> line 353
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int MSWay_fn_lGetNumberWayPointInPath(tdstMSWay_* hWay)
 {
     if (hWay != NULL)
@@ -1583,20 +1384,6 @@ int MSWay_fn_lGetNumberWayPointInPath(tdstMSWay_* hWay)
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 332–346 */
-/* addr: 0x00271c10  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 332
- *   +0x001c -> line 333
- *   +0x002c -> line 335
- *   +0x0038 -> line 340
- *   +0x0040 -> line 342
- *   +0x0044 -> line 343
- *   +0x0048 -> line 344
- *   +0x004c -> line 346
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void MSWay_fn_vSetPath(tdstMSWay_* hWay, WP_tdstGraph_* hPath, char _bIsCircular)
 {
     if ((hWay != 0) && (hPath != 0)) {
@@ -1609,21 +1396,6 @@ void MSWay_fn_vSetPath(tdstMSWay_* hWay, WP_tdstGraph_* hPath, char _bIsCircular
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 311–329 */
-/* addr: 0x00271c80  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 311
- *   +0x0010 -> line 312
- *   +0x0018 -> line 315
- *   +0x0028 -> line 317
- *   +0x0034 -> line 322
- *   +0x003c -> line 325
- *   +0x0040 -> line 326
- *   +0x0048 -> line 327
- *   +0x004c -> line 329
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void MSWay_fn_vDesinitPath(tdstMSWay_* hWay)
 {
     if (hWay)
@@ -1665,17 +1437,6 @@ void MSWay_fn_vDesinitPath(tdstMSWay_* hWay)
         }                                                                      \
     }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 267–273 */
-/* addr: 0x00271ce0  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 267
- *   +0x0018 -> line 268
- *   +0x0058 -> line 270
- *   +0x0068 -> line 272
- *   +0x0070 -> line 273
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSWayCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
     MSWay_M_vDesinitPath(_p_stObjectDest->h_MSWay);
@@ -1685,20 +1446,6 @@ void fn_vMSWayCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _
     MSWay_fn_vDesinitPath(_p_stObjectDest->h_MSWay);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 242–253 */
-/* addr: 0x00271d70  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 242
- *   +0x0010 -> line 245
- *   +0x0018 -> line 246
- *   +0x0044 -> line 248
- *   +0x0048 -> line 249
- *   +0x0050 -> line 250
- *   +0x007c -> line 252
- *   +0x00b8 -> line 253
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSWayDesinit(tdstEngineObject_* p_stObject)
 {
     tdstMSWay_* hMSWay;
@@ -1713,22 +1460,6 @@ void fn_vMSWayDesinit(tdstEngineObject_* p_stObject)
     MSWay_M_vDesinitPath(hMSWay);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 208–228 */
-/* addr: 0x00271e40  size: 164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 208
- *   +0x000c -> line 212
- *   +0x0014 -> line 215
- *   +0x001c -> line 216
- *   +0x0048 -> line 219
- *   +0x004c -> line 220
- *   +0x0054 -> line 221
- *   +0x0080 -> line 223
- *   +0x008c -> line 226
- *   +0x0094 -> line 228
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSWayInit(tdstEngineObject_* p_stObject)
 {
     tdstMSWay_* hMSWay;
@@ -1748,20 +1479,6 @@ void fn_vMSWayInit(tdstEngineObject_* p_stObject)
     GAM_fn_vPopAllocMode();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 178–194 */
-/* addr: 0x00271ef0  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 178
- *   +0x0010 -> line 181
- *   +0x0018 -> line 182
- *   +0x0044 -> line 184
- *   +0x0048 -> line 185
- *   +0x0050 -> line 186
- *   +0x007c -> line 188
- *   +0x00b8 -> line 194
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSWayFree(tdstEngineObject_* p_stObject)
 {
     tdstMSWay_* hMSWay;
@@ -1778,19 +1495,6 @@ void fn_vMSWayFree(tdstEngineObject_* p_stObject)
 
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSWay.c lines 145–155 */
-/* addr: 0x00271fc0  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 145
- *   +0x0010 -> line 146
- *   +0x0018 -> line 147
- *   +0x0044 -> line 149
- *   +0x0050 -> line 150
- *   +0x007c -> line 153
- *   +0x0098 -> line 155
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSWayAlloc(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {

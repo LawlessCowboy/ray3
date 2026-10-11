@@ -2885,40 +2885,16 @@ struct SECT_tdstListOfSOSectorsInActivityInteraction_ {
 
 tdstMetaActionEntry_ a_stMetaActionTable[13];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvAct.c lines 169–170 */
-/* addr: 0x00211530  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 169
- *   +0x0018 -> line 170
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdfn_MetaActionFunction_ fn_p_fn_pGetMetaActionFunctionPtr(tdeMetaActionId_ eMetaActionId)
 {
     return a_stMetaActionTable[eMetaActionId].p_fn_ucMetaActionFunction;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvAct.c lines 164–165 */
-/* addr: 0x00211550  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 164
- *   +0x0018 -> line 165
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdfn_MetaActionInitFunction_ fn_p_fn_pGetMetaActionInitFunctionPtr(tdeMetaActionId_ eMetaActionId)
 {
     return a_stMetaActionTable[eMetaActionId].p_fn_p_stMetaActionInitFunction;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvAct.c lines 102–103 */
-/* addr: 0x00211570  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 102
- *   +0x0018 -> line 103
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 char* szGetMetaActionTypeInParamFromId(tdeMetaActionId_ eMetaActionId)
 {
     return a_stMetaActionTable[eMetaActionId].szMetaActionTypeParam;

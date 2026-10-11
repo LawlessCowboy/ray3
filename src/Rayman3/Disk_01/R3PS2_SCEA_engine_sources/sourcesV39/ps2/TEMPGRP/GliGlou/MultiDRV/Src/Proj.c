@@ -111,19 +111,6 @@ inline float MTH_M_xMax(float _xA, float _xB)
     return _xResult;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Proj.c lines 210–220 */
-/* addr: 0x002aac80  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 210
- *   +0x000c -> line 211
- *   +0x0018 -> line 214
- *   +0x001c -> line 212
- *   +0x0020 -> line 215
- *   +0x0028 -> line 216
- *   +0x002c -> line 220
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Scoped opt_propagation off keeps the named constant locals in source order;
  * without it MWCC swaps the 1.0f and 0.0f FPRs and moves the hazard nop
  * (measured pragma sweep; declaration order alone cannot reach it). */

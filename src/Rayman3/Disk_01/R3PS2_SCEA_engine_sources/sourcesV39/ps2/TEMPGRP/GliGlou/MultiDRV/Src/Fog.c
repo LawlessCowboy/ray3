@@ -42,18 +42,6 @@ float Fog_RandomValue;
 char g_bForceWhiteFog;
 extern float GLI_g_xBrightness;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Fog.c lines 485–491 */
-/* addr: 0x002a8560  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 485
- *   +0x0008 -> line 486
- *   +0x0010 -> line 487
- *   +0x0018 -> line 488
- *   +0x001c -> line 490
- *   +0x003c -> line 491
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_fn_vSetBrightness(int _lValue)
 {
     if (_lValue < 0)
@@ -63,28 +51,12 @@ void GLI_fn_vSetBrightness(int _lValue)
     GLI_g_xBrightness = (float)_lValue / 100.0f;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Fog.c lines 266–268 */
-/* addr: 0x002a85b0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 266
- *   +0x0004 -> line 268
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vFogOff(void)
 {
     GLI_BIG_GLOBALS_p_stActiveFog = 0;
     GLI_BIG_GLOBALS_xFogIsOn = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Fog.c lines 255–256 */
-/* addr: 0x002a85c0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 255
- *   +0x0004 -> line 256
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vFogOn(void)
 {
     GLI_BIG_GLOBALS_xFogIsOn = 1;

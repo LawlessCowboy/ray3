@@ -691,46 +691,6 @@ struct tagGLlistdatas {
 tagListVertexBuffer g_PS2glListVBuf;
 tagGLcontext g_PS2glContext;
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Pipeline.c lines 208–234 */
-/* addr: 0x00181c70  size: 384 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 225
- *   +0x0004 -> line 208
- *   +0x0008 -> line 225
- *   +0x000c -> line 208
- *   +0x0010 -> line 225
- *   +0x0020 -> line 226
- *   +0x0028 -> line 225
- *   +0x0040 -> line 208
- *   +0x00a0 -> line 220
- *   +0x00a4 -> line 208
- *   +0x00b0 -> line 220
- *   +0x00b4 -> line 208
- *   +0x00bc -> line 221
- *   +0x00c0 -> line 208
- *   +0x00c4 -> line 222
- *   +0x00c8 -> line 208
- *   +0x00d4 -> line 220
- *   +0x00d8 -> line 221
- *   +0x00dc -> line 220
- *   +0x00e0 -> line 221
- *   +0x00ec -> line 222
- *   +0x00f8 -> line 212
- *   +0x010c -> line 213
- *   +0x0124 -> line 214
- *   +0x0138 -> line 216
- *   +0x0144 -> line 217
- *   +0x0148 -> line 216
- *   +0x0154 -> line 217
- *   +0x015c -> line 218
- *   +0x0164 -> line 217
- *   +0x0168 -> line 218
- *   +0x016c -> line 217
- *   +0x0170 -> line 218
- *   +0x0178 -> line 234
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void PS2glUpdateNormalMatrix(void)
 {
     float IMMV;
@@ -759,28 +719,6 @@ void PS2glUpdateNormalMatrix(void)
     g_PS2glContext.NormalMatrix[3][3] = 1.0f;
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Pipeline.c lines 94–104 */
-/* addr: 0x00181df0  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 94
- *   +0x0004 -> line 96
- *   +0x0008 -> line 94
- *   +0x0014 -> line 96
- *   +0x0028 -> line 98
- *   +0x002c -> line 102
- *   +0x0034 -> line 98
- *   +0x0038 -> line 99
- *   +0x0040 -> line 100
- *   +0x00e8 -> line 101
- *   +0x00ec -> line 100
- *   +0x00f4 -> line 102
- *   +0x0110 -> line 103
- *   +0x0118 -> line 102
- *   +0x0130 -> line 103
- *   +0x0138 -> line 104
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void PS2glBufferTriangleFanToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart)
 {
     int i;
@@ -799,26 +737,6 @@ void PS2glBufferTriangleFanToTriangle(float (*pBuf)[4], int iSrcStart, int iDstS
     }
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Pipeline.c lines 70–89 */
-/* addr: 0x00181f30  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 70
- *   +0x000c -> line 72
- *   +0x0014 -> line 74
- *   +0x0020 -> line 76
- *   +0x0028 -> line 77
- *   +0x002c -> line 78
- *   +0x0038 -> line 81
- *   +0x0040 -> line 82
- *   +0x0048 -> line 85
- *   +0x004c -> line 88
- *   +0x0050 -> line 85
- *   +0x0054 -> line 86
- *   +0x0058 -> line 88
- *   +0x0060 -> line 89
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void PS2glListBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart)
 {
     float (*pDst)[4];

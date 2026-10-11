@@ -102,20 +102,6 @@ struct anon_6 {
 int VID_g_iHasAudio;
 anon_6 videoDec;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\read.c lines 81–87 */
-/* addr: 0x00131070  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 81
- *   +0x0004 -> line 82
- *   +0x0008 -> line 81
- *   +0x0014 -> line 83
- *   +0x001c -> line 84
- *   +0x0044 -> line 87
- *   +0x0048 -> line 86
- *   +0x004c -> line 87
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SND_VID_fn_iAddIOPData(unsigned char* pData, int iSize);
 void switchThread(void);
 
@@ -129,39 +115,6 @@ int vagCallbackLeft(void* mp, anon_1* str, void* data)
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\read.c lines 41–74 */
-/* addr: 0x001310d0  size: 504 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 41
- *   +0x0004 -> line 45
- *   +0x0008 -> line 41
- *   +0x000c -> line 45
- *   +0x0010 -> line 41
- *   +0x0038 -> line 45
- *   +0x003c -> line 43
- *   +0x0040 -> line 45
- *   +0x005c -> line 54
- *   +0x0060 -> line 46
- *   +0x0064 -> line 54
- *   +0x007c -> line 55
- *   +0x0080 -> line 56
- *   +0x0084 -> line 55
- *   +0x008c -> line 58
- *   +0x0098 -> line 55
- *   +0x009c -> line 56
- *   +0x00a0 -> line 55
- *   +0x00a4 -> line 56
- *   +0x00a8 -> line 55
- *   +0x00ac -> line 58
- *   +0x0170 -> line 61
- *   +0x0178 -> line 62
- *   +0x01a0 -> line 63
- *   +0x01ac -> line 67
- *   +0x01bc -> line 73
- *   +0x01c8 -> line 74
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void videoDecBeginPut(anon_6* vd, unsigned char** ptr0, int* len0, unsigned char** ptr1, int* len1);
 int videoDecPutTs(anon_6* vd, long pts_val, long dts_val, unsigned char* start, int len);
 void videoDecEndPut(anon_6* vd, int size);

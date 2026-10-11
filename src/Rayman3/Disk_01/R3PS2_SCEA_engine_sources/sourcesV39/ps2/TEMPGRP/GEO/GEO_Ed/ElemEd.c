@@ -215,16 +215,6 @@ void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _
  * matrix in a3. */
 int GEO_lMainCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stShereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, MAT_tdstTransformation_* p_stObjectMatrix, int _lCullingResult);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 174–187 */
-/* addr: 0x002a3f80  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 174
- *   +0x002c -> line 183
- *   +0x0044 -> line 186
- *   +0x0060 -> line 187
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GEO_lCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stSphereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, int _lCullingResult)
 {
     MAT_tdstTransformation_ stTempMatrix;
@@ -233,71 +223,26 @@ int GEO_lCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* 
     return GEO_lMainCullingSphere(p_stVpt, p_stSphereCenter, xRadius, &stTempMatrix, p_stMatrix, _lCullingResult);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 1168–1169 */
-/* addr: 0x002a4000  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1168
- *   +0x0018 -> line 1169
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GEO_vSetElementVisibleInPortalFlag(GEO_tdstGeometricObject_* hObject, short hElement, unsigned char bVisible)
 {
     hObject->d_stListOfElements[hElement]->bVisibleInPortal = bVisible;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 351–352 */
-/* addr: 0x002a4020  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 351
- *   +0x0018 -> line 352
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GEO_vSetVisualMaterialOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, GLI_tdstMaterial_* hVisualMaterial)
 {
     hObject->d_stListOfElements[hElement]->hVisualMaterial = hVisualMaterial;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 325–326 */
-/* addr: 0x002a4040  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 325
- *   +0x0038 -> line 326
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GEO_vSetUVOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfUV, ACP_tdst2DUVValues_* p_stUV)
 {
     hObject->d_stListOfElements[hElement]->d_stListOfElementUV[xIndexOfUV] = *p_stUV;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 310–311 */
-/* addr: 0x002a4080  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 310
- *   +0x0018 -> line 311
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GEO_lGetIndexedTriangleNbFaces(GEO_tdstGeometricObject_* hObject, short hElement)
 {
     return hObject->d_stListOfElements[hElement]->xNbFaces;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 228–235 */
-/* addr: 0x002a40a0  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 228
- *   +0x0010 -> line 232
- *   +0x0024 -> line 228
- *   +0x002c -> line 232
- *   +0x0038 -> line 233
- *   +0x0048 -> line 234
- *   +0x0054 -> line 235
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GEO_vSetIndexedUVOfFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short xUV1, short xUV2, short xUV3)
 {
     GEO_tdstElementIndexedTriangles_* param0;
@@ -307,19 +252,6 @@ void GEO_vSetIndexedUVOfFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject
     ((GEO_tdstTripledIndex_*)(param0->d_stListOfFacesTripledIndexUV->a3_xIndex + 2))[xIndexOfFace].a3_xIndex[0] = xUV3;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\ElemEd.c lines 209–216 */
-/* addr: 0x002a4100  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 209
- *   +0x0010 -> line 213
- *   +0x0024 -> line 209
- *   +0x002c -> line 213
- *   +0x003c -> line 214
- *   +0x0050 -> line 215
- *   +0x0060 -> line 216
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GEO_vGetFaceOfIndexedTriangles(GEO_tdstGeometricObject_* hObject, short hElement, short xIndexOfFace, short* p_xPoint1, short* p_xPoint2, short* p_xPoint3)
 {
     GEO_tdstElementIndexedTriangles_* param0;

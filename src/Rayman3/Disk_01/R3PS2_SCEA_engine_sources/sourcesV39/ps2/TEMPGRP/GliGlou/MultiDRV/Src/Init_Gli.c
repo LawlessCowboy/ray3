@@ -147,81 +147,6 @@ int GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint;
 int gs_aDEFTableOfTextureAlreadyRead;
 int gs_aDEFTableOfTextureMemoryChannels;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Init_Gli.c lines 111–233 */
-/* addr: 0x002a85d0  size: 728 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 111
- *   +0x0008 -> line 130
- *   +0x0014 -> line 136
- *   +0x001c -> line 132
- *   +0x0024 -> line 138
- *   +0x002c -> line 136
- *   +0x0030 -> line 139
- *   +0x0038 -> line 132
- *   +0x003c -> line 139
- *   +0x0040 -> line 133
- *   +0x0044 -> line 139
- *   +0x0048 -> line 137
- *   +0x004c -> line 133
- *   +0x0050 -> line 134
- *   +0x0058 -> line 135
- *   +0x0060 -> line 136
- *   +0x0068 -> line 139
- *   +0x006c -> line 136
- *   +0x0070 -> line 139
- *   +0x0074 -> line 148
- *   +0x0084 -> line 150
- *   +0x008c -> line 151
- *   +0x0090 -> line 152
- *   +0x0098 -> line 155
- *   +0x00a0 -> line 156
- *   +0x00a8 -> line 159
- *   +0x00c0 -> line 160
- *   +0x00c8 -> line 162
- *   +0x00cc -> line 164
- *   +0x00e4 -> line 165
- *   +0x00ec -> line 166
- *   +0x0104 -> line 167
- *   +0x0108 -> line 169
- *   +0x0120 -> line 170
- *   +0x0128 -> line 171
- *   +0x0140 -> line 172
- *   +0x0144 -> line 174
- *   +0x0148 -> line 187
- *   +0x0154 -> line 192
- *   +0x0158 -> line 174
- *   +0x015c -> line 175
- *   +0x0160 -> line 187
- *   +0x0164 -> line 188
- *   +0x0168 -> line 175
- *   +0x016c -> line 193
- *   +0x0170 -> line 180
- *   +0x0184 -> line 193
- *   +0x0188 -> line 180
- *   +0x0194 -> line 193
- *   +0x019c -> line 196
- *   +0x01a0 -> line 200
- *   +0x01a4 -> line 196
- *   +0x01a8 -> line 197
- *   +0x01b0 -> line 200
- *   +0x01b4 -> line 199
- *   +0x01b8 -> line 200
- *   +0x01bc -> line 199
- *   +0x01c8 -> line 200
- *   +0x01d8 -> line 212
- *   +0x01f4 -> line 213
- *   +0x0218 -> line 214
- *   +0x0258 -> line 215
- *   +0x0298 -> line 226
- *   +0x02a4 -> line 230
- *   +0x02a8 -> line 231
- *   +0x02ac -> line 230
- *   +0x02b8 -> line 231
- *   +0x02c4 -> line 232
- *   +0x02cc -> line 233
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern char g_bForceWhiteFog;
 extern float Fog_RandomValue;
 extern tdstFogParams_* GLI_gp_stCurrentFog;
@@ -310,37 +235,16 @@ void GLI_vSetFog2(float xBlendStart, float xDepthStart, float xBlendEnd, float x
         GLI_gp_stCurrentFog = GLI_ga_stFogTable;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Init_Gli.c lines 217–217 */
-/* addr: 0x002a88b0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 217
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel)
 {
     GLI_TEX_vSignalCurrentMemoryChannel(ucCurrentChannel);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Init_Gli.c lines 206–206 */
-/* addr: 0x002a88c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 206
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vEndofGeometricLoad(void)
 {
     GLI_vComputeTextures();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Init_Gli.c lines 190–190 */
-/* addr: 0x002a88d0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 190
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GLI_xIsGliInit(void)
 {
     return GLI_gsIsInit;

@@ -208,25 +208,6 @@ extern int g_lNbMatrixInStack;
 extern MAT_tdstTransformation_* g_p_stCurrentMatrix;
 void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Menu.c lines 14–36 */
-/* addr: 0x002aa220  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 14
- *   +0x0014 -> line 16
- *   +0x0018 -> line 27
- *   +0x0020 -> line 29
- *   +0x0030 -> line 30
- *   +0x0034 -> line 29
- *   +0x0038 -> line 30
- *   +0x0050 -> line 31
- *   +0x0060 -> line 33
- *   +0x0064 -> line 31
- *   +0x0068 -> line 33
- *   +0x006c -> line 31
- *   +0x0078 -> line 36
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xInitMatrixStack(void)
 {
     short xI;

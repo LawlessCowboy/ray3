@@ -52,15 +52,6 @@ struct MTH3D_tdstVector_ {
 
 void MAT_fn_vNormQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsppla.c lines 875–880 */
-/* addr: 0x002fa220  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 875
- *   +0x0004 -> line 876
- *   +0x0008 -> line 880
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 float MTH_fn_xSqrAddSqrAddSqrOpt2(float a, float b, float c)
 {
     float xRet;
@@ -72,15 +63,6 @@ float MTH_fn_xSqrAddSqrAddSqrOpt2(float a, float b, float c)
     return xRet;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsppla.c lines 92–95 */
-/* addr: 0x002fa230  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 92
- *   +0x0008 -> line 93
- *   +0x001c -> line 95
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void MAT_fn_vInitTransformationWithNormQuaternion(MAT_tdstTransformation_* _hTransform, float* _a_xQuaternion)
 {
     _hTransform->eType = 5;

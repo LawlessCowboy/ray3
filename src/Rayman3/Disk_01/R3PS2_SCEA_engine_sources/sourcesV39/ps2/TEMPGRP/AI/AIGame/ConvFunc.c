@@ -2950,27 +2950,11 @@ struct MOR_stMorphObject_ {
 
 tdstFunctionEntry_ a_stFunctionTable[446];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFunc.c lines 136–137 */
-/* addr: 0x002116c0  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 136
- *   +0x0010 -> line 137
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstFunctionPointer_ fn_p_fn_pGetFunctionFunctionPtr(tdeFuncId_ eFuncId)
 {
     return a_stFunctionTable[eFuncId].p_fn_p_stFunctionFunction;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFunc.c lines 130–131 */
-/* addr: 0x002116e0  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 130
- *   +0x0010 -> line 131
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucGetFunctionUltraOperator(tdeFuncId_ eFuncId)
 {
     return a_stFunctionTable[eFuncId].bUltraFunctionFlag;

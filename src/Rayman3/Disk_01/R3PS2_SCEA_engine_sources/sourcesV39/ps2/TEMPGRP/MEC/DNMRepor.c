@@ -115,27 +115,6 @@ struct DNM_stMecReport {
 
 DNM_stMecReport g_stReport;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMRepor.c lines 37–63 */
-/* addr: 0x00302b40  size: 272 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 37
- *   +0x0004 -> line 46
- *   +0x000c -> line 47
- *   +0x0034 -> line 49
- *   +0x003c -> line 51
- *   +0x0054 -> line 53
- *   +0x0078 -> line 56
- *   +0x007c -> line 53
- *   +0x0080 -> line 54
- *   +0x0084 -> line 56
- *   +0x0098 -> line 57
- *   +0x00b8 -> line 59
- *   +0x00c0 -> line 60
- *   +0x00d8 -> line 61
- *   +0x0108 -> line 63
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Recovered PS2 MTH dot product: the R5900 accumulator ops have no C form
    under the baseline. */
 #define MTH_DOT3_TO(_result, _ax, _bx, _ay, _by, _az, _bz) \

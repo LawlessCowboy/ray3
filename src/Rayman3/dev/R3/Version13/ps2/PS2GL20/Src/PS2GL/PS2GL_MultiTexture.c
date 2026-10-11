@@ -683,20 +683,6 @@ struct tagstVIFCode {
 int g_astGsSetTex;
 tagGLcontext g_PS2glContext;
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_MultiTexture.c lines 115–122 */
-/* addr: 0x00186200  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 115
- *   +0x0018 -> line 116
- *   +0x002c -> line 117
- *   +0x0034 -> line 118
- *   +0x003c -> line 119
- *   +0x0068 -> line 120
- *   +0x0070 -> line 121
- *   +0x0078 -> line 122
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void PS2glViewport(int x, int y, int width, int height);
 void PS2glMatrixMode(unsigned int mode);
 void PS2glLoadIdentity(void);
@@ -712,17 +698,6 @@ void DefaultHandleReshape(int w, int h)
     PS2glLoadIdentity();
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_MultiTexture.c lines 40–49 */
-/* addr: 0x00186290  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 40
- *   +0x0004 -> line 43
- *   +0x0018 -> line 46
- *   +0x0020 -> line 48
- *   +0x0024 -> line 49
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void impPS2glClientActiveTextureARB(unsigned int texture)
 {
     tagGLcontext* gc;

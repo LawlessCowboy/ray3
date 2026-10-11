@@ -152,22 +152,6 @@ int GLI_gs_lBackGroundColor;
 int g_bDrawingBlackFrame;
 int GLI_g_AnimatedTextureToUse;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\spritegli.c lines 138–153 */
-/* addr: 0x002b0640  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 138
- *   +0x0010 -> line 142
- *   +0x0018 -> line 144
- *   +0x001c -> line 146
- *   +0x0034 -> line 147
- *   +0x0038 -> line 149
- *   +0x0050 -> line 150
- *   +0x0068 -> line 151
- *   +0x006c -> line 152
- *   +0x0078 -> line 153
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 struct GLI_SpecificPS2GL_Structure_ {
     unsigned int Flags; /* +0x0 */
     int pVertexArrayHandles; /* +0x4 */
@@ -202,26 +186,6 @@ void GLI_vCleanSpecificStructure(GLI_SpecificPS2GL_Structure_* pTemp)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\spritegli.c lines 789–811 */
-/* addr: 0x002b06d0  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 789
- *   +0x0010 -> line 790
- *   +0x0014 -> line 794
- *   +0x001c -> line 795
- *   +0x002c -> line 799
- *   +0x003c -> line 797
- *   +0x0040 -> line 808
- *   +0x0044 -> line 807
- *   +0x0048 -> line 799
- *   +0x005c -> line 800
- *   +0x0080 -> line 801
- *   +0x00a8 -> line 808
- *   +0x00b0 -> line 809
- *   +0x00b4 -> line 811
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 float GLI_vGetGlobalAlpha(void);
 void GLI_vSetGlobalAlpha(float Alpha);
 
@@ -243,26 +207,6 @@ void GLI_vClearViewportRegion(void)
     GLI_g_fZValueForSprite = OldZValue;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\spritegli.c lines 757–782 */
-/* addr: 0x002b07a0  size: 192 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 757
- *   +0x0028 -> line 761
- *   +0x0030 -> line 764
- *   +0x003c -> line 765
- *   +0x0044 -> line 767
- *   +0x0048 -> line 773
- *   +0x004c -> line 767
- *   +0x0060 -> line 770
- *   +0x0068 -> line 773
- *   +0x006c -> line 771
- *   +0x0070 -> line 775
- *   +0x008c -> line 777
- *   +0x0094 -> line 781
- *   +0x00a0 -> line 782
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vEndWorldSprites(void);
 void GLI_vDraw2DSpriteWithPercent(GLD_tdstViewportAttributes_* p_stVpt, float xMinX, float xMinY, float xMaxX, float xMaxY, GLI_tdstMaterial_* hMaterial);
 void GLI_vEndNewSprite(void);

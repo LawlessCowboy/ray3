@@ -53,25 +53,6 @@ struct SAI_tdstInternalStructure_ {
 
 SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 84–110 */
-/* addr: 0x00319870  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 84
- *   +0x0010 -> line 86
- *   +0x0014 -> line 88
- *   +0x0040 -> line 92
- *   +0x0070 -> line 95
- *   +0x0084 -> line 97
- *   +0x008c -> line 99
- *   +0x00a8 -> line 101
- *   +0x00b0 -> line 103
- *   +0x00cc -> line 105
- *   +0x00d8 -> line 106
- *   +0x00fc -> line 109
- *   +0x0100 -> line 110
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern unsigned char g_ucSAIModuleId;
 void Erm_fn_ClearLastError();
 
@@ -99,50 +80,16 @@ unsigned short SAI_fn_eVerifyFlags(unsigned short eFlags)
     return eFlags;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 143–143 */
-/* addr: 0x00319990  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 143
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SAI_fn_bInitAllWhen(int _eUserFlags)
 {
     return SAI_fn_bInitAllTableWhen(&SAI_g_stInternalStructure, _eUserFlags);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 138–138 */
-/* addr: 0x003199a0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 138
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags)
 {
     return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, param0, _ulSize, 0x5000, _eFlags);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 99–134 */
-/* addr: 0x003199c0  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 99
- *   +0x0014 -> line 104
- *   +0x0020 -> line 105
- *   +0x0024 -> line 104
- *   +0x0028 -> line 105
- *   +0x0038 -> line 107
- *   +0x0090 -> line 112
- *   +0x0098 -> line 115
- *   +0x00a0 -> line 118
- *   +0x00a8 -> line 121
- *   +0x00b0 -> line 124
- *   +0x00b8 -> line 126
- *   +0x00c0 -> line 133
- *   +0x00c4 -> line 134
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 SAI_tdstListEntry_* fn_hSearchAnElementInList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_vData, unsigned short eUserFlags);
 
 /* Debug signature records no return type; the target returns p_vReturn in v0. */
@@ -186,73 +133,31 @@ void* SAI_fn_p_vGetTableValuePointerOf(void* _p_vValue, unsigned short _eFlags)
     return p_vReturn;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 95–95 */
-/* addr: 0x00319aa0  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 95
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags)
 {
     return SAI_fn_bFreeAnElementFromList(&SAI_g_stInternalStructure, _p_vValue, _eFlags);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 70–70 */
-/* addr: 0x00319ac0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 70
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SAI_fn_bInsertMTHVectorInTable(void* _p_vValue, int _eFlags)
 {
     return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 0xC, 0x5000, _eFlags);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 57–57 */
-/* addr: 0x00319ae0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 57
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SAI_fn_bInsertMTHRealInTable(void* _p_vValue, int _eFlags)
 {
     return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 4, 0x3000, _eFlags);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 51–51 */
-/* addr: 0x00319b00  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 51
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SAI_fn_bInsertPointerInTable(void* _p_vValue, int _eFlags)
 {
     return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 8, 0x7000, _eFlags);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 36–36 */
-/* addr: 0x00319b20  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 36
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SAI_fn_bInsertLongInTable(void* _p_vValue, int _eFlags)
 {
     return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 4, 0x3000, _eFlags);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Pub.c lines 26–26 */
-/* addr: 0x00319b40  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 26
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags)
 {
     return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, 1, 0x1000, _eFlags);

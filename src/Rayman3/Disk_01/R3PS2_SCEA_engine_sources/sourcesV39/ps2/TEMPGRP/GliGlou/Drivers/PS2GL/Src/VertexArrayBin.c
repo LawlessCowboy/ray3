@@ -111,7 +111,6 @@ unsigned int TotalVertexArraySizeWithStrips;
 static unsigned int LastVal2;
 static unsigned int LastVal1;
 
-/* addr: 0x002c7250  size: 8 bytes */
 /* Debug signature rejected: type-record data leaked into it. */
 void GLI_vReinitTempVertexArrays(void)
 {

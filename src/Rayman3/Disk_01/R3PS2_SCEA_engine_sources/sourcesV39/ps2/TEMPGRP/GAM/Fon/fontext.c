@@ -752,17 +752,6 @@ struct tdstAnim3d_ {
 FON_tdstGeneral_ FON_g_stGeneral;
 tdstEngineStructure_ g_stEngineStructure;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Fon\fontext.c lines 40–49 */
-/* addr: 0x00274be0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 40
- *   +0x0004 -> line 41
- *   +0x0008 -> line 40
- *   +0x000c -> line 41
- *   +0x0024 -> line 49
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void FON_fn_vFirstInit(void)
 {
     if (g_ucFONModuleId == 255)

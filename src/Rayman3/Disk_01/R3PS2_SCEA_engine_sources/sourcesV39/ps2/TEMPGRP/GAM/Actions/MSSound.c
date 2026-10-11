@@ -1243,63 +1243,6 @@ struct MTH_stMove {
 
 unsigned char g_ucGameModuleId;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 155–220 */
-/* addr: 0x00271050  size: 412 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 155
- *   +0x0004 -> line 171
- *   +0x0008 -> line 155
- *   +0x000c -> line 171
- *   +0x0010 -> line 155
- *   +0x0014 -> line 171
- *   +0x0018 -> line 155
- *   +0x003c -> line 171
- *   +0x0044 -> line 173
- *   +0x0050 -> line 172
- *   +0x0058 -> line 173
- *   +0x0060 -> line 178
- *   +0x0070 -> line 179
- *   +0x0084 -> line 180
- *   +0x0098 -> line 185
- *   +0x00a0 -> line 188
- *   +0x00a4 -> line 189
- *   +0x00a8 -> line 188
- *   +0x00ac -> line 190
- *   +0x00b0 -> line 188
- *   +0x00b4 -> line 191
- *   +0x00b8 -> line 189
- *   +0x00bc -> line 190
- *   +0x00c0 -> line 191
- *   +0x00c4 -> line 192
- *   +0x00d0 -> line 194
- *   +0x00dc -> line 195
- *   +0x00e0 -> line 196
- *   +0x00e4 -> line 197
- *   +0x00e8 -> line 198
- *   +0x00f4 -> line 201
- *   +0x00f8 -> line 205
- *   +0x00fc -> line 201
- *   +0x0104 -> line 202
- *   +0x0108 -> line 203
- *   +0x010c -> line 204
- *   +0x0110 -> line 205
- *   +0x011c -> line 207
- *   +0x0120 -> line 210
- *   +0x0124 -> line 207
- *   +0x0128 -> line 210
- *   +0x012c -> line 207
- *   +0x0130 -> line 208
- *   +0x0134 -> line 209
- *   +0x0138 -> line 210
- *   +0x013c -> line 211
- *   +0x0148 -> line 214
- *   +0x0154 -> line 216
- *   +0x0168 -> line 217
- *   +0x0170 -> line 219
- *   +0x0174 -> line 220
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements);
 void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint);
 void GEO_vCreateElementSpheres(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbSpheres);
@@ -1358,101 +1301,41 @@ GEO_tdstGeometricObject_* fn_pCreateSphere(float x, float y, float z, float xRad
     return p_stSphere;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 358–358 */
-/* addr: 0x002711f0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 358
- * Recovered from .line/.symtab; the extractor emitted no debug record.
- */
 void fn_vMSSoundSetMechaCharacter(tdstMSSound_* h_MSSound, HIE_tdstSuperObject_* _hMechaCharacter)
 {
     *(HIE_tdstSuperObject_* *)((unsigned char*)h_MSSound + 0xC) = _hMechaCharacter;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 353–353 */
-/* addr: 0x00271200  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 353
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 HIE_tdstSuperObject_* fn_hMSSoundGetMechaCharacter(tdstMSSound_* h_MSSound)
 {
     return *(HIE_tdstSuperObject_* *)((unsigned char*)h_MSSound + 0xC);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 348–348 */
-/* addr: 0x00271210  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 348
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSSoundSetBackGroundDistance(tdstMSSound_* h_MSSound, int _xBackGroundDistance)
 {
     *(int*)((unsigned char*)h_MSSound + 0x4) = _xBackGroundDistance;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 343–343 */
-/* addr: 0x00271220  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 343
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_xMSSoundGetBackGroundDistance(tdstMSSound_* h_MSSound)
 {
     return *(int*)((unsigned char*)h_MSSound + 0x4);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 338–338 */
-/* addr: 0x00271230  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 338
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSSoundSetSaturationDistance(tdstMSSound_* h_MSSound, int _xSaturationDistance)
 {
     *(int*)((unsigned char*)h_MSSound + 0x0) = _xSaturationDistance;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 333–333 */
-/* addr: 0x00271240  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 333
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_xMSSoundGetSaturationDistance(tdstMSSound_* h_MSSound)
 {
     return *(int*)((unsigned char*)h_MSSound + 0x0);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 314–314 */
-/* addr: 0x00271250  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 314
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSSoundCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
     memcpy(_p_stObjectDest->h_MSSound, _p_stObjectSrc->h_MSSound, 0x10);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 277–297 */
-/* addr: 0x00271260  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 277
- *   +0x0010 -> line 278
- *   +0x0018 -> line 279
- *   +0x0044 -> line 281
- *   +0x0050 -> line 282
- *   +0x007c -> line 297
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSSoundDesinit(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {
@@ -1463,21 +1346,6 @@ void fn_vMSSoundDesinit(tdstEngineObject_* p_stObject)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 238–263 */
-/* addr: 0x002712f0  size: 252 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 238
- *   +0x0014 -> line 239
- *   +0x001c -> line 240
- *   +0x0048 -> line 242
- *   +0x0054 -> line 243
- *   +0x0080 -> line 245
- *   +0x00b8 -> line 254
- *   +0x00e0 -> line 256
- *   +0x00e8 -> line 263
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSSoundInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
     if (!p_stObject) {
@@ -1509,19 +1377,6 @@ void fn_vMSSoundInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectIn
 
 int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 212–224 */
-/* addr: 0x002713f0  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 212
- *   +0x0010 -> line 213
- *   +0x0018 -> line 214
- *   +0x0044 -> line 216
- *   +0x0050 -> line 217
- *   +0x007c -> line 219
- *   +0x00a4 -> line 224
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSSoundFree(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {
@@ -1544,22 +1399,6 @@ void SND_fn_vGetDefaultRollOff(_RollOffParam* p_stRollOff);
 int SAI_fn_bInsertLongInTable(void* _p_vValue, int _eFlags);
 int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSSound.c lines 177–188 */
-/* addr: 0x002714b0  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 177
- *   +0x0010 -> line 178
- *   +0x0018 -> line 179
- *   +0x0044 -> line 181
- *   +0x0050 -> line 182
- *   +0x007c -> line 185
- *   +0x0098 -> line 187
- *   +0x009c -> line 185
- *   +0x00a0 -> line 187
- *   +0x00c4 -> line 188
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vMSSoundAlloc(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {

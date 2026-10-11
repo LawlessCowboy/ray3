@@ -27,13 +27,6 @@ int g_a_szFONInformationModule[3];
 int g_szFONModuleName;
 FON_tdstGeneral_ FON_g_stGeneral;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Fon\fonfont.c lines 291–291 */
-/* addr: 0x00274b90  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 291
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned int fn_ulStdGameSizeOf(void)
 {
     return 100;

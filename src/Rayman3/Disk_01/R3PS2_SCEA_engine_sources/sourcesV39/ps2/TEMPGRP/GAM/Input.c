@@ -1445,21 +1445,6 @@ unsigned char g_ucDisplayActivatedGendoors;
 tdstEngineStructure_ g_stEngineStructure;
 tdst_EntryActions_ g_st_3DOS_EntryActions;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Input.c lines 353–398 */
-/* addr: 0x00265050  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 353
- *   +0x0008 -> line 354
- *   +0x0010 -> line 360
- *   +0x0018 -> line 367
- *   +0x0020 -> line 381
- *   +0x0028 -> line 382
- *   +0x0030 -> line 389
- *   +0x0038 -> line 392
- *   +0x0040 -> line 398
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vLastDesinitEngine(void)
 {
     GAM_fn_vSetEngineInFixMode();
@@ -1507,18 +1492,6 @@ void fn_vLastDesinitEngine(void)
 
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Input.c lines 1028–1156 */
-/* addr: 0x002650a0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1028
- *   +0x0008 -> line 1030
- *   +0x0010 -> line 1033
- *   +0x0020 -> line 1035
- *   +0x0028 -> line 1037
- *   +0x0030 -> line 1156
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vEngineReadInput(void)
 {
     fn_vManageControlerDisconnection();

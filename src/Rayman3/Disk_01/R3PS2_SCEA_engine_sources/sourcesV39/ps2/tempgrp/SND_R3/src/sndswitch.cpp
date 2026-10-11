@@ -373,19 +373,6 @@ struct CIdObj {
 
 anon_0 __vt__12CSwitchNotif;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndswitch.cpp lines 42–60 */
-/* addr: 0x001867c0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 42
- *   +0x000c -> line 47
- *   +0x0020 -> line 56
- *   +0x003c -> line 57
- *   +0x0050 -> line 58
- *   +0x005c -> line 59
- *   +0x0060 -> line 60
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bGetVolumeLineModifierString(int s32_ModifierId, char* pch_Buffer, int s32_Size);
 unsigned char fn_bCreateVolumeModifier(const char* pch_Buffer, float f32x_Volume);
 

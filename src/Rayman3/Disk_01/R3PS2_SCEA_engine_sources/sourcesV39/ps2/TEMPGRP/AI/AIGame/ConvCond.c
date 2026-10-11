@@ -2945,19 +2945,6 @@ struct tdstProhibit_ {
 
 tdstConditionEntry_ a_stConditionTable[178];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvCond.c lines 140–152 */
-/* addr: 0x00211590  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 140
- *   +0x000c -> line 146
- *   +0x0010 -> line 140
- *   +0x0014 -> line 141
- *   +0x001c -> line 146
- *   +0x003c -> line 148
- *   +0x0054 -> line 152
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeInterpret_* fn_p_stEvalCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int lValue = 0;
@@ -2971,14 +2958,6 @@ tdstNodeInterpret_* fn_p_stEvalCondition(HIE_tdstSuperObject_* p_SuperObjPerso, 
     *(tdeVariableType_ *)((unsigned char *)p_stValue + 0xC) = E_vt_Integer;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvCond.c lines 126–127 */
-/* addr: 0x00211600  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 126
- *   +0x0010 -> line 127
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucGetConditionUltraOperator(tdeCondId_ eCondId)
 {
     return a_stConditionTable[eCondId].bUltraCondtionFlag;

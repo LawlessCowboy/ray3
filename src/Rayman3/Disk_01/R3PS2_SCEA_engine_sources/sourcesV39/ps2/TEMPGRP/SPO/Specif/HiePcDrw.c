@@ -844,21 +844,6 @@ float g_xPercent;
 unsigned char bViewingInMirror;
 int Global_CharacterModuleBeingDisplayed;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\Specif\HiePcDrw.c lines 45–51 */
-/* addr: 0x00322890  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 45
- *   +0x0018 -> line 47
- *   +0x001c -> line 46
- *   +0x0020 -> line 47
- *   +0x0028 -> line 46
- *   +0x0038 -> line 47
- *   +0x0050 -> line 48
- *   +0x0054 -> line 49
- *   +0x0058 -> line 51
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern HIE_tdstSuperObject_* gd_hFixSPO[32];
 extern short g_xFixIndex;
 extern short g_xFixIndexSave;
@@ -875,60 +860,6 @@ void SPO_ReinitSuperimposedArray(void)
     g_xFixIndexSave = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\Specif\HiePcDrw.c lines 357–443 */
-/* addr: 0x003228f0  size: 656 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 357
- *   +0x002c -> line 364
- *   +0x0034 -> line 365
- *   +0x003c -> line 366
- *   +0x0048 -> line 369
- *   +0x004c -> line 373
- *   +0x0050 -> line 372
- *   +0x0054 -> line 373
- *   +0x005c -> line 376
- *   +0x0064 -> line 377
- *   +0x0070 -> line 379
- *   +0x0098 -> line 380
- *   +0x00a0 -> line 382
- *   +0x00ac -> line 384
- *   +0x00d4 -> line 385
- *   +0x00dc -> line 386
- *   +0x00e4 -> line 388
- *   +0x0100 -> line 389
- *   +0x0108 -> line 391
- *   +0x0124 -> line 392
- *   +0x012c -> line 393
- *   +0x0134 -> line 396
- *   +0x0144 -> line 398
- *   +0x014c -> line 401
- *   +0x015c -> line 403
- *   +0x0164 -> line 405
- *   +0x016c -> line 409
- *   +0x0170 -> line 411
- *   +0x0174 -> line 412
- *   +0x017c -> line 414
- *   +0x01a8 -> line 415
- *   +0x01b0 -> line 417
- *   +0x01bc -> line 419
- *   +0x01c8 -> line 421
- *   +0x01d4 -> line 422
- *   +0x01dc -> line 423
- *   +0x0204 -> line 424
- *   +0x020c -> line 426
- *   +0x0214 -> line 428
- *   +0x021c -> line 430
- *   +0x022c -> line 431
- *   +0x0234 -> line 433
- *   +0x0244 -> line 438
- *   +0x0248 -> line 436
- *   +0x024c -> line 438
- *   +0x025c -> line 439
- *   +0x0260 -> line 442
- *   +0x026c -> line 443
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 float GLI_vGetGlobalAlpha(void);
 float GEO_xGetZFarTransparencyLevel(void);
 void GLI_vSetGlobalAlpha(float Alpha);

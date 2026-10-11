@@ -2963,66 +2963,26 @@ struct tdstListOfMacro_ {
 tdstFieldEntry_ a_stFieldTable[20];
 tdstFieldTypeEntry_ a_stFieldTypeTable[5];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFild.c lines 230–231 */
-/* addr: 0x00211620  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 230
- *   +0x0018 -> line 231
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char (*fn_p_fn_pGetFieldSetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*)
 {
     return a_stFieldTable[eFieldId].p_fn_cSetFieldFunction;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFild.c lines 225–226 */
-/* addr: 0x00211640  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 225
- *   +0x0018 -> line 226
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char (*fn_p_fn_pGetFieldGetFunctionPtr(tdeFieldId_ eFieldId))(HIE_tdstSuperObject_*, tdstGetSetParam_*)
 {
     return a_stFieldTable[eFieldId].p_fn_cGetFieldFunction;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFild.c lines 120–121 */
-/* addr: 0x00211660  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 120
- *   +0x0018 -> line 121
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdeFieldTypeId_ fn_eGetEngineFieldType(tdeFieldId_ eFieldId)
 {
     return a_stFieldTable[eFieldId].eType;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFild.c lines 114–115 */
-/* addr: 0x00211680  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 114
- *   +0x0018 -> line 115
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void (*fn_p_fn_pGetFieldTypeSetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*)
 {
     return a_stFieldTypeTable[eFieldTypeId].fn_p_fn_vSetTypeFunction;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvFild.c lines 109–110 */
-/* addr: 0x002116a0  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 109
- *   +0x0018 -> line 110
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void (*fn_p_fn_pGetFieldTypeGetFunctionPtr(tdeFieldTypeId_ eFieldTypeId))(tdstGetSetParam_*)
 {
     return a_stFieldTypeTable[eFieldTypeId].fn_p_fn_vGetTypeFunction;

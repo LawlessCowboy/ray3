@@ -69,14 +69,6 @@ int GLI_gs_lCurrentDisplayMode;
 GLI_tdstDisplayMode_ GLI_gs_a_stDisplayMode[32];
 int g_bDrawingBlackFrame;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\DispMode.c lines 126–128 */
-/* addr: 0x002a8510  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 126
- *   +0x0004 -> line 128
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* The target reads COP0 Count with mfc0, which MWCC cannot emit from C;
  * only that instruction is written as asm. */
 void GLI_fn_vTimerPS2Counter(unsigned int* pCount)
@@ -86,17 +78,6 @@ void GLI_fn_vTimerPS2Counter(unsigned int* pCount)
     *pCount = counter;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\DispMode.c lines 616–619 */
-/* addr: 0x002a8520  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 616
- *   +0x000c -> line 617
- *   +0x0018 -> line 616
- *   +0x0020 -> line 617
- *   +0x0028 -> line 619
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_fn_vDoCompleteFadeOut(void)
 {
     float fSpeed = 0.1f;
@@ -104,14 +85,6 @@ void GLI_fn_vDoCompleteFadeOut(void)
     GLI_g_CompleteFadeCurrentValue = 1.0f - GLI_g_CompleteFadeDirection;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\DispMode.c lines 561–563 */
-/* addr: 0x002a8550  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 561
- *   +0x0004 -> line 563
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_fn_vInitInstantFadeIn(unsigned int ulNumberOfFrame)
 {
     GLI_g_ulFadeNumberOfFrameIn = ulNumberOfFrame;

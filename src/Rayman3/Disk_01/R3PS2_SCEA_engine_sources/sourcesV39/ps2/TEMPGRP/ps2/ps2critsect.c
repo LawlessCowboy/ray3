@@ -23,32 +23,11 @@ struct SemaParam {
     unsigned int option; /* +0x14 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2critsect.c lines 1574–1576 */
-/* addr: 0x00318d90  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1574
- *   +0x0004 -> line 1575
- *   +0x0008 -> line 1574
- *   +0x0020 -> line 1576
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int channel_debug_printf(int a0, int a1, ...)
 {
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2critsect.c lines 72–89 */
-/* addr: 0x00318dc0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 72
- *   +0x0008 -> line 81
- *   +0x0018 -> line 83
- *   +0x0020 -> line 85
- *   +0x0028 -> line 89
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS)
 {
     if (p_stCS->ReentrancyCount-- == 0)
@@ -58,27 +37,6 @@ void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2critsect.c lines 36–68 */
-/* addr: 0x00318e00  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 36
- *   +0x0018 -> line 40
- *   +0x001c -> line 48
- *   +0x0024 -> line 50
- *   +0x0028 -> line 48
- *   +0x002c -> line 50
- *   +0x003c -> line 51
- *   +0x0040 -> line 52
- *   +0x0044 -> line 54
- *   +0x0058 -> line 55
- *   +0x0068 -> line 60
- *   +0x0070 -> line 63
- *   +0x0074 -> line 65
- *   +0x0078 -> line 66
- *   +0x0080 -> line 68
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* The target writes COP0 register 24 (mtc0 toto, $24); C cannot express it.
  * Spelled with the R5900 alias mtbpc, MWCC schedules it like an ordinary
  * instruction, so it fills the delay slot of the first path's branch and

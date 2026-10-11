@@ -1406,22 +1406,6 @@ unsigned char g_ucGameModuleId;
 tdstEngineStructure_ g_stEngineStructure;
 int g_InGameMenu2DActivated;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\DspFix.c lines 74–85 */
-/* addr: 0x00282ab0  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 74
- *   +0x0004 -> line 75
- *   +0x0008 -> line 74
- *   +0x0010 -> line 77
- *   +0x0018 -> line 79
- *   +0x0024 -> line 80
- *   +0x002c -> line 82
- *   +0x0030 -> line 83
- *   +0x0038 -> line 84
- *   +0x003c -> line 85
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 struct tdstSubMapPosition_ {
     int lSubMap; /* +0x0 */
     MAT_tdstTransformation_* hPosition; /* +0x4 */
@@ -1446,17 +1430,6 @@ MAT_tdstTransformation_* GAM_fn_hGetSubMapPosition(int _lSubMapNumber, int _lEnt
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\DspFix.c lines 170–175 */
-/* addr: 0x00282b00  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 170
- *   +0x0008 -> line 171
- *   +0x0010 -> line 172
- *   +0x0018 -> line 173
- *   +0x001c -> line 175
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GAM_fn_vResetClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
 {
     _p_stFixViewportAttr->dwClipTopInPix = GAM_g_dwOldTop;
@@ -1466,23 +1439,6 @@ void GAM_fn_vResetClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAtt
     GLI_vRemoveScissors(_p_stFixViewportAttr);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\DspFix.c lines 150–160 */
-/* addr: 0x00282b30  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 150
- *   +0x0004 -> line 155
- *   +0x0008 -> line 150
- *   +0x000c -> line 151
- *   +0x0014 -> line 152
- *   +0x001c -> line 153
- *   +0x0024 -> line 155
- *   +0x0028 -> line 156
- *   +0x0030 -> line 157
- *   +0x0038 -> line 158
- *   +0x003c -> line 160
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GAM_fn_vClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
 {
     unsigned int ulClipValue;
@@ -1502,16 +1458,6 @@ void GAM_fn_vClipFixObject(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
     GLI_vSetScissors(_p_stFixViewportAttr);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\DspFix.c lines 132–136 */
-/* addr: 0x00282b80  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 132
- *   +0x0004 -> line 133
- *   +0x0008 -> line 134
- *   +0x000c -> line 136
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int _lRight)
 {
     GAM_g_dwClipping_Top = _lTop;
@@ -1520,14 +1466,6 @@ void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int 
     GAM_g_dwClipping_Bottom = _lRight;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\PC\DspFix.c lines 116–118 */
-/* addr: 0x00282ba0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 116
- *   +0x0004 -> line 118
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vAskToDisplayVignette(void)
 {
     g_stDisplayVignetteDuringPlaying.bAskToDisplayVignette = 0;

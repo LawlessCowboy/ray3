@@ -2944,13 +2944,6 @@ struct SCT_tdstListOfSoundEvent_ {
 
 tdstOperatorEntry_ a_stOperatorTable[29];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvOper.c lines 123–123 */
-/* addr: 0x00211730  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 123
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeInterpret_* fn_p_stEvalOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     a_stOperatorTable[p_stTree->uDummy.uId.eOperatorId].p_fn_p_stOperatorFunction(p_SuperObjPerso, (tdstNodeInterpret_ *)((unsigned char *)p_stTree + 8), p_stValue);

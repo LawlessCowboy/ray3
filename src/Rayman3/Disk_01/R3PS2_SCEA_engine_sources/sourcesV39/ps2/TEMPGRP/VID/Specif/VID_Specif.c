@@ -50,18 +50,6 @@ char* strcpy(char*, const char*);
 unsigned int movie(char* name, int interruptable, float fVolume);
 int printf(const char*, ...);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\VID_Specif.c lines 80–86 */
-/* addr: 0x0012f5a0  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 80
- *   +0x0040 -> line 81
- *   +0x0058 -> line 82
- *   +0x0060 -> line 83
- *   +0x007c -> line 84
- *   +0x0080 -> line 86
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void VIDSPE_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume)
 {
     gs_fVideoVolume = (1.0f / 127.0f) * ulVideoSoundVolume;
@@ -73,23 +61,6 @@ void VIDSPE_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume)
     printf("Video Volume Set to %d\n", ulVideoSoundVolume);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\VID_Specif.c lines 51–68 */
-/* addr: 0x0012f630  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 51
- *   +0x0004 -> line 53
- *   +0x0008 -> line 51
- *   +0x0010 -> line 53
- *   +0x0014 -> line 54
- *   +0x0018 -> line 56
- *   +0x0020 -> line 57
- *   +0x0028 -> line 59
- *   +0x0044 -> line 65
- *   +0x0060 -> line 67
- *   +0x0070 -> line 68
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void VIDSPE_fn_vPlayVideoNow(char* p_szDirectFileName)
 {
 {
@@ -119,15 +90,6 @@ void VIDSPE_fn_vPlayVideoNow(char* p_szDirectFileName)
 }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\VID_Specif.c lines 32–46 */
-/* addr: 0x0012f6b0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 32
- *   +0x0034 -> line 35
- *   +0x0038 -> line 46
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* VID_fn_vSetVideoQuality tail-forwards both arguments; ucBPP is unused. */
 void VIDSPE_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality)
 {

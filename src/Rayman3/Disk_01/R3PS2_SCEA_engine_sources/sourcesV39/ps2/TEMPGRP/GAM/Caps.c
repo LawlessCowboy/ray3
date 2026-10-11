@@ -1116,21 +1116,6 @@ struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn {
     int lNumberOfElementsDyn; /* +0x8 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Caps.c lines 201–211 */
-/* addr: 0x0025d450  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 201
- *   +0x0004 -> line 202
- *   +0x0008 -> line 201
- *   +0x0010 -> line 202
- *   +0x001c -> line 204
- *   +0x0040 -> line 206
- *   +0x0058 -> line 208
- *   +0x0084 -> line 210
- *   +0x008c -> line 211
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Only the leading member of the engine structure is used in this TU. */
 struct tdstEngineStructure_ {
     unsigned char eEngineMode; /* +0x0 */
@@ -1154,21 +1139,6 @@ void fn_vChangeEngineMode(unsigned char eNewMode)
     g_stEngineStructure.eEngineMode = eNewMode;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Caps.c lines 54–71 */
-/* addr: 0x0025d4f0  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 54
- *   +0x0024 -> line 58
- *   +0x0030 -> line 59
- *   +0x0038 -> line 62
- *   +0x003c -> line 63
- *   +0x0044 -> line 65
- *   +0x0054 -> line 66
- *   +0x005c -> line 68
- *   +0x0064 -> line 71
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vChangeCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities, int lValue)
 {
     switch (lValue)
@@ -1190,41 +1160,17 @@ void fn_vChangeCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32C
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Caps.c lines 49–50 */
-/* addr: 0x0025d560  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 49
- *   +0x0010 -> line 50
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSubCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
 {
     tdstStandardGame_* p_stStandardGame = _p_stObject->h_StandardGame;
     p_stStandardGame->ubf32Capabilities -= p_stStandardGame->ubf32Capabilities & _ubf32Capabilities;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Caps.c lines 44–45 */
-/* addr: 0x0025d580  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 44
- *   +0x000c -> line 45
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vAddCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capabilities)
 {
     _p_stObject->h_StandardGame->ubf32Capabilities |= _ubf32Capabilities;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Caps.c lines 39–40 */
-/* addr: 0x0025d5a0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 39
- *   +0x0004 -> line 40
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned int fn_ulGetCapabilities(tdstEngineObject_* _p_stObject)
 {
     return _p_stObject->h_StandardGame->ubf32Capabilities;

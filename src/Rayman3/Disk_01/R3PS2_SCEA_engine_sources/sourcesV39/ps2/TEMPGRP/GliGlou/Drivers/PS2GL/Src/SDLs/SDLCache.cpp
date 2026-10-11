@@ -1146,28 +1146,11 @@ void (*PS2glLiberator)(void*);
 unsigned int GLI_g_FrameNumber;
 extern void* (*PS2glAllocator64)(unsigned int);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 79–79 */
-/* addr: 0x002d7540  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 79
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* C_Sdl::__nw(unsigned int Size)
 {
     return PS2glAllocator64(Size);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 133–136 */
-/* addr: 0x002d7550  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 133
- *   +0x0010 -> line 134
- *   +0x0054 -> line 135
- *   +0x0058 -> line 136
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 inline C_SdlCache::~C_SdlCache()
 {
     tdstSDLCacheEntry_* pEntry = m_pList;
@@ -1186,43 +1169,11 @@ void GLI_vDeleteSdlCache(void)
     GLI_g_SdlCache = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 128–130 */
-/* addr: 0x002d75c0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 128
- *   +0x0008 -> line 129
- *   +0x0020 -> line 130
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vInitSdlCache(void)
 {
     GLI_g_SdlCache = (int)new C_SdlCache;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 93–124 */
-/* addr: 0x002d75f0  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 93
- *   +0x000c -> line 96
- *   +0x0010 -> line 97
- *   +0x0014 -> line 99
- *   +0x0018 -> line 101
- *   +0x0020 -> line 103
- *   +0x0034 -> line 105
- *   +0x0038 -> line 106
- *   +0x003c -> line 107
- *   +0x0040 -> line 108
- *   +0x0044 -> line 109
- *   +0x0050 -> line 111
- *   +0x0058 -> line 115
- *   +0x0060 -> line 119
- *   +0x0068 -> line 120
- *   +0x0074 -> line 123
- *   +0x0078 -> line 124
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned int C_SdlCache::FindOldestSDLInstanceAndRemoveIt(void)
 {
     _SDC_Instance_* pOldestInstance;
@@ -1248,27 +1199,6 @@ unsigned int C_SdlCache::FindOldestSDLInstanceAndRemoveIt(void)
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 56–82 */
-/* addr: 0x002d7680  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 56
- *   +0x0014 -> line 59
- *   +0x0024 -> line 62
- *   +0x0030 -> line 64
- *   +0x0038 -> line 68
- *   +0x003c -> line 70
- *   +0x0044 -> line 72
- *   +0x0050 -> line 74
- *   +0x0058 -> line 75
- *   +0x0064 -> line 76
- *   +0x006c -> line 78
- *   +0x0070 -> line 79
- *   +0x0074 -> line 80
- *   +0x007c -> line 81
- *   +0x0080 -> line 82
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_SdlCache::RemoveSdlInstance(_SDC_Instance_* pInstance)
 {
     tdstSDLCacheEntry_* pPrevious;
