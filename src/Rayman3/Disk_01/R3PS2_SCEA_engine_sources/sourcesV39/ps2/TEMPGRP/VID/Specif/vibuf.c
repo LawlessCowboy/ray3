@@ -566,8 +566,26 @@ int viBufReset(anon_3* f)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int CreateSema(SemaParam* param);
+
 int viBufCreate(anon_3* f, long double* data, long double* tag, int size, anon_2* ts, int n_ts)
 {
     SemaParam param;
-    /* TODO: decompile from asm/... */
+
+    f->data = (int)data;
+    f->tag = ((unsigned int)tag & 0x0fffffff) | 0x20000000;
+    f->n = size;
+    f->buffSize = size << 11;
+    f->ts = ts;
+    f->n_ts = n_ts;
+
+    param.initCount = 1;
+    param.maxCount = 1;
+    f->sema = CreateSema(&param);
+
+    viBufReset(f);
+
+    f->totalBytes = 0;
+
+    return 1;
 }

@@ -445,6 +445,15 @@ void GLI_vRecomputeCharacterNormals(_SDC_Instance_* pInstance, unsigned int* pIn
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Target writes COP0 register 24 (mtc0 zero, $24); C cannot express it. The
+ * R5900 alias mtbpc lets MWCC schedule it as retail did. */
+inline void GLI_vClearCop0Register24(void)
+{
+    asm { mtbpc zero }
+}
+
+void* memset(void* p, int c, unsigned int n);
+
 /* Callers pass NbVertices in t0 and pVBLWait in t1 (the callee saves t1); the debug record drops NbVertices. */
 void GLI_vRecomputeCharacterNormalsReal(unsigned int* pInstanceNormals, GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* pPoints, unsigned int xNbPoints, unsigned int NbVertices, unsigned int* pVBLWait)
 {
@@ -456,7 +465,151 @@ void GLI_vRecomputeCharacterNormalsReal(unsigned int* pInstanceNormals, GEO_tdst
     float (*pTempArray)[4];
     void* pSPR;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    pTempArray = GLI_g_TempArray;
+    FMask = 0x7f7f7f7f;
+    if (p_stEIT->d_stListOfFacesAdjacent == 0)
+        return;
+    Mask = 0xf;
+    GLI_vClearCop0Register24();
+    pIndices = (short*)((char*)p_stEIT->d_stListOfFacesAdjacent + 4);
+    pInstanceNormals = (unsigned int*)((unsigned int)pInstanceNormals | 0x20000000);
+    if (*(volatile unsigned int*)pVBLWait == 0)
+    {
+        GLI_vClearCop0Register24();
+        return;
+    }
+    memset(pTempArray, 0, xNbPoints << 4);
+    if (*(volatile unsigned int*)pVBLWait == 0)
+    {
+        GLI_vClearCop0Register24();
+        return;
+    }
+    pIndexArray = (unsigned short*)p_stEIT->d_stListOfFacesTripled;
+    GLI_vClearCop0Register24();
+    GLI_vClearCop0Register24();
+    i = p_stEIT->xNbFaces;
+    while (i != 0 && *(volatile unsigned int*)pVBLWait != 0)
+    {
+        asm {
+            sub at, at, at
+            sub v0, v0, v0
+            sub v1, v1, v1
+            lh t6, 0(pIndexArray)
+            lh t7, 2(pIndexArray)
+            lh s0, 4(pIndexArray)
+            sll a0, t6, 3
+            sll a1, t7, 3
+            sll a2, s0, 3
+            sll at, t6, 2
+            sll v0, t7, 2
+            sll v1, s0, 2
+            add at, at, a0
+            add v0, v0, a1
+            add v1, v1, a2
+            add at, at, pPoints
+            add v0, v0, pPoints
+            add v1, v1, pPoints
+            lq a0, 0(at)
+            lq a1, 0x10(at)
+            lq a2, 0(v0)
+            lq a3, 0x10(v0)
+            lq t0, 0(v1)
+            lq t1, 0x10(v1)
+            and at, at, Mask
+            and v0, v0, Mask
+            and v1, v1, Mask
+            mtsa at
+            qfsrv a0, a1, a0
+            sll t6, t6, 4
+            sll t7, t7, 4
+            sll s0, s0, 4
+            mtsa v0
+            qfsrv a2, a3, a2
+            add t6, t6, pTempArray
+            add t7, t7, pTempArray
+            add s0, s0, pTempArray
+            mtsa v1
+            qfsrv t0, t1, t0
+            qmtc2 a0, vf1
+            qmtc2 a2, vf2
+            qmtc2 t0, vf3
+            vsub.xyzw vf4, vf2, vf1
+            vsub.xyzw vf5, vf3, vf2
+            lqc2 vf7, 0(t6)
+            vopmula.xyz ACC, vf4, vf5
+            lqc2 vf8, 0(t7)
+            vopmsub.xyz vf6, vf5, vf4
+            lqc2 vf9, 0(s0)
+            vadd.xyzw vf7, vf7, vf6
+            vadd.xyzw vf8, vf8, vf6
+            vadd.xyzw vf9, vf9, vf6
+            sqc2 vf7, 0(t6)
+            sqc2 vf8, 0(t7)
+            sqc2 vf9, 0(s0)
+        }
+        pIndexArray += 3;
+        i--;
+    }
+    GLI_vClearCop0Register24();
+    if (*(volatile unsigned int*)pVBLWait == 0)
+        return;
+    GLI_vClearCop0Register24();
+    {
+        float* pPacker = GLI_g_NormalPacker;
+        float* pMul = GLI_g_MulVal;
+        asm {
+            lqc2 vf15, 0(pPacker)
+            lqc2 vf16, 0(pMul)
+            lqc2 vf4, 0(pTempArray)
+            vmul.xyz vf5, vf4, vf4
+            vaddy.x vf5, vf5, vf5
+            vaddz.x vf5, vf5, vf5
+            vrsqrt Q, vf0w, vf5x
+            vwaitq
+            addi pTempArray, pTempArray, 0x10
+        }
+    }
+    do
+    {
+        asm {
+            vwaitq
+            vmulq.xyz vf7, vf4, Q
+            lqc2 vf4, 0(pTempArray)
+            lw zero, 0x10(pTempArray)
+            vmul.xyz vf5, vf4, vf4
+            vaddy.x vf5, vf5, vf5
+            vaddz.x vf5, vf5, vf5
+            vrsqrt Q, vf0w, vf5x
+            vmul.xyzw vf7, vf7, vf16
+            vadd.xyzw vf7, vf7, vf16
+            vadd.xyzw vf7, vf7, vf15
+            qmfc2 at, vf7
+            sub v0, v0, v0
+            ppach at, at, at
+            ppacb at, at, at
+            lh v0, 0(pIndices)
+            psubb at, at, FMask
+            beqz v0, done
+            addi pIndices, pIndices, 2
+          again:
+            addi v0, v0, -1
+            lh v1, 0(pIndices)
+            addi pIndices, pIndices, 2
+            li a0, 0x7fff
+            and v1, v1, a0
+            sll v1, v1, 2
+            add v1, v1, pInstanceNormals
+            bnez v0, again
+            sw at, 0(v1)
+          done:
+        }
+        xNbPoints--;
+        if (*(volatile unsigned int*)pVBLWait == 0)
+            break;
+        pTempArray += 1;
+    } while (xNbPoints != 0);
+    GLI_vClearCop0Register24();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 1134–1145 */

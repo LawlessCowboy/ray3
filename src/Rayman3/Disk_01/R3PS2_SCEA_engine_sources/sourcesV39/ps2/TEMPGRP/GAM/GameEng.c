@@ -1973,6 +1973,62 @@ void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* h_SupObject)
                          *(unsigned char*)((char*)h_Character->hLinkedObject.p_stSuperObject + 0x28));
 }
 
+void GAM_fn_vInitTableOfMovedOnes(void);
+void SND_fn_vSynchroSound(void);
+int fn_bIsEngineInPause(void);
+void HIE_fn_vInvalidateAllGlobalMatrices(int);
+int MC_fn_hGetFirstMainCharNode(void);
+int MC_fn_hGetNewMainCharacter(int);
+void MC_fn_vSetCharacterInMainCharacterNode(int, int);
+void MC_fn_vSetNewMainCharacter(int, int);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(int);
+unsigned char fn_bIsTransitionInProgress(void);
+void fn_vKillAllAlwaysInNonActiveSectors(void);
+void fn_vClearUnusedAlwaysInDemoMode(void);
+void HIE_fn_vInitMatrixStack(void);
+int DEMO_fn_bUpdateDynamicHierarchy(int);
+HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int);
+HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructurCineinfo_*);
+void fn_vTreatDynamicHierarchyOfPlatForms(HIE_tdstSuperObject_* hSuperObj);
+void fn_vTreatDynamicHierarchy(HIE_tdstSuperObject_* hSuperObj, HIE_tdstSuperObject_* hMainChar, MTH3D_tdstVector_* p_stMainCharTranslation);
+void MAT_fn_vCompose(MAT_tdstTransformation_*, MAT_tdstTransformation_*, MAT_tdstTransformation_*);
+int CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_*);
+void fn_vSectInfoSetCurrentSector(tdstSectInfo_*, HIE_tdstSuperObject_*);
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_*);
+void fn_vInsertObjectInSectorList(HIE_tdstSuperObject_*, HIE_tdstSuperObject_*);
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_*);
+void GAM_fn_vSectInfoTestChangeSectorForCharacter(HIE_tdstSuperObject_*);
+void CAM_fn_vCameraManagement(void);
+void GLI_vRefreshAllCyclingTextures(float);
+static inline int fn_bDynamicEndFlag2(DNM_stDynamics* p_stDyn)
+{
+    int bFlag = 0;
+    if (p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 2) bFlag = 1;
+    return bFlag;
+}
+static inline int fn_bDynamicFlag2(DNM_stDynamics* p_stDyn)
+{
+    int bFlag = 0;
+    if (p_stDyn->m_tdstDynamicsBaseBlock.ulFlags & 2) bFlag = 1;
+    return bFlag;
+}
+static inline int fn_hGetFixedCamera(void)
+{
+    int hCamera;
+    if (g_stEngineStructure.stCineManager == NULL)
+        hCamera = 0;
+    else
+        hCamera = (int)g_stEngineStructure.stCineManager->gp_stSPOHandleCamera;
+    return hCamera;
+}
+/* The target writes COP0 register 24 (mtc0 zero, $24); C cannot express it.
+ * Spelled with the R5900 alias mtbpc, MWCC schedules it like an ordinary
+ * instruction, as in retail. */
+inline void GAM_vClearCop0Register24(void)
+{
+    asm volatile { mtbpc zero }
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 933–1458 */
 /* addr: 0x00261300  size: 1208 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2054,15 +2110,125 @@ void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* h_SupObject)
  */
 void fn_vEngine(void)
 {
+    unsigned char bSectorChange = 1;
+    float xScale;
     MAT_tdstTransformation_ stTransform;
     tdstCineinfo_* hCineInfo;
     HIE_tdstSuperObject_* hSprObjCamera;
     tdstCineinfo_* param0;
     HIE_tdstSuperObject_* hMainChar;
-    unsigned char bSectorChange;
     DNM_stDynamics* p_stDynamic;
     tdstDynam_* h_Dynam;
-    /* TODO: decompile from asm/... */
+
+    GAM_fn_vInitTableOfMovedOnes();
+    SND_fn_vSynchroSound();
+    if (!fn_bIsEngineInPause())
+    {
+        HIE_fn_vInvalidateAllGlobalMatrices(0);
+        if (MC_fn_hGetNewMainCharacter(MC_fn_hGetFirstMainCharNode()) != 0)
+        {
+            MC_fn_vSetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode(), MC_fn_hGetNewMainCharacter(MC_fn_hGetFirstMainCharNode()));
+            MC_fn_vSetNewMainCharacter(MC_fn_hGetFirstMainCharNode(), 0);
+        }
+        GAM_fn_vUpdateDynamicHierarchy_New();
+        if (g_DEMO_KeybTest != 2)
+        {
+            if (!fn_bIsTransitionInProgress())
+                fn_vKillAllAlwaysInNonActiveSectors();
+        }
+        else
+        {
+            fn_vClearUnusedAlwaysInDemoMode();
+        }
+        HIE_fn_vInitMatrixStack();
+        if (g_DEMO_KeybTest == 2)
+        {
+            if (!(unsigned char)DEMO_fn_bUpdateDynamicHierarchy(0))
+                return;
+        }
+        else
+        {
+            hSprObjCamera = CAM_fn_hGetActiveCamera(0);
+            GAM_vClearCop0Register24();
+            hMainChar = CAM_fn_hCineInfoGetSuperObjectTargeted(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent);
+            fn_vTreatDynamicHierarchyOfPlatForms((HIE_tdstSuperObject_*)gp_stDynamicWorld);
+            fn_vTreatDynamicHierarchy((HIE_tdstSuperObject_*)gp_stDynamicWorld, hMainChar, (MTH3D_tdstVector_*)&hMainChar->hGlobalMatrix->stTransformMatrix.stCol_3);
+            GAM_vClearCop0Register24();
+            if (hSprObjCamera != NULL)
+            {
+                if (fn_hGetFixedCamera() != 0)
+                {
+                    MAT_tdstTransformation_ stTransform = { MAT_eTransform_Rotation, { 0 }, { { -1.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, -1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f } }, { 1.0f, 1.0f, 1.0f, 0.0f } };
+                    GAM_vClearCop0Register24();
+                    hCineInfo = hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+                    xScale = g_stEngineStructure.stCineManager->gp_stFixedCameraMatrix.stScaleVector.xX;
+                    if (xScale < 0.0f)
+                    {
+                        hCineInfo->hCurrent->xFocal = -xScale;
+                        hCineInfo->hWork->xFocal = -xScale;
+                        g_stEngineStructure.stCineManager->gp_stFixedCameraMatrix.stScaleVector.xX = 1.0f;
+                    }
+                    MAT_fn_vCompose(hSprObjCamera->hGlobalMatrix, &g_stEngineStructure.stCineManager->gp_stFixedCameraMatrix, &stTransform);
+                    if (g_ucIsEdInGhostMode && CAM_fn_bSuperObjectIsACamera(hSprObjCamera))
+                    {
+                        fn_vSectInfoSetCurrentSector(hSprObjCamera->hLinkedObject.p_stCharacter->h_SectInfo, fn_h_SectInfoGetCurrentSector(MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter->h_SectInfo));
+                        fn_vInsertObjectInSectorList(fn_h_SectInfoGetCurrentSector(hSprObjCamera->hLinkedObject.p_stCharacter->h_SectInfo), hSprObjCamera);
+                    }
+                    else if (!(unsigned char)(hSprObjCamera->ulFlags & 0x20) && (!CAM_fn_bSuperObjectIsACamera(hSprObjCamera) || g_stEngineStructure.cCameraMode != 1 || !(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hWork->uwDNMFlags & 0x40)))
+                    {
+                        h_Dynam = hSprObjCamera->hLinkedObject.p_stCharacter->h_Dynam;
+                        if (h_Dynam != NULL)
+                        {
+                            p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+                            if (p_stDynamic != NULL)
+                            {
+                                bSectorChange = 1;
+                                if (fn_bDynamicEndFlag2(p_stDynamic))
+                                {
+                                    if (fn_bDynamicFlag2(p_stDynamic))
+                                        bSectorChange = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter == 0;
+                                    else
+                                        bSectorChange = 1;
+                                }
+                            }
+                        }
+                        if (!fn_bIsTransitionInProgress() && bSectorChange)
+                            GAM_fn_vSectInfoTestChangeSectorForCharacter(hSprObjCamera);
+                    }
+                    GAM_vClearCop0Register24();
+                }
+            }
+        }
+        GAM_vClearCop0Register24();
+        if (fn_hGetFixedCamera() == 0)
+            CAM_fn_vCameraManagement();
+        GAM_vClearCop0Register24();
+        GLI_vRefreshAllCyclingTextures((float)g_stEngineStructure.stEngineTimer.ulDeltaTimerCount);
+    }
+    else
+    {
+        HIE_tdstSuperObject_* hSprObjCamera;
+        tdstCineinfo_* hCineInfo;
+        float xScale;
+
+        hSprObjCamera = CAM_fn_hGetActiveCamera(0);
+        if (hSprObjCamera != NULL)
+        {
+            if (fn_hGetFixedCamera() != 0)
+            {
+                MAT_tdstTransformation_ stTransform = { MAT_eTransform_Rotation, { 0 }, { { -1.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, -1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f } }, { 1.0f, 1.0f, 1.0f, 0.0f } };
+                hCineInfo = hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+                xScale = g_stEngineStructure.stCineManager->gp_stFixedCameraMatrix.stScaleVector.xX;
+                    if (xScale < 0.0f)
+                {
+                    hCineInfo->hCurrent->xFocal = -xScale;
+                    hCineInfo->hWork->xFocal = -xScale;
+                    g_stEngineStructure.stCineManager->gp_stFixedCameraMatrix.stScaleVector.xX = 1.0f;
+                }
+                MAT_fn_vCompose(hSprObjCamera->hGlobalMatrix, &g_stEngineStructure.stCineManager->gp_stFixedCameraMatrix, &stTransform);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 838–908 */

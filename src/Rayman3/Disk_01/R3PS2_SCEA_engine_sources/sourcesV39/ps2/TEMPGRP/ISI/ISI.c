@@ -80,9 +80,15 @@ ISI_tdstColor_* ISI_fn_dGetVertexRLI(void* _hISI)
  */
 int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD)
 {
+    /* Permuter-found match (register allocation); the char* temporary and the
+     * index assignment are not original source and need cleaning up. */
+    char* pcLOD;
+    int iIndex;
     ISI_tdstISI_* hISI;
     hISI = (ISI_tdstISI_*)_hISI;
-    return ((int*)((char*)hISI->d_stISILOD + 8))[(int)_xNumISILOD * 3];
+    pcLOD = (char*)hISI->d_stISILOD;
+    pcLOD = pcLOD + 8;
+    return ((int*)pcLOD)[iIndex = (int)_xNumISILOD * 3];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 680–685 */

@@ -445,7 +445,7 @@ struct GEO_tdstEdge_ {
 
 struct C_Vector {
     float Vector[4]; /* +0x0 */
-};
+} __attribute__((aligned(16)));
 
 struct GEO_tdstColor_ {
     float xR; /* +0x0 */
@@ -1069,6 +1069,7 @@ struct C_FxList {
     void DeleteAll(void);
     C_BaseFx* SearchElement(void* pSearchKey);
     void vAddElement(C_BaseFx* pElement);
+    void DeleteAllNoFree(void);
 };
 
 struct tdstLipsSynchValue_ {
@@ -1367,25 +1368,12 @@ float GLI_BIG_GLOBALS_xGlobalAlpha;
 tdstEngineStructure_ g_stEngineStructure;
 int PS2glLiberator;
 
-/* The target writes COP0 register 24 (mtc0 zero, $24) around the effect
- * loops; C cannot express it.  MWCC appends a hazard nop to an asm mtc0 unless
- * the block says .set noreorder, so the closing write carries its nop
- * explicitly where the target has one. */
+/* The target writes COP0 register 24 (mtbpc zero, i.e. mtc0 zero, $24) around
+ * the effect loops; C cannot express it.  The R5900 alias mtbpc is used so MWCC
+ * schedules it like an ordinary instruction (delay slots, hazard nop). */
 inline void FireFx_vClearCop0Register24(void)
 {
-    asm {
-    .set noreorder
-    mtc0 zero, $24
-    }
-}
-
-inline void FireFx_vClearCop0Register24Sync(void)
-{
-    asm {
-    .set noreorder
-    mtc0 zero, $24
-    nop
-    }
+    asm { mtbpc zero }
 }
 
 extern "C" void SDL_UpdateFogs(unsigned int hSDL);
@@ -1518,10 +1506,30 @@ void FireFx_vDesinit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLI_vDrawFireSpriteGroup(GLI_tdstMaterial_* param0, C_Vector* pData, unsigned int NbParticles);
+extern "C" void GLI_vEndWorldSprites(void);
+
 void FireFx_vDisplay(void)
 {
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+    C_FireFx* pFx;
+
+    p = FireFx_g_ListToDisplay.pFirst;
+    if (p)
+    {
+        FireFx_vClearCop0Register24();
+        goto test;
+loop:
+        pFx = (C_FireFx*)p->pFx;
+        GLI_BIG_GLOBALS_xGlobalAlpha = 0.9f;
+        GLI_vDrawFireSpriteGroup(pFx->m_pMat1, pFx->m_pData, pFx->m_NbParticles);
+        p = p->pNext;
+test:
+        if (p) goto loop;
+        FireFx_g_ListToDisplay.DeleteAllNoFree();
+        GLI_vEndWorldSprites();
+        FireFx_vClearCop0Register24();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 295–313 */
@@ -1547,12 +1555,13 @@ void FireFx_vProcess(void)
     if (p)
     {
         FireFx_vClearCop0Register24();
-        while (p)
-        {
-            ((C_FireFx*)p->pFx)->Process();
-            p = p->pNext;
-        }
-        FireFx_vClearCop0Register24Sync();
+        goto test;
+loop:
+        ((C_FireFx*)p->pFx)->Process();
+        p = p->pNext;
+test:
+        if (p) goto loop;
+        FireFx_vClearCop0Register24();
     }
 }
 

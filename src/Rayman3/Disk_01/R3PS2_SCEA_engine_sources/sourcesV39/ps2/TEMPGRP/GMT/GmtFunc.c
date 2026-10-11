@@ -150,10 +150,17 @@ int GMT_fn_xMultipleTestCollideIdentifier(GMT_tdstCollideMaterial_* hCollideMate
 /* addr: 0x002a4ff0  size: 56 bytes */
 int GMT_fn_xTestCollideMaterialTypeOfIdentifier(GMT_tdstCollideMaterial_* hCollideMaterial, short wType)
 {
-    unsigned short xMask = 1 << wType;
-    unsigned short xTmp = (short)xMask & (short)hCollideMaterial->xIdentifier;
-    int bResult = (xTmp == 0);
-    return bResult ^ 1;
+    /* Permuter-found match (register allocation); the xMask reuse and the
+     * pointer to bResult are not original source and need cleaning up. */
+    int bResult;
+    unsigned short xTmp;
+    int* p_bResult;
+    unsigned short xMask;
+    xMask = 1 << (xMask = wType);
+    xTmp = (short)xMask & (short)hCollideMaterial->xIdentifier;
+    p_bResult = &bResult;
+    bResult = (xTmp == 0);
+    return *p_bResult ^ 1;
 }
 
 /* addr: 0x002a5030  size: 8 bytes */

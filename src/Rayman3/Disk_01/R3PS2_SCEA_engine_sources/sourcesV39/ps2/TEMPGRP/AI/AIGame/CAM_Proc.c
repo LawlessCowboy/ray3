@@ -3494,12 +3494,26 @@ tdstNodeInterpret_* CAM_fn_p_stUpdatePosition2(HIE_tdstSuperObject_* _hSuperObjP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcedureId);
+void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+void CAM_fn_vSetTransparencyFlag(tdstCineinfo_* hCineinfo, unsigned char ucFlag);
+
 tdstNodeInterpret_* CAM_fn_p_stCameraSetTransparencyFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stValue;
     tdstCineinfo_* hCineinfo;
     HIE_tdstSuperObject_* hCamera;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+
+    hCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+    CAM_fn_vSetTransparencyFlag(hCineinfo, stValue.uDummy.uParam.ucValue);
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 2099–2106 */
@@ -3690,11 +3704,26 @@ tdstNodeInterpret_* CAM_fn_p_stForceMovingOnRail(HIE_tdstSuperObject_* p_SuperOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcedureId);
+void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+void CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_* hCineinfo);
+
 tdstNodeInterpret_* CAM_fn_p_stForceNormalState(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstCineinfo_* hCineinfo;
     HIE_tdstSuperObject_* hCamera;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+
+    hCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+
+    if (hCineinfo->ucPerIAFlags & 2)
+        CAM_fn_vSetCineinfoCurrentFromVisibility(hCineinfo);
+
+    hCineinfo->ucPerIAFlags &= ~8;
+    hCineinfo->eState = 0;
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 1702–1775 */
@@ -3855,10 +3884,24 @@ tdstNodeInterpret_* CAM_fn_p_stSetForce(HIE_tdstSuperObject_* p_SuperObjPerso, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* CAM_fn_p_stConstants(tdstNodeInterpret_* p_stTree)
+void CAM_memcpy(void* pDest, void* pSrc, int iSize);
+
+tdstNodeInterpret_* CAM_fn_p_stConstants(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    switch (eProcedureId)
+    {
+    case eProc_Cam_SaveConstants:
+        CAM_memcpy(&CAM_g_stCopyCameraConstants, &CAM_g_stCameraConstants, sizeof(CAM_tdstCameraConstants_));
+        break;
+    case eProc_Cam_RestoreConstants:
+        CAM_memcpy(&CAM_g_stCameraConstants, &CAM_g_stCopyCameraConstants, sizeof(CAM_tdstCameraConstants_));
+        break;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 1441–1529 */

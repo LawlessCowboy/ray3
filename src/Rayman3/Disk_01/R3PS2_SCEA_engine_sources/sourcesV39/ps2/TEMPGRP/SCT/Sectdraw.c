@@ -1057,12 +1057,12 @@ struct GMT_tdstCollideMaterial_ {
 };
 
 unsigned int g_bDisplayingActors;
-int g_pActorBeingDisplayed;
+HIE_tdstSuperObject_* g_pActorBeingDisplayed;
 static int bNotCreateDefaultMaterial;
 unsigned char g_ucSCTDisplaySectors;
 tdstEngineStructure_ g_stEngineStructure;
 unsigned char g_bInGameMenu;
-unsigned int SCT_g_DrawingMirrored;
+volatile unsigned int SCT_g_DrawingMirrored;
 char GLI_cGlobalFogIsOn;
 
 extern HIE_tdstSuperObject_* SECT_g_hActiveSectorList_Head;
@@ -1185,16 +1185,138 @@ void SECT_fn_vAddSectorInList(HIE_tdstSuperObject_* _hSectorSO)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Target writes COP0 register 24 (mtc0 zero, $24) several times; C cannot
+ * express it. Spelled with the R5900 alias mtbpc, MWCC schedules it like an
+ * ordinary instruction (delay slots, hazard nop) as retail did. */
+inline void SCT_vClearCop0Register24Sched(void)
+{
+    asm { mtbpc zero }
+}
+/* The write placed right before a call has no hazard nop in the target, which
+ * only the noreorder spelling reproduces. */
+inline void SCT_vClearCop0Register24Open(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    }
+}
+unsigned char fn_bIsTransitionInProgress(void);
+void HIE_fn_vStartPS2MatStack(void);
+void GLIPS2_vPrepareCullingForThisFrame(GLD_tdstViewportAttributes_* p_stVpt);
+void GLI_vSetModifierIntensity(int lMul, int lAdd);
+void SECT_fn_vSendDynamicLightsOfASector();
+unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* _hVpt);
+void GLI_vSetOptimizedSDC(int flag);
+void GLI_vUpdateFogFromSector(SECT_tdstSector_* hSectorObject);
+void GLI_vDMASendObject(unsigned int hSdl);
+void GLI_vDMASendTransparentObject(unsigned int DisplayList);
+void GLI_vClearListOfLightInViewport(void);
+int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
+void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult);
+
 void SCT_fn_vSendSectorWhereIAmToViewport(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask)
 {
+    static char cDrawMap = 1;
+    static char cDrawPerso = 1;
     SECT_tdstSector_* hNeighbourSectorObject;
     int* a_lCullingResultArray;
     SECT_tdstListOfSOSectorsInGraphicInteraction_* hGraphicInteractionChild;
     SECT_tdstSector_* hSectorObject;
     short xI;
-    char cDrawPerso;
-    char cDrawMap;
-    /* TODO: decompile from asm/... */
+
+    hSectorObject = _hSprObjSector->hLinkedObject.p_stSector;
+    SCT_vClearCop0Register24Sched();
+    GLIPS2_vPrepareCullingForThisFrame(_p_stVpt);
+    HIE_fn_vStartPS2MatStack();
+    GLI_vSetModifierIntensity(hSectorObject->lModifierMulIntensity, hSectorObject->lModifierAddIntensity);
+    a_lCullingResultArray = (int*)__alloca(sizeof(int) * (hSectorObject->stListOfSectorsInGraphicInteraction.lNumberOfElementsOpt + 1));
+    hNeighbourSectorObject = _hSprObjSector->hLinkedObject.p_stSector;
+    SECT_fn_vSendDynamicLightsOfASector(_p_stVpt, hNeighbourSectorObject, 0);
+    if (!fn_bIsTransitionInProgress())
+    {
+        hGraphicInteractionChild = hNeighbourSectorObject->stListOfSectorsInGraphicInteraction.hFirstElementOpt;
+        for (xI = 0; xI < hNeighbourSectorObject->stListOfSectorsInGraphicInteraction.lNumberOfElementsOpt; xI++)
+        {
+            SECT_fn_vSendDynamicLightsOfASector(_p_stVpt, hGraphicInteractionChild->hPointerOfSectorSO->hLinkedObject.p_stSector, 0);
+            hGraphicInteractionChild++;
+        }
+    }
+    SCT_vClearCop0Register24Sched();
+    HIE_fn_bInitCameraMatrixStack(_p_stVpt);
+    SCT_vClearCop0Register24Sched();
+    if (cDrawMap)
+    {
+        if (!g_bInGameMenu)
+        {
+            SCT_vClearCop0Register24Sched();
+            GLI_vSetOptimizedSDC(1);
+            if (!hSectorObject->FogIntensity || (!SCT_g_DrawingMirrored && hSectorObject->FogIntensity == 1) || (SCT_g_DrawingMirrored == 1 && hSectorObject->FogIntensity == 2))
+            {
+                GLI_vUpdateFogFromSector(hSectorObject);
+                if (hSectorObject->glOpaqueDisplayList)
+                    GLI_vDMASendObject(hSectorObject->glOpaqueDisplayList);
+                if (hSectorObject->glTransparentDisplayList)
+                    GLI_vDMASendTransparentObject(hSectorObject->glTransparentDisplayList);
+            }
+            if (!fn_bIsTransitionInProgress())
+            {
+                hGraphicInteractionChild = hSectorObject->stListOfSectorsInGraphicInteraction.hFirstElementOpt;
+                for (xI = 0; xI < hSectorObject->stListOfSectorsInGraphicInteraction.lNumberOfElementsOpt; xI++)
+                {
+                    if (g_stEngineStructure.cCameraMode == 1 || hGraphicInteractionChild->cDisplayMode != 2)
+                    {
+                        hNeighbourSectorObject = hGraphicInteractionChild->hPointerOfSectorSO->hLinkedObject.p_stSector;
+                        if (hNeighbourSectorObject)
+                        {
+                            if (!hNeighbourSectorObject->FogIntensity || (!SCT_g_DrawingMirrored && hNeighbourSectorObject->FogIntensity == 1) || (SCT_g_DrawingMirrored == 1 && hNeighbourSectorObject->FogIntensity == 2))
+                            {
+                                GLI_vUpdateFogFromSector(hNeighbourSectorObject);
+                                if (hNeighbourSectorObject->glOpaqueDisplayList)
+                                    GLI_vDMASendObject(hNeighbourSectorObject->glOpaqueDisplayList);
+                                if (hNeighbourSectorObject->glTransparentDisplayList)
+                                    GLI_vDMASendTransparentObject(hNeighbourSectorObject->glTransparentDisplayList);
+                            }
+                        }
+                    }
+                    hGraphicInteractionChild++;
+                }
+            }
+            GLI_vSetOptimizedSDC(0);
+            SCT_vClearCop0Register24Sched();
+            a_lCullingResultArray[0] = SCT_fn_lSendSectorToViewportStatic(_p_stAbsolutePositionOfCamera, _p_stVpt, _hSprObjSector, _lDrawMask);
+        }
+    }
+    else
+    {
+        a_lCullingResultArray[0] = 0x40;
+    }
+    if (!g_bInGameMenu && !fn_bIsTransitionInProgress())
+    {
+        hGraphicInteractionChild = hSectorObject->stListOfSectorsInGraphicInteraction.hFirstElementOpt;
+        for (xI = 0; xI < hSectorObject->stListOfSectorsInGraphicInteraction.lNumberOfElementsOpt; xI++)
+        {
+            if ((g_stEngineStructure.cCameraMode == 1 || hGraphicInteractionChild->cDisplayMode != 2) && cDrawMap)
+                a_lCullingResultArray[xI + 1] = SCT_fn_lSendSectorToViewportStatic(_p_stAbsolutePositionOfCamera, _p_stVpt, hGraphicInteractionChild->hPointerOfSectorSO, _lDrawMask);
+            hGraphicInteractionChild++;
+        }
+    }
+    SCT_vClearCop0Register24Sched();
+    SCT_vClearCop0Register24Sched();
+    if (cDrawPerso)
+        SCT_fn_vSendSectorToViewportDynamic(_p_stAbsolutePositionOfCamera, _p_stVpt, _hSprObjSector, _lDrawMask, a_lCullingResultArray[0]);
+    if (!fn_bIsTransitionInProgress())
+    {
+        hGraphicInteractionChild = hSectorObject->stListOfSectorsInGraphicInteraction.hFirstElementOpt;
+        for (xI = 0; xI < hSectorObject->stListOfSectorsInGraphicInteraction.lNumberOfElementsOpt; xI++)
+        {
+            if ((g_bInGameMenu || g_stEngineStructure.cCameraMode == 1 || hGraphicInteractionChild->cDisplayMode != 2) && cDrawPerso)
+                SCT_fn_vSendSectorToViewportDynamic(_p_stAbsolutePositionOfCamera, _p_stVpt, hGraphicInteractionChild->hPointerOfSectorSO, _lDrawMask, a_lCullingResultArray[xI + 1]);
+            hGraphicInteractionChild++;
+        }
+    }
+    GLI_vClearListOfLightInViewport();
+    SCT_vClearCop0Register24Sched();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 534–714 */
@@ -1236,16 +1358,101 @@ void SCT_fn_vSendSectorWhereIAmToViewport(MTH3D_tdstVector_* _p_stAbsolutePositi
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SCT_fn_vSendSectorToViewportDynamic(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult)
+/* Target +0x1d8 and +0x1f0 write COP0 register 24 (mtc0 zero, $24), which C
+ * cannot express. Spelled with the R5900 alias mtbpc, MWCC schedules it like
+ * an ordinary instruction (delay slots, hazard nop) as retail did. */
+inline void SCT_vClearCop0Register24(void)
 {
-    unsigned int ulCustomBits;
-    int lDrawmaskOfCharacter;
-    HIE_tdstSuperObject_* hCharacterSO;
-    SECT_tdstListOfSOCharacters_* hCharacter;
-    SECT_tdstSector_* hSectorObject;
-    short xNbLights;
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    }
+}
+inline void SCT_vClearCop0Register24Sync(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    nop
+    }
+}
+unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj);
+void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt);
+void GLI_vResetTableOfActiveLightsForChar(char _cValue);
+unsigned char GLI_ucGetObjectLighted(GLI_tdstLight_* p_stLight);
+void GLI_vAddLightToViewport(GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstLight_* p_stLight);
+void GLI_vPopLightsInViewport(int lUnused, unsigned int lNbLightsToPop);
+float fn_xGetSectorZFar(HIE_tdstSuperObject_* _hSprObjSector);
+void GEO_vSetZFar(float _xZ);
+void GEO_vSetZFarTransparencyZone(float _xZ);
+void GEO_xReinitZFarTransparencyLevel(void);
+void HIE_fn_vSendCharacterToViewportPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);
+void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask);
+void SECT_fn_vSendFogToViewport(HIE_tdstSuperObject_* _hSprObjSector);
+
+void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult)
+{
     short xI;
-    /* TODO: decompile from asm/... */
+    short xNbLights;
+    GLI_tdstLight_* hStaticLight;
+    SECT_tdstListOfStaticLights_* hStaticLightsElement;
+    SECT_tdstSector_* hSectorObject = _hSprObjSector->hLinkedObject.p_stSector;
+    SECT_tdstListOfSOCharacters_* hCharacter;
+    HIE_tdstSuperObject_* hCharacterSO;
+    int lDrawmaskOfCharacter;
+    unsigned int ulCustomBits;
+
+    if (!fn_bIsTransitionInProgress() || _hSprObjSector->xTransition)
+    {
+    GLIPS2_vPrepareDisplay(_p_stVpt);
+    HIE_fn_vStartPS2MatStack();
+    if (_lCullingResult || g_bInGameMenu)
+    {
+    GLI_vResetTableOfActiveLightsForChar(1);
+    xNbLights = 0;
+    SECT_fn_vSendFogToViewport(_hSprObjSector);
+    if ((_lDrawMask & 0x8000) && (_hSprObjSector->lDrawModeMask & 0x8000))
+    {
+        SECT_tdstSector_* hLightSector = _hSprObjSector->hLinkedObject.p_stSector;
+        hStaticLightsElement = hLightSector->stListOfStaticLights.hFirstElementOpt;
+        for (xI = 0; xI < hLightSector->stListOfStaticLights.lNumberOfElementsOpt; xI++)
+        {
+            hStaticLight = hStaticLightsElement->hStaticLights;
+            if (GLI_ucGetObjectLighted(hStaticLight) & 2)
+            {
+                GLI_vAddLightToViewport(_p_stVpt, hStaticLight);
+                xNbLights++;
+            }
+            hStaticLightsElement++;
+        }
+    }
+    GEO_vSetZFar(fn_xGetSectorZFar(_hSprObjSector));
+    GEO_vSetZFarTransparencyZone(0.0f);
+    for (xI = 0, hCharacter = hSectorObject->stListOfCharacters.hFirstElementDyn; hCharacter != NULL; hCharacter = hCharacter->hNextBrotherDyn, xI++)
+    {
+        hCharacterSO = hCharacter->hPointerOfCharacter;
+        lDrawmaskOfCharacter = hCharacterSO->lDrawModeMask;
+        ulCustomBits = fn_ulStandardGameGetCustomBitsSO(hCharacterSO);
+        GEO_xReinitZFarTransparencyLevel();
+        if ((!g_bInGameMenu || (ulCustomBits & 0x100000)) && (lDrawmaskOfCharacter & 0x200000))
+        {
+            g_bDisplayingActors = 1;
+            g_pActorBeingDisplayed = hCharacterSO;
+            HIE_fn_vSendCharacterToViewportPS2(_p_stVpt, hCharacterSO, lDrawmaskOfCharacter & _lDrawMask, _lCullingResult);
+            g_bDisplayingActors = 0;
+            g_pActorBeingDisplayed = NULL;
+            if ((ulCustomBits & 0x100) && !fn_bIsTransitionInProgress())
+            {
+                SCT_vClearCop0Register24();
+                SHW_fn_vDrawShadow(_p_stVpt, hCharacterSO, _hSprObjSector, _lDrawMask);
+                SCT_vClearCop0Register24Sync();
+            }
+        }
+    }
+    if (xNbLights)
+        GLI_vPopLightsInViewport(0, xNbLights);
+    }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 323–483 */
@@ -1297,7 +1504,7 @@ void SCT_fn_vSendSectorToViewportDynamic(GLD_tdstViewportAttributes_* _p_stVpt, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SCT_fn_lSendSectorToViewportStatic(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask)
+int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask)
 {
     int lMaxInOut;
     int lMinInOut;

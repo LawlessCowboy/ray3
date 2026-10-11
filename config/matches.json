@@ -22659,6 +22659,322 @@
       "status": "EQUIVALENT",
       "target_size": 112,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00261f70",
+      "candidate_size": 1040,
+      "first_difference": 293,
+      "implementation": "void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)\n{\n    unsigned char bSectorChange = 1;\n    tdst3dData_* h_Current3dData;\n    unsigned int ulCurrentBits;\n    unsigned char bNoDisplay;\n    tdstAnim3d_* p_stCurrentAnim;\n    tdstState_* p_stCurrentState;\n    unsigned char bSkip;\n    DNM_stDynamics* p_stDynamic;\n    tdstDynam_* h_Dynam;\n    volatile unsigned int stOldV[3];\n    tdstSectInfo_* h_MainSectInfo;\n    tdstEngineObject_* h_EngineObject;\n\n    hCharacter->hLinkedObject->h_StandardGame->ulLastTrame = g_stEngineStructure.stEngineTimer.ulTrameNumber;\n    stOldV[0] = ((unsigned int*)&hCharacter->hGlobalMatrix->stCol_3)[0];\n    stOldV[1] = ((unsigned int*)&hCharacter->hGlobalMatrix->stCol_3)[1];\n    stOldV[2] = ((unsigned int*)&hCharacter->hGlobalMatrix->stCol_3)[2];\n\n    if (MC_fn_ucIsCharacterInMainCharacterList(hCharacter) && g_ucIsEdInGhostMode)\n        return;\n\n    if (g_DEMO_KeybTest != 2) {\n        h_Current3dData = hCharacter->hLinkedObject->h_3dData;\n        if (h_Current3dData != NULL) {\n            p_stCurrentState = h_Current3dData->h_CurrentState;\n            ulCurrentBits = hCharacter->hLinkedObject->h_StandardGame->ulCustomBits;\n            p_stCurrentAnim = p_stCurrentState ? fn_p_stGetAnimInState(p_stCurrentState) : NULL;\n            {\n                int r3, r2, r1, t;\n                r1 = r2 = r3 = 1;\n                if (p_stCurrentAnim != NULL) {\n                    t = 0;\n                    if (ulCurrentBits & 0x2000) if (hCharacter->lNumberOfElementsDyn > 0) t = 1;\n                    if (!t) r1 = 0;\n                }\n                if (!r1) {\n                    t = 0;\n                    if (ulCurrentBits & 0x800) if (ulCurrentBits & 0x1001) t = 1;\n                    if (!t) r2 = 0;\n                }\n                if (!r2) {\n                    t = 0;\n                    if (ulCurrentBits & 0x40000) { int m = 0; if (hCharacter->hLinkedObject->h_StandardGame->ucMiscFlags & 0x80) m = 1; if (m & 0xff) { t = 1; } }\n                    if (!t) r3 = 0;\n                }\n                bNoDisplay = r3;\n            }\n            if (h_Current3dData->h_CurrentCineActor != NULL)\n                bNoDisplay = 0;\n\n            if (!bNoDisplay || (ulCurrentBits & 0x800000)) {\n                GAM_vClearCop0Register24();\n                bSkip = PLA_fn_bSkipCurrentFrame(hCharacter);\n                bSkip &= !h_Current3dData->bAnimMatrixChanged;\n                bSkip |= h_Current3dData->ucFlagEndState;\n                if (h_Current3dData->h_CurrentCineActor != NULL && h_Current3dData->h_CurrentCineActor->bPlayingAnim)\n                    CINE_CheckEndCineActor(h_Current3dData->h_CurrentCineActor);\n                bSkip &= !fn_bSubAnimRunning(hCharacter);\n                if (!bSkip && h_Current3dData->ucFlagEndState)\n                    h_Current3dData->xCurrentFrame = (unsigned short)(h_Current3dData->h_CurrentState->p_stAnim->uwNumberOfFrames - 1);\n                if (!bSkip)\n                    PLA_fn_bDoAnimPlayerForCharacter(hCharacter, bNoDisplay, 0);\n                else\n                    PLA_fn_vRefreshFrameNumber(hCharacter);\n                GAM_vClearCop0Register24Sync();\n            }\n            fn_vMakeCharacterReact(hCharacter);\n            if (hCharacter->hLinkedObject->h_StandardGame == NULL)\n                goto end;\n        }\n    } else {\n        DEMO_fn_vGetACompleteCharacterPosition(hCharacter);\n    }\n\n    fn_vUpdateLight(hCharacter);\n\n    if (g_ucIsEdInGhostMode && CAM_fn_bSuperObjectIsACamera(hCharacter)) {\n        h_MainSectInfo = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject->h_SectInfo;\n        h_EngineObject = hCharacter->hLinkedObject;\n        fn_vSectInfoSetCurrentSector(h_EngineObject->h_SectInfo, fn_h_SectInfoGetCurrentSector(h_MainSectInfo));\n        fn_vInsertObjectInSectorList(fn_h_SectInfoGetCurrentSector(hCharacter->hLinkedObject->h_SectInfo), hCharacter);\n        return;\n    }\n\n    if ((unsigned char)(hCharacter->ulFlags & 0x20))\n        return;\n    if (CAM_fn_bSuperObjectIsACamera(hCharacter) && g_stEngineStructure.cCameraMode == 1\n        && (hCharacter->hLinkedObject->h_Cineinfo->hWork->uwDNMFlags & 0x40))\n        return;\n\n    h_Dynam = hCharacter->hLinkedObject->h_Dynam;\n    if (h_Dynam != NULL) {\n        p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);\n        if (p_stDynamic != NULL) {\n            if (DNM_bIsEnd(p_stDynamic) && DNM_bIsFlag(p_stDynamic))\n                bSectorChange = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter == 0;\n            else\n                bSectorChange = 1;\n        }\n    }\n    if (!fn_bIsTransitionInProgress() && bSectorChange)\n        GAM_fn_vSectInfoTestChangeSectorForCharacter(hCharacter);\nend:\n    return;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vTreatCharactersInSector",
+      "reason": "Size/control flow/relocs exact (1040/1040). Residual: (1) temp-register choice in misc-flag test (+0x124..0x154) and DNM predicate flags (+0x390..0x3b4); (2) retail fills the 'b' delay slot at +0x264 with the closing mtc0 $24 copied from the join block and retargets +4; MWCC never fills delay slots from asm{} blocks in any form tried, which also shifts the jal fn_vMakeCharacterReact delay slot (+0x274/+0x27c) and +0x180 nop. Uses volatile u32[3] stOldV (keeps dead copy as retail lw/sw), explicit r1/r2/r3 flag block for bNoDisplay, goto end for shared epilogue, decl order bSectorChange first.",
+      "size": 1040,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMain.c",
+      "status": "MISMATCH",
+      "target_size": 1040,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0012c8d0",
+      "candidate_size": 5300,
+      "first_difference": 0,
+      "implementation": "void PLD_fn_vLoadLevel(char* _szLevelName)\n{\n    static char szTransitIdentifier[9] = \"transit \";\n    char* pcStartCMBAddress;\n    char* pcTransitStartCMBAddress;\n    char* volatile pcCMBAddress;\n    char* pcAnimCMBAddress;\n    volatile unsigned int ulIndex;\n    unsigned int u32FixChecksum;\n    unsigned int u32NbProc;\n    unsigned int u32NbFunc;\n    unsigned int u32NbCond;\n    unsigned int u32DataClass;\n    int s32NumberOfTexturesNotInFix;\n    HIE_tdstSuperObject_* h_SupObject;\n    unsigned int u32MapSoundEventId;\n    unsigned int u32NbSoundEvent;\n    unsigned int u32NbSoundEventForTransit;\n    unsigned int u32NbSoundEventForLevel;\n    unsigned int* volatile pu32SoundEventIdArray;\n    HIE_tdstSuperObject_** volatile dummy;\n    unsigned int u32TextureChannel;\n    HIE_tdstSuperObject_* hNextCharacter;\n    tdstBrain_* h_Brain;\n    tdstEngineObject_* p_stObject;\n    char ch_Buffer[1024];\n    char* pch_Next;\n    tdstFamilyList_* p_stThisFamily;\n    unsigned char ucFamilyId;\n    HIE_tdstSuperObject_* hCharacter;\n    int i;\n    unsigned char ucCharacterId;\n\n    GLI_vSetProgressCallBack(0);\n    GLI_vSetProgressCallBack(11000000);\n\n    GLI_PrintDebugString(\"Loading Level\");\n    CTL_SetCurrentMap(_szLevelName);\n    GLI_HysteresisLevelStart(_szLevelName);\n\n    PLD_vClearCop0Register24Open();\n    CheckForTutorial(_szLevelName);\n\n    GLI_vResetTempList();\n\n    PLD_vClearCop0Register24Sched();\n    VID_fn_vPlayVideoIfAskedAfterLevel();\n\n    PLD_vClearCop0Register24Sched();\n    GAM_fn_vSaveGameAfterVideoIfNeeded();\n\n    if (!fn_bLevelHadTransitionMemory())\n        GLI_vLoadCarton(_szLevelName);\n\n    if (!fn_bLevelHadTransitionMemory())\n    {\n        for (ulIndex = 0; ulIndex < g_stFixInfo.ulNbObject; ulIndex++)\n        {\n            h_Brain = ((HIE_tdstSuperObject_*)g_stFixInfo.a20_stObjects[ulIndex])->hLinkedObject.p_stCharacter->h_Brain;\n            if (h_Brain)\n                memcpy((char*)h_Brain + 8, (char*)g_a_LinksOfSuperObjectInFix + ulIndex * 0x18, 0x18);\n        }\n    }\n\n    CheckPS2GLMem();\n    G_DMM_CurrentAllocMode++;\n    SetAllocMode(G_DMM_CurrentAllocMode);\n    if (G_DMM_CurrentAllocMode == 2)\n        CheckAllocMode(G_DMM_CurrentAllocMode - 1);\n\n    if (!fn_bDoTransition())\n        LS_Create(2);\n\n    gp_stNewActualWorld = 0;\n    gp_stNewDynamicWorld = 0;\n    gp_stNewInactiveDynamicWorld = 0;\n\n    if ((pcTransitStartCMBAddress = pcCMBAddress = MNC_fn_pcLoadAreaWithAllocator(PLD_szLocationFromAreaId(2, _szLevelName), fn_lGetTransitionBloc() == 2 ? 2 : 3, fn_pfnCurrentTransitionAllocator())) != NULL)\n    {\n        if (g_iLinkNumberA > 50)\n            g_bLevelHasTransitionMemory = 1;\n\n        if (!fn_bLevelHadTransitionMemory())\n        {\n            g_stEngineStructure.a_hViewportArray = M_READ(tdstViewportManagement_*);\n            M_READ_STRUCT(&g_stEngineStructure.hMainCharacterList, 181);\n            gp_stDynamicWorld = M_READ(int);\n            gp_stActualWorld = M_READ(int);\n            gp_stNewDynamicWorld = M_READ(int);\n            gp_stInactiveDynamicWorld = M_READ(int);\n        }\n        else\n        {\n            g_pstBinaryViewport = M_READ(int);\n            M_READ_STRUCT(&g_pstMainCharacterList, 181);\n            dummy = M_READ(HIE_tdstSuperObject_**);\n            gp_stNewActualWorld = M_READ(int);\n            gp_stNewDynamicWorld = M_READ(int);\n            gp_stNewInactiveDynamicWorld = M_READ(int);\n        }\n    }\n    else\n    {\n        g_bLevelHasTransitionMemory = 0;\n    }\n\n    printf(\"%s\\n\", PLD_szLocationFromAreaId(1, _szLevelName));\n    pcStartCMBAddress = pcCMBAddress = MNC_fn_pcLoadArea(PLD_szLocationFromAreaId(1, _szLevelName), 1);\n    printf(\"level@%08x\\n\", pcStartCMBAddress);\n\n    u32FixChecksum = M_READ(unsigned int);\n    if (u32FixChecksum != g_ulFixChecksum)\n        printf(\"level checksum doesn't match with fix checksum !!!\\n\");\n\n    u32NbProc = M_READ(unsigned int);\n    u32NbFunc = M_READ(unsigned int);\n    u32NbCond = M_READ(unsigned int);\n    if (u32NbProc != 876) printf(\"\\nCurrent NbProc = %d instead of %d\\n\", 876, u32NbProc); if (u32NbFunc != 446) printf(\"\\nCurrent NbFunc = %d instead of %d\\n\", 446, u32NbFunc); if (u32NbCond != 178) printf(\"\\nCurrent Nbcond = %d instead of %d\\n\", 178, u32NbCond);\n\n    u32DataClass = M_READ(unsigned int);\n    if (u32DataClass != g_ulEngineClass)\n    {\n        printf(\"level data class (0x%08x) not equal to engine class (0x%08x)\\n\");\n        while (1)\n            ;\n    }\n\n    g_pcLvlTimeStamp = (int)pcCMBAddress; pcCMBAddress += 40;\n    pcCMBAddress += 4;\n    pcCMBAddress += 4;\n\n    PS2_fn_vEnterGLCriticalSection();\n    GLI_PrintDebugString(\"HMU Allocation\");\n    HMU_fn_vInitNormalLevelMemory(300000);\n    HMU_fn_vInitTempLevelMemory(1000000);\n    HMU_fn_vSetMemoriesInLevelMode();\n    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock());\n    GLI_PrintDebugString(\"HMU Allocation End \");\n    PS2_fn_vLeaveGLCriticalSection();\n\n    if (g_bLevelHasTransitionMemory)\n    {\n        if (fn_lGetTransitionBloc() != 1)\n        {\n            HMU_fn_vInitNormalTransition1Memory(10000);\n            HMU_fn_vInitTempTransition1Memory(90000);\n        }\n        else\n        {\n            HMU_fn_vInitNormalTransition2Memory(10000);\n            HMU_fn_vInitTempTransition2Memory(90000);\n        }\n    }\n\n    s32NumberOfTexturesNotInFix = M_READ(int);\n    gs_lNumberOfTextureToCreate = g_lNumberOfTexturesInFix + s32NumberOfTexturesNotInFix;\n\n    for (ulIndex = g_lNumberOfTexturesInFix; ulIndex < gs_lNumberOfTextureToCreate; ulIndex++)\n        ((int*)gs_aDEFTableOfTextureAlreadyRead)[ulIndex] = M_READ(int);\n\n    if (fn_lGetTransitionBloc() == 1)\n        g_ucIdOfNextTransitionbloc = HMU_fn_ucGetTransition2NormalMemoryBlock();\n    else\n        g_ucIdOfNextTransitionbloc = HMU_fn_ucGetTransition1NormalMemoryBlock();\n\n    for (ulIndex = g_lNumberOfTexturesInFix; ulIndex < gs_lNumberOfTextureToCreate; ulIndex++)\n    {\n        u32TextureChannel = M_READ(unsigned int);\n        if (u32TextureChannel == HMU_fn_ucGetTransition1NormalMemoryBlock() || u32TextureChannel == HMU_fn_ucGetTransition2NormalMemoryBlock())\n            ((int*)gs_aDEFTableOfTextureMemoryChannels)[ulIndex] = g_ucIdOfNextTransitionbloc;\n        else\n            ((int*)gs_aDEFTableOfTextureMemoryChannels)[ulIndex] = u32TextureChannel;\n    }\n\n    if (fn_bLevelHadTransitionMemory())\n    {\n        dummy = M_READ(HIE_tdstSuperObject_**);\n        dummy = M_READ(HIE_tdstSuperObject_**);\n        dummy = M_READ(HIE_tdstSuperObject_**);\n        SECT_hNewFatherSector = M_READ(int);\n    }\n    else if (!g_bLevelHasTransitionMemory)\n    {\n        gp_stActualWorld = M_READ(int);\n        gp_stDynamicWorld = M_READ(int);\n        gp_stInactiveDynamicWorld = M_READ(int);\n        SECT_hFatherSector = M_READ(int);\n    }\n    else\n    {\n        dummy = M_READ(HIE_tdstSuperObject_**);\n        dummy = M_READ(HIE_tdstSuperObject_**);\n        dummy = M_READ(HIE_tdstSuperObject_**);\n        SECT_hFatherSector = M_READ(int);\n    }\n\n    gs_hFirstSubMapPosition = M_READ(int);\n    M_READ_STRUCT(&g_stAlways, 164);\n    M_READ_STRUCT(&g_stObjectTypes, 167);\n    gp_stLight = M_READ(int);\n    g_hCharacterLauchingSoundEvents = M_READ(int);\n\n    if (!g_bLevelHasTransitionMemory)\n        g_stEngineStructure.a_hViewportArray = M_READ(tdstViewportManagement_*);\n\n    M_READ_STRUCT(NULL, 177);\n    M_READ_STRUCT(&g_stEngineStructure.hFamilyList, 89);\n    M_READ_STRUCT(&g_stEngineStructure.hAlwaysActiveCharactersList, 179);\n\n    if (!g_bLevelHasTransitionMemory)\n        M_READ_STRUCT(&g_stEngineStructure.hMainCharacterList, 181);\n\n    if (fn_bLevelHadTransitionMemory())\n        ulIndex = M_READ(unsigned int);\n    else\n        g_stEngineStructure.h_StdCamCaracter = M_READ(HIE_tdstSuperObject_*);\n\n    IPO_g_ucNumberOfRLITables = M_READ(unsigned char);\n    g_stEngineStructure.ucCurrentLevel = M_READ(unsigned char);\n    if ((int)pcCMBAddress & 3)\n        pcCMBAddress += 4 - ((int)pcCMBAddress & 3);\n    g_stEngineStructure.ulNumberOfSOLAllocated = M_READ(unsigned int);\n    g_stEngineStructure.ulNumberOfSOLLoaded = M_READ(unsigned int);\n    g_stEngineStructure.p_hSOL = M_READ(tdstSuperObjectLinks_**);\n    g_stNewCineManager = M_READ(int);\n    COL_g_d_lTaggedFacesTable = M_READ(int);\n    COL_g_lMaxNumberOfTaggedFaces = M_READ(int);\n    u32MapSoundEventId = M_READ(unsigned int);\n    u32NbSoundEventForLevel = M_READ(unsigned int);\n    u32NbSoundEventForTransit = M_READ(unsigned int);\n    u32NbSoundEvent = u32NbSoundEventForLevel + u32NbSoundEventForTransit;\n    printf(\"Nb Sound Events in level = %d\\n\", u32NbSoundEvent);\n    pu32SoundEventIdArray = M_READ(unsigned int*);\n    M_READ_STRUCT(&SAI_g_stInternalStructure, 185);\n\n    g_NbPersoWithSettingsInFix = M_READ(unsigned int);\n    for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)\n    {\n        g_a_SettingsOfPerso[ulIndex].hCharacter = M_READ(HIE_tdstSuperObject_*);\n        if ((int)pcCMBAddress & 15)\n            pcCMBAddress += 16 - ((int)pcCMBAddress & 15);\n        M_READ_STRUCT(&g_a_SettingsOfPerso[ulIndex].tdstMatrix, 190);\n        g_a_SettingsOfPerso[ulIndex].ulFlags = M_READ(unsigned int);\n        g_a_SettingsOfPerso[ulIndex].ucTransparency = M_READ(unsigned char);\n        pcCMBAddress += 3;\n    }\n\n    fn_vTVS();\n\n    if (g_bLevelHasTransitionMemory == 1)\n    {\n        if (!fn_bLevelHadTransitionMemory())\n        {\n            g_iNbPersoOfFixInDynamicHierarchy = 0;\n            for (ulIndex = 0, h_SupObject = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn, hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(h_SupObject); h_SupObject; ulIndex++, h_SupObject = hNextCharacter, hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(h_SupObject))\n            {\n                if (h_SupObject->ulTypeOfLinkedObject == 2)\n                {\n                    gp_stPersoInDynamicHierarchy[g_iNbPersoOfFixInDynamicHierarchy] = (int)h_SupObject;\n                    g_iNbPersoOfFixInDynamicHierarchy++;\n                    { HIE_tdstSuperObject_* hFather = (HIE_tdstSuperObject_*)gp_stNewDynamicWorld; if (h_SupObject->hNextBrotherDyn) h_SupObject->hNextBrotherDyn->hPrevBrotherDyn = h_SupObject->hPrevBrotherDyn; if (h_SupObject->hPrevBrotherDyn) h_SupObject->hPrevBrotherDyn->hNextBrotherDyn = h_SupObject->hNextBrotherDyn; if (h_SupObject->hFatherDyn) { h_SupObject->hFatherDyn->lNumberOfElementsDyn--; if (h_SupObject->hFatherDyn->hFirstElementDyn == h_SupObject) h_SupObject->hFatherDyn->hFirstElementDyn = h_SupObject->hNextBrotherDyn; if (h_SupObject->hFatherDyn->hLastElementDyn == h_SupObject) h_SupObject->hFatherDyn->hLastElementDyn = h_SupObject->hPrevBrotherDyn; } h_SupObject->hNextBrotherDyn = NULL; h_SupObject->hPrevBrotherDyn = NULL; h_SupObject->hFatherDyn = NULL; h_SupObject->hNextBrotherDyn = NULL; h_SupObject->hPrevBrotherDyn = hFather->hLastElementDyn; h_SupObject->hFatherDyn = hFather; if (hFather->hFirstElementDyn == NULL) hFather->hFirstElementDyn = h_SupObject; else hFather->hLastElementDyn->hNextBrotherDyn = h_SupObject; hFather->hLastElementDyn = h_SupObject; hFather->lNumberOfElementsDyn++; }\n                }\n            }\n\n            gp_stDynamicWorld = gp_stNewDynamicWorld;\n\n            for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)\n            {\n                g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix = g_a_SettingsOfPerso[ulIndex].tdstMatrix;\n                g_a_SettingsOfPerso[ulIndex].hCharacter->ulFlags = g_a_SettingsOfPerso[ulIndex].ulFlags;\n                g_a_SettingsOfPerso[ulIndex].hCharacter->fTransparenceLevel = g_a_SettingsOfPerso[ulIndex].ucTransparency;\n                p_stObject = g_a_SettingsOfPerso[ulIndex].hCharacter->ulTypeOfLinkedObject == 2 ? g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter : NULL;\n                p_stObject->h_3dData->ucTransparency = g_a_SettingsOfPerso[ulIndex].ucTransparency;\n            }\n        }\n        else\n        {\n            for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)\n            {\n                p_stObject = g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter;\n                if (p_stObject->h_Brain && !p_stObject->h_Brain->bActiveDuringTransition)\n                    p_stObject->h_3dData->stGLIObjectMatrix = g_a_SettingsOfPerso[ulIndex].tdstMatrix;\n\n                fn_v3dDataInitValueSAI(g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter->h_3dData);\n            }\n        }\n    }\n    else\n    {\n        for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)\n        {\n            g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix = g_a_SettingsOfPerso[ulIndex].tdstMatrix;\n            g_a_SettingsOfPerso[ulIndex].hCharacter->ulFlags = g_a_SettingsOfPerso[ulIndex].ulFlags;\n            g_a_SettingsOfPerso[ulIndex].hCharacter->fTransparenceLevel = g_a_SettingsOfPerso[ulIndex].ucTransparency;\n            p_stObject = g_a_SettingsOfPerso[ulIndex].hCharacter->ulTypeOfLinkedObject == 2 ? g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter : NULL;\n            p_stObject->h_3dData->ucTransparency = g_a_SettingsOfPerso[ulIndex].ucTransparency;\n        }\n    }\n\n    printf(\"loadlevel, apres rearrangement des hierarchies:\\n\");\n    printf(\"============================\\n\");\n\n    g_hDemoSOList = M_READ(int);\n    PLD_g_ulNumberOfFixVisualMaterials = M_READ(unsigned int);\n    PLD_g_ulNumberOfTransitionVisualMaterials = M_READ(unsigned int);\n    GLI_g_ulNumberOfVisualMaterials = M_READ(unsigned int);\n    memcpy(GLI_g_StaticCopyOfArrayOfVisualMaterial, *(void**)pcCMBAddress, GLI_g_ulNumberOfVisualMaterials * 4);\n    fn_v_Transition_CorrectTextureChannelTable();\n    pcCMBAddress += 4;\n    pcAnimCMBAddress = M_READ(char*);\n    PLD_fn_vReadAnimationsBanks(&pcAnimCMBAddress, 1, 4);\n\n    SND_fn_bInitDataLoadSnd(\"Rayman3\");\n\n    GLI_PrintDebugString(\"SND TRANSIT BANK\"); SND_fn_vStartLoad(); strcpy(ch_Buffer, \"trans\\\\\"); Strcat(ch_Buffer, fn_p_szGetLevelName()); SND_fn_bLoadBank(ch_Buffer); szTransitIdentifier[7] = '0' + (char)fn_lGetTransitionBloc(); SND_fn_vFinishLoad(szTransitIdentifier); GLI_PrintDebugString(\"SND TRANSIT BANK END\");\n\n    SND_fn_vStartLoad();\n\n    { char szLevelBank[1024]; GLI_PrintDebugString(\"SND LEVEL BANK\"); strcpy(szLevelBank, fn_p_szGetLevelName()); Strrchr(szLevelBank, 0); PLD_vClearCop0Register24Open(); SND_fn_bLoadBank(szLevelBank); GLI_PrintDebugString(\"SND LEVEL BANK END\"); }\n\n    GLI_PrintDebugString(\"OPTIONAL BANKS\");\n\n    for (i = 0, p_stThisFamily = g_stEngineStructure.hFamilyList.hFirstElementDyn; p_stThisFamily; p_stThisFamily = p_stThisFamily->hNextBrotherDyn, i++)\n    {\n        if (fn_bGetFamilyProperty(p_stThisFamily, 1))\n        {\n            ucFamilyId = fn_ucFindFamilyIdOfFamilyType(p_stThisFamily->otObjectFamilyType);\n            if (!g_ax_pA3dGENERAL[p_stThisFamily->ucStorageBank] &&\n                GAM_fn_bIsFamilyToLoad(ucFamilyId))\n            {\n                { unsigned char ucBank = p_stThisFamily->ucStorageBank; char szAnimName[40]; char* pcFamilyAnimCMBAddress; sprintf(szAnimName, \"%s\\\\ani%d\", _szLevelName, ucBank - 5); pcFamilyAnimCMBAddress = PLD_fn_pcLoadArea(ucBank + 102, szAnimName); if (pcFamilyAnimCMBAddress) { g_pcAnimationsTimeStamp = (int)pcFamilyAnimCMBAddress; pcFamilyAnimCMBAddress += 40; pcFamilyAnimCMBAddress += 4; PLD_fn_vReadAnimationsBanks(&pcFamilyAnimCMBAddress, ucBank, 1); } }\n\n                { static char s_szNumericName[4]; sprintf(s_szNumericName, \"%d\", ucFamilyId); SND_fn_bLoadBank(s_szNumericName); }\n            }\n        }\n    }\n\n    printf(\"End of optional families load / Start of optional instances load\\n\");\n\n    for (i = 0, hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn; hCharacter; hCharacter = hCharacter->hNextBrotherDyn, i++)\n    {\n        if (hCharacter->ulTypeOfLinkedObject == 2)\n        {\n            if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucOptional & 1)\n            {\n                ucCharacterId = fn_ucFindPersonalIdOfPersonalType(hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectPersonalType);\n\n                if (GAM_fn_bIsActorToLoad(ucCharacterId))\n                {\n                    static char s_szNumericName[5] = \"I\"; sprintf(s_szNumericName + 1, \"%d\", ucCharacterId); SND_fn_bLoadBank(s_szNumericName);\n                }\n            }\n        }\n    }\n\n    printf(\"End of optional instances load\\n\");\n\n    SND_fn_vFinishLoad(\"GAME\");\n\n    GLI_PrintDebugString(\"OPTIONAL BANKS FINISHED\");\n\n    g_stBeginMapSoundEvent.pstPtr = SND_fn_pstGetBlockEventFromId(u32MapSoundEventId);\n    g_bBeginMapSoundEventFlag = g_stBeginMapSoundEvent.pstPtr != NULL;\n\n    for (ulIndex = 0; ulIndex < u32NbSoundEventForTransit; ulIndex++)\n    {\n        unsigned int* p_u32Event = (unsigned int*)(pcTransitStartCMBAddress + pu32SoundEventIdArray[ulIndex]); *p_u32Event = (unsigned int)SND_fn_pstGetBlockEventFromId(*p_u32Event);\n    }\n    for (ulIndex = u32NbSoundEventForTransit; ulIndex < u32NbSoundEvent; ulIndex++)\n    {\n        unsigned int* p_u32Event = (unsigned int*)(pcStartCMBAddress + pu32SoundEventIdArray[ulIndex]); *p_u32Event = (unsigned int)SND_fn_pstGetBlockEventFromId(*p_u32Event);\n    }\n\n    GLI_PrintDebugString(\"SND REFERENCE FINISHED\");\n\n    HMU_fn_vSetMemoriesInLevelMode();\n    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock());\n\n    if (!fn_bDoTransition())\n        g_stEngineStructure.stCineManager = (CINE_Manager_*)g_stNewCineManager;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PLD_fn_vLoadLevel",
+      "reason": "Full natural-C skeleton compiles (5300/5268 bytes, 278/332 relocs). Level-file cursor and loop counter are memory-resident in retail: char* volatile pcCMBAddress with cast-lvalue reads *((T*)p)++ reproduces the lw/addiu/sw/lw read pattern; counter, pu32SoundEventIdArray and dummy also need stack slots 0x8e0/0x8e4/0x8e8 (declared volatile). Open blocker: retail has mtc0 $24 in the jal delay slots of VID_fn_vPlayVideoIfAskedAfterLevel/GAM_fn_vSaveGameAfterVideoIfNeeded; mtbpc (inline, macro or bare asm), mtc0 and .set reorder spellings never fill a jal slot (same unsolved case as fn_vMakeCharacterThink). Remaining: frame 0x8e0 vs 0x8f0 (stack-slot layout), &g_stStructArray[id] kept in s0, PLD_szLocationFromAreaId arg evaluation order before fn_lGetTransitionBloc.",
+      "size": 5268,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_call.c",
+      "status": "MISMATCH",
+      "target_size": 5268,
+      "unresolved_relocations": [
+        {
+          "offset": 828,
+          "symbol": "@496",
+          "type": 5
+        },
+        {
+          "offset": 840,
+          "symbol": "@496",
+          "type": 6
+        },
+        {
+          "offset": 872,
+          "symbol": "@497",
+          "type": 5
+        },
+        {
+          "offset": 880,
+          "symbol": "@497",
+          "type": 6
+        },
+        {
+          "offset": 916,
+          "symbol": "@498",
+          "type": 5
+        },
+        {
+          "offset": 924,
+          "symbol": "@498",
+          "type": 6
+        },
+        {
+          "offset": 984,
+          "symbol": "@499",
+          "type": 5
+        },
+        {
+          "offset": 992,
+          "symbol": "@499",
+          "type": 6
+        },
+        {
+          "offset": 1004,
+          "symbol": "@500",
+          "type": 5
+        },
+        {
+          "offset": 1016,
+          "symbol": "@500",
+          "type": 6
+        },
+        {
+          "offset": 1028,
+          "symbol": "@501",
+          "type": 5
+        },
+        {
+          "offset": 1040,
+          "symbol": "@501",
+          "type": 6
+        },
+        {
+          "offset": 1068,
+          "symbol": "@502",
+          "type": 5
+        },
+        {
+          "offset": 1076,
+          "symbol": "@502",
+          "type": 6
+        },
+        {
+          "offset": 1136,
+          "symbol": "@503",
+          "type": 5
+        },
+        {
+          "offset": 1144,
+          "symbol": "@503",
+          "type": 6
+        },
+        {
+          "offset": 1196,
+          "symbol": "@504",
+          "type": 5
+        },
+        {
+          "offset": 1204,
+          "symbol": "@504",
+          "type": 6
+        },
+        {
+          "offset": 2400,
+          "symbol": "@505",
+          "type": 5
+        },
+        {
+          "offset": 2408,
+          "symbol": "@505",
+          "type": 6
+        },
+        {
+          "offset": 4216,
+          "symbol": "@506",
+          "type": 5
+        },
+        {
+          "offset": 4224,
+          "symbol": "@506",
+          "type": 6
+        },
+        {
+          "offset": 4228,
+          "symbol": "@507",
+          "type": 5
+        },
+        {
+          "offset": 4236,
+          "symbol": "@507",
+          "type": 6
+        },
+        {
+          "offset": 4404,
+          "symbol": "@508",
+          "type": 5
+        },
+        {
+          "offset": 4412,
+          "symbol": "@508",
+          "type": 6
+        },
+        {
+          "offset": 4416,
+          "symbol": "@509",
+          "type": 5
+        },
+        {
+          "offset": 4424,
+          "symbol": "@509",
+          "type": 6
+        },
+        {
+          "offset": 4436,
+          "symbol": "@510",
+          "type": 5
+        },
+        {
+          "offset": 4448,
+          "symbol": "@510",
+          "type": 6
+        },
+        {
+          "offset": 4520,
+          "symbol": "@511",
+          "type": 5
+        },
+        {
+          "offset": 4528,
+          "symbol": "@511",
+          "type": 6
+        },
+        {
+          "offset": 4540,
+          "symbol": "@512",
+          "type": 5
+        },
+        {
+          "offset": 4548,
+          "symbol": "@512",
+          "type": 6
+        },
+        {
+          "offset": 4596,
+          "symbol": "@513",
+          "type": 5
+        },
+        {
+          "offset": 4604,
+          "symbol": "@513",
+          "type": 6
+        },
+        {
+          "offset": 4608,
+          "symbol": "@514",
+          "type": 5
+        },
+        {
+          "offset": 4616,
+          "symbol": "@514",
+          "type": 6
+        },
+        {
+          "offset": 4720,
+          "symbol": "@515",
+          "type": 5
+        },
+        {
+          "offset": 4728,
+          "symbol": "@515",
+          "type": 6
+        },
+        {
+          "offset": 4800,
+          "symbol": "@516",
+          "type": 5
+        },
+        {
+          "offset": 4816,
+          "symbol": "@516",
+          "type": 6
+        },
+        {
+          "offset": 4848,
+          "symbol": "@517",
+          "type": 5
+        },
+        {
+          "offset": 4856,
+          "symbol": "@517",
+          "type": 6
+        },
+        {
+          "offset": 4940,
+          "symbol": "@516",
+          "type": 5
+        },
+        {
+          "offset": 4956,
+          "symbol": "@516",
+          "type": 6
+        },
+        {
+          "offset": 4984,
+          "symbol": "@518",
+          "type": 5
+        },
+        {
+          "offset": 4992,
+          "symbol": "@518",
+          "type": 6
+        },
+        {
+          "offset": 4996,
+          "symbol": "@519",
+          "type": 5
+        },
+        {
+          "offset": 5004,
+          "symbol": "@519",
+          "type": 6
+        },
+        {
+          "offset": 5008,
+          "symbol": "@520",
+          "type": 5
+        },
+        {
+          "offset": 5016,
+          "symbol": "@520",
+          "type": 6
+        },
+        {
+          "offset": 5188,
+          "symbol": "@521",
+          "type": 5
+        },
+        {
+          "offset": 5196,
+          "symbol": "@521",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x00314390",
+      "candidate_size": 112,
+      "first_difference": 13,
+      "implementation": "void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel)\n{\n    if (((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId != 0xff)\n    {\n        fn_vStaFree(p_vMemBlock, ucChannel);\n    }\n    else\n    {\n        PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection); free((char*)p_vMemBlock - 16); PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);\n    }\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "fn_vGenFree",
+      "reason": "EQUIVALENT: base/scaled-index registers swapped (v1/a2) on the unfolded g_d_stCurrentModeInfo[ucChannel].ucMode access. Permuter only matches by adding a dead 'if (info[ch].ucModuleId && info[ch].ucModuleId) {}' re-read inside the else branch (same artefact recorded in fn_p_vGenAlloc), which is not adopted; the original probably re-reads the channel info in code that compiles away (e.g. a debug/assert macro).",
+      "size": 112,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MMG/cpammg.c",
+      "status": "EQUIVALENT",
+      "target_size": 112,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -23127,6 +23443,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
       "status": "MATCH"
     },
+    "0x001328f0": {
+      "address": "0x001328f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "viBufCreate",
+      "size": 116,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
+      "status": "MATCH"
+    },
     "0x00132970": {
       "address": "0x00132970",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -23269,6 +23593,14 @@
       "name": "vagInit",
       "size": 44,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/audiodec.c",
+      "status": "MATCH"
+    },
+    "0x001330a0": {
+      "address": "0x001330a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MNC_fn_bGetPointerInfo",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/MNC/load/loadarea.c",
       "status": "MATCH"
     },
     "0x00133120": {
@@ -30359,6 +30691,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
       "status": "MATCH"
     },
+    "0x00187800": {
+      "address": "0x00187800",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_bLockSound__Fb",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/snd3d.cpp",
+      "status": "MATCH"
+    },
     "0x00188cf0": {
       "address": "0x00188cf0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -31365,6 +31705,14 @@
       "name": "AGO2_bIsTypeAlreadyExists",
       "size": 108,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO2.c",
+      "status": "MATCH"
+    },
+    "0x001ea150": {
+      "address": "0x001ea150",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO2_vReInit",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/Tobies.c",
       "status": "MATCH"
     },
     "0x001ea460": {
@@ -32375,6 +32723,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
       "status": "MATCH"
     },
+    "0x001fc4f0": {
+      "address": "0x001fc4f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_bIntelligenceEngine",
+      "size": 296,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
     "0x001fc620": {
       "address": "0x001fc620",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -32383,11 +32739,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
       "status": "MATCH"
     },
+    "0x001fc700": {
+      "address": "0x001fc700",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucIntelligenceRulesEngine",
+      "size": 384,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fc880": {
+      "address": "0x001fc880",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stIntelligenceEvalTreeEngine",
+      "size": 432,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
     "0x001fca30": {
       "address": "0x001fca30",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stEvalTree",
       "size": 32,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
+      "status": "MATCH"
+    },
+    "0x001fca50": {
+      "address": "0x001fca50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stEvalMetaAction",
+      "size": 472,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Intell.c",
       "status": "MATCH"
     },
@@ -33183,6 +33563,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Fnct.c",
       "status": "MATCH"
     },
+    "0x002075a0": {
+      "address": "0x002075a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_p_stCameraSetTransparencyFlag",
+      "size": 116,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MATCH"
+    },
     "0x00207620": {
       "address": "0x00207620",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -33191,11 +33579,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
       "status": "MATCH"
     },
+    "0x00207c90": {
+      "address": "0x00207c90",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_p_stForceNormalState",
+      "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MATCH"
+    },
     "0x00207e90": {
       "address": "0x00207e90",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CAM_fn_p_stReset",
       "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MATCH"
+    },
+    "0x002080e0": {
+      "address": "0x002080e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_p_stConstants",
+      "size": 120,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
       "status": "MATCH"
     },
@@ -40429,7 +40833,7 @@
       "name": "GMT_fn_xTestCollideMaterialTypeOfIdentifier",
       "size": 56,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GMT/GmtFunc.c",
-      "status": "EQUIVALENT"
+      "status": "MATCH"
     },
     "0x002a5030": {
       "address": "0x002a5030",
@@ -40932,6 +41336,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "GLI_Material_fn_vInitMultiTexturePart",
       "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
+    "0x002a9be0": {
+      "address": "0x002a9be0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vRefreshAllCyclingTextures",
+      "size": 116,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"
     },
@@ -42063,6 +42475,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawVertexArray.c",
       "status": "MATCH"
     },
+    "0x002be220": {
+      "address": "0x002be220",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "TBF_pReadLevelTRSBloc",
+      "size": 208,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_texture.c",
+      "status": "MATCH"
+    },
+    "0x002be2f0": {
+      "address": "0x002be2f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "TBF_pReadLevel",
+      "size": 208,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_texture.c",
+      "status": "MATCH"
+    },
+    "0x002be3c0": {
+      "address": "0x002be3c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "TBF_pReadFix",
+      "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_texture.c",
+      "status": "MATCH"
+    },
     "0x002be710": {
       "address": "0x002be710",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -42607,11 +43043,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCache.cpp",
       "status": "MATCH"
     },
+    "0x002d7550": {
+      "address": "0x002d7550",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vDeleteSdlCache",
+      "size": 108,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCache.cpp",
+      "status": "MATCH"
+    },
     "0x002d75c0": {
       "address": "0x002d75c0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vInitSdlCache",
       "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCache.cpp",
+      "status": "MATCH"
+    },
+    "0x002d75f0": {
+      "address": "0x002d75f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "FindOldestSDLInstanceAndRemoveIt__10C_SdlCacheFv",
+      "size": 136,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCache.cpp",
+      "status": "MATCH"
+    },
+    "0x002d7680": {
+      "address": "0x002d7680",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "RemoveSdlInstance__10C_SdlCacheFP14_SDC_Instance_",
+      "size": 148,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCache.cpp",
       "status": "MATCH"
     },
@@ -43175,6 +43635,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
+    "0x002e7b30": {
+      "address": "0x002e7b30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vRestoreSavedFrameBuffer",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
     "0x002e8390": {
       "address": "0x002e8390",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -43292,6 +43760,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "FireFx_vDesinit",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
+      "status": "MATCH"
+    },
+    "0x002ec660": {
+      "address": "0x002ec660",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "FireFx_vDisplay",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
+      "status": "MATCH"
+    },
+    "0x002ec6e0": {
+      "address": "0x002ec6e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "FireFx_vProcess",
+      "size": 88,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
       "status": "MATCH"
     },
@@ -44325,7 +44809,7 @@
       "name": "ISI_fn_dGetVertexRLILODLightMapU",
       "size": 40,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ISI/ISI.c",
-      "status": "EQUIVALENT"
+      "status": "MATCH"
     },
     "0x002f8010": {
       "address": "0x002f8010",
@@ -44428,6 +44912,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MAT_fn_vSetIdentity",
       "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matspscl.c",
+      "status": "MATCH"
+    },
+    "0x002fd590": {
+      "address": "0x002fd590",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MAT_fn_xGetYScale",
+      "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matspscl.c",
+      "status": "MATCH"
+    },
+    "0x002fd610": {
+      "address": "0x002fd610",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MAT_fn_xGetXScale",
+      "size": 124,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matspscl.c",
       "status": "MATCH"
     },
@@ -44719,6 +45219,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MMG/cpammg.c",
       "status": "MATCH"
     },
+    "0x00314390": {
+      "address": "0x00314390",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vGenFree",
+      "size": 112,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MMG/cpammg.c",
+      "status": "MATCH"
+    },
     "0x00314400": {
       "address": "0x00314400",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -44964,6 +45472,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "PS2_fn_vLeaveCriticalSection",
       "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ps2/ps2critsect.c",
+      "status": "MATCH"
+    },
+    "0x00318e00": {
+      "address": "0x00318e00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "PS2_fn_vEnterCriticalSection",
+      "size": 156,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ps2/ps2critsect.c",
       "status": "MATCH"
     },
@@ -45684,6 +46200,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "TXT_ChangeDefaultColor",
       "size": 92,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
+      "status": "MATCH"
+    },
+    "0x00327430": {
+      "address": "0x00327430",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "TXT_vInit",
+      "size": 112,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
       "status": "MATCH"
     },

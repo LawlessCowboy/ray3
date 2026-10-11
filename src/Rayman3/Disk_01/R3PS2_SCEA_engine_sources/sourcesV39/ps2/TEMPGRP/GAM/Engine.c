@@ -1475,11 +1475,114 @@ void fn_vInitWaterStreakEffect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+short fn_hGetGLDDevice(int param0);
+void AI_vBatchProccessOrder(void);
+void GLI_vEndOfAI(void);
+void GAM_fn_vSetEngineInLevelMode(void);
+void fn_vActualizeEngineClock(void);
+void SHW_fn_vGlobalInitShadowCounter(void);
+int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice);
+void CAM_fn_vActualizeAViewport(int _lViewport);
+void HIE_fn_vInitMatrixStack(void);
+unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* _hVpt);
+void TakeCareOfCinemascopePS2(void);
+void fn_vDisplayFix(unsigned char ucIndex);
+void GLI_fn_vEndOfDisplay(void);
+void fn_vClearPlayanimTempGeometricObjects(void);
+void DEMO_fn_vCloseFirstInit(void);
+void fn_vBbFrameManagement(void);
+
+/* The target writes COP0 register 24 (mtc0 $zero, $24); C cannot express it.
+ * Spelled with the R5900 alias mtbpc, MWCC schedules it like retail did
+ * (including into branch delay slots). */
+inline void ENG_vClearCop0Register24(void)
+{
+    asm { mtbpc zero }
+}
+
+inline unsigned char ENG_bIsModeDeadLoop(void)
+{
+    unsigned char b = 0;
+    if (g_stEngineStructure.eEngineMode == 2)
+        b = 1;
+    return b;
+}
+
 void fn_vOneTrame(void)
 {
     int i;
     unsigned char uc_ViewPortIndex;
-    /* TODO: decompile from asm/... */
+
+    ENG_vClearCop0Register24();
+    g_stEngineStructure.hGLDDevice = fn_hGetGLDDevice(0);
+    if (!ENG_bIsModeDeadLoop())
+    {
+        ((void (*)(int))p_fn_vEngine)(0);
+        AI_vBatchProccessOrder();
+        if (g_stEngineStructure.eEngineMode != 2)
+        {
+            ENG_vClearCop0Register24();
+            GLI_vEndOfAI();
+            GAM_fn_vSetEngineInLevelMode();
+            ENG_vClearCop0Register24();
+            fn_vActualizeEngineClock();
+            ENG_vClearCop0Register24();
+            ENG_vClearCop0Register24();
+            SHW_fn_vGlobalInitShadowCounter();
+            GLD_bClearViewportWithChoice(g_stEngineStructure.hGLDDevice, 0, 3);
+            if (g_bSectorDisplayPriorityFixed)
+            {
+                for (i = 0; i < 4; i++)
+                {
+                    uc_ViewPortIndex = g_a4_ucSectorDisplayPriority[i];
+                    if (uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode)
+                    {
+                        g_ucCurrentViewport = uc_ViewPortIndex;
+                        ((void (*)(int))p_fn_vDisplayAll)(uc_ViewPortIndex);
+                    }
+                }
+            }
+            else
+            {
+                if (GLI_g_AfterEffect == 4)
+                {
+                    if (g_stEngineStructure.ucNumberOfPlayersInMultiMode == 1)
+                        GLI_g_StereoVisionMode = 1;
+                }
+                for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++)
+                {
+                    g_ucCurrentViewport = uc_ViewPortIndex;
+                    ((void (*)(int))p_fn_vDisplayAll)(uc_ViewPortIndex);
+                }
+                if (GLI_g_AfterEffect == 4 && g_stEngineStructure.ucNumberOfPlayersInMultiMode == 1)
+                {
+                    GLI_g_StereoVisionMode = 2;
+                    CAM_fn_vActualizeAViewport(0);
+                    g_ucCurrentViewport = 0;
+                    ((void (*)(int))p_fn_vDisplayAll)(0);
+                    GLI_g_StereoVisionMode = 0;
+                }
+            }
+            ENG_vClearCop0Register24();
+            g_ucCurrentViewport = 255;
+            CAM_fn_vActualizeAViewport(4);
+            HIE_fn_vInitMatrixStack();
+            HIE_fn_bInitCameraMatrixStack(&g_stEngineStructure.a_stViewportAttr[4]);
+            TakeCareOfCinemascopePS2();
+            fn_vDisplayFix(4);
+            ENG_vClearCop0Register24();
+            ENG_vClearCop0Register24();
+            GLI_fn_vEndOfDisplay();
+            ENG_vClearCop0Register24();
+            GAM_fn_vSetEngineInLevelMode();
+            ENG_vClearCop0Register24();
+            fn_vClearPlayanimTempGeometricObjects();
+            ((void (*)(void))p_fn_vReadInput)();
+            DEMO_fn_vCloseFirstInit();
+            fn_vBbFrameManagement();
+            ENG_vClearCop0Register24();
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Engine.c lines 1472–1546 */

@@ -5138,39 +5138,463 @@ void PLD_fn_vUnLoadLevelFamilies(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef void* (*MNC_tfnAllocator_)(unsigned int);
+void GLI_vSetProgressCallBack(unsigned int SizeToRead);
+void GLI_PrintDebugString(char* szString);
+void CTL_SetCurrentMap(char* Map);
+void GLI_HysteresisLevelStart(char* levelname);
+void GLI_vResetTempList(void);
+void VID_fn_vPlayVideoIfAskedAfterLevel(void);
+void GAM_fn_vSaveGameAfterVideoIfNeeded(void);
+unsigned char fn_bLevelHadTransitionMemory(void);
+void GLI_vLoadCarton(char* levelname);
+void CheckPS2GLMem(void);
+void SetAllocMode(int Mode);
+void CheckAllocMode(int Mode);
+unsigned char fn_bDoTransition(void);
+void LS_Create(int Mode);
+char* PLD_szLocationFromAreaId(_tdeAreaName eAreaId, char* szName);
+int fn_lGetTransitionBloc(void);
+MNC_tfnAllocator_ fn_pfnCurrentTransitionAllocator(void);
+char* MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId, MNC_tfnAllocator_ _pfnAllocator);
+char* MNC_fn_pcLoadArea(char* _szAreaName, unsigned int _u32AreaId);
+void PS2_fn_vEnterGLCriticalSection(void);
+void PS2_fn_vLeaveGLCriticalSection(void);
+void HMU_fn_vInitNormalLevelMemory(unsigned int _ulNormalMemSize);
+void HMU_fn_vInitTempLevelMemory(unsigned int _ulTempMemSize);
+void HMU_fn_vSetMemoriesInLevelMode(void);
+unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
+void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
+void HMU_fn_vInitNormalTransition1Memory(unsigned int _ulNormalMemSize);
+void HMU_fn_vInitTempTransition1Memory(unsigned int _ulTempMemSize);
+void HMU_fn_vInitNormalTransition2Memory(unsigned int _ulNormalMemSize);
+void HMU_fn_vInitTempTransition2Memory(unsigned int _ulTempMemSize);
+unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void);
+unsigned char HMU_fn_ucGetTransition2NormalMemoryBlock(void);
+void fn_vTVS(void);
+HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* _hSprObj);
+void fn_v3dDataInitValueSAI(tdst3dData_* h_3dData);
+int SND_fn_bInitDataLoadSnd(char* szName);
+void SND_fn_vStartLoad(void);
+char* fn_p_szGetLevelName(void);
+char* Strcat(char* s1, char* s2);
+char* Strrchr(char* string, int ch);
+int SND_fn_bLoadBank(char* pch_NameWithoutExt);
+void SND_fn_vFinishLoad(char* pIdStr);
+unsigned char fn_bGetFamilyProperty(tdstFamilyList_* h_Family, unsigned char ucPropertyMask);
+unsigned char fn_ucFindFamilyIdOfFamilyType(int otType);
+unsigned char GAM_fn_bIsFamilyToLoad(unsigned char ucFamilyId);
+unsigned char fn_ucFindPersonalIdOfPersonalType(int otType);
+unsigned char GAM_fn_bIsActorToLoad(unsigned char ucActorId);
+_SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId);
+void* memcpy(void* dst, const void* src, size_t n);
+int printf(const char* format, ...);
+int sprintf(char* s, const char* format, ...);
+void CheckForTutorial(char* Name);
+char* PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName);
+void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, int iStartBank, int iNumberOfBanks);
+void fn_v_Transition_CorrectTextureChannelTable(void);
+
+/* The target writes COP0 register 24 (mtc0 zero, $24); C cannot express it.
+ * Spelled with the R5900 alias mtbpc, MWCC schedules it like an ordinary
+ * instruction, filling jal delay slots as in retail. */
+inline void PLD_vClearCop0Register24Sched(void)
+{
+    asm { mtbpc zero }
+}
+/* The write placed right before a call has no hazard nop in the target, which
+ * only the noreorder spelling reproduces. */
+inline void PLD_vClearCop0Register24Open(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    }
+}
+
+#define M_READ(type) (*((type*)pcCMBAddress)++)
+#define M_READ_STRUCT(dst, id) { stStructDef_* p_stDef = &g_stStructArray[id]; if (dst) memcpy((dst), pcCMBAddress, p_stDef->u32ActualSize); pcCMBAddress += p_stDef->u32ActualSize; }
+
 void PLD_fn_vLoadLevel(char* _szLevelName)
 {
-    unsigned char ucCharacterId;
-    int i;
-    HIE_tdstSuperObject_* hCharacter;
-    unsigned char ucFamilyId;
-    tdstFamilyList_* p_stThisFamily;
-    char* pch_Next;
-    char ch_Buffer[1024];
-    tdstEngineObject_* p_stObject;
-    tdstBrain_* h_Brain;
-    HIE_tdstSuperObject_* hNextCharacter;
-    unsigned int u32TextureChannel;
-    HIE_tdstSuperObject_** dummy;
-    unsigned int* pu32SoundEventIdArray;
-    unsigned int u32NbSoundEventForLevel;
-    unsigned int u32NbSoundEventForTransit;
-    unsigned int u32NbSoundEvent;
-    unsigned int u32MapSoundEventId;
-    HIE_tdstSuperObject_* h_SupObject;
-    int s32NumberOfTexturesNotInFix;
-    unsigned int u32DataClass;
-    unsigned int u32NbCond;
-    unsigned int u32NbFunc;
-    unsigned int u32NbProc;
-    unsigned int u32FixChecksum;
-    char* pcAnimCMBAddress;
-    char* pcCMBAddress;
-    char* pcTransitStartCMBAddress;
+    static char szTransitIdentifier[9] = "transit ";
     char* pcStartCMBAddress;
-    char s_szNumericName[4];
-    char param0[9];
-    /* TODO: decompile from asm/... */
+    char* pcTransitStartCMBAddress;
+    char* volatile pcCMBAddress;
+    char* pcAnimCMBAddress;
+    volatile unsigned int ulIndex;
+    unsigned int u32FixChecksum;
+    unsigned int u32NbProc;
+    unsigned int u32NbFunc;
+    unsigned int u32NbCond;
+    unsigned int u32DataClass;
+    int s32NumberOfTexturesNotInFix;
+    HIE_tdstSuperObject_* h_SupObject;
+    unsigned int u32MapSoundEventId;
+    unsigned int u32NbSoundEvent;
+    unsigned int u32NbSoundEventForTransit;
+    unsigned int u32NbSoundEventForLevel;
+    unsigned int* volatile pu32SoundEventIdArray;
+    HIE_tdstSuperObject_** volatile dummy;
+    unsigned int u32TextureChannel;
+    HIE_tdstSuperObject_* hNextCharacter;
+    tdstBrain_* h_Brain;
+    tdstEngineObject_* p_stObject;
+    char ch_Buffer[1024];
+    char* pch_Next;
+    tdstFamilyList_* p_stThisFamily;
+    unsigned char ucFamilyId;
+    HIE_tdstSuperObject_* hCharacter;
+    int i;
+    unsigned char ucCharacterId;
+
+    GLI_vSetProgressCallBack(0);
+    GLI_vSetProgressCallBack(11000000);
+
+    GLI_PrintDebugString("Loading Level");
+    CTL_SetCurrentMap(_szLevelName);
+    GLI_HysteresisLevelStart(_szLevelName);
+
+    PLD_vClearCop0Register24Open();
+    CheckForTutorial(_szLevelName);
+
+    GLI_vResetTempList();
+
+    PLD_vClearCop0Register24Sched();
+    VID_fn_vPlayVideoIfAskedAfterLevel();
+
+    PLD_vClearCop0Register24Sched();
+    GAM_fn_vSaveGameAfterVideoIfNeeded();
+
+    if (!fn_bLevelHadTransitionMemory())
+        GLI_vLoadCarton(_szLevelName);
+
+    if (!fn_bLevelHadTransitionMemory())
+    {
+        for (ulIndex = 0; ulIndex < g_stFixInfo.ulNbObject; ulIndex++)
+        {
+            h_Brain = ((HIE_tdstSuperObject_*)g_stFixInfo.a20_stObjects[ulIndex])->hLinkedObject.p_stCharacter->h_Brain;
+            if (h_Brain)
+                memcpy((char*)h_Brain + 8, (char*)g_a_LinksOfSuperObjectInFix + ulIndex * 0x18, 0x18);
+        }
+    }
+
+    CheckPS2GLMem();
+    G_DMM_CurrentAllocMode++;
+    SetAllocMode(G_DMM_CurrentAllocMode);
+    if (G_DMM_CurrentAllocMode == 2)
+        CheckAllocMode(G_DMM_CurrentAllocMode - 1);
+
+    if (!fn_bDoTransition())
+        LS_Create(2);
+
+    gp_stNewActualWorld = 0;
+    gp_stNewDynamicWorld = 0;
+    gp_stNewInactiveDynamicWorld = 0;
+
+    if ((pcTransitStartCMBAddress = pcCMBAddress = MNC_fn_pcLoadAreaWithAllocator(PLD_szLocationFromAreaId(2, _szLevelName), fn_lGetTransitionBloc() == 2 ? 2 : 3, fn_pfnCurrentTransitionAllocator())) != NULL)
+    {
+        if (g_iLinkNumberA > 50)
+            g_bLevelHasTransitionMemory = 1;
+
+        if (!fn_bLevelHadTransitionMemory())
+        {
+            g_stEngineStructure.a_hViewportArray = M_READ(tdstViewportManagement_*);
+            M_READ_STRUCT(&g_stEngineStructure.hMainCharacterList, 181);
+            gp_stDynamicWorld = M_READ(int);
+            gp_stActualWorld = M_READ(int);
+            gp_stNewDynamicWorld = M_READ(int);
+            gp_stInactiveDynamicWorld = M_READ(int);
+        }
+        else
+        {
+            g_pstBinaryViewport = M_READ(int);
+            M_READ_STRUCT(&g_pstMainCharacterList, 181);
+            dummy = M_READ(HIE_tdstSuperObject_**);
+            gp_stNewActualWorld = M_READ(int);
+            gp_stNewDynamicWorld = M_READ(int);
+            gp_stNewInactiveDynamicWorld = M_READ(int);
+        }
+    }
+    else
+    {
+        g_bLevelHasTransitionMemory = 0;
+    }
+
+    printf("%s\n", PLD_szLocationFromAreaId(1, _szLevelName));
+    pcStartCMBAddress = pcCMBAddress = MNC_fn_pcLoadArea(PLD_szLocationFromAreaId(1, _szLevelName), 1);
+    printf("level@%08x\n", pcStartCMBAddress);
+
+    u32FixChecksum = M_READ(unsigned int);
+    if (u32FixChecksum != g_ulFixChecksum)
+        printf("level checksum doesn't match with fix checksum !!!\n");
+
+    u32NbProc = M_READ(unsigned int);
+    u32NbFunc = M_READ(unsigned int);
+    u32NbCond = M_READ(unsigned int);
+    if (u32NbProc != 876) printf("\nCurrent NbProc = %d instead of %d\n", 876, u32NbProc); if (u32NbFunc != 446) printf("\nCurrent NbFunc = %d instead of %d\n", 446, u32NbFunc); if (u32NbCond != 178) printf("\nCurrent Nbcond = %d instead of %d\n", 178, u32NbCond);
+
+    u32DataClass = M_READ(unsigned int);
+    if (u32DataClass != g_ulEngineClass)
+    {
+        printf("level data class (0x%08x) not equal to engine class (0x%08x)\n");
+        while (1)
+            ;
+    }
+
+    g_pcLvlTimeStamp = (int)pcCMBAddress; pcCMBAddress += 40;
+    pcCMBAddress += 4;
+    pcCMBAddress += 4;
+
+    PS2_fn_vEnterGLCriticalSection();
+    GLI_PrintDebugString("HMU Allocation");
+    HMU_fn_vInitNormalLevelMemory(300000);
+    HMU_fn_vInitTempLevelMemory(1000000);
+    HMU_fn_vSetMemoriesInLevelMode();
+    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock());
+    GLI_PrintDebugString("HMU Allocation End ");
+    PS2_fn_vLeaveGLCriticalSection();
+
+    if (g_bLevelHasTransitionMemory)
+    {
+        if (fn_lGetTransitionBloc() != 1)
+        {
+            HMU_fn_vInitNormalTransition1Memory(10000);
+            HMU_fn_vInitTempTransition1Memory(90000);
+        }
+        else
+        {
+            HMU_fn_vInitNormalTransition2Memory(10000);
+            HMU_fn_vInitTempTransition2Memory(90000);
+        }
+    }
+
+    s32NumberOfTexturesNotInFix = M_READ(int);
+    gs_lNumberOfTextureToCreate = g_lNumberOfTexturesInFix + s32NumberOfTexturesNotInFix;
+
+    for (ulIndex = g_lNumberOfTexturesInFix; ulIndex < gs_lNumberOfTextureToCreate; ulIndex++)
+        ((int*)gs_aDEFTableOfTextureAlreadyRead)[ulIndex] = M_READ(int);
+
+    if (fn_lGetTransitionBloc() == 1)
+        g_ucIdOfNextTransitionbloc = HMU_fn_ucGetTransition2NormalMemoryBlock();
+    else
+        g_ucIdOfNextTransitionbloc = HMU_fn_ucGetTransition1NormalMemoryBlock();
+
+    for (ulIndex = g_lNumberOfTexturesInFix; ulIndex < gs_lNumberOfTextureToCreate; ulIndex++)
+    {
+        u32TextureChannel = M_READ(unsigned int);
+        if (u32TextureChannel == HMU_fn_ucGetTransition1NormalMemoryBlock() || u32TextureChannel == HMU_fn_ucGetTransition2NormalMemoryBlock())
+            ((int*)gs_aDEFTableOfTextureMemoryChannels)[ulIndex] = g_ucIdOfNextTransitionbloc;
+        else
+            ((int*)gs_aDEFTableOfTextureMemoryChannels)[ulIndex] = u32TextureChannel;
+    }
+
+    if (fn_bLevelHadTransitionMemory())
+    {
+        dummy = M_READ(HIE_tdstSuperObject_**);
+        dummy = M_READ(HIE_tdstSuperObject_**);
+        dummy = M_READ(HIE_tdstSuperObject_**);
+        SECT_hNewFatherSector = M_READ(int);
+    }
+    else if (!g_bLevelHasTransitionMemory)
+    {
+        gp_stActualWorld = M_READ(int);
+        gp_stDynamicWorld = M_READ(int);
+        gp_stInactiveDynamicWorld = M_READ(int);
+        SECT_hFatherSector = M_READ(int);
+    }
+    else
+    {
+        dummy = M_READ(HIE_tdstSuperObject_**);
+        dummy = M_READ(HIE_tdstSuperObject_**);
+        dummy = M_READ(HIE_tdstSuperObject_**);
+        SECT_hFatherSector = M_READ(int);
+    }
+
+    gs_hFirstSubMapPosition = M_READ(int);
+    M_READ_STRUCT(&g_stAlways, 164);
+    M_READ_STRUCT(&g_stObjectTypes, 167);
+    gp_stLight = M_READ(int);
+    g_hCharacterLauchingSoundEvents = M_READ(int);
+
+    if (!g_bLevelHasTransitionMemory)
+        g_stEngineStructure.a_hViewportArray = M_READ(tdstViewportManagement_*);
+
+    M_READ_STRUCT(NULL, 177);
+    M_READ_STRUCT(&g_stEngineStructure.hFamilyList, 89);
+    M_READ_STRUCT(&g_stEngineStructure.hAlwaysActiveCharactersList, 179);
+
+    if (!g_bLevelHasTransitionMemory)
+        M_READ_STRUCT(&g_stEngineStructure.hMainCharacterList, 181);
+
+    if (fn_bLevelHadTransitionMemory())
+        ulIndex = M_READ(unsigned int);
+    else
+        g_stEngineStructure.h_StdCamCaracter = M_READ(HIE_tdstSuperObject_*);
+
+    IPO_g_ucNumberOfRLITables = M_READ(unsigned char);
+    g_stEngineStructure.ucCurrentLevel = M_READ(unsigned char);
+    if ((int)pcCMBAddress & 3)
+        pcCMBAddress += 4 - ((int)pcCMBAddress & 3);
+    g_stEngineStructure.ulNumberOfSOLAllocated = M_READ(unsigned int);
+    g_stEngineStructure.ulNumberOfSOLLoaded = M_READ(unsigned int);
+    g_stEngineStructure.p_hSOL = M_READ(tdstSuperObjectLinks_**);
+    g_stNewCineManager = M_READ(int);
+    COL_g_d_lTaggedFacesTable = M_READ(int);
+    COL_g_lMaxNumberOfTaggedFaces = M_READ(int);
+    u32MapSoundEventId = M_READ(unsigned int);
+    u32NbSoundEventForLevel = M_READ(unsigned int);
+    u32NbSoundEventForTransit = M_READ(unsigned int);
+    u32NbSoundEvent = u32NbSoundEventForLevel + u32NbSoundEventForTransit;
+    printf("Nb Sound Events in level = %d\n", u32NbSoundEvent);
+    pu32SoundEventIdArray = M_READ(unsigned int*);
+    M_READ_STRUCT(&SAI_g_stInternalStructure, 185);
+
+    g_NbPersoWithSettingsInFix = M_READ(unsigned int);
+    for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)
+    {
+        g_a_SettingsOfPerso[ulIndex].hCharacter = M_READ(HIE_tdstSuperObject_*);
+        if ((int)pcCMBAddress & 15)
+            pcCMBAddress += 16 - ((int)pcCMBAddress & 15);
+        M_READ_STRUCT(&g_a_SettingsOfPerso[ulIndex].tdstMatrix, 190);
+        g_a_SettingsOfPerso[ulIndex].ulFlags = M_READ(unsigned int);
+        g_a_SettingsOfPerso[ulIndex].ucTransparency = M_READ(unsigned char);
+        pcCMBAddress += 3;
+    }
+
+    fn_vTVS();
+
+    if (g_bLevelHasTransitionMemory == 1)
+    {
+        if (!fn_bLevelHadTransitionMemory())
+        {
+            g_iNbPersoOfFixInDynamicHierarchy = 0;
+            for (ulIndex = 0, h_SupObject = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn, hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(h_SupObject); h_SupObject; ulIndex++, h_SupObject = hNextCharacter, hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(h_SupObject))
+            {
+                if (h_SupObject->ulTypeOfLinkedObject == 2)
+                {
+                    gp_stPersoInDynamicHierarchy[g_iNbPersoOfFixInDynamicHierarchy] = (int)h_SupObject;
+                    g_iNbPersoOfFixInDynamicHierarchy++;
+                    { HIE_tdstSuperObject_* hFather = (HIE_tdstSuperObject_*)gp_stNewDynamicWorld; if (h_SupObject->hNextBrotherDyn) h_SupObject->hNextBrotherDyn->hPrevBrotherDyn = h_SupObject->hPrevBrotherDyn; if (h_SupObject->hPrevBrotherDyn) h_SupObject->hPrevBrotherDyn->hNextBrotherDyn = h_SupObject->hNextBrotherDyn; if (h_SupObject->hFatherDyn) { h_SupObject->hFatherDyn->lNumberOfElementsDyn--; if (h_SupObject->hFatherDyn->hFirstElementDyn == h_SupObject) h_SupObject->hFatherDyn->hFirstElementDyn = h_SupObject->hNextBrotherDyn; if (h_SupObject->hFatherDyn->hLastElementDyn == h_SupObject) h_SupObject->hFatherDyn->hLastElementDyn = h_SupObject->hPrevBrotherDyn; } h_SupObject->hNextBrotherDyn = NULL; h_SupObject->hPrevBrotherDyn = NULL; h_SupObject->hFatherDyn = NULL; h_SupObject->hNextBrotherDyn = NULL; h_SupObject->hPrevBrotherDyn = hFather->hLastElementDyn; h_SupObject->hFatherDyn = hFather; if (hFather->hFirstElementDyn == NULL) hFather->hFirstElementDyn = h_SupObject; else hFather->hLastElementDyn->hNextBrotherDyn = h_SupObject; hFather->hLastElementDyn = h_SupObject; hFather->lNumberOfElementsDyn++; }
+                }
+            }
+
+            gp_stDynamicWorld = gp_stNewDynamicWorld;
+
+            for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)
+            {
+                g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix = g_a_SettingsOfPerso[ulIndex].tdstMatrix;
+                g_a_SettingsOfPerso[ulIndex].hCharacter->ulFlags = g_a_SettingsOfPerso[ulIndex].ulFlags;
+                g_a_SettingsOfPerso[ulIndex].hCharacter->fTransparenceLevel = g_a_SettingsOfPerso[ulIndex].ucTransparency;
+                p_stObject = g_a_SettingsOfPerso[ulIndex].hCharacter->ulTypeOfLinkedObject == 2 ? g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter : NULL;
+                p_stObject->h_3dData->ucTransparency = g_a_SettingsOfPerso[ulIndex].ucTransparency;
+            }
+        }
+        else
+        {
+            for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)
+            {
+                p_stObject = g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter;
+                if (p_stObject->h_Brain && !p_stObject->h_Brain->bActiveDuringTransition)
+                    p_stObject->h_3dData->stGLIObjectMatrix = g_a_SettingsOfPerso[ulIndex].tdstMatrix;
+
+                fn_v3dDataInitValueSAI(g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter->h_3dData);
+            }
+        }
+    }
+    else
+    {
+        for (ulIndex = 0; ulIndex < g_NbPersoWithSettingsInFix; ulIndex++)
+        {
+            g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix = g_a_SettingsOfPerso[ulIndex].tdstMatrix;
+            g_a_SettingsOfPerso[ulIndex].hCharacter->ulFlags = g_a_SettingsOfPerso[ulIndex].ulFlags;
+            g_a_SettingsOfPerso[ulIndex].hCharacter->fTransparenceLevel = g_a_SettingsOfPerso[ulIndex].ucTransparency;
+            p_stObject = g_a_SettingsOfPerso[ulIndex].hCharacter->ulTypeOfLinkedObject == 2 ? g_a_SettingsOfPerso[ulIndex].hCharacter->hLinkedObject.p_stCharacter : NULL;
+            p_stObject->h_3dData->ucTransparency = g_a_SettingsOfPerso[ulIndex].ucTransparency;
+        }
+    }
+
+    printf("loadlevel, apres rearrangement des hierarchies:\n");
+    printf("============================\n");
+
+    g_hDemoSOList = M_READ(int);
+    PLD_g_ulNumberOfFixVisualMaterials = M_READ(unsigned int);
+    PLD_g_ulNumberOfTransitionVisualMaterials = M_READ(unsigned int);
+    GLI_g_ulNumberOfVisualMaterials = M_READ(unsigned int);
+    memcpy(GLI_g_StaticCopyOfArrayOfVisualMaterial, *(void**)pcCMBAddress, GLI_g_ulNumberOfVisualMaterials * 4);
+    fn_v_Transition_CorrectTextureChannelTable();
+    pcCMBAddress += 4;
+    pcAnimCMBAddress = M_READ(char*);
+    PLD_fn_vReadAnimationsBanks(&pcAnimCMBAddress, 1, 4);
+
+    SND_fn_bInitDataLoadSnd("Rayman3");
+
+    GLI_PrintDebugString("SND TRANSIT BANK"); SND_fn_vStartLoad(); strcpy(ch_Buffer, "trans\\"); Strcat(ch_Buffer, fn_p_szGetLevelName()); SND_fn_bLoadBank(ch_Buffer); szTransitIdentifier[7] = '0' + (char)fn_lGetTransitionBloc(); SND_fn_vFinishLoad(szTransitIdentifier); GLI_PrintDebugString("SND TRANSIT BANK END");
+
+    SND_fn_vStartLoad();
+
+    { char szLevelBank[1024]; GLI_PrintDebugString("SND LEVEL BANK"); strcpy(szLevelBank, fn_p_szGetLevelName()); Strrchr(szLevelBank, 0); PLD_vClearCop0Register24Open(); SND_fn_bLoadBank(szLevelBank); GLI_PrintDebugString("SND LEVEL BANK END"); }
+
+    GLI_PrintDebugString("OPTIONAL BANKS");
+
+    for (i = 0, p_stThisFamily = g_stEngineStructure.hFamilyList.hFirstElementDyn; p_stThisFamily; p_stThisFamily = p_stThisFamily->hNextBrotherDyn, i++)
+    {
+        if (fn_bGetFamilyProperty(p_stThisFamily, 1))
+        {
+            ucFamilyId = fn_ucFindFamilyIdOfFamilyType(p_stThisFamily->otObjectFamilyType);
+            if (!g_ax_pA3dGENERAL[p_stThisFamily->ucStorageBank] &&
+                GAM_fn_bIsFamilyToLoad(ucFamilyId))
+            {
+                { unsigned char ucBank = p_stThisFamily->ucStorageBank; char szAnimName[40]; char* pcFamilyAnimCMBAddress; sprintf(szAnimName, "%s\\ani%d", _szLevelName, ucBank - 5); pcFamilyAnimCMBAddress = PLD_fn_pcLoadArea(ucBank + 102, szAnimName); if (pcFamilyAnimCMBAddress) { g_pcAnimationsTimeStamp = (int)pcFamilyAnimCMBAddress; pcFamilyAnimCMBAddress += 40; pcFamilyAnimCMBAddress += 4; PLD_fn_vReadAnimationsBanks(&pcFamilyAnimCMBAddress, ucBank, 1); } }
+
+                { static char s_szNumericName[4]; sprintf(s_szNumericName, "%d", ucFamilyId); SND_fn_bLoadBank(s_szNumericName); }
+            }
+        }
+    }
+
+    printf("End of optional families load / Start of optional instances load\n");
+
+    for (i = 0, hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn; hCharacter; hCharacter = hCharacter->hNextBrotherDyn, i++)
+    {
+        if (hCharacter->ulTypeOfLinkedObject == 2)
+        {
+            if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucOptional & 1)
+            {
+                ucCharacterId = fn_ucFindPersonalIdOfPersonalType(hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectPersonalType);
+
+                if (GAM_fn_bIsActorToLoad(ucCharacterId))
+                {
+                    static char s_szNumericName[5] = "I"; sprintf(s_szNumericName + 1, "%d", ucCharacterId); SND_fn_bLoadBank(s_szNumericName);
+                }
+            }
+        }
+    }
+
+    printf("End of optional instances load\n");
+
+    SND_fn_vFinishLoad("GAME");
+
+    GLI_PrintDebugString("OPTIONAL BANKS FINISHED");
+
+    g_stBeginMapSoundEvent.pstPtr = SND_fn_pstGetBlockEventFromId(u32MapSoundEventId);
+    g_bBeginMapSoundEventFlag = g_stBeginMapSoundEvent.pstPtr != NULL;
+
+    for (ulIndex = 0; ulIndex < u32NbSoundEventForTransit; ulIndex++)
+    {
+        unsigned int* p_u32Event = (unsigned int*)(pcTransitStartCMBAddress + pu32SoundEventIdArray[ulIndex]); *p_u32Event = (unsigned int)SND_fn_pstGetBlockEventFromId(*p_u32Event);
+    }
+    for (ulIndex = u32NbSoundEventForTransit; ulIndex < u32NbSoundEvent; ulIndex++)
+    {
+        unsigned int* p_u32Event = (unsigned int*)(pcStartCMBAddress + pu32SoundEventIdArray[ulIndex]); *p_u32Event = (unsigned int)SND_fn_pstGetBlockEventFromId(*p_u32Event);
+    }
+
+    GLI_PrintDebugString("SND REFERENCE FINISHED");
+
+    HMU_fn_vSetMemoriesInLevelMode();
+    GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock());
+
+    if (!fn_bDoTransition())
+        g_stEngineStructure.stCineManager = (CINE_Manager_*)g_stNewCineManager;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1445–1482 */
@@ -5660,7 +6084,7 @@ void PLD_fn_vLoadFix(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName)
+char* PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName)
 {
     char* szFilename;
     unsigned int u32AreaId;

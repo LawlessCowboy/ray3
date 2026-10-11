@@ -1161,9 +1161,9 @@ void shw_fn_vInternalDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstS
 unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj);
 unsigned char fn_bIsTransitionInProgress(void);
 /* Target +0x54 and +0x6c contain COP0 writes (mtc0 zero, $24), which cannot
- * be expressed in C. MWCC appends a hazard nop to an asm mtc0 unless the block
- * says .set noreorder; the target has no nop after the first write and one
- * after the second, so the second block carries it explicitly. */
+ * be expressed in C. The first has no hazard nop after it, so it keeps the
+ * .set noreorder spelling that MWCC leaves untouched. The second carries its
+ * hazard nop explicitly; the mtbpc spelling was tried and loses that nop. */
 inline void SHW_vClearCop0Register24(void)
 {
     asm {

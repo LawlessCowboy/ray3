@@ -445,6 +445,7 @@ struct GEO_tdstGeometricObject_ {
 struct C_FxList {
     tdstBaseFxListElement_* pFirst; /* +0x0 */
     void DeleteAll();
+    void DeleteAllNoFree(void);
     void DeleteAllSDLs();
     C_BaseFx* SearchElement(void* pSearchKey);
     void vAddElement(C_BaseFx* pElement);
@@ -2446,10 +2447,45 @@ void WaterFx_vInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The target writes COP0 register 24 (mtbpc, i.e. mtc0 zero, $24) around the
+ * processing and drawing; C cannot express it.  The R5900 alias mtbpc is used
+ * so MWCC schedules it like an ordinary instruction (delay slots, hazard nop). */
+inline void WaterFx_vClearCop0Register24(void)
+{
+    asm { mtbpc zero }
+}
+
+extern "C" void GLI_vSetOptimizedSDC(int flag);
+extern "C" void SDL_Draw(unsigned int hSDL);
+
 void WaterFx_vProcessAndDisplay(int bTransparent)
 {
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+    C_WaterFx* pFx;
+
+    p = WaterFx_g_ListToDisplay.pFirst;
+    if (p)
+    {
+        GLI_vSetOptimizedSDC(1);
+        while (p)
+        {
+            pFx = (C_WaterFx*)p->pFx;
+            if (pFx->m_bTransparent == bTransparent)
+            {
+                WaterFx_vClearCop0Register24();
+                pFx->Process();
+                WaterFx_vClearCop0Register24();
+                WaterFx_vClearCop0Register24();
+                if (((C_WaterFx*)p->pFx)->m_pSDL)
+                    SDL_Draw(((C_WaterFx*)p->pFx)->m_pSDL);
+                WaterFx_vClearCop0Register24();
+            }
+            p = p->pNext;
+        }
+        GLI_vSetOptimizedSDC(0);
+        if (bTransparent)
+            WaterFx_g_ListToDisplay.DeleteAllNoFree();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1118–1182 */

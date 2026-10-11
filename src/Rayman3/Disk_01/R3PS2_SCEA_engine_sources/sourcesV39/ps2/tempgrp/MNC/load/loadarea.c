@@ -38,9 +38,9 @@ struct anon_2 {
 };
 
 static unsigned int g_ulAreaChecksum;
-int g_a_pcEndOfArea[250];
+char* g_a_pcEndOfArea[250];
 anon_2 g_a_stOldLinkPointers[250];
-int g_a_pcAreaBasePointers[250];
+char* g_a_pcAreaBasePointers[250];
 void (*g_MNC_fn_vDefaultDeallocator)(void*);
 MNC_tfnAllocator_ g_MNC_fn_pvDefaultAllocator;
 
@@ -66,7 +66,21 @@ unsigned char MNC_fn_bGetPointerInfo(void* _pvAddress, int* _piAreaId, int* _piO
     int i;
     char* pcAddressAsChar;
     unsigned char bPointerFound;
-    /* TODO: decompile from asm/... */
+
+    pcAddressAsChar = (char*)_pvAddress;
+    bPointerFound = 0;
+
+    for (i = 0; !bPointerFound && i < 250; i++)
+    {
+        if (g_a_pcAreaBasePointers[i] <= pcAddressAsChar && pcAddressAsChar < g_a_pcEndOfArea[i])
+        {
+            *_piAreaId = i;
+            *_piOffset = pcAddressAsChar - g_a_pcAreaBasePointers[i];
+            bPointerFound = 1;
+        }
+    }
+
+    return bPointerFound;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\MNC\load\loadarea.c lines 751–757 */

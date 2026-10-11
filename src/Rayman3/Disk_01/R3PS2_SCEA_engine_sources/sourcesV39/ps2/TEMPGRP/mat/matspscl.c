@@ -81,10 +81,40 @@ void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _hTransform)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Retail uses sqrt.s, which C cannot express (sqrtf becomes a library call). */
+#define MTH_SQRT_TO(_result, _value) asm { sqrt.s _result, _value }
+
 float MAT_fn_xGetYScale(MAT_tdstTransformation_* _hTransform)
 {
     float xScale;
-    /* TODO: decompile from asm/... */
+
+    switch (_hTransform->eType)
+    {
+    case MAT_eTransform_Identity:
+    case MAT_eTransform_Translation:
+    case MAT_eTransform_Rotation:
+        xScale = 1.0f;
+        break;
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_Scale:
+        xScale = _hTransform->stScaleVector.xY;
+        break;
+    case MAT_eTransform_RotationZoom:
+    case MAT_eTransform_RotationScale:
+    case MAT_eTransform_ComplexRotationScale:
+        {
+            float x0 = _hTransform->stTransformMatrix.stCol_0.xY;
+            float x2 = _hTransform->stTransformMatrix.stCol_2.xY;
+            float x1 = _hTransform->stTransformMatrix.stCol_1.xY;
+            float xSqr = x0 * x0 + x1 * x1 + x2 * x2;
+            MTH_SQRT_TO(xScale, xSqr);
+        }
+        break;
+    default:
+        xScale = 0.0f;
+    }
+
+    return xScale;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matspscl.c lines 681–712 */
@@ -104,7 +134,34 @@ float MAT_fn_xGetYScale(MAT_tdstTransformation_* _hTransform)
 float MAT_fn_xGetXScale(MAT_tdstTransformation_* _hTransform)
 {
     float xScale;
-    /* TODO: decompile from asm/... */
+
+    switch (_hTransform->eType)
+    {
+    case MAT_eTransform_Identity:
+    case MAT_eTransform_Translation:
+    case MAT_eTransform_Rotation:
+        xScale = 1.0f;
+        break;
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_Scale:
+        xScale = _hTransform->stScaleVector.xX;
+        break;
+    case MAT_eTransform_RotationZoom:
+    case MAT_eTransform_RotationScale:
+    case MAT_eTransform_ComplexRotationScale:
+        {
+            float x0 = _hTransform->stTransformMatrix.stCol_0.xX;
+            float x2 = _hTransform->stTransformMatrix.stCol_2.xX;
+            float x1 = _hTransform->stTransformMatrix.stCol_1.xX;
+            float xSqr = x0 * x0 + x1 * x1 + x2 * x2;
+            MTH_SQRT_TO(xScale, xSqr);
+        }
+        break;
+    default:
+        xScale = 0.0f;
+    }
+
+    return xScale;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matspscl.c lines 616–668 */

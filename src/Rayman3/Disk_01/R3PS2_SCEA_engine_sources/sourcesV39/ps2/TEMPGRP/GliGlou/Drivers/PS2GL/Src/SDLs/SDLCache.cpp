@@ -526,6 +526,7 @@ struct SECT_tdstListOfSOCharacters_ {
 struct C_SdlCache {
     tdstSDLCacheEntry_* m_pList; /* +0x0 */
     C_SdlCache() : m_pList(0) {}
+    ~C_SdlCache();
     unsigned int FindOldestSDLInstanceAndRemoveIt(void);
     void RemoveSdlInstance(_SDC_Instance_* pInstance);
 };
@@ -779,6 +780,7 @@ struct SECT_tdstSector_ {
 struct C_InstanceList {
     unsigned int m_NbInstances; /* +0x0 */
     _SDC_Instance_** m_pList; /* +0x4 */
+    void Stealth_RemoveAndDeleteInstance(_SDC_Instance_* pInstance);
 };
 
 struct tdstEngineObject_ {
@@ -1140,7 +1142,7 @@ struct LST2_tdstAnchorTotdxHandleToFamilyListDyn {
 };
 
 int GLI_g_SdlCache;
-int PS2glLiberator;
+void (*PS2glLiberator)(void*);
 unsigned int GLI_g_FrameNumber;
 extern void* (*PS2glAllocator64)(unsigned int);
 
@@ -1166,9 +1168,22 @@ void* C_Sdl::__nw(unsigned int Size)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline C_SdlCache::~C_SdlCache()
+{
+    tdstSDLCacheEntry_* pEntry = m_pList;
+    while (pEntry)
+    {
+        tdstSDLCacheEntry_* pNext = pEntry->m_pNext;
+        PS2glLiberator(pEntry);
+        pEntry = pNext;
+    }
+    m_pList = 0;
+}
+
 void GLI_vDeleteSdlCache(void)
 {
-    /* TODO: decompile from asm/... */
+    delete (C_SdlCache*)GLI_g_SdlCache;
+    GLI_g_SdlCache = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 128–130 */
@@ -1213,7 +1228,24 @@ unsigned int C_SdlCache::FindOldestSDLInstanceAndRemoveIt(void)
     _SDC_Instance_* pOldestInstance;
     unsigned int MinValue;
     tdstSDLCacheEntry_* p;
-    /* TODO: decompile from asm/... */
+
+    MinValue = GLI_g_FrameNumber - 3;
+    pOldestInstance = 0;
+    for (p = m_pList; p; p = p->m_pNext)
+    {
+        if (p->m_pInstance->ulFrameNumber <= MinValue)
+        {
+            MinValue = p->m_pInstance->ulFrameNumber;
+            pOldestInstance = p->m_pInstance;
+        }
+    }
+
+    if (!pOldestInstance)
+        return 0;
+
+    RemoveSdlInstance(pOldestInstance);
+    pOldestInstance->pList->Stealth_RemoveAndDeleteInstance(pOldestInstance);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLCache.cpp lines 56–82 */
@@ -1241,5 +1273,24 @@ void C_SdlCache::RemoveSdlInstance(_SDC_Instance_* pInstance)
 {
     tdstSDLCacheEntry_* pPrevious;
     tdstSDLCacheEntry_* p;
-    /* TODO: decompile from asm/... */
+
+    pPrevious = m_pList;
+    if (pPrevious->m_pInstance == pInstance)
+    {
+        p = pPrevious->m_pNext;
+        PS2glLiberator(pPrevious);
+        m_pList = p;
+    }
+    else
+    {
+        for (p = pPrevious->m_pNext; p; pPrevious = p, p = p->m_pNext)
+        {
+            if (p->m_pInstance == pInstance)
+            {
+                pPrevious->m_pNext = p->m_pNext;
+                PS2glLiberator(p);
+                return;
+            }
+        }
+    }
 }

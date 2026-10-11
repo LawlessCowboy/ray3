@@ -1398,7 +1398,7 @@ struct MOR_stMorphObject_ {
 };
 
 char gcGlobAleat;
-int g_a_pfnDynamicFunction[2];
+DNM_stDynamics* (*g_a_pfnDynamicFunction[2])(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float);
 tdstEngineStructure_ g_stEngineStructure;
 int g_InGameMenu2DActivated;
 DNM_stDynamics* MEC_p_stDynamicsBaseMechanics(DNM_stDynamics*, HIE_tdstSuperObject_*, DNM_stParsingDatas*, void*, float);
@@ -1415,6 +1415,70 @@ DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics*, HIE_tdstSuperOb
 unsigned char fn_ucGetHitPoints(tdstEngineObject_* _p_stObject)
 {
     return _p_stObject->h_StandardGame->ucHitPoints;
+}
+
+int PLA_fn_bTestIfEndOfAction(HIE_tdstSuperObject_*);
+void fn_vKillEngineObjectOrAlwaysByPointer(tdstEngineObject_*);
+void fn_vMakeCharacterThink(HIE_tdstSuperObject_*);
+unsigned char fn_bIsTransitionInProgress(void);
+int CAM_fn_bGetLightComputation(tdstCineinfo_*);
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_*);
+void DNM_fn_vChangeIdCard(DNM_stDynamics*, int);
+DNM_stParsingDatas* fn_p_stDynamGetParsingDatas(tdstDynam_*);
+void fn_vDynamSetUsedMechanics(tdstDynam_*, int);
+int DNM_fn_eIdentityCardGetType(void* _hCurrent);
+int fn_hGetStateMechanicsIdCard(tdstState_* h_State);
+static inline unsigned char fn_bIsMiscFlag80(tdstStandardGame_* p_stStdGame)
+{
+    int bFlag = 0;
+    if (p_stStdGame->ucMiscFlags & 0x80) bFlag = 1;
+    return bFlag;
+}
+static inline int fn_bHasEndFlag4000(DNM_stDynamics* p_stDyn)
+{
+    int bFlag = p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000;
+    if (bFlag != 0) bFlag = 1;
+    return bFlag;
+}
+/* The target writes COP0 register 24 (mtc0 zero, $24); C cannot express it.
+ * Spelled with the R5900 alias mtbpc, MWCC schedules it like an ordinary
+ * instruction, as in retail. */
+inline void GAM_vClearCop0Register24Sync(void)
+{
+    asm { mtbpc zero }
+}
+
+#define MAKE_CHARACTER_REACT_DYNAMICS()  \
+{ \
+DNM_stParsingDatas* p_stParsingDatas; \
+DNM_stDynamics* p_stDynamics; \
+tdstState_* h_State; \
+tdstDynam_* h_Dynam; \
+int hIdCard; \
+h_Dynam = p_stSuperObj->hLinkedObject.p_stCharacter->h_Dynam; \
+if (h_Dynam != NULL) \
+{ \
+    if ((p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam)) != NULL) \
+    { \
+        GAM_vClearCop0Register24Sync(); \
+        h_State = p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData->h_CurrentState; \
+        if (h_State == NULL) \
+            hIdCard = 0; \
+        else \
+            hIdCard = fn_hGetStateMechanicsIdCard(h_State); \
+        if (p_stDynamics->m_tdstDynamicsBaseBlock.m_pCurrentIdCard != hIdCard) \
+            DNM_fn_vChangeIdCard(p_stDynamics, hIdCard); \
+        if (hIdCard != 0) \
+        { \
+            p_stParsingDatas = fn_p_stDynamGetParsingDatas(p_stSuperObj->hLinkedObject.p_stCharacter->h_Dynam); \
+            g_a_pfnDynamicFunction[DNM_fn_eIdentityCardGetType((void*)hIdCard)](p_stDynamics, p_stSuperObj, p_stParsingDatas, (void*)hIdCard, (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 1000.0f); \
+            if (fn_bHasEndFlag4000(p_stDynamics)) \
+                p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport->m_ulPrevSurfaceState = p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport->m_ulCurrSurfaceState; \
+            fn_vDynamSetUsedMechanics(h_Dynam, DNM_fn_eIdentityCardGetType((void*)hIdCard)); \
+        } \
+        GAM_vClearCop0Register24Sync(); \
+    } \
+} \
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 325–488 */
@@ -1449,8 +1513,62 @@ void fn_vMakeCharacterReact(HIE_tdstSuperObject_* p_stSuperObj)
 {
     tdstStandardGame_* hStdGame;
     unsigned int ulCurrentBits;
-    /* TODO: decompile from asm/... */
+
+    hStdGame = p_stSuperObj->hLinkedObject.p_stCharacter->h_StandardGame;
+    if (!g_InGameMenu2DActivated && hStdGame->otObjectFamilyType != -1)
+    {
+        ulCurrentBits = hStdGame->ulCustomBits;
+        if (ulCurrentBits & 0x20000)
+        {
+            if (PLA_fn_bTestIfEndOfAction(p_stSuperObj))
+            {
+                fn_vKillEngineObjectOrAlwaysByPointer(p_stSuperObj->hLinkedObject.p_stCharacter);
+                return;
+            }
+        }
+        if ((ulCurrentBits & 0x1800) != 0x1800)
+        {
+            if (!(ulCurrentBits & 0x10000))
+            {
+                if (!((ulCurrentBits & 0x80000) && fn_bIsMiscFlag80(hStdGame)))
+                {
+                    fn_vMakeCharacterThink(p_stSuperObj);
+                    hStdGame = p_stSuperObj->hLinkedObject.p_stCharacter->h_StandardGame;
+                    if (hStdGame != NULL)
+                        ulCurrentBits = hStdGame->ulCustomBits;
+                }
+            }
+            if (hStdGame != NULL && !(ulCurrentBits & 0x8000))
+            {
+                if (!((ulCurrentBits & 0x400000) && fn_bIsMiscFlag80(hStdGame)))
+                {
+                    if (!fn_bIsTransitionInProgress())
+                    {
+                        if (p_stSuperObj->hLinkedObject.p_stCharacter->h_Cineinfo != NULL)
+                        {
+                            if (!CAM_fn_bGetLightComputation(p_stSuperObj->hLinkedObject.p_stCharacter->h_Cineinfo))
+                            {
+                                MAKE_CHARACTER_REACT_DYNAMICS()
+                            }
+                        }
+                        else
+                        {
+                            MAKE_CHARACTER_REACT_DYNAMICS()
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+
+void fn_v3dDataUpdateBrainCounter(HIE_tdstSuperObject_*);
+int fn_b3dDataCanComputeBrain(HIE_tdstSuperObject_*);
+void fn_vInitDistanceWaypoint(void);
+void fn_vInitDistanceAct(void);
+void fn_vInitRecherchePerso(void);
+int fn_bDoReflexPerso(HIE_tdstSuperObject_*);
+int fn_bDoIntelligencePerso(HIE_tdstSuperObject_*);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 139–222 */
 /* addr: 0x00262910  size: 256 bytes */
@@ -1475,12 +1593,48 @@ void fn_vMakeCharacterReact(HIE_tdstSuperObject_* p_stSuperObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline unsigned short fn_uwGetBrainMainCounter(tdstEngineObject_* p_stObject)
+{
+    unsigned short uwCounter = 0;
+    if (p_stObject->h_3dData != NULL) uwCounter = p_stObject->h_3dData->uwBrainMainCounter;
+    return uwCounter;
+}
+
 void fn_vMakeCharacterThink(HIE_tdstSuperObject_* p_stSuperObj)
 {
     AI_tdstAIModel_* p_stAIModel;
     tdstBrain_* h_Brain;
     AI_tdstMind_* p_stMind;
-    /* TODO: decompile from asm/... */
+
+    fn_v3dDataUpdateBrainCounter(p_stSuperObj);
+    if (fn_b3dDataCanComputeBrain(p_stSuperObj))
+    {
+        h_Brain = p_stSuperObj->hLinkedObject.p_stCharacter->h_Brain;
+        if (h_Brain != NULL && (p_stMind = h_Brain->p_stMind) != NULL)
+        {
+            if (h_Brain->bActiveDuringTransition || !fn_bIsTransitionInProgress())
+            {
+                if (p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData != NULL)
+                    p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData->uwBrainMainCounter++;
+                gcGlobAleat = (p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData != NULL ? p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData->uwBrainMainCounter : 0) & 0xffff;
+                GAM_vClearCop0Register24Sync();
+                fn_vInitDistanceWaypoint();
+                fn_vInitDistanceAct();
+                fn_vInitRecherchePerso();
+                if (!fn_bDoReflexPerso(p_stSuperObj))
+                {
+                    h_Brain = p_stSuperObj->hLinkedObject.p_stCharacter->h_Brain;
+                    if (h_Brain != NULL)
+                    {
+                        p_stMind = h_Brain->p_stMind;
+                        if (p_stMind != NULL)
+                            fn_bDoIntelligencePerso(p_stSuperObj);
+                    }
+                }
+                GAM_vClearCop0Register24Sync();
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ia_dnm.c lines 100–122 */

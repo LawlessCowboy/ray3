@@ -373,6 +373,7 @@ int GetThreadId(void);
 int ReferThreadStatus(int tid, ThreadParam* info);
 int RotateThreadReadyQueue(int prio);
 
+#pragma auto_inline on
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 297–301 */
 /* addr: 0x00130c80  size: 48 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -389,6 +390,26 @@ void switchThread(void)
 
     ReferThreadStatus(GetThreadId(), &th_param);
     RotateThreadReadyQueue(th_param.currentPriority);
+}
+#pragma auto_inline reset
+
+int scePadRead(int port, int slot, unsigned char* rdata);
+int sceMpegDemuxPssRing(anon_2* vd, unsigned char* data, int size, void* ring, int ringsize);
+int readBufBeginPut(anon_0* b, unsigned char** ptr);
+int readBufEndPut(anon_0* b, int size);
+int readBufBeginGet(anon_0* b, unsigned char** ptr);
+int readBufEndGet(anon_0* b, int size);
+int strFileRead(anon_8* file, void* buff, int size);
+int videoDecAbort(anon_2* vd);
+int videoDecFlush(anon_2* vd);
+int videoDecIsFlushed(anon_2* vd);
+unsigned int videoDecGetState(anon_2* vd);
+/* The target writes COP0 register 24 (mtc0 zero, $24); C cannot express it.
+ * Spelled with the R5900 alias mtbpc, MWCC schedules it like an ordinary
+ * instruction, as in retail. */
+inline void GAM_vClearCop0Register24(void)
+{
+    asm { mtbpc zero }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 151–290 */
@@ -464,7 +485,62 @@ int readMpeg(anon_2* vd, anon_0* rb, anon_8* file, int interruptable)
     int putsize;
     unsigned char* get_ptr;
     unsigned char* put_ptr;
-    /* TODO: decompile from asm/... */
+
+    readrest = file->size;
+    writerest = readrest;
+    isPaused = 0;
+    button_old = 0;
+    SND_g_iEnoughSound = 1;
+    g_start_it = 0;
+    while (isPaused || (writerest > 4 && videoDecGetState(vd) != 3))
+    {
+        controller_val = 0;
+        if (interruptable)
+        {
+            if (scePadRead(0, 0, cdata) > 0)
+                controller_val = ((cdata[2] << 8) | cdata[3]) ^ 0xffff;
+        }
+        pushed = controller_val & (button_old ^ controller_val);
+        button_old = controller_val;
+        if ((pushed & 0x800) && vd->mpeg.frameCount > 10 && !isPaused)
+            videoDecAbort(&videoDec);
+        putsize = readBufBeginPut(rb, &put_ptr);
+        if (readrest > 0 && putsize >= 0x8000)
+        {
+            count = strFileRead(file, put_ptr, 0x8000);
+            if (count >= 0 && SND_g_iEnoughSound)
+            {
+                readBufEndPut(rb, count);
+                readrest -= count;
+            }
+            else if (g_start_it)
+            {
+                videoDecAbort(&videoDec);
+                return 0;
+            }
+        }
+        putsize = readBufBeginPut(rb, &put_ptr);
+        if (!g_start_it && !putsize)
+            g_start_it = 1;
+        if (g_start_it)
+        {
+            getsize = readBufBeginGet(rb, &get_ptr);
+            if (getsize > 0)
+            {
+                count = sceMpegDemuxPssRing(vd, get_ptr, getsize, rb, rb->size);
+                readBufEndGet(rb, count);
+                writerest -= count;
+            }
+        }
+        switchThread();
+        GAM_vClearCop0Register24();
+    }
+    while (!videoDecFlush(vd) && SND_g_iEnoughSound)
+        switchThread();
+    while (!videoDecIsFlushed(vd) && videoDecGetState(vd) != 3)
+        switchThread();
+    GAM_vClearCop0Register24();
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\main.c lines 127–139 */

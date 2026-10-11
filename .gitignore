@@ -47,3 +47,6 @@ debug-export*.json
 *.m2c
 /tools/m2c-lib/
 /tools/m2c-venv/
+
+# Local copy of the retail ISO contents.
+/iso/
