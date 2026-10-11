@@ -86,16 +86,6 @@ struct tdstTransition_ {
     unsigned char ucLinkingType; /* +0x8 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 49–52 */
-/* addr: 0x00268140  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 49
- *   +0x0018 -> line 50
- *   +0x0030 -> line 51
- *   +0x0044 -> line 52
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* g_stObjectTypes is defined in ObjType.c. */
 typedef struct tdstObjectTypeElement_ tdstObjectTypeElement_;
 typedef struct LST2_tdstAnchorTotdhHandleToObjectTypeElementDyn {
@@ -117,40 +107,12 @@ void fn_vFirstInitObjectTypeStructure(void)
     g_stObjectTypes.hPersonalType.hFirstElementDyn = NULL; g_stObjectTypes.hPersonalType.hLastElementDyn = NULL; g_stObjectTypes.hPersonalType.lNumberOfElementsDyn = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 397–399 */
-/* addr: 0x00268190  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 397
- *   +0x0004 -> line 398
- *   +0x0008 -> line 397
- *   +0x0010 -> line 398
- *   +0x0018 -> line 399
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_h_TmpStateFree(tdstState_* h_State)
 {
     extern void HMU_fn_vFree(void*, int);
     HMU_fn_vFree(&h_State, 1);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 365–394 */
-/* addr: 0x002681c0  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 365
- *   +0x0004 -> line 368
- *   +0x0008 -> line 365
- *   +0x000c -> line 368
- *   +0x001c -> line 369
- *   +0x0024 -> line 370
- *   +0x002c -> line 386
- *   +0x0038 -> line 389
- *   +0x003c -> line 390
- *   +0x0044 -> line 393
- *   +0x0048 -> line 394
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 void* memset(void*, int, unsigned int);
 
@@ -167,22 +129,6 @@ tdstState_* fn_h_TmpStateAlloc(void)
     return h_State;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 347–361 */
-/* addr: 0x00268220  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 347
- *   +0x0004 -> line 348
- *   +0x0008 -> line 350
- *   +0x0010 -> line 352
- *   +0x001c -> line 354
- *   +0x0024 -> line 356
- *   +0x0028 -> line 357
- *   +0x002c -> line 358
- *   +0x0040 -> line 360
- *   +0x0044 -> line 361
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_hIfExistProhibitedState(tdstState_* h_State, tdstState_* h_TargetState)
 {
     tdstProhibit_* p_stProhibit;
@@ -199,18 +145,6 @@ int fn_hIfExistProhibitedState(tdstState_* h_State, tdstState_* h_TargetState)
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 315–323 */
-/* addr: 0x00268270  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 315
- *   +0x0010 -> line 317
- *   +0x001c -> line 319
- *   +0x0024 -> line 321
- *   +0x003c -> line 322
- *   +0x0040 -> line 323
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstTransition_* fn_hIfExistTransitionalWithTargetState(tdstState_* h_State, tdstState_* h_TargetState)
 {
     tdstTransition_* p_stTransition;
@@ -228,121 +162,51 @@ tdstTransition_* fn_hIfExistTransitionalWithTargetState(tdstState_* h_State, tds
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 299–299 */
-/* addr: 0x002682c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 299
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucGetLinkingTypeInTransition(tdstTransition_* h_Transition)
 {
     return h_Transition->ucLinkingType;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 285–285 */
-/* addr: 0x002682d0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 285
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstState_* fn_hGetStateToGoInTransition(tdstTransition_* h_Transition)
 {
     return h_Transition->h_StateToGo;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 230–230 */
-/* addr: 0x002682e0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 230
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucGetStateCustomBits(tdstState_* h_State)
 {
     return h_State->ucCustomBits;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 217–217 */
-/* addr: 0x002682f0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 217
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_hGetStateMechanicsIdCard(tdstState_* h_State)
 {
     return h_State->h_LinkedMechanicsIdCard;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 212–212 */
-/* addr: 0x00268300  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 212
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetSpeedInState(tdstState_* h_State, signed char scSpeedAnim)
 {
     h_State->scSpeedAnim = scSpeedAnim;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 208–208 */
-/* addr: 0x00268310  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 208
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 signed char fn_scGetSpeedInState(tdstState_* h_State)
 {
     return h_State->scSpeedAnim;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 198–198 */
-/* addr: 0x00268320  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 198
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetRepeatAnimationInState(tdstState_* h_State, unsigned char ucRepeatAnimation)
 {
     h_State->ucRepeatAnimation = ucRepeatAnimation;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 185–185 */
-/* addr: 0x00268330  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 185
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetNextStateInState(tdstState_* h_State, tdstState_* h_NextState)
 {
     h_State->h_NextState = h_NextState;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 181–181 */
-/* addr: 0x00268340  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 181
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstState_* fn_hGetNextStateInState(tdstState_* h_State)
 {
     return h_State->h_NextState;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\State.c lines 176–176 */
-/* addr: 0x00268350  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 176
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetAnimInState(tdstState_* h_State, tdstAnim3d_* p_stAnim)
 {
     h_State->p_stAnim = p_stAnim;

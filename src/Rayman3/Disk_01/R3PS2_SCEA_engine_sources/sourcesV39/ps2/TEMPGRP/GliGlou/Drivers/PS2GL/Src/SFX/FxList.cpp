@@ -50,18 +50,6 @@ float g_fFogEnd;
 float GLI_g_OOStartMinusEnd;
 unsigned int GLI_g_CurrentSDLFogColor;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 100–106 */
-/* addr: 0x002ecb10  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 100
- *   +0x0028 -> line 101
- *   +0x0034 -> line 103
- *   +0x0040 -> line 104
- *   +0x0044 -> line 105
- *   +0x0074 -> line 106
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 
 struct C_Vector {
@@ -89,16 +77,6 @@ C_FireFx::~C_FireFx()
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 124–129 */
-/* addr: 0x002ecba0  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 124
- *   +0x0028 -> line 126
- *   +0x0048 -> line 128
- *   +0x004c -> line 129
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 C_BaseFx* C_FxList::SearchElement(void* pSearchKey)
 {
     tdstBaseFxListElement_* p;
@@ -111,21 +89,6 @@ C_BaseFx* C_FxList::SearchElement(void* pSearchKey)
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 97–115 */
-/* addr: 0x002ecc00  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 97
- *   +0x0014 -> line 101
- *   +0x0024 -> line 102
- *   +0x0028 -> line 103
- *   +0x002c -> line 105
- *   +0x0038 -> line 108
- *   +0x0040 -> line 112
- *   +0x0060 -> line 113
- *   +0x0064 -> line 115
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_FxList::vAddElement(C_BaseFx* pElement)
 {
     tdstBaseFxListElement_* pNew;
@@ -145,19 +108,6 @@ void C_FxList::vAddElement(C_BaseFx* pElement)
     p->pNext = pNew;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 82–92 */
-/* addr: 0x002ecc80  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 82
- *   +0x000c -> line 85
- *   +0x0010 -> line 86
- *   +0x0018 -> line 89
- *   +0x002c -> line 90
- *   +0x0030 -> line 91
- *   +0x0038 -> line 92
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_FxList::DeleteAllSDLs(void)
 {
     tdstBaseFxListElement_* p;
@@ -172,20 +122,6 @@ void C_FxList::DeleteAllSDLs(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 68–79 */
-/* addr: 0x002eccd0  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 68
- *   +0x0014 -> line 71
- *   +0x0018 -> line 72
- *   +0x0020 -> line 75
- *   +0x002c -> line 76
- *   +0x0030 -> line 77
- *   +0x0040 -> line 78
- *   +0x0044 -> line 79
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void C_FxList::DeleteAllNoFree(void)
 {
     tdstBaseFxListElement_* p;
@@ -201,20 +137,6 @@ void C_FxList::DeleteAllNoFree(void)
     pFirst = NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 53–65 */
-/* addr: 0x002ecd30  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 53
- *   +0x0014 -> line 56
- *   +0x0018 -> line 57
- *   +0x0020 -> line 60
- *   +0x0040 -> line 61
- *   +0x004c -> line 63
- *   +0x0058 -> line 64
- *   +0x005c -> line 65
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma auto_inline on
 void C_FxList::DeleteAll(void)
 {
@@ -233,28 +155,11 @@ void C_FxList::DeleteAll(void)
 }
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 47–49 */
-/* addr: 0x002ecdb0  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 47
- *   +0x0024 -> line 48
- *   +0x0084 -> line 49
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 C_FxList::~C_FxList()
 {
     DeleteAll();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FxList.cpp lines 43–44 */
-/* addr: 0x002ece50  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 43
- *   +0x0004 -> line 44
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 C_FxList::C_FxList(void)
 {
     pFirst = 0;

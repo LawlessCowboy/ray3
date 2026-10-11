@@ -2886,27 +2886,11 @@ tdstProcedureEntry_ a_stProcedureTable[876];
  * the debug extractor.  Spell the recovered callback type explicitly. */
 typedef tdstNodeInterpret_ *(*tdstProcedureFunction_)(HIE_tdstSuperObject_ *, tdstNodeInterpret_ *);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvProc.c lines 133–134 */
-/* addr: 0x00211760  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 133
- *   +0x0010 -> line 134
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstProcedureFunction_ fn_p_fn_pGetProcedureFunctionPtr(tdeProcedureId_ eProcedureId)
 {
     return a_stProcedureTable[eProcedureId].p_fn_p_stProcedureFunction;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvProc.c lines 127–128 */
-/* addr: 0x00211780  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 127
- *   +0x0010 -> line 128
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcId)
 {
     return a_stProcedureTable[eProcId].bUltraProcedureFlag;

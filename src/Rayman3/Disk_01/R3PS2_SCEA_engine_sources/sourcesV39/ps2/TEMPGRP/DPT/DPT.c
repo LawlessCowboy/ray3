@@ -27,31 +27,11 @@ struct tdstDataPath_ {
 char DPT_g_szTrueSaveGamePath[256];
 tdstDataPath_ g_stDataPath;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\DPT\DPT.c lines 59–60 */
-/* addr: 0x00258030  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 59
- *   +0x0004 -> line 60
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstDataPath_* fn_szGetGameDataPath(void)
 {
     return &g_stDataPath;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\DPT\DPT.c lines 39–50 */
-/* addr: 0x00258040  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 39
- *   +0x0008 -> line 44
- *   +0x000c -> line 39
- *   +0x0010 -> line 44
- *   +0x0018 -> line 46
- *   +0x0024 -> line 50
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetGameDataPath(char* _p_szPath)
 {
     strcpy(g_stDataPath.szGameData, _p_szPath);

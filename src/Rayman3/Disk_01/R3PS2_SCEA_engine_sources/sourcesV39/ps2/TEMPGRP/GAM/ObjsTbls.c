@@ -1198,64 +1198,26 @@ struct tdstEngineStructure_ {
 
 extern tdstEngineStructure_ g_stEngineStructure;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjsTbls.c lines 58–59 */
-/* addr: 0x00267df0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 58
- *   +0x0004 -> line 59
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char GAM_MultiVP_fn_ucGetNumberOfPlayers(void)
 {
     return g_stEngineStructure.ucNumberOfPlayersInMultiMode;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjsTbls.c lines 211–212 */
-/* addr: 0x00267e00  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 211
- *   +0x0008 -> line 212
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bObjectTableHasZde(tdstObjectsTablesList_* _hObjectTableList)
 {
     return (_hObjectTableList->wZDxUsed & 2) != 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjsTbls.c lines 177–177 */
-/* addr: 0x00267e10  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 177
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstObjectsTableElement_* fn_d_hGetInitObjectsTable(tdstObjectsTablesList_* h_ObjectsTablesListElement)
 {
     return h_ObjectsTablesListElement->d_stInitObjectsTable;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjsTbls.c lines 171–171 */
-/* addr: 0x00267e20  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 171
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vReInitObjectTable(tdstObjectsTablesList_* param0)
 {
     memcpy(param0->d_stObjectsTable, param0->d_stInitObjectsTable, param0->wNumberOfElement * 20);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjsTbls.c lines 132–135 */
-/* addr: 0x00267e40  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 132
- *   +0x0010 -> line 135
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned short fn_uwGetObjectTableNumberOfelements(tdstObjectsTablesList_* _hTargetTable)
 {
     if (_hTargetTable != NULL)
@@ -1263,15 +1225,6 @@ unsigned short fn_uwGetObjectTableNumberOfelements(tdstObjectsTablesList_* _hTar
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjsTbls.c lines 123–126 */
-/* addr: 0x00267e60  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 123
- *   +0x0018 -> line 125
- *   +0x0070 -> line 126
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vCopyObjectFromObjectTabletoAnother(tdstObjectsTablesList_* _hTargetTable, tdstObjectsTablesList_* _hSourceTable, unsigned short _uwTargetObject, unsigned short _uwSourceObject)
 {
     if (!_hTargetTable || !_hSourceTable) return;

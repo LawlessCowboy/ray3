@@ -1359,34 +1359,6 @@ struct FIL_tdstFileNameList_ {
 
 tdstEngineStructure_ g_stEngineStructure;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 604–627 */
-/* addr: 0x002653e0  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 604
- *   +0x0004 -> line 607
- *   +0x0008 -> line 604
- *   +0x000c -> line 607
- *   +0x0020 -> line 609
- *   +0x0034 -> line 611
- *   +0x0044 -> line 614
- *   +0x0048 -> line 611
- *   +0x004c -> line 612
- *   +0x0060 -> line 613
- *   +0x0070 -> line 614
- *   +0x007c -> line 616
- *   +0x008c -> line 620
- *   +0x0094 -> line 617
- *   +0x0098 -> line 620
- *   +0x009c -> line 617
- *   +0x00a0 -> line 618
- *   +0x00a4 -> line 620
- *   +0x00ac -> line 622
- *   +0x00b4 -> line 623
- *   +0x00bc -> line 626
- *   +0x00c0 -> line 627
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 typedef struct LST2_tdstAnchorTotdxHandleToStateOpt LST2_tdstAnchorTotdxHandleToStateOpt;
 typedef struct LST2_tdstAnchorTotdxHandleToSubAnimOpt LST2_tdstAnchorTotdxHandleToSubAnimOpt;
 typedef struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt;
@@ -1474,74 +1446,31 @@ int fn_bGetVectorFromPhonem(MTH3D_tdstVector_* p_stVector, char cPhonem, tdstFam
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 136–136 */
-/* addr: 0x002654b0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 136
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 HIE_tdstSuperObject_* MC_fn_hGetNewMainCharacter(tdstNodeMainCharacter_* hMainCharNode)
 {
     return hMainCharNode->hNewCharacterForTheNextFrame;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 131–131 */
-/* addr: 0x002654c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 131
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void MC_fn_vSetNewMainCharacter(tdstNodeMainCharacter_* hMainCharNode, HIE_tdstSuperObject_* hCharacter)
 {
     hMainCharNode->hNewCharacterForTheNextFrame = hCharacter;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 123–123 */
-/* addr: 0x002654d0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 123
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMainCharNode)
 {
     return hMainCharNode->hNextBrotherDyn;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 117–118 */
-/* addr: 0x002654e0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 117
- *   +0x0004 -> line 118
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void)
 {
     return g_stEngineStructure.hMainCharacterList.hFirstElementDyn;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 113–113 */
-/* addr: 0x002654f0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 113
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode)
 {
     return hMainCharNode->hCharacter;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MainChar.c lines 108–108 */
-/* addr: 0x00265500  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 108
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void MC_fn_vSetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode, HIE_tdstSuperObject_* hCharacter)
 {
     hMainCharNode->hCharacter = hCharacter;

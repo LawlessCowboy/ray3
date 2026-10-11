@@ -123,25 +123,6 @@ float GEO_g_xOoZFarTransparencyZone;
 float GEO_g_xZFarTransparencyZone;
 float GEO_g_xZFar;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\CullEd.c lines 24–48 */
-/* addr: 0x002a3ed0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 24
- *   +0x0018 -> line 27
- *   +0x0020 -> line 28
- *   +0x0034 -> line 30
- *   +0x0038 -> line 32
- *   +0x0050 -> line 35
- *   +0x0058 -> line 36
- *   +0x006c -> line 38
- *   +0x0070 -> line 40
- *   +0x0088 -> line 43
- *   +0x0090 -> line 44
- *   +0x00a4 -> line 46
- *   +0x00a8 -> line 48
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GEO_fn_vUpdateMinMaxBoxWithPoint(MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, MTH3D_tdstVector_* p_stPoint)
 {
     if (p_stPoint->xX < p_stMinPoint->xX)

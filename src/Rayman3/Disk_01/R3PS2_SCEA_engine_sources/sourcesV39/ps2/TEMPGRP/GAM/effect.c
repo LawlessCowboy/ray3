@@ -190,38 +190,6 @@ int HIE_g_a_hMatrixStack[50];
 int HIE_g_lNbMatrixInStack;
 int gp_stLight;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\effect.c lines 86–207 */
-/* addr: 0x0025ef40  size: 340 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 86
- *   +0x002c -> line 97
- *   +0x0034 -> line 123
- *   +0x0050 -> line 125
- *   +0x0054 -> line 138
- *   +0x005c -> line 142
- *   +0x007c -> line 148
- *   +0x0080 -> line 153
- *   +0x0088 -> line 155
- *   +0x00a8 -> line 159
- *   +0x00b8 -> line 166
- *   +0x00bc -> line 169
- *   +0x00c8 -> line 177
- *   +0x00d0 -> line 178
- *   +0x00d8 -> line 181
- *   +0x00e4 -> line 182
- *   +0x00f0 -> line 189
- *   +0x00f4 -> line 185
- *   +0x00f8 -> line 189
- *   +0x00fc -> line 188
- *   +0x0100 -> line 189
- *   +0x0104 -> line 185
- *   +0x0108 -> line 186
- *   +0x0110 -> line 189
- *   +0x0130 -> line 206
- *   +0x0134 -> line 207
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 typedef struct tdstEngineObject_ tdstEngineObject_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct DNM_stMecMatCharacteristics DNM_stMecMatCharacteristics;

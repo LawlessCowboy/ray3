@@ -114,13 +114,6 @@ struct CMicrophone {
     sset m_oNotifTargets; /* +0x34 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkmicro.cpp lines 111–111 */
-/* addr: 0x001cf610  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 111
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void CMusicMarkerNotifTarget::fv_vVarAccessed(usnd::CVar&)
 {
 }

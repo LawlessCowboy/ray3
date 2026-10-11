@@ -47,7 +47,6 @@ void (*GMT_p_fn_vVirtualCopy)(GMT_tdstGameMaterial_*, GMT_tdstGameMaterial_*);
 int GMT_fn_xMultipleTestCollideIdentifier(GMT_tdstCollideMaterial_* hCollideMaterial, unsigned short xMask);
 int GMT_fn_xTestCollideMaterialTypeOfIdentifier(GMT_tdstCollideMaterial_* hCollideMaterial, short wType);
 
-/* addr: 0x002a4df0  size: 80 bytes */
 int GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(GMT_tdstGameMaterial_* hGameMat, unsigned short xMask)
 {
     GMT_tdstCollideMaterial_* hCollideMaterial;
@@ -60,7 +59,6 @@ int GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(GMT_tdstGameMaterial_*
     return GMT_fn_xMultipleTestCollideIdentifier(hCollideMaterial, xMask);
 }
 
-/* addr: 0x002a4e40  size: 52 bytes */
 int GMT_fn_xTestCollideIdentifierTypeOfGameMaterial(GMT_tdstGameMaterial_* hGameMat, short wType)
 {
     GMT_tdstCollideMaterial_* hCollideMaterial;
@@ -71,45 +69,38 @@ int GMT_fn_xTestCollideIdentifierTypeOfGameMaterial(GMT_tdstGameMaterial_* hGame
     return GMT_fn_xTestCollideMaterialTypeOfIdentifier(hCollideMaterial, wType);
 }
 
-/* addr: 0x002a4e80  size: 8 bytes */
 GMT_tdstCollideMaterial_* GMT_fn_hGetCollideMaterial(GMT_tdstGameMaterial_* hGameMat)
 {
     return hGameMat->hCollideMaterial;
 }
 
-/* addr: 0x002a4e90  size: 8 bytes */
 int GMT_fn_hGetSoundMaterial(GMT_tdstGameMaterial_* hGameMat)
 {
     return hGameMat->hSoundMaterial;
 }
 
-/* addr: 0x002a4ea0  size: 36 bytes */
 int GMT_fn_b_ulIsValid(GMT_tdstGameMaterial_* hGameMat)
 {
     return hGameMat != (GMT_tdstGameMaterial_*)0xCDCDCDCD && hGameMat != NULL;
 }
 
-/* addr: 0x002a4ed0  size: 48 bytes */
 void GMT_fn_vInitGameMaterialErrorAndMemory(void)
 {
     if (g_ucGmtModuleId == 255)
         g_ucGmtModuleId = Erm_fn_ucInitErrMsg(g_ucGmtModuleId);
 }
 
-/* addr: 0x002a4f00  size: 36 bytes */
 void GMT_fn_vDestroyFor3DOS(GMT_tdstGameMaterial_* hGameMat)
 {
     HMU_fn_vFree((void**)&hGameMat, 0);
 }
 
-/* addr: 0x002a4f30  size: 20 bytes */
 void GMT_fn_vCopyFor3DOS(GMT_tdstGameMaterial_* hDst, GMT_tdstGameMaterial_* hSrc)
 {
     hDst->hSoundMaterial = hSrc->hSoundMaterial;
     hDst->hCollideMaterial = hSrc->hCollideMaterial;
 }
 
-/* addr: 0x002a4f50  size: 56 bytes */
 GMT_tdstGameMaterial_* GMT_fn_hCreateFor3DOS(void)
 {
     GMT_tdstGameMaterial_* hGameMat;
@@ -123,7 +114,6 @@ GMT_tdstGameMaterial_* GMT_fn_hCreateFor3DOS(void)
     return NULL;
 }
 
-/* addr: 0x002a4f90  size: 40 bytes */
 void GMT_fn_vInitFor3DOS(void)
 {
     GMT_p_fn_hVirtualCreate = GMT_fn_hCreateFor3DOS;
@@ -132,13 +122,11 @@ void GMT_fn_vInitFor3DOS(void)
     GMT_fn_vInitGameMaterialErrorAndMemory();
 }
 
-/* addr: 0x002a4fc0  size: 8 bytes */
 void GMT_fn_vResetEntireMask(unsigned short* p_xMask)
 {
     *p_xMask = 0;
 }
 
-/* addr: 0x002a4fd0  size: 32 bytes */
 int GMT_fn_xMultipleTestCollideIdentifier(GMT_tdstCollideMaterial_* hCollideMaterial, unsigned short xMask)
 {
     unsigned short xIdentifier = hCollideMaterial->xIdentifier;
@@ -147,7 +135,6 @@ int GMT_fn_xMultipleTestCollideIdentifier(GMT_tdstCollideMaterial_* hCollideMate
     return bResult != 0;
 }
 
-/* addr: 0x002a4ff0  size: 56 bytes */
 int GMT_fn_xTestCollideMaterialTypeOfIdentifier(GMT_tdstCollideMaterial_* hCollideMaterial, short wType)
 {
     /* Permuter-found match (register allocation); the xMask reuse and the
@@ -163,25 +150,21 @@ int GMT_fn_xTestCollideMaterialTypeOfIdentifier(GMT_tdstCollideMaterial_* hColli
     return *p_bResult ^ 1;
 }
 
-/* addr: 0x002a5030  size: 8 bytes */
 unsigned short GMT_fn_wGetCollideMaterialTypeForAi(GMT_tdstCollideMaterial_* hCollideMaterial)
 {
     return hCollideMaterial->wTypeForAi;
 }
 
-/* addr: 0x002a5040  size: 8 bytes */
 float GMT_fn_xGetCollideMaterialCoeff(GMT_tdstCollideMaterial_* hCollideMaterial)
 {
     return hCollideMaterial->xCoeff;
 }
 
-/* addr: 0x002a5050  size: 8 bytes */
 MTH3D_tdstVector_* GMT_fn_p_stGetCollideMaterialDirectionHandle(GMT_tdstCollideMaterial_* hCollideMaterial)
 {
     return &hCollideMaterial->stDirection;
 }
 
-/* addr: 0x002a5060  size: 8 bytes */
 unsigned short GMT_fn_hGetCollideMaterialIdentifier(GMT_tdstCollideMaterial_* hCollideMaterial)
 {
     return hCollideMaterial->xIdentifier;

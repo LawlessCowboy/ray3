@@ -1163,18 +1163,6 @@ struct DNM_stReport {
 tdstObjectType_ g_stObjectTypes;
 extern int strcasecmp(const char*, const char*);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 96–113 */
-/* addr: 0x00267ee0  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 96
- *   +0x0018 -> line 99
- *   +0x002c -> line 101
- *   +0x0050 -> line 105
- *   +0x0080 -> line 109
- *   +0x00a0 -> line 113
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vExchangeTwoObjectsInCurrentObjectsTable(HIE_tdstSuperObject_* p_stSuperObject, unsigned short w_ObjectA, unsigned short w_ObjectB)
 {
     tdstObjectsTableElement_ stObjectsTableElement;
@@ -1190,15 +1178,6 @@ void fn_vExchangeTwoObjectsInCurrentObjectsTable(HIE_tdstSuperObject_* p_stSuper
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 533–539 */
-/* addr: 0x00267fa0  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 533
- *   +0x002c -> line 536
- *   +0x003c -> line 539
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 char* fn_szFindPersonalTypeNameOfPersonalType(int otType)
 {
     tdstObjectTypeElement_* hHandleToObjectTypeElement;
@@ -1209,14 +1188,6 @@ char* fn_szFindPersonalTypeNameOfPersonalType(int otType)
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 414–417 */
-/* addr: 0x00267ff0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 414
- *   +0x002c -> line 417
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucFindPersonalIdOfPersonalType(int otType)
 {
     tdstObjectTypeElement_* hHandleToObjectTypeElement;
@@ -1225,15 +1196,6 @@ unsigned char fn_ucFindPersonalIdOfPersonalType(int otType)
     return hHandleToObjectTypeElement->ucPermanentId;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 323–329 */
-/* addr: 0x00268030  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 323
- *   +0x002c -> line 326
- *   +0x003c -> line 329
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 char* fn_szFindModelTypeNameOfModelType(int otType)
 {
     tdstObjectTypeElement_* hHandleToObjectTypeElement;
@@ -1244,21 +1206,6 @@ char* fn_szFindModelTypeNameOfModelType(int otType)
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 203–214 */
-/* addr: 0x00268080  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 203
- *   +0x0004 -> line 208
- *   +0x0008 -> line 203
- *   +0x0020 -> line 208
- *   +0x0030 -> line 210
- *   +0x0044 -> line 211
- *   +0x0048 -> line 212
- *   +0x0058 -> line 213
- *   +0x005c -> line 214
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_otFindFamilyTypeOfFamilyTypeName(char* szType)
 {
     int otType;
@@ -1278,14 +1225,6 @@ int fn_otFindFamilyTypeOfFamilyTypeName(char* szType)
     return otType;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ObjType.c lines 184–187 */
-/* addr: 0x00268100  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 184
- *   +0x002c -> line 187
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucFindFamilyIdOfFamilyType(int otType)
 {
     tdstObjectTypeElement_* hHandleToObjectTypeElement;

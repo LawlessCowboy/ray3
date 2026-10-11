@@ -1632,69 +1632,6 @@ char g_cIsLevelOk;
 tdstEngineStructure_ g_stEngineStructure;
 tdst3DOSLinkTable_ g_st3DOSLinkTable;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 371–592 */
-/* addr: 0x00261f70  size: 1040 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 371
- *   +0x0004 -> line 383
- *   +0x0008 -> line 371
- *   +0x0020 -> line 376
- *   +0x0024 -> line 383
- *   +0x0038 -> line 384
- *   +0x0050 -> line 387
- *   +0x006c -> line 390
- *   +0x007c -> line 395
- *   +0x0084 -> line 397
- *   +0x008c -> line 404
- *   +0x0090 -> line 405
- *   +0x0094 -> line 406
- *   +0x00b0 -> line 413
- *   +0x0160 -> line 421
- *   +0x016c -> line 422
- *   +0x0170 -> line 424
- *   +0x0184 -> line 439
- *   +0x0188 -> line 441
- *   +0x0190 -> line 444
- *   +0x0194 -> line 441
- *   +0x0198 -> line 447
- *   +0x019c -> line 450
- *   +0x01a0 -> line 444
- *   +0x01b4 -> line 447
- *   +0x01b8 -> line 450
- *   +0x01c0 -> line 452
- *   +0x01cc -> line 453
- *   +0x01d4 -> line 456
- *   +0x01f0 -> line 458
- *   +0x01f8 -> line 468
- *   +0x0204 -> line 469
- *   +0x0248 -> line 473
- *   +0x0250 -> line 474
- *   +0x0268 -> line 476
- *   +0x0270 -> line 478
- *   +0x0278 -> line 514
- *   +0x0280 -> line 516
- *   +0x0290 -> line 519
- *   +0x0298 -> line 523
- *   +0x02a0 -> line 541
- *   +0x02ac -> line 545
- *   +0x02c8 -> line 547
- *   +0x02f4 -> line 550
- *   +0x030c -> line 551
- *   +0x0314 -> line 555
- *   +0x0364 -> line 566
- *   +0x036c -> line 567
- *   +0x0374 -> line 569
- *   +0x037c -> line 570
- *   +0x0384 -> line 572
- *   +0x03bc -> line 573
- *   +0x03cc -> line 575
- *   +0x03d0 -> line 580
- *   +0x03e0 -> line 582
- *   +0x03e8 -> line 584
- *   +0x03f0 -> line 592
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)
 {
     tdstAnim3d_* p_stCurrentAnim;
@@ -1710,18 +1647,6 @@ void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter)
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 95–103 */
-/* addr: 0x00262380  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 95
- *   +0x001c -> line 96
- *   +0x002c -> line 99
- *   +0x0030 -> line 101
- *   +0x0058 -> line 102
- *   +0x005c -> line 103
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucSubHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
     int value = _ucValue; unsigned char* p = &_p_stObject->h_StandardGame->ucHitPointsMax; if (*p - value > 0)
@@ -1734,16 +1659,6 @@ unsigned char fn_ucSubHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char
     return _p_stObject->h_StandardGame->ucHitPointsMax;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 87–91 */
-/* addr: 0x002623f0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 87
- *   +0x0024 -> line 88
- *   +0x0034 -> line 90
- *   +0x0038 -> line 91
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vAddHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
     int value = _ucValue; tdstStandardGame_* h = _p_stObject->h_StandardGame; unsigned char m = h->ucHitPointsMaxMax; unsigned char* p = &h->ucHitPointsMax; if (value + *p <= m)
@@ -1752,56 +1667,21 @@ void fn_vAddHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
         *p = m;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 82–83 */
-/* addr: 0x00262430  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 82
- *   +0x0008 -> line 83
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetHitPointsMaxToMaxValue(tdstEngineObject_* _p_stObject)
 {
     _p_stObject->h_StandardGame->ucHitPointsMax = _p_stObject->h_StandardGame->ucHitPointsMaxMax;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 77–78 */
-/* addr: 0x00262440  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 77
- *   +0x0004 -> line 78
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
     _p_stObject->h_StandardGame->ucHitPointsMax = _ucValue;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 72–73 */
-/* addr: 0x00262450  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 72
- *   +0x0004 -> line 73
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucGetHitPointsMax(tdstEngineObject_* _p_stObject)
 {
     return _p_stObject->h_StandardGame->ucHitPointsMax;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 61–68 */
-/* addr: 0x00262460  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 61
- *   +0x001c -> line 62
- *   +0x002c -> line 65
- *   +0x0030 -> line 67
- *   +0x0034 -> line 68
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucSubHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
     int value = _p_stObject->h_StandardGame->ucHitPoints - _ucValue;
@@ -1812,16 +1692,6 @@ unsigned char fn_ucSubHitPoints(tdstEngineObject_* _p_stObject, unsigned char _u
     return _p_stObject->h_StandardGame->ucHitPoints;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 53–57 */
-/* addr: 0x002624a0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 53
- *   +0x0024 -> line 54
- *   +0x0034 -> line 56
- *   +0x0038 -> line 57
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vAddHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
     int value = _ucValue; tdstStandardGame_* h = _p_stObject->h_StandardGame; unsigned char m = h->ucHitPointsMax; unsigned char* p = &h->ucHitPoints; if (value + *p <= m)
@@ -1830,40 +1700,16 @@ void fn_vAddHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
         *p = m;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 48–49 */
-/* addr: 0x002624e0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 48
- *   +0x0008 -> line 49
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetHitPointsToMaxValue(tdstEngineObject_* _p_stObject)
 {
     _p_stObject->h_StandardGame->ucHitPoints = _p_stObject->h_StandardGame->ucHitPointsMax;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 43–44 */
-/* addr: 0x002624f0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 43
- *   +0x0004 -> line 44
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
     _p_stObject->h_StandardGame->ucHitPoints = _ucValue;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\HitPts.c lines 38–39 */
-/* addr: 0x00262500  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 38
- *   +0x0004 -> line 39
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetHitPointsInit(tdstEngineObject_* _p_stObject, unsigned char _ucValue)
 {
     _p_stObject->h_StandardGame->ucSaveHitPoints = _ucValue;

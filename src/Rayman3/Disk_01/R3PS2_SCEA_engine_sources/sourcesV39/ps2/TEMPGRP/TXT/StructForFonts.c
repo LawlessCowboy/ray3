@@ -69,13 +69,6 @@ unsigned char g_ucNbFontBitmap;
 _tdstBitmapFont g_TabBitmapFont[50];
 _tdstFont g_ListOfFonts[2];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\StructForFonts.c lines 28–28 */
-/* addr: 0x00323690  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 28
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void TXT_fn_vLoadInit(void)
 {
     fn_vInitFont();

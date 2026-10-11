@@ -41,53 +41,20 @@ static unsigned int gs_ulDepthBufferTestEnabled;
 int p_stLightMapTexture;
 int g_lNumberOfBlackTriangles;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Domat_PS2GL.c lines 83–83 */
-/* addr: 0x002a5090  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 83
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_DRV_xClearViewingList(void)
 {
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Domat_PS2GL.c lines 450–450 */
-/* addr: 0x002a50a0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 450
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GLI_DRV_bEndScene(void)
 {
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Domat_PS2GL.c lines 440–440 */
-/* addr: 0x002a50b0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 440
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GLI_DRV_bBeginScene(void)
 {
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Domat_PS2GL.c lines 395–400 */
-/* addr: 0x002a50c0  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 398
- *   +0x0004 -> line 395
- *   +0x0008 -> line 396
- *   +0x000c -> line 395
- *   +0x0010 -> line 398
- *   +0x0018 -> line 400
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_fn_vInitRenderParameters(void)
 {
     xSaveFogIsOn = 0;
@@ -98,13 +65,6 @@ void GLI_fn_vInitRenderParameters(void)
     ucSaveFunction = 0xff;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Domat_PS2GL.c lines 128–128 */
-/* addr: 0x002a50e0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 128
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_DRV_vAddBlackPolygon(void)
 {
 }

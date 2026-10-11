@@ -111,35 +111,11 @@ struct MOR_stMorphVector_ {
     MTH3D_tdstVector_ stDeformationVector; /* +0x4 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\dupobjmp.c lines 145–145 */
-/* addr: 0x00314ee0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 145
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void Mmg_fn_cCheckAlignmentValidity(void)
 {
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\dupobjmp.c lines 250–263 */
-/* addr: 0x00314ef0  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 250
- *   +0x0018 -> line 253
- *   +0x0020 -> line 255
- *   +0x002c -> line 256
- *   +0x0030 -> line 255
- *   +0x0034 -> line 256
- *   +0x0060 -> line 258
- *   +0x006c -> line 259
- *   +0x0080 -> line 261
- *   +0x008c -> line 262
- *   +0x0098 -> line 263
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
 
 void MOR_fn_vDeleteGeometricObject(GEO_tdstGeometricObject_** p_hObj);
@@ -155,47 +131,6 @@ void MOR_fn_vDeletePhysicalObject(PO_tdstPhysicalObject_* _pPhysicalObject)
     HMU_fn_vFree((void**)&_pPhysicalObject, 1);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\dupobjmp.c lines 180–243 */
-/* addr: 0x00314fa0  size: 508 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 180
- *   +0x001c -> line 184
- *   +0x0024 -> line 188
- *   +0x002c -> line 189
- *   +0x0034 -> line 192
- *   +0x0040 -> line 194
- *   +0x0050 -> line 195
- *   +0x0080 -> line 200
- *   +0x0090 -> line 201
- *   +0x0098 -> line 203
- *   +0x00a8 -> line 204
- *   +0x00b0 -> line 206
- *   +0x00c0 -> line 207
- *   +0x00c8 -> line 209
- *   +0x00d8 -> line 210
- *   +0x00e0 -> line 212
- *   +0x00f0 -> line 213
- *   +0x00f8 -> line 215
- *   +0x0108 -> line 216
- *   +0x0110 -> line 218
- *   +0x0120 -> line 219
- *   +0x0128 -> line 221
- *   +0x0138 -> line 222
- *   +0x0140 -> line 224
- *   +0x0150 -> line 225
- *   +0x0158 -> line 227
- *   +0x0170 -> line 229
- *   +0x018c -> line 231
- *   +0x0194 -> line 235
- *   +0x01a4 -> line 236
- *   +0x01b4 -> line 237
- *   +0x01c4 -> line 238
- *   +0x01d0 -> line 240
- *   +0x01dc -> line 241
- *   +0x01e0 -> line 243
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_DRV_vFreeVertexBuffersForElementsInObject(GEO_tdstGeometricObject_* pObj, int lFlag);
 
 void MOR_fn_vDeleteGeometricObject(GEO_tdstGeometricObject_** p_hObj)

@@ -171,18 +171,6 @@ short COL_g_xNumberOfFacesLimit;
 void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, COL_tdstOctreeNode_**, float*, short*);
 void COL_fn_vExploreRecursiveOctreeWithBox(COL_tdstOctreeNode_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, COL_tdstOctreeNode_**, short*);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\OctreeGO.c lines 912–924 */
-/* addr: 0x00257bc0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 912
- *   +0x0008 -> line 914
- *   +0x000c -> line 915
- *   +0x0010 -> line 918
- *   +0x0018 -> line 921
- *   +0x0020 -> line 924
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void COL_fn_vExploreOctreeWithSegment(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes)
 {
     *p_xNumberOfSelectedNodes = 0;
@@ -192,32 +180,6 @@ void COL_fn_vExploreOctreeWithSegment(COL_tdstOctree_* p_stOctree, MTH3D_tdstVec
         COL_fn_vExploreRecursiveOctreeWithSegment(p_stOctree->p_stOctreeRoot, p_stVertexA, p_stVectAB, d_pstSelectedNode, d_xSelectedT, p_xNumberOfSelectedNodes);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\OctreeGO.c lines 861–894 */
-/* addr: 0x00257bf0  size: 600 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 861
- *   +0x0034 -> line 864
- *   +0x003c -> line 866
- *   +0x0050 -> line 864
- *   +0x0054 -> line 866
- *   +0x0064 -> line 871
- *   +0x0070 -> line 874
- *   +0x008c -> line 875
- *   +0x00ac -> line 876
- *   +0x00cc -> line 877
- *   +0x00ec -> line 878
- *   +0x010c -> line 879
- *   +0x012c -> line 880
- *   +0x014c -> line 881
- *   +0x016c -> line 882
- *   +0x0174 -> line 885
- *   +0x0180 -> line 888
- *   +0x0220 -> line 889
- *   +0x0228 -> line 893
- *   +0x0234 -> line 894
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT);
 
 /* Inlined sorted insertion (original name unknown): retail maps the whole
@@ -272,18 +234,6 @@ void COL_fn_vExploreRecursiveOctreeWithSegment(COL_tdstOctreeNode_* p_stNodeToBe
     COL_g_xDepth--;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\OctreeGO.c lines 790–802 */
-/* addr: 0x00257e50  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 790
- *   +0x0008 -> line 792
- *   +0x000c -> line 793
- *   +0x0010 -> line 796
- *   +0x0018 -> line 799
- *   +0x0020 -> line 802
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void COL_fn_vExploreOctreeWithBox(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, COL_tdstOctreeNode_** d_pstSelectedNode, short* p_xNumberOfSelectedNodes)
 {
     *p_xNumberOfSelectedNodes = 0;
@@ -293,34 +243,6 @@ void COL_fn_vExploreOctreeWithBox(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_
         COL_fn_vExploreRecursiveOctreeWithBox(p_stOctree->p_stOctreeRoot, p_stMinPoint, p_stMaxPoint, d_pstSelectedNode, p_xNumberOfSelectedNodes);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\OctreeGO.c lines 696–773 */
-/* addr: 0x00257e80  size: 432 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 696
- *   +0x002c -> line 697
- *   +0x0034 -> line 699
- *   +0x0044 -> line 697
- *   +0x0048 -> line 699
- *   +0x0058 -> line 703
- *   +0x0064 -> line 706
- *   +0x007c -> line 707
- *   +0x0098 -> line 708
- *   +0x00b4 -> line 709
- *   +0x00d0 -> line 710
- *   +0x00ec -> line 711
- *   +0x0108 -> line 712
- *   +0x0124 -> line 713
- *   +0x0140 -> line 714
- *   +0x0148 -> line 717
- *   +0x0154 -> line 720
- *   +0x0164 -> line 722
- *   +0x0170 -> line 723
- *   +0x017c -> line 724
- *   +0x0184 -> line 772
- *   +0x0190 -> line 773
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2);
 
 void COL_fn_vExploreRecursiveOctreeWithBox(COL_tdstOctreeNode_* p_stNodeToBeExplored, MTH3D_tdstVector_* p_stMinSituation, MTH3D_tdstVector_* p_stMaxSituation, COL_tdstOctreeNode_** d_pstSelectedNode, short* p_xNumberOfSelectedNodes)

@@ -2944,13 +2944,6 @@ struct tdstKeyWordEntry_ {
 
 tdstKeyWordEntry_ a_stKeyWordTable[37];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ConvKey.c lines 306–306 */
-/* addr: 0x00211700  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 306
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeInterpret_* fn_p_stEvalKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     a_stKeyWordTable[p_stTree->uDummy.uId.eKeyWordId].p_fn_p_stKeyWordFunction(p_SuperObjPerso, (tdstNodeInterpret_ *)((unsigned char *)p_stTree + 8), p_stValue);

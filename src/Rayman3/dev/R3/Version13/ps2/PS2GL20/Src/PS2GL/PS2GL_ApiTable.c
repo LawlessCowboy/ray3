@@ -425,15 +425,6 @@ struct tagPS2glApiTable {
 tagPS2glApiTable g_PS2glApiTableImp;
 tagPS2glApiTable* g_pPS2glApiTable;
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6162–6164 */
-/* addr: 0x0013b940  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6162
- *   +0x0004 -> line 6163
- *   +0x0008 -> line 6164
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColorTableEXT(void)
 {
     lw v0, g_pPS2glApiTable
@@ -441,15 +432,6 @@ asm void PS2glColorTableEXT(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6142–6144 */
-/* addr: 0x0013b950  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6142
- *   +0x0004 -> line 6143
- *   +0x0008 -> line 6144
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor4usvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -457,15 +439,6 @@ asm void PS2glMultiColor4usvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6114–6116 */
-/* addr: 0x0013b960  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6114
- *   +0x0004 -> line 6115
- *   +0x0008 -> line 6116
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor4uivARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -473,15 +446,6 @@ asm void PS2glMultiColor4uivARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6086–6088 */
-/* addr: 0x0013b970  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6086
- *   +0x0004 -> line 6087
- *   +0x0008 -> line 6088
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor4ubvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -489,15 +453,6 @@ asm void PS2glMultiColor4ubvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6058–6060 */
-/* addr: 0x0013b980  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6058
- *   +0x0004 -> line 6059
- *   +0x0008 -> line 6060
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor4svARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -505,15 +460,6 @@ asm void PS2glMultiColor4svARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6030–6032 */
-/* addr: 0x0013b990  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6030
- *   +0x0004 -> line 6031
- *   +0x0008 -> line 6032
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor4ivARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -521,15 +467,6 @@ asm void PS2glMultiColor4ivARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 6002–6004 */
-/* addr: 0x0013b9a0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6002
- *   +0x0004 -> line 6003
- *   +0x0008 -> line 6004
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor4fvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -537,15 +474,6 @@ asm void PS2glMultiColor4fvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5974–5976 */
-/* addr: 0x0013b9b0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5974
- *   +0x0004 -> line 5975
- *   +0x0008 -> line 5976
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor4dvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -553,15 +481,6 @@ asm void PS2glMultiColor4dvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5946–5948 */
-/* addr: 0x0013b9c0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5946
- *   +0x0004 -> line 5947
- *   +0x0008 -> line 5948
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor4bvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -569,15 +488,6 @@ asm void PS2glMultiColor4bvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5918–5920 */
-/* addr: 0x0013b9d0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5918
- *   +0x0004 -> line 5919
- *   +0x0008 -> line 5920
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor3usvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -585,15 +495,6 @@ asm void PS2glMultiColor3usvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5890–5892 */
-/* addr: 0x0013b9e0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5890
- *   +0x0004 -> line 5891
- *   +0x0008 -> line 5892
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor3uivARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -601,15 +502,6 @@ asm void PS2glMultiColor3uivARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5862–5864 */
-/* addr: 0x0013b9f0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5862
- *   +0x0004 -> line 5863
- *   +0x0008 -> line 5864
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor3ubvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -617,15 +509,6 @@ asm void PS2glMultiColor3ubvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5834–5836 */
-/* addr: 0x0013ba00  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5834
- *   +0x0004 -> line 5835
- *   +0x0008 -> line 5836
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor3svARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -633,15 +516,6 @@ asm void PS2glMultiColor3svARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5806–5808 */
-/* addr: 0x0013ba10  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5806
- *   +0x0004 -> line 5807
- *   +0x0008 -> line 5808
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor3ivARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -649,15 +523,6 @@ asm void PS2glMultiColor3ivARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5778–5780 */
-/* addr: 0x0013ba20  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5778
- *   +0x0004 -> line 5779
- *   +0x0008 -> line 5780
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor3fvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -665,15 +530,6 @@ asm void PS2glMultiColor3fvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5750–5752 */
-/* addr: 0x0013ba30  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5750
- *   +0x0004 -> line 5751
- *   +0x0008 -> line 5752
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor3dvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -681,15 +537,6 @@ asm void PS2glMultiColor3dvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5722–5724 */
-/* addr: 0x0013ba40  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5722
- *   +0x0004 -> line 5723
- *   +0x0008 -> line 5724
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiColor3bvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -697,15 +544,6 @@ asm void PS2glMultiColor3bvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5692–5694 */
-/* addr: 0x0013ba50  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5692
- *   +0x0004 -> line 5693
- *   +0x0008 -> line 5694
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord4svARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -713,15 +551,6 @@ asm void PS2glMultiTexCoord4svARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5664–5666 */
-/* addr: 0x0013ba60  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5664
- *   +0x0004 -> line 5665
- *   +0x0008 -> line 5666
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord4ivARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -729,15 +558,6 @@ asm void PS2glMultiTexCoord4ivARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5636–5638 */
-/* addr: 0x0013ba70  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5636
- *   +0x0004 -> line 5637
- *   +0x0008 -> line 5638
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord4fvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -745,15 +565,6 @@ asm void PS2glMultiTexCoord4fvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5608–5610 */
-/* addr: 0x0013ba80  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5608
- *   +0x0004 -> line 5609
- *   +0x0008 -> line 5610
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord4dvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -761,15 +572,6 @@ asm void PS2glMultiTexCoord4dvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5580–5582 */
-/* addr: 0x0013ba90  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5580
- *   +0x0004 -> line 5581
- *   +0x0008 -> line 5582
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord3svARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -777,15 +579,6 @@ asm void PS2glMultiTexCoord3svARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5552–5554 */
-/* addr: 0x0013baa0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5552
- *   +0x0004 -> line 5553
- *   +0x0008 -> line 5554
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord3ivARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -793,15 +586,6 @@ asm void PS2glMultiTexCoord3ivARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5524–5526 */
-/* addr: 0x0013bab0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5524
- *   +0x0004 -> line 5525
- *   +0x0008 -> line 5526
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord3fvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -809,15 +593,6 @@ asm void PS2glMultiTexCoord3fvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5496–5498 */
-/* addr: 0x0013bac0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5496
- *   +0x0004 -> line 5497
- *   +0x0008 -> line 5498
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord3dvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -825,15 +600,6 @@ asm void PS2glMultiTexCoord3dvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5468–5470 */
-/* addr: 0x0013bad0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5468
- *   +0x0004 -> line 5469
- *   +0x0008 -> line 5470
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord2svARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -841,15 +607,6 @@ asm void PS2glMultiTexCoord2svARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5440–5442 */
-/* addr: 0x0013bae0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5440
- *   +0x0004 -> line 5441
- *   +0x0008 -> line 5442
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord2ivARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -857,15 +614,6 @@ asm void PS2glMultiTexCoord2ivARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5412–5414 */
-/* addr: 0x0013baf0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5412
- *   +0x0004 -> line 5413
- *   +0x0008 -> line 5414
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord2fvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -873,15 +621,6 @@ asm void PS2glMultiTexCoord2fvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5384–5386 */
-/* addr: 0x0013bb00  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5384
- *   +0x0004 -> line 5385
- *   +0x0008 -> line 5386
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMultiTexCoord2dvARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -889,15 +628,6 @@ asm void PS2glMultiTexCoord2dvARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5229–5231 */
-/* addr: 0x0013bb10  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5229
- *   +0x0004 -> line 5230
- *   +0x0008 -> line 5231
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glActiveTextureARB(void)
 {
     lw v0, g_pPS2glApiTable
@@ -905,15 +635,6 @@ asm void PS2glActiveTextureARB(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5197–5199 */
-/* addr: 0x0013bb20  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5197
- *   +0x0004 -> line 5198
- *   +0x0008 -> line 5199
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glSetGsRegister(void)
 {
     lw v0, g_pPS2glApiTable
@@ -921,15 +642,6 @@ asm void PS2glSetGsRegister(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5182–5184 */
-/* addr: 0x0013bb30  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5182
- *   +0x0004 -> line 5183
- *   +0x0008 -> line 5184
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glViewport(void)
 {
     lw v0, g_pPS2glApiTable
@@ -937,15 +649,6 @@ asm void PS2glViewport(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5168–5170 */
-/* addr: 0x0013bb40  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5168
- *   +0x0004 -> line 5169
- *   +0x0008 -> line 5170
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertexPointer(void)
 {
     lw v0, g_pPS2glApiTable
@@ -953,15 +656,6 @@ asm void PS2glVertexPointer(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5154–5156 */
-/* addr: 0x0013bb50  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5154
- *   +0x0004 -> line 5155
- *   +0x0008 -> line 5156
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex4sv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -969,15 +663,6 @@ asm void PS2glVertex4sv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5126–5128 */
-/* addr: 0x0013bb60  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5126
- *   +0x0004 -> line 5127
- *   +0x0008 -> line 5128
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex4iv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -985,15 +670,6 @@ asm void PS2glVertex4iv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5098–5100 */
-/* addr: 0x0013bb70  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5098
- *   +0x0004 -> line 5099
- *   +0x0008 -> line 5100
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex4fv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1001,15 +677,6 @@ asm void PS2glVertex4fv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5084–5086 */
-/* addr: 0x0013bb80  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5084
- *   +0x0004 -> line 5085
- *   +0x0008 -> line 5086
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex4f(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1017,15 +684,6 @@ asm void PS2glVertex4f(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5070–5072 */
-/* addr: 0x0013bb90  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5070
- *   +0x0004 -> line 5071
- *   +0x0008 -> line 5072
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex4dv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1033,15 +691,6 @@ asm void PS2glVertex4dv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5042–5044 */
-/* addr: 0x0013bba0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5042
- *   +0x0004 -> line 5043
- *   +0x0008 -> line 5044
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex3sv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1049,15 +698,6 @@ asm void PS2glVertex3sv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 5014–5016 */
-/* addr: 0x0013bbb0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5014
- *   +0x0004 -> line 5015
- *   +0x0008 -> line 5016
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex3iv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1065,15 +705,6 @@ asm void PS2glVertex3iv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4986–4988 */
-/* addr: 0x0013bbc0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4986
- *   +0x0004 -> line 4987
- *   +0x0008 -> line 4988
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex3fv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1081,15 +712,6 @@ asm void PS2glVertex3fv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4972–4974 */
-/* addr: 0x0013bbd0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4972
- *   +0x0004 -> line 4973
- *   +0x0008 -> line 4974
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex3f(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1097,15 +719,6 @@ asm void PS2glVertex3f(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4958–4960 */
-/* addr: 0x0013bbe0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4958
- *   +0x0004 -> line 4959
- *   +0x0008 -> line 4960
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex3dv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1113,15 +726,6 @@ asm void PS2glVertex3dv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4944–4946 */
-/* addr: 0x0013bbf0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4944
- *   +0x0004 -> line 4945
- *   +0x0008 -> line 4946
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex3d(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1129,15 +733,6 @@ asm void PS2glVertex3d(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4930–4932 */
-/* addr: 0x0013bc00  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4930
- *   +0x0004 -> line 4931
- *   +0x0008 -> line 4932
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex2sv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1145,15 +740,6 @@ asm void PS2glVertex2sv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4902–4904 */
-/* addr: 0x0013bc10  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4902
- *   +0x0004 -> line 4903
- *   +0x0008 -> line 4904
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex2iv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1161,15 +747,6 @@ asm void PS2glVertex2iv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4874–4876 */
-/* addr: 0x0013bc20  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4874
- *   +0x0004 -> line 4875
- *   +0x0008 -> line 4876
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex2fv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1177,15 +754,6 @@ asm void PS2glVertex2fv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4860–4862 */
-/* addr: 0x0013bc30  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4860
- *   +0x0004 -> line 4861
- *   +0x0008 -> line 4862
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex2f(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1193,15 +761,6 @@ asm void PS2glVertex2f(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4846–4848 */
-/* addr: 0x0013bc40  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4846
- *   +0x0004 -> line 4847
- *   +0x0008 -> line 4848
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glVertex2dv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1209,15 +768,6 @@ asm void PS2glVertex2dv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4818–4820 */
-/* addr: 0x0013bc50  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4818
- *   +0x0004 -> line 4819
- *   +0x0008 -> line 4820
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTranslatef(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1225,15 +775,6 @@ asm void PS2glTranslatef(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4748–4750 */
-/* addr: 0x0013bc60  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4748
- *   +0x0004 -> line 4749
- *   +0x0008 -> line 4750
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexParameteri(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1241,15 +782,6 @@ asm void PS2glTexParameteri(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4706–4708 */
-/* addr: 0x0013bc70  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4706
- *   +0x0004 -> line 4707
- *   +0x0008 -> line 4708
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexImage2D(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1257,15 +789,6 @@ asm void PS2glTexImage2D(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4552–4554 */
-/* addr: 0x0013bc80  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4552
- *   +0x0004 -> line 4553
- *   +0x0008 -> line 4554
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexEnvf(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1273,15 +796,6 @@ asm void PS2glTexEnvf(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4538–4540 */
-/* addr: 0x0013bc90  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4538
- *   +0x0004 -> line 4539
- *   +0x0008 -> line 4540
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoordPointer(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1289,15 +803,6 @@ asm void PS2glTexCoordPointer(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4524–4526 */
-/* addr: 0x0013bca0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4524
- *   +0x0004 -> line 4525
- *   +0x0008 -> line 4526
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord4sv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1305,15 +810,6 @@ asm void PS2glTexCoord4sv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4496–4498 */
-/* addr: 0x0013bcb0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4496
- *   +0x0004 -> line 4497
- *   +0x0008 -> line 4498
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord4iv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1321,15 +817,6 @@ asm void PS2glTexCoord4iv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4468–4470 */
-/* addr: 0x0013bcc0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4468
- *   +0x0004 -> line 4469
- *   +0x0008 -> line 4470
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord4fv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1337,15 +824,6 @@ asm void PS2glTexCoord4fv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4440–4442 */
-/* addr: 0x0013bcd0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4440
- *   +0x0004 -> line 4441
- *   +0x0008 -> line 4442
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord4dv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1353,15 +831,6 @@ asm void PS2glTexCoord4dv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4412–4414 */
-/* addr: 0x0013bce0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4412
- *   +0x0004 -> line 4413
- *   +0x0008 -> line 4414
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord3sv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1369,15 +838,6 @@ asm void PS2glTexCoord3sv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4384–4386 */
-/* addr: 0x0013bcf0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4384
- *   +0x0004 -> line 4385
- *   +0x0008 -> line 4386
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord3iv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1385,15 +845,6 @@ asm void PS2glTexCoord3iv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4356–4358 */
-/* addr: 0x0013bd00  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4356
- *   +0x0004 -> line 4357
- *   +0x0008 -> line 4358
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord3fv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1401,15 +852,6 @@ asm void PS2glTexCoord3fv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4328–4330 */
-/* addr: 0x0013bd10  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4328
- *   +0x0004 -> line 4329
- *   +0x0008 -> line 4330
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord3dv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1417,15 +859,6 @@ asm void PS2glTexCoord3dv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4300–4302 */
-/* addr: 0x0013bd20  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4300
- *   +0x0004 -> line 4301
- *   +0x0008 -> line 4302
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord2sv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1433,15 +866,6 @@ asm void PS2glTexCoord2sv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4272–4274 */
-/* addr: 0x0013bd30  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4272
- *   +0x0004 -> line 4273
- *   +0x0008 -> line 4274
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord2iv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1449,15 +873,6 @@ asm void PS2glTexCoord2iv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4244–4246 */
-/* addr: 0x0013bd40  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4244
- *   +0x0004 -> line 4245
- *   +0x0008 -> line 4246
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord2fv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1465,15 +880,6 @@ asm void PS2glTexCoord2fv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4230–4232 */
-/* addr: 0x0013bd50  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4230
- *   +0x0004 -> line 4231
- *   +0x0008 -> line 4232
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord2f(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1481,15 +887,6 @@ asm void PS2glTexCoord2f(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4216–4218 */
-/* addr: 0x0013bd60  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4216
- *   +0x0004 -> line 4217
- *   +0x0008 -> line 4218
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glTexCoord2dv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1497,15 +894,6 @@ asm void PS2glTexCoord2dv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 4006–4008 */
-/* addr: 0x0013bd70  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4006
- *   +0x0004 -> line 4007
- *   +0x0008 -> line 4008
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glScissor(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1513,15 +901,6 @@ asm void PS2glScissor(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3137–3139 */
-/* addr: 0x0013bd80  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3137
- *   +0x0004 -> line 3138
- *   +0x0008 -> line 3139
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glOrtho(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1529,15 +908,6 @@ asm void PS2glOrtho(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3123–3125 */
-/* addr: 0x0013bd90  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3123
- *   +0x0004 -> line 3124
- *   +0x0008 -> line 3125
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glNormalPointer(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1545,15 +915,6 @@ asm void PS2glNormalPointer(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3109–3111 */
-/* addr: 0x0013bda0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3109
- *   +0x0004 -> line 3110
- *   +0x0008 -> line 3111
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glNormal3sv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1561,15 +922,6 @@ asm void PS2glNormal3sv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3081–3083 */
-/* addr: 0x0013bdb0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3081
- *   +0x0004 -> line 3082
- *   +0x0008 -> line 3083
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glNormal3iv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1577,15 +929,6 @@ asm void PS2glNormal3iv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3053–3055 */
-/* addr: 0x0013bdc0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3053
- *   +0x0004 -> line 3054
- *   +0x0008 -> line 3055
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glNormal3fv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1593,15 +936,6 @@ asm void PS2glNormal3fv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 3025–3027 */
-/* addr: 0x0013bdd0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3025
- *   +0x0004 -> line 3026
- *   +0x0008 -> line 3027
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glNormal3dv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1609,15 +943,6 @@ asm void PS2glNormal3dv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2969–2971 */
-/* addr: 0x0013bde0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2969
- *   +0x0004 -> line 2970
- *   +0x0008 -> line 2971
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glNewList(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1625,15 +950,6 @@ asm void PS2glNewList(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2927–2929 */
-/* addr: 0x0013bdf0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2927
- *   +0x0004 -> line 2928
- *   +0x0008 -> line 2929
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMatrixMode(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1641,15 +957,6 @@ asm void PS2glMatrixMode(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2899–2901 */
-/* addr: 0x0013be00  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2899
- *   +0x0004 -> line 2900
- *   +0x0008 -> line 2901
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMateriali(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1657,15 +964,6 @@ asm void PS2glMateriali(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2885–2887 */
-/* addr: 0x0013be10  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2885
- *   +0x0004 -> line 2886
- *   +0x0008 -> line 2887
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glMaterialfv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1673,15 +971,6 @@ asm void PS2glMaterialfv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2717–2719 */
-/* addr: 0x0013be20  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2717
- *   +0x0004 -> line 2718
- *   +0x0008 -> line 2719
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glLoadMatrixf(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1689,15 +978,6 @@ asm void PS2glLoadMatrixf(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2689–2691 */
-/* addr: 0x0013be30  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2689
- *   +0x0004 -> line 2690
- *   +0x0008 -> line 2691
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glLoadIdentity(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1705,15 +985,6 @@ asm void PS2glLoadIdentity(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2619–2621 */
-/* addr: 0x0013be40  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2619
- *   +0x0004 -> line 2620
- *   +0x0008 -> line 2621
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glLighti(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1721,15 +992,6 @@ asm void PS2glLighti(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2605–2607 */
-/* addr: 0x0013be50  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2605
- *   +0x0004 -> line 2606
- *   +0x0008 -> line 2607
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glLightfv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1737,15 +999,6 @@ asm void PS2glLightfv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2563–2565 */
-/* addr: 0x0013be60  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2563
- *   +0x0004 -> line 2564
- *   +0x0008 -> line 2565
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glLightModeli(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1753,15 +1006,6 @@ asm void PS2glLightModeli(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2549–2551 */
-/* addr: 0x0013be70  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2549
- *   +0x0004 -> line 2550
- *   +0x0008 -> line 2551
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glLightModelfv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1769,15 +1013,6 @@ asm void PS2glLightModelfv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2490–2492 */
-/* addr: 0x0013be80  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2490
- *   +0x0004 -> line 2491
- *   +0x0008 -> line 2492
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm unsigned char PS2glIsEnabled(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1785,15 +1020,6 @@ asm unsigned char PS2glIsEnabled(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 2280–2282 */
-/* addr: 0x0013be90  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2280
- *   +0x0004 -> line 2281
- *   +0x0008 -> line 2282
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glHint(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1801,15 +1027,6 @@ asm void PS2glHint(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1943–1945 */
-/* addr: 0x0013bea0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1943
- *   +0x0004 -> line 1944
- *   +0x0008 -> line 1945
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glGetIntegerv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1817,15 +1034,6 @@ asm void PS2glGetIntegerv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1929–1931 */
-/* addr: 0x0013beb0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1929
- *   +0x0004 -> line 1930
- *   +0x0008 -> line 1931
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glGetFloatv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1833,15 +1041,6 @@ asm void PS2glGetFloatv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1858–1860 */
-/* addr: 0x0013bec0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1858
- *   +0x0004 -> line 1859
- *   +0x0008 -> line 1860
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glGenTextures(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1849,15 +1048,6 @@ asm void PS2glGenTextures(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1843–1845 */
-/* addr: 0x0013bed0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1843
- *   +0x0004 -> line 1844
- *   +0x0008 -> line 1845
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm unsigned int PS2glGenLists(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1865,15 +1055,6 @@ asm unsigned int PS2glGenLists(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1801–1803 */
-/* addr: 0x0013bee0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1801
- *   +0x0004 -> line 1802
- *   +0x0008 -> line 1803
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glFogiv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1881,15 +1062,6 @@ asm void PS2glFogiv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1787–1789 */
-/* addr: 0x0013bef0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1787
- *   +0x0004 -> line 1788
- *   +0x0008 -> line 1789
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glFogi(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1897,15 +1069,6 @@ asm void PS2glFogi(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1773–1775 */
-/* addr: 0x0013bf00  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1773
- *   +0x0004 -> line 1774
- *   +0x0008 -> line 1775
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glFogfv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1913,15 +1076,6 @@ asm void PS2glFogfv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1759–1761 */
-/* addr: 0x0013bf10  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1759
- *   +0x0004 -> line 1760
- *   +0x0008 -> line 1761
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glFogf(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1929,15 +1083,6 @@ asm void PS2glFogf(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1745–1747 */
-/* addr: 0x0013bf20  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1745
- *   +0x0004 -> line 1746
- *   +0x0008 -> line 1747
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glFlush(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1945,15 +1090,6 @@ asm void PS2glFlush(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1731–1733 */
-/* addr: 0x0013bf30  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1731
- *   +0x0004 -> line 1732
- *   +0x0008 -> line 1733
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glFinish(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1961,15 +1097,6 @@ asm void PS2glFinish(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1535–1537 */
-/* addr: 0x0013bf40  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1535
- *   +0x0004 -> line 1536
- *   +0x0008 -> line 1537
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glEndList(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1977,15 +1104,6 @@ asm void PS2glEndList(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1521–1523 */
-/* addr: 0x0013bf50  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1521
- *   +0x0004 -> line 1522
- *   +0x0008 -> line 1523
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glEnd(void)
 {
     lw v0, g_pPS2glApiTable
@@ -1993,15 +1111,6 @@ asm void PS2glEnd(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1507–1509 */
-/* addr: 0x0013bf60  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1507
- *   +0x0004 -> line 1508
- *   +0x0008 -> line 1509
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glEnableClientState(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2009,15 +1118,6 @@ asm void PS2glEnableClientState(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1493–1495 */
-/* addr: 0x0013bf70  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1493
- *   +0x0004 -> line 1494
- *   +0x0008 -> line 1495
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glEnable(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2025,15 +1125,6 @@ asm void PS2glEnable(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1395–1397 */
-/* addr: 0x0013bf80  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1395
- *   +0x0004 -> line 1396
- *   +0x0008 -> line 1397
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glDrawArrays(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2041,15 +1132,6 @@ asm void PS2glDrawArrays(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1381–1383 */
-/* addr: 0x0013bf90  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1381
- *   +0x0004 -> line 1382
- *   +0x0008 -> line 1383
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glDisableClientState(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2057,15 +1139,6 @@ asm void PS2glDisableClientState(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1367–1369 */
-/* addr: 0x0013bfa0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1367
- *   +0x0004 -> line 1368
- *   +0x0008 -> line 1369
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glDisable(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2073,15 +1146,6 @@ asm void PS2glDisable(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1353–1355 */
-/* addr: 0x0013bfb0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1353
- *   +0x0004 -> line 1354
- *   +0x0008 -> line 1355
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glDepthRange(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2089,15 +1153,6 @@ asm void PS2glDepthRange(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1339–1341 */
-/* addr: 0x0013bfc0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1339
- *   +0x0004 -> line 1340
- *   +0x0008 -> line 1341
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glDepthMask(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2105,15 +1160,6 @@ asm void PS2glDepthMask(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1325–1327 */
-/* addr: 0x0013bfd0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1325
- *   +0x0004 -> line 1326
- *   +0x0008 -> line 1327
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glDepthFunc(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2121,15 +1167,6 @@ asm void PS2glDepthFunc(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1311–1313 */
-/* addr: 0x0013bfe0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1311
- *   +0x0004 -> line 1312
- *   +0x0008 -> line 1313
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glDeleteTextures(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2137,15 +1174,6 @@ asm void PS2glDeleteTextures(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1297–1299 */
-/* addr: 0x0013bff0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1297
- *   +0x0004 -> line 1298
- *   +0x0008 -> line 1299
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glDeleteLists(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2153,15 +1181,6 @@ asm void PS2glDeleteLists(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1283–1285 */
-/* addr: 0x0013c000  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1283
- *   +0x0004 -> line 1284
- *   +0x0008 -> line 1285
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glCullFace(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2169,15 +1188,6 @@ asm void PS2glCullFace(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1199–1201 */
-/* addr: 0x0013c010  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1199
- *   +0x0004 -> line 1200
- *   +0x0008 -> line 1201
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColorPointer(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2185,15 +1195,6 @@ asm void PS2glColorPointer(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1171–1173 */
-/* addr: 0x0013c020  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1171
- *   +0x0004 -> line 1172
- *   +0x0008 -> line 1173
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColorMask(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2201,15 +1202,6 @@ asm void PS2glColorMask(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1157–1159 */
-/* addr: 0x0013c030  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1157
- *   +0x0004 -> line 1158
- *   +0x0008 -> line 1159
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor4usv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2217,15 +1209,6 @@ asm void PS2glColor4usv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1129–1131 */
-/* addr: 0x0013c040  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1129
- *   +0x0004 -> line 1130
- *   +0x0008 -> line 1131
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor4uiv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2233,15 +1216,6 @@ asm void PS2glColor4uiv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1101–1103 */
-/* addr: 0x0013c050  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1101
- *   +0x0004 -> line 1102
- *   +0x0008 -> line 1103
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor4ubv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2249,15 +1223,6 @@ asm void PS2glColor4ubv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1073–1075 */
-/* addr: 0x0013c060  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1073
- *   +0x0004 -> line 1074
- *   +0x0008 -> line 1075
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor4sv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2265,15 +1230,6 @@ asm void PS2glColor4sv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1045–1047 */
-/* addr: 0x0013c070  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1045
- *   +0x0004 -> line 1046
- *   +0x0008 -> line 1047
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor4iv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2281,15 +1237,6 @@ asm void PS2glColor4iv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1017–1019 */
-/* addr: 0x0013c080  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1017
- *   +0x0004 -> line 1018
- *   +0x0008 -> line 1019
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor4fv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2297,15 +1244,6 @@ asm void PS2glColor4fv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 1003–1005 */
-/* addr: 0x0013c090  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1003
- *   +0x0004 -> line 1004
- *   +0x0008 -> line 1005
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor4f(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2313,15 +1251,6 @@ asm void PS2glColor4f(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 989–991 */
-/* addr: 0x0013c0a0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 989
- *   +0x0004 -> line 990
- *   +0x0008 -> line 991
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor4dv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2329,15 +1258,6 @@ asm void PS2glColor4dv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 961–963 */
-/* addr: 0x0013c0b0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 961
- *   +0x0004 -> line 962
- *   +0x0008 -> line 963
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor4bv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2345,15 +1265,6 @@ asm void PS2glColor4bv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 933–935 */
-/* addr: 0x0013c0c0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 933
- *   +0x0004 -> line 934
- *   +0x0008 -> line 935
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor3usv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2361,15 +1272,6 @@ asm void PS2glColor3usv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 905–907 */
-/* addr: 0x0013c0d0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 905
- *   +0x0004 -> line 906
- *   +0x0008 -> line 907
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor3uiv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2377,15 +1279,6 @@ asm void PS2glColor3uiv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 877–879 */
-/* addr: 0x0013c0e0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 877
- *   +0x0004 -> line 878
- *   +0x0008 -> line 879
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor3ubv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2393,15 +1286,6 @@ asm void PS2glColor3ubv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 849–851 */
-/* addr: 0x0013c0f0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 849
- *   +0x0004 -> line 850
- *   +0x0008 -> line 851
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor3sv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2409,15 +1293,6 @@ asm void PS2glColor3sv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 821–823 */
-/* addr: 0x0013c100  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 821
- *   +0x0004 -> line 822
- *   +0x0008 -> line 823
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor3iv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2425,15 +1300,6 @@ asm void PS2glColor3iv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 793–795 */
-/* addr: 0x0013c110  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 793
- *   +0x0004 -> line 794
- *   +0x0008 -> line 795
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor3fv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2441,15 +1307,6 @@ asm void PS2glColor3fv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 779–781 */
-/* addr: 0x0013c120  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 779
- *   +0x0004 -> line 780
- *   +0x0008 -> line 781
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor3f(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2457,15 +1314,6 @@ asm void PS2glColor3f(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 765–767 */
-/* addr: 0x0013c130  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 765
- *   +0x0004 -> line 766
- *   +0x0008 -> line 767
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor3dv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2473,15 +1321,6 @@ asm void PS2glColor3dv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 737–739 */
-/* addr: 0x0013c140  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 737
- *   +0x0004 -> line 738
- *   +0x0008 -> line 739
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glColor3bv(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2489,15 +1328,6 @@ asm void PS2glColor3bv(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 653–655 */
-/* addr: 0x0013c150  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 653
- *   +0x0004 -> line 654
- *   +0x0008 -> line 655
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glClearColor(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2505,15 +1335,6 @@ asm void PS2glClearColor(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 625–627 */
-/* addr: 0x0013c160  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 625
- *   +0x0004 -> line 626
- *   +0x0008 -> line 627
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glClear(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2521,15 +1342,6 @@ asm void PS2glClear(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 583–585 */
-/* addr: 0x0013c170  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 583
- *   +0x0004 -> line 584
- *   +0x0008 -> line 585
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glBlendFunc(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2537,15 +1349,6 @@ asm void PS2glBlendFunc(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 555–557 */
-/* addr: 0x0013c180  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 555
- *   +0x0004 -> line 556
- *   +0x0008 -> line 557
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glBindTexture(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2553,15 +1356,6 @@ asm void PS2glBindTexture(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 541–543 */
-/* addr: 0x0013c190  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 541
- *   +0x0004 -> line 542
- *   +0x0008 -> line 543
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glBegin(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2569,15 +1363,6 @@ asm void PS2glBegin(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 527–529 */
-/* addr: 0x0013c1a0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 527
- *   +0x0004 -> line 528
- *   +0x0008 -> line 529
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glArrayElement(void)
 {
     lw v0, g_pPS2glApiTable
@@ -2585,15 +1370,6 @@ asm void PS2glArrayElement(void)
     jr v1; nop
 }
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ApiTable.c lines 498–500 */
-/* addr: 0x0013c1b0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 498
- *   +0x0004 -> line 499
- *   +0x0008 -> line 500
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 asm void PS2glAlphaFunc(void)
 {
     lw v0, g_pPS2glApiTable

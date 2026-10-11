@@ -110,13 +110,6 @@ int GLI_BIG_GLOBALS_p_stObj;
 int GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint;
 MAT_tdstTransformation_ GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Linear.c lines 156–156 */
-/* addr: 0x002a92e0  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 156
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vResetTableOfActiveLightsForChar(char _cValue)
 {
     memset(g_ucTableOfActiveLightsForChar, _cValue, 300);

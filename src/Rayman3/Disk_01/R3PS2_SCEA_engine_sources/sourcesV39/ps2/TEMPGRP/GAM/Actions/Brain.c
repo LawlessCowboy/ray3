@@ -1129,17 +1129,6 @@ struct tdstPLA_DeformationLink_ {
 
 unsigned char g_ucGameModuleId;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Brain.c lines 390–454 */
-/* addr: 0x0026d040  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 390
- *   +0x0008 -> line 447
- *   +0x0018 -> line 448
- *   +0x0020 -> line 449
- *   +0x0028 -> line 454
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
 void GLI_TEX_vKillMemoryChannel(unsigned char ucCurrentChannel);
 void PLD_fn_vUnLoadLevel(void);
@@ -1152,30 +1141,11 @@ void fn_vFreeLevelAllowedMemory(void)
     HMU_fn_vSetMemoriesInFixMode();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Brain.c lines 325–325 */
-/* addr: 0x0026d080  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 325
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vBrainCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
     fn_vSimulateMindAllocationFromAnotherMind(_p_stObjectSrc->h_Brain->p_stMind, _p_stObjectDest->h_Brain->p_stMind);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Brain.c lines 288–307 */
-/* addr: 0x0026d0a0  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 288
- *   +0x0010 -> line 289
- *   +0x0018 -> line 290
- *   +0x0044 -> line 292
- *   +0x0050 -> line 293
- *   +0x007c -> line 307
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vBrainDesinit(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {
@@ -1186,32 +1156,6 @@ void fn_vBrainDesinit(tdstEngineObject_* p_stObject)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Brain.c lines 232–274 */
-/* addr: 0x0026d130  size: 472 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 232
- *   +0x0018 -> line 235
- *   +0x0098 -> line 241
- *   +0x00a0 -> line 242
- *   +0x00cc -> line 244
- *   +0x00d8 -> line 245
- *   +0x0104 -> line 247
- *   +0x0110 -> line 250
- *   +0x0114 -> line 247
- *   +0x0118 -> line 248
- *   +0x011c -> line 250
- *   +0x0140 -> line 257
- *   +0x0150 -> line 258
- *   +0x0158 -> line 260
- *   +0x0160 -> line 263
- *   +0x0180 -> line 266
- *   +0x01a0 -> line 267
- *   +0x01a8 -> line 269
- *   +0x01b4 -> line 271
- *   +0x01c0 -> line 274
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bLevelHadTransitionMemory(void);
 void* MC_fn_hGetFirstMainCharNode(void);
 HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(void* hMainCharNode);
@@ -1265,13 +1209,6 @@ void fn_vBrainInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Brain.c lines 199–199 */
-/* addr: 0x0026d310  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 199
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vBrainFree(void)
 {
 }
@@ -1279,19 +1216,6 @@ void fn_vBrainFree(void)
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 AI_tdstMind_* fn_pstAllocMind(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Brain.c lines 154–164 */
-/* addr: 0x0026d320  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 154
- *   +0x0010 -> line 155
- *   +0x0018 -> line 156
- *   +0x0044 -> line 158
- *   +0x0050 -> line 159
- *   +0x007c -> line 162
- *   +0x00a8 -> line 164
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vBrainAlloc(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {

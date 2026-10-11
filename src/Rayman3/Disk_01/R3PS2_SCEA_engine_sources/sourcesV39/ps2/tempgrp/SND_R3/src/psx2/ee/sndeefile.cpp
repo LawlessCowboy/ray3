@@ -109,82 +109,32 @@ extern "C" int fseek(__sFILE*, long, int);
 extern "C" long ftell(__sFILE*);
 extern "C" unsigned int fread(void*, unsigned int, unsigned int, __sFILE*);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 58–59 */
-/* addr: 0x0018a120  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 58
- *   +0x0008 -> line 59
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int usnd_feof(__sFILE* stream)
 {
     return (stream->_flags & 0x20) != 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 48–48 */
-/* addr: 0x0018a130  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 48
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned int usnd_fread(void* buffer, unsigned int size, unsigned int count, __sFILE* stream)
 {
     return fread(buffer, size, count, stream);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 43–43 */
-/* addr: 0x0018a140  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 43
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 long usnd_ftell(__sFILE* stream)
 {
     return ftell(stream);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 36–39 */
-/* addr: 0x0018a150  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 36
- *   +0x000c -> line 37
- *   +0x0014 -> line 38
- *   +0x001c -> line 39
- *   +0x0020 -> line 38
- *   +0x0024 -> line 39
- *   +0x0028 -> line 38
- *   +0x002c -> line 39
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int usnd_fseek(__sFILE* stream, long offset, int origin)
 {
     fseek(stream, offset, origin);
     return (int)ftell(stream);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 17–17 */
-/* addr: 0x0018a190  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 17
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int usnd_fclose(__sFILE* stream)
 {
     return fclose(stream);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeefile.cpp lines 12–12 */
-/* addr: 0x0018a1a0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 12
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 __sFILE* usnd_fopen(char* filename, char* mode)
 {
     return fopen(filename, mode);

@@ -302,59 +302,11 @@ int dmaGIF;
 anon_12 PS2INIT_db;
 void (*fn_v_EngMain_VBLCallback)(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2init.c lines 67–67 */
-/* addr: 0x003181f0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 67
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* _hPhysicalObject)
 {
     return *(GEO_tdstVisualSet_**)_hPhysicalObject;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2init.c lines 426–489 */
-/* addr: 0x00318200  size: 528 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 426
- *   +0x0004 -> line 434
- *   +0x0008 -> line 426
- *   +0x000c -> line 434
- *   +0x0010 -> line 426
- *   +0x0014 -> line 434
- *   +0x0018 -> line 426
- *   +0x0034 -> line 434
- *   +0x0040 -> line 435
- *   +0x0048 -> line 438
- *   +0x0060 -> line 439
- *   +0x006c -> line 442
- *   +0x0078 -> line 443
- *   +0x0084 -> line 446
- *   +0x0090 -> line 447
- *   +0x009c -> line 448
- *   +0x00d0 -> line 450
- *   +0x00dc -> line 453
- *   +0x00e8 -> line 454
- *   +0x00f4 -> line 457
- *   +0x0108 -> line 458
- *   +0x0114 -> line 461
- *   +0x0120 -> line 462
- *   +0x012c -> line 465
- *   +0x0138 -> line 466
- *   +0x0144 -> line 470
- *   +0x0180 -> line 471
- *   +0x018c -> line 474
- *   +0x0198 -> line 475
- *   +0x01a4 -> line 478
- *   +0x01b4 -> line 479
- *   +0x01c0 -> line 482
- *   +0x01c8 -> line 486
- *   +0x01e8 -> line 487
- *   +0x01f4 -> line 489
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void sceGifPkInit(anon_17* pPacket, long double* pBase);
 void sceGifPkReset(anon_17* pPacket);
 void sceGifPkAddGsData(anon_17* pPacket, unsigned long data);

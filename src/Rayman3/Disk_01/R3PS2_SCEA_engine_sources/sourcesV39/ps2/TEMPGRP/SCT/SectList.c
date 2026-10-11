@@ -304,66 +304,26 @@ HIE_tdstSuperObject_* SECT_g_hActiveSectorList_Head;
 HIE_tdstSuperObject_* SECT_g_hActiveSectorList_Tail;
 unsigned short SECT_g_uwActiveSectorList_NumberOfElements;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 21–21 */
-/* addr: 0x00319b60  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 21
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char SAI_fn_bInsertBoolInTable(void* _p_vValue, unsigned char ucMask, unsigned short _eFlags)
 {
     return SAI_fn_bInsertAnElementInList(&SAI_g_stInternalStructure, _p_vValue, ucMask, 0x8000, _eFlags);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 127–129 */
-/* addr: 0x00319b80  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 127
- *   +0x0004 -> line 129
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SECT_fnvInitGlobalsForActivity(void)
 {
     SECT_g_hActiveSectorList_Head = SECT_g_hActiveSectorList_Tail = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 121–122 */
-/* addr: 0x00319b90  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 121
- *   +0x0004 -> line 122
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListNext(HIE_tdstSuperObject_* _hCurrentSO)
 {
     return _hCurrentSO->hLinkedObject.p_stSector->h_NextSectorInList;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 116–116 */
-/* addr: 0x00319ba0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 116
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListHead(void)
 {
     return (HIE_tdstSuperObject_ *)SECT_g_hActiveSectorList_Head;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 97–104 */
-/* addr: 0x00319bb0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 97
- *   +0x0004 -> line 100
- *   +0x0010 -> line 103
- *   +0x0014 -> line 104
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SECT_fn_vDesactivateSector(HIE_tdstSuperObject_* _hSectorSO)
 {
     SECT_tdstSector_* param0;
@@ -375,29 +335,6 @@ void SECT_fn_vDesactivateSector(HIE_tdstSuperObject_* _hSectorSO)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 63–92 */
-/* addr: 0x00319bd0  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 63
- *   +0x0004 -> line 65
- *   +0x0010 -> line 68
- *   +0x001c -> line 69
- *   +0x002c -> line 72
- *   +0x0034 -> line 73
- *   +0x0040 -> line 74
- *   +0x0048 -> line 78
- *   +0x0054 -> line 79
- *   +0x0064 -> line 82
- *   +0x006c -> line 83
- *   +0x0078 -> line 84
- *   +0x0080 -> line 88
- *   +0x0084 -> line 89
- *   +0x0088 -> line 90
- *   +0x008c -> line 91
- *   +0x0098 -> line 92
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SECT_fn_vRemoveSectorFromList(HIE_tdstSuperObject_* _hSectorSO)
 {
     SECT_tdstSector_* hSector;
@@ -428,16 +365,6 @@ void SECT_fn_vRemoveSectorFromList(HIE_tdstSuperObject_* _hSectorSO)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\SectList.c lines 52–59 */
-/* addr: 0x00319c70  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 52
- *   +0x0004 -> line 55
- *   +0x0014 -> line 58
- *   +0x0018 -> line 59
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SECT_fn_vActivateSector(HIE_tdstSuperObject_* _hSectorSO)
 {
     SECT_tdstSector_* hSector;

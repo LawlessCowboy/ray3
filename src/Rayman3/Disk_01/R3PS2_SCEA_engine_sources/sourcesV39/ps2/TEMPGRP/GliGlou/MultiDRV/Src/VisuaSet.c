@@ -135,32 +135,11 @@ ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD);
 int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD);
 void GLI_xSendObjectToViewportWithLightsFlag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, int lDrawModeMask, unsigned int ulSuperObjectFlag);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 116–117 */
-/* addr: 0x002ab360  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 116
- *   +0x0008 -> line 117
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void TEX_vSetTextureQualityLevel(GLI_tdstTexture_* p_stTexture, char ucTextQuality)
 {
     *(int *)((char *)p_stTexture + 4) = ucTextQuality;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 460–466 */
-/* addr: 0x002ab370  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 460
- *   +0x0004 -> line 461
- *   +0x0008 -> line 460
- *   +0x000c -> line 461
- *   +0x002c -> line 463
- *   +0x0058 -> line 465
- *   +0x005c -> line 466
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* GLI_hComputeBlendRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex1, unsigned char ucIndex2, short xNumISILOD, float xPercent)
 {
     if ((ucIndex1 < hVisualSet->lNumberOfRLI) && (ucIndex2 < hVisualSet->lNumberOfRLI))
@@ -168,28 +147,11 @@ void* GLI_hComputeBlendRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 449–452 */
-/* addr: 0x002ab3e0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 449
- *   +0x0028 -> line 452
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GLI_hGetRLI(GEO_tdstVisualSet_* hVisualSet, unsigned char ucIndex)
 {
     return (ucIndex < hVisualSet->lNumberOfRLI) ? ((int*)hVisualSet->d_hRLI)[ucIndex] : 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 417–433 */
-/* addr: 0x002ab410  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 417
- *   +0x0008 -> line 432
- *   +0x002c -> line 433
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask)
 {
     g_p_stRLIForNextObjectToDraw = 0;
@@ -199,26 +161,6 @@ void GLI_lSendVisualSetToViewport2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tds
         GLI_xSendObjectToViewportWithLights(p_stVpt, p_stVisualSet->d_p_stLodDefinitions->p_stGeometricObject, lDrawModeMask);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 341–359 */
-/* addr: 0x002ab450  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 341
- *   +0x002c -> line 342
- *   +0x0034 -> line 344
- *   +0x0050 -> line 345
- *   +0x0054 -> line 344
- *   +0x0058 -> line 345
- *   +0x0060 -> line 346
- *   +0x0068 -> line 349
- *   +0x0070 -> line 350
- *   +0x0074 -> line 353
- *   +0x0084 -> line 355
- *   +0x0090 -> line 357
- *   +0x0098 -> line 358
- *   +0x009c -> line 359
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_lSendVisualSetToViewportWithRLI2Flag(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask, void* hISI, unsigned int ulSuperObjectFlag)
 {
     if (hISI)
@@ -240,26 +182,6 @@ void GLI_lSendVisualSetToViewportWithRLI2Flag(GLD_tdstViewportAttributes_* p_stV
     g_p_stLightMapUForNextObjectToDraw = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 229–252 */
-/* addr: 0x002ab510  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 229
- *   +0x0024 -> line 236
- *   +0x002c -> line 238
- *   +0x0048 -> line 239
- *   +0x004c -> line 238
- *   +0x0050 -> line 239
- *   +0x0058 -> line 240
- *   +0x0060 -> line 243
- *   +0x0068 -> line 244
- *   +0x006c -> line 246
- *   +0x007c -> line 248
- *   +0x0084 -> line 250
- *   +0x008c -> line 251
- *   +0x0090 -> line 252
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_lSendVisualSetToViewportWithRLI2(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstVisualSet_* p_stVisualSet, int lUnused, int lDrawModeMask, void* hISI)
 {
     if (hISI)
@@ -281,29 +203,11 @@ void GLI_lSendVisualSetToViewportWithRLI2(GLD_tdstViewportAttributes_* p_stVpt, 
     g_p_stLightMapUForNextObjectToDraw = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 206–206 */
-/* addr: 0x002ab5c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 206
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GLI_lGetVisualSetNumbertOfLOD(GEO_tdstVisualSet_* p_stVisualSet)
 {
     return p_stVisualSet->xNbLodDefinitions;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 189–195 */
-/* addr: 0x002ab5d0  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 189
- *   +0x0014 -> line 191
- *   +0x0034 -> line 193
- *   +0x0048 -> line 194
- *   +0x0054 -> line 195
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 GEO_tdstGeometricObject_* GLI_hGetVisualSetGeometricForADistance(GEO_tdstVisualSet_* p_stVSE, float xThreshold)
 {
     int lLod;
@@ -319,16 +223,6 @@ GEO_tdstGeometricObject_* GLI_hGetVisualSetGeometricForADistance(GEO_tdstVisualS
     return p_stVSE->d_p_stLodDefinitions[lLod].p_stGeometricObject;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\VisuaSet.c lines 178–183 */
-/* addr: 0x002ab630  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 178
- *   +0x0010 -> line 180
- *   +0x0024 -> line 181
- *   +0x0034 -> line 183
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vGetVisualSetLOD(GEO_tdstVisualSet_* p_stVisualSet, int lNumberOfLodToGet, float* p_xThreshold, GEO_tdstGeometricObject_** h_stObject)
 {
     if (lNumberOfLodToGet < p_stVisualSet->xNbLodDefinitions) {

@@ -759,19 +759,6 @@ int no_optim;
 int g_iArraySizes;
 int gh_st3dData;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\playanimPS2.c lines 269–282 */
-/* addr: 0x00289fb0  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 269
- *   +0x0010 -> line 270
- *   +0x0018 -> line 271
- *   +0x0044 -> line 273
- *   +0x0050 -> line 274
- *   +0x007c -> line 277
- *   +0x0088 -> line 282
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern unsigned char g_ucGameModuleId;
 void Erm_fn_ClearLastError(unsigned int ulChannelId);
 void Erm_fn_v_UpdateLastError();

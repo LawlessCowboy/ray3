@@ -1415,66 +1415,25 @@ struct DNM_stParsingDatas {
 
 tdstEngineStructure_ g_stEngineStructure;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Family.c lines 151–151 */
-/* addr: 0x0025f630  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 151
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vEmptyFunction2(void)
 {
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Family.c lines 243–244 */
-/* addr: 0x0025f640  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 243
- *   +0x0010 -> line 244
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bGetFamilyProperty(tdstFamilyList_* h_Family, unsigned char ucPropertyMask)
 {
     return (unsigned char)(h_Family->ucProperties & ucPropertyMask);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Family.c lines 201–202 */
-/* addr: 0x0025f660  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 201
- *   +0x0018 -> line 202
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstObjectsTablesList_* fn_hGetObjectsTableOfFamilyByIndex(tdstFamilyList_* _hFamily, short _xIndex)
 {
     return &_hFamily->hForObjectsTablesList.hFirstElementOpt[_xIndex];
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Family.c lines 164–164 */
-/* addr: 0x0025f680  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 164
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 COL_tdstBoundingSphere_* fn_vGetBoundingVolumeOfFamily(tdstFamilyList_* h_Family)
 {
     return h_Family->hBoundingSphere;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Family.c lines 75–80 */
-/* addr: 0x0025f690  size: 232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 75
- *   +0x0020 -> line 77
- *   +0x0030 -> line 78
- *   +0x00c0 -> line 79
- *   +0x00e0 -> line 80
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vDesinitFamilyStructureForPriority(unsigned char ucPriority)
 {
     tdstFamilyList_* p_stThisFamily;

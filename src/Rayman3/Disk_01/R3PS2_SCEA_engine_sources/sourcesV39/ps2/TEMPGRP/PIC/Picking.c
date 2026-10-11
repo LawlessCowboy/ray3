@@ -166,13 +166,6 @@ struct GEO_tdstEdge_ {
 
 int g_p_stCurrentMatrix;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PIC\Picking.c lines 60–60 */
-/* addr: 0x00317fc0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 60
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 COL_tdstCollideObject_* PCS_fn_hGetZddGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet)
 {
     return _hPhyCollSet->hZdd;
