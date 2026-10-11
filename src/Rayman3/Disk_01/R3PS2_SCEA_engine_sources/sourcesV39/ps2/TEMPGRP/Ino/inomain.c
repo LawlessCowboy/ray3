@@ -107,13 +107,34 @@ short INO_fn_wInvalidateHandle(stDevice** hDev)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+short INO_fn_wIsJoystickConnected(stDevice* _hDev);
+
 int INO_fn_wIsJoyConnected(int JoyNb)
 {
-    stDevice* hDev;
-    int iResult;
-    stDevice** p_hDevice;
     short xIndex;
-    /* TODO: decompile from asm/... */
+    stDevice** p_hDevice;
+    int iResult;
+    stDevice* hDev;
+
+    iResult = 0;
+    if (!(INO_gs_ucINOInitOK ? 1 : 0))
+        return iResult;
+
+    for (xIndex = 0, p_hDevice = (stDevice**)INO_gs_a_tdhDevice; xIndex < INO_gs_xNbDevice; xIndex++, p_hDevice++)
+    {
+        hDev = *p_hDevice;
+        if (hDev->m_uwType & 0x10)
+        {
+            if (JoyNb-- == 0)
+            {
+                iResult = INO_fn_wIsJoystickConnected(hDev);
+                if (iResult == -1)
+                    iResult = 0;
+                break;
+            }
+        }
+    }
+    return iResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 422–450 */
@@ -222,20 +243,16 @@ inline short INO_fn_wIsHandleValid(stDevice* _hDev)
 {
     stDevice** p_hDevice;
     short xIndex;
-    short wResult = 0;
 
     if (_hDev && (INO_gs_ucINOInitOK ? 1 : 0))
     {
         for (xIndex = INO_gs_xNbDevice - 1, p_hDevice = (stDevice**)&INO_gs_a_tdhDevice[xIndex]; xIndex >= 0; xIndex--, p_hDevice--)
         {
             if (*p_hDevice == _hDev)
-            {
-                wResult = 1;
-                break;
-            }
+                return 1;
         }
     }
-    return wResult;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 318–327 */

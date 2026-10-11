@@ -1469,7 +1469,14 @@ void fn_vChangeDynamicAlwaysActiveState(HIE_tdstSuperObject_* hCharacter, unsign
 tdstAlwaysActiveCharacter_* fn_hGetNextAlwaysActiveCharNode(tdstAlwaysActiveCharacter_* hCharNode, unsigned char bTestDynamicAlwaysActive)
 {
     tdstAlwaysActiveCharacter_* hNextCharNode;
-    /* TODO: decompile from asm/... */
+
+    hNextCharNode = hCharNode->hNextBrotherDyn;
+    if (bTestDynamicAlwaysActive)
+    {
+        while (hNextCharNode && !hNextCharNode->bDynamicAlwaysActive)
+            hNextCharNode = hNextCharNode->hNextBrotherDyn;
+    }
+    return hNextCharNode;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 117–118 */

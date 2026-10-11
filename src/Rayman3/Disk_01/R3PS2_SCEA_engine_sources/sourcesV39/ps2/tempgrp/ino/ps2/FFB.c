@@ -425,9 +425,23 @@ void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForAllDevices(void)
  */
 void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice(stDevice* hDev)
 {
-    short wDev;
     short i;
-    /* TODO: decompile from asm/... */
+    short wDev;
+
+    if (!hDev || !INO_gs_a_bIsForceFeedBack[hDev->m_wPort])
+        return;
+
+    wDev = hDev->m_wPort;
+    for (i = 0; i < 20; i++) {
+        INO_g_a_stDIDevice[wDev].m_stForceFeedBackPrecreated[i].m_ulInUseSince = 0;
+        INO_g_a_stDIDevice[wDev].m_stForceFeedBackPrecreated[i].m_ulInUseUntil = 0;
+        INO_g_a_stDIDevice[wDev].m_stForceFeedBackPrecreated[i].m_ucFadeInStartValue = 0;
+        INO_g_a_stDIDevice[wDev].m_stForceFeedBackPrecreated[i].m_ulFadeInTime = 0;
+        INO_g_a_stDIDevice[wDev].m_stForceFeedBackPrecreated[i].m_ucConstantValue = 0;
+        INO_g_a_stDIDevice[wDev].m_stForceFeedBackPrecreated[i].m_lConstantTime = 0;
+        INO_g_a_stDIDevice[wDev].m_stForceFeedBackPrecreated[i].m_ucFadeOutStopValue = 0;
+        INO_g_a_stDIDevice[wDev].m_stForceFeedBackPrecreated[i].m_ulFadeOutTime = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\FFB.c lines 170–178 */

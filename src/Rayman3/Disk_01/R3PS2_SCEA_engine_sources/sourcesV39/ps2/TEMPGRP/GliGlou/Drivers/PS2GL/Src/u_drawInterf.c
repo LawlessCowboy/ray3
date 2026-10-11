@@ -2333,8 +2333,7 @@ float FRR(float a, float b)
 {
     float r;
 
-    r = (float)rand() / 2147483648.0f;
-    return a + (b - a) * r;
+    return a + (b - a) * (r = (float)rand() / 2147483648.0f);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 2774–2820 */

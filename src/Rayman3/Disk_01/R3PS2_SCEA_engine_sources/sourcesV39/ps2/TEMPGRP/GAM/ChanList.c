@@ -1315,6 +1315,8 @@ void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorp
     /* TODO: decompile from asm/... */
 }
 
+void* HMU_fn_p_vMalloc(unsigned int ulSize, unsigned char ucChannel);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 376–383 */
 /* addr: 0x0025db30  size: 80 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1328,7 +1330,13 @@ void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorp
  */
 void fn_vInitMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList)
 {
-    /* TODO: decompile from asm/... */
+    if (*p_hMorphList == NULL)
+    {
+        *p_hMorphList = (LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn*)HMU_fn_p_vMalloc(sizeof(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn), 1);
+        (*p_hMorphList)->hFirstElementDyn = NULL;
+        (*p_hMorphList)->hLastElementDyn = NULL;
+        (*p_hMorphList)->lNumberOfElementsDyn = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 279–321 */
@@ -1379,7 +1387,15 @@ void fn_vActivateChannel(HIE_tdstSuperObject_* _hPerso, unsigned short _uwChanne
 void fn_vUpdateSPOFlagsOfChannelForActivation(HIE_tdstSuperObject_* _hSOChannel, unsigned char _bActivate)
 {
     unsigned int ulSpoFlags;
-    /* TODO: decompile from asm/... */
+
+    if (g_DEMO_KeybTest != 2 && _hSOChannel)
+    {
+        ulSpoFlags = _hSOChannel->ulFlags;
+        if (_bActivate)
+            _hSOChannel->ulFlags = ulSpoFlags & ~0x83;
+        else
+            _hSOChannel->ulFlags = ulSpoFlags | 0x83;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 230–241 */

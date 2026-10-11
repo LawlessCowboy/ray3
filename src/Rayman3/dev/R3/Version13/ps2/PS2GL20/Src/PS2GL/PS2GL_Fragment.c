@@ -2370,8 +2370,28 @@ void impPS2glDepthMask(unsigned char flag)
  */
 void impPS2glDepthFunc(unsigned int func)
 {
-    unsigned char zTst;
-    /* TODO: decompile from asm/... */
+    unsigned char zTst = 1;
+
+    g_PS2glContext.eDepthFunc = func;
+
+    if (g_PS2glContext.nEnableBits & 0x800)
+    {
+        switch (func)
+        {
+            case 0x200: zTst = 0; break;
+            case 0x207: zTst = 1; break;
+            case 0x203: zTst = 2; break;
+            case 0x201: zTst = 3; break;
+            case 0x202:
+            case 0x204:
+            case 0x205:
+            case 0x206:
+                break;
+        }
+
+        g_gsContext.TEST_1.ZTST = zTst;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 219–239 */

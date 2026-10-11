@@ -1241,7 +1241,12 @@ unsigned char fn_ucStdGameCheckValidity(HIE_tdstSuperObject_* _h_SprObj)
 void fn_vStandardGameSetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex, MTH3D_tdstVector_* _p_stVec)
 {
     MTH3D_tdstVector_* p_stTmpVec;
-    /* TODO: decompile from asm/... */
+
+    if (_lIndex < 2 && _lIndex >= 0 && _p_stVec)
+    {
+        p_stTmpVec = &_hSO->hLinkedObject.p_stCharacter->h_StandardGame->a_stCustomVectors[_lIndex];
+        *(int*)&p_stTmpVec->xX = *(int*)&_p_stVec->xX; *(int*)&p_stTmpVec->xY = *(int*)&_p_stVec->xY; *(int*)&p_stTmpVec->xZ = *(int*)&_p_stVec->xZ;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 691–700 */
@@ -1258,7 +1263,12 @@ void fn_vStandardGameSetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex,
 void fn_vStandardGameGetCustomVectorSO(HIE_tdstSuperObject_* _hSO, long _lIndex, MTH3D_tdstVector_* _p_stVec)
 {
     MTH3D_tdstVector_* p_stTmpVec;
-    /* TODO: decompile from asm/... */
+
+    if (_lIndex < 2 && _lIndex >= 0 && _p_stVec)
+    {
+        p_stTmpVec = &_hSO->hLinkedObject.p_stCharacter->h_StandardGame->a_stCustomVectors[_lIndex];
+        *(int*)&_p_stVec->xX = *(int*)&p_stTmpVec->xX; *(int*)&_p_stVec->xY = *(int*)&p_stTmpVec->xY; *(int*)&_p_stVec->xZ = *(int*)&p_stTmpVec->xZ;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\StdGame.c lines 681–685 */

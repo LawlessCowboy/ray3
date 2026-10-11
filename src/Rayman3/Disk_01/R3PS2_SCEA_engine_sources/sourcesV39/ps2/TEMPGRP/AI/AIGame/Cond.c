@@ -3417,10 +3417,10 @@ tdstNodeInterpret_* fn_p_stSAV2Condition(HIE_tdstSuperObject_* p_SuperObjPerso, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stScreenCondition(tdstNodeInterpret_* p_stTree, int* p_lValue)
+tdstNodeInterpret_* fn_p_stScreenCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    int lValue;
     tdeCondId_ eCondId;
+    int lValue;
     eCondId = p_stTree[-1].uDummy.uId.eCondId;
     lValue = 0;
     switch (eCondId) {
