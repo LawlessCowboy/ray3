@@ -288,6 +288,20 @@ export workflow.
 
 ## Contributing
 
+Contributions are very welcome, whether you are an experienced decompiler or
+just curious. There is plenty to do at every level: thousands of functions
+still need matching (many of them small), fully matched files need cleaning
+up, and tooling, documentation and research into compiler behaviour all help.
+You do not need to own the game to improve the tools or docs, and AI-assisted
+work is welcome as long as every claimed match is verified by
+`tools/match.py`.
+
+To get started, read [AGENTS.md](AGENTS.md) for the matching workflow, pick a
+function from `python3 tools/match.py list --unmatched --compileable`, and open
+a pull request against `main`. Questions, ideas and partial findings are
+welcome too: open an issue, or record a failed attempt with its diagnosis so
+the next person can pick it up.
+
 Keep source changes scoped to one recovered translation unit where practical.
 Do not commit retail binaries, generated assembly, compiler/SDK files, or
 experiments/probe artifacts. When changing the parser, validate with a local
