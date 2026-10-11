@@ -4261,12 +4261,28 @@ tdstNodeInterpret_* fn_p_st_MultiPlayerFunction(HIE_tdstSuperObject_* p_SuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vReinitAIWithFlags(AI_tdstMind_* p_stMind, unsigned char ucFlags);
+HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObj);
+
+#pragma auto_inline on
 void fn_vReinitActors(HIE_tdstSuperObject_* hSuperObj)
 {
     HIE_tdstSuperObject_* hNextChild;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    if (hSuperObj->ulTypeOfLinkedObject == 2)
+    {
+        tdstBrain_* hBrain = ((hSuperObj->ulTypeOfLinkedObject != 2) ? NULL : hSuperObj->hLinkedObject.p_stCharacter)->h_Brain;
+        if (hBrain)
+            fn_vReinitAIWithFlags(hBrain->p_stMind, 0);
+    }
+    else
+    {
+        for (hChild = hSuperObj->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild))
+            fn_vReinitActors(hChild);
+    }
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2266–2271 */
 /* addr: 0x00212f20  size: 292 bytes */

@@ -1849,11 +1849,16 @@ unsigned char EngineIsFrozen(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void fn_vReinitTheStaticHierarchie(HIE_tdstSuperObject_* hSuperObject)
 {
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    hSuperObject->lDrawModeMask |= 0xEE7FFFFF;
+    for (hChild = hSuperObject->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+        fn_vReinitTheStaticHierarchie(hChild);
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1235–1364 */
 /* addr: 0x002648b0  size: 808 bytes */

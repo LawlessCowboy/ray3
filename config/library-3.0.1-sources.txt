@@ -7,3 +7,11 @@
 # an unfilled delay slot after the first switch compare); all 9 recorded
 # matches in the file also pass.
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Array.c
+#
+# 2026-10-11 sweep of every library file under 3.0.1 (gained / lost):
+# PS2GL_Fog.c +1/0, PS2GL_BufferControl.c +1/0 (PS2glInternalGetScreenCalebration's
+# unfilled delay slot), PS2GL_DataInput.c +5/0, PS2GL_ListsRecPly.c +2/0.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Fog.c
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_BufferControl.c
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c

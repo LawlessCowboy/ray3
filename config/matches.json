@@ -23155,6 +23155,21 @@
       "status": "MISMATCH",
       "target_size": 196,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00212e00",
+      "candidate_size": 288,
+      "first_difference": 186,
+      "implementation": "void fn_vReinitActors(HIE_tdstSuperObject_* hSuperObj)\n{\n    HIE_tdstSuperObject_* hNextChild;\n    HIE_tdstSuperObject_* hChild;\n\n    if (hSuperObj->ulTypeOfLinkedObject == 2)\n    {\n        tdstBrain_* hBrain = ((hSuperObj->ulTypeOfLinkedObject != 2) ? NULL : hSuperObj->hLinkedObject.p_stCharacter)->h_Brain;\n        if (hBrain)\n            fn_vReinitAIWithFlags(hBrain->p_stMind, 0);\n    }\n    else\n    {\n        for (hChild = hSuperObj->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild))\n            fn_vReinitActors(hChild);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vReinitActors",
+      "reason": "auto_inline recursion reproduces the one-level inlined child walk, single-evaluation hBrain fixes the M_GetPerso ternary (288/288). Residual: hChild/hNextChild registers swapped in the inlined copy only; swapping declaration order fixes that level but breaks the outer one. Permuter can't parse Function.c (asm abs.s block).",
+      "size": 288,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MISMATCH",
+      "target_size": 288,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -25415,6 +25430,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_BufferControl.c",
       "status": "MATCH"
     },
+    "0x001415a0": {
+      "address": "0x001415a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glInternalGetScreenCalebration",
+      "size": 152,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_BufferControl.c",
+      "status": "MATCH"
+    },
     "0x001439b0": {
       "address": "0x001439b0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -25959,6 +25982,22 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
       "status": "MATCH"
     },
+    "0x001455b0": {
+      "address": "0x001455b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glLightModeliv",
+      "size": 244,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
+    "0x001456b0": {
+      "address": "0x001456b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glLightModelfv",
+      "size": 184,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
     "0x00145770": {
       "address": "0x00145770",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -25967,11 +26006,35 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
       "status": "MATCH"
     },
+    "0x001457d0": {
+      "address": "0x001457d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glLightModelf",
+      "size": 172,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
     "0x00145880": {
       "address": "0x00145880",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glMaterialiv",
       "size": 76,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
+    "0x001458d0": {
+      "address": "0x001458d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glMaterialfv",
+      "size": 300,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
+    "0x00145a00": {
+      "address": "0x00145a00",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glMateriali",
+      "size": 120,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
       "status": "MATCH"
     },
@@ -27220,6 +27283,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "recPS2glMultiTexCoord1fARB",
       "size": 80,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00157a60": {
+      "address": "0x00157a60",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "recPS2glTexCoord4fv",
+      "size": 60,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -29287,6 +29358,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
+    "0x0015f9a0": {
+      "address": "0x0015f9a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "recPS2glColor4fv",
+      "size": 60,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
     "0x0015ff80": {
       "address": "0x0015ff80",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -30389,6 +30468,14 @@
       "name": "dmaSendGsPackage",
       "size": 132,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GSPackage.c",
+      "status": "MATCH"
+    },
+    "0x00179f90": {
+      "address": "0x00179f90",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glFogi",
+      "size": 176,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Fog.c",
       "status": "MATCH"
     },
     "0x0017d030": {
@@ -37620,6 +37707,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "EngineIsFrozen",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Initeng.c",
+      "status": "MATCH"
+    },
+    "0x002647e0": {
+      "address": "0x002647e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vReinitTheStaticHierarchie",
+      "size": 208,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Initeng.c",
       "status": "MATCH"
     },
@@ -45303,6 +45398,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
       "status": "MATCH"
     },
+    "0x002f25b0": {
+      "address": "0x002f25b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "IPO_fn_vInternalComputeRLI",
+      "size": 200,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MATCH"
+    },
+    "0x002f2680": {
+      "address": "0x002f2680",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "IPO_fn_vComputeRadiosity",
+      "size": 212,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MATCH"
+    },
     "0x002f2f50": {
       "address": "0x002f2f50",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -45324,6 +45435,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "IPO_fn_ucGetRLITableIndex",
       "size": 132,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MATCH"
+    },
+    "0x002f3000": {
+      "address": "0x002f3000",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "IPO_fn_vReInitIPO",
+      "size": 244,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MATCH"
+    },
+    "0x002f3100": {
+      "address": "0x002f3100",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "IPO_fn_vLevelReInitRLI",
+      "size": 208,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
       "status": "MATCH"
     },
