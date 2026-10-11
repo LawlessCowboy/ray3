@@ -777,23 +777,11 @@ typedef struct IPO_tdstPadMapping_ {
     int iSlot;
     int iStatus;
 } IPO_tdstPadMapping_;
+
 extern int INO_gs_a_bIsForceFeedBack[2];
 extern IPO_tdstPadMapping_ g_axPadMapping[2];
 extern int scePadInfoMode(int, int, int, int);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\Ps2\tempgrp\IPO\Specif\IPO.c lines 89–95 */
-/* addr: 0x002f1b60  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 89
- *   +0x0004 -> line 90
- *   +0x0008 -> line 89
- *   +0x000c -> line 90
- *   +0x0010 -> line 89
- *   +0x0014 -> line 90
- *   +0x0058 -> line 95
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vUpdateIsFfbTable(unsigned char _ucJoyNb)
 {
     INO_gs_a_bIsForceFeedBack[_ucJoyNb] = scePadInfoMode(
@@ -803,25 +791,11 @@ void fn_vUpdateIsFfbTable(unsigned char _ucJoyNb)
         0);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\Ps2\tempgrp\IPO\Specif\IPO.c lines 226–226 */
-/* addr: 0x002f1bd0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 226
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 HIE_tdstSuperObject_* fn_hGetPortalCamera(IPO_tdstInstanciatedPhysicalObject_* hIPO)
 {
     return hIPO->hPortalCamera;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\Ps2\tempgrp\IPO\Specif\IPO.c lines 112–112 */
-/* addr: 0x002f1be0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 112
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int IPO_fn_hGetRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject)
 {
     return _hInstanciatedPhysicalObject->_hCurrentRadiosity;
