@@ -326,8 +326,10 @@ on them.
 
 ## Thanks
 
-This project builds on tools and research from the wider decompilation
-community.
+This project would not have been possible without the amazing work of the
+authors and maintainers of the tools below, and of the decompilation projects
+that came before it, which I look up to. Thank you for building, sharing and
+documenting so much of what made this attempt possible.
 
 ### Tools
 
