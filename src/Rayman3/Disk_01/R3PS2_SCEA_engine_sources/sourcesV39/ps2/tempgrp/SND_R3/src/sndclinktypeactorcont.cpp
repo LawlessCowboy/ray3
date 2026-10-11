@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 extern char* strncpy(char*, const char*, unsigned int);
+float int2dB(int s32_volume);
 
 typedef int sallocator;
 
@@ -239,7 +240,9 @@ struct CLinkTypeActorCont : smap {
     CActorResData* m_poStandardActorResData; /* +0x10 */
     CActorResData* m_poMusicActorResData; /* +0x14 */
     CResData* m_poMusicProgramResData; /* +0x18 */
-    void mfn_vSetDefaultRolloff(_RollOffParam* pst_RollOff);
+    static CRolloffParam moRolloff;
+    static _RollOffParam moACPRolloff;
+    void mfn_vSetDefaultRolloff(const _RollOffParam* pst_RollOff);
     CLinkTypeActor* mfn_poGetActorTypeFromId(int s32_TypeId);
     unsigned char mfn_bInitActorResData(void);
 };
@@ -543,9 +546,15 @@ sTreeNode* ms_czNil__Q24usnd7sstring(sTreeLink* _pParent, _Redbl _eColor)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CLinkTypeActorCont::mfn_vSetDefaultRolloff(_RollOffParam* pst_RollOff)
+void CLinkTypeActorCont::mfn_vSetDefaultRolloff(const _RollOffParam* pst_RollOff)
 {
-    /* TODO: decompile from asm/... */
+    moACPRolloff.rDistSatur = pst_RollOff->rDistSatur;
+    moACPRolloff.rDistBackGround = pst_RollOff->rDistBackGround;
+    moACPRolloff.ucBackgroundVol = 0;
+
+    moRolloff.m_fSaturationDistance = (float)pst_RollOff->rDistSatur / 65536.0f;
+    moRolloff.m_fStabilisationDistance = (float)pst_RollOff->rDistBackGround / 65536.0f;
+    moRolloff.m_fStabilisationVolume = int2dB(moACPRolloff.ucBackgroundVol);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 260–269 */

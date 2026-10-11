@@ -1409,6 +1409,8 @@ unsigned char TFMT_ucNumberOfCurrentTextAffiche(HIE_tdstSuperObject_* p_SuperObj
     /* TODO: decompile from asm/... */
 }
 
+void* memset(void* dst, int c, size_t n);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 1116–1126 */
 /* addr: 0x00268690  size: 152 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1431,7 +1433,14 @@ unsigned char TFMT_ucNumberOfCurrentTextAffiche(HIE_tdstSuperObject_* p_SuperObj
 void TFMT_vInitTextAfficheStructure(void)
 {
     int iCpt;
-    /* TODO: decompile from asm/... */
+
+    for (iCpt = 0; iCpt < 30; iCpt++)
+    {
+        memset(&g_stInfoTextAffiche[iCpt], 0, sizeof(stInfoTextAffiche_));
+        g_stInfoTextAffiche[iCpt].bFirstInit = 1;
+        g_bFreeTextAfficheBlocs[iCpt] = 1;
+        gp_SuperObjPersoGenerated[iCpt] = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 1068–1106 */

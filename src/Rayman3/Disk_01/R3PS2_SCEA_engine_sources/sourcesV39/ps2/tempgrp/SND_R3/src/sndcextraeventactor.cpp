@@ -4,7 +4,7 @@
 
 #include <stddef.h>
 
-typedef int sallocator;
+struct sallocator {};
 typedef int CFlow;
 typedef struct CExtraEventActorPool CExtraEventActorPool;
 
@@ -158,8 +158,13 @@ struct usnd::CStringIsLess {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     CStringIsLess key_compare; /* +0xd */
 };
@@ -201,6 +206,27 @@ struct CExtraEventActor {
         CResObjParams() : m_poNext(0), m_poPrevious(0), m_uiNbRefs(0), m_s32Handle(0), m_poResData(0), m_pfn_Proc(0) {}
         virtual void fv_vRelease(void);
         virtual void fv_vAddRef(void);
+        void f_vIsolate(void)
+        {
+            if (m_poPrevious)
+                m_poPrevious->m_poNext = m_poNext;
+            if (m_poNext)
+                m_poNext->m_poPrevious = m_poPrevious;
+            m_poNext = 0;
+            m_poPrevious = 0;
+        }
+    };
+
+    struct CResObjParamsPool {
+        static CResObjParams ms_oPool;
+        static void f_vSalvage(CResObjParams* poParams)
+        {
+            poParams->m_poNext = ms_oPool.m_poNext;
+            poParams->m_poPrevious = &ms_oPool;
+            if (poParams->m_poNext)
+                poParams->m_poNext->m_poPrevious = poParams;
+            ms_oPool.m_poNext = poParams;
+        }
     };
 
     CExtraEventActor* m_poNext; /* +0x0 */
@@ -222,6 +248,7 @@ struct CExtraEventActor {
     unsigned char mbWaitForKill; /* +0x48 */
     unsigned char mbAllSoundPaused; /* +0x49 */
     CResObjParams m_oResObjParams; /* +0x4c */
+    static int ss32RefreshChannelCount[8];
     CExtraEventActor();
     unsigned char mfn_bExecute(int s32_CmdId, CUUID* roId);
     unsigned char mfn_bPlay(CEventResData* ro_EventResData, int s32_EventId, void (*pfn_Proc)(int));
@@ -282,25 +309,54 @@ struct sstring {
     int m_pcData; /* +0x0 */
 };
 
-struct usnd::CResData {
-    /* C++ base CRefIdObj at +0x0. */
-    unsigned int m_uiVersionId; /* +0x10 */
-    sstring m_strName; /* +0x14 */
-};
-
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
-    sstring m_oValue; /* +0x1c */
-};
-
 struct usnd::CUUID {
     unsigned int m_uiHighWord; /* +0x0 */
     unsigned int m_uiLowWord; /* +0x4 */
 };
 
-struct usnd::CIdObj {
-    /* C++ base CRTTIClass at +0x0. */
+namespace usnd { struct CDestFlow; }
+
+struct usnd::CRTTIClass {
+    virtual ~CRTTIClass();
+    virtual CClassInfo& fv_roGetClassInfo(void) const;
+    virtual void fv_vReadFromFlow(CSrcFlow& roFlow);
+    virtual void fv_vWriteToFlow(CDestFlow& roFlow);
+};
+
+struct usnd::CIdObj : CRTTIClass {
     CUUID m_oId; /* +0x4 */
+    virtual void fv_vSetId(const CUUID& roId);
+};
+
+struct usnd::CRefIdObj : CIdObj {
+    unsigned char m_bMarkFlag; /* +0xc */
+    virtual void fv_vGetReferencedObjects(CRefIdObj** ppoObjs, unsigned int& ruiNbObjs, CUUID* poIds, unsigned int& ruiNbIds);
+};
+
+struct usnd::CResData : CRefIdObj {
+    unsigned int m_uiVersionId; /* +0x10 */
+    sstring m_strName; /* +0x14 */
+    virtual CResType& fv_roGetResType(void);
+    virtual CResObj* fv_poCreateResObj(void);
+    virtual void fv_vUpdateData(unsigned int uiVersionId, CSrcFlow& roFlow);
+};
+
+struct sset {
+    stree _Tr; /* +0x0 */
+};
+
+namespace usnd { struct CVarNotifTarget; }
+
+struct usnd::CVar {
+    virtual ~CVar();
+    void f_vAddNotifTarget(CVarNotifTarget& roTarget);
+    CSndVarType* m_poType; /* +0x4 */
+    sset m_NotifTargets; /* +0x8 */
+    sstring m_strName; /* +0x18 */
+};
+
+struct TTypedVar : CVar {
+    sstring m_oValue; /* +0x1c */
 };
 
 struct CIdObjPtr {
@@ -311,9 +367,6 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct usnd::CPitchActorModifier {
-    /* C++ base CActorModifiers at +0x0. */
-};
 
 struct spair {
     int first; /* +0x0 */
@@ -347,16 +400,6 @@ struct usnd::CRolloffParam {
     float m_fStabilisationVolume; /* +0x8 */
 };
 
-struct sset {
-    stree _Tr; /* +0x0 */
-};
-
-struct usnd::CVar {
-    CSndVarType* m_poType; /* +0x4 */
-    sset m_NotifTargets; /* +0x8 */
-    sstring m_strName; /* +0x18 */
-};
-
 struct usnd::CEventResData {
     /* C++ base CResData at +0x0. */
     float m_fCoeffA; /* +0x18 */
@@ -371,12 +414,9 @@ struct smap {
     stree _Tr; /* +0x0 */
 };
 
-struct usnd::CRefIdObj {
-    /* C++ base CIdObj at +0x0. */
-    unsigned char m_bMarkFlag; /* +0xc */
-};
-
 struct usnd::CResObj {
+    virtual ~CResObj();
+    virtual void fv_vExecCmd(unsigned int ui_CmdId, void* pv_Data);
     CResType* m_roType; /* +0x4 */
     CResData* m_poResData; /* +0x8 */
 };
@@ -403,27 +443,35 @@ struct usnd::CCritSect {
     unsigned int m_uiCS; /* +0x0 */
 };
 
-struct usnd::CActorProgramContext {
-    /* C++ base CProgramContext at +0x0. */
-    /* C++ base CVarAccess at +0xc. */
+struct usnd::CVarAccess {
+    virtual CVar* fv_poGetVar(const char* pcName);
+    virtual CVar* fv_poCreateVar(const char* pcName, const CSndVarType& roType, CVarData* poData);
+};
+
+struct usnd::CProgramContext {
+    virtual void fv_vAddRunningObj(CResObj& roObj, void* pvUserData, int iUserData, bool bFlag, CResObj* poParent);
+    CVarAccess* m_poGlobVarAcc; /* +0x4 */
+    CVarAccess* m_poOwnerVarAcc; /* +0x8 */
+};
+
+struct usnd::CActorProgramContext : CProgramContext, CVarAccess {
     CResObjState m_oObjStates; /* +0x10 */
     CActorResObj* m_pActor; /* +0x38 */
     smap m_oVariables; /* +0x3c */
     CCritSect m_oMutex; /* +0x4c */
 };
 
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
-};
-
 struct TBaseVarType {
     /* C++ base CBaseVarType at +0x0. */
 };
 
-struct CMusicMarkerNotifTarget {
-    /* C++ base CVarNotifTarget at +0x0. */
+struct usnd::CNotifTarget : usnd::CInterface {
+};
+
+struct usnd::CVarNotifTarget : CNotifTarget {
+};
+
+struct CMusicMarkerNotifTarget : usnd::CVarNotifTarget {
     void fv_vVarChanged(CVar* roVar);
     void fv_vVarDestroyed(CVar& roVar);
 };
@@ -447,12 +495,21 @@ struct usnd::C3DParam {
     C3DDirection m_oDir; /* +0x18 */
 };
 
-struct usnd::CVolumeActorModifier {
-    /* C++ base CActorModifiers at +0x0. */
+struct usnd::CActorModifiers : usnd::CVarNotifTarget {
+    CActorResObj* m_pActor; /* +0x4 */
+    smap m_oVariables; /* +0x8 */
+    float m_fDirectValue; /* +0x18 */
+    float m_fResultValue; /* +0x1c */
+    unsigned char m_bResultChanged; /* +0x20 */
 };
 
-struct usnd::CActorResObj {
-    /* C++ base CResObj at +0x0. */
+struct usnd::CPitchActorModifier : CActorModifiers {
+};
+
+struct usnd::CVolumeActorModifier : CActorModifiers {
+};
+
+struct usnd::CActorResObj : CResObj {
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -577,14 +634,22 @@ struct usnd::CClassInfo {
     CClassInfo* m_poBaseClass; /* +0x2c */
 };
 
-struct usnd::CActorResData {
-    /* C++ base CResData at +0x0. */
+struct usnd::CActorResData : CResData {
     unsigned char m_b3DRes; /* +0x18 */
     sset m_oProgramList; /* +0x1c */
     smap m_oVariables; /* +0x2c */
     CRolloffParam m_oRolloff; /* +0x3c */
     CVarAccess* m_poGlobalVarAccess; /* +0x48 */
 };
+
+struct CLinkTypeActorCont : smap {
+    CActorResData* m_poStandardActorResData; /* +0x10 */
+    CActorResData* m_poMusicActorResData; /* +0x14 */
+    CResData* m_poMusicProgramResData; /* +0x18 */
+    static CLinkTypeActorCont& mfn_roGetInstance(void);
+};
+
+extern CMusicMarkerNotifTarget g_oMusicMarkerNotifTarget;
 
 struct TTypedVarData {
     /* C++ base CVarData at +0x0. */
@@ -596,27 +661,9 @@ struct usnd::CBaseVarType {
     tdeBaseType m_eBaseType; /* +0xc */
 };
 
-struct usnd::CNotifTarget {
-    /* C++ base CInterface at +0x0. */
-};
-
 struct CSwitchElement {
     CIdObjPtr m_pTarget; /* +0x0 */
     unsigned int m_uiValue; /* +0x4 */
-};
-
-struct usnd::CProgramContext {
-    CVarAccess* m_poGlobVarAcc; /* +0x4 */
-    CVarAccess* m_poOwnerVarAcc; /* +0x8 */
-};
-
-struct usnd::CActorModifiers {
-    /* C++ base CVarNotifTarget at +0x0. */
-    CActorResObj* m_pActor; /* +0x4 */
-    smap m_oVariables; /* +0x8 */
-    float m_fDirectValue; /* +0x18 */
-    float m_fResultValue; /* +0x1c */
-    unsigned char m_bResultChanged; /* +0x20 */
 };
 
 struct stMiniStackDesc {
@@ -1139,7 +1186,13 @@ unsigned char CExtraEventActor::mfn_bApplySectorActivation(void)
  */
 void CExtraEventActor::f_vDesInit(void)
 {
-    /* TODO: decompile from asm/... */
+    if (mpoVolumeModifier)
+        delete mpoVolumeModifier;
+    if (mpoPitchModifier)
+        delete mpoPitchModifier;
+    mpoVolumeModifier = mpoPitchModifier = 0;
+
+    ss32RefreshChannelCount[ms32RefreshChannel]--;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 422–432 */
@@ -1246,7 +1299,20 @@ void CExtraEventActor::f_vInitActorObj(int s32_ACPObjectId)
 {
     TTypedVar* pMarkerVar;
     CActorResData* poActorResData;
-    /* TODO: decompile from asm/... */
+
+    ms32ACPObjectId = s32_ACPObjectId;
+
+    if (ms32ACPObjectId != -1) {
+        poActorResData = CLinkTypeActorCont::mfn_roGetInstance().m_poStandardActorResData;
+        mpoActorObj = (CActorResObj*)poActorResData->fv_poCreateResObj();
+    } else {
+        poActorResData = CLinkTypeActorCont::mfn_roGetInstance().m_poMusicActorResData;
+        mpoActorObj = (CActorResObj*)poActorResData->fv_poCreateResObj();
+
+        pMarkerVar = (TTypedVar*)mpoActorObj->m_oProgramContext.m_poOwnerVarAcc->fv_poGetVar("sMarker");
+        if (pMarkerVar)
+            pMarkerVar->f_vAddNotifTarget(g_oMusicMarkerNotifTarget);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 251–256 */
@@ -1318,7 +1384,14 @@ void CExtraEventActor::CResObjParams::fv_vAddRef(void)
  */
 void CExtraEventActor::CResObjParams::fv_vRelease(void)
 {
-    /* TODO: decompile from asm/... */
+    m_uiNbRefs--;
+    if (m_uiNbRefs == 0) {
+        if (m_pfn_Proc)
+            m_pfn_Proc(m_s32Handle);
+
+        f_vIsolate();
+        CResObjParamsPool::f_vSalvage(this);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 136–136 */

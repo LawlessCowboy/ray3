@@ -2987,6 +2987,10 @@ struct tdstActionTable_ {
 
 HIE_tdstSuperObject_ *g_hCurrentSuperObjPerso;
 
+extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
+extern HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_*);
+tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 1115–1141 */
 /* addr: 0x00222600  size: 144 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3004,7 +3008,12 @@ HIE_tdstSuperObject_ *g_hCurrentSuperObjPerso;
 tdstNodeInterpret_* fn_p_stModelCastOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     HIE_tdstSuperObject_* hSuperObjPersoToCast;
-    /* TODO: decompile from asm/... */
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree, &hSuperObjPersoToCast);
+
+    p_stValue->uDummy.uParam.p_stEngObjValue = hSuperObjPersoToCast == 0 ? 0 : (hSuperObjPersoToCast->ulTypeOfLinkedObject != 2 ? 0 : hSuperObjPersoToCast->hLinkedObject.p_stCharacter); p_stValue->eType = E_vt_Perso;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 1087–1108 */
@@ -3018,8 +3027,6 @@ tdstNodeInterpret_* fn_p_stModelCastOperator(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
-extern HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_*);
 
 tdstNodeInterpret_* fn_p_stUltraOperator(HIE_tdstSuperObject_* hCurrentSuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
@@ -3384,6 +3391,7 @@ tdstNodeInterpret_* fn_p_stArrayOperator(HIE_tdstSuperObject_* p_SuperObjPerso, 
  * compare a candidate object's line table as an extra checkpoint.
  */
 
+#pragma auto_inline on
 tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound)
 {
     struct { tdstEngineObject_* p_stEngObjValue; unsigned char pad[12]; } stValue;
@@ -3391,6 +3399,7 @@ tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPers
     *hSuperObjPersoFound = fn_h_StandardGameGetSuperObject(stValue.p_stEngObjValue->h_StandardGame);
     return p_stTree;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 248–291 */
 /* addr: 0x00223460  size: 332 bytes */

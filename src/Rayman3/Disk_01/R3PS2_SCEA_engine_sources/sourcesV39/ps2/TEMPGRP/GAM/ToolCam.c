@@ -1567,6 +1567,8 @@ void CAM_fn_vCameraManagement(void)
     /* TODO: decompile from asm/... */
 }
 
+unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 321–338 */
 /* addr: 0x0026a420  size: 148 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1586,9 +1588,19 @@ void CAM_fn_vCameraManagement(void)
  */
 HIE_tdstSuperObject_* fn_hGetDebugCamera(int index)
 {
-    int j;
     tdstNodeCamera_* p_stNodeCamera;
-    /* TODO: decompile from asm/... */
+    int j;
+
+    j = 0;
+    for (p_stNodeCamera = g_stEngineStructure.hCameraList.hFirstElementDyn; p_stNodeCamera; p_stNodeCamera = p_stNodeCamera->hNextBrotherDyn)
+    {
+        if (CAM_fn_bCineInfoGetIsDebugCamera(p_stNodeCamera->p_stSuperObjectCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent))
+            j++;
+        if (j == index)
+            return p_stNodeCamera ? p_stNodeCamera->p_stSuperObjectCamera : NULL;
+    }
+
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 266–317 */

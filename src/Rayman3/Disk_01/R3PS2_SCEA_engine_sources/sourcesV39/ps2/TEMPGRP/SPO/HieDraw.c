@@ -1159,6 +1159,10 @@ void HIE_fn_vSendCharacterModulesToViewPortPS2(GLD_tdstViewportAttributes_* _hVp
     /* TODO: decompile from asm/... */
 }
 
+void GLI_vGetVisualSetLOD(GEO_tdstVisualSet_* p_stVisualSet, int lNumberOfLodToGet, float* p_xThreshold, GEO_tdstGeometricObject_** h_stObject);
+GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* _hPhysicalObject);
+PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 1165–1203 */
 /* addr: 0x0031ef00  size: 148 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1183,11 +1187,30 @@ void HIE_fn_vSendCharacterModulesToViewPortPS2(GLD_tdstViewportAttributes_* _hVp
  */
 GEO_tdstGeometricObject_* HIE_fn_p_stGetGeometricObjectFromSuperObject(HIE_tdstSuperObject_* h_SuperObject)
 {
-    GEO_tdstGeometricObject_* p_stObject;
-    float p_xThreshold;
-    PO_tdstPhysicalObject_* h_PO;
     int lSOType;
-    /* TODO: decompile from asm/... */
+    PO_tdstPhysicalObject_* h_PO;
+    float p_xThreshold;
+    GEO_tdstGeometricObject_* p_stObject;
+
+    p_stObject = NULL;
+
+    lSOType = h_SuperObject->ulTypeOfLinkedObject;
+
+    if (lSOType == 0x400)
+    {
+        p_stObject = h_SuperObject->hLinkedObject.p_stGeometricObject;
+    }
+    else if (lSOType & 0x18)
+    {
+        GLI_vGetVisualSetLOD(PO_fn_hGetVisualSet(h_SuperObject->hLinkedObject.p_stPhysicalObject), 0, &p_xThreshold, &p_stObject);
+    }
+    else if (lSOType & 0x60)
+    {
+        h_PO = IPO_fn_hGetPhysicalObject(h_SuperObject->hLinkedObject.p_stInstanciatedPhysicalObject);
+        GLI_vGetVisualSetLOD(PO_fn_hGetVisualSet(h_PO), 0, &p_xThreshold, &p_stObject);
+    }
+
+    return p_stObject;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 1089–1160 */

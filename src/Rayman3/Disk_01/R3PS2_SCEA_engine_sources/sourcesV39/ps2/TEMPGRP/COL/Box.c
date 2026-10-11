@@ -107,7 +107,12 @@ COL_tdstDoubledIndex_ COL_g_a12_stBoxEdges[12];
  */
 unsigned char COL_fn_bDetectCollisionBetweenTwoParallelBoxes(MTH3D_tdstVector_* _p_stFirstBoxMaxPoint, MTH3D_tdstVector_* _p_stFirstBoxMinPoint, MTH3D_tdstVector_* _p_stSecondBoxMaxPoint, MTH3D_tdstVector_* _p_stSecondBoxMinPoint)
 {
-    /* TODO: decompile from asm/... */
+    if ((_p_stSecondBoxMaxPoint->xX > _p_stFirstBoxMinPoint->xX) && (_p_stSecondBoxMinPoint->xX < _p_stFirstBoxMaxPoint->xX) && (_p_stSecondBoxMaxPoint->xY > _p_stFirstBoxMinPoint->xY) && (_p_stSecondBoxMinPoint->xY < _p_stFirstBoxMaxPoint->xY) && (_p_stSecondBoxMaxPoint->xZ > _p_stFirstBoxMinPoint->xZ) && (_p_stSecondBoxMinPoint->xZ < _p_stFirstBoxMaxPoint->xZ))
+    {
+        return 1;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Box.c lines 164–171 */

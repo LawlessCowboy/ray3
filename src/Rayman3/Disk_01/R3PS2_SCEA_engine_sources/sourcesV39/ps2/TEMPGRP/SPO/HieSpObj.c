@@ -185,7 +185,7 @@ int g_pstMatrix;
 unsigned char gd_ucContextOfSPOSave[32];
 int HIE_gs_lCurrentFrame;
 MAT_tdstTransformation_ Global_tempCamStackMatrix;
-int HIE_g_hCurrentMatrix;
+MAT_tdstTransformation_* HIE_g_hCurrentMatrix;
 MAT_tdstTransformation_ HIE_g_a_stCameraMatrixStack[51];
 int g_p_stCurrentMatrix;
 int HIE_g_a_hMatrixStack[50];
@@ -360,7 +360,49 @@ MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrix(void)
  */
 MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrixFastPS2(void)
 {
-    /* TODO: decompile from asm/... */
+    MTH4D_tdstMatrix_* p_stResultMatrix = &Global_tempCamStackMatrix.stTransformMatrix;
+    MTH4D_tdstMatrix_* p_stCameraMatrix = &HIE_g_a_stCameraMatrixStack[0].stTransformMatrix;
+    MTH4D_tdstMatrix_* p_stCurrentMatrix = &HIE_g_hCurrentMatrix->stTransformMatrix;
+
+    /* VU0 macro-mode matrix product: these instructions have no C form (one line per instruction in the target).
+       The debug record lists no locals; the operand pointers are locals here because MWCC asm rejects
+       a member of a pointed-to struct as a base ("illegal addressing mode"). */
+    asm {
+        lqc2 vf1, 0x0(p_stCameraMatrix)
+        lqc2 vf2, 0x10(p_stCameraMatrix)
+        lqc2 vf3, 0x20(p_stCameraMatrix)
+        lqc2 vf4, 0x30(p_stCameraMatrix)
+        lqc2 vf5, 0x0(p_stCurrentMatrix)
+        lqc2 vf6, 0x10(p_stCurrentMatrix)
+        lqc2 vf7, 0x20(p_stCurrentMatrix)
+        lqc2 vf8, 0x30(p_stCurrentMatrix)
+
+        vmulax.xyzw ACC, vf1, vf5x
+        vmadday.xyzw ACC, vf2, vf5y
+        vmaddz.xyzw vf9, vf3, vf5z
+
+        vmulax.xyzw ACC, vf1, vf6x
+        vmadday.xyzw ACC, vf2, vf6y
+        vmaddz.xyzw vf10, vf3, vf6z
+
+        vmulax.xyzw ACC, vf1, vf7x
+        vmadday.xyzw ACC, vf2, vf7y
+        vmaddz.xyzw vf11, vf3, vf7z
+
+        vmulax.xyzw ACC, vf1, vf8x
+        vmadday.xyzw ACC, vf2, vf8y
+        vmaddaz.xyzw ACC, vf3, vf8z
+        vmaddw.xyzw vf12, vf4, vf0w
+
+        sqc2 vf9, 0x0(p_stResultMatrix)
+        sqc2 vf10, 0x10(p_stResultMatrix)
+        sqc2 vf11, 0x20(p_stResultMatrix)
+        sqc2 vf12, 0x30(p_stResultMatrix)
+    }
+
+    Global_tempCamStackMatrix.eType = 5;
+
+    return &Global_tempCamStackMatrix;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 669–669 */

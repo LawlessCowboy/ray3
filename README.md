@@ -19,12 +19,12 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **2,140 / 4,164** (+2 register-equivalent) | **161,192 / 1,511,580** (**10.6638%**) |
-| Library code | 810 / 3,668 (+1 register-equivalent) | 46,620 / 756,524 (6.1624%) |
-| **Total** | **2,950 / 7,832** (+3 register-equivalent) | **207,812 / 2,268,104** (**9.1624%**) |
+| **Game code** | **2,157 / 4,164** (+2 register-equivalent) | **163,796 / 1,511,580** (**10.8361%**) |
+| Library code | 815 / 3,668 (+1 register-equivalent) | 47,740 / 756,524 (6.3104%) |
+| **Total** | **2,972 / 7,832** (+3 register-equivalent) | **211,536 / 2,268,104** (**9.3266%**) |
 
 - Translation units (`python3 tools/match.py tus --summary`): **110 / 384**
-  fully matched (game 105 / 347, library 5 / 37), with 219 more partially
+  fully matched (game 105 / 347, library 5 / 37), with 220 more partially
   matched. Only sources recovered into `src/Rayman3/` are counted, so SDK and
   runtime code without a source file is excluded.
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
@@ -49,6 +49,19 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
   toolchain and headers are supplied. Full byte-matching linking is not yet
   available: the original PS2 SDK/runtime objects and final link environment
   have not been reconstructed.
+
+## Roadmap
+
+1. **Match every function.** Reconstruct C/C++ for all functions in the
+   recovered translation units until each one byte-matches the retail ELF
+   (progress table above).
+2. **Clean up the code.** Once a translation unit is fully matched, remove the
+   extractor scaffolding (address/size and line-map comments), tidy names and
+   types, and replace matching workarounds with readable source wherever the
+   match still holds.
+3. **Port to PC (long term).** Use the matched, cleaned-up source as the basis
+   for a native PC port, replacing the PS2-specific layers (PS2GL rendering,
+   VU microcode, sound, input, memory card) with portable implementations.
 
 ## Repository layout
 
@@ -280,3 +293,63 @@ Do not commit retail binaries, generated assembly, compiler/SDK files, or
 experiments/probe artifacts. When changing the parser, validate with a local
 ELF extraction to a temporary directory and retain only reproducible parser
 logic and documentation in Git.
+
+## AI-assisted development
+
+This project is AI-enabled. Without AI assistance I would not have been able
+to attempt a decompilation of this size: most of the reconstruction work,
+including reading the assembly, writing candidate C/C++, running the matcher,
+and recording findings, is done with AI coding agents working under the rules
+in [AGENTS.md](AGENTS.md).
+
+AI output is never trusted on its own. A function only counts as matched when
+`tools/match.py` confirms its bytes, size and relocations against the retail
+ELF, and `python3 tools/match.py verify-recorded` recompiles and re-checks every
+recorded match. Near misses are recorded as attempts with a diagnosis instead
+of being claimed, and reusable compiler observations go into
+[docs/matching-insights.md](docs/matching-insights.md) so later work can build
+on them.
+
+## Thanks
+
+This project builds on tools and research from the wider decompilation
+community.
+
+### Tools
+
+- [splat](https://github.com/ethteck/splat) splits the retail ELF into
+  per-source assembly and data.
+- [spimdisasm](https://github.com/Decompollaborate/spimdisasm) and
+  [rabbitizer](https://github.com/Decompollaborate/rabbitizer) disassemble the
+  MIPS/R5900 code for the splitter and the matcher.
+- [m2c](https://github.com/matt-kempster/m2c) generates the starting-point C
+  seeds for large functions.
+- [asm-differ](https://github.com/simonlindholm/asm-differ) drives the aligned
+  `match.py check --diff` view.
+- [decomp-permuter](https://github.com/simonlindholm/decomp-permuter) searches
+  for source permutations that fix register-allocation residuals.
+- [Wibo](https://github.com/decompals/wibo) runs the Windows CodeWarrior
+  compilers on Linux.
+- [decomp.me](https://github.com/decompme/decomp.me) and its
+  [compilers](https://github.com/decompme/compilers) collection, for the
+  CodeWarrior PS2 compiler builds used to pin the game and library profiles.
+- [mwccps2-debugger](https://github.com/Raikaru/mwccps2-debugger), for
+  inspecting MWCC PS2 code generation.
+
+### Other decompilation projects
+
+Matching methodology, compiler behaviour and reference findings came from:
+
+- [Persona 4 Decompilation](https://github.com/Raikaru/Persona4-Decompilation)
+  (scoped pragma levers and MWCC insight notes)
+- [Persona 3 FES Decompilation](https://github.com/eyenalxai/Persona3-FES-Decompilation)
+- [Marvel vs. Capcom 2 PS2 decompilation](https://github.com/g-guthrie/mvc2-ps2-decomp)
+- [recvx-decomp](https://github.com/AshfordFamily/recvx-decomp)
+  (Resident Evil Code: Veronica X)
+- [Dark Cloud 2 decompilation](https://github.com/nf807942/dc2-decomp) and
+  [DarkCloud-DecompTooling](https://github.com/Gundorada-Workshop/DarkCloud-DecompTooling)
+- [mh1j](https://github.com/2Tie/mh1j) (Monster Hunter)
+- [Yu-Gi-Oh! Tag Force 5 decompilation](https://github.com/angelof-exe/ygo-tf-5-decomp)
+  and its splitting and matching guide
+- [ps2gl](https://github.com/ps2dev/ps2gl), the open-source PS2 OpenGL
+  library, for reference on the PS2GL code linked into the game
