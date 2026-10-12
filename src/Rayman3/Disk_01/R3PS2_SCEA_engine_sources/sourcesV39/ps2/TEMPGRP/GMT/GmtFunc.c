@@ -9,16 +9,10 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/HIE.h"
 
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
 typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
 
 struct GMT_tdstCollideMaterial_ {
     short wTypeOfZone; /* +0x0 */

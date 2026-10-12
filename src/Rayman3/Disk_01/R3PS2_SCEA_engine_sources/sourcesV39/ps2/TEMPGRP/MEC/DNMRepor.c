@@ -3,13 +3,10 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct MTH_stRotation MTH_stRotation;
 typedef struct DNM_stObstacle DNM_stObstacle;
-typedef struct MTH_stMove MTH_stMove;
 typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
 typedef struct DNM_stMecMatCharacteristics DNM_stMecMatCharacteristics;
 typedef struct DNM_stMecObstacle DNM_stMecObstacle;
@@ -26,17 +23,6 @@ typedef enum anon_enum_00bb199c {
     DNM_Dummy_For_Align = 2147483647,
 } anon_enum_00bb199c;
 
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
-struct MTH_stRotation {
-    float m_xAngle; /* +0x0 */
-    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
-};
-
 struct DNM_stObstacle {
     float m_xRate; /* +0x0 */
     MTH3D_tdstVector_ m_stNorm; /* +0x4 */
@@ -44,11 +30,6 @@ struct DNM_stObstacle {
     GMT_tdstGameMaterial_* hMyMaterial; /* +0x1c */
     GMT_tdstGameMaterial_* hCollidedMaterial; /* +0x20 */
     HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
-};
-
-struct MTH_stMove {
-    MTH3D_tdstVector_ m_stLinear; /* +0x0 */
-    MTH_stRotation m_stAngular; /* +0xc */
 };
 
 struct GMT_tdstGameMaterial_ {

@@ -3,15 +3,14 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/MTH.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct ACP_tdst2DUVValues_ ACP_tdst2DUVValues_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct GEO_tdstTripledIndex_ GEO_tdstTripledIndex_;
 typedef struct GEO_tdstFaceMapTriangle_ GEO_tdstFaceMapTriangle_;
@@ -33,23 +32,10 @@ struct ACP_tdst2DUVValues_ {
     float xV; /* +0x4 */
 };
 
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
 struct GEO_tdstEdge_ {
     short xPoints[2]; /* +0x0 */
     MTH3D_tdstVector_ st_VectorPoints[2]; /* +0x4 */
 };
-
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
 
 struct MAT_tdstTransformation_ {
     int eType; /* +0x0 */

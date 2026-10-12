@@ -3,12 +3,11 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct COL_tdstOctreeNode_ COL_tdstOctreeNode_;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct COL_tdstCollideObject_ COL_tdstCollideObject_;
 typedef struct COL_tdstOctree_ COL_tdstOctree_;
 typedef struct COL_tdstParallelBox_ COL_tdstParallelBox_;
@@ -24,25 +23,12 @@ typedef struct GEO_tdstElementIndexedTriangles_ GEO_tdstElementIndexedTriangles_
 typedef struct COL_tdstIndexedSphere_ COL_tdstIndexedSphere_;
 typedef struct COL_tdstIndexedAlignedBox_ COL_tdstIndexedAlignedBox_;
 
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
 struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
     COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
     int d_xFaceIndexList; /* +0x1c */
 };
-
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
 
 struct COL_tdstCollideObject_ {
     short xNbPoints; /* +0x0 */

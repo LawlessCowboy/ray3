@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct AI_tdstMind_ AI_tdstMind_;
@@ -23,11 +24,7 @@ typedef struct _sceDmaTag _sceDmaTag;
 typedef struct sceGifTag sceGifTag;
 typedef struct tagGLprimbuf tagGLprimbuf;
 typedef struct tag_stVU1Parameters tag_stVU1Parameters;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
-typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
-typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct GLI_tdstZBufferForLight_ GLI_tdstZBufferForLight_;
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -44,8 +41,6 @@ typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
 typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn;
-typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
-typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct LST2_tdstAnchorTotdxHandleToStateOpt LST2_tdstAnchorTotdxHandleToStateOpt;
 typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct SECT_tdstListOfStaticLights_ SECT_tdstListOfStaticLights_;
@@ -90,7 +85,6 @@ typedef struct tdstEngineObject_ tdstEngineObject_;
 typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
 typedef struct tdstAnim3d_ tdstAnim3d_;
 typedef struct tdstObjectsTableElement_ tdstObjectsTableElement_;
-typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
 typedef struct SECT_tdstListOfSOSectorsInActivityInteraction_ SECT_tdstListOfSOSectorsInActivityInteraction_;
 typedef struct GLI_tdstMultiTextureMaterial GLI_tdstMultiTextureMaterial;
@@ -105,7 +99,6 @@ typedef struct CINE_tdstCineActor_ CINE_tdstCineActor_;
 typedef struct SECT_tdstListOfSOSectorsInCollisionInteraction_ SECT_tdstListOfSOSectorsInCollisionInteraction_;
 typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
 typedef struct tdstFrame3d_ tdstFrame3d_;
-typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct tdstEventInTable_ tdstEventInTable_;
 typedef struct tdstPLA_DeformationLink_ tdstPLA_DeformationLink_;
 typedef struct C_SdlRef C_SdlRef;
@@ -115,19 +108,6 @@ typedef struct tdst3dData_ tdst3dData_;
 typedef struct MOR_stMorphObject_ MOR_stMorphObject_;
 typedef struct SCT_tdstListOfSoundEvent_ SCT_tdstListOfSoundEvent_;
 typedef struct LST2_tdstAnchorTotdxHandleToFamilyListDyn LST2_tdstAnchorTotdxHandleToFamilyListDyn;
-
-typedef enum MAT_tdeTranformationType_ {
-    MAT_eTransform_Uninitialized = 0,
-    MAT_eTransform_Identity = 1,
-    MAT_eTransform_Translation = 2,
-    MAT_eTransform_Zoom = 3,
-    MAT_eTransform_Scale = 4,
-    MAT_eTransform_Rotation = 5,
-    MAT_eTransform_RotationZoom = 6,
-    MAT_eTransform_RotationScale = 7,
-    MAT_eTransform_ComplexRotationScale = 8,
-    MAT_eTransform_Undefined = 9,
-} MAT_tdeTranformationType_;
 
 struct tdstBrain_ {
     AI_tdstMind_* p_stMind; /* +0x0 */
@@ -209,12 +189,6 @@ struct tag_stVU1Parameters {
     unsigned int eClippingMode; /* +0x9c */
 };
 
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
 struct tdstStandardGame_ {
     int otObjectFamilyType; /* +0x0 */
     int otObjectModelType; /* +0x4 */
@@ -245,27 +219,6 @@ struct tdstStandardGame_ {
     float a_xCustomFloats[2]; /* +0x3c */
     int a_lCustomLongs[2]; /* +0x44 */
     MTH3D_tdstVector_ a_stCustomVectors[2]; /* +0x4c */
-};
-
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
-
-struct MTH4D_tdstMatrix_ {
-    MTH4D_tdstVector_ stCol_0; /* +0x0 */
-    MTH4D_tdstVector_ stCol_1; /* +0x10 */
-    MTH4D_tdstVector_ stCol_2; /* +0x20 */
-    MTH4D_tdstVector_ stCol_3; /* +0x30 */
-};
-
-struct MAT_tdstTransformation_ {
-    MAT_tdeTranformationType_ eType; /* +0x0 */
-    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
-    MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
-    MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
 
 struct GEO_tdstColor_ {
@@ -398,47 +351,6 @@ struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn {
     SECT_tdstListOfDNMLights_* hFirstElementDyn; /* +0x0 */
     SECT_tdstListOfDNMLights_* hLastElementDyn; /* +0x4 */
     int lNumberOfElementsDyn; /* +0x8 */
-};
-
-union HIE_tduLinkedObject_ {
-    HIE_tdstSuperObject_* p_stSuperObject; /* +0x0 */
-    GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
-    PO_tdstPhysicalObject_* p_stPhysicalObject; /* +0x0 */
-    IPO_tdstInstanciatedPhysicalObject_* p_stInstanciatedPhysicalObject; /* +0x0 */
-    SECT_tdstSector_* p_stSector; /* +0x0 */
-    tdstEngineObject_* p_stCharacter; /* +0x0 */
-    GLI_tdstLight_* p_stLight; /* +0x0 */
-    HIE_tdstModifierObject_* p_stModifierObject; /* +0x0 */
-    int p_Void; /* +0x0 */
-};
-
-struct HIE_tdstSuperObject_ {
-    unsigned int ulTypeOfLinkedObject; /* +0x0 */
-    HIE_tduLinkedObject_ hLinkedObject; /* +0x4 */
-    HIE_tdstSuperObject_* hFirstElementDyn; /* +0x8 */
-    HIE_tdstSuperObject_* hLastElementDyn; /* +0xc */
-    int lNumberOfElementsDyn; /* +0x10 */
-    HIE_tdstSuperObject_* hNextBrotherDyn; /* +0x14 */
-    HIE_tdstSuperObject_* hPrevBrotherDyn; /* +0x18 */
-    HIE_tdstSuperObject_* hFatherDyn; /* +0x1c */
-    MAT_tdstTransformation_* hLocalMatrix; /* +0x20 */
-    MAT_tdstTransformation_* hGlobalMatrix; /* +0x24 */
-    int lLastComputeFrame; /* +0x28 */
-    int lDrawModeMask; /* +0x2c */
-    unsigned int ulFlags; /* +0x30 */
-    int hVisualBoundingVolume; /* +0x34 */
-    int hCollideBoundingVolume; /* +0x38 */
-    MTH3D_tdstVector_ stSemiLookAtVector; /* +0x3c */
-    float fTransparenceLevel; /* +0x48 */
-    unsigned int ulOutlineColor; /* +0x4c */
-    int lDisplayPrioriry; /* +0x50 */
-    int lIL_Status; /* +0x54 */
-    MTH3D_tdstVector_ stIL_AmbientColor; /* +0x58 */
-    MTH3D_tdstVector_ stIL_ParallelDirection; /* +0x64 */
-    MTH3D_tdstVector_ stIL_ParallelColor; /* +0x70 */
-    unsigned char ucSuperImposedOnWhichViewport; /* +0x7c */
-    unsigned char bIsSPO; /* +0x7d */
-    unsigned char xTransition; /* +0x7e */
 };
 
 struct LST2_tdstAnchorTotdxHandleToStateOpt {
@@ -826,12 +738,6 @@ struct tdstObjectsTableElement_ {
     unsigned char ucExpression; /* +0x10 */
 };
 
-struct HIE_tdstModifierObject_ {
-    GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
-    int lMulIntensity; /* +0x4 */
-    int lAddIntensity; /* +0x8 */
-};
-
 struct GEO_tdstDoubledIndex_ {
     short a2_xIndex[2]; /* +0x0 */
 };
@@ -1007,12 +913,6 @@ struct tdstFrame3d_ {
     unsigned short uwFrameNumber; /* +0x20 */
     unsigned char ucMatrixUpdated; /* +0x22 */
     unsigned char ucCacheEntry; /* +0x23 */
-};
-
-struct MTH3D_tdstMatrix_ {
-    MTH3D_tdstVector_ stCol_0; /* +0x0 */
-    MTH3D_tdstVector_ stCol_1; /* +0xc */
-    MTH3D_tdstVector_ stCol_2; /* +0x18 */
 };
 
 struct tdstEventInTable_ {

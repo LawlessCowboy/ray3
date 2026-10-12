@@ -3,11 +3,10 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _stCriticalSection _stCriticalSection;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct RND_tdstRandom_ RND_tdstRandom_;
 typedef struct SemaParam SemaParam;
 
@@ -27,18 +26,6 @@ struct _stCriticalSection {
 };
 
 extern int CreateSema(SemaParam* param);
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
-struct MTH3D_tdstMatrix_ {
-    MTH3D_tdstVector_ stCol_0; /* +0x0 */
-    MTH3D_tdstVector_ stCol_1; /* +0xc */
-    MTH3D_tdstVector_ stCol_2; /* +0x18 */
-};
 
 struct RND_tdstRandom_ {
     unsigned int ulSizeOfTable; /* +0x0 */

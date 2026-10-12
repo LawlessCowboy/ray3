@@ -3,11 +3,11 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/MTH.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct anon_1 anon_1;
 typedef struct anon_0 anon_0;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct GEO_tdstElementIndexedTriangles_ GEO_tdstElementIndexedTriangles_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
@@ -18,7 +18,6 @@ typedef struct ACP_tdst2DUVValues_ ACP_tdst2DUVValues_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 
 struct anon_1 {
@@ -41,13 +40,6 @@ struct anon_0 {
     float fScaleU; /* +0x48 */
     float fScaleV; /* +0x4c */
 };
-
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
 
 struct GLI_tdstTexture_ {
     int bIsAvailable; /* +0x0 */
@@ -177,12 +169,6 @@ struct GEO_tdstGeometricObject_ {
 struct GEO_tdstParallelBox_ {
     MTH4D_tdstVector_ stMinPoint; /* +0x0 */
     MTH4D_tdstVector_ stMaxPoint; /* +0x10 */
-};
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
 };
 
 struct GEO_tdstEdge_ {

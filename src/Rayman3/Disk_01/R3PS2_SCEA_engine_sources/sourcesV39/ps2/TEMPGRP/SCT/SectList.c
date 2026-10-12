@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -10,12 +11,6 @@ typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalO
 typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct tdstEngineObject_ tdstEngineObject_;
-typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
-typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
-typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
@@ -36,7 +31,6 @@ typedef struct SECT_tdstListOfDNMLights_ SECT_tdstListOfDNMLights_;
 typedef struct SCT_tdstListOfSoundEvent_ SCT_tdstListOfSoundEvent_;
 typedef struct SECT_tdstListOfStaticLights_ SECT_tdstListOfStaticLights_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
-typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 /* SAI's private table state is referenced by the recovered wrapper below.
@@ -52,87 +46,6 @@ extern SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
 extern unsigned char SAI_fn_bInsertAnElementInList(
     SAI_tdstInternalStructure_ *, void *, unsigned int,
     unsigned short, unsigned short);
-
-typedef enum MAT_tdeTranformationType_ {
-    MAT_eTransform_Uninitialized = 0,
-    MAT_eTransform_Identity = 1,
-    MAT_eTransform_Translation = 2,
-    MAT_eTransform_Zoom = 3,
-    MAT_eTransform_Scale = 4,
-    MAT_eTransform_Rotation = 5,
-    MAT_eTransform_RotationZoom = 6,
-    MAT_eTransform_RotationScale = 7,
-    MAT_eTransform_ComplexRotationScale = 8,
-    MAT_eTransform_Undefined = 9,
-} MAT_tdeTranformationType_;
-
-union HIE_tduLinkedObject_ {
-    HIE_tdstSuperObject_* p_stSuperObject; /* +0x0 */
-    GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
-    PO_tdstPhysicalObject_* p_stPhysicalObject; /* +0x0 */
-    IPO_tdstInstanciatedPhysicalObject_* p_stInstanciatedPhysicalObject; /* +0x0 */
-    SECT_tdstSector_* p_stSector; /* +0x0 */
-    tdstEngineObject_* p_stCharacter; /* +0x0 */
-    GLI_tdstLight_* p_stLight; /* +0x0 */
-    HIE_tdstModifierObject_* p_stModifierObject; /* +0x0 */
-    int p_Void; /* +0x0 */
-};
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
-struct HIE_tdstSuperObject_ {
-    unsigned int ulTypeOfLinkedObject; /* +0x0 */
-    HIE_tduLinkedObject_ hLinkedObject; /* +0x4 */
-    HIE_tdstSuperObject_* hFirstElementDyn; /* +0x8 */
-    HIE_tdstSuperObject_* hLastElementDyn; /* +0xc */
-    int lNumberOfElementsDyn; /* +0x10 */
-    HIE_tdstSuperObject_* hNextBrotherDyn; /* +0x14 */
-    HIE_tdstSuperObject_* hPrevBrotherDyn; /* +0x18 */
-    HIE_tdstSuperObject_* hFatherDyn; /* +0x1c */
-    MAT_tdstTransformation_* hLocalMatrix; /* +0x20 */
-    MAT_tdstTransformation_* hGlobalMatrix; /* +0x24 */
-    int lLastComputeFrame; /* +0x28 */
-    int lDrawModeMask; /* +0x2c */
-    unsigned int ulFlags; /* +0x30 */
-    int hVisualBoundingVolume; /* +0x34 */
-    int hCollideBoundingVolume; /* +0x38 */
-    MTH3D_tdstVector_ stSemiLookAtVector; /* +0x3c */
-    float fTransparenceLevel; /* +0x48 */
-    unsigned int ulOutlineColor; /* +0x4c */
-    int lDisplayPrioriry; /* +0x50 */
-    int lIL_Status; /* +0x54 */
-    MTH3D_tdstVector_ stIL_AmbientColor; /* +0x58 */
-    MTH3D_tdstVector_ stIL_ParallelDirection; /* +0x64 */
-    MTH3D_tdstVector_ stIL_ParallelColor; /* +0x70 */
-    unsigned char ucSuperImposedOnWhichViewport; /* +0x7c */
-    unsigned char bIsSPO; /* +0x7d */
-    unsigned char xTransition; /* +0x7e */
-};
-
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
-
-struct MTH4D_tdstMatrix_ {
-    MTH4D_tdstVector_ stCol_0; /* +0x0 */
-    MTH4D_tdstVector_ stCol_1; /* +0x10 */
-    MTH4D_tdstVector_ stCol_2; /* +0x20 */
-    MTH4D_tdstVector_ stCol_3; /* +0x30 */
-};
-
-struct MAT_tdstTransformation_ {
-    MAT_tdeTranformationType_ eType; /* +0x0 */
-    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
-    MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
-    MTH4D_tdstVector_ stScaleVector; /* +0x50 */
-};
 
 struct SECT_tdstListOfSOCharacters_ {
     HIE_tdstSuperObject_* hPointerOfCharacter; /* +0x0 */
@@ -260,12 +173,6 @@ struct SECT_tdstListOfStaticLights_ {
 struct GEO_tdstParallelBox_ {
     MTH4D_tdstVector_ stMinPoint; /* +0x0 */
     MTH4D_tdstVector_ stMaxPoint; /* +0x10 */
-};
-
-struct HIE_tdstModifierObject_ {
-    GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
-    int lMulIntensity; /* +0x4 */
-    int lAddIntensity; /* +0x8 */
 };
 
 struct GEO_tdstGeometricObject_ {

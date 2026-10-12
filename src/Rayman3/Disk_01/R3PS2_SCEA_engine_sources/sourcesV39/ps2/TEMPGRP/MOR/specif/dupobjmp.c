@@ -3,28 +3,20 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
 typedef union GEO_tduVSObject_ GEO_tduVSObject_;
 typedef struct MOR_stMorphObject_ MOR_stMorphObject_;
 typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 typedef struct COL_tdstBoundingSphere_ COL_tdstBoundingSphere_;
 typedef struct GEO_tdstVisualSet_ GEO_tdstVisualSet_;
 typedef struct MOR_stMorphVector_ MOR_stMorphVector_;
-
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
 
 struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
@@ -78,12 +70,6 @@ struct PO_tdstPhysicalObject_ {
     tdstPhysicalCollSet_* _hCollideSet; /* +0x4 */
     COL_tdstBoundingSphere_* _hVisualBoundingVolume; /* +0x8 */
     COL_tdstBoundingSphere_* _hCollideBoundingVolume; /* +0xc */
-};
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
 };
 
 struct GEO_tdstEdge_ {

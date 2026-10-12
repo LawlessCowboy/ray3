@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -27,16 +28,12 @@ typedef struct tdstState_ tdstState_;
 typedef struct tdstZdxList_ tdstZdxList_;
 typedef struct tdstZoneSetList_ tdstZoneSetList_;
 typedef struct tdstSubAnimInUse_ tdstSubAnimInUse_;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct COL_tdstBoundingSphere_ COL_tdstBoundingSphere_;
 typedef struct tdstMSWay_ tdstMSWay_;
 typedef struct tdstMicro_ tdstMicro_;
-typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
-typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
 typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
 typedef struct tdstFrame3d_ tdstFrame3d_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn;
 typedef struct tdst3dData_ tdst3dData_;
 typedef struct SECT_tdstListOfDNMLights_ SECT_tdstListOfDNMLights_;
@@ -44,7 +41,6 @@ typedef struct LST2_tdstAnchorToWP_tdhGraphNodeDyn LST2_tdstAnchorToWP_tdhGraphN
 typedef struct WP_tdstGraph_ WP_tdstGraph_;
 typedef struct AI_tdstAIModel_ AI_tdstAIModel_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
-typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct DNM_stDynamicsBaseBlock DNM_stDynamicsBaseBlock;
 typedef struct DNM_stDynamicsAdvancedBlock DNM_stDynamicsAdvancedBlock;
 typedef struct anon_0 anon_0;
@@ -79,8 +75,6 @@ typedef struct tdstMSSound_ tdstMSSound_;
 typedef struct stMorphData stMorphData;
 typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn;
-typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
-typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
 typedef struct tdstSubAnim_ tdstSubAnim_;
 typedef struct tdstEventInTable_ tdstEventInTable_;
@@ -96,10 +90,7 @@ typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
 typedef struct SECT_tdstListOfSOSectorsInCollisionInteraction_ SECT_tdstListOfSOSectorsInCollisionInteraction_;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt;
-typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
 typedef struct SECT_tdstListOfSOSectorsInSoundInteraction_ SECT_tdstListOfSOSectorsInSoundInteraction_;
-typedef struct MTH_stRotation MTH_stRotation;
-typedef struct MTH_stMove MTH_stMove;
 typedef struct DNM_stReport DNM_stReport;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt;
 typedef struct SECT_tdstListOfSOSectorsInActivityInteraction_ SECT_tdstListOfSOSectorsInActivityInteraction_;
@@ -134,19 +125,6 @@ typedef enum e_ucCameraStates_ {
     CAM_e_TempState_ApexMode = 5,
 } e_ucCameraStates_;
 
-typedef enum MAT_tdeTranformationType_ {
-    MAT_eTransform_Uninitialized = 0,
-    MAT_eTransform_Identity = 1,
-    MAT_eTransform_Translation = 2,
-    MAT_eTransform_Zoom = 3,
-    MAT_eTransform_Scale = 4,
-    MAT_eTransform_Rotation = 5,
-    MAT_eTransform_RotationZoom = 6,
-    MAT_eTransform_RotationScale = 7,
-    MAT_eTransform_ComplexRotationScale = 8,
-    MAT_eTransform_Undefined = 9,
-} MAT_tdeTranformationType_;
-
 typedef enum anon_enum_0084606a {
     DNM_eMIC_Error = -1,
     DNM_eCamera = 0,
@@ -168,13 +146,6 @@ struct tdstSubAnimInUse_ {
     unsigned char bMerge; /* +0x26 */
 };
 
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
-
 struct COL_tdstBoundingSphere_ {
     MTH4D_tdstVector_ stCenterPoint; /* +0x0 */
     float xRadius; /* +0x10 */
@@ -189,20 +160,6 @@ struct tdstMSWay_ {
 struct tdstMicro_ {
     MAT_tdstTransformation_* hMicroMatrix; /* +0x0 */
     unsigned char bIsActive; /* +0x4 */
-};
-
-struct MTH4D_tdstMatrix_ {
-    MTH4D_tdstVector_ stCol_0; /* +0x0 */
-    MTH4D_tdstVector_ stCol_1; /* +0x10 */
-    MTH4D_tdstVector_ stCol_2; /* +0x20 */
-    MTH4D_tdstVector_ stCol_3; /* +0x30 */
-};
-
-struct MAT_tdstTransformation_ {
-    MAT_tdeTranformationType_ eType; /* +0x0 */
-    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
-    MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
-    MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
 
 struct tdstPLA_Hierarchy_ {
@@ -225,12 +182,6 @@ struct tdstFrame3d_ {
     unsigned short uwFrameNumber; /* +0x20 */
     unsigned char ucMatrixUpdated; /* +0x22 */
     unsigned char ucCacheEntry; /* +0x23 */
-};
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
 };
 
 struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn {
@@ -364,12 +315,6 @@ struct tdstStandardGame_ {
     float a_xCustomFloats[2]; /* +0x3c */
     int a_lCustomLongs[2]; /* +0x44 */
     MTH3D_tdstVector_ a_stCustomVectors[2]; /* +0x4c */
-};
-
-struct MTH3D_tdstMatrix_ {
-    MTH3D_tdstVector_ stCol_0; /* +0x0 */
-    MTH3D_tdstVector_ stCol_1; /* +0xc */
-    MTH3D_tdstVector_ stCol_2; /* +0x18 */
 };
 
 struct DNM_stDynamicsBaseBlock {
@@ -762,47 +707,6 @@ struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn {
     int lNumberOfElementsDyn; /* +0x8 */
 };
 
-union HIE_tduLinkedObject_ {
-    HIE_tdstSuperObject_* p_stSuperObject; /* +0x0 */
-    GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
-    PO_tdstPhysicalObject_* p_stPhysicalObject; /* +0x0 */
-    IPO_tdstInstanciatedPhysicalObject_* p_stInstanciatedPhysicalObject; /* +0x0 */
-    SECT_tdstSector_* p_stSector; /* +0x0 */
-    tdstEngineObject_* p_stCharacter; /* +0x0 */
-    GLI_tdstLight_* p_stLight; /* +0x0 */
-    HIE_tdstModifierObject_* p_stModifierObject; /* +0x0 */
-    int p_Void; /* +0x0 */
-};
-
-struct HIE_tdstSuperObject_ {
-    unsigned int ulTypeOfLinkedObject; /* +0x0 */
-    HIE_tduLinkedObject_ hLinkedObject; /* +0x4 */
-    HIE_tdstSuperObject_* hFirstElementDyn; /* +0x8 */
-    HIE_tdstSuperObject_* hLastElementDyn; /* +0xc */
-    int lNumberOfElementsDyn; /* +0x10 */
-    HIE_tdstSuperObject_* hNextBrotherDyn; /* +0x14 */
-    HIE_tdstSuperObject_* hPrevBrotherDyn; /* +0x18 */
-    HIE_tdstSuperObject_* hFatherDyn; /* +0x1c */
-    MAT_tdstTransformation_* hLocalMatrix; /* +0x20 */
-    MAT_tdstTransformation_* hGlobalMatrix; /* +0x24 */
-    int lLastComputeFrame; /* +0x28 */
-    int lDrawModeMask; /* +0x2c */
-    unsigned int ulFlags; /* +0x30 */
-    int hVisualBoundingVolume; /* +0x34 */
-    int hCollideBoundingVolume; /* +0x38 */
-    MTH3D_tdstVector_ stSemiLookAtVector; /* +0x3c */
-    float fTransparenceLevel; /* +0x48 */
-    unsigned int ulOutlineColor; /* +0x4c */
-    int lDisplayPrioriry; /* +0x50 */
-    int lIL_Status; /* +0x54 */
-    MTH3D_tdstVector_ stIL_AmbientColor; /* +0x58 */
-    MTH3D_tdstVector_ stIL_ParallelDirection; /* +0x64 */
-    MTH3D_tdstVector_ stIL_ParallelColor; /* +0x70 */
-    unsigned char ucSuperImposedOnWhichViewport; /* +0x7c */
-    unsigned char bIsSPO; /* +0x7d */
-    unsigned char xTransition; /* +0x7e */
-};
-
 struct SECT_tdstListOfSOCharacters_ {
     HIE_tdstSuperObject_* hPointerOfCharacter; /* +0x0 */
     SECT_tdstListOfSOCharacters_* hNextBrotherDyn; /* +0x4 */
@@ -895,25 +799,9 @@ struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt {
     int lNumberOfElementsOpt; /* +0x4 */
 };
 
-struct HIE_tdstModifierObject_ {
-    GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
-    int lMulIntensity; /* +0x4 */
-    int lAddIntensity; /* +0x8 */
-};
-
 struct SECT_tdstListOfSOSectorsInSoundInteraction_ {
     HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
     int lVolume; /* +0x4 */
-};
-
-struct MTH_stRotation {
-    float m_xAngle; /* +0x0 */
-    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
-};
-
-struct MTH_stMove {
-    MTH3D_tdstVector_ m_stLinear; /* +0x0 */
-    MTH_stRotation m_stAngular; /* +0xc */
 };
 
 struct DNM_stReport {
