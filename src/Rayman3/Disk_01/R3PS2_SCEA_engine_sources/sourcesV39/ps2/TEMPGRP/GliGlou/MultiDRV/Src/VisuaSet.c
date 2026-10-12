@@ -3,14 +3,13 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct MOR_stMorphObject_ MOR_stMorphObject_;
 typedef struct ISI_tdstColor_ ISI_tdstColor_;
 typedef struct GEO_tdstVisualSet_ GEO_tdstVisualSet_;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
@@ -33,19 +32,6 @@ struct GEO_tdstVisualSet_ {
     GEO_tduVSObject_* d_p_stLodDefinitions; /* +0xc */
     void* d_hRLI; /* +0x10 */
     int lNumberOfRLI; /* +0x14 */
-};
-
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
 };
 
 struct GEO_tdstEdge_ {

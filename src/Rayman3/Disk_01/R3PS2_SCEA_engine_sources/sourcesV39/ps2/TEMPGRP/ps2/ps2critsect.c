@@ -3,25 +3,9 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct _stCriticalSection _stCriticalSection;
-typedef struct SemaParam SemaParam;
-
-struct _stCriticalSection {
-    int Sid; /* +0x0 */
-    int OwnerThreadId; /* +0x4 */
-    int ReentrancyCount; /* +0x8 */
-};
-
-struct SemaParam {
-    int currentCount; /* +0x0 */
-    int maxCount; /* +0x4 */
-    int initCount; /* +0x8 */
-    int numWaitThreads; /* +0xc */
-    unsigned int attr; /* +0x10 */
-    unsigned int option; /* +0x14 */
-};
 
 int channel_debug_printf(int a0, int a1, ...)
 {

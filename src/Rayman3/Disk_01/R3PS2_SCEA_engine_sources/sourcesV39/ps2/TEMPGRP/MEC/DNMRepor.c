@@ -3,18 +3,12 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/DNM.h"
+#include "r3/GMT.h"
+#include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct MTH_stRotation MTH_stRotation;
-typedef struct DNM_stObstacle DNM_stObstacle;
-typedef struct MTH_stMove MTH_stMove;
-typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
-typedef struct DNM_stMecMatCharacteristics DNM_stMecMatCharacteristics;
 typedef struct DNM_stMecObstacle DNM_stMecObstacle;
-typedef struct DNM_stReport DNM_stReport;
-typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
 typedef struct DNM_stMecReport DNM_stMecReport;
 
 typedef enum anon_enum_00bb199c {
@@ -25,41 +19,6 @@ typedef enum anon_enum_00bb199c {
     DNM_ObsType_MobileWall = 9,
     DNM_Dummy_For_Align = 2147483647,
 } anon_enum_00bb199c;
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
-struct MTH_stRotation {
-    float m_xAngle; /* +0x0 */
-    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
-};
-
-struct DNM_stObstacle {
-    float m_xRate; /* +0x0 */
-    MTH3D_tdstVector_ m_stNorm; /* +0x4 */
-    MTH3D_tdstVector_ m_stContact; /* +0x10 */
-    GMT_tdstGameMaterial_* hMyMaterial; /* +0x1c */
-    GMT_tdstGameMaterial_* hCollidedMaterial; /* +0x20 */
-    HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
-};
-
-struct MTH_stMove {
-    MTH3D_tdstVector_ m_stLinear; /* +0x0 */
-    MTH_stRotation m_stAngular; /* +0xc */
-};
-
-struct GMT_tdstGameMaterial_ {
-    int hSoundMaterial; /* +0x0 */
-    GMT_tdstCollideMaterial_* hCollideMaterial; /* +0x4 */
-};
-
-struct DNM_stMecMatCharacteristics {
-    float m_xSlide; /* +0x0 */
-    float m_xRebound; /* +0x4 */
-};
 
 struct DNM_stMecObstacle {
     float m_xRate; /* +0x0 */
@@ -77,30 +36,6 @@ struct DNM_stMecObstacle {
     float m_xZoneRadius; /* +0x54 */
     DNM_stMecMatCharacteristics m_stProperties; /* +0x58 */
     DNM_stMecMatCharacteristics m_stMyProperties; /* +0x60 */
-};
-
-struct DNM_stReport {
-    unsigned int m_ulPrevSurfaceState; /* +0x0 */
-    unsigned int m_ulCurrSurfaceState; /* +0x4 */
-    DNM_stObstacle m_stObstacle; /* +0x8 */
-    DNM_stObstacle m_stGround; /* +0x30 */
-    DNM_stObstacle m_stWall; /* +0x58 */
-    DNM_stObstacle m_stCharacter; /* +0x80 */
-    DNM_stObstacle m_stWater; /* +0xa8 */
-    DNM_stObstacle m_stCeil; /* +0xd0 */
-    MTH_stMove m_stAbsolutePrevSpeed; /* +0xf8 */
-    MTH_stMove m_stAbsoluteCurrSpeed; /* +0x114 */
-    MTH_stMove m_stAbsolutePrevPosition; /* +0x130 */
-    MTH_stMove m_stAbsoluteCurrPosition; /* +0x14c */
-    char m_cBitField; /* +0x168 */
-};
-
-struct GMT_tdstCollideMaterial_ {
-    short wTypeOfZone; /* +0x0 */
-    unsigned short xIdentifier; /* +0x2 */
-    MTH3D_tdstVector_ stDirection; /* +0x4 */
-    float xCoeff; /* +0x10 */
-    unsigned short wTypeForAi; /* +0x14 */
 };
 
 struct DNM_stMecReport {

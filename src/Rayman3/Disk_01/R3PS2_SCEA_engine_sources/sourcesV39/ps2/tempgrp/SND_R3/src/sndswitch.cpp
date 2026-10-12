@@ -3,12 +3,12 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CVarAccess CVarAccess;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct CPitchActorModifier CPitchActorModifier;
-typedef struct _RollOffParam _RollOffParam;
 typedef struct CResObjParams CResObjParams;
 typedef struct CExtraEventActor CExtraEventActor;
 typedef struct V3Ds V3Ds;
@@ -45,7 +45,6 @@ typedef struct CResObj CResObj;
 typedef struct CResData CResData;
 typedef struct _stVector _stVector;
 typedef struct streebase streebase;
-typedef union _SND_tduRefEvt _SND_tduRefEvt;
 typedef struct sTreeLink sTreeLink;
 typedef struct CResType CResType;
 typedef struct CRefIdObj CRefIdObj;
@@ -87,12 +86,6 @@ typedef enum tdeType {
 
 struct CPitchActorModifier {
     /* C++ base CActorModifiers at +0x0. */
-};
-
-struct _RollOffParam {
-    int rDistSatur; /* +0x0 */
-    int rDistBackGround; /* +0x4 */
-    unsigned char ucBackgroundVol; /* +0x8 */
 };
 
 struct CResObjParams {
@@ -320,11 +313,6 @@ struct streebase {
     sTreeLink* _HeadLink; /* +0x0 */
     unsigned char _Multi; /* +0x4 */
     unsigned int _Size; /* +0x8 */
-};
-
-union _SND_tduRefEvt {
-    unsigned int Id; /* +0x0 */
-    _SND_tdstBlockEvent* pstPtr; /* +0x0 */
 };
 
 struct sTreeLink {

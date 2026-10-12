@@ -3,15 +3,9 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct _stCriticalSection _stCriticalSection;
-
-struct _stCriticalSection {
-    int Sid; /* +0x0 */
-    int OwnerThreadId; /* +0x4 */
-    int ReentrancyCount; /* +0x8 */
-};
 
 unsigned char HMU_g_bInitialized;
 unsigned char HMU_g_bHMU_CS_Created;

@@ -3,21 +3,15 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct tag_GLmaterial tag_GLmaterial;
-typedef struct tag_GLtexture tag_GLtexture;
 typedef struct anon_0 anon_0;
-typedef struct _sceDmaTag _sceDmaTag;
 typedef struct tagListData tagListData;
 typedef union unFunction unFunction;
 typedef struct tagGLlistnode tagGLlistnode;
 typedef struct tagGLlistcalls tagGLlistcalls;
-typedef struct tagGLlistdatas tagGLlistdatas;
-typedef struct tagGLtexblock tagGLtexblock;
 typedef struct tagGLprimbuf tagGLprimbuf;
-typedef struct tagGLtexindex tagGLtexindex;
-typedef struct tag_GLtexture_set tag_GLtexture_set;
 typedef struct anon_3 anon_3;
 typedef struct anon_9 anon_9;
 typedef struct anon_11 anon_11;
@@ -31,40 +25,7 @@ typedef struct anon_7 anon_7;
 typedef struct anon_4 anon_4;
 typedef struct tagGsLoadImage tagGsLoadImage;
 typedef struct anon_1 anon_1;
-typedef struct tagListNodeSingle tagListNodeSingle;
-typedef struct tagListNode tagListNode;
-typedef struct tag_GLtexture_image tag_GLtexture_image;
-typedef struct tagGLlistpool tagGLlistpool;
-typedef struct tagGLtexname tagGLtexname;
-typedef struct tag_GLlight tag_GLlight;
-typedef struct tagGLArrayInfo tagGLArrayInfo;
 typedef struct tagGLcontext tagGLcontext;
-typedef struct tagstVIFCode tagstVIFCode;
-
-struct tag_GLmaterial {
-    float vAmbient[4]; /* +0x0 */
-    float vDiffuse[4]; /* +0x10 */
-    float vSpecular[4]; /* +0x20 */
-    float vEmission[4]; /* +0x30 */
-    float fShininess; /* +0x40 */
-    float fAmbientIndex; /* +0x44 */
-    float fDiffuseIndex; /* +0x48 */
-    float fSpecularIndex; /* +0x4c */
-} __attribute__((aligned(16)));
-
-struct tag_GLtexture {
-    float vTexBorderColor[4]; /* +0x0 */
-    unsigned int eDimension; /* +0x10 */
-    unsigned int eTexFilterMin; /* +0x14 */
-    unsigned int eTexFilterMag; /* +0x18 */
-    unsigned int eTexWrapS; /* +0x1c */
-    unsigned int eTexWrapT; /* +0x20 */
-    int Image[7]; /* +0x24 */
-    int iClutOffset; /* +0x40 */
-    int iClutSize; /* +0x44 */
-    int clut; /* +0x48 */
-    unsigned char bClutUserMaintain; /* +0x4c */
-};
 
 struct anon_0 {
     unsigned long NLOOP : 15; /* bit 0, byte +0x0 */
@@ -91,14 +52,6 @@ struct anon_0 {
     unsigned long REGS13 : 4; /* bit 52, byte +0x8 */
     unsigned long REGS14 : 4; /* bit 56, byte +0x8 */
     unsigned long REGS15 : 4; /* bit 60, byte +0x8 */
-};
-
-struct _sceDmaTag {
-    unsigned short qwc; /* +0x0 */
-    unsigned char mark; /* +0x2 */
-    unsigned char id; /* +0x3 */
-    _sceDmaTag* next; /* +0x4 */
-    unsigned int p[2]; /* +0x8 */
 };
 
 struct tagListData {
@@ -134,17 +87,6 @@ struct tagGLlistcalls {
     tagGLlistnode aNodes[1]; /* +0x8 */
 };
 
-struct tagGLlistdatas {
-    tagGLlistdatas* pNext; /* +0x0 */
-    int apData[3]; /* +0x4 */
-};
-
-struct tagGLtexblock {
-    unsigned int nTexID : 10; /* bit 0, byte +0x0 */
-    int nStart : 11; /* bit 10, byte +0x0 */
-    int nLength : 11; /* bit 21, byte +0x0 */
-};
-
 struct tagGLprimbuf {
     tagGLprimbuf* pNext; /* +0x0 */
     unsigned int nCount; /* +0x4 */
@@ -156,25 +98,6 @@ struct tagGLprimbuf {
     _sceDmaTag tagDma; /* +0x20 */
     anon_0 tagGif; /* +0x30 */
     int vData[4]; /* +0x40 */
-};
-
-struct tagGLtexindex {
-    unsigned int nTexID : 10; /* bit 0, byte +0x0 */
-    int nStart : 11; /* bit 10, byte +0x0 */
-};
-
-struct tag_GLtexture_set {
-    float vTexEnvColor[4]; /* +0x0 */
-    unsigned int eTexEnvMode; /* +0x10 */
-    unsigned int nTexGenBits; /* +0x14 */
-    unsigned short nTexGenModeS; /* +0x18 */
-    unsigned short nTexGenModeT; /* +0x1a */
-    unsigned short nTexGenModeR; /* +0x1c */
-    unsigned short nTexGenModeQ; /* +0x1e */
-    float vTexGenCoeffS[4]; /* +0x20 */
-    float vTexGenCoeffT[4]; /* +0x30 */
-    float vTexGenCoeffR[4]; /* +0x40 */
-    float vTexGenCoeffQ[4]; /* +0x50 */
 };
 
 struct anon_3 {
@@ -312,73 +235,6 @@ struct anon_1 {
     unsigned char bFinalCompile; /* +0x10 */
     unsigned int mode; /* +0x14 */
     tagGLprimbuf* pPrimBuf; /* +0x18 */
-};
-
-struct tagListNodeSingle {
-    unsigned int nIndex; /* +0x0 */
-    tagListData* pData; /* +0x4 */
-};
-
-struct tagListNode {
-    tagListNode* pNext; /* +0x0 */
-    unsigned int nIndex; /* +0x4 */
-    int iSize; /* +0x8 */
-    int apData[1]; /* +0xc */
-};
-
-struct tag_GLtexture_image {
-    unsigned int target; /* +0x0 */
-    int inputComponents; /* +0x4 */
-    int width; /* +0x8 */
-    int height; /* +0xc */
-    unsigned int format; /* +0x10 */
-    int pixels; /* +0x14 */
-    int pixelsAux; /* +0x18 */
-    int cbPixels; /* +0x1c */
-    int cbPixelsAux; /* +0x20 */
-    unsigned char pixelsChanged; /* +0x24 */
-    unsigned char bConverted; /* +0x25 */
-    unsigned char bUserMaintain; /* +0x26 */
-    unsigned int uiSpan; /* +0x28 */
-};
-
-struct tagGLlistpool {
-    unsigned int nFreeIndex; /* +0x0 */
-    tagListNodeSingle aSingleIndex[64]; /* +0x4 */
-    tagListNode* pFirstNode; /* +0x204 */
-    tagListNode* pLastNode; /* +0x208 */
-};
-
-struct tagGLtexname {
-    unsigned char bAllocated; /* +0x0 */
-    unsigned char bResident; /* +0x1 */
-    float fPrioritize; /* +0x4 */
-    unsigned int eDimension; /* +0x8 */
-    int iTexBlock; /* +0xc */
-    tag_GLtexture* pTex1D; /* +0x10 */
-    tag_GLtexture* pTex2D; /* +0x14 */
-    tag_GLtexture* pTexCube; /* +0x18 */
-};
-
-struct tag_GLlight {
-    float vAmbient[4]; /* +0x0 */
-    float vDiffuse[4]; /* +0x10 */
-    float vSpecular[4]; /* +0x20 */
-    float vPosition[4]; /* +0x30 */
-    float vDirection[4]; /* +0x40 */
-    float fSpotExponent; /* +0x50 */
-    float fSpotCutoff; /* +0x54 */
-    float fCosCutoff; /* +0x58 */
-    float fConstantAttenuation; /* +0x5c */
-    float fLinearAttenuation; /* +0x60 */
-    float fQuadraticAttenuation; /* +0x64 */
-} __attribute__((aligned(16)));
-
-struct tagGLArrayInfo {
-    int size; /* +0x0 */
-    unsigned int type; /* +0x4 */
-    int stride; /* +0x8 */
-    int pointer; /* +0xc */
 };
 
 struct tagGLcontext {
@@ -672,12 +528,6 @@ struct tagGLcontext {
     tagstVIFCode* pMSCAL; /* +0x6c98 */
     unsigned char _extractor_padding_07[4]; /* implicitly added by extractor; +0x6c9c..0x6c9f */
     unsigned char VU1Package[10000]; /* +0x6ca0 */
-};
-
-struct tagstVIFCode {
-    unsigned short IMMEDIATE; /* +0x0 */
-    unsigned char NUM; /* +0x2 */
-    unsigned char CMD; /* +0x3 */
 };
 
 int g_astGsSetTex;

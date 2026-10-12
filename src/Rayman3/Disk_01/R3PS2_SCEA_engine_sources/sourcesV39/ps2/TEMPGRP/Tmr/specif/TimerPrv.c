@@ -3,15 +3,10 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct _stTimerCount _stTimerCount;
-
-struct _stTimerCount {
-    unsigned long m_ulLowPart; /* +0x0 */
-    unsigned long m_ulHighPart; /* +0x8 */
-};
 
 float g_xVideoFrameDurationInSeconds;
 

@@ -527,6 +527,11 @@ def compile_source(source: Path, owner: Path | str | None = None) -> tuple[Path 
     fingerprint.update(source.read_bytes())
     fingerprint.update(mwcc.read_bytes())
     fingerprint.update(' '.join(flags).encode())
+    # Shared project headers (include/r3) are not part of the source bytes,
+    # so hash them too or a header edit would reuse stale objects.
+    for header in sorted((ROOT / 'include' / 'r3').glob('*.h')):
+        fingerprint.update(header.name.encode())
+        fingerprint.update(header.read_bytes())
     output = BUILD_ROOT / 'objects' / f'{fingerprint.hexdigest()}.o'
     with _compile_locks_guard:
         lock = _compile_locks.setdefault(output, threading.Lock())

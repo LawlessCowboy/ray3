@@ -3,16 +3,9 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct ISI_tdstColor_ ISI_tdstColor_;
-
-struct ISI_tdstColor_ {
-    short xRed; /* +0x0 */
-    short xGreen; /* +0x2 */
-    short xBlue; /* +0x4 */
-    short xAlpha; /* +0x6 */
-};
 
 ISI_tdstColor_ IPO_g_tdstBlack;
 

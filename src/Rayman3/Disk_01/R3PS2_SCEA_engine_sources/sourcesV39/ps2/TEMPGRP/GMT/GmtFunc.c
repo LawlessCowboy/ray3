@@ -9,29 +9,9 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/GMT.h"
+#include "r3/HIE.h"
 
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
-typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
-struct GMT_tdstCollideMaterial_ {
-    short wTypeOfZone; /* +0x0 */
-    unsigned short xIdentifier; /* +0x2 */
-    MTH3D_tdstVector_ stDirection; /* +0x4 */
-    float xCoeff; /* +0x10 */
-    unsigned short wTypeForAi; /* +0x14 */
-};
-
-struct GMT_tdstGameMaterial_ {
-    int hSoundMaterial; /* +0x0 */
-    GMT_tdstCollideMaterial_* hCollideMaterial; /* +0x4 */
-};
 
 #define GMT_C_InvalidCollideMaterial ((GMT_tdstCollideMaterial_*)-1)
 

@@ -3,57 +3,9 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
-typedef struct tdstGliCaps_ tdstGliCaps_;
-
-struct GLD_tdstViewportAttributes_ {
-    unsigned int dwInitialHeight; /* +0x0 */
-    unsigned int dwInitialWidth; /* +0x4 */
-    unsigned int dwHeight; /* +0x8 */
-    unsigned int dwWidth; /* +0xc */
-    unsigned int dwTopInPix; /* +0x10 */
-    unsigned int dwBottomInPix; /* +0x14 */
-    unsigned int dwLeftInPix; /* +0x18 */
-    unsigned int dwRightInPix; /* +0x1c */
-    unsigned int dwTopInPixForClip; /* +0x20 */
-    unsigned int dwBottomInPixForClip; /* +0x24 */
-    unsigned int dwLeftInPixForClip; /* +0x28 */
-    unsigned int dwRightInPixForClip; /* +0x2c */
-    unsigned int dwWidthInPercent; /* +0x30 */
-    unsigned int dwHeightInPercent; /* +0x34 */
-    unsigned int dwClipTopInPix; /* +0x38 */
-    unsigned int dwClipBottomInPix; /* +0x3c */
-    unsigned int dwClipLeftInPix; /* +0x40 */
-    unsigned int dwClipRightInPix; /* +0x44 */
-    unsigned int dwClipTopInPerMille; /* +0x48 */
-    unsigned int dwClipBottomInPerMille; /* +0x4c */
-    unsigned int dwClipLeftInPerMille; /* +0x50 */
-    unsigned int dwClipRightInPerMille; /* +0x54 */
-    int iOffsetPosX; /* +0x58 */
-    int iOffsetPosY; /* +0x5c */
-    int p_cVirtualScreen; /* +0x60 */
-    int lPitch; /* +0x64 */
-    int p_vSpecificToXD; /* +0x68 */
-    short hDevice; /* +0x6c */
-    short hViewport; /* +0x6e */
-};
-
-struct tdstGliCaps_ {
-    unsigned int ulSize; /* +0x0 */
-    unsigned int ulDriverCaps; /* +0x4 */
-    unsigned int ulTextureCaps; /* +0x8 */
-    unsigned int ulSurfaceCaps; /* +0xc */
-    unsigned int ulMemoryCaps; /* +0x10 */
-    unsigned int ulTextureMaxSize; /* +0x14 */
-    unsigned int ulTotalTextureMemory; /* +0x18 */
-    unsigned int ulTotalVideoMemory; /* +0x1c */
-    unsigned int ulTotalAGPMemory; /* +0x20 */
-    unsigned int ulTexturePerChannelMemory[4]; /* +0x24 */
-    unsigned char ucPrimarySurfacePixelFormat; /* +0x34 */
-    float fRefreshRate; /* +0x38 */
-};
 
 float GLI_g_NegVect[4];
 int GLD_RenderingCounter;

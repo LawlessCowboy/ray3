@@ -162,6 +162,15 @@ functions after cleanup; if removing metadata changes a result from `MATCH`,
 restore the comments needed to retain the verified match. Keep cleanup separate
 from function reconstruction changes so it can be reviewed independently.
 
+Shared types live in `include/r3/`, one header per engine module (`MTH.h`,
+`MAT.h`, `HIE.h`, `LST2.h`, `GEO.h`, `SECT.h`, ...; `ENG.h` holds the rest),
+each including the headers its types need by value. A completed translation unit may drop its own copy of a
+type and include the header only when its copy is identical to the header's;
+keep differing copies, function prototypes and global declarations local,
+since matches can depend on them. Run `verify-recorded` after such a change.
+`tools/match.py` hashes `include/r3/*.h` into its object cache key, so header
+edits rebuild every object.
+
 ## m2c-first workflow for advanced functions
 
 For every large or advanced function (roughly 100+ bytes, many basic blocks,

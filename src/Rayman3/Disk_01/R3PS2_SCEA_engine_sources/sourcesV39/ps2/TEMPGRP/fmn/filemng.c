@@ -3,11 +3,8 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/FIL.h"
 
-typedef struct FIL_tdstInternalGeneral_ FIL_tdstInternalGeneral_;
-struct FIL_tdstInternalGeneral_ {
-    unsigned char ucDisplayInformation; /* +0x0 */
-};
 extern unsigned char g_ucFILModuleId;
 extern FIL_tdstInternalGeneral_ g_stInternalGeneral;
 extern unsigned char Erm_fn_ucInitErrMsg(unsigned char);

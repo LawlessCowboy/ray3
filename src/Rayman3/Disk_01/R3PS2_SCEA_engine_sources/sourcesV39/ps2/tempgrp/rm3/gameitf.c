@@ -3,20 +3,14 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct GLI_tdstSpecificAttributesFor3D_ GLI_tdstSpecificAttributesFor3D_;
 
 struct GLI_tdstSpecificAttributesFor3D_ {
     int p_stCam; /* +0x0 */
     float xNear; /* +0x4 */
-};
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
 };
 
 short g_h_AllCm_MainDisplayDevice;
