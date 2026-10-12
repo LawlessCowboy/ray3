@@ -3,83 +3,22 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
+#include "r3/COL.h"
+#include "r3/GMT.h"
 #include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
-typedef struct COL_tdstOctreeNode_ COL_tdstOctreeNode_;
-typedef struct COL_tdstCollideObject_ COL_tdstCollideObject_;
-typedef struct COL_tdstOctree_ COL_tdstOctree_;
-typedef struct COL_tdstParallelBox_ COL_tdstParallelBox_;
-typedef struct GEO_tdstTripledIndex_ GEO_tdstTripledIndex_;
 typedef struct COL_tdstTripledIndex_ COL_tdstTripledIndex_;
-typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
-typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
-typedef struct ACP_tdst2DUVValues_ ACP_tdst2DUVValues_;
 typedef struct COL_tdstElementIndexedTriangles_ COL_tdstElementIndexedTriangles_;
 typedef struct COL_tdstElementSpheres_ COL_tdstElementSpheres_;
 typedef struct COL_tdstElementAlignedBoxes_ COL_tdstElementAlignedBoxes_;
-typedef struct GEO_tdstElementIndexedTriangles_ GEO_tdstElementIndexedTriangles_;
 typedef struct COL_tdstIndexedSphere_ COL_tdstIndexedSphere_;
 typedef struct COL_tdstIndexedAlignedBox_ COL_tdstIndexedAlignedBox_;
 
-struct COL_tdstOctreeNode_ {
-    MTH3D_tdstVector_ stMinPart; /* +0x0 */
-    MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
-    int d_xFaceIndexList; /* +0x1c */
-};
-
-struct COL_tdstCollideObject_ {
-    short xNbPoints; /* +0x0 */
-    short xNbElements; /* +0x2 */
-    short xNbParallelBoxes; /* +0x4 */
-    MTH3D_tdstVector_* d_stListOfPoints; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
-    int d_stListOfElements; /* +0x10 */
-    COL_tdstOctree_* p_stOctree; /* +0x14 */
-    COL_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
-    float xBoudingSphereRadius; /* +0x1c */
-    MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x20 */
-};
-
-struct COL_tdstOctree_ {
-    COL_tdstOctreeNode_* p_stOctreeRoot; /* +0x0 */
-    short xNbFaces; /* +0x4 */
-    int d_xElementBasesTable; /* +0x8 */
-    MTH3D_tdstVector_ stMinBoundingBox; /* +0xc */
-    MTH3D_tdstVector_ stMaxBoundingBox; /* +0x18 */
-};
-
-struct COL_tdstParallelBox_ {
-    MTH4D_tdstVector_ stMinPoint; /* +0x0 */
-    MTH4D_tdstVector_ stMaxPoint; /* +0x10 */
-};
-
-struct GEO_tdstTripledIndex_ {
-    short a3_xIndex[3]; /* +0x0 */
-};
-
 struct COL_tdstTripledIndex_ {
     short a3_xIndex[3]; /* +0x0 */
-};
-
-struct GMT_tdstGameMaterial_ {
-    int hSoundMaterial; /* +0x0 */
-    GMT_tdstCollideMaterial_* hCollideMaterial; /* +0x4 */
-};
-
-struct GMT_tdstCollideMaterial_ {
-    short wTypeOfZone; /* +0x0 */
-    unsigned short xIdentifier; /* +0x2 */
-    MTH3D_tdstVector_ stDirection; /* +0x4 */
-    float xCoeff; /* +0x10 */
-    unsigned short wTypeForAi; /* +0x14 */
-};
-
-struct ACP_tdst2DUVValues_ {
-    float xU; /* +0x0 */
-    float xV; /* +0x4 */
 };
 
 struct COL_tdstElementIndexedTriangles_ {
@@ -105,26 +44,6 @@ struct COL_tdstElementAlignedBoxes_ {
     COL_tdstIndexedAlignedBox_* d_stListOfAlignedBoxes; /* +0x0 */
     short xNbAlignedBoxes; /* +0x4 */
     short xIndexOfParallelBox; /* +0x6 */
-};
-
-struct GEO_tdstElementIndexedTriangles_ {
-    GLI_tdstMaterial_* hVisualMaterial; /* +0x0 */
-    short xNbFaces; /* +0x4 */
-    short xNbElementUV; /* +0x6 */
-    short xNbUVStages; /* +0x8 */
-    GEO_tdstTripledIndex_* d_stListOfFacesTripled; /* +0xc */
-    GEO_tdstTripledIndex_* d_stListOfFacesTripledIndexUV; /* +0x10 */
-    MTH3D_tdstVector_* d_stListOfFacesNormals; /* +0x14 */
-    ACP_tdst2DUVValues_* d_stListOfElementUV; /* +0x18 */
-    GEO_tdstTripledIndex_* d_stListOfFacesEdges; /* +0x1c */
-    GEO_tdstTripledIndex_* d_stListOfFacesAdjacent; /* +0x20 */
-    int d_stListOfIndexUsedByThisElement; /* +0x24 */
-    short xNumberOfIndexsUsed; /* +0x28 */
-    short xIndexOfParallelBox; /* +0x2a */
-    unsigned int glDisplayList; /* +0x2c */
-    int p_xSpecialValue; /* +0x30 */
-    unsigned char bVisibleInPortal; /* +0x34 */
-    unsigned int pVertexArrays[4]; /* +0x38 */
 };
 
 struct COL_tdstIndexedSphere_ {

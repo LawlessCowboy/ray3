@@ -3,10 +3,9 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct GEO_tdstVisualSet_ GEO_tdstVisualSet_;
-typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
 typedef struct anon_19 anon_19;
 typedef struct anon_6 anon_6;
 typedef struct anon_2 anon_2;
@@ -30,7 +29,6 @@ typedef struct anon_20 anon_20;
 typedef struct anon_22 anon_22;
 typedef struct anon_21 anon_21;
 typedef struct anon_12 anon_12;
-typedef struct _sceDmaTag _sceDmaTag;
 typedef struct anon_17 anon_17;
 
 struct anon_19 {
@@ -281,14 +279,6 @@ struct anon_12 {
     anon_11 giftag1; /* +0x140 */
     anon_0 draw1; /* +0x150 */
     anon_8 clear1; /* +0x1d0 */
-};
-
-struct _sceDmaTag {
-    unsigned short qwc; /* +0x0 */
-    unsigned char mark; /* +0x2 */
-    unsigned char id; /* +0x3 */
-    _sceDmaTag* next; /* +0x4 */
-    unsigned int p[2]; /* +0x8 */
 };
 
 struct anon_17 {

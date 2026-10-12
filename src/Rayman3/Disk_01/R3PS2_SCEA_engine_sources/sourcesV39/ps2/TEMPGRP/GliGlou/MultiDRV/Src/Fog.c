@@ -3,26 +3,9 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct GEO_tdstColor_ GEO_tdstColor_;
-typedef struct tdstFogParams_ tdstFogParams_;
-
-struct GEO_tdstColor_ {
-    float xR; /* +0x0 */
-    float xG; /* +0x4 */
-    float xB; /* +0x8 */
-    float xA; /* +0xc */
-};
-
-struct tdstFogParams_ {
-    float xDepthStart; /* +0x0 */
-    float xDepthEnd; /* +0x4 */
-    float xInfinite; /* +0x8 */
-    float xBlendStart; /* +0xc */
-    float xBlendEnd; /* +0x10 */
-    GEO_tdstColor_ stColor; /* +0x14 */
-};
 
 char GLI_cGlobalFogIsOn;
 int GLI_gp_stCurrentFog;

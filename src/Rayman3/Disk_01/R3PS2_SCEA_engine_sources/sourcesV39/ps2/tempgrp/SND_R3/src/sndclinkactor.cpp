@@ -3,11 +3,11 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CVarAccess CVarAccess;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
-typedef struct _RollOffParam _RollOffParam;
 typedef struct CResObjParams CResObjParams;
 typedef struct CExtraEventActor CExtraEventActor;
 typedef struct CLinkActor CLinkActor;
@@ -41,7 +41,6 @@ typedef struct CActorModifiers CActorModifiers;
 typedef struct CUUID CUUID;
 typedef struct CLookupElement CLookupElement;
 typedef struct TTypedVar TTypedVar;
-typedef union _SND_tduRefEvt _SND_tduRefEvt;
 typedef struct CCmdInterface CCmdInterface;
 typedef struct CSndVarType CSndVarType;
 typedef struct CStringIsLess CStringIsLess;
@@ -76,12 +75,6 @@ typedef enum _Redbl {
     _Red = 0,
     _Black = 1,
 } _Redbl;
-
-struct _RollOffParam {
-    int rDistSatur; /* +0x0 */
-    int rDistBackGround; /* +0x4 */
-    unsigned char ucBackgroundVol; /* +0x8 */
-};
 
 struct CResObjParams {
     /* C++ base CInterface at +0x0: vtable pointer (retail
@@ -369,11 +362,6 @@ struct CLookupElement {
 
 struct TTypedVar : CVar {
     float m_oValue; /* +0x1c */
-};
-
-union _SND_tduRefEvt {
-    unsigned int Id; /* +0x0 */
-    _SND_tdstBlockEvent* pstPtr; /* +0x0 */
 };
 
 struct CCmdInterface {

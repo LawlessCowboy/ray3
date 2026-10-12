@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/GEO.h"
 #include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
@@ -12,18 +13,10 @@ int g_lNbMatrixInStack;
 int g_p_stCurrentMatrix;
 MAT_tdstTransformation_ g_aDEF_stMatrixStack[1];
 
-typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;
 typedef struct anon_0 anon_0;
 typedef struct anon_1 anon_1;
-
-struct GEO_tdstColor_ {
-    float xR; /* +0x0 */
-    float xG; /* +0x4 */
-    float xB; /* +0x8 */
-    float xA; /* +0xc */
-};
 
 struct anon_1 {
     float stMat[2][2]; /* +0x0 */

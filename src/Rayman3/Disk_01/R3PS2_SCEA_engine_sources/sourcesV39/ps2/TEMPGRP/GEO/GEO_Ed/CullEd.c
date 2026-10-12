@@ -3,77 +3,10 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 #include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
-typedef struct GLI_tdst2DVertex_ GLI_tdst2DVertex_;
-typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
-
-struct GLD_tdstViewportAttributes_ {
-    unsigned int dwInitialHeight; /* +0x0 */
-    unsigned int dwInitialWidth; /* +0x4 */
-    unsigned int dwHeight; /* +0x8 */
-    unsigned int dwWidth; /* +0xc */
-    unsigned int dwTopInPix; /* +0x10 */
-    unsigned int dwBottomInPix; /* +0x14 */
-    unsigned int dwLeftInPix; /* +0x18 */
-    unsigned int dwRightInPix; /* +0x1c */
-    unsigned int dwTopInPixForClip; /* +0x20 */
-    unsigned int dwBottomInPixForClip; /* +0x24 */
-    unsigned int dwLeftInPixForClip; /* +0x28 */
-    unsigned int dwRightInPixForClip; /* +0x2c */
-    unsigned int dwWidthInPercent; /* +0x30 */
-    unsigned int dwHeightInPercent; /* +0x34 */
-    unsigned int dwClipTopInPix; /* +0x38 */
-    unsigned int dwClipBottomInPix; /* +0x3c */
-    unsigned int dwClipLeftInPix; /* +0x40 */
-    unsigned int dwClipRightInPix; /* +0x44 */
-    unsigned int dwClipTopInPerMille; /* +0x48 */
-    unsigned int dwClipBottomInPerMille; /* +0x4c */
-    unsigned int dwClipLeftInPerMille; /* +0x50 */
-    unsigned int dwClipRightInPerMille; /* +0x54 */
-    int iOffsetPosX; /* +0x58 */
-    int iOffsetPosY; /* +0x5c */
-    int p_cVirtualScreen; /* +0x60 */
-    int lPitch; /* +0x64 */
-    int p_vSpecificToXD; /* +0x68 */
-    short hDevice; /* +0x6c */
-    short hViewport; /* +0x6e */
-};
-
-struct GLI_tdst2DVertex_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xOoZ; /* +0x8 */
-};
-
-struct GLI_tdstCamera_ {
-    int lCameraMode; /* +0x0 */
-    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
-    MAT_tdstTransformation_ stMatrix; /* +0x10 */
-    float xAlphaX; /* +0x70 */
-    float xAlphaY; /* +0x74 */
-    float xNear; /* +0x78 */
-    float xFar; /* +0x7c */
-    float xScreen; /* +0x80 */
-    GLI_tdst2DVertex_ stScale; /* +0x84 */
-    GLI_tdst2DVertex_ stTrans; /* +0x90 */
-    float xXProjectionRatio; /* +0x9c */
-    float xYProjectionRatio; /* +0xa0 */
-    MTH3D_tdstVector_ stNormPlaneLeft; /* +0xa4 */
-    float xDistPlaneLeft; /* +0xb0 */
-    MTH3D_tdstVector_ stNormPlaneRight; /* +0xb4 */
-    float xDistPlaneRight; /* +0xc0 */
-    MTH3D_tdstVector_ stNormPlaneUp; /* +0xc4 */
-    float xDistPlaneUp; /* +0xd0 */
-    MTH3D_tdstVector_ stNormPlaneDown; /* +0xd4 */
-    float xDistPlaneDown; /* +0xe0 */
-    float xRatio; /* +0xe4 */
-    unsigned char ucCameraTransparency; /* +0xe8 */
-    float xTranspDist; /* +0xec */
-    unsigned char bCameraIsMirrored; /* +0xf0 */
-};
 
 float GEO_g_xZFarTransparencyLevel;
 float GEO_g_xOoZFarTransparencyZone;

@@ -3,38 +3,12 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 #include "r3/HIE.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct _stCriticalSection _stCriticalSection;
-typedef struct RND_tdstRandom_ RND_tdstRandom_;
-typedef struct SemaParam SemaParam;
-
-struct SemaParam {
-    int currentCount;
-    int maxCount;
-    int initCount;
-    int numWaitThreads;
-    unsigned int attr;
-    unsigned int option;
-};
-
-struct _stCriticalSection {
-    int Sid;
-    int OwnerThreadId;
-    int ReentrancyCount;
-};
 
 extern int CreateSema(SemaParam* param);
-
-struct RND_tdstRandom_ {
-    unsigned int ulSizeOfTable; /* +0x0 */
-    unsigned int a_ulIndex[50]; /* +0x4 */
-    unsigned int hLastUsedIndex; /* +0xcc */
-    unsigned int ulMaxValueInTable; /* +0xd0 */
-    float xInverseMaxValueInTable; /* +0xd4 */
-    int p_ulTable; /* +0xd8 */
-};
 
 unsigned char g_ucRNDModuleId;
 unsigned int RND_BaseSeed;

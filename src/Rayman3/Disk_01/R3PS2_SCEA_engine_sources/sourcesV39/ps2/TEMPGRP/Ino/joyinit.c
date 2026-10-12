@@ -3,13 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
-
-typedef struct _stCriticalSection _stCriticalSection;
-struct _stCriticalSection {
-    int Sid;
-    int OwnerThreadId;
-    int ReentrancyCount;
-};
+#include "r3/ENG.h"
 
 extern unsigned char HMU_g_bHMU_CS_Created;
 extern _stCriticalSection g_stHMU_CS;

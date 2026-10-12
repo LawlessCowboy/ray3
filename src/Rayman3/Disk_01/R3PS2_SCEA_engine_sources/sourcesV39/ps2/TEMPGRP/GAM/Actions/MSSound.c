@@ -3,6 +3,8 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/AI.h"
+#include "r3/LST2.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -35,29 +37,22 @@ typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct tdstEvent_ tdstEvent_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 typedef struct DNM_stDynamicsAdvancedBlock DNM_stDynamicsAdvancedBlock;
-typedef struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn LST2_tdstAnchorToCINE_tdxHandleToCineDyn;
 typedef struct tdstEngineObject_ tdstEngineObject_;
 typedef struct stMorphData stMorphData;
 typedef struct tdstMSSound_ tdstMSSound_;
 typedef struct tdstTransparentSuperObjectForCamera_ tdstTransparentSuperObjectForCamera_;
 typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct tdstBrain_ tdstBrain_;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn;
-typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct tdstEventInTable_ tdstEventInTable_;
 typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
 typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
 typedef struct tdstAnim3d_ tdstAnim3d_;
 typedef struct CINE_tdstCineActor_ CINE_tdstCineActor_;
-typedef struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn;
 typedef struct MOR_stMorphVector_ MOR_stMorphVector_;
 typedef struct tdstSubAnimInUse_ tdstSubAnimInUse_;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
-typedef struct LST2_tdstAnchorToWP_tdhGraphNodeDyn LST2_tdstAnchorToWP_tdhGraphNodeDyn;
 typedef struct tdstFrame3d_ tdstFrame3d_;
 typedef struct SECT_tdstListOfDNMLights_ SECT_tdstListOfDNMLights_;
-typedef struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn;
 typedef struct tdst3dData_ tdst3dData_;
 typedef struct WP_tdstGraphNode_ WP_tdstGraphNode_;
 typedef struct tdstSectInfo_ tdstSectInfo_;
@@ -69,7 +64,6 @@ typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct tdstDynam_ tdstDynam_;
 typedef struct SECT_tdstListOfSOSectorsInGraphicInteraction_ SECT_tdstListOfSOSectorsInGraphicInteraction_;
 typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt;
 typedef struct GEO_tdstVisualSet_ GEO_tdstVisualSet_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
@@ -80,12 +74,9 @@ typedef struct tdstMSWay_ tdstMSWay_;
 typedef struct COL_tdstBoundingSphere_ COL_tdstBoundingSphere_;
 typedef struct tdstMSLight_ tdstMSLight_;
 typedef struct SECT_tdstListOfSOSectorsInCollisionInteraction_ SECT_tdstListOfSOSectorsInCollisionInteraction_;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt;
 typedef struct tdstMicro_ tdstMicro_;
 typedef struct SECT_tdstListOfSOSectorsInSoundInteraction_ SECT_tdstListOfSOSectorsInSoundInteraction_;
-typedef struct AI_tdstAIModel_ AI_tdstAIModel_;
 typedef struct DNM_stDynamicsComplexBlock DNM_stDynamicsComplexBlock;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt;
 typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
 typedef struct SECT_tdstListOfSOSectorsInActivityInteraction_ SECT_tdstListOfSOSectorsInActivityInteraction_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
@@ -93,13 +84,10 @@ typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct WP_tdstGraph_ WP_tdstGraph_;
 typedef struct stMACDPID stMACDPID;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCollisionInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstCollisionInteractionOpt;
 typedef union GEO_tduVSObject_ GEO_tduVSObject_;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt;
 typedef struct MOR_stMorphObject_ MOR_stMorphObject_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct tdstCouple_ tdstCouple_;
-typedef struct LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt;
 typedef struct anon_0 anon_0;
 typedef struct CINE_tdstChannelLink_ CINE_tdstChannelLink_;
 typedef struct _RollOffParam _RollOffParam;
@@ -107,11 +95,9 @@ typedef struct SCT_tdstListOfSoundEvent_ SCT_tdstListOfSoundEvent_;
 typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
 typedef struct anon_1 anon_1;
 typedef struct DNM_stParsingDatas DNM_stParsingDatas;
-typedef struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn;
 typedef struct SECT_tdstSector_ SECT_tdstSector_;
 typedef struct stColliderInfo_ stColliderInfo_;
 typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
-typedef struct LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn;
 typedef struct MTH_stRotation MTH_stRotation;
 typedef struct tdstPLA_DeformationLink_ tdstPLA_DeformationLink_;
 typedef union _SND_tduRefEvt _SND_tduRefEvt;
@@ -308,12 +294,6 @@ struct DNM_stDynamicsAdvancedBlock {
     char m_cCollideCounter; /* +0x84 */
 };
 
-struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn {
-    CINE_tdstCine_* hFirstElementDyn; /* +0x0 */
-    CINE_tdstCine_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
 struct tdstEngineObject_ {
     tdst3dData_* h_3dData; /* +0x0 */
     tdstStandardGame_* h_StandardGame; /* +0x4 */
@@ -370,20 +350,6 @@ struct tdstBrain_ {
     GMT_tdstGameMaterial_* hLastCollidedGoThroughMaterial; /* +0x4 */
     unsigned char bWarnMechanicsFlag; /* +0x8 */
     unsigned char bActiveDuringTransition; /* +0x9 */
-};
-
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn {
-    SECT_tdstListOfSOCharacters_* hFirstElementDyn; /* +0x0 */
-    SECT_tdstListOfSOCharacters_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct AI_tdstMind_ {
-    AI_tdstAIModel_* p_stAIModel; /* +0x0 */
-    tdstIntelligence_* p_stIntelligence; /* +0x4 */
-    tdstIntelligence_* p_stReflex; /* +0x8 */
-    tdstDsgMem_* p_stDsgMem; /* +0xc */
-    unsigned char bDoingIntel; /* +0x10 */
 };
 
 struct tdstEventInTable_ {
@@ -471,12 +437,6 @@ struct CINE_tdstCineActor_ {
     LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn* hFatherDyn; /* +0x188 */
 };
 
-struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn {
-    tdstMorphChannelList_* hFirstElementDyn; /* +0x0 */
-    tdstMorphChannelList_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
 struct MOR_stMorphVector_ {
     short xVertexIndex; /* +0x0 */
     int stDeformationVector; /* +0x4 */
@@ -497,24 +457,12 @@ struct tdstSubAnimInUse_ {
     unsigned char bMerge; /* +0x26 */
 };
 
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn {
-    SECT_tdstListOfDNMLights_* hFirstElementDyn; /* +0x0 */
-    SECT_tdstListOfDNMLights_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
 struct MTH4D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
 } __attribute__((aligned(16)));
-
-struct LST2_tdstAnchorToWP_tdhGraphNodeDyn {
-    WP_tdstGraphNode_* hFirstElementDyn; /* +0x0 */
-    WP_tdstGraphNode_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
 
 struct tdstFrame3d_ {
     tdstElement3d_* p_stArrayOfElts3d; /* +0x0 */
@@ -535,12 +483,6 @@ struct SECT_tdstListOfDNMLights_ {
     SECT_tdstListOfDNMLights_* hNextBrotherDyn; /* +0x4 */
     SECT_tdstListOfDNMLights_* hPrevBrotherDyn; /* +0x8 */
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn* hFatherDyn; /* +0xc */
-};
-
-struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn {
-    tdstSubAnimInUse_* hFirstElementDyn; /* +0x0 */
-    tdstSubAnimInUse_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
 };
 
 struct tdst3dData_ {
@@ -793,11 +735,6 @@ struct tdstInternalStructurCineinfo_ {
     unsigned char bDebugCamera; /* +0x7a */
 };
 
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt {
-    SECT_tdstListOfStaticLights_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
 struct GEO_tdstVisualSet_ {
     float xLastDistance; /* +0x0 */
     short xNbLodDefinitions; /* +0x4 */
@@ -896,11 +833,6 @@ struct SECT_tdstListOfSOSectorsInCollisionInteraction_ {
     HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
 };
 
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt {
-    SECT_tdstListOfSOSectorsInSoundInteraction_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
 struct tdstMicro_ {
     MAT_tdstTransformation_* hMicroMatrix; /* +0x0 */
     unsigned char bIsActive; /* +0x4 */
@@ -909,14 +841,6 @@ struct tdstMicro_ {
 struct SECT_tdstListOfSOSectorsInSoundInteraction_ {
     HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
     int lVolume; /* +0x4 */
-};
-
-struct AI_tdstAIModel_ {
-    tdstScriptAI_* p_stScriptAIIntell; /* +0x0 */
-    tdstScriptAI_* p_stScriptAIReflex; /* +0x4 */
-    tdstDsgVar_* p_stDsgVar; /* +0x8 */
-    tdstListOfMacro_* p_stListOfMacro; /* +0xc */
-    unsigned char ucSecondPassDone; /* +0x10 */
 };
 
 struct DNM_stDynamicsComplexBlock {
@@ -936,11 +860,6 @@ struct DNM_stDynamicsComplexBlock {
     int m_stAbsolutePreviousMatrix; /* +0xb0 */
     unsigned char _extractor_padding_04[92]; /* implicitly added by extractor; +0xb4..0x10f */
     int m_stPrevPreviousMatrix; /* +0x110 */
-};
-
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt {
-    SECT_tdstListOfSOSectorsInActivityInteraction_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
 };
 
 struct GMT_tdstCollideMaterial_ {
@@ -1004,19 +923,9 @@ struct stMACDPID {
     unsigned char m_bData14; /* +0x78 */
 };
 
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCollisionInteractionOpt {
-    SECT_tdstListOfSOSectorsInCollisionInteraction_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
 union GEO_tduVSObject_ {
     GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
     MOR_stMorphObject_* p_stMorphObject; /* +0x0 */
-};
-
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt {
-    SECT_tdstListOfSOSectorsInGraphicInteraction_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
 };
 
 struct MOR_stMorphObject_ {
@@ -1040,11 +949,6 @@ union HIE_tduLinkedObject_ {
 struct tdstCouple_ {
     unsigned short wChild; /* +0x0 */
     unsigned short wFather; /* +0x2 */
-};
-
-struct LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt {
-    SCT_tdstListOfSoundEvent_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
 };
 
 struct anon_0 {
@@ -1082,12 +986,6 @@ struct DNM_stParsingDatas {
     unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x4..0xb */
     float xOutAlpha; /* +0xc */
     int stVector; /* +0x10 */
-};
-
-struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn {
-    CINE_tdstChannelLink_* hFirstElementDyn; /* +0x0 */
-    CINE_tdstChannelLink_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
 };
 
 struct SECT_tdstSector_ {
@@ -1144,12 +1042,6 @@ struct stColliderInfo_ {
 struct tdstPLA_Hierarchy_ {
     unsigned int ulNbOfCouples; /* +0x0 */
     tdstCouple_* d_stCouples; /* +0x4 */
-};
-
-struct LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn {
-    CINE_tdstCineActor_* hFirstElementDyn; /* +0x0 */
-    CINE_tdstCineActor_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
 };
 
 struct MTH_stRotation {

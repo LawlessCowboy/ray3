@@ -3,32 +3,19 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/GEO.h"
+#include "r3/DNM.h"
 #include "r3/MAT.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct DNM_stMecObstacle DNM_stMecObstacle;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
-typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
-typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
 typedef struct tdstFootPath_ tdstFootPath_;
 typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
 typedef struct tdstWaterStreakEffect_ tdstWaterStreakEffect_;
-typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
 typedef struct tdstWaterFoam_ tdstWaterFoam_;
-typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct ACP_tdst2DUVValues_ ACP_tdst2DUVValues_;
-typedef struct GEO_tdstColor_ GEO_tdstColor_;
-
-struct GEO_tdstEdge_ {
-    short xPoints[2]; /* +0x0 */
-    MTH3D_tdstVector_ st_VectorPoints[2]; /* +0x4 */
-};
-
-struct GEO_tdstParallelBox_ {
-    MTH4D_tdstVector_ stMinPoint; /* +0x0 */
-    MTH4D_tdstVector_ stMaxPoint; /* +0x10 */
-};
 
 struct tdstFootPath_ {
     short xNumberOfAlphaLevels; /* +0x0 */
@@ -92,53 +79,15 @@ struct tdstWaterStreakEffect_ {
     float xGap; /* +0x34 */
 };
 
-struct GEO_tdstDoubledIndex_ {
-    short a2_xIndex[2]; /* +0x0 */
-};
-
 struct tdstWaterFoam_ {
     MTH3D_tdstVector_ stPosition; /* +0x0 */
     unsigned char bFoamIsActive; /* +0xc */
     int lLifeTime; /* +0x10 */
 };
 
-struct GEO_tdstGeometricObject_ {
-    MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
-    MTH3D_tdstVector_* d_stListOfPointsNormals; /* +0x4 */
-    int d_dfVertexTransparency; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
-    int d_stListOfElements; /* +0x10 */
-    GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
-    GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
-    unsigned int ulType; /* +0x1c */
-    short xNbPoints; /* +0x20 */
-    short xNbElements; /* +0x22 */
-    short xNbEdges; /* +0x24 */
-    short xNbParallelBoxes; /* +0x26 */
-    float xBoudingSphereRadius; /* +0x28 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
-    MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
-    GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
-    short xNbEdgesDI; /* +0x44 */
-    short xNbOctreeEdges; /* +0x46 */
-    int bUsedForShadowDrawing; /* +0x48 */
-    int bUsedForShadowCreating; /* +0x4c */
-    int pSDC_Data; /* +0x50 */
-    unsigned int bIsStatic; /* +0x54 */
-    unsigned int glDisplayList; /* +0x58 */
-    unsigned char bVTForSinus; /* +0x5c */
-};
-
 struct ACP_tdst2DUVValues_ {
     float xU; /* +0x0 */
     float xV; /* +0x4 */
-};
-
-struct GEO_tdstColor_ {
-    float xR; /* +0x0 */
-    float xG; /* +0x4 */
-    float xB; /* +0x8 */
-    float xA; /* +0xc */
 };
 
 int g_p_stCurrentMatrix;
@@ -149,7 +98,6 @@ int gp_stLight;
 
 typedef struct tdstEngineObject_ tdstEngineObject_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
-typedef struct DNM_stMecMatCharacteristics DNM_stMecMatCharacteristics;
 
 union HIE_tduLinkedObject_ {
     HIE_tdstSuperObject_* p_stSuperObject; /* +0x0 */
@@ -188,11 +136,6 @@ struct tdstEngineObject_ {
     struct tdstSectInfo_* h_SectInfo; /* +0x20 */
     struct tdstMicro_* h_Micro; /* +0x24 */
     struct tdstMSSound_* h_MSSound; /* +0x28 */
-};
-
-struct DNM_stMecMatCharacteristics {
-    float m_xSlide; /* +0x0 */
-    float m_xRebound; /* +0x4 */
 };
 
 struct DNM_stMecObstacle {
