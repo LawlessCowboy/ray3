@@ -3510,7 +3510,11 @@ unsigned char fn_ucSetDsgVarFloat(void* pMyVarAddr, unsigned char param0, tdstGe
 unsigned char (*fn_p_fn_pGetDsgVarGetFunctionPtr(tdeDsgVarTypeId_ eDsgVarTypeId))(void*, unsigned char, tdstGetSetParam_*);
 unsigned char fn_ucGetDsgVar(unsigned char ucId, unsigned char ucIndex, AI_tdstMind_* p_stPerso, tdstGetSetParam_* p_stGetSetParam)
 {
-    return fn_p_fn_pGetDsgVarGetFunctionPtr(DSG_VAR_INFO_FIELD(p_stPerso, ucId, eDsgVarTypeId, tdeDsgVarTypeId_))((void*)(*(char**)&p_stPerso->p_stDsgMem->p_cDsgMemBuffer + DSG_VAR_INFO_FIELD(p_stPerso, ucId, ulOffsetInDsgMem, unsigned int)), ucIndex, p_stGetSetParam);
+    unsigned char (*p_fn_ucGetDsgVar)(void*, unsigned char, tdstGetSetParam_*);
+    char* pData;
+    pData = *(char**)&p_stPerso->p_stDsgMem->p_cDsgMemBuffer + DSG_VAR_INFO_FIELD(p_stPerso, ucId, ulOffsetInDsgMem, unsigned int);
+    p_fn_ucGetDsgVar = fn_p_fn_pGetDsgVarGetFunctionPtr(DSG_VAR_INFO_FIELD(p_stPerso, ucId, eDsgVarTypeId, tdeDsgVarTypeId_));
+    return p_fn_ucGetDsgVar(pData, ucIndex, p_stGetSetParam);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\DsgMem.c lines 809–830 */
