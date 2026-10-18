@@ -2969,14 +2969,67 @@ struct SCT_tdstListOfSoundEvent_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
+extern char* szGetMetaActionTypeInParamFromId(tdeMetaActionId_);
+extern void fn_vSetActionParamlValue(unsigned char, HIE_tdstSuperObject_*, int);
+extern void fn_vSetActionParamxValue(unsigned char, HIE_tdstSuperObject_*, float);
+extern void fn_vSetActionParamp_stVertex(unsigned char, HIE_tdstSuperObject_*, MTH3D_tdstVector_*);
+extern void fn_vSetActionParamStateValue(unsigned char, HIE_tdstSuperObject_*, tdstState_*);
+extern int toupper(int);
+extern size_t strlen(const char*);
+
+inline int MTH_M_xRealToLong(float xValue)
+{
+    int lResult;
+    asm
+    {
+        cvt.w.s f30, xValue
+        mfc1 lResult, f30
+    }
+    return lResult;
+}
+
 tdstNodeInterpret_* fn_p_stDefaultActionInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
+    char* szTypeParam;
+    unsigned char ucNbParam;
     unsigned char ucParam;
     char cType;
     tdstGetSetParam_ stParam;
-    unsigned char ucNbParam;
-    char* szTypeParam;
-    /* TODO: decompile from asm/... */
+
+    szTypeParam = szGetMetaActionTypeInParamFromId(p_stTree[-1].uDummy.uId.eMetaActionId);
+    ucNbParam = strlen(szTypeParam);
+    ucParam = 0;
+
+    if (ucNbParam != 0) {
+        while (ucParam < ucNbParam) {
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+            cType = toupper(szTypeParam[ucParam]);
+
+            if (cType == "L"[0]) {
+                fn_vSetActionParamlValue(
+                    ucParam,
+                    p_SuperObjPerso,
+                    stParam.eType == E_vt_Float
+                        ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue)
+                        : stParam.uDummy.uParam.lValue);
+            } else if (cType == "X"[0]) {
+                fn_vSetActionParamxValue(
+                    ucParam,
+                    p_SuperObjPerso,
+                    stParam.eType == E_vt_Float
+                        ? stParam.uDummy.uParam.xValue
+                        : (float)stParam.uDummy.uParam.lValue);
+            } else if (cType == "V"[0]) {
+                fn_vSetActionParamp_stVertex(ucParam, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);
+            } else if (cType == "A"[0]) {
+                fn_vSetActionParamStateValue(ucParam, p_SuperObjPerso, stParam.uDummy.uParam.tdxstHandleToState);
+            }
+            ucParam++;
+        }
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActParam.c lines 154–168 */
