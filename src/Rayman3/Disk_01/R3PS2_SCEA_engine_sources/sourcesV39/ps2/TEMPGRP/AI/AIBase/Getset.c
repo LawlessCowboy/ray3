@@ -2990,7 +2990,46 @@ struct tdstDsgVar_ {
  */
 unsigned int fn_ulSizeOfDsgVar(tdeDsgVarTypeId_ eDsgVarTypeId, unsigned char ucNbElt)
 {
-    /* TODO: decompile from asm/... */
+    switch (eDsgVarTypeId) {
+    case eDsgVarType_Caps: return 4;
+    case eDsgVarType_Graph: return 4;
+    case eDsgVarType_Boolean: return 1;
+    case eDsgVarType__128To127: return 1;
+    case eDsgVarType_0To255: return 1;
+    case eDsgVarType__32768To32767: return 2;
+    case eDsgVarType_0To65535: return 2;
+    case eDsgVarType_Integer: return 4;
+    case eDsgVarType_PositiveInteger: return 4;
+    case eDsgVarType_Float: return 4;
+    case eDsgVarType_WayPoint: return 4;
+    case eDsgVarType_Perso: return 4;
+    case eDsgVarType_Input: return 4;
+    case eDsgVarType_SoundEvent: return 4;
+    case eDsgVarType_Light: return 4;
+    case eDsgVarType_SuperObject: return 4;
+    case eDsgVarType_SOLinks: return 4;
+    case eDsgVarType_Text: return 4;
+    case eDsgVarType_List: return 8;
+    case eDsgVarType_Vector: return 12;
+    case eDsgVarType_Action: return 4;
+    case eDsgVarType_Comport: return 4;
+    case eDsgVarType_GameMaterial: return 4;
+    case eDsgVarType_VisualMaterial: return 4;
+    case eDsgVarType_VectorArray:
+        return (unsigned int)ucNbElt * 12 + 8;
+    case eDsgVarType_IntegerArray:
+    case eDsgVarType_FloatArray:
+    case eDsgVarType_PersoArray:
+    case eDsgVarType_WayPointArray:
+    case eDsgVarType_GraphArray:
+    case eDsgVarType_TextArray:
+    case eDsgVarType_SOLinksArray:
+    case eDsgVarType_SoundEventArray:
+    case eDsgVarType_VisualMatArray:
+        return ((unsigned int)ucNbElt - 1) * 4 + 12;
+    default:
+        return 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Getset.c lines 147–173 */

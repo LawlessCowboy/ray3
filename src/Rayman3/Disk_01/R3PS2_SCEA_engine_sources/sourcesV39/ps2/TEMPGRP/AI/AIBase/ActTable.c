@@ -2942,9 +2942,17 @@ tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, u
  */
 void fn_vInitActionTable(tdstIntelligence_* p_stIntelligence)
 {
-    unsigned char ucNbEntries;
     unsigned char ucNEntry;
-    /* TODO: decompile from asm/... */
+    unsigned char ucNbEntries;
+
+    p_stIntelligence->p_stActionTable->ucNbEntriesUsed = 0;
+    p_stIntelligence->p_stActionTable->ucCurrentEntry = 0;
+    ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
+
+    for (ucNEntry = 0; ucNEntry < ucNbEntries; ucNEntry++)
+    {
+        p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].bUseDefaultActionReturn = g_ucUseDefaultActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].ucNewActionReturn = g_ucNewActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].bUsed = 0; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].p_stNode = NULL; p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].ucNumRule = 0; memset(&p_stIntelligence->p_stActionTable->p_stEntry[ucNEntry].stActionParam, 0, sizeof(tdstActionParam_));
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActTable.c lines 225–260 */
@@ -2971,10 +2979,27 @@ void fn_vInitActionTable(tdstIntelligence_* p_stIntelligence)
  */
 void fn_vUnuseAllRulesFromSchedule(tdstIntelligence_* p_stIntelligence)
 {
-    tdstActionTableEntry_* p_stEntry;
-    unsigned char ucCurrentEntry;
     unsigned char ucNbEntries;
-    /* TODO: decompile from asm/... */
+    unsigned char ucCurrentEntry;
+    tdstActionTableEntry_* p_stEntry;
+
+    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed ? 1 : 0)
+    {
+        ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
+        p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry;
+        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; ucCurrentEntry++, p_stEntry++)
+        {
+            if (p_stEntry->bUsed)
+            {
+                if (p_stEntry->ucNumRule == 0)
+                {
+                    p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].bUseDefaultActionReturn = g_ucUseDefaultActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].ucNewActionReturn = g_ucNewActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].bUsed = 0; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].p_stNode = NULL; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].ucNumRule = 0; memset(&p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].stActionParam, 0, sizeof(tdstActionParam_));
+                    ucNbEntries--;
+                }
+            }
+        }
+        p_stIntelligence->p_stActionTable->ucNbEntriesUsed = ucNbEntries;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActTable.c lines 188–222 */
@@ -3001,10 +3026,26 @@ void fn_vUnuseAllRulesFromSchedule(tdstIntelligence_* p_stIntelligence)
  */
 void fn_vUnuseAllRulesWhichHaveGreaterNumRule(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule)
 {
-    tdstActionTableEntry_* p_stEntry;
-    unsigned char ucCurrentEntry;
     unsigned char ucNbEntries;
-    /* TODO: decompile from asm/... */
+    unsigned char ucCurrentEntry;
+    tdstActionTableEntry_* p_stEntry;
+
+    ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
+    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed ? 1 : 0)
+    {
+        p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry;
+        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; ucCurrentEntry++, p_stEntry++)
+        {
+            if (p_stEntry->bUsed)
+            {
+                if (p_stEntry->ucNumRule > ucNumRule)
+                {
+                    p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].bUseDefaultActionReturn = g_ucUseDefaultActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].ucNewActionReturn = g_ucNewActionReturn; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].bUsed = 0; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].p_stNode = NULL; p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].ucNumRule = 0; memset(&p_stIntelligence->p_stActionTable->p_stEntry[ucCurrentEntry].stActionParam, 0, sizeof(tdstActionParam_));
+                    p_stIntelligence->p_stActionTable->ucNbEntriesUsed--;
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActTable.c lines 169–185 */
@@ -3024,7 +3065,13 @@ void fn_vUnuseAllRulesWhichHaveGreaterNumRule(tdstIntelligence_* p_stIntelligenc
 void fn_vUnuseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence)
 {
     unsigned char ucCurrentEntry;
-    /* TODO: decompile from asm/... */
+
+    ucCurrentEntry = p_stIntelligence->p_stActionTable->ucCurrentEntry;
+    if (*((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)))
+    {
+        *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x66) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucUseDefaultActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x67) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucNewActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 0; *(tdstNodeInterpret_**)((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x60) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 0; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x65) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 0; memset((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + ucCurrentEntry * sizeof(tdstActionTableEntry_), 0, sizeof(tdstActionParam_));
+        p_stIntelligence->p_stActionTable->ucNbEntriesUsed--;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActTable.c lines 150–165 */
@@ -3044,7 +3091,13 @@ void fn_vUnuseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence)
 void fn_vUseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence, unsigned char ucNRule, tdstNodeInterpret_* p_stNode)
 {
     unsigned char ucCurrentEntry;
-    /* TODO: decompile from asm/... */
+
+    ucCurrentEntry = p_stIntelligence->p_stActionTable->ucCurrentEntry;
+    if (!*((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)))
+    {
+        *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x66) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucUseDefaultActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x67) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = g_ucNewActionReturn; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x64) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = 1; *(tdstNodeInterpret_**)((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x60) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = p_stNode; *((unsigned char*)((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + 0x65) + ucCurrentEntry * sizeof(tdstActionTableEntry_)) = ucNRule; memset((unsigned char*)p_stIntelligence->p_stActionTable->p_stEntry + ucCurrentEntry * sizeof(tdstActionTableEntry_), 0, sizeof(tdstActionParam_));
+        p_stIntelligence->p_stActionTable->ucNbEntriesUsed++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActTable.c lines 97–117 */
@@ -3104,21 +3157,27 @@ unsigned char fn_ucFindPlaceInActionTable(tdstIntelligence_* p_stIntelligence)
  */
 unsigned char fn_ucIsRuleAndNodeInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule, tdstNodeInterpret_* p_stNode)
 {
-    tdstActionTableEntry_* p_stEntry;
-    unsigned char ucCurrentEntry;
     unsigned char ucNbEntries;
+    unsigned char ucCurrentEntry;
+    tdstActionTableEntry_* p_stEntry;
+
     ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
-    if (ucNbEntries != 0)
+    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed ? 1 : 0)
     {
         p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry;
-        ucCurrentEntry = 0;
-        while (ucCurrentEntry < p_stIntelligence->p_stActionTable->ucNbEntriesUsed)
+        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; ucCurrentEntry++, p_stEntry++)
         {
-            if (p_stEntry->bUsed != 0 && p_stEntry->ucNumRule == ucNumRule && p_stEntry->p_stNode == p_stNode)
-                break;
-            ucCurrentEntry++;
-            p_stEntry++;
+            if (p_stEntry->bUsed)
+            {
+                if (p_stEntry->ucNumRule == ucNumRule)
+                {
+                    if (p_stEntry->p_stNode == p_stNode)
+                    {
+                        return ucCurrentEntry;
+                    }
+                }
+            }
         }
     }
-    return p_stIntelligence->p_stActionTable->ucNbEntriesUsed;
+    return ucNbEntries;
 }

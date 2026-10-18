@@ -2030,10 +2030,27 @@ void CAM_fn_vCineinfoInit(tdstEngineObject_* _p_stObject, tdeObjectTreeInit_ eOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define MTH3D_M_vSetVectorElements(_p, _x, _y, _z) { (_p)->xX = (_x); (_p)->xY = (_y); (_p)->xZ = (_z); }
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+void* memset(void* dst, int c, unsigned int n);
+
 void CAM_fn_vUpdateTargetPosition(tdstCineinfo_* _hCineinfo)
 {
     MTH3D_tdstVector_ Axis;
-    /* TODO: decompile from asm/... */
+
+    if (_hCineinfo->hWork->hSuperObjectTargeted)
+    {
+        memset(_hCineinfo->AveragePosition.a_CheckedSpeed, 0, sizeof(_hCineinfo->AveragePosition.a_CheckedSpeed));
+        memset(_hCineinfo->AveragePosition.a_CheckedPos, 0, sizeof(_hCineinfo->AveragePosition.a_CheckedPos));
+        memset(_hCineinfo->AveragePosition.a_CheckedTime, 0, sizeof(_hCineinfo->AveragePosition.a_CheckedTime));
+
+        MTH3D_M_vSetVectorElements(&Axis, 0.0f, -1.0f, 0.0f);
+        MTH3D_M_vCopyVector(&_hCineinfo->stSightAxisSystem.SightAxis, &Axis);
+        MTH3D_M_vSetVectorElements(&Axis, -1.0f, 0.0f, 0.0f);
+        MTH3D_M_vCopyVector(&_hCineinfo->stSightAxisSystem.FirstComplementaryAxis, &Axis);
+        MTH3D_M_vSetVectorElements(&Axis, 0.0f, 0.0f, -1.0f);
+        MTH3D_M_vCopyVector(&_hCineinfo->stSightAxisSystem.SecondComplementaryAxis, &Axis);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 456–493 */

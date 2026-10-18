@@ -3989,7 +3989,35 @@ tdstNodeInterpret_* fn_p_stEvalConstantVector(HIE_tdstSuperObject_* p_SuperObjPe
  */
 tdstNodeInterpret_* fn_p_stEvalVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    tdstNodeInterpret_* p_stTreeInit;
+    float x;
+    float y;
+    float z;
+
+    p_stTreeInit = p_stTree;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTreeInit + 1, p_stValue);
+    if (p_stValue->eType == E_vt_Float)
+        x = *(float *)&p_stValue->uDummy.uParam.ulValue;
+    else
+        x = (float)*(int *)&p_stValue->uDummy.uParam.ulValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (p_stValue->eType == E_vt_Float)
+        y = *(float *)&p_stValue->uDummy.uParam.ulValue;
+    else
+        y = (float)*(int *)&p_stValue->uDummy.uParam.ulValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (p_stValue->eType == E_vt_Float)
+        z = *(float *)&p_stValue->uDummy.uParam.ulValue;
+    else
+        z = (float)*(int *)&p_stValue->uDummy.uParam.ulValue;
+
+    ((float *)&p_stValue->uDummy.uParam)[0] = x;
+    ((float *)&p_stValue->uDummy.uParam)[1] = y;
+    ((float *)&p_stValue->uDummy.uParam)[2] = z;
+    p_stValue->eType = E_vt_Vector;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\Intell.c lines 596–601 */

@@ -252,8 +252,133 @@ struct HIE_tdstSuperObject_ {
     unsigned char xTransition;
 };
 
+struct tdstStandardGame_ {
+    int otObjectFamilyType; /* +0x0 */
+    int otObjectModelType; /* +0x4 */
+    int otObjectPersonalType; /* +0x8 */
+    HIE_tdstSuperObject_* h_SuperObject; /* +0xc */
+    unsigned char eInitFlagWhenOutOfZone; /* +0x10 */
+    unsigned char eInitFlagWhenDeadOrTaken; /* +0x11 */
+    unsigned int ulLastTrame; /* +0x14 */
+    unsigned int ubf32Capabilities; /* +0x18 */
+    unsigned char ucTractionFactor; /* +0x1c */
+    unsigned char ucHitPoints; /* +0x1d */
+    unsigned char ucHitPointsMax; /* +0x1e */
+    unsigned char ucHitPointsMaxMax; /* +0x1f */
+    unsigned int ulCustomBits; /* +0x20 */
+    unsigned int ulAICustomBits; /* +0x24 */
+    unsigned char ucPlatFormType; /* +0x28 */
+    unsigned char ucMiscFlags; /* +0x29 */
+    unsigned char ucTransparencyZoneMin; /* +0x2a */
+    unsigned char ucTransparencyZoneMax; /* +0x2b */
+    unsigned int ulSaveCustomBits; /* +0x2c */
+    unsigned int ulSaveAICustomBits; /* +0x30 */
+    unsigned char ucSaveHitPoints; /* +0x34 */
+    unsigned char ucSaveHitPointsMax; /* +0x35 */
+    unsigned char ucSaveMiscFlags; /* +0x36 */
+    unsigned char ucTooFarLimit; /* +0x37 */
+    unsigned char ucImportance; /* +0x38 */
+    unsigned char ucOptional; /* +0x39 */
+    float a_xCustomFloats[2]; /* +0x3c */
+    int a_lCustomLongs[2]; /* +0x44 */
+    MTH3D_tdstVector_ a_stCustomVectors[2]; /* +0x4c */
+};
+struct tdst3dData_ {
+    unsigned char _pad_00[0x84];
+    float xCurrentFrame; /* +0x84 */
+    unsigned char _pad_01[0x182 - 0x88];
+    unsigned char ucBrainComputationFrequency; /* +0x182 */
+    unsigned char _pad_02[0x196 - 0x183];
+    unsigned char ucLightComputationFrequency; /* +0x196 */
+};
+struct tdstEngineObject_ {
+    tdst3dData_* h_3dData; /* +0x0 */
+    tdstStandardGame_* h_StandardGame; /* +0x4 */
+    tdstDynam_* h_Dynam; /* +0x8 */
+    void* h_Brain; /* +0xc */
+    void* h_Cineinfo; /* +0x10 */
+    tdstCollSet_* h_CollSet; /* +0x14 */
+    void* h_MSWay; /* +0x18 */
+    void* h_MSLight; /* +0x1c */
+    void* h_SectInfo; /* +0x20 */
+    void* h_Micro; /* +0x24 */
+    tdstMSSound_* h_MSSound; /* +0x28 */
+};
+extern "C" void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+
+struct tdstMSSound_ { int dummy; };
+extern "C" int fn_xMSSoundGetBackGroundDistance(tdstMSSound_*);
+extern "C" int fn_xMSSoundGetSaturationDistance(tdstMSSound_*);
+extern "C" HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_*);
+extern "C" HIE_tdstSuperObject_* fn_hSuperObjectGetLastCollidedCharacter(HIE_tdstSuperObject_*);
+struct DNM_stObstacle {
+    float m_xRate; /* +0x0 */
+    MTH3D_tdstVector_ m_stNorm; /* +0x4 */
+    MTH3D_tdstVector_ m_stContact; /* +0x10 */
+    void* hMyMaterial; /* +0x1c */
+    void* hCollidedMaterial; /* +0x20 */
+    HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
+};
+struct DNM_stReport {
+    unsigned int m_ulPrevSurfaceState; /* +0x0 */
+    unsigned int m_ulCurrSurfaceState; /* +0x4 */
+    DNM_stObstacle m_stObstacle; /* +0x8 */
+    DNM_stObstacle m_stGround; /* +0x30 */
+    DNM_stObstacle m_stWall; /* +0x58 */
+    DNM_stObstacle m_stCharacter; /* +0x80 */
+    DNM_stObstacle m_stWater; /* +0xa8 */
+    DNM_stObstacle m_stCeil; /* +0xd0 */
+};
+extern "C" DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_*);
+extern "C" unsigned char fn_ucCollSetGetCollComputeFrequency(tdstCollSet_*);
+extern "C" float fn_xStandardGameGetCustomFloatSO(HIE_tdstSuperObject_*, long);
+extern "C" int fn_lStandardGameGetCustomLongSO(HIE_tdstSuperObject_*, long);
+extern "C" void fn_vStandardGameGetCustomVectorSO(HIE_tdstSuperObject_*, long, MTH3D_tdstVector_*);
+extern "C" DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_*);
+extern "C" unsigned char CS_fn_eGetPrivilegedActivationZone(unsigned char, tdstCollSet_*, short);
+struct COL_tdstCollideObject_ {
+    short xNbPoints; /* +0x0 */
+    short xNbElements; /* +0x2 */
+    short xNbParallelBoxes; /* +0x4 */
+    MTH3D_tdstVector_* d_stListOfPoints; /* +0x8 */
+    short* d_xListOfElementsTypes; /* +0xc */
+};
+extern "C" COL_tdstCollideObject_* fn_hGetCollideZdxOfTypeAtIndex(unsigned char, unsigned short, HIE_tdstSuperObject_*);
+extern "C" void COL_vGetMinMaxPointOfIndexedAlignedBox(COL_tdstCollideObject_*, short, short, short*, short*);
+extern "C" void COL_vGetPointOfObject(COL_tdstCollideObject_*, MTH3D_tdstVector_*, short);
+extern "C" void COL_fn_vGetInfoFromGeometricSphere(MTH3D_tdstVector_*, float*, COL_tdstCollideObject_*);
+/* Statement-level asm for abs.s, which MWCC cannot emit from C. */
+inline float MTH_xAbs(float _x) { float _r; asm { abs.s _r, _x } return _r; }
+inline void MTH3D_M_vAddVector(MTH3D_tdstVector_* R, MTH3D_tdstVector_* A, MTH3D_tdstVector_* B)
+{
+    R->xX = A->xX + B->xX;
+    R->xY = A->xY + B->xY;
+    R->xZ = A->xZ + B->xZ;
+}
+inline void MTH3D_M_vMulScalar(MTH3D_tdstVector_* R, MTH3D_tdstVector_* A, float k)
+{
+    R->xX = k * A->xX;
+    R->xY = k * A->xY;
+    R->xZ = k * A->xZ;
+}
+inline void MTH3D_M_vAbsSubVector(MTH3D_tdstVector_* R, MTH3D_tdstVector_* A, MTH3D_tdstVector_* B)
+{
+    R->xX = MTH_xAbs(A->xX - B->xX);
+    R->xY = MTH_xAbs(A->xY - B->xY);
+    R->xZ = MTH_xAbs(A->xZ - B->xZ);
+}
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
 extern "C" unsigned char fn_ucGetFunctionUltraOperator(tdeFuncId_);
-extern "C" void fn_vGetUltraOperatorPerso(int, HIE_tdstSuperObject_*, HIE_tdstSuperObject_**);
+extern "C" void fn_vGetUltraOperatorPerso(unsigned char, HIE_tdstSuperObject_*, HIE_tdstSuperObject_**);
 extern "C" void MAT_fn_vGetRotationVectorBaseJ(MAT_tdstTransformation_*, MTH3D_tdstVector_*);
 extern "C" int printf(const char*, ...);
 extern "C" int atoi(const char*);
@@ -550,11 +675,24 @@ tdstNodeInterpret_* fn_p_stComputeXor(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  */
 tdstNodeInterpret_* fn_p_stGetCurrentFrame(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    unsigned int ulValue;
-    tdst3dData_* h3dData;
-    tdeFuncId_ eFuncId;
     HIE_tdstSuperObject_* hPerso;
-    /* TODO: decompile from asm/... */
+    tdeFuncId_ eFuncId;
+    tdst3dData_* h3dData;
+    unsigned int ulValue;
+    ulValue = 0;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hPerso);
+    h3dData = hPerso->hLinkedObject.p_stCharacter->h_3dData;
+    if (h3dData != NULL) {
+        if (eFuncId == 359) {
+            ulValue = (unsigned short)MTH_M_xRealToLong(h3dData->xCurrentFrame);
+        } else {
+            fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        }
+    }
+    p_stValue->uParam.lValue = ulValue;
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3628–3663 */
@@ -579,11 +717,32 @@ tdstNodeInterpret_* fn_p_stGetCurrentFrame(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 tdstNodeInterpret_* fn_p_stGetStdGameLimit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    unsigned int ulValue;
+    unsigned int ulValue = 0;
     tdstStandardGame_* hStdGame;
     tdeFuncId_ eFuncId;
     HIE_tdstSuperObject_* hPerso;
-    /* TODO: decompile from asm/... */
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hPerso);
+    hStdGame = hPerso->hLinkedObject.p_stCharacter->h_StandardGame;
+    if (hStdGame != NULL) {
+        switch (eFuncId) {
+        case 356:
+            ulValue = hStdGame->ucTooFarLimit;
+            break;
+        case 357:
+            ulValue = hStdGame->ucTransparencyZoneMin;
+            break;
+        case 358:
+            ulValue = hStdGame->ucTransparencyZoneMax;
+            break;
+        default:
+            fn_vOnAIErm_M_UpdateLastError(39, NULL);
+            break;
+        }
+    }
+    p_stValue->uParam.lValue = ulValue;
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3577–3616 */
@@ -609,12 +768,33 @@ tdstNodeInterpret_* fn_p_stGetStdGameLimit(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 tdstNodeInterpret_* fn_p_stGetMSSoundValues(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    int xSndValue;
-    unsigned int ulValue;
-    tdstMSSound_* hMSSound;
-    tdeFuncId_ eFuncId;
     HIE_tdstSuperObject_* hPerso;
-    /* TODO: decompile from asm/... */
+    tdeFuncId_ eFuncId;
+    tdstMSSound_* hMSSound;
+    unsigned int ulValue;
+    int xSndValue;
+    ulValue = 0;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hPerso);
+    hMSSound = hPerso->hLinkedObject.p_stCharacter->h_MSSound;
+    if (hMSSound != NULL) {
+        switch (eFuncId) {
+        case 354:
+            xSndValue = fn_xMSSoundGetSaturationDistance(hMSSound);
+            ulValue = xSndValue >> 16;
+            break;
+        case 355:
+            xSndValue = fn_xMSSoundGetBackGroundDistance(hMSSound);
+            ulValue = xSndValue >> 16;
+            break;
+        default:
+            fn_vOnAIErm_M_UpdateLastError(39, NULL);
+            break;
+        }
+    }
+    p_stValue->uParam.lValue = ulValue;
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 3562–3565 */
@@ -673,7 +853,13 @@ tdstNodeInterpret_* fn_p_stGetBrightness(HIE_tdstSuperObject_* p_SuperObjPerso, 
  */
 tdstNodeInterpret_* fn_p_stGetNameResolution(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    char szName[60];
+    static char szName[60];
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    printf("jt : fn_p_stGetNameResolution non impl\xe9ment\xe9" "e dans functio1.cxx");
+    p_stValue->uParam.pValue = szName;
+    p_stValue->eType = (tdeVariableType_)9;
+    p_stValue->uParam.pValue = szName;
+    p_stValue->eType = (tdeVariableType_)9;
     return p_stTree;
 }
 
@@ -1049,12 +1235,36 @@ tdstNodeInterpret_* fn_p_ComputeJumpImpulsion(HIE_tdstSuperObject_* p_SuperObjPe
  */
 tdstNodeInterpret_* fn_p_GetCustomValuesFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    MTH3D_tdstVector_ stTmpVec;
-    tdeFuncId_ eFuncId;
-    short xIndex;
-    tdstGetSetParam_ stParam;
     HIE_tdstSuperObject_* hPerso;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam;
+    short xIndex;
+    tdeFuncId_ eFuncId;
+    union { MTH3D_tdstVector_ stTmpVec; unsigned int vectorBits[3]; };
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xIndex = (short)stParam.uParam.lValue;
+    switch (eFuncId) {
+    case 338:
+        p_stValue->uParam.xValue = fn_xStandardGameGetCustomFloatSO(hPerso, xIndex);
+        p_stValue->eType = (tdeVariableType_)8;
+        break;
+    case 339:
+        p_stValue->uParam.lValue = fn_lStandardGameGetCustomLongSO(hPerso, xIndex);
+        p_stValue->eType = (tdeVariableType_)6;
+        break;
+    case 340:
+        fn_vStandardGameGetCustomVectorSO(hPerso, xIndex, &stTmpVec);
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = vectorBits[0];
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = vectorBits[1];
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = vectorBits[2];
+        p_stValue->eType = (tdeVariableType_)21;
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        return p_stTree;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2951–2995 */
@@ -1085,10 +1295,32 @@ tdstNodeInterpret_* fn_p_GetCustomValuesFunc(HIE_tdstSuperObject_* p_SuperObjPer
  */
 tdstNodeInterpret_* fn_p_GetComputationFrequency(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdeFuncId_ eFuncId;
-    unsigned char ucFrequency;
     HIE_tdstSuperObject_* hPerso;
-    /* TODO: decompile from asm/... */
+    unsigned char ucFrequency;
+    tdeFuncId_ eFuncId;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hPerso);
+    switch (eFuncId) {
+    case 333:
+        ucFrequency = (hPerso->hLinkedObject.p_stCharacter->h_3dData != NULL) ? hPerso->hLinkedObject.p_stCharacter->h_3dData->ucBrainComputationFrequency : 1;
+        *(unsigned char*)&p_stValue->uParam.lValue = ucFrequency;
+        p_stValue->eType = (tdeVariableType_)3;
+        break;
+    case 332:
+        ucFrequency = fn_ucCollSetGetCollComputeFrequency(hPerso->hLinkedObject.p_stCharacter->h_CollSet);
+        *(unsigned char*)&p_stValue->uParam.lValue = ucFrequency;
+        p_stValue->eType = (tdeVariableType_)3;
+        break;
+    case 334:
+        ucFrequency = (hPerso->hLinkedObject.p_stCharacter->h_3dData != NULL) ? hPerso->hLinkedObject.p_stCharacter->h_3dData->ucLightComputationFrequency : 1;
+        *(unsigned char*)&p_stValue->uParam.lValue = ucFrequency;
+        p_stValue->eType = (tdeVariableType_)3;
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        return p_stTree;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2888–2935 */
@@ -1123,13 +1355,43 @@ tdstNodeInterpret_* fn_p_GetComputationFrequency(HIE_tdstSuperObject_* p_SuperOb
  */
 tdstNodeInterpret_* fn_p_GetPriviligedActivationZdx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdstCollSet_* hCollSet;
-    tdeFuncId_ eFuncId;
-    unsigned char ePrivilege;
-    int lZoneNumber;
-    HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hPerso;
+    int lZoneNumber;
+    unsigned char ePrivilege;
+    tdeFuncId_ eFuncId;
+    tdstCollSet_* hCollSet;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hPerso);
+    hCollSet = hPerso->hLinkedObject.p_stCharacter->h_CollSet;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lZoneNumber = stParam.uParam.lValue;
+    switch (eFuncId) {
+    case 328:
+        ePrivilege = CS_fn_eGetPrivilegedActivationZone(0, hCollSet, (unsigned short)(lZoneNumber - 1));
+        p_stValue->uParam.lValue = ePrivilege;
+        p_stValue->eType = (tdeVariableType_)6;
+        break;
+    case 329:
+        ePrivilege = CS_fn_eGetPrivilegedActivationZone(1, hCollSet, (unsigned short)(lZoneNumber - 1));
+        p_stValue->uParam.lValue = ePrivilege;
+        p_stValue->eType = (tdeVariableType_)6;
+        break;
+    case 330:
+        ePrivilege = CS_fn_eGetPrivilegedActivationZone(2, hCollSet, (unsigned short)(lZoneNumber - 1));
+        p_stValue->uParam.lValue = ePrivilege;
+        p_stValue->eType = (tdeVariableType_)6;
+        break;
+    case 331:
+        ePrivilege = CS_fn_eGetPrivilegedActivationZone(3, hCollSet, (unsigned short)(lZoneNumber - 1));
+        p_stValue->uParam.lValue = ePrivilege;
+        p_stValue->eType = (tdeVariableType_)6;
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        return p_stTree;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2812–2869 */
@@ -1157,11 +1419,35 @@ tdstNodeInterpret_* fn_p_GetPriviligedActivationZdx(HIE_tdstSuperObject_* p_Supe
  */
 tdstNodeInterpret_* fn_p_GetHierarchyLink(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdeFuncId_ eFuncId;
-    HIE_tdstSuperObject_* hFather;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdstDynam_* h_Dynam;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    HIE_tdstSuperObject_* hFather;
+    tdeFuncId_ eFuncId;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    h_Dynam = (tdstDynam_*)hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam == NULL || fn_p_stDynamGetDynamics(h_Dynam) == NULL) {
+        return p_stTree;
+    }
+    fn_p_stDynamGetDynamics(h_Dynam);
+    switch (eFuncId) {
+    case 327:
+        hFather = hNewSuperObjPerso;
+        do {
+            hFather = hFather->hFatherDyn;
+        } while (hFather != NULL && hFather->ulTypeOfLinkedObject != 2);
+        if (hFather == NULL) {
+            p_stValue->uParam.pValue = NULL;
+        } else {
+            p_stValue->uParam.pValue = (hFather->ulTypeOfLinkedObject == 2) ? (void*)hFather->hLinkedObject.p_stCharacter : NULL;
+        }
+        p_stValue->eType = (tdeVariableType_)11;
+        return p_stTree;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2744–2804 */
@@ -1191,11 +1477,41 @@ tdstNodeInterpret_* fn_p_GetHierarchyLink(HIE_tdstSuperObject_* p_SuperObjPerso,
  */
 tdstNodeInterpret_* fn_p_GetCollidedSPO(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdeFuncId_ param0;
-    HIE_tdstSuperObject_* p_CollidedSPO;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
     DNM_stReport* p_stDynamReport;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    HIE_tdstSuperObject_* p_CollidedSPO;
+    tdeFuncId_ param0;
+    p_CollidedSPO = NULL;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(63), p_SuperObjPerso, &hNewSuperObjPerso);
+    if (hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam == NULL) {
+        return p_stTree;
+    }
+    p_stDynamReport = fn_pstGetDNMReport(hNewSuperObjPerso);
+    if (p_stDynamReport != NULL) {
+        param0 = p_stTree[-1].uDummy.uId.eFuncId;
+        switch (param0) {
+        case 63:
+            if ((p_stDynamReport->m_ulCurrSurfaceState & 1) == 1) {
+                p_CollidedSPO = p_stDynamReport->m_stGround.mp_stSupObj;
+            }
+            break;
+        case 64:
+            if ((p_stDynamReport->m_ulCurrSurfaceState & 4) == 4) {
+                p_CollidedSPO = p_stDynamReport->m_stWall.mp_stSupObj;
+            }
+            break;
+        case 65:
+            if ((p_stDynamReport->m_ulCurrSurfaceState & 16) == 16) {
+                p_CollidedSPO = p_stDynamReport->m_stCeil.mp_stSupObj;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+    p_stValue->uParam.pValue = p_CollidedSPO;
+    p_stValue->eType = (tdeVariableType_)30;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2552–2740 */
@@ -1639,11 +1955,21 @@ tdstNodeInterpret_* fn_p_stGetCollision(HIE_tdstSuperObject_* p_SuperObjPerso, t
  */
 tdstNodeInterpret_* fn_p_stGetLastCollisionActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdstGetSetParam_ stParam;
-    HIE_tdstSuperObject_* p_SuperObjCollidedActor;
-    HIE_tdstSuperObject_* p_SuperObjPersoTreated;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* p_SuperObjPersoTreated;
+    HIE_tdstSuperObject_* p_SuperObjCollidedActor;
+    tdstGetSetParam_ stParam;
+    eFuncId = p_stTree[-1].uDummy.uId.eFuncId;
+    if (eFuncId == 292) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_SuperObjPersoTreated = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)stParam.uParam.pValue)->h_StandardGame);
+        p_SuperObjCollidedActor = fn_hSuperObjectGetLastCollidedCharacter(p_SuperObjPersoTreated);
+        p_stValue->uParam.pValue = (p_SuperObjCollidedActor != NULL) ? ((p_SuperObjCollidedActor->ulTypeOfLinkedObject == 2) ? (void*)p_SuperObjCollidedActor->hLinkedObject.p_stCharacter : NULL) : NULL;
+        p_stValue->eType = (tdeVariableType_)11;
+        return p_stTree;
+    }
+    fn_vOnAIErm_M_UpdateLastError(39, NULL);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1699–2026 */
@@ -2175,10 +2501,29 @@ tdstNodeInterpret_* fn_p_stGetDTFunction(HIE_tdstSuperObject_* p_SuperObjPerso, 
  */
 tdstNodeInterpret_* fn_p_stCode4VitesseHorizontaleDuPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdeFuncId_ eFuncId;
     DNM_stReport* p_stDynamReport;
-    /* TODO: decompile from asm/... */
+    tdeFuncId_ eFuncId;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stDynamReport = fn_pstGetDNMReport(hNewSuperObjPerso);
+    if (p_stDynamReport == NULL) {
+        return p_stTree;
+    }
+    switch (eFuncId) {
+    case 237:
+        p_stValue->uParam.lValue = 0;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 238:
+        p_stValue->uParam.lValue = 0;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 876–962 */
@@ -2216,15 +2561,51 @@ tdstNodeInterpret_* fn_p_stCode4VitesseHorizontaleDuPerso(HIE_tdstSuperObject_* 
  */
 tdstNodeInterpret_* fn_p_stCode4LitPositionZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdeFuncId_ eFuncId;
-    short xMinPoint;
-    short xMaxPoint;
-    MTH3D_tdstVector_ stVectorMin;
-    int lZoneNumber;
-    COL_tdstCollideObject_* hGeoObj;
-    HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hPerso;
+    COL_tdstCollideObject_* hGeoObj;
+    int lZoneNumber;
+    union { MTH3D_tdstVector_ stVectorMin; unsigned int vectorBits[3]; };
+    short xMaxPoint;
+    short xMinPoint;
+    tdeFuncId_ eFuncId;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lZoneNumber = stParam.uParam.lValue;
+    switch (eFuncId) {
+    case 243:
+        hGeoObj = fn_hGetCollideZdxOfTypeAtIndex(1, (unsigned short)(lZoneNumber - 1), hPerso);
+        break;
+    case 244:
+        hGeoObj = fn_hGetCollideZdxOfTypeAtIndex(2, (unsigned short)(lZoneNumber - 1), hPerso);
+        break;
+    case 245:
+        hGeoObj = fn_hGetCollideZdxOfTypeAtIndex(0, (unsigned short)(lZoneNumber - 1), hPerso);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        return p_stTree;
+    }
+    if (hGeoObj != NULL) {
+        switch (*hGeoObj->d_xListOfElementsTypes) {
+        case 7:
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = ((unsigned int*)hGeoObj->d_stListOfPoints)[0];
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = ((unsigned int*)hGeoObj->d_stListOfPoints)[1];
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = ((unsigned int*)hGeoObj->d_stListOfPoints)[2];
+            p_stValue->eType = (tdeVariableType_)21;
+            return p_stTree;
+        case 8:
+            COL_vGetMinMaxPointOfIndexedAlignedBox(hGeoObj, 0, 0, &xMinPoint, &xMaxPoint);
+            COL_vGetPointOfObject(hGeoObj, &stVectorMin, xMinPoint);
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = vectorBits[0];
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = vectorBits[1];
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = vectorBits[2];
+            p_stValue->eType = (tdeVariableType_)21;
+            return p_stTree;
+        }
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 727–862 */
@@ -2417,17 +2798,64 @@ tdstNodeInterpret_* fn_p_stCode4LitAxeZDx(HIE_tdstSuperObject_* p_SuperObjPerso,
  */
 tdstNodeInterpret_* fn_p_stCode4LitDimensionZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    float xRadius;
-    tdeFuncId_ eFuncId;
-    short xMinPoint;
-    short xMaxPoint;
-    MTH3D_tdstVector_ stVectorMax;
-    MTH3D_tdstVector_ stVectorMin;
-    int lZoneNumber;
-    COL_tdstCollideObject_* hGeoObj;
-    HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hPerso;
+    COL_tdstCollideObject_* hGeoObj;
+    int lZoneNumber;
+    union { MTH3D_tdstVector_ stVectorMin; unsigned int vectorBits[3]; };
+    MTH3D_tdstVector_ stVectorMax;
+    short xMaxPoint;
+    short xMinPoint;
+    tdeFuncId_ eFuncId;
+    float xRadius;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lZoneNumber = stParam.uParam.lValue;
+    switch (eFuncId) {
+    case 252:
+        hGeoObj = fn_hGetCollideZdxOfTypeAtIndex(1, (unsigned short)(lZoneNumber - 1), hPerso);
+        break;
+    case 253:
+        hGeoObj = fn_hGetCollideZdxOfTypeAtIndex(2, (unsigned short)(lZoneNumber - 1), hPerso);
+        break;
+    case 254:
+        hGeoObj = fn_hGetCollideZdxOfTypeAtIndex(0, (unsigned short)(lZoneNumber - 1), hPerso);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        return p_stTree;
+    }
+    if (hGeoObj != NULL) {
+        switch (*hGeoObj->d_xListOfElementsTypes) {
+        case 7:
+            COL_fn_vGetInfoFromGeometricSphere(&stVectorMin, &xRadius, hGeoObj);
+            stVectorMin.xX = xRadius;
+            stVectorMin.xY = xRadius;
+            stVectorMin.xZ = xRadius;
+            break;
+        case 8:
+            COL_vGetMinMaxPointOfIndexedAlignedBox(hGeoObj, 0, 0, &xMinPoint, &xMaxPoint);
+            COL_vGetPointOfObject(hGeoObj, &stVectorMin, xMinPoint);
+            COL_vGetPointOfObject(hGeoObj, &stVectorMax, xMaxPoint);
+            MTH3D_M_vAbsSubVector(&stVectorMin, &stVectorMin, &stVectorMax);
+            break;
+        default:
+            stVectorMin.xX = 0.0f;
+            stVectorMin.xY = 0.0f;
+            stVectorMin.xZ = 0.0f;
+            break;
+        }
+    } else {
+        stVectorMin.xX = 0.0f;
+        stVectorMin.xY = 0.0f;
+        stVectorMin.xZ = 0.0f;
+    }
+    ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = vectorBits[0];
+    ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = vectorBits[1];
+    ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = vectorBits[2];
+    p_stValue->eType = (tdeVariableType_)21;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 361–456 */
@@ -2473,16 +2901,72 @@ tdstNodeInterpret_* fn_p_stCode4LitDimensionZDx(HIE_tdstSuperObject_* p_SuperObj
  */
 tdstNodeInterpret_* fn_p_stCode4LitCentreZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdeFuncId_ eFuncId;
-    short xMinPoint;
-    short xMaxPoint;
-    MTH3D_tdstVector_ stVectorMax;
-    MTH3D_tdstVector_ stVectorMin;
-    int lZoneNumber;
-    COL_tdstCollideObject_* hGeoObj;
-    HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hPerso;
+    COL_tdstCollideObject_* hGeoObj;
+    int lZoneNumber;
+    union { MTH3D_tdstVector_ stVectorMin; unsigned int vectorBits[3]; };
+    MTH3D_tdstVector_ stVectorMax;
+    short xMaxPoint;
+    short xMinPoint;
+    tdeFuncId_ eFuncId;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lZoneNumber = stParam.uParam.lValue;
+    switch (eFuncId) {
+    case 246:
+        hGeoObj = fn_hGetCollideZdxOfTypeAtIndex(1, (unsigned short)(lZoneNumber - 1), hPerso);
+        break;
+    case 247:
+        hGeoObj = fn_hGetCollideZdxOfTypeAtIndex(2, (unsigned short)(lZoneNumber - 1), hPerso);
+        break;
+    case 248:
+        hGeoObj = fn_hGetCollideZdxOfTypeAtIndex(0, (unsigned short)(lZoneNumber - 1), hPerso);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        return p_stTree;
+    }
+    if (hGeoObj != NULL) {
+        switch (*hGeoObj->d_xListOfElementsTypes) {
+        case 7:
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = ((unsigned int*)hGeoObj->d_stListOfPoints)[0];
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = ((unsigned int*)hGeoObj->d_stListOfPoints)[1];
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = ((unsigned int*)hGeoObj->d_stListOfPoints)[2];
+            p_stValue->eType = (tdeVariableType_)21;
+            break;
+        case 8:
+            COL_vGetMinMaxPointOfIndexedAlignedBox(hGeoObj, 0, 0, &xMinPoint, &xMaxPoint);
+            COL_vGetPointOfObject(hGeoObj, &stVectorMin, xMinPoint);
+            COL_vGetPointOfObject(hGeoObj, &stVectorMax, xMaxPoint);
+            MTH3D_M_vAddVector(&stVectorMin, &stVectorMin, &stVectorMax);
+            MTH3D_M_vMulScalar(&stVectorMin, &stVectorMin, 0.5f);
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = vectorBits[0];
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = vectorBits[1];
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = vectorBits[2];
+            p_stValue->eType = (tdeVariableType_)21;
+            break;
+        default:
+            stVectorMin.xX = 0.0f;
+            stVectorMin.xY = 0.0f;
+            stVectorMin.xZ = 0.0f;
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = vectorBits[0];
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = vectorBits[1];
+            ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = vectorBits[2];
+            p_stValue->eType = (tdeVariableType_)21;
+            break;
+        }
+    } else {
+        stVectorMin.xX = 0.0f;
+        stVectorMin.xY = 0.0f;
+        stVectorMin.xZ = 0.0f;
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = vectorBits[0];
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = vectorBits[1];
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = vectorBits[2];
+        p_stValue->eType = (tdeVariableType_)21;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 289–346 */

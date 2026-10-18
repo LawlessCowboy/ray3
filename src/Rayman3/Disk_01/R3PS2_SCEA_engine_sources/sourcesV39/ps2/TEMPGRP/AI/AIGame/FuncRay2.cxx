@@ -120,6 +120,46 @@ struct CINE_tdstCine_ {
     char szName[255];
 };
 
+struct tdstStandardGame_ {
+    unsigned char _pad_00[0x1c];
+    unsigned char ucTractionFactor; /* +0x1c */
+};
+struct tdstEngineObject_ {
+    void* h_3dData; /* +0x0 */
+    tdstStandardGame_* h_StandardGame; /* +0x4 */
+};
+
+struct COL_tdstCollideObject_ {
+    short xNbPoints; /* +0x0 */
+    short xNbElements; /* +0x2 */
+    short xNbParallelBoxes; /* +0x4 */
+    MTH3D_tdstVector_* d_stListOfPoints; /* +0x8 */
+    short* d_xListOfElementsTypes; /* +0xc */
+};
+extern "C" void COL_fn_vGetInfoFromGeometricSphere(MTH3D_tdstVector_*, float*, COL_tdstCollideObject_*);
+extern "C" void COL_vGetMinMaxPointOfIndexedAlignedBox(COL_tdstCollideObject_*, short, short, short*, short*);
+extern "C" void COL_vGetPointOfObject(COL_tdstCollideObject_*, MTH3D_tdstVector_*, short);
+inline void MTH3D_M_vAddVector(MTH3D_tdstVector_* R, MTH3D_tdstVector_* A, MTH3D_tdstVector_* B)
+{
+    R->xX = A->xX + B->xX;
+    R->xY = A->xY + B->xY;
+    R->xZ = A->xZ + B->xZ;
+}
+inline void MTH3D_M_vMulScalar(MTH3D_tdstVector_* R, MTH3D_tdstVector_* A, float k)
+{
+    R->xX = k * A->xX;
+    R->xY = k * A->xY;
+    R->xZ = k * A->xZ;
+}
+
+extern "C" HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_*);
+extern "C" void fn_vInternGetZDxCenter(HIE_tdstSuperObject_* _hCharacter, unsigned short _xMask, unsigned char _ucZoneType, unsigned char _bInGlobalCoordinates, MTH3D_tdstVector_* _p_stReturnVector);
+inline void MTH3D_M_vNegVector(MTH3D_tdstVector_* R, MTH3D_tdstVector_* A)
+{
+    R->xX = -A->xX;
+    R->xY = -A->xY;
+    R->xZ = -A->xZ;
+}
 static HIE_tdstSuperObject_* g_hCharacterMaskedForResearch;
 unsigned char g_ucAIModuleId;
 float g_DistanceWaypointMin;
@@ -136,7 +176,7 @@ extern "C" void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
 extern "C" char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
 extern "C" CINE_tdstCine_* CINE_fn_pFindCine(char* szName);
 extern "C" unsigned char fn_ucGetFunctionUltraOperator(tdeFuncId_ eFuncId);
-extern "C" void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+extern "C" void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
 extern "C" unsigned int fn_ulGetCapabilities(tdstEngineObject_* _p_stObject);
 extern "C" WP_tdstGraph_* WPG_fn_hGetNearestGraph(MTH3D_tdstVector_* p_stPos);
 extern "C" unsigned short PLA_fn_uwGetNbFrameInCurrAnim(HIE_tdstSuperObject_* hSuperObject);
@@ -578,11 +618,38 @@ HIE_tdstSuperObject_* fn_hGetNearestActorInSectorWithAnyCustombit(HIE_tdstSuperO
  */
 tdstNodeInterpret_* fn_p_stGetZDxCenter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    unsigned char ucZoneType;
-    unsigned short xMask;
-    HIE_tdstSuperObject_* hCharacter;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hCharacter;
+    unsigned short xMask;
+    unsigned char ucZoneType;
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    hCharacter = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)p_stValue->uParam.pValue)->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    xMask = (unsigned short)p_stValue->uParam.lValue;
+    p_stValue->uParam.stVectorValue.xX = 0;
+    p_stValue->uParam.stVectorValue.xY = 0;
+    p_stValue->uParam.stVectorValue.xZ = 0;
+    switch (eFuncId) {
+    case 222:
+        ucZoneType = 2;
+        break;
+    case 223:
+        ucZoneType = 1;
+        break;
+    case 224:
+        ucZoneType = 3;
+        break;
+    case 225:
+        ucZoneType = 0;
+        break;
+    default:
+        ucZoneType = 255;
+        break;
+    }
+    p_stValue->eType = (tdeVariableType_)21;
+    fn_vInternGetZDxCenter(hCharacter, xMask, ucZoneType, 0, &p_stValue->uParam.stVectorValue);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3194–3226 */
@@ -605,10 +672,26 @@ tdstNodeInterpret_* fn_p_stGetZDxCenter(HIE_tdstSuperObject_* p_SuperObjPerso, t
  */
 tdstNodeInterpret_* fn_p_stTractionFactorFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
+    tdstEngineObject_* p_stEngineObj;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     unsigned char ucTractionFactor;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    ucTractionFactor = 0;
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    if (hNewSuperObjPerso->ulTypeOfLinkedObject == 2) {
+        p_stEngineObj = hNewSuperObjPerso->hLinkedObject.p_stCharacter;
+    } else {
+        p_stEngineObj = NULL;
+    }
+    switch (eFuncId) {
+    case 221:
+        ucTractionFactor = p_stEngineObj->h_StandardGame->ucTractionFactor;
+        break;
+    }
+    *(unsigned char*)&p_stValue->uParam.lValue = ucTractionFactor;
+    p_stValue->eType = (tdeVariableType_)3;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3152–3183 */
@@ -726,11 +809,49 @@ tdstNodeInterpret_* fn_p_stGetNbActivePerso(HIE_tdstSuperObject_* p_SuperObjPers
  */
 tdstNodeInterpret_* fn_p_stGetSPOCoordinates(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    MTH3D_tdstVector_ stResult;
-    HIE_tdstSuperObject_* hSpo;
-    tdstGetSetParam_ stParam;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam;
+    HIE_tdstSuperObject_* hSpo;
+    union { MTH3D_tdstVector_ stResult; unsigned int resultBits[3]; };
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hSpo = (HIE_tdstSuperObject_*)stParam.uParam.pValue;
+    stResult.xX = 0;
+    stResult.xY = 0;
+    stResult.xZ = 0;
+    if (hSpo != NULL) {
+        switch (eFuncId) {
+        case 217:
+            resultBits[0] = ((unsigned int*)hSpo->hLocalMatrix)[0x40 / 4];
+            resultBits[1] = ((unsigned int*)hSpo->hLocalMatrix)[0x44 / 4];
+            resultBits[2] = ((unsigned int*)hSpo->hLocalMatrix)[0x48 / 4];
+            break;
+        case 218:
+            resultBits[0] = ((unsigned int*)hSpo->hLocalMatrix)[0x20 / 4];
+            resultBits[1] = ((unsigned int*)hSpo->hLocalMatrix)[0x24 / 4];
+            resultBits[2] = ((unsigned int*)hSpo->hLocalMatrix)[0x28 / 4];
+            MTH3D_M_vNegVector(&stResult, &stResult);
+            break;
+        case 219:
+            resultBits[0] = ((unsigned int*)hSpo->hLocalMatrix)[0x10 / 4];
+            resultBits[1] = ((unsigned int*)hSpo->hLocalMatrix)[0x14 / 4];
+            resultBits[2] = ((unsigned int*)hSpo->hLocalMatrix)[0x18 / 4];
+            break;
+        case 220:
+            resultBits[0] = ((unsigned int*)hSpo->hLocalMatrix)[0x30 / 4];
+            resultBits[1] = ((unsigned int*)hSpo->hLocalMatrix)[0x34 / 4];
+            resultBits[2] = ((unsigned int*)hSpo->hLocalMatrix)[0x38 / 4];
+            break;
+        default:
+            fn_vOnAIErm_M_UpdateLastError(39, NULL);
+            break;
+        }
+    }
+    ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = resultBits[0];
+    ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = resultBits[1];
+    ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = resultBits[2];
+    p_stValue->eType = (tdeVariableType_)21;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3018–3063 */
@@ -2051,13 +2172,30 @@ void fn_vInternGetZDxCenter(HIE_tdstSuperObject_* _hCharacter, unsigned short _x
  */
 unsigned char fn_vGetZoneCenter(COL_tdstCollideObject_* _hGeoObj, MTH3D_tdstVector_* _hZoneCenter)
 {
-    MTH3D_tdstVector_ stMax;
-    MTH3D_tdstVector_ stMin;
-    short xMax;
-    short xMin;
-    float xRadius;
     unsigned char bZoneIsValid;
-    /* TODO: decompile from asm/... */
+    float xRadius;
+    short xMin;
+    short xMax;
+    MTH3D_tdstVector_ stMin;
+    MTH3D_tdstVector_ stMax;
+    switch (*_hGeoObj->d_xListOfElementsTypes) {
+    case 7:
+        COL_fn_vGetInfoFromGeometricSphere(_hZoneCenter, &xRadius, _hGeoObj);
+        bZoneIsValid = 1;
+        break;
+    case 8:
+        COL_vGetMinMaxPointOfIndexedAlignedBox(_hGeoObj, 0, 0, &xMin, &xMax);
+        COL_vGetPointOfObject(_hGeoObj, &stMin, xMin);
+        COL_vGetPointOfObject(_hGeoObj, &stMax, xMax);
+        MTH3D_M_vAddVector(_hZoneCenter, &stMin, &stMax);
+        MTH3D_M_vMulScalar(_hZoneCenter, _hZoneCenter, 0.5f);
+        bZoneIsValid = 1;
+        break;
+    default:
+        bZoneIsValid = 0;
+        break;
+    }
+    return bZoneIsValid;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 653–763 */
