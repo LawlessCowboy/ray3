@@ -23342,6 +23342,51 @@
           "type": 6
         }
       ]
+    },
+    {
+      "address": "0x00211e20",
+      "candidate_size": 364,
+      "first_difference": 14,
+      "implementation": "unsigned char fn_ucGetFieldOrientation(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)\n{\n    float xNorm;\n    MTH3D_tdstVector_ stVertexDirection;\n    MTH3D_tdstVector_ stVertex;\n\n    MTH3D_M_vSetVectorElements(&stVertexDirection, 0.0f, -1.0f, 0.0f);\n    MAT_fn_vApplyOnVertex(&stVertexDirection, hSuperObjPerso->hGlobalMatrix, &stVertexDirection);\n\n    stVertex = *POS_fn_p_stGetTranslationVector(hSuperObjPerso->hGlobalMatrix);\n\n    MTH3D_M_vSubVector(&stVertexDirection, &stVertexDirection, &stVertex);\n    xNorm = MTH_xSqrt(MTH_xSqr3(stVertexDirection.xX, stVertexDirection.xY, stVertexDirection.xZ));\n    if (xNorm != 0.0f)\n    {\n        MTH3D_M_vMulScalarVector(&stVertexDirection, 1.0f / xNorm, &stVertexDirection);\n    }\n    ((int*)p_stGetSetParam)[0] = *(int*)&stVertexDirection.xX;\n    ((int*)p_stGetSetParam)[1] = *(int*)&stVertexDirection.xY;\n    ((int*)p_stGetSetParam)[2] = *(int*)&stVertexDirection.xZ;\n    *(tdeVariableType_*)((char*)p_stGetSetParam + 12) = E_vt_Vector;\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_ucGetFieldOrientation",
+      "reason": "364/360: VU0 transform (MAT_fn_vApplyOnVertex asm), stack layout, normalize and output match; residual is the translation copy into stVertex: retail lw/sw ints by sp offset interleaved with the subtraction, reusing &dir.y/&dir.z pointer temps; struct assignment copies as floats, int-cast word copies make extra pointer temps or reload hGlobalMatrix",
+      "size": 360,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MISMATCH",
+      "target_size": 360,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00221b80",
+      "candidate_size": 592,
+      "first_difference": 380,
+      "implementation": "tdstNodeInterpret_* fn_p_stEngineGotoKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)\n{\n    int i;\n    tdstNodeInterpret_* p_stTempTree;\n    char szForErrorString[200];\n    int lJump;\n\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);\n    if (p_stValue->eType == E_vt_Float)\n    {\n        lJump = MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue);\n    }\n    else\n    {\n        lJump = p_stValue->uDummy.uParam.lValue;\n    }\n    p_stValue->uDummy.uParam.lValue = 0;\n    p_stValue->eType = E_vt_MetaActionReturn;\n    if (lJump == 0)\n    {\n        sprintf(szForErrorString, \"parameter zero in %s\", fn_szFindPersonalTypeNameOfPersonalType(M_GetEngineObject(p_SuperObjPerso)->h_StandardGame->otObjectPersonalType));\n        Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4e, -1, 0xff, 0, szForErrorString);\n        Erm_fn_ClearLastError(0);\n        return p_stTree;\n    }\n    if (lJump < 0)\n    {\n        p_stTempTree = p_stTree + lJump;\n        if (p_stTempTree < g_p_stIntelligence->p_stCurrentComport->p_stRules[g_ucNRule].p_stNodeInterpret)\n        {\n            sprintf(szForErrorString, \"out of interpret tree (negative) in %s\", fn_szFindPersonalTypeNameOfPersonalType(M_GetEngineObject(p_SuperObjPerso)->h_StandardGame->otObjectPersonalType));\n            Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4e, -1, 0xff, 0, szForErrorString);\n            Erm_fn_ClearLastError(0);\n        }\n        else\n            return p_stTempTree;\n    }\n    else\n    {\n        p_stTempTree = p_stTree;\n        for (i = 0; i < lJump; i++, p_stTempTree++)\n        {\n            if (p_stTempTree->eType == 8)\n            {\n                sprintf(szForErrorString, \"out of interpret tree (positive) in %s\", fn_szFindPersonalTypeNameOfPersonalType(M_GetEngineObject(p_SuperObjPerso)->h_StandardGame->otObjectPersonalType));\n                Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4e, -1, 0xff, 0, szForErrorString);\n                Erm_fn_ClearLastError(0);\n                return p_stTree;\n            }\n        }\n        return p_stTempTree;\n    }\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stEngineGotoKeyWord",
+      "reason": "592/592, relocs 24/24: only the negative-range error path differs; retail branches to a separate 'move v0,s1' return block with an unfilled delay slot (b 230; nop), ours fills the slot and branches to the epilogue. else-if, explicit return, no-else and temp-return variants worse; same under 3.0.3",
+      "size": 592,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MISMATCH",
+      "target_size": 592,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00222350",
+      "candidate_size": 96,
+      "first_difference": 26,
+      "implementation": "tdstNodeInterpret_* fn_p_stElseKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)\n{\n    return fn_p_stSkipElseNode(p_stTree - 1);\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stElseKeyWord",
+      "reason": "Inline fn_p_stSkipElseNode(p_stTree-1) helper gives lines=ok and 96/96; residual is v0/v1 swap computing node+uwNodeToSkip (retail: andi v1; addiu v0,s0,-8; sll v1; addu v0,v0,v1). 15 index/local/helper spellings and a 15-min permuter run (no score below base) did not fix it",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MISMATCH",
+      "target_size": 96,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -33290,6 +33335,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
       "status": "MATCH"
     },
+    "0x001fbd10": {
+      "address": "0x001fbd10",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucGetDsgVar",
+      "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/DsgMem.c",
+      "status": "MATCH"
+    },
     "0x001fbd90": {
       "address": "0x001fbd90",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -34004,7 +34057,7 @@
     },
     "0x001fdae0": {
       "address": "0x001fdae0",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_vAffectZdeInList",
       "size": 220,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
@@ -34012,7 +34065,7 @@
     },
     "0x001fdbc0": {
       "address": "0x001fdbc0",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_vAffectZddInList",
       "size": 212,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
@@ -34260,7 +34313,7 @@
     },
     "0x00200b80": {
       "address": "0x00200b80",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "WP_fnx_WayPoint_GetRadius",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPWayPt.c",
@@ -35162,6 +35215,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
       "status": "MATCH"
     },
+    "0x00211d20": {
+      "address": "0x00211d20",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_ucGetFieldNormSpeed",
+      "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Fields.c",
+      "status": "MATCH"
+    },
     "0x00211da0": {
       "address": "0x00211da0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -35314,6 +35375,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
+    "0x002122e0": {
+      "address": "0x002122e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stMonitoringSetVariable",
+      "size": 220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
     "0x002123c0": {
       "address": "0x002123c0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -35354,6 +35423,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
+    "0x00212c40": {
+      "address": "0x00212c40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_iGetActiveMainActors",
+      "size": 248,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
     "0x00212d40": {
       "address": "0x00212d40",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -35391,6 +35468,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stEvalRedOrGreenOrBlueOrAlpha",
       "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00214010": {
+      "address": "0x00214010",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stListFunction",
+      "size": 236,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
@@ -35842,11 +35927,59 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
       "status": "MATCH"
     },
+    "0x00221dd0": {
+      "address": "0x00221dd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stEndWhileKeyWord",
+      "size": 132,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MATCH"
+    },
     "0x00221e60": {
       "address": "0x00221e60",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stBeginWhileKeyWord",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MATCH"
+    },
+    "0x00221e70": {
+      "address": "0x00221e70",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stWhileKeyWord",
+      "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MATCH"
+    },
+    "0x00221f20": {
+      "address": "0x00221f20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stSkipWhile",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MATCH"
+    },
+    "0x00221fc0": {
+      "address": "0x00221fc0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stIfKeyWord",
+      "size": 584,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MATCH"
+    },
+    "0x00222210": {
+      "address": "0x00222210",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stIfNotU64",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MATCH"
+    },
+    "0x002222b0": {
+      "address": "0x002222b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stIfDebug",
+      "size": 152,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
       "status": "MATCH"
     },
@@ -35946,6 +36079,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
       "status": "MATCH"
     },
+    "0x00222520": {
+      "address": "0x00222520",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stMainActorKeyWord",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MATCH"
+    },
     "0x002225a0": {
       "address": "0x002225a0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -36002,11 +36143,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Operator.c",
       "status": "MATCH"
     },
+    "0x00223360": {
+      "address": "0x00223360",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stArrayOperator",
+      "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Operator.c",
+      "status": "MATCH"
+    },
     "0x00223410": {
       "address": "0x00223410",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stOperatorGetPerso",
       "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Operator.c",
+      "status": "MATCH"
+    },
+    "0x00223460": {
+      "address": "0x00223460",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stVectorOperator",
+      "size": 332,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Operator.c",
+      "status": "MATCH"
+    },
+    "0x002235b0": {
+      "address": "0x002235b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stVectorScalarOperator",
+      "size": 348,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Operator.c",
       "status": "MATCH"
     },
@@ -36170,6 +36335,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
       "status": "MATCH"
     },
+    "0x002241f0": {
+      "address": "0x002241f0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_p_stCreateToby",
+      "size": 208,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
     "0x002242c0": {
       "address": "0x002242c0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -36199,6 +36372,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_p_stHandleFamilyDynamicLoad",
       "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x00224460": {
+      "address": "0x00224460",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_p_stFFBProcedures",
+      "size": 460,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
       "status": "MATCH"
     },
@@ -36298,11 +36479,43 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
       "status": "MATCH"
     },
+    "0x00225150": {
+      "address": "0x00225150",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_p_stVideoProcedure",
+      "size": 432,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x00225300": {
+      "address": "0x00225300",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_p_stRLIProcedure2",
+      "size": 608,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x00225b20": {
+      "address": "0x00225b20",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_p_stJFFTXTSettings",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
     "0x00225c70": {
       "address": "0x00225c70",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_vSetMenuPausePad",
       "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x00226170": {
+      "address": "0x00226170",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "PS2_fn_vSetControllerMessage",
+      "size": 428,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
       "status": "MATCH"
     },
@@ -36426,6 +36639,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
       "status": "MATCH"
     },
+    "0x002280b0": {
+      "address": "0x002280b0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_p_st_SinusEffect_SetFreq",
+      "size": 264,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
     "0x002281c0": {
       "address": "0x002281c0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -36447,6 +36668,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_p_stChangeActionRandomProcedure",
       "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x00228bd0": {
+      "address": "0x00228bd0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_p_stChangeActionProcedure",
+      "size": 584,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
       "status": "MATCH"
     },
@@ -37143,6 +37372,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_vFillListWithAllPersoOfAFamilly",
       "size": 268,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
+      "status": "MATCH"
+    },
+    "0x0023ada0": {
+      "address": "0x0023ada0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_p_stListZDDZDEProcedure",
+      "size": 412,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c",
       "status": "MATCH"
     },
@@ -41900,7 +42137,7 @@
     },
     "0x0028d130": {
       "address": "0x0028d130",
-      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_wBbDeclareVariable2Monitor",
       "size": 8,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/BlackBox.c",

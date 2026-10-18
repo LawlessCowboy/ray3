@@ -2950,7 +2950,7 @@ int iNumWhile;
 tdst_WhileInfo_ a_stWhileInfo[50];
 unsigned char g_ucAIModuleId;
 unsigned char g_ucNRule;
-int g_p_stIntelligence;
+tdstIntelligence_* g_p_stIntelligence;
 char gcGlobAleat;
 
 /* Implemented by AIBase/Intell.c; keep the cross-TU return type visible. */
@@ -2995,12 +2995,78 @@ tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int sprintf(char*, const char*, ...);
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+char* fn_szFindPersonalTypeNameOfPersonalType(int otType);
+void Erm_fn_v_UpdateLastError(int, unsigned char, int, int, int, int, int, char*);
+void Erm_fn_ClearLastError(int);
+#ifndef M_GetEngineObject
+#define M_GetEngineObject(h) ((h)->ulTypeOfLinkedObject != 2 ? (tdstEngineObject_*)0 : (h)->hLinkedObject.p_stCharacter)
+#endif
+inline int MTH_M_xRealToLong(float xValue)
+{
+    int lResult;
+    asm
+    {
+        cvt.w.s f30, xValue
+        mfc1 lResult, f30
+    }
+    return lResult;
+}
+
 tdstNodeInterpret_* fn_p_stEngineGotoKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     int i;
     tdstNodeInterpret_* p_stTempTree;
     char szForErrorString[200];
-    /* TODO: decompile from asm/... */
+    int lJump;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (p_stValue->eType == E_vt_Float)
+    {
+        lJump = MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue);
+    }
+    else
+    {
+        lJump = p_stValue->uDummy.uParam.lValue;
+    }
+    p_stValue->uDummy.uParam.lValue = 0;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    if (lJump == 0)
+    {
+        sprintf(szForErrorString, "parameter zero in %s", fn_szFindPersonalTypeNameOfPersonalType(M_GetEngineObject(p_SuperObjPerso)->h_StandardGame->otObjectPersonalType));
+        Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4e, -1, 0xff, 0, szForErrorString);
+        Erm_fn_ClearLastError(0);
+        return p_stTree;
+    }
+    if (lJump < 0)
+    {
+        p_stTempTree = p_stTree + lJump;
+        if (p_stTempTree < g_p_stIntelligence->p_stCurrentComport->p_stRules[g_ucNRule].p_stNodeInterpret)
+        {
+            sprintf(szForErrorString, "out of interpret tree (negative) in %s", fn_szFindPersonalTypeNameOfPersonalType(M_GetEngineObject(p_SuperObjPerso)->h_StandardGame->otObjectPersonalType));
+            Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4e, -1, 0xff, 0, szForErrorString);
+            Erm_fn_ClearLastError(0);
+        }
+        else
+            return p_stTempTree;
+    }
+    else
+    {
+        p_stTempTree = p_stTree;
+        for (i = 0; i < lJump; i++, p_stTempTree++)
+        {
+            if (p_stTempTree->eType == 8)
+            {
+                sprintf(szForErrorString, "out of interpret tree (positive) in %s", fn_szFindPersonalTypeNameOfPersonalType(M_GetEngineObject(p_SuperObjPerso)->h_StandardGame->otObjectPersonalType));
+                Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4e, -1, 0xff, 0, szForErrorString);
+                Erm_fn_ClearLastError(0);
+                return p_stTree;
+            }
+        }
+        return p_stTempTree;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 465–484 */
@@ -3020,11 +3086,20 @@ tdstNodeInterpret_* fn_p_stEngineGotoKeyWord(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_* p_stTree);
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+
 tdstNodeInterpret_* fn_p_stEndWhileKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stValue;
     tdst_WhileInfo_* p_stWhileInfo;
-    /* TODO: decompile from asm/... */
+
+    if (iNumWhile == 0) return p_stTree;
+    p_stWhileInfo = &a_stWhileInfo[iNumWhile - 1];
+    fn_p_stEvalTree(p_SuperObjPerso, p_stWhileInfo->TreeCondition, &stValue);
+    if (stValue.uDummy.uParam.lValue) return p_stWhileInfo->Tree;
+    iNumWhile--;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 460–460 */
@@ -3063,12 +3138,25 @@ tdstNodeInterpret_* fn_p_stBeginWhileKeyWord(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* fn_p_stSkipWhile(tdstNodeInterpret_* p_stTreeInit);
+
 tdstNodeInterpret_* fn_p_stWhileKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdstGetSetParam_ stValue;
+    tdstGetSetParam_ stValue = { 0 };
     tdst_WhileInfo_* p_stWhileInfo;
     tdstNodeInterpret_* p_stTreeInit;
-    /* TODO: decompile from asm/... */
+
+    p_stTreeInit = p_stTree - 1;
+    p_stWhileInfo = &a_stWhileInfo[iNumWhile];
+    p_stWhileInfo->TreeInit = p_stTreeInit;
+    p_stWhileInfo->TreeCondition = p_stTree;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    if (!stValue.uDummy.uParam.lValue) return fn_p_stSkipWhile(p_stTreeInit);
+    p_stWhileInfo->Tree = p_stTree;
+    iNumWhile++;
+    p_stValue->uDummy.uParam.lValue = 0;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 394–430 */
@@ -3096,7 +3184,32 @@ tdstNodeInterpret_* fn_p_stSkipWhile(tdstNodeInterpret_* p_stTreeInit)
 {
     tdstNodeInterpret_* p_stTree;
     int iLevel;
-    /* TODO: decompile from asm/... */
+
+    iLevel = 0;
+    p_stTree = p_stTreeInit;
+    if (p_stTreeInit->uwNodeToSkip) return p_stTreeInit + p_stTreeInit->uwNodeToSkip;
+    while (p_stTree->eType != 8)
+    {
+        if (p_stTree->eType == 0)
+        {
+            if (p_stTree->uDummy.uId.eKeyWordId == eKeyWord_While)
+            {
+                iLevel++;
+            }
+            else if (p_stTree->uDummy.uId.eKeyWordId == eKeyWord_EndWhile)
+            {
+                iLevel--;
+                if (iLevel <= 0)
+                {
+                    p_stTree++;
+                    break;
+                }
+            }
+        }
+        p_stTree++;
+    }
+    p_stTreeInit->uwNodeToSkip = p_stTree - p_stTreeInit;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 253–369 */
@@ -3151,13 +3264,97 @@ tdstNodeInterpret_* fn_p_stSkipWhile(tdstNodeInterpret_* p_stTreeInit)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline tdstNodeInterpret_* fn_p_stSkipNode(tdstNodeInterpret_* p_stNode, tdstNodeInterpret_* p_stStart)
+{
+    tdstNodeInterpret_* p_stNext;
+    if (p_stNode->uwNodeToSkip)
+        return p_stNode + p_stNode->uwNodeToSkip;
+    p_stNext = fn_p_stSwapNextParameter(p_stStart);
+    p_stNode->uwNodeToSkip = (unsigned short)(p_stNext - p_stNode);
+    return p_stNext;
+}
+
 tdstNodeInterpret_* fn_p_stIfKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdeKeyWordId_ eKeyId;
-    char cInvert;
-    char cMax;
     tdstNodeInterpret_* p_stTreeInit;
-    /* TODO: decompile from asm/... */
+    char cMax;
+    char cInvert;
+    tdeKeyWordId_ eKeyId;
+
+    cInvert = 0;
+    p_stTreeInit = p_stTree - 1;
+    eKeyId = p_stTreeInit->uDummy.uId.eKeyWordId;
+    if (eKeyId == eKeyWord_If)
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    }
+    else
+    {
+        switch (eKeyId)
+        {
+        case eKeyWord_IfNot2:
+            cInvert = 1;
+        case eKeyWord_If2:
+            cMax = gcGlobAleat & 1;
+            goto random;
+        case eKeyWord_IfNot2 + 1:
+            cInvert = 1;
+        case eKeyWord_If2 + 1:
+            cMax = gcGlobAleat & 3;
+            goto random;
+        case eKeyWord_IfNot2 + 2:
+            cInvert = 1;
+        case eKeyWord_If2 + 2:
+            cMax = gcGlobAleat & 7;
+            goto random;
+        case eKeyWord_IfNot2 + 3:
+            cInvert = 1;
+        case eKeyWord_If2 + 3:
+            cMax = gcGlobAleat & 15;
+            goto random;
+        case eKeyWord_IfNot2 + 4:
+            cInvert = 1;
+        case eKeyWord_If2 + 4:
+            cMax = gcGlobAleat & 31;
+            goto random;
+        case eKeyWord_IfNot2 + 5:
+            cInvert = 1;
+        case eKeyWord_If64:
+            cMax = gcGlobAleat & 63;
+        random:
+            if (cMax)
+            {
+                p_stValue->uDummy.uParam.lValue = 0;
+                p_stTree = fn_p_stSkipNode(p_stTree, p_stTreeInit + 1);
+            }
+            else
+            {
+                p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+                if (cInvert)
+                    p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue ? 0 : 1;
+            }
+            break;
+        case eKeyWord_IfNot:
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+            p_stValue->uDummy.uParam.lValue = p_stValue->uDummy.uParam.lValue ? 0 : 1;
+            break;
+        }
+    }
+
+    if (p_stValue->uDummy.uParam.lValue)
+    {
+        p_stTree++;
+    }
+    else
+    {
+        if (p_stTree->eType != 8)
+            p_stTree = fn_p_stSkipNode(p_stTreeInit, p_stTree + 1);
+        if (p_stTree->ucDepth == p_stTreeInit->ucDepth && p_stTree->eType == 0 && p_stTree->uDummy.uId.eKeyWordId == eKeyWord_Else)
+            p_stTree++;
+    }
+    p_stValue->uDummy.uParam.lValue = 0;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 236–249 */
@@ -3178,7 +3375,28 @@ tdstNodeInterpret_* fn_p_stIfKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
 tdstNodeInterpret_* fn_p_stIfNotU64(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeKeyWordId_ eKeyId;
-    /* TODO: decompile from asm/... */
+
+    eKeyId = (p_stTree - 1)->uDummy.uId.eKeyWordId;
+    if (eKeyId == eKeyWord_IfNotU64 && gcSimulateNotU64)
+    {
+        tdstNodeInterpret_* p_stNext;
+
+        tdstNodeInterpret_* p_stPrev = p_stTree - 1;
+
+        if (p_stPrev->uwNodeToSkip)
+        {
+            p_stNext = p_stPrev + p_stPrev->uwNodeToSkip;
+        }
+        else
+        {
+            p_stNext = fn_p_stSwapNextParameter(p_stPrev + 1);
+            (p_stTree - 1)->uwNodeToSkip = (unsigned short)(p_stNext - (p_stTree - 1));
+        }
+        p_stTree = p_stNext;
+    }
+    p_stValue->uDummy.uParam.lValue = 0;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 219–232 */
@@ -3199,7 +3417,28 @@ tdstNodeInterpret_* fn_p_stIfNotU64(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
 tdstNodeInterpret_* fn_p_stIfDebug(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeKeyWordId_ eKeyId;
-    /* TODO: decompile from asm/... */
+
+    eKeyId = (p_stTree - 1)->uDummy.uId.eKeyWordId;
+    if (eKeyId == eKeyWord_IfDebug && gcSimulateRelease)
+    {
+        tdstNodeInterpret_* p_stNext;
+
+        tdstNodeInterpret_* p_stPrev = p_stTree - 1;
+
+        if (p_stPrev->uwNodeToSkip)
+        {
+            p_stNext = p_stPrev + p_stPrev->uwNodeToSkip;
+        }
+        else
+        {
+            p_stNext = fn_p_stSwapNextParameter(p_stPrev + 1);
+            (p_stTree - 1)->uwNodeToSkip = (unsigned short)(p_stNext - (p_stTree - 1));
+        }
+        p_stTree = p_stNext;
+    }
+    p_stValue->uDummy.uParam.lValue = 0;
+    p_stValue->eType = E_vt_MetaActionReturn;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 192–195 */
@@ -3211,14 +3450,21 @@ tdstNodeInterpret_* fn_p_stIfDebug(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_* p_stTree);
 
 /* Debug info lists only p_stTree, but the target reads it from $a1: keyword ABI. */
-tdstNodeInterpret_* fn_p_stElseKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+inline tdstNodeInterpret_* fn_p_stSkipElseNode(tdstNodeInterpret_* p_stNode)
 {
     tdstNodeInterpret_* p_stNext;
+    if (p_stNode->uwNodeToSkip)
+        return p_stNode + p_stNode->uwNodeToSkip;
+    p_stNext = fn_p_stSwapNextParameter(p_stNode + 1);
+    p_stNode->uwNodeToSkip = (unsigned short)(p_stNext - p_stNode);
+    return p_stNext;
+}
 
-    if ((p_stTree - 1)->uwNodeToSkip) return (tdstNodeInterpret_*)((p_stTree - 1)->uwNodeToSkip * sizeof(tdstNodeInterpret_) + (char*)(p_stTree - 1)); else { p_stNext = fn_p_stSwapNextParameter(p_stTree); (p_stTree - 1)->uwNodeToSkip = (unsigned short)(p_stNext - (p_stTree - 1)); return p_stNext; }
+tdstNodeInterpret_* fn_p_stElseKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    return fn_p_stSkipElseNode(p_stTree - 1);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 188–188 */
@@ -3425,9 +3671,14 @@ tdstNodeInterpret_* fn_p_stNoInputKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* MC_fn_hGetFirstMainCharNode(void);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(void* hMainCharNode);
+
 tdstNodeInterpret_* fn_p_stMainActorKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    p_stValue->uDummy.uParam.p_stEngObjValue = (MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->ulTypeOfLinkedObject != 2) ? NULL : MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter;
+    p_stValue->eType = E_vt_Perso;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 80–83 */

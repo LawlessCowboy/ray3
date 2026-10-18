@@ -3593,8 +3593,8 @@ int MENU_g_bInversionVert;
 int MENU_g_bInversionHor;
 int GLI_g_50_or_60_HzMode;
 tdstEngineStructure_ g_stEngineStructure;
-int gp_stInactiveDynamicWorld;
-int gp_stDynamicWorld;
+HIE_tdstSuperObject_* gp_stInactiveDynamicWorld;
+HIE_tdstSuperObject_* gp_stDynamicWorld;
 int g_iNewImpulseTribe;
 unsigned int g_xMask;
 int HIE_gs_lCurrentFrame;
@@ -3805,13 +3805,32 @@ tdstNodeInterpret_* fn_p_st_SinusEffect_GetPosition(HIE_tdstSuperObject_* p_Supe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);
+short fn_wBbDeclareVariable2Monitor(void* p_pvVar, int lType, char* szName, int lFlag);
+
 tdstNodeInterpret_* fn_p_stMonitoringSetVariable(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     HIE_tdstSuperObject_* p_stResultOwnerPerso;
     long lChannel;
     char* szVarName;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    tdstDsgMem_* p_stDsgMem;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    szVarName = fn_szGetStringFromTextOrStringParam(&stValue);
+    if (p_stTree->eType == 2)
+    {
+        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
+    }
+    else
+    {
+        p_stResultOwnerPerso = p_SuperObjPerso;
+    }
+    p_stDsgMem = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stDsgMem;
+    lChannel = fn_wBbDeclareVariable2Monitor((void*)(p_stDsgMem->p_cDsgMemBuffer + (*p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[p_stTree->uDummy.uParam.ucValue].ulOffsetInDsgMem), 4, szVarName, 1);
+    p_stValue->uDummy.uParam.lValue = lChannel;
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree + 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2682–2703 */
@@ -4191,12 +4210,32 @@ tdstNodeInterpret_* fn_p_st_GetActiveMainActors(HIE_tdstSuperObject_* p_SuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
+tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMCN);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
+
 int fn_iGetActiveMainActors(HIE_tdstSuperObject_** pp_SuperObjArray)
 {
-    tdstNodeMainCharacter_* hMCN;
-    HIE_tdstSuperObject_* hMainChar;
+    tdstEngineObject_* p_stEngObj;
     int i;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hMainChar;
+    tdstNodeMainCharacter_* hMCN;
+
+    for (i = 0; i < 4; i++) pp_SuperObjArray[i] = NULL;
+    i = 0;
+    for (hMCN = MC_fn_hGetFirstMainCharNode(); i < 4 && hMCN; hMCN = MC_fn_hGetNextMainCharNode(hMCN))
+    {
+        hMainChar = MC_fn_hGetCharacterInMainCharacterNode(hMCN);
+        if (hMainChar)
+        {
+            if (hMainChar->ulTypeOfLinkedObject != 2) p_stEngObj = NULL; else p_stEngObj = hMainChar->hLinkedObject.p_stCharacter;
+            if (p_stEngObj && (unsigned char)((p_stEngObj->h_StandardGame->ucMiscFlags & 4) ? 1 : 0) == 1)
+            {
+                pp_SuperObjArray[i++] = hMainChar;
+            }
+        }
+    }
+    return i;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2295–2326 */
@@ -4298,7 +4337,8 @@ void fn_vReinitActors(HIE_tdstSuperObject_* hSuperObj)
  */
 void fn_vReInitAllDynamicActors(void)
 {
-    /* TODO: decompile from asm/... */
+    fn_vReinitActors(gp_stDynamicWorld);
+    fn_vReinitActors(gp_stInactiveDynamicWorld);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2255–2257 */
@@ -4631,16 +4671,62 @@ tdstNodeInterpret_* fn_p_stVisualMaterialFunction(HIE_tdstSuperObject_* p_SuperO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+GMT_tdstCollideMaterial_* GMT_fn_hGetCollideMaterial(GMT_tdstGameMaterial_* hGameMat);
+int GMT_fn_b_ulIsValid(GMT_tdstGameMaterial_* hGameMat);
+unsigned short GMT_fn_hGetCollideMaterialIdentifier(GMT_tdstCollideMaterial_* hCollideMaterial);
+DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso);
+
 tdstNodeInterpret_* fn_p_stGameMaterialFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     unsigned short xMask;
     GMT_tdstCollideMaterial_* hMaterialCollide;
     tdstBrain_* hBrain;
-    /*type_0x83*/ int hNewSuperObjPerso;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
     DNM_stReport* p_stDynamReport;
     GMT_tdstGameMaterial_* hGameMaterial;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+
+    hGameMaterial = (GMT_tdstGameMaterial_*)0xcdcdcdcd;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    switch (eFuncId)
+    {
+    case eFunc_GetLastTraversedMaterialType:
+    case eFunc_GetLastTraversedMaterial:
+        hBrain = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain;
+        if (hBrain)
+        {
+            hGameMaterial = hBrain->hLastCollidedGoThroughMaterial;
+            if (GMT_fn_b_ulIsValid(hGameMaterial))
+            {
+                if (eFuncId == eFunc_GetLastTraversedMaterialType)
+                {
+                    hMaterialCollide = GMT_fn_hGetCollideMaterial(hGameMaterial);
+                    xMask = 0;
+                    if ((int)hMaterialCollide != -1)
+                        xMask = GMT_fn_hGetCollideMaterialIdentifier(hMaterialCollide);
+                    p_stValue->uDummy.uParam.ulValue = xMask;
+                    p_stValue->eType = E_vt_Mask;
+                    return p_stTree;
+                }
+            }
+            else
+            {
+                p_stValue->uDummy.uParam.lValue = 0;
+            }
+            p_stValue->eType = E_vt_Mask;
+        }
+        return p_stTree;
+    case eFunc_GetCurrentCollidedGMT:
+        p_stDynamReport = fn_pstGetDNMReport(hNewSuperObjPerso);
+        if (p_stDynamReport) hGameMaterial = p_stDynamReport->m_stGround.hCollidedMaterial;
+        break;
+    default:
+        break;
+    }
+    p_stValue->uDummy.uParam.lValue = (int)hGameMaterial;
+    p_stValue->eType = E_vt_GameMaterial;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 1699–1800 */
@@ -4787,11 +4873,29 @@ tdstNodeInterpret_* fn_p_stInputFunction(HIE_tdstSuperObject_* p_SuperObjPerso, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition);
+
 tdstNodeInterpret_* fn_p_stListFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdeFuncId_ eFuncId;
     tdstList_* p_stList;
-    /* TODO: decompile from asm/... */
+    tdeFuncId_ eFuncId;
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    p_stList = *(tdstList_**)p_stValue;
+    switch (eFuncId)
+    {
+    case eFunc_GivePersoInList:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_stValue->uDummy.uParam.p_stEngObjValue = (fn_p_stGetPersoInList(p_stList, p_stValue->uDummy.uParam.ucValue) == NULL) ? NULL : ((fn_p_stGetPersoInList(p_stList, p_stValue->uDummy.uParam.ucValue)->ulTypeOfLinkedObject != 2) ? NULL : fn_p_stGetPersoInList(p_stList, p_stValue->uDummy.uParam.ucValue)->hLinkedObject.p_stCharacter);
+        p_stValue->eType = E_vt_Perso;
+        return p_stTree;
+    case eFunc_ListSize:
+        p_stValue->uDummy.uParam.lValue = p_stList->ucNbElt;
+        p_stValue->eType = E_vt_Integer;
+        return p_stTree;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 1521–1551 */
@@ -5239,7 +5343,27 @@ tdstNodeInterpret_* fn_p_stMathFunctionInt(HIE_tdstSuperObject_* p_SuperObjPerso
 {
     int lFirstValue;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    lFirstValue = (p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue;
+    if (eFuncId == eFunc_RandomInt)
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lFirstValue = RND_fn_lGetLongRandomValue(0, lFirstValue, (p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue);
+    }
+    else if (eFuncId == eFunc_Int)
+    {
+    }
+    else
+    {
+        p_stValue->uDummy.uParam.lValue = lFirstValue;
+        p_stValue->eType = E_vt_Integer;
+        return p_stTree;
+    }
+    p_stValue->uDummy.uParam.lValue = lFirstValue;
+    p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 878–949 */
@@ -5901,11 +6025,47 @@ tdstNodeInterpret_* fn_p_stGetPersoAbsolutePosition(HIE_tdstSuperObject_* p_Supe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* PS2 MTH helpers: sqrt.s and the R5900 accumulator ops have no C form under
+ * MWCC; only those instructions are asm. */
+inline float MTH_xSqrt(float _xValue)
+{
+    float xResult;
+    asm { sqrt.s xResult, _xValue }
+    return xResult;
+}
+
+inline float MTH3D_xVectorGap(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
+{
+    float xX, xY, xZ, xResult;
+    xX = _p_stA->xX - _p_stB->xX; xY = _p_stA->xY - _p_stB->xY; xZ = _p_stA->xZ - _p_stB->xZ;
+    asm { mula.s xX, xX }
+    asm { madda.s xY, xY }
+    asm { madd.s xResult, xZ, xZ }
+    return MTH_xSqrt(xResult);
+}
+
 tdstNodeInterpret_* fn_p_stDistanceToPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /*type_0x83*/ int hNewSuperObjPerso;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
     HIE_tdstSuperObject_* p_SuperObjTarget;
-    /* TODO: decompile from asm/... */
+    float xDistance;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator((p_stTree - 1)->uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (p_stValue->uDummy.uParam.xValue == 0)
+    {
+        p_stValue->uDummy.uParam.xValue = 3.402822e+38f;
+        p_stValue->eType = E_vt_Float;
+        return p_stTree;
+    }
+    else
+    {
+        p_SuperObjTarget = fn_h_StandardGameGetSuperObject(p_stValue->uDummy.uParam.p_stEngObjValue->h_StandardGame);
+        xDistance = MTH3D_xVectorGap((MTH3D_tdstVector_*)&p_SuperObjTarget->hGlobalMatrix->stTransformMatrix.stCol_3, (MTH3D_tdstVector_*)&hNewSuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3);
+        p_stValue->uDummy.uParam.xValue = xDistance;
+        p_stValue->eType = E_vt_Float;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 134–182 */

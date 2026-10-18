@@ -3518,7 +3518,7 @@ unsigned char fn_ucGetFieldAbsoluteAxisX(HIE_tdstSuperObject_* hSuperObjPerso, t
  */
 extern DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
 inline float MTH_xSqr3(float _x, float _y, float _z) { float _r; asm { mula.s _x, _x } asm { madda.s _y, _y } asm { madd.s _r, _z, _z } return _r; }
-inline float MTH_xSqrt(float _x) { float _r; asm { sqrt.s _r, _x } asm { nop } asm { nop } return _r; }
+inline float MTH_xSqrt(float _x) { float _r; asm { sqrt.s _r, _x } return _r; }
 
 unsigned char fn_ucGetFieldNormSpeed(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
@@ -3619,12 +3619,75 @@ unsigned char fn_ucGetFieldSpeed(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
+inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    MTH4D_tdstVector_* p_stVtmp;
+
+    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
+    *(unsigned int*)&Vtmp.xX = ((unsigned int*)VectA)[0]; *(unsigned int*)&Vtmp.xY = ((unsigned int*)VectA)[1]; *(unsigned int*)&Vtmp.xZ = ((unsigned int*)VectA)[2];
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
+}
+
+inline void MTH3D_M_vSetVectorElements(MTH3D_tdstVector_* VectDest, float x, float y, float z)
+{
+    VectDest->xX = x; VectDest->xY = y; VectDest->xZ = z;
+}
+
+inline void MTH3D_M_vSubVector(MTH3D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA, MTH3D_tdstVector_* VectB)
+{
+    VectDest->xX = VectA->xX - VectB->xX; VectDest->xY = VectA->xY - VectB->xY; VectDest->xZ = VectA->xZ - VectB->xZ;
+}
+
+inline void MTH3D_M_vMulScalarVector(MTH3D_tdstVector_* VectDest, float a, MTH3D_tdstVector_* VectA)
+{
+    VectDest->xX = a * VectA->xX; VectDest->xY = a * VectA->xY; VectDest->xZ = a * VectA->xZ;
+}
+
+inline MTH3D_tdstVector_* POS_fn_p_stGetTranslationVector(MAT_tdstTransformation_* hMatrix)
+{
+    return (MTH3D_tdstVector_*)&hMatrix->stTransformMatrix.stCol_3;
+}
+
+
 unsigned char fn_ucGetFieldOrientation(HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam)
 {
     float xNorm;
-    MTH3D_tdstVector_ stVertex;
     MTH3D_tdstVector_ stVertexDirection;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stVertex;
+
+    MTH3D_M_vSetVectorElements(&stVertexDirection, 0.0f, -1.0f, 0.0f);
+    MAT_fn_vApplyOnVertex(&stVertexDirection, hSuperObjPerso->hGlobalMatrix, &stVertexDirection);
+
+    stVertex = *POS_fn_p_stGetTranslationVector(hSuperObjPerso->hGlobalMatrix);
+
+    MTH3D_M_vSubVector(&stVertexDirection, &stVertexDirection, &stVertex);
+    xNorm = MTH_xSqrt(MTH_xSqr3(stVertexDirection.xX, stVertexDirection.xY, stVertexDirection.xZ));
+    if (xNorm != 0.0f)
+    {
+        MTH3D_M_vMulScalarVector(&stVertexDirection, 1.0f / xNorm, &stVertexDirection);
+    }
+    ((int*)p_stGetSetParam)[0] = *(int*)&stVertexDirection.xX;
+    ((int*)p_stGetSetParam)[1] = *(int*)&stVertexDirection.xY;
+    ((int*)p_stGetSetParam)[2] = *(int*)&stVertexDirection.xZ;
+    *(tdeVariableType_*)((char*)p_stGetSetParam + 12) = E_vt_Vector;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Fields.c lines 169–169 */

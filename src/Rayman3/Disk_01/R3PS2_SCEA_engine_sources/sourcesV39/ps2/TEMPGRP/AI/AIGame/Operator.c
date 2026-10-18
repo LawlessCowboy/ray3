@@ -3323,7 +3323,31 @@ void fn_vSetVectorComponentForAffectOperator(unsigned char ucXYZflag, MTH3D_tdst
 tdstNodeInterpret_* fn_p_stVectorDotOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeOperatorId_ eOperatorId;
-    /* TODO: decompile from asm/... */
+    tdstNodeInterpret_* p_stNext;
+
+    eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
+    p_stNext = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (p_stValue->eType == E_vt_Vector)
+    {
+        switch (eOperatorId)
+        {
+        case eOperator_GetVectorX:
+            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.stVectorValue.xX;
+            p_stValue->eType = E_vt_Float;
+            return p_stNext;
+        case eOperator_GetVectorY:
+            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.stVectorValue.xY;
+            p_stValue->eType = E_vt_Float;
+            return p_stNext;
+        case eOperator_GetVectorZ:
+            p_stValue->uDummy.uParam.xValue = p_stValue->uDummy.uParam.stVectorValue.xZ;
+            p_stValue->eType = E_vt_Float;
+            return p_stNext;
+        default:
+            return p_stNext;
+        }
+    }
+    return p_stNext;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 460–502 */
@@ -3345,11 +3369,44 @@ tdstNodeInterpret_* fn_p_stVectorDotOperator(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);
+unsigned char fn_ucGetDsgVar(unsigned char ucId, unsigned char ucIndex, AI_tdstMind_* p_stPerso, tdstGetSetParam_* p_stGetSetParam);
+unsigned char fn_ucGetFieldValue(tdeFieldId_ eFieldId, HIE_tdstSuperObject_* hSuperObjPerso, tdstGetSetParam_* p_stGetSetParam);
+void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
+
 tdstNodeInterpret_* fn_p_stDotOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdeTypeInterpret_ eTypeInterpret;
+    unsigned char ucOk;
     HIE_tdstSuperObject_* hSuperObjPerso;
-    /* TODO: decompile from asm/... */
+    tdeTypeInterpret_ eTypeInterpret;
+    tdstNodeInterpret_* p_stNext;
+
+    p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree, &hSuperObjPerso);
+    p_stNext = p_stTree;
+    eTypeInterpret = (tdeTypeInterpret_)p_stTree->eType;
+    if (eTypeInterpret == 11)
+    {
+        fn_ucGetDsgVar(p_stTree->uDummy.uParam.ucValue, 0, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stValue);
+        p_stNext = p_stTree + 1;
+        return p_stNext;
+    }
+    else if (eTypeInterpret == 9)
+    {
+        p_stNext = p_stTree + 1;
+        ucOk = fn_ucGetFieldValue(p_stTree->uDummy.uId.eFieldId, hSuperObjPerso, p_stValue);
+        if (!ucOk)
+        {
+            fn_vOnAIErm_M_UpdateLastError(0x22, 0);
+        }
+    }
+    else if (eTypeInterpret == 2)
+    {
+        if (p_stTree->uDummy.uId.eFuncId == eFunc_Cosinus)
+        {
+            p_stNext = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        }
+    }
+    return p_stNext;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 427–454 */
@@ -3370,12 +3427,22 @@ tdstNodeInterpret_* fn_p_stDotOperator(HIE_tdstSuperObject_* p_SuperObjPerso, td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 tdstNodeInterpret_* fn_p_stArrayOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdeTypeInterpret_ eTypeInterpret;
-    HIE_tdstSuperObject_* hSuperObjPerso;
     unsigned char ucVarId;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hSuperObjPerso;
+    tdeTypeInterpret_ eTypeInterpret;
+
+    hSuperObjPerso = p_SuperObjPerso;
+    if (p_stTree->eType == 2)
+    {
+        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &hSuperObjPerso);
+    }
+    ucVarId = p_stTree->uDummy.uParam.ucValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree + 1, p_stValue);
+    fn_ucGetDsgVar(ucVarId, p_stValue->uDummy.uParam.ucValue, hSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, p_stValue);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 300–375 */
@@ -3434,12 +3501,47 @@ tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPers
  */
 tdstNodeInterpret_* fn_p_stVectorOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    MTH3D_tdstVector_* p_stVector2;
-    MTH3D_tdstVector_* p_stVector1;
-    tdeOperatorId_ eOperatorId;
-    tdstGetSetParam_ stParam2;
     tdstGetSetParam_ stParam1;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam2;
+    tdeOperatorId_ eOperatorId;
+    MTH3D_tdstVector_* p_stVector1;
+    MTH3D_tdstVector_* p_stVector2;
+    MTH3D_tdstVector_* p_stResult;
+
+    eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
+    p_stVector2 = NULL;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+    p_stVector1 = &stParam1.uDummy.uParam.stVectorValue;
+    if (eOperatorId != eOperator_VectorUnaryMinus)
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+        p_stVector2 = &stParam2.uDummy.uParam.stVectorValue;
+    }
+    p_stResult = &p_stValue->uDummy.uParam.stVectorValue;
+    p_stValue->eType = E_vt_Vector;
+    switch (eOperatorId)
+    {
+    case eOperator_VectorPlusVector:
+        p_stResult->xX = p_stVector1->xX + p_stVector2->xX;
+        p_stResult->xY = p_stVector1->xY + p_stVector2->xY;
+        p_stResult->xZ = p_stVector1->xZ + p_stVector2->xZ;
+        return p_stTree;
+    case eOperator_VectorMinusVector:
+        p_stResult->xX = p_stVector1->xX - p_stVector2->xX;
+        p_stResult->xY = p_stVector1->xY - p_stVector2->xY;
+        p_stResult->xZ = p_stVector1->xZ - p_stVector2->xZ;
+        return p_stTree;
+    case eOperator_VectorUnaryMinus:
+        p_stResult->xX = -p_stVector1->xX;
+        p_stResult->xY = -p_stVector1->xY;
+        p_stResult->xZ = -p_stVector1->xZ;
+        return p_stTree;
+    default:
+        p_stResult->xX = 0;
+        p_stResult->xY = 0;
+        p_stResult->xZ = 0;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 192–243 */
@@ -3469,14 +3571,65 @@ tdstNodeInterpret_* fn_p_stVectorOperator(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* abs.s has no C form under MWCC; only that instruction is asm. */
+inline float MTH_xAbs(float xValue)
+{
+    float xResult;
+    asm { abs.s xResult, xValue }
+    return xResult;
+}
+
 tdstNodeInterpret_* fn_p_stVectorScalarOperator(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    float xFactor;
-    MTH3D_tdstVector_* p_stVector1;
-    tdeOperatorId_ eOperatorId;
-    tdstGetSetParam_ stParam2;
     tdstGetSetParam_ stParam1;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam2;
+    tdeOperatorId_ eOperatorId;
+    MTH3D_tdstVector_* p_stVector1;
+    float xFactor;
+    MTH3D_tdstVector_* p_stResult;
+
+    eOperatorId = p_stTree[-1].uDummy.uId.eOperatorId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+    if (stParam1.eType != E_vt_Vector)
+    {
+        p_stVector1 = &stParam2.uDummy.uParam.stVectorValue;
+        xFactor = (stParam1.eType == E_vt_Float) ? stParam1.uDummy.uParam.xValue : (float)stParam1.uDummy.uParam.lValue;
+    }
+    else
+    {
+        p_stVector1 = &stParam1.uDummy.uParam.stVectorValue;
+        xFactor = (stParam2.eType == E_vt_Float) ? stParam2.uDummy.uParam.xValue : (float)stParam2.uDummy.uParam.lValue;
+    }
+    p_stResult = &p_stValue->uDummy.uParam.stVectorValue;
+    p_stValue->eType = E_vt_Vector;
+    switch (eOperatorId)
+    {
+    case eOperator_VectorMulScalar:
+        p_stResult->xX = xFactor * p_stVector1->xX;
+        p_stResult->xY = xFactor * p_stVector1->xY;
+        p_stResult->xZ = xFactor * p_stVector1->xZ;
+        return p_stTree;
+    case eOperator_VectorDivScalar:
+        if (MTH_xAbs(xFactor) > 1.1754951e-38f)
+        {
+            p_stResult->xX = p_stVector1->xX / xFactor;
+            p_stResult->xY = p_stVector1->xY / xFactor;
+            p_stResult->xZ = p_stVector1->xZ / xFactor;
+        }
+        else
+        {
+            p_stResult->xX = 0;
+            p_stResult->xY = 0;
+            p_stResult->xZ = 0;
+        }
+        return p_stTree;
+    default:
+        p_stResult->xX = 0;
+        p_stResult->xY = 0;
+        p_stResult->xZ = 0;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Operator.c lines 105–187 */
