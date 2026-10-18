@@ -3308,6 +3308,49 @@ tdstEngineStructure_ g_stEngineStructure;
 int GLI_g_bWideScreenMode;
 extern char IPO_fn_bRLITransitionInProgress(void);
 extern tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_*, tdstNodeInterpret_*, tdstGetSetParam_*);
+char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
+unsigned char SAV2_fn_bIsExist(char* szName);
+unsigned char fn_ucGetConditionUltraOperator(tdeCondId_ eCondId);
+void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterList(HIE_tdstSuperObject_* hCharacter);
+unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterListAndDynamicallyActived(HIE_tdstSuperObject_* hCharacter);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
+unsigned char fn_ucMSLightGetOnOff(tdstMSLight_* h_MSLight);
+unsigned char fn_bMSLightGetPulse(tdstMSLight_* h_MSLight);
+unsigned char fn_bMSLightGetGiroPhare(tdstMSLight_* h_MSLight);
+void fn_vGetCenterOfBoundingVolume(HIE_tdstSuperObject_* hPerso, MTH3D_tdstVector_* p_stVertex);
+unsigned char fn_bPerso1Point1IntersectPerso2Point2(HIE_tdstSuperObject_* hPerso1, MTH3D_tdstVector_* p_stVertex1, HIE_tdstSuperObject_* hPerso2, MTH3D_tdstVector_* p_stVertex2);
+HIE_tdstSuperObject_* GAM_fn_hGetCurrentSector(HIE_tdstSuperObject_* _hCharacter);
+int HIE_bDetectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj);
+DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso);
+HIE_tdstSuperObject_* MEC_fn_hGetFatherActor(HIE_tdstSuperObject_* hSupObj);
+typedef struct tdstList_ tdstList_;
+struct tdstList_ {
+    unsigned char ucNbElt; /* +0x0 */
+    unsigned char ucMaxSize; /* +0x1 */
+    HIE_tdstSuperObject_** p_hTabElt; /* +0x4 */
+};
+char fn_bFindFamilyInList(tdstList_* p_List, tdstFamilyList_* hFamily);
+char fn_bFindModelInList(tdstList_* p_List, AI_tdstAIModel_* _p_stModel);
+char fn_bFindPersoInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso);
+tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_* p_stTree);
+unsigned char fn_bIsCharacterTWODetectedByCharacterOne(HIE_tdstSuperObject_* _hCharacterONE, HIE_tdstSuperObject_* _hCharacterTWO);
+unsigned char fn_bIsCharacterTWODetectedByThisZddOfCharacterOne(HIE_tdstSuperObject_* _hCharacterONE, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_* _hCharacterTWO);
+unsigned char fn_ucAtLeastOnePersoInZdd(HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId);
+typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
+unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement);
+unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement);
+unsigned char IPT_fn_bIsInvalidated(IPT_tdstEntryElement_* _hEntryElement);
+unsigned char IPT_fn_bIsJustInvalidated(IPT_tdstEntryElement_* _hEntryElement);
+unsigned char IPT_fn_bIsValidatedPadButton(unsigned char ucPadNumber, unsigned char ucButtonNumber);
+unsigned char IPT_fn_bIsJustValidatedPadButton(unsigned char ucPadNumber, unsigned char ucButtonNumber);
+unsigned char IPT_fn_bIsInvalidatedPadButton(unsigned char ucPadNumber, unsigned char ucButtonNumber);
+unsigned char IPT_fn_bIsJustInvalidatedPadButton(unsigned char ucPadNumber, unsigned char ucButtonNumber);
+unsigned char fn_ucIsAlwaysGeneratedByMe(HIE_tdstSuperObject_* hAlways, HIE_tdstSuperObject_* hGenerator);
+#define M_GetEngineObject(h) ((h)->ulTypeOfLinkedObject != 2 ? (tdstEngineObject_*)0 : (h)->hLinkedObject.p_stCharacter)
+int INO_fn_wIsJoyConnected(int JoyNb);
+CINE_tdstCine_* CINE_fn_pFindCine(char* szName);
+unsigned char CINE_fn_bIsCinePlaying(CINE_tdstCine_* hCine);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1814–1816 */
 /* addr: 0x0020dc30  size: 16 bytes */
@@ -3347,11 +3390,26 @@ tdstNodeInterpret_* fn_p_stDummyCondition(int lUnused, tdstNodeInterpret_* p_stT
  */
 tdstNodeInterpret_* fn_p_stCineIsPlaying(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    tdeCondId_ eCondId;
-    char* p_szString;
-    tdstGetSetParam_ stParam;
     CINE_tdstCine_* hCine;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam;
+    char* p_szString;
+    tdeCondId_ eCondId;
+
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    switch (eCondId) {
+    case 149:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_szString = fn_szGetStringFromTextOrStringParam(&stParam);
+        hCine = CINE_fn_pFindCine(p_szString);
+        if (hCine)
+            *p_lValue = CINE_fn_bIsCinePlaying(hCine);
+        else
+            *p_lValue = 0;
+        return p_stTree;
+    default:
+        *p_lValue = 0;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1738–1765 */
@@ -3373,8 +3431,8 @@ tdstNodeInterpret_* fn_p_stCineIsPlaying(HIE_tdstSuperObject_* p_SuperObjPerso, 
  */
 tdstNodeInterpret_* fn_p_stComparisonOfObjectsCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    tdstGetSetParam_ stParam2 = {0};
     tdstGetSetParam_ stParam1 = {0};
+    tdstGetSetParam_ stParam2 = {0};
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
     *p_lValue = stParam1.uDummy.uParam.p_stEngObjValue == stParam2.uDummy.uParam.p_stEngObjValue;
@@ -3399,11 +3457,22 @@ tdstNodeInterpret_* fn_p_stComparisonOfObjectsCondition(HIE_tdstSuperObject_* p_
  */
 tdstNodeInterpret_* fn_p_stSAV2Condition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    char* p_szElementName;
-    tdstGetSetParam_ stParam;
-    int lValue;
     tdeCondId_ eCondId;
-    /* TODO: decompile from asm/... */
+    int lValue;
+    tdstGetSetParam_ stParam;
+    char* p_szElementName;
+
+    lValue = 0;
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_szElementName = fn_szGetStringFromTextOrStringParam(&stParam);
+    switch (eCondId) {
+    case 70:
+        lValue = SAV2_fn_bIsExist(p_szElementName);
+        break;
+    }
+    *p_lValue = lValue;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1671–1706 */
@@ -3457,10 +3526,24 @@ tdstNodeInterpret_* fn_p_stScreenCondition(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 tdstNodeInterpret_* fn_p_stInputCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    tdstGetSetParam_ stParam;
-    int lValue;
     tdeCondId_ eCondId;
-    /* TODO: decompile from asm/... */
+    int lValue;
+    tdstGetSetParam_ stParam;
+
+    lValue = 0;
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    switch (eCondId) {
+    case 68:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lValue = INO_fn_wIsJoyConnected(stParam.uDummy.uParam.ucValue);
+        break;
+    case 69:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lValue = 0;
+        break;
+    }
+    *p_lValue = lValue;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1598–1624 */
@@ -3482,10 +3565,23 @@ tdstNodeInterpret_* fn_p_stInputCondition(HIE_tdstSuperObject_* p_SuperObjPerso,
  */
 tdstNodeInterpret_* fn_p_stAlwaysActiveCond(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    int lValue;
     tdeCondId_ eCondId;
-    /* TODO: decompile from asm/... */
+    int lValue;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    lValue = 0;
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
+    switch (eCondId) {
+    case 66:
+        lValue = fn_bGetIfCharacterIsInAlwaysActiveCharacterList(hNewSuperObjPerso);
+        break;
+    case 67:
+        lValue = fn_bGetIfCharacterIsInAlwaysActiveCharacterListAndDynamicallyActived(hNewSuperObjPerso);
+        break;
+    }
+    *p_lValue = lValue;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1578–1595 */
@@ -3505,12 +3601,12 @@ tdstNodeInterpret_* fn_p_stAlwaysActiveCond(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-tdstNodeInterpret_* fn_p_stRLITransitionCondition(tdstNodeInterpret_* p_stTree, int* p_lValue)
+tdstNodeInterpret_* fn_p_stRLITransitionCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    int lValue;
     tdeCondId_ eCondId;
-    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    int lValue;
     lValue = 0;
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
     switch (eCondId) {
     case eCond_IsRLITransitionInProgress:
         lValue = IPO_fn_bRLITransitionInProgress();
@@ -3518,6 +3614,13 @@ tdstNodeInterpret_* fn_p_stRLITransitionCondition(tdstNodeInterpret_* p_stTree, 
     }
     *p_lValue = lValue;
     return p_stTree;
+}
+
+static inline unsigned char fn_ucAlwIsMine(tdstEngineObject_* hAlwaysObject, HIE_tdstSuperObject_* hGenerator)
+{
+    if (hAlwaysObject->h_StandardGame == NULL)
+        return 0;
+    return fn_ucIsAlwaysGeneratedByMe(fn_h_StandardGameGetSuperObject(hAlwaysObject->h_StandardGame), hGenerator);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1545–1573 */
@@ -3535,10 +3638,18 @@ tdstNodeInterpret_* fn_p_stRLITransitionCondition(tdstNodeInterpret_* p_stTree, 
  */
 tdstNodeInterpret_* fn_p_stAlw_IsMine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    tdstEngineObject_* hAlwaysObject;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstEngineObject_* hAlwaysObject;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(61), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hAlwaysObject = stParam.uDummy.uParam.p_stEngObjValue;
+    if (hAlwaysObject)
+        *p_lValue = fn_ucAlwIsMine(hAlwaysObject, hNewSuperObjPerso);
+    else
+        *p_lValue = 0;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1475–1538 */
@@ -3635,7 +3746,10 @@ tdstNodeInterpret_* fn_p_st_HandledCondition(HIE_tdstSuperObject_* p_SuperObjPer
 tdstNodeInterpret_* fn_p_st_ActivationCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(p_stTree[-1].uDummy.uId.eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
+    *p_lValue = (unsigned char)((M_GetEngineObject(hNewSuperObjPerso)->h_StandardGame->ucMiscFlags & 2) ? 1 : 0) == 1;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1395–1429 */
@@ -3662,10 +3776,29 @@ tdstNodeInterpret_* fn_p_st_ActivationCondition(HIE_tdstSuperObject_* p_SuperObj
 tdstNodeInterpret_* fn_p_stLightCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
-    int lValue;
-    tdstMSLight_* h_MSLight;
     tdeCondId_ eCondId;
-    /* TODO: decompile from asm/... */
+    tdstMSLight_* h_MSLight;
+    int lValue;
+
+    lValue = 0;
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
+    h_MSLight = M_GetEngineObject(hNewSuperObjPerso)->h_MSLight;
+    if (h_MSLight != NULL) {
+        switch (eCondId) {
+        case 62:
+            lValue = fn_ucMSLightGetOnOff(h_MSLight);
+            break;
+        case 63:
+            lValue = fn_bMSLightGetPulse(h_MSLight);
+            break;
+        case 64:
+            lValue = fn_bMSLightGetGiroPhare(h_MSLight);
+            break;
+        }
+    }
+    *p_lValue = lValue;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1347–1387 */
@@ -3689,14 +3822,29 @@ tdstNodeInterpret_* fn_p_stLightCondition(HIE_tdstSuperObject_* p_SuperObjPerso,
  */
 tdstNodeInterpret_* fn_p_stSectorCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    MTH3D_tdstVector_ stVertex2;
-    MTH3D_tdstVector_ stVertex1;
-    HIE_tdstSuperObject_* pPerso2;
-    HIE_tdstSuperObject_* pPerso1;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdeCondId_ eCondId;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    tdeCondId_ eCondId;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    HIE_tdstSuperObject_* pPerso1;
+    HIE_tdstSuperObject_* pPerso2;
+    MTH3D_tdstVector_ stVertex1;
+    MTH3D_tdstVector_ stVertex2;
+
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
+    switch (eCondId) {
+    case 58:
+        pPerso1 = hNewSuperObjPerso;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        pPerso2 = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+        fn_vGetCenterOfBoundingVolume(pPerso1, &stVertex1);
+        fn_vGetCenterOfBoundingVolume(pPerso2, &stVertex2);
+        *p_lValue = !fn_bPerso1Point1IntersectPerso2Point2(pPerso1, &stVertex1, pPerso2, &stVertex2);
+        return p_stTree;
+    default:
+        *p_lValue = 0;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1305–1340 */
@@ -3729,12 +3877,32 @@ tdstNodeInterpret_* fn_p_stSectorCondition(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 unsigned char fn_bPerso1Point1IntersectPerso2Point2(HIE_tdstSuperObject_* hPerso1, MTH3D_tdstVector_* p_stVertex1, HIE_tdstSuperObject_* hPerso2, MTH3D_tdstVector_* p_stVertex2)
 {
-    SECT_tdstListOfSOSectorsInGraphicInteraction_* hList;
-    int i;
-    HIE_tdstSuperObject_* hSector2;
-    HIE_tdstSuperObject_* hSector1;
     MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hSector1;
+    HIE_tdstSuperObject_* hSector2;
+    int i;
+    SECT_tdstListOfSOSectorsInGraphicInteraction_* hList;
+
+    hSector1 = GAM_fn_hGetCurrentSector(hPerso1);
+    if (hSector1 == NULL)
+        return 0;
+    hSector2 = GAM_fn_hGetCurrentSector(hPerso2);
+    if (hSector2 == NULL)
+        return 0;
+    stTempVector.xX = p_stVertex2->xX - p_stVertex1->xX;
+    stTempVector.xY = p_stVertex2->xY - p_stVertex1->xY;
+    stTempVector.xZ = p_stVertex2->xZ - p_stVertex1->xZ;
+    if (HIE_bDetectIntersectSegmentWithSuperObject(p_stVertex1, &stTempVector, hSector1))
+        return 1;
+    if (hSector1 != hSector2 && HIE_bDetectIntersectSegmentWithSuperObject(p_stVertex1, &stTempVector, hSector2))
+        return 1;
+    i = hSector1->hLinkedObject.p_stSector->stListOfSectorsInGraphicInteraction.lNumberOfElementsOpt;
+    hList = hSector1->hLinkedObject.p_stSector->stListOfSectorsInGraphicInteraction.hFirstElementOpt;
+    for (; i > 0; i--, hList++) {
+        if (hList->hPointerOfSectorSO != hSector2 && HIE_bDetectIntersectSegmentWithSuperObject(p_stVertex1, &stTempVector, hList->hPointerOfSectorSO))
+            return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1143–1277 */
@@ -3845,7 +4013,54 @@ tdstNodeInterpret_* fn_p_stValidityCondition(HIE_tdstSuperObject_* p_SuperObjPer
     tdstStandardGame_* hStdGame;
     tdeCondId_ eCondId;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    int lValue;
+    int bValid;
+    int bTmp;
+
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    switch (eCondId) {
+    case 57:
+        *p_lValue = stParam.uDummy.uParam.hSuperObject != NULL;
+        return p_stTree;
+    case 55:
+        *p_lValue = stParam.uDummy.uParam.lValue != -1;
+        return p_stTree;
+    case 50:
+        lValue = 0;
+        bValid = 0;
+        hObject = stParam.uDummy.uParam.p_stEngObjValue;
+        bTmp = hObject != NULL && (hStdGame = hObject->h_StandardGame) != NULL;
+        if (bTmp) {
+            bTmp = !(unsigned char)((hStdGame->ucMiscFlags & 1) ? 1 : 0);
+            if (bTmp)
+                bValid = 1;
+        }
+        if (bValid) {
+            if (hObject->h_StandardGame->otObjectFamilyType != -1)
+                lValue = 1;
+        }
+        *p_lValue = lValue;
+        return p_stTree;
+    case 51:
+        *p_lValue = stParam.uDummy.uParam.hSuperObject != NULL;
+        return p_stTree;
+    case 56:
+        *p_lValue = stParam.uDummy.uParam.hSuperObject != NULL;
+        return p_stTree;
+    case 52:
+        *p_lValue = stParam.uDummy.uParam.hSuperObject != NULL;
+        return p_stTree;
+    case 53:
+        *p_lValue = stParam.uDummy.uParam.hSuperObject != NULL;
+        return p_stTree;
+    case 54:
+        *p_lValue = stParam.uDummy.uParam.hSuperObject != NULL;
+        return p_stTree;
+    default:
+        *p_lValue = 0;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1027–1048 */
@@ -3867,11 +4082,18 @@ tdstNodeInterpret_* fn_p_stValidityCondition(HIE_tdstSuperObject_* p_SuperObjPer
  */
 tdstNodeInterpret_* fn_p_stTimeCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    unsigned int ulLimitDeltaTime;
-    unsigned int ulSavedTime;
-    unsigned int ulCurrentTime;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    unsigned int ulCurrentTime;
+    unsigned int ulSavedTime;
+    unsigned int ulLimitDeltaTime;
+
+    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulSavedTime = stParam.uDummy.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulLimitDeltaTime = stParam.uDummy.uParam.ulValue;
+    *p_lValue = (ulCurrentTime >= ulSavedTime ? ulCurrentTime - ulSavedTime : -(ulCurrentTime - ulSavedTime)) >= ulLimitDeltaTime;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 979–1020 */
@@ -3902,9 +4124,50 @@ tdstNodeInterpret_* fn_p_stTimeCondition(HIE_tdstSuperObject_* p_SuperObjPerso, 
 tdstNodeInterpret_* fn_p_stListCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdeCondId_ eCondId;
-    tdstGetSetParam_ stParam2;
     tdstGetSetParam_ stParam1;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam2;
+
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    switch (eCondId) {
+    case 38:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+        *p_lValue = fn_bFindPersoInList((tdstList_*)stParam1.uDummy.uParam.p_stEngObjValue, fn_h_StandardGameGetSuperObject(stParam2.uDummy.uParam.p_stEngObjValue->h_StandardGame));
+        return p_stTree;
+    case 39:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+        *p_lValue = fn_bFindModelInList((tdstList_*)stParam1.uDummy.uParam.p_stEngObjValue, stParam2.uDummy.uParam.p_stModel);
+        return p_stTree;
+    case 40:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+        *p_lValue = fn_bFindFamilyInList((tdstList_*)stParam1.uDummy.uParam.p_stEngObjValue, stParam2.uDummy.uParam.hFamily);
+        return p_stTree;
+    case 41:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+        *p_lValue = ((tdstList_*)stParam1.uDummy.uParam.p_stEngObjValue)->ucNbElt == 0;
+        return p_stTree;
+    default:
+        *p_lValue = 0;
+        return p_stTree;
+    }
+}
+
+int GMT_fn_b_ulIsValid(GMT_tdstGameMaterial_* hGameMat);
+GMT_tdstCollideMaterial_* GMT_fn_hGetCollideMaterial(GMT_tdstGameMaterial_* hGameMat);
+unsigned short GMT_fn_hGetCollideMaterialIdentifier(GMT_tdstCollideMaterial_* hCollideMaterial);
+static inline unsigned char fn_bZDMMaterialMatch(GMT_tdstGameMaterial_* hGameMat, unsigned short xTestMask)
+{
+    GMT_tdstCollideMaterial_* hCollideMat;
+    unsigned short xId;
+    if (!GMT_fn_b_ulIsValid(hGameMat))
+        return 0;
+    hCollideMat = GMT_fn_hGetCollideMaterial(hGameMat);
+    if (hCollideMat == (GMT_tdstCollideMaterial_*)-1)
+        return 0;
+    xId = GMT_fn_hGetCollideMaterialIdentifier(hCollideMat);
+    return (xTestMask & xId) == xTestMask;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 877–972 */
@@ -3949,13 +4212,60 @@ tdstNodeInterpret_* fn_p_stListCondition(HIE_tdstSuperObject_* p_SuperObjPerso, 
  */
 tdstNodeInterpret_* fn_p_stReportOnZDMSurfaceCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdeCondId_ eCondId;
-    unsigned short xTestMask;
-    unsigned int ulSurfState;
-    DNM_stReport* p_stDynamReport;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    DNM_stReport* p_stDynamReport;
+    unsigned int ulSurfState;
+    unsigned short xTestMask;
+    tdeCondId_ eCondId;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
+    if (!(p_stDynamReport = fn_pstGetDNMReport(hNewSuperObjPerso))) {
+        *p_lValue = 0;
+        return p_stTree;
+    }
+    ulSurfState = p_stDynamReport->m_ulCurrSurfaceState;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xTestMask = stParam.uDummy.uParam.xMask;
+    switch (eCondId) {
+    case 34:
+        if ((ulSurfState & 1) == 1)
+            *p_lValue = fn_bZDMMaterialMatch(p_stDynamReport->m_stGround.hMyMaterial, xTestMask);
+        else
+            *p_lValue = 0;
+        return p_stTree;
+    case 35:
+        if ((ulSurfState & 4) == 4)
+            *p_lValue = fn_bZDMMaterialMatch(p_stDynamReport->m_stWall.hMyMaterial, xTestMask);
+        else
+            *p_lValue = 0;
+        return p_stTree;
+    case 36:
+        if (ulSurfState != 0) {
+            if ((ulSurfState & 1) == 1) {
+                *p_lValue = !fn_bZDMMaterialMatch(p_stDynamReport->m_stGround.hMyMaterial, xTestMask);
+            } else if ((ulSurfState & 4) == 4) {
+                *p_lValue = !fn_bZDMMaterialMatch(p_stDynamReport->m_stWall.hMyMaterial, xTestMask);
+            } else if ((ulSurfState & 0x10) == 0x10) {
+                *p_lValue = !fn_bZDMMaterialMatch(p_stDynamReport->m_stCeil.hMyMaterial, xTestMask);
+            } else {
+                *p_lValue = 1;
+            }
+        } else {
+            *p_lValue = 1;
+        }
+        return p_stTree;
+    case 37:
+        if ((ulSurfState & 0x10) == 0x10)
+            *p_lValue = fn_bZDMMaterialMatch(p_stDynamReport->m_stCeil.hMyMaterial, xTestMask);
+        else
+            *p_lValue = 0;
+        return p_stTree;
+    default:
+        *p_lValue = 0;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 831–869 */
@@ -3986,7 +4296,22 @@ tdstNodeInterpret_* fn_p_stReportThisPerso(HIE_tdstSuperObject_* p_SuperObjPerso
     HIE_tdstSuperObject_* hPersoSupObj;
     tdstGetSetParam_ stParam;
     DNM_stReport* p_stDynamReport;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(p_stTree[-1].uDummy.uId.eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hPersoSupObj = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stDynamReport = fn_pstGetDNMReport(hNewSuperObjPerso);
+    if (p_stDynamReport == NULL) {
+        *p_lValue = 0;
+        return p_stTree;
+    }
+    if ((p_stDynamReport->m_ulCurrSurfaceState & 0x10000) == 0x10000 && p_stDynamReport->m_stCharacter.mp_stSupObj != NULL) {
+        hSupObj = MEC_fn_hGetFatherActor(p_stDynamReport->m_stCharacter.mp_stSupObj);
+        *p_lValue = hSupObj == hPersoSupObj;
+        return p_stTree;
+    }
+    *p_lValue = 0;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 753–827 */
@@ -4036,7 +4361,38 @@ tdstNodeInterpret_* fn_p_stReportOnSurfaceCondition(HIE_tdstSuperObject_* p_Supe
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdeCondId_ eCondId;
     DNM_stReport* p_stDynamReport;
-    /* TODO: decompile from asm/... */
+
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stDynamReport = fn_pstGetDNMReport(hNewSuperObjPerso);
+    if (p_stDynamReport == NULL) {
+        *p_lValue = 0;
+        return p_stTree;
+    }
+    ulSurfState = p_stDynamReport->m_ulCurrSurfaceState;
+    switch (eCondId) {
+    case 27:
+        *p_lValue = (ulSurfState & 1) == 1;
+        return p_stTree;
+    case 28:
+        *p_lValue = (ulSurfState & 4) == 4;
+        return p_stTree;
+    case 29:
+        *p_lValue = ulSurfState == 0;
+        return p_stTree;
+    case 30:
+        *p_lValue = (ulSurfState & 0x10) == 0x10;
+        return p_stTree;
+    case 31:
+        *p_lValue = (ulSurfState & 0x10000) == 0x10000;
+        return p_stTree;
+    case 32:
+        *p_lValue = (ulSurfState & 0x40) == 0x40;
+        return p_stTree;
+    default:
+        *p_lValue = 0;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 542–746 */
@@ -4198,13 +4554,49 @@ tdstNodeInterpret_* fn_p_stZDECondition(HIE_tdstSuperObject_* p_SuperObjPerso, t
  */
 tdstNodeInterpret_* fn_p_stZDDCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
-    unsigned char ucModuleOrCharacter;
-    unsigned char ucChannelNumber;
-    tdeCondId_ eCondId;
-    HIE_tdstSuperObject_* hCharacter2;
-    HIE_tdstSuperObject_* hCharacter1;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hCharacter1;
+    HIE_tdstSuperObject_* hCharacter2;
+    tdeCondId_ eCondId;
+    unsigned char ucChannelNumber;
+    unsigned char ucModuleOrCharacter;
+
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hCharacter1 = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    switch (eCondId) {
+    case 10:
+    case 11:
+        ucModuleOrCharacter = (eCondId == 10) ? 0 : 1;
+        ucChannelNumber = stParam.uDummy.uParam.ucValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hCharacter2 = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+        if (hCharacter1 != NULL)
+            *p_lValue = fn_bIsCharacterTWODetectedByThisZddOfCharacterOne(hCharacter1, ucModuleOrCharacter, ucChannelNumber, hCharacter2);
+        else
+            *p_lValue = 0;
+        return p_stTree;
+    case 12:
+        hCharacter2 = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+        if (hCharacter1 != NULL && hCharacter2 != NULL)
+            *p_lValue = fn_bIsCharacterTWODetectedByCharacterOne(hCharacter1, hCharacter2);
+        else
+            *p_lValue = 0;
+        return p_stTree;
+    case 13:
+    case 14:
+        ucModuleOrCharacter = (eCondId == 13) ? 0 : 1;
+        ucChannelNumber = stParam.uDummy.uParam.ucValue;
+        if (hCharacter1 != NULL)
+            *p_lValue = fn_ucAtLeastOnePersoInZdd(hCharacter1, ucModuleOrCharacter, ucChannelNumber);
+        else
+            *p_lValue = 0;
+        return p_stTree;
+    default:
+        *p_lValue = 0;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 346–442 */
@@ -4270,7 +4662,73 @@ tdstNodeInterpret_* fn_p_stButtonCondition(HIE_tdstSuperObject_* p_SuperObjPerso
     unsigned char ucPadNumber;
     tdeCondId_ eCondId;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    switch (eCondId) {
+    case 45:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        *p_lValue = IPT_fn_bIsValidated((IPT_tdstEntryElement_*)stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    case 46:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        *p_lValue = IPT_fn_bIsJustValidated((IPT_tdstEntryElement_*)stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    case 47:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        *p_lValue = IPT_fn_bIsInvalidated((IPT_tdstEntryElement_*)stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    case 48:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        *p_lValue = IPT_fn_bIsJustInvalidated((IPT_tdstEntryElement_*)stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    case 145:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        ucPadNumber = stValue.uDummy.uParam.ucValue;
+        if (ucPadNumber > 15)
+            ucPadNumber = 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        ucButtonNumber = stValue.uDummy.uParam.ucValue;
+        if (ucButtonNumber > 15)
+            ucButtonNumber = 0;
+        *p_lValue = IPT_fn_bIsValidatedPadButton(ucPadNumber, ucButtonNumber);
+        return p_stTree;
+    case 146:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        ucPadNumber = stValue.uDummy.uParam.ucValue;
+        if (ucPadNumber > 15)
+            ucPadNumber = 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        ucButtonNumber = stValue.uDummy.uParam.ucValue;
+        if (ucButtonNumber > 15)
+            ucButtonNumber = 0;
+        *p_lValue = IPT_fn_bIsJustValidatedPadButton(ucPadNumber, ucButtonNumber);
+        return p_stTree;
+    case 147:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        ucPadNumber = stValue.uDummy.uParam.ucValue;
+        if (ucPadNumber > 15)
+            ucPadNumber = 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        ucButtonNumber = stValue.uDummy.uParam.ucValue;
+        if (ucButtonNumber > 15)
+            ucButtonNumber = 0;
+        *p_lValue = IPT_fn_bIsInvalidatedPadButton(ucPadNumber, ucButtonNumber);
+        return p_stTree;
+    case 148:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        ucPadNumber = stValue.uDummy.uParam.ucValue;
+        if (ucPadNumber > 15)
+            ucPadNumber = 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        ucButtonNumber = stValue.uDummy.uParam.ucValue;
+        if (ucButtonNumber > 15)
+            ucButtonNumber = 0;
+        *p_lValue = IPT_fn_bIsJustInvalidatedPadButton(ucPadNumber, ucButtonNumber);
+        return p_stTree;
+    default:
+        *p_lValue = 0;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 249–339 */
@@ -4318,7 +4776,54 @@ tdstNodeInterpret_* fn_p_stBooleanCondition(HIE_tdstSuperObject_* p_SuperObjPers
     tdstNodeInterpret_* p_stTreeInit;
     tdeCondId_ eCondId;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    *p_lValue = stValue.uDummy.uParam.lValue;
+    switch (eCondId) {
+    case 0:
+        if (*p_lValue == 0) {
+            if (p_stTree->uwNodeToSkip) {
+                p_stTreeInit = p_stTree;
+                p_stTree = (tdstNodeInterpret_*)(p_stTree->uwNodeToSkip * sizeof(tdstNodeInterpret_) + (char*)p_stTree);
+            } else {
+                p_stTreeInit = p_stTree;
+                p_stTree = fn_p_stSwapNextParameter(p_stTree);
+                p_stTreeInit->uwNodeToSkip = (unsigned short)(p_stTree - p_stTreeInit);
+            }
+        } else {
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+            *p_lValue = stValue.uDummy.uParam.lValue;
+        }
+        break;
+    case 1:
+        if (*p_lValue != 0) {
+            if (p_stTree->uwNodeToSkip) {
+                p_stTreeInit = p_stTree;
+                p_stTree = (tdstNodeInterpret_*)(p_stTree->uwNodeToSkip * sizeof(tdstNodeInterpret_) + (char*)p_stTree);
+            } else {
+                p_stTreeInit = p_stTree;
+                p_stTree = fn_p_stSwapNextParameter(p_stTree);
+                p_stTreeInit->uwNodeToSkip = (unsigned short)(p_stTree - p_stTreeInit);
+            }
+        } else {
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+            *p_lValue = stValue.uDummy.uParam.lValue;
+        }
+        break;
+    case 2:
+        *p_lValue = !*p_lValue;
+        break;
+    case 3:
+        l1 = *p_lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        *p_lValue = l1 != *p_lValue;
+        break;
+    default:
+        *p_lValue = 0;
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 115–242 */

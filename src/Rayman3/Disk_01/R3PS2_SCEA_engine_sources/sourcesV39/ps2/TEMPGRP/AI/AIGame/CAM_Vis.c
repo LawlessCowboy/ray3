@@ -3423,9 +3423,47 @@ void CAM_fn_vCheckForABetterPos(CAM_tdstUpdateCamera_* _p_stStruct)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* PS2 MTH helpers: sqrt.s and the R5900 accumulator ops have no C form under
+   the baseline. */
+inline float MTH_xSqrt(float _xValue)
+{
+    float xResult;
+    asm { sqrt.s xResult, _xValue }
+    return xResult;
+}
+
+inline float MTH3D_xSqrVector(MTH3D_tdstVector_* _p_stV)
+{
+    float xZ, xY, xX, xResult;
+    xZ = _p_stV->xZ; xY = _p_stV->xY; xX = _p_stV->xX;
+    asm { mula.s xX, xX }
+    asm { madda.s xY, xY }
+    asm { madd.s xResult, xZ, xZ }
+    return xResult;
+}
+
+inline float MTH3D_xVectorGap(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
+{
+    float xX, xY, xZ, xResult;
+    xX = _p_stA->xX - _p_stB->xX; xY = _p_stA->xY - _p_stB->xY; xZ = _p_stA->xZ - _p_stB->xZ;
+    asm { mula.s xX, xX }
+    asm { madda.s xY, xY }
+    asm { madd.s xResult, xZ, xZ }
+    return MTH_xSqrt(xResult);
+}
+
 char CAM_fn_cCanResetConstraintMoveVisFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWanted)
 {
-    /* TODO: decompile from asm/... */
+    if (_p_stStruct->hCineinfo->eState == 0)
+        return 1;
+
+    if (_p_stStruct->hCineinfo->xCounter4 >= 1000.0f * (float)CAM_g_stCameraConstants.xTickFindBetterPosIfNoMove * g_stEngineStructure.stEngineTimer.xFrameLength)
+        return 1;
+
+    if (!(_p_stStruct->hCineinfo->ucPerIAFlags & 8))
+        return 1;
+
+    return ((MTH3D_xVectorGap(_p_stWanted, &_p_stStruct->hCineinfo->stLastFailedOrigin) > 0.5f + MTH3D_xVectorGap(&_p_stStruct->hCineinfo->stLastFailedWanted, &_p_stStruct->hCineinfo->stLastFailedOrigin)) ? (char)0 : (char)1) ^ 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1585–1631 */
@@ -3455,6 +3493,8 @@ void CAM_fn_vMakeAsNewIdealPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_td
     /* TODO: decompile from asm/... */
 }
 
+void CAM_fn_vComputeCineinfoWorkForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1569–1577 */
 /* addr: 0x0020b620  size: 232 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3472,7 +3512,11 @@ void CAM_fn_vMakeAsNewIdealPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_td
 void CAM_fn_vComputeCineinfoCurrentForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition)
 {
     tdstInternalStructurCineinfo_* p_stMemo;
-    /* TODO: decompile from asm/... */
+
+    p_stMemo = _p_stStruct->hCineinfoWork;
+    _p_stStruct->hCineinfoWork = _p_stStruct->hCineinfoCurrent;
+    CAM_fn_vComputeCineinfoWorkForAPosition(_p_stStruct, _p_stPosition);
+    _p_stStruct->hCineinfoWork = p_stMemo;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1534–1567 */
@@ -3493,14 +3537,31 @@ void CAM_fn_vComputeCineinfoCurrentForAPosition(CAM_tdstUpdateCamera_* _p_stStru
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vComputeRefAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stRefAxis);
+void CAM_fn_vComputeAnglesBetweenTwoVectors(tdstInternalStructurCineinfo_* _hCineinfo, MTH3D_tdstVector_* _p_stSourceVector, MTH3D_tdstVector_* _p_stTargetVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle, MTH3D_tdstVector_* _p_stRefAxisZ);
+
+#pragma auto_inline on
 void CAM_fn_vComputeCineinfoWorkForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition)
 {
-    float xThetaAngle;
     float xAlphaAngle;
+    float xThetaAngle;
     MTH3D_tdstVector_ stCamTargetVector;
     MTH3D_tdstVector_ stDir;
-    /* TODO: decompile from asm/... */
+    float xDist;
+
+    CAM_fn_vComputeRefAxis(_p_stStruct, &stCamTargetVector);
+
+    stDir.xX = _p_stPosition->xX - _p_stStruct->stTargetedPersoPos.xX; stDir.xY = _p_stPosition->xY - _p_stStruct->stTargetedPersoPos.xY; stDir.xZ = _p_stPosition->xZ - _p_stStruct->stTargetedPersoPos.xZ;
+    xDist = MTH_xSqrt(MTH3D_xSqrVector(&stDir));
+
+    CAM_fn_vComputeAnglesBetweenTwoVectors(_p_stStruct->hCineinfoWork, &stCamTargetVector, &stDir, &xAlphaAngle, &xThetaAngle, &_p_stStruct->stCptPos.stRefAxisZ);
+
+    _p_stStruct->hCineinfoWork->xDistMin = xDist;
+    _p_stStruct->hCineinfoWork->xDistMax = xDist;
+    _p_stStruct->hCineinfoWork->xAngleAlpha = xAlphaAngle;
+    _p_stStruct->hCineinfoWork->xAngleTheta = xThetaAngle;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1458–1513 */
 /* addr: 0x0020b7e0  size: 340 bytes */

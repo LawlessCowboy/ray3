@@ -3571,6 +3571,17 @@ _stMenuPause myMenuPause;
 void TXT_vSetTransparence(int StringNumber, unsigned int ulTransparence);
 unsigned char fn_ucChangeComportIntell(tdstIntelligence_* p_stIntelligence, tdstComport_* p_stComport);
 void fn_vSetProcedureActionReturn(unsigned char ucActionReturn);
+void VID_fn_vPlayVideoNow(void);
+void VID_fn_vPlayVideoAfterLevel(void);
+void VID_fn_vNextVideoToPlay(char* p_szVideoName, unsigned char bCanBeInterrupt, unsigned char bLoop);
+void VID_fn_vSetVideoQuality(unsigned char ucBPP, unsigned char ucVideoQuality);
+void CS_fn_vSetCharacterPriority(tdstCollSet_* hCollSet, unsigned char _ucPriority);
+void fn_v3dDataFactorFrameRate(tdst3dData_* _h3dData, unsigned int _ulFactor100);
+void fn_vChangeDynamicAlwaysActiveState(HIE_tdstSuperObject_* hCharacter, unsigned char bNewState);
+void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel, unsigned char _bControlled);
+void fn_vInitActionTable(tdstIntelligence_* p_stIntelligence);
+int fn_h_GetCurrentDNMIdCard(HIE_tdstSuperObject_* p_SuperObjPerso);
+void fn_vSnifThePlayerIsDead(void);
 void GAM_fn_vSetActorToLoad(tdstEngineObject_* p_stEngineObject);
 void GAM_fn_vSetFamilyToLoad(tdstFamilyList_* h_Family);
 void fn_vSetUnusedTextures(int bUnused);
@@ -3684,6 +3695,17 @@ void GAM_fn_vSetLoadingLevel(char* _szLevelTag);
 void Toby_Destroy(unsigned int IDNumber);
 void Toby_SetTransparency(unsigned int IDNumber, float fAlphaValue);
 void Toby_SetMaterial(void* unused, GLI_tdstMaterial_* hVisualMaterial);
+unsigned char fn_ucSubHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+unsigned char fn_ucSubHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+void fn_vAddHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+void fn_vAddHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+void fn_vSetHitPointsInit(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+void fn_vSetHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+void fn_vSetHitPointsMaxToInitValue(tdstEngineObject_* _p_stObject);
+void fn_vSetHitPointsMaxToMaxValue(tdstEngineObject_* _p_stObject);
+void fn_vSetHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+void fn_vSetHitPointsToInitValue(tdstEngineObject_* _p_stObject);
+void fn_vSetHitPointsToMaxValue(tdstEngineObject_* _p_stObject);
 
 /* Engine float-to-int conversion: retail converts through $f30 at 164 sites
  * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
@@ -5118,7 +5140,33 @@ tdstNodeInterpret_* fn_p_stVideoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso,
     char cCanInterrupt;
     char* p_szVideoName;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_EnqueueVideo:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_szVideoName = fn_szGetStringFromTextOrStringParam(&stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        cCanInterrupt = (char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        VID_fn_vNextVideoToPlay(p_szVideoName, cCanInterrupt, (char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue));
+        VID_fn_vPlayVideoAfterLevel();
+        break;
+    case eProc_VideoQuality:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        VID_fn_vSetVideoQuality(32, (char)((stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue));
+        break;
+    case eProc_PlayVideo:
+        VID_fn_vPlayVideoNow();
+        break;
+    case eProc_PlayVideoAfterLevel:
+        VID_fn_vPlayVideoAfterLevel();
+        break;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 5509–5555 */
@@ -7183,13 +7231,34 @@ tdstNodeInterpret_* fn_p_stTurnPersoProcedure(HIE_tdstSuperObject_* p_SuperObjPe
  */
 tdstNodeInterpret_* fn_p_stTurnProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstDynam_* hDynam;
-    DNM_stDynamics* p_stDynamics;
-    tdeProcedureId_ eProcedureId;
-    float xAngle;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    float xAngle;
+    tdeProcedureId_ eProcedureId;
+    DNM_stDynamics* p_stDynamics;
+    tdstDynam_* hDynam;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xAngle = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+
+    hDynam = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (hDynam && (p_stDynamics = fn_p_stDynamGetDynamics(hDynam)) != NULL)
+    {
+        switch (eProcedureId)
+        {
+        case eProc_Turn:
+            MEC_vTurnAroundZAxis(p_stDynamics, 0.017453292f * xAngle * (0.001f * g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime));
+            break;
+        case eProc_Turn2:
+            MEC_vTurnAroundZAxis(p_stDynamics, 0.017453292f * xAngle);
+            break;
+        }
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 2575–2615 */
@@ -7752,8 +7821,36 @@ tdstNodeInterpret_* fn_p_stModuleControlProcedure(HIE_tdstSuperObject_* p_SuperO
 {
     int lModuleId;
     tdeProcedureId_ eProcedureId;
-    tdstGetSetParam_ stParam1;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam1 = {0};
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    if (eProcedureId != eProc_ReleaseAllModulesControl)
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+
+    switch (eProcedureId)
+    {
+    case eProc_TakeManyModulesControl:
+        lModuleId = stParam1.uDummy.uParam.lValue;
+        lModuleId--;
+        while (lModuleId >= 0)
+        {
+            fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, lModuleId, 1);
+            lModuleId--;
+        }
+        return p_stTree;
+    case eProc_TakeModuleControl:
+        fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, stParam1.uDummy.uParam.uwValue, 1);
+        return p_stTree;
+    case eProc_ReleaseModuleControl:
+        fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, stParam1.uDummy.uParam.uwValue, 0);
+        return p_stTree;
+    case eProc_ReleaseAllModulesControl:
+        fn_vTakeControlOfChannel(p_SuperObjPerso->hLinkedObject.p_stCharacter, 0xffff, 0);
+        return p_stTree;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1587–1662 */
@@ -7887,6 +7984,11 @@ tdstNodeInterpret_* fn_p_stLinkTableProcedure(HIE_tdstSuperObject_* p_SuperObjPe
     return p_stTree;
 }
 
+void fn_vAddList(tdstList_* p_stListA, tdstList_* p_stListB);
+void fn_vUnionList(tdstList_* p_stListA, tdstList_* p_stListB, tdstList_* p_stListC);
+void fn_vInterList(tdstList_* p_stListA, tdstList_* p_stListB, tdstList_* p_stListC);
+void fn_vDiffList(tdstList_* p_stListA, tdstList_* p_stListB, tdstList_* p_stListC);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1462–1507 */
 /* addr: 0x0023a620  size: 252 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -7916,12 +8018,41 @@ tdstNodeInterpret_* fn_p_stLinkTableProcedure(HIE_tdstSuperObject_* p_SuperObjPe
  */
 tdstNodeInterpret_* fn_p_stListEnsembleProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstList_* p_stListC;
-    tdstList_* p_stListB;
-    tdstList_* p_stListA;
-    tdeProcedureId_ eProcedureId;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    tdeProcedureId_ eProcedureId;
+    tdstList_* p_stListA;
+    tdstList_* p_stListB;
+    tdstList_* p_stListC;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    p_stListA = *(tdstList_**)&stValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    p_stListB = *(tdstList_**)&stValue;
+
+    if (eProcedureId == eProc_ListAdd)
+    {
+        fn_vAddList(p_stListA, p_stListB);
+        return p_stTree;
+    }
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    p_stListC = *(tdstList_**)&stValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_ListUnion:
+        fn_vUnionList(p_stListA, p_stListB, p_stListC);
+        return p_stTree;
+    case eProc_ListInter:
+        fn_vInterList(p_stListA, p_stListB, p_stListC);
+        return p_stTree;
+    case eProc_ListDiff:
+        fn_vDiffList(p_stListA, p_stListB, p_stListC);
+        return p_stTree;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1305–1457 */
@@ -8024,12 +8155,24 @@ tdstNodeInterpret_* fn_p_stListProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void fn_vFillListWithAllPersoOfAModel(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, AI_tdstAIModel_* _p_stModel)
 {
     tdstBrain_* hBrain;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    if (_p_stList->ucNbElt >= _p_stList->ucMaxSize)
+        return;
+    if (_hFather->ulTypeOfLinkedObject == 2)
+    {
+        hBrain = _hFather->hLinkedObject.p_stCharacter->h_Brain;
+        if (hBrain && hBrain->p_stMind->p_stAIModel == _p_stModel)
+            fn_vPutInList(_p_stList, _hFather);
+    }
+    for (hChild = _hFather->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+        fn_vFillListWithAllPersoOfAModel(_p_stList, hChild, _p_stModel);
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1249–1268 */
 /* addr: 0x0023ac90  size: 268 bytes */
@@ -8046,11 +8189,19 @@ void fn_vFillListWithAllPersoOfAModel(tdstList_* _p_stList, HIE_tdstSuperObject_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void fn_vFillListWithAllPersoOfAFamilly(tdstList_* _p_stList, HIE_tdstSuperObject_* _hFather, tdstFamilyList_* _hFamily)
 {
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    if (_p_stList->ucNbElt >= _p_stList->ucMaxSize)
+        return;
+    if (_hFather->ulTypeOfLinkedObject == 2 && _hFather->hLinkedObject.p_stCharacter->h_3dData->h_Family == _hFamily)
+        fn_vPutInList(_p_stList, _hFather);
+    for (hChild = _hFather->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)
+        fn_vFillListWithAllPersoOfAFamilly(_p_stList, hChild, _hFamily);
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1148–1242 */
 /* addr: 0x0023ada0  size: 412 bytes */
@@ -8124,8 +8275,51 @@ tdstNodeInterpret_* fn_p_stListZDDZDEProcedure(HIE_tdstSuperObject_* p_SuperObjP
 tdstNodeInterpret_* fn_p_stHitPointsMaxProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdeProcedureId_ eProcedureId;
+    tdstEngineObject_* p_stObject;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    switch (eProcedureId)
+    {
+    case eProc_SetHitPointsMax:
+    {
+        tdstGetSetParam_ stValue;
+
+        p_stObject = stParam.uDummy.uParam.p_stEngObjValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        fn_vSetHitPointsMax(p_stObject, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+    case eProc_SetHitPointsMaxToInitValue:
+        fn_vSetHitPointsMaxToInitValue(stParam.uDummy.uParam.p_stEngObjValue);
+        return p_stTree;
+    case eProc_SetHitPointsMaxToMaxValue:
+        fn_vSetHitPointsMaxToMaxValue(stParam.uDummy.uParam.p_stEngObjValue);
+        return p_stTree;
+    case eProc_AddHitPointsMax:
+    {
+        tdstGetSetParam_ stValue;
+
+        p_stObject = stParam.uDummy.uParam.p_stEngObjValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        fn_vAddHitPointsMax(p_stObject, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+    case eProc_SubHitPointsMax:
+    {
+        tdstGetSetParam_ stValue;
+
+        p_stObject = stParam.uDummy.uParam.p_stEngObjValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        fn_ucSubHitPointsMax(p_stObject, (stValue.eType == E_vt_Float) ? MTH_M_xRealToLong(stValue.uDummy.uParam.xValue) : stValue.uDummy.uParam.lValue);
+        return p_stTree;
+    }
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1037–1088 */
@@ -8209,13 +8403,39 @@ tdstNodeInterpret_* fn_p_stLogWindowProcedure(HIE_tdstSuperObject_* p_SuperObjPe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+HIE_tdstSuperObject_* CAM_fn_hCineInfoGetSuperObjectTargeted(tdstInternalStructurCineinfo_* hCineinfo);
+
 tdstNodeInterpret_* fn_p_stDynamProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned int ulIndex;
     tdstCineinfo_* hCineinfo;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    switch (eProcedureId)
+    {
+    case 0xAD:
+        if (g_stEngineStructure.h_StdCamCaracter)
+        {
+            hCineinfo = g_stEngineStructure.h_StdCamCaracter->hLinkedObject.p_stCharacter->h_Cineinfo;
+            if (CAM_fn_hCineInfoGetSuperObjectTargeted(hCineinfo->hCurrent) == hNewSuperObjPerso)
+            {
+                MTH3D_tdstVector_* p_stPos = (MTH3D_tdstVector_*)&hNewSuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
+                for (ulIndex = 0; ulIndex < 8; ulIndex++)
+                {
+                    hCineinfo->AveragePosition.a_CheckedTime[ulIndex] = 0.03f;
+                    hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xX = 0.0f; hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xY = 0.0f; hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xZ = 0.0f;
+                    *(int*)&hCineinfo->AveragePosition.a_CheckedPos[ulIndex].xX = *(int*)&p_stPos->xX; *(int*)&hCineinfo->AveragePosition.a_CheckedPos[ulIndex].xY = *(int*)&p_stPos->xY; *(int*)&hCineinfo->AveragePosition.a_CheckedPos[ulIndex].xZ = *(int*)&p_stPos->xZ;
+                }
+            }
+        }
+        return p_stTree;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 922–956 */
@@ -8448,8 +8668,54 @@ tdstNodeInterpret_* fn_p_stMiscNoProcedure(HIE_tdstSuperObject_* p_SuperObjPerso
     DNM_stDynamics* p_stDynamics;
     tdstDynam_* h_Dynam;
     tdstComport_* p_stComport;
+    tdstIntelligence_* p_stIntelligence;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_IgnoreTraceFlagForNextPicking:
+        g_ulOverRideRayTraceSpoMask = 0;
+        return p_stTree;
+    case eProc_BreakAI:
+    {
+        AI_tdstMind_* p_stMind;
+
+        p_stMind = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+        if (p_stMind->bDoingIntel)
+            p_stIntelligence = p_stMind->p_stIntelligence;
+        else
+            p_stIntelligence = p_stMind->p_stReflex;
+        p_stComport = p_stIntelligence->p_stCurrentComport;
+        fn_vInitActionTable(p_stIntelligence);
+        if (p_stComport->p_stSchedule == NULL)
+            p_stIntelligence->p_stCurrentSchedule = NULL;
+        else
+            p_stIntelligence->p_stCurrentSchedule = p_stComport->p_stSchedule->p_stNodeInterpret;
+        iNumLoop = 0;
+        fn_vSetProcedureActionReturn(11);
+        return p_stTree;
+    }
+    case eProc_ResetDynamicsWithCard:
+        h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+        if (h_Dynam)
+        {
+            p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+            if (p_stDynamics)
+            {
+                hMecIdCard = (void*)fn_h_GetCurrentDNMIdCard(p_SuperObjPerso);
+                if (hMecIdCard)
+                    DNM_fn_vChangeIdCard(p_stDynamics, hMecIdCard);
+            }
+        }
+        return p_stTree;
+    case eProc_PlayerIsDead:
+        fn_vSnifThePlayerIsDead();
+        return p_stTree;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 431–492 */
@@ -8487,7 +8753,34 @@ tdstNodeInterpret_* fn_p_stMiscUltraProcedure(HIE_tdstSuperObject_* p_SuperObjPe
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    switch (eProcedureId)
+    {
+    case eProc_SetCharacterPriority:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        CS_fn_vSetCharacterPriority(hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_CollSet, (stParam.eType == E_vt_Float) ? (unsigned int)MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.ulValue);
+        break;
+    case eProc_EraseLastGoThroughMaterial:
+        hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->hLastCollidedGoThroughMaterial = (GMT_tdstGameMaterial_*)0xcdcdcdcd;
+        break;
+    case eProc_FactorAnimationFrameRate:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_v3dDataFactorFrameRate(hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData, (stParam.eType == E_vt_Float) ? (unsigned int)MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.ulValue);
+        break;
+    case eProc_SetGoThroughMechanicsHandling:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->bWarnMechanicsFlag = stParam.uDummy.uParam.cValue;
+        break;
+    case eProc_SetDynamicAlwaysActive:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        fn_vChangeDynamicAlwaysActiveState(hNewSuperObjPerso, stParam.uDummy.uParam.ucValue);
+        break;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 232–277 */
@@ -8522,9 +8815,48 @@ tdstNodeInterpret_* fn_p_stMiscUltraProcedure(HIE_tdstSuperObject_* p_SuperObjPe
  */
 tdstNodeInterpret_* fn_p_stR3SetValue(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    unsigned int ulValue;
-    unsigned int ulIndEnv;
-    tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam;
+    unsigned int ulIndEnv;
+    unsigned int ulValue;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    ulIndEnv = 0;
+    switch (eProcedureId)
+    {
+    case eProc_R3SetScore:
+    case eProc_R3SetNbCage:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        ulIndEnv = stParam.uDummy.uParam.lValue;
+        break;
+    }
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulValue = stParam.uDummy.uParam.lValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_R3SetScore:
+        fn_vR3SetEnvScoreWithRevisit(ulIndEnv, ulValue);
+        break;
+    case eProc_R3SetNbCage:
+        fn_vR3SetEnvNbCage(ulIndEnv, ulValue);
+        break;
+    case eProc_R3SetCurrentEnvNumber:
+        fn_vR3SetCurrentEnvNumber(ulValue);
+        break;
+    case eProc_R3SetNbCineOpen:
+        fn_vR3SetNbCineOpen(ulValue);
+        break;
+    case eProc_R3SetNbBonusOpen:
+        fn_vR3SetNbBonusOpen(ulValue);
+        break;
+    case eProc_R3SetAutoSave:
+        g_DoAutoSaveWhenChangeMap = ulValue;
+        break;
+    case eProc_R3SetEndOfGame:
+        fn_vR3SetEndOfGame(ulValue);
+        break;
+    }
+
+    return p_stTree;
 }

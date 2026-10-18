@@ -35,6 +35,7 @@ typedef union tduGetSetParam_ {
     float xValue;
     MTH3D_tdstVector_ stVectorValue;
     void* pValue;
+    unsigned char ucValue;
 } tduGetSetParam_;
 struct tdstGetSetParam_ { tduGetSetParam_ uParam; tdeVariableType_ eType; };
 
@@ -95,13 +96,89 @@ struct HIE_tdstSuperObject_ {
     unsigned char xTransition;
 };
 
+extern "C" void IPT_fn_vSetUniqueValueForHandle(IPT_tdstEntryElement_* _hElement, unsigned int _ulValue);
 extern "C" tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso,
                                                  tdstNodeInterpret_* p_stTree,
                                                  tdstGetSetParam_* p_stValue);
 extern "C" void GLI_fn_vSetBrightness(int);
 extern "C" unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_);
-extern "C" void fn_vGetUltraOperatorPerso(int, HIE_tdstSuperObject_*, HIE_tdstSuperObject_**);
+extern "C" void fn_vGetUltraOperatorPerso(unsigned char, HIE_tdstSuperObject_*, HIE_tdstSuperObject_**);
 extern "C" float MEC_g_xClimbSpeedLimit;
+struct tdst3dData_;
+struct tdstEngineObject_ { tdst3dData_* h_3dData; tdstStandardGame_* h_StandardGame; tdstDynam_* h_Dynam; void* h_Brain; tdstCineinfo_* h_Cineinfo; tdstCollSet_* h_CollSet; void* h_MSWay; tdstMSLight_* h_MSLight; };
+extern "C" void MEC_fn_vForcePlatformLink(DNM_stDynamics*, HIE_tdstSuperObject_*, HIE_tdstSuperObject_*);
+extern "C" void MEC_fn_vFreePlatformLink(DNM_stDynamics*, HIE_tdstSuperObject_*);
+extern "C" void fn_vMSLightSetColorRGBA(tdstMSLight_*, float, float, float, float);
+extern "C" void fn_v3dDataSetBrainComputationFrequency(tdst3dData_*, unsigned char);
+extern "C" void fn_v3dDataSetLightComputationFrequency(tdst3dData_*, unsigned char);
+extern "C" void fn_vCollSetSetCollComputeFrequency(tdstCollSet_*, unsigned char);
+extern "C" void fn_vCollSetSetCharacterNoCollisionWithMap(tdstCollSet_*, int);
+extern "C" void fn_vCollSetSetCharacterNoCollisionWithSecondaryCharacter(tdstCollSet_*, int);
+extern "C" void fn_vCollSetSetCharacterNoCollisionWithMainCharacter(tdstCollSet_*, int);
+extern "C" void fn_vCollSetSetCharacterNoCollisionWithOtherSectors(tdstCollSet_*, int);
+extern "C" void fn_vCollSetSetCharacterNoCollisionWithProjectile(tdstCollSet_*, int);
+extern "C" void fn_vCollSetSetCharacterNoCollisionZdeWithProjectile(tdstCollSet_*, int);
+union tduVector3Words { MTH3D_tdstVector_ v; unsigned int w[3]; };
+struct DNM_stDynamics {
+    int m_lObjectType;
+    int m_pCurrentIdCard;
+    unsigned int m_ulFlags; /* +0x8 */
+    unsigned int m_ulEndFlags; /* +0xc */
+    float m_aPad10[(0x48 - 0x10) / 4];
+    MTH3D_tdstVector_ m_stScale; /* +0x48 */
+    float m_aPad54[(0x170 - 0x54) / 4];
+    MTH3D_tdstVector_ m_stInertia; /* +0x170 */
+    float m_xStreamPrority;
+    float m_xStreamFactor;
+    MTH3D_tdstVector_ m_stSlideFactor; /* +0x184 */
+    float m_aPad190[(0x1a0 - 0x190) / 4];
+    tduVector3Words m_uStreamSpeed; /* +0x1a0 */
+};
+struct DNM_stReport { unsigned int m_ulPrevSurfaceState; unsigned int m_ulCurrSurfaceState; };
+extern "C" DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_*);
+extern "C" HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_*);
+extern "C" void fn_hGetCollideZdxOfTypeAtIndex(unsigned char, unsigned short, HIE_tdstSuperObject_*);
+extern "C" void fn_vOnAIErm_M_UpdateLastError(int, char*);
+extern "C" DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_*);
+extern "C" void fn_vSuperObjectSetLastCollidedCharacter(HIE_tdstSuperObject_*, HIE_tdstSuperObject_*);
+extern "C" void TXT_ChangeDefaultColor(float, float, float);
+struct AI_tdstBatchOrder_ {
+    HIE_tdstSuperObject_* hPersoToMove;
+    HIE_tdstSuperObject_* hRefPerso;
+    unsigned char ucRefChannel;
+    unsigned char aucPad[0x17];
+    unsigned char ucBatchOrderType;
+};
+static unsigned short AI_gs_uwNbrBatchOrder;
+static AI_tdstBatchOrder_ AI_gs_a_stBatchSetPersoTab[20];
+extern "C" void AI_vProcessSetPersoWithPerso(AI_tdstBatchOrder_*);
+extern "C" void AI_vProcessSetPersoOrientation(AI_tdstBatchOrder_*);
+extern "C" void AI_vProcessSetPersoAtModulePosition(AI_tdstBatchOrder_*);
+extern "C" tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_*);
+extern "C" int sprintf(char*, const char*, ...);
+extern "C" char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
+/* The debug record says void itoa(int, ...); it returns the buffer and callers
+ * pass the long result unextended. */
+extern "C" char* itoa(long value, char* buffer, int radix);
+
+/* Engine float-to-int conversion: retail converts through $f30 at 164 sites
+ * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
+ * never picks for its own conversions. */
+inline long MTH_M_xRealToLong(float _xValue)
+{
+    long _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+struct tdstList_ { unsigned char ucNbOfElements; };
+extern "C" HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_*, unsigned char);
+extern "C" int COLANTIBUG_hHandleOfCharacter;
+extern "C" signed char INO_aJoyUsedByAI[16];
+extern "C" void TFMT_vSetDefaultValuesCharacter(float, float, float);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6566–6587 */
 /* addr: 0x0022f360  size: 176 bytes */
@@ -123,7 +200,12 @@ tdstNodeInterpret_* fn_p_stReleaseAnalogJoystick(HIE_tdstSuperObject_* p_SuperOb
 {
     unsigned char ucPadNumber;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ucPadNumber = (unsigned char)((stParam.eType == E_vt_Float) ? stParam.uParam.xValue : (float)stParam.uParam.lValue);
+    if (ucPadNumber >= 16)
+        ucPadNumber = 0;
+    INO_aJoyUsedByAI[ucPadNumber] = 0;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6508–6560 */
@@ -191,7 +273,22 @@ tdstNodeInterpret_* fn_p_stSHWSetShadowMode(HIE_tdstSuperObject_* p_SuperObjPers
 {
     tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    switch (eProcedureId) {
+    case 0x197:
+        return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    case 0x198:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    case 0x199:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    default:
+        fn_vOnAIErm_M_UpdateLastError(0x27, 0);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6304–6445 */
@@ -374,10 +471,16 @@ tdstNodeInterpret_* fn_p_stSelectDriver(HIE_tdstSuperObject_* p_SuperObjPerso, t
  */
 tdstNodeInterpret_* fn_p_stSetDefaultFormatCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    float xLineHeight;
     float xCharWidth;
+    float xLineHeight;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xCharWidth = stParam.uParam.xValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xLineHeight = stParam.uParam.xValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    TFMT_vSetDefaultValuesCharacter(xCharWidth, xLineHeight, stParam.uParam.xValue);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 5878–5950 */
@@ -508,7 +611,17 @@ tdstNodeInterpret_* fn_p_st_InputProcedure(HIE_tdstSuperObject_* p_SuperObjPerso
     IPT_tdstEntryElement_* IPT_xHandle;
     tdeProcedureId_ eProcedureId;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    switch (eProcedureId) {
+    case 406:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        IPT_xHandle = (IPT_tdstEntryElement_*)stParam.uParam.pValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        IPT_fn_vSetUniqueValueForHandle(IPT_xHandle, stParam.uParam.lValue);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 5763–5800 */
@@ -1221,14 +1334,30 @@ tdstNodeInterpret_* fn_p_stReadAnalogJoystickMario(HIE_tdstSuperObject_* p_Super
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: the redundant second ulFlags store reproduces retail. */
 tdstNodeInterpret_* fn_p_LinkControl(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstDynam_* h_Dynam;
     DNM_stDynamics* pstDynamic;
     unsigned char bValue;
+    unsigned int ulFlags;
     HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    bValue = stParam.uParam.ucValue;
+    h_Dynam = ((tdstEngineObject_*)hPerso->hLinkedObject.p_stCharacter)->h_Dynam;
+    if (!h_Dynam)
+        return p_stTree;
+    pstDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+    if (!pstDynamic)
+        return p_stTree;
+    if (bValue)
+        pstDynamic->m_ulFlags = ulFlags = pstDynamic->m_ulFlags | 0x40000000;
+    else
+        pstDynamic->m_ulFlags = ulFlags = pstDynamic->m_ulFlags & ~0x40000000;
+    pstDynamic->m_ulFlags = ulFlags;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 4691–4710 */
@@ -1247,8 +1376,8 @@ tdstNodeInterpret_* fn_p_LinkControl(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  */
 tdstNodeInterpret_* fn_p_stActivationZDR(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
+    HIE_tdstSuperObject_* hPerso;
     fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hPerso);
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     if (stParam.uParam.lValue)
@@ -1285,7 +1414,25 @@ tdstNodeInterpret_* fn_p_stSetComputationFrequency(HIE_tdstSuperObject_* p_Super
     unsigned char ucFrequency;
     HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ucFrequency = stParam.uParam.ucValue;
+    switch (eProcedureId) {
+    case 0x174:
+        fn_v3dDataSetBrainComputationFrequency(((tdstEngineObject_*)hPerso->hLinkedObject.p_stCharacter)->h_3dData, ucFrequency);
+        break;
+    case 0x173:
+        fn_vCollSetSetCollComputeFrequency(((tdstEngineObject_*)hPerso->hLinkedObject.p_stCharacter)->h_CollSet, ucFrequency);
+        break;
+    case 0x175:
+        fn_v3dDataSetLightComputationFrequency(((tdstEngineObject_*)hPerso->hLinkedObject.p_stCharacter)->h_3dData, ucFrequency);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(0x28, 0);
+        return p_stTree;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 4579–4633 */
@@ -1322,10 +1469,38 @@ tdstNodeInterpret_* fn_p_stSetCollSetCollisionFlag(HIE_tdstSuperObject_* p_Super
 {
     tdstCollSet_* hCollSet;
     tdeProcedureId_ eProcedureId;
-    unsigned char bValue;
+    int bValue;
     HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hPerso);
+    hCollSet = ((tdstEngineObject_*)hPerso->hLinkedObject.p_stCharacter)->h_CollSet;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    bValue = stParam.uParam.ucValue;
+    switch (eProcedureId) {
+    case 0x16d:
+        fn_vCollSetSetCharacterNoCollisionWithMap(hCollSet, bValue);
+        break;
+    case 0x16e:
+        fn_vCollSetSetCharacterNoCollisionWithSecondaryCharacter(hCollSet, bValue);
+        break;
+    case 0x16f:
+        fn_vCollSetSetCharacterNoCollisionWithMainCharacter(hCollSet, bValue);
+        break;
+    case 0x170:
+        fn_vCollSetSetCharacterNoCollisionWithOtherSectors(hCollSet, bValue);
+        break;
+    case 0x171:
+        fn_vCollSetSetCharacterNoCollisionWithProjectile(hCollSet, bValue);
+        break;
+    case 0x172:
+        fn_vCollSetSetCharacterNoCollisionZdeWithProjectile(hCollSet, bValue);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(0x28, 0);
+        return p_stTree;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 4473–4560 */
@@ -1467,17 +1642,47 @@ tdstNodeInterpret_* fn_p_SetMechanicClimbSpeedLimit(HIE_tdstSuperObject_* p_Supe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: the redundant second ulFlags store reproduces retail. */
 tdstNodeInterpret_* fn_p_SetMechanic3Real(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdeProcedureId_ eProcedureId;
-    float xValue3;
-    float xValue2;
-    float xValue1;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstDynam_* h_Dynam;
-    DNM_stDynamics* pstDynamic;
+    unsigned int ulFlags;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    DNM_stDynamics* pstDynamic;
+    tdstDynam_* h_Dynam;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    float xValue1;
+    float xValue2;
+    float xValue3;
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    h_Dynam = ((tdstEngineObject_*)hNewSuperObjPerso->hLinkedObject.p_stCharacter)->h_Dynam;
+    if (!h_Dynam)
+        return p_stTree;
+    pstDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+    if (!pstDynamic)
+        return p_stTree;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    xValue1 = stValue.uParam.xValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    xValue2 = stValue.uParam.xValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    xValue3 = stValue.uParam.xValue;
+    switch (eProcedureId) {
+    case 0x13f:
+        pstDynamic->m_stScale.xX = xValue1;
+        pstDynamic->m_stScale.xY = xValue2;
+        pstDynamic->m_stScale.xZ = xValue3;
+        pstDynamic->m_ulEndFlags = ulFlags = pstDynamic->m_ulEndFlags | 0x1000;
+        pstDynamic->m_ulEndFlags = ulFlags;
+        break;
+    case 0x140:
+        pstDynamic->m_stSlideFactor.xX = xValue1;
+        pstDynamic->m_stSlideFactor.xY = xValue2;
+        pstDynamic->m_stSlideFactor.xZ = xValue3;
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 4227–4254 */
@@ -1502,7 +1707,20 @@ tdstNodeInterpret_* fn_p_stResetLastCollisionActor(HIE_tdstSuperObject_* p_Super
     DNM_stReport* p_stDynamReport;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    switch (eProcedureId) {
+    case 0x103:
+        if (((tdstEngineObject_*)hNewSuperObjPerso->hLinkedObject.p_stCharacter)->h_StandardGame)
+            fn_vSuperObjectSetLastCollidedCharacter(hNewSuperObjPerso, 0);
+        break;
+    case 0x104:
+        p_stDynamReport = fn_pstGetDNMReport(hNewSuperObjPerso);
+        if (p_stDynamReport)
+            p_stDynamReport->m_ulCurrSurfaceState = 0;
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 4159–4216 */
@@ -1541,7 +1759,7 @@ tdstNodeInterpret_* fn_p_stResetLastCollisionActor(HIE_tdstSuperObject_* p_Super
  */
 tdstNodeInterpret_* fn_p_SetMechanicListParameter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    MTH3D_tdstVector_ stVector;
+    tduVector3Words stVector;
     HIE_tdstSuperObject_* hSuperObject;
     tdeProcedureId_ eProcedureId;
     unsigned int ulCounter;
@@ -1551,7 +1769,32 @@ tdstNodeInterpret_* fn_p_SetMechanicListParameter(HIE_tdstSuperObject_* p_SuperO
     MTH3D_tdstVector_* p_stVector;
     tdstList_* p_stList;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    int lNoDynam;
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    p_stList = (tdstList_*)stValue.uParam.pValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    p_stVector = &stValue.uParam.stVectorValue;
+    switch (eProcedureId) {
+    case 0x133:
+        ulMaxList = p_stList->ucNbOfElements;
+        for (ulCounter = 0; ulCounter < ulMaxList; ulCounter++) {
+            hSuperObject = fn_p_stGetPersoInList(p_stList, ulCounter);
+            h_Dynam = ((tdstEngineObject_*)hSuperObject->hLinkedObject.p_stCharacter)->h_Dynam;
+            lNoDynam = (int)h_Dynam & (int)fn_p_stDynamGetDynamics(h_Dynam);
+            if (!lNoDynam)
+                return p_stTree;
+            pstDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+            stVector.v.xX = pstDynamic->m_uStreamSpeed.v.xX + p_stVector->xX;
+            stVector.v.xY = pstDynamic->m_uStreamSpeed.v.xY + p_stVector->xY;
+            stVector.v.xZ = pstDynamic->m_uStreamSpeed.v.xZ + p_stVector->xZ;
+            pstDynamic->m_uStreamSpeed.w[0] = stVector.w[0];
+            pstDynamic->m_uStreamSpeed.w[1] = stVector.w[1];
+            pstDynamic->m_uStreamSpeed.w[2] = stVector.w[2];
+        }
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 4048–4143 */
@@ -1633,13 +1876,31 @@ tdstNodeInterpret_* fn_p_HierFatherLink(HIE_tdstSuperObject_* p_SuperObjPerso, t
  */
 tdstNodeInterpret_* fn_p_PlatformLink(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdeProcedureId_ eProcedureId;
-    HIE_tdstSuperObject_* hPlatform;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstDynam_* h_Dynam;
-    DNM_stDynamics* pstDynamic;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    DNM_stDynamics* pstDynamic;
+    tdstDynam_* h_Dynam;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    HIE_tdstSuperObject_* hPlatform;
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    h_Dynam = ((tdstEngineObject_*)hNewSuperObjPerso->hLinkedObject.p_stCharacter)->h_Dynam;
+    if (!h_Dynam)
+        return p_stTree;
+    pstDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+    if (!pstDynamic)
+        return p_stTree;
+    switch (eProcedureId) {
+    case 0x13d:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        hPlatform = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)stValue.uParam.pValue)->h_StandardGame);
+        MEC_fn_vForcePlatformLink(pstDynamic, hNewSuperObjPerso, hPlatform);
+        break;
+    case 0x13e:
+        MEC_fn_vFreePlatformLink(pstDynamic, hNewSuperObjPerso);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 3933–3972 */
@@ -1671,7 +1932,19 @@ tdstNodeInterpret_* fn_p_stChangeActorSpoFlag(HIE_tdstSuperObject_* p_SuperObjPe
     unsigned int ulFlags;
     int lFlag;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lFlag = stValue.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    ulMask = 1 << lFlag;
+    COLANTIBUG_hHandleOfCharacter = (int)hNewSuperObjPerso;
+    ulFlags = hNewSuperObjPerso->ulFlags;
+    if (stValue.uParam.lValue)
+        ulFlags |= ulMask;
+    else
+        ulFlags &= ~ulMask;
+    hNewSuperObjPerso->ulFlags = ulFlags;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 3858–3922 */
@@ -1709,15 +1982,49 @@ tdstNodeInterpret_* fn_p_stChangeActorSpoFlag(HIE_tdstSuperObject_* p_SuperObjPe
  */
 tdstNodeInterpret_* fn_SPO_p_stChangeFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdeProcedureId_ eProcedureId;
-    unsigned int ulMask;
-    unsigned int ulFlags;
-    int lSet;
-    int lFlag;
-    HIE_tdstSuperObject_* param0;
-    HIE_tdstSuperObject_* hSPO;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hSPO;
+    HIE_tdstSuperObject_* param0;
+    int lFlag;
+    int lSet;
+    unsigned int ulFlags;
+    unsigned int ulMask;
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    hSPO = (HIE_tdstSuperObject_*)stValue.uParam.pValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lFlag = stValue.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lSet = stValue.uParam.lValue;
+    switch (eProcedureId) {
+    case 0x155:
+        param0 = hSPO->hFirstElementDyn;
+        if (param0) {
+            ulMask = 1 << lFlag;
+            do {
+                ulFlags = param0->ulFlags;
+                if (lSet)
+                    ulFlags |= ulMask;
+                else
+                    ulFlags &= ~ulMask;
+                param0->ulFlags = ulFlags;
+                param0 = param0->hNextBrotherDyn;
+            } while (param0);
+        }
+    case 0x154:
+        ulFlags = hSPO->ulFlags;
+        ulMask = 1 << lFlag;
+        if (lSet)
+            ulFlags |= ulMask;
+        else
+            ulFlags &= ~ulMask;
+        hSPO->ulFlags = ulFlags;
+        break;
+    default:
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 3416–3845 */
@@ -2324,15 +2631,36 @@ tdstNodeInterpret_* fn_p_SetMechanicVectorParameter(HIE_tdstSuperObject_* p_Supe
  */
 tdstNodeInterpret_* fn_p_SetMechanic3RealParameter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdeProcedureId_ eProcedureId;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstDynam_* h_Dynam;
-    DNM_stDynamics* pstDynamic;
-    float xValue3;
-    float xValue2;
-    float xValue1;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    float xValue1;
+    float xValue2;
+    float xValue3;
+    DNM_stDynamics* pstDynamic;
+    tdstDynam_* h_Dynam;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    xValue1 = stValue.uParam.xValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    xValue2 = stValue.uParam.xValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    xValue3 = stValue.uParam.xValue;
+    h_Dynam = ((tdstEngineObject_*)hNewSuperObjPerso->hLinkedObject.p_stCharacter)->h_Dynam;
+    if (!h_Dynam)
+        return p_stTree;
+    pstDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+    if (!pstDynamic)
+        return p_stTree;
+    switch (eProcedureId) {
+    case 0x12a:
+        pstDynamic->m_stInertia.xX = xValue1;
+        pstDynamic->m_stInertia.xY = xValue2;
+        pstDynamic->m_stInertia.xZ = xValue3;
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 2992–3126 */
@@ -2426,13 +2754,30 @@ tdstNodeInterpret_* fn_p_SetMechanicRealParameter(HIE_tdstSuperObject_* p_SuperO
  */
 tdstNodeInterpret_* fn_p_stChangeLigthIntensity(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdeProcedureId_ eProcedureId;
-    float xB;
-    float xG;
-    float xR;
-    tdstMSLight_* h_MSLight;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    tdstMSLight_* h_MSLight;
+    float xR;
+    float xG;
+    float xB;
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    h_MSLight = ((tdstEngineObject_*)stParam.uParam.pValue)->h_MSLight;
+    if (!h_MSLight)
+        return p_stTree;
+    if (eProcedureId == 0x153) {
+        float xFactor;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xR = stParam.uParam.xValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xG = stParam.uParam.xValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xB = stParam.uParam.xValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xFactor = stParam.uParam.xValue;
+        fn_vMSLightSetColorRGBA(h_MSLight, xR * xFactor, xG * xFactor, xB * xFactor, 0.0f);
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 2804–2942 */
@@ -2592,11 +2937,25 @@ tdstNodeInterpret_* fn_p_stFixePositionZDx(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 tdstNodeInterpret_* fn_p_stChangeGameMaterialZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdeProcedureId_ eProcedureId;
-    int lZoneNumber;
-    HIE_tdstSuperObject_* hPerso;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hPerso;
+    int lZoneNumber;
+    tdeProcedureId_ eProcedureId;
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hPerso = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)stParam.uParam.pValue)->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lZoneNumber = stParam.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    switch (eProcedureId) {
+    case 0x152:
+        fn_hGetCollideZdxOfTypeAtIndex(2, (unsigned short)(lZoneNumber - 1), hPerso);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(0x28, 0);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 2532–2619 */
@@ -3169,7 +3528,21 @@ void AI_vBatchProccessOrder(void)
 {
     AI_tdstBatchOrder_* p_stBatchOrder;
     unsigned short uwCpt;
-    /* TODO: decompile from asm/... */
+    for (uwCpt = 0; uwCpt < AI_gs_uwNbrBatchOrder; uwCpt++) {
+        p_stBatchOrder = &AI_gs_a_stBatchSetPersoTab[uwCpt];
+        switch (p_stBatchOrder->ucBatchOrderType) {
+        case 0:
+            AI_vProcessSetPersoAtModulePosition(p_stBatchOrder);
+            break;
+        case 1:
+            AI_vProcessSetPersoOrientation(p_stBatchOrder);
+            break;
+        case 2:
+            AI_vProcessSetPersoWithPerso(p_stBatchOrder);
+            break;
+        }
+    }
+    AI_gs_uwNbrBatchOrder = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 1444–1489 */
@@ -3335,10 +3708,21 @@ void AI_vProcessSetPersoAtModulePosition(AI_tdstBatchOrder_* p_stBatchOrder)
 tdstNodeInterpret_* fn_p_stBatchSynchroPersoWithPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     AI_tdstBatchOrder_* p_stBatchOrder;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    HIE_tdstSuperObject_* hNewSuperObjPerso = p_SuperObjPerso;
     tdeProcedureId_ eProcedureId;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    if (AI_gs_uwNbrBatchOrder >= 20)
+        return fn_p_stSwapNextParameter(p_stTree);
+    p_stBatchOrder = &AI_gs_a_stBatchSetPersoTab[AI_gs_uwNbrBatchOrder];
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stBatchOrder->hPersoToMove = hNewSuperObjPerso;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_stBatchOrder->hRefPerso = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)stParam.uParam.pValue)->h_StandardGame);
+    p_stBatchOrder->ucRefChannel = 0xff;
+    p_stBatchOrder->ucBatchOrderType = 2;
+    AI_gs_uwNbrBatchOrder++;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 1267–1297 */
@@ -3786,30 +4170,22 @@ tdstNodeInterpret_* fn_p_stCollideCommunicationProc(HIE_tdstSuperObject_* p_Supe
  */
 tdstNodeInterpret_* fn_p_stRealToText(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    char cFormater[32];
-    char* pszString;
+    long lPrecision;
+    float xValue;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    char* pszString;
+    char cFormater[32];
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    pszString = fn_szGetStringFromTextOrStringParam(&stParam);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xValue = (stParam.eType == E_vt_Float) ? stParam.uParam.xValue : (float)stParam.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    lPrecision = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uParam.xValue) : stParam.uParam.lValue;
+    sprintf(cFormater, "%%.%uf", lPrecision);
+    sprintf(pszString, cFormater, xValue);
+    return p_stTree;
 }
 
-extern "C" char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
-/* The debug record says void itoa(int, ...); it returns the buffer and callers
- * pass the long result unextended. */
-extern "C" char* itoa(long value, char* buffer, int radix);
-
-/* Engine float-to-int conversion: retail converts through $f30 at 164 sites
- * in 77 game functions ("cvt.w.s $f30, x; mfc1 r, $f30"), a register MWCC
- * never picks for its own conversions. */
-inline long MTH_M_xRealToLong(float _xValue)
-{
-    long _lResult;
-    asm
-    {
-        cvt.w.s f30, _xValue
-        mfc1 _lResult, f30
-    }
-    return _lResult;
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 462–489 */
 /* addr: 0x00238c10  size: 152 bytes */
@@ -3991,10 +4367,16 @@ tdstNodeInterpret_* fn_p_stCreateTextWithFormat(HIE_tdstSuperObject_* p_SuperObj
  */
 tdstNodeInterpret_* fn_p_stChangeTextDefaultColor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    float xG;
     float xR;
+    float xG;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xR = (float)stParam.uParam.lValue / 255.0f;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xG = (float)stParam.uParam.lValue / 255.0f;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    TXT_ChangeDefaultColor(xR, xG, (float)stParam.uParam.lValue / 255.0f);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 208–264 */

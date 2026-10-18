@@ -3443,9 +3443,31 @@ void CAM_fn_vUpdateGeneralCamera(CAM_tdstUpdateCamera_* _p_stStruct)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+char CAM_fn_cCanResetConstraintMoveVisFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWanted);
+void CAM_fn_vConstraintMoveAfterVisFailure(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vConstraintMoveCutAngles(CAM_tdstUpdateCamera_* _p_stStruct);
+
 void CAM_fn_vConstraintMove(CAM_tdstUpdateCamera_* _p_stStruct)
 {
-    /* TODO: decompile from asm/... */
+    if (!(_p_stStruct->hCineinfo->ucVolIAFlags & 2) && !(_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000))
+    {
+        if (_p_stStruct->hCineinfoWork->hSuperObjectTargeted == NULL)
+        {
+            return;
+        }
+        else
+        {
+            if (CAM_fn_cCanResetConstraintMoveVisFailure(_p_stStruct, &_p_stStruct->stWantedCameraPos))
+                _p_stStruct->hCineinfo->ucPerIAFlags &= ~8;
+
+            if (_p_stStruct->hCineinfo->ucPerIAFlags & 8)
+                CAM_fn_vConstraintMoveAfterVisFailure(_p_stStruct);
+            else if (_p_stStruct->cHasCutAlpha && !(_p_stStruct->hCineinfoWork->uwIAFlags & 4))
+                CAM_fn_vConstraintMoveCutAngles(_p_stStruct);
+            else
+                _p_stStruct->hCineinfo->cLastCutAngleSens = 0;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 1208–1287 */

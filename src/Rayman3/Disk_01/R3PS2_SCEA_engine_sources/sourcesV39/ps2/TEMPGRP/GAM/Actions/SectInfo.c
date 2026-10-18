@@ -1128,7 +1128,7 @@ struct AI_tdstMind_ {
 };
 
 int g_hCharacterLauchingSoundEvents;
-int SECT_hFatherSector;
+HIE_tdstSuperObject_* SECT_hFatherSector;
 int gp_stInactiveDynamicWorld;
 int g_lSoundObjectTypeMusic;
 unsigned char g_ucGameModuleId;
@@ -1162,9 +1162,27 @@ unsigned int fn_ulMicroSizeOf(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vSectInfoInitForSingleCharacter(HIE_tdstSuperObject_* hCharacter, MTH3D_tdstVector_* hPosition);
+
+static inline MTH3D_tdstVector_* POS_fn_p_stGetTranslationVector(MAT_tdstTransformation_* p_stMatrix)
+{
+    return (MTH3D_tdstVector_*)((char*)p_stMatrix + 0x40);
+}
+
 void GAM_fn_vSetObjectSectorSynchro(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* hSynchroCharacter)
 {
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_* p_stPosition;
+
+    hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hSectorSynchroCharacter = hSynchroCharacter;
+
+    if (hSynchroCharacter == NULL)
+    {
+        p_stPosition = POS_fn_p_stGetTranslationVector(&hCharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix);
+        fn_vSectInfoInitForSingleCharacter(hCharacter, p_stPosition);
+        *(int*)&hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->stPreviousPosition.xX = *(int*)&p_stPosition->xX;
+        *(int*)&hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->stPreviousPosition.xY = *(int*)&p_stPosition->xY;
+        *(int*)&hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->stPreviousPosition.xZ = *(int*)&p_stPosition->xZ;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 560–631 */
@@ -1350,8 +1368,23 @@ void fn_vInsertLightInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObj
 void fn_vInsertObjectInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hCharacter)
 {
     tdstSectInfo_* p_stSectInfo;
-    /* TODO: decompile from asm/... */
+
+    p_stSectInfo = hCharacter->hLinkedObject.p_stCharacter->h_SectInfo;
+    SECT_fn_vIsolateCharListNode(p_stSectInfo->hNodeInSector);
+
+    if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+        SECT_fn_vAddHeadCharListNode(hSector, p_stSectInfo->hNodeInSector);
+    else
+        SECT_fn_vAddTailCharListNode(hSector, p_stSectInfo->hNodeInSector);
+
+    if (hCharacter->hLinkedObject.p_stCharacter->h_MSLight)
+        fn_vInsertLightInSectorList(hSector, hCharacter);
 }
+
+HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* hFatherSector, MTH3D_tdstVector_* p_stPosition);
+HIE_tdstSuperObject_* HIE_fn_hGetChildNumber(HIE_tdstSuperObject_* hFather, int lChildNumber);
+void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* hNode, HIE_tdstSuperObject_* hCharacter);
+void SECT_fn_vSetHandleOfLightsInDNMLightsList();
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 354–386 */
 /* addr: 0x00273b70  size: 256 bytes */
@@ -1373,7 +1406,22 @@ void fn_vSectInfoInitForSingleCharacter(HIE_tdstSuperObject_* hCharacter, MTH3D_
     tdstMSLight_* hLight;
     tdstSectInfo_* hSectInfo;
     HIE_tdstSuperObject_* testSO;
-    /* TODO: decompile from asm/... */
+
+    hSectInfo = hCharacter->hLinkedObject.p_stCharacter->h_SectInfo;
+
+    testSO = SECT_fn_hResearchInWhatSectorIAm(SECT_hFatherSector, hPosition);
+    if (testSO)
+        hSectInfo->hCurrentSector = testSO;
+    else
+        hSectInfo->hCurrentSector = HIE_fn_hGetChildNumber(SECT_hFatherSector, SECT_hFatherSector->lNumberOfElementsDyn - 1);
+
+    SECT_fn_vSetCharacterPointerInCharacterList(hSectInfo->hNodeInSector, hCharacter);
+
+    hLight = hCharacter->hLinkedObject.p_stCharacter->h_MSLight;
+    if (hLight)
+        SECT_fn_vSetHandleOfLightsInDNMLightsList(fn_hMSLightGetLightNodeInSector(hLight), fn_p_stMSLightGetLight(hLight));
+
+    fn_vInsertObjectInSectorList(hSectInfo->hCurrentSector, hCharacter);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 340–340 */
@@ -1461,11 +1509,61 @@ void fn_vSectInfoDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObje
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject);
+void GAM_fn_vPopAllocMode(void);
+
 void fn_vSectInfoInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
     tdstMSLight_* hLight;
     HIE_tdstSuperObject_* h_SO;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_* p_stPosition;
+
+    fn_vPushAllocModeAccordingToEngineObject(p_stObject);
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_SectInfo) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_MapLoaded:
+        p_stObject->h_SectInfo->hCurrentSector = NULL;
+    case OTI_LoadSavedGame:
+    case OTI_ReinitTheMap:
+    case OTI_PlayerDead:
+        if (fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame))
+        {
+            p_stObject->h_SectInfo->hSectorSynchroCharacter = NULL;
+            p_stPosition = (MTH3D_tdstVector_*)&p_stObject->h_3dData->stGLIObjectMatrix.stTransformMatrix.stCol_3;
+            h_SO = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
+            fn_vSectInfoInitForSingleCharacter(h_SO, p_stPosition);
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xX = *(int*)&p_stPosition->xX;
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xY = *(int*)&p_stPosition->xY;
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xZ = *(int*)&p_stPosition->xZ;
+        }
+        break;
+    case OTI_AlwaysCreated:
+        if (fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame))
+        {
+            p_stObject->h_SectInfo->hSectorSynchroCharacter = NULL;
+            h_SO = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
+            p_stPosition = (MTH3D_tdstVector_*)&h_SO->hGlobalMatrix->stTransformMatrix.stCol_3;
+            fn_vInsertObjectInSectorList(p_stObject->h_SectInfo->hCurrentSector, h_SO);
+            SECT_fn_vSetCharacterPointerInCharacterList(p_stObject->h_SectInfo->hNodeInSector, h_SO);
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xX = *(int*)&p_stPosition->xX;
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xY = *(int*)&p_stPosition->xY;
+            *(int*)&p_stObject->h_SectInfo->stPreviousPosition.xZ = *(int*)&p_stPosition->xZ;
+            hLight = h_SO->hLinkedObject.p_stCharacter->h_MSLight;
+            if (hLight)
+                SECT_fn_vSetHandleOfLightsInDNMLightsList(fn_hMSLightGetLightNodeInSector(hLight), fn_p_stMSLightGetLight(hLight));
+        }
+        break;
+    }
+
+    GAM_fn_vPopAllocMode();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 220–220 */

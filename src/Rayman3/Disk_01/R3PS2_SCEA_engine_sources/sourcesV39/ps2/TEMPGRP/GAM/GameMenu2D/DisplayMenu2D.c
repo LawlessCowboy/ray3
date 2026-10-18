@@ -1345,6 +1345,8 @@ void fn_vAnimeBeginPage(void)
     /* TODO: decompile from asm/... */
 }
 
+void GLI_vDraw2DSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xYMin, float xXMax, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 284–312 */
 /* addr: 0x00296620  size: 212 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1377,11 +1379,31 @@ void fn_vAnimeBeginPage(void)
  */
 void fn_vDraw2DSelectedSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xYMin, float xXMax, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial)
 {
-    float H1;
-    float W1;
     float H;
+    float W1;
+    float H1;
     float W;
-    /* TODO: decompile from asm/... */
+
+    W = xXMax - xXMin;
+    H = xYMax - xYMin;
+    W1 = W * g_CurrentSelectedSpriteScale;
+    H1 = H * g_CurrentSelectedSpriteScale;
+    xXMin = xXMin + (W - W1) / 2.0f;
+    xYMin = xYMin + (H - H1) / 2.0f;
+    GLI_vDraw2DSpriteWithPercentAndUVs(p_stVpt, xXMin, xYMin, xXMin + W1, xYMin + H1, xUMin, xUMax, xVMin, xVMax, hMaterial);
+
+    if (g_IsIncreaseSelectedSpriteScale)
+    {
+        g_CurrentSelectedSpriteScale += 0.02f;
+        if (g_CurrentSelectedSpriteScale >= 1.0f)
+            g_IsIncreaseSelectedSpriteScale = 0;
+    }
+    else
+    {
+        g_CurrentSelectedSpriteScale -= 0.02f;
+        if (g_CurrentSelectedSpriteScale <= 0.7f)
+            g_IsIncreaseSelectedSpriteScale = 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 275–276 */
