@@ -32959,6 +32959,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/ActParam.c",
       "status": "MATCH"
     },
+    "0x001fa1d0": {
+      "address": "0x001fa1d0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_vSetActionParamp_stVertex",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/ActParam.c",
+      "status": "MATCH"
+    },
     "0x001fa2a0": {
       "address": "0x001fa2a0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",

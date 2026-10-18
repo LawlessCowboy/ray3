@@ -3069,9 +3069,7 @@ void fn_vSetActionParamp_stVertex(unsigned char ucN, HIE_tdstSuperObject_* p_Sup
         p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence;
     else
         p_stIntelligence = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex;
-    p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xX = p_stVertex->xX;
-    p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xY = p_stVertex->xY;
-    p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xZ = p_stVertex->xZ;
+    *(int*)&p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xX = *(int*)&p_stVertex->xX; *(int*)&p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xY = *(int*)&p_stVertex->xY; *(int*)&p_stIntelligence->p_stActionTable->p_stEntry[p_stIntelligence->p_stActionTable->ucCurrentEntry].stActionParam.a_uParam[ucN].stVectorValue.xZ = *(int*)&p_stVertex->xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\ActParam.c lines 130–131 */
