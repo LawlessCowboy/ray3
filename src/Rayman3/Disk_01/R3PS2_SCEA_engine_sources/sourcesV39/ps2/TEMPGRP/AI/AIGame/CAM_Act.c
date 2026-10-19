@@ -3194,13 +3194,90 @@ tdstEngineStructure_ g_stEngineStructure;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d).xX = *(int*)&(_s)->xX; *(int*)&(_d).xY = *(int*)&(_s)->xY; *(int*)&(_d).xZ = *(int*)&(_s)->xZ; }
+
+#define MTH3D_M_vSubVector(_d, _a, _b) { MTH3D_tdstVector_* _pd = (_d); MTH3D_tdstVector_* _pa = (_a); MTH3D_tdstVector_* _pb = (_b); _pd->xX = _pa->xX - _pb->xX; _pd->xY = _pa->xY - _pb->xY; _pd->xZ = _pa->xZ - _pb->xZ; }
+#define MTH3D_M_vSubVectorOld(_d, _a, _b) { (_d)->xX = (_a)->xX - (_b)->xX; (_d)->xY = (_a)->xY - (_b)->xY; (_d)->xZ = (_a)->xZ - (_b)->xZ; }
+#define MTH3D_M_vAddVector(_d, _s) { (_d)->xX += (_s)->xX; (_d)->xY += (_s)->xY; (_d)->xZ += (_s)->xZ; }
+
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x } \
+    asm { madda.s _y, _y } \
+    asm { madd.s _result, _z, _z }
+#define MTH_VECTOR_NORM2_TO(_result, _vector) \
+    do { \
+        float _mthX = (_vector).xX; \
+        float _mthY = (_vector).xY; \
+        float _mthZ = (_vector).xZ; \
+        MTH_SQR3_TO(_result, _mthX, _mthY, _mthZ); \
+    } while (0)
+#define MTH_VECTOR_NORM_TO(_result, _vector) \
+    do { \
+        float _mthX = (_vector).xX; \
+        float _mthY = (_vector).xY; \
+        float _mthZ = (_vector).xZ; \
+        MTH_SQR3_TO(_result, _mthX, _mthY, _mthZ); \
+        asm { sqrt.s _result, _result } \
+    } while (0)
+#define MTH_VECTOR_NORM_SYNC_TO(_result, _vector) \
+    do { \
+        float _mthX = (_vector).xX; \
+        float _mthY = (_vector).xY; \
+        float _mthZ = (_vector).xZ; \
+        MTH_SQR3_TO(_result, _mthX, _mthY, _mthZ); \
+        asm { sqrt.s _result, _result } \
+        asm { nop } \
+    } while (0)
+
+unsigned int fn_ulDetermineUsefulDT(void);
+
+typedef struct { int x, y, z; } IV3;
+typedef union { MTH3D_tdstVector_ v; int i[3]; } UV3;
+
+void fnv_TurnAWithB(HIE_tdstSuperObject_* p_SuperObjPerso, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stPointAxis, MTH3D_tdstVector_* _p_stAxis, MTH3D_tdstVector_* _p_stCurrent, float _xAngle, int _iTime, int _iAccel);
+void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+void CAM_fn_vForceCameraTgt(HIE_tdstSuperObject_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
+void fnv_MoveAToB(HIE_tdstSuperObject_* param0, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stDest, MTH3D_tdstVector_* _p_stCurrent, int _iTime, int _iAccel);
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+void fn_vSetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, int lValue);
+void fn_vSetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, float xValue);
+void CAM_fn_vComputeProjection(MTH3D_tdstVector_* _p_sDestVector, MTH3D_tdstVector_* _p_sSrcVector, MTH3D_tdstVector_* _p_sNormVector);
+float CAM_fn_xComputeRotation(MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stSrcVector, MTH3D_tdstVector_* _p_stAxisVector);
+MTH3D_tdstVector_* MTH_p_stRotationMulVector(MTH_stRotation* _p_stRotation, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stResult);
+void CAM_fn_vForceCameraPos(HIE_tdstSuperObject_*, MTH3D_tdstVector_*);
+MTH3D_tdstVector_* fn_p_stGetActionParamp_stVertex(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);
+void fn_vSetActionParamp_stVertex(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, MTH3D_tdstVector_* p_stVertex);
+float fn_xGetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);
+int fn_lGetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);
+
 unsigned char fn_ucCamCinePosATgtBTurnTgtV(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    MTH3D_tdstVector_ stAxis;
+    UV3 stCurrentCameraPos;
+    UV3 stTempVector;
     MTH3D_tdstVector_ stTempVector1;
-    MTH3D_tdstVector_ stTempVector;
-    MTH3D_tdstVector_ stCurrentCameraPos;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stAxis;
+    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount >= (unsigned int)(fn_lGetActionParamlValue(5, p_SuperObjPerso) + fn_lGetActionParamlValue(3, p_SuperObjPerso)))
+    {
+        p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits &= ~0x8000;
+        return 4;
+    }
+    {
+        int* pPos = (int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
+        stCurrentCameraPos.i[0] = pPos[0];
+        stCurrentCameraPos.i[1] = pPos[1];
+        stCurrentCameraPos.i[2] = pPos[2];
+    }
+    MAT_fn_vGetRotationVectors(p_SuperObjPerso->hGlobalMatrix, &stAxis, &stTempVector.v, &stTempVector.v);
+    stTempVector.i[0] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[0];
+    stTempVector.i[1] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[1];
+    stTempVector.i[2] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[2];
+    fnv_TurnAWithB(p_SuperObjPerso, &stTempVector.v, &stCurrentCameraPos.v, &stAxis, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso), fn_xGetActionParamxValue(2, p_SuperObjPerso), fn_lGetActionParamlValue(3, p_SuperObjPerso), fn_lGetActionParamlValue(4, p_SuperObjPerso));
+    stTempVector1.xX = 0.0f;
+    stTempVector1.xY = 0.0f;
+    stTempVector1.xZ = 1.0f;
+    CAM_fn_vForceCameraTgt(p_SuperObjPerso, &stTempVector.v, &stTempVector1);
+    fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, &stTempVector.v);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 642–700 */
@@ -3234,11 +3311,32 @@ unsigned char fn_ucCamCinePosATgtBTurnTgtV(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 unsigned char fn_ucCamCinePosATgtBTurnTgtH(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    MTH3D_tdstVector_ stAxis;
+    UV3 stCurrentCameraPos;
+    UV3 stTempVector;
     MTH3D_tdstVector_ stTempVector1;
-    MTH3D_tdstVector_ stTempVector;
-    MTH3D_tdstVector_ stCurrentCameraPos;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stAxis;
+    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount >= (unsigned int)(fn_lGetActionParamlValue(5, p_SuperObjPerso) + fn_lGetActionParamlValue(3, p_SuperObjPerso)))
+    {
+        p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits &= ~0x8000;
+        return 4;
+    }
+    {
+        int* pPos = (int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
+        stCurrentCameraPos.i[0] = pPos[0];
+        stCurrentCameraPos.i[1] = pPos[1];
+        stCurrentCameraPos.i[2] = pPos[2];
+    }
+    MAT_fn_vGetRotationVectors(p_SuperObjPerso->hGlobalMatrix, &stTempVector.v, &stTempVector.v, &stAxis);
+    stTempVector.i[0] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[0];
+    stTempVector.i[1] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[1];
+    stTempVector.i[2] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[2];
+    fnv_TurnAWithB(p_SuperObjPerso, &stTempVector.v, &stCurrentCameraPos.v, &stAxis, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso), fn_xGetActionParamxValue(2, p_SuperObjPerso), fn_lGetActionParamlValue(3, p_SuperObjPerso), fn_lGetActionParamlValue(4, p_SuperObjPerso));
+    stTempVector1.xX = 0.0f;
+    stTempVector1.xY = 0.0f;
+    stTempVector1.xZ = 1.0f;
+    CAM_fn_vForceCameraTgt(p_SuperObjPerso, &stTempVector.v, &stTempVector1);
+    fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, &stTempVector.v);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 577–633 */
@@ -3272,10 +3370,31 @@ unsigned char fn_ucCamCinePosATgtBTurnTgtH(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 unsigned char fn_ucCamCinePosATgtBTurnPosV(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
+    UV3 stTempVector;
+    UV3 stCurrentCameraPos;
     MTH3D_tdstVector_ stAxis;
-    MTH3D_tdstVector_ stCurrentCameraPos;
-    MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount >= (unsigned int)(fn_lGetActionParamlValue(5, p_SuperObjPerso) + fn_lGetActionParamlValue(3, p_SuperObjPerso)))
+    {
+        p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits &= ~0x8000;
+        return 4;
+    }
+    {
+        int* pPos = (int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
+        stCurrentCameraPos.i[0] = pPos[0];
+        stCurrentCameraPos.i[1] = pPos[1];
+        stCurrentCameraPos.i[2] = pPos[2];
+    }
+    MAT_fn_vGetRotationVectors(p_SuperObjPerso->hGlobalMatrix, &stAxis, &stTempVector.v, &stTempVector.v);
+    stTempVector.i[0] = ((int*)fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso))[0];
+    stTempVector.i[1] = ((int*)fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso))[1];
+    stTempVector.i[2] = ((int*)fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso))[2];
+    fnv_TurnAWithB(p_SuperObjPerso, &stTempVector.v, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stAxis, &stCurrentCameraPos.v, fn_xGetActionParamxValue(2, p_SuperObjPerso), fn_lGetActionParamlValue(3, p_SuperObjPerso), fn_lGetActionParamlValue(4, p_SuperObjPerso));
+    CAM_fn_vForceCameraPos(p_SuperObjPerso, &stTempVector.v);
+    stTempVector.v.xX = 0.0f;
+    stTempVector.v.xY = 0.0f;
+    stTempVector.v.xZ = 1.0f;
+    CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stTempVector.v);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 512–568 */
@@ -3309,10 +3428,31 @@ unsigned char fn_ucCamCinePosATgtBTurnPosV(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 unsigned char fn_ucCamCinePosATgtBTurnPosH(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
+    UV3 stTempVector;
+    UV3 stCurrentCameraPos;
     MTH3D_tdstVector_ stAxis;
-    MTH3D_tdstVector_ stCurrentCameraPos;
-    MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount >= (unsigned int)(fn_lGetActionParamlValue(5, p_SuperObjPerso) + fn_lGetActionParamlValue(3, p_SuperObjPerso)))
+    {
+        p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits &= ~0x8000;
+        return 4;
+    }
+    {
+        int* pPos = (int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
+        stCurrentCameraPos.i[0] = pPos[0];
+        stCurrentCameraPos.i[1] = pPos[1];
+        stCurrentCameraPos.i[2] = pPos[2];
+    }
+    MAT_fn_vGetRotationVectors(p_SuperObjPerso->hGlobalMatrix, &stTempVector.v, &stTempVector.v, &stAxis);
+    stTempVector.i[0] = ((int*)fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso))[0];
+    stTempVector.i[1] = ((int*)fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso))[1];
+    stTempVector.i[2] = ((int*)fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso))[2];
+    fnv_TurnAWithB(p_SuperObjPerso, &stTempVector.v, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stAxis, &stCurrentCameraPos.v, fn_xGetActionParamxValue(2, p_SuperObjPerso), fn_lGetActionParamlValue(3, p_SuperObjPerso), fn_lGetActionParamlValue(4, p_SuperObjPerso));
+    CAM_fn_vForceCameraPos(p_SuperObjPerso, &stTempVector.v);
+    stTempVector.v.xX = 0.0f;
+    stTempVector.v.xY = 0.0f;
+    stTempVector.v.xZ = 1.0f;
+    CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stTempVector.v);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 449–498 */
@@ -3349,10 +3489,31 @@ unsigned char fn_ucCamCinePosATgtBTurnPosH(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 unsigned char fn_ucCamCinePosAMoveTgtBToC(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    MTH3D_tdstVector_ stCurrentTarget;
+    UV3 stCurrentTarget;
     MTH3D_tdstVector_ stTempVector1;
-    MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+    UV3 stTempVector;
+    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount >= (unsigned int)(fn_lGetActionParamlValue(5, p_SuperObjPerso) + fn_lGetActionParamlValue(3, p_SuperObjPerso)))
+    {
+        stTempVector1.xX = 0.0f;
+        stTempVector1.xY = 0.0f;
+        stTempVector1.xZ = 1.0f;
+        CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(2, p_SuperObjPerso), &stTempVector1);
+        p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits &= ~0x8000;
+        return 4;
+    }
+    stTempVector.i[0] = ((int*)fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso))[0];
+    stTempVector.i[1] = ((int*)fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso))[1];
+    stTempVector.i[2] = ((int*)fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso))[2];
+    stCurrentTarget.i[0] = ((int*)fn_p_stGetActionParamp_stVertex(2, p_SuperObjPerso))[0];
+    stCurrentTarget.i[1] = ((int*)fn_p_stGetActionParamp_stVertex(2, p_SuperObjPerso))[1];
+    stCurrentTarget.i[2] = ((int*)fn_p_stGetActionParamp_stVertex(2, p_SuperObjPerso))[2];
+    fnv_MoveAToB(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stCurrentTarget.v, &stTempVector.v, fn_lGetActionParamlValue(3, p_SuperObjPerso), fn_lGetActionParamlValue(4, p_SuperObjPerso));
+    stTempVector1.xX = 0.0f;
+    stTempVector1.xY = 0.0f;
+    stTempVector1.xZ = 1.0f;
+    CAM_fn_vForceCameraTgt(p_SuperObjPerso, &stCurrentTarget.v, &stTempVector1);
+    fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, &stCurrentTarget.v);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 413–440 */
@@ -3428,10 +3589,39 @@ unsigned char fn_ucCamCinePosATgtB(HIE_tdstSuperObject_* p_SuperObjPerso)
  */
 unsigned char fn_ucCamCineMoveAToBTgtAC(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    MTH3D_tdstVector_ stCurrentCameraPos;
-    MTH3D_tdstVector_ stTempVector1;
+    UV3 stTempVector1;
     MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+    UV3 stCurrentCameraPos;
+    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount >= (unsigned int)(fn_lGetActionParamlValue(5, p_SuperObjPerso) + fn_lGetActionParamlValue(3, p_SuperObjPerso)))
+    {
+        CAM_fn_vForceCameraPos(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso));
+        MTH3D_M_vSubVectorOld(&stTempVector, fn_p_stGetActionParamp_stVertex(2, p_SuperObjPerso), fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso));
+        MTH3D_M_vAddVector(&stTempVector, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso));
+        stTempVector1.v.xX = 0.0f;
+        stTempVector1.v.xY = 0.0f;
+        stTempVector1.v.xZ = 1.0f;
+        CAM_fn_vForceCameraTgt(p_SuperObjPerso, &stTempVector, &stTempVector1.v);
+        p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits &= ~0x8000;
+        return 4;
+    }
+    {
+        int* pPos = (int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
+        stCurrentCameraPos.i[0] = pPos[0];
+        stCurrentCameraPos.i[1] = pPos[1];
+        stCurrentCameraPos.i[2] = pPos[2];
+    }
+    stTempVector1.i[0] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[0];
+    stTempVector1.i[1] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[1];
+    stTempVector1.i[2] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[2];
+    fnv_MoveAToB(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso), &stTempVector1.v, &stCurrentCameraPos.v, fn_lGetActionParamlValue(3, p_SuperObjPerso), fn_lGetActionParamlValue(4, p_SuperObjPerso));
+    CAM_fn_vForceCameraPos(p_SuperObjPerso, &stTempVector1.v);
+    MTH3D_M_vSubVectorOld(&stTempVector, fn_p_stGetActionParamp_stVertex(2, p_SuperObjPerso), fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso));
+    MTH3D_M_vAddVector(&stTempVector, &stTempVector1.v);
+    stTempVector1.v.xX = 0.0f;
+    stTempVector1.v.xY = 0.0f;
+    stTempVector1.v.xZ = 1.0f;
+    CAM_fn_vForceCameraTgt(p_SuperObjPerso, &stTempVector, &stTempVector1.v);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 285–337 */
@@ -3471,9 +3661,34 @@ unsigned char fn_ucCamCineMoveAToBTgtAC(HIE_tdstSuperObject_* p_SuperObjPerso)
  */
 unsigned char fn_ucCamCineMoveAToBTgtC(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    MTH3D_tdstVector_ stCurrentCameraPos;
-    MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+    UV3 stTempVector;
+    UV3 stCurrentCameraPos;
+    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount >= (unsigned int)(fn_lGetActionParamlValue(5, p_SuperObjPerso) + fn_lGetActionParamlValue(3, p_SuperObjPerso)))
+    {
+        CAM_fn_vForceCameraPos(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso));
+        stTempVector.v.xX = 0.0f;
+        stTempVector.v.xY = 0.0f;
+        stTempVector.v.xZ = 1.0f;
+        CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(2, p_SuperObjPerso), &stTempVector.v);
+        p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits &= ~0x8000;
+        return 4;
+    }
+    {
+        int* pPos = (int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
+        stCurrentCameraPos.i[0] = pPos[0];
+        stCurrentCameraPos.i[1] = pPos[1];
+        stCurrentCameraPos.i[2] = pPos[2];
+    }
+    stTempVector.i[0] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[0];
+    stTempVector.i[1] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[1];
+    stTempVector.i[2] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[2];
+    fnv_MoveAToB(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso), &stTempVector.v, &stCurrentCameraPos.v, fn_lGetActionParamlValue(3, p_SuperObjPerso), fn_lGetActionParamlValue(4, p_SuperObjPerso));
+    CAM_fn_vForceCameraPos(p_SuperObjPerso, &stTempVector.v);
+    stTempVector.v.xX = 0.0f;
+    stTempVector.v.xY = 0.0f;
+    stTempVector.v.xZ = 1.0f;
+    CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(2, p_SuperObjPerso), &stTempVector.v);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 171–265 */
@@ -3554,7 +3769,74 @@ tdstNodeInterpret_* fn_p_stCamCineInit(HIE_tdstSuperObject_* p_SuperObjPerso, td
     tdstGetSetParam_ stParam;
     tdeMetaActionId_ eMetaActionId;
     MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+
+    eMetaActionId = (p_stTree - 1)->uDummy.uId.eMetaActionId;
+    p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits |= 0x8000;
+    stTempVector.xX = 0.0f;
+    stTempVector.xY = 0.0f;
+    stTempVector.xZ = 1.0f;
+    switch (eMetaActionId)
+    {
+    case eMetaAction_CamCineMoveAToBTgtC:
+    case eMetaAction_CamCineMoveAToBTgtAC:
+    case eMetaAction_CamCinePosAMoveTgtBToC:
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamp_stVertex(1, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamp_stVertex(2, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamlValue(3, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamlValue(4, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);
+        fn_vSetActionParamlValue(5, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+        CAM_fn_vForceCameraPos(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso));
+        if (eMetaActionId == eMetaAction_CamCinePosAMoveTgtBToC)
+        {
+            CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stTempVector);
+            fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso));
+        }
+        else
+        {
+            CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(2, p_SuperObjPerso), &stTempVector);
+        }
+        break;
+    case eMetaAction_CamCinePosATgtB:
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamp_stVertex(1, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamlValue(2, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);
+        fn_vSetActionParamlValue(3, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+        CAM_fn_vForceCameraPos(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso));
+        CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stTempVector);
+        break;
+    case eMetaAction_CamCinePosATgtBTurnPosH:
+    case eMetaAction_CamCinePosATgtBTurnTgtH:
+    case eMetaAction_CamCinePosATgtBTurnPosV:
+    case eMetaAction_CamCinePosATgtBTurnTgtV:
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamp_stVertex(1, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamxValue(2, p_SuperObjPerso, stParam.uDummy.uParam.xValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamlValue(3, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    fn_vSetActionParamlValue(4, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);
+        fn_vSetActionParamlValue(5, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+        CAM_fn_vForceCameraPos(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso));
+        CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stTempVector);
+        if (eMetaActionId == eMetaAction_CamCinePosATgtBTurnTgtH || eMetaActionId == eMetaAction_CamCinePosATgtBTurnTgtV)
+        {
+            fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso));
+        }
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 111–153 */
@@ -3602,11 +3884,35 @@ tdstNodeInterpret_* fn_p_stCamCineInit(HIE_tdstSuperObject_* p_SuperObjPerso, td
 void fnv_TurnAWithB(HIE_tdstSuperObject_* p_SuperObjPerso, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stPointAxis, MTH3D_tdstVector_* _p_stAxis, MTH3D_tdstVector_* _p_stCurrent, float _xAngle, int _iTime, int _iAccel)
 {
     MTH_stRotation stRotation;
-    MTH3D_tdstVector_ stTempVector1;
     MTH3D_tdstVector_ stTempVector;
+    MTH3D_tdstVector_ stTempVector1;
     int lTime;
     float xSpeed;
-    /* TODO: decompile from asm/... */
+    MTH3D_M_vSubVector(&stTempVector, _p_stCurrent, _p_stPointAxis);
+    CAM_fn_vComputeProjection(&stTempVector, &stTempVector, _p_stAxis);
+    MTH3D_M_vSubVector(&stTempVector1, _p_stSource, _p_stPointAxis);
+    CAM_fn_vComputeProjection(&stTempVector1, &stTempVector1, _p_stAxis);
+    CAM_fn_xComputeRotation(&stTempVector1, &stTempVector, 0);
+    xSpeed = _xAngle / (float)_iTime;
+    lTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - fn_lGetActionParamlValue(5, p_SuperObjPerso);
+    if (lTime < _iAccel)
+    {
+        xSpeed = (float)lTime * (xSpeed / (float)_iAccel);
+    }
+    if (_iTime - _iAccel < lTime)
+    {
+        xSpeed = (float)lTime * -(xSpeed / (float)_iAccel) + (float)_iTime * xSpeed / (float)_iAccel;
+    }
+    ((int*)&stRotation.m_stAxis)[0] = ((int*)_p_stAxis)[0];
+    ((int*)&stRotation.m_stAxis)[1] = ((int*)_p_stAxis)[1];
+    ((int*)&stRotation.m_stAxis)[2] = ((int*)_p_stAxis)[2];
+    xSpeed *= (float)fn_ulDetermineUsefulDT();
+    stRotation.m_xAngle = xSpeed;
+    MTH3D_M_vSubVector(&stTempVector, _p_stCurrent, _p_stPointAxis);
+    MTH_p_stRotationMulVector(&stRotation, &stTempVector, _p_stSource);
+    _p_stSource->xX = _p_stSource->xX + _p_stPointAxis->xX;
+    _p_stSource->xY = _p_stSource->xY + _p_stPointAxis->xY;
+    _p_stSource->xZ = _p_stSource->xZ + _p_stPointAxis->xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 53–94 */
@@ -3645,5 +3951,34 @@ void fnv_MoveAToB(HIE_tdstSuperObject_* param0, MTH3D_tdstVector_* _p_stSource, 
     MTH3D_tdstVector_ stTempVector;
     int lTime;
     float xSpeed;
-    /* TODO: decompile from asm/... */
+    MTH3D_M_vSubVector(&stTempVector, _p_stDest, _p_stSource);
+    MTH_VECTOR_NORM_TO(xNorm, stTempVector);
+    MTH3D_M_vSubVector(&stTempVector, _p_stCurrent, _p_stSource);
+    MTH_VECTOR_NORM2_TO(xSpeed, stTempVector);
+    xSpeed = xNorm / (float)_iTime;
+    lTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - fn_lGetActionParamlValue(5, param0);
+    if (lTime < _iAccel)
+    {
+        xSpeed = (float)lTime * (xSpeed / (float)_iAccel);
+    }
+    if (_iTime - _iAccel < lTime)
+    {
+        xSpeed = (float)lTime * -(xSpeed / (float)_iAccel) + (float)_iTime * xSpeed / (float)_iAccel;
+    }
+    MTH3D_M_vSubVector(&stTempVector, _p_stDest, _p_stSource);
+    MTH_VECTOR_NORM_SYNC_TO(xNorm, stTempVector);
+    if (xNorm != 0.0f)
+    {
+        xNorm = 1.0f / xNorm;
+        stTempVector.xX = xNorm * stTempVector.xX;
+        stTempVector.xY = xNorm * stTempVector.xY;
+        stTempVector.xZ = xNorm * stTempVector.xZ;
+    }
+    xSpeed = xSpeed * (float)fn_ulDetermineUsefulDT();
+    stTempVector.xX = xSpeed * stTempVector.xX;
+    stTempVector.xY = xSpeed * stTempVector.xY;
+    stTempVector.xZ = xSpeed * stTempVector.xZ;
+    _p_stCurrent->xX = stTempVector.xX + _p_stCurrent->xX;
+    _p_stCurrent->xY = stTempVector.xY + _p_stCurrent->xY;
+    _p_stCurrent->xZ = stTempVector.xZ + _p_stCurrent->xZ;
 }

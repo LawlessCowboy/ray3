@@ -8528,22 +8528,22 @@ void recPS2glLightiv(unsigned int light, unsigned int pname, int* params)
     tagGLlistnode* pNode;
     switch (pname)
     {
-    case 0x1204:
-    case 0x1203:
-    case 0x1202:
-    case 0x1201:
     case 0x1200:
+    case 0x1201:
+    case 0x1202:
+    case 0x1203:
+    case 0x1204:
         fparams[0] = (float)params[0];
         fparams[1] = (float)params[1];
         fparams[2] = (float)params[2];
         fparams[3] = (float)params[3];
         switch (pname)
         {
-        case 0x1204:
-        case 0x1203:
-        case 0x1202:
-        case 0x1201:
         case 0x1200:
+        case 0x1201:
+        case 0x1202:
+        case 0x1203:
+        case 0x1204:
             pNode = PS2glListAllocNode(sizeof(anon_118));
             pParam = (anon_118*)pNode->aParams;
             pParam->light = light;
@@ -8562,12 +8562,15 @@ void recPS2glLightiv(unsigned int light, unsigned int pname, int* params)
         }
         break;
     default:
+        {
+        int p = *params;
         pNode = PS2glListAllocNode(sizeof(anon_61));
         pParam61 = (anon_61*)pNode->aParams;
         pParam61->light = light;
         pParam61->pname = pname;
-        pParam61->param = *params;
+        pParam61->param = p;
         pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLighti;
+        }
         break;
     }
 }
@@ -8638,11 +8641,11 @@ void recPS2glLightfv(unsigned int light, unsigned int pname, float* params)
     tagGLlistnode* pNode;
     switch (pname)
     {
-    case 0x1204:
-    case 0x1203:
-    case 0x1202:
-    case 0x1201:
     case 0x1200:
+    case 0x1201:
+    case 0x1202:
+    case 0x1203:
+    case 0x1204:
         pNode = PS2glListAllocNode(sizeof(anon_118));
         pParam = (anon_118*)pNode->aParams;
         pParam->light = light;

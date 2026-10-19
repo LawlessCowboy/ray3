@@ -23713,6 +23713,96 @@
       "status": "MISMATCH",
       "target_size": 376,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0015b610",
+      "candidate_size": 348,
+      "first_difference": 76,
+      "implementation": "void recPS2glLightiv(unsigned int light, unsigned int pname, int* params)\n{\n    float fparams[4];\n    anon_118* pParam;\n    anon_77* pParam77;\n    anon_61* pParam61;\n    tagGLlistnode* pNode;\n    switch (pname)\n    {\n    case 0x1200:\n    case 0x1201:\n    case 0x1202:\n    case 0x1203:\n    case 0x1204:\n        fparams[0] = (float)params[0];\n        fparams[1] = (float)params[1];\n        fparams[2] = (float)params[2];\n        fparams[3] = (float)params[3];\n        switch (pname)\n        {\n        case 0x1200:\n        case 0x1201:\n        case 0x1202:\n        case 0x1203:\n        case 0x1204:\n            pNode = PS2glListAllocNode(sizeof(anon_118));\n            pParam = (anon_118*)pNode->aParams;\n            pParam->light = light;\n            pParam->pname = pname;\n            memcpy(pParam->params, fparams, sizeof(pParam->params));\n            pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightfv;\n            break;\n        default:\n            pNode = PS2glListAllocNode(sizeof(anon_77));\n            pParam77 = (anon_77*)pNode->aParams;\n            pParam77->light = light;\n            pParam77->pname = pname;\n            pParam77->param = fparams[0];\n            pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightf;\n            break;\n        }\n        break;\n    default:\n        {\n        int p = *params;\n        pNode = PS2glListAllocNode(sizeof(anon_61));\n        pParam61 = (anon_61*)pNode->aParams;\n        pParam61->light = light;\n        pParam61->pname = pname;\n        pParam61->param = p;\n        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLighti;\n        }\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "recPS2glLightiv",
+      "reason": "348/352. Case order fixed: MWCC emits small-switch compare chains in REVERSE source order, so ascending source (0x1200..0x1204) gives the target's descending compares. Default hoists int p = *params. Residual: target's inner-switch break jumps to an outer 'b' (two-hop exit, +4 bytes); merged in ours. An inline helper copy of Lightfv/Lighti did not reproduce it.",
+      "size": 352,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MISMATCH",
+      "target_size": 352,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00133390",
+      "candidate_size": 1380,
+      "first_difference": 212,
+      "implementation": "char* MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId, MNC_tfnAllocator_ _pfnAllocator);\nvoid* MNC_fn_pvDefaultAllocator(unsigned int u32Size);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\tempgrp\\MNC\\load\\loadarea.c lines 741\u2013747 */\n/* addr: 0x00133160  size: 68 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 741\n *   +0x0014 -> line 743\n *   +0x001c -> line 746\n *   +0x0030 -> line 747\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\nchar* MNC_fn_pcLoadArea(char* _szAreaName, unsigned int _u32AreaId)\n{\n\n    HMU_fn_vSetMemoriesInBinaryMode();\n\n\n    return MNC_fn_pcLoadAreaWithAllocator(_szAreaName, _u32AreaId, MNC_fn_pvDefaultAllocator);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MNC_fn_pcLoadAreaWithAllocator",
+      "reason": "1380/1380 bytes, relocs ok; single scheduling pair: move a0,fh vs addiu a1,sp,0x1ac order in CD_Read(fh,&u32NbLinks,4). Decl order/if-else area remap fixed rest. 1h permuter (7.6k iters) stuck at score 60.",
+      "size": 1380,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/MNC/load/loadarea.c",
+      "status": "MISMATCH",
+      "target_size": 1380,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00133f30",
+      "candidate_size": 572,
+      "first_difference": 0,
+      "implementation": "int SVG_fn_s32GetFileAttributes(int _iPort, int _iSlot, char* _szFileName)\n{\n    anon_0 Res;\n    int iFd;\n    unsigned short t;\n    int i;\n    unsigned int u32RetryCount;\n\n    iFd = -1;\n    i = 0;\n    while ((char)_szFileName[i++] != '/')\n        ;\n\n    if (!SVG_fn_s32ReadNextName(0, 0, _szFileName, 0, 0))\n        return 0;\n\n    SVG_M_vRetrySceMcOperation(sceMcGetDir(_iPort, _iSlot, _szFileName, 0, 1, &Res));\n\n    if (gs_bSceMcOpIsSuccessful)\n    {\n        sceMcSync(0, 0, &iFd);\n        while (!Res.AttrFile)\n            ;\n        t = (unsigned short)((short)Res.AttrFile & 0x80);\n        if (t != 0)\n            return 1;\n        return 0;\n    }\n\n    return 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "SVG_fn_s32GetFileAttributes",
+      "reason": "572/576 (3.0.3): stack frame 0x110 target vs 0xd0 (0x30 of locals missing from debug record) plus one missing andi 0xffff after polling lhu in while(!Res.AttrFile)",
+      "size": 576,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MISMATCH",
+      "target_size": 576,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00135f40",
+      "candidate_size": 1156,
+      "first_difference": 0,
+      "implementation": "int SVG_fn_s32DestroySaveGame(int _iPort, int _iSlot, char* _szSonyCompliantDirName)\n{\n    int iResult;\n    int s32Count;\n    anon_0 a18_stGetDirTable[18];\n    unsigned int u32RetryCount;\n\n    SVG_M_vRetrySceMcOperationScoped(sceMcGetDir(_iPort, _iSlot, _szSonyCompliantDirName, 0, 99, a18_stGetDirTable));\n\n    if (gs_bSceMcOpIsSuccessful)\n        sceMcSync(0, 0, &iResult);\n    else\n        return 0;\n\n    if (iResult >= 0)\n    {\n        for (s32Count = 0; s32Count < iResult; s32Count++)\n        {\n            SVG_M_vRetrySceMcOperationScoped(sceMcDelete(_iPort, _iSlot, (char*)a18_stGetDirTable[s32Count].EntryName));\n\n            if (gs_bSceMcOpIsSuccessful)\n            {\n                sceMcSync(0, 0, &iResult);\n                if (iResult)\n                    return 0;\n            }\n            else\n                return 0;\n        }\n    }\n\n    SVG_M_vRetrySceMcOperationScoped(sceMcDelete(_iPort, _iSlot, _szSonyCompliantDirName));\n\n    if (gs_bSceMcOpIsSuccessful)\n    {\n        sceMcSync(0, 0, &iResult);\n        if (iResult)\n            return 0;\n    }\n    else\n        return 0;\n\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "SVG_fn_s32DestroySaveGame",
+      "reason": "1156/1164 (3.0.3): only stack frame differs, 0x570 target vs 0x540 (0x30 extra locals; unused arrays optimized away, decl reorders no effect)",
+      "size": 1164,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MISMATCH",
+      "target_size": 1164,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00202ee0",
+      "candidate_size": 692,
+      "first_difference": 56,
+      "implementation": "void fnv_MoveAToB(HIE_tdstSuperObject_* param0, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stDest, MTH3D_tdstVector_* _p_stCurrent, int _iTime, int _iAccel);\ntdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nvoid fn_vSetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, int lValue);\nvoid fn_vSetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, float xValue);\nvoid CAM_fn_vComputeProjection(MTH3D_tdstVector_* _p_sDestVector, MTH3D_tdstVector_* _p_sSrcVector, MTH3D_tdstVector_* _p_sNormVector);\nfloat CAM_fn_xComputeRotation(MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stSrcVector, MTH3D_tdstVector_* _p_stAxisVector);\nMTH3D_tdstVector_* MTH_p_stRotationMulVector(MTH_stRotation* _p_stRotation, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stResult);\nvoid CAM_fn_vForceCameraPos(HIE_tdstSuperObject_*, MTH3D_tdstVector_*);\nMTH3D_tdstVector_* fn_p_stGetActionParamp_stVertex(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);\nvoid fn_vSetActionParamp_stVertex(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, MTH3D_tdstVector_* p_stVertex);\nfloat fn_xGetActionParamxValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);\nint fn_lGetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);\n\nunsigned char fn_ucCamCinePosATgtBTurnTgtV(HIE_tdstSuperObject_* p_SuperObjPerso)\n{\n    UV3 stCurrentCameraPos;\n    UV3 stTempVector;\n    MTH3D_tdstVector_ stTempVector1;\n    MTH3D_tdstVector_ stAxis;\n    if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount >= (unsigned int)(fn_lGetActionParamlValue(5, p_SuperObjPerso) + fn_lGetActionParamlValue(3, p_SuperObjPerso)))\n    {\n        p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits &= ~0x8000;\n        return 4;\n    }\n    {\n        int* pPos = (int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;\n        stCurrentCameraPos.i[0] = pPos[0];\n        stCurrentCameraPos.i[1] = pPos[1];\n        stCurrentCameraPos.i[2] = pPos[2];\n    }\n    MAT_fn_vGetRotationVectors(p_SuperObjPerso->hGlobalMatrix, &stAxis, &stTempVector.v, &stTempVector.v);\n    stTempVector.i[0] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[0];\n    stTempVector.i[1] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[1];\n    stTempVector.i[2] = ((int*)fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso))[2];\n    fnv_TurnAWithB(p_SuperObjPerso, &stTempVector.v, &stCurrentCameraPos.v, &stAxis, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso), fn_xGetActionParamxValue(2, p_SuperObjPerso), fn_lGetActionParamlValue(3, p_SuperObjPerso), fn_lGetActionParamlValue(4, p_SuperObjPerso));\n    stTempVector1.xX = 0.0f;\n    stTempVector1.xY = 0.0f;\n    stTempVector1.xZ = 1.0f;\n    CAM_fn_vForceCameraTgt(p_SuperObjPerso, &stTempVector.v, &stTempVector1);\n    fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, &stTempVector.v);\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "fnv_MoveAToB",
+      "reason": "692/680: target keeps stTempVector.z in f0 for the norm (candidate reloads x/y/z, +2 lwc1) and schedules sqrt.s after the next lwc1. Control flow/relocs/memory-resident vector layout match.",
+      "size": 680,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
+      "status": "MISMATCH",
+      "target_size": 680,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002027d0",
+      "candidate_size": 1148,
+      "first_difference": 0,
+      "implementation": "tdstNodeInterpret_* fn_p_stCamCineInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stParam;\n    tdeMetaActionId_ eMetaActionId;\n    MTH3D_tdstVector_ stTempVector;\n\n    eMetaActionId = (p_stTree - 1)->uDummy.uId.eMetaActionId;\n    p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits |= 0x8000;\n    stTempVector.xX = 0.0f;\n    stTempVector.xY = 0.0f;\n    stTempVector.xZ = 1.0f;\n    switch (eMetaActionId)\n    {\n    case eMetaAction_CamCineMoveAToBTgtC:\n    case eMetaAction_CamCineMoveAToBTgtAC:\n    case eMetaAction_CamCinePosAMoveTgtBToC:\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamp_stVertex(1, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamp_stVertex(2, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamlValue(3, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamlValue(4, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);\n        fn_vSetActionParamlValue(5, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);\n        CAM_fn_vForceCameraPos(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso));\n        if (eMetaActionId == eMetaAction_CamCinePosAMoveTgtBToC)\n        {\n            CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stTempVector);\n            fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso));\n        }\n        else\n        {\n            CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(2, p_SuperObjPerso), &stTempVector);\n        }\n        break;\n    case eMetaAction_CamCinePosATgtB:\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamp_stVertex(1, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamlValue(2, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);\n        fn_vSetActionParamlValue(3, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);\n        CAM_fn_vForceCameraPos(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso));\n        CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stTempVector);\n        break;\n    case eMetaAction_CamCinePosATgtBTurnPosH:\n    case eMetaAction_CamCinePosATgtBTurnTgtH:\n    case eMetaAction_CamCinePosATgtBTurnPosV:\n    case eMetaAction_CamCinePosATgtBTurnTgtV:\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamp_stVertex(1, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamxValue(2, p_SuperObjPerso, stParam.uDummy.uParam.xValue);\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamlValue(3, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);\n    fn_vSetActionParamlValue(4, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);\n        fn_vSetActionParamlValue(5, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);\n        CAM_fn_vForceCameraPos(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso));\n        CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stTempVector);\n        if (eMetaActionId == eMetaAction_CamCinePosATgtBTurnTgtH || eMetaActionId == eMetaAction_CamCinePosATgtBTurnTgtV)\n        {\n            fn_vSetActionParamp_stVertex(0, p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso));\n        }\n        break;\n    }\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "fn_p_stCamCineInit",
+      "reason": "1148/1156, relocs 55/55: target converts (int)xValue in eType==E_vt_Float?(int)xValue:lValue via trunc.w.s into callee-saved f30 (frame 0x80 vs 0x70, stParam 0x60 vs 0x50). Switch grouping 5/6/8, 7, 9..12 correct.",
+      "size": 1156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
+      "status": "MISMATCH",
+      "target_size": 1156,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -24397,6 +24487,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/MNC/load/loadarea.c",
       "status": "MATCH"
     },
+    "0x00133950": {
+      "address": "0x00133950",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_vCheckStatusChangeInMC0",
+      "size": 424,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
     "0x00133b00": {
       "address": "0x00133b00",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -24426,6 +24524,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SVG_fn_szGetSonyCompliantDirName",
       "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
+    "0x00133c10": {
+      "address": "0x00133c10",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_s32Format",
+      "size": 384,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
+    "0x00133d90": {
+      "address": "0x00133d90",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_s32GetFileInfo",
+      "size": 404,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
       "status": "MATCH"
     },
@@ -24477,6 +24591,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
       "status": "MATCH"
     },
+    "0x00134690": {
+      "address": "0x00134690",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_s32WriteToFile",
+      "size": 1672,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
+    "0x00134d20": {
+      "address": "0x00134d20",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_s32ReadFromFile",
+      "size": 1060,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
     "0x00135150": {
       "address": "0x00135150",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -24485,11 +24615,59 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
       "status": "MATCH"
     },
+    "0x00135270": {
+      "address": "0x00135270",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_s32Query",
+      "size": 552,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
+    "0x001354a0": {
+      "address": "0x001354a0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_s32QueryAndCheckSpace",
+      "size": 524,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
+    "0x001356b0": {
+      "address": "0x001356b0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_szAsciiToSJIS",
+      "size": 820,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
+    "0x001359f0": {
+      "address": "0x001359f0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_s32CreateIconFilesForSave",
+      "size": 960,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
+    "0x00135db0": {
+      "address": "0x00135db0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_s32MakeDir",
+      "size": 400,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
     "0x001363d0": {
       "address": "0x001363d0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SVG_fn_s32SaveGame",
       "size": 108,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
+    "0x00136440": {
+      "address": "0x00136440",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_s32SaveGameReal",
+      "size": 664,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
       "status": "MATCH"
     },
@@ -24522,6 +24700,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SVG_fn_bGetActiveVms",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
+      "status": "MATCH"
+    },
+    "0x001368d0": {
+      "address": "0x001368d0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SVG_fn_s32ReadNextFileInfo",
+      "size": 392,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c",
       "status": "MATCH"
     },
@@ -29634,6 +29820,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "plyPS2glLighti",
       "size": 20,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x0015b7f0": {
+      "address": "0x0015b7f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "recPS2glLightfv",
+      "size": 216,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -35941,11 +36135,75 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AITools.c",
       "status": "MATCH"
     },
+    "0x00201a60": {
+      "address": "0x00201a60",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucCamCinePosATgtBTurnTgtV",
+      "size": 400,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
+      "status": "MATCH"
+    },
+    "0x00201bf0": {
+      "address": "0x00201bf0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucCamCinePosATgtBTurnTgtH",
+      "size": 400,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
+      "status": "MATCH"
+    },
+    "0x00201d80": {
+      "address": "0x00201d80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucCamCinePosATgtBTurnPosV",
+      "size": 408,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
+      "status": "MATCH"
+    },
+    "0x00201f20": {
+      "address": "0x00201f20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucCamCinePosATgtBTurnPosH",
+      "size": 408,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
+      "status": "MATCH"
+    },
+    "0x002020c0": {
+      "address": "0x002020c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucCamCinePosAMoveTgtBToC",
+      "size": 420,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
+      "status": "MATCH"
+    },
     "0x00202270": {
       "address": "0x00202270",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_ucCamCinePosATgtB",
       "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
+      "status": "MATCH"
+    },
+    "0x00202300": {
+      "address": "0x00202300",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucCamCineMoveAToBTgtAC",
+      "size": 800,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
+      "status": "MATCH"
+    },
+    "0x00202620": {
+      "address": "0x00202620",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucCamCineMoveAToBTgtC",
+      "size": 420,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
+      "status": "MATCH"
+    },
+    "0x00202c60": {
+      "address": "0x00202c60",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fnv_TurnAWithB",
+      "size": 636,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
       "status": "MATCH"
     },
