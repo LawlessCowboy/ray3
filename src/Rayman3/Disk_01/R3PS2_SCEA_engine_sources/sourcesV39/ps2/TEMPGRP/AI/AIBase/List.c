@@ -3007,13 +3007,65 @@ void fn_vThisTypeVsThisType(HIE_tdstSuperObject_* _hCharacter, unsigned short _w
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern unsigned char g_ucIsInMacro;
+extern tdstNodeInterpret_* g_p_stTreeMacro;
+extern unsigned char g_ucNRule;
+extern tdstIntelligence_* g_p_stIntelligence;
+unsigned char fn_ucIsRuleInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule);
+tdstNodeInterpret_* fn_p_stGetTableAction(tdstIntelligence_* p_stIntelligence, unsigned char ucIndex);
+tdstNodeInterpret_* fn_p_stIntelligenceEvalTreeEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+void fn_vUnuseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence);
+void fn_vUseCurrentActionTableEntry(tdstIntelligence_* p_stIntelligence, unsigned char ucNRule, tdstNodeInterpret_* p_stNode);
 tdstNodeInterpret_* fn_p_stEvalSubRoutine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue, tdstMacro_* p_stMacro)
 {
     tdstNodeInterpret_* p_stTreeTmp;
     unsigned char ucIndTabAction;
     tdstNodeInterpret_* p_stTreeSave;
     unsigned char ucActionReturn;
-    /* TODO: decompile from asm/... */
+
+    p_stTreeSave = g_p_stTreeMacro;
+    g_ucIsInMacro++;
+    g_p_stTreeMacro = p_stTree;
+
+    ucIndTabAction = fn_ucIsRuleInActionTable(g_p_stIntelligence, g_ucNRule);
+    if (ucIndTabAction >= g_p_stIntelligence->p_stActionTable->ucNbEntries)
+        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
+    else if (fn_p_stGetTableAction(g_p_stIntelligence, ucIndTabAction) != g_p_stTreeMacro)
+        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
+
+    fn_p_stIntelligenceEvalTreeEngine(p_SuperObjPerso, p_stMacro->p_stCurrentTree->p_stNodeInterpret, p_stValue);
+    ucActionReturn = p_stValue->uDummy.uParam.ucValue;
+    g_ucIsInMacro--;
+
+    if ((ucActionReturn & 0x10) == 0x10)
+    {
+        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
+        p_stValue->uDummy.uParam.lValue = 0;
+        p_stValue->eType = 20;
+        g_p_stTreeMacro = p_stTreeSave;
+        return ++p_stTree;
+    }
+
+    if ((ucActionReturn & 8) == 8)
+    {
+        p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stMacro->p_stInitTree->p_stNodeInterpret;
+        g_p_stTreeMacro = p_stTreeSave;
+        return ++p_stTree;
+    }
+
+    ucIndTabAction = fn_ucIsRuleInActionTable(g_p_stIntelligence, g_ucNRule);
+    if (ucIndTabAction < g_p_stIntelligence->p_stActionTable->ucNbEntries)
+    {
+        p_stTreeTmp = fn_p_stGetTableAction(g_p_stIntelligence, ucIndTabAction);
+        if (p_stTreeTmp->eType != 41)
+        {
+            p_stMacro->p_stCurrentTree->p_stNodeInterpret = p_stTreeTmp;
+            fn_vUnuseCurrentActionTableEntry(g_p_stIntelligence);
+            fn_vUseCurrentActionTableEntry(g_p_stIntelligence, g_ucNRule, g_p_stTreeMacro);
+        }
+        g_p_stTreeMacro = p_stTreeSave;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 544–618 */
@@ -3090,17 +3142,69 @@ tdstNodeInterpret_* fn_p_stEvalSubRoutine(HIE_tdstSuperObject_* p_SuperObjPerso,
  */
 tdstNodeInterpret_* fn_p_stListSort(tdstList_* p_List, unsigned char ucWantedNbElt, char b_cIncrease, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stParam;
-    tdstNodeInterpret_* p_stTreeSv;
-    unsigned char ucId;
-    float xValue;
-    float* p_xCriteraResult;
-    float* a_xCriteraResult;
-    unsigned char ucJ;
-    unsigned char ucI;
-    HIE_tdstSuperObject_* p_stPerso;
     HIE_tdstSuperObject_** p_p_stPerso;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* p_stPerso;
+    unsigned char ucI;
+    unsigned char ucJ;
+    float* a_xCriteraResult;
+    float* p_xCriteraResult;
+    float xValue;
+    unsigned char ucId;
+    tdstNodeInterpret_* p_stTreeSv;
+    tdstGetSetParam_ stParam;
+
+    ucId = 0;
+    p_stTreeSv = p_stTree;
+    p_p_stPerso = p_List->p_hTabElt;
+    a_xCriteraResult = (float*)HMU_fn_p_vMalloc(p_List->ucNbElt, 1);
+    for (p_xCriteraResult = a_xCriteraResult; p_p_stPerso < p_List->p_hTabElt + p_List->ucNbElt; p_p_stPerso++, p_xCriteraResult++)
+    {
+        p_stTree = fn_p_stEvalTree(*p_p_stPerso, p_stTreeSv, &stParam);
+        *p_xCriteraResult = (stParam.eType == 8) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+    }
+
+    if (b_cIncrease == 0)
+    {
+        xValue = -3.402822e38f;
+        for (ucI = 0; (ucI < p_List->ucNbElt - 1) && (ucI < ucWantedNbElt); ucI++)
+        {
+            for (ucJ = ucI; ucJ < p_List->ucNbElt; ucJ++)
+            {
+                if (a_xCriteraResult[ucJ] > xValue)
+                {
+                    xValue = a_xCriteraResult[ucJ];
+                    ucId = ucJ;
+                }
+            }
+            a_xCriteraResult[ucId] = a_xCriteraResult[ucI];
+            p_stPerso = p_List->p_hTabElt[ucId];
+            p_List->p_hTabElt[ucId] = p_List->p_hTabElt[ucI];
+            p_List->p_hTabElt[ucI] = p_stPerso;
+        }
+    }
+    else
+    {
+        xValue = 3.402822e38f;
+        for (ucI = 0; (ucI < p_List->ucNbElt - 1) && (ucI < ucWantedNbElt); ucI++)
+        {
+            for (ucJ = ucI; ucJ < p_List->ucNbElt; ucJ++)
+            {
+                if (a_xCriteraResult[ucJ] < xValue)
+                {
+                    xValue = a_xCriteraResult[ucJ];
+                    ucId = ucJ;
+                }
+            }
+            a_xCriteraResult[ucId] = a_xCriteraResult[ucI];
+            p_stPerso = p_List->p_hTabElt[ucId];
+            p_List->p_hTabElt[ucId] = p_List->p_hTabElt[ucI];
+            p_List->p_hTabElt[ucI] = p_stPerso;
+        }
+    }
+
+    p_List->ucNbElt = (p_List->ucNbElt > ucWantedNbElt) ? ucWantedNbElt : p_List->ucNbElt;
+    HMU_fn_vFree((void**)&a_xCriteraResult, 1);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 451–476 */
@@ -3169,14 +3273,16 @@ tdstNodeInterpret_* fn_p_stListSelect(tdstList_* p_List, char b_cInverse, tdstNo
 #pragma auto_inline on
 HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition)
 {
-    if (p_List->ucNbElt == 0)
+    int lNbElt = p_List->ucNbElt;
+
+    if (lNbElt == 0)
         return NULL;
 
-    if ((ucPosition >= p_List->ucNbElt) && (ucPosition != 0xff))
+    if ((ucPosition >= lNbElt) && (ucPosition != 0xff))
         return NULL;
 
     if (ucPosition == 0xff)
-        return (p_List->p_hTabElt - 1)[p_List->ucNbElt];
+        return p_List->p_hTabElt[lNbElt - 1];
     else
         return p_List->p_hTabElt[ucPosition];
 }
@@ -3568,11 +3674,11 @@ void fn_vUnionList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
  */
 void fn_vSortListByModel(tdstList_* p_stList, AI_tdstAIModel_* _p_stModel)
 {
-    unsigned char ucJ;
-    unsigned char ucI;
-    HIE_tdstSuperObject_** p_hSupObjElt;
-    unsigned char ucPos;
     HIE_tdstSuperObject_* hPerso;
+    unsigned char ucPos;
+    HIE_tdstSuperObject_** p_hSupObjElt;
+    unsigned char ucI;
+    unsigned char ucJ;
 
     ucPos = 0;
     ucJ = 0;
@@ -3624,10 +3730,10 @@ void fn_vSortListByModel(tdstList_* p_stList, AI_tdstAIModel_* _p_stModel)
  */
 void fn_vSortListByFamily(tdstList_* p_List, tdstFamilyList_* hFamily)
 {
-    HIE_tdstSuperObject_* hSupObjElt;
-    HIE_tdstSuperObject_** p_hSupObjElt;
-    unsigned char ucJ;
     unsigned char ucI;
+    unsigned char ucJ;
+    HIE_tdstSuperObject_** p_hSupObjElt;
+    HIE_tdstSuperObject_* hSupObjElt;
 
     ucJ = 0;
     p_hSupObjElt = (HIE_tdstSuperObject_**)HMU_fn_p_vMalloc(p_List->ucNbElt, 1);

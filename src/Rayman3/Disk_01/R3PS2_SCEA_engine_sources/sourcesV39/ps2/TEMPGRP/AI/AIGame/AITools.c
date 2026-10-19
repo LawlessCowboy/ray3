@@ -4,6 +4,28 @@
 
 #include <stddef.h>
 
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }  \
+    asm { nop }
+#define MTH_VECTOR_NORM_TO(_result, _vector)           \
+    do {                                                   \
+        float _mthX = (_vector).xX;                        \
+        float _mthY = (_vector).xY;                        \
+        float _mthZ = (_vector).xZ;                        \
+        float _mthSquared;                                 \
+        MTH_SQR3_TO(_mthSquared, _mthX, _mthY, _mthZ);    \
+        MTH_SQRT_TO(_result, _mthSquared);                 \
+    } while (0)
+#define MTH_SQR2_TO(_result, _x, _y) \
+    asm { mula.s _x, _x }             \
+    asm { madd.s _result, _y, _y }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                       \
+    asm { madda.s _y, _y }                      \
+    asm { madd.s _result, _z, _z }
+
+void WP_fnv_WayPoint_ComputeLocation(void* _hWayPoint, void* _p_stVertex);
+float atanf(float);
 extern char* FON_fn_szGetTextPointerForHandle(int hString);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
@@ -3102,7 +3124,11 @@ struct SECT_tdstSector_ {
  */
 void fn_vConvertColorToParam(GEO_tdstColor_* p_stColor, tdstGetSetParam_* p_stParam)
 {
-    /* TODO: decompile from asm/... */
+    p_stParam->uDummy.uParam.ColorValue.Component.Red = (unsigned int)(100.0f * p_stColor->xR);
+    p_stParam->uDummy.uParam.ColorValue.Component.Green = (unsigned int)(100.0f * p_stColor->xG);
+    p_stParam->uDummy.uParam.ColorValue.Component.Blue = (unsigned int)(100.0f * p_stColor->xB);
+    p_stParam->uDummy.uParam.ColorValue.Component.Alpha = (unsigned int)(100.0f * p_stColor->xA);
+    p_stParam->eType = E_vt_Color;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 527–542 */
@@ -3128,7 +3154,43 @@ void fn_vConvertParamToColor(tdstGetSetParam_* p_stParam, GEO_tdstColor_* p_stCo
 {
     float fValue;
     float lValue;
-    /* TODO: decompile from asm/... */
+    float fScale = 0.01f;
+    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Red;
+    if (lValue < 0.0f) {
+        fValue = 0.0f;
+    } else if (lValue > 100.0f) {
+        fValue = 1.0f;
+    } else {
+        fValue = lValue * fScale;
+    }
+    p_stColor->xR = fValue;
+    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Green;
+    if (lValue < 0.0f) {
+        fValue = 0.0f;
+    } else if (lValue > 100.0f) {
+        fValue = 1.0f;
+    } else {
+        fValue = lValue * fScale;
+    }
+    p_stColor->xG = fValue;
+    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Blue;
+    if (lValue < 0.0f) {
+        fValue = 0.0f;
+    } else if (lValue > 100.0f) {
+        fValue = 1.0f;
+    } else {
+        fValue = lValue * fScale;
+    }
+    p_stColor->xB = fValue;
+    lValue = (float)p_stParam->uDummy.uParam.ColorValue.Component.Alpha;
+    if (lValue < 0.0f) {
+        fValue = 0.0f;
+    } else if (lValue > 100.0f) {
+        fValue = 1.0f;
+    } else {
+        fValue = lValue * fScale;
+    }
+    p_stColor->xA = fValue;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 500–518 */
@@ -3323,13 +3385,14 @@ DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso)
 float fn_xComputeBestEcartDirectionAngle(float xAngleFollowed, float xAngleToFollow)
 {
     float xDeltaAngle;
+    float xPi = 3.14159265358979323846f;
     xDeltaAngle = xAngleToFollow - xAngleFollowed;
     if (xDeltaAngle > 0.0f) {
-        if (xDeltaAngle > (float)3.14159265358979323846) {
+        if (xDeltaAngle > xPi) {
             xDeltaAngle -= (float)6.28318530717958647692;
         }
-    } else if (xDeltaAngle < -(float)3.14159265358979323846) {
-        xDeltaAngle += (float)6.28318530717958647692;
+    } else if (xDeltaAngle < -xPi) {
+        xDeltaAngle = (float)6.28318530717958647692 + xDeltaAngle;
     }
     return xDeltaAngle;
 }
@@ -3362,8 +3425,32 @@ float fn_xComputeDirectionAngle(MTH3D_tdstVector_* p_stVector)
     float xAngle;
     float xRealY;
     float xRealX;
-    /* TODO: decompile from asm/... */
+    float xHalfPi = 1.57079632679489661923f;
+    xRealX = p_stVector->xX;
+    xRealY = p_stVector->xY;
+    if (xRealX) {
+        xAngle = atanf(xRealY / xRealX);
+    } else if (xRealY < 0.0f) {
+        xAngle = -xHalfPi;
+    } else {
+        xAngle = xHalfPi;
+    }
+    if (xRealX < 0.0f) {
+        xAngle = 3.14159265358979323846f + xAngle;
+    }
+    if (xAngle < 0.0f) {
+        xAngle = 6.28318530717958647692f + xAngle;
+    }
+    xAngle = xHalfPi + xAngle;
+    if (xAngle > 6.28318530717958647692f) {
+        xAngle -= 6.28318530717958647692f;
+    }
+    return xAngle;
 }
+
+void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
+void MAT_fn_vInvertRotation(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stSource);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 229–255 */
 /* addr: 0x002016d0  size: 524 bytes */
@@ -3397,7 +3484,72 @@ float fn_xExtendedDistanceBetweenPerso(HIE_tdstSuperObject_* param0, HIE_tdstSup
     MAT_tdstTransformation_ stMatrix;
     MTH3D_tdstVector_ stVertex2;
     MTH3D_tdstVector_ stVertex1;
-    /* TODO: decompile from asm/... */
+    COL_tdstBoundingSphere_* hBoundingSphere;
+    float xX, xY, xZ, xSqr;
+    float xDist;
+    if (ucFlags & 0x80) {
+        hBoundingSphere = (COL_tdstBoundingSphere_*)param0->hCollideBoundingVolume;
+        if (hBoundingSphere) {
+            MAT_fn_vApplyOnVertex(&stVertex1, param0->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
+        } else {
+            unsigned int* p_ulPos = (unsigned int*)&param0->hGlobalMatrix->stTransformMatrix.stCol_3;
+            ((unsigned int*)&stVertex1)[0] = p_ulPos[0];
+            ((unsigned int*)&stVertex1)[1] = p_ulPos[1];
+            ((unsigned int*)&stVertex1)[2] = p_ulPos[2];
+        }
+        hBoundingSphere = (COL_tdstBoundingSphere_*)p_SuperObjPerso2->hCollideBoundingVolume;
+        if (hBoundingSphere) {
+            MAT_fn_vApplyOnVertex(&stVertex2, p_SuperObjPerso2->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
+        } else {
+            unsigned int* p_ulPos = (unsigned int*)&p_SuperObjPerso2->hGlobalMatrix->stTransformMatrix.stCol_3;
+            ((unsigned int*)&stVertex2)[0] = p_ulPos[0];
+            ((unsigned int*)&stVertex2)[1] = p_ulPos[1];
+            ((unsigned int*)&stVertex2)[2] = p_ulPos[2];
+        }
+    } else {
+        unsigned int* p_ulPos1 = (unsigned int*)&param0->hGlobalMatrix->stTransformMatrix.stCol_3;
+        unsigned int* p_ulPos2 = (unsigned int*)&p_SuperObjPerso2->hGlobalMatrix->stTransformMatrix.stCol_3;
+        ((unsigned int*)&stVertex1)[0] = p_ulPos1[0];
+        ((unsigned int*)&stVertex1)[1] = p_ulPos1[1];
+        ((unsigned int*)&stVertex1)[2] = p_ulPos1[2];
+        ((unsigned int*)&stVertex2)[0] = p_ulPos2[0];
+        ((unsigned int*)&stVertex2)[1] = p_ulPos2[1];
+        ((unsigned int*)&stVertex2)[2] = p_ulPos2[2];
+    }
+    stVertex1.xX -= stVertex2.xX;
+    stVertex1.xY -= stVertex2.xY;
+    stVertex1.xZ -= stVertex2.xZ;
+    if ((ucFlags & 7) != 7) {
+        MAT_fn_vInvertRotation(&stMatrix, param0->hGlobalMatrix);
+        MAT_fn_vApplyOnVector(&stVertex1, &stMatrix, &stVertex1);
+    }
+    xX = stVertex1.xX;
+    xY = stVertex1.xY;
+    xZ = stVertex1.xZ;
+    switch (ucFlags & 7) {
+    case 0:
+        return 0.0f;
+    case 1:
+        return xX;
+    case 2:
+        return xY;
+    case 3:
+        MTH_SQR2_TO(xSqr, xX, xY);
+        break;
+    case 4:
+        return xZ;
+    case 5:
+        MTH_SQR2_TO(xSqr, xX, xZ);
+        break;
+    case 6:
+        MTH_SQR2_TO(xSqr, xY, xZ);
+        break;
+    default:
+        MTH_SQR3_TO(xSqr, xX, xY, xZ);
+        break;
+    }
+    MTH_SQRT_TO(xDist, xSqr);
+    return xDist;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 184–191 */
@@ -3416,9 +3568,24 @@ float fn_xExtendedDistanceBetweenPerso(HIE_tdstSuperObject_* param0, HIE_tdstSup
  */
 float fn_xDistanceBetweenPersoAndWP(HIE_tdstSuperObject_* p_SuperObjPerso, WP_tdstWayPoint_* hWP)
 {
-    MTH3D_tdstVector_ stVertex2;
     MTH3D_tdstVector_ stVertex1;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stVertex2;
+    float xX, xY, xZ, xSqr;
+    float xDist;
+    unsigned int* p_ulPos = (unsigned int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
+    ((unsigned int*)&stVertex1)[0] = p_ulPos[0];
+    ((unsigned int*)&stVertex1)[1] = p_ulPos[1];
+    ((unsigned int*)&stVertex1)[2] = p_ulPos[2];
+    WP_fnv_WayPoint_ComputeLocation(hWP, &stVertex2);
+    stVertex1.xX -= stVertex2.xX;
+    stVertex1.xY -= stVertex2.xY;
+    xZ = stVertex1.xZ - stVertex2.xZ;
+    stVertex1.xZ = xZ;
+    xY = stVertex1.xY;
+    xX = stVertex1.xX;
+    MTH_SQR3_TO(xSqr, xX, xY, xZ);
+    MTH_SQRT_TO(xDist, xSqr);
+    return xDist;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 168–181 */
@@ -3433,10 +3600,44 @@ float fn_xDistanceBetweenPersoAndWP(HIE_tdstSuperObject_* p_SuperObjPerso, WP_td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
+inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    MTH4D_tdstVector_* p_stVtmp;
+
+    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
+    *(unsigned int*)&Vtmp.xX = ((unsigned int*)VectA)[0]; *(unsigned int*)&Vtmp.xY = ((unsigned int*)VectA)[1]; *(unsigned int*)&Vtmp.xZ = ((unsigned int*)VectA)[2];
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
+}
+
 void fn_vGetCenterOfBoundingVolume(HIE_tdstSuperObject_* hPerso, MTH3D_tdstVector_* p_stVertex)
 {
     COL_tdstBoundingSphere_* hBoundingSphere;
-    /* TODO: decompile from asm/... */
+    hBoundingSphere = (COL_tdstBoundingSphere_*)hPerso->hCollideBoundingVolume;
+    if (hBoundingSphere) {
+        MAT_fn_vApplyOnVertex(p_stVertex, hPerso->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
+    } else {
+        unsigned int* p_ulPos = (unsigned int*)&hPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
+        ((unsigned int*)p_stVertex)[0] = p_ulPos[0];
+        ((unsigned int*)p_stVertex)[1] = p_ulPos[1];
+        ((unsigned int*)p_stVertex)[2] = p_ulPos[2];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AITools.c lines 133–145 */

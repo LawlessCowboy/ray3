@@ -27,6 +27,7 @@ typedef struct tdstMSWay_ tdstMSWay_;
 typedef struct tdstNodeInterpret_ tdstNodeInterpret_;
 typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
 typedef struct tdstStandardGame_ tdstStandardGame_;
+typedef struct tdstSectInfo_ tdstSectInfo_;
 
 typedef enum tdeFuncId_ { eFunc_Dummy = 0 } tdeFuncId_;
 typedef enum tdeVariableType_ { eVariableType_Dummy = 0 } tdeVariableType_;
@@ -123,10 +124,21 @@ struct CINE_tdstCine_ {
 struct tdstStandardGame_ {
     unsigned char _pad_00[0x1c];
     unsigned char ucTractionFactor; /* +0x1c */
+    unsigned char _pad_1d[3];
+    unsigned int ulCustomBits; /* +0x20 */
+    unsigned int ulAICustomBits; /* +0x24 */
+};
+struct SECT_tdstListOfSOCharacters_ {
+    HIE_tdstSuperObject_* hPointerOfCharacter; /* +0x0 */
+    SECT_tdstListOfSOCharacters_* hNextBrotherDyn; /* +0x4 */
 };
 struct tdstEngineObject_ {
     void* h_3dData; /* +0x0 */
     tdstStandardGame_* h_StandardGame; /* +0x4 */
+    unsigned char _pad_08[0x10];
+    tdstMSWay_* h_MSWay; /* +0x18 */
+    unsigned char _pad_1c[4];
+    tdstSectInfo_* h_SectInfo; /* +0x20 */
 };
 
 struct COL_tdstCollideObject_ {
@@ -181,6 +193,8 @@ extern "C" unsigned int fn_ulGetCapabilities(tdstEngineObject_* _p_stObject);
 extern "C" WP_tdstGraph_* WPG_fn_hGetNearestGraph(MTH3D_tdstVector_* p_stPos);
 extern "C" unsigned short PLA_fn_uwGetNbFrameInCurrAnim(HIE_tdstSuperObject_* hSuperObject);
 extern "C" int strcasecmp(const char*, const char*);
+extern "C" HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* p_stSectInfo);
+extern "C" HIE_tdstSuperObject_* fn_hGetNearestActorInSectorWithAnyCustombit(HIE_tdstSuperObject_* _hMe, HIE_tdstSuperObject_* _hSector, unsigned int _ulFilterCustomBits, tdeFuncId_ _eFuncId);
 extern "C" void fn_vGetScrollSpeedMatCollided(HIE_tdstSuperObject_* p_stSuperObj, MTH3D_tdstVector_* p_stVector, unsigned int ulObstacleType, int ulMTIndex);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 4091–4099 */
@@ -324,13 +338,76 @@ tdstNodeInterpret_* fn_p_stSAV2_DoVarsNeedToBeSet(HIE_tdstSuperObject_* p_SuperO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" int fn_bAutoSaveFinished(void);
+extern "C" unsigned char SHW_bDidCharacterHaveAShadowLastFrame(HIE_tdstSuperObject_* _hHandleOfCharacter);
+extern "C" void M2D_fn_vForbidExitFromMenu(void);
+extern "C" unsigned int M2D_fn_ulGetRevisitEnvironmentNumber(void);
+extern "C" void M2D_fn_vDisplayEndOfGameRecapPage(void);
+extern "C" int COLANTIBUG_hHandleOfCharacter;
 tdstNodeInterpret_* fn_p_stFunctPS2(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     unsigned int Val1;
     tdeFuncId_ eFuncId;
     unsigned int ulValue;
-    unsigned int SAV2_NotInitialized;
-    /* TODO: decompile from asm/... */
+    static int SAV2_NotInitialized;
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    switch (eFuncId) {
+    case 231:
+        ulValue = 0;
+        break;
+    case 230:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        ulValue = 0;
+        break;
+    case 435:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        ulValue = 0;
+        break;
+    case 232:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        Val1 = p_stValue->uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        if (Val1 > 1807000) {
+            ulValue = 0;
+        } else {
+            switch (Val1) {
+            case 4000:
+                ulValue = SAV2_NotInitialized;
+                SAV2_NotInitialized = 0;
+                break;
+            case 4001:
+                ulValue = fn_bAutoSaveFinished();
+                break;
+            case 1000:
+                ulValue = SHW_bDidCharacterHaveAShadowLastFrame((HIE_tdstSuperObject_*)COLANTIBUG_hHandleOfCharacter);
+                break;
+            case 6000:
+                ulValue = 0;
+                break;
+            case 6001:
+                ulValue = 0;
+                M2D_fn_vForbidExitFromMenu();
+                break;
+            case 6002:
+                ulValue = M2D_fn_ulGetRevisitEnvironmentNumber();
+                break;
+            case 6003:
+                ulValue = 0;
+                M2D_fn_vDisplayEndOfGameRecapPage();
+                break;
+            default:
+                ulValue = 0;
+                break;
+            }
+        }
+        break;
+    default:
+        return p_stTree;
+    }
+    p_stValue->uParam.lValue = ulValue;
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3463–3588 */
@@ -493,21 +570,78 @@ inline float MTH_xDotProduct(MTH3D_tdstVector_* left, MTH3D_tdstVector_* right)
 }
 tdstNodeInterpret_* fn_p_stDotProduct(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    MTH3D_tdstVector_ stV1;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
-    {
-        float x = p_stValue->uParam.stVectorValue.xX;
-        float y = p_stValue->uParam.stVectorValue.xY;
-        float z = p_stValue->uParam.stVectorValue.xZ;
-        ((MTH3D_tdstVector_*)&stV1)->xX = x;
-        ((MTH3D_tdstVector_*)&stV1)->xY = y;
-        ((MTH3D_tdstVector_*)&stV1)->xZ = z;
-    }
+    MTH3D_tdstVector_ stV1 = p_stValue->uParam.stVectorValue;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
     p_stValue->uParam.xValue = MTH_xDotProduct(&stV1, &p_stValue->uParam.stVectorValue);
     p_stValue->eType = (tdeVariableType_)8;
     return p_stTree;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3372–3406 */
 /* addr: 0x0021be30  size: 264 bytes */
@@ -527,6 +661,17 @@ tdstNodeInterpret_* fn_p_stDotProduct(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline int MTH_M_xRealToLong(float xValue)
+{
+    int lResult;
+    asm
+    {
+        cvt.w.s f30, xValue
+        mfc1 lResult, f30
+    }
+    return lResult;
+}
+
 tdstNodeInterpret_* fn_p_stGetNearestActorInCurrentSector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
@@ -534,7 +679,20 @@ tdstNodeInterpret_* fn_p_stGetNearestActorInCurrentSector(HIE_tdstSuperObject_* 
     HIE_tdstSuperObject_* hCloserSO;
     HIE_tdstSuperObject_* hCurrentSectorPerso;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    unsigned int ulCustomBits;
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    if (stParam.eType == 8) {
+        ulCustomBits = MTH_M_xRealToLong(stParam.uParam.xValue);
+    } else {
+        ulCustomBits = (unsigned int)stParam.uParam.lValue;
+    }
+    hCurrentSectorPerso = fn_h_SectInfoGetCurrentSector(hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_SectInfo);
+    hCloserSO = fn_hGetNearestActorInSectorWithAnyCustombit(hNewSuperObjPerso, hCurrentSectorPerso, ulCustomBits, eFuncId);
+    p_stValue->uParam.pValue = (hCloserSO == NULL ? NULL : (hCloserSO->ulTypeOfLinkedObject != 2 ? NULL : hCloserSO->hLinkedObject.p_stCharacter));
+    p_stValue->eType = (tdeVariableType_)11;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3317–3369 */
@@ -577,15 +735,52 @@ tdstNodeInterpret_* fn_p_stGetNearestActorInCurrentSector(HIE_tdstSuperObject_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline float MTH_xSqr3(float _x, float _y, float _z) { float _r; asm { mula.s _x, _x } asm { madda.s _y, _y } asm { madd.s _r, _z, _z } return _r; }
+inline float MTH_xAbs(float _x) { float _r; asm { abs.s _r, _x } return _r; }
+/* Not original source, needs cleaning up: retail copies these position vectors
+ * as three direct-sp lw/sw words; a word-array union view is the only form found
+ * that reproduces it (same workaround as CAM_tduVectorCopy_ in DNMCame.c). */
+typedef union tduVectorCopy_ {
+    MTH3D_tdstVector_ stVector;
+    unsigned int auWords[3];
+} tduVectorCopy_;
 HIE_tdstSuperObject_* fn_hGetNearestActorInSectorWithAnyCustombit(HIE_tdstSuperObject_* _hMe, HIE_tdstSuperObject_* _hSector, unsigned int _ulFilterCustomBits, tdeFuncId_ _eFuncId)
 {
+    tduVectorCopy_ stMyPosition;
+    tduVectorCopy_ stActorsPosition;
     unsigned int ulStCustomBits;
-    MTH3D_tdstVector_ stActorsPosition;
-    MTH3D_tdstVector_ stMyPosition;
+    HIE_tdstSuperObject_* hSO;
     float xBestDist;
     HIE_tdstSuperObject_* hCloserSO;
     SECT_tdstListOfSOCharacters_* hCharacterElement;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_* p_stMyMatrixPos = (MTH3D_tdstVector_*)((char*)_hMe->hGlobalMatrix + 0x40);
+    stMyPosition.auWords[0] = ((tduVectorCopy_*)p_stMyMatrixPos)->auWords[0]; stMyPosition.auWords[1] = ((tduVectorCopy_*)p_stMyMatrixPos)->auWords[1]; stMyPosition.auWords[2] = ((tduVectorCopy_*)p_stMyMatrixPos)->auWords[2];
+    xBestDist = 3.402822e38f;
+    hCloserSO = NULL;
+    for (hCharacterElement = *(SECT_tdstListOfSOCharacters_**)_hSector->hLinkedObject.p_stSector; hCharacterElement != NULL; hCharacterElement = hCharacterElement->hNextBrotherDyn) {
+        hSO = hCharacterElement->hPointerOfCharacter;
+        if (hSO != _hMe && g_hCharacterMaskedForResearch != hSO) {
+            switch (_eFuncId) {
+            case 152:
+                ulStCustomBits = hSO->hLinkedObject.p_stCharacter->h_StandardGame->ulAICustomBits;
+                break;
+            default:
+                ulStCustomBits = hSO->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits;
+                break;
+            }
+            if (ulStCustomBits & _ulFilterCustomBits) {
+                MTH3D_tdstVector_* p_stActorMatrixPos = (MTH3D_tdstVector_*)((char*)hSO->hGlobalMatrix + 0x40);
+                float xDist;
+                stActorsPosition.auWords[0] = ((tduVectorCopy_*)p_stActorMatrixPos)->auWords[0]; stActorsPosition.auWords[1] = ((tduVectorCopy_*)p_stActorMatrixPos)->auWords[1]; stActorsPosition.auWords[2] = ((tduVectorCopy_*)p_stActorMatrixPos)->auWords[2];
+                xDist = MTH_xSqr3(stActorsPosition.stVector.xX - stMyPosition.stVector.xX, stActorsPosition.stVector.xY - stMyPosition.stVector.xY, stActorsPosition.stVector.xZ - stMyPosition.stVector.xZ);
+                if (xDist < xBestDist && (xDist > g_DistanceActMin || MTH_xAbs(g_DistanceActMin) < 0.001f) && (xDist < g_DistanceActMax || MTH_xAbs(g_DistanceActMax) < 0.001f)) {
+                    hCloserSO = hSO;
+                    xBestDist = xDist;
+                }
+            }
+        }
+    }
+    return hCloserSO;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 3242–3295 */
@@ -879,13 +1074,41 @@ tdstNodeInterpret_* fn_p_stGetSPOCoordinates(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline float MTH_xSqrt(float _x) { float _r; asm { sqrt.s _r, _x } return _r; }
+inline float MTH_xCross(float _a, float _b, float _c, float _d) { float _r; asm { mula.s _a, _b } asm { msub.s _r, _c, _d } return _r; }
 tdstNodeInterpret_* fn_p_stVectorOperations(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     float xNorm;
-    MTH3D_tdstVector_ stV2;
-    MTH3D_tdstVector_ stV1;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    switch (eFuncId) {
+    case 215:
+    {
+        MTH3D_tdstVector_ stV1 = p_stValue->uParam.stVectorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        MTH3D_tdstVector_ stV2 = p_stValue->uParam.stVectorValue;
+        p_stValue->uParam.stVectorValue.xX = MTH_xCross(stV1.xY, stV2.xZ, stV1.xZ, stV2.xY);
+        p_stValue->uParam.stVectorValue.xY = MTH_xCross(stV1.xZ, stV2.xX, stV1.xX, stV2.xZ);
+        p_stValue->uParam.stVectorValue.xZ = MTH_xCross(stV1.xX, stV2.xY, stV1.xY, stV2.xX);
+        return p_stTree;
+    }
+    case 216:
+        if (!(MTH_xAbs(p_stValue->uParam.stVectorValue.xX) < 1.0e-9f && MTH_xAbs(p_stValue->uParam.stVectorValue.xY) < 1.0e-9f && MTH_xAbs(p_stValue->uParam.stVectorValue.xZ) < 1.0e-9f)) {
+            xNorm = MTH_xSqrt(MTH_xSqr3(p_stValue->uParam.stVectorValue.xX, p_stValue->uParam.stVectorValue.xY, p_stValue->uParam.stVectorValue.xZ));
+            if (xNorm != 0.0f) {
+                xNorm = 1.0f / xNorm;
+                p_stValue->uParam.stVectorValue.xX = xNorm * p_stValue->uParam.stVectorValue.xX;
+                p_stValue->uParam.stVectorValue.xY = xNorm * p_stValue->uParam.stVectorValue.xY;
+                p_stValue->uParam.stVectorValue.xZ = xNorm * p_stValue->uParam.stVectorValue.xZ;
+            }
+        }
+        return p_stTree;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 2987–3005 */
@@ -1087,19 +1310,61 @@ tdstNodeInterpret_* fn_p_stPersoCapabilityFunction(HIE_tdstSuperObject_* p_Super
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" int MSWay_fn_lGetNumberWayPointInPath(tdstMSWay_* hWay);
+extern "C" int MSWay_fn_lGetCurrentIndexInPath(tdstMSWay_* hWay);
+extern "C" WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_* hWay, int iIndex);
+extern "C" float WP_fnx_WayPoint_GetRadius(WP_tdstWayPoint_* _hWayPoint);
+extern "C" void WP_fnv_WayPoint_GetVertex(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _pstVector);
 tdstNodeInterpret_* fn_p_stGetSituationOnRail(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    MTH3D_tdstVector_ stPersoPosition;
     MTH3D_tdstVector_ stWpPosition;
+    tduVectorCopy_ stPersoPosition;
     int lValue;
     WP_tdstWayPoint_* hWayPoint;
-    int lNbWp;
-    int lCurrentIndex;
     tdstMSWay_* h_MSWay;
+    int lCurrentIndex;
+    int lNbWp;
     float xDist;
     tdstGetSetParam_ stParam;
     HIE_tdstSuperObject_* hNewPerso;
-    /* TODO: decompile from asm/... */
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(*((tdeFuncId_*)p_stTree - 2)), p_SuperObjPerso, &hNewPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    xDist = stParam.uParam.xValue;
+    h_MSWay = hNewPerso->hLinkedObject.p_stCharacter->h_MSWay;
+    if (h_MSWay == NULL) {
+        p_stValue->uParam.lValue = -1;
+        p_stValue->eType = (tdeVariableType_)6;
+        return p_stTree;
+    }
+    lNbWp = MSWay_fn_lGetNumberWayPointInPath(h_MSWay);
+    lCurrentIndex = MSWay_fn_lGetCurrentIndexInPath(h_MSWay);
+    lValue = 1;
+    if (lCurrentIndex == lValue) {
+        hWayPoint = MSWay_fn_hGetWayPointOfPath(h_MSWay, 0);
+    } else if (lCurrentIndex == lNbWp - 1) {
+        lValue = 2;
+        hWayPoint = MSWay_fn_hGetWayPointOfPath(h_MSWay, lCurrentIndex);
+    } else {
+        p_stValue->uParam.lValue = 0;
+        p_stValue->eType = (tdeVariableType_)6;
+        return p_stTree;
+    }
+    if (xDist == 0.0f) {
+        xDist = WP_fnx_WayPoint_GetRadius(hWayPoint);
+    }
+    {
+        tduVectorCopy_* p_stPos = (tduVectorCopy_*)((char*)hNewPerso->hLocalMatrix + 0x40);
+        stPersoPosition.auWords[0] = p_stPos->auWords[0]; stPersoPosition.auWords[1] = p_stPos->auWords[1]; stPersoPosition.auWords[2] = p_stPos->auWords[2];
+    }
+    WP_fnv_WayPoint_GetVertex(hWayPoint, &stWpPosition);
+    if ((stWpPosition.xX != stPersoPosition.stVector.xX || stWpPosition.xY != stPersoPosition.stVector.xY || stWpPosition.xZ != stPersoPosition.stVector.xZ) && MTH_xSqrt(MTH_xSqr3(stWpPosition.xX - stPersoPosition.stVector.xX, stWpPosition.xY - stPersoPosition.stVector.xY, stWpPosition.xZ - stPersoPosition.stVector.xZ)) < xDist) {
+        p_stValue->uParam.lValue = lValue;
+        p_stValue->eType = (tdeVariableType_)6;
+    } else {
+        p_stValue->uParam.lValue = 0;
+        p_stValue->eType = (tdeVariableType_)6;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 2701–2748 */

@@ -367,6 +367,22 @@ inline void MTH3D_M_vAbsSubVector(MTH3D_tdstVector_* R, MTH3D_tdstVector_* A, MT
     R->xY = MTH_xAbs(A->xY - B->xY);
     R->xZ = MTH_xAbs(A->xZ - B->xZ);
 }
+inline float MTH3D_xScalarProduct(MTH3D_tdstVector_* A, MTH3D_tdstVector_* B)
+{
+    float xAX = A->xX, xAY = A->xY, xAZ = A->xZ;
+    float xBX = B->xX, xBY = B->xY, xBZ = B->xZ;
+    float xResult;
+    asm { mula.s xAX, xBX }
+    asm { madda.s xAY, xBY }
+    asm { madd.s xResult, xAZ, xBZ }
+    return xResult;
+}
+inline void MTH3D_M_vCopy(MTH3D_tdstVector_* R, MTH3D_tdstVector_* A)
+{
+    R->xX = A->xX;
+    R->xY = A->xY;
+    R->xZ = A->xZ;
+}
 inline long MTH_M_xRealToLong(float _xValue)
 {
     long _lResult;
@@ -717,10 +733,11 @@ tdstNodeInterpret_* fn_p_stGetCurrentFrame(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 tdstNodeInterpret_* fn_p_stGetStdGameLimit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    unsigned int ulValue = 0;
-    tdstStandardGame_* hStdGame;
-    tdeFuncId_ eFuncId;
     HIE_tdstSuperObject_* hPerso;
+    tdeFuncId_ eFuncId;
+    tdstStandardGame_* hStdGame;
+    unsigned int ulValue;
+    ulValue = 0;
     eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
     fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hPerso);
     hStdGame = hPerso->hLinkedObject.p_stCharacter->h_StandardGame;
@@ -1436,11 +1453,7 @@ tdstNodeInterpret_* fn_p_GetHierarchyLink(HIE_tdstSuperObject_* p_SuperObjPerso,
         do {
             hFather = hFather->hFatherDyn;
         } while (hFather != NULL && hFather->ulTypeOfLinkedObject != 2);
-        if (hFather == NULL) {
-            p_stValue->uParam.pValue = NULL;
-        } else {
-            p_stValue->uParam.pValue = (hFather->ulTypeOfLinkedObject == 2) ? (void*)hFather->hLinkedObject.p_stCharacter : NULL;
-        }
+        p_stValue->uParam.pValue = (hFather == NULL) ? NULL : ((hFather->ulTypeOfLinkedObject != 2) ? NULL : (void*)hFather->hLinkedObject.p_stCharacter);
         p_stValue->eType = (tdeVariableType_)11;
         return p_stTree;
     default:
@@ -1732,7 +1745,26 @@ tdstNodeInterpret_* fn_p_stComputeRebondVector(HIE_tdstSuperObject_* p_SuperObjP
     float xReactionNorm;
     MTH3D_tdstVector_ stInitVector;
     MTH3D_tdstVector_ stNormalVector;
-    /* TODO: decompile from asm/... */
+    float xDot, xCoef, xNorm;
+    MTH3D_tdstVector_* p_stOut;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    MTH3D_M_vCopy(&stInitVector, &p_stValue->uParam.stVectorValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    MTH3D_M_vCopy(&stNormalVector, &p_stValue->uParam.stVectorValue);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (p_stValue->eType == 8) {
+        xNorm = p_stValue->uParam.xValue;
+    } else {
+        xNorm = (float)p_stValue->uParam.lValue;
+    }
+    xDot = MTH3D_xScalarProduct(&stInitVector, &stNormalVector);
+    xCoef = -2.0f * xDot;
+    MTH3D_M_vMulScalar(&stReactionVector, &stNormalVector, xCoef);
+    MTH3D_M_vAddVector(&stReactionVector, &stReactionVector, &stInitVector);
+    MTH3D_M_vMulScalar(&stReactionVector, &stReactionVector, xNorm);
+    *(int*)&p_stValue->uParam.stVectorValue.xX = *(int*)&stReactionVector.xX; *(int*)&p_stValue->uParam.stVectorValue.xY = *(int*)&stReactionVector.xY; *(int*)&p_stValue->uParam.stVectorValue.xZ = *(int*)&stReactionVector.xZ;
+    p_stValue->eType = (tdeVariableType_)21;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2240–2300 */
@@ -1964,7 +1996,7 @@ tdstNodeInterpret_* fn_p_stGetLastCollisionActor(HIE_tdstSuperObject_* p_SuperOb
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
         p_SuperObjPersoTreated = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)stParam.uParam.pValue)->h_StandardGame);
         p_SuperObjCollidedActor = fn_hSuperObjectGetLastCollidedCharacter(p_SuperObjPersoTreated);
-        p_stValue->uParam.pValue = (p_SuperObjCollidedActor != NULL) ? ((p_SuperObjCollidedActor->ulTypeOfLinkedObject == 2) ? (void*)p_SuperObjCollidedActor->hLinkedObject.p_stCharacter : NULL) : NULL;
+        p_stValue->uParam.pValue = (p_SuperObjCollidedActor == NULL) ? NULL : ((p_SuperObjCollidedActor->ulTypeOfLinkedObject != 2) ? NULL : (void*)p_SuperObjCollidedActor->hLinkedObject.p_stCharacter);
         p_stValue->eType = (tdeVariableType_)11;
         return p_stTree;
     }
