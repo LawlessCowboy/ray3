@@ -47,6 +47,13 @@ score-zero winner through the full matcher:
 python3 tools/permute.py run FUNCTION --jobs 4
 ```
 
+For a C++ source (`.cpp`/`.cxx`), `candidate.c` is a pycparser-friendly copy:
+`extern "C"`, MWCC `asm` blocks and GCC attributes are removed and C++
+struct/union tags get typedefs. MWCC chooses C or C++ from the file suffix, so
+`compile`, `verify` and `run` splice the candidate's definition of the target
+function back into the canonical source and compile that under its own suffix.
+Only the target function's definition in `candidate.c` matters for C++ jobs.
+
 Use bounded manual `PERM_GENERAL` / `PERM_VAR` experiments for a known set of
 source-shape choices.  Random mode is useful only near the end; it can produce
 unnatural code and it cannot diagnose a wrong debug type or global layout.

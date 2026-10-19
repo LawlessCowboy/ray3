@@ -385,12 +385,12 @@ struct tdstBrain_ {
     unsigned char bWarnMechanicsFlag;
     unsigned char bActiveDuringTransition;
 };
-extern "C" int PLA_fn_bTestCurrentAction(HIE_tdstSuperObject_*, tdstState_*);
+extern "C" int PLA_fn_bTestCurrentAction(HIE_tdstSuperObject_*, void*);
 extern "C" int SAV2_CheckMCStatus(int port);
 extern "C" void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
 extern "C" HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_*);
 extern "C" unsigned char GAM_fn_bIsCharacterActive(HIE_tdstSuperObject_*);
-extern "C" unsigned char fn_ucGetConditionUltraOperator(tdeCondId_);
+extern "C" int fn_ucGetConditionUltraOperator(tdeCondId_);
 extern "C" void fn_vGetUltraOperatorPerso(int, HIE_tdstSuperObject_*, HIE_tdstSuperObject_**);
 extern "C" int PLA_fn_bTestIfActorIsInSmoothAnim(HIE_tdstSuperObject_*);
 struct tdstNodeMainCharacter_;
@@ -1021,7 +1021,7 @@ tdstNodeInterpret_* fn_p_stCheckAnimEnd(HIE_tdstSuperObject_* p_SuperObjPerso, t
         return p_stTree;
     case 0x52:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        *p_lValue = PLA_fn_bTestCurrentAction(hNewSuperObjPerso, (tdstState_*)stParam.uParam.pValue);
+        *p_lValue = PLA_fn_bTestCurrentAction(hNewSuperObjPerso, stParam.uParam.pValue);
         return p_stTree;
     default:
         fn_vOnAIErm_M_UpdateLastError(43, 0);
@@ -1200,15 +1200,7 @@ tdstNodeInterpret_* fn_p_stMechanicOption(HIE_tdstSuperObject_* p_SuperObjPerso,
                 p_stResultOwnerPerso = p_SuperObjPerso;
             ucVectorId = p_stTree->uDummy.uParam.ucValue;
             p_stTree++;
-            {
-                MTH3D_tdstVector_* p_stVector = &stParam.uParam.stVectorValue;
-                float xX = pstDynamic->m_tdstDynamicsComplexBlock.m_stFallTranslation.xX;
-                float xY = pstDynamic->m_tdstDynamicsComplexBlock.m_stFallTranslation.xY;
-                float xZ = pstDynamic->m_tdstDynamicsComplexBlock.m_stFallTranslation.xZ;
-                p_stVector->xX = xX;
-                p_stVector->xY = xY;
-                p_stVector->xZ = xZ;
-            }
+            stParam.uParam.stVectorValue = pstDynamic->m_tdstDynamicsComplexBlock.m_stFallTranslation;
             stParam.eType = (tdeVariableType_)0x15;
             fn_ucSetDsgVar(ucVectorId, 0, p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, &stParam);
         } else {

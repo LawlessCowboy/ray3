@@ -89,13 +89,33 @@ struct _tdstCheapCharacterList {
 extern _tdstCheapCharacterList g_aListOfCheapCharacterList[10];
 
 extern unsigned int g_lNbListOfCheapCharacterList;
+typedef struct tdstEngineTimerStructure_ {
+    unsigned char _pad[8];
+    unsigned int ulCurrentTimerCount; /* +0x8 */
+} tdstEngineTimerStructure_;
+typedef struct tdstEngineStructure_ {
+    unsigned char _pad[0x68];
+    tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
+} tdstEngineStructure_;
+extern tdstEngineStructure_ g_stEngineStructure;
+extern "C" float MTH_fn_xSqrAddSqrAddSqrOpt2(float a, float b, float c);
+/* sqrt.s has no C form under the baseline. */
+inline float MTH_xSqrt(float _x) { float _r; asm { sqrt.s _r, _x } return _r; }
+typedef struct MAT_tdstTransformation_ {
+    unsigned char _pad[0x40];
+    MTH3D_tdstVector_ stPos; /* +0x40 */
+} MAT_tdstTransformation_;
+struct HIE_tdstSuperObject_ {
+    unsigned char _pad[0x24];
+    MAT_tdstTransformation_* hGlobalMatrix; /* +0x24 */
+};
+extern "C" unsigned int TestPositionOfCheapCharacter(unsigned int ulIndList, HIE_tdstSuperObject_* hCharacter);
 extern "C" void HIE_fn_CleanAllListOfFakeInstanceToViewport(void);
 extern "C" HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
 extern "C" unsigned char fn_ucGetFunctionUltraOperator(tdeFuncId_ eFuncId);
 extern "C" void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
 extern "C" int Erm_fn_iMessageBox(char* _szText, char* _szTitle, int _iType);
 extern "C" int lCreateCheapCharacterList(unsigned int ulMax, HIE_tdstSuperObject_* pRefObj);
-extern "C" void AddCheapCharacter(unsigned int ulInd, MTH3D_tdstVector_* pPos);
 extern "C" void InitCheapCharacterList(unsigned int ulInd, unsigned int ulMax, HIE_tdstSuperObject_* pRefObj);
 extern "C" tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 
@@ -308,6 +328,49 @@ tdstNodeInterpret_* fn_p_stResetCheapCharacterList(HIE_tdstSuperObject_* p_Super
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: retail adds each member offset to
+ * the list base before adding the scaled character index; only the char*
+ * temp plus the dead iIndex assignment reproduces that. */
+#pragma auto_inline on
+extern "C" void AddCheapCharacter(unsigned int ulInd, MTH3D_tdstVector_* pPos)
+{
+    _tdstCheapCharacterList* pCheapList;
+    char* pc;
+    int iIndex;
+
+    pCheapList = &g_aListOfCheapCharacterList[ulInd];
+    if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) {
+        if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) {
+            pc = (char*)pCheapList;
+            pc = pc + 0x10;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->x;
+            pc = (char*)pCheapList;
+            pc = pc + 0x14;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->y;
+            pc = (char*)pCheapList;
+            pc = pc + 0x18;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->z;
+            pc = (char*)pCheapList;
+            pc = pc + 0x20;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
+            pc = (char*)pCheapList;
+            pc = pc + 0x24;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
+            pc = (char*)pCheapList;
+            pc = pc + 0x28;
+            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
+            pc = (char*)pCheapList;
+            pc = pc + 0x34;
+            ((char*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 48] = 1;
+            pc = (char*)pCheapList;
+            pc = pc + 0x30;
+            ((unsigned int*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0;
+            pCheapList->NumberOfCheapCharacter++;
+        }
+    }
+}
+#pragma auto_inline reset
+
 tdstNodeInterpret_* fn_p_stAddCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned int ulInd;
@@ -369,11 +432,58 @@ tdstNodeInterpret_* fn_p_stSetCheapCharacterPos(HIE_tdstSuperObject_* p_SuperObj
 {
     tdeProcedureId_ eProcedureId;
     _tdstCheapCharacterList* pCheapList;
-    MTH3D_tdstVector_ stPosition;
     unsigned int ulIndChar;
     unsigned int ulInd;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    char* pc;
+    int iIndex;
+
+    eProcedureId = (p_stTree - 1)->uDummy;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulInd = stParam.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulIndChar = stParam.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    MTH3D_tdstVector_ stPosition = stParam.uParam.stVectorValue;
+    pCheapList = &g_aListOfCheapCharacterList[ulInd];
+    if (pCheapList->NumberOfCheapCharacter >= ulIndChar) {
+        if (eProcedureId == 842) {
+            pc = (char*)pCheapList;
+            pc = pc + 0x10;
+            *(float*)((char*)pc + (iIndex = ulIndChar * 48)) = stPosition.x;
+            pc = (char*)pCheapList;
+            pc = pc + 0x14;
+            *(float*)((char*)pc + (iIndex = ulIndChar * 48)) = stPosition.y;
+            pc = (char*)pCheapList;
+            pc = pc + 0x18;
+            *(float*)((char*)pc + (iIndex = ulIndChar * 48)) = stPosition.z;
+        } else if (eProcedureId == 843) {
+            float fNorm;
+            float* pfX;
+            float* pfY;
+            float* pfZ;
+            pc = (char*)pCheapList;
+            pc = pc + 0x20;
+            pfX = (float*)((char*)pc + (iIndex = ulIndChar * 48));
+            pc = (char*)pCheapList;
+            pc = pc + 0x24;
+            pfY = (float*)((char*)pc + (iIndex = ulIndChar * 48));
+            pc = (char*)pCheapList;
+            pc = pc + 0x28;
+            pfZ = (float*)((char*)pc + (iIndex = ulIndChar * 48));
+            *pfX = stPosition.x;
+            *pfY = stPosition.y;
+            *pfZ = stPosition.z;
+            fNorm = 1.0f / MTH_xSqrt(MTH_fn_xSqrAddSqrAddSqrOpt2(*pfX, *pfY, *pfZ));
+            *pfX = fNorm * *pfX;
+            *pfY = fNorm * *pfY;
+            *pfZ = fNorm * *pfZ;
+            pc = (char*)pCheapList;
+            pc = pc + 0x2c;
+            *(float*)((char*)pc + (iIndex = ulIndChar * 48)) = 1.0f;
+        }
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 461–475 */
@@ -573,10 +683,41 @@ tdstNodeInterpret_* fn_p_stGetCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPer
 tdstNodeInterpret_* fn_p_stTestCheapCharacterList(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     HIE_tdstSuperObject_* hCharacter;
-    unsigned int ulTestRes;
     unsigned int ulInd;
+    unsigned int ulTestRes;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    _tdstCheapCharacterList* pCheapList;
+    unsigned int i;
+    char* pcAlias; /* Not original source, needs cleaning up (permuter alias) */
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulInd = stParam.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hCharacter = fn_h_StandardGameGetSuperObject(stParam.uParam.p_stEngObjValue->hStandardGame);
+    pCheapList = &g_aListOfCheapCharacterList[ulInd];
+    pCheapList->lIndOfReactivateCharacter = 0;
+    if (pCheapList->lTimer != 0) {
+        for (i = 0; i < pCheapList->NumberOfCheapCharacter; i++) {
+            if (pCheapList->List[i].cActivity == 0 && pCheapList->List[i].lTakenTime != 0
+                && g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pCheapList->List[i].lTakenTime >= pCheapList->lTimer) {
+                int iIndex = i * 48;
+                char* pc;
+                ulTestRes = 1;
+                pc = (char*)pCheapList + 0x34;
+                pc[iIndex] = 1;
+                pCheapList->lIndOfReactivateCharacter = i;
+                pc = (char*)pCheapList + 0x30;
+                *(unsigned int*)((pcAlias = pc) + iIndex) = 0;
+                goto done;
+            }
+        }
+    }
+    ulTestRes = 0;
+done:
+    ulTestRes += TestPositionOfCheapCharacter(ulInd, hCharacter);
+    p_stValue->uParam.ulValue = ulTestRes;
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 303–334 */
@@ -670,14 +811,66 @@ tdstNodeInterpret_* fn_p_stCreateCheapCharacterList(HIE_tdstSuperObject_* p_Supe
 unsigned int TestPositionOfCheapCharacter(unsigned int ulIndList, HIE_tdstSuperObject_* hCharacter)
 {
     _tdstCheapCharacterList* pCheapList;
-    float z;
-    float y;
     float x;
+    float y;
+    float z;
     float fSquaredDistance;
-    float fMaxSqDistance;
     float fMinSqDistance;
+    float fMaxSqDistance;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_* pPos;
+    char* pc;
+    int iIndex;
+
+    fMinSqDistance = 1e9f;
+    fMaxSqDistance = 0.0f;
+    pCheapList = &g_aListOfCheapCharacterList[ulIndList];
+    pCheapList->lIndOfFurthestDesactivateCharacter = 40;
+    pCheapList->lIndOfClosestDesactivateCharacter = 40;
+    pPos = &hCharacter->hGlobalMatrix->stPos;
+    for (i = 0; i < pCheapList->NumberOfCheapCharacter; i++) {
+        if (pCheapList->List[i].cActivity != 0) {
+            x = pCheapList->List[i].stPosition.x - pPos->x;
+            y = pCheapList->List[i].stPosition.y - pPos->y;
+            z = pCheapList->List[i].stPosition.z - pPos->z;
+            fSquaredDistance = x * x + y * y + z * z;
+            if (fSquaredDistance < fMinSqDistance) {
+                pCheapList->lIndOfClosestDesactivateCharacter = i;
+                fMinSqDistance = fSquaredDistance;
+            }
+            if (!(fSquaredDistance < fMaxSqDistance)) {
+                fMaxSqDistance = fSquaredDistance;
+                pCheapList->lIndOfFurthestDesactivateCharacter = i;
+            }
+        }
+    }
+    if ((pCheapList->cTestMode & 1) && fMinSqDistance <= pCheapList->fSquaredMinDistance) {
+        pc = (char*)pCheapList;
+        pc = pc + 0x34;
+        ((char*)pc)[iIndex = pCheapList->lIndOfClosestDesactivateCharacter * 48] = 0;
+        pc = (char*)pCheapList;
+        pc = pc + 0x30;
+        ((unsigned int*)pc)[iIndex = pCheapList->lIndOfClosestDesactivateCharacter * 12] = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        return 2;
+    }
+    if (pCheapList->cTestMode & 2) {
+        if (!(fMaxSqDistance < pCheapList->fSquaredMaxDistance)) {
+            pc = (char*)pCheapList;
+            pc = pc + 0x34;
+            ((char*)pc)[iIndex = pCheapList->lIndOfFurthestDesactivateCharacter * 48] = 0;
+            if (pCheapList->cTestMode == 3) {
+                pc = (char*)pCheapList;
+                pc = pc + 0x30;
+                ((unsigned int*)pc)[iIndex = pCheapList->lIndOfFurthestDesactivateCharacter * 12] = 0;
+            } else {
+                pc = (char*)pCheapList;
+                pc = pc + 0x30;
+                ((unsigned int*)pc)[iIndex = pCheapList->lIndOfFurthestDesactivateCharacter * 12] = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+            }
+            return 2;
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 156–157 */
@@ -770,48 +963,6 @@ void AddCheapCharacterListAura(unsigned int ulInd, GLI_tdstMaterial_* hVisualMat
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Not original source, needs cleaning up: retail adds each member offset to
- * the list base before adding the scaled character index; only the char*
- * temp plus the dead iIndex assignment reproduces that. */
-#pragma auto_inline on
-void AddCheapCharacter(unsigned int ulInd, MTH3D_tdstVector_* pPos)
-{
-    _tdstCheapCharacterList* pCheapList;
-    char* pc;
-    int iIndex;
-
-    pCheapList = &g_aListOfCheapCharacterList[ulInd];
-    if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) {
-        if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) {
-            pc = (char*)pCheapList;
-            pc = pc + 0x10;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->x;
-            pc = (char*)pCheapList;
-            pc = pc + 0x14;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->y;
-            pc = (char*)pCheapList;
-            pc = pc + 0x18;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = pPos->z;
-            pc = (char*)pCheapList;
-            pc = pc + 0x20;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
-            pc = (char*)pCheapList;
-            pc = pc + 0x24;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
-            pc = (char*)pCheapList;
-            pc = pc + 0x28;
-            ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f;
-            pc = (char*)pCheapList;
-            pc = pc + 0x34;
-            ((char*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 48] = 1;
-            pc = (char*)pCheapList;
-            pc = pc + 0x30;
-            ((unsigned int*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0;
-            pCheapList->NumberOfCheapCharacter++;
-        }
-    }
-}
-#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 73–84 */
 /* addr: 0x0022a010  size: 84 bytes */
@@ -876,7 +1027,26 @@ void InitCheapCharacterList(unsigned int ulInd, unsigned int ulMax, HIE_tdstSupe
 {
     unsigned int i;
     _tdstCheapCharacterList* pCheapList;
-    /* TODO: decompile from asm/... */
+
+    pCheapList = &g_aListOfCheapCharacterList[ulInd];
+    pCheapList->NumberOfCheapCharacter = 0;
+    if (ulMax > 40)
+        ulMax = 40;
+    pCheapList->MaxNumberOfCheapCharacter = ulMax;
+    pCheapList->pReferenceObject = pRefObj;
+    pCheapList->fSquaredMinDistance = 1.0f;
+    pCheapList->fSquaredMaxDistance = 10.0f;
+    pCheapList->lTimer = 0;
+    pCheapList->cTestMode = 1;
+    pCheapList->ulOptionFlags = 0;
+    pCheapList->SDL = 0;
+    pCheapList->pMatrixList = NULL;
+    pCheapList->hAuraVisualMaterial = NULL;
+    pCheapList->bAurasNeedToBeDrawn = 0;
+    for (i = 0; i < ulMax; i++) {
+        MTH3D_tdstVector_* p = (MTH3D_tdstVector_*)&pCheapList->List[i];
+        asm { sqc2 vf0, 0(p) }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcOptim.cxx lines 28–34 */

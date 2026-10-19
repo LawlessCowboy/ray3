@@ -38,14 +38,29 @@ def entry_for(name: str) -> dict:
     return match.find_entry(name, match.cached_source_index(symbols, main))
 
 
+def find_definition(source: str, name: str) -> tuple[re.Match, int]:
+    """Return the name occurrence that starts the definition and its body
+    brace, skipping prototypes and calls that precede it."""
+    for occurrence in re.finditer(rf'\b{re.escape(name)}\s*\(', source):
+        depth = 0
+        pos = occurrence.end() - 1
+        while pos < len(source):
+            if source[pos] == '(':
+                depth += 1
+            elif source[pos] == ')':
+                depth -= 1
+                if depth == 0:
+                    break
+            pos += 1
+        rest = re.match(r'\s*\{', source[pos + 1:])
+        if rest is not None:
+            return occurrence, pos + 1 + rest.end() - 1
+    raise ValueError(f'could not find definition for {name}')
+
+
 def find_function_span(source: str, name: str) -> tuple[int, int]:
     """Return the complete definition span, including its closing brace."""
-    occurrence = re.search(rf'\b{re.escape(name)}\s*\(', source)
-    if occurrence is None:
-        raise ValueError(f'could not find definition for {name}')
-    brace = source.find('{', occurrence.end())
-    if brace < 0:
-        raise ValueError(f'could not find opening brace for {name}')
+    occurrence, brace = find_definition(source, name)
     depth = 0
     quote: str | None = None
     escaped = False
@@ -91,6 +106,66 @@ def job_dir(entry: dict) -> Path:
     return JOB_ROOT / safe_name(entry['name'])
 
 
+def is_cxx(entry: dict) -> bool:
+    return Path(entry['source']).suffix.lower() in {'.cpp', '.cxx'}
+
+
+def strip_asm_blocks(source: str) -> str:
+    """Replace MWCC `asm { ... }` statements with empty statements."""
+    pieces = []
+    pos = 0
+    for match_ in re.finditer(r'\basm\s*\{', source):
+        if match_.start() < pos:
+            continue
+        pieces.append(source[pos:match_.start()])
+        pieces.append(';')
+        pos = source.index('}', match_.end()) + 1
+    pieces.append(source[pos:])
+    return ''.join(pieces)
+
+
+def pycparser_source(source: str) -> str:
+    """Make a C++ translation unit parseable by upstream's pycparser.
+
+    Only the target function is ever compiled back (see splice_candidate), so
+    the rest of the file just has to parse: drop `extern "C"`, MWCC asm
+    blocks and GCC attributes, and typedef C++ struct/union tags that the
+    source uses without a typedef."""
+    source = source.replace('extern "C" ', '')
+    source = strip_asm_blocks(source)
+    source = re.sub(r'__attribute__\s*\(\([^()]*(?:\([^()]*\))?[^()]*\)\)', '', source)
+    typedefs = set(re.findall(r'typedef\s+(?:struct|union|enum)\s+\w+\s+(\w+)\s*;', source))
+    typedefs |= set(re.findall(r'\}\s*(\w+)\s*;', source))
+    tags: dict[str, str] = {}
+    for tag in re.finditer(r'\b(struct|union)\s+(\w+)\s*[;{]', source):
+        if tag.group(2) not in typedefs:
+            tags.setdefault(tag.group(2), tag.group(1))
+    prelude = ''.join(f'typedef {kind} {name} {name};\n' for name, kind in tags.items())
+    return prelude + source
+
+
+def splice_candidate(entry: dict, candidate: Path, output_dir: Path) -> Path:
+    """Put the candidate's definition of the target into the canonical source.
+
+    MWCC picks C or C++ from the file suffix, so a C++ candidate must be
+    compiled under the canonical suffix with the canonical surroundings
+    (extern "C" prototypes, asm helpers) that pycparser cannot handle."""
+    original_path = ROOT / entry['source']
+    original = original_path.read_text(encoding='utf-8', errors='replace')
+    text = candidate.read_text(encoding='utf-8', errors='replace')
+    start, end = find_function_span(original, entry['name'])
+    cand_start, cand_end = find_function_span(text, entry['name'])
+    output_dir.mkdir(parents=True, exist_ok=True)
+    result = output_dir / f'{candidate.stem}-spliced{original_path.suffix}'
+    result.write_text(original[:start] + text[cand_start:cand_end] + original[end:],
+                      encoding='utf-8')
+    return result
+
+
+def needs_splice(entry: dict, candidate: Path) -> bool:
+    return is_cxx(entry) and candidate.suffix.lower() == '.c'
+
+
 def synthetic_object(words: bytes, output: Path, symbol: str) -> None:
     """Assemble resolved words into a tiny object for upstream's scorer."""
     if len(words) % 4:
@@ -118,6 +193,8 @@ def prepare(entry: dict) -> Path:
     # recovered C needs, without changing canonical source or MWCC's headers.
     permuter_source = source.replace(
         '#include <stddef.h>', 'typedef unsigned int size_t;\n#define NULL ((void *)0)')
+    if is_cxx(entry):
+        permuter_source = pycparser_source(permuter_source)
     (job / 'base.c').write_text(permuter_source, encoding='utf-8')
     (job / 'candidate.c').write_text(permuter_source, encoding='utf-8')
     (job / 'function.c').write_text(source[start:end] + '\n', encoding='utf-8')
@@ -130,7 +207,11 @@ def prepare(entry: dict) -> Path:
         'definition_end': end,
         'upstream_permuter': str(VENDOR.relative_to(ROOT)),
         'note': ('candidate.c is a full translation-unit candidate. Verify it with '
-                 '`tools/permute.py verify`, never with upstream score alone.'),
+                 '`tools/permute.py verify`, never with upstream score alone.'
+                 + (' This is a C++ source: candidate.c is only a pycparser-friendly '
+                    'copy, and each candidate\'s definition of the target is spliced '
+                    'back into the canonical source before compiling.'
+                    if is_cxx(entry) else '')),
     }
     (job / 'metadata.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')
     _, _, main, _, _ = match.target_context()
@@ -162,12 +243,14 @@ def prepare(entry: dict) -> Path:
 
 def candidate_source(entry: dict, candidate: Path, body_only: bool) -> Path:
     if not body_only:
+        if needs_splice(entry, candidate):
+            return splice_candidate(entry, candidate, job_dir(entry))
         return candidate
     original_path = ROOT / entry['source']
     original = original_path.read_text(encoding='utf-8', errors='replace')
     start, end = find_function_span(original, entry['name'])
     body = candidate.read_text(encoding='utf-8', errors='replace').strip()
-    result = job_dir(entry) / 'candidate-full.c'
+    result = job_dir(entry) / f'candidate-full{original_path.suffix}'
     result.write_text(original[:start] + body + '\n' + original[end:], encoding='utf-8')
     return result
 
@@ -201,7 +284,15 @@ def command_compile(args: argparse.Namespace) -> int:
     job = Path(args.job).resolve()
     metadata = json.loads((job / 'metadata.json').read_text(encoding='utf-8'))
     entry = entry_for(metadata['function'])
-    result = match.compare(entry, source_override=Path(args.input).resolve(), verbose=True)
+    source = Path(args.input).resolve()
+    spliced = None
+    if needs_splice(entry, source):
+        spliced = source = splice_candidate(entry, source, Path(args.output).resolve().parent)
+    try:
+        result = match.compare(entry, source_override=source, verbose=True)
+    finally:
+        if spliced is not None:
+            spliced.unlink(missing_ok=True)
     if result['status'] in {'COMPILE_ERROR', 'OBJECT_ERROR'}:
         print(result.get('detail', result['status']), file=sys.stderr)
         return 1
@@ -216,13 +307,13 @@ def command_run(args: argparse.Namespace) -> int:
                '-j', str(args.jobs)]
     result = subprocess.run(command, cwd=ROOT)
     for winner in sorted(job.glob('output-0-*/source.c')):
-        verify = match.compare(entry, source_override=winner)
+        verify = match.compare(entry, source_override=candidate_source(entry, winner, False))
         print(f"{verify['status']} {winner.relative_to(ROOT)}")
         if verify['status'] == 'MATCH':
             return 0
     # Upstream does not write an output directory when the unpermuted base
     # already scores zero. The authoritative candidate is still worth testing.
-    base = match.compare(entry, source_override=job / 'candidate.c')
+    base = match.compare(entry, source_override=candidate_source(entry, job / 'candidate.c', False))
     print(f"{base['status']} {job.relative_to(ROOT)}/candidate.c")
     if base['status'] == 'MATCH':
         return 0
