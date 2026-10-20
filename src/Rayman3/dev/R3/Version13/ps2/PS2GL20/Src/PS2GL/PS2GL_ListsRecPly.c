@@ -12618,7 +12618,7 @@ int Mode2Prim(unsigned int mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glAssembleQuads(int mode);
+void PS2glAssembleQuads(void);
 void PS2glFlushBuffer(int mode);
 
 void PS2glExecuteListVBuf(tagGLprimbuf* pPrimBuf)
@@ -12628,6 +12628,7 @@ void PS2glExecuteListVBuf(tagGLprimbuf* pPrimBuf)
     float (*pData)[4];
     unsigned char* pCode;
     int* pTexUnit;
+    quad* pQuad;
     while (pPrimBuf != 0)
     {
         pNext = pPrimBuf->pNext;
@@ -12640,41 +12641,31 @@ void PS2glExecuteListVBuf(tagGLprimbuf* pPrimBuf)
             switch (*pCode++)
             {
             case 0:
-                *(quad*)g_PS2glContext.vacurColor[0] = *(quad*)pData;
+                *(quad*)g_PS2glContext.vacurColor[0] = *(quad*)pData++;
                 break;
             case 1:
                 break;
             case 2:
-                *(quad*)g_PS2glContext.vcurNormal = *(quad*)pData;
+                *(quad*)g_PS2glContext.vcurNormal = *(quad*)pData++;
                 break;
             case 3:
-                *(quad*)g_PS2glContext.vacurTexCoords[0] = *(quad*)pData;
+                *(quad*)g_PS2glContext.vacurTexCoords[0] = *(quad*)pData++;
                 break;
             case 4:
-                if (g_PS2glContext.iBufCount < g_PS2glContext.iBufLimit)
-                {
-                    *(quad*)g_PS2glContext.pCBuf = *(quad*)g_PS2glContext.vacurColor[0]; g_PS2glContext.pCBuf++;
-                    *(quad*)g_PS2glContext.pCBuf_b = *(quad*)g_PS2glContext.vacurColor[1]; g_PS2glContext.pCBuf_b++;
-                    *(quad*)g_PS2glContext.pNBuf = *(quad*)g_PS2glContext.vcurNormal; g_PS2glContext.pNBuf++;
-                    *(quad*)g_PS2glContext.pTBuf = *(quad*)g_PS2glContext.vacurTexCoords[0]; g_PS2glContext.pTBuf++;
-                    *(quad*)g_PS2glContext.pTBuf_b = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.pTBuf_b++;
-                    *(quad*)g_PS2glContext.pVBuf = *(quad*)pData; g_PS2glContext.pVBuf++;
-                    g_PS2glContext.iBufCount++;
-                }
-                else if (g_PS2glContext.eBeginMode == 7)
-                {
-                    PS2glAssembleQuads(0);
-                }
-                else
-                {
-                    PS2glFlushBuffer(0);
-                }
+                if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); }
+                pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0];
+                pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1];
+                pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal;
+                pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0];
+                pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1];
+                pQuad = (quad*)g_PS2glContext.pVBuf++; *pQuad = *(quad*)pData++;
+                g_PS2glContext.iBufCount++;
                 break;
             case 5:
-                *(quad*)g_PS2glContext.vacurTexCoords[*pTexUnit] = *(quad*)pData;
+                *(quad*)g_PS2glContext.vacurTexCoords[*pTexUnit] = *(quad*)pData++;
                 break;
             case 6:
-                *(quad*)g_PS2glContext.vacurColor[*pTexUnit] = *(quad*)pData;
+                *(quad*)g_PS2glContext.vacurColor[*pTexUnit] = *(quad*)pData++;
                 break;
             }
         }
@@ -12683,13 +12674,8 @@ void PS2glExecuteListVBuf(tagGLprimbuf* pPrimBuf)
         pPrimBuf = pNext;
     }
     if (g_PS2glContext.eBeginMode == 7)
-    {
-        PS2glAssembleQuads(1);
-    }
-    else
-    {
-        PS2glFlushBuffer(1);
-    }
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 618–715 */
