@@ -46249,6 +46249,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
       "status": "EQUIVALENT"
     },
+    "0x00153dd0": {
+      "address": "0x00153dd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glMergeBB",
+      "size": 148,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
     "0x00154320": {
       "address": "0x00154320",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -46278,6 +46286,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "PS2glListSaveParamSpace",
       "size": 156,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
+    "0x00154b90": {
+      "address": "0x00154b90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glSearchList",
+      "size": 132,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
       "status": "MATCH"
     },

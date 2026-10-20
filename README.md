@@ -20,8 +20,8 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
 | **Game code** | **2,892 / 4,134** (+1 register-equivalent) | **378,604 / 1,507,864** (**25.1086%**) |
-| Library code | 1,060 / 3,521 (+1 register-equivalent) | 105,180 / 737,336 (14.2649%) |
-| **Total** | **3,952 / 7,655** (+2 register-equivalent) | **483,784 / 2,245,200** (**21.5475%**) |
+| Library code | 1,062 / 3,521 (+1 register-equivalent) | 105,460 / 737,336 (14.3028%) |
+| **Total** | **3,954 / 7,655** (+2 register-equivalent) | **484,064 / 2,245,200** (**21.5600%**) |
 
 - Translation units (`python3 tools/match.py tus --summary`): **147 / 356**
   fully matched (game 141 / 334, library 6 / 22), with 199 more partially
