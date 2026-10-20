@@ -55481,6 +55481,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WParc.c",
       "status": "MATCH"
     },
+    "0x001fed60": {
+      "address": "0x001fed60",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPARCLST_fn_vDestroy",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WParc.c",
+      "status": "MATCH"
+    },
     "0x001feeb0": {
       "address": "0x001feeb0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",

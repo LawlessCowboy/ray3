@@ -3181,10 +3181,8 @@ void WPARCLST_fn_vDestroy(WP_tdstListOfArc_* hList)
         WPG_fn_vSetAllocMode();
         if (hList != NULL)
         {
-            hElement = hList->m_hArc.hFirstElementDyn;
-            while (hElement != NULL)
+            for (hElement = hList->m_hArc.hFirstElementDyn, hNextElement = hElement ? hElement->hNextBrotherDyn : NULL; hElement; hElement = hNextElement, hNextElement = hElement ? hElement->hNextBrotherDyn : NULL)
             {
-                hNextElement = hElement->hNextBrotherDyn;
                 if (hElement->hNextBrotherDyn) hElement->hNextBrotherDyn->hPrevBrotherDyn = hElement->hPrevBrotherDyn;
                 if (hElement->hPrevBrotherDyn) hElement->hPrevBrotherDyn->hNextBrotherDyn = hElement->hNextBrotherDyn;
                 if (hElement->hFatherDyn)
@@ -3196,16 +3194,20 @@ void WPARCLST_fn_vDestroy(WP_tdstListOfArc_* hList)
                 hElement->hNextBrotherDyn = NULL;
                 hElement->hPrevBrotherDyn = NULL;
                 hElement->hFatherDyn = NULL;
-                WPG_fn_vSetAllocMode();
-                if (hElement != NULL)
                 {
-                    HMU_fn_vFree((void**)&hElement, 1);
+                    WP_tdstArc_* hArc = hElement;
+                    WPG_fn_vSetAllocMode();
+                    if (hArc != NULL)
+                    {
+                        HMU_fn_vFree((void**)&hArc, 1);
+                        hArc = NULL;
+                    }
+                    WPG_fn_vClearAllocMode();
                 }
-                WPG_fn_vClearAllocMode();
-                hElement = hNextElement;
             }
+            HMU_fn_vFree((void**)&hList, 1);
+            hList = NULL;
         }
-        HMU_fn_vFree((void**)&hList, 1);
         WPG_fn_vClearAllocMode();
     }
 }
