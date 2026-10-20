@@ -149,7 +149,8 @@ def splice_candidate(entry: dict, candidate: Path, output_dir: Path) -> Path:
 
     MWCC picks C or C++ from the file suffix, so a C++ candidate must be
     compiled under the canonical suffix with the canonical surroundings
-    (extern "C" prototypes, asm helpers) that pycparser cannot handle."""
+    (extern "C" prototypes, asm helpers) that pycparser cannot handle.  C
+    sources with asm helpers are spliced the same way."""
     original_path = ROOT / entry['source']
     original = original_path.read_text(encoding='utf-8', errors='replace')
     text = candidate.read_text(encoding='utf-8', errors='replace')
@@ -162,8 +163,23 @@ def splice_candidate(entry: dict, candidate: Path, output_dir: Path) -> Path:
     return result
 
 
+def has_asm_blocks(source: str) -> bool:
+    return re.search(r'\basm\s*\{', source) is not None
+
+
+def uses_splice(entry: dict) -> bool:
+    """Whether candidates are pycparser-friendly copies spliced back on compile.
+
+    True for C++ sources and for C sources with MWCC `asm { ... }` helpers
+    (e.g. an inline sqrt.s wrapper), which pycparser cannot parse."""
+    if is_cxx(entry):
+        return True
+    source = (ROOT / entry['source']).read_text(encoding='utf-8', errors='replace')
+    return has_asm_blocks(source)
+
+
 def needs_splice(entry: dict, candidate: Path) -> bool:
-    return is_cxx(entry) and candidate.suffix.lower() == '.c'
+    return candidate.suffix.lower() == '.c' and uses_splice(entry)
 
 
 def synthetic_object(words: bytes, output: Path, symbol: str) -> None:
@@ -186,6 +202,11 @@ def prepare(entry: dict) -> Path:
     source_path = ROOT / entry['source']
     source = source_path.read_text(encoding='utf-8', errors='replace')
     start, end = find_function_span(source, entry['name'])
+    if has_asm_blocks(source[start:end]):
+        # Stripping the target's own asm would make every candidate compile to
+        # different code, so upstream could never score it meaningfully.
+        raise ValueError(f"{entry['name']} contains an asm block; the permuter cannot "
+                         'parse it without changing the function')
     job = job_dir(entry)
     job.mkdir(parents=True, exist_ok=True)
     # Upstream preprocesses with `cpp -nostdinc`.  Replace the ubiquitous
@@ -195,6 +216,8 @@ def prepare(entry: dict) -> Path:
         '#include <stddef.h>', 'typedef unsigned int size_t;\n#define NULL ((void *)0)')
     if is_cxx(entry):
         permuter_source = pycparser_source(permuter_source)
+    elif has_asm_blocks(permuter_source):
+        permuter_source = strip_asm_blocks(permuter_source)
     (job / 'base.c').write_text(permuter_source, encoding='utf-8')
     (job / 'candidate.c').write_text(permuter_source, encoding='utf-8')
     (job / 'function.c').write_text(source[start:end] + '\n', encoding='utf-8')
@@ -208,10 +231,10 @@ def prepare(entry: dict) -> Path:
         'upstream_permuter': str(VENDOR.relative_to(ROOT)),
         'note': ('candidate.c is a full translation-unit candidate. Verify it with '
                  '`tools/permute.py verify`, never with upstream score alone.'
-                 + (' This is a C++ source: candidate.c is only a pycparser-friendly '
-                    'copy, and each candidate\'s definition of the target is spliced '
-                    'back into the canonical source before compiling.'
-                    if is_cxx(entry) else '')),
+                 + (' candidate.c is only a pycparser-friendly copy (C++ source or '
+                    'MWCC asm helpers), and each candidate\'s definition of the target '
+                    'is spliced back into the canonical source before compiling.'
+                    if uses_splice(entry) else '')),
     }
     (job / 'metadata.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')
     _, _, main, _, _ = match.target_context()
@@ -268,7 +291,7 @@ def command_verify(args: argparse.Namespace) -> int:
     if not candidate.is_file():
         raise ValueError(f'candidate not found: {candidate}')
     source = candidate_source(entry, candidate, args.body_only)
-    result = match.compare(entry, source_override=source)
+    result = match.compare(entry, source_override=source, owner=ROOT / entry['source'])
     print(f"{result['status']} {entry['name']} text={result.get('candidate_size', 0)}/{entry['size']} "
           f"build={result.get('build', 'unknown')}")
     if result['status'] != 'MATCH':
@@ -289,7 +312,8 @@ def command_compile(args: argparse.Namespace) -> int:
     if needs_splice(entry, source):
         spliced = source = splice_candidate(entry, source, Path(args.output).resolve().parent)
     try:
-        result = match.compare(entry, source_override=source, verbose=True)
+        result = match.compare(entry, source_override=source, verbose=True,
+                               owner=ROOT / entry['source'])
     finally:
         if spliced is not None:
             spliced.unlink(missing_ok=True)
@@ -307,13 +331,15 @@ def command_run(args: argparse.Namespace) -> int:
                '-j', str(args.jobs)]
     result = subprocess.run(command, cwd=ROOT)
     for winner in sorted(job.glob('output-0-*/source.c')):
-        verify = match.compare(entry, source_override=candidate_source(entry, winner, False))
+        verify = match.compare(entry, source_override=candidate_source(entry, winner, False),
+                               owner=ROOT / entry['source'])
         print(f"{verify['status']} {winner.relative_to(ROOT)}")
         if verify['status'] == 'MATCH':
             return 0
     # Upstream does not write an output directory when the unpermuted base
     # already scores zero. The authoritative candidate is still worth testing.
-    base = match.compare(entry, source_override=candidate_source(entry, job / 'candidate.c', False))
+    base = match.compare(entry, source_override=candidate_source(entry, job / 'candidate.c', False),
+                         owner=ROOT / entry['source'])
     print(f"{base['status']} {job.relative_to(ROOT)}/candidate.c")
     if base['status'] == 'MATCH':
         return 0
