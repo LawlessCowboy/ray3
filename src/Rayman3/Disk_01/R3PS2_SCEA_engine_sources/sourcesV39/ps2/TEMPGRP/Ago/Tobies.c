@@ -119,9 +119,40 @@ void Toby_AddSegment(unsigned int IDNumber, MTH3D_tdstVector_* pPos1, MTH3D_tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\Tobies.c lines 117–130 */
+/* addr: 0x001ea260  size: 424 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 117
+ *   +0x0014 -> line 119
+ *   +0x0020 -> line 120
+ *   +0x00d8 -> line 124
+ *   +0x0148 -> line 126
+ *   +0x0158 -> line 129
+ *   +0x015c -> line 126
+ *   +0x0168 -> line 127
+ *   +0x0174 -> line 128
+ *   +0x0184 -> line 129
+ *   +0x0194 -> line 130
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 void Toby_Allocate(unsigned int IDNumber, unsigned int NumberOfSegments)
 {
-    /* TODO: decompile from asm/... */
+    int iIndex;
+    /* Matching idiom for the unfolded member offset (byte/char* base plus offset, dead scaled-index
+       assignment); found by scanning matched functions. Not original source and needs cleaning up. */
+    if (!bIsInitAllDone)
+    {
+        Toby_g_Container = (int)HMU_fn_p_vMalloc(0x50, 1); ((int*)Toby_g_Container)[0] = 0; ((int*)Toby_g_Container)[1] = 0; ((int*)Toby_g_Container)[2] = 0; ((int*)Toby_g_Container)[3] = 0; ((int*)Toby_g_Container)[4] = 0; ((int*)Toby_g_Container)[5] = 0; ((int*)Toby_g_Container)[6] = 0; ((int*)Toby_g_Container)[7] = 0; ((int*)Toby_g_Container)[8] = 0; ((int*)Toby_g_Container)[9] = 0; ((int*)Toby_g_Container)[10] = 0; ((int*)Toby_g_Container)[11] = 0; ((int*)Toby_g_Container)[12] = 0; ((int*)Toby_g_Container)[13] = 0; ((int*)Toby_g_Container)[14] = 0; ((int*)Toby_g_Container)[15] = 0; ((int*)Toby_g_Container)[16] = 0; ((int*)Toby_g_Container)[17] = 0; ((int*)Toby_g_Container)[18] = 0; ((int*)Toby_g_Container)[19] = 0; bIsInitAllDone = 1;
+    }
+
+    iIndex = IDNumber * sizeof(_Toby_); if (*(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex)) if (*(void**)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex)) { HMU_fn_vFree((void**)&((_Toby_*)((char*)Toby_g_Container + iIndex))->pSegments, 1); *(int*)((char*)Toby_g_Container + iIndex) = 0; *(int*)((char*)&((_Toby_*)Toby_g_Container)->NbActualSegments + iIndex) = 0; *(int*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + iIndex) = 0; *(int*)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex) = 0; }
+
+    *(void**)((char*)&((_Toby_*)Toby_g_Container)->pSegments + iIndex) = HMU_fn_p_vMalloc(NumberOfSegments * 32, 1);
+    *(int*)((char*)Toby_g_Container + iIndex) = NumberOfSegments;
+    *(int*)((char*)&((_Toby_*)Toby_g_Container)->NbActualSegments + iIndex) = 0;
+    *(float*)((char*)&((_Toby_*)Toby_g_Container)->fTransparency + iIndex) = 1.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\Tobies.c lines 110–113 */

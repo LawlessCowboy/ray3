@@ -94,6 +94,7 @@ typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
 typedef struct tdstAnim3d_ tdstAnim3d_;
 typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
 typedef struct tdstEngineObject_ tdstEngineObject_;
+typedef struct tdstStructureHandleFunction_ tdstStructureHandleFunction_;
 typedef struct MOR_stMorphVector_ MOR_stMorphVector_;
 typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
 typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
@@ -772,6 +773,15 @@ struct tdstEngineObject_ {
     tdstMSSound_* h_MSSound; /* +0x28 */
 };
 
+struct tdstStructureHandleFunction_ {
+    void (*p_fn_vCopyCloneMSFunction)(tdstEngineObject_*, tdstEngineObject_*); /* +0x0 */
+    unsigned int (*p_fn_ulSizeOfFunction)(void); /* +0x4 */
+    void (*p_fn_vAllocFunction)(tdstEngineObject_*); /* +0x8 */
+    void (*p_fn_vFreeFunction)(tdstEngineObject_*); /* +0xc */
+    void (*p_fn_vInitFunction)(tdstEngineObject_*, int); /* +0x10 */
+    void (*p_fn_vDesinitFunction)(tdstEngineObject_*, int); /* +0x14 */
+};
+
 struct MOR_stMorphVector_ {
     short xVertexIndex; /* +0x0 */
     MTH3D_tdstVector_ stDeformationVector; /* +0x4 */
@@ -1360,6 +1370,10 @@ struct SECT_tdstSector_ {
 int GROS_ANTIBUG_DE_LA_MORT_QUI_TUE;
 tdstEngineStructure_ g_stEngineStructure;
 
+extern int sprintf(char* szBuffer, const char* szFormat, ...);
+extern int printf(const char* szFormat, ...);
+extern char* fn_szFindModelTypeNameOfModelType(int otType);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 90–135 */
 /* addr: 0x0025ad10  size: 568 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1385,7 +1399,68 @@ void fn_vDestroyAllHierarchy(HIE_tdstSuperObject_* p_stSuperObject)
 {
     HIE_tdstSuperObject_* p_stNextChild;
     HIE_tdstSuperObject_* p_stChild;
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* p_stCharacter;
+    int i;
+    extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObject);
+    extern void HIE_fn_vIsolate(HIE_tdstSuperObject_* p_stSuperObject);
+    extern unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stObject);
+    extern int fn_bIsInFix(tdstEngineObject_* p_stObject);
+    extern void fn_vDesinitOneObject(tdstEngineObject_* p_stObject, int eObjIniType);
+    extern void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
+    extern tdstStructureHandleFunction_ g_a_stStructureHandleFunction[12];
+    extern unsigned char g_ucGameModuleId;
+
+    p_stChild = p_stSuperObject->hFirstElementDyn;
+    p_stNextChild = HIE_fn_hForceGetSuperObjectNextBrother(p_stChild);
+    if (p_stChild != (HIE_tdstSuperObject_*)0)
+    {
+        do
+        {
+            fn_vDestroyAllHierarchy(p_stChild);
+            p_stChild = p_stNextChild;
+            p_stNextChild = HIE_fn_hForceGetSuperObjectNextBrother(p_stChild);
+        } while (p_stChild != (HIE_tdstSuperObject_*)0);
+    }
+    HIE_fn_vIsolate(p_stSuperObject);
+    if (p_stSuperObject->ulTypeOfLinkedObject == 2)
+    {
+        if (!fn_ucIsAnAlwaysObject(p_stSuperObject->ulTypeOfLinkedObject != 2 ? 0 : p_stSuperObject->hLinkedObject.p_stCharacter))
+        {
+            if (fn_bIsInFix(p_stSuperObject->ulTypeOfLinkedObject != 2 ? 0 : p_stSuperObject->hLinkedObject.p_stCharacter))
+            {
+                fn_vDesinitOneObject(p_stSuperObject->ulTypeOfLinkedObject != 2 ? 0 : p_stSuperObject->hLinkedObject.p_stCharacter, 1);
+            }
+            else
+            {
+                if (p_stSuperObject->ulTypeOfLinkedObject == 2)
+                {
+                    p_stCharacter = p_stSuperObject->hLinkedObject.p_stCharacter;
+                    for (i = 10; i >= 0; i--)
+                    {
+                        if (((void**)p_stCharacter)[i] != 0)
+                        {
+                            g_a_stStructureHandleFunction[i].p_fn_vFreeFunction(p_stCharacter);
+                        }
+                    }
+                }
+                else
+                {
+                    Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x39, -1, 0xFF, 0xFF, NULL);
+                }
+            }
+        }
+    }
+    if (p_stSuperObject->ulTypeOfLinkedObject == 2)
+    {
+        if (fn_ucIsAnAlwaysObject(p_stSuperObject->ulTypeOfLinkedObject != 2 ? 0 : p_stSuperObject->hLinkedObject.p_stCharacter))
+        {
+            return;
+        }
+        if (fn_bIsInFix(p_stSuperObject->ulTypeOfLinkedObject != 2 ? 0 : p_stSuperObject->hLinkedObject.p_stCharacter))
+        {
+            fn_vDesinitOneObject(p_stSuperObject->ulTypeOfLinkedObject != 2 ? 0 : p_stSuperObject->hLinkedObject.p_stCharacter, 1);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 184–188 */
@@ -1451,9 +1526,25 @@ void fn_vReInitAllDynamicAlwaysActiveState(void)
 void fn_vChangeDynamicAlwaysActiveState(HIE_tdstSuperObject_* hCharacter, unsigned char bNewState)
 {
     char buffer[256];
-    tdstAlwaysActiveCharacter_* hCharNode;
     unsigned char bFound;
-    /* TODO: decompile from asm/... */
+    tdstAlwaysActiveCharacter_* hCharNode;
+
+    bFound = 0;
+    for (hCharNode = g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn; hCharNode != (tdstAlwaysActiveCharacter_*)0; hCharNode = hCharNode->hNextBrotherDyn)
+    {
+        if (hCharNode->hAlwActSuperObject == hCharacter)
+        {
+            bFound = 1;
+            hCharNode->bDynamicAlwaysActive = bNewState;
+        }
+    }
+    if (!bFound)
+    {
+        GROS_ANTIBUG_DE_LA_MORT_QUI_TUE = 1;
+        sprintf(buffer, "[%s]:fn_vChangeDynamicAlwaysActiveState :\n*** The object is not in the Always Active List ! ***\n",
+                fn_szFindModelTypeNameOfModelType(hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectModelType));
+        printf("Message called :\n %s\n%s\n", "AlwaysActive Error", buffer);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\AlwAct.c lines 125–132 */
@@ -1472,10 +1563,8 @@ tdstAlwaysActiveCharacter_* fn_hGetNextAlwaysActiveCharNode(tdstAlwaysActiveChar
 
     hNextCharNode = hCharNode->hNextBrotherDyn;
     if (bTestDynamicAlwaysActive)
-    {
         while (hNextCharNode && !hNextCharNode->bDynamicAlwaysActive)
             hNextCharNode = hNextCharNode->hNextBrotherDyn;
-    }
     return hNextCharNode;
 }
 

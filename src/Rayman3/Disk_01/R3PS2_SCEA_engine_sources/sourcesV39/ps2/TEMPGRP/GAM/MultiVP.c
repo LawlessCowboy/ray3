@@ -848,7 +848,7 @@ struct GLD_tdstViewportAttributes_ {
     int iOffsetPosY; /* +0x5c */
     int p_cVirtualScreen; /* +0x60 */
     int lPitch; /* +0x64 */
-    int p_vSpecificToXD; /* +0x68 */
+    int* p_vSpecificToXD; /* +0x68 */
     short hDevice; /* +0x6c */
     short hViewport; /* +0x6e */
 };
@@ -881,11 +881,11 @@ struct tdstEngineStructure_ {
     short hGLDDevice; /* +0x104 */
     short a_hGLDViewport[5]; /* +0x106 */
     GLD_tdstViewportAttributes_ a_stViewportAttr[5]; /* +0x110 */
-    int a_p_stGameViewportCamera[5]; /* +0x340 */
+    GLI_tdstCamera_* a_p_stGameViewportCamera[5]; /* +0x340 */
     short a_hGLDFixViewport[5]; /* +0x354 */
     GLD_tdstViewportAttributes_ a_stFixViewportAttr[5]; /* +0x360 */
     GLI_tdstSpecificAttributesFor3D_ a_stFixAttributes3D[5]; /* +0x590 */
-    int a_p_stFixCamera[5]; /* +0x5b8 */
+    GLI_tdstCamera_* a_p_stFixCamera[5]; /* +0x5b8 */
     GLI_tdstSpecificAttributesFor3D_ a_stGameAttributes3D[5]; /* +0x5cc */
     tdstViewportManagement_* a_hViewportArray; /* +0x5f4 */
     LST2_tdstAnchorTotdxHandleToNodeCameraDyn hCameraList; /* +0x5f8 */
@@ -1633,7 +1633,34 @@ tdstEngineStructure_ g_stEngineStructure;
 unsigned char g_ucGameModuleId;
 
 int GLD_bDeleteViewport(short hDev, short hVP);
-void GLI_xSetViewportCamera(short hDev, short hVP, int p_stCamera);
+void GLI_xSetViewportCamera(short hDev, short hVP, GLI_tdstCamera_* p_stCamera);
+int GLI_xGetViewportCamera(short hDev, short hVP, GLI_tdstCamera_** p_stCamera);
+void GLI_xAdjustCameraToViewport(short hDev, short hVP, GLI_tdstCamera_* p_stCamera);
+void GLI_xSetCameraRatio(GLI_tdstCamera_* p_stCamera, float fRatio);
+int GLD_bCreateViewport();
+int GLD_bGiveSpecificAttributesToViewport(short hDev, short hVP, GLI_tdstSpecificAttributesFor3D_* p_stAttrib);
+int GLD_bGetViewportAttributes(short hDev, short hVP, GLD_tdstViewportAttributes_* p_stAttrib);
+void GLD_bSetViewportPosition(short hDev, short hVP, GLD_tdstViewportAttributes_* p_stAttrib);
+void GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* p_stAttrib);
+void Erm_fn_ClearLastError(int lError);
+void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
+void fn_vChangeViewPortPercent(unsigned char _ucVPIndex, unsigned int _ulMode, unsigned int _ulWhat, unsigned int _ulWidth, unsigned int _ulHeight, unsigned int _ulClipTop, unsigned int _ulClipLeft, unsigned int _ulClipBottom, unsigned int _ulClipRight, int _iPosX, int _iPosY);
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
+tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMCN);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
+HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int lViewportNumber);
+void CAM_fn_vCineInfoSetSuperObjectTargeted(tdstInternalStructurCineinfo_* hIntCineinfo, HIE_tdstSuperObject_* hSuperObject);
+void GLI_xGetCameraMatrix(GLI_tdstCamera_* pCam, MAT_tdstTransformation_* pMat);
+void GLI_xSetCameraMatrix(GLI_tdstCamera_* pCam, MAT_tdstTransformation_* pMat);
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* pMat);
+void MAT_fn_vSetXRotation(MAT_tdstTransformation_* pMat, float fAngle);
+void MAT_fn_vSetZRotation(MAT_tdstTransformation_* pMat, float fAngle);
+void MAT_fn_vCompose(MAT_tdstTransformation_* pMat1, MAT_tdstTransformation_* pMat2, MAT_tdstTransformation_* pOut);
+void MAT_fn_vNormalize(MAT_tdstTransformation_* pMat);
+void GLI_xCreateCamera(GLI_tdstCamera_** p_stCam, int lSize);
+void GLI_xSetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float fAspect, float fRatio);
+void GLI_xSetCameraNearFar(GLI_tdstCamera_* p_stCam, float fNear, float fFar);
+void GLI_fn_vSetCameraMirrorMode(GLI_tdstCamera_* p_stCam, int bMode);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 23–23 */
 /* addr: 0x00266540  size: 8 bytes */
@@ -1660,7 +1687,8 @@ void GAM_fn_vActualizeAllGameViewportSize(void)
 {
     unsigned char uc_ViewPortIndex;
     GLI_tdstCamera_* p_stCam;
-    /* TODO: decompile from asm/... */
+
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++) { GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], &p_stCam); if (p_stCam) { GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], p_stCam); } GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[uc_ViewPortIndex], &p_stCam); if (p_stCam) { GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[uc_ViewPortIndex], p_stCam); } }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 635–664 */
@@ -1686,7 +1714,25 @@ void GAM_fn_vActualizeAllGameViewportSize(void)
 void fn_vChangeViewportRatio(unsigned char _ucVPIndex, unsigned int ulMode, float xRatio)
 {
     GLI_tdstCamera_* p_stCam;
-    /* TODO: decompile from asm/... */
+
+    if (ulMode == 1)
+    {
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucVPIndex], &p_stCam);
+        if (p_stCam)
+        {
+            GLI_xSetCameraRatio(p_stCam, xRatio);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucVPIndex], p_stCam);
+        }
+    }
+    else
+    {
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucVPIndex], &p_stCam);
+        if (p_stCam)
+        {
+            GLI_xSetCameraRatio(p_stCam, xRatio);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucVPIndex], p_stCam);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 560–631 */
@@ -1748,10 +1794,61 @@ void fn_vChangeViewportRatio(unsigned char _ucVPIndex, unsigned int ulMode, floa
  */
 void fn_vChangeViewPortPercent(unsigned char _ucVPIndex, unsigned int _ulMode, unsigned int _ulWhat, unsigned int _ulWidth, unsigned int _ulHeight, unsigned int _ulClipTop, unsigned int _ulClipLeft, unsigned int _ulClipBottom, unsigned int _ulClipRight, int _iPosX, int _iPosY)
 {
-    GLD_tdstDeviceAttributes_ stDeviceAttr;
-    GLI_tdstCamera_* p_stCam;
     GLD_tdstViewportAttributes_ stViewAttrib;
-    /* TODO: decompile from asm/... */
+    GLI_tdstCamera_* p_stCam;
+    GLD_tdstDeviceAttributes_ stDeviceAttr;
+
+    if (_ulMode == 1) {
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucVPIndex], &p_stCam); }
+    else
+    {
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucVPIndex], &p_stCam);
+    }
+    if (!p_stCam) { return; }
+    if (_ulMode == 1) {
+        GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucVPIndex], &stViewAttrib); }
+    else
+    {
+        GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucVPIndex], &stViewAttrib);
+    }
+    if (_ulWhat == 1)
+    {
+        stViewAttrib.dwWidthInPercent = _ulWidth;
+        stViewAttrib.dwHeightInPercent = _ulHeight;
+    }
+    else if (_ulWhat == 2)
+    {
+        stViewAttrib.dwClipTopInPerMille = _ulClipTop;
+        stViewAttrib.dwClipLeftInPerMille = _ulClipLeft;
+        stViewAttrib.dwClipBottomInPerMille = _ulClipBottom;
+        stViewAttrib.dwClipRightInPerMille = _ulClipRight;
+    }
+    else if (_ulWhat == 3)
+    {
+        stViewAttrib.iOffsetPosX = _iPosX;
+        stViewAttrib.iOffsetPosY = _iPosY;
+    }
+    else if (_ulWhat == 4)
+    {
+        stViewAttrib.iOffsetPosX = (unsigned int)(_iPosX * (int)stViewAttrib.dwWidth / 1000);
+        stViewAttrib.iOffsetPosY = (unsigned int)(_iPosY * (int)stViewAttrib.dwHeight / 1000);
+    }
+    else if (_ulWhat == 5)
+    {
+        GLD_bGetDeviceAttributes(g_stEngineStructure.hGLDDevice, &stDeviceAttr);
+        stViewAttrib.iOffsetPosX = (unsigned int)(_iPosX * (int)stDeviceAttr.dwWidth / 100);
+        stViewAttrib.iOffsetPosY = (unsigned int)(_iPosY * (int)stDeviceAttr.dwHeight / 100);
+    }
+    if (_ulMode == 1)
+    {
+        GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucVPIndex], &stViewAttrib);
+        GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucVPIndex], p_stCam);
+    }
+    else
+    {
+        GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucVPIndex], &stViewAttrib);
+        GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucVPIndex], p_stCam);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 542–546 */
@@ -1819,10 +1916,20 @@ void GAM_fn_vDestroyGameDeviceAndViewPorts(void)
  */
 void fn_vInitCameraMatrix(GLI_tdstCamera_* _p_tdstCamera)
 {
-    MTH3D_tdstVector_ stTranslationVector;
-    MAT_tdstTransformation_ stTransformMatrix;
     MAT_tdstTransformation_ stCameraMatrix;
-    /* TODO: decompile from asm/... */
+    MAT_tdstTransformation_ stTransformMatrix;
+    union { MTH3D_tdstVector_ v; int i[3]; } stTranslationVector;
+
+    GLI_xGetCameraMatrix(_p_tdstCamera, &stCameraMatrix);
+    stTranslationVector.v.xZ = 5.0f; stTranslationVector.v.xX = 0.0f; stTranslationVector.v.xY = 0.0f;
+    MAT_fn_vSetIdentity(&stCameraMatrix);
+    if (stCameraMatrix.eType == MAT_eTransform_Identity) { stCameraMatrix.eType = MAT_eTransform_Translation; } ((int*)&stCameraMatrix.stTransformMatrix.stCol_3)[0] = stTranslationVector.i[0]; ((int*)&stCameraMatrix.stTransformMatrix.stCol_3)[1] = stTranslationVector.i[1]; ((int*)&stCameraMatrix.stTransformMatrix.stCol_3)[2] = stTranslationVector.i[2]; stCameraMatrix.stTransformMatrix.stCol_3.xW = 1.0f;
+    MAT_fn_vSetXRotation(&stCameraMatrix, 1.5707964f);
+    MAT_fn_vSetIdentity(&stTransformMatrix);
+    MAT_fn_vSetZRotation(&stTransformMatrix, 3.1415927f);
+    MAT_fn_vCompose(&stCameraMatrix, &stTransformMatrix, &stCameraMatrix);
+    MAT_fn_vNormalize(&stCameraMatrix);
+    GLI_xSetCameraMatrix(_p_tdstCamera, &stCameraMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 456–483 */
@@ -1881,7 +1988,21 @@ void fn_vInitCameraMatrix(GLI_tdstCamera_* _p_tdstCamera)
  */
 void fn_vCreateGameViewPort(unsigned char _ucIndex)
 {
-    /* TODO: decompile from asm/... */
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwWidthInPercent = 100;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwHeightInPercent = 100;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipTopInPerMille = 0;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipBottomInPerMille = 1000;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipLeftInPerMille = 0;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].dwClipRightInPerMille = 1000;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].iOffsetPosX = 0;
+    g_stEngineStructure.a_stViewportAttr[_ucIndex].iOffsetPosY = 0;
+    if (!GLD_bCreateViewport(g_stEngineStructure.hGLDDevice, &g_stEngineStructure.a_stViewportAttr[_ucIndex], &g_stEngineStructure.a_hGLDViewport[_ucIndex], 100))
+    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
+    g_stEngineStructure.a_stGameAttributes3D[_ucIndex].p_stCam = 0;
+    g_stEngineStructure.a_stGameAttributes3D[_ucIndex].xNear = 0;
+    if (!GLD_bGiveSpecificAttributesToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex], &g_stEngineStructure.a_stGameAttributes3D[_ucIndex]))
+    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
+    GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex], &g_stEngineStructure.a_stViewportAttr[_ucIndex]);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 406–445 */
@@ -1939,7 +2060,29 @@ void fn_vCreateGameViewPort(unsigned char _ucIndex)
  */
 void fn_vCreateViewPort(unsigned char _ucIndex)
 {
-    /* TODO: decompile from asm/... */
+    GLI_tdstCamera_* p_stCam[1];
+
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwWidthInPercent = 100;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwHeightInPercent = 100;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipTopInPerMille = 0;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipBottomInPerMille = 1000;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipLeftInPerMille = 0;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].dwClipRightInPerMille = 1000;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].iOffsetPosX = 0;
+    g_stEngineStructure.a_stFixViewportAttr[_ucIndex].iOffsetPosY = 0;
+    if (!GLD_bCreateViewport(g_stEngineStructure.hGLDDevice, &g_stEngineStructure.a_stFixViewportAttr[_ucIndex], &g_stEngineStructure.a_hGLDFixViewport[_ucIndex]))
+    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
+    if (!GLD_bGiveSpecificAttributesToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], &g_stEngineStructure.a_stFixAttributes3D[_ucIndex]))
+    { Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x28, -1, 255, 255, NULL); }
+    GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], &g_stEngineStructure.a_stFixViewportAttr[_ucIndex]);
+    if (g_stEngineStructure.a_p_stFixCamera[_ucIndex] == 0)
+    {
+        GLI_xCreateCamera(p_stCam, 0x67); g_stEngineStructure.a_p_stFixCamera[_ucIndex] = p_stCam[0]; GLI_xSetCameraAspectAndRatio(p_stCam[0], 1.5f, 0.75f); GLI_xSetCameraNearFar(p_stCam[0], 0.1f, 1000.0f); fn_vInitCameraMatrix(p_stCam[0]); *g_stEngineStructure.a_stFixViewportAttr[_ucIndex].p_vSpecificToXD = (int)p_stCam[0];
+    }
+    GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], g_stEngineStructure.a_p_stFixCamera[_ucIndex]);
+    GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex], g_stEngineStructure.a_p_stFixCamera[_ucIndex]);
+    GLI_fn_vSetCameraMirrorMode(g_stEngineStructure.a_p_stFixCamera[_ucIndex], 0);
+    fn_vCreateGameViewPort(_ucIndex);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 388–402 */
@@ -1953,7 +2096,9 @@ void fn_vCreateViewPort(unsigned char _ucIndex)
  */
 void GAM_fn_vCreateGameDeviceAndViewPorts(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char ucIndex;
+
+    for (ucIndex = 0; ucIndex < 4; ucIndex++) { g_stEngineStructure.a_p_stFixCamera[ucIndex] = 0; fn_vCreateViewPort(ucIndex); } g_stEngineStructure.a_p_stFixCamera[4] = 0; fn_vCreateViewPort(4);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 327–377 */
@@ -1989,11 +2134,42 @@ void GAM_fn_vCreateGameDeviceAndViewPorts(void)
  */
 void GAM_MultiVP_fn_vInvertOneVP(unsigned char _ucWhat, unsigned char _ucIndex1, unsigned char _ucIndex2)
 {
-    GLI_tdstCamera_* p_stCam2;
-    GLI_tdstCamera_* p_stCam1;
-    GLD_tdstViewportAttributes_ stViewAttrib2;
     GLD_tdstViewportAttributes_ stViewAttrib1;
-    /* TODO: decompile from asm/... */
+    GLD_tdstViewportAttributes_ stViewAttrib2;
+    GLI_tdstCamera_* p_stCam1;
+    GLI_tdstCamera_* p_stCam2;
+
+    if (_ucWhat == 1)
+    {
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], &p_stCam1);
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], &p_stCam2);
+    }
+    else
+    {
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], &p_stCam1);
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], &p_stCam2);
+    }
+    if (p_stCam1 && p_stCam2)
+    {
+        if (_ucWhat == 1)
+        {
+            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], &stViewAttrib1);
+            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], &stViewAttrib2);
+            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], &stViewAttrib2);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex1], p_stCam1);
+            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], &stViewAttrib1);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_ucIndex2], p_stCam2);
+        }
+        else
+        {
+            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], &stViewAttrib1);
+            GLD_bGetViewportAttributes(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], &stViewAttrib2);
+            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], &stViewAttrib2);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex1], p_stCam1);
+            GLD_bSetViewportPosition(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], &stViewAttrib1);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDFixViewport[_ucIndex2], p_stCam2);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 312–320 */
@@ -2011,7 +2187,12 @@ void GAM_MultiVP_fn_vInvertOneVP(unsigned char _ucWhat, unsigned char _ucIndex1,
 void GAM_MultiVP_fn_vChangeOneVPSizeAndPositionPercent(unsigned char ucVpNum, unsigned int* a2_ulSize, unsigned int* a2_ulPos)
 {
     int iGameOrFix;
-    /* TODO: decompile from asm/... */
+
+    for (iGameOrFix = 0; iGameOrFix < 2; iGameOrFix++)
+    {
+        fn_vChangeViewPortPercent(ucVpNum, iGameOrFix, 1, a2_ulSize[0], a2_ulSize[1], 0, 0, 0, 0, 0, 0);
+        fn_vChangeViewPortPercent(ucVpNum, iGameOrFix, 5, 0, 0, 0, 0, 0, 0, a2_ulPos[0], a2_ulPos[1]);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 243–309 */
@@ -2070,10 +2251,46 @@ void GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(unsigned char _ucNumberOfPlay
     unsigned short uwColumnSizePercentage;
     unsigned short uwColumnPercentInit;
     unsigned short uwLinePercentInit;
-    unsigned short uwColumnPercent;
+    unsigned short uwColumnPercent = 0;
     unsigned short uwLinePercent;
     unsigned char ucIndex;
-    /* TODO: decompile from asm/... */
+
+    ucNumberOfLines = (unsigned char)(_ucNumberOfPlayers / _ucNumberOfColumns);
+    if ((_ucNumberOfPlayers % _ucNumberOfColumns) != 0) { uwLinePercent = 0; ucNumberOfLines = (unsigned char)(ucNumberOfLines + 1); }
+    if (g_stEngineStructure.ucMiniScreenRatioInMultiMode == 1)
+    {
+        uwColumnSizePercentage = (unsigned short)(100.0f / (float)_ucNumberOfColumns);
+        uwLineSizePercentage = (unsigned short)(100.0f / (float)ucNumberOfLines);
+    }
+    else if (_ucNumberOfColumns >= g_stEngineStructure.ucMiniScreenRatioInMultiMode)
+    {
+        uwLineSizePercentage = (unsigned short)(100.0f / (float)ucNumberOfLines);
+        uwColumnSizePercentage = uwLineSizePercentage;
+        uwLinePercent = (unsigned short)((100 - uwLineSizePercentage * _ucNumberOfColumns) / 2);
+    }
+    else
+    {
+        uwColumnSizePercentage = (unsigned short)(100.0f / (float)_ucNumberOfColumns);
+        uwLineSizePercentage = uwColumnSizePercentage;
+        uwColumnPercentInit = (unsigned short)((100 - uwColumnSizePercentage * g_stEngineStructure.ucMiniScreenRatioInMultiMode) / 2);
+    }
+    uwColumnPercentInit = uwColumnPercent;
+    for (ucIndex = 0; ucIndex < _ucNumberOfPlayers; ucIndex++)
+    {
+        fn_vChangeViewPortPercent(ucIndex, 1, 1, uwColumnSizePercentage, uwLineSizePercentage, 0, 0, 0, 0, 0, 0);
+        fn_vChangeViewPortPercent(ucIndex, 1, 5, 0, 0, 0, 0, 0, 0, uwLinePercent, uwColumnPercent);
+        fn_vChangeViewPortPercent(ucIndex, 0, 1, uwColumnSizePercentage, uwLineSizePercentage, 0, 0, 0, 0, 0, 0);
+        fn_vChangeViewPortPercent(ucIndex, 0, 5, 0, 0, 0, 0, 0, 0, uwLinePercent, uwColumnPercent);
+        if (((ucIndex + 1) / _ucNumberOfColumns) != 0) { uwLinePercent = (unsigned short)(uwLinePercent + uwLineSizePercentage); }
+        else { uwColumnPercent = (unsigned short)(uwColumnPercent + uwColumnSizePercentage); }
+    }
+    if (g_stEngineStructure.h_DbgCamCharacter == NULL)
+    {
+        fn_vChangeViewPortPercent(0, 1, 1, 0, 100, 0, 0, 0, 0, 0, 0);
+        fn_vChangeViewPortPercent(0, 0, 1, 0, 100, 0, 0, 0, 0, 0, 0);
+        fn_vChangeViewPortPercent(1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 25);
+        fn_vChangeViewPortPercent(1, 1, 1, 0, 25, 0, 0, 0, 0, 0, 0);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 196–237 */
@@ -2093,7 +2310,24 @@ void GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(unsigned char _ucNumberOfPlay
  */
 void GAM_MultiVP_fn_vInitMultiPlayerMode(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char uc_ViewPortIndex;
+    tdstNodeMainCharacter_* hMCN;
+    HIE_tdstSuperObject_* hCharacter;
+    HIE_tdstSuperObject_* hCamera;
+    int iPlayers;
+    int iColumns;
+
+    g_stEngineStructure.a_hSO_CurrentMainPlayers[0] = 0; g_stEngineStructure.a_hSO_CurrentMainPlayers[1] = 0; g_stEngineStructure.a_hSO_CurrentMainPlayers[2] = 0; g_stEngineStructure.a_hSO_CurrentMainPlayers[3] = 0;
+    if (g_stEngineStructure.h_DbgCamCharacter == NULL)
+    {
+        iColumns = g_stEngineStructure.ucNumberOfColumnsInMultiMode; iPlayers = g_stEngineStructure.ucNumberOfPlayersInMultiMode; if ((unsigned char)iPlayers <= 0) { iPlayers = 1; } if ((unsigned char)iColumns <= 0) { iColumns = 1; } if ((unsigned char)iPlayers < 5) { g_stEngineStructure.ucNumberOfPlayersInMultiMode = (unsigned char)iPlayers; } else { g_stEngineStructure.ucNumberOfPlayersInMultiMode = 4; } g_stEngineStructure.ucNumberOfColumnsInMultiMode = (unsigned char)iColumns; GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
+    }
+    else
+    {
+        g_stEngineStructure.ucNumberOfPlayersInMultiMode = 2; g_stEngineStructure.ucNumberOfColumnsInMultiMode = 1; GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
+    }
+    hMCN = MC_fn_hGetFirstMainCharNode();
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++) { if (hMCN == NULL) { break; } hCharacter = MC_fn_hGetCharacterInMainCharacterNode(hMCN); if (uc_ViewPortIndex <= g_stEngineStructure.ucNumberOfPlayersInMultiMode) { hCamera = CAM_fn_hGetActiveCamera(uc_ViewPortIndex); if (hCamera) { CAM_fn_vCineInfoSetSuperObjectTargeted(hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent, hCharacter); } g_stEngineStructure.a_hSO_CurrentMainPlayers[uc_ViewPortIndex] = (int)hCharacter; } if (g_stEngineStructure.h_DbgCamCharacter == NULL) { hMCN = MC_fn_hGetNextMainCharNode(hMCN); } }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 175–191 */
@@ -2116,9 +2350,21 @@ void GAM_MultiVP_fn_vInitMultiPlayerMode(void)
  */
 void GAM_MultiVP_fn_vAutoAssociateMainPlayersForViewPorts(void)
 {
-    unsigned char uc_ViewPortIndex;
     tdstNodeMainCharacter_* hMCN;
-    /* TODO: decompile from asm/... */
+    unsigned char uc_ViewPortIndex;
+    HIE_tdstSuperObject_* hCharacter;
+    HIE_tdstSuperObject_* hCamera;
+
+    hMCN = MC_fn_hGetFirstMainCharNode();
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++)
+    {
+        if (hMCN == NULL) { break; }
+        hCharacter = MC_fn_hGetCharacterInMainCharacterNode(hMCN); if (uc_ViewPortIndex <= g_stEngineStructure.ucNumberOfPlayersInMultiMode) { hCamera = CAM_fn_hGetActiveCamera(uc_ViewPortIndex); if (hCamera) { CAM_fn_vCineInfoSetSuperObjectTargeted(hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent, hCharacter); } g_stEngineStructure.a_hSO_CurrentMainPlayers[uc_ViewPortIndex] = (int)hCharacter; }
+        if (g_stEngineStructure.h_DbgCamCharacter == NULL)
+        {
+            hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\MultiVP.c lines 160–169 */
@@ -2254,17 +2500,13 @@ void GAM_MultiVP_fn_vSetPlayerForViewPort(unsigned char _ucViewPortIndex, HIE_td
  */
 void GAM_MultiVP_fn_vSetNumberOfPlayers(unsigned char _ucNumberOfPlayers, unsigned char _ucNumberOfColumns)
 {
-    if ((int)_ucNumberOfPlayers <= 0) {
-        _ucNumberOfPlayers = 1;
-    }
-    if ((int)_ucNumberOfColumns <= 0) {
-        _ucNumberOfColumns = 1;
-    }
-    if (_ucNumberOfPlayers < 5) {
+    { int iPlayers = _ucNumberOfPlayers; if (iPlayers <= 0) { iPlayers = 1; } _ucNumberOfPlayers = (unsigned char)iPlayers; }
+    { int iColumns = _ucNumberOfColumns; if (iColumns <= 0) { iColumns = 1; } _ucNumberOfColumns = (unsigned char)iColumns; }
+    if (_ucNumberOfPlayers < 5)
         g_stEngineStructure.ucNumberOfPlayersInMultiMode = _ucNumberOfPlayers;
-    } else {
+    else
         g_stEngineStructure.ucNumberOfPlayersInMultiMode = 4;
-    }
+
     g_stEngineStructure.ucNumberOfColumnsInMultiMode = _ucNumberOfColumns;
     GAM_MultiVP_fn_vAdjustViewPortSizeAndPosition(g_stEngineStructure.ucNumberOfPlayersInMultiMode, g_stEngineStructure.ucNumberOfColumnsInMultiMode);
 }

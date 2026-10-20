@@ -55,7 +55,7 @@ struct HIE_tdstSuperObject_ {
 
 extern "C" DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
 
-HIE_tdstSuperObject_* fn_hSuperObjectGetLastCollidedCharacter(HIE_tdstSuperObject_* hCharacter)
+extern "C" HIE_tdstSuperObject_* fn_hSuperObjectGetLastCollidedCharacter(HIE_tdstSuperObject_* hCharacter)
 {
     HIE_tdstSuperObject_* p_stObjectCollided;
     DNM_stDynamics* p_stDynamics;
@@ -84,7 +84,7 @@ HIE_tdstSuperObject_* fn_hSuperObjectGetLastCollidedCharacter(HIE_tdstSuperObjec
     return p_stObjectCollided;
 }
 
-void fn_vSuperObjectSetLastCollidedCharacter(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* _h_LastCollidedCharacter)
+extern "C" void fn_vSuperObjectSetLastCollidedCharacter(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* _h_LastCollidedCharacter)
 {
     DNM_stDynamics* p_stDynamics;
     tdstDynam_* h_Dynam;

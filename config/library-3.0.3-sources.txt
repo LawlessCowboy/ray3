@@ -1,0 +1,12 @@
+# Library (non-game) sources built with MWCC 3.0.3-020716 instead of the
+# library baseline 3.0 (2001-11-26). A library file needs this when retail
+# inlines the float-to-unsigned conversion (c.le.s 2^31 / cvt.w.s / or
+# 0x80000000): the 3.0 and 3.0.1 builds emit a jal fptoui instead, which
+# changes the frame and the relocation list.
+# Add a file only with that evidence: every recorded match in it must still
+# match under 3.0.3. Paths are repo-relative.
+#
+# PS2GL_Fragment.c: impPS2glFogf matches 204/204 (bytes and relocations)
+# only under 3.0.3-020716; all 15 other recorded matches in the file still
+# match under 3.0.3.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Fragment.c

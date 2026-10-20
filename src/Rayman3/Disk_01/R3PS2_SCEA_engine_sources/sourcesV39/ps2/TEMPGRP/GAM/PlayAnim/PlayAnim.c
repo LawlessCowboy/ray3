@@ -1700,6 +1700,41 @@ int gp_stMorphData;
 int HIE_gs_lCurrentFrame;
 void fn_v3dDataSetFrameRate(tdst3dData_* h_3dData, unsigned char ucFrameRate);
 void GLI_vCleanDispTemporaryDataSPO(HIE_tdstSuperObject_* h_SuperObject);
+unsigned short fn_uwGetObjectTableNumberOfelements(tdstObjectsTablesList_* hTargetTable);
+void GLI_PS2GL_CleanSpecifForPO(PO_tdstPhysicalObject_* PO);
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+HIE_tdstSuperObject_* HIE_fn_p_stCreateSuperObjectTab(int lSize);
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
+void fn_vChangeStorageBank(unsigned char ucStorageBank);
+MTH3D_tdstVector_* fn_p_stGetLinearSpeedVector(tdstAnim3d_* p_stAnim3d, unsigned short uwFrame);
+void fn_vTransferSpeedInformationPLA_DNM(HIE_tdstSuperObject_* p_SuperObjPerso, float xLastFrame);
+tdstTransition_* fn_hIfExistTransitionalWithTargetState(tdstState_* h_State);
+void PLA_fn_vRefreshGlobalMatrixOfAnimsHierarchy(HIE_tdstSuperObject_* hSprObj);
+int fn_hIfExistProhibitedState(tdstState_* h_State, tdstState_* h_TargetState);
+unsigned int RND_fn_ulGetUnsignedLongRandomValue(unsigned int lIndexNumber, unsigned int ulMin, unsigned int ulMax);
+unsigned char PLA_fn_bDoAnimPlayerForCharacter(HIE_tdstSuperObject_* p_stSuperObject, unsigned char bNoDisplay, unsigned char bHandleSkippedEventsIfRelevant);
+unsigned char fn_bIsInFix(tdstEngineObject_* p_stObject);
+unsigned char GAM_fn_bIsEngineInFixMode(void);
+void GAM_fn_vSetEngineInFixMode(void);
+void GAM_fn_vSetEngineInLevelMode(void);
+void fn_vAllocArrayOfElts3d(tdst3dData_* h_3dData, unsigned char ucNbElts);
+void fn_vFreeArrayOfElts3d(tdst3dData_* h_3dData);
+void fn_vUpdateCurrentActivationForCharacter(HIE_tdstSuperObject_* p_stSuperObject);
+signed char fn_scGetSpeedInState(tdstState_* h_State);
+void fn_vInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, int lParam);
+
+/* Engine float-to-int helper: the retail code converts through the callee-saved
+   $f30 register, which MWCC never picks on its own. */
+inline int MTH_M_xRealToLong(float _xValue)
+{
+    int _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
 /* fn_iCompareMorphData is declared by its recovered definition below. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 25–31 */
@@ -2168,9 +2203,28 @@ int PLA_fn_bTestCurrentAction(HIE_tdstSuperObject_* p_stSuperObject, tdstState_*
  */
 int PLA_fn_bTestNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_WantedState)
 {
-    tdstTransition_* h_Transition;
     tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/... */
+
+    h_Current3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+    if (h_WantedState == h_Current3dData->h_FirstStateOfAction)
+    {
+        return 1;
+    }
+    else
+    {
+        if (!fn_hIfExistTransitionalWithTargetState(h_Current3dData->h_WantedState))
+        {
+            if (fn_hIfExistProhibitedState(h_Current3dData->h_WantedState, h_WantedState))
+            {
+                return 0;
+            }
+            if (h_Current3dData->h_WantedState->ucTransitionStatusFlag == 1)
+            {
+                return 0;
+            }
+        }
+        return 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 2784–2827 */
@@ -2208,7 +2262,44 @@ int PLA_fn_vInitNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_St
 {
     unsigned char bBTLevel;
     tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/... */
+
+    h_Current3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+    if (h_Current3dData->h_Family->hForStateArray.hFirstElementOpt == NULL)
+    {
+        return 0;
+    }
+    h_Current3dData->ucFlagEndState = 0;
+    h_Current3dData->ucFlagModifState = 1;
+    h_Current3dData->xCurrentFrame = 0.0f;
+    h_Current3dData->xLastFrame = -1.0f;
+    h_Current3dData->h_WantedState = h_State;
+    if (h_State->p_stAnim != NULL)
+    {
+        bBTLevel = 0;
+        if (fn_bIsInFix(p_stSuperObject->ulTypeOfLinkedObject != 2 ? NULL : p_stSuperObject->hLinkedObject.p_stCharacter) && !GAM_fn_bIsEngineInFixMode())
+        {
+            GAM_fn_vSetEngineInFixMode();
+            bBTLevel = 1;
+        }
+        fn_vAllocArrayOfElts3d(h_Current3dData, h_State->p_stAnim->ucMaxNumberOfElements);
+        if (bBTLevel)
+        {
+            GAM_fn_vSetEngineInLevelMode();
+        }
+    }
+    else
+    {
+        fn_vFreeArrayOfElts3d(h_Current3dData);
+    }
+    h_Current3dData->h_CurrentState = h_State;
+    fn_vUpdateCurrentActivationForCharacter(p_stSuperObject);
+    h_Current3dData->h_FirstStateOfAction = h_State;
+    fn_v3dDataSetFrameRate(h_Current3dData, (unsigned char)fn_scGetSpeedInState(h_State));
+    if (h_State->p_stAnim != NULL)
+    {
+        fn_vInitAllEvents(p_stSuperObject, 0);
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 2771–2772 */
@@ -2315,8 +2406,38 @@ void PLA_fn_vSetCurrFrame(HIE_tdstSuperObject_* p_stSuperObject, short _wFrame)
 unsigned char PLA_fn_bSetNewStateWithRandom(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_WantedState)
 {
     unsigned short uwFrameNumber;
+    unsigned char ucFrameNumber;
     tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/... */
+
+    h_Current3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+    if (h_WantedState == h_Current3dData->h_FirstStateOfAction)
+    {
+        return 1;
+    }
+    fn_hIfExistTransitionalWithTargetState(h_Current3dData->h_WantedState);
+    if (fn_hIfExistProhibitedState(h_Current3dData->h_WantedState, h_WantedState))
+    {
+        return 0;
+    }
+    if (h_Current3dData->h_WantedState->ucTransitionStatusFlag == 1)
+    {
+        return 0;
+    }
+    h_Current3dData->uwNbEngineFrameSinceLastMechEvent = 0xFFFF;
+    h_Current3dData->ulStartTime = 0;
+    h_Current3dData->h_StateInLastFrame = h_Current3dData->h_CurrentState;
+    h_WantedState->p_stAnim->ucFlagMergeAnim = 0;
+    h_Current3dData->h_WantedState = h_WantedState;
+    h_Current3dData->h_FirstStateOfAction = h_WantedState;
+    h_Current3dData->ucFlagModifState = 1;
+    ucFrameNumber = (unsigned char)RND_fn_ulGetUnsignedLongRandomValue(g_Randomhandle, 0, h_Current3dData->h_WantedState->p_stAnim->uwNumberOfFrames - 1);
+    uwFrameNumber = ucFrameNumber;
+    h_Current3dData->xForcedFrame = ((int)uwFrameNumber >= 0) ? (float)(int)uwFrameNumber : (float)((ucFrameNumber >> 1) | (ucFrameNumber & 1)) + (float)((ucFrameNumber >> 1) | (ucFrameNumber & 1));
+    h_Current3dData->xLastFrame = (float)((unsigned short)(int)uwFrameNumber - 1);
+    h_Current3dData->ulTimeDelay = 0;
+    h_Current3dData->ulTimePreviousFrame = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    PLA_fn_bDoAnimPlayerForCharacter(p_stSuperObject, 0, 0);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 2467–2648 */
@@ -2454,8 +2575,30 @@ unsigned char PLA_fn_bSetNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstSta
  */
 void PLA_fn_vRefreshGlobalMatrixUnderCharacter(HIE_tdstSuperObject_* _hSprObj)
 {
+    int lResult;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+    if (fn_ulStandardGameGetCustomBitsSO(_hSprObj) & 2)
+    {
+        lResult = 1;
+    }
+    else
+    {
+        lResult = 0;
+        if (_hSprObj->ulTypeOfLinkedObject == 2 && _hSprObj->hLinkedObject.p_stCharacter->h_3dData->stFrame3d.stDeformation.ulNbOfDeformationLinks != 0)
+        {
+            lResult = 1;
+        }
+    }
+    if (lResult)
+    {
+        hChild = _hSprObj->hFirstElementDyn;
+        while (hChild != NULL)
+        {
+            PLA_fn_vRefreshGlobalMatrixOfAnimsHierarchy(hChild);
+            hChild->hFatherDyn = _hSprObj;
+            hChild = hChild->hNextBrotherDyn;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 2372–2401 */
@@ -2738,9 +2881,27 @@ void PLA_fn_vUpdateTransparencyForModules(HIE_tdstSuperObject_* p_stSuperObject)
 void PLA_fn_vCleanMorphTargets(tdstEngineObject_* p_stObject)
 {
     PO_tdstPhysicalObject_* pPO;
-    unsigned int i;
     unsigned int iNumOfElts;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    tdstObjectsTablesList_* pTable;
+
+    pTable = p_stObject->h_3dData->h_CurrentObjectsTable;
+    iNumOfElts = fn_uwGetObjectTableNumberOfelements(pTable);
+    if (iNumOfElts != 0 && pTable->d_stObjectsTable != NULL)
+    {
+        for (i = 0; i < iNumOfElts; i++)
+        {
+            if (pTable->d_stObjectsTable[i].wTypeOfTarget == 0) {
+                pPO = (PO_tdstPhysicalObject_*)pTable->d_stObjectsTable[i].h_Target;
+                if (pPO != NULL)
+                {
+                    GLI_g_ForceDestructAllSDLs = 1;
+                    GLI_PS2GL_CleanSpecifForPO(pPO);
+                    GLI_g_ForceDestructAllSDLs = 0;
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 1848–1863 */
@@ -2833,7 +2994,17 @@ HIE_tdstSuperObject_* PLA_fn_hFindNextFreeSupObj(void)
  */
 void PLA_fn_vCreateAndInitHeaps(void)
 {
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* p_stSO;
+    HIE_tdstSuperObject_* p_stEnd;
+    MAT_tdstTransformation_* p_stMatrix;
+    unsigned int i;
+
+    PLA_g_d_stMatrixHeap = (int)HMU_fn_p_vMalloc(0x18060, 0);
+    PLA_g_d_stSupObjHeap = (int)HIE_fn_p_stCreateSuperObjectTab(0x401); g_Randomhandle = 0;
+    for (i = 0; i < (long)0x401; i++) MAT_fn_vSetIdentity((MAT_tdstTransformation_*)PLA_g_d_stMatrixHeap + i);
+    p_stSO = (HIE_tdstSuperObject_*)PLA_g_d_stSupObjHeap; p_stEnd = (HIE_tdstSuperObject_*)PLA_g_d_stSupObjHeap + 0x401; p_stMatrix = (MAT_tdstTransformation_*)PLA_g_d_stMatrixHeap; while (p_stSO != p_stEnd) { p_stSO->hFatherDyn = NULL; p_stSO->hLocalMatrix = p_stMatrix; p_stSO++; p_stMatrix++; } PLA_g_ulCurrentPosInSupObjHeap = 0; PLA_g_ulNbAllocInSupObjHeap = 0;
+    PLA_g_ulMaxOccupationOfSupObjHeap = 0;
+    PLA_g_ulMaxOccupationOfChannels = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 1735–1738 */
@@ -2848,7 +3019,13 @@ void PLA_fn_vCreateAndInitHeaps(void)
  */
 void PLA_fn_vInitHeaps(void)
 {
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* p_stSO;
+    HIE_tdstSuperObject_* p_stEnd;
+    MAT_tdstTransformation_* p_stMatrix;
+    unsigned int i;
+
+    for (i = 0; i < (long)0x401; i++) MAT_fn_vSetIdentity((MAT_tdstTransformation_*)PLA_g_d_stMatrixHeap + i);
+    p_stSO = (HIE_tdstSuperObject_*)PLA_g_d_stSupObjHeap; p_stEnd = (HIE_tdstSuperObject_*)PLA_g_d_stSupObjHeap + 0x401; p_stMatrix = (MAT_tdstTransformation_*)PLA_g_d_stMatrixHeap; while (p_stSO != p_stEnd) { p_stSO->hFatherDyn = NULL; p_stSO->hLocalMatrix = p_stMatrix; p_stSO++; p_stMatrix++; } PLA_g_ulCurrentPosInSupObjHeap = 0; PLA_g_ulNbAllocInSupObjHeap = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 1519–1618 */
@@ -3161,9 +3338,57 @@ void PLA_fn_vRefreshFrameNumber(HIE_tdstSuperObject_* p_stSuperObject)
 unsigned char PLA_fn_bSkipCurrentFrame(HIE_tdstSuperObject_* p_stSuperObject)
 {
     int lValue;
-    tdstAnim3d_* p_stCurrentAnim;
     tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/... */
+    tdstAnim3d_* p_stCurrentAnim;
+    tdstState_* p_stState;
+    unsigned short uwFrame;
+
+    h_Current3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+    p_stState = h_Current3dData->h_CurrentState;
+    if (p_stState == NULL)
+    {
+        return 1;
+    }
+    p_stCurrentAnim = p_stState->p_stAnim;
+    if (p_stCurrentAnim == NULL)
+    {
+        return 0;
+    }
+    if (h_Current3dData->ucFrameRate == 0)
+    {
+        return 1;
+    }
+    fn_vChangeStorageBank(h_Current3dData->h_Family->ucStorageBank);
+    h_Current3dData->ucUserEventFlags = 0;
+    if (h_Current3dData->lLastComputeFrame == 0)
+    {
+        lValue = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - g_stEngineStructure.stEngineTimer.ulPauseTime; lValue = lValue + h_Current3dData->ulStartTime;
+        if (lValue < 0)
+        {
+            lValue = 1;
+        }
+        h_Current3dData->ulStartTime = lValue;
+        h_Current3dData->ulTimePreviousFrame = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    }
+    h_Current3dData->lLastComputeFrame = HIE_gs_lCurrentFrame;
+    uwFrame = h_Current3dData->uwNbEngineFrameSinceLastMechEvent;
+    if (uwFrame != 0xFFFF)
+    {
+        h_Current3dData->uwNbEngineFrameSinceLastMechEvent = uwFrame + 1;
+    }
+    if (h_Current3dData->bSkipCurrentFrame != 0)
+    {
+        if (h_Current3dData->bDiscreetSpeed == 0)
+        {
+            if (fn_p_stGetLinearSpeedVector(p_stCurrentAnim, (unsigned short)MTH_M_xRealToLong(h_Current3dData->xCurrentFrame)) != NULL)
+            {
+                fn_vTransferSpeedInformationPLA_DNM(p_stSuperObject, h_Current3dData->xLastFrame);
+            }
+        }
+        h_Current3dData->bSkipCurrentFrame = 0;
+        return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 366–862 */

@@ -47,12 +47,11 @@ struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
     MTH3D_tdstVector_* d_stListOfPointsNormals; /* +0x4 */
     int d_dfVertexTransparency; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
-    int d_stListOfElements; /* +0x10 */
+    short* d_xListOfElementsTypes; /* +0xc */
+    void** d_stListOfElements; /* +0x10 */
     GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
     GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
-    unsigned char ulType; /* +0x1c */
-    unsigned char _extractor_padding_01[3]; /* explicit retail gap; +0x1d..0x1f */
+    unsigned int ulType; /* +0x1c */
     short xNbPoints; /* +0x20 */
     short xNbElements; /* +0x22 */
     short xNbEdges; /* +0x24 */
@@ -103,7 +102,7 @@ struct GLD_tdstViewportAttributes_ {
     int iOffsetPosY; /* +0x5c */
     int p_cVirtualScreen; /* +0x60 */
     int lPitch; /* +0x64 */
-    int p_vSpecificToXD; /* +0x68 */
+    GLI_tdstCamera_** p_vSpecificToXD; /* +0x68 */
     short hDevice; /* +0x6c */
     short hViewport; /* +0x6e */
 };
@@ -164,6 +163,13 @@ struct GEO_tdstEdge_ {
     MTH3D_tdstVector_ st_VectorPoints[2]; /* +0x4 */
 };
 
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void* memset(void* dst, int c, size_t n);
+GEO_tdstGeometricObject_* GEO_hAllocTMPGeometricObject(short xNbPoints, short xNbElements);
+void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, short xNbPoints, short xNbElements);
+void MAT_fn_vInvertRotation(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 187–207 */
 /* addr: 0x002a4530  size: 276 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -186,10 +192,43 @@ struct GEO_tdstEdge_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Recovered PS2 MTH scalar helpers: sqrt.s and the R5900 accumulator ops
+   have no C form under the baseline. */
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+
 void GEO_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter, float _xSecondSphereRadius)
 {
     float xAlpha;
-    /* TODO: decompile from asm/... */
+    float xX, xY, xZ;
+    float xSqrNorm;
+    float xNorm;
+
+    xX = _p_stFirstSphereCenter->xX - _p_stSecondSphereCenter->xX; xY = _p_stFirstSphereCenter->xY - _p_stSecondSphereCenter->xY; xZ = _p_stFirstSphereCenter->xZ - _p_stSecondSphereCenter->xZ;
+    MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+    if (xNorm + _xFirstSphereRadius <= _xSecondSphereRadius)
+    {
+        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stSecondSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stSecondSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stSecondSphereCenter->xZ;
+
+        *_p_xReturnedSphereRadius = _xSecondSphereRadius;
+    }
+    else if (xNorm + _xSecondSphereRadius < _xFirstSphereRadius)
+    {
+        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stFirstSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stFirstSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stFirstSphereCenter->xZ;
+
+        *_p_xReturnedSphereRadius = _xFirstSphereRadius;
+    }
+    else
+    {
+        xAlpha = (1.0f - (_xFirstSphereRadius - _xSecondSphereRadius) / xNorm) / 2.0f;
+        _p_stReturnedSphereCenter->xX = _p_stFirstSphereCenter->xX + xAlpha * (_p_stSecondSphereCenter->xX - _p_stFirstSphereCenter->xX); _p_stReturnedSphereCenter->xY = _p_stFirstSphereCenter->xY + xAlpha * (_p_stSecondSphereCenter->xY - _p_stFirstSphereCenter->xY); _p_stReturnedSphereCenter->xZ = _p_stFirstSphereCenter->xZ + xAlpha * (_p_stSecondSphereCenter->xZ - _p_stFirstSphereCenter->xZ);
+        *_p_xReturnedSphereRadius = (xNorm + _xFirstSphereRadius + _xSecondSphereRadius) / 2.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 875–966 */
@@ -250,12 +289,76 @@ void GEO_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedS
  */
 void GEO_vTurnLookAt(GEO_tdstGeometricObject_* p_stObj, GLD_tdstViewportAttributes_* hVpt, GLI_tdstCamera_* _pstCameraFromPushBuffer, MAT_tdstTransformation_* p_stCurrentMatrix)
 {
-    float xNorm;
-    MTH3D_tdstVector_ stZ;
-    MTH3D_tdstVector_ stY;
-    MTH3D_tdstVector_ stX;
     MAT_tdstTransformation_ hCameraPosInv;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stX;
+    MTH3D_tdstVector_ stY;
+    MTH3D_tdstVector_ stZ;
+    MTH4D_tdstVector_* p_stCol;
+
+    if (_pstCameraFromPushBuffer == NULL) { _pstCameraFromPushBuffer = *hVpt->p_vSpecificToXD; } MAT_fn_vInvertRotation(&hCameraPosInv, &_pstCameraFromPushBuffer->stMatrix);
+    p_stCol = &hCameraPosInv.stTransformMatrix.stCol_3;
+    stX.xX = p_stCol->xX - p_stCurrentMatrix->stTransformMatrix.stCol_3.xX; stX.xY = p_stCol->xY - p_stCurrentMatrix->stTransformMatrix.stCol_3.xY; stX.xZ = p_stCol->xZ - p_stCurrentMatrix->stTransformMatrix.stCol_3.xZ;
+    if (stX.xX == 0.0f && stX.xY == 0.0f && stX.xZ == 0.0f) { return; }
+    {
+        float xNorm, xSqrNorm, xX, xY, xZ;
+
+        xX = stX.xX; xY = stX.xY; xZ = stX.xZ;
+        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+        if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stX.xX = xNorm * stX.xX; stX.xY = xNorm * stX.xY; stX.xZ = xNorm * stX.xZ; }
+    }
+    if (p_stObj->ulType == 3)
+    {
+        MTH3D_M_vCopyVector(&stY, &p_stCurrentMatrix->stTransformMatrix.stCol_1)
+        stZ.xX = stX.xY * stY.xZ - stX.xZ * stY.xY; stZ.xY = stX.xZ * stY.xX - stX.xX * stY.xZ; stZ.xZ = stX.xX * stY.xY - stX.xY * stY.xX;
+        {
+            float xNorm, xSqrNorm, xX, xY, xZ;
+
+            xX = stZ.xX; xY = stZ.xY; xZ = stZ.xZ;
+            MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+            if (xNorm <= 0.0f) { return; }
+            MTH_SQR3_TO(xNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xNorm)
+            if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stZ.xX = xNorm * stZ.xX; stZ.xY = xNorm * stZ.xY; stZ.xZ = xNorm * stZ.xZ; }
+        }
+        stX.xX = stY.xY * stZ.xZ - stY.xZ * stZ.xY; stX.xY = stY.xZ * stZ.xX - stY.xX * stZ.xZ; stX.xZ = stY.xX * stZ.xY - stY.xY * stZ.xX;
+        MAT_fn_vSetRotationVectors(p_stCurrentMatrix, &stX, &stY, &stZ);
+    }
+    else if (p_stObj->ulType == 2)
+    {
+        MTH3D_M_vCopyVector(&stZ, &p_stCurrentMatrix->stTransformMatrix.stCol_2)
+        stY.xX = stZ.xY * stX.xZ - stZ.xZ * stX.xY; stY.xY = stZ.xZ * stX.xX - stZ.xX * stX.xZ; stY.xZ = stZ.xX * stX.xY - stZ.xY * stX.xX;
+        {
+            float xNorm, xSqrNorm, xX, xY, xZ;
+
+            xX = stY.xX; xY = stY.xY; xZ = stY.xZ;
+            MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+            if (xNorm <= 0.0f) { return; }
+            MTH_SQR3_TO(xNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xNorm)
+            if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stY.xX = xNorm * stY.xX; stY.xY = xNorm * stY.xY; stY.xZ = xNorm * stY.xZ; }
+        }
+        stX.xX = stY.xY * stZ.xZ - stY.xZ * stZ.xY; stX.xY = stY.xZ * stZ.xX - stY.xX * stZ.xZ; stX.xZ = stY.xX * stZ.xY - stY.xY * stZ.xX;
+        MAT_fn_vSetRotationVectors(p_stCurrentMatrix, &stX, &stY, &stZ);
+    }
+    else
+    {
+        MTH3D_M_vCopyVector(&stZ, &hCameraPosInv.stTransformMatrix.stCol_2)
+        {
+            float xNorm, xSqrNorm, xX, xY, xZ;
+
+            xX = stZ.xX; xY = stZ.xY; xZ = stZ.xZ;
+            MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+            if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stZ.xX = xNorm * stZ.xX; stZ.xY = xNorm * stZ.xY; stZ.xZ = xNorm * stZ.xZ; }
+        }
+        stY.xX = stZ.xY * stX.xZ - stZ.xZ * stX.xY; stY.xY = stX.xX * stZ.xZ - stZ.xX * stX.xZ; stY.xZ = stX.xY * stZ.xX - stZ.xY * stX.xX;
+        {
+            float xNorm, xSqrNorm, xX, xY, xZ;
+
+            xX = stY.xX; xY = stY.xY; xZ = stY.xZ;
+            MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+            if (xNorm <= 0.0f) { return; } MTH_SQR3_TO(xNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xNorm) if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stY.xX = xNorm * stY.xX; stY.xY = xNorm * stY.xY; stY.xZ = xNorm * stY.xZ; }
+        }
+        stZ.xX = stX.xY * stY.xZ - stX.xZ * stY.xY; stZ.xY = stY.xY * stX.xZ - stX.xX * stY.xZ; stZ.xZ = stY.xX * stX.xY - stY.xY * stX.xX;
+        MAT_fn_vSetRotationVectors(p_stCurrentMatrix, &stX, &stY, &stZ);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 868–868 */
@@ -285,7 +388,9 @@ unsigned char GEO_bIsLookAt(GEO_tdstGeometricObject_* p_stObj)
  */
 void GEO_vCreateTMPGeometricObjectWithEdges(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements, short xNbEdges)
 {
-    /* TODO: decompile from asm/... */
+    GEO_tdstGeometricObject_* p_stObj = GEO_hAllocTMPGeometricObject(xNbPoints, xNbElements); p_stObj->d_stListOfEdges = (GEO_tdstEdge_*)HMU_fn_p_vMalloc(xNbEdges * sizeof(GEO_tdstEdge_), 1); *p_hObject = p_stObj;
+    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
+    (*p_hObject)->xNbEdges = xNbEdges;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GEO_Ed\GeoObjEd.c lines 140–144 */
@@ -303,5 +408,9 @@ void GEO_vCreateTMPGeometricObjectWithEdges(GEO_tdstGeometricObject_** p_hObject
  */
 void GEO_vCreateTMPGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements)
 {
-    /* TODO: decompile from asm/... */
+    GEO_tdstGeometricObject_* p_stObj;
+
+    p_stObj = (GEO_tdstGeometricObject_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstGeometricObject_), 1); p_stObj->xNbElements = xNbElements; p_stObj->xNbPoints = xNbPoints; p_stObj->d_xListOfElementsTypes = (short*)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 1); p_stObj->d_stListOfElements = (void**)HMU_fn_p_vMalloc(xNbElements * sizeof(void*), 1); p_stObj->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 1); memset(p_stObj->d_stListOfPoints, 0, xNbPoints * sizeof(MTH3D_tdstVector_)); p_stObj->d_stListOfPointsNormals = NULL; p_stObj->d_dfVertexTransparency = 0; p_stObj->d_stListOfEdges = NULL; *p_hObject = p_stObj;
+    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
+    (*p_hObject)->xNbEdges = 0;
 }

@@ -4,11 +4,8 @@
 
 #include <stddef.h>
 
-typedef int CFlow;
-
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
-typedef struct CIdObjPtr CIdObjPtr;
 typedef union _tduRefRes _tduRefRes;
 typedef struct _tdstInfoTrackMem _tdstInfoTrackMem;
 typedef struct iterator iterator;
@@ -30,11 +27,13 @@ typedef struct iterator_base iterator_base;
 typedef struct _tdstThemePartOutro _tdstThemePartOutro;
 typedef struct _stCdBlock _stCdBlock;
 typedef struct _tdstThemePart _tdstThemePart;
-typedef struct CSrcFlow CSrcFlow;
+namespace usnd { class CSrcFlow; }
+typedef usnd::CSrcFlow CSrcFlow;
 typedef struct CAllocBlock CAllocBlock;
 namespace usnd { struct CPS2IdObjLoader; }
 typedef usnd::CPS2IdObjLoader CPS2IdObjLoader;
-typedef struct CPS2FileSrcFlow CPS2FileSrcFlow;
+namespace usnd { class CPS2FileSrcFlow; }
+typedef usnd::CPS2FileSrcFlow CPS2FileSrcFlow;
 typedef struct _tdstTypeRandomMem _tdstTypeRandomMem;
 typedef struct _stMemBlockA _stMemBlockA;
 typedef struct stSampleMemory stSampleMemory;
@@ -53,7 +52,10 @@ typedef struct _tdstTypeSequenceMem _tdstTypeSequenceMem;
 typedef union _tduResMem _tduResMem;
 typedef struct _tdstBlockResourceMem _tdstBlockResourceMem;
 typedef struct CSwitchElement CSwitchElement;
-typedef struct CResData CResData;
+namespace usnd { struct CResData; }
+typedef usnd::CResData CResData;
+namespace usnd { template <class T> struct CIdObjPtr; }
+typedef usnd::CIdObjPtr<CResData> CIdObjPtr;
 typedef struct CEventResData CEventResData;
 typedef struct sset sset;
 typedef struct CBankDescCont CBankDescCont;
@@ -129,10 +131,6 @@ typedef enum tdeEventType {
     ESTOPALLEVENT = 5,
     ESTOPANDGO = 6,
 } tdeEventType;
-
-struct CIdObjPtr {
-    CLookupElement* m_poElmt; /* +0x0 */
-};
 
 union _tduRefRes {
     unsigned int Id; /* +0x0 */
@@ -215,7 +213,38 @@ struct CRefIdObj : CIdObj {
     unsigned char m_bMarkFlag; /* +0xc */
 };
 
-struct CResData : CRefIdObj {
+struct CLookupElement {
+    int m_iNbRef; /* +0x0 */
+    CUUID m_oId; /* +0x4 */
+    CIdObj* m_poIdObj; /* +0xc */
+};
+
+/* usnd::CIdObjPtr<T> is a template in the retail sources; its const member
+   __rf mangles to __rf__Q24usnd27CIdObjPtr<Q24usnd8CResData>CFv, and the
+   conversion operator to CResData* to
+   __opPQ24usnd8CResData__Q24usnd27CIdObjPtr<Q24usnd8CResData>CFv. */
+namespace usnd {
+template <class T> struct CIdObjPtr {
+    CLookupElement* m_poElmt; /* +0x0 */
+    operator T*() const
+    {
+        if (m_poElmt)
+            return (T*)m_poElmt->m_poIdObj;
+        return NULL;
+    }
+};
+}
+
+/* The retail object file of this unit carries an out-of-line copy of that
+   conversion operator although no function of the unit calls it: the retail
+   compiler emits a copy of every member of an instantiated class template.
+   MWCC only emits one when the address of the member is taken, so keep that
+   reference here. */
+typedef usnd::CResData* (usnd::CIdObjPtr<usnd::CResData>::*PFN_CONVERT)(void) const;
+static PFN_CONVERT ms_pfnConvert =
+    (PFN_CONVERT)&usnd::CIdObjPtr<usnd::CResData>::operator usnd::CResData*;
+
+struct usnd::CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
 };
@@ -282,10 +311,35 @@ struct _tdstThemePart {
     int rFadeDuration; /* +0x10 */
 };
 
-struct CSrcFlow {
-    /* C++ base CFlow at +0x0. */
-    CFlow CFlow; /* +0x8 */
+/* Text file source classes.  CFlow is the virtual base of CSrcFlow, so
+   CPS2FileSrcFlow carries MWCC's hidden virtual-base constructor argument and
+   stores the virtual base after its own members (the object layout recovered
+   from the retail debug records: vbase pointer at +0x0, vtable pointer at
+   +0x4, members at +0x8..+0x1f, virtual base at +0x20). */
+namespace usnd {
+
+class CFlow {
+public:
+    virtual bool fv_bIsEnd(void);
+    int m_data; /* +0x4 */
 };
+
+class CSrcFlow : public virtual CFlow {
+public:
+};
+
+class CPS2FileSrcFlow : public CSrcFlow {
+public:
+    unsigned int m_uiFileHandle; /* +0x8 */
+    unsigned int m_uiFileOffset; /* +0xc */
+    unsigned int m_uiSize; /* +0x10 */
+    unsigned int m_uiPos; /* +0x14 */
+    unsigned int m_uiEndPos; /* +0x18 */
+    unsigned char m_bUseCache; /* +0x1c */
+    static void fs_vUseCache(void* p_Buffer, unsigned int ui_Size);
+};
+
+}
 
 struct CAllocBlock {
     CAllocBlock* m_poNextBlock; /* +0x0 */
@@ -299,15 +353,6 @@ struct usnd::CPS2IdObjLoader {
     smap m_oIndex; /* +0x10 */
     void fv_FlushCache(void);
     void f_vClearIndex(void);
-};
-
-struct CPS2FileSrcFlow : CSrcFlow {
-    unsigned int m_uiFileHandle; /* +0x8 */
-    unsigned int m_uiFileOffset; /* +0xc */
-    unsigned int m_uiSize; /* +0x10 */
-    unsigned int m_uiPos; /* +0x14 */
-    unsigned int m_uiEndPos; /* +0x18 */
-    unsigned char m_bUseCache; /* +0x1c */
 };
 
 struct _tdstTypeRandomMem {
@@ -469,12 +514,6 @@ struct _tdstRangeSplitMem {
     int rCoefMagCD; /* +0x20 */
 };
 
-struct CLookupElement {
-    int m_iNbRef; /* +0x0 */
-    CUUID m_oId; /* +0x4 */
-    CIdObj* m_poIdObj; /* +0xc */
-};
-
 struct CTextFile {
     CPS2FileSrcFlow m_File; /* +0x0 */
     sstring mostringName; /* +0x28 */
@@ -567,8 +606,14 @@ static char gch_Title[256];
 static char gch_SoundFolder[1024];
 static char gch_DivertSoundFolder[1024];
 sset gs_oListToLoad;
-int g_pSoundCache;
+void* g_pSoundCache;
 
+/* The debug record for the retail function at 0x00187a60 names it
+   _NilElmt__Q24usnd9streebase, but the ELF symbol there is the indexed
+   const conversion operator of usnd::CIdObjPtr<usnd::CResData>, which is
+   defined with the class template above (the ms_pfnConvert reference keeps
+   the compiler from folding it away, so the retail's out-of-line copy is
+   emitted). */
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 251–254 */
 /* addr: 0x00187a60  size: 32 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -577,10 +622,6 @@ int g_pSoundCache;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CResData* _NilElmt__Q24usnd9streebase(void)
-{
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 419–480 */
 /* addr: 0x00187a80  size: 616 bytes */
@@ -706,6 +747,8 @@ void SND_fn_vFinishLoad(char* pIdStr)
     /* TODO: decompile from asm/... */
 }
 
+extern "C" void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int uiSize);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 283–288 */
 /* addr: 0x00188cb0  size: 52 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -720,7 +763,8 @@ void SND_fn_vFinishLoad(char* pIdStr)
  */
 void SND_fn_vStartLoad(void)
 {
-    /* TODO: decompile from asm/... */
+    g_pSoundCache = fn_pvMallocInBinaryPreservingTheCurrentMode(0x7D000);
+    usnd::CPS2FileSrcFlow::fs_vUseCache(g_pSoundCache, 0x7D000);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 266–272 */
@@ -864,7 +908,24 @@ int SND_fn_bLoadBank(char* pch_NameWithoutExt)
 unsigned char fn_s8Digit__FUc(unsigned char s8_Digit)
 {
     unsigned char s8_Answer;
-    /* TODO: decompile from asm/... */
+
+    if (s8_Digit >= '0' && s8_Digit <= '9') {
+        s8_Answer = s8_Digit - '0';
+    }
+    else {
+        if (s8_Digit >= 'A' && s8_Digit <= 'F') {
+            s8_Answer = s8_Digit - 'A' + 10;
+        }
+        else {
+            if (s8_Digit >= 'a' && s8_Digit <= 'f') {
+                s8_Answer = s8_Digit - 'a' + 10;
+            }
+            else
+                s8_Answer = 0;
+        }
+    }
+
+    return s8_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 111–111 */

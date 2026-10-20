@@ -127,7 +127,19 @@ int (*g_mpegNodata)(anon_2*, anon_3*, void*);
 int (*g_mpegError)(anon_2*, anon_5*, void*);
 extern int printf(const char*, ...);
 extern void switchThread(void);
+extern int sceMpegIsEnd(anon_2* mp);
+typedef int (*sceMpegCallback)(anon_2*, anon_3*, void*);
+extern int sceMpegCreate(anon_2* mp, unsigned char* work_area, int work_area_size);
+extern int sceMpegAddCallback(anon_2* mp, anon_enum_00034440 type, sceMpegCallback callback, void* anyData);
+extern int viBufCreate(anon_4* f, long double* data, long double* tag, int size, anon_1* ts, int n_ts);
+extern int sceMpegGetPicture(anon_2* mp, anon_8* rgb32, int mbcount);
+extern int sceMpegReset(anon_2* mp);
+extern void ErrMessage(char* message);
+extern void fn_vDisplayImage(void* _p_ImageBuffer, unsigned int _ulWidth, unsigned int _ulHeight);
 extern int viBufAddDMA(anon_4* f);
+extern int viBufBeginPut(anon_4* f, unsigned char** pp_ptr0, int* p_len0, unsigned char** pp_ptr1, int* p_len1);
+extern int viBufEndPut(anon_4* f, int size);
+extern int viBufFlush(anon_4* f);
 extern int viBufReset(anon_4* f);
 extern int viBufGetTs(anon_4* f, anon_1* ts);
 extern int viBufCount(anon_4* f);
@@ -268,7 +280,31 @@ int decBs0(anon_0* vd)
     int status;
     int ret;
     anon_8* rgb32;
-    /* TODO: decompile from asm/... */
+
+    status = 1;
+
+    while (!sceMpegIsEnd(&vd->mpeg))
+    {
+        if (vd->state == 1)
+        {
+            status = -1;
+            printf("decode thread: aborted\n");
+            break;
+        }
+
+        rgb32 = (anon_8*)((zeFrame + 63) & ~63);
+        ret = sceMpegGetPicture(&vd->mpeg, rgb32, 0x5a0);
+        if (ret < 0)
+        {
+            ErrMessage("sceMpegGetPicture() decode error");
+        }
+
+        fn_vDisplayImage(rgb32, vd->mpeg.width, vd->mpeg.height);
+        switchThread();
+    }
+
+    sceMpegReset(&vd->mpeg);
+    return status;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 269–276 */
@@ -350,7 +386,18 @@ int videoDecFlush(anon_0* vd)
     unsigned char* pd0Unc;
     unsigned char* pd1;
     unsigned char* pd0;
-    /* TODO: decompile from asm/... */
+
+    /* The retail seeds the sequence-end code with the float bit pattern
+     * 0xB7010000 (-7.689e-06) and asks the video buffer for the two write
+     * counters and the two (unaligned) data pointers.  The remainder is a
+     * bit-field copy loop: the low 16 bits of each counter are OR-ed with the
+     * 0x20000000 tag, and the two halves are memcpy'd in four-byte chunks
+     * around the end-of-sequence code. */
+    *(int*)seq_end_code = 0xB7010000;
+    viBufBeginPut((anon_4*)((unsigned char*)vd + 0x48), &pd0, &d1, &pd1, &d0);
+    pd0Unc = pd0;
+    pd1Unc = pd1;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\videodec.c lines 182–191 */
@@ -488,5 +535,21 @@ int videoDecSetStream(anon_0* vd, int strType, int ch, int (*cb)(anon_2*, anon_3
  */
 int videoDecCreate(anon_0* vd, unsigned char* mpegWork, int mpegWorkSize, long double* data, long double* tag, int tagSize, anon_1* pts, int n_pts)
 {
-    /* TODO: decompile from asm/... */
+    sceMpegCreate(&vd->mpeg, mpegWork, mpegWorkSize);
+
+    sceMpegAddCallback(&vd->mpeg, sceMpegCbError, (sceMpegCallback)mpegError, NULL);
+
+    sceMpegAddCallback(&vd->mpeg, sceMpegCbNodata, (sceMpegCallback)mpegNodata, NULL);
+
+    sceMpegAddCallback(&vd->mpeg, sceMpegCbStopDMA, (sceMpegCallback)mpegStopDMA, NULL);
+
+    sceMpegAddCallback(&vd->mpeg, sceMpegCbRestartDMA, (sceMpegCallback)mpegRestartDMA, NULL);
+
+    sceMpegAddCallback(&vd->mpeg, sceMpegCbTimeStamp, (sceMpegCallback)mpegTS, NULL);
+
+    vd->state = 0;
+
+    viBufCreate(&vd->vibuf, data, tag, tagSize, pts, n_pts);
+
+    return 1;
 }

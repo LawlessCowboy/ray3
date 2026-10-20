@@ -3498,6 +3498,7 @@ unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcedureId);
 void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
 tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 void CAM_fn_vSetTransparencyFlag(tdstCineinfo_* hCineinfo, unsigned char ucFlag);
+void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* hCineinfo);
 
 tdstNodeInterpret_* CAM_fn_p_stCameraSetTransparencyFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
@@ -3982,10 +3983,19 @@ tdstNodeInterpret_* CAM_fn_p_stChangeConstants(HIE_tdstSuperObject_* p_SuperObjP
  */
 tdstNodeInterpret_* CAM_fn_p_stShowInfo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stValue;
-    HIE_tdstSuperObject_* hCamera;
     tdstCineinfo_* hCineInfo;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hCamera;
+    tdstGetSetParam_ stValue;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    switch (stValue.uDummy.uParam.lValue)
+    {
+    case 0: hCineInfo->ucPerIAFlags &= 0xFE; break;
+    case 1: hCineInfo->ucPerIAFlags |= 1; break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 1222–1374 */
@@ -4211,13 +4221,22 @@ tdstNodeInterpret_* CAM_fn_p_stAssociateViewport(HIE_tdstSuperObject_* p_SuperOb
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vActivateCamera(tdstCineinfo_* _hCineInfo, int _lTypeOfChange, unsigned char _bActive);
+
 tdstNodeInterpret_* CAM_fn_p_stActivate(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    int lTypeOfChange;
-    tdstGetSetParam_ stValue;
-    HIE_tdstSuperObject_* hCamera;
     tdstCineinfo_* hCineInfo;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hCamera;
+    tdstGetSetParam_ stValue;
+    int lTypeOfChange;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lTypeOfChange = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    CAM_fn_vActivateCamera(hCineInfo, lTypeOfChange, (stValue.uDummy.uParam.lValue == 0) ? (unsigned char)0 : (unsigned char)1);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 840–903 */
@@ -4252,14 +4271,49 @@ tdstNodeInterpret_* CAM_fn_p_stActivate(HIE_tdstSuperObject_* p_SuperObjPerso, t
  */
 tdstNodeInterpret_* CAM_fn_p_stChangeChannel(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stValue;
-    char cChannelNumber;
-    int lTypeOfChange;
-    int lChangingMode;
-    tdstInternalStructurCineinfo_* hCineInfoCurrent;
     tdstCineinfo_* hCineInfo;
+    tdstInternalStructurCineinfo_* hCineInfoCurrent;
+    int lChangingMode;
+    int lTypeOfChange;
+    char cChannelNumber;
+    tdstGetSetParam_ stValue;
     HIE_tdstSuperObject_* hCamera;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lTypeOfChange = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lChangingMode = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    cChannelNumber = stValue.uDummy.uParam.cValue;
+    if (lTypeOfChange == 1)
+    {
+        CAM_fn_vSetCineinfoWorkFromCurrent(hCineInfo);
+        hCineInfoCurrent = hCineInfo->hWork;
+    }
+    else
+    {
+        hCineInfoCurrent = hCineInfo->hCurrent;
+    }
+    switch (lChangingMode)
+    {
+    case -1:
+        cChannelNumber = hCineInfo->hInit->cChannel;
+        break;
+    case 0:
+        cChannelNumber = -1;
+        break;
+    case 1:
+        break;
+    }
+    hCineInfoCurrent->cChannel = cChannelNumber;
+    if (lTypeOfChange != 1)
+    {
+        hCineInfo->hVisibility->cChannel = cChannelNumber;
+        hCineInfo->hWork->cChannel = cChannelNumber;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 750–827 */
@@ -4654,8 +4708,43 @@ tdstNodeInterpret_* CAM_fn_p_stChangeVectorParameter(HIE_tdstSuperObject_* p_Sup
  */
 void CAM_fn_vChangeAVectorParameter(tdstCineinfo_* _hCineInfo, MTH3D_tdstVector_* _p_stInitialValue, MTH3D_tdstVector_* _p_stCurrentValue, MTH3D_tdstVector_* _p_stVisibilityValue, MTH3D_tdstVector_* _p_stWorkValue, int _lTypeOfChange, int _lChangingMode, MTH3D_tdstVector_* _p_stValue)
 {
-    MTH3D_tdstVector_ stActualValue;
-    /* TODO: decompile from asm/... */
+    union {
+        struct { unsigned int uiX, uiY, uiZ; } stWords;
+        struct { float fArray[3]; } stFloats;
+        unsigned int uiArray[3];
+    } stActualValue;
+
+    stActualValue.stFloats.fArray[0] = 0.0f; stActualValue.stFloats.fArray[1] = 0.0f; stActualValue.stFloats.fArray[2] = 0.0f;
+
+    if (_lTypeOfChange == 1)
+    {
+        CAM_fn_vSetCineinfoWorkFromCurrent(_hCineInfo);
+        _p_stCurrentValue = _p_stWorkValue;
+    }
+    switch (_lChangingMode)
+    {
+    case -1:
+        stActualValue.stWords.uiX = ((unsigned int*)_p_stInitialValue)[0]; stActualValue.stWords.uiY = ((unsigned int*)_p_stInitialValue)[1]; stActualValue.stWords.uiZ = ((unsigned int*)_p_stInitialValue)[2];
+        break;
+    case 0:
+        if (_hCineInfo->ucVolIAFlags & 1)
+        {
+            stActualValue.stFloats.fArray[0] = _p_stWorkValue->xX + _p_stValue->xX; stActualValue.stFloats.fArray[1] = _p_stWorkValue->xY + _p_stValue->xY; stActualValue.stFloats.fArray[2] = _p_stWorkValue->xZ + _p_stValue->xZ;
+        }
+        else
+        {
+            stActualValue.stFloats.fArray[0] = _p_stCurrentValue->xX + _p_stValue->xX; stActualValue.stFloats.fArray[1] = _p_stCurrentValue->xY + _p_stValue->xY; stActualValue.stFloats.fArray[2] = _p_stCurrentValue->xZ + _p_stValue->xZ;
+        }
+        break;
+    case 1:
+        stActualValue.stWords.uiX = ((unsigned int*)_p_stValue)[0]; stActualValue.stWords.uiY = ((unsigned int*)_p_stValue)[1]; stActualValue.stWords.uiZ = ((unsigned int*)_p_stValue)[2];
+        break;
+    }
+    ((unsigned int*)_p_stCurrentValue)[0] = stActualValue.uiArray[0];
+    *(int*)&_p_stCurrentValue->xY = *(int*)&stActualValue.stWords.uiY; *(int*)&_p_stCurrentValue->xZ = *(int*)&stActualValue.stWords.uiZ;
+    if (_lTypeOfChange != 1) {
+        ((unsigned int*)_p_stVisibilityValue)[0] = stActualValue.uiArray[0]; *(int*)&_p_stVisibilityValue->xY = *(int*)&stActualValue.stWords.uiY; *(int*)&_p_stVisibilityValue->xZ = *(int*)&stActualValue.stWords.uiZ;
+        ((unsigned int*)_p_stWorkValue)[0] = stActualValue.uiArray[0]; *(int*)&_p_stWorkValue->xY = *(int*)&stActualValue.stWords.uiY; *(int*)&_p_stWorkValue->xZ = *(int*)&stActualValue.stWords.uiZ; }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 237–282 */
@@ -4688,7 +4777,39 @@ void CAM_fn_vActivateCamera(tdstCineinfo_* _hCineInfo, int _lTypeOfChange, unsig
 {
     tdstInternalStructurCineinfo_* hCineInfoTest;
     tdstInternalStructurCineinfo_* param0;
-    /* TODO: decompile from asm/... */
+
+    if (_lTypeOfChange == 1)
+    {
+        CAM_fn_vSetCineinfoWorkFromCurrent(_hCineInfo);
+        param0 = _hCineInfo->hWork;
+        hCineInfoTest = param0;
+    }
+    else
+    {
+        param0 = _hCineInfo->hCurrent;
+        if (_hCineInfo->ucVolIAFlags & 1)
+            hCineInfoTest = _hCineInfo->hWork;
+        else
+            hCineInfoTest = param0;
+    }
+
+    if (hCineInfoTest->bIsActive != _bActive)
+    {
+        param0->bIsActive = _bActive;
+        if (_bActive == 0)
+            param0->eTypeOfViewport = CAM_e_NoViewport;
+
+        if (_lTypeOfChange != 1)
+        {
+            if (_bActive == 0)
+            {
+                _hCineInfo->hVisibility->eTypeOfViewport = CAM_e_NoViewport;
+                _hCineInfo->hWork->eTypeOfViewport = CAM_e_NoViewport;
+            }
+            _hCineInfo->hVisibility->bIsActive = _bActive;
+            _hCineInfo->hWork->bIsActive = _bActive;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 190–224 */
@@ -4717,8 +4838,34 @@ void CAM_fn_vActivateCamera(tdstCineinfo_* _hCineInfo, int _lTypeOfChange, unsig
  */
 void CAM_fn_vChangeARealParameter(tdstCineinfo_* _hCineInfo, float* _p_xInitialValue, float* _p_xCurrentValue, float* _p_xVisibilityValue, float* _p_xWorkValue, int _lTypeOfChange, int _lChangingMode, float _xValue)
 {
-    float xActualValue;
-    /* TODO: decompile from asm/... */
+    float xActualValue = 0.0f;
+
+    if (_lTypeOfChange == 1)
+    {
+        CAM_fn_vSetCineinfoWorkFromCurrent(_hCineInfo);
+        _p_xCurrentValue = _p_xWorkValue;
+    }
+    switch (_lChangingMode)
+    {
+    case -1:
+        xActualValue = *_p_xInitialValue;
+        break;
+    case 0:
+        if (_hCineInfo->ucVolIAFlags & 1)
+            xActualValue = *_p_xWorkValue + _xValue;
+        else
+            xActualValue = *_p_xCurrentValue + _xValue;
+        break;
+    case 1:
+        xActualValue = _xValue;
+        break;
+    }
+    *_p_xCurrentValue = xActualValue;
+    if (_lTypeOfChange != 1)
+    {
+        *_p_xVisibilityValue = xActualValue;
+        *_p_xWorkValue = xActualValue;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 75–158 */

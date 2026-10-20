@@ -362,16 +362,17 @@ struct GLI_tdstMaterial_ {
 };
 
 struct anon_2 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon2[6]; /* +0x2..0x7 */
 };
 
 struct GLI_tdstTexture_ {
@@ -769,15 +770,16 @@ struct anon_29 {
 };
 
 struct anon_25 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_39 {
@@ -859,60 +861,61 @@ struct anon_26 {
 };
 
 struct anon_34 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 union anon_33 {
@@ -2343,6 +2346,7 @@ unsigned int GLI_g_NbHysteresisFrames;
 unsigned int GLI_g_NbHystChangeFrames;
 unsigned int GLI_g_HysteresisNotYet;
 void GLIPS2_vChangeResolutionNTSCProgressive(void);
+void GLIPS2_vChangeResolutionNTSC(void);
 int toupper(int c);
 char* strstr(const char* s1, const char* s2);
 unsigned int PS2glInternalGetScreenCalebration(unsigned int target);
@@ -2443,7 +2447,19 @@ void GLI_DRV_vNoBlackPolygon(void)
  */
 void GLI_vRestoreVideoModeAfterVideos(void)
 {
-    /* TODO: decompile from asm/... */
+    g_ResChangeVideo = 1;
+    switch (GLI_g_VideoModeBeforeVideos)
+    {
+    case 0x32:
+        break;
+    case 0x3C:
+        if (GLI_g_50_or_60_HzMode != 0x3C) { GLIPS2_vChangeResolutionNTSC(); GLI_g_50_or_60_HzMode = 0x3C; g_xVideoFrameDurationInSeconds = 1.0f / 60.0f; fn_vInitFrameLenght(); GLI_g_ScreenPos_DXBase = (float)PS2glInternalGetScreenCalebration(0xf43); GLI_g_ScreenPos_DYBase = (float)PS2glInternalGetScreenCalebration(0xf44); }
+        break;
+    case 0x46:
+        if (GLI_g_50_or_60_HzMode != 0x46) { GLIPS2_vChangeResolutionNTSCProgressive(); GLI_g_50_or_60_HzMode = 0x46; g_xVideoFrameDurationInSeconds = 1.0f / 60.0f; fn_vInitFrameLenght(); GLI_g_ScreenPos_DXBase = (float)PS2glInternalGetScreenCalebration(0xf43); GLI_g_ScreenPos_DYBase = (float)PS2glInternalGetScreenCalebration(0xf44); }
+        break;
+    }
+    g_ResChangeVideo = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 4315–4324 */
@@ -2462,12 +2478,19 @@ void GLI_vRestoreVideoModeAfterVideos(void)
  */
 void GLI_vChangeVideoModeForVideos(void)
 {
-    /* TODO: decompile from asm/... */
+    g_ResChangeVideo = 1;
+    GLI_g_VideoModeBeforeVideos = GLI_g_50_or_60_HzMode;
+    if (GLI_g_50_or_60_HzMode != 0x3C) { GLIPS2_vChangeResolutionNTSC(); GLI_g_50_or_60_HzMode = 0x3C; g_xVideoFrameDurationInSeconds = 1.0f / 60.0f; fn_vInitFrameLenght(); GLI_g_ScreenPos_DXBase = (float)PS2glInternalGetScreenCalebration(0xf43); GLI_g_ScreenPos_DYBase = (float)PS2glInternalGetScreenCalebration(0xf44); }
+    g_ResChangeVideo = 0;
 }
 
 void PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
 void PS2glClearColor(float red, float green, float blue, float alpha);
 void PS2glClear(unsigned int mask);
+void PS2glMatrixMode(unsigned int mode);
+void PS2glLoadIdentity(void);
+void PS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
+void GLI_DRV_vSetCommonGLRenderStates(void);
 void GLI_fn_vEndOfDisplay(void);
 void GLI_vEndOfAI(void);
 
@@ -3425,7 +3448,35 @@ void GLI_vManageStuffForRasters(void)
  */
 void GLI_vProcessColoredFade(void)
 {
-    /* TODO: decompile from asm/... */
+    if (!g_InGameMenu2DActivated)
+    {
+        if (GLI_g_fCurrentColoredFadeValue >= 0.0f)
+        {
+            GLI_g_fCurrentColoredFadeValue = GLI_g_fInitialColoredFadeValue + GLI_g_fCurrentColoredFadeDirection * (g_ffFrameTime - GLI_g_fInitialColoredFadeTime);
+            if ((GLI_g_fCurrentColoredFadeValue >= 1.0f) && (GLI_g_fCurrentColoredFadeDirection > 0.0f))
+            {
+                GLI_g_fCurrentColoredFadeValue = 1.0f;
+            }
+            if ((GLI_g_fCurrentColoredFadeValue > 1.0f) || (GLI_g_fCurrentColoredFadeValue <= 0.0f))
+            {
+                GLI_g_fCurrentColoredFadeValue = -1.0f;
+            }
+            else
+            {
+                PS2glMatrixMode(0x1701);
+                PS2glLoadIdentity();
+                PS2glOrtho(100.0f, 0.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+                PS2glMatrixMode(0x1700);
+                PS2glLoadIdentity();
+                GLI_DRV_vSetCommonGLRenderStates();
+                /* TODO: GS/PS2GL state restore and the fade quad */
+            }
+        }
+    }
+    if (g_p_stCurrentViewport)
+    {
+        AGO3_DisplayTransitionMessage();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1679–1681 */
@@ -3561,9 +3612,31 @@ void GLI_vCleanInterpolData(void)
  */
 void TR_Report(void)
 {
-    unsigned int TotalTimeWithVSync;
-    int Wait;
-    /* TODO: decompile from asm/... */
+    static int Wait;
+    unsigned int ulNbFrames;
+    unsigned int ulTime;
+
+    ulTime = (TR_EndFrame < TR_StartFrame) ? TR_EndFrame : (TR_EndFrame - TR_StartFrame); ulNbFrames = (unsigned int)((float)ulTime / 4915200.0f);
+    if ((ulNbFrames < 2) || (ulNbFrames > 2))
+    {
+        Wait = 20;
+    }
+    if ((Wait != 0) && !((ulNbFrames < 2) || (ulNbFrames > 2)))
+    {
+        Wait = Wait - 1;
+        return;
+    }
+    TR_IAMeca_Copy = TR_IAMeca;
+    TR_EndDisp1VU1_Copy = TR_EndDisp1VU1;
+    TR_IAMecaPlusDisp1_Copy = TR_IAMecaPlusDisp1;
+    TR_UpdateDisp2_Copy = TR_UpdateDisp2;
+    TR_EndDisplayCPU_Copy = TR_EndDisplayCPU;
+    TR_EndDisp2_Copy = TR_EndDisp2;
+    TR_StartFrame_Copy = TR_StartFrame;
+    TR_InterpolDisp1_Copy = TR_InterpolDisp1;
+    TR_EndFrame_Copy = TR_EndFrame;
+    GLI_g_NumberOfSDLsCreatedInThisFrame_Copy = GLI_g_NumberOfSDLsCreatedInThisFrame;
+    GLI_g_NumberOfSDLsCreatedInThisFrame = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1096–1147 */

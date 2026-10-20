@@ -160,7 +160,26 @@ int g_h_ActualEntryInput;
 IPT_tdstInput_ IPT_g_hInputStructure;
 unsigned char g_ucIPTModuleId;
 int IPT_p_fn_bIsKeyWordValid[28];
-unsigned int IPT_g_ulPadAndJoyButtonFlag;
+unsigned int IPT_g_ulPadAndJoyButtonFlag[16];
+
+unsigned int INO_fn_ulJoyPreviousButtons(stDevice* _hDev);
+void Erm_fn_ClearLastError(unsigned int ulChannelId);
+void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
+
+static inline unsigned char IPT_fn_bIsNextKeyWordValid(IPT_tdstKeyWordElement_* hKeyWordElement)
+{
+    unsigned char ucReturn = 0;
+    if (((unsigned char (**)(void))IPT_p_fn_bIsKeyWordValid)[hKeyWordElement->u_ElementUnion.swKeyWord & 0xFF])
+    {
+        ucReturn = ((unsigned char (**)(void))IPT_p_fn_bIsKeyWordValid)[hKeyWordElement->u_ElementUnion.swKeyWord & 0xFF]();
+    }
+    else
+    {
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(14, g_ucIPTModuleId, 0, 12, -1, 255, 255, NULL);
+    }
+    return ucReturn;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 92–103 */
 /* addr: 0x002f31d0  size: 156 bytes */
@@ -208,8 +227,32 @@ void IPO_fn_vLevelDesinitRLITables(void)
  */
 unsigned char IPT_fn_bIsKeyWordValid_SequencePadEnd(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
+    unsigned char ucReturn = 0;
     unsigned int ulPadNumber;
-    /* TODO: decompile from asm/... */
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    ulPadNumber = (unsigned int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf6DeviceType == ulPadNumber + 2)
+    {
+        if (IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf2State == 1)
+        {
+            if (IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].swDeviceValue ==
+                (short)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord)
+            {
+                if (((unsigned char *)&IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber])[2 + ulPadNumber] >=
+                    ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput &&
+                    ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput >=
+                    ((unsigned char *)&IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber])[2 + ulPadNumber])
+                {
+                    ucReturn = 1;
+                }
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    IPT_g_ulSequenceAnalyseNumber++;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 1121–1136 */
@@ -237,8 +280,32 @@ unsigned char IPT_fn_bIsKeyWordValid_SequencePadEnd(IPT_tdstKeyWordElement_* _hK
  */
 unsigned char IPT_fn_bIsKeyWordValid_SequencePad(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
+    unsigned char ucReturn = 0;
     unsigned int ulPadNumber;
-    /* TODO: decompile from asm/... */
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    ulPadNumber = (unsigned int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf6DeviceType == ulPadNumber + 2)
+    {
+        if (IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].bf2State == 0)
+        {
+            if (IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber].swDeviceValue ==
+                (short)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord)
+            {
+                if (((unsigned char *)&IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber])[2 + ulPadNumber] >=
+                    ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput &&
+                    ((unsigned char *)&IPT_g_hInputStructure.hEventHistoric[IPT_g_ulSequenceAnalyseNumber])[2 + ulPadNumber] >
+                    ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)
+                {
+                    ucReturn = 1;
+                }
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    IPT_g_ulSequenceAnalyseNumber++;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 1062–1076 */
@@ -260,9 +327,19 @@ unsigned char IPT_fn_bIsKeyWordValid_SequencePad(IPT_tdstKeyWordElement_* _hKeyW
  */
 unsigned char IPT_fn_bIsKeyWordValid_Sequence(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
-    unsigned int i;
     unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 2);
+    IPT_g_ulSequenceAnalyseNumber = 0;
+    ucReturn = 1;
+    i = 0;
+    while (ucReturn && i < ((IPT_tdstKeyWordElement_*)_hKeyWordElement + 1)->u_ElementUnion.ulNumberOfSequence)
+    {
+        ucReturn = ucReturn & (IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) == 1 ? 1 : 0);
+        i++;
+    }
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 1049–1057 */
@@ -585,8 +662,35 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadJustPressed(IPT_tdstKeyWordEle
 unsigned char IPT_fn_bIsKeyWordValid_JoystickReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
     stDevice* hPad;
-    unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn = 0;
+    unsigned char ucValue;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
+    {
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
+        {
+            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
+            ucReturn = ((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask);
+            if (!ucReturn)
+            {
+                ucValue = IPT_g_hInputStructure.a_stDevice[swKeyWord].ucPadAndJoyCounter[swKeyWord];
+                if (ucValue >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput &&
+                    ucValue > ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)
+                {
+                    ucReturn = 0;
+                }
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 763–781 */
@@ -615,8 +719,29 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickReleased(IPT_tdstKeyWordElement_* _
 unsigned char IPT_fn_bIsKeyWordValid_JoystickPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
     stDevice* hPad;
-    unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn = 0;
+    unsigned char ucValue;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
+    {
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
+        {
+            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
+            ucValue = IPT_g_hInputStructure.a_stDevice[swKeyWord].ucPadAndJoyCounter[swKeyWord];
+            ucReturn = ((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask) &&
+                       (ucValue >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput &&
+                        ucValue <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput);
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 737–755 */
@@ -648,8 +773,31 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickPressed(IPT_tdstKeyWordElement_* _h
 unsigned char IPT_fn_bIsKeyWordValid_JoystickJustReleased(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
     stDevice* hPad;
-    unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn = 0;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
+    {
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
+        {
+            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
+            if (!((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask))
+            {
+                if ((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask)
+                {
+                    ucReturn = 1;
+                }
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 716–734 */
@@ -681,8 +829,26 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickJustReleased(IPT_tdstKeyWordElement
 unsigned char IPT_fn_bIsKeyWordValid_JoystickJustPressed(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
     stDevice* hPad;
-    unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn = 0;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
+    {
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
+        {
+            ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
+            ucReturn = ((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask) &&
+                       ((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) != ulMask);
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 626–713 */
@@ -1165,27 +1331,12 @@ unsigned char IPT_fn_bIsKeyWordValid_PadJustPressed(IPT_tdstKeyWordElement_* _hK
  * compare a candidate object's line table as an extra checkpoint.
  */
 void Erm_fn_ClearLastError(unsigned int ulChannelId);
-void Erm_fn_v_UpdateLastError();
-
-static inline unsigned char IPT_fn_bIsNextKeyWordValid(short swKeyWord)
-{
-    unsigned char ucReturn = 0;
-    if (((unsigned char (**)(void))IPT_p_fn_bIsKeyWordValid)[swKeyWord & 0xFF])
-    {
-        ucReturn = ((unsigned char (**)(void))IPT_p_fn_bIsKeyWordValid)[swKeyWord & 0xFF]();
-    }
-    else
-    {
-        Erm_fn_ClearLastError(0);
-        Erm_fn_v_UpdateLastError(14, g_ucIPTModuleId, 0, 12, -1, 255, 255, NULL);
-    }
-    return ucReturn;
-}
+void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
 
 unsigned char IPT_fn_bIsKeyWordValid_Not(IPT_tdstKeyWordElement_* _hKeyWordElement)
 {
     IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
-    return IPT_fn_bIsNextKeyWordValid(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord) ? 0 : 1;
+    return IPT_fn_bIsNextKeyWordValid((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) ? (unsigned char)0 : (unsigned char)1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 84–93 */

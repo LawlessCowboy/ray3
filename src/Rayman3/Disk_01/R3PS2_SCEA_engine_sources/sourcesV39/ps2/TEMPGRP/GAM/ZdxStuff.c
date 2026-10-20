@@ -1370,15 +1370,40 @@ int g_hCollisionGeoObj;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _hTransform);
+void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
+float cosf(float _xValue);
+float sinf(float _xValue);
+/* R5900 absolute value: MWCC never emits abs.s from plain C. */
+inline float MTH_xAbs(float _xValue)
+{
+    float xResult;
+    asm { abs.s xResult, _xValue }
+    return xResult;
+}
+
 void fn_vTurnMatrixX(MAT_tdstTransformation_* _p_stMatrix, float _xAngle)
 {
     float xSin;
     float xCos;
-    MTH3D_tdstVector_ K;
-    MTH3D_tdstVector_ J;
     MTH3D_tdstVector_ I;
+    MTH3D_tdstVector_ J;
+    MTH3D_tdstVector_ K;
     MAT_tdstTransformation_ TmpMatrix;
-    /* TODO: decompile from asm/... */
+
+    MAT_fn_vSetIdentity(&TmpMatrix);
+    xCos = cosf(_xAngle);
+    xSin = sinf(_xAngle);
+    if (MTH_xAbs(xCos) < 0.0001f)
+        xCos = 0.0f;
+    if (MTH_xAbs(xSin) < 0.0001f)
+        xSin = 0.0f;
+    I.xX = 1.0f; I.xY = 0.0f; I.xZ = 0.0f;
+    J.xX = 0.0f; J.xY = xCos; J.xZ = xSin;
+    K.xX = 0.0f; K.xY = -xSin; K.xZ = xCos;
+    MAT_fn_vSetRotationVectors(&TmpMatrix, &I, &J, &K);
+    MAT_fn_vCompose(_p_stMatrix, _p_stMatrix, &TmpMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2673–2682 */
@@ -1523,12 +1548,54 @@ COL_tdstCollideObject_* fn_hMakeOneObjectFromManyZdx(unsigned char _ucZoneType, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+COL_tdstCollideObject_* fn_hIsThisZoneActive(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucZoneNumber);
+tdstPhysicalCollSet_* PO_fn_hGetCollideSet(PO_tdstPhysicalObject_* _hPhysicalObject);
+COL_tdstCollideObject_* PCS_fn_hGetZddGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
+void fn_vDetectAllObjectsInThisModule(HIE_tdstSuperObject_* _hCharacter, COL_tdstCollideObject_* _hModule, MAT_tdstTransformation_* _p_stMatrix, HIE_tdstSuperObject_** _p_hSuperObjTable, int _lMaxNumberOfObjects, int* _lCurrentNumberOfObjects);
+
 void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_** _p_hSuperObjTable, unsigned short* _p_uwNumber)
 {
     int lCurrentNumberOfObjects;
     int lMaxNumberOfObjects;
     COL_tdstCollideObject_* hGeoObj;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hModule;
+    HIE_tdstSuperObject_* hModuleIfZoom;
+    tdstAChannel_* a_hArrayOfChannels;
+    unsigned short uwIndex;
+
+    lMaxNumberOfObjects = *_p_uwNumber;
+    lCurrentNumberOfObjects = 0;
+
+    if (_ucModuleOrCharacter)
+    {
+        a_hArrayOfChannels = _hSuperObj->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;
+        hModule = a_hArrayOfChannels ? a_hArrayOfChannels[_ucChannelNumber].hSupObject : NULL;
+        hModuleIfZoom = hModule;
+        if (hModule)
+        {
+            if (8 != hModule->ulTypeOfLinkedObject)
+            {
+                hModuleIfZoom = a_hArrayOfChannels ? a_hArrayOfChannels[(_ucChannelNumber + 32768) & 0xFFFF].hSupObject : NULL;
+            }
+            if (hModuleIfZoom)
+            {
+                hGeoObj = PCS_fn_hGetZddGeoObjOfPhysicalCollSet(PO_fn_hGetCollideSet(hModuleIfZoom->hLinkedObject.p_stPhysicalObject));
+                if (hGeoObj)
+                {
+                    fn_vDetectAllObjectsInThisModule(_hSuperObj, hGeoObj, hModule->hGlobalMatrix, _p_hSuperObjTable, lMaxNumberOfObjects, &lCurrentNumberOfObjects);
+                }
+            }
+        }
+    }
+    else
+    {
+        hGeoObj = fn_hIsThisZoneActive(_hSuperObj, 0, (unsigned char)(_ucChannelNumber - 1));
+        if (hGeoObj)
+        {
+            fn_vDetectAllObjectsInThisModule(_hSuperObj, hGeoObj, _hSuperObj->hGlobalMatrix, _p_hSuperObjTable, lMaxNumberOfObjects, &lCurrentNumberOfObjects);
+        }
+    }
+    *_p_uwNumber = lCurrentNumberOfObjects;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2091–2146 */
@@ -1634,11 +1701,25 @@ unsigned char fn_bIsCharacterTWODetectedByCharacterOne(HIE_tdstSuperObject_* _hC
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, MAT_tdstTransformation_** _p_hMatrix);
+void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
+COL_tdstCollideObject_* PCS_fn_hGetGeoObjOfPhysicalCollSet(unsigned char ucZoneType, tdstPhysicalCollSet_* _hPhyCollSet);
+
 unsigned char fn_bIsCharacterTWODetectedByThisZddOfCharacterOne(HIE_tdstSuperObject_* _hCharacterONE, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_* _hCharacterTWO)
 {
     COL_tdstCollideObject_* hGeoObj;
     MAT_tdstTransformation_* p_stMatrix;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stPoint;
+    MAT_tdstTransformation_ stMatrix;
+    unsigned char bFlag;
+
+    hGeoObj = ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(_hCharacterONE, 0, _ucModuleOrCharacter, _ucChannelNumber, &p_stMatrix);
+    if (!hGeoObj)
+        return 0;
+
+    bFlag = (_hCharacterTWO->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0;
+    if (bFlag == 1) { MAT_fn_vInvert(&stMatrix, p_stMatrix); MAT_fn_vApplyOnVertex(&stPoint, &stMatrix, (MTH3D_tdstVector_*)&_hCharacterTWO->hGlobalMatrix->stTransformMatrix.stCol_3); return INT_fn_bGetInclusionPointInCollideObject(&stPoint, hGeoObj); } else { return 0; }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1827–1924 */
@@ -1851,7 +1932,46 @@ COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSup
     HIE_tdstSuperObject_* hModuleIfZoom;
     HIE_tdstSuperObject_* hModule;
     COL_tdstCollideObject_* hGeoObj;
-    /* TODO: decompile from asm/... */
+    tdstAChannel_* a_hArrayOfChannels;
+
+    if (_ucModuleOrCharacter)
+    {
+        a_hArrayOfChannels = _hCharacter->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;
+        hModule = a_hArrayOfChannels ? a_hArrayOfChannels[_ucChannelNumber].hSupObject : NULL;
+        hModuleIfZoom = hModule;
+        if (!hModule)
+        {
+            return 0;
+        }
+        if (!(hModule->ulTypeOfLinkedObject & 0x18))
+        {
+            hModuleIfZoom = a_hArrayOfChannels ? a_hArrayOfChannels[(_ucChannelNumber + 32768) & 0xFFFF].hSupObject : NULL;
+            if (!hModuleIfZoom)
+            {
+                return 0;
+            }
+        }
+        hPhyCollSet = PO_fn_hGetCollideSet(hModuleIfZoom->hLinkedObject.p_stPhysicalObject);
+        if (!hPhyCollSet)
+        {
+            return 0;
+        }
+        hGeoObj = PCS_fn_hGetGeoObjOfPhysicalCollSet(_ucZoneType, hPhyCollSet);
+        if (!hGeoObj)
+        {
+            return 0;
+        }
+        *_p_hMatrix = hModule->hGlobalMatrix;
+        return hGeoObj;
+    }    else
+    {
+        hGeoObj = fn_hIsThisZoneActive(_hCharacter, _ucZoneType, (unsigned char)(_ucChannelNumber - 1));
+        if (hGeoObj)
+        {
+            *_p_hMatrix = _hCharacter->hGlobalMatrix;
+        }
+        return hGeoObj;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1487–1623 */
@@ -1947,12 +2067,37 @@ unsigned char fn_bIsThisZdeInClashWithCharacterZdeOfTypes(COL_tdstCollideObject_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+COL_tdstCollideObject_* PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(tdstPhysicalCollSet_* _hPhyCollSet);
+void fn_vGetAllCharacterInContactWithThisGeoObj(HIE_tdstSuperObject_* _hSuperObj, COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _hMatrix, HIE_tdstSuperObject_** _hSuperObjTable, unsigned short _wMaterialMask, int _lMaxNumberOfObjects, int* _p_lCurrentNumberofObjects);
+
 void fn_vGetAllCharactersInContactWithThisModuleZde(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucChannelNumber, HIE_tdstSuperObject_** _hSuperObjTable, unsigned short _wMaterialMask, int _lMaxNumberOfObjects, int* _p_lCurrentNumberofObjects)
 {
     tdstPhysicalCollSet_* hPhyCollSet;
     COL_tdstCollideObject_* hGeoObj;
     HIE_tdstSuperObject_* hModule;
-    /* TODO: decompile from asm/... */
+    tdstAChannel_* a_hArrayOfChannels;
+
+    a_hArrayOfChannels = _hSuperObj->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;
+    hModule = a_hArrayOfChannels ? a_hArrayOfChannels[_ucChannelNumber].hSupObject : NULL;
+    if (hModule)
+    {
+        if (hModule->ulTypeOfLinkedObject != 8)
+        {
+            hModule = a_hArrayOfChannels ? a_hArrayOfChannels[_ucChannelNumber].hZoomSupObject : NULL;
+        }
+        if (hModule && hModule->ulTypeOfLinkedObject == 8)
+        {
+            hPhyCollSet = PO_fn_hGetCollideSet(hModule->hLinkedObject.p_stPhysicalObject);
+            if (hPhyCollSet)
+            {
+                hGeoObj = PCS_fn_hGetZdeGeoObjOfPhysicalCollSet(hPhyCollSet);
+                if (hGeoObj)
+                {
+                    fn_vGetAllCharacterInContactWithThisGeoObj(_hSuperObj, hGeoObj, hModule->hGlobalMatrix, _hSuperObjTable, _wMaterialMask, _lMaxNumberOfObjects, _p_lCurrentNumberofObjects);
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 1355–1437 */
@@ -2024,12 +2169,30 @@ void fn_vGetAllCharacterInContactWithThisGeoObj(HIE_tdstSuperObject_* _hSuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+COL_tdstCollideObject_* fn_hIsThisZoneActive(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucZoneNumber);
+
 void fn_vGetAllCharactersInContactWithThisZde(HIE_tdstSuperObject_* _hSuperObj, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, HIE_tdstSuperObject_** _hSuperObjTable, unsigned short* _p_uwNumber, unsigned short _wMaterialMask)
 {
     int lCurrentNumberOfObjects;
     int lMaxNumberOfObjects;
     COL_tdstCollideObject_* hGeoObj;
-    /* TODO: decompile from asm/... */
+
+    lMaxNumberOfObjects = *_p_uwNumber;
+    lCurrentNumberOfObjects = 0;
+
+    if (_ucModuleOrCharacter)
+    {
+        fn_vGetAllCharactersInContactWithThisModuleZde(_hSuperObj, _ucChannelNumber, _hSuperObjTable, _wMaterialMask, lMaxNumberOfObjects, &lCurrentNumberOfObjects);
+    }
+    else
+    {
+        hGeoObj = fn_hIsThisZoneActive(_hSuperObj, 2, _ucChannelNumber - 1);
+        if (hGeoObj)
+        {
+            fn_vGetAllCharacterInContactWithThisGeoObj(_hSuperObj, hGeoObj, _hSuperObj->hGlobalMatrix, _hSuperObjTable, _wMaterialMask, lMaxNumberOfObjects, &lCurrentNumberOfObjects);
+        }
+    }
+    *_p_uwNumber = lCurrentNumberOfObjects;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 679–701 */
@@ -2073,13 +2236,35 @@ COL_tdstCollideObject_* fn_hGetCollideZdxOfTypeAtIndex(unsigned char ucZoneType,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void qsort(void* base, unsigned int n, unsigned int size, int (*cmp)(void*, void*));
+int fn_iCmpZoneSetIndex(void* p_stZSE1, void* p_stZSE2);
+
 int fn_bHadToCorrectActivationList(tdstCsaList_* _p_stCsaList)
 {
     int bResult;
+    unsigned short uwPosition;
     tdstZoneSetEncapsulation_* p_stZSE2;
     tdstZoneSetEncapsulation_* p_stZSE;
-    unsigned short uwPosition;
-    /* TODO: decompile from asm/... */
+
+    uwPosition = 0;
+    p_stZSE = _p_stCsaList->hZoneSetEncapsulationList.hFirstElementOpt; p_stZSE2 = p_stZSE + _p_stCsaList->hZoneSetEncapsulationList.lNumberOfElementsOpt - 1; bResult = 0; while (p_stZSE < p_stZSE2)
+    {
+        if (p_stZSE->uwIndex > uwPosition)
+        {
+            bResult = 1;
+            p_stZSE2->uwIndex = uwPosition;
+            p_stZSE2 = p_stZSE - 1;
+        }
+        else
+            p_stZSE++;
+        uwPosition++; }
+
+    if (bResult)
+    {
+        qsort(_p_stCsaList->hZoneSetEncapsulationList.hFirstElementOpt, _p_stCsaList->hZoneSetEncapsulationList.lNumberOfElementsOpt, 8, fn_iCmpZoneSetIndex);
+    }
+
+    return bResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 516–517 */
@@ -2172,12 +2357,64 @@ void fn_vUpdateCurrentActivationForCharacter(HIE_tdstSuperObject_* _hCharacter)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+short COL_xGetCollideObjectNumberOfElementsMax(COL_tdstCollideObject_* hObject);
+short COL_xGetElementType(COL_tdstCollideObject_* hObject, short xElement);
+void COL_vGetGameMaterialOfIndexedTriangles(COL_tdstCollideObject_* hObject, short hElement, GMT_tdstGameMaterial_** p_hMaterial);
+short COL_lGetIndexedSphereNbSpheres(COL_tdstCollideObject_* _hObject, short hElement);
+GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedSphere(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfSphere);
+short COL_lGetAlignedBoxNbBoxes(COL_tdstCollideObject_* hObject, short hElement);
+GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedAlignedBox(COL_tdstCollideObject_* hObject, short hElement, short xNumberOfAlignedBox);
+int GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(GMT_tdstGameMaterial_* hGameMat, unsigned short xMask);
+
 GMT_tdstGameMaterial_* fn_hIsTypeExistsInGeoObj(COL_tdstCollideObject_* _hGeoObj, unsigned short _wMaterialMask)
 {
-    short xNbElementsMax;
-    short xNbElements;
-    GMT_tdstGameMaterial_* hGMT;
-    short xIndexMax;
     short xIndex;
-    /* TODO: decompile from asm/... */
+    short xIndexMax;
+    GMT_tdstGameMaterial_* hGMT;
+    short xNbElements;
+    short xNbElementsMax;
+
+    xNbElementsMax = COL_xGetCollideObjectNumberOfElementsMax(_hGeoObj);
+    for (xNbElements = 0; xNbElements < xNbElementsMax; xNbElements++)
+    {
+        switch (COL_xGetElementType(_hGeoObj, xNbElements))
+        {
+        case 1:
+            COL_vGetGameMaterialOfIndexedTriangles(_hGeoObj, xNbElements, &hGMT);
+            if (GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(hGMT, _wMaterialMask))
+            {
+                return hGMT;
+            }
+            break;
+        case 7:
+        {
+            xIndexMax = COL_lGetIndexedSphereNbSpheres(_hGeoObj, xNbElements);
+            for (xIndex = 0; xIndex < xIndexMax; xIndex++)
+            {
+                hGMT = COL_hGetGameMaterialOfIndexedSphere(_hGeoObj, xNbElements, xIndex);
+                if (GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(hGMT, _wMaterialMask))
+                {
+                    return hGMT;
+                }
+            }
+            break;
+        }
+        case 8:
+        {
+            xIndexMax = COL_lGetAlignedBoxNbBoxes(_hGeoObj, xNbElements);
+            for (xIndex = 0; xIndex < xIndexMax; xIndex++)
+            {
+                hGMT = COL_hGetGameMaterialOfIndexedAlignedBox(_hGeoObj, xNbElements, xIndex);
+                if (GMT_fn_xMultipleTestCollideIdentifierFromGameMaterial(hGMT, _wMaterialMask))
+                {
+                    return hGMT;
+                }
+            }
+            break;
+        }
+        case 0:
+            break;
+        }
+    }
+    return NULL;
 }

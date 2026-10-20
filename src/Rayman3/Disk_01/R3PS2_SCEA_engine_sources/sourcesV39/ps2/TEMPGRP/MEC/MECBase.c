@@ -1346,18 +1346,54 @@ void MEC_vTurnAbsolute(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVecto
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _hTransform);
+extern void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+extern void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
+extern void MAT_fn_vRotateAroundAxis(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stAxisVector, float _xAngle);
+extern float cosf(float _xValue);
+extern float sinf(float _xValue);
+
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+
 void MEC_vTurnAroundZAxis(DNM_stDynamics* p_stDynamic, float xAngle)
 {
     MAT_tdstTransformation_ stMatrix;
-    float xSin;
     float xCos;
-    MTH3D_tdstVector_ stK;
-    MTH3D_tdstVector_ stJ;
-    MTH3D_tdstVector_ stI;
-    MTH3D_tdstVector_ stMove;
+    float xSin;
     MTH3D_tdstVector_ stVectorZ;
+    MTH3D_tdstVector_ stMove;
+    MTH3D_tdstVector_ stI;
+    MTH3D_tdstVector_ stJ;
+    MTH3D_tdstVector_ stK;
     MAT_tdstTransformation_* hCurrentMatrix;
-    /* TODO: decompile from asm/... */
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0) { return; }
+    if (xAngle != 0.0f)
+    {
+        hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x8) ? 1 : 0)
+        {
+            xCos = cosf(xAngle);
+            xSin = sinf(xAngle);
+            MTH3D_M_vCopyVector(&stMove, &hCurrentMatrix->stTransformMatrix.stCol_3);
+            MAT_fn_vSetIdentity(&stMatrix);
+            stI.xX = xCos; stI.xY = xSin; stI.xZ = 0.0f;
+            stJ.xX = -xSin; stJ.xY = xCos; stJ.xZ = 0.0f;
+            stK.xX = 0.0f; stK.xY = 0.0f; stK.xZ = 1.0f;
+            MAT_fn_vSetRotationVectors(&stMatrix, &stI, &stJ, &stK);
+            MAT_fn_vCompose(hCurrentMatrix, &stMatrix, hCurrentMatrix);
+            if (hCurrentMatrix->eType == MAT_eTransform_Identity) { hCurrentMatrix->eType = MAT_eTransform_Translation; }
+            MTH3D_M_vCopyVector(&hCurrentMatrix->stTransformMatrix.stCol_3, &stMove); hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+        }
+        else
+        {
+            MTH3D_M_vCopyVector(&stMove, &hCurrentMatrix->stTransformMatrix.stCol_3);
+            stVectorZ.xX = 0.0f; stVectorZ.xY = 0.0f; stVectorZ.xZ = -1.0f;
+            MAT_fn_vRotateAroundAxis(hCurrentMatrix, &stVectorZ, xAngle);
+            if (hCurrentMatrix->eType == MAT_eTransform_Identity) { hCurrentMatrix->eType = MAT_eTransform_Translation; }
+            MTH3D_M_vCopyVector(&hCurrentMatrix->stTransformMatrix.stCol_3, &stMove); hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 935–959 */
@@ -1380,10 +1416,26 @@ void MEC_vTurnAroundZAxis(DNM_stDynamics* p_stDynamic, float xAngle)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj);
+
 void MEC_fn_vImposeActorMatrix(HIE_tdstSuperObject_* hSupObj)
 {
     DNM_stDynamics* p_stDynamic;
-    /* TODO: decompile from asm/... */
+    unsigned int ulFlags;
+    p_stDynamic = fn_p_stDynamGetDynamicsSO(hSupObj);
+    if (p_stDynamic != NULL)
+    {
+        MAT_tdstTransformation_* hMatrix = hSupObj->hGlobalMatrix;
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix = *hMatrix;
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix = *hMatrix;
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX = 0.0f; p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY = 0.0f; p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ = 0.0f;
+        ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x01000000; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+        {
+            p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix = *hMatrix;
+            p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix = *hMatrix;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 885–928 */
@@ -1449,8 +1501,16 @@ void MEC_vInitTranslation(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSu
  */
 void MEC_vImposeTranslation(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector)
 {
-    MTH3D_tdstVector_ stVector;
-    /* TODO: decompile from asm/... */
+    typedef union { MTH3D_tdstVector_ v; unsigned int auWords[3]; } UV3;
+    UV3 stDelta;
+    unsigned int ulFlags;
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0))
+    {
+        ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags | 0x80000000; p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags; p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+        stDelta.v.xX = p_stVector->xX - p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xX; stDelta.v.xY = p_stVector->xY - p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xY; stDelta.v.xZ = p_stVector->xZ - p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xZ;
+        ((UV3*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation)->auWords[0] = stDelta.auWords[0]; ((UV3*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation)->auWords[1] = stDelta.auWords[1]; ((UV3*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation)->auWords[2] = stDelta.auWords[2];
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX = 0.0f; p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY = 0.0f; p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ = 0.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 835–854 */
@@ -1467,11 +1527,22 @@ void MEC_vImposeTranslation(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_st
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void MAT_fn_vInitTransformationAndType(MAT_tdstTransformation_* _hTransform, MAT_tdeTranformationType_ _eType, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK, MTH3D_tdstVector_* _p_stTranslation);
+extern void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
+extern void MAT_fn_vGetRotationMatrix(MAT_tdstTransformation_* _hTransform, MTH3D_tdstMatrix_* _p_stRotationMatrix);
+extern void MEC_fn_vCancelTilt(DNM_stDynamics* p_stDynamic);
+
 void MEC_vImposeRelativeRotation(DNM_stDynamics* p_stDynamic, MTH3D_tdstMatrix_* p_stRotationMatrix)
 {
     MAT_tdstTransformation_ stTmp;
     MAT_tdstTransformation_* hCurrentMatrix;
-    /* TODO: decompile from asm/... */
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0))
+    {
+        hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+        MAT_fn_vInitTransformationAndType(&stTmp, MAT_eTransform_Rotation, &p_stRotationMatrix->stCol_0, &p_stRotationMatrix->stCol_1, &p_stRotationMatrix->stCol_2, NULL);
+        MAT_fn_vCompose(hCurrentMatrix, hCurrentMatrix, &stTmp);
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) { MEC_fn_vCancelTilt(p_stDynamic); }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 819–826 */
@@ -1488,14 +1559,11 @@ void MEC_vImposeRelativeRotation(DNM_stDynamics* p_stDynamic, MTH3D_tdstMatrix_*
  */
 void MEC_vImposeRotationVector(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stX, MTH3D_tdstVector_* p_stY, MTH3D_tdstVector_* p_stZ)
 {
-    MTH3D_tdstMatrix_* p_stImposeRotationMatrix;
-    if (!(p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80))
+    unsigned int ulFlags;
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0))
     {
-        p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_0 = *p_stX;
-        p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_1 = *p_stY;
-        p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_2 = *p_stZ;
-        p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags |= 0x20000000;
-        p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags |= 0x20000000;
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_0.xX = p_stX->xX; p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_0.xY = p_stX->xY; p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_0.xZ = p_stX->xZ; p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_1.xX = p_stY->xX; p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_1.xY = p_stY->xY; p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_1.xZ = p_stY->xZ; p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_2.xX = p_stZ->xX; p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_2.xY = p_stZ->xY; p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix.stCol_2.xZ = p_stZ->xZ;
+        ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags | 0x20000000; p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags; p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
     }
 }
 
@@ -1522,8 +1590,20 @@ void MEC_vImposeRotationVector(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p
  */
 void MEC_vImposeRotationMatrix(DNM_stDynamics* p_stDynamic, MAT_tdstTransformation_* hRotationMatrix)
 {
-    MTH3D_tdstVector_ stMove;
-    /* TODO: decompile from asm/... */
+    typedef union { MTH3D_tdstVector_ v; unsigned int auWords[3]; } UV3;
+    UV3 stDelta;
+    unsigned int ulFlags;
+    if (p_stDynamic != NULL)
+    {
+        if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0))
+        {
+            ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags | 0x20000000; p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags; p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+            MAT_fn_vGetRotationMatrix(hRotationMatrix, &p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix);
+            stDelta.v.xX = hRotationMatrix->stTransformMatrix.stCol_3.xX - p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xX; stDelta.v.xY = hRotationMatrix->stTransformMatrix.stCol_3.xY - p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xY; stDelta.v.xZ = hRotationMatrix->stTransformMatrix.stCol_3.xZ - p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xZ;
+            ((UV3*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation)->auWords[0] = stDelta.auWords[0]; ((UV3*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation)->auWords[1] = stDelta.auWords[1]; ((UV3*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation)->auWords[2] = stDelta.auWords[2];
+            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) { MEC_fn_vCancelTilt(p_stDynamic); }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 177–776 */
@@ -1902,9 +1982,71 @@ void MEC_vImposeRotationMatrix(DNM_stDynamics* p_stDynamic, MAT_tdstTransformati
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+
+extern void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _hTransform);
+extern void MAT_fn_vSetRotationMatrix(MAT_tdstTransformation_* _hTransform, MTH3D_tdstMatrix_* _p_stRotationMatrix);
+extern void MAT_fn_vGetScale(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stScaleVector);
+extern void MAT_fn_vGetRotationVectorBaseJ(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecJ);
+extern void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+extern void MAT_fn_vRotateVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stSource);
+extern int MAT_fn_bAreEquivalent(MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
+extern void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_* _hSprObj);
+extern void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj);
+extern unsigned char fn_bGetCharacterForceCollisionWhenNotMoving(HIE_tdstSuperObject_* _hSuperObject, unsigned int _ulMask);
+extern unsigned char fn_bStandardGameIsAPlatform(HIE_tdstSuperObject_* _hSupObj);
+extern unsigned char fn_ucCollSetGetCollComputeFrequencySO(HIE_tdstSuperObject_* _hSuperObj);
+extern unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* _hSupObj);
+extern int MEC_fn_bDynamicsNeedCollide(DNM_stDynamics* p_stDynamic);
+extern int MEC_fn_bNoMove(DNM_stDynamics* p_stDynamic);
+extern int MEC_fn_lComputeCall(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT, float xCoef);
+extern void MEC_fn_vAddSpeed(DNM_stDynamics* p_stDynamic, float xDT, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix);
+extern void MEC_fn_vAddStream(DNM_stDynamics* p_stDynamic, int bSlide, float xDT);
+extern void MEC_fn_vAddTiltSpeed(DNM_stDynamics* p_stDynamic);
+extern void MEC_fn_vAdditionnalTranslation(DNM_stDynamics* p_stDynamic);
+extern void MEC_fn_vAdjustScaleData(DNM_stDynamics* p_stDynamic, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix);
+extern void MEC_fn_vAdjustSpeed(DNM_stDynamics* p_stDynamic, float xDT);
+extern void MEC_fn_vBaseObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT);
+extern unsigned char MEC_fn_vBasePlatformManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj);
+extern void MEC_fn_vCancelTilt(DNM_stDynamics* p_stDynamic);
+extern void MEC_fn_vClimbObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT);
+extern void MEC_fn_vComputeInertiaTranslation(DNM_stDynamics* p_stDynamic, float xDT);
+extern void MEC_fn_vComputeSpeed(DNM_stDynamics* p_stDynamic, float xDT);
+extern void MEC_fn_vCorrectMatrix(DNM_stDynamics* p_stDynamic, MAT_tdstTransformation_* hMatrix);
+extern void MEC_fn_vFillCollisionReport(DNM_stDynamics* p_stDynamic);
+extern void MEC_fn_vGiObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT);
+extern void MEC_fn_vGravitySpeed(DNM_stDynamics* p_stDynamic, float xDT);
+extern void MEC_fn_vGroundGuess(DNM_stDynamics* p_stDynamic, float xDT);
+extern void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT);
+extern void MEC_fn_vImposeRotation(DNM_stDynamics* p_stDynamic);
+extern void MEC_fn_vImposeSpeed(DNM_stDynamics* p_stDynamic, float xDT, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix);
+extern void MEC_fn_vInitMatrix(DNM_stDynamics* p_stDynamic);
+extern void MEC_fn_vNormalMode(DNM_stDynamics* p_stDynamic, int lMode);
+extern void MEC_fn_vPositionLimit(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stSafePreviousPosition);
+extern void MEC_fn_vProposeSpeed(DNM_stDynamics* p_stDynamic, float xDT, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix);
+extern void MEC_fn_vRepeatMove(DNM_stDynamics* p_stDynamic);
+extern void MEC_fn_vSetInitialFrameTranslation(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector);
+extern void MEC_fn_vSlowMode(DNM_stDynamics* p_stDynamic, int lMode);
+extern void MEC_fn_vSpeedLimit(DNM_stDynamics* p_stDynamic, float xDT, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix);
+extern void MEC_fn_vSwimObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT);
+extern void MEC_fn_vTranslateMatrixOff(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stMatrixTranslation);
+extern void MEC_fn_vTranslateMatrixOn(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stMatrixTranslation);
+extern void MEC_fn_vUpdatePlatform(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MAT_tdstTransformation_* hPreviousReferenceMatrix, MAT_tdstTransformation_* hInvPreviousReferenceMatrix);
+extern float MEC_fn_xGetSlide(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle);
+
 DNM_stDynamics* MEC_p_stDynamicsBaseMechanics(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT)
 {
     float xMul;
+    float xSpeed;
+    float xSpeedY;
+    float xSpeedZ;
+    float xNorm;
     MTH3D_tdstVector_* p_stSpeedAnim;
     float xDelta;
     DNM_stMecObstacle* p_stObstacle;
@@ -1912,6 +2054,7 @@ DNM_stDynamics* MEC_p_stDynamicsBaseMechanics(DNM_stDynamics* p_stDynamic, HIE_t
     MTH3D_tdstVector_ stVector;
     MTH_stMove stMove;
     int lFrame;
+    int i;
     MTH3D_tdstVector_ stJ;
     MTH3D_tdstVector_ stI;
     unsigned char bImposeRotation;
@@ -1933,5 +2076,603 @@ DNM_stDynamics* MEC_p_stDynamicsBaseMechanics(DNM_stDynamics* p_stDynamic, HIE_t
     MAT_tdstTransformation_* hPrevPreviousMatrix;
     MAT_tdstTransformation_* hPreviousMatrix;
     MAT_tdstTransformation_* hCurrentMatrix;
-    /* TODO: decompile from asm/... */
+
+    hPrevPreviousMatrix = NULL;
+    hAbsolutePreviousMatrix = NULL;
+    p_stReport = NULL;
+    bPlatform = 0;
+    bPlatformChange = 0;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+    {
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+        {
+            stMove.m_stLinear.xX = 0.0f; stMove.m_stLinear.xY = 0.0f; stMove.m_stLinear.xZ = 0.0f;
+            stMove.m_stAngular.m_xAngle = 0.0f; stMove.m_stAngular.m_stAxis.xX = 0.0f; stMove.m_stAngular.m_stAxis.xY = 0.0f; stMove.m_stAngular.m_stAxis.xZ = 0.0f;
+        }
+    }
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+    {
+        p_stReport = p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport;
+        if (p_stReport->m_ulCurrSurfaceState & 0x80) { p_stReport->m_ulCurrSurfaceState = 0x10000; }
+        else { p_stReport->m_ulCurrSurfaceState = 0; }
+    }
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x2000;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= 0xFEFFFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= 0xF7FFFFFF;
+    if ((fn_bGetCharacterForceCollisionWhenNotMoving(hSupObj, 0xFEFFFFFF) == 0) && (MEC_fn_bNoMove(p_stDynamic) != 0))
+    {
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)
+        {
+        }
+        else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x1000) ? 1 : 0)
+        {
+            return p_stDynamic;
+        }
+    }
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+    hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+    xMul = xDT / 1.0f;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+    {
+        hPrevPreviousMatrix = &p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix;
+        hAbsolutePreviousMatrix = &p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
+    }
+    MAT_fn_vSetIdentity(&stRefMatrix);
+    MAT_fn_vSetIdentity(&stPrevPreviousReferenceMatrix);
+    hRefMatrix = hSupObj->hGlobalMatrix;
+    MAT_fn_vSetIdentity(&stInvPreviousReferenceMatrix);
+    hInvRefMatrix = &stPreviousReferenceMatrix;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x800;
+    if (lZWaterValidity < 10) { lZWaterValidity = lZWaterValidity + 1; }
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0)
+    {
+        hCurrentMatrix->eType = hRefMatrix->eType;
+        hCurrentMatrix->stTransformMatrix = hRefMatrix->stTransformMatrix;
+        hCurrentMatrix->stScaleVector = hRefMatrix->stScaleVector;
+        hPreviousMatrix->eType = hRefMatrix->eType;
+        hPreviousMatrix->stTransformMatrix = hRefMatrix->stTransformMatrix;
+        hPreviousMatrix->stScaleVector = hRefMatrix->stScaleVector;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+        {
+            hPrevPreviousMatrix->eType = hRefMatrix->eType;
+            hPrevPreviousMatrix->stTransformMatrix = hRefMatrix->stTransformMatrix;
+            hPrevPreviousMatrix->stScaleVector = hRefMatrix->stScaleVector;
+            hAbsolutePreviousMatrix->eType = hRefMatrix->eType;
+            hAbsolutePreviousMatrix->stTransformMatrix = hRefMatrix->stTransformMatrix;
+            hAbsolutePreviousMatrix->stScaleVector = hRefMatrix->stScaleVector;
+        }
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0)
+        {
+            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX;
+            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY;
+            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ;
+        }
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x1000) ? 1 : 0)
+        {
+            MAT_fn_vGetScale(hRefMatrix, &stSpeed);
+            p_stDynamic->m_tdstDynamicsBaseBlock.m_stScale.xX = stSpeed.xX;
+            p_stDynamic->m_tdstDynamicsBaseBlock.m_stScale.xY = stSpeed.xY;
+            p_stDynamic->m_tdstDynamicsBaseBlock.m_stScale.xZ = stSpeed.xZ;
+        }
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX = 0.0f;
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY = 0.0f;
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ = 0.0f;
+        p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= ~0x80;
+    }
+    if (((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x10) ? 1 : 0) && ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0))
+    {
+        MEC_fn_vCancelTilt(p_stDynamic);
+    }
+    stInvPreviousReferenceMatrix = *hPreviousMatrix;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x20000000) ? 1 : 0)
+    {
+        MAT_fn_vSetRotationMatrix(&stInvPreviousReferenceMatrix, &p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeRotationMatrix);
+    }
+    if (((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0) && (p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter <= 0))
+    {
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter = fn_ucCollSetGetCollComputeFrequencySO(hSupObj);
+    }
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x200) ? 1 : 0)
+    {
+        bImposeRotation = (p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x20000000) ? 1 : 0;
+        stMatrixTranslation.xX = xMul * p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX;
+        stMatrixTranslation.xY = xMul * p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY;
+        stMatrixTranslation.xZ = xMul * p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
+        MEC_fn_vSetInitialFrameTranslation(p_stDynamic, &stMatrixTranslation);
+        stRefMatrix = *hPreviousMatrix;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0xE0000) ? 1 : 0)
+        {
+            MEC_fn_vImposeSpeed(p_stDynamic, xMul, &stInvPreviousReferenceMatrix, hInvRefMatrix);
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFFFDFFFF;
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFFFBFFFF;
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFFF7FFFF;
+        }
+        if (bImposeRotation != 0)
+        {
+            MEC_fn_vImposeRotation(p_stDynamic);
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xDFFFFFFF;
+        }
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 2) ? 1 : 0)
+        {
+            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0)
+            {
+                p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter - 1;
+                if (p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter == 0)
+                {
+                    lFrame = MEC_fn_lComputeCall(p_stDynamic, hSupObj, xMul, 0.0f);
+                    MEC_fn_vSlowMode(p_stDynamic, lFrame);
+                    MEC_fn_vBaseObstacleManagement(p_stDynamic, hSupObj, xMul);
+                    for (i = 1; i < lFrame; i++)
+                    {
+                        MEC_fn_vRepeatMove(p_stDynamic);
+                        MEC_fn_vBaseObstacleManagement(p_stDynamic, hSupObj, xMul);
+                    }
+                    MEC_fn_vNormalMode(p_stDynamic, lFrame);
+                    if ((fn_ucCollSetGetCollComputeFrequencySO(hSupObj) & 0xFF) >= 2)
+                    {
+                        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX;
+                        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY;
+                        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ;
+                    }
+                }
+            }
+            else
+            {
+                lFrame = MEC_fn_lComputeCall(p_stDynamic, hSupObj, xMul, 0.0f);
+                MEC_fn_vSlowMode(p_stDynamic, lFrame);
+                MEC_fn_vBaseObstacleManagement(p_stDynamic, hSupObj, xMul);
+                for (i = 1; i < lFrame; i++)
+                {
+                    MEC_fn_vRepeatMove(p_stDynamic);
+                    MEC_fn_vBaseObstacleManagement(p_stDynamic, hSupObj, xMul);
+                }
+                MEC_fn_vNormalMode(p_stDynamic, lFrame);
+            }
+        }
+        MEC_fn_vComputeSpeed(p_stDynamic, xMul);
+        MEC_fn_vCorrectMatrix(p_stDynamic, hCurrentMatrix);
+        if (MAT_fn_bAreEquivalent(hRefMatrix, hCurrentMatrix) == 0)
+        {
+            *hRefMatrix = *hCurrentMatrix;
+            HIE_fn_vComputeNewRelativeMatrix(hSupObj);
+        }
+        if (fn_bStandardGameIsAPlatform(hSupObj) != 0)
+        {
+            if (MAT_fn_bAreEquivalent(hPreviousMatrix, hCurrentMatrix) == 0)
+            {
+                HIE_fn_vRefreshHierarchy(hSupObj);
+                if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x20000000) ? 1 : 0)
+                {
+                    hInvRefMatrix = &stInvMatrix;
+                    MAT_fn_vInvert(hInvRefMatrix, &stRefMatrix);
+                }
+                else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x800) ? 1 : 0)
+                {
+                    MAT_fn_vInvert(hInvRefMatrix, &stInvPreviousReferenceMatrix);
+                    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= ~0x800;
+                }
+                MEC_fn_vUpdatePlatform(p_stDynamic, hSupObj, &stRefMatrix, hInvRefMatrix);
+            }
+        }
+        else if (((fn_ulStandardGameGetCustomBitsSO(hSupObj) & 2) != 0) && (MAT_fn_bAreEquivalent(hPreviousMatrix, hCurrentMatrix) == 0))
+        {
+            HIE_fn_vRefreshHierarchy(hSupObj);
+        }
+        MEC_fn_vInitMatrix(p_stDynamic);
+        MEC_fn_vFillCollisionReport(p_stDynamic);
+        return p_stDynamic;
+    }
+    stStablePreviousPosition.xX = hPreviousMatrix->stTransformMatrix.stCol_3.xX;
+    stStablePreviousPosition.xY = hPreviousMatrix->stTransformMatrix.stCol_3.xY;
+    stStablePreviousPosition.xZ = hPreviousMatrix->stTransformMatrix.stCol_3.xZ;
+    stRefMatrix = *hPreviousMatrix;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+    {
+        stPrevPreviousReferenceMatrix = *hPrevPreviousMatrix;
+    }
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= ~0x20;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= ~0x40;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x2000) ? 1 : 0)
+    {
+        if (((p_stDynamic->m_tdstDynamicsBaseBlock.m_stScale.xX - 1.0f) < 0.001f) && ((p_stDynamic->m_tdstDynamicsBaseBlock.m_stScale.xY - 1.0f) < 0.001f) && ((p_stDynamic->m_tdstDynamicsBaseBlock.m_stScale.xZ - 1.0f) < 0.001f))
+        {
+            MEC_fn_vAdjustScaleData(p_stDynamic, &stInvPreviousReferenceMatrix, hInvRefMatrix);
+        }
+    }
+    p_stSpeedAnim = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xX = g_stEngineStructure.stEngineTimer.xFrameLength * p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xX;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xY = g_stEngineStructure.stEngineTimer.xFrameLength * p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xY;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xZ = g_stEngineStructure.stEngineTimer.xFrameLength * p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xZ;
+    MAT_fn_vRotateVector(p_stSpeedAnim, hCurrentMatrix, p_stSpeedAnim);
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSafeTranslation.xX = p_stDynamic->m_tdstDynamicsBaseBlock.m_stSafeTranslation.xX / 1.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSafeTranslation.xY = p_stDynamic->m_tdstDynamicsBaseBlock.m_stSafeTranslation.xY / 1.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSafeTranslation.xZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stSafeTranslation.xZ / 1.0f;
+    MEC_fn_vTranslateMatrixOn(p_stDynamic, &stVector);
+    lFrame = 0;
+    do
+    {
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 1) ? 1 : 0)
+        {
+            xDelta = xMul / g_stEngineStructure.stEngineTimer.xFrameLength;
+            p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xX = xDelta * p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xX;
+            p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xY = xDelta * p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xY;
+            p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xZ = xDelta * p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xZ;
+            MEC_fn_vSetInitialFrameTranslation(p_stDynamic, &p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim);
+        }
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x700000) ? 1 : 0)
+        {
+            MEC_fn_vProposeSpeed(p_stDynamic, xMul, &stInvPreviousReferenceMatrix, hInvRefMatrix);
+        }
+        if (((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x800) ? 1 : 0) && (p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamPrority == 0.0f))
+        {
+            MEC_fn_vAddStream(p_stDynamic, 1, xMul);
+        }
+        MEC_fn_vInertia(p_stDynamic, xMul, &stInvPreviousReferenceMatrix, hInvRefMatrix);
+        if (g_iNewMecaTribe == 0)
+        {
+            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 4) ? 1 : 0)
+            {
+                MEC_fn_vGravitySpeed(p_stDynamic, xMul);
+            }
+        }
+        else if (((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 4) ? 1 : 0) && ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x8000) ? 1 : 0) == 0)
+        {
+            if (hCurrentMatrix->eType == MAT_eTransform_Identity) { hCurrentMatrix->eType = MAT_eTransform_Translation; }
+            hCurrentMatrix->stTransformMatrix.stCol_3.xX = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide + p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX * xMul;
+        }
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0xE0000) ? 1 : 0)
+        {
+            MEC_fn_vImposeSpeed(p_stDynamic, xMul, &stInvPreviousReferenceMatrix, hInvRefMatrix);
+            if ((g_iNewMecaTribe != 0) && (lFrame != 0) && ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x8000) ? 1 : 0) == 0)
+            {
+                if (hCurrentMatrix->eType == MAT_eTransform_Identity) { hCurrentMatrix->eType = MAT_eTransform_Translation; }
+                hCurrentMatrix->stTransformMatrix.stCol_3.xX = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide + p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX * xMul;
+            }
+        }
+        if (g_iNewMecaTribe != 0)
+        {
+            MEC_fn_vComputeSpeed(p_stDynamic, xMul);
+            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 4) ? 1 : 0)
+            {
+                MEC_fn_vGravitySpeed(p_stDynamic, xMul);
+            }
+        }
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x03800000) ? 1 : 0)
+        {
+            MEC_fn_vAddSpeed(p_stDynamic, xMul, &stInvPreviousReferenceMatrix, hInvRefMatrix);
+        }
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x20000000) ? 1 : 0)
+        {
+            MEC_fn_vImposeRotation(p_stDynamic);
+            MEC_fn_vAdditionnalTranslation(p_stDynamic);
+        }
+        else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x80000000) ? 1 : 0)
+        {
+            MEC_fn_vAdditionnalTranslation(p_stDynamic);
+        }
+        if (((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x800) ? 1 : 0) && (p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamPrority == 1.0f))
+        {
+            MEC_fn_vAddStream(p_stDynamic, 0, xMul);
+        }
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x200) ? 1 : 0)
+        {
+            MEC_fn_vSpeedLimit(p_stDynamic, xMul, &stInvPreviousReferenceMatrix, hInvRefMatrix);
+        }
+        MEC_fn_vComputeSpeed(p_stDynamic, xMul);
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0)
+        {
+            MEC_fn_vComputeInertiaTranslation(p_stDynamic, xMul);
+        }
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+        {
+            hPrevPreviousMatrix->eType = hPreviousMatrix->eType;
+            hPrevPreviousMatrix->stTransformMatrix = hPreviousMatrix->stTransformMatrix;
+            hPrevPreviousMatrix->stScaleVector = hPreviousMatrix->stScaleVector;
+        }
+        *hPreviousMatrix = *hCurrentMatrix;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX == 0.0f) && (p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY == 0.0f) && (p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ == 0.0f))
+        {
+            lFrame = 1;
+        }
+        lFrame = lFrame + 1;
+    } while (lFrame <= 0);
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+    {
+        hPrevPreviousMatrix->eType = stPrevPreviousReferenceMatrix.eType;
+        hPrevPreviousMatrix->stTransformMatrix = stPrevPreviousReferenceMatrix.stTransformMatrix;
+        hPrevPreviousMatrix->stScaleVector = stPrevPreviousReferenceMatrix.stScaleVector;
+    }
+    *hPreviousMatrix = stRefMatrix;
+    MEC_fn_vTranslateMatrixOff(p_stDynamic, &stVector);
+    MEC_fn_vAdjustSpeed(p_stDynamic, xMul);
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 8) ? 1 : 0)
+    {
+        MEC_fn_vAddTiltSpeed(p_stDynamic);
+    }
+    bNeedToCollide = MEC_fn_bDynamicsNeedCollide(p_stDynamic) & 0xFF;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+    {
+        bPlatform = (p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != NULL);
+    }
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= 0xFFFF7FFF;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0)
+    {
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter - 1;
+        if (p_stDynamic->m_tdstDynamicsAdvancedBlock.m_cCollideCounter == 0)
+        {
+            if ((bNeedToCollide != 0) || (bPlatform != 0) || (fn_bGetCharacterForceCollisionWhenNotMoving(hSupObj, 0xFFFF7FFF) != 0))
+            {
+                if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x10) ? 1 : 0)
+                {
+                    MEC_fn_vGiObstacleManagement(p_stDynamic, hSupObj, xMul);
+                }
+                else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40) ? 1 : 0)
+                {
+                    MEC_fn_vClimbObstacleManagement(p_stDynamic, hSupObj, xMul);
+                    {
+                        xSpeed = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX;
+                        xSpeedY = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY;
+                        xSpeedZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
+                        MTH_SQR3_TO(xNorm, xSpeed, xSpeedY, xSpeedZ);
+                        MTH_SQRT_TO(xNorm, xNorm);
+                        if (xNorm < MEC_g_xClimbSpeedLimit)
+                        {
+                        if (hCurrentMatrix->eType == MAT_eTransform_Identity) { hCurrentMatrix->eType = MAT_eTransform_Translation; }
+                        hCurrentMatrix->stTransformMatrix.stCol_3.xX = hPreviousMatrix->stTransformMatrix.stCol_3.xX;
+                        hCurrentMatrix->stTransformMatrix.stCol_3.xY = hPreviousMatrix->stTransformMatrix.stCol_3.xY;
+                        hCurrentMatrix->stTransformMatrix.stCol_3.xZ = hPreviousMatrix->stTransformMatrix.stCol_3.xZ;
+                        hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+                        p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX = 0.0f;
+                        p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY = 0.0f;
+                        p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ = 0.0f;
+                        }
+                    }
+                }
+                else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x20) ? 1 : 0)
+                {
+                    lFrame = MEC_fn_lComputeCall(p_stDynamic, hSupObj, xMul, 0.0f);
+                    MEC_fn_vSlowMode(p_stDynamic, lFrame);
+                    MEC_fn_vGroundObstacleManagement(p_stDynamic, hSupObj, xMul);
+                    for (i = 1; i < lFrame; i++)
+                    {
+                        g_lCallCounter = 0;
+                        MEC_fn_vRepeatMove(p_stDynamic);
+                        MEC_fn_vGroundObstacleManagement(p_stDynamic, hSupObj, xMul);
+                    }
+                    MEC_fn_vNormalMode(p_stDynamic, lFrame);
+                }
+                else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x100000) ? 1 : 0)
+                {
+                    MEC_fn_vSwimObstacleManagement(p_stDynamic, hSupObj, xMul);
+                }
+                else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 2) ? 1 : 0)
+                {
+                    lFrame = MEC_fn_lComputeCall(p_stDynamic, hSupObj, xMul, 0.0f);
+                    MEC_fn_vSlowMode(p_stDynamic, lFrame);
+                    MEC_fn_vBaseObstacleManagement(p_stDynamic, hSupObj, xMul);
+                    for (i = 1; i < lFrame; i++)
+                    {
+                        MEC_fn_vRepeatMove(p_stDynamic);
+                        MEC_fn_vBaseObstacleManagement(p_stDynamic, hSupObj, xMul);
+                    }
+                    MEC_fn_vNormalMode(p_stDynamic, lFrame);
+                }
+            }
+            if ((fn_ucCollSetGetCollComputeFrequencySO(hSupObj) & 0xFF) >= 2)
+            {
+                p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX;
+                p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY;
+                p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ;
+            }
+        }
+        else
+        {
+            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x20) ? 1 : 0)
+            {
+                MEC_fn_vGroundGuess(p_stDynamic, xMul);
+            }
+            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+            {
+                p_stReport->m_ulPrevSurfaceState = p_stReport->m_ulCurrSurfaceState;
+            }
+        }
+    }
+    else if ((bNeedToCollide != 0) || (fn_bGetCharacterForceCollisionWhenNotMoving(hSupObj, 0xFFFF7FFF) != 0))
+    {
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x10) ? 1 : 0)
+        {
+            MEC_fn_vGiObstacleManagement(p_stDynamic, hSupObj, xMul);
+        }
+        else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40) ? 1 : 0)
+        {
+            MEC_fn_vClimbObstacleManagement(p_stDynamic, hSupObj, xMul);
+            {
+                xSpeed = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX;
+                xSpeedY = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY;
+                xSpeedZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
+                MTH_SQR3_TO(xNorm, xSpeed, xSpeedY, xSpeedZ);
+                MTH_SQRT_TO(xNorm, xNorm);
+                if (xNorm < MEC_g_xClimbSpeedLimit)
+                {
+                if (hCurrentMatrix->eType == MAT_eTransform_Identity) { hCurrentMatrix->eType = MAT_eTransform_Translation; }
+                hCurrentMatrix->stTransformMatrix.stCol_3.xX = hPreviousMatrix->stTransformMatrix.stCol_3.xX;
+                hCurrentMatrix->stTransformMatrix.stCol_3.xY = hPreviousMatrix->stTransformMatrix.stCol_3.xY;
+                hCurrentMatrix->stTransformMatrix.stCol_3.xZ = hPreviousMatrix->stTransformMatrix.stCol_3.xZ;
+                hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+                p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX = 0.0f;
+                p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY = 0.0f;
+                p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ = 0.0f;
+                }
+            }
+        }
+        else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x20) ? 1 : 0)
+        {
+            lFrame = MEC_fn_lComputeCall(p_stDynamic, hSupObj, xMul, 0.0f);
+            MEC_fn_vSlowMode(p_stDynamic, lFrame);
+            MEC_fn_vGroundObstacleManagement(p_stDynamic, hSupObj, xMul);
+            for (i = 1; i < lFrame; i++)
+            {
+                g_lCallCounter = 0;
+                MEC_fn_vRepeatMove(p_stDynamic);
+                MEC_fn_vGroundObstacleManagement(p_stDynamic, hSupObj, xMul);
+            }
+            MEC_fn_vNormalMode(p_stDynamic, lFrame);
+        }
+        else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x100000) ? 1 : 0)
+        {
+            MEC_fn_vSwimObstacleManagement(p_stDynamic, hSupObj, xMul);
+        }
+        else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 2) ? 1 : 0)
+        {
+            lFrame = MEC_fn_lComputeCall(p_stDynamic, hSupObj, xMul, 0.0f);
+            MEC_fn_vSlowMode(p_stDynamic, lFrame);
+            MEC_fn_vBaseObstacleManagement(p_stDynamic, hSupObj, xMul);
+            for (i = 1; i < lFrame; i++)
+            {
+                MEC_fn_vRepeatMove(p_stDynamic);
+                MEC_fn_vBaseObstacleManagement(p_stDynamic, hSupObj, xMul);
+            }
+            MEC_fn_vNormalMode(p_stDynamic, lFrame);
+        }
+    }
+    MEC_fn_vPositionLimit(p_stDynamic, &stStablePreviousPosition);
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+    {
+        bPlatformChange = MEC_fn_vBasePlatformManagement(p_stDynamic, hSupObj);
+    }
+    MEC_fn_vCorrectMatrix(p_stDynamic, hCurrentMatrix);
+    if (((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) && ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0))
+    {
+        stSpeed.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX - hAbsolutePreviousMatrix->stTransformMatrix.stCol_3.xX;
+        stSpeed.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY - hAbsolutePreviousMatrix->stTransformMatrix.stCol_3.xY;
+        stSpeed.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hAbsolutePreviousMatrix->stTransformMatrix.stCol_3.xZ;
+        stSpeed.xX = stSpeed.xX / xMul;
+        stSpeed.xY = stSpeed.xY / xMul;
+        stSpeed.xZ = stSpeed.xZ / xMul;
+        MAT_fn_vGetRotationVectorBaseJ(hAbsolutePreviousMatrix, &stJ);
+        stMove.m_stLinear.xX = stSpeed.xX; stMove.m_stLinear.xY = stSpeed.xY; stMove.m_stLinear.xZ = stSpeed.xZ;
+        stMove.m_stAngular.m_xAngle = 1.0f;
+        stMove.m_stAngular.m_stAxis.xX = stJ.xX; stMove.m_stAngular.m_stAxis.xY = stJ.xY; stMove.m_stAngular.m_stAxis.xZ = stJ.xZ;
+        p_stReport->m_stAbsoluteCurrSpeed.m_stLinear.xX = stMove.m_stLinear.xX;
+        p_stReport->m_stAbsoluteCurrSpeed.m_stLinear.xY = stMove.m_stLinear.xY;
+        p_stReport->m_stAbsoluteCurrSpeed.m_stLinear.xZ = stMove.m_stLinear.xZ;
+        p_stReport->m_stAbsoluteCurrSpeed.m_stAngular.m_xAngle = stMove.m_stAngular.m_xAngle;
+        p_stReport->m_stAbsoluteCurrSpeed.m_stAngular.m_stAxis.xX = stMove.m_stAngular.m_stAxis.xX;
+        p_stReport->m_stAbsoluteCurrSpeed.m_stAngular.m_stAxis.xY = stMove.m_stAngular.m_stAxis.xY;
+        p_stReport->m_stAbsoluteCurrSpeed.m_stAngular.m_stAxis.xZ = stMove.m_stAngular.m_stAxis.xZ;
+    }
+    if ((MAT_fn_bAreEquivalent(hRefMatrix, hCurrentMatrix) == 0) || (bPlatformChange != 0))
+    {
+        *hRefMatrix = *hCurrentMatrix;
+        HIE_fn_vComputeNewRelativeMatrix(hSupObj);
+        p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x01000000;
+    }
+    if (fn_bStandardGameIsAPlatform(hSupObj) != 0)
+    {
+        if (MAT_fn_bAreEquivalent(hPreviousMatrix, hCurrentMatrix) == 0)
+        {
+            HIE_fn_vRefreshHierarchy(hSupObj);
+            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x20000000) ? 1 : 0)
+            {
+                hInvRefMatrix = &stInvMatrix;
+                MAT_fn_vInvert(hInvRefMatrix, &stRefMatrix);
+            }
+            else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x800) ? 1 : 0)
+            {
+                MAT_fn_vInvert(hInvRefMatrix, &stInvPreviousReferenceMatrix);
+                p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= ~0x800;
+            }
+            MEC_fn_vUpdatePlatform(p_stDynamic, hSupObj, &stRefMatrix, hInvRefMatrix);
+        }
+    }
+    else if (((fn_ulStandardGameGetCustomBitsSO(hSupObj) & 2) != 0) && (MAT_fn_bAreEquivalent(hPreviousMatrix, hCurrentMatrix) == 0))
+    {
+        HIE_fn_vRefreshHierarchy(hSupObj);
+    }
+    MEC_fn_vInitMatrix(p_stDynamic);
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)
+    {
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+        {
+            stMove.m_stLinear.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX;
+            stMove.m_stLinear.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY;
+            stMove.m_stLinear.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ;
+            stMove.m_stAngular.m_xAngle = 0.0f;
+            stMove.m_stAngular.m_stAxis.xX = 0.0f; stMove.m_stAngular.m_stAxis.xY = 0.0f; stMove.m_stAngular.m_stAxis.xZ = 0.0f;
+            p_stReport->m_stAbsoluteCurrPosition.m_stLinear.xX = stMove.m_stLinear.xX;
+            p_stReport->m_stAbsoluteCurrPosition.m_stLinear.xY = stMove.m_stLinear.xY;
+            p_stReport->m_stAbsoluteCurrPosition.m_stLinear.xZ = stMove.m_stLinear.xZ;
+            p_stReport->m_stAbsoluteCurrPosition.m_stAngular.m_xAngle = stMove.m_stAngular.m_xAngle;
+            p_stReport->m_stAbsoluteCurrPosition.m_stAngular.m_stAxis.xX = stMove.m_stAngular.m_stAxis.xX;
+            p_stReport->m_stAbsoluteCurrPosition.m_stAngular.m_stAxis.xY = stMove.m_stAngular.m_stAxis.xY;
+            p_stReport->m_stAbsoluteCurrPosition.m_stAngular.m_stAxis.xZ = stMove.m_stAngular.m_stAxis.xZ;
+        }
+    }
+    MEC_fn_vFillCollisionReport(p_stDynamic);
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+    {
+        p_stReport->m_ulPrevSurfaceState = p_stReport->m_ulCurrSurfaceState;
+    }
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_ucNbFrame = 1;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeSpeed.xX = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeSpeed.xY = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeSpeed.xZ = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stProposeSpeed.xX = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stProposeSpeed.xY = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stProposeSpeed.xZ = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xX = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xY = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xZ = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSafeTranslation.xX = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSafeTranslation.xY = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stSafeTranslation.xZ = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xX = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xY = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xZ = 0.0f;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= ~0x4000;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFFFF7FFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFFFEFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFFFDFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFFFBFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFFF7FFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFFEFFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFFDFFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFFBFFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFF7FFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFEFFFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xFDFFFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0xDFFFFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags &= 0x01FFFFFF;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= ~0x10;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= ~0x1000;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0)
+    {
+        if (g_stReport.m_ulCurrSurfaceState != 0)
+        {
+            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide = MEC_fn_xGetSlide(p_stDynamic, &g_stReport.m_stObstacle);
+        }
+        else
+        {
+            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide = 0.0f;
+        }
+    }
+    if ((MEC_fn_xGetSlide(p_stDynamic, &g_stReport.m_stCharacter) != 0.0f) && (g_stReport.m_ulCurrSurfaceState & 1))
+    {
+        p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x20000;
+    }
+    else
+    {
+        p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= 0xFFFDFFFF;
+    }
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0)
+    {
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xX = 0.0f;
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xY = 0.0f;
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xZ = 0.0f;
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stAddSpeed.xX = 0.0f;
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stAddSpeed.xY = 0.0f;
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stAddSpeed.xZ = 0.0f;
+    }
+    return p_stDynamic;
 }
+

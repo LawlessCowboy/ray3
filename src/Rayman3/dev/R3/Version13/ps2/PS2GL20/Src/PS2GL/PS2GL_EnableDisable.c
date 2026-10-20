@@ -5,6 +5,9 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+struct tagPS2glVector4 { float f[4]; } __attribute__((aligned(16)));
+struct tagPS2glMatrix4 { float f[4][4]; } __attribute__((aligned(16)));
+
 typedef struct anon_0 anon_0;
 typedef struct anon_1 anon_1;
 typedef struct anon_2 anon_2;
@@ -113,17 +116,18 @@ struct anon_1 {
 };
 
 struct anon_2 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
-};
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon2[6]; /* +0x2..0x7 */
+} __attribute__((aligned(4)));
 
 struct _sceDmaTag {
     unsigned short qwc; /* +0x0 */
@@ -394,21 +398,22 @@ struct anon_30 {
 };
 
 struct anon_28 {
-    unsigned long CLAMP : 1; /* bit 0, byte +0x0 */
-    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
-};
+    unsigned char CLAMP : 1; /* bit 0, byte +0x0 */
+    unsigned char pad01[7]; /* +0x1 */
+} __attribute__((aligned(4)));
 
 struct anon_24 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
-};
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
+} __attribute__((aligned(4)));
 
 struct anon_38 {
     unsigned long PABE : 1; /* bit 0, byte +0x0 */
@@ -489,61 +494,62 @@ struct anon_25 {
 };
 
 struct anon_36 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
-};
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
+} __attribute__((aligned(4)));
 
 union anon_35 {
     signed char bData[16]; /* +0x0 */
@@ -1079,8 +1085,8 @@ struct tagGLcontext {
     float (*pvColorRange)[4]; /* +0x6c18 */
     int pfAlpha; /* +0x6c1c */
     int pfShininess; /* +0x6c20 */
-    int pnColorMatMasks; /* +0x6c24 */
-    int pbFogging; /* +0x6c28 */
+    int* pnColorMatMasks; /* +0x6c24 */
+    unsigned char* pbFogging; /* +0x6c28 */
     int peFogMode; /* +0x6c2c */
     int pfFogDensity; /* +0x6c30 */
     int pfFogLinearStart; /* +0x6c34 */
@@ -1088,7 +1094,7 @@ struct tagGLcontext {
     int pbTriangleFan; /* +0x6c3c */
     int pnClipMask; /* +0x6c40 */
     int piClipStep; /* +0x6c44 */
-    int pbNormalize; /* +0x6c48 */
+    unsigned char* pbNormalize; /* +0x6c48 */
     int piReturnAddress; /* +0x6c4c */
     int piEntryAddress; /* +0x6c50 */
     int peClippingMode; /* +0x6c54 */
@@ -1113,13 +1119,17 @@ struct tagGLcontext {
     unsigned char VU1Package[10000]; /* +0x6ca0 */
 };
 
+void PS2glSDLInstancing(unsigned int* pIDs);
+void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewValue);
+void WaitDMAFromSPR(void);
+
 tagGLcontext g_PS2glContext;
 float vColorLimit255[4];
 float vColorLimit128[4];
 tagSPRInfo g_stSPRInfo;
 unsigned int uiMaxVifDmaBufLength;
-int PS2glAllocator64;
-int PS2glLiberator;
+void* (*PS2glAllocator64)(unsigned int);
+void (*PS2glLiberator)(void*);
 float g_fBSMultiplicator;
 int g_aDmaTag;
 tagGScontext g_gsContext;
@@ -1217,7 +1227,141 @@ _GL_BUFFERINFO g_stBufferInfo;
  */
 void impPS2glHint(unsigned int target, unsigned int mode)
 {
-    /* TODO: decompile from asm/... */
+    switch (target)
+    {
+    case 0xF30:
+        g_aDmaTag = mode;
+        break;
+    case 0xF11:
+        g_PS2glContext.uiBoundingSphereBits = mode;
+        break;
+    case 0xF09:
+        g_PS2glContext.uiFastPathBits = mode;
+        break;
+    case 0xF10:
+        if ((mode & 0x600) != (g_PS2glContext.uiDmaOmitDataBits & 0x600))
+        {
+            if (mode & 0x200)
+                *(int*)g_PS2glContext.pnColorMatMasks |= 0x200;
+            else
+                *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200;
+            if (mode & 0x400)
+                *(int*)g_PS2glContext.pnColorMatMasks |= 0x100;
+            else
+                *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100;
+        }
+        g_PS2glContext.uiDmaOmitDataBits = mode;
+        break;
+    case 0x450:
+        g_PS2glContext.eClippingFunction = mode;
+        break;
+    case 0xF08:
+        g_PS2glContext.usDontUpdateBits = mode;
+        break;
+    case 0x451:
+        g_PS2glContext.bAlphaChannelReduce = mode;
+        break;
+    case 0xF42:
+        g_fBSMultiplicator = *(float*)mode;
+        break;
+    case 0xF15:
+        g_PS2glContext.uiStaticDisplayListMaxSize = mode;
+        break;
+    case 0xF16:
+        g_PS2glContext.uiStaticDisplayListBits &= ~0xFFFFFF;
+        g_PS2glContext.uiStaticDisplayListBits |= (mode & 0xFFFFFF);
+        break;
+    case 0xF17:
+        g_PS2glContext.ucSDLObjectReserveSize = mode;
+        break;
+    case 0xF22:
+        PS2glSDLInstancing((unsigned int*)mode);
+        break;
+    case 0x439:
+        g_PS2glContext.iMipMapCoeff = (int)mode - 0x800;
+        break;
+    case 0x441:
+        if (mode == 0)
+            mode = 0x10000;
+        {
+            unsigned int uiHalf = mode >> 1;
+            mode = uiHalf >> 4;
+        }
+        if (uiMaxVifDmaBufLength != mode)
+        {
+            uiMaxVifDmaBufLength = mode;
+            if (g_PS2glContext.pVIFDMABuf != NULL)
+                PS2glLiberator((void*)((unsigned int)g_PS2glContext.pVIFDMABufUnaligned & 0xCFFFFFFF));
+            g_PS2glContext.pVIFDMABufUnaligned = (float(*)[4])((unsigned int)PS2glAllocator64((uiMaxVifDmaBufLength << 5) + 0x40) | 0x30000000);
+            g_PS2glContext.pVIFDMABuf = (float(*)[4])((((unsigned int)g_PS2glContext.pVIFDMABufUnaligned) + 0x3F) & ~0x3F);
+            g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFDMABuf; g_PS2glContext.pVIFInBuf = g_PS2glContext.pVIFDMABuf;
+            g_PS2glContext.pVIFOutBuf = &g_PS2glContext.pVIFDMABuf[uiMaxVifDmaBufLength];
+        }
+        break;
+    case 0x442:
+        if (g_PS2glContext.eSPRMode != mode)
+        {
+            if (g_stSPRInfo.uiState & 1)
+                WaitDMAFromSPR();
+            if (mode == 1)
+                g_stSPRInfo.uiState = 4;
+            else if (mode == 0)
+                g_stSPRInfo.uiState = 0;
+            else
+                g_stSPRInfo.uiState = 8;
+            g_PS2glContext.eSPRMode = mode;
+        }
+        break;
+    case 0x443:
+        g_PS2glContext.eTexConvMode = mode;
+        break;
+    case 0x445:
+        g_PS2glContext.eClutConvMode = mode;
+        break;
+    case 0x444:
+        g_PS2glContext.eTexUserMaintainMode = mode;
+        break;
+    case 0xF05:
+        if (mode == 1)
+            g_PS2glContext.nEnableBits |= 0x40000;
+        else
+            g_PS2glContext.nEnableBits &= ~0x40000;
+        break;
+    case 0x446:
+        g_PS2glContext.uiMotionBlurIntensity = mode;
+        break;
+    case 0x447:
+        g_PS2glContext.bSPRSynchronization = mode;
+        break;
+    case 0x449:
+    {
+        unsigned int uiDepth;
+        if (mode >= 0x20)
+            uiDepth = 0x20;
+        else
+            uiDepth = 0x10;
+        g_PS2glContext.iAccumDepth = uiDepth;
+    }
+    break;
+    case 0xF40:
+        *(struct tagPS2glVector4*)vColorLimit128 = *(struct tagPS2glVector4*)mode;
+        break;
+    case 0xF41:
+        *(struct tagPS2glVector4*)vColorLimit255 = *(struct tagPS2glVector4*)mode;
+        break;
+    case 0xF12:
+        *(struct tagPS2glMatrix4*)&g_PS2glContext.mFrustumNormal[0][0] = *(struct tagPS2glMatrix4*)mode;
+        break;
+    case 0xF13:
+        *(struct tagPS2glMatrix4*)&g_PS2glContext.mGuardBandNormal[0][0] = *(struct tagPS2glMatrix4*)mode;
+        break;
+    case 0xF43:
+    case 0xF44:
+    case 0xF45:
+    case 0xF46:
+        PS2glInternalSetScreenCalebration(target, mode);
+        break;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 1024–1026 */
@@ -1401,7 +1545,282 @@ void impPS2glCullFace(unsigned int mode)
  */
 unsigned char impPS2glIsEnabled(unsigned int cap)
 {
-    /* TODO: decompile from asm/... */
+    switch (cap)
+    {
+    case 0xB50:
+        if (g_PS2glContext.nLightBits & 0x400)
+            return 1;
+        break;
+    case 0xDE1:
+        if (g_PS2glContext.nTextureEnableBits & (g_PS2glContext.iCurTextureSet == 0 ? 0x2 : 0x200))
+            return 1;
+        break;
+    case 0xBC0:
+        if (g_PS2glContext.nEnableBits & 0x400)
+            return 1;
+        break;
+    case 0xD80:
+        if (g_PS2glContext.nEvaluatorBits & 0x10000000)
+            return 1;
+        break;
+    case 0xBE2:
+        if (g_PS2glContext.nEnableBits & 0x100)
+            return 1;
+        break;
+    case 0xB57:
+        if (g_PS2glContext.nLightBits & 0x200)
+            return 1;
+        break;
+    case 0xB44:
+        if (g_PS2glContext.nEnableBits & 0x2000)
+            return 1;
+        break;
+    case 0xB71:
+        if (g_PS2glContext.nEnableBits & 0x800)
+            return 1;
+        break;
+    case 0xBD0:
+        if (g_PS2glContext.nEnableBits & 0x200)
+            return 1;
+        break;
+    case 0xB60:
+        if (g_PS2glContext.nEnableBits & 0x80)
+            return 1;
+        break;
+    case 0x4000:
+        if (g_PS2glContext.nLightBits & 0x1)
+            return 1;
+        break;
+    case 0x4001:
+        if (g_PS2glContext.nLightBits & 0x2)
+            return 1;
+        break;
+    case 0x4002:
+        if (g_PS2glContext.nLightBits & 0x4)
+            return 1;
+        break;
+    case 0x4003:
+        if (g_PS2glContext.nLightBits & 0x8)
+            return 1;
+        break;
+    case 0x4004:
+        if (g_PS2glContext.nLightBits & 0x10)
+            return 1;
+        break;
+    case 0x4005:
+        if (g_PS2glContext.nLightBits & 0x20)
+            return 1;
+        break;
+    case 0x4006:
+        if (g_PS2glContext.nLightBits & 0x40)
+            return 1;
+        break;
+    case 0x4007:
+        if (g_PS2glContext.nLightBits & 0x80)
+            return 1;
+        break;
+    case 0xB20:
+        if (g_PS2glContext.nEnableBits & 0x2)
+            return 1;
+        break;
+    case 0xB24:
+        if (g_PS2glContext.nEnableBits & 0x4)
+            return 1;
+        break;
+    case 0xBF1:
+        if (g_PS2glContext.nEnableBits & 0x1000)
+            return 1;
+        break;
+    case 0xD90:
+        if (g_PS2glContext.nEvaluatorBits & 0x400)
+            return 1;
+        break;
+    case 0xD91:
+        if (g_PS2glContext.nEvaluatorBits & 0x800)
+            return 1;
+        break;
+    case 0xD92:
+        if (g_PS2glContext.nEvaluatorBits & 0x1000)
+            return 1;
+        break;
+    case 0xD93:
+        if (g_PS2glContext.nEvaluatorBits & 0x10)
+            return 1;
+        break;
+    case 0xD94:
+        if (g_PS2glContext.nEvaluatorBits & 0x20)
+            return 1;
+        break;
+    case 0xD95:
+        if (g_PS2glContext.nEvaluatorBits & 0x40)
+            return 1;
+        break;
+    case 0xD96:
+        if (g_PS2glContext.nEvaluatorBits & 0x80)
+            return 1;
+        break;
+    case 0xD97:
+        if (g_PS2glContext.nEvaluatorBits & 0x100)
+            return 1;
+        break;
+    case 0xD98:
+        if (g_PS2glContext.nEvaluatorBits & 0x200)
+            return 1;
+        break;
+    case 0xDB0:
+        if (g_PS2glContext.nEvaluatorBits & 0x400000)
+            return 1;
+        break;
+    case 0xDB1:
+        if (g_PS2glContext.nEvaluatorBits & 0x800000)
+            return 1;
+        break;
+    case 0xDB2:
+        if (g_PS2glContext.nEvaluatorBits & 0x1000000)
+            return 1;
+        break;
+    case 0xDB3:
+        if (g_PS2glContext.nEvaluatorBits & 0x10000)
+            return 1;
+        break;
+    case 0xDB4:
+        if (g_PS2glContext.nEvaluatorBits & 0x20000)
+            return 1;
+        break;
+    case 0xDB5:
+        if (g_PS2glContext.nEvaluatorBits & 0x40000)
+            return 1;
+        break;
+    case 0xDB6:
+        if (g_PS2glContext.nEvaluatorBits & 0x80000)
+            return 1;
+        break;
+    case 0xDB7:
+        if (g_PS2glContext.nEvaluatorBits & 0x100000)
+            return 1;
+        break;
+    case 0xDB8:
+        if (g_PS2glContext.nEvaluatorBits & 0x200000)
+            return 1;
+        break;
+    case 0xBA1:
+        if (g_PS2glContext.nLightBits & 0x100)
+            return 1;
+        break;
+    case 0xB10:
+        if (g_PS2glContext.nEnableBits & 0x1)
+            return 1;
+        break;
+    case 0xB41:
+        if (g_PS2glContext.nEnableBits & 0x8)
+            return 1;
+        break;
+    case 0xB42:
+        if (g_PS2glContext.nEnableBits & 0x10)
+            return 1;
+        break;
+    case 0xC11:
+        if (g_PS2glContext.nEnableBits & 0x20)
+            return 1;
+        break;
+    case 0xB90:
+        if (g_PS2glContext.nEnableBits & 0x40)
+            return 1;
+        break;
+    case 0xDE0:
+        if (g_PS2glContext.nTextureEnableBits & (g_PS2glContext.iCurTextureSet == 0 ? 0x1 : 0x100))
+            return 1;
+        break;
+    case 0x8513:
+        if (g_PS2glContext.nTextureEnableBits & 0x8)
+            return 1;
+        break;
+    case 0x81FB:
+        if (g_PS2glContext.nTextureEnableBits & 0x10)
+            return 1;
+        break;
+    case 0xC63:
+        if (g_PS2glContext.pCurTexture->nTexGenBits & 0x8)
+            return 1;
+        break;
+    case 0xC62:
+        if (g_PS2glContext.pCurTexture->nTexGenBits & 0x8)
+            return 1;
+        break;
+    case 0xC60:
+        if (g_PS2glContext.pCurTexture->nTexGenBits & 0x8)
+            return 1;
+        break;
+    case 0xC61:
+        if (g_PS2glContext.pCurTexture->nTexGenBits & 0x8)
+            return 1;
+        break;
+    case 0x8076:
+        if (g_PS2glContext.nClientEnableBits & (g_PS2glContext.iCurClientTextureSet == 0 ? 0x1 : 0x80))
+            return 1;
+        break;
+    case 0x8079:
+        if (g_PS2glContext.nClientEnableBits & 0x2)
+            return 1;
+        break;
+    case 0x8077:
+        if (g_PS2glContext.nClientEnableBits & 0x4)
+            return 1;
+        break;
+    case 0x8075:
+        if (g_PS2glContext.nClientEnableBits & 0x8)
+            return 1;
+        break;
+    case 0x8078:
+        if (g_PS2glContext.nClientEnableBits & (g_PS2glContext.iCurClientTextureSet == 0 ? 0x10 : 0x40))
+            return 1;
+        break;
+    case 0x8074:
+        if (g_PS2glContext.nClientEnableBits & 0x20)
+            return 1;
+        break;
+    case 0xF01:
+        if (g_PS2glContext.nEnableBits & 0x4000)
+            return 1;
+        break;
+    case 0xF02:
+        if (g_PS2glContext.nEnableBits & 0x8000)
+            return 1;
+        break;
+    case 0xF03:
+        if (g_PS2glContext.nEnableBits & 0x10000)
+            return 1;
+        break;
+    case 0xF04:
+        if (g_PS2glContext.nEnableBits & 0x20000)
+            return 1;
+        break;
+    case 0x3000:
+        if (g_PS2glContext.nClipBits & 0x1)
+            return 1;
+        break;
+    case 0x3001:
+        if (g_PS2glContext.nClipBits & 0x2)
+            return 1;
+        break;
+    case 0x3002:
+        if (g_PS2glContext.nClipBits & 0x4)
+            return 1;
+        break;
+    case 0x3003:
+        if (g_PS2glContext.nClipBits & 0x8)
+            return 1;
+        break;
+    case 0x3004:
+        if (g_PS2glContext.nClipBits & 0x10)
+            return 1;
+        break;
+    case 0x3005:
+        if (g_PS2glContext.nClipBits & 0x20)
+            return 1;
+        break;
+    }
+    return 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 373–707 */
@@ -1928,6 +2347,257 @@ void impPS2glDisable(unsigned int cap)
  */
 void impPS2glEnable(unsigned int cap)
 {
-    unsigned char zTst;
-    /* TODO: decompile from asm/... */
+    switch (cap)
+    {
+    case 0xB50:
+        g_PS2glContext.nLightBits |= 0x400;
+        break;
+    case 0xDE1:
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200);
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        break;
+    case 0xBC0:
+        g_PS2glContext.nEnableBits |= 0x400;
+        g_gsContext.TEST_1.ATE = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        break;
+    case 0xD80:
+        g_PS2glContext.nEvaluatorBits |= 0x10000000;
+        break;
+    case 0xBE2:
+        g_PS2glContext.nEnableBits |= 0x100;
+        g_gsContext.PRMODE.ABE = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        break;
+    case 0xB57:
+        g_PS2glContext.nLightBits |= 0x200;
+        g_PS2glContext.pnColorMatMasks[0] |= 1;
+        break;
+    case 0xB58:
+        g_PS2glContext.nLightBits &= ~0x400;
+        g_PS2glContext.bPointLighting = 1;
+        break;
+    case 0xB44:
+        g_PS2glContext.bCullfaceChanged = 1;
+        g_PS2glContext.nEnableBits |= 0x2000;
+        break;
+    case 0xB71:
+        g_PS2glContext.nEnableBits |= 0x800;
+        {
+            unsigned int uiZTST = 1;
+            g_gsContext.TEST_1.ZTE = 1;
+            g_gsContext.ModFlgs.TEST_1_Modified = 1;
+            switch (g_PS2glContext.eDepthFunc)
+            {
+            case 0x200:
+                uiZTST = 0;
+                break;
+            case 0x201:
+                uiZTST = 3;
+                break;
+            case 0x202:
+                break;
+            case 0x203:
+                uiZTST = 2;
+                break;
+            case 0x204:
+                break;
+            case 0x205:
+                break;
+            case 0x206:
+                break;
+            case 0x207:
+                break;
+            }
+            g_gsContext.TEST_1.ZTST = uiZTST;
+            g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        }
+        break;
+    case 0xBD0:
+        g_PS2glContext.nEnableBits |= 0x200;
+        g_gsContext.COLCLAMP.CLAMP = 1;
+        g_gsContext.ModFlgs.COLCLAMP_Modified = 1;
+        break;
+    case 0xB60:
+        g_PS2glContext.nEnableBits |= 0x80;
+        g_gsContext.PRMODE.FGE = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        g_PS2glContext.pbFogging[0] = 1;
+        break;
+    case 0xBA1:
+        g_PS2glContext.nLightBits |= 0x100;
+        g_PS2glContext.pbNormalize[0] = 1;
+        break;
+    case 0x4000:
+        g_PS2glContext.nLightBits |= 0x1;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4001:
+        g_PS2glContext.nLightBits |= 0x2;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4002:
+        g_PS2glContext.nLightBits |= 0x4;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4003:
+        g_PS2glContext.nLightBits |= 0x8;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4004:
+        g_PS2glContext.nLightBits |= 0x10;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4005:
+        g_PS2glContext.nLightBits |= 0x20;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4006:
+        g_PS2glContext.nLightBits |= 0x40;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0x4007:
+        g_PS2glContext.nLightBits |= 0x80;
+        g_PS2glContext.bLightsChanged = 1;
+        break;
+    case 0xB20:
+        g_PS2glContext.nEnableBits |= 0x2;
+        break;
+    case 0xB24:
+        g_PS2glContext.nEnableBits |= 0x4;
+        break;
+    case 0xBF1:
+        g_PS2glContext.nEnableBits |= 0x1000;
+        break;
+    case 0xD90:
+        g_PS2glContext.nEvaluatorBits |= 0x400;
+        break;
+    case 0xD91:
+        g_PS2glContext.nEvaluatorBits |= 0x800;
+        break;
+    case 0xD92:
+        g_PS2glContext.nEvaluatorBits |= 0x1000;
+        break;
+    case 0xD93:
+        g_PS2glContext.nEvaluatorBits |= 0x10;
+        break;
+    case 0xD94:
+        g_PS2glContext.nEvaluatorBits |= 0x20;
+        break;
+    case 0xD95:
+        g_PS2glContext.nEvaluatorBits |= 0x40;
+        break;
+    case 0xD96:
+        g_PS2glContext.nEvaluatorBits |= 0x80;
+        break;
+    case 0xD97:
+        g_PS2glContext.nEvaluatorBits |= 0x100;
+        break;
+    case 0xD98:
+        g_PS2glContext.nEvaluatorBits |= 0x200;
+        break;
+    case 0xDB0:
+        g_PS2glContext.nEvaluatorBits |= 0x400000;
+        break;
+    case 0xDB1:
+        g_PS2glContext.nEvaluatorBits |= 0x800000;
+        break;
+    case 0xDB2:
+        g_PS2glContext.nEvaluatorBits |= 0x1000000;
+        break;
+    case 0xDB3:
+        g_PS2glContext.nEvaluatorBits |= 0x10000;
+        break;
+    case 0xDB4:
+        g_PS2glContext.nEvaluatorBits |= 0x20000;
+        break;
+    case 0xDB5:
+        g_PS2glContext.nEvaluatorBits |= 0x40000;
+        break;
+    case 0xDB6:
+        g_PS2glContext.nEvaluatorBits |= 0x80000;
+        break;
+    case 0xDB7:
+        g_PS2glContext.nEvaluatorBits |= 0x100000;
+        break;
+    case 0xDB8:
+        g_PS2glContext.nEvaluatorBits |= 0x200000;
+        break;
+    case 0xB10:
+        g_PS2glContext.nEnableBits |= 0x1;
+        break;
+    case 0xB41:
+        g_PS2glContext.nEnableBits |= 0x8;
+        break;
+    case 0xB42:
+        g_PS2glContext.nEnableBits |= 0x10;
+        break;
+    case 0xC11:
+        g_PS2glContext.nEnableBits |= 0x20;
+        impPS2glScissor((int)g_PS2glContext.vScissorBox[0], (int)g_PS2glContext.vScissorBox[1], (int)g_PS2glContext.vScissorBox[2], (int)g_PS2glContext.vScissorBox[3]);
+        break;
+    case 0xB90:
+        g_PS2glContext.nEnableBits |= 0x40;
+        break;
+    case 0xDE0:
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0 ? 1 : 0x100);
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        break;
+    case 0x8513:
+        g_PS2glContext.nTextureEnableBits |= 0x8;
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        g_PS2glContext.eOldBeginMode = ~0;
+        break;
+    case 0x81FB:
+        g_PS2glContext.nTextureEnableBits |= 0x10;
+        break;
+    case 0xC63:
+        g_PS2glContext.pCurTexture->nTexGenBits |= 0x8;
+        break;
+    case 0xC62:
+        g_PS2glContext.pCurTexture->nTexGenBits |= 0x4;
+        break;
+    case 0xC60:
+        g_PS2glContext.pCurTexture->nTexGenBits |= 0x1;
+        break;
+    case 0xC61:
+        g_PS2glContext.pCurTexture->nTexGenBits |= 0x2;
+        break;
+    case 0xF01:
+        g_PS2glContext.nEnableBits |= 0x4000;
+        break;
+    case 0xF02:
+        g_PS2glContext.nEnableBits |= 0x8000;
+        break;
+    case 0xF03:
+        g_PS2glContext.nEnableBits |= 0x10000;
+        break;
+    case 0xF04:
+        g_PS2glContext.nEnableBits |= 0x20000;
+        break;
+    case 0xF05:
+        g_PS2glContext.nEnableBits |= 0x40000;
+        break;
+    case 0x3000:
+        g_PS2glContext.nClipBits |= 0x1;
+        break;
+    case 0x3001:
+        g_PS2glContext.nClipBits |= 0x2;
+        break;
+    case 0x3002:
+        g_PS2glContext.nClipBits |= 0x4;
+        break;
+    case 0x3003:
+        g_PS2glContext.nClipBits |= 0x8;
+        break;
+    case 0x3004:
+        g_PS2glContext.nClipBits |= 0x10;
+        break;
+    case 0x3005:
+        g_PS2glContext.nClipBits |= 0x20;
+        break;
+    }
 }

@@ -160,7 +160,7 @@ struct IPT_tdstInput_ {
 };
 
 IPT_tdstInput_ IPT_g_hInputStructure;
-unsigned int IPT_g_ulPadAndJoyButtonFlag;
+unsigned int IPT_g_ulPadAndJoyButtonFlag[16];
 IPT_tdstKeyAndPadDefine_* IPT_gd_hKeyAndPadDefine;
 extern IPT_tdstScriptValue_ IPT_g_hScriptKeyValue[];
 
@@ -181,12 +181,16 @@ extern IPT_tdstKeyWordElement_* IPT_g_hNextParameter;
 extern IPT_tdstEntryElement_* g_h_ActualEntryInput;
 extern unsigned char (*IPT_p_fn_bIsKeyWordValid[28])(void);
 extern unsigned char g_ucIPTModuleId;
+unsigned int INO_fn_ulJoyPreviousButtons(stDevice* _hDev);
 void Erm_fn_ClearLastError(unsigned int ulChannelId);
 void Erm_fn_v_UpdateLastError();
 
 unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement)
 {
-    unsigned char ucReturn;
+    /* The retail body keeps the keyword result in a saved register and masks
+     * it once on return (andi v0,s0,0xff), so the local is int-sized even
+     * though the debug record types it as unsigned char. */
+    int ucReturn;
 
     g_h_ActualEntryInput = _hEntryElement;
     _hEntryElement->xAnalogicValue = 0.0f;
@@ -231,10 +235,28 @@ unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement)
  */
 unsigned char IPT_fn_bAButtonPadJustPressed(void)
 {
-    stDevice* hPad;
     int j;
     int i;
-    /* TODO: decompile from asm/... */
+    stDevice* hPad;
+
+    if (IPT_g_hInputStructure.ucOnePadActivate == 2)
+    {
+        for (i = 2; i < 18; i++)
+        {
+            j = 12;
+            hPad = IPT_g_hInputStructure.a_stDevice[i].hDeviceHandle;
+            do
+            {
+                if (((IPT_g_ulPadAndJoyButtonFlag[j - 12] & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == IPT_g_ulPadAndJoyButtonFlag[j - 12]) &&
+                    !((IPT_g_ulPadAndJoyButtonFlag[j - 12] & INO_fn_ulJoyPreviousButtons(hPad)) == IPT_g_ulPadAndJoyButtonFlag[j - 12]))
+                {
+                    return 1;
+                }
+                j++;
+            } while (j <= 27);
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 161–179 */

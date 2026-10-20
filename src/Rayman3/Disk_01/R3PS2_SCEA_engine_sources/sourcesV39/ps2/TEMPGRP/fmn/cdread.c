@@ -33,6 +33,18 @@ int g_bUsingCache;
 static _CD_FILE_Internal_ gs_CD_Files[20];
 static unsigned char gs_CD_Buffer[32768];
 
+void InitSectorCache(void);
+extern int sceCdInit(int mode);
+extern int sceSifInitRpc(void* pRpc);
+extern int sceCdMmode(int media);
+extern char* Strchr(char* s, int c);
+extern char* Strcat(char* s1, char* s2);
+extern char* strcpy(char* dest, const char* src);
+extern int strlen(const char* s);
+extern char* strupr(char* s);
+extern char* strstr(const char* s, const char* sub);
+extern int tolower(int c);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 892–935 */
 /* addr: 0x00258540  size: 372 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -70,12 +82,47 @@ static unsigned char gs_CD_Buffer[32768];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void FMN_SCE_ConvertPathDos2Unix(char* buffer)
+char* FMN_SCE_ConvertPathDos2Unix(char* buffer)
 {
     char* p_cConverted;
     char* p_cToConvert;
-    char s_szFileName[512];
-    /* TODO: decompile from asm/... */
+    static char s_szFileName[512];
+
+    if ((p_cToConvert = Strchr(buffer, ':')) != NULL)
+    {
+        p_cToConvert++;
+    }
+    else
+    {
+        p_cToConvert = buffer;
+    }
+    strcpy(s_szFileName, "cdrom0:");
+    p_cConverted = s_szFileName + strlen(s_szFileName);
+    if (*p_cToConvert != '\\' && *p_cToConvert != '/')
+    {
+        *p_cConverted++ = '\\';
+    }
+    do
+    {
+        if (*p_cToConvert == '/')
+        {
+            *p_cConverted = '\\';
+            if (p_cConverted > s_szFileName) { if (p_cConverted[-1] == '\\')
+                p_cConverted--;
+            }
+        }
+        else if (*p_cToConvert == '\xE9' || *p_cToConvert == '\xE8')
+            *p_cConverted = 'e';
+        else if (*p_cToConvert == ' ')
+            *p_cConverted = '_';
+        else
+            *p_cConverted = tolower(*p_cToConvert);
+        p_cConverted++; } while (*p_cToConvert++);
+    p_cConverted = Strchr(s_szFileName, ':');
+    strupr(p_cConverted);
+    if (strstr(p_cConverted, ";1") == NULL)
+        Strcat(p_cConverted, ";1");
+    return s_szFileName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\fmn\cdread.c lines 949–949 */
@@ -348,5 +395,12 @@ int CD_OpenFile(char* FileName)
 void CD_Init(void)
 {
     int Handle;
-    /* TODO: decompile from asm/... */
+
+    CD_ProgressCallBack = 0; InitSectorCache();
+    sceCdInit(0);
+    sceSifInitRpc(0);
+    sceCdMmode(2);
+    for (Handle = 0; Handle < 20; Handle++) {
+        gs_CD_Files[Handle].FirstLogicalSector = 0;
+    }
 }

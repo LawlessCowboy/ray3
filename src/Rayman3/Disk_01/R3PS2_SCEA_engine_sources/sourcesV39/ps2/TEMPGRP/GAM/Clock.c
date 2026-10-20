@@ -10,6 +10,7 @@ typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalO
 typedef struct WP_tdstGraph_ WP_tdstGraph_;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct tdstAChannel_ tdstAChannel_;
+typedef struct stInterpolatedPosition stInterpolatedPosition;
 typedef struct tdstAlwaysActiveCharacter_ tdstAlwaysActiveCharacter_;
 typedef struct tdstComport_ tdstComport_;
 typedef struct tdstEngineObject_ tdstEngineObject_;
@@ -731,6 +732,26 @@ struct tdstEngineStructure_ {
     CINE_Manager_* stCineManager; /* +0x1b8c */
 };
 
+struct stInterpolatedPosition {
+    float stRot[4]; /* +0x0 */
+    float stRotSca[4]; /* +0x10 */
+    MTH3D_tdstVector_ stPos; /* +0x20 */
+    MTH3D_tdstVector_ stVecSca; /* +0x2c */
+    float xPercent; /* +0x38 */
+};
+
+struct tdstAChannel_ {
+    HIE_tdstSuperObject_* hSupObject; /* +0x0 */
+    HIE_tdstSuperObject_* hZoomSupObject; /* +0x4 */
+    tdstAChannel_* p_stNextActiveChannel; /* +0x8 */
+    tdstAChannel_* p_stFatherChannel; /* +0xc */
+    stInterpolatedPosition ax_InterpolatedPositions[2]; /* +0x10 */
+    unsigned char ucNbInterpolatedPositions; /* +0x88 */
+    unsigned char bControlledChannel; /* +0x89 */
+    unsigned char bLipsChannel; /* +0x8a */
+    unsigned char bActiveChannel; /* +0x8b */
+};
+
 unsigned long GAM_g_ulMatc;
 unsigned long GAM_g_ulMai;
 int g_iFalseTime;
@@ -745,6 +766,9 @@ float GAM_g_a_xMat[5];
 tdstEngineStructure_ g_stEngineStructure;
 unsigned int g_uiAnotherRandom;
 float g_xVideoFrameDurationInSeconds;
+
+float ceilf(float f);
+void* HMU_fn_p_vMalloc(unsigned int ulSize, unsigned char ucChannel);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 67–91 */
 /* addr: 0x0025de50  size: 212 bytes */
@@ -775,7 +799,21 @@ float g_xVideoFrameDurationInSeconds;
 void fn_vInitCSOList(tdstAChannel_** p_hChannelArray, unsigned int ulNumberOfChannels)
 {
     unsigned int ulI;
-    /* TODO: decompile from asm/... */
+
+    *p_hChannelArray = (tdstAChannel_*)HMU_fn_p_vMalloc(ulNumberOfChannels * sizeof(tdstAChannel_), 1);
+
+    for (ulI = 0; ulI < ulNumberOfChannels; ulI++)
+    {
+        (*p_hChannelArray)[ulI].hSupObject = NULL;
+        (*p_hChannelArray)[ulI].hZoomSupObject = NULL;
+        /* The retail code clears the +0x4 word twice; both stores are needed. */
+        (*p_hChannelArray)[ulI].hZoomSupObject = NULL;
+        (*p_hChannelArray)[ulI].p_stNextActiveChannel = NULL;
+        (*p_hChannelArray)[ulI].p_stFatherChannel = NULL;
+        (*p_hChannelArray)[ulI].bActiveChannel = 1;
+        (*p_hChannelArray)[ulI].bControlledChannel = 0;
+        (*p_hChannelArray)[ulI].bLipsChannel = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 500–509 */
@@ -1126,7 +1164,50 @@ unsigned int fn_ulDetermineUsefulDT(void)
     unsigned long i;
     float xFrameLengthInMs;
     int lResult;
-    /* TODO: decompile from asm/... */
+
+    xFrameLengthInMs = 1000.0f * g_stEngineStructure.stEngineTimer.xFrameLength;
+    lResult = (int)g_stEngineStructure.stEngineTimer.ulDeltaTimerCount;
+
+    if (g_iNoCropTime)
+    {
+        if (lResult == 0)
+            lResult = 30;
+        else if ((float)lResult > 8.0f * xFrameLengthInMs)
+            lResult = (int)(8.0f * xFrameLengthInMs);
+        return (unsigned int)lResult;
+    }
+
+    if ((float)lResult < xFrameLengthInMs)
+        lResult = (int)xFrameLengthInMs;
+    else if ((int)(8.0f * xFrameLengthInMs) < lResult)
+        lResult = (int)(8.0f * xFrameLengthInMs);
+
+    /* The retail code keeps the ceilf call but stores the un-converted delta. */
+    xAverage = ceilf(0.001f * (float)lResult / g_stEngineStructure.stEngineTimer.xFrameLength);
+    GAM_g_a_xMat[GAM_g_ulMai] = (float)lResult;
+
+    GAM_g_ulMai++;
+    GAM_g_ulMatc++;
+    if (GAM_g_ulMai >= 5)
+        GAM_g_ulMai = 0;
+
+    if (GAM_g_ulMatc >= 5)
+    {
+        GAM_g_ulMatc = 5;
+        xAverage = 0.0f;
+        for (i = 0; i < 5; i++)
+            xAverage += GAM_g_a_xMat[i];
+        xAverage /= 5.0f;
+    }
+    else
+    {
+        xAverage = 0.0f;
+        for (i = 0; i <= GAM_g_ulMatc; i++)
+            xAverage += GAM_g_a_xMat[i];
+        xAverage /= (float)(GAM_g_ulMatc + 1);
+    }
+
+    return (unsigned int)xAverage;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Clock.c lines 115–115 */

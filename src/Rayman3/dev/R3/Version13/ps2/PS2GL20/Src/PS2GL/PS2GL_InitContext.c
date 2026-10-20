@@ -667,60 +667,61 @@ struct anon_3 {
 };
 
 struct anon_4 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 struct tag_GLtexture_image {
@@ -860,16 +861,17 @@ struct anon_14 {
 };
 
 struct anon_15 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon15[6]; /* +0x2..0x7 */
 };
 
 struct tag_GLtexture {
@@ -928,8 +930,9 @@ struct anon_26 {
 };
 
 struct anon_18 {
-    unsigned long AC : 1; /* bit 0, byte +0x0 */
-    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+    unsigned char AC : 1; /* bit 0, byte +0x0 */
+    unsigned char pad01 : 7; /* bit 1, byte +0x0 */
+    unsigned char _extractor_padding_00[6]; /* explicit retail gap; +0x2..0x7 */
 };
 
 struct anon_23 {
@@ -992,15 +995,16 @@ struct anon_41 {
 };
 
 struct anon_37 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_22 {
@@ -1107,7 +1111,7 @@ struct anon_16 {
 
 unsigned int uiMaxVifDmaBufLength;
 int PS2glAllocator;
-int PS2glAllocator64;
+void* (*PS2glAllocator64)(unsigned int);
 int PS2glLiberator;
 int PS2glReallocator;
 volatile int g_FIELD;
@@ -1814,8 +1818,8 @@ void PS2glGet(unsigned int type, unsigned int pname, void* params)
  */
 void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb)
 {
-    return (void*)(((unsigned int)g_PS2glContext.pVIFDMABuf +
-        ((BufferNb + 1) * uiMaxVifDmaBufLength << 4)) & ~0xf);
+    return (void*)((unsigned int)(g_PS2glContext.pVIFDMABuf +
+        (BufferNb + 1) * uiMaxVifDmaBufLength) & 0x0FFFFFFF);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 837–891 */
@@ -1844,10 +1848,37 @@ void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int printf(const char* format, ...);
+void* memset(void* pDest, int iValue, unsigned int uiCount);
+void sceDmaReset(int iChannel);
+void sceDmaGetEnv(anon_16* pEnv);
+void sceDmaPutEnv(anon_16* pEnv);
+void sceGsResetPath(void);
+void PS2glInitContext(tagGLcontext* pCtx);
+void GsResetBuffer(void);
+void impPS2glShadeModel(unsigned int uiMode);
+void impPS2glDepthFunc(unsigned int uiFunc);
+int CreateSema(SemaParam* pParam);
+
 void PS2glInit(void)
 {
     anon_16 denv;
-    /* TODO: decompile from asm/... */
+    SemaParam sema;
+
+    printf("\n\n                       Open GL for PS2\n\n");
+    printf("                   Version %s  on SCE %s\n", "2.3 for Rayman3", "2.1.4");
+    printf("      Copyright by Ubisoft 1999-2001, all rights reserved\n\n");
+    sceDmaReset(1);
+    sceDmaGetEnv(&denv);
+    denv.notify = 0x100;
+    sceDmaPutEnv(&denv);
+    sceGsResetPath();
+    PS2glInitContext(&g_PS2glContext);
+    memset(&g_gsContext, 0, sizeof(g_gsContext)); GsResetBuffer();
+    g_gsContext.PRMODECONT.AC = 0; g_gsContext.ModFlgs.PRMODECONT_Modified = 1;
+    impPS2glShadeModel(0x1D01);
+    impPS2glDepthFunc(0x201);
+    sema.initCount = 0; sema.maxCount = 0; VBL_Sid = CreateSema(&sema);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 803–828 */
@@ -2056,9 +2087,79 @@ int VBLCallback(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* memcpy(void* pDest, const void* pSrc, unsigned int uiSize);
+void VU1SendPackage(_sceDmaTag* pTag, unsigned long ulArg);
+void gifSetTag(anon_1* pTag, unsigned long nLoop, unsigned long EOP, unsigned long PRE, unsigned long PRIM, unsigned long FLG, unsigned long nReg, unsigned char* pRegs);
+
 void InitVU1Package(tagGLcontext* pCtx)
 {
     int iOffset;
-    unsigned char regs[3];
-    /* TODO: decompile from asm/... */
+    static unsigned char regs[3];
+
+    iOffset = (int)&pCtx->VU1Package[0] - (int)&My_dma_next;
+    if ((unsigned int)&My_dma_end - (unsigned int)&My_dma_next >= 0x2711)
+    {
+        printf("Error: VU1 package buffer overflows.");
+        while (1);
+    }
+    memcpy(pCtx->VU1Package, &My_dma_next, (unsigned int)&My_dma_end - (unsigned int)&My_dma_next);
+    VU1SendPackage(&My_dma_start, 0);
+    VU1SendPackage(&My_dma_next, 0);
+    if (pCtx->pVIFDMABuf == NULL)
+    {
+        pCtx->pVIFDMABufUnaligned = (float (*)[4])((unsigned int)PS2glAllocator64((uiMaxVifDmaBufLength << 5) + 0x40) | 0x30000000);
+        pCtx->pVIFDMABuf = (float (*)[4])((((unsigned int)pCtx->pVIFDMABufUnaligned) + 0x3F) & ~0x3F);
+        pCtx->pVIFIBufTail = pCtx->pVIFDMABuf; pCtx->pVIFInBuf = pCtx->pVIFDMABuf;
+        pCtx->pVIFOutBuf = &pCtx->pVIFDMABuf[uiMaxVifDmaBufLength];
+    }
+    pCtx->pVU1_DMA_parameters = (_sceDmaTag*)((int)&My_dma_next + iOffset);
+    pCtx->pVU1_DMA_buf0 = (_sceDmaTag*)((int)&My_vertex_start0 + iOffset);
+    pCtx->pVU1_DMA_buf1 = (_sceDmaTag*)((int)&My_vertex_start1 + iOffset);
+    pCtx->pmClipping = (float (*)[4][4])((int)&mClipping + iOffset);
+    pCtx->pmNormal = (float (*)[4][4])((int)&mNormal + iOffset);
+    pCtx->pmClippingScreen = (float (*)[4][4])((int)&mClippingScreen + iOffset);
+    pCtx->pmLocalScreen = (float (*)[4][4])((int)&mLocalScreen + iOffset);
+    pCtx->pmModelView = (float (*)[4][4])((int)&mModelView + iOffset);
+    pCtx->pvClampLimit = (float (*)[4])((int)&vClampLimit + iOffset);
+    pCtx->pmD = (float (*)[4][4])((int)&mD + iOffset);
+    pCtx->pmVP = (float (*)[4][4])((int)&mVP + iOffset);
+    pCtx->pmS = (float (*)[4][4])((int)&mS + iOffset);
+    pCtx->pmh = (float (*)[4][4])((int)&mh + iOffset);
+    pCtx->pvAmbient = (float (*)[4])((int)&avv + iOffset);
+    pCtx->pvScreenScale = (float (*)[4])((int)pCtx->pvAmbient + 0x10);
+    pCtx->pvEmission = (float (*)[4])((int)pCtx->pvAmbient + 0x20);
+    pCtx->pvColorRange = (float (*)[4])((int)pCtx->pvAmbient + 0x30);
+    pCtx->pfAlpha = (int)&parameters + iOffset;
+    pCtx->pfShininess = pCtx->pfAlpha + 4;
+    pCtx->pnColorMatMasks = pCtx->pfAlpha + 8;
+    pCtx->pbFogging = pCtx->pfAlpha + 0xC;
+    pCtx->peFogMode = pCtx->pfAlpha + 0x10;
+    pCtx->pfFogDensity = pCtx->pfAlpha + 0x14;
+    pCtx->pfFogLinearStart = pCtx->pfAlpha + 0x18;
+    pCtx->pfFogLinearEnd = pCtx->pfAlpha + 0x1C;
+    pCtx->pbTriangleFan = pCtx->pfAlpha + 0x20;
+    pCtx->pnClipMask = pCtx->pfAlpha + 0x24;
+    pCtx->piClipStep = pCtx->pfAlpha + 0x28;
+    pCtx->pbNormalize = pCtx->pfAlpha + 0x2C;
+    pCtx->piReturnAddress = pCtx->pfAlpha + 0x30;
+    pCtx->piEntryAddress = pCtx->pfAlpha + 0x34;
+    pCtx->peClippingMode = pCtx->pfAlpha + 0x38;
+    pCtx->peUseClippingMode = pCtx->pfAlpha + 0x3C;
+    pCtx->pGifTagBuf0 = (anon_1*)((int)&First_Buf + iOffset);
+    pCtx->pGifTagBuf1 = (anon_1*)((int)&Next_Buf + iOffset);
+    pCtx->pVBuf0 = (float (*)[4])((int)&vBuf0 + iOffset);
+    pCtx->pNBuf0 = (float (*)[4])((int)&nBuf0 + iOffset);
+    pCtx->pCBuf0 = (float (*)[4])((int)&cBuf0 + iOffset);
+    pCtx->pTBuf0 = (float (*)[4])((int)&tBuf0 + iOffset);
+    pCtx->pVBuf1 = (float (*)[4])((int)&vBuf1 + iOffset);
+    pCtx->pNBuf1 = (float (*)[4])((int)&nBuf1 + iOffset);
+    pCtx->pCBuf1 = (float (*)[4])((int)&cBuf1 + iOffset);
+    pCtx->pTBuf1 = (float (*)[4])((int)&tBuf1 + iOffset);
+    pCtx->pCBuf0_b = (float (*)[4])((int)&cBuf0_b + iOffset);
+    pCtx->pTBuf0_b = (float (*)[4])((int)&tBuf0_b + iOffset);
+    pCtx->pCBuf1_b = (float (*)[4])((int)&cBuf1_b + iOffset);
+    pCtx->pTBuf1_b = (float (*)[4])((int)&tBuf1_b + iOffset);
+    pCtx->pMSCAL = (tagstVIFCode*)((int)&MSCAL_Code + iOffset);
+    gifSetTag(pCtx->pGifTagBuf0, 0, 1, 1, 0, 0, 3, regs);
+    gifSetTag(pCtx->pGifTagBuf1, 0, 1, 1, 0, 0, 3, regs);
 }

@@ -65,6 +65,20 @@ struct MTH3D_tdstVector_ {
     float xZ; /* +0x8 */
 };
 
+extern void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _p_stMatrix);
+extern void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _p_stMatrix, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+extern void MAT_fn_vCompose(MAT_tdstTransformation_* _p_stDest, MAT_tdstTransformation_* _p_stA, MAT_tdstTransformation_* _p_stB);
+extern float cosf(float _xAngle);
+extern float sinf(float _xAngle);
+
+/* R5900 abs.s: MWCC cannot emit it from plain C (fabsf lowers to a call). */
+inline float MTH_xAbs(float _xValue)
+{
+    float xResult;
+    asm { abs.s xResult, _xValue }
+    return xResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolMatr.c lines 76–78 */
 /* addr: 0x0026aa50  size: 52 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -111,13 +125,25 @@ HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int _lViewportNumber)
  */
 void fn_vTurnMatrixZ(MAT_tdstTransformation_* _p_stMatrix, float _xAngle)
 {
-    float xSin;
-    float xCos;
-    MTH3D_tdstVector_ K;
-    MTH3D_tdstVector_ J;
-    MTH3D_tdstVector_ I;
     MAT_tdstTransformation_ TmpMatrix;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ I;
+    MTH3D_tdstVector_ J;
+    MTH3D_tdstVector_ K;
+    float xCos;
+    float xSin;
+
+    MAT_fn_vSetIdentity(&TmpMatrix);
+    xCos = cosf(_xAngle);
+    xSin = sinf(_xAngle);
+    if (MTH_xAbs(xCos) < 0.0001f)
+        xCos = 0.0f;
+    if (MTH_xAbs(xSin) < 0.0001f)
+        xSin = 0.0f;
+    I.xX = xCos; I.xY = xSin; I.xZ = 0.0f;
+    J.xX = -xSin; J.xY = xCos; J.xZ = 0.0f;
+    K.xX = 0.0f; K.xY = 0.0f; K.xZ = 1.0f;
+    MAT_fn_vSetRotationVectors(&TmpMatrix, &I, &J, &K);
+    MAT_fn_vCompose(_p_stMatrix, _p_stMatrix, &TmpMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolMatr.c lines 99–119 */
@@ -150,11 +176,23 @@ void fn_vTurnMatrixZ(MAT_tdstTransformation_* _p_stMatrix, float _xAngle)
  */
 void fn_vTurnMatrixY(MAT_tdstTransformation_* _p_stMatrix, float _xAngle)
 {
-    float xSin;
-    float xCos;
-    MTH3D_tdstVector_ K;
-    MTH3D_tdstVector_ J;
-    MTH3D_tdstVector_ I;
     MAT_tdstTransformation_ TmpMatrix;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ I;
+    MTH3D_tdstVector_ J;
+    MTH3D_tdstVector_ K;
+    float xCos;
+    float xSin;
+
+    MAT_fn_vSetIdentity(&TmpMatrix);
+    xCos = cosf(_xAngle);
+    xSin = sinf(_xAngle);
+    if (MTH_xAbs(xCos) < 0.0001f)
+        xCos = 0.0f;
+    if (MTH_xAbs(xSin) < 0.0001f)
+        xSin = 0.0f;
+    I.xX = xCos; I.xY = 0.0f; I.xZ = -xSin;
+    J.xX = 0.0f; J.xY = 1.0f; J.xZ = 0.0f;
+    K.xX = xSin; K.xY = 0.0f; K.xZ = xCos;
+    MAT_fn_vSetRotationVectors(&TmpMatrix, &I, &J, &K);
+    MAT_fn_vCompose(_p_stMatrix, _p_stMatrix, &TmpMatrix);
 }

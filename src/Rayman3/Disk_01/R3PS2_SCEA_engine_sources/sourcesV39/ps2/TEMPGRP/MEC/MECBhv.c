@@ -21,6 +21,20 @@
     asm { madda.s _y1, _y2 }                                 \
     asm { madd.s _result, _z1, _z2 }
 
+/* Engine float-to-int conversion: the retail keeps the integer in $f30 and
+ * converts it straight back ("cvt.w.s $f30, x; mfc1 r, $f30"), which MWCC
+ * never selects on its own. */
+inline int MTH_M_xRealToLong(float _xValue)
+{
+    int _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -978,6 +992,41 @@ DNM_stMecReport g_stReport;
 int COL_g_lMaxNumberOfCollisions;
 int (*MEC_fn_iComp2ObstForCorners)(void*, void*);
 
+/* Recovered prefix of the engine timer structure: only the members this unit
+ * reads are reproduced, but their offsets are the retail ones. */
+typedef struct tdstEngineTimerStructure_ tdstEngineTimerStructure_;
+typedef struct tdstEngineStructure_ tdstEngineStructure_;
+
+struct tdstEngineTimerStructure_ {
+    unsigned int ulTrameNumber; /* +0x0 */
+    short sTimerHandle; /* +0x4 */
+    unsigned int ulCurrentTimerCount; /* +0x8 */
+    unsigned int ulDeltaTimerCount; /* +0xc */
+    unsigned int a_ulCounter[16]; /* +0x10 */
+    unsigned int ulUsefulDeltaTime; /* +0x50 */
+    unsigned int ulPauseTime; /* +0x54 */
+    float xFrameLength; /* +0x58 */
+};
+
+/* Recovered prefix of the engine structure: stEngineTimer.xFrameLength sits at
+ * +0xc0 in the retail global. */
+struct tdstEngineStructure_ {
+    unsigned char eEngineMode; /* +0x0 */
+    char szLevelName[30]; /* +0x1 */
+    char szNextLevelName[30]; /* +0x1f */
+    char szFirstLevelName[30]; /* +0x3d */
+    unsigned char eInputMode; /* +0x5b */
+    unsigned char eDisplayFixMode; /* +0x5c */
+    unsigned int ulDisplayMode; /* +0x60 */
+    unsigned char _extractor_padding_00[4]; /* +0x64..0x67 */
+    tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
+};
+
+extern tdstEngineStructure_ g_stEngineStructure;
+extern unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj);
+extern float ceilf(float xValue);
+void MEC_fn_vComputeSpeed(DNM_stDynamics* p_stDynamic, float xDT);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 64–91 */
 /* addr: 0x003053d0  size: 312 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -996,9 +1045,28 @@ int (*MEC_fn_iComp2ObstForCorners)(void*, void*);
  */
 int MEC_fn_lComputeCall(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT, float xCoef)
 {
+    float xX;
+    float xY;
+    float xZ;
+    float xSq;
+    float xDist;
+    float xSq2;
+    float xDist2;
     int lCall;
     int lNbFrame;
-    /* TODO: decompile from asm/... */
+    int bCustomBits;
+
+    xX = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xX - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX; xY = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xY - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY; xZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xZ - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ;
+    bCustomBits = ((fn_ulStandardGameGetCustomBitsSO(hSupObj) & 0x80000000) ^ 0x80000000) < 1; if (bCustomBits) {
+        MTH_SQR3_TO(xSq, xX, xY, xZ); MTH_SQRT_TO(xDist, xSq); return MTH_M_xRealToLong(1.0f + xCoef * (xDist / 0.7f));
+    } else {
+        lNbFrame = (int)ceilf(xDT / g_stEngineStructure.stEngineTimer.xFrameLength);
+        lCall = 1;
+        if (lNbFrame > 4) { MTH_SQR3_TO(xSq2, xX, xY, xZ); MTH_SQRT_TO(xDist2, xSq2); if (xDist2 <= 0.5f) { goto lEnd; }
+            lCall = 2; }
+    lEnd:
+        return lCall;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 2300–2605 */
@@ -1251,9 +1319,55 @@ void MEC_fn_vGroundGuess(DNM_stDynamics* p_stDynamic, float xDT)
 {
     float xNorm;
     MTH3D_tdstVector_ stVector;
+    MTH3D_tdstVector_ stResult;
     MTH3D_tdstVector_* p_stNormal;
     MAT_tdstTransformation_* hCurrentMatrix;
-    /* TODO: decompile from asm/... */
+    float xSq;
+    float xDot;
+    float xDeltaX;
+    float xDeltaY;
+    float xDeltaZ;
+    float xNormalX;
+    float xNormalY;
+    float xNormalZ;
+    float xInv;
+
+    p_stNormal = &p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal;
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+    if ((p_stNormal->xX == 0.0f) && (p_stNormal->xY == 0.0f) && (p_stNormal->xZ == 0.0f)) {
+        return;
+    }
+    xDeltaX = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xX - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX;
+    xDeltaY = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xY - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY;
+    xDeltaZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xZ - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ;
+    xNormalX = p_stNormal->xX;
+    xNormalY = p_stNormal->xY;
+    xNormalZ = p_stNormal->xZ;
+    MTH_DOT3_TO(xDot, xDeltaX, xNormalX, xDeltaY, xNormalY, xDeltaZ, xNormalZ);
+    MTH_SQR3_TO(xSq, xNormalX, xNormalY, xNormalZ);
+    MTH_SQRT_TO(xNorm, xSq);
+    if (xNorm != 0.0f) {
+        xInv = 1.0f / xNorm;
+        stVector.xX = xInv * xNormalX;
+        stVector.xY = xInv * xNormalY;
+        stVector.xZ = xInv * xNormalZ;
+    } else {
+        stVector = *p_stNormal;
+    }
+    stVector.xX = xDot * stVector.xX;
+    stVector.xY = xDot * stVector.xY;
+    stVector.xZ = xDot * stVector.xZ;
+    stResult.xX = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX + (xDeltaX - stVector.xX);
+    stResult.xY = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY + (xDeltaY - stVector.xY);
+    stResult.xZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ + (xDeltaZ - stVector.xZ);
+    if (hCurrentMatrix->eType == MAT_eTransform_Identity) {
+        hCurrentMatrix->eType = MAT_eTransform_Translation;
+    }
+    *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xX = *(int*)&stResult.xX;
+    *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xY = *(int*)&stResult.xY;
+    *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xZ = *(int*)&stResult.xZ;
+    hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+    MEC_fn_vComputeSpeed(p_stDynamic, xDT);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 1550–2269 */
@@ -2808,7 +2922,37 @@ void MEC_fn_vBaseObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperOb
     MAT_tdstTransformation_* hInitialMatrix;
     MAT_tdstTransformation_* hCurrentMatrix;
     int lObstacle;
-    /* TODO: decompile from asm/... */
+    unsigned int ulFlags;
+
+    hInitialMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+    ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x10;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+    if (fn_ucCollSetGetCollComputeFrequencySO(hSupObj) > 1) {
+        stInitialMatrix = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+        if (stInitialMatrix.eType == MAT_eTransform_Identity) {
+            stInitialMatrix.eType = MAT_eTransform_Translation;
+        }
+        *(int*)&stInitialMatrix.stTransformMatrix.stCol_3.xX = *(int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xX;
+        *(int*)&stInitialMatrix.stTransformMatrix.stCol_3.xY = *(int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xY;
+        *(int*)&stInitialMatrix.stTransformMatrix.stCol_3.xZ = *(int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xZ;
+        stInitialMatrix.stTransformMatrix.stCol_3.xW = 1.0f;
+    }
+    if (MEC_fn_bCollision(&lObstacle,
+                          g_a_stObstacle,
+                          p_stDynamic,
+                          hSupObj,
+                          NULL,
+                          hCurrentMatrix,
+                          (unsigned char)((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x00400000) ? 1 : 0))) {
+        MEC_fn_vEdgeAnalysis(p_stDynamic, lObstacle, g_a_stObstacle, NULL);
+        MEC_fn_vCollideBaseMechanic(p_stDynamic, hSupObj, lObstacle, g_a_stObstacle, xDT);
+    } else {
+        ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFF0000;
+        p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+        p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 723–752 */

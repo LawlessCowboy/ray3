@@ -3482,10 +3482,10 @@ void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_
 float fn_xExtendedDistanceBetweenPerso(HIE_tdstSuperObject_* param0, HIE_tdstSuperObject_* p_SuperObjPerso2, unsigned char ucFlags)
 {
     MAT_tdstTransformation_ stMatrix;
-    MTH3D_tdstVector_ stVertex2;
     MTH3D_tdstVector_ stVertex1;
+    MTH3D_tdstVector_ stVertex2;
     COL_tdstBoundingSphere_* hBoundingSphere;
-    float xX, xY, xZ, xSqr;
+    float xX, xY, xZ;
     float xDist;
     if (ucFlags & 0x80) {
         hBoundingSphere = (COL_tdstBoundingSphere_*)param0->hCollideBoundingVolume;
@@ -3516,39 +3516,35 @@ float fn_xExtendedDistanceBetweenPerso(HIE_tdstSuperObject_* param0, HIE_tdstSup
         ((unsigned int*)&stVertex2)[1] = p_ulPos2[1];
         ((unsigned int*)&stVertex2)[2] = p_ulPos2[2];
     }
-    stVertex1.xX -= stVertex2.xX;
-    stVertex1.xY -= stVertex2.xY;
-    stVertex1.xZ -= stVertex2.xZ;
+    xX = stVertex1.xX - stVertex2.xX; stVertex1.xX = xX; xY = stVertex1.xY - stVertex2.xY; stVertex1.xY = xY; xZ = stVertex1.xZ - stVertex2.xZ; stVertex1.xZ = xZ;
     if ((ucFlags & 7) != 7) {
-        MAT_fn_vInvertRotation(&stMatrix, param0->hGlobalMatrix);
+        MAT_fn_vInvertRotation(&stMatrix, p_SuperObjPerso2->hGlobalMatrix);
         MAT_fn_vApplyOnVector(&stVertex1, &stMatrix, &stVertex1);
     }
-    xX = stVertex1.xX;
-    xY = stVertex1.xY;
-    xZ = stVertex1.xZ;
+    xZ = stVertex1.xZ; xX = stVertex1.xX; xY = stVertex1.xY;
     switch (ucFlags & 7) {
-    case 0:
-        return 0.0f;
     case 1:
         return xX;
     case 2:
         return xY;
-    case 3:
-        MTH_SQR2_TO(xSqr, xX, xY);
-        break;
     case 4:
         return xZ;
+    case 3:
+        MTH_SQR2_TO(xX, xX, xY);
+        break;
     case 5:
-        MTH_SQR2_TO(xSqr, xX, xZ);
+        MTH_SQR2_TO(xX, xX, xZ);
         break;
     case 6:
-        MTH_SQR2_TO(xSqr, xY, xZ);
+        MTH_SQR2_TO(xX, xY, xZ);
         break;
-    default:
-        MTH_SQR3_TO(xSqr, xX, xY, xZ);
+    case 0:
+        return 0.0f;
+    case 7:
+        MTH_SQR3_TO(xX, xX, xY, xZ);
         break;
     }
-    MTH_SQRT_TO(xDist, xSqr);
+    MTH_SQRT_TO(xDist, xX);
     return xDist;
 }
 
@@ -3572,19 +3568,10 @@ float fn_xDistanceBetweenPersoAndWP(HIE_tdstSuperObject_* p_SuperObjPerso, WP_td
     MTH3D_tdstVector_ stVertex2;
     float xX, xY, xZ, xSqr;
     float xDist;
-    unsigned int* p_ulPos = (unsigned int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
-    ((unsigned int*)&stVertex1)[0] = p_ulPos[0];
-    ((unsigned int*)&stVertex1)[1] = p_ulPos[1];
-    ((unsigned int*)&stVertex1)[2] = p_ulPos[2];
+    unsigned int* p_ulPos = (unsigned int*)&p_SuperObjPerso->hGlobalMatrix->stTransformMatrix.stCol_3; ((unsigned int*)&stVertex1)[0] = p_ulPos[0]; ((unsigned int*)&stVertex1)[1] = p_ulPos[1]; ((unsigned int*)&stVertex1)[2] = p_ulPos[2];
     WP_fnv_WayPoint_ComputeLocation(hWP, &stVertex2);
-    stVertex1.xX -= stVertex2.xX;
-    stVertex1.xY -= stVertex2.xY;
-    xZ = stVertex1.xZ - stVertex2.xZ;
-    stVertex1.xZ = xZ;
-    xY = stVertex1.xY;
-    xX = stVertex1.xX;
-    MTH_SQR3_TO(xSqr, xX, xY, xZ);
-    MTH_SQRT_TO(xDist, xSqr);
+    xX = stVertex1.xX - stVertex2.xX; stVertex1.xX = xX; xY = stVertex1.xY - stVertex2.xY; stVertex1.xY = xY; xZ = stVertex1.xZ - stVertex2.xZ; stVertex1.xZ = xZ;
+    xZ = stVertex1.xZ; xX = stVertex1.xX; xY = stVertex1.xY; MTH_SQR3_TO(xSqr, xX, xY, xZ); MTH_SQRT_TO(xDist, xSqr);
     return xDist;
 }
 
@@ -3600,8 +3587,39 @@ float fn_xDistanceBetweenPersoAndWP(HIE_tdstSuperObject_* p_SuperObjPerso, WP_td
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
-inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+/* MatSp.h inline: the VU0 macro-mode instructions have no C form.
+ * The retail object calls this helper out of line from
+ * fn_xExtendedDistanceBetweenPerso but inlines it into
+ * fn_vGetCenterOfBoundingVolume, and MWCC's inline keyword cannot express
+ * both at once: a file-scope '#pragma dont_inline on' suppresses every
+ * inline in the unit.  Keep the plain out-of-line copy for the callers that
+ * retail left out of line and the inline copy for the one it expanded. */
+void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    MTH4D_tdstVector_* p_stVtmp;
+
+    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
+    *(unsigned int*)&Vtmp.xX = ((unsigned int*)VectA)[0]; *(unsigned int*)&Vtmp.xY = ((unsigned int*)VectA)[1]; *(unsigned int*)&Vtmp.xZ = ((unsigned int*)VectA)[2];
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
+}
+
+static inline void MAT_fn_vApplyOnVertexInlined(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
 {
     MTH4D_tdstVector_ Vtmp;
     MTH4D_tdstMatrix_* p_stMatrix;
@@ -3631,7 +3649,7 @@ void fn_vGetCenterOfBoundingVolume(HIE_tdstSuperObject_* hPerso, MTH3D_tdstVecto
     COL_tdstBoundingSphere_* hBoundingSphere;
     hBoundingSphere = (COL_tdstBoundingSphere_*)hPerso->hCollideBoundingVolume;
     if (hBoundingSphere) {
-        MAT_fn_vApplyOnVertex(p_stVertex, hPerso->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
+        MAT_fn_vApplyOnVertexInlined(p_stVertex, hPerso->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere->stCenterPoint);
     } else {
         unsigned int* p_ulPos = (unsigned int*)&hPerso->hGlobalMatrix->stTransformMatrix.stCol_3;
         ((unsigned int*)p_stVertex)[0] = p_ulPos[0];

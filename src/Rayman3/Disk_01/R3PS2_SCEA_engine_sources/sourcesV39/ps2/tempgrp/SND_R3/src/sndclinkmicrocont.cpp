@@ -204,7 +204,7 @@ struct stree : streebase {
     struct iterator : iterator_base {
         iterator(void) {}
         iterator(sTreeLink* po_Link) : iterator_base(po_Link) {}
-        iterator(const iterator& ro_It) : iterator_base(ro_It._Ptr) {}
+        iterator(const iterator& ro_It);
         V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
         iterator& operator++(void) { _Inc(); return *this; }
         iterator operator++(int) { iterator oTmp = *this; ++*this; return oTmp; }
@@ -262,6 +262,12 @@ struct stree : streebase {
     ALLOC allocator; /* +0xc */
     CMP key_compare; /* +0xd */
 };
+
+template <class K, class V, class KFN, class CMP, class ALLOC>
+stree<K, V, KFN, CMP, ALLOC>::iterator::iterator(const iterator& ro_It)
+    : iterator_base(ro_It._Ptr)
+{
+}
 
 template <class K, class T, class CMP, class ALLOC>
 struct smap {
@@ -485,8 +491,23 @@ unsigned char CLinkMicroCont::mfn_bSetMicroInterface(const _tdstAllRetMicroSound
  */
 unsigned char CLinkMicroCont::mfn_bRemoveMicroInstance(int s32_MicroId)
 {
-    unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
+    unsigned char b_Answer = 0;
+    iterator it = _Tr.lower_bound(s32_MicroId);
+
+    if (it == _Tr.end() || _Tr.key_compare(s32_MicroId, _Tr._Key(it._Mynode())))
+    {
+        it = _Tr.end();
+    }
+    if (it._Ptr != _Tr._GetHead())
+    {
+        CLinkMicro* pMicro = (*it).second;
+
+        _Tr.erase(_Tr.find(s32_MicroId));
+        usnd::CMicroManager::fs_roGetInst().f_bDeleteMicrophone(pMicro->mroMicro);
+        usnd_free(pMicro);
+        b_Answer = 1;
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkmicrocont.cpp lines 44–64 */

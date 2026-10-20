@@ -101,6 +101,9 @@ typedef struct tdstPLA_DeformationLink_ tdstPLA_DeformationLink_;
 typedef struct SECT_tdstListOfSOSectorsInActivityInteraction_ SECT_tdstListOfSOSectorsInActivityInteraction_;
 typedef struct SCT_tdstListOfSoundEvent_ SCT_tdstListOfSoundEvent_;
 
+float cosf(float x);
+float sinf(float x);
+
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
     MAT_eTransform_Identity = 1,
@@ -960,11 +963,11 @@ GLI_tdstMaterial_* fn_hGetVisualMaterialFromIndex(unsigned short uwIndex)
  */
 int GLI_Material_fn_lSetTextureOp(GLI_tdstMaterial_* _hVisualMat, int _lIndex, int _lTextureOp)
 {
-    char* p_cOperator = &_hVisualMat->a_stMultiMaterial[0].c_Operator;
+    int lOffset;
     if (_lIndex < 0 || _lIndex >= 4)
         return 0;
-    p_cOperator += ((_lIndex * 5) << 4);
-    *p_cOperator = _lTextureOp;
+    lOffset = _lIndex * 80;
+    ((char*)&_hVisualMat->a_stMultiMaterial[0].c_Operator)[lOffset] = _lTextureOp;
     return 1;
 }
 
@@ -999,9 +1002,25 @@ void GLI_vRefreshMultiTexturePart(GLI_tdstMaterial_* _pst_Material)
 {
     float fSin;
     float fCos;
-    unsigned int i;
     anon_0* pst_MTM;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    pst_MTM = &_pst_Material->a_stMultiMaterial[0];
+    for (i = 0; i < _pst_Material->ulNbTextureStages; i++)
+    {
+        if (pst_MTM->c_Flags & 0x8)
+        {
+            pst_MTM->fStaticAngle += pst_MTM->fDynamicAngle * gs_fCoefOfMultiplicationForScolledTextures;
+            fCos = cosf(pst_MTM->fStaticAngle);
+            fSin = sinf(pst_MTM->fStaticAngle);
+            pst_MTM->st_UVStaticPos.stMat[0][0] = fCos * pst_MTM->fScaleU;
+            pst_MTM->st_UVStaticPos.stMat[0][1] = fSin * pst_MTM->fScaleU;
+            pst_MTM->st_UVStaticPos.stMat[1][0] = -fSin * pst_MTM->fScaleV;
+            pst_MTM->st_UVStaticPos.stMat[1][1] = fCos * pst_MTM->fScaleV;
+        }
+        pst_MTM->st_UVStaticPos.stTrans[0] += pst_MTM->st_UVDynamicPos.stTrans[0] * gs_fCoefOfMultiplicationForScolledTextures;
+        pst_MTM->st_UVStaticPos.stTrans[1] += pst_MTM->st_UVDynamicPos.stTrans[1] * gs_fCoefOfMultiplicationForScolledTextures;
+        pst_MTM++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 782–796 */
@@ -1096,9 +1115,74 @@ void GLI_Material_fn_vInitMultiTexturePart(GLI_tdstMaterial_* _hVisualMat)
  */
 void GLI_xRefreshAnimatedTexture(GLI_tdstMaterial_* hMaterial)
 {
-    int lSaveType;
+    GLI_tdstTexture_* p_stTexture;
+    /* Not original source, needs cleaning up: retail keeps lSaveType in the
+     * stack frame across the inlined texture update (frame 0x30, not 0x20);
+     * volatile reproduces that until the original shape is found. */
+    volatile int lSaveType;
     float fNbFramesToDisplay;
-    /* TODO: decompile from asm/... */
+
+    if (hMaterial->lActualRefreshNumber != gs_lActualRefreshNumberForScolledTextures)
+        GLI_vRefreshMultiTexturePart(hMaterial);
+    if (hMaterial->p_stTexture != NULL)
+    {
+        if (hMaterial->lNumberOfDisplayNode > 1 && hMaterial->lActualRefreshNumber != gs_lActualRefreshNumberForScolledTextures)
+        {
+            if (hMaterial->xIsLocked == 1)
+            {
+                p_stTexture = hMaterial->p_stActualAnimatedTExtureNode->p_stTexture; hMaterial->p_stTexture = p_stTexture; if (p_stTexture != NULL) { if (p_stTexture->lTextureCaps & 0x8) hMaterial->xMaterialType &= ~0x400; if (p_stTexture->lTextureCaps & 0x40) hMaterial->xMaterialType &= 0xF7FFFFFF; else hMaterial->xMaterialType |= 0x08000000; } else { hMaterial->xMaterialType |= 0x08000000;
+            }
+            }
+            else
+            {
+                g_bHasTextureAnimationFinished = 0;
+                if (g_bTakeCareOfAnimationCoordination)
+                {
+                    hMaterial->p_stActualAnimatedTExtureNode = hMaterial->p_stFistAnimatedTExtureNode;
+                    fNbFramesToDisplay = 60.0f * hMaterial->p_stActualAnimatedTExtureNode->xDisplayTime * g_AGO_AnimTimeScale;
+                    while (gs_fCoefOfMultiplicationForAnimatedTexture - g_BaseTimeForParticleAnimation > fNbFramesToDisplay)
+                    {
+                        g_BaseTimeForParticleAnimation += fNbFramesToDisplay;
+                        if (hMaterial->p_stActualAnimatedTExtureNode->p_stNextDisplayNode != NULL)
+                            hMaterial->p_stActualAnimatedTExtureNode = hMaterial->p_stActualAnimatedTExtureNode->p_stNextDisplayNode;
+                        else if (g_bOneShotAnim)
+                        {
+                            g_bHasTextureAnimationFinished = 1;
+                            break;
+                        }
+                        else
+                        {
+                            hMaterial->p_stActualAnimatedTExtureNode = hMaterial->p_stFistAnimatedTExtureNode;
+                        }
+                        fNbFramesToDisplay = 60.0f * hMaterial->p_stActualAnimatedTExtureNode->xDisplayTime * g_AGO_AnimTimeScale;
+                    }
+                    hMaterial->p_stTexture = hMaterial->p_stActualAnimatedTExtureNode->p_stTexture;
+                }
+                else
+                {
+                    if (hMaterial->p_stActualAnimatedTExtureNode->xDisplayTime > 0.0f)
+                    {
+                        fNbFramesToDisplay = 60.0f * hMaterial->p_stActualAnimatedTExtureNode->xDisplayTime;
+                        while (gs_fCoefOfMultiplicationForAnimatedTexture - hMaterial->xActualDisplayTimeSinceStartOfLastTexture > fNbFramesToDisplay)
+                        {
+                            hMaterial->xActualDisplayTimeSinceStartOfLastTexture += fNbFramesToDisplay;
+                            if (hMaterial->p_stActualAnimatedTExtureNode->p_stNextDisplayNode != NULL)
+                                hMaterial->p_stActualAnimatedTExtureNode = hMaterial->p_stActualAnimatedTExtureNode->p_stNextDisplayNode;
+                            else
+                                hMaterial->p_stActualAnimatedTExtureNode = hMaterial->p_stFistAnimatedTExtureNode;
+                            fNbFramesToDisplay = 60.0f * hMaterial->p_stActualAnimatedTExtureNode->xDisplayTime;
+                        }
+                    }
+                    hMaterial->p_stTexture = hMaterial->p_stActualAnimatedTExtureNode->p_stTexture;
+                }
+                lSaveType = hMaterial->xMaterialType;
+                p_stTexture = hMaterial->p_stActualAnimatedTExtureNode->p_stTexture; hMaterial->p_stTexture = p_stTexture; if (p_stTexture != NULL) { if (p_stTexture->lTextureCaps & 0x8) hMaterial->xMaterialType &= ~0x400; if (p_stTexture->lTextureCaps & 0x40) hMaterial->xMaterialType &= 0xF7FFFFFF; else hMaterial->xMaterialType |= 0x08000000; } else hMaterial->xMaterialType |= 0x08000000;
+                hMaterial->xMaterialType = lSaveType;
+            }
+        }
+    }
+    if (!g_bTakeCareOfAnimationCoordination)
+        hMaterial->lActualRefreshNumber = gs_lActualRefreshNumberForScolledTextures;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 595–603 */
@@ -1314,7 +1398,24 @@ void GLI_xSetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnu
  */
 void GLI_xSetMaterialTexture(GLI_tdstMaterial_* hMaterial, GLI_tdstTexture_* p_stTexture)
 {
-    /* TODO: decompile from asm/... */
+    hMaterial->p_stTexture = p_stTexture;
+    if (p_stTexture != NULL)
+    {
+        if (p_stTexture->lTextureCaps & 0x8)
+        {
+            hMaterial->xMaterialType &= ~0x400;
+        }
+        if (p_stTexture->lTextureCaps & 0x40)
+            hMaterial->xMaterialType &= 0xF7FFFFFF;
+        else
+        {
+            hMaterial->xMaterialType |= 0x08000000;
+        }
+    }
+    else
+    {
+        hMaterial->xMaterialType |= 0x08000000;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 259–259 */
@@ -1457,5 +1558,9 @@ void GLI_xGetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p
  */
 void GLI_xSetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
-    /* TODO: decompile from asm/... */
+    if (hMaterial->stAmbient.xR != p_stColor->xR || hMaterial->stAmbient.xG != p_stColor->xG || hMaterial->stAmbient.xB != p_stColor->xB || hMaterial->stAmbient.xA != p_stColor->xA)
+    {
+        hMaterial->stAmbient = *p_stColor;
+        GLI_xSetUpdateGeometricForMaterialCoefChange();
+    }
 }

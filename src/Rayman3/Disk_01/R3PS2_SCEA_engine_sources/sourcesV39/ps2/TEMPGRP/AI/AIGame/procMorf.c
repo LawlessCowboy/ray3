@@ -2988,9 +2988,23 @@ unsigned char g_ucAIModuleId;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+short MOR_fn_xMorphing(HIE_tdstSuperObject_* _hActorSuperObject, int _xStartIndexInObjectTable, short* _xEndIndexInObjectTable, unsigned char _ucNbTargets, float* _xRatio, short _xChannelIndex, unsigned char _ucMorphType);
+short MOR_fn_xStopMorph(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex);
+short MOR_fn_xPrepareMorph(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartIndexInObjectTable, short* _axEndIndexInObjectTable, unsigned char _ucNbTarget, int _iNbMillisecond, float* _axStart, float* _axEnd, unsigned char _ucMorphType, short _xChannelIndex);
+int PLA_bCheckDistForMorph(HIE_tdstSuperObject_* p_stActorSO);
+void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
+void Erm_fn_ClearLastError(unsigned int ulChannelId);
+/* Declared without a narrow return type here: retail passes the result on without an andi. */
+int fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcId);
+void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);
+unsigned char fn_ucGetDsgVar(unsigned char ucId, unsigned char ucIndex, AI_tdstMind_* p_stPerso, tdstGetSetParam_* p_stGetSetParam);
+
 tdstNodeInterpret_* fn_p_stMorphingMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     HIE_tdstSuperObject_* p_stResultOwnerPerso;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso2;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdstArray_* p_stArray;
     tdstGetSetParam_ stParam;
@@ -3005,7 +3019,72 @@ tdstNodeInterpret_* fn_p_stMorphingMT(HIE_tdstSuperObject_* p_SuperObjPerso, tds
     float axRatio[10];
     short axEndIndexInObjectTable[10];
     short xStartIndexInObjectTable;
-    /* TODO: decompile from asm/... */
+    int iTreeResult;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[0]);
+
+    if (p_stTree->eType == 2)
+    {
+        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
+    }
+    else
+    {
+        p_stResultOwnerPerso = p_SuperObjPerso;
+    }
+
+    ucArrayId1 = (unsigned char)p_stTree->uDummy.uId.eProcedureId;
+
+    p_stTree++;
+
+    p_stMind1 = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+
+    if (p_stTree->eType == 2)
+    {
+        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso2);
+    }
+    else
+    {
+        p_stResultOwnerPerso2 = p_SuperObjPerso;
+    }
+
+    ucArrayId2 = (unsigned char)p_stTree->uDummy.uId.eProcedureId;
+
+    p_stMind2 = p_stResultOwnerPerso2->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+
+    iTreeResult = (int)fn_p_stEvalTree(p_SuperObjPerso, p_stTree + 1, &stValue[1]);
+
+    xChannelIndex = stValue[1].uDummy.uParam.wValue;
+    xStartIndexInObjectTable = stValue[0].uDummy.uParam.wValue - 1;
+
+    p_stArray = (tdstArray_ *)((char *)p_stMind1->p_stDsgMem->p_cDsgMemBuffer + p_stMind1->p_stDsgMem->p_p_stDsgVar[0]->p_stDsgVarInfo[ucArrayId1].ulOffsetInDsgMem);
+    iMaxArraySize = p_stArray->ucMaxSize;
+
+    if (iMaxArraySize > 10)
+    {
+        iMaxArraySize = 10;
+    }
+
+    for (i = 0; i < iMaxArraySize; i++)
+    {
+        if (fn_ucGetDsgVar(ucArrayId1, i, p_stMind1, &stParam) == 1)
+        {
+            axEndIndexInObjectTable[i] = stParam.uDummy.uParam.wValue - 1;
+        }
+
+        if (fn_ucGetDsgVar(ucArrayId1, i, p_stMind2, &stParam) == 1)
+        {
+            axRatio[i] = 0.01f * stParam.uDummy.uParam.lValue;
+        }
+    }
+
+    if (MOR_fn_xMorphing(p_SuperObjPerso, xStartIndexInObjectTable, &axEndIndexInObjectTable[0], iMaxArraySize, &axRatio[0], xChannelIndex, 2) == -1)
+    {
+        Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4D, -1, 0xFF, 0, "Morphing requires objects with the same number of points"); Erm_fn_ClearLastError(0);
+    }
+
+    return (tdstNodeInterpret_ *)iTreeResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 306–365 */
@@ -3043,15 +3122,42 @@ tdstNodeInterpret_* fn_p_stMorphingMT(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 tdstNodeInterpret_* fn_p_stMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdstGetSetParam_ stValue[4];
-    short xChannelIndex;
     float xRatio;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
     short xEndIndexInObjectTable;
-    short xStartIndexInObjectTable;
-    /* TODO: decompile from asm/... */
+    short xChannelIndex;
+    int xStartIndexInObjectTable;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[0]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[1]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[2]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[3]);
+
+    xStartIndexInObjectTable = stValue[0].uDummy.uParam.wValue;
+    xEndIndexInObjectTable = stValue[1].uDummy.uParam.wValue;
+    xRatio = (float)stValue[2].uDummy.uParam.lValue;
+    xChannelIndex = stValue[3].uDummy.uParam.wValue;
+
+    xEndIndexInObjectTable = xEndIndexInObjectTable - 1;
+    xRatio = xRatio / 100.0f;
+
+    if (PLA_bCheckDistForMorph(p_SuperObjPerso) == 0)
+    {
+        MOR_fn_xStopMorph(p_SuperObjPerso, xChannelIndex);
+    }
+
+    if (MOR_fn_xMorphing(p_SuperObjPerso, xStartIndexInObjectTable - 1, &xEndIndexInObjectTable, 1, &xRatio, xChannelIndex, 2) == -1)
+    {
+        Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4D, -1, 0xFF, 0, "Morphing requires two objects with the same number of points"); Erm_fn_ClearLastError(0);
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 274–296 */
@@ -3068,8 +3174,6 @@ tdstNodeInterpret_* fn_p_stMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
  */
 /* Declared without a narrow return type here: retail passes the result on without an andi. */
 int fn_ucGetConditionUltraOperator(tdeCondId_ eCondId);
-void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
-tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 unsigned char MOR_fn_bIsChannelMorphed(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex);
 
 tdstNodeInterpret_* fn_p_stIsMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
@@ -3106,9 +3210,6 @@ tdstNodeInterpret_* fn_p_stIsMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcId);
-short MOR_fn_xStopMorph(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex);
-
 tdstNodeInterpret_* fn_p_stStopMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstMorphChannelList_* p_stMorph_Next;
@@ -3195,23 +3296,91 @@ tdstNodeInterpret_* fn_p_stStopMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  */
 tdstNodeInterpret_* fn_p_stPrepareMorphMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstGetSetParam_ stParam;
-    AI_tdstMind_* p_stMind;
-    unsigned char ucArrayId_Ratios;
-    unsigned char ucArrayId_EndObject;
-    tdstGetSetParam_ stValue[4];
-    short i;
-    short xChannelIndex;
-    unsigned char iMaxArraySize;
-    unsigned char ucMorphType;
-    float axEnd[10];
-    float axStart[10];
-    int iNbMillisecond;
-    short axEndIndexInObjectTable[10];
     short xStartIndexInObjectTable;
-    /* TODO: decompile from asm/... */
+    int iNbMillisecond;
+    unsigned char ucMorphType;
+    short xChannelIndex;
+    short axEndIndexInObjectTable[10];
+    float axStart[10];
+    float axEnd[10];
+    tdstGetSetParam_ stValue[4];
+    tdstGetSetParam_ stParam;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso2;
+    unsigned char iMaxArraySize;
+    short i;
+    AI_tdstMind_* p_stMind;
+    unsigned char ucArrayId_EndObject;
+    unsigned char ucArrayId_Ratios;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[0]);
+
+    if (p_stTree->eType == 2)
+    {
+        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso);
+    }
+    else
+    {
+        p_stResultOwnerPerso = p_SuperObjPerso;
+    }
+
+    ucArrayId_EndObject = (unsigned char)p_stTree->uDummy.uId.eProcedureId;
+
+    p_stTree++;
+
+    if (p_stTree->eType == 2)
+    {
+        p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso2);
+    }
+    else
+    {
+        p_stResultOwnerPerso2 = p_SuperObjPerso;
+    }
+
+    ucArrayId_Ratios = (unsigned char)p_stTree->uDummy.uId.eProcedureId;
+
+    p_stMind = p_stResultOwnerPerso2->hLinkedObject.p_stCharacter->h_Brain->p_stMind;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree + 1, &stValue[1]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[2]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[3]);
+
+    iNbMillisecond = stValue[1].uDummy.uParam.lValue;
+    ucMorphType = stValue[2].uDummy.uParam.ucValue;
+    xChannelIndex = stValue[3].uDummy.uParam.wValue;
+    xStartIndexInObjectTable = stValue[0].uDummy.uParam.wValue;
+
+    iMaxArraySize = (unsigned char)(((tdstArray_ *)((char *)p_stMind->p_stDsgMem->p_cDsgMemBuffer + p_stMind->p_stDsgMem->p_p_stDsgVar[0]->p_stDsgVarInfo[ucArrayId_EndObject].ulOffsetInDsgMem))->ucMaxSize);
+
+    if (iMaxArraySize > 10)
+    {
+        iMaxArraySize = 10;
+    }
+
+    for (i = 0; i < iMaxArraySize; i++)
+    {
+        ((float *)axStart)[i] = 0.0f;
+
+        if (fn_ucGetDsgVar(ucArrayId_EndObject, i, p_stMind, &stParam) == 1)
+        {
+            ((short *)axEndIndexInObjectTable)[i] = stParam.uDummy.uParam.wValue;
+        }
+
+        if (fn_ucGetDsgVar(ucArrayId_Ratios, i, p_stMind, &stParam) == 1)
+        {
+            ((float *)axEnd)[i] = 0.01f * stParam.uDummy.uParam.lValue;
+        }
+    }
+
+    if (MOR_fn_xPrepareMorph(p_SuperObjPerso, xStartIndexInObjectTable, &axEndIndexInObjectTable[0], iMaxArraySize, iNbMillisecond, &axStart[0], &axEnd[0], ucMorphType, xChannelIndex) == -1)
+    {
+        Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4D, -1, 0xFF, 0, "Multi target Morphing failed"); Erm_fn_ClearLastError(0);
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 56–107 */
@@ -3242,10 +3411,29 @@ tdstNodeInterpret_* fn_p_stPrepareMorphMT(HIE_tdstSuperObject_* p_SuperObjPerso,
  */
 tdstNodeInterpret_* fn_p_stPrepareMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdstGetSetParam_ stValue[5];
-    float xEnd;
     float xStart;
+    float xEnd;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
     short xEndIndexInObjectTable;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[0]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[1]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[2]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[3]);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue[4]);
+
+    xEndIndexInObjectTable = stValue[1].uDummy.uParam.wValue;
+
+    xStart = 0.0f;
+    xEnd = 1.0f;
+
+    if (MOR_fn_xPrepareMorph(p_SuperObjPerso, stValue[0].uDummy.uParam.wValue, &xEndIndexInObjectTable, 1, stValue[2].uDummy.uParam.lValue, &xStart, &xEnd, stValue[3].uDummy.uParam.cValue, stValue[4].uDummy.uParam.wValue) == -1)
+    {
+        Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4D, -1, 0xFF, 0, "Morphing requires two objects with the same number of points"); Erm_fn_ClearLastError(0);
+    }
+
+    return p_stTree;
 }

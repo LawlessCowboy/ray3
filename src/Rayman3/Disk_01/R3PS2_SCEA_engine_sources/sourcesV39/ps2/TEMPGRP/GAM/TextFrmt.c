@@ -1265,6 +1265,29 @@ int g_bFreeTextAfficheBlocs[30];
 int gp_SuperObjPersoGenerated[30];
 stInfoTextAffiche_ g_stInfoTextAffiche[30];
 
+void* memset(void* dst, int c, size_t n);
+
+tdstObjectsTablesList_* fn_hGetObjectsTableOfFamilyByIndex(tdstFamilyList_* hFamily, short xIndex);
+unsigned short fn_uwGetObjectTableNumberOfelements(tdstObjectsTablesList_* hTargetTable);
+int fn_ucToTableElement(int n);
+
+char* strtok(char* szString, const char* szDelim);
+long atol(const char* szString);
+int atoi(const char* szString);
+
+int TFMT_lProcessFormater(stTfmtStatus_* p_stStatus, char* szString, unsigned char* p_bLineBreak, unsigned char* p_bStartLine);
+void TFMT_pszReadNextChar(stTfmtStatus_* p_stStatus, HIE_tdstSuperObject_* hSuperObjPerso, char* pszCurrentChar, unsigned char* p_ucReturnedChar, unsigned char* p_bLineBreak);
+
+/* R5900 min.s/max.s; MWCC compiles the C comparison as compare-and-branch.
+   The result stays in the register of the first operand, which is also the
+   register the retail code uses for the updated value. */
+inline float MTH_M_xMax(float _xA, float _xB)
+{
+    float _xResult;
+    asm { max.s _xResult, _xA, _xB }
+    return _xResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 172–172 */
 /* addr: 0x00268360  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1305,9 +1328,22 @@ tdstAnim3d_* fn_p_stGetAnimInState(tdstState_* h_State)
  */
 void TFMT_vUpdateScaleTable(char* szText)
 {
-    int i;
     char* szCur;
-    /* TODO: decompile from asm/... */
+    int i;
+
+    szCur = strtok(szText, ":");
+    TFMT_ga_fLetterScale[0] = (float)atol(szCur) / 1000.0f;
+    i = 1;
+    while (szCur != NULL && i < 256)
+    {
+        szCur = strtok(NULL, ":");
+        if (szCur != NULL)
+        {
+            TFMT_ga_fLetterScale[i] = (float)atol(szCur) / 1000.0f; i++;
+            szCur[-1] = ':';
+        }
+    }
+    TFMT_ga_ulNbScale = i;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 1204–1218 */
@@ -1336,9 +1372,21 @@ void TFMT_vUpdateScaleTable(char* szText)
  */
 void TFMT_vUpdateSpacingTable(char* szText)
 {
-    int i;
     char* szCur;
-    /* TODO: decompile from asm/... */
+    int i;
+
+    szCur = strtok(szText, ":");
+    TFMT_ga_fLetterSpacing[0] = (float)atol(szCur) / 1000.0f;
+    i = 1;
+    while (szCur != NULL && i < 256)
+    {
+        szCur = strtok(NULL, ":");
+        if (szCur != NULL)
+        {
+            TFMT_ga_fLetterSpacing[i] = (float)atol(szCur) / 1000.0f; i++;
+            szCur[-1] = ':';
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 1176–1190 */
@@ -1367,7 +1415,18 @@ void TFMT_vUpdateSpacingTable(char* szText)
 void TFMT_ucClearNumberOfCurrentTextAffiche(HIE_tdstSuperObject_* p_SuperObjPersoTreated)
 {
     unsigned char i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < 30; i++)
+    {
+        if ((int)p_SuperObjPersoTreated == gp_SuperObjPersoGenerated[i])
+        {
+            g_bFreeTextAfficheBlocs[i] = 1;
+            gp_SuperObjPersoGenerated[i] = 0;
+            memset(&g_stInfoTextAffiche[i], 0, sizeof(stInfoTextAffiche_));
+            g_stInfoTextAffiche[i].bFirstInit = 1;
+            break;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 1156–1168 */
@@ -1494,14 +1553,36 @@ void TFMT_vInitTextAfficheStructure(void)
  */
 void TFMT_vChangeLetter(HIE_tdstSuperObject_* hSuperObjPerso, unsigned char ucPosLetter, unsigned char ucLetter)
 {
-    unsigned char ucTemp;
-    short wNbObjectsInSourceTable;
-    short wSourceObject;
-    tdstObjectsTableElement_* d_stCurrentObjectsTable;
-    tdstAChannel_* p_stChannel;
-    tdstAChannel_* hChannelArray;
     tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/... */
+    tdstAChannel_* hChannelArray;
+    tdstAChannel_* p_stChannel;
+    tdstObjectsTableElement_* d_stCurrentObjectsTable;
+    short wSourceObject;
+    short wNbObjectsInSourceTable;
+    unsigned char ucTemp;
+    h_Current3dData = hSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData;
+    d_stCurrentObjectsTable = h_Current3dData->h_CurrentObjectsTable->d_stObjectsTable;
+    hChannelArray = h_Current3dData->hArrayOfChannels;
+    wNbObjectsInSourceTable = (short)fn_uwGetObjectTableNumberOfelements(fn_hGetObjectsTableOfFamilyByIndex(h_Current3dData->h_Family, 0));
+    if (ucLetter < 32)
+    {
+        wSourceObject = -1;
+    }
+    else
+    {
+        ucTemp = fn_ucToTableElement(ucLetter);
+        wSourceObject = (short)(ucTemp + OffsetObjectTable);
+    }
+    if (wSourceObject >= 0 && wSourceObject < wNbObjectsInSourceTable)
+    {
+        int iIndex;
+        char* pc;
+        pc = (char*)&d_stCurrentObjectsTable[0];
+        pc = pc + 4;
+        p_stChannel = &hChannelArray[ucPosLetter];
+        p_stChannel->hSupObject->ulTypeOfLinkedObject = ((int*)pc)[iIndex = wSourceObject * 5] ? 8 : 1;
+        p_stChannel->hSupObject->hLinkedObject.p_Void = ((int*)pc)[iIndex = wSourceObject * 5];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 935–1054 */
@@ -1573,7 +1654,12 @@ unsigned int TFMT_wPositionModulesAccordingToText2(stTfmtStatus_* _p_stStatus, H
     short wCurrentChar4Channels;
     short wCurrentChar;
     tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/... */
+    /* TODO: decompile from asm/...
+       720-byte body with 8 register parameters (a0-a3 plus t0-t3), a 0x100-byte
+       frame and s0-s7/fp saved.  The prologue clamps the string with strlen,
+       reserves a handle through RND_fn_hReserveANewHandleIndex, zeroes four
+       status fields and then drives the per-character placement loop; the bulk
+       of the body has not been reconstructed. */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 862–923 */
@@ -1795,13 +1881,59 @@ void TFMT_pszReadNextChar2(stTfmtStatus_* _p_stStatus, char* _pszCurrentChar, un
  */
 void TEXT_vComputeLengthOgString(char* p_szString, stTfmtStatus_* p_stStatus)
 {
-    unsigned char ucTemp;
-    unsigned char bStartLine;
-    unsigned char bLineBreak;
-    float xMaxScreenWidth;
-    float xZoom;
     int lNbChar;
-    /* TODO: decompile from asm/... */
+    float xZoom;
+    float xMaxScreenWidth;
+    unsigned char bLineBreak;
+    unsigned char bStartLine;
+    unsigned char ucTemp;
+    char cChar;
+
+    xMaxScreenWidth = 0.0f;
+    lNbChar = 0;
+    bLineBreak = 0;
+    bStartLine = 0;
+    while ((cChar = *p_szString) != 0)
+    {
+        if (cChar == '/')
+        {
+            p_szString++;
+            p_szString += TFMT_lProcessFormater(p_stStatus, p_szString, &bLineBreak, &bStartLine);
+            if (bLineBreak)
+            {
+                xMaxScreenWidth = MTH_M_xMax(xMaxScreenWidth, p_stStatus->xScreenWidth);
+                p_stStatus->xScreenWidth = 0.0f;
+                bLineBreak = 0;
+            }
+        }
+        else
+        {
+            xZoom = p_stStatus->xCharZoom;
+            if (xZoom == 0.0f)
+            {
+                if (TFMT_ga_ulNbScale != 0)
+                {
+                    xZoom = TFMT_ga_fLetterScale[lNbChar % TFMT_ga_ulNbScale];
+                }
+                else
+                {
+                    xZoom = 1.0f;
+                }
+            }
+            lNbChar++;
+            if (p_stStatus->xCharWidth)
+            {
+                p_stStatus->xScreenWidth += xZoom * p_stStatus->xCharWidth;
+            }
+            else
+            {
+                ucTemp = fn_ucToTableElement(cChar);
+                p_stStatus->xScreenWidth += xZoom * TFMT_ga_fLetterSpacing[ucTemp];
+            }
+            p_szString++;
+        }
+    }
+    p_stStatus->xScreenWidth = MTH_M_xMax(p_stStatus->xScreenWidth, xMaxScreenWidth);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 495–559 */
@@ -1838,8 +1970,53 @@ void TEXT_vComputeLengthOgString(char* p_szString, stTfmtStatus_* p_stStatus)
  */
 int TFMT_lProcessFormater(stTfmtStatus_* p_stStatus, char* szString, unsigned char* p_bLineBreak, unsigned char* p_bStartLine)
 {
-    int i;
-    /* TODO: decompile from asm/... */
+    int iRet;
+    char* szCur;
+    char cJustification;
+
+    szCur = szString;
+    iRet = 1;
+    switch (*szCur++)
+    {
+        case 'C':
+        case 'c':
+            cJustification = 'c';
+            p_stStatus->cJustificationMode = cJustification;
+            break;
+        case 'H':
+        case 'h':
+            p_stStatus->xLineHeight = (float)atoi(szCur) / 1000.0f;
+            break;
+        case 'L':
+        case 'l':
+            *p_bLineBreak = 1;
+            *p_bStartLine = 1;
+            p_stStatus->xBaseToAddX = 0.0f;
+            p_stStatus->xBaseCharX = 0.0f;
+            p_stStatus->xBaseCharZ -= p_stStatus->xLineHeight;
+            break;
+        case 'W':
+        case 'w':
+            p_stStatus->xCharWidth = (float)atoi(szCur) / 1000.0f;
+            break;
+        case 'Z':
+        case 'z':
+            p_stStatus->xCharZoom = (float)atoi(szCur) / 1000.0f;
+            break;
+        case 'o':
+        case 'O':
+            OffsetObjectTable = atoi(szCur);
+            break;
+        default:
+            cJustification = 'c';
+            break;
+    }
+    while (*szCur != ':')
+    {
+        szCur++;
+        iRet++;
+    }
+    return ++iRet;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 340–482 */
@@ -1977,16 +2154,44 @@ short TFMT_wPositionModulesAccordingToText(stTfmtStatus_* _p_stStatus, HIE_tdstS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned short TFMT_uwGetNbCharsFillingALine(stTfmtStatus_* _p_stStatus, HIE_tdstSuperObject_* _hSuperObjPerso, char* _pszText, float* _p_xActualWidth)
+unsigned short TFMT_uwGetNbCharsFillingALine(stTfmtStatus_* p_stStatus, HIE_tdstSuperObject_* hSuperObjPerso, char* pszText, float* p_xActualWidth)
 {
-    float xNewWidth;
-    float xScreenWidth;
-    float xCurrentWidth;
+    stTfmtStatus_ stTfmtStatusSave;
     unsigned char bLineBreak;
     short wCharIndex;
     unsigned char ucCurrentChar;
-    stTfmtStatus_ stTfmtStatusSave;
-    /* TODO: decompile from asm/... */
+    {
+        float xCurrentWidth;
+        float xScreenWidth;
+        float xNewWidth;
+
+        stTfmtStatusSave = *p_stStatus;
+        xScreenWidth = p_stStatus->xScreenWidth;
+        if (xScreenWidth < 0.0f)
+        {
+            xScreenWidth = 1000.0f;
+        }
+        wCharIndex = 0;
+        xCurrentWidth = 0.0f;
+        while (bLineBreak == 0)
+        {
+            TFMT_pszReadNextChar(p_stStatus, hSuperObjPerso, (char*)&stTfmtStatusSave, &ucCurrentChar, &bLineBreak);
+            if (bLineBreak == 0)
+            {
+                xNewWidth = xCurrentWidth + p_stStatus->xCharWidth;
+                if (xNewWidth < xScreenWidth)
+                {
+                    wCharIndex++;
+                    xCurrentWidth = xNewWidth;
+                    continue;
+                }
+            }
+            bLineBreak = 1;
+        }
+        *p_stStatus = stTfmtStatusSave;
+        *p_xActualWidth = xCurrentWidth;
+    }
+    return (unsigned short)wCharIndex;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\TextFrmt.c lines 151–275 */

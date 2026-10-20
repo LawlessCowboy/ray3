@@ -3369,6 +3369,16 @@ char CAM_fn_cFindNewGoodIdealPos(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, cha
 void CAM_fn_vMakeAsNewIdealPosition(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*);
 void CAM_fn_vForceCameraPos(HIE_tdstSuperObject_*, MTH3D_tdstVector_*);
 void CAM_fn_vForceCameraTgt(HIE_tdstSuperObject_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
+void CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_*);
+void CAM_fn_vSetCineinfoWorkFromVisibility(tdstCineinfo_*);
+void CAM_fn_vComputeMovePosWithDynTheta(CAM_tdstUpdateCamera_*);
+float CAM_fnx_ComputePosPound(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*);
+void CAM_fn_vFillVectorArray(CAM_tdstUpdateCamera_*, char);
+char CAM_fnc_IsDirectionCorrect(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, float, float, char);
+char CAM_fn_cIsWantedPosIncorrect(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, char);
+void qsort(void*, unsigned int, unsigned int, int (*)(void*, void*));
+char CAM_fn_cSendSegment(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, tdstCineinfo_*);
+MTH3D_tdstVector_* MTH_p_stRotationMulVector(MTH_stRotation*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1735–1774 */
 /* addr: 0x0020b280  size: 392 bytes */
@@ -3400,7 +3410,33 @@ void CAM_fn_vCheckForABetterPos(CAM_tdstUpdateCamera_* _p_stStruct)
 {
     char cRes;
     MTH3D_tdstVector_ stComputeVector;
-    /* TODO: decompile from asm/... */
+
+    _p_stStruct->hCineinfo->xCounter1 = _p_stStruct->hCineinfo->xCounter1 + (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;
+    if ((_p_stStruct->hCineinfo->xCounter1 >= 1000.0f * (float)CAM_g_stCameraConstants.xTickFindBetterPos * g_stEngineStructure.stEngineTimer.xFrameLength) && !(CAM_g_stCameraConstants.wFlags & 0x20) && _p_stStruct->hCineinfo->bCanDoBestPos)
+    {
+        _p_stStruct->hCineinfo->xCounter1 = 0.0f;
+        cRes = CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector, 11);
+        if (!cRes) { return; }
+        else if (cRes == 1)
+        {
+            /* The retail source keeps this whole block on one source line. */
+            _p_stStruct->hCineinfo->eState = 0; CAM_fn_vSetCineinfoCurrentFromVisibility(_p_stStruct->hCineinfo); CAM_fn_vSetCineinfoWorkFromVisibility(_p_stStruct->hCineinfo); _p_stStruct->hCineinfo->ucPerIAFlags |= 4; _p_stStruct->hCineinfo->ucPerIAFlags &= ~8; CAM_fn_vComputeMovePosWithDynTheta(_p_stStruct);
+        }
+        else
+        {
+            CAM_fn_vMakeAsNewIdealPosition(_p_stStruct, &stComputeVector);
+            if (_p_stStruct->hCineinfo->ucPerIAFlags & 8)
+            {
+                cJustBetterPos = 1;
+            }
+            else
+            {
+                cJustBetterPos = 0;
+            }
+            _p_stStruct->hCineinfo->ucPerIAFlags &= ~8;
+        }
+        _p_stStruct->hCineinfo->bCanDoBestPos = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1657–1701 */
@@ -3451,6 +3487,32 @@ inline float MTH3D_xVectorGap(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_s
     asm { madd.s xResult, xZ, xZ }
     return MTH_xSqrt(xResult);
 }
+
+/* PS2 MTH scalar helpers: the R5900 accumulator ops and sqrt.s have no C
+   form under the baseline. */
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_CROSS_TO(_result, _a, _b, _c, _d) \
+    asm { mula.s _a, _b }                       \
+    asm { msub.s _result, _c, _d }
+#define MTH_CROSS_COMPONENT_TO(_destination, _leftA, _rightB, _leftC, _rightD) \
+    do {                                                                        \
+        float _mthLeftA;                                                        \
+        float _mthRightB;                                                       \
+        float _mthLeftC;                                                        \
+        float _mthRightD;                                                       \
+        float _mthResult;                                                       \
+        _mthRightB = (_rightB);                                                 \
+        _mthLeftA = (_leftA);                                                   \
+        _mthRightD = (_rightD);                                                 \
+        _mthLeftC = (_leftC);                                                   \
+        MTH_CROSS_TO(_mthResult, _mthLeftA, _mthRightB, _mthLeftC, _mthRightD); \
+        (_destination) = _mthResult;                                            \
+    } while (0)
 
 char CAM_fn_cCanResetConstraintMoveVisFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWanted)
 {
@@ -3680,8 +3742,96 @@ void CAM_fn_vTestBadVisibility(CAM_tdstUpdateCamera_* _p_stStruct)
 void CAM_fn_vTestBadDistance(CAM_tdstUpdateCamera_* _p_stStruct)
 {
     char cMode;
+    char cFound;
     MTH3D_tdstVector_ stComputeVector;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stComputeVector2;
+    float xDist;
+    float xX;
+    float xY;
+    float xZ;
+
+    if ((_p_stStruct->hCineinfo->eState != CAM_e_State_GoToOptimal) && (_p_stStruct->hCineinfo->eState != CAM_e_State_GoToComputedOptimal))
+    {
+        return;
+    }
+    if (_p_stStruct->hCineinfoWork->uwIAFlags & 0x1000)
+    {
+        return;
+    }
+    if (_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000)
+    {
+        return;
+    }
+    if (_p_stStruct->hCineinfo->ucVolIAFlags & 2)
+    {
+        return;
+    }
+
+    xX = _p_stStruct->stCurrentCameraPos.xX - _p_stStruct->stTargetedPersoRealPos.xX;
+    xY = _p_stStruct->stCurrentCameraPos.xY - _p_stStruct->stTargetedPersoRealPos.xY;
+    xZ = _p_stStruct->stCurrentCameraPos.xZ - _p_stStruct->stTargetedPersoRealPos.xZ;
+    MTH_SQR3_TO(xZ, xX, xY, xZ);
+    MTH_SQRT_TO(xZ, xZ);
+    if (xZ > _p_stStruct->hCineinfoWork->xDistMin)
+    {
+        return;
+    }
+    if ((_p_stStruct->p_stReport->m_cBitField & 1) || (_p_stStruct->hCineinfo->ucVolIAFlags & 4))
+    {
+    xX = _p_stStruct->stWantedCameraPos.xX - _p_stStruct->stTargetedPersoRealPos.xX;
+    xY = _p_stStruct->stWantedCameraPos.xY - _p_stStruct->stTargetedPersoRealPos.xY;
+    xZ = _p_stStruct->stWantedCameraPos.xZ - _p_stStruct->stTargetedPersoRealPos.xZ;
+    MTH_SQR3_TO(xY, xX, xY, xZ);
+    MTH_SQRT_TO(xY, xY);
+    if (xY < (_p_stStruct->hCineinfoWork->xDistMin + CAM_g_stCameraConstants.xOffsetMinDistPerso))
+    {
+        cFound = 1;
+    }
+    else
+    {
+        if (cCanTestStatic)
+        {
+            CAM_fn_vResetArrayOfTransparentSuperObject(_p_stStruct->hCineinfo);
+        }
+        if (CAM_fn_cSendMultiSegment(_p_stStruct, &_p_stStruct->stTargetedPersoRealPos, &_p_stStruct->stWantedCameraPos, CAM_g_stCameraConstants.xRayCameraSphereToSee1, CAM_g_stCameraConstants.xRayCameraSphereToSee2, CAM_g_stCameraConstants.xNumRayCameraCanSee, _p_stStruct->hCineinfo))
+        {
+            cFound = 1;
+        }
+        else
+        {
+            cFound = (CAM_fn_cSendMultiSegment(_p_stStruct, &_p_stStruct->stCurrentCameraPos, &_p_stStruct->stWantedCameraPos, CAM_g_stCameraConstants.xRayCameraSphereToGo1, CAM_g_stCameraConstants.xRayCameraSphereToGo2, CAM_g_stCameraConstants.xNumRayCameraCanGo, NULL) != 0) ? 1 : 0;
+        }
+    }
+    if (!cFound)
+    {
+        return;
+    }
+
+    _p_stStruct->hCineinfo->xCounter1 = 0.0f;
+    cMode = 3;
+    if (_p_stStruct->hCineinfoWork->uwIAFlags & 8)
+    {
+        cMode &= ~1;
+    }
+    if (CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector, cMode))
+    {
+        CAM_fn_vMakeAsNewIdealPosition(_p_stStruct, &stComputeVector);
+        _p_stStruct->hCineinfo->ucPerIAFlags |= 8;
+    }
+    else
+    {
+        cMode = 5;
+        if (CAM_g_stCameraConstants.wFlags & 4)
+        {
+            cMode |= 8;
+        }
+        if (CAM_fn_cFindNewGoodIdealPos(_p_stStruct, &stComputeVector2, cMode))
+        {
+            _p_stStruct->hCineinfo->eState = CAM_e_State_FailureVisibility;
+            MTH3D_M_vCopyVector(&_p_stStruct->hCineinfo->stLastFailedWanted, &stComputeVector2);
+        }
+    }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1220–1236 */
@@ -3782,9 +3932,38 @@ char CAM_fn_cFindNewGoodIdealPos(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstV
 {
     float xPoundRef;
     MTH3D_tdstVector_* p_stDir;
-    MTH3D_tdstVector_ stTempVector;
+    MTH3D_tdstVector_ stDir;
+    union { MTH3D_tdstVector_ v; int i[3]; } stTemp;
     unsigned int ulCounter;
-    /* TODO: decompile from asm/... */
+    int cFound;
+
+    *(int*)&_p_stComputeVector->xX = 0; *(int*)&_p_stComputeVector->xY = 0; *(int*)&_p_stComputeVector->xZ = 0; xPoundRef = 0.0f;
+
+    if (_cMode & 8)
+    {
+        if (_cMode & 4)
+        {
+            stDir.xX = _p_stStruct->stCurrentCameraPos.xX - _p_stStruct->stTargetedPersoPos.xX; stDir.xY = _p_stStruct->stCurrentCameraPos.xY - _p_stStruct->stTargetedPersoPos.xY; stDir.xZ = _p_stStruct->stCurrentCameraPos.xZ - _p_stStruct->stTargetedPersoPos.xZ;
+        }
+        else
+        {
+            stDir.xX = _p_stStruct->stWantedCameraPos.xX - _p_stStruct->stTargetedPersoPos.xX; stDir.xY = _p_stStruct->stWantedCameraPos.xY - _p_stStruct->stTargetedPersoPos.xY; stDir.xZ = _p_stStruct->stWantedCameraPos.xZ - _p_stStruct->stTargetedPersoPos.xZ;
+        }
+        xPoundRef = CAM_fnx_ComputePosPound(_p_stStruct, &stDir);
+    }
+    CAM_fn_vFillVectorArray(_p_stStruct, _cMode);
+    qsort(gast_VectorArrayCpt, guw_NbVectorArrayCpt, 16, CAM_fni_ComparePositions);
+
+    for (ulCounter = 0; ulCounter < guw_NbVectorArrayCpt; ulCounter++)
+    {
+        p_stDir = &gast_VectorArrayCpt[ulCounter].stDir;
+        if (CAM_fnc_IsDirectionCorrect(_p_stStruct, p_stDir, gast_VectorArrayCpt[ulCounter].xPound, xPoundRef, _cMode)) { stTemp.v.xX = p_stDir->xX + _p_stStruct->stTargetedPersoPos.xX; stTemp.v.xY = p_stDir->xY + _p_stStruct->stTargetedPersoPos.xY; stTemp.v.xZ = p_stDir->xZ + _p_stStruct->stTargetedPersoPos.xZ; if (CAM_fn_cIsWantedPosIncorrect(_p_stStruct, &stTemp.v, _cMode)) { cFound = 0; } else { *(int*)&_p_stComputeVector->xX = stTemp.i[0]; *(int*)&_p_stComputeVector->xY = stTemp.i[1]; *(int*)&_p_stComputeVector->xZ = stTemp.i[2]; cFound = 1; } if (cFound)
+        {
+            return (ulCounter == 0) ? (char)1 : (char)2;
+        }
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 947–1074 */
@@ -3928,7 +4107,6 @@ void CAM_fn_vFillVectorArray(CAM_tdstUpdateCamera_* _p_stStruct, char _cMode)
     float xSaveTheta;
     float xAngle;
     MTH3D_tdstVector_* p_stDir;
-    MTH3D_tdstVector_ stAxis;
     /* TODO: decompile from asm/... */
 }
 
@@ -4182,12 +4360,68 @@ char CAM_fn_cSendMultiSegment(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVect
 {
     float xNorm;
     int i;
-    MTH3D_tdstVector_ stVector;
     MTH_stRotation stRotation;
-    MTH3D_tdstVector_ stPositionTarget1;
-    MTH3D_tdstVector_ stPositionSource1;
-    MTH3D_tdstVector_ stDirection;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stDir;
+    MTH3D_tdstVector_ stSourcePoint;
+    MTH3D_tdstVector_ stTargetPoint;
+    MTH3D_tdstVector_ stRot;
+
+    if (_lNbRay == 1)
+    {
+        return CAM_fn_cSendSegment(_p_stStruct, _p_stSourcePos, _p_stTargetPos, _hCineinfo);
+    }
+
+    stDir.xX = _p_stTargetPos->xX - _p_stSourcePos->xX;
+    stDir.xY = _p_stTargetPos->xY - _p_stSourcePos->xY;
+    stDir.xZ = _p_stTargetPos->xZ - _p_stSourcePos->xZ;
+    xNorm = MTH_xSqrt(MTH3D_xSqrVector(&stDir));
+    if (xNorm != 0.0f)
+    {
+        xNorm = 1.0f / xNorm;
+        stDir.xX = xNorm * stDir.xX;
+        stDir.xY = xNorm * stDir.xY;
+        stDir.xZ = xNorm * stDir.xZ;
+    }
+
+    MTH_CROSS_COMPONENT_TO(stRot.xX, stDir.xY, 1.0f, stDir.xZ, 0.0f);
+    MTH_CROSS_COMPONENT_TO(stRot.xY, stDir.xZ, 0.0f, stDir.xX, 1.0f);
+    MTH_CROSS_COMPONENT_TO(stRot.xZ, stDir.xX, 0.0f, stDir.xY, 0.0f);
+    if ((stRot.xX == 0.0f) && (stRot.xY == 0.0f) && (stRot.xZ == 0.0f))
+    {
+        MTH_CROSS_COMPONENT_TO(stRot.xX, stDir.xY, 0.0f, stDir.xZ, 0.0f);
+        MTH_CROSS_COMPONENT_TO(stRot.xY, stDir.xZ, 1.0f, stDir.xX, 0.0f);
+        MTH_CROSS_COMPONENT_TO(stRot.xZ, stDir.xX, 0.0f, stDir.xY, 1.0f);
+    }
+    xNorm = MTH_xSqrt(MTH3D_xSqrVector(&stRot));
+    if (xNorm != 0.0f)
+    {
+        xNorm = 1.0f / xNorm;
+        stRot.xX = xNorm * stRot.xX;
+        stRot.xY = xNorm * stRot.xY;
+        stRot.xZ = xNorm * stRot.xZ;
+    }
+
+    stRotation.m_xAngle = 6.2831855f / (float)_lNbRay;
+    MTH3D_M_vCopyVector(&stRotation.m_stAxis, &stDir);
+
+    if (_lNbRay > 0)
+    {
+        for (i = 0; i < _lNbRay; i++)
+        {
+            stSourcePoint.xX = _xRadiusCamera * stRot.xX + _p_stSourcePos->xX;
+            stSourcePoint.xY = _xRadiusCamera * stRot.xY + _p_stSourcePos->xY;
+            stSourcePoint.xZ = _xRadiusCamera * stRot.xZ + _p_stSourcePos->xZ;
+            stTargetPoint.xX = _xRadiusTarget * stRot.xX + _p_stTargetPos->xX;
+            stTargetPoint.xY = _xRadiusTarget * stRot.xY + _p_stTargetPos->xY;
+            stTargetPoint.xZ = _xRadiusTarget * stRot.xZ + _p_stTargetPos->xZ;
+            if (CAM_fn_cSendSegment(_p_stStruct, &stSourcePoint, &stTargetPoint, _hCineinfo))
+            {
+                return 1;
+            }
+            MTH_p_stRotationMulVector(&stRotation, &stRot, &stRot);
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 170–398 */

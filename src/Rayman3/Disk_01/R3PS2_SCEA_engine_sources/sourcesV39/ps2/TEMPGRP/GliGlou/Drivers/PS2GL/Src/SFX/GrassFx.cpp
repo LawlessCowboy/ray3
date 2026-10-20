@@ -1489,15 +1489,17 @@ void GrassFx_vProcessAndDisplay(void)
     tdstBaseFxListElement_* p;
 
     p = GrassFx_g_ListToDisplay.pFirst;
-    if (p)
+    if (p == NULL)
     {
-        while (p)
-        {
-            ((C_GrassFx*)p->pFx)->Display();
-            p = p->pNext;
-        }
-        GrassFx_g_ListToDisplay.DeleteAllNoFree();
+        return;
     }
+    while (p)
+    {
+        ((C_GrassFx*)p->pFx)->Display();
+        p = p->pNext;
+    }
+
+    GrassFx_g_ListToDisplay.DeleteAllNoFree();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 532–539 */

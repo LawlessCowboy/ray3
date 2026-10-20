@@ -93,10 +93,41 @@ typedef struct tdstFrame3d_ tdstFrame3d_;
 
 /* Cross-TU light helpers need their real prototypes so MWCC keeps float
  * arguments in the PS2 float ABI and can form the original tail call. */
+void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements);
+void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_* p_stPoint, short xIndexOfPoint);
+void GEO_vCreateElementCones(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbCones);
+void GEO_vSetPointsOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, short xTopPoint, short xBasePoint);
+void GEO_vSetRadiusOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, float xRadius);
+void GLI_xCreateMaterial(GLI_tdstMaterial_** hMaterial);
+void GLI_xSetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExponent, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xSetMaterialType(GLI_tdstMaterial_* hMaterial, unsigned int xMType);
+void GEO_vSetVisualMaterialOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hElement, short xNumberOfCone, GLI_tdstMaterial_* hVisualMaterial);
+void GEO_vEndModifyObject(GEO_tdstGeometricObject_* hObject);
+unsigned short GLI_lGetLightType(GLI_tdstLight_* p_stLight);
+void GLI_xSetLightMatrix(GLI_tdstLight_* p_stLight, MAT_tdstTransformation_* p_stMatrix);
+void MAT_fn_vInvertRotation(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+void MAT_fn_vNormalize(MAT_tdstTransformation_* _hTransform);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
+GEO_tdstGeometricObject_* fn_pCreateSphere(float x, float y, float z, float xRadius);
+GEO_tdstGeometricObject_* fn_pCreateCone(float xS, float yS, float zS, float xRadius);
+void Erm_fn_ClearLastError(unsigned int ulChannelId);
+void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void GLI_xCreateLight(GLI_tdstLight_** h_stLight, int lTypeOfLight);
+SECT_tdstListOfDNMLights_* SECT_fn_hCreateElementLstDNMLights(void);
+void GLI_vStoreLightForInit(GLI_tdstLight_* p_stLight, unsigned int eUserFlags);
+int SAI_fn_bInsertMTHVectorInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertMTHRealInTable(void* _p_vValue, int _eFlags);
 void GLI_vGetLightAlphas(GLI_tdstLight_* p_stLight, float* p_xLittleAlpha, float* p_xBigAlpha);
 void GLI_vSetLightAlphas(GLI_tdstLight_* p_stLight, float xLittleAlpha, float xBigAlpha);
 void GLI_vSetLightNearFar(GLI_tdstLight_* p_stLight, float xNear, float xFar);
 void GLI_xSetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor);
+void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* p_stTransform, MTH3D_tdstVector_* p_stVecI, MTH3D_tdstVector_* p_stVecJ, MTH3D_tdstVector_* p_stVecK);
+float atanf(float);
 
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
@@ -122,15 +153,19 @@ typedef enum tdeObjectTreeInit_ {
     OTI_AlwaysCreated = 5,
 } tdeObjectTreeInit_;
 
+struct MTH3D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+};
+
 struct tdstMSLight_ {
     unsigned char bLocalLight; /* +0x0 */
     unsigned char bOnlyLocalLight; /* +0x1 */
     unsigned char bGiroPhare; /* +0x2 */
     unsigned char bPulsing; /* +0x3 */
-    int stOffsetVect; /* +0x4 */
-    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x8..0xf */
-    int stAngle; /* +0x10 */
-    unsigned char _extractor_padding_01[8]; /* implicitly added by extractor; +0x14..0x1b */
+    MTH3D_tdstVector_ stOffsetVect; /* +0x4 */
+    MTH3D_tdstVector_ stAngle; /* +0x10 */
     float xStepGiro; /* +0x1c */
     float xStepPulse; /* +0x20 */
     float xMaxRangePulse; /* +0x24 */
@@ -553,12 +588,6 @@ struct SECT_tdstListOfSOSectorsInActivityInteraction_ {
     HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
 };
 
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
 struct SECT_tdstSector_ {
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn stListOfCharacters; /* +0x0 */
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt stListOfStaticLights; /* +0xc */
@@ -802,7 +831,15 @@ GLI_tdstLight_* HIE_fn_hGetSuperObjectLight(HIE_tdstSuperObject_* p_SuperObjPers
 
         hMSLight = ((p_SuperObjPerso->ulTypeOfLinkedObject != 2) ? NULL : p_SuperObjPerso->hLinkedObject.p_stCharacter)->h_MSLight;
 
-        return (hMSLight != NULL) ? ((hMSLight->bLocalLight == 0) ? NULL : hMSLight->p_stLight) : NULL;
+        if (hMSLight != NULL)
+        {
+            if (hMSLight->bLocalLight == 0)
+            {
+                return NULL;
+            }
+            return hMSLight->p_stLight;
+        }
+        return NULL;
     }
     return NULL;
 }
@@ -840,24 +877,13 @@ void fn_vMSLightSetRLIParameter(tdstMSLight_* hMSLight, int lNbRLI, int lIndex1,
  */
 unsigned char fn_ucGetNumberOfRLIFromCharacter(HIE_tdstSuperObject_* hSprObj, unsigned char* p_ucIndex1, unsigned char* p_ucIndex2, float* p_xPercent)
 {
-    tdstEngineObject_* hCharacter;
-    tdstMSLight_* hMSLight;
-    unsigned char ucNbRLIUse;
+    int lNbRLIUse;
     float xPercent;
-    ucNbRLIUse = 0;
-    if (hSprObj->ulTypeOfLinkedObject == 2) {
-        hCharacter = hSprObj->hLinkedObject.p_stCharacter;
-        hMSLight = hCharacter->h_MSLight;
-        if (hMSLight != NULL) {
-            *p_ucIndex1 = hMSLight->ucFirstRLI;
-            *p_ucIndex2 = hMSLight->ucSecondRLI;
-            xPercent = hMSLight->ucBlendPercent;
-            *p_xPercent = xPercent / 100.0f;
-            ucNbRLIUse = hMSLight->ucNbRLIUse;
-        }
+    if (hSprObj->ulTypeOfLinkedObject == 2)
+    {
+        tdstMSLight_* hMSLight = hSprObj->hLinkedObject.p_stCharacter->h_MSLight; if (hMSLight != NULL) { *p_ucIndex1 = hMSLight->ucFirstRLI; *p_ucIndex2 = hMSLight->ucSecondRLI; xPercent = hMSLight->ucBlendPercent; *p_xPercent = xPercent / 100.0f; lNbRLIUse = hMSLight->ucNbRLIUse; } else { lNbRLIUse = 0; } return (unsigned char)lNbRLIUse;
     }
-    return ucNbRLIUse;
-}
+    return 0; }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1159–1256 */
 /* addr: 0x0026ff10  size: 1780 bytes */
@@ -991,13 +1017,40 @@ void fn_vUpdateLight(HIE_tdstSuperObject_* hSupObject)
  */
 float fn_xComputeAngleOfPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
-    MTH3D_tdstVector_ p_stK;
-    MTH3D_tdstVector_ p_stJ;
     MTH3D_tdstVector_ p_stI;
+    MTH3D_tdstVector_ p_stJ;
+    MTH3D_tdstVector_ p_stK;
     float xAngle;
     float xSin;
     float xCos;
-    /* TODO: decompile from asm/... */
+    float xHalfPi = 1.57079632679489661923f;
+
+    MAT_fn_vGetRotationVectors(p_SuperObjPerso->hLocalMatrix, &p_stI, &p_stJ, &p_stK);
+    xCos = p_stI.xX;
+    xSin = p_stI.xY;
+    if ((xCos > 1.175495e-38f) && (xCos < 1.175495e-38f))
+    {
+        xAngle = atanf(xSin / xCos);
+        if (xCos < 0.0f)
+        {
+            xAngle = 3.14159265358979323846f + xAngle; }
+        if (xAngle < 0.0f)
+        {
+            xAngle = 6.28318530717958647692f + xAngle; }
+        else if (!(xAngle < 6.28318530717958647692f))
+        {
+            xAngle = xAngle - 6.28318530717958647692f; }
+    }
+    else
+    {
+        if (xSin >= 0.0f)
+        {
+            xAngle = xHalfPi; }
+        else
+        {
+            xAngle = -xHalfPi; }
+    }
+    return xAngle;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1099–1099 */
@@ -1325,7 +1378,44 @@ void fn_vLightInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit
 {
     HIE_tdstSuperObject_* hSuperObjFather;
     MAT_tdstTransformation_ stMatrix2;
-    /* TODO: decompile from asm/... */
+    tdstMSLight_* hMSLight;
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_MSLight) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    switch (eObjectInit)
+    {
+        case OTI_WhenGameStart:
+        case OTI_MapLoaded:
+        case OTI_ReinitTheMap:
+        case OTI_LoadSavedGame:
+        case OTI_PlayerDead:
+        case OTI_AlwaysCreated:
+        {
+            hMSLight = p_stObject->h_MSLight; GLI_vStoreLightForInit(hMSLight->p_stLight, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stOffsetVect, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stAngle, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bPulsing, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepPulse, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xMaxRangePulse, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bOnlyLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bGiroPhare, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepGiro, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xGiroAngle, 0x32);
+            if (3 == GLI_lGetLightType(p_stObject->h_MSLight->p_stLight))
+            {
+                p_stObject->h_MSLight->p_stVisuLight = fn_pCreateSphere(p_stObject->h_MSLight->stOffsetVect.xX, p_stObject->h_MSLight->stOffsetVect.xY, p_stObject->h_MSLight->stOffsetVect.xZ, 0.2f);
+            }
+            else
+            {
+                p_stObject->h_MSLight->p_stVisuLight = fn_pCreateCone(p_stObject->h_MSLight->stOffsetVect.xX, p_stObject->h_MSLight->stOffsetVect.xY, p_stObject->h_MSLight->stOffsetVect.xZ, 1.0f);
+            }
+            hSuperObjFather = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
+            if (hSuperObjFather)
+            {
+                MAT_fn_vInvertRotation(&stMatrix2, hSuperObjFather->hLocalMatrix);
+                MAT_fn_vNormalize(&stMatrix2);
+                GLI_xSetLightMatrix(p_stObject->h_MSLight->p_stLight, &stMatrix2);
+            }
+        }
+        break;
+        default:
+            break;
+    }
 }
 
 void GLI_vRemoveLightForInit(GLI_tdstLight_* p_stLight, unsigned short eUserFlags);
@@ -1385,7 +1475,16 @@ void fn_vLightFree(tdstEngineObject_* p_stObject)
  */
 void fn_vLightAlloc(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    tdstMSLight_* hMSLight;
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_MSLight) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+    hMSLight = (tdstMSLight_*)HMU_fn_p_vMalloc(0x40, 0); hMSLight->xGiroAngle = 0.0f; hMSLight->stOffsetVect.xX = 0.0f; hMSLight->stOffsetVect.xY = 0.0f; hMSLight->stOffsetVect.xZ = 0.0f; GLI_xCreateLight(&hMSLight->p_stLight, 1); hMSLight->hLightInSector = SECT_fn_hCreateElementLstDNMLights(); p_stObject->h_MSLight = hMSLight;
+    hMSLight = p_stObject->h_MSLight; GLI_vStoreLightForInit(hMSLight->p_stLight, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stOffsetVect, 0x32); SAI_fn_bInsertMTHVectorInTable(&hMSLight->stAngle, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bPulsing, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepPulse, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xMaxRangePulse, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bOnlyLocalLight, 0x32); SAI_fn_bInsertCharInTable(&hMSLight->bGiroPhare, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xStepGiro, 0x32); SAI_fn_bInsertMTHRealInTable(&hMSLight->xGiroAngle, 0x32);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 472–472 */
@@ -1452,10 +1551,44 @@ unsigned int fn_ulLightSizeOf(void)
  */
 GEO_tdstGeometricObject_* fn_pCreateCone(float xS, float yS, float zS, float xRadius)
 {
-    GEO_tdstColor_ stColor;
-    GLI_tdstMaterial_* hMaterial;
-    short hElement;
-    MTH3D_tdstVector_ stCenter;
     GEO_tdstGeometricObject_* p_stSphere;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stCenter;
+    short hElement;
+    GLI_tdstMaterial_* hMaterial;
+    GEO_tdstColor_ stColor;
+
+    GEO_vCreateGeometricObject(&p_stSphere, 2, 1);
+    stCenter.xX = xS; stCenter.xY = yS; stCenter.xZ = zS;
+    GEO_vSetPointOfObject(p_stSphere, &stCenter, 0);
+    stCenter.xX = xS - 0.1f; stCenter.xY = yS; stCenter.xZ = zS;
+    GEO_vSetPointOfObject(p_stSphere, &stCenter, 1);
+    GEO_vCreateElementCones(p_stSphere, &hElement, 1);
+    GEO_vSetPointsOfIndexedCone(p_stSphere, hElement, 0, 1, 0);
+    GEO_vSetRadiusOfIndexedCone(p_stSphere, hElement, 0, xRadius);
+
+    GLI_xCreateMaterial(&hMaterial);
+    stColor.xR = 0.0f;
+    stColor.xG = 0.0f;
+    stColor.xB = 0.0f;
+    stColor.xA = 0.0f;
+    GLI_xSetMaterialAmbientCoef(hMaterial, &stColor);
+    stColor.xR = 0.0f;
+    stColor.xG = 0.0f;
+    stColor.xB = 0.0f;
+    stColor.xA = 0.0f;
+    GLI_xSetMaterialDiffuseCoef(hMaterial, &stColor);
+    stColor.xR = 0.0f;
+    stColor.xG = 0.0f;
+    stColor.xB = 0.0f;
+    stColor.xA = 0.0f;
+    GLI_xSetMaterialSpecularCoef(hMaterial, 0, &stColor);
+    stColor.xR = 0.0f;
+    stColor.xG = 0.0f;
+    stColor.xB = 0.0f;
+    stColor.xA = 0.0f;
+    GLI_xSetMaterialColor(hMaterial, &stColor);
+    GLI_xSetMaterialType(hMaterial, 0x7FA);
+    GEO_vSetVisualMaterialOfIndexedCone(p_stSphere, hElement, 0, hMaterial);
+    GEO_vEndModifyObject(p_stSphere);
+    return p_stSphere;
 }

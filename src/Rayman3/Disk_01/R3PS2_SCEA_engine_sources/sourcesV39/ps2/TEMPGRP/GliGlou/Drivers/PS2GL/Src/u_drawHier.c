@@ -1719,7 +1719,7 @@ int GLI_BIG_GLOBALS_xFogIsOn;
 char GLI_cGlobalFogIsOn;
 int gp_stActualWorld;
 unsigned int GLI_g_FrameNumber;
-int Global_CharacterModuleBeingDisplayed;
+HIE_tdstSuperObject_* Global_CharacterModuleBeingDisplayed;
 int g_p_hHandleOfGeometricShadowObject[10];
 short g_p_hHandleOfElementForShadow[10];
 int gp_stInactiveDynamicWorld;
@@ -1752,8 +1752,24 @@ void GLI_vDisplayLogo(void)
 {
 }
 
+
 void GLI_vCleanDispTemporaryDataSPO(HIE_tdstSuperObject_* h_SuperObject);
 void GLI_vCleanGeoObj(GEO_tdstGeometricObject_* pObj);
+void GLI_vInspectObjectForShadow(GEO_tdstGeometricObject_* p_stObj);
+void GLI_PS2GL_BuildSpecifForPO(PO_tdstPhysicalObject_* PO);
+void GLI_PS2GL_CleanSpecifForPO(PO_tdstPhysicalObject_* PO);
+GEO_tdstVisualSet_* PO_fn_hGetVisualSet(PO_tdstPhysicalObject_* hPhysicalObject);
+void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* pSO);
+void GLI_vUpdateFogFromSector(SECT_tdstSector_* hSectorObject);
+void GLI_vDMABufferParseTreeForThisSector(HIE_tdstSuperObject_* pSO);
+void GLI_vDMABufferParseTree(HIE_tdstSuperObject_* pSO);
+unsigned int SDL_GetNew(void);
+void SDL_Start(unsigned int hSDL);
+void SDL_End(unsigned int hSDL);
+void SDL_SetNbFaces(unsigned int hSDL, unsigned int NbFaces);
+void SDL_Preprocess(unsigned int hSDL);
+void SDL_Destroy(unsigned int* phSDL);
+void PS2glDisable(unsigned int cap);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 2064–2411 */
 /* addr: 0x002b6da0  size: 2008 bytes */
@@ -2389,7 +2405,69 @@ void GLI_vDMABufferParseTree(HIE_tdstSuperObject_* pSO)
     unsigned int* phSdl;
     SECT_tdstSector_* hSectorObject;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    if (pSO != NULL) {
+        HIE_fn_vPushMatrix(pSO);
+        if (pSO->ulTypeOfLinkedObject == 4) {
+            hSectorObject = pSO->hLinkedObject.p_stSector;
+            if (hSectorObject != NULL) {
+                if (GLI_g_DMA_PreparingOpaque) {
+                    phSdl = &hSectorObject->glOpaqueDisplayList;
+                } else {
+                    phSdl = &hSectorObject->glTransparentDisplayList;
+                }
+                GLI_g_DMA_SomethingWasDrawn = 0;
+                GLI_NbSDLFaces = 0;
+                *phSdl = SDL_GetNew();
+                SDL_Start(*phSdl);
+                PS2glDisable(0xB60);
+                GLI_vUpdateFogFromSector(hSectorObject);
+                GLI_g_NumberInList = 0;
+                GLI_g_DrawingSPO = 0;
+                PS2glDisable(0xB50);
+                DoingMainSector = 1;
+                if (GLI_g_DMA_PreparingOpaque) {
+                    GLI_g_DMA_DrawingAllNZ = 0;
+                    for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
+                        GLI_vDMABufferParseTreeForThisSector(hChild);
+                    }
+                    GLI_g_DMA_DrawingAllNZ = 1;
+                    for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
+                        GLI_vDMABufferParseTreeForThisSector(hChild);
+                    }
+                    GLI_g_DMA_DrawingAllNZ = 0;
+                }
+                else {
+                    for (GLI_g_CurrentPriority = -10; GLI_g_CurrentPriority <= 10; GLI_g_CurrentPriority++) {
+                        for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
+                            GLI_vDMABufferParseTreeForThisSector(hChild);
+                        }
+                    }
+                }
+                DoingMainSector = 0;
+                SDL_End(*phSdl);
+                SDL_SetNbFaces(*phSdl, GLI_NbSDLFaces);
+                if (!GLI_g_DMA_SomethingWasDrawn) {
+                    SDL_Destroy(phSdl);
+                }
+                else {
+                    SDL_Preprocess(*phSdl);
+                    GLI_g_NumberInList = 0;
+                    GLI_g_DrawingSPO = 0;
+                }
+            }
+        }
+        else {
+            for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
+                GLI_vDMABufferParseTree(hChild);
+            }
+        }
+        if (HIE_g_lNbMatrixInStack != 0) {
+            HIE_g_lNbMatrixInStack--;
+            HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+            g_p_stCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1045–1090 */
@@ -2669,16 +2747,95 @@ void GLI_fnv_CleanAlwaysSO(HIE_tdstSuperObject_* h_SuperObject)
  */
 void GLI_vCleanDispTemporaryDataSPO(HIE_tdstSuperObject_* _hSprObj)
 {
-    int i;
+    short iNbElement;
+    tdstObjectsTableElement_* p_ObjectsTableElement;
     GEO_tdstVisualSet_* hVisualSet;
+    int iNbLod;
+    int iOffset;
+    tdstObjectsTablesList_* p_stObjectTable;
+    int i;
     SECT_tdstSector_* hSectorObject;
     PO_tdstPhysicalObject_* PO;
     IPO_tdstInstanciatedPhysicalObject_* hIPO;
-    tdstObjectsTablesList_* p_stObjectTable;
-    tdstObjectsTableElement_* p_ObjectsTableElement;
-    int lType;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* p_stCharacter;
+    tdst3dData_* p_st3dData;
+    int lType;
+
+    Global_CharacterModuleBeingDisplayed = _hSprObj;
+    lType = _hSprObj->ulTypeOfLinkedObject;
+    if (lType == 2) {
+        if (_hSprObj != NULL) {
+            p_stCharacter = _hSprObj->hLinkedObject.p_stCharacter;
+            if (p_stCharacter != NULL) {
+                p_st3dData = p_stCharacter->h_3dData;
+                if (p_st3dData != NULL) {
+                    p_stObjectTable = p_st3dData->h_CurrentObjectsTable;
+                    if (p_stObjectTable != NULL) {
+                        if (p_stObjectTable->wNumberOfElement != 0) {
+                            iNbElement = 0;
+                            p_ObjectsTableElement = p_stObjectTable->d_stObjectsTable;
+                            for (; iNbElement < p_stObjectTable->wNumberOfElement; iNbElement++) {
+                                if (p_ObjectsTableElement->wTypeOfTarget == 0) {
+                                    hVisualSet = PO_fn_hGetVisualSet((PO_tdstPhysicalObject_*)p_ObjectsTableElement->h_Target);
+                                    if (hVisualSet != NULL) {
+                                        if (hVisualSet->xType == 0) {
+                                            if (hVisualSet->xNbLodDefinitions == 0) {
+                                                GLI_vCleanGeoObj(hVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject);
+                                            } else {
+                                                for (iNbLod = 0, iOffset = 0; iNbLod < hVisualSet->xNbLodDefinitions; iNbLod++, iOffset += 4) {
+                                                    GLI_vCleanGeoObj(((GEO_tduVSObject_*)((char*)hVisualSet->d_p_stLodDefinitions + iOffset))->p_stGeometricObject);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                p_ObjectsTableElement++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else if (lType == 32) {
+        hIPO = _hSprObj->hLinkedObject.p_stInstanciatedPhysicalObject;
+        if (hIPO != NULL) {
+            PO = hIPO->_hPhysicalObject;
+            if (PO != NULL) {
+                GLI_PS2GL_CleanSpecifForPO(PO);
+            }
+        }
+    }
+    else if (lType == 8) {
+        PO = _hSprObj->hLinkedObject.p_stPhysicalObject;
+        if (PO != NULL) {
+            GLI_PS2GL_CleanSpecifForPO(PO);
+        }
+    }
+    else if (lType == 4) {
+        hSectorObject = _hSprObj->hLinkedObject.p_stSector;
+        if (hSectorObject != NULL) {
+            if (hSectorObject->glOpaqueDisplayList != 0) {
+                SDL_Destroy(&hSectorObject->glOpaqueDisplayList);
+            }
+            hSectorObject->glOpaqueDisplayList = 0;
+            if (hSectorObject->glTransparentDisplayList != 0) {
+                SDL_Destroy(&hSectorObject->glTransparentDisplayList);
+            }
+            hSectorObject->glTransparentDisplayList = 0;
+        }
+    }
+    iNbElement = 0;
+    hChild = _hSprObj->hFirstElementDyn;
+    if (hChild != NULL) {
+        do {
+            GLI_vCleanDispTemporaryDataSPO(hChild);
+            hChild = hChild->hNextBrotherDyn;
+            iNbElement++;
+        } while (hChild != NULL);
+    }
+    Global_CharacterModuleBeingDisplayed = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 575–614 */
@@ -2716,32 +2873,29 @@ void GLI_vCleanDispTemporaryDataSPO(HIE_tdstSuperObject_* _hSprObj)
 void GLI_PS2GL_CleanSpecifForPO(PO_tdstPhysicalObject_* PO)
 {
     GEO_tdstGeometricObject_* pObj;
-    short i;
-    short xNbLodDefinitions;
     GEO_tdstVisualSet_* hVisualSet;
+    short xNbLodDefinitions;
+    short i;
     int iLodOffset;
 
-    if ((((unsigned int)PO & 0xffffff00) != 0) && (PO != NULL)) {
-        hVisualSet = PO->_hVisualSet;
-        if ((((unsigned int)hVisualSet & 0xffffff00) != 0) &&
-            (hVisualSet != NULL) && (hVisualSet->xType == 0)) {
-            xNbLodDefinitions = hVisualSet->xNbLodDefinitions;
-            if (xNbLodDefinitions == 0) {
-                xNbLodDefinitions = 1;
+    if (((unsigned int)PO & 0xffffff00) == 0) { return; }
+    if (PO == NULL) { return; }
+    hVisualSet = PO->_hVisualSet;
+    if (((unsigned int)hVisualSet & 0xffffff00) == 0) { return; }
+    if (hVisualSet == NULL) { return; }
+    if (hVisualSet->xType != 0) { return; }
+    xNbLodDefinitions = hVisualSet->xNbLodDefinitions;
+    if (xNbLodDefinitions == 0) {
+        xNbLodDefinitions = 1;
+    }
+    if (hVisualSet->d_p_stLodDefinitions == (GEO_tduVSObject_*)-1) { return; }
+    if (hVisualSet->d_p_stLodDefinitions != NULL) {
+        for (i = 0, iLodOffset = 0; i < xNbLodDefinitions; i++, iLodOffset += 4) {
+            pObj = *(GEO_tdstGeometricObject_**)((int)hVisualSet->d_p_stLodDefinitions + iLodOffset);
+            if (pObj == NULL) {
+                continue;
             }
-            if (hVisualSet->d_p_stLodDefinitions != (GEO_tduVSObject_*)-1) {
-                if (hVisualSet->d_p_stLodDefinitions != NULL) {
-                    for (i = 0, iLodOffset = 0;
-                         i < xNbLodDefinitions;
-                         i++, iLodOffset += 4) {
-                        pObj = *(GEO_tdstGeometricObject_**)((int)hVisualSet->d_p_stLodDefinitions + iLodOffset);
-                        if (pObj == NULL) {
-                            continue;
-                        }
-                        GLI_vCleanGeoObj(pObj);
-                    }
-                }
-            }
+            GLI_vCleanGeoObj(pObj);
         }
     }
 }
@@ -2890,7 +3044,79 @@ void GLI_PS2GL_PrepareSpecificDataForSPO(HIE_tdstSuperObject_* _hSO)
     PO_tdstPhysicalObject_* PO;
     IPO_tdstInstanciatedPhysicalObject_* hIPO;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* p_stCharacter;
+    tdst3dData_* p_st3dData;
+    short iNbElement;
+    int iNbLod;
+    int iOffset;
+
+    if (_hSO != NULL) {
+        iNbElement = 0;
+        hChild = _hSO->hFirstElementDyn;
+        if (hChild != NULL) {
+            do {
+                GLI_PS2GL_PrepareSpecificDataForSPO(hChild);
+                hChild = hChild->hNextBrotherDyn;
+                iNbElement++;
+            } while (hChild != NULL);
+        }
+    }
+    if (_hSO->ulTypeOfLinkedObject == 2) {
+        if (_hSO != NULL) {
+            p_stCharacter = _hSO->hLinkedObject.p_stCharacter;
+            if (p_stCharacter != NULL) {
+                p_st3dData = p_stCharacter->h_3dData;
+                if (p_st3dData != NULL) {
+                    p_stObjectTable = p_st3dData->h_CurrentObjectsTable;
+                    if (p_stObjectTable != NULL) {
+                        iNbElement = 0;
+                        if (p_stObjectTable->wNumberOfElement != 0) {
+                            p_ObjectsTableElement = p_stObjectTable->d_stObjectsTable;
+                            for (; iNbElement < p_stObjectTable->wNumberOfElement; iNbElement++) {
+                                if (p_ObjectsTableElement->wTypeOfTarget == 0) {
+                                    hVisualSet = PO_fn_hGetVisualSet((PO_tdstPhysicalObject_*)p_ObjectsTableElement->h_Target);
+                                    if (hVisualSet != NULL) {
+                                        if (hVisualSet->xType == 0) {
+                                            if (hVisualSet->xNbLodDefinitions == 0) {
+                                                GLI_vInspectObjectForShadow(hVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject);
+                                            } else {
+                                                for (iNbLod = 0, iOffset = 0; iNbLod < hVisualSet->xNbLodDefinitions; iNbLod++, iOffset += 4) {
+                                                    GLI_vInspectObjectForShadow(((GEO_tduVSObject_*)((char*)hVisualSet->d_p_stLodDefinitions + iOffset))->p_stGeometricObject);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                p_ObjectsTableElement++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else if (_hSO->ulTypeOfLinkedObject == 4) {
+        hSectorObject = _hSO->hLinkedObject.p_stSector;
+        if (hSectorObject != NULL) {
+            hSectorObject->glOpaqueDisplayList = 0;
+            hSectorObject->glTransparentDisplayList = 0;
+        }
+    }
+    else if (_hSO->ulTypeOfLinkedObject == 32) {
+        hIPO = _hSO->hLinkedObject.p_stInstanciatedPhysicalObject;
+        if (hIPO != NULL) {
+            PO = hIPO->_hPhysicalObject;
+            if (PO != NULL) {
+                GLI_PS2GL_BuildSpecifForPO(PO);
+            }
+        }
+    }
+    else if (_hSO->ulTypeOfLinkedObject == 8) {
+        PO = _hSO->hLinkedObject.p_stPhysicalObject;
+        if (PO != NULL) {
+            GLI_PS2GL_BuildSpecifForPO(PO);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 288–337 */

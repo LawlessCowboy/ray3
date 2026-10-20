@@ -35,7 +35,7 @@ struct COL_tdstCollideObject_ {
     short xNbElements; /* +0x2 */
     short xNbParallelBoxes; /* +0x4 */
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
+    short* d_xListOfElementsTypes; /* +0xc */
     int d_stListOfElements; /* +0x10 */
     COL_tdstOctree_* p_stOctree; /* +0x14 */
     COL_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
@@ -137,6 +137,12 @@ struct COL_tdstIndexedAlignedBox_ {
     GMT_tdstGameMaterial_* hMaterial; /* +0x4 */
 };
 
+extern void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
+/* Element type ids stored in COL_tdstCollideObject_.d_xListOfElementsTypes. */
+#define COL_ELEMENTTYPE_SPHERES 7
+#define COL_ELEMENTTYPE_ALIGNEDBOXES 8
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 616–617 */
 /* addr: 0x0024c940  size: 32 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -202,7 +208,22 @@ void COL_vGetMinMaxPointOfIndexedAlignedBox(COL_tdstCollideObject_* hObject, sho
 void COL_vCreateElementAlignedBoxes(COL_tdstCollideObject_* hObject, short* p_hElement, short xNbAlignedBoxes)
 {
     short xElementToBuild;
-    /* TODO: decompile from asm/... */
+    COL_tdstElementAlignedBoxes_* p_stElement;
+
+    for (xElementToBuild = 0; xElementToBuild < hObject->xNbElements; xElementToBuild++)
+    {
+        if (hObject->d_xListOfElementsTypes[xElementToBuild] == 0)
+        {
+            break;
+        }
+    }
+
+    if (xElementToBuild != hObject->xNbElements)
+    {
+        hObject->d_xListOfElementsTypes[xElementToBuild] = COL_ELEMENTTYPE_ALIGNEDBOXES;
+        *p_hElement = xElementToBuild;
+        p_stElement = (COL_tdstElementAlignedBoxes_*)HMU_fn_p_vMalloc(sizeof(COL_tdstElementAlignedBoxes_), 0); p_stElement->d_stListOfAlignedBoxes = (COL_tdstIndexedAlignedBox_*)HMU_fn_p_vMalloc(xNbAlignedBoxes * sizeof(COL_tdstIndexedAlignedBox_), 0); p_stElement->xNbAlignedBoxes = xNbAlignedBoxes; p_stElement->xIndexOfParallelBox = -1; (*(COL_tdstElementAlignedBoxes_***)&hObject->d_stListOfElements)[xElementToBuild] = p_stElement;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 427–428 */
@@ -272,7 +293,22 @@ GMT_tdstGameMaterial_* COL_hGetGameMaterialOfIndexedSphere(COL_tdstCollideObject
 void COL_vCreateElementSpheres(COL_tdstCollideObject_* hObject, short* p_hElement, short xNbSpheres)
 {
     short xElementToBuild;
-    /* TODO: decompile from asm/... */
+    COL_tdstElementSpheres_* p_stElement;
+
+    for (xElementToBuild = 0; xElementToBuild < hObject->xNbElements; xElementToBuild++)
+    {
+        if (hObject->d_xListOfElementsTypes[xElementToBuild] == 0)
+        {
+            break;
+        }
+    }
+
+    if (xElementToBuild != hObject->xNbElements)
+    {
+        hObject->d_xListOfElementsTypes[xElementToBuild] = COL_ELEMENTTYPE_SPHERES;
+        *p_hElement = xElementToBuild;
+        p_stElement = (COL_tdstElementSpheres_*)HMU_fn_p_vMalloc(sizeof(COL_tdstElementSpheres_), 0); p_stElement->d_stListOfSpheres = (COL_tdstIndexedSphere_*)HMU_fn_p_vMalloc(xNbSpheres * sizeof(COL_tdstIndexedSphere_), 0); p_stElement->xNbSpheres = xNbSpheres; p_stElement->xIndexOfParallelBox = -1; (*(COL_tdstElementSpheres_***)&hObject->d_stListOfElements)[xElementToBuild] = p_stElement;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollElts.c lines 201–204 */

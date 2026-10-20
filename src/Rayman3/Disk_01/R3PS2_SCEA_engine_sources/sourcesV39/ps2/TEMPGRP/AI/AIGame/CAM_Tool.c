@@ -10,6 +10,14 @@
     asm { madda.s _y, _y }                 \
     asm { madd.s _result, _z, _z }
 
+/* abs.s has no C form under MWCC; only that instruction is asm. */
+inline float MTH_xAbs(float xValue)
+{
+    float xResult;
+    asm { abs.s xResult, xValue }
+    return xResult;
+}
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
@@ -3110,6 +3118,28 @@ char cNoDynChangeTheta;
 char cRefAxisIsAlreadyComputed;
 CAM_tdstCameraConstants_ CAM_g_stCameraConstants;
 
+/* Word view of an MTH vector: the retail copies those with integer words. */
+typedef union { MTH3D_tdstVector_ stVector; int aiWords[3]; } CAMUV3;
+
+DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso);
+DNM_stParsingDatas* fn_p_stDynamGetParsingDatas(tdstDynam_* h_Dynam);
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+void CAM_fn_vComputeCameraSystemAxis(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, MTH3D_tdstVector_* _p_stNewPosition, MTH3D_tdstVector_* _p_stNewTarget, MTH3D_tdstVector_* _p_stAxisX, MTH3D_tdstVector_* _p_stAxisY, MTH3D_tdstVector_* _p_stAxisZ);
+void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vInitCameraStructure(HIE_tdstSuperObject_* _hSuperObjPerso, CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vComputeReferencePoint(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vComputeTarget(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vComputeRealWantedPos(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vComputeMovePosWithDynTheta(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vForceFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vComputeFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct);
+void fn_vGetPersoSightAxisSystem(tdstCineinfo_* _hCineinfo, MTH3D_tdstVector_* _p_stSightAxis, MTH3D_tdstVector_* _p_stFirstComplementaryAxis, MTH3D_tdstVector_* _p_stSecondComplementaryAxis);
+void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+float CAM_fn_xComputeHorizontalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ);
+float CAM_fn_xComputeVerticalAngle(MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVector_* _p_stAxisZ);
+void CAM_fn_vAverageSpeed(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_tdstVector_* p_result);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 973–1011 */
 /* addr: 0x002099f0  size: 172 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3138,7 +3168,21 @@ CAM_tdstCameraConstants_ CAM_g_stCameraConstants;
 void CAM_fn_vForceBestPosition(HIE_tdstSuperObject_* _hCamera)
 {
     CAM_tdstUpdateCamera_ stStruct;
-    /* TODO: decompile from asm/... */
+
+    CAM_fn_vSetCineinfoWorkFromCurrent(_hCamera->hLinkedObject.p_stCharacter->h_Cineinfo);
+    CAM_fn_vInitCameraStructure(_hCamera, &stStruct);
+    cRefAxisIsAlreadyComputed = (stStruct.hCineinfoWork->uwIAFlags & 0x4000) ? 1 : 0;
+    cNoDynChangeTheta = (stStruct.hCineinfoWork->uwIAFlags & 0x20) ? 1 : 0;
+    cCanTestStatic = 1;
+    CAM_fn_vComputeReferencePoint(&stStruct);
+    CAM_fn_vComputeTarget(&stStruct);
+    CAM_fn_vComputeRealWantedPos(&stStruct);
+    CAM_fn_vComputeMovePosWithDynTheta(&stStruct);
+    if (stStruct.hCineinfoCurrent->hSuperObjectTargeted != NULL)
+    {
+        CAM_fn_vForceFailureVisibility(&stStruct);
+        CAM_fn_vComputeFailureVisibility(&stStruct);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 847–966 */
@@ -3255,8 +3299,24 @@ void CAM_fn_vSendParametersToParsing(CAM_tdstUpdateCamera_* _p_stStruct)
 void CAM_fn_vInitCameraStructure(HIE_tdstSuperObject_* _hSuperObjPerso, CAM_tdstUpdateCamera_* _p_stStruct)
 {
     DNM_stDynamics* p_stDynamics;
+    MAT_tdstTransformation_* pMatrix;
     MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+
+    memset(_p_stStruct, 0, 0xD0);
+    p_stDynamics = fn_p_stDynamGetDynamics(_hSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam);
+    _p_stStruct->p_stDynamics = p_stDynamics;
+    _p_stStruct->p_stReport = _p_stStruct->p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
+    _p_stStruct->hCineinfo = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
+    _p_stStruct->hCineinfoWork = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hWork;
+    _p_stStruct->hCineinfoCurrent = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent;
+    _p_stStruct->hCineinfoInit = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hInit;
+    _p_stStruct->hCineinfoVisibility = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo->hVisibility;
+    _p_stStruct->hSuperObjCamera = _hSuperObjPerso;
+    pMatrix = _hSuperObjPerso->hGlobalMatrix; *(int*)&_p_stStruct->stCurrentCameraPos.xX = *(int*)&pMatrix->stTransformMatrix.stCol_3.xX; *(int*)&_p_stStruct->stCurrentCameraPos.xY = *(int*)&pMatrix->stTransformMatrix.stCol_3.xY; *(int*)&_p_stStruct->stCurrentCameraPos.xZ = *(int*)&pMatrix->stTransformMatrix.stCol_3.xZ;
+    if (_p_stStruct->hCineinfoCurrent->hSuperObjectTargeted)
+    {
+        CAM_fn_vAverageSpeed(_p_stStruct->hCineinfo, CAM_g_stCameraConstants.xAverageForComputeLinearSpeed, &stTempVector);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 643–745 */
@@ -3390,13 +3450,26 @@ float Cam_fn_xComputeProjectionRail(MTH3D_tdstVector_* _p_stTargetedPersoPos, MT
  */
 void CAM_fn_vGetPersoSightAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stAxis, MTH3D_tdstVector_* _p_stAxisZ)
 {
-    HIE_tdstSuperObject_* hPerso;
+    CAMUV3 stFirstComplementaryAxis;
+    CAMUV3 stSecondComplementaryAxis;
+    CAMUV3 stTmpVector1;
+    CAMUV3 stTmpVector2;
     unsigned char ucChannel;
-    MTH3D_tdstVector_ stTmpVector2;
-    MTH3D_tdstVector_ stTmpVector1;
-    MTH3D_tdstVector_ stSecondComplementaryAxis;
-    MTH3D_tdstVector_ stFirstComplementaryAxis;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hPerso;
+
+    hPerso = _p_stStruct->hCineinfoWork->hSuperObjectTargeted;
+    fn_vGetPersoSightAxisSystem(_p_stStruct->hCineinfo, _p_stAxis, &stFirstComplementaryAxis.stVector, &stSecondComplementaryAxis.stVector);
+    ucChannel = (unsigned char)_p_stStruct->hCineinfoWork->cChannel;
+    if (ucChannel != 255)
+    {
+        tdstAChannel_* p_stChannels = hPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels; if (p_stChannels) hPerso = p_stChannels[(unsigned char)_p_stStruct->hCineinfoWork->cChannel].hSupObject; else hPerso = NULL;
+    }
+    MAT_fn_vGetRotationVectors(hPerso->hGlobalMatrix, &stTmpVector1.stVector, _p_stAxis, &stTmpVector2.stVector);
+    if (_p_stAxisZ != NULL)
+    {
+        *(int*)&_p_stAxisZ->xX = stTmpVector2.aiWords[0]; *(int*)&_p_stAxisZ->xY = stTmpVector2.aiWords[1]; *(int*)&_p_stAxisZ->xZ = stTmpVector2.aiWords[2];
+    }
+    _p_stAxis->xX = -_p_stAxis->xX; _p_stAxis->xY = -_p_stAxis->xY; _p_stAxis->xZ = -_p_stAxis->xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 492–498 */
@@ -3409,6 +3482,7 @@ void CAM_fn_vGetPersoSightAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVec
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 float CAM_fn_xSetAngleInInterval02Pi(float _xAngle)
 {
     if (_xAngle < 0.0f)
@@ -3457,9 +3531,12 @@ float CAM_fn_xSetAngleInIntervalPiPi(float _xAngle)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vComputeAnglesBetweenTwoVectors(MTH3D_tdstVector_* _p_stSourceVector, MTH3D_tdstVector_* _p_stTargetVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle, MTH3D_tdstVector_* _p_stRefAxisZ)
+void CAM_fn_vComputeAnglesBetweenTwoVectors(MTH3D_tdstVector_* _p_stUnusedVector, MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle, MTH3D_tdstVector_* _p_stRefAxisZ)
 {
-    /* TODO: decompile from asm/... */
+    float xPi = 3.1415927f;
+    *_p_xHorizontalAngle = CAM_fn_xComputeHorizontalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
+    *_p_xVerticalAngle = CAM_fn_xComputeVerticalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
+    if (MTH_xAbs(*_p_xVerticalAngle) > 3.1415927f / 2.0f) { if (*_p_xVerticalAngle > 0.0f) *_p_xVerticalAngle = xPi - *_p_xVerticalAngle; else *_p_xVerticalAngle = -xPi - *_p_xVerticalAngle; } *_p_xHorizontalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xHorizontalAngle); *_p_xVerticalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xVerticalAngle);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 409–416 */
@@ -3665,14 +3742,25 @@ unsigned char CAM_fn_bPersoIsMoving(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_td
  */
 void CAM_fn_vForceCameraTgt(HIE_tdstSuperObject_* _hSuperObjCamera, MTH3D_tdstVector_* _p_stPosition, MTH3D_tdstVector_* _p_stRefAxisZ)
 {
-    MTH3D_tdstVector_ stCameraPosition;
-    MTH3D_tdstVector_ stZ;
-    MTH3D_tdstVector_ stY;
-    MTH3D_tdstVector_ stX;
-    DNM_stReport* p_stReport;
+    CAMUV3 stX;
+    CAMUV3 stY;
+    CAMUV3 stZ;
+    CAMUV3 stCameraPosition;
     DNM_stParsingDatas* p_stParsingDatas;
+    DNM_stReport* p_stReport;
     tdstDynam_* h_Dynam;
-    /* TODO: decompile from asm/... */
+    MAT_tdstTransformation_* hMatrix;
+
+    h_Dynam = _hSuperObjCamera->hLinkedObject.p_stCharacter->h_Dynam;
+    p_stReport = fn_pstGetDNMReport(_hSuperObjCamera);
+    p_stParsingDatas = fn_p_stDynamGetParsingDatas(h_Dynam);
+    hMatrix = _hSuperObjCamera->hGlobalMatrix; stCameraPosition.aiWords[0] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[0]; stCameraPosition.aiWords[1] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[1]; stCameraPosition.aiWords[2] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[2];
+    stZ.aiWords[0] = ((int*)_p_stRefAxisZ)[0]; stZ.aiWords[1] = ((int*)_p_stRefAxisZ)[1]; stZ.aiWords[2] = ((int*)_p_stRefAxisZ)[2];
+    CAM_fn_vComputeCameraSystemAxis(fn_p_stDynamGetDynamics(h_Dynam), _hSuperObjCamera, &stCameraPosition.stVector, _p_stPosition, &stX.stVector, &stY.stVector, &stZ.stVector);
+    MAT_fn_vSetRotationVectors(_hSuperObjCamera->hLocalMatrix, &stX.stVector, &stY.stVector, &stZ.stVector);
+    MAT_fn_vSetRotationVectors(_hSuperObjCamera->hGlobalMatrix, &stX.stVector, &stY.stVector, &stZ.stVector);
+    *(int*)&p_stParsingDatas->stVector.xX = *(int*)&_p_stPosition->xX; *(int*)&p_stParsingDatas->stVector.xY = *(int*)&_p_stPosition->xY; *(int*)&p_stParsingDatas->stVector.xZ = *(int*)&_p_stPosition->xZ;
+    p_stReport->m_stAbsolutePrevPosition.m_stLinear.xX = 0.0f; p_stReport->m_stAbsolutePrevPosition.m_stLinear.xY = 0.0f; p_stReport->m_stAbsolutePrevPosition.m_stLinear.xZ = 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 106–129 */

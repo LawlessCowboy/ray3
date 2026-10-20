@@ -42,7 +42,9 @@ struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
     MTH3D_tdstVector_* d_stListOfPointsNormals; /* +0x4 */
     int d_dfVertexTransparency; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
+    /* The element-type table is an array of shorts (the retail code loads it
+       with 'lh' and stores the type with 'sh'), not a plain int. */
+    short* d_xListOfElementsTypes; /* +0xc */
     int d_stListOfElements; /* +0x10 */
     GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
     GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
@@ -219,6 +221,10 @@ unsigned char g_ucGEOModuleId;
 /* Defined by the GEO culling module; shared by the element helpers. */
 extern float GEO_g_xZFar;
 
+extern void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+extern void Erm_fn_ClearLastError(unsigned int ulChannelId);
+extern void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 64–64 */
 /* addr: 0x002a1500  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -305,8 +311,19 @@ void GEO_vSetPointsOfIndexedCone(GEO_tdstGeometricObject_* hObject, short hEleme
  */
 void GEO_vCreateElementCones(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbCones)
 {
+    GEO_tdstElementCones_* p_stElement;
     short xElementToBuild;
-    /* TODO: decompile from asm/... */
+
+    for (xElementToBuild = 0; xElementToBuild < hObject->xNbElements; xElementToBuild++)
+    {
+        if (hObject->d_xListOfElementsTypes[xElementToBuild] == 0) break;
+    }
+    if (xElementToBuild == hObject->xNbElements) return;
+    hObject->d_xListOfElementsTypes[xElementToBuild] = 9;
+    *p_hElement = xElementToBuild;
+    /* The retail source allocated and filled the new element in a single
+       statement group on one source line (retail line 567). */
+    p_stElement = (GEO_tdstElementCones_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstElementCones_), 0); p_stElement->d_stListOfCones = (GEO_tdstIndexedCone_*)HMU_fn_p_vMalloc(xNbCones * sizeof(GEO_tdstIndexedCone_), 0); p_stElement->xNbCones = xNbCones; p_stElement->xIndexOfParallelBox = -1; (*(GEO_tdstElementCones_***)&hObject->d_stListOfElements)[xElementToBuild] = p_stElement;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 396–398 */
@@ -381,8 +398,19 @@ void GEO_vSetCenterPointOfIndexedSphere(GEO_tdstGeometricObject_* hObject, short
  */
 void GEO_vCreateElementSpheres(GEO_tdstGeometricObject_* hObject, short* p_hElement, short xNbSpheres)
 {
+    GEO_tdstElementSpheres_* p_stElement;
     short xElementToBuild;
-    /* TODO: decompile from asm/... */
+
+    for (xElementToBuild = 0; xElementToBuild < hObject->xNbElements; xElementToBuild++)
+    {
+        if (hObject->d_xListOfElementsTypes[xElementToBuild] == 0) break;
+    }
+    if (xElementToBuild == hObject->xNbElements) return;
+    hObject->d_xListOfElementsTypes[xElementToBuild] = 7;
+    *p_hElement = xElementToBuild;
+    /* The retail source allocated and filled the new element in a single
+       statement group on one source line (retail line 263). */
+    p_stElement = (GEO_tdstElementSpheres_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstElementSpheres_), 0); p_stElement->d_stListOfSpheres = (GEO_tdstIndexedSphere_*)HMU_fn_p_vMalloc(xNbSpheres * sizeof(GEO_tdstIndexedSphere_), 0); p_stElement->xNbSpheres = xNbSpheres; p_stElement->xIndexOfParallelBox = -1; (*(GEO_tdstElementSpheres_***)&hObject->d_stListOfElements)[xElementToBuild] = p_stElement;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Element.c lines 54–115 */
@@ -424,5 +452,43 @@ void GEO_vCreateElementSpheres(GEO_tdstGeometricObject_* hObject, short* p_hElem
 GEO_tdstElementIndexedTriangles_* GEO_p_stAllocElementIndexedTriangles(short xNbFaces, short xNbElementUV, short xNbUVStages)
 {
     GEO_tdstElementIndexedTriangles_* p_stLocalElement;
-    /* TODO: decompile from asm/... */
+
+    p_stLocalElement = (GEO_tdstElementIndexedTriangles_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstElementIndexedTriangles_), 0);
+    if (xNbFaces)
+    {
+        p_stLocalElement->d_stListOfFacesTripled = (GEO_tdstTripledIndex_*)HMU_fn_p_vMalloc(xNbFaces * sizeof(GEO_tdstTripledIndex_), 0);
+        if (xNbUVStages)
+        {
+            p_stLocalElement->d_stListOfFacesTripledIndexUV = (GEO_tdstTripledIndex_*)HMU_fn_p_vMalloc(xNbUVStages * (xNbFaces * sizeof(GEO_tdstTripledIndex_)), 0);
+        }
+        else
+        {
+            p_stLocalElement->d_stListOfFacesTripledIndexUV = NULL;
+        }
+        p_stLocalElement->d_stListOfFacesNormals = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbFaces * sizeof(MTH3D_tdstVector_), 0);
+    }
+    else
+    {
+        p_stLocalElement->d_stListOfFacesTripled = NULL;
+        p_stLocalElement->d_stListOfFacesTripledIndexUV = NULL;
+        p_stLocalElement->d_stListOfFacesNormals = NULL;
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(4, g_ucGEOModuleId, 0, 9, -1, 255, 255, NULL);
+    }
+    if (xNbElementUV)
+    {
+        p_stLocalElement->d_stListOfElementUV = (ACP_tdst2DUVValues_*)HMU_fn_p_vMalloc(xNbElementUV * sizeof(ACP_tdst2DUVValues_), 0);
+    }
+    else
+    {
+        p_stLocalElement->d_stListOfElementUV = NULL;
+    }
+    p_stLocalElement->xNbElementUV = xNbElementUV;
+    p_stLocalElement->xNbUVStages = xNbUVStages;
+    p_stLocalElement->xNbFaces = xNbFaces;
+    p_stLocalElement->xNumberOfIndexsUsed = 0;
+    p_stLocalElement->d_stListOfIndexUsedByThisElement = NULL;
+    p_stLocalElement->xIndexOfParallelBox = -1;
+    p_stLocalElement->bVisibleInPortal = 1;
+    return p_stLocalElement;
 }

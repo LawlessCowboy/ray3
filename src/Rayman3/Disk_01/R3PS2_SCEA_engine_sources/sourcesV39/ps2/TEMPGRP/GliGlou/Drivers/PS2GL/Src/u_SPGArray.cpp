@@ -4,6 +4,25 @@
 
 #include <stddef.h>
 
+extern "C" int CD_OpenFile(char* FileName);
+extern "C" unsigned int CD_Length(int FileHandle);
+extern "C" unsigned int CD_Seek(int FileHandle, int Position, int WhereFrom);
+extern "C" int CD_Read(int FileHandle, char* Buffer, int Size);
+extern "C" void CD_Close(int FileHandle);
+extern "C" void PS2glGenTextures(unsigned int NbTextures, unsigned int* pTextureNames);
+extern "C" void PS2glBindTexture(unsigned int target, unsigned int texture);
+extern "C" void PS2glColorTableEXT(unsigned int target, unsigned int internalFormat, int width, unsigned int format, unsigned int type, void* data);
+extern "C" void PS2glTexImage2D(unsigned int target, int level, int components, int width, int height, int border, unsigned int format, unsigned int type, void* pixels);
+extern "C" void GLI_vInitGLProjectionMatrix(void);
+extern "C" void PS2glMatrixMode(unsigned int mode);
+extern "C" void PS2glLoadMatrixf(const float* pMatrix);
+extern "C" void GLI_vClearSendMatStates(void);
+extern "C" void PS2glNormalPointer(int type, int stride, void* pointer);
+extern "C" void PS2glTexCoordPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glColorPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glVertexPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glInternalDrawArrays(int mode, int first, int count, int stride, int flags);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct S_TXR_Header_ S_TXR_Header_;
 typedef struct aggregate aggregate;
@@ -80,9 +99,18 @@ typedef struct sceGsPrmode sceGsPrmode;
 typedef struct sceGsSignal sceGsSignal;
 typedef struct tagGScontext tagGScontext;
 
+extern "C" void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
+
 
 struct C_LoadingScreen {
     int LoadTexture(char* TextureFileName, unsigned int** ppTextureData, unsigned int* pTextureName);
+};
+
+struct S_TXR_Header_ {
+    unsigned int VersionID; /* +0x0 */
+    unsigned int Flags; /* +0x4 */
+    unsigned int SizeX; /* +0x8 */
+    unsigned int SizeY; /* +0xc */
 };
 
 struct C_VertexArrayContainer {
@@ -90,8 +118,8 @@ struct C_VertexArrayContainer {
     int m_pV[2]; /* +0x4 */
     int m_pC[2]; /* +0xc */
     int m_pT[2]; /* +0x14 */
-    unsigned int m_TotalNbVertices; /* +0x1c */
-    unsigned int m_CurrentIndex; /* +0x20 */
+    int m_TotalNbVertices; /* +0x1c */
+    int m_CurrentIndex; /* +0x20 */
     unsigned int m_bMatrixWasSet; /* +0x24 */
     unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x28..0x2f */
     float m_Matrix[4][4] __attribute__((aligned(16))); /* +0x30 */
@@ -413,15 +441,16 @@ struct sceGsXyzf {
 };
 
 struct sceGsTest {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 union QWORD {
@@ -915,7 +944,7 @@ struct tagGLcontext {
     float (*pvColorRange)[4]; /* +0x6c18 */
     int pfAlpha; /* +0x6c1c */
     int pfShininess; /* +0x6c20 */
-    int pnColorMatMasks; /* +0x6c24 */
+    int* pnColorMatMasks; /* +0x6c24 */
     int pbFogging; /* +0x6c28 */
     int peFogMode; /* +0x6c2c */
     int pfFogDensity; /* +0x6c30 */
@@ -1077,6 +1106,50 @@ struct sceGsSignal {
     unsigned int IDMSK; /* +0x4 */
 };
 
+struct tagGSModFlgs {
+    unsigned long PRIM_Modified : 1;
+    unsigned long RGBAQ_Modified : 1;
+    unsigned long ST_Modified : 1;
+    unsigned long UV_Modified : 1;
+    unsigned long XYZF2_Modified : 1;
+    unsigned long XYZ2_Modified : 1;
+    unsigned long TEX0_1_Modified : 1;
+    unsigned long TEX0_2_Modified : 1;
+    unsigned long CLAMP_1_Modified : 1;
+    unsigned long CLAMP_2_Modified : 1;
+    unsigned long FOG_Modified : 1;
+    unsigned long XYZF3_Modified : 1;
+    unsigned long XYZ3_Modified : 1;
+    unsigned long TEX1_1_Modified : 1;
+    unsigned long TEX1_2_Modified : 1;
+    unsigned long TEX2_1_Modified : 1;
+    unsigned long TEX2_2_Modified : 1;
+    unsigned long XYOFFSET_1_Modified : 1;
+    unsigned long XYOFFSET_2_Modified : 1;
+    unsigned long PRMODECONT_Modified : 1;
+    unsigned long PRMODE_Modified : 1;
+    unsigned long TEXCLUT_Modified : 1;
+    unsigned long SCANMSK_Modified : 1;
+    unsigned long MIPTBP1_1_Modified : 1;
+    unsigned long MIPTBP1_2_Modified : 1;
+    unsigned long MIPTBP2_1_Modified : 1;
+    unsigned long MIPTBP2_2_Modified : 1;
+    unsigned long TEXA_Modified : 1;
+    unsigned long FOGCOL_Modified : 1;
+    unsigned long TEXFLUSH_Modified : 1;
+    unsigned long SCISSOR_1_Modified : 1;
+    unsigned long SCISSOR_2_Modified : 1;
+    unsigned char ALPHA_1_Modified : 1;
+    unsigned char ALPHA_2_Modified : 1;
+    unsigned char DIMX_Modified : 1;
+    unsigned char DTHE_Modified : 1;
+    unsigned char COLCLAMP_Modified : 1;
+    unsigned char TEST_1_Modified : 1;
+    unsigned char TEST_2_Modified : 1;
+    unsigned char PABE_Modified : 1;
+    unsigned char _extractor_padding_00[3];
+};
+
 struct tagGScontext {
     sceGsPrim PRIM; /* +0x0 */
     sceGsRgbaq RGBAQ; /* +0x8 */
@@ -1132,10 +1205,8 @@ struct tagGScontext {
     sceGsSignal SIGNAL; /* +0x198 */
     tagsceGsReg FINISH; /* +0x1a0 */
     sceGsLabel LABEL; /* +0x1a8 */
-    /* aggregate */ int ModFlgs; /* +0x1b0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x1b4..0x1b7 */
-    /* aggregate */ int GlobalModFlgs; /* +0x1b8 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x1bc..0x1bf */
+    /* aggregate */ tagGSModFlgs ModFlgs; /* +0x1b0 */
+    /* aggregate */ tagGSModFlgs GlobalModFlgs; /* +0x1b8 */
     QWORD PackageBuffer[518]; /* +0x1c0 */
     int iBufCount; /* +0x2220 */
     QWORD* pqCurrent; /* +0x2224 */
@@ -1152,8 +1223,8 @@ unsigned int VAC_g_CurrentNbSprites;
 int GLI_g_AnimatedTextureToUse;
 tagGLcontext g_PS2glContext;
 tagGScontext g_gsContext;
-int PS2glLiberator;
-int PS2glAllocator64;
+void (*PS2glLiberator)(void*);
+void* (*PS2glAllocator64)(unsigned int);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 224–264 */
 /* addr: 0x002cedf0  size: 392 bytes */
@@ -1186,12 +1257,34 @@ int PS2glAllocator64;
  */
 int C_LoadingScreen::LoadTexture(char* TextureFileName, unsigned int** ppTextureData, unsigned int* pTextureName)
 {
-    char* TextureData;
-    S_TXR_Header_* pHeader;
     unsigned int SizeOfFile;
-    int In;
-    /* TODO: decompile from asm/... */
-    return 0;
+    int hFile;
+    S_TXR_Header_* pHeader;
+    unsigned char* pData;
+    hFile = CD_OpenFile(TextureFileName);
+    if (hFile < 0) {
+        return 0;
+    }
+    SizeOfFile = CD_Length(hFile);
+    CD_Seek(hFile, 0, 0);
+    *ppTextureData = (unsigned int*)PS2glAllocator64(SizeOfFile);
+    CD_Read(hFile, (char*)*ppTextureData, (int)SizeOfFile);
+    pHeader = (S_TXR_Header_*)*ppTextureData;
+    pData = (unsigned char*)pHeader + 0x10;
+    PS2glGenTextures(1, pTextureName);
+    PS2glBindTexture(0xDE1, *pTextureName);
+    g_PS2glContext.eTexUserMaintainMode = 2;
+    g_PS2glContext.eTexConvMode = 3;
+    g_PS2glContext.eClutConvMode = 2;
+    if (pHeader->Flags & 1) {
+        PS2glColorTableEXT(0xDE1, 0x8058, 0x10, 0x1908, 0x1401, pData);
+        PS2glTexImage2D(0xDE1, 0, 0x1900, pHeader->SizeX, pHeader->SizeY, 0, 0x80E4, 0x1401, pData + 0x40);
+    } else {
+        PS2glColorTableEXT(0xDE1, 0x8058, 0x100, 0x1908, 0x1401, pData);
+        PS2glTexImage2D(0xDE1, 0, 0x1900, pHeader->SizeX, pHeader->SizeY, 0, 0x80E5, 0x1401, pData + 0x400);
+    }
+    CD_Close(hFile);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 415–416 */
@@ -1252,10 +1345,26 @@ void VAC_UnAcquireAndDraw(void* hContainer, unsigned int NbSprites)
 int VAC_Acquire(void* hContainer, float (*pMatrix)[4][4], GLI_tdstMaterial_* pMat)
 {
     C_VertexArrayContainer* pContainer;
-    /* TODO: decompile from asm/... */
-    return 0;
+    char* pc;
+    int nbSpritesLeft;
+    pContainer = (C_VertexArrayContainer*)hContainer;
+    pContainer->SetMatrix(pMatrix);
+    pContainer->m_AnimatedTextureToUse = GLI_g_AnimatedTextureToUse;
+    pContainer->m_pMat = pMat;
+    pc = (char*)pContainer + 4;
+    VAC_g_CurrentpV = ((int*)pc)[pContainer->m_CurrentFrameIndex] + pContainer->m_CurrentIndex * 16;
+    pc = (char*)pContainer + 0xc;
+    VAC_g_CurrentpC = ((int*)pc)[pContainer->m_CurrentFrameIndex] + pContainer->m_CurrentIndex * 16;
+    pc = (char*)pContainer + 0x14;
+    VAC_g_CurrentpT = ((int*)pc)[pContainer->m_CurrentFrameIndex] + pContainer->m_CurrentIndex * 16;
+    nbSpritesLeft = (pContainer->m_TotalNbVertices - pContainer->m_CurrentIndex) / 6;
+    VAC_g_NbSpritesLefts = nbSpritesLeft;
+    if (nbSpritesLeft < 0) {
+        VAC_g_NbSpritesLefts = 0;
+    }
+    VAC_g_CurrentNbSprites = 0;
+    return VAC_g_NbSpritesLefts;
 }
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 361–362 */
 /* addr: 0x002cf0c0  size: 20 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1352,12 +1461,72 @@ void* VAC_Create(unsigned int NbSprites)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Reconstructed from the retail disassembly (asm/.../u_SPGArray.s, 0x002cf140).
+   Notes on the recovered shape:
+   - the whole body is guarded by 'if (NbSprites != 0)'; the tail always adds
+     NbSprites * 6 to m_CurrentIndex (recomputed there, not reused from s0).
+   - GLI_vInitGLProjectionMatrix is called with no argument; the retail passes
+     no argument either (a0 keeps its old value), and NbSprites * 6 is
+     computed in the call's delay slot.
+   - the depth-function block is the PS2GL library's impPS2glDepthFunc switch
+     (cases 0x200/0x207/0x203/0x201 in that order), and the GS context is
+     updated through byte accesses, which needs ZTE/ZTST and the ModFlgs flags
+     32-39 in unsigned char bitfield containers.
+   - the retail calls PS2glNormalPointer with three arguments (no size), the
+     other three pointer calls with four. */
 void C_VertexArrayContainer::UnAcquireAndDraw(unsigned int NbSprites)
 {
     unsigned char zTst;
     void* pAnimaterTextureToUseSaved;
     unsigned int NbVertices;
-    /* TODO: decompile from asm/... */
+    if (NbSprites != 0) {
+        NbVertices = NbSprites * 6;
+        GLI_vInitGLProjectionMatrix();
+        if (m_bMatrixWasSet) {
+            PS2glMatrixMode(0x1700);
+            PS2glLoadMatrixf((float*)&m_Matrix);
+        }
+        if (m_pMat) {
+            pAnimaterTextureToUseSaved = (void*)GLI_g_AnimatedTextureToUse;
+            GLI_g_AnimatedTextureToUse = m_AnimatedTextureToUse;
+            GLI_vClearSendMatStates();
+            GLI_DRV_SendMaterialToViewport(m_pMat);
+            g_PS2glContext.nEnableBits |= 0x800;
+            g_gsContext.TEST_1.ZTE = 1;
+            g_gsContext.ModFlgs.TEST_1_Modified = 1;
+            zTst = 1;
+            GLI_g_AnimatedTextureToUse = (int)pAnimaterTextureToUseSaved;
+            switch (g_PS2glContext.eDepthFunc)
+            {
+            case 0x200: zTst = 0; break;
+            case 0x207: zTst = 1; break;
+            case 0x203: zTst = 2; break;
+            case 0x201: zTst = 3; break;
+            case 0x202:
+            case 0x204:
+            case 0x205:
+            case 0x206:
+                break;
+            }
+            g_gsContext.TEST_1.ZTST = zTst;
+            g_gsContext.ModFlgs.TEST_1_Modified = 1;
+            g_PS2glContext.nLightBits &= ~0x400;
+        }
+        g_PS2glContext.eClippingFunction = 3;
+        if (g_PS2glContext.uiDmaOmitDataBits & 0x600) {
+            *g_PS2glContext.pnColorMatMasks &= ~0x200;
+            *g_PS2glContext.pnColorMatMasks &= ~0x100;
+        }
+        g_PS2glContext.uiDmaOmitDataBits = 0;
+        g_PS2glContext.uiFastPathBits = 1;
+        PS2glNormalPointer(0x1406, -2, (void*)(((int*)&m_pV[0])[m_CurrentFrameIndex] + m_CurrentIndex * 16));
+        PS2glTexCoordPointer(NbVertices, 0x1406, -2, (void*)(((int*)&m_pT[0])[m_CurrentFrameIndex] + m_CurrentIndex * 16));
+        PS2glColorPointer(NbVertices, 0x1406, -2, (void*)(((int*)&m_pC[0])[m_CurrentFrameIndex] + m_CurrentIndex * 16));
+        PS2glVertexPointer(NbVertices, 0x1406, -2, (void*)(((int*)&m_pV[0])[m_CurrentFrameIndex] + m_CurrentIndex * 16));
+        PS2glInternalDrawArrays(4, 0, NbVertices, g_PS2glContext.VertexArray.stride, 1);
+        g_PS2glContext.eClippingFunction = 3;
+    }
+    m_CurrentIndex += NbSprites * 6;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 205–220 */
@@ -1381,9 +1550,20 @@ void C_VertexArrayContainer::UnAcquireAndDraw(unsigned int NbSprites)
  */
 void C_VertexArrayContainer::SetMatrix(float (*pMatrix)[4][4])
 {
+    float (*pDst)[4][4];
     if (pMatrix != 0) {
         m_bMatrixWasSet = 1;
-        m_Matrix = *pMatrix;
+        pDst = &m_Matrix;
+        asm {
+            lqc2 vf1, 0x0(pMatrix)
+            lqc2 vf2, 0x10(pMatrix)
+            lqc2 vf3, 0x20(pMatrix)
+            lqc2 vf4, 0x30(pMatrix)
+            sqc2 vf1, 0x0(pDst)
+            sqc2 vf2, 0x10(pDst)
+            sqc2 vf3, 0x20(pDst)
+            sqc2 vf4, 0x30(pDst)
+        }
     } else {
         m_bMatrixWasSet = 0;
     }
@@ -1403,7 +1583,12 @@ void C_VertexArrayContainer::SetMatrix(float (*pMatrix)[4][4])
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void __dt__22C_VertexArrayContainerFv(void)
+C_VertexArrayContainer::~C_VertexArrayContainer()
 {
-    /* TODO: decompile from asm/... */
+    if (m_pV[0] != 0) { PS2glLiberator((void*)m_pV[0]); m_pV[0] = 0; }
+    if (m_pV[1] != 0) { PS2glLiberator((void*)m_pV[1]); m_pV[1] = 0; }
+    if (m_pC[0] != 0) { PS2glLiberator((void*)m_pC[0]); m_pC[0] = 0; }
+    if (m_pC[1] != 0) { PS2glLiberator((void*)m_pC[1]); m_pC[1] = 0; }
+    if (m_pT[0] != 0) { PS2glLiberator((void*)m_pT[0]); m_pT[0] = 0; }
+    if (m_pT[1] != 0) { PS2glLiberator((void*)m_pT[1]); m_pT[1] = 0; }
 }

@@ -1081,6 +1081,12 @@ struct tagstVIFCode {
     unsigned char CMD; /* +0x3 */
 };
 
+/* A 16-byte aligned group of four integers: the retail code moves the whole
+ * fog colour in one quadword load/store pair. */
+typedef struct tag_int4 {
+    int c[4];
+} __attribute__((aligned(16))) tag_int4;
+
 tagGLcontext g_PS2glContext;
 tagGScontext g_gsContext;
 
@@ -1139,7 +1145,42 @@ tagGScontext g_gsContext;
  */
 void gifSetTag(anon_1* pTag, unsigned short nLoop, unsigned char EOP, unsigned char PRE, unsigned short PRIM, unsigned short FLG, unsigned char nReg, unsigned char* pRegs)
 {
-    /* TODO: decompile from asm/... */
+    pTag->NLOOP = nLoop;
+    pTag->EOP = EOP;
+    pTag->PRE = PRE;
+    pTag->PRIM = PRIM;
+    pTag->FLG = FLG;
+    if (nReg > 16)
+    {
+        nReg = 16;
+    }
+    pTag->NREG = (nReg == 16) ? 0 : nReg;
+    if (nReg > 0)
+    {
+        pRegs += nReg - 1;
+        if (pRegs != NULL)
+        {
+            switch (nReg)
+            {
+            case 15: pTag->REGS15 = *(pRegs--);
+            case 14: pTag->REGS14 = *(pRegs--);
+            case 13: pTag->REGS13 = *(pRegs--);
+            case 12: pTag->REGS12 = *(pRegs--);
+            case 11: pTag->REGS11 = *(pRegs--);
+            case 10: pTag->REGS10 = *(pRegs--);
+            case 9:  pTag->REGS9  = *(pRegs--);
+            case 8:  pTag->REGS8  = *(pRegs--);
+            case 7:  pTag->REGS7  = *(pRegs--);
+            case 6:  pTag->REGS6  = *(pRegs--);
+            case 5:  pTag->REGS5  = *(pRegs--);
+            case 4:  pTag->REGS4  = *(pRegs--);
+            case 3:  pTag->REGS3  = *(pRegs--);
+            case 2:  pTag->REGS2  = *(pRegs--);
+            case 1:  pTag->REGS1  = *(pRegs--);
+            case 0:  pTag->REGS0  = *(pRegs--);
+            }
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 68–80 */
@@ -1160,7 +1201,44 @@ void gifSetTag(anon_1* pTag, unsigned short nLoop, unsigned char EOP, unsigned c
  */
 void impPS2glFogiv(unsigned int pname, int* params)
 {
-    /* TODO: decompile from asm/... */
+    if (pname == 0x0B66) /* GL_FOG_COLOR */
+    {
+        *(tag_int4*)&g_PS2glContext.ivFogColor = *(tag_int4*)params;
+        g_gsContext.FOGCOL.FCR = (char)params[0]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
+        g_gsContext.FOGCOL.FCG = (char)params[1]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
+        g_gsContext.FOGCOL.FCB = (char)params[2]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
+    }
+    else
+    {
+        int iValue = params[0];
+        switch (pname)
+        {
+        case 0x0B65: /* GL_FOG_MODE */
+            g_PS2glContext.eFogMode = iValue;
+            break;
+        case 0x0B62: /* GL_FOG_DENSITY */
+            g_PS2glContext.fFogDensity = (float)iValue;
+            break;
+        case 0x0B63: /* GL_FOG_START */
+            g_PS2glContext.fFogLinearStart = (float)iValue;
+            break;
+        case 0x0B64: /* GL_FOG_END */
+            g_PS2glContext.fFogLinearEnd = (float)iValue;
+            break;
+        case 0x0B61: /* GL_FOG_INDEX */
+            g_PS2glContext.fFogIndex = (float)iValue;
+            break;
+        default:
+            /* An unknown pname leaves the fog state untouched: it has to skip
+             * the bFogChanged store below.  A plain 'return' makes MWCC emit an
+             * extra trampoline block (b <epilogue>) that the retail code does
+             * not have, so jump straight to the end of the branch instead. */
+            goto bFogDone;
+        }
+        g_PS2glContext.bFogChanged = 1;
+    bFogDone:
+        ;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 53–63 */
@@ -1203,6 +1281,22 @@ void impPS2glFogi(unsigned int pname, int param)
     g_PS2glContext.bFogChanged = 1;
 }
 
+/* Clamp a colour component to the [0, 1] range the GS fog register expects. */
+#pragma auto_inline on
+static float fogClamp01(float x)
+{
+    if (x < 0.0f)
+    {
+        x = 0.0f;
+    }
+    else if (x > 1.0f)
+    {
+        x = 1.0f;
+    }
+    return x;
+}
+#pragma auto_inline reset
+
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fog.c lines 34–48 */
 /* addr: 0x0017a040  size: 824 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1223,8 +1317,84 @@ void impPS2glFogi(unsigned int pname, int param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void impPS2glFogfv(unsigned int pname, float* params)
 {
     int ivFogColor[4];
-    /* TODO: decompile from asm/... */
+
+    if (pname == 0x0B66) /* GL_FOG_COLOR */
+    {
+        ivFogColor[0] = (int)(255.0f * fogClamp01(params[0]));
+        ivFogColor[1] = (int)(255.0f * fogClamp01(params[1]));
+        ivFogColor[2] = (int)(255.0f * fogClamp01(params[2]));
+
+        *(tag_int4*)&g_PS2glContext.ivFogColor = *(tag_int4*)ivFogColor;
+
+        g_gsContext.FOGCOL.FCR = (char)ivFogColor[0]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
+        g_gsContext.FOGCOL.FCG = (char)ivFogColor[1]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
+        g_gsContext.FOGCOL.FCB = (char)ivFogColor[2]; g_gsContext.ModFlgs.FOGCOL_Modified = 1;
+
+        /* The retail binary keeps a second, unreachable copy of the fog
+         * parameter switch here: it reads the colour array that was just
+         * filled instead of params[].  The test is always false in this
+         * branch, but the retail compiler still emits it. */
+        if (pname != 0x0B66)
+        {
+            switch (pname)
+            {
+            case 0x0B65: /* GL_FOG_MODE */
+                g_PS2glContext.eFogMode = ivFogColor[0];
+                break;
+            case 0x0B62: /* GL_FOG_DENSITY */
+                g_PS2glContext.fFogDensity = (float)ivFogColor[0];
+                break;
+            case 0x0B63: /* GL_FOG_START */
+                g_PS2glContext.fFogLinearStart = (float)ivFogColor[0];
+                break;
+            case 0x0B64: /* GL_FOG_END */
+                g_PS2glContext.fFogLinearEnd = (float)ivFogColor[0];
+                break;
+            case 0x0B61: /* GL_FOG_INDEX */
+                g_PS2glContext.fFogIndex = (float)ivFogColor[0];
+                break;
+            default:
+                return;
+            }
+            g_PS2glContext.bFogChanged = 1;
+        }
+    }
+    else
+    {
+        float fValue = params[0];
+        switch (pname)
+        {
+        case 0x0B65: /* GL_FOG_MODE */
+            /* The retail code inlines the float-to-unsigned conversion; spell
+             * it out so the compiler does not call fptoui. */
+            if (2147483648.0f <= fValue)
+            {
+                g_PS2glContext.eFogMode = 0x80000000u | (unsigned int)(int)(fValue - 2147483648.0f);
+            }
+            else
+            {
+                g_PS2glContext.eFogMode = (unsigned int)(int)fValue;
+            }
+            break;
+        case 0x0B62: /* GL_FOG_DENSITY */
+            g_PS2glContext.fFogDensity = fValue;
+            break;
+        case 0x0B63: /* GL_FOG_START */
+            g_PS2glContext.fFogLinearStart = fValue;
+            break;
+        case 0x0B64: /* GL_FOG_END */
+            g_PS2glContext.fFogLinearEnd = fValue;
+            break;
+        case 0x0B61: /* GL_FOG_INDEX */
+            g_PS2glContext.fFogIndex = fValue;
+            break;
+        default:
+            return;
+        }
+        g_PS2glContext.bFogChanged = 1;
+    }
 }

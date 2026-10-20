@@ -11,7 +11,41 @@ src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Array.c
 # 2026-10-11 sweep of every library file under 3.0.1 (gained / lost):
 # PS2GL_Fog.c +1/0, PS2GL_BufferControl.c +1/0 (PS2glInternalGetScreenCalebration's
 # unfilled delay slot), PS2GL_DataInput.c +5/0, PS2GL_ListsRecPly.c +2/0.
+# PS2GL_Fog.c re-measured 2026-10-20: under library-3.0.3 it keeps only 1 of
+# its 3 recorded matches (impPS2glFogiv and impPS2glFogi lose their size and
+# line map), so it must stay on 3.0.1.  Its impPS2glFogfv is 4 bytes short of
+# the retail under 3.0.3 with a plain (unsigned int)fValue cast, but that
+# spelling loses 2 of the retail's 46 relocations, so the hand-written
+# conversion in the source stays.
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Fog.c
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_BufferControl.c
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c
+#
+# PS2GLAUX/PS2GLAUX.c: PS2auxInitPosition matches 496/496 (bytes, 34/34
+# relocations, retail line map ok) only under 3.0.1-020123 or 3.0.3-020716;
+# the library 3.0-011126 baseline drops the nop delay slot of the second
+# else-if level and re-orders the chain, leaving it 480/496.  Measured
+# 2026-10-20: 9/9 recorded matches verify under 3.0.1 and under 3.0.3, and
+# only 8/9 on the baseline, so the file moves to 3.0.1.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GLAUX/PS2GLAUX.c
+#
+# PS2GL_Matrix.c: impPS2glDepthRange matches 384/384 (bytes, relocations and
+# line map) only under 3.0.1: 3.0 hoists the 1.0 constant of the clamp test
+# into the beqz delay slot, and 3.0.3 breaks the recorded impPS2glLoadIdentity
+# (72/64 bytes). All 11 recorded matches in the file also pass under 3.0.1.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Matrix.c
+# PS2GL_Texture.c: the retail fills conditional-branch delay slots with nop
+# where the MWCC 3.0 library baseline fills them eagerly; the file's recorded
+# matches (the TexGen family among them) are byte-exact under 3.0.1-020123.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c
+# PS2GL_VU1_Pipeline.c: the retail object for this file was built with MWCC
+# 3.0.1-020123, not the 3.0 library baseline (PS2glFlushBuffer is 596/596 under
+# 3.0.1 and 592 bytes under 3.0); all 14 recorded matches still verify.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_VU1_Pipeline.c
+# PS2GL_EnableDisable.c: impPS2glHint is 20 bytes short under the 3.0
+# library baseline (it fills the 0xF10 case's beq delay slot with a nop
+# instead of "andi v1,s0,0x200" and hoists the 0x439 case's addiu into the
+# switch chain); it is byte-exact under 3.0.1-020123. All other recorded
+# matches in the file verify under 3.0.1.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_EnableDisable.c

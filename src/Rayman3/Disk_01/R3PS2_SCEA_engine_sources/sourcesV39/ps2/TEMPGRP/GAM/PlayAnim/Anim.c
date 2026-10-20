@@ -1517,17 +1517,18 @@ struct stLanguage_ {
 extern tdstEngineStructure_ g_stEngineStructure;
 extern FON_tdstGeneral_ FON_g_stGeneral;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Anim.c lines 122–134 */
-/* addr: 0x00274c10  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 122
- *   +0x006c -> line 134
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+/* The common-language branch addresses texts[hString - 20000].  Retail computes
+ * it as (texts - 20000) + hString*4: the -80000 constant is materialised in
+ * $at (lui 0xfffe / ori 0xc780) and added to the array base before the scaled
+ * index.  MWCC folds a plain p[i-20000] into the final load displacement
+ * instead, so the pointer is offset in a separate statement and the scaled
+ * index is written out through a dead local (iIndex) to keep it out of the
+ * address fold; that reproduces the retail instruction order and registers.
+ * The whole body stays on one line: retail's line table has entries only at
+ * +0x0000 (line 122) and +0x006c (line 134). */
 char* FON_fn_szGetTextPointerForHandle(int hString)
 {
-    if (hString == -1) return NULL; if (hString < 20000) return ((char**)FON_g_stGeneral.d_sLanguageArray[g_stEngineStructure.ucCurrentLanguage].d_pTextsArray)[hString]; return ((char**)FON_g_stGeneral.p_stCommonLanguage->d_pTextsArray)[hString - 20000];
+    char** pstText; int iIndex; if (hString == -1) return NULL; if (hString < 20000) return ((char**)FON_g_stGeneral.d_sLanguageArray[g_stEngineStructure.ucCurrentLanguage].d_pTextsArray)[hString]; pstText = (char**)FON_g_stGeneral.p_stCommonLanguage->d_pTextsArray; pstText = (char**)(pstText - 20000); return *(char**)((char*)pstText + (iIndex = hString * 4));
 }
 
 signed char fn_scGetSpeedInState(tdstState_* h_State);
@@ -1548,18 +1549,6 @@ inline long MTH_M_xRealToLong(float _xValue)
     return _lResult;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Anim.c lines 42–51 */
-/* addr: 0x00274c90  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 42
- *   +0x0014 -> line 43
- *   +0x001c -> line 45
- *   +0x0028 -> line 47
- *   +0x003c -> line 49
- *   +0x0060 -> line 51
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void ANI_fn_vUnFreeze(HIE_tdstSuperObject_* hSuperObjPerso)
 {
     tdst3dData_* h_Current3dData;

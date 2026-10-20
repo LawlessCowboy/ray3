@@ -3273,16 +3273,19 @@ tdstNodeInterpret_* fn_p_stListSelect(tdstList_* p_List, char b_cInverse, tdstNo
 #pragma auto_inline on
 HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition)
 {
-    int lNbElt = p_List->ucNbElt;
+    HIE_tdstSuperObject_* pNull;
 
-    if (lNbElt == 0)
-        return NULL;
+    if (p_List->ucNbElt == 0)
+    {
+        pNull = NULL;
+        return pNull;
+    }
 
-    if ((ucPosition >= lNbElt) && (ucPosition != 0xff))
+    if ((ucPosition >= p_List->ucNbElt) && (ucPosition != 0xff))
         return NULL;
 
     if (ucPosition == 0xff)
-        return p_List->p_hTabElt[lNbElt - 1];
+        return p_List->p_hTabElt[p_List->ucNbElt - 1];
     else
         return p_List->p_hTabElt[ucPosition];
 }

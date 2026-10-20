@@ -753,8 +753,8 @@ unsigned int RUMBLE_g_ulConfigTotalTime;
 unsigned int RUMBLE_g_ulConfigStartTime;
 int RUMBLE_g_lActivePortNumber;
 int g_PauseStringNumber;
-SVG_stMCStatus_ g_axPadMapping;
-signed char INO_aJoyUsedByAI;
+extern SVG_stMCStatus_ g_axPadMapping[2];
+extern signed char INO_aJoyUsedByAI[16];
 int g_GameHasNotStartedTheFirstBootCheck;
 char g_a_szSlotNames[4];
 tdstEngineStructure_ g_stEngineStructure;
@@ -828,9 +828,50 @@ anon_enum_008b49ff g_eVideoMode;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int g_i_CurrentStorageBank;
+extern int gp_stA3dGENERAL;
+extern int gp_a3_xVectors;
+extern int gp_a4_xQuaternions;
+extern int gp_stHierarchies;
+extern int gp_stNTTO;
+extern int gp_stOnlyFrames;
+extern int gp_stChannels;
+extern int gp_FramesNumOfNTTO;
+extern int gp_FramesKFIndex;
+extern int gp_stKeyFrames;
+extern int gp_stEvents;
+extern int gp_stMorphData;
+extern int gp_stDeformations;
+extern int g_ax_pA3dGENERAL[100];
+extern int g_ax_pVectors[100];
+extern int g_ax_pQuaternions[100];
+extern int g_ax_pHierarchies[100];
+extern int g_ax_pNTTO[100];
+extern int g_ax_pOnlyFrames[100];
+extern int g_ax_pChannels[100];
+extern int g_ax_pFramesNumOfNTTO[100];
+extern int g_ax_pFramesKFIndex[100];
+extern int g_ax_pKeyFrames[100];
+extern int g_ax_pEvents[100];
+extern int g_ax_pMorphData[100];
+extern int g_ax_pDeformations[100];
+
 void fn_vChangeStorageBank(unsigned char ucStorageBank)
 {
-    /* TODO: decompile from asm/... */
+    g_i_CurrentStorageBank = ucStorageBank;
+    gp_stA3dGENERAL = g_ax_pA3dGENERAL[g_i_CurrentStorageBank];
+    gp_a3_xVectors = g_ax_pVectors[g_i_CurrentStorageBank];
+    gp_a4_xQuaternions = g_ax_pQuaternions[g_i_CurrentStorageBank];
+    gp_stHierarchies = g_ax_pHierarchies[g_i_CurrentStorageBank];
+    gp_stNTTO = g_ax_pNTTO[g_i_CurrentStorageBank];
+    gp_stOnlyFrames = g_ax_pOnlyFrames[g_i_CurrentStorageBank];
+    gp_stChannels = g_ax_pChannels[g_i_CurrentStorageBank];
+    gp_FramesNumOfNTTO = g_ax_pFramesNumOfNTTO[g_i_CurrentStorageBank];
+    gp_FramesKFIndex = g_ax_pFramesKFIndex[g_i_CurrentStorageBank];
+    gp_stKeyFrames = g_ax_pKeyFrames[g_i_CurrentStorageBank];
+    gp_stEvents = g_ax_pEvents[g_i_CurrentStorageBank];
+    gp_stMorphData = g_ax_pMorphData[g_i_CurrentStorageBank];
+    gp_stDeformations = g_ax_pDeformations[g_i_CurrentStorageBank];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 1059–1067 */
@@ -976,14 +1017,113 @@ int fn_bHasBeenPausedForController(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The retail calls the fast connection check through an int result: the
+ * function itself returns a short, but declaring it int keeps the sign
+ * extension out of the caller's branch. */
+extern int INOPS2_fn_wJoyCheckConnectionFast(short _wJoystickNum);
+extern void fn_vTXTAffichePause(int _lVMSOrPad, int _lDeconnectedPadId);
+extern void fn_vSetMenuPausePad(void);
+extern void fn_vInterruptMenu2D(int _bPauseMenu);
+/* Only three arguments are passed by the retail code (the size is left in a3). */
+extern int scePadRead(int port, int slot, char* rdata);
+
 void fn_vManageControlerDisconnection(void)
 {
     char buffer[32];
-    int InitMtapAtLeastOnce;
-    int DeconnectedPadId;
-    int LastMtapGetConnection[2];
-    int FrameCounter;
-    /* TODO: decompile from asm/... */
+    static int FrameCounter;
+    static int InitMtapAtLeastOnce;
+    static int LastMtapGetConnection[2];
+    static int DeconnectedPadId;
+
+    if (g_GameHasNotStartedTheFirstBootCheck)
+    {
+        if (INOPS2_fn_wJoyCheckConnectionFast(0) == 0)
+        {
+            fn_vTXTAffichePause(1, DeconnectedPadId);
+        }
+        else
+        {
+            fn_vSetMenuPausePad();
+        }
+        return;
+    }
+
+    if ((PAUSE_g_ucPauseCause & 5) == 0)
+    {
+        if ((INOPS2_fn_wJoyCheckConnectionFast(0) == 0) && (INO_aJoyUsedByAI[0] == 1))
+        {
+            FrameCounter++;
+            if (FrameCounter == 3)
+            {
+                FrameCounter = 0;
+                if (!fn_bIsEngineInPause())
+                {
+                    g_EngineWasPausedAutomatically = 1;
+                    fn_vSetEngineInPaused();
+                }
+                fn_vInterruptMenu2D(1);
+                uDevicePaused = 0;
+                PAUSE_g_ucPauseCause |= 1;
+                DeconnectedPadId = 0;
+                DeconnectedPadId |= LastMtapGetConnection[0];
+            }
+        }
+        else
+        {
+            LastMtapGetConnection[0] &= ~0x10;
+            FrameCounter = 0;
+        }
+    }
+    else
+    {
+        if (PAUSE_g_ucPauseCause & 1)
+        {
+            fn_vTXTAffichePause(1, DeconnectedPadId);
+            if (INOPS2_fn_wJoyCheckConnectionFast((short)uDevicePaused))
+            {
+                if (scePadRead(g_axPadMapping[uDevicePaused].iPort, g_axPadMapping[uDevicePaused].iSlot, buffer) == 0x20)
+                {
+                    if ((buffer[2] & 8) == 0)
+                    {
+                        PAUSE_g_ucPauseCause &= ~1;
+                        PAUSE_g_ucPauseCause |= 4;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (PAUSE_g_ucPauseCause & 4)
+            {
+                fn_vTXTAffichePause(1, DeconnectedPadId);
+                if (INOPS2_fn_wJoyCheckConnectionFast((short)uDevicePaused))
+                {
+                    if (scePadRead(g_axPadMapping[uDevicePaused].iPort, g_axPadMapping[uDevicePaused].iSlot, buffer) == 0x20)
+                    {
+                        if (buffer[2] & 8)
+                        {
+                            PAUSE_g_ucPauseCause &= ~4;
+                            fn_vInterruptMenu2D(0);
+                            if ((PAUSE_g_ucPauseCause == 0) && (g_EngineWasPausedAutomatically != 0))
+                            {
+                                fn_vResetEngineFromPaused();
+                                g_EngineWasPausedAutomatically = 0;
+                            }
+                            fn_vSetMenuPausePad();
+                            uDevicePaused = -1;
+                            InitMtapAtLeastOnce = 0;
+                            fn_vManageControlerDisconnection();
+                        }
+                    }
+                }
+                else
+                {
+                    PAUSE_g_ucPauseCause &= ~4;
+                    PAUSE_g_ucPauseCause |= 1;
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\gamopt.c lines 789–796 */
@@ -1057,13 +1197,70 @@ int GAM_fn_iIsGamePaused(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bLoadGameOptions()
+#define M_Min(a, b) (((a) > (b)) ? (b) : (a))
+#define M_Max(a, b) (((a) > (b)) ? (a) : (b))
+#define M_Clamp(x, lo, hi) M_Max(lo, M_Min(x, hi))
+
+extern int fn_lCheckVMSConnexion(unsigned char _bFullCheck);
+extern char* SVG_fn_szGetSonyCompliantDirName(char* _szName);
+extern char* strcpy(char* _pDst, const char* _pSrc);
+extern tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName);
+extern int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_stBuffer);
+extern int VMS_fn_bFclose(tdstSaveBuffer_* _p_stBuffer);
+extern void SetPal60(void);
+extern void SetPal50(void);
+extern void GLI_fn_vSetBrightness(int _lValue);
+extern void SND_fn_vSetStereoSound(int _bStereo);
+extern void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
+extern void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume);
+
+int fn_bLoadGameOptions(char* szFileName)
 {
     unsigned char ucTmp;
     int lIndex;
     tdstSaveBuffer_* p_stTempFile;
     int lReturn;
-    /* TODO: decompile from asm/... */
+
+    lReturn = fn_lCheckVMSConnexion(1);
+    if (lReturn <= 0)
+    {
+        return lReturn;
+    }
+
+    strcpy(g_stGameOptions.szCurrentFileName, SVG_fn_szGetSonyCompliantDirName("OPTIONS"));
+
+    p_stTempFile = VMS_fn_p_stFopenR(g_stGameOptions.szCurrentFileName);
+    if (p_stTempFile != NULL)
+    {
+        VMS_fn_bFread(&g_stGameOptions.ulScreenSize, 1, 4, p_stTempFile);
+        VMS_fn_bFread(&lIndex, 1, 4, p_stTempFile);
+        if (lIndex == 1) { SetPal60(); } else { SetPal50(); }
+        VMS_fn_bFread(&lIndex, 1, 4, p_stTempFile);
+        GLI_fn_vSetBrightness(lIndex);
+
+        VMS_fn_bFread(&ucTmp, 1, 4, p_stTempFile);
+        g_stGameOptions.s32VolumeSound = M_Clamp(ucTmp, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
+
+        VMS_fn_bFread(&ucTmp, 1, 4, p_stTempFile);
+        g_stGameOptions.s32VolumeMusic = M_Clamp(ucTmp, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
+
+        VMS_fn_bFread(&ucTmp, 1, 4, p_stTempFile);
+        g_stGameOptions.s32VolumeVoice = M_Clamp(ucTmp, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
+
+        VMS_fn_bFread(&g_ulMoviesBit1, 1, 4, p_stTempFile);
+        VMS_fn_bFread(&g_ulMoviesBit2, 1, 4, p_stTempFile);
+
+        ucTmp = 0;
+        VMS_fn_bFread(&ucTmp, 1, 1, p_stTempFile);
+        SND_fn_vSetStereoSound(ucTmp);
+
+        if (VMS_fn_bFclose(p_stTempFile) != 0)
+        {
+            g_stGameOptions.s32VolumeSound = M_Clamp(g_stGameOptions.s32VolumeSound, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound); g_stGameOptions.s32VolumeVoice = M_Clamp(g_stGameOptions.s32VolumeVoice, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice); g_stGameOptions.s32VolumeMusic = M_Clamp(g_stGameOptions.s32VolumeMusic, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic); g_stGameOptions.s32VolumeAmbiance = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance); g_stGameOptions.s32VolumeMenu = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
+            return 1;
+        }
+    }
+    return 0;
 }
 
 unsigned char GAM_fn_bUpdateSavingFile(void);

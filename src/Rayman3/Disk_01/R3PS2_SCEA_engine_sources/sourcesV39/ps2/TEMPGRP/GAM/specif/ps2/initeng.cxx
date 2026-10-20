@@ -4,6 +4,14 @@
 
 #include <stddef.h>
 
+/* The retail debug records for this unit say "Language: C"; MWCC lowers a
+   96-byte transformation copy blockwise in C and member-wise in C++. */
+#pragma cplusplus off
+
+#include "r3/ENG.h"
+#include "r3/HIE.h"
+#include "r3/MAT.h"
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
 typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
@@ -11,6 +19,15 @@ typedef struct stFile_ stFile_;
 typedef struct _SND_tdstInitStruct _SND_tdstInitStruct;
 struct _SND_tdstInitStruct {
     int data[16];
+};
+
+/* File-tree record walked by fn_vTVS (32 bytes, see public/PS2/ps2Prothelper.h). */
+struct stFile_ {
+    stFile_* pChild;
+    unsigned int sector;
+    unsigned int length;
+    char name[16];
+    unsigned int nb_sons;
 };
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 1110–1292 */
@@ -85,13 +102,238 @@ struct _SND_tdstInitStruct {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern tdstEngineStructure_ g_stEngineStructure;
+extern HIE_tdstSuperObject_* gp_stActualWorld;
+extern HIE_tdstSuperObject_* gp_stDynamicWorld;
+extern HIE_tdstSuperObject_* gp_stPersoInDynamicHierarchy[30];
+extern int g_iNbPersoOfFixInDynamicHierarchy;
+extern HIE_tdstSuperObject_* g_hLoadedSuperObjectRoot;
+extern MAT_tdstTransformation_ g_hMCMatrix;
+extern MAT_tdstTransformation_ g_hMCLocalMatrix;
+extern MAT_tdstTransformation_ g_hCamMatrix;
+extern MAT_tdstTransformation_ g_hCamLocalMatrix;
+
+void GLI_vCleanAllSpecificData(void);
+void IPO_fn_vLevelDesinitRLITables(void);
+void Toby_DestroyAll(void);
+void fn_vDestructAllFatherSonLinks(void);
+void fn_vKillAllAlways(void);
+void AGO_vInit(void);
+void SPO_ReinitSuperimposedArray(void);
+void fn_vKillAllAlwaysModel(void);
+void fn_vLastDesinitAlwaysStructure(void);
+void CINE_fn_pResetCineList(void);
+void PLD_fn_vUnLoadLevelFamilies(void);
+int HMU_fn_ucGetLevelNormalMemoryBlock(void);
+void fn_vDesinitFamilyStructureForPriority(int);
+int fn_bDoTransition(void);
+void fn_vDestroyAllHierarchy(HIE_tdstSuperObject_*);
+void CAM_fn_vInvalidateViewports(void);
+HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_*);
+void* fn_h_SectInfoGetCurrentSector(void*);
+void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_*);
+int GAM_fn_hGetCurrentSector(HIE_tdstSuperObject_*);
+void fn_vRemoveCharactersFromTransitionSector(int);
+void fn_vPartiallyDestroyHierarchy(HIE_tdstSuperObject_*);
+void HIE_fn_vIsolate(HIE_tdstSuperObject_*);
+void* MC_fn_hGetFirstMainCharNode(void);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(void*);
+void fn_vRemoveWorldSectInfo(void);
+void fn_vLastDeinitMorphTaskList(void);
+void fn_vRemoveAllMicros(void);
+void fn_vReputGameViewportCamera(void);
+int fn_bLevelHasTransitionMemory(void);
+void fn_vTakeControlOfLipChannel(void*, void*);
+void GAM_fn_vPushAllocMode(int);
+void fn_vInitTransitionHierarchy(void);
+void GLI_PS2GL_PrepareSpecificDataForLevel(void);
+void fn_vBeginTransition(void);
+void GAM_fn_vPopAllocMode(void);
+void fn_vFreeLevelAllowedMemory(void);
+void fn_vFreeTransitionAllocatedMemory(void);
+
+extern unsigned char g_bLevelHasTransitionMemory;
+extern unsigned char g_bLevelHadTransitionMemory;
+extern unsigned char g_bLoadNewLevel;
+extern unsigned char g_bInGameMenu;
+extern unsigned char GLI_g_bSaveFog;
+extern unsigned char GLI_cGlobalFogIsOn;
+extern unsigned char g_bBeginMapSoundEventFlag;
+extern int g_AlphabetCharacterPointer;
+extern int g_a_hSOCurrentMainSector[4];
+extern int g_a_pfnDynamicFunction[2];
+extern void* g_stBeginMapSoundEvent;
+extern int g_lSoundObjectTypeMusic;
+extern int bFirst;
+extern HIE_tdstSuperObject_* SECT_hFatherSector;
+
+void InitListOfCheapCharacterList(void);
+void SCT_fn_vInitMaterialForGoThrough(void);
+void SECT_fnvInitGlobalsForActivity(void);
+int fn_lGetTransitionBloc(void);
+void fn_vSetTransitionBloc(int);
+char* fn_p_szGetLevelName(void);
+void PLD_fn_vLoadLevel(char*);
+void fn_vSetDisplayFlag(void*, int);
+void fn_vReInitAllMiscFlagForAlwaysActiveState(void);
+void GAM_fn_vInitFamiliesToLoad(void);
+void GAM_fn_vInitActorsToLoad(void);
+GLI_tdstCamera_* GLI_xGetViewportCamera(short, short, GLI_tdstCamera_**);
+GLI_tdstCamera_* GLI_xCreateCamera(GLI_tdstCamera_**, int);
+void GLI_xSetCameraAspectAndRatio(GLI_tdstCamera_*, float, float);
+void GLI_xSetViewportCamera(short, short, GLI_tdstCamera_*);
+int fn_bLevelHasTransitionMemory(void);
+int HMU_fn_ucGetLevelNormalMemoryBlock(void);
+void LoadTextureBloc(int, int);
+void GAM_fn_vSetEngineInTransitionMode(void);
+int HMU_fn_ucGetTransition2NormalMemoryBlock(void);
+int HMU_fn_ucGetTransition1NormalMemoryBlock(void);
+void GAM_fn_vSetEngineInLevelMode(void);
+void GLI_vProcessRegisteredTextures(void);
+int fn_bDoTransition(void);
+void fn_vEndTransitionSynchro(void);
+void fn_vEndTransition(void);
+void GLI_v_InformJustLoadedLevel(void);
+void PS2MC_fn_vEnablePrompts(void);
+void fn_vInitAllObjectsWhenMapJustLoaded(void);
+void CAM_fn_vInitCameras(void);
+void GAM_fn_vActualizeAllGameViewportSize(void);
+void PLD_fn_vReinitPositionOfFixCharacters(void);
+void fn_vInitDeadLoop(void);
+int fn_bLoadLevelSaveGameAfterLoadLevel(void);
+int SAI_fn_bInitAllWhen(int);
+int fn_bLoadPlayerSaveGameAfterLoadLevel(void);
+void fn_vInitAllObjectsWhenSavedGameJustLoaded(void);
+void GAM_fn_vSaveBlockEventSlotMemory(void*, int);
+int SND_fn_s32SendRequestSound(int, int, int, void*, void*, void*);
+void InitArrayOfDynamicFunction(int*);
+void IPT_fn_vResetInputEntry(void);
+void PLA_fn_vInitHeaps(void);
+void GLI_vInitWaterplaneModule(void);
+void SCT_fn_vInitMirrorFlagForAllSectors(HIE_tdstSuperObject_*);
+void IPT_fn_vActivateAllEntryElements(void);
+void IPT_fn_vReadInput(int);
+void AGO_vInit(void);
+void GLI_PS2GL_PrepareSpecificDataForLevel(void);
+int fn_bLevelHadTransitionMemory(void);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(void*);
+void MEC_fn_vImposeActorMatrix(HIE_tdstSuperObject_*);
+void DEMO_fn_vLoadDemoIfNeeded(void);
+
+/* The statements below are grouped on single source lines on purpose: the
+   retail line map puts the same statement groups on one line each (the
+   target line map in the comment above), and MWCC emits one line-table row
+   per source line, so the grouping is what makes the line offsets match. */
 void fn_vDesInitLevelLoop(void)
 {
+    int i;
     HIE_tdstSuperObject_* hNextCharacter;
     HIE_tdstSuperObject_* hCharacter;
-    int i;
     HIE_tdstSuperObject_* hMainChar;
-    /* TODO: decompile from asm/... */
+
+    GLI_vCleanAllSpecificData();
+
+    IPO_fn_vLevelDesinitRLITables();
+
+    Toby_DestroyAll();
+
+    fn_vDestructAllFatherSonLinks(); fn_vKillAllAlways(); AGO_vInit();
+
+    SPO_ReinitSuperimposedArray();
+
+    fn_vKillAllAlwaysModel();
+
+    fn_vLastDesinitAlwaysStructure();
+
+    CINE_fn_pResetCineList();
+
+    PLD_fn_vUnLoadLevelFamilies();
+
+    fn_vDesinitFamilyStructureForPriority(HMU_fn_ucGetLevelNormalMemoryBlock());
+
+    if (fn_bDoTransition() == 0)
+        fn_vDestroyAllHierarchy(gp_stActualWorld);
+    else
+    {
+        CAM_fn_vInvalidateViewports();
+
+        i = 0; hCharacter = gp_stDynamicWorld->hFirstElementDyn; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); while (hCharacter != NULL)
+        {
+            if (hCharacter->ulTypeOfLinkedObject == 2)
+            {
+                if (((unsigned char*)fn_h_SectInfoGetCurrentSector(hCharacter->hLinkedObject.p_stCharacter->h_SectInfo))[0x7E] == 0)
+                {
+                    fn_vRemoveObjectInSectorList(hCharacter);
+                }
+            }
+
+            i++; hCharacter = hNextCharacter; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hNextCharacter); }
+
+        fn_vRemoveCharactersFromTransitionSector(GAM_fn_hGetCurrentSector(g_stEngineStructure.h_StdCamCaracter));
+
+        fn_vPartiallyDestroyHierarchy(gp_stActualWorld);
+
+        for (i = 0; i < g_iNbPersoOfFixInDynamicHierarchy; i++)
+        {
+            HIE_fn_vIsolate(gp_stPersoInDynamicHierarchy[i]);
+        }
+
+        for (i = 0; i < g_iNbPersoOfFixInDynamicHierarchy; i++)
+        {
+            HIE_tdstSuperObject_* p_stWorld = gp_stDynamicWorld; HIE_tdstSuperObject_* p_stPerso = gp_stPersoInDynamicHierarchy[i]; if (p_stPerso->hNextBrotherDyn != NULL) { p_stPerso->hNextBrotherDyn->hPrevBrotherDyn = p_stPerso->hPrevBrotherDyn; } if (p_stPerso->hPrevBrotherDyn != NULL) { p_stPerso->hPrevBrotherDyn->hNextBrotherDyn = p_stPerso->hNextBrotherDyn; } if (p_stPerso->hFatherDyn != NULL) { p_stPerso->hFatherDyn->lNumberOfElementsDyn--; if (p_stPerso->hFatherDyn->hFirstElementDyn == p_stPerso) { p_stPerso->hFatherDyn->hFirstElementDyn = p_stPerso->hNextBrotherDyn; } if (p_stPerso->hFatherDyn->hLastElementDyn == p_stPerso) { p_stPerso->hFatherDyn->hLastElementDyn = p_stPerso->hPrevBrotherDyn; } } p_stPerso->hNextBrotherDyn = NULL; p_stPerso->hPrevBrotherDyn = NULL; p_stPerso->hFatherDyn = NULL; p_stPerso->hNextBrotherDyn = NULL; p_stPerso->hPrevBrotherDyn = p_stWorld->hLastElementDyn; p_stPerso->hFatherDyn = p_stWorld; if (p_stWorld->hFirstElementDyn == NULL) { p_stWorld->hFirstElementDyn = p_stPerso; } else { p_stWorld->hLastElementDyn->hNextBrotherDyn = p_stPerso; } p_stWorld->hLastElementDyn = p_stPerso; p_stWorld->lNumberOfElementsDyn++;
+        }
+
+        hMainChar = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
+
+        g_hMCMatrix = *hMainChar->hGlobalMatrix;
+
+        g_hMCLocalMatrix = *hMainChar->hLocalMatrix;
+
+        g_hCamMatrix = *g_stEngineStructure.h_StdCamCaracter->hGlobalMatrix;
+
+        g_hCamLocalMatrix = *g_stEngineStructure.h_StdCamCaracter->hLocalMatrix;
+
+        fn_vRemoveWorldSectInfo();
+    }
+
+    fn_vLastDeinitMorphTaskList();
+
+    g_hLoadedSuperObjectRoot = NULL;
+
+    fn_vRemoveAllMicros();
+
+    fn_vReputGameViewportCamera();
+
+    g_stEngineStructure.hCameraList.hFirstElementDyn = NULL; g_stEngineStructure.hCameraList.hLastElementDyn = NULL; g_stEngineStructure.hCameraList.lNumberOfElementsDyn = 0;
+
+    if (fn_bLevelHasTransitionMemory() == 0)
+    {
+        g_stEngineStructure.hMainCharacterList.hFirstElementDyn = NULL; g_stEngineStructure.hMainCharacterList.hLastElementDyn = NULL; g_stEngineStructure.hMainCharacterList.lNumberOfElementsDyn = 0;
+    }
+
+    g_stEngineStructure.hAlwaysActiveCharactersList.hFirstElementDyn = NULL; g_stEngineStructure.hAlwaysActiveCharactersList.hLastElementDyn = NULL; g_stEngineStructure.hAlwaysActiveCharactersList.lNumberOfElementsDyn = 0;
+
+    fn_vTakeControlOfLipChannel(NULL, NULL);
+
+    if (fn_bDoTransition())
+    {
+        GAM_fn_vPushAllocMode(2);
+
+        fn_vInitTransitionHierarchy();
+
+        GLI_PS2GL_PrepareSpecificDataForLevel();
+
+        fn_vBeginTransition();
+
+        GAM_fn_vPopAllocMode();
+    }
+
+    fn_vFreeLevelAllowedMemory();
+
+    if (fn_bLevelHasTransitionMemory() && (fn_bDoTransition() == 0))
+    {
+        fn_vFreeTransitionAllocatedMemory();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 671–1070 */
@@ -187,7 +429,115 @@ void fn_vInitLevelLoop(void)
     char cDoInit;
     unsigned char uc_ViewPortIndex;
     GLI_tdstCamera_* p_stCamera;
-    /* TODO: decompile from asm/... */
+
+    g_bLevelHadTransitionMemory = g_bLevelHasTransitionMemory;
+    g_bLoadNewLevel = 1;
+    g_bLevelHasTransitionMemory = 0;
+    InitListOfCheapCharacterList();
+    SCT_fn_vInitMaterialForGoThrough();
+    SECT_fnvInitGlobalsForActivity();
+    if (fn_lGetTransitionBloc() != 1)
+        fn_vSetTransitionBloc(1);
+    else
+        fn_vSetTransitionBloc(2);
+    PLD_fn_vLoadLevel(fn_p_szGetLevelName());
+    fn_vSetDisplayFlag(NULL, 1);
+    fn_vReInitAllMiscFlagForAlwaysActiveState();
+    GAM_fn_vInitFamiliesToLoad();
+    GAM_fn_vInitActorsToLoad();
+    GLI_g_bSaveFog = 0;
+    g_AlphabetCharacterPointer = 0;
+    g_bInGameMenu = 0;
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex <= 4; uc_ViewPortIndex++)
+    {
+        GLI_xGetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], &p_stCamera);
+        if (p_stCamera == NULL)
+        {
+            GLI_xCreateCamera(&p_stCamera, 0x67);
+            GLI_xSetCameraAspectAndRatio(p_stCamera, 1.5f, 0.75f);
+            GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], p_stCamera);
+        }
+    }
+    if (fn_bLevelHasTransitionMemory() == 0)
+    {
+        g_a_hSOCurrentMainSector[0] = 0; g_a_hSOCurrentMainSector[1] = 0; g_a_hSOCurrentMainSector[2] = 0; g_a_hSOCurrentMainSector[3] = 0;
+    }
+    g_stEngineStructure.hCameraList.hFirstElementDyn = NULL; g_stEngineStructure.hCameraList.hLastElementDyn = NULL; g_stEngineStructure.hCameraList.lNumberOfElementsDyn = 0;
+    LoadTextureBloc(1, HMU_fn_ucGetLevelNormalMemoryBlock() & 0xFF);
+    if (fn_bLevelHasTransitionMemory())
+    {
+        GAM_fn_vSetEngineInTransitionMode();
+        if (fn_lGetTransitionBloc() == 1)
+        {
+            LoadTextureBloc(3, HMU_fn_ucGetTransition2NormalMemoryBlock() & 0xFF); }
+        else
+        {
+            LoadTextureBloc(2, HMU_fn_ucGetTransition1NormalMemoryBlock() & 0xFF);
+        }
+        GAM_fn_vSetEngineInLevelMode();
+    }
+    GLI_vProcessRegisteredTextures();
+    if (fn_bDoTransition())
+    {
+        fn_vEndTransitionSynchro();
+        fn_vEndTransition();
+    }
+    else
+    {
+        GLI_v_InformJustLoadedLevel();
+    }
+    PS2MC_fn_vEnablePrompts();
+    fn_vInitAllObjectsWhenMapJustLoaded();
+    CAM_fn_vInitCameras();
+    GAM_fn_vActualizeAllGameViewportSize();
+    g_hLoadedSuperObjectRoot = SECT_hFatherSector;
+    PLD_fn_vReinitPositionOfFixCharacters();
+    fn_vInitDeadLoop();
+    if (g_stEngineStructure.eEngineMode == 5)
+    {
+        cDoInit = 0;
+        if (fn_bLoadLevelSaveGameAfterLoadLevel())
+        {
+            SAI_fn_bInitAllWhen(8);
+            cDoInit = 1;
+        }
+        if (fn_bLoadPlayerSaveGameAfterLoadLevel())
+        {
+            SAI_fn_bInitAllWhen(4);
+            cDoInit = 1;
+        }
+        if (cDoInit)
+        {
+            fn_vInitAllObjectsWhenSavedGameJustLoaded();
+        }
+    }
+    if (g_stEngineStructure.eEngineMode == 5 || g_stEngineStructure.eEngineMode == 3)
+    {
+        if (g_bBeginMapSoundEventFlag)
+        {
+            GAM_fn_vSaveBlockEventSlotMemory(g_stBeginMapSoundEvent, 0);
+            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, g_stBeginMapSoundEvent, 0, 0);
+        }
+    }
+    InitArrayOfDynamicFunction(g_a_pfnDynamicFunction);
+    IPT_fn_vResetInputEntry();
+    PLA_fn_vInitHeaps();
+    bFirst = 0;
+    GLI_cGlobalFogIsOn = 0;
+    GLI_vInitWaterplaneModule();
+    SCT_fn_vInitMirrorFlagForAllSectors(SECT_hFatherSector);
+    IPT_fn_vActivateAllEntryElements();
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_a_hSOCurrentMainSector[0] = 0; g_a_hSOCurrentMainSector[1] = 0; g_a_hSOCurrentMainSector[2] = 0; g_a_hSOCurrentMainSector[3] = 0;
+    AGO_vInit();
+    GLI_PS2GL_PrepareSpecificDataForLevel();
+    g_bLoadNewLevel = 0;
+    if (fn_bLevelHadTransitionMemory() && fn_bLevelHasTransitionMemory())
+    {
+        MEC_fn_vImposeActorMatrix(MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode()));
+    }
+    DEMO_fn_vLoadDemoIfNeeded();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 554–628 */
@@ -217,13 +567,6 @@ void fn_vInitLevelLoop(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-typedef struct tdstEngineStructure_ tdstEngineStructure_;
-struct tdstEngineStructure_ {
-    unsigned char eEngineMode; /* +0x0 */
-    char szLevelName[30]; /* +0x1 */
-};
-
-extern "C" {
 extern tdstEngineStructure_ g_stEngineStructure;
 extern unsigned char g_ucGameModuleId;
 extern unsigned int g_FixMemHasBeenSet;
@@ -245,7 +588,6 @@ void HMU_fn_vInitNormalFixMemory(unsigned int ulSize);
 void HMU_fn_vInitTempFixMemory(unsigned int ulSize);
 void HMU_fn_vInitBinaryMemory(unsigned int ulSize);
 void GAM_fn_vSetEngineInFixMode(void);
-}
 
 void fn_vInitEngineWhenInitApplication(void)
 {
@@ -357,7 +699,59 @@ void fn_vFirstInitEngine(void)
     unsigned char i;
     _SND_tdstInitStruct st_SoundInit;
     int FirstCine;
-    /* TODO: decompile from asm/... */
+    /* TODO: decompile from asm/...
+     *
+     * Structure recovered from the retail disassembly (0x263840, 1468 bytes):
+     *
+     *   178-205  a run of global initialisations: fn_vBbInit(),
+     *            fn_vInitDefaultValuesForSoundVolumes(), the engine-structure
+     *            list handles (hCameraList at +0x5f8, hMainCharacterList at
+     *            +0x620, hAlwaysActiveCharactersList at +0x614) and three
+     *            bytes at -0x6192/-0x6191/-0x6190 are cleared.
+     *   207-215  a four-iteration loop that clears the four words of
+     *            D_5383F4 (the counter is an unsigned char, the index is
+     *            strength reduced to a byte offset).
+     *   223-229  fn_vFirstInitEngineClock(), then a check of the six
+     *            globals D_00346138..D_0034614C against 1..6; a mismatch
+     *            calls Erm_fn_ClearLastError(0) and
+     *            Erm_fn_v_UpdateLastError(0x30, ..., 0, 0x15).
+     *   229      one source line holds a ~500 byte scan of the whole
+     *            __text_start..__text_end range that looks for the word
+     *            0x4080c000 and counts matches; it uses 64-bit shifts
+     *            (dsll32/dsrl32) and writes to the DMAlike area at
+     *            0x1000d400..0x1000d480.
+     *   244-529  the engine start-up call chain: GLI_xInitGli,
+     *            fn_vInitFrameLenght, GAM_fn_vCreateGameDeviceAndViewPorts,
+     *            FON_fn_vInitFonts, DEMO_fn_vAllocateMemory,
+     *            HMU_fn_vSetMemoriesInBinaryMode,
+     *            fn_vInitTransitionAllocPools(0x1e000),
+     *            HMU_fn_vSetMemoriesInFixMode, fn_v_InitInterpol,
+     *            SND_fn_iInitSound, GAM_fn_bInitSoundTypes,
+     *            fn_vInitMicrosFunction, fn_vFirstInitObjectTypeStructure,
+     *            PLD_fn_vLoadFix, IPT_fn_vInitInput(0xf,0,0,0),
+     *            fn_bLoadCurrentGameOptions, PLA_fn_vCreateAndInitHeaps,
+     *            fn_vFirstTimeInitCollisionGeometricObject,
+     *            MAT_fn_vSetIdentity(&D_538940), MAT_fn_vSetIdentity(&D_5389A0),
+     *            fn_vInitWaterStreakEffect,
+     *            SHW_fn_vInitShadow(g_stEngineStructure.hGLDDevice, 1),
+     *            HIE_fn_vCreateMatrixStack, GLI_fn_vCloseBigFileTextures,
+     *            sprintf(sp+0x30, "@897", MNC_fn_pcGetCurrentDirectory(),
+     *            "@898"), FMN_SCE_ConvertPath2DVD, GLI_fn_vOpenBigFileTextures,
+     *            GLI_vSetLoadingFix(1), GLI_vEndofGeometricLoad,
+     *            GLI_vSetLoadingFix(0),
+     *            TFMT_vSetDefaultValuesCharacter(1.0f, 0.0f, 2.0f),
+     *            GLI_xCreateMaterial, GLI_xSetMaterialType(..., 0x4ddc47f6),
+     *            GLI_fn_vDoCompleteFadeOut(4), the optional video start-up
+     *            (sceSifInitIopHeap, VID_fn_vNextVideoToPlay,
+     *            VID_fn_vSetVideoSoundVolume(0x7f), VIDSPE_fn_vPlayVideoNow),
+     *            fn_vInitInGameMenu2D and DEMO_fn_vReadDemoTableFile.
+     *   525-529  a VU0 block that cannot be emitted from C: mtsab, lqc2
+     *            vf27, qmfc2.ni, qfsrv and vcallms.  The retail line map puts
+     *            the whole block on one source line, so the original used a
+     *            statement-level asm block (or a macro expanding to one).
+     *            It is followed by VU0_fn_vLoadPrgPlayAnim and
+     *            VU0_fn_vWaitEndLoadVU0.
+     */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 148–163 */
@@ -391,11 +785,89 @@ void fn_vFirstInitEngine(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* fn_vTVS walks the file tree returned by pFD.  The retail lowers the
+   "x / 2 * 2" idiom to "x" for non-negative x and to a logical shift plus a
+   sign fix-up for negative x; see the attempt note for this function. */
+extern int g_iArraySizes;
+stFile_* pFD(char* format, char* name, int mode1, int mode2);
+float GetDS(stFile_* pCache);
+
 void fn_vTVS(void)
 {
-    char format[10];
+    char format[10] = ".I%sE%c%c";
     stFile_* pCache;
-    /* TODO: decompile from asm/... */
+    stFile_* pCur;
+    stFile_* pFirst;
+    stFile_* pMid;
+    stFile_* pFile;
+    float fTotal;
+    float fVal;
+    int i;
+
+    format[0] = 'V';
+
+    pFile = pFD(format, "D", 'O', 'S');
+    g_iArraySizes = 0x4D8;
+    fTotal = 0.0f;
+
+    if (pFile != NULL)
+    {
+        pCache = pFile->pChild;
+
+        if (pCache != NULL)
+        {
+            if (pFile->nb_sons != 0)
+            {
+                pFirst = (stFile_*)((unsigned int)pCache | 0x20000000);
+                pCur = pFirst;
+
+                for (i = pFile->nb_sons - 1; i != 0; i--)
+                {
+                    fVal = (float)(pCur->length / 2) * 2.0f;
+                    fTotal += fVal;
+
+                    if (pCur->nb_sons != 0)
+                    {
+                        fTotal += GetDS(pCur);
+                    }
+
+                    if (pFirst < pCur)
+                    {
+                        for (pMid = pFirst; pMid < pCur; pMid++)
+                        {
+                            if (pMid->sector < pCur->sector)
+                            {
+                                if ((2048.0f * ((float)(pMid->sector / 2) * 2.0f) + ((float)(pMid->length / 2) * 2.0f)) > (2048.0f * ((float)(pCur->sector / 2) * 2.0f)))
+                                {
+                                    fTotal = 0.0f;
+                                    goto theEnd;
+                                }
+                            }
+                            else
+                            {
+                                if ((2048.0f * ((float)(pCur->sector / 2) * 2.0f) + ((float)(pCur->length / 2) * 2.0f)) > (2048.0f * ((float)(pMid->sector / 2) * 2.0f)))
+                                {
+                                    fTotal = 0.0f;
+                                    goto theEnd;
+                                }
+                            }
+                        }
+                    }
+
+                    pCur++;
+                }
+            }
+        }
+    }
+
+theEnd:
+    if (fTotal < 1316448357.0f)
+    {
+    }
+    else
+    {
+        g_iArraySizes = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\initeng.cxx lines 82–99 */
@@ -409,13 +881,13 @@ void fn_vTVS(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" void GLI_fn_vCloseBigFileTextures(void);
+void GLI_fn_vCloseBigFileTextures(void);
 /* Pointer return/argument roles are established by this wrapper's target ABI;
  * the recovered callee scaffolds currently omit them. */
-extern "C" char* MNC_fn_pcGetCurrentDirectory(void);
-extern "C" char* FMN_SCE_ConvertPath2DVD(char* buffer);
-extern "C" void GLI_fn_vOpenBigFileTextures(char* filename);
-extern "C" int sprintf(char*, const char*, ...);
+char* MNC_fn_pcGetCurrentDirectory(void);
+char* FMN_SCE_ConvertPath2DVD(char* buffer);
+void GLI_fn_vOpenBigFileTextures(char* filename);
+int sprintf(char*, const char*, ...);
 void GAM_fn_vLoadTextures(void)
 {
     char Texture_BF_Name[255];

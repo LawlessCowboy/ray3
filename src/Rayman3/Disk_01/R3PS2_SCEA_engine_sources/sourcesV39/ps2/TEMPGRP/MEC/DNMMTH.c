@@ -3,30 +3,58 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/DNM.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
+typedef struct stMACDPID stMACDPID;
 typedef struct DNM_stDynamics DNM_stDynamics;
-typedef struct DNM_stReport DNM_stReport;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct MTH_stRotation MTH_stRotation;
-typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
+typedef struct DNM_stDynamicsComplexBlock DNM_stDynamicsComplexBlock;
+typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
+struct stMACDPID {
+    float m_xData0; /* +0x0 */
+    MTH3D_tdstVector_ m_stData1; /* +0x4 */
+    MTH3D_tdstVector_ m_stData2; /* +0x10 */
+    MTH3D_tdstVector_ m_stData3; /* +0x1c */
+    float m_xData3; /* +0x28 */
+    float m_xData4; /* +0x2c */
+    float m_xData5; /* +0x30 */
+    MTH_stRotation m_stData6; /* +0x34 */
+    MTH_stRotation m_stData7; /* +0x44 */
+    char m_cData8; /* +0x54 */
+    unsigned short m_uwData9; /* +0x56 */
+    MTH3D_tdstVector_ m_stData10; /* +0x58 */
+    float m_xData11; /* +0x64 */
+    float m_xData12; /* +0x68 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x6c..0x73 */
+    float m_xData13; /* +0x74 */
+    unsigned char m_bData14; /* +0x78 */
 };
 
-struct MTH_stRotation {
-    float m_xAngle; /* +0x0 */
-    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
+struct DNM_stDynamicsComplexBlock {
+    float m_xTiltIntensity; /* +0x0 */
+    float m_xTiltInertia; /* +0x4 */
+    float m_xTiltOrigin; /* +0x8 */
+    float m_xTiltAngle; /* +0xc */
+    float m_xHangingLimit; /* +0x10 */
+    MTH3D_tdstVector_ m_stContact; /* +0x14 */
+    MTH3D_tdstVector_ m_stFallTranslation; /* +0x20 */
+    stMACDPID m_stExternalDatas; /* +0x2c */
+    HIE_tdstSuperObject_* m_hPlatform; /* +0xa8 */
+    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0xac..0xaf */
+    MAT_tdstTransformation_ m_stAbsolutePreviousMatrix; /* +0xb0 */
+    MAT_tdstTransformation_ m_stPrevPreviousMatrix; /* +0x110 */
 };
 
-struct MTH3D_tdstMatrix_ {
-    MTH3D_tdstVector_ stCol_0; /* +0x0 */
-    MTH3D_tdstVector_ stCol_1; /* +0xc */
-    MTH3D_tdstVector_ stCol_2; /* +0x18 */
+struct DNM_stDynamics {
+    DNM_stDynamicsBaseBlock m_tdstDynamicsBaseBlock; /* +0x0 */
+    DNM_stDynamicsAdvancedBlock m_tdstDynamicsAdvancedBlock; /* +0x170 */
+    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x1f8..0x1ff */
+    DNM_stDynamicsComplexBlock m_tdstDynamicsComplexBlock; /* +0x200 */
 };
+
+extern DNM_stReport g_stReport;
+void DNM_p_stReportDefaultInit(DNM_stReport* p_stReport);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMMTH.c lines 224–299 */
 /* addr: 0x00302520  size: 340 bytes */
@@ -68,9 +96,56 @@ struct MTH3D_tdstMatrix_ {
  */
 void DNM_fn_vDynamicsInitDefault(DNM_stDynamics* p_stDynamic)
 {
-    unsigned int ulEndFlags;
     DNM_stReport* p_stReport;
-    /* TODO: decompile from asm/... */
+    unsigned int ulEndFlags;
+
+    p_stReport = NULL;
+    memset(&g_stReport, 0, 0x274);
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = 0;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= 0x0004400Fu;
+    ulEndFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags;
+
+    if ((ulEndFlags & 0x4000) ? 1 : 0)
+    {
+        p_stReport = p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport;
+        DNM_p_stReportDefaultInit(p_stReport);
+    }
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0)
+    {
+        memset(p_stDynamic, 0, sizeof(DNM_stDynamics));
+    }
+    else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
+    {
+        memset(p_stDynamic, 0, sizeof(DNM_stDynamics) - sizeof(DNM_stDynamicsComplexBlock));
+    }
+    else
+    {
+        memset(p_stDynamic, 0, sizeof(DNM_stDynamicsBaseBlock));
+    }
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags;
+
+    if (p_stReport != NULL)
+    {
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport = p_stReport;
+    }
+
+    ulEndFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x80;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags;
+    p_stDynamic->m_tdstDynamicsBaseBlock.m_ucNbFrame = 1;
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
+    {
+        p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor = 1.0f;
+    }
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0)
+    {
+        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = NULL;
+    }
+
+    memset(&g_stReport, 0, 0x274);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMMTH.c lines 164–201 */

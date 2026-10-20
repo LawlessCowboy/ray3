@@ -3041,14 +3041,38 @@ tdstNodeInterpret_* fn_p_stSoundProcedurePS2SetReverbOn(HIE_tdstSuperObject_* p_
  */
 tdstNodeInterpret_* fn_p_stSoundProcedurePS2ChangeReverb(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    int s32_FeedBack;
-    int s32_Delay;
-    int s32_Vol;
-    int s32_Mode;
-    int s32_Channels;
-    tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam;
+    int s32_Channels;
+    int s32_Mode;
+    int s32_Vol;
+    int s32_Delay;
+    int s32_FeedBack;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Channels = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Mode = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Vol = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Delay = stParam.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_FeedBack = stParam.uDummy.uParam.lValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_SND_PS2ChangeReverb:
+        SND_fn_p_stPS2ChangeReverb(s32_Channels, s32_Mode, s32_Vol, s32_Delay, s32_FeedBack);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(40, 0);
+        break;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 730–758 */
@@ -3071,13 +3095,37 @@ tdstNodeInterpret_* fn_p_stSoundProcedurePS2ChangeReverb(HIE_tdstSuperObject_* p
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+char* strcpy(char* _dst, const char* _src);
+int SND_fn_iGetNbMusicMarkerSlots(void);
+stMusicMarkerSlot* SND_fn_p_stGetMusicMarkerSlots(void);
+
 tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     stMusicMarkerSlot* p_stMarkerSlots;
     int s32_Index;
     tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    switch (eProcedureId)
+    {
+    case eProc_SND_ResetMusicMarkerSlot:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        s32_Index = stParam.uDummy.uParam.lValue - 1;
+
+        if (s32_Index < SND_fn_iGetNbMusicMarkerSlots() && s32_Index >= 0)
+        {
+            p_stMarkerSlots = SND_fn_p_stGetMusicMarkerSlots();
+            strcpy(*(char**)((char*)&p_stMarkerSlots[0].szBuffer + s32_Index * 40), "");
+        }
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(40, 0);
+        break;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 690–722 */
@@ -3136,14 +3184,40 @@ tdstNodeInterpret_* fn_p_stLipsChannelControl(HIE_tdstSuperObject_* p_SuperObjPe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+_SND_tdstBlockEvent* SND_fn_pstGetLastEventForObjectTypeSound(int s32_TypeId);
+void GAM_fn_vSaveBlockEventSlotMemory(_SND_tdstBlockEvent* pst_BlockEvent, int s32_Index);
+_SND_tdstBlockEvent* GAM_p_stGetBlockEventSlotMemory(int s32_Index);
+int SND_fn_s32SendRequestSemaphoreSound(int s32_SemaphoreId, int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int));
+
 tdstNodeInterpret_* fn_p_stSaveCurrentSoundRequest(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     _SND_tduRefEvt u_RefEvt;
     _SND_tdstBlockEvent* pst_BlockEvent;
+    tdeProcedureId_ eProcedureId;
     int s32_Index;
     tdstGetSetParam_ stParam;
-    tdeProcedureId_ eProcedureId;
-    /* TODO: decompile from asm/... */
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    s32_Index = stParam.uDummy.uParam.lValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_SND_SaveSoundEventInSlotMemory:
+        pst_BlockEvent = SND_fn_pstGetLastEventForObjectTypeSound(g_lSoundObjectTypeMusic);
+        GAM_fn_vSaveBlockEventSlotMemory(pst_BlockEvent, s32_Index);
+        break;
+    case eProc_SND_RestoreSoundEventInSlotMemory:
+        u_RefEvt.pstPtr = GAM_p_stGetBlockEventSlotMemory(s32_Index);
+        SND_fn_s32SendRequestSemaphoreSound(-3, -1, -1, g_lSoundObjectTypeMusic, u_RefEvt, 0, 0);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(40, 0);
+        break;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 597–643 */
@@ -3317,6 +3391,10 @@ tdstNodeInterpret_* fn_p_stSoundProcedureSetVolume(HIE_tdstSuperObject_* p_Super
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcedureId);
+void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
+
 tdstNodeInterpret_* fn_p_stSoundProcedureChangeVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     int s32_LineId;
@@ -3324,7 +3402,36 @@ tdstNodeInterpret_* fn_p_stSoundProcedureChangeVolume(HIE_tdstSuperObject_* p_Su
     HIE_tdstSuperObject_* h_UltraAbleObject;
     tdstGetSetParam_ st_Param;
     tdeProcedureId_ e_ProcedureId;
-    /* TODO: decompile from asm/... */
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(e_ProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+    s32_Volume = st_Param.uDummy.uParam.lValue;
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_ChangeVolumeSound:
+        s32_LineId = g_lSoundVolumeLineSound;
+        break;
+    case eProc_SND_ChangeVolumeVoice:
+        s32_LineId = g_lSoundVolumeLineVoices;
+        break;
+    case eProc_SND_ChangeVolumeMusic:
+        s32_LineId = g_lSoundVolumeLineMusic;
+        break;
+    case eProc_SND_ChangeVolumeAmbiance:
+        s32_LineId = g_lSoundVolumeLineAmbiance;
+        break;
+    case eProc_SND_ChangeVolumeMenuSnd:
+        s32_LineId = g_lSoundVolumeLineMenu;
+        break;
+    default:
+        s32_LineId = -1;
+    }
+
+    SND_fn_vSetVolumeLineSound(s32_LineId, s32_Volume);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 359–457 */
@@ -3405,12 +3512,48 @@ tdstNodeInterpret_* fn_p_stSoundProcedure(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void SND_fn_vResumeSound(void);
+void SND_fn_vResumeAllObjectTypeSound(int s32_TypeId);
+void SND_fn_vPauseSound(void);
+void SND_fn_vPauseAllObjectTypeSound(int s32_TypeId);
+
 tdstNodeInterpret_* fn_p_stSoundProcedureResume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     int s32_TypeId;
     tdstGetSetParam_ st_Param;
     tdeProcedureId_ e_ProcedureId;
-    /* TODO: decompile from asm/... */
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_ResumeSound:
+        s32_TypeId = g_lSoundObjectTypeAnim;
+        break;
+    case eProc_SND_ResumeVoice:
+        s32_TypeId = g_lSoundObjectTypeVoice;
+        break;
+    case eProc_SND_ResumeMusic:
+        s32_TypeId = g_lSoundObjectTypeMusic;
+        break;
+    case eProc_SND_ResumeAmbiance:
+        s32_TypeId = g_lSoundObjectTypeAmbiance;
+        break;
+    case eProc_SND_ResumeMenuSound:
+        s32_TypeId = g_lSoundObjectTypeMenu;
+        break;
+    case eProc_SND_ResumeAllRequests:
+        s32_TypeId = -2;
+        break;
+    default:
+        s32_TypeId = -1;
+    }
+
+    if (s32_TypeId == -2) { SND_fn_vResumeSound(); return p_stTree; }
+    SND_fn_vResumeAllObjectTypeSound(s32_TypeId);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 269–310 */
@@ -3438,7 +3581,38 @@ tdstNodeInterpret_* fn_p_stSoundProcedurePause(HIE_tdstSuperObject_* p_SuperObjP
     int s32_TypeId;
     tdstGetSetParam_ st_Param;
     tdeProcedureId_ e_ProcedureId;
-    /* TODO: decompile from asm/... */
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_PauseSound:
+        s32_TypeId = g_lSoundObjectTypeAnim;
+        break;
+    case eProc_SND_PauseVoice:
+        s32_TypeId = g_lSoundObjectTypeVoice;
+        break;
+    case eProc_SND_PauseMusic:
+        s32_TypeId = g_lSoundObjectTypeMusic;
+        break;
+    case eProc_SND_PauseAmbiance:
+        s32_TypeId = g_lSoundObjectTypeAmbiance;
+        break;
+    case eProc_SND_PauseMenuSound:
+        s32_TypeId = g_lSoundObjectTypeMenu;
+        break;
+    case eProc_SND_PauseAllRequests:
+        s32_TypeId = -2;
+        break;
+    default:
+        s32_TypeId = -1;
+    }
+
+    if (s32_TypeId == -2) { SND_fn_vPauseSound(); return p_stTree; }
+    SND_fn_vPauseAllObjectTypeSound(s32_TypeId);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 231–265 */
@@ -3522,6 +3696,8 @@ tdstNodeInterpret_* fn_p_stSoundProcedureStopRequest(HIE_tdstSuperObject_* p_Sup
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void SND_fn_vChangeVolumeSound(int s32_Handle, int s32_Volume, int s32_TypeId, int s32_ObjectId);
+
 tdstNodeInterpret_* fn_p_stSoundProcedureChangeVolumeId(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ st_Param;
@@ -3531,7 +3707,35 @@ tdstNodeInterpret_* fn_p_stSoundProcedureChangeVolumeId(HIE_tdstSuperObject_* p_
     int s32_Handle;
     HIE_tdstSuperObject_* h_UltraAbleObject;
     tdeProcedureId_ e_ProcedureId;
-    /* TODO: decompile from asm/... */
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(e_ProcedureId), p_SuperObjPerso, &h_UltraAbleObject);
+    s32_Handle = (int)h_UltraAbleObject;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+    s32_Volume = st_Param.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+    s32_ObjectId = st_Param.uDummy.uParam.lValue;
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_ChangeVolumeIdAmbiance:
+        s32_TypeId = g_lSoundObjectTypeAmbiance;
+        s32_Handle = -1;
+        break;
+    case eProc_SND_ChangeVolumeIdVoice:
+        s32_TypeId = g_lSoundObjectTypeVoice;
+    case eProc_SND_ChangeVolumeIdMusic:
+        s32_TypeId = g_lSoundObjectTypeMusic;
+        s32_Handle = -1;
+        break;
+    default:
+        s32_TypeId = -1;
+        s32_Handle = s32_TypeId;
+        break;
+    }
+
+    SND_fn_vChangeVolumeSound(s32_Handle, s32_Volume, s32_TypeId, s32_ObjectId);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 35–177 */

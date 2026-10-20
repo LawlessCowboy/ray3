@@ -131,6 +131,18 @@ typedef struct tdstCouple_ tdstCouple_;
 typedef struct CINE_tdstChannelLink_ CINE_tdstChannelLink_;
 typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
 
+extern int GLI_lGetVisualSetNumbertOfLOD(GEO_tdstVisualSet_* p_stVisualSet);
+extern void GLI_vSetObjectDeformed(GEO_tdstGeometricObject_* pObj);
+extern void* memcpy(void*, const void*, size_t);
+extern short fn_hMorphListIndex(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, short uwChannel);
+extern void fn_vRemoveChannelFromMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel);
+extern void fn_vPushAllocModeAccordingToObject(HIE_tdstSuperObject_* _hCharacter);
+extern void GAM_fn_vPopAllocMode(void);
+extern void MOR_fn_vDeletePhysicalObject(PO_tdstPhysicalObject_* _pPhysicalObject);
+extern void* memset(void*, int, size_t);
+
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
     MAT_eTransform_Identity = 1,
@@ -146,7 +158,7 @@ typedef enum MAT_tdeTranformationType_ {
 
 struct tdstObjectsTableElement_ {
     MTH3D_tdstVector_* p_stCustomZoom; /* +0x0 */
-    int h_Target; /* +0x4 */
+    PO_tdstPhysicalObject_* h_Target; /* +0x4 */
     unsigned int uwChannelNumber; /* +0x8 */
     unsigned short wTypeOfTarget; /* +0xc */
     unsigned char ucPhoneme; /* +0xe */
@@ -1251,9 +1263,21 @@ void MOR_fn_vRemoveMorph2(HIE_tdstSuperObject_* hSuperObject)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void MOR_fn_vTerminateMorphsForThisFrame(void)
-{
-    unsigned int j;
-    /* TODO: decompile from asm/... */
+{ unsigned int i; int lOffset = 0; MOR_stMorphStruct_* mp;
+    i = 0;
+    for (; i < 50; i++, lOffset += sizeof(MOR_stMorphStruct_)) { mp = (MOR_stMorphStruct_ *)((char *)g_MorphTasksList + lOffset); if (!mp->bInUse) { if (mp->ucbMarkedForTermination && mp->pMorphedPhysicalObject) {
+
+
+
+        MOR_fn_vDeletePhysicalObject(mp->pMorphedPhysicalObject);
+        memset(mp, 0, sizeof(MOR_stMorphStruct_));
+        continue; } }
+
+
+
+    mp->ucbMarkedForTermination = 0;
+
+}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1486–1494 */
@@ -1275,6 +1299,7 @@ void MOR_fn_vTerminateMorphsForThisFrame(void)
  */
 void MOR_fn_vMorphTo2(MOR_stMorphStruct_* mp);
 void MOR_fn_vMorphTo(MOR_stMorphStruct_* mp);
+int MOR_fn_bRemoveMorphedObjectFromHierarchy(HIE_tdstSuperObject_* hSuperObject, PO_tdstPhysicalObject_* p_stPhysicalObjectToRemove, PO_tdstPhysicalObject_* p_stPhysicalObjectToPut);
 
 void MOR_fn_vDoMorph(short _xIndex)
 {
@@ -1316,10 +1341,37 @@ PO_tdstPhysicalObject_* MOR_fn_hGetMorphedObject(short _xIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char MOR_fn_bRemoveMorphedObjectFromHierarchy(HIE_tdstSuperObject_* hSuperObject, PO_tdstPhysicalObject_* p_stPhysicalObjectToRemove, PO_tdstPhysicalObject_* p_stPhysicalObjectToPut)
+int MOR_fn_bRemoveMorphedObjectFromHierarchy(HIE_tdstSuperObject_* hSuperObject, PO_tdstPhysicalObject_* p_stPhysicalObjectToRemove, PO_tdstPhysicalObject_* p_stPhysicalObjectToPut)
 {
-    HIE_tdstSuperObject_* hChildSuperObject;
-    /* TODO: decompile from asm/... */
+    long lRemoved;
+    HIE_tdstSuperObject_* pBrother;
+    HIE_tdstSuperObject_* pChild;
+
+    if (hSuperObject->hLinkedObject.p_stPhysicalObject == p_stPhysicalObjectToRemove) {
+        hSuperObject->ulTypeOfLinkedObject = (p_stPhysicalObjectToPut != NULL) ? 8 : 1;
+        hSuperObject->hLinkedObject.p_stPhysicalObject = p_stPhysicalObjectToPut;
+        return 1;
+    }
+
+    for (pBrother = hSuperObject->hFirstElementDyn; pBrother != NULL; pBrother = pBrother->hNextBrotherDyn) {
+        if (pBrother->hLinkedObject.p_stPhysicalObject == p_stPhysicalObjectToRemove) {
+            pBrother->ulTypeOfLinkedObject = (p_stPhysicalObjectToPut != NULL) ? 8 : 1;
+            pBrother->hLinkedObject.p_stPhysicalObject = p_stPhysicalObjectToPut;
+            lRemoved = 1;
+        } else {
+            lRemoved = 0;
+            for (pChild = pBrother->hFirstElementDyn; pChild != NULL; pChild = pChild->hNextBrotherDyn) {
+                if (MOR_fn_bRemoveMorphedObjectFromHierarchy(pChild, p_stPhysicalObjectToRemove, p_stPhysicalObjectToPut)) {
+                    lRemoved = 1;
+                    break;
+                }
+            }
+        }
+        if (lRemoved) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1397–1429 */
@@ -1346,9 +1398,45 @@ unsigned char MOR_fn_bRemoveMorphedObjectFromHierarchy(HIE_tdstSuperObject_* hSu
  */
 void MOR_fn_vRemoveAllMorphedObjects(void)
 {
-    MOR_stMorphStruct_* mp;
     short i;
-    /* TODO: decompile from asm/... */
+    MOR_stMorphStruct_* mp;
+    int lOffset;
+    PO_tdstPhysicalObject_* pMorphed;
+    PO_tdstPhysicalObject_* pEnd;
+    HIE_tdstSuperObject_* hChild;
+    HIE_tdstSuperObject_* hSuperObject;
+    tdstEngineObject_* pCharacter;
+
+    for (i = 0, lOffset = 0; i < 50; i++, lOffset += sizeof(MOR_stMorphStruct_)) {
+        mp = (MOR_stMorphStruct_ *)((char *)g_MorphTasksList + lOffset);
+        if (mp->bInUse) {
+            hSuperObject = mp->hActorSuperObject;
+            pMorphed = mp->pMorphedPhysicalObject;
+            pEnd = mp->pOriginalPhysicalObject;
+            if (hSuperObject->hLinkedObject.p_stPhysicalObject == pMorphed) {
+                hSuperObject->ulTypeOfLinkedObject = (pEnd != NULL) ? 8 : 1;
+                hSuperObject->hLinkedObject.p_stPhysicalObject = pEnd;
+            } else {
+                for (hChild = hSuperObject->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
+                    if (MOR_fn_bRemoveMorphedObjectFromHierarchy(hChild, pMorphed, pEnd)) {
+                        break;
+                    }
+                }
+            }
+            fn_vPushAllocModeAccordingToObject(mp->hActorSuperObject);
+            pCharacter = (tdstEngineObject_ *)mp->hActorSuperObject->hLinkedObject.p_stCharacter;
+            if (pCharacter->h_StandardGame != NULL) {
+                fn_vRemoveChannelFromMorphList(pCharacter->h_3dData->hMorphChannelList, mp->xChannelIndex);
+            }
+            GAM_fn_vPopAllocMode();
+            MOR_fn_vDeletePhysicalObject(mp->pMorphedPhysicalObject);
+            if (mp->bInUse) {
+                memset(mp, 0, sizeof(MOR_stMorphStruct_));
+                mp->bInUse = 0;
+            }
+        }
+    }
+
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1377–1388 */
@@ -1369,7 +1457,14 @@ short MOR_fn_xGetMorphTaskIndex(HIE_tdstSuperObject_* _hActorSuperObject, short 
 {
     MOR_stMorphStruct_* mp;
     short i;
-    /* TODO: decompile from asm/... */
+    int lOffset;
+    i = 0; lOffset = 0; while (i < 50) {
+        mp = (MOR_stMorphStruct_ *)((char *)g_MorphTasksList + lOffset);
+        if (mp->bInUse && mp->hActorSuperObject == _hActorSuperObject && mp->xChannelIndex == _xChannelIndex) {
+        return i; }
+        lOffset += sizeof(MOR_stMorphStruct_);
+        i++; }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1349–1360 */
@@ -1388,22 +1483,15 @@ short MOR_fn_xGetMorphTaskIndex(HIE_tdstSuperObject_* _hActorSuperObject, short 
  */
 unsigned char MOR_fn_bIsCharacterMorphed(HIE_tdstSuperObject_* _hActorSuperObject)
 {
-    MOR_stMorphStruct_* mp;
     short i;
+    MOR_stMorphStruct_* mp;
     int lOffset;
-
-    i = 0;
-    lOffset = 0;
-    while (i < 50) {
+    i = 0; lOffset = 0; while (i < 50) {
         mp = (MOR_stMorphStruct_ *)((char *)g_MorphTasksList + lOffset);
-        if (mp->bInUse) {
-            if (mp->hActorSuperObject == _hActorSuperObject) {
-                return 1;
-            }
-        }
+        if (mp->bInUse && mp->hActorSuperObject == _hActorSuperObject) {
+        return 1; }
         lOffset += sizeof(MOR_stMorphStruct_);
-        i++;
-    }
+        i++; }
     return 0;
 }
 
@@ -1462,10 +1550,26 @@ unsigned char MOR_fn_bIsChannelMorphed(HIE_tdstSuperObject_* _hActorSuperObject,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vLastDeinitMorphTaskList(void)
-{
-    short i;
-    /* TODO: decompile from asm/... */
+void fn_vLastDeinitMorphTaskList(void) { short i; int lOffset = 0; MOR_stMorphStruct_* mp; HIE_tdstSuperObject_* hSuperObject; HIE_tdstSuperObject_* pFix;
+
+    for (i = 0; i < 50; i++, lOffset += sizeof(MOR_stMorphStruct_)) {
+
+        mp = (MOR_stMorphStruct_ *)((char *)g_MorphTasksList + lOffset); if (mp->bInUse) {
+
+
+            hSuperObject = mp->hActorSuperObject; if (hSuperObject->ulTypeOfLinkedObject != 2) { pFix = NULL; } else { pFix = hSuperObject->hLinkedObject.p_stSuperObject; } if (fn_bIsInFix(pFix)) { continue; }
+
+            if (mp->bInUse) { memset(mp, 0, sizeof(MOR_stMorphStruct_));
+
+
+
+                mp->bInUse = 0; }
+        } else {
+
+            if (mp->pMorphedPhysicalObject) { MOR_fn_vDeletePhysicalObject(mp->pMorphedPhysicalObject); }
+            memset(mp, 0, sizeof(MOR_stMorphStruct_));
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1159–1245 */
@@ -1521,9 +1625,76 @@ void GEO_fn_vMorphAddInMainLoop(void)
     float axRate[10];
     float axTmp[10];
     MOR_stMorphStruct_* mp;
+    int iDeltaTime;
+    float xDeltaTime;
     short j;
     short i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < 50; i++)
+    {
+        mp = &g_MorphTasksList[i];
+        if (!mp->bInUse)
+            continue;
+        if (mp->iNbMillisecond == 0)
+            continue;
+        if (mp->ucMorphType == 4)
+            continue;
+        for (j = 0; j < mp->ucNbTarget; j++)
+        {
+            axRate[j] = (mp->axEnd[j] - mp->axStart[j]) / (float)mp->iNbMillisecond;
+            iDeltaTime = (int)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;
+            if (iDeltaTime >= 0)
+            {
+                xDeltaTime = (float)iDeltaTime;
+            }
+            else
+            {
+                xDeltaTime = (float)(((unsigned int)iDeltaTime >> 1) | (iDeltaTime & 1));
+                xDeltaTime = xDeltaTime + xDeltaTime;
+            }
+            mp->axCurrent[j] = mp->axCurrent[j] + xDeltaTime * axRate[j];
+        }
+        switch (mp->ucMorphType)
+        {
+        case 1:
+            if (mp->axCurrent[0] * axRate[0] > mp->axEnd[0] * axRate[0])
+            {
+                fn_vPushAllocModeAccordingToObject(mp->hActorSuperObject);
+                fn_vRemoveChannelFromMorphList(((tdstEngineObject_*)mp->hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, mp->xChannelIndex);
+                GAM_fn_vPopAllocMode();
+                MOR_fn_vDeletePhysicalObject(mp->pMorphedPhysicalObject);
+                if (mp->bInUse)
+                {
+                    memset(mp, 0, sizeof(MOR_stMorphStruct_));
+                    mp->bInUse = 0;
+                }
+            }
+            else
+            {
+                MOR_fn_vMorphTo(mp);
+            }
+            break;
+        case 2:
+            if (mp->axCurrent[0] * axRate[0] > mp->axEnd[0] * axRate[0])
+            {
+                memcpy(mp->axCurrent, mp->axEnd, mp->ucNbTarget * sizeof(float));
+                mp->iNbMillisecond = 0;
+            }
+            MOR_fn_vMorphTo(mp);
+            break;
+        case 3:
+            if (mp->axCurrent[0] * axRate[0] > mp->axEnd[0] * axRate[0])
+            {
+                memcpy(axTmp, mp->axStart, mp->ucNbTarget * sizeof(float));
+                memcpy(mp->axStart, mp->axEnd, mp->ucNbTarget * sizeof(float));
+                memcpy(mp->axCurrent, mp->axEnd, mp->ucNbTarget * sizeof(float));
+                memcpy(mp->axEnd, axTmp, mp->ucNbTarget * sizeof(float));
+                mp->ucMorphType = 2;
+            }
+            MOR_fn_vMorphTo(mp);
+            break;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1083–1134 */
@@ -1574,16 +1745,37 @@ void GEO_fn_vMorphAddInMainLoop(void)
  */
 void MOR_fn_vMorphTo2(MOR_stMorphStruct_* mp)
 {
-    PO_tdstPhysicalObject_* hMorphedPO;
-    MOR_stMorphObject_* param0;
-    GEO_tdstGeometricObject_* geo3;
-    GEO_tdstGeometricObject_* geo1;
-    PO_tdstPhysicalObject_* phy1;
-    unsigned int j;
-    short k;
-    short i;
     float xMorphRatio;
-    /* TODO: decompile from asm/... */
+    short i;
+    short k;
+    unsigned int j;
+    PO_tdstPhysicalObject_* phy1;
+    GEO_tdstGeometricObject_* geo1;
+    GEO_tdstGeometricObject_* geo3;
+    MOR_stMorphObject_* param0;
+    PO_tdstPhysicalObject_* hMorphedPO;
+
+    hMorphedPO = mp->pMorphedPhysicalObject;
+    phy1 = mp->pOriginalPhysicalObject;
+    geo3 = NULL;
+    for (i = 0; i < GLI_lGetVisualSetNumbertOfLOD(phy1->_hVisualSet); i++)
+    {
+        geo1 = phy1->_hVisualSet->d_p_stLodDefinitions[i].p_stGeometricObject;
+        geo3 = hMorphedPO->_hVisualSet->d_p_stLodDefinitions[i].p_stGeometricObject;
+        memcpy(geo3->d_stListOfPoints, geo1->d_stListOfPoints, geo3->xNbPoints * 3 * sizeof(float));
+        geo3->xBoudingSphereRadius = geo1->xBoudingSphereRadius;
+        MTH3D_M_vCopyVector((MTH3D_tdstVector_*)&geo3->xBoudingSphereCenter, (MTH3D_tdstVector_*)&geo1->xBoudingSphereCenter);
+        for (k = 0; k < mp->ucNbTarget; k++)
+        {
+            param0 = ((MOR_stMorphObject_*)((PO_tdstPhysicalObject_*)((tdstEngineObject_*)mp->hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[mp->axEndIndexInObjectTable[k]].h_Target)->_hVisualSet->d_p_stLodDefinitions[i].p_stMorphObject);
+            xMorphRatio = mp->axCurrent[k];
+            for (j = 0; j < param0->ulNbVectors; j++)
+            {
+                geo3->d_stListOfPoints[param0->d_stMorphVector[j].xVertexIndex].xX = xMorphRatio * param0->d_stMorphVector[j].stDeformationVector.xX + geo3->d_stListOfPoints[param0->d_stMorphVector[j].xVertexIndex].xX; geo3->d_stListOfPoints[param0->d_stMorphVector[j].xVertexIndex].xY = xMorphRatio * param0->d_stMorphVector[j].stDeformationVector.xY + geo3->d_stListOfPoints[param0->d_stMorphVector[j].xVertexIndex].xY; geo3->d_stListOfPoints[param0->d_stMorphVector[j].xVertexIndex].xZ = xMorphRatio * param0->d_stMorphVector[j].stDeformationVector.xZ + geo3->d_stListOfPoints[param0->d_stMorphVector[j].xVertexIndex].xZ;
+            }
+        }
+    }
+    GLI_vSetObjectDeformed(geo3);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 879–1052 */
@@ -2046,7 +2238,50 @@ short MOR_fn_xMorphing(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartIn
 short MOR_fn_xStopMorph(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex)
 {
     MOR_stMorphStruct_* mp;
+    HIE_tdstSuperObject_* hSuperObject;
+    PO_tdstPhysicalObject_* pMorphedPhysicalObject;
+    PO_tdstPhysicalObject_* pEndPhysicalObject;
+    HIE_tdstSuperObject_* hChildSuperObject;
+    unsigned short uwChannelNumber;
     short j;
     short xMorphListIndex;
-    /* TODO: decompile from asm/... */
+
+    mp = NULL;
+    uwChannelNumber = (unsigned short)_xChannelIndex;
+    xMorphListIndex = fn_hMorphListIndex(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, _xChannelIndex);
+    if (xMorphListIndex == -1 || !g_MorphTasksList[xMorphListIndex].bInUse)
+        return -1;
+
+    for (j = 0; j < 50; j++)
+    {
+        mp = &g_MorphTasksList[j];
+        if (mp->bInUse && mp->hActorSuperObject == _hActorSuperObject && mp->xChannelIndex == _xChannelIndex)
+            break;
+        mp = NULL;
+    }
+    if (mp == NULL)
+        return -1;
+
+    hSuperObject = mp->hActorSuperObject;
+    pMorphedPhysicalObject = mp->pMorphedPhysicalObject;
+    pEndPhysicalObject = *(PO_tdstPhysicalObject_**)(void*)((char*)&((tdstEngineObject_*)mp->hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[0].h_Target + mp->axEndIndexInObjectTable[0] * sizeof(tdstObjectsTableElement_));
+    if (hSuperObject->hLinkedObject.p_stPhysicalObject == pMorphedPhysicalObject)
+    {
+        hSuperObject->ulTypeOfLinkedObject = (pEndPhysicalObject != NULL) ? 8 : 1;
+        hSuperObject->hLinkedObject.p_stPhysicalObject = pEndPhysicalObject;
+    }
+    else
+    {
+        for (hChildSuperObject = hSuperObject->hFirstElementDyn; hChildSuperObject != NULL; hChildSuperObject = hChildSuperObject->hNextBrotherDyn)
+        {
+            if (MOR_fn_bRemoveMorphedObjectFromHierarchy(hChildSuperObject, pMorphedPhysicalObject, pEndPhysicalObject))
+                break;
+        }
+    }
+
+    mp->bInUse = 0;
+    fn_vPushAllocModeAccordingToObject(_hActorSuperObject);
+    fn_vRemoveChannelFromMorphList(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, uwChannelNumber);
+    GAM_fn_vPopAllocMode();
+    return 0;
 }

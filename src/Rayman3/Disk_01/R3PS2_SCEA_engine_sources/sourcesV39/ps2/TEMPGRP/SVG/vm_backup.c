@@ -23,6 +23,7 @@ typedef struct anon_1 anon_1;
 typedef struct anon_2 anon_2;
 typedef struct SVG_stMCStatus_ SVG_stMCStatus_;
 typedef struct anon_3 anon_3;
+typedef struct anon_2_local anon_2_local;
 
 struct tdstSaveBuffer_ {
     int lCurrentPosition; /* +0x0 */
@@ -89,6 +90,22 @@ struct anon_3 {
     unsigned char year; /* +0x7 */
 };
 
+/* The retail build gives the local file-info object 0x78 bytes of stack: it
+ * starts at sp+0x20 and the next local (the RTC time struct) sits at
+ * sp+0x98.  The recovered sceMcTblGetDir layout only describes the first
+ * 0x40 of them, so the local keeps the remaining storage. */
+struct anon_2_local {
+    anon_0 _Create; /* +0x0 */
+    anon_0 _Modify; /* +0x8 */
+    unsigned int FileSizeByte; /* +0x10 */
+    unsigned short AttrFile; /* +0x14 */
+    unsigned short Reserve1; /* +0x16 */
+    unsigned int Reserve2; /* +0x18 */
+    unsigned int PdaAplNo; /* +0x1c */
+    unsigned char EntryName[32]; /* +0x20 */
+    unsigned char Reserved[0x38]; /* +0x40 */
+};
+
 extern int SVG_fn_s32GetFileInfo(int, int, char*, anon_2*);
 extern void sceScfGetLocalTimefromRTC(anon_3*);
 
@@ -134,9 +151,9 @@ extern int SVG_fn_s32ReadNextName();
 
 int VMS_lInitFilenameList(int drive, int* lListSize)
 {
-    char wildcardName[33];
-    char filename[33];
     int lRet;
+    char filename[33];
+    char wildcardName[33];
 
     if (VMS_lInitOk != 1)
         return 0;
@@ -348,10 +365,10 @@ int VMS_lGetFileDate(int drive, char* fname, anon_1* fDate)
 {
     anon_3 t;
     int lRet;
-    anon_2 info;
+    anon_2_local info;
     if (fDate == NULL) return -1;
     lRet = SVG_fn_s32GetFileInfo((&g_axPadMapping)[drive].iPort,
-        (&g_axPadMapping)[drive].iSlot, fname, &info);
+        (&g_axPadMapping)[drive].iSlot, fname, (anon_2*)&info);
     if (!lRet)
         return 0;
     memset(&t, 0, sizeof(t));

@@ -1275,19 +1275,23 @@ void GLI_SendShadowElementToViewport(GLD_tdstViewportAttributes_* p_stVpt, GEO_t
  * definition drops an unreferenced third parameter. */
 void SHW_fn_vSentToViewPort(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, void* _p_vUnused, int _lSectorDrawmask, GEO_tdstGeometricObject_* _hHandleOfGeometricShadowObject)
 {
-    float fGlobalAlphaTemp;
     unsigned char bTransparenceSetting;
     int lAdditionnalDrawMask;
+    float fGlobalAlphaTemp;
+    float fTransparenceLevel;
+    GLI_tdstMaterial_* hShadowMaterial;
 
-    g_hShadowPolygonVisualMaterial = (int)_hHandleOfCharacter->hLinkedObject.p_stCharacter->h_3dData->p_stShadowVisualMaterial;
-    GEO_vSetVisualMaterialOfIndexedTriangles(_hHandleOfGeometricShadowObject, g_p_hHandleOfElementForShadow[g_xIndexOfShadow], (GLI_tdstMaterial_*)g_hShadowPolygonVisualMaterial);
     bTransparenceSetting = 0;
     lAdditionnalDrawMask = 0;
+    hShadowMaterial = (GLI_tdstMaterial_*)_hHandleOfCharacter->hLinkedObject.p_stCharacter->h_3dData->p_stShadowVisualMaterial;
+    g_hShadowPolygonVisualMaterial = (int)hShadowMaterial;
+    GEO_vSetVisualMaterialOfIndexedTriangles(_hHandleOfGeometricShadowObject, g_p_hHandleOfElementForShadow[g_xIndexOfShadow], hShadowMaterial);
     HIE_fn_bLoadIdentity();
     if (fn_ulStandardGameGetCustomBitsSO(_hHandleOfCharacter) & 0x200000)
     {
         fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
-        GLI_vSetGlobalAlpha(GEO_xGetZFarTransparencyLevel() * _hHandleOfCharacter->fTransparenceLevel);
+        fTransparenceLevel = _hHandleOfCharacter->fTransparenceLevel;
+        GLI_vSetGlobalAlpha(fTransparenceLevel * GEO_xGetZFarTransparencyLevel());
         bTransparenceSetting = 1;
         _lSectorDrawmask &= 0xFFFBFFF7;
     }
@@ -1312,7 +1316,7 @@ void SHW_fn_vSentToViewPort(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuper
     if (HIE_g_lNbMatrixInStack)
     {
         HIE_g_lNbMatrixInStack--;
-        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack];
+        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
     }
 }
 

@@ -1401,12 +1401,19 @@ extern CAM_tdstCameraConstants_ CAM_g_stCopyCameraConstants;
 #pragma optimize_for_size off
 void CAM_fn_vLoadCameraConstants(void)
 {
+    /* Matching idiom: taking the copy source through a char* base makes the
+       global address a computed (non-rematerialisable) value, so MWCC keeps it
+       in a1 and materialises it in the prologue exactly like retail.  The
+       xDynSpeed_TargetMulPerso constant is 1.0f (retail stores the same
+       register as the two xCutAngleFactor values). */
+    CAM_tdstCameraConstants_ *pSrc = (CAM_tdstCameraConstants_*)((char*)&CAM_g_stCameraConstants + 0);
     CAM_g_stCameraConstants.xRayCameraSphereToGo1 = 0.35f;
     CAM_g_stCameraConstants.xRayCameraSphereToGo2 = 0.35f;
     CAM_g_stCameraConstants.xRayCameraSphereToSee1 = 0.1f;
     CAM_g_stCameraConstants.xRayCameraSphereToSee2 = 0.1f;
     CAM_g_stCameraConstants.xBaseAngleComputePosNormal = 0.7853982f;
-    CAM_g_stCameraConstants.xBaseAngleComputePosFailure = 0.3926991f;
+    CAM_g_stCameraConstants.xBaseAngleComputePosFailure = 0.7853982f;
+    CAM_g_stCameraConstants.xBaseCutAngle = 0.3926991f;
     CAM_g_stCameraConstants.xAverageForComputePos = 0.4f;
     CAM_g_stCameraConstants.xAverageForComputeLinearSpeed = 0.4f;
     CAM_g_stCameraConstants.xMinLinearSpeedCamera = 0.005f;
@@ -1432,15 +1439,15 @@ void CAM_fn_vLoadCameraConstants(void)
     CAM_g_stCameraConstants.xDynSpeed_TargetFactNorm = 4.0f;
     CAM_g_stCameraConstants.xDynSpeed_TargetMax = 10.0f;
     CAM_g_stCameraConstants.xDynSpeed_TargetMulPerso = 1.0f;
-    CAM_g_stCameraConstants.xBaseCutAngle = 0.3926991f;
     CAM_g_stCameraConstants.xCutAngleFactorPos = 1.0f;
     CAM_g_stCameraConstants.xCutAngleFactorTgt = 1.0f;
     CAM_g_stCameraConstants.wFlags = 0;
-    memcpy(&CAM_g_stCopyCameraConstants, &CAM_g_stCameraConstants, sizeof(CAM_tdstCameraConstants_));
+    memcpy(&CAM_g_stCopyCameraConstants, pSrc, sizeof(CAM_tdstCameraConstants_));
 }
 #pragma optimize_for_size reset
 
 unsigned int CS_fn_ulGetPrivilegedActivationZoneInCollSet(unsigned char _ucZoneType, tdstCollSet_* _hCollSet);
+int fn_bHadToCorrectActivationList(tdstCsaList_* _p_stCsaList, int _lNumberOfState);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 917–938 */
 /* addr: 0x0026e7c0  size: 212 bytes */
@@ -1660,12 +1667,39 @@ void fn_vSetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hColl
  */
 void fn_vCorrectAllActivationLists(tdstEngineObject_* _p_stObject)
 {
-    int bWarningZdr;
-    int bWarningZdm;
-    int bWarningZde;
     int bWarningZdd;
+    int bWarningZde;
+    int bWarningZdm;
+    int bWarningZdr;
+    tdstCollSet_* hCollSet;
     int lNumberOfState;
-    /* TODO: decompile from asm/... */
+
+    hCollSet = _p_stObject->h_CollSet; if (hCollSet)
+    {
+        bWarningZdd = 0; bWarningZde = 0; bWarningZdm = 0; bWarningZdr = 0;
+        lNumberOfState = _p_stObject->h_3dData->h_Family->hForStateArray.lNumberOfElementsOpt;
+        if (hCollSet->hZddActivationList)
+        {
+            bWarningZdd = fn_bHadToCorrectActivationList(hCollSet->hZddActivationList, lNumberOfState);
+        }
+        if (hCollSet->hZdeActivationList)
+        {
+            bWarningZde = fn_bHadToCorrectActivationList(hCollSet->hZdeActivationList, lNumberOfState);
+        }
+        if (hCollSet->hZdmActivationList)
+        {
+            bWarningZdm = fn_bHadToCorrectActivationList(hCollSet->hZdmActivationList, lNumberOfState);
+        }
+        if (hCollSet->hZdrActivationList)
+        {
+            bWarningZdr = fn_bHadToCorrectActivationList(hCollSet->hZdrActivationList, lNumberOfState);
+        }
+        if (bWarningZde || bWarningZdd || bWarningZdm || bWarningZdr)
+        {
+            Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 64, -1, 255, 255, NULL);
+            Erm_fn_ClearLastError(0);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 729–732 */
@@ -2045,7 +2079,7 @@ void fn_vCollSetSetColliderActor(tdstCollSet_* _hCollSet, short _wIndex, HIE_tds
 void fn_vCollSetSetColliderVector(tdstCollSet_* _hCollSet, short _wIndex, MTH3D_tdstVector_* _p_stVector)
 {
     if (_wIndex >= 0 && _wIndex < 2)
-        _hCollSet->stColliderInfo.a_stColliderVectors[_wIndex] = *_p_stVector;
+        ((MTH3D_tdstVector_*)((char*)&_hCollSet->stColliderInfo.a_stColliderVectors[0]))[_wIndex] = *_p_stVector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 543–543 */
@@ -2082,9 +2116,10 @@ void fn_vCollSetSetColliderPriority(tdstCollSet_* _hCollSet, unsigned char _ucPr
  */
 float fn_xCollSetGetColliderReal(tdstCollSet_* _hCollSet, short _wIndex)
 {
-    int index = _wIndex;
-    float (*pReals)[2];
-    return (index >= 0 && index < 2) ? ((float*)(pReals = &_hCollSet->stColliderInfo.a_xColliderReals))[index] : 0.0f;
+    /* Matching idiom: a char* base plus a dead scaled-index assignment keeps
+       the retail's unfolded address (base addiu + index shift) with the whole
+       index chain in one register.  Not original source, needs cleanup. */
+    int index = _wIndex; int iIndex; char *pc = (char*)_hCollSet; pc = pc + 0x64; return (index >= 0 && index < 2) ? *(float*)((char*)pc + (iIndex = index * 4)) : 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 520–526 */
@@ -2119,7 +2154,9 @@ MTH3D_tdstVector_ fn_stCollSetGetColliderVector(tdstCollSet_* _hCollSet, short _
  */
 HIE_tdstSuperObject_* fn_stCollSetGetColliderActor(tdstCollSet_* _hCollSet, short _wIndex)
 {
-    return (_wIndex >= 0 && _wIndex < 2) ? ((HIE_tdstSuperObject_**)&_hCollSet->stColliderInfo.a_stColliderActors)[_wIndex] : NULL;
+    /* Matching idiom: see fn_xCollSetGetColliderReal (char* base plus a dead
+       scaled-index assignment).  Not original source, needs cleanup. */
+    int index = _wIndex; int iIndex; char *pc = (char*)_hCollSet; pc = pc + 0x44; return (index >= 0 && index < 2) ? *(HIE_tdstSuperObject_**)((char*)pc + (iIndex = index * 4)) : NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 509–509 */

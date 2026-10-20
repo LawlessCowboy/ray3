@@ -326,9 +326,27 @@ struct GEO_tdstDoubledIndex_ {
     short a2_xIndex[2]; /* +0x0 */
 };
 
+/* Word view of a 3D vector, used for the sector border box copies. */
+typedef union {
+    MTH3D_tdstVector_ v;
+    unsigned int i[3];
+} SECT_tduVectorWords_;
+
+/* R5900 accumulator multiply-add, as used by the sector distance computation. */
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+
 unsigned char g_ucSCTModuleId;
 short SCT_xNbChange;
 int SCT_a10_hSectorChangeHistory[10];
+
+int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject);
+int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject);
+HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SECT_hFatherSector, MTH3D_tdstVector_* p_stAbsolutePosition);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 85–140 */
 /* addr: 0x0031c080  size: 652 bytes */
@@ -501,8 +519,21 @@ void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot)
 HIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* _hSectorObject)
 {
     SECT_tdstSector_* hSector;
-    HIE_tdstSuperObject_* hNextSO;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hNextSector;
+
+    hSector = _hSectorObject->hLinkedObject.p_stSector;
+    if (!hSector->ucInList)
+        return NULL;
+    hNextSector = hSector->h_NextSectorInList;
+    if (SECT_fn_bIsSectorNewlyActive(_hSectorObject))
+        SECT_fn_vActivateSector(_hSectorObject);
+    else if (SECT_fn_bIsSectorNewlyInactive(_hSectorObject))
+    {
+        SECT_fn_vDesactivateSector(_hSectorObject);
+        SECT_fn_vRemoveSectorFromList(_hSectorObject);
+    }
+    hSector->cWantedActivity = -1;
+    return hNextSector;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 951–956 */
@@ -514,6 +545,7 @@ HIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* _
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject)
 {
     SECT_tdstSector_* param0 = _hSectorObject->hLinkedObject.p_stSector;
@@ -534,6 +566,7 @@ int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject)
     SECT_tdstSector_* param0 = _hSectorObject->hLinkedObject.p_stSector;
     return (param0->cWantedActivity == 1) && (param0->cCurrentActivity != param0->cWantedActivity);
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 905–936 */
 /* addr: 0x0031c4a0  size: 152 bytes */
@@ -559,7 +592,29 @@ int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject)
 int SECT_fn_cSetWantedActivity(HIE_tdstSuperObject_* _hSectorObject, char _cWantedActivity)
 {
     SECT_tdstSector_* hSector;
-    /* TODO: decompile from asm/... */
+
+    hSector = _hSectorObject->hLinkedObject.p_stSector;
+    if (_cWantedActivity == -1)
+        return 0;
+    if (hSector->cWantedActivity == _cWantedActivity)
+        return 0;
+    switch (hSector->cWantedActivity)
+    {
+    case -1:
+        hSector->cWantedActivity = _cWantedActivity;
+        break;
+    case 0:
+        if (_cWantedActivity == 1)
+        {
+            hSector->cWantedActivity = _cWantedActivity;
+        }
+        break;
+    }
+    if (_cWantedActivity == 1 && !hSector->ucInList)
+    {
+        SECT_fn_vAddSectorInList(_hSectorObject);
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 894–895 */
@@ -598,7 +653,7 @@ unsigned char SECT_fn_bIsThisSectorVirtual(HIE_tdstSuperObject_* _hSprObjSector)
  */
 void SECT_fn_vAddTailDNMLightsListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfDNMLights_* hNode)
 {
-    /* TODO: decompile from asm/... */
+    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfDNMLights; if (hSector->hLinkedObject.p_stSector->stListOfDNMLights.hFirstElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfDNMLights.hFirstElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn->hNextBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfDNMLights.lNumberOfElementsDyn++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 498–499 */
@@ -624,7 +679,7 @@ void SECT_fn_vIsolateDNMLightsListNode(SECT_tdstListOfDNMLights_* hNode)
  */
 void SECT_fn_vAddHeadCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode)
 {
-    /* TODO: decompile from asm/... */
+    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hNextBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfCharacters; if (hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn->hPrevBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.lNumberOfElementsDyn++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 486–487 */
@@ -637,7 +692,7 @@ void SECT_fn_vAddHeadCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOf
  */
 void SECT_fn_vAddTailCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode)
 {
-    /* TODO: decompile from asm/... */
+    if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfCharacters; if (hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn->hNextBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.lNumberOfElementsDyn++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 480–481 */
@@ -680,14 +735,79 @@ void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SCT_fn_vTestChangeSectorWithHistory(MTH3D_tdstVector_* _p_stAfterAbsolutePosition, HIE_tdstSuperObject_** _p_hSectorSOWhereIWas)
+void SCT_fn_vTestChangeSectorWithHistory(void* _pUnused, MTH3D_tdstVector_* _p_stAfterAbsolutePosition, HIE_tdstSuperObject_** _p_hSectorSOWhereIWas)
 {
     int iInd;
     HIE_tdstSuperObject_* param0;
     SECT_tdstSector_* hCurrentSectorObject;
     SECT_tdstSector_* hSectorObject;
-    SECT_tdstListOfSOSectorsInCollisionInteraction_* hCollisionNode;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hCollisionNode;
+    HIE_tdstSuperObject_** aCollisionList;
+    SECT_tduVectorWords_ stMax;
+    SECT_tduVectorWords_ stMin;
+    int bInside;
+
+    param0 = *_p_hSectorSOWhereIWas;
+    hCurrentSectorObject = param0->hLinkedObject.p_stSector;
+    stMin.i[0] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[0].xX; stMin.i[1] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[0].xY; stMin.i[2] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[0].xZ;
+    stMax.i[0] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[1].xX; stMax.i[1] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[1].xY; stMax.i[2] = *(unsigned int*)&hCurrentSectorObject->stMinMaxPoints[1].xZ;
+    if ((_p_stAfterAbsolutePosition->xX < stMin.v.xX) || (_p_stAfterAbsolutePosition->xX > stMax.v.xX))
+        bInside = 0;
+    else if ((_p_stAfterAbsolutePosition->xY < stMin.v.xY) || (_p_stAfterAbsolutePosition->xY > stMax.v.xY))
+        bInside = 0;
+    else if ((_p_stAfterAbsolutePosition->xZ < stMin.v.xZ) || (_p_stAfterAbsolutePosition->xZ > stMax.v.xZ))
+        bInside = 0;
+    else
+        bInside = 1;
+    if (!bInside || hCurrentSectorObject->xVirtual)
+    {
+        aCollisionList = (HIE_tdstSuperObject_**)hCurrentSectorObject->stListOfSectorsInCollisionInteraction.hFirstElementOpt;
+        for (iInd = hCurrentSectorObject->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt; iInd > 0; iInd--, aCollisionList++)
+        {
+            SECT_tduVectorWords_ stNodeMax;
+            SECT_tduVectorWords_ stNodeMin;
+            hCollisionNode = *aCollisionList;
+            hSectorObject = hCollisionNode->hLinkedObject.p_stSector;
+            if (!hSectorObject->xVirtual)
+            {
+                stNodeMin.i[0] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xX; stNodeMin.i[1] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xY; stNodeMin.i[2] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xZ;
+                stNodeMax.i[0] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xX; stNodeMax.i[1] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xY; stNodeMax.i[2] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xZ;
+                if ((_p_stAfterAbsolutePosition->xX >= stNodeMin.v.xX) && (_p_stAfterAbsolutePosition->xX <= stNodeMax.v.xX) &&
+                    (_p_stAfterAbsolutePosition->xY >= stNodeMin.v.xY) && (_p_stAfterAbsolutePosition->xY <= stNodeMax.v.xY) &&
+                    (_p_stAfterAbsolutePosition->xZ >= stNodeMin.v.xZ) && (_p_stAfterAbsolutePosition->xZ <= stNodeMax.v.xZ))
+                {
+                    *_p_hSectorSOWhereIWas = hCollisionNode;
+                    return;
+                }
+            }
+        }
+        *_p_hSectorSOWhereIWas = SECT_fn_hResearchInWhatSectorIAm(param0->hFatherDyn, _p_stAfterAbsolutePosition);
+        return;
+    }
+    aCollisionList = (HIE_tdstSuperObject_**)hCurrentSectorObject->stListOfSectorsInCollisionInteraction.hFirstElementOpt;
+    for (iInd = hCurrentSectorObject->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt; iInd > 0; iInd--, aCollisionList++)
+    {
+        SECT_tduVectorWords_ stNodeMax;
+        SECT_tduVectorWords_ stNodeMin;
+        hCollisionNode = *aCollisionList;
+        hSectorObject = hCollisionNode->hLinkedObject.p_stSector;
+        if (hCurrentSectorObject->cPriority >= hSectorObject->cPriority)
+        {
+            break;
+        }
+        if (!hSectorObject->xVirtual)
+        {
+            stNodeMin.i[0] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xX; stNodeMin.i[1] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xY; stNodeMin.i[2] = *(unsigned int*)&hSectorObject->stMinMaxPoints[0].xZ;
+            stNodeMax.i[0] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xX; stNodeMax.i[1] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xY; stNodeMax.i[2] = *(unsigned int*)&hSectorObject->stMinMaxPoints[1].xZ;
+            if ((_p_stAfterAbsolutePosition->xX >= stNodeMin.v.xX) && (_p_stAfterAbsolutePosition->xX <= stNodeMax.v.xX) &&
+                (_p_stAfterAbsolutePosition->xY >= stNodeMin.v.xY) && (_p_stAfterAbsolutePosition->xY <= stNodeMax.v.xY) &&
+                (_p_stAfterAbsolutePosition->xZ >= stNodeMin.v.xZ) && (_p_stAfterAbsolutePosition->xZ <= stNodeMax.v.xZ))
+            {
+                *_p_hSectorSOWhereIWas = hCollisionNode;
+                return;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 277–352 */
@@ -750,7 +870,86 @@ HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SEC
     HIE_tdstSuperObject_* hVirtualSectorWhereIAm;
     HIE_tdstSuperObject_* hSectorWhereIAm;
     SECT_tdstSector_* param0;
-    /* TODO: decompile from asm/... */
+    SECT_tduVectorWords_ stMax;
+    SECT_tduVectorWords_ stMin;
+    float xDeltaX;
+    float xDeltaY;
+    float xDeltaZ;
+    float xDistance;
+    float xCenterX;
+    float xCenterY;
+    float xCenterZ;
+    int bInside;
+
+    hLastSector = NULL;
+    cCurrentPriority = 0;
+    cVirtualPriority = 0;
+    xCurrentDistance = 3.40282347e+38f;
+    hSectorWhereIAm = NULL;
+    hVirtualSectorWhereIAm = NULL;
+    hCurrentSector = SECT_hFatherSector->hFirstElementDyn;
+    xVirtualDistance = 3.40282347e+38f;
+
+    while (hCurrentSector)
+    {
+        param0 = hCurrentSector->hLinkedObject.p_stSector;
+        hLastSector = hCurrentSector;
+        stMin.i[0] = *(unsigned int*)&param0->stMinMaxPoints[0].xX; stMin.i[1] = *(unsigned int*)&param0->stMinMaxPoints[0].xY; stMin.i[2] = *(unsigned int*)&param0->stMinMaxPoints[0].xZ;
+        stMax.i[0] = *(unsigned int*)&param0->stMinMaxPoints[1].xX; stMax.i[1] = *(unsigned int*)&param0->stMinMaxPoints[1].xY; stMax.i[2] = *(unsigned int*)&param0->stMinMaxPoints[1].xZ;
+        if ((p_stAbsolutePosition->xX < stMin.v.xX) || (p_stAbsolutePosition->xX > stMax.v.xX))
+            bInside = 0;
+        else if ((p_stAbsolutePosition->xY < stMin.v.xY) || (p_stAbsolutePosition->xY > stMax.v.xY))
+            bInside = 0;
+        else if ((p_stAbsolutePosition->xZ < stMin.v.xZ) || (p_stAbsolutePosition->xZ > stMax.v.xZ))
+            bInside = 0;
+        else
+            bInside = 1;
+        if (bInside)
+        {
+            xCenterX = (param0->stMinMaxPoints[0].xX + param0->stMinMaxPoints[1].xX) / 2.0f;
+            xCenterY = (param0->stMinMaxPoints[0].xY + param0->stMinMaxPoints[1].xY) / 2.0f;
+            xCenterZ = (param0->stMinMaxPoints[0].xZ + param0->stMinMaxPoints[1].xZ) / 2.0f;
+            xDeltaX = xCenterX - p_stAbsolutePosition->xX;
+            xDeltaY = xCenterY - p_stAbsolutePosition->xY;
+            xDeltaZ = xCenterZ - p_stAbsolutePosition->xZ;
+            MTH_SQR3_TO(xDistance, xDeltaX, xDeltaY, xDeltaZ);
+            MTH_SQRT_TO(xDistance, xDistance);
+            if (!param0->xVirtual)
+            {
+                if (param0->cPriority > cCurrentPriority)
+                {
+                    cCurrentPriority = param0->cPriority;
+                    hSectorWhereIAm = hCurrentSector;
+                    xCurrentDistance = xDistance;
+                }
+                else if ((param0->cPriority == cCurrentPriority) && (xDistance < xCurrentDistance))
+                {
+                    xCurrentDistance = xDistance;
+                    hSectorWhereIAm = hCurrentSector;
+                }
+            }
+            else
+            {
+                if (param0->cPriority > cVirtualPriority)
+                {
+                    cVirtualPriority = param0->cPriority;
+                    hVirtualSectorWhereIAm = hCurrentSector;
+                    xVirtualDistance = xDistance;
+                }
+                else if ((param0->cPriority == cVirtualPriority) && (xDistance < xVirtualDistance))
+                {
+                    xVirtualDistance = xDistance;
+                    hVirtualSectorWhereIAm = hCurrentSector;
+                }
+            }
+        }
+        hCurrentSector = hCurrentSector->hNextBrotherDyn;
+    }
+    if (!hSectorWhereIAm)
+        hSectorWhereIAm = hVirtualSectorWhereIAm;
+    if (!hSectorWhereIAm)
+        hSectorWhereIAm = hLastSector;
+    return hSectorWhereIAm;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 242–261 */
@@ -774,9 +973,17 @@ HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SEC
  */
 int SECT_fn_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSector_* _hSector)
 {
-    MTH3D_tdstVector_ stMax;
-    MTH3D_tdstVector_ stMin;
-    /* TODO: decompile from asm/... */
+    SECT_tduVectorWords_ stMin;
+    SECT_tduVectorWords_ stMax;
+    stMin.i[0] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xX; stMin.i[1] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xY; stMin.i[2] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xZ;
+    stMax.i[0] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xX; stMax.i[1] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xY; stMax.i[2] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xZ;
+    if (_p_stPosition->xX < stMin.v.xX || _p_stPosition->xX > stMax.v.xX)
+        return 0;
+    if (_p_stPosition->xY < stMin.v.xY || _p_stPosition->xY > stMax.v.xY)
+        return 0;
+    if (_p_stPosition->xZ < stMin.v.xZ || _p_stPosition->xZ > stMax.v.xZ)
+        return 0;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 237–237 */

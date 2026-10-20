@@ -26,7 +26,7 @@ extern "C" void usnd_memcpy(void* pvDest, void* pvSrc, unsigned int uiSize)
     memcpy(pvDest, pvSrc, uiSize);
 }
 
-void usnd_free(void* pv)
+extern "C" void usnd_free(void* pv)
 {
     HMU_fn_vSndFree(&pv);
 }

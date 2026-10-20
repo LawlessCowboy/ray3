@@ -3785,6 +3785,9 @@ _tdstBitmapFont g_TabBitmapFont;
 unsigned char g_ucCurrentViewport;
 
 void TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p);
+void GLI_vDisplayFrame(float* a3_fPosition, float* a3_fDirection, float fTransparency, GLD_tdstViewportAttributes_* p_stVpt);
+void GLI_vSetGlobalAlpha(float fAlpha);
+void GLI_vEnd2DSpritesWithUVs(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 81–86 */
 /* addr: 0x003236a0  size: 56 bytes */
@@ -3881,12 +3884,12 @@ void fn_vInitFont(void)
  */
 void TXT_vAfficheSpecialWithTransparency(char* String, float* a3_Pos, float f0_255Transparency)
 {
+    _JFFTXT_ DummyString;
+    _JFFTXT_* p;
+    GLD_tdstViewportAttributes_ stVpt;
+    GLD_tdstViewportAttributes_* p_stVpt;
     float x1[3];
     float x2[3];
-    _JFFTXT_* p;
-    GLD_tdstViewportAttributes_* p_stVpt;
-    _JFFTXT_ DummyString;
-    GLD_tdstViewportAttributes_ stVpt;
 
     p = &DummyString;
     p_stVpt = &stVpt;
@@ -3898,10 +3901,7 @@ void TXT_vAfficheSpecialWithTransparency(char* String, float* a3_Pos, float f0_2
     if (String)
     {
         p->pString = (int)String;
-        if (2147483648.0f <= f0_255Transparency)
-            p->ucTransparency = (unsigned int)((int)(f0_255Transparency - 2147483648.0f) | 0x80000000);
-        else
-            p->ucTransparency = (int)f0_255Transparency;
+        p->ucTransparency = (unsigned int)f0_255Transparency;
         p->bOther = 8;
         p->a3_Pos[0] = a3_Pos[0];
         p->a3_Pos[1] = a3_Pos[1];
@@ -3919,27 +3919,17 @@ void TXT_vAfficheSpecialWithTransparency(char* String, float* a3_Pos, float f0_2
         else
             g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
 
-        g_ucCurrentNumFont = 0;
-        g_ucCurrentNumTextureFont = 50;
-        g_fCurrentSizeFontW = 1.0f;
-        g_fCurrentSizeFontH = 1.0f;
-        g_fInterLetterRatio = 1.0f;
+        g_ucCurrentNumFont = 0; g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f;
 
         x1[0] = p->a3_Pos[0] * (float)p_stVpt->dwWidth * 0.001f;
         x1[1] = p->a3_Pos[1] * (float)p_stVpt->dwHeight * 0.001f;
-        TXT_g_StringExtents[2] = x1[0];
-        TXT_g_StringExtents[0] = x1[0];
-        TXT_g_StringExtents[3] = x1[1];
-        TXT_g_StringExtents[1] = x1[1];
+        TXT_g_StringExtents[2] = x1[0]; TXT_g_StringExtents[0] = x1[0];
+        TXT_g_StringExtents[3] = x1[1]; TXT_g_StringExtents[1] = x1[1];
         TXT_g_GettingExtents = 1;
         TXT_vDrawString(p_stVpt, p);
 
-        g_ucCurrentNumTextureFont = 50;
         TXT_g_GettingExtents = 0;
-        g_fCurrentSizeFontW = 1.0f;
-        g_fCurrentSizeFontH = 1.0f;
-        g_fInterLetterRatio = 1.0f;
-        g_ucCurrentNumFont = 0;
+        g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f; g_ucCurrentNumFont = 0;
 
         x1[0] = TXT_g_StringExtents[0] * 100.0f / (float)p_stVpt->dwWidth - 1.0f;
         x1[1] = TXT_g_StringExtents[1] * 100.0f / (float)p_stVpt->dwHeight - 1.0f;
@@ -4021,38 +4011,55 @@ void TXT_vAfficheSpecialWithTransparency(char* String, float* a3_Pos, float f0_2
  */
 void TXT_vRedrawStringByNumber(int Num)
 {
-    float x2[3];
-    float x1[3];
-    GLD_tdstViewportAttributes_* p_stVpt;
     GLD_tdstViewportAttributes_ stVpt;
     _JFFTXT_* p;
-    /* TODO: decompile from asm/... */
-}
+    GLD_tdstViewportAttributes_* p_stVpt;
+    float x1[3];
+    float x2[3];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1864–1869 */
-/* addr: 0x00323ee0  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1864
- *   +0x0004 -> line 1866
- *   +0x0008 -> line 1864
- *   +0x000c -> line 1866
- *   +0x0010 -> line 1864
- *   +0x0014 -> line 1866
- *   +0x0018 -> line 1864
- *   +0x001c -> line 1866
- *   +0x0020 -> line 1864
- *   +0x0040 -> line 1866
- *   +0x0060 -> line 1868
- *   +0x0080 -> line 1869
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void TXT_vAfficheSimpleWithShadow(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z, unsigned int ulTextColor)
-{
-    /* TODO: decompile from asm/... */
-}
+    p = &g_JFFTXT[Num];
+    p_stVpt = &stVpt;
+    stVpt.dwWidth = 640;
+    stVpt.dwHeight = 480;
+    stVpt.iOffsetPosX = 0;
+    stVpt.iOffsetPosY = 0;
 
-#pragma auto_inline on
+    g_fCurrentSizeFontW = 1.0f;
+    g_fCurrentSizeFontH = 1.0f;
+    g_fInterLetterRatio = 1.0f;
+    g_ucCurrentNumFont = 0;
+    g_GLI_bForceAAAColor = 0;
+
+    if (p->bOther & 0x40)
+        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 0;
+    else
+        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+
+    g_ucCurrentNumFont = 0; g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f;
+
+    x1[0] = p->a3_Pos[0] * (float)p_stVpt->dwWidth * 0.001f;
+    x1[1] = p->a3_Pos[1] * (float)p_stVpt->dwHeight * 0.001f;
+    TXT_g_StringExtents[2] = x1[0]; TXT_g_StringExtents[0] = x1[0];
+    TXT_g_StringExtents[3] = x1[1]; TXT_g_StringExtents[1] = x1[1];
+    TXT_g_GettingExtents = 1;
+    TXT_vDrawString(p_stVpt, p);
+
+    TXT_g_GettingExtents = 0;
+    g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f; g_ucCurrentNumFont = 0;
+
+    x1[0] = TXT_g_StringExtents[0] * 100.0f / (float)p_stVpt->dwWidth - 1.0f;
+    x1[1] = TXT_g_StringExtents[1] * 100.0f / (float)p_stVpt->dwHeight - 1.0f;
+    x2[0] = TXT_g_StringExtents[2] * 100.0f / (float)p_stVpt->dwWidth + 1.0f;
+    x2[1] = TXT_g_StringExtents[3] * 100.0f / (float)p_stVpt->dwHeight + 1.0f;
+
+    GLI_vDisplayFrame(x1, x2, p->ucTransparency * 0.7f, p_stVpt);
+    g_GLI_bForceAAAColor = 1;
+    g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+    GLI_vSetGlobalAlpha((float)p->ucTransparency);
+    TXT_vDrawString(p_stVpt, p);
+    GLI_vEnd2DSpritesWithUVs();
+    g_GLI_bForceAAAColor = 0;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1827–1851 */
 /* addr: 0x00324000  size: 88 bytes */
@@ -4093,6 +4100,30 @@ void TXT_vAfficheSimple(GLD_tdstViewportAttributes_* stVpt, char* String, float 
         GLI_vEnd2DSpritesWithUVs();
     }
 }
+
+/* Statement-macro form of the TXT_vAfficheSimple drawing body: the retail
+ * TXT_vAfficheSimpleWithColor variant expands the whole body on one source
+ * line, while TXT_vAfficheSimpleWithShadow calls the real function. */
+#define TXT_M_vAfficheSimple(_stVpt, _String, _x, _y, _z)   \
+    {                                                        \
+        _JFFTXT_* _p;                                        \
+        _JFFTXT_ _DummyString;                               \
+        _p = &_DummyString;                                  \
+        if (_String) {                                      \
+            _p->pString = (int)(_String);                    \
+            _p->ucTransparency = 255;                        \
+            _p->a3_Pos[0] = (_x);                            \
+            _p->a3_Pos[1] = (_y);                            \
+            _p->a3_Pos[2] = (_z);                            \
+            _p->ulColor = TXT_g_ulDefaultColor;              \
+            _p->bOther = 0;                                  \
+            g_GLI_bForceAAAColor = 0;                        \
+            TXT_g_GettingExtents = 0;                        \
+            TXT_vDrawString((_stVpt), _p);                   \
+            GLI_vEnd2DSpritesWithUVs();                      \
+        }                                                    \
+    }
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1854–1861 */
 /* addr: 0x00323f90  size: 108 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -4111,10 +4142,34 @@ void TXT_vAfficheSimpleWithColor(GLD_tdstViewportAttributes_* stVpt, char* Strin
     unsigned int ulOldDefaultColor;
     ulOldDefaultColor = TXT_g_ulDefaultColor;
     TXT_g_ulDefaultColor = ulTextColor;
-    TXT_vAfficheSimple(stVpt, String, x, y, z);
+    TXT_M_vAfficheSimple(stVpt, String, x, y, z);
     TXT_g_ulDefaultColor = ulOldDefaultColor;
 }
-#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1864–1869 */
+/* addr: 0x00323ee0  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1864
+ *   +0x0004 -> line 1866
+ *   +0x0008 -> line 1864
+ *   +0x000c -> line 1866
+ *   +0x0010 -> line 1864
+ *   +0x0014 -> line 1866
+ *   +0x0018 -> line 1864
+ *   +0x001c -> line 1866
+ *   +0x0020 -> line 1864
+ *   +0x0040 -> line 1866
+ *   +0x0060 -> line 1868
+ *   +0x0080 -> line 1869
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_vAfficheSimpleWithShadow(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z, unsigned int ulTextColor)
+{
+    unsigned int ulOldDefaultColor = TXT_g_ulDefaultColor; TXT_g_ulDefaultColor = 0xFF010101; TXT_vAfficheSimple(stVpt, String, x + 2.0f, y + 2.0f, z);
+    TXT_g_ulDefaultColor = ulTextColor; TXT_vAfficheSimple(stVpt, String, x, y, z); TXT_g_ulDefaultColor = ulOldDefaultColor;
+}
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1736–1824 */
 /* addr: 0x00324060  size: 1008 bytes */
@@ -4183,13 +4238,66 @@ void TXT_vAfficheSimpleWithColor(GLD_tdstViewportAttributes_* stVpt, char* Strin
  */
 void TXT_vAfficheSpecial(char* String, float* a3_Pos)
 {
-    float x2[3];
-    float x1[3];
-    GLD_tdstViewportAttributes_* p_stVpt;
-    GLD_tdstViewportAttributes_ stVpt;
-    _JFFTXT_* p;
     _JFFTXT_ DummyString;
-    /* TODO: decompile from asm/... */
+    _JFFTXT_* p;
+    GLD_tdstViewportAttributes_ stVpt;
+    GLD_tdstViewportAttributes_* p_stVpt;
+    float x1[3];
+    float x2[3];
+
+    p = &DummyString;
+    p_stVpt = &stVpt;
+    stVpt.dwWidth = 640;
+    stVpt.dwHeight = 480;
+    stVpt.iOffsetPosX = 0;
+    stVpt.iOffsetPosY = 0;
+
+    if (String)
+    {
+        p->pString = (int)String;
+        p->ucTransparency = 255;
+        p->bOther = 8;
+        p->a3_Pos[0] = a3_Pos[0];
+        p->a3_Pos[1] = a3_Pos[1];
+        p->a3_Pos[2] = a3_Pos[2];
+        p->ulColor = TXT_g_ulDefaultColor;
+
+        g_fCurrentSizeFontW = 1.0f;
+        g_fCurrentSizeFontH = 1.0f;
+        g_fInterLetterRatio = 1.0f;
+        g_ucCurrentNumFont = 0;
+        g_GLI_bForceAAAColor = 0;
+
+        if (p->bOther & 0x40)
+            g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 0;
+        else
+            g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+
+        g_ucCurrentNumFont = 0; g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f;
+
+        x1[0] = p->a3_Pos[0] * (float)p_stVpt->dwWidth * 0.001f;
+        x1[1] = p->a3_Pos[1] * (float)p_stVpt->dwHeight * 0.001f;
+        TXT_g_StringExtents[2] = x1[0]; TXT_g_StringExtents[0] = x1[0];
+        TXT_g_StringExtents[3] = x1[1]; TXT_g_StringExtents[1] = x1[1];
+        TXT_g_GettingExtents = 1;
+        TXT_vDrawString(p_stVpt, p);
+
+        TXT_g_GettingExtents = 0;
+        g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f; g_ucCurrentNumFont = 0;
+
+        x1[0] = TXT_g_StringExtents[0] * 100.0f / (float)p_stVpt->dwWidth - 1.0f;
+        x1[1] = TXT_g_StringExtents[1] * 100.0f / (float)p_stVpt->dwHeight - 1.0f;
+        x2[0] = TXT_g_StringExtents[2] * 100.0f / (float)p_stVpt->dwWidth + 1.0f;
+        x2[1] = TXT_g_StringExtents[3] * 100.0f / (float)p_stVpt->dwHeight + 1.0f;
+
+        GLI_vDisplayFrame(x1, x2, p->ucTransparency * 0.7f, p_stVpt);
+        g_GLI_bForceAAAColor = 1;
+        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+        GLI_vSetGlobalAlpha((float)p->ucTransparency);
+        TXT_vDrawString(p_stVpt, p);
+        GLI_vEnd2DSpritesWithUVs();
+        g_GLI_bForceAAAColor = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1728–1733 */
@@ -4212,30 +4320,6 @@ void TXT_vReinitStates(void)
     g_fCurrentSizeFontW = 1.0f;
     g_fCurrentSizeFontH = 1.0f;
     g_fInterLetterRatio = 1.0f;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1694–1709 */
-/* addr: 0x00324470  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1697
- *   +0x0004 -> line 1694
- *   +0x0008 -> line 1697
- *   +0x001c -> line 1694
- *   +0x0024 -> line 1697
- *   +0x0028 -> line 1699
- *   +0x0038 -> line 1702
- *   +0x0048 -> line 1703
- *   +0x006c -> line 1705
- *   +0x0070 -> line 1707
- *   +0x00a8 -> line 1709
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void TXT_GetBoundingBox(int Index, int* x1, int* y1f, int* x2, int* y2)
-{
-    GLD_tdstViewportAttributes_* p_stVpt;
-    _JFFTXT_* p;
-    /* TODO: decompile from asm/... */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1632–1691 */
@@ -4275,6 +4359,37 @@ void TXT_GetBoundingBox2(GLD_tdstViewportAttributes_* p_stVpt, unsigned char* St
     float H;
     float W;
     /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1694–1709 */
+/* addr: 0x00324470  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1697
+ *   +0x0004 -> line 1694
+ *   +0x0008 -> line 1697
+ *   +0x001c -> line 1694
+ *   +0x0024 -> line 1697
+ *   +0x0028 -> line 1699
+ *   +0x0038 -> line 1702
+ *   +0x0048 -> line 1703
+ *   +0x006c -> line 1705
+ *   +0x0070 -> line 1707
+ *   +0x00a8 -> line 1709
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_GetBoundingBox(int Index, int* x1, int* y1f, int* x2, int* y2)
+{
+    GLD_tdstViewportAttributes_* p_stVpt;
+    _JFFTXT_* p;
+    p = &g_JFFTXT[Index];
+    if (p->pString) {
+        if (p->DestinationViewport != 255)
+            p_stVpt = &g_stEngineStructure.a_stViewportAttr[p->DestinationViewport];
+        else
+            p_stVpt = &g_stEngineStructure.a_stFixViewportAttr[0];
+        TXT_GetBoundingBox2(p_stVpt, (unsigned char*)p->pString, x1, y1f, x2, y2, (int)(p->a3_Pos[0] / 10.0f), (int)(p->a3_Pos[1] / 10.0f));
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1477–1624 */
@@ -5090,7 +5205,73 @@ void JFFTXT_vModifyCaracter(int StringNumber, int Position, int newcar)
 void JFFTXT_vExtendText(int StringNumber, int ID, float xParameter)
 {
     _JFFTXT_* p;
-    /* TODO: decompile from asm/... */
+    if (StringNumber < 200) {
+        p = &g_JFFTXT[StringNumber];
+        switch (ID) {
+        case 0:
+            p->ucTransparency = (int)xParameter;
+            break;
+        case 2:
+            p->bOther = 1;
+            if (!p->ucTransparency) {
+                p->ucTransparency = 1;
+            }
+            break;
+        case 3:
+            p->bOther = 2;
+            break;
+        case 4:
+            p->a3_Pos[2] = xParameter;
+            break;
+        case 5:
+            if ((int)xParameter == 0) {
+                p->bOther &= ~4;
+                break;
+            }
+            else {
+                p->bOther |= 4;
+                p->EffectParameter = (int)xParameter;
+            }
+            break;
+        case 6:
+            if (xParameter == 1.0f) {
+                p->bOther |= 8;
+            }
+            else {
+                p->bOther &= ~8;
+            }
+            break;
+        case 7:
+            switch ((int)xParameter) {
+            case 0:
+                p->bOther &= ~0x10;
+                p->ucForcedColor = 0;
+                break;
+            case 1:
+                p->bOther |= 0x10;
+                p->ucForcedColor = 1;
+                break;
+            case 2:
+                p->bOther |= 0x10;
+                p->ucForcedColor = 2;
+                break;
+            case 3:
+                p->bOther |= 0x10;
+                p->ucForcedColor = 3;
+                break;
+            }
+            break;
+        case 8:
+            switch ((int)xParameter) {
+            case 0:
+                p->bOther &= ~0x80;
+                break;
+            case 1:
+                p->bOther |= 0x80;
+            }
+            break;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 334–342 */

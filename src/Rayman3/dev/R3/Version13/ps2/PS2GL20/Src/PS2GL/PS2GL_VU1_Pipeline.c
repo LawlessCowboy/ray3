@@ -829,15 +829,16 @@ struct anon_20 {
 };
 
 struct anon_22 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct tag_stVU1CurrentFrame {
@@ -916,60 +917,61 @@ union anon_27 {
 };
 
 struct anon_28 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 struct anon_29 {
@@ -1087,16 +1089,17 @@ struct anon_39 {
 };
 
 struct anon_40 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon40[6]; /* +0x2..0x7 */
 };
 
 struct tagGScontext {
@@ -1266,9 +1269,66 @@ void PS2glBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDs
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glBufferTriangleFanToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart);
+void PS2glVU1TexCoordsCubeMappingVectorTo2D(tagGLcontext* pctx);
+void PS2glVIFSendBuffer(unsigned char bEOP);
 void PS2glFlushBuffer(unsigned char EOP)
 {
-    /* TODO: decompile from asm/... */
+    int iDst;
+    int iSrc;
+    if (g_PS2glContext.iBufCount <= 0)
+    {
+        g_PS2glContext.iBufCount = 0;
+        return;
+    }
+    if (g_PS2glContext.nTextureEnableBits & 8)
+    {
+        switch (g_PS2glContext.eBeginMode)
+        {
+        case 5:
+            iSrc = g_PS2glContext.iBufCount - 3;
+            iDst = iSrc + iSrc * 2;
+            if (g_PS2glContext.pVBuf < g_PS2glContext.pVBuf1)
+            {
+                PS2glBufferTriangleStripToTriangle(g_PS2glContext.pVBuf0, iSrc, iDst);
+                PS2glBufferTriangleStripToTriangle(g_PS2glContext.pNBuf0, iSrc, iDst);
+                PS2glBufferTriangleStripToTriangle(g_PS2glContext.pCBuf0, iSrc, iDst);
+                PS2glBufferTriangleStripToTriangle(g_PS2glContext.pTBuf0, iSrc, iDst);
+            }
+            else
+            {
+                PS2glBufferTriangleStripToTriangle(g_PS2glContext.pVBuf1, iSrc, iDst);
+                PS2glBufferTriangleStripToTriangle(g_PS2glContext.pNBuf1, iSrc, iDst);
+                PS2glBufferTriangleStripToTriangle(g_PS2glContext.pCBuf1, iSrc, iDst);
+                PS2glBufferTriangleStripToTriangle(g_PS2glContext.pTBuf1, iSrc, iDst);
+            }
+            g_PS2glContext.iBufCount = (g_PS2glContext.iBufCount - 2) * 3;
+            break;
+        case 6:
+            iSrc = g_PS2glContext.iBufCount - 3;
+            iDst = iSrc + iSrc * 2;
+            if (g_PS2glContext.pVBuf < g_PS2glContext.pVBuf1)
+            {
+                PS2glBufferTriangleFanToTriangle(g_PS2glContext.pVBuf0, iSrc, iDst);
+                PS2glBufferTriangleFanToTriangle(g_PS2glContext.pNBuf0, iSrc, iDst);
+                PS2glBufferTriangleFanToTriangle(g_PS2glContext.pCBuf0, iSrc, iDst);
+                PS2glBufferTriangleFanToTriangle(g_PS2glContext.pTBuf0, iSrc, iDst);
+            }
+            else
+            {
+                PS2glBufferTriangleFanToTriangle(g_PS2glContext.pVBuf1, iSrc, iDst);
+                PS2glBufferTriangleFanToTriangle(g_PS2glContext.pNBuf1, iSrc, iDst);
+                PS2glBufferTriangleFanToTriangle(g_PS2glContext.pCBuf1, iSrc, iDst);
+                PS2glBufferTriangleFanToTriangle(g_PS2glContext.pTBuf1, iSrc, iDst);
+            }
+            g_PS2glContext.iBufCount = (g_PS2glContext.iBufCount - 2) * 3;
+            break;
+        default:
+            break;
+        }
+        PS2glVU1TexCoordsCubeMappingVectorTo2D(&g_PS2glContext);
+    }
+    PS2glVIFSendBuffer(EOP);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 2081–2428 */
@@ -1965,7 +2025,44 @@ void PS2GL_SetDestinationFrame(unsigned int DestinationFrame)
  */
 void VU1UpdateCullFaceParam(tagGLcontext* pctx)
 {
-    /* TODO: decompile from asm/... */
+    pctx->bCullfaceChanged = 0;
+    if (pctx->nEnableBits & 0x2000)
+    {
+        switch (pctx->eBeginMode)
+        {
+        case 4:
+        case 7:
+            /* The retail code stores the raw word 1/2/3 in the scale slot. */
+            ((int*)pctx->pvScreenScale)[1] = 1;
+            pctx->pvScreenScale[0][2] = 1.0f;
+            pctx->pvScreenScale[0][3] = 1.0f;
+            break;
+        case 5:
+        case 8:
+            ((int*)pctx->pvScreenScale)[1] = 2;
+            pctx->pvScreenScale[0][2] = -1.0f;
+            pctx->pvScreenScale[0][3] = -1.0f;
+            break;
+        case 6:
+        case 9:
+            ((int*)pctx->pvScreenScale)[1] = 3;
+            pctx->pvScreenScale[0][2] = 1.0f;
+            pctx->pvScreenScale[0][3] = 1.0f;
+            break;
+        default:
+            ((int*)pctx->pvScreenScale)[1] = 0;
+            break;
+        }
+        if ((pctx->eCullFaceMode == 0x405 && pctx->eFrontFaceMode == 0x900) ||
+            (pctx->eCullFaceMode == 0x404 && pctx->eFrontFaceMode == 0x901))
+        {
+            pctx->pvScreenScale[0][2] = -pctx->pvScreenScale[0][2];
+        }
+    }
+    else
+    {
+        ((int*)pctx->pvScreenScale)[1] = 0;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1160–1293 */
@@ -2035,14 +2132,105 @@ void VU1UpdateCullFaceParam(tagGLcontext* pctx)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void sceVu0AddVector(float dst[4], float v0[4], float v1[4]);
+void sceVu0CopyVector(float dst[4], float src[4]);
+void sceVu0MulVector(float dst[4], float v0[4], float v1[4]);
+void sceVu0Normalize(float dst[4], float src[4]);
+void sceVu0TransposeMatrix(float dst[4][4], float src[4][4]);
 void VU1UpdateSimpleSpecularParam(tagGLcontext* pctx)
 {
-    tag_GLlight* pLight;
-    tag_stVU1MatriceL* pstMatriceL;
-    int iLoop;
-    unsigned int nLightBits;
     tag_GLmaterial* pmat;
-    /* TODO: decompile from asm/... */
+    unsigned int nLightBits;
+    int iLoop;
+    tag_stVU1MatriceL* pstMatriceL;
+    tag_GLlight* pLight;
+    float vTmp1[4];
+    float vTmp2[4];
+    nLightBits = pctx->nLightBits;
+    pstMatriceL = (tag_stVU1MatriceL*)pctx->pVIFIBufTail;
+    pctx->bLightsChanged = 0;
+    pctx->bMaterialChanged = 0;
+    *(float*)pctx->pfShininess = pctx->Materials[0].fShininess;
+    if (pctx->nLightBits & 0x200)
+    {
+        pmat = &pctx->Materials[0];
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        pLight = &pctx->Lights[0];
+        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        {
+            if (nLightBits & (1 << iLoop))
+            {
+                if (pctx->eColorMaterialMode == 0x1200 || pctx->eColorMaterialMode == 0x1602)
+                {
+                    sceVu0AddVector(pctx->pvAmbient[0], pLight->vAmbient, pctx->pvAmbient[0]);
+                }
+                else
+                {
+                    sceVu0MulVector(vTmp1, pLight->vAmbient, pmat->vAmbient);
+                    sceVu0AddVector(pctx->pvAmbient[0], vTmp1, pctx->pvAmbient[0]);
+                }
+                if (pctx->eColorMaterialMode == 0x1201 || pctx->eColorMaterialMode == 0x1602)
+                {
+                    sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], pLight->vDiffuse);
+                }
+                else
+                {
+                    sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
+                }
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
+                if (pctx->eColorMaterialMode == 0x1201)
+                {
+                    sceVu0CopyVector(pstMatriceL->mSpecularLightColor[iLoop], pLight->vSpecular);
+                }
+                else
+                {
+                    sceVu0MulVector(pstMatriceL->mSpecularLightColor[iLoop], pmat->vSpecular, pLight->vSpecular);
+                }
+                sceVu0AddVector(pstMatriceL->mSpecularLightReflection[iLoop], pLight->vDirection, vViewer);
+                sceVu0Normalize(pstMatriceL->mSpecularLightReflection[iLoop], pstMatriceL->mSpecularLightReflection[iLoop]);
+            }
+            else
+            {
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mSpecularLightReflection[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mSpecularLightColor[iLoop], vZero);
+            }
+        }
+    }
+    else
+    {
+        pmat = &pctx->Materials[0];
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        pLight = &pctx->Lights[0];
+        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        {
+            if (nLightBits & (1 << iLoop))
+            {
+                sceVu0MulVector(vTmp2, pmat->vAmbient, pLight->vAmbient);
+                sceVu0AddVector(pctx->pvAmbient[0], vTmp2, pctx->pvAmbient[0]);
+                sceVu0MulVector(pstMatriceL->mSpecularLightColor[iLoop], pmat->vSpecular, pLight->vSpecular);
+                sceVu0AddVector(pstMatriceL->mSpecularLightReflection[iLoop], pLight->vDirection, vViewer);
+                sceVu0Normalize(pstMatriceL->mSpecularLightReflection[iLoop], pstMatriceL->mSpecularLightReflection[iLoop]);
+                sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
+            }
+            else
+            {
+                sceVu0CopyVector(pstMatriceL->mSpecularLightReflection[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mSpecularLightColor[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
+            }
+        }
+    }
+    pctx->pvAmbient[0][3] = pmat->vDiffuse[3];
+    sceVu0TransposeMatrix(pstMatriceL->mDiffuseLightPosition, pstMatriceL->mDiffuseLightPosition);
+    sceVu0TransposeMatrix(pstMatriceL->mSpecularLightReflection, pstMatriceL->mSpecularLightReflection);
+    pstMatriceL->ivUnpackCode[0] = pstMatriceL->ivUnpackCode[1] = 0;
+    pstMatriceL->ivUnpackCode[2] = 0x01000404;
+    pstMatriceL->ivUnpackCode[3] = 0x6C10000C;
+    pctx->pVIFIBufTail += sizeof(*pstMatriceL) / sizeof(*pctx->pVIFIBufTail);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1049–1157 */
@@ -2100,12 +2288,79 @@ void VU1UpdateSimpleSpecularParam(tagGLcontext* pctx)
  */
 void VU1UpdateDiffuseOnlyParam(tagGLcontext* pctx)
 {
-    tag_GLlight* pLight;
-    tag_stVU1MatriceL* pstMatriceL;
-    int iLoop;
-    unsigned int nLightBits;
     tag_GLmaterial* pmat;
-    /* TODO: decompile from asm/... */
+    unsigned int nLightBits;
+    int iLoop;
+    tag_stVU1MatriceL* pstMatriceL;
+    tag_GLlight* pLight;
+    float vTmp1[4];
+    float vTmp2[4];
+    nLightBits = pctx->nLightBits;
+    pstMatriceL = (tag_stVU1MatriceL*)pctx->pVIFIBufTail;
+    pctx->bLightsChanged = 0;
+    pctx->bMaterialChanged = 0;
+    if (pctx->nLightBits & 0x200)
+    {
+        pmat = &pctx->Materials[0];
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        pLight = &pctx->Lights[0];
+        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        {
+            if (nLightBits & (1 << iLoop))
+            {
+                if (pctx->eColorMaterialMode == 0x1200 || pctx->eColorMaterialMode == 0x1602)
+                {
+                    sceVu0AddVector(pctx->pvAmbient[0], pLight->vAmbient, pctx->pvAmbient[0]);
+                }
+                else
+                {
+                    sceVu0MulVector(vTmp1, pLight->vAmbient, pmat->vAmbient);
+                    sceVu0AddVector(pctx->pvAmbient[0], vTmp1, pctx->pvAmbient[0]);
+                }
+                if (pctx->eColorMaterialMode == 0x1201 || pctx->eColorMaterialMode == 0x1602)
+                {
+                    sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], pLight->vDiffuse);
+                }
+                else
+                {
+                    sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
+                }
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
+            }
+            else
+            {
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
+            }
+        }
+    }
+    else
+    {
+        pmat = &pctx->Materials[0];
+        sceVu0CopyVector(pctx->pvAmbient[0], pctx->vAmbient);
+        pLight = &pctx->Lights[0];
+        for (iLoop = 0; iLoop < 4; iLoop++, pLight++)
+        {
+            if (nLightBits & (1 << iLoop))
+            {
+                sceVu0MulVector(vTmp2, pmat->vAmbient, pLight->vAmbient);
+                sceVu0AddVector(pctx->pvAmbient[0], vTmp2, pctx->pvAmbient[0]);
+                sceVu0MulVector(pstMatriceL->mDiffuseLightColor[iLoop], pmat->vDiffuse, pLight->vDiffuse);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], pLight->vPosition);
+            }
+            else
+            {
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightPosition[iLoop], vZero);
+                sceVu0CopyVector(pstMatriceL->mDiffuseLightColor[iLoop], vZero);
+            }
+        }
+    }
+    pctx->pvAmbient[0][3] = pmat->vDiffuse[3];
+    sceVu0TransposeMatrix(pstMatriceL->mDiffuseLightPosition, pstMatriceL->mDiffuseLightPosition);
+    pstMatriceL->ivUnpackCode[0] = pstMatriceL->ivUnpackCode[1] = 0;
+    pstMatriceL->ivUnpackCode[2] = 0x01000404;
+    pstMatriceL->ivUnpackCode[3] = 0x6C08000C;
+    pctx->pVIFIBufTail += 9;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 1013–1045 */
@@ -2131,10 +2386,40 @@ void VU1UpdateDiffuseOnlyParam(tagGLcontext* pctx)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* A whole 4x4 matrix copy is one 64-byte block move; the retail code emits
+ * it as four quadword loads followed by four quadword stores. */
+typedef struct tag_stMatriceBlock tag_stMatriceBlock;
+struct tag_stMatriceBlock {
+    __int128 qw0, qw1, qw2, qw3;
+};
+
+void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
 void VU1ReUpdateMatrice(PS2GL_VU1_InterpolMatrixData_* pInterpolData)
 {
     tag_stVU1MatriceT* pstMatriceT;
-    /* TODO: decompile from asm/... */
+    pstMatriceT = pInterpolData->pstMatriceT;
+    if (pInterpolData->bStore)
+    {
+        *(tag_stMatriceBlock*)&pstMatriceT->mModelView = *(tag_stMatriceBlock*)pInterpolData->OriginalModelView;
+    }
+    else if (pInterpolData->Compute)
+    {
+        sceVu0MulMatrix(pstMatriceT->mModelView, (float(*)[4])pInterpolData->pCameraMatrix, pInterpolData->OriginalModelView);
+    }
+    else
+    {
+        *(tag_stMatriceBlock*)&pstMatriceT->mModelView = *(tag_stMatriceBlock*)*pInterpolData->pCameraMatrix;
+    }
+    sceVu0MulMatrix(pstMatriceT->mClipping, pInterpolData->ProjectionMatrix, pstMatriceT->mModelView);
+    sceVu0MulMatrix(pstMatriceT->mLocalScreen, pstMatriceT->mClippingScreen, pstMatriceT->mClipping);
+    if (pInterpolData->Mode == 5)
+    {
+        sceVu0MulMatrix(pstMatriceT->mGuardBandClipping, pInterpolData->GuardBandProjectionMatrix, pstMatriceT->mModelView);
+    }
+    else
+    {
+        *(tag_stMatriceBlock*)&pstMatriceT->mGuardBandClipping = *(tag_stMatriceBlock*)pstMatriceT->mClipping;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 975–1005 */
@@ -2336,11 +2621,26 @@ void VU1UpdateMatrice(tagGLcontext* pctx, unsigned int Mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glFlush(void);
 float (*VU1SetCurrentFrameInDMABuffer(void))[4]
 {
-    tag_stVU1CurrentFrame* pstCurrentFrame;
-    tagGLcontext* pctx;
-    /* TODO: decompile from asm/... */
+    tagGLcontext* pctx = &g_PS2glContext;
+    tag_stVU1CurrentFrame* pstCurrentFrame = (tag_stVU1CurrentFrame*)pctx->pVIFIBufTail;
+    if (uiMaxVifDmaBufLength - (pctx->pVIFIBufTail - pctx->pVIFInBuf) - 1 < 3)
+    {
+        impPS2glFlush();
+    }
+    pctx->pVIFIBufTail += sizeof(*pstCurrentFrame) / sizeof(*pctx->pVIFIBufTail);
+    *(__int128*)&pstCurrentFrame->m_CurrentFrame = *(__int128*)&PS2GL_CurrentGlobalFrameVector;
+    pstCurrentFrame->tagDMA.qwc = 2;
+    pstCurrentFrame->tagDMA.id = 0x10;
+    pstCurrentFrame->tagDMA.mark = 0;
+    pstCurrentFrame->tagDMA.p[0] = 0x13000000;
+    pstCurrentFrame->tagDMA.p[1] = 0x01000404;
+    pstCurrentFrame->ivUnpackCode[0] = pstCurrentFrame->ivUnpackCode[1] = 0;
+    pstCurrentFrame->ivUnpackCode[2] = 0x01000404;
+    pstCurrentFrame->ivUnpackCode[3] = 0x6C010048;
+    return &pstCurrentFrame->m_CurrentFrame;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 655–721 */
@@ -2410,12 +2710,56 @@ float (*VU1SetCurrentFrameInDMABuffer(void))[4]
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glFlush(void);
+void sceVu0UnitMatrix(float m[4][4]);
+void sceVu0AddVector(float dst[4], float v0[4], float v1[4]);
 void VU1UpdateMatriceOutsideSDL(tagGLcontext* pctx)
 {
+    tag_stVU1MatriceToutSDL* pstMatriceToutSDL;
     float vScreenScale[4];
     float vScreenOrg[4];
-    tag_stVU1MatriceToutSDL* pstMatriceToutSDL;
-    /* TODO: decompile from asm/... */
+    pstMatriceToutSDL = (tag_stVU1MatriceToutSDL*)pctx->pVIFIBufTail;
+    g_PS2glContext.bMatrixChanged = 0;
+    pst_LastUpdatedMatriceToutSDL = (int)pstMatriceToutSDL;
+    if (uiMaxVifDmaBufLength - (g_PS2glContext.pVIFIBufTail - g_PS2glContext.pVIFInBuf) - 1 < 0x1B)
+    {
+        impPS2glFlush();
+    }
+    pctx->pVIFIBufTail += sizeof(*pstMatriceToutSDL) / sizeof(*pctx->pVIFIBufTail);
+    *(tag_stMatriceBlock*)&pstMatriceToutSDL->mProjection = *(tag_stMatriceBlock*)pctx->ProjectionMatrix;
+    *(tag_stMatriceBlock*)&pstMatriceToutSDL->mGuardBandProjection = *(tag_stMatriceBlock*)pctx->GuardBandProjectionMatrix;
+    *(tag_stMatriceBlock*)&pstMatriceToutSDL->mWorldView = *(tag_stMatriceBlock*)pctx->ModelViewMatrix;
+    sceVu0UnitMatrix(pstMatriceToutSDL->mClippingScreen);
+    vScreenOrg[0] = 0.5f * pctx->ViewPort[2];
+    pstMatriceToutSDL->mClippingScreen[0][0] = vScreenOrg[0];
+    vScreenOrg[1] = 0.5f * pctx->ViewPort[3];
+    pstMatriceToutSDL->mClippingScreen[1][1] = vScreenOrg[1];
+    vScreenOrg[2] = 0.5f * (pctx->DepthRange[1] - pctx->DepthRange[0]);
+    pstMatriceToutSDL->mClippingScreen[2][2] = vScreenOrg[2];
+    vScreenOrg[3] = 0.0f;
+    vScreenScale[0] = pctx->ViewPort[0];
+    vScreenScale[1] = pctx->ViewPort[1];
+    vScreenScale[2] = pctx->DepthRange[0];
+    vScreenScale[3] = 1.0f;
+    sceVu0AddVector(pstMatriceToutSDL->mClippingScreen[3], vScreenOrg, vScreenScale);
+    sceVu0UnitMatrix(pstMatriceToutSDL->mGuardBandClippingScreen);
+    pstMatriceToutSDL->mGuardBandClippingScreen[0][0] = 2048.0f;
+    pstMatriceToutSDL->mGuardBandClippingScreen[1][1] = -2048.0f;
+    pstMatriceToutSDL->mGuardBandClippingScreen[2][2] = vScreenOrg[2];
+    pstMatriceToutSDL->mGuardBandClippingScreen[3][0] = 2048.0f;
+    pstMatriceToutSDL->mGuardBandClippingScreen[3][1] = 2048.0f;
+    pstMatriceToutSDL->mGuardBandClippingScreen[3][2] = pstMatriceToutSDL->mClippingScreen[3][2];
+    pstMatriceToutSDL->tagDMA.qwc = 26;
+    pstMatriceToutSDL->tagDMA.id = 0x10;
+    pstMatriceToutSDL->tagDMA.mark = 0;
+    pstMatriceToutSDL->tagDMA.p[0] = 0x13000000;
+    pstMatriceToutSDL->tagDMA.p[1] = 0x01000404;
+    pstMatriceToutSDL->ivUnpackCode[0] = pstMatriceToutSDL->ivUnpackCode[1] = 0;
+    pstMatriceToutSDL->ivUnpackCode[2] = 0x01000404;
+    pstMatriceToutSDL->ivUnpackCode[3] = 0x6C040008;
+    pstMatriceToutSDL->ivUnpackCode2[0] = pstMatriceToutSDL->ivUnpackCode2[1] = 0;
+    pstMatriceToutSDL->ivUnpackCode2[2] = 0x01000404;
+    pstMatriceToutSDL->ivUnpackCode2[3] = 0x6C140034;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 650–651 */
@@ -2498,13 +2842,79 @@ void VU1_RE_UpdateMatriceOutsideSDL(tag_stVU1MatriceToutSDL* pstMatriceToutSDL, 
  */
 unsigned char VU1UpdateMatriceInsideSDL(tagGLcontext* pctx, unsigned int* pMask)
 {
-    unsigned char bTexture1;
-    unsigned char bTexture0;
-    float (*pTexture1)[4][4];
-    float (*pTexture0)[4][4];
-    int (*pBuf)[4];
     tag_stVU1MatriceTinSDL* pstMatriceTinSDL;
-    /* TODO: decompile from asm/... */
+    int (*pBuf)[4];
+    float (*pTexture0)[4][4];
+    float (*pTexture1)[4][4];
+    unsigned char bTexture0;
+    unsigned char bTexture1;
+    pstMatriceTinSDL = (tag_stVU1MatriceTinSDL*)pctx->pVIFIBufTail;
+    g_PS2glContext.bMatrixChanged = 0;
+    if (!(g_PS2glContext.usDontUpdateBits & 4))
+    {
+        *pMask |= 0x01000000;
+        pctx->pVIFIBufTail += sizeof(*pstMatriceTinSDL) / sizeof(*pctx->pVIFIBufTail);
+        if (g_PS2glContext.uiStaticDisplayListBits & 0x200)
+        {
+            sceVu0UnitMatrix(pstMatriceTinSDL->mLocalWorld);
+            sceVu0UnitMatrix(pstMatriceTinSDL->mNormal);
+        }
+        else
+        {
+            *(tag_stMatriceBlock*)&pstMatriceTinSDL->mLocalWorld = *(tag_stMatriceBlock*)pctx->ModelViewMatrix;
+            *(tag_stMatriceBlock*)&pstMatriceTinSDL->mNormal = *(tag_stMatriceBlock*)pctx->ModelViewMatrix;
+        }
+        pTexture0 = &pctx->TextureMatrix[0];
+        pTexture1 = &pctx->TextureMatrix[1];
+        bTexture0 = 1;
+        if (pTexture0[0][0][0] == 1.0f && pTexture0[0][0][1] == 0.0f && pTexture0[0][0][2] == 0.0f &&
+            pTexture0[0][1][0] == 0.0f && pTexture0[0][1][1] == 1.0f && pTexture0[0][1][2] == 0.0f)
+        {
+            bTexture0 = 0;
+        }
+        /* The retail code keeps the two texture flags in the last row of the
+         * normal matrix. */
+        ((int*)pstMatriceTinSDL->mNormal[3])[2] = bTexture0;
+        bTexture1 = 1;
+        if (pTexture1[0][0][0] == 1.0f && pTexture1[0][0][1] == 0.0f && pTexture1[0][0][2] == 0.0f &&
+            pTexture1[0][1][0] == 0.0f && pTexture1[0][1][1] == 1.0f && pTexture1[0][1][2] == 0.0f)
+        {
+            bTexture1 = 0;
+        }
+        ((int*)pstMatriceTinSDL->mNormal[3])[3] = bTexture1;
+        if (bTexture0 || bTexture1)
+        {
+            *pMask |= 0x02000000;
+            if (bTexture0)
+            {
+                uiPreparation |= 2;
+            }
+            else
+            {
+                uiPreparation &= ~3;
+            }
+            pBuf = (int(*)[4])pctx->pVIFIBufTail;
+            pBuf[0][0] = pBuf[0][1] = 0;
+            pBuf[0][2] = 0x01000404;
+            pBuf[0][3] = 0x6C06004A;
+            pBuf[1] = ((int(*)[4])pTexture0)[0];
+            pBuf[2] = ((int(*)[4])pTexture0)[1];
+            pBuf[3] = ((int(*)[4])pTexture0)[2];
+            pBuf[4] = ((int(*)[4])pTexture1)[0];
+            pBuf[5] = ((int(*)[4])pTexture1)[1];
+            pBuf[6] = ((int(*)[4])pTexture1)[2];
+            pctx->pVIFIBufTail += 7;
+        }
+        else
+        {
+            uiPreparation &= ~3;
+        }
+        pstMatriceTinSDL->ivUnpackCode[0] = pstMatriceTinSDL->ivUnpackCode[1] = 0;
+        pstMatriceTinSDL->ivUnpackCode[2] = 0x01000404;
+        pstMatriceTinSDL->ivUnpackCode[3] = 0x6C080000;
+        return 1;
+    }
+    return 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_VU1_Pipeline.c lines 340–341 */

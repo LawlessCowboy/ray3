@@ -10,6 +10,23 @@
     asm { madda.s _y, _y }                 \
     asm { madd.s _result, _z, _z }
 
+/* R5900 accumulator dot product (as MECBhv.c's MTH_xDot3). */
+inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2)
+{
+    asm { mula.s _x1, _x2 }
+    asm { madda.s _y1, _y2 }
+    asm { madd.s _z2, _z1, _z2 }
+    return _z2;
+}
+
+/* R5900 absolute value (abs.s has no C form). */
+inline float MTH_xAbs(float _x)
+{
+    float _r;
+    asm { abs.s _r, _x }
+    return _r;
+}
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 
@@ -20,6 +37,9 @@ struct MTH3D_tdstVector_ {
 };
 
 MTH3D_tdstVector_ COL_g_a6_stBoxSidesNormal[6];
+
+unsigned char INT_fn_bFastRejectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3);
+unsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertex0, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stNormal);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 2043–2065 */
 /* addr: 0x002525e0  size: 312 bytes */
@@ -403,7 +423,46 @@ unsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_st
 unsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float xDotProduct, float* p_xT, MTH3D_tdstVector_* p_stHit)
 {
     float xDivid;
-    /* TODO: decompile from asm/... */
+
+    if (!INT_fn_bFastRejectIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB, p_stVertex1, p_stVertex2, p_stVertex3))
+        return 0;
+
+    xDivid = xDPlan + MTH_xDot3(p_stNormal->xX, p_stVertexA->xX, p_stNormal->xY, p_stVertexA->xY, p_stNormal->xZ, p_stVertexA->xZ);
+    if (MTH_xAbs(xDivid) < 0.001f)
+    {
+        if (xDotProduct < -0.001f)
+        {
+            *p_xT = 0.0f;
+            *p_stHit = *p_stVertexA;
+            return 1;
+        }
+    }
+    if (xDivid >= 0.0f)
+    {
+        if (xDivid < -xDotProduct)
+        {
+            xDivid = xDivid / xDotProduct;
+            xDivid = -xDivid;
+
+            p_stHit->xX = p_stVertexA->xX + xDivid * p_stVectAB->xX;
+            p_stHit->xY = p_stVertexA->xY + xDivid * p_stVectAB->xY;
+            p_stHit->xZ = p_stVertexA->xZ + xDivid * p_stVectAB->xZ;
+
+            if (!INT_fn_bGetPointInTriangle(p_stHit, p_stVertex1, p_stVertex2, p_stVertex3, p_stNormal))
+                return 0;
+
+            *p_xT = xDivid;
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1154–1199 */
@@ -432,7 +491,37 @@ unsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVerte
 unsigned char INT_fn_bIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float* p_xT, MTH3D_tdstVector_* p_stHit)
 {
     float xDivid;
-    /* TODO: decompile from asm/... */
+    float xDot;
+
+    if (!INT_fn_bFastRejectIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB, p_stVertex1, p_stVertex2, p_stVertex3))
+        return 0;
+
+    xDot = MTH_xDot3(p_stNormal->xX, p_stVectAB->xX, p_stNormal->xY, p_stVectAB->xY, p_stNormal->xZ, p_stVectAB->xZ);
+    if (xDot < 0.0f)
+    {
+        xDivid = xDPlan + MTH_xDot3(p_stNormal->xX, p_stVertexA->xX, p_stNormal->xY, p_stVertexA->xY, p_stNormal->xZ, p_stVertexA->xZ);
+        if (xDivid > 0.0f)
+        {
+            if (xDivid < -xDot)
+            {
+                xDivid = xDivid / xDot;
+                xDivid = -xDivid;
+
+                p_stHit->xX = p_stVertexA->xX + xDivid * p_stVectAB->xX;
+                p_stHit->xY = p_stVertexA->xY + xDivid * p_stVectAB->xY;
+                p_stHit->xZ = p_stVertexA->xZ + xDivid * p_stVectAB->xZ;
+
+                if (INT_fn_bGetPointInTriangle(p_stHit, p_stVertex1, p_stVertex2, p_stVertex3, p_stNormal))
+                {
+                    *p_xT = xDivid;
+                    return 1;
+                }
+                return 0;
+            }
+        }
+        return 0;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1055–1133 */
@@ -822,7 +911,7 @@ unsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MT
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
+int INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint)
 {
     if (p_stPoint->xX < p_stMinPoint->xX)
         return 0;
@@ -885,10 +974,8 @@ unsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3
  */
 unsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, float xRadius1, MTH3D_tdstVector_* p_stCenter2, float xRadius2)
 {
-    return ((p_stCenter1->xX - p_stCenter2->xX) * (p_stCenter1->xX - p_stCenter2->xX) +
-            (p_stCenter1->xY - p_stCenter2->xY) * (p_stCenter1->xY - p_stCenter2->xY) +
-            (p_stCenter1->xZ - p_stCenter2->xZ) * (p_stCenter1->xZ - p_stCenter2->xZ)) <=
-           ((xRadius1 + xRadius2) * (xRadius1 + xRadius2));
+    float xDX; float xDY; float xDZ; float xDist;
+    xDZ = p_stCenter1->xZ - p_stCenter2->xZ; xDY = p_stCenter1->xY - p_stCenter2->xY; xDX = p_stCenter1->xX - p_stCenter2->xX; MTH_SQR3_TO(xDist, xDX, xDY, xDZ); return xDist <= (xRadius1 + xRadius2) * (xRadius1 + xRadius2);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 139–178 */

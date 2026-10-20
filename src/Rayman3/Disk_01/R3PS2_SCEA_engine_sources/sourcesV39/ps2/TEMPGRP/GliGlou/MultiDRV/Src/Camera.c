@@ -96,6 +96,15 @@ struct GLI_tdstCamera_ {
     unsigned char bCameraIsMirrored; /* +0xf0 */
 };
 
+struct J_ParticleSprite_ {
+    float Pos[4]; /* +0x0 */
+    float Color[4]; /* +0x10 */
+    float FaceNormal[4]; /* +0x20 */
+    unsigned int Flags; /* +0x30 */
+    unsigned int bFirst; /* +0x34 */
+    unsigned int Pad[2]; /* +0x38 */
+};
+
 struct GLD_tdstViewportAttributes_ {
     unsigned int dwInitialHeight; /* +0x0 */
     unsigned int dwInitialWidth; /* +0x4 */
@@ -213,7 +222,7 @@ struct GLI_tdstSpecificAttributesFor3D_ {
     float xNear; /* +0x4 */
 };
 
-static int p_stCamAntiBug;
+static GLI_tdstCamera_* p_stCamAntiBug;
 int GLI_BIG_GLOBALS_gs_st_CameraMatrix;
 float GLI_g_fCurrentCameraxAngle;
 char GLI_g_StereoVisionMode;
@@ -241,11 +250,38 @@ float GLI_g_fCurrentCameraRatio;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* R5900 absolute value: MWCC never emits abs.s from plain C. */
+inline float J_M_xAbs(float x)
+{
+    float r = x;
+    asm { abs.s r, r }
+    return r;
+}
+
 void J_RemoveRedundantSprites(J_ParticleSprite_* pList, unsigned int NbSprites)
 {
-    unsigned int dest;
-    unsigned int org;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    unsigned int j;
+    int bSame;
+    float xEps;
+
+    xEps = 1.0e-7f;
+    for (i = 0; i < NbSprites; i++)
+    {
+        if (pList[i].Flags == 1)
+        {
+            for (j = i + 1; j < NbSprites; j++)
+            {
+                if (pList[j].Flags == 1)
+                {
+                    if (J_M_xAbs(pList[j].Pos[0] - pList[i].Pos[0]) < xEps && J_M_xAbs(pList[j].Pos[1] - pList[i].Pos[1]) < xEps && J_M_xAbs(pList[j].Pos[2] - pList[i].Pos[2]) < xEps) bSame = 1; else bSame = 0; if (bSame)
+                    {
+                        pList[j].Flags = 2;
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Camera.c lines 351–357 */
@@ -259,7 +295,7 @@ void J_RemoveRedundantSprites(J_ParticleSprite_* pList, unsigned int NbSprites)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vReinitViewport(GLD_tdstViewportAttributes_* p_stVpt);
+void GLI_vReinitViewport();
 
 void GLD_fn_vD3DUpdateViewMatrixFromCamera(GLD_tdstViewportAttributes_* _p_stVpt)
 {
@@ -290,7 +326,11 @@ void GLI_fn_vSetCameraMirrorMode(GLI_tdstCamera_* p_stCam, unsigned char _bMirro
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_xGetViewportCamera(int hDevice, int hViewport, GLI_tdstCamera_** p_stCam)
+int GLD_bGetViewportAttributes(short hDev, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib);
+int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib);
+void GLI_xAdjustCameraToViewport2(GLD_tdstDeviceAttributes_* p_stDev, GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstCamera_* p_stCam);
+
+void GLI_xGetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_** p_stCam)
 {
     GLD_tdstViewportAttributes_ stViewAttrib;
     if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib))
@@ -316,9 +356,23 @@ void GLI_xGetViewportCamera(int hDevice, int hViewport, GLI_tdstCamera_** p_stCa
  */
 void GLI_xSetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_* p_stCam)
 {
-    GLI_tdstSpecificAttributesFor3D_* param0;
     GLD_tdstViewportAttributes_ stViewAttrib;
-    /* TODO: decompile from asm/... */
+    GLD_tdstViewportAttributes_ stViewAttrib2;
+    GLD_tdstDeviceAttributes_ stDevAttrib;
+    GLI_tdstCamera_* p_stCamUsed;
+    GLI_tdstSpecificAttributesFor3D_* p_stSpecific;
+
+    GLI_vReinitViewport();
+    if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib))
+    {
+        p_stSpecific = (GLI_tdstSpecificAttributesFor3D_*)stViewAttrib.p_vSpecificToXD;
+        if (p_stCam != p_stSpecific->p_stCam)
+        {
+            p_stSpecific->p_stCam = p_stCam;
+            p_stCamUsed = p_stCam; if (GLD_bGetDeviceAttributes(hDevice, &stDevAttrib)) { if (GLD_bGetViewportAttributes(hDevice, hViewport, &stViewAttrib2)) { if (p_stCam == NULL) p_stCamUsed = p_stCamAntiBug; else p_stCamAntiBug = p_stCam; GLI_xAdjustCameraToViewport2(&stDevAttrib, &stViewAttrib2, p_stCamUsed); } }
+        }
+        if (p_stCam) { GLI_g_fCurrentCameraxAngle = 0.75f * (180.0f * p_stCam->xAlphaX) / 3.1415927f; }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Camera.c lines 224–226 */

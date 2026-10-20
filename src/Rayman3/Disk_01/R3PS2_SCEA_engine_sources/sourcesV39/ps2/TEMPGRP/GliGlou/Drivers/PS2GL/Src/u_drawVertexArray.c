@@ -8,6 +8,8 @@
 typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
 typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
+typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
+typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct _SDC_Instance_ _SDC_Instance_;
 typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;
 typedef struct GLI_tdstNormalsToRecompute_ GLI_tdstNormalsToRecompute_;
@@ -161,6 +163,65 @@ struct ACP_tdst2DUVValues_ {
     float xV; /* +0x4 */
 };
 
+struct MTH4D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+    float xW; /* +0xc */
+} __attribute__((aligned(16)));
+
+struct MTH4D_tdstMatrix_ {
+    MTH4D_tdstVector_ stCol_0; /* +0x0 */
+    MTH4D_tdstVector_ stCol_1; /* +0x10 */
+    MTH4D_tdstVector_ stCol_2; /* +0x20 */
+    MTH4D_tdstVector_ stCol_3; /* +0x30 */
+} __attribute__((aligned(16)));
+
+struct MAT_tdstTransformation_ {
+    int eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* +0x4..0xf */
+    MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
+    MTH4D_tdstVector_ stScaleVector; /* +0x50 */
+};
+
+struct GLI_tdstCamera_ {
+    int lCameraMode; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* +0x4..0xf */
+    MAT_tdstTransformation_ stMatrix; /* +0x10 */
+};
+
+struct GLD_tdstViewportAttributes_ {
+    unsigned int dwInitialHeight; /* +0x0 */
+    unsigned int dwInitialWidth; /* +0x4 */
+    unsigned int dwHeight; /* +0x8 */
+    unsigned int dwWidth; /* +0xc */
+    unsigned int dwTopInPix; /* +0x10 */
+    unsigned int dwBottomInPix; /* +0x14 */
+    unsigned int dwLeftInPix; /* +0x18 */
+    unsigned int dwRightInPix; /* +0x1c */
+    unsigned int dwTopInPixForClip; /* +0x20 */
+    unsigned int dwBottomInPixForClip; /* +0x24 */
+    unsigned int dwLeftInPixForClip; /* +0x28 */
+    unsigned int dwRightInPixForClip; /* +0x2c */
+    unsigned int dwWidthInPercent; /* +0x30 */
+    unsigned int dwHeightInPercent; /* +0x34 */
+    unsigned int dwClipTopInPix; /* +0x38 */
+    unsigned int dwClipBottomInPix; /* +0x3c */
+    unsigned int dwClipLeftInPix; /* +0x40 */
+    unsigned int dwClipRightInPix; /* +0x44 */
+    unsigned int dwClipTopInPerMille; /* +0x48 */
+    unsigned int dwClipBottomInPerMille; /* +0x4c */
+    unsigned int dwClipLeftInPerMille; /* +0x50 */
+    unsigned int dwClipRightInPerMille; /* +0x54 */
+    int iOffsetPosX; /* +0x58 */
+    int iOffsetPosY; /* +0x5c */
+    int p_cVirtualScreen; /* +0x60 */
+    int lPitch; /* +0x64 */
+    int p_vSpecificToXD; /* +0x68 */
+    short hDevice; /* +0x6c */
+    short hViewport; /* +0x6e */
+};
+
 int g_bIsTribe;
 char g_cSinusEffectState;
 unsigned int AGO_g_ulNbLights;
@@ -173,6 +234,13 @@ float GLI_g_TempArray[5000][4];
 AGO_Light_ AGO_g_pLightList[8];
 static int gs_keepit;
 int g_waiting;
+float GLI_g_a16_fWorldMatrix[16];
+float GLI_g_NegVect[4];
+MAT_tdstTransformation_ GLI_g_InvertexCameraMatrix;
+int GLI_g_CurrentStage;
+
+extern void MAT_fn_vInvert(MAT_tdstTransformation_* pDest, MAT_tdstTransformation_* pSource);
+extern void GLI_vInitSpritesForThisViewport(GLD_tdstViewportAttributes_* p_stViewport);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 35–47 */
 /* addr: 0x002bd4c0  size: 152 bytes */
@@ -197,11 +265,29 @@ int g_waiting;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* VU0 column scaling: lqc2/sqc2/vmul have no C form (the same idiom as
+ * u_drawAGO2.c's PS2_M_vMulMatrixColumnsByVector). */
+#define PS2_M_vMulMatrixColumnsByVector(_dst, _vec, _src) \
+    asm { lqc2 vf5, 0x0(_vec); lqc2 vf1, 0x0(_src); lqc2 vf2, 0x10(_src); lqc2 vf3, 0x20(_src); lqc2 vf4, 0x30(_src); vmul.xyzw vf1, vf1, vf5; vmul.xyzw vf2, vf2, vf5; vmul.xyzw vf3, vf3, vf5; vmul.xyzw vf4, vf4, vf5; sqc2 vf1, 0x0(_dst); sqc2 vf2, 0x10(_dst); sqc2 vf3, 0x20(_dst); sqc2 vf4, 0x30(_dst); }
+
 void GLI_vPrepareDisplayingAGOs(GLD_tdstViewportAttributes_* _p_stViewport)
 {
     GLI_tdstCamera_* p_stCam;
     MTH4D_tdstMatrix_* p_stWorldMatrix;
-    /* TODO: decompile from asm/... */
+    float* pVec;
+    float (*pSrc)[4];
+    float (*pDst)[4];
+
+    p_stCam = *(GLI_tdstCamera_**)(*(int*)&_p_stViewport->p_vSpecificToXD);
+    p_stWorldMatrix = (MTH4D_tdstMatrix_*)&p_stCam->stMatrix.stTransformMatrix;
+    pVec = GLI_g_NegVect;
+    pSrc = (float (*)[4])p_stWorldMatrix;
+    pDst = (float (*)[4])GLI_g_a16_fWorldMatrix;
+    PS2_M_vMulMatrixColumnsByVector(pDst, pVec, pSrc);
+    GLI_g_a16_fWorldMatrix[15] = 1.0f;
+    MAT_fn_vInvert(&GLI_g_InvertexCameraMatrix, &p_stCam->stMatrix);
+    GLI_vInitSpritesForThisViewport(_p_stViewport);
+    GLI_g_CurrentStage = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 1469–1478 */
@@ -262,11 +348,19 @@ void GLI_vEndNormalRecomputation(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int sceGsSyncPath(int path, int count);
+
 void GLI_vRecomputeAllCharacterNormalsAndWaitForSyncPath(void)
 {
     GLI_tdstNormalsToRecompute_* p;
-    int fakevblwait;
-    /* TODO: decompile from asm/... */
+    int fakevblwait = 1;
+    while (GLI_g_CurrentNormalToRecompute < GLI_g_NbNormalsToRecompute && sceGsSyncPath(1, 0))
+    {
+        p = &GLI_g_NormalsToRecomputeArray[GLI_g_CurrentNormalToRecompute];
+        GLI_vRecomputeCharacterNormalsReal((unsigned int*)p->pInstanceNormals, p->p_stEIT, p->pPoints, p->xNbPoints, p->NbVertices, (unsigned int*)&fakevblwait);
+        GLI_g_CurrentNormalToRecompute++;
+    }
+    sceGsSyncPath(0, 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 1429–1429 */
@@ -678,18 +772,44 @@ void InitNormalPacker(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int printf(const char* format, ...);
+
 void GLI_vUpdateCharacterVARealInterp(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints)
 {
     unsigned int offset;
     unsigned int counter;
-    float z;
-    float y;
     float x;
+    float y;
+    float z;
     unsigned short* pIndexArray;
     MTH3D_tdstVector_* p_stPointsArg;
     float (*pV)[4];
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    if (p_stEIT->d_stListOfFacesAdjacent == NULL)
+    {
+        printf("Ouch no index table!\n");
+        return;
+    }
+    pIndexArray = (unsigned short*)p_stEIT->d_stListOfFacesAdjacent;
+    pIndexArray += 2;
+    p_stPointsArg = p_stPoints;
+    while (NbPoints != 0)
+    {
+        x = p_stPointsArg->xX;
+        y = p_stPointsArg->xY;
+        z = p_stPointsArg->xZ;
+        p_stPointsArg++;
+        counter = *pIndexArray++;
+        while (counter != 0)
+        {
+            counter--;
+            offset = *pIndexArray++ & 0x7FFF;
+            pV = pDestPV + offset; pV[0][0] = 0.5f * (x + pV[0][0]);
+            pV[0][1] = 0.5f * (y + pV[0][1]);
+            pV[0][2] = 0.5f * (z + pV[0][2]);
+        }
+        NbPoints--; }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 905–917 */
@@ -723,9 +843,23 @@ void GLI_vUpdateCharacterVARealInterp(float (*pDestPV)[4], GEO_tdstElementIndexe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void TestAddAGOLight(MTH3D_tdstVector_* pPosition, float* Color, float fardist)
+/* The retail callers (AGO.c, AGO_vAddParticleContd) pass a0 = NULL, a1 = the
+ * position vector, a2 = a float[4] colour and f12 = the far distance. The
+ * MWCC definition record omits the unreferenced leading pointer parameter, so
+ * it is restored here to keep the retail ABI. */
+void TestAddAGOLight(void* pUnused, MTH3D_tdstVector_* pPosition, float* Color, float fardist)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int uiIndex;
+    if (AGO_g_ulNbLights < 8)
+    {
+        uiIndex = AGO_g_ulNbLights * 12; ((float*)&AGO_g_pLightList[0].Position[0])[uiIndex] = pPosition->xX;
+        ((float*)&AGO_g_pLightList[0].Position[1])[uiIndex] = pPosition->xY;
+        ((float*)&AGO_g_pLightList[0].Position[2])[uiIndex] = pPosition->xZ;
+        ((float*)&AGO_g_pLightList[0].Color)[uiIndex + 0] = 0.5f * Color[0]; ((float*)&AGO_g_pLightList[0].Color)[uiIndex + 1] = 0.5f * Color[1]; ((float*)&AGO_g_pLightList[0].Color)[uiIndex + 2] = 0.5f * Color[2]; ((float*)&AGO_g_pLightList[0].Color)[uiIndex + 3] = 0.5f * Color[3];
+        ((float*)&AGO_g_pLightList[0].SqFar)[uiIndex] = fardist * fardist;
+        ((float*)&AGO_g_pLightList[0].Far)[uiIndex] = fardist;
+        AGO_g_ulNbLights++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawVertexArray.c lines 896–896 */
@@ -791,5 +925,10 @@ void FastPS2Copy(void* pDest_, void* pSrc_, unsigned int NbChars)
     unsigned int* pSrc;
     unsigned int* pDest;
     unsigned int NbQW;
-    /* TODO: decompile from asm/... */
+    /* TODO: decompile from asm/...
+     * The retail body is an aligned memmove: it rounds the destination up to
+     * 64 bytes, copies whole words up to that boundary, then copies 64-byte
+     * blocks (four lq/sq quadword pairs) and finally the remaining words.
+     * The block copy is written one instruction per source line (the PS2GL
+     * hand-asm pattern), so it needs an asm block to be reproduced. */
 }

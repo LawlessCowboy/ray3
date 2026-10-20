@@ -1005,19 +1005,10 @@ float GLI_g_pTempVertexBuffers[2][320][4];
 TempVertexArrayID_ GLI_g_TempVAAllocatedIDs[512];
 int Global_CharacterBeingDisplayed;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_VertexBuffers.c lines 78–81 */
-/* addr: 0x002c71c0  size: 144 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 78
- *   +0x0080 -> line 79
- *   +0x0088 -> line 81
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned int GetTotalSizeWithMipMaps(unsigned int OriginalSize)
 {
-    unsigned int TotalSize;
+    OriginalSize = (unsigned int)(1.34f * (float)OriginalSize);
+    OriginalSize = (OriginalSize + 15) & ~15;
 
-    TotalSize = (unsigned int)(1.34f * (float)OriginalSize);
-    return (TotalSize + 15) & ~15;
+    return OriginalSize;
 }

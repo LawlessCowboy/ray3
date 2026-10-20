@@ -291,8 +291,8 @@ struct SECT_tdstListOfDNMLights_ {
 
 struct IPO_tdstInstanciatedPhysicalObject_ {
     PO_tdstPhysicalObject_* _hPhysicalObject; /* +0x0 */
-    int _hCurrentRadiosity; /* +0x4 */
-    int a_hRadiosity; /* +0x8 */
+    void* _hCurrentRadiosity; /* +0x4 */
+    void** a_hRadiosity; /* +0x8 */
     HIE_tdstSuperObject_* hPortalCamera; /* +0xc */
     unsigned int ulLastTransitionID; /* +0x10 */
     float fLastRatioUsed; /* +0x14 */
@@ -1021,6 +1021,9 @@ struct COL_tdstBoundingSphere_ {
     float xRadius; /* +0x10 */
 };
 
+ISI_tdstColor_* ISI_fn_dGetVertexRLI(void*);
+short ISI_fn_xGetNbVertexRLILOD(void*, short);
+int ISI_fn_dGetVertexRLILODLightMapU(void*, short);
 unsigned char IPO_g_ucNumberOfRLITables;
 char IPO_g_cBlockingTransitions;
 char IPO_g_cChangeMode;
@@ -1040,7 +1043,7 @@ float IPO_g_fAddWantedRatio;
 char* IPO_g_a_szAdditionnalRLITables[10];
 int strcasecmp(const char*, const char*);
 ISI_tdstColor_ IPO_g_tdstBlack;
-int gp_stActualWorld;
+HIE_tdstSuperObject_* gp_stActualWorld;
 tdstEngineStructure_ g_stEngineStructure;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 91–91 */
@@ -1121,14 +1124,50 @@ PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalOb
  */
 void IPO_fn_vSetRadiosityFromIndex(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject, char _cRadiosityIndex)
 {
-    float* p_fLMU;
-    ISI_tdstColor_* p_tdstColor;
-    short xNumberOfVertices;
-    short xCurrentVertex;
-    short xCurrentIndex;
-    short iNumberOfVerticesInSourceRLI;
-    short iNumberOfVerticesInCurrentRLI;
-    /* TODO: decompile from asm/... */
+    void* pISI;
+    short* pSrc;
+    short* pDst;
+    short* pU1;
+    short* pU2;
+    short xNbVertexInCurrent;
+    short xNbVertexInSource;
+    short xIndex;
+    int lOffset;
+
+    GLI_vResetVertexColorsForIPO(_hInstanciatedPhysicalObject);
+    if ((IPO_g_ucNumberOfRLITables != 0) && (_cRadiosityIndex < IPO_g_ucNumberOfRLITables) && (_cRadiosityIndex >= 0))
+    {
+        if (_hInstanciatedPhysicalObject->a_hRadiosity != NULL)
+        {
+            pISI = _hInstanciatedPhysicalObject->a_hRadiosity[_cRadiosityIndex];
+            if (pISI != NULL)
+            {
+                xNbVertexInCurrent = ISI_fn_xGetNbVertexRLILOD(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0);
+                xNbVertexInSource = ISI_fn_xGetNbVertexRLILOD(pISI, 0);
+                if (xNbVertexInSource < xNbVertexInCurrent)
+                {
+                    for (xIndex = 0, lOffset = 0; xIndex < xNbVertexInCurrent; xIndex++, lOffset += 64)
+                    {
+                        pDst = (short*)((char*)ISI_fn_dGetVertexRLI(_hInstanciatedPhysicalObject->_hCurrentRadiosity) + lOffset);
+                        pSrc = (short*)((char*)ISI_fn_dGetVertexRLI(pISI) + lOffset);
+                        pU1 = (short*)((char*)ISI_fn_dGetVertexRLILODLightMapU(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0) + lOffset);
+                        pU2 = (short*)((char*)ISI_fn_dGetVertexRLILODLightMapU(pISI, 0) + lOffset);
+                        memcpy(pDst, pSrc, (unsigned int)xNbVertexInCurrent * 8);
+                        memcpy(pU1, pU2, (unsigned int)xNbVertexInCurrent * 4);
+                    }
+                }
+                else
+                {
+                    pDst = (short*)ISI_fn_dGetVertexRLI(_hInstanciatedPhysicalObject->_hCurrentRadiosity);
+                    pSrc = (short*)ISI_fn_dGetVertexRLI(pISI);
+                    memcpy(pDst, pSrc, (unsigned int)xNbVertexInCurrent * 8);
+                    pU1 = (short*)ISI_fn_dGetVertexRLILODLightMapU(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0);
+                    pU2 = (short*)ISI_fn_dGetVertexRLILODLightMapU(pISI, 0);
+                    memcpy(pU1, pU2, (unsigned int)xNbVertexInCurrent * 4);
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 637–720 */
@@ -1167,13 +1206,35 @@ void IPO_fn_vSetRadiosityFromIndex(IPO_tdstInstanciatedPhysicalObject_* _hInstan
  */
 void IPO_fn_vInternalComputeRLI_Add(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio, float _fPreviousRatio)
 {
-    ISI_tdstColor_* p_tdstColor2;
-    ISI_tdstColor_* p_tdstColor1;
-    short xNumberOfVerticesToUse;
-    short xNumberOfVerticesInSource;
-    short xNumberOfVerticesInCurrent;
-    short xCurrentVertex;
-    /* TODO: decompile from asm/... */
+    short xNbVertex;
+    short xNbVertex2;
+    short* pSrc;
+    short* pDst;
+    short xIndex;
+    int lOffset;
+
+    if (_hIPO->_hCurrentRadiosity != 0)
+    {
+        if (_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd] != NULL)
+        {
+            pSrc = (short*)ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd]);
+            xNbVertex = ISI_fn_xGetNbVertexRLILOD(_hIPO->_hCurrentRadiosity, 0);
+            xNbVertex2 = ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd], 0);
+            xNbVertex = (xNbVertex2 < xNbVertex) ? xNbVertex2 : xNbVertex;
+            pDst = (short*)ISI_fn_dGetVertexRLI(_hIPO->_hCurrentRadiosity);
+            for (xIndex = 0, lOffset = 0; xIndex < xNbVertex; xIndex++, lOffset += 8)
+            {
+                pDst[0] = pDst[0] - (short)(_fPreviousRatio * (float)pSrc[0]);
+                pDst[0] = pDst[0] + (short)(_fRatio * (float)pSrc[0]);
+                pDst[1] = pDst[1] - (short)(_fPreviousRatio * (float)pSrc[1]);
+                pDst[1] = pDst[1] + (short)(_fRatio * (float)pSrc[1]);
+                pDst[2] = pDst[2] - (short)(_fPreviousRatio * (float)pSrc[2]);
+                pDst[2] = pDst[2] + (short)(_fRatio * (float)pSrc[2]);
+                pDst[3] = pDst[3] - (short)(_fPreviousRatio * (float)pSrc[3]);
+                pDst[3] = pDst[3] + (short)(_fRatio * (float)pSrc[3]);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 516–631 */
@@ -1293,7 +1354,6 @@ static inline float IPO_fn_fGetPreviousRatio(IPO_tdstInstanciatedPhysicalObject_
     return 0.0f;
 }
 
-#pragma auto_inline on
 void IPO_fn_vInternalComputeRLI(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio)
 {
     if (IPO_g_cChangeMode == 1)
@@ -1315,7 +1375,28 @@ void IPO_fn_vInternalComputeRLI(IPO_tdstInstanciatedPhysicalObject_* _hIPO, floa
         GLI_vResetVertexColorsForIPO(_hIPO);
     }
 }
-#pragma auto_inline reset
+
+static inline void IPO_fn_vInternalComputeRLI_Inlined(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio)
+{
+    if (IPO_g_cChangeMode == 1)
+    {
+        IPO_fn_vInternalComputeRLI_Normal(_hIPO, _fRatio);
+
+        _hIPO->fLastRatioUsed = IPO_g_fCurrentGlobalRatio;
+        _hIPO->ulLastTransitionID = IPO_g_ulCurrentTransitionID;
+
+        GLI_vResetVertexColorsForIPO(_hIPO);
+    }
+    else if (IPO_g_cChangeMode == 2)
+    {
+        IPO_fn_vInternalComputeRLI_Add(_hIPO, _fRatio, IPO_fn_fGetPreviousRatio(_hIPO));
+
+        _hIPO->fLastRatioUsed = IPO_g_fCurrentGlobalRatio;
+        _hIPO->ulLastTransitionID = IPO_g_ulCurrentTransitionID;
+
+        GLI_vResetVertexColorsForIPO(_hIPO);
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 471–477 */
 /* addr: 0x002f2680  size: 212 bytes */
@@ -1331,7 +1412,7 @@ void IPO_fn_vComputeRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
 {
     if (IPO_g_cTransitionInProgress)
     {
-        IPO_fn_vInternalComputeRLI(_hIPO, IPO_g_fCurrentGlobalRatio);
+        IPO_fn_vInternalComputeRLI_Inlined(_hIPO, IPO_g_fCurrentGlobalRatio);
     }
 }
 
@@ -1393,8 +1474,111 @@ void IPO_fn_vUpdateAllIPOAfterTransition(HIE_tdstSuperObject_* _hSO)
  */
 void IPO_fn_vFrameEndForRLITables(void)
 {
-    char cMustEndTransition;
-    /* TODO: decompile from asm/... */
+    char cMode;
+    int lFlag;
+    int lFlag2;
+    long lEnd;
+    HIE_tdstSuperObject_* hChild;
+    HIE_tdstSuperObject_* hWorld;
+    IPO_tdstInstanciatedPhysicalObject_* hIPO;
+
+    if (IPO_g_cTransitionInProgress)
+    {
+        cMode = IPO_g_cChangeMode;
+        lFlag = 1;
+        lEnd = 0;
+        if (cMode == 1)
+        {
+            if (IPO_g_fCurrentGlobalRatio >= 1.0f)
+            {
+                IPO_g_ucCurrentRadiosityIndex = IPO_g_ucNextRadiosityIndex;
+                if (IPO_g_ucCurrentRadiosityIndex == IPO_g_ucRadiosityIndexToReach)
+                {
+                    lEnd = lFlag;
+                }
+                else
+                {
+                    IPO_g_fCurrentGlobalRatio = 0.0f;
+                    IPO_g_fIncrementByMilliSecond = 0.0f;
+                    IPO_g_ucNextRadiosityIndex = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + 1) % IPO_g_ucNumberOfRLITables);
+                }
+            }
+        }
+        else if (cMode == 2)
+        {
+            float fWanted = IPO_g_fAddWantedRatio;
+
+            lFlag = 1;
+            if (fWanted <= 0.0f)
+            {
+                lFlag = 0;
+            }
+            if (lFlag != 0)
+            {
+                if (IPO_g_fCurrentGlobalRatio < fWanted)
+                {
+                    lFlag = 0;
+                }
+                else
+                {
+                    lFlag = 1;
+                }
+            }
+            if (lFlag == 0)
+            {
+                lFlag2 = 1;
+                if (!(fWanted < 0.0f))
+                {
+                    lFlag2 = 0;
+                }
+                if (lFlag2 != 0)
+                {
+                    if (IPO_g_fCurrentGlobalRatio <= fWanted)
+                    {
+                        lFlag2 = 1;
+                    }
+                    else
+                    {
+                        lFlag2 = 0;
+                    }
+                }
+                lEnd = (long)lFlag2;
+            }
+        }
+        else
+        {
+            lEnd = 1;
+        }
+        if (lEnd != 0)
+        {
+            hWorld = gp_stActualWorld;
+            IPO_g_fPreviousGlobalRatio = IPO_g_fCurrentGlobalRatio;
+            for (hChild = hWorld->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+            {
+                IPO_fn_vUpdateAllIPOAfterTransition(hChild);
+            }
+            if (hWorld->ulTypeOfLinkedObject == 0x20)
+            {
+                hIPO = hWorld->hLinkedObject.p_stInstanciatedPhysicalObject;
+                lFlag = 0;
+                if (hIPO->ulLastTransitionID == IPO_g_ulCurrentTransitionID)
+                {
+                    if (hIPO->fLastRatioUsed == IPO_g_fPreviousGlobalRatio)
+                    {
+                        lFlag = 1;
+                    }
+                }
+                if (lFlag == 0)
+                {
+                    IPO_fn_vInternalComputeRLI(hIPO, IPO_g_fCurrentGlobalRatio);
+                }
+            }
+            IPO_g_cChangeMode = 0;
+            IPO_g_fIncrementByMilliSecond = 0.0f;
+            IPO_g_fCurrentGlobalRatio = 0.0f;
+            IPO_g_cTransitionInProgress = 0;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 346–382 */
@@ -1426,7 +1610,43 @@ void IPO_fn_vFrameEndForRLITables(void)
  */
 void IPO_fn_vFrameInitForRLITables(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int ulCurrentTime;
+    unsigned int lDelta;
+    float fDelta;
+
+    if (IPO_g_cTransitionInProgress)
+    {
+        ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount; lDelta = (int)(ulCurrentTime - IPO_g_ulCurrentTime); fDelta = lDelta >= 0 ? (float)lDelta : (float)((int)((unsigned int)lDelta >> 1) | (lDelta & 1)) + (float)((int)((unsigned int)lDelta >> 1) | (lDelta & 1)); IPO_g_fCurrentIncrementRatio = IPO_g_fIncrementByMilliSecond * fDelta;
+        IPO_g_fPreviousGlobalRatio = IPO_g_fCurrentGlobalRatio;
+        IPO_g_fCurrentGlobalRatio = IPO_g_fCurrentGlobalRatio + IPO_g_fCurrentIncrementRatio;
+        if (IPO_g_cChangeMode == 1)
+        {
+            if (IPO_g_fCurrentGlobalRatio > 1.0f)
+                IPO_g_fCurrentGlobalRatio = 1.0f;
+        }
+        else if (IPO_g_cChangeMode == 2)
+        {
+            if (IPO_g_fAddWantedRatio >= 0.0f)
+            {
+                if (IPO_g_fCurrentGlobalRatio > IPO_g_fAddWantedRatio)
+                {
+                    IPO_g_fCurrentGlobalRatio = IPO_g_fAddWantedRatio;
+                }
+            }
+            else if (IPO_g_fAddWantedRatio <= 0.0f)
+            {
+                if (IPO_g_fCurrentGlobalRatio < IPO_g_fAddWantedRatio)
+                {
+                    IPO_g_fCurrentGlobalRatio = IPO_g_fAddWantedRatio;
+                }
+            }
+        }
+        else
+        {
+            IPO_g_cTransitionInProgress = 0;
+        }
+        IPO_g_ulCurrentTime = ulCurrentTime;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 297–336 */
@@ -1462,7 +1682,40 @@ void IPO_fn_vFrameInitForRLITables(void)
  */
 void IPO_fn_vSetAddRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, float _fFinalRatio)
 {
-    /* TODO: decompile from asm/... */
+    float fDuration;
+
+    if (IPO_g_ucNumberOfRLITables != 0)
+    {
+        if ((_cIndexToReach < IPO_g_ucNumberOfRLITables) && (_cIndexToReach >= 0))
+        {
+            if ((IPO_g_cBlockingTransitions == 0 || IPO_g_cTransitionInProgress == 0) && (_fFinalRatio != 0.0f))
+            {
+                IPO_g_ucRadiosityIndexToAdd = (unsigned char)_cIndexToReach;
+                if (_ulChangeDuration == 0)
+                {
+                    IPO_g_fAddWantedRatio = _fFinalRatio;
+                    IPO_g_fCurrentGlobalRatio = _fFinalRatio;
+                    IPO_g_fIncrementByMilliSecond = 0.0f;
+                }
+                else
+                {
+                    IPO_g_ulChangeDuration = _ulChangeDuration;
+                    IPO_g_fCurrentIncrementRatio = 0.0f;
+                    IPO_g_fCurrentGlobalRatio = 0.0f;
+                    fDuration = (int)_ulChangeDuration >= 0 ? (float)_ulChangeDuration : (float)((int)((unsigned int)_ulChangeDuration >> 1) | (_ulChangeDuration & 1)) + (float)((int)((unsigned int)_ulChangeDuration >> 1) | (_ulChangeDuration & 1));
+                    IPO_g_ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - 1;
+                    IPO_g_fIncrementByMilliSecond = _fFinalRatio / fDuration;
+                    if (IPO_g_fIncrementByMilliSecond == 0.0f)
+                    {
+                        IPO_g_fIncrementByMilliSecond = 1e-9f;
+                    }
+                }
+                IPO_g_cChangeMode = 2;
+                IPO_g_cTransitionInProgress = 1;
+                IPO_g_ulCurrentTransitionID++;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 245–290 */
@@ -1504,9 +1757,54 @@ void IPO_fn_vSetAddRLITable(char _cIndexToReach, unsigned int _ulChangeDuration,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void IPO_fn_vSetChangeOfRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, char _cIncrementOrJump)
+void IPO_fn_vSetChangeOfRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, char _cAdd)
 {
-    /* TODO: decompile from asm/... */
+    int lNumberOfSteps;
+    float fDuration;
+
+    if ((IPO_g_ucNumberOfRLITables != 0) && (_cIndexToReach < IPO_g_ucNumberOfRLITables) && (_cIndexToReach >= 0))
+    {
+        if ((IPO_g_cBlockingTransitions == 0 || IPO_g_cTransitionInProgress == 0) && (_cAdd == 0))
+        {
+            IPO_g_ucRadiosityIndexToReach = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + _cIndexToReach) % IPO_g_ucNumberOfRLITables);
+        }
+        else
+        {
+            IPO_g_ucRadiosityIndexToReach = (unsigned char)_cIndexToReach;
+        }
+        if (_ulChangeDuration == 0)
+        {
+            IPO_g_fCurrentIncrementRatio = 0.0f;
+            IPO_g_fCurrentGlobalRatio = 1.0f;
+            IPO_g_ucNextRadiosityIndex = IPO_g_ucRadiosityIndexToReach;
+            IPO_g_ucCurrentRadiosityIndex = IPO_g_ucRadiosityIndexToReach;
+        }
+        else
+        {
+            IPO_g_ulChangeDuration = _ulChangeDuration;
+            IPO_g_fCurrentIncrementRatio = 0.0f;
+            IPO_g_fCurrentGlobalRatio = 0.0f;
+            IPO_g_ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - 1;
+            if (IPO_g_ucCurrentRadiosityIndex < IPO_g_ucRadiosityIndexToReach)
+            {
+                IPO_g_ucNextRadiosityIndex = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + 1) % IPO_g_ucNumberOfRLITables);
+                lNumberOfSteps = IPO_g_ucRadiosityIndexToReach - IPO_g_ucCurrentRadiosityIndex;
+            }
+            else
+            {
+                lNumberOfSteps = IPO_g_ucRadiosityIndexToReach + IPO_g_ucNumberOfRLITables - IPO_g_ucCurrentRadiosityIndex;
+            }
+            fDuration = (float)(_ulChangeDuration / 2) * 2.0f;
+            IPO_g_fIncrementByMilliSecond = (float)lNumberOfSteps / fDuration;
+            if (IPO_g_fIncrementByMilliSecond == 0.0f)
+            {
+                IPO_g_fIncrementByMilliSecond = 1e-9f;
+            }
+        }
+        IPO_g_cTransitionInProgress = 1;
+        IPO_g_cChangeMode = 1;
+        IPO_g_ulCurrentTransitionID++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 234–234 */

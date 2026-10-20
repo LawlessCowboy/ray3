@@ -4,10 +4,14 @@
 
 #include <stddef.h>
 
-typedef int sallocator;
+typedef struct sallocator sallocator;
+struct sallocator {
+};
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CVarAccess CVarAccess;
+typedef struct PostponedPlay PostponedPlay;
+typedef struct CSoundSemaphoreCont CSoundSemaphoreCont;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct _stVector _stVector;
 typedef struct less less;
@@ -117,10 +121,6 @@ struct C3DParam {
     C3DDirection m_oDir; /* +0x18 */
 };
 
-struct CPitchActorModifier {
-    /* C++ base CActorModifiers at +0x0. */
-};
-
 struct CRolloffParam {
     float m_fStabilisationDistance; /* +0x0 */
     float m_fSaturationDistance; /* +0x4 */
@@ -136,10 +136,6 @@ struct C2DParams {
 
 struct sstring {
     int m_pcData; /* +0x0 */
-};
-
-struct CVolumeActorModifier {
-    /* C++ base CActorModifiers at +0x0. */
 };
 
 struct CResObjState {
@@ -168,9 +164,41 @@ struct CCritSect {
     unsigned int m_uiCS; /* +0x0 */
 };
 
+struct CActorModifiers {
+    /* C++ base CVarNotifTarget at +0x0: vtable pointer; virtual order from
+     * retail __vt__Q24usnd15CActorModifiers. */
+    virtual void fv_vVarChanged(CVar& ro_Var);
+    virtual void fv_vVarDestroyed(CVar& ro_Var);
+    virtual void fv_vVarAccessed(CVar& ro_Var);
+    virtual void fv_vAddModifier(CVar& ro_Var, float f_Value);
+    virtual void fv_vRemoveModifier(CVar& ro_Var);
+    CActorResObj* m_pActor; /* +0x4 */
+    smap m_oVariables; /* +0x8 */
+    float m_fDirectValue; /* +0x18 */
+    float m_fResultValue; /* +0x1c */
+    unsigned char m_bResultChanged; /* +0x20 */
+};
+
+struct CPitchActorModifier : CActorModifiers {
+};
+
+struct CVolumeActorModifier : CActorModifiers {
+};
+
 struct CActorProgramContext {
-    /* C++ base CProgramContext at +0x0. */
+    /* C++ base CProgramContext at +0x0; virtual order from retail
+     * __vt__Q24usnd20CActorProgramContext. */
+    virtual void fv_vAddRunningObj(CResObj& ro_Obj, void* pv_UserData, int s32_Data, bool b_Flag, CResObj* po_Parent);
+    virtual bool fv_bAddRunningObj(CResObj& ro_Obj, CResObj& ro_Parent, bool b_Flag);
+    virtual void fv_vRemoveRunningObj(CResObj& ro_Obj);
+    virtual unsigned int fv_uiGetAllRunningObjs(CResObj** ppo_Objs, unsigned int ui_Max);
+    virtual void fv_vCallHandler(const char* sz_Name, void* pv_Param);
+    virtual void fv_vAddRunningObjRef(CResObj& ro_Obj);
+    virtual void fv_vReleaseRunningObjRef(CResObj& ro_Obj);
+    virtual bool fv_bAreThereRunningObjs(void);
+    unsigned int a2_ulProgramContextData[2]; /* +0x4 */
     /* C++ base CVarAccess at +0xc. */
+    unsigned int ulVarAccessVptr; /* +0xc */
     CResObjState m_oObjStates; /* +0x10 */
     CActorResObj* m_pActor; /* +0x38 */
     smap m_oVariables; /* +0x3c */
@@ -178,11 +206,18 @@ struct CActorProgramContext {
 };
 
 struct CResObj {
+    /* C++ base CRTTIClass at +0x0: vtable pointer (retail
+     * __vt__Q24usnd7CResObj starts with the destructor). */
+    virtual ~CResObj();
     CResType* m_roType; /* +0x4 */
     CResData* m_poResData; /* +0x8 */
 };
 
 struct CActorResObj : CResObj {
+    /* Virtual order from retail __vt__Q24usnd12CActorResObj: the destructor
+     * at +0x8 and fv_vExecCmd at +0xc. */
+    virtual ~CActorResObj();
+    virtual void fv_vExecCmd(unsigned int ui_Cmd, void* pv_Param);
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -238,12 +273,77 @@ struct _RollOffParam {
     unsigned char ucBackgroundVol; /* +0x8 */
 };
 
-struct CLinkTypeActorCont {
+/* The usnd containers are a renamed Dinkumware red-black tree.  The members
+ * that the retail object calls out of line (_Lmost, the iterator_base
+ * constructor and _Inc) stay out of line here so that the calls keep the
+ * retail's jal/relocation shape. */
+namespace usnd {
+struct streebase {
+    struct sTreeLink {
+        sTreeLink* m_poLeft; /* +0x0 */
+        sTreeLink* m_poParent; /* +0x4 */
+        sTreeLink* m_poRight; /* +0x8 */
+        int m_eColor; /* +0xc */
+    };
+    struct iterator_base {
+        iterator_base(void) {}
+        iterator_base(sTreeLink* po_Link);
+        void _Inc(void);
+        sTreeLink* _Ptr; /* +0x0 */
+    };
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+template <class T> struct less {
+};
+
+template <class T> struct sallocator {
+};
+
+template <class T1, class T2> struct spair {
+    T1 first;
+    T2 second;
+};
+
+template <class K, class V, class KFN, class CMP, class ALLOC>
+struct stree : streebase {
+    struct sTreeNode : sTreeLink {
+        V m_oValue; /* +0x10 */
+    };
+    struct iterator : iterator_base {
+        iterator(void) {}
+        iterator(sTreeLink* po_Link) : iterator_base(po_Link) {}
+        V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
+        iterator& operator++(void) { _Inc(); return *this; }
+        bool operator==(const iterator& ro_It) const { return _Ptr == ro_It._Ptr; }
+        bool operator!=(const iterator& ro_It) const { return !(*this == ro_It); }
+    };
+    sTreeLink*& _Lmost(void);
+    iterator begin(void) { return iterator(_Lmost()); }
+    iterator end(void) { return iterator(_HeadLink); }
+    ALLOC allocator; /* +0xc */
+    CMP key_compare; /* +0xd */
+};
+
+template <class K, class T, class CMP, class ALLOC>
+struct smap {
+    struct _Kfn {
+    };
+    typedef stree<K, spair<const K, T>, _Kfn, CMP, ALLOC> _Imp;
+    typedef typename _Imp::iterator iterator;
+    iterator begin(void) { return _Tr.begin(); }
+    iterator end(void) { return _Tr.end(); }
+    _Imp _Tr; /* +0x0 */
+};
+}
+
+struct CLinkTypeActorCont : usnd::smap<int, CLinkTypeActor*, usnd::less<int>, usnd::sallocator<CLinkTypeActor*> > {
     /* Recovered singleton and command signatures. */
     static CLinkTypeActorCont* mfn_roGetInstance(void);
     unsigned char mfn_bExecuteActorType(int s32_CmdId, int s32_TypeId);
     CLinkTypeActor* mfn_poGetActorTypeFromId(int s32_TypeId);
-    /* C++ base smap at +0x0. */
     CActorResData* m_poStandardActorResData; /* +0x10 */
     CActorResData* m_poMusicActorResData; /* +0x14 */
     CResData* m_poMusicProgramResData; /* +0x18 */
@@ -263,6 +363,8 @@ struct CResObjParams {
 };
 
 struct CExtraEventActor {
+    /* Static channel counter shared with the actor scanner. */
+    static int ss32CurrentRefreshChannel;
     CExtraEventActor* m_poNext; /* +0x0 */
     CExtraEventActor* m_poPrevious; /* +0x4 */
     TTypedVar* m_poIntSwitchVar; /* +0x8 */
@@ -282,6 +384,17 @@ struct CExtraEventActor {
     unsigned char mbWaitForKill; /* +0x48 */
     unsigned char mbAllSoundPaused; /* +0x49 */
     CResObjParams m_oResObjParams; /* +0x4c */
+};
+
+int CExtraEventActor::ss32CurrentRefreshChannel;
+
+struct PostponedPlay {
+    static void fs_vEmpty(void);
+};
+
+struct CSoundSemaphoreCont {
+    static CSoundSemaphoreCont* mfn_roGetInstance(void);
+    void mfn_vDelete(void);
 };
 
 struct CLinkActor {
@@ -383,15 +496,6 @@ struct iterator {
     /* C++ base iterator_base at +0x0. */
 };
 
-struct CActorModifiers {
-    /* C++ base CVarNotifTarget at +0x0. */
-    CActorResObj* m_pActor; /* +0x4 */
-    smap m_oVariables; /* +0x8 */
-    float m_fDirectValue; /* +0x18 */
-    float m_fResultValue; /* +0x1c */
-    unsigned char m_bResultChanged; /* +0x20 */
-};
-
 
 
 
@@ -439,56 +543,64 @@ struct CActorModifiers {
 
 int g_pauseCnt;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 48–54 */
-/* addr: 0x001c99e0  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 48
- *   +0x001c -> line 53
- *   +0x0050 -> line 54
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void _NilElmt__Q24usnd9streebase(void)
+extern "C" void SND_fn_vSynchroSound(void);
+extern "C" void SND_fn_vClearLastTheme(void);
+extern "C" void usnd_free(void* pv_Ptr);
+
+void SND_fn_vScanActor(void);
+
+/* The retail object holds the deleting destructor of the callback object the
+ * actor types own; the debug record for that address only carries the
+ * streebase::_NilElmt static member name, so the extractor attributed it to
+ * the wrong function here. */
+struct CLinkCallbackResObj {
+    CActorResObj* mroActorObj; /* +0x0 */
+    CResObj* mroResObj; /* +0x4 */
+    void (*mpfnProc)(int); /* +0x8 */
+    int ms32Param; /* +0xc */
+    ~CLinkCallbackResObj();
+    /* The class releases its instances through the SND allocator. */
+    static void operator delete(void* pv_Ptr) { usnd_free(pv_Ptr); }
+};
+
+CLinkCallbackResObj::~CLinkCallbackResObj()
 {
-    /* TODO: decompile from asm/... */
+    mroActorObj->m_oProgramContext.fv_vReleaseRunningObjRef(*mroResObj);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 148–175 */
-/* addr: 0x001c9a50  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 148
- *   +0x0008 -> line 150
- *   +0x0010 -> line 152
- *   +0x0018 -> line 154
- *   +0x0044 -> line 157
- *   +0x0074 -> line 160
- *   +0x007c -> line 164
- *   +0x0084 -> line 165
- *   +0x008c -> line 166
- *   +0x00a8 -> line 168
- *   +0x00b8 -> line 169
- *   +0x00c0 -> line 172
- *   +0x00c8 -> line 174
- *   +0x00cc -> line 175
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SND_fn_vKillAllObjectSound(void)
 {
-    /* TODO: decompile from asm/... */
+    /* The statement grouping below follows the retail line table: the
+     * pause test, its command and the counter update share one source
+     * line, the two kill commands share the next one, and the loop body
+     * ends on the line of the channel counter. */
+    PostponedPlay::fs_vEmpty();
+
+    SND_fn_vSynchroSound();
+
+    if (g_pauseCnt == 0) CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, -2); g_pauseCnt++;
+
+
+    CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, -2); CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(1, -2);
+
+    CExtraEventActor::ss32CurrentRefreshChannel = 0;
+    while (CExtraEventActor::ss32CurrentRefreshChannel < 5)
+    {
+
+
+        SND_fn_vSynchroSound();
+        SND_fn_vSynchroSound();
+        CExtraEventActor::ss32CurrentRefreshChannel++; }
+
+    CSoundSemaphoreCont::mfn_roGetInstance()->mfn_vDelete();
+    SND_fn_vScanActor();
+
+
+    SND_fn_vClearLastTheme();
+
+    g_pauseCnt = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 131–145 */
-/* addr: 0x001c9b30  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 131
- *   +0x0008 -> line 132
- *   +0x0014 -> line 133
- *   +0x0020 -> line 136
- *   +0x0038 -> line 145
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SND_fn_vResumeSound(void)
 {
     g_pauseCnt--;
@@ -499,17 +611,6 @@ void SND_fn_vResumeSound(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 115–128 */
-/* addr: 0x001c9b80  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 115
- *   +0x0008 -> line 116
- *   +0x0014 -> line 118
- *   +0x002c -> line 127
- *   +0x0038 -> line 128
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SND_fn_vPauseSound(void)
 {
     if (g_pauseCnt == 0)
@@ -517,61 +618,22 @@ void SND_fn_vPauseSound(void)
     g_pauseCnt++;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 106–108 */
-/* addr: 0x001c9bd0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 106
- *   +0x000c -> line 107
- *   +0x0024 -> line 108
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SND_fn_vResumeAllObjectTypeSound(int s32_TypeId)
 {
     CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(3, s32_TypeId);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 102–104 */
-/* addr: 0x001c9c10  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 102
- *   +0x000c -> line 103
- *   +0x0024 -> line 104
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SND_fn_vPauseAllObjectTypeSound(int s32_TypeId)
 {
     CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, s32_TypeId);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 95–100 */
-/* addr: 0x001c9c50  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 95
- *   +0x000c -> line 98
- *   +0x0024 -> line 99
- *   +0x003c -> line 100
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SND_fn_vKillAllObjectTypeSound(int s32_TypeId)
 {
     CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(2, s32_TypeId);
     CLinkTypeActorCont::mfn_roGetInstance()->mfn_bExecuteActorType(1, s32_TypeId);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 89–93 */
-/* addr: 0x001c9ca0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 89
- *   +0x0014 -> line 90
- *   +0x002c -> line 91
- *   +0x0034 -> line 92
- *   +0x003c -> line 93
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SND_fn_vKillObjectSound2(int s32_ObjectId, int s32_TypeId)
 {
     CLinkTypeActor* poType;
@@ -580,31 +642,26 @@ void SND_fn_vKillObjectSound2(int s32_ObjectId, int s32_TypeId)
         poType->mfn_bExecuteActorInTypeActorInstance(1, s32_ObjectId);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndactor.cpp lines 62–84 */
-/* addr: 0x001c9cf0  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 62
- *   +0x0010 -> line 65
- *   +0x001c -> line 67
- *   +0x003c -> line 71
- *   +0x0044 -> line 72
- *   +0x0050 -> line 74
- *   +0x0054 -> line 75
- *   +0x0060 -> line 77
- *   +0x0078 -> line 79
- *   +0x007c -> line 80
- *   +0x0088 -> line 81
- *   +0x008c -> line 82
- *   +0x0098 -> line 83
- *   +0x00c8 -> line 84
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void SND_fn_vScanActor__Fv(void)
+void SND_fn_vScanActor(void)
 {
-    CExtraEventActor* poEEActor;
     CLinkActor* poActor;
+    CExtraEventActor* poEEActor;
     CLinkTypeActorCont* ro_TypeActorCont;
-    iterator it_Type;
-    /* TODO: decompile from asm/... */
+    CLinkTypeActorCont::iterator it_Type;
+
+    ro_TypeActorCont = CLinkTypeActorCont::mfn_roGetInstance();
+    for (it_Type = ro_TypeActorCont->begin(); it_Type != ro_TypeActorCont->end(); ++it_Type)
+    {
+        poActor = (*it_Type).second->m_oActors.m_poNext;
+        while (poActor)
+        {
+            poEEActor = poActor->m_oExtraActors.m_poNext;
+            while (poEEActor)
+            {
+                poEEActor->mpoActorObj->fv_vExecCmd(0x44D, NULL);
+                poEEActor = poEEActor->m_poNext;
+            }
+            poActor = poActor->m_poNext;
+        }
+    }
 }

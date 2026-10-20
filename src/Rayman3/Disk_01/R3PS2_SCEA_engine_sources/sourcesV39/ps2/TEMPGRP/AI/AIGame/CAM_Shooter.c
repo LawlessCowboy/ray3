@@ -4,13 +4,15 @@
 
 #include <stddef.h>
 
-/* Recovered from the original PS2 MTH floating-point helper convention. */
+/* Recovered from the original PS2 MTH floating-point helper convention.
+   MTH_SQRT_TO carries no explicit nop: MWCC inserts the sqrt.s hazard nop
+   itself when the following instruction is an FPU op (fn_CreateRaycastDirection)
+   and leaves the slot alone when it is not (fn_p_GetViewFinderDistance). */
 #define MTH_SQRT_IN_PLACE(_value) \
     asm { sqrt.s _value, _value } \
     asm { nop }
 #define MTH_SQRT_TO(_result, _value) \
-    asm { sqrt.s _result, _value }  \
-    asm { nop }
+    asm { sqrt.s _result, _value }
 #define MTH_SQR3_TO(_result, _x, _y, _z) \
     asm { mula.s _x, _x }                       \
     asm { madda.s _y, _y }                      \
@@ -2371,8 +2373,11 @@ struct CAM_Shooter_ {
     HIE_tdstSuperObject_* pTargetActor; /* +0x68 */
     HIE_tdstSuperObject_* pTargetSkin; /* +0x6c */
     HIE_tdstSuperObject_* pMultiControl; /* +0x70 */
-    int apMainActors[4]; /* +0x74 */
-    int apSkins[4]; /* +0x84 */
+    /* The extractor typed these handle arrays as int[4]; the retail code
+       loads and compares them as pointers, so declare them as pointer arrays
+       (fn_p_RemoveMainActor / fn_p_AddMainActor). */
+    HIE_tdstSuperObject_* apMainActors[4]; /* +0x74 */
+    HIE_tdstSuperObject_* apSkins[4]; /* +0x84 */
     short iNumberOfMainActors; /* +0x94 */
     GLD_tdstViewportAttributes_* p_stViewport; /* +0x98 */
     tdstCineinfo_* hCineInfo; /* +0x9c */
@@ -3517,6 +3522,8 @@ void fn_ChangeCameraVectorParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eP
 void fn_CreateRaycastDirection(CAM_Shooter_* pcs, MTH3D_tdstVector_* vRayCastDirection, MTH3D_tdstVector_* vCentralSegment);
 void fn_GetTheoreticalPosition_UsingRealPosition(MTH3D_tdstVector_* vTPosition, CAM_Shooter_* pcs, unsigned int iMode);
 void fn_PutCameraAgainstWall(CAM_Shooter_* pcs, float xDistanceToTarget);
+int fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcId);
+void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 3662–3782 */
 /* addr: 0x00241ad0  size: 6128 bytes */
@@ -4668,7 +4675,22 @@ void fn_CreateRaycastDirection(CAM_Shooter_* pcs, MTH3D_tdstVector_* vRayCastDir
 {
     MTH3D_tdstVector_ vTemp;
     float xNorm;
-    /* TODO: decompile from asm/... */
+    float xX, xY, xZ;
+    float xSquared;
+    float xScale;
+
+    *(int *)&vRayCastDirection->xX = *(int *)&vCentralSegment->xX; *(int *)&vRayCastDirection->xY = *(int *)&vCentralSegment->xY; *(int *)&vRayCastDirection->xZ = *(int *)&vCentralSegment->xZ;
+
+    xX = vRayCastDirection->xX; xY = vRayCastDirection->xY; xZ = vRayCastDirection->xZ; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xNorm, xSquared); if (xNorm != 0.0f)
+    {
+        xScale = (pcs->xDistMax_Default / xNorm) + 0.6f;
+        vRayCastDirection->xX = xScale * vRayCastDirection->xX; vRayCastDirection->xY = xScale * vRayCastDirection->xY; vRayCastDirection->xZ = xScale * vRayCastDirection->xZ;
+    }
+    else
+    {
+        fn_GetPersoNegativeSighting(&vTemp, pcs->pCamera);
+        vRayCastDirection->xX = (pcs->xDistMax_Default + 0.6f) * vTemp.xX; vRayCastDirection->xY = (pcs->xDistMax_Default + 0.6f) * vTemp.xY; vRayCastDirection->xZ = (pcs->xDistMax_Default + 0.6f) * vTemp.xZ;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 2695–2767 */
@@ -5617,7 +5639,32 @@ void fn_ChangeCameraVectorParameter(tdstCineinfo_* hCineInfo, tdeProcedureId_ eP
  */
 void fn_InitCSH_Common(void)
 {
-    /* TODO: decompile from asm/... */
+    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
+    {
+        stCamShooter_CV.xTheta_Init = 0.4f;
+        stCamShooter_CV.xTheta_Init_mario = 0.4f;
+        stCamShooter_CV.xTheta_Init_Climb = 0.6f;
+        stCamShooter_CV.xDistMax_Init = 6.0f;
+        stCamShooter_CV.xDistMax_Init_mario = 7.0f;
+        stCamShooter_CV.xDistMax_Init_Climb = 8.0f;
+        stCamShooter_CV.xDistMax_Init_Swim = 6.0f;
+    }
+    else
+    {
+        stCamShooter_CV.xTheta_Init = 0.2f;
+        stCamShooter_CV.xTheta_Init_mario = 0.27f;
+        stCamShooter_CV.xTheta_Init_Climb = 0.6f;
+        stCamShooter_CV.xDistMax_Init = 8.3f;
+        stCamShooter_CV.xDistMax_Init_mario = 9.0f;
+        stCamShooter_CV.xDistMax_Init_Climb = 12.0f;
+        stCamShooter_CV.xDistMax_Init_Swim = 8.3f;
+    }
+    stCamShooter_CV.xMouseFactorY = xMouseSensitivityFactor[1];
+    stCamShooter_CV.xMouseFactorX = xMouseSensitivityFactor[1];
+    stCamShooter_CV.vViewFinderRedIconUV1.xX = 0.627f; stCamShooter_CV.vViewFinderRedIconUV1.xY = 0.0f; stCamShooter_CV.vViewFinderRedIconUV1.xZ = 0.0f;
+    stCamShooter_CV.vViewFinderRedIconUV2.xX = 0.75f; stCamShooter_CV.vViewFinderRedIconUV2.xY = 0.125f; stCamShooter_CV.vViewFinderRedIconUV2.xZ = 0.0f;
+    stCamShooter_CV.vViewFinderWhiteIconUV1.xX = 0.502f; stCamShooter_CV.vViewFinderWhiteIconUV1.xY = 0.0f; stCamShooter_CV.vViewFinderWhiteIconUV1.xZ = 0.0f;
+    stCamShooter_CV.vViewFinderWhiteIconUV2.xX = 0.625f; stCamShooter_CV.vViewFinderWhiteIconUV2.xY = 0.125f; stCamShooter_CV.vViewFinderWhiteIconUV2.xZ = 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 628–645 */
@@ -5730,7 +5777,26 @@ tdstNodeInterpret_* fn_p_RemoveMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, 
     int k;
     CAM_Shooter_* pcs;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* p_stEngObj;
+
+    bFound = 0;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    p_stEngObj = stValue.uDummy.uParam.p_stEngObjValue;
+    pMainActor = fn_h_StandardGameGetSuperObject(p_stEngObj->h_StandardGame);
+    hCineInfo = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    for (k = 0; k < pcs->iNumberOfMainActors; k++)
+    {
+        if (pcs->apMainActors[k] == pMainActor)
+            bFound = 1;
+        if (bFound && k <= 2)
+            pcs->apMainActors[k] = pcs->apMainActors[k + 1];
+        pcs->apSkins[k] = pcs->apSkins[k + 1];
+    }
+    if (bFound)
+        pcs->iNumberOfMainActors--;
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 532–552 */
@@ -5846,7 +5912,13 @@ tdstNodeInterpret_* fn_p_RegisterDesignVar(HIE_tdstSuperObject_* p_SuperObjPerso
 tdstNodeInterpret_* fn_p_GetViewFinderVMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    stCamShooter_CV.hVMTViewFinder_white = (GLI_tdstMaterial_*)stValue.uDummy.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    stCamShooter_CV.hVMTViewFinder_red = (GLI_tdstMaterial_*)stValue.uDummy.uParam.ulValue;
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 349–369 */
@@ -5870,7 +5942,20 @@ tdstNodeInterpret_* fn_p_GetViewFinderDistance(HIE_tdstSuperObject_* p_SuperObjP
 {
     HIE_tdstSuperObject_* hCamera;
     CAM_Shooter_* pcs;
-    /* TODO: decompile from asm/... */
+    float xX, xY, xZ;
+    float xSquared;
+    float xNorm;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+
+    xX = pcs->vViewFinderPosition.xX - pcs->pTargetActor_position->xX; xY = pcs->vViewFinderPosition.xY - pcs->pTargetActor_position->xY; xZ = pcs->vViewFinderPosition.xZ - pcs->pTargetActor_position->xZ;
+    MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xNorm, xSquared); p_stValue->uDummy.uParam.xValue = xNorm; p_stValue->eType = E_vt_Float;
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 308–344 */
@@ -5905,7 +5990,23 @@ tdstNodeInterpret_* fn_p_GetMainActorComports(HIE_tdstSuperObject_* p_SuperObjPe
     HIE_tdstSuperObject_* hCamera;
     tdstGetSetParam_ stValue;
     CAM_Shooter_* pcs;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Wait = stValue.uDummy.uParam.pComport;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Run = stValue.uDummy.uParam.pComport;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Hang = stValue.uDummy.uParam.pComport;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Climb = stValue.uDummy.uParam.pComport;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Reborn = stValue.uDummy.uParam.pComport;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pMAComport_Fall = stValue.uDummy.uParam.pComport;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 296–303 */

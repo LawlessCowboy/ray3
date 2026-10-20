@@ -16,12 +16,16 @@ typedef enum ESTATE {
 } ESTATE;
 
 extern "C" void* usnd_malloc(unsigned int ui_Size);
+extern "C" void usnd_free(void* pBlock);
+extern "C" void usnd_vDeleteCritSect(unsigned int uiCritSect);
+extern "C" void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int uiSize);
+extern "C" void fn_vFreeInBinaryPreservingTheCurrentMode(void* pBlock);
 
 namespace usnd {
 
 struct CPS2Renderer {
     virtual void vUnknown0(void* pBox, unsigned int ui0, unsigned int ui1);
-    virtual void vUnknown1(void);
+    virtual ~CPS2Renderer();
     virtual unsigned int vUnknown2(void);
     virtual void vUnknown3(void);
     virtual void vUnknown4(void);
@@ -46,20 +50,25 @@ struct CPS2StreamVBRenderer : CPS2Renderer {
     static void* operator new(size_t uiSize) { return usnd_malloc(uiSize); }
 };
 
-struct CPS2IOPRemotePulledBox {
-    /* C++ base CPS2IOPPulledBox at +0x0. */
-    unsigned char _padding_0[8]; /* +0x0..0x7 */
+struct CPulledBox {
+    virtual void fv_vPull(void* pWaveBlock, unsigned int uiSize, void* pType);
+};
+
+struct CPS2IOPPulledBox : CPulledBox {
+    unsigned int m_uiIOPPulledBoxAddr; /* +0x4 */
+    virtual unsigned int fv_uiGetIOPPulledBoxAddr(void);
+};
+
+struct CPS2IOPRemotePulledBox : CPS2IOPPulledBox {
+    virtual ~CPS2IOPRemotePulledBox();
 };
 
 struct CPS2IOPPullDMA : CPS2IOPRemotePulledBox {
     unsigned int (*m_pfnFunc)(void*, unsigned int); /* +0x8 */
     CPS2IOPPullDMA(unsigned int (*pfnFunc)(void*, unsigned int));
+    virtual void fv_vPull(void* pWaveBlock, unsigned int uiSize, void* pType);
+    virtual ~CPS2IOPPullDMA();
     static void* operator new(size_t uiSize) { return usnd_malloc(uiSize); }
-};
-
-struct CPS2IOPPulledBox {
-    /* C++ base CPulledBox at +0x0. */
-    unsigned int m_uiIOPPulledBoxAddr; /* +0x4 */
 };
 
 struct CPS2Channel {
@@ -124,7 +133,7 @@ public:
 int g_pxBufferAudio;
 static unsigned int gs_PosRead;
 static unsigned int gs_NbBytesInBuffer;
-static int gs_poBox;
+static CPS2IOPPullDMA* gs_poBox;
 static CPS2Renderer* gs_poRenderer;
 static unsigned int gs_uiChannel;
 static unsigned int gs_uiSndVidCritSect;
@@ -176,7 +185,15 @@ CLinkActor::CLinkActor(void) : mpoType(0)
  */
 void SND_VID_fn_vDesinitVideoSound(void)
 {
-    /* TODO: decompile from asm/... */
+    gs_poRenderer->vStop(gs_uiChannel);
+    gs_SoundStarted = 0;
+    delete gs_poRenderer;
+    gs_poRenderer = 0;
+    gs_poBox->~CPS2IOPPullDMA(); usnd_free(gs_poBox);
+    gs_poBox = 0;
+    usnd_vDeleteCritSect(gs_uiSndVidCritSect);
+    fn_vFreeInBinaryPreservingTheCurrentMode((void*)g_pxBufferAudio);
+    g_pxBufferAudio = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeevid.cpp lines 265–298 */
@@ -208,18 +225,13 @@ unsigned int fn_iTransferIOPData(void* pvData, unsigned int uiSize);
 
 void SND_VID_fn_vInitVideoSound(unsigned int _nbVoices, unsigned int _iFrequency, float _fLinearVolume)
 {
-    void* pAddress;
-
-    pAddress = fn_pvMallocInBinaryPreservingTheCurrentMode(0x40000);
-    gs_PosRead = 0;
-    gs_NbBytesInBuffer = 0;
-    g_pxBufferAudio = (int)pAddress;
-    gs_TotalSizeReceived = 0;
+    g_pxBufferAudio = (int)fn_pvMallocInBinaryPreservingTheCurrentMode(0x40000);
+    gs_PosRead = 0; gs_NbBytesInBuffer = 0; gs_TotalSizeReceived = 0;
     gs_SoundStarted = 0;
     while (gv_iCD_Opened)
         SND_VID_vClearCop0Register24();
     gs_uiSndVidCritSect = usnd_uiCreateCritSect();
-    gs_poBox = (int)new CPS2IOPPullDMA(fn_iTransferIOPData);
+    gs_poBox = new CPS2IOPPullDMA(fn_iTransferIOPData);
     gs_poRenderer = new CPS2StreamVBRenderer(_nbVoices, _iFrequency);
     gs_poRenderer->vUnknown0((void*)gs_poBox, 0, 0);
     gs_uiChannel = gs_poRenderer->vUnknown2();

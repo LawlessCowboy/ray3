@@ -1423,6 +1423,9 @@ void fn_vMakeCharacterThink(HIE_tdstSuperObject_*);
 unsigned char fn_bIsTransitionInProgress(void);
 int CAM_fn_bGetLightComputation(tdstCineinfo_*);
 DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_*);
+MTH3D_tdstMatrix_* PLA_fn_stGetAngularSpeedMatrix(HIE_tdstSuperObject_* p_stSuperObject, float xLastFrame);
+MTH3D_tdstVector_* PLA_fn_stGetLinearSpeedVector(HIE_tdstSuperObject_* p_stSuperObject, float xLastFrame);
+void MEC_vImposeRelativeRotation(DNM_stDynamics* p_stDynamic, MTH3D_tdstMatrix_* p_stRotationMatrix);
 void DNM_fn_vChangeIdCard(DNM_stDynamics*, int);
 DNM_stParsingDatas* fn_p_stDynamGetParsingDatas(tdstDynam_*);
 void fn_vDynamSetUsedMechanics(tdstDynam_*, int);
@@ -1609,29 +1612,30 @@ void fn_vMakeCharacterThink(HIE_tdstSuperObject_* p_stSuperObj)
     fn_v3dDataUpdateBrainCounter(p_stSuperObj);
     if (fn_b3dDataCanComputeBrain(p_stSuperObj))
     {
-        h_Brain = p_stSuperObj->hLinkedObject.p_stCharacter->h_Brain;
-        if (h_Brain != NULL && (p_stMind = h_Brain->p_stMind) != NULL)
+        if ((h_Brain = p_stSuperObj->hLinkedObject.p_stCharacter->h_Brain) != NULL)
         {
-            if (h_Brain->bActiveDuringTransition || !fn_bIsTransitionInProgress())
+            if ((p_stMind = h_Brain->p_stMind) != NULL)
             {
-                if (p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData != NULL)
-                    p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData->uwBrainMainCounter++;
-                gcGlobAleat = (p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData != NULL ? p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData->uwBrainMainCounter : 0) & 0xffff;
-                GAM_vClearCop0Register24Sync();
-                fn_vInitDistanceWaypoint();
-                fn_vInitDistanceAct();
-                fn_vInitRecherchePerso();
-                if (!fn_bDoReflexPerso(p_stSuperObj))
+                if (h_Brain->bActiveDuringTransition || !fn_bIsTransitionInProgress())
                 {
-                    h_Brain = p_stSuperObj->hLinkedObject.p_stCharacter->h_Brain;
-                    if (h_Brain != NULL)
+                    if (p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData != NULL) p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData->uwBrainMainCounter++;
+                    gcGlobAleat = (p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData != NULL ? p_stSuperObj->hLinkedObject.p_stCharacter->h_3dData->uwBrainMainCounter : 0) & 0xffff;
+                    GAM_vClearCop0Register24Sync();
+                    fn_vInitDistanceWaypoint();
+                    fn_vInitDistanceAct();
+                    fn_vInitRecherchePerso();
+                    if (!fn_bDoReflexPerso(p_stSuperObj))
                     {
-                        p_stMind = h_Brain->p_stMind;
-                        if (p_stMind != NULL)
-                            fn_bDoIntelligencePerso(p_stSuperObj);
+                        if ((h_Brain = p_stSuperObj->hLinkedObject.p_stCharacter->h_Brain) != NULL)
+                        {
+                            if (h_Brain->p_stMind != NULL)
+                            {
+                                fn_bDoIntelligencePerso(p_stSuperObj);
+                            }
+                        }
                     }
+                    GAM_vClearCop0Register24Sync();
                 }
-                GAM_vClearCop0Register24Sync();
             }
         }
     }
@@ -1655,11 +1659,27 @@ void fn_vMakeCharacterThink(HIE_tdstSuperObject_* p_stSuperObj)
  */
 void fn_vTransferSpeedInformationPLA_DNM(HIE_tdstSuperObject_* p_SuperObjPerso, float xLastFrame)
 {
-    MTH3D_tdstMatrix_* p_MthRotationMatrix;
-    MTH3D_tdstVector_* p_MthVector;
-    DNM_stDynamics* p_stDynamics;
     tdstDynam_* h_Dynam;
-    /* TODO: decompile from asm/... */
+    DNM_stDynamics* p_stDynamics;
+    MTH3D_tdstVector_* p_MthVector;
+    MTH3D_tdstMatrix_* p_MthRotationMatrix;
+
+    if ((h_Dynam = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam) != NULL)
+    {
+        if ((p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam)) != NULL)
+        {
+            p_MthVector = PLA_fn_stGetLinearSpeedVector(p_SuperObjPerso, xLastFrame);
+            p_MthRotationMatrix = PLA_fn_stGetAngularSpeedMatrix(p_SuperObjPerso, xLastFrame);
+            if (p_MthVector != NULL)
+            {
+                *(int*)&p_stDynamics->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xX = *(int*)&p_MthVector->xX; *(int*)&p_stDynamics->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xY = *(int*)&p_MthVector->xY; *(int*)&p_stDynamics->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xZ = *(int*)&p_MthVector->xZ;
+            }
+            if (p_MthRotationMatrix != NULL)
+            {
+                MEC_vImposeRelativeRotation(p_stDynamics, p_MthRotationMatrix);
+            }
+        }
+    }
 }
 
 int fn_hGetStateMechanicsIdCard(tdstState_* h_State);

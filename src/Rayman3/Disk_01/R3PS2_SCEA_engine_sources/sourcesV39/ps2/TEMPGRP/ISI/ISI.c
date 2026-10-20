@@ -37,47 +37,98 @@ struct ISI_tdstISILOD_ {
 
 ISI_tdstColor_* g_p_stRawRLIsForThisObject;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 21–30 */
-/* addr: 0x002f7f70  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 23
- *   +0x0008 -> line 21
- *   +0x0010 -> line 23
- *   +0x0020 -> line 25
- *   +0x0030 -> line 26
- *   +0x003c -> line 27
- *   +0x0058 -> line 30
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+/* Input-device layouts (shared with Ipt/ipt_main.c). */
+typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
+typedef struct stDevice stDevice;
+typedef struct anon_0 anon_0;
+typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
+typedef struct IPT_tdstPadReadingOutput_ IPT_tdstPadReadingOutput_;
+typedef struct IPT_tdstDevice_ IPT_tdstDevice_;
+typedef struct IPT_tdstInput_ IPT_tdstInput_;
+
+struct anon_0 {
+    unsigned char m_ucStatus; /* +0x0 */
+};
+
+struct stDevice {
+    unsigned short m_uwType; /* +0x0 */
+    short m_wPort; /* +0x2 */
+    int m_p_stCaps; /* +0x4 */
+    anon_0* m_p_stState; /* +0x8 */
+    anon_0* m_p_stLastState; /* +0xc */
+    short (*m_pfnRead)(stDevice*); /* +0x10 */
+};
+
+struct MTH3D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+};
+
+struct IPT_tdstPadReadingOutput_ {
+    MTH3D_tdstVector_ stGlobalVector; /* +0x0 */
+    short wHorizontalAxis; /* +0xc */
+    short wVerticalAxis; /* +0xe */
+    float xAnalogForce; /* +0x10 */
+    float xTrueAnalogForce; /* +0x14 */
+    float xRotationAngle; /* +0x18 */
+    int lSector; /* +0x1c */
+};
+
+struct IPT_tdstDevice_ {
+    unsigned char ucValideAndActiveDevice; /* +0x0 */
+    unsigned char _extractor_padding_00[3]; /* +0x1..0x3 */
+    stDevice* hDeviceHandle; /* +0x4 */
+    unsigned char ucPadAndJoyCounter[44]; /* +0x8 */
+    signed char cJoystickXmin; /* +0x34 */
+    signed char cJoystickXmax; /* +0x35 */
+    signed char cJoystickYmin; /* +0x36 */
+    signed char cJoystickYmax; /* +0x37 */
+    signed char cJoystickXcenter; /* +0x38 */
+    signed char cJoystickYcenter; /* +0x39 */
+    IPT_tdstEntryElement_* hJoystickAxeX; /* +0x3c */
+    IPT_tdstEntryElement_* hJoystickAxeY; /* +0x40 */
+    IPT_tdstEntryElement_* hJoystickAxeZ; /* +0x44 */
+    IPT_tdstEntryElement_* hJoystickAxeR; /* +0x48 */
+    IPT_tdstEntryElement_* hKeyUp; /* +0x4c */
+    IPT_tdstEntryElement_* hKeyDown; /* +0x50 */
+    IPT_tdstEntryElement_* hKeyLeft; /* +0x54 */
+    IPT_tdstEntryElement_* hKeyRight; /* +0x58 */
+    IPT_tdstEntryElement_* hKeySpeedUp; /* +0x5c */
+    unsigned char bCancelKeyboardInertia; /* +0x60 */
+    unsigned char _extractor_padding_01[3]; /* +0x61..0x63 */
+    int hJoystickButtons[16]; /* +0x64 */
+    int hKeyButtons[16]; /* +0xa4 */
+    IPT_tdstPadReadingOutput_ stPadReadingOutput; /* +0xe4 */
+};
+
+struct IPT_tdstInput_ {
+    unsigned char ucOnePadActivate; /* +0x0 */
+    unsigned char _extractor_padding_00[3]; /* +0x1..0x3 */
+    IPT_tdstDevice_ a_stDevice[18]; /* +0x4 */
+};
+
+extern IPT_tdstInput_ IPT_g_hInputStructure;
+extern void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
+
 unsigned char IPT_fn_ucGetFirstValidJoystick(void)
 {
     unsigned char ucReturn;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    ucReturn = 0xFF;
+    for (i = 2; i < 0x12 && ucReturn == 0xFF; i++) {
+        if (IPT_g_hInputStructure.a_stDevice[i].ucValideAndActiveDevice == 2) {
+            ucReturn = (unsigned char)(i - 2);
+        }
+    }
+    return ucReturn;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 739–740 */
-/* addr: 0x002f7fd0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 739
- *   +0x0004 -> line 740
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 ISI_tdstColor_* ISI_fn_dGetVertexRLI(void* _hISI)
 {
     return ((ISI_tdstISI_*)_hISI)->d_stISILOD->d_stVertexRLI;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 704–705 */
-/* addr: 0x002f7fe0  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 704
- *   +0x0020 -> line 705
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD)
 {
     /* Permuter-found match (register allocation); the char* temporary and the
@@ -91,14 +142,6 @@ int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD)
     return ((int*)pcLOD)[iIndex = (int)_xNumISILOD * 3];
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 680–685 */
-/* addr: 0x002f8010  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 680
- *   +0x0028 -> line 685
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD)
 {
     ISI_tdstISI_* hISI;
@@ -114,14 +157,6 @@ ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD)
     return g_p_stRawRLIsForThisObject;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 654–655 */
-/* addr: 0x002f8040  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 654
- *   +0x001c -> line 655
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 short ISI_fn_xGetNbVertexRLILOD(void* _hISI, short _xNumISILOD)
 {
     ISI_tdstISI_* hISI;
@@ -130,28 +165,19 @@ short ISI_fn_xGetNbVertexRLILOD(void* _hISI, short _xNumISILOD)
     return hISI->d_stISILOD[_xNumISILOD].xNbVertexRLI;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ISI\ISI.c lines 601–618 */
-/* addr: 0x002f8070  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 601
- *   +0x0014 -> line 605
- *   +0x0018 -> line 607
- *   +0x0020 -> line 609
- *   +0x0034 -> line 610
- *   +0x0040 -> line 612
- *   +0x0058 -> line 613
- *   +0x0060 -> line 615
- *   +0x0068 -> line 613
- *   +0x006c -> line 615
- *   +0x008c -> line 616
- *   +0x0098 -> line 617
- *   +0x00a4 -> line 618
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void ISI_fn_vFreeISI(void* _hISI)
 {
     short xI;
     ISI_tdstISI_* hCpyISI;
-    /* TODO: decompile from asm/... */
+    hCpyISI = (ISI_tdstISI_*)_hISI;
+    for (xI = 0; xI < hCpyISI->xNbISILOD; xI++) {
+        if (hCpyISI->d_stISILOD[xI].d_stVertexRLI != 0) {
+            HMU_fn_vFree((void**)&hCpyISI->d_stISILOD[xI].d_stVertexRLI, 0);
+        }
+        if (hCpyISI->d_stISILOD[xI].d_fLightMapU != 0) {
+            HMU_fn_vFree((void**)&hCpyISI->d_stISILOD[xI].d_fLightMapU, 0);
+        }
+    }
+    HMU_fn_vFree((void**)&hCpyISI->d_stISILOD, 0);
+    HMU_fn_vFree((void**)&hCpyISI, 0);
 }

@@ -137,13 +137,11 @@ struct GLI_tdstCamera_ {
 
 void GLI_xSerialProjection(GLI_tdstCamera_* p_stCam, int lNbOfVertex, MTH4D_tdstVector_* p_stSource, GLI_tdstAligned2DVector_* p_stDest)
 {
-    GLI_tdstAligned2DVector_* p_stDestLast;
-    int lNewX;
+    GLI_tdstAligned2DVector_* p_stDestLast = p_stDest + lNbOfVertex;
+    volatile int lNewX = 0x45FA0000;
     int lVertexIndex;
     float xInterm;
 
-    { float xTmp = 8000.0f; lNewX = *(int*)&xTmp; }
-    p_stDestLast = p_stDest + lNbOfVertex;
     switch (p_stCam->lCameraMode)
     {
     case 0x66:
@@ -175,8 +173,7 @@ void GLI_xSerialProjection(GLI_tdstCamera_* p_stCam, int lNbOfVertex, MTH4D_tdst
                 p_stDest[lVertexIndex].xOoZ = 1.0f;
                 p_stDest[lVertexIndex].xX = p_stCam->stTrans.xX + p_stCam->stScale.xX * p_stSource[lVertexIndex].xX;
                 p_stDest[lVertexIndex].xY = p_stCam->stTrans.xY + p_stCam->stScale.xY * p_stSource[lVertexIndex].xY;
-            }
-        }
+            } }
         break;
     }
 }

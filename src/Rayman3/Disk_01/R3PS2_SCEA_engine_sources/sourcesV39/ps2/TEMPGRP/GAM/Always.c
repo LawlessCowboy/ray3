@@ -231,8 +231,8 @@ struct HIE_tdstSuperObject_ {
     int lLastComputeFrame; /* +0x28 */
     int lDrawModeMask; /* +0x2c */
     unsigned int ulFlags; /* +0x30 */
-    int hVisualBoundingVolume; /* +0x34 */
-    int hCollideBoundingVolume; /* +0x38 */
+    COL_tdstBoundingSphere_* hVisualBoundingVolume; /* +0x34 */
+    COL_tdstBoundingSphere_* hCollideBoundingVolume; /* +0x38 */
     MTH3D_tdstVector_ stSemiLookAtVector; /* +0x3c */
     float fTransparenceLevel; /* +0x48 */
     unsigned int ulOutlineColor; /* +0x4c */
@@ -1521,10 +1521,38 @@ tdstAlways_ g_stAlways;
 unsigned char g_ucGameModuleId;
 int g_lSoundObjectTypeAnim;
 tdstEngineStructure_ g_stEngineStructure;
-tdstStructureHandleFunction_ g_a_stStructureHandleFunction;
+tdstStructureHandleFunction_ g_a_stStructureHandleFunction[12];
 int SECT_hFatherSector;
 int HIE_gs_lCurrentFrame;
 int g_bMinimalLoading;
+
+extern void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
+extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* h_SuperObject);
+extern HIE_tdstSuperObject_* MC_fn_hGetFirstMainCharNode(void);
+extern HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(HIE_tdstSuperObject_* h_Node);
+extern HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* p_stSectInfo);
+extern void fn_vSectInfoSetCurrentSector(tdstSectInfo_* p_stSectInfo, HIE_tdstSuperObject_* h_Sector);
+extern void fn_vInsertObjectInSectorList(HIE_tdstSuperObject_* h_Sector, HIE_tdstSuperObject_* h_SuperObject);
+extern void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* h_SuperObject);
+extern void HIE_fn_SO_vClearSuperimposedFlag(HIE_tdstSuperObject_* h_SuperObject);
+extern void GLI_fnv_CleanAlwaysSO(HIE_tdstSuperObject_* h_SuperObject);
+extern int PLA_fn_bTestIfEndOfAction(HIE_tdstSuperObject_* h_SuperObject);
+extern void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* h_SuperObject, tdstEngineObject_* p_stEngineObject);
+extern void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList);
+extern void PLA_fn_vCleanMorphTargets(tdstEngineObject_* p_stEngineObject);
+extern void fn_v_DynamicFree(tdstDynam_* p_stDynam);
+extern void fn_vDesinitOneObject(tdstEngineObject_* p_stEngineObject, int lMode);
+extern int fn_bIsInFix(tdstEngineObject_* p_stEngineObject);
+extern void fn_vKillAlwaysByPersonalType(int otPersonalType);
+extern void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
+extern HIE_tdstSuperObject_* GAM_fn_hGetCurrentSector(HIE_tdstSuperObject_* _hCharacter);
+extern int SECT_fn_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSector_* _hSector);
+extern HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SECT_hFatherSector, MTH3D_tdstVector_* p_stAbsolutePosition);
+extern void fn_vStandardGameSetSuperObject(tdstStandardGame_* p_stStandardGame, HIE_tdstSuperObject_* h_SuperObject);
+extern COL_tdstBoundingSphere_* fn_vGetBoundingVolumeOfFamily(tdstFamilyList_* h_Family);
+extern tdstAnim3d_* fn_p_stGetAnimInState(tdstState_* p_stState);
+extern void fn_vAllocArrayOfElts3d(tdst3dData_* h_3dData, unsigned char ucNbElts);
+extern void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 43–43 */
 /* addr: 0x0025b150  size: 8 bytes */
@@ -1555,10 +1583,20 @@ HIE_tdstSuperObject_* fn_hGetCharacterInAlwaysActiveCharacterNode(tdstAlwaysActi
  */
 void fn_vClearUnusedAlwaysInDemoMode(void)
 {
-    HIE_tdstSuperObject_* hAlwaysSuperObject;
-    HIE_tdstSuperObject_** p_hLastGenerator;
     HIE_tdstSuperObject_** param0;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_** p_hLastGenerator;
+    HIE_tdstSuperObject_* hAlwaysSuperObject;
+
+    hAlwaysSuperObject = g_stAlways.d_stAlwaysSuperObject;
+    param0 = g_stAlways.d_hAlwaysGenerator;
+    p_hLastGenerator = param0 + g_stAlways.ulMaxNumberOfAlways;
+    while (param0 < p_hLastGenerator)
+    {
+        if (*param0 == NULL)
+        {
+            hAlwaysSuperObject->hNextBrotherDyn = NULL;
+        }
+        param0++; hAlwaysSuperObject++; }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1252–1256 */
@@ -1574,16 +1612,25 @@ void fn_vClearUnusedAlwaysInDemoMode(void)
 static inline HIE_tdstSuperObject_* fn_hGetAlwaysGenerator(HIE_tdstSuperObject_* _hAlways)
 {
     if (_hAlways)
-        return (_hAlways->hLinkedObject.p_stCharacter->h_StandardGame && _hAlways->hLinkedObject.p_stCharacter) ? g_stAlways.d_hAlwaysGenerator[(unsigned int)(_hAlways->hLinkedObject.p_stCharacter->h_StandardGame->otObjectPersonalType - 0x10000)] : NULL;
+    {
+        tdstEngineObject_* p_stChar = _hAlways->hLinkedObject.p_stCharacter;
+        tdstStandardGame_* p_stGame = p_stChar->h_StandardGame;
+        if (p_stGame == NULL || p_stChar == NULL)
+            return NULL;
+        else
+            return g_stAlways.d_hAlwaysGenerator[(unsigned int)(p_stGame->otObjectPersonalType - 0x10000)];
+    }
     return NULL;
 }
 
 unsigned char fn_ucIsAlwaysGeneratedByMe(HIE_tdstSuperObject_* _hAlways, HIE_tdstSuperObject_* _hGenerator)
 {
+    HIE_tdstSuperObject_* hGen;
     if (_hGenerator == NULL)
         return 0;
 
-    return fn_hGetAlwaysGenerator(_hAlways) == _hGenerator;
+    hGen = fn_hGetAlwaysGenerator(_hAlways);
+    return (hGen == _hGenerator);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1187–1240 */
@@ -1608,11 +1655,41 @@ unsigned char fn_ucIsAlwaysGeneratedByMe(HIE_tdstSuperObject_* _hAlways, HIE_tds
  */
 void fn_vKillAllAlwaysInNonActiveSectors(void)
 {
-    HIE_tdstSuperObject_* hAlwaysSuperObject;
-    HIE_tdstSuperObject_** p_hLastGenerator;
-    HIE_tdstSuperObject_** p_hGenerator;
     tdstEngineObject_* p_stAlwaysEngObj;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_** p_hGenerator;
+    HIE_tdstSuperObject_** p_hLastGenerator;
+    HIE_tdstSuperObject_* hAlwaysSuperObject;
+
+    hAlwaysSuperObject = g_stAlways.d_stAlwaysSuperObject;
+    p_hGenerator = g_stAlways.d_hAlwaysGenerator;
+    p_hLastGenerator = p_hGenerator + g_stAlways.ulMaxNumberOfAlways;
+    while (p_hGenerator < p_hLastGenerator)
+    {
+        p_stAlwaysEngObj = hAlwaysSuperObject->hLinkedObject.p_stCharacter;
+        if (p_stAlwaysEngObj->h_StandardGame != NULL && p_stAlwaysEngObj->h_StandardGame->otObjectFamilyType != -1)
+        {
+            if (p_stAlwaysEngObj->h_StandardGame->eInitFlagWhenOutOfZone != 7 || ((((*p_hGenerator)->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4)) != 0))
+            {
+                if (p_stAlwaysEngObj->h_StandardGame->ulCustomBits & 0x20000)
+                {
+                    if (PLA_fn_bTestIfEndOfAction(hAlwaysSuperObject))
+                    {
+                        fn_vKillEngineObjectOrAlwaysByPointer(p_stAlwaysEngObj);
+                    }
+                }
+            }
+            else
+            {
+                fn_vKillEngineObjectOrAlwaysByPointer(p_stAlwaysEngObj);
+            }
+        }
+        if (*p_hGenerator == NULL)
+        {
+            hAlwaysSuperObject->hNextBrotherDyn = NULL;
+        }
+        p_hGenerator++;
+        hAlwaysSuperObject++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1053–1071 */
@@ -1634,7 +1711,18 @@ unsigned int fn_ulGetNumberOfAlwaysBelongingToMe(HIE_tdstSuperObject_* _hGenerat
     tdstEngineObject_* hAlwaysObject;
     unsigned int ulReturn;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    ulReturn = 0;
+    for (i = 0; i < g_stAlways.ulMaxNumberOfAlways; i++)
+    {
+        hAlwaysObject = g_stAlways.d_stAlwaysSuperObject[i].hLinkedObject.p_stCharacter;
+        if (hAlwaysObject != NULL && hAlwaysObject->h_3dData != NULL)
+        {
+            if (g_stAlways.d_hAlwaysGenerator[i] == _hGenerator)
+                ulReturn++;
+        }
+    }
+    return ulReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 991–1035 */
@@ -1664,7 +1752,38 @@ void fn_vKillAllAlways(void)
 {
     tdstEngineObject_* p_stEngineObject;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* p_stAlwaysSuperObject;
+    HIE_tdstSuperObject_* p_stAlwaysModel;
+    HIE_tdstSuperObject_** p_hGenerator;
+
+    for (i = 0; i < g_stAlways.ulMaxNumberOfAlways; i++)
+    {
+        p_stAlwaysSuperObject = &g_stAlways.d_stAlwaysSuperObject[i];
+        GLI_fnv_CleanAlwaysSO(p_stAlwaysSuperObject);
+        if ((unsigned char)(p_stAlwaysSuperObject->ulFlags & 0x20))
+        {
+            HIE_fn_SO_vClearSuperimposedFlag(p_stAlwaysSuperObject);
+            p_stEngineObject = p_stAlwaysSuperObject->hLinkedObject.p_stCharacter;
+            fn_vSectInfoSetCurrentSector(p_stEngineObject->h_SectInfo, fn_h_SectInfoGetCurrentSector(MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter->h_SectInfo));
+            fn_vInsertObjectInSectorList(fn_h_SectInfoGetCurrentSector(p_stEngineObject->h_SectInfo), p_stAlwaysSuperObject);
+        }
+        p_stEngineObject = p_stAlwaysSuperObject->hLinkedObject.p_stCharacter;
+        if (p_stEngineObject->h_StandardGame != NULL)
+        {
+            p_hGenerator = g_stAlways.d_hAlwaysGenerator;
+        }
+        if (p_hGenerator[i] != NULL || p_stAlwaysSuperObject->hNextBrotherDyn != NULL)
+        {
+            fn_vKillAlwaysByPersonalType(p_stEngineObject->h_StandardGame->otObjectPersonalType);
+        }
+        p_stAlwaysModel = &g_stAlways.d_stAlwaysSuperObject[p_stEngineObject->h_StandardGame->otObjectPersonalType - 0x10000];
+        p_stEngineObject = p_stAlwaysModel->hLinkedObject.p_stCharacter;
+        p_stEngineObject->h_StandardGame->otObjectPersonalType = 0x10000;
+        PLA_fn_vDesInitAllChildOfCharacter(p_stAlwaysModel, p_stEngineObject);
+        fn_vFreeMorphList(&p_stEngineObject->h_3dData->hMorphChannelList);
+        PLA_fn_vCleanMorphTargets(p_stEngineObject);
+        memset(p_stEngineObject, 0, 0x2C);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 965–986 */
@@ -1681,11 +1800,26 @@ void fn_vKillAllAlways(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: retail recomputes the
+ * d_stAlwaysSuperObject[i] offset (i << 7) every iteration instead of
+ * stepping a pointer; no natural loop, index type or accessor form
+ * reproduced that, so strength reduction is disabled around the function. */
+#pragma push
+#pragma opt_strength_reduction off
 void fn_vKillAllAlwaysSDLs(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* p_stAlways;
+
+    for (i = 0; i < g_stAlways.ulMaxNumberOfAlways; i++)
+    {
+        p_stAlways = &g_stAlways.d_stAlwaysSuperObject[i];
+        GLI_fnv_CleanAlwaysSO(p_stAlways);
+        if (p_stAlways->hLinkedObject.p_stCharacter->h_StandardGame != NULL)
+            GLI_fnv_CleanAlwaysSO(&g_stAlways.d_stAlwaysSuperObject[p_stAlways->hLinkedObject.p_stCharacter->h_StandardGame->otObjectPersonalType - 0x10000]);
+    }
 }
+#pragma pop
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 764–897 */
 /* addr: 0x0025b5c0  size: 364 bytes */
@@ -1725,13 +1859,54 @@ void fn_vKillAllAlwaysSDLs(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+
 void fn_vKillAlwaysByPersonalType(int otPersonalType)
 {
-    unsigned int ulRank;
     tdstEngineObject_* p_stEngineObject;
+    unsigned int ulRank;
     HIE_tdstSuperObject_* h_NextChild;
     HIE_tdstSuperObject_* h_Child;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* p_stAlwaysSuperObject;
+
+    ulRank = (unsigned int)otPersonalType - 0x10000;
+    p_stAlwaysSuperObject = &g_stAlways.d_stAlwaysSuperObject[ulRank];
+    TFMT_ucClearNumberOfCurrentTextAffiche(p_stAlwaysSuperObject);
+    SND_fn_vKillObjectSound2(p_stAlwaysSuperObject, g_lSoundObjectTypeAnim);
+    p_stEngineObject = p_stAlwaysSuperObject->hLinkedObject.p_stCharacter;
+    if (p_stEngineObject->h_StandardGame->otObjectModelType == -1)
+    {
+        Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x48, -1, 0, 0, 0);
+        Erm_fn_ClearLastError(0);
+    }
+    g_stAlways.d_hAlwaysGenerator[ulRank] = NULL;
+    fn_vRemoveObjectInSectorList(p_stAlwaysSuperObject);
+    p_stEngineObject->h_StandardGame->otObjectFamilyType = -1;
+    p_stEngineObject->h_StandardGame->otObjectModelType = -1;
+    p_stEngineObject->h_StandardGame->ucMiscFlags &= 0xFB;
+    if (p_stEngineObject->h_Dynam != NULL)
+    {
+        fn_v_DynamicFree(p_stEngineObject->h_Dynam);
+    }
+    HIE_fn_vIsolate(p_stAlwaysSuperObject);
+    if (p_stAlwaysSuperObject->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType != 0)
+    {
+        h_Child = p_stAlwaysSuperObject->hFirstElementDyn;
+        h_NextChild = HIE_fn_hForceGetSuperObjectNextBrother(h_Child);
+        while (h_Child != NULL)
+        {
+            if (h_Child->ulTypeOfLinkedObject == 2)
+            {
+                fn_vReputCharacterSuperObjectAtTheWorld(h_Child);
+            }
+            h_Child = h_NextChild;
+            h_NextChild = HIE_fn_hForceGetSuperObjectNextBrother(h_Child);
+        }
+    }
+    if ((unsigned char)(p_stAlwaysSuperObject->ulFlags & 0x20))
+    {
+        HIE_fn_SO_vClearSuperimposedFlag(p_stAlwaysSuperObject);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 466–746 */
@@ -1845,21 +2020,161 @@ void fn_vKillAlwaysByPersonalType(int otPersonalType)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-HIE_tdstSuperObject_* fn_p_stAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, MAT_tdstTransformation_* p_stMatrix)
+HIE_tdstSuperObject_* fn_p_stAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix)
 {
-    tdstAnim3d_* p_stCurrentAnim;
-    tdst3dData_* h_3dData;
-    tdstEngineObject_* p_stBetterEngineObject;
-    HIE_tdstSuperObject_* h_stBetterSuperObject;
-    unsigned int BetterInstNb;
-    int bChangeGeometric;
-    tdstEngineObject_* p_stEngineObject;
-    tdstAlwaysModelList_* h_AlwaysModelChild;
-    unsigned int MsNb;
-    unsigned int InstNb;
-    HIE_tdstSuperObject_* h_SOSector;
     HIE_tdstSuperObject_* h_stSuperObject;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* h_SOSector;
+    unsigned int InstNb;
+    unsigned int MsNb;
+    tdstAlwaysModelList_* h_AlwaysModelChild;
+    tdstEngineObject_* p_stEngineObject;
+    int bChangeGeometric = 1;
+    unsigned int BetterInstNb;
+    HIE_tdstSuperObject_* h_stBetterSuperObject;
+    tdstEngineObject_* p_stBetterEngineObject;
+    tdst3dData_* h_3dData;
+    tdstAnim3d_* p_stCurrentAnim;
+    MTH3D_tdstVector_* p_stPosition;
+
+    h_AlwaysModelChild = g_stAlways.ALW_h_LstAlwaysModel.hFirstElementDyn; while (h_AlwaysModelChild != NULL)
+    {
+        if (h_AlwaysModelChild->otObjectModelType == otObjectModelType)
+        {
+            if (g_swAlwaysNumber < 0)
+            {
+                MsNb = 0;
+                h_stSuperObject = g_stAlways.d_stAlwaysSuperObject;
+                while (MsNb < g_stAlways.ulMaxNumberOfAlways &&
+                       (g_stAlways.d_hAlwaysGenerator[MsNb] != NULL || h_stSuperObject->hNextBrotherDyn != NULL))
+                {
+                    MsNb++; h_stSuperObject++; }
+                if (MsNb >= g_stAlways.ulMaxNumberOfAlways)
+                    return NULL;
+
+                if (h_AlwaysModelChild->p_stAlwaysObject->h_3dData != NULL)
+                {
+                    for (BetterInstNb = 0, h_stBetterSuperObject = g_stAlways.d_stAlwaysSuperObject; BetterInstNb < g_stAlways.ulMaxNumberOfAlways; BetterInstNb++, h_stBetterSuperObject++)
+                    {
+                        if (g_stAlways.d_hAlwaysGenerator[BetterInstNb] != NULL) continue; if (h_stBetterSuperObject->hNextBrotherDyn != NULL) continue;
+                        p_stBetterEngineObject = h_stBetterSuperObject->hLinkedObject.p_stCharacter;
+                        if (p_stBetterEngineObject == NULL) continue; if (p_stBetterEngineObject->h_3dData == NULL) continue;
+                        if (p_stBetterEngineObject->h_3dData->h_Family != h_AlwaysModelChild->p_stAlwaysObject->h_3dData->h_Family)
+                            continue;
+                        MsNb = BetterInstNb;
+                        h_stSuperObject = h_stBetterSuperObject;
+                        bChangeGeometric = 0;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                MsNb = g_swAlwaysNumber;
+                g_swAlwaysNumber = -1;
+                h_stSuperObject = &g_stAlways.d_stAlwaysSuperObject[MsNb];
+            }
+
+            g_stAlways.d_hAlwaysGenerator[MsNb] = _hGenerator;
+
+            p_stEngineObject = h_stSuperObject->hLinkedObject.p_stCharacter;
+            if (bChangeGeometric) { if (p_stEngineObject != NULL)
+                {
+                    if (p_stEngineObject->h_3dData != NULL)
+                    {
+                        GLI_fnv_CleanAlwaysSO(h_stSuperObject);
+                        PLA_fn_vDesInitAllChildOfCharacter(h_stSuperObject, h_stSuperObject->hLinkedObject.p_stCharacter);
+                        fn_vFreeMorphList(&p_stEngineObject->h_3dData->hMorphChannelList);
+                        PLA_fn_vCleanMorphTargets(p_stEngineObject);
+                    }
+                    memset(p_stEngineObject, 0, 0x2C);
+                }
+            }
+
+            h_stSuperObject->ulFlags = 0;
+            h_stSuperObject->lDrawModeMask = -1;
+            if (h_stSuperObject != NULL)
+            {
+                h_3dData = h_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+                if (h_3dData != NULL)
+                {
+                    if (h_3dData->d_ucEventActivation != 0) { HMU_fn_vFree((void **)&h_3dData->d_ucEventActivation, 1); h_3dData->d_ucEventActivation = 0; }
+                }
+            }
+
+            InstNb = 0;
+            for (InstNb = 0; InstNb < 11; InstNb++) { if (((void **)h_AlwaysModelChild->p_stAlwaysObject)[InstNb] != NULL)
+                {
+                    if (((void **)&g_stAlways.d_stAlwaysEngineObjectInit[MsNb])[InstNb] == NULL)
+                    { g_a_stStructureHandleFunction[InstNb].p_fn_vAllocFunction(&g_stAlways.d_stAlwaysEngineObjectInit[MsNb]); }
+                    ((void **)p_stEngineObject)[InstNb] = ((void **)&g_stAlways.d_stAlwaysEngineObjectInit[MsNb])[InstNb];
+                    g_a_stStructureHandleFunction[InstNb].p_fn_vCopyCloneMSFunction(p_stEngineObject, h_AlwaysModelChild->p_stAlwaysObject);
+                }
+            }
+
+            p_stEngineObject->h_StandardGame->otObjectPersonalType = MsNb + 0x10000;
+            fn_vStandardGameSetSuperObject(p_stEngineObject->h_StandardGame, h_stSuperObject);
+
+            if (p_stEngineObject->h_3dData != NULL)
+                p_stEngineObject->h_3dData->stGLIObjectMatrix = *p_stMatrix;
+
+            MAT_fn_vCompose(h_stSuperObject->hGlobalMatrix, p_stFatherSuperObject->hGlobalMatrix, h_stSuperObject->hLocalMatrix);
+            h_stSuperObject->lLastComputeFrame = HIE_gs_lCurrentFrame;
+
+            p_stPosition = (MTH3D_tdstVector_ *)&h_stSuperObject->hGlobalMatrix->stTransformMatrix.stCol_3;
+            h_SOSector = GAM_fn_hGetCurrentSector(_hGenerator);
+            if (!SECT_fn_bIsInBorderBox(p_stPosition, h_SOSector->hLinkedObject.p_stSector))
+                h_SOSector = SECT_fn_hResearchInWhatSectorIAm((HIE_tdstSuperObject_ *)SECT_hFatherSector, p_stPosition);
+            if (h_SOSector == NULL)
+            {
+                g_stAlways.d_hAlwaysGenerator[MsNb] = NULL;
+                return NULL;
+            }
+            fn_vSectInfoSetCurrentSector(p_stEngineObject->h_SectInfo, h_SOSector);
+
+            InstNb = 0; while (InstNb < 11) { if (((void **)p_stEngineObject)[InstNb] != NULL)
+                {
+                    g_a_stStructureHandleFunction[InstNb].p_fn_vInitFunction(p_stEngineObject, OTI_AlwaysCreated);
+                } InstNb++; }
+
+            if (h_stSuperObject->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType != 0)
+            {
+                if (h_stSuperObject->hNextBrotherDyn != NULL) h_stSuperObject->hNextBrotherDyn->hPrevBrotherDyn = h_stSuperObject->hPrevBrotherDyn; if (h_stSuperObject->hPrevBrotherDyn != NULL) h_stSuperObject->hPrevBrotherDyn->hNextBrotherDyn = h_stSuperObject->hNextBrotherDyn; if (h_stSuperObject->hFatherDyn != NULL) { h_stSuperObject->hFatherDyn->lNumberOfElementsDyn--; if (h_stSuperObject->hFatherDyn->hFirstElementDyn == h_stSuperObject) h_stSuperObject->hFatherDyn->hFirstElementDyn = h_stSuperObject->hNextBrotherDyn; if (h_stSuperObject->hFatherDyn->hLastElementDyn == h_stSuperObject) h_stSuperObject->hFatherDyn->hLastElementDyn = h_stSuperObject->hPrevBrotherDyn; } h_stSuperObject->hNextBrotherDyn = NULL; h_stSuperObject->hPrevBrotherDyn = NULL; h_stSuperObject->hFatherDyn = NULL; h_stSuperObject->hPrevBrotherDyn = NULL; h_stSuperObject->hNextBrotherDyn = p_stFatherSuperObject->hFirstElementDyn; h_stSuperObject->hFatherDyn = p_stFatherSuperObject; if (p_stFatherSuperObject->hLastElementDyn == NULL) p_stFatherSuperObject->hLastElementDyn = h_stSuperObject; else p_stFatherSuperObject->hFirstElementDyn->hPrevBrotherDyn = h_stSuperObject; p_stFatherSuperObject->hFirstElementDyn = h_stSuperObject; p_stFatherSuperObject->lNumberOfElementsDyn++;
+            }
+            else
+            {
+                if (h_stSuperObject->hNextBrotherDyn != NULL) h_stSuperObject->hNextBrotherDyn->hPrevBrotherDyn = h_stSuperObject->hPrevBrotherDyn; if (h_stSuperObject->hPrevBrotherDyn != NULL) h_stSuperObject->hPrevBrotherDyn->hNextBrotherDyn = h_stSuperObject->hNextBrotherDyn; if (h_stSuperObject->hFatherDyn != NULL) { h_stSuperObject->hFatherDyn->lNumberOfElementsDyn--; if (h_stSuperObject->hFatherDyn->hFirstElementDyn == h_stSuperObject) h_stSuperObject->hFatherDyn->hFirstElementDyn = h_stSuperObject->hNextBrotherDyn; if (h_stSuperObject->hFatherDyn->hLastElementDyn == h_stSuperObject) h_stSuperObject->hFatherDyn->hLastElementDyn = h_stSuperObject->hPrevBrotherDyn; } h_stSuperObject->hNextBrotherDyn = NULL; h_stSuperObject->hPrevBrotherDyn = NULL; h_stSuperObject->hFatherDyn = NULL; h_stSuperObject->hNextBrotherDyn = NULL; h_stSuperObject->hPrevBrotherDyn = p_stFatherSuperObject->hLastElementDyn; h_stSuperObject->hFatherDyn = p_stFatherSuperObject; if (p_stFatherSuperObject->hFirstElementDyn == NULL) p_stFatherSuperObject->hFirstElementDyn = h_stSuperObject; else p_stFatherSuperObject->hLastElementDyn->hNextBrotherDyn = h_stSuperObject; p_stFatherSuperObject->hLastElementDyn = h_stSuperObject; p_stFatherSuperObject->lNumberOfElementsDyn++;
+            }
+
+            p_stEngineObject->h_StandardGame->ucMiscFlags |= 2;
+            h_stSuperObject->hVisualBoundingVolume = fn_vGetBoundingVolumeOfFamily(p_stEngineObject->h_3dData->h_Family);
+            h_stSuperObject->hCollideBoundingVolume = fn_vGetBoundingVolumeOfFamily(p_stEngineObject->h_3dData->h_Family);
+
+            p_stEngineObject->h_StandardGame->ucMiscFlags |= 4;
+            p_stEngineObject->h_3dData->ulStartTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+            p_stEngineObject->h_3dData->ulTimePreviousFrame = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+
+            if (p_stEngineObject->h_3dData->stFrame3d.p_stArrayOfElts3d == 0)
+            {
+                if (p_stEngineObject->h_3dData->h_CurrentState != NULL)
+                {
+                    p_stCurrentAnim = fn_p_stGetAnimInState(p_stEngineObject->h_3dData->h_CurrentState);
+                    if (p_stCurrentAnim != NULL)
+                    {
+                        fn_vAllocArrayOfElts3d(p_stEngineObject->h_3dData, p_stCurrentAnim->ucMaxNumberOfElements);
+                        p_stEngineObject->h_3dData->stFrame3d.p_stAnim = NULL;
+                    }
+                }
+                p_stEngineObject->h_3dData->stFrame3d.p_stAnim = NULL;
+            }
+
+            return h_stSuperObject;
+        }
+
+        h_AlwaysModelChild = h_AlwaysModelChild->hNextBrotherDyn; }
+
+    Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x36, -1, 0xFF, 0xFF, 0);
+    Erm_fn_ClearLastError(0);
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 454–455 */
@@ -1870,10 +2185,10 @@ HIE_tdstSuperObject_* fn_p_stAllocateAlways(int otObjectModelType, HIE_tdstSuper
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-HIE_tdstSuperObject_* fn_p_stDemoAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, MAT_tdstTransformation_* p_stMatrix, unsigned short uwAction, short wAlwaysNumber)
+HIE_tdstSuperObject_* fn_p_stDemoAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix, short wAlwaysNumber)
 {
     g_swAlwaysNumber = wAlwaysNumber;
-    return fn_p_stAllocateAlways(otObjectModelType, p_stFatherSuperObject, _hGenerator, p_stMatrix);
+    return fn_p_stAllocateAlways(otObjectModelType, p_stFatherSuperObject, _hGenerator, uwAction, p_stMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 419–429 */
@@ -1967,7 +2282,18 @@ void fn_vInitAlwaysModel(tdeObjectTreeInit_ eObjIniType)
  */
 void fn_vKillAllAlwaysModel(void)
 {
-    tdstAlwaysModelList_* h_AlwaysModelNextChild;
     tdstAlwaysModelList_* h_AlwaysModelChild;
-    /* TODO: decompile from asm/... */
+    tdstAlwaysModelList_* h_AlwaysModelNextChild;
+
+    h_AlwaysModelChild = g_stAlways.ALW_h_LstAlwaysModel.hFirstElementDyn;
+    h_AlwaysModelNextChild = (h_AlwaysModelChild != NULL) ? h_AlwaysModelChild->hNextBrotherDyn : NULL;
+    while (h_AlwaysModelChild != NULL)
+    {
+        if (g_bMinimalLoading == 0 && fn_bIsInFix(h_AlwaysModelChild->p_stAlwaysObject))
+        {
+            fn_vDesinitOneObject(h_AlwaysModelChild->p_stAlwaysObject, 1);
+        }
+        h_AlwaysModelChild = h_AlwaysModelNextChild;
+        h_AlwaysModelNextChild = (h_AlwaysModelChild != NULL) ? h_AlwaysModelChild->hNextBrotherDyn : NULL;
+    }
 }

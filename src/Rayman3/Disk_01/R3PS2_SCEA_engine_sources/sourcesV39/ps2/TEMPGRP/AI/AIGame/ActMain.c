@@ -30,13 +30,11 @@ struct _stTimerCount { unsigned long m_ulLowPart; unsigned long m_ulHighPart; };
 struct tdstEngineTimerStructure_ { unsigned int ulTrameNumber; short sTimerHandle; unsigned int ulCurrentTimerCount; unsigned int ulDeltaTimerCount; unsigned int a_ulCounter[16]; unsigned int ulUsefulDeltaTime; unsigned int ulPauseTime; float xFrameLength; _stTimerCount stRealTimeCount; _stTimerCount stPauseTime; unsigned int ulTickPerMS; };
 struct tdstPLA_Hierarchy_ { unsigned int ulNbOfCouples; tdstCouple_* d_stCouples; };
 union RGBAStruct_ { int Color; };
-union HIE_tduLinkedObject_ { int p_Void; };
 struct LST2_tdstAnchorTotdxHandleToStateOpt { tdstState_* hFirstElementOpt; int lNumberOfElementsOpt; };
 struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt { tdstObjectsTablesList_* hFirstElementOpt; int lNumberOfElementsOpt; };
 struct LST2_tdstAnchorTotdxHandleToTransitionOpt { void* hFirstElementOpt; int lNumberOfElementsOpt; };
 struct LST2_tdstAnchorTotdxHandleToProhibitOpt { void* hFirstElementOpt; int lNumberOfElementsOpt; };
 struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn { void* hFirstElementDyn; void* hLastElementDyn; int lNumberOfElementsDyn; };
-union anon_0 { int uDummy; };
 
 typedef enum MAT_tdeTranformationType_ { MAT_eTransform_Uninitialized = 0, MAT_eTransform_Identity = 1, MAT_eTransform_Translation = 2, MAT_eTransform_Zoom = 3, MAT_eTransform_Scale = 4, MAT_eTransform_Rotation = 5, MAT_eTransform_RotationZoom = 6, MAT_eTransform_RotationScale = 7, MAT_eTransform_ComplexRotationScale = 8, MAT_eTransform_Undefined = 9 } MAT_tdeTranformationType_;
 typedef enum tdeObjectTreeInit_ { OTI_WhenGameStart = 0, OTI_MapLoaded = 1, OTI_ReinitTheMap = 2, OTI_LoadSavedGame = 3, OTI_PlayerDead = 4, OTI_WhenGoOutOfZone = 4, OTI_Always = 4, OTI_AlwaysCreated = 5 } tdeObjectTreeInit_;
@@ -1056,6 +1054,8 @@ struct MTH3D_tdstVector_ {
     float xZ; /* +0x8 */
 };
 
+union HIE_tduLinkedObject_ { tdstEngineObject_* p_stCharacter; };
+
 struct HIE_tdstSuperObject_ {
     unsigned int ulTypeOfLinkedObject; /* +0x0 */
     HIE_tduLinkedObject_ hLinkedObject; /* +0x4 */
@@ -1175,6 +1175,10 @@ struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn {
     tdstMorphChannelList_* hLastElementDyn; /* +0x4 */
     int lNumberOfElementsDyn; /* +0x8 */
 };
+
+typedef union tduIdInterpret_ tduIdInterpret_;
+union tduIdInterpret_ { tdeMetaActionId_ eMetaActionId; };
+union anon_0 { tduIdInterpret_ uId; int uDummy; };
 
 struct tdstNodeInterpret_ {
     anon_0 uDummy; /* +0x0 */
@@ -1964,10 +1968,23 @@ int fn_ucWaitEndOfAction(HIE_tdstSuperObject_* p_SuperObjPerso)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucExecuteAction(HIE_tdstSuperObject_* p_SuperObjPerso)
+tdstState_* fn_xGetActionParamStateValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);
+int PLA_fn_bSetNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_WantedState, unsigned char _bForce, unsigned char _bHandleSkippedEventsIfRelevant, unsigned char _bIgnoreTransitions, unsigned int ulNbFrameForIntermAnim, float xNLParameter, unsigned char bProportionnal);
+void fn_vSetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, int lValue);
+void fn_vSetActionParamStateValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, tdstState_* hState);
+int PLA_fn_bTestCurrentAction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstState_* h_FirstStateOfAction);
+int PLA_fn_bTestIfEndOfAction(HIE_tdstSuperObject_* p_SuperObjPerso);
+
+int fn_ucExecuteAction(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     tdstState_* h_WantedState;
-    /* TODO: decompile from asm/... */
+
+    h_WantedState = fn_xGetActionParamStateValue(1, p_SuperObjPerso);
+    if (fn_lGetActionParamlValue(0, p_SuperObjPerso) == 0)
+        return 4;
+    if (PLA_fn_bTestCurrentAction(p_SuperObjPerso, h_WantedState) == 0)
+        return 4;
+    return PLA_fn_bTestIfEndOfAction(p_SuperObjPerso) ? 4 : 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 23–72 */
@@ -1997,7 +2014,23 @@ unsigned char fn_ucExecuteAction(HIE_tdstSuperObject_* p_SuperObjPerso)
 tdstNodeInterpret_* fn_p_stExecuteActionInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     long lNbFrame;
-    tdeMetaActionId_ eMetaActionId;
     tdstState_* h_WantedState;
-    /* TODO: decompile from asm/... */
+    tdeMetaActionId_ eMetaActionId;
+
+    eMetaActionId = (p_stTree-1)->uDummy.uId.eMetaActionId;
+    p_stTree = fn_p_stDefaultActionInit(p_SuperObjPerso, p_stTree);
+    h_WantedState = fn_xGetActionParamStateValue(0, p_SuperObjPerso);
+    p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_FirstStateOfAction = NULL;
+    switch (eMetaActionId)
+    {
+        case eMetaAction_ExecuteAction:
+            fn_vSetActionParamlValue(0, p_SuperObjPerso, (unsigned char)PLA_fn_bSetNewState(p_SuperObjPerso, h_WantedState, 0, 0, 0, 0, 0.0f, 0));
+            break;
+        case eMetaAction_ExecuteActionSmooth:
+            lNbFrame = fn_lGetActionParamlValue(1, p_SuperObjPerso);
+            fn_vSetActionParamlValue(0, p_SuperObjPerso, (unsigned char)PLA_fn_bSetNewState(p_SuperObjPerso, h_WantedState, 0, 0, 0, lNbFrame, 0.0f, 0));
+            break;
+    }
+    fn_vSetActionParamStateValue(1, p_SuperObjPerso, h_WantedState);
+    return p_stTree;
 }

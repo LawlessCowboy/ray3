@@ -226,9 +226,13 @@ void IPT_fn_vSetJoystickAxesForPadNumber2(unsigned char ucPadNumber, IPT_tdstEnt
  */
 unsigned char IPT_fn_bIsInvalidatedPadButton(unsigned char ucPadNumber, unsigned char ucButtonNumber)
 {
-    IPT_tdstEntryElement_* param0;
     IPT_tdstEntryElement_* hPadButton;
-    /* TODO: decompile from asm/... */
+    IPT_tdstEntryElement_* param0;
+
+    hPadButton = (IPT_tdstEntryElement_*)IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickButtons[ucButtonNumber];
+    param0 = (IPT_tdstEntryElement_*)IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyButtons[ucButtonNumber];
+
+    return (((hPadButton != NULL) && (hPadButton->lState < 0)) && ((param0 != NULL) && (param0->lState < 0))) ? (unsigned char)1 : (unsigned char)0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 263–276 */
@@ -255,9 +259,32 @@ unsigned char IPT_fn_bIsInvalidatedPadButton(unsigned char ucPadNumber, unsigned
  */
 unsigned char IPT_fn_bIsJustInvalidatedPadButton(unsigned char ucPadNumber, unsigned char ucButtonNumber)
 {
-    IPT_tdstEntryElement_* param0;
     IPT_tdstEntryElement_* hPadButton;
-    /* TODO: decompile from asm/... */
+    IPT_tdstEntryElement_* param0;
+
+    hPadButton = (IPT_tdstEntryElement_*)IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickButtons[ucButtonNumber];
+    param0 = (IPT_tdstEntryElement_*)IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyButtons[ucButtonNumber];
+
+    if (hPadButton && param0)
+    {
+        if (hPadButton->lState == -1)
+        {
+            if (param0->lState < 0)
+            {
+                return 1;
+            }
+        }
+        return (hPadButton->lState < 0) ? ((param0->lState == -1) ? 1 : 0) : 0;
+    }
+    else if (hPadButton != NULL)
+    {
+        return (hPadButton->lState == -1) ? (unsigned char)1 : (unsigned char)0;
+    }
+    else if (param0 != NULL)
+    {
+        return (param0->lState == -1) ? (unsigned char)1 : (unsigned char)0;
+    }
+    return (unsigned char)0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 252–256 */
@@ -278,17 +305,13 @@ unsigned char IPT_fn_bIsJustInvalidatedPadButton(unsigned char ucPadNumber, unsi
  */
 unsigned char IPT_fn_bIsValidatedPadButton(unsigned char ucPadNumber, unsigned char ucButtonNumber)
 {
-    IPT_tdstEntryElement_* param0;
     IPT_tdstEntryElement_* hPadButton;
+    IPT_tdstEntryElement_* param0;
 
     hPadButton = (IPT_tdstEntryElement_*)IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickButtons[ucButtonNumber];
     param0 = (IPT_tdstEntryElement_*)IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyButtons[ucButtonNumber];
 
-    if (hPadButton && hPadButton->lState > 0)
-        return 1;
-    if (param0 && param0->lState > 0)
-        return 1;
-    return 0;
+    return (((hPadButton != NULL) && (hPadButton->lState > 0)) || ((param0 != NULL) && (param0->lState > 0))) ? (unsigned char)1 : (unsigned char)0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 234–245 */
@@ -315,9 +338,32 @@ unsigned char IPT_fn_bIsValidatedPadButton(unsigned char ucPadNumber, unsigned c
  */
 unsigned char IPT_fn_bIsJustValidatedPadButton(unsigned char ucPadNumber, unsigned char ucButtonNumber)
 {
-    IPT_tdstEntryElement_* param0;
     IPT_tdstEntryElement_* hPadButton;
-    /* TODO: decompile from asm/... */
+    IPT_tdstEntryElement_* param0;
+
+    hPadButton = (IPT_tdstEntryElement_*)IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickButtons[ucButtonNumber];
+    param0 = (IPT_tdstEntryElement_*)IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyButtons[ucButtonNumber];
+
+    if (hPadButton && param0)
+    {
+        if (hPadButton->lState == 1)
+        {
+            if (param0->lState <= 0)
+            {
+                return 1;
+            }
+        }
+        return (hPadButton->lState > 0) ? 0 : ((param0->lState == 1) ? 1 : 0);
+    }
+    else if (hPadButton != NULL)
+    {
+        return (hPadButton->lState == 1) ? (unsigned char)1 : (unsigned char)0;
+    }
+    else if (param0 != NULL)
+    {
+        return (param0->lState == 1) ? (unsigned char)1 : (unsigned char)0;
+    }
+    return (unsigned char)0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 225–227 */
@@ -337,8 +383,15 @@ unsigned char IPT_fn_bIsJustValidatedPadButton(unsigned char ucPadNumber, unsign
  */
 void IPT_fn_vSetKeyAndPadButtonForPadNumber(unsigned char ucPadNumber, unsigned char ucButtonNumber, IPT_tdstEntryElement_* hPadButton, IPT_tdstEntryElement_* hKeyButton)
 {
-    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickButtons[ucButtonNumber] = (int)hPadButton;
-    IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyButtons[ucButtonNumber] = (int)hKeyButton;
+    char* pcJoy;
+    char* pcKey;
+
+    pcJoy = (char*)&IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hJoystickButtons;
+    pcKey = (char*)&IPT_g_hInputStructure.a_stDevice[ucPadNumber + 2].hKeyButtons;
+    pcJoy = pcJoy + 0;
+    pcKey = pcKey + 0;
+    *(int*)(pcJoy + ucButtonNumber * 4) = (int)hPadButton;
+    *(int*)(pcKey + ucButtonNumber * 4) = (int)hKeyButton;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\IPT_Pad.c lines 220–221 */

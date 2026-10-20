@@ -371,13 +371,13 @@ unsigned char INT_fn_bIntersectSemiAxeWithSphere(MTH3D_tdstVector_* p_stVertex1,
         float xDx;
         float xDy;
         float xDz;
-        float xVx;
-        float xVy;
         float xVz;
+        float xVy;
+        float xVx;
         float xA;
 
         xDx = p_stVertex1->xX - p_stSphereCenter->xX; xDy = p_stVertex1->xY - p_stSphereCenter->xY; xDz = p_stVertex1->xZ - p_stSphereCenter->xZ;
-        xVx = p_stVect12->xX; xVy = p_stVect12->xY; xVz = p_stVect12->xZ;
+        xVz = p_stVect12->xZ; xVy = p_stVect12->xY; xVx = p_stVect12->xX;
         MTH_DOT3_TO(xA, xVx, xVy, xVz, xVx, xVy, xVz)
         MTH_DOT3_TO(xB, xVx, xVy, xVz, xDx, xDy, xDz)
         xB = xB + xB;

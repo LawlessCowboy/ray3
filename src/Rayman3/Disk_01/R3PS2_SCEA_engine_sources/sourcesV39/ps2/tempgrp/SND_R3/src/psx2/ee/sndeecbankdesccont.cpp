@@ -4,19 +4,27 @@
 
 #include <stddef.h>
 
+extern "C" unsigned int strlen(const char* pch_Str);
+extern "C" void* usnd_malloc(unsigned int ui_Size);
+extern "C" void usnd_memcpy(void* pv_Dest, void* pv_Src, unsigned int ui_Size);
+extern "C" void usnd_free(void* pv_Ptr);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CVarAccess CVarAccess;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct iterator iterator;
 typedef struct spair spair;
 typedef struct sTreeNode sTreeNode;
-typedef struct CUUID CUUID;
-typedef struct sstring sstring;
+namespace usnd { struct CUUID; }
+typedef usnd::CUUID CUUID;
+namespace usnd { struct sstring; }
+typedef usnd::sstring sstring;
 typedef struct CPS2IdObjInfo CPS2IdObjInfo;
 typedef struct less less;
 typedef struct stree stree;
 typedef struct smap smap;
-typedef struct CResData CResData;
+namespace usnd { struct CResData; }
+typedef usnd::CResData CResData;
 typedef struct _RollOffParam _RollOffParam;
 typedef struct CResObjParams CResObjParams;
 typedef struct CExtraEventActor CExtraEventActor;
@@ -57,7 +65,8 @@ typedef struct CLinkTypeActor CLinkTypeActor;
 typedef struct _stVector _stVector;
 typedef struct PostponedPlay PostponedPlay;
 typedef struct streebase streebase;
-typedef struct CIdObj CIdObj;
+namespace usnd { struct CIdObj; }
+typedef usnd::CIdObj CIdObj;
 typedef struct CStringIsLess CStringIsLess;
 typedef union _SND_tduRefEvt _SND_tduRefEvt;
 typedef struct CLinkTypeActorCont CLinkTypeActorCont;
@@ -65,7 +74,8 @@ typedef struct CProgramContext CProgramContext;
 typedef struct CIdObjPtr CIdObjPtr;
 typedef struct CLookupElement CLookupElement;
 typedef struct CEventResData CEventResData;
-typedef struct CRefIdObj CRefIdObj;
+namespace usnd { struct CRefIdObj; }
+typedef usnd::CRefIdObj CRefIdObj;
 
 typedef enum _Redbl {
     _Red = 0,
@@ -111,13 +121,16 @@ struct sTreeNode : sTreeLink {
     spair m_oValue; /* +0x10 */
 };
 
-struct CUUID {
+struct usnd::CUUID {
     unsigned int m_uiHighWord; /* +0x0 */
     unsigned int m_uiLowWord; /* +0x4 */
 };
 
-struct sstring {
-    int m_pcData; /* +0x0 */
+struct usnd::sstring {
+    char* m_pcData; /* +0x0 */
+    static char* ms_czNil;
+    void _Init(const char* pch_Str, unsigned int ui_Length);
+    bool operator<(const sstring& ro_Other) const;
 };
 
 struct CPS2IdObjInfo {
@@ -145,16 +158,16 @@ struct smap {
     stree _Tr; /* +0x0 */
 };
 
-struct CIdObj {
+struct usnd::CIdObj {
     /* C++ base CRTTIClass at +0x0. */
     CUUID m_oId; /* +0x4 */
 };
 
-struct CRefIdObj : CIdObj {
+struct usnd::CRefIdObj : CIdObj {
     unsigned char m_bMarkFlag; /* +0xc */
 };
 
-struct CResData : CRefIdObj {
+struct usnd::CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
 };
@@ -223,14 +236,103 @@ struct TTypedVar : CVar {
     float m_oValue; /* +0x1c */
 };
 
+/* Container templates recovered from the retail symbol names: the map is
+   usnd::smap<K,T,CMP,ALLOC> on top of
+   usnd::stree<K, spair<const K,T>, smap<K,T,CMP,ALLOC>::_Kfn, CMP, ALLOC>,
+   the set is usnd::sset<K,CMP,ALLOC> on top of
+   usnd::stree<K, K, sset<K,CMP,ALLOC>::_Kfn, CMP, ALLOC>. */
+namespace usnd {
+
+struct binary_function {
+    binary_function(void) {}
+};
+
+template <class T> struct less : binary_function {
+};
+
+template <class T> struct sallocator {
+};
+
+template <class T1, class T2> struct spair {
+    T1 first;
+    T2 second;
+    spair(void) {}
+    spair(const T1& ro_First, const T2& ro_Second) : first(ro_First), second(ro_Second) {}
+};
+
+struct streebase {
+    struct sTreeLink {
+        sTreeLink* m_poLeft; /* +0x0 */
+        sTreeLink* m_poParent; /* +0x4 */
+        sTreeLink* m_poRight; /* +0x8 */
+        int m_eColor; /* +0xc */
+    };
+    struct iterator_base {
+        iterator_base(void) {}
+        iterator_base(sTreeLink* po_Link);
+        void _Inc(void);
+        sTreeLink* _Ptr; /* +0x0 */
+    };
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+template <class K, class V, class KFN, class CMP, class ALLOC>
+struct stree : streebase {
+    struct sTreeNode : sTreeLink {
+        V m_oValue; /* +0x10 */
+    };
+    struct iterator : iterator_base {
+        iterator(void) {}
+        /* The retail has no iterator(sTreeLink*) overload: the pointer
+         * constructor takes sTreeNode* and forwards to the base's
+         * iterator_base(sTreeLink*) constructor. */
+        iterator(sTreeNode* po_Node) : iterator_base((sTreeLink*)po_Node) {}
+        V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
+        iterator& operator++(void) { _Inc(); return *this; }
+        bool operator==(const iterator& ro_It) const { return _Ptr == ro_It._Ptr; }
+        bool operator!=(const iterator& ro_It) const { return !(*this == ro_It); }
+    };
+    stree(const CMP& ro_Compare = CMP(), bool b_Multi = false, const ALLOC& ro_Alloc = ALLOC());
+    sTreeLink* _Lmost(void);
+    sTreeLink* _Lbound(const K& ro_Key) const;
+    void insert(const V& ro_Value);
+    iterator begin(void) { return iterator((sTreeNode*)_Lmost()->m_poLeft); }
+    iterator end(void) { return iterator(_HeadLink); }
+    ALLOC allocator; /* +0xc */
+    CMP key_compare; /* +0xd */
+};
+
+template <class K, class T, class CMP, class ALLOC>
+struct smap {
+    struct _Kfn {
+    };
+    typedef stree<K, spair<const K, T>, _Kfn, CMP, ALLOC> _Imp;
+    typedef typename _Imp::iterator iterator;
+    iterator begin(void) { return _Tr.begin(); }
+    iterator end(void) { return _Tr.end(); }
+    _Imp _Tr; /* +0x0 */
+};
+
+template <class K, class CMP, class ALLOC>
+struct sset {
+    struct _Kfn {
+    };
+    typedef stree<K, K, _Kfn, CMP, ALLOC> _Imp;
+    _Imp _Tr; /* +0x0 */
+};
+
+}
+
 struct CPS2IdObjLoader {
     smap m_oIdObjsCache; /* +0x0 */
     smap m_oIndex; /* +0x10 */
 };
 
-struct CBankDescCont : smap {
+struct CBankDescCont : usnd::smap<usnd::sstring, CBankDesc*, usnd::less<usnd::sstring>, usnd::sallocator<CBankDesc*> > {
     CPS2IdObjLoader moLoader; /* +0x10 */
-    CBankDesc* mfn_poAddBankDesc(char* pch_FileName);
+    CBankDesc* mfn_poAddBankDesc(const char* pch_FileName);
 };
 
 struct CResObj {
@@ -246,9 +348,13 @@ struct CCritSect {
     unsigned int m_uiCS; /* +0x0 */
 };
 
-struct CBankDesc : sset {
+typedef usnd::spair<const usnd::sstring, CBankDesc* > TS_Pair;
+typedef usnd::smap<usnd::sstring, CBankDesc*, usnd::less<usnd::sstring>, usnd::sallocator<CBankDesc*> >::_Imp::sTreeNode TS_TreeNode;
+
+struct CBankDesc : usnd::sset<CResData*, usnd::less<CResData*>, usnd::sallocator<CResData*> > {
     CPS2IdObjLoader* mroLoader; /* +0x10 */
     sstring mostringName; /* +0x14 */
+    static void* operator new(size_t ui_Size) { return usnd_malloc(ui_Size); }
 };
 
 struct CResObjState {
@@ -275,7 +381,7 @@ struct CRolloffParam {
     float m_fStabilisationVolume; /* +0x8 */
 };
 
-struct CActorResData : CResData {
+struct CActorResData : usnd::CResData {
     unsigned char m_b3DRes; /* +0x18 */
     sset m_oProgramList; /* +0x1c */
     smap m_oVariables; /* +0x2c */
@@ -474,6 +580,64 @@ struct CEventResData : CResData {
 };
 
 
+/* Text file source classes.  CFlow is the virtual base of CSrcFlow, so
+   CPS2FileSrcFlow carries MWCC's hidden virtual-base constructor argument and
+   stores the virtual base after its own members (the object layout recovered
+   from the retail debug records: vbase pointer at +0x0, vtable pointer at
+   +0x4, members at +0x8..+0x1f, virtual base at +0x20). */
+/* ERamLocation is a global enumeration in the retail sources. */
+typedef enum _ERamLocation {
+    E_RamLocation_RAM = 0,
+} _ERamLocation;
+
+namespace usnd {
+
+class CFlow {
+public:
+    virtual bool fv_bIsEnd(void);
+};
+
+class CSrcFlow : public virtual CFlow {
+public:
+};
+
+class CPS2FileSrcFlow : public CSrcFlow {
+public:
+    CPS2FileSrcFlow(void);
+    virtual bool fv_bIsEnd(void);
+    virtual unsigned int fv_uiRead(void* p_Buffer, unsigned int ui_Size, unsigned int ui_Nb);
+    virtual ~CPS2FileSrcFlow();
+    unsigned int m_uiFileHandle; /* +0x8 */
+    unsigned int m_uiFileOffset; /* +0xc */
+    unsigned int m_uiSize; /* +0x10 */
+    unsigned int m_uiPos; /* +0x14 */
+    unsigned int m_uiEndPos; /* +0x18 */
+    unsigned char m_bUseCache; /* +0x1c */
+    bool f_bOpen(const char* pch_FilePath, _ERamLocation e_RamLocation);
+};
+
+}
+
+struct CTextFile {
+    usnd::CPS2FileSrcFlow m_File; /* +0x0 */
+    usnd::sstring mostringName; /* +0x28 */
+    unsigned char m_bOpened; /* +0x2c */
+    int eState; /* +0x30 */
+};
+
+struct CTextFileSrc : CTextFile {
+    CTextFileSrc(const char* pch_FilePath);
+    int eCTextFileSrc; /* +0x34 */
+    char* mpchBuffer1; /* +0x38 */
+    char* mpchBuffer2; /* +0x3c */
+    char* mpchBufferEnd; /* +0x40 */
+    char mchBuffer[2048]; /* +0x44 */
+    char* mpchCurrent; /* +0x844 */
+    unsigned int mdwPosition; /* +0x848 */
+};
+
+
+
 
 
 
@@ -542,9 +706,17 @@ struct CEventResData : CResData {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void _NilElmt__Q24usnd9streebase(char* pch_FilePath)
-{
-    /* TODO: decompile from asm/... */
+/* Reconstruction in progress: 296/304 bytes, 5/5 relocations match.  Two
+   MWCC codegen residuals remain (the retail keeps 'this' in two stack slots
+   around the CPS2FileSrcFlow base-constructor call, and it materialises the
+   "read == 0x400" test as a value instead of branching on the argument
+   register); see the recorded attempt in config/matches.json. */
+CTextFileSrc::CTextFileSrc(const char* pch_FilePath) { mostringName._Init(pch_FilePath, strlen(pch_FilePath)); m_bOpened = 0; unsigned short us_Len = mostringName.m_pcData ? (unsigned short)strlen(mostringName.m_pcData) : 0; if (us_Len) m_bOpened = m_File.f_bOpen(mostringName.m_pcData, E_RamLocation_RAM); mpchBuffer1 = &mchBuffer[0]; mpchBuffer2 = &mchBuffer[1024]; mpchBufferEnd = &mchBuffer[2048];
+
+    mdwPosition = 0;
+    mpchCurrent = mpchBuffer1;
+    if (m_bOpened && m_File.fv_uiRead(mpchBuffer1, 1, 0x400) == 0x400)
+    { if (m_bOpened) { m_File.fv_uiRead(mpchBuffer2, 1, 0x400); } }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesccont.cpp lines 63–68 */
@@ -558,8 +730,59 @@ void _NilElmt__Q24usnd9streebase(char* pch_FilePath)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CBankDesc* CBankDescCont::mfn_poAddBankDesc(char* pch_FileName)
+/* Reconstruction in progress: 380/468 bytes, 18/18 relocations match.  The
+   remaining differences are the callee-saved register assignment, the extra
+   local the retail passes to insert(), and the shape of the map lookup; see
+   the recorded attempt in config/matches.json. */
+CBankDesc* CBankDescCont::mfn_poAddBankDesc(const char* pch_FileName)
 {
-    sstring o_Key;
-    /* TODO: decompile from asm/... */
+    char* pch_Copy;
+    CBankDesc* po_BankDesc;
+    unsigned int ui_Len;
+    usnd::sstring o_Key;
+
+    ui_Len = strlen(pch_FileName);
+    if (ui_Len)
+    {
+        pch_Copy = (char*)usnd_malloc(ui_Len + 1);
+        usnd_memcpy(pch_Copy, (void*)pch_FileName, ui_Len + 1);
+    }
+    else
+    {
+        pch_Copy = usnd::sstring::ms_czNil;
+    }
+
+    po_BankDesc = new CBankDesc;
+    if (po_BankDesc)
+    {
+        po_BankDesc->mroLoader = &moLoader;
+        po_BankDesc->mostringName._Init(pch_FileName, strlen(pch_FileName));
+    }
+
+    o_Key.m_pcData = pch_Copy;
+    {
+        TS_Pair o_Pair;
+        ((usnd::sstring*)&o_Pair.first)->_Init(pch_Copy, (unsigned short)strlen(pch_Copy));
+        o_Pair.second = po_BankDesc;
+        _Tr.insert(o_Pair);
+    }
+    if (o_Key.m_pcData != usnd::sstring::ms_czNil)
+        usnd_free(o_Key.m_pcData);
+
+    {
+        usnd::streebase::sTreeLink* po_Link = _Tr._Lbound(o_Key);
+        usnd::smap<usnd::sstring, CBankDesc*, usnd::less<usnd::sstring>, usnd::sallocator<CBankDesc*> >::iterator it((TS_TreeNode*)po_Link);
+        usnd::smap<usnd::sstring, CBankDesc*, usnd::less<usnd::sstring>, usnd::sallocator<CBankDesc*> >::iterator itEnd((TS_TreeNode*)_Tr._HeadLink);
+
+        if (it == itEnd || o_Key < (*it).first)
+        {
+            po_BankDesc = NULL;
+        }
+        else
+        {
+            po_BankDesc = (*it).second;
+        }
+    }
+
+    return po_BankDesc;
 }

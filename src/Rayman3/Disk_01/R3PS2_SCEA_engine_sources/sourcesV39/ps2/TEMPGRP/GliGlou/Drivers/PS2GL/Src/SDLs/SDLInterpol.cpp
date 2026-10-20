@@ -10,6 +10,7 @@ struct C_SdlRef {
 };
 
 extern void* (*PS2glAllocator64)(unsigned int);
+extern "C" int printf(const char*, ...);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct PS2GL_VU1_InterpolMatrixData_ PS2GL_VU1_InterpolMatrixData_;
@@ -28,7 +29,7 @@ struct PS2GL_VU1_InterpolMatrixData_ {
     float ProjectionMatrix[4][4]; /* +0x50 */
     float GuardBandProjectionMatrix[4][4]; /* +0x90 */
     float (*pCameraMatrix)[4][4]; /* +0xd0 */
-};
+} __attribute__((aligned(16)));
 
 struct tag_stVU1MatriceT {
     int ivUnpackCode[4]; /* +0x0 */
@@ -56,6 +57,9 @@ struct _sceDmaTag {
     unsigned int p[2]; /* +0x8 */
 };
 
+/* A 4x4 matrix, 16-byte aligned like the retail VU matrices. */
+typedef float __attribute__((aligned(16))) tMatrix4x4[4][4];
+
 struct tag_stVU1MatriceToutSDL {
     _sceDmaTag tagDMA; /* +0x0 */
     int ivUnpackCode[4]; /* +0x10 */
@@ -67,6 +71,27 @@ struct tag_stVU1MatriceToutSDL {
     float mGuardBandClipping[4][4]; /* +0x130 */
     float mGuardBandClippingScreen[4][4]; /* +0x170 */
 };
+
+extern "C" void VU1_RE_UpdateMatriceOutsideSDL(tag_stVU1MatriceToutSDL* pstMatriceToutSDL, float (*NewModelView)[4][4]);
+extern "C" void VU1ReUpdateMatrice(PS2GL_VU1_InterpolMatrixData_* pInterpolData);
+extern "C" void sceVu0InversMatrix(float (*dest)[4], float (*src)[4]);
+extern "C" void sceVu0MulMatrix(float (*dest)[4], float (*left)[4], float (*right)[4]);
+int InterpolateMatrixAndTest(float* pDest, float* pSrc);
+
+/* VU0 macro-mode matrix copy (lqc2/sqc2 are not emitted by MWCC from C). */
+inline void PS2_M_vCopyMatrix(float (*_src)[4][4], float (*_dst)[4][4])
+{
+    asm {
+        lqc2 vf1, 0x0(_src)
+        lqc2 vf2, 0x10(_src)
+        lqc2 vf3, 0x20(_src)
+        lqc2 vf4, 0x30(_src)
+        sqc2 vf1, 0x0(_dst)
+        sqc2 vf2, 0x10(_dst)
+        sqc2 vf3, 0x20(_dst)
+        sqc2 vf4, 0x30(_dst)
+    }
+}
 
 unsigned int GLI_g_NumberOfPS2GLMatricesToInterpol;
 PS2GL_VU1_InterpolMatrixData_ GLI_g_MatricesToInterpol[1000];
@@ -88,9 +113,9 @@ tdstMatrixesOutSDLRemember_ GLI_g_TheMatricesOutSDL[1000];
 char GLI_g_bStoreMatrixOnly;
 float g_LeftHandedIdentityMatrix[16];
 float GLI_g_NegVect[4];
-int PS2GL_g_pInterpol;
+PS2GL_VU1_InterpolMatrixData_* PS2GL_g_pInterpol;
 unsigned int SCT_g_DrawingMirrored;
-int pst_LastUpdatedMatriceToutSDL;
+tag_stVU1MatriceToutSDL* pst_LastUpdatedMatriceToutSDL;
 unsigned int GLI_g_FrameNumber;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInterpol.cpp lines 17–17 */
@@ -133,12 +158,47 @@ void* C_SdlRef::__nw(unsigned int Size)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vFinalUpdateAllNormalMatrix(void)
+extern "C" void GLI_vFinalUpdateAllNormalMatrix(float (*pCameraMatrix)[4][4])
 {
-    int pCamMat[2];
-    PS2GL_VU1_InterpolMatrixData_* p;
+    tMatrix4x4* pCamMat[2];
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    PS2GL_VU1_InterpolMatrixData_* p;
+
+    pCamMat[0] = (tMatrix4x4*)&GLI_g_SDL_pNonInterpolatedCameraMatrix;
+    pCamMat[1] = (tMatrix4x4*)&GLI_g_SDL_pNonInterpolatedCameraMatrixMirror;
+    p = GLI_g_MatricesToInterpol;
+    for (i = 0; i < GLI_g_NumberOfPS2GLMatricesToInterpol; p++, i++)
+    {
+        if (p->pstMatriceT)
+        {
+            if (p->bStore)
+            {
+                unsigned int w0;
+                unsigned int w1;
+                int n;
+                unsigned int* pDst;
+                unsigned int* pSrc;
+                n = 8;
+                pDst = (unsigned int*)&p->OriginalModelView;
+                pSrc = (unsigned int*)g_LeftHandedIdentityMatrix;
+                for (n = 8; n > 0; n--)
+                {
+                    w0 = pSrc[0];
+                    w1 = pSrc[1];
+                    pDst[1] = w1;
+                    pDst[0] = w0;
+                    pDst += 2;
+                    pSrc += 2;
+                }
+            }
+            else
+            {
+                p->pCameraMatrix = pCamMat[p->bMirror];
+            }
+            VU1ReUpdateMatrice(p);
+        }
+    }
+    GLI_g_NumberOfPS2GLMatricesToInterpol = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInterpol.cpp lines 424–457 */
@@ -168,12 +228,60 @@ void GLI_vFinalUpdateAllNormalMatrix(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vInterpolAllNormalMatrix(void)
+extern "C" void GLI_vInterpolAllNormalMatrix(void)
 {
-    int pCamMat[2];
-    PS2GL_VU1_InterpolMatrixData_* p;
+    tMatrix4x4* pCamMat[2];
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    PS2GL_VU1_InterpolMatrixData_* p;
+    tMatrix4x4* pMat;
+
+    pMat = &GLI_g_SDL_pInterpolatedCameraMatrix;
+    if (GLI_g_NO_INTERPOLATION_FOR_NEXT_FRAME)
+    {
+        GLI_vFinalUpdateAllNormalMatrix(pMat);
+    }
+    else
+    {
+        pCamMat[0] = &GLI_g_SDL_pInterpolatedCameraMatrix;
+        pCamMat[1] = (tMatrix4x4*)&GLI_g_SDL_pInterpolatedCameraMatrixMirror;
+        p = GLI_g_MatricesToInterpol;
+        for (i = 0; i < GLI_g_NumberOfPS2GLMatricesToInterpol; p++, i++)
+        {
+            if (p->pstMatriceT)
+            {
+                if (p->bStore)
+                {
+                    float* pNeg;
+                    float* pDiff;
+                    float* pDst;
+                    pNeg = (float*)&GLI_g_NegVect[0];
+                    pDiff = (float*)&GLI_g_SDL_pInterpolatedCameraMatrixDifference[0][0];
+                    pDst = (float*)&p->OriginalModelView[0][0];
+                    asm {
+                        lqc2 vf5, 0x0(pNeg)
+                        lqc2 vf1, 0x0(pDiff)
+                        lqc2 vf2, 0x10(pDiff)
+                        lqc2 vf3, 0x20(pDiff)
+                        lqc2 vf4, 0x30(pDiff)
+                        vmul.xyzw vf1, vf1, vf5
+                        vmul.xyzw vf2, vf2, vf5
+                        vmul.xyzw vf3, vf3, vf5
+                        vmul.xyzw vf4, vf4, vf5
+                        sqc2 vf1, 0x0(pDst)
+                        sqc2 vf2, 0x10(pDst)
+                        sqc2 vf3, 0x20(pDst)
+                        sqc2 vf4, 0x30(pDst)
+                    }
+                    p->OriginalModelView[3][3] = 1.0f;
+                }
+                else
+                {
+                    p->pCameraMatrix = pCamMat[p->bMirror];
+                }
+                VU1ReUpdateMatrice(p);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInterpol.cpp lines 385–420 */
@@ -204,10 +312,43 @@ void GLI_vInterpolAllNormalMatrix(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_AddNormalInterpolation(float (*ModelView)[4][4])
+extern "C" void GLI_AddNormalInterpolation(float (*ModelView)[4][4])
 {
     PS2GL_VU1_InterpolMatrixData_* p;
-    /* TODO: decompile from asm/... */
+    float (*pDst)[4][4];
+
+    if (GLI_g_NumberOfPS2GLMatricesToInterpol < 1000)
+    {
+        p = &GLI_g_MatricesToInterpol[GLI_g_NumberOfPS2GLMatricesToInterpol++];
+        p->bStore = GLI_g_bStoreMatrixOnly;
+        GLI_g_bStoreMatrixOnly = 0;
+        p->bMirror = (unsigned char)SCT_g_DrawingMirrored;
+        p->pstMatriceT = 0;
+        if (!ModelView)
+        {
+            p->Compute = 0;
+        }
+        else
+        {
+            pDst = &p->OriginalModelView;
+            asm {
+                lqc2 vf1, 0x0(ModelView)
+                lqc2 vf2, 0x10(ModelView)
+                lqc2 vf3, 0x20(ModelView)
+                lqc2 vf4, 0x30(ModelView)
+                sqc2 vf1, 0x0(pDst)
+                sqc2 vf2, 0x10(pDst)
+                sqc2 vf3, 0x20(pDst)
+                sqc2 vf4, 0x30(pDst)
+            }
+            p->Compute = 1;
+        }
+        PS2GL_g_pInterpol = p;
+    }
+    else
+    {
+        printf("Too Much to interpol\n");
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInterpol.cpp lines 353–374 */
@@ -231,12 +372,27 @@ void GLI_AddNormalInterpolation(float (*ModelView)[4][4])
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vUpdateAllMatricesOutSDL(void)
+extern "C" void GLI_vUpdateAllMatricesOutSDL(void)
 {
-    float (*pNewMirrorCameraMatrix)[4][4];
-    float (*pNewCameraMatrix)[4][4];
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    float (*pNewCameraMatrix)[4][4];
+    float (*pNewMirrorCameraMatrix)[4][4];
+
+    pNewCameraMatrix = &GLI_g_SDL_pNonInterpolatedCameraMatrix;
+    pNewMirrorCameraMatrix = &GLI_g_SDL_pNonInterpolatedCameraMatrixMirror;
+
+    for (i = 0; i < GLI_gNumberOfMatricesOutSDL; i++)
+    {
+        if (GLI_g_TheMatricesOutSDL[i].bDrawingMirrored)
+        {
+            VU1_RE_UpdateMatriceOutsideSDL(GLI_g_TheMatricesOutSDL[i].p, pNewMirrorCameraMatrix);
+        }
+        else
+        {
+            VU1_RE_UpdateMatriceOutsideSDL(GLI_g_TheMatricesOutSDL[i].p, pNewCameraMatrix);
+        }
+    }
+    GLI_gNumberOfMatricesOutSDL = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInterpol.cpp lines 341–350 */
@@ -257,9 +413,17 @@ void GLI_vUpdateAllMatricesOutSDL(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vAddMatriceOutSDL(void)
+extern "C" void GLI_vAddMatriceOutSDL(void)
 {
-    /* TODO: decompile from asm/... */
+    if (pst_LastUpdatedMatriceToutSDL)
+    {
+        if (GLI_gNumberOfMatricesOutSDL < 1000)
+        {
+            GLI_g_TheMatricesOutSDL[GLI_gNumberOfMatricesOutSDL].bDrawingMirrored = SCT_g_DrawingMirrored;
+            GLI_g_TheMatricesOutSDL[GLI_gNumberOfMatricesOutSDL].p = pst_LastUpdatedMatriceToutSDL; GLI_gNumberOfMatricesOutSDL++;
+        }
+        pst_LastUpdatedMatriceToutSDL = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInterpol.cpp lines 231–265 */
@@ -283,10 +447,36 @@ void GLI_vAddMatriceOutSDL(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void InterpolAndSaveCameraMatrix(unsigned int Mirror)
+extern "C" void InterpolAndSaveCameraMatrix(unsigned int Mirror)
 {
     float TempMatrix1[4][4];
-    /* TODO: decompile from asm/... */
+
+    if (Mirror)
+    {
+        if (GLI_g_MatricesInterpolationTime[1] != GLI_g_FrameNumber)
+        {
+            GLI_g_MatricesInterpolationTime[1] = GLI_g_FrameNumber;
+            PS2_M_vCopyMatrix(&GLI_g_SDL_pInterpolatedCameraMatrixMirror, &GLI_g_SDL_pNonInterpolatedCameraMatrixMirror);
+            if (InterpolateMatrixAndTest((float*)&GLI_g_SDL_pInterpolatedCameraMatrixMirror, (float*)&GLI_g_PreviousCameraMatrixMirror))
+            {
+                GLI_g_NO_INTERPOLATION_FOR_NEXT_FRAME = 1;
+            }
+        }
+    }
+    else
+    {
+        if (GLI_g_MatricesInterpolationTime[0] != GLI_g_FrameNumber)
+        {
+            GLI_g_MatricesInterpolationTime[0] = GLI_g_FrameNumber;
+            PS2_M_vCopyMatrix(&GLI_g_SDL_pInterpolatedCameraMatrix, &GLI_g_SDL_pNonInterpolatedCameraMatrix);
+            if (InterpolateMatrixAndTest((float*)&GLI_g_SDL_pInterpolatedCameraMatrix, (float*)&GLI_g_PreviousCameraMatrix))
+            {
+                GLI_g_NO_INTERPOLATION_FOR_NEXT_FRAME = 1;
+            }
+            sceVu0InversMatrix(TempMatrix1, GLI_g_SDL_pInterpolatedCameraMatrix);
+            sceVu0MulMatrix(GLI_g_SDL_pInterpolatedCameraMatrixDifference, TempMatrix1, GLI_g_SDL_pNonInterpolatedCameraMatrix);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInterpol.cpp lines 161–226 */
@@ -338,9 +528,59 @@ void InterpolAndSaveCameraMatrix(unsigned int Mirror)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void InterpolateMatrixAndStoreWithThreshold(float* pDest, float* pSrc, float* pDest2)
+/* The retail body needs VU vector arithmetic (vsub.xyzw, vmul.xyz, vaddy.x,
+ * vaddz.x, vmove.xyzw, vmulx.xyzw) which MWCC cannot emit from C at all, so the
+ * VU sequence is written as an inline asm block. */
+extern "C" void InterpolateMatrixAndStoreWithThreshold(float* pDest, float* pSrc, float* pDest2)
 {
-    /* TODO: decompile from asm/... */
+    float fLimit = 500.0f;
+    float* pHalf = GLI_g_SDL_pHalfVect;
+
+    asm {
+        lqc2 vf9, 0x30(pSrc)
+        lqc2 vf5, 0x30(pDest)
+        vsub.xyzw vf10, vf9, vf5
+        vmul.xyz vf11, vf10, vf10
+        vaddy.x vf11, vf11, vf11y
+        vaddz.x vf11, vf11, vf11z
+        qmfc2.ni v0, vf11
+        mtc1 v0, $f1
+        c.le.s $f1, fLimit
+        lqc2 vf1, 0x0(pHalf)
+        bc1t LInterpolate
+        lqc2 vf2, 0x0(pDest)
+        lqc2 vf2, 0x0(pSrc)
+        lqc2 vf3, 0x10(pSrc)
+        lqc2 vf4, 0x20(pSrc)
+        vmove.xyzw vf5, vf9
+        vmove.xyzw vf6, vf2
+        vmove.xyzw vf7, vf3
+        b LStore
+        lqc2 vf8, 0x20(pSrc)
+    LInterpolate:
+        lqc2 vf3, 0x10(pDest)
+        lqc2 vf4, 0x20(pDest)
+        lqc2 vf6, 0x0(pSrc)
+        lqc2 vf7, 0x10(pSrc)
+        lqc2 vf8, 0x20(pSrc)
+        vadd.xyzw vf2, vf2, vf6
+        vadd.xyzw vf3, vf3, vf7
+        vadd.xyzw vf4, vf4, vf8
+        vadd.xyzw vf5, vf5, vf9
+        vmulx.xyzw vf2, vf2, vf1x
+        vmulx.xyzw vf3, vf3, vf1x
+        vmulx.xyzw vf4, vf4, vf1x
+        vmulx.xyzw vf5, vf5, vf1x
+    LStore:
+        sqc2 vf2, 0x0(pDest)
+        sqc2 vf3, 0x10(pDest)
+        sqc2 vf4, 0x20(pDest)
+        sqc2 vf5, 0x30(pDest)
+        sqc2 vf6, 0x0(pDest2)
+        sqc2 vf7, 0x10(pDest2)
+        sqc2 vf8, 0x20(pDest2)
+        sqc2 vf9, 0x30(pDest2)
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLInterpol.cpp lines 91–156 */
@@ -390,8 +630,58 @@ void InterpolateMatrixAndStoreWithThreshold(float* pDest, float* pSrc, float* pD
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int InterpolateMatrixAndTest__FPfPf(float* pDest, float* pSrc)
+/* The retail body is flagged as hand-written assembly (one debug line per
+ * instruction and a hand-written "add v0,zero,zero" that MWCC would spell
+ * "move v0,zero"), and the VU vector ops (vsub/vabs/vmax/vmulx .xyzw) have no
+ * C form, so the VU sequence is written as inline asm blocks. */
+int InterpolateMatrixAndTest(float* pDest, float* pSrc)
 {
+    float fLimit = 0.3f;
+    float* pHalf = GLI_g_SDL_pHalfVect;
+    float fDist;
     int Result;
-    /* TODO: decompile from asm/... */
+
+    asm {
+        lqc2 vf1, 0x0(pHalf)
+        lqc2 vf2, 0x0(pDest)
+        lqc2 vf3, 0x10(pDest)
+        lqc2 vf4, 0x20(pDest)
+        lqc2 vf5, 0x30(pDest)
+        lqc2 vf6, 0x0(pSrc)
+        lqc2 vf7, 0x10(pSrc)
+        lqc2 vf8, 0x20(pSrc)
+        lqc2 vf9, 0x30(pSrc)
+        vsub.xyzw vf10, vf6, vf2
+        vsub.xyzw vf11, vf7, vf3
+        vsub.xyzw vf12, vf8, vf4
+        vabs.xyzw vf10, vf10
+        vabs.xyzw vf11, vf11
+        vabs.xyzw vf12, vf12
+        vmax.xyzw vf10, vf10, vf11
+        vmax.xyzw vf10, vf10, vf12
+        vmaxz.x vf10, vf10, vf10z
+        vmaxy.x vf10, vf10, vf10y
+        qmfc2.ni v0, vf10
+        mtc1 v0, fDist
+    }
+    Result = 0;
+    if (fDist > fLimit)
+    {
+        Result = 1;
+    }
+    asm {
+        vadd.xyzw vf2, vf2, vf6
+        vadd.xyzw vf3, vf3, vf7
+        vadd.xyzw vf4, vf4, vf8
+        vadd.xyzw vf5, vf5, vf9
+        vmulx.xyzw vf2, vf2, vf1x
+        vmulx.xyzw vf3, vf3, vf1x
+        vmulx.xyzw vf4, vf4, vf1x
+        vmulx.xyzw vf5, vf5, vf1x
+        sqc2 vf2, 0x0(pDest)
+        sqc2 vf3, 0x10(pDest)
+        sqc2 vf4, 0x20(pDest)
+        sqc2 vf5, 0x30(pDest)
+    }
+    return Result;
 }

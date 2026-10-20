@@ -19,7 +19,7 @@ extern char g_DEMO_aEventBuffer[2][131072];
 extern "C" unsigned int fn_uiOpenStream(char* szFileName);
 extern "C" unsigned int fn_uiReadStream(unsigned int u32FileHandle, unsigned int u32FilePos, char* pcBuffer, unsigned int u32Size, unsigned int u32Priority);
 
-unsigned char DEMO_bInitEventFlow(char* szFileName)
+extern "C" unsigned char DEMO_bInitEventFlow(char* szFileName)
 {
     g_DEMO_u32StreamFileHandle = fn_uiOpenStream(szFileName);
     g_DEMO_u32StreamFileOffset = 0;
@@ -27,12 +27,12 @@ unsigned char DEMO_bInitEventFlow(char* szFileName)
     return 1;
 }
 
-unsigned int fn_bStreamSize(unsigned int u32FileHandle)
+extern "C" unsigned int fn_bStreamSize(unsigned int u32FileHandle)
 {
     return fs_uiGetSize__Q24usnd11CPS2FileMgrFUi(u32FileHandle);
 }
 
-unsigned char fn_bSyncStream(unsigned int u32RequestHandle)
+extern "C" unsigned char fn_bSyncStream(unsigned int u32RequestHandle)
 {
     return fs_bSync__Q24usnd11CPS2FileMgrFUib(u32RequestHandle, 1) != 0;
 }
@@ -42,7 +42,7 @@ unsigned int fn_uiReadStream(unsigned int u32FileHandle, unsigned int u32FilePos
     return fs_uiRead__Q24usnd11CPS2FileMgrFUiUiUiUiUiPFPv_vPv(u32FileHandle, u32FilePos, (unsigned int)pcBuffer, u32Size, u32Priority, 0, 0);
 }
 
-void fn_vCloseStream(unsigned int u32FileHandle)
+extern "C" void fn_vCloseStream(unsigned int u32FileHandle)
 {
     fs_vClose__Q24usnd11CPS2FileMgrFUi(u32FileHandle);
 }

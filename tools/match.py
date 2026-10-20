@@ -9,6 +9,7 @@ without reconstructing the game's final linker environment.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import fcntl
 import hashlib
 import json
@@ -17,6 +18,7 @@ import re
 import struct
 import subprocess
 import sys
+import tempfile
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -66,6 +68,8 @@ LATE_GAME_SOURCES_PATH = ROOT / 'config' / 'compiler-3.0.3-sources.txt'
 LIBRARY_O3P_SOURCES_PATH = ROOT / 'config' / 'library-O3p-sources.txt'
 # Library files built with 3.0.1 (2002-01-23) instead of 3.0 (see that file).
 LIBRARY_301_SOURCES_PATH = ROOT / 'config' / 'library-3.0.1-sources.txt'
+
+LIBRARY_303_SOURCES_PATH = ROOT / 'config' / 'library-3.0.3-sources.txt'
 DEFAULT_INCLUDES = ROOT / 'include' / 'mwcc'
 MODEL_ORDER = {
     'gpt-5.4-mini': 0,
@@ -156,9 +160,23 @@ def library_301_sources() -> set[str]:
     return _LIBRARY_301_SOURCES
 
 
+_LIBRARY_303_SOURCES: set[str] | None = None
+
+
+def library_303_sources() -> set[str]:
+    """Library files built with 3.0.3 (config/library-3.0.3-sources.txt)."""
+    global _LIBRARY_303_SOURCES
+    if _LIBRARY_303_SOURCES is None:
+        lines = LIBRARY_303_SOURCES_PATH.read_text().splitlines() if LIBRARY_303_SOURCES_PATH.exists() else []
+        _LIBRARY_303_SOURCES = {line.strip() for line in lines if line.strip() and not line.startswith('#')}
+    return _LIBRARY_303_SOURCES
+
+
 def owner_compiler(owner: Path | str) -> tuple[Path, str]:
     """(compiler, profile name) for a translation unit's owning source."""
     if not is_game_source(owner):
+        if _relative_owner(owner) in library_303_sources():
+            return LATE_GAME_MWCC, 'mwccps2-3.0.3-020716-lib'
         if _relative_owner(owner) in library_301_sources():
             return GAME_MWCC, 'mwccps2-3.0.1-020123-lib'
         return DEFAULT_MWCC, 'mwccps2-3.0-011126-o3'
@@ -362,7 +380,11 @@ def source_index(target_symbols: list[Symbol], main: Section) -> list[dict]:
     by_addr = {symbol.value: preferred_symbol(target_symbols, symbol.value)
                for symbol in target_symbols if symbol.type == STT_FUNC}
     entries_by_address: dict[int, dict] = {}
-    for path in SRC_ROOT.rglob('*'):
+    # The extractor sometimes attributes one retail function to two files: the
+    # real owner and a second stub.  Sort the scan so the choice is stable,
+    # and prefer the file that actually carries a reconstructed body over one
+    # that still holds the extractor's TODO stub.
+    for path in sorted(SRC_ROOT.rglob('*'), key=lambda item: item.as_posix()):
         # An extraction run without --strip-prefix left a nested duplicate of
         # Disk_01 at src/Rayman3/Rayman3/.  It repeats the same address
         # comments; indexing it first silently redirects manifest entries to
@@ -391,7 +413,7 @@ def source_index(target_symbols: list[Symbol], main: Section) -> list[dict]:
             language = 'C++' if suffix in {'.cpp', '.cxx', '.hpp', '.hxx'} else 'C'
             code_offset = address - main.addr
             code = main.data[code_offset:code_offset + size] if code_offset >= 0 else b''
-            entries_by_address.setdefault(address, {
+            entry = {
                 'address': address,
                 'size': size,
                 'name': name,
@@ -400,7 +422,10 @@ def source_index(target_symbols: list[Symbol], main: Section) -> list[dict]:
                 'todo': 'TODO: decompile from asm/' in body,
                 'line_map': line_map,
                 'difficulty': difficulty_for(code, len(line_map), language),
-            })
+            }
+            previous = entries_by_address.get(address)
+            if previous is None or (previous['todo'] and not entry['todo']):
+                entries_by_address[address] = entry
     # The debug parser currently owns only part of the ELF's function set.
     # Keep a difficulty record for every remaining code symbol as well, but
     # leave it unassigned until source ownership is recovered.
@@ -504,7 +529,28 @@ def find_entry(query: str, entries: list[dict]) -> dict:
     if len(matches) != 1:
         detail = ', '.join(f"0x{x['address']:08x}" for x in matches[:8]) or 'none'
         raise ValueError(f'function {query!r} is ambiguous or absent ({detail})')
-    return matches[0]
+    return prefer_recorded_owner(matches[0])
+
+
+def prefer_recorded_owner(entry: dict) -> dict:
+    """Point an entry at the file that actually produced its recorded match.
+
+    The extractor sometimes writes the retail's address comment into a second
+    file that still holds the TODO stub, while the real implementation lives
+    in a file without any address comment.  The source index then resolves
+    the function to the stub.  The manifest records where a verified match was
+    actually produced, so prefer that source when it exists.
+    """
+    manifest = load_manifest()
+    for record in manifest.get('functions', {}).values():
+        if int(record['address'], 16) != entry['address']:
+            continue
+        source = record.get('source')
+        if source and (ROOT / source).exists() and source != entry.get('source'):
+            entry = dict(entry)
+            entry['source'] = source
+        break
+    return entry
 
 
 def tool_paths(owner: Path | str | None = None) -> tuple[Path, Path, Path]:
@@ -513,6 +559,21 @@ def tool_paths(owner: Path | str | None = None) -> tuple[Path, Path, Path]:
     mwcc = Path(os.environ.get('MWCC', default))
     includes = Path(os.environ.get('MWC_INCLUDES', DEFAULT_INCLUDES))
     return wibo, mwcc, includes
+
+
+HEADER_SUFFIXES = {'.h', '.hpp', '.hxx'}
+
+
+def is_header_owned(entry: dict) -> bool:
+    """True for a function the retail debug attributes to a header.
+
+    Header-owned functions live in library support code (the C4_R3 Pustl
+    portable STL, the public MTH/Mat headers, the PS2GL support headers).
+    They are not part of the game-code decompilation effort, so they are
+    excluded from the worklist and from coverage.
+    """
+    source = entry.get('source')
+    return bool(source) and Path(source).suffix.lower() in HEADER_SUFFIXES
 
 
 def compile_source(source: Path, owner: Path | str | None = None) -> tuple[Path | None, str]:
@@ -539,18 +600,43 @@ def compile_source(source: Path, owner: Path | str | None = None) -> tuple[Path 
         if output.exists():
             return output, 'cached'
         output.parent.mkdir(parents=True, exist_ok=True)
+        # Build in a small scratch directory and move the object into the
+        # cache afterwards: Wibo resolves Windows paths case-insensitively by
+        # scanning the directory, which costs seconds per compile once the
+        # object cache holds tens of thousands of files.
+        scratch = BUILD_ROOT / 'tmp'
+        scratch.mkdir(parents=True, exist_ok=True)
         # Include the process id in the temporary name so an interrupted or
         # independently launched verifier cannot clobber this build.
-        temporary = output.with_name(output.stem + f'.{os.getpid()}.tmp.o')
+        temporary = scratch / (output.stem + f'.{os.getpid()}.tmp.o')
         env = os.environ.copy()
         env['MWCIncludes'] = str(includes)
+        if source.suffix.lower() in HEADER_SUFFIXES:
+            # MWCC treats a header as an include, not a translation unit: it
+            # compiles it but writes no object.  The retail's C++ template
+            # headers (C4_R3/harmonx/Inc/L1/PServices/Pustl) own retail
+            # functions, so build them through a one-line C++ translation unit
+            # that includes the header.
+            driver = scratch / (output.stem + f'.{os.getpid()}.tmp.cpp')
+            try:
+                include_path = source.resolve().relative_to(ROOT).as_posix()
+            except ValueError:
+                include_path = source.as_posix()
+            driver.write_text(f'#include "{include_path}"\n', encoding='utf-8')
+            compile_input = driver
+        else:
+            compile_input = source
         cmd = [str(wibo), str(mwcc), '-I' + str(ROOT / 'include'), *flags,
-               str(source), '-o', str(temporary)]
+               str(compile_input), '-o', str(temporary)]
         result = subprocess.run(cmd, cwd=ROOT, env=env, text=True,
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        if compile_input is not source:
+            compile_input.unlink(missing_ok=True)
         if result.returncode:
             temporary.unlink(missing_ok=True)
             return None, result.stdout[-4000:]
+        if not temporary.exists():
+            return None, 'compiler produced no object for ' + source.name
         temporary.replace(output)
         return output, 'compiled'
 
@@ -905,10 +991,20 @@ def register_equivalent(candidate: bytes, target: bytes,
     return True, 'registers differ only by consistent renaming'
 
 
-def compare(entry: dict, verbose: bool = False, source_override: Path | None = None) -> dict:
+def compare(entry: dict, verbose: bool = False, source_override: Path | None = None,
+            owner: Path | None = None) -> dict:
     sections, target_symbols, main, _, target_names = target_context()
+    if source_override is None:
+        entry = prefer_recorded_owner(entry)
     source = source_override or ROOT / entry['source']
-    obj_path, build_state = compile_source(source, owner=entry.get('source') or source)
+    # The flags come from the translation unit that is actually compiled: a
+    # template member the retail debug attributes to its defining header is
+    # instantiated in a using unit, and that unit owns the code generation.
+    # ``owner`` lets a caller compiling a scratch copy of a unit (the permuter)
+    # keep the canonical unit's compiler profile.
+    if owner is None:
+        owner = source if source_override else (entry.get('source') or source)
+    obj_path, build_state = compile_source(source, owner=owner)
     if obj_path is None:
         return {'status': 'COMPILE_ERROR', 'entry': entry, 'detail': build_state}
     obj_sections = read_sections(obj_path)
@@ -1029,6 +1125,13 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
                   and other['offset'] > record['offset']),
                  key=lambda other: other['offset'], default=None)
         if lo is None:
+            # MWCC can also hoist the %hi into a branch delay slot, so the
+            # HI16 may follow its LO16; pair with the nearest preceding one.
+            lo = max((other for other, other_target in relocation_records
+                      if other['symbol'] == name and other['type'] == 6
+                      and other['offset'] < record['offset']),
+                     key=lambda other: other['offset'], default=None)
+        if lo is None:
             continue
         address = infer_anonymous_hi_lo_address(target_bytes, record['offset'], lo['offset'])
         if address is None:
@@ -1041,8 +1144,16 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
             unresolved_by_key.pop((lo['offset'], lo['type'], name), None)
     unresolved = list(unresolved_by_key.values())
     code_equal = bytes(candidate_bytes) == target_bytes
+    line_name = '.line_' + entry['name']
     line_symbol = next((symbol for symbol in obj_symbols
-                        if symbol.name == '.line_' + entry['name']), None)
+                        if symbol.name == line_name), None)
+    if line_symbol is None:
+        # MWCC names the line section ".line_<name><parameter signature>" for a
+        # C++ function that takes parameters, so the retail name is only a
+        # prefix. Accept that spelling when it is unambiguous.
+        prefixed = [symbol for symbol in obj_symbols
+                    if symbol.name.startswith(line_name) and symbol.name != line_name]
+        line_symbol = prefixed[0] if len(prefixed) == 1 else None
     line_section = obj_sections[line_symbol.shndx] if line_symbol else None
     candidate_lines = parse_line_section(line_section.data, 0) if line_section else []
     target_offsets = [offset for offset, _ in entry['line_map']]
@@ -1086,13 +1197,46 @@ def load_manifest() -> dict:
 
 
 def save_manifest(manifest: dict) -> None:
-    MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
+    """Write the manifest atomically, so a reader never sees a torn file."""
+    text = json.dumps(manifest, indent=2, sort_keys=True) + '\n'
+    handle = tempfile.NamedTemporaryFile('w', dir=MANIFEST_PATH.parent, delete=False,
+                                         encoding='utf-8')
+    try:
+        with handle:
+            handle.write(text)
+        os.replace(handle.name, MANIFEST_PATH)
+    except BaseException:
+        Path(handle.name).unlink(missing_ok=True)
+        raise
+
+
+@contextlib.contextmanager
+def manifest_lock():
+    """Serialise manifest updates between concurrent workers.
+
+    Several workers record matches at the same time; without the lock their
+    read-modify-write cycles overwrite each other and the file can end up torn.
+    """
+    lock_path = ROOT / 'build' / 'matches.lock'
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(lock_path, 'w', encoding='utf-8') as handle:
+        fcntl.flock(handle, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(handle, fcntl.LOCK_UN)
 
 
 def function_source_excerpt(source: Path, name: str) -> str:
-    """Return the named function's current C/C++ definition for attempt logs."""
+    """Return the named function's current C/C++ definition for attempt logs.
+
+    The name is matched on a word boundary: a plain substring search finds
+    ``fn_vUpdateFrame`` inside ``fn_vUpdateFrameMatrixForSubAnim`` and records
+    the wrong body.
+    """
     text = source.read_text(encoding='utf-8', errors='replace')
-    marker = text.find(name)
+    found = re.search(r'\b' + re.escape(name) + r'\b', text)
+    marker = found.start() if found else -1
     if marker < 0:
         return ''
     opening = text.find('{', marker)
@@ -1180,9 +1324,16 @@ def coverage() -> dict:
                     for record in data_records if record.get('status') == 'MATCH']
     entries = cached_source_index(symbols, main)
     categories = code_category(entries)
+    # Header-owned functions are library support code and are not part of the
+    # game-code decompilation effort: they are excluded from the coverage
+    # totals and reported separately.
+    header_addresses = {entry['address'] for entry in entries if is_header_owned(entry)}
+    scope_addresses = {entry['address'] for entry in entries
+                       if entry['address'] not in header_addresses}
     split = {}
     for category in ('game', 'library'):
-        members = [entry for entry in entries if categories[entry['address']] == category]
+        members = [entry for entry in entries if categories[entry['address']] == category
+                   and entry['address'] not in header_addresses]
         addresses = {entry['address'] for entry in members}
         split[category] = {
             'matched_functions': len([r for r in function_records if r.get('status') == 'MATCH'
@@ -1196,19 +1347,33 @@ def coverage() -> dict:
             'code_bytes_total': intervals_size([(entry['address'], entry['address'] + entry['size'])
                                                 for entry in members]),
         }
+    scope_code = [(s.value, s.value + s.size) for s in symbols if s.type == STT_FUNC and s.size
+                  and main.addr <= s.value < main.addr + main.size]
+    scope_code = [span for span in scope_code if span[0] in scope_addresses]
+    scope_data = [(s.value, s.value + s.size) for s in symbols if s.type == STT_OBJECT and s.size
+                  and main.addr <= s.value < main.addr + main.size]
+    scope_data = [span for span in scope_data if span[0] in scope_addresses]
     return {
-        'matched_functions': len([r for r in function_records if r.get('status') == 'MATCH']),
+        'matched_functions': len([r for r in function_records if r.get('status') == 'MATCH'
+                                  and int(r['address'], 16) in scope_addresses]),
         'equivalent_functions': len([r for r in function_records
-                                     if r.get('status') == 'EQUIVALENT']),
+                                     if r.get('status') == 'EQUIVALENT'
+                                     and int(r['address'], 16) in scope_addresses]),
         'total_functions': len({(s.value, s.size) for s in symbols if s.type == STT_FUNC and s.size
-                                and main.addr <= s.value < main.addr + main.size}),
-        'code_bytes_matched': intervals_size(matched_code),
-        'code_bytes_total': intervals_size(code),
-        'data_objects_matched': len([r for r in data_records if r.get('status') == 'MATCH']),
+                                and main.addr <= s.value < main.addr + main.size
+                                and s.value in scope_addresses}),
+        'code_bytes_matched': intervals_size([span for span in matched_code
+                                              if span[0] in scope_addresses]),
+        'code_bytes_total': intervals_size(scope_code),
+        'data_objects_matched': len([r for r in data_records if r.get('status') == 'MATCH'
+                                     and int(r['address'], 16) in scope_addresses]),
         'data_objects_total': len({(s.value, s.size) for s in symbols if s.type == STT_OBJECT and s.size
-                                   and main.addr <= s.value < main.addr + main.size}),
-        'data_bytes_matched': intervals_size(matched_data),
-        'data_bytes_total': intervals_size(data),
+                                   and main.addr <= s.value < main.addr + main.size
+                                   and s.value in scope_addresses}),
+        'data_bytes_matched': intervals_size([span for span in matched_data
+                                              if span[0] in scope_addresses]),
+        'data_bytes_total': intervals_size(scope_data),
+        'header_functions_excluded': len(header_addresses),
         'split': split,
     }
 
@@ -1229,6 +1394,9 @@ def print_coverage(result: dict) -> None:
     print(f"data bytes: {result['data_bytes_matched']}/{result['data_bytes_total']} "
           f"({pct(result['data_bytes_matched'], result['data_bytes_total'])})")
     print(f"data objects: {result['data_objects_matched']}/{result['data_objects_total']}")
+    if result.get('header_functions_excluded'):
+        print(f"excluded (library header functions, out of scope): "
+              f"{result['header_functions_excluded']}")
 
 
 def translation_units() -> dict:
@@ -1242,7 +1410,7 @@ def translation_units() -> dict:
     units = {}
     for entry in entries:
         source = entry.get('source')
-        if source is None:
+        if source is None or is_header_owned(entry):
             continue
         unit = units.setdefault(source, {
             'source': source, 'category': categories[entry['address']],
@@ -1340,7 +1508,8 @@ def command_list(args: argparse.Namespace) -> int:
                and (not args.language or e['language'] == args.language)
                and (not args.compileable or source_compileable(e['source'], compileability))
                and (not args.difficulty or e['difficulty']['label'] == args.difficulty)
-               and (not args.model or e['difficulty']['model'] == args.model)]
+               and (not args.model or e['difficulty']['model'] == args.model)
+               and (args.include_headers or not is_header_owned(e))]
     if args.skip_residuals:
         image = retail_image()
         matches = [e for e in matches if not known_residual(
@@ -1521,7 +1690,13 @@ def command_check(args: argparse.Namespace) -> int:
     if entry['source'] is None:
         print(f"SOURCE_UNRECOVERED {entry['name']}: no debug-owned source template")
         return 1
-    result = compare(entry, args.diff or args.diff_words)
+    source_override = None
+    if getattr(args, 'source', None):
+        source_override = ROOT / args.source
+        if not source_override.exists():
+            print(f"COMPILE_ERROR {entry['name']}: no such source {args.source}")
+            return 1
+    result = compare(entry, args.diff or args.diff_words, source_override=source_override)
     if args.json:
         print(json.dumps(result, indent=2))
     elif result['status'] == 'COMPILE_ERROR':
@@ -1560,23 +1735,23 @@ def command_check(args: argparse.Namespace) -> int:
         save_manifest(manifest)
         print('recorded verified match')
     if args.record_equivalent and result['status'] == 'EQUIVALENT':
-        manifest = load_manifest()
-        key = f"0x{entry['address']:08x}"
-        existing = manifest.setdefault('functions', {}).get(key, {})
-        if existing.get('status') == 'MATCH':
-            print('not recorded: function is already recorded as MATCH')
-        else:
-            manifest['functions'][key] = {
-                'address': key, 'name': entry['name'], 'size': entry['size'],
-                'source': entry['source'], 'status': 'EQUIVALENT',
-                'compiler_profile': compiler_profile(entry['source']),
-            }
-            save_manifest(manifest)
-            print('recorded verified register-equivalent function')
+        with manifest_lock():
+            manifest = load_manifest()
+            key = f"0x{entry['address']:08x}"
+            existing = manifest.setdefault('functions', {}).get(key, {})
+            if existing.get('status') == 'MATCH':
+                print('not recorded: function is already recorded as MATCH')
+            else:
+                manifest['functions'][key] = {
+                    'address': key, 'name': entry['name'], 'size': entry['size'],
+                    'source': entry['source'], 'status': 'EQUIVALENT',
+                    'compiler_profile': compiler_profile(entry['source']),
+                }
+                save_manifest(manifest)
+                print('recorded verified register-equivalent function')
     elif args.record_equivalent:
         print(f"not recorded: verifier status is {result['status']}, not EQUIVALENT")
     if args.record_attempt:
-        manifest = load_manifest()
         source_path = ROOT / entry['source']
         attempt = {
             'address': f"0x{entry['address']:08x}",
@@ -1593,8 +1768,10 @@ def command_check(args: argparse.Namespace) -> int:
             'line_offsets_equal': result.get('line_offsets_equal'),
             'implementation': function_source_excerpt(source_path, entry['name']),
         }
-        manifest.setdefault('attempts', []).append(attempt)
-        save_manifest(manifest)
+        with manifest_lock():
+            manifest = load_manifest()
+            manifest.setdefault('attempts', []).append(attempt)
+            save_manifest(manifest)
         print('recorded attempt')
     return 0 if result['status'] == 'MATCH' else 1
 
@@ -1938,6 +2115,8 @@ def command_worklist(args: argparse.Namespace) -> int:
     for entry in entries:
         if not entry['todo'] or not source_compileable(entry['source'], compileability):
             continue
+        if is_header_owned(entry):
+            continue
         difficulty = entry['difficulty']
         key = (difficulty['model'], difficulty['thinking'], difficulty['label'])
         groups.setdefault(key, []).append(entry)
@@ -1973,6 +2152,7 @@ def command_batch(args: argparse.Namespace) -> int:
                 or not source_compileable(entry['source'], compileability)
                 or (not args.include_leased and entry['source'] in leases)
                 or entry['address'] in matched
+                or is_header_owned(entry)
                 or (not args.include_attempted and entry['address'] in attempted)):
             continue
         difficulty = entry['difficulty']
@@ -2010,6 +2190,9 @@ def main() -> int:
     list_parser.add_argument('--refresh-index', action='store_true')
     list_parser.add_argument('--compileable', action='store_true')
     list_parser.add_argument('--include-unowned', action='store_true')
+    list_parser.add_argument('--include-headers', action='store_true',
+                              help='also list functions the retail debug attributes '
+                                   'to a library header (out of scope by default)')
     list_parser.add_argument('--skip-residuals', action='store_true',
                              help='hide functions with a known compiler-build residual (none currently)')
     list_parser.add_argument('--unattempted', action='store_true',
@@ -2049,6 +2232,10 @@ def main() -> int:
                               help='record this attempt, including mismatch diagnostics')
     check_parser.add_argument('--model', help='model that attempted the function')
     check_parser.add_argument('--reason', help='concise explanation of the mismatch')
+    check_parser.add_argument('--source', help=(
+        'compile this translation unit instead of the owning source; use it for '
+        'template members the retail debug attributes to the defining header, '
+        'whose instantiation lives in a using unit'))
     check_parser.set_defaults(func=command_check)
     coverage_parser = sub.add_parser('coverage')
     coverage_parser.add_argument('--json', action='store_true')

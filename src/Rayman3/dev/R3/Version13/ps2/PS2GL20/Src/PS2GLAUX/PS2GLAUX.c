@@ -1385,11 +1385,56 @@ void VU1SendPackage(_sceDmaTag* pTag)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glInit(void);
+unsigned int PS2glInitBuffers(_GL_BUFFERINFO* pBufferInfo);
+
 unsigned int PS2auxInitWindow(void)
 {
     _GL_BUFFERINFO stBufferInfo;
-    unsigned int eReturn;
-    /* TODO: decompile from asm/... */
+    if (!g_bInitDisplayModeInvoked && !g_bEnvInitialized)
+    {
+        PS2glInit();
+    }
+    if ((g_eDisplayMode & 2) == 0)
+    {
+        g_bSingleBuffer = 1;
+    }
+    stBufferInfo.iFrameBufferDepth = (g_eDisplayMode & 0x400) ? 0x10 : 0x20;
+    stBufferInfo.iDepthBufferDepth = (g_eDisplayMode & 0x20) ? 0x18 : 0x10;
+    stBufferInfo.iStencilBufferDepth = (g_eDisplayMode & 0x40) ? 0 : 0;
+    stBufferInfo.iAccumBufferDepth = (g_eDisplayMode & 8) ? g_PS2glContext.iAccumDepth : 0;
+    if (g_eDisplayMode & 8)
+    {
+        stBufferInfo.iAccumBufferDepth = g_PS2glContext.iAccumDepth;
+    }
+    else
+    {
+        g_PS2glContext.iAccumDepth = 0;
+        stBufferInfo.iAccumBufferDepth = 0;
+    }
+    stBufferInfo.iAuxBufferBase = (g_eDisplayMode & 0x80) ? 1 : 0;
+    stBufferInfo.bDoubleBufferMode = (g_eDisplayMode & 2) ? 1 : 0;
+    stBufferInfo.bPlainBufferMode = (g_eDisplayMode & 0x800) ? 1 : 0;
+    stBufferInfo.iScreenWidth = g_iScreenWidth;
+    stBufferInfo.iScreenHeight = g_iScreenHeight;
+    stBufferInfo.iSecondBufferWidth = g_iSecondBufferWidth;
+    stBufferInfo.iSecondBufferHeight = g_iSecondBufferHeight;
+    stBufferInfo.iSecondBufferWidthPower = g_iSecondBufferWidthPower;
+    stBufferInfo.iSecondBufferHeightPower = g_iSecondBufferHeightPower;
+    stBufferInfo.iSuperWidth = g_iSuperWidth;
+    stBufferInfo.iSuperHeight = g_iSuperHeight;
+    PS2glInitBuffers(&stBufferInfo);
+    if (!g_bEnvInitialized)
+    {
+        g_bEnvInitialized = 1;
+        ReshapeFunc = (int)DefaultHandleReshape;
+        ExposeFunc = (int)DefaultHandleExpose;
+        MouseUpFunc = (int)MouseUp;
+        MouseDownFunc = (int)MouseDown;
+        MouseMoveFunc = (int)MouseLoc;
+        KeyDownFunc = (int)KeyDown;
+    }
+    return 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 495–580 */
@@ -1469,7 +1514,86 @@ unsigned int PS2auxInitWindow(void)
  */
 void PS2auxInitPosition(int x, int y, int w, int h)
 {
-    /* TODO: decompile from asm/... */
+    if (w >= 0x280)
+        g_iScreenWidth = 0x280;
+    else if (w >= 0x200)
+        g_iScreenWidth = 0x200;
+    else if (w >= 0x140)
+        g_iScreenWidth = 0x140;
+    else
+        g_iScreenWidth = 0x100;
+    if (h >= 0x240)
+        g_iScreenHeight = 0x240;
+    else if (h >= 0x200)
+        g_iScreenHeight = 0x200;
+    else if (h >= 0x1C0)
+        g_iScreenHeight = 0x1C0;
+    else if (h >= 0x120)
+        g_iScreenHeight = 0x120;
+    else if (h >= 0x100)
+        g_iScreenHeight = 0x100;
+    else
+        g_iScreenHeight = 0xE0;
+    if (x >= 0x280)
+    {
+        g_iSecondBufferWidth = 0x280;
+        g_iSecondBufferWidthPower = 10;
+    }
+    else if (x >= 0x200)
+    {
+        g_iSecondBufferWidth = 0x200;
+        g_iSecondBufferWidthPower = 9;
+    }
+    else if (x >= 0x140)
+    {
+        g_iSecondBufferWidth = 0x140;
+        g_iSecondBufferWidthPower = 9;
+    }
+    else if (x >= 0x100)
+    {
+        g_iSecondBufferWidth = 0x100;
+        g_iSecondBufferWidthPower = 8;
+    }
+    else
+    {
+        g_iSecondBufferWidth = 0;
+        g_iSecondBufferWidthPower = 0;
+    }
+    if (y >= 0x240)
+    {
+        g_iSecondBufferHeight = 0x240;
+        g_iSecondBufferHeightPower = 10;
+    }
+    else if (y >= 0x200)
+    {
+        g_iSecondBufferHeight = 0x200;
+        g_iSecondBufferHeightPower = 10;
+    }
+    else if (y >= 0x1C0)
+    {
+        g_iSecondBufferHeight = 0x1C0;
+        g_iSecondBufferHeightPower = 9;
+    }
+    else if (y >= 0x120)
+    {
+        g_iSecondBufferHeight = 0x120;
+        g_iSecondBufferHeightPower = 9;
+    }
+    else if (y >= 0x100)
+    {
+        g_iSecondBufferHeight = 0x100;
+        g_iSecondBufferHeightPower = 8;
+    }
+    else if (y >= 0xE0)
+    {
+        g_iSecondBufferHeight = 0xE0;
+        g_iSecondBufferHeightPower = 8;
+    }
+    else
+    {
+        g_iSecondBufferHeight = 0;
+        g_iSecondBufferHeightPower = 0;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GLAUX\PS2GLAUX.c lines 471–482 */
@@ -1483,7 +1607,6 @@ void PS2auxInitPosition(int x, int y, int w, int h)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glInit(void);
 
 void PS2auxInitDisplayMode(unsigned int eMode)
 {

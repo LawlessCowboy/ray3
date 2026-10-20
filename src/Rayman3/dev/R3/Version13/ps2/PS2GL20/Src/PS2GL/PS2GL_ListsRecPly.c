@@ -222,6 +222,7 @@ typedef struct tagPS2glApiTable tagPS2glApiTable;
 typedef struct anon_184 anon_184;
 typedef struct anon_186 anon_186;
 typedef struct anon_189 anon_189;
+typedef struct { float f[4]; } __attribute__((aligned(16))) quad;
 
 struct tagListData {
     unsigned int eMode; /* +0x0 */
@@ -231,7 +232,7 @@ struct tagListData {
     tagGLprimbuf* pPrimBufTail; /* +0x10 */
     float (*pDmaBuffer)[4]; /* +0x14 */
     unsigned int uiSDLSize; /* +0x18 */
-    int pSDLIndices; /* +0x1c */
+    int* pSDLIndices; /* +0x1c */
     unsigned int uiSDLIndicesSize; /* +0x20 */
     unsigned int uiSDLBits; /* +0x24 */
     unsigned long ModFlgs; /* +0x28 */
@@ -416,60 +417,61 @@ union anon_18 {
 };
 
 struct anon_19 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 struct anon_20 {
@@ -554,9 +556,9 @@ struct tagGLprimbuf {
     tagGLprimbuf* pNext; /* +0x0 */
     unsigned int nCount; /* +0x4 */
     unsigned char bEOP; /* +0x8 */
-    int pCode; /* +0xc */
+    unsigned char* pCode; /* +0xc */
     float (*pData)[4]; /* +0x10 */
-    int pTexUnit; /* +0x14 */
+    int* pTexUnit; /* +0x14 */
     unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
     _sceDmaTag tagDma; /* +0x20 */
     anon_30 tagGif; /* +0x30 */
@@ -1404,7 +1406,7 @@ struct anon_79 {
 };
 
 struct anon_80 {
-    float vObjectBS[4]; /* +0x0 */
+    quad vObjectBS; /* +0x0 */
     unsigned int mode; /* +0x10 */
     int first; /* +0x14 */
     int count; /* +0x18 */
@@ -1556,16 +1558,17 @@ struct anon_101 {
 };
 
 struct anon_102 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon102[6]; /* +0x2..0x7 */
 };
 
 struct tagsceGsReg {
@@ -1686,15 +1689,16 @@ struct anon_190 {
 };
 
 struct anon_182 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_128 {
@@ -1777,8 +1781,8 @@ struct tagGScontext {
     anon_173 SIGNAL; /* +0x198 */
     tagsceGsReg FINISH; /* +0x1a0 */
     anon_185 LABEL; /* +0x1a8 */
-    anon_19 ModFlgs; /* +0x1b0 */
-    anon_19 GlobalModFlgs; /* +0x1b8 */
+    unsigned long ModFlgs; /* +0x1b0 */
+    unsigned long GlobalModFlgs; /* +0x1b8 */
     anon_18 PackageBuffer[518]; /* +0x1c0 */
     int iBufCount; /* +0x2220 */
     anon_18* pqCurrent; /* +0x2224 */
@@ -2561,7 +2565,6 @@ tagGLcontext g_PS2glContext;
 
 void PS2glSaveListCall(unsigned int eCode, float (*pData)[4]);
 void PS2glSaveListCallMultiTex(unsigned int eCode, unsigned int texture, float (*pData)[4]);
-typedef struct { float f[4]; } __attribute__((aligned(16))) quad;
 void plyPS2glTranslatef(anon_133*);
 void plyPS2glTexSubImage2D(anon_28*);
 void plyPS2glTexSubImage1D(anon_176*);
@@ -3734,7 +3737,7 @@ void impPS2glTexSubImage1D(unsigned int, int, int, int, unsigned int, unsigned i
 
 void plyPS2glTexSubImage1D(anon_176* pParam)
 {
-    impPS2glTexSubImage1D(pParam->target, pParam->level, pParam->xoffset, pParam->width, pParam->format, pParam->type, (void*)pParam->pixels);
+    impPS2glTexSubImage1D(pParam->target, pParam->level, pParam->xoffset, pParam->width, pParam->format, pParam->type, *(void**)&pParam->pixels);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 5595–5602 */
@@ -8516,103 +8519,37 @@ void plyPS2glLineStipple(anon_48* param0)
  * compare a candidate object's line table as an extra checkpoint.
  */
 /* worker B */
-void recPS2glLighti(unsigned int light, unsigned int pname, int param);
-void recPS2glLightf(unsigned int light, unsigned int pname, float param);
-void recPS2glLightfv(unsigned int light, unsigned int pname, float* params);
-void recPS2glLightiv(unsigned int light, unsigned int pname, int* params)
-{
-    float fparams[4];
-    anon_118* pParam;
-    anon_77* pParam77;
-    anon_61* pParam61;
-    tagGLlistnode* pNode;
-    switch (pname)
-    {
-    case 0x1200:
-    case 0x1201:
-    case 0x1202:
-    case 0x1203:
-    case 0x1204:
-        fparams[0] = (float)params[0];
-        fparams[1] = (float)params[1];
-        fparams[2] = (float)params[2];
-        fparams[3] = (float)params[3];
-        switch (pname)
-        {
-        case 0x1200:
-        case 0x1201:
-        case 0x1202:
-        case 0x1203:
-        case 0x1204:
-            pNode = PS2glListAllocNode(sizeof(anon_118));
-            pParam = (anon_118*)pNode->aParams;
-            pParam->light = light;
-            pParam->pname = pname;
-            memcpy(pParam->params, fparams, sizeof(pParam->params));
-            pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightfv;
-            break;
-        default:
-            pNode = PS2glListAllocNode(sizeof(anon_77));
-            pParam77 = (anon_77*)pNode->aParams;
-            pParam77->light = light;
-            pParam77->pname = pname;
-            pParam77->param = fparams[0];
-            pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightf;
-            break;
-        }
-        break;
-    default:
-        {
-        int p = *params;
-        pNode = PS2glListAllocNode(sizeof(anon_61));
-        pParam61 = (anon_61*)pNode->aParams;
-        pParam61->light = light;
-        pParam61->pname = pname;
-        pParam61->param = p;
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLighti;
-        }
-        break;
-    }
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3000–3007 */
-/* addr: 0x0015b770  size: 88 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2937–2944 */
+/* addr: 0x0015b910  size: 88 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3000
- *   +0x0020 -> line 3001
- *   +0x0028 -> line 3003
- *   +0x002c -> line 3006
- *   +0x0030 -> line 3004
- *   +0x0034 -> line 3006
- *   +0x0038 -> line 3005
- *   +0x003c -> line 3006
- *   +0x0040 -> line 3007
+ *   +0x0000 -> line 2937
+ *   +0x0020 -> line 2938
+ *   +0x0028 -> line 2940
+ *   +0x002c -> line 2943
+ *   +0x0030 -> line 2941
+ *   +0x0034 -> line 2943
+ *   +0x0038 -> line 2942
+ *   +0x003c -> line 2943
+ *   +0x0040 -> line 2944
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void recPS2glLighti(unsigned int light, unsigned int pname, int param)
+#pragma auto_inline on
+#pragma auto_inline on
+void recPS2glLightf(unsigned int light, unsigned int pname, float param)
 {
-    anon_61* pParam;
+    anon_77* pParam;
     tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_61));
-    pParam = (anon_61*)pNode->aParams;
+    pNode = PS2glListAllocNode(sizeof(anon_77));
+    pParam = (anon_77*)pNode->aParams;
     pParam->light = light;
     pParam->pname = pname;
     pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLighti;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightf;
 }
+#pragma auto_inline reset
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2996–2996 */
-/* addr: 0x0015b7d0  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 2996
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void plyPS2glLighti(anon_61* pParam)
-{
-    impPS2glLighti(pParam->light, pParam->pname, pParam->param);
-}
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2963–2983 */
 /* addr: 0x0015b7f0  size: 216 bytes */
@@ -8635,6 +8572,7 @@ void plyPS2glLighti(anon_61* pParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void recPS2glLightfv(unsigned int light, unsigned int pname, float* params)
 {
     anon_118* pParam;
@@ -8654,18 +8592,75 @@ void recPS2glLightfv(unsigned int light, unsigned int pname, float* params)
         pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightfv;
         break;
     default:
-        {
-        anon_77* pParam77;
-        float p = *params;
-        pNode = PS2glListAllocNode(sizeof(anon_77));
-        pParam77 = (anon_77*)pNode->aParams;
-        pParam77->light = light;
-        pParam77->pname = pname;
-        pParam77->param = p;
-        pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightf;
-        }
+        recPS2glLightf(light, pname, *params);
         break;
     }
+}
+
+#pragma auto_inline reset
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 3000–3007 */
+/* addr: 0x0015b770  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3000
+ *   +0x0020 -> line 3001
+ *   +0x0028 -> line 3003
+ *   +0x002c -> line 3006
+ *   +0x0030 -> line 3004
+ *   +0x0034 -> line 3006
+ *   +0x0038 -> line 3005
+ *   +0x003c -> line 3006
+ *   +0x0040 -> line 3007
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+void recPS2glLighti(unsigned int light, unsigned int pname, int param)
+{
+    anon_61* pParam;
+    tagGLlistnode* pNode;
+    pNode = PS2glListAllocNode(sizeof(anon_61));
+    pParam = (anon_61*)pNode->aParams;
+    pParam->light = light;
+    pParam->pname = pname;
+    pParam->param = param;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLighti;
+}
+
+#pragma auto_inline reset
+
+void recPS2glLightiv(unsigned int light, unsigned int pname, int* params)
+{
+    float fparams[4];
+    switch (pname)
+    {
+    case 0x1200:
+    case 0x1201:
+    case 0x1202:
+    case 0x1203:
+    case 0x1204:
+        fparams[0] = (float)params[0];
+        fparams[1] = (float)params[1];
+        fparams[2] = (float)params[2];
+        fparams[3] = (float)params[3];
+        recPS2glLightfv(light, pname, fparams);
+        return;
+    default:
+        recPS2glLighti(light, pname, *params);
+        break;
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2996–2996 */
+/* addr: 0x0015b7d0  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 2996
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void plyPS2glLighti(anon_61* pParam)
+{
+    impPS2glLighti(pParam->light, pParam->pname, pParam->param);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2956–2960 */
@@ -8687,33 +8682,6 @@ void plyPS2glLightfv(anon_118* pParam)
     float vParam[4];
     memcpy(vParam, pParam->params, sizeof(vParam));
     impPS2glLightfv(pParam->light, pParam->pname, vParam);
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2937–2944 */
-/* addr: 0x0015b910  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2937
- *   +0x0020 -> line 2938
- *   +0x0028 -> line 2940
- *   +0x002c -> line 2943
- *   +0x0030 -> line 2941
- *   +0x0034 -> line 2943
- *   +0x0038 -> line 2942
- *   +0x003c -> line 2943
- *   +0x0040 -> line 2944
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void recPS2glLightf(unsigned int light, unsigned int pname, float param)
-{
-    anon_77* pParam;
-    tagGLlistnode* pNode;
-    pNode = PS2glListAllocNode(sizeof(anon_77));
-    pParam = (anon_77*)pNode->aParams;
-    pParam->light = light;
-    pParam->pname = pname;
-    pParam->param = param;
-    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glLightf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 2933–2933 */
@@ -10248,11 +10216,45 @@ void plyPS2glDrawBuffer(anon_84* pParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int PS2glInternalArraysSize(unsigned int mode, int count);
+int PS2glListSaveParamSpace(int space);
+void PS2glInternalDrawArrays(unsigned int mode, int first, int count, int stride, unsigned int flags);
+
 void recPS2glDrawArrays(unsigned int mode, int first, int count)
 {
     anon_80* pParam;
     tagGLlistnode* pNode;
-    /* TODO: decompile from asm/... */
+    pNode = PS2glListAllocNode(sizeof(anon_80));
+    pParam = (anon_80*)pNode->aParams;
+    pParam->mode = mode;
+    pParam->first = first;
+    pParam->count = count;
+    pNode->pfns.pfnPlayParam = (void (*)(void*))plyPS2glDrawArrays;
+    if (g_PS2glContext.VertexArray.stride < 0)
+    {
+        if (pParam->count != 0)
+        {
+            g_aDmaTag = PS2glListSaveParamSpace(PS2glInternalArraysSize(mode, count) << 4);
+            pParam->pBuf = (float (*)[4])g_aDmaTag;
+            *(quad*)vOldGifTag = *(quad*)g_PS2glContext.pGifTagBuf0;
+            g_PS2glContext.pGifTagBuf0->PRIM = Mode2Prim(mode);
+            g_PS2glContext.iPackageBSIndex = 0;
+            PS2glInternalDrawArrays(pParam->mode, pParam->first, pParam->count, g_PS2glContext.VertexArray.stride, 0);
+            memcpy(pParam, g_PS2glContext.vObjectBS, 16);
+            *(quad*)g_PS2glContext.pGifTagBuf0 = *(quad*)vOldGifTag;
+            pParam->packageCount = iDmaTagCount;
+        }
+        else
+        {
+            pParam->pBuf = (float (*)[4])0x10;
+            g_PS2glContext.iPackageBSIndex = 0;
+            pParam->packageCount = iDmaTagCount;
+        }
+    }
+    else
+    {
+        pParam->pBuf = 0;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1970–2022 */
@@ -10295,11 +10297,61 @@ void recPS2glDrawArrays(unsigned int mode, int first, int count)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glBegin(unsigned int mode);
+void impPS2glDrawArrays(unsigned int mode, int first, int count);
+void impPS2glEnd(void);
+void impPS2glFlush(void);
+int VU1BufferFreeSpace(void);
+void GsUpdate(void);
+
 void plyPS2glDrawArrays(anon_80* pParam)
 {
-    tagListData* pListData;
     _sceDmaTag* pDmaTag;
-    /* TODO: decompile from asm/... */
+    tagListData* pListData;
+    if (pParam->pBuf == 0)
+        impPS2glDrawArrays(pParam->mode, pParam->first, pParam->count);
+    else
+    {
+        if (g_PS2glContext.eClippingFunction != -1)
+        {
+            if (g_PS2glContext.nEnableBits & 0x4000)
+            {
+                if (g_gsContext.ModFlgs)
+                    GsUpdate();
+            }
+            else
+            {
+                if (g_PS2glContext.uiBoundingSphereBits & 3)
+                    memcpy(g_PS2glContext.vObjectBS, pParam, 16);
+                impPS2glBegin(pParam->mode);
+                impPS2glEnd();
+            }
+            if (VU1BufferFreeSpace() == 0)
+                impPS2glFlush();
+            pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail++;
+            pDmaTag->qwc = 0;
+            if (pParam->count != 0)
+            {
+                pDmaTag->id = 0x50;
+                pDmaTag->next = (_sceDmaTag*)pParam->pBuf;
+            }
+            else
+            {
+                pDmaTag->id = 0x10;
+                pDmaTag->next = 0;
+            }
+            pDmaTag->p[1] = 0; pDmaTag->p[0] = 0;
+            if ((g_PS2glContext.uiStaticDisplayListBits & 0x1000800) == 0x1000800)
+            {
+                pListData = g_PS2glContext.pCurListData;
+                pListData->pSDLIndices[pListData->uiSDLIndicesSize++] = (int)pDmaTag;
+                pListData->pSDLIndices[pListData->uiSDLIndicesSize] = 0x81000000;
+                if (pParam->count == 0)
+                    pListData->pSDLIndices[pListData->uiSDLIndicesSize] |= 0x02000000;
+                pListData->uiSDLIndicesSize++;
+            }
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 1957–1962 */
@@ -12319,7 +12371,7 @@ void impPS2glBitmap(int, int, float, float, float, float, unsigned char*);
 
 void plyPS2glBitmap(anon_83* pParam)
 {
-    impPS2glBitmap(pParam->width, pParam->height, pParam->xorig, pParam->yorig, pParam->xmove, pParam->ymove, (unsigned char*)pParam->bitmap);
+    impPS2glBitmap(pParam->width, pParam->height, pParam->xorig, pParam->yorig, pParam->xmove, pParam->ymove, *(unsigned char**)&pParam->bitmap);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 929–935 */
@@ -12566,14 +12618,78 @@ int Mode2Prim(unsigned int mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glAssembleQuads(int mode);
+void PS2glFlushBuffer(int mode);
+
 void PS2glExecuteListVBuf(tagGLprimbuf* pPrimBuf)
 {
-    unsigned int* pTexUnit;
-    unsigned char* pCode;
-    float (*pData)[4];
-    unsigned int iBufSize;
     tagGLprimbuf* pNext;
-    /* TODO: decompile from asm/... */
+    int iCount;
+    float (*pData)[4];
+    unsigned char* pCode;
+    int* pTexUnit;
+    while (pPrimBuf != 0)
+    {
+        pNext = pPrimBuf->pNext;
+        iCount = pPrimBuf->nCount;
+        pData = pPrimBuf->pData;
+        pCode = pPrimBuf->pCode;
+        pTexUnit = pPrimBuf->pTexUnit;
+        while (iCount--)
+        {
+            switch (*pCode++)
+            {
+            case 0:
+                *(quad*)g_PS2glContext.vacurColor[0] = *(quad*)pData;
+                break;
+            case 1:
+                break;
+            case 2:
+                *(quad*)g_PS2glContext.vcurNormal = *(quad*)pData;
+                break;
+            case 3:
+                *(quad*)g_PS2glContext.vacurTexCoords[0] = *(quad*)pData;
+                break;
+            case 4:
+                if (g_PS2glContext.iBufCount < g_PS2glContext.iBufLimit)
+                {
+                    *(quad*)g_PS2glContext.pCBuf = *(quad*)g_PS2glContext.vacurColor[0]; g_PS2glContext.pCBuf++;
+                    *(quad*)g_PS2glContext.pCBuf_b = *(quad*)g_PS2glContext.vacurColor[1]; g_PS2glContext.pCBuf_b++;
+                    *(quad*)g_PS2glContext.pNBuf = *(quad*)g_PS2glContext.vcurNormal; g_PS2glContext.pNBuf++;
+                    *(quad*)g_PS2glContext.pTBuf = *(quad*)g_PS2glContext.vacurTexCoords[0]; g_PS2glContext.pTBuf++;
+                    *(quad*)g_PS2glContext.pTBuf_b = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.pTBuf_b++;
+                    *(quad*)g_PS2glContext.pVBuf = *(quad*)pData; g_PS2glContext.pVBuf++;
+                    g_PS2glContext.iBufCount++;
+                }
+                else if (g_PS2glContext.eBeginMode == 7)
+                {
+                    PS2glAssembleQuads(0);
+                }
+                else
+                {
+                    PS2glFlushBuffer(0);
+                }
+                break;
+            case 5:
+                *(quad*)g_PS2glContext.vacurTexCoords[*pTexUnit] = *(quad*)pData;
+                break;
+            case 6:
+                *(quad*)g_PS2glContext.vacurColor[*pTexUnit] = *(quad*)pData;
+                break;
+            }
+        }
+        if (pPrimBuf->bEOP)
+            break;
+        pPrimBuf = pNext;
+    }
+    if (g_PS2glContext.eBeginMode == 7)
+    {
+        PS2glAssembleQuads(1);
+    }
+    else
+    {
+        PS2glFlushBuffer(1);
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_ListsRecPly.c lines 618–715 */
@@ -12625,9 +12741,9 @@ void PS2glVU1ListTexCoordsCubeMappingVectorTo2D(tagGLprimbuf* pPrimBuf);
 void impPS2glBegin(unsigned int mode);
 void plyPS2glBegin(anon_64* pParam)
 {
+    _sceDmaTag* pDmaTag;
     tagListData* pListData;
     tagGLprimbuf* pPrimBufTemp;
-    _sceDmaTag* pDmaTag;
     tagGLprimbuf* pPrimBuf;
     pPrimBuf = pParam->pPrimBuf;
     if (g_PS2glContext.eClippingFunction != -1)
@@ -12639,9 +12755,9 @@ void plyPS2glBegin(anon_64* pParam)
         {
             if (pPrimBuf != 0 && pPrimBuf->tagGif.NLOOP > 0)
             {
+                pPrimBufTemp = pPrimBuf;
                 if (g_PS2glContext.nTextureEnableBits & 8)
                 {
-                    pPrimBufTemp = pPrimBuf;
                     if (pPrimBufTemp != 0)
                     {
                         do
@@ -12657,13 +12773,12 @@ void plyPS2glBegin(anon_64* pParam)
                 pDmaTag->qwc = 0;
                 pDmaTag->id = 0x50;
                 pDmaTag->next = &pPrimBuf->tagDma;
-                pDmaTag->p[1] = 0;
-                pDmaTag->p[0] = 0;
-                if ((g_PS2glContext.uiStaticDisplayListBits & 0x100800) == 0x100800)
+                pDmaTag->p[1] = 0; pDmaTag->p[0] = 0;
+                if ((g_PS2glContext.uiStaticDisplayListBits & 0x1000800) == 0x1000800)
                 {
                     pListData = g_PS2glContext.pCurListData;
-                    ((int*)pListData->pSDLIndices)[pListData->uiSDLIndicesSize++] = (int)pDmaTag;
-                    ((int*)pListData->pSDLIndices)[pListData->uiSDLIndicesSize++] = 0x80000000;
+                    pListData->pSDLIndices[pListData->uiSDLIndicesSize++] = (int)pDmaTag;
+                    pListData->pSDLIndices[pListData->uiSDLIndicesSize++] = 0x80000000;
                 }
             }
         }

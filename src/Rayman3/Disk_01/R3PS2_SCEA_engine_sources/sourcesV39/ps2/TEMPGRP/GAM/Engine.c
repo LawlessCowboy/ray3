@@ -1532,15 +1532,19 @@ void fn_vOneTrame(void)
             GLD_bClearViewportWithChoice(g_stEngineStructure.hGLDDevice, 0, 3);
             if (g_bSectorDisplayPriorityFixed)
             {
-                for (i = 0; i < 4; i++)
+                i = 0;
+                goto lpPriorityTest;
+            lpPriorityBody:
+                uc_ViewPortIndex = g_a4_ucSectorDisplayPriority[i];
+                if (uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode)
                 {
-                    uc_ViewPortIndex = g_a4_ucSectorDisplayPriority[i];
-                    if (uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode)
-                    {
-                        g_ucCurrentViewport = uc_ViewPortIndex;
-                        ((void (*)(int))p_fn_vDisplayAll)(uc_ViewPortIndex);
-                    }
+                    g_ucCurrentViewport = uc_ViewPortIndex;
+                    ((void (*)(int))p_fn_vDisplayAll)(uc_ViewPortIndex);
                 }
+                i++;
+            lpPriorityTest:
+                if (i < 4)
+                    goto lpPriorityBody;
             }
             else
             {
@@ -1549,11 +1553,15 @@ void fn_vOneTrame(void)
                     if (g_stEngineStructure.ucNumberOfPlayersInMultiMode == 1)
                         GLI_g_StereoVisionMode = 1;
                 }
-                for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++)
-                {
-                    g_ucCurrentViewport = uc_ViewPortIndex;
-                    ((void (*)(int))p_fn_vDisplayAll)(uc_ViewPortIndex);
-                }
+                uc_ViewPortIndex = 0;
+                goto lpViewportTest;
+            lpViewportBody:
+                g_ucCurrentViewport = uc_ViewPortIndex;
+                ((void (*)(int))p_fn_vDisplayAll)(uc_ViewPortIndex);
+                uc_ViewPortIndex++;
+            lpViewportTest:
+                if (uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode)
+                    goto lpViewportBody;
                 if (GLI_g_AfterEffect == 4 && g_stEngineStructure.ucNumberOfPlayersInMultiMode == 1)
                 {
                     GLI_g_StereoVisionMode = 2;

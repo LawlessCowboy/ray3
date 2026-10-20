@@ -707,6 +707,10 @@ struct C_SdlRef {
     unsigned int m_uIndexInList; /* +0x4 */
     int m_vpOriginPointer; /* +0x8 */
     int m_vpDestinationPointer; /* +0xc */
+    /* The retail vtable pointer sits at +0x10, after the four data members. */
+    virtual void Process(void);
+    virtual void ProcessWithInterpol(void);
+    virtual void ProcessNoInterpol(void);
 };
 
 struct C_SdlRef_FogParameters : C_SdlRef {
@@ -1485,9 +1489,9 @@ struct sceGsZbuf {
 };
 
 struct C_SdlRef_LocalMatrix : C_SdlRef {
-    /* +0x10: C_SdlRef vtable pointer (retail __vt__8C_SdlRef, defined in this
-     * unit as data, so not declared virtual here), then alignment padding. */
-    unsigned char _padding_00[16]; /* +0x10..0x1f */
+    /* The base class carries the vtable pointer at +0x10 and ends at +0x14;
+     * OldMat starts at +0x20. */
+    unsigned char _extractor_padding_01[12]; /* +0x14..0x1f */
     float OldMat[4][4]; /* +0x20 */
     int m_bNoInterpolation; /* +0x60 */
 };
@@ -1860,7 +1864,7 @@ struct tagGLcontext {
     float (*pvColorRange)[4]; /* +0x6c18 */
     int pfAlpha; /* +0x6c1c */
     int pfShininess; /* +0x6c20 */
-    int pnColorMatMasks; /* +0x6c24 */
+    int* pnColorMatMasks; /* +0x6c24 */
     int pbFogging; /* +0x6c28 */
     int peFogMode; /* +0x6c2c */
     int pfFogDensity; /* +0x6c30 */
@@ -2270,6 +2274,14 @@ struct tdstObjectsTableElement_ {
 
 
 
+/* PS2GL entry points used by this unit. */
+extern "C" void PS2glDisable(unsigned int cap);
+extern "C" void PS2glEnable(unsigned int cap);
+extern "C" void PS2glBlendFunc(unsigned int src, unsigned int dst);
+extern "C" void PS2glDepthMask(unsigned int flag);
+extern "C" void PS2glEndList(void);
+extern "C" tagListData** PS2glSearchList(unsigned int list);
+
 unsigned int GLI_g_MaxSDLSize;
 unsigned int GLI_g_NbSDLs;
 unsigned int SDL_g_OptimizedSDC;
@@ -2281,7 +2293,6 @@ anon_2 __vt__14C_CharacterSdl;
 unsigned int GLI_g_InstanceLists;
 tagGLcontext g_PS2glContext;
 void (*PS2glLiberator)(void);
-anon_1 __vt__8C_SdlRef;
 int GLI_g_ChristianSlaterMode;
 tagGScontext g_gsContext;
 float GLI_g_SDL_pInterpolatedCameraMatrix[4][4];
@@ -2306,7 +2317,7 @@ unsigned int GLI_g_CurrentSDLFogColor;
 unsigned int GLI_g_bInterpol;
 unsigned int GLI_g_NO_INTERPOLATION_FOR_NEXT_FRAME;
 int PS2glReallocator;
-int PS2glAllocator64;
+void* (*PS2glAllocator64)(unsigned int size);
 anon_0 __vt__5C_Sdl;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 23–58 */
@@ -2343,9 +2354,51 @@ anon_0 __vt__5C_Sdl;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CSpriteController(unsigned int NbSprites)
+/* The sprite controller class is shared with VUSprites.cpp; only the data
+ * members and the constructor are needed here. */
+struct CSpriteController {
+    float (*m_SpBufferVP[2])[4]; /* +0x0 */
+    int* m_SpBufferVC[2]; /* +0x8 */
+    int* m_SpBufferVT[2]; /* +0x10 */
+    unsigned int m_CurrentFrame; /* +0x18 */
+    unsigned int m_NbVertices; /* +0x1c */
+    unsigned int m_MaxNbSpritesVertices; /* +0x20 */
+    int m_CurrentSpriteListIndex; /* +0x24 */
+    float (*m_CurrentVP)[4]; /* +0x28 */
+    int m_CurrentVC; /* +0x2c */
+    int m_CurrentVT; /* +0x30 */
+    GLI_tdstMaterial_* m_pCurrentMaterial; /* +0x34 */
+    GLI_tdstTexture_* m_pCurrentTexture; /* +0x38 */
+    GLI_tdstTexture_* m_pCurrentAnimTexture; /* +0x3c */
+    unsigned int m_CurrentSpriteType; /* +0x40 */
+    CSpriteController(unsigned int MaxNbSprites);
+};
+
+CSpriteController::CSpriteController(unsigned int MaxNbSprites)
 {
-    /* TODO: decompile from asm/... */
+    MaxNbSprites = (MaxNbSprites + 15) & ~15;
+    m_MaxNbSpritesVertices = MaxNbSprites * 4;
+    m_SpBufferVP[0] = (float(*)[4])PS2glAllocator64(m_MaxNbSpritesVertices * sizeof(float[4]));
+    m_SpBufferVP[1] = (float(*)[4])PS2glAllocator64(m_MaxNbSpritesVertices * sizeof(float[4]));
+    m_SpBufferVC[0] = (int*)PS2glAllocator64(m_MaxNbSpritesVertices * sizeof(int));
+    m_SpBufferVC[1] = (int*)PS2glAllocator64(m_MaxNbSpritesVertices * sizeof(int));
+    m_SpBufferVT[0] = (int*)PS2glAllocator64(m_MaxNbSpritesVertices * sizeof(int));
+    m_SpBufferVT[1] = (int*)PS2glAllocator64(m_MaxNbSpritesVertices * sizeof(int));
+    m_CurrentFrame = 0;
+    m_NbVertices = 0;
+    m_CurrentVP = NULL;
+    m_CurrentVC = 0;
+    m_CurrentVT = 0;
+    m_CurrentSpriteListIndex = -1;
+    m_pCurrentMaterial = NULL;
+    m_CurrentSpriteType = 0;
+    m_pCurrentTexture = NULL;
+    m_pCurrentAnimTexture = NULL;
+    if (!m_SpBufferVP[0] || !m_SpBufferVP[1] || !m_SpBufferVC[0] || !m_SpBufferVC[1] || !m_SpBufferVT[0] || !m_SpBufferVT[1])
+    {
+        printf("!!! Couldn't allocate sprite buffers !!!\n");
+        while (1);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1320–1320 */
@@ -2414,10 +2467,30 @@ void GLIPS2_vSetNoInterpolationForSPO(HIE_tdstSuperObject_* _hLinkedSpo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vRecurseRemoveInterpolationForSPOs(HIE_tdstSuperObject_* _hLinkedSpo, C_Sdl* pOpaqueSDL, C_Sdl* pTranspSDL)
+extern "C" void GLIPS2_vRecurseRemoveInterpolationForSPOs(HIE_tdstSuperObject_* _hLinkedSpo, C_Sdl* pOpaqueSDL, C_Sdl* pTranspSDL)
 {
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hSub;
+    C_SdlRef_LocalMatrix* pRef;
+    unsigned int i;
+    unsigned int j;
+
+    /* The retail compiles the early exit as a branch to the function-end
+     * label (the alignment nop in front of the epilogue is part of the
+     * label), which a plain 'return' does not reproduce. */
+    if (_hLinkedSpo == NULL) goto end;
+
+    if (pTranspSDL != NULL && pTranspSDL->m_NbReservedRefs) { for (i = 0; i < pTranspSDL->m_NbRefs; i++) { if (pTranspSDL->m_ppRefs[i] && pTranspSDL->m_ppRefs[i]->m_uRefType == 1) { pRef = (C_SdlRef_LocalMatrix*)pTranspSDL->m_ppRefs[i]; if (pRef->m_vpOriginPointer == (int)_hLinkedSpo) pRef->m_bNoInterpolation = 1; } } }
+
+    if (pOpaqueSDL != NULL && pOpaqueSDL->m_NbReservedRefs) { for (j = 0; j < pOpaqueSDL->m_NbRefs; j++) { if (pOpaqueSDL->m_ppRefs[j] && pOpaqueSDL->m_ppRefs[j]->m_uRefType == 1) { pRef = (C_SdlRef_LocalMatrix*)pOpaqueSDL->m_ppRefs[j]; if (pRef->m_vpOriginPointer == (int)_hLinkedSpo) pRef->m_bNoInterpolation = 1; } } }
+
+    hChild = _hLinkedSpo->hFirstElementDyn; while (hChild != NULL) {
+        /* The redundant inner test reproduces the retail's extra branch at
+         * the loop head. */
+        if (hChild != NULL) { if (pTranspSDL != NULL) pTranspSDL->RemoveSPOInterpol(hChild); if (pOpaqueSDL != NULL) pOpaqueSDL->RemoveSPOInterpol(hChild); hSub = hChild->hFirstElementDyn; while (hSub != NULL) { GLIPS2_vRecurseRemoveInterpolationForSPOs(hSub, pOpaqueSDL, pTranspSDL); hSub = hSub->hNextBrotherDyn; } }
+        hChild = hChild->hNextBrotherDyn; }
+end:
+    return;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1230–1254 */
@@ -2606,7 +2679,31 @@ void C_Sdl::Draw(int bProcessRefs)
 void C_Sdl::End(void)
 {
     tagListData** ppListData;
-    /* TODO: decompile from asm/... */
+
+    PS2glDisable(0xB44);
+    PS2glEnable(0xBE2);
+    PS2glBlendFunc(0x302, 0x303);
+    PS2glDepthMask(1);
+    PS2glEnable(0xB71);
+    PS2glDisable(0xBE2);
+    PS2glDisable(0xBC0);
+    PS2glDisable(0xB50);
+    g_PS2glContext.bPointLighting = 0;
+    PS2glEndList();
+    g_PS2glContext.usDontUpdateBits = 0;
+    g_PS2glContext.uiStaticDisplayListBits &= 0xFF000000;
+    g_PS2glContext.uiBoundingSphereBits = 0;
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *g_PS2glContext.pnColorMatMasks &= ~0x200; *g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;
+    g_fBSMultiplicator = GLI_g_fBSMultiplicatorMap;
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *g_PS2glContext.pnColorMatMasks &= ~0x200; *g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;
+    g_PS2glContext.uiBoundingSphereBits = 0;
+    g_PS2glContext.eClippingFunction = 3;
+    PS2GL_g_DontReallocSDLs = 0;
+    PS2GL_SDL_DataBufferToUse = 0;
+    ppListData = (tagListData**)PS2glSearchList(m_DisplayList);
+    m_pListData = *ppListData;
+    if (m_pListData == NULL)
+        printf("Houla NULL LIST !!!\n");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 948–1038 */
@@ -2952,13 +3049,32 @@ void C_Sdl::Start(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void C_Sdl::UpdateFogs(void)
-{
-    C_SdlRef** ppRefs;
-    float FogEnd;
+{    C_SdlRef** ppRefs;
     float FogStart;
+    float FogEnd;
     unsigned int FogColor;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    FogColor = GLI_g_CurrentSDLFogColor;
+    FogStart = GLI_g_OOStartMinusEnd;
+    FogEnd = g_fFogEnd;
+    ppRefs = m_ppRefs;
+
+    if (!GLI_BIG_GLOBALS_xFogIsOn)
+    {
+        FogStart = 2000.0f;
+        FogEnd = -0.001f;
+        FogColor = 0;
+    }
+    for (i = m_NbRefs; i; i--, ppRefs++)
+    {
+        if ((*ppRefs)->m_uRefType == 4 && ((C_SdlRef_FogParameters*)*ppRefs)->m_pDestFogColor)
+        {
+            *(unsigned int*)((C_SdlRef_FogParameters*)*ppRefs)->m_pDestFogColor = FogColor;
+            *(float*)((C_SdlRef_FogParameters*)*ppRefs)->m_pDestFogStart = FogStart;
+            *(float*)((C_SdlRef_FogParameters*)*ppRefs)->m_pDestFogEnd = FogEnd;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 512–564 */
@@ -2999,7 +3115,55 @@ void C_Sdl::UpdateFogs(void)
 void C_Sdl::ProcessAllRefs(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    if (m_bIsBlinking || m_bNoInterpolation || GLI_g_NO_INTERPOLATION_FOR_NEXT_FRAME)
+    {
+        if (GLI_g_bInterpol)
+        {
+            GLI_g_SDLIsBlinking = m_bIsBlinking;
+            for (i = 0; i < m_NbRefs; i++)
+            {
+                if (m_ppRefs[i]->m_uRefType != 4)
+                    m_ppRefs[i]->ProcessNoInterpol();
+            }
+        }
+        else
+        {
+            for (i = 0; i < m_NbRefs; i++)
+            {
+                if (m_ppRefs[i]->m_uRefType != 4)
+                    m_ppRefs[i]->Process();
+            }
+            /* The retail hoists this store into the delay slot of the branch
+             * that ends the if/else; MWCC keeps it here. */
+            GLI_g_SDLIsBlinking = 0;
+        }
+        m_bNoInterpolation = 0;
+        GLI_g_SDLIsBlinking = 0;
+    }
+    else
+    {
+        if (GLI_g_bInterpol)
+        {
+            if (m_LastFrameInterpolated != GLI_g_FrameNumber)
+            {
+                for (i = 0; i < m_NbRefs; i++)
+                {
+                    if (m_ppRefs[i]->m_uRefType != 4)
+                        m_ppRefs[i]->ProcessWithInterpol();
+                }
+                m_LastFrameInterpolated = GLI_g_FrameNumber;
+            }
+        }
+        else
+        {
+            for (i = 0; i < m_NbRefs; i++)
+            {
+                if (m_ppRefs[i]->m_uRefType != 4)
+                    m_ppRefs[i]->Process();
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 221–485 */
@@ -3190,7 +3354,12 @@ void C_Sdl::Preprocess(void)
  */
 void C_Sdl::AddRef(C_SdlRef* pRef)
 {
-    /* TODO: decompile from asm/... */
+    if (m_NbRefs >= m_NbReservedRefs)
+    {
+        m_NbReservedRefs += 16;
+        m_ppRefs = (C_SdlRef**)((void*(*)(void*, unsigned int))PS2glReallocator)(m_ppRefs, m_NbReservedRefs * sizeof(C_SdlRef*));
+    }
+    m_ppRefs[m_NbRefs++] = pRef;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 180–197 */
@@ -3275,7 +3444,24 @@ void C_Sdl::RemoveSPOInterpol(HIE_tdstSuperObject_* pSPO)
  */
 void C_Sdl::Init(void)
 {
-    /* TODO: decompile from asm/... */
+    m_DisplayList = 0;
+    m_NbRefs = 0;
+    m_NbReservedRefs = 0;
+    m_ppRefs = 0;
+    m_SDL_Size = 0;
+    m_NbFaces = 0;
+    m_NbElements = 0;
+    m_bIsTransparent = 0;
+    m_LastFrameUsed = 0;
+    m_SDL_InitSize = 0x7530;
+    m_bReduce = 1;
+    m_LastFrameInterpolated = -1;
+    m_SkinIndex = -1;
+    m_SkinMaterial = 0;
+    m_pListData = 0;
+    m_bNoInterpolation = 1;
+    m_bIsBlinking = 0;
+    GLI_g_NbSDLs++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 85–85 */

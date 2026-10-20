@@ -225,9 +225,9 @@ struct tagstVIFCode {
 struct C_LoadingScreen {
     C_LoadingScreen();
     unsigned int m_bDataIsValid; /* +0x0 */
-    int m_ModelTextureData; /* +0x4 */
+    unsigned int* m_ModelTextureData; /* +0x4 */
     unsigned int m_ModelTextureName; /* +0x8 */
-    int m_BackGroundTextureData; /* +0xc */
+    unsigned int* m_BackGroundTextureData; /* +0xc */
     unsigned int m_BackGroundTextureName; /* +0x10 */
     float m_FadeValue; /* +0x14 */
     float m_fTime; /* +0x18 */
@@ -237,6 +237,7 @@ struct C_LoadingScreen {
     void DisplayWheelWork(float XX, float YY, float fSize, float fSpeed);
     void DrawQuad(float X1, float Y1, float X2, float Y2, float U1, float V1, float U2, float V2, float R, float G, float B, float A);
     void FreeTexture(unsigned int** ppTextureData, unsigned int* pTextureName);
+    int LoadTexture(char* TextureFileName, unsigned int** ppTextureData, unsigned int* pTextureName);
 };
 
 struct sceGsPrmode {
@@ -289,16 +290,16 @@ struct tag_GLtexture {
 };
 
 struct sceGsPrim {
-    unsigned long PRIM : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char PRIM : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11[6]; /* bit 11, byte +0x1 */
 };
 
 struct sceGsRgbaq {
@@ -596,7 +597,40 @@ struct tagGScontext {
     sceGsSignal SIGNAL; /* +0x198 */
     tagsceGsReg FINISH; /* +0x1a0 */
     sceGsLabel LABEL; /* +0x1a8 */
-    /* aggregate */ int ModFlgs; /* +0x1b0 */
+    struct {
+        unsigned int PRIM_Modified : 1; /* bit 0 */
+        unsigned int RGBAQ_Modified : 1; /* bit 1 */
+        unsigned int ST_Modified : 1; /* bit 2 */
+        unsigned int UV_Modified : 1; /* bit 3 */
+        unsigned int XYZF2_Modified : 1; /* bit 4 */
+        unsigned int XYZ2_Modified : 1; /* bit 5 */
+        unsigned int TEX0_1_Modified : 1; /* bit 6 */
+        unsigned int TEX0_2_Modified : 1; /* bit 7 */
+        unsigned int CLAMP_1_Modified : 1; /* bit 8 */
+        unsigned int CLAMP_2_Modified : 1; /* bit 9 */
+        unsigned int FOG_Modified : 1; /* bit 10 */
+        unsigned int XYZF3_Modified : 1; /* bit 11 */
+        unsigned int XYZ3_Modified : 1; /* bit 12 */
+        unsigned int TEX1_1_Modified : 1; /* bit 13 */
+        unsigned int TEX1_2_Modified : 1; /* bit 14 */
+        unsigned int TEX2_1_Modified : 1; /* bit 15 */
+        unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x2 */
+        unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x2 */
+        unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x2 */
+        unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x2 */
+        unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x2 */
+        unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x2 */
+        unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x2 */
+        unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x2 */
+        unsigned int MIPTBP1_2_Modified : 1; /* bit 24 */
+        unsigned int MIPTBP2_1_Modified : 1; /* bit 25 */
+        unsigned int MIPTBP2_2_Modified : 1; /* bit 26 */
+        unsigned int TEXA_Modified : 1; /* bit 27 */
+        unsigned int FOGCOL_Modified : 1; /* bit 28 */
+        unsigned int TEXFLUSH_Modified : 1; /* bit 29 */
+        unsigned int SCISSOR_1_Modified : 1; /* bit 30 */
+        unsigned int SCISSOR_2_Modified : 1; /* bit 31 */
+    } ModFlgs; /* +0x1b0 */
     unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x1b4..0x1b7 */
     /* aggregate */ int GlobalModFlgs; /* +0x1b8 */
     unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x1bc..0x1bf */
@@ -1087,9 +1121,39 @@ unsigned int g_ProgressSizeHaveRead;
 unsigned int g_ProgressSizeToRead;
 int _gp;
 void (*PS2glLiberator)(void*);
+void* (*PS2glAllocator64)(int size);
 extern "C" void PS2glDeleteTextures(int n, const unsigned int* textures);
 extern "C" void PS2auxSwapBuffers(void);
-int PS2glAllocator64;
+extern "C" void PS2glBegin(unsigned int mode);
+extern "C" void PS2glEnd(void);
+extern "C" void PS2glColor4f(float red, float green, float blue, float alpha);
+extern "C" void PS2glTexCoord2f(float s, float t);
+extern "C" void PS2glVertex2f(float x, float y);
+extern "C" int WaitSema(int sid);
+extern "C" void DeleteSema(int sid);
+extern "C" int TerminateThread(int th);
+extern "C" int DeleteThread(int th);
+extern "C" void PS2MC_RemoveCurrentMessage(void);
+extern "C" int PS2glGsSyncPath(void);
+extern "C" void PS2glMatrixMode(unsigned int mode);
+extern "C" void PS2glLoadIdentity(void);
+extern "C" void PS2glOrtho(float left, float right, float bottom, float top, float near, float far);
+extern "C" void PS2glBindTexture(unsigned int target, unsigned int texture);
+extern "C" void PS2glSetGsRegister(unsigned int what, unsigned int index, unsigned int len, unsigned char data);
+extern "C" float sinf(float x);
+extern "C" float cosf(float x);
+extern "C" int rand(void);
+extern "C" int sprintf(char* buffer, const char* format, ...);
+extern "C" void PS2glFlush(void);
+extern "C" void PS2glFinish(void);
+extern "C" int CreateThread(ThreadParam* pParam);
+extern "C" int StartThread(int thid, int arg);
+extern "C" int CreateSema(SemaParam* pParam);
+extern "C" void LS_Process(void* pData);
+extern "C" void LS_Create(void);
+extern "C" void LS_Destroy(void);
+extern "C" void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft);
+extern "C" int LS_fn_iRemainingSizeToLoad(void);
 tagGScontext g_gsContext;
 tagGLcontext g_PS2glContext;
 int g_BlackScreenUntilNextMap;
@@ -1184,7 +1248,13 @@ int LS_fn_iRemainingSizeToLoad(void)
 void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft)
 {
     float Percent;
-    /* TODO: decompile from asm/... */
+    Percent = 2.0f * (float)(g_ProgressSizeHaveRead / 2) / (2.0f * (float)(g_ProgressSizeToRead / 2));
+    if (Percent > 0.99f)
+        Percent = 0.99f;
+    if (Percent < 0.01f)
+        Percent = 0.01f;
+    g_ProgressSizeToRead = (int)((float)SizeLeft / (1.0f - Percent));
+    g_ProgressSizeHaveRead = g_ProgressSizeToRead - SizeLeft;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 726–735 */
@@ -1199,7 +1269,7 @@ void LS_FinallyIThinkIOnlyHaveThisSizeLeftToLoad(int SizeLeft)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void LS_Process(void)
+void LS_Process(void* pData)
 {
     while (pLS && (LoadingInProgress || !pLS->m_Finished)) {
         if (pLS && (LoadingInProgress || !pLS->m_Finished))
@@ -1227,7 +1297,16 @@ void LS_Process(void)
  */
 void LS_Destroy(void)
 {
-    /* TODO: decompile from asm/... */
+    LoadingInProgress = 0;
+    if (pLS)
+    {
+        WaitSema(pLS->m_SemaPhore);
+        TerminateThread(LS_iThreadID); DeleteThread(LS_iThreadID);
+        PS2auxSwapBuffers();
+        PS2auxSwapBuffers();
+        { C_LoadingScreen* p = pLS; if (p) { p->m_bDataIsValid = 0; DeleteSema(p->m_SemaPhore); if (p->m_ModelTextureName) { PS2glDeleteTextures(1, &p->m_ModelTextureName); p->m_ModelTextureName = 0; } if (p->m_ModelTextureData) { PS2glLiberator(p->m_ModelTextureData); p->m_ModelTextureData = 0; } if (p->m_BackGroundTextureName) { PS2glDeleteTextures(1, &p->m_BackGroundTextureName); p->m_BackGroundTextureName = 0; } if (p->m_BackGroundTextureData) { PS2glLiberator(p->m_BackGroundTextureData); p->m_BackGroundTextureData = 0; } PS2MC_RemoveCurrentMessage(); PS2glLiberator(p); } }
+        pLS = NULL; PS2glGsSyncPath();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 663–684 */
@@ -1254,7 +1333,25 @@ void LS_Destroy(void)
 void LS_Create(void)
 {
     SemaParam Semaphore;
-    /* TODO: decompile from asm/... */
+    ThreadParam Thread;
+    static char stack[4096];
+    PS2glFlush();
+    PS2glFinish();
+    C_LoadingScreen* p = (C_LoadingScreen*)PS2glAllocator64(sizeof(C_LoadingScreen)); if (p) p->C_LoadingScreen(); pLS = p;
+    if (!pLS->m_bDataIsValid)
+    {
+        if (pLS) { LoadingInProgress = 0; WaitSema(pLS->m_SemaPhore); TerminateThread(LS_iThreadID); DeleteThread(LS_iThreadID); PS2auxSwapBuffers(); PS2auxSwapBuffers(); { C_LoadingScreen* q = pLS; if (q) { q->m_bDataIsValid = 0; DeleteSema(q->m_SemaPhore); q->FreeTexture(&q->m_ModelTextureData, &q->m_ModelTextureName); q->FreeTexture(&q->m_BackGroundTextureData, &q->m_BackGroundTextureName); PS2MC_RemoveCurrentMessage(); PS2glLiberator(q); } } pLS = NULL; PS2glGsSyncPath(); }
+    }
+    else
+    {
+        LoadingInProgress = 1;
+        Thread.entry = LS_Process; Thread.stack = (int)stack; Thread.stackSize = 0x1000; Thread.gpReg = (int)(&_gp); Thread.initPriority = 10;
+        LS_iThreadID = CreateThread(&Thread);
+        StartThread(LS_iThreadID, 0);
+        Semaphore.initCount = 0;
+        Semaphore.maxCount = 0;
+        pLS->m_SemaPhore = CreateSema(&Semaphore);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 504–640 */
@@ -1496,7 +1593,45 @@ void C_LoadingScreen::DisplayWheelWork(float XX, float YY, float fSize, float fS
     float size;
     float y;
     float x;
-    /* TODO: decompile from asm/... */
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 640.0f, 480.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+    PS2glMatrixMode(0x1702);
+    PS2glLoadIdentity();
+    g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet != 0) ? 0x200 : 2;
+    g_gsContext.PRMODE.TME = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glBindTexture(0xDE1, m_ModelTextureName);
+    g_PS2glContext.nEnableBits |= 0x100;
+    g_gsContext.PRMODE.ABE = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glSetGsRegister(0x42, 0x44, 0, g_gsContext.ModFlgs.PRMODE_Modified);
+    PS2glBegin(4);
+    PS2glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
+    size = (640.0f * fSize) / 100.0f;
+    x = (640.0f * XX) / 100.0f;
+    y = (480.0f * YY) / 100.0f;
+    s1 = sinf(m_fTime * fSpeed);
+    c1 = cosf(m_fTime * fSpeed);
+    Coords[0][0] = -size; Coords[0][1] = -size;
+    Coords[1][0] = size; Coords[1][1] = -size;
+    Coords[2][0] = size; Coords[2][1] = size;
+    Coords[3][0] = -size; Coords[3][1] = size;
+    for (i = 0; i < 4; i++) {
+        float x1 = Coords[i][0];
+        float y1 = Coords[i][1];
+        Coords[i][0] = x1 * c1 + y1 * s1;
+        Coords[i][1] = x1 * s1 - y1 * c1;
+    }
+    PS2glTexCoord2f(0.0f, 0.0f); PS2glVertex2f(x + Coords[0][0], y + Coords[0][1]);
+    PS2glTexCoord2f(1.0f, 0.0f); PS2glVertex2f(x + Coords[1][0], y + Coords[1][1]);
+    PS2glTexCoord2f(1.0f, 1.0f); PS2glVertex2f(x + Coords[2][0], y + Coords[2][1]);
+    PS2glTexCoord2f(0.0f, 0.0f); PS2glVertex2f(x + Coords[0][0], y + Coords[0][1]);
+    PS2glTexCoord2f(1.0f, 1.0f); PS2glVertex2f(x + Coords[2][0], y + Coords[2][1]);
+    PS2glTexCoord2f(0.0f, 1.0f); PS2glVertex2f(x + Coords[3][0], y + Coords[3][1]);
+    PS2glEnd();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 394–413 */
@@ -1526,7 +1661,21 @@ void C_LoadingScreen::DisplayWheelWork(float XX, float YY, float fSize, float fS
  */
 void C_LoadingScreen::DrawQuad(float X1, float Y1, float X2, float Y2, float U1, float V1, float U2, float V2, float R, float G, float B, float A)
 {
-    /* TODO: decompile from asm/... */
+    PS2glBegin(4);
+    PS2glColor4f(R, G, B, A);
+    PS2glTexCoord2f(U1, V1);
+    PS2glVertex2f(X1, Y1);
+    PS2glTexCoord2f(U2, V1);
+    PS2glVertex2f(X2, Y1);
+    PS2glTexCoord2f(U2, V2);
+    PS2glVertex2f(X2, Y2);
+    PS2glTexCoord2f(U1, V1);
+    PS2glVertex2f(X1, Y1);
+    PS2glTexCoord2f(U2, V2);
+    PS2glVertex2f(X2, Y2);
+    PS2glTexCoord2f(U1, V2);
+    PS2glVertex2f(X1, Y2);
+    PS2glEnd();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_LoadingScreen.cpp lines 304–315 */
@@ -1590,5 +1739,22 @@ void C_LoadingScreen::FreeTexture(unsigned int** ppTextureData, unsigned int* pT
 C_LoadingScreen::C_LoadingScreen(void)
 {
     char TempString[128];
-    /* TODO: decompile from asm/... */
+    m_FadeValue = 1.0f;
+    m_Finished = 0;
+    m_bDataIsValid = 0;
+    m_BackGroundTextureData = 0; m_ModelTextureData = 0;
+    m_BackGroundTextureName = 0; m_ModelTextureName = 0;
+    m_SemaPhore = -1;
+    m_fTime = 0;
+    if (g_iLoadingScreenBackgroundNumber == 0)
+    {
+        g_iLoadingScreenBackgroundNumber = (int)(1.0f + 7.0f * (float)rand() / 2147483648.0f);
+    }
+    g_iLoadingScreenBackgroundNumber = g_iLoadingScreenBackgroundNumber + 1;
+    if (g_iLoadingScreenBackgroundNumber <= 0 || g_iLoadingScreenBackgroundNumber > 8)
+        g_iLoadingScreenBackgroundNumber = 1;
+    sprintf(TempString, "cdrom0:\\LSBIN\\LODPS20%d.TXR", g_iLoadingScreenBackgroundNumber);
+    LoadTexture(TempString, &m_BackGroundTextureData, &m_BackGroundTextureName);
+    LoadTexture("cdrom0:\\LSBIN\\LODMECA.TXR", &m_ModelTextureData, &m_ModelTextureName);
+    m_bDataIsValid = 1;
 }

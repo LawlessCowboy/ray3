@@ -2996,29 +2996,29 @@ void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg);
  */
 tdstNodeInterpret_* fn_p_stMusicMarkerSlotControlFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdeFuncId_ eFuncId;
+    tdeFuncId_ eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
     int lSlotId;
     stMusicMarkerSlot* p_stMarkerSlots;
 
-    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
-
     switch (eFuncId)
     {
+
+
         case eProc_SND_GetMusicMarker:
             p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
             lSlotId = (p_stValue->eType == E_vt_Float ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue) - 1;
 
+
             if (lSlotId < SND_fn_iGetNbMusicMarkerSlots() && lSlotId >= 0)
             {
                 p_stMarkerSlots = SND_fn_p_stGetMusicMarkerSlots();
-                p_stValue->uDummy.uParam.szString = p_stMarkerSlots[lSlotId].szBuffer; p_stValue->eType = E_vt_String;
+                p_stValue->uDummy.uParam.szString = *(int*)((char*)&p_stMarkerSlots[0].szBuffer + lSlotId * 40); p_stValue->eType = E_vt_String;
+
             }
             break;
         default:
             fn_vOnAIErm_M_UpdateLastError(39, NULL);
-            break;
     }
-
     return p_stTree;
 }
 

@@ -414,26 +414,38 @@ char* MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId,
     {
         pu32Adr = (unsigned int*)(g_a_pcAreaBasePointers[_u32AreaId] + pstPtrTable[i].u32Offset);
         if (pstPtrTable[i].u32AreaId == 2 || pstPtrTable[i].u32AreaId == 3)
+        {
             u32Area = pstPtrTable[i].u32AreaId + 2 - fn_lGetTransitionBloc();
+        }
         else
+        {
             u32Area = pstPtrTable[i].u32AreaId;
+        }
         *pu32Adr += (unsigned int)g_a_pcAreaBasePointers[u32Area];
     }
 
     for (i = 0; i < u32NbLinks; i++)
     {
         if (pstLinksTable[i].u32AreaId == 2 || pstLinksTable[i].u32AreaId == 3)
+        {
             u32Area = pstLinksTable[i].u32AreaId + 2 - fn_lGetTransitionBloc();
+        }
         else
+        {
             u32Area = pstLinksTable[i].u32AreaId;
+        }
         pu32Adr = (unsigned int*)(g_a_pcAreaBasePointers[u32Area] + pstLinksTable[i].u32AreaOffset);
         pstOldLinkPointers->pPtrAddress = (int)pu32Adr;
         pstOldLinkPointers->pPtrOldValue = *pu32Adr;
         pstOldLinkPointers++;
         if (pstLinksTable[i].u32CMBAreaId == 2 || pstLinksTable[i].u32CMBAreaId == 3)
+        {
             u32Area = pstLinksTable[i].u32CMBAreaId + 2 - fn_lGetTransitionBloc();
+        }
         else
+        {
             u32Area = pstLinksTable[i].u32CMBAreaId;
+        }
         *pu32Adr = (unsigned int)(g_a_pcAreaBasePointers[u32Area] + pstLinksTable[i].u32CMBOffset);
     }
 

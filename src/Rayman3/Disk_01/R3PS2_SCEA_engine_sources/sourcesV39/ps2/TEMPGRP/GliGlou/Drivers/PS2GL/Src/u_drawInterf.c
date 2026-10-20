@@ -501,16 +501,17 @@ struct COL_tdstBoundingSphere_ {
 };
 
 struct anon_1 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon1[6]; /* +0x2..0x7 */
 };
 
 struct tdstViewportManagement_ {
@@ -886,60 +887,61 @@ union anon_8 {
 };
 
 struct anon_9 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 struct SECT_tdstListOfSOSectorsInActivityInteraction_ {
@@ -1710,8 +1712,8 @@ struct tagGLcontext {
     float (*pvColorRange)[4]; /* +0x6c18 */
     int pfAlpha; /* +0x6c1c */
     int pfShininess; /* +0x6c20 */
-    int pnColorMatMasks; /* +0x6c24 */
-    int pbFogging; /* +0x6c28 */
+    int* pnColorMatMasks; /* +0x6c24 */
+    char* pbFogging; /* +0x6c28 */
     int peFogMode; /* +0x6c2c */
     int pfFogDensity; /* +0x6c30 */
     int pfFogLinearStart; /* +0x6c34 */
@@ -1914,15 +1916,16 @@ struct tdstAChannel_ {
 };
 
 struct anon_26 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_27 {
@@ -2317,6 +2320,33 @@ extern char* PLD_szPrependGamedataName(char*);
 extern int CD_OpenFileWithNameConversion(char*);
 extern char D_0035ADA0[];
 void GLI_vShowVignetteFromHandle(int);
+extern void PS2glDepthMask(unsigned char);
+extern void PS2glColorMask(unsigned char, unsigned char, unsigned char, unsigned char);
+extern void PS2glClearColor(float, float, float, float);
+extern void PS2glClear(unsigned int);
+extern void PS2glFlush(void);
+extern void PS2glFinish(void);
+extern void PS2auxSwapBuffers(void);
+extern void GLI_vShowVignette(char*);
+extern void PS2glBegin(unsigned int);
+extern void PS2glBindTexture(unsigned int, unsigned int);
+extern void PS2glColor4f(float, float, float, float);
+extern void PS2glDeleteTextures(unsigned int, int*);
+extern void PS2glEnd(void);
+extern void PS2glGenTextures(unsigned int, int*);
+extern void PS2glLoadIdentity(void);
+extern void PS2glMatrixMode(unsigned int);
+extern void PS2glOrtho(float, float, float, float, float, float);
+extern void PS2glTexCoord2f(float, float);
+extern void PS2glTexImage2D(unsigned int, int, unsigned int, unsigned int, unsigned int,
+                             unsigned int, unsigned int, unsigned int);
+extern void PS2glTexParameteri(unsigned int, unsigned int, unsigned int);
+extern void PS2glVertex2f(float, float);
+extern void GLI_vReinitViewport(void);
+extern int CD_Read(int, unsigned int, unsigned int);
+extern void CD_Close(int);
+extern void* malloc(unsigned int);
+extern void free(void*);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 78–80 */
 /* addr: 0x002b5790  size: 84 bytes */
@@ -2430,7 +2460,87 @@ float FRR(float a, float b)
  */
 void GLIPS2_vDisplayFirstLoadingBar(float Percent)
 {
-    /* TODO: decompile from asm/... */
+    /* Partial reconstruction: the GS/PS2GL state update and the draw order
+     * follow the retail code, the vertex list is still approximate.
+     * See m2c-seeds/GLIPS2_vDisplayFirstLoadingBar.c for the full skeleton. */
+    float fBar;
+    float fPos;
+
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+
+    g_PS2glContext.nEnableBits &= ~0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nLightBits &= ~0x200;
+    g_gsContext.TEST_1.ZTST = 2;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    *g_PS2glContext.pnColorMatMasks &= ~1;
+    if (g_PS2glContext.iCurTextureSet != 0) {
+        g_PS2glContext.bPointLighting &= ~0x200;
+    }
+    else {
+        g_PS2glContext.bPointLighting &= ~2;
+    }
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x400;
+    g_gsContext.TEST_1.ATE = 0;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    if ((g_PS2glContext.bPointLighting & 0xF) != 0) {
+        g_gsContext.PRMODE.TME = 1;
+    }
+    else {
+        g_gsContext.PRMODE.TME = 0;
+    }
+    g_PS2glContext.nEnableBits &= ~0x80;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_gsContext.PRMODE.FGE = 0;
+    *g_PS2glContext.pbFogging = 0;
+    g_PS2glContext.bCullfaceChanged = 1;
+    g_PS2glContext.nEnableBits &= ~0x2000;
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glDepthMask(0);
+    PS2glBlendFunc(0x302, 0x303);
+    g_PS2glContext.nEnableBits &= ~0x100;
+    g_gsContext.PRMODE.ABE = 0;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4100);
+
+    if (Percent > 100.0f) {
+        Percent = 100.0f;
+    }
+    fPos = BAR_POS[1] + 0.5f;
+    fBar = 0.5f + (BAR_POS[0] + ((Percent * ((BAR_POS[2] - 0.5f) - (BAR_POS[0] + 0.5f))) / 100.0f));
+    PS2glBegin(4);
+    PS2glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+    PS2glVertex2f(BAR_POS[0], BAR_POS[2]);
+    PS2glVertex2f(BAR_POS[2], fPos);
+    PS2glVertex2f(BAR_POS[2], fPos);
+    PS2glVertex2f(BAR_POS[1], fPos);
+    PS2glVertex2f(BAR_POS[2], BAR_POS[1]);
+    PS2glVertex2f(BAR_POS[1], BAR_POS[1]);
+    PS2glColor4f(0.0f, 0.3f, 0.3f, 1.0f);
+    PS2glVertex2f(BAR_POS[0], BAR_POS[3] - 0.5f);
+    PS2glVertex2f(BAR_POS[3], BAR_POS[3] - 0.5f);
+    PS2glVertex2f(BAR_POS[3], BAR_POS[3] - 0.5f);
+    PS2glVertex2f(BAR_POS[2], BAR_POS[3] - 0.5f);
+    PS2glVertex2f(BAR_POS[3], BAR_POS[3] - 0.5f);
+    PS2glVertex2f(BAR_POS[2], BAR_POS[3] - 0.5f);
+    PS2glColor4f(0.0f, 0.75f, 0.75f, 1.0f);
+    PS2glVertex2f(BAR_POS[3] - 0.5f, BAR_POS[0] + 0.5f);
+    PS2glVertex2f(fBar, fBar);
+    PS2glVertex2f(fBar, fBar);
+    PS2glVertex2f(BAR_POS[3] - 0.5f, fBar);
+    PS2glVertex2f(fBar, fBar);
+    PS2glVertex2f(BAR_POS[3] - 0.5f, fBar);
+    PS2glEnd();
+    PS2glFinish();
+    PS2auxSwapBuffers();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 2229–2238 */
@@ -2450,9 +2560,12 @@ void GLI_vLoadCarton(char* levelname)
 {
     int FileHandle;
     char TempString[512];
-    sprintf(TempString, D_0035ADA0, levelname);
-    GLI_vShowVignetteFromHandle(CD_OpenFileWithNameConversion(
-        PLD_szPrependGamedataName(TempString)));
+
+    sprintf(TempString, "VIGNETTE\\FRA\\%s.RAW", levelname);
+    FileHandle = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName(TempString));
+
+    GLI_vShowVignetteFromHandle(FileHandle);
+
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 2101–2223 */
@@ -2598,12 +2711,104 @@ void GLI_vLoadCarton(char* levelname)
  */
 void GLI_vShowVignetteFromHandle(int FileHandle)
 {
-    float Y;
-    unsigned int K;
-    unsigned int i;
-    int TexHandle[4];
+    /* Partial reconstruction: the GS/PS2GL state update and the draw order
+     * follow the retail code, the texture loop is still approximate.
+     * See m2c-seeds/GLI_vShowVignetteFromHandle.c for the full skeleton. */
     unsigned char* pBitmap;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    unsigned int K;
+    int TexHandle[4];
+
+    if (FileHandle < 0) {
+        return;
+    }
+    pBitmap = (unsigned char*)malloc(0x30080);
+    PS2glFlush();
+    PS2glFinish();
+    GLI_vReinitViewport();
+    PS2glGenTextures(4, TexHandle);
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits &= ~0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    if (g_PS2glContext.iCurTextureSet != 0) {
+        g_PS2glContext.bPointLighting |= 0x200;
+    }
+    else {
+        g_PS2glContext.bPointLighting |= 2;
+    }
+    g_gsContext.TEST_1.ZTST = 2;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_gsContext.PRMODE.TME = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4000);
+    PS2glFlush();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4000);
+    PS2glFlush();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4000);
+    PS2glFlush();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    for (i = 0; i < 4; i++) {
+        CD_Read(FileHandle, (unsigned int)(((int)pBitmap + 0x7F) & ~0x7F), 0x30000);
+        PS2glBindTexture(0xDE1, TexHandle[i]);
+        PS2glTexImage2D(0xDE1, 0, 0x1907, 0x200, 0x80, 0, 0x1907, 0x1401);
+    }
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1702);
+    PS2glLoadIdentity();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+    for (i = 0; i < 4; i++) {
+        for (K = 0; K < 4; K++) {
+            if (g_PS2glContext.iCurTextureSet != 0) {
+                g_PS2glContext.bPointLighting |= 0x200;
+            }
+            else {
+                g_PS2glContext.bPointLighting |= 2;
+            }
+            g_gsContext.PRMODE.TME = 1;
+            g_gsContext.ModFlgs.PRMODE_Modified = 1;
+            PS2glBindTexture(0xDE1, TexHandle[K]);
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+            PS2glBegin(4);
+            PS2glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
+            PS2glTexCoord2f(0.0f, 0.0f);
+            PS2glVertex2f(0.0f, 0.0f);
+            PS2glTexCoord2f(1.0f, 0.0f);
+            PS2glVertex2f(100.0f, 0.0f);
+            PS2glTexCoord2f(1.0f, 1.0f);
+            PS2glVertex2f(100.0f, 100.0f);
+            PS2glTexCoord2f(0.0f, 1.0f);
+            PS2glVertex2f(0.0f, 100.0f);
+            PS2glTexCoord2f(1.0f, 0.0f);
+            PS2glVertex2f(100.0f, 0.0f);
+            PS2glTexCoord2f(0.0f, 0.0f);
+            PS2glVertex2f(0.0f, 0.0f);
+            PS2glEnd();
+        }
+        g_PS2glContext.nEnableBits &= ~0x100;
+        g_gsContext.PRMODE.ABE = 0;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glFlush();
+        PS2glFinish();
+        PS2auxSwapBuffers();
+    }
+    CD_Close(FileHandle);
+    PS2auxSwapBuffers();
+    PS2auxSwapBuffers();
+    free(pBitmap);
+    PS2glDeleteTextures(4, TexHandle);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 2025–2026 */
@@ -2718,7 +2923,23 @@ void GLI_PrintDebugString(void)
  */
 void ClearScreenAfterInit(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2glDepthMask(1);
+    g_PS2glContext.nEnableBits &= ~0x400;
+    g_gsContext.TEST_1.ATE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_gsContext.PRMODE.FGE = 1;
+    g_PS2glContext.nEnableBits &= ~0x80;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    *g_PS2glContext.pbFogging = 0;
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4100);
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glFlush();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    GLI_vShowVignette("UBISOFT.SCR");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawInterf.c lines 417–459 */
@@ -2921,12 +3142,106 @@ void GLI_vProgressCallBack(unsigned int NbBytesReadThisTime)
  */
 void GLI_vShowVignette(char* FileName)
 {
-    float Y;
-    unsigned int K;
+    /* Partial reconstruction: the GS/PS2GL state update and the draw order
+     * follow the retail code, the texture loop is still approximate.
+     * See m2c-seeds/GLI_vShowVignette.c for the full skeleton. */
+    unsigned char* pBitmap;
     unsigned int i;
+    unsigned int K;
     int TexHandle[4];
     int FileHandle;
-    unsigned char* pBitmap;
     char TempString[1024];
-    /* TODO: decompile from asm/... */
+
+    sprintf(TempString, "VIG\\%s", FileName);
+    FileHandle = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName(TempString));
+    if (FileHandle < 0) {
+        return;
+    }
+    pBitmap = (unsigned char*)malloc(0x30080);
+    PS2glFlush();
+    PS2glFinish();
+    GLI_vReinitViewport();
+    PS2glGenTextures(4, TexHandle);
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits &= ~0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    if (g_PS2glContext.iCurTextureSet != 0) {
+        g_PS2glContext.bPointLighting |= 0x200;
+    }
+    else {
+        g_PS2glContext.bPointLighting |= 2;
+    }
+    g_gsContext.TEST_1.ZTST = 2;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_gsContext.PRMODE.TME = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4000);
+    PS2glFlush();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4000);
+    PS2glFlush();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glClear(0x4000);
+    PS2glFlush();
+    PS2glFinish();
+    PS2auxSwapBuffers();
+    for (i = 0; i < 4; i++) {
+        CD_Read(FileHandle, (unsigned int)(((int)pBitmap + 0x7F) & ~0x7F), 0x30000);
+        PS2glBindTexture(0xDE1, TexHandle[i]);
+        PS2glTexImage2D(0xDE1, 0, 0x1907, 0x200, 0x80, 0, 0x1907, 0x1401);
+    }
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1702);
+    PS2glLoadIdentity();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+    for (i = 0; i < 4; i++) {
+        for (K = 0; K < 4; K++) {
+            if (g_PS2glContext.iCurTextureSet != 0) {
+                g_PS2glContext.bPointLighting |= 0x200;
+            }
+            else {
+                g_PS2glContext.bPointLighting |= 2;
+            }
+            g_gsContext.PRMODE.TME = 1;
+            g_gsContext.ModFlgs.PRMODE_Modified = 1;
+            PS2glBindTexture(0xDE1, TexHandle[K]);
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+            PS2glBegin(4);
+            PS2glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
+            PS2glTexCoord2f(0.0f, 0.0f);
+            PS2glVertex2f(0.0f, 0.0f);
+            PS2glTexCoord2f(1.0f, 0.0f);
+            PS2glVertex2f(100.0f, 0.0f);
+            PS2glTexCoord2f(1.0f, 1.0f);
+            PS2glVertex2f(100.0f, 100.0f);
+            PS2glTexCoord2f(0.0f, 1.0f);
+            PS2glVertex2f(0.0f, 100.0f);
+            PS2glTexCoord2f(1.0f, 0.0f);
+            PS2glVertex2f(100.0f, 0.0f);
+            PS2glTexCoord2f(0.0f, 0.0f);
+            PS2glVertex2f(0.0f, 0.0f);
+            PS2glEnd();
+        }
+        g_PS2glContext.nEnableBits &= ~0x100;
+        g_gsContext.PRMODE.ABE = 0;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glFlush();
+        PS2glFinish();
+        PS2auxSwapBuffers();
+    }
+    CD_Close(FileHandle);
+    PS2auxSwapBuffers();
+    PS2auxSwapBuffers();
+    free(pBitmap);
+    PS2glDeleteTextures(4, TexHandle);
 }

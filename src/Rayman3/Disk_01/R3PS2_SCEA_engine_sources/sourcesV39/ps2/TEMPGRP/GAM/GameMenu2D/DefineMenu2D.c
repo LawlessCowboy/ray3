@@ -1699,7 +1699,7 @@ int g_bAlbumInitialized;
 tdst_Album_ g_stAlbum;
 int g_CurrentLanguage;
 int g_CurrentSelectedCharNumber;
-char g_CurrentNameForSavePage;
+char g_CurrentNameForSavePage[10];
 int g_CurrentLineForSelection;
 int g_CurrentColForSelection;
 int GLI_g_50_or_60_HzMode;
@@ -1765,13 +1765,84 @@ SAV2_tdstList_ SAV2_g_stList;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern GLD_tdstViewportAttributes_* g_p_stVpt;
+extern int g_NumFirstCharForScroll;
+extern float g_OffsetXForScroll;
+extern float g_OffsetStepForScroll;
+extern unsigned int strlen(const char* s);
+extern char* strncpy(char* dst, const char* src, unsigned int n);
+extern void TXT_vAfficheSimpleWithColor(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z, unsigned int ulTextColor);
+extern void TXT_fn_fComputePixelLengthOfString(char* _szText, float* W, float* H);
+
 void fn_vDisplayScrollTextMenu2D(float X, float Y, float W, char* szText, unsigned int ulTextColor)
 {
     char szTmp[30];
     int N;
-    float fH;
+    int ulLen;
     float fL;
-    /* TODO: decompile from asm/... */
+    float fH;
+
+    TXT_vAfficheSimpleWithColor(g_p_stVpt, szText + g_NumFirstCharForScroll, X - g_OffsetXForScroll, Y, 0.0f, ulTextColor);
+
+    g_OffsetXForScroll = g_OffsetXForScroll + g_OffsetStepForScroll;
+
+    if (g_OffsetXForScroll <= 20.0f)
+    {
+        return;
+    }
+
+    N = 0;
+    while (szText[g_NumFirstCharForScroll + N] == '\\')
+    {
+        N++;
+        if (szText[g_NumFirstCharForScroll + N] == 'f')
+        {
+            N++;
+            while (szText[g_NumFirstCharForScroll + N] != ':')
+            {
+                N++;
+            }
+            N++;
+        }
+        else if (szText[g_NumFirstCharForScroll + N] == 'c')
+        {
+            N++;
+            while (szText[g_NumFirstCharForScroll + N] != ':')
+            {
+                N++;
+            }
+            N++;
+            while (szText[g_NumFirstCharForScroll + N] != ':')
+            {
+                N++;
+            }
+            N++;
+            while (szText[g_NumFirstCharForScroll + N] != ':')
+            {
+                N++;
+            }
+            N++;
+        }
+    }
+
+    ulLen = N + 1;
+
+    strncpy(szTmp, szText + g_NumFirstCharForScroll, ulLen);
+    szTmp[ulLen] = 0;
+
+    TXT_fn_fComputePixelLengthOfString(szTmp, &fL, &fH);
+
+    fL = 100.0f * (fL / (float)g_p_stVpt->dwWidth);
+    fH = 100.0f * (fH / (float)g_p_stVpt->dwHeight);
+
+    g_NumFirstCharForScroll += N + 1;
+    g_OffsetXForScroll = g_OffsetXForScroll - 10.0f * fL;
+
+    if (strlen(szText) < g_NumFirstCharForScroll)
+    {
+        g_NumFirstCharForScroll = 0;
+        g_OffsetXForScroll = -W;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 2031–2966 */
@@ -2164,9 +2235,28 @@ void fn_vDisplayScrollTextMenu2D(float X, float Y, float W, char* szText, unsign
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int fn_vSpecificManageMenu2D(void);
+
 void fn_vManageMenu2D(void)
 {
-    /* TODO: decompile from asm/... */
+    if (fn_vSpecificManageMenu2D())
+    {
+        if (g_CurrentActionMenu2D == 2)
+        {
+            /* TODO: the "action 2" menu handling is not reconstructed yet. */
+        }
+        else if (g_CurrentActionMenu2D == 3)
+        {
+            /* TODO: the "action 3" menu handling is not reconstructed yet. */
+        }
+    }
+    else
+    {
+        /* TODO: the main menu state machine (the ~10 kB body with the
+         * fn_vGotoSubMenu / ReturnFromSubMenu / fn_vChangeCurrentValue
+         * dispatch on the IPT_fn_bIsJustValidated pad entries) is not
+         * reconstructed yet. */
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1905–1982 */
@@ -2201,9 +2291,67 @@ void fn_vManageMenu2D(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void fn_vSetStereoGameMenu2D(unsigned int uiSet);
+extern void IPT_fn_vStopFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber);
+extern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+extern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+extern signed char IPT_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime);
+
 void fn_vChangeCurrentValue(char Value)
 {
-    /* TODO: decompile from asm/... */
+    if (aMenu2DPages[g_CurrentMenu2DPage].aValue[g_CurrentSelection] != Value)
+    {
+        fn_vPlaySoundInGameMenu2D(3);
+        aMenu2DPages[g_CurrentMenu2DPage].aValue[g_CurrentSelection] = Value;
+    }
+
+    switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+    {
+    case eVideoOptionTypePage:
+        if (g_CurrentSelection == 1)
+        {
+            GLI_g_bWideScreenMode = Value;
+        }
+        break;
+
+    case eControlOptionTypePage:
+        if (g_CurrentSelection == 0)
+        {
+            MENU_g_bInversionVert = Value;
+        }
+        else if (g_CurrentSelection == 1)
+        {
+            MENU_g_bInversionHor = Value;
+        }
+        else if (g_CurrentSelection == 2)
+        {
+            if (MENU_g_bVibration != Value)
+            {
+                MENU_g_bVibration = Value;
+
+                if (Value != 0)
+                {
+                    if (g_MenuVibrationEffect != -1)
+                    {
+                        IPT_fn_vStopFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, g_MenuVibrationEffect);
+                        g_MenuVibrationEffect = -1;
+                    }
+
+                    IPT_fn_vResumeAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+                    g_MenuVibrationEffect = IPT_fn_cCreateAndLaunchConstantFFBEffect(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount, 0, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+                }
+                else
+                {
+                    IPT_fn_vPauseAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+                }
+            }
+        }
+        break;
+
+    case eAudioOptionTypePage:
+        fn_vSetStereoGameMenu2D(Value);
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1812–1821 */
@@ -2276,9 +2424,174 @@ void fn_vInterruptMenu2D(int bPauseMenu)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void GAM_fn_vSetVolumeMusic(int s32_Value);
+extern void GAM_fn_vSetVolumeSound(int s32_Value);
+extern void GAM_fn_vSetVolumeMenu(int s32_Value);
+extern void GAM_fn_vSetVolumeAmbiance(int s32_Value);
+extern void GAM_fn_vSetVolumeVoice(int s32_Value);
+extern unsigned int PS2MC_fn_iGetFunctionResult(int FlagID);
+extern void PS2MC_vClearFlag(int FlagID);
+extern void VID_fn_vNextVideoToPlay(char* p_szVideoName, unsigned char bCanBeInterrupt, unsigned char bLoop);
+extern void VID_fn_vPlayVideoAfterLevel(void);
+extern void GAM_fn_vAskToChangeLevel(char* szNewLevelName);
+extern void DesinitGameMenu2D(void);
+extern void CloseInGameMenu2D(void);
+extern void fn_vLoadEngineClock(void);
+extern void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+extern void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulTime);
+extern void GLI_vFreeTempMaterial(int* ppMaterial);
+
 void ReturnFromSubMenu(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int ulResult;
+    long bPlayVideo;
+    char* szLevelName;
+
+    fn_vPlaySoundInGameMenu2D(4);
+
+    if (g_CurrentMenu2DPage == g_ControlOptionPage ||
+        g_CurrentMenu2DPage == g_AudioOptionPage ||
+        g_CurrentMenu2DPage == g_VideoOptionPage ||
+        g_CurrentMenu2DPage == g_AlbumPage ||
+        g_CurrentMenu2DPage == g_HallOfFamePage ||
+        g_CurrentMenu2DPage == g_CinematicPage && g_NbCinematicOpen == 0)
+    {
+        g_NoValidate = 0;
+    }
+
+    if (g_CurrentMenu2DPage == g_AudioOptionPage)
+    {
+        GAM_fn_vSetVolumeMusic(g_aNbGradOn[0] * 127 / 10);
+        GAM_fn_vSetVolumeSound(g_aNbGradOn[1] * 127 / 10);
+        GAM_fn_vSetVolumeMenu(g_aNbGradOn[1] * 127 / 10);
+        GAM_fn_vSetVolumeAmbiance(g_aNbGradOn[1] * 127 / 10);
+        GAM_fn_vSetVolumeVoice(g_aNbGradOn[2] * 127 / 10);
+    }
+
+    if (g_2DMenuID == 1 && g_CurrentMenu2DPage == g_SavePage)
+    {
+        ulResult = PS2MC_fn_iGetFunctionResult(0);
+
+        switch (ulResult)
+        {
+        case 1:
+            PS2MC_vClearFlag(0);
+            bPlayVideo = 1;
+            break;
+        case 2:
+            PS2MC_vClearFlag(0);
+            bPlayVideo = 0;
+            break;
+        default:
+            printf("ERROR ! fn_bIsSaveOK called when save still in progress \n");
+            bPlayVideo = 0;
+            break;
+        }
+
+        if (bPlayVideo)
+        {
+            VID_fn_vNextVideoToPlay((char *)g_aCinematicName[0], 1, 0);
+            g_IsSaveOK = 0;
+            VID_fn_vPlayVideoAfterLevel();
+            szLevelName = (char *)g_aMapName[1];
+            CloseInGameMenu2D();
+            GAM_fn_vAskToChangeLevel(szLevelName);
+        }
+    }
+
+    if (g_CurrentIndSubMenu >= 0)
+    {
+        g_NextPage = g_aSubMenuReturn[g_CurrentIndSubMenu];
+        g_CurrentIndSubMenu--;
+        g_CurrentActionMenu2D = 2;
+        g_GotoRight = 1;
+
+        if (g_CurrentIndSubMenu == -1)
+        {
+            if (g_2DMenuID == 0 || g_2DMenuID == 3)
+            {
+                g_NotRight = 0;
+                g_NotLeft = 0;
+                g_NoBonusShortcut = 0;
+                g_NoGameShortcut = 0;
+            }
+        }
+
+        g_MustCheckMC = 1;
+
+        {
+            int i;
+            tdstMenu2DPages_* p;
+
+            i = 0;
+            do
+            {
+                p = &aMenu2DPages[g_NextPage];
+                p->abGrayed[i] = 0;
+                p->abGrayed[i + 1] = 0;
+                p->abGrayed[i + 2] = 0;
+                p->abGrayed[i + 3] = 0;
+                p->abGrayed[i + 4] = 0;
+                p->abGrayed[i + 5] = 0;
+                p->abGrayed[i + 6] = 0;
+                p->abGrayed[i + 7] = 0;
+                i += 8;
+            } while (i < 2);
+
+            if (i < 10)
+            {
+                do
+                {
+                    p = &aMenu2DPages[g_NextPage];
+                    p->abGrayed[i] = 0;
+                    i++;
+                } while (i < 10);
+            }
+        }
+
+        if (g_2DMenuID == 3)
+        {
+            aMenu2DPages[g_GamePage].abGrayed[2] = 1;
+        }
+
+        if (!g_EndOfGameIsDone)
+        {
+            aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
+        }
+
+        g_MustCheckMC = 1;
+    }
+
+    if (g_2DMenuID != 1 && !g_ExitForbidden)
+    {
+        if (g_2DMenuID != 3 || g_BonusWithExit == 1)
+        {
+            DesinitGameMenu2D();
+
+            if (g_stEngineStructure.bEngineFrozen)
+            {
+                fn_vLoadEngineClock();
+            }
+
+            g_stEngineStructure.bEngineFrozen = 0;
+            g_InGameMenu2DActivated = 0;
+
+            if (MENU_g_bVibration)
+            {
+                IPT_fn_vResumeAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+            }
+            else
+            {
+                IPT_fn_vPauseAllConstantFFBEffectForAllDevices(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+            }
+        }
+    }
+
+    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[0]);
+    GLI_vFreeTempMaterial(&g_hFixMaterialForAlbum[1]);
+    g_bAlbumInitialized = 0;
+    g_bAlbumIsWorking = 0;
+    g_bAlbumLoadInProgress = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1657–1715 */
@@ -2314,7 +2627,83 @@ void ReturnFromSubMenu(void)
  */
 void fn_vGotoSubMenu(int SubPage)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int uNb;
+    int i;
+    tdstMenu2DPages_* p;
+
+    fn_vPlaySoundInGameMenu2D(4);
+
+    if (g_CurrentIndSubMenu < 4)
+    {
+        g_NextPage = SubPage;
+        g_CurrentActionMenu2D = 2;
+        g_GotoRight = 1;
+        g_aSubMenuReturn[++g_CurrentIndSubMenu] = g_CurrentMenu2DPage;
+
+        g_NotRight = 1;
+        g_NotLeft = 1;
+        g_NoBonusShortcut = 1;
+        g_NoGameShortcut = 1;
+
+        if (SubPage == g_VideoOptionPage ||
+            SubPage == g_AlbumPage ||
+            SubPage == g_HallOfFamePage ||
+            (SubPage == g_CinematicPage && g_NbCinematicOpen == 0))
+        {
+            g_NoValidate = 1;
+        }
+
+        if (SubPage == g_VideoOptionPage)
+        {
+            if (g_2DMenuID == 1)
+            {
+                uNb = 3;
+                aMenu2DPages[g_VideoOptionPage].NbSelection = uNb;
+                aMenu2DPages[g_VideoOptionPage].NbEntry = uNb;
+            }
+            else
+            {
+                uNb = 2;
+                aMenu2DPages[g_VideoOptionPage].NbSelection = uNb;
+                aMenu2DPages[g_VideoOptionPage].NbEntry = uNb;
+            }
+        }
+
+        i = 0;
+        do
+        {
+            p = &aMenu2DPages[SubPage];
+            p->abGrayed[i] = 0;
+            p->abGrayed[i + 1] = 0;
+            p->abGrayed[i + 2] = 0;
+            p->abGrayed[i + 3] = 0;
+            p->abGrayed[i + 4] = 0;
+            p->abGrayed[i + 5] = 0;
+            p->abGrayed[i + 6] = 0;
+            p->abGrayed[i + 7] = 0;
+            i += 8;
+        } while (i < 2);
+
+        if (i < 10)
+        {
+            do
+            {
+                p = &aMenu2DPages[SubPage];
+                p->abGrayed[i] = 0;
+                i++;
+            } while (i < 10);
+        }
+
+        if (g_2DMenuID == 3)
+            aMenu2DPages[g_GamePage].abGrayed[2] = 1;
+
+        if (!g_EndOfGameIsDone)
+        {
+            aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
+        }
+
+        g_MustCheckMC = 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1625–1654 */
@@ -2394,7 +2783,70 @@ void fn_vNextSelection(void)
 void fn_vPreviousSelectionNoWrap(void)
 {
     unsigned int u32Sound2Play;
-    /* TODO: decompile from asm/... */
+
+    u32Sound2Play = 2;
+
+    if (g_CurrentSelection == 0)
+    {
+        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+        {
+            u32Sound2Play = 10;
+        }
+        else
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)
+            {
+                u32Sound2Play = 10;
+            }
+            else
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;
+            }
+        }
+    }
+    else
+    {
+        g_CurrentSelection--;
+    }
+
+    fn_vPlaySoundInGameMenu2D(u32Sound2Play);
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+    {
+        u32Sound2Play = 2;
+
+        if (g_CurrentSelection == 0)
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+            {
+                u32Sound2Play = 10;
+            }
+            else
+            {
+                if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)
+                {
+                    u32Sound2Play = 10;
+                }
+                else
+                {
+                    aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;
+                    u32Sound2Play = 2;
+                }
+            }
+        }
+        else
+        {
+            g_CurrentSelection--;
+            u32Sound2Play = 2;
+        }
+
+        fn_vPlaySoundInGameMenu2D(u32Sound2Play);
+
+        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+        {
+            fn_vPreviousSelectionNoWrap();
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1520–1553 */
@@ -2421,7 +2873,70 @@ void fn_vPreviousSelectionNoWrap(void)
 void fn_vNextSelectionNoWrap(void)
 {
     unsigned int u32Sound2Play;
-    /* TODO: decompile from asm/... */
+
+    u32Sound2Play = 2;
+
+    if (g_CurrentSelection == aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1)
+    {
+        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+        {
+            u32Sound2Play = 10;
+        }
+        else
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry !=
+                aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry++;
+            }
+            else
+            {
+                u32Sound2Play = 10;
+            }
+        }
+    }
+    else
+    {
+        g_CurrentSelection++;
+    }
+
+    fn_vPlaySoundInGameMenu2D(u32Sound2Play);
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+    {
+        u32Sound2Play = 2;
+
+        if (g_CurrentSelection == aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1)
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+            {
+                u32Sound2Play = 10;
+            }
+            else
+            {
+                if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry !=
+                    aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
+                {
+                    aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry++;
+                }
+                else
+                {
+                    u32Sound2Play = 10;
+                }
+            }
+        }
+        else
+        {
+            g_CurrentSelection++;
+        }
+
+        fn_vPlaySoundInGameMenu2D(u32Sound2Play);
+
+        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+        {
+            fn_vNextSelectionNoWrap();
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1444–1465 */
@@ -2441,28 +2956,40 @@ void fn_vNextSelectionNoWrap(void)
 void fn_vReinitGrayedEntries(int PageNumber)
 {
     int i;
+    tdstMenu2DPages_* p;
 
-    for (i = 0; i < 10; i++)
+    i = 0;
+    do
     {
-        aMenu2DPages[PageNumber].abGrayed[i] = 0;
+        p = &aMenu2DPages[PageNumber];
+        p->abGrayed[i] = 0;
+        p->abGrayed[i + 1] = 0;
+        p->abGrayed[i + 2] = 0;
+        p->abGrayed[i + 3] = 0;
+        p->abGrayed[i + 4] = 0;
+        p->abGrayed[i + 5] = 0;
+        p->abGrayed[i + 6] = 0;
+        p->abGrayed[i + 7] = 0;
+        i += 8;
+    } while (i < 2);
+
+    if (i < 10)
+    {
+        do
+        {
+            p = &aMenu2DPages[PageNumber];
+            p->abGrayed[i] = 0;
+            i++;
+        } while (i < 10);
     }
 
     if (g_2DMenuID == 3)
         aMenu2DPages[g_GamePage].abGrayed[2] = 1;
 
-
     if (!g_EndOfGameIsDone)
     {
         aMenu2DPages[g_BonusPage].abGrayed[3] = 1;
     }
-
-
-
-
-
-
-
-
 
     g_MustCheckMC = 1;
 }
@@ -2699,11 +3226,49 @@ void fn_vInitInGameMenu2D(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void fn_vInitMenuPages(void)
 {
+    GEO_tdstColor_ stColor;
     int IndSubMenuPage;
     int i;
-    /* TODO: decompile from asm/... */
+    int j;
+    tdstMenu2DPages_* p;
+
+    g_FirstCineNameText = 9;
+    g_FirstArcadeNameText = 18;
+
+    IndSubMenuPage = 1;
+    i = 592;
+    j = 4;
+    p = &aMenu2DPages[0];
+
+    stColor.xR = 0.1f;
+    stColor.xG = 0.7f;
+    stColor.xB = 0.7f;
+    stColor.xA = 0.5f;
+
+    GLI_xCreateMaterial(&g_hSelectedFrameMaterialForMenu2D);
+    GLI_xSetMaterialAmbientCoef(&g_hSelectedFrameMaterialForMenu2D, &stColor);
+    GLI_xSetMaterialDiffuseCoef(&g_hSelectedFrameMaterialForMenu2D, &stColor);
+    GLI_Material_fn_lSetTextureOp(&g_hSelectedFrameMaterialForMenu2D, 0, 3);
+
+    for (i = 0; i < 10; i++)
+    {
+        g_aEnvValue[i].ulNbCage = 0;
+        g_aEnvValue[i].ulScore = 0;
+    }
+
+    g_GlobalScoreAtBeginingOfLevel = 0;
+    g_CurrentEnvScoreAtBeginingOfLevel = 0;
+    g_RevisitGlobalScoreAtBeginingOfLevel = 0;
+    g_RevisitEnvScoreAtBeginingOfLevel = 0;
+    g_RevisitCurrentEnvScore = 0;
+    g_EndOfGameIsDone = 0;
+    g_CurrentEnvInit = 1;
+
+    /* TODO: the remaining page titles, texts and selection setup
+     * (35 aMenu2DPages entries) are not reconstructed yet. */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 897–975 */
@@ -2752,7 +3317,275 @@ void fn_vInitMenuPages(void)
  */
 void fn_vInitMaterialForMenu(void)
 {
-    /* TODO: decompile from asm/... */
+    InitPS2Menu2DTextures();
+    M2D_StartBGLoading();
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_gen.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 2);
+        EnableAlphaTest(hMat);
+        g_hBGMaterialForMenu2D = (int)hMat;
+        M2D_StartFixLoading();
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_fix.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        g_hFixMaterialForMenu2D = (int)hMat;
+        M2D_StartTitlesLoading();
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_jard.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[0].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_fore.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[1].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_mara.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[2].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_land.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[3].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_dese.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[4].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_abra.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[5].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_mont.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[6].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_blac.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[7].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_donj.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[8].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_bonu.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[9].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_game.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[10].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_opti.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[11].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_sav.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[13].hMaterial = 0;
+        aMenu2DPages[12].hMaterial = hMat;
+        aMenu2DPages[14].hMaterial = aMenu2DPages[11].hMaterial;
+        aMenu2DPages[15].hMaterial = aMenu2DPages[14].hMaterial;
+        aMenu2DPages[16].hMaterial = aMenu2DPages[15].hMaterial;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_arca.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[17].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_flms.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[18].hMaterial = hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_phts.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        aMenu2DPages[19].hMaterial = hMat;
+        aMenu2DPages[20].hMaterial = aMenu2DPages[19].hMaterial;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_film.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        g_hFixMaterialForSelectedFilms = (int)hMat;
+    }
+
+    {
+        GLI_tdstTexture_* hTex;
+        GLI_tdstMaterial_* hMat;
+
+        GLI_xCreateMaterial(&hMat);
+        GLI_xSetMaterialType(hMat, -9);
+        M2D_iLoadMenuTexture(&hTex, "Menu\\mnu_bouc.tga");
+        GLI_xSetMaterialTexture(hMat, hTex);
+        GLI_Material_fn_lSetTextureOp(hMat, 0, 3);
+        EnableAlpha(hMat);
+        g_hFixMaterialForArcadeAndFilms = (int)hMat;
+    }
+
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 840–886 */
@@ -2969,7 +3802,69 @@ void ActivateInGameMenu2DStart(void)
  */
 void ActivateInGameMenu2DPhoto(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    char* p;
+
+    g_NotRight = 1;
+    g_NotLeft = 1;
+    g_NoBonusShortcut = 1;
+    g_NoGameShortcut = 1;
+    g_CurrentMenu2DPage = g_PhotoMenuPage;
+    g_2DMenuID = 2;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
+    fn_vSaveEngineClock();
+    g_CurrentActionMenu2D = eActionBeginOfPage;
+    g_stEngineStructure.bEngineFrozen = 1;
+    g_CurrentIndSubMenu = -1;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    g_InGameMenu2DActivated = 1;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_CurrentSelection = 0;
+    PS2M2D_vReinitMenuTextures();
+    fn_vInitSoundInGameMenu2D(0);
+    g_CurrentSelectedCharNumber = 0;
+    g_NbColForSelection = 10;
+    g_NbLineForSelection = 5;
+    g_CurrentColForSelection = 6;
+    g_CurrentLineForSelection = 4;
+    g_NbCharForSaveName = 7;
+    g_XTextLeft = 18.0f;
+    g_XText = 18.0f;
+
+    i = 0;
+    do
+    {
+        p = g_CurrentNameForSavePage;
+        p[i] = 0;
+        p[i + 1] = 0;
+        p[i + 2] = 0;
+        p[i + 3] = 0;
+        p[i + 4] = 0;
+        p[i + 5] = 0;
+        p[i + 6] = 0;
+        p[i + 7] = 0;
+        i += 8;
+    } while (i < 2);
+
+    if (i < 10)
+    {
+        do
+        {
+            p = g_CurrentNameForSavePage;
+            p[i] = 0;
+            i++;
+        } while (i < 10);
+    }
+
+    PS2MC_vClearFlag(0);
+    PS2MC_vClearFlag(5);
+    g_CurrentNameForSavePage[0] = 0;
+    PS2MC_g_NbFilesFound = 0;
+    PS2MC_fn_vGetMemoryCardScreenShotsHeaders(g_aFileEntryArray, 100, &PS2MC_g_NbFilesFound);
+    MNU_g_SavingScreenshot = 1;
+    g_CurrentSelectedCharNumber = strlen(g_CurrentNameForSavePage);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 489–505 */
@@ -3190,7 +4085,94 @@ unsigned int fn_ulR3GetEnvNbCage(unsigned int ulIndE)
  */
 unsigned int fn_ulR3GetEnvScoreWithRevisit(unsigned int ulIndE)
 {
-    /* TODO: decompile from asm/... */
+    int i;
+    int offset;
+    anon_2 *p;
+
+    g_aEnvValue[0].ulScore = 0;
+
+    i = 1;
+    offset = 8;
+    do
+    {
+        p = (anon_2 *)((char *)g_aEnvValue + offset);
+        g_aEnvValue[0].ulScore += p[0].ulScore;
+        g_aEnvValue[0].ulScore += p[1].ulScore;
+        g_aEnvValue[0].ulScore += p[2].ulScore;
+        g_aEnvValue[0].ulScore += p[3].ulScore;
+        g_aEnvValue[0].ulScore += p[4].ulScore;
+        g_aEnvValue[0].ulScore += p[5].ulScore;
+        g_aEnvValue[0].ulScore += p[6].ulScore;
+        g_aEnvValue[0].ulScore += p[7].ulScore;
+        i += 8;
+        offset += 64;
+    } while (i < 2);
+
+    offset = i * 8;
+    if (i < 10)
+    {
+        do
+        {
+            p = (anon_2 *)((char *)g_aEnvValue + offset);
+            g_aEnvValue[0].ulScore += p->ulScore;
+            i++;
+            offset += 8;
+        } while (i < 10);
+    }
+
+    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+
+    if (g_RevisitMode != 0)
+    {
+        if (ulIndE == 0)
+        {
+            return g_RevisitCurrentGlobalScore;
+        }
+
+        return g_RevisitCurrentEnvScore;
+    }
+    else
+    {
+        g_aEnvValue[0].ulScore = 0;
+
+        i = 1;
+        offset = 8;
+        do
+        {
+            p = (anon_2 *)((char *)g_aEnvValue + offset);
+            g_aEnvValue[0].ulScore += p[0].ulScore;
+            g_aEnvValue[0].ulScore += p[1].ulScore;
+            g_aEnvValue[0].ulScore += p[2].ulScore;
+            g_aEnvValue[0].ulScore += p[3].ulScore;
+            g_aEnvValue[0].ulScore += p[4].ulScore;
+            g_aEnvValue[0].ulScore += p[5].ulScore;
+            g_aEnvValue[0].ulScore += p[6].ulScore;
+            g_aEnvValue[0].ulScore += p[7].ulScore;
+            i += 8;
+            offset += 64;
+        } while (i < 2);
+
+        offset = i * 8;
+        if (i < 10)
+        {
+            do
+            {
+                p = (anon_2 *)((char *)g_aEnvValue + offset);
+                g_aEnvValue[0].ulScore += p->ulScore;
+                i++;
+                offset += 8;
+            } while (i < 10);
+        }
+
+        g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+
+        if (ulIndE < 10)
+        {
+            return g_aEnvValue[ulIndE].ulScore;
+        }
+
+        return 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 300–306 */
@@ -3204,7 +4186,49 @@ unsigned int fn_ulR3GetEnvScoreWithRevisit(unsigned int ulIndE)
  */
 unsigned int fn_ulR3GetEnvScore(unsigned int ulIndE)
 {
-    /* TODO: decompile from asm/... */
+    int i;
+    int offset;
+    anon_2 *p;
+
+    g_aEnvValue[0].ulScore = 0;
+
+    i = 1;
+    offset = 8;
+    do
+    {
+        p = (anon_2 *)((char *)g_aEnvValue + offset);
+        g_aEnvValue[0].ulScore += p[0].ulScore;
+        g_aEnvValue[0].ulScore += p[1].ulScore;
+        g_aEnvValue[0].ulScore += p[2].ulScore;
+        g_aEnvValue[0].ulScore += p[3].ulScore;
+        g_aEnvValue[0].ulScore += p[4].ulScore;
+        g_aEnvValue[0].ulScore += p[5].ulScore;
+        g_aEnvValue[0].ulScore += p[6].ulScore;
+        g_aEnvValue[0].ulScore += p[7].ulScore;
+        i += 8;
+        offset += 64;
+    } while (i < 2);
+
+    offset = i * 8;
+    if (i < 10)
+    {
+        do
+        {
+            p = (anon_2 *)((char *)g_aEnvValue + offset);
+            g_aEnvValue[0].ulScore += p->ulScore;
+            i++;
+            offset += 8;
+        } while (i < 10);
+    }
+
+    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+
+    if (ulIndE < 10)
+    {
+        return g_aEnvValue[ulIndE].ulScore;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 294–296 */
@@ -3240,7 +4264,102 @@ void fn_vR3SetEnvNbCage(unsigned int ulIndE, unsigned int ulNbCage)
  */
 void fn_vR3SetEnvScoreWithRevisit(unsigned int ulIndE, unsigned int ulScore)
 {
-    /* TODO: decompile from asm/... */
+    int i;
+    int offset;
+    anon_2 *p;
+
+    if (ulIndE < 10)
+    {
+        if (g_RevisitMode != 0)
+        {
+            if (ulIndE == 0)
+            {
+                g_RevisitCurrentGlobalScore = ulScore;
+            }
+            else
+            {
+                g_RevisitCurrentEnvScore = ulScore;
+            }
+
+            if (g_aEnvValue[ulIndE].ulScore < ulScore)
+            {
+                g_aEnvValue[ulIndE].ulScore = ulScore;
+            }
+        }
+        else
+        {
+            if (ulIndE < 10)
+            {
+                g_aEnvValue[ulIndE].ulScore = ulScore;
+            }
+
+            g_aEnvValue[0].ulScore = 0;
+
+            i = 1;
+            offset = 8;
+            do
+            {
+                p = (anon_2 *)((char *)g_aEnvValue + offset);
+                g_aEnvValue[0].ulScore += p[0].ulScore;
+                g_aEnvValue[0].ulScore += p[1].ulScore;
+                g_aEnvValue[0].ulScore += p[2].ulScore;
+                g_aEnvValue[0].ulScore += p[3].ulScore;
+                g_aEnvValue[0].ulScore += p[4].ulScore;
+                g_aEnvValue[0].ulScore += p[5].ulScore;
+                g_aEnvValue[0].ulScore += p[6].ulScore;
+                g_aEnvValue[0].ulScore += p[7].ulScore;
+                i += 8;
+                offset += 64;
+            } while (i < 2);
+
+            offset = i * 8;
+            if (i < 10)
+            {
+                do
+                {
+                    p = (anon_2 *)((char *)g_aEnvValue + offset);
+                    g_aEnvValue[0].ulScore += p->ulScore;
+                    i++;
+                    offset += 8;
+                } while (i < 10);
+            }
+
+            g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+        }
+    }
+
+    g_aEnvValue[0].ulScore = 0;
+
+    i = 1;
+    offset = 8;
+    do
+    {
+        p = (anon_2 *)((char *)g_aEnvValue + offset);
+        g_aEnvValue[0].ulScore += p[0].ulScore;
+        g_aEnvValue[0].ulScore += p[1].ulScore;
+        g_aEnvValue[0].ulScore += p[2].ulScore;
+        g_aEnvValue[0].ulScore += p[3].ulScore;
+        g_aEnvValue[0].ulScore += p[4].ulScore;
+        g_aEnvValue[0].ulScore += p[5].ulScore;
+        g_aEnvValue[0].ulScore += p[6].ulScore;
+        g_aEnvValue[0].ulScore += p[7].ulScore;
+        i += 8;
+        offset += 64;
+    } while (i < 2);
+
+    offset = i * 8;
+    if (i < 10)
+    {
+        do
+        {
+            p = (anon_2 *)((char *)g_aEnvValue + offset);
+            g_aEnvValue[0].ulScore += p->ulScore;
+            i++;
+            offset += 8;
+        } while (i < 10);
+    }
+
+    g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 251–255 */

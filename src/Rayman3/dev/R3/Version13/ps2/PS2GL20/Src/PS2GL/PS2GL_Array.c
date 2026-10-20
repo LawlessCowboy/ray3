@@ -136,16 +136,17 @@ struct anon_1 {
 };
 
 struct anon_2 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon2[6]; /* +0x2..0x7 */
 };
 
 struct tag_GLtexture {
@@ -443,15 +444,16 @@ struct anon_29 {
 };
 
 struct anon_25 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_40 {
@@ -533,60 +535,61 @@ struct anon_26 {
 };
 
 struct anon_37 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 union anon_36 {
@@ -1211,18 +1214,98 @@ tagGScontext g_gsContext;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+typedef struct { long long q[2]; } tagMSCNT;
+void impPS2glBegin(unsigned int mode);
+void impPS2glEnd(void);
+unsigned int VU1BufferFreeSpace(void);
+void VU1FlushBuffer(void);
+
 void PS2glInternalDrawSpriteArray(int count)
 {
-    int iSizeBlock;
-    float sy;
-    float sx;
-    unsigned char bFirst;
-    unsigned int* pMyGifTag;
-    float (*pV)[4];
-    int I;
-    _sceDmaTag* aDmaTagBegin;
     _sceDmaTag* aDmaTag;
-    /* TODO: decompile from asm/... */
+    _sceDmaTag* aDmaTagBegin;
+    int I;
+    float (*pV)[4];
+    unsigned int* pMyGifTag;
+    unsigned char bFirst;
+    float sx;
+    float sy;
+    int iSizeBlock;
+    int nSprite;
+    int nVertex;
+    int nOffset;
+
+    I = 0;
+    bFirst = 1;
+    iSizeBlock = count * 2;
+    pV = (float (*)[4])g_PS2glContext.VertexArray.pointer;
+    sx = pV[0][3];
+    sy = pV[2][3];
+    PS2GL_bOptimizedSprite = 1;
+    impPS2glBegin(5);
+    impPS2glEnd();
+    if (VU1BufferFreeSpace() < (unsigned int)(((iSizeBlock + 29) / 30) * 9))
+        VU1FlushBuffer();
+    g_aDmaTag = (int)g_PS2glContext.pVIFIBufTail;
+    aDmaTagBegin = (_sceDmaTag*)g_aDmaTag;
+    aDmaTag = aDmaTagBegin;
+    nOffset = 0;
+    if (iSizeBlock > 0)
+    {
+        do
+        {
+            pV[0][3] = sx;
+            pV[2][3] = sy;
+            if (bFirst)
+            {
+                nSprite = 40;
+                if (iSizeBlock < 40)
+                    nSprite = iSizeBlock;
+            }
+            else
+            {
+                nSprite = 40;
+                if (iSizeBlock < 40)
+                    nSprite = iSizeBlock;
+            }
+            if (iSizeBlock < 40)
+                nVertex = iSizeBlock;
+            else
+                nVertex = 40;
+            pMyGifTag = (unsigned int*)((unsigned char*)aDmaTag + nOffset);
+            ((unsigned short*)pMyGifTag)[0] = (unsigned short)nSprite;
+            ((unsigned char*)pMyGifTag)[3] = 0x30;
+            pMyGifTag[1] = (unsigned int)pV;
+            pMyGifTag[2] = 0x01000404;
+            pMyGifTag[3] = 0x6C3C8001;
+            ((unsigned char*)pMyGifTag)[0xE] = (unsigned char)nSprite;
+            pMyGifTag[8] = 0x8000;
+            pMyGifTag[8] |= (nSprite >> 1);
+            pMyGifTag[9] = 0x90024000;
+            pMyGifTag[10] = 0x24242412;
+            pMyGifTag[11] = 4;
+            ((unsigned char*)pMyGifTag)[0x13] = 0x10;
+            pMyGifTag[6] = 0x01000404;
+            pMyGifTag[7] = 0x6C018000;
+            ((unsigned short*)pMyGifTag)[8] = 2;
+            *(tagMSCNT*)((unsigned char*)pMyGifTag + 0x30) = *(tagMSCNT*)MY_MSCNT;
+            nOffset += 0x40;
+            I += 4;
+            pV += nVertex;
+            if (bFirst)
+            {
+                iSizeBlock -= nSprite;
+                bFirst = 0;
+            }
+            else
+            {
+                iSizeBlock -= nVertex;
+            }
+        } while (iSizeBlock > 0);
+    }
+    g_PS2glContext.pVIFIBufTail += I;
+    iDmaTagCount = I;
+    PS2GL_bOptimizedSprite = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 2942–3065 */
@@ -1335,9 +1418,134 @@ void PS2glInternalDrawSpriteArray(int count)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glEnableClientState(unsigned int array);
+void PS2glDisableClientState(unsigned int array);
+void PS2glVertexPointer(int size, unsigned int type, int stride, unsigned char* pointer);
+void PS2glTexCoordPointer(int size, unsigned int type, int stride, unsigned char* pointer);
+void PS2glNormalPointer(unsigned int type, int stride, unsigned char* pointer);
+void PS2glColorPointer(int size, unsigned int type, int stride, unsigned char* pointer);
+
 void impPS2glInterleavedArrays(unsigned int format, int stride, void* pointer)
 {
-    /* TODO: decompile from asm/... */
+    PS2glEnableClientState(0x8074); /* GL_VERTEX_ARRAY */
+    PS2glDisableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+    PS2glDisableClientState(0x8075); /* GL_NORMAL_ARRAY */
+    PS2glDisableClientState(0x8076); /* GL_COLOR_ARRAY */
+    PS2glDisableClientState(0x8077); /* GL_INDEX_ARRAY */
+    PS2glDisableClientState(0x8079); /* GL_EDGE_FLAG_ARRAY */
+    switch (format)
+    {
+    case 0x2A20: /* GL_V2F */
+        if (stride == 0)
+            stride = 8;
+        PS2glVertexPointer(2, 0x1406, stride, pointer);
+        break;
+    case 0x2A21: /* GL_V3F */
+        if (stride == 0)
+            stride = 12;
+        PS2glVertexPointer(3, 0x1406, stride, pointer);
+        break;
+    case 0x2A22: /* GL_C4UB_V2F */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        if (stride == 0)
+            stride = 12;
+        PS2glColorPointer(4, 0x1401, stride, pointer);
+        PS2glVertexPointer(2, 0x1406, stride, (unsigned char*)pointer + 4);
+        break;
+    case 0x2A23: /* GL_C4UB_V3F */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        if (stride == 0)
+            stride = 16;
+        PS2glColorPointer(4, 0x1401, stride, pointer);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 4);
+        break;
+    case 0x2A24: /* GL_C3F_V3F */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        if (stride == 0)
+            stride = 24;
+        PS2glColorPointer(3, 0x1406, stride, pointer);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 12);
+        break;
+    case 0x2A25: /* GL_N3F_V3F */
+        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
+        if (stride == 0)
+            stride = 24;
+        PS2glNormalPointer(0x1406, stride, pointer);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 12);
+        break;
+    case 0x2A26: /* GL_C4F_N3F_V3F */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
+        if (stride == 0)
+            stride = 40;
+        PS2glColorPointer(4, 0x1406, stride, pointer);
+        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 16);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 28);
+        break;
+    case 0x2A27: /* GL_T2F_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        if (stride == 0)
+            stride = 20;
+        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 8);
+        break;
+    case 0x2A28: /* GL_T4F_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        if (stride == 0)
+            stride = 32;
+        PS2glTexCoordPointer(4, 0x1406, stride, pointer);
+        PS2glVertexPointer(4, 0x1406, stride, (unsigned char*)pointer + 16);
+        break;
+    case 0x2A29: /* GL_T2F_C4UB_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        if (stride == 0)
+            stride = 24;
+        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
+        PS2glColorPointer(4, 0x1401, stride, (unsigned char*)pointer + 8);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 12);
+        break;
+    case 0x2A2A: /* GL_T2F_C3F_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        if (stride == 0)
+            stride = 32;
+        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
+        PS2glColorPointer(3, 0x1406, stride, (unsigned char*)pointer + 8);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 20);
+        break;
+    case 0x2A2B: /* GL_T2F_N3F_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
+        if (stride == 0)
+            stride = 32;
+        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
+        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 8);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 20);
+        break;
+    case 0x2A2C: /* GL_T2F_C4F_N3F_V3F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
+        if (stride == 0)
+            stride = 48;
+        PS2glTexCoordPointer(2, 0x1406, stride, pointer);
+        PS2glColorPointer(3, 0x1406, stride, (unsigned char*)pointer + 8);
+        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 24);
+        PS2glVertexPointer(3, 0x1406, stride, (unsigned char*)pointer + 36);
+        break;
+    case 0x2A2D: /* GL_T4F_C4F_N3F_V4F */
+        PS2glEnableClientState(0x8078); /* GL_TEXTURE_COORD_ARRAY */
+        PS2glEnableClientState(0x8076); /* GL_COLOR_ARRAY */
+        PS2glEnableClientState(0x8075); /* GL_NORMAL_ARRAY */
+        if (stride == 0)
+            stride = 60;
+        PS2glTexCoordPointer(4, 0x1406, stride, pointer);
+        PS2glColorPointer(4, 0x1406, stride, (unsigned char*)pointer + 16);
+        PS2glNormalPointer(0x1406, stride, (unsigned char*)pointer + 32);
+        PS2glVertexPointer(4, 0x1406, stride, (unsigned char*)pointer + 44);
+        break;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 2917–2938 */
@@ -1360,10 +1568,32 @@ void impPS2glInterleavedArrays(unsigned int format, int stride, void* pointer)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glBegin(unsigned int mode);
+void PS2glEnd(void);
+void PS2glArrayElement(int iIndex);
+
+#pragma opt_unroll_loops off
 void impPS2glDrawElements(unsigned int mode, int count, unsigned int type, void* indices)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    PS2glBegin(mode);
+    switch (type)
+    {
+    case 0x1401:
+        for (i = 0; i < count; i++)
+            PS2glArrayElement(((unsigned char*)indices)[i]);
+        break;
+    case 0x1403:
+        for (i = 0; i < count; i++)
+            PS2glArrayElement(((unsigned short*)indices)[i]);
+        break;
+    case 0x1405:
+        for (i = 0; i < count; i++)
+            PS2glArrayElement(((unsigned int*)indices)[i]);
+        break;
+    }
+    PS2glEnd();
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Array.c lines 2112–2914 */

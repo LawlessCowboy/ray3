@@ -4,6 +4,12 @@
 
 #include <stddef.h>
 
+/* R5900 accumulator multiply-add, as in MECBhv.c / DNMCame.c. */
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
@@ -317,6 +323,7 @@ struct CINE_tdstCine_ {
 };
 
 union HIE_tduLinkedObject_ {
+    float xFloat; /* +0x0 */
     HIE_tdstSuperObject_* p_stSuperObject; /* +0x0 */
     GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
     PO_tdstPhysicalObject_* p_stPhysicalObject; /* +0x0 */
@@ -642,7 +649,13 @@ typedef struct {
     int lNumberOfElementsDyn;
 } tdstMainCharacterList;
 
-extern volatile tdstMainCharacterList D_538920;
+/* The main-character list lives at +0x620 inside the engine structure. */
+struct tdstEngineStructure_ {
+    unsigned char _extractor_padding_00[0x620]; /* +0x0..0x61f */
+    tdstMainCharacterList hMainCharacterList; /* +0x620 */
+};
+
+extern struct tdstEngineStructure_ g_stEngineStructure;
 
 int fn_bObjectTypeAnimationVelocity(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector);
 
@@ -995,6 +1008,50 @@ int g_lSoundVolumeLineAmbiance;
 int g_lSoundVolumeLineMenu;
 int ga_pstBlockEventSlotMemory[10];
 
+/* Callbacks used by the sound-type tables of GAM_fn_bInitSoundTypes. */
+int fn_s32ObjectTypeAnimationX(int s32_ObjectId);
+int fn_s32ObjectTypeAnimationY(int s32_ObjectId);
+int fn_s32ObjectTypeAnimationZ(int s32_ObjectId);
+int fn_s32ObjectTypeAnimationVX(int s32_ObjectId);
+int fn_s32ObjectTypeAnimationVY(int s32_ObjectId);
+int fn_s32ObjectTypeAnimationVZ(int s32_ObjectId);
+void fn_s32ObjectTypeAnimationExtraCoef(int s32_ObjectId, _SND_tduRefEvt u_RefEvt, int* pr_Pitch, int* pr_Pan, int* pr_Vol);
+int fn_s32ObjectTypeAnimationSwitch(int s32_ObjectId, int s32_InfoId);
+int fn_bObjectTypeAnimationLink(int s32_ObjectId, int s32_MicroId);
+int fn_bObjectTypeAnimationPosition(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector);
+int fn_bObjectTypeAnimationVelocity(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector);
+int fn_bObjectTypeAnimationLinkBis(int s32_Unused, int s32_ObjectId, int s32_MicroId);
+int fn_bObjectTypeAnimationRollOff(int s32_ObjectId, int s32_Unused, _RollOffParam* pst_RollOff);
+int fn_bObjectTypeAnimationInfo(int s32_ObjectId, int s32_Unused, char* pch_String, int s32_Size);
+int fn_bObjectTypeVoiceInfo(int s32_ObjectId, int s32_Unused, char* pch_String, int s32_Size);
+int fn_bObjectTypeMusicInfo(int s32_ObjectId, int s32_Unused, char* pch_String, int s32_Size);
+int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, int s32_Unused, char* pch_Buffer, int s32_Size);
+unsigned char fn_u8RetObjectReverbNull(int s32_ObjectId);
+void fn_vRetObjectExtraCoefNull(int s32_ObjectId, _SND_tduRefEvt u_RefEvt, int* pr_Pitch, int* pr_Pan, int* pr_Vol);
+int fn_s32RetObjectSwitchNull(int s32_ObjectId, int s32_InfoId);
+int fn_bRetObjectLinkNull(int s32_ObjectId, int s32_MicroId);
+int fn_bRetObjectLinkBisNull(int s32_ObjectId, int s32_MicroId, int s32_InfoId);
+int fn_bObjectPositionNull(int s32_ObjectId, int s32_Unused, _stVector* pst_Vector);
+int fn_bRetObjectRollOffNull(int s32_ObjectId, int s32_Unused, _RollOffParam* pst_RollOff);
+int fn_s32RetObjectCoordinateNull(int s32_ObjectId);
+
+void SND_fn_vGetDefaultRollOff(_RollOffParam* pst_RollOff);
+int SND_fn_s32AddVolumeLineSound(void);
+int SND_fn_lAddObjectTypeSound2(_tdstAllRetObjectSound* pst_IActor, int s32_LineId);
+void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_Level);
+
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(void* p_SectInfo);
+HIE_tdstSuperObject_* fn_hMSSoundGetMechaCharacter(tdstMSSound_* h_MSSound);
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynamic);
+int GMT_fn_hGetSoundMaterial(GMT_tdstGameMaterial_* h_Material);
+tdstMicro_* fn_hReturnHandleMicroFromIndex(int lIndex);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(HIE_tdstSuperObject_* h_Object);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* h_Node);
+tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* h_Node);
+
+HIE_tdstSuperObject_* fn_hGetSuperObjectActorHandle(int s32_ObjectId);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 67–73 */
 /* addr: 0x00265510  size: 60 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1007,16 +1064,11 @@ int ga_pstBlockEventSlotMemory[10];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char MC_fn_ucIsCharacterInMainCharacterList(HIE_tdstSuperObject_* hCharacter)
-{
-    tdstNodeMainCharacter_* hMainCharNode = D_538920.hFirstElementDyn;
-
-    while (hMainCharNode != NULL) {
-        if (hMainCharNode->hCharacter == hCharacter) {
-            return 1;
-        }
-        hMainCharNode = hMainCharNode->hNextBrotherDyn;
+unsigned char MC_fn_ucIsCharacterInMainCharacterList(HIE_tdstSuperObject_* hCharacter) { tdstNodeMainCharacter_* hMainCharNode = g_stEngineStructure.hMainCharacterList.hFirstElementDyn; while (hMainCharNode != NULL) {
+    if (hMainCharNode->hCharacter == hCharacter) {
+        return 1;
     }
+    hMainCharNode = hMainCharNode->hNextBrotherDyn; }
     return 0;
 }
 
@@ -1090,11 +1142,97 @@ void GAM_fn_vSaveBlockEventSlotMemory(_SND_tdstBlockEvent* pst_BlockEvent, int s
  */
 int GAM_fn_bInitSoundTypes(void)
 {
-    _tdstAllRetObjectSound st_IObjectTypeAmbiance;
-    _tdstAllRetObjectSound st_IObjectTypeMusic;
-    _tdstAllRetObjectSound st_IObjectTypeVoice;
-    _tdstAllRetObjectSound st_IObjectTypeAnimation;
-    /* TODO: decompile from asm/... */
+    _tdstAllRetObjectSound st_IObjectTypeAnimation = {
+        fn_s32ObjectTypeAnimationX,
+        fn_s32ObjectTypeAnimationY,
+        fn_s32ObjectTypeAnimationZ,
+        fn_s32ObjectTypeAnimationVX,
+        fn_s32ObjectTypeAnimationVY,
+        fn_s32ObjectTypeAnimationVZ,
+        fn_u8RetObjectReverbNull,
+        fn_s32ObjectTypeAnimationExtraCoef,
+        fn_s32ObjectTypeAnimationSwitch,
+        fn_bObjectTypeAnimationLink,
+        fn_bObjectTypeAnimationPosition,
+        fn_bObjectTypeAnimationVelocity,
+        fn_bObjectTypeAnimationLinkBis,
+        fn_bObjectTypeAnimationRollOff,
+        fn_bObjectTypeAnimationInfo
+    };
+    _tdstAllRetObjectSound st_IObjectTypeVoice = {
+        fn_s32ObjectTypeAnimationX,
+        fn_s32ObjectTypeAnimationY,
+        fn_s32ObjectTypeAnimationZ,
+        fn_s32ObjectTypeAnimationVX,
+        fn_s32ObjectTypeAnimationVY,
+        fn_s32ObjectTypeAnimationVZ,
+        fn_u8RetObjectReverbNull,
+        fn_s32ObjectTypeAnimationExtraCoef,
+        fn_s32ObjectTypeAnimationSwitch,
+        fn_bObjectTypeAnimationLink,
+        fn_bObjectTypeAnimationPosition,
+        fn_bObjectTypeAnimationVelocity,
+        fn_bObjectTypeAnimationLinkBis,
+        fn_bObjectTypeAnimationRollOff,
+        fn_bObjectTypeVoiceInfo
+    };
+    _tdstAllRetObjectSound st_IObjectTypeMusic = {
+        fn_s32RetObjectCoordinateNull,
+        fn_s32RetObjectCoordinateNull,
+        fn_s32RetObjectCoordinateNull,
+        fn_s32RetObjectCoordinateNull,
+        fn_s32RetObjectCoordinateNull,
+        fn_s32RetObjectCoordinateNull,
+        fn_u8RetObjectReverbNull,
+        fn_vRetObjectExtraCoefNull,
+        fn_s32RetObjectSwitchNull,
+        fn_bRetObjectLinkNull,
+        fn_bObjectPositionNull,
+        fn_bObjectPositionNull,
+        fn_bRetObjectLinkBisNull,
+        fn_bRetObjectRollOffNull,
+        fn_bObjectTypeMusicInfo
+    };
+    _tdstAllRetObjectSound st_IObjectTypeAmbiance = {
+        fn_s32RetObjectCoordinateNull,
+        fn_s32RetObjectCoordinateNull,
+        fn_s32RetObjectCoordinateNull,
+        fn_s32RetObjectCoordinateNull,
+        fn_s32RetObjectCoordinateNull,
+        fn_s32RetObjectCoordinateNull,
+        fn_u8RetObjectReverbNull,
+        fn_vRetObjectExtraCoefNull,
+        fn_s32RetObjectSwitchNull,
+        fn_bRetObjectLinkNull,
+        fn_bObjectPositionNull,
+        fn_bObjectPositionNull,
+        fn_bRetObjectLinkBisNull,
+        fn_bRetObjectRollOffNull,
+        fn_bObjectTypeAmbianceInfo
+    };
+
+    g_lSoundVolumeLineSound = SND_fn_s32AddVolumeLineSound();
+    g_lSoundObjectTypeAnim = SND_fn_lAddObjectTypeSound2(&st_IObjectTypeAnimation, g_lSoundVolumeLineSound);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, 0x7F);
+
+    g_lSoundVolumeLineVoices = SND_fn_s32AddVolumeLineSound();
+    g_lSoundObjectTypeVoice = SND_fn_lAddObjectTypeSound2(&st_IObjectTypeVoice, g_lSoundVolumeLineVoices);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, 0x7F);
+
+    g_lSoundVolumeLineMusic = SND_fn_s32AddVolumeLineSound();
+    g_lSoundObjectTypeMusic = SND_fn_lAddObjectTypeSound2(&st_IObjectTypeMusic, g_lSoundVolumeLineMusic);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, 0x7F);
+
+    g_lSoundVolumeLineMenu = SND_fn_s32AddVolumeLineSound();
+    g_lSoundObjectTypeMenu = SND_fn_lAddObjectTypeSound2(&st_IObjectTypeMusic, g_lSoundVolumeLineMenu);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, 0x7F);
+
+    g_lSoundVolumeLineAmbiance = SND_fn_s32AddVolumeLineSound();
+    g_lSoundObjectTypeAmbiance = SND_fn_lAddObjectTypeSound2(&st_IObjectTypeAmbiance, g_lSoundVolumeLineAmbiance);
+    SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, 0x7F);
+
+    memset(ga_pstBlockEventSlotMemory, 0, sizeof(ga_pstBlockEventSlotMemory));
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 603–606 */
@@ -1110,7 +1248,7 @@ int GAM_fn_bInitSoundTypes(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, int s32_Unused, char* pch_Buffer)
+int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, int s32_Unused, char* pch_Buffer, int s32_Size)
 {
     sprintf(pch_Buffer, "Object type ambiance n\xb0 %d\n", s32_ObjectId);
     return 1;
@@ -1129,7 +1267,7 @@ int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, int s32_Unused, char* pch_Buffe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeMusicInfo(int s32_ObjectId, int s32_Unused, char* pch_String)
+int fn_bObjectTypeMusicInfo(int s32_ObjectId, int s32_Unused, char* pch_String, int s32_Size)
 {
     sprintf(pch_String, "Object type music n\xb0 %d\n", s32_ObjectId);
     return 1;
@@ -1159,7 +1297,7 @@ int fn_bObjectTypeMusicInfo(int s32_ObjectId, int s32_Unused, char* pch_String)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeVoiceInfo(int s32_ObjectId, char* pch_String, int s32_Size)
+int fn_bObjectTypeVoiceInfo(int s32_ObjectId, int s32_Unused, char* pch_String, int s32_Size)
 {
     char* pch_StringToCat;
     HIE_tduLinkedObject_ h_LinkedObj;
@@ -1193,12 +1331,53 @@ int fn_bObjectTypeVoiceInfo(int s32_ObjectId, char* pch_String, int s32_Size)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeAnimationInfo(int s32_ObjectId, char* pch_String, int s32_Size)
+int fn_bObjectTypeAnimationInfo(int s32_ObjectId, int s32_Unused, char* pch_String, int s32_Size)
 {
     char* pch_PersoName;
     HIE_tduLinkedObject_ h_Link;
     int b_Answer;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* h_Object;
+    union { float xValue; void* pVoid; } u_Link;
+
+    h_Link.p_stSuperObject = NULL;
+    b_Answer = 0;
+    if (s32_ObjectId != 0 && s32_ObjectId != -1) {
+        h_Object = (HIE_tdstSuperObject_*)s32_ObjectId;
+        while (h_Object != NULL) {
+            if (h_Object->ulTypeOfLinkedObject == 2) {
+                h_Link.p_stSuperObject = h_Object;
+                break;
+            }
+            h_Object = h_Object->hFatherDyn;
+        }
+    }
+    if (h_Link.p_stSuperObject == NULL) {
+        if (s32_ObjectId == -1) {
+            b_Answer = (strncpy(pch_String, "Ghost Object", s32_Size) != 0);
+        }
+        return b_Answer;
+    }
+    u_Link.xValue = h_Link.p_stSuperObject->hLinkedObject.xFloat;
+    if (h_Link.p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData == NULL) {
+        return b_Answer;
+    }
+    if (u_Link.pVoid != NULL) {
+        if (strncpy(pch_String, "Perso:", s32_Size) != 0) {
+            pch_PersoName = "Always";
+        }
+    }
+    if (fn_ucIsAnAlwaysObject((HIE_tdstSuperObject_*)u_Link.pVoid) == 0) {
+        pch_String = pch_String;
+    }
+    if (h_Link.p_stCharacter->h_Brain != NULL) {
+        pch_PersoName = "";
+    } else {
+        pch_PersoName = "No intelligence";
+    }
+    if (strncat(pch_String, pch_PersoName, s32_Size - (int)strlen(pch_String)) != 0) {
+        b_Answer = 1;
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 448–450 */
@@ -1210,9 +1389,9 @@ int fn_bObjectTypeAnimationInfo(int s32_ObjectId, char* pch_String, int s32_Size
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bObjectTypeAnimationRollOff(int s32_ObjectId, _RollOffParam* pst_RollOff)
+int fn_bObjectTypeAnimationRollOff(int s32_ObjectId, int s32_Unused, _RollOffParam* pst_RollOff)
 {
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* h_Object; tdstMSSound_* h_MSSound; int b_Answer = 0; h_Object = fn_hGetSuperObjectActorHandle(s32_ObjectId); if (h_Object != NULL) { h_MSSound = h_Object->hLinkedObject.p_stCharacter->h_MSSound; if (h_MSSound != NULL) { pst_RollOff->rDistSatur = h_MSSound->stRollOff.rDistSatur; pst_RollOff->rDistBackGround = h_MSSound->stRollOff.rDistBackGround; pst_RollOff->ucBackgroundVol = h_MSSound->stRollOff.ucBackgroundVol; } else { SND_fn_vGetDefaultRollOff(pst_RollOff); } b_Answer = 1; } return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 419–419 */
@@ -1263,14 +1442,54 @@ int fn_bObjectTypeAnimationLinkBis(int s32_Unused, int s32_ObjectId, int s32_Mic
 int fn_bObjectTypeAnimationLink(int objet, int micro)
 {
     HIE_tdstSuperObject_* hParent;
+    HIE_tdstSuperObject_* hMicroSector;
     HIE_tdstSuperObject_* hMainActor;
     tdstNodeMainCharacter_* hMCN;
-    SECT_tdstListOfSOSectorsInSoundInteraction_* param0;
     unsigned int ulI;
-    HIE_tdstSuperObject_* hSuperObj;
-    HIE_tdstSuperObject_* hMicroSector;
+    SECT_tdstListOfSOSectorsInSoundInteraction_* param0;
+    tdstEngineObject_* hSuperObj;
     HIE_tdstSuperObject_* hObjectSector;
-    /* TODO: decompile from asm/... */
+
+    hParent = (HIE_tdstSuperObject_*)objet;
+    if (hParent->ulTypeOfLinkedObject != 2)
+    {
+        hParent = hParent->hFatherDyn;
+        while (hParent != NULL && hParent->ulTypeOfLinkedObject != 2)
+        {
+            hParent = hParent->hFatherDyn;
+        }
+        if (hParent == NULL) { return 1; }
+    }
+    hSuperObj = hParent->hLinkedObject.p_stCharacter;
+    if (hSuperObj->h_SectInfo != NULL) {
+        fn_h_SectInfoGetCurrentSector(hSuperObj->h_SectInfo);
+        hMicroSector = (HIE_tdstSuperObject_*)fn_hReturnHandleMicroFromIndex(micro);
+        hMainActor = fn_h_StandardGameGetSuperObject((tdstStandardGame_*)hMicroSector->hLinkedObject.p_stCharacter);
+        hObjectSector = (HIE_tdstSuperObject_*)MC_fn_hGetFirstMainCharNode((HIE_tdstSuperObject_*)hMicroSector->hLinkedObject.p_stCharacter);
+        while (hObjectSector != NULL) {
+            if (MC_fn_hGetCharacterInMainCharacterNode((tdstNodeMainCharacter_*)hObjectSector) == hParent) {
+                return 1;
+            }
+            hObjectSector = (HIE_tdstSuperObject_*)MC_fn_hGetNextMainCharNode((tdstNodeMainCharacter_*)hObjectSector);
+        }
+        hObjectSector = fn_h_SectInfoGetCurrentSector((void*)hMainActor->hLinkedObject.p_stCharacter->h_SectInfo);
+        if (hObjectSector == hMicroSector) {
+            return 1;
+        }
+        {
+            LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt* pAnchor = &hObjectSector->hLinkedObject.p_stSector->stListOfSectorsInSoundInteraction;
+            ulI = pAnchor->lNumberOfElementsOpt;
+            param0 = pAnchor->hFirstElementOpt;
+            while (ulI != 0) {
+                if (param0->hPointerOfSectorSO == hMicroSector) {
+                    return (param0->lVolume != 0);
+                }
+                ulI--;
+                param0++;
+            }
+        }
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 280–363 */
@@ -1317,19 +1536,76 @@ int fn_bObjectTypeAnimationLink(int objet, int micro)
  */
 int fn_s32ObjectTypeAnimationSwitch(int s32_ObjectId, int s32_InfoId)
 {
-    int s32_Tmp;
-    GMT_tdstGameMaterial_* h_GMT;
+    int s32_Answer;
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Micro;
+    tdstEngineObject_* h_Engine;
+    DNM_stDynamics* pst_Dynamics;
+    DNM_stReport* pst_Report;
     DNM_stObstacle* pst_Obstacle;
     unsigned int u32_State;
-    DNM_stReport* pst_Report;
-    DNM_stDynamics* pst_Dynamics;
-    HIE_tdstSuperObject_* h_Tmp;
-    tdstDynam_* h_Dynamic;
-    tdstMSSound_* h_MSSound;
-    HIE_tdstSuperObject_* h_Object;
-    _SIF_eInfoTypeId e_TypeId;
-    int s32_Answer;
-    /* TODO: decompile from asm/... */
+
+    s32_Answer = 0;
+    if (s32_InfoId == -1) {
+        return s32_Answer;
+    }
+    h_Object = NULL;
+    if (s32_ObjectId != 0 && s32_ObjectId != -1) {
+        HIE_tdstSuperObject_* h = (HIE_tdstSuperObject_*)s32_ObjectId;
+        while (h != NULL) {
+            if (h->ulTypeOfLinkedObject == 2) {
+                h_Object = h;
+                break;
+            }
+            h = h->hFatherDyn;
+        }
+    }
+    if (h_Object == NULL) {
+        return s32_Answer;
+    }
+    h_Engine = ((HIE_tdstSuperObject_*)s32_ObjectId)->hLinkedObject.p_stCharacter;
+    if (h_Engine->h_MSSound != NULL) {
+        h_Micro = fn_hMSSoundGetMechaCharacter(h_Engine->h_MSSound);
+        if (h_Micro != NULL) {
+            h_Object = h_Micro;
+        }
+    }
+    h_Engine = h_Object->hLinkedObject.p_stCharacter;
+    if (h_Engine->h_Dynam == NULL) {
+        return s32_Answer;
+    }
+    pst_Dynamics = fn_p_stDynamGetDynamics(h_Engine->h_Dynam);
+    if (pst_Dynamics == NULL) {
+        return s32_Answer;
+    }
+    if (s32_InfoId != 1) {
+        return s32_Answer;
+    }
+    pst_Report = pst_Dynamics->m_tdstDynamicsBaseBlock.m_pstReport;
+    if (pst_Report == NULL) {
+        return s32_Answer;
+    }
+    u32_State = pst_Report->m_ulCurrSurfaceState;
+    if (u32_State & 1) {
+        pst_Obstacle = &pst_Report->m_stGround;
+    } else if (u32_State & 0x10) {
+        pst_Obstacle = &pst_Report->m_stCeil;
+    } else if (u32_State & 4) {
+        pst_Obstacle = &pst_Report->m_stWall;
+    } else {
+        pst_Obstacle = NULL;
+    }
+    if (pst_Obstacle == NULL) {
+        return s32_Answer;
+    }
+    if (pst_Obstacle->hCollidedMaterial == NULL) {
+        return s32_Answer;
+    }
+    s32_Answer = GMT_fn_hGetSoundMaterial(pst_Obstacle->hCollidedMaterial);
+    if (s32_Answer < 0) {
+        return 0;
+    }
+    return s32_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 199–278 */
@@ -1375,7 +1651,7 @@ int fn_s32ObjectTypeAnimationSwitch(int s32_ObjectId, int s32_InfoId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_s32ObjectTypeAnimationExtraCoef(int s32_ObjectId, int* pitch, int* pan, int* vol)
+void fn_s32ObjectTypeAnimationExtraCoef(int s32_ObjectId, _SND_tduRefEvt u_RefEvt, int* pr_Pitch, int* pr_Pan, int* pr_Vol)
 {
     HIE_tdstSuperObject_* hParent;
     int rTmpPan;
@@ -1383,7 +1659,55 @@ void fn_s32ObjectTypeAnimationExtraCoef(int s32_ObjectId, int* pitch, int* pan, 
     int rTmpPitch;
     MTH3D_tdstVector_ stVertex;
     DNM_stDynamics* p_stDynamics;
-    /* TODO: decompile from asm/... */
+    tdstEngineObject_* hObject;
+    float xSpeed;
+    float xValX;
+    float xValY;
+    float xValZ;
+
+    hParent = (HIE_tdstSuperObject_*)s32_ObjectId;
+    while (hParent->ulTypeOfLinkedObject != 2) {
+        hParent = hParent->hFatherDyn;
+        if (hParent == NULL) {
+            break;
+        }
+    }
+    if (hParent == NULL) {
+        *pr_Pan = 0;
+        *pr_Vol = 0;
+        *pr_Pitch = 0;
+        return;
+    }
+    hObject = hParent->hLinkedObject.p_stCharacter;
+    if (hObject->h_Dynam == NULL) {
+        *pr_Pan = 0;
+        goto end;
+    }
+    p_stDynamics = fn_p_stDynamGetDynamics(hObject->h_Dynam);
+    if (p_stDynamics == NULL) {
+        *pr_Pan = 0;
+        goto end;
+    }
+    stVertex.xX = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX;
+    stVertex.xY = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY;
+    stVertex.xZ = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
+    xSpeed = 0.0f;
+    xValX = stVertex.xX;
+    xValY = stVertex.xY;
+    xValZ = stVertex.xZ;
+    MTH_SQR3_TO(xSpeed, xValX, xValY, xValZ);
+    rTmpPan = (int)(xSpeed * 65536.0f);
+    if (rTmpPan < 0x1999) {
+        rTmpPan = 0x1999;
+    }
+    *pr_Pan = rTmpPan >> 7;
+end:
+    if (*pr_Pitch == 0) {
+        *pr_Pitch = 0x10000;
+    }
+    if (*pr_Vol == 0) {
+        *pr_Vol = 0x10000;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 189–195 */
@@ -1491,7 +1815,14 @@ int fn_s32ObjectTypeAnimationVX(int s32_ObjectId)
 int fn_s32ObjectTypeAnimationZ(int s32_ObjectId)
 {
     _stVector st_Answer;
-    /* TODO: decompile from asm/... */
+    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Other;
+    MAT_tdstTransformation_* h_Matrix;
+    _stVector* pst_Answer = &st_Answer;
+    float* pf_Answer = &st_Answer.f32z;
+    *pf_Answer = 0.0f; if (pst_Answer != NULL) { h_Object = fn_hGetSuperObjectActorHandle(s32_ObjectId); if (h_Object != NULL) { h_Other = fn_hGetSuperObjectActorHandle(-1); if (h_Other != NULL) { h_Object = h_Other; } h_Matrix = h_Object->hGlobalMatrix; if (h_Matrix != NULL) { st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ; st_Answer.f32x = st_Vertex.v.xX; st_Answer.f32y = st_Vertex.v.xY; *pf_Answer = st_Vertex.v.xZ; } } }
+    return (int)(*pf_Answer * 65536.0f);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 157–163 */
@@ -1514,7 +1845,14 @@ int fn_s32ObjectTypeAnimationZ(int s32_ObjectId)
 int fn_s32ObjectTypeAnimationY(int s32_ObjectId)
 {
     _stVector st_Answer;
-    /* TODO: decompile from asm/... */
+    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Other;
+    MAT_tdstTransformation_* h_Matrix;
+    _stVector* pst_Answer = &st_Answer;
+    float* pf_Answer = &st_Answer.f32y;
+    *pf_Answer = 0.0f; if (pst_Answer != NULL) { h_Object = fn_hGetSuperObjectActorHandle(s32_ObjectId); if (h_Object != NULL) { h_Other = fn_hGetSuperObjectActorHandle(-1); if (h_Other != NULL) { h_Object = h_Other; } h_Matrix = h_Object->hGlobalMatrix; if (h_Matrix != NULL) { st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ; st_Answer.f32x = st_Vertex.v.xX; *pf_Answer = st_Vertex.v.xY; st_Answer.f32z = st_Vertex.v.xZ; } } }
+    return (int)(*pf_Answer * 65536.0f);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 149–155 */
@@ -1534,7 +1872,13 @@ int fn_s32ObjectTypeAnimationY(int s32_ObjectId)
 int fn_s32ObjectTypeAnimationX(int s32_ObjectId)
 {
     _stVector st_Answer;
-    /* TODO: decompile from asm/... */
+    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Other;
+    MAT_tdstTransformation_* h_Matrix;
+    _stVector* pst_Answer = &st_Answer;
+    st_Answer.f32x = 0.0f; if (pst_Answer != NULL) { h_Object = fn_hGetSuperObjectActorHandle(s32_ObjectId); if (h_Object != NULL) { h_Other = fn_hGetSuperObjectActorHandle(-1); if (h_Other != NULL) { h_Object = h_Other; } h_Matrix = h_Object->hGlobalMatrix; if (h_Matrix != NULL) { st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ; st_Answer.f32x = st_Vertex.v.xX; st_Answer.f32y = st_Vertex.v.xY; st_Answer.f32z = st_Vertex.v.xZ; } } }
+    return (int)(st_Answer.f32x * 65536.0f);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 114–147 */
@@ -1566,12 +1910,41 @@ int fn_s32ObjectTypeAnimationX(int s32_ObjectId)
  */
 int fn_bObjectTypeAnimationVelocity(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector)
 {
-    MTH3D_tdstVector_ st_Vertex;
+    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
     DNM_stDynamics* pst_Dynamics;
     tdstDynam_* h_Dynamic;
     HIE_tdstSuperObject_* h_Object;
-    int b_Answer;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* h_Channel;
+    HIE_tdstSuperObject_* h_Loop;
+    tdstEngineObject_* h_Engine;
+    int b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        h_Object = NULL;
+        if (s32_ObjectId != 0 && s32_ObjectId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ObjectId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Object = h_Loop; break; } } }
+        if (h_Object != NULL)
+        {
+            h_Channel = NULL;
+            if (s32_ChannelId != 0 && s32_ChannelId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ChannelId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Channel = h_Loop; break; } } }
+            if (h_Channel != NULL) {
+            h_Object = h_Channel; }
+            h_Engine = h_Object->hLinkedObject.p_stCharacter;
+            h_Dynamic = h_Engine->h_Dynam;
+            if (h_Dynamic != NULL)
+            {
+                pst_Dynamics = fn_p_stDynamGetDynamics(h_Dynamic);
+                if (pst_Dynamics != NULL)
+                {
+                    st_Vertex.i[0] = *(int*)&pst_Dynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX; st_Vertex.i[1] = *(int*)&pst_Dynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY; st_Vertex.i[2] = *(int*)&pst_Dynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
+                    pst_Vector->f32x = st_Vertex.v.xX;
+                    pst_Vector->f32y = st_Vertex.v.xY;
+                    pst_Vector->f32z = st_Vertex.v.xZ;
+                    b_Answer = 1;
+                }
+            }
+        }
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 84–112 */
@@ -1600,10 +1973,34 @@ int fn_bObjectTypeAnimationVelocity(int s32_ObjectId, int s32_ChannelId, _stVect
  */
 int fn_bObjectTypeAnimationPosition(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector)
 {
-    MTH3D_tdstVector_ st_Vertex;
+    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
     HIE_tdstSuperObject_* h_Object;
-    int b_Answer;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* h_Channel;
+    HIE_tdstSuperObject_* h_Loop;
+    MAT_tdstTransformation_* h_Matrix;
+    int b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        h_Object = NULL;
+        if (s32_ObjectId != 0 && s32_ObjectId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ObjectId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Object = h_Loop; break; } } }
+        if (h_Object != NULL)
+        {
+            h_Channel = NULL;
+            if (s32_ChannelId != 0 && s32_ChannelId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ChannelId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Channel = h_Loop; break; } } }
+            if (h_Channel != NULL) {
+            h_Object = h_Channel; }
+            h_Matrix = h_Object->hGlobalMatrix;
+            if (h_Matrix != NULL)
+            {
+                st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ;
+                pst_Vector->f32x = st_Vertex.v.xX;
+                pst_Vector->f32y = st_Vertex.v.xY;
+                pst_Vector->f32z = st_Vertex.v.xZ;
+                b_Answer = 1;
+            }
+        }
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 68–82 */
@@ -1669,7 +2066,7 @@ int fn_bRetObjectRollOffNull(int s32_Unused0, int s32_Unused1, _RollOffParam* ps
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bRetObjectLinkBisNull(void)
+int fn_bRetObjectLinkBisNull(int s32_ObjectId, int s32_MicroId, int s32_InfoId)
 {
     return 1;
 }
@@ -1706,7 +2103,7 @@ int fn_bObjectPositionNull(int s32_Unused0, int s32_Unused1, _stVector* pst_Vect
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_bRetObjectLinkNull(void)
+int fn_bRetObjectLinkNull(int s32_ObjectId, int s32_MicroId)
 {
     return 1;
 }
@@ -1718,7 +2115,7 @@ int fn_bRetObjectLinkNull(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_s32RetObjectSwitchNull(void)
+int fn_s32RetObjectSwitchNull(int s32_ObjectId, int s32_InfoId)
 {
     return 0;
 }
@@ -1753,7 +2150,7 @@ void fn_vRetObjectExtraCoefNull(int s32_Unused, _SND_tduRefEvt u_Unused, int* pr
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_u8RetObjectReverbNull(void)
+unsigned char fn_u8RetObjectReverbNull(int s32_ObjectId)
 {
     return 0;
 }

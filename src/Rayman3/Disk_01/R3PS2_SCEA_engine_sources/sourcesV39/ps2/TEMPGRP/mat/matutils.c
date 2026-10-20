@@ -9,6 +9,19 @@ typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 
+typedef enum MAT_tdeTranformationType_ {
+    MAT_eTransform_Uninitialized = 0,
+    MAT_eTransform_Identity = 1,
+    MAT_eTransform_Translation = 2,
+    MAT_eTransform_Zoom = 3,
+    MAT_eTransform_Scale = 4,
+    MAT_eTransform_Rotation = 5,
+    MAT_eTransform_RotationZoom = 6,
+    MAT_eTransform_RotationScale = 7,
+    MAT_eTransform_ComplexRotationScale = 8,
+    MAT_eTransform_Undefined = 9,
+} MAT_tdeTranformationType_;
+
 struct MTH4D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
@@ -21,6 +34,13 @@ struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_1; /* +0x10 */
     MTH4D_tdstVector_ stCol_2; /* +0x20 */
     MTH4D_tdstVector_ stCol_3; /* +0x30 */
+};
+
+struct MAT_tdstTransformation_ {
+    MAT_tdeTranformationType_ eType; /* +0x0 */
+    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
+    MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
+    MTH4D_tdstVector_ stScaleVector; /* +0x50 */
 };
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matutils.c lines 25–90 */
@@ -50,7 +70,70 @@ struct MTH4D_tdstMatrix_ {
 void MAT_fn_vZoom(MAT_tdstTransformation_* _hTransform, float _xZoomFactor)
 {
     MTH4D_tdstMatrix_* p_stMatrix;
-    /* TODO: decompile from asm/... */
+    float xDiff;
+
+    xDiff = _xZoomFactor - 1.0f;
+    /* abs.s has no C form under the baseline (MWCC calls fabsf). */
+    asm { abs.s xDiff, xDiff }
+    if (xDiff < 1.0e-4f)
+    {
+        return;
+    }
+    p_stMatrix = &_hTransform->stTransformMatrix;
+    switch (_hTransform->eType)
+    {
+        case MAT_eTransform_Uninitialized:
+            break;
+        case MAT_eTransform_Identity:
+            break;
+        case MAT_eTransform_Translation:
+            break;
+        case MAT_eTransform_Zoom:
+            _hTransform->eType = MAT_eTransform_Zoom;
+            p_stMatrix->stCol_2.xZ = _xZoomFactor;
+            p_stMatrix->stCol_1.xY = _xZoomFactor;
+            p_stMatrix->stCol_0.xX = _xZoomFactor;
+            _hTransform->stScaleVector.xX = _xZoomFactor;
+            _hTransform->stScaleVector.xY = _xZoomFactor;
+            _hTransform->stScaleVector.xZ = _xZoomFactor;
+            _hTransform->stScaleVector.xW = 1.0f;
+            break;
+        case MAT_eTransform_RotationZoom:
+            _hTransform->eType = MAT_eTransform_RotationZoom;
+            _hTransform->stScaleVector.xX = _xZoomFactor * _hTransform->stScaleVector.xX;
+            _hTransform->stScaleVector.xY = _xZoomFactor * _hTransform->stScaleVector.xY;
+            _hTransform->stScaleVector.xZ = _xZoomFactor * _hTransform->stScaleVector.xZ;
+            p_stMatrix->stCol_0.xX = _xZoomFactor * p_stMatrix->stCol_0.xX;
+            p_stMatrix->stCol_0.xY = _xZoomFactor * p_stMatrix->stCol_0.xY;
+            p_stMatrix->stCol_0.xZ = _xZoomFactor * p_stMatrix->stCol_0.xZ;
+            p_stMatrix->stCol_0.xW = 1.0f;
+            p_stMatrix->stCol_1.xX = _xZoomFactor * p_stMatrix->stCol_1.xX;
+            p_stMatrix->stCol_1.xY = _xZoomFactor * p_stMatrix->stCol_1.xY;
+            p_stMatrix->stCol_1.xZ = _xZoomFactor * p_stMatrix->stCol_1.xZ;
+            p_stMatrix->stCol_1.xW = 1.0f;
+            p_stMatrix->stCol_2.xX = _xZoomFactor * p_stMatrix->stCol_2.xX;
+            p_stMatrix->stCol_2.xY = _xZoomFactor * p_stMatrix->stCol_2.xY;
+            p_stMatrix->stCol_2.xZ = _xZoomFactor * p_stMatrix->stCol_2.xZ;
+            p_stMatrix->stCol_2.xW = 1.0f;
+            p_stMatrix->stCol_2.xW = 0.0f;
+            p_stMatrix->stCol_1.xW = 0.0f;
+            p_stMatrix->stCol_0.xW = 0.0f;
+            break;
+        case MAT_eTransform_Rotation:
+            break;
+        case MAT_eTransform_Scale:
+            p_stMatrix->stCol_0.xX = p_stMatrix->stCol_0.xX * _xZoomFactor;
+            p_stMatrix->stCol_1.xY = p_stMatrix->stCol_1.xY * _xZoomFactor;
+            p_stMatrix->stCol_2.xZ = p_stMatrix->stCol_2.xZ * _xZoomFactor;
+            _hTransform->stScaleVector.xX = _xZoomFactor * _hTransform->stScaleVector.xX;
+            _hTransform->stScaleVector.xY = _xZoomFactor * _hTransform->stScaleVector.xY;
+            _hTransform->stScaleVector.xZ = _xZoomFactor * _hTransform->stScaleVector.xZ;
+            break;
+        case MAT_eTransform_RotationScale:
+            break;
+        case MAT_eTransform_ComplexRotationScale:
+            break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matutils.c lines 178–211 */
@@ -98,18 +181,18 @@ void MAT_fn_vZoom(MAT_tdstTransformation_* _hTransform, float _xZoomFactor)
  */
 void MAT_fn_vNormQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW)
 {
-    float xZz;
-    float xYz;
-    float xYy;
-    float xXz;
-    float xXy;
-    float xXx;
-    float xWz;
-    float xWy;
-    float xWx;
-    float xZs;
-    float xYs;
     float xXs;
+    float xYs;
+    float xZs;
+    float xWx;
+    float xWy;
+    float xWz;
+    float xXx;
+    float xXy;
+    float xXz;
+    float xYy;
+    float xYz;
+    float xZz;
 
     xXs = _xX + _xX;
     xYs = _xY + _xY;
@@ -192,18 +275,56 @@ void MAT_fn_vNormQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _
  */
 void MAT_fn_vQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW)
 {
-    float xInvNorm;
-    float xZz;
-    float xYz;
-    float xYy;
-    float xXz;
-    float xXy;
-    float xXx;
-    float xWz;
-    float xWy;
-    float xWx;
-    float xZs;
-    float xYs;
     float xXs;
-    /* TODO: decompile from asm/... */
+    float xYs;
+    float xZs;
+    float xWx;
+    float xWy;
+    float xWz;
+    float xXx;
+    float xXy;
+    float xXz;
+    float xYy;
+    float xYz;
+    float xZz;
+    float xInvNorm;
+
+    /* sqrt.s has no C form under the baseline (MWCC calls sqrtf). */
+    xInvNorm = (_xX * _xX + _xY * _xY) + (_xZ * _xZ + _xW * _xW); asm { sqrt.s xInvNorm, xInvNorm } xInvNorm = 1.0f / xInvNorm;
+    _xX = _xX * xInvNorm;
+    _xY = _xY * xInvNorm;
+    _xZ = _xZ * xInvNorm;
+    _xW = _xW * xInvNorm;
+    xXs = _xX + _xX;
+    xYs = _xY + _xY;
+    xZs = _xZ + _xZ;
+    xWx = _xW * xXs;
+    xWy = _xW * xYs;
+    xWz = _xW * xZs;
+    xXx = _xX * xXs;
+    xXy = _xX * xYs;
+    xXz = _xX * xZs;
+    xYy = _xY * xYs;
+    xYz = _xY * xZs;
+    xZz = _xZ * xZs;
+
+    _p_stMatrix->stCol_0.xX = 1.0f - (xYy + xZz);
+    _p_stMatrix->stCol_1.xX = xXy + xWz;
+    _p_stMatrix->stCol_2.xX = xXz - xWy;
+    _p_stMatrix->stCol_3.xX = 0.0f;
+
+    _p_stMatrix->stCol_0.xY = xXy - xWz;
+    _p_stMatrix->stCol_1.xY = 1.0f - (xXx + xZz);
+    _p_stMatrix->stCol_2.xY = xYz + xWx;
+    _p_stMatrix->stCol_3.xY = 0.0f;
+
+    _p_stMatrix->stCol_0.xZ = xXz + xWy;
+    _p_stMatrix->stCol_1.xZ = xYz - xWx;
+    _p_stMatrix->stCol_2.xZ = 1.0f - (xXx + xYy);
+    _p_stMatrix->stCol_3.xZ = 0.0f;
+
+    _p_stMatrix->stCol_0.xW = 0.0f;
+    _p_stMatrix->stCol_1.xW = 0.0f;
+    _p_stMatrix->stCol_2.xW = 0.0f;
+    _p_stMatrix->stCol_3.xW = 1.0f;
 }

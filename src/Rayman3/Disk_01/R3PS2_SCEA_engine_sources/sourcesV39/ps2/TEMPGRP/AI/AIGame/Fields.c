@@ -3671,11 +3671,17 @@ unsigned char fn_ucGetFieldOrientation(HIE_tdstSuperObject_* hSuperObjPerso, tds
     float xNorm;
     MTH3D_tdstVector_ stVertexDirection;
     MTH3D_tdstVector_ stVertex;
+    MTH3D_tdstVector_* p_stTrans;
 
     MTH3D_M_vSetVectorElements(&stVertexDirection, 0.0f, -1.0f, 0.0f);
     MAT_fn_vApplyOnVertex(&stVertexDirection, hSuperObjPerso->hGlobalMatrix, &stVertexDirection);
 
-    stVertex = *POS_fn_p_stGetTranslationVector(hSuperObjPerso->hGlobalMatrix);
+    {
+        p_stTrans = POS_fn_p_stGetTranslationVector(hSuperObjPerso->hGlobalMatrix);
+        ((int*)&stVertex)[0] = ((int*)p_stTrans)[0];
+        ((int*)&stVertex)[1] = ((int*)p_stTrans)[1];
+        ((int*)&stVertex)[2] = ((int*)p_stTrans)[2];
+    }
 
     MTH3D_M_vSubVector(&stVertexDirection, &stVertexDirection, &stVertex);
     xNorm = MTH_xSqrt(MTH_xSqr3(stVertexDirection.xX, stVertexDirection.xY, stVertexDirection.xZ));

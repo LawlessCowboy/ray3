@@ -582,7 +582,7 @@ struct CINE_tdstCineActor_ {
 };
 
 struct PS2MC_stMessage_ {
-    int aMessage; /* +0x0 */
+    char* aMessage; /* +0x0 */
     int iNbChoice; /* +0x4 */
     int iDefaultChoice; /* +0x8 */
     char cChoice1; /* +0xc */
@@ -1475,7 +1475,7 @@ struct MOR_stMorphObject_ {
 };
 
 int g_CurrentLanguage;
-int PS2MC_g_Buttons[5][7];
+char* PS2MC_g_Buttons[5][7];
 PS2MC_stMessage_ PS2MC_g_MessageTable[5][46];
 static C_PS2MC_Message PS2MC_g_MessageHandler;
 tdstEngineStructure_ g_stEngineStructure;
@@ -1751,11 +1751,35 @@ void PS2MC_SetDisplayMessage(PS2MC_tdeMessageID _MessageID, unsigned int _Requir
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" char* strstr(const char* _pString, const char* _pSubString);
+extern "C" char* Strcat(char* _pDest, const char* _pSource);
+extern "C" int sprintf(char* _pBuffer, const char* _pFormat, ...);
+extern "C" void TXT_vAfficheSpecialWithTransparency(float _xAlpha, char* _pText, float* _pPosition);
+extern "C" unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement);
+extern "C" void IPT_fn_vReadInput(unsigned int ulCurrentTime);
+extern "C" int fn_bHasBeenPausedForController(void);
+
 void C_PS2MC_Message::CalculateMessagePosition(void)
 {
+    int NbLines = 1;
     char* pString;
-    unsigned int NbLines;
-    /* TODO: decompile from asm/... */
+
+    m_a3fMessagePosition[0] = 500.0f;
+    m_a3fMessagePosition[2] = 500.0f;
+    if (m_pCurrentMessage)
+    {
+        pString = m_pCurrentMessage->aMessage;
+        pString = strstr(pString, "\\l");
+        while (pString != NULL)
+        {
+            NbLines++; pString = strstr(pString + 1, "\\l");
+        }
+        if (m_pCurrentMessage->iNbChoice)
+        {
+            NbLines += 2;
+        }
+        m_a3fMessagePosition[1] = 500.0f - (m_pCurrentMessage->iNbChoice ? 20.0f : 0.0f) * (float)(NbLines / 2) * 2.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3577–3643 */
@@ -1794,7 +1818,47 @@ void C_PS2MC_Message::CalculateMessagePosition(void)
  */
 unsigned int C_PS2MC_Message::GetAnswer(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_pCurrentMessage == NULL) { return 0; }
+    if (m_pCurrentMessage->iNbChoice == 0) { return 0; }
+    if (fn_bHasBeenPausedForController()) { return 0; }
+    if (m_pCurrentMessage->iNbChoice == 2 && m_iCurrentMessage != (unsigned char)MC_eAreYouSureSaveNo)
+    {
+        if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Left) == 1)
+        {
+            m_iCurrentChoice--;
+        }
+        else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Right) == 1)
+        {
+            m_iCurrentChoice++;
+        }
+    }
+    if (m_pCurrentMessage->iNbChoice == 3 || m_iCurrentMessage == (unsigned char)MC_eAreYouSureSaveNo)
+    {
+        if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Up) == 1)
+        {
+            m_iCurrentChoice--;
+        }
+        else if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Down) == 1)
+        {
+            m_iCurrentChoice++;
+        }
+    }
+    if (m_iCurrentChoice <= 0)
+    {
+        m_iCurrentChoice = m_pCurrentMessage->iNbChoice;
+    }
+    else if (m_pCurrentMessage->iNbChoice < m_iCurrentChoice)
+    {
+        m_iCurrentChoice = 1;
+    }
+    if (IPT_fn_bIsJustValidated(g_st_3DOS_EntryActions.hEngineMenu_Enter) == 1)
+    {
+        g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+        IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+        m_pCurrentMessage = NULL;
+        return m_iCurrentChoice;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3426–3490 */
@@ -1832,5 +1896,31 @@ unsigned int C_PS2MC_Message::GetAnswer(void)
 void C_PS2MC_Message::Display(void)
 {
     char TempString[1024];
-    /* TODO: decompile from asm/... */
+
+    g_CurrentLanguage = g_stEngineStructure.ucCurrentLanguage;
+    if (m_pCurrentMessage &&
+        !fn_bHasBeenPausedForController())
+    {
+        sprintf(TempString, m_pCurrentMessage->aMessage, m_uiSaveGameRequiredSize);
+        Strcat(TempString, "\\l\\l");
+        if (m_iCurrentChoice == 1) { Strcat(TempString, "\\c255:255:0:"); }
+        else { Strcat(TempString, "\\c125:125:125:"); }
+        Strcat(TempString, PS2MC_g_Buttons[g_CurrentLanguage][m_pCurrentMessage->cChoice1]);
+        if (m_pCurrentMessage->cChoice2 != 0)
+        {
+            if (m_pCurrentMessage->cChoice3 != 0 || m_iCurrentMessage == (unsigned char)MC_eAreYouSureSaveNo) { Strcat(TempString, "\\l"); }
+            else { Strcat(TempString, "    "); }
+            if (m_iCurrentChoice == 2) { Strcat(TempString, "\\c255:255:0:"); }
+            else { Strcat(TempString, "\\c125:125:125:"); }
+            Strcat(TempString, PS2MC_g_Buttons[g_CurrentLanguage][m_pCurrentMessage->cChoice2]);
+        }
+        if (m_pCurrentMessage->cChoice3 != 0)
+        {
+            Strcat(TempString, "\\l");
+            if (m_iCurrentChoice == 3) { Strcat(TempString, "\\c255:255:0:"); }
+            else { Strcat(TempString, "\\c125:125:125:"); }
+            Strcat(TempString, PS2MC_g_Buttons[g_CurrentLanguage][m_pCurrentMessage->cChoice3]);
+        }
+        TXT_vAfficheSpecialWithTransparency(255.0f, TempString, &m_a3fMessagePosition[0]);
+    }
 }

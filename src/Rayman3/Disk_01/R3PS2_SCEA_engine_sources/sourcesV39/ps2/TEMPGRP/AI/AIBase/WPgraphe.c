@@ -3127,6 +3127,24 @@ void WPG_fn_vSetAllocMode(void);
 void WPG_fn_vClearAllocMode(void);
 /* Debug info says void; the allocation is returned in $v0. */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void WPG_fn_vReinitGraph(WP_tdstGraph_* hGraph);
+int WPARCLST_fn_lGetWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int* p_lWeight);
+int WPARCLST_fn_lChangeWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight);
+int WPARCLST_fn_lGetCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int* p_ulCapability);
+int WPARCLST_fn_lChangeCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int ulCapability, int lValue);
+void WPARCLST_fn_vAdd(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight, unsigned int ulCapability);
+float WPG_xGetCloserWPDistInGraph(WP_tdstGraph_* hGraph, MTH3D_tdstVector_* p_stPos);
+void WP_fnv_WayPoint_ComputeLocation(WP_tdstWayPoint_* hWayPoint, MTH3D_tdstVector_* p_stVertex);
+/* Recovered PS2 MTH scalar helpers: the R5900 accumulator ops and sqrt.s have
+   no C form under the baseline. */
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }     \
+    asm { nop }                        \
+    asm { nop }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 56–71 */
 /* addr: 0x001feeb0  size: 80 bytes */
@@ -3639,11 +3657,29 @@ WP_tdstGraph_* WPG_fn_lShortestPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSr
  */
 WP_tdstGraph_* WPG_fn_hGetNearestGraph(MTH3D_tdstVector_* _p_stPos)
 {
+    tdstGraphChainedListNode_* p_stGraphListNode;
     WP_tdstGraph_* hCloserGraph;
     float xTmp;
     float xDistMin;
-    tdstGraphChainedListNode_* p_stGraphListNode;
-    /* TODO: decompile from asm/... */
+
+    p_stGraphListNode = g_stEngineStructure.p_GraphChainedList;
+    if (p_stGraphListNode == NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        xDistMin = WPG_xGetCloserWPDistInGraph(p_stGraphListNode->GraphChainedListNodeInfo, _p_stPos);
+        hCloserGraph = p_stGraphListNode->GraphChainedListNodeInfo;
+        p_stGraphListNode = p_stGraphListNode->p_NextGraphChainedListNode;
+        while (p_stGraphListNode != NULL)
+        {
+            xTmp = WPG_xGetCloserWPDistInGraph(p_stGraphListNode->GraphChainedListNodeInfo, _p_stPos);
+            if (xTmp < xDistMin) { hCloserGraph = p_stGraphListNode->GraphChainedListNodeInfo; }
+            p_stGraphListNode = p_stGraphListNode->p_NextGraphChainedListNode;
+        }
+        return hCloserGraph;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 746–769 */
@@ -3675,9 +3711,45 @@ float WPG_xGetCloserWPDistInGraph(WP_tdstGraph_* _hGraph, MTH3D_tdstVector_* _p_
 {
     float xDistMin;
     MTH3D_tdstVector_ stWpPos;
+    int lNbWp;
     long lIndex;
-    long lNbWp;
-    /* TODO: decompile from asm/... */
+    WP_tdstGraphNode_* hNode;
+    int i;
+
+    lNbWp = _hGraph->m_hListOfNode.lNumberOfElementsDyn;
+    hNode = _hGraph->m_hListOfNode.hFirstElementDyn;
+    WP_fnv_WayPoint_ComputeLocation(hNode->m_hWayPoint, &stWpPos);
+    stWpPos.xX = stWpPos.xX - _p_stPos->xX;
+    stWpPos.xY = stWpPos.xY - _p_stPos->xY;
+    stWpPos.xZ = stWpPos.xZ - _p_stPos->xZ;
+    {
+        float xZ = stWpPos.xZ;
+        float xX = stWpPos.xX;
+        float xY = stWpPos.xY;
+        float xSqrNorm;
+        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ)
+        lIndex = 1;
+        MTH_SQRT_TO(xDistMin, xSqrNorm)
+    }
+    while ((int)lIndex < lNbWp)
+    {
+        for (i = 0, hNode = _hGraph->m_hListOfNode.hFirstElementDyn; i < (int)lIndex; i++, hNode = hNode->hNextBrotherDyn) ;
+        WP_fnv_WayPoint_ComputeLocation(hNode->m_hWayPoint, &stWpPos);
+        stWpPos.xX = stWpPos.xX - _p_stPos->xX;
+        stWpPos.xY = stWpPos.xY - _p_stPos->xY;
+        stWpPos.xZ = stWpPos.xZ - _p_stPos->xZ;
+        {
+            float xZ = stWpPos.xZ;
+            float xX = stWpPos.xX;
+            float xY = stWpPos.xY;
+            float xDist;
+            MTH_SQR3_TO(xDist, xX, xY, xZ)
+            MTH_SQRT_TO(xDist, xDist)
+            if (xDist < xDistMin) { xDistMin = xDist; }
+        }
+        lIndex++;
+    }
+    return xDistMin;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 726–735 */
@@ -3694,8 +3766,14 @@ float WPG_xGetCloserWPDistInGraph(WP_tdstGraph_* _hGraph, MTH3D_tdstVector_* _p_
  */
 void WPG_fn_vReinitAllGraphs(void)
 {
-    tdstGraphChainedListNode_* param0;
-    /* TODO: decompile from asm/... */
+    tdstGraphChainedListNode_* p_stGraphListNode;
+
+    p_stGraphListNode = g_stEngineStructure.p_GraphChainedList;
+    while (p_stGraphListNode)
+    {
+        WPG_fn_vReinitGraph(p_stGraphListNode->GraphChainedListNodeInfo);
+        p_stGraphListNode = p_stGraphListNode->p_NextGraphChainedListNode;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 688–700 */
@@ -3714,6 +3792,7 @@ void WPG_fn_vReinitAllGraphs(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 void WPG_fn_vReinitGraph(WP_tdstGraph_* hGraph)
 {
     WP_tdstGraphNode_* param0;
@@ -3732,6 +3811,7 @@ void WPG_fn_vReinitGraph(WP_tdstGraph_* hGraph)
         }
     }
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 655–679 */
 /* addr: 0x00200460  size: 160 bytes */
@@ -3755,7 +3835,38 @@ int WPG_fn_lGetLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint,
 {
     WP_tdstGraphNode_* hDstNode;
     WP_tdstGraphNode_* hSrcNode;
-    /* TODO: decompile from asm/... */
+    int lResult;
+
+    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
+    {
+        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
+        while (hDstNode != NULL)
+        {
+            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
+            hDstNode = hDstNode->hNextBrotherDyn;
+        }
+        if (hDstNode != NULL)
+        {
+            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
+            while (hSrcNode != NULL)
+            {
+                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
+                {
+                    if ((hSrcNode != NULL) && (hDstNode != NULL))
+                    {
+                        lResult = WPARCLST_fn_lGetWeight(hSrcNode->m_hListOfArc, hDstNode, p_lWeight);
+                    }
+                    else
+                    {
+                        lResult = -1;
+                    }
+                    return lResult;
+                }
+                hSrcNode = hSrcNode->hNextBrotherDyn;
+            }
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 626–650 */
@@ -3780,7 +3891,38 @@ int WPG_fn_lChangeLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoi
 {
     WP_tdstGraphNode_* hDstNode;
     WP_tdstGraphNode_* hSrcNode;
-    /* TODO: decompile from asm/... */
+    int lResult;
+
+    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
+    {
+        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
+        while (hDstNode != NULL)
+        {
+            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
+            hDstNode = hDstNode->hNextBrotherDyn;
+        }
+        if (hDstNode != NULL)
+        {
+            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
+            while (hSrcNode != NULL)
+            {
+                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
+                {
+                    if ((hSrcNode != NULL) && (hDstNode != NULL))
+                    {
+                        lResult = WPARCLST_fn_lChangeWeight(hSrcNode->m_hListOfArc, hDstNode, lWeight);
+                    }
+                    else
+                    {
+                        lResult = -1;
+                    }
+                    return lResult;
+                }
+                hSrcNode = hSrcNode->hNextBrotherDyn;
+            }
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 597–621 */
@@ -3805,7 +3947,38 @@ int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWay
 {
     WP_tdstGraphNode_* hDstNode;
     WP_tdstGraphNode_* hSrcNode;
-    /* TODO: decompile from asm/... */
+    int lResult;
+
+    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
+    {
+        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
+        while (hDstNode != NULL)
+        {
+            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
+            hDstNode = hDstNode->hNextBrotherDyn;
+        }
+        if (hDstNode != NULL)
+        {
+            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
+            while (hSrcNode != NULL)
+            {
+                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
+                {
+                    if ((hSrcNode != NULL) && (hDstNode != NULL))
+                    {
+                        lResult = WPARCLST_fn_lGetCapabilities(hSrcNode->m_hListOfArc, hDstNode, p_ulCapability);
+                    }
+                    else
+                    {
+                        lResult = -1;
+                    }
+                    return lResult;
+                }
+                hSrcNode = hSrcNode->hNextBrotherDyn;
+            }
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 561–584 */
@@ -3831,7 +4004,38 @@ int WPG_fn_lChangeLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrc
 {
     WP_tdstGraphNode_* hDstNode;
     WP_tdstGraphNode_* hSrcNode;
-    /* TODO: decompile from asm/... */
+    int lResult;
+
+    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
+    {
+        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
+        while (hDstNode != NULL)
+        {
+            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
+            hDstNode = hDstNode->hNextBrotherDyn;
+        }
+        if (hDstNode != NULL)
+        {
+            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
+            while (hSrcNode != NULL)
+            {
+                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
+                {
+                    if ((hSrcNode != NULL) && (hDstNode != NULL))
+                    {
+                        lResult = WPARCLST_fn_lChangeCapabilities(hSrcNode->m_hListOfArc, hDstNode, ulCapability, lValue);
+                    }
+                    else
+                    {
+                        lResult = -1;
+                    }
+                    return lResult;
+                }
+                hSrcNode = hSrcNode->hNextBrotherDyn;
+            }
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 488–513 */
@@ -3857,7 +4061,35 @@ int WPG_fn_lAddArcToWayPoint(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoi
 {
     WP_tdstGraphNode_* hDstNode;
     WP_tdstGraphNode_* hSrcNode;
-    /* TODO: decompile from asm/... */
+    int lResult;
+
+    if ((hGraph != NULL) && (hSrcWayPoint != NULL) && (hDstWayPoint != NULL))
+    {
+        hDstNode = hGraph->m_hListOfNode.hFirstElementDyn;
+        while (hDstNode != NULL)
+        {
+            if (hDstNode->m_hWayPoint == hDstWayPoint) { break; }
+            hDstNode = hDstNode->hNextBrotherDyn;
+        }
+        if (hDstNode != NULL)
+        {
+            hSrcNode = hGraph->m_hListOfNode.hFirstElementDyn;
+            while (hSrcNode != NULL)
+            {
+                if (hSrcNode->m_hWayPoint == hSrcWayPoint)
+                {
+                    if ((hSrcNode != NULL) && (hDstNode != NULL))
+                    {
+                        WPARCLST_fn_vAdd(hSrcNode->m_hListOfArc, hDstNode, lWeight, ulCapability);
+                    }
+                    lResult = 0;
+                    return lResult;
+                }
+                hSrcNode = hSrcNode->hNextBrotherDyn;
+            }
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 335–345 */

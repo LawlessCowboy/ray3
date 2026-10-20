@@ -349,6 +349,10 @@ union anon_2 {
     double dData[2]; /* +0x0 */
 };
 
+/* The GS context's modified-flag bitmap is a 64-bit word, but the retail
+   driver updates the flags 32..39 with BYTE accesses, so those eight bits
+   live in an unsigned char container at +0x4 (as in the sibling PS2GL
+   driver u_SPGArray.cpp). */
 struct anon_3 {
     unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
     unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
@@ -382,28 +386,18 @@ struct anon_3 {
     unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
     unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
     unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x4 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x4 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x4 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x4 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x4 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x4 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x4 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x4 */
+    unsigned char _extractor_padding_00[3]; /* +0x5..0x7 */
+    /* The remaining extracted flags (FBA_1_Modified .. LABEL_Modified, bits
+       40..53) have no name in the retail 8-byte bitmap and would start a
+       second container, so they stay unnamed here. */
 };
 
 struct anon_15 {
@@ -869,16 +863,21 @@ struct anon_29 {
     unsigned long pad01 : 63; /* bit 1, byte +0x0 */
 };
 
+/* The GS test register is an 8-byte record; the retail driver updates ZTE
+   and ZTST (bits 16..18) with BYTE accesses, so those three bits live in an
+   unsigned char container at +0x2 (as in the sibling PS2GL driver
+   u_SPGArray.cpp). */
 struct anon_25 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4]; /* +0x3..0x6 */
 };
 
 struct anon_39 {
@@ -1391,7 +1390,7 @@ int GLI_BIG_GLOBALS_lCurrentDrawMask;
 int GLI_BIG_GLOBALS_hCurrentMaterial;
 unsigned char g_bHasTextureAnimationFinished;
 float GLI_g_NegVect[4];
-int GLI_BIG_GLOBALS_gs_st_CurrentMatrix;
+MAT_tdstTransformation_* GLI_BIG_GLOBALS_gs_st_CurrentMatrix;
 MAT_tdstTransformation_ GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix;
 unsigned int GLI_g_CurrentStage;
 
@@ -1599,12 +1598,108 @@ void J_DrawSpriteGenList(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticleLi
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glColor4f(float red, float green, float blue, float alpha);
+extern void PS2glMatrixMode(unsigned int mode);
+extern void PS2glLoadMatrixf(const void* matrix);
+extern void PS2glBegin(unsigned int mode);
+extern void PS2glTexCoord2f(float u, float v);
+extern void PS2glVertex3f(float x, float y, float z);
+extern void GLI_vInitGLProjectionMatrix(void);
+extern void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
+
+/* Reconstructed from the retail disassembly (asm/.../u_drawSprites.s,
+   0x002bcb80).
+   Notes on the recovered shape:
+   - the pending-sprite block (colour, end, and the three flag resets) is one
+     source line;
+   - the world matrix is built by a VU0 block that scales every column of the
+     viewport's world matrix by GLI_g_NegVect (MWCC cannot emit the VU
+     instructions from C, so the block is reproduced verbatim);
+   - the depth-function block is the PS2GL library's impPS2glDepthFunc switch
+     (cases 0x200/0x207/0x203/0x201 in that order), and the GS context is
+     updated through byte accesses;
+   - the draw mask is saved, forced to -0x409 and restored at the end. */
 void GLI_vDisplayWorldTriangle(GLD_tdstViewportAttributes_* _p_stViewport, float (*coordinates)[3], float (*uvs)[2], void* pVisualMaterial)
 {
     unsigned char zTst;
     unsigned int xSaveDrawMsk;
     float a16_fWorldMatrix[16];
-    /* TODO: decompile from asm/... */
+    float* pNeg;
+    float* pSrc;
+    float* pDst;
+
+    GLI_vEndNewSprite(); if (PS2_gs_glBeginPending2) { PS2glColor4f(0.5f, 0.5f, 0.5f, 1.0f); PS2glEnd(); PS2_gs_CurrentSpriteMaterial = 0; PS2_gs_glBeginPending2 = 0; PS2_gs_glBeginPendingCounter2 = 0; }
+    g_bTakeCareOfAnimationCoordination = 1;
+    g_bHasTextureAnimationFinished = 0;
+    g_bOneShotAnim = 1;
+    GLI_vInitGLProjectionMatrix();
+
+    pSrc = (float*)((char*)*(void**)_p_stViewport->p_vSpecificToXD + 0x20);
+    pDst = a16_fWorldMatrix;
+    pNeg = GLI_g_NegVect;
+    asm {
+        lqc2 $vf5, 0x0(pNeg)
+        lqc2 $vf1, 0x0(pSrc)
+        lqc2 $vf2, 0x10(pSrc)
+        lqc2 $vf3, 0x20(pSrc)
+        lqc2 $vf4, 0x30(pSrc)
+        vmul.xyzw $vf1, $vf1, $vf5
+        vmul.xyzw $vf2, $vf2, $vf5
+        vmul.xyzw $vf3, $vf3, $vf5
+        vmul.xyzw $vf4, $vf4, $vf5
+        sqc2 $vf1, 0x0(pDst)
+        sqc2 $vf2, 0x10(pDst)
+        sqc2 $vf3, 0x20(pDst)
+        sqc2 $vf4, 0x30(pDst)
+    }
+    a16_fWorldMatrix[15] = 1.0f;
+
+    g_bTakeCareOfAnimationCoordination = 1;
+    g_bOneShotAnim = 1;
+    GLI_BIG_GLOBALS_hCurrentMaterial = (int)pVisualMaterial;
+    xSaveDrawMsk = GLI_BIG_GLOBALS_lHierachDrawMask;
+    GLI_BIG_GLOBALS_lHierachDrawMask = -0x409;
+    GLI_BIG_GLOBALS_lCurrentDrawMask = -0x409;
+    GLI_g_DontRefreshAnimated = 1;
+    g_bHasTextureAnimationFinished = 0;
+    GLI_DRV_SendMaterialToViewport(pVisualMaterial);
+    GLI_g_DontRefreshAnimated = 0;
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf(a16_fWorldMatrix);
+
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc)
+    {
+    case 0x200: zTst = 0; break;
+    case 0x207: zTst = 1; break;
+    case 0x203: zTst = 2; break;
+    case 0x201: zTst = 3; break;
+    case 0x202:
+    case 0x204:
+    case 0x205:
+    case 0x206:
+        break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+
+    PS2glBegin(4);
+    PS2glColor4f(0.5f, 0.5f, 0.5f, GLI_BIG_GLOBALS_xGlobalAlpha);
+    PS2glTexCoord2f(uvs[0][0], uvs[0][1]);
+    PS2glVertex3f(coordinates[0][0], coordinates[0][1], coordinates[0][2]);
+    PS2glTexCoord2f(uvs[1][0], uvs[1][1]);
+    PS2glVertex3f(coordinates[1][0], coordinates[1][1], coordinates[1][2]);
+    PS2glTexCoord2f(uvs[2][0], uvs[2][1]);
+    PS2glVertex3f(coordinates[2][0], coordinates[2][1], coordinates[2][2]);
+    PS2glEnd();
+
+    GLI_BIG_GLOBALS_lHierachDrawMask = xSaveDrawMsk;
+    g_bTakeCareOfAnimationCoordination = 0;
+    g_bOneShotAnim = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSprites.c lines 1562–1562 */
@@ -1618,8 +1713,6 @@ void GLI_vEnd2DSpritesWithUVs(void)
 {
     GLI_vEndNewSprite();
 }
-
-void PS2glColor4f(float red, float green, float blue, float alpha);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSprites.c lines 684–699 */
 /* addr: 0x002bce50  size: 84 bytes */
@@ -1737,15 +1830,116 @@ void GLI_vEndWorldSprites(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Reconstructed from the retail disassembly (asm/.../u_drawSprites.s,
+   0x002bceb0).
+   Notes on the recovered shape:
+   - the sprite's draw mode is tested as a short: bit 2 skips the whole
+     function, bit 4 skips it after the half-size vectors are computed;
+   - the viewport's world matrix is inverted into a local transformation and
+     its first two columns are scaled by the sprite's half size;
+   - the centre point is taken from the object's point list (indexed by the
+     sprite's centre-point index), copied into a 4-float vector and multiplied
+     by the current matrix with a VU0 block (MWCC cannot emit the VU
+     instructions from C, so the block is reproduced verbatim);
+   - the four corners are then expanded around that centre point and appended
+     to GLI_g_IndexedSpriteList. */
 void GLI_vDrawIndexedSprite(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, GEO_tdstIndexedSprite_* p_stISpr)
 {
-    MTH3D_tdstVector_ CameraCenterPoint;
-    MTH3D_tdstVector_ CenterPoint;
-    float fScaleY;
-    float fScaleX;
-    float coords[4][3];
     MAT_tdstTransformation_ TempMatrix;
-    /* TODO: decompile from asm/... */
+    float coords[4][3];
+    float fScaleX;
+    float fScaleY;
+    MTH3D_tdstVector_ CenterPoint;
+    MTH4D_tdstVector_ CameraCenterPoint;
+    MTH3D_tdstVector_ vecX;
+    MTH3D_tdstVector_ vecY;
+    float x;
+    float y;
+    float z;
+    int i;
+
+    if (p_stISpr->hSprite == NULL) return;
+    if (p_stVpt == NULL) return;
+    if ((short)p_stISpr->hSprite->d_xSpriteDrawMode & 4) return;
+
+    MAT_fn_vInvert(&TempMatrix, (char*)*(void**)p_stVpt->p_vSpecificToXD + 0x10);
+
+    fScaleX = p_stISpr->hSprite->d_xSizeOfSprite->xX;
+    fScaleY = -p_stISpr->hSprite->d_xSizeOfSprite->xY;
+    vecX.xX = TempMatrix.stTransformMatrix.stCol_0.xX * fScaleX;
+    vecX.xY = TempMatrix.stTransformMatrix.stCol_0.xY * fScaleX;
+    vecX.xZ = TempMatrix.stTransformMatrix.stCol_0.xZ * fScaleX;
+    vecY.xX = TempMatrix.stTransformMatrix.stCol_1.xX * fScaleY;
+    vecY.xY = TempMatrix.stTransformMatrix.stCol_1.xY * fScaleY;
+    vecY.xZ = TempMatrix.stTransformMatrix.stCol_1.xZ * fScaleY;
+    if ((short)p_stISpr->hSprite->d_xSpriteDrawMode & 0x10) return;
+
+    switch (GLI_BIG_GLOBALS_gs_st_CurrentMatrix->eType)
+    {
+    case 8: break;
+    case 6:
+    case 7:
+    case 3:
+    case 4:
+    default:
+        fScaleX = MAT_fn_xGetXScale(&GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix);
+        fScaleY = MAT_fn_xGetYScale(&GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix);
+        break;
+    }
+
+    CenterPoint.xX = p_stObj->d_stListOfPoints[p_stISpr->xCenterPoint].xX;
+    CenterPoint.xY = p_stObj->d_stListOfPoints[p_stISpr->xCenterPoint].xY;
+    CenterPoint.xZ = p_stObj->d_stListOfPoints[p_stISpr->xCenterPoint].xZ;
+    *(int*)&CameraCenterPoint.xX = *(int*)&CenterPoint.xX;
+    *(int*)&CameraCenterPoint.xY = *(int*)&CenterPoint.xY;
+    *(int*)&CameraCenterPoint.xZ = *(int*)&CenterPoint.xY;
+
+    {
+        float* pMat = (float*)&GLI_BIG_GLOBALS_gs_st_CurrentMatrix->stTransformMatrix;
+        float* pVec = (float*)&CameraCenterPoint;
+        asm {
+            lqc2 $vf1, 0x0(pVec)
+            lqc2 $vf2, 0x0(pMat)
+            lqc2 $vf3, 0x10(pMat)
+            lqc2 $vf4, 0x20(pMat)
+            lqc2 $vf5, 0x30(pMat)
+            vmulax.xyzw $ACC, $vf2, $vf1x
+            vmadday.xyzw $ACC, $vf3, $vf1y
+            vmaddaz.xyzw $ACC, $vf4, $vf1z
+            vmaddw.xyzw $vf6, $vf5, $vf1w
+            sqc2 $vf6, 0x0(pVec)
+        }
+    }
+
+    x = CameraCenterPoint.xX;
+    y = CameraCenterPoint.xY;
+    z = CameraCenterPoint.xZ;
+    coords[0][0] = vecY.xX + (x + vecX.xX);
+    coords[0][1] = vecY.xY + (y + vecX.xY);
+    coords[0][2] = vecY.xZ + (z + vecX.xZ);
+    coords[3][0] = (x + vecX.xX) - vecY.xX;
+    coords[3][1] = (y + vecX.xY) - vecY.xY;
+    coords[3][2] = (z + vecX.xZ) - vecY.xZ;
+    coords[1][0] = vecY.xX + (x - vecX.xX);
+    coords[1][1] = vecY.xY + (y - vecX.xY);
+    coords[1][2] = vecY.xZ + (z - vecX.xZ);
+    coords[2][0] = (x - vecX.xX) - vecY.xX;
+    coords[2][1] = (y - vecX.xY) - vecY.xY;
+    coords[2][2] = (z - vecX.xZ) - vecY.xZ;
+
+    if (GLI_g_NbOfIndexedSprites < 25)
+    {
+        GLI_PS2GL_IndexedSprite_* pSpr = &GLI_g_IndexedSpriteList[GLI_g_NbOfIndexedSprites];
+        for (i = 0; i < 4; i++)
+        {
+            pSpr->points[i][0] = coords[i][0];
+            pSpr->points[i][1] = coords[i][1];
+            pSpr->points[i][2] = coords[i][2];
+        }
+        pSpr->hVisualMaterial = *p_stISpr->hSprite->d_hVisualMaterial;
+        pSpr->p_stVpt = p_stVpt;
+        GLI_g_NbOfIndexedSprites++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSprites.c lines 106–176 */
@@ -1792,9 +1986,82 @@ void GLI_vDrawIndexedSprite(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeomet
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void PS2glMatrixMode(unsigned int mode);
+extern void PS2glLoadMatrixf(const void* matrix);
+extern void GLI_AddNormalInterpolation(void* pMatrix);
+extern void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
+extern void PS2glBegin(unsigned int mode);
+extern void PS2glTexCoord2f(float u, float v);
+extern void PS2glVertex3f(float x, float y, float z);
+extern void GLI_vClearSendMatStates(void);
+
+/* Reconstructed from the retail disassembly (asm/.../u_drawSprites.s,
+   0x002bd220).
+   Notes on the recovered shape:
+   - the whole body is guarded by the number of indexed sprites; the counter
+     is reset to zero at the very end.
+   - the depth-function block is the PS2GL library's impPS2glDepthFunc switch
+     (cases 0x200/0x207/0x203/0x201 in that order), and the GS context is
+     updated through byte accesses.
+   - each indexed sprite is drawn as two triangles sharing the 0-2 diagonal,
+     with the quad's (0,0) (1,0) (1,1) (0,1) texture coordinates. */
 void DrawAllIndexedSprites(void)
 {
     unsigned char zTst;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    unsigned int offset;
+    GLI_PS2GL_IndexedSprite_* pSpr;
+
+
+    if (GLI_g_NbOfIndexedSprites == 0) return;
+
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf(&GLI_BIG_GLOBALS_gs_st_CurrentMatrix->stTransformMatrix);
+
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc)
+    {
+    case 0x200: zTst = 0; break;
+    case 0x207: zTst = 1; break;
+    case 0x203: zTst = 2; break;
+    case 0x201: zTst = 3; break;
+    case 0x202:
+    case 0x204:
+    case 0x205:
+    case 0x206:
+        break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    GLI_g_CurrentStage = 0;
+    GLI_vClearSendMatStates();
+
+    for (i = 0, offset = 0; i < GLI_g_NbOfIndexedSprites; offset += sizeof(GLI_PS2GL_IndexedSprite_), i++)
+    {
+        PS2glMatrixMode(0x1700);
+        PS2glLoadMatrixf(&GLI_BIG_GLOBALS_gs_st_CurrentMatrix->stTransformMatrix);
+        GLI_AddNormalInterpolation(NULL);
+        pSpr = (GLI_PS2GL_IndexedSprite_*)((char*)GLI_g_IndexedSpriteList + offset);
+        GLI_DRV_SendMaterialToViewport(pSpr->hVisualMaterial);
+        PS2glBegin(4);
+        PS2glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
+        PS2glTexCoord2f(0.0f, 0.0f);
+        PS2glVertex3f(pSpr->points[0][0], pSpr->points[0][1], pSpr->points[0][2]);
+        PS2glTexCoord2f(1.0f, 0.0f);
+        PS2glVertex3f(pSpr->points[1][0], pSpr->points[1][1], pSpr->points[1][2]);
+        PS2glTexCoord2f(1.0f, 1.0f);
+        PS2glVertex3f(pSpr->points[2][0], pSpr->points[2][1], pSpr->points[2][2]);
+        PS2glTexCoord2f(0.0f, 0.0f);
+        PS2glVertex3f(pSpr->points[0][0], pSpr->points[0][1], pSpr->points[0][2]);
+        PS2glTexCoord2f(1.0f, 1.0f);
+        PS2glVertex3f(pSpr->points[2][0], pSpr->points[2][1], pSpr->points[2][2]);
+        PS2glTexCoord2f(0.0f, 1.0f);
+        PS2glVertex3f(pSpr->points[3][0], pSpr->points[3][1], pSpr->points[3][2]);
+        PS2glEnd();
+    }
+    GLI_g_NbOfIndexedSprites = 0;
 }

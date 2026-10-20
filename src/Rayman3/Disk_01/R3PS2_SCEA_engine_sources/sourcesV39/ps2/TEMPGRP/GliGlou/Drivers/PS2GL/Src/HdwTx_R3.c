@@ -1265,8 +1265,8 @@ int GLI_g_TransitionTextureInformation[2][25];
 char GLI_g_MapBeingLoaded[512];
 tagGLcontext g_PS2glContext;
 tagGScontext g_gsContext;
-int PS2glAllocator64;
-int PS2glLiberator;
+void* (*PS2glAllocator64)(unsigned int);
+void (*PS2glLiberator)(void*);
 unsigned int gs_lActualRefreshNumberForScolledTextures;
 float gs_fCoefOfMultiplicationForAnimatedTexture;
 int gs_aDEFTableOfTextureAlreadyRead;
@@ -1454,9 +1454,25 @@ void GLI_vFreeTempMaterial(GLI_tdstMaterial_** ppMaterial)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2_fn_vEnterGLCriticalSection(void);
+void PS2_fn_vLeaveGLCriticalSection(void);
+void PS2glDeleteTextures(int NbTextures, void* pTextures);
+
 void GLI_vFreeTempTexture(GLI_tdstTexture_* p_stTexture)
 {
-    /* TODO: decompile from asm/... */
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+
+    if (p_stTexture != NULL)
+    {
+        if ((p_stSpecParam = p_stTexture->p_stSpecParam) != NULL)
+        {
+            PS2_fn_vEnterGLCriticalSection();
+            PS2glDeleteTextures(1, p_stSpecParam);
+            PS2_fn_vLeaveGLCriticalSection();
+            PS2glLiberator(p_stTexture->p_stSpecParam);
+            p_stTexture->p_stSpecParam = NULL;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2297–2328 */
@@ -1764,7 +1780,17 @@ void EnableAlpha(GLI_tdstMaterial_* p_stMaterial)
 int GLI_iLoadMenuTexture(GLI_tdstTexture_** pp_stTexture, char* TxrName)
 {
     GLI_tdstTexture_* p_stTexture;
-    /* TODO: decompile from asm/... */
+
+    *pp_stTexture = p_stTexture = (GLI_tdstTexture_*)PS2glAllocator64(0xCC);
+    if (p_stTexture == NULL)
+    {
+        return 0;
+    }
+    memset(p_stTexture, 0, 0xCC);
+    strcpy(p_stTexture->a255_cFileName, TxrName);
+    p_stTexture->p_stSpecParam = (GLI_tdstTexturePS2GL_*)PS2glAllocator64(4);
+    p_stTexture->p_stSpecParam->TextureID = 0;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1684–1686 */
@@ -2304,22 +2330,8 @@ void GLI_DRV_vUnLoadTextures(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vUnloadTexturePartial(unsigned char ucChannel)
-{
-    int i;
-    unsigned char channel;
-    int offset;
-
-    channel = ucChannel;
-    offset = 0;
-    i = 0;
-    do {
-        if ((channel & 0xfe) == *(int*)((char*)GLI_g_BaseChannelForThisBloc + offset)) {
-            GLI_vFreeTextureBloc(i);
-        }
-        i++;
-        offset += 4;
-    } while (i < 4);
+void GLI_vUnloadTexturePartial(unsigned char ucChannel) { int i; int channel; int offset = 0;
+    channel = ucChannel; i = 0; do { if ((unsigned char)(channel & 0xFE) == *(int*)((char*)GLI_g_BaseChannelForThisBloc + offset)) { GLI_vFreeTextureBloc(i); } i++; offset += 4; } while (i < 4);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 498–538 */
@@ -2337,9 +2349,23 @@ void GLI_vUnloadTexturePartial(unsigned char ucChannel)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vLoadTBF_File(int DestBlocId, int SourceBlocId);
+void GLI_vProcessRegisteredTextures(void);
+
 void GLI_DRV_vDownLoadTextures(void)
 {
-    /* TODO: decompile from asm/... */
+    Bug_Please_ReloadMenu_40 = 0;
+    if (GLI_gs_LoadingFix)
+    {
+        GLI_vLoadTBF_File(0, 0);
+    }
+    else
+    {
+        GLI_vLoadTBF_File(2, 4);
+        GLI_vLoadTBF_File(3, 6);
+        GLI_vLoadTBF_File(1, 2);
+    }
+    GLI_vProcessRegisteredTextures();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 486–486 */
@@ -2457,9 +2483,40 @@ void GLI_vSetLoadingFix(int BoolVal)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned int GAM_fn_uwGetEngineLoading(void);
+void* HMU_fn_p_vMalloc(unsigned int size, int iExtra);
+void HMU_fn_vSetMemoriesInBinaryMode(void);
+void HMU_fn_vFree(void* p_vPointer, int iTempMalloc);
+int GAM_fn_bIsEngineInFixMode(void);
+void HMU_fn_vSetMemoriesInFixMode(void);
+int GAM_fn_bIsEngineInLevelMode(void);
+void HMU_fn_vSetMemoriesInLevelMode(void);
+int GAM_fn_bIsEngineInTransitionMode(void);
+void GAM_fn_vSetEngineInTransitionMode(char* pszMessage);
+
 void fn_vFreeInBinaryPreservingTheCurrentMode(void* pointer)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int uwLoading;
+
+    uwLoading = GAM_fn_uwGetEngineLoading();
+    HMU_fn_vSetMemoriesInBinaryMode();
+    HMU_fn_vFree(&uwLoading, 0);
+    if (GAM_fn_bIsEngineInFixMode())
+    {
+        HMU_fn_vSetMemoriesInFixMode();
+    }
+    else if (GAM_fn_bIsEngineInLevelMode())
+    {
+        HMU_fn_vSetMemoriesInLevelMode();
+    }
+    else if (GAM_fn_bIsEngineInTransitionMode())
+    {
+        GAM_fn_vSetEngineInTransitionMode("Bad Allocation Mode\n");
+    }
+    else
+    {
+        printf("Bad Allocation Mode\n");
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 140–162 */
@@ -2480,8 +2537,27 @@ void fn_vFreeInBinaryPreservingTheCurrentMode(void* pointer)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size)
+void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size)
 {
     void* pointer;
-    /* TODO: decompile from asm/... */
+
+    HMU_fn_vSetMemoriesInBinaryMode();
+    pointer = HMU_fn_p_vMalloc(size, 0);
+    if (GAM_fn_bIsEngineInFixMode())
+    {
+        HMU_fn_vSetMemoriesInFixMode();
+    }
+    else if (GAM_fn_bIsEngineInLevelMode())
+    {
+        HMU_fn_vSetMemoriesInLevelMode();
+    }
+    else if (GAM_fn_bIsEngineInTransitionMode())
+    {
+        GAM_fn_vSetEngineInTransitionMode("Bad Allocation Mode\n");
+    }
+    else
+    {
+        printf("Bad Allocation Mode\n");
+    }
+    return pointer;
 }

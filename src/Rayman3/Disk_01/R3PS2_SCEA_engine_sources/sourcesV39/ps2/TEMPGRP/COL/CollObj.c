@@ -4,6 +4,15 @@
 
 #include <stddef.h>
 
+/* Recovered PS2 MTH scalar helpers: sqrt.s and the R5900 accumulator ops
+   have no C form under the baseline. */
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
@@ -275,6 +284,12 @@ static int gs_pstGeoObject;
 static int gs_aGeoITElements[25];
 int gs_hVisualMaterial;
 
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void COL_vComputeObjectParallelBox(COL_tdstCollideObject_* hObject, short xParallelBox);
+void COL_vCreateObjectListOfParallelBox(COL_tdstCollideObject_* hObject, short xNumberOfParallelBoxes);
+void COL_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(MTH3D_tdstVector_* p_stReturnedSphereCenter, float* p_xReturnedSphereRadius, MTH3D_tdstVector_* p_stFirstSphereCenter, float xFirstSphereRadius, MTH3D_tdstVector_* p_stSecondSphereCenter);
+void COL_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* p_stReturnedSphereCenter, float* p_xReturnedSphereRadius, MTH3D_tdstVector_* p_stFirstSphereCenter, float xFirstSphereRadius, MTH3D_tdstVector_* p_stSecondSphereCenter, float xSecondSphereRadius);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1820–1912 */
 /* addr: 0x0024da20  size: 652 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -392,14 +407,32 @@ COL_tdstCollideObject_* COL_fn_hTransformTableOfObjectInOneObjectForGAM(COL_tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void COL_fn_vAddObjectToSphere(COL_tdstCollideObject_* _hGeometricObject, MTH3D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius)
+void COL_fn_vAddObjectToSphere(COL_tdstCollideObject_* _hGeometricObject, MTH4D_tdstVector_* _p_stSphereCenter, float* _p_xSphereRadius)
 {
     MTH3D_tdstVector_ stSphereCenterLocal;
-    COL_tdstElementSpheres_* p_stLocalElementSphere;
     int lElementCounter;
-    int i;
+    COL_tdstElementSpheres_* p_stLocalElementSphere;
     MTH3D_tdstVector_* p_stVertex;
-    /* TODO: decompile from asm/... */
+    int i;
+
+    p_stVertex = _hGeometricObject->d_stListOfPoints;
+    for (i = 0; i < _hGeometricObject->xNbPoints; i++, p_stVertex++)
+    {
+        COL_fn_vComputeBoundingSphereOfOneSphereAndOnePoint((MTH3D_tdstVector_*)_p_stSphereCenter, _p_xSphereRadius, (MTH3D_tdstVector_*)_p_stSphereCenter, *_p_xSphereRadius, p_stVertex);
+    }
+
+    for (lElementCounter = 0; lElementCounter < _hGeometricObject->xNbElements; lElementCounter++)
+    {
+        if (((short*)_hGeometricObject->d_xListOfElementsTypes)[lElementCounter] == 7)
+        {
+            p_stLocalElementSphere = ((COL_tdstElementSpheres_**)_hGeometricObject->d_stListOfElements)[lElementCounter];
+            for (i = 0; i < p_stLocalElementSphere->xNbSpheres; i++)
+            {
+                stSphereCenterLocal = _hGeometricObject->d_stListOfPoints[p_stLocalElementSphere->d_stListOfSpheres[i].xCenterPoint];
+                COL_fn_vComputeBoundingSphereOfTwoSpheres((MTH3D_tdstVector_*)_p_stSphereCenter, _p_xSphereRadius, (MTH3D_tdstVector_*)_p_stSphereCenter, *_p_xSphereRadius, &stSphereCenterLocal, p_stLocalElementSphere->d_stListOfSpheres[i].xRadius);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1721–1742 */
@@ -427,7 +460,30 @@ void COL_fn_vAddObjectToSphere(COL_tdstCollideObject_* _hGeometricObject, MTH3D_
 void COL_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter, float _xSecondSphereRadius)
 {
     float xAlpha;
-    /* TODO: decompile from asm/... */
+    float xX, xY, xZ;
+    float xSqrNorm;
+    float xNorm;
+
+    xX = _p_stFirstSphereCenter->xX - _p_stSecondSphereCenter->xX; xY = _p_stFirstSphereCenter->xY - _p_stSecondSphereCenter->xY; xZ = _p_stFirstSphereCenter->xZ - _p_stSecondSphereCenter->xZ;
+    MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+    if (xNorm + _xFirstSphereRadius <= _xSecondSphereRadius)
+    {
+        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stSecondSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stSecondSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stSecondSphereCenter->xZ;
+
+        *_p_xReturnedSphereRadius = _xSecondSphereRadius;
+    }
+    else if (xNorm + _xSecondSphereRadius < _xFirstSphereRadius)
+    {
+        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stFirstSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stFirstSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stFirstSphereCenter->xZ;
+
+        *_p_xReturnedSphereRadius = _xFirstSphereRadius;
+    }
+    else
+    {
+        xAlpha = (1.0f - (_xFirstSphereRadius - _xSecondSphereRadius) / xNorm) / 2.0f;
+        _p_stReturnedSphereCenter->xX = _p_stFirstSphereCenter->xX + xAlpha * (_p_stSecondSphereCenter->xX - _p_stFirstSphereCenter->xX); _p_stReturnedSphereCenter->xY = _p_stFirstSphereCenter->xY + xAlpha * (_p_stSecondSphereCenter->xY - _p_stFirstSphereCenter->xY); _p_stReturnedSphereCenter->xZ = _p_stFirstSphereCenter->xZ + xAlpha * (_p_stSecondSphereCenter->xZ - _p_stFirstSphereCenter->xZ);
+        *_p_xReturnedSphereRadius = (xNorm + _xFirstSphereRadius + _xSecondSphereRadius) / 2.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1673–1688 */
@@ -449,10 +505,28 @@ void COL_fn_vComputeBoundingSphereOfTwoSpheres(MTH3D_tdstVector_* _p_stReturnedS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void COL_fn_vComputeBoundingSphereOfOneSphereAndOnePoint(MTH3D_tdstVector_* _p_stReturnedSphereCenter, float* _p_xReturnedSphereRadius, MTH3D_tdstVector_* _p_stFirstSphereCenter, float _xFirstSphereRadius, MTH3D_tdstVector_* _p_stSecondSphereCenter)
 {
     float xAlpha;
-    /* TODO: decompile from asm/... */
+    float xX, xY, xZ;
+    float xSqrNorm;
+    float xNorm;
+
+    xX = _p_stFirstSphereCenter->xX - _p_stSecondSphereCenter->xX; xY = _p_stFirstSphereCenter->xY - _p_stSecondSphereCenter->xY; xZ = _p_stFirstSphereCenter->xZ - _p_stSecondSphereCenter->xZ;
+    MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)
+    if (xNorm <= _xFirstSphereRadius)
+    {
+        *(int*)&_p_stReturnedSphereCenter->xX = *(int*)&_p_stFirstSphereCenter->xX; *(int*)&_p_stReturnedSphereCenter->xY = *(int*)&_p_stFirstSphereCenter->xY; *(int*)&_p_stReturnedSphereCenter->xZ = *(int*)&_p_stFirstSphereCenter->xZ;
+
+        *_p_xReturnedSphereRadius = _xFirstSphereRadius;
+    }
+    else
+    {
+        xAlpha = (1.0f - _xFirstSphereRadius / xNorm) / 2.0f;
+        _p_stReturnedSphereCenter->xX = _p_stFirstSphereCenter->xX + xAlpha * (_p_stSecondSphereCenter->xX - _p_stFirstSphereCenter->xX); _p_stReturnedSphereCenter->xY = _p_stFirstSphereCenter->xY + xAlpha * (_p_stSecondSphereCenter->xY - _p_stFirstSphereCenter->xY); _p_stReturnedSphereCenter->xZ = _p_stFirstSphereCenter->xZ + xAlpha * (_p_stSecondSphereCenter->xZ - _p_stFirstSphereCenter->xZ);
+        *_p_xReturnedSphereRadius = (xNorm + _xFirstSphereRadius) / 2.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1620–1625 */
@@ -550,19 +624,16 @@ void COL_vGetNormalOfGeometricObjectElement(COL_tdstCollideObject_* hObject, sho
  */
 short COL_xGetParallelBoxIndexOfElement(COL_tdstCollideObject_* hObject, short xIndexElement)
 {
-    short xType;
-    xType = ((short*)hObject->d_xListOfElementsTypes)[xIndexElement];
-    if (xType != 8)
+    switch (((short*)hObject->d_xListOfElementsTypes)[xIndexElement])
     {
-        if (xType != 7)
-        {
-            if (xType != 1)
-                return -1;
-            return ((COL_tdstElementIndexedTriangles_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
-        }
+    case 1:
+        return ((COL_tdstElementIndexedTriangles_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
+    case 7:
         return ((COL_tdstElementAlignedBoxes_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
+    case 8:
+        return ((COL_tdstElementSpheres_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
     }
-    return ((COL_tdstElementSpheres_**)hObject->d_stListOfElements)[xIndexElement]->xIndexOfParallelBox;
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1494–1494 */
@@ -603,7 +674,13 @@ short COL_xGetCollideObjectNumberOfPoints(COL_tdstCollideObject_* hObject)
  */
 void COL_vCreateCollideObject(COL_tdstCollideObject_** p_hObject, short xNbPoints, short xNbElements)
 {
-    /* TODO: decompile from asm/... */
+    COL_tdstCollideObject_* hObject;
+    short xNb;
+    short i;
+    COL_tdstCollideObject_* p_stObj;
+
+    hObject = (COL_tdstCollideObject_*)HMU_fn_p_vMalloc(sizeof(COL_tdstCollideObject_), 0); hObject->xNbElements = xNbElements; hObject->xNbPoints = xNbPoints; hObject->d_xListOfElementsTypes = (int)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 0); hObject->d_stListOfElements = (int)HMU_fn_p_vMalloc(xNbElements * 4, 0); hObject->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 0); *p_hObject = hObject;
+    p_stObj = *p_hObject; xNb = p_stObj->xNbElements; for (i = 0; i < xNb; i++) { ((short*)p_stObj->d_xListOfElementsTypes)[i] = 0; } p_stObj->p_stOctree = NULL; p_stObj->xNbParallelBoxes = 0; p_stObj->d_stListOfParallelBoxes = NULL; p_stObj->xBoudingSphereRadius = 0.0f; p_stObj->xBoudingSphereCenter.xX = 0.0f; p_stObj->xBoudingSphereCenter.xY = 0.0f; p_stObj->xBoudingSphereCenter.xZ = 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 1389–1390 */
@@ -664,7 +741,16 @@ short COL_xGetElementType(COL_tdstCollideObject_* hObject, short xElement)
  */
 void COL_vEndModifyObject(COL_tdstCollideObject_* hObject)
 {
-    /* TODO: decompile from asm/... */
+    short xIndex;
+
+    if (hObject->xNbParallelBoxes != 0) { if (hObject->d_stListOfParallelBoxes == NULL) { COL_vCreateObjectListOfParallelBox(hObject, hObject->xNbParallelBoxes); xIndex = 0; } for (xIndex = 0; xIndex < hObject->xNbParallelBoxes; xIndex++) { COL_vComputeObjectParallelBox(hObject, xIndex); } }
+
+    hObject->xBoudingSphereCenter.xX = hObject->d_stListOfPoints[0].xX;
+    hObject->xBoudingSphereCenter.xY = hObject->d_stListOfPoints[0].xY;
+    hObject->xBoudingSphereCenter.xZ = hObject->d_stListOfPoints[0].xZ;
+    hObject->xBoudingSphereCenter.xW = 1.0f;
+    hObject->xBoudingSphereRadius = 0.0f;
+    COL_fn_vAddObjectToSphere(hObject, &hObject->xBoudingSphereCenter, &hObject->xBoudingSphereRadius);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 206–272 */
@@ -763,10 +849,24 @@ void COL_vComputeObjectParallelBox(COL_tdstCollideObject_* hObject, short xParal
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void COL_vCreateObjectListOfParallelBox(COL_tdstCollideObject_* hObject, short xNumberOfParallelBoxes)
 {
     short xIndex;
-    /* TODO: decompile from asm/... */
+
+    hObject->xNbParallelBoxes = xNumberOfParallelBoxes;
+    if (hObject->xNbParallelBoxes != 0)
+    {
+        if (hObject->d_stListOfParallelBoxes == NULL)
+        {
+            hObject->d_stListOfParallelBoxes = (COL_tdstParallelBox_*)HMU_fn_p_vMalloc(hObject->xNbParallelBoxes * sizeof(COL_tdstParallelBox_), 0);
+            for (xIndex = 0; xIndex < hObject->xNbParallelBoxes; xIndex++)
+            {
+                hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xX = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xY = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xZ = 3.402822e38f;
+                hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xX = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xY = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xZ = -3.402822e38f;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollObj.c lines 48–72 */
@@ -790,5 +890,28 @@ void COL_vCreateObjectListOfParallelBox(COL_tdstCollideObject_* hObject, short x
  */
 void COL_fn_vUpdateMinMaxBoxWithPoint(MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, MTH3D_tdstVector_* p_stPoint)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stPoint->xX < p_stMinPoint->xX)
+    {
+        p_stMinPoint->xX = p_stPoint->xX;
+    }
+    else if (p_stPoint->xX > p_stMaxPoint->xX)
+    {
+        p_stMaxPoint->xX = p_stPoint->xX;
+    }
+    if (p_stPoint->xY < p_stMinPoint->xY)
+    {
+        p_stMinPoint->xY = p_stPoint->xY;
+    }
+    else if (p_stPoint->xY > p_stMaxPoint->xY)
+    {
+        p_stMaxPoint->xY = p_stPoint->xY;
+    }
+    if (p_stPoint->xZ < p_stMinPoint->xZ)
+    {
+        p_stMinPoint->xZ = p_stPoint->xZ;
+    }
+    else if (p_stPoint->xZ > p_stMaxPoint->xZ)
+    {
+        p_stMaxPoint->xZ = p_stPoint->xZ;
+    }
 }

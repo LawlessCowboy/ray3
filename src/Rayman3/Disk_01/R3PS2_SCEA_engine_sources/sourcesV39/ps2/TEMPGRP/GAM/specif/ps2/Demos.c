@@ -1900,12 +1900,91 @@ void DEMO_fn_vDesInitGame(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* memcpy(void* dst, const void* src, size_t n);
+void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* p_stCompressedTransform);
+float fn_fUncompressNumber(short n);
+void fn_vDecompressTransform(MAT_tdstTransformation_* p_stTransform, tdstDemoCompressedTransform_* p_stCompressedTransform);
+unsigned char CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* hSO);
+float MTH4D_fn_xSqrVector(MTH4D_tdstVector_* p_stVector);
+float MTH_fn_xSqrtOpt2(float xValue);
+unsigned char PLA_fn_bSetNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_WantedState, unsigned char bForce, unsigned char bHandleSkippedEventsIfRelevant, unsigned char bIgnoreTransitions, unsigned int ulNbFrameForIntermAnim, float xNLParameter, unsigned char bProportionnal);
+unsigned char PLA_fn_bDoAnimPlayerForCharacter(HIE_tdstSuperObject_* p_stSuperObject, unsigned char bNoDisplay, unsigned char bHandleSkippedEventsIfRelevant);
+void PLA_fn_vSetCurrFrame(HIE_tdstSuperObject_* p_stSuperObject, float xFrame);
+void PLA_fn_vUpdateTransparencyForModules(HIE_tdstSuperObject_* p_stSuperObject);
+void MAT_fn_vQuatToMatrix(MTH4D_tdstMatrix_* p_stMatrix, float xX, float xY, float xZ, float xW);
+void DEMO_fn_vPrepareForReadNow(void);
+void DEMO_fn_vStopEventFlow(void);
+void DEMO_fn_vMoveModuleDelayedHandling(void);
+void DEMO_fn_vReadOneCompleteStateUpdate(void);
+void GAM_fn_vAskToChangeLevel(char* szNewLevelName, int lParameter);
+void fn_vKillAllAlways(void);
+void fn_vReinitTheMap(void);
+void AGO_vClearUnwanted110AGOsForDemos(void);
+void SND_fn_vSynchroSound(void);
+void TMR_fn_wWait(unsigned int ulTimeToWait);
+int printf(const char* fmt, ...);
 unsigned char DEMO_fn_bUpdateDynamicHierarchy(void)
 {
+    unsigned int ulDEMO_ElapsedEngineTimerCount;
     int iEndOfUpdate;
     int iNewFrameInRecord;
-    unsigned int ulDEMO_ElapsedEngineTimerCount;
-    /* TODO: decompile from asm/... */
+
+    if (g_iNbFramesToWaitBeforePlaying)
+    {
+        if (--g_iNbFramesToWaitBeforePlaying == 0) { DEMO_fn_vPrepareForReadNow(); }
+        return 1;
+    }
+
+    if (!(gl_DEMO_CurrentFrame < gl_DEMO_NumberOfFrames) || (g_bTestInputDuringDemo && gl_DEMO_CurrentFrame > 0x3C && (unsigned char)IPT_fn_bIsValidated(g_st_3DOS_EntryActions.hFlyingModeDoubleSpeed) == 1))
+    {
+        g_DEMO_KeybTest = 0; if (g_DEMO_AutoPlay == 1) { g_DEMO_AutoPlay = 0; printf("fn_vChangeEngineMode() comment\351 pour tests\n"); }
+        if (g_DEMO_u32PlayMode == 2)
+        {
+            DEMO_fn_vStopEventFlow();
+            g_DEMO_u32PlayMode = 0;
+        }
+        if (g_szMapNameToLoadWhenDemoFinished[0])
+        {
+            GAM_fn_vAskToChangeLevel(g_szMapNameToLoadWhenDemoFinished, 0);
+            g_szMapNameToLoadWhenDemoFinished[0] = 0;
+        }
+        else
+        {
+            fn_vKillAllAlways();
+            fn_vReinitTheMap();
+        }
+        return 0;
+    }
+    else
+    {
+        ulDEMO_ElapsedEngineTimerCount = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - g_ulDEMO_StartDEMO_EngineTimerCount;
+        iNewFrameInRecord = 0;
+        do
+        {
+            g_iFrameTimeOffset = g_ulDEMO_ElapsedDemoTimerCount - ulDEMO_ElapsedEngineTimerCount;
+            iEndOfUpdate = !((!gl_DEMO_ConstantSpeed) && (g_iFrameTimeOffset < 0));
+            if (!iEndOfUpdate)
+            {
+                if (iNewFrameInRecord)
+                {
+                    AGO_vClearUnwanted110AGOsForDemos();
+                    SND_fn_vSynchroSound();
+                    g_iNbMoveModule = 0; } else if (!gl_DEMO_ConstantSpeed &&
+                    g_iFrameTimeOffset > 0)
+                {
+                    printf("(wait %d)\n", g_iFrameTimeOffset);
+                    TMR_fn_wWait(g_iFrameTimeOffset);
+                    g_iFrameTimeOffset = 0;
+                }
+            }
+            { float xOffset = (float)g_iFrameTimeOffset; g_xInterpolCoef = 1.0f - xOffset / ((int)g_ulDEMO_DeltaTimerCount >= 0 ? (float)(int)g_ulDEMO_DeltaTimerCount : (float)(int)((g_ulDEMO_DeltaTimerCount >> 1) | (g_ulDEMO_DeltaTimerCount & 1)) + (float)(int)((g_ulDEMO_DeltaTimerCount >> 1) | (g_ulDEMO_DeltaTimerCount & 1))); }
+            DEMO_fn_vReadOneCompleteStateUpdate();
+            iNewFrameInRecord = 1;
+        } while (gl_DEMO_CurrentFrame < gl_DEMO_NumberOfFrames &&
+                 !iEndOfUpdate);
+        DEMO_fn_vMoveModuleDelayedHandling();
+        return 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7035–7169 */
@@ -2170,25 +2249,219 @@ void DEMO_fn_vReadOneCompleteStateUpdate(void)
  */
 void DEMO_fn_vGetACompleteCharacterPosition(HIE_tdstSuperObject_* hSO)
 {
-    tdstAnim3d_* p_stAnim;
-    int bSavedValue;
-    unsigned char bNoDisplay;
-    char szOutputMsg[8];
-    char a3_cCoef[3];
-    unsigned char ucSO_Number;
-    unsigned char bIsCamera;
+    LST2_tdstAnchorToDEMO_tdxHandleToDemoSOElementOpt* p_stListAnchor;
+    tdstDemoSOList_* p_stListElement;
+    MAT_tdstTransformation_* hMatrix;
+    tdstState_* p_stTmpState;
     unsigned short Demo_Flag;
-    float xForcedFrame;
     unsigned short uwForcedFrame;
     unsigned short wSO_Number;
     short wStateNumber;
+    char a3_cCoef[3];
+    char szOutputMsg[8];
     MTH3D_tdstVector_ stDeltaTranslation;
     MTH3D_tdstVector_ stTranslation;
-    MAT_tdstTransformation_ stNewlyReadTransform;
     tdstDemoCompressedTransform_ stCompressedTransform;
-    tdstState_* p_stTmpState;
-    tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/... */
+    MAT_tdstTransformation_ stNewlyReadTransform;
+    unsigned char bIsCamera;
+
+    wStateNumber = 0;
+    wSO_Number = 0;
+    Demo_Flag = 0;
+    if (g_DEMO_KeybTest != 2)
+    {
+        return;
+    }
+    if (g_iNbFramesToWaitBeforePlaying != 0)
+    {
+        return;
+    }
+
+    p_stListAnchor = (LST2_tdstAnchorToDEMO_tdxHandleToDemoSOElementOpt*)g_hDemoSOList;
+    p_stListElement = p_stListAnchor->hFirstElementOpt;
+    for (wSO_Number = 0; (unsigned short)wSO_Number < (unsigned short)p_stListAnchor->lNumberOfElementsOpt; wSO_Number++)
+    {
+        if (p_stListElement->hCharacterSupObject == hSO)
+        {
+            break;
+        }
+        p_stListElement++;
+    }
+    if ((unsigned short)wSO_Number >= (unsigned short)p_stListAnchor->lNumberOfElementsOpt)
+    {
+        p_stListElement = NULL;
+    }
+    if (p_stListElement == NULL)
+    {
+        return;
+    }
+
+    hMatrix = hSO->hLocalMatrix;
+    memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);
+    gp_DEMO_CurrentPosInMemory += 2;
+    bIsCamera = (unsigned char)CAM_fn_bSuperObjectIsACamera(hSO);
+    if (Demo_Flag & 0x2000)
+    {
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 1);
+        gp_DEMO_CurrentPosInMemory += 1;
+    }
+    else
+    {
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+    }
+
+    if (Demo_Flag & 0x10)
+    {
+        memcpy(&p_stListElement->_stTrs, (void*)gp_DEMO_CurrentPosInMemory, 12);
+        gp_DEMO_CurrentPosInMemory += 12;
+        if (hMatrix->eType == 1)
+        {
+            hMatrix->eType = 2;
+        }
+        hMatrix->stTransformMatrix.stCol_3.xX = p_stListElement->_stTrs.xX;
+        hMatrix->stTransformMatrix.stCol_3.xY = p_stListElement->_stTrs.xY;
+        hMatrix->stTransformMatrix.stCol_3.xZ = p_stListElement->_stTrs.xZ;
+        hMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+    }
+
+    if (Demo_Flag & 0x20)
+    {
+        memcpy(a3_cCoef, (void*)gp_DEMO_CurrentPosInMemory, 3);
+        gp_DEMO_CurrentPosInMemory += 3;
+        p_stListElement->_stTrs.xX += (float)a3_cCoef[0] / 128.0f;
+        p_stListElement->_stTrs.xY += (float)a3_cCoef[1] / 128.0f;
+        p_stListElement->_stTrs.xZ += (float)a3_cCoef[2] / 128.0f;
+        if (hMatrix->eType == 1)
+        {
+            hMatrix->eType = 2;
+        }
+        hMatrix->stTransformMatrix.stCol_3.xX = p_stListElement->_stTrs.xX;
+        hMatrix->stTransformMatrix.stCol_3.xY = p_stListElement->_stTrs.xY;
+        hMatrix->stTransformMatrix.stCol_3.xZ = p_stListElement->_stTrs.xZ;
+        hMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+    }
+
+    if (Demo_Flag & 0x40)
+    {
+        memcpy(&stTranslation, (void*)gp_DEMO_CurrentPosInMemory, 12);
+        gp_DEMO_CurrentPosInMemory += 12;
+        fn_vDemoReadCompressedTransform(&stCompressedTransform);
+        stDeltaTranslation.xX = stTranslation.xX - p_stListElement->_stTrs.xX;
+        stDeltaTranslation.xY = stTranslation.xY - p_stListElement->_stTrs.xY;
+        stDeltaTranslation.xZ = stTranslation.xZ - p_stListElement->_stTrs.xZ;
+    }
+
+    if (Demo_Flag & 0x80)
+    {
+        fn_vDemoReadCompressedTransform(&stCompressedTransform);
+    }
+    fn_vDecompressTransform(&stNewlyReadTransform, &stCompressedTransform);
+    memcpy(&p_stListElement->stCompressedTransform, &stCompressedTransform, 42);
+    if (Demo_Flag & 0x80)
+    {
+        stDeltaTranslation.xX = stNewlyReadTransform.stTransformMatrix.stCol_3.xX;
+        stDeltaTranslation.xY = stNewlyReadTransform.stTransformMatrix.stCol_3.xY;
+        stDeltaTranslation.xZ = stNewlyReadTransform.stTransformMatrix.stCol_3.xZ;
+        stTranslation.xX = p_stListElement->_stTrs.xX + stDeltaTranslation.xX;
+        stTranslation.xY = p_stListElement->_stTrs.xY + stDeltaTranslation.xY;
+        stTranslation.xZ = p_stListElement->_stTrs.xZ + stDeltaTranslation.xZ;
+    }
+    hMatrix->stTransformMatrix = stNewlyReadTransform.stTransformMatrix;
+    hMatrix->stTransformMatrix.stCol_3.xX = stTranslation.xX;
+    hMatrix->stTransformMatrix.stCol_3.xY = stTranslation.xY;
+    hMatrix->stTransformMatrix.stCol_3.xZ = stTranslation.xZ;
+    p_stListElement->_stTrs.xX = stTranslation.xX;
+    p_stListElement->_stTrs.xY = stTranslation.xY;
+    p_stListElement->_stTrs.xZ = stTranslation.xZ;
+
+    if (bIsCamera)
+    {
+        float xInvNorm;
+        xInvNorm = 1.0f / MTH_fn_xSqrtOpt2(MTH4D_fn_xSqrVector(&hMatrix->stTransformMatrix.stCol_0));
+        hMatrix->stTransformMatrix.stCol_0.xX *= xInvNorm;
+        hMatrix->stTransformMatrix.stCol_0.xY *= xInvNorm;
+        hMatrix->stTransformMatrix.stCol_0.xZ *= xInvNorm;
+        hMatrix->stTransformMatrix.stCol_0.xW = 1.0f;
+        xInvNorm = 1.0f / MTH_fn_xSqrtOpt2(MTH4D_fn_xSqrVector(&hMatrix->stTransformMatrix.stCol_1));
+        hMatrix->stTransformMatrix.stCol_1.xX *= xInvNorm;
+        hMatrix->stTransformMatrix.stCol_1.xY *= xInvNorm;
+        hMatrix->stTransformMatrix.stCol_1.xZ *= xInvNorm;
+        hMatrix->stTransformMatrix.stCol_1.xW = 1.0f;
+    }
+
+    if (Demo_Flag & 0x2)
+    {
+        memcpy(&wStateNumber, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        p_stListElement->wStateNumber = wStateNumber;
+    }
+    else
+    {
+        wStateNumber = p_stListElement->wStateNumber;
+    }
+
+    if (Demo_Flag & 0x4)
+    {
+        memcpy(&uwForcedFrame, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        sprintf(szOutputMsg, "%4d\n", uwForcedFrame);
+        p_stListElement->uwCurrentFrame = uwForcedFrame;
+    }
+    else
+    {
+        uwForcedFrame = p_stListElement->uwCurrentFrame;
+    }
+
+    hSO->hGlobalMatrix->stTransformMatrix = hSO->hLocalMatrix->stTransformMatrix;
+
+    if ((Demo_Flag & 0x4) || (Demo_Flag & 0x2))
+    {
+        tdstState_* p_stState;
+        if (wStateNumber == 0x7FFF)
+        {
+            p_stState = (tdstState_*)((char*)p_stListAnchor + 4);
+        }
+        else if (wStateNumber >= 0)
+        {
+            p_stState = ((tdstState_**)p_stListAnchor->hFirstElementOpt)[wStateNumber];
+        }
+        else
+        {
+            wStateNumber = -1 - wStateNumber;
+            p_stState = (tdstState_*)a_hTemporaryStateCorrespondance[wStateNumber];
+            if (p_stState == NULL)
+            {
+                printf("interm state is null : ignore it !\n");
+                p_stState = (tdstState_*)((char*)p_stListAnchor + 4);
+            }
+        }
+        if (p_stState == (tdstState_*)((char*)p_stListAnchor + 4))
+        {
+            PLA_fn_bSetNewState(hSO, p_stState, 0, 0, 0, 0, 0.0f, 0);
+        }
+        else
+        {
+            float xForcedFrame;
+            xForcedFrame = fn_fUncompressNumber(uwForcedFrame);
+            PLA_fn_bSetNewState(hSO, p_stState, 0, 0, 0, 0, xForcedFrame, 0);
+        }
+    }
+
+    if (Demo_Flag & 0x8)
+    {
+        unsigned char ucTransparence;
+        memcpy(&ucTransparence, (void*)gp_DEMO_CurrentPosInMemory, 1);
+        gp_DEMO_CurrentPosInMemory += 1;
+        hSO->fTransparenceLevel = (float)ucTransparence;
+        if (ucTransparence == 0xFF)
+        {
+            hSO->lDrawModeMask |= 8;
+            return;
+        }
+        hSO->lDrawModeMask &= ~8;
+        PLA_fn_vUpdateTransparencyForModules(hSO);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 5927–6018 */
@@ -2988,7 +3261,131 @@ void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag)
     char szOutputMsg[8];
     GLI_tdstMaterial_* hSkinVisualMaterial;
     char* pcFormerNewPosition;
-    /* TODO: decompile from asm/... */
+        unsigned short u16Command;
+    unsigned char ucTransparence;
+    unsigned int ulSoundId;
+    unsigned int ulParam;
+    unsigned int ulBlockEvent;
+
+    if (g_DEMO_KeybTest != 2)
+    {
+        return;
+    }
+    memcpy(&u16Command, (void*)gp_DEMO_CurrentPosInMemory, 2);
+    gp_DEMO_CurrentPosInMemory += 2;
+    u16Command &= 0x7FFF;
+    sprintf(szOutputMsg, "%4d\n", u16Command);
+    switch (u16Command)
+    {
+    case 0:
+        memcpy(szOutputMsg + 8, (void*)gp_DEMO_CurrentPosInMemory, 10);
+        gp_DEMO_CurrentPosInMemory += 10;
+        fn_vChangeViewPortPercent(0, szOutputMsg[8], szOutputMsg[9], szOutputMsg[10], 0);
+        break;
+    case 1:
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(&ucIndex, (void*)gp_DEMO_CurrentPosInMemory, 1);
+        gp_DEMO_CurrentPosInMemory += 1;
+        memcpy(&ucTransparence, (void*)gp_DEMO_CurrentPosInMemory, 1);
+        gp_DEMO_CurrentPosInMemory += 1;
+        p_stListElement = (tdstDemoSOList_*)((char*)g_hDemoSOList + wSO_Number * 0x44);
+        if (p_stListElement->hCharacterSupObject != NULL)
+        {
+            hSpo = (HIE_tdstSuperObject_*)((char*)p_stListElement->hCharacterSupObject + ucIndex * 0x8C);
+            if (hSpo != NULL)
+            {
+                hSpo->ulFlags |= 0x10000;
+                hSpo->fTransparenceLevel = (float)ucTransparence;
+                break;
+            }
+        }
+        break;
+    case 2:
+    case 3:
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(&ucIndex, (void*)gp_DEMO_CurrentPosInMemory, 1);
+        gp_DEMO_CurrentPosInMemory += 1;
+        p_stListElement = (tdstDemoSOList_*)((char*)g_hDemoSOList + wSO_Number * 0x44);
+        if (p_stListElement->hCharacterSupObject != NULL)
+        {
+            hSpo = (HIE_tdstSuperObject_*)((char*)p_stListElement->hCharacterSupObject + ucIndex * 0x8C);
+            if (hSpo != NULL)
+            {
+                if (u16Command == 6)
+                {
+                    hSpo->lDrawModeMask &= ~8;
+                }
+                else
+                {
+                    hSpo->lDrawModeMask |= 8;
+                    hSpo->ulFlags &= 0xFFFEFFFF;
+                }
+                break;
+            }
+        }
+        break;
+    case 4:
+    case 5:
+        g_aRemindedMoveModule[g_iNbMoveModule] = gp_DEMO_CurrentPosInMemory - 2;
+        g_iNbMoveModule++;
+        if (g_iNbMoveModule >= 0x14)
+        {
+            g_iNbMoveModule--;
+        }
+        memset(&stRotationMatrix, 0, 12);
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(&ucIndex, (void*)gp_DEMO_CurrentPosInMemory, 1);
+        gp_DEMO_CurrentPosInMemory += 1;
+        break;
+    case 6:
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(a3_fCompressedVector, (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        break;
+    case 22:
+        g_aRemindedMoveModule[g_iNbMoveModule] = gp_DEMO_CurrentPosInMemory - 2;
+        g_iNbMoveModule++;
+        if (g_iNbMoveModule >= 0x14)
+        {
+            g_iNbMoveModule--;
+        }
+        memset(&stRotationMatrix, 0, 12);
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(&ucIndex, (void*)gp_DEMO_CurrentPosInMemory, 1);
+        gp_DEMO_CurrentPosInMemory += 1;
+        break;
+    case 38:
+    case 39:
+        memcpy(&ulNbFramesForIntermAnim, (void*)gp_DEMO_CurrentPosInMemory, 4);
+        gp_DEMO_CurrentPosInMemory += 4;
+        break;
+    case 7:
+        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(&ulParam, (void*)gp_DEMO_CurrentPosInMemory, 4);
+        gp_DEMO_CurrentPosInMemory += 4;
+        memcpy(&ulBlockEvent, (void*)gp_DEMO_CurrentPosInMemory, 4);
+        gp_DEMO_CurrentPosInMemory += 4;
+        memcpy(&ulSoundId, (void*)gp_DEMO_CurrentPosInMemory, 4);
+        gp_DEMO_CurrentPosInMemory += 4;
+        ulBlockEvent = (unsigned int)SND_fn_pstGetBlockEventFromId((int)ulBlockEvent);
+        SND_fn_vSetSwitchMaterial((int)ulParam);
+        if (wSO_Number == 0xFFFF)
+        {
+            SND_fn_s32SendRequestSound(-1, -1, (int)ulParam, (int)ulBlockEvent);
+        }
+        else
+        {
+            SND_fn_s32SendRequestSound((int)((tdstDemoSOList_*)((char*)g_hDemoSOList + wSO_Number * 0x44))->hCharacterSupObject,
+                                        -1, (int)ulParam, (int)ulBlockEvent);
+        }
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 2026–2029 */
@@ -3194,7 +3591,6 @@ void DEMO_fn_vCloseFirstInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DEMO_fn_vPrepareForReadNow(void);
 
 void DEMO_fn_vPrepareForRead(int _iNbFramesToWait)
 {
@@ -3381,12 +3777,128 @@ void DEMO_fn_vAllocateMemory(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* _p_stCompressedTransform)
-{
-    MTH4D_tdstMatrix_ stMatrix;
+{    MTH4D_tdstMatrix_ stMatrix;
     MTH4D_tdstVector_* p_stVector;
     unsigned short uwFormerType;
     short* p_coef;
-    /* TODO: decompile from asm/... */
+    char szCompressBuffer[80];
+    /* The retail code inlines the float-to-half compression of every matrix
+       component, so the original source used a macro for it. */
+    #define DEMO_M_COMPRESS_NUMBER(xValue, xResult) \
+    { \
+        int lBits; \
+        int lMantissa; \
+        int lExponent; \
+        lBits = *(int*)&(xValue); \
+        lMantissa = lBits & 0x7FFFFF; \
+        lExponent = (lBits & 0x7F800000) >> 23; \
+        if (lExponent != 0) \
+        { \
+            lExponent -= 0x7F; \
+            if (lExponent < -15) \
+            { \
+                sprintf(szCompressBuffer, "float abs val too small to be compressed %f -> 0\n", (double)(xValue)); \
+                lExponent = -15; \
+                lMantissa = 1; \
+            } \
+            else if (lExponent > 16) \
+            { \
+                lExponent = 16; \
+                lMantissa = 0x3FF; \
+            } \
+            lExponent = (lExponent + 15) << 10; \
+        } \
+        (xResult) = (short)((lMantissa >> 13) | ((lBits & 0x80000000) >> 16) | lExponent); \
+    }
+
+    memset(_p_stCompressedTransform, 0, 42);
+    memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 2);
+    gp_DEMO_CurrentPosInMemory += 2;
+    p_coef = _p_stCompressedTransform->a_sCoef;
+    switch (_p_stCompressedTransform->uwType)
+    {
+    case 1:
+        p_coef[19] = 0x3C00;
+        p_coef[18] = 0x3C00;
+        p_coef[17] = 0x3C00;
+        p_coef[16] = 0x3C00;
+        p_coef[15] = 0x3C00;
+        p_coef[9] = 0x3C00;
+        p_coef[5] = 0x3C00;
+        p_coef[0] = 0x3C00;
+        return;
+    case 2:
+        p_coef[19] = 0x3C00;
+        p_coef[18] = 0x3C00;
+        p_coef[17] = 0x3C00;
+        p_coef[16] = 0x3C00;
+        p_coef[15] = 0x3C00;
+        p_coef[9] = 0x3C00;
+        p_coef[5] = 0x3C00;
+        p_coef[0] = 0x3C00;
+        memcpy(&p_coef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        return;
+    case 3:
+        memcpy(&p_coef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        p_coef[15] = 0x3C00;
+        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        uwFormerType = (unsigned short)p_coef[0];
+        p_coef[19] = uwFormerType;
+        p_coef[18] = uwFormerType;
+        p_coef[17] = uwFormerType;
+        p_coef[16] = uwFormerType;
+        p_coef[15] = uwFormerType;
+        p_coef[9] = uwFormerType;
+        p_coef[5] = uwFormerType;
+        return;
+    case 4:
+        memcpy(&p_coef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        p_coef[15] = 0x3C00;
+        memcpy(&p_coef[16], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        p_coef[0] = p_coef[16];
+        p_coef[5] = p_coef[17];
+        p_coef[9] = p_coef[18];
+        return;
+    case 5:
+        memcpy(&p_coef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        p_coef[15] = 0x3C00;
+        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 8);
+        gp_DEMO_CurrentPosInMemory += 8;
+        MAT_fn_vQuatToMatrix(&stMatrix, fn_fUncompressNumber(p_coef[0]),
+                             fn_fUncompressNumber(p_coef[1]),
+                             fn_fUncompressNumber(p_coef[2]),
+                             fn_fUncompressNumber(p_coef[3]));
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_0.xX, p_coef[0])
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_0.xY, p_coef[1])
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_0.xZ, p_coef[2])
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_1.xX, p_coef[3])
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_1.xY, p_coef[4])
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_1.xZ, p_coef[5])
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_2.xX, p_coef[6])
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_2.xY, p_coef[7])
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_2.xZ, p_coef[8])
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_3.xX, p_coef[9])
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_3.xY, p_coef[10])
+        DEMO_M_COMPRESS_NUMBER(stMatrix.stCol_3.xZ, p_coef[11])
+        p_coef[19] = 0x3C00;
+        p_coef[18] = 0x3C00;
+        p_coef[17] = 0x3C00;
+        return;
+    case 7:
+    case 8:
+        memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 42);
+        gp_DEMO_CurrentPosInMemory += 42;
+        return;
+    default:
+        return;
+    }
+    #undef DEMO_M_COMPRESS_NUMBER
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 440–482 */

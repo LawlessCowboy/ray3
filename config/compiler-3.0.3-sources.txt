@@ -9,7 +9,18 @@
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/Getset.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPWayPt.c
+# AITools.c: fn_xRealModuloAround is byte-exact (100/100, lines ok) under the
+# 3.0.1 game build, because 3.0.3 pads the two short FP loops one nop less.
+# The file STAYS on 3.0.3 anyway: measured, moving it to 3.0.1 loses four
+# recorded matches (fn_vConvertColorToParam, fn_ucIsThereFloatIfYesConvertItToInteger,
+# fn_xDistanceBetweenPersoAndWP, fn_vGetCenterOfBoundingVolume) and gains one,
+# so the trade is -4/+1.  Verified 11/11 under 3.0.3, 7/11 under 3.0.1.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AITools.c
+# ERM/CpaError.c was measured against 3.0.3 on 2026-10-20 and NOT added: its
+# three recorded matches verify under both builds (3/3 each), and
+# Erm_fn_v_UpdateLastError matches under neither (the retail pads an empty
+# infinite loop to 7 instructions; 3.0.3 pads to 6, 3.0.1 to 1, 3.0b38 to 9),
+# so the switch would gain nothing.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO2.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollGO.c
@@ -37,3 +48,126 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/A
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/FuncRay2.cxx
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mcmngr.c
+# u_VertexBuffers.c: retail GetTotalSizeWithMipMaps inlines the float-to-
+# unsigned conversion (c.le.s 2^31 / trunc.w.s / or 0x80000000), which only
+# the 3.0.3 build emits; 3.0.1 lowers it to a jal fptoui (100/144 bytes).
+# The file holds no other recorded match.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_VertexBuffers.c
+# HieMtStk.c: MWCC 3.0.1 pads the conditional branch target to 8 bytes via the
+# delay slot (480 vs the retail 476 bytes for HIE_fn_vFastPS2PushMatrix);
+# 3.0.3-020716 matches it byte-for-byte, and every recorded match in the file
+# still verifies under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieMtStk.c
+# MECOpt.c: MEC_fn_vPositionLimit is a verified 372/372 match only under
+# MWCC 3.0.3-020716 (3.0.1 emits one extra nop after the inline min.s/max.s
+# block); the file's four pre-existing recorded matches still verify under
+# 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECOpt.c
+# MEC/DNMDynam.c: DNM_fn_vInitDynamic matches 1316/1316 only under MWCC
+# 3.0.3-020716 (3.0.1 leaves the ternary-boolean register/scheduling
+# different, 1312/1316); the file's other four functions match under both.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMDynam.c
+# GliGlou/Drivers/PS2GL/Src/u_drawAGO2.c: PS2GL library code inside the game
+# tree; GLI_vDisplaySerialLeaves/Flow/FlowBlured match only under
+# MWCC 3.0.3-020716 (3.0.1 leaves one instruction in a different slot) while
+# the file's three pre-existing recorded matches still verify under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawAGO2.c
+# COL/CollObj.c: COL_xGetParallelBoxIndexOfElement matches 144/144 (bytes and
+# line map) only under MWCC 3.0.3-020716; under 3.0.1 the retail's base/index
+# register pair comes out swapped. All 16 other functions of the file (including
+# its nine pre-existing recorded matches) still MATCH under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c
+# GAM/Clock.c: left on the 3.0.1 baseline on purpose.  Under 3.0.3
+# fn_ulDetermineUsefulDT reaches 600/604 (one nop short) but
+# fn_vStartEngineClock loses its match (276/276 with different bytes), and
+# fn_vFakeTimer regresses too, so 3.0.1 keeps strictly more.
+# GliGlou/Drivers/PS2GL/Src/Init_PS2GL.c: TR_Report inlines the
+# (unsigned int)float conversion (lui 0x4f00 / c.le.s 2^31 / trunc.w.s / or
+# 0x80000000) which 3.0.1 lowers to a jal fptoui; all 23 pre-existing
+# recorded matches in the file still MATCH under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Init_PS2GL.c
+# SND_R3/src/sndcextraeventactor.cpp: the two fn_bIsSoundPlaying overloads
+# evaluate the arguments of apObjects[i]->fv_vExecCmd(4, &oBoolRef)
+# left-to-right, which 3.0.1 gets right-to-left; 3.0.3-020716 reproduces
+# retail exactly. All 18 other recorded matches in the file still verify.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp
+# AI/AIGame/Function.c: the file needs both builds, so this entry trades one
+# match for three. fn_p_stDistanceToPerso, fn_p_stMathFunctionInt and
+# fn_p_stSAV2SaveFunction are byte-exact only under 3.0.3-020716 (3.0.1 keeps
+# the constant materialisation and the float store after the asm { sqrt.s }
+# block, and fills the switch-test delay slots differently), while
+# fn_vReInitAllDynamicActors is byte-exact only under 3.0.1 (3.0.3 sinks the
+# loop increment's move into the bnez delay slot). All 32 pre-existing recorded
+# matches in the file still verify under 3.0.3; fn_vReInitAllDynamicActors is
+# recorded as an attempt instead.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c
+# tempgrp/ino/ps2/FFB.c: INOPS2_fn_iWaitCmd is 272/272 only under MWCC
+# 3.0.3-020716 (3.0.1 lowers the (unsigned int)float conversion to a
+# jal fptoui, giving 216/272); the file's two pre-existing recorded matches
+# still verify under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/FFB.c
+# GAM/TextFrmt.c: left on the 3.0.1 baseline on purpose.  Under 3.0.3
+# TEXT_vComputeLengthOgString becomes byte-identical (380/380) but
+# TFMT_lProcessFormater regresses (464/468), so the two profiles tie at two
+# verified matches and keeping the baseline avoids demoting a recorded match.
+# GAM/ZdxStuff.c: fn_bHadToCorrectActivationList matches 172/172 only under
+# MWCC 3.0.3-020716 (3.0.1 evaluates the qsort arguments left-to-right and
+# re-materialises the base pointer, giving 176/172); all 12 other recorded
+# matches in the file still verify under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZdxStuff.c
+# GliGlou/Drivers/PS2GL/Src/VUSprites.cpp: the retail inlines the
+# (unsigned int)float conversion (c.le.s 2^31 / bc1t / cvt.w.s / sub.s / or
+# 0x80000000) where 3.0.1 emits a jal fptoui; all 37 recorded matches in the
+# file still verify under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp
+# AI/AIBase/WPgraphe.c: left on the 3.0.1 baseline on purpose.  Under 3.0.3
+# WPG_xGetCloserWPDistInGraph reaches the exact 396 bytes but
+# WPG_fn_hGetWaypointOfGraph loses the retail's short-loop padding, so the
+# 3.0.1 profile keeps the recorded match and the 3.0.3 profile does not.
+# GliGlou/Drivers/PS2GL/Src/u_newSG.c and GliGlou/MultiDRV/Src/jparticle.c:
+# the 17-word edge-dispatch head of J_New_GetInterpolPointOnEdge (and its
+# byte-identical sibling J_GetInterpolPointOnEdge) is byte-exact only under
+# MWCC 3.0.3-020716; 3.0.1/3.0 emit one extra "li $v1,2" and shift every
+# branch offset. Both files' recorded matches still verify under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_newSG.c
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/jparticle.c
+# GAM/MultiVP.c: the retail inlines the float-to-unsigned conversion
+# (lui 0x4F00 / c.le.s 2^31 / trunc.w.s / or 0x80000000) in the viewport grid
+# maths, which 3.0.1 lowers to a jal fptoui; all 20 recorded matches in the
+# file still verify under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/MultiVP.c
+# AI/AIGame/CAM_Act.c: fnv_MoveAToB and fn_p_stCamCineInit are byte-exact only
+# under MWCC 3.0.3-020716; all nine pre-existing recorded matches still verify
+# under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c
+# Ago/AGO3.cpp: AGO3_ScoreDisplay::Display/Init are byte-exact only under
+# MWCC 3.0.3-020716 (3.0.1 emits a jal fptoui instead of the retail's inlined
+# float-to-unsigned conversion); 49 of the 50 recorded matches verify under
+# 3.0.3 against 47 under 3.0.1, and the one failure
+# (AGO3_ScrollMatUV::Display) fails under both builds.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp
+# MEC/MECBhv.c: MEC_fn_lComputeCall is byte-exact (bytes and line map) only
+# under MWCC 3.0.3-020716: the %hi(global)-in-delay-slot shape and the
+# lui v0 / ori v1,v0 float-constant shape both need the later build. The file
+# has no other recorded match.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECBhv.c
+# AI/AIGame/AICommonTools.c: fn_CollisionRayCast matches only under MWCC
+# 3.0.3-020716 (3.0.3 emits the punned global store as a one-shot constant
+# address, 3.0.1 materialises it in a register); all six pre-existing recorded
+# matches in the file still verify under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AICommonTools.c
+# TXT/DisplayText.c: TXT_vAfficheSpecialWithTransparency is byte-exact (bytes,
+# relocations and line map) only under MWCC 3.0.3-020716, which inlines the
+# (unsigned int)float conversion where 3.0.1 emits a jal fptoui; every other
+# recorded match in the file is identical under both builds.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c
+# AI/AIGame/LNK_Proc.c: fn_CollisionRayCastLnKProc matches only under MWCC
+# 3.0.3-020716 (3.0.3 emits the retail's split lui $at,%hi(g) / sw %lo(g+off)($at)
+# form for a punned global vector member, 3.0.1 materialises the 32-bit
+# address in a GPR); all 12 pre-existing recorded matches still verify.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/LNK_Proc.c
+# VID/Specif/videodec.c: videoDecCreate matches 252/252 only under MWCC
+# 3.0.3-020716 (3.0.1 evaluates the a1/a2 arguments of its five
+# sceMpegAddCallback calls in the opposite order); all 15 other recorded
+# matches in the file still verify under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c

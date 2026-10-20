@@ -432,6 +432,13 @@ struct SwitchElt {
     CUUID m_oId; /* +0x8 */
 };
 
+/* Address view of a SwitchElt whose data pointer comes first. */
+struct SwitchEltData {
+    CResData* m_pData; /* +0x0 */
+    unsigned int m_uiVal; /* +0x4 */
+    CUUID m_oId; /* +0x8 */
+};
+
 struct SwitchData {
     CSwitchResData* m_pSwitchData; /* +0x0 */
     SwitchElt* m_pElt; /* +0x4 */
@@ -543,7 +550,18 @@ inline SwitchData::SwitchData(CSwitchResData* pSwitchData, SwitchData* pNext)
         m_pElt[i].m_uiVal = m_pSwitchData->m_paElements[i].m_uiValue;
         m_pElt[i].m_oId = m_pSwitchData->m_paElements[i].m_pTarget.f_roGetId();
     }
-    m_pElt[m_uiDefault].m_pData = m_pSwitchData->m_paElements[m_uiDefault].m_pTarget;
+    /* Retail addresses the default element as (m_pElt + 4) + m_uiDefault * 16
+     * and stores the data pointer at offset 0 of that address, i.e. the
+     * member offset stays unfolded in the base pointer.  The plain
+     * "m_pElt[m_uiDefault].m_pData" spelling folds the +4 into the store
+     * displacement, so the element is addressed through a pointer to its
+     * data field instead.  The dead index assignment keeps MWCC from
+     * coalescing the base and the index into the same register. */
+    CResData* pTarget = m_pSwitchData->m_paElements[m_uiDefault].m_pTarget;
+    int iIndex;
+    char* pc = (char*)m_pElt;
+    pc = pc + 4;
+    ((SwitchEltData*)pc)[iIndex = m_uiDefault].m_pData = pTarget;
     RebuildSwitch();
 }
 
@@ -784,25 +802,6 @@ struct SwitchMgr {
 unsigned int SwitchMgr::ms_nbTex;
 unsigned int SwitchMgr::ms_nbTexMax;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 31–61 */
-/* addr: 0x001d0a40  size: 364 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 31
- *   +0x002c -> line 32
- *   +0x0058 -> line 35
- *   +0x0060 -> line 38
- *   +0x0068 -> line 39
- *   +0x00a8 -> line 41
- *   +0x00b0 -> line 44
- *   +0x00cc -> line 47
- *   +0x00d8 -> line 52
- *   +0x00e0 -> line 54
- *   +0x0120 -> line 56
- *   +0x0128 -> line 58
- *   +0x0148 -> line 61
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void Jingle::fs_vAddJingle(int s32_ObjectId, int s32_TypeId, int s32_HandleId, int iVolumeLine)
 {
     int uVol;
@@ -838,27 +837,6 @@ void Jingle::fs_vAddJingle(int s32_ObjectId, int s32_TypeId, int s32_HandleId, i
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 432–461 */
-/* addr: 0x001d0bb0  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 432
- *   +0x0004 -> line 436
- *   +0x0008 -> line 432
- *   +0x0018 -> line 436
- *   +0x0048 -> line 439
- *   +0x0050 -> line 441
- *   +0x005c -> line 446
- *   +0x0064 -> line 447
- *   +0x0070 -> line 449
- *   +0x007c -> line 451
- *   +0x008c -> line 452
- *   +0x0094 -> line 455
- *   +0x0098 -> line 458
- *   +0x00ac -> line 459
- *   +0x00b8 -> line 461
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SwitchMgr::fs_vAddDataToDelete(CResData* pData)
 {
     CResData** pDel;
@@ -884,45 +862,6 @@ void SwitchMgr::fs_vAddDataToDelete(CResData* pData)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 367–413 */
-/* addr: 0x001d0c80  size: 528 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 367
- *   +0x0020 -> line 368
- *   +0x002c -> line 370
- *   +0x004c -> line 373
- *   +0x0054 -> line 374
- *   +0x0060 -> line 376
- *   +0x0064 -> line 377
- *   +0x0070 -> line 379
- *   +0x0074 -> line 380
- *   +0x0078 -> line 379
- *   +0x007c -> line 380
- *   +0x0090 -> line 383
- *   +0x0094 -> line 384
- *   +0x00a0 -> line 386
- *   +0x00a4 -> line 387
- *   +0x00b0 -> line 389
- *   +0x00c0 -> line 392
- *   +0x013c -> line 393
- *   +0x0140 -> line 394
- *   +0x0144 -> line 395
- *   +0x0150 -> line 396
- *   +0x0154 -> line 397
- *   +0x015c -> line 398
- *   +0x0160 -> line 399
- *   +0x0164 -> line 400
- *   +0x0170 -> line 401
- *   +0x0174 -> line 402
- *   +0x0180 -> line 403
- *   +0x01b0 -> line 406
- *   +0x01b8 -> line 410
- *   +0x01c0 -> line 411
- *   +0x01c8 -> line 412
- *   +0x01e8 -> line 413
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SwitchMgr::fs_vStopAll(void)
 {
     CExtraEventActor* poEEActor;
@@ -978,30 +917,6 @@ void SwitchMgr::fs_vStopAll(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 324–362 */
-/* addr: 0x001d0e90  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 324
- *   +0x0018 -> line 325
- *   +0x001c -> line 327
- *   +0x0024 -> line 329
- *   +0x0038 -> line 330
- *   +0x003c -> line 331
- *   +0x0048 -> line 335
- *   +0x0050 -> line 337
- *   +0x0058 -> line 343
- *   +0x0064 -> line 345
- *   +0x006c -> line 348
- *   +0x0070 -> line 350
- *   +0x0078 -> line 352
- *   +0x0080 -> line 353
- *   +0x0084 -> line 354
- *   +0x0098 -> line 357
- *   +0x00a0 -> line 361
- *   +0x012c -> line 362
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SwitchMgr::fs_vUpdateWaves(CPS2IdObjLoader* pLoader)
 {
     SwitchData* pTmp;
@@ -1039,37 +954,12 @@ void SwitchMgr::fs_vUpdateWaves(CPS2IdObjLoader* pLoader)
     ms_nbDel = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 317–319 */
-/* addr: 0x001d0fe0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 317
- *   +0x0004 -> line 319
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SwitchMgr::fs_vClearTexture(void)
 {
     SwitchMgr::ms_nbTexMax = 0;
     SwitchMgr::ms_nbTex = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 292–311 */
-/* addr: 0x001d0ff0  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 292
- *   +0x0014 -> line 293
- *   +0x0024 -> line 297
- *   +0x002c -> line 298
- *   +0x0034 -> line 300
- *   +0x0040 -> line 302
- *   +0x004c -> line 303
- *   +0x0054 -> line 306
- *   +0x0058 -> line 309
- *   +0x0068 -> line 310
- *   +0x0074 -> line 311
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SwitchMgr::fs_vAddTexture(unsigned int uiTexture)
 {
     char* pTex;
@@ -1089,17 +979,6 @@ void SwitchMgr::fs_vAddTexture(unsigned int uiTexture)
     ms_nbTex++;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 235–242 */
-/* addr: 0x001d1080  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 235
- *   +0x001c -> line 236
- *   +0x0028 -> line 238
- *   +0x0030 -> line 240
- *   +0x012c -> line 242
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SwitchMgr::fs_vAdd(CSwitchResData* pSwitchData)
 {
     void* ptr;
@@ -1111,15 +990,6 @@ void SwitchMgr::fs_vAdd(CSwitchResData* pSwitchData)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 209–212 */
-/* addr: 0x001d11d0  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 209
- *   +0x0038 -> line 211
- *   +0x003c -> line 212
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char SwitchData::f_bFindData(CResData* pData)
 {
     unsigned int i;
@@ -1128,32 +998,6 @@ unsigned char SwitchData::f_bFindData(CResData* pData)
     return i != m_nbElt;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\SwitchMgr.cpp lines 149–201 */
-/* addr: 0x001d1220  size: 488 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 149
- *   +0x0010 -> line 158
- *   +0x0014 -> line 149
- *   +0x0038 -> line 158
- *   +0x0040 -> line 161
- *   +0x0078 -> line 164
- *   +0x00a8 -> line 166
- *   +0x00c8 -> line 167
- *   +0x00dc -> line 169
- *   +0x00f0 -> line 172
- *   +0x0104 -> line 175
- *   +0x0124 -> line 177
- *   +0x0130 -> line 179
- *   +0x0140 -> line 180
- *   +0x014c -> line 181
- *   +0x0170 -> line 184
- *   +0x0178 -> line 186
- *   +0x01a0 -> line 192
- *   +0x01ac -> line 194
- *   +0x01c0 -> line 201
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SwitchData::f_vUpdateWaves(char* pTex, unsigned int nbTex, CPS2IdObjLoader* pLoader)
 {
     int nb;

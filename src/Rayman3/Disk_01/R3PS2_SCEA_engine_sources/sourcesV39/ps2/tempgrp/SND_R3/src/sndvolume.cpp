@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+extern "C" int sprintf(char*, const char*, ...);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;
@@ -15,7 +17,8 @@ typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
 typedef struct WP_tdstListOfArc_ WP_tdstListOfArc_;
 typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
 typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
-typedef struct tagGLcontext tagGLcontext;
+typedef struct tag_GLtexture_set tag_GLtexture_set;
+typedef struct tagGsSetTex tagGsSetTex;
 typedef struct tdstAlwaysActiveCharacter_ tdstAlwaysActiveCharacter_;
 typedef struct tdstCineinfo_ tdstCineinfo_;
 typedef struct tdstCollSet_ tdstCollSet_;
@@ -36,7 +39,18 @@ typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
 typedef struct less less;
 typedef struct stree stree;
 typedef struct smap smap;
-typedef struct CGlobalVarAccess CGlobalVarAccess;
+namespace usnd {
+struct CGlobalVarAccess;
+struct CVar;
+struct CVarData;
+struct CSndVarType;
+struct CFloatVarType;
+template <class T> struct TTypedVar;
+}
+typedef usnd::CGlobalVarAccess CGlobalVarAccess;
+typedef usnd::CVar CVar;
+typedef usnd::CSndVarType CSndVarType;
+typedef usnd::TTypedVar<float> TTypedVar;
 typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
 typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
 typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
@@ -73,7 +87,6 @@ struct sallocator {
     int data[8];
 };
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt;
-typedef struct CSndVarType CSndVarType;
 typedef struct _stTimerCount _stTimerCount;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
 typedef struct GLI_tdst2DVertex_ GLI_tdst2DVertex_;
@@ -130,7 +143,6 @@ typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt LS
 typedef struct SECT_tdstSector_ SECT_tdstSector_;
 typedef struct CINE_Manager_ CINE_Manager_;
 typedef struct tdstBrain_ tdstBrain_;
-typedef struct CVar CVar;
 
 typedef enum _Redbl {
     _Red = 0,
@@ -220,10 +232,52 @@ struct smap {
     stree _Tr; /* +0x0 */
 };
 
+namespace usnd {
 struct CGlobalVarAccess {
     /* C++ base CVarAccess at +0x0. */
+    static CGlobalVarAccess* fs_roGetInst(void);
+    virtual CVar* fv_poGetVar(const char* pcName);
+    virtual CVar* fv_poCreateVar(const char* pcName, const CSndVarType& roType, CVarData* poData);
     smap m_oVariables; /* +0x4 */
 };
+}
+
+/* PS2GL context layout: only the members used by impPS2glActiveTextureARB are
+ * typed, the rest of the retail offsets are kept as explicit padding. */
+struct tag_GLtexture_set {
+    unsigned char _extractor_padding_00[96];
+};
+
+struct tagGsSetTex {
+    unsigned char _extractor_padding_00[112];
+};
+
+struct tagGLcontext {
+    unsigned char _extractor_padding_00[0x180];
+    tag_GLtexture_set TextureSet[2]; /* +0x180 */
+    tag_GLtexture_set* pCurTexture; /* +0x240 */
+    unsigned char _extractor_padding_01[0x2a0 - 0x244];
+    tagGsSetTex astGsSetTex[2]; /* +0x2a0 */
+    tagGsSetTex* pstCurGsSetTex; /* +0x380 */
+    unsigned char _extractor_padding_02[0x60b0 - 0x384];
+    float vacurColor[2][4]; /* +0x60b0 */
+    float (*pvcurColor)[4]; /* +0x60d0 */
+    unsigned char _extractor_padding_03[0x6110 - 0x60d4];
+    unsigned int iCurTextureSet; /* +0x6110 */
+    unsigned char _extractor_padding_04[12]; /* +0x6114..0x611f */
+    float valistColor[2][4]; /* +0x6120 */
+    float (*pvlistColor)[4]; /* +0x6140 */
+    unsigned char _extractor_padding_05[0x6160 - 0x6144];
+    float valistTexCoords[2][4]; /* +0x6160 */
+    unsigned int ilistTexSet; /* +0x6180 */
+    float (*pvlistTexCoord)[4]; /* +0x6184 */
+    unsigned char _extractor_padding_06[0x61c0 - 0x6188];
+    float RasterMultiTexCoords[2][4]; /* +0x61c0 */
+    float (*pvRasterTexCoord)[4]; /* +0x61e0 */
+};
+
+extern tagGLcontext g_PS2glContext;
+extern tagGsSetTex* g_astGsSetTex;
 
 struct MTH4D_tdstVector_ {
     float xX; /* +0x0 */
@@ -434,10 +488,19 @@ struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt {
     int lNumberOfElementsOpt; /* +0x4 */
 };
 
+namespace usnd {
 struct CSndVarType {
     tdeType m_eType; /* +0x4 */
     int m_czTypeName; /* +0x8 */
 };
+
+struct CVarData {
+};
+
+struct CFloatVarType : CSndVarType {
+    static CFloatVarType* fs_roGetInst(void);
+};
+}
 
 struct _stTimerCount {
     unsigned long m_ulLowPart; /* +0x0 */
@@ -1016,10 +1079,20 @@ struct tdstEventInTable_ {
     unsigned int u32SemaphoreId; /* +0x8 */
 };
 
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
-    float m_oValue; /* +0x1c */
+namespace usnd {
+struct CVar {
+    virtual ~CVar();
+    CSndVarType* m_poType; /* +0x4 */
+    sset m_NotifTargets; /* +0x8 */
+    sstring m_strName; /* +0x18 */
 };
+
+template <class T> struct TTypedVar : CVar {
+    void f_vSetValue(T oValue);
+    T* f_oGetValue(void);
+    T m_oValue; /* +0x1c */
+};
+}
 
 struct tdstPLA_DeformationLink_ {
     unsigned short wChannel1; /* +0x0 */
@@ -1090,92 +1163,39 @@ struct tdstBrain_ {
     unsigned char bActiveDuringTransition; /* +0x9 */
 };
 
-struct CVar {
-    CSndVarType* m_poType; /* +0x4 */
-    sset m_NotifTargets; /* +0x8 */
-    sstring m_strName; /* +0x18 */
-};
-
 float dB[128];
 unsigned int c_uiLanguages[6];
 tdstEngineStructure_ g_stEngineStructure;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndvolume.cpp lines 15–34 */
-/* addr: 0x001862c0  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 15
- *   +0x0004 -> line 18
- *   +0x0018 -> line 21
- *   +0x0020 -> line 24
- *   +0x0024 -> line 23
- *   +0x0028 -> line 24
- *   +0x002c -> line 25
- *   +0x0030 -> line 24
- *   +0x0034 -> line 25
- *   +0x0038 -> line 24
- *   +0x003c -> line 25
- *   +0x0040 -> line 24
- *   +0x0044 -> line 25
- *   +0x0048 -> line 24
- *   +0x004c -> line 25
- *   +0x0050 -> line 26
- *   +0x0054 -> line 25
- *   +0x0058 -> line 26
- *   +0x0060 -> line 30
- *   +0x0064 -> line 26
- *   +0x0068 -> line 31
- *   +0x006c -> line 28
- *   +0x0070 -> line 33
- *   +0x0074 -> line 30
- *   +0x0078 -> line 31
- *   +0x007c -> line 33
- *   +0x0080 -> line 34
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void impPS2glActiveTextureARB(unsigned int texture)
 {
     tagGLcontext* gc;
     int unit;
-    /* TODO: decompile from asm/... */
+
+    gc = &g_PS2glContext;
+    unit = texture;
+    if (unit < 0 || unit >= 2)
+    {
+        return;
+    }
+    gc->iCurTextureSet = texture;
+    gc->pCurTexture = &gc->TextureSet[unit];
+    gc->pstCurGsSetTex = &gc->astGsSetTex[unit];
+    gc->pvlistTexCoord = &gc->valistTexCoords[unit];
+    g_astGsSetTex = &gc->astGsSetTex[unit];
+    gc->pvcurColor = &gc->vacurColor[unit];
+    gc->pvlistColor = &gc->valistColor[unit];
+    gc->pvRasterTexCoord = &gc->RasterMultiTexCoords[unit];
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndvolume.cpp lines 194–198 */
-/* addr: 0x00186360  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 194
- *   +0x0004 -> line 197
- *   +0x0008 -> line 194
- *   +0x000c -> line 195
- *   +0x0010 -> line 194
- *   +0x0014 -> line 197
- *   +0x0018 -> line 195
- *   +0x001c -> line 197
- *   +0x0020 -> line 195
- *   +0x0038 -> line 197
- *   +0x0054 -> line 198
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bGetVolumeLineModifierString__FiPci(int s32_ModifierId, char* pch_Buffer, int s32_Size)
 {
-    char ch_String[26];
-    /* TODO: decompile from asm/... */
+    char ch_String[26] = "volume line modifier = %d";
+    unsigned char bRet;
+
+    bRet = (unsigned char)(s32_Size >= 46); if (bRet) { sprintf(pch_Buffer, ch_String, s32_ModifierId); } return bRet;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndvolume.cpp lines 182–191 */
-/* addr: 0x001863d0  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 182
- *   +0x0004 -> line 185
- *   +0x0008 -> line 182
- *   +0x0010 -> line 185
- *   +0x0020 -> line 187
- *   +0x0048 -> line 188
- *   +0x004c -> line 191
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 namespace usnd {
 struct CLanguageMng {
     static CLanguageMng* fs_roGetInst(void);
@@ -1198,83 +1218,72 @@ unsigned char fn_bSetLanguage(void)
     return bRet;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndvolume.cpp lines 141–154 */
-/* addr: 0x00186430  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 141
- *   +0x0014 -> line 144
- *   +0x001c -> line 147
- *   +0x0034 -> line 148
- *   +0x003c -> line 150
- *   +0x0070 -> line 151
- *   +0x0074 -> line 153
- *   +0x0078 -> line 154
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bSetVolumeModifier__FPCci(char* ch_buffer, int s32_volume)
 {
     CGlobalVarAccess* ro_GlobVar;
     TTypedVar* po_FloatVar;
     unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
+
+    ro_GlobVar = usnd::CGlobalVarAccess::fs_roGetInst();
+    b_Answer = 0;
+    po_FloatVar = (TTypedVar*)ro_GlobVar->fv_poGetVar(ch_buffer);
+    if (po_FloatVar != NULL)
+    {
+        if (s32_volume < 0) { s32_volume = 0; } if (s32_volume > 127) { s32_volume = 127; } po_FloatVar->f_vSetValue(dB[s32_volume]);
+        b_Answer = 1;
+    }
+    return b_Answer;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndvolume.cpp lines 127–138 */
-/* addr: 0x001864c0  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 127
- *   +0x000c -> line 130
- *   +0x0014 -> line 133
- *   +0x002c -> line 134
- *   +0x0034 -> line 135
- *   +0x00a8 -> line 137
- *   +0x00ac -> line 138
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+static inline int s32FindIndexOfDbValue(float x_Value)
+{
+    float* pDb = dB;
+    int s32_Index = 0;
+
+    while (pDb < (float*)&c_uiLanguages[0])
+    {
+        if (x_Value < pDb[1])
+        {
+            s32_Index = (int)(pDb - dB);
+            break;
+        }
+        pDb++;
+    }
+    return s32_Index;
+}
+
 int fn_s32GetVolumeModifier__FPCc(char* pch_buffer)
 {
     CGlobalVarAccess* ro_GlobVar;
     TTypedVar* po_FloatVar;
     int s32_Answer;
-    /* TODO: decompile from asm/... */
+
+    ro_GlobVar = usnd::CGlobalVarAccess::fs_roGetInst();
+    s32_Answer = -1;
+    po_FloatVar = (TTypedVar*)ro_GlobVar->fv_poGetVar(pch_buffer);
+    if (po_FloatVar != NULL)
+    {
+        s32_Answer = s32FindIndexOfDbValue(*po_FloatVar->f_oGetValue());
+    }
+    return s32_Answer;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndvolume.cpp lines 111–124 */
-/* addr: 0x00186580  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 111
- *   +0x0018 -> line 115
- *   +0x001c -> line 111
- *   +0x0020 -> line 116
- *   +0x004c -> line 117
- *   +0x0054 -> line 119
- *   +0x0058 -> line 120
- *   +0x0060 -> line 123
- *   +0x0064 -> line 124
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bCreateVolumeModifier__FPCcf(char* pch_Buffer, float f32x_Volume)
 {
     TTypedVar* po_FloatVar;
     unsigned char b_answer;
-    /* TODO: decompile from asm/... */
+
+    b_answer = 0;
+    po_FloatVar = (TTypedVar*)usnd::CGlobalVarAccess::fs_roGetInst()->fv_poCreateVar(
+        pch_Buffer, *usnd::CFloatVarType::fs_roGetInst(), NULL);
+    if (po_FloatVar != NULL)
+    {
+        b_answer = 1;
+        po_FloatVar->f_vSetValue(f32x_Volume);
+    }
+    return b_answer;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndvolume.cpp lines 82–89 */
-/* addr: 0x00186600  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 82
- *   +0x0008 -> line 83
- *   +0x000c -> line 85
- *   +0x0018 -> line 86
- *   +0x001c -> line 88
- *   +0x0028 -> line 89
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 float int2dB__Fi(int s32_volume)
 {
     if (s32_volume < 0)

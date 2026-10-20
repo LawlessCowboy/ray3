@@ -2913,6 +2913,10 @@ struct SECT_tdstListOfSOSectorsInActivityInteraction_ {
     HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
 };
 
+/* External helpers used by the DsgVar reinitialisation code. */
+extern int fn_GetDsgVarType(tdeDsgVarTypeId_ eDsgVarTypeId);
+extern unsigned int fn_ulSizeOfDsgVar(tdeDsgVarTypeId_ eDsgVarTypeId, unsigned char ucNbElt);
+
 unsigned char g_ucNewActionReturn;
 unsigned char g_ucUseDefaultActionReturn;
 unsigned char g_ucAIModuleId;
@@ -2935,13 +2939,35 @@ unsigned char g_ucAIModuleId;
  */
 unsigned char fn_ucIsRuleInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule)
 {
-    tdstActionTableEntry_* p_stEntry;
-    unsigned char ucCurrentEntry;
+    /* The debug local list is (p_stEntry, ucCurrentEntry, ucNbEntries); the retail
+     * register allocation (ucNbEntries in a2, p_stEntry in a3) needs the reverse
+     * declaration order. */
     unsigned char ucNbEntries;
-    /* TODO: decompile from asm/... */
+    unsigned char ucCurrentEntry;
+    tdstActionTableEntry_* p_stEntry;
+
+    ucNbEntries = p_stIntelligence->p_stActionTable->ucNbEntries;
+    /* 'x ? 1 : 0' is what produces the retail's li v0,1 / movz v0,zero,v1 pair. */
+    if (p_stIntelligence->p_stActionTable->ucNbEntriesUsed ? 1 : 0)
+    {
+        p_stEntry = p_stIntelligence->p_stActionTable->p_stEntry;
+        for (ucCurrentEntry = 0; ucCurrentEntry < ucNbEntries; ucCurrentEntry++, p_stEntry++)
+        {
+            if (p_stEntry->bUsed)
+            {
+                if (p_stEntry->ucNumRule == ucNumRule)
+                {
+                    return ucCurrentEntry;
+                }
+            }
+        }
+    }
+    return ucNbEntries;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1539–1668 */
+tdstActionTable_* fn_p_stSimulateAllocActionTable(char** p_ptr, unsigned char ucActionTableNbEntry);
+
 /* addr: 0x001fac50  size: 732 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
  *   +0x0000 -> line 1539
@@ -2995,9 +3021,112 @@ void fn_vSimulateMindAllocationFromAnotherMind(AI_tdstMind_* p_stMindSrc, AI_tds
 {
     char* ptr;
     tdstIntelligence_* p_stIntelligenceOrReflex;
-    tdstScriptAI_** p_p_stScriptAI;
+    tdstScriptAI_* p_stScriptAI;
     AI_tdstAIModel_* p_stLoadedAIModel;
-    /* TODO: decompile from asm/... */
+    tdstActionTable_* p_stActionTable;
+    tdstDsgMem_* p_stDsgMem;
+
+    if (p_stMindSrc == NULL)
+        return;
+    if (p_stMindDst == NULL)
+        return;
+
+    /* The simulated structures are carved out of the memory that follows the
+     * destination mind. */
+    ptr = (char*)p_stMindDst + sizeof(AI_tdstMind_);
+    p_stLoadedAIModel = p_stMindSrc->p_stAIModel;
+    p_stMindDst->p_stAIModel = p_stLoadedAIModel;
+
+    p_stIntelligenceOrReflex = NULL;
+    p_stScriptAI = p_stLoadedAIModel->p_stScriptAIIntell;
+    if (p_stScriptAI != NULL)
+    {
+        if (p_stScriptAI->ulNbComport != 0)
+        {
+            memset(ptr, 0, sizeof(tdstIntelligence_));
+            p_stIntelligenceOrReflex = (tdstIntelligence_*)ptr;
+            ptr += sizeof(tdstIntelligence_);
+            p_stIntelligenceOrReflex->p_p_stScriptAI = (tdstScriptAI_**)p_stLoadedAIModel;
+            p_stIntelligenceOrReflex->ulNoComportInit = p_stScriptAI->ulNoComportInitDefault;
+            p_stActionTable = fn_p_stSimulateAllocActionTable(&ptr, p_stScriptAI->ucActionTableNbEntry);
+            p_stIntelligenceOrReflex->p_stActionTable = p_stActionTable;
+            p_stMindDst->p_stIntelligence = p_stIntelligenceOrReflex;
+        }
+    }
+    else
+    {
+        p_stMindDst->p_stIntelligence = NULL;
+    }
+    if (p_stMindSrc->p_stIntelligence != NULL)
+        p_stMindDst->p_stIntelligence->ulNoComportInit = p_stMindSrc->p_stIntelligence->ulNoComportInit;
+
+    p_stIntelligenceOrReflex = NULL;
+    p_stScriptAI = p_stLoadedAIModel->p_stScriptAIReflex;
+    if (p_stScriptAI != NULL)
+    {
+        if (p_stScriptAI->ulNbComport != 0)
+        {
+            memset(ptr, 0, sizeof(tdstIntelligence_));
+            p_stIntelligenceOrReflex = (tdstIntelligence_*)ptr;
+            ptr += sizeof(tdstIntelligence_);
+            p_stIntelligenceOrReflex->p_p_stScriptAI = (tdstScriptAI_**)&p_stLoadedAIModel->p_stScriptAIReflex;
+            p_stIntelligenceOrReflex->ulNoComportInit = p_stScriptAI->ulNoComportInitDefault;
+            p_stActionTable = fn_p_stSimulateAllocActionTable(&ptr, p_stScriptAI->ucActionTableNbEntry);
+            p_stIntelligenceOrReflex->p_stActionTable = p_stActionTable;
+            p_stMindDst->p_stReflex = p_stIntelligenceOrReflex;
+        }
+    }
+    else
+    {
+        p_stMindDst->p_stReflex = NULL;
+    }
+    if (p_stMindSrc->p_stReflex != NULL)
+        p_stMindDst->p_stReflex->ulNoComportInit = p_stMindSrc->p_stReflex->ulNoComportInit;
+
+    p_stDsgMem = NULL;
+    if (p_stMindDst->p_stAIModel->p_stDsgVar != NULL && p_stMindDst->p_stAIModel->p_stDsgVar->ulSize != 0)
+    {
+        memset(ptr, 0, sizeof(tdstDsgMem_));
+        p_stDsgMem = (tdstDsgMem_*)ptr;
+        ptr += sizeof(tdstDsgMem_);
+        p_stDsgMem->p_p_stDsgVar = (tdstDsgVar_**)&p_stMindDst->p_stAIModel->p_stDsgVar;
+        p_stDsgMem->p_cDsgMemBufferInit = 0;
+        p_stDsgMem->p_cDsgMemBuffer = (int)ptr;
+        memset(ptr, 0, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
+        ptr += p_stMindDst->p_stAIModel->p_stDsgVar->ulSize;
+    }
+    p_stMindDst->p_stDsgMem = p_stDsgMem;
+
+    if (p_stMindSrc->p_stDsgMem != NULL)
+    {
+        *p_stMindDst->p_stDsgMem->p_p_stDsgVar = *p_stMindSrc->p_stDsgMem->p_p_stDsgVar;
+        if (p_stMindSrc->p_stDsgMem->p_cDsgMemBufferInit != 0)
+        {
+            memset(p_stMindDst->p_stDsgMem->p_cDsgMemBuffer, 0, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
+            p_stMindDst->p_stDsgMem->p_cDsgMemBufferInit = (int)ptr;
+            ptr += p_stMindDst->p_stAIModel->p_stDsgVar->ulSize;
+            memcpy((char*)p_stMindDst->p_stDsgMem->p_cDsgMemBuffer, (char*)p_stMindSrc->p_stDsgMem->p_cDsgMemBufferInit, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
+        }
+    }
+
+    if (p_stMindDst->p_stIntelligence != NULL)
+    {
+        p_stMindDst->p_stIntelligence->p_stCurrentComport = (tdstComport_*)p_stMindDst->p_stIntelligence->ulNoComportInit;
+        p_stMindDst->p_stIntelligence->p_stPrevComport = p_stMindDst->p_stIntelligence->p_stCurrentComport;
+    }
+    if (p_stMindDst->p_stReflex != NULL)
+    {
+        p_stMindDst->p_stReflex->p_stCurrentComport = (tdstComport_*)p_stMindDst->p_stReflex->ulNoComportInit;
+        p_stMindDst->p_stReflex->p_stPrevComport = p_stMindDst->p_stReflex->p_stCurrentComport;
+    }
+
+    if (p_stMindDst->p_stDsgMem != NULL)
+    {
+        if (p_stMindDst->p_stDsgMem->p_cDsgMemBufferInit != 0)
+            memcpy((char*)p_stMindDst->p_stDsgMem->p_cDsgMemBuffer, (char*)p_stMindDst->p_stDsgMem->p_cDsgMemBufferInit, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
+        else
+            memcpy(p_stMindDst->p_stDsgMem->p_cDsgMemBuffer, (char*)p_stMindDst->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1473–1514 */
@@ -3028,10 +3157,35 @@ void fn_vSimulateMindAllocationFromAnotherMind(AI_tdstMind_* p_stMindSrc, AI_tds
  */
 tdstActionTable_* fn_p_stSimulateAllocActionTable(char** p_ptr, unsigned char ucActionTableNbEntry)
 {
-    unsigned char ucNEntry;
-    tdstActionTableEntry_* param0;
     tdstActionTable_* p_stActionTable;
-    /* TODO: decompile from asm/... */
+    tdstActionTableEntry_* p_stEntry;
+    /* The retail walks the entry array with a second pointer local; using the
+     * same variable for the allocation and the walk swaps a0/a1 in the loop. */
+    tdstActionTableEntry_* p_stCurEntry;
+    unsigned char ucNEntry;
+
+    if (ucActionTableNbEntry != 0)
+    {
+        p_stActionTable = (tdstActionTable_*)*p_ptr;
+        memset(*p_ptr, 0, sizeof(tdstActionTable_));
+        *p_ptr += sizeof(tdstActionTable_);
+    }
+    else
+    {
+        return NULL;
+    }
+    p_stActionTable->ucNbEntries = ucActionTableNbEntry;
+    /* One retail source line: the entry area is cleared and the table filled in
+     * the same statement group. */
+    p_stEntry = (tdstActionTableEntry_*)*p_ptr; memset(*p_ptr, 0, ucActionTableNbEntry * sizeof(tdstActionTableEntry_)); *p_ptr += ucActionTableNbEntry * sizeof(tdstActionTableEntry_); p_stActionTable->p_stEntry = p_stEntry;
+    p_stActionTable->ucNbEntriesUsed = 0;
+    p_stActionTable->ucCurrentEntry = 0;
+    for (p_stCurEntry = p_stActionTable->p_stEntry, ucNEntry = 0; ucNEntry < ucActionTableNbEntry; ucNEntry++, p_stCurEntry++)
+    {
+        p_stCurEntry->bUseDefaultActionReturn = g_ucUseDefaultActionReturn;
+        p_stCurEntry->ucNewActionReturn = g_ucNewActionReturn;
+    }
+    return p_stActionTable;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1417–1426 */
@@ -3137,6 +3291,9 @@ void fn_vSecondPassOfMindLoading(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int SAI_fn_bInsertPointerInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags);
+
 void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind)
 {
     tdeDsgVarTypeId_ eDsgVarTypeId;
@@ -3146,7 +3303,87 @@ void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind)
     char* p_MyVarAddr;
     unsigned short eFlags;
     unsigned char ucVarId;
-    /* TODO: decompile from asm/... */
+
+    if (p_stMind == NULL)
+        return;
+    if (p_stMind->p_stDsgMem == NULL)
+        return;
+    if (p_stMind->p_stAIModel->p_stDsgVar == NULL)
+        return;
+
+    for (ucIndex = 0; ucIndex < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucIndex++)
+    {
+        eFlags = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eSaveType;
+        if (eFlags == 0)
+            continue;
+        p_MyVarAddr = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].ulOffsetInDsgMem;
+        eDsgVarType = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eDsgVarTypeId;
+        if (fn_GetDsgVarType(eDsgVarType) == 42)
+        {
+            p_stArray = (tdstArray_*)p_MyVarAddr;
+            for (ucVarId = 0; ucVarId < p_stArray->ucMaxSize; ucVarId++)
+            {
+                eDsgVarTypeId = p_stArray->eType;
+                switch (eDsgVarTypeId)
+                {
+                case eDsgVarType_SoundEventArray:
+                case eDsgVarType_TextArray:
+                case eDsgVarType_GraphArray:
+                case eDsgVarType_WayPointArray:
+                case eDsgVarType_IntegerArray:
+                case eDsgVarType_FloatArray:
+                case eDsgVarType_VectorArray:
+                case eDsgVarType_PersoArray:
+                case eDsgVarType_List:
+                    break;
+                }
+                switch (eDsgVarTypeId)
+                {
+                case eDsgVarType_VisualMaterial:
+                case eDsgVarType_GameMaterial:
+                case eDsgVarType_Perso:
+                case eDsgVarType_Action:
+                case eDsgVarType_Comport:
+                case eDsgVarType_WayPoint:
+                    SAI_fn_bInsertPointerInTable(&p_stArray->d_ArrayElement[ucVarId], eFlags);
+                    break;
+                default:
+                    SAI_fn_bInsertArrayInTable(&p_stArray->d_ArrayElement[ucVarId], fn_ulSizeOfDsgVar(eDsgVarTypeId, 0), eFlags);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            switch (eDsgVarType)
+            {
+            case eDsgVarType_SoundEventArray:
+            case eDsgVarType_TextArray:
+            case eDsgVarType_GraphArray:
+            case eDsgVarType_WayPointArray:
+            case eDsgVarType_IntegerArray:
+            case eDsgVarType_FloatArray:
+            case eDsgVarType_VectorArray:
+            case eDsgVarType_PersoArray:
+            case eDsgVarType_List:
+                break;
+            }
+            switch (eDsgVarType)
+            {
+            case eDsgVarType_VisualMaterial:
+            case eDsgVarType_GameMaterial:
+            case eDsgVarType_Perso:
+            case eDsgVarType_Action:
+            case eDsgVarType_Comport:
+            case eDsgVarType_WayPoint:
+                SAI_fn_bInsertPointerInTable(p_MyVarAddr, eFlags);
+                break;
+            default:
+                SAI_fn_bInsertArrayInTable(p_MyVarAddr, fn_ulSizeOfDsgVar(eDsgVarType, 0), eFlags);
+                break;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 785–831 */
@@ -3174,14 +3411,41 @@ void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind)
  */
 void ReinitDesignerVariables(AI_tdstMind_* p_stMind)
 {
-    unsigned int ulMyVarSize;
-    unsigned int ulMyVarOffset;
-    tdeObjectTreeInit_ eFlags;
-    tdeDsgVarTypeId_ eDsgVarType;
-    unsigned char ucVarId;
     char* ptrDst;
+    unsigned char ucVarId;
+    tdeDsgVarTypeId_ eDsgVarType;
+    unsigned int ulMyVarOffset;
+    tdstDsgVarInfo_* p_stDsgVarInfo;
     char* ptrSrc;
-    /* TODO: decompile from asm/... */
+    unsigned int ulMyVarSize;
+    tdeObjectTreeInit_ eFlags;
+    if (p_stMind == NULL)
+        return;
+    if (p_stMind->p_stDsgMem == NULL)
+        return;
+
+    ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
+    ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
+    if (ptrSrc == NULL)
+        ptrSrc = (char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit;
+    for (ucVarId = 0; ucVarId < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucVarId++)
+    {
+        p_stDsgVarInfo = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo + ucVarId;
+        eFlags = p_stDsgVarInfo->eInitType;
+        if (eFlags == 0)
+            continue;
+        eDsgVarType = p_stDsgVarInfo->eDsgVarTypeId;
+        ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
+        if (fn_GetDsgVarType(eDsgVarType) == 42)
+        {
+            ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, *(unsigned char*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem + 4));
+        }
+        else
+        {
+            ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
+        }
+        memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 698–758 */
@@ -3217,16 +3481,51 @@ void ReinitDesignerVariables(AI_tdstMind_* p_stMind)
  */
 void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType)
 {
-    unsigned int ulMyVarSize;
-    unsigned int ulMyVarOffset;
-    tdeObjectTreeInit_ eFlags;
-    tdstList_* p_stSrcList;
-    tdstList_* param0;
-    tdeDsgVarTypeId_ eDsgVarType;
-    unsigned char ucVarId;
     char* ptrDst;
+    unsigned char ucVarId;
+    tdeDsgVarTypeId_ eDsgVarType;
+    unsigned int ulMyVarOffset;
+    tdstDsgVarInfo_* p_stDsgVarInfo;
     char* ptrSrc;
-    /* TODO: decompile from asm/... */
+    unsigned int ulMyVarSize;
+    tdeObjectTreeInit_ eFlags;
+
+    if (p_stMind == NULL)
+        return;
+    if (p_stMind->p_stDsgMem == NULL)
+        return;
+
+    ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
+    ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
+    if (ptrSrc == NULL)
+        ptrSrc = (char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit;
+
+    for (ucVarId = 0; ucVarId < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucVarId++)
+    {
+        p_stDsgVarInfo = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo + ucVarId;
+        eDsgVarType = p_stDsgVarInfo->eDsgVarTypeId;
+        if (eDsgVarType == eDsgVarType_List)
+        {
+            ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
+            *(unsigned int*)(ptrDst + ulMyVarOffset + 4) = *(unsigned int*)(ptrSrc + ulMyVarOffset + 4);
+            *(unsigned char*)(ptrDst + ulMyVarOffset) = 0;
+            *(unsigned char*)(ptrDst + ulMyVarOffset + 1) = *(unsigned char*)(ptrSrc + ulMyVarOffset + 1);
+            continue;
+        }
+        eFlags = p_stDsgVarInfo->eInitType;
+        if (eFlags < eObjIniType)
+            continue;
+        ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
+        if (fn_GetDsgVarType(eDsgVarType) == 42)
+        {
+            ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, *(unsigned char*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem + 4));
+        }
+        else
+        {
+            ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
+        }
+        memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
+    }
 }
 
 unsigned char fn_bIntelligenceEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence);

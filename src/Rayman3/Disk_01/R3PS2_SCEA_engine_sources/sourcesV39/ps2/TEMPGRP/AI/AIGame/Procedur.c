@@ -3595,6 +3595,10 @@ void GAM_fn_vSetActorToLoad(tdstEngineObject_* p_stEngineObject);
 void GAM_fn_vSetFamilyToLoad(tdstFamilyList_* h_Family);
 void fn_vSetUnusedTextures(int bUnused);
 char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
+unsigned short fn_uwGetObjectTableNumberOfelements(tdstObjectsTablesList_* hTargetTable);
+void fn_vCopyObjectFromObjectTabletoAnother(tdstObjectsTablesList_* hTargetTable, tdstObjectsTablesList_* hSourceTable, unsigned short uwTargetObject, unsigned short uwSourceObject);
+short TFMT_wPositionModulesAccordingToText(stTfmtStatus_* p_stStatus, HIE_tdstSuperObject_* hSuperObjPerso, char* pszText, int lStart, int lEnd, float xScreenWidth, void* p_stLineResults, short wNbLines);
+unsigned int toupper(unsigned int c);
 void fn_vSetGameDataPath(char* _p_szPath);
 void MC_AddString(int Number, char* String);
 void Toby_AddSegment(unsigned int IDNumber, MTH3D_tdstVector_* pPos1, MTH3D_tdstVector_* pPos2);
@@ -7538,6 +7542,7 @@ tdstNodeInterpret_* fn_p_stTurnProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, 
 {
     tdstGetSetParam_ stParam;
     float xAngle;
+    float xAngleRad;
     tdeProcedureId_ eProcedureId;
     DNM_stDynamics* p_stDynamics;
     tdstDynam_* hDynam;
@@ -7550,16 +7555,22 @@ tdstNodeInterpret_* fn_p_stTurnProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, 
     xAngle = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
 
     hDynam = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
-    if (hDynam && (p_stDynamics = fn_p_stDynamGetDynamics(hDynam)) != NULL)
+    if (hDynam)
     {
-        switch (eProcedureId)
+        p_stDynamics = fn_p_stDynamGetDynamics(hDynam);
+        if (p_stDynamics != NULL)
         {
-        case eProc_Turn:
-            MEC_vTurnAroundZAxis(p_stDynamics, 0.017453292f * xAngle * (0.001f * g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime));
-            break;
-        case eProc_Turn2:
-            MEC_vTurnAroundZAxis(p_stDynamics, 0.017453292f * xAngle);
-            break;
+            switch (eProcedureId)
+            {
+            case eProc_Turn:
+                xAngleRad = 0.017453292f * xAngle;
+                xAngleRad = xAngleRad * (0.001f * g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime);
+                MEC_vTurnAroundZAxis(p_stDynamics, xAngleRad);
+                break;
+            case eProc_Turn2:
+                MEC_vTurnAroundZAxis(p_stDynamics, 0.017453292f * xAngle);
+                break;
+            }
         }
     }
 
@@ -8212,17 +8223,63 @@ tdstNodeInterpret_* fn_p_stModuleControlProcedure(HIE_tdstSuperObject_* p_SuperO
  */
 tdstNodeInterpret_* fn_p_stBuildObjectTableFromTableAndStringProcedure(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    short wSourceObject;
-    tdstObjectsTablesList_* hSourceObjectTable;
-    short wTargetObject;
-    short wNbObjectsInSourceTable;
-    short wNbObjectsInTargetTable;
-    stTfmtStatus_ stStatus;
-    int lStart;
     char* pszChar;
+    int lStart;
+    int lEnd;
+    float xScreenWidth;
     tdeProcedureId_ eProcedureId;
+    short wNbObjectsInTargetTable;
+    short wTargetObject;
+    tdstObjectsTablesList_* hSourceObjectTable;
+    tdstObjectsTablesList_* hTargetTable;
+    short wNbObjectsInSourceTable;
+    short wSourceObject;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    stTfmtStatus_ stStatus;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+
+    switch (eProcedureId)
+    {
+    case eProc_BuildObjectTableFromFormattedString:
+        pszChar = fn_szGetStringFromTextOrStringParam(&stParam);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xScreenWidth = (stParam.eType == E_vt_Float) ? stParam.uDummy.uParam.xValue : (float)stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lStart = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        lEnd = (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue;
+        if (lStart < 0)
+            lStart = 0;
+        TFMT_wPositionModulesAccordingToText(&stStatus, p_SuperObjPerso, pszChar, lStart, lEnd, xScreenWidth, NULL, -1);
+        return p_stTree;
+    case eProc_BuildObjectTableFromTableAndString:
+        hTargetTable = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_CurrentObjectsTable;
+        wTargetObject = 0;
+        hSourceObjectTable = (tdstObjectsTablesList_*)stParam.uDummy.uParam.lValue;
+        wNbObjectsInTargetTable = (short)fn_uwGetObjectTableNumberOfelements(hTargetTable);
+        wNbObjectsInSourceTable = (short)fn_uwGetObjectTableNumberOfelements(hSourceObjectTable);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        pszChar = fn_szGetStringFromTextOrStringParam(&stParam);
+        while (*pszChar != 0 && wTargetObject < wNbObjectsInTargetTable)
+        {
+            wSourceObject = toupper(*pszChar) - 0x20;
+            if (wSourceObject < 0 || wSourceObject >= wNbObjectsInSourceTable)
+                wSourceObject = 0;
+            fn_vCopyObjectFromObjectTabletoAnother(hTargetTable, hSourceObjectTable, (unsigned short)wTargetObject, (unsigned short)wSourceObject);
+            pszChar++;
+            wTargetObject++;
+        }
+        while (wTargetObject < wNbObjectsInTargetTable)
+        {
+            fn_vCopyObjectFromObjectTabletoAnother(hTargetTable, hSourceObjectTable, (unsigned short)wTargetObject, 0);
+            wTargetObject++;
+        }
+        return p_stTree;
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedur.c lines 1514–1570 */
@@ -9161,23 +9218,33 @@ tdstNodeInterpret_* fn_p_stMiscUltraProcedure(HIE_tdstSuperObject_* p_SuperObjPe
     switch (eProcedureId)
     {
     case eProc_SetCharacterPriority:
+    {
+        tdstEngineObject_* p_stCharacter;
+
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        CS_fn_vSetCharacterPriority(hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_CollSet, (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
+        p_stCharacter = hNewSuperObjPerso->hLinkedObject.p_stCharacter;
+        CS_fn_vSetCharacterPriority(p_stCharacter->h_CollSet, (stParam.eType == E_vt_Float) ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
         return p_stTree;
+    }
     case eProc_EraseLastGoThroughMaterial:
         hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->hLastCollidedGoThroughMaterial = (GMT_tdstGameMaterial_*)0xcdcdcdcd;
         return p_stTree;
     case eProc_FactorAnimationFrameRate:
+    {
+        tdstEngineObject_* p_stCharacter;
+
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_v3dDataFactorFrameRate(hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData, (stParam.eType == E_vt_Float) ? (unsigned int)MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.ulValue);
+        p_stCharacter = hNewSuperObjPerso->hLinkedObject.p_stCharacter;
+        fn_v3dDataFactorFrameRate(p_stCharacter->h_3dData, (stParam.eType == E_vt_Float) ? (unsigned int)MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.ulValue);
         return p_stTree;
+    }
     case eProc_SetGoThroughMechanicsHandling:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
         hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->bWarnMechanicsFlag = stParam.uDummy.uParam.cValue;
         return p_stTree;
     case eProc_SetDynamicAlwaysActive:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vChangeDynamicAlwaysActiveState(hNewSuperObjPerso, stParam.uDummy.uParam.ucValue);
+        fn_vChangeDynamicAlwaysActiveState(hNewSuperObjPerso, (int)stParam.uDummy.uParam.ucValue);
         return p_stTree;
     }
 

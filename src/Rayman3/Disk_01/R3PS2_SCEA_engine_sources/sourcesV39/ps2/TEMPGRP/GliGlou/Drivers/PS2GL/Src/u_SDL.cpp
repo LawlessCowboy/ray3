@@ -2351,7 +2351,7 @@ MTH3D_tdstVector_ stSinEffectAmp;
 float a3_xSinEffectBaseMesh[3];
 float GLI_fF2pow24;
 float a64_fSinTable[128];
-int PS2glLiberator;
+void (*PS2glLiberator)(void*);
 tagGLcontext g_PS2glContext;
 int GLI_BIG_GLOBALS_gs_st_CurrentMatrix;
 int GLI_g_LastCyclingMode;
@@ -2735,7 +2735,13 @@ void GLI_vProcessSinusEffectOnObject(GEO_tdstGeometricObject_* pObj)
 void GLI_vFreeAllSinusCopies(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < GLI_G_NB_SINUS_COPIES; i++)
+    {
+        PS2glLiberator(GLI_G_SINUS_COPIES[i].pVCopy);
+        GLI_G_SINUS_COPIES[i].pVCopy = NULL;
+    }
+    GLI_G_NB_SINUS_COPIES = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 2432–2547 */
@@ -4184,8 +4190,17 @@ void GLI_vDrawAllActors(unsigned int bTransparent)
  */
 void GLI_vRemoveInstanceFromDisplay(_SDC_Instance_* pInstance)
 {
+    float (*pDestPV)[4];
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < GLI_G_NumberOfInstancesToDisplay; i++)
+    {
+        if ((_SDC_Instance_*)GLI_G_InstancesToDisplay[i] == pInstance)
+        {
+            GLI_G_InstancesToDisplay[i] = 0;
+        }
+    }
+    pDestPV = pInstance->pVertexArray; for (i = 0; i < GLI_g_NbVAToUpdate; i++) { if (GLI_VAToUpdate[i].pDestPV == pDestPV) { GLI_VAToUpdate[i].pDestPV = 0; } }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 185–191 */
@@ -4220,10 +4235,25 @@ void DestroyDummySDL(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void PS2glDeleteLists(unsigned int list, int range);
+
 void GLI_vForceDeleteAllWaitingPointers(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < sizeof(GLI_g_DelayedFrees) / sizeof(GLI_g_DelayedFrees[0]); i++)
+    {
+        if (GLI_g_DelayedFrees[i].Pointer != NULL)
+        {
+            PS2glLiberator((void*)GLI_g_DelayedFrees[i].Pointer);
+            GLI_g_DelayedFrees[i].Pointer = NULL;
+        }
+        if (GLI_g_DelayedFrees[i].DisplayList != NULL)
+        {
+            PS2glDeleteLists(GLI_g_DelayedFrees[i].DisplayList, 1);
+            GLI_g_DelayedFrees[i].DisplayList = 0;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 138–156 */
@@ -4245,7 +4275,20 @@ void GLI_vForceDeleteAllWaitingPointers(void)
 void GLI_vDeleteAllWaitingPointers(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < sizeof(GLI_g_DelayedFrees) / sizeof(GLI_g_DelayedFrees[0]); i++)
+    {
+        if ((GLI_g_DelayedFrees[i].Pointer != NULL) && (GLI_g_DelayedFrees[i].CurrentFrame + 5 <= GLI_g_FrameNumber))
+        {
+            PS2glLiberator((void*)GLI_g_DelayedFrees[i].Pointer);
+            GLI_g_DelayedFrees[i].Pointer = NULL;
+        }
+        if ((GLI_g_DelayedFrees[i].DisplayList != 0) && (GLI_g_DelayedFrees[i].CurrentFrame + 5 <= GLI_g_FrameNumber))
+        {
+            PS2glDeleteLists(GLI_g_DelayedFrees[i].DisplayList, 1);
+            GLI_g_DelayedFrees[i].DisplayList = 0;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 120–135 */

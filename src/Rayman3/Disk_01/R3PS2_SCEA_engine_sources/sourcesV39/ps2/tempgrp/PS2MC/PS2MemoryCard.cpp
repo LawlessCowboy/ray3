@@ -5,6 +5,8 @@
 #include <stddef.h>
 extern "C" int printf(const char*, ...);
 extern "C" void fn_vInterruptMenu2D(int bPauseMenu);
+extern "C" void fn_vPauseFromMemoryCard(void);
+extern "C" void fn_vUnpauseFromMemoryCard(void);
 extern "C" char* strcpy(char*, const char*);
 extern "C" char* Strcat(char*, char*);
 extern "C" int strcmp(const char*, const char*);
@@ -365,6 +367,12 @@ void TXT_PauseGameIWantToDrawThisStringNumber(int _iStringNumber)
  */
 int PS2MC_fn_bHasBootCheckBeenDoneYet(void)
 {
+    if (g_GameHasNotStartedTheFirstBootCheck)
+    {
+        g_GameHasNotStartedTheFirstBootCheck = 0;
+        C_PS2MC_Manager* pManager = (C_PS2MC_Manager*)PS2MC_g_Manager; if (pManager->m_bPreBootCheckWasDone) { if (pManager->m_bPreBootCheckHadNoMC) { pManager->m_bNeedToCheckAndWarnForMCFull = 3; g_EngineHasBeenPausedBecauseOfMC = 1; pManager->m_IPausedTheEngine++; if (pManager->m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); } pManager->m_Flags[4] = 0; pManager->m_uiIdleState = 5; } }
+        return 0;
+    }
     return ((C_PS2MC_Manager*)PS2MC_g_Manager)->m_bFirstBootCheckHasBeenDone;
 }
 
@@ -407,9 +415,7 @@ void PS2MC_DisableAutoSave(void)
  */
 void PS2MC_vClearFlag(int FlagID)
 {
-    C_PS2MC_Manager* pManager;
-    pManager = (C_PS2MC_Manager*)PS2MC_g_Manager;
-    pManager->m_Flags[FlagID] = -1;
+    ((C_PS2MC_Manager*)PS2MC_g_Manager)->m_Flags[FlagID] = 0xFFFFFFFF;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5512–5514 */
@@ -744,7 +750,32 @@ unsigned int PS2MC_fn_uiInit(unsigned int Port, unsigned int Slot)
  */
 void C_PS2MC_Manager::AutoSaveGame(char* _pData, char* _pFileName)
 {
-    /* TODO: decompile from asm/... */
+    unsigned char* pData;
+    char* pBuffer;
+    int i;
+    if (m_bAutoSaveEnabled)
+    {
+        m_bAutoSaveWasntEvenTried = 0;
+        printf("Auto-Saving\n");
+        m_pDataToSave = (int)m_pLoadSaveBuffer;
+        memcpy(m_pLoadSaveBuffer, _pData, 0x3DA);
+        pData = m_pLoadSaveBuffer; m_ulCheckSum = 0; i = 0x3DA; if (i != 0) { do { m_ulCheckSum = m_ulCheckSum * 3 + ((i & 1) + 1) * (*pData++ + (i & 1)); } while (--i != 0); }
+        pBuffer = (char*)m_pLoadSaveBuffer; pBuffer[0x3DA] = (unsigned char)(m_ulCheckSum >> 24); pBuffer[0x3DB] = (unsigned char)(m_ulCheckSum >> 16); pBuffer[0x3DC] = (unsigned char)(m_ulCheckSum >> 8); pBuffer[0x3DD] = (unsigned char)m_ulCheckSum;
+        m_Flags[1] = 0;
+        strcpy(m_aGameName, _pFileName);
+        strcpy(m_aDirExtension, "S");
+        Strcat(m_aDirExtension, _pFileName);
+        strcpy(m_aFullFileName, m_aFilePrefix);
+        Strcat(m_aFullFileName, "S");
+        Strcat(m_aFullFileName, _pFileName);
+        m_uiIdleState = (unsigned char)STATE_AUTO_SAVE_GAME;
+    }
+    else
+    {
+        printf("Not-AutoSaving\n");
+        m_Flags[1] = 1;
+        m_bAutoSaveWasntEvenTried = 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 4961–4977 */
@@ -2101,9 +2132,58 @@ void C_PS2MC_Manager::ManageBootCheck(void)
  */
 void C_PS2MC_Manager::ManagePreBootCheck(void)
 {
-    int LoopCount;
-    signed char init;
-    /* TODO: decompile from asm/... */
+    static int LoopCount;
+    static signed char init;
+    if (!init) { LoopCount = 0; init = 1; }
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            g_EngineHasBeenPausedBecauseOfMC = 1; m_IPausedTheEngine++; if (m_IPausedTheEngine == 1) { fn_vPauseFromMemoryCard(); fn_vInterruptMenu2D(1); }
+            m_MemoryCardInternalStatus.type = -10;
+            m_uiSubState = 100;
+            LoopCount = 0;
+            break;
+        }
+        case 100:
+        {
+            if (m_MemoryCardInternalStatus.type != -10)
+            {
+                LoopCount++;
+                m_MemoryCardInternalStatus.type = -10;
+                if (LoopCount == 5)
+                {
+                    LoopCount = 0;
+                    m_uiSubState = 101;
+                }
+            }
+            break;
+        }
+        case 101:
+        {
+            if (m_MemoryCardInternalStatus.type != -10)
+            {
+                if (m_MemoryCardInternalStatus.type == 0)
+                {
+                    m_bPreBootCheckWasDone = 1;
+                    m_bPreBootCheckHadNoMC = 1;
+                    if (m_IPausedTheEngine == 1) { g_EngineHasBeenPausedBecauseOfMC = 0; m_IPausedTheEngine = 0; fn_vUnpauseFromMemoryCard(); m_bWillHaveToRestoreMenu2D = 2; } else { m_IPausedTheEngine--; }
+                    m_Flags[4] = 1;
+                    m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+                    m_bFirstBootCheckHasBeenDone = 1;
+                    m_bNeedToCheckAndWarnForMCFull = 0;
+                }
+                else
+                {
+                    m_bPreBootCheckWasDone = 1;
+                    m_bPreBootCheckHadNoMC = 0;
+                    g_GameHasNotStartedTheFirstBootCheck = 0;
+                    m_Flags[4] = 0; m_uiIdleState = 5;
+                }
+            }
+            break;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 1928–2111 */
@@ -2707,7 +2787,37 @@ void C_PS2MC_Manager::CreateIconFile(void)
     PS2MC_tdstIconVertex_* pIconVtx;
     PS2MC_tdstIcon_* pIconHeader;
     char* pData;
-    /* TODO: decompile from asm/... */
+    pIconHeader = (PS2MC_tdstIcon_*)&m_pUserIconFile[0];
+    pIconVtx = (PS2MC_tdstIconVertex_*)&m_pUserIconFile[5];
+    pIconAnimation = (PS2MC_tdstIconAnimSection_*)&m_pUserIconFile[77];
+    pData = (char*)&m_pUserIconFile[0];
+    pIconHeader->uiVersion = 0x10000;
+    pIconHeader->uiNBSP = 1;
+    pIconHeader->uiAttributes = 6;
+    pIconHeader->fBackFaceThreshold = 1.0f;
+    pIconHeader->nbVtx = 12;
+    pIconAnimation->uiNBSeq = 1;
+    pIconAnimation->uiNbFrame = 1;
+    pIconAnimation->fSpeed = 1.0f;
+    pIconAnimation->uiPlayOffset = 1;
+    pIconAnimation->uiNbKSP = 1;
+    pIconAnimation->uiKSPID = 1;
+    pIconAnimation->uiNBKF = 1;
+    pIconAnimation->uiKEYS[0] = 1;
+    pIconAnimation->uiKEYS[1] = 1;
+        pIconVtx[0].Pos[0] = -10240; pIconVtx[0].Pos[1] = -1536; pIconVtx[0].Pos[2] = 0; pIconVtx[0].Pos[3] = 1024; pIconVtx[0].Normal[0] = 716; pIconVtx[0].Normal[1] = 716; pIconVtx[0].Normal[2] = 716; pIconVtx[0].Normal[3] = 0; pIconVtx[0].ST[0] = 0; pIconVtx[0].ST[1] = 4096; pIconVtx[0].Color = 0xA0A0A0A0;
+        pIconVtx[1].Pos[0] = 10240; pIconVtx[1].Pos[1] = -1536; pIconVtx[1].Pos[2] = 0; pIconVtx[1].Pos[3] = 1024; pIconVtx[1].Normal[0] = 716; pIconVtx[1].Normal[1] = 716; pIconVtx[1].Normal[2] = 716; pIconVtx[1].Normal[3] = 0; pIconVtx[1].ST[0] = 4096; pIconVtx[1].ST[1] = 4096; pIconVtx[1].Color = 0xA0A0A0A0;
+        pIconVtx[2].Pos[0] = 10240; pIconVtx[2].Pos[1] = -18944; pIconVtx[2].Pos[2] = 0; pIconVtx[2].Pos[3] = 1024; pIconVtx[2].Normal[0] = 716; pIconVtx[2].Normal[1] = 716; pIconVtx[2].Normal[2] = 716; pIconVtx[2].Normal[3] = 0; pIconVtx[2].ST[0] = 4096; pIconVtx[2].ST[1] = 0; pIconVtx[2].Color = 0xA0A0A0A0;
+        pIconVtx[3].Pos[0] = -10240; pIconVtx[3].Pos[1] = -1536; pIconVtx[3].Pos[2] = 0; pIconVtx[3].Pos[3] = 1024; pIconVtx[3].Normal[0] = 716; pIconVtx[3].Normal[1] = 716; pIconVtx[3].Normal[2] = 716; pIconVtx[3].Normal[3] = 0; pIconVtx[3].ST[0] = 0; pIconVtx[3].ST[1] = 4096; pIconVtx[3].Color = 0xA0A0A0A0;
+        pIconVtx[4].Pos[0] = 10240; pIconVtx[4].Pos[1] = -18944; pIconVtx[4].Pos[2] = 0; pIconVtx[4].Pos[3] = 1024; pIconVtx[4].Normal[0] = 716; pIconVtx[4].Normal[1] = 716; pIconVtx[4].Normal[2] = 716; pIconVtx[4].Normal[3] = 0; pIconVtx[4].ST[0] = 4096; pIconVtx[4].ST[1] = 0; pIconVtx[4].Color = 0xA0A0A0A0;
+        pIconVtx[5].Pos[0] = -10240; pIconVtx[5].Pos[1] = -18944; pIconVtx[5].Pos[2] = 0; pIconVtx[5].Pos[3] = 1024; pIconVtx[5].Normal[0] = 716; pIconVtx[5].Normal[1] = 716; pIconVtx[5].Normal[2] = 716; pIconVtx[5].Normal[3] = 0; pIconVtx[5].ST[0] = 0; pIconVtx[5].ST[1] = 0; pIconVtx[5].Color = 0xA0A0A0A0;
+        pIconVtx[6].Pos[0] = -10240; pIconVtx[6].Pos[1] = -1536; pIconVtx[6].Pos[2] = 0; pIconVtx[6].Pos[3] = 1024; pIconVtx[6].Normal[0] = 716; pIconVtx[6].Normal[1] = 716; pIconVtx[6].Normal[2] = 716; pIconVtx[6].Normal[3] = 0; pIconVtx[6].ST[0] = 4096; pIconVtx[6].ST[1] = 4096; pIconVtx[6].Color = 0xA0A0A0A0;
+        pIconVtx[7].Pos[0] = -10240; pIconVtx[7].Pos[1] = -18944; pIconVtx[7].Pos[2] = 0; pIconVtx[7].Pos[3] = 1024; pIconVtx[7].Normal[0] = 716; pIconVtx[7].Normal[1] = 716; pIconVtx[7].Normal[2] = 716; pIconVtx[7].Normal[3] = 0; pIconVtx[7].ST[0] = 4096; pIconVtx[7].ST[1] = 0; pIconVtx[7].Color = 0xA0A0A0A0;
+        pIconVtx[8].Pos[0] = 10240; pIconVtx[8].Pos[1] = -18944; pIconVtx[8].Pos[2] = 0; pIconVtx[8].Pos[3] = 1024; pIconVtx[8].Normal[0] = 716; pIconVtx[8].Normal[1] = 716; pIconVtx[8].Normal[2] = 716; pIconVtx[8].Normal[3] = 0; pIconVtx[8].ST[0] = 0; pIconVtx[8].ST[1] = 0; pIconVtx[8].Color = 0xA0A0A0A0;
+        pIconVtx[9].Pos[0] = -10240; pIconVtx[9].Pos[1] = -1536; pIconVtx[9].Pos[2] = 0; pIconVtx[9].Pos[3] = 1024; pIconVtx[9].Normal[0] = 716; pIconVtx[9].Normal[1] = 716; pIconVtx[9].Normal[2] = 716; pIconVtx[9].Normal[3] = 0; pIconVtx[9].ST[0] = 4096; pIconVtx[9].ST[1] = 4096; pIconVtx[9].Color = 0xA0A0A0A0;
+        pIconVtx[10].Pos[0] = 10240; pIconVtx[10].Pos[1] = -18944; pIconVtx[10].Pos[2] = 0; pIconVtx[10].Pos[3] = 1024; pIconVtx[10].Normal[0] = 716; pIconVtx[10].Normal[1] = 716; pIconVtx[10].Normal[2] = 716; pIconVtx[10].Normal[3] = 0; pIconVtx[10].ST[0] = 0; pIconVtx[10].ST[1] = 0; pIconVtx[10].Color = 0xA0A0A0A0;
+        pIconVtx[11].Pos[0] = 10240; pIconVtx[11].Pos[1] = -1536; pIconVtx[11].Pos[2] = 0; pIconVtx[11].Pos[3] = 1024; pIconVtx[11].Normal[0] = 716; pIconVtx[11].Normal[1] = 716; pIconVtx[11].Normal[2] = 716; pIconVtx[11].Normal[3] = 0; pIconVtx[11].ST[0] = 0; pIconVtx[11].ST[1] = 4096;
+        pIconVtx[11].Color = 0xA0A0A0A0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 745–808 */
@@ -2764,9 +2874,13 @@ void C_PS2MC_Manager::FillIconSys(char* _szTitleName, char bPhoto)
     memset(&m_iconSys, 0, sizeof(m_iconSys));
     strcpy((char*)m_iconSys.Head, "PS2D");
     if (bPhoto)
+    {
         sprintf(Title, "%s\n%s", "Rayman3 Photo", _szTitleName);
+    }
     else
-        sprintf(Title, "%s\n%s", "Rayman3 Data", _szTitleName);
+    {
+        sprintf(Title, "%s\n%s\0", "Rayman3 Data", _szTitleName);
+    }
     SVG_fn_szAsciiToSJIS((char*)m_iconSys.TitleName, 33, Title, &m_iconSys.OffsLF);
     m_iconSys.TransRate = 0x60;
     memcpy(m_iconSys.BgColor, bgcolor, sizeof(bgcolor));

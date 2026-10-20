@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+/* External PS2GL entry points used by this translation unit. */
+void impPS2glFlush(void);
+unsigned int VU1BufferFreeSpace(void);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct tag_GLmaterial tag_GLmaterial;
 typedef struct anon_0 anon_0;
@@ -55,7 +59,11 @@ typedef struct anon_25 anon_25;
 typedef struct anon_18 anon_18;
 typedef struct anon_22 anon_22;
 typedef struct anon_27 anon_27;
-typedef struct anon_37 anon_37;
+typedef union anon_37 anon_37;
+typedef union un_gsreg_2 un_gsreg_2;
+typedef union un_gsreg_4 un_gsreg_4;
+typedef union un_gsreg_5 un_gsreg_5;
+typedef union un_gsreg_19 un_gsreg_19;
 typedef union anon_10 anon_10;
 typedef struct tagGScontext tagGScontext;
 typedef struct anon_16 anon_16;
@@ -72,6 +80,7 @@ typedef struct tagGLtexname tagGLtexname;
 typedef struct tag_GLlight tag_GLlight;
 typedef struct tagGLArrayInfo tagGLArrayInfo;
 typedef struct tagGLcontext tagGLcontext;
+void gifSetTag(anon_1* pTag, unsigned short nLoop, unsigned char EOP, unsigned char PRE, unsigned short PRIM, unsigned short FLG, unsigned char nReg, unsigned char* pRegs);
 typedef struct tagstVIFCode tagstVIFCode;
 
 struct tag_GLmaterial {
@@ -138,16 +147,17 @@ struct anon_1 {
 };
 
 struct anon_2 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon2[6]; /* +0x2..0x7 */
 };
 
 struct _sceDmaTag {
@@ -455,15 +465,16 @@ struct anon_30 {
 };
 
 struct anon_26 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_40 {
@@ -544,61 +555,65 @@ struct anon_27 {
     unsigned int IDMSK; /* +0x4 */
 };
 
-struct anon_37 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+union anon_37 {
+    struct {
+        unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+        unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+        unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+        unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+        unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+        unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+        unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+        unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+        unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+        unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+        unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+        unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+        unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+        unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+        unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+        unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+        unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+        unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+        unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+        unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+        unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+        unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+        unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+        unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+        unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+        unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+        unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+        unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+        unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+        unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+        unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+        unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+        unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+        unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+        unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+        unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+        unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+        unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+        unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+        unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+        unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+        unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+        unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+        unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+        unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+        unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+        unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+        unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+        unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+        unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+        unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+        unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+        unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+        unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+        unsigned char _extractor_padding_00[1];
+    } bits;
+    unsigned long flags; /* whole-word view of the per-register modified mask */
 };
 
 union anon_10 {
@@ -612,6 +627,25 @@ union anon_10 {
     unsigned long u64Data[2]; /* +0x0 */
     float fData[4]; /* +0x0 */
     double dData[2]; /* +0x0 */
+};
+
+/* The GS register slots are read as raw 64-bit words by the update path, so
+ * each recovered bitfield register keeps a whole-word view alongside it. */
+union un_gsreg_2 {
+    anon_2 bits;
+    unsigned long long u64;
+};
+union un_gsreg_4 {
+    anon_4 bits;
+    unsigned long long u64;
+};
+union un_gsreg_5 {
+    anon_5 bits;
+    unsigned long long u64;
+};
+union un_gsreg_19 {
+    anon_19 bits;
+    unsigned long long u64;
 };
 
 struct tagGScontext {
@@ -634,8 +668,8 @@ struct tagGScontext {
     anon_0 TEX2_2; /* +0x80 */
     anon_31 XYOFFSET_1; /* +0x88 */
     anon_31 XYOFFSET_2; /* +0x90 */
-    anon_4 PRMODECONT; /* +0x98 */
-    anon_2 PRMODE; /* +0xa0 */
+    un_gsreg_4 PRMODECONT; /* +0x98 */
+    un_gsreg_2 PRMODE; /* +0xa0 */
     anon_9 TEXCLUT; /* +0xa8 */
     anon_13 SCANMSK; /* +0xb0 */
     anon_28 MIPTBP1_1; /* +0xb8 */
@@ -643,11 +677,11 @@ struct tagGScontext {
     anon_34 MIPTBP2_1; /* +0xc8 */
     anon_34 MIPTBP2_2; /* +0xd0 */
     anon_3 TEXA; /* +0xd8 */
-    anon_19 FOGCOL; /* +0xe0 */
+    un_gsreg_19 FOGCOL; /* +0xe0 */
     tagsceGsReg TEXFLUSH; /* +0xe8 */
     anon_17 SCISSOR_1; /* +0xf0 */
     anon_17 SCISSOR_2; /* +0xf8 */
-    anon_5 ALPHA_1; /* +0x100 */
+    un_gsreg_5 ALPHA_1; /* +0x100 */
     anon_5 ALPHA_2; /* +0x108 */
     anon_32 DIMX; /* +0x110 */
     anon_6 DTHE; /* +0x118 */
@@ -1265,11 +1299,38 @@ void GsUpdateRegisters(void)
 void GsUpdateLimited(void)
 {
     anon_10 qword;
-    anon_10* pqCurrent;
-    anon_1* pCurTag;
-    _sceDmaTag* pDmaTag;
     int iRegs;
-    /* TODO: decompile from asm/... */
+    _sceDmaTag* pDmaTag;
+    anon_1* pCurTag;
+    anon_10* pqCurrent;
+
+    pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
+    iRegs = 0;
+    qword.u64Data[1] = 0;
+    qword.u64Data[0] = 0;
+    pCurTag = (anon_1*)(pDmaTag + 1);
+    pqCurrent = (anon_10*)(pCurTag + 1);
+    if (VU1BufferFreeSpace() < 6)
+        impPS2glFlush();
+    g_gsContext.GlobalModFlgs.flags |= g_gsContext.ModFlgs.flags;
+    if (g_gsContext.ModFlgs.bits.PRMODECONT_Modified) { iRegs++; qword.u64Data[0] = g_gsContext.PRMODECONT.u64; qword.ubData[8] = 0x1A; *pqCurrent = qword; pqCurrent++; g_gsContext.ModFlgs.bits.PRMODECONT_Modified = 0; }
+    if (g_gsContext.ModFlgs.bits.PRMODE_Modified) { iRegs++; qword.u64Data[0] = g_gsContext.PRMODE.u64; qword.ubData[8] = 0x1B; *pqCurrent = qword; pqCurrent++; g_gsContext.ModFlgs.bits.PRMODE_Modified = 0; }
+    if (g_gsContext.ModFlgs.bits.ALPHA_1_Modified) { iRegs++; qword.u64Data[0] = g_gsContext.ALPHA_1.u64; qword.ubData[8] = 0x42; *pqCurrent = qword; pqCurrent++; g_gsContext.ModFlgs.bits.ALPHA_1_Modified = 0; }
+    if (g_gsContext.ModFlgs.bits.FOGCOL_Modified) { iRegs++; qword.u64Data[0] = g_gsContext.FOGCOL.u64; qword.ubData[8] = 0x3D; *pqCurrent = qword; pqCurrent++; g_gsContext.ModFlgs.bits.FOGCOL_Modified = 0; }
+    ((anon_10*)pCurTag)->u64Data[0] = 0;
+    ((anon_10*)pCurTag)->u64Data[1] = 0;
+    pCurTag->NLOOP = iRegs;
+    pCurTag->EOP = 1;
+    pCurTag->FLG = 0;
+    pCurTag->NREG = 1;
+    pCurTag->REGS0 = 14;
+    pDmaTag->qwc = iRegs + 1;
+    pDmaTag->mark = 0;
+    pDmaTag->id = 0x10;
+    pDmaTag->p[0] = 0x11000000;
+    pDmaTag->p[1] = (iRegs + 1) | 0x50000000;
+    g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFIBufTail + (iRegs + 2);
+    if (g_gsContext.iBufCount > 1) { unsigned long iCount; _sceDmaTag* pNewTag; g_gsContext.pCurTag->EOP = 1; iCount = g_gsContext.iBufCount; pNewTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail; pNewTag->qwc = iCount; pNewTag->mark = 0; pNewTag->id = 0x10; pNewTag->p[0] = 0x11000000; pNewTag->p[1] = iCount | 0x50000000; memcpy(pNewTag + 1, g_gsContext.PackageBuffer, iCount * 16); g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFIBufTail + (iCount + 1); } g_gsContext.iRegs = 0; g_gsContext.iBufCount = 1; g_gsContext.pqCurrent = &g_gsContext.PackageBuffer[1]; g_gsContext.pCurTag = (anon_1*)&g_gsContext.PackageBuffer[0]; gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GSPackage.c lines 415–505 */
@@ -1436,7 +1497,68 @@ void GsUpdate(void)
  */
 void GsSendData(signed char type, anon_10* pdata)
 {
-    /* TODO: decompile from asm/... */
+    unsigned long ulCount;
+    signed char cIndex;
+    anon_10* pTagRaw;
+    anon_10* pDest;
+    if (g_gsContext.iBufCount >= 512) {
+        if (g_gsContext.iBufCount > 1) {
+            _sceDmaTag* pTag;
+            g_gsContext.pCurTag->EOP = 1;
+            ulCount = g_gsContext.iBufCount;
+            pTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
+            pTag->qwc = ulCount;
+            pTag->mark = 0;
+            pTag->id = 0x10;
+            pTag->p[0] = 0x11000000;
+            pTag->p[1] = ulCount | 0x50000000;
+            memcpy(pTag + 1, g_gsContext.PackageBuffer, ulCount * 16);
+            g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFIBufTail + (ulCount + 1);
+        }
+        g_gsContext.iRegs = 0;
+        g_gsContext.iBufCount = 1;
+        g_gsContext.pqCurrent = &g_gsContext.PackageBuffer[1];
+        g_gsContext.pCurTag = (anon_1*)&g_gsContext.PackageBuffer[0];
+        gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
+    }
+    if (g_gsContext.iRegs >= 16) {
+        if (g_gsContext.iBufCount >= 511) {
+            if (g_gsContext.iBufCount > 1) {
+                _sceDmaTag* pTag;
+                g_gsContext.pCurTag->EOP = 1;
+                ulCount = g_gsContext.iBufCount;
+                pTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
+                pTag->qwc = ulCount;
+                pTag->mark = 0;
+                pTag->id = 0x10;
+                pTag->p[0] = 0x11000000;
+                pTag->p[1] = ulCount | 0x50000000;
+                memcpy(pTag + 1, g_gsContext.PackageBuffer, ulCount * 16);
+                g_PS2glContext.pVIFIBufTail = g_PS2glContext.pVIFIBufTail + (ulCount + 1);
+            }
+            g_gsContext.iRegs = 0;
+            g_gsContext.iBufCount = 1;
+            g_gsContext.pqCurrent = &g_gsContext.PackageBuffer[1];
+            g_gsContext.pCurTag = (anon_1*)&g_gsContext.PackageBuffer[0];
+            gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
+        } else {
+            g_gsContext.pCurTag = (anon_1*)g_gsContext.pqCurrent;
+            g_gsContext.pqCurrent = g_gsContext.pqCurrent + 16;
+            gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
+            g_gsContext.iRegs = 0;
+            g_gsContext.iBufCount++;
+        }
+    }
+    cIndex = g_gsContext.iRegs;
+    pTagRaw = (anon_10*)g_gsContext.pCurTag;
+    pTagRaw->u64Data[1] &= ~((unsigned long)0xF << (cIndex * 4));
+    pTagRaw->u64Data[1] |= ((unsigned long)type) << (cIndex * 4);
+    g_gsContext.pCurTag->NREG = (++g_gsContext.iRegs) & 0xF;
+    g_gsContext.pCurTag->NLOOP = 1;
+    pDest = g_gsContext.pqCurrent;
+    g_gsContext.iBufCount++;
+    g_gsContext.pqCurrent = g_gsContext.pqCurrent + 16;
+    *pDest = *pdata;
 }
 
 
@@ -1462,7 +1584,6 @@ void GsSendData(signed char type, anon_10* pdata)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void gifSetTag(anon_1* pTag, unsigned short nLoop, unsigned char EOP, unsigned char PRE, unsigned short PRIM, unsigned short FLG, unsigned char nReg, unsigned char* pRegs);
 void GsResetBuffer(void)
 {
     g_gsContext.iBufCount = 1;
@@ -1596,11 +1717,10 @@ void impPS2glSetGsRegister(int address, unsigned long value, unsigned long mask)
     iOffset = iRegisterTable[address];
     if (iOffset >= 0) {
         *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3)) = (value & ~mask) | (mask & *(unsigned long*)((unsigned int)&g_gsContext + (iOffset << 3)));
-        *(unsigned long*)&g_gsContext.ModFlgs |= 1UL << iOffset;
+        g_gsContext.ModFlgs.flags |= 1UL << iOffset;
     } else {
         qwTemp.u64Data[0] = value & ~mask;
         qwTemp.u64Data[1] = 0;
-        qwTemp.ubData[8] = address;
-        GsSendData(14, &qwTemp);
+        qwTemp.ubData[8] = address; GsSendData(14, &qwTemp);
     }
 }

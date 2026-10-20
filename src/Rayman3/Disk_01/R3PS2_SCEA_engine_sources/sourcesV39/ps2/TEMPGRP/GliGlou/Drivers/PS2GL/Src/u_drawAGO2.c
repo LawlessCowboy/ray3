@@ -1789,24 +1789,108 @@ void GLI_vDisplaySerialBees(GLD_tdstViewportAttributes_* pViewport, AGO2_BeePart
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vDisplaySerialLeaves(AGO2_LeavesParticle_* pParticleArray, int NumberOfParticles, void* pMaterial)
+void GLI_vDisplaySerialLeaves(GLD_tdstViewportAttributes_* pViewport, AGO2_LeavesParticle_* pParticleArray, int NumberOfParticles, void* pMaterial)
 {
-    float YVZ;
-    float YVY;
-    float YVX;
-    float XVZ;
-    float XVY;
-    float XVX;
-    float PosZ;
-    float PosY;
-    float PosX;
     float AlphaVal;
-    float (*pT)[4];
-    float (*pC)[4];
-    float (*pV)[4];
+    float PosX;
+    float PosY;
+    float PosZ;
+    float XVX;
+    float XVY;
+    float XVZ;
+    float YVX;
+    float YVY;
+    float YVZ;
+
     unsigned int NbSpritesReal;
+    float (*pV)[4];
+    float (*pC)[4];
+    float (*pT)[4];
     int i;
-    /* TODO: decompile from asm/... */
+    unsigned char* pPrefetch;
+
+    NbSpritesReal = 0;
+    GLI_g_RainMaterial = (int)pMaterial;
+    NumberOfParticles = (NumberOfParticles < (int)VAC_g_NbSpritesLefts) ? NumberOfParticles : (int)VAC_g_NbSpritesLefts;
+    if (NumberOfParticles != 0)
+    {
+        pV = (float (*)[4])VAC_g_CurrentpV;
+        pC = (float (*)[4])VAC_g_CurrentpC;
+        pT = (float (*)[4])VAC_g_CurrentpT;
+        while (NumberOfParticles != 0)
+        {
+            if (pParticleArray->Flags == 0)
+            {
+                pPrefetch = (unsigned char*)pParticleArray + 0x120;
+                asm {
+                    pref 0x0, 0x0(pPrefetch)
+                }
+                AlphaVal = pParticleArray->xTransparency * (1.0f / 255.0f);
+                NbSpritesReal++;
+                PosX = pParticleArray->Position[0];
+                PosY = pParticleArray->Position[1];
+                PosZ = pParticleArray->Position[2];
+                XVX = pParticleArray->UsedV1[0];
+                XVY = pParticleArray->UsedV1[1];
+                XVZ = pParticleArray->UsedV1[2];
+                YVX = pParticleArray->UsedV2[0];
+                YVY = pParticleArray->UsedV2[1];
+                YVZ = pParticleArray->UsedV2[2];
+                pC[0][0] = pC[0][1] = pC[0][2] = 1.0f;
+                pC[0][3] = AlphaVal;
+                pC[1][0] = pC[1][1] = pC[1][2] = 1.0f;
+                pC[1][3] = AlphaVal;
+                pC[2][0] = pC[2][1] = pC[2][2] = 1.0f;
+                pC[2][3] = AlphaVal;
+                pC[3][0] = pC[3][1] = pC[3][2] = 1.0f;
+                pC[3][3] = AlphaVal;
+                pC[4][0] = pC[4][1] = pC[4][2] = 1.0f;
+                pC[4][3] = AlphaVal;
+                pC[5][0] = pC[5][1] = pC[5][2] = 1.0f;
+                pC[5][3] = AlphaVal;
+                pC += 6;
+                pT[0][0] = 0.0f; pT[0][1] = 1.0f; pT[0][2] = 0.0f; pT[0][3] = 0.0f;
+                pT[1][0] = 1.0f; pT[1][1] = 1.0f; pT[1][2] = 0.0f; pT[1][3] = 0.0f;
+                pT[2][0] = 1.0f; pT[2][1] = 0.0f; pT[2][2] = 0.0f; pT[2][3] = 0.0f;
+                pT[3][0] = 0.0f; pT[3][1] = 1.0f; pT[3][2] = 0.0f; pT[3][3] = 0.0f;
+                pT[4][0] = 1.0f; pT[4][1] = 0.0f; pT[4][2] = 0.0f; pT[4][3] = 0.0f;
+                pT[5][0] = 0.0f; pT[5][1] = 0.0f; pT[5][2] = 0.0f; pT[5][3] = 0.0f;
+                pT += 6;
+                pV[0][0] = PosX - XVX - YVX;
+                pV[0][1] = PosY - XVY - YVY;
+                pV[0][2] = PosZ - XVZ - YVZ;
+                pV[0][3] = 1.0f;
+                pV[1][0] = PosX + XVX - YVX;
+                pV[1][1] = PosY + XVY - YVY;
+                pV[1][2] = PosZ + XVZ - YVZ;
+                pV[1][3] = 1.0f;
+                pV[2][0] = PosX + XVX + YVX;
+                pV[2][1] = PosY + XVY + YVY;
+                pV[2][2] = PosZ + XVZ + YVZ;
+                pV[2][3] = 1.0f;
+                pV[3][0] = PosX - XVX - YVX;
+                pV[3][1] = PosY - XVY - YVY;
+                pV[3][2] = PosZ - XVZ - YVZ;
+                pV[3][3] = 1.0f;
+                pV[4][0] = PosX + XVX + YVX;
+                pV[4][1] = PosY + XVY + YVY;
+                pV[4][2] = PosZ + XVZ + YVZ;
+                pV[4][3] = 1.0f;
+                pV[5][0] = PosX - XVX + YVX;
+                pV[5][1] = PosY - XVY + YVY;
+                pV[5][2] = PosZ - XVZ + YVZ;
+                pV[5][3] = 1.0f;
+                pV += 6;
+            }
+            pParticleArray++;
+            NumberOfParticles--;
+        }
+        VAC_g_NbSpritesLefts -= NbSpritesReal;
+        VAC_g_CurrentNbSprites += NbSpritesReal;
+        VAC_g_CurrentpV = (int)((unsigned char*)VAC_g_CurrentpV + 96 * NbSpritesReal);
+        VAC_g_CurrentpC = (int)((unsigned char*)VAC_g_CurrentpC + 96 * NbSpritesReal);
+        VAC_g_CurrentpT = (int)((unsigned char*)VAC_g_CurrentpT + 96 * NbSpritesReal);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 930–1045 */
@@ -1930,28 +2014,120 @@ void GLI_vDisplaySerialLeaves(AGO2_LeavesParticle_* pParticleArray, int NumberOf
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void GLI_v_CalculateInverseCamMat(MAT_tdstTransformation_* pInvertedCam, GLD_tdstViewportAttributes_* pViewport);
+extern void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy);
+
 void GLI_vDisplaySerialFlowBlured(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy)
 {
-    float YVZ;
-    float YVY;
-    float YVX;
-    float XVZ;
-    float XVY;
-    float XVX;
-    float Pos2Z;
-    float Pos2Y;
-    float Pos2X;
-    float PosZ;
-    float PosY;
-    float PosX;
     float AlphaVal;
-    float (*pT)[4];
-    float (*pC)[4];
-    float (*pV)[4];
-    MAT_tdstTransformation_ InvertedCam;
+    float PosX;
+    float PosY;
+    float PosZ;
+    float Pos2X;
+    float Pos2Y;
+    float Pos2Z;
+    float XVX;
+    float XVY;
+    float XVZ;
+    float YVX;
+    float YVY;
+    float YVZ;
+
     unsigned int NbSpritesReal;
+    float (*pV)[4];
+    float (*pC)[4];
+    float (*pT)[4];
     int i;
-    /* TODO: decompile from asm/... */
+    unsigned char* pPrefetch;
+    MAT_tdstTransformation_ InvertedCam;
+
+    NbSpritesReal = 0;
+    GLI_g_RainMaterial = (int)pMaterial;
+    i = (NumberOfParticles < (int)VAC_g_NbSpritesLefts) ? NumberOfParticles : (int)VAC_g_NbSpritesLefts;
+    if (i != 0)
+    {
+        pV = (float (*)[4])VAC_g_CurrentpV;
+        pC = (float (*)[4])VAC_g_CurrentpC;
+        pT = (float (*)[4])VAC_g_CurrentpT;
+        GLI_v_CalculateInverseCamMat(&InvertedCam, param0);
+        GLI_v_CalculateVectorsFor3DRain(&InvertedCam, pParticleArray->Direction, sx, sy);
+        XVX = GLI_g_stXVect.xX;
+        XVY = GLI_g_stXVect.xY;
+        XVZ = GLI_g_stXVect.xZ;
+        YVX = GLI_g_stYVect.xX;
+        YVY = GLI_g_stYVect.xY;
+        YVZ = GLI_g_stYVect.xZ;
+        while (i != 0)
+        {
+            if (pParticleArray->Flags == 0)
+            {
+                pPrefetch = (unsigned char*)pParticleArray + 0x80;
+                asm {
+                    pref 0x0, 0x0(pPrefetch)
+                }
+                AlphaVal = pParticleArray->xTransparency * (1.0f / 255.0f);
+                NbSpritesReal++;
+                PosX = pParticleArray->Position[0];
+                PosY = pParticleArray->Position[1];
+                PosZ = pParticleArray->Position[2];
+                Pos2X = pParticleArray->PreviousPosition[0];
+                Pos2Y = pParticleArray->PreviousPosition[1];
+                Pos2Z = pParticleArray->PreviousPosition[2];
+                pC[0][0] = pC[0][1] = pC[0][2] = 1.0f;
+                pC[0][3] = AlphaVal;
+                pC[1][0] = pC[1][1] = pC[1][2] = 1.0f;
+                pC[1][3] = AlphaVal;
+                pC[2][0] = pC[2][1] = pC[2][2] = 1.0f;
+                pC[2][3] = 0.0f;
+                pC[3][0] = pC[3][1] = pC[3][2] = 1.0f;
+                pC[3][3] = AlphaVal;
+                pC[4][0] = pC[4][1] = pC[4][2] = 1.0f;
+                pC[4][3] = 0.0f;
+                pC[5][0] = pC[5][1] = pC[5][2] = 1.0f;
+                pC[5][3] = 0.0f;
+                pC += 6;
+                pT[0][0] = 0.0f; pT[0][1] = 1.0f; pT[0][2] = 0.0f; pT[0][3] = 0.0f;
+                pT[1][0] = 1.0f; pT[1][1] = 1.0f; pT[1][2] = 0.0f; pT[1][3] = 0.0f;
+                pT[2][0] = 1.0f; pT[2][1] = 0.0f; pT[2][2] = 0.0f; pT[2][3] = 0.0f;
+                pT[3][0] = 0.0f; pT[3][1] = 1.0f; pT[3][2] = 0.0f; pT[3][3] = 0.0f;
+                pT[4][0] = 1.0f; pT[4][1] = 0.0f; pT[4][2] = 0.0f; pT[4][3] = 0.0f;
+                pT[5][0] = 0.0f; pT[5][1] = 0.0f; pT[5][2] = 0.0f; pT[5][3] = 0.0f;
+                pT += 6;
+                pV[0][0] = PosX - XVX - YVX;
+                pV[0][1] = PosY - XVY - YVY;
+                pV[0][2] = PosZ - XVZ - YVZ;
+                pV[0][3] = 1.0f;
+                pV[1][0] = PosX + XVX - YVX;
+                pV[1][1] = PosY + XVY - YVY;
+                pV[1][2] = PosZ + XVZ - YVZ;
+                pV[1][3] = 1.0f;
+                pV[2][0] = Pos2X + XVX + YVX;
+                pV[2][1] = Pos2Y + XVY + YVY;
+                pV[2][2] = Pos2Z + XVZ + YVZ;
+                pV[2][3] = 1.0f;
+                pV[3][0] = PosX - XVX - YVX;
+                pV[3][1] = PosY - XVY - YVY;
+                pV[3][2] = PosZ - XVZ - YVZ;
+                pV[3][3] = 1.0f;
+                pV[4][0] = Pos2X + XVX + YVX;
+                pV[4][1] = Pos2Y + XVY + YVY;
+                pV[4][2] = Pos2Z + XVZ + YVZ;
+                pV[4][3] = 1.0f;
+                pV[5][0] = Pos2X - XVX + YVX;
+                pV[5][1] = Pos2Y - XVY + YVY;
+                pV[5][2] = Pos2Z - XVZ + YVZ;
+                pV[5][3] = 1.0f;
+                pV += 6;
+            }
+            pParticleArray++;
+            i--;
+        }
+        VAC_g_NbSpritesLefts -= NbSpritesReal;
+        VAC_g_CurrentNbSprites += NbSpritesReal;
+        VAC_g_CurrentpV = (int)((unsigned char*)VAC_g_CurrentpV + 96 * NbSpritesReal);
+        VAC_g_CurrentpC = (int)((unsigned char*)VAC_g_CurrentpC + 96 * NbSpritesReal);
+        VAC_g_CurrentpT = (int)((unsigned char*)VAC_g_CurrentpT + 96 * NbSpritesReal);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 817–921 */
@@ -2073,23 +2249,108 @@ void GLI_vDisplaySerialFlowBlured(GLD_tdstViewportAttributes_* param0, AGO2_Flow
  */
 void GLI_vDisplaySerialFlow(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy)
 {
-    float YVZ;
-    float YVY;
-    float YVX;
-    float XVZ;
-    float XVY;
-    float XVX;
-    float PosZ;
-    float PosY;
-    float PosX;
     float AlphaVal;
-    float (*pT)[4];
-    float (*pC)[4];
-    float (*pV)[4];
-    MAT_tdstTransformation_ InvertedCam;
+    float PosX;
+    float PosY;
+    float PosZ;
+    float XVX;
+    float XVY;
+    float XVZ;
+    float YVX;
+    float YVY;
+    float YVZ;
+
     unsigned int NbSpritesReal;
+    float (*pV)[4];
+    float (*pC)[4];
+    float (*pT)[4];
     int i;
-    /* TODO: decompile from asm/... */
+    unsigned char* pPrefetch;
+    MAT_tdstTransformation_ InvertedCam;
+
+    NbSpritesReal = 0;
+    GLI_g_RainMaterial = (int)pMaterial;
+    i = (NumberOfParticles < (int)VAC_g_NbSpritesLefts) ? NumberOfParticles : (int)VAC_g_NbSpritesLefts;
+    if (i != 0)
+    {
+        pV = (float (*)[4])VAC_g_CurrentpV;
+        pC = (float (*)[4])VAC_g_CurrentpC;
+        pT = (float (*)[4])VAC_g_CurrentpT;
+        GLI_v_CalculateInverseCamMat(&InvertedCam, param0);
+        XVX = InvertedCam.stTransformMatrix.stCol_0.xX * sx;
+        XVY = InvertedCam.stTransformMatrix.stCol_0.xY * sx;
+        XVZ = InvertedCam.stTransformMatrix.stCol_0.xZ * sx;
+        YVX = InvertedCam.stTransformMatrix.stCol_1.xX * sy;
+        YVY = InvertedCam.stTransformMatrix.stCol_1.xY * sy;
+        YVZ = InvertedCam.stTransformMatrix.stCol_1.xZ * sy;
+        while (i != 0)
+        {
+            if (pParticleArray->Flags == 0)
+            {
+                pPrefetch = (unsigned char*)pParticleArray + 0x80;
+                asm {
+                    pref 0x0, 0x0(pPrefetch)
+                }
+                AlphaVal = pParticleArray->xTransparency * (1.0f / 255.0f);
+                NbSpritesReal++;
+                PosX = pParticleArray->Position[0];
+                PosY = pParticleArray->Position[1];
+                PosZ = pParticleArray->Position[2];
+                pC[0][0] = pC[0][1] = pC[0][2] = 1.0f;
+                pC[0][3] = AlphaVal;
+                pC[1][0] = pC[1][1] = pC[1][2] = 1.0f;
+                pC[1][3] = AlphaVal;
+                pC[2][0] = pC[2][1] = pC[2][2] = 1.0f;
+                pC[2][3] = AlphaVal;
+                pC[3][0] = pC[3][1] = pC[3][2] = 1.0f;
+                pC[3][3] = AlphaVal;
+                pC[4][0] = pC[4][1] = pC[4][2] = 1.0f;
+                pC[4][3] = AlphaVal;
+                pC[5][0] = pC[5][1] = pC[5][2] = 1.0f;
+                pC[5][3] = AlphaVal;
+                pC += 6;
+                pT[0][0] = 0.0f; pT[0][1] = 1.0f; pT[0][2] = 0.0f; pT[0][3] = 0.0f;
+                pT[1][0] = 1.0f; pT[1][1] = 1.0f; pT[1][2] = 0.0f; pT[1][3] = 0.0f;
+                pT[2][0] = 1.0f; pT[2][1] = 0.0f; pT[2][2] = 0.0f; pT[2][3] = 0.0f;
+                pT[3][0] = 0.0f; pT[3][1] = 1.0f; pT[3][2] = 0.0f; pT[3][3] = 0.0f;
+                pT[4][0] = 1.0f; pT[4][1] = 0.0f; pT[4][2] = 0.0f; pT[4][3] = 0.0f;
+                pT[5][0] = 0.0f; pT[5][1] = 0.0f; pT[5][2] = 0.0f; pT[5][3] = 0.0f;
+                pT += 6;
+                pV[0][0] = PosX - XVX - YVX;
+                pV[0][1] = PosY - XVY - YVY;
+                pV[0][2] = PosZ - XVZ - YVZ;
+                pV[0][3] = 1.0f;
+                pV[1][0] = PosX + XVX - YVX;
+                pV[1][1] = PosY + XVY - YVY;
+                pV[1][2] = PosZ + XVZ - YVZ;
+                pV[1][3] = 1.0f;
+                pV[2][0] = PosX + XVX + YVX;
+                pV[2][1] = PosY + XVY + YVY;
+                pV[2][2] = PosZ + XVZ + YVZ;
+                pV[2][3] = 1.0f;
+                pV[3][0] = PosX - XVX - YVX;
+                pV[3][1] = PosY - XVY - YVY;
+                pV[3][2] = PosZ - XVZ - YVZ;
+                pV[3][3] = 1.0f;
+                pV[4][0] = PosX + XVX + YVX;
+                pV[4][1] = PosY + XVY + YVY;
+                pV[4][2] = PosZ + XVZ + YVZ;
+                pV[4][3] = 1.0f;
+                pV[5][0] = PosX - XVX + YVX;
+                pV[5][1] = PosY - XVY + YVY;
+                pV[5][2] = PosZ - XVZ + YVZ;
+                pV[5][3] = 1.0f;
+                pV += 6;
+            }
+            pParticleArray++;
+            i--;
+        }
+        VAC_g_NbSpritesLefts -= NbSpritesReal;
+        VAC_g_CurrentNbSprites += NbSpritesReal;
+        VAC_g_CurrentpV = (int)((unsigned char*)VAC_g_CurrentpV + 96 * NbSpritesReal);
+        VAC_g_CurrentpC = (int)((unsigned char*)VAC_g_CurrentpC + 96 * NbSpritesReal);
+        VAC_g_CurrentpT = (int)((unsigned char*)VAC_g_CurrentpT + 96 * NbSpritesReal);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 654–803 */
@@ -2392,8 +2653,7 @@ void GLI_v_StartDrawingRain(GLD_tdstViewportAttributes_* pViewport)
     float ModelView[4][4];
 
     GLI_g_p_stCurrentCam = *(int*)pViewport->p_vSpecificToXD;
-    PS2_M_vMulMatrixColumnsByVector((float (*)[4])&((GLI_tdstCamera_*)GLI_g_p_stCurrentCam)->stMatrix.stTransformMatrix, GLI_g_NegVect, ModelView);
-    ModelView[3][3] = 1.0f;
+    PS2_M_vMulMatrixColumnsByVector((float (*)[4])&((GLI_tdstCamera_*)GLI_g_p_stCurrentCam)->stMatrix.stTransformMatrix, GLI_g_NegVect, ModelView); ModelView[3][3] = 1.0f;
     VAC_Acquire((void*)GLI_g_hVAContainer, &ModelView, NULL);
 }
 
@@ -2457,7 +2717,67 @@ void GLI_v_StartDrawingRain(GLD_tdstViewportAttributes_* pViewport)
 void GLI_v_CalculateVectorsFor3DRainVU0(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy)
 {
     float V1[4];
-    /* TODO: decompile from asm/... */
+    float* pX;
+    float* pMat;
+    float* pV1;
+    float* pY;
+
+
+    V1[0] = 0.0f;
+    V1[1] = 0.0f;
+    V1[2] = -1.0f;
+    pMat = (float*)((char*)pInvertedCam + 0x10);
+    V1[3] = 0.0f;
+    pX = GLI_g_stXVecta;
+    pV1 = V1;
+    pY = GLI_g_stYVecta;
+
+    asm {
+        lqc2 $vf10, 0x0(pDirection)
+        vmul.xyz $vf5, $vf10, $vf10
+        vaddy.x $vf5, $vf5, $vf5y
+        vaddz.x $vf5, $vf5, $vf5z
+        vsqrt $Q, $vf5x
+        vwaitq
+        vaddq.x $vf5, $vf0, $Q
+        vdiv $Q, $vf0w, $vf5x
+        vsub.xyzw $vf6, $vf0, $vf0
+        vwaitq
+        vmulq.xyz $vf10, $vf10, $Q
+        lqc2 $vf8, 0x0(pV1)
+        lqc2 $vf4, 0x0(pMat)
+        lqc2 $vf5, 0x10(pMat)
+        lqc2 $vf6, 0x20(pMat)
+        lqc2 $vf7, 0x30(pMat)
+        vmulax.xyzw $ACC, $vf4, $vf8x
+        vmadday.xyzw $ACC, $vf5, $vf8y
+        vmaddaz.xyzw $ACC, $vf6, $vf8z
+        vmaddw.xyzw $vf9, $vf7, $vf8w
+        vopmula.xyz $ACC, $vf10, $vf9
+        vopmsub.xyz $vf13, $vf9, $vf10
+        vsub.w $vf13, $vf13, $vf13
+        vmul.xyz $vf5, $vf13, $vf13
+        vaddy.x $vf5, $vf5, $vf5y
+        vaddz.x $vf5, $vf5, $vf5z
+        vsqrt $Q, $vf5x
+        vwaitq
+        vaddq.x $vf5, $vf0, $Q
+        vdiv $Q, $vf0w, $vf5x
+        vsub.xyzw $vf6, $vf0, $vf0
+        vwaitq
+        vmulq.xyz $vf6, $vf13, $Q
+        sqc2 $vf6, 0x0(pX)
+        mfc1 $t0, sx
+        nop
+        qmtc2.ni $t0, $vf8
+        vmulx.xyzw $vf7, $vf6, $vf8x
+        mfc1 $t0, sy
+        nop
+        qmtc2.ni $t0, $vf9
+        vmulx.xyzw $vf2, $vf10, $vf9x
+        sqc2 $vf7, 0x0(pX)
+        sqc2 $vf2, 0x0(pY)
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 313–343 */

@@ -1763,11 +1763,13 @@ void fn_vRemoveAllSubAnimations(HIE_tdstSuperObject_* _hCharacter)
 #pragma auto_inline on
 int fn_bTestSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSubAnim)
 {
-    tdstSubAnimInUse_* param0;
+    tdst3dData_* h3dData;
     tdstSubAnim_* hSubAnimInFamily;
+    tdstSubAnimInUse_* param0;
 
-    hSubAnimInFamily = &_hCharacter->hLinkedObject.p_stCharacter->h_3dData->h_Family->hForSubAnimArray.hFirstElementOpt[ulNumberOfSubAnim];
-    for (param0 = _hCharacter->hLinkedObject.p_stCharacter->h_3dData->hForSubAnimInUseArray.hFirstElementDyn; param0; param0 = param0->hNextBrotherDyn)
+    h3dData = _hCharacter->hLinkedObject.p_stCharacter->h_3dData;
+    hSubAnimInFamily = &h3dData->h_Family->hForSubAnimArray.hFirstElementOpt[ulNumberOfSubAnim];
+    for (param0 = h3dData->hForSubAnimInUseArray.hFirstElementDyn; param0; param0 = param0->hNextBrotherDyn)
     {
         if (param0->p_stTheSubAnim == hSubAnimInFamily)
             return 1;
@@ -2370,12 +2372,14 @@ void fn_v3dDataCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* 
  * compare a candidate object's line table as an extra checkpoint.
  */
 int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags);
+#pragma auto_inline on
 void fn_v3dDataInitValueSAI(tdst3dData_* h_3dData)
 {
     SAI_fn_bInsertArrayInTable(&h_3dData->stGLIObjectMatrix.eType, 4, 50);
     SAI_fn_bInsertArrayInTable(&h_3dData->stGLIObjectMatrix.stTransformMatrix, 64, 50);
     SAI_fn_bInsertArrayInTable(&h_3dData->stGLIObjectMatrix.stScaleVector, 16, 50);
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 606–606 */
 /* addr: 0x00289590  size: 8 bytes */
@@ -2533,6 +2537,19 @@ void fn_v3dDataDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObject
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject);
+void* SAI_fn_p_vGetTableValuePointerOf(void* p_vValue, unsigned short eFlags);
+void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
+void PLA_fn_vCleanMorphTargets(tdstEngineObject_* p_stObject);
+int PLA_fn_vInitNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_State);
+void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel, unsigned char _bControlled);
+void fn_vCorrectAllActivationLists(tdstEngineObject_* _p_stObject);
+void fn_vInitMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList);
+void* fn_d_hGetInitObjectsTable(tdstObjectsTablesList_* h_ObjectsTablesListElement);
+void fn_vReInitObjectTable(tdstObjectsTablesList_* param0);
+int RND_fn_lGetLongRandomValue(unsigned int ulChannel, int lMin, int lMax);
+void* memset(void* p_vDest, int c, size_t n);
+
 void fn_v3dDataInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
     HIE_tdstSuperObject_* h_SupObject;
@@ -2540,7 +2557,95 @@ void fn_v3dDataInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectIni
     HIE_tdstSuperObject_* hFather;
     tdstSubAnimInUse_* hNextSubAnim;
     tdstSubAnimInUse_* hThisSubAnim;
-    /* TODO: decompile from asm/... */
+    tdstObjectsTablesList_* hObjectsTable;
+    tdst3dData_* h_3dData;
+    float xFrameRate;
+
+    fn_vPushAllocModeAccordingToEngineObject(p_stObject);
+    if (p_stObject == NULL)
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_3dData == NULL)
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    if (eObjectInit == OTI_LoadSavedGame || eObjectInit == OTI_PlayerDead)
+    {
+        p_stObject->h_3dData->stGLIObjectMatrix = *(MAT_tdstTransformation_*)SAI_fn_p_vGetTableValuePointerOf(&p_stObject->h_3dData->stGLIObjectMatrix, 0x32);
+        h_SupObject = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
+        if (h_SupObject && h_SupObject->hFatherDyn)
+        {
+            hFather = h_SupObject->hFatherDyn;
+            MAT_fn_vCompose(p_stObject->h_3dData->p_stGLIObjectAbsoluteMatrix, hFather->hGlobalMatrix, &p_stObject->h_3dData->stGLIObjectMatrix);
+        }
+    }
+    hCharacter = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
+    if (hCharacter)
+    {
+        hCharacter->fTransparenceLevel = (float)p_stObject->h_3dData->ucTransparency;
+    }
+    fn_vCorrectAllActivationLists(p_stObject);
+    switch (eObjectInit)
+    {
+    case OTI_WhenGameStart:
+        break;
+    case OTI_MapLoaded:
+        fn_v3dDataInitValueSAI(p_stObject->h_3dData);
+        p_stObject->h_3dData->hArrayOfChannels = NULL;
+        p_stObject->h_3dData->ulNumberOfChannels = p_stObject->h_3dData->h_Family->ulNumberOfChannels;
+        /* fall through */
+    case OTI_ReinitTheMap:
+    case OTI_LoadSavedGame:
+    case OTI_PlayerDead:
+        p_stObject->h_3dData->bAnimMatrixChanged = 1;
+        fn_vTakeControlOfChannel(p_stObject, 0xFFFF, 0);
+        p_stObject->h_3dData->ulStartTime = 0;
+        p_stObject->h_3dData->ulTimeDelay = 0;
+        p_stObject->h_3dData->ulTimePreviousFrame = 0;
+        PLA_fn_vDesInitAllChildOfCharacter(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), p_stObject);
+        PLA_fn_vCleanMorphTargets(p_stObject);
+        memset(&p_stObject->h_3dData->stFrame3d, 0, sizeof(tdstFrame3d_));
+        p_stObject->h_3dData->p_stCurrentHieCouples = NULL;
+        p_stObject->h_3dData->wCurrentHieNbCouples = 0;
+        p_stObject->h_3dData->wSizeOfArrayOfElts3d = 0;
+        p_stObject->h_3dData->lLastComputeFrame = 0;
+        p_stObject->h_3dData->bStateJustModified = 0;
+        xFrameRate = 0.0f;
+        p_stObject->h_3dData->ucFrameRate = (unsigned int)(xFrameRate * g_fGlobalAccelerationFactorForAnims);
+        p_stObject->h_3dData->h_CurrentState = NULL;
+        p_stObject->h_3dData->stFrame3d.p_stArrayOfElts3d = NULL;
+        p_stObject->h_3dData->stFrame3d.p_stAnim = NULL;
+        p_stObject->h_3dData->lDrawMask = p_stObject->h_3dData->lDrawMaskInit;
+        p_stObject->h_3dData->cBrainCounter = -1;
+        p_stObject->h_3dData->bSkipCurrentFrame = 0;
+        p_stObject->h_3dData->cLightCounter = -1;
+        /* fall through */
+    case OTI_AlwaysCreated:
+        fn_vInitMorphList(&p_stObject->h_3dData->hMorphChannelList);
+        hObjectsTable = p_stObject->h_3dData->h_InitialObjectsTable;
+        if (hObjectsTable) { if (fn_d_hGetInitObjectsTable(hObjectsTable) != NULL) { fn_vReInitObjectTable(hObjectsTable); } }
+        p_stObject->h_3dData->uwBrainMainCounter = (unsigned short)RND_fn_lGetLongRandomValue(0, 1, 17);
+        h_3dData = p_stObject->h_3dData; h_3dData->ucBrainComputationFrequency = 1; if (h_3dData->cBrainCounter >= h_3dData->ucBrainComputationFrequency) h_3dData->cBrainCounter = 0;
+        break;
+    default:
+        break;
+    }
+    h_SupObject = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame); if (h_SupObject)
+    {
+        PLA_fn_vInitNewState(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), p_stObject->h_3dData->h_InitialState);
+        fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame)->lDrawModeMask = p_stObject->h_3dData->lDrawMask;
+    }
+    for (hThisSubAnim = p_stObject->h_3dData->hForSubAnimInUseArray.hFirstElementDyn,
+         hNextSubAnim = hThisSubAnim ? hThisSubAnim->hNextBrotherDyn : NULL;
+         hThisSubAnim;
+         hThisSubAnim = hNextSubAnim, hNextSubAnim = hThisSubAnim ? hThisSubAnim->hNextBrotherDyn : NULL)
+    {
+        if (hThisSubAnim->hNextBrotherDyn) hThisSubAnim->hNextBrotherDyn->hPrevBrotherDyn = hThisSubAnim->hPrevBrotherDyn; if (hThisSubAnim->hPrevBrotherDyn) hThisSubAnim->hPrevBrotherDyn->hNextBrotherDyn = hThisSubAnim->hNextBrotherDyn; if (hThisSubAnim->hFatherDyn) { hThisSubAnim->hFatherDyn->lNumberOfElementsDyn--; if (hThisSubAnim->hFatherDyn->hFirstElementDyn == hThisSubAnim) hThisSubAnim->hFatherDyn->hFirstElementDyn = hThisSubAnim->hNextBrotherDyn; if (hThisSubAnim->hFatherDyn->hLastElementDyn == hThisSubAnim) hThisSubAnim->hFatherDyn->hLastElementDyn = hThisSubAnim->hPrevBrotherDyn; } hThisSubAnim->hNextBrotherDyn = NULL; hThisSubAnim->hPrevBrotherDyn = NULL; hThisSubAnim->hFatherDyn = NULL;
+        HMU_fn_vFree((void**)&hThisSubAnim, 1);
+    }
+    GAM_fn_vPopAllocMode();
+    p_stObject->h_3dData->h_CurrentCineActor = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 382–408 */

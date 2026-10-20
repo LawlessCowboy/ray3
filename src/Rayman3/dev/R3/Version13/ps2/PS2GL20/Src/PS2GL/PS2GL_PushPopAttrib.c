@@ -864,9 +864,12 @@ struct defAttribPointBit {
 };
 
 int pAttribListHead;
-int PS2glLiberator;
+void (*PS2glLiberator)(void*);
 tagGLcontext g_PS2glContext;
-int PS2glAllocator;
+void* (*PS2glAllocator)(unsigned int);
+
+void internalReadFastRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
+void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PushPopAttrib.c lines 69–86 */
 /* addr: 0x00167490  size: 384 bytes */
@@ -886,8 +889,21 @@ int PS2glAllocator;
  */
 void impPS2glCopyPixels(int x, int y, int width, int height, unsigned int type)
 {
-    void* p;
-    /* TODO: decompile from asm/... */
+    void* pixels;
+
+    pixels = PS2glAllocator(width * height * 4);
+    switch (type)
+    {
+        case 0x1800:
+            internalReadFastRgbaPixels(x, y, width, height, 0x1908, 0x1401, pixels);
+            if (g_PS2glContext.bRasterPosValid) internalPS2glDrawRgbaPixels((int)(0.5f + g_PS2glContext.fRasterPos[0]), (int)(0.5f + g_PS2glContext.fRasterPos[1]), width, height, 0x1908, 0x1401, pixels);
+            break;
+        case 0x1801:
+            internalReadFastRgbaPixels(x, y, width, height, 0x1902, 0x1401, pixels);
+            if (g_PS2glContext.bRasterPosValid) internalPS2glDrawRgbaPixels((int)(0.5f + g_PS2glContext.fRasterPos[0]), (int)(0.5f + g_PS2glContext.fRasterPos[1]), width, height, 0x1902, 0x1401, pixels);
+            break;
+    }
+    PS2glLiberator(pixels);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PushPopAttrib.c lines 541–867 */

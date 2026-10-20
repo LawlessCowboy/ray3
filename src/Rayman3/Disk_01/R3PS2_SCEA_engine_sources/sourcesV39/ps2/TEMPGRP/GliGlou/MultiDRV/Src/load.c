@@ -173,7 +173,7 @@ struct GLI_tdstAligned3DVector_ {
 };
 
 /* R5900 accumulator dot product (no C form under the baseline). */
-inline float MTH3D_M_xDotProduct(float _xAX, float _xAY, float _xAZ, float _xBX, float _xBY, float _xBZ)
+inline float MTH3D_M_xDotProduct(float _xAX, float _xBX, float _xAY, float _xBY, float _xAZ, float _xBZ)
 {
     float _xResult;
     asm { mula.s _xAX, _xBX }
@@ -182,28 +182,33 @@ inline float MTH3D_M_xDotProduct(float _xAX, float _xAY, float _xAZ, float _xBX,
     return _xResult;
 }
 
+/* A 16-byte vector with a word view: the retail copies the matrix columns
+ * with integer loads and stores, and keeps the local at a 16-byte stride. */
+typedef union {
+    MTH4D_tdstVector_ v;
+    int i[4];
+} GLI_UV4;
+
 void GLI_xSerialLinearOp(int lNbOfVertex, MTH3D_tdstVector_* p_stSource, GLI_tdstAligned3DVector_* p_stDest, MAT_tdstTransformation_* p_stMatrix)
 {
-    MTH3D_tdstVector_ stX;
-    MTH3D_tdstVector_ stY;
-    MTH3D_tdstVector_ stZ;
-    MTH3D_tdstVector_ stTrans;
+    GLI_UV4 stX;
+    GLI_UV4 stY;
+    GLI_UV4 stZ;
+    GLI_UV4 stTrans;
     GLI_tdstAligned3DVector_* param0;
     float fSwapValue;
 
     param0 = p_stDest + lNbOfVertex;
-    *(int*)&stX.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xX; *(int*)&stX.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xY; *(int*)&stX.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xZ;
-    *(int*)&stY.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xX; *(int*)&stY.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xY; *(int*)&stY.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xZ;
-    *(int*)&stZ.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xX; *(int*)&stZ.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xY; *(int*)&stZ.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xZ;
-    fSwapValue = stX.xY; stX.xY = stY.xX; stY.xX = fSwapValue;
-    fSwapValue = stX.xZ; stX.xZ = stZ.xX; stZ.xX = fSwapValue;
-    fSwapValue = stY.xZ; stY.xZ = stZ.xY; stZ.xY = fSwapValue;
-    *(int*)&stTrans.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xX; *(int*)&stTrans.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xY; *(int*)&stTrans.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xZ;
+    stX.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xX; stX.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xY; stX.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xZ; stY.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xX; stY.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xY; stY.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xZ; stZ.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xX; stZ.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xY; stZ.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xZ;
+    fSwapValue = stX.v.xY; stX.v.xY = stY.v.xX; stY.v.xX = fSwapValue;
+    fSwapValue = stX.v.xZ; stX.v.xZ = stZ.v.xX; stZ.v.xX = fSwapValue;
+    fSwapValue = stY.v.xZ; stY.v.xZ = stZ.v.xY; stZ.v.xY = fSwapValue;
+    stTrans.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xX; stTrans.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xY; stTrans.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xZ;
     for (; p_stDest < param0; p_stDest++, p_stSource++)
     {
-        p_stDest->xX = stTrans.xX + MTH3D_M_xDotProduct(stX.xX, stX.xY, stX.xZ, p_stSource->xX, p_stSource->xY, p_stSource->xZ);
-        p_stDest->xY = stTrans.xY + MTH3D_M_xDotProduct(stY.xX, stY.xY, stY.xZ, p_stSource->xX, p_stSource->xY, p_stSource->xZ);
-        p_stDest->xZ = stTrans.xZ + MTH3D_M_xDotProduct(stZ.xX, stZ.xY, stZ.xZ, p_stSource->xX, p_stSource->xY, p_stSource->xZ);
+        p_stDest->xX = stTrans.v.xX + MTH3D_M_xDotProduct(stX.v.xX, p_stSource->xX, stX.v.xY, p_stSource->xY, stX.v.xZ, p_stSource->xZ);
+        p_stDest->xY = stTrans.v.xY + MTH3D_M_xDotProduct(stY.v.xX, p_stSource->xX, stY.v.xY, p_stSource->xY, stY.v.xZ, p_stSource->xZ);
+        p_stDest->xZ = stTrans.v.xZ + MTH3D_M_xDotProduct(stZ.v.xX, p_stSource->xX, stZ.v.xY, p_stSource->xY, stZ.v.xZ, p_stSource->xZ);
     }
 }
 
@@ -234,11 +239,44 @@ void GLI_xSerialLinearOp(int lNbOfVertex, MTH3D_tdstVector_* p_stSource, GLI_tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int GLI_Precalc_IsMaterialTransparent(GLI_tdstMaterial_* hVisualMaterial);
+void GLI_vAssignOptimizedFunctionToMaterial(GLI_tdstMaterial_* hVisualMaterial);
+
 void GLI_fnvPrecalculateStuffForAllMaterials(void)
 {
+    unsigned int i;
     GLI_tdstMaterial_* pMat;
-    int i;
-    /* TODO: decompile from asm/... */
+    int bOk;
+
+    for (i = 0; i < GLI_g_ulNumberOfVisualMaterials; i++)
+    {
+        pMat = (GLI_tdstMaterial_*)GLI_g_StaticCopyOfArrayOfVisualMaterial[i];
+        if (pMat)
+        {
+            pMat->lMaterialAdditionnalType = 0;
+            if (GLI_Precalc_IsMaterialTransparent(pMat))
+            {
+                pMat->lMaterialAdditionnalType |= 1;
+            }
+            if (pMat && pMat->p_stTexture && (pMat->uiFlags & 4)) bOk = 1; else bOk = 0; if (bOk)
+            {
+                pMat->lMaterialAdditionnalType |= 2;
+            }
+            if (pMat && pMat->p_stTexture && (pMat->uiFlags & 8)) bOk = 1; else bOk = 0; if (bOk)
+            {
+                pMat->lMaterialAdditionnalType |= 4;
+            }
+            if (pMat && pMat->p_stTexture && strstr(pMat->p_stTexture->a255_cFileName, "SHADOWLOD")) bOk = 1; else bOk = 0; if (bOk)
+            {
+                pMat->lMaterialAdditionnalType |= 8;
+            }
+            if (pMat && pMat->p_stTexture && strstr(pMat->p_stTexture->a255_cFileName, "EVILSHADOW")) bOk = 1; else bOk = 0; if (bOk)
+            {
+                pMat->lMaterialAdditionnalType |= 0x10;
+            }
+            GLI_vAssignOptimizedFunctionToMaterial(pMat);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\load.c lines 2376–2419 */

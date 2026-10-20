@@ -6088,7 +6088,22 @@ char* PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName)
 {
     char* szFilename;
     unsigned int u32AreaId;
-    /* TODO: decompile from asm/... */
+
+    szFilename = PLD_szLocationFromAreaId(_eAreaId, _szAreaName);
+    if (_eAreaId == 0)
+    {
+        strcpy(szLastFixLoaded, szFilename);
+    }
+    u32AreaId = _eAreaId;
+    if (_eAreaId == 2)
+    {
+        u32AreaId = (fn_lGetTransitionBloc() == 2) ? 2 : 3;
+    }
+    if (_eAreaId == 2)
+    {
+        return MNC_fn_pcLoadAreaWithAllocator(szFilename, u32AreaId, fn_pfnCurrentTransitionAllocator());
+    }
+    return MNC_fn_pcLoadArea(szFilename, u32AreaId);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 321–328 */
