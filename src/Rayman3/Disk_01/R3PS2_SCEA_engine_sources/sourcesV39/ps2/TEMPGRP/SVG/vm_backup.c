@@ -117,34 +117,6 @@ int VMS_lCurrentDrive;
 SVG_stMCStatus_ g_axPadMapping;
 char VMS_ax_cFilenameList[160][33];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 821–873 */
-/* addr: 0x00136b00  size: 528 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 821
- *   +0x0014 -> line 831
- *   +0x0024 -> line 832
- *   +0x0030 -> line 834
- *   +0x0034 -> line 835
- *   +0x0040 -> line 842
- *   +0x0068 -> line 844
- *   +0x00c8 -> line 845
- *   +0x00d4 -> line 846
- *   +0x00e8 -> line 847
- *   +0x00f4 -> line 849
- *   +0x0120 -> line 853
- *   +0x0128 -> line 855
- *   +0x0180 -> line 857
- *   +0x019c -> line 858
- *   +0x01a0 -> line 859
- *   +0x01ac -> line 860
- *   +0x01b8 -> line 863
- *   +0x01e4 -> line 870
- *   +0x01e8 -> line 871
- *   +0x01f8 -> line 872
- *   +0x01fc -> line 873
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern char* SVG_fn_szGetSonyCompliantDirName();
 extern int sprintf(char*, const char*, ...);
 extern int SVG_fn_s32ReadNextName();
@@ -184,19 +156,6 @@ int VMS_lInitFilenameList(int drive, int* lListSize)
     return lRet;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 890–900 */
-/* addr: 0x00136d10  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 890
- *   +0x0010 -> line 892
- *   +0x0030 -> line 894
- *   +0x0044 -> line 895
- *   +0x0050 -> line 898
- *   +0x0074 -> line 899
- *   +0x0078 -> line 900
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int VMS_lGetFilenameInList(int lFileIndex, char* pcFilename)
 {
     if (lFileIndex >= VMS_lFilenameListSize || VMS_lFilenameListSize <= 0) {
@@ -207,20 +166,6 @@ int VMS_lGetFilenameInList(int lFileIndex, char* pcFilename)
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1332–1345 */
-/* addr: 0x00136da0  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1332
- *   +0x0018 -> line 1334
- *   +0x0020 -> line 1338
- *   +0x002c -> line 1340
- *   +0x0030 -> line 1341
- *   +0x0048 -> line 1342
- *   +0x0054 -> line 1343
- *   +0x0068 -> line 1345
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen)
 {
     int ucEncryptKey2;
@@ -234,20 +179,6 @@ void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1354–1367 */
-/* addr: 0x00136e20  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1354
- *   +0x0018 -> line 1356
- *   +0x0020 -> line 1360
- *   +0x002c -> line 1362
- *   +0x0030 -> line 1363
- *   +0x0048 -> line 1364
- *   +0x0054 -> line 1365
- *   +0x0068 -> line 1367
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen)
 {
     int ucEncryptKey2;
@@ -261,18 +192,6 @@ void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1377–1387 */
-/* addr: 0x00136ea0  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1377
- *   +0x0014 -> line 1381
- *   +0x0018 -> line 1383
- *   +0x0024 -> line 1384
- *   +0x0050 -> line 1386
- *   +0x0054 -> line 1387
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen)
 {
     int lCheckSum;
@@ -286,19 +205,6 @@ int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen)
     return lCheckSum;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1585–1593 */
-/* addr: 0x00136f10  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1585
- *   +0x000c -> line 1586
- *   +0x0010 -> line 1588
- *   +0x002c -> line 1590
- *   +0x0044 -> line 1591
- *   +0x0074 -> line 1592
- *   +0x0078 -> line 1593
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int Int100ToBCD(int val)
 {
     int lReturn = 0;
@@ -310,19 +216,6 @@ int Int100ToBCD(int val)
     return lReturn;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1596–1604 */
-/* addr: 0x00136fa0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1596
- *   +0x000c -> line 1597
- *   +0x0010 -> line 1599
- *   +0x001c -> line 1601
- *   +0x0024 -> line 1602
- *   +0x003c -> line 1603
- *   +0x0040 -> line 1604
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int BCDToInt100(int val)
 {
     int lReturn;
@@ -334,33 +227,6 @@ int BCDToInt100(int val)
     return lReturn;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1615–1657 */
-/* addr: 0x00136ff0  size: 496 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1615
- *   +0x0018 -> line 1621
- *   +0x0030 -> line 1622
- *   +0x0084 -> line 1624
- *   +0x008c -> line 1625
- *   +0x0098 -> line 1632
- *   +0x00ac -> line 1633
- *   +0x00c4 -> line 1634
- *   +0x00dc -> line 1635
- *   +0x00f4 -> line 1637
- *   +0x010c -> line 1638
- *   +0x0124 -> line 1639
- *   +0x013c -> line 1640
- *   +0x0148 -> line 1641
- *   +0x0160 -> line 1642
- *   +0x0178 -> line 1643
- *   +0x0190 -> line 1644
- *   +0x01a8 -> line 1645
- *   +0x01c0 -> line 1646
- *   +0x01d8 -> line 1656
- *   +0x01dc -> line 1657
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int VMS_lGetFileDate(int drive, char* fname, anon_1* fDate)
 {
     anon_3 t;
@@ -388,20 +254,6 @@ int VMS_lGetFileDate(int drive, char* fname, anon_1* fDate)
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 1894–1910 */
-/* addr: 0x001371e0  size: 192 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1894
- *   +0x001c -> line 1899
- *   +0x002c -> line 1900
- *   +0x0038 -> line 1903
- *   +0x0090 -> line 1905
- *   +0x009c -> line 1906
- *   +0x00a8 -> line 1908
- *   +0x00ac -> line 1910
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, void** bufData, int* fileSize)
 {
     int ret;
@@ -414,24 +266,6 @@ int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, void** bufData, in
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2034–2061 */
-/* addr: 0x001372a0  size: 264 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2034
- *   +0x001c -> line 2044
- *   +0x002c -> line 2045
- *   +0x0044 -> line 2046
- *   +0x0050 -> line 2049
- *   +0x00a8 -> line 2051
- *   +0x00b4 -> line 2052
- *   +0x00c0 -> line 2053
- *   +0x00cc -> line 2056
- *   +0x00e0 -> line 2058
- *   +0x00ec -> line 2059
- *   +0x00f0 -> line 2061
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma peephole on
 int VMS_lGetVmsCommentFromFile(int drive, char* fileName, char* comment)
 {
@@ -452,33 +286,6 @@ int VMS_lGetVmsCommentFromFile(int drive, char* fileName, char* comment)
 }
 #pragma peephole reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2199–2256 */
-/* addr: 0x001373b0  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2199
- *   +0x0014 -> line 2206
- *   +0x0020 -> line 2208
- *   +0x002c -> line 2209
- *   +0x0038 -> line 2211
- *   +0x0044 -> line 2212
- *   +0x0050 -> line 2214
- *   +0x0060 -> line 2215
- *   +0x0074 -> line 2217
- *   +0x007c -> line 2218
- *   +0x0088 -> line 2220
- *   +0x008c -> line 2221
- *   +0x0094 -> line 2229
- *   +0x009c -> line 2243
- *   +0x00bc -> line 2245
- *   +0x00c8 -> line 2246
- *   +0x00d4 -> line 2249
- *   +0x00e0 -> line 2251
- *   +0x00ec -> line 2252
- *   +0x00f8 -> line 2255
- *   +0x00fc -> line 2256
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma peephole on
 tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName)
 {
@@ -509,20 +316,6 @@ tdstSaveBuffer_* VMS_fn_p_stFopenR(char* _szFileName)
 }
 #pragma peephole reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2292–2304 */
-/* addr: 0x001374d0  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2292
- *   +0x0018 -> line 2295
- *   +0x0040 -> line 2296
- *   +0x006c -> line 2297
- *   +0x0078 -> line 2299
- *   +0x00a4 -> line 2301
- *   +0x00c4 -> line 2303
- *   +0x00c8 -> line 2304
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_stBuffer)
 {
     if (_p_stBuffer->cFileMode == 'w') return 0;
@@ -533,24 +326,6 @@ int VMS_fn_bFread(void* _p_vData, int _lNumber, int _lSize, tdstSaveBuffer_* _p_
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SVG\vm_backup.c lines 2311–2342 */
-/* addr: 0x001375b0  size: 292 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2311
- *   +0x0014 -> line 2313
- *   +0x0018 -> line 2316
- *   +0x0024 -> line 2317
- *   +0x0030 -> line 2318
- *   +0x0034 -> line 2320
- *   +0x005c -> line 2321
- *   +0x00e8 -> line 2335
- *   +0x00ec -> line 2338
- *   +0x00fc -> line 2339
- *   +0x0108 -> line 2341
- *   +0x010c -> line 2342
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern unsigned char fn_bSaveFileInSlot(int drive, int fileName, int vmsComment, int bootRomComment,
     int gameName, int iconPalette, int iconData, unsigned short nbIcon, unsigned short iconSpeed,
     int visualData, unsigned short visualType, int saveBuffer, int saveSize);
