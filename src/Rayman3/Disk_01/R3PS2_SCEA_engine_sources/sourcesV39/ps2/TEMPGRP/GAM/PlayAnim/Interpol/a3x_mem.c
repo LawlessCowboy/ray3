@@ -3,11 +3,9 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct stInterpolatedPosition stInterpolatedPosition;
-typedef struct tdstEvent_ tdstEvent_;
-typedef struct tdstEventInTable_ tdstEventInTable_;
 typedef struct tdstKeyFrame_ tdstKeyFrame_;
 typedef struct tdstOnlyFrame_ tdstOnlyFrame_;
 typedef struct tdstA3dGENERAL_ tdstA3dGENERAL_;
@@ -15,26 +13,8 @@ typedef struct tdstHierarchy_ tdstHierarchy_;
 typedef struct tdstNTTO_ tdstNTTO_;
 typedef struct tdstChannel_ tdstChannel_;
 typedef struct tdstDeformation_ tdstDeformation_;
-typedef struct stMorphData stMorphData;
 typedef struct tdstStackInfos_ tdstStackInfos_;
 typedef struct tdstA3dGENERAL_ForTransitions_ tdstA3dGENERAL_ForTransitions_;
-
-struct tdstEvent_ {
-    tdstEventInTable_* p_stfEventInTBL; /* +0x0 */
-    unsigned short usEventNumberInTBL; /* +0x4 */
-    unsigned short uwFrameNumber; /* +0x6 */
-    unsigned short uwChannelNumber; /* +0x8 */
-    unsigned short uwIsLocalized; /* +0xa */
-};
-
-struct tdstEventInTable_ {
-    int p_xEvent; /* +0x0 */
-    unsigned char ucTypeOfEvent; /* +0x4 */
-    unsigned char ucPriority; /* +0x5 */
-    unsigned char ucFirstCall; /* +0x6 */
-    unsigned char ucPeriod; /* +0x7 */
-    unsigned int u32SemaphoreId; /* +0x8 */
-};
 
 struct tdstKeyFrame_ {
     unsigned short uwFrameNumber; /* +0x0 */
@@ -114,15 +94,6 @@ struct tdstDeformation_ {
     unsigned short uwFrontier2; /* +0x6 */
 };
 
-struct stMorphData {
-    unsigned short uwChannelNumber; /* +0x0 */
-    unsigned short uwFrameNumber; /* +0x2 */
-    unsigned char ucNbTarget; /* +0x4 */
-    unsigned char ucAlign[3]; /* +0x5 */
-    short a_xIndexTargetMT[10]; /* +0x8 */
-    unsigned char a_ucMorphingAmountMT[10]; /* +0x1c */
-};
-
 struct tdstStackInfos_ {
     unsigned int ulPosAlloc; /* +0x0 */
     unsigned int ulStackPos; /* +0x4 */
@@ -155,8 +126,8 @@ int gp_stChannels;
 int gp_stOnlyFrames;
 int gp_stNTTO;
 int gp_stHierarchies;
-int gp_a4_xQuaternions;
-int gp_a3_xVectors;
+short (*gp_a4_xQuaternions)[4];
+MTH3D_tdstVector_* gp_a3_xVectors;
 int gp_stA3dGENERAL;
 int g_ax_pDeformations[100];
 int g_ax_pMorphData[100];
@@ -173,86 +144,93 @@ int g_ax_pVectors[100];
 int g_ax_pA3dGENERAL[100];
 tdstStackInfos_ g_tdstStackInfos[100][13];
 unsigned char g_ucGameModuleId;
+extern float a4_xQuater1[4];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_mem.c lines 109–297 */
-/* addr: 0x0027f350  size: 1480 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 109
- *   +0x0008 -> line 121
- *   +0x000c -> line 109
- *   +0x0030 -> line 121
- *   +0x0064 -> line 123
- *   +0x0074 -> line 125
- *   +0x008c -> line 126
- *   +0x0094 -> line 133
- *   +0x00bc -> line 136
- *   +0x00c4 -> line 139
- *   +0x00dc -> line 140
- *   +0x00f4 -> line 144
- *   +0x0108 -> line 149
- *   +0x013c -> line 155
- *   +0x0140 -> line 158
- *   +0x0144 -> line 155
- *   +0x014c -> line 158
- *   +0x0150 -> line 155
- *   +0x020c -> line 158
- *   +0x0224 -> line 160
- *   +0x0234 -> line 167
- *   +0x025c -> line 169
- *   +0x0264 -> line 172
- *   +0x027c -> line 174
- *   +0x0284 -> line 177
- *   +0x029c -> line 178
- *   +0x02b4 -> line 182
- *   +0x02c8 -> line 185
- *   +0x02d0 -> line 188
- *   +0x02d8 -> line 190
- *   +0x02f0 -> line 194
- *   +0x031c -> line 196
- *   +0x0324 -> line 204
- *   +0x0350 -> line 205
- *   +0x0380 -> line 211
- *   +0x03bc -> line 224
- *   +0x03ec -> line 226
- *   +0x0460 -> line 228
- *   +0x0468 -> line 291
- *   +0x0530 -> line 292
- *   +0x05a8 -> line 297
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS);
+void fn_v_QuatSlerp(float* _a4_xQuatD, float* _a4_xQuatS1, float* _a4_xQuatS2, float _xT);
+
+/* Copy the three components of a vector through a single source pointer. */
+#define A3X_M_CopyVector3(_p_dst, _p_src) \
+    { \
+        MTH3D_tdstVector_* pSrc = (_p_src); \
+        (_p_dst)->xX = pSrc->xX; (_p_dst)->xY = pSrc->xY; (_p_dst)->xZ = pSrc->xZ; \
+    }
+
 void fn_v_InterpolBetweenKeys(tdstKeyFrame_* _p_stKey1, tdstKeyFrame_* _p_stKey2, tdstChannel_* _p_stChannel, stInterpolatedPosition* _p_stResult, float _xT)
 {
-    float a4_xQuatS2[4];
     float a4_xQuatS1[4];
-    /* TODO: decompile from asm/... */
+    float a4_xQuatS2[4];
+
+    if ((_xT == 0.0f) || (_p_stKey1->uwNumOfQuatOri == _p_stKey2->uwNumOfQuatOri) || ((_p_stKey1->uwMask & 0x2000) == 0x2000))
+    {
+        if (!(_p_stKey1->uwMask & 0x10))
+        {
+            fn_v_ExpandQuat(_p_stResult->stRot, gp_a4_xQuaternions[_p_stKey1->uwNumOfQuatOri]);
+        }
+        else
+        {
+            _p_stResult->stRot[0] = a4_xQuater1[0]; _p_stResult->stRot[1] = a4_xQuater1[1]; _p_stResult->stRot[2] = a4_xQuater1[2]; _p_stResult->stRot[3] = a4_xQuater1[3];
+        }
+    }
+    else
+    {
+        fn_v_ExpandQuat(a4_xQuatS1, gp_a4_xQuaternions[_p_stKey1->uwNumOfQuatOri]);
+        fn_v_ExpandQuat(a4_xQuatS2, gp_a4_xQuaternions[_p_stKey2->uwNumOfQuatOri]);
+        fn_v_QuatSlerp(_p_stResult->stRot, a4_xQuatS1, a4_xQuatS2, _xT);
+    }
+
+    if ((_xT != 0.0f) || !(_p_stKey1->uwMask & 0x40) || !(_p_stKey1->uwMask & 0x2000))
+    {
+        _p_stResult->stVecSca.xX = ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfScaleValues])[0] + _xT * (((float*)&gp_a3_xVectors[_p_stKey2->uwNumOfScaleValues])[0] - ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfScaleValues])[0]); _p_stResult->stVecSca.xY = ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfScaleValues])[1] + _xT * (((float*)&gp_a3_xVectors[_p_stKey2->uwNumOfScaleValues])[1] - ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfScaleValues])[1]); _p_stResult->stVecSca.xZ = ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfScaleValues])[2] + _xT * (((float*)&gp_a3_xVectors[_p_stKey2->uwNumOfScaleValues])[2] - ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfScaleValues])[2]);
+        if ((_xT == 0.0f) || (_p_stKey1->uwMask & 0x2))
+        {
+            if (_p_stKey1->uwMask & 0x20)
+            {
+                _p_stResult->stRotSca[0] = a4_xQuater1[0]; _p_stResult->stRotSca[1] = a4_xQuater1[1]; _p_stResult->stRotSca[2] = a4_xQuater1[2]; _p_stResult->stRotSca[3] = a4_xQuater1[3];
+            }
+            else
+            {
+                fn_v_ExpandQuat(_p_stResult->stRotSca, gp_a4_xQuaternions[_p_stKey1->uwNumOfQuatSca]);
+            }
+        }
+        else
+        {
+            fn_v_ExpandQuat(a4_xQuatS1, gp_a4_xQuaternions[_p_stKey1->uwNumOfQuatSca]);
+            fn_v_ExpandQuat(a4_xQuatS2, gp_a4_xQuaternions[_p_stKey2->uwNumOfQuatSca]);
+            fn_v_QuatSlerp(_p_stResult->stRotSca, a4_xQuatS1, a4_xQuatS2, _xT);
+        }
+    }
+    else
+    {
+        if (!(_p_stKey1->uwMask & 0x40))
+        {
+            fn_v_ExpandQuat(_p_stResult->stRotSca, gp_a4_xQuaternions[_p_stKey1->uwNumOfQuatSca]);
+            A3X_M_CopyVector3(&_p_stResult->stVecSca, &gp_a3_xVectors[_p_stKey1->uwNumOfScaleValues]);
+        }
+        else
+        {
+            _p_stResult->stRotSca[0] = a4_xQuater1[0]; _p_stResult->stRotSca[1] = a4_xQuater1[1]; _p_stResult->stRotSca[2] = a4_xQuater1[2]; _p_stResult->stRotSca[3] = a4_xQuater1[3];
+            A3X_M_CopyVector3(&_p_stResult->stVecSca, &gp_a3_xVectors[_p_stKey1->uwNumOfScaleValues]);
+        }
+    }
+
+    if ((_xT == 0.0f) || (_p_stKey1->uwNumOfPosition == _p_stKey2->uwNumOfPosition) || ((_p_stKey1->uwMask & 0x2000) == 0x2000))
+    {
+        A3X_M_CopyVector3(&_p_stResult->stPos, &gp_a3_xVectors[_p_stKey1->uwNumOfPosition]);
+        _p_stResult->stPos.xX += ((float*)&gp_a3_xVectors[_p_stChannel->uwNumOfLocalPivotPos])[0]; _p_stResult->stPos.xY += ((float*)&gp_a3_xVectors[_p_stChannel->uwNumOfLocalPivotPos])[1]; _p_stResult->stPos.xZ += ((float*)&gp_a3_xVectors[_p_stChannel->uwNumOfLocalPivotPos])[2];
+    }
+    else
+    {
+        _p_stResult->stPos.xX = ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[0] + _xT * (((float*)&gp_a3_xVectors[_p_stKey2->uwNumOfPosition])[0] - ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[0]); _p_stResult->stPos.xY = ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[1] + _xT * (((float*)&gp_a3_xVectors[_p_stKey2->uwNumOfPosition])[1] - ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[1]); _p_stResult->stPos.xZ = ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[2] + _xT * (((float*)&gp_a3_xVectors[_p_stKey2->uwNumOfPosition])[2] - ((float*)&gp_a3_xVectors[_p_stKey1->uwNumOfPosition])[2]);
+        _p_stResult->stPos.xX += ((float*)&gp_a3_xVectors[_p_stChannel->uwNumOfLocalPivotPos])[0]; _p_stResult->stPos.xY += ((float*)&gp_a3_xVectors[_p_stChannel->uwNumOfLocalPivotPos])[1]; _p_stResult->stPos.xZ += ((float*)&gp_a3_xVectors[_p_stChannel->uwNumOfLocalPivotPos])[2];
+    }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_mem.c lines 705–706 */
-/* addr: 0x0027f920  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 705
- *   +0x0010 -> line 706
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short uwIndex)
 {
     return &a32_stA3dGENERALTransitionArray[uwIndex];
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_mem.c lines 692–696 */
-/* addr: 0x0027f940  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 695
- *   +0x0004 -> line 694
- *   +0x0008 -> line 692
- *   +0x000c -> line 694
- *   +0x0010 -> line 695
- *   +0x0018 -> line 696
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vReleaseMergeA3dGeneral(unsigned short _uwIndex)
 {
     unsigned int ubBitToSet;
@@ -261,24 +239,6 @@ void fn_vReleaseMergeA3dGeneral(unsigned short _uwIndex)
     ulFreePlaceInMergeStack &= ~ubBitToSet;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_mem.c lines 666–683 */
-/* addr: 0x0027f960  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 669
- *   +0x0004 -> line 666
- *   +0x0008 -> line 669
- *   +0x0010 -> line 671
- *   +0x0014 -> line 672
- *   +0x0018 -> line 673
- *   +0x0030 -> line 675
- *   +0x003c -> line 677
- *   +0x0040 -> line 679
- *   +0x0050 -> line 677
- *   +0x0058 -> line 678
- *   +0x005c -> line 683
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstA3dGENERAL_ForTransitions_* fn_p_stFindFreeMergeA3dGeneral(unsigned short* p_uwIndex)
 {
     unsigned int ulTest;
@@ -300,13 +260,6 @@ tdstA3dGENERAL_ForTransitions_* fn_p_stFindFreeMergeA3dGeneral(unsigned short* p
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_mem.c lines 375–375 */
-/* addr: 0x0027f9d0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 375
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_v_InitInterpol(void)
 {
     fn_v_InitSinTab();

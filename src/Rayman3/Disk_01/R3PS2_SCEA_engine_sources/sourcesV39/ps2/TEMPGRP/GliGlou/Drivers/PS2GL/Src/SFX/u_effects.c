@@ -633,7 +633,7 @@ struct Water2DEffect_ {
     unsigned int Type; /* +0x1c */
     float fAngleSpeed; /* +0x20 */
     float fSizeMultiplier; /* +0x24 */
-};
+} __attribute__((aligned(16)));
 
 struct GLI_tdstAnimatedTextureNode_ {
     GLI_tdstTexture_* p_stTexture; /* +0x0 */
@@ -3864,23 +3864,88 @@ void GLIPS2_Water2D_DisplayClippedTriangle(float* Pos2D0, float* Pos2D1, float* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLIPS2_vWaterFXProcess(void);
+
 void GLIPS2_vMakeWaterEffect(void)
 {
-    float Variation;
-    float* costable;
-    float Time;
-    float ySize;
-    float xSize;
-    float yStep;
-    float xStep;
-    float y;
-    float x;
-    float Z;
-    float Y2;
-    float X2;
-    float Y1;
     float X1;
-    /* TODO: decompile from asm/... */
+    float Y1;
+    float X2;
+    float Y2;
+    float Z;
+    float x;
+    float y;
+    float xStep;
+    float yStep;
+    float xSize;
+    float ySize;
+    float Time;
+    float* costable;
+    float Variation;
+    float fScale;
+    float fPosX;
+    float fPosY;
+    float fAngle;
+    int nIdx;
+
+    X1 = GLIPS2_WaterMin[0];
+    X2 = GLIPS2_WaterMax[0];
+    Y1 = GLIPS2_WaterMin[1];
+    Y2 = GLIPS2_WaterMax[1];
+    Z = GLIPS2_WaterMin[2];
+    costable = AGO2_g_pfCosTable;
+    Time = g_ffFrameTime;
+
+    if (g_bHasWaterEffect == 1)
+    {
+        yStep = 7.4f;
+        xStep = 6.7f;
+        ySize = 7.0f;
+        xSize = 6.5f;
+        Variation = 1.0f;
+        Time *= 2.0f;
+    }
+    else
+    {
+        xSize = 80.5f;
+        yStep = 61.4f;
+        xStep = 63.7f;
+        ySize = 80.0f;
+        Variation = 0.2f;
+    }
+
+    X2 += 0.00001f;
+    Y2 += 0.00001f;
+    fScale = 81.487328f;
+
+    for (x = X1; x <= X2; x += xStep)
+    {
+        for (y = Y1; y <= Y2; y += yStep)
+        {
+            nIdx = (int)((Time + 2.3321f * x + 2.5111f * y + x * y) * fScale);
+            fPosX = x + xStep * costable[nIdx & 0x1FF];
+            fPosY = y + yStep * costable[(nIdx + 0x80) & 0x1FF];
+            fAngle = costable[(int)((x + 1.21f * y) * Variation * fScale) & 0x1FF];
+
+            if (GLIPS2_g_NbWater2DEffects < 500)
+            {
+                Water2DEffect_* pNew = &GLIPS2_g_Water2DEffects[GLIPS2_g_NbWater2DEffects];
+                pNew->Position3D[0] = fPosX;
+                pNew->Position3D[1] = fPosY;
+                pNew->Position3D[2] = Z;
+                pNew->Position3D[3] = 1.0f;
+                pNew->fAlpha = 1.0f;
+                pNew->Type = 1;
+                pNew->fSizeX = xSize;
+                pNew->fSizeY = ySize;
+                pNew->fSizeMultiplier = 1.0f;
+                pNew->fAngleSpeed = fAngle;
+                GLIPS2_g_NbWater2DEffects++;
+            }
+        }
+    }
+
+    GLIPS2_vWaterFXProcess();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2554–2571 */
@@ -3925,11 +3990,52 @@ void GLIPS2_vMakeWaterEffect(void)
  */
 void GLIPS2_vWaterFXProcess(void)
 {
-    float TimeDiff;
-    unsigned int i;
     Water2DEffect_* p;
-    float OldFrameTime;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    float TimeDiff;
+    static float OldFrameTime;
+
+    TimeDiff = g_ffFrameTime - OldFrameTime;
+    if (TimeDiff > 0.032f) TimeDiff = 0.032f;
+
+    for (i = 0; i < 500; i++)
+    {
+        p = &GLIPS2_g_Water2DEffectsList[i];
+        if (p->fAlpha > 0.01f)
+        {
+            float fSizeX;
+            float fSizeY;
+            float fAngleSpeed;
+            float fSizeMultiplier;
+
+            fSizeMultiplier = p->fSizeMultiplier;
+            fAngleSpeed = p->fAngleSpeed;
+            fSizeY = p->fSizeY;
+            fSizeX = p->fSizeX;
+
+            if (GLIPS2_g_NbWater2DEffects < 500)
+            {
+                Water2DEffect_* pNew = &GLIPS2_g_Water2DEffects[GLIPS2_g_NbWater2DEffects];
+                GLIPS2_g_NbWater2DEffects++;
+                pNew->Position3D[0] = p->Position3D[0];
+                pNew->Position3D[1] = p->Position3D[1];
+                pNew->Position3D[2] = p->Position3D[2];
+                pNew->Position3D[3] = 1.0f;
+                pNew->fAlpha = 1.0f;
+                pNew->Type = 2;
+                pNew->fSizeX = fSizeX;
+                pNew->fSizeY = fSizeY;
+                pNew->fSizeMultiplier = fSizeMultiplier;
+                pNew->fAngleSpeed = fAngleSpeed;
+            }
+            p->fAlpha -= 3.0f * TimeDiff;
+            p->fSizeX += 2.0f * TimeDiff;
+            p->fSizeY += 2.0f * TimeDiff;
+            p->fSizeMultiplier -= 1.5f * TimeDiff;
+        }
+    }
+
+    OldFrameTime = g_ffFrameTime;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2344–2496 */
@@ -4108,12 +4214,34 @@ void GLIPS2_vReinitMatrixDeformations(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLIPS2_vAddMatrixDeformationEffect(MTH3D_tdstVector_* pPosition, float fSize, unsigned int TYPE)
+void FRR(float param0, float param1);
+
+void GLIPS2_vAddMatrixDeformationEffect(const MTH3D_tdstVector_* pPosition, float fSize, unsigned int TYPE)
 {
     unsigned int MinIndex;
     float MinVal;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    MinVal = 2.0f;
+    MinIndex = 0;
+    for (i = 0; i < 200; i++)
+    {
+        if (GLI_g_MatrixDeformations[i].AlphaVal < MinVal)
+        {
+            MinVal = GLI_g_MatrixDeformations[i].AlphaVal;
+            MinIndex = i;
+        }
+    }
+
+    GLI_g_MatrixDeformations[MinIndex].Position[0] = pPosition->xX;
+    GLI_g_MatrixDeformations[MinIndex].Position[1] = pPosition->xY;
+    GLI_g_MatrixDeformations[MinIndex].Position[2] = pPosition->xZ;
+    GLI_g_MatrixDeformations[MinIndex].Position[3] = 1.0f;
+    GLI_g_MatrixDeformations[MinIndex].AlphaVal = fSize;
+    FRR(-5.0f, 5.0f);
+    GLI_g_MatrixDeformations[MinIndex].AngleSpeed = pPosition->xZ;
+    GLI_g_MatrixDeformations[MinIndex].Type = TYPE;
+    GLI_g_MatrixDeformations[MinIndex].fSize = 6.0f * fSize;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2301–2306 */
@@ -4129,7 +4257,12 @@ void GLIPS2_vAddMatrixDeformationEffect(MTH3D_tdstVector_* pPosition, float fSiz
 void GLIPS2_vInitMatrixDeformation(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    unsigned int j;
+    for (i = 0; i < 200; i++)
+    {
+        GLI_g_MatrixDeformations[i].AlphaVal = 0.0f;
+    }
+    for (j = 0; j < 500; j++) GLIPS2_g_Water2DEffectsList[j].fAlpha = 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2256–2271 */
@@ -4170,10 +4303,28 @@ void GLIPS2_vInitMatrixDeformation(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GsSendData(unsigned int reg, anon_1* pdata);
+void GsFlushBuffer(void);
+
 void AE_EndMatrixEffect(void)
 {
-    anon_1 qword;
-    /* TODO: decompile from asm/... */
+    anon_1 stData;
+
+    stData = *(anon_1*)&g_gsContext.PRMODE;
+    stData.ubData[8] = 0x1B;
+    GsSendData(0xE, &stData);
+    stData = *(anon_1*)&g_gsContext.PRIM;
+    stData.ubData[8] = 0x00;
+    GsSendData(0xE, &stData);
+    stData = *(anon_1*)&g_gsContext.TEST_1;
+    stData.ubData[8] = 0x47;
+    GsSendData(0xE, &stData);
+    stData.ubData[8] = 0x48;
+    GsSendData(0xE, &stData);
+    stData = *(anon_1*)&g_gsContext.RGBAQ;
+    stData.ubData[8] = 0x01;
+    GsSendData(0xE, &stData);
+    GsFlushBuffer();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 2028–2249 */
@@ -4915,9 +5066,35 @@ void AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2])
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AE_Begin(void);
+void AE_End(void);
+void AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);
+void AE_CopyScreen(void);
+void AE_SetTexture(int BufferID);
+void AE_SetDrawTarget(int BufferID);
+void PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void PS2glDepthMask(unsigned char flag);
+void PS2glDisable(unsigned int cap);
+void PS2glEnable(unsigned int cap);
+
 void GLI_vSaveCurrentBackBuffer(void)
 {
-    /* TODO: decompile from asm/... */
+    AE_Begin();
+
+    PS2glDepthMask(0);
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    PS2glDisable(0xB71);
+    PS2glEnable(0xBD0);
+
+    AE_SetDrawTarget(2);
+    AE_SetTexture(0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_CopyScreen();
+
+    AE_End();
+
+    PS2glDisable(0xBD0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1501–1544 */
@@ -5051,7 +5228,22 @@ void GLI_vRestoreSavedFrameBuffer(void)
  */
 void GLI_vSaveCurrentFrameBuffer(void)
 {
-    /* TODO: decompile from asm/... */
+    AE_Begin();
+
+    PS2glDepthMask(0);
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    PS2glDisable(0xB71);
+    PS2glEnable(0xBD0);
+
+    AE_SetDrawTarget(2);
+    AE_SetTexture(1);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_CopyScreen();
+
+    AE_End();
+
+    PS2glDisable(0xBD0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1100–1209 */

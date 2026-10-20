@@ -81,6 +81,10 @@ typedef struct tag_stVU1MatriceTinSDL tag_stVU1MatriceTinSDL;
 typedef struct tag_stVU1MatriceT tag_stVU1MatriceT;
 typedef struct tagstVIFCode tagstVIFCode;
 
+/* 16-byte aligned float quadruple: the retail list code copies float[4]
+   payloads with a single lq/sq quadword pair. */
+typedef struct { float f[4]; } __attribute__((aligned(16))) quad;
+
 struct tag_GLtexture {
     float vTexBorderColor[4]; /* +0x0 */
     unsigned int eDimension; /* +0x10 */
@@ -285,16 +289,17 @@ struct anon_2 {
 };
 
 struct anon_42 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon42[6]; /* +0x2..0x7 */
 };
 
 struct anon_7 {
@@ -416,15 +421,16 @@ struct anon_27 {
 };
 
 struct anon_22 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_38 {
@@ -506,60 +512,61 @@ struct anon_23 {
 };
 
 struct anon_33 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 union anon_31 {
@@ -927,8 +934,11 @@ struct tagGLcontext {
     anon_8* pCurParamBegin; /* +0x5ce8 */
     tagGLprimbuf** ppCurPrimBufHead; /* +0x5cec */
     float (*pCurListVData)[4]; /* +0x5cf0 */
-    int pCurListVCode; /* +0x5cf4 */
-    int pCurListTexUnit; /* +0x5cf8 */
+    /* The retail code advances these two fields by 1 and 4 bytes and stores
+       through them, so they are pointers here (the debug records typed them
+       as int). */
+    unsigned char* pCurListVCode; /* +0x5cf4 */
+    int* pCurListTexUnit; /* +0x5cf8 */
     tagGLlistpool ListPool; /* +0x5cfc */
     unsigned int nClientEnableBits; /* +0x5f08 */
     tagGLArrayInfo VertexArray; /* +0x5f0c */
@@ -1603,7 +1613,9 @@ unsigned int PS2GL_g_DontReallocSDLs;
 int PS2GL_SDL_DataBufferToUse;
 tagGLcontext g_PS2glContext;
 tagGScontext g_gsContext;
-int PS2glAllocator;
+/* The retail code calls this global through a register (lw/jalr), so it is a
+   function pointer; the debug record typed it as int. */
+void* (*PS2glAllocator)(int);
 int g_pPS2glApiTable;
 tagPS2glApiTable g_PS2glApiTableImp;
 tagListVertexBuffer g_PS2glListVBuf;
@@ -2418,11 +2430,36 @@ void PS2glExecuteListData(tagListData* pData)
 int PS2glCountListObject(tagListData* pData)
 {
     unsigned int cbNode;
-    unsigned int cbCalls;
     tagGLlistnode* pNode;
+    unsigned int cbCalls;
     tagGLlistcalls* pCalls;
     int iCount;
-    /* TODO: decompile from asm/... */
+
+    pCalls = pData->pCalls;
+    iCount = 0;
+    while (pCalls)
+    {
+        pNode = (tagGLlistnode*)pCalls->aNodes;
+        cbCalls = 0;
+        while (cbCalls < pCalls->cbCalls)
+        {
+            cbNode = pNode->cbParamCount;
+            if (cbNode)
+            {
+                if ((pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glBegin) ||
+                    ((pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glDrawArrays) &&
+                     (pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glDrawElements)))
+                {
+                    iCount++;
+                }
+            }
+            cbNode = cbNode + 8;
+            pNode = (tagGLlistnode*)((char*)pNode + cbNode);
+            cbCalls += cbNode;
+        }
+        pCalls = pCalls->pNext;
+    }
+    return iCount;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1446–1480 */
@@ -3196,22 +3233,21 @@ void PS2glMergeBB(float* pDstBB, float* pSrcBB)
 
     if (pSrcBB)
     {
-        for (i = 0; i < 3; i++, pDstBB += 2, pSrcBB += 2)
+        for (i = 0; i < 3; i++, pDstBB += 2)
         {
             if (pDstBB[0] > pSrcBB[0])
                 pDstBB[0] = pSrcBB[0];
             if (pDstBB[1] < pSrcBB[1])
                 pDstBB[1] = pSrcBB[1];
+            pSrcBB += 2;
         }
     }
     else
     {
         pDstBB[0] = 16777215.0f;
-        pDstBB[1] = -16777215.0f;
-        pDstBB[2] = 16777215.0f;
-        pDstBB[3] = -16777215.0f;
-        pDstBB[4] = 16777215.0f;
-        pDstBB[5] = -16777215.0f;
+        /* The retail line table gives the last five stores one source line;
+           keeping them together reproduces its DWARF line entries. */
+        pDstBB[1] = -16777215.0f; pDstBB[2] = 16777215.0f; pDstBB[3] = -16777215.0f; pDstBB[4] = 16777215.0f; pDstBB[5] = -16777215.0f;
     }
 }
 
@@ -3510,7 +3546,12 @@ void PS2glListSaveVBuf(unsigned char EOP)
  */
 void PS2glSaveListCall(unsigned int eCode, float (*pData)[4])
 {
-    /* TODO: decompile from asm/... */
+    if (g_PS2glListVBuf.nCount >= 256)
+        PS2glListSaveVBuf(0);
+    *g_PS2glContext.pCurListVCode++ = (unsigned char)eCode;
+    *g_PS2glContext.pCurListTexUnit++ = 0;
+    *(quad*)g_PS2glContext.pCurListVData++ = *(quad*)pData;
+    g_PS2glListVBuf.nCount++;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 332–342 */
@@ -3533,7 +3574,12 @@ void PS2glSaveListCall(unsigned int eCode, float (*pData)[4])
  */
 void PS2glSaveListCallMultiTex(unsigned int eCode, unsigned int texture, float (*pData)[4])
 {
-    /* TODO: decompile from asm/... */
+    if (g_PS2glListVBuf.nCount >= 256)
+        PS2glListSaveVBuf(0);
+    *g_PS2glContext.pCurListVCode++ = (unsigned char)eCode;
+    *g_PS2glContext.pCurListTexUnit++ = texture;
+    *(quad*)g_PS2glContext.pCurListVData++ = *(quad*)pData;
+    g_PS2glListVBuf.nCount++;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 294–328 */
@@ -3569,8 +3615,41 @@ tagGLlistnode* PS2glListAllocNode(int cbParams)
 {
     tagGLlistnode* param0;
     int cbNode;
+    int cbTotal;
     tagGLlistcalls* pCurCalls;
-    /* TODO: decompile from asm/... */
+
+    cbTotal = cbParams + 8;
+    cbNode = cbParams - cbTotal;
+    cbTotal = (cbTotal + 3) & ~3;
+    pCurCalls = g_PS2glContext.pCurListCalls;
+    if (pCurCalls != NULL)
+    {
+        cbNode = cbNode + cbTotal;
+        if (pCurCalls->cbCalls + cbTotal > 0x400)
+            goto alloc;
+        goto reuse;
+    }
+    /* The retail code has a single allocation block and a single node tail,
+       so the two exits jump to shared labels instead of duplicating them. */
+alloc:
+    pCurCalls = (tagGLlistcalls*)PS2glAllocator(0x408);
+    if (g_PS2glContext.pCurListCalls == NULL)
+    {
+        g_PS2glContext.pCurListData->pCalls = pCurCalls;
+    }
+    else
+    {
+        g_PS2glContext.pCurListCalls->pNext = pCurCalls;
+    }
+    g_PS2glContext.pPreListCalls = g_PS2glContext.pCurListCalls;
+    g_PS2glContext.pCurListCalls = pCurCalls;
+    pCurCalls->cbCalls = 0;
+    pCurCalls->pNext = 0;
+reuse:
+    param0 = (tagGLlistnode*)((char*)pCurCalls + 8 + pCurCalls->cbCalls);
+    param0->cbParamCount = cbNode;
+    pCurCalls->cbCalls += cbTotal;
+    return param0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 272–291 */
@@ -3630,12 +3709,31 @@ void PS2glListSaveParam(void* pParam, int cbParam)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glListSaveParamSpace(int cbParam)
+void* PS2glListSaveParamSpace(int cbParam)
 {
     tagGLlistdatas* pDatas;
     tagGLlistdatas* pCurDatas;
     void* pBuf;
-    /* TODO: decompile from asm/... */
+
+    pBuf = PS2glAllocator(cbParam);
+    pDatas = g_PS2glContext.pCurListData->pDatas;
+    if ((pDatas == NULL) || (pDatas->apData[2] != 0))
+    {
+        pCurDatas = (tagGLlistdatas*)PS2glAllocator(16);
+        pCurDatas->apData[1] = pCurDatas->apData[2] = 0;
+        pCurDatas->apData[0] = (int)pBuf;
+        pCurDatas->pNext = pDatas;
+        g_PS2glContext.pCurListData->pDatas = pCurDatas;
+    }
+    else if (pDatas->apData[1] == 0)
+    {
+        pDatas->apData[1] = (int)pBuf;
+    }
+    else
+    {
+        pDatas->apData[2] = (int)pBuf;
+    }
+    return pBuf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 178–248 */
@@ -3789,11 +3887,12 @@ tagListData** PS2glSearchList(unsigned int list)
         if (pSingleIndex->nIndex == list)
             return &pSingleIndex->pData;
     }
-    for (; pNode; pNode = pNode->pNext)
+    while (pNode)
     {
         iOffset = list - pNode->nIndex;
         if ((iOffset >= 0) && (iOffset < pNode->iSize))
             return (tagListData**)&pNode->apData[iOffset];
+        pNode = pNode->pNext;
     }
     return NULL;
 }

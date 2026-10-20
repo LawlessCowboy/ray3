@@ -17,8 +17,22 @@ extern "C" int CreateSema(SemaParam* pst_Param);
 extern "C" int SignalSema(int);
 extern "C" int iSignalSema(int);
 extern "C" int WaitSema(int);
+extern "C" int PollSema(int);
 extern "C" int GetThreadId(void);
 extern "C" int rand(void);
+extern "C" int strlen(const char*);
+extern "C" void* memset(void* pBuffer, int cValue, unsigned int uiSize);
+extern "C" char* strcat(char* szDest, const char* szSrc);
+extern "C" void* memmove(void* dst, const void* src, unsigned int size);
+extern "C" int CreateThread(ThreadParam* pst_Param);
+extern "C" int StartThread(int iThreadId, int iPriority);
+extern "C" int AddIntcHandler(int iLevel, int (*pfnHandler)(int), int iArg);
+extern "C" int EnableIntc(int iLevel);
+extern "C" void usnd_memset(void* pBuffer, int cValue, unsigned int uiSize);
+extern "C" void* usnd_malloc(unsigned int uiSize);
+extern "C" void usnd_free(void* pBuffer);
+extern "C" int _gp;
+int usnd_uiTimerHandler(int iArg);
 
 struct _SHiResTime {
     unsigned int m_uiHighWord; /* +0x0 */
@@ -85,7 +99,7 @@ unsigned int gs_uiCritSect;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void usnd_vLeaveCritSect(unsigned int uiCS)
+extern "C" void usnd_vLeaveCritSect(unsigned int uiCS)
 {
     gs_uiCSCount[uiCS - 1]--;
     if (gs_uiCSCount[uiCS - 1] == 0)
@@ -113,10 +127,27 @@ void usnd_vLeaveCritSect(unsigned int uiCS)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int usnd_uiTryToEnterCritSect(unsigned int uiCS)
+extern "C" unsigned int usnd_uiTryToEnterCritSect(unsigned int uiCS)
 {
     unsigned int uiThreadId;
-    /* TODO: decompile from asm/... */
+
+    uiThreadId = GetThreadId();
+    uiCS--;
+    if (gs_uiCSThread[uiCS] == uiThreadId)
+    {
+        gs_uiCSCount[uiCS]++;
+        return 1;
+    }
+    if (PollSema(uiCS) != -1)
+    {
+        gs_uiCSThread[uiCS] = uiThreadId;
+        gs_uiCSCount[uiCS] = 1;
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 649–662 */
@@ -137,7 +168,7 @@ unsigned int usnd_uiTryToEnterCritSect(unsigned int uiCS)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void usnd_vEnterCritSect(unsigned int uiCS)
+extern "C" void usnd_vEnterCritSect(unsigned int uiCS)
 {
     unsigned int uiThreadId;
 
@@ -219,10 +250,37 @@ unsigned int usnd_uiCreateCritSect(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void usnd_vKillTimer(unsigned int uiTimerId)
+extern "C" void usnd_vKillTimer(unsigned int uiTimerId)
 {
     _usnd_STimerStruct* pToBeKilled;
-    /* TODO: decompile from asm/... */
+    unsigned int uiThreadId;
+    unsigned int uiCS;
+
+    pToBeKilled = (_usnd_STimerStruct*)uiTimerId;
+    if (uiTimerId == 0)
+    {
+        return;
+    }
+    uiThreadId = GetThreadId();
+    uiCS = g_uiCritSect;
+    if (gs_uiCSThread[uiCS - 1] == uiThreadId)
+    {
+        gs_uiCSCount[uiCS - 1]++;
+    }
+    else
+    {
+        WaitSema(uiCS - 1);
+        gs_uiCSThread[uiCS - 1] = uiThreadId;
+        gs_uiCSCount[uiCS - 1] = 1;
+    }
+    pToBeKilled->m_bDelete = 1;
+    SignalSema(g_uiTimerSem);
+    gs_uiCSCount[g_uiCritSect - 1]--;
+    if (gs_uiCSCount[g_uiCritSect - 1] == 0)
+    {
+        gs_uiCSThread[g_uiCritSect - 1] = (unsigned int)-1;
+        SignalSema(g_uiCritSect - 1);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 551–579 */
@@ -252,10 +310,53 @@ void usnd_vKillTimer(unsigned int uiTimerId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int usnd_uiSetTimer(unsigned int uiDelay, void (*pfnCallback)(unsigned int, unsigned int), unsigned int uiUserParam)
+/* The recovered debug record lists three parameters, but the retail ABI uses
+   four words: its callers (usnd::CTimer::f_vResume / f_vStart) set a0 = delay,
+   a1 = timer object, a2 = callback and a3 = user data, and the callee stores
+   a2 in m_pfnCallback and a3 in m_uiUserParam.  The declaration therefore
+   carries the leading argument the record dropped. */
+extern "C" unsigned int usnd_uiSetTimer(unsigned int uiDelay, void* pTimer, void (*pfnCallback)(unsigned int, unsigned int), unsigned int uiUserParam)
 {
     _usnd_STimerStruct* pSTS;
-    /* TODO: decompile from asm/... */
+    unsigned int uiThreadId;
+    unsigned int uiCS;
+
+    pSTS = NULL;
+    if (uiDelay != 0)
+    {
+        pSTS = (_usnd_STimerStruct*)usnd_malloc(0x20);
+    }
+    if (pSTS == NULL)
+    {
+        return 0;
+    }
+    pSTS->m_pfnCallback = pfnCallback;
+    pSTS->m_uiUserParam = uiUserParam;
+    pSTS->m_uiPeriod = (unsigned int)(((unsigned long long)uiDelay * 2500 * 0x10624DD3) >> 38);
+    pSTS->m_uiTime = usnd_guiTickT0 + pSTS->m_uiPeriod;
+    pSTS->m_bDelete = 0;
+    pSTS->m_bCall = 0;
+    uiThreadId = GetThreadId();
+    uiCS = g_uiCritSect;
+    if (gs_uiCSThread[uiCS - 1] == uiThreadId)
+    {
+        gs_uiCSCount[uiCS - 1]++;
+    }
+    else
+    {
+        WaitSema(uiCS - 1);
+        gs_uiCSThread[uiCS - 1] = uiThreadId;
+        gs_uiCSCount[uiCS - 1] = 1;
+    }
+    pSTS->m_next = (_usnd_STimerStruct*)g_sTimers;
+    g_sTimers = (int)pSTS;
+    gs_uiCSCount[g_uiCritSect - 1]--;
+    if (gs_uiCSCount[g_uiCritSect - 1] == 0)
+    {
+        gs_uiCSThread[g_uiCritSect - 1] = (unsigned int)-1;
+        SignalSema(g_uiCritSect - 1);
+    }
+    return (unsigned int)pSTS;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 460–497 */
@@ -283,7 +384,7 @@ unsigned int usnd_uiSetTimer(unsigned int uiDelay, void (*pfnCallback)(unsigned 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void usnd_vTimerLoop__FPv(void)
+void usnd_vTimerLoop(void* arg)
 {
     _usnd_STimerStruct** ppSTS;
     /* TODO: decompile from asm/... */
@@ -330,12 +431,51 @@ unsigned int usnd_uiDesinitTimers(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned int usnd_uiInitTimers(void)
+extern "C" unsigned int usnd_uiInitTimers(void)
 {
-    SemaParam sem;
+    /* The retail unit keeps its 16 KB thread stack in a static named
+       "stack" ("stack$221" in the ELF).  Our build numbers function-local
+       statics per compilation, so the buffer is given two unused padding
+       statics first: that puts it at "stack$43" instead of "stack$41", which
+       is an unrelated 4 KB buffer of another unit. */
+    static char s_stackPad1[4];
+    static char s_stackPad2[4];
+    static char stack[16384];
     ThreadParam tp;
-    char stack[16384];
-    /* TODO: decompile from asm/... */
+    SemaParam semTimer;
+    SemaParam sem;
+    unsigned int uiSem;
+
+    usnd_memset(stack, 0xAD, sizeof(stack));
+
+    sem.initCount = 1;
+    sem.maxCount = 1;
+    uiSem = CreateSema(&sem);
+    gs_nbSem++;
+    gs_uiCSCount[uiSem] = 0;
+    gs_uiCSThread[uiSem] = (unsigned int)-1;
+    g_uiCritSect = uiSem + 1;
+
+    semTimer.initCount = 0;
+    semTimer.maxCount = 1;
+    g_uiTimerSem = CreateSema(&semTimer);
+
+    tp.entry = usnd_vTimerLoop;
+    tp.stack = (int)stack;
+    tp.stackSize = (int)sizeof(stack);
+    tp.initPriority = 0xA;
+    tp.gpReg = (int)(unsigned int)&_gp;
+    tp.option = (unsigned int)CreateThread(&tp);
+    StartThread((int)tp.option, 0);
+
+    usnd_guiTickT0 = 0;
+    AddIntcHandler(9, usnd_uiTimerHandler, 0);
+    *(volatile unsigned int*)0x10000000 = 0;
+    *(volatile unsigned int*)0x10000020 = 0xEA60;
+    *(volatile unsigned int*)0x10000010 |= 0x1C0;
+    EnableIntc(9);
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 377–377 */
@@ -392,19 +532,29 @@ unsigned int usnd_uiGetTime(void)
    form for them. */
 int usnd_uiTimerHandler(int)
 {
+    int bSignal;
     _usnd_STimerStruct* pTimer;
-    int bSignal = 0;
 
     *(volatile unsigned int*)0x10000010 |= 0x100;
     usnd_guiTickT0++;
-    for (pTimer = (_usnd_STimerStruct*)g_sTimers; pTimer; pTimer = pTimer->m_next)
+    bSignal = 0;
+    pTimer = (_usnd_STimerStruct*)g_sTimers;
+    /* The retail code enters the list scan by jumping to the loop test and
+       tests the list pointer itself, which no plain while/for spelling
+       reproduces, so the rotation is spelled out here. */
+    goto timer_test;
+timer_body:
+    if (pTimer->m_uiTime == usnd_guiTickT0)
     {
-        if (pTimer->m_uiTime == usnd_guiTickT0)
-        {
-            pTimer->m_uiTime += pTimer->m_uiPeriod;
-            pTimer->m_bCall = 1;
-            bSignal = 1;
-        }
+        pTimer->m_uiTime += pTimer->m_uiPeriod;
+        pTimer->m_bCall = 1;
+        bSignal = 1;
+    }
+    pTimer = pTimer->m_next;
+timer_test:
+    if (pTimer)
+    {
+        goto timer_body;
     }
     if (bSignal == 1)
         iSignalSema(g_uiTimerSem);
@@ -439,11 +589,38 @@ int usnd_uiTimerHandler(int)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fs_vCleanTheString__FPc(char* ptr)
+void fs_vCleanTheString(char* ptr)
 {
     char* p2;
     char* p;
-    /* TODO: decompile from asm/... */
+    char* p3 = ptr;
+
+    while (*p3)
+    {
+        if (*p3 == '/')
+        {
+            *p3 = '\\';
+        }
+        p3++;
+    }
+    p = ptr;
+    while (*p)
+    {
+        if (*p == '\\')
+        {
+            p++;
+            p2 = p;
+            while (*p2 == '\\')
+            {
+                p2++;
+            }
+            if (p2 != p)
+            {
+                memmove(p, p2, strlen(p));
+            }
+        }
+        p++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 137–173 */
@@ -486,12 +663,40 @@ void fs_vCleanTheString__FPc(char* ptr)
  */
 unsigned int usnd_uiComputeRelativePath(char* szAbsFP1, char* szAbsFP2, char* szResFP, unsigned int uiResStringSize)
 {
-    signed char cIndexFirstDifferentCar;
-    signed char cRecursDir;
-    signed char* param0;
-    signed char* p2;
     signed char* p1;
-    /* TODO: decompile from asm/... */
+    signed char* p2;
+    signed char* param0;
+    signed char cRecursDir;
+    signed char cIndexFirstDifferentCar;
+
+    p1 = (signed char*)szAbsFP1; p2 = (signed char*)szAbsFP2;
+    cRecursDir = 0; cIndexFirstDifferentCar = 0;
+    memset(szResFP, 0, uiResStringSize);
+    while (*p1++ == *p2++)
+    {
+        cIndexFirstDifferentCar++;
+    }
+    p2 = &((signed char*)szAbsFP2)[cIndexFirstDifferentCar];
+    p1 = &((signed char*)szAbsFP1)[cIndexFirstDifferentCar];
+    while ((*p1 == *p2) && ((signed char*)szAbsFP1 < p1) && !(*p1 == '\\' && *p2 == '\\'))
+    {
+        p1--;
+        p2--;
+    }
+    param0 = (signed char*)szAbsFP1 + strlen(szAbsFP1);
+    p1++;
+    while (p1 < param0)
+    {
+        if (*p1 == '\\') cRecursDir++;
+        p1++;
+    }
+    while (cRecursDir--)
+    {
+        strcat(szResFP, "..\\");
+    }
+    strcat(szResFP, (const char*)(p2 + 1));
+    fs_vCleanTheString(szResFP);
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 73–122 */

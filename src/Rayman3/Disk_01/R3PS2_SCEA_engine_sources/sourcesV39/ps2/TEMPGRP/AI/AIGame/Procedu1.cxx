@@ -29,13 +29,24 @@ typedef struct tdstStandardGame_ tdstStandardGame_;
 typedef enum tdeProcedureId_ { eProcedureId_Dummy = 0 } tdeProcedureId_;
 typedef enum tdeVariableType_ { eVariableType_Dummy = 0, E_vt_Integer = 6, E_vt_Float = 8 } tdeVariableType_;
 struct MTH3D_tdstVector_ { float xX; float xY; float xZ; };
-struct MAT_tdstTransformation_ { int eType; unsigned char data[100]; };
+/* Retail layout: the transformation is a 96-byte, 16-byte aligned blob (the
+ * 4-byte transformation type plus padding, a 4x4 matrix and a scale vector).
+ * The game copies whole transformations with lq/sq quadword pairs, so the
+ * copy has to be one blob: a single nested struct of 16-byte aligned
+ * vectors is copied as six lq/sq pairs, while a multi-member struct is
+ * copied member by member and a float[24] member with a byte loop. */
+struct MTH4D_tdstVector_ { float xX; float xY; float xZ; float xW; } __attribute__((aligned(16)));
+struct MTH4D_tdstMatrix_ { MTH4D_tdstVector_ stCol_0; MTH4D_tdstVector_ stCol_1; MTH4D_tdstVector_ stCol_2; MTH4D_tdstVector_ stCol_3; } __attribute__((aligned(16)));
+typedef struct { MTH4D_tdstVector_ stCol_0; MTH4D_tdstVector_ stCol_1; MTH4D_tdstVector_ stCol_2; MTH4D_tdstVector_ stCol_3; MTH4D_tdstVector_ stCol_4; MTH4D_tdstVector_ stCol_5; } MAT_stTransformationData_;
+struct MAT_tdstTransformation_ { MAT_stTransformationData_ stData; } __attribute__((aligned(16)));
 typedef union tduGetSetParam_ {
     int lValue;
     float xValue;
     MTH3D_tdstVector_ stVectorValue;
     void* pValue;
     unsigned char ucValue;
+    unsigned short usValue;
+    signed char scValue;
 } tduGetSetParam_;
 struct tdstGetSetParam_ { tduGetSetParam_ uParam; tdeVariableType_ eType; };
 
@@ -142,11 +153,29 @@ extern "C" void fn_vOnAIErm_M_UpdateLastError(int, char*);
 extern "C" DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_*);
 extern "C" void fn_vSuperObjectSetLastCollidedCharacter(HIE_tdstSuperObject_*, HIE_tdstSuperObject_*);
 extern "C" void TXT_ChangeDefaultColor(float, float, float);
+/* The batch order is a union: a "synchro" order carries the reference
+ * perso and its channel, an "orientation" order carries two orientation
+ * vectors.  Both views start at +0x4. */
+typedef union AI_tduBatchOrderData_ {
+    struct {
+        HIE_tdstSuperObject_* hRefPerso;
+        unsigned char ucRefChannel;
+    } stPerso;
+    struct {
+        float xX;
+        float xY;
+        float xZ;
+        float xW;
+        float xV;
+        float xU;
+    } stOrientation;
+} AI_tduBatchOrderData_;
 struct AI_tdstBatchOrder_ {
     HIE_tdstSuperObject_* hPersoToMove;
-    HIE_tdstSuperObject_* hRefPerso;
-    unsigned char ucRefChannel;
-    unsigned char aucPad[0x17];
+    AI_tduBatchOrderData_ u;
+    unsigned short uwChannel;
+    unsigned char ucChannel;
+    unsigned char ucPadding;
     unsigned char ucBatchOrderType;
 };
 static unsigned short AI_gs_uwNbrBatchOrder;
@@ -154,6 +183,11 @@ static AI_tdstBatchOrder_ AI_gs_a_stBatchSetPersoTab[20];
 extern "C" void AI_vProcessSetPersoWithPerso(AI_tdstBatchOrder_*);
 extern "C" void AI_vProcessSetPersoOrientation(AI_tdstBatchOrder_*);
 extern "C" void AI_vProcessSetPersoAtModulePosition(AI_tdstBatchOrder_*);
+extern "C" void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_*);
+extern "C" void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_*);
+extern "C" void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_*);
+extern "C" void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_*);
+extern "C" void MEC_vImposeRotationMatrix(DNM_stDynamics*, MAT_tdstTransformation_*);
 extern "C" tdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_*);
 extern "C" int sprintf(char*, const char*, ...);
 extern "C" char* fn_szGetStringFromTextOrStringParam(tdstGetSetParam_* p_stValue);
@@ -202,8 +236,7 @@ tdstNodeInterpret_* fn_p_stReleaseAnalogJoystick(HIE_tdstSuperObject_* p_SuperOb
     tdstGetSetParam_ stParam;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     ucPadNumber = (unsigned char)((stParam.eType == E_vt_Float) ? stParam.uParam.xValue : (float)stParam.uParam.lValue);
-    if (ucPadNumber >= 16)
-        ucPadNumber = 0;
+    if (ucPadNumber > 15) ucPadNumber = 0;
     INO_aJoyUsedByAI[ucPadNumber] = 0;
     return p_stTree;
 }
@@ -273,22 +306,27 @@ tdstNodeInterpret_* fn_p_stSHWSetShadowMode(HIE_tdstSuperObject_* p_SuperObjPers
 {
     tdstGetSetParam_ stParam;
     tdeProcedureId_ eProcedureId;
+    tdstNodeInterpret_* p_stResult;
     eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
     switch (eProcedureId) {
     case 0x197:
-        return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stResult = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        break;
     case 0x198:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stResult = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        break;
     case 0x199:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        return fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stResult = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        break;
     default:
         fn_vOnAIErm_M_UpdateLastError(0x27, 0);
+        p_stResult = p_stTree;
         break;
     }
-    return p_stTree;
+    return p_stResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 6304–6445 */
@@ -1378,12 +1416,13 @@ tdstNodeInterpret_* fn_p_stActivationZDR(HIE_tdstSuperObject_* p_SuperObjPerso, 
 {
     tdstGetSetParam_ stParam;
     HIE_tdstSuperObject_* hPerso;
+    unsigned int ulFlags;
     fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hPerso);
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     if (stParam.uParam.lValue)
-        hPerso->ulFlags = hPerso->ulFlags & ~1;
+    { ulFlags = hPerso->ulFlags; hPerso->ulFlags = ulFlags & ~1; }
     else
-        hPerso->ulFlags |= 1;
+    { ulFlags = hPerso->ulFlags; hPerso->ulFlags = ulFlags | 1; }
     return p_stTree;
 }
 
@@ -3575,11 +3614,30 @@ void AI_vBatchProccessOrder(void)
  */
 void AI_vProcessSetPersoWithPerso(AI_tdstBatchOrder_* p_stBatchOrder)
 {
-    tdstDynam_* hDynam;
-    HIE_tdstSuperObject_* hChild;
-    HIE_tdstSuperObject_* hPersoToMove;
     HIE_tdstSuperObject_* hRefSPO;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hPersoToMove;
+    HIE_tdstSuperObject_* hChild;
+    tdstDynam_* h_Dynam;
+    MAT_tdstTransformation_* hGlobalMatrix;
+    hRefSPO = p_stBatchOrder->u.stPerso.hRefPerso;
+    if (hRefSPO == NULL)
+        return;
+    hPersoToMove = p_stBatchOrder->hPersoToMove;
+    HIE_fn_vUpdateGlobalMatrix(hRefSPO);
+    if (hPersoToMove->hFatherDyn != NULL)
+        HIE_fn_vUpdateGlobalMatrix(hPersoToMove->hFatherDyn);
+    h_Dynam = ((tdstEngineObject_*)hPersoToMove->hLinkedObject.p_stCharacter)->h_Dynam;
+    hGlobalMatrix = hPersoToMove->hGlobalMatrix;
+    *hGlobalMatrix = *hRefSPO->hGlobalMatrix;
+    if (h_Dynam != NULL && fn_p_stDynamGetDynamics(h_Dynam) != NULL)
+        MEC_vImposeRotationMatrix(fn_p_stDynamGetDynamics(h_Dynam), hGlobalMatrix);
+    if (hPersoToMove->hFatherDyn != NULL)
+        HIE_fn_vComputeNewRelativeMatrix(hPersoToMove);
+    for (hChild = hPersoToMove->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+    {
+        HIE_fn_vInvalidateHierarchy(hChild);
+    }
+    HIE_fn_vRefreshHierarchy(hPersoToMove);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 1398–1440 */
@@ -3718,8 +3776,8 @@ tdstNodeInterpret_* fn_p_stBatchSynchroPersoWithPerso(HIE_tdstSuperObject_* p_Su
     fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
     p_stBatchOrder->hPersoToMove = hNewSuperObjPerso;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    p_stBatchOrder->hRefPerso = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)stParam.uParam.pValue)->h_StandardGame);
-    p_stBatchOrder->ucRefChannel = 0xff;
+    p_stBatchOrder->u.stPerso.hRefPerso = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)stParam.uParam.pValue)->h_StandardGame);
+    p_stBatchOrder->u.stPerso.ucRefChannel = 0xff;
     p_stBatchOrder->ucBatchOrderType = 2;
     AI_gs_uwNbrBatchOrder++;
     return p_stTree;
@@ -3764,10 +3822,45 @@ tdstNodeInterpret_* fn_p_stBatchSynchroPersoWithPerso(HIE_tdstSuperObject_* p_Su
 tdstNodeInterpret_* fn_p_stBatchSetPersoOrientation(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     AI_tdstBatchOrder_* p_stBatchOrder;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    HIE_tdstSuperObject_* hNewSuperObjPerso = p_SuperObjPerso;
     tdeProcedureId_ eProcedureId;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+    float* p_fVector;
+    float xZ;
+    float xY;
+    float xX;
+    eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
+    if (AI_gs_uwNbrBatchOrder >= 20)
+        return fn_p_stSwapNextParameter(p_stTree);
+    p_stBatchOrder = &AI_gs_a_stBatchSetPersoTab[AI_gs_uwNbrBatchOrder];
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stBatchOrder->hPersoToMove = hNewSuperObjPerso;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_stBatchOrder->ucChannel = stParam.uParam.scValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_fVector = (float*)&stParam.uParam.stVectorValue;
+    xX = p_fVector[0];
+    xY = p_fVector[1];
+    xZ = p_fVector[2];
+    p_stBatchOrder->u.stOrientation.xX = xX;
+    p_stBatchOrder->u.stOrientation.xY = xY;
+    p_stBatchOrder->u.stOrientation.xZ = xZ;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_fVector = (float*)&stParam.uParam.stVectorValue;
+    /* The second orientation vector is read back to front: that is the order
+     * that keeps MWCC's $f0/$f1/$f2 assignment of this group identical to the
+     * retail's. */
+    xZ = p_fVector[2];
+    xY = p_fVector[1];
+    xX = p_fVector[0];
+    p_stBatchOrder->u.stOrientation.xW = xX;
+    p_stBatchOrder->u.stOrientation.xV = xY;
+    p_stBatchOrder->u.stOrientation.xU = xZ;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_stBatchOrder->uwChannel = stParam.uParam.usValue;
+    p_stBatchOrder->ucBatchOrderType = 1;
+    AI_gs_uwNbrBatchOrder++;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Procedu1.cxx lines 1219–1263 */

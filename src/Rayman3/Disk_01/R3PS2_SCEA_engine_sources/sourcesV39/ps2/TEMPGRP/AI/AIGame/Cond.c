@@ -2078,6 +2078,9 @@ union tduGetSetParam_ {
     unsigned short uwValue; /* +0x0 */
     char cValue; /* +0x0 */
     unsigned char ucValue; /* +0x0 */
+    /* The retail record puts tdeVariableType_ eType at +0xc, so the payload
+       union is 12 bytes wide; the vector member restores that size. */
+    MTH3D_tdstVector_ vValue; /* +0x0 */
     unsigned char bf7Value : 7; /* bit 0, byte +0x0 */
     unsigned char bf6Value : 6; /* bit 0, byte +0x0 */
     unsigned char bf5Value : 5; /* bit 0, byte +0x0 */
@@ -3351,6 +3354,9 @@ unsigned char fn_ucIsAlwaysGeneratedByMe(HIE_tdstSuperObject_* hAlways, HIE_tdst
 int INO_fn_wIsJoyConnected(int JoyNb);
 CINE_tdstCine_* CINE_fn_pFindCine(char* szName);
 unsigned char CINE_fn_bIsCinePlaying(CINE_tdstCine_* hCine);
+int fn_b3dDataGetUserEventFlag(tdst3dData_* h_3dData, unsigned char _ucFlagIndex, MAT_tdstTransformation_* _p_stPosition);
+unsigned char fn_ucSetDsgVar(unsigned char ucVarId, unsigned char ucValue, AI_tdstMind_* p_stMind, tdstGetSetParam_* p_stValue);
+void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stSource);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1814–1816 */
 /* addr: 0x0020dc30  size: 16 bytes */
@@ -3616,13 +3622,6 @@ tdstNodeInterpret_* fn_p_stRLITransitionCondition(HIE_tdstSuperObject_* p_SuperO
     return p_stTree;
 }
 
-static inline unsigned char fn_ucAlwIsMine(tdstEngineObject_* hAlwaysObject, HIE_tdstSuperObject_* hGenerator)
-{
-    if (hAlwaysObject->h_StandardGame == NULL)
-        return 0;
-    return fn_ucIsAlwaysGeneratedByMe(fn_h_StandardGameGetSuperObject(hAlwaysObject->h_StandardGame), hGenerator);
-}
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1545–1573 */
 /* addr: 0x0020f4d0  size: 172 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3641,14 +3640,15 @@ tdstNodeInterpret_* fn_p_stAlw_IsMine(HIE_tdstSuperObject_* p_SuperObjPerso, tds
     tdstGetSetParam_ stParam;
     HIE_tdstSuperObject_* hNewSuperObjPerso;
     tdstEngineObject_* hAlwaysObject;
+    int lValue;
 
-    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(61), p_SuperObjPerso, &hNewSuperObjPerso);
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(eCond_Alw_IsMine), p_SuperObjPerso, &hNewSuperObjPerso);
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     hAlwaysObject = stParam.uDummy.uParam.p_stEngObjValue;
-    if (hAlwaysObject)
-        *p_lValue = fn_ucAlwIsMine(hAlwaysObject, hNewSuperObjPerso);
-    else
-        *p_lValue = 0;
+    /* The retail line table puts the whole conditional and the store on one
+       source line (target line 1569), so the statement is kept on one line
+       here to reproduce the statement boundaries. */
+    if (hAlwaysObject) { if (hAlwaysObject->h_StandardGame == NULL) lValue = 0; else lValue = fn_ucIsAlwaysGeneratedByMe(fn_h_StandardGameGetSuperObject(hAlwaysObject->h_StandardGame), hNewSuperObjPerso); } else lValue = 0; *p_lValue = lValue;
     return p_stTree;
 }
 
@@ -3701,15 +3701,64 @@ tdstNodeInterpret_* fn_p_stAlw_IsMine(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  */
 tdstNodeInterpret_* fn_p_st_UserEvent_IsSet(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* _p_lValue)
 {
-    MTH3D_tdstVector_ stSighting;
+    tdstGetSetParam_ stParam;
     MAT_tdstTransformation_ stGlobalMatrix;
     MTH3D_tdstVector_ stPosition;
+    MTH3D_tdstVector_ stSighting;
     tdeCondId_ eCondId;
     unsigned char ucVarId2;
     unsigned char ucVarId;
     unsigned char ucEventIndex;
-    tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+
+    ucVarId = 0;
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    switch (eCondId) {
+    case eCond_UserEvent_IsSet:
+    case eCond_UserEvent_IsSet2:
+    case eCond_UserEvent_IsSet3:
+        ucEventIndex = 0;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if ((eCondId == eCond_UserEvent_IsSet2) || (eCondId == eCond_UserEvent_IsSet3)) {
+            ucEventIndex = p_stTree->uDummy.uParam.ucValue;
+            p_stTree++;
+            if (eCondId == eCond_UserEvent_IsSet3) {
+                ucVarId = p_stTree->uDummy.uParam.ucValue;
+                p_stTree++;
+            }
+        }
+        if ((stParam.uDummy.uParam.ucValue & 0xFF) <= 7) {
+            *_p_lValue = fn_b3dDataGetUserEventFlag(p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData, stParam.uDummy.uParam.ucValue, &stGlobalMatrix);
+            if ((*_p_lValue != 0) && ((eCondId == eCond_UserEvent_IsSet2) || (eCondId == eCond_UserEvent_IsSet3))) {
+                *(int*)&stPosition.xX = *(int*)&((MTH3D_tdstVector_*)&stGlobalMatrix.stTransformMatrix.stCol_3)->xX;
+                *(int*)&stPosition.xY = *(int*)&((MTH3D_tdstVector_*)&stGlobalMatrix.stTransformMatrix.stCol_3)->xY;
+                *(int*)&stPosition.xZ = *(int*)&((MTH3D_tdstVector_*)&stGlobalMatrix.stTransformMatrix.stCol_3)->xZ;
+                *(int*)&stParam.uDummy.uParam.vValue.xX = *(int*)&stPosition.xX;
+                *(int*)&stParam.uDummy.uParam.vValue.xY = *(int*)&stPosition.xY;
+                *(int*)&stParam.uDummy.uParam.vValue.xZ = *(int*)&stPosition.xZ;
+                stParam.eType = E_vt_Vector;
+                if (!fn_ucSetDsgVar(ucEventIndex, 0, p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, &stParam))
+                    *_p_lValue = 0;
+            }
+            if ((*_p_lValue != 0) && (eCondId == eCond_UserEvent_IsSet3)) {
+                stSighting.xX = 0.0f;
+                stSighting.xY = -1.0f;
+                stSighting.xZ = 0.0f;
+                MAT_fn_vApplyOnVector(&stSighting, &stGlobalMatrix, &stSighting);
+                *(int*)&stParam.uDummy.uParam.vValue.xX = *(int*)&stSighting.xX;
+                *(int*)&stParam.uDummy.uParam.vValue.xY = *(int*)&stSighting.xY;
+                *(int*)&stParam.uDummy.uParam.vValue.xZ = *(int*)&stSighting.xZ;
+                stParam.eType = E_vt_Vector;
+                if (!fn_ucSetDsgVar(ucVarId, 0, p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, &stParam))
+                    *_p_lValue = 0;
+            }
+        } else {
+            *_p_lValue = 0;
+        }
+        break;
+    default:
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1457–1468 */
@@ -4795,7 +4844,7 @@ tdstNodeInterpret_* fn_p_stBooleanCondition(HIE_tdstSuperObject_* p_SuperObjPers
             p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
             *p_lValue = stValue.uDummy.uParam.lValue;
         }
-        break;
+        return p_stTree;
     case 1:
         if (*p_lValue != 0) {
             if (p_stTree->uwNodeToSkip) {
@@ -4810,20 +4859,19 @@ tdstNodeInterpret_* fn_p_stBooleanCondition(HIE_tdstSuperObject_* p_SuperObjPers
             p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
             *p_lValue = stValue.uDummy.uParam.lValue;
         }
-        break;
+        return p_stTree;
     case 2:
-        *p_lValue = !*p_lValue;
-        break;
+        *p_lValue = (*p_lValue == 0) ? 1 : 0;
+        return p_stTree;
     case 3:
         l1 = *p_lValue;
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        *p_lValue = l1 != *p_lValue;
-        break;
+        *p_lValue = (l1 ^ *p_lValue) ? 1 : 0;
+        return p_stTree;
     default:
         *p_lValue = 0;
-        break;
+        return p_stTree;
     }
-    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 115–242 */

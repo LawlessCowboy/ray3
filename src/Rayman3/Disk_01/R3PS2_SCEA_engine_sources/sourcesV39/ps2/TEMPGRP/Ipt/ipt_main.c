@@ -68,6 +68,24 @@ struct anon_0 {
     unsigned char m_ucStatus; /* +0x0 */
 };
 
+/* Device state buffer: the keyboard keeps two rows of 256 key flags plus the
+   row that is currently active, the joystick keeps the direction mask and the
+   button mask in the same allocation. */
+typedef struct IPT_tdstDeviceState_ IPT_tdstDeviceState_;
+struct IPT_tdstDeviceState_ {
+    unsigned char aKeyState[0x202];
+    short sCurrentRow; /* +0x202 */
+    unsigned short usReserved; /* +0x204 */
+    signed char cLastKeyPressed; /* +0x206 */
+};
+
+typedef struct IPT_tdstJoystickState_ IPT_tdstJoystickState_;
+struct IPT_tdstJoystickState_ {
+    short sStatus;
+    short sDirections;
+    unsigned int ulButtons;
+};
+
 struct IPT_tdstHistoricElement_ {
     unsigned char bf2State; /* +0x0 */
     unsigned char bf6DeviceType; /* +0x1 */
@@ -79,7 +97,7 @@ struct stDevice {
     unsigned short m_uwType; /* +0x0 */
     short m_wPort; /* +0x2 */
     int m_p_stCaps; /* +0x4 */
-    anon_0* m_p_stState; /* +0x8 */
+    IPT_tdstDeviceState_* m_p_stState; /* +0x8 */
     anon_0* m_p_stLastState; /* +0xc */
     short (*m_pfnRead)(stDevice*); /* +0x10 */
 };
@@ -173,17 +191,17 @@ struct IPT_tdstConvertValue_ {
 
 unsigned char g_ucIPTModuleId;
 IPT_tdstConvertValue_ IPT_g_ConvertAZERTYtoQWERTY[1];
-IPT_tdstScriptValue_ IPT_g_hScriptKeyValue[1];
+extern IPT_tdstScriptValue_ IPT_g_hScriptKeyValue[];
 IPT_tdstScriptValue_ IPT_g_hScriptPadValue[61];
 unsigned int IPT_g_ulPadAndJoyButtonFlag[16];
 IPT_tdstScriptValue_ IPT_g_hScriptKeyWordValue[27];
 int IPT_p_fn_bIsKeyWordValid[28];
 unsigned char IPT_g_bInputEnabled;
-int IPT_g_p_szValidKey;
+char* IPT_g_p_szValidKey;
 int IPT_g_c_szValidExtraKeyForChat;
 IPT_tdstLineCommand_ IPT_g_hLineCommand;
 IPT_tdstInput_ IPT_g_hInputStructure;
-int IPT_gd_hKeyAndPadDefine;
+IPT_tdstKeyAndPadDefine_* IPT_gd_hKeyAndPadDefine;
 
 extern stDevice INO_g_a_stDIDevice[];
 extern void INO_fn_vForceFeedBackRunTime(unsigned int, stDevice*);
@@ -202,6 +220,11 @@ extern void INO_fn_vStartPreCreatedFFBEffect(unsigned int, stDevice*, signed cha
 extern void INO_fn_vDeleteAllPreCreatedConstantFFBEffectForDevice(stDevice*);
 extern void INO_fn_vDeletePreCreatedConstantFFBEffect(stDevice*, signed char);
 extern signed char INO_fn_cPreCreateConstantFFBEffect(stDevice*, float, float, float, float, float, float);
+extern unsigned short INO_fn_uwJoyPreviousDirections(stDevice*);
+extern unsigned int INO_fn_ulJoyPreviousButtons(stDevice*);
+extern short IPT_fn_swConvertAZERTYtoQWERTY(short);
+extern char* Strchr(char* s, int c);
+extern void* memcpy(void*, const void*, unsigned int);
 extern int D_7D35C0;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 60–243 */
@@ -340,15 +363,202 @@ extern int D_7D35C0;
 void IPT_fn_vActualizeHistoric(void)
 {
     IPT_tdstHistoricElement_ hHistoricElement;
+    IPT_tdstHistoricElement_* hElement;
     unsigned short uwNewDirections;
     unsigned short uwJustReleasedDirections;
     stDevice* hPad;
     stDevice* hKeyboard;
     int lFound;
+    volatile unsigned int* pulButtonFlag;
     int lPadNumber;
     int j;
     int i;
-    /* TODO: decompile from asm/... */
+    IPT_tdstDevice_* pDevice;
+    int lCount;
+    unsigned int ulButtonFlag;
+
+    lFound = 0;
+    hHistoricElement.bf2State = 2;
+    hKeyboard = IPT_g_hInputStructure.a_stDevice[1].hDeviceHandle;
+
+    for (i = 0; IPT_g_hScriptKeyValue[i].swKeyValue != -1; i++)
+    {
+        if ((hKeyboard->m_p_stState->aKeyState[hKeyboard->m_p_stState->sCurrentRow * 256 + IPT_g_hScriptKeyValue[i].swKeyValue + 1] != 0) && (hKeyboard->m_p_stState->aKeyState[(1 - hKeyboard->m_p_stState->sCurrentRow) * 256 + IPT_g_hScriptKeyValue[i].swKeyValue + 1] == 0))
+        {
+            lFound = 1;
+            hHistoricElement.bf2State = 2;
+            hHistoricElement.bf6DeviceType = 1;
+            if (IPT_g_hInputStructure.ucKeyboardType == 1)
+            {
+                hHistoricElement.swDeviceValue = IPT_g_hScriptKeyValue[i].swKeyValue;
+            }
+            else
+            {
+                hHistoricElement.swDeviceValue = IPT_fn_swConvertAZERTYtoQWERTY(IPT_g_hScriptKeyValue[i].swKeyValue);
+            }
+            hHistoricElement.ucCounter = 0;
+            IPT_g_hInputStructure.p_ucKeyboardCounter[IPT_g_hScriptKeyValue[i].swKeyValue] = 0;
+        }
+        else if ((hKeyboard->m_p_stState->aKeyState[hKeyboard->m_p_stState->sCurrentRow * 256 + IPT_g_hScriptKeyValue[i].swKeyValue + 1] == 0) && (hKeyboard->m_p_stState->aKeyState[(1 - hKeyboard->m_p_stState->sCurrentRow) * 256 + IPT_g_hScriptKeyValue[i].swKeyValue + 1] != 0))
+        {
+            IPT_g_hInputStructure.p_ucKeyboardCounter[IPT_g_hScriptKeyValue[i].swKeyValue] = 0;
+        }
+        lCount = IPT_g_hInputStructure.p_ucKeyboardCounter[IPT_g_hScriptKeyValue[i].swKeyValue] + 1; if (lCount >= 0x100) { lCount = 0xFF; } IPT_g_hInputStructure.p_ucKeyboardCounter[IPT_g_hScriptKeyValue[i].swKeyValue] = (unsigned char)lCount;
+    }
+
+    if ((lFound == 0) && (IPT_g_hInputStructure.ucOnePadActivate == 2))
+    {
+        for (lPadNumber = 2; lPadNumber < 0x12; lPadNumber++)
+        {
+            if (IPT_g_hInputStructure.a_stDevice[lPadNumber].ucValideAndActiveDevice == 2)
+            {
+                j = lPadNumber - 2;
+                hPad = IPT_g_hInputStructure.a_stDevice[lPadNumber].hDeviceHandle;
+                if (hPad->m_uwType == 0x10)
+                {
+                    uwJustReleasedDirections = (unsigned short)(~((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & (short)INO_fn_uwJoyPreviousDirections(hPad));
+                    uwNewDirections = (unsigned short)(((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & ~(short)INO_fn_uwJoyPreviousDirections(hPad));
+
+                    if (uwNewDirections & 4)
+                    {
+                        lFound = 1;
+                        hHistoricElement.bf2State = 2;
+                        hHistoricElement.bf6DeviceType = lPadNumber;
+                        hHistoricElement.swDeviceValue = 0;
+                        hHistoricElement.ucCounter = 0;
+                        pDevice = &IPT_g_hInputStructure.a_stDevice[j];
+                        pDevice->ucPadAndJoyCounter[0] = 0;
+                    }
+                    else if (uwJustReleasedDirections & 4)
+                    {
+                        pDevice = &IPT_g_hInputStructure.a_stDevice[j];
+                        pDevice->ucPadAndJoyCounter[0] = 0;
+                    }
+                    pDevice = &IPT_g_hInputStructure.a_stDevice[j]; lCount = pDevice->ucPadAndJoyCounter[0] + 1; if (lCount >= 0x100) { lCount = 0xFF; } pDevice->ucPadAndJoyCounter[0] = (unsigned char)lCount;
+
+                    if (uwNewDirections & 8)
+                    {
+                        lFound = 1;
+                        hHistoricElement.bf2State = 2;
+                        hHistoricElement.bf6DeviceType = lPadNumber;
+                        hHistoricElement.swDeviceValue = 1;
+                        hHistoricElement.ucCounter = 0;
+                        pDevice->ucPadAndJoyCounter[1] = 0;
+                    }
+                    else if (uwJustReleasedDirections & 8)
+                    {
+                        pDevice->ucPadAndJoyCounter[1] = 0;
+                    }
+                    lCount = pDevice->ucPadAndJoyCounter[1] + 1; if (lCount >= 0x100) { lCount = 0xFF; } pDevice->ucPadAndJoyCounter[1] = (unsigned char)lCount;
+
+                    if (uwNewDirections & 1)
+                    {
+                        lFound = 1;
+                        hHistoricElement.bf2State = 2;
+                        hHistoricElement.bf6DeviceType = lPadNumber;
+                        hHistoricElement.swDeviceValue = 2;
+                        hHistoricElement.ucCounter = 0;
+                        pDevice->ucPadAndJoyCounter[2] = 0;
+                    }
+                    else if (uwJustReleasedDirections & 1)
+                    {
+                        pDevice->ucPadAndJoyCounter[2] = 0;
+                    }
+                    lCount = pDevice->ucPadAndJoyCounter[2] + 1; if (lCount >= 0x100) { lCount = 0xFF; } pDevice->ucPadAndJoyCounter[2] = (unsigned char)lCount;
+
+                    if (uwNewDirections & 2)
+                    {
+                        lFound = 1;
+                        hHistoricElement.bf2State = 2;
+                        hHistoricElement.bf6DeviceType = lPadNumber;
+                        hHistoricElement.swDeviceValue = 3;
+                        hHistoricElement.ucCounter = 0;
+                        pDevice->ucPadAndJoyCounter[3] = 0;
+                    }
+                    else if (uwJustReleasedDirections & 2)
+                    {
+                        pDevice->ucPadAndJoyCounter[3] = 0;
+                    }
+                    lCount = pDevice->ucPadAndJoyCounter[3] + 1; if (lCount >= 0x100) { lCount = 0xFF; } pDevice->ucPadAndJoyCounter[3] = (unsigned char)lCount;
+
+                    for (i = 12; i < 43; i++)
+                    {
+                        pulButtonFlag = &IPT_g_ulPadAndJoyButtonFlag[i - 12]; ulButtonFlag = IPT_g_ulPadAndJoyButtonFlag[i - 12];
+                        if (((ulButtonFlag & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) ^ ulButtonFlag) == 0 && ((ulButtonFlag & INO_fn_ulJoyPreviousButtons(hPad)) ^ ulButtonFlag) != 0)
+                        {
+                            lFound = 1;
+                            hHistoricElement.bf2State = 2;
+                            hHistoricElement.bf6DeviceType = lPadNumber;
+                            hHistoricElement.swDeviceValue = IPT_g_hScriptPadValue[i].swKeyValue;
+                            hHistoricElement.ucCounter = 0;
+                            pDevice = &IPT_g_hInputStructure.a_stDevice[j];
+                            pDevice->ucPadAndJoyCounter[IPT_g_hScriptPadValue[i].swKeyValue] = 0;
+                        }
+                        else if (((*pulButtonFlag & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) ^ *pulButtonFlag) != 0 && ((*pulButtonFlag & INO_fn_ulJoyPreviousButtons(hPad)) ^ *pulButtonFlag) == 0)
+                        {
+                            pDevice = &IPT_g_hInputStructure.a_stDevice[j];
+                            pDevice->ucPadAndJoyCounter[IPT_g_hScriptPadValue[i].swKeyValue] = 0;
+                        }
+                        lCount = pDevice->ucPadAndJoyCounter[IPT_g_hScriptPadValue[i].swKeyValue] + 1; if (lCount >= 0x100) { lCount = 0xFF; } pDevice->ucPadAndJoyCounter[IPT_g_hScriptPadValue[i].swKeyValue] = (unsigned char)lCount;
+                    }
+                }
+            }
+        }
+    }
+
+    if (lFound != 0)
+    {
+        for (i = IPT_g_hInputStructure.sEventHistoricSize - 1; i > 0; i--)
+        {
+            memcpy(&IPT_g_hInputStructure.hEventHistoric[i], &IPT_g_hInputStructure.hEventHistoric[i - 1], 6);
+        }
+        memcpy(IPT_g_hInputStructure.hEventHistoric, &hHistoricElement, 6);
+    }
+
+    for (i = 0; i < IPT_g_hInputStructure.sEventHistoricSize; i++)
+    {
+        hElement = &IPT_g_hInputStructure.hEventHistoric[i];
+        if ((hElement->bf6DeviceType == 1) && (hElement->bf2State == 2) && (hKeyboard->m_p_stState->aKeyState[hKeyboard->m_p_stState->sCurrentRow * 256 + hElement->swDeviceValue + 1] != 0))
+        {
+            lCount = hElement->ucCounter + 1;
+            hElement->ucCounter = (unsigned char)((lCount >= 0x100) ? 0xFF : lCount);
+        }
+        else if ((hElement->bf6DeviceType >= 2) && (hElement->bf6DeviceType < 0x12) && (hElement->bf2State == 2))
+        {
+            pDevice = &IPT_g_hInputStructure.a_stDevice[hElement->bf6DeviceType];
+            if (((hElement->swDeviceValue == 0) && (((IPT_tdstJoystickState_*)pDevice->hDeviceHandle->m_p_stState)->sDirections & 4)) ||
+                ((hElement->swDeviceValue == 1) && (((IPT_tdstJoystickState_*)pDevice->hDeviceHandle->m_p_stState)->sDirections & 8)) ||
+                ((hElement->swDeviceValue == 2) && (((IPT_tdstJoystickState_*)pDevice->hDeviceHandle->m_p_stState)->sDirections & 1)) ||
+                ((hElement->swDeviceValue == 3) && (((IPT_tdstJoystickState_*)pDevice->hDeviceHandle->m_p_stState)->sDirections & 2)) ||
+                ((hElement->swDeviceValue >= 0xC) && (hElement->swDeviceValue < 0x1C) && !((IPT_g_ulPadAndJoyButtonFlag[hElement->swDeviceValue - 12] & ((IPT_tdstJoystickState_*)pDevice->hDeviceHandle->m_p_stState)->ulButtons) ^ IPT_g_ulPadAndJoyButtonFlag[hElement->swDeviceValue - 12])))
+            {
+                lCount = hElement->ucCounter + 1;
+                hElement->ucCounter = (unsigned char)((lCount >= 0x100) ? 0xFF : lCount);
+            }
+            else
+            {
+                if (hElement->bf2State == 2)
+                {
+                    hElement->bf2State = 1;
+                }
+                else if (hElement->bf2State == 1)
+                {
+                    hElement->bf2State = 0;
+                }
+            }
+        }
+        else
+        {
+            if (hElement->bf2State == 2)
+            {
+                hElement->bf2State = 1;
+            }
+            else if (hElement->bf2State == 1)
+            {
+                hElement->bf2State = 0;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 1186–1207 */
@@ -548,8 +758,14 @@ signed char IPT_fn_cPreCreateConstantFFBEffect(unsigned char ucPadNumber, float 
  */
 unsigned char IPT_fn_ucScanForAnASCIIKey(void)
 {
-    char cKey;
-    /* TODO: decompile from asm/... */
+    signed char cKey;
+
+    cKey = IPT_g_hInputStructure.a_stDevice[1].hDeviceHandle->m_p_stState->cLastKeyPressed;
+    if (cKey == 27 || cKey == 13 || cKey == 8)
+        return (unsigned char)cKey;
+    if (Strchr(IPT_g_p_szValidKey, cKey) == NULL)
+        cKey = 0;
+    return (unsigned char)cKey;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 960–998 */
@@ -660,10 +876,25 @@ unsigned int IPT_fn_ulGetUniqueValueForHandle(IPT_tdstEntryElement_* _hElement)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void IPT_fn_szGetStringOf(IPT_tdstEntryElement_* _hElement)
+char* IPT_fn_szGetStringOf(IPT_tdstEntryElement_* _hElement)
 {
-    IPT_tdstKeyWordElement_* param0;
-    /* TODO: decompile from asm/... */
+    char* szResult = 0;
+    int i;
+    short swKey;
+    unsigned short uwKey;
+
+    if (_hElement->d_stKeyWordElementArray[0].u_ElementUnion.swKeyWord != -4074)
+        return 0;
+    swKey = _hElement->d_stKeyWordElementArray[2].u_ElementUnion.swKeyWord;
+    uwKey = (unsigned short)(swKey | 0x8000);
+    for (i = 0; IPT_gd_hKeyAndPadDefine[i].uwBasedKey != 0xFFFF; i++)
+    {
+        if (IPT_gd_hKeyAndPadDefine[i].uwBasedKey == uwKey)
+            break;
+    }
+    if (IPT_gd_hKeyAndPadDefine[i].uwBasedKey != 0xFFFF)
+        szResult = (char*)((int*)&IPT_gd_hKeyAndPadDefine[0].p_szFrenchKey)[i * 3];
+    return szResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 878–882 */
@@ -754,7 +985,7 @@ unsigned char IPT_fn_bModifyIPTAction(IPT_tdstEntryElement_* _hElementToChange, 
     int lI;
     for (lI = 0; lI < (int)_hElementToChange->ulNumberOfKeyWordElement; lI++) {
         if (_hElementToChange->d_stKeyWordElementArray[lI].u_ElementUnion.swKeyWord == -4090) {
-            _hElementToChange->d_stKeyWordElementArray[lI + 1].u_ElementUnion.hEntryElement = _hReplacingElement;
+            ((IPT_tdstKeyWordElement_*)&_hElementToChange->d_stKeyWordElementArray[1])[lI].u_ElementUnion.hEntryElement = _hReplacingElement;
             return 1;
         }
     }
@@ -783,17 +1014,18 @@ unsigned char IPT_fn_bModifyIPTAction(IPT_tdstEntryElement_* _hElementToChange, 
  */
 IPT_tdstEntryElement_* IPT_fn_hSearchElementInOptionWithKeyWord(short _swEntryType, short swPadNumber, short _swKeyValue)
 {
+    unsigned int i;
+    IPT_tdstEntryElement_* hEntryElement;
     IPT_tdstKeyWordElement_* hNextElement;
     IPT_tdstEntryElement_* hAction;
-    IPT_tdstEntryElement_* hEntryElement;
-    unsigned int i;
+
     hAction = NULL;
     for (i = 0; i < IPT_g_hInputStructure.ulNumberOfEntryElement; i++) {
         hEntryElement = &IPT_g_hInputStructure.d_stEntryElementArray[i];
         if (hEntryElement->p_szEntryName) {
             if (_swEntryType == -4074) {
                 hNextElement = hEntryElement->d_stKeyWordElementArray;
-                if (hNextElement->u_ElementUnion.swKeyWord == -4074) {
+                if (hEntryElement->d_stKeyWordElementArray->u_ElementUnion.swKeyWord == -4074) {
                     hNextElement++;
                     if (hNextElement->u_ElementUnion.swPadNumber == swPadNumber) {
                         hNextElement++;
@@ -825,7 +1057,7 @@ IPT_tdstEntryElement_* IPT_fn_hSearchElementInOptionWithKeyWord(short _swEntryTy
 void IPT_fn_vActiveJoystickControl(void)
 {
     unsigned int i;
-    for (i = 2; i < 18; i++) {
+    for (i = 2; i <= 17; i++) {
         if (IPT_g_hInputStructure.a_stDevice[i].ucValideAndActiveDevice == 1) {
             IPT_g_hInputStructure.a_stDevice[i].ucValideAndActiveDevice = 2;
             if (INO_fn_wActivateDevice(IPT_g_hInputStructure.a_stDevice[i].hDeviceHandle))
@@ -851,7 +1083,7 @@ void IPT_fn_vActiveJoystickControl(void)
 void IPT_fn_vDesactiveJoystickAndPadControl(void)
 {
     unsigned int i;
-    for (i = 2; i < 18; i++) {
+    for (i = 2; i <= 17; i++) {
         if (IPT_g_hInputStructure.a_stDevice[i].ucValideAndActiveDevice == 2) {
             IPT_g_hInputStructure.a_stDevice[i].ucValideAndActiveDevice = 1;
             INO_fn_wDeactivateDevice(IPT_g_hInputStructure.a_stDevice[i].hDeviceHandle);

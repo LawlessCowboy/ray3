@@ -391,6 +391,7 @@ struct CInitParams {
 struct CLinkTypeActorCont {
     static CLinkTypeActorCont* mfn_roGetInstance();
     static _RollOffParam moACPRolloff;
+    void mfn_vSetDefaultRolloff(const _RollOffParam* pst_RollOff);
     /* C++ base smap at +0x0. */
     CActorResData* m_poStandardActorResData; /* +0x10 */
     CActorResData* m_poMusicActorResData; /* +0x14 */
@@ -579,7 +580,7 @@ void SND_fn_p_stPS2ChangeReverb(int s32_Channels, int s32_Mode, int s32_Vol, int
  */
 void SND_fn_vSetDefaultRollOff(_RollOffParam* pst_RollOff)
 {
-    /* TODO: decompile from asm/... */
+    CLinkTypeActorCont* p_Instance = CLinkTypeActorCont::mfn_roGetInstance(); p_Instance->mfn_vSetDefaultRolloff(pst_RollOff);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 346–348 */

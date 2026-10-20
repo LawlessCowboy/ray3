@@ -199,11 +199,132 @@ IPT_tdstScriptValue_ IPT_g_hScriptKeyValue;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int INO_fn_wReadAllDevices();
+extern int IPT_fn_bIsEnabled();
+extern int IPT_fn_bIsEntryActionValid();
+extern void IPT_fn_vActualizeHistoric();
+extern void IPT_fn_vForceFeedBackRunTime();
+
 void IPT_fn_vReadInput(unsigned int ulCurrentTime)
 {
     unsigned char ucValid;
     unsigned char ucIsActionValid;
     IPT_tdstEntryElement_* hEntryElement;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    long lState;
+    int iOk;
+
+    ucValid = 0;
+    if (IPT_g_hInputStructure.ucOnePadActivate == 2)
+    {
+        if (INO_fn_wReadAllDevices(0x10, 2) != 0)
+        {
+            ucValid = 1;
+        }
+    }
+    if (IPT_g_hInputStructure.a_stDevice[1].ucValideAndActiveDevice == 2)
+    {
+        int iValue;
+
+        if (IPT_g_hInputStructure.a_stDevice[1].hDeviceHandle->m_pfnRead != NULL)
+        {
+            iValue = IPT_g_hInputStructure.a_stDevice[1].hDeviceHandle->m_pfnRead(IPT_g_hInputStructure.a_stDevice[1].hDeviceHandle);
+        }
+        else
+        {
+            iValue = -1;
+        }
+        if (iValue != 0)
+        {
+            ucValid = 1;
+        }
+    }
+    if (IPT_fn_bIsEnabled() != 0)
+    {
+        if (ucValid == 1)
+        {
+            IPT_fn_vActualizeHistoric();
+            IPT_g_hInputStructure.bAtLeastOneActionIsValidated = 0;
+            for (i = 0; i < IPT_g_hInputStructure.ulNumberOfEntryElement; i++)
+            {
+                hEntryElement = &IPT_g_hInputStructure.d_stEntryElementArray[i];
+                if (hEntryElement->bIsActivate == 1)
+                {
+                    ucIsActionValid = IPT_fn_bIsEntryActionValid(hEntryElement);
+                    IPT_g_hInputStructure.bAtLeastOneActionIsValidated |= ucIsActionValid;
+                    if (ucIsActionValid == 1)
+                    {
+                        if ((hEntryElement != NULL) && (hEntryElement->lState > 0))
+                        {
+                            iOk = 1;
+                        }
+                        else
+                        {
+                            iOk = 0;
+                        }
+                        if (iOk != 0)
+                        {
+                            lState = (long)(hEntryElement->lState + 1);
+                            if (lState > 0x7FFFFFFFL)
+                            {
+                                lState = 0x7FFFFFFFL;
+                            }
+                            hEntryElement->lState = (int)lState;
+                        }
+                    }
+                    if (ucIsActionValid == 0)
+                    {
+                        if ((hEntryElement != NULL) && (hEntryElement->lState < 0))
+                        {
+                            iOk = 1;
+                        }
+                        else
+                        {
+                            iOk = 0;
+                        }
+                        if (iOk != 0)
+                        {
+                            lState = (long)(hEntryElement->lState - 1);
+                            if (lState < (long)(-2147483647 - 1))
+                            {
+                                lState = (long)(-2147483647 - 1);
+                            }
+                            hEntryElement->lState = (int)lState;
+                        }
+                    }
+                    if (ucIsActionValid == 0)
+                    {
+                        if ((hEntryElement != NULL) && (hEntryElement->lState > 0))
+                        {
+                            iOk = 1;
+                        }
+                        else
+                        {
+                            iOk = 0;
+                        }
+                        if (iOk != 0)
+                        {
+                            hEntryElement->lState = -1;
+                        }
+                    }
+                    if (ucIsActionValid == 1)
+                    {
+                        if ((hEntryElement != NULL) && (hEntryElement->lState < 0))
+                        {
+                            iOk = 1;
+                        }
+                        else
+                        {
+                            iOk = 0;
+                        }
+                        if (iOk != 0)
+                        {
+                            hEntryElement->lState = 1;
+                        }
+                    }
+                }
+            }
+        }
+        IPT_fn_vForceFeedBackRunTime(ulCurrentTime);
+    }
 }

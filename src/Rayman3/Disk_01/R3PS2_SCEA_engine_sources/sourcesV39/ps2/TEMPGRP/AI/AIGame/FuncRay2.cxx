@@ -132,6 +132,14 @@ struct SECT_tdstListOfSOCharacters_ {
     HIE_tdstSuperObject_* hPointerOfCharacter; /* +0x0 */
     SECT_tdstListOfSOCharacters_* hNextBrotherDyn; /* +0x4 */
 };
+/* Recovered AI "extended datas" layout, as in ProcRay2.cxx. */
+struct tdstExtendDatas4Ray_ {
+    int iMagicPoints4Ray;
+    int iMagicPointsMax4Ray;
+    float xAirPoints4Ray; /* +0x8 */
+    float xAirPointsMax4Ray; /* +0xc */
+};
+extern "C" tdstExtendDatas4Ray_ stExtendDatas4Ray;
 struct tdstEngineObject_ {
     void* h_3dData; /* +0x0 */
     tdstStandardGame_* h_StandardGame; /* +0x4 */
@@ -196,6 +204,10 @@ extern "C" int strcasecmp(const char*, const char*);
 extern "C" HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* p_stSectInfo);
 extern "C" HIE_tdstSuperObject_* fn_hGetNearestActorInSectorWithAnyCustombit(HIE_tdstSuperObject_* _hMe, HIE_tdstSuperObject_* _hSector, unsigned int _ulFilterCustomBits, tdeFuncId_ _eFuncId);
 extern "C" void fn_vGetScrollSpeedMatCollided(HIE_tdstSuperObject_* p_stSuperObj, MTH3D_tdstVector_* p_stVector, unsigned int ulObstacleType, int ulMTIndex);
+extern "C" int WPG_fn_lGetLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int* p_lWeight);
+extern "C" int WPG_fn_lChangeLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight);
+extern "C" int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int* p_ulCapability);
+extern "C" int WPG_fn_lChangeLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int ulCapability, int lValue);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 4091–4099 */
 /* addr: 0x0021b6e0  size: 44 bytes */
@@ -867,18 +879,14 @@ tdstNodeInterpret_* fn_p_stGetZDxCenter(HIE_tdstSuperObject_* p_SuperObjPerso, t
  */
 tdstNodeInterpret_* fn_p_stTractionFactorFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    tdstEngineObject_* p_stEngineObj;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
     unsigned char ucTractionFactor;
     tdeFuncId_ eFuncId;
-    ucTractionFactor = 0;
+    tdstEngineObject_* p_stEngineObj;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
     eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    ucTractionFactor = 0;
     fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
-    if (hNewSuperObjPerso->ulTypeOfLinkedObject == 2) {
-        p_stEngineObj = hNewSuperObjPerso->hLinkedObject.p_stCharacter;
-    } else {
-        p_stEngineObj = NULL;
-    }
+    if (hNewSuperObjPerso->ulTypeOfLinkedObject != 2) { p_stEngineObj = NULL; } else { p_stEngineObj = hNewSuperObjPerso->hLinkedObject.p_stCharacter; }
     switch (eFuncId) {
     case 221:
         ucTractionFactor = p_stEngineObj->h_StandardGame->ucTractionFactor;
@@ -1220,11 +1228,8 @@ tdstNodeInterpret_* fn_p_stGetScrollSpeed(HIE_tdstSuperObject_* p_SuperObjPerso,
     fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
     if (eFuncId == 211) {
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-        fn_vGetScrollSpeedMatCollided(hNewSuperObjPerso, &stVector, stParam.uParam.lValue, -1);
-        ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = vectorBits[0];
-        ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = vectorBits[1];
-        ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = vectorBits[2];
-        p_stValue->eType = (tdeVariableType_)21;
+        fn_vGetScrollSpeedMatCollided(hNewSuperObjPerso, &stVector, *(unsigned int*)&stParam, -1);
+        ((unsigned int*)&p_stValue->uParam.stVectorValue)[0] = vectorBits[0]; ((unsigned int*)&p_stValue->uParam.stVectorValue)[1] = vectorBits[1]; ((unsigned int*)&p_stValue->uParam.stVectorValue)[2] = vectorBits[2]; p_stValue->eType = (tdeVariableType_)21;
         return p_stTree;
     }
     fn_vOnAIErm_M_UpdateLastError(39, NULL);
@@ -2081,7 +2086,63 @@ tdstNodeInterpret_* fn_p_stGraphFunction(HIE_tdstSuperObject_* p_SuperObjPerso, 
     int lValue;
     WP_tdstGraph_* hGraph;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    unsigned int ulCaps;
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    hGraph = (WP_tdstGraph_*)p_stValue->uParam.pValue;
+    lValue = p_stValue->uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    hWayPoint1 = (WP_tdstWayPoint_*)p_stValue->uParam.pValue;
+    lWeight = p_stValue->uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    hWayPoint2 = (WP_tdstWayPoint_*)p_stValue->uParam.pValue;
+    ulNewCaps = p_stValue->uParam.lValue;
+    if (lValue != 0) {
+        switch (eFuncId) {
+        case 207:
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+            lValue = p_stValue->uParam.lValue;
+            p_stValue->uParam.lValue = WPG_fn_lChangeLinkWeight(hGraph, hWayPoint1, hWayPoint2, lValue);
+            p_stValue->eType = (tdeVariableType_)6;
+            break;
+        case 206:
+            if (WPG_fn_lGetLinkWeight(hGraph, hWayPoint1, hWayPoint2, &lWeight) != -1) {
+                p_stValue->uParam.lValue = lWeight;
+            } else {
+                p_stValue->uParam.lValue = -1;
+            }
+            p_stValue->eType = (tdeVariableType_)6;
+            break;
+        case 205:
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+            ulCaps = p_stValue->uParam.lValue;
+            p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+            lValue = p_stValue->uParam.lValue;
+            p_stValue->uParam.lValue = WPG_fn_lChangeLinkCapabilities(hGraph, hWayPoint1, hWayPoint2, ulCaps, lValue);
+            p_stValue->eType = (tdeVariableType_)6;
+            break;
+        case 204:
+            if (WPG_fn_lGetLinkCapabilities(hGraph, hWayPoint1, hWayPoint2, &ulCaps) != -1) {
+                p_stValue->uParam.lValue = ulCaps;
+            } else {
+                p_stValue->uParam.lValue = 0;
+            }
+            p_stValue->eType = (tdeVariableType_)44;
+            break;
+        default:
+            fn_vOnAIErm_M_UpdateLastError(39, NULL);
+            break;
+        }
+    } else {
+        if (eFuncId == 204) {
+            p_stValue->uParam.lValue = 0;
+            p_stValue->eType = (tdeVariableType_)44;
+        } else {
+            p_stValue->uParam.lValue = -1;
+            p_stValue->eType = (tdeVariableType_)6;
+        }
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 1201–1420 */
@@ -2580,7 +2641,46 @@ tdstNodeInterpret_* fn_p_stCode4PointsDair(HIE_tdstSuperObject_* p_SuperObjPerso
     tdstGetSetParam_ stParam;
     float xSign;
     float xValue;
-    /* TODO: decompile from asm/... */
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    xSign = 1.0f;
+    switch (eFuncId) {
+    case 143:
+        xValue = stExtendDatas4Ray.xAirPoints4Ray;
+        break;
+    case 144:
+        xValue = stExtendDatas4Ray.xAirPointsMax4Ray;
+        break;
+    case 147:
+        xSign = -1.0f;
+    case 145:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xValue = xSign * ((stParam.eType == 8) ? stParam.uParam.xValue : (float)stParam.uParam.lValue);
+        xValue = stExtendDatas4Ray.xAirPoints4Ray + xValue;
+        if (xValue > stExtendDatas4Ray.xAirPointsMax4Ray) {
+            xValue = stExtendDatas4Ray.xAirPointsMax4Ray;
+        } else if (xValue < 0.0f) {
+            xValue = 0.0f;
+        }
+        stExtendDatas4Ray.xAirPoints4Ray = xValue;
+        break;
+    case 148:
+        xSign = -1.0f;
+    case 146:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xValue = xSign * ((stParam.eType == 8) ? stParam.uParam.xValue : (float)stParam.uParam.lValue);
+        xValue = stExtendDatas4Ray.xAirPointsMax4Ray + xValue;
+        if (xValue < 0.0f) xValue = 0.0f;
+        if (xValue < stExtendDatas4Ray.xAirPoints4Ray) {
+            stExtendDatas4Ray.xAirPoints4Ray = xValue;
+        }
+        stExtendDatas4Ray.xAirPointsMax4Ray = xValue;
+        break;
+    default:
+        return p_stTree;
+    }
+    p_stValue->uParam.xValue = xValue;
+    p_stValue->eType = (tdeVariableType_)8;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 95–523 */

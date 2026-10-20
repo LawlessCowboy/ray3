@@ -835,6 +835,7 @@ struct SCT_tdstListOfSoundEvent_ {
 };
 
 struct C_WaterFx : C_BaseFx {
+    C_WaterFx();
     int m_pGrids[2]; /* +0x28 */
     float m_MinPos[4]; /* +0x30 */
     float m_MaxPos[4]; /* +0x40 */
@@ -2152,6 +2153,16 @@ extern "C" void SDL_Destroy(unsigned int* phSDL);
 
 extern "C" void SDL_UpdateFogs(unsigned int hSDL);
 
+extern "C" unsigned int SDL_GetNew(void);
+
+extern "C" void SDL_Start(unsigned int hSDL);
+
+extern "C" void SDL_End(unsigned int hSDL);
+
+extern "C" void SDL_SetNbFaces(unsigned int hSDL, unsigned int NbFaces);
+
+extern "C" void SDL_Preprocess(unsigned int hSDL);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 72–153 */
 /* addr: 0x002e9780  size: 1264 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2305,8 +2316,23 @@ void WaterFx_SetPosition(float* PositionInWater, float* NewPosition)
  */
 void WaterFx_SetPerturbationMode(float* Position, int PerturbationMode, float Strength)
 {
+    C_WaterFx* pFx;
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+
+    for (p = WaterFx_g_List.pFirst; p != 0; p = p->pNext)
+    {
+        pFx = (C_WaterFx*)p->pFx;
+        if (Position[0] < pFx->m_MaxPos[0] && Position[0] > pFx->m_MinPos[0] &&
+            Position[1] < pFx->m_MaxPos[1] && Position[1] > pFx->m_MinPos[1])
+        {
+            pFx->m_bPerturbated = PerturbationMode;
+            if (0.0f == Strength)
+            {
+                pFx->m_fPerturbationStrength = Strength;
+                pFx->m_bPerturbated = 0;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1321–1331 */
@@ -2345,7 +2371,20 @@ void WaterFx_Perturb(float* Position, float Strength)
  */
 void WaterFx_vAddObjectEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
-    /* TODO: decompile from asm/... */
+    C_WaterFx* p;
+
+    if (!WaterFx_g_List.SearchElement(p_stEIT))
+    {
+        p = new C_WaterFx();
+
+        p->m_p_stEIT = p_stEIT;
+
+        p->m_pObj = pObj;
+
+        p->Init();
+
+        WaterFx_g_List.vAddElement(p);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1289–1299 */
@@ -2421,7 +2460,20 @@ void WaterFx_vInit(void)
 {
     unsigned int pSDL;
     tdstBaseFxListElement_* p;
-    /* TODO: decompile from asm/... */
+    C_WaterFx* pFx;
+
+    for (p = WaterFx_g_List.pFirst; p != 0; p = p->pNext)
+    {
+        pFx = (C_WaterFx*)p->pFx;
+        pSDL = SDL_GetNew();
+        SDL_Start(pSDL);
+        pFx->m_pSDL = pSDL;
+        GLI_g_NumberInList = 0;
+        pFx->DisplayInSDL();
+        SDL_End(pSDL);
+        SDL_SetNbFaces(pSDL, pFx->m_ulGridSize[0] * pFx->m_ulGridSize[1] * 2);
+        SDL_Preprocess(pSDL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1216–1245 */
@@ -2458,6 +2510,10 @@ inline void WaterFx_vClearCop0Register24(void)
 extern "C" void GLI_vSetOptimizedSDC(int flag);
 extern "C" void SDL_Draw(unsigned int hSDL);
 
+/* The retail loop is entered by a branch to its bottom test ("b 78") and has
+   no separate entry guard; MWCC only emits that rotated form for a loop that
+   is entered by an explicit jump, so the goto below reproduces it (and with it
+   the retail line map). */
 void WaterFx_vProcessAndDisplay(int bTransparent)
 {
     tdstBaseFxListElement_* p;
@@ -2467,21 +2523,21 @@ void WaterFx_vProcessAndDisplay(int bTransparent)
     if (p)
     {
         GLI_vSetOptimizedSDC(1);
-        while (p)
+        goto waterfx_loop_test;
+    waterfx_loop:
         {
-            pFx = (C_WaterFx*)p->pFx;
-            if (pFx->m_bTransparent == bTransparent)
+            pFx = (C_WaterFx*)p->pFx; if (pFx->m_bTransparent == bTransparent)
             {
-                WaterFx_vClearCop0Register24();
                 pFx->Process();
                 WaterFx_vClearCop0Register24();
                 WaterFx_vClearCop0Register24();
-                if (((C_WaterFx*)p->pFx)->m_pSDL)
-                    SDL_Draw(((C_WaterFx*)p->pFx)->m_pSDL);
+                if (((C_WaterFx*)p->pFx)->m_pSDL) SDL_Draw(((C_WaterFx*)p->pFx)->m_pSDL);
                 WaterFx_vClearCop0Register24();
             }
             p = p->pNext;
         }
+        waterfx_loop_test:
+        if (p) goto waterfx_loop;
         GLI_vSetOptimizedSDC(0);
         if (bTransparent)
             WaterFx_g_ListToDisplay.DeleteAllNoFree();

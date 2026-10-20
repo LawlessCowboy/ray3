@@ -19,7 +19,15 @@ struct AGO2_MEM_HandleDescriptors_ {
 };
 
 struct AGO2_MEM_FreeZone_ {
-    int pStart; /* +0x0 */
+    /* The retail code builds the address "&g_AGO2_MEM_FreeZones + 1" as a
+     * single address constant (lui %hi / addiu %lo with a +1 addend).
+     * MWCC 3.0.1 only folds such a constant addend into the relocation when
+     * the base is a char-typed lvalue, so the zone start is also exposed as
+     * a byte alias.  The layout is unchanged (pStart stays at +0x0). */
+    union {
+        int pStart; /* +0x0 */
+        char cStart; /* +0x0 */
+    };
     int pEnd; /* +0x4 */
     unsigned int Size; /* +0x8 */
 };
@@ -43,6 +51,8 @@ struct HIE_tdstSuperObject_ {
 typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
 extern tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
 extern HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
+extern int printf(const char* format, ...);
+void AGO2_MEM_Shrink(void);
 
 static unsigned int g_AGO2_MEM_NbOfAllocatedBlocs;
 static unsigned int g_AGO2_MEM_CurrentHandle;
@@ -173,15 +183,80 @@ void AGO_GetMainCharacterPosition(MTH3D_tdstVector_* pPos)
  */
 void AGO2_MEM_FreeFromHandle(unsigned int Handle)
 {
-    unsigned int k;
+    unsigned int HandleDescIndex;
+    unsigned int j;
+    AGO2_MEM_HandleDescriptors_* pCurrentDescriptor;
+    void* pBlock;
+    void* pEnd;
     unsigned int FreeZoneAfter;
     unsigned int FreeZoneBefore;
-    void* pEnd;
-    void* param0;
-    AGO2_MEM_HandleDescriptors_* pCurrentDescriptor;
-    unsigned int j;
-    unsigned int HandleDescIndex;
-    /* TODO: decompile from asm/... */
+    unsigned int k;
+
+    FreeZoneBefore = 1000;
+    FreeZoneAfter = 1000;
+    for (HandleDescIndex = 0; HandleDescIndex < g_AGO2_MEM_NbOfAllocatedBlocs; HandleDescIndex++) {
+        if (g_AGO2_MEM_HandleDescriptors[HandleDescIndex].Handle == Handle) {
+            break;
+        }
+    }
+    if (HandleDescIndex == g_AGO2_MEM_NbOfAllocatedBlocs) {
+        printf("HEHO !!! CA VA PAS LA TETE !!??\n\n");
+        return;
+    }
+
+    pCurrentDescriptor = &g_AGO2_MEM_HandleDescriptors[HandleDescIndex];
+    pBlock = (void*)pCurrentDescriptor->Pointer;
+    pEnd = (void*)(pCurrentDescriptor->Pointer + pCurrentDescriptor->Size);
+
+    for (k = 0; k < g_AGO2_MEM_NumberOfFreeZones; k++) {
+        if (g_AGO2_MEM_FreeZones[k].pStart == (int)pEnd) {
+            FreeZoneAfter = k;
+        }
+        else if (g_AGO2_MEM_FreeZones[k].pEnd == (int)pBlock) {
+            FreeZoneBefore = k;
+        }
+    }
+
+    /* Freeing a block either merges the two free zones that touch it (one
+     * starting at the block end, one ending at the block start), extends the
+     * single touching zone, or appends a new zone when the block touches
+     * none.  1000 is the "not found" sentinel for both zone indices. */
+    if ((FreeZoneAfter != 1000) || (FreeZoneBefore != 1000)) {
+        if ((FreeZoneAfter != 1000) && (FreeZoneBefore != 1000)) {
+            g_AGO2_MEM_FreeZones[FreeZoneBefore].pEnd = g_AGO2_MEM_FreeZones[FreeZoneAfter].pEnd;
+            g_AGO2_MEM_FreeZones[FreeZoneBefore].Size = g_AGO2_MEM_FreeZones[FreeZoneBefore].pEnd - g_AGO2_MEM_FreeZones[FreeZoneBefore].pStart;
+            for (j = FreeZoneAfter + 1; j < g_AGO2_MEM_NumberOfFreeZones; j++) {
+                g_AGO2_MEM_FreeZones[j-1].pStart = g_AGO2_MEM_FreeZones[j].pStart;
+                g_AGO2_MEM_FreeZones[j-1].pEnd = g_AGO2_MEM_FreeZones[j].pEnd;
+                g_AGO2_MEM_FreeZones[j-1].Size = g_AGO2_MEM_FreeZones[j].Size;
+            }
+            g_AGO2_MEM_NumberOfFreeZones--;
+        }
+        else if (FreeZoneAfter != 1000) {
+            g_AGO2_MEM_FreeZones[FreeZoneAfter].pStart = (int)pBlock;
+            g_AGO2_MEM_FreeZones[FreeZoneAfter].Size += pCurrentDescriptor->Size;
+        }
+        else if (FreeZoneBefore != 1000) {
+            g_AGO2_MEM_FreeZones[FreeZoneBefore].pEnd = (int)pEnd;
+            g_AGO2_MEM_FreeZones[FreeZoneBefore].Size += pCurrentDescriptor->Size;
+        }
+    }
+    else {
+        g_AGO2_MEM_FreeZones[g_AGO2_MEM_NumberOfFreeZones].pStart = (int)pBlock;
+        g_AGO2_MEM_FreeZones[g_AGO2_MEM_NumberOfFreeZones].pEnd = (int)pEnd;
+        g_AGO2_MEM_FreeZones[g_AGO2_MEM_NumberOfFreeZones].Size = pCurrentDescriptor->Size;
+        g_AGO2_MEM_NumberOfFreeZones++;
+        if (g_AGO2_MEM_NumberOfFreeZones == 1000) {
+            AGO2_MEM_Shrink();
+        }
+    }
+
+    for (j = HandleDescIndex + 1; j < g_AGO2_MEM_NbOfAllocatedBlocs; j++) {
+        g_AGO2_MEM_HandleDescriptors[j-1].Handle = g_AGO2_MEM_HandleDescriptors[j].Handle;
+        g_AGO2_MEM_HandleDescriptors[j-1].Size = g_AGO2_MEM_HandleDescriptors[j].Size;
+        g_AGO2_MEM_HandleDescriptors[j-1].Pointer = g_AGO2_MEM_HandleDescriptors[j].Pointer;
+    }
+    g_AGO2_MEM_NbOfAllocatedBlocs--;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2_Mem.c lines 294–350 */
@@ -241,12 +316,65 @@ void AGO2_MEM_FreeFromHandle(unsigned int Handle)
  */
 void AGO2_MEM_Shrink(void)
 {
-    char* pStartMin;
-    char* pStart;
-    unsigned int Found;
-    unsigned int IndexMin;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    unsigned int IndexMin;
+    unsigned int Found;
+    char* pStart;
+    char* pStartMin;
+    unsigned int uiCount;
+    int* pSrc;
+    int* pDst;
+
+    g_AGO2_MEM_NumberOfFreeZones = 1;
+    pStart = (char*)g_AGO2_Main_Memory;
+    g_AGO2_MEM_FreeZones[0].pStart = (int)pStart;
+    g_AGO2_MEM_FreeZones[0].pEnd = (int)&g_AGO2_MEM_FreeZones;
+    g_AGO2_MEM_FreeZones[0].Size = 0x100000;
+
+    i = 0;
+    while (i < g_AGO2_MEM_NbOfAllocatedBlocs) {
+        g_AGO2_MEM_HandleDescriptors[i].Shrinked = 0;
+        i++;
+    }
+
+    do {
+        /* The retail initialises the search bound with one address constant
+         * that is one byte past the free-zone array; cStart is the char
+         * alias that lets MWCC fold the +1 into the relocation addend. */
+        pStartMin = &g_AGO2_MEM_FreeZones[0].cStart + 1;
+        IndexMin = 0;
+        Found = 0;
+        for (i = 0; i < g_AGO2_MEM_NbOfAllocatedBlocs; i++) {
+            if ((g_AGO2_MEM_HandleDescriptors[i].Shrinked == 0) &&
+                ((char*)g_AGO2_MEM_HandleDescriptors[i].Pointer < pStartMin)) {
+                pStartMin = (char*)g_AGO2_MEM_HandleDescriptors[i].Pointer;
+                Found = 1;
+                IndexMin = i;
+            }
+        }
+        if (Found != 0) {
+            if (pStart != pStartMin) {
+                uiCount = g_AGO2_MEM_HandleDescriptors[IndexMin].Size / 4;
+                pDst = (int*)pStart;
+                pSrc = (int*)pStartMin;
+                while (uiCount != 0) {
+                    *pDst = *pSrc;
+                    pSrc++;
+                    pDst++;
+                    uiCount--;
+                }
+            }
+            g_AGO2_MEM_HandleDescriptors[IndexMin].Shrinked = 1;
+            g_AGO2_MEM_HandleDescriptors[IndexMin].Pointer = (int)pStart;
+            pStart += g_AGO2_MEM_HandleDescriptors[IndexMin].Size;
+            g_AGO2_MEM_FreeZones[0].pStart += g_AGO2_MEM_HandleDescriptors[IndexMin].Size;
+        }
+    } while (Found);
+
+    g_AGO2_MEM_FreeZones[0].Size = g_AGO2_MEM_FreeZones[0].pEnd - g_AGO2_MEM_FreeZones[0].pStart;
+    if (g_AGO2_MEM_FreeZones[0].Size == 0) {
+        g_AGO2_MEM_NumberOfFreeZones = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2_Mem.c lines 269–276 */

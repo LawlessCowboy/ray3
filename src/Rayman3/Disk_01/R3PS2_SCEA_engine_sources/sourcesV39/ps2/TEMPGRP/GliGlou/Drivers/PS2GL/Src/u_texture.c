@@ -17,6 +17,21 @@ struct S_TXR_Header_ {
     unsigned int SizeY; /* +0xc */
 };
 
+struct MTH3D_tdstVector_ {
+    float xX; /* +0x0 */
+    float xY; /* +0x4 */
+    float xZ; /* +0x8 */
+};
+
+struct GEO_tdstElementIndexedTriangles_ {
+    void* p_stFields[8]; /* +0x0 .. +0x1f */
+    unsigned short* pusIndexTable; /* +0x20 */
+};
+
+extern int gs_keepit;
+extern void SyncDCache(void*, void*);
+extern void InvalidDCache(void*, void*);
+
 int TBF_g_CurrentFile;
 int printf(const char* format, ...);
 int TBF_g_CurrentFileBuffer;
@@ -234,21 +249,140 @@ extern int GetTotalSizeWithMipMaps(int);
  */
 void GLI_vUpdateCharacterVAReal(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints, unsigned int NbDestPoints)
 {
-    int i;
-    int j;
-    unsigned int* p;
-    char* pSprWork;
-    char* pSprDest;
-    unsigned int NbPointsToTransfert;
-    unsigned int NbPointsToProcessNext;
-    unsigned int NbPointsToProcess;
-    unsigned int RemainingNbPoints;
-    unsigned int RemainingNbPointsNext;
-    unsigned int CurrentBuffer;
-    unsigned short* param0;
-    MTH3D_tdstVector_* p_stPointsArg;
-    float* pV;
-    /* TODO: decompile from asm/... */
+    volatile unsigned int* puGs;
+    unsigned int  ulDest;
+    unsigned int  ulCheck;
+    unsigned int  ulCheck2;
+    unsigned int  ulFlag = 0;
+    unsigned int  ulNb;
+    unsigned int  ulRemaining;
+    unsigned int  ulRemainingSnap;
+    unsigned int  ulBuffer;
+    unsigned int  ulCount;
+    unsigned int  ulPacket;
+    unsigned int  ulOffset;
+    unsigned short* pusIndex;
+    unsigned short  usCount;
+    unsigned short  usIndex;
+
+    *(volatile unsigned int*)0x1000E000 |= 2;
+    while ((*(volatile unsigned int*)0x1000D400 & 0x100) != 0) { for (ulNb = 0; ulNb < 0x64; ulNb++) { ulCheck = (ulCheck + ulNb) & 0x746; } }
+    gs_keepit += ulCheck;
+    while ((*(volatile unsigned int*)0x1000D000 & 0x100) != 0) { for (ulNb = 0; ulNb < 0x64; ulNb++) { ulCheck2 = (ulCheck2 + ulNb) & 0x746; } }
+    gs_keepit += ulCheck2;
+    SyncDCache((char*)p_stPoints - 0x60, (char*)p_stPoints + NbPoints * 12 + 0x60);
+    InvalidDCache((char*)p_stPoints - 0x60, (char*)p_stPoints + NbPoints * 12 + 0x60);
+    SyncDCache((char*)pDestPV - 0x10, (char*)pDestPV + 0x10);
+    SyncDCache((char*)pDestPV + NbDestPoints * 16 - 0x10, (char*)pDestPV + NbDestPoints * 16 + 0x10);
+    InvalidDCache((char*)pDestPV - 0x10, (char*)pDestPV + NbDestPoints * 16 + 0x10);
+    if (p_stEIT->pusIndexTable == NULL) {
+        printf("Ouch no index table!\n");
+        return;
+    }
+    pusIndex = p_stEIT->pusIndexTable + 2;
+    ulDest = ((unsigned int)pDestPV) | 0x30000000;
+    puGs = (volatile unsigned int*)0x70000000;
+    puGs[0] = 0xFFFFFFFF;
+    puGs[1] = 0xFFFFFFFF;
+    puGs[2] = 0xFFFFFFFF;
+    puGs[3] = 0;
+    puGs[4] = 0;
+    puGs[5] = 0;
+    puGs[6] = 0;
+    puGs[7] = 0x3F800000;
+    puGs[8] = 0;
+    puGs[9] = 0;
+    puGs[10] = 0;
+    puGs[11] = 0x8000;
+    ulBuffer = 0x70000200 + (ulFlag << 13);
+    ulNb = (NbPoints < 0x3C) ? NbPoints : 0x3C;
+    ulRemaining = NbPoints - ulNb;
+    *(volatile unsigned int*)0x1000E410 = ((unsigned int)p_stPoints) & 0xFFFFFFF0;
+    *(volatile unsigned int*)0x1000E480 = ulBuffer & 0x3FF0;
+    *(volatile unsigned int*)0x1000E420 = ((((ulNb + 3) & ~3) * 12) + 15) >> 4;
+    p_stPoints += ulNb * 12;
+    *(volatile unsigned int*)0x1000D400 = 0x100;
+    do {
+        while ((*(volatile unsigned int*)0x1000D400 & 0x100) != 0) { for (ulNb = 0; ulNb < 0x64; ulNb++) { ulCheck2 = (ulCheck2 + ulNb) & 0x746; } }
+        gs_keepit += ulCheck2;
+        ulCount = ulNb;
+        ulRemainingSnap = ulRemaining;
+        ulPacket = ulBuffer;
+        ulFlag ^= 1;
+        if (ulRemaining != 0) {
+            ulBuffer = 0x70000200 + (ulFlag << 13);
+            ulNb = (ulRemaining < 0x3C) ? ulRemaining : 0x3C;
+            ulRemaining = ulRemaining - ulNb;
+            *(volatile unsigned int*)0x1000E410 = ((unsigned int)p_stPoints) & 0xFFFFFFF0;
+            *(volatile unsigned int*)0x1000E480 = ulBuffer & 0x3FF0;
+            *(volatile unsigned int*)0x1000E420 = ((((ulNb + 3) & ~3) * 12) + 15) >> 4;
+            p_stPoints += ulNb * 12;
+            *(volatile unsigned int*)0x1000D400 = 0x100;
+        }
+        asm { lui $t0, 0x7000 }
+        asm { lq $s0, 0x0($t0) }
+        asm { lq $s1, 0x10($t0) }
+        asm { lq $s2, 0x20($t0) }
+        asm { lq $t2, 0x0($t8) }
+        asm { lq $t3, 0x10($t8) }
+        asm { mtsab $zero, 0xC }
+        asm { qfsrv $t5, $t3, $t2 }
+        asm { lq $t4, 0x20($t8) }
+        asm { nop }
+        asm { nop }
+        asm { mtsab $zero, 0x8 }
+        asm { qfsrv $t6, $t4, $t3 }
+        usCount = *pusIndex;
+        pusIndex++;
+        ulPacket += 0x30;
+        asm { mtsab $zero, 0x4 }
+        asm { qfsrv $t7, $zero, $t4 }
+        if (usCount != 0) {
+            do {
+                usIndex = *pusIndex;
+                ulOffset = usIndex & 0x7FFF;
+                usIndex = usIndex & 0x8000;
+                usCount--;
+                ulOffset = ulOffset << 4;
+                asm { pand $t2, $t2, $s0 }
+                asm { add $s3, $s3, $v1 }
+                if (usIndex == 0) {
+                    pusIndex++;
+                    asm { por $t2, $t2, $s2 }
+                    if (usCount != 0) continue;
+                    asm { sq $t2, 0x0($s3) }
+                } else {
+                    asm { por $t2, $t2, $s1 }
+                    if (usCount != 0) continue;
+                    asm { sq $t2, 0x0($s3) }
+                }
+            } while (usCount != 0);
+        }
+        usCount = *pusIndex;
+        if (ulCount == 0) break;
+        pusIndex++;
+        if (usCount != 0) {
+            do {
+                usIndex = *pusIndex;
+                ulOffset = usIndex & 0x7FFF;
+                usCount--;
+                usIndex = usIndex & 0x8000;
+                ulOffset = ulOffset << 4;
+                asm { pand $t5, $t5, $s0 }
+                asm { add $s3, $s3, $v1 }
+                if (usIndex == 0) {
+                    pusIndex++;
+                    asm { por $t5, $t5, $s2 }
+                    if (usCount != 0) continue;
+                    asm { sq $t5, 0x0($s3) }
+                } else {
+                    asm { por $t5, $t5, $s1 }
+                    if (usCount != 0) continue;
+                    asm { sq $t5, 0x0($s3) }
+                }
+            } while (usCount != 0);
+        }
+    } while (ulRemainingSnap != 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 413–446 */
@@ -435,13 +569,7 @@ void TBF_vCreateEmptyTexture(void)
         Header.Flags = 0;
         Header.SizeX = 0;
         Header.SizeY = 0;
-        if (TBF_g_UseTBFWriteCache != 0) {
-            TBF_ChangeCacheSize(0x10);
-            memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, &Header, 0x10);
-            TBF_g_CurrentFileSize += 0x10;
-        } else {
-            sceWrite(TBF_g_CurrentFile, &Header, 0x10);
-        }
+        if (TBF_g_UseTBFWriteCache != 0) { TBF_ChangeCacheSize(0x10); } if (TBF_g_UseTBFWriteCache != 0) { memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, &Header, 0x10); TBF_g_CurrentFileSize += 0x10; } else { sceWrite(TBF_g_CurrentFile, &Header, 0x10); }
     }
 }
 
@@ -476,49 +604,38 @@ void TBF_vCreateEmptyTexture(void)
 void TBF_vWriteTexture(void* pTextureData, unsigned int SizeX, unsigned int SizeY, unsigned int Flags)
 {
     S_TXR_Header_ Header;
-    int iDataSize;
     int iPaletteSize;
-    unsigned int Type;
+    int iDataSize;
+    if (TBF_g_CurrentFile < 0)
+        return;
+    switch (Flags & 0xF) {
+    case 1:
+        iPaletteSize = 0x40;
+        iDataSize = (SizeX * SizeY) >> 1;
+        break;
+    case 2:
+        iDataSize = SizeX * SizeY;
+        iPaletteSize = 0x400;
+        if (Flags & 0x1000) {
+            iDataSize = GetTotalSizeWithMipMaps(iDataSize);
+        }
+        break;
+    case 3:
+        iPaletteSize = 0;
+        iDataSize = (SizeX * SizeY) * 2;
+        break;
+    case 4:
+        iPaletteSize = 0;
+        iDataSize = (SizeX * SizeY) * 4;
+        break;
+    }
     Header.VersionID = 0x0AB9FC72;
     Header.Flags = Flags;
     Header.SizeX = SizeX;
     Header.SizeY = SizeY;
-    if (TBF_g_CurrentFile < 0)
-        return;
-    Type = Flags & 0xF;
-    if (Type == 1) {
-        iPaletteSize = 0x40;
-        iDataSize = (SizeX * SizeY) >> 1;
-    } else if (Type == 2) {
-        iPaletteSize = 0;
-        iDataSize = SizeX * SizeY * 2;
-    } else if (Type == 3) {
-        iPaletteSize = 0;
-        iDataSize = SizeX * SizeY * 3;
-    } else if (Type == 4) {
-        iPaletteSize = 0x400;
-        iDataSize = SizeX * SizeY * 4;
-        if ((Flags & 0x1000) != 0)
-            iDataSize = GetTotalSizeWithMipMaps(iDataSize);
-    } else {
-        iPaletteSize = 0;
-        iDataSize = 0;
-    }
-    if (TBF_g_UseTBFWriteCache != 0) {
-        TBF_ChangeCacheSize(0x10);
-        memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, &Header, 0x10);
-        TBF_g_CurrentFileSize += 0x10;
-    } else {
-        sceWrite(TBF_g_CurrentFile, &Header, 0x10);
-    }
+    if (TBF_g_UseTBFWriteCache != 0) { TBF_ChangeCacheSize(0x10); } if (TBF_g_UseTBFWriteCache != 0) { memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, &Header, 0x10); TBF_g_CurrentFileSize += 0x10; } else { sceWrite(TBF_g_CurrentFile, &Header, 0x10); }
     iDataSize += iPaletteSize;
-    if (TBF_g_UseTBFWriteCache != 0) {
-        TBF_ChangeCacheSize(iDataSize);
-        memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, pTextureData, iDataSize);
-        TBF_g_CurrentFileSize += iDataSize;
-    } else {
-        sceWrite(TBF_g_CurrentFile, pTextureData, iDataSize);
-    }
+    if (TBF_g_UseTBFWriteCache != 0) { TBF_ChangeCacheSize(iDataSize); } if (TBF_g_UseTBFWriteCache != 0) { memcpy((char*)TBF_g_CurrentFileBuffer + TBF_g_CurrentFileSize, pTextureData, iDataSize); TBF_g_CurrentFileSize += iDataSize; } else { sceWrite(TBF_g_CurrentFile, pTextureData, iDataSize); }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 258–265 */
@@ -533,22 +650,11 @@ void TBF_vWriteTexture(void* pTextureData, unsigned int SizeX, unsigned int Size
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void TBF_vClose(void)
-{
-    int Result;
-    Result = -1;
-    if (TBF_g_CurrentFile >= 0) {
-        if (TBF_g_UseTBFWriteCache != 0 && TBF_g_CurrentFileBuffer != 0) {
-            sceWrite(TBF_g_CurrentFile, (void*)TBF_g_CurrentFileBuffer, TBF_g_CurrentFileSize);
-            free((void*)TBF_g_CurrentFileBuffer);
-            TBF_g_CurrentFileBuffer = 0;
-            TBF_g_CurrentFileAllocation = 0;
-            TBF_g_CurrentFileSize = 0;
-        }
+void TBF_vClose(void) {
+    int Result; Result = -1; if (TBF_g_CurrentFile >= 0) {
+        if (TBF_g_CurrentFile >= 0) { if (TBF_g_UseTBFWriteCache != 0 && TBF_g_CurrentFileBuffer != 0) { sceWrite(TBF_g_CurrentFile, (void*)TBF_g_CurrentFileBuffer, TBF_g_CurrentFileSize); free((void*)TBF_g_CurrentFileBuffer); TBF_g_CurrentFileBuffer = 0; TBF_g_CurrentFileAllocation = 0; TBF_g_CurrentFileSize = 0; } }
         sceClose(TBF_g_CurrentFile);
-        Result = -1;
-    }
-    TBF_g_CurrentFile = Result;
+        Result = -1; } TBF_g_CurrentFile = Result;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_texture.c lines 219–251 */

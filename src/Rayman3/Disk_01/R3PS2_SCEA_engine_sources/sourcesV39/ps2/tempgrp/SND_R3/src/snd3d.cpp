@@ -17,7 +17,6 @@ typedef struct CLinkActor CLinkActor;
 typedef struct V3Ds V3Ds;
 typedef struct smap smap;
 typedef struct CProgramHdr CProgramHdr;
-typedef struct CIdObjPtr CIdObjPtr;
 typedef struct CCmdInterface CCmdInterface;
 typedef struct CResType CResType;
 typedef struct sTreeLink sTreeLink;
@@ -38,16 +37,19 @@ typedef struct spair spair;
 typedef struct sTreeNode sTreeNode;
 typedef struct CUUID CUUID;
 typedef struct CLookupElement CLookupElement;
-typedef struct CResData CResData;
+namespace usnd { struct CResData; }
+typedef usnd::CResData CResData;
 typedef struct _Node _Node;
 typedef struct sset sset;
 typedef struct CActorResData CActorResData;
 typedef struct CSoundSemaphore CSoundSemaphore;
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
 typedef struct CLinkTypeActor CLinkTypeActor;
-typedef struct TTypedVar TTypedVar;
+namespace usnd { template <class T> struct TTypedVar; }
+typedef usnd::TTypedVar<int> TTypedVar;
 typedef struct slist slist;
-typedef struct CEventResData CEventResData;
+namespace usnd { struct CEventResData; }
+typedef usnd::CEventResData CEventResData;
 typedef struct CRefIdObj CRefIdObj;
 typedef struct const_iterator const_iterator;
 typedef struct streebase streebase;
@@ -55,7 +57,8 @@ typedef struct CLinkCallbackResObjCont CLinkCallbackResObjCont;
 typedef struct CProgramContext CProgramContext;
 typedef struct CActorModifiers CActorModifiers;
 typedef struct _stVector _stVector;
-typedef struct CVar CVar;
+namespace usnd { struct CVar; }
+typedef usnd::CVar CVar;
 typedef struct CLinkTypeActorCont CLinkTypeActorCont;
 typedef union _SND_tduRefEvt _SND_tduRefEvt;
 typedef struct iterator iterator;
@@ -68,9 +71,10 @@ typedef struct CStringIsLess CStringIsLess;
  * until its complete library layout is recovered. */
 struct sallocator {};
 
-/* This TU contains one recovered out-of-line Jingle helper. */
+/* The recovered out-of-line Jingle helpers. */
 struct Jingle {
-    static void ms_fVolReduction(int);
+    static void fs_vAddJingle(int, int, int, int);
+    static void fs_vSynchronise(void);
 };
 
 namespace usnd {
@@ -84,12 +88,17 @@ struct CPS2Box {
 }
 
 extern "C" void usnd_vLeaveCritSect(unsigned int);
+extern "C" unsigned int usnd_uiCreateCritSect(void);
+extern "C" unsigned int usnd_uiTryToEnterCritSect(unsigned int);
+extern "C" void usnd_vEnterCritSect(unsigned int);
 
 struct CSoundSemaphoreCont {
     /* The singleton call has no incoming this argument in the target. */
     static CSoundSemaphoreCont* mfn_roGetInstance(void);
     unsigned char mfn_bRemoveSoundSemaphore(int);
+    unsigned char mfn_bSynchroSoundSemaphore(void);
     CSoundSemaphore* mfn_poAddSoundSemaphore(int, int);
+    CSoundSemaphore* mfn_poFindSoundSemaphore(int);
 };
 
 typedef enum tdeEventType {
@@ -120,8 +129,13 @@ struct less {
     /* C++ base binary_function at +0x0. */
 };
 
-struct stree {
-    /* C++ base streebase at +0x0. */
+struct streebase {
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+struct stree : streebase {
     sallocator allocator; /* +0xc */
     less key_compare; /* +0xd */
 };
@@ -165,6 +179,9 @@ struct CExtraEventActor {
     unsigned char mbWaitForKill; /* +0x48 */
     unsigned char mbAllSoundPaused; /* +0x49 */
     CResObjParams m_oResObjParams; /* +0x4c */
+    int fn_bIsSoundPlaying(int);
+    int fn_bIsSoundPlaying(usnd::CResData*);
+    static int ss32CurrentRefreshChannel;
 };
 
 struct CLinkActor {
@@ -174,6 +191,7 @@ struct CLinkActor {
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
+    CExtraEventActor* mfn_poGetExtraEventActorInstance(int, const usnd::CEventResData*);
 };
 
 struct V3Ds {
@@ -185,6 +203,74 @@ struct V3Ds {
 struct smap {
     stree _Tr; /* +0x0 */
 };
+/* The usnd STL containers used by CLinkTypeActorCont. */
+namespace usnd {
+struct streebase {
+    struct sTreeLink {
+        sTreeLink* m_poLeft; /* +0x0 */
+        sTreeLink* m_poParent; /* +0x4 */
+        sTreeLink* m_poRight; /* +0x8 */
+        int m_eColor; /* +0xc */
+    };
+    struct iterator_base {
+        iterator_base(void) {}
+        iterator_base(sTreeLink* po_Link);
+        void _Inc(void);
+        sTreeLink* _Ptr; /* +0x0 */
+    };
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+template <class T> struct less {
+};
+
+template <class T> struct sallocator {
+};
+
+template <class T1, class T2> struct spair {
+    T1 first;
+    T2 second;
+};
+
+template <class K, class V, class KFN, class CMP, class ALLOC>
+struct stree : streebase {
+    struct sTreeNode : sTreeLink {
+        V m_oValue; /* +0x10 */
+    };
+    struct iterator : iterator_base {
+        iterator(void) {}
+        iterator(sTreeLink* po_Link) : iterator_base(po_Link) {}
+        V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
+        iterator& operator++(void) { _Inc(); return *this; }
+        bool operator==(const iterator& ro_It) const { return _Ptr == ro_It._Ptr; }
+        bool operator!=(const iterator& ro_It) const { return !(*this == ro_It); }
+    };
+    sTreeLink*& _Lmost(void);
+    iterator begin(void) { return iterator(_Lmost()); }
+    iterator end(void) { return iterator(_HeadLink); }
+    ALLOC allocator; /* +0xc */
+    CMP key_compare; /* +0xd */
+};
+
+template <class K, class T, class CMP, class ALLOC>
+struct smap {
+    struct _Kfn {
+    };
+    typedef stree<K, spair<const K, T>, _Kfn, CMP, ALLOC> _Imp;
+    typedef typename _Imp::iterator iterator;
+    iterator begin(void) { return _Tr.begin(); }
+    iterator end(void) { return _Tr.end(); }
+    _Imp _Tr; /* +0x0 */
+};
+
+template <class T> struct CIdObjPtr {
+    CLookupElement* m_poElmt; /* +0x0 */
+    operator T*(void) const;
+};
+}
+typedef usnd::CIdObjPtr<CResData> CIdObjPtr;
 
 struct CProgramHdr {
     unsigned int m_uiConstHdrSize; /* +0x0 */
@@ -216,10 +302,6 @@ struct CProgramHdr {
     int m_aiStdHandlerIds[33]; /* +0x74 */
 };
 
-struct CIdObjPtr {
-    CLookupElement* m_poElmt; /* +0x0 */
-};
-
 struct CCmdInterface {
     smap m_oCommands; /* +0x0 */
     smap m_oInterfaces; /* +0x10 */
@@ -245,6 +327,7 @@ struct sTreeLink {
 
 struct CVolumeActorModifier {
     /* C++ base CActorModifiers at +0x0. */
+    unsigned char _extractor_padding_00[0x24];
 };
 
 struct C3DDirection {
@@ -260,6 +343,7 @@ struct C3DParam {
 
 struct CPitchActorModifier {
     /* C++ base CActorModifiers at +0x0. */
+    unsigned char _extractor_padding_00[0x24];
 };
 
 struct CRolloffParam {
@@ -304,14 +388,32 @@ struct CCritSect {
 struct CActorProgramContext {
     /* C++ base CProgramContext at +0x0. */
     /* C++ base CVarAccess at +0xc. */
+    /* Virtual order from the retail __vt__Q24usnd20CActorProgramContext. */
+    virtual void fv_vAddRunningObj(CResObj& ro_Obj, void* pv_UserData, int s32_Data, bool b_Flag, CResObj* po_Parent);
+    virtual bool fv_bAddRunningObj(CResObj& ro_Obj, CResObj& ro_Parent, bool b_Flag);
+    virtual void fv_vRemoveRunningObj(CResObj& ro_Obj);
+    virtual unsigned int fv_uiGetAllRunningObjs(CResObj** ppo_Objs, unsigned int ui_Max);
+    virtual void fv_vCallHandler(const char* sz_Name, void* pv_Param);
+    virtual void fv_vAddRunningObjRef(CResObj& ro_Obj);
+    virtual void fv_vReleaseRunningObjRef(CResObj& ro_Obj);
+    virtual bool fv_bAreThereRunningObjs(void);
+    virtual unsigned int fv_uiGetRunningObjsWithUserData(int* pvi_UserData, CResObj** ppo_Objs, unsigned int ui_Max, unsigned int ui_Extra);
+    unsigned char _extractor_padding_00[0xc]; /* implicitly added by extractor; +0x4..0xf */
     CResObjState m_oObjStates; /* +0x10 */
     CActorResObj* m_pActor; /* +0x38 */
     smap m_oVariables; /* +0x3c */
     CCritSect m_oMutex; /* +0x4c */
 };
 
+/* The postponed-play helper the theme check calls. */
+struct PostponedPlay {
+    static unsigned char fs_bIsSoundPlaying(usnd::CResData*, CExtraEventActor*);
+    static void fs_vSynchro(void);
+};
+
 struct CActorResObj {
     /* C++ base CResObj at +0x0. */
+    unsigned char _extractor_padding_00[0xc]; /* implicitly added by extractor; +0x0..0xb */
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -354,12 +456,11 @@ struct CLookupElement {
     CIdObj* m_poIdObj; /* +0xc */
 };
 
-struct CResData {
+struct usnd::CResData {
     /* C++ base CRefIdObj at +0x0. */
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
 };
-
 struct _Node {
     _Node* _pNext; /* +0x0 */
     _Node* _pPrev; /* +0x4 */
@@ -379,10 +480,10 @@ struct CActorResData {
     CVarAccess* m_poGlobalVarAccess; /* +0x48 */
 };
 
-struct CSoundSemaphore {
-    /* C++ base smap at +0x0. */
+struct CSoundSemaphore : smap {
     unsigned int mu32ChannelId; /* +0x10 */
     unsigned int mu32ChannelSize; /* +0x14 */
+    int mfn_bAddSoundRequest(int, int, int);
 };
 
 struct _tdstAllRetObjectSound {
@@ -409,11 +510,8 @@ struct CLinkTypeActor {
     int ms32TypeId; /* +0x80 */
     int ms32LineId; /* +0x84 */
     _tdstAllRetObjectSound mstIActor; /* +0x88 */
-};
-
-struct TTypedVar {
-    /* C++ base CVar at +0x0. */
-    float m_oValue; /* +0x1c */
+    int mfn_bSoundPlaying(void);
+    CLinkActor* mfn_poGetActorFromIdInTypeActorInstance(int);
 };
 
 struct slist {
@@ -422,14 +520,14 @@ struct slist {
     unsigned int _Size; /* +0x8 */
 };
 
-struct CEventResData {
+struct usnd::CEventResData {
     /* C++ base CResData at +0x0. */
     float m_fCoeffA; /* +0x18 */
     float m_fCoeffB; /* +0x1c */
     float m_fCoeffC; /* +0x20 */
     float m_fCoeffD; /* +0x24 */
     tdeEventType m_eEventType; /* +0x28 */
-    CIdObjPtr m_pTargetRes; /* +0x2c */
+    ::CIdObjPtr m_pTargetRes; /* +0x2c */
 };
 
 struct CRefIdObj {
@@ -441,15 +539,28 @@ struct const_iterator {
     _Node* _Ptr; /* +0x0 */
 };
 
-struct streebase {
-    sTreeLink* _HeadLink; /* +0x0 */
-    unsigned char _Multi; /* +0x4 */
-    unsigned int _Size; /* +0x8 */
-};
-
 struct CLinkCallbackResObjCont {
     /* C++ base slist at +0x0. */
+    unsigned char mfn_bSynchroCallbackInstance(void);
 };
+
+struct CLinkMicroCont {
+    static CLinkMicroCont* mfn_roGetInstance(void);
+    unsigned char mfn_bSynchroMicroInstance(void);
+};
+
+namespace usnd {
+struct CL2PS2CoreMgr {
+    static void fs_vUpdate(void);
+};
+}
+
+/* The postponed-play and jingle helpers the synchro pass drives. */
+extern "C" void GLI_vStartSoundCounter(int);
+extern "C" void GLI_vEndSoundCounter(int);
+extern "C" int GAM_fn_iIsGamePaused(void);
+extern "C" void fn_vValidateAllOption(void);
+extern "C" void SND_fn_vSetVolumeLineSound(int, int);
 
 struct CProgramContext {
     CVarAccess* m_poGlobVarAcc; /* +0x4 */
@@ -471,20 +582,17 @@ struct _stVector {
     float f32z; /* +0x8 */
 };
 
-struct CVar {
-    CSndVarType* m_poType; /* +0x4 */
-    sset m_NotifTargets; /* +0x8 */
-    sstring m_strName; /* +0x18 */
-};
-
-struct CLinkTypeActorCont {
-    /* C++ base smap at +0x0. */
+struct CLinkTypeActorCont : usnd::smap<int, CLinkTypeActor*, usnd::less<int>, usnd::sallocator<CLinkTypeActor*> > {
+    static CLinkTypeActorCont* mfn_roGetInstance(void);
+    CLinkTypeActor* mfn_poGetActorTypeFromId(int);
+    void mfn_vSynchroActorInstance(void);
     CActorResData* m_poStandardActorResData; /* +0x10 */
     CActorResData* m_poMusicActorResData; /* +0x14 */
     CResData* m_poMusicProgramResData; /* +0x18 */
 };
 
 union _SND_tduRefEvt {
+    float fTheme; /* +0x0: MWCC copies a union through its first member */
     unsigned int Id; /* +0x0 */
     _SND_tdstBlockEvent* pstPtr; /* +0x0 */
 };
@@ -503,12 +611,36 @@ struct CSndVarType {
     int m_czTypeName; /* +0x8 */
 };
 
+/* usnd::CVar is polymorphic (its vtable pointer occupies +0x0); the value
+ * member of usnd::TTypedVar<T> therefore starts at +0x1c. */
+struct usnd::CVar {
+    virtual ~CVar(void);
+    CSndVarType* m_poType; /* +0x4 */
+    sset m_NotifTargets; /* +0x8 */
+    sstring m_strName; /* +0x18 */
+    void f_vValueChanged(void);
+};
+
 struct CStringIsLess {
     /* C++ base binary_function at +0x0. */
 };
 
+
+struct _SND_tdstBlockEvent {
+    unsigned char _extractor_padding_00[0x14]; /* +0x0..0x13 */
+    CLinkActor* m_poLinkActor; /* +0x14 */
+    unsigned char _extractor_padding_01[0x14]; /* +0x18..0x2b */
+    CIdObjPtr m_oResId; /* +0x2c */
+};
+
 _SND_tduRefEvt g_oLastTheme;
 _SND_tduRefEvt g_oLastSavedTheme;
+int g_lSoundObjectTypeMusic;
+int g_lSoundVolumeLineVoices;
+int g_lSoundVolumeLineSound;
+int g_lSoundVolumeLineMusic;
+int g_lSoundVolumeLineAmbiance;
+int g_lSoundVolumeLineMenu;
 unsigned int gs_uiCritSect;
 int g_bInStereo;
 static int g_bUseNearestMicro;
@@ -522,9 +654,14 @@ char g_szMarker[2];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void Jingle::ms_fVolReduction(int oValue)
-{
-    /* TODO: decompile from asm/... */
+namespace usnd {
+template <class T>
+struct TTypedVar : CVar {
+    T m_oValue; /* +0x1c */
+    void f_vSetValue(T oValue);
+};
+
+template <> void TTypedVar<int>::f_vSetValue(int oValue) { m_oValue = oValue; f_vValueChanged(); }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 1041–1045 */
@@ -541,10 +678,11 @@ void Jingle::ms_fVolReduction(int oValue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_bIsTypePlayingSound(int s32_TypeId)
+extern "C" int SND_fn_bIsTypePlayingSound(int s32_TypeId)
 {
     CLinkTypeActor* po_TypeActor;
-    /* TODO: decompile from asm/... */
+    po_TypeActor = CLinkTypeActorCont::mfn_roGetInstance()->mfn_poGetActorTypeFromId(s32_TypeId);
+    return po_TypeActor->mfn_bSoundPlaying() ? 1 : 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 1035–1035 */
@@ -659,9 +797,49 @@ void SND_fn_vSynchroSound(void)
 {
     int currentPause;
     CLinkCallbackResObjCont o_Singleton;
-    signed char init;
-    int inPause;
-    /* TODO: decompile from asm/... */
+    static signed char init = 0;
+    static int inPause = 0;
+
+    GLI_vStartSoundCounter(0);
+    if (!init)
+    {
+        inPause = 0;
+        init = 1;
+    }
+    inPause = GAM_fn_iIsGamePaused();
+    if (inPause)
+    {
+        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, 0);
+        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, 0);
+        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, 0);
+        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, 0);
+        SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, 0);
+    }
+    else
+    {
+        if (inPause != gs_uiCritSect)
+        {
+            fn_vValidateAllOption();
+            inPause = gs_uiCritSect;
+        }
+    }
+    if (!gs_uiCritSect)
+        gs_uiCritSect = usnd_uiCreateCritSect();
+    if (usnd_uiTryToEnterCritSect(gs_uiCritSect) == 1)
+    {
+        PostponedPlay::fs_vSynchro();
+        o_Singleton.mfn_bSynchroCallbackInstance();
+        CLinkMicroCont::mfn_roGetInstance()->mfn_bSynchroMicroInstance();
+        CExtraEventActor::ss32CurrentRefreshChannel++;
+        if (CExtraEventActor::ss32CurrentRefreshChannel >= 5)
+            CExtraEventActor::ss32CurrentRefreshChannel = 0;
+        CLinkTypeActorCont::mfn_roGetInstance()->mfn_vSynchroActorInstance();
+        CSoundSemaphoreCont::mfn_roGetInstance()->mfn_bSynchroSoundSemaphore();
+        Jingle::fs_vSynchronise();
+        usnd::CL2PS2CoreMgr::fs_vUpdate();
+        GLI_vEndSoundCounter(0);
+        usnd_vLeaveCritSect(gs_uiCritSect);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 805–806 */
@@ -729,14 +907,39 @@ void SND_fn_vChangeVolumeSound(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_bIsSoundPlaying(_SND_tduRefEvt u_RefEvt)
+extern "C" int SND_fn_bIsSoundPlaying(_SND_tduRefEvt u_RefEvt)
 {
-    CExtraEventActor* poEEActor;
-    CLinkActor* poActor;
-    CLinkTypeActorCont* ro_TypeActorCont;
-    iterator it_Type;
     CResData* po_ResData;
-    /* TODO: decompile from asm/... */
+    CLinkActor* poActor;
+    CExtraEventActor* poEEActor;
+    CLinkTypeActorCont::iterator it_Type;
+
+    if (u_RefEvt.pstPtr == (_SND_tdstBlockEvent*)-1 || u_RefEvt.pstPtr == NULL)
+    {
+        return 0;
+    }
+    po_ResData = u_RefEvt.pstPtr->m_oResId;
+    if (po_ResData == NULL)
+    {
+        return 0;
+    }
+    CLinkTypeActorCont* poCont = CLinkTypeActorCont::mfn_roGetInstance();
+    for (it_Type = poCont->begin(); it_Type != poCont->end(); ++it_Type)
+    {
+        poActor = (*it_Type).second->m_oActors.m_poNext;
+        while (poActor)
+        {
+            poEEActor = poActor->m_oExtraActors.m_poNext;
+            while (poEEActor)
+            {
+                if (poEEActor->fn_bIsSoundPlaying(po_ResData))
+                    return 1;
+                poEEActor = poEEActor->m_poNext;
+            }
+            poActor = poActor->m_poNext;
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 603–648 */
@@ -765,13 +968,33 @@ int SND_fn_bIsSoundPlaying(_SND_tduRefEvt u_RefEvt)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, int s32_HandleId)
+extern "C" int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, int s32_HandleId)
 {
+    int s32_Answer;
     CExtraEventActor* po_EventActor;
     CLinkActor* po_LinkActor;
     CLinkTypeActor* po_TypeActor;
-    int s32_Answer;
-    /* TODO: decompile from asm/... */
+
+    if (s32_HandleId == -2)
+        return -1;
+    po_TypeActor = CLinkTypeActorCont::mfn_roGetInstance()->mfn_poGetActorTypeFromId(s32_TypeId);
+    if (po_TypeActor == NULL)
+        return 3;
+    po_LinkActor = po_TypeActor->mfn_poGetActorFromIdInTypeActorInstance(s32_ObjectId);
+    if (po_LinkActor == NULL)
+        return 3;
+    s32_Answer = 2;
+    po_EventActor = po_LinkActor->m_oExtraActors.m_poNext;
+    while (po_EventActor != NULL && s32_Answer == 2)
+    {
+        if (po_EventActor->meExtraCoeff == 0)
+        {
+            if (po_EventActor->fn_bIsSoundPlaying(s32_HandleId))
+                s32_Answer = 0;
+        }
+        po_EventActor = po_EventActor->m_poNext;
+    }
+    return s32_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 447–573 */
@@ -819,7 +1042,7 @@ int SND_fn_s32GetSoundHandleState(int s32_ObjectId, int s32_TypeId, int s32_Hand
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, void (*pfn_Proc)(int))
+extern "C" int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int))
 {
     CExtraEventActor* po_EventActor;
     CLinkTypeActor* po_TypeActor;
@@ -851,10 +1074,20 @@ int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_Type
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_s32SendRequestJingle(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int), int s32_VolumeLine)
+extern "C" int SND_fn_s32SendRequestJingle(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int), int s32_VolumeLine)
 {
     int s32_Answer;
-    /* TODO: decompile from asm/... */
+    int bRes;
+
+    s32_Answer = -2;
+    if (!gs_uiCritSect) gs_uiCritSect = usnd_uiCreateCritSect(); bRes = usnd_uiTryToEnterCritSect(gs_uiCritSect) == 1; if (bRes)
+    {
+        s32_Answer = SND_fn_s32SendRequestSound(s32_ObjectId, s32_ChannelId, s32_TypeId, u_RefEvt, s32_Prio, pfn_Proc);
+        if (s32_Answer != -2)
+            Jingle::fs_vAddJingle(s32_ObjectId, s32_TypeId, s32_Answer, s32_VolumeLine);
+        usnd_vLeaveCritSect(gs_uiCritSect);
+    }
+    return s32_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 370–391 */
@@ -875,11 +1108,28 @@ int SND_fn_s32SendRequestJingle(int s32_ObjectId, int s32_ChannelId, int s32_Typ
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int SND_fn_s32SendRequestSemaphoreSound(int s32_SemaphoreId, int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int))
+extern "C" int SND_fn_s32SendRequestSemaphoreSound(int s32_SemaphoreId, int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int))
 {
-    CSoundSemaphore* po_Channel;
     int s32_Answer;
-    /* TODO: decompile from asm/... */
+    CSoundSemaphore* po_Channel;
+    int bRes;
+
+    s32_Answer = -2;
+    if (!gs_uiCritSect) gs_uiCritSect = usnd_uiCreateCritSect(); bRes = usnd_uiTryToEnterCritSect(gs_uiCritSect) == 1; if (bRes)
+    {
+        s32_Answer = -2; po_Channel = CSoundSemaphoreCont::mfn_roGetInstance()->mfn_poFindSoundSemaphore(s32_SemaphoreId);
+        if (po_Channel != NULL && (po_Channel == NULL || po_Channel->mu32ChannelSize == po_Channel->_Tr._Size))
+        {
+        }
+        else
+        {
+            s32_Answer = SND_fn_s32SendRequestSound(s32_ObjectId, s32_ChannelId, s32_TypeId, u_RefEvt, s32_Prio, pfn_Proc);
+            if (po_Channel != NULL && s32_Answer != -2)
+                po_Channel->mfn_bAddSoundRequest(s32_ObjectId, s32_TypeId, s32_Answer);
+        }
+        usnd_vLeaveCritSect(gs_uiCritSect);
+    }
+    return s32_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\snd3d.cpp lines 348–355 */
@@ -1054,15 +1304,56 @@ unsigned char fn_bLockSound__Fb(unsigned char bIgnoreIfCantAccess)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SND_fn_vSaveLastTheme(void)
+extern "C" void SND_fn_vSaveLastTheme(void)
 {
-    unsigned int uiResult;
-    CResObjParams* pParams;
-    CResData* po_ResData;
-    unsigned char flag;
     CExtraEventActor* po_EventActor;
+    _SND_tdstBlockEvent* pstTheme;
+    unsigned char flag;
+    CResData* po_ResData;
+    CResObjParams* pParams;
     CLinkActor* po_LinkActor;
     CLinkTypeActor* po_TypeActor;
-    CEventResData* ro_EventResData;
-    /* TODO: decompile from asm/... */
+    unsigned int uiResult;
+
+    g_oLastSavedTheme.Id = 0;
+    pstTheme = g_oLastTheme.pstPtr;
+    if (pstTheme != NULL)
+    {
+        po_TypeActor = CLinkTypeActorCont::mfn_roGetInstance()->mfn_poGetActorTypeFromId(g_lSoundObjectTypeMusic);
+        if (po_TypeActor != NULL)
+        {
+            po_LinkActor = po_TypeActor->mfn_poGetActorFromIdInTypeActorInstance(-1);
+            if (po_LinkActor != NULL)
+            {
+                po_EventActor = po_LinkActor->mfn_poGetExtraEventActorInstance(-1, NULL);
+                if (po_EventActor != NULL)
+                {
+                    po_ResData = pstTheme->m_oResId;
+                    flag = 0;
+                    pParams = po_EventActor->m_oResObjParams.m_poNext;
+                    while (pParams != NULL && pParams->m_poResData != po_ResData)
+                    {
+                        pParams = pParams->m_poNext;
+                    }
+                    if (pParams != NULL)
+                    {
+                        uiResult = po_EventActor->mpoActorObj->m_oProgramContext.fv_uiGetRunningObjsWithUserData((int*)pParams, (CResObj**)-1, 0, 0);
+                        flag = (uiResult != 0);
+                        if (!flag)
+                        {
+                            flag = PostponedPlay::fs_bIsSoundPlaying(po_ResData, po_EventActor);
+                        }
+                    }
+                    if (flag)
+                    {
+                        g_oLastSavedTheme = g_oLastTheme;
+                    }
+                    else
+                    {
+                        g_oLastTheme.Id = 0;
+                    }
+                }
+            }
+        }
+    }
 }

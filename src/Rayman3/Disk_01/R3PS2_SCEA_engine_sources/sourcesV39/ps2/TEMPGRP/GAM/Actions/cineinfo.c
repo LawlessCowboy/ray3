@@ -2033,6 +2033,7 @@ void CAM_fn_vCineinfoInit(tdstEngineObject_* _p_stObject, tdeObjectTreeInit_ eOb
 #define MTH3D_M_vSetVectorElements(_p, _x, _y, _z) { (_p)->xX = (_x); (_p)->xY = (_y); (_p)->xZ = (_z); }
 #define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
 void* memset(void* dst, int c, unsigned int n);
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 
 void CAM_fn_vUpdateTargetPosition(tdstCineinfo_* _hCineinfo)
 {
@@ -2108,9 +2109,30 @@ void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _hCineinfo)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Only the null checks survive in retail: the function never frees anything,
+ * it only reports the six error cases (14 for the missing object, 15 for a
+ * missing cineinfo or one of its four internal structures).
+ */
 void CAM_fn_vCineinfoFree(tdstEngineObject_* _p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (!_p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo->hInit) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo->hCurrent) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo->hVisibility) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    if (!_p_stObject->h_Cineinfo->hWork) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 317–385 */
@@ -2179,9 +2201,62 @@ void CAM_fn_vCineinfoFree(tdstEngineObject_* _p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The retail loop over a10_stTransparentSuperObjectForCamera is a rolled
+ * pointer walk (sltu against base + 0xC8): an index loop is unrolled by the
+ * -O3,p game baseline, so the source walks the array with p_stFirst/p_stEnd.
+ * The local declaration order is part of the match: MWCC allocates a1/a2/a3
+ * in that order, and retail keeps h_Cineinfo in a3 across the loop so that
+ * xNumberOfTransparentSuperObjectForCamera is stored without a reload.
+ */
 void CAM_fn_vCineinfoAlloc(tdstEngineObject_* _p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    tdstTransparentSuperObjectForCamera_* p_stEnd;
+    tdstTransparentSuperObjectForCamera_* p_stFirst;
+    tdstCineinfo_* hCineinfo;
+    if (!_p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (_p_stObject->h_Cineinfo) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+    _p_stObject->h_Cineinfo = (tdstCineinfo_*)HMU_fn_p_vMalloc(0x258, 0);
+    _p_stObject->h_Cineinfo->hInit = (tdstInternalStructurCineinfo_*)HMU_fn_p_vMalloc(0x7c, 0);
+    _p_stObject->h_Cineinfo->hCurrent = (tdstInternalStructurCineinfo_*)HMU_fn_p_vMalloc(0x7c, 0);
+    _p_stObject->h_Cineinfo->hVisibility = (tdstInternalStructurCineinfo_*)HMU_fn_p_vMalloc(0x7c, 0);
+    _p_stObject->h_Cineinfo->hWork = (tdstInternalStructurCineinfo_*)HMU_fn_p_vMalloc(0x7c, 0);
+    _p_stObject->h_Cineinfo->hInit->stShiftTarget.xX = 0.0f; _p_stObject->h_Cineinfo->hInit->stShiftTarget.xY = 0.0f; _p_stObject->h_Cineinfo->hInit->stShiftTarget.xZ = 0.0f;
+    _p_stObject->h_Cineinfo->hInit->stShiftPos.xX = 0.0f; _p_stObject->h_Cineinfo->hInit->stShiftPos.xY = 0.0f; _p_stObject->h_Cineinfo->hInit->stShiftPos.xZ = 0.0f;
+    _p_stObject->h_Cineinfo->hInit->xDistMin = 6.0f;
+    _p_stObject->h_Cineinfo->hInit->xDistMax = 6.0f;
+    _p_stObject->h_Cineinfo->hInit->xBoundDistMin = 2.0f;
+    _p_stObject->h_Cineinfo->hInit->xBoundDistMax = 10.0f;
+    _p_stObject->h_Cineinfo->hInit->xAngleAlpha = 0.0f;
+    _p_stObject->h_Cineinfo->hInit->xAngleShiftAlpha = 0.0f;
+    _p_stObject->h_Cineinfo->hInit->xAngleTheta = 0.0f;
+    _p_stObject->h_Cineinfo->hInit->xAngleShiftTheta = 0.0f;
+    _p_stObject->h_Cineinfo->hInit->xLinearSpeed = 200.0f;
+    _p_stObject->h_Cineinfo->hInit->xLinearIncreaseSpeed = 1.0f;
+    _p_stObject->h_Cineinfo->hInit->xLinearDecreaseSpeed = 0.0f;
+    _p_stObject->h_Cineinfo->hInit->xAngularSpeed = 3.14f;
+    _p_stObject->h_Cineinfo->hInit->xAngularIncreaseSpeed = 1.0f;
+    _p_stObject->h_Cineinfo->hInit->xAngularDecreaseSpeed = 0.0f;
+    _p_stObject->h_Cineinfo->hInit->xTargetSpeed = 200.0f;
+    _p_stObject->h_Cineinfo->hInit->xTargetIncreaseSpeed = 1.0f;
+    _p_stObject->h_Cineinfo->hInit->xTargetDecreaseSpeed = 0.0f;
+    _p_stObject->h_Cineinfo->hInit->xFocal = 1.5f;
+    _p_stObject->h_Cineinfo->hInit->xZMin = -3.402822e+38f;
+    _p_stObject->h_Cineinfo->hInit->xZMax = 3.402822e+38f;
+    _p_stObject->h_Cineinfo->hInit->hSuperObjectTargeted = NULL;
+    _p_stObject->h_Cineinfo->hInit->hSecondSuperObjectTargeted = NULL;
+    _p_stObject->h_Cineinfo->hInit->uwDNMFlags = 0;
+    _p_stObject->h_Cineinfo->hInit->uwIAFlags = 0;
+    _p_stObject->h_Cineinfo->hInit->eTypeOfViewport = CAM_e_NoViewport;
+    _p_stObject->h_Cineinfo->hInit->cChannel = -1;
+    _p_stObject->h_Cineinfo->hInit->bIsActive = 0;
+    hCineinfo = _p_stObject->h_Cineinfo; p_stFirst = &hCineinfo->a10_stTransparentSuperObjectForCamera[0]; p_stEnd = p_stFirst + 10; if (p_stFirst < p_stEnd) { do { p_stFirst->hSuperObject = NULL; p_stFirst->lInitialDrawMask = 0; p_stFirst->fInitialTransparenceLevel = 0.0f; p_stFirst->fCurrentTransparencyLevel = 255.0f; p_stFirst->bIncrease = 0; p_stFirst++; } while (p_stFirst < p_stEnd); } hCineinfo->xNumberOfTransparentSuperObjectForCamera = 0;
+    _p_stObject->h_Cineinfo->fTransparency = 128.0f;
+    _p_stObject->h_Cineinfo->fTransparencySpeed = 1.0f;
+    _p_stObject->h_Cineinfo->bLightComputation = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 303–303 */

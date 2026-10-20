@@ -31,8 +31,22 @@ struct J_ParticleSprite_ {
     unsigned int Pad[2]; /* +0x38 */
 };
 
-int J_g_pNoiseTable;
+float* J_g_pNoiseTable;
 float J_g_NoiseLevel;
+
+/* R5900 absolute value: MWCC never emits abs.s from plain C. */
+inline float J_M_xAbs(float x)
+{
+    float r = x;
+    asm { abs.s r, r }
+    return r;
+}
+
+extern void* malloc(unsigned int size);
+extern int rand(void);
+
+void J_GetInterpolPointOnEdge(J_ParticleFace_* pFace, J_InterpolPoint_* pPoint, unsigned int Edge, float U);
+void J_GetParticleSpriteFromInterpolatedPoints(J_ParticleSprite_* p, J_InterpolPoint_* p1, J_InterpolPoint_* p2, float V);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\jparticle.c lines 156–157 */
 /* addr: 0x002b0860  size: 12 bytes */
@@ -158,10 +172,10 @@ unsigned int J_CreateParticlesOnFace(J_ParticleSprite_* pGeneratedSprites, unsig
     float RealMinV;
     float MaxV;
     float MinV;
-    J_InterpolPoint_* pt2;
     J_InterpolPoint_* pt1;
-    J_InterpolPoint_ p2;
+    J_InterpolPoint_* pt2;
     J_InterpolPoint_ p1;
+    J_InterpolPoint_ p2;
     float RealMaxU;
     float RealMinU;
     float U;
@@ -170,7 +184,162 @@ unsigned int J_CreateParticlesOnFace(J_ParticleSprite_* pGeneratedSprites, unsig
     float MaxU;
     float MinU;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    int nNoise;
+    float* pP0;
+    float* pP1;
+    float* pP2;
+    float* pNormal;
+    float* pSpriteNormal;
+    int bOnEdge;
+
+    bFirst = 1;
+    NbGenerated = 0;
+    InvfU = 1.0f / _fU;
+    InvfV = 1.0f / _fV;
+
+    if (J_g_pNoiseTable == NULL)
+    {
+        J_g_pNoiseTable = (float*)malloc(0x2010);
+        nNoise = 0;
+        do
+        {
+            nNoise++;
+            J_g_pNoiseTable[nNoise - 1] = 10.0f * ((float)rand() / 2147483648.0f) - 5.0f;
+        } while (nNoise < 0x804);
+    }
+
+    /* VU0 face normal: normalize((p1 - p0) x (p2 - p1)). */
+    pP0 = &pFace->pPoints[0][0];
+    pP1 = &pFace->pPoints[1][0];
+    pP2 = &pFace->pPoints[2][0];
+    pNormal = &FaceNormal[0];
+    asm {
+        lqc2 vf1, 0(pP0)
+        lqc2 vf2, 0(pP1)
+        lqc2 vf3, 0(pP2)
+        vsub.xyz vf4, vf2, vf1
+        vsub.xyz vf5, vf3, vf2
+        vsub.xyzw vf26, vf0, vf0
+        vopmula.xyz ACC, vf4, vf5
+        vopmsub.xyz vf6, vf5, vf4
+        vmul.xyz vf7, vf6, vf6
+        vaddy.x vf7, vf7, vf7y
+        vaddz.x vf7, vf7, vf7z
+        vrsqrt Q, vf0w, vf7x
+        vwaitq
+        vmulq.xyz vf26, vf6, Q
+        sqc2 vf26, 0(pNormal)
+    }
+
+    J_g_NoiseLevel = NoiseLevel;
+    Noise[0] = NoiseLevel;
+
+    /* Smallest and largest U of the face. */
+    MinU = pFace->pUVs[0][0];
+    MaxU = MinU;
+    for (i = 1; i < 3; i++)
+    {
+        float u = pFace->pUVs[i][0];
+        if (u < MinU)
+            MinU = u;
+        if (u > MaxU)
+            MaxU = u;
+    }
+
+    /* Snap the U range onto the particle grid. */
+    RealMinU = MinU * InvfU;
+    RealMinU = (float)(int)RealMinU;
+    RealMinU = _fU * RealMinU;
+    if (RealMinU < MinU)
+        RealMinU += _fU;
+    FirstU = RealMinU;
+    while (FirstU + _fU <= MaxU)
+        FirstU += _fU;
+    RealMaxU = FirstU;
+
+    if (RealMinU > MaxU)
+        return 0;
+    U = FirstU + 0.5f * _fU;
+    if (U < MinU)
+        return 0;
+
+    RealMinV = 0.0f;
+    while (RealMinU <= U)
+    {
+        if (NbGenerated < MaxParticles)
+        {
+            NbEdges = 0;
+            bOnEdge = (((RealMinU >= pFace->pUVs[0][0]) && (RealMinU <= pFace->pUVs[0][1]))
+                       || ((RealMinU >= pFace->pUVs[0][1]) && (RealMinU <= pFace->pUVs[0][0])));
+            if (bOnEdge)
+            {
+                Edge[NbEdges] = 0;
+                NbEdges++;
+            }
+            bOnEdge = (((RealMinU >= pFace->pUVs[0][1]) && (RealMinU <= pFace->pUVs[1][0]))
+                       || ((RealMinU >= pFace->pUVs[1][0]) && (RealMinU <= pFace->pUVs[0][1])));
+            if (bOnEdge)
+            {
+                Edge[NbEdges] = 1;
+                NbEdges++;
+            }
+            bOnEdge = (((RealMinU >= pFace->pUVs[1][0]) && (RealMinU <= pFace->pUVs[0][0]))
+                       || ((RealMinU >= pFace->pUVs[0][0]) && (RealMinU <= pFace->pUVs[1][0])));
+            if (bOnEdge)
+            {
+                Edge[NbEdges] = 2;
+                NbEdges++;
+            }
+
+            if (NbEdges == 2)
+            {
+                J_GetInterpolPointOnEdge(pFace, &p1, Edge[0], RealMinU);
+                J_GetInterpolPointOnEdge(pFace, &p2, Edge[1], RealMinU);
+                if (p1.UVs[1] < p2.UVs[1])
+                {
+                    pt1 = &p1;
+                    pt2 = &p2;
+                }
+                else
+                {
+                    pt1 = &p2;
+                    pt2 = &p1;
+                }
+                MinV = pt1->UVs[1];
+                MaxV = pt2->UVs[1];
+                RealMinV = MinV * InvfV;
+                RealMinV = (float)(int)RealMinV;
+                RealMinV = _fV * RealMinV;
+                if (RealMinV < MinV)
+                    RealMinV += _fV;
+                FirstV = RealMinV;
+                while (FirstV + _fV <= MaxV)
+                    FirstV += _fV;
+                RealMaxV = FirstV;
+                if (RealMinV <= MaxV)
+                {
+                    V = FirstV + 0.5f * _fV;
+                    if (V >= MinV)
+                    {
+                        while ((V <= V) && (NbGenerated < MaxParticles))
+                        {
+                            pSpriteNormal = &pGeneratedSprites[NbGenerated].FaceNormal[0];
+                            pGeneratedSprites[NbGenerated].bFirst = bFirst;
+                            asm {
+                                sqc2 vf26, 0(pSpriteNormal)
+                            }
+                            J_GetParticleSpriteFromInterpolatedPoints(&pGeneratedSprites[NbGenerated], pt1, pt2, V);
+                            NbGenerated++;
+                            bFirst = 0;
+                            V += _fV;
+                        }
+                    }
+                }
+            }
+        }
+        RealMinU += _fU;
+    }
+    return NbGenerated;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\jparticle.c lines 173–223 */
@@ -223,7 +392,50 @@ void J_GetInterpolPointOnEdge(J_ParticleFace_* pFace, J_InterpolPoint_* pPoint, 
     float A[4];
     int p2;
     int p1;
-    /* TODO: decompile from asm/... */
+    float* pPts1;
+    float* pPts2;
+    float* pCol1;
+    float* pCol2;
+    float* pW;
+    float* pDstCol;
+    float* pUV0;
+    float* pUV1;
+
+    if (Edge == 0) { p1 = 0; p2 = 1; }
+    else if (Edge == 1) { p1 = 1; p2 = 2; }
+    else if (Edge == 2) { p1 = 2; p2 = 0; }
+    else { p1 = 0; p2 = 1; }
+
+    pUV0 = &pFace->pUVs[0][0];
+    A[1] = (U - pUV0[p1 * 2]) / (pUV0[p2 * 2] - pUV0[p1 * 2]);
+    A[0] = 1.0f - A[1];
+    pPts1 = &pFace->pPoints[p1][0];
+    pPts2 = &pFace->pPoints[p2][0];
+    pCol1 = &pFace->pColors[p1][0];
+    pCol2 = &pFace->pColors[p2][0];
+    pW = &A[0];
+    pDstCol = &pPoint->Color[0];
+
+    asm {
+        lqc2 vf2, 0(pPts1)
+        lqc2 vf3, 0(pPts2)
+        lqc2 vf4, 0(pCol1)
+        lqc2 vf5, 0(pCol2)
+        lqc2 vf6, 0(pW)
+        vmulx.xyz vf8, vf2, vf6x
+        vmuly.xyz vf9, vf3, vf6y
+        vsubx.w vf12, vf0, vf0x
+        vmulx.xyzw vf10, vf4, vf6x
+        vmuly.xyzw vf11, vf5, vf6y
+        vadd.xyz vf12, vf8, vf9
+        vadd.xyzw vf13, vf10, vf11
+        sqc2 vf12, 0(pPoint)
+        sqc2 vf13, 0(pDstCol)
+    }
+
+    pUV1 = (float*)&pFace->pUVs[0][1];
+    pPoint->UVs[0] = U;
+    pPoint->UVs[1] = pUV1[p1 * 2] * A[0] + pUV1[p2 * 2] * A[1];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\jparticle.c lines 95–166 */
@@ -280,5 +492,50 @@ void J_GetParticleSpriteFromInterpolatedPoints(J_ParticleSprite_* p, J_InterpolP
 {
     float vA[4];
     unsigned int index;
-    /* TODO: decompile from asm/... */
+    float fSum;
+    float* pNoise;
+    float* pCol1;
+    float* pCol2;
+    float* pW;
+    float* pDstCol;
+
+    vA[1] = (V - p1->UVs[1]) / (p2->UVs[1] - p1->UVs[1]);
+
+    fSum = p1->UVs[0] * 1.5564321f + V * 3.4659879f;
+    index = (int)(1024.0f * fSum);
+    index = ((index & 0x7FF) + 3) & ~3u;
+
+    vA[0] = 1.0f - vA[1];
+
+    if (J_M_xAbs(vA[0]) < 0.0000001f || J_M_xAbs(vA[1]) < 0.0000001f)
+        p->Flags = 1;
+    else
+        p->Flags = 0;
+
+    pNoise = J_g_pNoiseTable + index;
+    pCol1 = &p1->Color[0];
+    pCol2 = &p2->Color[0];
+    pW = &vA[0];
+    pDstCol = &p->Color[0];
+
+    asm {
+        vsubx.w vf12, vf0, vf0x
+        lqc2 vf1, 0(pNoise)
+        lqc2 vf2, 0(p1)
+        lqc2 vf3, 0(p2)
+        lqc2 vf6, 0(pW)
+        vsubz.z vf1, vf1, vf1z
+        lqc2 vf4, 0(pCol1)
+        lqc2 vf5, 0(pCol2)
+        vmulx.xy vf1, vf1, vf25x
+        vmulx.xyz vf8, vf2, vf6x
+        vmuly.xyz vf9, vf3, vf6y
+        vadd.xyz vf12, vf8, vf9
+        vmulx.xyzw vf10, vf4, vf6x
+        vmuly.xyzw vf11, vf5, vf6y
+        vadd.xyz vf12, vf12, vf1
+        vadd.xyzw vf13, vf10, vf11
+        sqc2 vf12, 0(p)
+        sqc2 vf13, 0(pDstCol)
+    }
 }

@@ -386,15 +386,16 @@ struct anon_48 {
 };
 
 struct anon_19 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_11 {
@@ -989,60 +990,61 @@ union anon_28 {
 };
 
 struct anon_29 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 struct anon_33 {
@@ -1154,16 +1156,17 @@ struct tagGLlistcalls {
 };
 
 struct anon_41 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon41[6]; /* +0x2..0x7 */
 };
 
 struct anon_44 {
@@ -1259,6 +1262,9 @@ struct tagGLlistdatas {
     int apData[3]; /* +0x4 */
 };
 
+/* 16-byte aligned float vector, copied as a single quadword. */
+typedef struct { float f[4]; } __attribute__((aligned(16))) quad;
+
 static int TEX_LEVEL_SIZE[10];
 static int TEX_LEVEL_BASE[10];
 int iCubeMapMode;
@@ -1272,12 +1278,26 @@ float CubeMapAbsNSave[3][4];
 int CubeMapTSave;
 float g_mModelView[4][4];
 tagGLcontext g_PS2glContext;
-int PS2glAllocator;
+void* (*PS2glAllocator)(int);
 int PS2glAllocator64;
 int PS2glLiberator;
 tagGScontext g_gsContext;
 _GL_BUFFERINFO g_stBufferInfo;
 anon_34 g_stDoubleBuf;
+
+/* GL_TEXTURE_GEN_MODE: store the generation mode of one coordinate. */
+#define PS2GL_TEXGEN_MODE_SWITCH(pTex, coord, pname, value) \
+    if (pname == 0x2500) \
+        switch (coord) \
+        { \
+        case 0x2000: (pTex)->nTexGenModeS = (value); break; \
+        case 0x2001: (pTex)->nTexGenModeT = (value); break; \
+        case 0x2002: (pTex)->nTexGenModeR = (value); break; \
+        case 0x2003: (pTex)->nTexGenModeQ = (value); break; \
+        }
+
+void impPS2glTexGenfv(unsigned int coord, unsigned int pname, float* params);
+void PS2glFreeTexture(tag_GLtexture* pTexture);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 209–538 */
 /* addr: 0x001680e0  size: 2512 bytes */
@@ -3013,7 +3033,44 @@ void impPS2glTexParameterf(unsigned int target, unsigned int pname, float param)
  */
 void impPS2glTexParameteri(unsigned int target, unsigned int pname, int param)
 {
-    /* TODO: decompile from asm/... */
+    tag_GLtexture** ppTex = 0;
+
+    switch (target)
+    {
+    case 0xDE0: ppTex = &g_PS2glContext.aTexName[g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]].pTex1D; break;
+    case 0xDE1: ppTex = &g_PS2glContext.aTexName[g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]].pTex2D; break;
+    case 0x8513: ppTex = &g_PS2glContext.aTexName[g_PS2glContext.anCurTexName2D[0]].pTexCube; break;
+    }
+    if (ppTex)
+    {
+        if (!*ppTex)
+        {
+            *ppTex = (tag_GLtexture*)PS2glAllocator(0x50);
+            memset(*ppTex, 0, 0x50);
+        }
+        if (*ppTex)
+        {
+            switch (pname)
+            {
+            case 0x2800: (*ppTex)->eTexFilterMag = param; break;
+            case 0x2801: (*ppTex)->eTexFilterMin = param; break;
+            case 0x2802: (*ppTex)->eTexWrapS = param; break;
+            case 0x2803: (*ppTex)->eTexWrapT = param; break;
+            }
+            switch (target)
+            {
+            case 0xDE0: g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1; break;
+            case 0xDE1: g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1; break;
+            case 0x8513:
+            case 0x8515:
+            case 0x8516:
+            case 0x8517:
+            case 0x8518:
+            case 0x8519:
+            case 0x851A: g_PS2glContext.bTexCubeChanged = 1; break;
+            }
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 3119–3313 */
@@ -4367,8 +4424,17 @@ void PS2glUpdateTexParameter(unsigned int target)
  */
 void impPS2glTexGeniv(unsigned int coord, unsigned int pname, int* params)
 {
-    float v[4];
-    /* TODO: decompile from asm/... */
+    tag_GLtexture_set* pCurTexture;
+    int iValue;
+
+    if (pname == 0x2500)
+    {
+        iValue = params[0]; pCurTexture = g_PS2glContext.pCurTexture; PS2GL_TEXGEN_MODE_SWITCH(pCurTexture, coord, pname, iValue) }
+    else
+    {
+        quad v = {0.0f, 0.0f, 0.0f, 0.0f}; v.f[0] = (float)params[0]; v.f[1] = (float)params[1]; v.f[2] = (float)params[2]; v.f[3] = (float)params[3];
+        impPS2glTexGenfv(coord, pname, v.f);
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1260–1281 */
@@ -4393,9 +4459,28 @@ void impPS2glTexGeniv(unsigned int coord, unsigned int pname, int* params)
  */
 void impPS2glTexGenfv(unsigned int coord, unsigned int pname, float* params)
 {
-    float (*pvCoeff)[4];
-    tag_GLtexture_set* pCurTexture;
-    /* TODO: decompile from asm/... */
+    float (*pvCoeff)[4] = 0;
+    int iValue;
+    tag_GLtexture_set* pCurTexture = g_PS2glContext.pCurTexture;
+
+    switch (pname)
+    {
+    case 0x2500:
+        iValue = (int)*params; PS2GL_TEXGEN_MODE_SWITCH(pCurTexture, coord, pname, iValue) break;
+    case 0x2501:
+    case 0x2502:
+        switch (coord)
+        {
+        case 0x2000: pvCoeff = &pCurTexture->vTexGenCoeffS; break;
+        case 0x2001: pvCoeff = &pCurTexture->vTexGenCoeffT; break;
+        case 0x2002: pvCoeff = &pCurTexture->vTexGenCoeffR; break;
+        case 0x2003: pvCoeff = &pCurTexture->vTexGenCoeffQ; break;
+        default: return;
+        }
+        break;
+    default: return;
+    }
+    *(quad*)pvCoeff = *(quad*)params;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1252–1256 */
@@ -4416,8 +4501,8 @@ void impPS2glTexGenfv(unsigned int coord, unsigned int pname, float* params)
  */
 void impPS2glTexGendv(unsigned int coord, unsigned int pname, double* params)
 {
-    float v[4];
-    /* TODO: decompile from asm/... */
+    quad v = {0.0f, 0.0f, 0.0f, 0.0f}; v.f[0] = (float)params[0]; v.f[1] = (float)params[1]; v.f[2] = (float)params[2]; v.f[3] = (float)params[3];
+    impPS2glTexGenfv(coord, pname, v.f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1246–1249 */
@@ -4435,7 +4520,8 @@ void impPS2glTexGendv(unsigned int coord, unsigned int pname, double* params)
  */
 void impPS2glTexGend(unsigned int coord, unsigned int pname, double param)
 {
-    /* TODO: decompile from asm/... */
+    tag_GLtexture_set* pCurTexture = g_PS2glContext.pCurTexture;
+    if (pname == 0x2500) { switch (coord) { case 0x2000: pCurTexture->nTexGenModeS = (int)param; break; case 0x2001: pCurTexture->nTexGenModeT = (int)param; break; case 0x2002: pCurTexture->nTexGenModeR = (int)param; break; case 0x2003: pCurTexture->nTexGenModeQ = (int)param; break; } }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1242–1243 */
@@ -4448,7 +4534,19 @@ void impPS2glTexGend(unsigned int coord, unsigned int pname, double param)
  */
 void impPS2glTexGenf(unsigned int coord, unsigned int pname, float param)
 {
-    /* TODO: decompile from asm/... */
+    tag_GLtexture_set* pCurTexture;
+
+    pCurTexture = g_PS2glContext.pCurTexture;
+    if (pname == 0x2500)
+    {
+        switch (coord)
+        {
+        case 0x2000: pCurTexture->nTexGenModeS = (int)param; break;
+        case 0x2001: pCurTexture->nTexGenModeT = (int)param; break;
+        case 0x2002: pCurTexture->nTexGenModeR = (int)param; break;
+        case 0x2003: pCurTexture->nTexGenModeQ = (int)param; break;
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1226–1237 */
@@ -4468,7 +4566,18 @@ void impPS2glTexGenf(unsigned int coord, unsigned int pname, float param)
 void impPS2glTexGeni(unsigned int coord, unsigned int pname, int param)
 {
     tag_GLtexture_set* pCurTexture;
-    /* TODO: decompile from asm/... */
+
+    pCurTexture = g_PS2glContext.pCurTexture;
+    if (pname == 0x2500)
+    {
+        switch (coord)
+        {
+        case 0x2000: pCurTexture->nTexGenModeS = param; break;
+        case 0x2001: pCurTexture->nTexGenModeT = param; break;
+        case 0x2002: pCurTexture->nTexGenModeR = param; break;
+        case 0x2003: pCurTexture->nTexGenModeQ = param; break;
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1207–1222 */
@@ -4493,8 +4602,33 @@ void impPS2glTexGeni(unsigned int coord, unsigned int pname, int param)
  */
 void impPS2glTexEnviv(unsigned int target, unsigned int pname, int* params)
 {
-    float (*param0)[4];
-    /* TODO: decompile from asm/... */
+    int iValue;
+    float* pfParams;
+    tag_GLtexture_set* pTex;
+    quad* pq;
+
+    if (target == 0x2300)
+    {
+        if (pname == 0x2200)
+        {
+            iValue = params[0];
+            if (target == 0x2300)
+            {
+                if (pname == 0x2200)
+                    g_PS2glContext.pCurTexture->eTexEnvMode = iValue;
+            }
+        }
+        else if (pname == 0x2201)
+        {
+            pTex = g_PS2glContext.pCurTexture;
+            pfParams = (float*)params;
+            pq = (quad*)&pTex->vTexEnvColor;
+            pq[0].f[0] = (int)pfParams[0] / 2147483648.0f;
+            pq[1].f[0] = (int)pfParams[1] / 2147483648.0f;
+            pq[2].f[0] = (int)pfParams[2] / 2147483648.0f;
+            pq[3].f[0] = (int)pfParams[3] / 2147483648.0f;
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1191–1202 */
@@ -4512,7 +4646,24 @@ void impPS2glTexEnviv(unsigned int target, unsigned int pname, int* params)
  */
 void impPS2glTexEnvfv(unsigned int target, unsigned int pname, float* params)
 {
-    /* TODO: decompile from asm/... */
+    int iValue;
+
+    if (target == 0x2300)
+    {
+        if (pname == 0x2200)
+        {
+            iValue = (int)params[0];
+            if (target == 0x2300)
+            {
+                if (pname == 0x2200)
+                    g_PS2glContext.pCurTexture->eTexEnvMode = iValue;
+            }
+        }
+        else if (pname == 0x2201)
+        {
+            *(quad*)&g_PS2glContext.pCurTexture->vTexEnvColor = *(quad*)params;
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1185–1186 */
@@ -4704,9 +4855,16 @@ void impPS2glBindTexture(unsigned int target, unsigned int texture)
 void impPS2glPrioritizeTextures(int n, unsigned int* textures, float* priorities)
 {
     float fPrioritize;
-    unsigned int tex;
     int I;
-    /* TODO: decompile from asm/... */
+    unsigned int tex;
+
+    for (I = 0; I < n; I++)
+    {
+        tex = *textures++;
+        fPrioritize = *priorities++;
+        if ((tex < 0x200) && g_PS2glContext.aTexName[tex].bAllocated)
+            g_PS2glContext.aTexName[tex].fPrioritize = fPrioritize;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 981–996 */
@@ -4729,8 +4887,22 @@ unsigned char impPS2glAreTexturesResident(int n, unsigned int* textures, unsigne
 {
     unsigned int tex;
     unsigned char bAll;
+    unsigned char bRes;
     int I;
-    /* TODO: decompile from asm/... */
+
+    bAll = 1;
+    for (I = 0; I < n; I++)
+    {
+        tex = *textures++;
+        if ((tex < 0x200) && (bAll != 0))
+        {
+            bRes = (g_PS2glContext.aTexName[tex].bResident != 0) && (g_PS2glContext.aTexName[tex].bAllocated != 0);
+            *residences = bRes;
+            bAll = (bRes != 0);
+        }
+        residences++;
+    }
+    return bAll;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 945–976 */
@@ -4761,7 +4933,36 @@ void impPS2glDeleteTextures(int n, unsigned int* textures)
 {
     unsigned int tex;
     int I;
-    /* TODO: decompile from asm/... */
+    tagGLtexname* pTexName;
+    long lLength;
+
+    for (I = 0; I < n; I++)
+    {
+        tex = *textures++;
+        if (tex == 0) continue;
+        if (tex >= 512) continue;
+        pTexName = &g_PS2glContext.aTexName[tex];
+        if (!g_PS2glContext.aTexName[tex].bAllocated) continue;
+        if (pTexName->bResident)
+        {
+            lLength = g_PS2glContext.aBlockMap[pTexName->iTexBlock].nLength;
+            PS2glFreeTexBlock(pTexName->iTexBlock, -1);
+            if (lLength != 0)
+                PS2glUpdateTexIndex(lLength);
+        }
+        pTexName->bResident = 0;
+        if (g_PS2glContext.aTexName[tex].pTex1D)
+        {
+            PS2glFreeTexture(g_PS2glContext.aTexName[tex].pTex1D);
+            g_PS2glContext.aTexName[tex].pTex1D = 0;
+        }
+        if (g_PS2glContext.aTexName[tex].pTex2D)
+        {
+            PS2glFreeTexture(g_PS2glContext.aTexName[tex].pTex2D);
+            g_PS2glContext.aTexName[tex].pTex2D = 0;
+        }
+        pTexName->bAllocated = 0;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 908–942 */

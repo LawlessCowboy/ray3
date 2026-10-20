@@ -109,33 +109,33 @@ extern "C" int fseek(__sFILE*, long, int);
 extern "C" long ftell(__sFILE*);
 extern "C" unsigned int fread(void*, unsigned int, unsigned int, __sFILE*);
 
-int usnd_feof(__sFILE* stream)
+extern "C" int usnd_feof(__sFILE* stream)
 {
     return (stream->_flags & 0x20) != 0;
 }
 
-unsigned int usnd_fread(void* buffer, unsigned int size, unsigned int count, __sFILE* stream)
+extern "C" unsigned int usnd_fread(void* buffer, unsigned int size, unsigned int count, __sFILE* stream)
 {
     return fread(buffer, size, count, stream);
 }
 
-long usnd_ftell(__sFILE* stream)
+extern "C" long usnd_ftell(__sFILE* stream)
 {
     return ftell(stream);
 }
 
-int usnd_fseek(__sFILE* stream, long offset, int origin)
+extern "C" int usnd_fseek(__sFILE* stream, long offset, int origin)
 {
     fseek(stream, offset, origin);
     return (int)ftell(stream);
 }
 
-int usnd_fclose(__sFILE* stream)
+extern "C" int usnd_fclose(__sFILE* stream)
 {
     return fclose(stream);
 }
 
-__sFILE* usnd_fopen(char* filename, char* mode)
+extern "C" __sFILE* usnd_fopen(char* filename, char* mode)
 {
     return fopen(filename, mode);
 }

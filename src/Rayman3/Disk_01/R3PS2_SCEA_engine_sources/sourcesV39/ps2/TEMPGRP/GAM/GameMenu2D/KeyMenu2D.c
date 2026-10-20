@@ -733,6 +733,18 @@ struct stMorphData {
 unsigned int g_uiAnotherRandom;
 tdstEngineStructure_ g_stEngineStructure;
 
+extern unsigned int g_uiInitialised;
+extern unsigned int g_aSoundEventID[11];
+extern _SND_tdstBlockEvent* g_aSoundEvent[11];
+extern int g_lSoundObjectTypeMenu;
+
+_SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId);
+void SND_fn_vPauseSound(void);
+int SND_fn_s32SendRequestSound(int lObjectId, int lPersoId, int lObjectType, _SND_tduRefEvt uEvent, int lParam1, void (*pfn_Proc)(int));
+void fn_vXorEncrypt(unsigned char* _LastKey, int length, int direction);
+void fn_vEncrypt(unsigned char* _LastKey, int length);
+int fn_iAppendKey(unsigned char* _LastKey, int _LastKeyLength, unsigned char* _NewValues, int _NewValuesLength);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 41–66 */
 /* addr: 0x0029ffe0  size: 248 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -759,7 +771,24 @@ tdstEngineStructure_ g_stEngineStructure;
 void fn_vInitSoundInGameMenu2D(unsigned int uiPause)
 {
     int i;
-    /* TODO: decompile from asm/... */
+    _SND_tduRefEvt u_RefEvt;
+
+    if (g_uiInitialised != 1)
+    {
+        i = 0;
+        do
+        {
+            g_aSoundEvent[i] = SND_fn_pstGetBlockEventFromId(g_aSoundEventID[i]);
+            i++;
+        } while (i < 11);
+        g_uiInitialised = 1;
+    }
+    if (uiPause == 1)
+    {
+        SND_fn_vPauseSound();
+    }
+    if (g_aSoundEvent[3] != 0) { u_RefEvt.pstPtr = g_aSoundEvent[3]; SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMenu, u_RefEvt, 0, 0); }
+    if (g_aSoundEvent[8] != 0) { u_RefEvt.pstPtr = g_aSoundEvent[8]; SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMenu, u_RefEvt, 0, 0); }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 315–370 */
@@ -824,14 +853,86 @@ void fn_vInitSoundInGameMenu2D(unsigned int uiPause)
  */
 void fn_vEncodeKey(unsigned char* _Key, unsigned int _Score, unsigned int _Cages, unsigned int _Id)
 {
-    unsigned char Key[256];
-    unsigned char Value[256];
-    int total;
-    int i;
-    int iLength;
     unsigned int Cages_Platform_Score;
-    /* TODO: decompile from asm/... */
+    int iLength;
+    int i;
+    int total;
+    unsigned char Value[256];
+    unsigned char Key[256];
+    if (_Cages > 0x3C)
+    {
+        _Cages = 0x3C;
+    }
+    if (_Score > 0x3567E0)
+    {
+        _Score = 0x3567E0;
+    }
+    Cages_Platform_Score = (unsigned int)((unsigned long)_Id & 0xFFFFF) * 0x1234567U;
+    total = (int)((_Cages + (_Score * 0x3D)) * 5 + 1);
+    total ^= (int)((unsigned long)Cages_Platform_Score & 0x1FFFFFF);
+    Value[4] = 0;
+    Value[1] = (unsigned char)total;
+    Value[0] = (unsigned char)(total >> 8);
+    Value[2] = (unsigned char)(total >> 16);
+    Value[3] = (unsigned char)(total >> 24);
+    iLength = fn_iAppendKey(Key, 0, Value, 0x1E);
+    fn_vEncrypt(Key, iLength);
+    Value[0] = (unsigned char)((unsigned int)((unsigned long)_Id & 0xFFFFF) * 0x1234567U);
+    Value[1] = (unsigned char)((int)((unsigned long)Cages_Platform_Score & 0x1FFFFFF) >> 8);
+    Value[2] = (unsigned char)((int)((unsigned long)Cages_Platform_Score & 0x1FFFFFF) >> 16);
+    Value[3] = (unsigned char)((int)((unsigned long)Cages_Platform_Score & 0x1FFFFFF) >> 24);
+    iLength = fn_iAppendKey(Key, iLength, Value, 0x19);
+    fn_vEncrypt(Key, iLength);
+    total = 0;
+    i = 0;
+    while (i < iLength - 8)
+    {
+        total += Key[i] + Key[i + 1] + Key[i + 2] + Key[i + 3] + Key[i + 4] + Key[i + 5] + Key[i + 6] + Key[i + 7];
+        i += 8;
+    }
+    while (i < iLength)
+    {
+        total += Key[i];
+        i++;
+    }
+    Key[iLength] = (unsigned char)(((total & 0xFF) + 1) & 0x1F);
+    i = 0;
+    total = 0;
+    while (i < iLength + 1)
+    {
+        if ((total & 3) == 3)
+        {
+            _Key[total] = ' ';
+            total++;
+        }
+        _Key[total] = "134M568Q9BC+=DFNG7H-JKPW2RSTLVXZ"[Key[i]];
+        i++;
+        total++;
+    }
+    _Key[total] = 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 194–256 */
 /* addr: 0x002a0350  size: 468 bytes */
@@ -894,10 +995,42 @@ void fn_vEncodeKey(unsigned char* _Key, unsigned int _Score, unsigned int _Cages
  */
 void fn_vEncrypt(unsigned char* _LastKey, int length)
 {
-    int i;
     unsigned char* p;
-    /* TODO: decompile from asm/... */
+    int i;
+    unsigned int val;
+
+    fn_vXorEncrypt(_LastKey, length, -1);
+    p = _LastKey;
+for (i = 0; i < length - 1; i += 2)
+    {
+        val = (p[1] + (p[0] << 5)) * 130521; p[1] = (val >> 5) & 0x1F;
+        p[0] = val & 0x1F;
+        p += 2;
+    }
+    fn_vXorEncrypt(_LastKey, length, 1);
+    p = _LastKey;
+for (i = 0; i < length - 2; i += 3)
+    {
+        val = (p[0] + (p[1] << 5) + (p[2] << 10)) * 130521; p[1] = (val >> 10) & 0x1F;
+        p[0] = (val >> 5) & 0x1F;
+        p[2] = val & 0x1F;
+        p += 3;
+    }
+    fn_vXorEncrypt(_LastKey, length, -1);
+    p = _LastKey;
+for (i = 0; i < length - 3; i += 4)
+    {
+        val = (p[0] + (p[1] << 5) + (p[2] << 10) + (p[3] << 15)) * 0x9DD7107; p[1] = (val >> 15) & 0x1F;
+        p[3] = (val >> 10) & 0x1F;
+        p[0] = (val >> 5) & 0x1F;
+        p[2] = val & 0x1F;
+        p += 4;
+    }
+    fn_vXorEncrypt(_LastKey, length, 1);
 }
+
+
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 164–187 */
 /* addr: 0x002a0530  size: 96 bytes */
@@ -955,6 +1088,16 @@ void fn_vXorEncrypt(unsigned char* _LastKey, int length, int direction)
     }
 }
 
+
+
+
+
+
+
+
+
+
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 111–147 */
 /* addr: 0x002a0590  size: 308 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -990,5 +1133,34 @@ int fn_iAppendKey(unsigned char* _LastKey, int _LastKeyLength, unsigned char* _N
     int Val;
     int NewLength;
     int OffsetInInt;
-    /* TODO: decompile from asm/... */
+
+    memcpy(OldKey, _LastKey, _LastKeyLength);
+    NewLength = _LastKeyLength + ((_NewValuesLength + 4) / 5);
+    Val = 0;
+    OffsetInInt = 0;
+    while (_NewValuesLength >= 9)
+    {
+        Val |= (*_NewValues) << OffsetInInt;
+        OffsetInInt += 8;
+        _NewValues++;
+        _NewValuesLength -= 8;
+        while (OffsetInInt >= 5)
+        {
+            *_LastKey = Val & 0x1F;
+            Val >>= 5;
+            OffsetInInt -= 5;
+            _LastKey++;
+        }
+    }
+    Val |= (*_NewValues) << OffsetInInt;
+    OffsetInInt += _NewValuesLength + 4;
+    while (OffsetInInt >= 5)
+    {
+        *_LastKey = Val & 0x1F;
+        Val >>= 5;
+        OffsetInInt -= 5;
+        _LastKey++;
+    }
+    memcpy(_LastKey, OldKey, _LastKeyLength);
+    return NewLength;
 }

@@ -181,14 +181,14 @@ struct GEO_tdstGeometricObject_ {
 unsigned char g_ucContext;
 unsigned int PS2_MatStackIndex;
 MAT_tdstTransformation_ PS2_MatStack[51];
-int g_pstMatrix;
+MAT_tdstTransformation_* g_pstMatrix;
 unsigned char gd_ucContextOfSPOSave[32];
 int HIE_gs_lCurrentFrame;
 MAT_tdstTransformation_ Global_tempCamStackMatrix;
 MAT_tdstTransformation_* HIE_g_hCurrentMatrix;
 MAT_tdstTransformation_ HIE_g_a_stCameraMatrixStack[51];
-int g_p_stCurrentMatrix;
-int HIE_g_a_hMatrixStack[50];
+MAT_tdstTransformation_* g_p_stCurrentMatrix;
+MAT_tdstTransformation_* HIE_g_a_hMatrixStack[50];
 int HIE_g_lNbMatrixInStack;
 short g_xFixIndexSave;
 short g_xFixIndex;
@@ -448,7 +448,14 @@ void HIE_fn_vStartPS2MatStack(void)
 void HIE_fn_vInitPS2MatStack(void)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    for (i = 0; i < 50; i++) {
+        PS2_MatStack[i].eType = MAT_eTransform_Rotation;
+        PS2_MatStack[i].stScaleVector.xX = 1.0f;
+        PS2_MatStack[i].stScaleVector.xY = 1.0f;
+        PS2_MatStack[i].stScaleVector.xZ = 1.0f;
+        PS2_MatStack[i].stScaleVector.xW = 1.0f;
+    }
+    PS2_MatStackIndex = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 515–523 */
@@ -465,7 +472,12 @@ void HIE_fn_vInitPS2MatStack(void)
 void HIE_fn_vApplyFunctionOnHierarchy(HIE_tdstSuperObject_* _hSprObj, void (*_fn_vApplyFunction)(HIE_tdstSuperObject_*))
 {
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hChild2;
+    HIE_tdstSuperObject_* hChild3;
+
+    _fn_vApplyFunction(_hSprObj);
+    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn) {
+        _fn_vApplyFunction(hChild); for (hChild2 = hChild->hFirstElementDyn; hChild2; hChild2 = hChild2->hNextBrotherDyn) { _fn_vApplyFunction(hChild2); for (hChild3 = hChild2->hFirstElementDyn; hChild3; hChild3 = hChild3->hNextBrotherDyn) { HIE_fn_vApplyFunctionOnHierarchy(hChild3, _fn_vApplyFunction); } } }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 504–512 */
@@ -481,10 +493,23 @@ void HIE_fn_vApplyFunctionOnHierarchy(HIE_tdstSuperObject_* _hSprObj, void (*_fn
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void HIE_fn_vInvalidateOneGlobalMatrix(HIE_tdstSuperObject_* _hSprObj);
+#define HIE_M_vInvalidateOneGlobalMatrix(p_stSprObj) \
+    if ((p_stSprObj)->lLastComputeFrame != -1) { \
+        if (HIE_gs_lCurrentFrame != 0) \
+            (p_stSprObj)->lLastComputeFrame = HIE_gs_lCurrentFrame - 1; \
+        else \
+            (p_stSprObj)->lLastComputeFrame = HIE_gs_lCurrentFrame - 2; \
+    }
 void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* _hSprObj)
 {
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hChild2;
+    HIE_tdstSuperObject_* hChild3;
+
+    HIE_M_vInvalidateOneGlobalMatrix(_hSprObj);
+    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn) {
+        HIE_M_vInvalidateOneGlobalMatrix(hChild); for (hChild2 = hChild->hFirstElementDyn; hChild2; hChild2 = hChild2->hNextBrotherDyn) { HIE_fn_vInvalidateOneGlobalMatrix(hChild2); for (hChild3 = hChild2->hFirstElementDyn; hChild3; hChild3 = hChild3->hNextBrotherDyn) { HIE_fn_vInvalidateHierarchy(hChild3); } } }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 491–501 */
@@ -519,9 +544,21 @@ void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
+void HIE_fn_vIsolate(HIE_tdstSuperObject_* _hSprObj);
 void HIE_fn_vChangeFather(HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_* _hNewFather, unsigned char _bAtHead)
 {
-    /* TODO: decompile from asm/... */
+    MAT_tdstTransformation_ stLocalMatrix;
+
+    HIE_fn_vIsolate(_hSprObj);
+    if (_bAtHead) {
+        HIE_fn_vIsolate(_hSprObj); _hSprObj->hPrevBrotherDyn = NULL; _hSprObj->hNextBrotherDyn = _hNewFather->hFirstElementDyn; _hSprObj->hFatherDyn = _hNewFather; if (!_hNewFather->hLastElementDyn) { _hNewFather->hLastElementDyn = _hSprObj; } else { _hNewFather->hFirstElementDyn->hPrevBrotherDyn = _hSprObj; } _hNewFather->hFirstElementDyn = _hSprObj; _hNewFather->lNumberOfElementsDyn++;
+        }
+        else {
+            HIE_fn_vIsolate(_hSprObj); _hSprObj->hNextBrotherDyn = NULL; _hSprObj->hPrevBrotherDyn = _hNewFather->hLastElementDyn; _hSprObj->hFatherDyn = _hNewFather; if (!_hNewFather->hFirstElementDyn) { _hNewFather->hFirstElementDyn = _hSprObj; } else { _hNewFather->hLastElementDyn->hNextBrotherDyn = _hSprObj; } _hNewFather->hLastElementDyn = _hSprObj; _hNewFather->lNumberOfElementsDyn++;
+        }
+    MAT_fn_vInvert(&stLocalMatrix, _hSprObj->hFatherDyn->hGlobalMatrix); MAT_fn_vCompose(_hSprObj->hLocalMatrix, &stLocalMatrix, _hSprObj->hGlobalMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 463–468 */
@@ -534,8 +571,6 @@ void HIE_fn_vChangeFather(HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
-void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
 void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_* _hSprObj)
 {
     MAT_tdstTransformation_ stLocalMatrix;
@@ -559,7 +594,24 @@ void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_* _hSprObj)
  */
 void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* _hSprObj)
 {
-    /* TODO: decompile from asm/... */
+    if ((unsigned char)(_hSprObj->lLastComputeFrame == HIE_gs_lCurrentFrame || _hSprObj->lLastComputeFrame == -1)) {
+        MAT_tdstTransformation_* hGlobalMatrix = _hSprObj->hGlobalMatrix;
+        if (HIE_g_lNbMatrixInStack != 50) {
+            HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack] = hGlobalMatrix;
+            HIE_g_lNbMatrixInStack++;
+            g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+        }
+    } else {
+        MAT_tdstTransformation_* hGlobalMatrix;
+        MAT_fn_vCompose(_hSprObj->hGlobalMatrix, HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1], _hSprObj->hLocalMatrix);
+        hGlobalMatrix = _hSprObj->hGlobalMatrix;
+        if (HIE_g_lNbMatrixInStack != 50) {
+            HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack] = hGlobalMatrix;
+            HIE_g_lNbMatrixInStack++;
+            g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+        }
+        _hSprObj->lLastComputeFrame = HIE_gs_lCurrentFrame;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 416–420 */
@@ -650,9 +702,16 @@ HIE_tdstSuperObject_* HIE_fn_hGetChildNumber(HIE_tdstSuperObject_* _hParent, int
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int HIE_fn_vRecUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO);
 void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO)
 {
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hFather;
+    HIE_tdstSuperObject_* hGrandFather;
+    HIE_tdstSuperObject_* hGreatGrandFather;
+
+    g_pstMatrix = HIE_g_a_hMatrixStack[0];
+    hFather = hSO->hFatherDyn; if (hFather) { hGrandFather = hFather->hFatherDyn; if (hGrandFather) { hGreatGrandFather = hGrandFather->hFatherDyn; if (hGreatGrandFather) { HIE_fn_vRecUpdateGlobalMatrix(hGreatGrandFather); MAT_fn_vCompose(hGreatGrandFather->hGlobalMatrix, g_pstMatrix, hGreatGrandFather->hLocalMatrix); g_pstMatrix = hGreatGrandFather->hGlobalMatrix; } MAT_fn_vCompose(hGrandFather->hGlobalMatrix, g_pstMatrix, hGrandFather->hLocalMatrix); g_pstMatrix = hGrandFather->hGlobalMatrix; } MAT_fn_vCompose(hFather->hGlobalMatrix, g_pstMatrix, hFather->hLocalMatrix); g_pstMatrix = hFather->hGlobalMatrix; }
+    MAT_fn_vCompose(hSO->hGlobalMatrix, g_pstMatrix, hSO->hLocalMatrix);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 348–361 */
@@ -670,7 +729,17 @@ void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO)
  */
 int HIE_fn_vRecUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO)
 {
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hFather;
+    HIE_tdstSuperObject_* hGrandFather;
+    HIE_tdstSuperObject_* hGreatGrandFather;
+    HIE_tdstSuperObject_* hGreatGreatGrandFather;
+
+    hFather = hSO->hFatherDyn;
+    if (hFather) {
+        hGrandFather = hFather->hFatherDyn; if (hGrandFather) { hGreatGrandFather = hGrandFather->hFatherDyn; if (hGreatGrandFather) { hGreatGreatGrandFather = hGreatGrandFather->hFatherDyn; if (hGreatGreatGrandFather) { HIE_fn_vRecUpdateGlobalMatrix(hGreatGreatGrandFather); MAT_fn_vCompose(hGreatGreatGrandFather->hGlobalMatrix, g_pstMatrix, hGreatGreatGrandFather->hLocalMatrix); g_pstMatrix = hGreatGreatGrandFather->hGlobalMatrix; } MAT_fn_vCompose(hGreatGrandFather->hGlobalMatrix, g_pstMatrix, hGreatGrandFather->hLocalMatrix); g_pstMatrix = hGreatGrandFather->hGlobalMatrix; } MAT_fn_vCompose(hGrandFather->hGlobalMatrix, g_pstMatrix, hGrandFather->hLocalMatrix); g_pstMatrix = hGrandFather->hGlobalMatrix; }
+        MAT_fn_vCompose(hFather->hGlobalMatrix, g_pstMatrix, hFather->hLocalMatrix);
+        g_pstMatrix = hFather->hGlobalMatrix;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 340–343 */
@@ -764,6 +833,10 @@ HIE_tdstSuperObject_* HIE_fn_p_stCreateSuperObjectTab(int lSize)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* HIE_fn_vChangeFather inlines this body three times (retail code shape), so the
+   callee must be auto-inlinable.  The pragma state is read at the end of the
+   unit, so it must stay on: a 'reset' here would drop the inline expansions. */
+#pragma auto_inline on
 void HIE_fn_vIsolate(HIE_tdstSuperObject_* _hSprObj)
 {
     if (_hSprObj->hNextBrotherDyn) {
@@ -923,19 +996,18 @@ void HIE_fn_SO_vSetOutLineMode(HIE_tdstSuperObject_* _hSO, int bMode, unsigned i
 void HIE_fn_SO_vClearSuperimposedFlag(HIE_tdstSuperObject_* _hSO)
 {
     short xIndex;
-    if ((_hSO->ulFlags & 0x20) == 0x20) {
-        _hSO->ulFlags &= ~0x21;
-        if (g_xFixIndex) {
-            for (xIndex = 0; xIndex < 32; xIndex++) {
-                if ((HIE_tdstSuperObject_*)gd_hFixSPO[xIndex] == _hSO) {
-                    g_xFixIndex--;
-                    if (g_xFixIndex) {
-                        gd_hFixSPO[xIndex] = gd_hFixSPO[g_xFixIndex];
-                    }
-                    gd_hFixSPO[g_xFixIndex] = 0;
-                    break;
-                }
+    int lFixIndex;
+    if ((_hSO->ulFlags & 0x20) != 0x20) return;
+    _hSO->ulFlags &= ~0x21;
+    if (!g_xFixIndex) return;
+    for (xIndex = 0; xIndex < 32; xIndex++) {
+        if ((HIE_tdstSuperObject_*)gd_hFixSPO[xIndex] == _hSO) {
+            g_xFixIndex--;
+            lFixIndex = g_xFixIndex; if (lFixIndex) {
+                gd_hFixSPO[xIndex] = gd_hFixSPO[lFixIndex];
             }
+            gd_hFixSPO[lFixIndex] = 0;
+            break;
         }
     }
 }

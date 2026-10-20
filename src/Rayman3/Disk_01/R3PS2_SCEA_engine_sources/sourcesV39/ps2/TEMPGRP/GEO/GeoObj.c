@@ -27,6 +27,8 @@ typedef struct GEO_tdstFaceMapDescriptor_ GEO_tdstFaceMapDescriptor_;
 typedef struct GEO_tdstIndexedSphere_ GEO_tdstIndexedSphere_;
 typedef struct GEO_tdstElementSpheres_ GEO_tdstElementSpheres_;
 typedef struct GEO_tdstElementAlignedBoxes_ GEO_tdstElementAlignedBoxes_;
+typedef struct GEO_tdstElementSprite_ GEO_tdstElementSprite_;
+typedef struct GEO_tdstElementTMeshes_ GEO_tdstElementTMeshes_;
 
 struct GEO_tdstElementCones_ {
     GEO_tdstIndexedCone_* d_stListOfCones; /* +0x0 */
@@ -107,7 +109,7 @@ struct GEO_tdstElementIndexedTriangles_ {
     ACP_tdst2DUVValues_* d_stListOfElementUV; /* +0x18 */
     GEO_tdstTripledIndex_* d_stListOfFacesEdges; /* +0x1c */
     GEO_tdstTripledIndex_* d_stListOfFacesAdjacent; /* +0x20 */
-    int d_stListOfIndexUsedByThisElement; /* +0x24 */
+    short* d_stListOfIndexUsedByThisElement; /* +0x24 */
     short xNumberOfIndexsUsed; /* +0x28 */
     short xIndexOfParallelBox; /* +0x2a */
     unsigned int glDisplayList; /* +0x2c */
@@ -189,6 +191,27 @@ struct GEO_tdstElementAlignedBoxes_ {
     short xIndexOfParallelBox; /* +0x6 */
 };
 
+typedef struct GEO_tdstIndexedSprite_ GEO_tdstIndexedSprite_;
+
+struct GEO_tdstElementSprite_ {
+    GEO_tdstIndexedSprite_* d_stListOfSprites; /* +0x0 */
+    short xNbSprites; /* +0x4 */
+    short xIndexOfParallelBox; /* +0x6 */
+    char cFastDraw; /* +0x8 */
+    int p_stOwnerObject; /* +0xc */
+};
+
+struct GEO_tdstElementTMeshes_ {
+    GLI_tdstMaterial_* hVisualMaterial; /* +0x0 */
+    short xNbMeshAtoms; /* +0x4 */
+    short xNbFaces; /* +0x6 */
+    short xNbUV; /* +0x8 */
+    int d_stListOfMeshAtoms; /* +0xc */
+    MTH3D_tdstVector_* d_stListOfFacesNormals; /* +0x10 */
+    ACP_tdst2DUVValues_* d_stListOfElementUV; /* +0x14 */
+    short xIndexOfParallelBox; /* +0x18 */
+};
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 28–49 */
 /* addr: 0x002a19e0  size: 180 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -248,7 +271,30 @@ void GEO_vCreateElementIndexedTriangles(GEO_tdstGeometricObject_* hObject, short
  */
 short GEO_xGetParallelBoxIndexOfElement(GEO_tdstGeometricObject_* hObject, short xIndexElement)
 {
-    /* TODO: decompile from asm/... */
+    switch (hObject->d_xListOfElementsTypes[xIndexElement])
+    {
+        case 1:
+            return ((GEO_tdstElementIndexedTriangles_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 2:
+            return ((GEO_tdstElementFaceMapDescriptors_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 3:
+            return ((GEO_tdstElementSprite_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 4:
+            return ((GEO_tdstElementTMeshes_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 5:
+            return ((GEO_tdstElementPoints_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 6:
+            return ((GEO_tdstElementLines_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 7:
+            return ((GEO_tdstElementSpheres_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 8:
+            return ((GEO_tdstElementAlignedBoxes_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 9:
+            return ((GEO_tdstElementCones_*)hObject->d_stListOfElements[xIndexElement])->xIndexOfParallelBox;
+        case 0:
+        default:
+            return -1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 1012–1015 */
@@ -286,10 +332,26 @@ GEO_tdstParallelBox_* GEO_hGetParallelBox(GEO_tdstGeometricObject_* hObject, sho
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void* memset(void* dst, int c, size_t n);
+
 void GEO_vCreateObjectListOfParallelBox(GEO_tdstGeometricObject_* hObject, short xNumberOfParallelBoxes)
 {
     short xIndex;
-    /* TODO: decompile from asm/... */
+
+    hObject->xNbParallelBoxes = xNumberOfParallelBoxes;
+    if (hObject->xNbParallelBoxes != 0)
+    {
+        if (hObject->d_stListOfParallelBoxes == NULL)
+        {
+            hObject->d_stListOfParallelBoxes = (GEO_tdstParallelBox_*)HMU_fn_p_vMalloc(hObject->xNbParallelBoxes * sizeof(GEO_tdstParallelBox_), 0);
+            for (xIndex = 0; xIndex < hObject->xNbParallelBoxes; xIndex++)
+            {
+                hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xX = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xY = 3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMinPoint.xZ = 3.402822e38f;
+                hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xX = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xY = -3.402822e38f; hObject->d_stListOfParallelBoxes[xIndex].stMaxPoint.xZ = -3.402822e38f;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 846–938 */
@@ -382,6 +444,15 @@ void GEO_vCreateObjectListOfParallelBox(GEO_tdstGeometricObject_* hObject, short
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Partially reconstructed: the control flow, the scrolling-coefficient call and
+   the determinant/gradient structure follow the target, but the floating point
+   expression tree does not.  The target keeps a 0.0f constant in the callee
+   saved $fs0 and evaluates the three speed components through the R5900
+   accumulator chain (mula.s / madda.s / madd.s) with a 0x70 frame; this
+   candidate folds the third product away and uses a 0x60 frame.  The first
+   difference is at +0x0 (the frame size / the missing $fs0 save). */
+void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed);
+
 unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short xElement, short xFace, MTH3D_tdstVector_* p_vSpeed, int lMTIndex)
 {
     float det;
@@ -396,7 +467,36 @@ unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short 
     MTH3D_tdstVector_* p_vA;
     GEO_tdstTripledIndex_* p_stListOfTripled;
     GEO_tdstElementIndexedTriangles_* p_stElement;
-    /* TODO: decompile from asm/... */
+
+    p_vSpeed->xX = 0.0f;
+    p_vSpeed->xY = 0.0f;
+    p_vSpeed->xZ = 0.0f;
+    if (hObject->d_xListOfElementsTypes[xElement] != 1)
+        return 0;
+    p_stElement = (GEO_tdstElementIndexedTriangles_*)hObject->d_stListOfElements[xElement];
+    bScrollMode = 0;
+    xVSpeed = 0.0f;
+    xUSpeed = 0.0f;
+    if (lMTIndex == -1)
+        GLI_xGetMaterialTextureScrollingCoef(p_stElement->hVisualMaterial, 0, &bScrollMode, &xUSpeed, &xVSpeed);
+    if (bScrollMode == 0)
+        return 0;
+    xUSpeed = 60.0f * -xUSpeed;
+    xVSpeed = 60.0f * -xVSpeed;
+    p_stListOfTripled = p_stElement->d_stListOfFacesTripled;
+    p_vA = &hObject->d_stListOfPoints[p_stListOfTripled[xFace].a3_xIndex[0]];
+    p_vB = &hObject->d_stListOfPoints[p_stListOfTripled[xFace].a3_xIndex[1]];
+    p_vC = &hObject->d_stListOfPoints[p_stListOfTripled[xFace].a3_xIndex[2]];
+    p_uvA = &p_stElement->d_stListOfElementUV[p_stElement->d_stListOfFacesTripledIndexUV[xFace].a3_xIndex[0]];
+    p_uvB = &p_stElement->d_stListOfElementUV[p_stElement->d_stListOfFacesTripledIndexUV[xFace].a3_xIndex[1]];
+    param0 = &p_stElement->d_stListOfElementUV[p_stElement->d_stListOfFacesTripledIndexUV[xFace].a3_xIndex[2]];
+    det = (p_uvB->xU - p_uvA->xU) * (param0->xV - p_uvA->xV) - (p_uvB->xV - p_uvA->xV) * (param0->xU - p_uvA->xU);
+    xUSpeed = xUSpeed * ((param0->xV - p_uvA->xV) / det) + xVSpeed * (-(param0->xU - p_uvA->xU) / det);
+    xVSpeed = xUSpeed * (-(p_uvB->xV - p_uvA->xV) / det) + xVSpeed * ((p_uvB->xU - p_uvA->xU) * (param0->xV - p_uvA->xV) / det);
+    p_vSpeed->xX = (p_vB->xX - p_vA->xX) * xUSpeed + (p_vC->xX - p_vA->xX) * xVSpeed + 0.0f * 0.0f;
+    p_vSpeed->xY = (p_vB->xY - p_vA->xY) * xUSpeed + (p_vC->xY - p_vA->xY) * xVSpeed + 0.0f * 0.0f;
+    p_vSpeed->xZ = (p_vB->xZ - p_vA->xZ) * xUSpeed + (p_vC->xZ - p_vA->xZ) * xVSpeed + 0.0f * 0.0f;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 665–681 */
@@ -421,10 +521,25 @@ unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+
 void GEO_vGetNormalOfGeometricObjectElement(GEO_tdstGeometricObject_* hObject, short xElementIndex, short xDataElementIndex, MTH3D_tdstVector_* p_stNormal)
 {
     GEO_tdstElementFaceMapDescriptors_* param0;
-    /* TODO: decompile from asm/... */
+    GEO_tdstElementIndexedTriangles_* param1;
+
+    p_stNormal->xX = 0.0f; p_stNormal->xY = 0.0f; p_stNormal->xZ = 0.0f;
+
+    switch (hObject->d_xListOfElementsTypes[xElementIndex]) {
+        case 1:
+            param1 = (GEO_tdstElementIndexedTriangles_*)hObject->d_stListOfElements[xElementIndex];
+            MTH3D_M_vCopyVector(p_stNormal, &param1->d_stListOfFacesNormals[xDataElementIndex]);
+            break;
+        case 2:
+            param0 = (GEO_tdstElementFaceMapDescriptors_*)hObject->d_stListOfElements[xElementIndex];
+            MTH3D_M_vCopyVector(p_stNormal, &param0->d_stListOfFacesNormals[xDataElementIndex]);
+            break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 588–606 */
@@ -513,9 +628,13 @@ void GEO_vSetPointOfObject(GEO_tdstGeometricObject_* hObject, MTH3D_tdstVector_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, short xNbPoints, short xNbElements);
+
 void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbPoints, short xNbElements)
 {
-    /* TODO: decompile from asm/... */
+    GEO_tdstGeometricObject_* p_stObj; p_stObj = (GEO_tdstGeometricObject_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstGeometricObject_), 0); p_stObj->xNbElements = xNbElements; p_stObj->xNbPoints = xNbPoints; p_stObj->d_xListOfElementsTypes = (short*)HMU_fn_p_vMalloc(xNbElements * sizeof(short), 0); p_stObj->d_stListOfElements = (void**)HMU_fn_p_vMalloc(xNbElements * sizeof(void*), 0); p_stObj->d_stListOfPoints = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 0); p_stObj->d_stListOfPointsNormals = (MTH3D_tdstVector_*)HMU_fn_p_vMalloc(xNbPoints * sizeof(MTH3D_tdstVector_), 0); p_stObj->d_stListOfEdges = NULL; p_stObj->bIsStatic = 0; p_stObj->glDisplayList = 0; *p_hObject = p_stObj;
+    GEO_vInitGeometricObject(*p_hObject, xNbPoints, xNbElements);
+    (*p_hObject)->xNbEdges = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 310–338 */
@@ -537,10 +656,23 @@ void GEO_vCreateGeometricObject(GEO_tdstGeometricObject_** p_hObject, short xNbP
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, short xNbElements)
+#pragma auto_inline on
+
+void GEO_vInitGeometricObject(GEO_tdstGeometricObject_* p_stObjectToCreate, short xNbPoints, short xNbElements)
 {
     short xInitCount;
-    /* TODO: decompile from asm/... */
+
+    for (xInitCount = 0; xInitCount < xNbElements; xInitCount++)
+        p_stObjectToCreate->d_xListOfElementsTypes[xInitCount] = 0;
+
+    p_stObjectToCreate->xNbParallelBoxes = 0;
+    p_stObjectToCreate->d_stListOfParallelBoxes = NULL;
+    p_stObjectToCreate->ulType = 0;
+    p_stObjectToCreate->d_dfVertexTransparency = 0;
+    p_stObjectToCreate->bUsedForShadowDrawing = 1;
+    p_stObjectToCreate->bUsedForShadowCreating = 1;
+    p_stObjectToCreate->bIsStatic = 0;
+    p_stObjectToCreate->glDisplayList = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj.c lines 149–227 */
@@ -599,7 +731,46 @@ void GEO_xComputeIndexUsedByElements(GEO_tdstGeometricObject_* p_stObj)
     unsigned int xIndexCounter;
     unsigned int xObjIndex;
     short xTriangleIndex;
-    short xIndex;
     GEO_tdstElementIndexedTriangles_* p_stLocalElement;
-    /* TODO: decompile from asm/... */
+    short xIndex;
+
+    for (xIndex = 0; xIndex < p_stObj->xNbElements; xIndex++)
+    {
+        if (p_stObj->d_xListOfElementsTypes[xIndex] == 1)
+        {
+            p_stLocalElement = (GEO_tdstElementIndexedTriangles_*)p_stObj->d_stListOfElements[xIndex];
+            memset(aDEF_ulCountBuffer, 0, (p_stObj->xNbPoints + 7) >> 3);
+            for (xTriangleIndex = 0; xTriangleIndex < p_stLocalElement->xNbFaces; xTriangleIndex++)
+            {
+                ((unsigned char*)aDEF_ulCountBuffer)[(unsigned int)p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[0] / 8] |= (unsigned char)(1 << (p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[0] & 7));
+                ((unsigned char*)aDEF_ulCountBuffer)[(unsigned int)p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[1] / 8] |= (unsigned char)(1 << (p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[1] & 7));
+                ((unsigned char*)aDEF_ulCountBuffer)[(unsigned int)p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[2] / 8] |= (unsigned char)(1 << (p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[2] & 7));
+            }
+            p_stLocalElement->xNumberOfIndexsUsed = 0;
+            for (xObjIndex = 0; xObjIndex < ((unsigned int)p_stObj->xNbPoints + 7) >> 3; xObjIndex++)
+            {
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 1) p_stLocalElement->xNumberOfIndexsUsed++;
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 2) p_stLocalElement->xNumberOfIndexsUsed++;
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 4) p_stLocalElement->xNumberOfIndexsUsed++;
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 8) p_stLocalElement->xNumberOfIndexsUsed++;
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 0x10) p_stLocalElement->xNumberOfIndexsUsed++;
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 0x20) p_stLocalElement->xNumberOfIndexsUsed++;
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 0x40) p_stLocalElement->xNumberOfIndexsUsed++;
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 0x80) p_stLocalElement->xNumberOfIndexsUsed++;
+            }
+            p_stLocalElement->d_stListOfIndexUsedByThisElement = (short*)HMU_fn_p_vMalloc(p_stLocalElement->xNumberOfIndexsUsed * 2, 0);
+            xIndexCounter = 0;
+            for (xObjIndex = 0; xObjIndex < ((unsigned int)p_stObj->xNbPoints + 7) >> 3; xObjIndex++)
+            {
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 1) { p_stLocalElement->d_stListOfIndexUsedByThisElement[xIndexCounter] = xObjIndex * 8; xIndexCounter++; }
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 2) { p_stLocalElement->d_stListOfIndexUsedByThisElement[xIndexCounter] = xObjIndex * 8 + 1; xIndexCounter++; }
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 4) { p_stLocalElement->d_stListOfIndexUsedByThisElement[xIndexCounter] = xObjIndex * 8 + 2; xIndexCounter++; }
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 8) { p_stLocalElement->d_stListOfIndexUsedByThisElement[xIndexCounter] = xObjIndex * 8 + 3; xIndexCounter++; }
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 0x10) { p_stLocalElement->d_stListOfIndexUsedByThisElement[xIndexCounter] = xObjIndex * 8 + 4; xIndexCounter++; }
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 0x20) { p_stLocalElement->d_stListOfIndexUsedByThisElement[xIndexCounter] = xObjIndex * 8 + 5; xIndexCounter++; }
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 0x40) { p_stLocalElement->d_stListOfIndexUsedByThisElement[xIndexCounter] = xObjIndex * 8 + 6; xIndexCounter++; }
+                if (((unsigned char*)aDEF_ulCountBuffer)[xObjIndex] & 0x80) { p_stLocalElement->d_stListOfIndexUsedByThisElement[xIndexCounter] = xObjIndex * 8 + 7; xIndexCounter++; }
+            }
+        }
+    }
 }

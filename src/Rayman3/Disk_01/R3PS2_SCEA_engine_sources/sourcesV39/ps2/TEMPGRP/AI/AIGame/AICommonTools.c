@@ -3280,6 +3280,66 @@ void fn_vComputeCollideResult(HIE_tdstSuperObject_* hSender);
 DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso);
 void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO);
 void MAT_fn_vGetRotationVectorBaseI(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI);
+void MAT_fn_vQuatToMatrix(MTH4D_tdstMatrix_* p_stMatrix, float xX, float xY, float xZ, float xW);
+float sinf(float x);
+float cosf(float x);
+float acosf(float x);
+
+/* Word-wise vector copy: the retail code moves the three components as
+   32-bit words rather than as floats. */
+#define MTH3D_M_vCopyVector(_dst, _src) { *(int*)&(_dst)->xX = *(int*)&(_src)->xX; *(int*)&(_dst)->xY = *(int*)&(_src)->xY; *(int*)&(_dst)->xZ = *(int*)&(_src)->xZ; }
+
+/* R5900 accumulator helpers (MWCC cannot contract these from plain C, and
+   the inline-asm operands must be plain scalar float locals). */
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x } \
+    asm { madda.s _y, _y } \
+    asm { madd.s _result, _z, _z }
+#define MTH_SQR3_OF(_result, _v) \
+    do { \
+        float _mthX = (_v).xX; \
+        float _mthY = (_v).xY; \
+        float _mthZ = (_v).xZ; \
+        MTH_SQR3_TO(_result, _mthX, _mthY, _mthZ); \
+    } while (0)
+#define MTH_DOT3_OF(_result, _a, _b) \
+    do { \
+        float _mthBX = (_b).xX; \
+        float _mthAX = (_a).xX; \
+        float _mthBY = (_b).xY; \
+        float _mthAY = (_a).xY; \
+        float _mthBZ = (_b).xZ; \
+        float _mthAZ = (_a).xZ; \
+        asm { mula.s _mthAX, _mthBX } \
+        asm { madda.s _mthAY, _mthBY } \
+        asm { madd.s _result, _mthAZ, _mthBZ } \
+    } while (0)
+#define MTH_CROSS_COMPONENT_TO(_destination, _leftA, _rightB, _leftC, _rightD) \
+    do { \
+        float _mthLeftA; \
+        float _mthRightB; \
+        float _mthLeftC; \
+        float _mthRightD; \
+        float _mthResult; \
+        _mthLeftA = (_leftA); \
+        _mthRightB = (_rightB); \
+        _mthLeftC = (_leftC); \
+        _mthRightD = (_rightD); \
+        asm { mula.s _mthLeftA, _mthRightB } \
+        asm { msub.s _mthResult, _mthLeftC, _mthRightD } \
+        (_destination) = _mthResult; \
+    } while (0)
+#define MTH_CROSS_Z_OF(_result, _a, _b) \
+    do { \
+        float _mthAX = (_a).xX; \
+        float _mthBX = (_b).xX; \
+        float _mthAY = (_a).xY; \
+        float _mthBY = (_b).xY; \
+        asm { mula.s _mthAX, _mthBY } \
+        asm { msub.s _result, _mthAY, _mthBX } \
+    } while (0)
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 332–345 */
 /* addr: 0x0024bd90  size: 100 bytes */
@@ -3296,18 +3356,23 @@ void MAT_fn_vGetRotationVectorBaseI(MAT_tdstTransformation_* _hTransform, MTH3D_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The retail code moves the three vector components as 32-bit words, not as
+   floats: the destinations are the engine's collision globals. */
+#define MTH_COPY_VECTOR_WORDS(_dst, _src) \
+    do { \
+        *(int*)&(_dst).xX = *(int*)&(_src).xX; \
+        *(int*)&(_dst).xY = *(int*)&(_src).xY; \
+        *(int*)&(_dst).xZ = *(int*)&(_src).xZ; \
+    } while (0)
+
 void fn_CollisionRayCast(HIE_tdstSuperObject_* hSender, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode)
 {
-    ((tdstRawVector*)&g_stCollideParameterPoint)->xX = ((tdstRawVector*)p_vPoint)->xX;
-    ((tdstRawVector*)&g_stCollideParameterPoint)->xY = ((tdstRawVector*)p_vPoint)->xY;
-    ((tdstRawVector*)&g_stCollideParameterPoint)->xZ = ((tdstRawVector*)p_vPoint)->xZ;
-    ((tdstRawVector*)&g_stCollideParameterVector)->xX = ((tdstRawVector*)p_vDirection)->xX;
-    ((tdstRawVector*)&g_stCollideParameterVector)->xY = ((tdstRawVector*)p_vDirection)->xY;
-    ((tdstRawVector*)&g_stCollideParameterVector)->xZ = ((tdstRawVector*)p_vDirection)->xZ;
+    MTH_COPY_VECTOR_WORDS(g_stCollideParameterPoint, *p_vPoint);
+    MTH_COPY_VECTOR_WORDS(g_stCollideParameterVector, *p_vDirection);
     g_ulMode = ulMode;
-    g_hColMatHit = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    g_ulCollideTimeCounter = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
     g_hSuperObjectHit = 0;
-    g_ulCollideTimeCounter = 0;
+    g_hColMatHit = 0;
     fn_vComputeCollideResult(hSender);
 }
 
@@ -3338,9 +3403,35 @@ void fn_CollisionRayCast(HIE_tdstSuperObject_* hSender, MTH3D_tdstVector_* p_vPo
  */
 void fn_RotateVectorByAngle(MTH3D_tdstVector_* vector1, float xAngle, MTH3D_tdstVector_* vector2)
 {
+    float xSaveX;
+    float xSaveY;
+    float xSaveZ;
     MTH3D_tdstVector_ vTemp;
     MTH4D_tdstMatrix_ stMatrix;
-    /* TODO: decompile from asm/... */
+    *(int*)&vTemp.xX = *(int*)&vector2->xX;
+    *(int*)&vTemp.xY = *(int*)&vector2->xY;
+    *(int*)&vTemp.xZ = *(int*)&vector2->xZ;
+    if (xAngle != 0.0f)
+    {
+        float xHalf = 0.5f;
+        xAngle = xAngle * -xHalf;
+        vTemp.xX = vTemp.xX * sinf(xAngle); vTemp.xY = vTemp.xY * sinf(xAngle); vTemp.xZ = vTemp.xZ * sinf(xAngle);
+        MAT_fn_vQuatToMatrix(&stMatrix, vTemp.xX, vTemp.xY, vTemp.xZ, cosf(xAngle));
+        if (vector1 == &vTemp)
+        {
+            *(int*)&xSaveX = *(int*)&vector1->xX; *(int*)&xSaveY = *(int*)&vector1->xY; *(int*)&xSaveZ = *(int*)&vector1->xZ;
+            vTemp.xX = stMatrix.stCol_0.xX * xSaveX + stMatrix.stCol_1.xX * xSaveY + stMatrix.stCol_2.xX * xSaveZ;
+            vTemp.xY = stMatrix.stCol_0.xY * xSaveX + stMatrix.stCol_1.xY * xSaveY + stMatrix.stCol_2.xY * xSaveZ;
+            vTemp.xZ = stMatrix.stCol_0.xZ * xSaveX + stMatrix.stCol_1.xZ * xSaveY + stMatrix.stCol_2.xZ * xSaveZ;
+        }
+        else
+        {
+            vTemp.xX = stMatrix.stCol_0.xX * vector1->xX + stMatrix.stCol_1.xX * vector1->xY + stMatrix.stCol_2.xX * vector1->xZ;
+            vTemp.xY = stMatrix.stCol_0.xY * vector1->xX + stMatrix.stCol_1.xY * vector1->xY + stMatrix.stCol_2.xY * vector1->xZ;
+            vTemp.xZ = stMatrix.stCol_0.xZ * vector1->xX + stMatrix.stCol_1.xZ * vector1->xY + stMatrix.stCol_2.xZ * vector1->xZ;
+        }
+        MTH3D_M_vCopyVector(vector1, &vTemp);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 243–290 */
@@ -3385,7 +3476,51 @@ float fn_xAngleVectorVertical(MTH3D_tdstVector_* stVectorU, MTH3D_tdstVector_* s
     MTH3D_tdstVector_ vU;
     float xAngle;
     float xCos;
-    /* TODO: decompile from asm/... */
+    if ((stVectorU->xX == 0.0f) && (stVectorU->xY == 0.0f))
+    {
+        if ((stVectorV->xX == 0.0f) && (stVectorV->xY == 0.0f)) { return 0.0f; }
+        MTH3D_M_vCopyVector(&vU, stVectorV);
+        MTH3D_M_vCopyVector(&vV, stVectorU);
+    }
+    else
+    {
+        MTH3D_M_vCopyVector(&vU, stVectorU);
+        MTH3D_M_vCopyVector(&vV, stVectorV);
+    }
+    MTH_SQR3_OF(xNorm, vU);
+    MTH_SQRT_TO(xCos, xNorm);
+    if (xCos != 0.0f)
+    {
+        xCos = 1.0f / xCos;
+        vU.xX = xCos * vU.xX;
+        vU.xY = xCos * vU.xY;
+        vU.xZ = xCos * vU.xZ;
+    }
+    MTH_SQR3_OF(xNorm, vV);
+    MTH_SQRT_TO(xAngle, xNorm);
+    if (xAngle != 0.0f)
+    {
+        xAngle = 1.0f / xAngle;
+        vV.xX = xAngle * vV.xX;
+        vV.xY = xAngle * vV.xY;
+        vV.xZ = xAngle * vV.xZ;
+    }
+    MTH_CROSS_COMPONENT_TO(VectTmp.xX, vU.xX, vVectorZ.xZ, vU.xY, vVectorZ.xY);
+    MTH_CROSS_COMPONENT_TO(VectTmp.xY, vU.xY, vVectorZ.xX, vU.xZ, vVectorZ.xZ);
+    MTH_CROSS_COMPONENT_TO(VectTmp.xZ, vU.xZ, vVectorZ.xY, vU.xX, vVectorZ.xX);
+    MTH_CROSS_COMPONENT_TO(vW.xX, vV.xX, vVectorZ.xZ, vV.xY, vVectorZ.xY);
+    MTH_CROSS_COMPONENT_TO(vW.xY, vV.xY, vVectorZ.xX, vV.xZ, vVectorZ.xZ);
+    MTH_CROSS_COMPONENT_TO(vW.xZ, vV.xZ, vVectorZ.xY, vV.xX, vVectorZ.xX);
+    MTH_SQR3_OF(xNorm, VectTmp);
+    MTH_SQRT_TO(xCos, xNorm);
+    MTH_SQR3_OF(xNorm, vW);
+    MTH_SQRT_TO(xAngle, xNorm);
+    MTH_DOT3_OF(xNorm, VectTmp, vW);
+    if (xNorm > 1.0f) { xNorm = 1.0f; }
+    if (xNorm < -1.0f) { xNorm = -1.0f; }
+    xCos = acosf(xNorm);
+    if (vU.xZ < vV.xZ) { xCos = -xCos; }
+    return xCos;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 163–198 */
@@ -3424,11 +3559,44 @@ float fn_xAngleVectorVertical(MTH3D_tdstVector_* stVectorU, MTH3D_tdstVector_* s
 float fn_xAngleVectorXOY(MTH3D_tdstVector_* stVectorU, MTH3D_tdstVector_* stVectorV)
 {
     float xNorm;
+    float xNorm2;
     MTH3D_tdstVector_ vUtemp2;
     MTH3D_tdstVector_ vUtemp;
     float xAngle;
     float xCos;
-    /* TODO: decompile from asm/... */
+    vUtemp.xX = stVectorU->xX;
+    vUtemp.xY = stVectorU->xY;
+    *(int*)&vUtemp.xZ = 0;
+    vUtemp2.xX = stVectorV->xX;
+    vUtemp2.xY = stVectorV->xY;
+    *(int*)&vUtemp2.xZ = 0;
+    if (((vUtemp.xX == 0.0f) && (vUtemp.xY == 0.0f) && (vUtemp.xZ == 0.0f)) ||
+        ((vUtemp2.xX == 0.0f) && (vUtemp2.xY == 0.0f) && (vUtemp2.xZ == 0.0f))) { return 0.0f; }
+    MTH_SQR3_OF(xNorm, vUtemp);
+    MTH_SQRT_TO(xNorm2, xNorm);
+    if (xNorm2 != 0.0f)
+    {
+        xNorm2 = 1.0f / xNorm2;
+        vUtemp.xX = xNorm2 * vUtemp.xX;
+        vUtemp.xY = xNorm2 * vUtemp.xY;
+        vUtemp.xZ = xNorm2 * vUtemp.xZ;
+    }
+    MTH_SQR3_OF(xNorm, vUtemp2);
+    MTH_SQRT_TO(xNorm2, xNorm);
+    if (xNorm2 != 0.0f)
+    {
+        xNorm2 = 1.0f / xNorm2;
+        vUtemp2.xX = xNorm2 * vUtemp2.xX;
+        vUtemp2.xY = xNorm2 * vUtemp2.xY;
+        vUtemp2.xZ = xNorm2 * vUtemp2.xZ;
+    }
+    MTH_DOT3_OF(xCos, vUtemp, vUtemp2);
+    if (xCos > 1.0f) { xCos = 1.0f; }
+    if (xCos < -1.0f) { xCos = -1.0f; }
+    xAngle = acosf(xCos);
+    MTH_CROSS_Z_OF(xCos, vUtemp, vUtemp2);
+    if (xCos < 0.0f) { xAngle = -xAngle; }
+    return xAngle;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 135–146 */

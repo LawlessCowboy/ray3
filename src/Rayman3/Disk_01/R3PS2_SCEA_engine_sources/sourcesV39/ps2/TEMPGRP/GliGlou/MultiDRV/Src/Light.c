@@ -23,6 +23,7 @@ typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
 typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
 typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
+typedef struct tdstGliCaps_ tdstGliCaps_;
 
 typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Uninitialized = 0,
@@ -201,6 +202,21 @@ struct GEO_tdstEdge_ {
     MTH3D_tdstVector_ st_VectorPoints[2]; /* +0x4 */
 };
 
+struct tdstGliCaps_ {
+    unsigned int ulSize; /* +0x0 */
+    unsigned int ulDriverCaps; /* +0x4 */
+    unsigned int ulTextureCaps; /* +0x8 */
+    unsigned int ulSurfaceCaps; /* +0xc */
+    unsigned int ulMemoryCaps; /* +0x10 */
+    unsigned int ulTextureMaxSize; /* +0x14 */
+    unsigned int ulTotalTextureMemory; /* +0x18 */
+    unsigned int ulTotalVideoMemory; /* +0x1c */
+    unsigned int ulTotalAGPMemory; /* +0x20 */
+    unsigned int ulTexturePerChannelMemory[4]; /* +0x24 */
+    unsigned char ucPrimarySurfacePixelFormat; /* +0x34 */
+    float fRefreshRate; /* +0x38 */
+};
+
 unsigned int GLI_g_ExcluLightIsOn;
 static MTH3D_tdstVector_ stPositionOfTheLightInTheObjectMatrix;
 static int gs_p_stColor;
@@ -214,6 +230,36 @@ int gs_CurrentNumberOfLightInViewport;
 int gs_aDEF_p_CurrentListOfLight[300];
 int SECT_hFatherSector;
 int GLI_BIG_GLOBALS_gs_st_CurrentMatrix;
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
+int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertLongInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertMTHRealInTable(void* _p_vValue, int _eFlags);
+int SAI_fn_bInsertCharInTable(void* _p_vValue, int _eFlags);
+void GLI_vAddLightToViewport(int lUnused, GLI_tdstLight_* p_stLight);
+
+extern int gs_aDEFTableOfTextureMemoryChannels;
+extern int gs_aDEFTableOfTextureAlreadyRead;
+extern int GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint;
+extern int GLI_BIG_GLOBALS_GLI_aDEF_stEnvUV;
+extern void* gs_hDefaultMaterial;
+extern int GLI_BIG_GLOBALS_p_stActiveFog;
+extern int GLI_BIG_GLOBALS_xFogIsOn;
+extern int GLI_BIG_GLOBALS_xGlobalAlpha;
+extern float g_xVideoFrameDurationInSeconds;
+extern int GLI_gsIsInit;
+extern tdstGliCaps_ GLI_g_stCaps;
+
+void GLI_xCreateMaterial(void** hMaterial);
+void GLI_vIniTextRead(void);
+void GLI_vCreateObjectsReference(void);
+void GLI_vInitWaterplaneModule(void);
+void GLI_vInitLensFlare(void);
+void GLI_xInitMatrixStack(void);
+void GLI_fn_vInitMenuBackground(void);
+void GLI_DRV_xInitDriver(void* pUnused, int l1, int l2, int l3, int l4);
+void GLI_vSetModifierIntensity(int lMul, int lAdd);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 99–169 */
 /* addr: 0x002a88e0  size: 316 bytes */
@@ -256,8 +302,34 @@ int GLI_BIG_GLOBALS_gs_st_CurrentMatrix;
  */
 void GLI_xInitGli(void)
 {
-    int lFirst;
-    /* TODO: decompile from asm/... */
+    static int lFirst = 1;
+    if (lFirst)
+    {
+        lFirst = 0;
+        gs_aDEFTableOfTextureMemoryChannels = (int)malloc(0x640);
+        memset(gs_aDEFTableOfTextureMemoryChannels, 0, 0x640);
+        gs_aDEFTableOfTextureAlreadyRead = (int)malloc(0x640);
+        memset(gs_aDEFTableOfTextureAlreadyRead, 0, 0x640);
+        GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint = (int)HMU_fn_p_vMalloc(0x13890, 1);
+        GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint = (int)(((unsigned int)GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint + 15) & 0xFFFFFFF0);
+        GLI_BIG_GLOBALS_GLI_aDEF_stEnvUV = (int)HMU_fn_p_vMalloc(0x9C40, 1);
+        GLI_BIG_GLOBALS_p_stActiveFog = 0;
+        GLI_BIG_GLOBALS_xFogIsOn = 0;
+        GLI_BIG_GLOBALS_xGlobalAlpha = 0;
+        GLI_xCreateMaterial(&gs_hDefaultMaterial);
+        GLI_vIniTextRead();
+        GLI_vCreateObjectsReference();
+        GLI_vInitWaterplaneModule();
+        GLI_vInitLensFlare();
+        GLI_xInitMatrixStack();
+        GLI_fn_vInitMenuBackground();
+    }
+    GLI_g_stCaps.fRefreshRate = 0.0f;
+    GLI_DRV_xInitDriver(NULL, 1, 0x280, 0x1C0, 0x20);
+    GLI_g_stCaps.fRefreshRate = 60.0f;
+    g_xVideoFrameDurationInSeconds = 1.0f / GLI_g_stCaps.fRefreshRate;
+    GLI_vSetModifierIntensity(100, 0);
+    GLI_gsIsInit = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 977–977 */
@@ -535,9 +607,20 @@ void GLI_xSetLightState(GLI_tdstLight_* p_stLight, int b_lOnOff)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vRemoveLightForInit(GLI_tdstLight_* p_stLight, unsigned short eUserFlags)
+void GLI_vRemoveLightForInit(GLI_tdstLight_* p_stLight, unsigned int eUserFlags)
 {
-    /* TODO: decompile from asm/... */
+    SAI_fn_bRemoveValueFromTable(p_stLight, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xFar, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xNear, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xLittleAlpha, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xBigAlpha, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xLittleTangent, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->xBigTangent, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xR, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xG, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xB, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->stColor.xA, eUserFlags);
+    SAI_fn_bRemoveValueFromTable(&p_stLight->ucObjectLighted, eUserFlags);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 590–606 */
@@ -560,9 +643,20 @@ void GLI_vRemoveLightForInit(GLI_tdstLight_* p_stLight, unsigned short eUserFlag
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vStoreLightForInit(GLI_tdstLight_* p_stLight, unsigned short eUserFlags)
+void GLI_vStoreLightForInit(GLI_tdstLight_* p_stLight, unsigned int eUserFlags)
 {
-    /* TODO: decompile from asm/... */
+    SAI_fn_bInsertLongInTable(p_stLight, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xFar, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xNear, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xLittleAlpha, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xBigAlpha, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xLittleTangent, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->xBigTangent, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xR, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xG, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xB, eUserFlags);
+    SAI_fn_bInsertMTHRealInTable(&p_stLight->stColor.xA, eUserFlags);
+    SAI_fn_bInsertCharInTable(&p_stLight->ucObjectLighted, eUserFlags);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 514–581 */
@@ -643,8 +737,47 @@ void GLI_vStoreLightForInit(GLI_tdstLight_* p_stLight, unsigned short eUserFlags
  */
 void GLI_vAddInternalLightToViewportGhost(void)
 {
-    GLI_tdstLight_* p_stLight;
-    /* TODO: decompile from asm/... */
+    GLI_tdstLight_* p_stAmbient;
+    GLI_tdstLight_* p_stParallel;
+    p_stAmbient = &GLI_g_IL_Ambient;
+    GLI_g_IL_Ambient.lTypeOfLight = 4;
+    MAT_fn_vSetIdentity(&GLI_g_IL_Ambient.stMatrix);
+    GLI_g_IL_Ambient.b_lOnOff = 1;
+    GLI_g_IL_Ambient.stColor.xR = 0.5f;
+    GLI_g_IL_Ambient.stColor.xG = 0.5f;
+    GLI_g_IL_Ambient.stColor.xB = 0.5f;
+    GLI_g_IL_Ambient.stColor.xA = 0.0f;
+    GLI_g_IL_Ambient.stZBuffer.p_stZBufferMap = 0;
+    GLI_g_IL_Ambient.bValid = 1;
+    GLI_g_IL_Ambient.bIsPainting = 0;
+    GLI_g_IL_Ambient.bCreatesShadows = 0;
+    GLI_g_IL_Ambient.ucObjectLighted = 2;
+    if (gs_CurrentNumberOfLightInViewport != 300)
+    {
+        gs_aDEF_p_CurrentListOfLight[gs_CurrentNumberOfLightInViewport] = (int)p_stAmbient;
+        gs_CurrentNumberOfLightInViewport++;
+    }
+    p_stParallel = &GLI_g_IL_Parallel;
+    GLI_g_IL_Parallel.lTypeOfLight = 1;
+    MAT_fn_vSetIdentity(&GLI_g_IL_Parallel.stMatrix);
+    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xX = 0.0f;
+    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xY = 0.0f;
+    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xZ = -1.0f;
+    GLI_g_IL_Parallel.b_lOnOff = 1;
+    GLI_g_IL_Parallel.stColor.xR = 1.0f;
+    GLI_g_IL_Parallel.stColor.xG = 1.0f;
+    GLI_g_IL_Parallel.stColor.xB = 1.0f;
+    GLI_g_IL_Parallel.stColor.xA = 1.0f;
+    GLI_g_IL_Parallel.stZBuffer.p_stZBufferMap = 0;
+    GLI_g_IL_Parallel.bValid = 1;
+    GLI_g_IL_Parallel.bIsPainting = 0;
+    GLI_g_IL_Parallel.bCreatesShadows = 0;
+    GLI_g_IL_Parallel.ucObjectLighted = 2;
+    if (gs_CurrentNumberOfLightInViewport != 300)
+    {
+        gs_aDEF_p_CurrentListOfLight[gs_CurrentNumberOfLightInViewport] = (int)p_stParallel;
+        gs_CurrentNumberOfLightInViewport++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 458–510 */
@@ -710,10 +843,49 @@ void GLI_vAddInternalLightToViewportGhost(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vAddInternalLightToViewport(MTH3D_tdstVector_* pAmbientColor, MTH3D_tdstVector_* pParallelDirection, MTH3D_tdstVector_* pParallelColor)
+void GLI_vAddInternalLightToViewport(int lUnused, MTH3D_tdstVector_* pAmbientColor, MTH3D_tdstVector_* pParallelDirection, MTH3D_tdstVector_* pParallelColor)
 {
-    GLI_tdstLight_* p_stLight;
-    /* TODO: decompile from asm/... */
+    GLI_tdstLight_* p_stAmbient;
+    GLI_tdstLight_* p_stParallel;
+    p_stAmbient = &GLI_g_IL_Ambient;
+    GLI_g_IL_Ambient.lTypeOfLight = 4;
+    MAT_fn_vSetIdentity(&GLI_g_IL_Ambient.stMatrix);
+    GLI_g_IL_Ambient.b_lOnOff = 1;
+    GLI_g_IL_Ambient.stColor.xR = pAmbientColor->xX;
+    GLI_g_IL_Ambient.stColor.xG = pAmbientColor->xY;
+    GLI_g_IL_Ambient.stColor.xB = pAmbientColor->xZ;
+    GLI_g_IL_Ambient.stColor.xA = 0.5f;
+    GLI_g_IL_Ambient.stZBuffer.p_stZBufferMap = 0;
+    GLI_g_IL_Ambient.bValid = 1;
+    GLI_g_IL_Ambient.bIsPainting = 0;
+    GLI_g_IL_Ambient.bCreatesShadows = 0;
+    GLI_g_IL_Ambient.ucObjectLighted = 2;
+    if (gs_CurrentNumberOfLightInViewport != 300)
+    {
+        gs_aDEF_p_CurrentListOfLight[gs_CurrentNumberOfLightInViewport] = (int)p_stAmbient;
+        gs_CurrentNumberOfLightInViewport++;
+    }
+    p_stParallel = &GLI_g_IL_Parallel;
+    GLI_g_IL_Parallel.lTypeOfLight = 1;
+    MAT_fn_vSetIdentity(&GLI_g_IL_Parallel.stMatrix);
+    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xX = pParallelDirection->xX;
+    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xY = pParallelDirection->xY;
+    GLI_g_IL_Parallel.stMatrix.stTransformMatrix.stCol_2.xZ = pParallelDirection->xZ;
+    GLI_g_IL_Parallel.b_lOnOff = 1;
+    GLI_g_IL_Parallel.stColor.xR = pParallelColor->xX;
+    GLI_g_IL_Parallel.stColor.xG = pParallelColor->xY;
+    GLI_g_IL_Parallel.stColor.xB = pParallelColor->xZ;
+    GLI_g_IL_Parallel.stColor.xA = 0.0f;
+    GLI_g_IL_Parallel.stZBuffer.p_stZBufferMap = 0;
+    GLI_g_IL_Parallel.bValid = 1;
+    GLI_g_IL_Parallel.bIsPainting = 0;
+    GLI_g_IL_Parallel.bCreatesShadows = 0;
+    GLI_g_IL_Parallel.ucObjectLighted = 2;
+    if (gs_CurrentNumberOfLightInViewport != 300)
+    {
+        gs_aDEF_p_CurrentListOfLight[gs_CurrentNumberOfLightInViewport] = (int)p_stParallel;
+        gs_CurrentNumberOfLightInViewport++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 445–445 */
@@ -760,7 +932,26 @@ void GLI_vCopyLight(GLI_tdstLight_* p_stLightDst, GLI_tdstLight_* p_stLightSrc)
  */
 void GLI_xCreateLight(GLI_tdstLight_** h_stLight, int lTypeOfLight)
 {
-    /* TODO: decompile from asm/... */
+    *h_stLight = (GLI_tdstLight_*)HMU_fn_p_vMalloc(0x130, 0);
+    if (*h_stLight != NULL)
+    {
+        (*h_stLight)->lTypeOfLight = lTypeOfLight;
+        MAT_fn_vSetIdentity(&(*h_stLight)->stMatrix);
+        (*h_stLight)->b_lOnOff = 1;
+        (*h_stLight)->stColor.xR = 0.8f;
+        (*h_stLight)->stColor.xG = 0.8f;
+        (*h_stLight)->stColor.xB = 0.8f;
+        (*h_stLight)->stColor.xA = 0.8f;
+        (*h_stLight)->stZBuffer.p_stZBufferMap = 0;
+        (*h_stLight)->bValid = 1;
+        (*h_stLight)->bIsPainting = 0;
+        (*h_stLight)->bCreatesShadows = 0;
+        (*h_stLight)->ucObjectLighted = 3;
+        (*h_stLight)->stBackgroundColor.xR = 0.0f;
+        (*h_stLight)->stBackgroundColor.xG = 0.0f;
+        (*h_stLight)->stBackgroundColor.xB = 0.0f;
+        (*h_stLight)->stBackgroundColor.xA = 0.0f;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Light.c lines 402–405 */
@@ -778,10 +969,7 @@ void GLI_xCreateLight(GLI_tdstLight_** h_stLight, int lTypeOfLight)
 void GLI_xSetViewportLightsOnOff(unsigned char bOnOff)
 {
     int i;
-    int lOnOff = 0;
-    if (bOnOff == 0)
-        lOnOff = 1;
-    GLI_g_ExcluLightIsOn = lOnOff;
+    GLI_g_ExcluLightIsOn = bOnOff ? 0 : 1;
     for (i = 0; i < gs_CurrentNumberOfLightInViewport; i++)
         ((GLI_tdstLight_*)gs_aDEF_p_CurrentListOfLight[i])->bValid = bOnOff;
 }

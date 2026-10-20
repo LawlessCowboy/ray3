@@ -1835,6 +1835,11 @@ typedef enum e_ucCameraStates_ {
     CAM_e_TempState_ApexMode = 5,
 } e_ucCameraStates_;
 
+struct tdstDemoCompressedTransform_ {
+    unsigned short uwType; /* +0x0 */
+    short a_sCoef[20]; /* +0x2 */
+};
+
 struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn {
     tdstSubAnimInUse_* hFirstElementDyn; /* +0x0 */
     tdstSubAnimInUse_* hLastElementDyn; /* +0x4 */
@@ -3361,12 +3366,46 @@ int g_lSoundObjectTypeAnim;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+float fn_fUncompressNumber(short n);
+
 void fn_vDecompressTransform(MAT_tdstTransformation_* hTransform, tdstDemoCompressedTransform_* _p_stCompressedTransform)
 {
-    MTH4D_tdstVector_* p_stVector;
-    MTH4D_tdstMatrix_* _p_stMatrix;
     short* p;
-    /* TODO: decompile from asm/... */
+    MTH4D_tdstMatrix_* _p_stMatrix;
+    MTH4D_tdstVector_* p_stVector;
+
+    hTransform->eType = _p_stCompressedTransform->uwType;
+
+    _p_stMatrix = &hTransform->stTransformMatrix;
+    p_stVector = &_p_stMatrix->stCol_0;
+    {
+        float fX, fY, fZ, fW;
+        p = _p_stCompressedTransform->a_sCoef; fW = fn_fUncompressNumber(p[3]); fZ = fn_fUncompressNumber(p[2]); fY = fn_fUncompressNumber(p[1]); fX = fn_fUncompressNumber(p[0]); p_stVector->xX = fX; p_stVector->xY = fY; p_stVector->xZ = fZ; p_stVector->xW = fW;
+    }
+
+    p_stVector = &_p_stMatrix->stCol_1;
+    {
+        float fX, fY, fZ, fW;
+        fW = fn_fUncompressNumber(p[7]); fZ = fn_fUncompressNumber(p[6]); fY = fn_fUncompressNumber(p[5]); fX = fn_fUncompressNumber(p[4]); p_stVector->xX = fX; p_stVector->xY = fY; p_stVector->xZ = fZ; p_stVector->xW = fW;
+    }
+
+    p_stVector = &_p_stMatrix->stCol_2;
+    {
+        float fX, fY, fZ, fW;
+        fW = fn_fUncompressNumber(p[11]); fZ = fn_fUncompressNumber(p[10]); fY = fn_fUncompressNumber(p[9]); fX = fn_fUncompressNumber(p[8]); p_stVector->xX = fX; p_stVector->xY = fY; p_stVector->xZ = fZ; p_stVector->xW = fW;
+    }
+
+    p_stVector = &_p_stMatrix->stCol_3;
+    {
+        float fX, fY, fZ, fW;
+        fW = fn_fUncompressNumber(p[15]); fZ = fn_fUncompressNumber(p[14]); fY = fn_fUncompressNumber(p[13]); fX = fn_fUncompressNumber(p[12]); p_stVector->xX = fX; p_stVector->xY = fY; p_stVector->xZ = fZ; p_stVector->xW = fW;
+    }
+
+    p_stVector = &hTransform->stScaleVector;
+    {
+        float fX, fY, fZ, fW;
+        fW = fn_fUncompressNumber(p[19]); fZ = fn_fUncompressNumber(p[18]); fY = fn_fUncompressNumber(p[17]); fX = fn_fUncompressNumber(p[16]); p_stVector->xX = fX; p_stVector->xY = fY; p_stVector->xZ = fZ; p_stVector->xW = fW;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 804–807 */
@@ -3443,6 +3482,18 @@ CINE_tdstCine_* CINE_fn_hGetCineAtIndex(int iPos)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CINE_CheckEndCineActor(CINE_tdstCineActor_* hCineActor);
+void* HMU_fn_p_vMalloc(unsigned int uiSize);
+extern unsigned int g_ulMode;
+void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSuperObject);
+void MEC_vImposeRotationMatrix(HIE_tdstSuperObject_* hSuperObject, HIE_tdstSuperObject_* hSuperObject2);
+void CINE_SendRequestsEndSounds(CINE_tdstCineActor_* hElement);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
+void fn_vDesInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse);
+void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
+unsigned char PLA_fn_bSetNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_WantedState, unsigned char _bForce, unsigned char _bHandleSkippedEventsIfRelevant, unsigned char _bIgnoreTransitions, unsigned int ulNbFrameForIntermAnim, float xNLParameter, unsigned char bProportionnal);
+void fn_vInternalChangeComportProcedure(tdstIntelligence_* p_stAimedPersoIntelligenceOrReflex, tdstComport_* p_stComport, unsigned char _bContinueExecution);
+
 void fn_vStopEngineCinematics(CINE_tdstCine_* hCine)
 {
     AI_tdstMind_* p_stMind;
@@ -3452,7 +3503,110 @@ void fn_vStopEngineCinematics(CINE_tdstCine_* hCine)
     tdst3dData_* h_Current3dData;
     HIE_tdstSuperObject_* p_stSuperObjCine;
     CINE_tdstCineActor_* hElement;
-    /* TODO: decompile from asm/... */
+    int bFound;
+
+    /* The search loop assigns bFound on every exit path, so the flag stays in a
+     * caller-saved register (it is dead across the CINE_CheckEndCineActor call),
+     * which is what the retail code does. */
+    for (hElement = hCine->hActorList.hFirstElementDyn; hElement != NULL; hElement = hElement->hNextBrotherDyn)
+    {
+        CINE_CheckEndCineActor(hElement);
+        if (hElement->bPlayingAnim)
+        {
+            bFound = 1;
+            break;
+        }
+        bFound = 0;
+    }
+    if (!bFound)
+    {
+        return;
+    }
+
+    hElement = hCine->hActorList.hFirstElementDyn;
+    while (hElement != NULL)
+    {
+        if (hElement->bPlayingAnim)
+        {
+            p_stSuperObjCine = fn_h_StandardGameGetSuperObject(hElement->p_stActor->h_StandardGame);
+            hStdGame = ((tdstEngineObject_*)p_stSuperObjCine->hLinkedObject.p_stCharacter)->h_StandardGame;
+            if (hElement->bIsASubAnim)
+            {
+                h_Current3dData = ((tdstEngineObject_*)p_stSuperObjCine->hLinkedObject.p_stCharacter)->h_3dData;
+                hSubAnimInUse = h_Current3dData->hForSubAnimInUseArray.hFirstElementDyn;
+                hNextSubAnimInUse = NULL;
+                if (hSubAnimInUse != NULL)
+                {
+                    hNextSubAnimInUse = hSubAnimInUse->hNextBrotherDyn;
+                }
+                if (hSubAnimInUse == hElement->hSubAnimInUse)
+                {
+                    if (hElement->hSubAnimInUse->hNextBrotherDyn != NULL)
+                    {
+                        hElement->hSubAnimInUse->hNextBrotherDyn->hPrevBrotherDyn = hElement->hSubAnimInUse->hPrevBrotherDyn;
+                    }
+                    if (hElement->hSubAnimInUse->hPrevBrotherDyn != NULL)
+                    {
+                        hElement->hSubAnimInUse->hPrevBrotherDyn->hNextBrotherDyn = hElement->hSubAnimInUse->hNextBrotherDyn;
+                    }
+                    if (hElement->hSubAnimInUse->hFatherDyn != NULL)
+                    {
+                        hElement->hSubAnimInUse->hFatherDyn->lNumberOfElementsDyn--;
+                        if (hElement->hSubAnimInUse->hFatherDyn->hFirstElementDyn == hElement->hSubAnimInUse)
+                        {
+                            hElement->hSubAnimInUse->hFatherDyn->hFirstElementDyn = hElement->hSubAnimInUse->hNextBrotherDyn;
+                        }
+                        if (hElement->hSubAnimInUse->hFatherDyn->hLastElementDyn == hElement->hSubAnimInUse)
+                        {
+                            hElement->hSubAnimInUse->hFatherDyn->hLastElementDyn = hElement->hSubAnimInUse->hNextBrotherDyn;
+                        }
+                    }
+                    hElement->hSubAnimInUse->hNextBrotherDyn = NULL;
+                    hElement->hSubAnimInUse->hPrevBrotherDyn = NULL;
+                    hElement->hSubAnimInUse->hFatherDyn = NULL;
+                }
+                fn_vDesInitAllSubEvents(p_stSuperObjCine, hElement->hSubAnimInUse);
+                HMU_fn_vFree((void**)&hElement->hSubAnimInUse, 1);
+                hSubAnimInUse = hNextSubAnimInUse;
+                if (hSubAnimInUse != NULL)
+                {
+                    PLA_fn_bSetNewState(p_stSuperObjCine, hElement->p_stStateAfterCine, 1, 0, 0, 0, 0.0f, 0);
+                }
+            }
+            else
+            {
+                PLA_fn_bSetNewState(p_stSuperObjCine, hElement->p_stStateAfterCine, 1, 0, 0, 0, 0.0f, 0);
+            }
+            if ((h_Current3dData->h_CurrentCineActor->bPreviousIAState == 0) && (h_Current3dData->h_CurrentCineActor->bSkipIA != 0))
+            {
+                hStdGame->ulCustomBits &= 0xFFFEFFFF;
+            }
+            if ((h_Current3dData->h_CurrentCineActor->bPreviousMecaState == 0) && (h_Current3dData->h_CurrentCineActor->bSkipMeca != 0))
+            {
+                hStdGame->ulCustomBits &= 0xFFFF7FFF;
+            }
+            if (hElement->bChangeComportEnd)
+            {
+                if (hElement->p_stIntelEnd != NULL)
+                {
+                    p_stMind = ((tdstEngineObject_*)p_stSuperObjCine->hLinkedObject.p_stCharacter)->h_Brain->p_stMind;
+                    fn_vInternalChangeComportProcedure(p_stMind->p_stIntelligence, hElement->p_stIntelEnd, (unsigned char)(p_stMind->bDoingIntel != 0));
+                }
+            }
+            if (hElement->bChangeReflexEnd)
+            {
+                if (hElement->p_stReflexBegin != NULL)
+                {
+                    p_stMind = ((tdstEngineObject_*)p_stSuperObjCine->hLinkedObject.p_stCharacter)->h_Brain->p_stMind;
+                    fn_vInternalChangeComportProcedure(p_stMind->p_stReflex, hElement->p_stReflexEnd, (unsigned char)(p_stMind->bDoingIntel != 0));
+                }
+            }
+            CINE_SendRequestsEndSounds(hElement);
+            hStdGame->ulAICustomBits &= 0xFF7FFFFF;
+            hElement->p_stStateDuringCine->p_stAnim = NULL;
+        }
+        hElement = hElement->hNextBrotherDyn;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 533–673 */
@@ -3542,6 +3696,16 @@ void fn_vStopEngineCinematics(CINE_tdstCine_* hCine)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSuperObject);
+void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_* hSuperObject, HIE_tdstSuperObject_* hSuperObject2);
+void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* hSuperObject);
+void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_* hSuperObject, unsigned int ulCurrentBits);
+void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hNewSubAnimInUse);
+void fn_vSetAnimInState(tdstState_* hState, unsigned short usChannel);
+void fn_vSetNextStateInState(tdstState_* hState, tdstState_* hNextState);
+void fn_vSetRepeatAnimationInState(tdstState_* hState, unsigned char ucRepeat);
+void fn_vSetSpeedInState(tdstState_* hState, signed char scSpeed);
+
 void fn_vLaunchEngineCinematics(CINE_tdstCine_* hCine)
 {
     AI_tdstMind_* p_stMind;
@@ -3552,7 +3716,64 @@ void fn_vLaunchEngineCinematics(CINE_tdstCine_* hCine)
     tdstStandardGame_* hStdGame;
     HIE_tdstSuperObject_* p_stSuperObjCine;
     CINE_tdstCineActor_* hElement;
-    /* TODO: decompile from asm/... */
+    int bFound;
+
+    for (hElement = hCine->hActorList.hFirstElementDyn; hElement != NULL; hElement = hElement->hNextBrotherDyn)
+    {
+        CINE_CheckEndCineActor(hElement);
+        if (hElement->bPlayingAnim)
+        {
+            bFound = 1;
+            break;
+        }
+        bFound = 0;
+    }
+    if (!bFound)
+    {
+        return;
+    }
+
+
+    hCine->lGenerateEvent = 0;
+
+    hElement = hCine->hActorList.hFirstElementDyn;
+    while (hElement != NULL)
+    {
+        p_stSuperObjCine = fn_h_StandardGameGetSuperObject(hElement->p_stActor->h_StandardGame);
+        h_Current3dData = ((tdstEngineObject_*)p_stSuperObjCine->hLinkedObject.p_stCharacter)->h_3dData;
+        h_Current3dData->h_CurrentCineActor = hElement;
+        h_Current3dData->ulStartTime = g_ulMode;
+        h_Current3dData->h_WantedState = NULL;
+        if (hElement->bMoveActorAtTheBegin)
+        {
+            if (hElement->hSPORef != NULL)
+            {
+                hDynam = ((tdstEngineObject_*)p_stSuperObjCine->hLinkedObject.p_stCharacter)->h_Dynam;
+                HIE_fn_vUpdateGlobalMatrix(p_stSuperObjCine);
+                HIE_fn_vComputeNewRelativeMatrix(p_stSuperObjCine, hElement->hSPORef);
+            }
+        }
+        hElement->bPlayingAnim = 1;
+        if (hElement->bIsASubAnim)
+        {
+            hElement->hSubAnimInUse = (tdstSubAnimInUse_*)HMU_fn_p_vMalloc(0x28);
+            hElement->hSubAnimInUse->p_stTheSubAnim = (tdstSubAnim_*)hElement;
+            hElement->hSubAnimInUse->ulCustombit = 0;
+            hElement->hSubAnimInUse->ulLoop = hElement->ucRepeatAnimation + 1;
+            hElement->hSubAnimInUse->ulStartFrame = g_ulMode;
+            fn_vInitAllSubEvents(p_stSuperObjCine, hElement->hSubAnimInUse);
+            hElement->hSubAnimInUse->hNextBrotherDyn = NULL;
+            hElement->hSubAnimInUse->hPrevBrotherDyn = NULL;
+            hElement->hSubAnimInUse->hFatherDyn = NULL;
+        }
+        else
+        {
+            hElement->hSubAnimInUse->hNextBrotherDyn = NULL;
+            hElement->hSubAnimInUse->hPrevBrotherDyn = NULL;
+            hElement->hSubAnimInUse->hFatherDyn = NULL;
+        }
+        hElement = hElement->hNextBrotherDyn;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 464–516 */
@@ -3581,11 +3802,61 @@ void fn_vLaunchEngineCinematics(CINE_tdstCine_* hCine)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void SND_fn_vSetPan(int b_pan);
+int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId,
+                               _SND_tduRefEvt u_RefEvt, void* pData, void* pData2);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
+
 void CINE_SendRequestsBeginSounds(CINE_tdstCineActor_* hElement)
 {
     HIE_tdstSuperObject_* p_stSuperObjCine;
     _SND_tduRefEvt uRefEvt;
-    /* TODO: decompile from asm/... */
+
+    /* Reset the sound pan before sending the begin requests. */
+    SND_fn_vSetPan(0);
+
+    /* The super object of the actor drives the sound requests. */
+    p_stSuperObjCine = fn_h_StandardGameGetSuperObject(hElement->p_stActor->h_StandardGame);
+
+    if (hElement->bUseSoundRequestBegin)
+    {
+        if (hElement->pSoundRequestBegin != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pSoundRequestBegin;
+            /* Send the begin sound request. */
+            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeAnim, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseMusicRequestBegin)
+    {
+        if (hElement->pMusicRequestBegin != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pMusicRequestBegin;
+            /* Send the begin music request. */
+            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseVoiceRequestBegin)
+    {
+        if (hElement->pVoiceRequestBegin != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pVoiceRequestBegin;
+            /* Send the begin voice request. */
+            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeVoice, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseAmbianceRequestBegin)
+    {
+        if (hElement->pAmbianceRequestBegin != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pAmbianceRequestBegin;
+            /* Send the begin ambiance request. */
+            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeAmbiance, uRefEvt, 0, 0);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 407–459 */
@@ -3618,7 +3889,51 @@ void CINE_SendRequestsEndSounds(CINE_tdstCineActor_* hElement)
 {
     HIE_tdstSuperObject_* p_stSuperObjCine;
     _SND_tduRefEvt uRefEvt;
-    /* TODO: decompile from asm/... */
+
+    p_stSuperObjCine = fn_h_StandardGameGetSuperObject(hElement->p_stActor->h_StandardGame);
+
+    /* Reset the sound pan before sending the end requests. */
+    SND_fn_vSetPan(1);
+
+    if (hElement->bUseSoundRequestEnd)
+    {
+        if (hElement->pSoundRequestEnd != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pSoundRequestEnd;
+            /* Send the end sound request. */
+            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeAnim, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseMusicRequestEnd)
+    {
+        if (hElement->pMusicRequestEnd != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pMusicRequestEnd;
+            /* Send the end music request. */
+            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseVoiceRequestEnd)
+    {
+        if (hElement->pVoiceRequestEnd != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pVoiceRequestEnd;
+            /* Send the end voice request. */
+            SND_fn_s32SendRequestSound((int)p_stSuperObjCine, -1, g_lSoundObjectTypeVoice, uRefEvt, 0, 0);
+        }
+    }
+
+    if (hElement->bUseAmbianceRequestEnd)
+    {
+        if (hElement->pAmbianceRequestEnd != NULL)
+        {
+            uRefEvt.pstPtr = hElement->pAmbianceRequestEnd;
+            /* Send the end ambiance request. */
+            SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeAmbiance, uRefEvt, 0, 0);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 266–392 */
@@ -3683,7 +3998,79 @@ void CINE_CheckEndCineActor(CINE_tdstCineActor_* hCineActor)
     HIE_tdstSuperObject_* hCharacter;
     unsigned char bEnd;
     tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/... */
+
+    hCharacter = fn_h_StandardGameGetSuperObject(hCineActor->p_stActor->h_StandardGame);
+    h_Current3dData = ((tdstEngineObject_*)hCharacter->hLinkedObject.p_stCharacter)->h_3dData;
+    if (h_Current3dData->h_CurrentCineActor != NULL)
+    {
+        if (h_Current3dData->h_CurrentCineActor->bPlayingAnim != 0)
+        {
+            if (hCineActor->bIsASubAnim != 0)
+            {
+                hNextSubAnimInUse = h_Current3dData->hForSubAnimInUseArray.hFirstElementDyn;
+                if (hNextSubAnimInUse != NULL)
+                {
+                    hNextSubAnimInUse = hNextSubAnimInUse->hNextBrotherDyn;
+                }
+                if (hNextSubAnimInUse != NULL)
+                {
+                    while (hNextSubAnimInUse != NULL)
+                    {
+                        if (hNextSubAnimInUse == h_Current3dData->h_CurrentCineActor->hSubAnimInUse)
+                        {
+                            bSubAnimRun = 1;
+                            break;
+                        }
+                        hNextSubAnimInUse = hNextSubAnimInUse->hNextBrotherDyn;
+                    }
+                }
+            }
+            else
+            {
+                bSubAnimRun = 1;
+            }
+            if (bSubAnimRun == 0)
+            {
+                h_Current3dData->h_CurrentCineActor->bPlayingAnim = 0;
+            }
+            else
+            {
+                if ((h_Current3dData->ucFlagEndOfAnim != 0) && (h_Current3dData->ucFlagEndState == 0))
+                {
+                    h_Current3dData->h_CurrentCineActor->bPlayingAnim = 0;
+                    if (g_stEngineStructure.stCineManager->gp_stSPOHandleCamera == hCharacter)
+                    {
+                        g_stEngineStructure.stCineManager->gp_stSPOHandleCamera = NULL;
+                    }
+                }
+            }
+            param0 = ((tdstEngineObject_*)hCharacter->hLinkedObject.p_stCharacter)->h_StandardGame;
+            if ((h_Current3dData->h_CurrentCineActor->bPreviousIAState == 0) && (h_Current3dData->h_CurrentCineActor->bSkipIA != 0))
+            {
+                param0->ulCustomBits &= 0xFFFEFFFF;
+            }
+            if ((h_Current3dData->h_CurrentCineActor->bPreviousMecaState == 0) && (h_Current3dData->h_CurrentCineActor->bSkipMeca != 0))
+            {
+                param0->ulCustomBits &= 0xFFFF7FFF;
+            }
+            param0->ulAICustomBits &= 0xFFFFBFFF;
+            if (h_Current3dData->h_CurrentCineActor->bMoveActorAtTheEnd != 0)
+            {
+                if (h_Current3dData->hArrayOfChannels != NULL)
+                {
+                    HIE_tdstSuperObject_* hSuperObj;
+                    hSuperObj = h_Current3dData->hArrayOfChannels[h_Current3dData->h_CurrentCineActor->usChannel].hSupObject;
+                    if (hSuperObj != NULL)
+                    {
+                        hDynam = ((tdstEngineObject_*)hCharacter->hLinkedObject.p_stCharacter)->h_Dynam;
+                        HIE_fn_vUpdateGlobalMatrix(hCharacter);
+                        HIE_fn_vUpdateGlobalMatrix(hSuperObj);
+                        MEC_vImposeRotationMatrix(hCharacter, hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->h_SuperObject);
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\CineDef.c lines 186–187 */
@@ -3718,8 +4105,24 @@ void CINE_fn_pResetCineList(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int strcasecmp(const char*, const char*);
+
 CINE_tdstCine_* CINE_fn_pFindCine(char* szName)
 {
     CINE_tdstCine_* hElement;
-    /* TODO: decompile from asm/... */
+
+    if ((g_stEngineStructure.stCineManager == NULL) || (szName == NULL))
+    {
+        return NULL;
+    }
+    hElement = g_stEngineStructure.stCineManager->hCineList.hFirstElementDyn;
+    while (hElement != NULL)
+    {
+        if (strcasecmp(szName, hElement->szName) == 0)
+        {
+            return hElement;
+        }
+        hElement = hElement->hNextBrotherDyn;
+    }
+    return NULL;
 }

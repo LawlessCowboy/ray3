@@ -256,7 +256,16 @@ int viBufCount(anon_3* f)
  */
 int viBufDelete(anon_3* f)
 {
-    /* TODO: decompile from asm/... */
+    DIntr();
+    *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000;
+    *(volatile unsigned int*)0x1000B400 = 5;
+    *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFFFFFE;
+    EIntr();
+    *(volatile unsigned int*)0x1000B420 = 0;
+    *(volatile unsigned int*)0x1000B410 = 0;
+    *(volatile unsigned int*)0x1000B430 = 0;
+    DeleteSema(f->sema);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 379–459 */

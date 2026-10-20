@@ -250,12 +250,18 @@ tdstNodeInterpret_* fn_p_stSetCheapCharacterListAura(HIE_tdstSuperObject_* p_Sup
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source: the retail build leaves the "cActivity" member
+ * address unfolded (list base + 0x34, then the scaled character index), which
+ * the char* temp below reproduces.  Under MWCC 3.0 the body is register
+ * equivalent to the retail one; 3.0.1 duplicates the index computation in the
+ * else branch (4 bytes too long). */
 tdstNodeInterpret_* fn_p_stActivateCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
     unsigned int ulIndChar;
     tdeProcedureId_ eProcedureId;
     _tdstCheapCharacterList* pCheapList;
+    char* pc;
 
     eProcedureId = (p_stTree - 1)->uDummy;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
@@ -263,10 +269,12 @@ tdstNodeInterpret_* fn_p_stActivateCheapCharacter(HIE_tdstSuperObject_* p_SuperO
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     ulIndChar = stParam.uParam.ulValue;
     if (ulIndChar < pCheapList->NumberOfCheapCharacter) {
+        pc = (char*)pCheapList;
+        pc = pc + 0x34;
         if (eProcedureId == 846)
-            pCheapList->List[ulIndChar].cActivity = 1;
+            ((char*)pc)[ulIndChar * 48] = 1;
         else
-            pCheapList->List[ulIndChar].cActivity = 0;
+            ((char*)pc)[ulIndChar * 48] = 0;
     }
     return p_stTree;
 }
@@ -371,17 +379,23 @@ extern "C" void AddCheapCharacter(unsigned int ulInd, MTH3D_tdstVector_* pPos)
 }
 #pragma auto_inline reset
 
+/* Not original source: the retail build inlines AddCheapCharacter() here and
+ * keeps the whole inlined body on the call statement's line (543), and it
+ * keeps the stPosition copy in memory.  Writing the body out with the vector
+ * copy at its point of use reproduces the retail bytes and line map. */
 tdstNodeInterpret_* fn_p_stAddCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     unsigned int ulInd;
-    MTH3D_tdstVector_ stPosition;
     tdstGetSetParam_ stParam;
+    _tdstCheapCharacterList* pCheapList;
+    char* pc;
+    int iIndex;
 
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     ulInd = stParam.uParam.ulValue;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    stPosition = stParam.uParam.stVectorValue;
-    AddCheapCharacter(ulInd, &stPosition);
+    MTH3D_tdstVector_ stPosition = stParam.uParam.stVectorValue;
+    pCheapList = &g_aListOfCheapCharacterList[ulInd]; if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) { if (pCheapList->NumberOfCheapCharacter < pCheapList->MaxNumberOfCheapCharacter) { pc = (char*)pCheapList; pc = pc + 0x10; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = stPosition.x; pc = (char*)pCheapList; pc = pc + 0x14; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = stPosition.y; pc = (char*)pCheapList; pc = pc + 0x18; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = stPosition.z; pc = (char*)pCheapList; pc = pc + 0x20; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f; pc = (char*)pCheapList; pc = pc + 0x24; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f; pc = (char*)pCheapList; pc = pc + 0x28; ((float*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0.0f; pc = (char*)pCheapList; pc = pc + 0x34; ((char*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 48] = 1; pc = (char*)pCheapList; pc = pc + 0x30; ((unsigned int*)pc)[iIndex = (int)pCheapList->NumberOfCheapCharacter * 12] = 0; pCheapList->NumberOfCheapCharacter++; } }
     return p_stTree;
 }
 
@@ -428,11 +442,17 @@ tdstNodeInterpret_* fn_p_stAddCheapCharacter(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source in two places: the retail branch layout needs the
+ * guard written as an early return (it branches to the body on beqz and keeps
+ * the skip as the fall-through), and the 843 branch needs the scaled index in
+ * a local of its own (the retail keeps it in ulIndChar's callee-saved
+ * register across the call) and the three pointer locals declared in reverse
+ * order to land in s5/s4/s3. */
 tdstNodeInterpret_* fn_p_stSetCheapCharacterPos(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdeProcedureId_ eProcedureId;
-    _tdstCheapCharacterList* pCheapList;
     unsigned int ulIndChar;
+    _tdstCheapCharacterList* pCheapList;
+    tdeProcedureId_ eProcedureId;
     unsigned int ulInd;
     tdstGetSetParam_ stParam;
     char* pc;
@@ -446,42 +466,46 @@ tdstNodeInterpret_* fn_p_stSetCheapCharacterPos(HIE_tdstSuperObject_* p_SuperObj
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     MTH3D_tdstVector_ stPosition = stParam.uParam.stVectorValue;
     pCheapList = &g_aListOfCheapCharacterList[ulInd];
-    if (pCheapList->NumberOfCheapCharacter >= ulIndChar) {
-        if (eProcedureId == 842) {
-            pc = (char*)pCheapList;
-            pc = pc + 0x10;
-            *(float*)((char*)pc + (iIndex = ulIndChar * 48)) = stPosition.x;
-            pc = (char*)pCheapList;
-            pc = pc + 0x14;
-            *(float*)((char*)pc + (iIndex = ulIndChar * 48)) = stPosition.y;
-            pc = (char*)pCheapList;
-            pc = pc + 0x18;
-            *(float*)((char*)pc + (iIndex = ulIndChar * 48)) = stPosition.z;
-        } else if (eProcedureId == 843) {
-            float fNorm;
-            float* pfX;
-            float* pfY;
-            float* pfZ;
-            pc = (char*)pCheapList;
-            pc = pc + 0x20;
-            pfX = (float*)((char*)pc + (iIndex = ulIndChar * 48));
-            pc = (char*)pCheapList;
-            pc = pc + 0x24;
-            pfY = (float*)((char*)pc + (iIndex = ulIndChar * 48));
-            pc = (char*)pCheapList;
-            pc = pc + 0x28;
-            pfZ = (float*)((char*)pc + (iIndex = ulIndChar * 48));
-            *pfX = stPosition.x;
-            *pfY = stPosition.y;
-            *pfZ = stPosition.z;
-            fNorm = 1.0f / MTH_xSqrt(MTH_fn_xSqrAddSqrAddSqrOpt2(*pfX, *pfY, *pfZ));
-            *pfX = fNorm * *pfX;
-            *pfY = fNorm * *pfY;
-            *pfZ = fNorm * *pfZ;
-            pc = (char*)pCheapList;
-            pc = pc + 0x2c;
-            *(float*)((char*)pc + (iIndex = ulIndChar * 48)) = 1.0f;
-        }
+    if (pCheapList->NumberOfCheapCharacter < ulIndChar)
+        return p_stTree;
+    if (eProcedureId == 842) {
+        iIndex = (int)ulIndChar * 48;
+        pc = (char*)pCheapList;
+        pc = pc + 0x10;
+        *(float*)((char*)pc + iIndex) = stPosition.x;
+        pc = (char*)pCheapList;
+        pc = pc + 0x14;
+        *(float*)((char*)pc + iIndex) = stPosition.y;
+        pc = (char*)pCheapList;
+        pc = pc + 0x18;
+        *(float*)((char*)pc + iIndex) = stPosition.z;
+    } else if (eProcedureId == 843) {
+        int iIdx;
+        float fNorm;
+        float* pfZ;
+        float* pfY;
+        float* pfX;
+
+        iIdx = (int)ulIndChar * 48;
+        pc = (char*)pCheapList;
+        pc = pc + 0x20;
+        pfX = (float*)((char*)pc + iIdx);
+        pc = (char*)pCheapList;
+        pc = pc + 0x24;
+        pfY = (float*)((char*)pc + iIdx);
+        pc = (char*)pCheapList;
+        pc = pc + 0x28;
+        pfZ = (float*)((char*)pc + iIdx);
+        *pfX = stPosition.x;
+        *pfY = stPosition.y;
+        *pfZ = stPosition.z;
+        fNorm = 1.0f / MTH_xSqrt(MTH_fn_xSqrAddSqrAddSqrOpt2(*pfX, *pfY, *pfZ));
+        *pfX = fNorm * *pfX;
+        *pfY = fNorm * *pfY;
+        *pfZ = fNorm * *pfZ;
+        pc = (char*)pCheapList;
+        pc = pc + 0x2c;
+        *(float*)((char*)pc + iIdx) = 1.0f;
     }
     return p_stTree;
 }

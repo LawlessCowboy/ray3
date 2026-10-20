@@ -67,13 +67,18 @@ struct GLI_tdstMaterial_ {
     GLI_tdstMultiTextureMaterial a_stMultiMaterial[4]; /* +0x88 */
 };
 
+/* The retail layout recovered from the target code (see u_SDL.s and the
+ * GLI_vGetVertexPointersFromSDCStructure* bodies): pArrayOfVertexArrays is a
+ * single pointer to an array of float* at +0xc, and +0x14 points to an int
+ * array holding the per-element triangle counts (the retail indexes it with
+ * iElement). */
 struct SDC_VertexArrays_ {
     unsigned int OptType; /* +0x0 */
     unsigned int NbElements; /* +0x4 */
     GLI_tdstMaterial_** pArrayOfMaterials; /* +0x8 */
-    float ** pArrayOfVertexArrays[4]; /* +0xc */
-    int pVertexArraySizes; /* +0x10 */
-    int pNbTrianglesPerElement; /* +0x14 */
+    float ** pArrayOfVertexArrays; /* +0xc */
+    int * pVertexArraySizes; /* +0x10 */
+    int * pNbTrianglesPerElement; /* +0x14 */
     int pbIsTransparent; /* +0x18 */
     unsigned int FrameDeformed; /* +0x1c */
     int pSDLs; /* +0x20 */
@@ -172,11 +177,20 @@ unsigned int SDL_GetNew(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg[4], float ** pUV1[4], float ** pNormals[4])
+/* The retail caller (u_SDL.s) passes seven arguments (a0,a1,a2,a3,t0,t1,t2) and
+ * the target body stores into the 3rd, 4th and 7th of them; the two unreferenced
+ * middle parameters were dropped by the debug extractor, so the recovered
+ * "float ** pVOrg[4]" parameters are plain "float **" pointers. */
+void GLI_vGetVertexPointersFromSDCStructureSpriteGens(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg, float ** pUV1, float ** pUnused1, float ** pUnused2, float ** pNormals)
 {
     float (*pVA)[4];
+    float (*pUV)[4];
     unsigned int NbVertices;
-    /* TODO: decompile from asm/... */
+    NbVertices = pSDC->pNbTrianglesPerElement[iElement] * 3;
+    pVA = (float (*)[4])pSDC->pArrayOfVertexArrays[iElement];
+    pVOrg[0] = (float*)pVA;
+    pUV = pVA + NbVertices;
+    pUV1[0] = (float*)pUV; pNormals[0] = (float*)(pUV + NbVertices);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLUtils.cpp lines 91–153 */

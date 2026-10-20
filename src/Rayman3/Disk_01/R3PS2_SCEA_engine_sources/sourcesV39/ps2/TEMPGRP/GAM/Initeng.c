@@ -1798,26 +1798,134 @@ int g_lSoundObjectTypeAnim;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+unsigned char GMT_fn_b_ulIsValid(GMT_tdstGameMaterial_* hGameMaterial);
+GEO_tdstGeometricObject_* HIE_fn_p_stGetGeometricObjectFromSuperObject(HIE_tdstSuperObject_* h_SuperObject);
+void MAT_fn_vInvert(MAT_tdstTransformation_* pDest, MAT_tdstTransformation_* pSource);
+void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* pResult, MAT_tdstTransformation_* pMat, MTH3D_tdstVector_* pVec);
+unsigned char INT_fn_bIntersectSegmentWithFaceOfGeometricObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVertexB, MTH3D_tdstVector_* p_stVectAB, GEO_tdstGeometricObject_* p_stGeomObj, short xNbMaxElements, short* p_xNbElements, GLI_tdstDataOfElement_* d_stDataOfElement);
+unsigned char GEO_vGetFaceSurfaceSpeed(GEO_tdstGeometricObject_* hObject, short xElement, short xFace, MTH3D_tdstVector_* p_vSpeed, int lMTIndex);
+
 void fn_vGetScrollSpeedMatCollided(HIE_tdstSuperObject_* p_stSuperObj, MTH3D_tdstVector_* p_stVector, unsigned int ulObstacleType, int ulMTIndex)
 {
-    MAT_tdstTransformation_ mGlobalToObst;
-    MTH3D_tdstVector_ vV12;
+    short xNbFaceCollided;
+    MTH3D_tdstVector_ vXYZSpeed;
     MTH3D_tdstVector_ vPt2;
     MTH3D_tdstVector_ vPt1;
     MTH3D_tdstVector_ vNorm;
-    MTH3D_tdstVector_ vContact;
-    short xNbFaceCollided;
+    union { MTH3D_tdstVector_ v; int i[3]; } vContact;
+    MTH3D_tdstVector_ vV12;
+    MTH3D_tdstVector_ vGlobalSpeed;
+    union { MTH4D_tdstVector_ v; int i[4]; } stContact;
+    MAT_tdstTransformation_ mGlobalToObst;
     GLI_tdstDataOfElement_ stElement;
     MAT_tdstTransformation_ mGlobalToPerso;
-    MTH3D_tdstVector_ vGlobalSpeed;
-    MTH3D_tdstVector_ vXYZSpeed;
     GEO_tdstGeometricObject_* hObject;
     HIE_tdstSuperObject_* p_stObjectCollided;
     DNM_stObstacle* p_stObstacle;
     DNM_stDynamics* p_stDynamics;
     tdstDynam_* h_Dynam;
     DNM_stReport* p_stDynamReport;
-    /* TODO: decompile from asm/... */
+    MTH4D_tdstVector_* pMat;
+    MTH4D_tdstVector_* pVec;
+
+    p_stVector->xX = 0.0f;
+    p_stVector->xY = 0.0f;
+    p_stVector->xZ = 0.0f;
+
+    h_Dynam = p_stSuperObj->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam == NULL)
+        return;
+
+    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+    if (p_stDynamics == NULL)
+        return;
+
+    p_stDynamReport = p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
+    if (p_stDynamReport == NULL)
+        return;
+
+    switch (ulObstacleType)
+    {
+    case 1:
+        p_stObstacle = &p_stDynamReport->m_stGround;
+        break;
+
+    case 2:
+        p_stObstacle = &p_stDynamReport->m_stWall;
+        break;
+
+    case 3:
+        p_stObstacle = &p_stDynamReport->m_stCharacter;
+        break;
+
+    case 4:
+        p_stObstacle = &p_stDynamReport->m_stWater;
+        break;
+
+    case 5:
+        p_stObstacle = &p_stDynamReport->m_stCeil;
+        break;
+
+    default:
+        p_stObstacle = &p_stDynamReport->m_stObstacle;
+        break;
+    }
+
+    if (GMT_fn_b_ulIsValid(p_stObstacle->hCollidedMaterial))
+    {
+        p_stObjectCollided = p_stObstacle->mp_stSupObj;
+        hObject = HIE_fn_p_stGetGeometricObjectFromSuperObject(p_stObjectCollided);
+        MAT_fn_vInvert(&mGlobalToObst, p_stObjectCollided->hGlobalMatrix);
+
+        stContact.i[0] = ((int*)&p_stObstacle->m_stContact)[0];
+        stContact.i[1] = ((int*)&p_stObstacle->m_stContact)[1];
+        stContact.i[2] = ((int*)&p_stObstacle->m_stContact)[2];
+
+        /* VU0 macro-mode matrix product: these instructions have no C form. */
+        pMat = &mGlobalToObst.stTransformMatrix.stCol_0;
+        pVec = &stContact.v;
+        asm {
+            lqc2 vf1, 0x0(pVec)
+            lqc2 vf2, 0x0(pMat)
+            lqc2 vf3, 0x10(pMat)
+            lqc2 vf4, 0x20(pMat)
+            lqc2 vf5, 0x30(pMat)
+            vmulax.xyzw ACC, vf2, vf1x
+            vmadday.xyzw ACC, vf3, vf1y
+            vmaddaz.xyzw ACC, vf4, vf1z
+            vmaddw.xyzw vf6, vf5, vf0w
+            sqc2 vf6, 0x0(pVec)
+        }
+
+        vContact.i[0] = stContact.i[0];
+        vContact.i[1] = stContact.i[1];
+        vContact.i[2] = stContact.i[2];
+
+        MAT_fn_vApplyOnVector(&vNorm, &mGlobalToObst, &p_stObstacle->m_stNorm);
+
+        vPt1.xX = vContact.v.xX + vNorm.xX;
+        vPt1.xY = vContact.v.xY + vNorm.xY;
+        vPt1.xZ = vContact.v.xZ + vNorm.xZ;
+
+        vPt2.xX = vContact.v.xX - vNorm.xX;
+        vPt2.xY = vContact.v.xY - vNorm.xY;
+        vPt2.xZ = vContact.v.xZ - vNorm.xZ;
+
+        vXYZSpeed.xX = vPt2.xX - vPt1.xX;
+        vXYZSpeed.xY = vPt2.xY - vPt1.xY;
+        vXYZSpeed.xZ = vPt2.xZ - vPt1.xZ;
+
+        if (INT_fn_bIntersectSegmentWithFaceOfGeometricObject(&vPt1, &vPt2, &vXYZSpeed, hObject, 1, &xNbFaceCollided, &stElement))
+        {
+            if (GEO_vGetFaceSurfaceSpeed(hObject, stElement.xElements, stElement.xIndexOfFace, &vGlobalSpeed, ulMTIndex))
+            {
+                MAT_fn_vApplyOnVector(&vV12, p_stObjectCollided->hGlobalMatrix, &vGlobalSpeed);
+                MAT_fn_vInvert(&mGlobalToPerso, p_stSuperObj->hGlobalMatrix);
+                MAT_fn_vApplyOnVector(p_stVector, &mGlobalToPerso, &vV12);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1418–1419 */
@@ -1918,11 +2026,113 @@ void fn_vReinitTheStaticHierarchie(HIE_tdstSuperObject_* hSuperObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+short fn_hGetGLDDevice(int lDevice);
+int GLD_bSetBackgroundColorForDevice(int hDevice, unsigned int crRGB);
+void InitListOfCheapCharacterList(void);
+void SND_fn_vKillAllObjectTypeSound(int s32_TypeId);
+void SND_fn_vKillAllObjectSound(void);
+void fn_vRemoveAllMicros(void);
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
+void fn_vKillAllAlways(void);
+void fn_vDestructAllFatherSonLinks(void);
+int SAI_fn_bInitAllWhen(int eUserFlags);
+void fn_vForceReinitAllObjects(void);
+void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO);
+void WPG_fn_vReinitAllGraphs(void);
+void CAM_fn_vActualizeAViewport(int lViewport);
+void GLI_vInitWaterplaneModule(void);
+void GAM_fn_vSaveBlockEventSlotMemory(_SND_tdstBlockEvent* pst_BlockEvent, int s32_Index);
+int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId,
+                               _SND_tduRefEvt u_RefEvt, void* pData, void* pData2);
+void MOR_fn_vRemoveAllMorphedObjects(void);
+void SPO_ReinitSuperimposedArray(void);
+void IPT_fn_vActivateAllEntryElements(void);
+void TFMT_vInitTextAfficheStructure(void);
+void AGO_vInit(void);
+int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice);
+void fn_vStartEngineClock(void);
+void fn_vSaveEngineClock(void);
+void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot);
+void CAM_fn_vAssignCameraToAViewport(int lViewportNumber, HIE_tdstSuperObject_* hCamera);
+void fn_vReInitAllDynamicAlwaysActiveState(void);
+void IPO_fn_vLevelReInitRLI(void);
+void GLI_fn_vInitInstantFadeIn(unsigned int ulNumberOfFrame);
+
 void fn_vReinitTheMap(void)
 {
     unsigned char uc_ViewPortIndex;
     int i;
-    /* TODO: decompile from asm/... */
+
+    GLD_bSetBackgroundColorForDevice(fn_hGetGLDDevice(0), 0);
+    InitListOfCheapCharacterList();
+    SND_fn_vKillAllObjectTypeSound(g_lSoundObjectTypeAnim);
+    SND_fn_vKillAllObjectSound();
+    fn_vRemoveAllMicros();
+    MAT_fn_vSetIdentity(&g_stEngineStructure.stMainCharacterPosition);
+    MAT_fn_vSetIdentity(&g_stEngineStructure.stMainCameraPosition);
+    g_stEngineStructure.bResurection = 0;
+    fn_vKillAllAlways();
+    fn_vDestructAllFatherSonLinks();
+    SAI_fn_bInitAllWhen(0x10);
+    fn_vForceReinitAllObjects();
+    fn_vReinitTheStaticHierarchie((HIE_tdstSuperObject_*)SECT_hFatherSector);
+
+    for (i = 0; i < 300; i++)
+    {
+        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
+            *g_a50_stDynSpoInitialPos[i].hDynSpo->hLocalMatrix = g_a50_stDynSpoInitialPos[i].stMatrix;
+    }
+
+    for (i = 0; i < 300; i++)
+    {
+        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
+            HIE_fn_vUpdateGlobalMatrix(g_a50_stDynSpoInitialPos[i].hDynSpo);
+    }
+
+    WPG_fn_vReinitAllGraphs();
+
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++) CAM_fn_vActualizeAViewport(uc_ViewPortIndex);
+
+    GLI_vInitWaterplaneModule();
+
+    if (g_bBeginMapSoundEventFlag)
+    {
+        GAM_fn_vSaveBlockEventSlotMemory(g_stBeginMapSoundEvent.pstPtr, 0);
+        SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, g_stBeginMapSoundEvent, NULL, NULL);
+    }
+
+    MOR_fn_vRemoveAllMorphedObjects();
+    GLI_cGlobalFogIsOn = 0;
+    SPO_ReinitSuperimposedArray();
+    iNumLoop = 0;
+    g_a_hSOCurrentMainSector[0] = 0; g_a_hSOCurrentMainSector[1] = 0; g_a_hSOCurrentMainSector[2] = 0; g_a_hSOCurrentMainSector[3] = 0;
+
+    IPT_fn_vActivateAllEntryElements();
+    TFMT_vInitTextAfficheStructure();
+    AGO_vInit();
+
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++) GLD_bClearViewportWithChoice(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[uc_ViewPortIndex], 1);
+
+    fn_vStartEngineClock();
+    if (g_bFrozenWhenStart)
+    {
+        fn_vSaveEngineClock();
+        g_stEngineStructure.bEngineFrozen = 1;
+    }
+
+    SECT_fn_vInitActivationSector((HIE_tdstSuperObject_*)g_hLoadedSuperObjectRoot);
+
+    if (g_ucDebugCamera)
+    {
+        g_ucDebugCamera = 0;
+        CAM_fn_vAssignCameraToAViewport(0, g_stEngineStructure.h_DbgCamCharacter);
+        CAM_fn_vAssignCameraToAViewport(1, g_stEngineStructure.h_StdCamCaracter);
+        g_stEngineStructure.h_StdCamCaracter = g_stEngineStructure.h_DbgCamCharacter;
+    }
+
+    fn_vReInitAllDynamicAlwaysActiveState();
+    IPO_fn_vLevelReInitRLI();
+    GLI_fn_vInitInstantFadeIn(4);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 1136–1152 */
@@ -2002,13 +2212,104 @@ void fn_vDesInitDeadLoop(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_HysteresisLevelStart(char* szLevelName);
+void InitListOfCheapCharacterList(void);
+void fn_vStartEngineClock(void);
+void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO);
+void CAM_fn_vActualizeAViewport(int lViewport);
+void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot);
+tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);
+int SAI_fn_bInitAllWhen(int eUserFlags);
+void fn_vInitAllObjectsWhenPlayerDead(void);
+void IPT_fn_vActivateAllEntryElements(void);
+void fn_vInitAllObjectsWhenMapJustLoaded(void);
+void* SAI_fn_p_vGetTableValuePointerOf(void* p_vValue, unsigned short eFlags);
+void GLI_vInitWaterplaneModule(void);
+void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* h_SupObject);
+_SND_tdstBlockEvent* GAM_p_stGetBlockEventSlotMemory(int s32_Index);
+int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId,
+                               _SND_tduRefEvt u_RefEvt, void* pData, void* pData2);
+void GAM_MultiVP_fn_vInitMultiPlayerMode(void);
+void IPO_fn_vLevelReInitRLI(void);
+void CAM_fn_vAssignCameraToAViewport(int lViewportNumber, HIE_tdstSuperObject_* hCamera);
+
 void fn_vInitDeadLoop(void)
 {
-    HIE_tdstSuperObject_* hMaincharacter;
-    unsigned char uc_ViewPortIndex;
-    _SND_tduRefEvt uSoundEvent;
     int i;
-    /* TODO: decompile from asm/... */
+    _SND_tduRefEvt uSoundEvent;
+    unsigned char uc_ViewPortIndex;
+    HIE_tdstSuperObject_* hMaincharacter;
+
+    g_stEngineStructure.stEngineTimer.ulTrameNumber = 0;
+    g_stEngineStructure.bEngineFrozen = 0;
+    g_stEngineStructure.cCameraMode = 0;
+    GLI_HysteresisLevelStart(NULL);
+    InitListOfCheapCharacterList();
+    fn_vStartEngineClock();
+    fn_vReinitTheStaticHierarchie((HIE_tdstSuperObject_*)SECT_hFatherSector);
+
+    for (i = 0; i < 300; i++)
+    {
+        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
+            *g_a50_stDynSpoInitialPos[i].hDynSpo->hLocalMatrix = g_a50_stDynSpoInitialPos[i].stMatrix;
+    }
+
+    for (i = 0; i < 300; i++)
+    {
+        if (g_a50_stDynSpoInitialPos[i].hDynSpo != NULL)
+            HIE_fn_vUpdateGlobalMatrix(g_a50_stDynSpoInitialPos[i].hDynSpo);
+    }
+
+    for (uc_ViewPortIndex = 0; uc_ViewPortIndex < 4; uc_ViewPortIndex++) CAM_fn_vActualizeAViewport(uc_ViewPortIndex);
+
+    SECT_fn_vInitActivationSector((HIE_tdstSuperObject_*)g_hLoadedSuperObjectRoot);
+
+    if (g_stEngineStructure.eEngineMode != 5 && g_stEngineStructure.eEngineMode != 3)
+    {
+        hMaincharacter = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
+        if (hMaincharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucHitPoints > 0)
+        {
+            SAI_fn_bInitAllWhen(0x20);
+            fn_vInitAllObjectsWhenPlayerDead();
+            IPT_fn_vActivateAllEntryElements();
+        }
+        else
+        {
+            fn_vReinitTheMap();
+            fn_vInitAllObjectsWhenMapJustLoaded();
+        }
+
+        if (g_stEngineStructure.bResurection)
+        {
+            if (hMaincharacter != NULL)
+            {
+                *(MAT_tdstTransformation_*)SAI_fn_p_vGetTableValuePointerOf(&hMaincharacter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix, 0x32) = g_stEngineStructure.stMainCharacterPosition;
+            }
+            if (g_stEngineStructure.h_StdCamCaracter != NULL)
+            {
+                *(MAT_tdstTransformation_*)SAI_fn_p_vGetTableValuePointerOf(&g_stEngineStructure.h_StdCamCaracter->hLinkedObject.p_stCharacter->h_3dData->stGLIObjectMatrix, 0x32)
+                    = g_stEngineStructure.stMainCameraPosition;
+            }
+        }
+
+        g_stEngineStructure.bResurection = 0;
+        g_a_hSOCurrentMainSector[0] = 0; g_a_hSOCurrentMainSector[1] = 0; g_a_hSOCurrentMainSector[2] = 0; g_a_hSOCurrentMainSector[3] = 0;
+        GLI_cGlobalFogIsOn = 0;
+        GLI_vInitWaterplaneModule();
+    }
+
+    fn_vReputCharacterSuperObjectAtTheWorld(MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode()));
+
+    if (g_stEngineStructure.eEngineMode == 7 && g_bBeginMapSoundEventFlag)
+    {
+        uSoundEvent.pstPtr = GAM_p_stGetBlockEventSlotMemory(0);
+        SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, uSoundEvent, NULL, NULL);
+    }
+
+    GAM_MultiVP_fn_vInitMultiPlayerMode();
+    IPO_fn_vLevelReInitRLI();
+    CAM_fn_vAssignCameraToAViewport(4, g_stEngineStructure.h_StdCamCaracter);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Initeng.c lines 415–458 */
@@ -2037,8 +2338,52 @@ void fn_vInitDeadLoop(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GAM_fn_vSetEngineInLevelMode(void);
+void fn_vReinitEngineClock(void);
+void HIE_fn_vInitGlobalMatrixFrameCounter(int lValue);
+unsigned char fn_bIsNextLevelNameValid(void);
+char* fn_p_szGetNextLevelName(void);
+void fn_vSetLevelName(char* szLevelName);
+void fn_vFreeNextLevelName(void);
+char* fn_p_szGetFirstLevelName(void);
+void fn_vInitAllObjectsWhenNewGameStart(void);
+int SAI_fn_bInitAllWhen(int eUserFlags);
+void fn_vChangeEngineMode(unsigned char eNewMode);
+void fn_vInitLevelLoop(void);
+void fn_vTestUnusedComport(void);
+void TFMT_vInitTextAfficheStructure(void);
+void GAM_MultiVP_fn_vInitMultiPlayerMode(void);
+
 void fn_vInitGameLoop(void)
 {
-    unsigned char eCallingMode;
-    /* TODO: decompile from asm/... */
+    unsigned char ucEngineMode;
+
+    ucEngineMode = g_stEngineStructure.eEngineMode;
+
+    GAM_fn_vSetEngineInLevelMode();
+
+    fn_vReinitEngineClock();
+    HIE_fn_vInitGlobalMatrixFrameCounter(0);
+
+    if (fn_bIsNextLevelNameValid())
+    {
+        fn_vSetLevelName(fn_p_szGetNextLevelName());
+        fn_vFreeNextLevelName();
+    }
+    else
+    {
+        fn_vSetLevelName(fn_p_szGetFirstLevelName());
+    }
+
+    fn_vInitAllObjectsWhenNewGameStart();
+    SAI_fn_bInitAllWhen(1);
+
+    fn_vChangeEngineMode(5);
+
+    fn_vInitLevelLoop();
+    fn_vChangeEngineMode(ucEngineMode);
+
+    fn_vTestUnusedComport();
+    TFMT_vInitTextAfficheStructure();
+    GAM_MultiVP_fn_vInitMultiPlayerMode();
 }

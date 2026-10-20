@@ -1129,7 +1129,7 @@ struct AI_tdstMind_ {
 
 int g_hCharacterLauchingSoundEvents;
 HIE_tdstSuperObject_* SECT_hFatherSector;
-int gp_stInactiveDynamicWorld;
+HIE_tdstSuperObject_* gp_stInactiveDynamicWorld;
 int g_lSoundObjectTypeMusic;
 unsigned char g_ucGameModuleId;
 
@@ -1243,6 +1243,18 @@ void GAM_fn_vSetObjectSectorSynchro(HIE_tdstSuperObject_* hCharacter, HIE_tdstSu
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+void SCT_fn_vTestChangeSectorWithHistory(void* _pUnused, MTH3D_tdstVector_* _p_stAfterAbsolutePosition, HIE_tdstSuperObject_** _p_hSectorSOWhereIWas);
+int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, void* pData, void* pData2);
+void HIE_fn_vIsolate(HIE_tdstSuperObject_* _hSprObj);
+void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode);
+void SECT_fn_vAddHeadCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode);
+void SECT_fn_vAddTailCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode);
+unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject);
+unsigned char fn_bGetIfCharacterIsInAlwaysActiveCharacterListAndDynamicallyActived(HIE_tdstSuperObject_* hCharacter);
+unsigned char MC_fn_ucIsCharacterInMainCharacterList(HIE_tdstSuperObject_* hCharacter);
+void fn_vInitObjectsWhenPlayerChangeSector(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hPreviousSector);
+void fn_vInsertLightInSectorList(HIE_tdstSuperObject_* hSector, HIE_tdstSuperObject_* hCharacter);
 void GAM_fn_vSectInfoTestChangeSectorForCharacter(HIE_tdstSuperObject_* _hCharacter)
 {
     MTH3D_tdstVector_ a2_stColons[2];
@@ -1251,9 +1263,153 @@ void GAM_fn_vSectInfoTestChangeSectorForCharacter(HIE_tdstSuperObject_* _hCharac
     MTH3D_tdstVector_ stCurrentRaisedPosition;
     HIE_tdstSuperObject_* hPreviousSector;
     HIE_tdstSuperObject_* hSector;
+    HIE_tdstSuperObject_* hCurrentSector;
     MTH3D_tdstVector_ stCurrentPosition;
     tdstSectInfo_* p_stSectInfo;
-    /* TODO: decompile from asm/... */
+    SECT_tdstSector_* p_stSector;
+    SCT_tdstListOfSoundEvent_* hSoundEvent;
+    int lNumberOfSoundEvent;
+
+    p_stSectInfo = _hCharacter->hLinkedObject.p_stCharacter->h_SectInfo;
+
+    if (p_stSectInfo->hSectorSynchroCharacter)
+    {
+        hSector = p_stSectInfo->hSectorSynchroCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hCurrentSector;
+        hPreviousSector = p_stSectInfo->hCurrentSector;
+        *(int*)&stCurrentPosition.xX = *(int*)&_hCharacter->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
+        *(int*)&stCurrentPosition.xY = *(int*)&_hCharacter->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
+        *(int*)&stCurrentPosition.xZ = *(int*)&_hCharacter->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+    }
+    else
+    {
+        MAT_fn_vGetRotationVectors(_hCharacter->hGlobalMatrix, &a2_stColons[0], &a2_stColons[1], &stAdding);
+        stAdding.xX = 0.2f * stAdding.xX;
+        stAdding.xY = 0.2f * stAdding.xY;
+        stAdding.xZ = 0.2f * stAdding.xZ;
+        hSector = p_stSectInfo->hCurrentSector;
+        hPreviousSector = p_stSectInfo->hCurrentSector;
+        *(int*)&stCurrentPosition.xX = *(int*)&_hCharacter->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
+        *(int*)&stCurrentPosition.xY = *(int*)&_hCharacter->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
+        *(int*)&stCurrentPosition.xZ = *(int*)&_hCharacter->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+        stCurrentRaisedPosition.xX = stCurrentPosition.xX + stAdding.xX;
+        stCurrentRaisedPosition.xY = stCurrentPosition.xY + stAdding.xY;
+        stCurrentRaisedPosition.xZ = stCurrentPosition.xZ + stAdding.xZ;
+        stPreviousRaisedPosition.xX = p_stSectInfo->stPreviousPosition.xX + stAdding.xX;
+        stPreviousRaisedPosition.xY = p_stSectInfo->stPreviousPosition.xY + stAdding.xY;
+        stPreviousRaisedPosition.xZ = p_stSectInfo->stPreviousPosition.xZ + stAdding.xZ;
+        SCT_fn_vTestChangeSectorWithHistory(&stPreviousRaisedPosition, &stCurrentRaisedPosition, &hSector);
+    }
+
+    hCurrentSector = p_stSectInfo->hCurrentSector;
+
+    if (hSector != hCurrentSector)
+    {
+        if (_hCharacter == (HIE_tdstSuperObject_*)g_hCharacterLauchingSoundEvents)
+        {
+            p_stSector = hSector->hLinkedObject.p_stSector;
+            lNumberOfSoundEvent = p_stSector->stListOfSoundEvent.lNumberOfElementsOpt;
+            hSoundEvent = p_stSector->stListOfSoundEvent.hFirstElementOpt;
+            while (lNumberOfSoundEvent)
+            {
+                if ((hSoundEvent->hPointerOfSectorSO == hCurrentSector) || (hSoundEvent->hPointerOfSectorSO == NULL))
+                {
+                    SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeMusic, hSoundEvent->uSoundEvent, 0, 0);
+                }
+                lNumberOfSoundEvent--;
+                hSoundEvent++;
+            }
+        }
+
+        p_stSectInfo->hCurrentSector = hSector;
+
+        if ((!fn_ucIsAnAlwaysObject(_hCharacter->hLinkedObject.p_stCharacter)) &&
+            (!fn_bGetIfCharacterIsInAlwaysActiveCharacterListAndDynamicallyActived(_hCharacter)) &&
+            (hSector->hLinkedObject.p_stSector->cCurrentActivity != 1))
+        {
+            HIE_fn_vIsolate(_hCharacter);
+
+            if (_hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+            {
+                _hCharacter->hNextBrotherDyn = gp_stInactiveDynamicWorld->hFirstElementDyn;
+                _hCharacter->hFatherDyn = gp_stInactiveDynamicWorld;
+                if (gp_stInactiveDynamicWorld->hLastElementDyn)
+                {
+                    gp_stInactiveDynamicWorld->hFirstElementDyn->hPrevBrotherDyn = _hCharacter;
+                }
+                else
+                {
+                    gp_stInactiveDynamicWorld->hLastElementDyn = _hCharacter;
+                }
+                gp_stInactiveDynamicWorld->hFirstElementDyn = _hCharacter;
+                gp_stInactiveDynamicWorld->lNumberOfElementsDyn++;
+            }
+            else
+            {
+                if (_hCharacter->hNextBrotherDyn)
+                {
+                    _hCharacter->hNextBrotherDyn->hPrevBrotherDyn = _hCharacter->hPrevBrotherDyn;
+                }
+                if (_hCharacter->hPrevBrotherDyn)
+                {
+                    _hCharacter->hPrevBrotherDyn->hNextBrotherDyn = _hCharacter->hNextBrotherDyn;
+                }
+                if (_hCharacter->hFatherDyn)
+                {
+                    _hCharacter->hFatherDyn->lNumberOfElementsDyn--;
+                    if (_hCharacter->hFatherDyn->hFirstElementDyn == _hCharacter)
+                    {
+                        _hCharacter->hFatherDyn->hFirstElementDyn = _hCharacter->hNextBrotherDyn;
+                    }
+                    if (_hCharacter->hFatherDyn->hLastElementDyn == _hCharacter)
+                    {
+                        _hCharacter->hFatherDyn->hLastElementDyn = _hCharacter->hPrevBrotherDyn;
+                }
+                }
+                _hCharacter->hNextBrotherDyn = NULL;
+                _hCharacter->hPrevBrotherDyn = NULL;
+                _hCharacter->hFatherDyn = NULL;
+                _hCharacter->hNextBrotherDyn = NULL;
+                _hCharacter->hPrevBrotherDyn = gp_stInactiveDynamicWorld->hLastElementDyn;
+                _hCharacter->hFatherDyn = gp_stInactiveDynamicWorld;
+                if (gp_stInactiveDynamicWorld->hLastElementDyn)
+                {
+                    gp_stInactiveDynamicWorld->hLastElementDyn->hNextBrotherDyn = _hCharacter;
+                }
+                else
+                {
+                    gp_stInactiveDynamicWorld->hFirstElementDyn = _hCharacter;
+                }
+                gp_stInactiveDynamicWorld->hLastElementDyn = _hCharacter;
+                gp_stInactiveDynamicWorld->lNumberOfElementsDyn++;
+            }
+
+            _hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags &= ~0x4;
+        }
+
+        SECT_fn_vIsolateCharListNode(_hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hNodeInSector);
+        if (_hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+        {
+            SECT_fn_vAddHeadCharListNode(p_stSectInfo->hCurrentSector, _hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hNodeInSector);
+        }
+        else
+        {
+            SECT_fn_vAddTailCharListNode(p_stSectInfo->hCurrentSector, _hCharacter->hLinkedObject.p_stCharacter->h_SectInfo->hNodeInSector);
+        }
+
+        if (_hCharacter->hLinkedObject.p_stCharacter->h_MSLight)
+        {
+            fn_vInsertLightInSectorList(p_stSectInfo->hCurrentSector, _hCharacter);
+        }
+
+        if (MC_fn_ucIsCharacterInMainCharacterList(_hCharacter))
+        {
+            fn_vInitObjectsWhenPlayerChangeSector(_hCharacter, p_stSectInfo->hCurrentSector, hPreviousSector);
+        }
+    }
+
+    *(int*)&p_stSectInfo->stPreviousPosition.xX = *(int*)&stCurrentPosition.xX;
+    *(int*)&p_stSectInfo->stPreviousPosition.xY = *(int*)&stCurrentPosition.xY;
+    *(int*)&p_stSectInfo->stPreviousPosition.xZ = *(int*)&stCurrentPosition.xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\SectInfo.c lines 488–493 */

@@ -52,8 +52,8 @@ _stCriticalSection stGL_CS;
 unsigned char LTStack[131072];
 unsigned char ETStack[131072];
 int _gp;
-void (*fn_vOneTrameThread)(void);
-void (*fn_v_EngMain_MainLoop)(void);
+void fn_vOneTrameThread(void);
+void fn_v_EngMain_MainLoop(void);
 unsigned int _heap_size;
 unsigned int _end;
 unsigned int _stack_size;
@@ -61,9 +61,45 @@ unsigned int _start;
 extern int SignalSema(int sid);
 extern int WaitSema(int sid);
 extern int CreateSema(SemaParam* param);
+int printf(const char* format, ...);
+extern int CreateThread(ThreadParam* param);
+extern int StartThread(int tid, int priority);
+extern int ChangeThreadPriority(int tid, int priority);
+extern void fn_vHandleMemoryBlockSwitch(int eEvent);
+extern void GAM_fn_vCheckJoyConnections(void);
 extern void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS);
 extern void PS2_fn_vCreateCriticalSection(_stCriticalSection* p_stCS);
 extern void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS);
+extern int sceSifInitRpc(int param);
+extern void GLI_PrintDebugString(char* szString);
+extern int sceCdInit(int mode);
+extern char* FMN_SCE_AddBaseDirectory(char* szPath);
+extern int sceSifRebootIop(int iFlag);
+extern int sceSifSyncIop(void);
+extern void sceGsResetPath(void);
+extern int sceDmaGetChan(int id);
+extern void ClearVRAM(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+extern void sceGsSyncV(int mode);
+extern void GLI_fn_vFirstInitOpenGL(void);
+extern void GLI_fn_vSetSwapBufferCallback(void (*f)(void));
+extern void FlushCache(int operation);
+extern void GLIPS2_vDisplayFirstLoadingBar(float Percent);
+extern void sceSifLoadFileReset(void);
+extern void sceFsReset(void);
+extern int PS2_fn_iGetCDMediaMode(void);
+extern int sceCdMmode(int media);
+extern int sceCdDiskReady(int mode);
+extern int sceSifLoadModule(int iZone, int iSize, char* pName);
+extern int sceTtyInit(void);
+extern unsigned int PS2MC_fn_uiInit(unsigned int Port, unsigned int Slot);
+extern void PS2MC_fn_vStartMachine(void);
+extern short INOPS2_fn_wInit(void);
+extern void CD_Init(void);
+extern void GLI_vSecondInitPS2GL(void);
+extern void GAM_vAllocateSaveBloc(void);
+extern int dmaGIF;
+extern int strlen(const char* s);
+void fn_v_EngMain_VBLCallback(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 71–380 */
 /* addr: 0x00318410  size: 924 bytes */
@@ -144,7 +180,310 @@ int PS2_fn_lInit(void)
     int i;
     int MTid;
     char* mes;
-    /* TODO: decompile from asm/... */
+
+
+    sceSifInitRpc(0);
+
+
+    GLI_PrintDebugString("Initialisation CD");
+    sceCdInit(0);
+
+
+
+
+
+    GLI_PrintDebugString("REBOOT IOP");
+
+
+
+
+    do { } while (sceSifRebootIop((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\IOPRP252.IMG;1")) == 0);
+
+
+    do { } while (sceSifSyncIop() == 0);
+
+
+
+
+
+
+
+    sceGsResetPath();
+    i = sceDmaGetChan(2);
+
+
+    dmaGIF = i;
+
+
+
+    ClearVRAM(0, 0, 0, 0);
+    for (i = 0; i < 5; i++) sceGsSyncV(0);
+
+
+
+    GLI_fn_vFirstInitOpenGL();
+    GLI_fn_vSetSwapBufferCallback(fn_v_EngMain_VBLCallback);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    FlushCache(0);
+
+
+
+
+    i = 0;
+    for (; i < 5; i++) sceGsSyncV(0);
+
+
+
+
+
+
+
+
+
+
+
+
+    GLIPS2_vDisplayFirstLoadingBar(0.0f);
+
+    sceSifInitRpc(0);
+    sceSifLoadFileReset();
+    sceFsReset();
+
+    GLIPS2_vDisplayFirstLoadingBar(10.0f);
+
+
+    GLI_PrintDebugString("CD Mode");
+    sceCdInit(0);
+    sceCdMmode(PS2_fn_iGetCDMediaMode());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    GLI_PrintDebugString("SIO2MAN");
+    sceCdDiskReady(0);
+    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\SIO2MAN.IRX;1"), 0, NULL) < 0)
+
+
+
+
+
+
+        return 0;
+
+
+    GLIPS2_vDisplayFirstLoadingBar(15.0f);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    mes = "thpri=9,10";
+
+
+
+
+    sceTtyInit();
+
+
+    GLIPS2_vDisplayFirstLoadingBar(25.0f);
+
+
+
+
+
+
+
+
+    GLI_PrintDebugString("PADMAN");
+    sceCdDiskReady(0);
+    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\PADMAN.IRX;1"), strlen(mes) + 1, mes) < 0)
+
+
+
+
+
+
+        return 0;
+
+
+
+
+
+    GLIPS2_vDisplayFirstLoadingBar(30.0f);
+
+
+    mes = "thpri=9";
+
+
+
+
+
+
+
+
+
+    GLI_PrintDebugString("MCMAN");
+    sceCdDiskReady(0);
+    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\MCMAN.IRX;1"), strlen(mes) + 1, mes) < 0)
+
+
+
+
+
+        return 0;
+
+
+
+
+    GLIPS2_vDisplayFirstLoadingBar(40.0f);
+
+
+
+
+
+
+
+
+
+    GLI_PrintDebugString("MCSERV");
+    sceCdDiskReady(0);
+    if (sceSifLoadModule((int)FMN_SCE_AddBaseDirectory("cdrom0:\\IRX252\\MCSERV.IRX;1"), strlen(mes) + 1, mes) < 0)
+
+
+
+
+
+        return 0;
+
+
+
+
+    GLIPS2_vDisplayFirstLoadingBar(50.0f);
+
+    PS2MC_fn_uiInit(0, 0);
+    GLIPS2_vDisplayFirstLoadingBar(60.0f);
+    PS2MC_fn_vStartMachine();
+
+
+
+
+
+    GLIPS2_vDisplayFirstLoadingBar(70.0f);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    GLIPS2_vDisplayFirstLoadingBar(80.0f);
+
+    INOPS2_fn_wInit();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    GLI_PrintDebugString("CDInit");
+
+    CD_Init();
+
+    GLI_PrintDebugString("Fin PS2init");
+
+
+
+    MTid = GetThreadId();
+    ChangeThreadPriority(MTid, 100);
+
+
+
+    GLIPS2_vDisplayFirstLoadingBar(100.0f);
+
+
+    GLI_vSecondInitPS2GL();
+
+
+    GAM_vAllocateSaveBloc();
+
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 530–568 */
@@ -183,7 +522,29 @@ void PS2_fn_vFlipThreadsPriority(void)
     int lt_priority;
     int et_priority;
     ThreadParam T;
-    /* TODO: decompile from asm/... */
+    ReferThreadStatus(ETid, &T);
+    et_priority = T.currentPriority;
+    ReferThreadStatus(LTid, &T);
+    lt_priority = T.currentPriority;
+    if (lt_priority < et_priority)
+    {
+        bt_id = LTid;
+        bt_priority = et_priority;
+        ft_id = ETid;
+        ft_priority = lt_priority;
+    }
+    else
+    {
+        bt_id = ETid;
+        bt_priority = lt_priority;
+        ft_id = LTid;
+        ft_priority = et_priority;
+    }
+    printf("dt <- %d\n", ft_id);
+    printf("CTP(%d, %d\n", ft_id, ft_priority);
+    ChangeThreadPriority(ft_id, ft_priority);
+    printf("CTP(%d, %d\n", bt_id, bt_priority);
+    ChangeThreadPriority(bt_id, bt_priority);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 505–526 */
@@ -198,8 +559,6 @@ void PS2_fn_vFlipThreadsPriority(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int printf(const char* format, ...);
-
 void PS2_fn_vWakeupMainThread(void)
 {
     if (g_iThreadDebugOutput)
@@ -233,7 +592,31 @@ void PS2_fn_vWakeupMainThread(void)
  */
 void PS2_fn_vThreadSwitch(void)
 {
-    /* TODO: decompile from asm/... */
+    WaitSema(DisplaySid);
+
+    if (g_iThreadDebugOutput) printf("MT: draw T blocked on VBL wait\n");
+
+    if (g_iThreadDebugOutput) printf("MT: memory switch: -> restore load mode; sleep\n");
+
+    fn_vHandleMemoryBlockSwitch(1);
+
+    GAM_fn_vCheckJoyConnections();
+
+    WaitSema(LoadSuspendSid);
+
+    if (g_iThreadDebugOutput) printf("MT: waken up\n");
+
+    PS2_fn_vEnterCriticalSection(&stGL_CS);
+
+    PS2_fn_vLeaveCriticalSection(&stGL_CS);
+
+    if (g_iThreadDebugOutput) printf("memory switch: -> save load mode; wake draw T up\n");
+
+    fn_vHandleMemoryBlockSwitch(0);
+
+    SignalSema(ContextSaveSid);
+
+    if (g_iThreadDebugOutput) printf("MT: end of thread switch\n");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 400–422 */
@@ -264,7 +647,17 @@ void PS2_fn_vThreadSwitch(void)
 void PS2_fn_v_CreateTransitionThread(void)
 {
     ThreadParam T;
-    /* TODO: decompile from asm/... */
+    T.entry = (void (*)(void*))fn_vOneTrameThread;
+    T.stack = (int)LTStack;
+    T.stackSize = sizeof(LTStack);
+    T.initPriority = 34;
+    T.gpReg = (int)&_gp;
+    memset(LTStack, 0xCD, sizeof(LTStack));
+    LTid = CreateThread(&T);
+    printf("Transition Thread: Id :%d\n", LTid);
+    printf("stack size:0x%08x\t\tstack 0x%08x -> 0x%08x; priority: %d\n", sizeof(LTStack), LTStack, LTStack + sizeof(LTStack) - 1, 34);
+    printf("launching transition thread\n");
+    StartThread(LTid, 0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\ps2\ps2Threads.c lines 341–357 */
@@ -475,7 +868,20 @@ void PS2_fn_vCreateGLCriticalSection(void)
 void PS2_fn_v_CreateEngineThread(void)
 {
     ThreadParam T;
-    /* TODO: decompile from asm/... */
+    T.entry = (void (*)(void*))fn_v_EngMain_MainLoop;
+    T.stack = (int)ETStack;
+    T.stackSize = sizeof(ETStack);
+    T.initPriority = 32;
+    T.gpReg = (int)&_gp;
+    memset(ETStack, 0xCD, sizeof(ETStack));
+    ETid = CreateThread(&T);
+    printf("Engine Thread: Id :%d\n", ETid);
+    printf("stack size:0x%08x\t\tstack 0x%08x -> 0x%08x; priority: %d\n", sizeof(ETStack), ETStack, ETStack + sizeof(ETStack) - 1, 32);
+    printf("switching main thread to priority: %d\n", 33);
+    ChangeThreadPriority(MTid, 33);
+    fn_vHandleMemoryBlockSwitch(0);
+    printf("launching engine thread\n");
+    StartThread(ETid, 0);
 }
 
 int GetThreadId(void);

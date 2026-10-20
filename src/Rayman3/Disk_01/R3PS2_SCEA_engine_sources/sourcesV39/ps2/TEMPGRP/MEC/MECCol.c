@@ -4,6 +4,12 @@
 
 #include <stddef.h>
 
+/* Recovered PS2 MTH scalar helpers used by the original vector macros. */
+#define MTH_DOT3_TO(_result, _ax, _ay, _az, _bx, _by, _bz) \
+    asm { mula.s _ax, _bx }                  \
+    asm { madda.s _ay, _by }                 \
+    asm { madd.s _result, _az, _bz }
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -1265,13 +1271,46 @@ void MEC_fn_vCollideBaseMechanic(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObjec
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int MEC_fn_bCeilObstacle(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle);
+int MEC_fn_bGroundNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal);
+unsigned char MEC_fn_bCanCrashActor(DNM_stMecObstacle* p_stCollideObstacle);
+
 void MEC_fn_vCrashAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle)
 {
-    DNM_stMecObstacle* p_stCeilObstacle;
-    DNM_stMecObstacle* p_stGroundObstacle;
-    DNM_stMecObstacle* p_stTmpObstacle;
-    int lCounter;
-    /* TODO: decompile from asm/... */
+    int lCounter = 0;
+    DNM_stMecObstacle* p_stTmpObstacle = p_stObstacle;
+    DNM_stMecObstacle* p_stGroundObstacle = NULL;
+    DNM_stMecObstacle* p_stCeilObstacle = NULL;
+
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= 0xFFF7FFFF;
+
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))
+        {
+            if ((p_stGroundObstacle == NULL) && MEC_fn_bGroundNormal(p_stDynamic, &p_stTmpObstacle->m_stNorm))
+            {
+                p_stGroundObstacle = p_stTmpObstacle;
+            }
+            if ((p_stCeilObstacle == NULL) && MEC_fn_bCeilObstacle(p_stDynamic, p_stTmpObstacle))
+            {
+                p_stCeilObstacle = p_stTmpObstacle;
+            }
+        }
+        p_stTmpObstacle++;
+    }
+
+    if ((p_stCeilObstacle != NULL) && (p_stGroundObstacle != NULL))
+    {
+        if ((p_stGroundObstacle->m_eType & 2) && MEC_fn_bCanCrashActor(p_stGroundObstacle))
+        {
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x80000;
+        }
+        else if ((p_stCeilObstacle->m_eType & 2) && MEC_fn_bCanCrashActor(p_stCeilObstacle))
+        {
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x80000;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 923–1095 */
@@ -1535,7 +1574,44 @@ unsigned char MEC_fn_vComputeAdjustVector(MTH3D_tdstVector_* p_stAdjustVector, i
 void MEC_fn_vFillCollisionReport(DNM_stDynamics* p_stDynamic)
 {
     DNM_stReport* p_stReport;
-    /* TODO: decompile from asm/... */
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+    if (g_stReport.m_ulCurrSurfaceState)
+    {
+        p_stReport = p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport;
+
+        memcpy(&p_stReport->m_stObstacle, &g_stReport.m_stObstacle, sizeof(DNM_stObstacle));
+
+        if (g_stReport.m_ulCurrSurfaceState & 0x10000)
+        {
+            p_stReport->m_ulCurrSurfaceState |= 0x10000;
+            memcpy(&p_stReport->m_stCharacter, &g_stReport.m_stCharacter, sizeof(DNM_stObstacle));
+        }
+
+        if (g_stReport.m_ulCurrSurfaceState & 0x40)
+        {
+            p_stReport->m_ulCurrSurfaceState |= 0x40;
+            memcpy(&p_stReport->m_stWater, &g_stReport.m_stWater, sizeof(DNM_stObstacle));
+        }
+
+        if (g_stReport.m_ulCurrSurfaceState & 0x1)
+        {
+            p_stReport->m_ulCurrSurfaceState |= 0x1;
+            memcpy(&p_stReport->m_stGround, &g_stReport.m_stGround, sizeof(DNM_stObstacle));
+        }
+
+        if (g_stReport.m_ulCurrSurfaceState & 0x4)
+        {
+            p_stReport->m_ulCurrSurfaceState |= 0x4;
+            memcpy(&p_stReport->m_stWall, &g_stReport.m_stWall, sizeof(DNM_stObstacle));
+        }
+
+        if (g_stReport.m_ulCurrSurfaceState & 0x10)
+        {
+            p_stReport->m_ulCurrSurfaceState |= 0x10;
+            memcpy(&p_stReport->m_stCeil, &g_stReport.m_stCeil, sizeof(DNM_stObstacle));
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 298–494 */
@@ -1651,6 +1727,8 @@ void MEC_fn_vFillCollisionReport(DNM_stDynamics* p_stDynamic)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecObstacle* p_stCollideObstacle);
+
 void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lNbObstacle, DNM_stMecObstacle* a_stObstacle, int lObstacle)
 {
     unsigned char bWaterEdge;
@@ -1670,8 +1748,181 @@ void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* 
     DNM_stMecObstacle* p_stTmpObstacle;
     MTH3D_tdstVector_* p_stNormalVector;
     float xCurrentRate;
-    float xPreviousRate;
-    /* TODO: decompile from asm/... */
+    unsigned char bEdge;
+
+    bStop = 0;
+    bObstacle = 0;
+    bCeil = 0;
+    bWall = 0;
+    bGround = 0;
+    bWater = 0;
+    bObstacleEdge = 0;
+    bCeilEdge = 0;
+    bWallEdge = 0;
+    bGroundEdge = 0;
+    bActor = 0;
+    bActorEdge = 0;
+    bWaterEdge = 0;
+    xCurrentRate = 2.0f;
+
+    for (lCounter = 0; (lCounter < lNbObstacle) && (bStop == 0); lCounter++)
+    {
+        p_stTmpObstacle = a_stObstacle + lCounter;
+
+        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))
+        {
+            if ((lObstacle >= lCounter) && (xCurrentRate == p_stTmpObstacle->m_xRate))
+            {
+                p_stNormalVector = &p_stTmpObstacle->m_stNorm;
+
+                bEdge = ((unsigned int)(p_stTmpObstacle->m_xCollidedEntity - 7) < 2) ? 1 : 0;
+
+                if (bObstacle == 0)
+                {
+                    xCurrentRate = p_stTmpObstacle->m_xRate;
+                    memcpy(&g_stReport.m_stObstacle, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                    bObstacleEdge = bEdge;
+                    bObstacle = 1;
+                }
+                else if ((bObstacleEdge != 0) && (bEdge == 0))
+                {
+                    memcpy(&g_stReport.m_stObstacle, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                    bObstacleEdge = 0;
+                }
+
+                if (((p_stTmpObstacle->m_eType & 2) == 2) || ((p_stTmpObstacle->m_eType & 9) == 9))
+                {
+                    if (bActor == 0)
+                    {
+                        memcpy(&g_stReport.m_stCharacter, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                        bActorEdge = bEdge;
+                        bActor = 1;
+                    }
+                    else if ((bActorEdge != 0) && (bEdge == 0))
+                    {
+                        memcpy(&g_stReport.m_stCharacter, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                        bActorEdge = 0;
+                    }
+                }
+
+                if ((p_stTmpObstacle->hCollidedMaterial->hCollideMaterial != NULL) &&
+                    (((p_stTmpObstacle->hCollidedMaterial->hCollideMaterial->xIdentifier & 0x4000) == 0x4000) ? 1 : 0) &&
+                    (p_stTmpObstacle->hMyMaterial->hCollideMaterial != NULL) &&
+                    (((p_stTmpObstacle->hMyMaterial->hCollideMaterial->xIdentifier & 0x4000) == 0x4000) ? 1 : 0))
+                {
+                    if (bWater == 0)
+                    {
+                        memcpy(&g_stReport.m_stWater, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                        bWaterEdge = bEdge;
+                        bWater = 1;
+                    }
+                    else if ((bWaterEdge != 0) && (bEdge == 0))
+                    {
+                        memcpy(&g_stReport.m_stWater, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                        bWaterEdge = 0;
+                    }
+                }
+                else
+                {
+                    float xDot;
+                    float xX = p_stNormalVector->xX;
+                    float xY = p_stNormalVector->xY;
+                    float xZ = p_stNormalVector->xZ;
+                    float xZero = 0.0f;
+                    float xOne = 1.0f;
+                    MTH_DOT3_TO(xDot, xX, xY, xZ, xZero, xZero, xOne);
+
+                    if (xDot <= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
+                    {
+                        if (bWall == 0)
+                        {
+                            memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                            bWallEdge = bEdge;
+                            bWall = 1;
+                        }
+                        else if ((bWallEdge != 0) && (bEdge == 0))
+                        {
+                            memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                            bWallEdge = 0;
+                        }
+                    }
+                    else
+                    {
+                        if ((p_stTmpObstacle->hCollidedMaterial->hCollideMaterial != NULL) &&
+                            (((p_stTmpObstacle->hCollidedMaterial->hCollideMaterial->xIdentifier & 1) == 1) ? 1 : 0))
+                        {
+                            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x8000000;
+                        }
+
+                        if (bGround == 0)
+                        {
+                            memcpy(&g_stReport.m_stGround, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                            bGroundEdge = bEdge;
+                            bGround = 1;
+                        }
+                        else if ((bGroundEdge != 0) && (bEdge == 0))
+                        {
+                            memcpy(&g_stReport.m_stGround, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                            bGroundEdge = 0;
+                        }
+                    }
+
+                    if (xDot <= -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
+                    {
+                        if (bCeil == 0)
+                        {
+                            memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                            bCeilEdge = bEdge;
+                            bCeil = 1;
+                        }
+                        else if ((bCeilEdge != 0) && (bEdge == 0))
+                        {
+                            memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                            bCeilEdge = 0;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                bStop = 1;
+            }
+        }
+    }
+
+    if (bActor)
+    {
+        g_stReport.m_ulCurrSurfaceState |= 0x10000;
+        MEC_fn_vReportCollideActor(hSupObj, &g_stReport.m_stCharacter);
+    }
+    if (bWater)
+    {
+        g_stReport.m_ulCurrSurfaceState |= 0x40;
+    }
+    if (bGround)
+    {
+        g_stReport.m_ulCurrSurfaceState |= 0x1;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
+        {
+            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xX = g_stReport.m_stGround.m_stNorm.xX;
+            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xY = g_stReport.m_stGround.m_stNorm.xY;
+            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xZ = g_stReport.m_stGround.m_stNorm.xZ;
+        }
+    }
+    if (bWall)
+    {
+        g_stReport.m_ulCurrSurfaceState |= 0x4;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
+        {
+            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal.xX = g_stReport.m_stWall.m_stNorm.xX;
+            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal.xY = g_stReport.m_stWall.m_stNorm.xY;
+            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal.xZ = g_stReport.m_stWall.m_stNorm.xZ;
+        }
+    }
+    if (bCeil)
+    {
+        g_stReport.m_ulCurrSurfaceState |= 0x10;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECCol.c lines 256–285 */
@@ -1705,7 +1956,7 @@ DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj);
 void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecObstacle* p_stCollideObstacle)
 {
     HIE_tdstSuperObject_* hSupObj;
-    MTH3D_tdstVector_ stVector;
+    union { MTH3D_tdstVector_ v; int i[3]; } stVector;
     DNM_stObstacle* p_stObstacle;
     DNM_stDynamics* p_stDynamic;
 
@@ -1724,8 +1975,8 @@ void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecO
 
                 p_stObstacle = &p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_stCharacter;
                 p_stObstacle->m_xRate = 0.0f;
-                stVector.xX = -p_stCollideObstacle->m_stNorm.xX; stVector.xY = -p_stCollideObstacle->m_stNorm.xY; stVector.xZ = -p_stCollideObstacle->m_stNorm.xZ;
-                *(int*)&p_stObstacle->m_stNorm.xX = *(int*)&stVector.xX; *(int*)&p_stObstacle->m_stNorm.xY = *(int*)&stVector.xY; *(int*)&p_stObstacle->m_stNorm.xZ = *(int*)&stVector.xZ;
+                stVector.v.xX = -p_stCollideObstacle->m_stNorm.xX; stVector.v.xY = -p_stCollideObstacle->m_stNorm.xY; stVector.v.xZ = -p_stCollideObstacle->m_stNorm.xZ;
+                *(int*)&p_stObstacle->m_stNorm.xX = stVector.i[0]; *(int*)&p_stObstacle->m_stNorm.xY = stVector.i[1]; *(int*)&p_stObstacle->m_stNorm.xZ = stVector.i[2];
                 *(int*)&p_stObstacle->m_stContact.xX = *(int*)&p_stCollideObstacle->m_stContact.xX; *(int*)&p_stObstacle->m_stContact.xY = *(int*)&p_stCollideObstacle->m_stContact.xY; *(int*)&p_stObstacle->m_stContact.xZ = *(int*)&p_stCollideObstacle->m_stContact.xZ;
                 p_stObstacle->mp_stSupObj = hCollideSupObj;
                 p_stObstacle->hCollidedMaterial = p_stCollideObstacle->hMyMaterial;

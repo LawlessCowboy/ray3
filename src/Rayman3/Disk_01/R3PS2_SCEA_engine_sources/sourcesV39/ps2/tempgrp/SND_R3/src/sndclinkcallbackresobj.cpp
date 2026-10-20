@@ -342,17 +342,13 @@ unsigned char CLinkCallbackResObjCont::mfn_bSynchroCallbackInstance(void)
     CLinkCallbackResObj* ro_LinkCallback;
     iterator it;
 
-    for (it = begin(); it != end();)
+    for (it = begin(); it != end(); ++it)
     {
         ro_LinkCallback = *it;
         if (!ro_LinkCallback->mfn_bSynchroCallbackResObj())
         {
-            it = erase(it);
+            erase(it);
             delete ro_LinkCallback;
-        }
-        else
-        {
-            ++it;
         }
     }
     return 1;

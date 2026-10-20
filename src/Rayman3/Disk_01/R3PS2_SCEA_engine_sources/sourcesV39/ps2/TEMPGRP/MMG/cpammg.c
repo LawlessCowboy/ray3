@@ -3,10 +3,10 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/DNM.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct DNM_stDynamics DNM_stDynamics;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct tdstInformationHeaderOfBolckWithoutFree_ tdstInformationHeaderOfBolckWithoutFree_;
 typedef struct tdstBlockInfoPriv_ tdstBlockInfoPriv_;
 typedef struct tdstChannelInfo_ tdstChannelInfo_;
@@ -14,6 +14,12 @@ typedef struct tdstGeneralChannelsInfo_ tdstGeneralChannelsInfo_;
 typedef struct tdstCurrentModeInfo_ tdstCurrentModeInfo_;
 typedef struct tdstBlockInfo_ tdstBlockInfo_;
 typedef struct _stCriticalSection _stCriticalSection;
+
+/* Only the base block is reached from this module; the remaining blocks of
+ * the retail DNM_stDynamics live in the MEC module's own copy. */
+struct DNM_stDynamics {
+    DNM_stDynamicsBaseBlock m_tdstDynamicsBaseBlock; /* +0x0 */
+};
 
 struct tdstInformationHeaderOfBolckWithoutFree_ {
     unsigned char ucBoundededHeaderSize; /* +0x0 */
@@ -42,7 +48,7 @@ struct tdstGeneralChannelsInfo_ {
 struct tdstCurrentModeInfo_ {
     unsigned char ucModuleId; /* +0x0 */
     unsigned char ucMode; /* +0x1 */
-    int p_vTdstBlockInfoOrTdstDynInfo; /* +0x4 */
+    tdstBlockInfoPriv_* p_vTdstBlockInfoOrTdstDynInfo; /* +0x4 */
 };
 
 struct tdstBlockInfo_ {
@@ -58,6 +64,12 @@ struct _stCriticalSection {
     int ReentrancyCount; /* +0x8 */
 };
 
+/* The static allocator works on 16-byte cells.  The first quad word of a
+ * cell holds the size of the free space (in cells), the second one the link
+ * to the next free cell; the link lives in the user area of a freed cell, so
+ * a free cell spans at least two cells and the user pointer is cell + 0x10. */
+typedef __int128 tdstFreeCell_;
+
 unsigned char g_ucMmgModuleId;
 unsigned char Mmg_g_bAllocationError;
 tdstGeneralChannelsInfo_ g_stGeneralChannelInfo;
@@ -67,6 +79,13 @@ int g_d_p_stMmgModuleDynInfo;
 unsigned char g_a_ucBlocksNbInModule[255];
 int g_a_p_stMmgModuleBlocksInfo[255];
 unsigned char g_ucErmNbOfModule;
+
+extern void PS2_fn_vCreateCriticalSection(_stCriticalSection* p_stCS);
+extern unsigned char g_ucErmModuleId;
+extern void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId,
+                                     unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo,
+                                     unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug,
+                                     char* szPersonalMsg);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 44–48 */
 /* addr: 0x00313fc0  size: 64 bytes */
@@ -80,7 +99,10 @@ unsigned char g_ucErmNbOfModule;
  */
 unsigned char MEC_fn_bWallNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stNormal->xZ > -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) { if (p_stNormal->xZ < p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) {
+        return 1;
+    } }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 5152–5153 */
@@ -126,9 +148,15 @@ void Mmg_fn_vDisableAllocationError(void)
  */
 void Mmg_fn_v_InitMmg(unsigned char ucModuleId, unsigned char ucMaxBlocksNb)
 {
-    tdstBlockInfoPriv_* p_stMyBlockInfo;
     unsigned char ucI;
-    /* TODO: decompile from asm/... */
+    tdstBlockInfoPriv_* p_stMyBlockInfo;
+    if (ucMaxBlocksNb > 0) {
+        g_a_p_stMmgModuleBlocksInfo[ucModuleId] = malloc(ucMaxBlocksNb * sizeof(tdstBlockInfoPriv_));
+        for (p_stMyBlockInfo = (tdstBlockInfoPriv_*)g_a_p_stMmgModuleBlocksInfo[ucModuleId], ucI = 0; ucI < ucMaxBlocksNb; ucI++, p_stMyBlockInfo++) {
+            p_stMyBlockInfo->p_cBeginBlock = -1;
+        }
+        g_a_ucBlocksNbInModule[ucModuleId] = ucMaxBlocksNb;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4511–4587 */
@@ -158,7 +186,14 @@ void Mmg_fn_v_InitMmg(unsigned char ucModuleId, unsigned char ucMaxBlocksNb)
 void Mmg_fn_vFirstInitMmgModule(unsigned char ucMaxNbChannel)
 {
     unsigned char ucI;
-    /* TODO: decompile from asm/... */
+    g_d_stCurrentModeInfo = malloc(ucMaxNbChannel * sizeof(tdstCurrentModeInfo_));
+    g_stGeneralChannelInfo.d_stTabChannelInfo = (tdstChannelInfo_*)malloc(ucMaxNbChannel * sizeof(tdstChannelInfo_));
+    g_stGeneralChannelInfo.ucMAxNbChannel = ucMaxNbChannel;
+    g_stGeneralChannelInfo.ucNbchannelUsed = 1;
+    for (ucI = 0; ucI < 255; ucI++) {
+        g_a_p_stMmgModuleBlocksInfo[ucI] = 0;
+    }
+    PS2_fn_vCreateCriticalSection(&g_MmgCriticalSection);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4480–4497 */
@@ -176,11 +211,14 @@ void Mmg_fn_vFirstInitMmgModule(unsigned char ucMaxNbChannel)
  */
 void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel)
 {
-    ((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)[ucChannel].ucMode = ucNewMode;
+    /* Retail addresses the mode-info array as (base + field offset) + index,
+     * so the member offset is never folded into the store.  The shifted cast
+     * reproduces that; it is not the original source spelling. */
+    ((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->ucMode))[ucChannel].ucModuleId = ucNewMode;
     ((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)[ucChannel].ucModuleId = ucModuleId;
-    if (ucNewMode != 0xFF) {
-        ((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)[ucChannel].p_vTdstBlockInfoOrTdstDynInfo =
-            g_a_p_stMmgModuleBlocksInfo[ucModuleId] + ucNewMode * 4;
+    if ((unsigned char)ucNewMode != 0xFF) {
+        *(int*)&((tdstCurrentModeInfo_*)(&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->p_vTdstBlockInfoOrTdstDynInfo))[ucChannel] =
+            g_a_p_stMmgModuleBlocksInfo[ucModuleId] + ucNewMode * 16;
     }
 }
 
@@ -223,9 +261,50 @@ void Mmg_fn_vWhereIs(void* p_vPtr, unsigned short* p_uwModuleBlockId, void** pp_
     tdstBlockInfoPriv_* a_stMyBlockInfo;
     unsigned char ucBlockId;
     unsigned char ucModuleId;
-    unsigned char lastBlockId;
-    unsigned char lastModuleId;
-    /* TODO: decompile from asm/... */
+    static unsigned char lastModuleId;
+    static unsigned char lastBlockId;
+    /* Retail keeps the last searched module/block pair in file storage; the
+     * range test is spelled as a failure-first chain because MWCC 3.0.1 drops
+     * an unsigned "<=" that is combined with a ">=" in an && chain. */
+    if (g_a_p_stMmgModuleBlocksInfo[lastModuleId] != 0) {
+        if (lastBlockId < g_a_ucBlocksNbInModule[lastModuleId]) {
+            a_stMyBlockInfo = (tdstBlockInfoPriv_*)g_a_p_stMmgModuleBlocksInfo[lastModuleId];
+            a_stMyBlockInfo += lastBlockId;
+            if (a_stMyBlockInfo->p_cBeginBlock == -1) {
+                /* not in this block */
+            } else if ((unsigned int)p_vPtr < (unsigned int)a_stMyBlockInfo->p_cBeginBlock) {
+                /* not in this block */
+            } else if ((unsigned int)a_stMyBlockInfo->p_cEndBlock < (unsigned int)p_vPtr) {
+                /* not in this block */
+            } else {
+                *p_uwModuleBlockId = (unsigned short)((lastModuleId << 8) | lastBlockId);
+                *pp_vBeginAdr = (void*)a_stMyBlockInfo->p_cBeginBlock;
+                return;
+            }
+        }
+    }
+    *p_uwModuleBlockId = 0xFFFF;
+    for (ucModuleId = 0; ucModuleId < g_ucErmNbOfModule && *p_uwModuleBlockId == 0xFFFF; ucModuleId++) {
+        a_stMyBlockInfo = (tdstBlockInfoPriv_*)g_a_p_stMmgModuleBlocksInfo[ucModuleId];
+        if (a_stMyBlockInfo != NULL) {
+            for (ucBlockId = 0; ucBlockId < g_a_ucBlocksNbInModule[ucModuleId] && *p_uwModuleBlockId == 0xFFFF; ucBlockId++, a_stMyBlockInfo++) {
+                if (a_stMyBlockInfo == NULL) {
+                    /* no block table */
+                } else if (a_stMyBlockInfo->p_cBeginBlock == -1) {
+                    /* not in this block */
+                } else if ((unsigned int)p_vPtr < (unsigned int)a_stMyBlockInfo->p_cBeginBlock) {
+                    /* not in this block */
+                } else if ((unsigned int)a_stMyBlockInfo->p_cEndBlock < (unsigned int)p_vPtr) {
+                    /* not in this block */
+                } else {
+                    *p_uwModuleBlockId = (unsigned short)((ucModuleId << 8) | ucBlockId);
+                    *pp_vBeginAdr = (void*)a_stMyBlockInfo->p_cBeginBlock;
+                    lastModuleId = ucModuleId;
+                    lastBlockId = ucBlockId;
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 2755–2782 */
@@ -279,8 +358,8 @@ void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel);
-void fn_p_vDynAlloc(unsigned int ulSize);
+void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel);
+unsigned long long* fn_p_vDynAlloc(unsigned int ulSize);
 
 void fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel)
 {
@@ -433,16 +512,152 @@ void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel)
+/* Reconstructed from the retail code.  The free list, the cell split and the
+ * debug signature handling follow the target instruction for instruction;
+ * what is still missing is the exact register allocation (the retail keeps
+ * the size in $s0, the block info in $s1, the previous cell in $s2, the
+ * "found" flag in $s3 and the current cell in $s4) and the line table. */
+void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel)
 {
     char* param0;
     tdstInformationHeaderOfBolckWithoutFree_* p_stInfoHeaderBolck;
     unsigned int ulI;
     unsigned char b_ucFound;
-    long double* p_uaBeforeMyFreeSpace;
-    long double* p_uaMyFreeSpace;
+    tdstFreeCell_* p_uaBeforeMyFreeSpace;
+    tdstFreeCell_* p_uaMyFreeSpace;
     tdstBlockInfoPriv_* p_stMyBlockInfo;
-    /* TODO: decompile from asm/... */
+    p_stMyBlockInfo = *((tdstBlockInfoPriv_**)&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->p_vTdstBlockInfoOrTdstDynInfo + ucChannel * 2);
+    if (ulSize == 0) {
+        return NULL;
+    }
+    PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection);
+    p_uaMyFreeSpace = (tdstFreeCell_*)p_stMyBlockInfo->p_cFirstFree;
+    if ((int)p_uaMyFreeSpace != -1) {
+        p_uaBeforeMyFreeSpace = NULL;
+        b_ucFound = 0;
+        if (ulSize & 0xF) {
+            ulSize = (ulSize & 0xFFFFFFF0) + 0x10;
+        }
+        ulI = (ulSize >> 4) + 1;
+        p_uaBeforeMyFreeSpace = p_uaMyFreeSpace;
+        while (p_uaMyFreeSpace != NULL && !b_ucFound) {
+            if ((unsigned int)p_uaMyFreeSpace < (unsigned int)p_stMyBlockInfo->p_cBeginBlock || (unsigned int)p_stMyBlockInfo->p_cEndBlock < (unsigned int)p_uaMyFreeSpace) {
+                Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x17, -1, 0xFF, 0xFF, 0);
+            }
+            if (!(p_uaMyFreeSpace[0] < (tdstFreeCell_)ulI)) {
+                b_ucFound = 0xFF;
+            } else {
+                p_uaBeforeMyFreeSpace = p_uaMyFreeSpace;
+                p_uaMyFreeSpace = (tdstFreeCell_*)p_uaMyFreeSpace[1];
+            }
+        }
+        if (b_ucFound) {
+            {
+                int iFreeSize = (int)p_uaMyFreeSpace[0] - (int)ulI;
+                long long lFreeSize = (unsigned int)iFreeSize;
+                p_uaMyFreeSpace[0] = (tdstFreeCell_)lFreeSize;
+                if (lFreeSize < 2) {
+                    ulI += (int)lFreeSize;
+                    if (p_uaMyFreeSpace == p_uaBeforeMyFreeSpace) {
+                        p_stMyBlockInfo->p_cFirstFree = (int)p_uaMyFreeSpace[1];
+                    } else {
+                        p_uaBeforeMyFreeSpace[1] = p_uaMyFreeSpace[1];
+                    }
+                } else {
+                    tdstFreeCell_* p_uaNewFreeSpace = p_uaMyFreeSpace + ulI;
+                    p_uaMyFreeSpace[ulI] = (tdstFreeCell_)lFreeSize;
+                    ((tdstFreeCell_*)((char*)p_uaMyFreeSpace + 0x10))[ulI] = p_uaMyFreeSpace[1];
+                    if (p_uaMyFreeSpace == (tdstFreeCell_*)p_stMyBlockInfo->p_cFirstFree) {
+                        p_stMyBlockInfo->p_cFirstFree = (int)p_uaNewFreeSpace;
+                    } else {
+                        p_uaBeforeMyFreeSpace[1] = (tdstFreeCell_)(unsigned int)p_uaNewFreeSpace;
+                    }
+                }
+                {
+                    long long lCount = (unsigned int)ulI;
+                    p_uaMyFreeSpace[0] = (tdstFreeCell_)lCount;
+                    {
+                        char* p_cEndOfFreeSpace = (char*)p_uaMyFreeSpace + (int)lCount * 16 - 1;
+                        if ((unsigned int)p_cEndOfFreeSpace >= (unsigned int)p_stMyBlockInfo->p_cMaxMem) {
+                            p_stMyBlockInfo->p_cMaxMem = (int)p_cEndOfFreeSpace;
+                        }
+                    }
+                }
+            }
+            PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+            return (char*)p_uaMyFreeSpace + 0x10;
+        } else {
+            if (Mmg_g_bAllocationError) {
+                Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x23, -1, 0xFF, 0xFF, 0);
+            }
+            PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+            return NULL;
+        }
+    }
+    p_stInfoHeaderBolck = (tdstInformationHeaderOfBolckWithoutFree_*)p_stMyBlockInfo->p_cBeginBlock;
+    if (ulSize & (p_stInfoHeaderBolck->ucAlignment - 1)) {
+        ulSize = p_stInfoHeaderBolck->ucAlignment + (ulSize & ~(p_stInfoHeaderBolck->ucAlignment - 1));
+    }
+    if ((unsigned int)(p_stMyBlockInfo->p_cEndBlock - p_stMyBlockInfo->p_cMaxMem) < ulSize) {
+        if (Mmg_g_bAllocationError) {
+            Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x23, -1, 0xFF, 0xFF, 0);
+        }
+        PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+        return NULL;
+    }
+    if ((p_stInfoHeaderBolck->ucMode & 8) && (unsigned int)(p_stMyBlockInfo->p_cEndBlock - p_stMyBlockInfo->p_cMaxMem) >= 4) {
+        unsigned int ulPattern = 0xE123456E;
+        char* p_cBlock = (char*)(p_stMyBlockInfo->p_cMaxMem + 1);
+        char* p_cPattern = (char*)&ulPattern;
+        while (p_cBlock < (char*)(p_stMyBlockInfo->p_cMaxMem + 1) + 4) {
+            if (*p_cBlock != *p_cPattern) {
+                break;
+            }
+            p_cBlock++;
+            p_cPattern++;
+        }
+        {
+            unsigned int ulDiff = (unsigned int)p_cBlock ^ (unsigned int)((char*)(p_stMyBlockInfo->p_cMaxMem + 1) + 4);
+            if (!ulDiff) {
+                /* the signature of the previous allocation is still valid */
+            } else {
+                Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x1C, -1, 0xFF, 0xFF, 0);
+            }
+        }
+    }
+    if (p_stInfoHeaderBolck->ucMode & 2) {
+        char* p_cFill = (char*)(p_stMyBlockInfo->p_cMaxMem + 1);
+        while (p_cFill <= (char*)(p_stMyBlockInfo->p_cMaxMem + 4) && p_cFill <= (char*)p_stMyBlockInfo->p_cEndBlock) {
+            *p_cFill = (char)0xAA;
+            p_cFill++;
+        }
+    }
+    if (p_stInfoHeaderBolck->ucMode & 4) {
+        unsigned int ulOriginalSize = ulSize;
+        if (ulSize & (p_stInfoHeaderBolck->ucAlignment - 1)) {
+            ulSize = p_stInfoHeaderBolck->ucAlignment + (ulSize & ~(p_stInfoHeaderBolck->ucAlignment - 1));
+        }
+        if (ulOriginalSize != ulSize) {
+            Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x1B, -1, 0xFF, 0xFF, 0);
+        }
+    }
+    {
+        unsigned int ulUsed = (unsigned int)p_stMyBlockInfo->p_cMaxMem;
+        p_stMyBlockInfo->p_cMaxMem = (int)(ulUsed + ulSize);
+        if ((unsigned int)(p_stMyBlockInfo->p_cEndBlock - p_stMyBlockInfo->p_cMaxMem) >= 4) {
+            unsigned int ulPattern = 0xE123456E;
+            char* p_cPattern = (char*)&ulPattern;
+            char* p_cDst = (char*)(p_stMyBlockInfo->p_cMaxMem + 1);
+            char* p_cEnd = p_cDst + 4;
+            while (p_cDst < p_cEnd) {
+                *p_cDst = *p_cPattern;
+                p_cDst++;
+                p_cPattern++;
+            }
+        }
+        PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+        return (char*)(ulUsed + 1);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 594–692 */
@@ -469,11 +684,35 @@ void fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_p_vDynAlloc(unsigned int ulSize)
+unsigned long long* fn_p_vDynAlloc(unsigned int ulSize)
 {
+    unsigned long long* p_uaMalloc;
     unsigned int ulMalloc;
-    long double* p_uaMalloc;
-    /* TODO: decompile from asm/... */
+    unsigned int ulAligned;
+    if (ulSize == 0) {
+        return 0;
+    }
+    PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection);
+    if (ulSize & 0xF) {
+        ulSize = (ulSize & 0xFFFFFFF0) + 0x10;
+    }
+    ulMalloc = (ulSize >> 4) + 1;
+    p_uaMalloc = (unsigned long long*)malloc(ulMalloc * 16);
+    ulAligned = (unsigned int)p_uaMalloc;
+    if (ulAligned & 0xF) {
+        ulAligned = (ulAligned & 0xFFFFFFF0) + 0x10;
+    }
+    if ((unsigned int)p_uaMalloc != ulAligned) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 3, -1, 0xFF, 0xFF, 0);
+    }
+    if (p_uaMalloc == 0) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x20, -1, 0xFF, 0xFF, 0);
+        PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+        return 0;
+    }
+    *(tdstFreeCell_*)p_uaMalloc = (tdstFreeCell_)(unsigned long long)ulMalloc;
+    PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+    return (unsigned long long*)((char*)p_uaMalloc + 16);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 544–576 */

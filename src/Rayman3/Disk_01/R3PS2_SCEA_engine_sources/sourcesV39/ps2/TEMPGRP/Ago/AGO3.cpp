@@ -585,6 +585,12 @@ struct AGO3_ScoreDisplay : AGO3_Part {
     float m_fTransparency; /* +0x40 */
     float m_fCurrentFadeTime; /* +0x44 */
     unsigned int m_dwScoreID; /* +0x48 */
+    static float m_a_fUV[12][2];
+    /* The retail's table is 8 bytes (two floats) but the target addresses it
+     * with lui/%lo, i.e. it lives in .data; an 8-byte static would go to
+     * .sdata and be addressed gp-relative instead. */
+    static float m_a_fSize[4];
+    static int m_a_dwScore[12];
     void Display(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
     void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fScore);
@@ -1697,8 +1703,13 @@ extern "C" int SCT_g_DrawingMirrored;
 extern "C" GLI_tdstTexture_* GLI_xRefreshAnimatedTextureIfNeeded(GLI_tdstMaterial_* hVisualMaterial);
 extern "C" void GLI_vDrawWorldSemiLookatSprite(MTH3D_tdstVector_* param0, MTH3D_tdstVector_* a3_fPosition2, GLI_tdstMaterial_* pMaterial, int param3, float fSizeX, float fParam5, int bFade, float Alpha1, float Alpha2);
 extern "C" int GLI_vDrawWorldSpriteWithUVsOrientedOpt(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime, float fAngle);
+extern "C" int GLI_vDrawWorldSpriteWithUVsOpt(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime);
 extern "C" float g_ffFrameTime;
 extern "C" void GLI_vSetGlobalAlpha(float Alpha);
+extern "C" void GLI_vEnableDepthTest(void);
+extern "C" void GLI_vDisableDepthTest(void);
+extern "C" int GLI_g_UseAlphaTest;
+extern "C" int GLI_vDrawWorldOrthoPlanarSprite(MTH3D_tdstVector_* p_stPosition, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2);
 extern "C" int GLI_vDrawWorldSpriteOpt(MTH3D_tdstVector_* Pos, GLI_tdstMaterial_* Material, float SizeX, float SizeY, GLD_tdstViewportAttributes_* viewport, int AnimTime);
 extern "C" void GLI_vDrawWorldSemiLookatSpriteWithUVs(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* hMaterial, GLD_tdstViewportAttributes_* hVp, float fSize, float fU0, float fV0, float fU1, float fV1);
 
@@ -1777,10 +1788,28 @@ void AGO3_LinkChainComputing::DesInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The retail AGO3_vAddPart has C linkage and nine parameters: the debug
+ * definition record only lists the referenced ones, but the target ABI shows
+ * seven integer/pointer arguments (a0-a3, t0-t2) and two float arguments
+ * (f12, f13). */
+extern "C" void AGO3_vAddPart(unsigned int PartNumber, MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParam1, float fParam2, MTH3D_tdstVector_* V1, MTH3D_tdstVector_* V2, MTH3D_tdstVector_* V3);
+
 void AGO3_ReInit(unsigned int dwHandle, unsigned int dwPartNumber, MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParameter)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    g_dwAGOHandle = 0;
+    for (i = 0; i < 2048; i++)
+    {
+        if (AGO3_g_Parts[i] == dwHandle)
+        {
+            g_bReInitAGO = 1;
+            g_dwAGOHandle = dwHandle;
+            AGO3_vAddPart(dwPartNumber - 10000, pPosition, pDirection, pMat1, fParameter, 0.0f, NULL, NULL, NULL);
+            g_bReInitAGO = 0;
+            break;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 8311–8326 */
@@ -2017,7 +2046,7 @@ unsigned int AGO3_dwGetLastHandle(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void AGO3_vAddPart(unsigned int PartNumber, MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParam1, MTH3D_tdstVector_* V1)
+extern "C" void AGO3_vAddPart(unsigned int PartNumber, MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParam1, float fParam2, MTH3D_tdstVector_* V1, MTH3D_tdstVector_* V2, MTH3D_tdstVector_* V3)
 {
     int iParam1;
     unsigned int i;
@@ -2666,7 +2695,17 @@ void AGO3_CustomRipple::Display(GLD_tdstViewportAttributes_* hVp)
     unsigned int ulSprite2;
     unsigned int ulSprite;
     AGO3_CR2_SpriteData* pSpriteData;
-    /* TODO: decompile from asm/... */
+    pSpriteData = &m_a_stSprite[m_ulFirstSprite];
+    ulSprite = m_ulFirstSprite;
+    for (ulSprite2 = 0; ulSprite2 < m_dwNumRipples; ulSprite2++)
+    {
+        GLI_vSetGlobalAlpha(pSpriteData->fTransparency);
+        GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)&pSpriteData->stPosition, m_pMat1, pSpriteData->fSize, pSpriteData->fSize, hVp, 0, &m_stInitialPosition, &m_stAdditionnalVector);
+        ulSprite++;
+        if (ulSprite == m_dwNumRipples)
+            ulSprite = 0;
+        pSpriteData = &m_a_stSprite[ulSprite];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6646–6757 */
@@ -2931,7 +2970,14 @@ void AGO3_Snowboard_SnowEffect::Display(GLD_tdstViewportAttributes_* hVp)
 {
     unsigned int iPart;
     AGO3_SBS_tdstSnowPart_* pPart;
-    /* TODO: decompile from asm/... */
+    if (!m_pSnowParticleMat) return;
+    pPart = &m_a_stSnowParticle[m_dwFirstUsedPart];
+    for (iPart = 0; iPart < m_dwNumSnowParts; iPart++)
+    {
+        GLI_vSetGlobalAlpha(pPart->fAlpha);
+        GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&pPart->stPartPos, m_pMat1, pPart->fSize, pPart->fSize, 0.0f, 0.0f, 1.0f, 1.0f, hVp, 1, pPart->fAngle);
+        pPart++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6279–6292 */
@@ -2952,7 +2998,14 @@ void AGO3_Snowboard_SnowEffect::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_Snowboard_SnowEffect::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_dwEffectID == 0)
+        GeneratePartsOnGround();
+    else if (m_dwEffectID == 2)
+        GeneratePartsOnAir();
+    else if (m_dwEffectID == 3)
+        GeneratePartsOnLanding();
+    else if (m_dwEffectID == 5)
+        m_Finished = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 6246–6275 */
@@ -3835,7 +3888,15 @@ void AGO3_DisplayDigitalScore(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_ScoreDisplay::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    if (m_fTransparency > 0.0f)
+    {
+        GLI_vSetGlobalAlpha(m_fTransparency);
+        GLI_vDrawWorldSpriteWithUVsOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fMainSize, (1.0f / 3.0f) * m_fMainSize, m_a_fSize[0] + m_a_fUV[m_dwScoreID][0], m_a_fUV[m_dwScoreID][1], m_a_fUV[m_dwScoreID][0], m_a_fSize[1] + m_a_fUV[m_dwScoreID][1], hVp, 1);
+    }
+    else
+    {
+        m_Finished = 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4780–4787 */
@@ -3887,9 +3948,26 @@ void AGO3_ScoreDisplay::Process(void)
  */
 void AGO3_ScoreDisplay::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fScore)
 {
-    int dwScore;
     unsigned int dwScoreID;
-    /* TODO: decompile from asm/... */
+    int dwScore;
+
+    dwScore = (unsigned int)fScore;
+    m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    m_fMainSize = pDirection->xX;
+    m_fDisplayDuration = pDirection->xY;
+    m_fFadeDuration = pDirection->xZ;
+    m_fCurrentTime = 0;
+    m_fCurrentFadeTime = 0;
+    m_fTransparency = 255.0f;
+    m_dwScoreID = 0;
+    for (dwScoreID = 0; dwScoreID < 12; dwScoreID++)
+    {
+        if (m_a_dwScore[dwScoreID] == dwScore)
+        {
+            m_dwScoreID = dwScoreID;
+            break;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4651–4682 */
@@ -4594,10 +4672,20 @@ AGO3_SphericalRadiance::AGO3_SphericalRadiance(void)
  */
 void AGO3_SwirlingBubbles::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    unsigned int ulBubble2;
     unsigned int ulBubble;
+    unsigned int ulBubble2;
     AGO3_SB_SpriteData* pSpriteData;
-    /* TODO: decompile from asm/... */
+
+    ulBubble2 = m_ulFirstSet;
+    ulBubble = 0;
+    pSpriteData = &m_stSprite[ulBubble2];
+    while (ulBubble < m_ulNbBubbles)
+    {
+        GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)&pSpriteData->stPosition, m_pMat1, pSpriteData->fSize, pSpriteData->fSize, hVp, 1);
+        ulBubble2 = (ulBubble2 + 1) & 511;
+        ulBubble++;
+        pSpriteData = &m_stSprite[ulBubble2];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3613–3824 */
@@ -5350,7 +5438,14 @@ AGO3_HurricaneUpper::AGO3_HurricaneUpper(void)
  */
 void AGO3_Chain::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_UseAlphaTest = 1;
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)&m_stPos, m_pMat1, m_fMainSize, m_fSize, hVp, 0, &m_stVector, &m_stDirection);
+    if (m_fLinkType != 0.0f)
+    {
+        GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fMainSize, m_fIntermediateSize, hVp, 0, &m_stIntermediateVector, &m_stIntermediateDirection);
+    }
+    GLI_g_UseAlphaTest = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2770–2832 */
@@ -5575,7 +5670,20 @@ void AGO3_SpriteZoom::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_SpriteZoom::Process(void)
 {
-    /* TODO: decompile from asm/... */
+    if (m_fCurrentTime != 0.0f)
+    {
+        if (m_fZoomPercentage >= 1.0f)
+            m_fCurrentZoom = 1.0f + (m_fZoomPercentage - 1.0f) * (m_fCurrentTime / m_fDisplayDuration);
+        else
+            m_fCurrentZoom = 1.0f - (1.0f - m_fZoomPercentage) * (m_fCurrentTime / m_fDisplayDuration);
+        m_fCurrentSize = m_fMainSize * m_fCurrentZoom;
+        if (m_fCurrentTime > m_fDisplayDuration)
+        {
+            m_fCurrentTime = m_fDisplayDuration;
+            m_Finished = 1;
+        }
+    }
+    m_fCurrentTime += g_fTimeDifference;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2444–2453 */
@@ -7009,9 +7117,21 @@ void AGO3_Smoke::Display(GLD_tdstViewportAttributes_* hVp)
     float v1;
     float u2;
     float u1;
-    AGO3Smoke_InternalData_* p;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    AGO3Smoke_InternalData_* p;
+    GLI_vEndWorldSprites();
+    p = m_Sprites;
+    for (i = 0; i < 8; i++)
+    {
+        if (p->fTransparency > 0.0f)
+        {
+            GLI_vSetGlobalAlpha(p->fTransparency > 255.0f ? 255.0f : p->fTransparency);
+            GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&p->Position, m_pMat1, p->fSize, p->fSize, 0.0f, 1.0f, 1.0f, 0.0f, hVp, 1, p->fCurrentAngle);
+        }
+        p++;
+    }
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vEndWorldSprites();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 787–820 */
@@ -7118,7 +7238,10 @@ void AGO3_Smoke::Init(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMat1)
  */
 void AGO3_Target::Display(GLD_tdstViewportAttributes_* hVp)
 {
-    /* TODO: decompile from asm/... */
+    GLI_vSetGlobalAlpha(255.0f);
+    GLI_vDisableDepthTest();
+    GLI_vDrawWorldSpriteWithUVsOrientedOpt((MTH3D_tdstVector_*)&m_Position, m_pMat1, m_fSize, m_fSize, 0.0f, 0.0f, 1.0f, 1.0f, hVp, 1, 5.0f * g_ffFrameTime * m_fOrientation);
+    GLI_vEnableDepthTest();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 666–669 */
@@ -7550,16 +7673,15 @@ void AGO3_vDisplayAll(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_vProcessAll(void)
 {
-    unsigned int* p;
     unsigned int i;
+    unsigned int* p = AGO3_g_Parts;
 
-    if (AGO_g_PreviousCurrentFrame != g_stEngineStructure.stEngineTimer.ulCurrentTimerCount)
+    if (AGO_g_PreviousCurrentFrame == g_stEngineStructure.stEngineTimer.ulCurrentTimerCount)
+        return;
+    for (i = 2048; i != 0; i--, p++)
     {
-        for (p = AGO3_g_Parts, i = 2048; i != 0; i--, p++)
-        {
-            if (*p)
-                ((AGO3_Part*)AGO2_MEM_GetPointerFromHandle(*p))->Process();
-        }
+        if (*p)
+            ((AGO3_Part*)AGO2_MEM_GetPointerFromHandle(*p))->Process();
     }
 }
 
@@ -7681,6 +7803,16 @@ void AGO3_LightExplosion::DesInit(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 int AGO3_SwirlingBubbles::m_hHandle;
+
+float AGO3_ScoreDisplay::m_a_fUV[12][2] =
+{
+    { 0.5f, 0.8333334f }, { 0.5f, 0.6666667f }, { 0.5f, 0.5f }, { 0.5f, 0.33333334f }, { 0.5f, 0.16666667f }, { 0.5f, 0.0f },
+    { 0.0f, 0.8333334f }, { 0.0f, 0.6666667f }, { 0.0f, 0.5f }, { 0.0f, 0.33333334f }, { 0.0f, 0.16666667f }, { 0.0f, 0.0f }
+};
+
+float AGO3_ScoreDisplay::m_a_fSize[4] = { 0.5f, 0.16666667f };
+
+int AGO3_ScoreDisplay::m_a_dwScore[12] = { -1, 10, 30, 100, 250, 1500, -2, 20, 60, 200, 500, 3000 };
 
 void AGO3_SwirlingBubbles::DesInit(void)
 {

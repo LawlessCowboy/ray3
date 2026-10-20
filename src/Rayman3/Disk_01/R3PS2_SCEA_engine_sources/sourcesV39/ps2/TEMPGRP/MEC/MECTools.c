@@ -1229,6 +1229,7 @@ unsigned char MEC_fn_vBasePlatformManagement(DNM_stDynamics* p_stDynamic, HIE_td
 DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj);
 int DNM_fn_eIdentityCardGetType(void* _hCurrent);
 void MEC_fn_vDynamicComputeAbsoluteMatrix(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MAT_tdstTransformation_* hPreviousMatrix, MAT_tdstTransformation_* hInvPreviousMatrix, MAT_tdstTransformation_* hCurrentMatrix);
+float powf(float _xBase, float _xExponent);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 37–67 */
 /* addr: 0x003110a0  size: 184 bytes */
@@ -1474,20 +1475,15 @@ void MEC_fn_vComputeInertiaTranslation(DNM_stDynamics* p_stDynamic, float xDT)
 {
     unsigned char bSlide;
     MTH3D_tdstVector_ stVector;
+    float xFactor;
 
     bSlide = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamPrority != 1.0f;
-    stVector.xX = xDT * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xX;
-    stVector.xY = xDT * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xY;
-    stVector.xZ = xDT * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xZ;
-    if (bSlide) {
-        stVector.xX *= p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide;
-        stVector.xY *= p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide;
-        stVector.xZ *= p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide;
-    }
-    stVector.xX += p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xX;
-    stVector.xY += p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xY;
-    stVector.xZ += p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xZ;
-    p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation = stVector;
+    xFactor = xDT * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor; stVector.xX = xFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xX; stVector.xY = xFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xY; stVector.xZ = xFactor * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xZ; if (bSlide) { stVector.xX = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide * stVector.xX; stVector.xY = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide * stVector.xY; stVector.xZ = p_stDynamic->m_tdstDynamicsAdvancedBlock.m_xPreviousSlide * stVector.xZ; }
+
+
+    stVector.xX = stVector.xX + p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xX; stVector.xY = stVector.xY + p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xY; stVector.xZ = stVector.xZ + p_stDynamic->m_tdstDynamicsBaseBlock.m_stAddTranslation.xZ;
+
+    ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation)[0] = ((unsigned int*)&stVector)[0]; ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation)[1] = ((unsigned int*)&stVector)[1]; ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stInertiaTranslation)[2] = ((unsigned int*)&stVector)[2];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1329–1332 */
@@ -1868,7 +1864,35 @@ void MEC_fn_vDeleteOnGroundBackFace(int lObstacle, DNM_stMecObstacle* p_stObstac
 float MEC_fn_xConvertScale(float xValue, unsigned char bAdjust)
 {
     float xTmpValue;
-    /* TODO: decompile from asm/... */
+    float xFrameLength;
+
+    float xResult;
+
+    if (xValue >= 1.0f)
+    {
+        xResult = xValue;
+    }
+    else
+    {
+        if (xValue > 0.0f)
+        {
+            xTmpValue = 1.0f - xValue;
+            xTmpValue = xTmpValue * xTmpValue;
+            xTmpValue = xTmpValue * xTmpValue;
+            xResult = 1.0f - xTmpValue;
+        }
+        else
+        {
+            xResult = 0.0f;
+        }
+    }
+    if (bAdjust)
+    {
+        xFrameLength = g_stEngineStructure.stEngineTimer.xFrameLength;
+        if (MTH_xAbs(xFrameLength - (1.0f / 60.0f)) > 0.001f)
+            xResult = powf(xResult, 60.0f * xFrameLength);
+    }
+    return xResult;
 }
 
 /* Truncation through the engine's $f30 conversion: retail keeps the integer
@@ -1966,9 +1990,9 @@ void MEC_fn_vTranslateMatrixOff(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* 
 }
 
 /* Engine float-to-int macro: retail converts through f30. */
-inline long MTH_M_xRealToLong(float _xValue)
+inline int MTH_M_xRealToLong(float _xValue)
 {
-    long _lResult;
+    int _lResult;
     asm
     {
         cvt.w.s f30, _xValue
@@ -2007,8 +2031,8 @@ inline long MTH_M_xRealToLong(float _xValue)
  */
 void MEC_fn_vTranslateMatrixOn(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stMatrixTranslation)
 {
-    MAT_tdstTransformation_* hPreviousMatrix;
     MAT_tdstTransformation_* hCurrentMatrix;
+    MAT_tdstTransformation_* hPreviousMatrix;
 
     hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
     hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
@@ -2016,9 +2040,10 @@ void MEC_fn_vTranslateMatrixOn(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p
         MTH3D_tdstVector_* p_stPrevTrans = (MTH3D_tdstVector_*)&hPreviousMatrix->stTransformMatrix.stCol_3;
         int lX = MTH_M_xRealToLong(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX);
         int lY = MTH_M_xRealToLong(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY);
+        float xZ = MTH_M_xTruncate(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ);
         p_stMatrixTranslation->xX = (float)lX;
         p_stMatrixTranslation->xY = (float)lY;
-        p_stMatrixTranslation->xZ = MTH_M_xTruncate(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ);
+        p_stMatrixTranslation->xZ = xZ;
         {
             union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;
             uVector.stVector.xX = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xX - p_stMatrixTranslation->xX;
@@ -2350,7 +2375,14 @@ unsigned char fn_bIsOneEdgeInCommon(int i1, int i2)
     MTH3D_tdstVector_ V12;
     MTH3D_tdstVector_ V11;
     int Ind;
-    /* TODO: decompile from asm/... */
+
+    COL_fn_vGetCollidedEgde(i1, &V11, &V12);
+    COL_fn_vGetCollidedEgde(i2, &V21, &V22);
+    if (MTH_xAbs(V11.xX - V12.xX) < 0.001f && MTH_xAbs(V11.xY - V12.xY) < 0.001f && MTH_xAbs(V11.xZ - V12.xZ) < 0.001f) return 1;
+    if (MTH_xAbs(V11.xX - V22.xX) < 0.001f && MTH_xAbs(V11.xY - V22.xY) < 0.001f && MTH_xAbs(V11.xZ - V22.xZ) < 0.001f) return 1;
+    if (MTH_xAbs(V21.xX - V12.xX) < 0.001f && MTH_xAbs(V21.xY - V12.xY) < 0.001f && MTH_xAbs(V21.xZ - V12.xZ) < 0.001f) return 1;
+    if (MTH_xAbs(V21.xX - V22.xX) < 0.001f && MTH_xAbs(V21.xY - V22.xY) < 0.001f && MTH_xAbs(V21.xZ - V22.xZ) < 0.001f) return 1;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 354–364 */
@@ -2369,7 +2401,15 @@ unsigned char fn_bIsTheSameCollidedEdge(int i, MTH3D_tdstVector_* pV1, MTH3D_tds
 {
     MTH3D_tdstVector_ V2;
     MTH3D_tdstVector_ V1;
-    /* TODO: decompile from asm/... */
+
+    COL_fn_vGetCollidedEgde(i, &V2, &V1);
+    if (MTH_xAbs(pV1->xX - V2.xX) < 0.001f && MTH_xAbs(pV1->xY - V2.xY) < 0.001f && MTH_xAbs(pV1->xZ - V2.xZ) < 0.001f
+        && MTH_xAbs(pV2->xX - V1.xX) < 0.001f && MTH_xAbs(pV2->xY - V1.xY) < 0.001f && MTH_xAbs(pV2->xZ - V1.xZ) < 0.001f)
+        return 1;
+    if (MTH_xAbs(pV2->xX - V1.xX) < 0.001f && MTH_xAbs(pV2->xY - V2.xY) < 0.001f && MTH_xAbs(pV2->xZ - V2.xZ) < 0.001f
+        && MTH_xAbs(V1.xX) < 0.001f && MTH_xAbs(pV1->xY - V1.xY) < 0.001f && MTH_xAbs(pV1->xZ - V1.xZ) < 0.001f)
+        return 1;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 300–341 */
@@ -2577,15 +2617,8 @@ unsigned char MEC_fn_bCanCrashActor(DNM_stMecObstacle* p_stCollideObstacle)
     HIE_tdstSuperObject_* hSupObj;
 
     hSupObj = p_stCollideObstacle->mp_stSupObj;
-    if (hSupObj == NULL)
-        return 0;
-    if (hSupObj->ulTypeOfLinkedObject != 2) {
-        do {
-            hSupObj = hSupObj->hFatherDyn;
-            if (hSupObj == NULL)
-                break;
-        } while (hSupObj->ulTypeOfLinkedObject != 2);
-    }
+    if (hSupObj == NULL) return 0;
+    if (hSupObj->ulTypeOfLinkedObject != 2) { do { hSupObj = hSupObj->hFatherDyn; if (hSupObj == NULL) break; } while (hSupObj->ulTypeOfLinkedObject != 2); }
     return ((fn_ulStandardGameGetCustomBitsSO(hSupObj) & 0x40) ^ 0x40) != 0;
 }
 

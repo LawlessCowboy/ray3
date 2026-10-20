@@ -3,6 +3,22 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/AI.h"
+#include "r3/CINE.h"
+#include "r3/COL.h"
+#include "r3/DNM.h"
+#include "r3/ENG.h"
+#include "r3/FIL.h"
+#include "r3/GEO.h"
+#include "r3/GLI.h"
+#include "r3/GMT.h"
+#include "r3/HIE.h"
+#include "r3/LST2.h"
+#include "r3/MAT.h"
+#include "r3/MOR.h"
+#include "r3/MTH.h"
+#include "r3/SECT.h"
+#include "r3/WP.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -22,204 +38,27 @@ typedef struct tdstPhysicalCollSet_ tdstPhysicalCollSet_;
 typedef struct tdstScriptAI_ tdstScriptAI_;
 typedef struct tdstSuperObjectLinks_ tdstSuperObjectLinks_;
 typedef struct tdstViewportManagement_ tdstViewportManagement_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct DNM_stObstacle DNM_stObstacle;
 typedef struct LST2_tdstAnchorToZDX_tdxHandleToZoneSetEncapsulationOpt LST2_tdstAnchorToZDX_tdxHandleToZoneSetEncapsulationOpt;
 typedef struct tdstCsaList_ tdstCsaList_;
-typedef struct tdstSubAnimInUse_ tdstSubAnimInUse_;
-typedef struct SECT_tdstListOfDNMLights_ SECT_tdstListOfDNMLights_;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
-typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
-typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
-typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
-typedef struct DNM_stDynamicsBaseBlock DNM_stDynamicsBaseBlock;
-typedef struct COL_tdstCollideObject_ COL_tdstCollideObject_;
-typedef struct tdstSubAnim_ tdstSubAnim_;
-typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
-typedef struct HIE_tdstSuperObject_ HIE_tdstSuperObject_;
-typedef struct tdstEventInTable_ tdstEventInTable_;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn;
-typedef struct LST2_tdstAnchorTotdxHandleToStateOpt LST2_tdstAnchorTotdxHandleToStateOpt;
-typedef struct LST2_tdstAnchorTotdxHandleToSubAnimOpt LST2_tdstAnchorTotdxHandleToSubAnimOpt;
-typedef struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt;
-typedef struct tdstFamilyList_ tdstFamilyList_;
-typedef struct tdstEngineObject_ tdstEngineObject_;
-typedef struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn LST2_tdstAnchorToCINE_tdxHandleToCineDyn;
-typedef struct CINE_Manager_ CINE_Manager_;
-typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
-typedef struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn;
-typedef struct CINE_tdstCineActor_ CINE_tdstCineActor_;
-typedef struct tdstAnim3d_ tdstAnim3d_;
-typedef struct tdstGraphChainedListNode_ tdstGraphChainedListNode_;
-typedef struct DNM_stParsingDatas DNM_stParsingDatas;
 typedef struct LST2_tdstAnchorToZDX_tdxHandleToZdxIndexListOpt LST2_tdstAnchorToZDX_tdxHandleToZdxIndexListOpt;
 typedef struct tdstZoneSetList_ tdstZoneSetList_;
-typedef struct GEO_tdstEdge_ GEO_tdstEdge_;
-typedef struct LST2_tdstAnchorToWP_tdhGraphNodeDyn LST2_tdstAnchorToWP_tdhGraphNodeDyn;
-typedef struct WP_tdstGraph_ WP_tdstGraph_;
-typedef struct MOR_stMorphVector_ MOR_stMorphVector_;
-typedef struct LST2_tdstAnchorTotdxHandleToTransitionOpt LST2_tdstAnchorTotdxHandleToTransitionOpt;
-typedef struct LST2_tdstAnchorTotdxHandleToProhibitOpt LST2_tdstAnchorTotdxHandleToProhibitOpt;
-typedef struct tdstState_ tdstState_;
-typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
-typedef struct tdstPLA_Hierarchy_ tdstPLA_Hierarchy_;
-typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
-typedef struct tdstFrame3d_ tdstFrame3d_;
-typedef struct _RollOffParam _RollOffParam;
-typedef struct tdstMSSound_ tdstMSSound_;
-typedef struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn;
-typedef struct tdst3dData_ tdst3dData_;
-typedef struct tdstElement3d_ tdstElement3d_;
-typedef struct tdstStandardGame_ tdstStandardGame_;
-typedef struct tdstTransition_ tdstTransition_;
 typedef struct tdstDynam_ tdstDynam_;
-typedef struct tdstInternalStructurCineinfo_ tdstInternalStructurCineinfo_;
-typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
-typedef struct tdstBrain_ tdstBrain_;
-typedef struct HIE_tdstModifierObject_ HIE_tdstModifierObject_;
-typedef struct tdstAveragePosition_ tdstAveragePosition_;
-typedef struct tdstSightAxisSystem_ tdstSightAxisSystem_;
-typedef struct tdstTransparentSuperObjectForCamera_ tdstTransparentSuperObjectForCamera_;
-typedef struct tdstCineinfo_ tdstCineinfo_;
-typedef struct tdstEvent_ tdstEvent_;
-typedef struct LST2_tdstAnchorTotdxHandleToFamilyListDyn LST2_tdstAnchorTotdxHandleToFamilyListDyn;
-typedef struct stColliderInfo_ stColliderInfo_;
-typedef struct tdstCollSet_ tdstCollSet_;
-typedef struct tdstProhibit_ tdstProhibit_;
-typedef struct tdstObjectsTableElement_ tdstObjectsTableElement_;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn;
-typedef struct tdstMSWay_ tdstMSWay_;
-typedef struct SECT_tdstListOfSOCharacters_ SECT_tdstListOfSOCharacters_;
-typedef struct tdstMSLight_ tdstMSLight_;
-typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
-typedef struct tdstSectInfo_ tdstSectInfo_;
-typedef struct tdstMicro_ tdstMicro_;
-typedef struct AI_tdstAIModel_ AI_tdstAIModel_;
-typedef struct GLI_tdst2DVertex_ GLI_tdst2DVertex_;
-typedef struct tdstObjectsTablesList_ tdstObjectsTablesList_;
-typedef struct MTH_stRotation MTH_stRotation;
-typedef struct MTH_stMove MTH_stMove;
-typedef struct DNM_stReport DNM_stReport;
-typedef struct PO_tdstPhysicalObject_ PO_tdstPhysicalObject_;
-typedef struct _stTimerCount _stTimerCount;
-typedef struct tdstEngineTimerStructure_ tdstEngineTimerStructure_;
-typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
-typedef struct GLI_tdstSpecificAttributesFor3D_ GLI_tdstSpecificAttributesFor3D_;
-typedef struct LST2_tdstAnchorTotdxHandleToNodeCameraDyn LST2_tdstAnchorTotdxHandleToNodeCameraDyn;
-typedef struct LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn;
-typedef struct LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn;
-typedef struct tdstEngineStructure_ tdstEngineStructure_;
-typedef struct SECT_tdstListOfSOSectorsInGraphicInteraction_ SECT_tdstListOfSOSectorsInGraphicInteraction_;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt;
-typedef struct DNM_stDynamicsAdvancedBlock DNM_stDynamicsAdvancedBlock;
-typedef struct SECT_tdstListOfStaticLights_ SECT_tdstListOfStaticLights_;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCollisionInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstCollisionInteractionOpt;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt;
-typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt;
-typedef struct LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt;
-typedef union _SND_tduRefEvt _SND_tduRefEvt;
-typedef struct SECT_tdstSector_ SECT_tdstSector_;
-typedef struct SECT_tdstListOfSOSectorsInCollisionInteraction_ SECT_tdstListOfSOSectorsInCollisionInteraction_;
-typedef struct tdstNodeMainCharacter_ tdstNodeMainCharacter_;
-typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
-typedef struct COL_tdstOctree_ COL_tdstOctree_;
-typedef struct SECT_tdstListOfSOSectorsInSoundInteraction_ SECT_tdstListOfSOSectorsInSoundInteraction_;
-typedef struct tdstCouple_ tdstCouple_;
-typedef struct COL_tdstParallelBox_ COL_tdstParallelBox_;
-typedef union GEO_tduVSObject_ GEO_tduVSObject_;
-typedef struct CINE_tdstChannelLink_ CINE_tdstChannelLink_;
-typedef struct SECT_tdstListOfSOSectorsInActivityInteraction_ SECT_tdstListOfSOSectorsInActivityInteraction_;
-typedef struct MOR_stMorphObject_ MOR_stMorphObject_;
 typedef struct anon_0 anon_0;
 typedef struct anon_1 anon_1;
 typedef struct stMACDPID stMACDPID;
 typedef struct DNM_stDynamicsComplexBlock DNM_stDynamicsComplexBlock;
 typedef struct DNM_stDynamics DNM_stDynamics;
-typedef struct GEO_tdstVisualSet_ GEO_tdstVisualSet_;
-typedef struct stInterpolatedPosition stInterpolatedPosition;
-typedef struct tdstAChannel_ tdstAChannel_;
-typedef struct LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn;
-typedef struct CINE_tdstCine_ CINE_tdstCine_;
 typedef struct LST2_tdstAnchorToZDX_tdxHandleToGeoZdxListOpt LST2_tdstAnchorToZDX_tdxHandleToGeoZdxListOpt;
 typedef struct tdstZdxList_ tdstZdxList_;
-typedef struct tdstMorphChannelList_ tdstMorphChannelList_;
-typedef struct COL_tdstOctreeNode_ COL_tdstOctreeNode_;
-typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
-typedef struct COL_tdstBoundingSphere_ COL_tdstBoundingSphere_;
-typedef struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn;
-typedef struct SCT_tdstListOfSoundEvent_ SCT_tdstListOfSoundEvent_;
-typedef struct tdstPLA_DeformationLink_ tdstPLA_DeformationLink_;
-typedef struct tdstLipsSynchValue_ tdstLipsSynchValue_;
-typedef struct FIL_tdstFileNameListElement_ FIL_tdstFileNameListElement_;
 typedef struct tdstCollideZdxList_ tdstCollideZdxList_;
-typedef struct LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn;
-typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;
-typedef struct WP_tdstGraphNode_ WP_tdstGraphNode_;
 typedef struct tdstZdxIndexList_ tdstZdxIndexList_;
-typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
 typedef struct tdstZoneSetEncapsulation_ tdstZoneSetEncapsulation_;
-typedef struct AI_tdstMind_ AI_tdstMind_;
-typedef struct tdstLanguageStructure_ tdstLanguageStructure_;
-typedef struct stMorphData stMorphData;
-
-typedef enum e_ucListViewport_ {
-    CAM_e_NoViewport = -1,
-} e_ucListViewport_;
-
-typedef enum e_ucCameraStates_ {
-    CAM_e_State_GoToOptimal = 0,
-    CAM_e_State_GoToComputedOptimal = 1,
-    CAM_e_State_FailureVisibility = 2,
-    CAM_e_State_FailureVisibilityWithoutCut = 3,
-    CAM_e_TempState_GhostMode = 4,
-    CAM_e_TempState_ApexMode = 5,
-} e_ucCameraStates_;
-
-typedef enum MAT_tdeTranformationType_ {
-    MAT_eTransform_Uninitialized = 0,
-    MAT_eTransform_Identity = 1,
-    MAT_eTransform_Translation = 2,
-    MAT_eTransform_Zoom = 3,
-    MAT_eTransform_Scale = 4,
-    MAT_eTransform_Rotation = 5,
-    MAT_eTransform_RotationZoom = 6,
-    MAT_eTransform_RotationScale = 7,
-    MAT_eTransform_ComplexRotationScale = 8,
-    MAT_eTransform_Undefined = 9,
-} MAT_tdeTranformationType_;
-
-typedef enum tdeObjectTreeInit_ {
-    OTI_WhenGameStart = 0,
-    OTI_MapLoaded = 1,
-    OTI_ReinitTheMap = 2,
-    OTI_LoadSavedGame = 3,
-    OTI_PlayerDead = 4,
-    OTI_WhenGoOutOfZone = 4,
-    OTI_Always = 4,
-    OTI_AlwaysCreated = 5,
-} tdeObjectTreeInit_;
 
 typedef enum anon_enum_0091e2f9 {
     DNM_eMIC_Error = -1,
     DNM_eCamera = 0,
     DNM_eBase = 1,
 } anon_enum_0091e2f9;
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
-struct DNM_stObstacle {
-    float m_xRate; /* +0x0 */
-    MTH3D_tdstVector_ m_stNorm; /* +0x4 */
-    MTH3D_tdstVector_ m_stContact; /* +0x10 */
-    GMT_tdstGameMaterial_* hMyMaterial; /* +0x1c */
-    GMT_tdstGameMaterial_* hCollidedMaterial; /* +0x20 */
-    HIE_tdstSuperObject_* mp_stSupObj; /* +0x24 */
-};
 
 struct LST2_tdstAnchorToZDX_tdxHandleToZoneSetEncapsulationOpt {
     tdstZoneSetEncapsulation_* hFirstElementOpt; /* +0x0 */
@@ -228,297 +67,6 @@ struct LST2_tdstAnchorToZDX_tdxHandleToZoneSetEncapsulationOpt {
 
 struct tdstCsaList_ {
     LST2_tdstAnchorToZDX_tdxHandleToZoneSetEncapsulationOpt hZoneSetEncapsulationList; /* +0x0 */
-};
-
-struct tdstSubAnimInUse_ {
-    tdstSubAnimInUse_* hNextBrotherDyn; /* +0x0 */
-    tdstSubAnimInUse_* hPrevBrotherDyn; /* +0x4 */
-    LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn* hFatherDyn; /* +0x8 */
-    tdstSubAnim_* p_stTheSubAnim; /* +0xc */
-    int d_ucEventActivation; /* +0x10 */
-    unsigned int ulStartFrame; /* +0x14 */
-    unsigned int ulCustombit; /* +0x18 */
-    unsigned int ulLoop; /* +0x1c */
-    float xFrameNumber; /* +0x20 */
-    unsigned char ucNextEvent; /* +0x24 */
-    unsigned char bStop; /* +0x25 */
-    unsigned char bMerge; /* +0x26 */
-};
-
-struct SECT_tdstListOfDNMLights_ {
-    GLI_tdstLight_* hDNMLights; /* +0x0 */
-    SECT_tdstListOfDNMLights_* hNextBrotherDyn; /* +0x4 */
-    SECT_tdstListOfDNMLights_* hPrevBrotherDyn; /* +0x8 */
-    LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn* hFatherDyn; /* +0xc */
-};
-
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
-
-struct MTH4D_tdstMatrix_ {
-    MTH4D_tdstVector_ stCol_0; /* +0x0 */
-    MTH4D_tdstVector_ stCol_1; /* +0x10 */
-    MTH4D_tdstVector_ stCol_2; /* +0x20 */
-    MTH4D_tdstVector_ stCol_3; /* +0x30 */
-};
-
-struct MAT_tdstTransformation_ {
-    MAT_tdeTranformationType_ eType; /* +0x0 */
-    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
-    MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
-    MTH4D_tdstVector_ stScaleVector; /* +0x50 */
-};
-
-struct MTH3D_tdstMatrix_ {
-    MTH3D_tdstVector_ stCol_0; /* +0x0 */
-    MTH3D_tdstVector_ stCol_1; /* +0xc */
-    MTH3D_tdstVector_ stCol_2; /* +0x18 */
-};
-
-struct DNM_stDynamicsBaseBlock {
-    int m_lObjectType; /* +0x0 */
-    int m_pCurrentIdCard; /* +0x4 */
-    unsigned int ulFlags; /* +0x8 */
-    unsigned int ulEndFlags; /* +0xc */
-    float m_xGravity; /* +0x10 */
-    float m_xSlopeLimit; /* +0x14 */
-    float m_xCosSlope; /* +0x18 */
-    float m_xSlide; /* +0x1c */
-    float m_xRebound; /* +0x20 */
-    MTH3D_tdstVector_ m_stImposeSpeed; /* +0x24 */
-    MTH3D_tdstVector_ m_stProposeSpeed; /* +0x30 */
-    MTH3D_tdstVector_ m_stPreviousSpeed; /* +0x3c */
-    MTH3D_tdstVector_ m_stScale; /* +0x48 */
-    MTH3D_tdstVector_ m_stSpeedAnim; /* +0x54 */
-    MTH3D_tdstVector_ m_stSafeTranslation; /* +0x60 */
-    MTH3D_tdstVector_ m_stAddTranslation; /* +0x6c */
-    MAT_tdstTransformation_ m_stPreviousMatrix; /* +0x80 */
-    MAT_tdstTransformation_ m_stCurrentMatrix; /* +0xe0 */
-    MTH3D_tdstMatrix_ m_stImposeRotationMatrix; /* +0x140 */
-    unsigned char m_ucNbFrame; /* +0x164 */
-    DNM_stReport* m_pstReport; /* +0x168 */
-};
-
-struct COL_tdstCollideObject_ {
-    short xNbPoints; /* +0x0 */
-    short xNbElements; /* +0x2 */
-    short xNbParallelBoxes; /* +0x4 */
-    MTH3D_tdstVector_* d_stListOfPoints; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
-    int d_stListOfElements; /* +0x10 */
-    COL_tdstOctree_* p_stOctree; /* +0x14 */
-    COL_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
-    float xBoudingSphereRadius; /* +0x1c */
-    MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x20 */
-};
-
-struct tdstSubAnim_ {
-    tdstAnim3d_* p_stSubAnim; /* +0x0 */
-};
-
-union HIE_tduLinkedObject_ {
-    HIE_tdstSuperObject_* p_stSuperObject; /* +0x0 */
-    GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
-    PO_tdstPhysicalObject_* p_stPhysicalObject; /* +0x0 */
-    IPO_tdstInstanciatedPhysicalObject_* p_stInstanciatedPhysicalObject; /* +0x0 */
-    SECT_tdstSector_* p_stSector; /* +0x0 */
-    tdstEngineObject_* p_stCharacter; /* +0x0 */
-    GLI_tdstLight_* p_stLight; /* +0x0 */
-    HIE_tdstModifierObject_* p_stModifierObject; /* +0x0 */
-    int p_Void; /* +0x0 */
-};
-
-struct HIE_tdstSuperObject_ {
-    unsigned int ulTypeOfLinkedObject; /* +0x0 */
-    HIE_tduLinkedObject_ hLinkedObject; /* +0x4 */
-    HIE_tdstSuperObject_* hFirstElementDyn; /* +0x8 */
-    HIE_tdstSuperObject_* hLastElementDyn; /* +0xc */
-    int lNumberOfElementsDyn; /* +0x10 */
-    HIE_tdstSuperObject_* hNextBrotherDyn; /* +0x14 */
-    HIE_tdstSuperObject_* hPrevBrotherDyn; /* +0x18 */
-    HIE_tdstSuperObject_* hFatherDyn; /* +0x1c */
-    MAT_tdstTransformation_* hLocalMatrix; /* +0x20 */
-    MAT_tdstTransformation_* hGlobalMatrix; /* +0x24 */
-    int lLastComputeFrame; /* +0x28 */
-    int lDrawModeMask; /* +0x2c */
-    unsigned int ulFlags; /* +0x30 */
-    int hVisualBoundingVolume; /* +0x34 */
-    int hCollideBoundingVolume; /* +0x38 */
-    MTH3D_tdstVector_ stSemiLookAtVector; /* +0x3c */
-    float fTransparenceLevel; /* +0x48 */
-    unsigned int ulOutlineColor; /* +0x4c */
-    int lDisplayPrioriry; /* +0x50 */
-    int lIL_Status; /* +0x54 */
-    MTH3D_tdstVector_ stIL_AmbientColor; /* +0x58 */
-    MTH3D_tdstVector_ stIL_ParallelDirection; /* +0x64 */
-    MTH3D_tdstVector_ stIL_ParallelColor; /* +0x70 */
-    unsigned char ucSuperImposedOnWhichViewport; /* +0x7c */
-    unsigned char bIsSPO; /* +0x7d */
-    unsigned char xTransition; /* +0x7e */
-};
-
-struct tdstEventInTable_ {
-    int p_xEvent; /* +0x0 */
-    unsigned char ucTypeOfEvent; /* +0x4 */
-    unsigned char ucPriority; /* +0x5 */
-    unsigned char ucFirstCall; /* +0x6 */
-    unsigned char ucPeriod; /* +0x7 */
-    unsigned int u32SemaphoreId; /* +0x8 */
-};
-
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn {
-    SECT_tdstListOfDNMLights_* hFirstElementDyn; /* +0x0 */
-    SECT_tdstListOfDNMLights_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToStateOpt {
-    tdstState_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToSubAnimOpt {
-    tdstSubAnim_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt {
-    tdstObjectsTablesList_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct tdstFamilyList_ {
-    tdstFamilyList_* hNextBrotherDyn; /* +0x0 */
-    tdstFamilyList_* hPrevBrotherDyn; /* +0x4 */
-    LST2_tdstAnchorTotdxHandleToFamilyListDyn* hFatherDyn; /* +0x8 */
-    int otObjectFamilyType; /* +0xc */
-    LST2_tdstAnchorTotdxHandleToStateOpt hForStateArray; /* +0x10 */
-    LST2_tdstAnchorTotdxHandleToSubAnimOpt hForSubAnimArray; /* +0x18 */
-    tdstObjectsTablesList_* h_DefaultObjectsTable; /* +0x20 */
-    LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt hForObjectsTablesList; /* +0x24 */
-    COL_tdstBoundingSphere_* hBoundingSphere; /* +0x2c */
-    tdstLipsSynchValue_* ax_stLipsSynchValues; /* +0x30 */
-    unsigned int ulNumberLipSynchValues; /* +0x34 */
-    unsigned int ulLipsChannel; /* +0x38 */
-    unsigned int ulNumberOfChannels; /* +0x3c */
-    unsigned char ucPriority; /* +0x40 */
-    unsigned char ucOptimized; /* +0x41 */
-    unsigned char ucStorageBank; /* +0x42 */
-    unsigned char ucProperties; /* +0x43 */
-};
-
-struct tdstEngineObject_ {
-    tdst3dData_* h_3dData; /* +0x0 */
-    tdstStandardGame_* h_StandardGame; /* +0x4 */
-    tdstDynam_* h_Dynam; /* +0x8 */
-    tdstBrain_* h_Brain; /* +0xc */
-    tdstCineinfo_* h_Cineinfo; /* +0x10 */
-    tdstCollSet_* h_CollSet; /* +0x14 */
-    tdstMSWay_* h_MSWay; /* +0x18 */
-    tdstMSLight_* h_MSLight; /* +0x1c */
-    tdstSectInfo_* h_SectInfo; /* +0x20 */
-    tdstMicro_* h_Micro; /* +0x24 */
-    tdstMSSound_* h_MSSound; /* +0x28 */
-};
-
-struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn {
-    CINE_tdstCine_* hFirstElementDyn; /* +0x0 */
-    CINE_tdstCine_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct CINE_Manager_ {
-    LST2_tdstAnchorToCINE_tdxHandleToCineDyn hCineList; /* +0x0 */
-    MAT_tdstTransformation_ gp_stFixedCameraMatrix; /* +0x10 */
-    HIE_tdstSuperObject_* gp_stSPOHandleCamera; /* +0x70 */
-};
-
-struct GMT_tdstGameMaterial_ {
-    int hSoundMaterial; /* +0x0 */
-    GMT_tdstCollideMaterial_* hCollideMaterial; /* +0x4 */
-};
-
-struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn {
-    CINE_tdstChannelLink_* hFirstElementDyn; /* +0x0 */
-    CINE_tdstChannelLink_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct CINE_tdstCineActor_ {
-    tdstSubAnim_ stSubAnim; /* +0x0 */
-    tdstSubAnimInUse_* hSubAnimInUse; /* +0x4 */
-    char szAnimation[255]; /* +0x8 */
-    tdstEngineObject_* p_stActor; /* +0x108 */
-    tdstState_* p_stStateAfterCine; /* +0x10c */
-    tdstState_* p_stStateDuringCine; /* +0x110 */
-    tdstState_* p_stTmpStateForActor; /* +0x114 */
-    unsigned char bSkipIA; /* +0x118 */
-    unsigned char bSkipMeca; /* +0x119 */
-    unsigned char bPreviousIAState; /* +0x11a */
-    unsigned char bPreviousMecaState; /* +0x11b */
-    unsigned char ucRepeatAnimation; /* +0x11c */
-    signed char scSpeedAnim; /* +0x11d */
-    unsigned char bMoveActorAtTheBegin; /* +0x11e */
-    HIE_tdstSuperObject_* hSPORef; /* +0x120 */
-    unsigned char bMoveActorAtTheEnd; /* +0x124 */
-    unsigned short usChannel; /* +0x126 */
-    unsigned char bPlayingAnim; /* +0x128 */
-    unsigned char bIsASubAnim; /* +0x129 */
-    unsigned char bChangeComportBegin; /* +0x12a */
-    tdstComport_* p_stIntelBegin; /* +0x12c */
-    unsigned char bChangeReflexBegin; /* +0x130 */
-    tdstComport_* p_stReflexBegin; /* +0x134 */
-    unsigned char bChangeComportEnd; /* +0x138 */
-    tdstComport_* p_stIntelEnd; /* +0x13c */
-    unsigned char bChangeReflexEnd; /* +0x140 */
-    tdstComport_* p_stReflexEnd; /* +0x144 */
-    unsigned char bUseSoundRequestBegin; /* +0x148 */
-    unsigned char bUseVoiceRequestBegin; /* +0x149 */
-    unsigned char bUseMusicRequestBegin; /* +0x14a */
-    unsigned char bUseAmbianceRequestBegin; /* +0x14b */
-    _SND_tdstBlockEvent* pSoundRequestBegin; /* +0x14c */
-    _SND_tdstBlockEvent* pVoiceRequestBegin; /* +0x150 */
-    _SND_tdstBlockEvent* pMusicRequestBegin; /* +0x154 */
-    _SND_tdstBlockEvent* pAmbianceRequestBegin; /* +0x158 */
-    unsigned char bUseSoundRequestEnd; /* +0x15c */
-    unsigned char bUseVoiceRequestEnd; /* +0x15d */
-    unsigned char bUseMusicRequestEnd; /* +0x15e */
-    unsigned char bUseAmbianceRequestEnd; /* +0x15f */
-    _SND_tdstBlockEvent* pSoundRequestEnd; /* +0x160 */
-    _SND_tdstBlockEvent* pVoiceRequestEnd; /* +0x164 */
-    _SND_tdstBlockEvent* pMusicRequestEnd; /* +0x168 */
-    _SND_tdstBlockEvent* pAmbianceRequestEnd; /* +0x16c */
-    CINE_tdstCine_* pCine; /* +0x170 */
-    LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn hChannelLink; /* +0x174 */
-    CINE_tdstCineActor_* hNextBrotherDyn; /* +0x180 */
-    CINE_tdstCineActor_* hPrevBrotherDyn; /* +0x184 */
-    LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn* hFatherDyn; /* +0x188 */
-};
-
-struct tdstAnim3d_ {
-    unsigned short uwNumberOfFrames; /* +0x0 */
-    unsigned char ucFrameRate; /* +0x2 */
-    unsigned char ucMaxNumberOfElements; /* +0x3 */
-    tdstEvent_* d_stAnimEvent; /* +0x4 */
-    stMorphData* d_stMorphDataArray; /* +0x8 */
-    unsigned short uwNumOfA3dGENERAL; /* +0xc */
-    unsigned char ucNumberOfEvents; /* +0xe */
-    unsigned char ucFlagMergeAnim; /* +0xf */
-};
-
-struct tdstGraphChainedListNode_ {
-    WP_tdstGraph_* GraphChainedListNodeInfo; /* +0x0 */
-    tdstGraphChainedListNode_* p_NextGraphChainedListNode; /* +0x4 */
-};
-
-struct DNM_stParsingDatas {
-    MTH3D_tdstVector_ stPosition; /* +0x0 */
-    float xOutAlpha; /* +0xc */
-    MTH3D_tdstVector_ stVector; /* +0x10 */
 };
 
 struct LST2_tdstAnchorToZDX_tdxHandleToZdxIndexListOpt {
@@ -530,811 +78,10 @@ struct tdstZoneSetList_ {
     LST2_tdstAnchorToZDX_tdxHandleToZdxIndexListOpt hZdxIndexList; /* +0x0 */
 };
 
-struct GEO_tdstEdge_ {
-    short xPoints[2]; /* +0x0 */
-    MTH3D_tdstVector_ st_VectorPoints[2]; /* +0x4 */
-};
-
-struct LST2_tdstAnchorToWP_tdhGraphNodeDyn {
-    WP_tdstGraphNode_* hFirstElementDyn; /* +0x0 */
-    WP_tdstGraphNode_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct WP_tdstGraph_ {
-    LST2_tdstAnchorToWP_tdhGraphNodeDyn m_hListOfNode; /* +0x0 */
-};
-
-struct MOR_stMorphVector_ {
-    short xVertexIndex; /* +0x0 */
-    MTH3D_tdstVector_ stDeformationVector; /* +0x4 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToTransitionOpt {
-    tdstTransition_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToProhibitOpt {
-    tdstProhibit_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct tdstState_ {
-    tdstAnim3d_* p_stAnim; /* +0x0 */
-    LST2_tdstAnchorTotdxHandleToTransitionOpt hForTransitionArray; /* +0x4 */
-    LST2_tdstAnchorTotdxHandleToProhibitOpt hForProhibitArray; /* +0xc */
-    tdstState_* h_NextState; /* +0x14 */
-    int h_LinkedMechanicsIdCard; /* +0x18 */
-    int szLevelList; /* +0x1c */
-    int szAnimationSectionName; /* +0x20 */
-    unsigned char ucRepeatAnimation; /* +0x24 */
-    signed char scSpeedAnim; /* +0x25 */
-    unsigned char ucTransitionStatusFlag; /* +0x26 */
-    unsigned char ucCustomBits; /* +0x27 */
-};
-
-struct GEO_tdstParallelBox_ {
-    MTH4D_tdstVector_ stMinPoint; /* +0x0 */
-    MTH4D_tdstVector_ stMaxPoint; /* +0x10 */
-};
-
-struct tdstPLA_Hierarchy_ {
-    unsigned int ulNbOfCouples; /* +0x0 */
-    tdstCouple_* d_stCouples; /* +0x4 */
-};
-
-struct tdstPLA_Deformation_ {
-    unsigned int ulNbOfDeformationLinks; /* +0x0 */
-    tdstPLA_DeformationLink_* d_stDeformationLinks; /* +0x4 */
-};
-
-struct tdstFrame3d_ {
-    tdstElement3d_* p_stArrayOfElts3d; /* +0x0 */
-    MTH3D_tdstMatrix_* p_stAngularSpeedMatrix; /* +0x4 */
-    MTH3D_tdstVector_* p_stLinearSpeedVector; /* +0x8 */
-    tdstPLA_Hierarchy_ stHierarchy; /* +0xc */
-    tdstPLA_Deformation_ stDeformation; /* +0x14 */
-    tdstAnim3d_* p_stAnim; /* +0x1c */
-    unsigned short uwFrameNumber; /* +0x20 */
-    unsigned char ucMatrixUpdated; /* +0x22 */
-    unsigned char ucCacheEntry; /* +0x23 */
-};
-
-struct _RollOffParam {
-    int rDistSatur; /* +0x0 */
-    int rDistBackGround; /* +0x4 */
-    unsigned char ucBackgroundVol; /* +0x8 */
-};
-
-struct tdstMSSound_ {
-    _RollOffParam stRollOff; /* +0x0 */
-    HIE_tdstSuperObject_* hMechaCharacter; /* +0xc */
-};
-
-struct LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn {
-    tdstSubAnimInUse_* hFirstElementDyn; /* +0x0 */
-    tdstSubAnimInUse_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct tdst3dData_ {
-    tdstState_* h_InitialState; /* +0x0 */
-    tdstState_* h_CurrentState; /* +0x4 */
-    tdstState_* h_FirstStateOfAction; /* +0x8 */
-    tdstObjectsTablesList_* h_InitialObjectsTable; /* +0xc */
-    tdstObjectsTablesList_* h_CurrentObjectsTable; /* +0x10 */
-    tdstFamilyList_* h_Family; /* +0x14 */
-    unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x18..0x1f */
-    MAT_tdstTransformation_ stGLIObjectMatrix; /* +0x20 */
-    MAT_tdstTransformation_* p_stGLIObjectAbsoluteMatrix; /* +0x80 */
-    float xCurrentFrame; /* +0x84 */
-    unsigned char ucRepeatAnimation; /* +0x88 */
-    unsigned char ucNextEvent; /* +0x89 */
-    int d_ucEventActivation; /* +0x8c */
-    tdstCouple_* p_stCurrentHieCouples; /* +0x90 */
-    unsigned short wCurrentHieNbCouples; /* +0x94 */
-    unsigned short wSizeOfArrayOfElts3d; /* +0x96 */
-    tdstState_* h_StateInLastFrame; /* +0x98 */
-    tdstState_* h_WantedState; /* +0x9c */
-    float xForcedFrame; /* +0xa0 */
-    unsigned char ucFlagEndState; /* +0xa4 */
-    unsigned char ucFlagEndOfAnim; /* +0xa5 */
-    tdstAChannel_* hArrayOfChannels; /* +0xa8 */
-    unsigned int ulNumberOfChannels; /* +0xac */
-    tdstAChannel_* hFirstActiveChannel; /* +0xb0 */
-    tdstFrame3d_ stFrame3d; /* +0xb4 */
-    LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphChannelList; /* +0xd8 */
-    unsigned int ulStartTime; /* +0xdc */
-    unsigned int ulTimeDelay; /* +0xe0 */
-    unsigned int ulTimePreviousFrame; /* +0xe4 */
-    float xLastFrame; /* +0xe8 */
-    unsigned char bStateJustModified; /* +0xec */
-    unsigned char bSkipCurrentFrame; /* +0xed */
-    GLI_tdstMaterial_* p_stShadowVisualMaterial; /* +0xf0 */
-    GLI_tdstTexture_* p_stShadowTexture; /* +0xf4 */
-    float xShadowScaleX; /* +0xf8 */
-    float xShadowScaleY; /* +0xfc */
-    short xShadowQuality; /* +0x100 */
-    unsigned short uwNbEngineFrameSinceLastMechEvent; /* +0x102 */
-    unsigned char ucFrameRate; /* +0x104 */
-    unsigned char ucFlagModifState; /* +0x105 */
-    int lDrawMaskInit; /* +0x108 */
-    int lDrawMask; /* +0x10c */
-    int lLastComputeFrame; /* +0x110 */
-    unsigned char _extractor_padding_01[12]; /* implicitly added by extractor; +0x114..0x11f */
-    MAT_tdstTransformation_ stLastEventGlobalPosition; /* +0x120 */
-    unsigned char bAnimMatrixChanged; /* +0x180 */
-    unsigned char ucUserEventFlags; /* +0x181 */
-    unsigned char ucBrainComputationFrequency; /* +0x182 */
-    char cBrainCounter; /* +0x183 */
-    unsigned short uwBrainMainCounter; /* +0x184 */
-    unsigned char ucTransparency; /* +0x186 */
-    unsigned char bDiscreetSpeed; /* +0x187 */
-    MTH3D_tdstVector_ stLightDirForDynamicShadow; /* +0x188 */
-    unsigned char ucIsShadowClosed; /* +0x194 */
-    unsigned char ucShadowRecLevel; /* +0x195 */
-    unsigned char ucLightComputationFrequency; /* +0x196 */
-    char cLightCounter; /* +0x197 */
-    MTH3D_tdstVector_ stSHWDeformationVector; /* +0x198 */
-    float xSHWHeight; /* +0x1a4 */
-    float xDistNoInterpol; /* +0x1a8 */
-    float xDistNoMorphing; /* +0x1ac */
-    float xDistNoDEnv; /* +0x1b0 */
-    LST2_tdstAnchorTotdxHandleToSubAnimInUseDyn hForSubAnimInUseArray; /* +0x1b4 */
-    CINE_tdstCineActor_* h_CurrentCineActor; /* +0x1c0 */
-    int hSkinMaterial[4]; /* +0x1c4 */
-    unsigned int NbSkinMaterials; /* +0x1d4 */
-    short xSkinIndex[4]; /* +0x1d8 */
-};
-
-struct tdstElement3d_ {
-    unsigned short wElement : 15; /* bit 0, byte +0x0 */
-    unsigned short bf1ActiveStatus : 1; /* bit 15, byte +0x0 */
-    unsigned char ucChannelNumber; /* +0x2 */
-    unsigned char eTypeOfElement; /* +0x3 */
-    unsigned char ucTransparency; /* +0x4 */
-    unsigned char ucAnimLevel; /* +0x5 */
-};
-
-struct tdstStandardGame_ {
-    int otObjectFamilyType; /* +0x0 */
-    int otObjectModelType; /* +0x4 */
-    int otObjectPersonalType; /* +0x8 */
-    HIE_tdstSuperObject_* h_SuperObject; /* +0xc */
-    unsigned char eInitFlagWhenOutOfZone; /* +0x10 */
-    unsigned char eInitFlagWhenDeadOrTaken; /* +0x11 */
-    unsigned int ulLastTrame; /* +0x14 */
-    unsigned int ubf32Capabilities; /* +0x18 */
-    unsigned char ucTractionFactor; /* +0x1c */
-    unsigned char ucHitPoints; /* +0x1d */
-    unsigned char ucHitPointsMax; /* +0x1e */
-    unsigned char ucHitPointsMaxMax; /* +0x1f */
-    unsigned int ulCustomBits; /* +0x20 */
-    unsigned int ulAICustomBits; /* +0x24 */
-    unsigned char ucPlatFormType; /* +0x28 */
-    unsigned char ucMiscFlags; /* +0x29 */
-    unsigned char ucTransparencyZoneMin; /* +0x2a */
-    unsigned char ucTransparencyZoneMax; /* +0x2b */
-    unsigned int ulSaveCustomBits; /* +0x2c */
-    unsigned int ulSaveAICustomBits; /* +0x30 */
-    unsigned char ucSaveHitPoints; /* +0x34 */
-    unsigned char ucSaveHitPointsMax; /* +0x35 */
-    unsigned char ucSaveMiscFlags; /* +0x36 */
-    unsigned char ucTooFarLimit; /* +0x37 */
-    unsigned char ucImportance; /* +0x38 */
-    unsigned char ucOptional; /* +0x39 */
-    float a_xCustomFloats[2]; /* +0x3c */
-    int a_lCustomLongs[2]; /* +0x44 */
-    MTH3D_tdstVector_ a_stCustomVectors[2]; /* +0x4c */
-};
-
-struct tdstTransition_ {
-    tdstState_* h_TargetState; /* +0x0 */
-    tdstState_* h_StateToGo; /* +0x4 */
-    unsigned char ucLinkingType; /* +0x8 */
-};
-
 struct tdstDynam_ {
     DNM_stDynamics* p_stDynamics; /* +0x0 */
     DNM_stParsingDatas* p_stParsingDatas; /* +0x4 */
     anon_enum_0091e2f9 eUsedMechanics; /* +0x8 */
-};
-
-struct tdstInternalStructurCineinfo_ {
-    MTH3D_tdstVector_ stShiftTarget; /* +0x0 */
-    MTH3D_tdstVector_ stShiftPos; /* +0xc */
-    float xDistMin; /* +0x18 */
-    float xDistMax; /* +0x1c */
-    float xBoundDistMin; /* +0x20 */
-    float xBoundDistMax; /* +0x24 */
-    float xAngleAlpha; /* +0x28 */
-    float xAngleShiftAlpha; /* +0x2c */
-    float xAngleTheta; /* +0x30 */
-    float xAngleShiftTheta; /* +0x34 */
-    float xLinearSpeed; /* +0x38 */
-    float xLinearIncreaseSpeed; /* +0x3c */
-    float xLinearDecreaseSpeed; /* +0x40 */
-    float xAngularSpeed; /* +0x44 */
-    float xAngularIncreaseSpeed; /* +0x48 */
-    float xAngularDecreaseSpeed; /* +0x4c */
-    float xTargetSpeed; /* +0x50 */
-    float xTargetIncreaseSpeed; /* +0x54 */
-    float xTargetDecreaseSpeed; /* +0x58 */
-    float xFocal; /* +0x5c */
-    float xZMin; /* +0x60 */
-    float xZMax; /* +0x64 */
-    HIE_tdstSuperObject_* hSuperObjectTargeted; /* +0x68 */
-    HIE_tdstSuperObject_* hSecondSuperObjectTargeted; /* +0x6c */
-    unsigned short uwDNMFlags; /* +0x70 */
-    unsigned short uwIAFlags; /* +0x72 */
-    e_ucListViewport_ eTypeOfViewport; /* +0x74 */
-    char cChannel; /* +0x78 */
-    unsigned char bIsActive; /* +0x79 */
-    unsigned char bDebugCamera; /* +0x7a */
-};
-
-struct GEO_tdstGeometricObject_ {
-    MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
-    MTH3D_tdstVector_* d_stListOfPointsNormals; /* +0x4 */
-    int d_dfVertexTransparency; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
-    int d_stListOfElements; /* +0x10 */
-    GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
-    GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
-    unsigned int ulType; /* +0x1c */
-    short xNbPoints; /* +0x20 */
-    short xNbElements; /* +0x22 */
-    short xNbEdges; /* +0x24 */
-    short xNbParallelBoxes; /* +0x26 */
-    float xBoudingSphereRadius; /* +0x28 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x2c..0x2f */
-    MTH4D_tdstVector_ xBoudingSphereCenter; /* +0x30 */
-    GEO_tdstDoubledIndex_* d_stListOfEdgesDI; /* +0x40 */
-    short xNbEdgesDI; /* +0x44 */
-    short xNbOctreeEdges; /* +0x46 */
-    int bUsedForShadowDrawing; /* +0x48 */
-    int bUsedForShadowCreating; /* +0x4c */
-    int pSDC_Data; /* +0x50 */
-    unsigned int bIsStatic; /* +0x54 */
-    unsigned int glDisplayList; /* +0x58 */
-    unsigned char bVTForSinus; /* +0x5c */
-};
-
-struct tdstBrain_ {
-    AI_tdstMind_* p_stMind; /* +0x0 */
-    GMT_tdstGameMaterial_* hLastCollidedGoThroughMaterial; /* +0x4 */
-    unsigned char bWarnMechanicsFlag; /* +0x8 */
-    unsigned char bActiveDuringTransition; /* +0x9 */
-};
-
-struct HIE_tdstModifierObject_ {
-    GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
-    int lMulIntensity; /* +0x4 */
-    int lAddIntensity; /* +0x8 */
-};
-
-struct tdstAveragePosition_ {
-    MTH3D_tdstVector_ a_CheckedSpeed[8]; /* +0x0 */
-    MTH3D_tdstVector_ a_CheckedPos[8]; /* +0x60 */
-    float a_CheckedTime[8]; /* +0xc0 */
-};
-
-struct tdstSightAxisSystem_ {
-    MTH3D_tdstVector_ SightAxis; /* +0x0 */
-    MTH3D_tdstVector_ FirstComplementaryAxis; /* +0xc */
-    MTH3D_tdstVector_ SecondComplementaryAxis; /* +0x18 */
-};
-
-struct tdstTransparentSuperObjectForCamera_ {
-    HIE_tdstSuperObject_* hSuperObject; /* +0x0 */
-    int lInitialDrawMask; /* +0x4 */
-    float fInitialTransparenceLevel; /* +0x8 */
-    float fCurrentTransparencyLevel; /* +0xc */
-    unsigned char bIncrease; /* +0x10 */
-};
-
-struct tdstCineinfo_ {
-    tdstInternalStructurCineinfo_* hInit; /* +0x0 */
-    tdstInternalStructurCineinfo_* hCurrent; /* +0x4 */
-    tdstInternalStructurCineinfo_* hVisibility; /* +0x8 */
-    tdstInternalStructurCineinfo_* hWork; /* +0xc */
-    MTH3D_tdstVector_ stLastFailedOrigin; /* +0x10 */
-    MTH3D_tdstVector_ stLastFailedWanted; /* +0x1c */
-    MTH3D_tdstVector_ stForceTarget; /* +0x28 */
-    MTH3D_tdstVector_ stForcePosition; /* +0x34 */
-    MTH3D_tdstVector_ stForceRefAxisY; /* +0x40 */
-    MTH3D_tdstVector_ stForceRefAxisZ; /* +0x4c */
-    float xApexRatio; /* +0x58 */
-    float xLastDeltaCut; /* +0x5c */
-    e_ucCameraStates_ eState; /* +0x60 */
-    float xCounter1; /* +0x64 */
-    float xCounter2; /* +0x68 */
-    float xCounter3; /* +0x6c */
-    float xCounter4; /* +0x70 */
-    unsigned char ucVolIAFlags; /* +0x74 */
-    unsigned char ucPerIAFlags; /* +0x75 */
-    char cLastCutAngleSens; /* +0x76 */
-    tdstAveragePosition_ AveragePosition; /* +0x78 */
-    tdstSightAxisSystem_ stSightAxisSystem; /* +0x158 */
-    unsigned char bCanDoBestPos; /* +0x17c */
-    tdstTransparentSuperObjectForCamera_ a10_stTransparentSuperObjectForCamera[10]; /* +0x180 */
-    short xNumberOfTransparentSuperObjectForCamera; /* +0x248 */
-    float fTransparency; /* +0x24c */
-    float fTransparencySpeed; /* +0x250 */
-    unsigned char ucTransparencyFlag; /* +0x254 */
-    unsigned char bCameraIsMirrored; /* +0x255 */
-    unsigned char bLightComputation; /* +0x256 */
-};
-
-struct tdstEvent_ {
-    tdstEventInTable_* p_stfEventInTBL; /* +0x0 */
-    unsigned short usEventNumberInTBL; /* +0x4 */
-    unsigned short uwFrameNumber; /* +0x6 */
-    unsigned short uwChannelNumber; /* +0x8 */
-    unsigned short uwIsLocalized; /* +0xa */
-};
-
-struct LST2_tdstAnchorTotdxHandleToFamilyListDyn {
-    tdstFamilyList_* hFirstElementDyn; /* +0x0 */
-    tdstFamilyList_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct stColliderInfo_ {
-    int a_stColliderActors[2]; /* +0x0 */
-    MTH3D_tdstVector_ a_stColliderVectors[2]; /* +0x8 */
-    float a_xColliderReals[2]; /* +0x20 */
-    unsigned char ucColliderType; /* +0x28 */
-    unsigned char ucColliderPriority; /* +0x29 */
-    unsigned char a2_ucUnused[2]; /* +0x2a */
-};
-
-struct tdstCollSet_ {
-    tdstZdxList_* hZddList; /* +0x0 */
-    tdstZdxList_* hZdeList; /* +0x4 */
-    tdstZdxList_* hZdmList; /* +0x8 */
-    tdstZdxList_* hZdrList; /* +0xc */
-    tdstCsaList_* hZddActivationList; /* +0x10 */
-    tdstCsaList_* hZdeActivationList; /* +0x14 */
-    tdstCsaList_* hZdmActivationList; /* +0x18 */
-    tdstCsaList_* hZdrActivationList; /* +0x1c */
-    tdstZoneSetList_* hZddCurrentActivation; /* +0x20 */
-    tdstZoneSetList_* hZdeCurrentActivation; /* +0x24 */
-    tdstZoneSetList_* hZdrCurrentActivation; /* +0x28 */
-    tdstZoneSetList_* hZdmCurrentActivation; /* +0x2c */
-    unsigned int ulFBZddPriviligedZones; /* +0x30 */
-    unsigned int ulFBZdePriviligedZones; /* +0x34 */
-    unsigned int ulFBZdmPriviligedZones; /* +0x38 */
-    unsigned int ulFBZdrPriviligedZones; /* +0x3c */
-    unsigned char ucCollComputeFrequency; /* +0x40 */
-    unsigned char ucCharacterPriority; /* +0x41 */
-    unsigned char ucCollisionFlag; /* +0x42 */
-    stColliderInfo_ stColliderInfo; /* +0x44 */
-};
-
-struct tdstProhibit_ {
-    tdstState_* h_ProhibitedState; /* +0x0 */
-};
-
-struct tdstObjectsTableElement_ {
-    MTH3D_tdstVector_* p_stCustomZoom; /* +0x0 */
-    int h_Target; /* +0x4 */
-    unsigned int uwChannelNumber; /* +0x8 */
-    unsigned short wTypeOfTarget; /* +0xc */
-    unsigned char ucPhoneme; /* +0xe */
-    unsigned char ucIntensity; /* +0xf */
-    unsigned char ucExpression; /* +0x10 */
-};
-
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn {
-    SECT_tdstListOfSOCharacters_* hFirstElementDyn; /* +0x0 */
-    SECT_tdstListOfSOCharacters_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct tdstMSWay_ {
-    WP_tdstGraph_* m_hPath; /* +0x0 */
-    int m_lIndex; /* +0x4 */
-    char m_bIsCircular; /* +0x8 */
-};
-
-struct SECT_tdstListOfSOCharacters_ {
-    HIE_tdstSuperObject_* hPointerOfCharacter; /* +0x0 */
-    SECT_tdstListOfSOCharacters_* hNextBrotherDyn; /* +0x4 */
-    SECT_tdstListOfSOCharacters_* hPrevBrotherDyn; /* +0x8 */
-    LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn* hFatherDyn; /* +0xc */
-};
-
-struct tdstMSLight_ {
-    unsigned char bLocalLight; /* +0x0 */
-    unsigned char bOnlyLocalLight; /* +0x1 */
-    unsigned char bGiroPhare; /* +0x2 */
-    unsigned char bPulsing; /* +0x3 */
-    MTH3D_tdstVector_ stOffsetVect; /* +0x4 */
-    MTH3D_tdstVector_ stAngle; /* +0x10 */
-    float xStepGiro; /* +0x1c */
-    float xStepPulse; /* +0x20 */
-    float xMaxRangePulse; /* +0x24 */
-    float xGiroAngle; /* +0x28 */
-    GLI_tdstLight_* p_stLight; /* +0x2c */
-    GEO_tdstGeometricObject_* p_stVisuLight; /* +0x30 */
-    SECT_tdstListOfDNMLights_* hLightInSector; /* +0x34 */
-    unsigned char ucNbRLIUse; /* +0x38 */
-    unsigned char ucFirstRLI; /* +0x39 */
-    unsigned char ucSecondRLI; /* +0x3a */
-    float ucBlendPercent; /* +0x3c */
-};
-
-struct GEO_tdstDoubledIndex_ {
-    short a2_xIndex[2]; /* +0x0 */
-};
-
-struct tdstSectInfo_ {
-    HIE_tdstSuperObject_* hCurrentSector; /* +0x0 */
-    SECT_tdstListOfSOCharacters_* hNodeInSector; /* +0x4 */
-    MTH3D_tdstVector_ stPreviousPosition; /* +0x8 */
-    HIE_tdstSuperObject_* hSectorSynchroCharacter; /* +0x14 */
-};
-
-struct tdstMicro_ {
-    MAT_tdstTransformation_* hMicroMatrix; /* +0x0 */
-    unsigned char bIsActive; /* +0x4 */
-};
-
-struct AI_tdstAIModel_ {
-    tdstScriptAI_* p_stScriptAIIntell; /* +0x0 */
-    tdstScriptAI_* p_stScriptAIReflex; /* +0x4 */
-    tdstDsgVar_* p_stDsgVar; /* +0x8 */
-    tdstListOfMacro_* p_stListOfMacro; /* +0xc */
-    unsigned char ucSecondPassDone; /* +0x10 */
-};
-
-struct GLI_tdst2DVertex_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xOoZ; /* +0x8 */
-};
-
-struct tdstObjectsTablesList_ {
-    tdstObjectsTableElement_* d_stObjectsTable; /* +0x0 */
-    tdstObjectsTableElement_* d_stInitObjectsTable; /* +0x4 */
-    unsigned short wNumberOfElement; /* +0x8 */
-    unsigned short wZDxUsed; /* +0xa */
-};
-
-struct MTH_stRotation {
-    float m_xAngle; /* +0x0 */
-    MTH3D_tdstVector_ m_stAxis; /* +0x4 */
-};
-
-struct MTH_stMove {
-    MTH3D_tdstVector_ m_stLinear; /* +0x0 */
-    MTH_stRotation m_stAngular; /* +0xc */
-};
-
-struct DNM_stReport {
-    unsigned int m_ulPrevSurfaceState; /* +0x0 */
-    unsigned int m_ulCurrSurfaceState; /* +0x4 */
-    DNM_stObstacle m_stObstacle; /* +0x8 */
-    DNM_stObstacle m_stGround; /* +0x30 */
-    DNM_stObstacle m_stWall; /* +0x58 */
-    DNM_stObstacle m_stCharacter; /* +0x80 */
-    DNM_stObstacle m_stWater; /* +0xa8 */
-    DNM_stObstacle m_stCeil; /* +0xd0 */
-    MTH_stMove m_stAbsolutePrevSpeed; /* +0xf8 */
-    MTH_stMove m_stAbsoluteCurrSpeed; /* +0x114 */
-    MTH_stMove m_stAbsolutePrevPosition; /* +0x130 */
-    MTH_stMove m_stAbsoluteCurrPosition; /* +0x14c */
-    char m_cBitField; /* +0x168 */
-};
-
-struct PO_tdstPhysicalObject_ {
-    GEO_tdstVisualSet_* _hVisualSet; /* +0x0 */
-    tdstPhysicalCollSet_* _hCollideSet; /* +0x4 */
-    COL_tdstBoundingSphere_* _hVisualBoundingVolume; /* +0x8 */
-    COL_tdstBoundingSphere_* _hCollideBoundingVolume; /* +0xc */
-};
-
-struct _stTimerCount {
-    unsigned long m_ulLowPart; /* +0x0 */
-    unsigned long m_ulHighPart; /* +0x8 */
-};
-
-struct tdstEngineTimerStructure_ {
-    unsigned int ulTrameNumber; /* +0x0 */
-    short sTimerHandle; /* +0x4 */
-    unsigned int ulCurrentTimerCount; /* +0x8 */
-    unsigned int ulDeltaTimerCount; /* +0xc */
-    unsigned int a_ulCounter[16]; /* +0x10 */
-    unsigned int ulUsefulDeltaTime; /* +0x50 */
-    unsigned int ulPauseTime; /* +0x54 */
-    float xFrameLength; /* +0x58 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x5c..0x5f */
-    _stTimerCount stRealTimeCount; /* +0x60 */
-    _stTimerCount stPauseTime; /* +0x70 */
-    unsigned int ulTickPerMS; /* +0x80 */
-};
-
-struct GLD_tdstViewportAttributes_ {
-    unsigned int dwInitialHeight; /* +0x0 */
-    unsigned int dwInitialWidth; /* +0x4 */
-    unsigned int dwHeight; /* +0x8 */
-    unsigned int dwWidth; /* +0xc */
-    unsigned int dwTopInPix; /* +0x10 */
-    unsigned int dwBottomInPix; /* +0x14 */
-    unsigned int dwLeftInPix; /* +0x18 */
-    unsigned int dwRightInPix; /* +0x1c */
-    unsigned int dwTopInPixForClip; /* +0x20 */
-    unsigned int dwBottomInPixForClip; /* +0x24 */
-    unsigned int dwLeftInPixForClip; /* +0x28 */
-    unsigned int dwRightInPixForClip; /* +0x2c */
-    unsigned int dwWidthInPercent; /* +0x30 */
-    unsigned int dwHeightInPercent; /* +0x34 */
-    unsigned int dwClipTopInPix; /* +0x38 */
-    unsigned int dwClipBottomInPix; /* +0x3c */
-    unsigned int dwClipLeftInPix; /* +0x40 */
-    unsigned int dwClipRightInPix; /* +0x44 */
-    unsigned int dwClipTopInPerMille; /* +0x48 */
-    unsigned int dwClipBottomInPerMille; /* +0x4c */
-    unsigned int dwClipLeftInPerMille; /* +0x50 */
-    unsigned int dwClipRightInPerMille; /* +0x54 */
-    int iOffsetPosX; /* +0x58 */
-    int iOffsetPosY; /* +0x5c */
-    int p_cVirtualScreen; /* +0x60 */
-    int lPitch; /* +0x64 */
-    int p_vSpecificToXD; /* +0x68 */
-    short hDevice; /* +0x6c */
-    short hViewport; /* +0x6e */
-};
-
-struct GLI_tdstSpecificAttributesFor3D_ {
-    GLI_tdstCamera_* p_stCam; /* +0x0 */
-    float xNear; /* +0x4 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToNodeCameraDyn {
-    tdstNodeCamera_* hFirstElementDyn; /* +0x0 */
-    tdstNodeCamera_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn {
-    tdstAlwaysActiveCharacter_* hFirstElementDyn; /* +0x0 */
-    tdstAlwaysActiveCharacter_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn {
-    tdstNodeMainCharacter_* hFirstElementDyn; /* +0x0 */
-    tdstNodeMainCharacter_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct tdstEngineStructure_ {
-    unsigned char eEngineMode; /* +0x0 */
-    char szLevelName[30]; /* +0x1 */
-    char szNextLevelName[30]; /* +0x1f */
-    char szFirstLevelName[30]; /* +0x3d */
-    unsigned char eInputMode; /* +0x5b */
-    unsigned char eDisplayFixMode; /* +0x5c */
-    unsigned int ulDisplayMode; /* +0x60 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x64..0x67 */
-    tdstEngineTimerStructure_ stEngineTimer; /* +0x68 */
-    unsigned char ucNumberOfPlayersInMultiMode; /* +0xf0 */
-    unsigned char ucNumberOfColumnsInMultiMode; /* +0xf1 */
-    unsigned char ucMiniScreenRatioInMultiMode; /* +0xf2 */
-    int a_hSO_CurrentMainPlayers[4]; /* +0xf4 */
-    short hGLDDevice; /* +0x104 */
-    short a_hGLDViewport[5]; /* +0x106 */
-    GLD_tdstViewportAttributes_ a_stViewportAttr[5]; /* +0x110 */
-    int a_p_stGameViewportCamera[5]; /* +0x340 */
-    short a_hGLDFixViewport[5]; /* +0x354 */
-    GLD_tdstViewportAttributes_ a_stFixViewportAttr[5]; /* +0x360 */
-    GLI_tdstSpecificAttributesFor3D_ a_stFixAttributes3D[5]; /* +0x590 */
-    int a_p_stFixCamera[5]; /* +0x5b8 */
-    GLI_tdstSpecificAttributesFor3D_ a_stGameAttributes3D[5]; /* +0x5cc */
-    tdstViewportManagement_* a_hViewportArray; /* +0x5f4 */
-    LST2_tdstAnchorTotdxHandleToNodeCameraDyn hCameraList; /* +0x5f8 */
-    int hDrawSem; /* +0x604 */
-    LST2_tdstAnchorTotdxHandleToFamilyListDyn hFamilyList; /* +0x608 */
-    LST2_tdstAnchorTotdxHandleToAlwaysActiveCharacterNodeDyn hAlwaysActiveCharactersList; /* +0x614 */
-    LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn hMainCharacterList; /* +0x620 */
-    HIE_tdstSuperObject_* h_StdCamCaracter; /* +0x62c */
-    HIE_tdstSuperObject_* h_DbgCamCharacter; /* +0x630 */
-    tdstLanguageStructure_* p_stLanguageTable; /* +0x634 */
-    FIL_tdstFileNameList_* hLevelNameList; /* +0x638 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x63c..0x63f */
-    MAT_tdstTransformation_ stMainCharacterPosition; /* +0x640 */
-    MAT_tdstTransformation_ stMainCameraPosition; /* +0x6a0 */
-    int lSubMapNumber; /* +0x700 */
-    unsigned char bEngineIsInPaused; /* +0x704 */
-    unsigned char bEngineHasInPaused; /* +0x705 */
-    unsigned char bEngineIsInSaveGamePart; /* +0x706 */
-    char a_szLevelName[150][30]; /* +0x707 */
-    char a_szDemoName[30][12]; /* +0x189b */
-    char a_szDemoLevelName[30][12]; /* +0x1a03 */
-    unsigned char ucNumberOfDemos; /* +0x1b6b */
-    unsigned char ucNumberOfLevels; /* +0x1b6c */
-    unsigned char ucCurrentLevel; /* +0x1b6d */
-    unsigned char ucPreviousLevel; /* +0x1b6e */
-    unsigned char ucExitIdToQuitPrevLevel; /* +0x1b6f */
-    unsigned char ucLevelGlobalCounter; /* +0x1b70 */
-    unsigned char xDemoMode; /* +0x1b71 */
-    unsigned char ucCurrentLanguage; /* +0x1b72 */
-    unsigned char ucNbLanguages; /* +0x1b73 */
-    unsigned char bEngineFrozen; /* +0x1b74 */
-    unsigned char bResurection; /* +0x1b75 */
-    char cCameraMode; /* +0x1b76 */
-    unsigned char ucCurrentImportance; /* +0x1b77 */
-    unsigned int ulNumberOfSOLAllocated; /* +0x1b78 */
-    unsigned int ulNumberOfSOLLoaded; /* +0x1b7c */
-    unsigned int ulNumberOfNonPersitentLinksPerSOL; /* +0x1b80 */
-    tdstSuperObjectLinks_** p_hSOL; /* +0x1b84 */
-    tdstGraphChainedListNode_* p_GraphChainedList; /* +0x1b88 */
-    CINE_Manager_* stCineManager; /* +0x1b8c */
-};
-
-struct SECT_tdstListOfSOSectorsInGraphicInteraction_ {
-    short wLevelOfDetail; /* +0x0 */
-    char cDisplayMode; /* +0x2 */
-    HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x4 */
-};
-
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt {
-    SECT_tdstListOfStaticLights_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct DNM_stDynamicsAdvancedBlock {
-    float m_xInertiaX; /* +0x0 */
-    float m_xInertiaY; /* +0x4 */
-    float m_xInertiaZ; /* +0x8 */
-    float m_xStreamPrority; /* +0xc */
-    float m_xStreamFactor; /* +0x10 */
-    float m_xSlideFactorX; /* +0x14 */
-    float m_xSlideFactorY; /* +0x18 */
-    float m_xSlideFactorZ; /* +0x1c */
-    float m_xPreviousSlide; /* +0x20 */
-    MTH3D_tdstVector_ m_stMaxSpeed; /* +0x24 */
-    MTH3D_tdstVector_ m_stStreamSpeed; /* +0x30 */
-    MTH3D_tdstVector_ m_stAddSpeed; /* +0x3c */
-    MTH3D_tdstVector_ m_stLimit; /* +0x48 */
-    MTH3D_tdstVector_ m_stCollisionTranslation; /* +0x54 */
-    MTH3D_tdstVector_ m_stInertiaTranslation; /* +0x60 */
-    MTH3D_tdstVector_ m_stGroundNormal; /* +0x6c */
-    MTH3D_tdstVector_ m_stWallNormal; /* +0x78 */
-    char m_cCollideCounter; /* +0x84 */
-};
-
-struct SECT_tdstListOfStaticLights_ {
-    GLI_tdstLight_* hStaticLights; /* +0x0 */
-};
-
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt {
-    SECT_tdstListOfSOSectorsInGraphicInteraction_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCollisionInteractionOpt {
-    SECT_tdstListOfSOSectorsInCollisionInteraction_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt {
-    SECT_tdstListOfSOSectorsInActivityInteraction_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt {
-    SECT_tdstListOfSOSectorsInSoundInteraction_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-struct LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt {
-    SCT_tdstListOfSoundEvent_* hFirstElementOpt; /* +0x0 */
-    int lNumberOfElementsOpt; /* +0x4 */
-};
-
-union _SND_tduRefEvt {
-    unsigned int Id; /* +0x0 */
-    _SND_tdstBlockEvent* pstPtr; /* +0x0 */
-};
-
-struct SECT_tdstSector_ {
-    LST2_tdstAnchorToSECT_tdxHandleOfElementLstCharacterDyn stListOfCharacters; /* +0x0 */
-    LST2_tdstAnchorToSECT_tdxHandleOfElementLstStaticLightsOpt stListOfStaticLights; /* +0xc */
-    LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn stListOfDNMLights; /* +0x14 */
-    LST2_tdstAnchorToSECT_tdxHandleOfElementLstGraphicInteractionOpt stListOfSectorsInGraphicInteraction; /* +0x20 */
-    LST2_tdstAnchorToSECT_tdxHandleOfElementLstCollisionInteractionOpt stListOfSectorsInCollisionInteraction; /* +0x28 */
-    LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt stListOfSectorsInActivityInteraction; /* +0x30 */
-    LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt stListOfSectorsInSoundInteraction; /* +0x38 */
-    LST2_tdstAnchorToSCT_tdxHandleOfLstSoundEventOpt stListOfSoundEvent; /* +0x40 */
-    MTH3D_tdstVector_ stMinMaxPoints[2]; /* +0x48 */
-    float xZFar; /* +0x60 */
-    unsigned char xVirtual; /* +0x64 */
-    char cCameraType; /* +0x65 */
-    char cCounter; /* +0x66 */
-    char cPriority; /* +0x67 */
-    int pSkyVisualMaterial; /* +0x68 */
-    unsigned char FogIntensity; /* +0x6c */
-    HIE_tdstSuperObject_* h_PreviousSectorInList; /* +0x70 */
-    HIE_tdstSuperObject_* h_NextSectorInList; /* +0x74 */
-    int lModifierMulIntensity; /* +0x78 */
-    int lModifierAddIntensity; /* +0x7c */
-    unsigned int glOpaqueDisplayList; /* +0x80 */
-    unsigned int glTransparentDisplayList; /* +0x84 */
-    char cCurrentActivity; /* +0x88 */
-    char cWantedActivity; /* +0x89 */
-    unsigned char ucInList; /* +0x8a */
-    int xTransition; /* +0x8c */
-    _SND_tduRefEvt hTransitionSoundEvent; /* +0x90 */
-};
-
-struct SECT_tdstListOfSOSectorsInCollisionInteraction_ {
-    HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
-};
-
-struct tdstNodeMainCharacter_ {
-    HIE_tdstSuperObject_* hNewCharacterForTheNextFrame; /* +0x0 */
-    HIE_tdstSuperObject_* hCharacter; /* +0x4 */
-    tdstNodeMainCharacter_* hNextBrotherDyn; /* +0x8 */
-    tdstNodeMainCharacter_* hPrevBrotherDyn; /* +0xc */
-    LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn* hFatherDyn; /* +0x10 */
-};
-
-struct GMT_tdstCollideMaterial_ {
-    short wTypeOfZone; /* +0x0 */
-    unsigned short xIdentifier; /* +0x2 */
-    MTH3D_tdstVector_ stDirection; /* +0x4 */
-    float xCoeff; /* +0x10 */
-    unsigned short wTypeForAi; /* +0x14 */
-};
-
-struct COL_tdstOctree_ {
-    COL_tdstOctreeNode_* p_stOctreeRoot; /* +0x0 */
-    short xNbFaces; /* +0x4 */
-    int d_xElementBasesTable; /* +0x8 */
-    MTH3D_tdstVector_ stMinBoundingBox; /* +0xc */
-    MTH3D_tdstVector_ stMaxBoundingBox; /* +0x18 */
-};
-
-struct SECT_tdstListOfSOSectorsInSoundInteraction_ {
-    HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
-    int lVolume; /* +0x4 */
-};
-
-struct tdstCouple_ {
-    unsigned short wChild; /* +0x0 */
-    unsigned short wFather; /* +0x2 */
-};
-
-struct COL_tdstParallelBox_ {
-    MTH4D_tdstVector_ stMinPoint; /* +0x0 */
-    MTH4D_tdstVector_ stMaxPoint; /* +0x10 */
-};
-
-union GEO_tduVSObject_ {
-    GEO_tdstGeometricObject_* p_stGeometricObject; /* +0x0 */
-    MOR_stMorphObject_* p_stMorphObject; /* +0x0 */
-};
-
-struct CINE_tdstChannelLink_ {
-    HIE_tdstSuperObject_* hSPOLinked; /* +0x0 */
-    int lIndexOfChannel; /* +0x4 */
-    CINE_tdstChannelLink_* hNextBrotherDyn; /* +0x8 */
-    CINE_tdstChannelLink_* hPrevBrotherDyn; /* +0xc */
-    LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn* hFatherDyn; /* +0x10 */
-};
-
-struct SECT_tdstListOfSOSectorsInActivityInteraction_ {
-    HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
-};
-
-struct MOR_stMorphObject_ {
-    GEO_tdstGeometricObject_* hBaseObject; /* +0x0 */
-    unsigned int ulNbVectors; /* +0x4 */
-    MOR_stMorphVector_* d_stMorphVector; /* +0x8 */
 };
 
 struct anon_0 {
@@ -1387,52 +134,6 @@ struct DNM_stDynamics {
     DNM_stDynamicsComplexBlock m_tdstDynamicsComplexBlock; /* +0x200 */
 };
 
-struct GEO_tdstVisualSet_ {
-    float xLastDistance; /* +0x0 */
-    short xNbLodDefinitions; /* +0x4 */
-    short xType; /* +0x6 */
-    int d_xThresholdsTable; /* +0x8 */
-    GEO_tduVSObject_* d_p_stLodDefinitions; /* +0xc */
-    int d_hRLI; /* +0x10 */
-    int lNumberOfRLI; /* +0x14 */
-};
-
-struct stInterpolatedPosition {
-    float stRot[4]; /* +0x0 */
-    float stRotSca[4]; /* +0x10 */
-    MTH3D_tdstVector_ stPos; /* +0x20 */
-    MTH3D_tdstVector_ stVecSca; /* +0x2c */
-    float xPercent; /* +0x38 */
-};
-
-struct tdstAChannel_ {
-    HIE_tdstSuperObject_* hSupObject; /* +0x0 */
-    HIE_tdstSuperObject_* hZoomSupObject; /* +0x4 */
-    tdstAChannel_* p_stNextActiveChannel; /* +0x8 */
-    tdstAChannel_* p_stFatherChannel; /* +0xc */
-    stInterpolatedPosition ax_InterpolatedPositions[2]; /* +0x10 */
-    unsigned char ucNbInterpolatedPositions; /* +0x88 */
-    unsigned char bControlledChannel; /* +0x89 */
-    unsigned char bLipsChannel; /* +0x8a */
-    unsigned char bActiveChannel; /* +0x8b */
-};
-
-struct LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn {
-    CINE_tdstCineActor_* hFirstElementDyn; /* +0x0 */
-    CINE_tdstCineActor_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct CINE_tdstCine_ {
-    LST2_tdstAnchorToCINE_tdxHandleToCineActorDyn hActorList; /* +0x0 */
-    CINE_tdstCine_* hNextBrotherDyn; /* +0xc */
-    CINE_tdstCine_* hPrevBrotherDyn; /* +0x10 */
-    LST2_tdstAnchorToCINE_tdxHandleToCineDyn* hFatherDyn; /* +0x14 */
-    unsigned char bPlaying; /* +0x18 */
-    int lGenerateEvent; /* +0x1c */
-    char szName[255]; /* +0x20 */
-};
-
 struct LST2_tdstAnchorToZDX_tdxHandleToGeoZdxListOpt {
     tdstCollideZdxList_* hFirstElementOpt; /* +0x0 */
     int lNumberOfElementsOpt; /* +0x4 */
@@ -1443,117 +144,12 @@ struct tdstZdxList_ {
     unsigned short uwNumberOfZdx; /* +0x8 */
 };
 
-struct tdstMorphChannelList_ {
-    tdstMorphChannelList_* hNextBrotherDyn; /* +0x0 */
-    tdstMorphChannelList_* hPrevBrotherDyn; /* +0x4 */
-    LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hFatherDyn; /* +0x8 */
-    unsigned short uwChannelNumber; /* +0xc */
-    short MorphListIndex; /* +0xe */
-};
-
-struct COL_tdstOctreeNode_ {
-    MTH3D_tdstVector_ stMinPart; /* +0x0 */
-    MTH3D_tdstVector_ stMaxPart; /* +0xc */
-    COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
-    int d_xFaceIndexList; /* +0x1c */
-};
-
-struct GLI_tdstCamera_ {
-    int lCameraMode; /* +0x0 */
-    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
-    MAT_tdstTransformation_ stMatrix; /* +0x10 */
-    float xAlphaX; /* +0x70 */
-    float xAlphaY; /* +0x74 */
-    float xNear; /* +0x78 */
-    float xFar; /* +0x7c */
-    float xScreen; /* +0x80 */
-    GLI_tdst2DVertex_ stScale; /* +0x84 */
-    GLI_tdst2DVertex_ stTrans; /* +0x90 */
-    float xXProjectionRatio; /* +0x9c */
-    float xYProjectionRatio; /* +0xa0 */
-    MTH3D_tdstVector_ stNormPlaneLeft; /* +0xa4 */
-    float xDistPlaneLeft; /* +0xb0 */
-    MTH3D_tdstVector_ stNormPlaneRight; /* +0xb4 */
-    float xDistPlaneRight; /* +0xc0 */
-    MTH3D_tdstVector_ stNormPlaneUp; /* +0xc4 */
-    float xDistPlaneUp; /* +0xd0 */
-    MTH3D_tdstVector_ stNormPlaneDown; /* +0xd4 */
-    float xDistPlaneDown; /* +0xe0 */
-    float xRatio; /* +0xe4 */
-    unsigned char ucCameraTransparency; /* +0xe8 */
-    float xTranspDist; /* +0xec */
-    unsigned char bCameraIsMirrored; /* +0xf0 */
-};
-
-struct COL_tdstBoundingSphere_ {
-    MTH4D_tdstVector_ stCenterPoint; /* +0x0 */
-    float xRadius; /* +0x10 */
-};
-
-struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn {
-    tdstMorphChannelList_* hFirstElementDyn; /* +0x0 */
-    tdstMorphChannelList_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct SCT_tdstListOfSoundEvent_ {
-    HIE_tdstSuperObject_* hPointerOfSectorSO; /* +0x0 */
-    _SND_tduRefEvt uSoundEvent; /* +0x4 */
-};
-
-struct tdstPLA_DeformationLink_ {
-    unsigned short wChannel1; /* +0x0 */
-    unsigned short wBorder1; /* +0x2 */
-    unsigned short wChannel2; /* +0x4 */
-    unsigned short wBorder2; /* +0x6 */
-};
-
-struct tdstLipsSynchValue_ {
-    char cCode; /* +0x0 */
-    float xX; /* +0x4 */
-    float xY; /* +0x8 */
-    float xZ; /* +0xc */
-};
-
-struct FIL_tdstFileNameListElement_ {
-    FIL_tdstFileNameListElement_* hNextBrotherDyn; /* +0x0 */
-    FIL_tdstFileNameListElement_* hPrevBrotherDyn; /* +0x4 */
-    LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn* hFatherDyn; /* +0x8 */
-    int szFileName; /* +0xc */
-};
-
 struct tdstCollideZdxList_ {
     COL_tdstCollideObject_* hGeoObj; /* +0x0 */
 };
 
-struct LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn {
-    FIL_tdstFileNameListElement_* hFirstElementDyn; /* +0x0 */
-    FIL_tdstFileNameListElement_* hLastElementDyn; /* +0x4 */
-    int lNumberOfElementsDyn; /* +0x8 */
-};
-
-struct FIL_tdstFileNameList_ {
-    LST2_tdstAnchorToFIL_tdxHandleToFileNameListElementDyn hFileNameListAnchor; /* +0x0 */
-};
-
-struct WP_tdstGraphNode_ {
-    WP_tdstGraphNode_* hNextBrotherDyn; /* +0x0 */
-    WP_tdstGraphNode_* hPrevBrotherDyn; /* +0x4 */
-    LST2_tdstAnchorToWP_tdhGraphNodeDyn* hFatherDyn; /* +0x8 */
-    WP_tdstWayPoint_* m_hWayPoint; /* +0xc */
-    int m_lTypeOfWP; /* +0x10 */
-    int m_lTypeOfWPInit; /* +0x14 */
-    WP_tdstListOfArc_* m_hListOfArc; /* +0x18 */
-};
-
 struct tdstZdxIndexList_ {
     unsigned short uwZdxIndex; /* +0x0 */
-};
-
-struct WP_tdstWayPoint_ {
-    MTH3D_tdstVector_ m_stVertex; /* +0x0 */
-    float m_xRadius; /* +0xc */
-    HIE_tdstSuperObject_* m_hSuperObject; /* +0x10 */
 };
 
 struct tdstZoneSetEncapsulation_ {
@@ -1561,48 +157,10 @@ struct tdstZoneSetEncapsulation_ {
     unsigned short uwIndex; /* +0x4 */
 };
 
-struct AI_tdstMind_ {
-    AI_tdstAIModel_* p_stAIModel; /* +0x0 */
-    tdstIntelligence_* p_stIntelligence; /* +0x4 */
-    tdstIntelligence_* p_stReflex; /* +0x8 */
-    tdstDsgMem_* p_stDsgMem; /* +0xc */
-    unsigned char bDoingIntel; /* +0x10 */
-};
-
-struct tdstLanguageStructure_ {
-    char szLanguageCode[20]; /* +0x0 */
-    char szLanguageText[20]; /* +0x14 */
-};
-
-struct stMorphData {
-    unsigned short uwChannelNumber; /* +0x0 */
-    unsigned short uwFrameNumber; /* +0x2 */
-    unsigned char ucNbTarget; /* +0x4 */
-    unsigned char ucAlign[3]; /* +0x5 */
-    short a_xIndexTargetMT[10]; /* +0x8 */
-    unsigned char a_ucMorphingAmountMT[10]; /* +0x1c */
-};
-
 float g_fGlobalAccelerationFactorForAnims;
 tdstEngineStructure_ g_stEngineStructure;
 unsigned char g_ucGameModuleId;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 123–142 */
-/* addr: 0x002886d0  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 123
- *   +0x000c -> line 125
- *   +0x0010 -> line 126
- *   +0x0018 -> line 128
- *   +0x0020 -> line 129
- *   +0x002c -> line 130
- *   +0x0034 -> line 131
- *   +0x0038 -> line 132
- *   +0x0040 -> line 140
- *   +0x0044 -> line 142
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void CINE_CheckEndCineActor(CINE_tdstCineActor_* hActor);
 unsigned char CINE_fn_bIsCinePlaying(CINE_tdstCine_* hCine)
 {
@@ -1618,22 +176,6 @@ unsigned char CINE_fn_bIsCinePlaying(CINE_tdstCine_* hCine)
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1210–1228 */
-/* addr: 0x00288730  size: 316 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1210
- *   +0x0004 -> line 1215
- *   +0x0008 -> line 1210
- *   +0x000c -> line 1215
- *   +0x0014 -> line 1216
- *   +0x0020 -> line 1218
- *   +0x002c -> line 1222
- *   +0x0120 -> line 1226
- *   +0x0130 -> line 1227
- *   +0x0134 -> line 1228
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_bTestSubAnimNearEnd(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSubAnim)
 {
     tdstSubAnimInUse_* param0;
@@ -1652,34 +194,11 @@ int fn_bTestSubAnimNearEnd(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNum
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1202–1205 */
-/* addr: 0x00288870  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1202
- *   +0x000c -> line 1205
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_bSubAnimRunning(HIE_tdstSuperObject_* _hCharacter)
 {
     return *(int*)((char*)_hCharacter->hLinkedObject.p_stCharacter->h_3dData + 0x1bc) > 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1180–1194 */
-/* addr: 0x00288890  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1180
- *   +0x0004 -> line 1185
- *   +0x0008 -> line 1180
- *   +0x000c -> line 1185
- *   +0x0014 -> line 1186
- *   +0x0020 -> line 1188
- *   +0x002c -> line 1191
- *   +0x0034 -> line 1193
- *   +0x0040 -> line 1194
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vStopSubAnimationAtEnd(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSubAnim)
 {
     tdstSubAnimInUse_* hSubAnimInUse;
@@ -1698,19 +217,6 @@ void fn_vStopSubAnimationAtEnd(HIE_tdstSuperObject_* _hCharacter, unsigned int u
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1163–1175 */
-/* addr: 0x002888e0  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1163
- *   +0x0010 -> line 1168
- *   +0x0040 -> line 1170
- *   +0x00f0 -> line 1172
- *   +0x00fc -> line 1173
- *   +0x0108 -> line 1174
- *   +0x012c -> line 1175
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
 void fn_vDesInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hSubAnimInUse);
 
@@ -1744,30 +250,16 @@ void fn_vRemoveAllSubAnimations(HIE_tdstSuperObject_* _hCharacter)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1147–1159 */
-/* addr: 0x00288a20  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1147
- *   +0x0004 -> line 1152
- *   +0x0008 -> line 1147
- *   +0x000c -> line 1152
- *   +0x0014 -> line 1153
- *   +0x0020 -> line 1155
- *   +0x002c -> line 1156
- *   +0x0034 -> line 1157
- *   +0x0040 -> line 1158
- *   +0x0044 -> line 1159
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma auto_inline on
 int fn_bTestSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSubAnim)
 {
-    tdstSubAnimInUse_* param0;
+    tdst3dData_* h3dData;
     tdstSubAnim_* hSubAnimInFamily;
+    tdstSubAnimInUse_* param0;
 
-    hSubAnimInFamily = &_hCharacter->hLinkedObject.p_stCharacter->h_3dData->h_Family->hForSubAnimArray.hFirstElementOpt[ulNumberOfSubAnim];
-    for (param0 = _hCharacter->hLinkedObject.p_stCharacter->h_3dData->hForSubAnimInUseArray.hFirstElementDyn; param0; param0 = param0->hNextBrotherDyn)
+    h3dData = _hCharacter->hLinkedObject.p_stCharacter->h_3dData;
+    hSubAnimInFamily = &h3dData->h_Family->hForSubAnimArray.hFirstElementOpt[ulNumberOfSubAnim];
+    for (param0 = h3dData->hForSubAnimInUseArray.hFirstElementDyn; param0; param0 = param0->hNextBrotherDyn)
     {
         if (param0->p_stTheSubAnim == hSubAnimInFamily)
             return 1;
@@ -1776,22 +268,6 @@ int fn_bTestSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSu
 }
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1124–1142 */
-/* addr: 0x00288a70  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1124
- *   +0x0004 -> line 1129
- *   +0x0008 -> line 1124
- *   +0x000c -> line 1129
- *   +0x0014 -> line 1130
- *   +0x0034 -> line 1132
- *   +0x0040 -> line 1136
- *   +0x0058 -> line 1140
- *   +0x0078 -> line 1141
- *   +0x007c -> line 1142
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_bTestCustomBitSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSubAnim, unsigned int ulBitNumber)
 {
     tdstSubAnim_* hSubAnimInFamily;
@@ -1812,29 +288,6 @@ int fn_bTestCustomBitSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulN
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1096–1119 */
-/* addr: 0x00288b00  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1096
- *   +0x0004 -> line 1101
- *   +0x0008 -> line 1096
- *   +0x000c -> line 1101
- *   +0x0010 -> line 1102
- *   +0x0014 -> line 1101
- *   +0x0018 -> line 1102
- *   +0x0034 -> line 1115
- *   +0x0038 -> line 1109
- *   +0x003c -> line 1104
- *   +0x0048 -> line 1106
- *   +0x0050 -> line 1110
- *   +0x0058 -> line 1111
- *   +0x0060 -> line 1115
- *   +0x006c -> line 1117
- *   +0x0070 -> line 1118
- *   +0x0090 -> line 1119
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetCustombitSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumberOfSubAnim, unsigned int ulBitNumber, int bValue)
 {
     unsigned int ulMask;
@@ -1861,28 +314,6 @@ void fn_vSetCustombitSubAnim(HIE_tdstSuperObject_* _hCharacter, unsigned int ulN
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 1064–1091 */
-/* addr: 0x00288ba0  size: 400 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1064
- *   +0x0018 -> line 1065
- *   +0x0020 -> line 1070
- *   +0x0034 -> line 1073
- *   +0x003c -> line 1075
- *   +0x0044 -> line 1076
- *   +0x0048 -> line 1075
- *   +0x004c -> line 1076
- *   +0x0070 -> line 1078
- *   +0x007c -> line 1080
- *   +0x0128 -> line 1082
- *   +0x0134 -> line 1083
- *   +0x0140 -> line 1084
- *   +0x0148 -> line 1086
- *   +0x0170 -> line 1088
- *   +0x0178 -> line 1091
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vPushAllocModeAccordingToObject(HIE_tdstSuperObject_* _hCharacter);
 void GAM_fn_vPopAllocMode(void);
 
@@ -1929,58 +360,6 @@ void fn_vRemoveSubAnimation(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNu
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 965–1060 */
-/* addr: 0x00288d30  size: 808 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 965
- *   +0x0038 -> line 966
- *   +0x0040 -> line 973
- *   +0x0048 -> line 1012
- *   +0x0098 -> line 1015
- *   +0x009c -> line 1016
- *   +0x00a0 -> line 1015
- *   +0x00a4 -> line 1016
- *   +0x00ac -> line 1018
- *   +0x00b8 -> line 1020
- *   +0x0100 -> line 1021
- *   +0x0110 -> line 1022
- *   +0x0128 -> line 1023
- *   +0x012c -> line 1024
- *   +0x0130 -> line 1027
- *   +0x0134 -> line 1025
- *   +0x0138 -> line 1028
- *   +0x013c -> line 1026
- *   +0x0140 -> line 1027
- *   +0x0144 -> line 1028
- *   +0x014c -> line 1029
- *   +0x0154 -> line 1031
- *   +0x0160 -> line 1032
- *   +0x0168 -> line 1036
- *   +0x0174 -> line 1037
- *   +0x017c -> line 1040
- *   +0x0184 -> line 1041
- *   +0x0188 -> line 1040
- *   +0x018c -> line 1042
- *   +0x0190 -> line 1043
- *   +0x01d8 -> line 1044
- *   +0x01e8 -> line 1045
- *   +0x0200 -> line 1046
- *   +0x0204 -> line 1047
- *   +0x0208 -> line 1051
- *   +0x020c -> line 1048
- *   +0x0210 -> line 1052
- *   +0x0214 -> line 1049
- *   +0x0218 -> line 1052
- *   +0x021c -> line 1050
- *   +0x0220 -> line 1051
- *   +0x0224 -> line 1052
- *   +0x022c -> line 1053
- *   +0x0238 -> line 1054
- *   +0x02f8 -> line 1058
- *   +0x0300 -> line 1060
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 void fn_vInitAllSubEvents(HIE_tdstSuperObject_* _hCharacter, tdstSubAnimInUse_* hSubAnimInUse);
 
@@ -2063,19 +442,6 @@ void fn_vAddSubAnimation(HIE_tdstSuperObject_* _hCharacter, unsigned int ulNumbe
     GAM_fn_vPopAllocMode();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 951–961 */
-/* addr: 0x00289060  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 951
- *   +0x000c -> line 952
- *   +0x0014 -> line 954
- *   +0x0020 -> line 957
- *   +0x002c -> line 959
- *   +0x0030 -> line 960
- *   +0x0034 -> line 961
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vFreeArrayOfElts3d(tdst3dData_* h_3dData)
 {
     tdstElement3d_* p_stElts3d;
@@ -2089,19 +455,6 @@ void fn_vFreeArrayOfElts3d(tdst3dData_* h_3dData)
     h_3dData->wSizeOfArrayOfElts3d = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 934–948 */
-/* addr: 0x002890b0  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 934
- *   +0x0018 -> line 937
- *   +0x002c -> line 939
- *   +0x0038 -> line 942
- *   +0x0044 -> line 945
- *   +0x005c -> line 946
- *   +0x0060 -> line 948
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vAllocArrayOfElts3d(tdst3dData_* h_3dData, unsigned short _wNumberOfElts3d)
 {
     if (h_3dData->wSizeOfArrayOfElts3d < _wNumberOfElts3d) {
@@ -2113,19 +466,6 @@ void fn_vAllocArrayOfElts3d(tdst3dData_* h_3dData, unsigned short _wNumberOfElts
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 923–930 */
-/* addr: 0x00289130  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 923
- *   +0x0010 -> line 924
- *   +0x0018 -> line 925
- *   +0x0028 -> line 927
- *   +0x0044 -> line 928
- *   +0x004c -> line 929
- *   +0x007c -> line 930
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_v3dDataSetUserEventFlag(tdst3dData_* h_3dData, unsigned char _ucFlagIndex, int _bSet, MAT_tdstTransformation_* _p_stPosition)
 {
     unsigned char ucMask;
@@ -2139,17 +479,6 @@ void fn_v3dDataSetUserEventFlag(tdst3dData_* h_3dData, unsigned char _ucFlagInde
         h_3dData->stLastEventGlobalPosition = *_p_stPosition;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 915–919 */
-/* addr: 0x002891c0  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 915
- *   +0x0010 -> line 916
- *   +0x0018 -> line 917
- *   +0x0048 -> line 918
- *   +0x0050 -> line 919
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_b3dDataGetUserEventFlag(tdst3dData_* h_3dData, unsigned char _ucFlagIndex, MAT_tdstTransformation_* _p_stPosition)
 {
     unsigned char ucMask;
@@ -2161,16 +490,6 @@ int fn_b3dDataGetUserEventFlag(tdst3dData_* h_3dData, unsigned char _ucFlagIndex
     return h_3dData->ucUserEventFlags & ucMask;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 891–894 */
-/* addr: 0x00289220  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 891
- *   +0x0004 -> line 892
- *   +0x0018 -> line 893
- *   +0x001c -> line 894
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma auto_inline on
 void fn_v3dDataSetLightComputationFrequency(tdst3dData_* h_3dData, unsigned char _ucFrequency)
 {
@@ -2180,16 +499,6 @@ void fn_v3dDataSetLightComputationFrequency(tdst3dData_* h_3dData, unsigned char
 }
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 878–885 */
-/* addr: 0x00289250  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 878
- *   +0x0018 -> line 882
- *   +0x0028 -> line 884
- *   +0x002c -> line 885
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_b3dDataCanComputeBrain(HIE_tdstSuperObject_* _hCharacter)
 {
     if (_hCharacter && _hCharacter->hLinkedObject.p_stCharacter->h_3dData)
@@ -2201,17 +510,6 @@ unsigned char fn_b3dDataCanComputeBrain(HIE_tdstSuperObject_* _hCharacter)
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 866–874 */
-/* addr: 0x00289290  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 866
- *   +0x0018 -> line 870
- *   +0x0024 -> line 871
- *   +0x0038 -> line 872
- *   +0x003c -> line 874
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_v3dDataUpdateBrainCounter(HIE_tdstSuperObject_* _hCharacter)
 {
     tdst3dData_* h_3dData;
@@ -2228,16 +526,6 @@ void fn_v3dDataUpdateBrainCounter(HIE_tdstSuperObject_* _hCharacter)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 858–861 */
-/* addr: 0x002892e0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 858
- *   +0x0004 -> line 859
- *   +0x0018 -> line 860
- *   +0x001c -> line 861
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma auto_inline on
 void fn_v3dDataSetBrainComputationFrequency(tdst3dData_* h_3dData, unsigned char _ucFrequency)
 {
@@ -2247,15 +535,6 @@ void fn_v3dDataSetBrainComputationFrequency(tdst3dData_* h_3dData, unsigned char
 }
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 832–835 */
-/* addr: 0x00289310  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 832
- *   +0x0020 -> line 833
- *   +0x0024 -> line 835
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_v3dDataSetGlobalAccelerationFactor(float fFactor)
 {
     if (fFactor < 1.0f / 10.0f)
@@ -2263,18 +542,6 @@ void fn_v3dDataSetGlobalAccelerationFactor(float fFactor)
     g_fGlobalAccelerationFactorForAnims = fFactor;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 817–828 */
-/* addr: 0x00289340  size: 144 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 817
- *   +0x0014 -> line 819
- *   +0x0040 -> line 821
- *   +0x004c -> line 824
- *   +0x0078 -> line 826
- *   +0x007c -> line 828
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern tdstEngineStructure_ g_stEngineStructure;
 signed char fn_scGetSpeedInState(tdstState_* h_State);
 void fn_v3dDataFactorFrameRate(tdst3dData_* _h3dData, unsigned int _ulFactor100)
@@ -2288,16 +555,6 @@ void fn_v3dDataFactorFrameRate(tdst3dData_* _h3dData, unsigned int _ulFactor100)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 807–814 */
-/* addr: 0x002893d0  size: 196 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 807
- *   +0x0078 -> line 808
- *   +0x0088 -> line 811
- *   +0x00bc -> line 814
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern float g_fGlobalAccelerationFactorForAnims;
 void fn_v3dDataSetFrameRate(tdst3dData_* h_3dData, unsigned char ucFrameRate)
 {
@@ -2310,27 +567,6 @@ void fn_v3dDataSetFrameRate(tdst3dData_* h_3dData, unsigned char ucFrameRate)
     h_3dData->ucFrameRate = ucFrameRate2;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 661–678 */
-/* addr: 0x002894a0  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 661
- *   +0x0024 -> line 662
- *   +0x0028 -> line 670
- *   +0x002c -> line 662
- *   +0x0030 -> line 663
- *   +0x0034 -> line 664
- *   +0x0038 -> line 665
- *   +0x003c -> line 666
- *   +0x0040 -> line 670
- *   +0x0048 -> line 673
- *   +0x0050 -> line 674
- *   +0x0058 -> line 675
- *   +0x0060 -> line 676
- *   +0x0068 -> line 677
- *   +0x0070 -> line 678
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* memcpy(void* dst, const void* src, size_t n);
 
 void fn_v3dDataCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
@@ -2354,62 +590,21 @@ void fn_v3dDataCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* 
     _p_stObjectDest->h_3dData->wSizeOfArrayOfElts3d = uwSizeOfArrayOfElts3d;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 613–623 */
-/* addr: 0x00289540  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 613
- *   +0x0004 -> line 619
- *   +0x0008 -> line 613
- *   +0x000c -> line 619
- *   +0x0010 -> line 613
- *   +0x0018 -> line 619
- *   +0x0020 -> line 620
- *   +0x0030 -> line 621
- *   +0x0040 -> line 623
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags);
+#pragma auto_inline on
 void fn_v3dDataInitValueSAI(tdst3dData_* h_3dData)
 {
     SAI_fn_bInsertArrayInTable(&h_3dData->stGLIObjectMatrix.eType, 4, 50);
     SAI_fn_bInsertArrayInTable(&h_3dData->stGLIObjectMatrix.stTransformMatrix, 64, 50);
     SAI_fn_bInsertArrayInTable(&h_3dData->stGLIObjectMatrix.stScaleVector, 16, 50);
 }
+#pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 606–606 */
-/* addr: 0x00289590  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 606
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned int fn_ul3dDataSizeOf(void)
 {
     return 0x1E0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 569–600 */
-/* addr: 0x002895a0  size: 480 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 569
- *   +0x0014 -> line 573
- *   +0x001c -> line 574
- *   +0x0048 -> line 576
- *   +0x0054 -> line 577
- *   +0x0080 -> line 579
- *   +0x00a8 -> line 584
- *   +0x00bc -> line 585
- *   +0x00c8 -> line 594
- *   +0x00f0 -> line 596
- *   +0x018c -> line 598
- *   +0x0194 -> line 596
- *   +0x01a4 -> line 598
- *   +0x01ac -> line 599
- *   +0x01cc -> line 600
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StandardGame);
 void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, tdstEngineObject_* p_stObject);
 void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList);
@@ -2464,75 +659,19 @@ void fn_v3dDataDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObject
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 422–555 */
-/* addr: 0x00289780  size: 1224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 422
- *   +0x0014 -> line 429
- *   +0x001c -> line 433
- *   +0x0024 -> line 434
- *   +0x0050 -> line 436
- *   +0x005c -> line 437
- *   +0x0088 -> line 441
- *   +0x009c -> line 446
- *   +0x00e0 -> line 448
- *   +0x00e8 -> line 451
- *   +0x00fc -> line 454
- *   +0x0110 -> line 466
- *   +0x0118 -> line 467
- *   +0x0120 -> line 469
- *   +0x0158 -> line 475
- *   +0x0164 -> line 478
- *   +0x0188 -> line 483
- *   +0x01bc -> line 485
- *   +0x01c4 -> line 486
- *   +0x01d4 -> line 491
- *   +0x01dc -> line 492
- *   +0x01f0 -> line 493
- *   +0x01f8 -> line 494
- *   +0x0200 -> line 495
- *   +0x0208 -> line 497
- *   +0x021c -> line 500
- *   +0x0224 -> line 502
- *   +0x0238 -> line 504
- *   +0x023c -> line 511
- *   +0x0248 -> line 504
- *   +0x024c -> line 505
- *   +0x0254 -> line 506
- *   +0x025c -> line 508
- *   +0x0264 -> line 510
- *   +0x026c -> line 511
- *   +0x02b0 -> line 522
- *   +0x02b4 -> line 511
- *   +0x02b8 -> line 516
- *   +0x02c0 -> line 518
- *   +0x02c8 -> line 519
- *   +0x02d0 -> line 521
- *   +0x02dc -> line 522
- *   +0x02e4 -> line 523
- *   +0x02ec -> line 524
- *   +0x02f4 -> line 527
- *   +0x0300 -> line 528
- *   +0x0308 -> line 529
- *   +0x0328 -> line 531
- *   +0x033c -> line 532
- *   +0x0340 -> line 531
- *   +0x0344 -> line 532
- *   +0x0364 -> line 536
- *   +0x0374 -> line 538
- *   +0x038c -> line 539
- *   +0x03a0 -> line 543
- *   +0x03c8 -> line 545
- *   +0x0464 -> line 547
- *   +0x046c -> line 545
- *   +0x047c -> line 547
- *   +0x0484 -> line 548
- *   +0x04a4 -> line 551
- *   +0x04ac -> line 554
- *   +0x04b4 -> line 555
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject);
+void* SAI_fn_p_vGetTableValuePointerOf(void* p_vValue, unsigned short eFlags);
+void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
+void PLA_fn_vCleanMorphTargets(tdstEngineObject_* p_stObject);
+int PLA_fn_vInitNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_State);
+void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel, unsigned char _bControlled);
+void fn_vCorrectAllActivationLists(tdstEngineObject_* _p_stObject);
+void fn_vInitMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList);
+void* fn_d_hGetInitObjectsTable(tdstObjectsTablesList_* h_ObjectsTablesListElement);
+void fn_vReInitObjectTable(tdstObjectsTablesList_* param0);
+int RND_fn_lGetLongRandomValue(unsigned int ulChannel, int lMin, int lMax);
+void* memset(void* p_vDest, int c, size_t n);
+
 void fn_v3dDataInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
     HIE_tdstSuperObject_* h_SupObject;
@@ -2540,30 +679,97 @@ void fn_v3dDataInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectIni
     HIE_tdstSuperObject_* hFather;
     tdstSubAnimInUse_* hNextSubAnim;
     tdstSubAnimInUse_* hThisSubAnim;
-    /* TODO: decompile from asm/... */
+    tdstObjectsTablesList_* hObjectsTable;
+    tdst3dData_* h_3dData;
+    float xFrameRate;
+
+    fn_vPushAllocModeAccordingToEngineObject(p_stObject);
+    if (p_stObject == NULL)
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_3dData == NULL)
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+    if (eObjectInit == OTI_LoadSavedGame || eObjectInit == OTI_PlayerDead)
+    {
+        p_stObject->h_3dData->stGLIObjectMatrix = *(MAT_tdstTransformation_*)SAI_fn_p_vGetTableValuePointerOf(&p_stObject->h_3dData->stGLIObjectMatrix, 0x32);
+        h_SupObject = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
+        if (h_SupObject && h_SupObject->hFatherDyn)
+        {
+            hFather = h_SupObject->hFatherDyn;
+            MAT_fn_vCompose(p_stObject->h_3dData->p_stGLIObjectAbsoluteMatrix, hFather->hGlobalMatrix, &p_stObject->h_3dData->stGLIObjectMatrix);
+        }
+    }
+    hCharacter = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame);
+    if (hCharacter)
+    {
+        hCharacter->fTransparenceLevel = (float)p_stObject->h_3dData->ucTransparency;
+    }
+    fn_vCorrectAllActivationLists(p_stObject);
+    switch (eObjectInit)
+    {
+    case OTI_WhenGameStart:
+        break;
+    case OTI_MapLoaded:
+        fn_v3dDataInitValueSAI(p_stObject->h_3dData);
+        p_stObject->h_3dData->hArrayOfChannels = NULL;
+        p_stObject->h_3dData->ulNumberOfChannels = p_stObject->h_3dData->h_Family->ulNumberOfChannels;
+        /* fall through */
+    case OTI_ReinitTheMap:
+    case OTI_LoadSavedGame:
+    case OTI_PlayerDead:
+        p_stObject->h_3dData->bAnimMatrixChanged = 1;
+        fn_vTakeControlOfChannel(p_stObject, 0xFFFF, 0);
+        p_stObject->h_3dData->ulStartTime = 0;
+        p_stObject->h_3dData->ulTimeDelay = 0;
+        p_stObject->h_3dData->ulTimePreviousFrame = 0;
+        PLA_fn_vDesInitAllChildOfCharacter(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), p_stObject);
+        PLA_fn_vCleanMorphTargets(p_stObject);
+        memset(&p_stObject->h_3dData->stFrame3d, 0, sizeof(tdstFrame3d_));
+        p_stObject->h_3dData->p_stCurrentHieCouples = NULL;
+        p_stObject->h_3dData->wCurrentHieNbCouples = 0;
+        p_stObject->h_3dData->wSizeOfArrayOfElts3d = 0;
+        p_stObject->h_3dData->lLastComputeFrame = 0;
+        p_stObject->h_3dData->bStateJustModified = 0;
+        xFrameRate = 0.0f;
+        p_stObject->h_3dData->ucFrameRate = (unsigned int)(xFrameRate * g_fGlobalAccelerationFactorForAnims);
+        p_stObject->h_3dData->h_CurrentState = NULL;
+        p_stObject->h_3dData->stFrame3d.p_stArrayOfElts3d = NULL;
+        p_stObject->h_3dData->stFrame3d.p_stAnim = NULL;
+        p_stObject->h_3dData->lDrawMask = p_stObject->h_3dData->lDrawMaskInit;
+        p_stObject->h_3dData->cBrainCounter = -1;
+        p_stObject->h_3dData->bSkipCurrentFrame = 0;
+        p_stObject->h_3dData->cLightCounter = -1;
+        /* fall through */
+    case OTI_AlwaysCreated:
+        fn_vInitMorphList(&p_stObject->h_3dData->hMorphChannelList);
+        hObjectsTable = p_stObject->h_3dData->h_InitialObjectsTable;
+        if (hObjectsTable) { if (fn_d_hGetInitObjectsTable(hObjectsTable) != NULL) { fn_vReInitObjectTable(hObjectsTable); } }
+        p_stObject->h_3dData->uwBrainMainCounter = (unsigned short)RND_fn_lGetLongRandomValue(0, 1, 17);
+        h_3dData = p_stObject->h_3dData; h_3dData->ucBrainComputationFrequency = 1; if (h_3dData->cBrainCounter >= h_3dData->ucBrainComputationFrequency) h_3dData->cBrainCounter = 0;
+        break;
+    default:
+        break;
+    }
+    h_SupObject = fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame); if (h_SupObject)
+    {
+        PLA_fn_vInitNewState(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), p_stObject->h_3dData->h_InitialState);
+        fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame)->lDrawModeMask = p_stObject->h_3dData->lDrawMask;
+    }
+    for (hThisSubAnim = p_stObject->h_3dData->hForSubAnimInUseArray.hFirstElementDyn,
+         hNextSubAnim = hThisSubAnim ? hThisSubAnim->hNextBrotherDyn : NULL;
+         hThisSubAnim;
+         hThisSubAnim = hNextSubAnim, hNextSubAnim = hThisSubAnim ? hThisSubAnim->hNextBrotherDyn : NULL)
+    {
+        if (hThisSubAnim->hNextBrotherDyn) hThisSubAnim->hNextBrotherDyn->hPrevBrotherDyn = hThisSubAnim->hPrevBrotherDyn; if (hThisSubAnim->hPrevBrotherDyn) hThisSubAnim->hPrevBrotherDyn->hNextBrotherDyn = hThisSubAnim->hNextBrotherDyn; if (hThisSubAnim->hFatherDyn) { hThisSubAnim->hFatherDyn->lNumberOfElementsDyn--; if (hThisSubAnim->hFatherDyn->hFirstElementDyn == hThisSubAnim) hThisSubAnim->hFatherDyn->hFirstElementDyn = hThisSubAnim->hNextBrotherDyn; if (hThisSubAnim->hFatherDyn->hLastElementDyn == hThisSubAnim) hThisSubAnim->hFatherDyn->hLastElementDyn = hThisSubAnim->hPrevBrotherDyn; } hThisSubAnim->hNextBrotherDyn = NULL; hThisSubAnim->hPrevBrotherDyn = NULL; hThisSubAnim->hFatherDyn = NULL;
+        HMU_fn_vFree((void**)&hThisSubAnim, 1);
+    }
+    GAM_fn_vPopAllocMode();
+    p_stObject->h_3dData->h_CurrentCineActor = NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 382–408 */
-/* addr: 0x00289c50  size: 464 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 382
- *   +0x0010 -> line 386
- *   +0x0018 -> line 387
- *   +0x0044 -> line 389
- *   +0x0050 -> line 390
- *   +0x007c -> line 392
- *   +0x00a4 -> line 394
- *   +0x00b0 -> line 395
- *   +0x00bc -> line 397
- *   +0x00e4 -> line 399
- *   +0x017c -> line 401
- *   +0x0184 -> line 399
- *   +0x0194 -> line 401
- *   +0x019c -> line 402
- *   +0x01bc -> line 408
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SAI_fn_bRemoveValueFromTable(void* _p_vValue, int _eFlags);
 void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, tdstEngineObject_* p_stObject);
 void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList);
@@ -2616,79 +822,6 @@ void fn_v3dDataFree(tdstEngineObject_* p_stObject)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\3dData.c lines 286–368 */
-/* addr: 0x00289e20  size: 388 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 286
- *   +0x0004 -> line 289
- *   +0x0008 -> line 286
- *   +0x000c -> line 289
- *   +0x001c -> line 290
- *   +0x0024 -> line 292
- *   +0x0028 -> line 338
- *   +0x002c -> line 293
- *   +0x0030 -> line 338
- *   +0x0034 -> line 294
- *   +0x0038 -> line 308
- *   +0x003c -> line 295
- *   +0x0040 -> line 311
- *   +0x0044 -> line 297
- *   +0x0048 -> line 313
- *   +0x004c -> line 298
- *   +0x0050 -> line 322
- *   +0x0054 -> line 299
- *   +0x0058 -> line 327
- *   +0x005c -> line 301
- *   +0x0060 -> line 330
- *   +0x0064 -> line 302
- *   +0x0068 -> line 333
- *   +0x006c -> line 303
- *   +0x0070 -> line 340
- *   +0x0074 -> line 305
- *   +0x0078 -> line 306
- *   +0x007c -> line 308
- *   +0x0084 -> line 309
- *   +0x0088 -> line 310
- *   +0x008c -> line 311
- *   +0x0090 -> line 312
- *   +0x0094 -> line 313
- *   +0x0098 -> line 314
- *   +0x009c -> line 322
- *   +0x00a0 -> line 323
- *   +0x00a4 -> line 327
- *   +0x00a8 -> line 328
- *   +0x00ac -> line 330
- *   +0x00b0 -> line 331
- *   +0x00b4 -> line 332
- *   +0x00c0 -> line 333
- *   +0x00c4 -> line 335
- *   +0x00c8 -> line 336
- *   +0x00cc -> line 337
- *   +0x00d8 -> line 338
- *   +0x00dc -> line 340
- *   +0x00f8 -> line 343
- *   +0x00fc -> line 341
- *   +0x0100 -> line 343
- *   +0x0110 -> line 345
- *   +0x0130 -> line 346
- *   +0x0134 -> line 348
- *   +0x0138 -> line 346
- *   +0x013c -> line 353
- *   +0x0140 -> line 348
- *   +0x0144 -> line 352
- *   +0x0148 -> line 349
- *   +0x014c -> line 354
- *   +0x0150 -> line 352
- *   +0x0154 -> line 353
- *   +0x0158 -> line 367
- *   +0x015c -> line 354
- *   +0x0160 -> line 356
- *   +0x016c -> line 363
- *   +0x0170 -> line 365
- *   +0x0174 -> line 368
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
 int RND_fn_lGetLongRandomValue(unsigned int ulChannel, int lMin, int lMax);
 

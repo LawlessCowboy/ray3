@@ -865,16 +865,17 @@ struct anon_19 {
 };
 
 struct anon_16 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon16[6]; /* +0x2..0x7 */
 };
 
 struct anon_24 {
@@ -977,15 +978,16 @@ struct anon_21 {
 };
 
 struct anon_42 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_12 {
@@ -1062,60 +1064,61 @@ struct anon_38 {
 };
 
 struct anon_25 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 union anon_27 {
@@ -2450,7 +2453,7 @@ unsigned int GLI_g_GlobalShadowNextPointBack;
 unsigned int GLI_g_GlobalShadowNextPointFront;
 float GLI_g_SDL_pNonInterpolatedCameraMatrix[4][4];
 _GL_BUFFERINFO g_stBufferInfo;
-int PS2glAllocator64;
+void *(*PS2glAllocator64)(unsigned int);
 int PS2glLiberator;
 tdstEngineStructure_ g_stEngineStructure;
 
@@ -3002,6 +3005,7 @@ void GLI_vAddShadowObject(float* p1, float* p2, float* p3, float* p4, GLI_tdstMa
 void GLI_vInitSimpleShadowArrays(void)
 {
     unsigned int i;
+    unsigned int idx;
     for (i = 0; i < 384; i++) {
         GLI_g_SimpleShadowsRLIs[i][0] = 127.0f;
         GLI_g_SimpleShadowsRLIs[i][1] = 127.0f;
@@ -3015,6 +3019,21 @@ void GLI_vInitSimpleShadowArrays(void)
         GLI_g_SimpleShadowsPos[i][1] = 0.0f;
         GLI_g_SimpleShadowsPos[i][2] = 0.0f;
         GLI_g_SimpleShadowsPos[i][3] = 1.0f;
+    }
+    for (i = 0; i < 64; i++) {
+        idx = 6 * i;
+        GLI_g_SimpleShadowsUVs[idx][0] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx][1] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx + 1][0] = 1.0f;
+        GLI_g_SimpleShadowsUVs[idx + 1][1] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx + 2][0] = 1.0f;
+        GLI_g_SimpleShadowsUVs[idx + 2][1] = 1.0f;
+        GLI_g_SimpleShadowsUVs[idx + 3][0] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx + 3][1] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx + 4][0] = 1.0f;
+        GLI_g_SimpleShadowsUVs[idx + 4][1] = 1.0f;
+        GLI_g_SimpleShadowsUVs[idx + 5][0] = 0.0f;
+        GLI_g_SimpleShadowsUVs[idx + 5][1] = 1.0f;
     }
 }
 
@@ -3081,13 +3100,53 @@ void GLI_DRV_xSendElementTIToClip_TRIANGLES(void)
  */
 void GLI_CalculateBoundingBoxForElement(GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax)
 {
-    float Z;
-    float Y;
-    float X;
-    GEO_tdstTripledIndex_* p_stListOfFacesTripled;
     MTH3D_tdstVector_* p_stPoints;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    GEO_tdstTripledIndex_* p_stListOfFacesTripled;
+    float X;
+    float Y;
+    float Z;
+    float xMax;
+    float yMax;
+    float zMax;
+    p_stListOfFacesTripled = p_stEIT->d_stListOfFacesTripled;
+    p_stPoints = *(MTH3D_tdstVector_**)GLI_BIG_GLOBALS_p_stObj;
+    X = ((float *)((char *)p_stPoints + 0))[3 * p_stListOfFacesTripled->a3_xIndex[0]];
+    Y = ((float *)((char *)p_stPoints + 4))[3 * p_stListOfFacesTripled->a3_xIndex[0]];
+    Z = ((float *)((char *)p_stPoints + 8))[3 * p_stListOfFacesTripled->a3_xIndex[0]];
+    xMax = X;
+    yMax = Y;
+    zMax = Z;
+    for (i = p_stEIT->xNbFaces; i > 0; i--) {
+        MTH3D_tdstVector_* pV = &p_stPoints[p_stListOfFacesTripled->a3_xIndex[0]];
+        if (pV->xX < X) X = pV->xX;
+        if (pV->xY < Y) Y = pV->xY;
+        if (pV->xZ < Z) Z = pV->xZ;
+        if (pV->xX > xMax) xMax = pV->xX;
+        if (pV->xY > yMax) yMax = pV->xY;
+        if (pV->xZ > zMax) zMax = pV->xZ;
+        pV = &p_stPoints[p_stListOfFacesTripled->a3_xIndex[1]];
+        if (pV->xX < X) X = pV->xX;
+        if (pV->xY < Y) Y = pV->xY;
+        if (pV->xZ < Z) Z = pV->xZ;
+        if (pV->xX > xMax) xMax = pV->xX;
+        if (pV->xY > yMax) yMax = pV->xY;
+        if (pV->xZ > zMax) zMax = pV->xZ;
+        pV = &p_stPoints[p_stListOfFacesTripled->a3_xIndex[2]];
+        if (pV->xX < X) X = pV->xX;
+        if (pV->xY < Y) Y = pV->xY;
+        if (pV->xZ < Z) Z = pV->xZ;
+        if (pV->xX > xMax) xMax = pV->xX;
+        if (pV->xY > yMax) yMax = pV->xY;
+        if (pV->xZ > zMax) zMax = pV->xZ;
+        p_stListOfFacesTripled++;
+    }
+    p_stMin->xX = X;
+    p_stMin->xY = Y;
+    p_stMin->xZ = Z;
+    p_stMax->xX = xMax;
+    p_stMax->xY = yMax;
+    p_stMax->xZ = zMax;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1349–1353 */
@@ -3219,9 +3278,33 @@ void GLI_vGet2DPercentPointFrom3DWorldPoint(GLD_tdstViewportAttributes_* p_stVpt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void PS2glMatrixMode(unsigned int mode);
+extern void PS2glLoadIdentity(void);
+extern void PS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
+
 void GLI_vSetFIXFullScreenOrthoProjection(void)
 {
-    /* TODO: decompile from asm/... */
+    if (GLI_g_ProjectionMode == 2) {
+        return;
+    }
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits &= ~0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_gsContext.TEST_1.ZTST = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x80;
+    g_gsContext.PRMODE.FGE = 0;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    *(unsigned char*)g_PS2glContext.pbFogging = 0;
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1702);
+    PS2glLoadIdentity();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+    GLI_g_ProjectionMode = 2;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1121–1141 */
@@ -3272,7 +3355,28 @@ void GLI_vSetFIXFullScreenOrthoProjection(void)
  */
 void GLI_vSetFullScreenOrthoProjection(void)
 {
-    /* TODO: decompile from asm/... */
+    if (GLI_g_ProjectionMode == 2) {
+        return;
+    }
+    GLI_g_ProjMatrixHasChanged = 1;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits &= ~0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_gsContext.TEST_1.ZTST = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x80;
+    g_gsContext.PRMODE.FGE = 0;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    *(unsigned char*)g_PS2glContext.pbFogging = 0;
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1702);
+    PS2glLoadIdentity();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+    GLI_g_ProjectionMode = 2;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1032–1117 */
@@ -3469,14 +3573,21 @@ void GLI_vReinitViewport(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
+
 void glFrustumf(float left, float right, float bottom, float top, float zNear, float zFar)
 {
-    float oofminusn;
-    float ootminusb;
-    float oorminusl;
-    float twonears;
     float m[4][4];
-    /* TODO: decompile from asm/... */
+    float twonears = 2.0f * zNear;
+    float oorminusl = 1.0f / (right - left);
+    float ootminusb = 1.0f / (top - bottom);
+    float oofminusn = 1.0f / (zFar - zNear);
+    m[0][0] = twonears * oorminusl; m[1][0] = 0.0f; m[2][0] = (right + left) * oorminusl; m[3][0] = 0.0f;
+    m[0][1] = 0.0f; m[1][1] = twonears * ootminusb; m[2][1] = (top + bottom) * ootminusb; m[3][1] = 0.0f;
+    m[0][2] = 0.0f; m[1][2] = 0.0f; m[2][2] = -(zFar + zNear) * oofminusn; m[3][2] = -(twonears * zFar) * oofminusn;
+    m[0][3] = 0.0f; m[1][3] = 0.0f; m[2][3] = -1.0f; m[3][3] = 0.0f;
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 863–874 */
@@ -3575,10 +3686,82 @@ GLI_tdstTexture_* GLI_xRefreshAnimatedTextureIfNeeded(GLI_tdstMaterial_* hVisual
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void PS2glTexParameteri(unsigned int target, unsigned int pname, int param);
+extern void PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+extern void PS2glDepthFunc(unsigned int func);
+extern void PS2glCullFace(unsigned int mode);
+extern void PS2glBlendFunc(unsigned int sfactor, unsigned int dfactor);
+extern void PS2glDepthMask(unsigned char flag);
+extern void PS2glTexEnvf(unsigned int target, unsigned int pname, float param);
+extern void PS2glLightModelfv(unsigned int pname, float* params);
+extern void PS2glLightModeli(unsigned int pname, int param);
+extern void PS2glMateriali(unsigned int face, unsigned int pname, int param);
+extern void PS2glLoadMatrixf(const float* m);
+extern void PS2glBegin(unsigned int mode);
+extern void PS2glEnd(void);
+extern void PS2glColor4fv(const float* v);
+extern void PS2glVertex4f(float x, float y, float z, float w);
+extern void GLI_vInitGLProjectionMatrix(void);
+
 void GLI_DRV_vSetCommonGLRenderStates(void)
 {
     unsigned char zTst;
-    /* TODO: decompile from asm/... */
+    if (GLI_g_ChristianSlaterMode) {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+    }
+    else {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
+    }
+    if (GLI_g_StereoVisionMode == 2) {
+        PS2glColorMask(0, 1, 1, 0);
+    }
+    else if (GLI_g_StereoVisionMode == 1) {
+        PS2glColorMask(1, 0, 0, 0);
+    }
+    PS2glDepthFunc(0x203);
+    g_PS2glContext.bCullfaceChanged = 1;
+    g_PS2glContext.nEnableBits &= ~0x2000;
+    PS2glCullFace(0x405);
+    g_PS2glContext.nEnableBits |= 0x100;
+    g_gsContext.PRMODE.ABE = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glBlendFunc(0x302, 0x303);
+    PS2glDepthMask(0);
+    g_PS2glContext.nEnableBits |= 0x800;
+    zTst = 1;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    switch (g_PS2glContext.eDepthFunc) {
+    case 0x200: zTst = 0; break;
+    case 0x207: zTst = 1; break;
+    case 0x203: zTst = 2; break;
+    case 0x201: zTst = 3; break;
+    case 0x202:
+    case 0x204:
+    case 0x205:
+    case 0x206:
+        break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x100;
+    g_gsContext.PRMODE.ABE = 0;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x400;
+    g_gsContext.TEST_1.ATE = 0;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    PS2glTexEnvf(0x2300, 0x2200, 8448.0f);
+    g_PS2glContext.nLightBits &= ~0x400;
+    PS2glLightModelfv(0xB53, light_ambient0);
+    PS2glLightModeli(0xF00, 1);
+    PS2glMateriali(0x404, 0x1601, 0xA);
+    GLI_g_ProjectionMode = 0xffff;
+    GLI_vClearSendMatStates();
+    GLI_g_HasVertexTransparency = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 724–724 */
@@ -3627,9 +3810,33 @@ void GLI_vAllocateTempLists(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void GLI_vReinitTempVertexArrays(void);
+extern void GLI_vReinitSprites(void);
+extern void GLIPS2_vReinitMatrixDeformations(void);
+extern void VAC_ReinitForNewFrame(int hContainer);
+extern void GLI_vRemovePointLightsAfterProcessing(void);
+
 void GLI_vReinitFrame(unsigned int SwapBuffers)
 {
-    /* TODO: decompile from asm/... */
+    GLI_g_ProjectionMode = 0;
+    GLI_vReinitTempVertexArrays();
+    GLI_g_TextureMatrixIsIdentity = 0;
+    g_PS2glContext.usDontUpdateBits = 0;
+    GLI_g_SimpleShadowBegin = 0;
+    GLI_g_NbSimpleShadows = 0;
+    GLI_vClearSendMatStates();
+    Global_pCurrentActor = 0;
+    GLI_g_CurrentSpriteGenIndex = 0;
+    if (SwapBuffers) {
+        GLI_g_CurrentSpriteGenFrame ^= 1;
+        GLI_g_NumberOfShadowVolumes = 0;
+        GLI_vReinitSprites();
+        GLIPS2_vReinitMatrixDeformations();
+        if (GLI_g_hVAContainer) { VAC_ReinitForNewFrame(GLI_g_hVAContainer); }
+    }
+    else {
+        GLI_vRemovePointLightsAfterProcessing();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 505–650 */
@@ -3863,10 +4070,60 @@ void DisplayShadowVolumes(void)
 void DrawTriangles(void)
 {
     unsigned char zTst;
-    float* p;
-    float fADC;
+    union { int i; float f; } uW;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    uW.i = 0x8000;
+    GLI_vInitGLProjectionMatrix();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf((float*)GLI_g_SDL_pNonInterpolatedCameraMatrix);
+    g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc) {
+    case 0x200: zTst = 0; break;
+    case 0x207: zTst = 1; break;
+    case 0x203: zTst = 2; break;
+    case 0x201: zTst = 3; break;
+    case 0x202:
+    case 0x204:
+    case 0x205:
+    case 0x206:
+        break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nLightBits &= ~0x200;
+    *(int*)g_PS2glContext.pnColorMatMasks &= ~1;
+    g_PS2glContext.nLightBits &= g_PS2glContext.iCurTextureSet ? ~0x200 : ~0x2;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x400;
+    g_gsContext.TEST_1.ATE = 0;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_gsContext.PRMODE.TME = (g_PS2glContext.nLightBits & 0xF) ? 1 : 0;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_gsContext.PRMODE.FGE = 0;
+    *(unsigned char*)g_PS2glContext.pbFogging = 0;
+    g_PS2glContext.bCullfaceChanged = 1;
+    g_PS2glContext.nEnableBits &= ~0x2000;
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    g_PS2glContext.nEnableBits |= 0x100;
+    g_gsContext.PRMODE.ABE = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glBlendFunc(0x302, 0x303);
+    PS2glBegin(5);
+    for (i = 0; i < NbTrianglesToDisplay; i++) {
+        Triangle_Disp_* pTri = &TrianglesToDisplay[i];
+        PS2glColor4fv(pTri->RGBAColor);
+        PS2glVertex4f(pTri->Position[0].xX, pTri->Position[0].xY, pTri->Position[0].xZ, uW.f);
+        PS2glVertex4f(pTri->Position[1].xX, pTri->Position[1].xY, pTri->Position[1].xZ, uW.f);
+        PS2glVertex4f(pTri->Position[2].xX, pTri->Position[2].xY, pTri->Position[2].xZ, 1.0f);
+    }
+    PS2glEnd();
+    NbTrianglesToDisplay = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 285–286 */
@@ -4001,5 +4258,28 @@ GLI_SpecificPS2GL_Structure_* GLI_vAllocateSpecificStructure(unsigned int NbMult
 {
     unsigned int i;
     GLI_SpecificPS2GL_Structure_* pTemp;
-    /* TODO: decompile from asm/... */
+    pTemp = (GLI_SpecificPS2GL_Structure_*)PS2glAllocator64(0x60);
+    pTemp->glDisplayLists = 0;
+    pTemp->SpriteGenArray = 0;
+    pTemp->pVertexArrayHandles = 0;
+    pTemp->LastFrame = 0;
+    pTemp->WasOutlinedOrDynamicallyLit = 0;
+    if (GLI_BIG_GLOBALS_p_stObj) {
+        GLI_CalculateBoundingBoxForElement(p_stEIT, &pTemp->stMin, &pTemp->stMax);
+        pTemp->BoundingBoxValid = 1;
+    }
+    else {
+        pTemp->BoundingBoxValid = 0;
+    }
+    pTemp->NbStages = NbMultiTextureMaterials;
+    if (!NbMultiTextureMaterials) {
+        NbMultiTextureMaterials++;
+    }
+    pTemp->glDisplayLists = (int)PS2glAllocator64((NbMultiTextureMaterials + 1) * sizeof(int));
+    for (i = 0; i < NbMultiTextureMaterials + 1; i++) {
+        ((int*)pTemp->glDisplayLists)[i] = 0;
+    }
+    pTemp->Flags = 15;
+    p_stEIT->glDisplayList = (unsigned int)pTemp;
+    return pTemp;
 }

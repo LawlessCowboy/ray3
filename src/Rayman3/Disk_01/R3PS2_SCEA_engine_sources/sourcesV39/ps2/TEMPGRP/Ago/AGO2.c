@@ -32,6 +32,8 @@ typedef struct AGO2_FlowParticle_ AGO2_FlowParticle_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
 typedef struct AGO2_BalloonPart_ AGO2_BalloonPart_;
 typedef struct AGO2_Part_ AGO2_Part_;
+typedef struct AGO2_MEM_HandleDescriptors_ AGO2_MEM_HandleDescriptors_;
+typedef struct AGO2_MEM_FreeZone_ AGO2_MEM_FreeZone_;
 typedef struct GEO_tdstDoubledIndex_ GEO_tdstDoubledIndex_;
 typedef struct AGO2_LeavesParticle_ AGO2_LeavesParticle_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
@@ -115,6 +117,11 @@ typedef enum MAT_tdeTranformationType_ {
     MAT_eTransform_Undefined = 9,
 } MAT_tdeTranformationType_;
 
+/* Prototypes used before their original definition point (the retail had them
+ * in a header): the AGO2 particle display helpers call them. */
+extern char* AGO2_MEM_GetPointerFromHandle(unsigned int Handle);
+extern void GLI_vSetGlobalAlpha(float Alpha);
+extern void GLI_vDrawWorldQuadWithUVsOpt(GLD_tdstViewportAttributes_* p_stViewport, float* x1, float* x2, float* x3, float* x4, float U1, float V1, float U2, float V2, GLI_tdstMaterial_* pMaterial);
 struct AGO_V4D_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
@@ -207,6 +214,19 @@ struct AGO2_Part_ {
     AGO_V4D_ Vector2; /* +0xa0 */
     AGO_V4D_ Vector3; /* +0xb0 */
     AGO_V4D_ Vector4; /* +0xc0 */
+};
+
+struct AGO2_MEM_HandleDescriptors_ {
+    unsigned int Handle; /* +0x0 */
+    unsigned int Size; /* +0x4 */
+    int Pointer; /* +0x8 */
+    unsigned int Shrinked; /* +0xc */
+};
+
+struct AGO2_MEM_FreeZone_ {
+    int pStart; /* +0x0 */
+    int pEnd; /* +0x4 */
+    unsigned int Size; /* +0x8 */
 };
 
 struct GEO_tdstDoubledIndex_ {
@@ -946,6 +966,16 @@ int g_PadCircle;
 float g_ffFrameTime;
 float g_fTimeDifference;
 float g_AGO_AnimTimeScale;
+/* The memory manager state lives in AGO2_Mem.c (its symbols are file-local
+ * there, so the debug record that attributes AGO2_MEM_Alloc to this unit is
+ * off by one function at the object boundary). */
+extern unsigned int g_AGO2_MEM_NbOfAllocatedBlocs;
+extern unsigned int g_AGO2_MEM_CurrentHandle;
+extern unsigned int g_AGO2_MEM_NumberOfFreeZones;
+extern AGO2_MEM_HandleDescriptors_ g_AGO2_MEM_HandleDescriptors[5000];
+extern AGO2_MEM_FreeZone_ g_AGO2_MEM_FreeZones[1000];
+void AGO2_MEM_Shrink(void);
+extern int printf(const char*, ...);
 /* Function symbols are declared by their recovered definitions below. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 139–240 */
@@ -1021,7 +1051,60 @@ unsigned int AGO2_MEM_Alloc(unsigned int Size)
     unsigned int* Pointer;
     unsigned int TempSize;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    if (g_AGO2_MEM_NbOfAllocatedBlocs >= 5000)
+    {
+        printf("AGO2 : Too many allocations done !!\n");
+        return 0;
+    }
+
+    TempSize = (Size + 0x1F) & 0xFFFFFFF0;
+
+    for (i = 0; i < g_AGO2_MEM_NumberOfFreeZones; i++)
+    {
+        if (g_AGO2_MEM_FreeZones[i].Size >= TempSize)
+        {
+            break;
+        }
+    }
+
+    if (i == g_AGO2_MEM_NumberOfFreeZones)
+    {
+        if (g_AGO2_MEM_NumberOfFreeZones < 2)
+        {
+            return 0;
+        }
+        AGO2_MEM_Shrink();
+        return AGO2_MEM_Alloc(Size);
+    }
+
+    MinDifference = g_AGO2_MEM_FreeZones[i].pEnd - TempSize;
+    MinZone = i;
+    for (j = i + 1; j < g_AGO2_MEM_NumberOfFreeZones; j++)
+    {
+        if (g_AGO2_MEM_FreeZones[j].Size < TempSize)
+        {
+            Difference = g_AGO2_MEM_FreeZones[j].Size - TempSize;
+            if (Difference < MinDifference)
+            {
+                MinDifference = Difference;
+                MinZone = j;
+            }
+        }
+    }
+
+    g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Pointer = g_AGO2_MEM_FreeZones[MinZone].pStart;
+    Pointer = (unsigned int*)g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Pointer;
+    memset(Pointer, 0, TempSize);
+    g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Handle = g_AGO2_MEM_CurrentHandle;
+    g_AGO2_MEM_HandleDescriptors[g_AGO2_MEM_NbOfAllocatedBlocs].Size = TempSize;
+    *Pointer = g_AGO2_MEM_CurrentHandle;
+    *(Pointer + 1) = TempSize;
+    g_AGO2_MEM_FreeZones[MinZone].pStart += TempSize;
+    g_AGO2_MEM_FreeZones[MinZone].pEnd -= TempSize;
+    g_AGO2_MEM_CurrentHandle++;
+    g_AGO2_MEM_NbOfAllocatedBlocs++;
+    return g_AGO2_MEM_CurrentHandle - 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 4276–4312 */
@@ -1859,7 +1942,37 @@ void AGO2_DisplayBalloon(AGO2_Part_* p)
     AGO2_BalloonPart_* pParticleArrayOrg;
     unsigned int i;
     AGO2_BalloonPart_* pParticleArray;
-    /* TODO: decompile from asm/... */
+
+    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!pParticleArrayOrg)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        p->ulType |= 1;
+    }
+    else
+    {
+        i = 0;
+        pParticleArray = pParticleArrayOrg;
+        while (i < p->GroupNumber)
+        {
+            if (pParticleArray->fTransparency > 0.0f)
+            {
+                GLI_vSetGlobalAlpha(pParticleArray->fTransparency);
+                GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport,
+                                             &pParticleArray->Points[0].xX,
+                                             &pParticleArray->Points[1].xX,
+                                             &pParticleArray->Points[2].xX,
+                                             &pParticleArray->Points[3].xX,
+                                             pParticleArray->VertexUVs[0][0],
+                                             pParticleArray->VertexUVs[0][1],
+                                             pParticleArray->VertexUVs[1][0],
+                                             pParticleArray->VertexUVs[1][1],
+                                             (GLI_tdstMaterial_*)p->pMaterial1);
+                pParticleArray->HasBeenDisplayed = 1;
+            }
+            pParticleArray++;
+            i++; }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3254–3296 */
@@ -1887,7 +2000,37 @@ void AGO2_DisplayForceField(AGO2_Part_* p)
     AGO2_BalloonPart_* pParticleArrayOrg;
     unsigned int i;
     AGO2_BalloonPart_* pParticleArray;
-    /* TODO: decompile from asm/... */
+
+    pParticleArrayOrg = (AGO2_BalloonPart_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!pParticleArrayOrg)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        p->ulType |= 1;
+    }
+    else
+    {
+        i = 0;
+        pParticleArray = pParticleArrayOrg;
+        while (i < p->GroupNumber)
+        {
+            if (pParticleArray->fTransparency > 0.0f)
+            {
+                GLI_vSetGlobalAlpha(255.0f * pParticleArray->fTransparency);
+                GLI_vDrawWorldQuadWithUVsOpt((GLD_tdstViewportAttributes_*)g_AGO2_p_stViewport,
+                                             &pParticleArray->Points[0].xX,
+                                             &pParticleArray->Points[1].xX,
+                                             &pParticleArray->Points[2].xX,
+                                             &pParticleArray->Points[3].xX,
+                                             pParticleArray->VertexUVs[0][0],
+                                             pParticleArray->VertexUVs[0][1],
+                                             pParticleArray->VertexUVs[1][0],
+                                             pParticleArray->VertexUVs[1][1],
+                                             (GLI_tdstMaterial_*)p->pMaterial1);
+                pParticleArray->HasBeenDisplayed = 1;
+            }
+            pParticleArray++;
+            i++; }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 3162–3250 */
@@ -2910,11 +3053,46 @@ void AGO2_ShrinkFire(AGO2_Part_* p)
  */
 void AGO2_FadeFire(AGO2_Part_* p)
 {
-    float TimeDiffTrsp;
-    unsigned int OneIsAlive;
-    unsigned int i;
     AGO2_FlowParticle_* param0;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    unsigned int OneIsAlive;
+    float TimeDiffTrsp;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    OneIsAlive = 0;
+    TimeDiffTrsp = g_fTimeDifference * p->xTransparencySpeed;
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->xTransparency -= TimeDiffTrsp;
+            if (param0->xTransparency < 0.0f)
+            {
+                param0->xTransparency = 0.0f;
+                param0->Flags |= 1;
+            }
+            else
+            {
+                OneIsAlive = 1;
+            }
+        }
+        param0++;
+    }
+    if (!OneIsAlive)
+    {
+        p->ulType |= 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2200–2248 */
@@ -2947,11 +3125,36 @@ void AGO2_FadeFire(AGO2_Part_* p)
  */
 void AGO2_ProcessFire(AGO2_Part_* p)
 {
+    AGO2_FlowParticle_* param0;
+    unsigned int i;
     float TimeDiff;
     float LocalG;
-    unsigned int i;
-    AGO2_FlowParticle_* param0;
-    /* TODO: decompile from asm/... */
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    LocalG = (g_fTimeDifference > 0.033333335f) ? 0.033333335f : g_fTimeDifference;
+    TimeDiff = 9.81f * LocalG;
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->Direction.xZ += TimeDiff;
+            param0->Position.xX += param0->Direction.xX * LocalG;
+            param0->Position.xY += param0->Direction.xY * LocalG;
+            param0->Position.xZ += param0->Direction.xZ * LocalG;
+        }
+        param0++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 2145–2197 */
@@ -3007,7 +3210,6 @@ extern char* AGO2_MEM_GetPointerFromHandle(unsigned int Handle);
    GLI_vDisplaySerialLeaves definition drops them (Bees/Flow keep them). */
 extern void GLI_vDisplaySerialLeaves(GLD_tdstViewportAttributes_* pViewport, AGO2_LeavesParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
 extern void GLI_vDisplaySerialFlow(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
-extern int printf(const char*, ...);
 /* AGO2_DisplayBees passes pMaterial2 in t0 as well; the recovered definition omits it. */
 extern void GLI_vDisplaySerialBees(GLD_tdstViewportAttributes_* pViewport, AGO2_BeeParticle_* _pParticleArray_, int NumberOfParticles, void* pMaterial, void* pMaterial2, float sx, float sy);
 extern void GLI_vDisplaySerialFlowBlured(GLD_tdstViewportAttributes_* param0, AGO2_FlowParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy);
@@ -3977,11 +4179,46 @@ unsigned char AGO2_CreateLightning(unsigned int _unused, AGO2_Part_* p)
  */
 void AGO2_FadeFlow(AGO2_Part_* p)
 {
-    float TimeDiffTrsp;
-    unsigned int OneIsAlive;
-    unsigned int i;
     AGO2_FlowParticle_* param0;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    unsigned int OneIsAlive;
+    float TimeDiffTrsp;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    OneIsAlive = 0;
+    TimeDiffTrsp = g_fTimeDifference * p->xTransparencySpeed;
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->xTransparency -= TimeDiffTrsp;
+            if (param0->xTransparency < 0.0f)
+            {
+                param0->xTransparency = 0.0f;
+                param0->Flags |= 1;
+            }
+            else
+            {
+                OneIsAlive = 1;
+            }
+        }
+        param0++;
+    }
+    if (!OneIsAlive)
+    {
+        p->ulType |= 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1154–1171 */
@@ -4081,11 +4318,44 @@ void AGO2_DisplayFlow(AGO2_Part_* p)
  */
 void AGO2_ProcessFlow(AGO2_Part_* p)
 {
-    float TimeDiff;
-    float LocalG;
-    unsigned int i;
+{
     AGO2_FlowParticle_* param0;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    float LocalG;
+    float TimeDiff;
+
+    if (!p->hGroup)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return;
+    }
+    param0 = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (!param0)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return;
+    }
+    TimeDiff = g_fTimeDifference;
+    LocalG = 2.0f * (9.81f * TimeDiff);
+    for (i = 0; i < p->GroupNumber; i++)
+    {
+        if (!(param0->Flags & 1))
+        {
+            param0->Direction.xZ -= LocalG;
+            param0->PreviousPosition.xX = param0->Position.xX;
+            param0->PreviousPosition.xY = param0->Position.xY;
+            param0->PreviousPosition.xZ = param0->Position.xZ;
+            param0->PreviousPosition.xX -= param0->Direction.xX * TimeDiff;
+            param0->PreviousPosition.xY -= param0->Direction.xY * TimeDiff;
+            param0->PreviousPosition.xZ -= param0->Direction.xZ * TimeDiff;
+            param0->Position.xX += param0->Direction.xX * TimeDiff;
+            param0->Position.xY += param0->Direction.xY * TimeDiff;
+            param0->Position.xZ += param0->Direction.xZ * TimeDiff;
+        }
+        param0++;
+    }
+}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1026–1079 */
@@ -4470,12 +4740,39 @@ void AGO2_vProcessAllParts(void)
  */
 void AGO2_vDestroyAllParts(void)
 {
-    unsigned int Limit;
-    AGO2_Part_* pdst;
-    AGO2_Part_* psrc;
-    unsigned int NumToSkip;
     unsigned int Source;
-    /* TODO: decompile from asm/... */
+    unsigned int NumToSkip;
+    AGO2_Part_* psrc;
+    AGO2_Part_* pdst;
+    unsigned int Limit;
+
+    Source = 0;
+    NumToSkip = 0;
+    Limit = g_ulNumberOfAgos2;
+    pdst = g_pAGO2Parts;
+    psrc = pdst;
+    while (Source < Limit)
+    {
+        if (psrc->ulType & 1)
+        {
+            if (psrc->hGroup)
+            {
+                AGO2_MEM_FreeFromHandle(psrc->hGroup);
+            }
+            NumToSkip++;
+        }
+        else
+        {
+            if (psrc != pdst)
+            {
+                memcpy(pdst, psrc, sizeof(AGO2_Part_));
+            }
+            pdst++;
+        }
+        psrc++;
+        Source++;
+    }
+    g_ulNumberOfAgos2 -= NumToSkip;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 523–578 */

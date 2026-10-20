@@ -117,33 +117,6 @@ unsigned int GLI_g_ulNumberOfVisualMaterials;
 char szTexturePath[256];
 int GLI_g_StaticCopyOfArrayOfVisualMaterial[256];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\load.c lines 93–112 */
-/* addr: 0x002a9300  size: 352 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 105
- *   +0x0004 -> line 93
- *   +0x0008 -> line 105
- *   +0x000c -> line 101
- *   +0x0010 -> line 100
- *   +0x0014 -> line 102
- *   +0x0018 -> line 103
- *   +0x0020 -> line 106
- *   +0x0024 -> line 100
- *   +0x0044 -> line 101
- *   +0x0048 -> line 100
- *   +0x006c -> line 101
- *   +0x0078 -> line 102
- *   +0x0088 -> line 103
- *   +0x0098 -> line 104
- *   +0x00ac -> line 106
- *   +0x00b4 -> line 108
- *   +0x00e4 -> line 109
- *   +0x0114 -> line 110
- *   +0x0144 -> line 111
- *   +0x0158 -> line 112
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 typedef struct MTH4D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
@@ -173,7 +146,7 @@ struct GLI_tdstAligned3DVector_ {
 };
 
 /* R5900 accumulator dot product (no C form under the baseline). */
-inline float MTH3D_M_xDotProduct(float _xAX, float _xAY, float _xAZ, float _xBX, float _xBY, float _xBZ)
+inline float MTH3D_M_xDotProduct(float _xAX, float _xBX, float _xAY, float _xBY, float _xAZ, float _xBZ)
 {
     float _xResult;
     asm { mula.s _xAX, _xBX }
@@ -182,86 +155,76 @@ inline float MTH3D_M_xDotProduct(float _xAX, float _xAY, float _xAZ, float _xBX,
     return _xResult;
 }
 
+/* A 16-byte vector with a word view: the retail copies the matrix columns
+ * with integer loads and stores, and keeps the local at a 16-byte stride. */
+typedef union {
+    MTH4D_tdstVector_ v;
+    int i[4];
+} GLI_UV4;
+
 void GLI_xSerialLinearOp(int lNbOfVertex, MTH3D_tdstVector_* p_stSource, GLI_tdstAligned3DVector_* p_stDest, MAT_tdstTransformation_* p_stMatrix)
 {
-    MTH3D_tdstVector_ stX;
-    MTH3D_tdstVector_ stY;
-    MTH3D_tdstVector_ stZ;
-    MTH3D_tdstVector_ stTrans;
+    GLI_UV4 stX;
+    GLI_UV4 stY;
+    GLI_UV4 stZ;
+    GLI_UV4 stTrans;
     GLI_tdstAligned3DVector_* param0;
     float fSwapValue;
 
     param0 = p_stDest + lNbOfVertex;
-    *(int*)&stX.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xX; *(int*)&stX.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xY; *(int*)&stX.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xZ;
-    *(int*)&stY.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xX; *(int*)&stY.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xY; *(int*)&stY.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xZ;
-    *(int*)&stZ.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xX; *(int*)&stZ.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xY; *(int*)&stZ.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xZ;
-    fSwapValue = stX.xY; stX.xY = stY.xX; stY.xX = fSwapValue;
-    fSwapValue = stX.xZ; stX.xZ = stZ.xX; stZ.xX = fSwapValue;
-    fSwapValue = stY.xZ; stY.xZ = stZ.xY; stZ.xY = fSwapValue;
-    *(int*)&stTrans.xX = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xX; *(int*)&stTrans.xY = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xY; *(int*)&stTrans.xZ = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xZ;
+    stX.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xX; stX.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xY; stX.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_0.xZ; stY.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xX; stY.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xY; stY.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_1.xZ; stZ.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xX; stZ.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xY; stZ.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_2.xZ;
+    fSwapValue = stX.v.xY; stX.v.xY = stY.v.xX; stY.v.xX = fSwapValue;
+    fSwapValue = stX.v.xZ; stX.v.xZ = stZ.v.xX; stZ.v.xX = fSwapValue;
+    fSwapValue = stY.v.xZ; stY.v.xZ = stZ.v.xY; stZ.v.xY = fSwapValue;
+    stTrans.i[0] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xX; stTrans.i[1] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xY; stTrans.i[2] = *(int*)&p_stMatrix->stTransformMatrix.stCol_3.xZ;
     for (; p_stDest < param0; p_stDest++, p_stSource++)
     {
-        p_stDest->xX = stTrans.xX + MTH3D_M_xDotProduct(stX.xX, stX.xY, stX.xZ, p_stSource->xX, p_stSource->xY, p_stSource->xZ);
-        p_stDest->xY = stTrans.xY + MTH3D_M_xDotProduct(stY.xX, stY.xY, stY.xZ, p_stSource->xX, p_stSource->xY, p_stSource->xZ);
-        p_stDest->xZ = stTrans.xZ + MTH3D_M_xDotProduct(stZ.xX, stZ.xY, stZ.xZ, p_stSource->xX, p_stSource->xY, p_stSource->xZ);
+        p_stDest->xX = stTrans.v.xX + MTH3D_M_xDotProduct(stX.v.xX, p_stSource->xX, stX.v.xY, p_stSource->xY, stX.v.xZ, p_stSource->xZ);
+        p_stDest->xY = stTrans.v.xY + MTH3D_M_xDotProduct(stY.v.xX, p_stSource->xX, stY.v.xY, p_stSource->xY, stY.v.xZ, p_stSource->xZ);
+        p_stDest->xZ = stTrans.v.xZ + MTH3D_M_xDotProduct(stZ.v.xX, p_stSource->xX, stZ.v.xY, p_stSource->xY, stZ.v.xZ, p_stSource->xZ);
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\load.c lines 2467–2503 */
-/* addr: 0x002a9460  size: 456 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2467
- *   +0x0018 -> line 2471
- *   +0x0020 -> line 2473
- *   +0x002c -> line 2475
- *   +0x0034 -> line 2479
- *   +0x0044 -> line 2481
- *   +0x0050 -> line 2483
- *   +0x0090 -> line 2485
- *   +0x009c -> line 2486
- *   +0x00a0 -> line 2487
- *   +0x00e0 -> line 2489
- *   +0x00ec -> line 2490
- *   +0x00f0 -> line 2491
- *   +0x0130 -> line 2493
- *   +0x013c -> line 2494
- *   +0x0140 -> line 2495
- *   +0x0180 -> line 2497
- *   +0x018c -> line 2498
- *   +0x0190 -> line 2500
- *   +0x019c -> line 2502
- *   +0x01b0 -> line 2503
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+int GLI_Precalc_IsMaterialTransparent(GLI_tdstMaterial_* hVisualMaterial);
+void GLI_vAssignOptimizedFunctionToMaterial(GLI_tdstMaterial_* hVisualMaterial);
+
 void GLI_fnvPrecalculateStuffForAllMaterials(void)
 {
+    unsigned int i;
     GLI_tdstMaterial_* pMat;
-    int i;
-    /* TODO: decompile from asm/... */
+    int bOk;
+
+    for (i = 0; i < GLI_g_ulNumberOfVisualMaterials; i++)
+    {
+        pMat = (GLI_tdstMaterial_*)GLI_g_StaticCopyOfArrayOfVisualMaterial[i];
+        if (pMat)
+        {
+            pMat->lMaterialAdditionnalType = 0;
+            if (GLI_Precalc_IsMaterialTransparent(pMat))
+            {
+                pMat->lMaterialAdditionnalType |= 1;
+            }
+            if (pMat && pMat->p_stTexture && (pMat->uiFlags & 4)) bOk = 1; else bOk = 0; if (bOk)
+            {
+                pMat->lMaterialAdditionnalType |= 2;
+            }
+            if (pMat && pMat->p_stTexture && (pMat->uiFlags & 8)) bOk = 1; else bOk = 0; if (bOk)
+            {
+                pMat->lMaterialAdditionnalType |= 4;
+            }
+            if (pMat && pMat->p_stTexture && strstr(pMat->p_stTexture->a255_cFileName, "SHADOWLOD")) bOk = 1; else bOk = 0; if (bOk)
+            {
+                pMat->lMaterialAdditionnalType |= 8;
+            }
+            if (pMat && pMat->p_stTexture && strstr(pMat->p_stTexture->a255_cFileName, "EVILSHADOW")) bOk = 1; else bOk = 0; if (bOk)
+            {
+                pMat->lMaterialAdditionnalType |= 0x10;
+            }
+            GLI_vAssignOptimizedFunctionToMaterial(pMat);
+        }
+    }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\load.c lines 2376–2419 */
-/* addr: 0x002a9630  size: 236 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2376
- *   +0x0008 -> line 2378
- *   +0x0014 -> line 2382
- *   +0x001c -> line 2384
- *   +0x0040 -> line 2389
- *   +0x0048 -> line 2390
- *   +0x0060 -> line 2393
- *   +0x006c -> line 2397
- *   +0x0078 -> line 2399
- *   +0x00ac -> line 2404
- *   +0x00b4 -> line 2405
- *   +0x00d0 -> line 2409
- *   +0x00d8 -> line 2410
- *   +0x00e0 -> line 2412
- *   +0x00e4 -> line 2419
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GLI_Precalc_IsMaterialTransparent(GLI_tdstMaterial_* hVisualMaterial)
 {
     anon_0* pMat;

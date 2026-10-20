@@ -4,10 +4,181 @@
 
 #include <stddef.h>
 
-extern char* strncpy(char*, const char*, unsigned int);
+extern "C" char* strncpy(char*, const char*, unsigned int);
+extern "C" void* usnd_malloc(unsigned int ui_Size);
+extern "C" int sprintf(char*, const char*, ...);
+extern "C" char* strcpy(char*, const char*);
+extern "C" char* FMN_SCE_AddBaseDirectory(char*);
+extern "C" int SND_fn_s32AddVolumeLineSound(void*);
+extern "C" void __register_global_object(void*, void*);
 float int2dB(int s32_volume);
+void fs_vUppercase(char* pc_String);
 
 typedef int sallocator;
+
+/* The usnd containers are a renamed Dinkumware red-black tree.  Only the
+ * members this translation unit needs are declared here; the members that
+ * are defined in the class body are inline, the others stay out of line so
+ * that the calls to them keep the retail's jal/relocation shape. */
+namespace usnd {
+struct streebase {
+    enum _Redbl {
+        _Red = 0,
+        _Black = 1
+    };
+    struct sTreeLink {
+        sTreeLink* m_poLeft; /* +0x0 */
+        sTreeLink* m_poParent; /* +0x4 */
+        sTreeLink* m_poRight; /* +0x8 */
+        _Redbl m_eColor; /* +0xc */
+    };
+    struct iterator_base {
+        iterator_base(void) {}
+        iterator_base(sTreeLink* po_Link);
+        void _Inc(void);
+        bool operator==(const iterator_base& ro_It) const;
+        sTreeLink* _Ptr; /* +0x0 */
+    };
+    streebase(bool b_Multi) : _Multi(b_Multi) {}
+    sTreeLink* base_erase(sTreeLink* po_Node);
+    static sTreeLink _NilElmt;
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+template <class T> struct binary_function {
+};
+
+template <class T> struct less : binary_function<T> {
+    bool operator()(const T& ro_Left, const T& ro_Right) const;
+};
+
+template <class T> struct sallocator {
+    void deallocate(void* pv_Ptr, unsigned int ui_Count);
+};
+
+template <class T1, class T2> struct spair {
+    spair(void) {}
+    spair(const T1& ro_First, const T2& ro_Second) : first(ro_First), second(ro_Second) {}
+    T1 first;
+    T2 second;
+};
+
+template <class K, class V, class KFN, class CMP, class ALLOC>
+struct stree : streebase {
+    struct sTreeNode : sTreeLink {
+        V m_oValue; /* +0x10 */
+    };
+    struct iterator : iterator_base {
+        iterator(void) {}
+        iterator(sTreeLink* po_Link) : iterator_base(po_Link) {}
+        iterator(const iterator& ro_It) : iterator_base(ro_It._Ptr) {}
+        V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
+        iterator& operator++(void) { _Inc(); return *this; }
+        bool operator!=(const iterator& ro_It) const { return !(_Ptr == ro_It._Ptr); }
+        sTreeNode* _Mynode(void) const;
+    };
+    stree(const CMP& ro_Pred, bool b_Multi, const ALLOC& ro_Alloc) : streebase(b_Multi), allocator(ro_Alloc), key_compare(ro_Pred)
+    {
+        _Init();
+    }
+    void _Init(void)
+    {
+        _HeadLink = _Buynode(&_NilElmt, _Red);
+        _Size = 0;
+        _GetHead()->m_poLeft = _HeadLink;
+        _GetHead()->m_poRight = _HeadLink;
+    }
+    sTreeLink* _GetHead(void) const;
+    sTreeLink* _Buynode(sTreeLink* po_Parent, _Redbl e_Color)
+    {
+        sTreeNode* poNode = (sTreeNode*)usnd_malloc(sizeof(sTreeNode));
+        poNode->m_poParent = po_Parent;
+        poNode->m_eColor = e_Color;
+        return poNode;
+    }
+    sTreeLink*& _Lmost(void)
+    {
+        return _GetHead()->m_poLeft;
+    }
+    iterator begin(void) { return iterator(_Lmost()); }
+    iterator end(void) { return iterator(_HeadLink); }
+    iterator lower_bound(const K& ro_Key);
+    static const K& _Key(sTreeNode* po_Node);
+    iterator find(const K& ro_Key)
+    {
+        iterator oIt = lower_bound(ro_Key);
+        return (oIt == end() || key_compare(ro_Key, _Key(oIt._Mynode()))) ? end() : oIt;
+    }
+    void erase(iterator o_It)
+    {
+        sTreeNode* poNode;
+        iterator oNode = o_It;
+        ++o_It;
+        poNode = (sTreeNode*)base_erase(oNode._Ptr);
+        allocator.deallocate(poNode, 1);
+    }
+    ALLOC allocator; /* +0xc */
+    CMP key_compare; /* +0xd */
+};
+
+template <class K, class T, class CMP, class ALLOC>
+struct smap {
+    struct _Kfn {
+    };
+    typedef stree<K, spair<const K, T>, _Kfn, CMP, ALLOC> _Imp;
+    typedef typename _Imp::iterator iterator;
+    smap(const CMP& ro_Pred = CMP(), const ALLOC& ro_Alloc = ALLOC()) : _Tr(ro_Pred, false, ro_Alloc) {}
+    iterator begin(void) { return _Tr.begin(); }
+    iterator end(void) { return _Tr.end(); }
+    iterator find(const K& ro_Key) { return _Tr.find(ro_Key); }
+    iterator lower_bound(const K& ro_Key) { return _Tr.lower_bound(ro_Key); }
+    void erase(iterator o_It) { _Tr.erase(o_It); }
+    _Imp _Tr; /* +0x0 */
+};
+
+/* The resource types the retail object names in the usnd namespace. */
+struct sstring {
+    int m_pcData; /* +0x0 */
+};
+
+struct CUUID {
+    unsigned int m_uiHighWord; /* +0x0 */
+    unsigned int m_uiLowWord; /* +0x4 */
+    unsigned char f_bSetIdFromString(char const* pc_Id);
+};
+
+struct CIdObj {
+    CUUID m_oId; /* +0x4 */
+};
+
+struct CPS2IdObjInfo {
+    CUUID m_oId; /* +0x0 */
+    unsigned int m_uiOffset; /* +0x8 */
+    sstring m_strFileName; /* +0xc */
+};
+
+template <class T, int N> struct CIndexAllocator {
+    CIndexAllocator(void);
+    ~CIndexAllocator(void);
+};
+
+struct CPS2IdObjLoader {
+    smap<CUUID, CIdObj*, less<CUUID>, sallocator<CIdObj*> > m_oIdObjsCache;
+    smap<CUUID, CPS2IdObjInfo*, less<CUUID>, CIndexAllocator<CPS2IdObjInfo, 40> > m_oIndex;
+    unsigned char f_bLoadBank(char const* pc_FileName);
+    void f_vPreloadObjects(CUUID* po_Id, unsigned int ui_Count);
+    CIdObj* f_poLoadIdObj(CUUID const& ro_Id);
+    void f_vClearIndex(void);
+    void fv_FlushCache(void);
+};
+
+struct CClassFactory {
+    static CClassFactory& fs_roGetInst(void);
+    int f_poCreateObj(char const* pc_ClassName) const;
+};
+}
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CVarAccess CVarAccess;
@@ -236,7 +407,7 @@ struct smap {
     stree _Tr; /* +0x0 */
 };
 
-struct CLinkTypeActorCont : smap {
+struct CLinkTypeActorCont : usnd::smap<int, CLinkTypeActor*, usnd::less<int>, usnd::sallocator<CLinkTypeActor*> > {
     CActorResData* m_poStandardActorResData; /* +0x10 */
     CActorResData* m_poMusicActorResData; /* +0x14 */
     CResData* m_poMusicProgramResData; /* +0x18 */
@@ -244,6 +415,7 @@ struct CLinkTypeActorCont : smap {
     static _RollOffParam moACPRolloff;
     void mfn_vSetDefaultRolloff(const _RollOffParam* pst_RollOff);
     CLinkTypeActor* mfn_poGetActorTypeFromId(int s32_TypeId);
+    int mfn_s32AddActorType(int s32_VolId, const _tdstAllRetObjectSound* pst_IActor);
     unsigned char mfn_bInitActorResData(void);
 };
 
@@ -437,8 +609,9 @@ struct CPS2IdObjLoader {
     smap m_oIndex; /* +0x10 */
 };
 
-struct CBankDescCont : smap {
-    CPS2IdObjLoader moLoader; /* +0x10 */
+struct CBankDescCont : usnd::smap<usnd::sstring, CBankDesc*, usnd::less<usnd::sstring>, usnd::sallocator<CBankDesc*> > {
+    usnd::CPS2IdObjLoader moLoader; /* +0x10 */
+    static CBankDescCont& mfn_roGetInstance(void);
 };
 
 struct slist {
@@ -451,6 +624,21 @@ union _SND_tduRefEvt {
     unsigned int Id; /* +0x0 */
     _SND_tdstBlockEvent* pstPtr; /* +0x0 */
 };
+
+struct CSoundSemaphoreInfo {
+    int ms32ObjectId; /* +0x0 */
+    int ms32TypeId; /* +0x4 */
+    int ms32HandleId; /* +0x8 */
+};
+
+/* The retail object of this unit holds an out-of-line copy of the
+ * usnd::stree::_BuyNode template member for the CSoundSemaphoreInfo
+ * container (the container itself is owned by sndcsoundsemaphore.cpp).
+ * Naming the instantiation here is what makes MWCC emit that copy. */
+static void mfn_vNameCSoundSemaphoreInfoContainer(void)
+{
+    usnd::smap<int, CSoundSemaphoreInfo*, usnd::less<int>, usnd::sallocator<CSoundSemaphoreInfo*> > o_Container;
+}
 
 
 
@@ -575,8 +763,14 @@ void CLinkTypeActorCont::mfn_vSetDefaultRolloff(const _RollOffParam* pst_RollOff
  */
 CLinkTypeActor* CLinkTypeActorCont::mfn_poGetActorTypeFromId(int s32_TypeId)
 {
-    CLinkTypeActor* po_Type;
-    /* TODO: decompile from asm/... */
+    CLinkTypeActor* po_Answer = NULL;
+    iterator oIt = find(s32_TypeId);
+
+    if (oIt != end())
+    {
+        po_Answer = (*oIt).second;
+    }
+    return po_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 148–254 */
@@ -621,13 +815,45 @@ CLinkTypeActor* CLinkTypeActorCont::mfn_poGetActorTypeFromId(int s32_TypeId)
  */
 unsigned char CLinkTypeActorCont::mfn_bInitActorResData(void)
 {
-    CUUID oId2Load[2];
+    usnd::CUUID oId2Load[2];
     unsigned char bOk;
-    CPS2IdObjLoader* gro_BankLoader;
+    usnd::CPS2IdObjLoader* gro_BankLoader;
     char szDataPath[1024];
-    CBankDescCont o_Singleton;
     signed char init;
-    /* TODO: decompile from asm/... */
+
+    if (m_poMusicActorResData != NULL)
+    {
+        return 1;
+    }
+
+    sprintf(szDataPath, "\\DRIVERS\\THEMEPRO.HX2;1");
+    strcpy(szDataPath, FMN_SCE_AddBaseDirectory(szDataPath));
+    fs_vUppercase(szDataPath);
+
+    bOk = gro_BankLoader->f_bLoadBank(szDataPath);
+    if (!bOk)
+    {
+        return 0;
+    }
+
+    oId2Load[0].f_bSetIdFromString("2ACB4039-11EC-579D");
+    oId2Load[1].f_bSetIdFromString("2ACA41B9-C913-8EA1");
+    gro_BankLoader->f_vPreloadObjects(&oId2Load[0], 2);
+
+    m_poMusicActorResData = (CActorResData*)gro_BankLoader->f_poLoadIdObj(oId2Load[0]);
+    m_poMusicProgramResData = (CResData*)gro_BankLoader->f_poLoadIdObj(oId2Load[1]);
+    if ((m_poMusicActorResData == NULL) || (m_poMusicProgramResData == NULL))
+    {
+        return 0;
+    }
+
+    m_poStandardActorResData = (CActorResData*)(unsigned int)usnd::CClassFactory::fs_roGetInst().f_poCreateObj("CActorResData");
+    SND_fn_s32AddVolumeLineSound(m_poStandardActorResData);
+    mfn_s32AddActorType((int)(unsigned int)m_poStandardActorResData, NULL);
+
+    gro_BankLoader->f_vClearIndex();
+    gro_BankLoader->fv_FlushCache();
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 109–111 */
@@ -645,7 +871,7 @@ unsigned char CLinkTypeActorCont::mfn_bInitActorResData(void)
  */
 int fn_bGhostObjectInfo__FiiPci(int s32_Unused0, int s32_Unused1, char* pch_String, int s32_Size)
 {
-    return strncpy(pch_String, "Ghost", s32_Size) != NULL;
+    return strncpy(pch_String, "Nul string", s32_Size) != NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactorcont.cpp lines 99–108 */

@@ -302,13 +302,13 @@ inline C_SdlCache::~C_SdlCache()
     m_pList = 0;
 }
 
-void GLI_vDeleteSdlCache(void)
+extern "C" void GLI_vDeleteSdlCache(void)
 {
     delete (C_SdlCache*)GLI_g_SdlCache;
     GLI_g_SdlCache = 0;
 }
 
-void GLI_vInitSdlCache(void)
+extern "C" void GLI_vInitSdlCache(void)
 {
     GLI_g_SdlCache = (int)new C_SdlCache;
 }

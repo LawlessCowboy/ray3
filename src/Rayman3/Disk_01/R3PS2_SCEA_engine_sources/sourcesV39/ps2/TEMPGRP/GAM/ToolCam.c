@@ -1,4 +1,3 @@
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c */
 /* Language: C */
 /* Compiler: MW MIPS C Compiler */
 
@@ -796,7 +795,7 @@ struct tdstEngineStructure_ {
     short hGLDDevice; /* +0x104 */
     short a_hGLDViewport[5]; /* +0x106 */
     GLD_tdstViewportAttributes_ a_stViewportAttr[5]; /* +0x110 */
-    int a_p_stGameViewportCamera[5]; /* +0x340 */
+    GLI_tdstCamera_* a_p_stGameViewportCamera[5]; /* +0x340 */
     short a_hGLDFixViewport[5]; /* +0x354 */
     GLD_tdstViewportAttributes_ a_stFixViewportAttr[5]; /* +0x360 */
     GLI_tdstSpecificAttributesFor3D_ a_stFixAttributes3D[5]; /* +0x590 */
@@ -1488,22 +1487,6 @@ struct tdstMSLight_ {
 tdstEngineStructure_ g_stEngineStructure;
 unsigned short g_DEMO_KeybTest;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 74–86 */
-/* addr: 0x0026a270  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 74
- *   +0x000c -> line 75
- *   +0x0014 -> line 76
- *   +0x0024 -> line 77
- *   +0x002c -> line 78
- *   +0x0044 -> line 79
- *   +0x004c -> line 80
- *   +0x0054 -> line 81
- *   +0x005c -> line 83
- *   +0x0060 -> line 86
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucToTableElement(int _n)
 {
     if (_n < 0x20)
@@ -1521,71 +1504,53 @@ unsigned char fn_ucToTableElement(int _n)
     return (unsigned char)_n;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 525–525 */
-/* addr: 0x0026a2e0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 525
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void CAM_vDisplayInfo(void)
 {
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 345–394 */
-/* addr: 0x0026a2f0  size: 296 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 345
- *   +0x0004 -> line 358
- *   +0x0008 -> line 345
- *   +0x0014 -> line 358
- *   +0x0020 -> line 361
- *   +0x002c -> line 363
- *   +0x0034 -> line 365
- *   +0x0038 -> line 372
- *   +0x0060 -> line 374
- *   +0x0080 -> line 376
- *   +0x0090 -> line 377
- *   +0x00a0 -> line 379
- *   +0x00a8 -> line 382
- *   +0x00b4 -> line 383
- *   +0x00b8 -> line 388
- *   +0x00c0 -> line 390
- *   +0x00f0 -> line 391
- *   +0x00fc -> line 392
- *   +0x0108 -> line 393
- *   +0x0114 -> line 394
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void fn_vTreatCameraHierarchy(HIE_tdstSuperObject_* hSuperObj, unsigned char bForcedActivity, tdstInternalStructurCineinfo_* hIntCineinfo);
+void CAM_fn_vActualizeAViewport(int _lViewport);
+
 void CAM_fn_vCameraManagement(void)
 {
     tdstInternalStructurCineinfo_* hIntCineinfo;
     HIE_tdstSuperObject_* hCamera;
-    int i;
     tdstNodeCamera_* p_stNodeCamera;
-    /* TODO: decompile from asm/... */
+    int i;
+    tdstViewportManagement_* p_stViewport;
+
+    if (g_DEMO_KeybTest != 2)
+    {
+        p_stNodeCamera = g_stEngineStructure.hCameraList.hFirstElementDyn; i = 0; if (p_stNodeCamera)
+        {
+            do
+            {
+                if (p_stNodeCamera)
+                {
+                    hCamera = p_stNodeCamera->p_stSuperObjectCamera;
+                    if (hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->ucVolIAFlags & 1) hIntCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hWork; else hIntCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent;
+                    if (hIntCineinfo->bIsActive || hIntCineinfo->eTypeOfViewport != CAM_e_NoViewport)
+                    {
+                        if (hIntCineinfo->eTypeOfViewport != CAM_e_NoViewport)
+                            fn_vTreatCameraHierarchy(hCamera, 1, hIntCineinfo);
+                        else
+                            fn_vTreatCameraHierarchy(hCamera, 0, hIntCineinfo);
+                    }
+                }
+                p_stNodeCamera = p_stNodeCamera->hNextBrotherDyn; i++; } while (p_stNodeCamera);
+        }
+    }
+
+    for (i = 3; i >= 0; i--)
+    {
+        if ((i >= 5) || (i < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[i];
+        if (p_stViewport->bValid)
+            CAM_fn_vActualizeAViewport(i);
+    }
 }
 
 unsigned char CAM_fn_bCineInfoGetIsDebugCamera(tdstInternalStructurCineinfo_* _hIntCineinfo);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 321–338 */
-/* addr: 0x0026a420  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 321
- *   +0x0004 -> line 326
- *   +0x0008 -> line 321
- *   +0x001c -> line 326
- *   +0x0028 -> line 329
- *   +0x0044 -> line 330
- *   +0x0048 -> line 331
- *   +0x0050 -> line 333
- *   +0x0068 -> line 336
- *   +0x0078 -> line 337
- *   +0x007c -> line 338
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 HIE_tdstSuperObject_* fn_hGetDebugCamera(int index)
 {
     tdstNodeCamera_* p_stNodeCamera;
@@ -1603,88 +1568,79 @@ HIE_tdstSuperObject_* fn_hGetDebugCamera(int index)
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 266–317 */
-/* addr: 0x0026a4c0  size: 528 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 266
- *   +0x0018 -> line 277
- *   +0x0040 -> line 278
- *   +0x0044 -> line 280
- *   +0x004c -> line 282
- *   +0x0050 -> line 284
- *   +0x0064 -> line 286
- *   +0x0070 -> line 288
- *   +0x0074 -> line 286
- *   +0x0078 -> line 288
- *   +0x007c -> line 286
- *   +0x0080 -> line 289
- *   +0x008c -> line 286
- *   +0x00ac -> line 288
- *   +0x00cc -> line 289
- *   +0x00d4 -> line 290
- *   +0x00e0 -> line 293
- *   +0x00e4 -> line 294
- *   +0x00f0 -> line 295
- *   +0x0100 -> line 296
- *   +0x0118 -> line 297
- *   +0x011c -> line 299
- *   +0x0120 -> line 297
- *   +0x012c -> line 299
- *   +0x013c -> line 300
- *   +0x0148 -> line 302
- *   +0x015c -> line 304
- *   +0x0168 -> line 306
- *   +0x018c -> line 307
- *   +0x01a0 -> line 308
- *   +0x01a8 -> line 311
- *   +0x01c8 -> line 313
- *   +0x01f4 -> line 317
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+void MAT_fn_vInvertRotation(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+void GLI_xSetCameraMatrix(GLI_tdstCamera_* p_stCam, MAT_tdstTransformation_* p_stMatrix);
+void GLI_xGetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float* p_xAlphaX, float* p_xRatio);
+void GLI_xSetCameraAspectAndRatio(GLI_tdstCamera_* p_stCam, float xAlphaX, float xRatio);
+void GLI_xSetViewportCamera(short hDevice, short hViewport, GLI_tdstCamera_* p_stCam);
+void GLI_xCreateCamera(GLI_tdstCamera_** p_stCam, int lCameraMode);
+void GLI_fn_vSetCameraMirrorMode(GLI_tdstCamera_* p_stCam, unsigned char _bMirrorMode);
+void GLI_xAdjustCameraToViewport(short hDevice, short hViewport, GLI_tdstCamera_* p_stCam);
+void GEO_fn_vComputeCameraParametersForCulling(GLD_tdstViewportAttributes_* p_stVpt, float _xZFar);
+unsigned char CAM_fn_bGetMirrorFlag(tdstCineinfo_* _hCineinfo);
+
 void CAM_fn_vActualizeAViewport(int _lViewport)
 {
+    tdstViewportManagement_* p_stViewport;
     HIE_tdstSuperObject_* hCamera;
     MTH3D_tdstVector_ K;
     MTH3D_tdstVector_ J;
     MTH3D_tdstVector_ I;
     float xFocal;
-    float xRatio;
     float xAngle;
+    float xRatio;
     MAT_tdstTransformation_ stMatrix;
     GLI_tdstCamera_* p_Camera;
-    /* TODO: decompile from asm/... */
+    MAT_tdstTransformation_* p_stGlobalMatrix;
+
+    if ((_lViewport >= 5) || (_lViewport < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[_lViewport];
+    hCamera = p_stViewport->hCamera;
+    if (hCamera)
+    {
+        p_stGlobalMatrix = hCamera->hGlobalMatrix;
+        MAT_fn_vGetRotationVectors(p_stGlobalMatrix, &K, &J, &I);
+        stMatrix = *p_stGlobalMatrix;
+        J.xX = -J.xX; J.xY = -J.xY; J.xZ = -J.xZ;
+        MAT_fn_vSetRotationVectors(&stMatrix, &K, &I, &J);
+        MAT_fn_vInvertRotation(&stMatrix, &stMatrix);
+        p_Camera = p_stViewport->p_stCamera;
+        GLI_xSetCameraMatrix(p_Camera, &stMatrix);
+        GLI_xGetCameraAspectAndRatio(p_Camera, &xAngle, &xRatio);
+        GLI_fn_vSetCameraMirrorMode(p_Camera, CAM_fn_bGetMirrorFlag(hCamera->hLinkedObject.p_stCharacter->h_Cineinfo));
+        xFocal = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hWork->xFocal;
+        if (xFocal == 0.0f)
+            xFocal = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent->xFocal;
+        if (xFocal != xAngle)
+        {
+            GLI_xSetCameraAspectAndRatio(p_Camera, xFocal, xRatio);
+            GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_lViewport], p_Camera);
+            GLI_xAdjustCameraToViewport(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_lViewport], p_Camera);
+        }
+        else
+        {
+            GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[_lViewport], p_Camera);
+            GEO_fn_vComputeCameraParametersForCulling(&g_stEngineStructure.a_stViewportAttr[_lViewport], 10000.0f);
+        }
+    }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 248–257 */
-/* addr: 0x0026a6d0  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 248
- *   +0x0018 -> line 251
- *   +0x001c -> line 253
- *   +0x0048 -> line 254
- *   +0x0084 -> line 255
- *   +0x0088 -> line 256
- *   +0x0094 -> line 257
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+unsigned char fn_bIsInFix(tdstEngineObject_* p_stObject);
+
 void CAM_fn_vInvalidateViewports(void)
 {
     int i;
-    /* TODO: decompile from asm/... */
+    tdstViewportManagement_* p_stViewport;
+
+    for (i = 3; i >= 0; i--)
+    {
+        if ((i >= 5) || (i < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[i];
+        if (p_stViewport->hCamera && !fn_bIsInFix(p_stViewport->hCamera->ulTypeOfLinkedObject != 2 ? NULL : p_stViewport->hCamera->hLinkedObject.p_stCharacter))
+            p_stViewport->bValid = 0;
+    }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 233–244 */
-/* addr: 0x0026a780  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 233
- *   +0x0010 -> line 234
- *   +0x0018 -> line 240
- *   +0x002c -> line 244
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* _h_SprObj)
 {
     if (_h_SprObj->ulTypeOfLinkedObject != 2)
@@ -1696,88 +1652,94 @@ int CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* _h_SprObj)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 149–220 */
-/* addr: 0x0026a7c0  size: 336 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 149
- *   +0x0018 -> line 174
- *   +0x0020 -> line 180
- *   +0x0030 -> line 182
- *   +0x0044 -> line 184
- *   +0x004c -> line 185
- *   +0x0054 -> line 188
- *   +0x005c -> line 194
- *   +0x006c -> line 196
- *   +0x0098 -> line 198
- *   +0x00a4 -> line 199
- *   +0x00bc -> line 201
- *   +0x00c8 -> line 204
- *   +0x00cc -> line 201
- *   +0x00d0 -> line 204
- *   +0x00d4 -> line 201
- *   +0x00d8 -> line 204
- *   +0x00e8 -> line 205
- *   +0x00ec -> line 204
- *   +0x00f0 -> line 205
- *   +0x00f4 -> line 204
- *   +0x00f8 -> line 205
- *   +0x0100 -> line 209
- *   +0x0108 -> line 213
- *   +0x0110 -> line 215
- *   +0x0118 -> line 217
- *   +0x0128 -> line 218
- *   +0x0130 -> line 220
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+unsigned char fn_bLevelHasTransitionMemory(void);
+int fn_lGetTransitionBloc(void);
+void HMU_fn_vSetMemoriesInTransition2Mode(void);
+void HMU_fn_vSetMemoriesInTransition1Mode(void);
+void HMU_fn_vSetMemoriesInLevelMode(void);
+void CAM_fn_vLoadCameraConstants(void);
+void GAM_fn_vSetEngineInLevelMode(void);
+void CAM_fn_vReInitCameras(void);
+
 void CAM_fn_vInitCameras(void)
 {
     int i;
-    /* TODO: decompile from asm/... */
+    float xAlphaX;
+    float xRatio;
+    tdstViewportManagement_* p_stViewport;
+
+    CAM_fn_vReInitCameras();
+    if (fn_bLevelHasTransitionMemory())
+    {
+        if (fn_lGetTransitionBloc() == 1)
+        {
+            HMU_fn_vSetMemoriesInTransition2Mode();
+        }
+        else
+        {
+            HMU_fn_vSetMemoriesInTransition1Mode();
+        }
+    }
+    for (i = 0; i <= 4; i++)
+    {
+        if ((i >= 5) || (i < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[i];
+        GLI_xCreateCamera(&p_stViewport->p_stCamera, 0x67);
+        xAlphaX = 1.5f;
+        xRatio = 0.75f;
+        GLI_xSetCameraAspectAndRatio(p_stViewport->p_stCamera, xAlphaX, xRatio);
+        g_stEngineStructure.a_p_stGameViewportCamera[i] = p_stViewport->p_stCamera;
+        GLI_xSetViewportCamera(g_stEngineStructure.hGLDDevice, g_stEngineStructure.a_hGLDViewport[i], p_stViewport->p_stCamera);
+    }
+    HMU_fn_vSetMemoriesInLevelMode();
+    CAM_fn_vLoadCameraConstants();
+    CAM_fn_vReInitCameras();
+    if (fn_bLevelHasTransitionMemory())
+        GAM_fn_vSetEngineInLevelMode();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 113–136 */
-/* addr: 0x0026a910  size: 256 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 113
- *   +0x0008 -> line 115
- *   +0x0038 -> line 118
- *   +0x003c -> line 116
- *   +0x0040 -> line 118
- *   +0x0044 -> line 117
- *   +0x0048 -> line 118
- *   +0x0050 -> line 120
- *   +0x0074 -> line 128
- *   +0x0078 -> line 122
- *   +0x0080 -> line 125
- *   +0x0084 -> line 126
- *   +0x0090 -> line 128
- *   +0x00a8 -> line 132
- *   +0x00d8 -> line 135
- *   +0x00f8 -> line 136
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void CAM_fn_vReInitCameras(void)
 {
-    tdstInternalStructurCineinfo_* hIntCineinfo;
-    HIE_tdstSuperObject_* hSuperObject;
-    tdstNodeCamera_* p_stNextNodeCamera;
-    tdstNodeCamera_* param0;
     int i;
-    /* TODO: decompile from asm/... */
+    int lViewport;
+    tdstViewportManagement_* p_stViewport;
+    tdstNodeCamera_* p_stNodeCamera;
+    tdstNodeCamera_* p_stNextNodeCamera;
+    HIE_tdstSuperObject_* hCamera;
+    tdstInternalStructurCineinfo_* hIntCineinfo;
+
+    for (i = 0; i <= 4; i++)
+    {
+        if ((i >= 5) || (i < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[i];
+        p_stViewport->hTempCamera = NULL;
+        p_stViewport->bValid = 0;
+    }
+
+    p_stNodeCamera = g_stEngineStructure.hCameraList.hFirstElementDyn;
+    i = 0;
+    p_stNextNodeCamera = p_stNodeCamera ? p_stNodeCamera->hNextBrotherDyn : NULL;
+    if (p_stNodeCamera)
+    {
+        do
+        {
+            if (p_stNodeCamera)
+            {
+                hCamera = p_stNodeCamera->p_stSuperObjectCamera;
+                hIntCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hInit;
+                if (hIntCineinfo->bIsActive && hIntCineinfo->eTypeOfViewport != CAM_e_NoViewport)
+                {
+                    lViewport = hIntCineinfo->eTypeOfViewport;
+                    if ((lViewport >= 5) || (lViewport < 0)) p_stViewport = NULL; else p_stViewport = &g_stEngineStructure.a_hViewportArray[lViewport];
+                    p_stViewport->hCamera = hCamera;
+                    p_stViewport->bValid = 1;
+                }
+            }
+            i++;
+            p_stNodeCamera = p_stNextNodeCamera;
+            p_stNextNodeCamera = p_stNodeCamera ? p_stNodeCamera->hNextBrotherDyn : NULL;
+        } while (p_stNodeCamera);
+    }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ToolCam.c lines 91–94 */
-/* addr: 0x0026aa10  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 91
- *   +0x0028 -> line 92
- *   +0x002c -> line 93
- *   +0x0030 -> line 94
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void CAM_fn_vAssignCameraToAViewport(int _lViewportNumber, HIE_tdstSuperObject_* _hCamera)
 {
     tdstViewportManagement_* hViewport;

@@ -4,6 +4,35 @@
 
 #include <stddef.h>
 
+/* Recovered PS2 MTH scalar helpers used by the original vector macros. */
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_DISTANCE_TO(_result, _a, _b)      \
+    do {                                      \
+        float _dx = (_b)->xX - (_a)->xX;      \
+        float _dy = (_b)->xY - (_a)->xY;      \
+        float _dz = (_b)->xZ - (_a)->xZ;      \
+        float _dn;                           \
+        MTH_SQR3_TO(_dn, _dx, _dy, _dz);      \
+        MTH_SQRT_TO(_result, _dn);            \
+    } while (0)
+
+/* R5900 accumulator dot product (as MECBhv.c's MTH_xDot3). */
+inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2)
+{
+    float _r;
+    asm { mula.s _x1, _x2 }
+    asm { madda.s _y1, _y2 }
+    asm { madd.s _r, _z1, _z2 }
+    return _r;
+}
+
+extern void* memcpy(void*, const void*, size_t);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
@@ -86,8 +115,8 @@ struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
     MTH3D_tdstVector_* d_stListOfPointsNormals; /* +0x4 */
     int d_dfVertexTransparency; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
-    int d_stListOfElements; /* +0x10 */
+    short* d_xListOfElementsTypes; /* +0xc */
+    void** d_stListOfElements; /* +0x10 */
     GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
     GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
     unsigned int ulType; /* +0x1c */
@@ -118,7 +147,7 @@ struct COL_tdstOctreeNode_ {
     MTH3D_tdstVector_ stMinPart; /* +0x0 */
     MTH3D_tdstVector_ stMaxPart; /* +0xc */
     COL_tdstOctreeNode_** p_pstChildList; /* +0x18 */
-    int d_xFaceIndexList; /* +0x1c */
+    short* d_xFaceIndexList; /* +0x1c */
 };
 
 struct GMT_tdstGameMaterial_ {
@@ -229,8 +258,8 @@ struct COL_tdstCollideObject_ {
     short xNbElements; /* +0x2 */
     short xNbParallelBoxes; /* +0x4 */
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
-    int d_stListOfElements; /* +0x10 */
+    short* d_xListOfElementsTypes; /* +0xc */
+    void** d_stListOfElements; /* +0x10 */
     COL_tdstOctree_* p_stOctree; /* +0x14 */
     COL_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
     float xBoudingSphereRadius; /* +0x1c */
@@ -281,7 +310,7 @@ struct ACP_tdst2DUVValues_ {
 struct COL_tdstOctree_ {
     COL_tdstOctreeNode_* p_stOctreeRoot; /* +0x0 */
     short xNbFaces; /* +0x4 */
-    int d_xElementBasesTable; /* +0x8 */
+    unsigned short* d_xElementBasesTable; /* +0x8 */
     MTH3D_tdstVector_ stMinBoundingBox; /* +0xc */
     MTH3D_tdstVector_ stMaxBoundingBox; /* +0x18 */
 };
@@ -293,8 +322,22 @@ struct COL_tdstParallelBox_ {
 
 unsigned int g_xMask;
 COL_tdstDoubledIndex_ COL_g_a12_stBoxEdges[12];
-int COL_g_d_lTaggedFacesTable;
+int COL_g_d_lTaggedFacesTable[4096];
 int COL_g_lFacesTagCounter;
+
+extern unsigned char INT_fn_bIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float* p_xT, MTH3D_tdstVector_* p_stHit);
+extern unsigned char INT_fn_bIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);
+extern unsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);
+extern void COL_fn_vExploreOctreeWithSegment(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstOctreeNode_** d_pstSelectedNode, float* d_xSelectedT, short* p_xNumberOfSelectedNodes);
+extern unsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan);
+extern unsigned char INT_fn_bDetectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);
+extern unsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT);
+extern void COL_vGetGameMaterialOfIndexedTriangles(COL_tdstCollideObject_* p_stGeomObj, short xElementIndex, GMT_tdstGameMaterial_** p_hMaterial);
+extern GMT_tdstCollideMaterial_* GMT_fn_hGetCollideMaterial(GMT_tdstGameMaterial_* hGameMaterial);
+extern unsigned short GMT_fn_hGetCollideMaterialIdentifier(GMT_tdstCollideMaterial_* hCollideMaterial);
+extern void INT_fn_vViewAndAddFaceElementInList(short xNbMaxElements, short* p_xNbElements, GLI_tdstDataOfElement_* d_stDataOfElement, MTH3D_tdstVector_* p_stVertexA, unsigned char bBack, MTH3D_tdstVector_* p_stHit, short xElements, short xDataElementIndex);
+extern unsigned char INT_fn_bGetInclusionPointInSphere(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);
+extern unsigned char INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\IntersGO.c lines 2847–3086 */
 /* addr: 0x002556f0  size: 3056 bytes */
@@ -490,7 +533,30 @@ unsigned char INT_fn_bDetectIntersectGeomObjWithGeomObj(COL_tdstCollideObject_* 
     MAT_tdstTransformation_ st21TransformMatrix;
     MAT_tdstTransformation_ st12TransformMatrix;
     MAT_tdstTransformation_ stInvMatrix2;
-    /* TODO: decompile from asm/... */
+
+    /* Retail structure: the function switches on the type of the two
+     * transformations (MAT_eTransform_Identity / _Translation / _Rotation)
+     * and then compares the two collide objects element by element
+     * (triangles, spheres, aligned boxes) after transforming them into a
+     * common space; the eight bounding-box vectors and the three
+     * transformations are function-scope locals. */
+    switch (_p_stMatrix1->eType)
+    {
+    case MAT_eTransform_Identity:
+    {
+        break;
+    }
+    case MAT_eTransform_Translation:
+    {
+        break;
+    }
+    case MAT_eTransform_Rotation:
+    {
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\IntersGO.c lines 2039–2143 */
@@ -560,20 +626,80 @@ unsigned char INT_fn_bDetectIntersectGeomObjWithGeomObj(COL_tdstCollideObject_* 
  */
 unsigned char INT_fn_bGetInclusionPointInCollideObject(MTH3D_tdstVector_* p_stPoint, COL_tdstCollideObject_* p_stGeomObj)
 {
-    short xNbIntersect;
-    MTH3D_tdstVector_ stZNormal;
-    MTH3D_tdstVector_ stHit;
-    float xT;
-    MTH3D_tdstVector_* p_stNormal;
-    MTH3D_tdstVector_* p_stVertex1;
-    COL_tdstIndexedAlignedBox_* p_stIndexedAlignedBox;
-    COL_tdstIndexedSphere_* p_stIndexedSphere;
-    COL_tdstElementAlignedBoxes_* p_stElementAlignedBoxes;
-    COL_tdstElementSpheres_* p_stElementSpheres;
-    COL_tdstElementIndexedTriangles_* p_stElementIndexedTriangles;
-    short xDataElementIndex;
     short xElementIndex;
-    /* TODO: decompile from asm/... */
+    short xDataElementIndex;
+    COL_tdstElementIndexedTriangles_* p_stElementIndexedTriangles;
+    COL_tdstElementSpheres_* p_stElementSpheres;
+    COL_tdstElementAlignedBoxes_* p_stElementAlignedBoxes;
+    COL_tdstIndexedSphere_* p_stIndexedSphere;
+    COL_tdstIndexedAlignedBox_* p_stIndexedAlignedBox;
+    MTH3D_tdstVector_* p_stVertex1;
+    MTH3D_tdstVector_* p_stNormal;
+    float xT;
+    MTH3D_tdstVector_ stHit;
+    MTH3D_tdstVector_ stZNormal = {0.0f, 0.0f, 1.0f};
+    short xNbIntersect;
+
+    for (xElementIndex = 0; xElementIndex < p_stGeomObj->xNbElements; xElementIndex++)
+    {
+        switch (p_stGeomObj->d_xListOfElementsTypes[xElementIndex])
+        {
+        case 1:
+        {
+            p_stElementIndexedTriangles = (COL_tdstElementIndexedTriangles_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+            xNbIntersect = 0;
+            for (xDataElementIndex = 0; xDataElementIndex < p_stElementIndexedTriangles->xNbFaces; xDataElementIndex++)
+            {
+                p_stVertex1 = &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[0]];
+                p_stNormal = &p_stElementIndexedTriangles->d_stListOfFacesNormals[xDataElementIndex];
+                if (INT_fn_bIntersectSegmentWithTriangle(p_stPoint, &stZNormal,
+                        p_stVertex1,
+                        &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[1]],
+                        &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[2]],
+                        p_stNormal,
+                        -MTH_xDot3(p_stNormal->xX, p_stVertex1->xX, p_stNormal->xY, p_stVertex1->xY, p_stNormal->xZ, p_stVertex1->xZ),
+                        &xT, &stHit))
+                {
+                    xNbIntersect++;
+                }
+            }
+            if (xNbIntersect % 2)
+            {
+                return 1;
+            }
+            break;
+        }
+        case 7:
+        {
+            p_stElementSpheres = (COL_tdstElementSpheres_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+            for (xDataElementIndex = 0; xDataElementIndex < p_stElementSpheres->xNbSpheres; xDataElementIndex++)
+            {
+                p_stIndexedSphere = &p_stElementSpheres->d_stListOfSpheres[xDataElementIndex];
+                if (INT_fn_bGetInclusionPointInSphere(p_stPoint, &p_stGeomObj->d_stListOfPoints[p_stIndexedSphere->xCenterPoint], p_stIndexedSphere->xRadius))
+                {
+                    return 1;
+                }
+            }
+            break;
+        }
+        case 8:
+        {
+            p_stElementAlignedBoxes = (COL_tdstElementAlignedBoxes_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+            for (xDataElementIndex = 0; xDataElementIndex < p_stElementAlignedBoxes->xNbAlignedBoxes; xDataElementIndex++)
+            {
+                p_stIndexedAlignedBox = &p_stElementAlignedBoxes->d_stListOfAlignedBoxes[xDataElementIndex];
+                if (INT_fn_bGetInclusionPointInBox(p_stPoint, &p_stGeomObj->d_stListOfPoints[p_stIndexedAlignedBox->xMinPoint], &p_stGeomObj->d_stListOfPoints[p_stIndexedAlignedBox->xMaxPoint]))
+                {
+                    return 1;
+                }
+            }
+            break;
+        }
+        default:
+            break;
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\IntersGO.c lines 1155–1459 */
@@ -721,26 +847,216 @@ unsigned char INT_fn_bGetInclusionPointInCollideObject(MTH3D_tdstVector_* p_stPo
  */
 unsigned char INT_fn_bDetectIntersectSegmentWithFaceOfCollideObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, COL_tdstCollideObject_* p_stGeomObj)
 {
-    short xData;
-    short xNbElements;
+    short xElementIndex;
+    COL_tdstElementIndexedTriangles_* p_stElementIndexedTriangles;
+    COL_tdstElementSpheres_* p_stElementSpheres;
+    COL_tdstElementAlignedBoxes_* p_stElementAlignedBoxes;
+    short xDataElementIndex;
+    MTH3D_tdstVector_* p_stVertex1;
+    MTH3D_tdstVector_* p_stNormal;
+    COL_tdstIndexedSphere_* p_stIndexedSphere;
+    COL_tdstIndexedAlignedBox_* p_stIndexedAlignedBox;
+    MTH3D_tdstVector_ stNormal;
+    float xT;
+    MTH3D_tdstVector_ stHit;
+    GMT_tdstGameMaterial_* hMaterial;
     GMT_tdstCollideMaterial_* hCollidedCollideMaterial;
-    float aDEF_xSelectedT[100];
-    int aDEF_pstSelectedNode[100];
-    short xNumberOfSelectedNodes;
+    short xNbElements;
+    short xData;
     unsigned char xIndex;
     short xNodeIndex;
     unsigned char* p_xListIndex;
-    MTH3D_tdstVector_* p_stMinPoint;
-    COL_tdstIndexedAlignedBox_* p_stIndexedAlignedBox;
-    COL_tdstIndexedSphere_* p_stIndexedSphere;
-    MTH3D_tdstVector_* p_stNormal;
-    MTH3D_tdstVector_* p_stVertex1;
-    COL_tdstElementAlignedBoxes_* p_stElementAlignedBoxes;
-    COL_tdstElementSpheres_* p_stElementSpheres;
-    COL_tdstElementIndexedTriangles_* p_stElementIndexedTriangles;
-    short xDataElementIndex;
-    short xElementIndex;
-    /* TODO: decompile from asm/... */
+    short xNumberOfSelectedNodes;
+    float aDEF_xSelectedT[100];
+    COL_tdstOctreeNode_* aDEF_pstSelectedNode[100];
+
+    if (p_stGeomObj->p_stOctree)
+    {
+        COL_fn_vExploreOctreeWithSegment(p_stGeomObj->p_stOctree, p_stVertexA, p_stVectAB, aDEF_pstSelectedNode, aDEF_xSelectedT, &xNumberOfSelectedNodes);
+        COL_g_lFacesTagCounter++;
+        xIndex = 0;
+        xNbElements = 0;
+        xData = 0;
+        while (xIndex < xNumberOfSelectedNodes)
+        {
+            COL_tdstOctreeNode_* p_stNode = aDEF_pstSelectedNode[xNbElements];
+            short* p_xNodeIndex = (short*)p_stNode->d_xFaceIndexList;
+            short xNode = *p_xNodeIndex++;
+            unsigned char* p_xList = (unsigned char*)p_xNodeIndex;
+            {
+                unsigned char ucByte = *p_xList;
+                if (ucByte < 0x80)
+                {
+                    xData = (short)ucByte;
+                    p_xList++;
+                }
+                else
+                {
+                    xData = (short)(((ucByte & 0xFF) | (((unsigned short)p_xList[1]) << 8)) & 0x7FFF);
+                    p_xList += 2;
+                }
+            }
+            {
+                unsigned char ucByte = *p_xList;
+                if (ucByte < 0x80)
+                {
+                    xNodeIndex = (short)ucByte;
+                    p_xList++;
+                }
+                else
+                {
+                    xNodeIndex = (short)(((ucByte & 0xFF) | (((unsigned short)p_xList[1]) << 8)) & 0x7FFF);
+                    p_xList += 2;
+                }
+            }
+            {
+                short xFace = (short)(p_stGeomObj->p_stOctree->d_xElementBasesTable[xData * 2 + xNodeIndex] + xNode);
+                if (COL_g_d_lTaggedFacesTable[xFace] != COL_g_lFacesTagCounter)
+                {
+                    COL_g_d_lTaggedFacesTable[xFace] = COL_g_lFacesTagCounter;
+                    switch (p_stGeomObj->d_xListOfElementsTypes[xNbElements])
+                    {
+                    case 1:
+                    {
+                        if (g_xMask)
+                        {
+                            hMaterial = NULL;
+                            COL_vGetGameMaterialOfIndexedTriangles(p_stGeomObj, xNbElements, &hMaterial);
+                            if (hMaterial)
+                            {
+                                hCollidedCollideMaterial = GMT_fn_hGetCollideMaterial(hMaterial);
+                                if (hCollidedCollideMaterial)
+                                {
+                                    if (g_xMask & GMT_fn_hGetCollideMaterialIdentifier(hCollidedCollideMaterial))
+                                    {
+                                        p_stElementIndexedTriangles = (COL_tdstElementIndexedTriangles_*)p_stGeomObj->d_stListOfElements[xNbElements];
+                                        for (xDataElementIndex = 0; xDataElementIndex < p_stElementIndexedTriangles->xNbFaces; xDataElementIndex++)
+                                        {
+                                            p_stVertex1 = &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[0]];
+                                            p_stNormal = &p_stElementIndexedTriangles->d_stListOfFacesNormals[xDataElementIndex];
+                                            if (INT_fn_bDetectIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB,
+                                                    p_stVertex1,
+                                                    &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[1]],
+                                                    &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[2]],
+                                                    p_stNormal,
+                                                    -MTH_xDot3(p_stNormal->xX, p_stVertex1->xX, p_stNormal->xY, p_stVertex1->xY, p_stNormal->xZ, p_stVertex1->xZ)))
+                                            {
+                                                return 1;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    case 7:
+                    {
+                        p_stElementSpheres = (COL_tdstElementSpheres_*)p_stGeomObj->d_stListOfElements[xNbElements];
+                        for (xDataElementIndex = 0; xDataElementIndex < p_stElementSpheres->xNbSpheres; xDataElementIndex++)
+                        {
+                            p_stIndexedSphere = &p_stElementSpheres->d_stListOfSpheres[xDataElementIndex];
+                            if (INT_fn_bDetectIntersectSegmentWithSphere(p_stVertexA, p_stVectAB, &p_stGeomObj->d_stListOfPoints[p_stIndexedSphere->xCenterPoint], p_stIndexedSphere->xRadius))
+                            {
+                                return 1;
+                            }
+                        }
+                        break;
+                    }
+                    case 8:
+                    {
+                        p_stElementAlignedBoxes = (COL_tdstElementAlignedBoxes_*)p_stGeomObj->d_stListOfElements[xNbElements];
+                        for (xDataElementIndex = 0; xDataElementIndex < p_stElementAlignedBoxes->xNbAlignedBoxes; xDataElementIndex++)
+                        {
+                            p_stIndexedAlignedBox = &p_stElementAlignedBoxes->d_stListOfAlignedBoxes[xDataElementIndex];
+                            if (INT_fn_bDetectIntersectSegmentWithBox(p_stVertexA, p_stVectAB, &p_stGeomObj->d_stListOfPoints[p_stIndexedAlignedBox->xMinPoint], &p_stGeomObj->d_stListOfPoints[p_stIndexedAlignedBox->xMaxPoint], &xT))
+                            {
+                                return 1;
+                            }
+                        }
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                }
+            }
+            xIndex++;
+            xNbElements++;
+        }
+    }
+    else
+    {
+        for (xElementIndex = 0; xElementIndex < p_stGeomObj->xNbElements; xElementIndex++)
+        {
+            switch (p_stGeomObj->d_xListOfElementsTypes[xElementIndex])
+            {
+            case 1:
+            {
+                if (g_xMask)
+                {
+                    hMaterial = NULL;
+                    COL_vGetGameMaterialOfIndexedTriangles(p_stGeomObj, xElementIndex, &hMaterial);
+                    if (hMaterial)
+                    {
+                        hCollidedCollideMaterial = GMT_fn_hGetCollideMaterial(hMaterial);
+                        if (hCollidedCollideMaterial)
+                        {
+                            if (g_xMask & GMT_fn_hGetCollideMaterialIdentifier(hCollidedCollideMaterial))
+                            {
+                                p_stElementIndexedTriangles = (COL_tdstElementIndexedTriangles_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+                                for (xDataElementIndex = 0; xDataElementIndex < p_stElementIndexedTriangles->xNbFaces; xDataElementIndex++)
+                                {
+                                    p_stVertex1 = &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[0]];
+                                    p_stNormal = &p_stElementIndexedTriangles->d_stListOfFacesNormals[xDataElementIndex];
+                                    if (INT_fn_bDetectIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB,
+                                            p_stVertex1,
+                                            &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[1]],
+                                            &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[2]],
+                                            p_stNormal,
+                                            -MTH_xDot3(p_stNormal->xX, p_stVertex1->xX, p_stNormal->xY, p_stVertex1->xY, p_stNormal->xZ, p_stVertex1->xZ)))
+                                    {
+                                        return 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+            case 7:
+            {
+                p_stElementSpheres = (COL_tdstElementSpheres_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+                for (xDataElementIndex = 0; xDataElementIndex < p_stElementSpheres->xNbSpheres; xDataElementIndex++)
+                {
+                    p_stIndexedSphere = &p_stElementSpheres->d_stListOfSpheres[xDataElementIndex];
+                    if (INT_fn_bDetectIntersectSegmentWithSphere(p_stVertexA, p_stVectAB, &p_stGeomObj->d_stListOfPoints[p_stIndexedSphere->xCenterPoint], p_stIndexedSphere->xRadius))
+                    {
+                        return 1;
+                    }
+                }
+                break;
+            }
+            case 8:
+            {
+                p_stElementAlignedBoxes = (COL_tdstElementAlignedBoxes_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+                for (xDataElementIndex = 0; xDataElementIndex < p_stElementAlignedBoxes->xNbAlignedBoxes; xDataElementIndex++)
+                {
+                    p_stIndexedAlignedBox = &p_stElementAlignedBoxes->d_stListOfAlignedBoxes[xDataElementIndex];
+                    if (INT_fn_bDetectIntersectSegmentWithBox(p_stVertexA, p_stVectAB, &p_stGeomObj->d_stListOfPoints[p_stIndexedAlignedBox->xMinPoint], &p_stGeomObj->d_stListOfPoints[p_stIndexedAlignedBox->xMaxPoint], &xT))
+                    {
+                        return 1;
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+            }
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\IntersGO.c lines 401–525 */
@@ -810,19 +1126,75 @@ unsigned char INT_fn_bDetectIntersectSegmentWithFaceOfCollideObject(MTH3D_tdstVe
  */
 unsigned char INT_fn_bIntersectSegmentWithFaceOfGeometricObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVertexB, MTH3D_tdstVector_* p_stVectAB, GEO_tdstGeometricObject_* p_stGeomObj, short xNbMaxElements, short* p_xNbElements, GLI_tdstDataOfElement_* d_stDataOfElement)
 {
-    MTH3D_tdstVector_ stHit;
-    float xT;
-    MTH3D_tdstVector_ stNormal;
-    GEO_tdstIndexedAlignedBox_* p_stIndexedAlignedBox;
-    GEO_tdstIndexedSphere_* p_stIndexedSphere;
-    MTH3D_tdstVector_* p_stNormal;
-    MTH3D_tdstVector_* p_stVertex1;
-    short xDataElementIndex;
-    GEO_tdstElementAlignedBoxes_* p_stElementAlignedBoxes;
-    GEO_tdstElementSpheres_* p_stElementSpheres;
-    GEO_tdstElementIndexedTriangles_* p_stElementIndexedTriangles;
     short xElementIndex;
-    /* TODO: decompile from asm/... */
+    GEO_tdstElementIndexedTriangles_* p_stElementIndexedTriangles;
+    GEO_tdstElementSpheres_* p_stElementSpheres;
+    GEO_tdstElementAlignedBoxes_* p_stElementAlignedBoxes;
+    short xDataElementIndex;
+    MTH3D_tdstVector_* p_stVertex1;
+    MTH3D_tdstVector_* p_stNormal;
+    GEO_tdstIndexedSphere_* p_stIndexedSphere;
+    GEO_tdstIndexedAlignedBox_* p_stIndexedAlignedBox;
+    MTH3D_tdstVector_ stNormal;
+    float xT;
+    MTH3D_tdstVector_ stHit;
+
+    *p_xNbElements = 0;
+    for (xElementIndex = 0; xElementIndex < p_stGeomObj->xNbElements; xElementIndex++)
+    {
+        switch (p_stGeomObj->d_xListOfElementsTypes[xElementIndex])
+        {
+        case 1:
+        {
+            p_stElementIndexedTriangles = (GEO_tdstElementIndexedTriangles_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+            for (xDataElementIndex = 0; xDataElementIndex < p_stElementIndexedTriangles->xNbFaces; xDataElementIndex++)
+            {
+                p_stVertex1 = &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[0]];
+                p_stNormal = &p_stElementIndexedTriangles->d_stListOfFacesNormals[xDataElementIndex];
+                if (INT_fn_bIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB,
+                        p_stVertex1,
+                        &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[1]],
+                        &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[2]],
+                        p_stNormal,
+                        -MTH_xDot3(p_stNormal->xX, p_stVertex1->xX, p_stNormal->xY, p_stVertex1->xY, p_stNormal->xZ, p_stVertex1->xZ),
+                        &xT, &stHit))
+                {
+                    INT_fn_vViewAndAddFaceElementInList(xNbMaxElements, p_xNbElements, d_stDataOfElement, p_stVertexA, 0, &stHit, xElementIndex, xDataElementIndex);
+                }
+            }
+            break;
+        }
+        case 7:
+        {
+            p_stElementSpheres = (GEO_tdstElementSpheres_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+            for (xDataElementIndex = 0; xDataElementIndex < p_stElementSpheres->xNbSpheres; xDataElementIndex++)
+            {
+                p_stIndexedSphere = &p_stElementSpheres->d_stListOfSpheres[xDataElementIndex];
+                if (INT_fn_bIntersectSegmentWithSphere(p_stVertexA, p_stVectAB, &p_stGeomObj->d_stListOfPoints[p_stIndexedSphere->xCenterPoint], p_stIndexedSphere->xRadius, &xT, &stHit, &stNormal))
+                {
+                    INT_fn_vViewAndAddFaceElementInList(xNbMaxElements, p_xNbElements, d_stDataOfElement, p_stVertexA, 0, &stHit, xElementIndex, xDataElementIndex);
+                }
+            }
+            break;
+        }
+        case 8:
+        {
+            p_stElementAlignedBoxes = (GEO_tdstElementAlignedBoxes_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+            for (xDataElementIndex = 0; xDataElementIndex < p_stElementAlignedBoxes->xNbAlignedBoxes; xDataElementIndex++)
+            {
+                p_stIndexedAlignedBox = &p_stElementAlignedBoxes->d_stListOfAlignedBoxes[xDataElementIndex];
+                if (INT_fn_bIntersectSegmentWithBox(p_stVertexA, p_stVertexB, p_stVectAB, &p_stGeomObj->d_stListOfPoints[p_stIndexedAlignedBox->xMinPoint], &p_stGeomObj->d_stListOfPoints[p_stIndexedAlignedBox->xMaxPoint], &xT, &stHit, &stNormal))
+                {
+                    INT_fn_vViewAndAddFaceElementInList(xNbMaxElements, p_xNbElements, d_stDataOfElement, p_stVertexA, 0, &stHit, xElementIndex, xDataElementIndex);
+                }
+            }
+            break;
+        }
+        default:
+            break;
+        }
+    }
+    return *p_xNbElements > 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\IntersGO.c lines 89–392 */
@@ -991,30 +1363,169 @@ unsigned char INT_fn_bIntersectSegmentWithFaceOfGeometricObject(MTH3D_tdstVector
  */
 unsigned char INT_fn_bIntersectSegmentWithFaceOfCollideObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVertexB, MTH3D_tdstVector_* p_stVectAB, COL_tdstCollideObject_* p_stGeomObj, short xNbMaxElements, short* p_xNbElements, GLI_tdstDataOfElement_* d_stDataOfElement)
 {
-    GMT_tdstCollideMaterial_* hCM;
-    short xData;
-    GMT_tdstGameMaterial_* hMaterial;
-    short xNbElements;
-    float aDEF_xSelectedT[100];
-    int aDEF_pstSelectedNode[100];
-    short xNumberOfSelectedNodes;
-    MTH3D_tdstVector_ stHit;
-    float xT;
-    MTH3D_tdstVector_ stNormal;
-    MTH3D_tdstVector_* p_stMinPoint;
-    COL_tdstIndexedAlignedBox_* p_stIndexedAlignedBox;
-    COL_tdstIndexedSphere_* p_stIndexedSphere;
-    MTH3D_tdstVector_* p_stNormal;
-    MTH3D_tdstVector_* p_stVertex1;
-    short xIndex;
-    short xNodeIndex;
-    short xDataElementIndex;
-    COL_tdstElementAlignedBoxes_* p_stElementAlignedBoxes;
-    COL_tdstElementSpheres_* p_stElementSpheres;
-    COL_tdstElementIndexedTriangles_* p_stElementIndexedTriangles;
-    unsigned char* p_xListIndex;
     short xElementIndex;
-    /* TODO: decompile from asm/... */
+    COL_tdstElementIndexedTriangles_* p_stElementIndexedTriangles;
+    COL_tdstElementSpheres_* p_stElementSpheres;
+    COL_tdstElementAlignedBoxes_* p_stElementAlignedBoxes;
+    short xDataElementIndex;
+    MTH3D_tdstVector_* p_stVertex1;
+    MTH3D_tdstVector_* p_stNormal;
+    COL_tdstIndexedSphere_* p_stIndexedSphere;
+    COL_tdstIndexedAlignedBox_* p_stIndexedAlignedBox;
+    MTH3D_tdstVector_ stNormal;
+    float xT;
+    MTH3D_tdstVector_ stHit;
+    GMT_tdstGameMaterial_* hMaterial;
+    GMT_tdstCollideMaterial_* hCollidedCollideMaterial;
+    short xNbElements;
+    short xData;
+    unsigned char xIndex;
+    short xNodeIndex;
+    unsigned char* p_xListIndex;
+    short xNumberOfSelectedNodes;
+    float aDEF_xSelectedT[100];
+    COL_tdstOctreeNode_* aDEF_pstSelectedNode[100];
+
+    *p_xNbElements = 0;
+    xElementIndex = 0;
+    xNbElements = 0;
+    xData = 0;
+    if (p_stGeomObj->p_stOctree)
+    {
+        COL_fn_vExploreOctreeWithSegment(p_stGeomObj->p_stOctree, p_stVertexA, p_stVectAB, aDEF_pstSelectedNode, aDEF_xSelectedT, &xNumberOfSelectedNodes);
+        COL_g_lFacesTagCounter++;
+        xIndex = 0;
+        xNbElements = 0;
+        while (xIndex < xNumberOfSelectedNodes)
+        {
+            COL_tdstOctreeNode_* p_stNode = (COL_tdstOctreeNode_*)aDEF_pstSelectedNode[xNbElements];
+            short* p_xNodeIndex = (short*)p_stNode->d_xFaceIndexList;
+            short xNode;
+            unsigned char* p_xList = (unsigned char*)(p_xNodeIndex + 1);
+            xNode = *p_xNodeIndex++;
+            {
+                unsigned char ucByte = *p_xList;
+                if (ucByte < 0x80)
+                {
+                    xData = (short)ucByte;
+                    p_xList++;
+                }
+                else
+                {
+                    xData = (short)(((ucByte & 0xFF) | (((unsigned short)p_xList[1]) << 8)) & 0x7FFF);
+                    p_xList += 2;
+                }
+            }
+            {
+                unsigned char ucByte = *p_xList;
+                if (ucByte < 0x80)
+                {
+                    xNodeIndex = (short)ucByte;
+                    p_xList++;
+                }
+                else
+                {
+                    xNodeIndex = (short)(((ucByte & 0xFF) | (((unsigned short)p_xList[1]) << 8)) & 0x7FFF);
+                    p_xList += 2;
+                }
+            }
+            {
+                short xFace = (short)(p_stGeomObj->p_stOctree->d_xElementBasesTable[xData * 2 + xNodeIndex] + xNode);
+                if (COL_g_d_lTaggedFacesTable[xFace] == COL_g_lFacesTagCounter)
+                {
+                    /* the face is already tagged */
+                }
+                else
+                {
+                    COL_g_d_lTaggedFacesTable[xFace] = COL_g_lFacesTagCounter;
+                    switch (p_stGeomObj->d_xListOfElementsTypes[xNbElements])
+                    {
+                    case 1:
+                    {
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                }
+            }
+            xIndex++;
+            xNbElements++;
+        }
+    }
+    else
+    {
+        for (xElementIndex = 0; xElementIndex < p_stGeomObj->xNbElements; xElementIndex++)
+        {
+            switch (p_stGeomObj->d_xListOfElementsTypes[xElementIndex])
+            {
+            case 1:
+            {
+                if (g_xMask)
+                {
+                    hMaterial = NULL;
+                    COL_vGetGameMaterialOfIndexedTriangles(p_stGeomObj, xElementIndex, &hMaterial);
+                    if (hMaterial)
+                    {
+                        hCollidedCollideMaterial = GMT_fn_hGetCollideMaterial(hMaterial);
+                        if (hCollidedCollideMaterial)
+                        {
+                            if (g_xMask & GMT_fn_hGetCollideMaterialIdentifier(hCollidedCollideMaterial))
+                            {
+                                p_stElementIndexedTriangles = (COL_tdstElementIndexedTriangles_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+                                for (xDataElementIndex = 0; xDataElementIndex < p_stElementIndexedTriangles->xNbFaces; xDataElementIndex++)
+                                {
+                                    p_stVertex1 = &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[0]];
+                                    p_stNormal = &p_stElementIndexedTriangles->d_stListOfFacesNormals[xDataElementIndex];
+                                    if (INT_fn_bIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB,
+                                            p_stVertex1,
+                                            &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[1]],
+                                            &p_stGeomObj->d_stListOfPoints[p_stElementIndexedTriangles->d_stListOfFacesTripled[xDataElementIndex].a3_xIndex[2]],
+                                            p_stNormal,
+                                            -MTH_xDot3(p_stNormal->xX, p_stVertex1->xX, p_stNormal->xY, p_stVertex1->xY, p_stNormal->xZ, p_stVertex1->xZ),
+                                            &xT, &stHit))
+                                    {
+                                        INT_fn_vViewAndAddFaceElementInList(xNbMaxElements, p_xNbElements, d_stDataOfElement, p_stVertexA, 0, &stHit, xElementIndex, xDataElementIndex);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+            case 7:
+            {
+                p_stElementSpheres = (COL_tdstElementSpheres_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+                for (xDataElementIndex = 0; xDataElementIndex < p_stElementSpheres->xNbSpheres; xDataElementIndex++)
+                {
+                    p_stIndexedSphere = &p_stElementSpheres->d_stListOfSpheres[xDataElementIndex];
+                    if (INT_fn_bIntersectSegmentWithSphere(p_stVertexA, p_stVectAB, &p_stGeomObj->d_stListOfPoints[p_stIndexedSphere->xCenterPoint], p_stIndexedSphere->xRadius, &xT, &stHit, &stNormal))
+                    {
+                        INT_fn_vViewAndAddFaceElementInList(xNbMaxElements, p_xNbElements, d_stDataOfElement, p_stVertexA, 0, &stHit, xElementIndex, xDataElementIndex);
+                    }
+                }
+                break;
+            }
+            case 8:
+            {
+                p_stElementAlignedBoxes = (COL_tdstElementAlignedBoxes_*)p_stGeomObj->d_stListOfElements[xElementIndex];
+                for (xDataElementIndex = 0; xDataElementIndex < p_stElementAlignedBoxes->xNbAlignedBoxes; xDataElementIndex++)
+                {
+                    p_stIndexedAlignedBox = &p_stElementAlignedBoxes->d_stListOfAlignedBoxes[xDataElementIndex];
+                    if (INT_fn_bIntersectSegmentWithBox(p_stVertexA, p_stVertexB, p_stVectAB, &p_stGeomObj->d_stListOfPoints[p_stIndexedAlignedBox->xMinPoint], &p_stGeomObj->d_stListOfPoints[p_stIndexedAlignedBox->xMaxPoint], &xT, &stHit, &stNormal))
+                    {
+                        INT_fn_vViewAndAddFaceElementInList(xNbMaxElements, p_xNbElements, d_stDataOfElement, p_stVertexA, 0, &stHit, xElementIndex, xDataElementIndex);
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+            }
+        }
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\IntersGO.c lines 38–69 */
@@ -1057,5 +1568,29 @@ unsigned char INT_fn_bIntersectSegmentWithFaceOfCollideObject(MTH3D_tdstVector_*
 void INT_fn_vViewAndAddFaceElementInList(short xNbMaxElements, short* p_xNbElements, GLI_tdstDataOfElement_* d_stDataOfElement, MTH3D_tdstVector_* p_stVertexA, unsigned char bBack, MTH3D_tdstVector_* p_stHit, short xElements, short xDataElementIndex)
 {
     short xFaceIndex;
-    /* TODO: decompile from asm/... */
+    float xDistance;
+
+    if (bBack)
+        return;
+
+    MTH_DISTANCE_TO(xDistance, p_stVertexA, p_stHit);
+
+    for (xFaceIndex = *p_xNbElements; xFaceIndex > 0 && xDistance < d_stDataOfElement[xFaceIndex-1].xDistance; xFaceIndex--)
+    {
+        memcpy(&d_stDataOfElement[xFaceIndex], &d_stDataOfElement[xFaceIndex-1], sizeof(GLI_tdstDataOfElement_));
+    }
+
+    if (xFaceIndex < xNbMaxElements)
+    {
+        *(int*)&d_stDataOfElement[xFaceIndex].stHit.xX = *(int*)&p_stHit->xX;
+        *(int*)&d_stDataOfElement[xFaceIndex].stHit.xY = *(int*)&p_stHit->xY;
+        *(int*)&d_stDataOfElement[xFaceIndex].stHit.xZ = *(int*)&p_stHit->xZ;
+        ((float*)&d_stDataOfElement[0].xDistance)[xFaceIndex * 6] = xDistance;
+        ((short*)&d_stDataOfElement[0].xElements)[xFaceIndex * 12] = xElements;
+        ((short*)&d_stDataOfElement[0].xIndexOfFace)[xFaceIndex * 12] = xDataElementIndex;
+        if (*p_xNbElements < xNbMaxElements)
+        {
+            *p_xNbElements = *p_xNbElements + 1;
+        }
+    }
 }

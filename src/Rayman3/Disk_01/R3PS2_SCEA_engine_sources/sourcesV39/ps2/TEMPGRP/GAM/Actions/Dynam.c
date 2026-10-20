@@ -1136,29 +1136,11 @@ struct DNM_stReport {
 unsigned char g_ucGameModuleId;
 char g_cInitializingTransitionSPO;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 305–305 */
-/* addr: 0x0026f510  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 305
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned int fn_ulCollSetSizeOf(void)
 {
     return 0x70;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 547–556 */
-/* addr: 0x0026f520  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 547
- *   +0x0004 -> line 549
- *   +0x000c -> line 551
- *   +0x0010 -> line 552
- *   +0x0020 -> line 556
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj)
 {
     DNM_stDynamics* p_stDynamics = NULL;
@@ -1171,103 +1153,119 @@ DNM_stDynamics* fn_p_stDynamGetDynamicsSO(HIE_tdstSuperObject_* hSupObj)
     return p_stDynamics;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 539–539 */
-/* addr: 0x0026f550  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 539
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vDynamSetUsedMechanics(tdstDynam_* h_Dynam, anon_enum_00825eb5 eUsedMechanics)
 {
     h_Dynam->eUsedMechanics = eUsedMechanics;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 530–530 */
-/* addr: 0x0026f560  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 530
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 DNM_stParsingDatas* fn_p_stDynamGetParsingDatas(tdstDynam_* h_Dynam)
 {
     return h_Dynam->p_stParsingDatas;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 522–522 */
-/* addr: 0x0026f570  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 522
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam)
 {
     return h_Dynam->p_stDynamics;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 449–501 */
-/* addr: 0x0026f580  size: 564 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 449
- *   +0x0024 -> line 457
- *   +0x0028 -> line 456
- *   +0x002c -> line 458
- *   +0x0030 -> line 459
- *   +0x0034 -> line 460
- *   +0x003c -> line 463
- *   +0x0048 -> line 466
- *   +0x0068 -> line 467
- *   +0x007c -> line 469
- *   +0x0084 -> line 472
- *   +0x00a4 -> line 475
- *   +0x00b8 -> line 476
- *   +0x00c0 -> line 478
- *   +0x00d4 -> line 479
- *   +0x00dc -> line 481
- *   +0x00f8 -> line 486
- *   +0x011c -> line 487
- *   +0x0120 -> line 489
- *   +0x0180 -> line 492
- *   +0x01ac -> line 495
- *   +0x01b8 -> line 496
- *   +0x01c8 -> line 497
- *   +0x01cc -> line 500
- *   +0x020c -> line 501
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void fn_v_DynamicFree(tdstDynam_* h_Dynam);
+
+void fn_v_DynamicAlloc(tdstDynam_* h_Dynam, eDynamicSize_ eSize, unsigned char bCollision, unsigned char bAlways);
+
+unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject);
+
 void fn_vDynamCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
 {
     unsigned char bAlways;
-    unsigned char bAlloc;
-    eDynamicSize_ eSize;
-    DNM_stDynamics* p_stDestDynamic;
     DNM_stDynamics* p_stSrcDynamic;
+    DNM_stDynamics* p_stDestDynamic;
+    eDynamicSize_ eSize;
+    unsigned char bAlloc;
     tdstDynam_* hSrc;
     tdstDynam_* hDest;
-    /* TODO: decompile from asm/... */
+    unsigned int ulFlags;
+
+    hDest = _p_stObjectDest->h_Dynam;
+    hSrc = _p_stObjectSrc->h_Dynam;
+    p_stSrcDynamic = hSrc->p_stDynamics;
+    p_stDestDynamic = hDest->p_stDynamics;
+
+    bAlloc = 1;
+
+    if (p_stSrcDynamic == NULL)
+        return;
+
+    bAlways = fn_ucIsAnAlwaysObject(_p_stObjectDest);
+
+    /* The retail source keeps the size selection on a single line; the line
+     * table of the target only has one entry for it. */
+    if ((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) eSize = eDynamicSizeComplex;
+    else { eSize = eDynamicSizeBase; if ((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0) eSize = eDynamicSizeAdvanced; }
+
+    if (p_stDestDynamic != NULL)
+    {
+        switch (eSize)
+        {
+        case eDynamicSizeComplex:
+            bAlloc = !((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0);
+            break;
+        case eDynamicSizeAdvanced:
+            bAlloc = !((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 2) ? 1 : 0);
+            break;
+        case eDynamicSizeBase:
+            bAlloc = !((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 1) ? 1 : 0);
+            break;
+        }
+
+        if (((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0) != ((p_stDestDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0))
+        {
+            bAlloc = 1;
+        }
+
+        if (bAlloc) { fn_v_DynamicFree(hDest); }
+    }
+
+    if (bAlloc) { fn_v_DynamicAlloc(hDest, eSize, (unsigned char)((p_stSrcDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0), bAlways); }
+
+    DNM_fn_vDynamicsCopyClone(hDest->p_stDynamics, hSrc->p_stDynamics);
+    memcpy(hDest->p_stParsingDatas, hSrc->p_stParsingDatas, sizeof(DNM_stParsingDatas));
+
+    hDest->eUsedMechanics = hSrc->eUsedMechanics;
+
+    /* One line in the retail source: the update stores the field in both arms
+     * and once more after the join. */
+    if (bAlways) { ulFlags = hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags | 0x40000; hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } else { ulFlags = hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFBFFFF; hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } hDest->p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 413–435 */
-/* addr: 0x0026f7c0  size: 304 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 413
- *   +0x0014 -> line 414
- *   +0x001c -> line 415
- *   +0x0048 -> line 417
- *   +0x0054 -> line 418
- *   +0x0080 -> line 420
- *   +0x00ac -> line 426
- *   +0x00d0 -> line 427
- *   +0x011c -> line 435
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+
 void fn_vDynamDesinit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
-    /* TODO: decompile from asm/... */
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_Dynam) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_ReinitTheMap:
+        break;
+    case OTI_MapLoaded:
+    {
+        DNM_stDynamics* p_stDynamic = p_stObject->h_Dynam->p_stDynamics;
+
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x40000) ? 1 : 0)
+        {
+            fn_v_DynamicFree(p_stObject->h_Dynam);
+        }
+        break;
+    }
+    case OTI_AlwaysCreated:
+        break;
+    case OTI_PlayerDead:
+        break;
+    }
 }
 
 void fn_vPushAllocModeAccordingToEngineObject(tdstEngineObject_* p_stObject);
@@ -1275,20 +1273,6 @@ void GAM_fn_vPopAllocMode(void);
 void DNM_fn_vInitBaseMechanic(DNM_stDynamics* p_stDynamic);
 void* memset(void*, int, unsigned int);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 369–399 */
-/* addr: 0x0026f8f0  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 369
- *   +0x0014 -> line 372
- *   +0x001c -> line 375
- *   +0x0040 -> line 384
- *   +0x004c -> line 387
- *   +0x0058 -> line 388
- *   +0x006c -> line 397
- *   +0x0074 -> line 399
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vDynamInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
 {
     fn_vPushAllocModeAccordingToEngineObject(p_stObject);
@@ -1313,21 +1297,7 @@ void fn_vDynamInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit
     GAM_fn_vPopAllocMode();
 }
 
-void fn_v_DynamicFree(tdstDynam_* h_Dynam);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 335–349 */
-/* addr: 0x0026f980  size: 232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 335
- *   +0x0010 -> line 336
- *   +0x0018 -> line 337
- *   +0x0044 -> line 339
- *   +0x0050 -> line 340
- *   +0x007c -> line 344
- *   +0x00d8 -> line 349
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vDynamFree(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {
@@ -1339,131 +1309,98 @@ void fn_vDynamFree(tdstEngineObject_* p_stObject)
     fn_v_DynamicFree(p_stObject->h_Dynam);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 290–319 */
-/* addr: 0x0026fa70  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 290
- *   +0x0010 -> line 293
- *   +0x001c -> line 301
- *   +0x0038 -> line 303
- *   +0x0048 -> line 304
- *   +0x0054 -> line 305
- *   +0x0060 -> line 317
- *   +0x0064 -> line 318
- *   +0x0068 -> line 319
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma auto_inline on
+/* The retail code tests the end flags through a register copy of the dynamics
+ * pointer while the address of the pointer variable (the stack slot handed to
+ * HMU_fn_vFree) is what gets freed; MWCC only keeps the register copy when
+ * the pointer is read through a second, non address-taken local. */
 void fn_v_DynamicFree(tdstDynam_* h_Dynam)
 {
     DNM_stDynamics* p_stDynamic;
+    DNM_stDynamics* p_stDyn;
 
-
-    if ((p_stDynamic = h_Dynam->p_stDynamics) != NULL)
+    if ((p_stDynamic = p_stDyn = h_Dynam->p_stDynamics, p_stDyn != NULL))
     {
-
-
-
-
-
-
-
-        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x40000) ? 1 : 0)
+        if ((p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 0x40000) ? 1 : 0)
         {
-            if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
-                HMU_fn_vFree((void**)&p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport, 1);
+            if ((p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0)
+                HMU_fn_vFree((void**)&p_stDyn->m_tdstDynamicsBaseBlock.m_pstReport, 1);
             HMU_fn_vFree((void**)&p_stDynamic, 1);
         }
-
-
-
-
-
-
-
-
-
-
-
         h_Dynam->p_stDynamics = NULL;
         p_stDynamic = NULL;
     }
 }
+
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 209–286 */
-/* addr: 0x0026faf0  size: 540 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 209
- *   +0x0024 -> line 233
- *   +0x002c -> line 235
- *   +0x0054 -> line 238
- *   +0x0060 -> line 239
- *   +0x0068 -> line 238
- *   +0x006c -> line 239
- *   +0x007c -> line 240
- *   +0x0084 -> line 242
- *   +0x0090 -> line 243
- *   +0x0098 -> line 242
- *   +0x009c -> line 243
- *   +0x00ac -> line 244
- *   +0x00b4 -> line 246
- *   +0x00bc -> line 247
- *   +0x00c0 -> line 246
- *   +0x00c4 -> line 247
- *   +0x00c8 -> line 250
- *   +0x00d0 -> line 253
- *   +0x00f8 -> line 256
- *   +0x0100 -> line 257
- *   +0x0108 -> line 256
- *   +0x010c -> line 257
- *   +0x011c -> line 258
- *   +0x0124 -> line 260
- *   +0x012c -> line 261
- *   +0x0134 -> line 260
- *   +0x0138 -> line 261
- *   +0x0148 -> line 262
- *   +0x0150 -> line 264
- *   +0x0158 -> line 265
- *   +0x015c -> line 264
- *   +0x0160 -> line 265
- *   +0x0168 -> line 270
- *   +0x016c -> line 271
- *   +0x019c -> line 273
- *   +0x01a4 -> line 275
- *   +0x01ac -> line 276
- *   +0x01c0 -> line 278
- *   +0x01c8 -> line 279
- *   +0x01d0 -> line 281
- *   +0x01d4 -> line 283
- *   +0x0200 -> line 286
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
 void fn_v_DynamicAlloc(tdstDynam_* h_Dynam, eDynamicSize_ eSize, unsigned char bCollision, unsigned char bAlways)
 {
-    DNM_stDynamics* p_stDynamic;
-    /* TODO: decompile from asm/... */
+    DNM_stDynamics* p_stDynamic = NULL;
+    unsigned int ulFlags;
+
+    if (bAlways)
+    {
+        switch (eSize)
+        {
+        case eDynamicSizeBase:
+            p_stDynamic = (DNM_stDynamics*)HMU_fn_p_vMalloc(0x170, 1);
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= ~7; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 1;
+            break;
+        case eDynamicSizeAdvanced:
+            p_stDynamic = (DNM_stDynamics*)HMU_fn_p_vMalloc(0x200, 1);
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= ~7; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 3;
+            break;
+        case eDynamicSizeComplex:
+            p_stDynamic = (DNM_stDynamics*)HMU_fn_p_vMalloc(0x370, 1);
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 7;
+            break;
+        }
+    }
+    else
+    {
+        switch (eSize)
+        {
+        case eDynamicSizeBase:
+            p_stDynamic = (DNM_stDynamics*)HMU_fn_p_vMalloc(0x170, 0);
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= ~7; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 1;
+            break;
+        case eDynamicSizeAdvanced:
+            p_stDynamic = (DNM_stDynamics*)HMU_fn_p_vMalloc(0x200, 0);
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags &= ~7; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 3;
+            break;
+        case eDynamicSizeComplex:
+            p_stDynamic = (DNM_stDynamics*)HMU_fn_p_vMalloc(0x370, 0);
+            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 7;
+            break;
+        }
+    }
+
+    h_Dynam->p_stDynamics = p_stDynamic;
+
+    /* One line in the retail source: the update stores the field in both arms
+     * and once more after the join. */
+    if (bAlways) { ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x40000; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } else { ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFBFFFF; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+
+    if (bCollision)
+    {
+        if (bAlways)
+            p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport = (DNM_stReport*)HMU_fn_p_vMalloc(0x16C, 1);
+        else
+            p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport = (DNM_stReport*)HMU_fn_p_vMalloc(0x16C, 0);
+    }
+    else
+    {
+        p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport = NULL;
+    }
+
+    /* One line in the retail source, as above. */
+    if (bCollision) { ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x4000; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } else { ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFFBFFF; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags; } p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
 }
 
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\Dynam.c lines 182–195 */
-/* addr: 0x0026fd10  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 182
- *   +0x0010 -> line 183
- *   +0x0018 -> line 184
- *   +0x0044 -> line 186
- *   +0x0050 -> line 187
- *   +0x007c -> line 190
- *   +0x009c -> line 192
- *   +0x00bc -> line 195
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vDynamAlloc(tdstEngineObject_* p_stObject)
 {
     if (!p_stObject) {

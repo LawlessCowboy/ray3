@@ -8,6 +8,33 @@ ELF with CodeWarrior PS2 through Wibo: game sources build with 3.0.1
 -O3,p`. The only accepted baseline profile is encoded in `tools/match.py` and
 the Makefile.
 
+**Ask before editing the tooling.** `tools/match.py` and the `config/`
+compiler lists are coordinator-owned, but ownership is not permission: the
+coordinator must ask the user before changing them, and say which change and
+why. A compiler-list change alters what code the compiler produces for a whole
+translation unit, so it is always measured with `verify-recorded` before and
+after, and the trade-off is written into the list file.
+
+## Scope: library header functions are out of scope
+
+The retail debug attributes 177 functions to headers (`.h`, `.hpp`, `.hxx`):
+the C4_R3 `harmonx` Pustl portable STL (`stree.h`, `streebase.h`, `smap.h`,
+`sset.h`, `slist.h`, `sfunctional.h`, `smemory.h`, `sstring.h`,
+`CStringIsLess.h`), the `CIdObjPtr`/`CIndexAllocator` services, and the
+public MTH/Mat and PS2GL support headers. Those are library support code, not
+game code, and they are **not** part of the decompilation effort.
+
+`tools/match.py` enforces this: `list`, `worklist` and `batch` skip
+header-owned functions (`list --include-headers` still shows them), `coverage`
+counts them out of the totals and reports them as *excluded (library header
+functions, out of scope)*, and `translation_units` ignores them so a
+translation unit is never held open by a header function. Do not take header
+functions from a worklist, and do not edit library headers to chase them.
+
+Game translation units may still *include* a library header, and a game
+function whose retail debug points at a header is verified with
+`check FUNCTION --source <the game unit that uses it>`.
+
 ## Git branches and pull requests
 
 `main` is protected. When a task explicitly calls for committing and pushing

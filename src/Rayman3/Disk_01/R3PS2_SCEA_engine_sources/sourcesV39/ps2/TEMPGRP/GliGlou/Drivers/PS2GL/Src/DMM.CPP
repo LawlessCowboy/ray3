@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+extern "C" int printf(const char*, ...);
+extern "C" void* memcpy(void*, const void*, unsigned int);
+extern "C" void* PS2ASM_SearchBlocInChain(void* Chain, void* Bloc);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct J_New_InterpolPoint_ J_New_InterpolPoint_;
@@ -135,6 +139,7 @@ typedef enum MAT_tdeTranformationType_ {
 
 struct C_SdlCache {
     tdstSDLCacheEntry_* m_pList; /* +0x0 */
+    unsigned int FindOldestSDLInstanceAndRemoveIt(void);
 };
 
 struct MTH3D_tdstVector_ {
@@ -204,7 +209,7 @@ struct GEO_tdstEdge_ {
 struct DMM_tdstAllocInfo_ {
     unsigned int PADMarker1; /* +0x0 */
     unsigned int AllocSize; /* +0x4 */
-    int OrgPointer; /* +0x8 */
+    DMM_tdstFreeBloc_* OrgPointer; /* +0x8 */
     unsigned int PADMarker2; /* +0xc */
 };
 
@@ -223,7 +228,7 @@ struct DMMBloc {
     DMM_tdstFreeBloc_* m_pFreeBlocsChainEnd; /* +0x18 */
     unsigned int m_UsedMemory; /* +0x1c */
     int m_AllocMode; /* +0x20 */
-    void realloc_nofail(void* _pointer, unsigned int _size, unsigned int* p_bCouldntDoIt);
+    void* realloc_nofail(void* _pointer, unsigned int _size, unsigned int* p_bCouldntDoIt);
     void reduce(void* _pointer, unsigned int _size);
     void* memalign(unsigned int _alignment, unsigned int _size);
     DMMBloc(unsigned int _size, unsigned int _alignment);
@@ -1175,7 +1180,7 @@ struct C_Sdl {
 
 DMMBloc* PS2GL_pMemoryBloc;
 int PS2GL_SDL_DataBuffer;
-int GLI_g_SdlCache;
+C_SdlCache* GLI_g_SdlCache;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 75–131 */
 /* addr: 0x002cfd30  size: 232 bytes */
@@ -1265,13 +1270,20 @@ void SetAllocMode(int mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CheckPS2GLMem(void)
+extern "C" void CheckPS2GLMem(void)
 {
-    unsigned int PreviousOne;
-    signed char init;
-    /* TODO: decompile from asm/... */
+    static unsigned int PreviousOne;
+    static signed char init;
+    unsigned int uiMaxMalloc = 0;
+    if (!init)
+    {
+        PreviousOne = 0;
+        init = 1;
+    }
+    { DMM_tdstFreeBloc_* pCur = PS2GL_pMemoryBloc->m_pFreeBlocsChain; while (pCur != NULL) { unsigned int uiAligned = ((unsigned int)((char*)pCur + 16) + PS2GL_pMemoryBloc->m_BlocAlignment - 1) & ~(PS2GL_pMemoryBloc->m_BlocAlignment - 1); unsigned int uiSize = (unsigned int)((char*)pCur + pCur->BlocSize) - uiAligned; if (uiSize > uiMaxMalloc) { uiMaxMalloc = uiSize; } pCur = pCur->pNext; } }
+    PreviousOne = PS2GL_pMemoryBloc->m_UsedMemory;
+    printf("m_UsedMemory = %d,%03d,%03d bytes, MaxMalloc=%d\n", PS2GL_pMemoryBloc->m_UsedMemory >> 20, (PS2GL_pMemoryBloc->m_UsedMemory & 0xFFFFF) >> 10, PS2GL_pMemoryBloc->m_UsedMemory & 0x3FF, uiMaxMalloc);
 }
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 1295–1325 */
 /* addr: 0x002cfee0  size: 132 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1284,14 +1296,21 @@ void CheckPS2GLMem(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2GL_realloc(void* p, unsigned int size)
+extern "C" void* PS2GL_realloc(void* p, unsigned int size)
 {
-    unsigned int bFailed;
-    void* p2;
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 1264–1292 */
+    void* pResult;
+    unsigned int bCouldntDoIt;
+    do
+    {
+        bCouldntDoIt = 0;
+        pResult = PS2GL_pMemoryBloc->realloc_nofail(p, size, &bCouldntDoIt);
+        if ((pResult == NULL) || (bCouldntDoIt != 0))
+        {
+            GLI_g_SdlCache->FindOldestSDLInstanceAndRemoveIt();
+        }
+    } while ((bCouldntDoIt != 0) || (pResult == NULL));
+    return pResult;
+}/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 1264–1292 */
 /* addr: 0x002cff70  size: 244 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
  *   +0x0000 -> line 1264
@@ -1302,12 +1321,15 @@ void PS2GL_realloc(void* p, unsigned int size)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2GL_free(void* p)
+extern "C" void PS2GL_free(void* p)
 {
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 1229–1260 */
+    if (p == NULL) { return; }
+    {
+    DMMBloc* pBloc = PS2GL_pMemoryBloc; unsigned int uiBase = (unsigned int)pBloc->m_pMemoryBloc; DMM_tdstAllocInfo_* pInfo; DMM_tdstFreeBloc_* pOrgBloc; unsigned int uiAllocSize; int bInRange; int bInRange2; if (((unsigned int)p >= uiBase) && ((unsigned int)p < uiBase + pBloc->m_MemoryBlocSize)) bInRange = 1; else bInRange = 0; if (bInRange) { pInfo = (DMM_tdstAllocInfo_*)((char*)p - 16);
+        if (((unsigned int)pInfo >= uiBase) && ((unsigned int)pInfo < uiBase + pBloc->m_MemoryBlocSize)) bInRange2 = 1; else bInRange2 = 0; if (!(bInRange2 && (pInfo->PADMarker1 == 0xBABEBABE) && (pInfo->PADMarker2 == 0xBABEBABE))) { printf("********************* DMM : Invalid Bloc in free ****\n"); } else { pBloc->m_UsedMemory -= pInfo->AllocSize; uiAllocSize = pInfo->AllocSize; pOrgBloc = pInfo->OrgPointer; pOrgBloc->PADMarker1 = 0xC0DEC0DE; pOrgBloc->BlocSize = uiAllocSize; pOrgBloc->pNext = NULL; pOrgBloc->pPrevious = NULL; pBloc->add_FreeBloc(pOrgBloc); }
+    }
+    }
+}/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 1229–1260 */
 /* addr: 0x002d0070  size: 108 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
  *   +0x0000 -> line 1229
@@ -1320,10 +1342,20 @@ void PS2GL_free(void* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2GL_malloc(unsigned int size)
+extern "C" void* PS2GL_malloc(unsigned int size)
 {
-    unsigned int FoundSomethingToFree;
-    /* TODO: decompile from asm/... */
+    unsigned int pFound;
+    void* pResult;
+    do
+    {
+        pResult = PS2GL_pMemoryBloc->memalign(PS2GL_pMemoryBloc->m_BlocAlignment, size);
+        if (pResult == NULL)
+        {
+            pFound = GLI_g_SdlCache->FindOldestSDLInstanceAndRemoveIt();
+        }
+    }
+    while ((pResult == NULL) && (pFound != NULL));
+    return pResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 1217–1226 */
@@ -1370,12 +1402,48 @@ void PS2GL_vInitMemoryBloc(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DMMBloc::realloc_nofail(void* _pointer, unsigned int _size, unsigned int* p_bCouldntDoIt)
+void* DMMBloc::realloc_nofail(void* _pointer, unsigned int _size, unsigned int* p_bCouldntDoIt)
 {
     void* pNewPointer;
     unsigned int UseableAllocatedSize;
     DMM_tdstAllocInfo_* pAllocInfo;
-    /* TODO: decompile from asm/... */
+    DMM_tdstFreeBloc_* pOrgBloc;
+    unsigned int uiAllocSize;
+    unsigned int bInRange;
+
+    if (_pointer == NULL)
+    {
+        *p_bCouldntDoIt = 0;
+        return memalign(m_BlocAlignment, _size);
+    }
+
+    pAllocInfo = (DMM_tdstAllocInfo_*)((char*)_pointer - 16);
+    if ((unsigned int)pAllocInfo >= (unsigned int)m_pMemoryBloc && (unsigned int)pAllocInfo < (unsigned int)m_pMemoryBloc + m_MemoryBlocSize) bInRange = 1; else bInRange = 0; if (!bInRange || pAllocInfo->PADMarker1 != 0xBABEBABE || pAllocInfo->PADMarker2 != 0xBABEBABE)
+    {
+        *p_bCouldntDoIt = 1;
+        return _pointer;
+    }
+
+    UseableAllocatedSize = (unsigned int)pAllocInfo->OrgPointer + pAllocInfo->AllocSize - (unsigned int)_pointer;
+    if (_size <= UseableAllocatedSize)
+    {
+        *p_bCouldntDoIt = 0;
+        reduce(_pointer, _size);
+        return _pointer;
+    }
+    else
+    {
+        pNewPointer = memalign(m_BlocAlignment, _size);
+        if (pNewPointer == NULL)
+        {
+            *p_bCouldntDoIt = 1;
+            return _pointer;
+        }
+        memcpy(pNewPointer, _pointer, UseableAllocatedSize);
+        if ((unsigned int)pAllocInfo >= (unsigned int)m_pMemoryBloc && (unsigned int)pAllocInfo < (unsigned int)m_pMemoryBloc + m_MemoryBlocSize) bInRange = 1; else bInRange = 0; if (!bInRange || pAllocInfo->PADMarker1 != 0xBABEBABE || pAllocInfo->PADMarker2 != 0xBABEBABE) { printf("********************* DMM : Invalid Bloc in free ****\n"); *p_bCouldntDoIt = 0; } else { m_UsedMemory -= pAllocInfo->AllocSize; uiAllocSize = pAllocInfo->AllocSize; pOrgBloc = (DMM_tdstFreeBloc_*)pAllocInfo->OrgPointer; pOrgBloc->PADMarker1 = 0xC0DEC0DE; pOrgBloc->BlocSize = uiAllocSize; pOrgBloc->pNext = NULL; pOrgBloc->pPrevious = NULL; add_FreeBloc(pOrgBloc);
+            *p_bCouldntDoIt = 0; }
+        return pNewPointer;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 1018–1082 */
@@ -1407,11 +1475,33 @@ void DMMBloc::realloc_nofail(void* _pointer, unsigned int _size, unsigned int* p
  */
 void DMMBloc::reduce(void* _pointer, unsigned int _size)
 {
-    unsigned int AlignedNewSize;
+    unsigned int nInRange;
     DMM_tdstFreeBloc_* pFreeBloc;
     unsigned int NewFreeSize;
+    unsigned int AlignedNewSize;
     DMM_tdstAllocInfo_* pAllocInfo;
-    /* TODO: decompile from asm/... */
+
+    if (_pointer == NULL)
+        return;
+
+    AlignedNewSize = (_size + (m_BlocAlignment - 1)) & ~(m_BlocAlignment - 1);
+    pAllocInfo = (DMM_tdstAllocInfo_*)((char*)_pointer - 16);
+    if ((unsigned int)pAllocInfo >= (unsigned int)m_pMemoryBloc && (unsigned int)pAllocInfo < (unsigned int)m_pMemoryBloc + m_MemoryBlocSize) nInRange = 1; else nInRange = 0; if (!nInRange || pAllocInfo->PADMarker1 != 0xBABEBABE || pAllocInfo->PADMarker2 != 0xBABEBABE)
+    {
+        printf("********************* DMM : Invalid Bloc in reduce ****\n");
+        return;
+    }
+
+    m_UsedMemory -= pAllocInfo->AllocSize;
+    NewFreeSize = (unsigned int)pAllocInfo->OrgPointer + pAllocInfo->AllocSize - (unsigned int)_pointer - AlignedNewSize;
+    pFreeBloc = (DMM_tdstFreeBloc_*)((char*)_pointer + AlignedNewSize);
+    if (NewFreeSize > 16)
+    {
+        pAllocInfo->AllocSize -= NewFreeSize;
+        pFreeBloc->PADMarker1 = 0xC0DEC0DE; pFreeBloc->BlocSize = NewFreeSize; pFreeBloc->pNext = NULL;
+        pFreeBloc->pPrevious = NULL; add_FreeBloc(pFreeBloc);
+    }
+    m_UsedMemory += pAllocInfo->AllocSize;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 839–965 */
@@ -1474,7 +1564,74 @@ void* DMMBloc::memalign(unsigned int _alignment, unsigned int _size)
     DMM_tdstFreeBloc_* pFreeBloc;
     unsigned int align_minus_one;
     unsigned int total_size;
-    /* TODO: decompile from asm/... */
+
+    align_minus_one = _alignment + (-1);
+    AlignedSize = (_size + align_minus_one) & ~align_minus_one;
+    total_size = AlignedSize;
+    Found = 0;
+    pFreeBloc = m_pFreeBlocsChain;
+    while (pFreeBloc != NULL && !Found)
+    {
+        if (AlignedSize < pFreeBloc->BlocSize)
+        {
+            pBasePointer = (char*)pFreeBloc + 16;
+            pBlocPointer = (char*)pBasePointer + (_alignment - 1);
+            pBasePointer = (void*)((unsigned int)pBlocPointer & ~(_alignment - 1));
+            if ((unsigned int)pFreeBloc + pFreeBloc->BlocSize >= (unsigned int)pBasePointer + AlignedSize)
+            {
+                total_size = (unsigned int)pBasePointer + AlignedSize - (unsigned int)pFreeBloc;
+                Found++;
+            }
+            else
+            {
+                pFreeBloc = pFreeBloc->pNext;
+            }
+        }
+        else
+        {
+            pFreeBloc = pFreeBloc->pNext;
+        }
+    }
+    if (!Found)
+        return NULL;
+
+    pNewFreeBloc = (DMM_tdstFreeBloc_*)((char*)pBasePointer + AlignedSize);
+    NewFreeBlocSize = pFreeBloc->BlocSize - ((unsigned int)pNewFreeBloc - (unsigned int)pFreeBloc);
+    if (NewFreeBlocSize > 16)
+    {
+        remove_from_hashtable(pFreeBloc);
+        pNewFreeBloc->PADMarker1 = 0xC0DEC0DE;
+        pNewFreeBloc->BlocSize = NewFreeBlocSize;
+        pNewFreeBloc->pNext = pFreeBloc->pNext;
+        pNewFreeBloc->pPrevious = pFreeBloc->pPrevious;
+        if (pNewFreeBloc->pNext != NULL)
+            pNewFreeBloc->pNext->pPrevious = pNewFreeBloc;
+        if (pNewFreeBloc->pPrevious != NULL)
+            pNewFreeBloc->pPrevious->pNext = pNewFreeBloc;
+        if (pFreeBloc == m_pFreeBlocsChain)
+            m_pFreeBlocsChain = pNewFreeBloc;
+        if (pNewFreeBloc->pNext == NULL)
+            m_pFreeBlocsChainEnd = pNewFreeBloc;
+        {
+            unsigned int uiHashIndex = ((unsigned int)pNewFreeBloc - (unsigned int)m_pMemoryBloc) >> 10;
+            DMM_tdstFreeBloc_** ppHashSlot = &m_pHashTable[uiHashIndex];
+            if (*ppHashSlot == NULL || pNewFreeBloc < *ppHashSlot)
+                *ppHashSlot = pNewFreeBloc;
+        }
+        NewFreeBlocSize = 0;
+    }
+    else
+    {
+        remove_FreeBloc(pFreeBloc);
+    }
+    pAllocInfo = (DMM_tdstAllocInfo_*)((char*)pBasePointer - 16);
+    pAllocInfo->PADMarker1 = 0xBABEBABE;
+    pAllocInfo->AllocSize = total_size;
+    pAllocInfo->OrgPointer = pFreeBloc;
+    pAllocInfo->PADMarker2 = 0xBABEBABE;
+    pAllocInfo->AllocSize += NewFreeBlocSize;
+    m_UsedMemory += pAllocInfo->AllocSize;
+    return pBasePointer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 628–796 */
@@ -1554,7 +1711,113 @@ void DMMBloc::add_FreeBloc(DMM_tdstFreeBloc_* pFreeBloc)
     unsigned int EndBlocPointer;
     DMM_tdstFreeBloc_* pPreviousBloc;
     DMM_tdstFreeBloc_* pBloc;
-    /* TODO: decompile from asm/... */
+
+    if (m_pFreeBlocsChain == NULL)
+    {
+        m_pFreeBlocsChain = pFreeBloc;
+        pFreeBloc->pNext = NULL;
+        pFreeBloc->pPrevious = NULL;
+        m_pFreeBlocsChainEnd = m_pFreeBlocsChain;
+        {
+            unsigned int uiHashIndex = ((unsigned int)pFreeBloc - (unsigned int)m_pMemoryBloc) >> 10;
+            DMM_tdstFreeBloc_** ppHashSlot = &m_pHashTable[uiHashIndex];
+            if (*ppHashSlot == NULL || pFreeBloc < *ppHashSlot)
+                *ppHashSlot = pFreeBloc;
+        }
+        return;
+    }
+
+    if (pFreeBloc < m_pFreeBlocsChain)
+    {
+        EndBlocPointer = (unsigned int)pFreeBloc + pFreeBloc->BlocSize;
+        pFreeBloc->pNext = m_pFreeBlocsChain;
+        pFreeBloc->pPrevious = NULL;
+        m_pFreeBlocsChainEnd->pNext = pFreeBloc;
+        m_pFreeBlocsChain = pFreeBloc;
+        pBloc = pFreeBloc->pNext;
+        if (pBloc != NULL && EndBlocPointer == (unsigned int)pBloc)
+        {
+            unsigned int uiHashIndex = ((unsigned int)pBloc - (unsigned int)m_pMemoryBloc) >> 10;
+            DMM_tdstFreeBloc_** ppHashSlot = &m_pHashTable[uiHashIndex];
+            if (*ppHashSlot == pBloc)
+            {
+                DMM_tdstFreeBloc_* pNext = pBloc->pNext;
+                if (pNext == NULL || ((unsigned int)pNext - (unsigned int)m_pMemoryBloc) >> 10 != uiHashIndex)
+                    *ppHashSlot = NULL;
+                else
+                    *ppHashSlot = pNext;
+            }
+            if (m_pFreeBlocsChainEnd == pFreeBloc->pNext)
+                m_pFreeBlocsChainEnd = pFreeBloc;
+            pFreeBloc->BlocSize += pBloc->BlocSize;
+            pFreeBloc->pNext = pBloc->pNext;
+            if (pFreeBloc->pNext != NULL)
+                pFreeBloc->pNext->pPrevious = pFreeBloc;
+        }
+        {
+            unsigned int uiHashIndex = ((unsigned int)pFreeBloc - (unsigned int)m_pMemoryBloc) >> 10;
+            DMM_tdstFreeBloc_** ppHashSlot = &m_pHashTable[uiHashIndex];
+            if (*ppHashSlot == NULL || pFreeBloc < *ppHashSlot)
+                *ppHashSlot = pFreeBloc;
+        }
+    }
+    else
+    {
+        unsigned int uiHashIndex = ((unsigned int)pFreeBloc - (unsigned int)m_pMemoryBloc) >> 10;
+        DMM_tdstFreeBloc_* pInsert = NULL;
+        DMM_tdstFreeBloc_* pCandidate;
+        while (uiHashIndex != 0)
+        {
+            pCandidate = m_pHashTable[uiHashIndex];
+            if (pCandidate != NULL && pFreeBloc < pCandidate)
+                break;
+            uiHashIndex--;
+        }
+        pCandidate = (uiHashIndex != 0) ? m_pHashTable[uiHashIndex] : NULL;
+        if (pCandidate != NULL)
+            pCandidate = (DMM_tdstFreeBloc_*)PS2ASM_SearchBlocInChain(pCandidate, pFreeBloc);
+        if (pCandidate != NULL)
+        {
+            pPreviousBloc = pCandidate->pPrevious;
+            pFreeBloc->pNext = pCandidate;
+            pPreviousBloc->pNext = pFreeBloc;
+            pFreeBloc->pPrevious = pPreviousBloc;
+            if (pFreeBloc->pNext == NULL)
+                m_pFreeBlocsChainEnd = pFreeBloc;
+            pCandidate->pPrevious = pFreeBloc;
+            if (pCandidate->pNext == NULL)
+                m_pFreeBlocsChainEnd = pCandidate;
+        }
+        else
+        {
+            pPreviousBloc = m_pFreeBlocsChainEnd;
+            m_pFreeBlocsChainEnd->pNext = pFreeBloc;
+            pFreeBloc->pNext = NULL;
+            pFreeBloc->pPrevious = pPreviousBloc;
+            m_pFreeBlocsChainEnd = pFreeBloc;
+        }
+        {
+            unsigned int uiIndex = ((unsigned int)pFreeBloc - (unsigned int)m_pMemoryBloc) >> 10;
+            DMM_tdstFreeBloc_** ppHashSlot = &m_pHashTable[uiIndex];
+            if (*ppHashSlot == NULL || pFreeBloc < *ppHashSlot)
+                *ppHashSlot = pFreeBloc;
+        }
+        {
+            DMM_tdstFreeBloc_* pEnd = m_pFreeBlocsChainEnd;
+            if ((unsigned int)pEnd + pEnd->BlocSize == (unsigned int)pFreeBloc)
+            {
+                pEnd->BlocSize += pFreeBloc->BlocSize;
+                pEnd->pNext = NULL;
+                m_pFreeBlocsChainEnd = pEnd;
+                {
+                    unsigned int uiIndex = ((unsigned int)pEnd - (unsigned int)m_pMemoryBloc) >> 10;
+                    DMM_tdstFreeBloc_** ppHashSlot = &m_pHashTable[uiIndex];
+                    if (*ppHashSlot == pFreeBloc)
+                        *ppHashSlot = pEnd;
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 554–577 */
@@ -1577,9 +1840,29 @@ void DMMBloc::add_FreeBloc(DMM_tdstFreeBloc_* pFreeBloc)
 void DMMBloc::remove_from_hashtable(DMM_tdstFreeBloc_* pFreeBloc)
 {
     unsigned int HashTableIndex;
-    /* TODO: decompile from asm/... */
+    if (pFreeBloc != NULL)
+    {
+        HashTableIndex = ((unsigned int)pFreeBloc - (unsigned int)m_pMemoryBloc) >> 10;
+        if (m_pHashTable[HashTableIndex] == pFreeBloc)
+        {
+            if (pFreeBloc->pNext != NULL)
+            {
+                if (((unsigned int)pFreeBloc->pNext - (unsigned int)m_pMemoryBloc) >> 10 == HashTableIndex)
+                {
+                    m_pHashTable[HashTableIndex] = pFreeBloc->pNext;
+                }
+                else
+                {
+                    m_pHashTable[HashTableIndex] = NULL;
+                }
+            }
+            else
+            {
+                m_pHashTable[HashTableIndex] = NULL;
+            }
+        }
+    }
 }
-
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 499–526 */
 /* addr: 0x002d0ba0  size: 260 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):

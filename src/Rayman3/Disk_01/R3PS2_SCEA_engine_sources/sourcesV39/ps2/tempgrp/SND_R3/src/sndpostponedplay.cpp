@@ -22,13 +22,9 @@ typedef struct CResObjParams CResObjParams;
 typedef struct CExtraEventActor CExtraEventActor;
 typedef struct CLinkActor CLinkActor;
 typedef struct CResObj CResObj;
-typedef struct CUUID CUUID;
 typedef struct CIdObj CIdObj;
 typedef struct sstring sstring;
-typedef struct CResData CResData;
 typedef struct CResObjState CResObjState;
-typedef struct CIdObjPtr CIdObjPtr;
-typedef struct CEventResData CEventResData;
 typedef struct CCritSect CCritSect;
 typedef struct CActorProgramContext CActorProgramContext;
 typedef struct C2DParams C2DParams;
@@ -102,27 +98,51 @@ struct C3DDirection {
 
 namespace usnd { struct CResData; }
 
+namespace usnd {
+struct CUUID;
+struct CEventResData;
+
+/* usnd::CIdObjPtr<T>: the retail symbol
+ * __rf__Q24usnd27CIdObjPtr<Q24usnd8CResData>CFv is the const member __rf of
+ * the template instantiated with usnd::CResData. */
+template <class T> struct CIdObjPtr {
+    CLookupElement* m_poElmt; /* +0x0 */
+    T* __rf(void) const;
+};
+}
+
+typedef usnd::CUUID CUUID;
+typedef usnd::CEventResData CEventResData;
+typedef usnd::CResData CResData;
+
 struct PostponedPlay {
     static PostponedPlay* ms_pFirst;
     static PostponedPlay* ms_pFree;
     static PostponedPlay* ms_pLast;
+    static unsigned int ms_uiCount;
+    static unsigned int ms_uiMaxPlay;
     PostponedPlay* m_pNext; /* +0x0 */
     PostponedPlay* m_pPrev; /* +0x4 */
-    CEventResData* m_pData; /* +0x8 */
+    const CEventResData* m_pData; /* +0x8 */
     int m_s32Handle; /* +0xc */
     int m_s32LastCmd; /* +0x10 */
     void (*m_pProc)(int); /* +0x14 */
     CExtraEventActor* m_pEActor; /* +0x18 */
     unsigned int m_u32EngineContext; /* +0x1c */
-    void ms_uiMaxPlay(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue);
     static unsigned char fs_bIsPending(CExtraEventActor* pEActor);
-    void fs_vEmpty(void);
-    unsigned char fs_bExecute(int s32_CmdId, CUUID* roId, CExtraEventActor* pEActor);
+    static void fs_vEmpty(void);
+    static unsigned char fs_bExecute(int s32_CmdId, const CUUID& roId, CExtraEventActor* pEActor);
     static unsigned char fs_bIsSoundPlaying(int s32_Handle, CExtraEventActor* pEActor);
     static unsigned char fs_bIsSoundPlaying(usnd::CResData* po_ResData, CExtraEventActor* pEActor);
-    void fs_vSynchro(void);
-    unsigned char fs_bPlay(CEventResData* ro_EventResData, int s32_Handle, void (*pfn_Proc)(int), CExtraEventActor* pEActor);
+    static void fs_vSynchro(void);
+    static unsigned char fs_bPlay(const CEventResData& ro_EventResData, int s32_Handle, void (*pfn_Proc)(int), CExtraEventActor* pEActor);
+    void f_vSet(const CEventResData& ro_EventResData, int s32_Handle, void (*pfn_Proc)(int), CExtraEventActor* pEActor, PostponedPlay* pNext, PostponedPlay* pPrev);
 };
+
+/* Global flag copied into each postponed-play entry (see fs_vSynchro). */
+unsigned char g_bUseMarkersForNextRequest;
+
+extern "C" void* usnd_malloc(unsigned int uiSize);
 
 struct CStringIsLess {
     /* C++ base binary_function at +0x0. */
@@ -182,6 +202,8 @@ struct CExtraEventActor {
     unsigned char mbWaitForKill; /* +0x48 */
     unsigned char mbAllSoundPaused; /* +0x49 */
     CResObjParams m_oResObjParams; /* +0x4c */
+    unsigned char mfn_bPlay(const CEventResData& ro_EventResData, int s32_Handle, void (*pfn_Proc)(int));
+    unsigned char mfn_bExecute(int s32_CmdId, const CUUID& roId);
 };
 
 struct CLinkActor {
@@ -198,13 +220,24 @@ struct CResObj {
     CResData* m_poResData; /* +0x8 */
 };
 
-struct CUUID {
+struct usnd::CUUID {
     unsigned int m_uiHighWord; /* +0x0 */
     unsigned int m_uiLowWord; /* +0x4 */
 };
 
-struct CIdObj {
-    /* C++ base CRTTIClass at +0x0. */
+namespace usnd {
+inline bool operator==(const CUUID& a, const CUUID& b)
+{
+    return a.m_uiHighWord == b.m_uiHighWord && a.m_uiLowWord == b.m_uiLowWord;
+}
+}
+
+struct CRTTIClass {
+    /* C++ base with a virtual destructor: the vtable pointer sits at +0x0. */
+    virtual ~CRTTIClass();
+};
+
+struct CIdObj : CRTTIClass {
     CUUID m_oId; /* +0x4 */
 };
 
@@ -216,7 +249,7 @@ struct CRefIdObj : CIdObj {
     unsigned char m_bMarkFlag; /* +0xc */
 };
 
-struct CResData : CRefIdObj {
+struct usnd::CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
 };
@@ -239,17 +272,13 @@ struct CResObjState {
     unsigned int m_uiLockCount; /* +0x24 */
 };
 
-struct CIdObjPtr {
-    CLookupElement* m_poElmt; /* +0x0 */
-};
-
-struct CEventResData : CResData {
+struct usnd::CEventResData : usnd::CResData {
     float m_fCoeffA; /* +0x18 */
     float m_fCoeffB; /* +0x1c */
     float m_fCoeffC; /* +0x20 */
     float m_fCoeffD; /* +0x24 */
     tdeEventType m_eEventType; /* +0x28 */
-    CIdObjPtr m_pTargetRes; /* +0x2c */
+    usnd::CIdObjPtr<usnd::CResData> m_pTargetRes; /* +0x2c */
 };
 
 struct CCritSect {
@@ -471,10 +500,10 @@ struct CActorModifiers {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PostponedPlay::ms_uiMaxPlay(sTreeNode* _pNode, sTreeNode* _pNode2, spair* _roValue)
-{
-    /* TODO: decompile from asm/... */
-}
+/* The retail symbol at 0x001d0210 is the mangled template
+ * _Insert__Q24usnd179stree<i, usnd::spair<const int, CLinkMicro*>, ...>::_Insert;
+ * the extractor named it after the PostponedPlay data member ms_uiMaxPlay.
+ * TODO: reconstruct the usnd::stree template instantiation. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 169–175 */
 /* addr: 0x001d0350  size: 56 bytes */
@@ -535,11 +564,23 @@ void PostponedPlay::fs_vEmpty(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char PostponedPlay::fs_bExecute(int s32_CmdId, CUUID* roId, CExtraEventActor* pEActor)
+unsigned char PostponedPlay::fs_bExecute(int s32_CmdId, const CUUID& roId, CExtraEventActor* pEActor)
 {
-    PostponedPlay* e;
-    unsigned char bRet;
-    /* TODO: decompile from asm/... */
+    unsigned char bRet = 0;
+    PostponedPlay* e = ms_pFirst;
+
+    while (e)
+    {
+        if ((e->m_pEActor == pEActor) &&
+            (roId == e->m_pData->m_pTargetRes.__rf()->m_oId) &&
+            (e->m_s32LastCmd != 1))
+        {
+            e->m_s32LastCmd = s32_CmdId;
+            bRet = 1;
+        }
+        e = e->m_pNext;
+    }
+    return bRet;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 114–122 */
@@ -613,8 +654,29 @@ unsigned char PostponedPlay::fs_bIsSoundPlaying(usnd::CResData* po_ResData, CExt
  */
 void PostponedPlay::fs_vSynchro(void)
 {
-    unsigned char g_bUseMarkersForNextRequestBak;
-    /* TODO: decompile from asm/... */
+    PostponedPlay* e;
+    PostponedPlay* p;
+    unsigned char bBak;
+    while ((ms_uiCount < ms_uiMaxPlay) && ms_pLast)
+    {
+        p = 0; e = ms_pLast; if (e) { ms_pLast = e->m_pPrev; if (ms_pLast) { p = e; ms_pLast->m_pNext = NULL; } else { ms_pFirst = NULL; } e->m_pNext = ms_pFree; ms_pFree = e; }
+
+        bBak = g_bUseMarkersForNextRequest;
+        g_bUseMarkersForNextRequest = (unsigned char)p->m_u32EngineContext;
+
+        p->m_pEActor->mfn_bPlay(*p->m_pData, p->m_s32Handle, p->m_pProc);
+
+        g_bUseMarkersForNextRequest = bBak;
+
+        if (p->m_s32LastCmd != -1)
+        {
+            p->m_pEActor->mfn_bExecute(p->m_s32LastCmd, p->m_pData->m_pTargetRes.__rf()->m_oId);
+        }
+
+        ms_uiCount++;
+    }
+
+    ms_uiCount = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndpostponedplay.cpp lines 43–60 */
@@ -632,8 +694,21 @@ void PostponedPlay::fs_vSynchro(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char PostponedPlay::fs_bPlay(CEventResData* ro_EventResData, int s32_Handle, void (*pfn_Proc)(int), CExtraEventActor* pEActor)
+unsigned char PostponedPlay::fs_bPlay(const CEventResData& ro_EventResData, int s32_Handle, void (*pfn_Proc)(int), CExtraEventActor* pEActor)
 {
-    unsigned char bRet;
-    /* TODO: decompile from asm/... */
+    PostponedPlay* e;
+    unsigned char bRet = 1;
+
+    if (ms_uiCount < ms_uiMaxPlay)
+    {
+        bRet = pEActor->mfn_bPlay(ro_EventResData, s32_Handle, pfn_Proc);
+    }
+    else
+    {
+        e = ms_pFree; if (e) { PostponedPlay* pFirst = ms_pFirst; ms_pFree = e->m_pNext; e->m_pData = &ro_EventResData; e->m_pNext = pFirst; e->m_pPrev = NULL; e->m_pEActor = pEActor; e->m_s32Handle = s32_Handle; e->m_s32LastCmd = -1; e->m_pProc = pfn_Proc; } else { e = (PostponedPlay*)usnd_malloc(0x20); if (e) { e->f_vSet(ro_EventResData, s32_Handle, pfn_Proc, pEActor, ms_pFirst, NULL); } } e->m_u32EngineContext = g_bUseMarkersForNextRequest; if (ms_pFirst) ms_pFirst->m_pPrev = e; ms_pFirst = e; if (!ms_pLast) { ms_pLast = ms_pFirst; }
+    }
+
+    ms_uiCount++;
+
+    return bRet;
 }

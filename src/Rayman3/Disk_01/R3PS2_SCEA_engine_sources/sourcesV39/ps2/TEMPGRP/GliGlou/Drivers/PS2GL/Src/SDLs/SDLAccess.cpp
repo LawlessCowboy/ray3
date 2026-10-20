@@ -367,6 +367,9 @@ void CHEAP_CountMatrices(HIE_tdstSuperObject_* pSPO, unsigned int* pNbMatrices)
     }
 }
 
+/* The retail SDL_* entry points have C linkage (unmangled ELF symbols). */
+extern "C" {
+
 unsigned int SDL_REF_GetNewFogRef(unsigned int Index)
 {
     return (unsigned int)new C_SdlRef_FogParameters(Index);
@@ -461,4 +464,5 @@ void SDL_Destroy(unsigned int* phSDL)
             delete pSdl;
         *phSDL = 0;
     }
+}
 }

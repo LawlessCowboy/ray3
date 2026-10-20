@@ -222,60 +222,61 @@ struct tag_GLtexture {
 };
 
 struct anon_4 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 struct tagListNodeSingle {
@@ -949,15 +950,16 @@ struct anon_25 {
 };
 
 struct anon_50 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_23 {
@@ -1086,16 +1088,17 @@ struct anon_17 {
 };
 
 struct anon_18 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon18[6]; /* +0x2..0x7 */
 };
 
 struct tagsceGsReg {
@@ -1332,7 +1335,64 @@ void PS2glDisable(unsigned int cap);
 void PS2glEnable(unsigned int cap);
 void GsSendData(unsigned int reg, anon_3* data);
 void GsUpdate(void);
+void impPS2glClearColor(float red, float green, float blue, float alpha);
+void impPS2glClear(unsigned int mask);
+void internalFullScreenQuadJeffWithoutOptimization(unsigned int mask, float x1, float y1, float x2, float y2, float R, float G, float B, float A, float u1, float v1, float u2, float v2);
+void internalFullScreenQuadJeff(unsigned int mask, float x1, float y1, float x2, float y2, float R, float G, float B, float A, float u1, float v1, float u2, float v2);
 void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned long* pDestPSM);
+
+/* One blurred full-screen strip: the quad covers the whole framebuffer and
+ * the colour is the neutral 0.5 grey. */
+#define AE_BLUR_QUAD(x1, y1, x2, y2, r, g, b, a) \
+    { \
+        float fOne = 1.0f; \
+        float fWidth = (float)(g_stBufferInfo.iScreenWidth * 16); \
+        float fZero = 0.0f; \
+        float fU1 = fZero * fWidth; \
+        float fU2 = fOne * fWidth; \
+        float fHeight; \
+        float fV1; \
+        float fV2; \
+        if (g_stBufferInfo.bPlainBufferMode) \
+        { \
+            fHeight = (float)(g_stBufferInfo.iScreenHeight * 16); \
+            fV1 = fZero * fHeight; \
+            fV2 = fOne * fHeight; \
+        } \
+        else \
+        { \
+            fHeight = (float)(g_stBufferInfo.iScreenHeight * 8); \
+            fV1 = fZero * fHeight; \
+            fV2 = fOne * fHeight; \
+        } \
+        internalFullScreenQuadJeffWithoutOptimization(0x4000, (x1), (y1), (x2), (y2), (r), (g), (b), (a), fU1, fV1, fU2, fV2); \
+    }
+
+/* The same strip, but drawn through the optimised full-screen quad path. */
+#define AE_BLUR_QUAD_OPT(x1, y1, x2, y2, r, g, b, a) \
+    { \
+        float fOne = 1.0f; \
+        float fWidth = (float)(g_stBufferInfo.iScreenWidth * 16); \
+        float fZero = 0.0f; \
+        float fU1 = fZero * fWidth; \
+        float fU2 = fOne * fWidth; \
+        float fHeight; \
+        float fV1; \
+        float fV2; \
+        if (g_stBufferInfo.bPlainBufferMode) \
+        { \
+            fHeight = (float)(g_stBufferInfo.iScreenHeight * 16); \
+            fV1 = fZero * fHeight; \
+            fV2 = fOne * fHeight; \
+        } \
+        else \
+        { \
+            fHeight = (float)(g_stBufferInfo.iScreenHeight * 8); \
+            fV1 = fZero * fHeight; \
+            fV2 = fOne * fHeight; \
+        } \
+        internalFullScreenQuadJeff(0x4000, (x1), (y1), (x2), (y2), (r), (g), (b), (a), fU1, fV1, fU2, fV2); \
+    }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 507–507 */
 /* addr: 0x00161b20  size: 12 bytes */
@@ -1930,7 +1990,20 @@ void AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, flo
  */
 void AE_SimpleBlurWithOptimization(int Counter)
 {
-    /* TODO: decompile from asm/... */
+    AE_BLUR_QUAD_OPT(0.0f, 99.33036041259766f, 100.0f, -0.6696395874023438f, 0.5f, 0.5f, 0.5f, 0.5f);
+    AE_BLUR_QUAD_OPT(0.46875f, 100.0f, 100.46875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+    Counter--;
+    if (Counter)
+    {
+        AE_BLUR_QUAD_OPT(0.0f, 98.21428680419922f, 100.0f, -1.7857131958007812f, 0.5f, 0.5f, 0.5f, 0.5f);
+        AE_BLUR_QUAD_OPT(1.25f, 100.0f, 101.25f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+        Counter--;
+        if (Counter)
+        {
+            AE_BLUR_QUAD_OPT(0.0f, 97.32142639160156f, 100.0f, -2.6785736083984375f, 0.5f, 0.5f, 0.5f, 0.5f);
+            AE_BLUR_QUAD_OPT(1.875f, 100.0f, 101.875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1489–1522 */
@@ -1955,7 +2028,20 @@ void AE_SimpleBlurWithOptimization(int Counter)
  */
 void AE_SimpleBlur(int Counter)
 {
-    /* TODO: decompile from asm/... */
+    AE_BLUR_QUAD(0.0f, 99.33036041259766f, 100.0f, -0.6696395874023438f, 0.5f, 0.5f, 0.5f, 0.5f);
+    AE_BLUR_QUAD(0.46875f, 100.0f, 100.46875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+    Counter--;
+    if (Counter)
+    {
+        AE_BLUR_QUAD(0.0f, 98.21428680419922f, 100.0f, -1.7857131958007812f, 0.5f, 0.5f, 0.5f, 0.5f);
+        AE_BLUR_QUAD(1.25f, 100.0f, 101.25f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+        Counter--;
+        if (Counter)
+        {
+            AE_BLUR_QUAD(0.0f, 97.32142639160156f, 100.0f, -2.6785736083984375f, 0.5f, 0.5f, 0.5f, 0.5f);
+            AE_BLUR_QUAD(1.875f, 100.0f, 101.875f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f);
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1468–1470 */
@@ -4105,5 +4191,14 @@ void impPS2glDrawBuffer(unsigned int mode)
 void PS2glClearLastBits(void)
 {
     unsigned int iOldMask;
-    /* TODO: decompile from asm/... */
+    g_gsContext.COLCLAMP.CLAMP = 1;
+    g_gsContext.ModFlgs.COLCLAMP_Modified = 1;
+    iOldMask = g_gsContext.FRAME_1.FBMSK;
+    g_gsContext.FRAME_1.FBMSK = 0x80808080;
+    g_gsContext.ModFlgs.FRAME_1_Modified = 1;
+    impPS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    GsUpdate();
+    impPS2glClear(0x4000);
+    g_gsContext.FRAME_1.FBMSK = iOldMask;
+    g_gsContext.ModFlgs.FRAME_1_Modified = 1;
 }

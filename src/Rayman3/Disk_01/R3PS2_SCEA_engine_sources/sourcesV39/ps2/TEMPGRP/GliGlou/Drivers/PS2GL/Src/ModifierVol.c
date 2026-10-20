@@ -223,16 +223,17 @@ struct anon_0 {
 };
 
 struct anon_1 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon1[6]; /* +0x2..0x7 */
 };
 
 struct tagGLtexname {
@@ -700,60 +701,61 @@ struct anon_17 {
 };
 
 struct anon_18 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 struct anon_20 {
@@ -868,15 +870,16 @@ struct GEO_tdstParallelBox_ {
 };
 
 struct anon_28 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_29 {
@@ -1489,9 +1492,31 @@ int PS2glAllocator64;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
 void GLI_xCreateCamera(GLI_tdstCamera_** h_stCam, int lCameraMode)
 {
-    /* TODO: decompile from asm/... */
+    *h_stCam = (GLI_tdstCamera_*)HMU_fn_p_vMalloc(0x100, 0);
+    if (*h_stCam != NULL)
+    {
+        (*h_stCam)->lCameraMode = lCameraMode;
+        switch ((*h_stCam)->lCameraMode)
+        {
+        case 100:
+        case 101:
+            (*h_stCam)->xAlphaX = 1.0f;
+            (*h_stCam)->xAlphaY = 1.0f;
+            break;
+        case 102:
+        case 103:
+            (*h_stCam)->xAlphaX = 0.7853982f;
+            (*h_stCam)->xAlphaY = 0.7853982f;
+            break;
+        }
+        (*h_stCam)->xNear = 0.25f;
+        (*h_stCam)->xFar = 10000.0f;
+        (*h_stCam)->xRatio = (*h_stCam)->xAlphaY / (*h_stCam)->xAlphaX;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 914–1203 */
@@ -1692,7 +1717,7 @@ void GLI_xCreateCamera(GLI_tdstCamera_** h_stCam, int lCameraMode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_vDrawDynamicShadowElem_OnlyLonelyEdges(GEO_tdstElementIndexedTriangles_* p_stEIT)
+void GLI_vDrawDynamicShadowElem_OnlyLonelyEdges(GEO_tdstElementIndexedTriangles_* p_stEIT, int lUnused, GEO_tdstGeometricObject_* p_stObj)
 {
     float Local_GLI_g_EndOfCone[4];
     float Local_GLI_gs_stShadowLightDirectionObjMulLow[4];
@@ -1846,14 +1871,122 @@ void GLI_vDrawVisualSetDynamicShadow(GEO_tdstVisualSet_* p_stVisualSet)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Recovered PS2 MTH scalar helpers used by the original vector macros. */
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+
+void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stSource);
+void MTH4D_fn_vSerialMul4DMatrix3DVertexTo4DAlignedDest_VU0(void* _p_stDest, void* _p_stMatrix, void* _p_stVector, short _sNbVertex);
+void GLI_vAddShadowVolumeDisplayList(unsigned int _ulFront, unsigned int _ulBack, float* _p_stMatrix);
+void GLI_vStartDrawingShadowVolume(void);
+void GLI_vDrawDynamicShadowElem_OnlyLonelyEdges(GEO_tdstElementIndexedTriangles_* _p_stEIT, int _unused, GEO_tdstGeometricObject_* _p_stObj);
+
 void GLI_vDrawDynamicShadow(void)
 {
-    float xNorm;
-    unsigned int FirstPointOfShadowBack;
-    unsigned int FirstPointOfShadowFront;
-    GEO_tdstElementIndexedTriangles_* p_stEIT;
     short xElementCounter;
-    /* TODO: decompile from asm/... */
+    unsigned int FirstPointOfShadowFront;
+    unsigned int FirstPointOfShadowBack;
+    float xSqr;
+    float xNorm;
+    float xInv;
+    float xLightX;
+    float xLightY;
+    float xLightZ;
+    unsigned int ulCount;
+    int bOk;
+
+    FirstPointOfShadowFront = GLI_g_GlobalShadowNextPointFront;
+    FirstPointOfShadowBack = GLI_g_GlobalShadowNextPointBack;
+    if (SCT_g_DrawingMirrored)
+    {
+        return;
+    }
+    GLI_vStartDrawingShadowVolume();
+    if (GLI_g_GlobalShadowColorArray == 0)
+    {
+        return;
+    }
+    if (((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfEdgesDI == 0)
+    {
+        return;
+    }
+
+    GLI_gs_stShadowLightDirectionWorld.xX = 0.0f;
+    GLI_gs_stShadowLightDirectionWorld.xY = 0.0f;
+    GLI_gs_stShadowLightDirectionWorld.xZ = -1.0f;
+    xLightY = GLI_gs_stShadowLightDirectionWorld.xY;
+    xLightZ = -1.0f;
+    xLightX = GLI_gs_stShadowLightDirectionWorld.xX;
+    MTH_SQR3_TO(xSqr, xLightX, xLightY, xLightZ);
+    MTH_SQRT_TO(xNorm, xSqr);
+    if (xNorm != 0.0f)
+    {
+        xInv = 1.0f / xNorm;
+        GLI_gs_stShadowLightDirectionWorld.xX = xInv * xLightX;
+        GLI_gs_stShadowLightDirectionWorld.xY = xInv * xLightY;
+        GLI_gs_stShadowLightDirectionWorld.xZ = xInv * xLightZ;
+    }
+    MAT_fn_vApplyOnVector(&GLI_gs_stShadowLightDirectionObjN, (MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CameraMatrix, &GLI_gs_stShadowLightDirectionWorld);
+    GLI_gs_stShadowLightDirectionObj[3] = 0.0f;
+    GLI_g_fDynShadowLenght = 20.0f;
+    GLI_gs_stShadowLightDirectionObjMulLow[0] = 0.0f;
+    GLI_gs_stShadowLightDirectionObjMulLow[1] = 0.0f;
+    GLI_gs_stShadowLightDirectionObjMulLow[2] = 0.0f;
+    GLI_gs_stShadowLightDirectionObjMulLow[3] = 0.0f;
+    GLI_gs_stShadowLightDirectionObjF.xX = 20.0f * GLI_gs_stShadowLightDirectionObjN.xX;
+    GLI_gs_stShadowLightDirectionObj[0] = GLI_gs_stShadowLightDirectionObjN.xX;
+    GLI_gs_stShadowLightDirectionObj[1] = GLI_gs_stShadowLightDirectionObjN.xY;
+    GLI_gs_stShadowLightDirectionObj[2] = GLI_gs_stShadowLightDirectionObjN.xZ;
+    GLI_gs_stShadowLightDirectionObjMulHigh[3] = 20.0f * GLI_gs_stShadowLightDirectionObj[2];
+    GLI_gs_stShadowLightDirectionObjMulHigh[0] = 20.0f * GLI_gs_stShadowLightDirectionObj[0];
+    GLI_gs_stShadowLightDirectionObjMulHigh[1] = 20.0f * GLI_gs_stShadowLightDirectionObj[1];
+    GLI_gs_stShadowLightDirectionObjMulHigh[2] = 20.0f * GLI_gs_stShadowLightDirectionObj[2];
+    GLI_gs_stShadowLightDirectionObjN.xX = 0.5f * GLI_gs_stShadowLightDirectionObjN.xX;
+    GLI_gs_stShadowLightDirectionObjF.xY = 20.0f * GLI_gs_stShadowLightDirectionObjN.xY;
+    GLI_gs_stShadowLightDirectionObjF.xZ = 20.0f * GLI_gs_stShadowLightDirectionObjN.xZ;
+    GLI_gs_stShadowLightDirectionObjN.xY = 0.5f * GLI_gs_stShadowLightDirectionObjN.xY;
+    GLI_gs_stShadowLightDirectionObjN.xZ = 0.5f * GLI_gs_stShadowLightDirectionObjN.xZ;
+    MTH4D_fn_vSerialMul4DMatrix3DVertexTo4DAlignedDest_VU0((void*)GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint, (void*)&GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix.stTransformMatrix, ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfPoints, ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->xNbPoints);
+    GLI_g_EndOfCone[0] = ((MTH4D_tdstMatrix_*)GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint)->stCol_0.xX + GLI_gs_stShadowLightDirectionObjMulHigh[0];
+    GLI_g_EndOfCone[1] = ((MTH4D_tdstMatrix_*)GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint)->stCol_1.xY + GLI_gs_stShadowLightDirectionObjMulHigh[1];
+    GLI_g_EndOfCone[2] = ((MTH4D_tdstMatrix_*)GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint)->stCol_2.xZ + GLI_gs_stShadowLightDirectionObjMulHigh[2];
+    GLI_g_EndOfCone[3] = 1.0f;
+    GLI_gs_xShadowNumber = 0;
+    for (xElementCounter = 0; xElementCounter < ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->xNbElements; xElementCounter++)
+    {
+        if (((short*)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_xListOfElementsTypes)[xElementCounter] != 1)
+        {
+            continue;
+        }
+        {
+            GEO_tdstElementIndexedTriangles_* p_stEIT = ((GEO_tdstElementIndexedTriangles_**)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfElements)[xElementCounter];
+            bOk = 0;
+            if (p_stEIT->hVisualMaterial != NULL)
+            {
+                if (p_stEIT->hVisualMaterial->lMaterialAdditionnalType & 8)
+                {
+                    bOk = 1;
+                }
+            }
+            if (bOk)
+            {
+                if (GLI_g_ulDynShadowCpt + p_stEIT->xNbFaces * 4 <= 2500)
+                {
+                    GLI_vDrawDynamicShadowElem_OnlyLonelyEdges(p_stEIT, 0, (GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj);
+                    ulCount = (GLI_g_GlobalShadowNextPointBack < GLI_g_GlobalShadowNextPointFront) ? GLI_g_GlobalShadowNextPointBack : GLI_g_GlobalShadowNextPointFront;
+                    GLI_g_ulDynShadowCpt = ulCount;
+                }
+            }
+        }
+    }
+    if ((GLI_g_GlobalShadowNextPointFront != FirstPointOfShadowFront) || (GLI_g_GlobalShadowNextPointBack != FirstPointOfShadowBack))
+    {
+        GLI_vAddShadowVolumeDisplayList(FirstPointOfShadowFront, GLI_g_GlobalShadowNextPointFront, GLI_a16_fTempWorldMatrix);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 419–429 */
@@ -2032,16 +2165,83 @@ void SwapShadowBuffers(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Search the global edge list for the edge (iA,iB); append it when missing. */
+#define GLI_M_xGetEdgeIndex(lResult, iA, iB)                                                 \
+    do {                                                                                     \
+        GEO_tdstDoubledIndexDWORD_* pEdge;                                                    \
+        int lIdx;                                                                             \
+        short sA = (iA);                                                                      \
+        short sB = (iB);                                                                      \
+        long lA = sA;                                                                         \
+        long lB = sB;                                                                         \
+        pEdge = p_stListOfEdges;                                                              \
+        for (lIdx = 0; lIdx < (int)ulNbrEdge; lIdx++, pEdge++)                                \
+        {                                                                                     \
+            if ((pEdge->a2_xIndex[0] == lA && pEdge->a2_xIndex[1] == lB) ||                    \
+                (pEdge->a2_xIndex[0] == lB && pEdge->a2_xIndex[1] == lA))                       \
+            {                                                                                 \
+                break;                                                                        \
+            }                                                                                 \
+        }                                                                                     \
+        if (lIdx == (int)ulNbrEdge)                                                           \
+        {                                                                                     \
+            pEdge->a2_xIndex[0] = sA;                                                         \
+            pEdge->a2_xIndex[1] = sB;                                                         \
+            (lResult) = ulNbrEdge;                                                            \
+            ulNbrEdge++;                                                                      \
+        }                                                                                     \
+        else                                                                                  \
+        {                                                                                     \
+            (lResult) = lIdx;                                                                 \
+        }                                                                                     \
+    } while (0)
+
 void GLI_vComputeEdges(void)
 {
-    GEO_tdstElementIndexedTriangles_* p_stEIT;
-    short xElementCounter;
-    GEO_tdstDoubledIndexDWORD_* p_stListOfEdges;
-    GEO_tdstTripledIndexDWORD_* p_stEdgeIndex;
     GEO_tdstTripledIndex_* p_stPointIndex;
+    GEO_tdstDoubledIndexDWORD_* p_stListOfEdges;
+    short xElementCounter;
     unsigned int ulNbrEdge;
+    GEO_tdstElementIndexedTriangles_* p_stEIT;
+    GEO_tdstTripledIndexDWORD_* p_stEdgeIndex;
     unsigned int ulFaceIndex;
-    /* TODO: decompile from asm/... */
+    short sResult;
+    int bOk;
+
+    ulNbrEdge = 0;
+    p_stListOfEdges = (GEO_tdstDoubledIndexDWORD_*)GLI_BIG_GLOBALS_GLI_TurnedScaledDisplecedPoint;
+    for (xElementCounter = 0; xElementCounter < ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->xNbElements; xElementCounter++)
+    {
+        if (((short*)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_xListOfElementsTypes)[xElementCounter] != 1)
+            continue;
+        p_stEIT = ((GEO_tdstElementIndexedTriangles_**)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfElements)[xElementCounter];
+        bOk = 0;
+        if (p_stEIT->hVisualMaterial != NULL)
+        {
+            if (p_stEIT->hVisualMaterial->lMaterialAdditionnalType & 8)
+            {
+                bOk = 1;
+            }
+        }
+        if (bOk)
+        {
+            p_stEdgeIndex = (GEO_tdstTripledIndexDWORD_*)HMU_fn_p_vMalloc(p_stEIT->xNbFaces * 3 * sizeof(GEO_tdstTripledIndexDWORD_), 1);
+            p_stEIT->d_stListOfFacesEdges = (GEO_tdstTripledIndex_*)p_stEdgeIndex;
+            p_stPointIndex = p_stEIT->d_stListOfFacesTripled;
+            for (ulFaceIndex = 0; ulFaceIndex < p_stEIT->xNbFaces; ulFaceIndex++, p_stPointIndex++, p_stEdgeIndex++)
+            {
+                GLI_M_xGetEdgeIndex(sResult, p_stPointIndex->a3_xIndex[0], p_stPointIndex->a3_xIndex[1]);
+                p_stEdgeIndex->a3_xIndex[0] = sResult;
+                GLI_M_xGetEdgeIndex(sResult, p_stPointIndex->a3_xIndex[1], p_stPointIndex->a3_xIndex[2]);
+                p_stEdgeIndex->a3_xIndex[1] = sResult;
+                GLI_M_xGetEdgeIndex(sResult, p_stPointIndex->a3_xIndex[2], p_stPointIndex->a3_xIndex[0]);
+                p_stEdgeIndex->a3_xIndex[2] = sResult;
+            }
+        }
+    }
+    ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfEdgesDI = (GEO_tdstDoubledIndex_*)HMU_fn_p_vMalloc(ulNbrEdge * sizeof(GEO_tdstDoubledIndexDWORD_), 1);
+    memcpy(((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfEdgesDI, p_stListOfEdges, ulNbrEdge * sizeof(GEO_tdstDoubledIndexDWORD_));
+    ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->xNbEdgesDI = (short)ulNbrEdge;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\ModifierVol.c lines 154–159 */

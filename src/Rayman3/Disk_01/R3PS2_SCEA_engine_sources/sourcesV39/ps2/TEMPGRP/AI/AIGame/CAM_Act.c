@@ -3165,35 +3165,6 @@ struct GEO_tdstVisualSet_ {
 
 tdstEngineStructure_ g_stEngineStructure;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 709–767 */
-/* addr: 0x00201a60  size: 400 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 709
- *   +0x0004 -> line 726
- *   +0x0008 -> line 709
- *   +0x0020 -> line 726
- *   +0x0050 -> line 733
- *   +0x005c -> line 734
- *   +0x0060 -> line 733
- *   +0x006c -> line 734
- *   +0x0074 -> line 738
- *   +0x0078 -> line 746
- *   +0x0080 -> line 738
- *   +0x0098 -> line 746
- *   +0x00a4 -> line 748
- *   +0x00dc -> line 749
- *   +0x0140 -> line 760
- *   +0x0144 -> line 761
- *   +0x0148 -> line 760
- *   +0x014c -> line 761
- *   +0x0154 -> line 760
- *   +0x0158 -> line 761
- *   +0x0160 -> line 764
- *   +0x0170 -> line 766
- *   +0x0174 -> line 767
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d).xX = *(int*)&(_s)->xX; *(int*)&(_d).xY = *(int*)&(_s)->xY; *(int*)&(_d).xZ = *(int*)&(_s)->xZ; }
 
 #define MTH3D_M_vSubVector(_d, _a, _b) { MTH3D_tdstVector_* _pd = (_d); MTH3D_tdstVector_* _pa = (_a); MTH3D_tdstVector_* _pb = (_b); _pd->xX = _pa->xX - _pb->xX; _pd->xY = _pa->xY - _pb->xY; _pd->xZ = _pa->xZ - _pb->xZ; }
@@ -3206,26 +3177,29 @@ tdstEngineStructure_ g_stEngineStructure;
     asm { madd.s _result, _z, _z }
 #define MTH_VECTOR_NORM2_TO(_result, _vector) \
     do { \
+        float _mthZ = (_vector).xZ; \
         float _mthX = (_vector).xX; \
         float _mthY = (_vector).xY; \
-        float _mthZ = (_vector).xZ; \
-        MTH_SQR3_TO(_result, _mthX, _mthY, _mthZ); \
+        float _mthSqr; \
+        MTH_SQR3_TO(_mthSqr, _mthX, _mthY, _mthZ); \
+        _result = _mthSqr; \
     } while (0)
 #define MTH_VECTOR_NORM_TO(_result, _vector) \
     do { \
+        float _mthZ = (_vector).xZ; \
         float _mthX = (_vector).xX; \
         float _mthY = (_vector).xY; \
-        float _mthZ = (_vector).xZ; \
         MTH_SQR3_TO(_result, _mthX, _mthY, _mthZ); \
         asm { sqrt.s _result, _result } \
     } while (0)
 #define MTH_VECTOR_NORM_SYNC_TO(_result, _vector) \
     do { \
+        float _mthZ = (_vector).xZ; \
         float _mthX = (_vector).xX; \
         float _mthY = (_vector).xY; \
-        float _mthZ = (_vector).xZ; \
-        MTH_SQR3_TO(_result, _mthX, _mthY, _mthZ); \
-        asm { sqrt.s _result, _result } \
+        float _mthSqr; \
+        MTH_SQR3_TO(_mthSqr, _mthX, _mthY, _mthZ); \
+        asm { sqrt.s _result, _mthSqr } \
         asm { nop } \
     } while (0)
 
@@ -3280,35 +3254,6 @@ unsigned char fn_ucCamCinePosATgtBTurnTgtV(HIE_tdstSuperObject_* p_SuperObjPerso
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 642–700 */
-/* addr: 0x00201bf0  size: 400 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 642
- *   +0x0004 -> line 659
- *   +0x0008 -> line 642
- *   +0x0020 -> line 659
- *   +0x0050 -> line 666
- *   +0x005c -> line 667
- *   +0x0060 -> line 666
- *   +0x006c -> line 667
- *   +0x0074 -> line 671
- *   +0x0078 -> line 679
- *   +0x0080 -> line 671
- *   +0x0098 -> line 679
- *   +0x00a4 -> line 681
- *   +0x00dc -> line 682
- *   +0x0140 -> line 693
- *   +0x0144 -> line 694
- *   +0x0148 -> line 693
- *   +0x014c -> line 694
- *   +0x0154 -> line 693
- *   +0x0158 -> line 694
- *   +0x0160 -> line 697
- *   +0x0170 -> line 699
- *   +0x0174 -> line 700
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucCamCinePosATgtBTurnTgtH(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     UV3 stCurrentCameraPos;
@@ -3339,35 +3284,6 @@ unsigned char fn_ucCamCinePosATgtBTurnTgtH(HIE_tdstSuperObject_* p_SuperObjPerso
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 577–633 */
-/* addr: 0x00201d80  size: 408 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 577
- *   +0x0004 -> line 594
- *   +0x0008 -> line 577
- *   +0x0020 -> line 594
- *   +0x0050 -> line 601
- *   +0x005c -> line 602
- *   +0x0060 -> line 601
- *   +0x006c -> line 602
- *   +0x0074 -> line 606
- *   +0x0078 -> line 614
- *   +0x0080 -> line 606
- *   +0x0098 -> line 614
- *   +0x00a4 -> line 616
- *   +0x00dc -> line 617
- *   +0x0140 -> line 628
- *   +0x014c -> line 629
- *   +0x0150 -> line 630
- *   +0x0154 -> line 629
- *   +0x0158 -> line 630
- *   +0x015c -> line 629
- *   +0x0160 -> line 630
- *   +0x0178 -> line 632
- *   +0x017c -> line 633
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucCamCinePosATgtBTurnPosV(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     UV3 stTempVector;
@@ -3397,35 +3313,6 @@ unsigned char fn_ucCamCinePosATgtBTurnPosV(HIE_tdstSuperObject_* p_SuperObjPerso
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 512–568 */
-/* addr: 0x00201f20  size: 408 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 512
- *   +0x0004 -> line 529
- *   +0x0008 -> line 512
- *   +0x0020 -> line 529
- *   +0x0050 -> line 536
- *   +0x005c -> line 537
- *   +0x0060 -> line 536
- *   +0x006c -> line 537
- *   +0x0074 -> line 541
- *   +0x0078 -> line 549
- *   +0x0080 -> line 541
- *   +0x0098 -> line 549
- *   +0x00a4 -> line 551
- *   +0x00dc -> line 552
- *   +0x0140 -> line 563
- *   +0x014c -> line 564
- *   +0x0150 -> line 565
- *   +0x0154 -> line 564
- *   +0x0158 -> line 565
- *   +0x015c -> line 564
- *   +0x0160 -> line 565
- *   +0x0178 -> line 567
- *   +0x017c -> line 568
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucCamCinePosATgtBTurnPosH(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     UV3 stTempVector;
@@ -3455,38 +3342,6 @@ unsigned char fn_ucCamCinePosATgtBTurnPosH(HIE_tdstSuperObject_* p_SuperObjPerso
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 449–498 */
-/* addr: 0x002020c0  size: 420 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 449
- *   +0x0004 -> line 465
- *   +0x0008 -> line 449
- *   +0x0018 -> line 465
- *   +0x004c -> line 471
- *   +0x0050 -> line 472
- *   +0x0054 -> line 471
- *   +0x0058 -> line 472
- *   +0x005c -> line 471
- *   +0x0060 -> line 472
- *   +0x0078 -> line 474
- *   +0x0084 -> line 475
- *   +0x0088 -> line 474
- *   +0x0094 -> line 475
- *   +0x009c -> line 479
- *   +0x00d0 -> line 481
- *   +0x010c -> line 482
- *   +0x0158 -> line 491
- *   +0x015c -> line 492
- *   +0x0160 -> line 491
- *   +0x0164 -> line 492
- *   +0x016c -> line 491
- *   +0x0170 -> line 492
- *   +0x0178 -> line 495
- *   +0x0188 -> line 497
- *   +0x018c -> line 498
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucCamCinePosAMoveTgtBToC(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     UV3 stCurrentTarget;
@@ -3516,22 +3371,6 @@ unsigned char fn_ucCamCinePosAMoveTgtBToC(HIE_tdstSuperObject_* p_SuperObjPerso)
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 413–440 */
-/* addr: 0x00202270  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 413
- *   +0x0004 -> line 428
- *   +0x0008 -> line 413
- *   +0x001c -> line 428
- *   +0x004c -> line 435
- *   +0x0058 -> line 436
- *   +0x005c -> line 435
- *   +0x0068 -> line 436
- *   +0x0070 -> line 439
- *   +0x0074 -> line 440
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_lGetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);
 
 unsigned char fn_ucCamCinePosATgtB(HIE_tdstSuperObject_* p_SuperObjPerso)
@@ -3544,49 +3383,6 @@ unsigned char fn_ucCamCinePosATgtB(HIE_tdstSuperObject_* p_SuperObjPerso)
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 347–404 */
-/* addr: 0x00202300  size: 800 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 347
- *   +0x0004 -> line 363
- *   +0x0008 -> line 347
- *   +0x0020 -> line 363
- *   +0x0050 -> line 369
- *   +0x0064 -> line 370
- *   +0x00dc -> line 371
- *   +0x00e4 -> line 370
- *   +0x00e8 -> line 371
- *   +0x012c -> line 373
- *   +0x0130 -> line 371
- *   +0x0134 -> line 373
- *   +0x013c -> line 372
- *   +0x0140 -> line 371
- *   +0x0148 -> line 372
- *   +0x0150 -> line 373
- *   +0x0158 -> line 375
- *   +0x0164 -> line 376
- *   +0x0168 -> line 375
- *   +0x0174 -> line 376
- *   +0x017c -> line 380
- *   +0x0180 -> line 386
- *   +0x0188 -> line 380
- *   +0x019c -> line 386
- *   +0x01d0 -> line 387
- *   +0x021c -> line 396
- *   +0x0228 -> line 398
- *   +0x02a0 -> line 399
- *   +0x02a8 -> line 401
- *   +0x02b4 -> line 398
- *   +0x02b8 -> line 400
- *   +0x02bc -> line 398
- *   +0x02c0 -> line 399
- *   +0x02f0 -> line 400
- *   +0x02f8 -> line 401
- *   +0x0300 -> line 403
- *   +0x0304 -> line 404
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucCamCineMoveAToBTgtAC(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     UV3 stTempVector1;
@@ -3624,41 +3420,6 @@ unsigned char fn_ucCamCineMoveAToBTgtAC(HIE_tdstSuperObject_* p_SuperObjPerso)
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 285–337 */
-/* addr: 0x00202620  size: 420 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 285
- *   +0x0004 -> line 301
- *   +0x0008 -> line 285
- *   +0x0018 -> line 301
- *   +0x004c -> line 307
- *   +0x0060 -> line 308
- *   +0x0064 -> line 309
- *   +0x0068 -> line 308
- *   +0x006c -> line 309
- *   +0x0070 -> line 308
- *   +0x0074 -> line 309
- *   +0x008c -> line 311
- *   +0x0098 -> line 312
- *   +0x009c -> line 311
- *   +0x00a8 -> line 312
- *   +0x00b0 -> line 316
- *   +0x00b4 -> line 322
- *   +0x00bc -> line 316
- *   +0x00d0 -> line 322
- *   +0x0104 -> line 323
- *   +0x0150 -> line 332
- *   +0x015c -> line 333
- *   +0x0160 -> line 334
- *   +0x0164 -> line 333
- *   +0x0168 -> line 334
- *   +0x016c -> line 333
- *   +0x0170 -> line 334
- *   +0x0188 -> line 336
- *   +0x018c -> line 337
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucCamCineMoveAToBTgtC(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     UV3 stTempVector;
@@ -3691,79 +3452,19 @@ unsigned char fn_ucCamCineMoveAToBTgtC(HIE_tdstSuperObject_* p_SuperObjPerso)
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 171–265 */
-/* addr: 0x002027d0  size: 1156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 171
- *   +0x0004 -> line 191
- *   +0x0008 -> line 171
- *   +0x0028 -> line 189
- *   +0x002c -> line 175
- *   +0x0030 -> line 189
- *   +0x0034 -> line 192
- *   +0x003c -> line 189
- *   +0x0048 -> line 191
- *   +0x0050 -> line 192
- *   +0x0074 -> line 198
- *   +0x0080 -> line 199
- *   +0x0090 -> line 200
- *   +0x00a4 -> line 201
- *   +0x00b4 -> line 202
- *   +0x00c8 -> line 203
- *   +0x00d8 -> line 204
- *   +0x00e8 -> line 205
- *   +0x00ec -> line 204
- *   +0x00f0 -> line 205
- *   +0x0128 -> line 206
- *   +0x0138 -> line 207
- *   +0x013c -> line 206
- *   +0x0140 -> line 207
- *   +0x0174 -> line 209
- *   +0x0188 -> line 210
- *   +0x01a0 -> line 211
- *   +0x01ac -> line 213
- *   +0x01c8 -> line 215
- *   +0x01e4 -> line 216
- *   +0x01ec -> line 218
- *   +0x0204 -> line 219
- *   +0x020c -> line 222
- *   +0x0218 -> line 223
- *   +0x0228 -> line 224
- *   +0x023c -> line 225
- *   +0x024c -> line 226
- *   +0x025c -> line 227
- *   +0x0260 -> line 226
- *   +0x0264 -> line 227
- *   +0x0298 -> line 229
- *   +0x02ac -> line 230
- *   +0x02c4 -> line 231
- *   +0x02e0 -> line 232
- *   +0x02e8 -> line 239
- *   +0x02f4 -> line 240
- *   +0x0304 -> line 241
- *   +0x0318 -> line 242
- *   +0x0328 -> line 243
- *   +0x0338 -> line 244
- *   +0x033c -> line 243
- *   +0x0340 -> line 244
- *   +0x034c -> line 245
- *   +0x035c -> line 246
- *   +0x0360 -> line 245
- *   +0x0364 -> line 246
- *   +0x039c -> line 247
- *   +0x03ac -> line 248
- *   +0x03b0 -> line 247
- *   +0x03b4 -> line 248
- *   +0x03e8 -> line 250
- *   +0x03fc -> line 251
- *   +0x0414 -> line 252
- *   +0x0430 -> line 253
- *   +0x0448 -> line 256
- *   +0x0460 -> line 264
- *   +0x0464 -> line 265
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+/* Engine float-to-int conversion: retail converts through $f30 ("cvt.w.s $f30,
+ * x; mfc1 r, $f30"), a register MWCC never picks for its own conversions. */
+inline int MTH_M_xRealToLong(float _xValue)
+{
+    int _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
 tdstNodeInterpret_* fn_p_stCamCineInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
@@ -3772,9 +3473,7 @@ tdstNodeInterpret_* fn_p_stCamCineInit(HIE_tdstSuperObject_* p_SuperObjPerso, td
 
     eMetaActionId = (p_stTree - 1)->uDummy.uId.eMetaActionId;
     p_SuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits |= 0x8000;
-    stTempVector.xX = 0.0f;
-    stTempVector.xY = 0.0f;
-    stTempVector.xZ = 1.0f;
+    stTempVector.xX = 0.0f; stTempVector.xY = 0.0f; stTempVector.xZ = 1.0f;
     switch (eMetaActionId)
     {
     case eMetaAction_CamCineMoveAToBTgtC:
@@ -3787,9 +3486,9 @@ tdstNodeInterpret_* fn_p_stCamCineInit(HIE_tdstSuperObject_* p_SuperObjPerso, td
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     fn_vSetActionParamp_stVertex(2, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    fn_vSetActionParamlValue(3, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);
+    fn_vSetActionParamlValue(3, p_SuperObjPerso, stParam.eType == E_vt_Float ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    fn_vSetActionParamlValue(4, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);
+    fn_vSetActionParamlValue(4, p_SuperObjPerso, stParam.eType == E_vt_Float ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
         fn_vSetActionParamlValue(5, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
         CAM_fn_vForceCameraPos(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso));
         if (eMetaActionId == eMetaAction_CamCinePosAMoveTgtBToC)
@@ -3808,7 +3507,7 @@ tdstNodeInterpret_* fn_p_stCamCineInit(HIE_tdstSuperObject_* p_SuperObjPerso, td
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     fn_vSetActionParamp_stVertex(1, p_SuperObjPerso, &stParam.uDummy.uParam.stVectorValue);
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    fn_vSetActionParamlValue(2, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);
+    fn_vSetActionParamlValue(2, p_SuperObjPerso, stParam.eType == E_vt_Float ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
         fn_vSetActionParamlValue(3, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
         CAM_fn_vForceCameraPos(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso));
         CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stTempVector);
@@ -3824,9 +3523,9 @@ tdstNodeInterpret_* fn_p_stCamCineInit(HIE_tdstSuperObject_* p_SuperObjPerso, td
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     fn_vSetActionParamxValue(2, p_SuperObjPerso, stParam.uDummy.uParam.xValue);
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    fn_vSetActionParamlValue(3, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);
+    fn_vSetActionParamlValue(3, p_SuperObjPerso, stParam.eType == E_vt_Float ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    fn_vSetActionParamlValue(4, p_SuperObjPerso, stParam.eType == E_vt_Float ? (int)stParam.uDummy.uParam.xValue : stParam.uDummy.uParam.lValue);
+    fn_vSetActionParamlValue(4, p_SuperObjPerso, stParam.eType == E_vt_Float ? MTH_M_xRealToLong(stParam.uDummy.uParam.xValue) : stParam.uDummy.uParam.lValue);
         fn_vSetActionParamlValue(5, p_SuperObjPerso, g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
         CAM_fn_vForceCameraPos(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(0, p_SuperObjPerso));
         CAM_fn_vForceCameraTgt(p_SuperObjPerso, fn_p_stGetActionParamp_stVertex(1, p_SuperObjPerso), &stTempVector);
@@ -3839,48 +3538,6 @@ tdstNodeInterpret_* fn_p_stCamCineInit(HIE_tdstSuperObject_* p_SuperObjPerso, td
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 111–153 */
-/* addr: 0x00202c60  size: 636 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 111
- *   +0x0010 -> line 120
- *   +0x0014 -> line 111
- *   +0x0018 -> line 120
- *   +0x001c -> line 111
- *   +0x0030 -> line 121
- *   +0x0034 -> line 111
- *   +0x0054 -> line 120
- *   +0x0060 -> line 121
- *   +0x0068 -> line 120
- *   +0x0088 -> line 121
- *   +0x008c -> line 120
- *   +0x0090 -> line 121
- *   +0x0098 -> line 122
- *   +0x009c -> line 123
- *   +0x00a0 -> line 122
- *   +0x00a4 -> line 123
- *   +0x00ac -> line 122
- *   +0x00d0 -> line 123
- *   +0x00d8 -> line 125
- *   +0x00e8 -> line 128
- *   +0x00ec -> line 131
- *   +0x00f4 -> line 128
- *   +0x0104 -> line 131
- *   +0x0118 -> line 134
- *   +0x0124 -> line 136
- *   +0x0140 -> line 140
- *   +0x0150 -> line 143
- *   +0x0184 -> line 147
- *   +0x019c -> line 148
- *   +0x01d4 -> line 151
- *   +0x01e0 -> line 149
- *   +0x01e4 -> line 150
- *   +0x0210 -> line 151
- *   +0x0218 -> line 152
- *   +0x0248 -> line 153
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fnv_TurnAWithB(HIE_tdstSuperObject_* p_SuperObjPerso, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stPointAxis, MTH3D_tdstVector_* _p_stAxis, MTH3D_tdstVector_* _p_stCurrent, float _xAngle, int _iTime, int _iAccel)
 {
     MTH_stRotation stRotation;
@@ -3915,36 +3572,6 @@ void fnv_TurnAWithB(HIE_tdstSuperObject_* p_SuperObjPerso, MTH3D_tdstVector_* _p
     _p_stSource->xZ = _p_stSource->xZ + _p_stPointAxis->xZ;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Act.c lines 53–94 */
-/* addr: 0x00202ee0  size: 680 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 53
- *   +0x0038 -> line 61
- *   +0x003c -> line 53
- *   +0x0040 -> line 61
- *   +0x0074 -> line 62
- *   +0x0088 -> line 65
- *   +0x008c -> line 62
- *   +0x0090 -> line 65
- *   +0x00b0 -> line 66
- *   +0x00c4 -> line 72
- *   +0x00c8 -> line 69
- *   +0x00cc -> line 72
- *   +0x00d0 -> line 69
- *   +0x00e0 -> line 72
- *   +0x00f4 -> line 75
- *   +0x0100 -> line 77
- *   +0x011c -> line 81
- *   +0x012c -> line 84
- *   +0x0160 -> line 88
- *   +0x0190 -> line 89
- *   +0x01f0 -> line 91
- *   +0x0228 -> line 92
- *   +0x024c -> line 93
- *   +0x027c -> line 94
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fnv_MoveAToB(HIE_tdstSuperObject_* param0, MTH3D_tdstVector_* _p_stSource, MTH3D_tdstVector_* _p_stDest, MTH3D_tdstVector_* _p_stCurrent, int _iTime, int _iAccel)
 {
     float xNorm;
@@ -3966,19 +3593,8 @@ void fnv_MoveAToB(HIE_tdstSuperObject_* param0, MTH3D_tdstVector_* _p_stSource, 
         xSpeed = (float)lTime * -(xSpeed / (float)_iAccel) + (float)_iTime * xSpeed / (float)_iAccel;
     }
     MTH3D_M_vSubVector(&stTempVector, _p_stDest, _p_stSource);
-    MTH_VECTOR_NORM_SYNC_TO(xNorm, stTempVector);
-    if (xNorm != 0.0f)
-    {
-        xNorm = 1.0f / xNorm;
-        stTempVector.xX = xNorm * stTempVector.xX;
-        stTempVector.xY = xNorm * stTempVector.xY;
-        stTempVector.xZ = xNorm * stTempVector.xZ;
-    }
+    MTH_VECTOR_NORM_SYNC_TO(xNorm, stTempVector); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stTempVector.xX = xNorm * stTempVector.xX; stTempVector.xY = xNorm * stTempVector.xY; stTempVector.xZ = xNorm * stTempVector.xZ; }
     xSpeed = xSpeed * (float)fn_ulDetermineUsefulDT();
-    stTempVector.xX = xSpeed * stTempVector.xX;
-    stTempVector.xY = xSpeed * stTempVector.xY;
-    stTempVector.xZ = xSpeed * stTempVector.xZ;
-    _p_stCurrent->xX = stTempVector.xX + _p_stCurrent->xX;
-    _p_stCurrent->xY = stTempVector.xY + _p_stCurrent->xY;
-    _p_stCurrent->xZ = stTempVector.xZ + _p_stCurrent->xZ;
+    stTempVector.xX = xSpeed * stTempVector.xX; stTempVector.xY = xSpeed * stTempVector.xY; stTempVector.xZ = xSpeed * stTempVector.xZ;
+    _p_stDest->xX = stTempVector.xX + _p_stCurrent->xX; _p_stDest->xY = stTempVector.xY + _p_stCurrent->xY; _p_stDest->xZ = stTempVector.xZ + _p_stCurrent->xZ;
 }

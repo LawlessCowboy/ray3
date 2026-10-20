@@ -19,12 +19,12 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **2,395 / 4,164** (+1 register-equivalent) | **226,768 / 1,511,580** (**15.0021%**) |
-| Library code | 992 / 3,668 (+1 register-equivalent) | 79,552 / 756,524 (10.5155%) |
-| **Total** | **3,387 / 7,832** (+2 register-equivalent) | **306,320 / 2,268,104** (**13.5056%**) |
+| **Game code** | **2,887 / 4,134** (+1 register-equivalent) | **377,096 / 1,507,864** (**25.0086%**) |
+| Library code | 1,058 / 3,521 (+1 register-equivalent) | 104,120 / 737,336 (14.1211%) |
+| **Total** | **3,945 / 7,655** (+2 register-equivalent) | **481,216 / 2,245,200** (**21.4331%**) |
 
-- Translation units (`python3 tools/match.py tus --summary`): **118 / 384**
-  fully matched (game 113 / 347, library 5 / 37), with 213 more partially
+- Translation units (`python3 tools/match.py tus --summary`): **146 / 356**
+  fully matched (game 141 / 334, library 5 / 22), with 200 more partially
   matched. Only sources recovered into `src/Rayman3/` are counted, so SDK and
   runtime code without a source file is excluded.
 - Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
@@ -36,6 +36,9 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
   the harmonx sound middleware, the Metrowerks C/C++ runtime, the SCE SDK and
   other functions built without debug information. The split is computed by
   `code_category()` in `tools/match.py`.
+- The 177 functions the retail debug attributes to a library header (the
+  C4_R3 `Pustl` portable STL, the public MTH/Mat headers, the PS2GL support
+  headers) are **out of scope** and are excluded from the totals above.
 
 ## Status
 

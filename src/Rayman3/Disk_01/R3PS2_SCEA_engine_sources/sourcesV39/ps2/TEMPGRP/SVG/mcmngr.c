@@ -331,7 +331,9 @@ int SVG_fn_s32GetFileInfo(int _iPort, int _iSlot, char* _szFileName, anon_0* _pR
  */
 extern int SVG_fn_s32ReadNextName(int, int, char*, int, char*);
 
-int SVG_fn_s32GetFileAttributes(int _iPort, int _iSlot, char* _szFileName)
+/* The retail frame reserves four parameter slots (0x40 bytes) but only stores
+   a0/a1/a2, so the original took a fourth, unused argument. */
+int SVG_fn_s32GetFileAttributes(int _iPort, int _iSlot, char* _szFileName, int _iUnused)
 {
     anon_0 Res;
     int iFd;
@@ -352,7 +354,8 @@ int SVG_fn_s32GetFileAttributes(int _iPort, int _iSlot, char* _szFileName)
     if (gs_bSceMcOpIsSuccessful)
     {
         sceMcSync(0, 0, &iFd);
-        while (!Res.AttrFile)
+        /* The retail code keeps the unsigned-short -> int mask here. */
+        while (Res.AttrFile == 0)
             ;
         t = (unsigned short)((short)Res.AttrFile & 0x80);
         if (t != 0)

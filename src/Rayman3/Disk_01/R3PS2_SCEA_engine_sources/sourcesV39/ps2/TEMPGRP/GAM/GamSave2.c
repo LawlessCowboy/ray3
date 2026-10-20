@@ -1100,8 +1100,8 @@ int g_RevisitMode;
 int g_RevisitIndEnvironementFromWhereWeCome;
 int g_MaxIndCurrentEnv;
 int g_EndOfGameIsDone;
-unsigned int g_aForKeyAlgo;
-anon_3 g_aEnvValue;
+unsigned int g_aForKeyAlgo[4];
+anon_3 g_aEnvValue[10];
 tdstGameOptions_ g_stGameOptions;
 int MENU_g_bInversionVert;
 int MENU_g_bInversionHor;
@@ -1405,11 +1405,55 @@ void fn_vComputeDeformationPS2(GEO_tdstGeometricObject_* p_stGeoObj, unsigned in
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime);
+void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime);
+void SND_fn_vSetStereoSound(int iStereo);
+void GAM_fn_vSetVolumeMenu(int iVolume);
+void GAM_fn_vSetVolumeSound(int iVolume);
+void GAM_fn_vSetVolumeVoice(int iVolume);
+void GAM_fn_vSetVolumeMusic(int iVolume);
+void GAM_fn_vSetVolumeAmbiance(int iVolume);
+void fn_vUpdatePlayerGameName(void);
+void fn_vR3StoreInitScore(void* p_dst, void* p_src, int iCount, int iSize);
+
 void SAV2_fn_vActualizeMenuOptionsAfterLoad(void)
 {
     SAV2_MenuOptionHeader_* p;
     int i;
-    /* TODO: decompile from asm/... */
+
+    p = &SAV2_g_stList.stListHeader.stMenuOptions;
+    GLI_g_ScreenPos_DX = p->fCenteringX;
+    GLI_g_ScreenPos_DY = p->fCenteringY;
+    GLI_g_bWideScreenMode = p->bWideScreen;
+    MENU_g_bVibration = p->bVibration;
+    MENU_g_bInversionHor = p->bInversionHor;
+    MENU_g_bInversionVert = p->bInversionVert;
+    SND_fn_vSetStereoSound(g_stGameOptions.s32VolumeMenu);
+    g_stGameOptions.s32VolumeMenu = g_stGameOptions.s32VolumeAmbiance;
+    GAM_fn_vSetVolumeMenu(g_stGameOptions.s32VolumeMenu);
+    GAM_fn_vSetVolumeSound(g_stGameOptions.s32VolumeSound);
+    GAM_fn_vSetVolumeVoice(g_stGameOptions.s32VolumeVoice);
+    GAM_fn_vSetVolumeMusic(g_stGameOptions.s32VolumeMusic);
+    GAM_fn_vSetVolumeAmbiance(g_stGameOptions.s32VolumeAmbiance);
+    fn_vUpdatePlayerGameName();
+    for (i = 0; i < 10; i++) { g_aEnvValue[i] = SAV2_g_stList.stListHeader.aEnvValue[i]; }
+    fn_vR3StoreInitScore(g_aEnvValue, &SAV2_g_stList.stListHeader.aEnvValue[0], i, i * 8);
+    g_aForKeyAlgo[0] = SAV2_g_stList.stListHeader.aForKeyAlgo[0];
+    g_aForKeyAlgo[1] = SAV2_g_stList.stListHeader.aForKeyAlgo[1];
+    g_aForKeyAlgo[2] = SAV2_g_stList.stListHeader.aForKeyAlgo[2];
+    g_aForKeyAlgo[3] = SAV2_g_stList.stListHeader.aForKeyAlgo[3];
+    g_EndOfGameIsDone = SAV2_g_stList.stListHeader.EndOfGameIsDone;
+    g_MaxIndCurrentEnv = SAV2_g_stList.stListHeader.MaxIndCurrentEnv;
+    g_RevisitIndCurrentEnv = SAV2_g_stList.stListHeader.RevisitEnvironment;
+    g_RevisitIndEnvironementFromWhereWeCome = SAV2_g_stList.stListHeader.RevisitOriginEnvironment;
+    g_RevisitMode = SAV2_g_stList.stListHeader.RevisitMode;
+    g_RevisitEnvScoreAtBeginingOfLevel = SAV2_g_stList.stListHeader.RevisitEnvScore;
+    g_RevisitGlobalScoreAtBeginingOfLevel = SAV2_g_stList.stListHeader.RevisitGlobalScore;
+    g_RevisitCurrentEnvScore = g_RevisitEnvScoreAtBeginingOfLevel;
+    g_RevisitCurrentGlobalScore = g_RevisitGlobalScoreAtBeginingOfLevel;
+    strcpy(SAV2_g_LevelNameAfterReinitToSave, SAV2_g_stList.stListHeader.szLevelNameAfterRevisit);
+    g_IndCurrentEnv = g_RevisitIndCurrentEnv;
+    if (MENU_g_bVibration) { IPT_fn_vResumeAllConstantFFBEffectForAllDevices(PS2_g_SaveBloc); } else { IPT_fn_vPauseAllConstantFFBEffectForAllDevices(PS2_g_SaveBloc); }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 1581–1592 */
@@ -1426,9 +1470,6 @@ void SAV2_fn_vActualizeMenuOptionsAfterLoad(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void IPT_fn_vResumeAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime);
-void IPT_fn_vPauseAllConstantFFBEffectForAllDevices(unsigned int ulCurrentTime);
-
 void SAV2_fn_vUpdateVibrations(void)
 {
     unsigned int ulCurrentTime;
@@ -1796,8 +1837,16 @@ void GAM_vAllocateSaveBloc(void)
 SAV2_tdeDataType_ SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType);
 /* ucType is decoded as SAV2_tdeDataType_, but callers narrow it to a byte
  * (andi 0xff), matching its uc prefix. */
-void SAV2_fn_vDeclareAField(char* p_szElementName, unsigned char ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave);
+void SAV2_fn_vDeclareAField(char* p_szElementName, int ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave);
 void SAV2_fn_vSetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
+extern void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel);
+extern void* fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel);
+void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement);
+/* The element lookup is expanded into its callers by the retail compiler, but
+ * SAV2_fn_vDeleteAllPipeline still calls the out-of-line copy, so the
+ * expandable copy is a separate static helper. */
+SAV2_tdstElement_* SAV2_fn_p_stFindElementByName(char* p_szElementName);
+static SAV2_tdstElement_* SAV2_fn_p_stFindElementByNameExpanded(char* p_szElementName);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 591–596 */
 /* addr: 0x0028bcc0  size: 92 bytes */
@@ -1813,7 +1862,7 @@ void SAV2_fn_vSetValueForSave(char* p_szElementName, void* p_stParam)
 {
 
 
-    SAV2_fn_vDeclareAField(p_szElementName, SAV2_fn_eGiveElementTypeFromAIType(((tdstGetSetParam_*)p_stParam)->eType), 1, 1, 1);
+    SAV2_fn_vDeclareAField(p_szElementName, (unsigned char)SAV2_fn_eGiveElementTypeFromAIType(((tdstGetSetParam_*)p_stParam)->eType), 1, 1, 1);
     SAV2_fn_vSetAValueAtIndex(p_szElementName, 0, p_stParam);
 }
 
@@ -1829,7 +1878,7 @@ void SAV2_fn_vSetValueForSave(char* p_szElementName, void* p_stParam)
  */
 void SAV2_fn_vSetValueInPipeline(char* p_szElementName, void* p_stParam)
 {
-    SAV2_fn_vDeclareAField(p_szElementName, SAV2_fn_eGiveElementTypeFromAIType(((tdstGetSetParam_*)p_stParam)->eType), 1, 1, 0);
+    SAV2_fn_vDeclareAField(p_szElementName, (unsigned char)SAV2_fn_eGiveElementTypeFromAIType(((tdstGetSetParam_*)p_stParam)->eType), 1, 1, 0);
     SAV2_fn_vSetAValueAtIndex(p_szElementName, 0, p_stParam);
 }
 
@@ -2017,7 +2066,11 @@ void SAV2_fn_vDeleteAllList(void)
 {
     SAV2_tdstElement_* p_stNextElement;
     SAV2_tdstElement_* p_stElement;
-    /* TODO: decompile from asm/... */
+    memset(&SAV2_g_stList.stListHeader, 0, sizeof(SAV2_tdstHeader_));
+    p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; while (p_stElement != NULL)
+    {
+        SAV2_fn_vFreeAnElement(p_stElement);
+        p_stElement = p_stNextElement; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 333–339 */
@@ -2035,7 +2088,10 @@ void SAV2_fn_vDeleteAllList(void)
  */
 void SAV2_fn_vDeletePipelineElement(char* p_szElementName)
 {
-    /* TODO: decompile from asm/... */
+    SAV2_tdstElement_* p_stElement;
+    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
+    if ((p_stElement != NULL) && ((p_stElement->ucDataInformation & 0x10) == 0))
+        SAV2_fn_vFreeAnElement(p_stElement);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 322–330 */
@@ -2055,7 +2111,11 @@ void SAV2_fn_vDeleteAllPipeline(void)
 {
     SAV2_tdstElement_* p_stNextElement;
     SAV2_tdstElement_* p_stElement;
-    /* TODO: decompile from asm/... */
+    SAV2_tdstElement_* p_stFound;
+    p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stNextElement = (p_stElement != NULL) ? p_stElement->hNextBrotherDyn : NULL; while (p_stElement != NULL)
+    {
+        p_stFound = SAV2_fn_p_stFindElementByName((char*)p_stElement->p_szElementName); if ((p_stFound != NULL) && ((p_stFound->ucDataInformation & 0x10) == 0)) { SAV2_fn_vFreeAnElement(p_stFound); }
+        p_stElement = p_stNextElement; p_stNextElement = (p_stNextElement != NULL) ? p_stNextElement->hNextBrotherDyn : NULL; }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 313–319 */
@@ -2073,7 +2133,10 @@ void SAV2_fn_vDeleteAllPipeline(void)
  */
 void SAV2_fn_vDeleteAField(char* p_szElementName)
 {
-    /* TODO: decompile from asm/... */
+    SAV2_tdstElement_* p_stElement;
+    p_stElement = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
+    if (p_stElement != NULL)
+        SAV2_fn_vFreeAnElement(p_stElement);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 294–310 */
@@ -2095,9 +2158,21 @@ void SAV2_fn_vDeleteAField(char* p_szElementName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void SAV2_fn_vDeclareAField(char* p_szElementName, unsigned char ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave)
+void SAV2_fn_vDeclareAField(char* p_szElementName, int ucType, unsigned int ulNumberOfElement, unsigned char bStatic, unsigned char bSave)
 {
-    /* TODO: decompile from asm/... */
+    SAV2_tdstElement_* p_stElement; SAV2_tdstElement_* p_stFound; char* p_szName; void* p_vArray; unsigned int ulSize;
+    p_stFound = SAV2_fn_p_stFindElementByNameExpanded(p_szElementName);
+    if (p_stFound != NULL)
+        SAV2_fn_vFreeAnElement(p_stFound);
+
+    Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); p_stElement = (SAV2_tdstElement_*)fn_p_vGenAlloc(sizeof(SAV2_tdstElement_), 0); printf("SAV2_fn_p_vMalloc %d\n", sizeof(SAV2_tdstElement_)); if (p_stElement != NULL) { memset(p_stElement, 0, sizeof(SAV2_tdstElement_)); } ulSize = strlen(p_szElementName) + 1; Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); p_szName = (char*)fn_p_vGenAlloc(ulSize, 0); printf("SAV2_fn_p_vMalloc %d\n", ulSize); if (p_szName != NULL) { memset(p_szName, 0, ulSize); } p_stElement->p_szElementName = (int)p_szName; strcpy((char*)p_stElement->p_szElementName, p_szElementName); p_stElement->uData.p_vArray = NULL; p_stElement->ucDataInformation = ucType | ((char)bStatic * 0x10) | ((char)bSave * 0x30); p_stElement->ucNumberOfData = (unsigned char)ulNumberOfElement;
+
+    if (ulNumberOfElement != 1)
+    {
+        ulSize = SAV2_g_ulSizeByType[ucType] * ulNumberOfElement; Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); p_vArray = fn_p_vGenAlloc(ulSize, 0); printf("SAV2_fn_p_vMalloc %d\n", ulSize); if (p_vArray != NULL) { memset(p_vArray, 0, ulSize); } p_stElement->uData.p_vArray = (int)p_vArray;
+    }
+
+    if (p_stElement->hNextBrotherDyn != NULL) { p_stElement->hNextBrotherDyn->hPrevBrotherDyn = p_stElement->hPrevBrotherDyn; } if (p_stElement->hPrevBrotherDyn != NULL) { p_stElement->hPrevBrotherDyn->hNextBrotherDyn = p_stElement->hNextBrotherDyn; } if (p_stElement->hFatherDyn != NULL) { p_stElement->hFatherDyn->lNumberOfElementsDyn--; if (p_stElement->hFatherDyn->hFirstElementDyn == p_stElement) { p_stElement->hFatherDyn->hFirstElementDyn = p_stElement->hNextBrotherDyn; } if (p_stElement->hFatherDyn->hLastElementDyn == p_stElement) { p_stElement->hFatherDyn->hLastElementDyn = p_stElement->hPrevBrotherDyn; } } p_stElement->hNextBrotherDyn = NULL; p_stElement->hPrevBrotherDyn = NULL; p_stElement->hFatherDyn = NULL; p_stElement->hNextBrotherDyn = NULL; p_stElement->hPrevBrotherDyn = SAV2_g_stList.SAV2_ListAnchor.hLastElementDyn; p_stElement->hFatherDyn = &SAV2_g_stList.SAV2_ListAnchor; if (SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn == NULL) { SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn = p_stElement; } else { SAV2_g_stList.SAV2_ListAnchor.hLastElementDyn->hNextBrotherDyn = p_stElement; } SAV2_g_stList.SAV2_ListAnchor.hLastElementDyn = p_stElement; SAV2_g_stList.SAV2_ListAnchor.lNumberOfElementsDyn++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 289–291 */
@@ -2117,7 +2192,7 @@ void SAV2_fn_vDeclareAField(char* p_szElementName, unsigned char ucType, unsigne
  */
 unsigned char SAV2_fn_bIsExist(char* p_szElementName)
 {
-    /* TODO: decompile from asm/... */
+    return (SAV2_fn_p_stFindElementByNameExpanded(p_szElementName) != NULL) ? 1 : 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 275–286 */
@@ -2149,6 +2224,26 @@ SAV2_tdstElement_* SAV2_fn_p_stFindElementByName(char* p_szElementName)
 
     return NULL;
 }
+
+/* The retail code expands the lookup into its callers but keeps the call in
+ * SAV2_fn_vDeleteAllPipeline, so the expandable copy is a separate static
+ * helper. */
+#pragma auto_inline on
+static SAV2_tdstElement_* SAV2_fn_p_stFindElementByNameExpanded(char* p_szElementName)
+{
+    SAV2_tdstElement_* p_stElement;
+
+
+
+    for (p_stElement = SAV2_g_stList.SAV2_ListAnchor.hFirstElementDyn; p_stElement != NULL; p_stElement = p_stElement->hNextBrotherDyn)
+    {
+        if (strcasecmp((char*)p_stElement->p_szElementName, p_szElementName) == 0)
+            return p_stElement;
+    }
+
+    return NULL;
+}
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 246–272 */
 /* addr: 0x0028caf0  size: 644 bytes */
@@ -2203,10 +2298,19 @@ void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement)
  * compare a candidate object's line table as an extra checkpoint.
  */
 /* Debug info says void; the element type is returned in $v0. */
-SAV2_tdeDataType_ SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType)
-{
-    SAV2_tdeDataType_ eDataType;
-    /* TODO: decompile from asm/... */
+SAV2_tdeDataType_ SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType) { SAV2_tdeDataType_ eDataType = 0; if ((_eIAType == E_vt_Boolean) || (_eIAType == E_vt__128To127) || (_eIAType == E_vt_0To255))
+        eDataType = SAV2_eU8;
+    else if ((_eIAType == E_vt__32768To32767) || (_eIAType == E_vt_0To65535))
+        eDataType = SAV2_eU16;
+    else if ((_eIAType == E_vt_Integer) || (_eIAType == E_vt_PositiveInteger))
+        eDataType = SAV2_eU32;
+    else if (_eIAType == E_vt_Float)
+        eDataType = SAV2_eFloat;
+    else if (_eIAType == E_vt_Vector)
+        eDataType = SAV2_eVector;
+    else if ((_eIAType == E_vt_String) || (_eIAType == E_vt_Text))
+        eDataType = SAV2_eString;
+    return eDataType;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 157–188 */

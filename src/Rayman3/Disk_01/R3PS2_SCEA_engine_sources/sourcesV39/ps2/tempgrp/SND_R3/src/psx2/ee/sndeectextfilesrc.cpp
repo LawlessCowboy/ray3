@@ -5,20 +5,27 @@
 #include <stddef.h>
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct CResData CResData;
-typedef struct CUUID CUUID;
-typedef struct sstring sstring;
+namespace usnd
+{
+struct CResData;
+struct CUUID;
+struct sstring;
+}
+
+typedef usnd::CResData CResData;
+typedef usnd::CUUID CUUID;
+typedef usnd::sstring sstring;
 typedef struct CTextFileSrc CTextFileSrc;
 typedef struct CPS2FileSrcFlow CPS2FileSrcFlow;
 typedef struct CTextFile CTextFile;
 typedef struct CSrcFlow CSrcFlow;
 typedef struct CFlow CFlow;
 typedef struct CBankDesc CBankDesc;
-struct CUUID { int data[4]; };
+struct usnd::CUUID { int data[4]; };
 struct CFlow { int data[2]; };
 struct CBankDesc {
     int data[8];
-    CResData* mfn_poAddCResData(CUUID*);
+    CResData* mfn_poAddCResData(const CUUID& ro_cuuid);
 };
 
 typedef enum anon_enum_001bafa4 {
@@ -29,7 +36,7 @@ typedef enum anon_enum_001bafd7 {
     E_BUFFER_SIZE = 1024,
 } anon_enum_001bafd7;
 
-struct sstring {
+struct usnd::sstring {
     int m_pcData; /* +0x0 */
 };
 
@@ -43,7 +50,7 @@ struct CTextFileSrc {
     char mchBuffer[2048]; /* +0x44 */
     int mpchCurrent; /* +0x844 */
     unsigned int mdwPosition; /* +0x848 */
-    unsigned char mfn_bRead(sstring* ro_Sentence);
+    unsigned char mfn_bRead(sstring& ro_Sentence);
     char* mfn_pchParseChar(void) const;
     unsigned char mfn_bOpen(const char* pch_FilePath);
 };
@@ -90,7 +97,7 @@ struct CSrcFlow {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-CResData* CBankDesc::mfn_poAddCResData(CUUID* ro_cuuid)
+CResData* CBankDesc::mfn_poAddCResData(const CUUID& ro_cuuid)
 {
     CUUID aId[20];
     int nb;
@@ -128,7 +135,7 @@ CResData* CBankDesc::mfn_poAddCResData(CUUID* ro_cuuid)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CTextFileSrc::mfn_bRead(sstring* ro_Sentence)
+unsigned char CTextFileSrc::mfn_bRead(sstring& ro_Sentence)
 {
     char* pch_StringNext;
     unsigned int dw_Size;

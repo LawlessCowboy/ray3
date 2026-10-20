@@ -31,6 +31,8 @@ _tdstTimer a_stTimerTab[16];
 unsigned int a3_ulEventFrequency[3];
 unsigned int a3_ulTimerFrequency[3];
 
+extern void fn_vTimerGetCounter(short wTimerType, _stTimerCount* p_stValue);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 81–88 */
 /* addr: 0x00322b80  size: 72 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -124,7 +126,39 @@ short TMR_fn_wWait(unsigned int ulTimeToWait)
  */
 short TMR_fn_wResetTimer(short wTimerHandle)
 {
-    /* TODO: decompile from asm/... */
+    if (!TimerLibOk)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (wTimerHandle >= 16)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerState == 0)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerType > 2)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 6, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    a_stTimerTab[wTimerHandle].m_wTimerState = 1;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulLowPart = 0;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulHighPart = 0;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_LastValue.m_ulLowPart = 0;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_LastValue.m_ulHighPart = 0;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulLowPart = 0;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulHighPart = 0;
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 366–436 */
@@ -186,9 +220,67 @@ short TMR_fn_wResetTimer(short wTimerHandle)
  */
 short TMR_fn_wReadTimer(short wTimerHandle, _stTimerCount* p_stTimerCount)
 {
-    /* TODO: decompile from asm/... */
-}
+    if (!TimerLibOk)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
 
+    if (wTimerHandle >= 16)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerState == 0)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerType > 2)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 6, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    switch (a_stTimerTab[wTimerHandle].m_wTimerState)
+    {
+    case 2:
+        fn_vTimerGetCounter(a_stTimerTab[wTimerHandle].m_wTimerType, p_stTimerCount);
+        {
+            unsigned long ulInitLow = a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulLowPart;
+            long ulInitHigh = a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulHighPart;
+
+            if (p_stTimerCount->m_ulHighPart == ulInitHigh) { p_stTimerCount->m_ulLowPart = p_stTimerCount->m_ulLowPart - ulInitLow; p_stTimerCount->m_ulHighPart = 0; } else { if (p_stTimerCount->m_ulLowPart >= ulInitLow) { p_stTimerCount->m_ulLowPart = p_stTimerCount->m_ulLowPart - ulInitLow; } else { p_stTimerCount->m_ulLowPart = p_stTimerCount->m_ulLowPart + ((1UL << 32) - ulInitLow); p_stTimerCount->m_ulHighPart = p_stTimerCount->m_ulHighPart - 1UL; } p_stTimerCount->m_ulHighPart = p_stTimerCount->m_ulHighPart - ulInitHigh; }
+        }
+        break;
+
+    case 3:
+        p_stTimerCount->m_ulLowPart = a_stTimerTab[wTimerHandle].m_stTimerCount_LastValue.m_ulLowPart;
+        p_stTimerCount->m_ulHighPart = a_stTimerTab[wTimerHandle].m_stTimerCount_LastValue.m_ulHighPart;
+        {
+            unsigned long ulInitLow = a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulLowPart;
+            long ulInitHigh = a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulHighPart;
+
+            if (p_stTimerCount->m_ulHighPart == ulInitHigh) { p_stTimerCount->m_ulLowPart = p_stTimerCount->m_ulLowPart - ulInitLow; p_stTimerCount->m_ulHighPart = 0; } else { if (p_stTimerCount->m_ulLowPart >= ulInitLow) { p_stTimerCount->m_ulLowPart = p_stTimerCount->m_ulLowPart - ulInitLow; } else { p_stTimerCount->m_ulLowPart = p_stTimerCount->m_ulLowPart + ((1UL << 32) - ulInitLow); p_stTimerCount->m_ulHighPart = p_stTimerCount->m_ulHighPart - 1UL; } p_stTimerCount->m_ulHighPart = p_stTimerCount->m_ulHighPart - ulInitHigh; }
+        }
+        break;
+
+    case 1:
+    case 4:
+        p_stTimerCount->m_ulHighPart = 0;
+        p_stTimerCount->m_ulLowPart = 0;
+        break;
+    }
+
+    {
+        unsigned long ulTotalHigh = a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulHighPart;
+        unsigned long ulLow = p_stTimerCount->m_ulLowPart; long lSum = ulLow + a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulLowPart; if ((unsigned int)(int)lSum < ulLow) { p_stTimerCount->m_ulHighPart = p_stTimerCount->m_ulHighPart + 1; } p_stTimerCount->m_ulLowPart = (unsigned int)(int)lSum; p_stTimerCount->m_ulHighPart += ulTotalHigh;
+    }
+
+    return 0;
+}
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 332–359 */
 /* addr: 0x003230b0  size: 272 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -221,7 +313,28 @@ short TMR_fn_wReadTimer(short wTimerHandle, _stTimerCount* p_stTimerCount)
  */
 short TMR_fn_wSetTimerValue(short wTimerHandle, _stTimerCount* p_stValue)
 {
-    /* TODO: decompile from asm/... */
+    if (!TimerLibOk)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (wTimerHandle >= 16)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerType > 2)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 6, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulLowPart = p_stValue->m_ulLowPart;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulHighPart = p_stValue->m_ulHighPart;
+    a_stTimerTab[wTimerHandle].m_wTimerState = 4;
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 154–200 */
@@ -265,7 +378,44 @@ short TMR_fn_wSetTimerValue(short wTimerHandle, _stTimerCount* p_stValue)
 short TMR_fn_wStartTimer(short wTimerHandle)
 {
     _stTimerCount stValue;
-    /* TODO: decompile from asm/... */
+
+    if (!TimerLibOk)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (wTimerHandle >= 16)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerState == 0)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 5, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerType > 2)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 6, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    fn_vTimerGetCounter(a_stTimerTab[wTimerHandle].m_wTimerType, &stValue);
+
+    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulLowPart = stValue.m_ulLowPart;
+    a_stTimerTab[wTimerHandle].m_stTimerCount_InitValue.m_ulHighPart = stValue.m_ulHighPart;
+
+    if (a_stTimerTab[wTimerHandle].m_wTimerState != 4)
+    {
+        a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulLowPart = 0;
+        a_stTimerTab[wTimerHandle].m_stTimerCount_TotalValue.m_ulHighPart = 0;
+    }
+    a_stTimerTab[wTimerHandle].m_wTimerState = 2;
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Tmr\Timer.c lines 110–147 */
@@ -301,5 +451,48 @@ short TMR_fn_wStartTimer(short wTimerHandle)
 short TMR_fn_wCreateTimer(short wTimerType)
 {
     short i;
-    /* TODO: decompile from asm/... */
+
+    if (!TimerLibOk)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 2, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (wTimerCount == 16)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 7, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (wTimerType > 2)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 3, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    if (a3_ulTimerFrequency[wTimerType] == 0)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 4, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    for (i = 0; i < 16; i++)
+    {
+        if (a_stTimerTab[i].m_wTimerState == 0)
+        {
+            break;
+        }
+    }
+
+    if (i == 16)
+    {
+        Erm_fn_v_UpdateLastError(1, g_ucTmrModuleId, 0, 7, -1, 255, 255, NULL);
+        return 0x7FFF;
+    }
+
+    a_stTimerTab[i].m_wTimerType = wTimerType;
+    a_stTimerTab[i].m_wTimerState = 1;
+    wTimerCount++;
+
+    return i;
 }

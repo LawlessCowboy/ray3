@@ -60,7 +60,7 @@ struct COL_tdstCollideObject_ {
     short xNbElements; /* +0x2 */
     short xNbParallelBoxes; /* +0x4 */
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
+    short* d_xListOfElementsTypes; /* +0xc */
     int d_stListOfElements; /* +0x10 */
     COL_tdstOctree_* p_stOctree; /* +0x14 */
     COL_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
@@ -257,6 +257,11 @@ struct COL_tdstIndexedAlignedBox_ {
 
 COL_tdstGVForCollision_ COL_g_stGVForCol;
 
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
+void MAT_fn_vInvert(MAT_tdstTransformation_* pDest, MAT_tdstTransformation_* pSource);
+void MAT_fn_vCompose(MAT_tdstTransformation_* pDest, MAT_tdstTransformation_* pA, MAT_tdstTransformation_* pB);
+float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* p_stTransform);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 477–502 */
 /* addr: 0x0024ccb0  size: 432 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -325,7 +330,53 @@ void COL_fn_vCollideStaticGeomObj1WithStaticGeomObj2(COL_tdstCollideObject_* _hG
  */
 void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* p_stGV)
 {
-    /* TODO: decompile from asm/... */
+    short sType;
+    short lIndex;
+    int lFound;
+
+    MAT_fn_vSetIdentity(&p_stGV->stInvMatrix);
+    MAT_fn_vSetIdentity(&p_stGV->stD2ST0TransformMatrix);
+    MAT_fn_vSetIdentity(&p_stGV->stD2ST1TransformMatrix);
+    MAT_fn_vSetIdentity(&p_stGV->stS2DT0TransformMatrix);
+    MAT_fn_vSetIdentity(&p_stGV->stS2DT1TransformMatrix);
+    MAT_fn_vInvert(&p_stGV->stInvMatrix, p_stGV->p_stStaticGeomObjMatrix);
+    MAT_fn_vCompose(&p_stGV->stD2ST0TransformMatrix, &p_stGV->stInvMatrix, p_stGV->p_stT0DynamicGeomObjMatrix);
+    MAT_fn_vCompose(&p_stGV->stD2ST1TransformMatrix, &p_stGV->stInvMatrix, p_stGV->p_stT1DynamicGeomObjMatrix);
+
+    lIndex = 0;
+    lFound = 0;
+    while (lIndex < p_stGV->p_stDynamicColObj->xNbElements)
+    {
+        sType = p_stGV->p_stDynamicColObj->d_xListOfElementsTypes[lIndex];
+        if (sType != 8 && sType != 7 && sType != 1)
+        {
+            lIndex++;
+        }
+        else
+        {
+            lFound = 1;
+            break;
+        }
+    }
+
+    if (lFound == 0)
+    {
+        p_stGV->ulSelectedCollisionCases &= 0xFFFFFF0Fu;
+        p_stGV->ulSelectedCollisionCases &= 0xFFFFFEFFu;
+        p_stGV->ulSelectedCollisionCases &= 0xFFFFF9FFu;
+        p_stGV->ulSelectedCollisionCases &= 0xFFFFE7FFu;
+        p_stGV->ulSelectedCollisionCases &= 0xFE001FFFu;
+    }
+
+    p_stGV->p_stOctree = p_stGV->p_stStaticColObj->p_stOctree;
+    if (p_stGV->bStaticGeomObjHasNoTransformationMatrix)
+    {
+        p_stGV->xStaticScale = 1.0f;
+    }
+    else
+    {
+        p_stGV->xStaticScale = MAT_fn_xGetMaxScaleTest(p_stGV->p_stStaticGeomObjMatrix);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 180–309 */

@@ -46,6 +46,14 @@
         asm { mtc1 _mthBits, _result }          \
     } while (0)
 
+#define MTH_NORM3_TO(_result, _vector) \
+    do {                                                    \
+        float _mthX = (_vector)->xX;                        \
+        float _mthY = (_vector)->xY;                        \
+        float _mthZ = (_vector)->xZ;                        \
+        MTH_SQR3_TO(_result, _mthX, _mthY, _mthZ);          \
+    } while (0)
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
@@ -195,6 +203,16 @@ typedef union CAM_tduVectorCopy_ {
     MTH3D_tdstVector_ stVector;
     unsigned int auWords[3];
 } CAM_tduVectorCopy_;
+
+
+/* Word-wise vector copies: the retail code copies the three components as
+   32-bit words rather than as floats. */
+#define MTH_COPY_VECTOR_WORDS(_dst, _src) \
+    do { \
+        ((CAM_tduVectorCopy_*)_dst)->auWords[0] = ((CAM_tduVectorCopy_*)_src)->auWords[0]; \
+        ((CAM_tduVectorCopy_*)_dst)->auWords[1] = ((CAM_tduVectorCopy_*)_src)->auWords[1]; \
+        ((CAM_tduVectorCopy_*)_dst)->auWords[2] = ((CAM_tduVectorCopy_*)_src)->auWords[2]; \
+    } while (0)
 
 struct SECT_tdstListOfSOSectorsInGraphicInteraction_ {
     short wLevelOfDetail; /* +0x0 */
@@ -1191,9 +1209,110 @@ int g_a_stObstacle;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MTH4D_fn_vSerialMul4DMatrix3DVertexTo4DAlignedDest_VU0(void)
+/* Hand-written assembly in the retail ELF: the VU0 matrix/vector product
+   below uses the R5900 prefetch hints and the VU0 accumulator ops, which MWCC
+   cannot emit from C, and the retail line table has one entry per instruction.
+   The arguments arrive in a0 (destination), a1 (matrix), a2 (vector) and a3
+   (vertex count). */
+asm void MTH4D_fn_vSerialMul4DMatrix3DVertexTo4DAlignedDest_VU0(void)
 {
-    /* TODO: decompile from asm/... */
+    pref 0x0, 0x0($a1);
+    pref 0x0, 0x0($a2);
+    paddub $t2, $a2, $zero;
+    paddub $t0, $a0, $zero;
+    pref 0x0, 0x0($t2);
+    paddub $t3, $a3, $zero;
+    paddub $t4, $a3, $zero;
+    lui $t1, 0x7000;
+    lui $v1, 0x3F80;
+    lwc1 $f1, 0x0($a1);
+    lwc1 $f2, 0x4($a1);
+    lwc1 $f3, 0x8($a1);
+    lwc1 $f4, 0x10($a1);
+    lwc1 $f5, 0x14($a1);
+    lwc1 $f6, 0x18($a1);
+    lwc1 $f7, 0x20($a1);
+    lwc1 $f8, 0x24($a1);
+    lwc1 $f9, 0x28($a1);
+    lwc1 $f10, 0x30($a1);
+    lwc1 $f11, 0x34($a1);
+    lwc1 $f12, 0x38($a1);
+    srl $t4, $t4, 1;
+    andi $t3, $a3, 1;
+    swc1 $f1, 0x0($t1);
+    swc1 $f2, 0x4($t1);
+    swc1 $f3, 0x8($t1);
+    sw $zero, 0xC($t1);
+    swc1 $f4, 0x10($t1);
+    swc1 $f5, 0x14($t1);
+    swc1 $f6, 0x18($t1);
+    sw $zero, 0x1C($t1);
+    swc1 $f7, 0x20($t1);
+    swc1 $f8, 0x24($t1);
+    swc1 $f9, 0x28($t1);
+    sw $zero, 0x2C($t1);
+    swc1 $f10, 0x30($t1);
+    swc1 $f11, 0x34($t1);
+    swc1 $f12, 0x38($t1);
+    sw $v1, 0x3C($t1);
+    lqc2 $vf1, 0x0($t1);
+    lqc2 $vf2, 0x10($t1);
+    lqc2 $vf3, 0x20($t1);
+    lqc2 $vf4, 0x30($t1);
+    sw $v1, 0x4C($t1);
+    sw $v1, 0x5C($t1);
+    beqz $t4, LCheck;
+    nop
+LLoop:
+    lwc1 $f13, 0x0($t2);
+    lwc1 $f14, 0x4($t2);
+    lwc1 $f15, 0x8($t2);
+    lwc1 $f16, 0xC($t2);
+    lwc1 $f17, 0x10($t2);
+    lwc1 $f18, 0x14($t2);
+    pref 0x0, 0x18($t2);
+    swc1 $f13, 0x40($t1);
+    swc1 $f14, 0x44($t1);
+    swc1 $f15, 0x48($t1);
+    swc1 $f16, 0x50($t1);
+    swc1 $f17, 0x54($t1);
+    swc1 $f18, 0x58($t1);
+    lqc2 $vf5, 0x40($t1);
+    lqc2 $vf6, 0x50($t1);
+    vmulax.xyzw $ACC, $vf1, $vf5x;
+    vmadday.xyzw $ACC, $vf2, $vf5y;
+    vmaddaz.xyzw $ACC, $vf3, $vf5z;
+    vmaddw.xyzw $vf9, $vf4, $vf5w;
+    vmulax.xyzw $ACC, $vf1, $vf6x;
+    vmadday.xyzw $ACC, $vf2, $vf6y;
+    vmaddaz.xyzw $ACC, $vf3, $vf6z;
+    vmaddw.xyzw $vf10, $vf4, $vf6w;
+    addiu $t4, $t4, -1;
+    addiu $t2, $t2, 0x18;
+    sqc2 $vf9, 0x0($t0);
+    sqc2 $vf10, 0x10($t0);
+    bnez $t4, LLoop;
+    addiu $t0, $t0, 0x20;
+LCheck:
+    beqz $t3, LEnd;
+    nop
+LOdd:
+    lwc1 $f13, 0x0($t2);
+    lwc1 $f14, 0x4($t2);
+    lwc1 $f15, 0x8($t2);
+    swc1 $f13, 0x40($t1);
+    swc1 $f14, 0x44($t1);
+    swc1 $f15, 0x48($t1);
+    sw $v1, 0x4C($t1);
+    lqc2 $vf5, 0x40($t1);
+    vmulax.xyzw $ACC, $vf1, $vf5x;
+    vmadday.xyzw $ACC, $vf2, $vf5y;
+    vmaddaz.xyzw $ACC, $vf3, $vf5z;
+    vmaddw.xyzw $vf9, $vf4, $vf5w;
+    sqc2 $vf9, 0x0($t0);
+LEnd:
+    jr $ra;
+    nop
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 1359–1432 */
@@ -1839,7 +1958,28 @@ float DNM_fn_xDynamicsCameraAngleParsing(float _xSpeed, float _xIncSpeed, float 
 {
     float xAngle;
     float xRetAngle;
-    /* TODO: decompile from asm/... */
+
+    if (_cIgnoreParsing || _xRequestAngle < 0.001f)
+    {
+        return _xRequestAngle;
+    }
+    xAngle = _xRequestAngle;
+    if (_xRequestAngle > _xSpeed)
+        xAngle = _xSpeed;
+    if (!_cIgnoreInertia)
+    {
+        if (_xRequestAngle < _xSpeed * _xDecSpeed)
+        {
+            _xRequestAngle = _xRequestAngle / _xDecSpeed;
+            if (xAngle > _xRequestAngle)
+                xAngle = _xRequestAngle;
+        }
+        xRetAngle = _xLastAngle + _xSpeed / _xIncSpeed; if (xAngle > xRetAngle)
+        {
+            xAngle = xRetAngle;
+        }
+    }
+    return xAngle;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 262–354 */
@@ -1887,7 +2027,59 @@ void DNM_fn_vDynamicsCameraPositionParsing(float _xSpeed, float _xIncSpeed, floa
     float xTmpNorm;
     float xNormSrc;
     float xNorm;
-    /* TODO: decompile from asm/... */
+    float xScale;
+    float xSqrNorm;
+    float x, y, z;
+
+    bNormWantedIsModified = 0;
+    x = _p_stShiftingSrc->xX; y = _p_stShiftingSrc->xY; z = _p_stShiftingSrc->xZ; MTH_SQR3_TO(xSqrNorm, x, y, z); asm { sqrt.s xNorm, xSqrNorm } asm { nop } asm { nop }
+    xNormSrc = xNorm;
+    if (_cIgnoreParsing || xNorm <= 0.001f)
+    {
+        _p_stDestPos->xX = _p_stActualPos->xX + _p_stShiftingSrc->xX; _p_stDestPos->xY = _p_stActualPos->xY + _p_stShiftingSrc->xY; _p_stDestPos->xZ = _p_stActualPos->xZ + _p_stShiftingSrc->xZ;
+        MTH_COPY_VECTOR_WORDS(_p_stShiftingResult, _p_stShiftingSrc);
+        return;
+    }
+    if (_xSpeed == 0.0f)
+    {
+        MTH_COPY_VECTOR_WORDS(_p_stDestPos, _p_stActualPos);
+        _p_stShiftingSrc->xX = 0.0f; _p_stShiftingSrc->xY = 0.0f; _p_stShiftingSrc->xZ = 0.0f;
+        return;
+    }
+    MTH_COPY_VECTOR_WORDS(_p_stShiftingResult, _p_stShiftingSrc);
+    if (xNorm > _xSpeed)
+    {
+        xNormSrc = _xSpeed;
+        bNormWantedIsModified = 1;
+    }
+    if (!_cIgnoreInertia)
+    {
+        if (_xDecSpeed != 0.0f)
+        {
+            if (xNorm < _xSpeed * _xDecSpeed)
+            {
+                xTmpNorm = xNorm / _xDecSpeed;
+                if (xTmpNorm > 0.001f && xTmpNorm < xNormSrc)
+                {
+                    bNormWantedIsModified = 1;
+                    xNormSrc = xTmpNorm;
+                }
+            }
+        }
+        if (_xIncSpeed != 0.0f)
+        {
+            xNormWanted = _xLastNorm + _xSpeed / _xIncSpeed; if (xNormSrc > xNormWanted)
+            {
+                bNormWantedIsModified = 1;
+                xNormSrc = xNormWanted;
+            }
+        }
+    }
+    if (bNormWantedIsModified)
+    {
+        xScale = xNormSrc / xNorm; _p_stShiftingResult->xX = _p_stShiftingResult->xX * xScale; _p_stShiftingResult->xY = _p_stShiftingResult->xY * xScale; _p_stShiftingResult->xZ = _p_stShiftingResult->xZ * xScale;
+    }
+    _p_stDestPos->xX = _p_stActualPos->xX + _p_stShiftingResult->xX; _p_stDestPos->xY = _p_stActualPos->xY + _p_stShiftingResult->xY; _p_stDestPos->xZ = _p_stActualPos->xZ + _p_stShiftingResult->xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 207–237 */
@@ -1922,11 +2114,47 @@ void DNM_fn_vDynamicsCameraPositionParsing(float _xSpeed, float _xIncSpeed, floa
  */
 void DNM_fn_vDynamicsTakeCareOfLastMove(MTH3D_tdstVector_* _p_stShiftingResult, MTH3D_tdstVector_* _p_stLastShifting, float _xCutAngleFactor)
 {
-    float xNorm;
     MTH_stRotation stRotation;
     MTH3D_tdstVector_ stTempVector1;
     MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+    {
+        float xNorm;
+        float xNormLast;
+        float xNormRot;
+        float xInv;
+        float xSqrNorm;
+        float aX, aY, aZ;
+        float xX, xY, xZ;
+
+        if (_xCutAngleFactor == 1.0f)
+        {
+            return;
+        }
+        xX = _p_stShiftingResult->xX; xY = _p_stShiftingResult->xY; xZ = _p_stShiftingResult->xZ;
+        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ);
+        MTH_SQRT_TO(xNorm, xSqrNorm);
+        aX = _p_stLastShifting->xX; aY = _p_stLastShifting->xY; aZ = _p_stLastShifting->xZ;
+        MTH_SQR3_TO(xSqrNorm, aX, aY, aZ);
+        MTH_SQRT_TO(xNormLast, xSqrNorm);
+        if (xNorm <= 0.1f) return;
+        if (xNormLast <= 0.1f) return;
+        if (_xCutAngleFactor <= 0.0f) return;
+        xInv = 1.0f / xNorm;
+        stTempVector1.xX = xInv * xX; stTempVector1.xY = xInv * _p_stShiftingResult->xY; stTempVector1.xZ = xInv * _p_stShiftingResult->xZ;
+        xInv = 1.0f / xNormLast;
+        stTempVector.xX = xInv * _p_stLastShifting->xX; stTempVector.xY = xInv * _p_stLastShifting->xY; stTempVector.xZ = xInv * _p_stLastShifting->xZ;
+        MTH_p_stRotationComputeRotationWith2Vectors(&stRotation, &stTempVector, &stTempVector1);
+        stRotation.m_xAngle = stRotation.m_xAngle / _xCutAngleFactor;
+        MTH_p_stRotationMulVector(&stRotation, &stTempVector, &stTempVector1);
+        MTH_NORM3_TO(xSqrNorm, &stTempVector1);
+        MTH_SQRT_TO(xNormRot, xSqrNorm);
+        if (xNormRot != 0.0f)
+        {
+            xInv = 1.0f / xNormRot;
+            stTempVector1.xX = xInv * stTempVector1.xX; stTempVector1.xY = xInv * stTempVector1.xY; stTempVector1.xZ = xInv * stTempVector1.xZ;
+        }
+        _p_stShiftingResult->xX = xNorm * stTempVector1.xX; _p_stShiftingResult->xY = xNorm * stTempVector1.xY; _p_stShiftingResult->xZ = xNorm * stTempVector1.xZ;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 113–186 */

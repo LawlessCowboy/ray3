@@ -1616,10 +1616,18 @@ unsigned char GAM_fn_bLoadBitmapForAGO(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int RND_fn_lGetLongRandomValue(unsigned int ulChannel, int lMin, int lMax);
 void GAM_fn_vGetRandomMapAndDemoName(char** pp_cMapName, char** pp_cDemoName)
 {
     long lRandomValue;
-    /* TODO: decompile from asm/... */
+    *pp_cMapName = 0;
+    *pp_cDemoName = 0;
+    if (g_stEngineStructure.ucNumberOfDemos > 0)
+    {
+        lRandomValue = RND_fn_lGetLongRandomValue(0, 0, g_stEngineStructure.ucNumberOfDemos - 1);
+        *pp_cMapName = g_stEngineStructure.a_szDemoLevelName[lRandomValue];
+        *pp_cDemoName = g_stEngineStructure.a_szDemoName[lRandomValue];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1844–1865 */
@@ -1729,10 +1737,24 @@ unsigned char GAM_fn_vGetLoadingLevel(unsigned int _uiLevelTag)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int strcasecmp(const char* p_cS1, const char* p_cS2);
 void GAM_fn_vSetLoadingLevel(char* _szLevelTag)
 {
     char cI;
-    /* TODO: decompile from asm/... */
+    unsigned short uwMask;
+
+    GAM_g_uwLoadingLevel = 0;
+    if (_szLevelTag == NULL) return;
+    cI = 0;
+    for (cI = 0; cI < 2; cI++)
+    {
+        if (strcasecmp(GAM_g_a_stLoadingLevel_Properties[cI].szScriptTag, _szLevelTag) == 0)
+        {
+            uwMask = GAM_g_a_stLoadingLevel_Properties[cI].uwMaskValue;
+            GAM_g_uwLoadingLevel = uwMask;
+            break;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1252–1260 */
@@ -1749,10 +1771,18 @@ void GAM_fn_vSetLoadingLevel(char* _szLevelTag)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void HMU_fn_vSetMemoriesInFixMode(void);
+void HMU_fn_vSetMemoriesInLevelMode(void);
+int HMU_fn_ucGetFixNormalMemoryBlock(void);
+int HMU_fn_ucGetLevelNormalMemoryBlock(void);
+void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
+void GAM_fn_vSetEngineInTransitionMode(void);
 void GAM_fn_vPopAllocMode(void)
 {
-    GAM_eLoadingMode param0;
-    /* TODO: decompile from asm/... */
+    unsigned short usMode;
+
+    usMode = g_a_cAllocModeStack[--g_iAllocModePos];
+    if (GAM_gs_tdeLoadingMode != usMode) switch (usMode) { case GAM_eFixLoading: GAM_gs_tdeLoadingMode = GAM_eFixLoading; HMU_fn_vSetMemoriesInFixMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetFixNormalMemoryBlock()); break; case GAM_eLevelLoading: GAM_gs_tdeLoadingMode = GAM_eLevelLoading; HMU_fn_vSetMemoriesInLevelMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock()); break; case GAM_eTransitionLoading: GAM_fn_vSetEngineInTransitionMode(); break; }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1241–1248 */
@@ -1773,7 +1803,8 @@ void GAM_fn_vPopAllocMode(void)
  */
 void GAM_fn_vPushAllocMode(GAM_eLoadingMode eMode)
 {
-    /* TODO: decompile from asm/... */
+    g_a_cAllocModeStack[g_iAllocModePos++] = GAM_gs_tdeLoadingMode;
+    if (GAM_gs_tdeLoadingMode != (unsigned short)eMode) switch ((unsigned short)eMode) { case GAM_eFixLoading: GAM_gs_tdeLoadingMode = GAM_eFixLoading; HMU_fn_vSetMemoriesInFixMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetFixNormalMemoryBlock()); break; case GAM_eLevelLoading: GAM_gs_tdeLoadingMode = GAM_eLevelLoading; HMU_fn_vSetMemoriesInLevelMode(); GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetLevelNormalMemoryBlock()); break; case GAM_eTransitionLoading: GAM_fn_vSetEngineInTransitionMode(); break; }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1205–1226 */
@@ -1792,9 +1823,28 @@ void GAM_fn_vPushAllocMode(GAM_eLoadingMode eMode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_lGetTransitionBloc(void);
+void HMU_fn_vSetMemoriesInTransition1Mode(void);
+void HMU_fn_vSetMemoriesInTransition2Mode(void);
+int HMU_fn_ucGetTransition1NormalMemoryBlock(void);
+int HMU_fn_ucGetTransition2NormalMemoryBlock(void);
+void GLI_vSignalCurrentMemoryChannel(int ucCurrentChannel);
 void GAM_fn_vSetEngineInTransitionMode(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_bLevelHasTransitionMemory)
+    {
+        GAM_gs_tdeLoadingMode = GAM_eTransitionLoading;
+        if (fn_lGetTransitionBloc() != 1)
+        {
+            HMU_fn_vSetMemoriesInTransition1Mode();
+            GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetTransition1NormalMemoryBlock());
+        }
+        else
+        {
+            HMU_fn_vSetMemoriesInTransition2Mode();
+            GLI_vSignalCurrentMemoryChannel(HMU_fn_ucGetTransition2NormalMemoryBlock());
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 1167–1199 */
@@ -2023,20 +2073,247 @@ void GAM_fn_vAskToChangeLevelWithTransition(char* szNewLevelName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void Erm_fn_ClearLastError(unsigned int ulChannelId);
+void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
+void fn_vSetLevelName(char* szName);
+void SND_fn_vKillAllObjectSound(void);
+void PS2MC_fn_vStopPrompts(void);
+void fn_vSetDoTransition(int bDoTransition);
+void fn_vReInitAllDynamicActors(void);
+char* strcpy(char* p_cDst, const char* p_cSrc);
+char* Strchr(char* p_cString, int cChar);
+int strcasecmp(const char* p_cS1, const char* p_cS2);
+void AskForLevelStart(void);
+int atoi(const char* p_cString);
+void fn_vChangeEngineMode(int eMode);
+int MC_fn_hGetFirstMainCharNode(int lIndex);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(int hNode);
+MAT_tdstTransformation_* GAM_fn_hGetSubMapPosition(int lSubMap, int lEntry);
+void* SAI_fn_p_vGetTableValuePointerOf(void* p_vValue, unsigned short usFlags, void* p_vVector);
+void fn_vInitOneObject(void* p_stObject, int lType, void* p_vVector, void* p_vVector2);
+void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_* p_stObject);
+void MEC_fn_vImposeActorMatrix(HIE_tdstSuperObject_* p_stObject);
+void fn_vInitObjectsWhenPlayerChangeSector(HIE_tdstSuperObject_* p_stObject, int lSector, int lOldSector);
+void fn_vSetLevelName(char* szName);
+HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int iIndex);
+void CAM_fn_vUpdateTargetPosition(int lHandle);
+void fn_vInitAveragePositionDatasIfNecessary(int lHandle);
+void CAM_fn_vForceCameraPos(HIE_tdstSuperObject_* p_stCamera, MTH4D_tdstVector_* p_vPosition, float* p_fY, float* p_fZ);
+void CAM_fn_vForceCameraTgt(HIE_tdstSuperObject_* p_stCamera, void* p_vTarget, MTH4D_tdstVector_* p_vDirection);
+void CAM_fn_vForceBestPosition(HIE_tdstSuperObject_* p_stCamera);
 void GAM_fn_vAskToChangeLevel(char* szNewLevelName)
 {
-    HIE_tdstSuperObject_* _hCamera;
-    unsigned char uc_ViewPortIndex;
-    HIE_tdstSuperObject_* hSectorAfterTeleport;
-    HIE_tdstSuperObject_* hSectorBeforeTeleport;
-    MTH3D_tdstVector_ stZAxis;
-    MTH3D_tdstVector_ stCameraPos;
-    int lEntryNumber;
-    MAT_tdstTransformation_* hNewPosition;
     HIE_tdstSuperObject_* hMaincharacter;
+    MAT_tdstTransformation_* hNewPosition;
+    HIE_tdstSuperObject_* hCamera;
+    int lSectorAfterTeleport;
+    int lSectorBeforeTeleport;
+    MAT_tdstTransformation_* p_stSubMapPosition;
     char* p_cDelimiter;
+    char* p_cEntry;
     char szLevelName[80];
-    /* TODO: decompile from asm/... */
+    int lEntryNumber;
+    int lSubMapNumber;
+    unsigned char uc_ViewPortIndex;
+    MTH4D_tdstVector_ stVector;
+    float (*p_stMatrix)[4];
+    float* p_fVector;
+    MTH4D_tdstVector_ stPosition;
+    MTH4D_tdstVector_ stDirection;
+
+    SND_fn_vKillAllObjectSound();
+    PS2MC_fn_vStopPrompts();
+    fn_vSetDoTransition(0);
+    g_BlackScreenUntilNextMap = 1;
+    if (g_bReInitAllDynamicActors != 0)
+    {
+        fn_vReInitAllDynamicActors();
+        g_bReInitAllDynamicActors = 0;
+    }
+    strcpy(szLevelName, szNewLevelName);
+    p_cDelimiter = Strchr(szLevelName, '$');
+    if (p_cDelimiter == NULL)
+    {
+        strcpy(g_stEngineStructure.szNextLevelName, szNewLevelName);
+        fn_vChangeEngineMode(6);
+        return;
+    }
+    *p_cDelimiter = 0;
+    /* TODO: the retail code also tests the file-scope "FirstTime" flag here
+       (it is a local static of fn_p_szGetLevelName in this reconstruction). */
+    if (strcasecmp(szLevelName, g_stEngineStructure.szLevelName) != 0)
+    {
+        strcpy(g_stEngineStructure.szNextLevelName, szNewLevelName);
+        fn_vChangeEngineMode(6);
+        return;
+    }
+    p_cDelimiter++;
+    if (p_cDelimiter[0] < '0' && p_cDelimiter[0] > '9' && p_cDelimiter[0] != '+' && p_cDelimiter[0] != '-')
+    {
+                Erm_fn_ClearLastError(0);
+                Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 24, -1, 255, 255, NULL);
+    }
+    lSubMapNumber = atoi(p_cDelimiter);
+    if (lSubMapNumber != (int)(g_stEngineStructure.lSubMapNumber >> 16))
+    {
+        hMaincharacter = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode(0));
+        p_cDelimiter++;
+        p_cEntry = Strchr(p_cDelimiter, '$');
+        if (p_cEntry != NULL)
+        {
+            p_cEntry++;
+            if (p_cEntry[0] < '0' && p_cEntry[0] > '9' && p_cEntry[0] != '+' && p_cEntry[0] != '-')
+            {
+                Erm_fn_ClearLastError(0);
+                Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 24, -1, 255, 255, NULL);
+            }
+            lEntryNumber = atoi(p_cEntry);
+        }
+        else
+        {
+            lEntryNumber = 0;
+        }
+        p_stSubMapPosition = GAM_fn_hGetSubMapPosition(lSubMapNumber, lEntryNumber);
+        if (p_stSubMapPosition != NULL)
+        {
+            hNewPosition = hMaincharacter->hGlobalMatrix;
+            lSectorBeforeTeleport = (int)hMaincharacter->hLinkedObject.p_stSuperObject;
+            lSectorAfterTeleport = *(int*)&lSectorBeforeTeleport;
+            *hNewPosition = *p_stSubMapPosition;
+            if (hMaincharacter->hFatherDyn != ((HIE_tdstSuperObject_*)gp_stDynamicWorld))
+            {
+                if (*(unsigned char*)&hMaincharacter->hLinkedObject.p_stSuperObject->hLinkedObject.p_stSuperObject->hNextBrotherDyn != 0)
+                {
+                    if (hMaincharacter->hNextBrotherDyn != NULL)
+                    {
+                        hMaincharacter->hNextBrotherDyn->hPrevBrotherDyn = hMaincharacter->hPrevBrotherDyn;
+                    }
+                    if (hMaincharacter->hPrevBrotherDyn != NULL)
+                    {
+                        hMaincharacter->hPrevBrotherDyn->hNextBrotherDyn = hMaincharacter->hNextBrotherDyn;
+                    }
+                    if (hMaincharacter->hFatherDyn != NULL)
+                    {
+                        hMaincharacter->hFatherDyn->lNumberOfElementsDyn--;
+                        if (hMaincharacter->hFatherDyn->hFirstElementDyn == hMaincharacter)
+                        {
+                            hMaincharacter->hFatherDyn->hFirstElementDyn = hMaincharacter->hNextBrotherDyn;
+                        }
+                        if (hMaincharacter->hFatherDyn->hLastElementDyn == hMaincharacter)
+                        {
+                            hMaincharacter->hFatherDyn->hLastElementDyn = hMaincharacter->hPrevBrotherDyn;
+                        }
+                    }
+                    hMaincharacter->hNextBrotherDyn = NULL;
+                    hMaincharacter->hPrevBrotherDyn = NULL;
+                    hMaincharacter->hFatherDyn = NULL;
+                    hMaincharacter->hPrevBrotherDyn = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn;
+                    hMaincharacter->hFatherDyn = (HIE_tdstSuperObject_*)gp_stDynamicWorld;
+                    if (((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hLastElementDyn == NULL)
+                    {
+                        ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hLastElementDyn = hMaincharacter;
+                    }
+                    else
+                    {
+                        ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn->hPrevBrotherDyn = hMaincharacter;
+                    }
+                    ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn = hMaincharacter;
+                    ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->lNumberOfElementsDyn++;
+                }
+                else
+                {
+                    if (hMaincharacter->hNextBrotherDyn != NULL)
+                    {
+                        hMaincharacter->hNextBrotherDyn->hPrevBrotherDyn = hMaincharacter->hPrevBrotherDyn;
+                    }
+                    if (hMaincharacter->hPrevBrotherDyn != NULL)
+                    {
+                        hMaincharacter->hPrevBrotherDyn->hNextBrotherDyn = hMaincharacter->hNextBrotherDyn;
+                    }
+                    if (hMaincharacter->hFatherDyn != NULL)
+                    {
+                        hMaincharacter->hFatherDyn->lNumberOfElementsDyn--;
+                        if (hMaincharacter->hFatherDyn->hFirstElementDyn == hMaincharacter)
+                        {
+                            hMaincharacter->hFatherDyn->hFirstElementDyn = hMaincharacter->hNextBrotherDyn;
+                        }
+                        if (hMaincharacter->hFatherDyn->hLastElementDyn == hMaincharacter)
+                        {
+                            hMaincharacter->hFatherDyn->hLastElementDyn = hMaincharacter->hPrevBrotherDyn;
+                        }
+                    }
+                    hMaincharacter->hNextBrotherDyn = NULL;
+                    hMaincharacter->hPrevBrotherDyn = NULL;
+                    hMaincharacter->hFatherDyn = NULL;
+                    hMaincharacter->hPrevBrotherDyn = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hLastElementDyn;
+                    hMaincharacter->hFatherDyn = (HIE_tdstSuperObject_*)gp_stDynamicWorld;
+                    if (((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn == NULL)
+                    {
+                        ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn = hMaincharacter;
+                    }
+                    else
+                    {
+                        ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hLastElementDyn->hNextBrotherDyn = hMaincharacter;
+                    }
+                    ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hLastElementDyn = hMaincharacter;
+                    ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->lNumberOfElementsDyn++;
+                }
+            }
+            p_stSubMapPosition = SAI_fn_p_vGetTableValuePointerOf(hMaincharacter->hLinkedObject.p_stSuperObject->hGlobalMatrix, 0x32, &hNewPosition->stTransformMatrix.stCol_0);
+            *p_stSubMapPosition = *hNewPosition;
+            fn_vInitOneObject(hMaincharacter->hLinkedObject.p_stSuperObject, 3, &hNewPosition->stTransformMatrix.stCol_0, &hNewPosition->stTransformMatrix.stCol_1);
+            HIE_fn_vComputeNewRelativeMatrix(hMaincharacter);
+            MEC_fn_vImposeActorMatrix(hMaincharacter);
+            for (uc_ViewPortIndex = 0; uc_ViewPortIndex < g_stEngineStructure.ucNumberOfPlayersInMultiMode; uc_ViewPortIndex++)
+            {
+                hCamera = CAM_fn_hGetActiveCamera(uc_ViewPortIndex);
+                p_stMatrix = (float (*)[4])&hNewPosition->stTransformMatrix;
+                p_fVector = (float*)&stVector;
+                CAM_fn_vUpdateTargetPosition(hCamera->hLinkedObject.p_stSuperObject->lNumberOfElementsDyn);
+                fn_vInitAveragePositionDatasIfNecessary(hCamera->hLinkedObject.p_stSuperObject->lNumberOfElementsDyn);
+                stPosition.xX = 0.0f;
+                stPosition.xY = 0.0f;
+                stPosition.xZ = 0.0f;
+                stPosition.xW = 0.0f;
+                stDirection.xX = 0.0f;
+                stDirection.xY = 0.0f;
+                stDirection.xZ = 0.0f;
+                stDirection.xW = 0.0f;
+                stVector.xX = stPosition.xX;
+                stVector.xY = stPosition.xY;
+                stVector.xZ = stPosition.xZ;
+                stVector.xW = stPosition.xW;
+                asm {
+                    lqc2 vf1, 0x0(p_fVector)
+                    lqc2 vf2, 0x0(p_stMatrix)
+                    lqc2 vf3, 0x10(p_stMatrix)
+                    lqc2 vf4, 0x20(p_stMatrix)
+                    lqc2 vf5, 0x30(p_stMatrix)
+                    vmulax.xyzw ACC, vf2, vf1x
+                    vmadday.xyzw ACC, vf3, vf1y
+                    vmaddaz.xyzw ACC, vf4, vf1z
+                    vmaddw.xyzw vf6, vf5, vf0w
+                    sqc2 vf6, 0x0(p_fVector)
+                }
+                stPosition.xX = stVector.xX;
+                stPosition.xY = stVector.xY;
+                stPosition.xZ = stVector.xZ;
+                CAM_fn_vForceCameraPos(hCamera, &stPosition, &stVector.xY, &stPosition.xZ);
+                stDirection.xX = 0.0f;
+                stDirection.xY = 0.0f;
+                stDirection.xZ = 0.0f;
+                stDirection.xW = 1.0f;
+                CAM_fn_vForceCameraTgt(hCamera, hNewPosition, &stDirection);
+                CAM_fn_vForceBestPosition(hCamera);
+            }
+            lSectorAfterTeleport = *(int*)&hMaincharacter->hLinkedObject.p_stSuperObject->hGlobalMatrix;
+            if (lSectorAfterTeleport != lSectorBeforeTeleport)
+            {
+                fn_vInitObjectsWhenPlayerChangeSector(hMaincharacter, lSectorAfterTeleport, lSectorBeforeTeleport);
+                fn_vSetLevelName(szNewLevelName);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 667–716 */
@@ -2081,7 +2358,55 @@ void GAM_fn_vAskToChangeLevel(char* szNewLevelName)
  */
 void fn_vSetGLIDisplayFlag(unsigned int* p_DisplayMode, unsigned int ulFlag, unsigned char ucValue)
 {
-    /* TODO: decompile from asm/... */
+    if (ulFlag == 0)
+    {
+        if (ucValue == 1)
+            *p_DisplayMode |= 0xFFFFFFFF;
+        else
+            *p_DisplayMode &= 0;
+    }
+    else if (ulFlag == 2)
+    {
+        if (ucValue == 1)
+            *p_DisplayMode |= 1;
+        else
+            *p_DisplayMode &= ~1;
+    }
+    else if (ulFlag == 1)
+    {
+        if (ucValue == 1)
+            *p_DisplayMode |= 2;
+        else
+            *p_DisplayMode &= ~2;
+    }
+    else if (ulFlag == 3)
+    {
+        if (ucValue == 0)
+            *p_DisplayMode |= 0x8000;
+        else
+            *p_DisplayMode &= ~0x8000;
+    }
+    else if (ulFlag == 4)
+    {
+        if (ucValue == 1)
+            *p_DisplayMode |= 0x1000;
+        else
+            *p_DisplayMode &= ~0x1000;
+    }
+    else if (ulFlag == 5)
+    {
+        if (ucValue == 0)
+            *p_DisplayMode |= 4;
+        else
+            *p_DisplayMode &= ~4;
+    }
+    else if (ulFlag == 6)
+    {
+        if (ucValue == 0)
+            *p_DisplayMode |= 0x400000;
+        else
+            *p_DisplayMode &= ~0x400000;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 662–662 */
@@ -2196,10 +2521,54 @@ char* fn_p_szGetLevelName(void)
  */
 void fn_vSetLevelName(char* _szName)
 {
-    int lEntry;
-    int lSubMap;
     char* p_cDelimiter;
-    /* TODO: decompile from asm/... */
+    char* p_cEntry;
+    int lSubMap;
+    int lEntry;
+    char cChar;
+
+    strcpy(g_stEngineStructure.szLevelName, _szName);
+    p_cDelimiter = Strchr(g_stEngineStructure.szLevelName, '$');
+    if (p_cDelimiter == NULL)
+    {
+        g_stEngineStructure.lSubMapNumber = 0;
+    }
+    else
+    {
+        *p_cDelimiter = 0;
+        if (g_stEngineStructure.lSubMapNumber == 0)
+        {
+            lSubMap = 0;
+        }
+        else
+        {
+            cChar = p_cDelimiter[1];
+            if (cChar < '0' && cChar > '9' && cChar != '+' && cChar != '-')
+            {
+                Erm_fn_ClearLastError(0);
+                Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 24, -1, 255, 255, NULL);
+            }
+            lSubMap = atoi(p_cDelimiter + 1);
+        }
+        p_cEntry = Strchr(p_cDelimiter + 1, '$');
+        if (p_cEntry == NULL)
+        {
+            lEntry = 0;
+        }
+        else
+        {
+            p_cEntry++;
+            cChar = *p_cEntry;
+            if (cChar < '0' && cChar > '9' && cChar != '+' && cChar != '-')
+            {
+                Erm_fn_ClearLastError(0);
+                Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 24, -1, 255, 255, NULL);
+            }
+            lEntry = atoi(p_cEntry);
+        }
+        g_stEngineStructure.lSubMapNumber = ((unsigned short)lSubMap << 16) + (unsigned short)lEntry;
+    }
+    strcpy(SAV2_g_LevelNameToSave, g_stEngineStructure.szLevelName);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Basic.c lines 520–521 */

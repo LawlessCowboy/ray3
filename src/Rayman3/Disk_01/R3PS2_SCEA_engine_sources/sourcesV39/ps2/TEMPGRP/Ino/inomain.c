@@ -64,10 +64,55 @@ int INO_gs_a_tdhDevice[2];
  */
 /* INO_fn_hCreateDevice passes _wHistoricSize in a1; the debug record only
  * lists _wPort, so the unused second parameter was dropped from it. */
+extern void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+extern void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
+extern void* memset(void* pDest, int iValue, unsigned int u32Size);
+extern short INOPS2_fn_wRegisterJoystick(short _wJoystickNum);
+extern short INOPS2_fn_wJoyCheckConnection(short _wJoystickNum);
+extern short INOPS2_fn_wJoyGetJoystickCaps(int _unused, void* _p_stJoyCaps);
+extern short INOPS2_fn_wReadJoystick(stDevice* _p_stDev);
+
 stDevice* INO_fn_hCreateJoystickDevice(short _wPort, short _wHistoricSize)
 {
     stDevice* p_stDev;
-    /* TODO: decompile from asm/... */
+
+    if (INOPS2_fn_wRegisterJoystick(_wPort) != 1)
+    {
+        return NULL;
+    }
+
+    p_stDev = (stDevice*)HMU_fn_p_vMalloc(sizeof(stDevice), 1);
+    if (p_stDev)
+    {
+        p_stDev->m_uwType = 0x10;
+        p_stDev->m_wPort = _wPort;
+        p_stDev->m_p_stCaps = (int)HMU_fn_p_vMalloc(0x58, 1);
+        if (p_stDev->m_p_stCaps)
+        {
+            memset((void*)p_stDev->m_p_stCaps, 0, 0x58);
+            INOPS2_fn_wJoyGetJoystickCaps(p_stDev->m_wPort, (void*)p_stDev->m_p_stCaps);
+            p_stDev->m_p_stState = (anon_0*)HMU_fn_p_vMalloc(0x60, 1);
+            if (p_stDev->m_p_stState)
+            {
+                memset(p_stDev->m_p_stState, 0, 0x60);
+                p_stDev->m_p_stLastState = (anon_0*)HMU_fn_p_vMalloc(0x60, 1);
+                if (p_stDev->m_p_stLastState)
+                {
+                    memset(p_stDev->m_p_stLastState, 0, 0x60);
+                    if (INOPS2_fn_wJoyCheckConnection(p_stDev->m_wPort) == 1)
+                    {
+                        p_stDev->m_p_stState->m_ucStatus |= 1;
+                    }
+                    p_stDev->m_pfnRead = INOPS2_fn_wReadJoystick;
+                    return p_stDev;
+                }
+                HMU_fn_vFree((void**)&p_stDev->m_p_stState, 1);
+            }
+            HMU_fn_vFree((void**)&p_stDev->m_p_stCaps, 1);
+        }
+        HMU_fn_vFree((void**)&p_stDev, 1);
+    }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ino\inomain.c lines 487–489 */
@@ -153,7 +198,10 @@ int INO_fn_wIsJoyConnected(int JoyNb)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-short INO_fn_wIsJoystickConnectedFast(stDevice* _hDev);
+/* The retail code truncates the result of this call to 16 bits before using
+ * it, so the declaration seen by this unit cannot be a plain short (that
+ * removes the truncation and shrinks the function by 28 bytes). */
+int INO_fn_wIsJoystickConnectedFast(stDevice* _hDev);
 
 short INO_fn_wIsConnectedFast(stDevice* _hDev)
 {
@@ -221,15 +269,106 @@ short INO_fn_wIsConnectedFast(stDevice* _hDev)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Reconstruction notes (from the retail code):
+ *  - the first loop only refreshes the connection state of every device;
+ *  - the second loop reads the devices whose type matches _uwType and that
+ *    are marked as claimed (status bit 2);
+ *  - mode 1 refreshes the "connected" bit before reading, mode 2 (and the
+ *    default) reads directly - the retail code tests mode 2 first, then mode 1;
+ *  - when nothing could be read the function retries itself with mode 1.
+ * The local declaration order below reproduces the retail register
+ * allocation (wResult in $s4, wOneGood in $s5, hDev in $s6).
+ */
 short INO_fn_wReadAllDevices(unsigned short _uwType, short _wMode)
 {
     short wReadResult;
-    stDevice* hDev;
-    short wOneGood;
-    short wResult;
     stDevice** p_hDevice;
     short xIndex;
-    /* TODO: decompile from asm/... */
+    short wResult;
+    short wOneGood;
+    stDevice* hDev;
+
+    wOneGood = -1;
+    wResult = 1;
+
+    if (!(INO_gs_ucINOInitOK ? 1 : 0))
+    {
+        return wOneGood;
+    }
+
+    for (xIndex = INO_gs_xNbDevice - 1, p_hDevice = (stDevice**)&INO_gs_a_tdhDevice[xIndex]; xIndex >= 0; xIndex--, p_hDevice--)
+    {
+        INO_fn_wIsConnectedFast(*p_hDevice);
+    }
+
+    for (xIndex = INO_gs_xNbDevice - 1, p_hDevice = (stDevice**)&INO_gs_a_tdhDevice[xIndex]; xIndex >= 0; xIndex--, p_hDevice--)
+    {
+        hDev = *p_hDevice;
+        if ((hDev->m_uwType & _uwType) && (hDev->m_p_stState->m_ucStatus & 2))
+        {
+            switch (_wMode)
+            {
+            case 1:
+                if (hDev->m_uwType != 0x10)
+                {
+                    wReadResult = -1;
+                }
+                else
+                {
+                    wReadResult = INO_fn_wIsJoystickConnectedFast(hDev);
+                }
+                if (wReadResult == 1)
+                {
+                    hDev->m_p_stState->m_ucStatus |= 1;
+                }
+                else
+                {
+                    hDev->m_p_stState->m_ucStatus &= ~1;
+                }
+                /* fall through */
+            case 2:
+            default:
+                if (hDev->m_p_stState->m_ucStatus & 1)
+                {
+                    if (hDev->m_pfnRead)
+                    {
+                        wReadResult = hDev->m_pfnRead(hDev);
+                    }
+                    else
+                    {
+                        wReadResult = -1;
+                    }
+                    wOneGood = 1;
+                    if (wResult != -1)
+                    {
+                        if (wReadResult == -1)
+                        {
+                            wResult = -1;
+                        }
+                        else
+                        {
+                            wResult = wResult & wReadResult;
+                        }
+                    }
+                }
+                else
+                {
+                    hDev->m_p_stState->m_ucStatus &= ~1;
+                }
+                break;
+            }
+        }
+    }
+
+    if (wOneGood != -1)
+    {
+        return wResult;
+    }
+    if (_wMode == 1)
+    {
+        return wResult;
+    }
+    return INO_fn_wReadAllDevices(_uwType, 1);
 }
 
 /* Inlined helpers (no out-of-line copies in the ELF); bodies recovered from
@@ -372,8 +511,21 @@ stDevice* INO_fn_hCreateDevice(unsigned short _uwType, short _wPort, short _wHis
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void INO_fn_vRelease(void)
 {
     short xIndex;
-    /* TODO: decompile from asm/... */
+    stDevice* p_stDev;
+
+    if (INO_gs_ucINOInitOK)
+    {
+        for (xIndex = INO_gs_xNbDevice - 1; xIndex >= 0; xIndex--)
+        {
+            /* The retail source released a device with a single statement group:
+             * the range test, the four frees and the removal from the device
+             * table all share one source line. */
+            if (xIndex < INO_gs_xNbDevice) { p_stDev = (stDevice*)INO_gs_a_tdhDevice[xIndex]; HMU_fn_vFree((void**)&p_stDev->m_p_stState, 1); HMU_fn_vFree((void**)&p_stDev->m_p_stCaps, 1); HMU_fn_vFree((void**)&p_stDev->m_p_stLastState, 1); HMU_fn_vFree((void**)&p_stDev, 1); INO_gs_xNbDevice--; INO_gs_a_tdhDevice[xIndex] = INO_gs_a_tdhDevice[INO_gs_xNbDevice]; INO_gs_a_tdhDevice[INO_gs_xNbDevice] = 0; }
+        }
+    }
+    INO_gs_ucINOInitOK = 0;
 }

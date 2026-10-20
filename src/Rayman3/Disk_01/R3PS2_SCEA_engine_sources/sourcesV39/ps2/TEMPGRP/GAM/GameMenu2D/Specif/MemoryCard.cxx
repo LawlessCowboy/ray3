@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+#include "r3/ENG.h"
+
+#pragma cplusplus off
+
 /* Layouts from DefineMenu2D.c; only the fields this unit uses are named. */
 typedef struct tdstFileEntry_ {
     unsigned int Reserved_Key; /* +0x0 */
@@ -15,15 +19,119 @@ typedef struct tdstFileEntry_ {
 } tdstFileEntry_;
 
 typedef struct tdstMenu2DPages_ {
-    unsigned char a_ucPageData[0x248]; /* +0x0 */
+    unsigned char a_ucPageData[0x244]; /* +0x0 */
+    unsigned int NbSelection; /* +0x244 */
     unsigned int NbEntry; /* +0x248 */
     unsigned int CurrentFirstEntry; /* +0x24c */
 } tdstMenu2DPages_;
 
+typedef struct tdst_Album_ {
+    float fPicturePercentage; /* +0x0 */
+    int bMoveForward; /* +0x4 */
+    int bMoveBackward; /* +0x8 */
+    char szFileName[256]; /* +0xc */
+    int lPreviousNextInc; /* +0x10c */
+    int lSnapID; /* +0x110 */
+    int lSnapID2; /* +0x114 */
+} tdst_Album_;
+
+typedef struct anon_2 {
+    unsigned int ulNbCage; /* +0x0 */
+    unsigned int ulScore; /* +0x4 */
+} anon_2;
+
+typedef struct tdstEnvValue_ {
+    float fNbCage;
+    float fScore;
+} tdstEnvValue_;
+
+typedef struct SAV2_tdstHeader_ {
+    anon_2 aEnvValue[10]; /* +0x0 */
+    unsigned int aForKeyAlgo[4]; /* +0x50 */
+    int EndOfGameIsDone; /* +0x60 */
+    int MaxIndCurrentEnv; /* +0x64 */
+    unsigned char stMenuOptions[12]; /* +0x68 */
+    unsigned int ulWarnedUserAboutAutoSave; /* +0x74 */
+    int RevisitMode; /* +0x78 */
+    int RevisitEnvScore; /* +0x7c */
+    int RevisitGlobalScore; /* +0x80 */
+    int RevisitEnvironment; /* +0x84 */
+    int RevisitOriginEnvironment; /* +0x88 */
+    char szLevelName[20]; /* +0x8c */
+    char szLevelNameAfterRevisit[20]; /* +0xa0 */
+} SAV2_tdstHeader_;
+
+typedef struct SAV2_tdstList_ {
+    SAV2_tdstHeader_ stListHeader; /* +0x0 */
+    unsigned int SAV2_ListAnchor[3]; /* +0xb4 */
+} SAV2_tdstList_;
+
 extern tdstFileEntry_ g_aFileEntryArray[100];
 extern tdstMenu2DPages_ aMenu2DPages[35];
+extern tdst_Album_ g_stAlbum;
+extern anon_2 g_aEnvValue[10];
+extern SAV2_tdstList_ SAV2_g_stList;
+
 extern int g_AlbumPage;
-extern "C" char* strcpy(char* dst, const char* src);
+extern int g_MustCheckMC;
+extern int g_CurrentMenu2DPage;
+extern int g_CurrentActionMenu2D;
+extern int g_AlbumHadMemoryCardAtInit;
+extern int g_Menu2D_IsInterrupted;
+extern int g_LoadingGame;
+extern int MNU_g_SavingScreenshot;
+extern int g_RevisitMode;
+extern int g_RevisitCurrentGlobalScore;
+extern int g_RevisitCurrentEnvScore;
+extern int g_RevisitEnvScoreAtBeginingOfLevel;
+extern int g_RevisitGlobalScoreAtBeginingOfLevel;
+extern unsigned int g_IndCurrentEnv;
+extern int g_GlobalScoreAtBeginingOfLevel;
+extern int g_CurrentEnvScoreAtBeginingOfLevel;
+extern int g_CurrentEnvInit;
+extern int GLI_g_PerformAutosaveAfterVideo;
+extern char g_CurrentSaveName[];
+extern int g_bAlbumInitialized;
+extern unsigned int PS2MC_g_NbFilesFound;
+extern int g_bCurrentMaterialBuffer;
+extern int g_bAlbumIsWorking;
+extern int g_bAlbumLoadInProgress;
+extern int g_bAlbumLoadSucess;
+extern int g_StartMenuPage;
+extern unsigned int g_CurrentSelection;
+extern int g_GamePage;
+extern int g_SavePage;
+extern int g_LoadPage;
+extern int g_2DMenuID;
+extern int g_hFixMaterialForAlbum[2];
+extern int g_PAL60Page2;
+extern int g_PAL60Page3;
+extern int g_PScanPage2;
+extern int g_PScanPage3;
+extern int g_PreviousVideoMode;
+extern unsigned int g_SelectedTime;
+extern tdstEngineStructure_ g_stEngineStructure;
+
+char* strcpy(char* dst, const char* src);
+int PS2MC_GetCurrentMemoryCardStatus(void);
+int PS2MC_HasToCheckMCFull(void);
+void PS2MC_fn_vDoBootCheck(void);
+unsigned int PS2MC_fn_iGetFunctionResult(int FlagID);
+void PS2MC_fn_vGetMemoryCardFileHeaders(tdstFileEntry_* p_stEntryArray, unsigned int NbMaxEntries, unsigned int* p_uiNbFilesFound, int bFast);
+void PS2MC_vClearFlag(int FlagID);
+void ReturnFromSubMenu(void);
+unsigned char SAV2_fn_bUpdateAllDataFromLoadedFile(void);
+void fn_vR3RecomputeGlobalScore(void);
+void CloseInGameMenu2D(void);
+void GAM_fn_vAskToChangeLevel(char* szNewLevelName, int i);
+void fn_vPreviousSelection(void);
+void fn_vGetScreenShotDefaultName(void);
+int GLI_bLoadSnapShotTexture(char* pFileName, int* p_hMaterial);
+void GLI_vUncompressScreenShotIntoMaterial(int* p_hMaterial);
+void GLI_fn_vSwitchTo50Hz(void);
+void GLI_fn_vSwitchTo60Hz(void);
+void GLI_fn_vSwitchToProgressive60Hz(void);
+unsigned char SAV2_fn_bSaveAllOnDisk(char* szFileName);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\Specif\MemoryCard.cxx lines 922–930 */
 /* addr: 0x0029d990  size: 608 bytes */
@@ -39,7 +147,17 @@ extern "C" char* strcpy(char* dst, const char* src);
  */
 void GAM_fn_vSaveGameAfterVideoIfNeeded(void)
 {
-    /* TODO: decompile from asm/... */
+    int i;
+    int offset;
+    unsigned int ulIndE;
+    anon_2* p;
+
+    if (GLI_g_PerformAutosaveAfterVideo)
+    {
+        SAV2_fn_bSaveAllOnDisk(g_CurrentSaveName);
+        g_aEnvValue[0].ulScore = 0; i = 1; offset = 8; do { p = (anon_2 *)((char *)g_aEnvValue + offset); g_aEnvValue[0].ulScore += p[0].ulScore; g_aEnvValue[0].ulScore += p[1].ulScore; g_aEnvValue[0].ulScore += p[2].ulScore; g_aEnvValue[0].ulScore += p[3].ulScore; g_aEnvValue[0].ulScore += p[4].ulScore; g_aEnvValue[0].ulScore += p[5].ulScore; g_aEnvValue[0].ulScore += p[6].ulScore; g_aEnvValue[0].ulScore += p[7].ulScore; i += 8; offset += 64; } while (i < 2); offset = i * 8; if (i < 10) { do { p = (anon_2 *)((char *)g_aEnvValue + offset); g_aEnvValue[0].ulScore += p->ulScore; i++; offset += 8; } while (i < 10); } g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore; if (g_RevisitMode != 0) { ulIndE = g_IndCurrentEnv; g_RevisitEnvScoreAtBeginingOfLevel = g_RevisitCurrentEnvScore; g_RevisitGlobalScoreAtBeginingOfLevel = g_RevisitCurrentGlobalScore; fn_vR3RecomputeGlobalScore(); if (g_RevisitEnvScoreAtBeginingOfLevel > (ulIndE < 10 ? g_aEnvValue[ulIndE].ulScore : 0)) { if (g_IndCurrentEnv < 10) { g_aEnvValue[g_IndCurrentEnv].ulScore = g_RevisitEnvScoreAtBeginingOfLevel; } fn_vR3RecomputeGlobalScore(); } fn_vR3RecomputeGlobalScore(); if (g_aEnvValue[0].ulScore < g_RevisitGlobalScoreAtBeginingOfLevel) { g_aEnvValue[0].ulScore = g_RevisitGlobalScoreAtBeginingOfLevel; fn_vR3RecomputeGlobalScore(); } } fn_vR3RecomputeGlobalScore(); ulIndE = g_IndCurrentEnv; g_GlobalScoreAtBeginingOfLevel = g_aEnvValue[0].ulScore; fn_vR3RecomputeGlobalScore(); g_CurrentEnvScoreAtBeginingOfLevel = (ulIndE < 10) ? g_aEnvValue[ulIndE].ulScore : 0; g_CurrentEnvInit = g_IndCurrentEnv;
+    }
+    GLI_g_PerformAutosaveAfterVideo = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\Specif\MemoryCard.cxx lines 867–914 */
@@ -72,7 +190,36 @@ void GAM_fn_vSaveGameAfterVideoIfNeeded(void)
  */
 void fn_vInterruptPalAndProgressiveVideoPages(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_CurrentMenu2DPage == g_PAL60Page2)
+    {
+        g_CurrentMenu2DPage = g_PAL60Page3;
+        g_CurrentSelection = 2;
+        switch (g_PreviousVideoMode)
+        {
+        case 0x32:
+            GLI_fn_vSwitchTo50Hz();
+            break;
+        case 0x46:
+            GLI_fn_vSwitchToProgressive60Hz();
+            break;
+        }
+        ReturnFromSubMenu();
+    }
+    if (g_CurrentMenu2DPage == g_PScanPage2)
+    {
+        g_CurrentMenu2DPage = g_PScanPage3;
+        g_CurrentSelection = 2;
+        switch (g_PreviousVideoMode)
+        {
+        case 0x32:
+            GLI_fn_vSwitchTo50Hz();
+            break;
+        case 0x3C:
+            GLI_fn_vSwitchTo60Hz();
+            break;
+        }
+        ReturnFromSubMenu();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\Specif\MemoryCard.cxx lines 819–863 */
@@ -105,7 +252,40 @@ void fn_vInterruptPalAndProgressiveVideoPages(void)
  */
 void fn_vManagePalAndProgressiveVideoPage(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_CurrentMenu2DPage == g_PAL60Page2)
+    {
+        if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - g_SelectedTime >= 5000)
+        {
+            g_CurrentMenu2DPage = g_PAL60Page3;
+            g_CurrentSelection = 2;
+            switch (g_PreviousVideoMode)
+            {
+            case 0x32:
+                GLI_fn_vSwitchTo50Hz();
+                break;
+            case 0x46:
+                GLI_fn_vSwitchToProgressive60Hz();
+                break;
+            }
+        }
+    }
+    if (g_CurrentMenu2DPage == g_PScanPage2)
+    {
+        if (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - g_SelectedTime >= 5000)
+        {
+            g_CurrentMenu2DPage = g_PScanPage3;
+            g_CurrentSelection = 2;
+            switch (g_PreviousVideoMode)
+            {
+            case 0x32:
+                GLI_fn_vSwitchTo50Hz();
+                break;
+            case 0x3C:
+                GLI_fn_vSwitchTo60Hz();
+                break;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\Specif\MemoryCard.cxx lines 676–816 */
@@ -552,6 +732,469 @@ int fn_dwFindPreviousSnappedPicture(int lSnapID, char* _szFileName)
  */
 int fn_vSpecificManageMenu2D(void)
 {
-    unsigned int i;
-    /* TODO: decompile from asm/... */
+    int i;
+    int offset;
+    unsigned int uiIndex;
+    unsigned int ulIndE;
+    anon_2* p;
+    tdstEnvValue_* p_fEnvValue;
+    tdstEnvValue_* p_fSav2EnvValue;
+    unsigned int* p_uiNbSelection;
+    unsigned int* p_uiNbEntry;
+    unsigned int* p_uiCurrentFirstEntry;
+    unsigned char* p_ucFlag;
+
+    if (PS2MC_GetCurrentMemoryCardStatus() == 0)
+    {
+        g_MustCheckMC = 3;
+    }
+
+    if (g_CurrentMenu2DPage == g_AlbumPage)
+    {
+        if (g_CurrentActionMenu2D != 2)
+        {
+            if (g_AlbumHadMemoryCardAtInit != PS2MC_GetCurrentMemoryCardStatus())
+            {
+                ReturnFromSubMenu();
+                return 0;
+            }
+        }
+    }
+
+    if (g_Menu2D_IsInterrupted)
+    {
+        fn_vInterruptPalAndProgressiveVideoPages();
+        return 0;
+    }
+
+    if (PS2MC_GetCurrentMemoryCardStatus() == 0)
+    {
+        g_MustCheckMC = 3;
+    }
+    else
+    {
+        if (PS2MC_HasToCheckMCFull())
+        {
+            g_MustCheckMC = 3;
+        }
+        switch (g_MustCheckMC)
+        {
+        case 3:
+            PS2MC_fn_vDoBootCheck();
+            g_MustCheckMC--;
+            break;
+        case 2:
+            if (PS2MC_fn_iGetFunctionResult(4))
+            {
+                g_MustCheckMC--;
+            }
+            break;
+        }
+    }
+
+    if (g_CurrentMenu2DPage == g_LoadPage)
+    {
+        if (!((PS2MC_GetCurrentMemoryCardStatus() != 0 && g_MustCheckMC < 2) || g_CurrentActionMenu2D == 2))
+        {
+            ReturnFromSubMenu();
+            return 0;
+        }
+        if (g_LoadingGame)
+        {
+            switch (PS2MC_fn_iGetFunctionResult(6))
+            {
+            case 1:
+                g_LoadingGame = 0;
+                SAV2_fn_bUpdateAllDataFromLoadedFile();
+                for (uiIndex = 0; uiIndex < 10; uiIndex++)
+                {
+                    p_fEnvValue = (tdstEnvValue_*)((char*)g_aEnvValue + uiIndex * 8);
+                    p_fSav2EnvValue = (tdstEnvValue_*)((char*)&SAV2_g_stList.stListHeader.aEnvValue[0] + uiIndex * 8);
+                    p_fEnvValue[0] = p_fSav2EnvValue[0];
+                }
+                g_aEnvValue[0].ulScore = 0;
+                i = 1;
+                offset = 8;
+                do
+                {
+                    p = (anon_2 *)((char *)g_aEnvValue + offset);
+                    g_aEnvValue[0].ulScore += p[0].ulScore;
+                    g_aEnvValue[0].ulScore += p[1].ulScore;
+                    g_aEnvValue[0].ulScore += p[2].ulScore;
+                    g_aEnvValue[0].ulScore += p[3].ulScore;
+                    g_aEnvValue[0].ulScore += p[4].ulScore;
+                    g_aEnvValue[0].ulScore += p[5].ulScore;
+                    g_aEnvValue[0].ulScore += p[6].ulScore;
+                    g_aEnvValue[0].ulScore += p[7].ulScore;
+                    i += 8;
+                    offset += 64;
+                } while (i < 2);
+                offset = i * 8;
+                if (i < 10)
+                {
+                    do
+                    {
+                        p = (anon_2 *)((char *)g_aEnvValue + offset);
+                        g_aEnvValue[0].ulScore += p->ulScore;
+                        i++;
+                        offset += 8;
+                    } while (i < 10);
+                }
+                g_RevisitCurrentGlobalScore = g_aEnvValue[0].ulScore;
+                if (g_RevisitMode != 0)
+                {
+                    ulIndE = g_IndCurrentEnv;
+                    g_RevisitEnvScoreAtBeginingOfLevel = g_RevisitCurrentEnvScore;
+                    g_RevisitGlobalScoreAtBeginingOfLevel = g_RevisitCurrentGlobalScore;
+                    fn_vR3RecomputeGlobalScore();
+                    if (g_RevisitEnvScoreAtBeginingOfLevel > (ulIndE < 10 ? g_aEnvValue[ulIndE].ulScore : 0))
+                    {
+                        if (g_IndCurrentEnv < 10)
+                        {
+                            g_aEnvValue[g_IndCurrentEnv].ulScore = g_RevisitEnvScoreAtBeginingOfLevel;
+                        }
+                        fn_vR3RecomputeGlobalScore();
+                    }
+                    fn_vR3RecomputeGlobalScore();
+                    if (g_aEnvValue[0].ulScore < g_RevisitGlobalScoreAtBeginingOfLevel)
+                    {
+                        g_aEnvValue[0].ulScore = g_RevisitGlobalScoreAtBeginingOfLevel;
+                        fn_vR3RecomputeGlobalScore();
+                    }
+                }
+                fn_vR3RecomputeGlobalScore();
+                g_GlobalScoreAtBeginingOfLevel = g_aEnvValue[0].ulScore;
+                fn_vR3RecomputeGlobalScore();
+                g_CurrentEnvScoreAtBeginingOfLevel = (g_IndCurrentEnv < 10) ? g_aEnvValue[g_IndCurrentEnv].ulScore : 0;
+                g_CurrentEnvInit = g_IndCurrentEnv;
+                CloseInGameMenu2D();
+                GAM_fn_vAskToChangeLevel(SAV2_g_stList.stListHeader.szLevelName, 0);
+                break;
+            case 2:
+                g_LoadingGame = 0;
+                break;
+            }
+        }
+    }
+    else if (g_CurrentMenu2DPage == g_AlbumPage)
+    {
+        if (g_CurrentActionMenu2D != 2)
+        {
+            if (g_AlbumHadMemoryCardAtInit != PS2MC_GetCurrentMemoryCardStatus())
+            {
+                ReturnFromSubMenu();
+                return 0;
+            }
+            if (!g_bAlbumInitialized && PS2MC_fn_iGetFunctionResult(3) == 1)
+            {
+                g_stAlbum.lSnapID = 1;
+                g_stAlbum.lSnapID2 = 1;
+                g_stAlbum.fPicturePercentage = 1.0f;
+                g_stAlbum.bMoveForward = 0;
+                g_stAlbum.bMoveBackward = 0;
+                if (PS2MC_g_NbFilesFound >= 4)
+                {
+                    g_bCurrentMaterialBuffer = 0;
+                    i = 3;
+                }
+                else
+                {
+                    i = (int)PS2MC_g_NbFilesFound;
+                }
+                p_uiNbSelection = (unsigned int*)((char*)&aMenu2DPages[0].NbSelection + g_AlbumPage * (int)sizeof(tdstMenu2DPages_));
+                p_uiNbEntry = (unsigned int*)((char*)&aMenu2DPages[0].NbEntry + g_AlbumPage * (int)sizeof(tdstMenu2DPages_));
+                *p_uiNbSelection = (unsigned int)i;
+                *p_uiNbEntry = PS2MC_g_NbFilesFound;
+                g_bAlbumInitialized = 1;
+                strcpy(g_stAlbum.szFileName, g_aFileEntryArray[0].Name);
+                g_stAlbum.lSnapID = 0;
+                p_uiNbEntry = (unsigned int*)((char*)&aMenu2DPages[0].NbEntry + g_AlbumPage * (int)sizeof(tdstMenu2DPages_));
+                if (g_stAlbum.lSnapID != *p_uiNbEntry)
+                {
+                    g_bAlbumIsWorking = 1;
+                    g_bAlbumLoadInProgress = 1;
+                    GLI_bLoadSnapShotTexture(g_stAlbum.szFileName, g_hFixMaterialForAlbum);
+                }
+            }
+            else
+            {
+                if (g_bAlbumLoadInProgress == 1)
+                {
+                    switch (PS2MC_fn_iGetFunctionResult(7))
+                    {
+                    case 1:
+                        GLI_vUncompressScreenShotIntoMaterial(g_hFixMaterialForAlbum);
+                        g_bAlbumIsWorking = 0;
+                        g_bAlbumLoadSucess = 1;
+                        g_bAlbumLoadInProgress = 0;
+                        break;
+                    case 2:
+                        if (PS2MC_GetCurrentMemoryCardStatus() != 0)
+                        {
+                            g_bAlbumLoadSucess = 0;
+                        }
+                        else
+                        {
+                            ReturnFromSubMenu();
+                            g_bAlbumLoadSucess = 0;
+                        }
+                        g_bAlbumIsWorking = 0;
+                        g_bAlbumLoadInProgress = 0;
+                        break;
+                    }
+                }
+            }
+            }
+    }
+    else if (g_CurrentMenu2DPage == g_StartMenuPage)
+    {
+        if (PS2MC_GetCurrentMemoryCardStatus() == 0)
+        {
+            p_ucFlag = (unsigned char*)((char*)&aMenu2DPages[0].a_ucPageData[0x2F] + g_StartMenuPage * (int)sizeof(tdstMenu2DPages_));
+            *p_ucFlag = 1;
+            if (g_CurrentSelection == 1)
+            {
+                fn_vPreviousSelection();
+            }
+        }
+        else
+        {
+            if (g_CurrentActionMenu2D != 2)
+            {
+                if (g_MustCheckMC == 1)
+                {
+                    p_ucFlag = (unsigned char*)((char*)&aMenu2DPages[0].a_ucPageData[0x2F] + g_StartMenuPage * (int)sizeof(tdstMenu2DPages_));
+                    *p_ucFlag = 1;
+                    if (g_CurrentSelection == 1)
+                    {
+                        fn_vPreviousSelection();
+                    }
+                }
+                PS2MC_fn_vGetMemoryCardFileHeaders(g_aFileEntryArray, 100, &PS2MC_g_NbFilesFound, 1);
+                p_uiNbSelection = (unsigned int*)((char*)&aMenu2DPages[0].NbSelection + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+                p_uiNbEntry = (unsigned int*)((char*)&aMenu2DPages[0].NbEntry + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+                p_uiCurrentFirstEntry = (unsigned int*)((char*)&aMenu2DPages[0].CurrentFirstEntry + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+                *p_uiNbSelection = 0;
+                *p_uiNbEntry = 0;
+                *p_uiCurrentFirstEntry = 0;
+                g_MustCheckMC = 0;
+            }
+            switch (PS2MC_fn_iGetFunctionResult(2))
+            {
+            case 1:
+                i = (int)PS2MC_g_NbFilesFound;
+                if (PS2MC_g_NbFilesFound >= 4)
+                {
+                    i = 3;
+                }
+                p_uiNbSelection = (unsigned int*)((char*)&aMenu2DPages[0].NbSelection + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+                p_uiNbEntry = (unsigned int*)((char*)&aMenu2DPages[0].NbEntry + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+                *p_uiNbSelection = (unsigned int)i;
+                *p_uiNbEntry = PS2MC_g_NbFilesFound;
+                if (*p_uiNbEntry == 0)
+                {
+                    p_ucFlag = (unsigned char*)((char*)&aMenu2DPages[0].a_ucPageData[0x2F] + g_StartMenuPage * (int)sizeof(tdstMenu2DPages_));
+                    *p_ucFlag = 1;
+                    if (g_CurrentSelection == 1)
+                    {
+                        fn_vPreviousSelection();
+                    }
+                }
+                else
+                {
+                    p_ucFlag = (unsigned char*)((char*)&aMenu2DPages[0].a_ucPageData[0x2F] + g_StartMenuPage * (int)sizeof(tdstMenu2DPages_));
+                    *p_ucFlag = 0;
+                }
+                break;
+            case 2:
+                p_ucFlag = (unsigned char*)((char*)&aMenu2DPages[0].a_ucPageData[0x2F] + g_StartMenuPage * (int)sizeof(tdstMenu2DPages_));
+                *p_ucFlag = 1;
+                if (g_CurrentSelection == 1)
+                {
+                    fn_vPreviousSelection();
+                }
+                break;
+            }
+        }
+    }
+    else if (g_CurrentMenu2DPage == g_GamePage)
+    {
+        if (PS2MC_GetCurrentMemoryCardStatus() == 0)
+        {
+            p_ucFlag = (unsigned char*)((char*)&aMenu2DPages[0].a_ucPageData[0x2F] + g_GamePage * (int)sizeof(tdstMenu2DPages_));
+            *p_ucFlag = 1;
+            if (g_CurrentSelection == 1)
+            {
+                fn_vPreviousSelection();
+            }
+        }
+        else
+        {
+            if (g_CurrentActionMenu2D != 2)
+            {
+                if (g_MustCheckMC == 1)
+                {
+                    p_ucFlag = (unsigned char*)((char*)&aMenu2DPages[0].a_ucPageData[0x2F] + g_GamePage * (int)sizeof(tdstMenu2DPages_));
+                    *p_ucFlag = 1;
+                    if (g_CurrentSelection == 1)
+                    {
+                        fn_vPreviousSelection();
+                    }
+                }
+                PS2MC_fn_vGetMemoryCardFileHeaders(g_aFileEntryArray, 100, &PS2MC_g_NbFilesFound, 1);
+                p_uiNbSelection = (unsigned int*)((char*)&aMenu2DPages[0].NbSelection + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+                p_uiNbEntry = (unsigned int*)((char*)&aMenu2DPages[0].NbEntry + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+                p_uiCurrentFirstEntry = (unsigned int*)((char*)&aMenu2DPages[0].CurrentFirstEntry + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+                *p_uiNbSelection = 0;
+                *p_uiNbEntry = 0;
+                *p_uiCurrentFirstEntry = 0;
+                g_MustCheckMC = 0;
+            }
+            switch (PS2MC_fn_iGetFunctionResult(2))
+            {
+            case 1:
+                i = (int)PS2MC_g_NbFilesFound;
+                if (PS2MC_g_NbFilesFound >= 4)
+                {
+                    i = 3;
+                }
+                p_uiNbSelection = (unsigned int*)((char*)&aMenu2DPages[0].NbSelection + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+                p_uiNbEntry = (unsigned int*)((char*)&aMenu2DPages[0].NbEntry + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+                *p_uiNbSelection = (unsigned int)i;
+                *p_uiNbEntry = PS2MC_g_NbFilesFound;
+                if (*p_uiNbEntry == 0)
+                {
+                    p_ucFlag = (unsigned char*)((char*)&aMenu2DPages[0].a_ucPageData[0x2F] + g_GamePage * (int)sizeof(tdstMenu2DPages_));
+                    *p_ucFlag = 1;
+                    if (g_CurrentSelection == 1)
+                    {
+                        fn_vPreviousSelection();
+                    }
+                }
+                else
+                {
+                    p_ucFlag = (unsigned char*)((char*)&aMenu2DPages[0].a_ucPageData[0x2F] + g_GamePage * (int)sizeof(tdstMenu2DPages_));
+                    *p_ucFlag = 0;
+                }
+                break;
+            case 2:
+                p_ucFlag = (unsigned char*)((char*)&aMenu2DPages[0].a_ucPageData[0x2F] + g_GamePage * (int)sizeof(tdstMenu2DPages_));
+                *p_ucFlag = 1;
+                if (g_CurrentSelection == 1)
+                {
+                    fn_vPreviousSelection();
+                }
+                break;
+            }
+        }
+    }
+
+    if (MNU_g_SavingScreenshot && g_CurrentMenu2DPage == g_SavePage)
+    {
+        switch (PS2MC_fn_iGetFunctionResult(3))
+        {
+        case 1:
+            fn_vGetScreenShotDefaultName();
+            MNU_g_SavingScreenshot = 0;
+            PS2MC_vClearFlag(3);
+            break;
+        case 2:
+            PS2MC_g_NbFilesFound = 0;
+            fn_vGetScreenShotDefaultName();
+            MNU_g_SavingScreenshot = 0;
+            PS2MC_vClearFlag(3);
+            break;
+        }
+    }
+
+    if (g_CurrentActionMenu2D != 1)
+    {
+        return 1;
+    }
+
+    if (g_CurrentMenu2DPage == g_SavePage)
+    {
+        if (g_2DMenuID == 2)
+        {
+            switch (PS2MC_fn_iGetFunctionResult(5))
+            {
+            case 1:
+                ReturnFromSubMenu();
+                PS2MC_vClearFlag(0);
+                PS2MC_vClearFlag(5);
+                break;
+            case 2:
+                g_CurrentActionMenu2D = 0;
+                PS2MC_vClearFlag(0);
+                PS2MC_vClearFlag(5);
+                break;
+            }
+        }
+        else
+        {
+            switch (PS2MC_fn_iGetFunctionResult(0))
+            {
+            case 1:
+                ReturnFromSubMenu();
+                PS2MC_vClearFlag(0);
+                PS2MC_vClearFlag(5);
+                break;
+            case 2:
+                g_CurrentActionMenu2D = 0;
+                PS2MC_vClearFlag(0);
+                PS2MC_vClearFlag(5);
+                break;
+            }
+        }
+    }
+    else if (g_CurrentMenu2DPage == g_LoadPage)
+    {
+        switch (PS2MC_fn_iGetFunctionResult(2))
+        {
+        case 1:
+            i = (int)PS2MC_g_NbFilesFound;
+            if (PS2MC_g_NbFilesFound >= 4)
+            {
+                i = 3;
+            }
+            p_uiNbSelection = (unsigned int*)((char*)&aMenu2DPages[0].NbSelection + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+            p_uiNbEntry = (unsigned int*)((char*)&aMenu2DPages[0].NbEntry + g_LoadPage * (int)sizeof(tdstMenu2DPages_));
+            *p_uiNbSelection = (unsigned int)i;
+            *p_uiNbEntry = PS2MC_g_NbFilesFound;
+            g_CurrentActionMenu2D = 3;
+            break;
+        case 2:
+            ReturnFromSubMenu();
+            g_CurrentActionMenu2D = 3;
+            break;
+        }
+    }
+    else if (g_CurrentMenu2DPage == g_AlbumPage)
+    {
+        switch (PS2MC_fn_iGetFunctionResult(3))
+        {
+        case 1:
+            i = (int)PS2MC_g_NbFilesFound;
+            if (PS2MC_g_NbFilesFound >= 4)
+            {
+                i = 3;
+            }
+            p_uiNbSelection = (unsigned int*)((char*)&aMenu2DPages[0].NbSelection + g_AlbumPage * (int)sizeof(tdstMenu2DPages_));
+            p_uiNbEntry = (unsigned int*)((char*)&aMenu2DPages[0].NbEntry + g_AlbumPage * (int)sizeof(tdstMenu2DPages_));
+            *p_uiNbSelection = (unsigned int)i;
+            *p_uiNbEntry = PS2MC_g_NbFilesFound;
+            g_CurrentActionMenu2D = 3;
+            break;
+        case 2:
+            p_uiNbSelection = (unsigned int*)((char*)&aMenu2DPages[0].NbSelection + g_AlbumPage * (int)sizeof(tdstMenu2DPages_));
+            p_uiNbEntry = (unsigned int*)((char*)&aMenu2DPages[0].NbEntry + g_AlbumPage * (int)sizeof(tdstMenu2DPages_));
+            *p_uiNbSelection = 0;
+            *p_uiNbEntry = 0;
+            g_CurrentActionMenu2D = 3;
+            g_stAlbum.lSnapID = 0;
+            break;
+        }
+    }
+
+    return 1;
 }

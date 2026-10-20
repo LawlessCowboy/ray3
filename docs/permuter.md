@@ -53,6 +53,11 @@ struct/union tags get typedefs. MWCC chooses C or C++ from the file suffix, so
 `compile`, `verify` and `run` splice the candidate's definition of the target
 function back into the canonical source and compile that under its own suffix.
 Only the target function's definition in `candidate.c` matters for C++ jobs.
+C sources that contain MWCC `asm { ... }` helpers (such as an inline `sqrt.s`
+wrapper) are handled the same way: the helpers are stripped from `candidate.c`
+and the target definition is spliced back into the canonical source. A target
+function whose own body contains an `asm` block cannot be permuted, and
+`prepare` refuses it.
 
 Use bounded manual `PERM_GENERAL` / `PERM_VAR` experiments for a known set of
 source-shape choices.  Random mode is useful only near the end; it can produce

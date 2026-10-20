@@ -1104,6 +1104,54 @@ void SHW_fn_vInitShadow(short _hGLDDevice, int bMustAlloc)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The retail code drives the VU0 directly: MWCC PS2 cannot emit lqc2/sqc2 or
+ * the macro-mode vmulax/vmadday/vmaddz/vmaddw sequence from C, so the two
+ * matrix helpers below are reproduced with statement-level asm blocks. */
+#define HIE_VU_COPY_MATRIX(m_src, m_dst)                                   \
+    asm { lqc2 vf1, 0x0(m_src); lqc2 vf2, 0x10(m_src);                     \
+          lqc2 vf3, 0x20(m_src); lqc2 vf4, 0x30(m_src);                    \
+          sqc2 vf1, 0x0(m_dst); sqc2 vf2, 0x10(m_dst);                     \
+          sqc2 vf3, 0x20(m_dst); sqc2 vf4, 0x30(m_dst); }
+
+#define HIE_VU_MULTIPLY_MATRIX(m_a, m_b, m_c, m_d)                          \
+    asm { lqc2 vf1, 0x0(m_a); lqc2 vf2, 0x10(m_a);                         \
+          lqc2 vf3, 0x20(m_a); lqc2 vf4, 0x30(m_a);                        \
+          lqc2 vf5, 0x0(m_b); lqc2 vf6, 0x10(m_b);                         \
+          lqc2 vf7, 0x20(m_b); lqc2 vf8, 0x30(m_b);                        \
+          vmulax.xyzw acc, vf1, vf5x; vmadday.xyzw acc, vf2, vf5y;          \
+          vmaddz.xyzw vf9, vf3, vf5z; vmulax.xyzw acc, vf1, vf6x;            \
+          vmadday.xyzw acc, vf2, vf6y; vmaddz.xyzw vf10, vf3, vf6z;          \
+          vmulax.xyzw acc, vf1, vf7x; vmadday.xyzw acc, vf2, vf7y;          \
+          vmaddz.xyzw vf11, vf3, vf7z; vmulax.xyzw acc, vf1, vf8x;           \
+          vmadday.xyzw acc, vf2, vf8y; vmaddaz.xyzw acc, vf3, vf8z;          \
+          vmaddw.xyzw vf12, vf4, vf0w;                                      \
+          sqc2 vf9, 0x0(m_c); sqc2 vf10, 0x10(m_c);                         \
+          sqc2 vf11, 0x20(m_c); sqc2 vf12, 0x30(m_c);                       \
+          sqc2 vf9, 0x0(m_d); sqc2 vf10, 0x10(m_d);                        \
+          sqc2 vf11, 0x20(m_d); sqc2 vf12, 0x30(m_d); }
+
+void HIE_fn_SendListOfFakeInstanceToViewport(GLD_tdstViewportAttributes_* _hVpt, _tdstCheapCharacterList* pCharList);
+unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSprObj);
+void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_* hSprObj);
+float GLI_vGetGlobalAlpha(void);
+void GLI_vSetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial, int lTextureNumber);
+void GLI_vLockAnimatedTexture(GLI_tdstMaterial_* hMaterial);
+float GEO_xGetZFar(void);
+float GEO_xGetZFarTransparencyZone(void);
+int fn_ucStandardGameGetTransparencyZoneMaxSO(HIE_tdstSuperObject_* hSprObj);
+int fn_ucStandardGameGetTransparencyZoneMinSO(HIE_tdstSuperObject_* hSprObj);
+void GEO_vSetZFar(float xZ);
+void GEO_vSetZFarTransparencyZone(float xZ);
+MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrix(void);
+int GEO_lMainCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stShereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, MAT_tdstTransformation_* p_stObjectMatrix, int _lCullingResult);
+void GLI_vSetDynShadowParam(int iOnOff, void* pUnused, float fLength, int lLevel, int lCloseState);
+void HIE_fn_vSendCharacterDynShadowToViewPort(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int ulDrawMask);
+void GLI_vSetDynShadowState(unsigned char bOnOff);
+void GLIPS2_vManageLightsForThisCharacter(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, tdst3dData_* h_3dData, float xSphereRadius, MTH3D_tdstVector_* p_stSphereCenter);
+void fn_vComputeGeometricJobs(HIE_tdstSuperObject_* p_stActorSO);
+void HIE_fn_vSendCharacterModulesToViewPortPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int ulDrawMask);
+void GLI_vSetGlobalAlpha(float fAlpha);
+
 void HIE_fn_vSendCharacterToViewportPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult)
 {
     int lShadowCullingResult;
@@ -1131,7 +1179,312 @@ void HIE_fn_vSendCharacterToViewportPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_
     unsigned char bDisplayed;
     COL_tdstBoundingSphere_* hBoundingSphere;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+    _tdstCheapCharacterList* pCharList;
+    _tdstCheapCharacterList* pCharListArray;
+    MTH4D_tdstMatrix_* p_stMatrixSrc;
+    MTH4D_tdstMatrix_* p_stMatrixDst;
+    MTH4D_tdstMatrix_* p_stMatrixMul;
+    MTH4D_tdstMatrix_* p_stMatrixMulDst;
+    int lZone;
+    unsigned int ulHalf;
+
+    lShadowCullingResult = _lCullingResult;
+    ulFlags = 0;
+    ulDrawMask = 0;
+    p_stSphereCenter = NULL;
+    bDynamicShadowOn = 0;
+    xMaxZone = 0.0f;
+    xShadowRadius = 0.0f;
+    xTransparencyZoneLevel = 0.0f;
+
+    pCharListArray = g_aListOfCheapCharacterList;
+    for (i = 0; i < g_lNbListOfCheapCharacterList; i++)
+    {
+        pCharList = &pCharListArray[i];
+        if (pCharList->NumberOfCheapCharacter != 0)
+        {
+            if (pCharList->pReferenceObject == _hSprObj)
+            {
+                if (SCT_g_DrawingMirrored == 0 || !(pCharList->ulOptionFlags & 1))
+                {
+                    HIE_fn_SendListOfFakeInstanceToViewport(_hVpt, pCharList);
+                }
+            }
+        }
+    }
+
+    if ((unsigned char)(_hSprObj->ulFlags & 0x20))
+    {
+        return;
+    }
+
+    if (!((unsigned char)(_hSprObj->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) == 4))
+    {
+        return;
+    }
+
+    ulCustomBit = fn_ulStandardGameGetCustomBitsSO(_hSprObj);
+
+    if ((unsigned char)(_hSprObj->ulFlags & 2))
+    {
+        _hSprObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits = ulCustomBit | 0x800;
+        _hSprObj->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags &= 0xDF;
+        return;
+    }
+
+    HIE_fn_vRefreshHierarchy(_hSprObj);
+    fGlobalAlphaTemp = GLI_vGetGlobalAlpha();
+    bIsACinematicActor = 0;
+
+    hFather = _hSprObj->hFatherDyn;
+    if (hFather != NULL)
+    {
+        if (hFather->ulTypeOfLinkedObject == 2)
+        {
+            if (hFather->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType != 0)
+            {
+                bIsACinematicActor = 1;
+                if (PS2_MatStackIndex == 0)
+                {
+                    p_stMatrixSrc = &hFather->hGlobalMatrix->stTransformMatrix;
+                    p_stMatrixDst = &PS2_MatStack[PS2_MatStackIndex].stTransformMatrix;
+                    HIE_VU_COPY_MATRIX(p_stMatrixSrc, p_stMatrixDst);
+                    HIE_g_hCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+                    g_p_stCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+                    hFather->lLastComputeFrame = HIE_gs_lCurrentFrame;
+                    PS2_MatStackIndex++;
+                }
+                else
+                {
+                    if ((unsigned char)(hFather->lLastComputeFrame == HIE_gs_lCurrentFrame || hFather->lLastComputeFrame == -1))
+                    {
+                        p_stMatrixSrc = &hFather->hGlobalMatrix->stTransformMatrix;
+                        p_stMatrixDst = &PS2_MatStack[PS2_MatStackIndex].stTransformMatrix;
+                        HIE_VU_COPY_MATRIX(p_stMatrixSrc, p_stMatrixDst);
+                        HIE_g_hCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+                        g_p_stCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+                        PS2_MatStackIndex++;
+                    }
+                    else
+                    {
+                        p_stMatrixMul = &PS2_MatStack[PS2_MatStackIndex - 1].stTransformMatrix;
+                        p_stMatrixSrc = &hFather->hLocalMatrix->stTransformMatrix;
+                        p_stMatrixMulDst = &hFather->hGlobalMatrix->stTransformMatrix;
+                        p_stMatrixDst = &PS2_MatStack[PS2_MatStackIndex].stTransformMatrix;
+                        HIE_VU_MULTIPLY_MATRIX(p_stMatrixMul, p_stMatrixSrc, p_stMatrixMulDst, p_stMatrixDst);
+                        HIE_g_hCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+                        g_p_stCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+                        PS2_MatStackIndex++;
+                        hFather->hGlobalMatrix->eType = MAT_eTransform_Rotation;
+                        hFather->lLastComputeFrame = HIE_gs_lCurrentFrame;
+                    }
+                }
+            }
+        }
+    }
+
+    if (PS2_MatStackIndex == 0)
+    {
+        p_stMatrixSrc = &_hSprObj->hGlobalMatrix->stTransformMatrix;
+        p_stMatrixDst = &PS2_MatStack[PS2_MatStackIndex].stTransformMatrix;
+        HIE_VU_COPY_MATRIX(p_stMatrixSrc, p_stMatrixDst);
+        HIE_g_hCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+        g_p_stCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+        _hSprObj->lLastComputeFrame = HIE_gs_lCurrentFrame;
+        PS2_MatStackIndex++;
+    }
+    else
+    {
+        if ((unsigned char)(_hSprObj->lLastComputeFrame == HIE_gs_lCurrentFrame || _hSprObj->lLastComputeFrame == -1))
+        {
+            p_stMatrixSrc = &_hSprObj->hGlobalMatrix->stTransformMatrix;
+            p_stMatrixDst = &PS2_MatStack[PS2_MatStackIndex].stTransformMatrix;
+            HIE_VU_COPY_MATRIX(p_stMatrixSrc, p_stMatrixDst);
+            HIE_g_hCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+            g_p_stCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+            PS2_MatStackIndex++;
+        }
+        else
+        {
+            p_stMatrixMul = &PS2_MatStack[PS2_MatStackIndex - 1].stTransformMatrix;
+            p_stMatrixSrc = &_hSprObj->hLocalMatrix->stTransformMatrix;
+            p_stMatrixMulDst = &_hSprObj->hGlobalMatrix->stTransformMatrix;
+            p_stMatrixDst = &PS2_MatStack[PS2_MatStackIndex].stTransformMatrix;
+            HIE_VU_MULTIPLY_MATRIX(p_stMatrixMul, p_stMatrixSrc, p_stMatrixMulDst, p_stMatrixDst);
+            HIE_g_hCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+            g_p_stCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+            PS2_MatStackIndex++;
+            _hSprObj->hGlobalMatrix->eType = MAT_eTransform_Rotation;
+            _hSprObj->lLastComputeFrame = HIE_gs_lCurrentFrame;
+        }
+    }
+
+    h_3dData = _hSprObj->hLinkedObject.p_stCharacter->h_3dData;
+    GLI_g_CurrentSkinIndex = -1;
+    bOnPlatform = (unsigned char)((int)h_3dData->h_CurrentCineActor != 0);
+    GLI_g_CurrentSkinMaterial = 0;
+
+    if (h_3dData->NbSkinMaterials != 0)
+    {
+        GLI_g_NbSkinsForThisCharacter = h_3dData->NbSkinMaterials;
+        for (i = 0; i < h_3dData->NbSkinMaterials; i++)
+        {
+            GLI_vSetCurrentAnimatedTextureNumber((GLI_tdstMaterial_*)h_3dData->hSkinMaterial[i], h_3dData->xSkinIndex[i]);
+            GLI_vLockAnimatedTexture((GLI_tdstMaterial_*)h_3dData->hSkinMaterial[i]);
+            GLI_g_SkinMaterials[i] = h_3dData->hSkinMaterial[i];
+            GLI_g_SkinIndice[i] = h_3dData->xSkinIndex[i];
+        }
+    }
+    else
+    {
+        GLI_g_NbSkinsForThisCharacter = 0;
+    }
+
+    hBoundingSphere = (COL_tdstBoundingSphere_*)_hSprObj->hVisualBoundingVolume;
+    if (hBoundingSphere != NULL)
+    {
+        xShadowRadius = hBoundingSphere->xRadius;
+    }
+
+    if (ulCustomBit & 0x200000)
+    {
+        xMaxZone = GEO_xGetZFar();
+        xTransparencyZoneLevel = GEO_xGetZFarTransparencyZone();
+        lZone = fn_ucStandardGameGetTransparencyZoneMaxSO(_hSprObj);
+        ulHalf = ((unsigned int)lZone >> 1) | ((unsigned int)lZone & 1);
+        xTransparencyZoneMax = (lZone < 0) ? (float)ulHalf + (float)ulHalf : (float)lZone;
+        lZone = fn_ucStandardGameGetTransparencyZoneMinSO(_hSprObj);
+        ulHalf = ((unsigned int)lZone >> 1) | ((unsigned int)lZone & 1);
+        xMinZone = (lZone < 0) ? (float)ulHalf + (float)ulHalf : (float)lZone;
+        if (0.0f == xMaxZone)
+        {
+            GEO_vSetZFar(xTransparencyZoneMax);
+            GEO_vSetZFarTransparencyZone(xTransparencyZoneMax - xMinZone);
+        }
+        else if (xMinZone < xMaxZone)
+        {
+            GEO_vSetZFar(xMaxZone < xTransparencyZoneMax ? xMaxZone : xTransparencyZoneMax);
+            GEO_vSetZFarTransparencyZone(GEO_xGetZFar() - xMinZone);
+        }
+        ulFlags = _hSprObj->ulFlags;
+        _hSprObj->ulFlags = ulFlags | 0x10000;
+        ulDrawMask = _hSprObj->lDrawModeMask;
+        _hSprObj->lDrawModeMask = ulDrawMask & ~8;
+        lShadowCullingResult &= ~0x30;
+    }
+
+    if (lShadowCullingResult != 127)
+    {
+        if (hBoundingSphere != NULL)
+        {
+            lShadowCullingResult = GEO_lMainCullingSphere(_hVpt, (MTH3D_tdstVector_*)hBoundingSphere, xShadowRadius, HIE_fn_pGetCurrentInCamCoordsMatrix(), _hSprObj->hGlobalMatrix, lShadowCullingResult);
+        }
+        else
+        {
+            lShadowCullingResult = 127;
+        }
+    }
+
+    ulDrawMask = (_DrawMask | 0xFC67F7FB) & _hSprObj->lDrawModeMask;
+    if ((ulDrawMask & 0x800000) && (ulDrawMask & 0x2000000) || (ulDrawMask & 0x1000000) && !(ulDrawMask & 0x2000000) && !((unsigned char)(_hSprObj->ulFlags & 2)) && (lShadowCullingResult != 0 || bOnPlatform != 0))
+    {
+        bDynamicShadowOn = 1;
+        ulCustomBit &= ~0x801;
+        _hSprObj->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags |= 0x20;
+    }
+    else
+    {
+        if (g_ucCurrentViewport == 0)
+        {
+            ulCustomBit |= 0x800;
+        }
+        bDynamicShadowOn = 0;
+        _hSprObj->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags &= 0xDF;
+    }
+
+    _hSprObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits = ulCustomBit;
+
+    if (h_3dData->xShadowQuality == 3 && (ulDrawMask & 0x800000))
+    {
+        if (lShadowCullingResult == 0)
+        {
+            xHeight = 0.5f * h_3dData->xSHWHeight;
+            stShadowCenter.xX = xHeight * h_3dData->stLightDirForDynamicShadow.xX;
+            stShadowCenter.xY = xHeight * h_3dData->stLightDirForDynamicShadow.xY;
+            stShadowCenter.xZ = xHeight * h_3dData->stLightDirForDynamicShadow.xZ;
+            stShadowCenter.xX += hBoundingSphere->stCenterPoint.xX;
+            stShadowCenter.xY += hBoundingSphere->stCenterPoint.xY;
+            stShadowCenter.xZ += hBoundingSphere->stCenterPoint.xZ;
+            if (GEO_lMainCullingSphere(_hVpt, &stShadowCenter, xHeight + xShadowRadius, HIE_fn_pGetCurrentInCamCoordsMatrix(), _hSprObj->hGlobalMatrix, 0) != 0)
+            {
+                GLI_vSetDynShadowParam(0, &h_3dData->stLightDirForDynamicShadow, h_3dData->xSHWHeight, h_3dData->ucShadowRecLevel, h_3dData->ucIsShadowClosed);
+                for (hChild = _hSprObj->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+                {
+                    if (hChild->ulTypeOfLinkedObject != 2)
+                    {
+                        HIE_fn_vSendCharacterDynShadowToViewPort(_hVpt, hChild, ulDrawMask);
+                    }
+                }
+            }
+        }
+        else
+        {
+            GLI_vSetDynShadowParam(1, &h_3dData->stLightDirForDynamicShadow, h_3dData->xSHWHeight, h_3dData->ucShadowRecLevel, h_3dData->ucIsShadowClosed);
+            bDynamicShadowOn = 1;
+        }
+    }
+
+    Global_CharacterBeingDisplayed = (int)_hSprObj;
+
+    if (bDynamicShadowOn && _hSprObj->lNumberOfElementsDyn > 0)
+    {
+        GLIPS2_vManageLightsForThisCharacter(_hVpt, _hSprObj, h_3dData, xShadowRadius, (MTH3D_tdstVector_*)hBoundingSphere);
+        fn_vComputeGeometricJobs(_hSprObj);
+        for (hChild = _hSprObj->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+        {
+            if (hChild->ulTypeOfLinkedObject != 2)
+            {
+                HIE_fn_vSendCharacterModulesToViewPortPS2(_hVpt, hChild, ulDrawMask);
+            }
+        }
+    }
+
+    if (bDynamicShadowOn)
+    {
+        GLI_vSetDynShadowState(0);
+    }
+
+    if (ulCustomBit & 0x200000)
+    {
+        GEO_vSetZFar(xMaxZone);
+        GEO_vSetZFarTransparencyZone(xTransparencyZoneLevel);
+        _hSprObj->ulFlags = ulFlags;
+        _hSprObj->lDrawModeMask = ulDrawMask;
+    }
+
+    if (PS2_MatStackIndex != 0)
+    {
+        PS2_MatStackIndex--;
+        HIE_g_hCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+        g_p_stCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+    }
+
+    if (bIsACinematicActor && PS2_MatStackIndex != 0)
+    {
+        PS2_MatStackIndex--;
+        HIE_g_hCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+        g_p_stCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex];
+    }
+
+    if (SCT_g_DrawingMirrored == 0)
+    {
+        ((HIE_tdstSuperObject_*)Global_CharacterBeingDisplayed)->lDisplayPrioriry = 0;
+    }
+
+    Global_CharacterBeingDisplayed = NULL;
+    GLI_g_CurrentSkinIndex = -1;
+    GLI_g_CurrentSkinMaterial = 0;
+    GLI_vSetGlobalAlpha(fGlobalAlphaTemp);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 1354–1376 */

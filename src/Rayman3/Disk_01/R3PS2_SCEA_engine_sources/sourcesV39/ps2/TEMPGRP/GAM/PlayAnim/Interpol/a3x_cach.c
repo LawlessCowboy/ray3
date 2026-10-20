@@ -45,48 +45,6 @@ struct tdstA3dGENERAL_ {
 int p_uwLastA3dGENERAL;
 int gp_stA3dGENERAL;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_cach.c lines 76–145 */
-/* addr: 0x0027bc70  size: 528 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 76
- *   +0x0004 -> line 91
- *   +0x0008 -> line 76
- *   +0x0020 -> line 86
- *   +0x0024 -> line 76
- *   +0x0028 -> line 85
- *   +0x002c -> line 76
- *   +0x0034 -> line 91
- *   +0x0070 -> line 93
- *   +0x0078 -> line 94
- *   +0x0080 -> line 95
- *   +0x0084 -> line 101
- *   +0x008c -> line 102
- *   +0x0090 -> line 103
- *   +0x0098 -> line 104
- *   +0x00a0 -> line 106
- *   +0x00a4 -> line 104
- *   +0x00a8 -> line 106
- *   +0x00b8 -> line 109
- *   +0x00c0 -> line 111
- *   +0x00cc -> line 114
- *   +0x00d4 -> line 116
- *   +0x0118 -> line 119
- *   +0x0120 -> line 122
- *   +0x0138 -> line 123
- *   +0x0140 -> line 125
- *   +0x014c -> line 129
- *   +0x0154 -> line 130
- *   +0x018c -> line 131
- *   +0x0190 -> line 133
- *   +0x0198 -> line 135
- *   +0x01ac -> line 136
- *   +0x01bc -> line 138
- *   +0x01d0 -> line 139
- *   +0x01e0 -> line 141
- *   +0x01e8 -> line 145
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 typedef struct tdstEngineObject_ tdstEngineObject_;
 typedef struct tdstEventInTable_ tdstEventInTable_;
 
@@ -155,20 +113,21 @@ int fn_lGetTransitionBloc(void);
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 tdstAnim3d_* fn_p_stGetAnimInState(struct tdstState_* h_State);
 /* Retail passes three arguments here although the a3x_intn.c body reads only the first. */
-tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d, int lFrame, struct tdstObjectsTablesList_* h_ObjectsTable);
+tdstEvent_* fn_p_GetEventsAddress(tdstAnim3d_* _p_stAnim3d, unsigned int lFrame, struct tdstObjectsTablesList_* h_ObjectsTable);
 signed char fn_scGetSpeedInState(struct tdstState_* h_State);
 
 void fn_vInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, unsigned short uwFirstFrame)
 {
-    unsigned char ucMemoryType;
-    unsigned char bBTLevel;
-    unsigned char i;
-    tdstEvent_* p_stEvent;
-    tdstAnim3d_* p_stAnim;
     tdst3dData_* h_3dData;
+    tdstAnim3d_* p_stAnim;
+    tdstEvent_* p_stEvent;
+    unsigned char i;
+    unsigned char bBTLevel;
+    unsigned char ucMemoryType;
+    struct tdstState_* h_CurrentState;
 
-    ucMemoryType = 0;
     bBTLevel = 0;
+    ucMemoryType = 0;
     if (fn_bIsInFix((p_stSuperObject->ulTypeOfLinkedObject != 2) ? NULL : p_stSuperObject->hLinkedObject.p_stCharacter) && !GAM_fn_bIsEngineInFixMode())
     {
         ucMemoryType = HMU_fn_ucGetActualNormalMemoryBlockUsed();
@@ -177,20 +136,20 @@ void fn_vInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, unsigned short uwF
     }
 
     h_3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
-    if (h_3dData->h_CurrentState)
+    h_CurrentState = h_3dData->h_CurrentState;
+    if (h_CurrentState)
     {
-        p_stAnim = fn_p_stGetAnimInState(h_3dData->h_CurrentState);
+        p_stAnim = fn_p_stGetAnimInState(h_CurrentState);
         p_stEvent = fn_p_GetEventsAddress(p_stAnim, uwFirstFrame, h_3dData->h_CurrentObjectsTable);
         if (p_stEvent)
         {
             h_3dData->d_ucEventActivation = (unsigned char*)HMU_fn_p_vMalloc(p_stAnim->ucNumberOfEvents, 1);
             if (uwFirstFrame)
             {
-                for (i = 0; i < p_stAnim->ucNumberOfEvents && p_stEvent[i].uwFrameNumber < uwFirstFrame; i++)
-                    ;
+                for (i = 0; i < p_stAnim->ucNumberOfEvents && p_stEvent[i].uwFrameNumber < uwFirstFrame; i++);
                 h_3dData->ucNextEvent = i;
             }
-            else if (fn_scGetSpeedInState(h_3dData->h_CurrentState) > 0)
+            else if (fn_scGetSpeedInState(h_CurrentState) > 0)
             {
                 h_3dData->ucNextEvent = 0;
             }
@@ -199,10 +158,7 @@ void fn_vInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, unsigned short uwF
                 h_3dData->ucNextEvent = p_stAnim->ucNumberOfEvents - 1;
             }
             for (i = 0; i < p_stAnim->ucNumberOfEvents; i++)
-            {
-                h_3dData->d_ucEventActivation[i] = p_stEvent->p_stfEventInTBL->ucFirstCall;
-                p_stEvent++;
-            }
+            { h_3dData->d_ucEventActivation[i] = p_stEvent->p_stfEventInTBL->ucFirstCall; p_stEvent++; }
         }
         if (bBTLevel)
         {

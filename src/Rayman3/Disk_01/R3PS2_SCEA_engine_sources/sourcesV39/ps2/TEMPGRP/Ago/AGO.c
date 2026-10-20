@@ -1331,14 +1331,37 @@ void AGO_vCreateFootStep(float* Pos, float* Direction, void* hVisualMaterial)
  */
 unsigned int LUM_TestPosition(float* pPosition)
 {
-    float z;
-    float y;
-    float x;
-    float fSquaredDistance;
-    float fMinSqDistance;
-    unsigned int ClosestIndex;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    unsigned int ClosestIndex = 150;
+    float fMinSqDistance = 1e9f;
+    float fSquaredDistance;
+    float x;
+    float y;
+    float z;
+
+    for (i = 0; i < LUM_g_NumberOfLums; i++)
+    {
+        if (LUM_g_LumActivity[i] != 0)
+        {
+            x = LUM_g_LumPositions[i][0] - pPosition[0];
+            y = LUM_g_LumPositions[i][1] - pPosition[1];
+            z = LUM_g_LumPositions[i][2] - pPosition[2];
+            fSquaredDistance = x * x + y * y + z * z;
+            if (fSquaredDistance < fMinSqDistance)
+            {
+                fMinSqDistance = fSquaredDistance;
+                ClosestIndex = i;
+            }
+        }
+    }
+
+    if (fMinSqDistance <= LUM_g_fSquaredDistance)
+    {
+        LUM_g_NumberOfActiveLums--;
+        LUM_g_LumActivity[ClosestIndex] = 0;
+    }
+
+    return LUM_g_NumberOfActiveLums;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 8083–8092 */
@@ -1356,17 +1379,18 @@ unsigned int LUM_TestPosition(float* pPosition)
  */
 void AGO_vClearUnwanted110AGOsForDemos(void)
 {
-    AGO_Part_* p;
     unsigned int i;
+    AGO_Part_* p;
     unsigned int Offset;
 
-    for (i = 0, Offset = 0; i < g_ulNumberOfAgos; i++, Offset += 0x90)
+    for (i = 0, Offset = 0; i < g_ulNumberOfAgos; i++)
     {
         p = (AGO_Part_*)((char*)g_AGO + Offset);
         if (((p->ulType & 0xff) == 17) && ((p->ulType & 0x1000000) != 0x1000000))
         {
             p->ulType |= 0x1000000;
         }
+        Offset += 0x90;
     }
 
     AGO_vDestroyAllParts();
@@ -1510,16 +1534,26 @@ void AGO_vCreateTriangle(float* c1, float* c2, float* c3, void* VisualMat, float
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The retail code takes the square root of the squared length with the R5900
+   sqrt.s instruction, which plain C cannot express under the baseline
+   (sqrtf becomes a library call). */
+static inline float AGO_MTH_xSqrt(float xValue)
+{
+    float xResult;
+    asm { sqrt.s xResult, xValue }
+    return xResult;
+}
+
 void AGO_Define_OrthogonalVectorsV1Flat(MTH3D_tdstVector_* p_stDirection, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2)
 {
     float fNorm1;
 
-    fNorm1 = 1.0f / ((-p_stDirection->xY * -p_stDirection->xY) + (p_stDirection->xX * p_stDirection->xX));
-    p_stV1->xX = -p_stDirection->xY * fNorm1;
+    fNorm1 = 1.0f / AGO_MTH_xSqrt((-p_stDirection->xY * -p_stDirection->xY) + (p_stDirection->xX * p_stDirection->xX));
+    p_stV1->xX = (-p_stDirection->xY * -p_stDirection->xY) * fNorm1;
     p_stV1->xY = p_stDirection->xX * fNorm1;
-    p_stV1->xZ = 0.0f;
-    p_stV2->xX = p_stDirection->xZ * p_stV1->xY - p_stDirection->xY * p_stV1->xZ;
-    p_stV2->xY = p_stV1->xX * p_stDirection->xZ - p_stDirection->xX * p_stV1->xZ;
+    p_stV1->xZ = 0.0f * fNorm1;
+    p_stV2->xX = p_stDirection->xY * p_stV1->xZ - p_stDirection->xZ * p_stV1->xY;
+    p_stV2->xY = p_stDirection->xZ * p_stV1->xX - p_stDirection->xX * p_stV1->xZ;
     p_stV2->xZ = p_stDirection->xX * p_stV1->xY - p_stDirection->xY * p_stV1->xX;
 }
 

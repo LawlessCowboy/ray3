@@ -9,7 +9,10 @@ typedef struct GEO_tdstGeometricObject_ GEO_tdstGeometricObject_;
 typedef struct GEO_tdstVisualSet_ GEO_tdstVisualSet_;
 typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct GLI_tdstSinEffectAmp_ GLI_tdstSinEffectAmp_;
+typedef union GLI_tdstSinEffectAmp_ GLI_tdstSinEffectAmp_;
+typedef union GLI_tdstWaterPlaneColor_ GLI_tdstWaterPlaneColor_;
+typedef union GLI_tdstWaterPlaneNormale_ GLI_tdstWaterPlaneNormale_;
+typedef union GLI_tdstFloatInt_ GLI_tdstFloatInt_;
 
 struct GEO_tdstColor_ {
     float xR; /* +0x0 */
@@ -24,25 +27,58 @@ struct MTH3D_tdstVector_ {
     float xZ; /* +0x8 */
 };
 
-struct GLI_tdstSinEffectAmp_ {
-    int xX;
-    int xY;
-    int xZ;
+/* A scalar with both an int and a float view: the retail code stores raw
+ * float bit patterns with integer stores. */
+union GLI_tdstFloatInt_ {
+    float f;
+    int i;
 };
 
-static float GLI_gsWaterPlaneRefraction;
-static float GLI_gsWaterPlaneDepthSizeOf2DMove;
-static float GLI_gsWaterPlaneDepthStartOf2DMove;
-float GLI_gsfWaterPlaneFogStart;
-float g_xSinusSizeMulx;
-float g_xSinusSizeMuly;
-float g_xSinusSizeMulz;
+/* The retail code initialises these globals with integer stores of raw float
+ * bit patterns, so they carry an int view next to the float one. */
+union GLI_tdstWaterPlaneColor_ {
+    struct {
+        int xR;
+        int xG;
+        int xB;
+        int xA;
+    } l;
+    GEO_tdstColor_ v;
+};
+
+union GLI_tdstWaterPlaneNormale_ {
+    struct {
+        int xX;
+        int xY;
+        int xZ;
+    } l;
+    MTH3D_tdstVector_ v;
+};
+
+/* The retail code writes the amplitude with integer stores (raw float bit
+ * patterns) and reads it back as floats, so both views live in one union. */
+union GLI_tdstSinEffectAmp_ {
+    struct {
+        int xX;
+        int xY;
+        int xZ;
+    } l;
+    MTH3D_tdstVector_ v;
+};
+
+static int GLI_gsWaterPlaneRefraction;
+static int GLI_gsWaterPlaneDepthSizeOf2DMove;
+static int GLI_gsWaterPlaneDepthStartOf2DMove;
+int GLI_gsfWaterPlaneFogStart;
+GLI_tdstFloatInt_ g_xSinusSizeMulx;
+GLI_tdstFloatInt_ g_xSinusSizeMuly;
+GLI_tdstFloatInt_ g_xSinusSizeMulz;
 float gs_xFactor;
 float a3_lSinRLIAmp[3];
 float a3_lSinRLIBase[3];
 char g_cSinusEffectFlagSaved;
 char g_cSinusEffectStateSaved;
-float xSinusEffectDepthStartSaved;
+GLI_tdstFloatInt_ xSinusEffectDepthStartSaved;
 MTH3D_tdstVector_ stSinEffectVectorSaved;
 GLI_tdstSinEffectAmp_ stSinEffectAmpSaved; /* debug record: MTH3D_tdstVector_; retail save/restore copies need the same 8-aligned type as stSinEffectAmp */
 int a3_lSinEffectFreqRLISaved[3];
@@ -50,16 +86,16 @@ float a3_xSinEffectBaseRLISaved[3];
 int a3_lSinEffectFreqMeshSaved[3];
 float a3_xSinEffectBaseMeshSaved[3];
 char g_cSinusEffectFlag;
-float xSinusEffectDepthStart;
+GLI_tdstFloatInt_ xSinusEffectDepthStart;
 MTH3D_tdstVector_ stSinEffectVector;
 GLI_tdstSinEffectAmp_ stSinEffectAmp;
 int a3_lSinEffectFreqRLI[3];
 float a3_xSinEffectBaseRLI[3];
 int a3_lSinEffectFreqMesh[3];
 float a3_xSinEffectBaseMesh[3];
-GEO_tdstColor_ GLI_gsfWaterPlaneFogColor;
-float fWaterPlaneDistance;
-MTH3D_tdstVector_ stWaterPlaneNormale;
+GLI_tdstWaterPlaneColor_ GLI_gsfWaterPlaneFogColor;
+int fWaterPlaneDistance;
+GLI_tdstWaterPlaneNormale_ stWaterPlaneNormale;
 int bWaterPlaneState;
 float GLI_fSinEffectBase;
 float GLI_fF2pow24;
@@ -102,12 +138,55 @@ char g_cSinusEffectState;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+float powf(float x, float y);
+float cosf(float x);
+
+struct GEO_tdstVisualSet_ {
+    float xLastDistance;                            /* +0x0 */
+    short xNbLodDefinitions;                        /* +0x4 */
+    short xType;                                    /* +0x6 */
+    GEO_tdstGeometricObject_** d_xThresholdsTable;  /* +0x8 */
+    void** d_p_stLodDefinitions;                    /* +0xc */
+    void* d_hRLI;                                   /* +0x10 */
+    int lNumberOfRLI;                               /* +0x14 */
+};
+
 GEO_tdstVisualSet_* GLI_p_stCreateTMPVisualSet(int lNbLOD)
 {
     GEO_tdstGeometricObject_** ppGeo;
     short xLodCounter;
     GEO_tdstVisualSet_* p_stLocalVS;
-    /* TODO: decompile from asm/... */
+    void** ppLod;
+
+    p_stLocalVS = (GEO_tdstVisualSet_*)HMU_fn_p_vMalloc(sizeof(GEO_tdstVisualSet_), 1);
+    if (p_stLocalVS == NULL)
+        return NULL;
+
+
+    ppGeo = (GEO_tdstGeometricObject_**)HMU_fn_p_vMalloc(lNbLOD * sizeof(GEO_tdstGeometricObject_*), 1); p_stLocalVS->d_xThresholdsTable = ppGeo;
+    if (p_stLocalVS->d_xThresholdsTable == NULL)
+        return NULL;
+
+
+    ppLod = (void**)HMU_fn_p_vMalloc(lNbLOD * sizeof(void*), 1);
+    p_stLocalVS->d_p_stLodDefinitions = ppLod;
+
+    if (p_stLocalVS->d_p_stLodDefinitions == NULL)
+        return NULL;
+
+    p_stLocalVS->xNbLodDefinitions = lNbLOD;
+
+    for (xLodCounter = 0; xLodCounter < lNbLOD; xLodCounter++)
+    {
+        ((int*)p_stLocalVS->d_xThresholdsTable)[xLodCounter] = 0;
+        ((int*)p_stLocalVS->d_p_stLodDefinitions)[xLodCounter] = 0;
+    }
+
+    p_stLocalVS->lNumberOfRLI = 0;
+    p_stLocalVS->d_hRLI = NULL;
+
+    return p_stLocalVS;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1173–1184 */
@@ -152,7 +231,7 @@ void GLI_vRestoreSinusContext(void)
 
     stSinEffectAmp = stSinEffectAmpSaved;
     stSinEffectVector = stSinEffectVectorSaved;
-    xSinusEffectDepthStart = xSinusEffectDepthStartSaved;
+    xSinusEffectDepthStart.f = xSinusEffectDepthStartSaved.f;
     g_cSinusEffectState = g_cSinusEffectStateSaved;
     g_cSinusEffectFlag = g_cSinusEffectFlagSaved;
 }
@@ -199,7 +278,7 @@ void GLI_vSaveSinusContext(void)
 
     stSinEffectAmpSaved = stSinEffectAmp;
     stSinEffectVectorSaved = stSinEffectVector;
-    xSinusEffectDepthStartSaved = xSinusEffectDepthStart;
+    xSinusEffectDepthStartSaved.f = xSinusEffectDepthStart.f;
     g_cSinusEffectStateSaved = g_cSinusEffectState;
     g_cSinusEffectFlagSaved = g_cSinusEffectFlag;
 }
@@ -313,7 +392,16 @@ void GLI_vSinusEffetOn3DVertex(MTH3D_tdstVector_* p_stVertex3D)
     float xY;
     float xX;
     int lVertice;
-    /* TODO: decompile from asm/... */
+
+    fFreq = GLI_fF2pow24 + (a3_xSinEffectBaseMesh[0] + (p_stVertex3D->xY * g_xSinusSizeMuly.f + p_stVertex3D->xZ * g_xSinusSizeMulz.f));
+    lVertice = *(int*)&fFreq & 0x1FF; xX = p_stVertex3D->xX + stSinEffectAmp.v.xX * a64_fSinTable[lVertice];
+    fFreq = GLI_fF2pow24 + (a3_xSinEffectBaseMesh[1] + (p_stVertex3D->xZ * g_xSinusSizeMulz.f + p_stVertex3D->xX * g_xSinusSizeMulx.f));
+    lVertice = *(int*)&fFreq & 0x1FF; xY = p_stVertex3D->xY + stSinEffectAmp.v.xY * a64_fSinTable[lVertice];
+    fFreq = GLI_fF2pow24 + (a3_xSinEffectBaseMesh[2] + (p_stVertex3D->xY * g_xSinusSizeMuly.f + p_stVertex3D->xX * g_xSinusSizeMulx.f));
+    lVertice = *(int*)&fFreq & 0x1FF; xZ = p_stVertex3D->xZ + stSinEffectAmp.v.xZ * a64_fSinTable[lVertice];
+    p_stVertex3D->xX = xX;
+    p_stVertex3D->xY = xY;
+    p_stVertex3D->xZ = xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1055–1075 */
@@ -351,10 +439,25 @@ void GLI_vSinusEffetOn3DVertex(MTH3D_tdstVector_* p_stVertex3D)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bIsEngineInPause(void);
+unsigned char EngineIsFrozen(void);
+
 void GLI_vUpdateEffectData(unsigned int _ulDeltaT)
 {
     float xFactor;
-    /* TODO: decompile from asm/... */
+
+    /* Both tests share one exit block, so they stay on a single source line. */
+    if (fn_bIsEngineInPause()) { return; } if (EngineIsFrozen()) { return; }
+
+    xFactor = 0.0128f * (float)_ulDeltaT; gs_xFactor = xFactor;
+
+    a3_xSinEffectBaseMesh[0] += (float)a3_lSinEffectFreqMesh[0] * xFactor;
+    a3_xSinEffectBaseMesh[1] += (float)a3_lSinEffectFreqMesh[1] * xFactor;
+    a3_xSinEffectBaseMesh[2] += (float)a3_lSinEffectFreqMesh[2] * xFactor;
+
+    a3_xSinEffectBaseRLI[0] += (float)a3_lSinEffectFreqRLI[0] * xFactor;
+    a3_xSinEffectBaseRLI[1] += (float)a3_lSinEffectFreqRLI[1] * xFactor;
+    a3_xSinEffectBaseRLI[2] += (float)a3_lSinEffectFreqRLI[2] * xFactor;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 982–983 */
@@ -367,9 +470,9 @@ void GLI_vUpdateEffectData(unsigned int _ulDeltaT)
  */
 void GLI_fn_SinusEffect_vSetAmplitude(GLI_tdstSinEffectAmp_* _p_stAmpVector)
 {
-    stSinEffectAmp.xX = _p_stAmpVector->xX;
-    stSinEffectAmp.xY = _p_stAmpVector->xY;
-    stSinEffectAmp.xZ = _p_stAmpVector->xZ;
+    stSinEffectAmp.l.xX = _p_stAmpVector->l.xX;
+    stSinEffectAmp.l.xY = _p_stAmpVector->l.xY;
+    stSinEffectAmp.l.xZ = _p_stAmpVector->l.xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 970–973 */
@@ -478,9 +581,9 @@ void GLI_fn_SinusEffect_vSetState(char _cState)
  */
 void GLI_fn_vSetSinusPreMultiplier(float X, float Y, float Z)
 {
-    g_xSinusSizeMulx = X;
-    g_xSinusSizeMuly = Y;
-    g_xSinusSizeMulz = Z;
+    g_xSinusSizeMulx.f = X;
+    g_xSinusSizeMuly.f = Y;
+    g_xSinusSizeMulz.f = Z;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 832–893 */
@@ -574,8 +677,58 @@ void GLI_fn_vSetSinusPreMultiplier(float X, float Y, float Z)
 void GLI_vInitWaterplaneModule(void)
 {
     int lCounter;
-    unsigned char lIsAlreadyInit;
-    /* TODO: decompile from asm/... */
+    static unsigned char lIsAlreadyInit;
+    /* The retail code loads the powf() constants left to right, so the
+     * arguments are passed through named locals to keep that order. */
+    float xPowBase;
+    float xPowExp;
+
+    xPowBase = 2.0f;
+    xPowExp = 20.0f;
+    GLI_fF2pow24 = 3.0f * powf(xPowBase, xPowExp);
+    if (lIsAlreadyInit)
+    {
+        for (lCounter = 0; lCounter < 512; lCounter++)
+        {
+            a64_fSinTable[lCounter] = 2.0f * cosf(6.2831855f / 512.0f * (float)lCounter);
+        }
+    }
+    lIsAlreadyInit = 0;
+    bWaterPlaneState = 0;
+    gs_lXBase = 0;
+    gs_lYBase = 0x20;
+    GLI_gsfWaterPlaneFogColor.l.xR = 0xBF19999A;
+    GLI_gsfWaterPlaneFogColor.l.xG = 0xBE99999A;
+    stWaterPlaneNormale.l.xX = 0;
+    GLI_gsfWaterPlaneFogColor.l.xB = 0xBECCCCCD;
+    stWaterPlaneNormale.l.xZ = 0;
+    fWaterPlaneDistance = 0;
+    stSinEffectAmp.l.xY = 0;
+    GLI_gsWaterPlaneRefraction = 0x3F333333;
+    GLI_gsWaterPlaneDepthSizeOf2DMove = 0x3FB33333;
+    GLI_gsWaterPlaneDepthStartOf2DMove = 0xC0A00000;
+    GLI_gsfWaterPlaneFogStart = 0x40E00000;
+    stWaterPlaneNormale.l.xY = 0x3F800000;
+    stSinEffectAmp.l.xX = 0x3F800000;
+    stSinEffectAmp.l.xZ = 0;
+    g_xSinusSizeMulx.i = 0x3F800000;
+    g_xSinusSizeMuly.i = 0x3F800000;
+    g_xSinusSizeMulz.i = 0x3F800000;
+    a3_lSinEffectFreqMesh[0] = 1;
+    a3_lSinEffectFreqRLI[0] = 1;
+    a3_lSinEffectFreqMesh[1] = 0;
+    a3_lSinEffectFreqMesh[2] = 0;
+    a3_xSinEffectBaseMesh[0] = 0;
+    a3_xSinEffectBaseMesh[1] = 0;
+    a3_xSinEffectBaseMesh[2] = 0;
+    a3_lSinEffectFreqRLI[1] = 0;
+    a3_lSinEffectFreqRLI[2] = 0;
+    a3_xSinEffectBaseRLI[0] = 0;
+    a3_xSinEffectBaseRLI[1] = 0;
+    a3_xSinEffectBaseRLI[2] = 0;
+    xSinusEffectDepthStart.i = 0x41200000;
+    g_cSinusEffectState = 0;
+    g_cSinusEffectFlag = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 384–385 */

@@ -64,7 +64,14 @@ struct stree : streebase {
     struct iterator : iterator_base {
         iterator(void) {}
         iterator(sTreeLink* po_Link) : iterator_base(po_Link) {}
-        iterator(const iterator& ro_It) : iterator_base(ro_It._Ptr) {}
+        /* The retail code copies iterators in two different ways: stree::find()
+         * copies through the iterator's copy constructor (a call to
+         * iterator_base(sTreeLink*)), while stree::erase() initialises its
+         * by-value parameter with a plain memberwise copy of _Ptr.  MWCC cannot
+         * produce both from one copy constructor, so the copy constructor below
+         * is the trivial one that matches the erase() path; find() keeps the
+         * retail's call shape only when the copy constructor is changed. */
+        iterator(const iterator& ro_It) { _Ptr = ro_It._Ptr; }
         V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
         iterator& operator++(void) { _Inc(); return *this; }
         iterator operator++(int) { iterator oTmp = *this; ++*this; return oTmp; }
@@ -117,7 +124,10 @@ struct stree : streebase {
     }
     void erase(iterator o_It)
     {
-        usnd_free(base_erase((o_It++)._Ptr));
+        iterator oTmp(o_It._Ptr);
+        ++o_It;
+        iterator oRet(oTmp._Ptr);
+        usnd_free(base_erase(oRet._Ptr));
     }
     ALLOC allocator; /* +0xc */
     CMP key_compare; /* +0xd */
@@ -149,6 +159,7 @@ struct CSoundSemaphore : usnd::smap<int, struct CSoundSemaphoreInfo*, usnd::less
 };
 
 struct CSoundSemaphoreCont : usnd::smap<int, CSoundSemaphore*, usnd::less<int>, usnd::sallocator<CSoundSemaphore*> > {
+    typedef usnd::smap<int, CSoundSemaphore*, usnd::less<int>, usnd::sallocator<CSoundSemaphore*> >::_Imp _Tree;
     ~CSoundSemaphoreCont();
     void operator delete(void* pv_Ptr) { usnd_free(pv_Ptr); }
     unsigned char mfn_bRemoveSoundSemaphore(int s32_ChannelId);
@@ -211,8 +222,18 @@ extern "C" int SND_fn_lAddObjectTypeSound2(_tdstAllRetObjectSound* pst_IActor, i
  */
 unsigned char CSoundSemaphoreCont::mfn_bRemoveSoundSemaphore(int s32_ChannelId)
 {
-    unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
+    unsigned char b_Answer = 0;
+    int lKey = s32_ChannelId;
+    iterator it;
+
+    it = find(lKey);
+    if (it != end())
+    {
+        delete (*it).second;
+        erase(it);
+        b_Answer = 1;
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphorecont.cpp lines 98–107 */
@@ -305,8 +326,10 @@ CSoundSemaphore* CSoundSemaphoreCont::mfn_poAddSoundSemaphore(int s32_ChannelId,
 CSoundSemaphore* CSoundSemaphoreCont::mfn_poFindSoundSemaphore(int s32_ChannelId)
 {
     CSoundSemaphore* po_Answer = NULL;
+    int lKey = s32_ChannelId;
+    iterator it;
 
-    iterator it = find(s32_ChannelId);
+    it = find(lKey);
     if (it != end())
     {
         po_Answer = (*it).second;
@@ -329,12 +352,14 @@ CSoundSemaphore* CSoundSemaphoreCont::mfn_poFindSoundSemaphore(int s32_ChannelId
  */
 void CSoundSemaphoreCont::mfn_vDelete(void)
 {
+    iterator it;
     int i;
 
-    for (i = 0; (begin() != end()) && (i < 30000); i++)
+    for (i = 0; (begin() != end()) && (i < 30000); )
     {
-        delete (*begin()).second;
-        erase(begin());
+        delete ((_Tree::sTreeNode*)_Tr._GetHead()->m_poLeft)->m_oValue.second;
+        it = begin(); erase(it);
+        i++;
     }
 }
 

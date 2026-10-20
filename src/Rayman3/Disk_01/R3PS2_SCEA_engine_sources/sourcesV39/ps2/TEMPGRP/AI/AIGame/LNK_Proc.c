@@ -3283,7 +3283,7 @@ unsigned short ui_BCPindexWrite;
 unsigned short ui_BCPindexRead;
 LNK_NetEvent_ a_NetBuffer[1000];
 LinkActorType_ linkStructure[8];
-int hVisualMaterial[3];
+GLI_tdstMaterial_* hVisualMaterial[3];
 MTH3D_tdstVector_ vNullVector;
 MTH3D_tdstVector_ g_stCollideResultPoint;
 int g_hSuperObjectHit;
@@ -3472,7 +3472,65 @@ HIE_tdstSuperObject_* fn_p_Fisher2Fish(HIE_tdstSuperObject_* p_Fisher)
 void fn_NetSendEvent(LinkActorType_* p_link, LinkNetEventType_ LNEvent, unsigned char iV, MTH3D_tdstVector_* vV, float fV)
 {
     unsigned char k;
-    /* TODO: decompile from asm/... */
+
+    if (p_link->bIsGhost) {
+        return;
+    }
+    if (!bSendData) {
+        if (!bSendStatus && LNEvent != LNE_Kill && LNEvent != LNE_CreateCP && LNEvent != LNE_DeleteCP) {
+            return;
+        }
+    }
+    bSendData = 1;
+    if (LNEvent != LNE_CPsStatus) {
+        a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
+        a_NetBuffer[ui_BCPindexWrite].Event = LNEvent;
+        a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
+        a_NetBuffer[ui_BCPindexWrite].iValue = iV;
+        if (LNEvent == LNE_SetEnergy) {
+            a_NetBuffer[ui_BCPindexWrite].fValue = fV;
+        } else {
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&vV->xX;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&vV->xY;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&vV->xZ;
+        }
+        ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
+        a_NetBuffer[ui_BCPindexWrite].Time = 30000000;
+    } else {
+        a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
+        a_NetBuffer[ui_BCPindexWrite].Event = LNEvent;
+        a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
+        a_NetBuffer[ui_BCPindexWrite].iValue = p_link->ui_CutPointNb;
+        a_NetBuffer[ui_BCPindexWrite].fValue = p_link->xEnergy;
+        ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
+        for (k = (unsigned char)bSendData; k < p_link->ui_CutPointNb - 1; k++) {
+            a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
+            a_NetBuffer[ui_BCPindexWrite].Event = LNE_MoveCP;
+            a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
+            a_NetBuffer[ui_BCPindexWrite].iValue = k;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&p_link->a_Cutpoint[k].Position.xX;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&p_link->a_Cutpoint[k].Position.xY;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&p_link->a_Cutpoint[k].Position.xZ;
+            ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
+            a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
+            a_NetBuffer[ui_BCPindexWrite].Event = LNE_SetCPNormal;
+            a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
+            a_NetBuffer[ui_BCPindexWrite].iValue = k;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&p_link->a_Cutpoint[k].Normal.xX;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&p_link->a_Cutpoint[k].Normal.xY;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&p_link->a_Cutpoint[k].Normal.xZ;
+            ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
+            a_NetBuffer[ui_BCPindexWrite].iLinkID = p_link->iLinkID;
+            a_NetBuffer[ui_BCPindexWrite].Event = LNE_SetCPSpeed;
+            a_NetBuffer[ui_BCPindexWrite].Time = p_link->ui_BCPTimeWrite;
+            a_NetBuffer[ui_BCPindexWrite].iValue = k;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xX = *(int*)&p_link->a_Cutpoint[k].Speed.xX;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xY = *(int*)&p_link->a_Cutpoint[k].Speed.xY;
+            *(int*)&a_NetBuffer[ui_BCPindexWrite].vValue.xZ = *(int*)&p_link->a_Cutpoint[k].Speed.xZ;
+            ui_BCPindexWrite = (ui_BCPindexWrite + 1) % 1000;
+        }
+        a_NetBuffer[ui_BCPindexWrite].Time = 30000000;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1970–2059 */
@@ -4381,12 +4439,8 @@ void fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, M
  */
 void fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode)
 {
-    ((tdstRawVector*)&g_stCollideParameterPoint)->xX = ((tdstRawVector*)p_vPoint)->xX;
-    ((tdstRawVector*)&g_stCollideParameterPoint)->xY = ((tdstRawVector*)p_vPoint)->xY;
-    ((tdstRawVector*)&g_stCollideParameterPoint)->xZ = ((tdstRawVector*)p_vPoint)->xZ;
-    ((tdstRawVector*)&g_stCollideParameterVector)->xX = ((tdstRawVector*)p_vDirection)->xX;
-    ((tdstRawVector*)&g_stCollideParameterVector)->xY = ((tdstRawVector*)p_vDirection)->xY;
-    ((tdstRawVector*)&g_stCollideParameterVector)->xZ = ((tdstRawVector*)p_vDirection)->xZ;
+    *(int*)&g_stCollideParameterPoint.xX = *(int*)&p_vPoint->xX; *(int*)&g_stCollideParameterPoint.xY = *(int*)&p_vPoint->xY; *(int*)&g_stCollideParameterPoint.xZ = *(int*)&p_vPoint->xZ;
+    *(int*)&g_stCollideParameterVector.xX = *(int*)&p_vDirection->xX; *(int*)&g_stCollideParameterVector.xY = *(int*)&p_vDirection->xY; *(int*)&g_stCollideParameterVector.xZ = *(int*)&p_vDirection->xZ;
     g_ulMode = ulMode;
     g_ulCollideTimeCounter = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
     g_hSuperObjectHit = 0;
@@ -4451,7 +4505,7 @@ void fn_StateConstructor(LinkActorType_* p_link)
         *(int*)&vPointK->xX = *(int*)&p_link->a_Cutpoint[2].Position.xX;
         *(int*)&vPointK->xY = *(int*)&p_link->a_Cutpoint[2].Position.xY;
         *(int*)&vPointK->xZ = *(int*)&p_link->a_Cutpoint[2].Position.xZ;
-        AGO_vAddParticle(45, vPointK, vPointK, (void*)hVisualMaterial[p_link->ui_Material], 4.0f);
+        AGO_vAddParticle(45, vPointK, vPointK, hVisualMaterial[p_link->ui_Material], 4.0f);
         break;
     case LS_Launch:
         p_link->ulInitTime = p_link->ulPrevFrameTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
@@ -5053,9 +5107,7 @@ tdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
     for (k = 0; k < 1000; k++) {
         a_NetBuffer[k].Time = 30000000;
     }
-    vNullVector.xX = 0;
-    vNullVector.xY = 0;
-    vNullVector.xZ = 0;
+    vNullVector.xX = 0; vNullVector.xY = 0; vNullVector.xZ = 0;
     agoType = 21;
     return p_stTree;
 }

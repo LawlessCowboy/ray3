@@ -1208,9 +1208,11 @@ void fn_vSetCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-PO_tdstPhysicalObject_* fn_hGetMorphedObjectInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
-{
-    /* TODO: decompile from asm/... */
+PO_tdstPhysicalObject_* MOR_fn_hGetMorphedObject(short _xIndex);
+
+PO_tdstPhysicalObject_* fn_hGetMorphedObjectInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel) {
+    tdstMorphChannelList_* p_stMorph; short lIndex = -1; if (hMorphList == NULL) { lIndex = -1; } else { for (p_stMorph = hMorphList->hFirstElementDyn; p_stMorph != NULL; p_stMorph = p_stMorph->hNextBrotherDyn) { if (p_stMorph->uwChannelNumber == uwChannel) { lIndex = p_stMorph->MorphListIndex; break; } if (uwChannel < p_stMorph->uwChannelNumber) { lIndex = -1; break; } } }
+    if (lIndex != -1) { return MOR_fn_hGetMorphedObject(lIndex); } return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 513–528 */
@@ -1231,7 +1233,20 @@ PO_tdstPhysicalObject_* fn_hGetMorphedObjectInChannel(LST2_tdstAnchorToCHN_tdxHa
 short fn_hMorphListIndex(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
 {
     tdstMorphChannelList_* p_stMorph;
-    /* TODO: decompile from asm/... */
+
+    if (hMorphList == NULL) { return -1; }
+    for (p_stMorph = hMorphList->hFirstElementDyn; p_stMorph != NULL; p_stMorph = p_stMorph->hNextBrotherDyn)
+    {
+        if (p_stMorph->uwChannelNumber == uwChannel)
+        {
+            return p_stMorph->MorphListIndex;
+        }
+        if (uwChannel < p_stMorph->uwChannelNumber)
+        {
+            return -1;
+        }
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 478–494 */
@@ -1414,12 +1429,10 @@ void fn_vLooseControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uw
 {
     tdstAChannel_* p_stChannel;
 
-    p_stChannel = *(tdstAChannel_**)((char*)_hActor->h_3dData + 0xa8);
+    p_stChannel = _hActor->h_3dData->hArrayOfChannels;
     if (p_stChannel != NULL)
     {
-        unsigned int lChannel = (unsigned int)_uwChannel;
-        *((unsigned char*)&p_stChannel->bLipsChannel
-            + lChannel * sizeof(tdstAChannel_)) = 0;
+        *((unsigned char*)&p_stChannel->bLipsChannel + _uwChannel * sizeof(tdstAChannel_)) = 0;
     }
 }
 
@@ -1444,8 +1457,26 @@ void fn_vLooseControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uw
  */
 void fn_vTakeControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel)
 {
-    tdstAChannel_* p_stLastControlledChannel;
-    /* TODO: decompile from asm/... */
+    static tdstAChannel_* p_stLastControlledChannel = NULL;
+    tdstAChannel_* p_stChannel;
+
+    if (_hActor == NULL && _uwChannel == 0)
+    {
+        p_stLastControlledChannel = NULL;
+    }
+    else
+    {
+        p_stChannel = _hActor->h_3dData->hArrayOfChannels;
+        if (p_stChannel != NULL)
+        {
+            if (p_stLastControlledChannel != NULL)
+            {
+                p_stLastControlledChannel->bLipsChannel = 0;
+            }
+            ((unsigned char*)&p_stChannel->bLipsChannel)[_uwChannel * sizeof(tdstAChannel_)] = 1;
+            p_stLastControlledChannel = &p_stChannel[_uwChannel];
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 147–173 */
@@ -1482,7 +1513,7 @@ void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChan
         if (_uwChannel != 0xffff)
         {
             ulOffset = (unsigned int)_uwChannel * sizeof(tdstAChannel_);
-            ((unsigned char*)&p_stChannel->bControlledChannel)[ulOffset] = _bControlled;
+            *((unsigned char*)&p_stChannel->bControlledChannel + ulOffset) = _bControlled;
         }
         else
         {

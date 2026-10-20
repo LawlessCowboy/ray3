@@ -8,3 +8,8 @@ src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_VU1_Pipeline.c
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_UnImplemented.c
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GLAUX/PS2GLAUX.c
+# PS2GL_Array.c: retail keeps the branch-target alignment nops that MWCC 3.0.1
+# emits only under '-O3,p' (3.0.3 dropped the feature), so impPS2glDrawElements
+# and PS2glInternalDrawSpriteArray need it; all other recorded matches in the
+# file still verify.
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Array.c

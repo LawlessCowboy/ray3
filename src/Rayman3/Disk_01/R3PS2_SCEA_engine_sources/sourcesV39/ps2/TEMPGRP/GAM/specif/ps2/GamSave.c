@@ -727,192 +727,278 @@ int VMS_g_a8_lDriveNo[8];
 int (*g_fn_iCompareSlotDate)(void*, void*);
 int g_bSavingGameWithOptionsDontCheckDate;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\GamSave.c lines 141–152 */
-/* addr: 0x00280600  size: 452 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 141
- *   +0x0004 -> line 146
- *   +0x0008 -> line 141
- *   +0x000c -> line 146
- *   +0x0068 -> line 147
- *   +0x00bc -> line 148
- *   +0x0110 -> line 149
- *   +0x0164 -> line 150
- *   +0x01b8 -> line 152
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+extern int g_lSoundVolumeLineSound;
+extern int g_lSoundVolumeLineVoices;
+extern int g_lSoundVolumeLineMusic;
+extern int g_lSoundVolumeLineAmbiance;
+extern int g_lSoundVolumeLineMenu;
+extern void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue);
+extern void VID_fn_vSetVideoSoundVolume(unsigned int ulVideoSoundVolume);
+
+#define M_Min(a, b) (((a) > (b)) ? (b) : (a))
+#define M_Max(a, b) (((a) > (b)) ? (a) : (b))
+#define M_Clamp(x, lo, hi) M_Max(lo, M_Min(x, hi))
+
 void fn_vValidateAllOption(void)
 {
-    /* TODO: decompile from asm/... */
+    g_stGameOptions.s32VolumeSound = M_Clamp(g_stGameOptions.s32VolumeSound, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineSound, g_stGameOptions.s32VolumeSound); VID_fn_vSetVideoSoundVolume(g_stGameOptions.s32VolumeSound);
+    g_stGameOptions.s32VolumeVoice = M_Clamp(g_stGameOptions.s32VolumeVoice, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineVoices, g_stGameOptions.s32VolumeVoice);
+    g_stGameOptions.s32VolumeMusic = M_Clamp(g_stGameOptions.s32VolumeMusic, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMusic, g_stGameOptions.s32VolumeMusic);
+    g_stGameOptions.s32VolumeAmbiance = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineAmbiance, g_stGameOptions.s32VolumeAmbiance);
+    g_stGameOptions.s32VolumeMenu = M_Clamp(g_stGameOptions.s32VolumeAmbiance, 0, 127); SND_fn_vSetVolumeLineSound(g_lSoundVolumeLineMenu, g_stGameOptions.s32VolumeMenu);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\GamSave.c lines 1831–1832 */
-/* addr: 0x002807d0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1831
- *   +0x0004 -> line 1832
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GAM_fn_iGetCurrentLanguageNb(void)
 {
     return g_stEngineStructure.ucCurrentLanguage;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\GamSave.c lines 1051–1075 */
-/* addr: 0x002807e0  size: 364 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1051
- *   +0x0014 -> line 1056
- *   +0x0028 -> line 1059
- *   +0x0030 -> line 1062
- *   +0x0040 -> line 1065
- *   +0x0048 -> line 1067
- *   +0x0050 -> line 1069
- *   +0x0150 -> line 1071
- *   +0x0154 -> line 1074
- *   +0x0158 -> line 1075
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+int VMS_lLoadFileAndExtractUnknowData(int drive, char* fname, char** bufData, int* fileSize);
+void fn_vDecryptBuffer(unsigned char* p_ucBuffer, int lLen);
+int fn_vCheckSum(unsigned char* p_ucBuffer, int lLen);
+extern void* malloc(unsigned int size);
+extern void* memcpy(void* dst, const void* src, unsigned int n);
+extern void free(void* ptr);
+
+unsigned char SVG_fn_bIsActivVmsConnected(void);
+int VMS_lGetFileDate(int drive, char* fname, anon_0* fDate);
+extern int memcmp(const void* a, const void* b, unsigned int n);
+
+/* Not original source, needs cleaning up: helper names are invented; the
+ * target inlines both bodies into fn_lCheckVMSConnexion on line 1069. */
+inline unsigned char fn_bReadSavedFileCheckSum(int drive, char* fname, int* p_lCheckSum)
+{
+    char* pData;
+    int lSize;
+
+    if (VMS_lLoadFileAndExtractUnknowData(drive, fname, &pData, &lSize) != 1)
+        return 0;
+
+    fn_vDecryptBuffer((unsigned char*)pData, lSize);
+    memcpy(p_lCheckSum, pData + lSize - 4, 4);
+    free(pData);
+    return 1;
+}
+
+inline unsigned char fn_bIsSavedFileUnchanged(void)
+{
+    int lCheckSum;
+    anon_0 stDate;
+
+    if (!bIsValideMemory)
+        return 1;
+    if (!fn_bReadSavedFileCheckSum(lDriveMemory, szFilenameMemory, &lCheckSum))
+        return 0;
+    if (lCheckSum != lCheckSumMemory)
+        return 0;
+    if (VMS_lGetFileDate(lDriveMemory, szFilenameMemory, &stDate) != 1)
+        return 0;
+    if (!g_bSavingGameWithOptionsDontCheckDate && memcmp(&strTimeMemory, &stDate, sizeof(anon_0)) != 0)
+        return 0;
+    return 1;
+}
+
 int fn_lCheckVMSConnexion(unsigned char _bFullCheck)
 {
     int lStatus;
-    /* TODO: decompile from asm/... */
+
+    lStatus = 1;
+
+    if (SVG_fn_bGetActiveVms() == -1)
+    {
+        lStatus = 0;
+    }
+    else if (!SVG_fn_bIsActivVmsConnected())
+    {
+        lStatus = -1;
+    }
+    else if (_bFullCheck)
+    {
+        if (!fn_bIsSavedFileUnchanged())
+            lStatus = -2;
+    }
+
+    return lStatus;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\GamSave.c lines 831–883 */
-/* addr: 0x00280950  size: 240 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 831
- *   +0x0018 -> line 844
- *   +0x0024 -> line 848
- *   +0x0030 -> line 850
- *   +0x0038 -> line 854
- *   +0x0048 -> line 855
- *   +0x0060 -> line 856
- *   +0x0068 -> line 857
- *   +0x0074 -> line 862
- *   +0x0080 -> line 870
- *   +0x0094 -> line 871
- *   +0x00b0 -> line 873
- *   +0x00bc -> line 878
- *   +0x00c4 -> line 879
- *   +0x00cc -> line 881
- *   +0x00d8 -> line 883
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bLoadUnknowFileFromSlot(int drive, char* fname, void** bufData, int* fileSize)
 {
-    char* pData;
     int lCheckSum2;
+    char* pData;
     int lCheckSum1;
     int lret;
-    /* TODO: decompile from asm/... */
+
+    lret = VMS_lLoadFileAndExtractUnknowData(drive, fname, &pData, fileSize);
+
+    if (lret != 1)
+        return 0;
+
+    *bufData = malloc(*fileSize - 16);
+    memcpy(*bufData, pData + 16, *fileSize - 16);
+    free(pData);
+    *fileSize -= 16;
+
+    fn_vDecryptBuffer((unsigned char*)*bufData, *fileSize);
+    lCheckSum1 = fn_vCheckSum((unsigned char*)*bufData, *fileSize - 4);
+    memcpy(&lCheckSum2, (char*)*bufData + *fileSize - 4, 4);
+
+    if (lCheckSum1 != lCheckSum2)
+    {
+        free(*bufData);
+        return 0;
+    }
+
+    *fileSize -= 4;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\GamSave.c lines 705–765 */
-/* addr: 0x00280a40  size: 396 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 705
- *   +0x0004 -> line 712
- *   +0x0008 -> line 705
- *   +0x0038 -> line 717
- *   +0x003c -> line 712
- *   +0x0054 -> line 717
- *   +0x008c -> line 723
- *   +0x0098 -> line 726
- *   +0x00a0 -> line 723
- *   +0x00a4 -> line 726
- *   +0x00ac -> line 727
- *   +0x00c0 -> line 730
- *   +0x0110 -> line 736
- *   +0x011c -> line 759
- *   +0x0164 -> line 765
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_bSaveFileInSlot(int drive, char* fileName, char* vmsComment, void* saveData, unsigned int dataSize)
+extern unsigned int strlen(const char* s);
+extern char* strcpy(char* dst, const char* src);
+extern int strncmp(const char* a, const char* b, unsigned int n);
+char* SVG_fn_szGetSonyCompliantDirName(char* _szName);
+int SVG_fn_s32SaveGame(int _iPort, int _iSlot, char* _szFileName, char* _szTitle, char* _pData, unsigned int _u32Size);
+void fn_vEncryptBuffer(unsigned char* p_ucBuffer, int lLen);
+
+/* The debug record keeps only five parameters, but the target reads
+ * saveData/dataSize from the 4th/5th stack argument slots, matching the
+ * 13-parameter Dreamcast-style VMS call in vm_backup.c (VMS_fn_bFclose).
+ * szDirName is not in the debug record; its size only sets the frame. */
+unsigned char fn_bSaveFileInSlot(int drive, char* fileName, char* vmsComment, int bootRomComment,
+    int gameName, int iconPalette, int iconData, unsigned short nbIcon, unsigned short iconSpeed,
+    int visualData, unsigned short visualType, void* saveData, unsigned int dataSize)
 {
     char* pData;
     char Title[32];
+    char szDirName[64];
     int lCheckSum;
-    /* TODO: decompile from asm/... */
+
+    pData = (char*)__alloca(dataSize + 20);
+
+    memcpy(pData, vmsComment, (strlen(vmsComment) + 1 > 16) ? 16 : strlen(vmsComment) + 1);
+
+    lCheckSum = fn_vCheckSum((unsigned char*)saveData, dataSize);
+    memcpy(pData + 16, saveData, dataSize);
+    memcpy(pData + 16 + dataSize, &lCheckSum, 4);
+
+    Title[0] = 0;
+    strcpy(szDirName, SVG_fn_szGetSonyCompliantDirName(""));
+    if (strncmp(fileName, szDirName, strlen(szDirName)) == 0)
+        strcpy(Title, fileName + strlen(szDirName));
+
+    fn_vEncryptBuffer((unsigned char*)pData + 16, dataSize + 4);
+
+    return SVG_fn_s32SaveGame((&g_axPadMapping)[drive].iPort, (&g_axPadMapping)[drive].iSlot, fileName, Title, pData, dataSize + 20) == 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\GamSave.c lines 461–530 */
-/* addr: 0x00280bd0  size: 700 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 461
- *   +0x0004 -> line 472
- *   +0x0008 -> line 461
- *   +0x000c -> line 472
- *   +0x0010 -> line 461
- *   +0x0014 -> line 472
- *   +0x0018 -> line 461
- *   +0x0024 -> line 472
- *   +0x0028 -> line 475
- *   +0x0030 -> line 476
- *   +0x003c -> line 478
- *   +0x0044 -> line 481
- *   +0x0068 -> line 483
- *   +0x0070 -> line 486
- *   +0x0074 -> line 487
- *   +0x008c -> line 488
- *   +0x0094 -> line 490
- *   +0x009c -> line 495
- *   +0x00d8 -> line 500
- *   +0x00e4 -> line 502
- *   +0x00fc -> line 505
- *   +0x0108 -> line 506
- *   +0x014c -> line 517
- *   +0x0248 -> line 518
- *   +0x024c -> line 520
- *   +0x0250 -> line 521
- *   +0x0254 -> line 520
- *   +0x0264 -> line 523
- *   +0x0268 -> line 524
- *   +0x0280 -> line 527
- *   +0x029c -> line 529
- *   +0x02a0 -> line 530
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+extern int strcmp(const char* a, const char* b);
+extern char* strncpy(char* dst, const char* src, unsigned int n);
+extern void qsort(void* base, unsigned int n, unsigned int size, int (*cmp)(void*, void*));
+int VMS_lInitFilenameList(int drive, int* lListSize);
+int VMS_lGetFilenameInList(int lFileIndex, char* pcFilename);
+int VMS_lGetVmsCommentFromFile(int drive, char* fileName, char* comment);
+int fn_iCompareSlotDate(void* p_v1, void* p_v2);
+
+/* Not original source, needs cleaning up: helper names are invented; the
+ * target inlines both bodies into GAM_fn_bUpdateSavingFile on line 517. */
+inline int fn_bExtractSlotName(char* szFilename, char* szSlotName)
+{
+    char szBasename[64];
+
+    strcpy(szBasename, SVG_fn_szGetSonyCompliantDirName(""));
+    if (strncmp(szFilename, szBasename, strlen(szBasename)) == 0)
+    {
+        /* Not original source, needs cleaning up: the integer-address form
+         * reproduces retail forming the buffer address before the add. */
+        strcpy(szSlotName, (char*)((int)szFilename + strlen(szBasename)));
+        return 1;
+    }
+    return 0;
+}
+
+inline void fn_vFillSlotName(tdstSaveGameSlot_* p_stSlot, char* szFilename)
+{
+    int lNumActiveVms;
+    char szComment[32];
+
+    if ((lNumActiveVms = SVG_fn_bGetActiveVms()) == -1)
+    {
+        strcpy(p_stSlot->szNewSlotName, "xxx xx.x");
+        return;
+    }
+
+    p_stSlot->szNewSlotName[0] = 0;
+    if (strcmp(szFilename, SVG_fn_szGetSonyCompliantDirName("OPTIONS")) == 0)
+        return;
+
+    p_stSlot->szNewSlotName[0] = 0;
+    if (!fn_bExtractSlotName(szFilename, p_stSlot->szNewSlotName))
+        return;
+
+    szComment[16] = 0;
+    VMS_lGetVmsCommentFromFile(VMS_g_a8_lDriveNo[lNumActiveVms], szFilename, szComment);
+    p_stSlot->szNewSlotName[3] = ' ';
+    strncpy(&p_stSlot->szNewSlotName[4], szComment, 4);
+    p_stSlot->szNewSlotName[9] = 0;
+}
+
 unsigned char GAM_fn_bUpdateSavingFile(void)
 {
     unsigned int ulDate;
-    anon_0 BusTime;
-    char ax_cBasename[128];
     char ax_cFilename[128];
+    char ax_cBasename[128];
+    int lCnt;
     tdstSaveGameSlot_* p_stSGSlot;
     int lNumActiveVms;
     int lNumberOfFile;
-    int lCnt;
-    /* TODO: decompile from asm/... */
+
+    *(unsigned int*)g_stGameOptions.a_stSaveGameSlots = 0;
+    g_stGameOptions.ulNbOfSlots = 0;
+
+    lNumActiveVms = SVG_fn_bGetActiveVms();
+    if (lNumActiveVms == -1)
+        return 0;
+
+    if (VMS_lInitFilenameList(VMS_g_a8_lDriveNo[lNumActiveVms], &lNumberOfFile) != 1)
+        return 0;
+
+    p_stSGSlot = g_stGameOptions.a_stSaveGameSlots;
+    strcpy(ax_cBasename, SVG_fn_szGetSonyCompliantDirName(""));
+
+    for (lCnt = 0; lCnt < lNumberOfFile; lCnt++)
+    {
+        VMS_lGetFilenameInList(lCnt, ax_cFilename);
+
+        if (strncmp(ax_cFilename, ax_cBasename, strlen(ax_cBasename)) == 0
+            && strcmp(ax_cFilename, SVG_fn_szGetSonyCompliantDirName("OPTIONS")) != 0
+            && g_stGameOptions.ulNbOfSlots < 1)
+        {
+            anon_0 BusTime = {0};
+
+            VMS_lGetFileDate(VMS_g_a8_lDriveNo[lNumActiveVms], ax_cFilename, &BusTime);
+            ulDate = BusTime.year - 1990;
+            ulDate = (ulDate << 4) | BusTime.month;
+            ulDate = (ulDate << 5) | BusTime.day;
+            ulDate = (ulDate << 5) | BusTime.hour;
+            ulDate = (ulDate << 6) | BusTime.minute;
+            ulDate = (ulDate << 6) | BusTime.second;
+            p_stSGSlot->ulDate = ulDate;
+
+            fn_vFillSlotName(p_stSGSlot, ax_cFilename);
+
+            p_stSGSlot->szOldSlotName[0] = 0;
+            p_stSGSlot++;
+            g_stGameOptions.ulNbOfSlots++;
+        }
+    }
+
+    qsort(g_stGameOptions.a_stSaveGameSlots, 1, sizeof(tdstSaveGameSlot_), fn_iCompareSlotDate);
+    return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\GamSave.c lines 270–271 */
-/* addr: 0x00280e90  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 270
- *   +0x002c -> line 271
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_iCompareSlotDate(void* p_v1, void* p_v2)
 {
-    /* TODO: decompile from asm/... */
+    return (*(unsigned int*)p_v1 > *(unsigned int*)p_v2) ? -1 : ((*(unsigned int*)p_v1 < *(unsigned int*)p_v2) ? 1 : 0);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\GamSave.c lines 223–223 */
-/* addr: 0x00280ed0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 223
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bLoadLevelSaveGameAfterLoadLevel(void)
 {
     return 0;

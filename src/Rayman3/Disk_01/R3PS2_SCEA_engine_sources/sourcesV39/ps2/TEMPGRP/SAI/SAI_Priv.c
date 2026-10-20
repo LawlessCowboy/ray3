@@ -29,7 +29,10 @@ struct tdstArrayData_ {
 
 struct tdstBooleanData_ {
     unsigned char ucBitPosition; /* +0x0 */
-    unsigned char ucCharData; /* +0x1 */
+    /* The retail code loads this byte with a SIGNED byte load (lb) in
+       SAI_fn_bRestoreAnElementFromList, so the member is a plain char here
+       (the shared r3/SAI.h copy keeps the extracted 'unsigned char'). */
+    char ucCharData; /* +0x1 */
 };
 
 union SAI_tduData_ {
@@ -53,6 +56,10 @@ struct SAI_tdstListEntry_ {
 
 /* Defined by Sai_main.c; this private TU accesses the shared SAI state. */
 extern SAI_tdstInternalStructure_ SAI_g_stInternalStructure;
+
+unsigned short SAI_fn_eVerifyFlags(unsigned short eFlags);
+
+SAI_tdstListEntry_* fn_hSearchAnElementInList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_vData, unsigned short eUserFlags);
 
 unsigned char g_ucSAIModuleId;
 
@@ -139,7 +146,39 @@ unsigned char SAI_fn_bInitAllTableWhen(SAI_tdstInternalStructure_* p_stInternalS
 unsigned char SAI_fn_bRestoreAnElementFromList(SAI_tdstListEntry_* hListEntry)
 {
     unsigned char bReturn;
-    /* TODO: decompile from asm/... */
+
+    bReturn = 1;
+
+    switch (hListEntry->eFlags & 0xFC00)
+    {
+    case 0x8000:
+        *((signed char*)hListEntry->p_vDataPointer) &= ~hListEntry->uData.stBooleanData.ucCharData;
+        *((signed char*)hListEntry->p_vDataPointer) |= hListEntry->uData.stBooleanData.ucCharData;
+        break;
+    case 0x1000:
+        *((unsigned char*)hListEntry->p_vDataPointer) = hListEntry->uData.ucCharData;
+        break;
+    case 0x2000:
+        *((unsigned short*)hListEntry->p_vDataPointer) = hListEntry->uData.uwShortData;
+        break;
+    case 0x3000:
+        *((unsigned int*)hListEntry->p_vDataPointer) = hListEntry->uData.ulLongData;
+        break;
+    case 0x4000:
+        *((long*)hListEntry->p_vDataPointer) = hListEntry->uData.i64Long64Data;
+        break;
+    case 0x7000:
+        *((int*)hListEntry->p_vDataPointer) = hListEntry->uData.stPointerData.p_vPointer;
+        break;
+    case 0x5000:
+        memcpy((void*)hListEntry->p_vDataPointer, (void*)hListEntry->uData.stArrayData.p_ucPointer, hListEntry->uData.stArrayData.ulArraySize);
+        break;
+    default:
+        bReturn = 0;
+        break;
+    }
+
+    return bReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 177–302 */
@@ -209,7 +248,131 @@ unsigned char SAI_fn_bInsertAnElementInList(SAI_tdstInternalStructure_* p_stInte
     unsigned short uwBlocId;
     SAI_tdstListEntry_* hListEntry;
     unsigned char bReturn;
-    /* TODO: decompile from asm/... */
+
+    bReturn = 1;
+
+    eUserFlags = SAI_fn_eVerifyFlags(eUserFlags);
+
+    hListEntry = fn_hSearchAnElementInList(p_stInternalStructure, p_stData, eUserFlags);
+
+    if (!hListEntry)
+    {
+        hListEntry = (SAI_tdstListEntry_*)HMU_fn_p_vMalloc(0x18, 1);
+        if (!hListEntry)
+        {
+            Erm_fn_ClearLastError(0);
+            Erm_fn_v_UpdateLastError(8, g_ucSAIModuleId, 0, 4, -1, 255, 255, NULL);
+        }
+
+        memset(hListEntry, 0, 0x18);
+        hListEntry->ucMemoryLevel = HMU_fn_ucGetActualNormalMemoryBlockUsed();
+
+        if ((eTypeOfData & 0xffff) == 0x8000)
+        {
+            hListEntry->p_stNextEntry = NULL;
+            if (p_stInternalStructure->p_stLastEntry)
+                p_stInternalStructure->p_stLastEntry->p_stNextEntry = hListEntry;
+            else
+                p_stInternalStructure->p_stFirstEntry = hListEntry;
+            p_stInternalStructure->p_stLastEntry = hListEntry;
+        }
+        else
+        {
+            hListEntry->p_stNextEntry = p_stInternalStructure->p_stFirstEntry;
+            p_stInternalStructure->p_stFirstEntry = hListEntry;
+            if (!p_stInternalStructure->p_stLastEntry)
+                p_stInternalStructure->p_stLastEntry = hListEntry;
+        }
+    }
+
+    hListEntry->p_vDataPointer = (int)p_stData;
+
+    switch (eTypeOfData & 0xffff)
+    {
+    case 0x8000:
+    {
+        unsigned int ulMask;
+        unsigned char ucPos;
+
+        hListEntry->eFlags = (unsigned short)((short)eUserFlags | 0x8000);
+        ulMask = (unsigned char)ulSizeOfData;
+        ucPos = 0;
+        while (ucPos < 8)
+        {
+            if (((unsigned char)ulMask) & 1)
+            {
+                hListEntry->uData.stBooleanData.ucBitPosition = ucPos;
+                /* The retail code leaves the loop with the "no free bit" case
+                   in the loop's exit block only, so the search needs a jump
+                   over the fallback store (MWCC has no while/else). */
+                goto ucBooleanFound;
+            }
+            ulMask = (unsigned char)(ulMask >> 1);
+            ucPos = (unsigned char)(ucPos + 1);
+        }
+        hListEntry->uData.stBooleanData.ucBitPosition = 10;
+ucBooleanFound:
+        hListEntry->uData.stBooleanData.ucCharData = (char)((signed char*)p_stData)[0] & (char)ulSizeOfData;
+    }
+    break;
+    case 0x1000:
+        hListEntry->eFlags = (unsigned short)((short)eUserFlags | 0x1000);
+        hListEntry->uData.ucCharData = ((unsigned char*)p_stData)[0];
+        break;
+    case 0x2000:
+        hListEntry->eFlags = (unsigned short)((short)eUserFlags | 0x2000);
+        hListEntry->uData.uwShortData = ((unsigned short*)p_stData)[0];
+        break;
+    case 0x3000:
+        hListEntry->eFlags = (unsigned short)((short)eUserFlags | 0x3000);
+        hListEntry->uData.ulLongData = ((unsigned int*)p_stData)[0];
+        break;
+    case 0x4000:
+        hListEntry->eFlags = (unsigned short)((short)eUserFlags | 0x4000);
+        hListEntry->uData.i64Long64Data = ((long*)p_stData)[0];
+        break;
+    case 0x7000:
+        hListEntry->eFlags = (unsigned short)((short)eUserFlags | 0x7000);
+        if (((int*)p_stData)[0])
+        {
+            Mmg_fn_vWhereIs(((int*)p_stData)[0], &uwBlocId, &p_vBeginBloc);
+            hListEntry->uData.stPointerData.uwBlocAndModuleID = 0xffff;
+            hListEntry->uData.stPointerData.p_vPointer = ((int*)p_stData)[0];
+        }
+        else
+        {
+            hListEntry->uData.stPointerData.uwBlocAndModuleID = 0xffff;
+            hListEntry->uData.stPointerData.p_vPointer = 0;
+        }
+        break;
+    case 0x5000:
+        hListEntry->eFlags = (unsigned short)((short)eUserFlags | 0x5000);
+        if (!hListEntry->uData.stArrayData.p_ucPointer)
+        {
+            hListEntry->uData.stArrayData.p_ucPointer = (int)HMU_fn_p_vMalloc((ulSizeOfData + 0xf) & ~0xf, 1);
+            if (!hListEntry->uData.stArrayData.p_ucPointer)
+            {
+                Erm_fn_ClearLastError(0);
+                Erm_fn_v_UpdateLastError(8, g_ucSAIModuleId, 0, 4, -1, 255, 255, NULL);
+            }
+            hListEntry->uData.stArrayData.ulArraySize = ulSizeOfData;
+        }
+        if (hListEntry->uData.stArrayData.ulArraySize == ulSizeOfData)
+        {
+            memcpy((void*)hListEntry->uData.stArrayData.p_ucPointer, p_stData, ulSizeOfData);
+        }
+        else
+        {
+            Erm_fn_ClearLastError(0);
+            Erm_fn_v_UpdateLastError(8, g_ucSAIModuleId, 0, 6, -1, 255, 255, NULL);
+        }
+        break;
+    default:
+        bReturn = 0;
+        break;
+    }
+
+    return bReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 128–174 */
@@ -239,10 +402,37 @@ unsigned char SAI_fn_bInsertAnElementInList(SAI_tdstInternalStructure_* p_stInte
  */
 unsigned char SAI_fn_bFreeAnElementFromList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_stData, unsigned short eUserFlags)
 {
-    unsigned char bFound;
-    SAI_tdstListEntry_* p_stListEntry;
     SAI_tdstListEntry_* p_stPreviousListEntry;
-    /* TODO: decompile from asm/... */
+    SAI_tdstListEntry_* p_stListEntry;
+    unsigned char bFound;
+
+    bFound = 0;
+    p_stListEntry = p_stInternalStructure->p_stFirstEntry;
+    p_stPreviousListEntry = NULL;
+
+    eUserFlags = SAI_fn_eVerifyFlags(eUserFlags);
+
+    while (p_stListEntry != NULL)
+    {
+        if ((void*)p_stListEntry->p_vDataPointer == p_stData && (p_stListEntry->eFlags & 0x3ff) == eUserFlags)
+        {
+            bFound = 1;
+            break;
+        }
+        p_stPreviousListEntry = p_stListEntry;
+        p_stListEntry = p_stListEntry->p_stNextEntry;
+    }
+
+    if (bFound)
+    {
+        if (p_stPreviousListEntry) p_stPreviousListEntry->p_stNextEntry = p_stListEntry->p_stNextEntry;
+        else p_stInternalStructure->p_stFirstEntry = p_stListEntry->p_stNextEntry;
+
+        if (p_stListEntry->p_stNextEntry == NULL)
+            p_stInternalStructure->p_stLastEntry = p_stPreviousListEntry;
+    }
+
+    return bFound;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SAI\SAI_Priv.c lines 114–125 */
@@ -259,6 +449,11 @@ unsigned char SAI_fn_bFreeAnElementFromList(SAI_tdstInternalStructure_* p_stInte
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The list search is inlined into its callers (SAI_fn_bInsertAnElementInList);
+   the pragma has to stay enabled until the end of the unit because the
+   deferred inlining pass reads the pragma state there. The out-of-line copy
+   is kept because the other modules call this function too. */
+#pragma auto_inline on
 SAI_tdstListEntry_* fn_hSearchAnElementInList(SAI_tdstInternalStructure_* p_stInternalStructure, void* p_vData, unsigned short eUserFlags)
 {
     SAI_tdstListEntry_* hListEntry;

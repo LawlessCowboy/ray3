@@ -22,12 +22,12 @@ unsigned char fn_bGetVolumeLineModifierString(int s32_LineId, char* sz_Buffer, i
 unsigned char fn_bSetVolumeModifier(const char* sz_Name, int s32_Value);
 int fn_s32GetVolumeModifier(const char* sz_Name);
 
-int SND_fn_lCreateMicroSound(void)
+extern "C" int SND_fn_lCreateMicroSound(void)
 {
     return CLinkMicroCont::mfn_roGetInstance().mfn_s32AddMicroInstance();
 }
 
-int SND_fn_s32GetVolumeLineSound(int s32_LineId)
+extern "C" int SND_fn_s32GetVolumeLineSound(int s32_LineId)
 {
     int s32_Answer = -1;
     char ch_Buffer[256];
@@ -39,7 +39,7 @@ int SND_fn_s32GetVolumeLineSound(int s32_LineId)
     return s32_Answer;
 }
 
-void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue)
+extern "C" void SND_fn_vSetVolumeLineSound(int s32_LineId, int s32_VolValue)
 {
     char ch_Buffer[256];
 

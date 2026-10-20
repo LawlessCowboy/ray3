@@ -14,6 +14,48 @@ static unsigned int OldStart;
 static unsigned int StartFrame;
 int VID_g_iHasAudio;
 
+/* Engine and PS2GL entry points used by this unit. */
+void PS2MC_fn_vUpdateStatus(void);
+int vagSynchroToWait(void);
+void GLI_fn_vTimerPS2Counter(unsigned int* pTimer);
+void GLI_DRV_vSetCommonGLRenderStates(void);
+void GLI_vRestoreVideoModeAfterVideos(void);
+void GLI_vChangeVideoModeForVideos(void);
+void vagUpdateSound(void);
+void switchThread(void);
+void FlushCache(int address);
+void PS2auxSwapBuffers(void);
+void fn_vFreeInBinaryPreservingTheCurrentMode(void* p);
+void fn_vConvertIpuToTex(char* dst, char* src, int width, int height, int width_to_copy, unsigned int x0);
+void fn_vFeedTexToGl(unsigned char texNumber, void* pTexture, unsigned int width, unsigned int height, int x0, int y0, int x1, int y1);
+void PS2glEnable(unsigned int target);
+void PS2glBindTexture(unsigned int target, unsigned int texture);
+void PS2glTexImage2D(unsigned int target, int level, int components, int width, int height, int border, unsigned int format, unsigned int type, void* pixels);
+void PS2glTexParameteri(unsigned int target, unsigned int pname, int param);
+void PS2glDisable(unsigned int cap);
+void PS2glDepthMask(unsigned char flag);
+void PS2glMatrixMode(unsigned int mode);
+void PS2glLoadIdentity(void);
+void PS2glBegin(unsigned int mode);
+void PS2glColor3f(float red, float green, float blue);
+void PS2glColor4f(float red, float green, float blue, float alpha);
+void PS2glTexCoord2f(float s, float t);
+void PS2glVertex2f(float x, float y);
+void PS2glClearColor(float red, float green, float blue, float alpha);
+void PS2glClear(unsigned int mask);
+void PS2glColorMask(int red, int green, int blue, int alpha);
+void PS2glBlendFunc(unsigned int src, unsigned int dst);
+void PS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
+void PS2glFlush(void);
+void PS2glFinish(void);
+void PS2glEnd(void);
+void PS2glDeleteTextures(int n, int* textures);
+void PS2glGenTextures(int n, int* textures);
+void PS2glHint(unsigned int target, unsigned int mode);
+/* Debug info says void; the allocation is returned in $v0. */
+void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
+
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 519–579 */
 /* addr: 0x0012f6f0  size: 796 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -50,12 +92,67 @@ int VID_g_iHasAudio;
  */
 void fn_vDisplayImage(void* _p_ImageBuffer, unsigned int _ulWidth, unsigned int _ulHeight)
 {
+    char* p_cTextures;
+    int i;
     float fImage2ScreenRatioX;
+    int iSync;
     int iTexWidth;
     int nbTex;
-    int i;
-    char* p_cTextures;
-    /* TODO: decompile from asm/... */
+
+    fImage2ScreenRatioX = 640.0f / (float)_ulWidth;
+    PS2MC_fn_vUpdateStatus();
+    if (vagSynchroToWait() < 0)
+    {
+        OldStart = StartFrame;
+        GLI_fn_vTimerPS2Counter(&StartFrame);
+        return;
+    }
+    nbTex = (int)((_ulWidth + 0x3F) >> 6);
+    p_cTextures = (char*)(((int)gs_pOrg + 0x3F) & ~0x3F);
+    PS2glHint(0xF09, 1);
+    PS2glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    PS2glColorMask(1, 1, 1, 1);
+    PS2glDepthMask(1);
+    PS2glDisable(0xB50);
+    PS2glClear(0x4100);
+    PS2glDepthMask(0);
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    PS2glOrtho(0.0f, 640.0f, 480.0f, 0.0f, -1.0f, 1.0f);
+    PS2glMatrixMode(0x1700);
+    PS2glLoadIdentity();
+    FlushCache(0);
+    for (i = 0; i < nbTex; i++)
+    {
+        iTexWidth = (int)(_ulWidth - i * 64);
+        if ((unsigned int)(_ulWidth - i * 64) > 64)
+        {
+            iTexWidth = 64;
+        }
+        fn_vConvertIpuToTex(p_cTextures, (char*)_p_ImageBuffer, 64, (int)_ulHeight, iTexWidth, i * 64);
+        fn_vFeedTexToGl((unsigned char)i, p_cTextures, (unsigned int)iTexWidth, (unsigned int)_ulHeight,
+                        (int)(fImage2ScreenRatioX * (float)(i * 64)), 0,
+                        (int)(fImage2ScreenRatioX * (float)(i * 64 + iTexWidth)), 448);
+    }
+    PS2glDepthMask(1);
+    iSync = vagSynchroToWait();
+    if (iSync >= 0)
+    {
+        do
+        {
+            switchThread();
+            GLI_fn_vTimerPS2Counter(&EndFrame);
+        } while (((float)(EndFrame - StartFrame) / 4915200.0f) < ((float)iSync + 1.1f));
+        PS2glFlush();
+        PS2glFinish();
+        PS2auxSwapBuffers();
+    }
+    OldStart = StartFrame;
+    GLI_fn_vTimerPS2Counter(&StartFrame);
+    if (VID_g_iHasAudio)
+    {
+        vagUpdateSound();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 425–509 */
@@ -141,7 +238,40 @@ void fn_vConvertIpuToTex(char* dst, char* src, int width, int height, int width_
     int i;
     int h;
     int w;
-    /* TODO: decompile from asm/... */
+
+    /* The destination carries the IPU tag in its top bits. */
+    olddest = dst;
+    dst = (char*)((unsigned int)dst | 0x30000000);
+    w = width_to_copy / 16;
+    h_left = height / 16;
+    FlushCache(0);
+    memset((void*)0x70000000, 0, 0x3FFF);
+    /* GS DMA tag block used to upload the converted picture. */
+    spraddrold = (char*)0x1000D400;
+    spraddr = (char*)0x1000D410;
+    h_leftold = h_left;
+    *(unsigned int*)0x1000D410 = ((unsigned int)src + (((x0 >> 4) * h_left) << 10)) & 0x0FFFFFF0;
+    *(unsigned int*)0x1000D480 = 0;
+    *(unsigned int*)0x1000D420 = ((h_left < 8 ? h_left : 8) << 10) >> 4;
+    *(unsigned int*)0x1000D400 = 0x100;
+    for (i = 0; i < w; i++)
+    {
+        for (j = 0; j < h_left; j++)
+        {
+            h = h_left - j;
+            if (h > 8)
+            {
+                h = 8;
+            }
+            *(unsigned int*)0x1000D410 = ((unsigned int)src + ((j + h_left * (i + (x0 >> 4))) << 10)) & 0x0FFFFFF0;
+            *(unsigned int*)0x1000D480 = (h_left * 0x400) & 0x3FF0;
+            *(unsigned int*)0x1000D420 = (h << 10) >> 4;
+            *(unsigned int*)0x1000D400 = 0x100;
+            /* TODO: the IPU tag chain and the per-pixel dither table update
+               (gs_keepit1 / gs_keepit2) are still missing here. */
+        }
+    }
+    /* TODO: the GS FIFO wait loops and the final dither table update. */
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 328–378 */
@@ -184,7 +314,36 @@ void fn_vConvertIpuToTex(char* dst, char* src, int width, int height, int width_
  */
 void fn_vFeedTexToGl(unsigned char _ucTexNumber, void* _p_vTexture, unsigned int _ulWidth, unsigned int _ulHeight, int x0, int y0f, int x1, int y1f)
 {
-    /* TODO: decompile from asm/... */
+    PS2glEnable(0xDE1);
+    PS2glBindTexture(0xDE1, s_iTexGlTable[_ucTexNumber]);
+    PS2glTexImage2D(0xDE1, 0, 0x1908, 0x40, 0x200, 0, 0x1908, 0x1401, _p_vTexture);
+    PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+    PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+    PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+    PS2glTexParameteri(0xDE1, 0x2801, 0x2601);
+    PS2glDisable(0xB44);
+    PS2glDisable(0xBC0);
+    PS2glDisable(0xB71);
+    PS2glDisable(0xB50);
+    PS2glDisable(0xBE2);
+    PS2glDepthMask(0);
+    PS2glMatrixMode(0x1702);
+    PS2glLoadIdentity();
+    PS2glBegin(4);
+    PS2glColor3f(0.5f, 0.5f, 0.5f);
+    PS2glTexCoord2f(0.0f, 0.0f);
+    PS2glVertex2f((float)x0, (float)y0f);
+    PS2glTexCoord2f(0.0f, (float)_ulHeight / 512.0f);
+    PS2glVertex2f((float)x0, (float)y1f);
+    PS2glTexCoord2f((float)_ulWidth / 64.0f, (float)_ulHeight / 512.0f);
+    PS2glVertex2f((float)x1, (float)y1f);
+    PS2glTexCoord2f(0.0f, 0.0f);
+    PS2glVertex2f((float)x0, (float)y0f);
+    PS2glTexCoord2f((float)_ulWidth / 64.0f, (float)_ulHeight / 512.0f);
+    PS2glVertex2f((float)x1, (float)y1f);
+    PS2glTexCoord2f((float)_ulWidth / 64.0f, 0.0f);
+    PS2glVertex2f((float)x1, (float)y0f);
+    PS2glEnd();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 124–196 */
@@ -240,14 +399,53 @@ void fn_vFeedTexToGl(unsigned char _ucTexNumber, void* _p_vTexture, unsigned int
 void DesinitGlDevice(void)
 {
     int i;
-    /* TODO: decompile from asm/... */
+    for (i = 0; i < 4; i++)
+    {
+        PS2glMatrixMode(0x1701);
+        PS2glLoadIdentity();
+        /* The near plane is spelled as a difference: MWCC then materialises
+           the -1.0f constant before the 1.0f one, as the retail code does
+           (a plain -1.0f literal is loaded last). */
+        PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, (0.0f - 1.0f), 1.0f);
+        PS2glMatrixMode(0x1700);
+        PS2glLoadIdentity();
+        GLI_DRV_vSetCommonGLRenderStates();
+        PS2glDisable(0xB71);
+        PS2glDisable(0xB57);
+        PS2glDisable(0xDE1);
+        PS2glDisable(0xBC0);
+        PS2glDisable(0xB50);
+        PS2glDisable(0xB60);
+        PS2glDisable(0xC11);
+        PS2glDisable(0xB44);
+        PS2glColorMask(1, 1, 1, 1);
+        PS2glDepthMask(0);
+        PS2glEnable(0xBE2);
+        PS2glBlendFunc(0x302, 0x303);
+        PS2glEnable(0xBE2);
+        PS2glBegin(4);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(100.0f, 0.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+        PS2glVertex2f(0.0f, 100.0f);
+        PS2glEnd();
+        PS2glColorMask(1, 1, 1, 0);
+        PS2glFlush();
+        PS2glFinish();
+        PS2auxSwapBuffers();
+    }
+    PS2glDeleteTextures(16, s_iTexGlTable);
+    fn_vFreeInBinaryPreservingTheCurrentMode((void*)gs_pOrg);
+    GLI_vRestoreVideoModeAfterVideos();
 }
-
-void GLI_vChangeVideoModeForVideos(void);
-void PS2glHint(unsigned int target, unsigned int mode);
-void PS2glGenTextures(int n, int* textures);
-/* Debug info says void; the allocation is returned in $v0. */
-void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int size);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\disp.c lines 92–119 */
 /* addr: 0x00130870  size: 84 bytes */

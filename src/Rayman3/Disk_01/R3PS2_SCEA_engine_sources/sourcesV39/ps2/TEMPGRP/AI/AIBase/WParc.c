@@ -7,6 +7,12 @@
 /* Defined by the AI runtime; this TU only references the module id. */
 extern unsigned char g_ucAIModuleId;
 
+void WPG_fn_vSetAllocMode(void);
+void WPG_fn_vClearAllocMode(void);
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
+unsigned char fn_bScriptTransitionDeallocationCondition(void);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
@@ -3092,11 +3098,60 @@ int WPARCLST_fn_lChangeCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphN
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* LST2 list insertion: unlink the element from its previous list, then append
+   it to the given anchor. */
+#define LST2_M_vAddElementToList(_p_stList, _hElement) \
+{ \
+    if ((_hElement)->hNextBrotherDyn) (_hElement)->hNextBrotherDyn->hPrevBrotherDyn = (_hElement)->hPrevBrotherDyn; \
+    if ((_hElement)->hPrevBrotherDyn) (_hElement)->hPrevBrotherDyn->hNextBrotherDyn = (_hElement)->hNextBrotherDyn; \
+    if ((_hElement)->hFatherDyn) \
+    { \
+        (_hElement)->hFatherDyn->lNumberOfElementsDyn--; \
+        if ((_hElement)->hFatherDyn->hFirstElementDyn == (_hElement)) (_hElement)->hFatherDyn->hFirstElementDyn = (_hElement)->hNextBrotherDyn; \
+        if ((_hElement)->hFatherDyn->hLastElementDyn == (_hElement)) (_hElement)->hFatherDyn->hLastElementDyn = (_hElement)->hPrevBrotherDyn; \
+    } \
+    (_hElement)->hNextBrotherDyn = NULL; \
+    (_hElement)->hPrevBrotherDyn = NULL; \
+    (_hElement)->hFatherDyn = NULL; \
+    (_hElement)->hNextBrotherDyn = NULL; \
+    (_hElement)->hPrevBrotherDyn = (_p_stList)->hLastElementDyn; \
+    (_hElement)->hFatherDyn = (_p_stList); \
+    if ((_p_stList)->hFirstElementDyn == NULL) (_p_stList)->hFirstElementDyn = (_hElement); \
+    else (_p_stList)->hLastElementDyn->hNextBrotherDyn = (_hElement); \
+    (_p_stList)->hLastElementDyn = (_hElement); \
+    (_p_stList)->lNumberOfElementsDyn++; \
+}
+
 void WPARCLST_fn_vAdd(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight, unsigned int ulCapability)
 {
-    WP_tdstArc_* hElement;
     char bOK;
-    /* TODO: decompile from asm/... */
+    WP_tdstArc_* hElement;
+    bOK = 0;
+    if (hListOfArc == NULL)
+    {
+        return;
+    }
+    hElement = hListOfArc->m_hArc.hFirstElementDyn; while (hElement != NULL)
+    {
+        if (hElement->m_hNode == hNode)
+        {
+            hElement->m_ulCapabilityInit = ulCapability;
+            hElement->m_ulCapability = ulCapability;
+            hElement->m_lWeightInit = lWeight;
+            bOK = 1;
+            hElement->m_lWeight = lWeight;
+            break;
+        }
+        hElement = hElement->hNextBrotherDyn; }
+    if (bOK == 0)
+    {
+        WPG_fn_vSetAllocMode(); hElement = (WP_tdstArc_*)HMU_fn_p_vMalloc(0x20, 1); if (hElement != NULL) { hElement->hNextBrotherDyn = NULL; hElement->hPrevBrotherDyn = NULL; hElement->hFatherDyn = NULL; hElement->m_hNode = hNode; hElement->m_ulCapabilityInit = ulCapability; hElement->m_ulCapability = ulCapability; hElement->m_lWeightInit = lWeight; hElement->m_lWeight = lWeight; } WPG_fn_vClearAllocMode();
+        if (hElement == NULL)
+        {
+            return;
+        }
+        LST2_M_vAddElementToList(&hListOfArc->m_hArc, hElement);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 81–106 */
@@ -3121,5 +3176,36 @@ void WPARCLST_fn_vDestroy(WP_tdstListOfArc_* hList)
 {
     WP_tdstArc_* hNextElement;
     WP_tdstArc_* hElement;
-    /* TODO: decompile from asm/... */
+    if (fn_bScriptTransitionDeallocationCondition())
+    {
+        WPG_fn_vSetAllocMode();
+        if (hList != NULL)
+        {
+            hElement = hList->m_hArc.hFirstElementDyn;
+            while (hElement != NULL)
+            {
+                hNextElement = hElement->hNextBrotherDyn;
+                if (hElement->hNextBrotherDyn) hElement->hNextBrotherDyn->hPrevBrotherDyn = hElement->hPrevBrotherDyn;
+                if (hElement->hPrevBrotherDyn) hElement->hPrevBrotherDyn->hNextBrotherDyn = hElement->hNextBrotherDyn;
+                if (hElement->hFatherDyn)
+                {
+                    hElement->hFatherDyn->lNumberOfElementsDyn--;
+                    if (hElement->hFatherDyn->hFirstElementDyn == hElement) hElement->hFatherDyn->hFirstElementDyn = hElement->hNextBrotherDyn;
+                    if (hElement->hFatherDyn->hLastElementDyn == hElement) hElement->hFatherDyn->hLastElementDyn = hElement->hPrevBrotherDyn;
+                }
+                hElement->hNextBrotherDyn = NULL;
+                hElement->hPrevBrotherDyn = NULL;
+                hElement->hFatherDyn = NULL;
+                WPG_fn_vSetAllocMode();
+                if (hElement != NULL)
+                {
+                    HMU_fn_vFree((void**)&hElement, 1);
+                }
+                WPG_fn_vClearAllocMode();
+                hElement = hNextElement;
+            }
+        }
+        HMU_fn_vFree((void**)&hList, 1);
+        WPG_fn_vClearAllocMode();
+    }
 }

@@ -277,12 +277,17 @@ struct anon_0 {
     int Ind; /* +0x18 */
 };
 
-int COL_g_stCollisionCaseReal;
+COL_tdstCollisionCase_* COL_g_stCollisionCaseReal;
 int COL_g_lNbElementsInTable;
 int g_NbCollidedEdges;
-int g_pstGV;
+COL_tdstGVForCollision_* g_pstGV;
 anon_0 g_aCollidedEdges[50];
 #define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+/* R5900 abs.s: MWCC cannot emit it from plain C (fabsf lowers to a call). */
+#define MTH_ABS_IN_PLACE(_value) asm { abs.s _value, _value }
+extern GMT_tdstCollideMaterial_* GMT_fn_hGetCollideMaterial(GMT_tdstGameMaterial_* hGameMaterial);
+extern unsigned short GMT_fn_hGetCollideMaterialIdentifier(GMT_tdstCollideMaterial_* hCollideMaterial);
+extern void* memmove(void* pDest, void* pSrc, unsigned int uiSize);
 COL_tdstGVForCollision_ COL_g_stGVForCol;
 COL_tdstCollisionCase_ COL_g_stCollisionCase[75];
 int COL_g_lMaxNumberOfCollisions;
@@ -355,15 +360,242 @@ int COL_g_lMaxNumberOfCollisions;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Reconstruction notes:
+ * - The retail parameter list is (float _xT, 3 vectors, 2 game materials, 2
+ *   shorts, an int handle, a short, 2 vectors, a float): with the o32 hard-float
+ *   ABI _xT arrives in f12 and _xSphereRadius in f13, the four pointers in
+ *   a0-a3, the static material in t0, the two geometry entities in t1/t2, the
+ *   parameter handle in t3 and the rest on the stack (0xc0/0xc8/0xd0(sp)).
+ * - GMT_fn_hGetCollideMaterial returns a pointer but the retail compares it
+ *   with -1, so the tests use an explicit -1 cast.
+ * - The retail keeps a 64-bit copy of _xStaticGeomEntity (daddu s0,v1,zero)
+ *   and compares it with 7 and 8; the case loop compares the case's
+ *   xStaticGeomEntity against it.
+ * - The two epsilon tests use 0.001f for the collision time and 0.005f for the
+ *   hit/normal components, and the abs.s is emitted in place on the difference,
+ *   so the comparison uses a statement-level asm (MWCC cannot emit abs.s from
+ *   plain C).
+ * - The obsolete-case removal block is duplicated in the retail (two copies of
+ *   the same memmove + collided-edge fix-up code), so the source has it twice.
+ * - The collided-edge index fix-up only increments the edges whose Ind is
+ *   greater than or equal to the removed case index; the retail's branch shape
+ *   ('slt' + 'bnez' to the loop increment) comes from a 'continue' in the loop.
+ * - The case index of the collided edge is the unsigned... no: the signed
+ *   byte offset of the case from COL_g_stCollisionCaseReal divided by the
+ *   case size (the retail uses the signed mult/mfhi division sequence).
+ * - TODO: the remaining residual is MWCC's branch polarity and register
+ *   allocation, not source shape: the candidate has the retail structure and
+ *   all 45 relocations, but 382 of 1728 bytes still differ.  The first
+ *   difference (+0x6c) is the material check, where the retail branches to the
+ *   case-adding code with 'beq (id & 4) == 4' while MWCC branches to the
+ *   return with 'bne'; the rest is the s0/s1/s2 and a2/a3 allocation and the
+ *   order of the two instructions in the element-counting loop.
+ */
 void COL_fn_vAddInStaticCollisionTable(float _xT, MTH3D_tdstVector_* _p_stTranslation, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, GMT_tdstGameMaterial_* _hDynMat, GMT_tdstGameMaterial_* _hStatMat, short _xDynamicGeomEntity, short _xStaticGeomEntity, void* _p_vParameter1, short _sParameter2, MTH3D_tdstVector_* _p_stMovement, float _xSphereRadius, MTH3D_tdstVector_* _p_stEndPosition)
 {
-    COL_tdstCollisionCase_* end;
-    COL_tdstCollisionCase_* p;
-    int iNumberOfElementToCopy;
+    long lStaticGeomEntity;
     GMT_tdstCollideMaterial_* hCollideMaterial;
     COL_tdstCollisionCase_* p_stCollisionCase;
+    COL_tdstCollisionCase_* end;
+    float xDiff;
     int i;
-    /* TODO: decompile from asm/... */
+    int iCase;
+
+    hCollideMaterial = GMT_fn_hGetCollideMaterial(_hDynMat);
+    while (1)
+    {
+        if (hCollideMaterial == (GMT_tdstCollideMaterial_*) -1)
+        {
+            break;
+        }
+        if (!(GMT_fn_hGetCollideMaterialIdentifier(hCollideMaterial) & 8))
+        {
+            break;
+        }
+        hCollideMaterial = GMT_fn_hGetCollideMaterial(_hStatMat);
+        if (hCollideMaterial == (GMT_tdstCollideMaterial_*) -1)
+        {
+            return;
+        }
+        if ((GMT_fn_hGetCollideMaterialIdentifier(hCollideMaterial) & 4) == 4)
+        {
+            break;
+        }
+        return;
+    }
+
+    lStaticGeomEntity = _xStaticGeomEntity;
+    if ((lStaticGeomEntity == 7) || (lStaticGeomEntity == 8))
+    {
+        p_stCollisionCase = COL_g_stCollisionCaseReal;
+        i = 0;
+        while (i < COL_g_lNbElementsInTable)
+        {
+            if ((p_stCollisionCase->xStaticGeomEntity == lStaticGeomEntity) && (p_stCollisionCase->p_vParameter1 == (int)_p_vParameter1))
+            {
+                xDiff = p_stCollisionCase->xCollisionTime - _xT;
+                MTH_ABS_IN_PLACE(xDiff);
+                if (xDiff < 0.001f)
+                {
+                    xDiff = p_stCollisionCase->stCollisionPoint.xX - _p_stHit->xX;
+                    MTH_ABS_IN_PLACE(xDiff);
+                    if (xDiff < 0.005f)
+                    {
+                        xDiff = p_stCollisionCase->stCollisionPoint.xY - _p_stHit->xY;
+                        MTH_ABS_IN_PLACE(xDiff);
+                        if (xDiff < 0.005f)
+                        {
+                            xDiff = p_stCollisionCase->stCollisionPoint.xZ - _p_stHit->xZ;
+                            MTH_ABS_IN_PLACE(xDiff);
+                            if (xDiff < 0.005f)
+                            {
+                                xDiff = p_stCollisionCase->stCollisionNormal.xX - _p_stNormal->xX;
+                                MTH_ABS_IN_PLACE(xDiff);
+                                if (xDiff < 0.005f)
+                                {
+                                    xDiff = p_stCollisionCase->stCollisionNormal.xY - _p_stNormal->xY;
+                                    MTH_ABS_IN_PLACE(xDiff);
+                                    if (xDiff < 0.005f)
+                                    {
+                                        xDiff = p_stCollisionCase->stCollisionNormal.xZ - _p_stNormal->xZ;
+                                        MTH_ABS_IN_PLACE(xDiff);
+                                        if (xDiff < 0.005f)
+                                        {
+                                            p_stCollisionCase->sParameter2 |= 2;
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            p_stCollisionCase++;
+            i++;
+        }
+    }
+
+    {
+        p_stCollisionCase = COL_g_stCollisionCaseReal;
+        iCase = 0;
+        while (iCase < COL_g_lNbElementsInTable)
+        {
+            xDiff = _xT - p_stCollisionCase->xCollisionTime;
+            MTH_ABS_IN_PLACE(xDiff);
+            if (xDiff < 0.0001f)
+            {
+                if (_p_stNormal->xX < p_stCollisionCase->stCollisionNormal.xX)
+                {
+                    int iNumberOfElementToCopy;
+                    COL_tdstCollisionCase_* pNext;
+
+                    end = COL_g_stCollisionCaseReal + COL_g_lNbElementsInTable;
+                    iNumberOfElementToCopy = 0;
+                    pNext = p_stCollisionCase;
+                    while (pNext < end)
+                    {
+                        pNext++;
+                        iNumberOfElementToCopy++;
+                    }
+                    if (pNext == &COL_g_stCollisionCase[76])
+                    {
+                        iNumberOfElementToCopy--;
+                    }
+                    if (iNumberOfElementToCopy != 0)
+                    {
+                        memmove(p_stCollisionCase + 1, p_stCollisionCase, iNumberOfElementToCopy * sizeof(COL_tdstCollisionCase_));
+                        for (i = 0; i < g_NbCollidedEdges; i++)
+                        {
+                            if (g_aCollidedEdges[i].Ind < iCase)
+                            {
+                                continue;
+                            }
+                            g_aCollidedEdges[i].Ind++;
+                        }
+                    }
+                    break;
+                }
+            }
+            else
+            {
+                if (_xT < _p_stNormal->xX)
+                {
+                    int iNumberOfElementToCopy;
+                    COL_tdstCollisionCase_* pNext;
+
+                    end = COL_g_stCollisionCaseReal + COL_g_lNbElementsInTable;
+                    iNumberOfElementToCopy = 0;
+                    pNext = p_stCollisionCase;
+                    while (pNext < end)
+                    {
+                        pNext++;
+                        iNumberOfElementToCopy++;
+                    }
+                    if (pNext == &COL_g_stCollisionCase[76])
+                    {
+                        iNumberOfElementToCopy--;
+                    }
+                    if (iNumberOfElementToCopy != 0)
+                    {
+                        memmove(p_stCollisionCase + 1, p_stCollisionCase, iNumberOfElementToCopy * sizeof(COL_tdstCollisionCase_));
+                        for (i = 0; i < g_NbCollidedEdges; i++)
+                        {
+                            if (g_aCollidedEdges[i].Ind < iCase)
+                            {
+                                continue;
+                            }
+                            g_aCollidedEdges[i].Ind++;
+                        }
+                    }
+                    break;
+                }
+            }
+            p_stCollisionCase++;
+            iCase++;
+        }
+    }
+
+    if (iCase == COL_g_lMaxNumberOfCollisions)
+    {
+        return;
+    }
+
+    p_stCollisionCase->xCollisionTime = _xT;
+    MTH3D_M_vCopyVector(&p_stCollisionCase->stTranslation, _p_stTranslation);
+    MTH3D_M_vCopyVector(&p_stCollisionCase->stCollisionPoint, _p_stHit);
+    MTH3D_M_vCopyVector(&p_stCollisionCase->stCollisionNormal, _p_stNormal);
+    MTH3D_M_vCopyVector(&p_stCollisionCase->stMovement, _p_stMovement);
+    MTH3D_M_vCopyVector(&p_stCollisionCase->stEndPosition, _p_stEndPosition);
+    p_stCollisionCase->hDynamicMaterial = _hDynMat;
+    p_stCollisionCase->hStaticMaterial = _hStatMat;
+    p_stCollisionCase->xDynamicGeomEntity = _xDynamicGeomEntity;
+    p_stCollisionCase->xStaticGeomEntity = _xStaticGeomEntity;
+    p_stCollisionCase->xSphereRadius = _xSphereRadius;
+    p_stCollisionCase->p_vParameter1 = (int)_p_vParameter1;
+    p_stCollisionCase->sParameter2 = _sParameter2;
+
+    if (COL_g_lNbElementsInTable == COL_g_lMaxNumberOfCollisions)
+    {
+        return;
+    }
+    COL_g_lNbElementsInTable++;
+
+    if ((lStaticGeomEntity == 7) || (lStaticGeomEntity == 8))
+    {
+        int iIndex;
+
+        iIndex = (int)((char*)p_stCollisionCase - (char*)COL_g_stCollisionCaseReal) / (int)sizeof(COL_tdstCollisionCase_);
+        if (g_NbCollidedEdges < 50)
+        {
+            MTH3D_M_vCopyVector(&g_aCollidedEdges[g_NbCollidedEdges].A, g_pstGV->p_stVertex1);
+            g_aCollidedEdges[g_NbCollidedEdges].B.xX = g_pstGV->p_stVertex1->xX + g_pstGV->stEdgeVector.xX;
+            g_aCollidedEdges[g_NbCollidedEdges].B.xY = g_pstGV->p_stVertex1->xY + g_pstGV->stEdgeVector.xY;
+            g_aCollidedEdges[g_NbCollidedEdges].B.xZ = g_pstGV->p_stVertex1->xZ + g_pstGV->stEdgeVector.xZ;
+            g_aCollidedEdges[g_NbCollidedEdges].Ind = iIndex;
+            g_NbCollidedEdges++;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGOCo.c lines 80–83 */

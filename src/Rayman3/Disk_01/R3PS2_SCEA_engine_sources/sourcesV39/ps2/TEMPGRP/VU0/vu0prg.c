@@ -75,18 +75,16 @@ void VU0_fn_vWaitEndLoadVU0(void)
     int Reg;
     int i;
 
-    if (*(volatile int*)0x10008000 & 0x100)
+    if (*(volatile unsigned int*)0x10008000 & 0x100)
     {
         Reg = VU0_g_keepit1;
         do
         {
-            i = (Reg + 50) & 7;
-            while ((Reg & 7) < i)
+            i = (Reg + 50) & 7; while (i > (Reg & 7))
             {
                 Reg += i & 7;
-                i--;
-            }
-        } while (*(volatile int*)0x10008000 & 0x100);
+                i--; }
+        } while (*(volatile unsigned int*)0x10008000 & 0x100);
         VU0_g_keepit1 = Reg;
     }
 }

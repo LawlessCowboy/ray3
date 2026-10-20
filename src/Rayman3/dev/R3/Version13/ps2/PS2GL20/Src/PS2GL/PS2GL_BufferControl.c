@@ -177,16 +177,17 @@ struct anon_1 {
 };
 
 struct anon_2 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon2[6]; /* +0x2..0x7 */
 };
 
 struct _sceDmaTag {
@@ -235,8 +236,14 @@ struct anon_45 {
 };
 
 struct tag_stDoubleBufAdd {
-    anon_28 dispfb1[2]; /* +0x0 */
-    anon_45 display1[2]; /* +0x10 */
+    union {
+        anon_28 dispfb1[2]; /* +0x0 */
+        unsigned long long dispfb1q[2]; /* +0x0 */
+    } fb; /* +0x0 */
+    union {
+        anon_45 display1[2]; /* +0x10 */
+        unsigned long long display1q[2]; /* +0x10 */
+    } disp; /* +0x10 */
 };
 
 struct anon_3 {
@@ -403,15 +410,16 @@ struct anon_9 {
 };
 
 struct anon_34 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_7 {
@@ -667,60 +675,61 @@ struct anon_35 {
 };
 
 struct anon_48 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
 };
 
 union anon_47 {
@@ -1298,6 +1307,23 @@ tagGLcontext g_PS2glContext;
 int VBLCallback(int);
 int PS2glLiberator;
 int PS2glAllocator64;
+void impPS2glFlush(void);
+void PS2glSetInteger(unsigned int pname, int param);
+void PS2glExecSwapBuffers(void);
+void FlushCache();
+int PS2glGsSyncPath(void);
+int MyGsSyncV(int);
+int sceGsSetHalfOffset(void*, int, int, short);
+int sceGsSetHalfOffset2(void*, int, int, short);
+void VU1StartWorkingOnFakeSwapBuffer(void);
+void AE_CopyBackBufferOnScreen(void);
+void VU1FlushFakeSwapBuffer(void);
+void VU1StopWorkingOnFakeSwapBuffer(void);
+void MySwapBuff3Dc(anon_33* db, int bufferNum);
+void sceGsPutDrawEnv(void*, void*, void*, void*, void*);
+void GsSendData(int, void*);
+void internalFullScreenQuad(unsigned int mask, float R, float G, float B, float A, float u1, float v1, float u2, float v2, unsigned char bBlend);
+void impPS2glFinish(void);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1570–1570 */
 /* addr: 0x00140560  size: 8 bytes */
@@ -1376,7 +1402,48 @@ void PS2glSwapBufferNotifyFunc(void (*Func)(void))
  */
 void PS2glSwapBuffers(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_stBufferInfo.bDoubleBufferMode)
+    {
+        impPS2glFlush();
+
+        if (g_PS2glContext.nEnableBits & 0x20000)
+        {
+            bNeedSwapBuffer = 1;
+
+            if (g_stBufferInfo.bPlainBufferMode)
+            {
+                if (g_iFrame & 1)
+                {
+                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
+                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
+                }
+                else
+                {
+                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
+                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
+                }
+            }
+            else
+            {
+                if ((g_iFrame & 1) == 0)
+                {
+                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
+                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
+                }
+                else
+                {
+                    g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
+                    g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
+                }
+            }
+
+            PS2glSetInteger(0x420, g_iFrame);
+        }
+        else
+        {
+            PS2glExecSwapBuffers();
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1401–1487 */
@@ -1453,8 +1520,81 @@ void PS2glSwapBuffers(void)
  */
 void PS2glFakeSwapBuffers(void)
 {
-    short odev;
-    /* TODO: decompile from asm/... */
+    static short odev;
+    void* pOffset;
+
+    if (PS2GLBufferIsInverted)
+    {
+        PS2GLBufferIsInverted = 0;
+        g_iFrame--;
+    }
+
+    if (g_PS2glContext.nEnableBits & 0x20000)
+    {
+        if (g_stBufferInfo.bPlainBufferMode)
+        {
+            if (g_iFrame & 1)
+            {
+                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
+                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
+            }
+            else
+            {
+                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
+                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
+            }
+        }
+        else
+        {
+            if ((g_iFrame & 1) == 0)
+            {
+                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw01.frame1.FBP;
+                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw02.frame2.FBP;
+            }
+            else
+            {
+                g_gsContext.FRAME_1.FBP = g_stDoubleBuf.draw11.frame1.FBP;
+                g_gsContext.FRAME_2.FBP = g_stDoubleBuf.draw12.frame2.FBP;
+            }
+        }
+
+        PS2glSetInteger(0x420, g_iFrame);
+    }
+
+    FlushCache(NULL);
+    PS2glGsSyncPath();
+    odev = MyGsSyncV(0);
+
+    if (g_iFrame & 1)
+    {
+        pOffset = &g_stDoubleBuf.draw11.frame1;
+    }
+    else
+    {
+        pOffset = &g_stDoubleBuf.draw01.frame1;
+    }
+    sceGsSetHalfOffset(pOffset, 0x800, 0x800, odev);
+
+    if (g_iFrame & 1)
+    {
+        pOffset = &g_stDoubleBuf.draw12.frame2;
+    }
+    else
+    {
+        pOffset = &g_stDoubleBuf.draw02.frame2;
+    }
+    sceGsSetHalfOffset2(pOffset, 0x800, 0x800, odev);
+
+    MySwapBuff3Dc(&g_stDoubleBuf, g_iFrame);
+    VU1StartWorkingOnFakeSwapBuffer();
+    AE_CopyBackBufferOnScreen();
+    VU1FlushFakeSwapBuffer();
+    VU1StopWorkingOnFakeSwapBuffer();
+
+    if (SwapBufferNotifyFunc)
+    {
+        ((void (*)(void))SwapBufferNotifyFunc)();
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1384–1392 */
@@ -1976,7 +2116,7 @@ unsigned int PS2glInternalGetScreenCalebration(unsigned int target)
             break;
         case 0xF46:
             if (g_stBufferInfo.bPlainBufferMode)
-                uiReturn = g_stDoubleBufAdd.display1[0].DH;
+                uiReturn = g_stDoubleBufAdd.disp.display1[0].DH;
             else
                 uiReturn = g_stDoubleBuf.disp[0].display.DH;
             break;
@@ -2020,7 +2160,29 @@ unsigned int PS2glInternalGetScreenCalebration(unsigned int target)
  */
 void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewValue)
 {
-    /* TODO: decompile from asm/... */
+    switch (target)
+    {
+        case 0xF43:
+            g_stDoubleBufAdd.disp.display1[0].DX = g_stDoubleBufAdd.disp.display1[1].DX = g_stDoubleBuf.disp[0].display.DX = g_stDoubleBuf.disp[1].display.DX = uiNewValue;
+            break;
+        case 0xF44:
+            g_stDoubleBufAdd.disp.display1[0].DY = g_stDoubleBufAdd.disp.display1[1].DY = g_stDoubleBuf.disp[0].display.DY = g_stDoubleBuf.disp[1].display.DY = uiNewValue;
+            break;
+        case 0xF45:
+            g_stDoubleBufAdd.disp.display1[0].DW = g_stDoubleBufAdd.disp.display1[1].DW = g_stDoubleBuf.disp[0].display.DW = g_stDoubleBuf.disp[1].display.DW = uiNewValue;
+            break;
+        case 0xF46:
+            g_stDoubleBufAdd.disp.display1[0].DH = g_stDoubleBufAdd.disp.display1[1].DH = g_stDoubleBuf.disp[0].display.DH = g_stDoubleBuf.disp[1].display.DH = uiNewValue;
+            if (g_stBufferInfo.bPlainBufferMode)
+            {
+                if (g_stDoubleBuf.disp[0].display.DH != 0)
+                {
+                    g_stDoubleBuf.disp[0].display.DH = (int)g_stDoubleBuf.disp[0].display.DH - 1;
+                    g_stDoubleBuf.disp[1].display.DH = (int)g_stDoubleBuf.disp[1].display.DH - 1;
+                }
+            }
+            break;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1016–1046 */
@@ -2074,9 +2236,50 @@ void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewVa
  */
 void PS2glMotionBlur(void)
 {
-    anon_47 qOldAlpha;
     anon_47 qword;
-    /* TODO: decompile from asm/... */
+    anon_47 qOldAlpha;
+    unsigned long ullGs;
+
+    qOldAlpha = *(anon_47*)&g_gsContext.ALPHA_1;
+    qword.u64Data[0] = 0x60;
+
+    g_gsContext.ALPHA_1.A = 0;
+    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.B = 1;
+    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.C = 0;
+    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.D = 1;
+    g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    qword.ubData[8] = 0x14;
+
+    GsSendData(0xE, (void*)&qword);
+
+    ullGs = (unsigned long)g_PS2glContext.iFrameBufferFront
+          | ((unsigned long)(g_stBufferInfo.iScreenWidth / 64) << 14)
+          | ((unsigned long)g_gsContext.FRAME_1.PSM << 20)
+          | ((unsigned long)10 << 26) | ((unsigned long)9 << 30);
+    qword.u64Data[0] = ullGs;
+    qword.ubData[8] = 6;
+
+    GsSendData(0xE, (void*)&qword);
+
+    g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
+    g_gsContext.TEXFLUSH.DATA = 1;
+
+    internalFullScreenQuad(0x4000, 0.5f, 0.5f, 0.5f, 0.001f * (float)g_PS2glContext.uiMotionBlurIntensity, 0.0f,
+                           (float)(g_stBufferInfo.bPlainBufferMode ? g_stBufferInfo.iScreenHeight << 4 : g_stBufferInfo.iScreenHeight << 3),
+                           (float)(g_stBufferInfo.iScreenWidth << 4), 0.0f, 1);
+
+    qOldAlpha.ubData[8] = 0x42;
+
+    GsSendData(0xE, (void*)&qOldAlpha);
+
+    g_PS2glContext.bTexCubeChanged = 1;
+    g_PS2glContext.abTex2DChanged[0] = 1;
+    g_PS2glContext.abTex1DChanged[0] = 1;
+
+    impPS2glFinish();
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 949–990 */
@@ -2117,7 +2320,58 @@ void PS2glMotionBlur(void)
  */
 void MySwapBuff3Dc(anon_33* db, int bufferNum)
 {
-    /* TODO: decompile from asm/... */
+    if (bufferNum & 1)
+    {
+        if (g_PS2glContext.nEnableBits & 0x10000)
+        {
+            db->disp[1].pmode.EN1 = 1;
+        }
+        else
+        {
+            db->disp[1].pmode.EN1 = 0;
+        }
+
+        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[1].pmode;
+        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[1].smode2;
+        *(volatile unsigned long*)0x12000090 = *(unsigned long*)&db->disp[1].dispfb;
+        *(volatile unsigned long*)0x120000A0 = *(unsigned long*)&db->disp[1].display;
+        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[1].bgcolor;
+        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[1].pmode;
+        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[1].smode2;
+        *(volatile unsigned long*)0x12000070 = *(unsigned long*)&db->disp[1].dispfb;
+        *(volatile unsigned long*)0x12000080 = *(unsigned long*)&db->disp[1].display;
+        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[1].bgcolor;
+        *(volatile unsigned long*)0x12000070 = g_stDoubleBufAdd.fb.dispfb1q[1];
+        *(volatile unsigned long*)0x12000080 = g_stDoubleBufAdd.disp.display1q[1];
+
+        sceGsPutDrawEnv(&db->giftag0, (void*)0x12000020, (void*)0x120000E0, (void*)0x12000070, (void*)0x12000080);
+    }
+    else
+    {
+        if (g_PS2glContext.nEnableBits & 0x10000)
+        {
+            db->disp[0].pmode.EN1 = 1;
+        }
+        else
+        {
+            db->disp[0].pmode.EN1 = 0;
+        }
+
+        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[0].pmode;
+        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[0].smode2;
+        *(volatile unsigned long*)0x12000070 = *(unsigned long*)&db->disp[0].dispfb;
+        *(volatile unsigned long*)0x12000080 = *(unsigned long*)&db->disp[0].display;
+        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[0].bgcolor;
+        *(volatile unsigned long*)0x12000000 = *(unsigned long*)&db->disp[0].pmode;
+        *(volatile unsigned long*)0x12000020 = *(unsigned long*)&db->disp[0].smode2;
+        *(volatile unsigned long*)0x12000090 = *(unsigned long*)&db->disp[0].dispfb;
+        *(volatile unsigned long*)0x120000A0 = *(unsigned long*)&db->disp[0].display;
+        *(volatile unsigned long*)0x120000E0 = *(unsigned long*)&db->disp[0].bgcolor;
+        *(volatile unsigned long*)0x12000070 = g_stDoubleBufAdd.fb.dispfb1q[0];
+        *(volatile unsigned long*)0x12000080 = g_stDoubleBufAdd.disp.display1q[0];
+
+        sceGsPutDrawEnv(&db->giftag1, (void*)0x12000020, (void*)0x120000E0, (void*)0x12000070, (void*)0x12000080);
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 194–878 */

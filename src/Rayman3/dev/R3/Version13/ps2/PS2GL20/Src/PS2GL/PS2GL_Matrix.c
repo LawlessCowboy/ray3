@@ -710,6 +710,22 @@ struct tagGLlistdatas {
 float matIdentity[4][4];
 tagGLcontext g_PS2glContext;
 
+float sinf(float);
+float cosf(float);
+float tanf(float);
+float atanf(float);
+void* memcpy(void*, const void*, unsigned int);
+
+/* sqrt.s has no C form under the baseline (MWCC lowers sqrtf to a library
+ * call), but the retail code inlines it, so use the project's asm-wrapper
+ * style (see MTH_xSqrt in MECBhv.c). */
+inline float PS2glSqrt(float x)
+{
+    float r = x;
+    asm { sqrt.s r, r }
+    return r;
+}
+
 void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);
 _GL_BUFFERINFO g_stBufferInfo;
 
@@ -874,7 +890,18 @@ void PS2glInitContext(tagGLcontext* pCtx)
  */
 void impPS2glDepthRange(double zNear, double zFar)
 {
-    /* TODO: decompile from asm/... */
+    switch (g_PS2glContext.iDepthBufferBitDepth)
+    {
+    case 16: g_PS2glContext.DepthRange[0] = 65500.0f; break;
+    case 24: g_PS2glContext.DepthRange[0] = 16777000.0f; break;
+    case 32: g_PS2glContext.DepthRange[0] = 4294960128.0f; break;
+    default: g_PS2glContext.DepthRange[0] = 16777000.0f; break;
+    }
+    zNear = (zNear < 0.0) ? 0.0 : ((zNear > 1.0) ? 1.0 : zNear);
+    zFar = (zFar < 0.0) ? 0.0 : ((zFar > 1.0) ? 1.0 : zFar);
+    g_PS2glContext.DepthRange[1] = g_PS2glContext.DepthRange[0] * (1.0f - (float)zFar);
+    g_PS2glContext.DepthRange[0] = g_PS2glContext.DepthRange[0] * (1.0f - (float)zNear);
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 662–696 */
@@ -901,7 +928,13 @@ void impPS2glDepthRange(double zNear, double zFar)
  */
 void impPS2glViewport(int x, int y, int width, int height)
 {
-    /* TODO: decompile from asm/... */
+    if (g_PS2glContext.bFrameMode)
+        height >>= 1;
+    g_PS2glContext.ViewPort[0] = g_PS2glContext.ViewOrg[0] + (float)x;
+    g_PS2glContext.ViewPort[1] = g_PS2glContext.ViewOrg[1] + (float)y + (float)height;
+    g_PS2glContext.ViewPort[2] = (float)width;
+    g_PS2glContext.ViewPort[3] = -(float)height;
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 650–656 */
@@ -983,7 +1016,26 @@ void PS2glGenOrthoMatrix(float (*m)[4], float left, float right, float bottom, f
     float fDivFN;
     float fDivTB;
     float fDivRL;
-    /* TODO: decompile from asm/... */
+
+    fDivRL = 1.0f / (right - left);
+    fDivTB = 1.0f / (top - bottom);
+    fDivFN = 1.0f / (zNear - zFar);
+    m[0][0] = fDivRL + fDivRL;
+    m[1][0] = 0.0f;
+    m[2][0] = 0.0f;
+    m[3][0] = fDivRL * -(right + left);
+    m[0][1] = 0.0f;
+    m[1][1] = fDivTB + fDivTB;
+    m[2][1] = 0.0f;
+    m[3][1] = fDivTB * -(top + bottom);
+    m[0][2] = 0.0f;
+    m[1][2] = 0.0f;
+    m[2][2] = fDivFN + fDivFN;
+    m[3][2] = fDivFN * (zFar + zNear);
+    m[0][3] = 0.0f;
+    m[1][3] = 0.0f;
+    m[2][3] = 0.0f;
+    m[3][3] = 1.0f;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 532–605 */
@@ -1083,7 +1135,65 @@ void PS2glBoundingSphereParameters(float fov, float aspect, float zNear, float z
     int iWindowWidth;
     float mGuardBandNormal[4][4];
     float mFrustumNormal[4][4];
-    /* TODO: decompile from asm/... */
+    float fAngle;
+    float fAngle2;
+
+    fFovX = (3.1415927f * fov) / 360.0f;
+    iWindowWidth = g_stBufferInfo.iScreenWidth;
+    iWindowHeight = g_stBufferInfo.iScreenHeight;
+    if (g_stBufferInfo.bPlainBufferMode == 0 && iWindowHeight >= 0x1C0)
+        iWindowHeight >>= 1;
+    fTemp = tanf(fFovX);
+    fAngle = atanf(aspect * fTemp);
+    mFrustumNormal[0][0] = cosf(fAngle);
+    mFrustumNormal[0][1] = -cosf(fAngle);
+    mFrustumNormal[0][2] = 0.0f;
+    mFrustumNormal[0][3] = 0.0f;
+    mFrustumNormal[1][0] = 0.0f;
+    mFrustumNormal[1][1] = 0.0f;
+    mFrustumNormal[1][2] = cosf(fFovX);
+    mFrustumNormal[1][3] = -cosf(fFovX);
+    mFrustumNormal[2][0] = -sinf(fAngle);
+    mFrustumNormal[2][1] = -sinf(fAngle);
+    mFrustumNormal[2][2] = -sinf(fFovX);
+    mFrustumNormal[2][3] = -sinf(fFovX);
+    mFrustumNormal[3][0] = 0.0f;
+    mFrustumNormal[3][1] = 0.0f;
+    mFrustumNormal[3][2] = 0.0f;
+    mFrustumNormal[3][3] = 0.0f;
+    fTemp = fTemp * 4096.0f;
+    fAngle = atanf(fTemp / (float)iWindowHeight);
+    fTemp = fTemp * aspect;
+    fAngle2 = atanf(fTemp / (float)iWindowWidth);
+    mGuardBandNormal[0][0] = cosf(fAngle2);
+    mGuardBandNormal[0][1] = -cosf(fAngle2);
+    mGuardBandNormal[0][2] = 0.0f;
+    mGuardBandNormal[0][3] = 0.0f;
+    mGuardBandNormal[1][0] = 0.0f;
+    mGuardBandNormal[1][1] = 0.0f;
+    mGuardBandNormal[1][2] = cosf(fAngle);
+    mGuardBandNormal[1][3] = -cosf(fAngle);
+    mGuardBandNormal[2][0] = -sinf(fAngle2);
+    mGuardBandNormal[2][1] = -sinf(fAngle2);
+    mGuardBandNormal[2][2] = -sinf(fAngle);
+    mGuardBandNormal[2][3] = -sinf(fAngle);
+    mGuardBandNormal[3][0] = 0.0f;
+    mGuardBandNormal[3][1] = 0.0f;
+    mGuardBandNormal[3][2] = 0.0f;
+    mGuardBandNormal[3][3] = 0.0f;
+    ((__int128*)g_PS2glContext.mFrustumNormal)[0] = ((__int128*)mFrustumNormal)[0];
+    ((__int128*)g_PS2glContext.mFrustumNormal)[1] = ((__int128*)mFrustumNormal)[1];
+    ((__int128*)g_PS2glContext.mFrustumNormal)[2] = ((__int128*)mFrustumNormal)[2];
+    ((__int128*)g_PS2glContext.mFrustumNormal)[3] = ((__int128*)mFrustumNormal)[3];
+    ((__int128*)g_PS2glContext.mGuardBandNormal)[0] = ((__int128*)mGuardBandNormal)[0];
+    ((__int128*)g_PS2glContext.mGuardBandNormal)[1] = ((__int128*)mGuardBandNormal)[1];
+    ((__int128*)g_PS2glContext.mGuardBandNormal)[2] = ((__int128*)mGuardBandNormal)[2];
+    ((__int128*)g_PS2glContext.mGuardBandNormal)[3] = ((__int128*)mGuardBandNormal)[3];
+    g_PS2glContext.vZNearFar[0] = zNear;
+    g_PS2glContext.vZNearFar[1] = zFar;
+    g_PS2glContext.vZNearFar[2] = zNearTolerantCulling;
+    g_PS2glContext.vZNearFar[3] = zFarTolerantCulling;
+    g_PS2glContext.bBSParamChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 507–529 */
@@ -1115,7 +1225,13 @@ void PS2glBoundingSphereParameters(float fov, float aspect, float zNear, float z
 void impPS2glFrustum(double left, double right, double bottom, double top, double zNear, double zFar)
 {
     float m[4][4];
-    /* TODO: decompile from asm/... */
+
+    m[0][0] = (float)((2.0 * zNear) / (right - left)); m[1][0] = 0.0f; m[2][0] = (float)((right + left) / (right - left)); m[3][0] = 0.0f;
+    m[0][1] = 0.0f; m[1][1] = (float)((2.0 * zNear) / (top - bottom)); m[2][1] = (float)((top + bottom) / (top - bottom)); m[3][1] = 0.0f;
+    m[0][2] = 0.0f; m[1][2] = 0.0f; m[2][2] = (float)(-(zFar + zNear) / (zFar - zNear)); m[3][2] = (float)(-(2.0 * zFar * zNear) / (zFar - zNear));
+    m[0][3] = 0.0f; m[1][3] = 0.0f; m[2][3] = -1.0f; m[3][3] = 0.0f;
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 497–501 */
@@ -1273,8 +1389,12 @@ void impPS2glLoadMatrixd(double* m)
  */
 void impPS2glScalef(float x, float y, float z)
 {
-    float* param0;
-    /* TODO: decompile from asm/... */
+    float* param0 = (float*)*g_PS2glContext.pCurMatrix;
+    param0[0] *= x; param0[4] *= y; param0[8] *= z;
+    param0[1] *= x; param0[5] *= y; param0[9] *= z;
+    param0[2] *= x; param0[6] *= y; param0[10] *= z;
+    param0[3] *= x; param0[7] *= y; param0[11] *= z;
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 438–441 */
@@ -1288,9 +1408,12 @@ void impPS2glScalef(float x, float y, float z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The retail DWARF line table gives this function three source lines: the
+ * declaration, one body line and the closing brace, so the matrix pointer,
+ * the twelve row updates and the bMatrixChanged store all share one line. */
 void impPS2glScaled(double x, double y, double z)
 {
-    /* TODO: decompile from asm/... */
+    float (*m)[4] = *g_PS2glContext.pCurMatrix; m[0][0] *= (float)x; m[1][0] *= (float)y; m[2][0] *= (float)z; m[0][1] *= (float)x; m[1][1] *= (float)y; m[2][1] *= (float)z; m[0][2] *= (float)x; m[1][2] *= (float)y; m[2][2] *= (float)z; m[0][3] *= (float)x; m[1][3] *= (float)y; m[2][3] *= (float)z; g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 426–435 */
@@ -1311,8 +1434,12 @@ void impPS2glScaled(double x, double y, double z)
  */
 void impPS2glTranslatef(float x, float y, float z)
 {
-    float* param0;
-    /* TODO: decompile from asm/... */
+    float* param0 = (float*)*g_PS2glContext.pCurMatrix;
+    param0[12] = param0[0] * x + param0[4] * y + param0[8] * z + param0[12];
+    param0[13] = param0[1] * x + param0[5] * y + param0[9] * z + param0[13];
+    param0[14] = param0[2] * x + param0[6] * y + param0[10] * z + param0[14];
+    param0[15] = param0[3] * x + param0[7] * y + param0[11] * z + param0[15];
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 419–422 */
@@ -1326,9 +1453,14 @@ void impPS2glTranslatef(float x, float y, float z)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The retail DWARF line table gives this function three source lines: the
+ * declaration, one body line and the closing brace, so the matrix pointer,
+ * the four column updates and the bMatrixChanged store all share one line.
+ * The four columns are written out explicitly: a loop makes MWCC swap the
+ * operands of the first mul.s, which does not match the retail code. */
 void impPS2glTranslated(double x, double y, double z)
 {
-    /* TODO: decompile from asm/... */
+    float (*m)[4] = *g_PS2glContext.pCurMatrix; m[3][0] = m[3][0] + (m[0][0] * (float)x + m[1][0] * (float)y + m[2][0] * (float)z); m[3][1] = m[3][1] + (m[0][1] * (float)x + m[1][1] * (float)y + m[2][1] * (float)z); m[3][2] = m[3][2] + (m[0][2] * (float)x + m[1][2] * (float)y + m[2][2] * (float)z); m[3][3] = m[3][3] + (m[0][3] * (float)x + m[1][3] * (float)y + m[2][3] * (float)z); g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 409–416 */
@@ -1367,7 +1499,10 @@ void impPS2glRotatef(float angle, float x, float y, float z)
 void impPS2glRotated(double angle, double x, double y, double z)
 {
     float m[4][4];
-    /* TODO: decompile from asm/... */
+
+    PS2glGenRotationMatrix((float)angle, (float)x, (float)y, (float)z, m);
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 388–396 */
@@ -1440,7 +1575,27 @@ void impPS2glMultMatrixd(double* dm)
  */
 void impPS2glMatrixMode(unsigned int mode)
 {
-    /* TODO: decompile from asm/... */
+    switch (mode)
+    {
+    case 0x1700:
+        g_PS2glContext.pCurMatrix = &g_PS2glContext.ModelViewMatrix;
+        g_PS2glContext.piCurStackDepth = (int)&g_PS2glContext.nModelViewStackDepth;
+        g_PS2glContext.pCurStack = &g_PS2glContext.ModelViewStack[g_PS2glContext.nModelViewStackDepth];
+        break;
+    case 0x1701:
+        g_PS2glContext.pCurMatrix = &g_PS2glContext.ProjectionMatrix;
+        g_PS2glContext.piCurStackDepth = (int)&g_PS2glContext.nProjectionStackDepth;
+        g_PS2glContext.pCurStack = &g_PS2glContext.ProjectionStack[g_PS2glContext.nProjectionStackDepth];
+        break;
+    case 0x1702:
+        g_PS2glContext.pCurMatrix = &g_PS2glContext.TextureMatrix[g_PS2glContext.iCurTextureSet];
+        g_PS2glContext.piCurStackDepth = (int)&g_PS2glContext.nTextureStackDepths[g_PS2glContext.iCurTextureSet];
+        g_PS2glContext.pCurStack = &g_PS2glContext.TextureStacks[g_PS2glContext.iCurTextureSet][*(int*)g_PS2glContext.piCurStackDepth];
+        break;
+    default:
+        return;
+    }
+    g_PS2glContext.eMatrixMode = mode;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 238–346 */
@@ -1504,12 +1659,41 @@ void impPS2glMatrixMode(unsigned int mode)
  */
 void PS2glGenRotationMatrix(float angle, float x, float y, float z, float (*m)[4])
 {
-    float one_c;
-    float zs;
-    float ys;
-    float xs;
-    float c;
-    float s;
     float mag;
-    /* TODO: decompile from asm/... */
+    float s;
+    float c;
+    float xs;
+    float ys;
+    float zs;
+    float one_c;
+
+    s = sinf(angle * 0.017453292f);
+    c = cosf(angle * 0.017453292f);
+    mag = x * x + y * y + z * z;
+    mag = PS2glSqrt(mag);
+    if (mag == 0.0f)
+    {
+        memcpy(m, matIdentity, 64);
+        return;
+    }
+    xs = x / mag;
+    ys = y / mag;
+    zs = z / mag;
+    one_c = 1.0f - c;
+    m[0][0] = c + xs * xs * one_c;
+    m[1][0] = xs * ys * one_c - zs * s;
+    m[2][0] = zs * xs * one_c + ys * s;
+    m[3][0] = 0.0f;
+    m[0][1] = xs * ys * one_c + zs * s;
+    m[1][1] = c + ys * ys * one_c;
+    m[2][1] = ys * zs * one_c - xs * s;
+    m[3][1] = 0.0f;
+    m[0][2] = zs * xs * one_c - ys * s;
+    m[1][2] = ys * zs * one_c + xs * s;
+    m[2][2] = c + zs * zs * one_c;
+    m[3][2] = 0.0f;
+    m[0][3] = 0.0f;
+    m[1][3] = 0.0f;
+    m[2][3] = 0.0f;
+    m[3][3] = 1.0f;
 }

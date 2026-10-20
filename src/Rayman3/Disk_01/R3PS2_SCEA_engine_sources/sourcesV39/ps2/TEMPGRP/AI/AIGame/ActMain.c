@@ -30,13 +30,11 @@ struct _stTimerCount { unsigned long m_ulLowPart; unsigned long m_ulHighPart; };
 struct tdstEngineTimerStructure_ { unsigned int ulTrameNumber; short sTimerHandle; unsigned int ulCurrentTimerCount; unsigned int ulDeltaTimerCount; unsigned int a_ulCounter[16]; unsigned int ulUsefulDeltaTime; unsigned int ulPauseTime; float xFrameLength; _stTimerCount stRealTimeCount; _stTimerCount stPauseTime; unsigned int ulTickPerMS; };
 struct tdstPLA_Hierarchy_ { unsigned int ulNbOfCouples; tdstCouple_* d_stCouples; };
 union RGBAStruct_ { int Color; };
-union HIE_tduLinkedObject_ { int p_Void; };
 struct LST2_tdstAnchorTotdxHandleToStateOpt { tdstState_* hFirstElementOpt; int lNumberOfElementsOpt; };
 struct LST2_tdstAnchorTotdxHandleToObjectsTablesListOpt { tdstObjectsTablesList_* hFirstElementOpt; int lNumberOfElementsOpt; };
 struct LST2_tdstAnchorTotdxHandleToTransitionOpt { void* hFirstElementOpt; int lNumberOfElementsOpt; };
 struct LST2_tdstAnchorTotdxHandleToProhibitOpt { void* hFirstElementOpt; int lNumberOfElementsOpt; };
 struct LST2_tdstAnchorToCINE_tdxHandleToChannelLinkDyn { void* hFirstElementDyn; void* hLastElementDyn; int lNumberOfElementsDyn; };
-union anon_0 { int uDummy; };
 
 typedef enum MAT_tdeTranformationType_ { MAT_eTransform_Uninitialized = 0, MAT_eTransform_Identity = 1, MAT_eTransform_Translation = 2, MAT_eTransform_Zoom = 3, MAT_eTransform_Scale = 4, MAT_eTransform_Rotation = 5, MAT_eTransform_RotationZoom = 6, MAT_eTransform_RotationScale = 7, MAT_eTransform_ComplexRotationScale = 8, MAT_eTransform_Undefined = 9 } MAT_tdeTranformationType_;
 typedef enum tdeObjectTreeInit_ { OTI_WhenGameStart = 0, OTI_MapLoaded = 1, OTI_ReinitTheMap = 2, OTI_LoadSavedGame = 3, OTI_PlayerDead = 4, OTI_WhenGoOutOfZone = 4, OTI_Always = 4, OTI_AlwaysCreated = 5 } tdeObjectTreeInit_;
@@ -1056,6 +1054,8 @@ struct MTH3D_tdstVector_ {
     float xZ; /* +0x8 */
 };
 
+union HIE_tduLinkedObject_ { tdstEngineObject_* p_stCharacter; };
+
 struct HIE_tdstSuperObject_ {
     unsigned int ulTypeOfLinkedObject; /* +0x0 */
     HIE_tduLinkedObject_ hLinkedObject; /* +0x4 */
@@ -1175,6 +1175,10 @@ struct LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn {
     tdstMorphChannelList_* hLastElementDyn; /* +0x4 */
     int lNumberOfElementsDyn; /* +0x8 */
 };
+
+typedef union tduIdInterpret_ tduIdInterpret_;
+union tduIdInterpret_ { tdeMetaActionId_ eMetaActionId; };
+union anon_0 { tduIdInterpret_ uId; int uDummy; };
 
 struct tdstNodeInterpret_ {
     anon_0 uDummy; /* +0x0 */
@@ -1847,33 +1851,12 @@ struct tdst3dData_ {
 
 tdstEngineStructure_ g_stEngineStructure;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 76–78 */
-/* addr: 0x00200c10  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 76
- *   +0x0004 -> line 78
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vInitDistanceWaypoint(void)
 {
     g_DistanceWaypointMin = 0.0f;
     g_DistanceWaypointMax = 0.0f;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 202–217 */
-/* addr: 0x00200c20  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 202
- *   +0x000c -> line 206
- *   +0x0010 -> line 202
- *   +0x0014 -> line 206
- *   +0x0038 -> line 217
- *   +0x003c -> line 216
- *   +0x0040 -> line 217
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_lGetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);
 
 unsigned char fn_ucFrozenWait(HIE_tdstSuperObject_* p_SuperObjPerso)
@@ -1897,17 +1880,6 @@ unsigned char fn_ucFrozenWait(HIE_tdstSuperObject_* p_SuperObjPerso)
     return lReturn;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 157–198 */
-/* addr: 0x00200c70  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 157
- *   +0x0010 -> line 159
- *   +0x001c -> line 191
- *   +0x0040 -> line 197
- *   +0x0044 -> line 198
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeInterpret_* fn_p_stDefaultActionInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
 void fn_vSetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, int lValue);
 
@@ -1918,86 +1890,55 @@ tdstNodeInterpret_* fn_p_stFrozenWaitInit(HIE_tdstSuperObject_* p_SuperObjPerso,
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 143–147 */
-/* addr: 0x00200cd0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 143
- *   +0x0008 -> line 145
- *   +0x0010 -> line 147
- *   +0x0014 -> line 145
- *   +0x0024 -> line 147
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_ucWaitEndOfAnim(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     return PLA_fn_bTestIfEndOfAnim(p_SuperObjPerso) ? 4 : 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 132–136 */
-/* addr: 0x00200d00  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 132
- *   +0x0008 -> line 134
- *   +0x0010 -> line 136
- *   +0x0014 -> line 134
- *   +0x0024 -> line 136
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_ucWaitEndOfAction(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     return PLA_fn_bTestIfEndOfAction(p_SuperObjPerso) ? 4 : 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 78–99 */
-/* addr: 0x00200d30  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 78
- *   +0x0014 -> line 79
- *   +0x0024 -> line 82
- *   +0x0038 -> line 83
- *   +0x0040 -> line 86
- *   +0x0050 -> line 93
- *   +0x0058 -> line 97
- *   +0x0070 -> line 99
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned char fn_ucExecuteAction(HIE_tdstSuperObject_* p_SuperObjPerso)
+tdstState_* fn_xGetActionParamStateValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso);
+int PLA_fn_bSetNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_WantedState, unsigned char _bForce, unsigned char _bHandleSkippedEventsIfRelevant, unsigned char _bIgnoreTransitions, unsigned int ulNbFrameForIntermAnim, float xNLParameter, unsigned char bProportionnal);
+void fn_vSetActionParamlValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, int lValue);
+void fn_vSetActionParamStateValue(unsigned char ucN, HIE_tdstSuperObject_* p_SuperObjPerso, tdstState_* hState);
+int PLA_fn_bTestCurrentAction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstState_* h_FirstStateOfAction);
+int PLA_fn_bTestIfEndOfAction(HIE_tdstSuperObject_* p_SuperObjPerso);
+
+int fn_ucExecuteAction(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     tdstState_* h_WantedState;
-    /* TODO: decompile from asm/... */
+
+    h_WantedState = fn_xGetActionParamStateValue(1, p_SuperObjPerso);
+    if (fn_lGetActionParamlValue(0, p_SuperObjPerso) == 0)
+        return 4;
+    if (PLA_fn_bTestCurrentAction(p_SuperObjPerso, h_WantedState) == 0)
+        return 4;
+    return PLA_fn_bTestIfEndOfAction(p_SuperObjPerso) ? 4 : 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ActMain.c lines 23–72 */
-/* addr: 0x00200dc0  size: 272 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 23
- *   +0x0018 -> line 25
- *   +0x001c -> line 29
- *   +0x0028 -> line 30
- *   +0x0034 -> line 33
- *   +0x0038 -> line 30
- *   +0x003c -> line 35
- *   +0x0040 -> line 33
- *   +0x0044 -> line 35
- *   +0x0060 -> line 48
- *   +0x0094 -> line 50
- *   +0x009c -> line 53
- *   +0x00ac -> line 64
- *   +0x00b4 -> line 53
- *   +0x00b8 -> line 64
- *   +0x00e0 -> line 69
- *   +0x00f0 -> line 71
- *   +0x00f4 -> line 72
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeInterpret_* fn_p_stExecuteActionInit(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     long lNbFrame;
-    tdeMetaActionId_ eMetaActionId;
     tdstState_* h_WantedState;
-    /* TODO: decompile from asm/... */
+    tdeMetaActionId_ eMetaActionId;
+
+    eMetaActionId = (p_stTree-1)->uDummy.uId.eMetaActionId;
+    p_stTree = fn_p_stDefaultActionInit(p_SuperObjPerso, p_stTree);
+    h_WantedState = fn_xGetActionParamStateValue(0, p_SuperObjPerso);
+    p_SuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_FirstStateOfAction = NULL;
+    switch (eMetaActionId)
+    {
+        case eMetaAction_ExecuteAction:
+            fn_vSetActionParamlValue(0, p_SuperObjPerso, (unsigned char)PLA_fn_bSetNewState(p_SuperObjPerso, h_WantedState, 0, 0, 0, 0, 0.0f, 0));
+            break;
+        case eMetaAction_ExecuteActionSmooth:
+            lNbFrame = fn_lGetActionParamlValue(1, p_SuperObjPerso);
+            fn_vSetActionParamlValue(0, p_SuperObjPerso, (unsigned char)PLA_fn_bSetNewState(p_SuperObjPerso, h_WantedState, 0, 0, 0, lNbFrame, 0.0f, 0));
+            break;
+    }
+    fn_vSetActionParamStateValue(1, p_SuperObjPerso, h_WantedState);
+    return p_stTree;
 }

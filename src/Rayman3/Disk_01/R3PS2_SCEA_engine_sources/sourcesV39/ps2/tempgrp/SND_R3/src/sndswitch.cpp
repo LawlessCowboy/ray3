@@ -364,7 +364,7 @@ anon_0 __vt__12CSwitchNotif;
 unsigned char fn_bGetVolumeLineModifierString(int s32_ModifierId, char* pch_Buffer, int s32_Size);
 unsigned char fn_bCreateVolumeModifier(const char* pch_Buffer, float f32x_Volume);
 
-int SND_fn_s32AddVolumeLineSound(void)
+extern "C" int SND_fn_s32AddVolumeLineSound(void)
 {
     static int s32_LineId = 0;
     int s32_Answer;

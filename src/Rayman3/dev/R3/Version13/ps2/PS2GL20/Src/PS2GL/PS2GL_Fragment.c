@@ -112,16 +112,17 @@ struct anon_1 {
 };
 
 struct anon_2 {
-    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
-    unsigned long IIP : 1; /* bit 3, byte +0x0 */
-    unsigned long TME : 1; /* bit 4, byte +0x0 */
-    unsigned long FGE : 1; /* bit 5, byte +0x0 */
-    unsigned long ABE : 1; /* bit 6, byte +0x0 */
-    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
-    unsigned long FST : 1; /* bit 8, byte +0x0 */
-    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
-    unsigned long FIX : 1; /* bit 10, byte +0x0 */
-    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+    unsigned char pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned char IIP : 1; /* bit 3, byte +0x0 */
+    unsigned char TME : 1; /* bit 4, byte +0x0 */
+    unsigned char FGE : 1; /* bit 5, byte +0x0 */
+    unsigned char ABE : 1; /* bit 6, byte +0x0 */
+    unsigned char AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned char FST : 1; /* bit 8, byte +0x1 */
+    unsigned char CTXT : 1; /* bit 9, byte +0x1 */
+    unsigned char FIX : 1; /* bit 10, byte +0x1 */
+    unsigned char pad11 : 5; /* bit 11, byte +0x1 */
+    unsigned char _extractor_padding_anon2[6]; /* +0x2..0x7 */
 };
 
 struct _sceDmaTag {
@@ -403,15 +404,16 @@ struct anon_28 {
 };
 
 struct anon_24 {
-    unsigned long ATE : 1; /* bit 0, byte +0x0 */
-    unsigned long ATST : 3; /* bit 1, byte +0x0 */
-    unsigned long AREF : 8; /* bit 4, byte +0x0 */
-    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
-    unsigned long DATE : 1; /* bit 14, byte +0x0 */
-    unsigned long DATM : 1; /* bit 15, byte +0x0 */
-    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
-    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
-    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+    unsigned short ATE : 1; /* bit 0, byte +0x0 */
+    unsigned short ATST : 3; /* bit 1, byte +0x0 */
+    unsigned short AREF : 8; /* bit 4, byte +0x0 */
+    unsigned short AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned short DATE : 1; /* bit 14, byte +0x0 */
+    unsigned short DATM : 1; /* bit 15, byte +0x0 */
+    unsigned char ZTE : 1; /* bit 16, byte +0x2 */
+    unsigned char ZTST : 2; /* bit 17, byte +0x2 */
+    unsigned char pad19 : 5; /* bit 19, byte +0x2 */
+    unsigned char _extractor_padding_00[4];
 };
 
 struct anon_38 {
@@ -493,74 +495,86 @@ struct anon_25 {
 };
 
 struct anon_36 {
-    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
-    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
-    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
-    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
-    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
-    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
-    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
-    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
-    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
-    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
-    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
-    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
-    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
-    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
-    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
-    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
-    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
-    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
-    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
-    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
-    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
-    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
-    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
-    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
-    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
-    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
-    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
-    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
-    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
-    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
-    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
-    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
-    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
-    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
-    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
-    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
-    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
-    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
-    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
-    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
-    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
-    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
-    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
-    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
-    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
-    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
-    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
-    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
-    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
-    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
-    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
-    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
-    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
-    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
+};
+
+/* GS packet word: the retail code writes the fields of this word one bit
+ * field at a time (byte read-modify-write for the low fields, a 64-bit
+ * insert for the 32-bit field at bit 32). */
+struct anon_35s {
+    unsigned long f0 : 1; /* bit 0, byte +0x0 */
+    unsigned long f1 : 3; /* bit 1, byte +0x0 */
+    unsigned long pad04 : 8; /* bit 4, byte +0x0 */
+    unsigned long f2 : 2; /* bit 12, byte +0x0 */
+    unsigned long pad14 : 2; /* bit 14, byte +0x0 */
+    unsigned long f3 : 1; /* bit 16, byte +0x0 */
+    unsigned long f4 : 2; /* bit 17, byte +0x0 */
+    unsigned long pad19 : 13; /* bit 19, byte +0x0 */
+    unsigned long f5 : 32; /* bit 32, byte +0x0 */
 };
 
 union anon_35 {
-    signed char bData[16]; /* +0x0 */
+    struct anon_35s s; /* +0x0 */
     unsigned char ubData[16]; /* +0x0 */
-    short sData[8]; /* +0x0 */
     unsigned short usData[8]; /* +0x0 */
-    int iData[4]; /* +0x0 */
     unsigned int uiData[4]; /* +0x0 */
-    long i64Data[2]; /* +0x0 */
     unsigned long u64Data[2]; /* +0x0 */
     float fData[4]; /* +0x0 */
-    double dData[2]; /* +0x0 */
-};
+} __attribute__((aligned(16)));
 
 struct tagGScontext {
     anon_40 PRIM; /* +0x0 */
@@ -1136,7 +1150,16 @@ int AE_g_UseAlphaTestValues;
  */
 void impPS2glFogf(unsigned int pname, float param)
 {
-    /* TODO: decompile from asm/... */
+    switch (pname)
+    {
+        case 0x0B65: g_PS2glContext.eFogMode = (unsigned int)param; break;
+        case 0x0B62: g_PS2glContext.fFogDensity = param; break;
+        case 0x0B63: g_PS2glContext.fFogLinearStart = param; break;
+        case 0x0B64: g_PS2glContext.fFogLinearEnd = param; break;
+        case 0x0B61: g_PS2glContext.fFogIndex = param; break;
+        default: return;
+    }
+    g_PS2glContext.bFogChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 1190–1266 */
@@ -1247,9 +1270,84 @@ void impPS2glFogf(unsigned int pname, float param)
 void internalFullScreenQuadJeffSpecialPAL_512_512(void)
 {
     anon_35 qword;
-    /* TODO: decompile from asm/... */
-}
 
+    if (((unsigned long long *)&g_gsContext)[0x36])
+    {
+        GsUpdate();
+    }
+
+    qword.u64Data[1] = 0;
+    qword.u64Data[0] = 0;
+
+    qword.s.f3 = 1;
+    qword.s.f4 = 1;
+    qword.s.f0 = 1;
+    qword.s.f1 = 1;
+    qword.s.f2 = 1;
+
+    qword.ubData[8] = 0x47;
+    GsSendData(0xE, &qword);
+
+    qword.u64Data[0] = 0x110;
+    qword.ubData[8] = 0x1b;
+    GsSendData(0xE, &qword);
+
+    qword.ubData[0] = (unsigned char)((qword.ubData[0] & 0xf8) | 0x06);
+    qword.ubData[8] = 0;
+    GsSendData(0xE, &qword);
+
+    qword.ubData[0] = 0x80;
+    qword.ubData[1] = 0x80;
+    qword.ubData[2] = 0x80;
+    qword.ubData[3] = 0x80;
+    qword.ubData[8] = 1;
+    GsSendData(0xE, &qword);
+
+    qword.u64Data[0] = 0x00080008;
+    qword.ubData[8] = 3;
+    GsSendData(0xE, &qword);
+
+    qword.usData[0] = 0x7080;
+    qword.usData[1] = 0x7000;
+    qword.s.f5 = 0x1f40;
+    qword.ubData[8] = 5;
+    GsSendData(0xE, &qword);
+
+    qword.u64Data[0] = 0x3fff20083fff2008;
+    qword.ubData[8] = 3;
+    GsSendData(0xE, &qword);
+
+    qword.usData[0] = 0x9080;
+    qword.usData[1] = 0xaff9;
+    qword.s.f5 = 0x1f40;
+    qword.ubData[8] = 5;
+    GsSendData(0xE, &qword);
+
+    qword.u64Data[0] = ((unsigned long *)&g_gsContext.PRMODE)[0];
+    qword.u64Data[1] = ((unsigned long *)&g_gsContext.PRMODE)[1];
+    qword.ubData[8] = 0x1b;
+    GsSendData(0xE, &qword);
+
+    qword.u64Data[0] = ((unsigned long *)&g_gsContext)[0];
+    qword.u64Data[1] = ((unsigned long *)&g_gsContext)[1];
+    qword.ubData[8] = 0;
+    GsSendData(0xE, &qword);
+
+    qword.u64Data[0] = ((unsigned long *)&g_gsContext.TEST_1)[0];
+    qword.u64Data[1] = ((unsigned long *)&g_gsContext.TEST_1)[1];
+    qword.ubData[8] = 0x47;
+    GsSendData(0xE, &qword);
+
+    qword.ubData[8] = 0x48;
+    GsSendData(0xE, &qword);
+
+    qword.u64Data[0] = ((unsigned long *)&g_gsContext.RGBAQ)[0];
+    qword.u64Data[1] = ((unsigned long *)&g_gsContext.RGBAQ)[1];
+    qword.ubData[8] = 1;
+    GsSendData(0xE, &qword);
+
+    GsFlushBuffer();
+}
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 1072–1186 */
 /* addr: 0x0017a750  size: 940 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1390,7 +1488,16 @@ void internalFullScreenQuadJeffSpecialNTSC_640_448(void)
     anon_35 qworduv;
     anon_35 qword2;
     anon_35 qword;
-    /* TODO: decompile from asm/... */
+    /* TODO: decompile from asm/...
+     *
+     * Retail structure (0x0017a750, 940 bytes): a 0xc0 stack frame with
+     * s0-s7 saved, the return address at 0x80(sp) and the GS packet buffer
+     * at 0x90(sp).  As in the PAL variant the function is a sequence of
+     * GsSendData(0xE, buffer) calls; the command byte of each packet is
+     * written to buffer+8 and the payload is built in the 16-byte union
+     * (see internalFullScreenQuadJeffSpecialPAL_512_512 for the packet
+     * layout and the GS register bit fields).
+     */
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 963–1068 */
@@ -1530,7 +1637,14 @@ void internalFullScreenQuadJeffSpecialNTSC_640_448(void)
 void internalFullScreenQuadJeffWithoutOptimization(unsigned int mask, float x1, float y1, float x2, float y2, float R, float G, float B, float A, float u1, float v1, float u2, float v2)
 {
     anon_35 qword;
-    /* TODO: decompile from asm/... */
+    /* TODO: decompile from asm/...
+     *
+     * Retail structure (0x0017ab00, 2156 bytes): the unoptimized variant
+     * of the full-screen quad; it builds the same GS packets (16-byte
+     * union in the stack frame, GsSendData(0xE, buffer) per register group
+     * with the command byte in buffer[8]) but with the vertex coordinates
+     * given by the x1/y1/x2/y2 parameters instead of the screen size.
+     */
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 699–960 */
@@ -1927,7 +2041,16 @@ void internalFullScreenQuadJeff(unsigned int mask, float x1, float y1, float x2,
 void internalFullScreenQuad(unsigned int mask, float R, float G, float B, float A, float u1, float v1, float u2, float v2, unsigned char bBlend)
 {
     anon_35 qword;
-    /* TODO: decompile from asm/... */
+    /* TODO: decompile from asm/...
+     *
+     * Retail structure (0x0017bff0, 1880 bytes): the same GS packet
+     * builder as internalFullScreenQuadJeffSpecialPAL_512_512 - a 16-byte
+     * union in the stack frame, one GsSendData(0xE, buffer) call per GS
+     * register group with the command byte in buffer[8] - plus the
+     * RGBAQ/UV/XYZ payload built from the colour and texture-coordinate
+     * parameters.  The packet bit fields are the ones recovered in
+     * struct anon_35s.
+     */
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 400–585 */
@@ -2306,7 +2429,29 @@ void impPS2glStencilFunc(void)
 void impPS2glScissor(int x, int y, int width, int height)
 {
     int down;
-    /* TODO: decompile from asm/... */
+
+    g_PS2glContext.vScissorBox[0] = (float)x;
+    g_PS2glContext.vScissorBox[1] = (float)y;
+    g_PS2glContext.vScissorBox[2] = (float)width;
+    g_PS2glContext.vScissorBox[3] = (float)height;
+
+    if (g_PS2glContext.nEnableBits & 0x20)
+    {
+        if (g_PS2glContext.bFrameMode == 1)
+        {
+            height = height >> 1;
+            down = (g_stBufferInfo.iScreenHeight >> 1) - 1 - (y >> 1);
+        }
+        else
+        {
+            down = g_stBufferInfo.iScreenHeight - 1 - y;
+        }
+
+        g_gsContext.SCISSOR_1.SCAX0 = x; g_gsContext.ModFlgs.SCISSOR_1_Modified = 1;
+        g_gsContext.SCISSOR_1.SCAX1 = x + width - 1; g_gsContext.ModFlgs.SCISSOR_1_Modified = 1;
+        g_gsContext.SCISSOR_1.SCAY0 = down - height + 1; g_gsContext.ModFlgs.SCISSOR_1_Modified = 1;
+        g_gsContext.SCISSOR_1.SCAY1 = down; g_gsContext.ModFlgs.SCISSOR_1_Modified = 1;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 286–288 */
@@ -2414,8 +2559,19 @@ void impPS2glDepthFunc(unsigned int func)
  */
 void impPS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
 {
-    unsigned int mask;
-    /* TODO: decompile from asm/... */
+    unsigned int mask = 0;
+
+    g_PS2glContext.abColorMask[0] = red;
+    g_PS2glContext.abColorMask[1] = green;
+    g_PS2glContext.abColorMask[2] = blue;
+    g_PS2glContext.abColorMask[3] = alpha;
+
+    if (red)   mask |= 0x000000ff;
+    if (green) mask |= 0x0000ff00;
+    if (blue)  mask |= 0x00ff0000;
+    if (alpha) mask |= 0xff000000;
+
+    g_gsContext.FRAME_1.FBMSK = ~mask; g_gsContext.ModFlgs.FRAME_1_Modified = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 48–215 */
@@ -2553,5 +2709,36 @@ void impPS2glBlendFunc(unsigned int sfactor, unsigned int dfactor)
     unsigned char C;
     unsigned char B;
     unsigned char A;
-    /* TODO: decompile from asm/... */
+
+    /* TODO: decompile from asm/...
+     *
+     * Structure recovered from the retail code (0x0017d4f0, 1372 bytes):
+     *   g_PS2glContext.eBlendSrcFactor = sfactor;   (0x386b00)
+     *   g_PS2glContext.eBlendDstFactor = dfactor;   (0x386b04)
+     *   A = 2; B = A; C = A; D = 0; FIX = 0;
+     *   switch (sfactor) { GL_ZERO(0), GL_ONE(1), GL_SRC_ALPHA(0x302),
+     *       GL_ONE_MINUS_SRC_ALPHA(0x303), GL_DST_ALPHA(0x304),
+     *       GL_ONE_MINUS_DST_ALPHA(0x305) }
+     *     each case holds an inner switch on dfactor with the same six
+     *     values; the case bodies assign A/B/C/D (the GS ALPHA_1 field
+     *     codes) and the common tail writes
+     *       g_gsContext.ALPHA_1.A/B/C/D  (+0x100) and .FIX (+0x104)
+     *       g_gsContext.ModFlgs.ALPHA_1_Modified = 1;   (byte +0x1b4, bit 0)
+     *     or, when g_PS2glContext.iCurTextureSet (+0x6110) is non-zero,
+     *     the same for ALPHA_2 (+0x108 / +0x10c) and
+     *     ModFlgs.ALPHA_2_Modified (bit 1).
+     * Recovered (A,B,C,D) table, rows = sfactor, columns = dfactor
+     * 0x000, 0x001, 0x302, 0x303, 0x304, 0x305, invalid:
+     * 0x000: 2222  2221  1202  2101  1212  2111  2220
+     * 0x001: 2220  0221  1200  0101  1212  0111  2220
+     * 0x302: 0202  0202  1100  1100  1100  1100  2220
+     * 0x303: 1000  1000  1000  1000  1000  1000  2220
+     * 0x304: 0222  0222  1111  1111  1111  1111  2220
+     * 0x305: 1010  1010  1010  1010  1010  1010  2220
+     * (FIX = 0x80 only for sfactor = dfactor = GL_ONE, otherwise 0.)
+     * The per-case assignment order and the exact source expressions are
+     * still unknown: the retail code copies between the five locals
+     * (e.g. "B = A; D = 1; A = B") and masks some of them with 0xFF,
+     * which no single choice of local types reproduces for every case.
+     */
 }

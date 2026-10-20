@@ -743,15 +743,21 @@ void C_SdlRef_TextureMatrix::ProcessWithInterpol(void)
  *   +0x00a4 -> line 325
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
+ *
+ * The two address locals share one source line because the retail line map
+ * has a single row covering +0x0018..+0x0028 (the pHalf address setup and
+ * the origin pointer load).  The tail stores a float constant, so MWCC
+ * materialises 0.5f with "lui a1,0x3f00" and stores it with "sw"; MWCC
+ * 3.0.1-020123 lowers the store the other way round (address load first),
+ * MWCC 3.0.3-020716 matches the retail exactly.
  */
 void C_SdlRef_TextureMatrix::Process(void)
 {
-    float* pDest = (float*)m_vpDestinationPointer;
-    if (pDest && GLI_g_SDL_pInterpolatedCameraMatrix)
+    if (m_vpDestinationPointer && GLI_g_SDL_pInterpolatedCameraMatrix)
     {
+        float* pDest = (float*)m_vpDestinationPointer;
         float* pCamera = &GLI_g_SDL_pInterpolatedCameraMatrix[0][0];
-        float* pHalf = GLI_g_SDL_pHalfVect;
-        float* pObject = (float*)(*(char**)((char*)m_vpOriginPointer + 0x24) + 0x10);
+        float* pHalf = GLI_g_SDL_pHalfVect; float* pObject = (float*)(*(char**)((char*)m_vpOriginPointer + 0x24) + 0x10);
         asm
         {
             lqc2 vf5, 0x0(pHalf)
@@ -821,12 +827,17 @@ void C_SdlRef_LocalMatrixForCheap::ProcessWithInterpol(void)
  *   +0x006c -> line 231
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
+ *
+ * The null test uses the member while the copy uses the local: that keeps
+ * the destination pointer in $a2 and &OldMat in $a1, as the retail does, and
+ * gives the six-row line map (the load on its own line, the branch on the
+ * next).  Testing the local instead allocates $a1/$a2 the other way round.
  */
 void C_SdlRef_LocalMatrixForCheap::ProcessNoInterpol(void)
 {
-    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
     float (*pSrc)[4] = (float (*)[4])m_vpOriginPointer;
-    if (pDest)
+    float (*pDest)[4] = (float (*)[4])m_vpDestinationPointer;
+    if (m_vpDestinationPointer)
     {
         PS2_M_vCopyMatrix2(pSrc, pDest, OldMat);
         if (*(char*)m_pcActivity == 0)
