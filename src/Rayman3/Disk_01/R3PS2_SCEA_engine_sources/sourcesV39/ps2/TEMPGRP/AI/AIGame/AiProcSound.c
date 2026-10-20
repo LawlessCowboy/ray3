@@ -3364,12 +3364,45 @@ tdstNodeInterpret_* fn_p_stSetDopplerEffect(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GAM_fn_vSetVolumeSound(int iVolume);
+void GAM_fn_vSetVolumeVoice(int iVolume);
+void GAM_fn_vSetVolumeMusic(int iVolume);
+void GAM_fn_vSetVolumeAmbiance(int iVolume);
+void GAM_fn_vSetVolumeMenu(int iVolume);
+
 tdstNodeInterpret_* fn_p_stSoundProcedureSetVolume(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ st_Param;
     int s32_Volume;
     tdeProcedureId_ e_ProcedureId;
-    /* TODO: decompile from asm/... */
+
+    e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);
+    s32_Volume = st_Param.uDummy.uParam.lValue;
+
+    switch (e_ProcedureId)
+    {
+    case eProc_SND_SetVolumeSound:
+        GAM_fn_vSetVolumeSound(s32_Volume);
+        break;
+    case eProc_SND_SetVolumeVoice:
+        GAM_fn_vSetVolumeVoice(s32_Volume);
+        break;
+    case eProc_SND_SetVolumeMusic:
+        GAM_fn_vSetVolumeMusic(s32_Volume);
+        break;
+    case eProc_SND_SetVolumeAmbiance:
+        GAM_fn_vSetVolumeAmbiance(s32_Volume);
+        break;
+    case eProc_SND_SetVolumeMenuSnd:
+        GAM_fn_vSetVolumeMenu(s32_Volume);
+        break;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, 0);
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AiProcSound.c lines 464–519 */
