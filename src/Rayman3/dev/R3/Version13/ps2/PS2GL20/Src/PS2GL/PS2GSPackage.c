@@ -1543,7 +1543,7 @@ void GsSendData(signed char type, anon_10* pdata)
             gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
         } else {
             g_gsContext.pCurTag = (anon_1*)g_gsContext.pqCurrent;
-            g_gsContext.pqCurrent = g_gsContext.pqCurrent + 16;
+            g_gsContext.pqCurrent++;
             gifSetTag(g_gsContext.pCurTag, 1, 0, 0, 0, 0, 0, 0);
             g_gsContext.iRegs = 0;
             g_gsContext.iBufCount++;

@@ -1334,6 +1334,14 @@ unsigned char PS2glIsEnabled(unsigned int cap);
 void PS2glDisable(unsigned int cap);
 void PS2glEnable(unsigned int cap);
 void GsSendData(unsigned int reg, anon_3* data);
+
+/* libgraph.h register packer (sceGsTex0). */
+#define SCE_GS_SET_TEX0(tbp, tbw, psm, tw, th, tcc, tfx, cbp, cpsm, csm, csa, cld) \
+    ((unsigned long)(tbp) | ((unsigned long)(tbw) << 14) | ((unsigned long)(psm) << 20) | \
+     ((unsigned long)(tw) << 26) | ((unsigned long)(th) << 30) | ((unsigned long)(tcc) << 34) | \
+     ((unsigned long)(tfx) << 35) | ((unsigned long)(cbp) << 37) | ((unsigned long)(cpsm) << 51) | \
+     ((unsigned long)(csm) << 55) | ((unsigned long)(csa) << 56) | ((unsigned long)(cld) << 61))
+
 void GsUpdate(void);
 void impPS2glClearColor(float red, float green, float blue, float alpha);
 void impPS2glClear(unsigned int mask);
@@ -1629,9 +1637,20 @@ void AE_SetDrawTarget(int BufferID)
 void AE_SetTextureNoBilinear(int BufferID)
 {
     anon_3 qword;
-    unsigned long DestPSM;
     unsigned long DestBP;
-    /* TODO: decompile from asm/... */
+    unsigned long DestPSM;
+
+    qword.u64Data[0] = 0;
+    qword.u64Data[1] = 0;
+    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
+    qword.u64Data[0] = SCE_GS_SET_TEX0(DestBP << 5, g_stBufferInfo.iScreenWidth >> 6, DestPSM, 10, 9, 0, 0, 0, 0, 0, 0, 0);
+    qword.ubData[8] = 6;
+    GsSendData(0xE, &qword);
+    qword.u64Data[0] = 0;
+    qword.ubData[8] = 0x14;
+    GsSendData(0xE, &qword);
+    GsUpdate();
+    g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1772–1789 */
@@ -1663,9 +1682,20 @@ void AE_SetTextureNoBilinear(int BufferID)
 void AE_SetTextureNoAlpha(int BufferID)
 {
     anon_3 qword;
-    unsigned long DestPSM;
     unsigned long DestBP;
-    /* TODO: decompile from asm/... */
+    unsigned long DestPSM;
+
+    qword.u64Data[0] = 0;
+    qword.u64Data[1] = 0;
+    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
+    qword.u64Data[0] = SCE_GS_SET_TEX0(DestBP << 5, g_stBufferInfo.iScreenWidth >> 6, DestPSM, 10, 9, 0, 0, 0, 0, 0, 0, 0);
+    qword.ubData[8] = 6;
+    GsSendData(0xE, &qword);
+    qword.u64Data[0] = 0x60;
+    qword.ubData[8] = 0x14;
+    GsSendData(0xE, &qword);
+    GsUpdate();
+    g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1752–1769 */
@@ -1697,9 +1727,20 @@ void AE_SetTextureNoAlpha(int BufferID)
 void AE_SetTexture(int BufferID)
 {
     anon_3 qword;
-    unsigned long DestPSM;
     unsigned long DestBP;
-    /* TODO: decompile from asm/... */
+    unsigned long DestPSM;
+
+    qword.u64Data[0] = 0;
+    qword.u64Data[1] = 0;
+    AE_InternalGetBPandPSMFromID(BufferID, &DestBP, &DestPSM);
+    qword.u64Data[0] = SCE_GS_SET_TEX0(DestBP << 5, g_stBufferInfo.iScreenWidth >> 6, DestPSM, 10, 9, 1, 0, 0, 0, 0, 0, 0);
+    qword.ubData[8] = 6;
+    GsSendData(0xE, &qword);
+    qword.u64Data[0] = 0x60;
+    qword.ubData[8] = 0x14;
+    GsSendData(0xE, &qword);
+    GsUpdate();
+    g_gsContext.TEXFLUSH.DATA = 1; g_gsContext.ModFlgs.TEXFLUSH_Modified = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1748–1749 */
@@ -1763,7 +1804,47 @@ void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned
     unsigned long DestPSM;
     unsigned long DestBP;
     anon_44 dispfb;
-    /* TODO: decompile from asm/... */
+
+    switch (BufferID)
+    {
+    case 0:
+        *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
+        DestBP = g_PS2glContext.iFrameBufferBack >> 5;
+        DestPSM = dispfb.PSM;
+        break;
+    case 1:
+        *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
+        DestBP = g_PS2glContext.iFrameBufferFront >> 5;
+        DestPSM = dispfb.PSM;
+        break;
+    case 2:
+        DestBP = g_stBufferInfo.iAuxBufferBase;
+        DestPSM = g_stBufferInfo.iAuxBufferPSM;
+        break;
+    case 3:
+        DestBP = g_stDoubleBuf.draw01.zbuf1.ZBP;
+        if (g_stBufferInfo.iDepthBufferDepth == 16)
+        {
+            DestPSM = g_stBufferInfo.iAuxBufferPSM;
+        }
+        else
+        {
+            *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
+            DestPSM = dispfb.PSM;
+        }
+        break;
+    case 4:
+        DestBP = g_stDoubleBuf.draw01.zbuf1.ZBP;
+        *(unsigned long*)&dispfb = *(unsigned long*)&g_stDoubleBuf.disp[0].dispfb;
+        DestPSM = dispfb.PSM;
+        break;
+    default:
+        DestBP = AE_g_iOldBP;
+        DestPSM = AE_g_iOldPSM;
+        break;
+    }
+    *pDestBP = DestBP;
+    *pDestPSM = DestPSM;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1660–1681 */
@@ -1897,7 +1978,11 @@ void AE_Begin(void)
  */
 void AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX)
 {
-    /* TODO: decompile from asm/... */
+    g_gsContext.ALPHA_1.A = vA; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.B = vB; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.C = vC; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.D = vD; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
+    g_gsContext.ALPHA_1.FIX = vFIX; g_gsContext.ModFlgs.ALPHA_1_Modified = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1595–1612 */
@@ -1931,7 +2016,21 @@ void AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX)
  */
 void AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2)
 {
-    /* TODO: decompile from asm/... */
+    y1 = 100.0f - y1;
+    y2 = 100.0f - y2;
+    u1 *= (float)(g_stBufferInfo.iScreenWidth * 16);
+    u2 *= (float)(g_stBufferInfo.iScreenWidth * 16);
+    if (g_stBufferInfo.bPlainBufferMode)
+    {
+        v1 *= (float)(g_stBufferInfo.iScreenHeight * 16);
+        v2 *= (float)(g_stBufferInfo.iScreenHeight * 16);
+    }
+    else
+    {
+        v1 *= (float)(g_stBufferInfo.iScreenHeight * 8);
+        v2 *= (float)(g_stBufferInfo.iScreenHeight * 8);
+    }
+    internalFullScreenQuadJeffWithoutOptimization(0x4000, x1, y1, x2, y2, r, g, b, a, u1, v1, u2, v2);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1573–1590 */
@@ -1965,7 +2064,21 @@ void AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, fl
  */
 void AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2)
 {
-    /* TODO: decompile from asm/... */
+    y1 = 100.0f - y1;
+    y2 = 100.0f - y2;
+    u1 *= (float)(g_stBufferInfo.iScreenWidth * 16);
+    u2 *= (float)(g_stBufferInfo.iScreenWidth * 16);
+    if (g_stBufferInfo.bPlainBufferMode)
+    {
+        v1 *= (float)(g_stBufferInfo.iScreenHeight * 16);
+        v2 *= (float)(g_stBufferInfo.iScreenHeight * 16);
+    }
+    else
+    {
+        v1 *= (float)(g_stBufferInfo.iScreenHeight * 8);
+        v2 *= (float)(g_stBufferInfo.iScreenHeight * 8);
+    }
+    internalFullScreenQuadJeff(0x4000, x1, y1, x2, y2, r, g, b, a, u1, v1, u2, v2);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1526–1559 */
@@ -2057,7 +2170,7 @@ void AE_SimpleBlur(int Counter)
  */
 void AE_CopyScreen(void)
 {
-    /* TODO: decompile from asm/... */
+    AE_DrawWindow(0.0f, 0.0f, 100.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1283–1427 */

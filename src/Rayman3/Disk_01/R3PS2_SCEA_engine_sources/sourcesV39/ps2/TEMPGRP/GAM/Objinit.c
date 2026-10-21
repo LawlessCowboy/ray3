@@ -1888,15 +1888,54 @@ void fn_vForceReinitAllObjects(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vInitObjectsWhenPlayerChangeSector(HIE_tdstSuperObject_* hCurrentSector, HIE_tdstSuperObject_* hPreviousSector)
+void fn_vReInitActorsWhenSectorBecomesActive(HIE_tdstSuperObject_* _hSector);
+
+/* The debug record lists only (hCurrentSector, hPreviousSector), but the retail code reads
+   them from a1/a2 and both callers (SectInfo.c, Basic.c) pass the character first. */
+void fn_vInitObjectsWhenPlayerChangeSector(HIE_tdstSuperObject_* hCharacter, HIE_tdstSuperObject_* hCurrentSector, HIE_tdstSuperObject_* hPreviousSector)
 {
-    unsigned char bSectorWasAndIsActive;
-    SECT_tdstListOfSOSectorsInActivityInteraction_* hActivityListInPreviousSector;
-    SECT_tdstListOfSOSectorsInActivityInteraction_* hActivityListInActiveSector;
     int j;
     int i;
-    /* TODO: decompile from asm/... */
+    SECT_tdstListOfSOSectorsInActivityInteraction_* hActivityListInActiveSector;
+    SECT_tdstListOfSOSectorsInActivityInteraction_* hActivityListInPreviousSector;
+    unsigned char bSectorWasAndIsActive;
+
+    for (i = hCurrentSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.lNumberOfElementsOpt, hActivityListInActiveSector = hCurrentSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.hFirstElementOpt; i > 0; i--, hActivityListInActiveSector++)
+    {
+        bSectorWasAndIsActive = 0;
+        if (hActivityListInActiveSector->hPointerOfSectorSO == hPreviousSector)
+        {
+            bSectorWasAndIsActive = 1;
+        }
+        else
+        {
+            for (j = hPreviousSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.lNumberOfElementsOpt, hActivityListInPreviousSector = hPreviousSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.hFirstElementOpt; j > 0; j--, hActivityListInPreviousSector++)
+            {
+                if (hActivityListInPreviousSector->hPointerOfSectorSO == hActivityListInActiveSector->hPointerOfSectorSO)
+                    bSectorWasAndIsActive = 1;
+            }
+        }
+        if (bSectorWasAndIsActive == 0)
+            fn_vReInitActorsWhenSectorBecomesActive(hActivityListInActiveSector->hPointerOfSectorSO);
+    }
+
+    bSectorWasAndIsActive = 0;
+    for (j = hPreviousSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.lNumberOfElementsOpt, hActivityListInPreviousSector = hPreviousSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.hFirstElementOpt; j > 0; j--, hActivityListInPreviousSector++)
+    {
+        if (hActivityListInPreviousSector->hPointerOfSectorSO == hCurrentSector)
+            bSectorWasAndIsActive = 1;
+    }
+    if (bSectorWasAndIsActive == 0)
+        fn_vReInitActorsWhenSectorBecomesActive(hCurrentSector);
 }
+
+extern HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGame);
+extern void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, tdstEngineObject_* p_stObject);
+extern void SND_fn_vKillObjectSound2(HIE_tdstSuperObject_* p_stSuperObject, int s32_TypeId);
+extern unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stObject);
+extern void fn_vKillAlwaysByPersonalType(int otObjectPersonalType);
+extern void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
+void fn_vInitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIniType);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 511–542 */
 /* addr: 0x00259e00  size: 256 bytes */
@@ -1916,11 +1955,20 @@ void fn_vInitObjectsWhenPlayerChangeSector(HIE_tdstSuperObject_* hCurrentSector,
  */
 void fn_vReInitActorsWhenSectorBecomesActive(HIE_tdstSuperObject_* _hSector)
 {
-    int j;
-    tdstEngineObject_* p_stTreatObject;
     SECT_tdstListOfSOCharacters_* hNextCharacterList;
+    tdstEngineObject_* p_stTreatObject;
+    int j;
     SECT_tdstListOfSOCharacters_* hCharacterList;
-    /* TODO: decompile from asm/... */
+
+    for (j = _hSector->hLinkedObject.p_stSector->stListOfCharacters.lNumberOfElementsDyn, hCharacterList = _hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn, hNextCharacterList = hCharacterList ? hCharacterList->hNextBrotherDyn : NULL; hCharacterList && j; j--, hCharacterList = hNextCharacterList, hCharacterList ? hNextCharacterList = hNextCharacterList->hNextBrotherDyn : 0)
+    {
+        p_stTreatObject = hCharacterList->hPointerOfCharacter->hLinkedObject.p_stCharacter;
+        if (((unsigned char)((p_stTreatObject->h_StandardGame->ucMiscFlags & 1) ? 1 : 0) && (p_stTreatObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 0 || p_stTreatObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 1)) || (!(unsigned char)((p_stTreatObject->h_StandardGame->ucMiscFlags & 1) ? 1 : 0) && p_stTreatObject->h_StandardGame->eInitFlagWhenOutOfZone == 0))
+        {
+            if (!fn_ucIsAnAlwaysObject(p_stTreatObject) && g_DEMO_KeybTest != 2)
+                fn_vInitOneObject(p_stTreatObject, 4);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 504–508 */
@@ -1995,7 +2043,32 @@ void fn_vInitAllObjectsWhenNewGameStart(void)
  */
 void fn_vKillEngineObjectOrAlwaysByPointer(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    if (p_stObject->h_StandardGame->otObjectFamilyType != -1)
+    {
+        if (p_stObject->h_StandardGame->otObjectPersonalType >= 0x10000)
+        {
+            fn_vKillAlwaysByPersonalType(p_stObject->h_StandardGame->otObjectPersonalType);
+            return;
+        }
+        PLA_fn_vDesInitAllChildOfCharacter(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), p_stObject);
+        if (!(unsigned char)((p_stObject->h_StandardGame->ucMiscFlags & 1) ? 1 : 0))
+        {
+            p_stObject->h_StandardGame->ucMiscFlags |= 1;
+            if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 5)
+                p_stObject->h_StandardGame->ucMiscFlags &= 0xFD;
+            else
+                p_stObject->h_StandardGame->ucMiscFlags |= 2;
+            if (p_stObject->h_StandardGame->eInitFlagWhenDeadOrTaken == 1)
+                fn_vInitOneObject(p_stObject, 4);
+            else
+                p_stObject->h_StandardGame->ucMiscFlags &= 0xFB;
+        }
+        SND_fn_vKillObjectSound2(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), g_lSoundObjectTypeAnim);
+    }
+    else
+    {
+        Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x38, -1, 0xFF, 0xFF, NULL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 409–420 */
@@ -2014,7 +2087,15 @@ void fn_vKillEngineObjectOrAlwaysByPointer(tdstEngineObject_* p_stObject)
  */
 void fn_vDesactiveAnObject(tdstEngineObject_* p_stObject)
 {
-    /* TODO: decompile from asm/... */
+    PLA_fn_vDesInitAllChildOfCharacter(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), p_stObject);
+    SND_fn_vKillObjectSound2(fn_h_StandardGameGetSuperObject(p_stObject->h_StandardGame), g_lSoundObjectTypeAnim);
+
+    if (!(unsigned char)((p_stObject->h_StandardGame->ucMiscFlags & 1) ? 1 : 0) && (unsigned char)((p_stObject->h_StandardGame->ucMiscFlags & 2) ? 1 : 0) == 1)
+    {
+        p_stObject->h_StandardGame->ucMiscFlags &= 0xFD;
+        p_stObject->h_StandardGame->ucMiscFlags &= 0xFE;
+        p_stObject->h_StandardGame->ucMiscFlags &= 0xFB;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 359–406 */
@@ -2074,10 +2155,25 @@ void fn_vForceActiveAnObject(tdstEngineObject_* p_stObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void Erm_fn_ClearLastError();
+
 void fn_vDesinitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIniType)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    if (!p_stObject->h_3dData || !p_stObject->h_StandardGame)
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0xC, -1, 0xFF, 0xFF, NULL);
+    }
+    if (p_stObject->h_StandardGame->otObjectFamilyType == -1)
+    {
+        Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x47, -1, 0, 0, NULL); Erm_fn_ClearLastError(0);
+    }
+    for (i = 0; i < sizeof(tdstEngineObject_) / sizeof(void*); i++)
+    {
+        if (((void**)p_stObject)[i] != 0)
+            g_a_stStructureHandleFunction[i].p_fn_vDesinitFunction(p_stObject, eObjIniType);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 313–329 */
@@ -2100,7 +2196,22 @@ void fn_vDesinitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObj
 void fn_vInitOneObject(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjIniType)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    if (!p_stObject->h_3dData || !p_stObject->h_StandardGame)
+    {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0xC, -1, 0xFF, 0xFF, NULL);
+    }
+    if (p_stObject->h_StandardGame->otObjectFamilyType == -1)
+    {
+        Erm_fn_v_UpdateLastError(0x30, g_ucGameModuleId, 0, 0x47, -1, 0, 0, NULL); Erm_fn_ClearLastError(0);
+    }
+    for (i = 0; i < sizeof(tdstEngineObject_) / sizeof(void*); i++)
+    {
+        if (((void**)p_stObject)[i] != 0)
+            g_a_stStructureHandleFunction[i].p_fn_vInitFunction(p_stObject, eObjIniType);
+    }
+    if (eObjIniType == OTI_MapLoaded)
+        p_stObject->h_StandardGame->ucMiscFlags |= 8;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 176–234 */
@@ -2232,11 +2343,24 @@ void fn_vPartiallyDestroyHierarchy(HIE_tdstSuperObject_* p_stSuperObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int fn_otFindFamilyTypeOfFamilyTypeName(char* szFamilyName);
+extern void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* p_stSuperObject);
+extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObject);
+
 void fn_vRemoveWorldSectInfo(void)
 {
     HIE_tdstSuperObject_* hNextCharacter;
     HIE_tdstSuperObject_* hCharacter;
-    /* TODO: decompile from asm/... */
+    hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); while (hCharacter)
+    {
+        if (hCharacter->ulTypeOfLinkedObject == 2)
+        {
+            if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectFamilyType == fn_otFindFamilyTypeOfFamilyTypeName("World"))
+            {
+                fn_vRemoveObjectInSectorList(hCharacter);
+            }
+        }
+        hCharacter = hNextCharacter; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 140–158 */

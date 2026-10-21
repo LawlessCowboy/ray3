@@ -1712,6 +1712,9 @@ extern "C" int GLI_g_UseAlphaTest;
 extern "C" int GLI_vDrawWorldOrthoPlanarSprite(MTH3D_tdstVector_* p_stPosition, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2);
 extern "C" int GLI_vDrawWorldSpriteOpt(MTH3D_tdstVector_* Pos, GLI_tdstMaterial_* Material, float SizeX, float SizeY, GLD_tdstViewportAttributes_* viewport, int AnimTime);
 extern "C" void GLI_vDrawWorldSemiLookatSpriteWithUVs(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, GLI_tdstMaterial_* hMaterial, GLD_tdstViewportAttributes_* hVp, float fSize, float fU0, float fV0, float fU1, float fV1);
+extern "C" void sceVu0CopyVector(void* pDest, void* pSrc);
+extern "C" void sceVu0ScaleVectorXYZ(void* pDest, void* pSrc, float fScale);
+extern "C" void sceVu0AddVector(void* pDest, void* pSrc, void* pAdd);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 51–66 */
 /* addr: 0x001ea500  size: 180 bytes */
@@ -7472,10 +7475,32 @@ void AGO3_SimpleSparks::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_SimpleSparks::Process(void)
 {
-    unsigned int i;
-    C_Vector VTemp;
     C_Vector* pVect;
-    /* TODO: decompile from asm/... */
+    C_Vector VTemp;
+    unsigned int i;
+
+    if (m_hArray)
+    {
+        pVect = (C_Vector*)AGO2_MEM_GetPointerFromHandle(m_hArray);
+        for (i = 0; i < m_NbParticles; i++)
+        {
+            sceVu0CopyVector(&VTemp, &pVect[(i << 1) + 1]);
+            sceVu0ScaleVectorXYZ(&VTemp, &VTemp, g_fTimeDifference);
+            sceVu0AddVector(&pVect[i << 1], &pVect[i << 1], &VTemp);
+            ((MTH3D_tdstVector_*)&pVect[(i << 1) + 1])->xZ -= 9.81f * g_fTimeDifference;
+        }
+        m_fTransparency -= 255.0f * g_fTimeDifference;
+        if (m_fTransparency <= 0.0f)
+        {
+            m_fTransparency = 0.0f;
+            m_Finished = 1;
+        }
+        m_fSize -= 0.5f * g_fTimeDifference;
+        if (m_fSize <= 0.01f)
+        {
+            m_fSize = 0.01f;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 429–435 */

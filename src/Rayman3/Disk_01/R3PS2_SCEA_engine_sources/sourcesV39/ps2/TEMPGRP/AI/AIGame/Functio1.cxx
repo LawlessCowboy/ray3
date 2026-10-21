@@ -1859,14 +1859,15 @@ tdstNodeInterpret_* fn_p_stVectorAndAngle(HIE_tdstSuperObject_* p_SuperObjPerso,
  */
 tdstNodeInterpret_* fn_p_stComputeRebondVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
-    MTH3D_tdstVector_ stInitVector = p_stValue->uParam.stVectorValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
-    MTH3D_tdstVector_ stNormalVector = p_stValue->uParam.stVectorValue;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
-    float xDot, xCoef, xNorm;
-    MTH3D_tdstVector_* p_stOut;
+    MTH3D_tdstVector_ stInitVector;
+    MTH3D_tdstVector_ stNormalVector;
     MTH3D_tdstVector_ stReactionVector;
+    float xDot, xCoef, xNorm;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    stInitVector = p_stValue->uParam.stVectorValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    stNormalVector = p_stValue->uParam.stVectorValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
     if (p_stValue->eType == 8) { xNorm = p_stValue->uParam.xValue; } else { xNorm = (float)p_stValue->uParam.lValue; }
     xDot = MTH3D_xScalarProduct(&stInitVector, &stNormalVector);
     xCoef = -2.0f * xDot;

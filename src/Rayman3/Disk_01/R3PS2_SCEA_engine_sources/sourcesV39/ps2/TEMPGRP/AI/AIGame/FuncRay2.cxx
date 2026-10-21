@@ -1778,13 +1778,17 @@ tdstNodeInterpret_* fn_p_stCloserWPInGraph(HIE_tdstSuperObject_* p_SuperObjPerso
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" float fn_xGetDistanceWaypointMax(void);
+extern "C" float fn_xGetDistanceWaypointMin(void);
+extern "C" int WPG_fn_lNumberOfWaypointOfGraph(WP_tdstGraph_* hGraph);
+extern "C" WP_tdstWayPoint_* WPG_fn_hGetWaypointOfGraph(WP_tdstGraph_* hGraph, int iIndex, int* _plTypeOfWP);
+extern "C" void WP_fnv_WayPoint_ComputeLocation(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _p_stVertex);
 tdstNodeInterpret_* fn_p_stCloserAndCollisionWPInGraph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    MTH3D_tdstVector_ stVectPosition;
-    MTH3D_tdstVector_ stCurrentWPVector;
+    float xBestDist;
     float xDistMax;
     float xDistMin;
-    float xBestDist;
+    MTH3D_tdstVector_ stCurrentWPVector;
     WP_tdstWayPoint_* hWayPoint;
     WP_tdstWayPoint_* hBestWP;
     WP_tdstGraph_* hGraph;
@@ -1792,7 +1796,50 @@ tdstNodeInterpret_* fn_p_stCloserAndCollisionWPInGraph(HIE_tdstSuperObject_* p_S
     int lNbWPInGraph;
     int lIndex;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    hBestWP = NULL;
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    xBestDist = -1.0f;
+    xDistMax = fn_xGetDistanceWaypointMax();
+    xDistMin = fn_xGetDistanceWaypointMin();
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    MTH3D_tdstVector_ stVectPosition = p_stValue->uParam.stVectorValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    hGraph = (WP_tdstGraph_*)p_stValue->uParam.pValue;
+    if (eFuncId != 167) {
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        return p_stTree;
+    } else {
+        if (hGraph == NULL) {
+            p_stValue->uParam.lValue = 0;
+            p_stValue->eType = (tdeVariableType_)10;
+            return p_stTree;
+        } else {
+            lNbWPInGraph = WPG_fn_lNumberOfWaypointOfGraph(hGraph);
+            for (lIndex = 0; lIndex < lNbWPInGraph; lIndex++) {
+                float xDist;
+                float xDiffX;
+                float xDiffY;
+                float xDiffZ;
+                hWayPoint = WPG_fn_hGetWaypointOfGraph(hGraph, lIndex, &lTypeOfWP);
+                WP_fnv_WayPoint_ComputeLocation(hWayPoint, &stCurrentWPVector);
+                xDiffX = stCurrentWPVector.xX - stVectPosition.xX;
+                xDiffY = stCurrentWPVector.xY - stVectPosition.xY;
+                xDiffZ = stCurrentWPVector.xZ - stVectPosition.xZ;
+                xDist = MTH_xSqrt(MTH_xSqr3(xDiffX, xDiffY, xDiffZ));
+                if (xDist <= WP_fnx_WayPoint_GetRadius(hWayPoint)) {
+                    if (xBestDist == -1.0f || xDist < xBestDist) {
+                        if (xDistMax == 0.0f || (xDist <= xDistMax && xDist >= xDistMin)) {
+                            hBestWP = hWayPoint;
+                            xBestDist = MTH_xSqrt(MTH_xSqr3(xDiffX, xDiffY, xDiffZ));
+                        }
+                    }
+                }
+            }
+            p_stValue->uParam.pValue = hBestWP;
+            p_stValue->eType = (tdeVariableType_)10;
+            return p_stTree;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 1930–1955 */
@@ -2585,7 +2632,69 @@ tdstNodeInterpret_* fn_p_stCode4PointsDeMagie(HIE_tdstSuperObject_* p_SuperObjPe
     tdeFuncId_ eFuncId;
     tdstGetSetParam_ stParam;
     int lValue;
-    /* TODO: decompile from asm/... */
+    eFuncId = *((tdeFuncId_*)p_stTree - 2);
+    switch (eFuncId) {
+    case 137:
+        lValue = stExtendDatas4Ray.iMagicPoints4Ray;
+        break;
+    case 138:
+        lValue = stExtendDatas4Ray.iMagicPointsMax4Ray;
+        break;
+    case 139:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (stParam.eType == 8) {
+            lValue = MTH_M_xRealToLong(stParam.uParam.xValue);
+        } else {
+            lValue = stParam.uParam.lValue;
+        }
+        stExtendDatas4Ray.iMagicPoints4Ray += lValue;
+        if (stExtendDatas4Ray.iMagicPointsMax4Ray < stExtendDatas4Ray.iMagicPoints4Ray) {
+            stExtendDatas4Ray.iMagicPoints4Ray = stExtendDatas4Ray.iMagicPointsMax4Ray;
+        }
+        lValue = stExtendDatas4Ray.iMagicPoints4Ray;
+        break;
+    case 140:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (stParam.eType == 8) {
+            lValue = MTH_M_xRealToLong(stParam.uParam.xValue);
+        } else {
+            lValue = stParam.uParam.lValue;
+        }
+        stExtendDatas4Ray.iMagicPointsMax4Ray += lValue;
+        lValue = stExtendDatas4Ray.iMagicPointsMax4Ray;
+        break;
+    case 141:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (stParam.eType == 8) {
+            lValue = MTH_M_xRealToLong(stParam.uParam.xValue);
+        } else {
+            lValue = stParam.uParam.lValue;
+        }
+        stExtendDatas4Ray.iMagicPoints4Ray -= lValue;
+        if (stExtendDatas4Ray.iMagicPoints4Ray < 0) {
+            stExtendDatas4Ray.iMagicPoints4Ray = 0;
+        }
+        lValue = stExtendDatas4Ray.iMagicPoints4Ray;
+        break;
+    case 142:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        if (stParam.eType == 8) {
+            lValue = MTH_M_xRealToLong(stParam.uParam.xValue);
+        } else {
+            lValue = stParam.uParam.lValue;
+        }
+        stExtendDatas4Ray.iMagicPointsMax4Ray -= lValue;
+        if (stExtendDatas4Ray.iMagicPointsMax4Ray < 0) {
+            stExtendDatas4Ray.iMagicPointsMax4Ray = 0;
+        }
+        lValue = stExtendDatas4Ray.iMagicPointsMax4Ray;
+        break;
+    default:
+        return p_stTree;
+    }
+    p_stValue->uParam.lValue = lValue;
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 545–631 */

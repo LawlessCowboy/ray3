@@ -23,6 +23,7 @@ extern "C" int rand(void);
 extern "C" int strlen(const char*);
 extern "C" void* memset(void* pBuffer, int cValue, unsigned int uiSize);
 extern "C" char* strcat(char* szDest, const char* szSrc);
+extern "C" char* strncpy(char* szDest, const char* szSrc, unsigned int uiCount);
 extern "C" void* memmove(void* dst, const void* src, unsigned int size);
 extern "C" int CreateThread(ThreadParam* pst_Param);
 extern "C" int StartThread(int iThreadId, int iPriority);
@@ -730,10 +731,38 @@ unsigned int usnd_uiComputeRelativePath(char* szAbsFP1, char* szAbsFP2, char* sz
  */
 unsigned int usnd_uiComputeAbsolutePath(char* szAbsFP, char* szRelFP, char* szResFP, unsigned int uiResStringSize)
 {
-    char cRecursDir;
-    char* p2;
-    char* p1;
-    /* TODO: decompile from asm/... */
+    signed char* p;
+    signed char* pAbs;
+    signed char* pRes;
+    signed char cRecursDir;
+    unsigned int uiLen;
+
+    cRecursDir = 0;
+    memset(szResFP, 0, uiResStringSize);
+    p = (signed char*)szRelFP;
+    for (;;)
+    {
+        if (!((*p++ == '.') && (*p++ == '.') && ((*p == '\\') || (*p == '/'))))
+            break;
+        p++;
+        cRecursDir++;
+    }
+    pAbs = (signed char*)szAbsFP + strlen(szAbsFP);
+    do { pAbs--; } while ((*pAbs != '\\') && (*pAbs != '/') && (pAbs >= (signed char*)szAbsFP));
+    while (cRecursDir)
+    {
+        pAbs--;
+        if ((*pAbs == '\\') || (*pAbs == '/')) cRecursDir--;
+    }
+    uiLen = (unsigned int)(pAbs + 1) - (unsigned int)szAbsFP;
+    if ((unsigned int)(pAbs + 1) < (unsigned int)szAbsFP) return (unsigned int)-1;
+    strncpy(szResFP, szAbsFP, uiLen);
+    pRes = (signed char*)szResFP + strlen(szResFP);
+    do { pRes--; } while ((*pRes != '\\') && (*pRes != '/') && (pRes >= (signed char*)szAbsFP));
+    *++pRes = '\0';
+    strcat(szResFP, (const char*)(p - 1));
+    fs_vCleanTheString(szResFP);
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 52–59 */

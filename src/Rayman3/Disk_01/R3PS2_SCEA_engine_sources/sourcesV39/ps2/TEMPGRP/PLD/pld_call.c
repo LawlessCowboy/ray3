@@ -4757,10 +4757,23 @@ void PLD_fn_vUnLoadTransition(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void HMU_fn_vDeleteLevelMemories(void);
+
 void PLD_fn_vUnLoadLevel(void)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    memset(&GLI_g_StaticCopyOfArrayOfVisualMaterial[PLD_g_ulNumberOfTransitionVisualMaterials], 1, (GLI_g_ulNumberOfVisualMaterials - PLD_g_ulNumberOfTransitionVisualMaterials + 1) * 4);
+    GLI_g_ulNumberOfVisualMaterials = PLD_g_ulNumberOfTransitionVisualMaterials;
+    SND_fn_bUnloadBank("GAME");
+    HMU_fn_vDeleteLevelMemories();
+    MNC_fn_pcUnLoadArea(1);
+    for (i = 0; i < g_stFixInfo.ulNbObject; i++)
+    {
+        ((tdstEngineObject_*)g_stFixInfo.a20_stObjects[i])->h_3dData->p_stCurrentHieCouples = NULL;
+        ((tdstEngineObject_*)g_stFixInfo.a20_stObjects[i])->h_3dData->wCurrentHieNbCouples = 0;
+        ((tdstEngineObject_*)g_stFixInfo.a20_stObjects[i])->h_3dData->wCurrentHieNbCouples = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2582–2611 */
@@ -4776,11 +4789,28 @@ void PLD_fn_vUnLoadLevel(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PLD_fn_vClearAnimationsBanks(int iStartBank, int iNumberOfBanks);
+unsigned char fn_bGetFamilyProperty(tdstFamilyList_* h_Family, unsigned char ucPropertyMask);
+unsigned char fn_ucFindPersonalIdOfPersonalType(int otType);
+unsigned char GAM_fn_bIsActorToLoad(unsigned char ucActorId);
+int sprintf(char* s, const char* format, ...);
+
 void PLD_fn_vUnLoadLevelFamilies(void)
 {
     tdstFamilyList_* p_stThisFamily;
-    char s_szNumericName[5];
-    /* TODO: decompile from asm/... */
+    static char s_szNumericName[5] = "I";
+
+    { HIE_tdstSuperObject_* hCharacter; for (hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn; hCharacter; hCharacter = hCharacter->hNextBrotherDyn) { if (hCharacter->ulTypeOfLinkedObject == 2 && (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucOptional & 2)) { unsigned char ucCharacterId = fn_ucFindPersonalIdOfPersonalType(hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectPersonalType); if (GAM_fn_bIsActorToLoad(ucCharacterId)) { sprintf(s_szNumericName + 1, "%d", ucCharacterId); SND_fn_bUnloadBank(s_szNumericName); } } } }
+
+    for (p_stThisFamily = g_stEngineStructure.hFamilyList.hFirstElementDyn; p_stThisFamily; p_stThisFamily = p_stThisFamily->hNextBrotherDyn)
+    {
+        if (fn_bGetFamilyProperty(p_stThisFamily, 1) && g_ax_pA3dGENERAL[p_stThisFamily->ucStorageBank])
+        {
+            unsigned char ucBank = p_stThisFamily->ucStorageBank;
+            PLD_fn_vClearAnimationsBanks(ucBank, 1);
+            MNC_fn_pcUnLoadArea(ucBank + 102);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1542–2557 */

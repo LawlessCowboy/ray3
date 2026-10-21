@@ -2775,23 +2775,23 @@ void GLI_vCleanDispTemporaryDataSPO(HIE_tdstSuperObject_* _hSprObj)
                         if (p_stObjectTable->wNumberOfElement != 0) {
                             iNbElement = 0;
                             p_ObjectsTableElement = p_stObjectTable->d_stObjectsTable;
-                            for (; iNbElement < p_stObjectTable->wNumberOfElement; iNbElement++) {
-                                if (p_ObjectsTableElement->wTypeOfTarget == 0) {
-                                    hVisualSet = PO_fn_hGetVisualSet((PO_tdstPhysicalObject_*)p_ObjectsTableElement->h_Target);
-                                    if (hVisualSet != NULL) {
-                                        if (hVisualSet->xType == 0) {
-                                            if (hVisualSet->xNbLodDefinitions == 0) {
-                                                GLI_vCleanGeoObj(hVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject);
-                                            } else {
-                                                for (iNbLod = 0, iOffset = 0; iNbLod < hVisualSet->xNbLodDefinitions; iNbLod++, iOffset += 4) {
-                                                    GLI_vCleanGeoObj(((GEO_tduVSObject_*)((char*)hVisualSet->d_p_stLodDefinitions + iOffset))->p_stGeometricObject);
-                                                }
+                        }
+                        for (; iNbElement < p_stObjectTable->wNumberOfElement; iNbElement++) {
+                            if (p_ObjectsTableElement->wTypeOfTarget == 0) {
+                                hVisualSet = PO_fn_hGetVisualSet((PO_tdstPhysicalObject_*)p_ObjectsTableElement->h_Target);
+                                if (hVisualSet != NULL) {
+                                    if (hVisualSet->xType == 0) {
+                                        if (hVisualSet->xNbLodDefinitions == 0) {
+                                            GLI_vCleanGeoObj(hVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject);
+                                        } else {
+                                            for (iNbLod = 0, iOffset = 0; iNbLod < hVisualSet->xNbLodDefinitions; iNbLod++, iOffset += 4) {
+                                                GLI_vCleanGeoObj(((GEO_tduVSObject_*)((char*)hVisualSet->d_p_stLodDefinitions + iOffset))->p_stGeometricObject);
                                             }
                                         }
                                     }
                                 }
-                                p_ObjectsTableElement++;
                             }
+                            p_ObjectsTableElement++;
                         }
                     }
                 }

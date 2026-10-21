@@ -725,7 +725,7 @@ struct C_BaseFx {
     float m_fFogEnd; /* +0x1c */
     int m_pSearchKey; /* +0x20 */
     /* vtable pointer at +0x24 (retail __vt__8C_BaseFx: ~C_BaseFx, DeleteSDLs). */
-    virtual ~C_BaseFx();
+    virtual ~C_BaseFx() {}
     virtual void DeleteSDLs(void);
     void SetCurrentFog(void);
 };
@@ -836,6 +836,7 @@ struct SCT_tdstListOfSoundEvent_ {
 
 struct C_WaterFx : C_BaseFx {
     C_WaterFx();
+    ~C_WaterFx();
     int m_pGrids[2]; /* +0x28 */
     float m_MinPos[4]; /* +0x30 */
     float m_MaxPos[4]; /* +0x40 */
@@ -2145,7 +2146,7 @@ float GLI_g_SPOMATRIX_Dummy[16];
 unsigned int hCurrentSDL;
 MTH3D_tdstVector_ AGO_g_stMainCharacterFinalPosition;
 tdstEngineStructure_ g_stEngineStructure;
-int PS2glLiberator;
+void (*PS2glLiberator)(void*);
 int PS2glAllocator64;
 int G_pSO;
 
@@ -2318,19 +2319,20 @@ void WaterFx_SetPerturbationMode(float* Position, int PerturbationMode, float St
 {
     C_WaterFx* pFx;
     tdstBaseFxListElement_* p;
+    float y;
+    float x;
 
     for (p = WaterFx_g_List.pFirst; p != 0; p = p->pNext)
     {
         pFx = (C_WaterFx*)p->pFx;
-        if (Position[0] < pFx->m_MaxPos[0] && Position[0] > pFx->m_MinPos[0] &&
-            Position[1] < pFx->m_MaxPos[1] && Position[1] > pFx->m_MinPos[1])
+        x = Position[0];
+        y = Position[1];
+        if (x < pFx->m_MaxPos[0] && x > pFx->m_MinPos[0] && y < pFx->m_MaxPos[1] && y > pFx->m_MinPos[1])
         {
             pFx->m_bPerturbated = PerturbationMode;
+            pFx->m_fPerturbationStrength = Strength;
             if (0.0f == Strength)
-            {
-                pFx->m_fPerturbationStrength = Strength;
                 pFx->m_bPerturbated = 0;
-            }
         }
     }
 }
@@ -2458,20 +2460,18 @@ void WaterFx_vDestroySDLs(void)
  */
 void WaterFx_vInit(void)
 {
-    unsigned int pSDL;
     tdstBaseFxListElement_* p;
-    C_WaterFx* pFx;
+    unsigned int pSDL;
 
     for (p = WaterFx_g_List.pFirst; p != 0; p = p->pNext)
     {
-        pFx = (C_WaterFx*)p->pFx;
         pSDL = SDL_GetNew();
+        ((C_WaterFx*)p->pFx)->m_pSDL = pSDL;
         SDL_Start(pSDL);
-        pFx->m_pSDL = pSDL;
         GLI_g_NumberInList = 0;
-        pFx->DisplayInSDL();
+        ((C_WaterFx*)p->pFx)->DisplayInSDL();
         SDL_End(pSDL);
-        SDL_SetNbFaces(pSDL, pFx->m_ulGridSize[0] * pFx->m_ulGridSize[1] * 2);
+        SDL_SetNbFaces(pSDL, ((C_WaterFx*)p->pFx)->m_ulGridSize[0] * ((C_WaterFx*)p->pFx)->m_ulGridSize[1] * 2);
         SDL_Preprocess(pSDL);
     }
 }
@@ -2531,6 +2531,7 @@ void WaterFx_vProcessAndDisplay(int bTransparent)
                 pFx->Process();
                 WaterFx_vClearCop0Register24();
                 WaterFx_vClearCop0Register24();
+                WaterFx_vClearCop0Register24();
                 if (((C_WaterFx*)p->pFx)->m_pSDL) SDL_Draw(((C_WaterFx*)p->pFx)->m_pSDL);
                 WaterFx_vClearCop0Register24();
             }
@@ -2582,10 +2583,56 @@ void WaterFx_vProcessAndDisplay(int bTransparent)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLI_vInitGLProjectionMatrix(void);
+extern "C" void PS2glMatrixMode(unsigned int mode);
+extern "C" void PS2glLoadMatrixf(const float* m);
+extern "C" unsigned int SDL_REF_GetNewLocalMatrixRef(HIE_tdstSuperObject_* pSO, unsigned int Index);
+extern "C" void SDL_AddRef(unsigned int hSDL, unsigned int hRef);
+extern "C" void GLI_vSendStaticMaterialToViewport(GLI_tdstMaterial_* hMaterial);
+extern "C" void PS2glDisable(unsigned int cap);
+extern "C" void PS2glHint(unsigned int target, unsigned int mode);
+extern "C" void PS2glTexCoordPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void impPS2glColorPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glVertexPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glDrawArrays(unsigned int mode, int first, int count);
+
 void C_WaterFx::DisplayInSDL(void)
 {
     unsigned int hRef;
-    /* TODO: decompile from asm/... */
+
+    GLI_vInitGLProjectionMatrix();
+    m_Position.stCol_0.xX = 1.0f; m_Position.stCol_0.xY = 0.0f; m_Position.stCol_0.xZ = 0.0f; m_Position.stCol_0.xW = 0.0f; m_Position.stCol_1.xX = 0.0f; m_Position.stCol_1.xY = 1.0f; m_Position.stCol_1.xZ = 0.0f; m_Position.stCol_1.xW = 0.0f; m_Position.stCol_2.xX = 0.0f; m_Position.stCol_2.xY = 0.0f; m_Position.stCol_2.xZ = 1.0f; m_Position.stCol_2.xW = 0.0f; m_Position.stCol_3.xX = 0.0f; m_Position.stCol_3.xY = 0.0f; m_Position.stCol_3.xZ = 0.0f; m_Position.stCol_3.xW = 1.0f;
+    m_Position.stCol_3.xZ = 0.001f;
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf(&m_Position.stCol_0.xX);
+
+    hRef = SDL_REF_GetNewLocalMatrixRef(m_pSO, GLI_g_NumberInList);
+    SDL_AddRef(hCurrentSDL, hRef);
+
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf(GLI_g_SPOMATRIX_Dummy);
+
+    if (m_hMaterial)
+    {
+        GLI_g_CurrentStage = 0;
+        GLI_g_HasVertexTransparency = 1;
+        m_hMaterial->a_stMultiMaterial[0].ulTextureProperties |= 3;
+        GLI_vSendStaticMaterialToViewport(m_hMaterial);
+        GLI_g_HasVertexTransparency = 0;
+    }
+    else
+    {
+        PS2glDisable(0xde1);
+    }
+
+    PS2glHint(0xf10, 0x341);
+    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x200) { *(int*)g_PS2glContext.pnColorMatMasks |= 0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0x341;
+    PS2glTexCoordPointer(m_NbVertices, 0x1406, -2, (void*)m_pT);
+    impPS2glColorPointer(m_NbVertices, 0x1406, -2, (void*)m_pC);
+    PS2glVertexPointer(m_NbVertices, 0x1406, -2, m_pV);
+    PS2glDrawArrays(5, 0, m_NbVertices);
+    PS2glHint(0xf10, 0);
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 753–1111 */
@@ -2921,7 +2968,23 @@ void C_WaterFx::Init(void)
  */
 void C_WaterFx::SetPosition(float* WorldPositionInWater, float* NewRelativePosition)
 {
-    /* TODO: decompile from asm/... */
+    if (WorldPositionInWater[0] < m_OrgMaxPos[0] && WorldPositionInWater[0] > m_OrgMinPos[0] && WorldPositionInWater[1] < m_OrgMaxPos[1] && WorldPositionInWater[1] > m_OrgMinPos[1])
+    {
+        m_MinPos[0] = m_OrgMinPos[0] + NewRelativePosition[0];
+        m_MinPos[1] = m_OrgMinPos[1] + NewRelativePosition[1];
+        m_MinPos[2] = m_OrgMinPos[2] + NewRelativePosition[2];
+        m_MaxPos[0] = m_OrgMaxPos[0] + NewRelativePosition[0];
+        m_MaxPos[1] = m_OrgMaxPos[1] + NewRelativePosition[1];
+        m_MaxPos[2] = m_OrgMaxPos[2] + NewRelativePosition[2];
+
+        m_LocalPosition[0] = NewRelativePosition[0];
+        m_LocalPosition[1] = NewRelativePosition[1];
+        m_LocalPosition[2] = NewRelativePosition[2];
+
+        m_Position.stCol_3.xX = m_LocalPosition[0] + m_BasePosition[0];
+        m_Position.stCol_3.xY = m_LocalPosition[1] + m_BasePosition[1];
+        m_Position.stCol_3.xZ = m_LocalPosition[2] + m_BasePosition[2];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 433–463 */
@@ -2952,6 +3015,8 @@ void C_WaterFx::SetPosition(float* WorldPositionInWater, float* NewRelativePosit
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" float FRR(float fMin, float fMax);
+
 void C_WaterFx::Perturb(float* WorldPosition, float Strength)
 {
     unsigned int totalSize;
@@ -2959,7 +3024,29 @@ void C_WaterFx::Perturb(float* WorldPosition, float Strength)
     unsigned int i;
     float Y;
     float X;
-    /* TODO: decompile from asm/... */
+
+    X = WorldPosition[0];
+    Y = WorldPosition[1];
+
+    if (X < m_MaxPos[0] && X > m_MinPos[0] && Y < m_MaxPos[1] && Y > m_MinPos[1])
+    {
+        sx = m_ulGridSize[0];
+        totalSize = m_ulGridSize[0] * m_ulGridSize[1];
+
+        X = (X - m_MinPos[0]) / m_fGridStepSize[0];
+        Y = (Y - m_MinPos[1]) / m_fGridStepSize[1];
+        i = (unsigned int)(X + (float)((unsigned int)Y * sx));
+
+        if (i + sx > totalSize)
+            i = totalSize - sx - 1;
+
+        if (*(unsigned int*)(m_pC + i * 8) & 0xFF000000)
+        {
+            ((short*)m_pGrids[0])[i] = (short)FRR(-Strength, Strength);
+            ((short*)m_pGrids[0])[i + 1] = (short)FRR(-Strength, Strength);
+            ((short*)m_pGrids[0])[i + sx] = (short)FRR(-Strength, Strength);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 398–430 */
@@ -3000,7 +3087,30 @@ void C_WaterFx::PerturbFromCharacterPosition(float* WorldPosition, float Strengt
     float Z;
     float Y;
     float X;
-    /* TODO: decompile from asm/... */
+
+    X = WorldPosition[0];
+    Y = WorldPosition[1];
+    Z = WorldPosition[2];
+
+    if (X < m_MaxPos[0] && X > m_MinPos[0] && Y < m_MaxPos[1] && Y > m_MinPos[1] && Z < m_MaxPos[2])
+    {
+        sx = m_ulGridSize[0];
+        totalSize = m_ulGridSize[0] * m_ulGridSize[1];
+
+        X = (X - m_MinPos[0]) / m_fGridStepSize[0];
+        Y = (Y - m_MinPos[1]) / m_fGridStepSize[1];
+        i = (unsigned int)(X + (float)((unsigned int)Y * sx));
+
+        if (i + sx > totalSize)
+            i = totalSize - sx - 1;
+
+        if (*(unsigned int*)(m_pC + i * 8) & 0xFF000000)
+        {
+            ((short*)m_pGrids[0])[i] = (short)FRR(0.5f * Strength, Strength);
+            ((short*)m_pGrids[0])[i + 1] = (short)FRR(0.5f * Strength, Strength);
+            ((short*)m_pGrids[0])[i + sx] = (short)FRR(0.5f * Strength, Strength);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 296–395 */
@@ -3243,7 +3353,20 @@ void C_WaterFx::DeleteSDLs(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_Water_destructor(void)
+C_WaterFx::~C_WaterFx()
 {
-    /* TODO: decompile from asm/... */
+    if (m_pGrids[0])
+        PS2glLiberator((void*)m_pGrids[0]);
+    if (m_pGrids[1])
+        PS2glLiberator((void*)m_pGrids[1]);
+    if (m_pIndices)
+        PS2glLiberator((void*)m_pIndices);
+    if (m_pV)
+        PS2glLiberator(m_pV);
+    if (m_pT)
+        PS2glLiberator((void*)m_pT);
+    if (m_pC)
+        PS2glLiberator((void*)m_pC);
+    if (m_pSDL)
+        SDL_Destroy(&m_pSDL);
 }

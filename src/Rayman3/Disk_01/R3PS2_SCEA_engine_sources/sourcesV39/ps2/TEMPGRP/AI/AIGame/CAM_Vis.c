@@ -3525,7 +3525,7 @@ char CAM_fn_cCanResetConstraintMoveVisFailure(CAM_tdstUpdateCamera_* _p_stStruct
     if (!(_p_stStruct->hCineinfo->ucPerIAFlags & 8))
         return 1;
 
-    return ((MTH3D_xVectorGap(_p_stWanted, &_p_stStruct->hCineinfo->stLastFailedOrigin) > 0.5f + MTH3D_xVectorGap(&_p_stStruct->hCineinfo->stLastFailedWanted, &_p_stStruct->hCineinfo->stLastFailedOrigin)) ? (char)0 : (char)1) ^ 1;
+    return ((MTH3D_xVectorGap(&_p_stStruct->hCineinfo->stLastFailedOrigin, _p_stWanted) > 0.5f + MTH3D_xVectorGap(&_p_stStruct->hCineinfo->stLastFailedOrigin, &_p_stStruct->hCineinfo->stLastFailedWanted)) ? (char)0 : (char)1) ^ 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 1585–1631 */

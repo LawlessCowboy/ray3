@@ -195,6 +195,10 @@ unsigned char g_NbCharForSaveName;
 int g_NextPage;
 int g_GotoRight;
 
+void TXT_fn_fComputePixelLengthOfString(char* szString, float* pfWidth, float* pfHeight);
+char* strstr(const char* s, const char* t);
+void GLI_vDraw2DSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float yYMin, float xXMax, float yYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 18–18 */
 /* addr: 0x0028dd30  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1249,10 +1253,76 @@ void fn_vDrawOnOff(float X, float Y, int State)
  */
 void fn_vDrawClassicPage(void)
 {
+    float fWidth;
+    float fHeight;
     float Y;
     unsigned int i;
     char szMsg[50];
-    /* TODO: decompile from asm/... */
+    char szTmp[50];
+
+    if (strlen(aMenu2DPages[g_CurrentMenu2DPage].Title) != 0)
+    {
+        Y = 400.0f;
+    }
+    else
+    {
+        Y = 300.0f;
+    }
+
+    for (i = 0; i < aMenu2DPages[g_CurrentMenu2DPage].NbSelection; i++)
+    {
+        sprintf(szTmp, "%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
+
+        if (i == g_CurrentSelection)
+        {
+            TXT_fn_fComputePixelLengthOfString(szTmp, &fWidth, &fHeight);
+            fWidth = 100.0f * (fWidth / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+            fHeight = 100.0f * (fHeight / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+
+            if (strstr(szTmp, "FrameNumber") != NULL)
+            {
+                GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
+                    0.1f * (10.0f * g_XText) - fWidth - 2.0f,
+                    0.1f * Y - 7.0f,
+                    1.0f + (0.1f * (10.0f * g_XText) + fWidth),
+                    0.1f * Y + fHeight,
+                    0.42f, 0.64f, 0.3f, 0.56f,
+                    (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);
+            }
+            else
+            {
+                GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
+                    0.1f * (10.0f * g_XText) - fWidth - 2.0f,
+                    0.1f * Y - 7.0f,
+                    1.0f + (0.1f * (10.0f * g_XText) + fWidth),
+                    0.1f * Y + fHeight,
+                    0.42f, 0.64f, 0.3f, 0.56f,
+                    (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);
+            }
+
+            sprintf(szMsg, "\\jc\\z%d:%s", g_CurrentSelectedTextSize, szTmp);
+            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, 10.0f * g_XText, Y, 0.0f, 0xFFFFDA00);
+        }
+        else if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[i] != 0)
+        {
+            sprintf(szTmp, "\\jc\\z250:%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
+            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp, 10.0f * g_XText, Y, 0.0f, 0xFF003264);
+        }
+        else
+        {
+            sprintf(szTmp, "\\jc\\z250:%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
+            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp, 10.0f * g_XText, Y, 0.0f, 0xFFF5E9CF);
+        }
+
+        if (strstr(aMenu2DPages[g_CurrentMenu2DPage].aText[i], "FrameNumber") != NULL)
+        {
+            Y += 140.0f;
+        }
+        else
+        {
+            Y += 170.0f;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 601–629 */

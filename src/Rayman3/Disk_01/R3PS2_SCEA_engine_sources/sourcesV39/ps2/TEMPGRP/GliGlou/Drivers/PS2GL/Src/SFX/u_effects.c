@@ -4729,14 +4729,60 @@ void GLIPS2_vSetDepthBlurMode(float Near, float Far, float Intensity)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AE_Begin(void);
+void AE_End(void);
+void AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);
+void AE_CopyScreen(void);
+void AE_SetTexture(int BufferID);
+void AE_SetDrawTarget(int BufferID);
+void PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void PS2glDepthMask(unsigned char flag);
+void PS2glDisable(unsigned int cap);
+void PS2glEnable(unsigned int cap);
+void AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2]);
+float cosf(float x);
+float sinf(float x);
+
 void DoFullScreenWaterEffect(void)
 {
     float Angle;
-    int y;
     int x;
-    float UVs[25][2];
+    int y;
     float Points[25][2];
-    /* TODO: decompile from asm/... */
+    float UVs[25][2];
+
+    for (y = 0; y < 5; y++)
+    {
+        for (x = 0; x < 5; x++)
+        {
+            ((float(*)[2])&Points[0])[y * 5 + x][0] = (100.0f * (float)x) / 4.0f;
+            ((float(*)[2])&Points[0])[y * 5 + x][1] = 100.0f - ((100.0f * (float)y) / 4.0f);
+            ((float(*)[2])&UVs[0])[y * 5 + x][0] = (float)x / 4.0f;
+            ((float(*)[2])&UVs[0])[y * 5 + x][1] = (float)y / 4.0f;
+            if ((y != 0) && (x != 0) && (y != 4) && (x != 4))
+            {
+                Angle = 5.33333f * (float)x + 5.45645f * (float)y + g_ffFrameTime;
+                ((float(*)[2])&Points[0])[y * 5 + x][0] = ((float(*)[2])&Points[0])[y * 5 + x][0] + 1.8f * cosf(Angle);
+                ((float(*)[2])&Points[0])[y * 5 + x][1] = ((float(*)[2])&Points[0])[y * 5 + x][1] + 1.8f * sinf(Angle);
+            }
+        }
+    }
+
+    AE_Begin();
+    PS2glColorMask(1, 1, 1, 0);
+    PS2glDepthMask(0);
+    PS2glDisable(0xB71);
+    AE_SetDrawTarget(2);
+    AE_SetTexture(0);
+    PS2glEnable(0xBD0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_CopyScreen();
+    PS2glDisable(0xBD0);
+    AE_SetTexture(2);
+    AE_SetDrawTarget(0);
+    AE_SetGS(0, 2, 2, 2, 0x80);
+    AE_DrawDeformedScreen(Points, UVs);
+    AE_End();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 1763–1814 */

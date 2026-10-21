@@ -1528,7 +1528,27 @@ unsigned char MOR_fn_bIsChannelMorphed(HIE_tdstSuperObject_* _hActorSuperObject,
     int bEveryTargetIsFinishedMorphing;
     MOR_stMorphStruct_* mp;
     short i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < 50; i++) {
+        mp = &g_MorphTasksList[i];
+        if (!mp->bInUse) continue;
+        if (mp->hActorSuperObject != _hActorSuperObject) continue;
+        if (mp->xChannelIndex != _xChannelIndex) continue;
+        bEveryTargetIsFinishedMorphing = 1;
+        for (j = 0; j < mp->ucNbTarget && bEveryTargetIsFinishedMorphing; j++) {
+            if ((mp->axEnd[j] - mp->axCurrent[j]) * (mp->axEnd[j] - mp->axStart[j]) > 0.0f) {
+                bEveryTargetIsFinishedMorphing = 0;
+            }
+        }
+        if (mp->ucMorphType == 3) {
+            return 1;
+        }
+        if (bEveryTargetIsFinishedMorphing) {
+            return 0;
+        }
+        return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1266–1288 */

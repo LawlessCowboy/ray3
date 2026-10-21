@@ -256,11 +256,7 @@ int viBufCount(anon_3* f)
  */
 int viBufDelete(anon_3* f)
 {
-    DIntr();
-    *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000;
-    *(volatile unsigned int*)0x1000B400 = 5;
-    *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFFFFFE;
-    EIntr();
+    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = 5; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
     *(volatile unsigned int*)0x1000B420 = 0;
     *(volatile unsigned int*)0x1000B410 = 0;
     *(volatile unsigned int*)0x1000B430 = 0;
@@ -503,7 +499,28 @@ void viBufBeginPut(anon_3* f, unsigned char** ptr0, int* len0, unsigned char** p
 {
     int en;
     int es;
-    /* TODO: decompile from asm/... */
+
+    WaitSema(f->sema);
+
+    en = (((f->dmaStart + f->dmaN) << 11) + f->readBytes) % f->buffSize;
+    es = (((f->n - 2) - f->dmaN) << 11) - f->readBytes;
+
+    if ((f->buffSize - en) < es)
+    {
+        *ptr0 = (unsigned char*)(f->data + en);
+        *len0 = f->buffSize - en;
+        *ptr1 = (unsigned char*)f->data;
+        *len1 = es - (f->buffSize - en);
+    }
+    else
+    {
+        *ptr0 = (unsigned char*)(f->data + en);
+        *len0 = es;
+        *ptr1 = 0;
+        *len1 = 0;
+    }
+
+    SignalSema(f->sema);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 149–191 */

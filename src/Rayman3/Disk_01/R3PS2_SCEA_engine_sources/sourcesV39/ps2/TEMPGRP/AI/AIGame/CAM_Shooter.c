@@ -5734,11 +5734,25 @@ tdstNodeInterpret_* fn_p_SetGCubeVersion(HIE_tdstSuperObject_* p_SuperObjPerso, 
  */
 tdstNodeInterpret_* fn_p_SetSkin(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    int iSkinIndex;
     HIE_tdstSuperObject_* pSkin;
+    int iSkinIndex;
     CAM_Shooter_* pcs;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    char* pc;
+    int iIndex;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pSkin = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    iSkinIndex = stValue.uDummy.uParam.ulValue;
+    hCineInfo = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    if (fn_bIsValidObject(pSkin) && iSkinIndex < pcs->iNumberOfMainActors && iSkinIndex >= 0)
+    {
+        pc = (char*)&pcs->apSkins + iSkinIndex * 4;
+        *(HIE_tdstSuperObject_**)pc = pSkin;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 558–589 */

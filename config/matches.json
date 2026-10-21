@@ -42183,6 +42183,21 @@
       "unresolved_relocations": []
     },
     {
+      "address": "0x00275540",
+      "candidate_size": 176,
+      "first_difference": 8,
+      "implementation": "void fn_vGetDeformationInfoForChannel(unsigned int ulChannelNumber, tdstPLA_Deformation_* p_stDeformation)\n{\n{\n    unsigned int ulIndex;\n    tdstPLA_DeformationLink_* p_stLink;\n\n    p_stDeformation->d_stDeformationLinks = NULL;\n    p_stDeformation->ulNbOfDeformationLinks = 0;\n\n    for (ulIndex = 0; ulIndex < gh_st3dData->stFrame3d.stDeformation.ulNbOfDeformationLinks; ulIndex++) {\n        p_stLink = &gh_st3dData->stFrame3d.stDeformation.d_stDeformationLinks[ulIndex];\n        if (ulChannelNumber == p_stLink->wChannel1) {\n            p_stDeformation->d_stDeformationLinks = p_stLink;\n            for (; ulIndex < gh_st3dData->stFrame3d.stDeformation.ulNbOfDeformationLinks; ulIndex++) {\n                p_stLink = &gh_st3dData->stFrame3d.stDeformation.d_stDeformationLinks[ulIndex];\n                if (ulChannelNumber != p_stLink->wChannel1) { goto theend; }\n                p_stDeformation->ulNbOfDeformationLinks++;\n            }\n            continue;\n        }\n        if (p_stLink->wChannel1 > ulChannelNumber) { goto theend; }\n    }\ntheend:\n    ;\n}\n}",
+      "line_offsets_equal": false,
+      "model": "411",
+      "name": "fn_vGetDeformationInfoForChannel",
+      "reason": "Nested two-loop search over gh_st3dData->stFrame3d.stDeformation.d_stDeformationLinks[]; candidate 176/188 bytes. Residual: retail keeps the inner loop's latch in a separate block (count++ at +0x44 then 'b 0x60' with the store in the delay slot) and routes the inner mismatch through an extra block (+0x54 nop / +0x58 b epilogue) while the inner loop's normal exit continues the outer loop - a break/return/goto in the inner loop cannot produce that split in MWCC 3.0.1.",
+      "size": 188,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MISMATCH",
+      "target_size": 188,
+      "unresolved_relocations": []
+    },
+    {
       "address": "0x001fb590",
       "candidate_size": 396,
       "first_difference": 66,
@@ -42210,6 +42225,499 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
       "status": "MISMATCH",
       "target_size": 784,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ca7d0",
+      "candidate_size": 100,
+      "first_difference": 20,
+      "implementation": "void GLI_vRemoveInstanceIfExists(GEO_tdstGeometricObject_* pObj)\n{\n    HIE_tdstSuperObject_* pSPO;\n    SDC_VertexArrays_* pSDC;\n    C_InstanceList* pInstanceList;\n\n    pSPO = (HIE_tdstSuperObject_*)Global_CharacterModuleBeingDisplayed;\n    pSDC = pObj->pSDC;\n    if (pSDC != NULL)\n    {\n        if ((pInstanceList = pSDC->pInstanceList) != NULL)\n        {\n            if (pInstanceList != NULL)\n            {\n                pInstanceList->SearchAndDestroyInstanceForThisSPO(pSPO);\n                if (pInstanceList->m_NbInstances == 0)\n                {\n                    delete pInstanceList;\n                    pSDC->pInstanceList = NULL;\n                }\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vRemoveInstanceIfExists",
+      "reason": "Single early read of Global_CharacterModuleBeingDisplayed gets the gp load into the first delay slot; remaining: target leaves the redundant beqz s1 and the m_NbInstances bnez delay slots unfilled (block boundaries at lines 1235/1239, 1219-1234 gap suggests removed code)",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MISMATCH",
+      "target_size": 104,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ca6f0",
+      "candidate_size": 208,
+      "first_difference": 24,
+      "implementation": "void GLI_vRemoveAllInstances(GEO_tdstGeometricObject_* pObj)\n{\n    SDC_VertexArrays_* pSDC;\n    _SDC_Instance_* pInstance;\n    C_InstanceList* pInstanceList;\n    unsigned int i;\n\n    pSDC = pObj->pSDC;\n    if (pSDC != NULL)\n    {\n        if ((pInstanceList = pSDC->pInstanceList) != NULL)\n        {\n            if (pInstanceList != NULL)\n            {\n                while (pInstanceList->m_NbInstances)\n                {\n                    pInstance = pInstanceList->m_pList[0];\n                    for (i = 0; i < GLI_G_NumberOfInstancesToDisplay; i++) { if ((_SDC_Instance_*)GLI_G_InstancesToDisplay[i] == pInstance) GLI_G_InstancesToDisplay[i] = 0; } GLI_vRemoveCharacterVAFromProcessList(pInstance->pVertexArray);\n                    pInstanceList->DeleteInstance(pInstance);\n                }\n                delete pInstanceList;\n                pSDC->pInstanceList = NULL;\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vRemoveAllInstances",
+      "reason": "Only residual: target leaves the bnez delay slot after the while(m_NbInstances) loop as nop before 'delete pInstanceList' (move a0,s2); candidate fills it. Same unfilled-slot pattern as GLI_vRemoveInstanceIfExists; 'delete pSDC->pInstanceList' reproduces the nop but reloads the field",
+      "size": 212,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MISMATCH",
+      "target_size": 212,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002cbaa0",
+      "candidate_size": 432,
+      "first_difference": 34,
+      "implementation": "void GLI_vDrawAllActors(unsigned int bTransparent)\n{\n    unsigned int i;\n    _SDC_Instance_* pInstance;\n\n    GLI_vSetOptimizedSDC(1);\n\n    for (i = GLI_G_NextStartForThisViewport; i < GLI_G_NumberOfInstancesToDisplay; i++)\n    {\n        pInstance = (_SDC_Instance_*)GLI_G_InstancesToDisplay[i];\n        if (pInstance != NULL && pInstance->pSDL != NULL && bTransparent == pInstance->pSDL->m_bIsTransparent)\n            pInstance->pSDL->Draw(0);\n    }\n\n    if (GLIPS2_vDummySDL == NULL)\n    {\n        GLIPS2_vDummySDL = new C_CharacterSdl;\n        GLIPS2_vDummySDL->m_SDL_InitSize = 500;\n        GLIPS2_vDummySDL->m_bReduce = 1;\n        GLIPS2_vDummySDL->Start();\n        g_PS2glContext.nLightBits |= 0x400;\n        GLI_vSetDummyLighting();\n        g_PS2glContext.nLightBits |= 0x400;\n        g_PS2glContext.bLightsChanged = 1; g_PS2glContext.nLightBits |= 1;\n        PS2glLightfv(0x4000, 0x1202, light_specular0);\n        GLIPS2_vDummySDL->End();\n        GLIPS2_vDummySDL->Preprocess();\n    }\n\n    if (!SDL_g_HasDrawn)\n        GLIPS2_vDummySDL->Draw(0);\n\n    GLI_vSetOptimizedSDC(0);\n\n    PS2glColorMask(1, 1, 1, 1);\n\n    if (bTransparent)\n        GLI_G_NextStartForThisViewport = GLI_G_NumberOfInstancesToDisplay;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vDrawAllActors",
+      "reason": "Full reconstruction 432/432 bytes, relocs 45/45; only residual is the instance loop's i/offset register pair swapped (target i=s1, offset=s0; candidate reversed). Declaration order, int i, while/for, block-scoped locals do not change it. Permuter candidate.",
+      "size": 432,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MISMATCH",
+      "target_size": 432,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d9d70",
+      "candidate_size": 136,
+      "first_difference": 34,
+      "implementation": "void CHEAP_DisplayAllSDLs(int bTransparent)\n{\n    unsigned int i;\n\n    GLI_vSetOptimizedSDC(1);\n    for (i = GLI_g_CurrentNbCheapSDLsForViewport; i < GLI_g_CurrentNbCheapSDLs; i++)\n    {\n        if (bTransparent == GLI_g_CheapSDLs[i]->m_bIsTransparent)\n        {\n            GLI_g_CheapSDLs[i]->Draw(0);\n        }\n    }\n    GLI_vSetOptimizedSDC(0);\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "CHEAP_DisplayAllSDLs",
+      "reason": "136/136 bytes, relocs ok, lines ok; only i/offset induction register pair swapped (target i=s1 offset=s0). Same residual as u_SDL GLI_vDrawAllActors (loop starting from a global). while/for, int i, extra pSDL/ppSDL locals, decl order and 3.0.3 do not change it.",
+      "size": 136,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MISMATCH",
+      "target_size": 136,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002daa80",
+      "candidate_size": 180,
+      "first_difference": 41,
+      "implementation": "void HIE_fn_vFastPS2ForcedPushMatrixRT__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj)\n{\n    MTH4D_tdstMatrix_* pDst = &PS2_MatStack[PS2_MatStackIndex].stTransformMatrix; MTH4D_tdstMatrix_* pPrev = &PS2_MatStack[PS2_MatStackIndex - 1].stTransformMatrix; MTH4D_tdstMatrix_* pLocal = &_hSprObj->hLocalMatrix->stTransformMatrix;\n    asm {\n        lqc2 vf1, 0x0(pPrev)\n        lqc2 vf2, 0x10(pPrev)\n        lqc2 vf3, 0x20(pPrev)\n        lqc2 vf4, 0x30(pPrev)\n        lqc2 vf5, 0x0(pLocal)\n        lqc2 vf6, 0x10(pLocal)\n        lqc2 vf7, 0x20(pLocal)\n        lqc2 vf8, 0x30(pLocal)\n\n        vmulax.xyzw ACC, vf1, vf5x\n        vmadday.xyzw ACC, vf2, vf5y\n        vmaddz.xyzw vf9, vf3, vf5z\n\n        vmulax.xyzw ACC, vf1, vf6x\n        vmadday.xyzw ACC, vf2, vf6y\n        vmaddz.xyzw vf10, vf3, vf6z\n\n        vmulax.xyzw ACC, vf1, vf7x\n        vmadday.xyzw ACC, vf2, vf7y\n        vmaddz.xyzw vf11, vf3, vf7z\n\n        vmulax.xyzw ACC, vf1, vf8x\n        vmadday.xyzw ACC, vf2, vf8y\n        vmaddaz.xyzw ACC, vf3, vf8z\n        vmaddw.xyzw vf12, vf4, vf0w\n\n        sqc2 vf9, 0x0(pDst)\n        sqc2 vf10, 0x10(pDst)\n        sqc2 vf11, 0x20(pDst)\n        sqc2 vf12, 0x30(pDst)\n    }\n    PS2_MatStackIndex++;\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "HIE_fn_vFastPS2ForcedPushMatrixRT__FP20HIE_tdstSuperObject_",
+      "reason": "VU0 multiply asm block (as HieMtStk.c) plus one-line pointer setup; 180/180, relocs/lines ok. Residual: target finishes the pDst address (sll/addu/addiu a0) before pPrev (v1); candidate orders them the other way. Declaration/assignment orders and MAT_tdstTransformation_* intermediates do not fix it.",
+      "size": 180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MISMATCH",
+      "target_size": 180,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002da940",
+      "candidate_size": 132,
+      "first_difference": 0,
+      "implementation": "extern \"C\" void HIE_fn_vFastPS2ForcedRefreshHierarchy__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);\n\nvoid HIE_fn_vFastPS2ForcedRefreshHierarchy__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj)\n{\n    HIE_tdstSuperObject_* hChild;\n\n    HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(_hSprObj);\n    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)\n        HIE_fn_vFastPS2ForcedRefreshHierarchy__FP20HIE_tdstSuperObject_(hChild);\n    if (PS2_MatStackIndex != 0) { PS2_MatStackIndex--; HIE_g_hCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex]; g_p_stCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex]; }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "HIE_fn_vFastPS2ForcedRefreshHierarchy__FP20HIE_tdstSuperObject_",
+      "reason": "Logic is push; for children recurse; one-line PS2_MatStack pop. Target has the self-recursion inlined two levels deep (three nested child loops, 320 bytes); baseline emits a plain recursive call (132 bytes). Scoped auto_inline+inline_recursion pragmas only give one level (232 bytes), whatever inline_depth is set to. Points to a different inline setting for the original build.",
+      "size": 320,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MISMATCH",
+      "target_size": 320,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002dab40",
+      "candidate_size": 368,
+      "first_difference": 4,
+      "implementation": "extern \"C\" void HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);\nextern \"C\" void HIE_fn_vFastPS2ForcedRefreshHierarchy__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);\n\nvoid HIE_fn_vFastPS2ForcedRefreshHierarchy__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj)\n{\n    HIE_tdstSuperObject_* hChild;\n\n    HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(_hSprObj);\n    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)\n        HIE_fn_vFastPS2ForcedRefreshHierarchy__FP20HIE_tdstSuperObject_(hChild);\n    if (PS2_MatStackIndex != 0) { PS2_MatStackIndex--; HIE_g_hCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex]; g_p_stCurrentMatrix = (int)&PS2_MatStack[PS2_MatStackIndex]; }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_",
+      "reason": "HieMtStk.c-style VU0 copy/multiply asm blocks; 368/364. Residual: the candidate keeps an unreachable duplicate 'sll v1,a1,1' at the else-label after the bnez delay slot was filled from it (the target drops it), and li a1,5 (eType) is scheduled after the index reload instead of before.",
+      "size": 364,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MISMATCH",
+      "target_size": 364,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d5690",
+      "candidate_size": 216,
+      "first_difference": 72,
+      "implementation": "void GLIPS2_vSetNoInterpolationForSPO(HIE_tdstSuperObject_* _hLinkedSpo)\n{\n    C_Sdl* pOpaqueSDL;\n    C_Sdl* pTranspSDL;\n    SECT_tdstSector_* hSectorObject;\n    HIE_tdstSuperObject_* hFatherSpo;\n    HIE_tdstSuperObject_* hChild;\n\n    hFatherSpo = _hLinkedSpo;\n    while (hFatherSpo && hFatherSpo->ulTypeOfLinkedObject != 4)\n        hFatherSpo = hFatherSpo->hFatherDyn;\n\n    if (hFatherSpo && hFatherSpo->ulTypeOfLinkedObject == 4)\n    {\n        hSectorObject = hFatherSpo->hLinkedObject.p_stSector;\n        pOpaqueSDL = (C_Sdl*)hSectorObject->glOpaqueDisplayList; pTranspSDL = (C_Sdl*)hSectorObject->glTransparentDisplayList;\n        if (_hLinkedSpo) { if (pTranspSDL) pTranspSDL->RemoveSPOInterpol(_hLinkedSpo); if (pOpaqueSDL) pOpaqueSDL->RemoveSPOInterpol(_hLinkedSpo); for (hChild = _hLinkedSpo->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn) GLIPS2_vRecurseRemoveInterpolationForSPOs(hChild, pOpaqueSDL, pTranspSDL); }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLIPS2_vSetNoInterpolationForSPO",
+      "reason": "216/216, relocs ok; only residual: the two outer father/type-test failures branch to the epilogue (c0) in the target, but to the loop-exit alignment nop (bc) in the candidate. Early return, nested ifs and an inline helper for the one-line spo/children block do not separate the labels.",
+      "size": 216,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MISMATCH",
+      "target_size": 216,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d54f0",
+      "candidate_size": 316,
+      "first_difference": 264,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "__ct__17CSpriteControllerFUi",
+      "reason": "Everything matches except the final infinite loop after the printf: the target pads it with six nops plus the b delay nop and an alignment nop (340 bytes); 3.0.1 emits a bare b . (316), and 3.0.3 gives five nops (332). while(1);, for(;;);, do{}while(1) and a goto self-loop are identical. Points to a padloop/compiler-build detail.",
+      "size": 340,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MISMATCH",
+      "target_size": 340,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d5ff0",
+      "candidate_size": 336,
+      "first_difference": 40,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PreprocessLightingForCheap__14C_CharacterSdlFP20HIE_tdstSuperObject_",
+      "reason": "336/336, relocs 8/8: VU0 copy asm blocks plus mask-driven pointer walk. Residual is scheduling around the address-taken stack local ppP: the target sets a0=0xF18 before the second PS2glGetIntegerv and computes &ppP in the delay slot (the candidate does the reverse), and it schedules i++ before the ppP reload at the loop end. for/while forms and declaration orders do not change it.",
+      "size": 336,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MISMATCH",
+      "target_size": 336,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002eaff0",
+      "candidate_size": 444,
+      "first_difference": 42,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Perturb__9C_WaterFxFPff",
+      "reason": "Full reconstruction. Under 3.0.1 the two (unsigned int)float casts call fptoui (known compiler residual). Under 3.0.3 it reaches 556/556 with only register/scheduling differences, but moving WaterFx.cpp to 3.0.3 would lose WaterFx_SetPosition and WaterFx_Perturb (3.0.3 under-pads their straight loops) while gaining WaterFx_vProcessAndDisplay, so the file stays on 3.0.1.",
+      "size": 556,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 556,
+      "unresolved_relocations": [
+        {
+          "offset": 176,
+          "symbol": "fptoui",
+          "type": 4
+        },
+        {
+          "offset": 232,
+          "symbol": "fptoui",
+          "type": 4
+        }
+      ]
+    },
+    {
+      "address": "0x00276c90",
+      "candidate_size": 156,
+      "first_difference": 28,
+      "implementation": "void PLA_fn_vRefreshGlobalMatrixUnderCharacter(HIE_tdstSuperObject_* _hSprObj)\n{\n    unsigned char lResult;\n    HIE_tdstSuperObject_* hChild;\n\n    if (fn_ulStandardGameGetCustomBitsSO(_hSprObj) & 2)\n    {\n        lResult = 1;\n    }\n    else\n    {\n        lResult = 0;\n        if (_hSprObj->ulTypeOfLinkedObject == 2 && _hSprObj->hLinkedObject.p_stCharacter->h_3dData->stFrame3d.stDeformation.ulNbOfDeformationLinks != 0)\n        {\n            lResult = 1;\n        }\n    }\n    if (lResult)\n    {\n        hChild = _hSprObj->hFirstElementDyn;\n        while (hChild != NULL)\n        {\n            PLA_fn_vRefreshGlobalMatrixOfAnimsHierarchy(hChild);\n            hChild->hFatherDyn = _hSprObj;\n            hChild = hChild->hNextBrotherDyn;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PLA_fn_vRefreshGlobalMatrixUnderCharacter",
+      "reason": "156/156. The flag is an unsigned char (the target sets it with daddiu 1). Residual: the target branches straight from the custom-bit test to the loop body and only materialises the flag (0 in both delay slots, b + daddiu 1) on the deformation path, i.e. an || whose right operand is a boolean value. Inline unsigned-char helpers and if/else forms give the same size but different branch layout.",
+      "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MISMATCH",
+      "target_size": 156,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0027abf0",
+      "candidate_size": 320,
+      "first_difference": 250,
+      "implementation": "unsigned char PLA_bCheckDistForInterpol(HIE_tdstSuperObject_* p_stActorSO)\n{\n    unsigned char i;\n    float xResult;\n    tdst3dData_* h_Current3dData;\n    float xX, xY, xZ;\n    float xSqrNorm, xNorm;\n    UV3 stCamPos;\n    UV3 stDiff;\n    HIE_tdstSuperObject_* hCam;\n\n    xResult = 3.402822e38f;\n    h_Current3dData = p_stActorSO->hLinkedObject.p_stCharacter->h_3dData;\n    for (i = 0; i < g_stEngineStructure.ucNumberOfPlayersInMultiMode; i++)\n    {\n        float *pY;\n        float *pZ;\n        hCam = CAM_fn_hGetActiveCamera();\n        {\n            int *pPos = (int *)&p_stActorSO->hGlobalMatrix->stTransformMatrix.stCol_3;\n            stDiff.i[0] = pPos[0];\n            stDiff.i[1] = pPos[1];\n            stDiff.i[2] = pPos[2];\n        }\n        {\n            int *pPos = (int *)&hCam->hGlobalMatrix->stTransformMatrix.stCol_3;\n            stCamPos.i[0] = pPos[0];\n            stCamPos.i[1] = pPos[1];\n            stCamPos.i[2] = pPos[2];\n        }\n        pY = &stDiff.v.xY;\n        pZ = &stDiff.v.xZ;\n        stDiff.v.xX -= stCamPos.v.xX;\n        *pY -= stCamPos.v.xY;\n        *pZ -= stCamPos.v.xZ;\n        xZ = *pZ; xY = *pY; xX = stDiff.v.xX;\n        MTH_SQR3_TO(xSqrNorm, xX, xY, xZ) MTH_SQRT_TO(xNorm, xSqrNorm)\n        if (xNorm < xResult)\n            xResult = xNorm;\n    }\n    return (xResult < h_Current3dData->xDistNoInterpol);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PLA_bCheckDistForInterpol",
+      "reason": "Ported from the matched playevts.c twin PLA_bCheckDistForMorph (MTH_SQR3_TO/MTH_SQRT_TO asm macros, UV3 copies). 320/320, relocs ok; the only residual is the loop-test andi of i landing in v1 instead of a0. 300 declaration orders, a non-prototype camera declaration and 3.0.3 do not change it.",
+      "size": 320,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MISMATCH",
+      "target_size": 320,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d8b70",
+      "candidate_size": 372,
+      "first_difference": 40,
+      "implementation": "void CHEAP_DisplayAllAuras(void)\n{\n    _tdstCheapCharacter* param0;\n    unsigned int StartNum;\n    unsigned int i;\n    unsigned int k;\n    unsigned int Num;\n    _tdstCheapCharacterList* pl;\n    float (*pV)[4];\n\n    pV = CHEAP_AuraVertexArrays;\n    if (SCT_g_DrawingMirrored)\n        return;\n    Num = 0;\n    for (i = 0; i < g_lNbListOfCheapCharacterList; i++)\n    {\n        pl = &g_aListOfCheapCharacterList[i];\n        if (pl->hAuraVisualMaterial && pl->bAurasNeedToBeDrawn)\n        {\n            pl->bAurasNeedToBeDrawn = 0;\n            StartNum = Num;\n            for (k = 0; k < pl->NumberOfCheapCharacter; k++)\n            {\n                param0 = &pl->List[k];\n                if (param0->cActivity && Num < 250)\n                {\n                    pV[0][0] = param0->stPosition.xX;\n                    pV[0][1] = param0->stPosition.xY;\n                    pV[0][2] = param0->stPosition.xZ;\n                    pV[1][0] = 0.5f;\n                    pV[1][1] = 0.5f;\n                    pV[1][2] = 0.5f;\n                    pV[1][3] = pl->fAuraTransparencyMidLevel + FRR(-pl->fAuraTransparencyBlinkRange, pl->fAuraTransparencyBlinkRange);\n                    pV += 2;\n                    Num++;\n                }\n            }\n            if (Num - StartNum >= 4)\n                CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(pl->hAuraVisualMaterial, &CHEAP_AuraVertexArrays[StartNum * 2], Num - StartNum, pl->p_fAuraSizes, pl->fAuraSizeBlinkRange);\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CHEAP_DisplayAllAuras",
+      "reason": "372/372, relocs ok, after an exhaustive declaration-order search (5040 orders). Only residual: the target completes pV = CHEAP_AuraVertexArrays (addiu %lo) in the prologue before the SCT_g_DrawingMirrored load; the candidate puts it in the bnez delay slot. A declaration initializer and if-block forms do not move it.",
+      "size": 372,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MISMATCH",
+      "target_size": 372,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002e9f60",
+      "candidate_size": 172,
+      "first_difference": 65,
+      "implementation": "void WaterFx_vProcessAndDisplay(int bTransparent)\n{\n    tdstBaseFxListElement_* p;\n    C_WaterFx* pFx;\n\n    p = WaterFx_g_ListToDisplay.pFirst;\n    if (p)\n    {\n        GLI_vSetOptimizedSDC(1);\n        goto waterfx_loop_test;\n    waterfx_loop:\n        {\n            pFx = (C_WaterFx*)p->pFx; if (pFx->m_bTransparent == bTransparent)\n            {\n                pFx->Process();\n                WaterFx_vClearCop0Register24();\n                WaterFx_vClearCop0Register24();\n                WaterFx_vClearCop0Register24();\n                if (((C_WaterFx*)p->pFx)->m_pSDL) SDL_Draw(((C_WaterFx*)p->pFx)->m_pSDL);\n                WaterFx_vClearCop0Register24();\n            }\n            p = p->pNext;\n        }\n        waterfx_loop_test:\n        if (p) goto waterfx_loop;\n        GLI_vSetOptimizedSDC(0);\n        if (bTransparent)\n            WaterFx_g_ListToDisplay.DeleteAllNoFree();\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "WaterFx_vProcessAndDisplay",
+      "reason": "Only residual: retail fills the jal Process delay slot with the pre-call mtbpc (and then pads the SDL_Draw join with an alignment nop); MWCC 3.0.1 keeps mtbpc+hazard nop before the jal for every asm spelling tried (asm{}, asm(), volatile, mtc0 $24, inline helper vs direct). Moving the mtbpc after Process gives 172/172 with one differing word.",
+      "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 172,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002dab40",
+      "candidate_size": 368,
+      "first_difference": 4,
+      "implementation": "extern \"C\" void HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(HIE_tdstSuperObject_* _hSprObj);\nvoid HIE_fn_vFastPS2ForcedRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj);\n\n/* Not original source, needs cleaning up: the matrix-stack pop is an inline\n   helper (probably a PS2 HIE macro/inline from a header); as a call it is cheap\n   enough for MWCC to inline the recursion two levels deep, as retail does. */\ninline void HIE_vFastPS2PopMatrix(void)\n{\n    if (PS2_MatStackIndex) g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = (int)&PS2_MatStack[--PS2_MatStackIndex];\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_",
+      "reason": "Exact (364/364, lines ok) under MWCC 3.0.3; under the file's 3.0.1 build the bnez delay-slot copy of the else-branch's first sll leaves a dead duplicate (+4 bytes) and li 5 schedules after the index load. Moving SDLCheap.cpp to 3.0.3 loses HIE_fn_vFastPS2ForcedRefreshHierarchy (3.0.3 loop padding), so the trade is +1/-1 and the file stays on 3.0.1.",
+      "size": 364,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MISMATCH",
+      "target_size": 364,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d8cf0",
+      "candidate_size": 832,
+      "first_difference": 172,
+      "implementation": "extern \"C\" void CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(GLI_tdstMaterial_* pMat, float (*pParticleList)[4], unsigned int NbSprites, float* pSizes, float SizeRange);\n\nvoid CHEAP_DisplayAllAuras(void)\n{\n    _tdstCheapCharacter* param0;\n    unsigned int StartNum;\n    unsigned int i;\n    unsigned int k;\n    unsigned int Num;\n    _tdstCheapCharacterList* pl;\n    float (*pV)[4];\n\n    pV = CHEAP_AuraVertexArrays;\n    if (SCT_g_DrawingMirrored)\n        return;\n    Num = 0;\n    for (i = 0; i < g_lNbListOfCheapCharacterList; i++)\n    {\n        pl = &g_aListOfCheapCharacterList[i];\n        if (pl->hAuraVisualMaterial && pl->bAurasNeedToBeDrawn)\n        {\n            pl->bAurasNeedToBeDrawn = 0;\n            StartNum = Num;\n            for (k = 0; k < pl->NumberOfCheapCharacter; k++)\n            {\n                param0 = &pl->List[k];\n                if (param0->cActivity && Num < 250)\n                {\n                    pV[0][0] = param0->stPosition.xX;\n                    pV[0][1] = param0->stPosition.xY;\n                    pV[0][2] = param0->stPosition.xZ;\n                    pV[1][0] = 0.5f;\n                    pV[1][1] = 0.5f;\n                    pV[1][2] = 0.5f;\n                    pV[1][3] = pl->fAuraTransparencyMidLevel + FRR(-pl->fAuraTransparencyBlinkRange, pl->fAuraTransparencyBlinkRange);\n                    pV += 2;\n                    Num++;\n                }\n            }\n            if (Num - StartNum >= 4)\n                CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(pl->hAuraVisualMaterial, &CHEAP_AuraVertexArrays[StartNum * 2], Num - StartNum, pl->p_fAuraSizes, pl->fAuraSizeBlinkRange);\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff",
+      "reason": "832/832, relocs exact; only residual is the order of two independent addiu at +0xac/+0xb0 (ModelView address vs %lo(GLI_g_NegVect)) feeding the VU0 column-scale asm. Tried macro with block locals in every order, the u_drawAGO2 inline helper with all parameter orders, aligned ModelView. Scheduling-only: permuter candidate.",
+      "size": 832,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MISMATCH",
+      "target_size": 832,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002da210",
+      "candidate_size": 1196,
+      "first_difference": 56,
+      "implementation": "extern \"C\" void CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_Pc(GEO_tdstGeometricObject_* p_stObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity);\n\nvoid CHEAP_SendModulesToViewport(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity)\n{\n    SDC_VertexArrays_* pSDC;\n    GEO_tdstVisualSet_* p_stVisualSet;\n    GEO_tdstGeometricObject_* p_stObj;\n    HIE_tdstSuperObject_* hChild;\n\n    if (CHEAP_IS_NOT_VALID)\n        return;\n\n    HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_(_hSprObj);\n    Global_CharacterModuleBeingDisplayed = (int)_hSprObj;\n    if (_hSprObj->ulTypeOfLinkedObject == 8)\n    {\n        p_stVisualSet = PO_fn_hGetVisualSet(_hSprObj->hLinkedObject.p_stPhysicalObject);\n        p_stObj = p_stVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject;\n        GLI_BIG_GLOBALS_p_stObj = (int)p_stObj;\n        if (p_stObj)\n        {\n            pSDC = (SDC_VertexArrays_*)p_stObj->pSDC_Data;\n            if (pSDC)\n            {\n                if ((pSDC->OptType & 0xf) == 6)\n                {\n                    CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_Pc(p_stObj, ppCurrentMatrix, p_cActivity);\n                }\n            }\n            else\n            {\n                CHEAP_IS_NOT_VALID = 1;\n                printf(\"Something wrong in Cheap Character List.. Non Valid Actor\\n\");\n                HIE_vFastPS2PopMatrix();\n                return;\n            }\n        }\n        else\n        {\n            printf(\"Something wrong in Cheap Character List.. OBJ NULL\\n\");\n            CHEAP_IS_NOT_VALID = 1;\n            HIE_vFastPS2PopMatrix();\n            return;\n        }\n    }\n    else if (_hSprObj->ulTypeOfLinkedObject != 1)\n    {\n        printf(\"Something wrong in Cheap Character List.. NOT A PO !!\\n\");\n        CHEAP_IS_NOT_VALID = 1;\n        HIE_vFastPS2PopMatrix();\n        return;\n    }\n\n    if (CHEAP_IS_NOT_VALID)\n    {\n        HIE_vFastPS2PopMatrix();\n        return;\n    }\n\n    for (hChild = _hSprObj->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn)\n    {\n        if (hChild->ulTypeOfLinkedObject != 2)\n            CHEAP_SendModulesToViewport(hChild, ppCurrentMatrix, p_cActivity);\n    }\n\n    HIE_vFastPS2PopMatrix();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_Pc",
+      "reason": "Byte-exact MATCH (1180/1180) when SDLCheap.cpp is compiled with MWCC 3.0.3. Under the file's 3.0.1 build the three if/else branches inside the stage loop leave nop delay slots where retail hoists the then-branch's first instruction (li a0,0xf10 / lui a0 / li a0,5), which then adds four alignment nops (1196/1180). Moving the file to 3.0.3 would also match HIE_fn_vFastPS2ForcedPushMatrix but lose HIE_fn_vFastPS2ForcedRefreshHierarchy (3.0.3 under-pads its innermost loop): +2/-1, pending a coordinator decision.",
+      "size": 1180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MISMATCH",
+      "target_size": 1180,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002eb220",
+      "candidate_size": 480,
+      "first_difference": 42,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PerturbFromCharacterPosition__9C_WaterFxFPff",
+      "reason": "Same shape as C_WaterFx::Perturb plus a Z<MaxPos[2] test and FRR(0.5f*Strength, Strength). Retail inlines both (unsigned int)float casts (2^31 compare + trunc.w.s); MWCC 3.0.1 calls fptoui (480/596). Under 3.0.3 it is 592/596 and the file loses WaterFx_SetPosition/WaterFx_Perturb, so the file stays on 3.0.1.",
+      "size": 596,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 596,
+      "unresolved_relocations": [
+        {
+          "offset": 200,
+          "symbol": "fptoui",
+          "type": 4
+        },
+        {
+          "offset": 256,
+          "symbol": "fptoui",
+          "type": 4
+        }
+      ]
+    },
+    {
+      "address": "0x002d6140",
+      "candidate_size": 540,
+      "first_difference": 2,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PreprocessLighting__14C_CharacterSdlFP20HIE_tdstSuperObject_",
+      "reason": "Structure, VU0 asm and relocs right (540/544). Retail keeps coeff (0.4f) and invcoeff (0.6f) in stack homes (sw, then compiler lw into t2/t3 before the asm, line 827) and therefore reloads this->m_ppP for vAmbient; MWCC 3.0.1/3.0.3 propagate the constants straight into the qmtc2 operands. Current source loads them with explicit 'lw t2, coeff' in the asm (544/544 before the pMTinSDL reshape), still a register permutation away. volatile is rejected for asm operands.",
+      "size": 544,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MISMATCH",
+      "target_size": 544,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00279280",
+      "candidate_size": 768,
+      "first_difference": 40,
+      "implementation": "void PLA_fn_vRefreshFrameNumber(HIE_tdstSuperObject_* p_stSuperObject)\n{\n    tdst3dData_* h_Current3dData;\n    tdstAnim3d_* p_stCurrentAnim;\n    float xNbFrames;\n\n    h_Current3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;\n    {\n        /* Not original source, needs cleaning up: retail keeps the current\n           state in a callee-saved register across the fn_hGetNextStateInState\n           calls; a block-scoped local (absent from the debug list) reproduces it. */\n        tdstState_* h_CurrentState = h_Current3dData->h_CurrentState;\n\n        if (!h_CurrentState)\n            return;\n        p_stCurrentAnim = h_CurrentState->p_stAnim;\n        if (!p_stCurrentAnim)\n            return;\n        if (!h_Current3dData->ucFrameRate)\n            return;\n\n        if (g_bAnimConstantSpeed)\n            xNbFrames = h_Current3dData->xCurrentFrame + 1.0f;\n        else\n            xNbFrames = (float)h_Current3dData->ucFrameRate * (float)(unsigned int)(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - h_Current3dData->ulStartTime) / 1000.0f;\n\n        if (xNbFrames >= (float)p_stCurrentAnim->uwNumberOfFrames)\n        {\n            h_Current3dData->ulTimeDelay = MTH_M_xRealToLong((float)(unsigned int)g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - 1000.0f * ((float)p_stCurrentAnim->uwNumberOfFrames / (float)h_Current3dData->ucFrameRate) - (float)(unsigned int)h_Current3dData->ulStartTime);\n            xNbFrames = (float)(p_stCurrentAnim->uwNumberOfFrames - 1);\n        }\n        else\n        {\n            h_Current3dData->ulTimeDelay = 0;\n        }\n\n        if (p_stCurrentAnim->uwNumberOfFrames == 1 && !h_Current3dData->bStateJustModified && fn_hGetNextStateInState(h_CurrentState) == h_CurrentState)\n        {\n            h_Current3dData->bSkipCurrentFrame = 1;\n            h_Current3dData->xCurrentFrame = 0.0f;\n        }\n        else\n        {\n            h_Current3dData->xCurrentFrame = xNbFrames;\n        }\n\n        if ((unsigned short)MTH_M_xRealToLong(h_Current3dData->xCurrentFrame) == p_stCurrentAnim->uwNumberOfFrames)\n            h_Current3dData->ucFlagEndOfAnim = 1;\n\n        if (!h_Current3dData->ucRepeatAnimation && (unsigned short)MTH_M_xRealToLong(h_Current3dData->xCurrentFrame) == p_stCurrentAnim->uwNumberOfFrames && !fn_hGetNextStateInState(h_CurrentState))\n            h_Current3dData->ucFlagEndState = 1;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PLA_fn_vRefreshFrameNumber",
+      "reason": "Byte-exact MATCH (732/732, lines ok) when PlayAnim.c is built with MWCC 3.0.3. Uses MTH_M_xRealToLong (cvt.w.s f30 asm) for the three float->int conversions and plain (float) casts of the uchar/ushort fields (MWCC emits the unsigned sequence for them; an explicit (unsigned int) cast adds andi 0xff). Under 3.0.1 the function with asm leaves the hoisted srl duplicated in each unsigned->float block (768/732). PlayAnim.c on 3.0.3 loses PLA_fn_vInitHeaps/PLA_fn_vCreateAndInitHeaps (3.0.3 loop padding), so it needs a coordinator decision.",
+      "size": 732,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MISMATCH",
+      "target_size": 732,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002da940",
+      "candidate_size": 312,
+      "first_difference": 32,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "HIE_fn_vFastPS2ForcedRefreshHierarchy__FP20HIE_tdstSuperObject_",
+      "reason": "Byte-exact MATCH (320/320, lines ok) under MWCC 3.0.1, but SDLCheap.cpp moved to 3.0.3 (user-approved +2/-1 trade, 2026-10-21), where the innermost short child loop is padded one nop less (312/320). No pragma, flag or loop form under 3.0.3 restores it; keep the source as is.",
+      "size": 320,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MISMATCH",
+      "target_size": 320,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d5a90",
+      "candidate_size": 1004,
+      "first_difference": 176,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Draw__5C_SdlFi",
+      "reason": "1004/1004, relocs 109/109; structure, macros and line boundaries reconstructed (texture-enable ternary must be 'iCurTextureSet == 0 ? 2 : 0x200' for movn). Residual is scheduling/register choice only: the VU0 column-scale helper computes NegVect before the destination matrix address (same residual as CHEAP_DrawAuras, unaffected by helper parameter order), and the inlined texture/blend state macros at +0x184..+0x244 allocate different temporaries. Permuter candidate.",
+      "size": 1004,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MISMATCH",
+      "target_size": 1004,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002c7ad0",
+      "candidate_size": 976,
+      "first_difference": 0,
+      "implementation": "void GLI_c_DrawUnoptimizedCharacter(GEO_tdstGeometricObject_* pObj)\n{\n    unsigned int bUsingStrips;\n    GEO_tdstElementIndexedTriangles_* p_stEIT;\n    SDC_VertexArrays_* pSDC;\n    float (*pUsedUV)[4];\n    unsigned int OrgNbStages;\n    unsigned int NbVertices;\n    unsigned int NbStages;\n    unsigned int stage;\n    unsigned int iElement;\n\n    float (*pVOrg)[4] __attribute__((aligned(16)));\n    float (*pUV1)[4] __attribute__((aligned(16)));\n    float (*pUV2)[4] __attribute__((aligned(16)));\n    float (*pUVChrome)[4] __attribute__((aligned(16)));\n    float (*pNormals)[4] __attribute__((aligned(16)));\n\n    pSDC = pObj->pSDC;\n    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x600) { *(int*)g_PS2glContext.pnColorMatMasks |= 0x200; *(int*)g_PS2glContext.pnColorMatMasks |= 0x100; } g_PS2glContext.uiDmaOmitDataBits = 0x644;\n    g_PS2glContext.nLightBits |= 0x400;\n\n    for (iElement = 0; iElement < pObj->xNbElements; iElement++)\n    {\n        bUsingStrips = 1;\n        if (((short*)pObj->d_xListOfElementsTypes)[iElement] == 1)\n        {\n            p_stEIT = ((GEO_tdstElementIndexedTriangles_**)pObj->d_stListOfElements)[iElement];\n            if (((int*)pSDC->pbIsTransparent)[iElement])\n            {\n                if (GLI_g_NbUnOptChars < 500)\n                {\n                    _UnoptimizedTransparentCharacters_* p = &GLI_g_UnOptCharList[GLI_g_NbUnOptChars++];\n                    sceVu0CopyMatrix(p->GlobalMatrix, (float (*)[4])&((MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CurrentMatrix)->stTransformMatrix);\n                    p->pObj = pObj;\n                    p->p_stEIT = p_stEIT;\n                    p->iElement = iElement;\n                }\n                continue;\n            }\n\n            if ((pSDC->OptType & 0xf) == 5)\n            {\n                NbVertices = *(unsigned int*)pSDC->pArrayOfVertexArrays[iElement];\n            }\n            else\n            {\n                bUsingStrips = 0;\n                NbVertices = 3 * ((unsigned int*)pSDC->pNbTrianglesPerElement)[iElement];\n            }\n            GLI_vGetVertexPointersFromSDCStructure(pSDC, iElement, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pNormals);\n\n            if (pSDC->pArrayOfMaterials[iElement] && pSDC->pArrayOfMaterials[iElement]->ulNbTextureStages)\n                NbStages = pSDC->pArrayOfMaterials[iElement]->ulNbTextureStages;\n            else\n                NbStages = 0;\n            OrgNbStages = NbStages;\n            if (NbStages == 0)\n                NbStages++;\n\n            for (stage = 0; stage < NbStages; stage++)\n            {\n                if (OrgNbStages)\n                {\n                    switch (p_stEIT->hVisualMaterial->a_stMultiMaterial[stage].c_UVSource)\n                    {\n                    case 0: pUsedUV = pUV1; break;\n                    case 1: pUsedUV = pUV2; break;\n                    case 4: pUsedUV = pUVChrome; break;\n                    }\n                }\n                else\n                {\n                    pUsedUV = pUV1;\n                }\n                GLI_g_CurrentStage = stage;\n                GLI_g_LastCyclingMode = 0xff;\n                GlobalAlphaVal = GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;\n                GLI_DRV_SendMaterialToViewport(pSDC->pArrayOfMaterials[iElement]);\n                PS2glNormalPointer(0x1406, -2, pNormals);\n                PS2glTexCoordPointer(NbVertices, 0x1406, -2, pUsedUV);\n                PS2glVertexPointer(NbVertices, 0x1406, -2, pVOrg);\n                PS2glMatrixMode(0x1700);\n                PS2glLoadMatrixf(&((MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CurrentMatrix)->stTransformMatrix.stCol_0.xX);\n                GLI_AddNormalInterpolation(&((MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CurrentMatrix)->stTransformMatrix);\n                if (bUsingStrips)\n                    PS2glDrawArrays(5, 0, NbVertices);\n                else\n                    PS2glDrawArrays(4, 0, NbVertices);\n            }\n        }\n        else\n        {\n            globale = bUsingStrips;\n        }\n    }\n\n    if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_c_DrawUnoptimizedCharacter",
+      "reason": "Control flow, calls, relocations and the 16-aligned vertex slots reconstructed (976/948). Residual is spill choice: retail spills pObj (0xcc), p_stEIT (0xb0) and OrgNbStages (0xac) and keeps iElement and its byte offset in s0/s7; MWCC 3.0.1 spills iElement and the offset instead, adding a 0x10 frame and reloads. 300 declaration orders do not change it. _UnoptimizedTransparentCharacters_ now has its retail 0x50 stride (aligned(16)).",
+      "size": 948,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MISMATCH",
+      "target_size": 948,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00276dd0",
+      "candidate_size": 892,
+      "first_difference": 20,
+      "implementation": "void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, tdstEngineObject_* p_stObject)\n{\n    tdstAChannel_* hArray;\n    tdstAChannel_* p_stChannel;\n    tdstAnim3d_* p_stCurrentAnim;\n    tdst3dData_* h_Current3dData;\n\n    p_stCurrentAnim = NULL;\n    if (!p_stObject)\n        return;\n\n    h_Current3dData = p_stObject->h_3dData;\n    if (h_Current3dData->h_CurrentState)\n        p_stCurrentAnim = h_Current3dData->h_CurrentState->p_stAnim;\n    p_stChannel = h_Current3dData->hFirstActiveChannel;\n    if ((hArray = h_Current3dData->hArrayOfChannels) != NULL)\n    {\n        while (p_stChannel)\n        {\n            if (p_stSuperObject && p_stCurrentAnim && p_stCurrentAnim->d_stMorphDataArray)\n                MOR_fn_xStopMorph(p_stSuperObject, (short)(p_stChannel - hArray));\n\n            if (p_stChannel->hZoomSupObject)\n            {\n                PLA_M_vIsolateSupObj(p_stChannel->hZoomSupObject)\n                PLA_fn_vReleaseSupObjInHeap(p_stChannel->hZoomSupObject);\n                p_stChannel->hZoomSupObject = NULL;\n            }\n            if (p_stChannel->hSupObject)\n            {\n                PLA_M_vIsolateSupObj(p_stChannel->hSupObject)\n                PLA_fn_vReleaseSupObjInHeap(p_stChannel->hSupObject);\n                p_stChannel->hSupObject = NULL;\n            }\n            p_stChannel = p_stChannel->p_stNextActiveChannel;\n        }\n    }\n\n    h_Current3dData->bSkipCurrentFrame = 0;\n    if (p_stSuperObject)\n        fn_vDesInitAllEvents(p_stSuperObject, NULL, 1);\n    fn_vFreeCSOList(&hArray);\n    h_Current3dData->hArrayOfChannels = NULL;\n    fn_vFreeArrayOfElts3d(h_Current3dData);\n    h_Current3dData->hFirstActiveChannel = NULL;\n    h_Current3dData->stFrame3d.p_stAnim = NULL;\n    if (h_Current3dData->stFrame3d.p_stAngularSpeedMatrix)\n    {\n        HMU_fn_vFree((void**)&h_Current3dData->stFrame3d.p_stAngularSpeedMatrix, 1);\n        h_Current3dData->stFrame3d.p_stAngularSpeedMatrix = NULL;\n    }\n    h_Current3dData->p_stCurrentHieCouples = NULL;\n    h_Current3dData->wCurrentHieNbCouples = 0;\n    h_Current3dData->ucFlagModifState = 1;\n    h_Current3dData->bSkipCurrentFrame = 0;\n    if (p_stSuperObject)\n        fn_vRemoveAllSubAnimations(p_stSuperObject);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PLA_fn_vDesInitAllChildOfCharacter",
+      "reason": "892/892, relocs 18/18. The two channel super-object releases are an isolate macro (re-reading p_stChannel->hX each time) plus an inline heap-release helper, one source line each, as retail. Only residual: p_stSuperObject and h_Current3dData swap s0/s3 (retail keeps h_Current3dData in s0), which shifts the prologue's 'move s3,a0'. All 24 declaration orders, register keywords and early-return vs wrapped forms tried.",
+      "size": 892,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MISMATCH",
+      "target_size": 892,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d6c90",
+      "candidate_size": 1636,
+      "first_difference": 148,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Preprocess__5C_SdlFv",
+      "reason": "1636/1636, relocs 32/32 (the 'stVectorStack' relocations are the fog-colour marker constant 0x563412). Reconstructed: m_SDL_Size = NbIndices = (int)(ppP = m_DisplayList) chain, if/else-if ref-type chains in the two search loops (source order 1,0x10,8,0x20,2,4 and 1,2,4), compare-chain switch in the cleanup loop, compaction loop. Residuals: the &ppP argument of PS2glGetIntegerv(0xF18) is computed before a0 (same as PreprocessLightingForCheap), the refindex==m_NbRefs test is scheduled before the strength-reduced ref offset increment, and j/pMTP/refindex take rotated s-registers (300 declaration orders tried). Permuter candidate.",
+      "size": 1636,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MISMATCH",
+      "target_size": 1636,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00150f60",
+      "candidate_size": 320,
+      "first_difference": 48,
+      "implementation": "void impPS2glCallLists(int n, unsigned int type, void* lists)\n{\n    int I;\n    unsigned int list;\n\n    list = 0;\n    for (I = 0; I < n; I++)\n    {\n        switch (type)\n        {\n        case 0x1402: case 0x1403: list = *(unsigned short*)lists; lists = (unsigned short*)lists + 1; break;\n        case 0x1404: case 0x1405: list = *(unsigned int*)lists; lists = (unsigned int*)lists + 1; break;\n        case 0x1406: list = (unsigned int)*(float*)lists; lists = (float*)lists + 1; break;\n        case 0x1409: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;\n        case 0x1408: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;\n        case 0x1407: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;\n        case 0x1400: case 0x1401:\n            list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1; break;\n        }\n        { tagListData* pListData = *PS2glSearchList(g_PS2glContext.uiListBase + list); if (pListData->pDmaBuffer) PS2glCallSDL(pListData); else PS2glExecuteListData(pListData); }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "impPS2glCallLists",
+      "reason": "Source complete: byte-exact MATCH (384/384, relocs 7/7, lines ok) when PS2GL_Lists.c is built with library 3.0.3, which inlines the GL_FLOAT (unsigned int)float conversion; 3.0/3.0.1 emit jal fptoui (320/384). Not moved: under 3.0.3 PS2glFreeListData and PS2glFreeListDataPartially pad their short Liberator loop one nop less (-2/+1).",
+      "size": 384,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MISMATCH",
+      "target_size": 384,
+      "unresolved_relocations": [
+        {
+          "offset": 128,
+          "symbol": "fptoui",
+          "type": 4
+        }
+      ]
+    },
+    {
+      "address": "0x001637f0",
+      "candidate_size": 84,
+      "first_difference": 12,
+      "implementation": "void AE_CopyScreen(void)\n{\n    AE_DrawWindow(0.0f, 0.0f, 100.0f, 100.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AE_CopyScreen",
+      "reason": "Retail AE_CopyScreen is AE_DrawWindow(0,0,100,100,.5,.5,.5,.5,0,0,1,1) inlined (body on one line; unfolded 0*W/1*W products). With AE_DrawWindow inlined (inline keyword or #pragma auto_inline on) it is 204/204, relocs 9/9, lines ok, differing only in the order of 'mtc1 v0,f13' / 'mtc1 zero,f12' and the trailing mov.s schedule. Not kept: 'inline' drops AE_DrawWindow's out-of-line symbol and auto_inline also inlines the RasterPos wrappers (-19).",
+      "size": 204,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MISMATCH",
+      "target_size": 204,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00162860",
+      "candidate_size": 332,
+      "first_difference": 4,
+      "implementation": "void AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned long* pDestPSM);\n\n/* One blurred full-screen strip: the quad covers the whole framebuffer and\n * the colour is the neutral 0.5 grey. */\n#define AE_BLUR_QUAD(x1, y1, x2, y2, r, g, b, a) \\\n    { \\\n        float fOne = 1.0f; \\\n        float fWidth = (float)(g_stBufferInfo.iScreenWidth * 16); \\\n        float fZero = 0.0f; \\\n        float fU1 = fZero * fWidth; \\\n        float fU2 = fOne * fWidth; \\\n        float fHeight; \\\n        float fV1; \\\n        float fV2; \\\n        if (g_stBufferInfo.bPlainBufferMode) \\\n        { \\\n            fHeight = (float)(g_stBufferInfo.iScreenHeight * 16); \\\n            fV1 = fZero * fHeight; \\\n            fV2 = fOne * fHeight; \\\n        } \\\n        else \\\n        { \\\n            fHeight = (float)(g_stBufferInfo.iScreenHeight * 8); \\\n            fV1 = fZero * fHeight; \\\n            fV2 = fOne * fHeight; \\\n        } \\\n        internalFullScreenQuadJeffWithoutOptimization(0x4000, (x1), (y1), (x2), (y2), (r), (g), (b), (a), fU1, fV1, fU2, fV2); \\\n    }",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AE_InternalGetBPandPSMFromID",
+      "reason": "Switch, field sources and tail stores reproduced (relocs 26/26); 332/296 because the dispfb copy differs: retail does 'ld a0,%lo(g_stDoubleBuf+0x10)(at); sd a0,8(sp)' then 'lw' + dsll32 12/dsrl32 27 for PSM in a 0x10 frame. Struct assignment (u_int or u_long bitfields), *(u_long*)& casts and direct anon_19 assignment all materialise both addresses (addiu+ld 0/sd 0) and give one stack slot per case; the original likely reads dispfb through a u_long/union view not in the recovered types.",
+      "size": 296,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MISMATCH",
+      "target_size": 296,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002c6480",
+      "candidate_size": 212,
+      "first_difference": 12,
+      "implementation": "void CTL_SetCurrentMap(char* Map)\n{\n    char Temp[16];\n    int i;\n\n    CTL_Load_Ini_File();\n    for (i = 0; Map[i]; i++)\n        Temp[i] = toupper(Map[i]);\n    Temp[i] = 0;\n    for (i = 0; i < CTL_g_Infos.NumberOfMapsInIniFile && !strstr(CTL_g_Infos.Maps[i].MapName, Temp); i++)\n        ;\n    CTL_g_CurrentMap = i;\n    if (i == CTL_g_Infos.NumberOfMapsInIniFile)\n        CTL_g_CurrentMap = -1;\n    strcpy(GLI_g_MapBeingLoaded, Temp);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CTL_SetCurrentMap",
+      "reason": "212/220, relocs 14/14. Search loop reproduced as 'for (i = 0; i < N && !strstr(...); i++);' (s0/s1 swap only). Copy loop differs: retail loads Map[i] with lb straight into a0 for toupper (unfilled delay slots, Temp address as addiu sp,0x30 + addu, s0 saved before the call), while 3.0.1 and 3.0.3 re-sign-extend the cached char (dsll32/dsra32 0x18) and fold 0x30 into the sb offset. while/for, int casts, pointer forms and toupper prototypes tried.",
+      "size": 220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MISMATCH",
+      "target_size": 220,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002c6480",
+      "candidate_size": 204,
+      "first_difference": 12,
+      "implementation": "void CTL_SetCurrentMap(char* Map)\n{\n    char Temp[16];\n    int i;\n\n    CTL_Load_Ini_File();\n    for (i = 0; Map[i]; i++)\n        Temp[i] = toupper(Map[i]);\n    Temp[i] = 0;\n    for (i = 0; i < CTL_g_Infos.NumberOfMapsInIniFile && !strstr(CTL_g_Infos.Maps[i].MapName, Temp); i++)\n        ;\n    CTL_g_CurrentMap = i;\n    if (i == CTL_g_Infos.NumberOfMapsInIniFile)\n        CTL_g_CurrentMap = -1;\n    strcpy(GLI_g_MapBeingLoaded, Temp);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CTL_SetCurrentMap",
+      "reason": "204/220, relocs 14/14. With 'int toupper(char)' (as CTL_ReadLine needs) the char is passed raw like retail; search loop is 'for (...; i < N && !strstr(...); i++);' (s0/s1 swap). Remaining: retail forms the Temp[i] address as addiu sp,0x30 + addu (no offset folding) and saves s0 after the first move, which also shifts the loop-head alignment nop; for/while/pointer/cast forms of the copy loop all fold 0x30 into sb.",
+      "size": 220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MISMATCH",
+      "target_size": 220,
       "unresolved_relocations": []
     }
   ],
@@ -42380,6 +42888,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "PLD_fn_vUnLoadFix",
       "size": 92,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_call.c",
+      "status": "MATCH"
+    },
+    "0x0012c700": {
+      "address": "0x0012c700",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "PLD_fn_vUnLoadLevel",
+      "size": 184,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_call.c",
+      "status": "MATCH"
+    },
+    "0x0012c7c0": {
+      "address": "0x0012c7c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "PLD_fn_vUnLoadLevelFamilies",
+      "size": 268,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/PLD/pld_call.c",
       "status": "MATCH"
     },
@@ -42740,6 +43264,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "viBufCount",
       "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
+      "status": "MATCH"
+    },
+    "0x00131d40": {
+      "address": "0x00131d40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "viBufDelete",
+      "size": 144,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
       "status": "MATCH"
     },
@@ -43436,6 +43968,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MC_PrintMessage",
       "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
+      "status": "MATCH"
+    },
+    "0x00138090": {
+      "address": "0x00138090",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MC_PrintMessageAndWaitForYesNoFormat",
+      "size": 240,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c",
       "status": "MATCH"
     },
@@ -45479,6 +46019,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
       "status": "MATCH"
     },
+    "0x00148f40": {
+      "address": "0x00148f40",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glVertex4dv",
+      "size": 436,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
     "0x00149100": {
       "address": "0x00149100",
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
@@ -45503,6 +46051,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
       "status": "MATCH"
     },
+    "0x001495c0": {
+      "address": "0x001495c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glVertex3dv",
+      "size": 420,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
     "0x00149770": {
       "address": "0x00149770",
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
@@ -45524,6 +46080,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
       "name": "impPS2glVertex2fv",
       "size": 376,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
+    "0x00149c00": {
+      "address": "0x00149c00",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glVertex2dv",
+      "size": 400,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
       "status": "MATCH"
     },
@@ -45580,6 +46144,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
       "name": "impPS2glVertex2f",
       "size": 372,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
+    "0x0014af30": {
+      "address": "0x0014af30",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glVertex2d",
+      "size": 388,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
       "status": "MATCH"
     },
@@ -46231,6 +46803,22 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
       "status": "MATCH"
     },
+    "0x00151880": {
+      "address": "0x00151880",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glSDLInstancing",
+      "size": 348,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
+    "0x001519e0": {
+      "address": "0x001519e0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "impPS2glEndList",
+      "size": 316,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
     "0x00152180": {
       "address": "0x00152180",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -46260,6 +46848,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glListBase",
       "size": 12,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
+    "0x001524d0": {
+      "address": "0x001524d0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glExecuteListData",
+      "size": 192,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
       "status": "MATCH"
     },
@@ -46295,6 +46891,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
       "status": "MATCH"
     },
+    "0x00154390": {
+      "address": "0x00154390",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glListSaveVBuf",
+      "size": 328,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
     "0x001544e0": {
       "address": "0x001544e0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -46311,11 +46915,43 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
       "status": "MATCH"
     },
+    "0x00154710": {
+      "address": "0x00154710",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glListSaveParam",
+      "size": 188,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
     "0x001547d0": {
       "address": "0x001547d0",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "PS2glListSaveParamSpace",
       "size": 156,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
+    "0x00154870": {
+      "address": "0x00154870",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glFreeListData",
+      "size": 372,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
+    "0x001549f0": {
+      "address": "0x001549f0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glFreeListDataPartially",
+      "size": 176,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
+    "0x00154aa0": {
+      "address": "0x00154aa0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glAddLists",
+      "size": 232,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
       "status": "MATCH"
     },
@@ -50399,6 +51035,30 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
       "status": "MATCH"
     },
+    "0x001625b0": {
+      "address": "0x001625b0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "AE_SetTextureNoBilinear",
+      "size": 220,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MATCH"
+    },
+    "0x00162690": {
+      "address": "0x00162690",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "AE_SetTextureNoAlpha",
+      "size": 224,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MATCH"
+    },
+    "0x00162770": {
+      "address": "0x00162770",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "AE_SetTexture",
+      "size": 220,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MATCH"
+    },
     "0x00162850": {
       "address": "0x00162850",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -50420,6 +51080,30 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "AE_Begin",
       "size": 148,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MATCH"
+    },
+    "0x00162b90": {
+      "address": "0x00162b90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "AE_SetGS",
+      "size": 280,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MATCH"
+    },
+    "0x00162cb0": {
+      "address": "0x00162cb0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "AE_DrawWindowWithoutOptimization",
+      "size": 200,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MATCH"
+    },
+    "0x00162d80": {
+      "address": "0x00162d80",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "AE_DrawWindow",
+      "size": 200,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
       "status": "MATCH"
     },
@@ -50836,6 +51520,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
       "name": "impPS2glPrioritizeTextures",
       "size": 104,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x00175290": {
+      "address": "0x00175290",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glFreeTexture",
+      "size": 212,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
     },
@@ -52591,6 +53283,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
       "status": "MATCH"
     },
+    "0x0018ad50": {
+      "address": "0x0018ad50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "usnd_uiComputeAbsolutePath",
+      "size": 404,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
+      "status": "MATCH"
+    },
     "0x0018aef0": {
       "address": "0x0018aef0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -53383,6 +54083,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
       "status": "MATCH"
     },
+    "0x001dfa80": {
+      "address": "0x001dfa80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO_vSetGauge",
+      "size": 220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001e0370": {
+      "address": "0x001e0370",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO_ulGetElderOne",
+      "size": 220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
     "0x001e05e0": {
       "address": "0x001e05e0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -53588,6 +54304,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "AGO2_ProcessFlow",
       "size": 344,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO2.c",
+      "status": "MATCH"
+    },
+    "0x001e8dd0": {
+      "address": "0x001e8dd0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "AGO2_CreateFlow",
+      "size": 480,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO2.c",
       "status": "MATCH"
     },
@@ -54020,6 +54744,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "Display__17AGO3_SimpleSparksFP27GLD_tdstViewportAttributes_",
       "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f9830": {
+      "address": "0x001f9830",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Process__17AGO3_SimpleSparksFv",
+      "size": 328,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
@@ -56023,6 +56755,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
       "status": "MATCH"
     },
+    "0x002058d0": {
+      "address": "0x002058d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_vComputeReferencePoint",
+      "size": 300,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MATCH"
+    },
     "0x00205bf0": {
       "address": "0x00205bf0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -56183,6 +56923,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
       "status": "MATCH"
     },
+    "0x00209340": {
+      "address": "0x00209340",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_p_stChangeVectorParameter",
+      "size": 288,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MATCH"
+    },
     "0x00209460": {
       "address": "0x00209460",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -56244,6 +56992,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CAM_fn_bEqualVectorWithEpsilon",
       "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Tool.c",
+      "status": "MATCH"
+    },
+    "0x0020ac60": {
+      "address": "0x0020ac60",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_vComputeProjection",
+      "size": 136,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Tool.c",
       "status": "MATCH"
     },
@@ -57764,6 +58520,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_vGetZoneCenter",
       "size": 248,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/FuncRay2.cxx",
+      "status": "MATCH"
+    },
+    "0x0021f950": {
+      "address": "0x0021f950",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_p_stCode4PointsDeMagie",
+      "size": 568,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/FuncRay2.cxx",
       "status": "MATCH"
     },
@@ -60575,6 +61339,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
       "status": "MATCH"
     },
+    "0x00259cf0": {
+      "address": "0x00259cf0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vInitObjectsWhenPlayerChangeSector",
+      "size": 264,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
+    "0x00259e00": {
+      "address": "0x00259e00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vReInitActorsWhenSectorBecomesActive",
+      "size": 256,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
     "0x00259f00": {
       "address": "0x00259f00",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -60596,6 +61376,46 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vInitAllObjectsWhenNewGameStart",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
+    "0x00259fb0": {
+      "address": "0x00259fb0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vKillEngineObjectOrAlwaysByPointer",
+      "size": 312,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
+    "0x0025a0f0": {
+      "address": "0x0025a0f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vDesactiveAnObject",
+      "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
+    "0x0025a4d0": {
+      "address": "0x0025a4d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vDesinitOneObject",
+      "size": 276,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
+    "0x0025a5f0": {
+      "address": "0x0025a5f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vInitOneObject",
+      "size": 304,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
+      "status": "MATCH"
+    },
+    "0x0025a9e0": {
+      "address": "0x0025a9e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vRemoveWorldSectInfo",
+      "size": 152,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit.c",
       "status": "MATCH"
     },
@@ -62359,6 +63179,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZdxStuff.c",
       "status": "MATCH"
     },
+    "0x0026caf0": {
+      "address": "0x0026caf0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_vUpdateCurrentActivationForCharacter",
+      "size": 456,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZdxStuff.c",
+      "status": "MATCH"
+    },
     "0x0026ccc0": {
       "address": "0x0026ccc0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -64047,6 +64875,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
       "status": "MATCH"
     },
+    "0x00274d40": {
+      "address": "0x00274d40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_hMergeAnimForInterpolation",
+      "size": 700,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MATCH"
+    },
+    "0x00275540": {
+      "address": "0x00275540",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vGetDeformationInfoForChannel",
+      "size": 188,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MATCH"
+    },
     "0x00275600": {
       "address": "0x00275600",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -64119,6 +64963,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
       "status": "MATCH"
     },
+    "0x00276190": {
+      "address": "0x00276190",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "PLA_fn_vSetCurrFrame",
+      "size": 392,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MATCH"
+    },
+    "0x00276320": {
+      "address": "0x00276320",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "PLA_fn_bSetNewStateWithRandom",
+      "size": 312,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MATCH"
+    },
+    "0x00276d30": {
+      "address": "0x00276d30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "PLA_fn_vRefreshGlobalMatrixOfAnimsHierarchy",
+      "size": 148,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MATCH"
+    },
     "0x00277b30": {
       "address": "0x00277b30",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -64143,6 +65011,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
       "status": "MATCH"
     },
+    "0x00277cc0": {
+      "address": "0x00277cc0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "PLA_fn_hFindNextFreeSupObj",
+      "size": 312,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MATCH"
+    },
     "0x00277e00": {
       "address": "0x00277e00",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -64164,6 +65040,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "PLA_fn_bSkipCurrentFrame",
       "size": 304,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MATCH"
+    },
+    "0x0027aaf0": {
+      "address": "0x0027aaf0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "PLA_fn_vStopCurrentMorphAnim",
+      "size": 160,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
       "status": "MATCH"
     },
@@ -65279,11 +66163,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GamSave2.c",
       "status": "MATCH"
     },
+    "0x0028caf0": {
+      "address": "0x0028caf0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SAV2_fn_vFreeAnElement",
+      "size": 644,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GamSave2.c",
+      "status": "MATCH"
+    },
     "0x0028cd80": {
       "address": "0x0028cd80",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SAV2_fn_eGiveElementTypeFromAIType",
       "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GamSave2.c",
+      "status": "MATCH"
+    },
+    "0x0028ce20": {
+      "address": "0x0028ce20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SAV2_fn_vFindGoodTypeAndOptionsFromString",
+      "size": 536,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GamSave2.c",
       "status": "MATCH"
     },
@@ -68471,6 +69371,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawHier.c",
       "status": "MATCH"
     },
+    "0x002b93b0": {
+      "address": "0x002b93b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_PS2GL_PrepareSpecificDataForLevel",
+      "size": 400,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSpriteGen.c",
+      "status": "MATCH"
+    },
+    "0x002bc670": {
+      "address": "0x002bc670",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_v_CalculateVectorsFor3DSpriteGenVU0",
+      "size": 196,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawSpriteGen.c",
+      "status": "MATCH"
+    },
     "0x002bc740": {
       "address": "0x002bc740",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -68695,11 +69611,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
       "status": "MATCH"
     },
+    "0x002c4830": {
+      "address": "0x002c4830",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_iGetOneMenuTextureNames",
+      "size": 324,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c4c40": {
+      "address": "0x002c4c40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vFreeTempMaterial",
+      "size": 220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
     "0x002c4d20": {
       "address": "0x002c4d20",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vFreeTempTexture",
       "size": 100,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c4d90": {
+      "address": "0x002c4d90",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_xCreateMaterialPS2GL",
+      "size": 240,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
       "status": "MATCH"
     },
@@ -68759,6 +69699,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
       "status": "MATCH"
     },
+    "0x002c6280": {
+      "address": "0x002c6280",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vOpenTXCFile",
+      "size": 268,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c6390": {
+      "address": "0x002c6390",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "ReadFromBufferedCD",
+      "size": 232,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c67c0": {
+      "address": "0x002c67c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CTL_ReadLine",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
     "0x002c6ce0": {
       "address": "0x002c6ce0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -68788,6 +69752,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "LoadTextureBloc",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c6dd0": {
+      "address": "0x002c6dd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vLoadTBF_File",
+      "size": 364,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
+      "status": "MATCH"
+    },
+    "0x002c6f40": {
+      "address": "0x002c6f40",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vProcessRegisteredTextures",
+      "size": 296,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/HdwTx_R3.c",
       "status": "MATCH"
     },
@@ -68847,11 +69827,51 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
       "status": "MATCH"
     },
+    "0x002c7e90": {
+      "address": "0x002c7e90",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DisplayAllUnOptChar",
+      "size": 1092,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
+    "0x002c8bb0": {
+      "address": "0x002c8bb0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vDisplayAllTransparentUnoptimizedMapElements",
+      "size": 684,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
+    "0x002c8e60": {
+      "address": "0x002c8e60",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vRegisterUnoptimizedMapTransparentElements",
+      "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
     "0x002c9880": {
       "address": "0x002c9880",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_CreateBigRain",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
+    "0x002ca510": {
+      "address": "0x002ca510",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vDisplayAllTransparentSpriteGens",
+      "size": 468,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
+    "0x002cb760": {
+      "address": "0x002cb760",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLIPS2_bCharacterHasTheRightSkin",
+      "size": 128,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
       "status": "MATCH"
     },
@@ -68863,11 +69883,43 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
       "status": "MATCH"
     },
+    "0x002cb7f0": {
+      "address": "0x002cb7f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vUpdateAllRefs",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
+    "0x002cb890": {
+      "address": "0x002cb890",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vUpdateAllVAs",
+      "size": 268,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
     "0x002cb9a0": {
       "address": "0x002cb9a0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vRemoveCharacterVAFromProcessList",
       "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
+    "0x002cb9f0": {
+      "address": "0x002cb9f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vUpdateCharacterVA",
+      "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
+    "0x002cbce0": {
+      "address": "0x002cbce0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DestroyDummySDL",
+      "size": 96,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
       "status": "MATCH"
     },
@@ -68884,6 +69936,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vDeleteAllWaitingPointers",
       "size": 188,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
+    "0x002cbe90": {
+      "address": "0x002cbe90",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MyDelayedFree",
+      "size": 312,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
+    "0x002cbfd0": {
+      "address": "0x002cbfd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MyglDeleteLists",
+      "size": 312,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
       "status": "MATCH"
     },
@@ -69431,6 +70499,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
       "status": "MATCH"
     },
+    "0x002d5900": {
+      "address": "0x002d5900",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vSetOptimizedSDC",
+      "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MATCH"
+    },
+    "0x002d59b0": {
+      "address": "0x002d59b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "StealthDestroy__5C_SdlFv",
+      "size": 216,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MATCH"
+    },
     "0x002d5e80": {
       "address": "0x002d5e80",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -69439,11 +70523,51 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
       "status": "MATCH"
     },
+    "0x002d6360": {
+      "address": "0x002d6360",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Start__14C_CharacterSdlFv",
+      "size": 888,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MATCH"
+    },
+    "0x002d66e0": {
+      "address": "0x002d66e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Start__5C_SdlFv",
+      "size": 828,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MATCH"
+    },
+    "0x002d6a20": {
+      "address": "0x002d6a20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "UpdateFogs__5C_SdlFv",
+      "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MATCH"
+    },
+    "0x002d6ab0": {
+      "address": "0x002d6ab0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "ProcessAllRefs__5C_SdlFv",
+      "size": 480,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MATCH"
+    },
     "0x002d7300": {
       "address": "0x002d7300",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "AddRef__5C_SdlFP8C_SdlRef",
       "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MATCH"
+    },
+    "0x002d7380": {
+      "address": "0x002d7380",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "Destruct__5C_SdlFv",
+      "size": 220,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
       "status": "MATCH"
     },
@@ -69815,11 +70939,75 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
       "status": "MATCH"
     },
+    "0x002d9a10": {
+      "address": "0x002d9a10",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CHEAP_SearchMaterial__FP20HIE_tdstSuperObject_PP17MTH4D_tdstMatrix_Pc",
+      "size": 208,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MATCH"
+    },
+    "0x002d9ae0": {
+      "address": "0x002d9ae0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "HIE_fn_CleanAllListOfFakeInstanceToViewport",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MATCH"
+    },
+    "0x002d9bb0": {
+      "address": "0x002d9bb0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CHEAP_UpdateDeformation__FP20HIE_tdstSuperObject_",
+      "size": 324,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MATCH"
+    },
     "0x002d9d00": {
       "address": "0x002d9d00",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CHEAP_UpdateAllRefs",
       "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MATCH"
+    },
+    "0x002d9e00": {
+      "address": "0x002d9e00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CHEAP_SendModulesToViewportRT__FP20HIE_tdstSuperObject_PP17MTH4D_tdstMatrix_",
+      "size": 428,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MATCH"
+    },
+    "0x002d9fb0": {
+      "address": "0x002d9fb0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CHEAP_SendModulesToViewport__FP20HIE_tdstSuperObject_PP17MTH4D_tdstMatrix_Pc",
+      "size": 596,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MATCH"
+    },
+    "0x002da210": {
+      "address": "0x002da210",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CHEAP_DrawActorInstance__FP24GEO_tdstGeometricObject_PP17MTH4D_tdstMatrix_Pc",
+      "size": 1180,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MATCH"
+    },
+    "0x002da6b0": {
+      "address": "0x002da6b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CHEAP_DrawLastSDC__Fv",
+      "size": 656,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MATCH"
+    },
+    "0x002dab40": {
+      "address": "0x002dab40",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "HIE_fn_vFastPS2ForcedPushMatrix__FP20HIE_tdstSuperObject_",
+      "size": 364,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
       "status": "MATCH"
     },
@@ -70183,6 +71371,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
+    "0x002e6480": {
+      "address": "0x002e6480",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DoFullScreenWaterEffect",
+      "size": 540,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
     "0x002e76d0": {
       "address": "0x002e76d0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -70263,6 +71459,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
       "status": "MATCH"
     },
+    "0x002e9cd0": {
+      "address": "0x002e9cd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WaterFx_SetPerturbationMode",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MATCH"
+    },
     "0x002e9d70": {
       "address": "0x002e9d70",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -70303,11 +71507,43 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
       "status": "MATCH"
     },
+    "0x002e9ec0": {
+      "address": "0x002e9ec0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WaterFx_vInit",
+      "size": 148,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MATCH"
+    },
+    "0x002ea010": {
+      "address": "0x002ea010",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DisplayInSDL__9C_WaterFxFv",
+      "size": 496,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MATCH"
+    },
+    "0x002eaee0": {
+      "address": "0x002eaee0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SetPosition__9C_WaterFxFPfPf",
+      "size": 260,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MATCH"
+    },
     "0x002ec310": {
       "address": "0x002ec310",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "DeleteSDLs__9C_WaterFxFv",
       "size": 52,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
+      "status": "MATCH"
+    },
+    "0x002ec350": {
+      "address": "0x002ec350",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "__dt__9C_WaterFxFv",
+      "size": 272,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp",
       "status": "MATCH"
     },

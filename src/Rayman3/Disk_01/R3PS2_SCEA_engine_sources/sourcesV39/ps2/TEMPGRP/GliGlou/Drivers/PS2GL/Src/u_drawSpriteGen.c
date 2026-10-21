@@ -1448,9 +1448,86 @@ int g_p_stCurrentViewport;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned int GLI_g_MustBlocIn30FPS;
+int GLI_gs_lBackGroundColor;
+float GLI_g_fCurrentCameraRatio;
+float GLI_g_fCurrentCameraxAngle;
+float GLI_g_NearValue;
+float GLI_g_FarValue;
+unsigned int GLI_g_StaticVertexArraySizePrevision;
+unsigned int TotalVertexArraySizeWithoutStrips;
+unsigned int TotalVertexArraySizeWithStrips;
+unsigned int NbVerticesToProcessWithStrips;
+unsigned int NbVerticesToProcessWithoutStrips;
+void* gp_stActualWorld;
+void* gp_stDynamicWorld;
+void* gp_stInactiveDynamicWorld;
+unsigned int GLI_g_DMA_PreparingOpaque;
+unsigned int GLI_g_ChristianSlaterMode;
+
+void PS2glTexParameteri(unsigned int target, unsigned int pname, int param);
+void GLI_vInitSdlCache(void);
+void GLI_vInitSimpleShadowArrays(void);
+void GLI_fnvPrecalculateStuffForAllMaterials(void);
+void GLI_PS2GL_PrepareSpecificDataForSPO(void* p_hSO);
+void GLIPS2_vInitMatrixDeformation(void);
+void ReinitOldMovieEffect(void);
+void* VAC_Create(unsigned int NbSprites);
+void HIE_fn_vInitMatrixStack(void);
+void GLI_vDMABufferParseTree(void* p_stTree);
+void WaterFx_vInit(void);
+void PS2MC_vActivateMemoryCard(void);
+int printf(const char* format, ...);
+
 void GLI_PS2GL_PrepareSpecificDataForLevel(void)
 {
-    /* TODO: decompile from asm/... */
+    PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
+    PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+    GLI_vInitSdlCache();
+    GLI_g_MustBlocIn30FPS = 0;
+    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+    GLI_g_fCurrentCameraRatio = 4.0f / 3.0f;
+    GLI_g_fCurrentCameraxAngle = 45.0f;
+    GLI_g_NearValue = 0.8f;
+    GLI_g_FarValue = 2048.0f;
+    GLI_gs_lBackGroundColor = 0;
+    GLI_vInitSimpleShadowArrays();
+    GLI_g_StaticVertexArraySizePrevision = 0;
+    GLI_fnvPrecalculateStuffForAllMaterials();
+    TotalVertexArraySizeWithoutStrips = 0;
+    TotalVertexArraySizeWithStrips = 0;
+    NbVerticesToProcessWithStrips = 0;
+    NbVerticesToProcessWithoutStrips = 0;
+    GLI_PS2GL_PrepareSpecificDataForSPO(gp_stActualWorld);
+    GLI_PS2GL_PrepareSpecificDataForSPO(gp_stDynamicWorld);
+    GLI_PS2GL_PrepareSpecificDataForSPO(gp_stInactiveDynamicWorld);
+    GLIPS2_vInitMatrixDeformation();
+    ReinitOldMovieEffect();
+    GLI_g_hVAContainer = (int)VAC_Create(1000);
+    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+    if (GLI_g_ChristianSlaterMode)
+    {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+    }
+    else
+    {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
+    }
+    g_PS2glContext.uiStaticDisplayListMaxSize = 30000;
+    GLI_g_StaticVertexArraySizePrevision = 0;
+    HIE_fn_vInitMatrixStack();
+    GLI_g_DMA_PreparingOpaque = 1;
+    GLI_vDMABufferParseTree(gp_stActualWorld);
+    GLI_g_DMA_PreparingOpaque = 0;
+    GLI_vDMABufferParseTree(gp_stActualWorld);
+    g_PS2glContext.uiStaticDisplayListMaxSize = 5000;
+    WaterFx_vInit();
+    PS2MC_vActivateMemoryCard();
+    printf("Specific data done :\n");
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 1633–1754 */
@@ -2632,7 +2709,58 @@ void GLI_v_CalculateVectorsFor3DSpriteGen(MAT_tdstTransformation_* param0, J_Par
 void GLI_v_CalculateVectorsFor3DSpriteGenVU0(MAT_tdstTransformation_* pInvertedCam, J_ParticleSprite_* p, float sx, float sy)
 {
     float V1[4];
-    /* TODO: decompile from asm/... */
+    float* pX;
+    float* pMat;
+    float* pV1;
+    float* pDirection;
+    float* pY;
+
+    V1[0] = 0.0f;
+    V1[1] = 0.0f;
+    V1[2] = -1.0f;
+    pDirection = p->FaceNormal;
+    pMat = (float*)((char*)pInvertedCam + 0x10);
+    V1[3] = 0.0f;
+    pX = GLI_g_stXVecta;
+    pV1 = V1;
+    pY = GLI_g_stYVecta;
+
+    asm {
+        lqc2 $vf8, 0x0(pV1)
+        lqc2 $vf4, 0x0(pMat)
+        lqc2 $vf5, 0x10(pMat)
+        lqc2 $vf6, 0x20(pMat)
+        lqc2 $vf7, 0x30(pMat)
+        lqc2 $vf10, 0x0(pDirection)
+        vmulax.xyzw $ACC, $vf4, $vf8x
+        vmadday.xyzw $ACC, $vf5, $vf8y
+        vmaddaz.xyzw $ACC, $vf6, $vf8z
+        vmaddw.xyzw $vf9, $vf7, $vf8w
+        vopmula.xyz $ACC, $vf10, $vf9
+        vopmsub.xyz $vf13, $vf9, $vf10
+        vsub.w $vf13, $vf13, $vf13
+        vmul.xyz $vf5, $vf13, $vf13
+        vaddy.x $vf5, $vf5, $vf5y
+        vaddz.x $vf5, $vf5, $vf5z
+        vsqrt $Q, $vf5x
+        vwaitq
+        vaddq.x $vf5, $vf0, $Q
+        vdiv $Q, $vf0w, $vf5x
+        vsub.xyzw $vf6, $vf0, $vf0
+        vwaitq
+        vmulq.xyz $vf6, $vf13, $Q
+        sqc2 $vf6, 0x0(pX)
+        mfc1 $t0, sx
+        nop
+        qmtc2.ni $t0, $vf8
+        vmulx.xyzw $vf7, $vf6, $vf8x
+        mfc1 $t0, sy
+        nop
+        qmtc2.ni $t0, $vf9
+        vmulx.xyzw $vf2, $vf10, $vf9x
+        sqc2 $vf7, 0x0(pX)
+        sqc2 $vf2, 0x0(pY)
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 344–347 */

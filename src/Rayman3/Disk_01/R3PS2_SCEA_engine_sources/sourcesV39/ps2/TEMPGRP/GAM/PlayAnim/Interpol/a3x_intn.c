@@ -1276,6 +1276,10 @@ stMorphData* gp_stMorphData;
 tdstEvent_* gp_stEvents;
 
 /* External helpers used by this translation unit. */
+extern short ax_SinTab[8192];
+extern float ax_AcosTab[8192];
+float sinf(float _xValue);
+float acosf(float _xValue);
 tdstA3dGENERAL_* fn_p_GetA3dGENERAL(unsigned short uwNum, unsigned int ulFrame);
 void* HMU_fn_p_vMalloc(int _ulSize, int _ulMode);
 void HMU_fn_vFree(void* _ppBlock, int _ulMode);
@@ -1301,8 +1305,20 @@ void GAM_fn_vPopAllocMode(void);
  */
 void fn_v_InitSinTab(void)
 {
-    int slCnt1;
-    /* TODO: decompile from asm/... */
+    int slCnt;
+
+    for (slCnt = 0; slCnt < 0x1000L; slCnt++)
+    {
+        ax_SinTab[slCnt] = (short)(32767.0f * sinf(6.2831855f * (float)slCnt / 8192.0f) + 0.5f);
+    }
+    for (slCnt = 0x1000; slCnt < 0x2000L; slCnt++)
+    {
+        ax_SinTab[slCnt] = (short)(32767.0f * sinf(6.2831855f * (float)slCnt / 8192.0f) - 0.5f);
+    }
+    for (slCnt = 0; slCnt < 0x2000L; slCnt++)
+    {
+        ax_AcosTab[slCnt] = acosf(2.0f * (float)slCnt / 8191.0f - 1.0f);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 2025–2099 */

@@ -3534,9 +3534,11 @@ float CAM_fn_xSetAngleInIntervalPiPi(float _xAngle)
 void CAM_fn_vComputeAnglesBetweenTwoVectors(MTH3D_tdstVector_* _p_stUnusedVector, MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle, MTH3D_tdstVector_* _p_stRefAxisZ)
 {
     float xPi = 3.1415927f;
+    float xValue;
+    float* pVert = _p_xVerticalAngle;
     *_p_xHorizontalAngle = CAM_fn_xComputeHorizontalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
-    *_p_xVerticalAngle = CAM_fn_xComputeVerticalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
-    if (MTH_xAbs(*_p_xVerticalAngle) > 3.1415927f / 2.0f) { if (*_p_xVerticalAngle > 0.0f) *_p_xVerticalAngle = xPi - *_p_xVerticalAngle; else *_p_xVerticalAngle = -xPi - *_p_xVerticalAngle; } *_p_xHorizontalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xHorizontalAngle); *_p_xVerticalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xVerticalAngle);
+    *pVert = CAM_fn_xComputeVerticalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
+    xValue = *_p_xVerticalAngle; if (MTH_xAbs(xValue) > 3.1415927f / 2.0f) { if (xValue > 0.0f) *_p_xVerticalAngle = xPi - xValue; else *_p_xVerticalAngle = -xPi - xValue; } *_p_xHorizontalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xHorizontalAngle); *_p_xVerticalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xVerticalAngle);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 409–416 */
@@ -3601,10 +3603,31 @@ float CAM_fn_xComputeRotation(MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVect
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* R5900 accumulator dot product (mula.s/madda.s/madd.s). */
+inline float MTH_xDotProduct3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2)
+{
+    float xRet;
+    asm { mula.s _x1, _x2 }
+    asm { madda.s _y1, _y2 }
+    asm { madd.s xRet, _z1, _z2 }
+    return xRet;
+}
+
 void CAM_fn_vComputeProjection(MTH3D_tdstVector_* _p_sDestVector, MTH3D_tdstVector_* _p_sSrcVector, MTH3D_tdstVector_* _p_sNormVector)
 {
     float xScalar;
-    /* TODO: decompile from asm/... */
+    float xNx, xNy, xNz;
+
+    xScalar = MTH_xDotProduct3(_p_sSrcVector->xX, _p_sNormVector->xX, _p_sSrcVector->xY, _p_sNormVector->xY, _p_sSrcVector->xZ, _p_sNormVector->xZ);
+    if (xScalar != 0.0f)
+    {
+        xNx = _p_sNormVector->xX; xNy = _p_sNormVector->xY; xNz = _p_sNormVector->xZ; _p_sDestVector->xX = _p_sSrcVector->xX - xScalar * xNx; _p_sDestVector->xY = _p_sSrcVector->xY - xScalar * xNy; _p_sDestVector->xZ = _p_sSrcVector->xZ - xScalar * xNz;
+    }
+    else
+    {
+        /* Not original source, needs cleaning up: retail copies the vector through one integer register (lw/sw); a struct assignment uses FP loads. */
+        *(int*)&_p_sDestVector->xX = *(int*)&_p_sSrcVector->xX; *(int*)&_p_sDestVector->xY = *(int*)&_p_sSrcVector->xY; *(int*)&_p_sDestVector->xZ = *(int*)&_p_sSrcVector->xZ;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 301–319 */

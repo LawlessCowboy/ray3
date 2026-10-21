@@ -1428,6 +1428,8 @@ tdstEngineStructure_ g_stEngineStructure;
 unsigned char g_ucIsEdInGhostMode;
 unsigned char g_ucGameModuleId;
 
+void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 140–140 */
 /* addr: 0x0026d3e0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1651,11 +1653,24 @@ void CAM_fn_vCineInfoSetSuperObjectTargeted(tdstInternalStructurCineinfo_* _hInt
  */
 void CAM_fn_vAveragePosition(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_tdstVector_* p_result)
 {
-    MTH3D_tdstVector_* p_stTmp;
     unsigned int ulIndex;
-    float tmpTime;
-    float xCurrentTime;
-    /* TODO: decompile from asm/... */
+    float xSum;
+    float xTime;
+    MTH3D_tdstVector_* p_stPos;
+    fn_vInitAveragePositionDatasIfNecessary(_hCineinfo);
+    xSum = 0.0f;
+    p_result->xX = 0.0f; p_result->xY = 0.0f; p_result->xZ = 0.0f;
+    for (ulIndex = 0; ulIndex < 8; ulIndex++) {
+        xTime = _hCineinfo->AveragePosition.a_CheckedTime[ulIndex];
+        p_stPos = &_hCineinfo->AveragePosition.a_CheckedPos[ulIndex];
+        if ((xTime == 0.0f) || ((p_stPos->xX == 0.0f) && (p_stPos->xY == 0.0f) && (p_stPos->xZ == 0.0f))) continue;
+        xSum += xTime;
+        p_result->xX += xTime * p_stPos->xX; p_result->xY += xTime * p_stPos->xY; p_result->xZ += xTime * p_stPos->xZ;
+        if (xSum >= xTimeWindow) break;
+    }
+    if (xSum != 0.0f) {
+        p_result->xX /= xSum; p_result->xY /= xSum; p_result->xZ /= xSum;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\cineinfo.c lines 919–946 */

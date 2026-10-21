@@ -6854,7 +6854,22 @@ void AGO_vSetIcon(int NumeroVp, int Num, float* V1, float* V2, float xTransparen
  */
 void AGO_vSetGauge(int NumeroVp, int NumeroGauge, float* V1, float* V2, float xNiveau, float xTransparency, void* hVisualMaterial1, void* hVisualMaterial2)
 {
-    /* TODO: decompile from asm/... */
+    g_TheGauges[NumeroGauge].Coords[0] = V1[0];
+    g_TheGauges[NumeroGauge].Coords[1] = V1[1];
+    g_TheGauges[NumeroGauge].Coords[2] = V2[0];
+    g_TheGauges[NumeroGauge].Coords[3] = V2[1];
+    g_TheGauges[NumeroGauge].EmptyMaterial = (int)hVisualMaterial1;
+    g_TheGauges[NumeroGauge].FullMaterial = (int)hVisualMaterial2;
+    g_TheGauges[NumeroGauge].Position = xNiveau;
+    g_TheGauges[NumeroGauge].Transparency = (int)xTransparency;
+    if (NumeroVp == 0)
+    {
+        g_TheGauges[NumeroGauge].DestinationViewport = 0xFF;
+    }
+    else
+    {
+        g_TheGauges[NumeroGauge].DestinationViewport = NumeroVp - 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 1184–1212 */
@@ -7043,11 +7058,29 @@ AGO_Part_* AGO_vCreatePart(unsigned int parm_ulType, float* parm_a3_fPosition, f
  */
 int AGO_ulGetElderOne(void)
 {
-    AGO_Part_* p;
     float fOldestTime;
     unsigned int ulOldestIndex;
+    AGO_Part_* p;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0, p = &g_AGO[0]; p->ulType != 0x60000000 && i < 500; i++, p++)
+        ;
+    if (i >= 499)
+        return -1;
+
+    ulOldestIndex = i;
+    fOldestTime = p->fCreationTime;
+    for (i++; i < 500; i++, p++)
+    {
+        if (p->ulType & 0x01000000)
+            return i;
+        if (p->fCreationTime < fOldestTime && p->ulType != 0x60000000 && (p->ulType & 0xFF) != 20 && (p->ulType & 0xFF) != 22)
+        {
+            fOldestTime = p->fCreationTime;
+            ulOldestIndex = i;
+        }
+    }
+    return ulOldestIndex;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 715–755 */

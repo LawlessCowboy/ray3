@@ -1926,13 +1926,39 @@ unsigned char GAM_fn_bIsCharacterActive(HIE_tdstSuperObject_* hSuperObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int MC_fn_hGetFirstMainCharNode(void);
+HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(int);
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_*);
+
 int GAM_fn_lGetNbPersoActive(void)
 {
     int i;
     SECT_tdstListOfSOSectorsInActivityInteraction_* hActivityList;
     HIE_tdstSuperObject_* hActiveSector;
     int lNbPerso;
-    /* TODO: decompile from asm/... */
+    SECT_tdstSector_* hSector;
+    SECT_tdstListOfSOCharacters_* hCharList;
+    int lCount;
+
+    hActiveSector = fn_h_SectInfoGetCurrentSector(MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter->h_SectInfo);
+    hSector = hActiveSector->hLinkedObject.p_stSector;
+    lNbPerso = 0;
+    for (hCharList = hSector->stListOfCharacters.hFirstElementDyn; hCharList != NULL; hCharList = hCharList->hNextBrotherDyn)
+    {
+        if (((unsigned char)((hCharList->hPointerOfCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 2) ? 1 : 0)) == 1)
+            lNbPerso++;
+    }
+    for (i = hSector->stListOfSectorsInActivityInteraction.lNumberOfElementsOpt, hActivityList = hSector->stListOfSectorsInActivityInteraction.hFirstElementOpt; i > 0; i--, hActivityList++)
+    {
+        lCount = 0;
+        for (hCharList = hActivityList->hPointerOfSectorSO->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharList != NULL; hCharList = hCharList->hNextBrotherDyn)
+        {
+            if (((unsigned char)((hCharList->hPointerOfCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 2) ? 1 : 0)) == 1)
+                lCount++;
+        }
+        lNbPerso += lCount;
+    }
+    return lNbPerso;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1509–1525 */

@@ -1621,7 +1621,7 @@ tagPS2glApiTable g_PS2glApiTableImp;
 tagListVertexBuffer g_PS2glListVBuf;
 int PS2glReallocator;
 unsigned int uiMaxVifDmaBufLength;
-int PS2glLiberator;
+void (*PS2glLiberator)(void*);
 tagPS2glApiTable g_PS2glApiTableList;
 void plyPS2glDrawElements(anon_29*);
 void plyPS2glDrawArrays(anon_26*);
@@ -1650,11 +1650,31 @@ float vColorLimit128[4];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tagListData** PS2glSearchList(unsigned int list);
+void PS2glCallSDL(tagListData* pListData);
+void PS2glExecuteListData(tagListData* pData);
+
 void impPS2glCallLists(int n, unsigned int type, void* lists)
 {
-    unsigned int list;
     int I;
-    /* TODO: decompile from asm/... */
+    unsigned int list;
+
+    list = 0;
+    for (I = 0; I < n; I++)
+    {
+        switch (type)
+        {
+        case 0x1402: case 0x1403: list = *(unsigned short*)lists; lists = (unsigned short*)lists + 1; break;
+        case 0x1404: case 0x1405: list = *(unsigned int*)lists; lists = (unsigned int*)lists + 1; break;
+        case 0x1406: list = (unsigned int)*(float*)lists; lists = (float*)lists + 1; break;
+        case 0x1409: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;
+        case 0x1408: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;
+        case 0x1407: list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1;
+        case 0x1400: case 0x1401:
+            list = (list << 8) + *(unsigned char*)lists; lists = (unsigned char*)lists + 1; break;
+        }
+        { tagListData* pListData = *PS2glSearchList(g_PS2glContext.uiListBase + list); if (pListData->pDmaBuffer) PS2glCallSDL(pListData); else PS2glExecuteListData(pListData); }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2363–2387 */
@@ -1933,16 +1953,51 @@ void PS2glReinitAfterSDLs(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tagListData** PS2glAddLists(unsigned int list, int range);
+void PS2glFreeListData(tagListData* pDataOfList);
+
 void PS2glSDLInstancing(unsigned int* pIDs)
 {
-    int i;
-    int iOffset;
-    int* param0;
     unsigned int uiRealSize;
-    tagListData** ppListData;
-    tagListData* pDstListData;
+    int* param0;
     tagListData* pSrcListData;
-    /* TODO: decompile from asm/... */
+    tagListData** ppListData;
+    int iOffset;
+    tagListData* pDstListData;
+    int i;
+
+    pSrcListData = *PS2glSearchList(pIDs[1]);
+    ppListData = PS2glSearchList(pIDs[0]);
+    if (!ppListData)
+    {
+        if (!(ppListData = PS2glAddLists(pIDs[0], 1)))
+        {
+            printf("Error:SDL can't add the destination list!\n");
+            pIDs[0] = 0;
+            return;
+        }
+    }
+    if (*ppListData)
+        PS2glFreeListData(*ppListData);
+    pDstListData = *ppListData = (tagListData*)PS2glAllocator(sizeof(tagListData));
+    memcpy(pDstListData, pSrcListData, sizeof(tagListData));
+    pDstListData->pDatas = NULL;
+    pDstListData->pCalls = NULL;
+    pDstListData->pPrimBufTail = NULL;
+    pDstListData->pPrimBufHead = NULL;
+    uiRealSize = pDstListData->uiSDLSize * 16;
+    pDstListData->pLastExecDmaBuffer = pDstListData->pDmaBuffer = (float (*)[4])PS2glAllocator(uiRealSize);
+    memcpy(pDstListData->pDmaBuffer, pSrcListData->pDmaBuffer, uiRealSize);
+    iOffset = (char*)pDstListData->pDmaBuffer - (char*)pSrcListData->pDmaBuffer;
+    uiRealSize = pDstListData->uiSDLIndicesSize * 8;
+    pDstListData->pSDLIndices = (int)PS2glAllocator(uiRealSize);
+    memcpy((void*)pDstListData->pSDLIndices, (void*)pSrcListData->pSDLIndices, uiRealSize);
+    param0 = (int*)pDstListData->pSDLIndices;
+    for (i = 0; i < pDstListData->uiSDLIndicesSize; i++)
+    {
+        *param0 += iOffset;
+        param0 += 2;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1971–2023 */
@@ -1982,11 +2037,48 @@ void PS2glSDLInstancing(unsigned int* pIDs)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glBegin(unsigned int mode);
+void PS2glEnd(void);
+int PS2glComposeStaticDisplayList(tagListData* pListData);
+
 void impPS2glEndList(void)
 {
     tagGLlistcalls* pCalls;
     tagGLlistcalls* pCurCalls;
-    /* TODO: decompile from asm/... */
+
+    if (!g_PS2glContext.pCurListData)
+    {
+        printf("Error: glEndList was called without a preceding glNewList.\n");
+        return;
+    }
+    pCalls = g_PS2glContext.pCurListCalls;
+    if (pCalls && pCalls->cbCalls < 0x400)
+    {
+        g_PS2glContext.pCurListCalls = pCurCalls = ((tagGLlistcalls* (*)(void*, unsigned int))PS2glReallocator)(pCalls, pCalls->cbCalls + 8);
+        if (!g_PS2glContext.pPreListCalls)
+            g_PS2glContext.pCurListData->pCalls = pCurCalls;
+        else
+            g_PS2glContext.pPreListCalls->pNext = pCurCalls;
+    }
+    if (!g_PS2glContext.bFinalCompile && g_PS2glListVBuf.nCount)
+    {
+        PS2glBegin(0);
+        PS2glEnd();
+    }
+    g_PS2glContext.bInBeginEndPair = 0;
+    g_pPS2glApiTable = (int)&g_PS2glApiTableImp;
+    if (g_PS2glContext.pCurListData->eMode == 0x1301 || g_PS2glContext.pCurListData->eMode == 0x1303)
+    {
+        if (g_PS2glContext.pCurListData->pDmaBuffer)
+            PS2glCallSDL(g_PS2glContext.pCurListData);
+        else
+            PS2glExecuteListData(g_PS2glContext.pCurListData);
+    }
+    else if ((g_PS2glContext.uiStaticDisplayListBits & 3) == 3)
+    {
+        PS2glComposeStaticDisplayList(g_PS2glContext.pCurListData);
+    }
+    g_PS2glContext.pCurListData = NULL;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1789–1966 */
@@ -2399,10 +2491,26 @@ void impPS2glListBase(unsigned int base)
 void PS2glExecuteListData(tagListData* pData)
 {
     unsigned int cbNode;
-    unsigned int cbCalls;
-    tagGLlistnode* pNode;
     tagGLlistcalls* pCalls;
-    /* TODO: decompile from asm/... */
+    tagGLlistnode* pNode;
+    unsigned int cbCalls;
+
+    pCalls = pData->pCalls;
+    g_PS2glContext.bInDisplayListExecution = 1;
+    while (pCalls)
+    {
+        pNode = (tagGLlistnode*)pCalls->aNodes;
+        cbCalls = 0;
+        while (pCalls && cbCalls < pCalls->cbCalls)
+        {
+            if (pNode->cbParamCount) pNode->pfns.pfnPlayParam(pNode->aParams); else pNode->pfns.pfnPlayVoid();
+            cbNode = pNode->cbParamCount + 8;
+            pNode = (tagGLlistnode*)((char*)pNode + cbNode);
+            cbCalls += cbNode;
+        }
+        pCalls = pCalls->pNext;
+    }
+    g_PS2glContext.bInDisplayListExecution = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1498–1528 */
@@ -3523,7 +3631,24 @@ void PS2glResetPrimBuffer(void)
 void PS2glListSaveVBuf(unsigned char EOP)
 {
     tagGLprimbuf* pBuf;
-    /* TODO: decompile from asm/... */
+
+    if (g_PS2glContext.bInBeginEndPair && g_PS2glListVBuf.nCount)
+    {
+        pBuf = (tagGLprimbuf*)PS2glAllocator(sizeof(tagGLprimbuf));
+        memset(pBuf, 0, sizeof(tagGLprimbuf));
+        pBuf->nCount = g_PS2glListVBuf.nCount;
+        pBuf->pCode = (int)PS2glAllocator(g_PS2glListVBuf.nCount);
+        pBuf->pData = (float (*)[4])PS2glAllocator(g_PS2glListVBuf.nCount * 16);
+        memcpy((void*)pBuf->pCode, g_PS2glListVBuf.abCode, g_PS2glListVBuf.nCount);
+        memcpy(pBuf->pData, g_PS2glListVBuf.avData, g_PS2glListVBuf.nCount * 16);
+        pBuf->pTexUnit = (int)PS2glAllocator(g_PS2glListVBuf.nCount * 4);
+        memcpy((void*)pBuf->pTexUnit, g_PS2glListVBuf.aeTexUnit, g_PS2glListVBuf.nCount * 4);
+        PS2glAddPrimBuffer(pBuf, EOP);
+    }
+    g_PS2glListVBuf.nCount = 0;
+    g_PS2glContext.pCurListVCode = g_PS2glListVBuf.abCode;
+    g_PS2glContext.pCurListVData = g_PS2glListVBuf.avData;
+    g_PS2glContext.pCurListTexUnit = (int*)g_PS2glListVBuf.aeTexUnit;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 346–358 */
@@ -3678,12 +3803,32 @@ reuse:
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PS2glListSaveParam(void* pParam, int cbParam)
+void* PS2glListSaveParam(void* pParam, int cbParam)
 {
     tagGLlistdatas* pDatas;
     tagGLlistdatas* pCurDatas;
     void* pBuf;
-    /* TODO: decompile from asm/... */
+
+    pBuf = PS2glAllocator(cbParam);
+    pDatas = g_PS2glContext.pCurListData->pDatas;
+    memcpy(pBuf, pParam, cbParam);
+    if ((pDatas == NULL) || (pDatas->apData[2] != 0))
+    {
+        pCurDatas = (tagGLlistdatas*)PS2glAllocator(16);
+        pCurDatas->apData[1] = pCurDatas->apData[2] = 0;
+        pCurDatas->apData[0] = (int)pBuf;
+        pCurDatas->pNext = pDatas;
+        g_PS2glContext.pCurListData->pDatas = pCurDatas;
+    }
+    else if (pDatas->apData[1] == 0)
+    {
+        pDatas->apData[1] = (int)pBuf;
+    }
+    else
+    {
+        pDatas->apData[2] = (int)pBuf;
+    }
+    return pBuf;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 251–269 */
@@ -3775,10 +3920,55 @@ void* PS2glListSaveParamSpace(int cbParam)
 void PS2glFreeListData(tagListData* pDataOfList)
 {
     tagGLprimbuf* pNext;
-    tagGLprimbuf* pPrimBuf;
     tagGLlistdatas* pDatas;
+    tagGLprimbuf* pPrimBuf;
     tagGLlistcalls* pCalls;
-    /* TODO: decompile from asm/... */
+
+    if (pDataOfList)
+    {
+        pCalls = pDataOfList->pCalls;
+        pDatas = pDataOfList->pDatas;
+        pPrimBuf = pDataOfList->pPrimBufHead;
+        if ((unsigned int)pDataOfList->pDmaBuffer > 1)
+        {
+            PS2glLiberator(pDataOfList->pDmaBuffer);
+            pDataOfList->pDmaBuffer = NULL;
+            if (pDataOfList->pSDLIndices)
+            {
+                PS2glLiberator((void*)pDataOfList->pSDLIndices);
+                pDataOfList->pSDLIndices = 0;
+            }
+        }
+        while (pCalls)
+        {
+            tagGLlistcalls* pNextCalls = pCalls->pNext;
+            PS2glLiberator(pCalls);
+            pCalls = pNextCalls;
+        }
+        while (pDatas)
+        {
+            tagGLlistdatas* pNextDatas = pDatas->pNext;
+            if (pDatas->apData[0])
+                PS2glLiberator((void*)pDatas->apData[0]);
+            if (pDatas->apData[1])
+                PS2glLiberator((void*)pDatas->apData[1]);
+            if (pDatas->apData[2])
+                PS2glLiberator((void*)pDatas->apData[2]);
+            PS2glLiberator(pDatas);
+            pDatas = pNextDatas;
+        }
+        while (pPrimBuf)
+        {
+            pNext = pPrimBuf->pNext;
+            if (pPrimBuf->pCode)
+                PS2glLiberator((void*)pPrimBuf->pCode);
+            if (pPrimBuf->pData)
+                PS2glLiberator(pPrimBuf->pData);
+            PS2glLiberator(pPrimBuf);
+            pPrimBuf = pNext;
+        }
+        PS2glLiberator(pDataOfList);
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 101–175 */
@@ -3807,10 +3997,37 @@ void PS2glFreeListData(tagListData* pDataOfList)
  */
 void PS2glFreeListDataPartially(tagListData* pDataOfList)
 {
-    tagGLprimbuf* pNext;
     tagGLprimbuf* pPrimBuf;
+    tagGLprimbuf* pNext;
     tagGLlistcalls* pCalls;
-    /* TODO: decompile from asm/... */
+
+    if (pDataOfList)
+    {
+        pCalls = pDataOfList->pCalls;
+        pPrimBuf = pDataOfList->pPrimBufHead;
+        while (pCalls)
+        {
+            tagGLlistcalls* pNextCalls = pCalls->pNext;
+            PS2glLiberator(pCalls);
+            pCalls = pNextCalls;
+        }
+        pDataOfList->pCalls = NULL;
+        while (pPrimBuf)
+        {
+            pNext = pPrimBuf->pNext;
+            if (pPrimBuf->pCode)
+            {
+                PS2glLiberator((void*)pPrimBuf->pCode);
+                pPrimBuf->pCode = 0;
+            }
+            if (pPrimBuf->pData)
+            {
+                PS2glLiberator(pPrimBuf->pData);
+                pPrimBuf->pData = NULL;
+            }
+            pPrimBuf = pNext;
+        }
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 56–98 */
@@ -3845,10 +4062,36 @@ void PS2glFreeListDataPartially(tagListData* pDataOfList)
  */
 tagListData** PS2glAddLists(unsigned int list, int range)
 {
-    int I;
     tagListNode* pNode;
     tagListNodeSingle* pSingleIndex;
-    /* TODO: decompile from asm/... */
+    int I;
+
+    if (!list)
+        return NULL;
+    if (range <= 0)
+        return NULL;
+    if (range == 1)
+    {
+        for (I = 0, pSingleIndex = g_PS2glContext.ListPool.aSingleIndex; I < 64; I++, pSingleIndex++)
+        {
+            if (!pSingleIndex->nIndex)
+            {
+                pSingleIndex->nIndex = list;
+                return &pSingleIndex->pData;
+            }
+        }
+    }
+    pNode = (tagListNode*)PS2glAllocator(sizeof(tagListNode) + (range - 1) * sizeof(int));
+    pNode->iSize = range;
+    pNode->nIndex = list;
+    pNode->pNext = NULL;
+    memset(pNode->apData, 0, range * sizeof(int));
+    if (g_PS2glContext.ListPool.pLastNode)
+        g_PS2glContext.ListPool.pLastNode->pNext = pNode;
+    g_PS2glContext.ListPool.pLastNode = pNode;
+    if (!g_PS2glContext.ListPool.pFirstNode)
+        g_PS2glContext.ListPool.pFirstNode = pNode;
+    return (tagListData**)pNode->apData;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 30–53 */

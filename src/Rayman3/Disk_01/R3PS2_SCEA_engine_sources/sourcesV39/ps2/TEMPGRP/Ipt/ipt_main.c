@@ -985,7 +985,7 @@ unsigned char IPT_fn_bModifyIPTAction(IPT_tdstEntryElement_* _hElementToChange, 
     int lI;
     for (lI = 0; lI < (int)_hElementToChange->ulNumberOfKeyWordElement; lI++) {
         if (_hElementToChange->d_stKeyWordElementArray[lI].u_ElementUnion.swKeyWord == -4090) {
-            ((IPT_tdstKeyWordElement_*)&_hElementToChange->d_stKeyWordElementArray[1])[lI].u_ElementUnion.hEntryElement = _hReplacingElement;
+            _hElementToChange->d_stKeyWordElementArray[lI + 1].u_ElementUnion.hEntryElement = _hReplacingElement;
             return 1;
         }
     }

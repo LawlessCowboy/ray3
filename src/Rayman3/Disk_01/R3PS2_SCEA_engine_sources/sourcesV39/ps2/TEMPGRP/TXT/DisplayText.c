@@ -3788,6 +3788,7 @@ void TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p);
 void GLI_vDisplayFrame(float* a3_fPosition, float* a3_fDirection, float fTransparency, GLD_tdstViewportAttributes_* p_stVpt);
 void GLI_vSetGlobalAlpha(float fAlpha);
 void GLI_vEnd2DSpritesWithUVs(void);
+unsigned char fn_bIsEngineInPause(void);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 81–86 */
 /* addr: 0x003236a0  size: 56 bytes */
@@ -5125,13 +5126,70 @@ void TXT_vInit(void)
  */
 void TXT_vAffiche(GLD_tdstViewportAttributes_* p_stVpt, float fFrameLenght)
 {
-    float x2[3];
-    float x1[3];
-    int trsp;
-    unsigned char ucDrawThisString;
-    int i;
     _JFFTXT_* p;
-    /* TODO: decompile from asm/... */
+    int i;
+    unsigned char ucDrawThisString;
+    int trsp;
+    float x1[3];
+    float x2[3];
+
+    for (i = 0; i < 200; i++)
+    {
+        p = &g_JFFTXT[i];
+        if (p->ucTransparency && p->pString && (p->DestinationViewport == g_ucCurrentViewport))
+        {
+            ucDrawThisString = fn_bIsEngineInPause() ? p->ucDrawThisStringDuringPauseGame : 1;
+            if (ucDrawThisString)
+            {
+                if (p->bOther & 1)
+                {
+                    trsp = p->ucTransparency + (int)(200.0f * fFrameLenght);
+                    if (trsp >= 255) { trsp = 255; p->bOther &= 0xFE; }
+                    p->ucTransparency = trsp;
+                }
+                else if (p->bOther & 2)
+                {
+                    trsp = p->ucTransparency - (int)(200.0f * fFrameLenght);
+                    if (trsp <= 0) { trsp = 0; p->bOther &= 0xFD; }
+                    p->ucTransparency = trsp;
+                }
+
+                if (p->bOther & 8)
+                {
+                    g_GLI_bForceAAAColor = 0;
+                    if (p->bOther & 0x40)
+                        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 0;
+                    else
+                        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+
+                    x1[0] = p->a3_Pos[0] * (float)p_stVpt->dwWidth * 0.001f;
+                    x1[1] = p->a3_Pos[1] * (float)p_stVpt->dwHeight * 0.001f;
+                    TXT_g_StringExtents[2] = x1[0]; TXT_g_StringExtents[0] = x1[0];
+                    TXT_g_StringExtents[3] = x1[1]; TXT_g_StringExtents[1] = x1[1];
+                    g_ucCurrentNumTextureFont = 50;
+                    TXT_g_GettingExtents = 1;
+                    g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f; g_ucCurrentNumFont = 0;
+                    TXT_vDrawString(p_stVpt, p);
+
+                    TXT_g_GettingExtents = 0;
+                    g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f; g_ucCurrentNumFont = 0;
+
+                    x1[0] = TXT_g_StringExtents[0] * 100.0f / (float)p_stVpt->dwWidth - 1.0f;
+                    x1[1] = TXT_g_StringExtents[1] * 100.0f / (float)p_stVpt->dwHeight - 1.0f;
+                    x2[0] = TXT_g_StringExtents[2] * 100.0f / (float)p_stVpt->dwWidth + 1.0f;
+                    x2[1] = TXT_g_StringExtents[3] * 100.0f / (float)p_stVpt->dwHeight + 1.0f;
+
+                    GLI_vDisplayFrame(x1, x2, p->ucTransparency * 0.7f, p_stVpt);
+                    g_GLI_bForceAAAColor = 1;
+                    g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+                }
+                GLI_vSetGlobalAlpha((float)p->ucTransparency);
+                TXT_vDrawString(p_stVpt, p);
+            }
+        }
+    }
+    GLI_vEnd2DSpritesWithUVs();
+    g_GLI_bForceAAAColor = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 451–460 */

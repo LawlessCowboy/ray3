@@ -1450,11 +1450,35 @@ int PS2glLiberator;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern float light_ambient0[4];
+extern float light_specular0[4];
+extern float ambientMaterial[4];
+extern void PS2glLightfv(unsigned int light, unsigned int pname, float* params);
+extern void PS2glLighti(unsigned int light, unsigned int pname, int param);
+extern void PS2glMaterialfv(unsigned int face, unsigned int pname, float* params);
+
 void GLI_vSetDummyLighting(void)
 {
     float light_direction[4];
     float light_diffuse[4];
-    /* TODO: decompile from asm/... */
+
+    light_direction[0] = -0.3f;
+    light_direction[1] = -0.2f;
+    light_direction[2] = 1.0f;
+    light_direction[3] = 0.0f;
+    light_diffuse[0] = 0.4f;
+    light_diffuse[1] = 0.4f;
+    light_diffuse[2] = 0.4f;
+    light_diffuse[3] = 1.0f;
+
+    PS2glLightfv(0x4000, 0x1200, light_ambient0);
+    PS2glLightfv(0x4000, 0x1201, light_diffuse);
+    PS2glLightfv(0x4000, 0x1202, light_specular0);
+    PS2glLighti(0x4000, 0x1205, 0x40);
+    PS2glLightfv(0x4000, 0x1203, light_direction);
+
+    ambientMaterial[0] = ambientMaterial[1] = ambientMaterial[2] = 0.1f;
+    PS2glMaterialfv(0x404, 0x1200, ambientMaterial);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 562–562 */

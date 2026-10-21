@@ -2317,12 +2317,64 @@ int fn_iCmpZoneSetIndex(void* p_stZSE1, void* p_stZSE2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstCsaList_* CS_fn_hGetActivationList(unsigned char ucZoneType, HIE_tdstSuperObject_* hSuperObj);
+void fn_vSetCurrentZoneSetOfType(unsigned char _ucZoneType, tdstCollSet_* _hCollSet, tdstZoneSetList_* _hCurrentZoneSet);
 void fn_vUpdateCurrentActivationForCharacter(HIE_tdstSuperObject_* _hCharacter)
 {
-    tdstCollSet_* hCollSet;
-    tdstCsaList_* hCsaList;
     short xIndex;
-    /* TODO: decompile from asm/... */
+    tdstCsaList_* hCsaList;
+    tdstCollSet_* hCollSet;
+    tdstState_* hState;
+
+    hCollSet = _hCharacter->hLinkedObject.p_stCharacter->h_CollSet;
+    if (!hCollSet)
+        return;
+
+    hState = _hCharacter->hLinkedObject.p_stCharacter->h_3dData->h_CurrentState;
+    if (hState->p_stAnim && hState->p_stAnim->ucFlagMergeAnim == 1)
+        return;
+
+    xIndex = (short)(((int)hState - (int)_hCharacter->hLinkedObject.p_stCharacter->h_3dData->h_Family->hForStateArray.hFirstElementOpt) / 40);
+
+    hCsaList = CS_fn_hGetActivationList(0, _hCharacter);
+    if (hCsaList)
+    {
+        fn_vSetCurrentZoneSetOfType(0, hCollSet, hCsaList->hZoneSetEncapsulationList.hFirstElementOpt[xIndex].p_stZoneSetList);
+    }
+    else
+    {
+        fn_vSetCurrentZoneSetOfType(0, hCollSet, NULL);
+    }
+
+    hCsaList = CS_fn_hGetActivationList(2, _hCharacter);
+    if (hCsaList)
+    {
+        fn_vSetCurrentZoneSetOfType(2, hCollSet, hCsaList->hZoneSetEncapsulationList.hFirstElementOpt[xIndex].p_stZoneSetList);
+    }
+    else
+    {
+        fn_vSetCurrentZoneSetOfType(2, hCollSet, NULL);
+    }
+
+    hCsaList = CS_fn_hGetActivationList(3, _hCharacter);
+    if (hCsaList)
+    {
+        fn_vSetCurrentZoneSetOfType(3, hCollSet, hCsaList->hZoneSetEncapsulationList.hFirstElementOpt[xIndex].p_stZoneSetList);
+    }
+    else
+    {
+        fn_vSetCurrentZoneSetOfType(3, hCollSet, NULL);
+    }
+
+    hCsaList = CS_fn_hGetActivationList(1, _hCharacter);
+    if (hCsaList)
+    {
+        fn_vSetCurrentZoneSetOfType(1, hCollSet, hCsaList->hZoneSetEncapsulationList.hFirstElementOpt[xIndex].p_stZoneSetList);
+    }
+    else
+    {
+        fn_vSetCurrentZoneSetOfType(1, hCollSet, NULL);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 146–190 */
