@@ -1680,7 +1680,7 @@ int g_bAnimConstantSpeed;
 unsigned char gbUseDeformation;
 static int gp_stActorSO;
 static unsigned int gulNumberOfChannels;
-int gh_st3dData;
+tdst3dData_* gh_st3dData;
 static unsigned int gulSwapAllocationIndex;
 static unsigned int gulVectorAllocationIndex;
 static stSwapInfo_ gax_stSwapInfo[256];
@@ -1705,6 +1705,7 @@ void GLI_PS2GL_CleanSpecifForPO(PO_tdstPhysicalObject_* PO);
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 HIE_tdstSuperObject_* HIE_fn_p_stCreateSuperObjectTab(int lSize);
 void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
+void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
 void fn_vChangeStorageBank(unsigned char ucStorageBank);
 MTH3D_tdstVector_* fn_p_stGetLinearSpeedVector(tdstAnim3d_* p_stAnim3d, unsigned short uwFrame);
 void fn_vTransferSpeedInformationPLA_DNM(HIE_tdstSuperObject_* p_SuperObjPerso, float xLastFrame);
@@ -1936,8 +1937,29 @@ void fn_vComputeGeometricJobs(HIE_tdstSuperObject_* p_stActorSO)
  */
 void fn_vGetDeformationInfoForChannel(unsigned int ulChannelNumber, tdstPLA_Deformation_* p_stDeformation)
 {
+{
     unsigned int ulIndex;
-    /* TODO: decompile from asm/... */
+    tdstPLA_DeformationLink_* p_stLink;
+
+    p_stDeformation->d_stDeformationLinks = NULL;
+    p_stDeformation->ulNbOfDeformationLinks = 0;
+
+    for (ulIndex = 0; ulIndex < gh_st3dData->stFrame3d.stDeformation.ulNbOfDeformationLinks; ulIndex++) {
+        p_stLink = &gh_st3dData->stFrame3d.stDeformation.d_stDeformationLinks[ulIndex];
+        if (ulChannelNumber == p_stLink->wChannel1) {
+            p_stDeformation->d_stDeformationLinks = p_stLink;
+            for (; ulIndex < gh_st3dData->stFrame3d.stDeformation.ulNbOfDeformationLinks; ulIndex++) {
+                p_stLink = &gh_st3dData->stFrame3d.stDeformation.d_stDeformationLinks[ulIndex];
+                if (ulChannelNumber != p_stLink->wChannel1) { goto theend; }
+                p_stDeformation->ulNbOfDeformationLinks++;
+            }
+            continue;
+        }
+        if (p_stLink->wChannel1 > ulChannelNumber) { goto theend; }
+    }
+theend:
+    ;
+}
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 3595–3597 */
@@ -2622,7 +2644,17 @@ void PLA_fn_vRefreshGlobalMatrixUnderCharacter(HIE_tdstSuperObject_* _hSprObj)
 void PLA_fn_vRefreshGlobalMatrixOfAnimsHierarchy(HIE_tdstSuperObject_* _hSprObj)
 {
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    if ((_hSprObj->ulTypeOfLinkedObject & 0x19) == 0) { return; }
+    MAT_fn_vCompose(_hSprObj->hGlobalMatrix, _hSprObj->hFatherDyn->hGlobalMatrix, _hSprObj->hLocalMatrix);
+    for (hChild = _hSprObj->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
+        hChild->hFatherDyn = _hSprObj;
+        if (hChild->hNextBrotherDyn && hChild->hNextBrotherDyn == hChild->hPrevBrotherDyn) {
+            hChild->hNextBrotherDyn = NULL;
+            hChild->hPrevBrotherDyn = NULL;
+        }
+        PLA_fn_vRefreshGlobalMatrixOfAnimsHierarchy(hChild);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 2291–2361 */

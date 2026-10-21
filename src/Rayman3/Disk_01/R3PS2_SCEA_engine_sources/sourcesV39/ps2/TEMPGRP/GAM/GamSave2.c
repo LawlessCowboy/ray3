@@ -2272,10 +2272,61 @@ static SAV2_tdstElement_* SAV2_fn_p_stFindElementByNameExpanded(char* p_szElemen
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel);
+
 void SAV2_fn_vFreeAnElement(SAV2_tdstElement_* p_stElement)
 {
-    unsigned int i;
-    /* TODO: decompile from asm/... */
+    unsigned int ulIndex;
+    void* p_vElement;
+    void* p_vPtr;
+    if (p_stElement->hNextBrotherDyn != NULL) { p_stElement->hNextBrotherDyn->hPrevBrotherDyn = p_stElement->hPrevBrotherDyn; }
+    if (p_stElement->hPrevBrotherDyn != NULL) { p_stElement->hPrevBrotherDyn->hNextBrotherDyn = p_stElement->hNextBrotherDyn; }
+    if (p_stElement->hFatherDyn != NULL)
+    {
+        p_stElement->hFatherDyn->lNumberOfElementsDyn--;
+        if (p_stElement->hFatherDyn->hFirstElementDyn == p_stElement) { p_stElement->hFatherDyn->hFirstElementDyn = p_stElement->hNextBrotherDyn; }
+        if (p_stElement->hFatherDyn->hLastElementDyn == p_stElement) { p_stElement->hFatherDyn->hLastElementDyn = p_stElement->hPrevBrotherDyn; }
+    }
+    p_stElement->hNextBrotherDyn = NULL;
+    p_stElement->hPrevBrotherDyn = NULL;
+    p_stElement->hFatherDyn = NULL;
+    if (p_stElement->ucNumberOfData != 1)
+    {
+        if ((p_stElement->ucDataInformation & 0xF) == SAV2_eVector)
+        {
+            for (ulIndex = 0; ulIndex < p_stElement->ucNumberOfData; ulIndex++)
+            {
+                p_vElement = ((void**)p_stElement->uData.p_vArray)[ulIndex];
+                if (p_vElement != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vElement, 0); }
+            }
+        }
+        else if ((p_stElement->ucDataInformation & 0xF) == SAV2_eString)
+        {
+            for (ulIndex = 0; ulIndex < p_stElement->ucNumberOfData; ulIndex++)
+            {
+                p_vElement = ((void**)p_stElement->uData.p_vArray)[ulIndex];
+                if (p_vElement != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vElement, 0); }
+            }
+        }
+        p_vPtr = (void*)p_stElement->uData.p_vArray;
+        if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
+    }
+    else
+    {
+        if ((p_stElement->ucDataInformation & 0xF) == SAV2_eVector)
+        {
+            p_vPtr = p_stElement->uData.p_stVector;
+            if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
+        }
+        else if ((p_stElement->ucDataInformation & 0xF) == SAV2_eString)
+        {
+            p_vPtr = (void*)p_stElement->uData.p_szString;
+            if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
+        }
+    }
+    p_vPtr = (void*)p_stElement->p_szElementName;
+    if (p_vPtr != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_vPtr, 0); }
+    if (p_stElement != NULL) { Mmg_fn_v_SetModeAlloc(g_ucSAV2ModuleId, 0, 0); fn_vGenFree(p_stElement, 0); }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GamSave2.c lines 204–220 */
@@ -2345,7 +2396,31 @@ SAV2_tdeDataType_ SAV2_fn_eGiveElementTypeFromAIType(tdeVariableType_ _eIAType) 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+char* Strchr(char* p_cString, int cChar);
+
 void SAV2_fn_vFindGoodTypeAndOptionsFromString(char* p_szElementOptions, SAV2_tdeDataType_* p_ucType, unsigned char* p_bStatic, unsigned char* p_bSave)
 {
-    /* TODO: decompile from asm/... */
+    *p_ucType = SAV2_eU8;
+    *p_bStatic = 0;
+    *p_bSave = 0;
+    if (Strchr(p_szElementOptions, 'S') || Strchr(p_szElementOptions, 's'))
+        *p_bStatic = 1;
+    else if (Strchr(p_szElementOptions, 'D') || Strchr(p_szElementOptions, 'd'))
+        *p_bStatic = 0;
+    if (Strchr(p_szElementOptions, 'O') || Strchr(p_szElementOptions, 'o'))
+        *p_bSave = 1;
+    else if (Strchr(p_szElementOptions, 'N') || Strchr(p_szElementOptions, 'n'))
+        *p_bSave = 0;
+    if (Strchr(p_szElementOptions, 'C') || Strchr(p_szElementOptions, 'c'))
+        *p_ucType = SAV2_eU8;
+    else if (Strchr(p_szElementOptions, 'W') || Strchr(p_szElementOptions, 'w'))
+        *p_ucType = SAV2_eU16;
+    else if (Strchr(p_szElementOptions, 'L') || Strchr(p_szElementOptions, 'l'))
+        *p_ucType = SAV2_eU32;
+    else if (Strchr(p_szElementOptions, 'F') || Strchr(p_szElementOptions, 'f'))
+        *p_ucType = SAV2_eFloat;
+    else if (Strchr(p_szElementOptions, 'V') || Strchr(p_szElementOptions, 'v'))
+        *p_ucType = SAV2_eVector;
+    else if (Strchr(p_szElementOptions, 'T') || Strchr(p_szElementOptions, 't'))
+        *p_ucType = SAV2_eString;
 }

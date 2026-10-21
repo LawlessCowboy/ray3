@@ -146,8 +146,8 @@ struct tag_GLtexture_image {
     int width; /* +0x8 */
     int height; /* +0xc */
     unsigned int format; /* +0x10 */
-    int pixels; /* +0x14 */
-    int pixelsAux; /* +0x18 */
+    void* pixels; /* +0x14 */
+    void* pixelsAux; /* +0x18 */
     int cbPixels; /* +0x1c */
     int cbPixelsAux; /* +0x20 */
     unsigned char pixelsChanged; /* +0x24 */
@@ -424,10 +424,10 @@ struct tag_GLtexture {
     unsigned int eTexFilterMag; /* +0x18 */
     unsigned int eTexWrapS; /* +0x1c */
     unsigned int eTexWrapT; /* +0x20 */
-    int Image[7]; /* +0x24 */
+    tag_GLtexture_image* Image[7]; /* +0x24 */
     int iClutOffset; /* +0x40 */
     int iClutSize; /* +0x44 */
-    int clut; /* +0x48 */
+    void* clut; /* +0x48 */
     unsigned char bClutUserMaintain; /* +0x4c */
 };
 
@@ -1280,7 +1280,7 @@ float g_mModelView[4][4];
 tagGLcontext g_PS2glContext;
 void* (*PS2glAllocator)(int);
 int PS2glAllocator64;
-int PS2glLiberator;
+void (*PS2glLiberator)(void*);
 tagGScontext g_gsContext;
 _GL_BUFFERINFO g_stBufferInfo;
 anon_34 g_stDoubleBuf;
@@ -4990,9 +4990,35 @@ void impPS2glDeleteTextures(int n, unsigned int* textures)
  */
 void PS2glFreeTexture(tag_GLtexture* pTexture)
 {
-    tag_GLtexture_image** ppImage;
     int I;
-    /* TODO: decompile from asm/... */
+    tag_GLtexture_image** ppImage;
+
+    ppImage = pTexture->Image;
+    if (pTexture)
+    {
+        for (I = 0; I < 7; I++, ppImage++)
+        {
+            if (*ppImage)
+            {
+                if ((*ppImage)->pixels)
+                {
+                    if (!(*ppImage)->bUserMaintain)
+                    {
+                        PS2glLiberator((*ppImage)->pixels);
+                        if (pTexture->clut)
+                        {
+                            PS2glLiberator(pTexture->clut);
+                            pTexture->clut = 0;
+                        }
+                    }
+                }
+                if ((*ppImage)->pixelsAux)
+                    PS2glLiberator((*ppImage)->pixelsAux);
+                PS2glLiberator(*ppImage);
+            }
+        }
+        PS2glLiberator(pTexture);
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 897–905 */

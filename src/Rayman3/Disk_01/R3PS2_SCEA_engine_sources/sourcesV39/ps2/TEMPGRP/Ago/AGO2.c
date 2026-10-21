@@ -4402,12 +4402,51 @@ void AGO2_ProcessFlow(AGO2_Part_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char AGO2_CreateFlow(AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, unsigned int ParticleNumber)
+/* The retail creation callback has the full 16-parameter prototype stored in
+ * g_pAGO2Types[].pCreationFunction; the debug record only keeps the
+ * parameters this function actually reads (ulParticleType, Vector1..4,
+ * pMaterial1/2, xParam1..4 and pLaunchingCharacter are unused here). */
+unsigned char AGO2_CreateFlow(unsigned int ulParticleType, AGO2_Part_* p, AGO_V4D_* Position, AGO_V4D_* Direction, AGO_V4D_* Vector1, AGO_V4D_* Vector2, AGO_V4D_* Vector3, AGO_V4D_* Vector4, void* pMaterial1, void* pMaterial2, float xParam1, float xParam2, float xParam3, float xParam4, HIE_tdstSuperObject_* pLaunchingCharacter, unsigned int ParticleNumber)
 {
     AGO2_FlowParticle_* pParticleArrayOrg;
-    AGO2_FlowParticle_* pParticleArray;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    AGO2_FlowParticle_* pParticleArray;
+
+    p->GroupNumber = ParticleNumber;
+    p->hGroup = AGO2_MEM_Alloc(ParticleNumber * sizeof(AGO2_FlowParticle_));
+    if (p->hGroup == 0)
+    {
+        p->GroupNumber = 0;
+        p->ulType |= 1;
+        return 0;
+    }
+    pParticleArrayOrg = (AGO2_FlowParticle_*)AGO2_MEM_GetPointerFromHandle(p->hGroup);
+    if (pParticleArrayOrg == NULL)
+    {
+        printf("AGO2MEM DECONNE UN MAX !!!\n");
+        return 0;
+    }
+    p->xTransparencySpeed = 100.0f;
+    p->xSize[0] = 0.1f;
+    p->xSize[1] = 0.1f;
+    p->xShrinkingSpeed = 0.1f;
+    pParticleArray = pParticleArrayOrg;
+    for (i = 0; i < ParticleNumber; i++)
+    {
+        rand();
+        rand();
+        rand();
+        pParticleArray->Position.xX = Position->xX;
+        pParticleArray->Position.xY = Position->xY;
+        pParticleArray->Position.xZ = Position->xZ;
+        pParticleArray->xTransparency = 255.0f;
+        pParticleArray->Direction.xX = Direction->xX + (-5.0f + 10.0f * (float)rand() / 2147483648.0f);
+        pParticleArray->Direction.xY = Direction->xY + (-5.0f + 10.0f * (float)rand() / 2147483648.0f);
+        pParticleArray->Direction.xZ = Direction->xZ + (-6.5f + 32.0f * (float)rand() / 2147483648.0f);
+        pParticleArray->Flags = 0;
+        pParticleArray++;
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO2.c lines 1005–1011 */

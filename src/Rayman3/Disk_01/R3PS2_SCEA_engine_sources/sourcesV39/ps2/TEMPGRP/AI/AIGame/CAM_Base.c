@@ -4484,7 +4484,21 @@ void CAM_fn_vComputeTarget(CAM_tdstUpdateCamera_* _p_stStruct)
  */
 void CAM_fn_vComputeReferencePoint(CAM_tdstUpdateCamera_* _p_stStruct)
 {
-    /* TODO: decompile from asm/... */
+    if (_p_stStruct->hCineinfoWork->hSecondSuperObjectTargeted != NULL)
+    {
+        _p_stStruct->hCineinfoWork->uwIAFlags |= 2;
+    }
+
+    CAM_fn_vComputeTargetedPersoPos(_p_stStruct, _p_stStruct->hCineinfoWork->hSuperObjectTargeted, &_p_stStruct->stTargetedPersoPos, &_p_stStruct->stTargetedPersoRealPos);
+
+    if (_p_stStruct->hCineinfoWork->hSecondSuperObjectTargeted != NULL)
+    {
+        CAM_fn_vComputeTargetedPersoPos(_p_stStruct, _p_stStruct->hCineinfoWork->hSecondSuperObjectTargeted, &_p_stStruct->stSecondTargetedPersoPos, &_p_stStruct->stSecondTargetedPersoRealPos);
+
+        _p_stStruct->stTargetedPersoPos.xX = _p_stStruct->stTargetedPersoPos.xX + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoPos.xX - _p_stStruct->stTargetedPersoPos.xX); _p_stStruct->stTargetedPersoPos.xY = _p_stStruct->stTargetedPersoPos.xY + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoPos.xY - _p_stStruct->stTargetedPersoPos.xY); _p_stStruct->stTargetedPersoPos.xZ = _p_stStruct->stTargetedPersoPos.xZ + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoPos.xZ - _p_stStruct->stTargetedPersoPos.xZ);
+
+        _p_stStruct->stTargetedPersoRealPos.xX = _p_stStruct->stTargetedPersoRealPos.xX + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoRealPos.xX - _p_stStruct->stTargetedPersoRealPos.xX); _p_stStruct->stTargetedPersoRealPos.xY = _p_stStruct->stTargetedPersoRealPos.xY + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoRealPos.xY - _p_stStruct->stTargetedPersoRealPos.xY); _p_stStruct->stTargetedPersoRealPos.xZ = _p_stStruct->stTargetedPersoRealPos.xZ + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoRealPos.xZ - _p_stStruct->stTargetedPersoRealPos.xZ);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 114–182 */

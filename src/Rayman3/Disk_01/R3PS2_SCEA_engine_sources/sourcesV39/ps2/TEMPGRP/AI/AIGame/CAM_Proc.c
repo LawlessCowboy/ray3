@@ -4657,20 +4657,56 @@ tdstNodeInterpret_* CAM_fn_p_stChangeRealParameter(HIE_tdstSuperObject_* p_Super
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vChangeAVectorParameter(tdstCineinfo_* _hCineInfo, MTH3D_tdstVector_* _p_stInitialValue, MTH3D_tdstVector_* _p_stCurrentValue, MTH3D_tdstVector_* _p_stVisibilityValue, MTH3D_tdstVector_* _p_stWorkValue, int _lTypeOfChange, int _lChangingMode, MTH3D_tdstVector_* _p_stValue);
+
 tdstNodeInterpret_* CAM_fn_p_stChangeVectorParameter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdeProcedureId_ eProcedureId;
-    MTH3D_tdstVector_* p_stWorkValue;
-    MTH3D_tdstVector_* p_stVisibilityValue;
-    MTH3D_tdstVector_* p_stCurrentValue;
-    MTH3D_tdstVector_* p_stInitialValue;
-    MTH3D_tdstVector_* p_stValue;
-    tdstGetSetParam_ stValue;
-    int lTypeOfChange;
-    int lChangingMode;
-    HIE_tdstSuperObject_* hCamera;
     tdstCineinfo_* hCineInfo;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hCamera;
+    int lChangingMode;
+    int lTypeOfChange;
+    tdstGetSetParam_ stValue;
+    MTH3D_tdstVector_* p_stValue;
+    MTH3D_tdstVector_* p_stInitialValue;
+    MTH3D_tdstVector_* p_stCurrentValue;
+    MTH3D_tdstVector_* p_stVisibilityValue;
+    MTH3D_tdstVector_* p_stWorkValue;
+    tdeProcedureId_ eProcedureId;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hCamera);
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lTypeOfChange = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lChangingMode = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+    p_stValue = (MTH3D_tdstVector_*)&stValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_Cam_ChangeShiftTarget:
+        p_stInitialValue = &hCineInfo->hInit->stShiftTarget;
+        p_stCurrentValue = &hCineInfo->hCurrent->stShiftTarget;
+        p_stVisibilityValue = &hCineInfo->hVisibility->stShiftTarget;
+        p_stWorkValue = &hCineInfo->hWork->stShiftTarget;
+        break;
+    case eProc_Cam_ChangeShiftPos:
+        p_stInitialValue = &hCineInfo->hInit->stShiftPos;
+        p_stCurrentValue = &hCineInfo->hCurrent->stShiftPos;
+        p_stVisibilityValue = &hCineInfo->hVisibility->stShiftPos;
+        p_stWorkValue = &hCineInfo->hWork->stShiftPos;
+        break;
+    default:
+        return p_stTree;
+    }
+    CAM_fn_vChangeAVectorParameter(hCineInfo, p_stInitialValue, p_stCurrentValue, p_stVisibilityValue, p_stWorkValue, lTypeOfChange, lChangingMode, p_stValue);
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 315–355 */

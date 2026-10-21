@@ -2232,11 +2232,24 @@ void fn_vPartiallyDestroyHierarchy(HIE_tdstSuperObject_* p_stSuperObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int fn_otFindFamilyTypeOfFamilyTypeName(char* szFamilyName);
+extern void fn_vRemoveObjectInSectorList(HIE_tdstSuperObject_* p_stSuperObject);
+extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObject);
+
 void fn_vRemoveWorldSectInfo(void)
 {
     HIE_tdstSuperObject_* hNextCharacter;
     HIE_tdstSuperObject_* hCharacter;
-    /* TODO: decompile from asm/... */
+    hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); while (hCharacter)
+    {
+        if (hCharacter->ulTypeOfLinkedObject == 2)
+        {
+            if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->otObjectFamilyType == fn_otFindFamilyTypeOfFamilyTypeName("World"))
+            {
+                fn_vRemoveObjectInSectorList(hCharacter);
+            }
+        }
+        hCharacter = hNextCharacter; hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Objinit.c lines 140–158 */

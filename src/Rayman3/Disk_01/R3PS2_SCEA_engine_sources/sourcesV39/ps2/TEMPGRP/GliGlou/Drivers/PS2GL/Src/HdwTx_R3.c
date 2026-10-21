@@ -1509,9 +1509,40 @@ void GLI_vFreeTempTexture(GLI_tdstTexture_* p_stTexture)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vUnLockAnimatedTexture(GLI_tdstMaterial_* p_stMaterial);
+void GLI_Material_fn_vInitMultiTexturePart(GLI_tdstMaterial_* p_stMaterial);
+
 void GLI_xCreateMaterialPS2GL(GLI_tdstMaterial_** hMaterial)
 {
-    /* TODO: decompile from asm/... */
+    *hMaterial = (GLI_tdstMaterial_*)PS2glAllocator64(sizeof(GLI_tdstMaterial_));
+
+    if (*hMaterial != NULL)
+    {
+        (*hMaterial)->stAmbient.xR = 0.0f;
+        (*hMaterial)->stAmbient.xG = 0.1f;
+        (*hMaterial)->stAmbient.xB = 0.1f;
+
+        (*hMaterial)->stDiffuse.xR = 0.8f;
+        (*hMaterial)->stDiffuse.xG = 0.8f;
+        (*hMaterial)->stDiffuse.xB = 0.8f;
+
+        (*hMaterial)->stColor.xR = 1.0f;
+        (*hMaterial)->stColor.xG = 0.0f;
+        (*hMaterial)->stColor.xB = 1.0f;
+
+        (*hMaterial)->p_stTexture = NULL;
+        (*hMaterial)->xMaterialType = 0xFFFFFFFF;
+        (*hMaterial)->lIncrementIsEnable = 0;
+
+        (*hMaterial)->p_stFistAnimatedTExtureNode = NULL;
+        (*hMaterial)->p_stActualAnimatedTExtureNode = NULL;
+        (*hMaterial)->lNumberOfDisplayNode = 0;
+        (*hMaterial)->xActualDisplayTimeSinceStartOfLastTexture = gs_fCoefOfMultiplicationForAnimatedTexture;
+        (*hMaterial)->lActualRefreshNumber = gs_lActualRefreshNumberForScolledTextures;
+
+        GLI_vUnLockAnimatedTexture(*hMaterial);
+        GLI_Material_fn_vInitMultiTexturePart(*hMaterial);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2273–2282 */

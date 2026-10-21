@@ -242,7 +242,7 @@ struct GEO_tdstGeometricObject_ {
     short xNbOctreeEdges; /* +0x46 */
     int bUsedForShadowDrawing; /* +0x48 */
     int bUsedForShadowCreating; /* +0x4c */
-    int pSDC_Data; /* +0x50 */
+    SDC_VertexArrays_* pSDC; /* +0x50 */
     unsigned int bIsStatic; /* +0x54 */
     unsigned int glDisplayList; /* +0x58 */
     unsigned char bVTForSinus; /* +0x5c */
@@ -357,12 +357,12 @@ struct SDC_VertexArrays_ {
     unsigned int OptType; /* +0x0 */
     unsigned int NbElements; /* +0x4 */
     GLI_tdstMaterial_** pArrayOfMaterials; /* +0x8 */
-    float ** pArrayOfVertexArrays[4]; /* +0xc */
+    float ** pArrayOfVertexArrays; /* +0xc */
     int pVertexArraySizes; /* +0x10 */
     int pNbTrianglesPerElement; /* +0x14 */
     int pbIsTransparent; /* +0x18 */
     unsigned int FrameDeformed; /* +0x1c */
-    int pSDLs; /* +0x20 */
+    C_InstanceList* pInstanceList; /* +0x20 */
 };
 
 struct MTH3D_tdstVector_ {
@@ -1305,8 +1305,43 @@ struct LST2_tdstAnchorTotdxHandleToFamilyListDyn {
     int lNumberOfElementsDyn; /* +0x8 */
 };
 
-struct C_CharacterSdl {
-    /* C++ base C_Sdl at +0x0. */
+/* The retail C_Sdl is a polymorphic class: its vtable pointer sits at +0x48,
+   right after the data members, and holds a single slot (Start). */
+struct C_Sdl {
+    int m_SDL_Size; /* +0x0 */
+    unsigned int m_SDL_InitSize; /* +0x4 */
+    unsigned int m_bReduce; /* +0x8 */
+    unsigned int m_DisplayList; /* +0xc */
+    tagListData* m_pListData; /* +0x10 */
+    unsigned int m_NbRefs; /* +0x14 */
+    unsigned int m_NbReservedRefs; /* +0x18 */
+    unsigned int m_NbFaces; /* +0x1c */
+    unsigned int m_NbElements; /* +0x20 */
+    C_SdlRef** m_ppRefs; /* +0x24 */
+    tag_stVU1Parameters** m_ppP; /* +0x28 */
+    unsigned int m_LastFrameUsed; /* +0x2c */
+    unsigned int m_LastFrameInterpolated; /* +0x30 */
+    unsigned int m_bIsTransparent; /* +0x34 */
+    unsigned int m_bNoInterpolation; /* +0x38 */
+    int m_SkinIndex; /* +0x3c */
+    GLI_tdstMaterial_* m_SkinMaterial; /* +0x40 */
+    int m_bIsBlinking; /* +0x44 */
+    /* vtable pointer at +0x48 (retail __vt__5C_Sdl: Start). */
+    virtual void Start(void);
+    ~C_Sdl() { Destruct(); }
+    void Destruct(void);
+    static void operator delete(void* p);
+    void UpdateFogs(void);
+    void Draw(int bProcessRefs);
+    void Preprocess(void);
+    void End(void);
+    void Init(void);
+    void AddRef(C_SdlRef* pRef);
+    void RemoveSPOInterpol(HIE_tdstSuperObject_* pSPO);
+};
+
+struct C_CharacterSdl : C_Sdl {
+    void Start(void);
 };
 
 struct GEO_tdstVisualSet_ {
@@ -1367,6 +1402,12 @@ struct GMT_tdstCollideMaterial_ {
 struct C_InstanceList {
     unsigned int m_NbInstances; /* +0x0 */
     _SDC_Instance_** m_pList; /* +0x4 */
+    void DeleteInstance(_SDC_Instance_* pInstance);
+    void SearchAndDestroyInstanceForThisSPO(HIE_tdstSuperObject_* pSPO);
+    void SearchInstance(HIE_tdstSuperObject_* pSPO, unsigned int* pIndex);
+    void AddInstance(HIE_tdstSuperObject_* pSPO, float (*pVertexArray)[4], unsigned int* pIndex, C_Sdl* pSDL, unsigned int ulElementNumber);
+    ~C_InstanceList();
+    static void* operator new(unsigned int size);
 };
 
 struct DelayedFrees_ {
@@ -1957,27 +1998,6 @@ struct GLI_tdstUVTransformation {
     float stTrans[2]; /* +0x10 */
 };
 
-struct C_Sdl {
-    int m_SDL_Size; /* +0x0 */
-    unsigned int m_SDL_InitSize; /* +0x4 */
-    unsigned int m_bReduce; /* +0x8 */
-    unsigned int m_DisplayList; /* +0xc */
-    tagListData* m_pListData; /* +0x10 */
-    unsigned int m_NbRefs; /* +0x14 */
-    unsigned int m_NbReservedRefs; /* +0x18 */
-    unsigned int m_NbFaces; /* +0x1c */
-    unsigned int m_NbElements; /* +0x20 */
-    C_SdlRef** m_ppRefs; /* +0x24 */
-    tag_stVU1Parameters** m_ppP; /* +0x28 */
-    unsigned int m_LastFrameUsed; /* +0x2c */
-    unsigned int m_LastFrameInterpolated; /* +0x30 */
-    unsigned int m_bIsTransparent; /* +0x34 */
-    unsigned int m_bNoInterpolation; /* +0x38 */
-    int m_SkinIndex; /* +0x3c */
-    GLI_tdstMaterial_* m_SkinMaterial; /* +0x40 */
-    int m_bIsBlinking; /* +0x44 */
-};
-
 struct SECT_tdstListOfStaticLights_ {
     GLI_tdstLight_* hStaticLights; /* +0x0 */
 };
@@ -2305,7 +2325,7 @@ static unsigned int LastVal2;
 static unsigned int LastVal1;
 int GLI_g_CurrentSkinIndex;
 int GLI_g_CurrentSkinMaterial;
-int GLIPS2_vDummySDL;
+C_CharacterSdl* GLIPS2_vDummySDL;
 unsigned int DelayedFreesInit;
 DelayedFrees_ GLI_g_DelayedFrees[2000];
 int Global_CharacterModuleBeingDisplayed;
@@ -2395,8 +2415,6 @@ char GLI_b_CreatingActorSDL;
 float light_specular0[4];
 float g_LeftHandedIdentityMatrix[16];
 unsigned int hCurrentSDL;
-anon_0 __vt__14C_CharacterSdl;
-void* __vt__5C_Sdl;
 unsigned int GLI_g_InstanceLists;
 int Global_CharacterBeingDisplayed;
 unsigned int GLI_g_FrameNumber;
@@ -3667,9 +3685,27 @@ void GLI_vRemoveAllInstances(GEO_tdstGeometricObject_* pObj)
 void GLI_vRemoveInstanceIfExists(GEO_tdstGeometricObject_* pObj)
 {
     HIE_tdstSuperObject_* pSPO;
-    C_InstanceList* pInstanceList;
     SDC_VertexArrays_* pSDC;
-    /* TODO: decompile from asm/... */
+    C_InstanceList* pInstanceList;
+
+    pSPO = (HIE_tdstSuperObject_*)Global_CharacterModuleBeingDisplayed;
+    pSDC = pObj->pSDC;
+    if (pSDC != NULL)
+    {
+        if ((pInstanceList = pSDC->pInstanceList) != NULL)
+        {
+            if (pInstanceList != NULL)
+            {
+                pSPO = (HIE_tdstSuperObject_*)Global_CharacterModuleBeingDisplayed;
+                pInstanceList->SearchAndDestroyInstanceForThisSPO(pSPO);
+                if (pInstanceList->m_NbInstances == 0)
+                {
+                    delete pInstanceList;
+                    pSDC->pInstanceList = NULL;
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 552–1190 */
@@ -4216,7 +4252,11 @@ void GLI_vRemoveInstanceFromDisplay(_SDC_Instance_* pInstance)
  */
 void DestroyDummySDL(void)
 {
-    /* TODO: decompile from asm/... */
+    if (GLIPS2_vDummySDL != NULL)
+    {
+        delete GLIPS2_vDummySDL;
+        GLIPS2_vDummySDL = NULL;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 159–175 */
