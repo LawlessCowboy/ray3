@@ -52662,6 +52662,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
       "status": "MATCH"
     },
+    "0x0018ad50": {
+      "address": "0x0018ad50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "usnd_uiComputeAbsolutePath",
+      "size": 404,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
+      "status": "MATCH"
+    },
     "0x0018aef0": {
       "address": "0x0018aef0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -53451,6 +53459,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "AGO_vClearUnwanted110AGOsForDemos",
       "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001dfa80": {
+      "address": "0x001dfa80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO_vSetGauge",
+      "size": 220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001e0370": {
+      "address": "0x001e0370",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO_ulGetElderOne",
+      "size": 220,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
       "status": "MATCH"
     },
