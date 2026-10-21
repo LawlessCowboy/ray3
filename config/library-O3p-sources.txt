@@ -13,3 +13,15 @@ src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GLAUX/PS2GLAUX.c
 # and PS2glInternalDrawSpriteArray need it; all other recorded matches in the
 # file still verify.
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Array.c
+# PS2GL_ListsRecPly.c: plyPS2glBegin and PS2glExecuteListVBuf have the
+# -O3,p branch-target alignment nops and match only under it. '-O3,p' alone
+# loses 66 rec* converters because it also turns on the divide fix (a nop
+# after div.s); tools/match.py now builds this list with 'dividefix off', and
+# all 505 recorded matches still pass while both gain, completing the file.
+# 2026-10-20 sweep of the other library files under -O3,p + dividefix off:
+# 13 neutral (DataInput.c no longer loses), PS2GL_Lists.c +2/-1.
+# PS2GL_Lists.c: PS2glMergeBB and PS2glSearchList match only under -O3,p;
+# impPS2glPartialDeleteLists keeps its match once its loop exits with return
+# instead of break (the -O3,p join after the loop gets an alignment nop).
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c

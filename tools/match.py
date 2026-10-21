@@ -110,7 +110,9 @@ def mwcc_flags(owner: Path | str) -> list[str]:
     if is_game_source(owner):
         return MWCC_FLAGS + GAME_MWCC_FLAGS
     if _relative_owner(owner) in library_o3p_sources():
-        return MWCC_FLAGS + ['-O3,p']
+        # '-O3,p' also turns on the R5900 divide fix (a nop after div.s); the
+        # retail library has none, so switch it back off.
+        return MWCC_FLAGS + ['-pragma', 'dividefix off', '-O3,p']
     return list(MWCC_FLAGS)
 
 

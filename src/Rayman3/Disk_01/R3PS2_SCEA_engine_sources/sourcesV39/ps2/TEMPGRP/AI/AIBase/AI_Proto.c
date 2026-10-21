@@ -2968,6 +2968,51 @@ unsigned char fn_ucIsRuleInActionTable(tdstIntelligence_* p_stIntelligence, unsi
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1539–1668 */
 tdstActionTable_* fn_p_stSimulateAllocActionTable(char** p_ptr, unsigned char ucActionTableNbEntry);
 
+/* Not original source, needs cleaning up: the retail has no out-of-line copy
+ * of these simulated allocations; each is one source line in its caller, so
+ * they were macros or inline functions. */
+inline tdstIntelligence_* fn_p_stSimulateAllocIntelligence(char** p_ptr, tdstScriptAI_** p_p_stScriptAI)
+{
+    tdstIntelligence_* p_stIntelligence;
+    unsigned char ucActionTableNbEntry;
+
+    ucActionTableNbEntry = (*p_p_stScriptAI)->ucActionTableNbEntry;
+    p_stIntelligence = NULL;
+    if ((*p_p_stScriptAI)->ulNbComport != 0)
+    {
+        p_stIntelligence = (tdstIntelligence_*)*p_ptr;
+        memset(*p_ptr, 0, sizeof(tdstIntelligence_));
+        *p_ptr += sizeof(tdstIntelligence_);
+        p_stIntelligence->p_p_stScriptAI = p_p_stScriptAI;
+        p_stIntelligence->ulNoComportInit = (*p_p_stScriptAI)->ulNoComportInitDefault;
+        p_stIntelligence->p_stActionTable = fn_p_stSimulateAllocActionTable(p_ptr, ucActionTableNbEntry);
+    }
+    return p_stIntelligence;
+}
+
+inline char* fn_p_cSimulateAllocBuffer(char** p_ptr, unsigned int ulSize)
+{
+    char* p_cBuffer;
+
+    p_cBuffer = *p_ptr;
+    *p_ptr += ulSize;
+    memset(p_cBuffer, 0, ulSize);
+    return p_cBuffer;
+}
+
+inline tdstDsgMem_* fn_p_stSimulateAllocDsgMem(char** p_ptr, tdstDsgVar_** p_p_stDsgVar, unsigned int ulSize)
+{
+    tdstDsgMem_* p_stDsgMem;
+
+    p_stDsgMem = (tdstDsgMem_*)*p_ptr;
+    memset(*p_ptr, 0, sizeof(tdstDsgMem_));
+    *p_ptr += sizeof(tdstDsgMem_);
+    p_stDsgMem->p_p_stDsgVar = p_p_stDsgVar;
+    p_stDsgMem->p_cDsgMemBufferInit = 0;
+    p_stDsgMem->p_cDsgMemBuffer = (int)fn_p_cSimulateAllocBuffer(p_ptr, ulSize);
+    return p_stDsgMem;
+}
+
 /* addr: 0x001fac50  size: 732 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
  *   +0x0000 -> line 1539
@@ -3021,37 +3066,27 @@ void fn_vSimulateMindAllocationFromAnotherMind(AI_tdstMind_* p_stMindSrc, AI_tds
 {
     char* ptr;
     tdstIntelligence_* p_stIntelligenceOrReflex;
-    tdstScriptAI_* p_stScriptAI;
     AI_tdstAIModel_* p_stLoadedAIModel;
-    tdstActionTable_* p_stActionTable;
     tdstDsgMem_* p_stDsgMem;
+    char* p_cBuffer;
+    tdstScriptAI_** p_p_stScriptAI;
 
     if (p_stMindSrc == NULL)
         return;
     if (p_stMindDst == NULL)
         return;
 
-    /* The simulated structures are carved out of the memory that follows the
-     * destination mind. */
     ptr = (char*)p_stMindDst + sizeof(AI_tdstMind_);
+
     p_stLoadedAIModel = p_stMindSrc->p_stAIModel;
     p_stMindDst->p_stAIModel = p_stLoadedAIModel;
 
-    p_stIntelligenceOrReflex = NULL;
-    p_stScriptAI = p_stLoadedAIModel->p_stScriptAIIntell;
-    if (p_stScriptAI != NULL)
+    p_p_stScriptAI = &p_stLoadedAIModel->p_stScriptAIIntell;
+    if (*p_p_stScriptAI != NULL)
     {
-        if (p_stScriptAI->ulNbComport != 0)
-        {
-            memset(ptr, 0, sizeof(tdstIntelligence_));
-            p_stIntelligenceOrReflex = (tdstIntelligence_*)ptr;
-            ptr += sizeof(tdstIntelligence_);
-            p_stIntelligenceOrReflex->p_p_stScriptAI = (tdstScriptAI_**)p_stLoadedAIModel;
-            p_stIntelligenceOrReflex->ulNoComportInit = p_stScriptAI->ulNoComportInitDefault;
-            p_stActionTable = fn_p_stSimulateAllocActionTable(&ptr, p_stScriptAI->ucActionTableNbEntry);
-            p_stIntelligenceOrReflex->p_stActionTable = p_stActionTable;
-            p_stMindDst->p_stIntelligence = p_stIntelligenceOrReflex;
-        }
+        p_stMindDst->p_stIntelligence = fn_p_stSimulateAllocIntelligence(&ptr, p_p_stScriptAI);
+        if (p_stMindSrc->p_stIntelligence != NULL)
+            p_stMindDst->p_stIntelligence->ulNoComportInit = p_stMindSrc->p_stIntelligence->ulNoComportInit;
     }
     else
     {
@@ -3060,72 +3095,54 @@ void fn_vSimulateMindAllocationFromAnotherMind(AI_tdstMind_* p_stMindSrc, AI_tds
     if (p_stMindSrc->p_stIntelligence != NULL)
         p_stMindDst->p_stIntelligence->ulNoComportInit = p_stMindSrc->p_stIntelligence->ulNoComportInit;
 
-    p_stIntelligenceOrReflex = NULL;
-    p_stScriptAI = p_stLoadedAIModel->p_stScriptAIReflex;
-    if (p_stScriptAI != NULL)
+    p_p_stScriptAI = &p_stLoadedAIModel->p_stScriptAIReflex;
+    if (*p_p_stScriptAI != NULL)
     {
-        if (p_stScriptAI->ulNbComport != 0)
-        {
-            memset(ptr, 0, sizeof(tdstIntelligence_));
-            p_stIntelligenceOrReflex = (tdstIntelligence_*)ptr;
-            ptr += sizeof(tdstIntelligence_);
-            p_stIntelligenceOrReflex->p_p_stScriptAI = (tdstScriptAI_**)&p_stLoadedAIModel->p_stScriptAIReflex;
-            p_stIntelligenceOrReflex->ulNoComportInit = p_stScriptAI->ulNoComportInitDefault;
-            p_stActionTable = fn_p_stSimulateAllocActionTable(&ptr, p_stScriptAI->ucActionTableNbEntry);
-            p_stIntelligenceOrReflex->p_stActionTable = p_stActionTable;
-            p_stMindDst->p_stReflex = p_stIntelligenceOrReflex;
-        }
+        p_stMindDst->p_stReflex = fn_p_stSimulateAllocIntelligence(&ptr, p_p_stScriptAI);
+        if (p_stMindSrc->p_stReflex != NULL)
+            p_stMindDst->p_stReflex->ulNoComportInit = p_stMindSrc->p_stReflex->ulNoComportInit;
     }
     else
     {
         p_stMindDst->p_stReflex = NULL;
     }
-    if (p_stMindSrc->p_stReflex != NULL)
-        p_stMindDst->p_stReflex->ulNoComportInit = p_stMindSrc->p_stReflex->ulNoComportInit;
 
-    p_stDsgMem = NULL;
-    if (p_stMindDst->p_stAIModel->p_stDsgVar != NULL && p_stMindDst->p_stAIModel->p_stDsgVar->ulSize != 0)
+    p_stMindDst->p_stDsgMem = NULL;
+    if (p_stMindDst->p_stAIModel->p_stDsgVar != NULL)
     {
-        memset(ptr, 0, sizeof(tdstDsgMem_));
-        p_stDsgMem = (tdstDsgMem_*)ptr;
-        ptr += sizeof(tdstDsgMem_);
-        p_stDsgMem->p_p_stDsgVar = (tdstDsgVar_**)&p_stMindDst->p_stAIModel->p_stDsgVar;
-        p_stDsgMem->p_cDsgMemBufferInit = 0;
-        p_stDsgMem->p_cDsgMemBuffer = (int)ptr;
-        memset(ptr, 0, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
-        ptr += p_stMindDst->p_stAIModel->p_stDsgVar->ulSize;
-    }
-    p_stMindDst->p_stDsgMem = p_stDsgMem;
-
-    if (p_stMindSrc->p_stDsgMem != NULL)
-    {
-        *p_stMindDst->p_stDsgMem->p_p_stDsgVar = *p_stMindSrc->p_stDsgMem->p_p_stDsgVar;
-        if (p_stMindSrc->p_stDsgMem->p_cDsgMemBufferInit != 0)
+        if (p_stMindDst->p_stAIModel->p_stDsgVar->ulSize != 0)
         {
-            memset(p_stMindDst->p_stDsgMem->p_cDsgMemBuffer, 0, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
-            p_stMindDst->p_stDsgMem->p_cDsgMemBufferInit = (int)ptr;
-            ptr += p_stMindDst->p_stAIModel->p_stDsgVar->ulSize;
-            memcpy((char*)p_stMindDst->p_stDsgMem->p_cDsgMemBuffer, (char*)p_stMindSrc->p_stDsgMem->p_cDsgMemBufferInit, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
+            p_stMindDst->p_stDsgMem = fn_p_stSimulateAllocDsgMem(&ptr, &p_stMindDst->p_stAIModel->p_stDsgVar, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
+            *p_stMindDst->p_stDsgMem->p_p_stDsgVar = *p_stMindSrc->p_stDsgMem->p_p_stDsgVar;
+            if (p_stMindSrc->p_stDsgMem->p_cDsgMemBufferInit != 0)
+            {
+                p_cBuffer = fn_p_cSimulateAllocBuffer(&ptr, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
+                p_stMindDst->p_stDsgMem->p_cDsgMemBufferInit = (int)p_cBuffer;
+                memcpy((char*)p_stMindDst->p_stDsgMem->p_cDsgMemBufferInit, (char*)p_stMindSrc->p_stDsgMem->p_cDsgMemBufferInit, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
+            }
         }
     }
 
-    if (p_stMindDst->p_stIntelligence != NULL)
+    p_stIntelligenceOrReflex = p_stMindDst->p_stIntelligence;
+    if (p_stIntelligenceOrReflex != NULL)
     {
-        p_stMindDst->p_stIntelligence->p_stCurrentComport = (tdstComport_*)p_stMindDst->p_stIntelligence->ulNoComportInit;
-        p_stMindDst->p_stIntelligence->p_stPrevComport = p_stMindDst->p_stIntelligence->p_stCurrentComport;
+        p_stIntelligenceOrReflex->p_stCurrentComport = (tdstComport_*)p_stIntelligenceOrReflex->ulNoComportInit;
+        p_stIntelligenceOrReflex->p_stPrevComport = p_stIntelligenceOrReflex->p_stCurrentComport;
     }
-    if (p_stMindDst->p_stReflex != NULL)
+    p_stIntelligenceOrReflex = p_stMindDst->p_stReflex;
+    if (p_stIntelligenceOrReflex != NULL)
     {
-        p_stMindDst->p_stReflex->p_stCurrentComport = (tdstComport_*)p_stMindDst->p_stReflex->ulNoComportInit;
-        p_stMindDst->p_stReflex->p_stPrevComport = p_stMindDst->p_stReflex->p_stCurrentComport;
+        p_stIntelligenceOrReflex->p_stCurrentComport = (tdstComport_*)p_stIntelligenceOrReflex->ulNoComportInit;
+        p_stIntelligenceOrReflex->p_stPrevComport = p_stIntelligenceOrReflex->p_stCurrentComport;
     }
 
-    if (p_stMindDst->p_stDsgMem != NULL)
+    p_stDsgMem = p_stMindDst->p_stDsgMem;
+    if (p_stDsgMem != NULL)
     {
-        if (p_stMindDst->p_stDsgMem->p_cDsgMemBufferInit != 0)
-            memcpy((char*)p_stMindDst->p_stDsgMem->p_cDsgMemBuffer, (char*)p_stMindDst->p_stDsgMem->p_cDsgMemBufferInit, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
+        if (p_stDsgMem->p_cDsgMemBufferInit == 0)
+            memcpy((char*)p_stDsgMem->p_cDsgMemBuffer, (char*)p_stMindDst->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
         else
-            memcpy(p_stMindDst->p_stDsgMem->p_cDsgMemBuffer, (char*)p_stMindDst->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
+            memcpy((char*)p_stDsgMem->p_cDsgMemBuffer, (char*)p_stDsgMem->p_cDsgMemBufferInit, p_stMindDst->p_stAIModel->p_stDsgVar->ulSize);
     }
 }
 
@@ -3294,6 +3311,36 @@ void fn_vSecondPassOfMindLoading(void)
 int SAI_fn_bInsertPointerInTable(void* _p_vValue, int _eFlags);
 int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags);
 
+/* Not original source, needs cleaning up: the retail emits this switch as
+ * one source line at each use, so it was a macro or an inline function. */
+inline void fn_vInsertOneDsgVarInSAI(void* p_vAddr, tdeDsgVarTypeId_ eDsgVarType, unsigned short eFlags)
+{
+    switch (eDsgVarType)
+    {
+    case eDsgVarType_WayPoint:
+    case eDsgVarType_Comport:
+    case eDsgVarType_Action:
+    case eDsgVarType_Perso:
+    case eDsgVarType_GameMaterial:
+    case eDsgVarType_VisualMaterial:
+        SAI_fn_bInsertPointerInTable(p_vAddr, eFlags);
+        break;
+    case eDsgVarType_List:
+    case eDsgVarType_PersoArray:
+    case eDsgVarType_VectorArray:
+    case eDsgVarType_FloatArray:
+    case eDsgVarType_IntegerArray:
+    case eDsgVarType_WayPointArray:
+    case eDsgVarType_GraphArray:
+    case eDsgVarType_TextArray:
+    case eDsgVarType_SoundEventArray:
+        break;
+    default:
+        SAI_fn_bInsertArrayInTable(p_vAddr, fn_ulSizeOfDsgVar(eDsgVarType, 0), eFlags);
+        break;
+    }
+}
+
 void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind)
 {
     tdeDsgVarTypeId_ eDsgVarTypeId;
@@ -3304,83 +3351,31 @@ void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind)
     unsigned short eFlags;
     unsigned char ucVarId;
 
-    if (p_stMind == NULL)
-        return;
-    if (p_stMind->p_stDsgMem == NULL)
-        return;
-    if (p_stMind->p_stAIModel->p_stDsgVar == NULL)
-        return;
-
-    for (ucIndex = 0; ucIndex < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucIndex++)
+    if (p_stMind != NULL)
     {
-        eFlags = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eSaveType;
-        if (eFlags == 0)
-            continue;
-        p_MyVarAddr = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].ulOffsetInDsgMem;
-        eDsgVarType = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eDsgVarTypeId;
-        if (fn_GetDsgVarType(eDsgVarType) == 42)
+        if ((p_stMind->p_stDsgMem != NULL) && (p_stMind->p_stAIModel->p_stDsgVar != NULL))
         {
-            p_stArray = (tdstArray_*)p_MyVarAddr;
-            for (ucVarId = 0; ucVarId < p_stArray->ucMaxSize; ucVarId++)
+            for (ucIndex = 0; ucIndex < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucIndex++)
             {
-                eDsgVarTypeId = p_stArray->eType;
-                switch (eDsgVarTypeId)
+                eFlags = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eSaveType;
+                if (eFlags != 0)
                 {
-                case eDsgVarType_SoundEventArray:
-                case eDsgVarType_TextArray:
-                case eDsgVarType_GraphArray:
-                case eDsgVarType_WayPointArray:
-                case eDsgVarType_IntegerArray:
-                case eDsgVarType_FloatArray:
-                case eDsgVarType_VectorArray:
-                case eDsgVarType_PersoArray:
-                case eDsgVarType_List:
-                    break;
+                    p_MyVarAddr = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].ulOffsetInDsgMem;
+                    eDsgVarType = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eDsgVarTypeId;
+                    if (fn_GetDsgVarType(eDsgVarType) == 42)
+                    {
+                        p_stArray = (tdstArray_*)p_MyVarAddr;
+                        eDsgVarTypeId = p_stArray->eType;
+                        for (ucVarId = 0; ucVarId < p_stArray->ucMaxSize; ucVarId++)
+                        {
+                            fn_vInsertOneDsgVarInSAI(&p_stArray->d_ArrayElement[(p_stArray->eType == eDsgVarType_Vector) ? ucVarId * 3 : ucVarId], eDsgVarTypeId, eFlags);
+                        }
+                    }
+                    else
+                    {
+                        fn_vInsertOneDsgVarInSAI(p_MyVarAddr, eDsgVarType, eFlags);
+                    }
                 }
-                switch (eDsgVarTypeId)
-                {
-                case eDsgVarType_VisualMaterial:
-                case eDsgVarType_GameMaterial:
-                case eDsgVarType_Perso:
-                case eDsgVarType_Action:
-                case eDsgVarType_Comport:
-                case eDsgVarType_WayPoint:
-                    SAI_fn_bInsertPointerInTable(&p_stArray->d_ArrayElement[ucVarId], eFlags);
-                    break;
-                default:
-                    SAI_fn_bInsertArrayInTable(&p_stArray->d_ArrayElement[ucVarId], fn_ulSizeOfDsgVar(eDsgVarTypeId, 0), eFlags);
-                    break;
-                }
-            }
-        }
-        else
-        {
-            switch (eDsgVarType)
-            {
-            case eDsgVarType_SoundEventArray:
-            case eDsgVarType_TextArray:
-            case eDsgVarType_GraphArray:
-            case eDsgVarType_WayPointArray:
-            case eDsgVarType_IntegerArray:
-            case eDsgVarType_FloatArray:
-            case eDsgVarType_VectorArray:
-            case eDsgVarType_PersoArray:
-            case eDsgVarType_List:
-                break;
-            }
-            switch (eDsgVarType)
-            {
-            case eDsgVarType_VisualMaterial:
-            case eDsgVarType_GameMaterial:
-            case eDsgVarType_Perso:
-            case eDsgVarType_Action:
-            case eDsgVarType_Comport:
-            case eDsgVarType_WayPoint:
-                SAI_fn_bInsertPointerInTable(p_MyVarAddr, eFlags);
-                break;
-            default:
-                SAI_fn_bInsertArrayInTable(p_MyVarAddr, fn_ulSizeOfDsgVar(eDsgVarType, 0), eFlags);
-                break;
             }
         }
     }
@@ -3419,32 +3414,32 @@ void ReinitDesignerVariables(AI_tdstMind_* p_stMind)
     char* ptrSrc;
     unsigned int ulMyVarSize;
     tdeObjectTreeInit_ eFlags;
-    if (p_stMind == NULL)
-        return;
-    if (p_stMind->p_stDsgMem == NULL)
-        return;
-
-    ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
-    ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
-    if (ptrSrc == NULL)
-        ptrSrc = (char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit;
-    for (ucVarId = 0; ucVarId < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucVarId++)
+    if (p_stMind != NULL)
     {
-        p_stDsgVarInfo = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo + ucVarId;
-        eFlags = p_stDsgVarInfo->eInitType;
-        if (eFlags == 0)
-            continue;
-        eDsgVarType = p_stDsgVarInfo->eDsgVarTypeId;
-        ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
-        if (fn_GetDsgVarType(eDsgVarType) == 42)
+        if (p_stMind->p_stDsgMem != NULL)
         {
-            ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, *(unsigned char*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem + 4));
+            ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
+            ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
+            if (p_stMind->p_stDsgMem->p_cDsgMemBufferInit == 0)
+                ptrSrc = (char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit;
+            for (ucVarId = 0; ucVarId < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucVarId++)
+            {
+                p_stDsgVarInfo = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo + ucVarId;
+                eDsgVarType = p_stDsgVarInfo->eDsgVarTypeId;
+                if (p_stDsgVarInfo->eInitType == 0)
+                    continue;
+                ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
+                if (fn_GetDsgVarType(eDsgVarType) == 42)
+                {
+                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, *(unsigned char*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem + 4));
+                }
+                else
+                {
+                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
+                }
+                memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
+            }
         }
-        else
-        {
-            ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
-        }
-        memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
     }
 }
 
@@ -3490,41 +3485,42 @@ void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeI
     unsigned int ulMyVarSize;
     tdeObjectTreeInit_ eFlags;
 
-    if (p_stMind == NULL)
-        return;
-    if (p_stMind->p_stDsgMem == NULL)
-        return;
-
-    ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
-    ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
-    if (ptrSrc == NULL)
-        ptrSrc = (char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit;
-
-    for (ucVarId = 0; ucVarId < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucVarId++)
+    if (p_stMind != NULL)
     {
-        p_stDsgVarInfo = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo + ucVarId;
-        eDsgVarType = p_stDsgVarInfo->eDsgVarTypeId;
-        if (eDsgVarType == eDsgVarType_List)
+        if (p_stMind->p_stDsgMem != NULL)
         {
-            ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
-            *(unsigned int*)(ptrDst + ulMyVarOffset + 4) = *(unsigned int*)(ptrSrc + ulMyVarOffset + 4);
-            *(unsigned char*)(ptrDst + ulMyVarOffset) = 0;
-            *(unsigned char*)(ptrDst + ulMyVarOffset + 1) = *(unsigned char*)(ptrSrc + ulMyVarOffset + 1);
-            continue;
+            ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
+            ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
+            if (ptrSrc == NULL)
+                ptrSrc = (char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit;
+
+            for (ucVarId = 0; ucVarId < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucVarId++)
+            {
+                p_stDsgVarInfo = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo + ucVarId;
+                eDsgVarType = p_stDsgVarInfo->eDsgVarTypeId;
+                if (eDsgVarType == eDsgVarType_List)
+                {
+                    ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
+                    *(unsigned int*)(ptrDst + ulMyVarOffset + 4) = *(unsigned int*)(ptrSrc + ulMyVarOffset + 4);
+                    *(unsigned char*)(ptrDst + ulMyVarOffset) = 0;
+                    *(unsigned char*)(ptrDst + ulMyVarOffset + 1) = *(unsigned char*)(ptrSrc + ulMyVarOffset + 1);
+                    continue;
+                }
+                eFlags = p_stDsgVarInfo->eInitType;
+                if (eObjIniType > eFlags)
+                    continue;
+                ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
+                if (fn_GetDsgVarType(eDsgVarType) == 42)
+                {
+                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, *(unsigned char*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem + 4));
+                }
+                else
+                {
+                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
+                }
+                memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
+            }
         }
-        eFlags = p_stDsgVarInfo->eInitType;
-        if (eFlags < eObjIniType)
-            continue;
-        ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
-        if (fn_GetDsgVarType(eDsgVarType) == 42)
-        {
-            ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, *(unsigned char*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem + 4));
-        }
-        else
-        {
-            ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
-        }
-        memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
     }
 }
 

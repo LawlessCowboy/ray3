@@ -42166,6 +42166,51 @@
       "status": "MISMATCH",
       "target_size": 176,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0024b630",
+      "candidate_size": 848,
+      "first_difference": 48,
+      "implementation": "tdstNodeInterpret_* fn_p_stSoundProcedureSendRequest(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdeProcedureId_ e_ProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;\n    int lModuleId;\n    tdstGetSetParam_ st_Param;\n    HIE_tdstSuperObject_* h_UltraAbleObject;\n    int s32_TypeId;\n    int s32_ChannelId;\n    int s32_ObjectId;\n    int s32_SemaphoreId;\n    _SND_tduRefEvt u_RefEvt;\n    tdstGetSetParam_ stParam1 = {0};\n    tdstFamilyList_* h_Family;\n\n    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(e_ProcedureId), p_SuperObjPerso, &h_UltraAbleObject);\n\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);\n    s32_ObjectId = -1;\n    g_bUseMarkersForNextRequest = 0;\n    s32_SemaphoreId = -3;\n    s32_ChannelId = -1;\n    u_RefEvt.pstPtr = st_Param.uDummy.uParam.pSoundEvent;\n\n    switch (e_ProcedureId)\n    {\n    case eProc_SND_SendSoundRequestSemaphore:\n    case eProc_SND_SendVoiceRequestSemaphore:\n    case eProc_SND_SendMusicRequestSemaphore:\n    case eProc_SND_SendAmbianceRequestSemaphore:\n    case eProc_SND_SendMenuSndRequestSemaphore:\n        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &st_Param);\n        s32_SemaphoreId = st_Param.uDummy.uParam.lValue;\n        break;\n    }\n\n    switch (e_ProcedureId)\n    {\n    case eProc_SND_SendSoundRequestSemaphore:\n    case eProc_SND_SendSoundRequest:\n        s32_ObjectId = (int)h_UltraAbleObject;\n        s32_TypeId = g_lSoundObjectTypeAnim;\n        break;\n    case eProc_SND_SendVoiceRequestSemaphore:\n    case eProc_SND_SendVoiceRequest:\n        s32_ObjectId = (int)h_UltraAbleObject;\n        s32_TypeId = g_lSoundObjectTypeVoice;\n        break;\n    case eProc_SND_SendMusicRequestWithMarkers:\n        g_bUseMarkersForNextRequest = 2;\n    case eProc_SND_SendMusicRequestSemaphore:\n    case eProc_SND_SendMusicRequest:\n        s32_TypeId = g_lSoundObjectTypeMusic;\n        break;\n    case eProc_SND_SendAmbianceRequestSemaphore:\n    case eProc_SND_SendAmbianceRequest:\n    case eProc_SND_SendJingleRequest:\n        s32_TypeId = g_lSoundObjectTypeAmbiance;\n        break;\n    case eProc_SND_SendMenuSndRequestSemaphore:\n    case eProc_SND_SendMenuSndRequest:\n        s32_TypeId = g_lSoundObjectTypeMenu;\n        break;\n    case eProc_SND_SendVoiceRequestWithLipsChannelSemaphore:\n    case eProc_SND_SendVoiceRequestWithLipsChannel:\n        s32_ObjectId = (int)h_UltraAbleObject;\n        s32_TypeId = g_lSoundObjectTypeVoice;\n        g_bUseMarkersForNextRequest = 1;\n        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);\n        s32_ChannelId = stParam1.uDummy.uParam.lValue;\n        fn_vTakeControlOfLipChannel(h_UltraAbleObject->hLinkedObject.p_stCharacter, (unsigned short)s32_ChannelId);\n        s32_ChannelId = (int)fn_hGetChannelSuperObject(h_UltraAbleObject->hLinkedObject.p_stCharacter->h_3dData, (unsigned short)s32_ChannelId);\n        if (s32_ChannelId == 0)\n            s32_ChannelId = -1;\n        SND_fn_vResetLastMarker();\n        break;\n    case eProc_SND_SendVoiceRequestWithLipsAuto:\n        s32_ObjectId = (int)h_UltraAbleObject;\n        s32_TypeId = g_lSoundObjectTypeVoice;\n        h_Family = h_UltraAbleObject->hLinkedObject.p_stCharacter->h_3dData->h_Family;\n        g_bUseMarkersForNextRequest = 1;\n        if (h_Family->ulLipsChannel != (unsigned int)-1)\n        {\n            fn_vTakeControlOfLipChannel(h_UltraAbleObject->hLinkedObject.p_stCharacter, (unsigned short)h_Family->ulLipsChannel);\n            s32_ChannelId = (int)fn_hGetChannelSuperObject(h_UltraAbleObject->hLinkedObject.p_stCharacter->h_3dData, (unsigned short)h_Family->ulLipsChannel);\n            if (s32_ChannelId == 0)\n                s32_ChannelId = -1;\n        }\n        SND_fn_vResetLastMarker();\n        break;\n    default:\n        s32_TypeId = -1;\n        break;\n    }\n\n    if (e_ProcedureId == eProc_SND_SendJingleRequest)\n        SND_fn_s32SendRequestJingle(s32_ObjectId, s32_ChannelId, s32_TypeId, u_RefEvt, 0, NULL, g_lSoundVolumeLineMusic);\n    else\n        SND_fn_s32SendRequestSemaphoreSound(s32_SemaphoreId, s32_ObjectId, s32_ChannelId, s32_TypeId, u_RefEvt, 0, NULL);\n    g_bUseMarkersForNextRequest = 0;\n\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stSoundProcedureSendRequest",
+      "reason": "848/848 bytes, structure/relocs/stack match; residual is a rotation of three callee-saved registers (retail ObjectId s3 / ChannelId s1 / perso+TypeId s2). Inline unsigned-short channel lookup helper fixed size; decl order, init order, lModuleId use and a 10-min permuter (195->190) did not fix the rotation.",
+      "size": 848,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
+      "status": "MISMATCH",
+      "target_size": 848,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fb590",
+      "candidate_size": 396,
+      "first_difference": 66,
+      "implementation": "void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType);\n\n/* Inlined into fn_vReinitAIWithFlags and fn_vReinitAI: each call site\n * attributes the whole block to one line (1421 and 1390). */\nstatic inline void fn_vReinitComports(AI_tdstMind_* p_stMind)\n{\n    fn_vSetUltraOperatorPerso(NULL, NULL);\n    if (p_stMind)\n    {\n        if (p_stMind->p_stIntelligence)\n            fn_vReinitComport(p_stMind->p_stIntelligence);\n        if (p_stMind->p_stReflex)\n            fn_vReinitComport(p_stMind->p_stReflex);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vReinitDesignerVariablesWithFlags",
+      "reason": "396/396; nested-if body (aligned epilogue nop) and 'eObjIniType > eFlags' fix size and slt at. Residual is registers only: ptrSrc/ulMyVarOffset s5/s3 swap plus dst/src address order in the List branch. Declaration permutations (200) and 15 min of permuter did not move it; the BufferInit==0 test trick that matched ReinitDesignerVariables makes this one worse.",
+      "size": 396,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MISMATCH",
+      "target_size": 396,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fb130",
+      "candidate_size": 784,
+      "first_difference": 110,
+      "implementation": "void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind)\n{\n    tdeDsgVarTypeId_ eDsgVarTypeId;\n    tdstArray_* p_stArray;\n    unsigned char ucIndex;\n    tdeDsgVarTypeId_ eDsgVarType;\n    char* p_MyVarAddr;\n    unsigned short eFlags;\n    unsigned char ucVarId;\n\n    if (p_stMind != NULL)\n    {\n        if ((p_stMind->p_stDsgMem != NULL) && (p_stMind->p_stAIModel->p_stDsgVar != NULL))\n        {\n            for (ucIndex = 0; ucIndex < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucIndex++)\n            {\n                eFlags = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eSaveType;\n                if (eFlags != 0)\n                {\n                    p_MyVarAddr = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].ulOffsetInDsgMem;\n                    eDsgVarType = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eDsgVarTypeId;\n                    if (fn_GetDsgVarType(eDsgVarType) == 42)\n                    {\n                        p_stArray = (tdstArray_*)p_MyVarAddr;\n                        eDsgVarTypeId = p_stArray->eType;\n                        for (ucVarId = 0; ucVarId < p_stArray->ucMaxSize; ucVarId++)\n                        {\n                            fn_vInsertOneDsgVarInSAI(&p_stArray->d_ArrayElement[(p_stArray->eType == eDsgVarType_Vector) ? ucVarId * 3 : ucVarId], eDsgVarTypeId, eFlags);\n                        }\n                    }\n                    else\n                    {\n                        fn_vInsertOneDsgVarInSAI(p_MyVarAddr, eDsgVarType, eFlags);\n                    }\n                }\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AI_fn_vInsertDsgVarInSAI",
+      "reason": "784/784 with an inline helper (one switch: pointer cases, skip cases, default array insert; labels in reverse order) and nested-if body. Element index is (eType==Vector ? i*3 : i). A macro version is worse (address not precomputed). Residual is callee-saved register assignment only (eFlags s0 vs s6 etc.); signature/declaration permutations and 20 min of permuter did not fix it.",
+      "size": 784,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MISMATCH",
+      "target_size": 784,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -46234,6 +46279,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
       "status": "EQUIVALENT"
     },
+    "0x00153dd0": {
+      "address": "0x00153dd0",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glMergeBB",
+      "size": 148,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
     "0x00154320": {
       "address": "0x00154320",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -46263,6 +46316,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "PS2glListSaveParamSpace",
       "size": 156,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MATCH"
+    },
+    "0x00154b90": {
+      "address": "0x00154b90",
+      "compiler_profile": "mwccps2-3.0-011126-o3",
+      "name": "PS2glSearchList",
+      "size": 132,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
       "status": "MATCH"
     },
@@ -50231,6 +50292,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
       "name": "Mode2Prim",
       "size": 180,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00161550": {
+      "address": "0x00161550",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glExecuteListVBuf",
+      "size": 684,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
+      "status": "MATCH"
+    },
+    "0x00161800": {
+      "address": "0x00161800",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "plyPS2glBegin",
+      "size": 376,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c",
       "status": "MATCH"
     },
@@ -54226,6 +54303,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
       "status": "MATCH"
     },
+    "0x001fac50": {
+      "address": "0x001fac50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vSimulateMindAllocationFromAnotherMind",
+      "size": 732,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MATCH"
+    },
     "0x001faf30": {
       "address": "0x001faf30",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -54255,6 +54340,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vSecondPassOfMindLoading",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MATCH"
+    },
+    "0x001fb440": {
+      "address": "0x001fb440",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "ReinitDesignerVariables",
+      "size": 328,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
       "status": "MATCH"
     },
@@ -55218,6 +55311,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
       "status": "MATCH"
     },
+    "0x001fd900": {
+      "address": "0x001fd900",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_p_stGetPersoInList",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
     "0x001fd980": {
       "address": "0x001fd980",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -55434,6 +55535,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WParc.c",
       "status": "MATCH"
     },
+    "0x001fed60": {
+      "address": "0x001fed60",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPARCLST_fn_vDestroy",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WParc.c",
+      "status": "MATCH"
+    },
     "0x001feeb0": {
       "address": "0x001feeb0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -55471,6 +55580,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "WPG_fn_lBuildRandomPath",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x001ff670": {
+      "address": "0x001ff670",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPG_fn_hBuildOrderedPathFromAtoB",
+      "size": 704,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x001ff930": {
+      "address": "0x001ff930",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB",
+      "size": 660,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
       "status": "MATCH"
     },
@@ -55535,6 +55660,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "WPG_fn_lAddArcToWayPoint",
       "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x002007a0": {
+      "address": "0x002007a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPG_fn_lAddWayPoint",
+      "size": 356,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x00200910": {
+      "address": "0x00200910",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPG_fn_vDestroy",
+      "size": 340,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
       "status": "MATCH"
     },
@@ -59546,11 +59687,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
       "status": "MATCH"
     },
+    "0x0024aac0": {
+      "address": "0x0024aac0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stMusicMarkerSlotControlProcedure",
+      "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
+      "status": "MATCH"
+    },
+    "0x0024ab70": {
+      "address": "0x0024ab70",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stLipsChannelControl",
+      "size": 228,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
+      "status": "MATCH"
+    },
     "0x0024ac60": {
       "address": "0x0024ac60",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stSaveCurrentSoundRequest",
       "size": 184,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
+      "status": "MATCH"
+    },
+    "0x0024ad20": {
+      "address": "0x0024ad20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stSetRollOffDistances",
+      "size": 344,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
       "status": "MATCH"
     },
@@ -59594,6 +59759,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
       "status": "MATCH"
     },
+    "0x0024b110": {
+      "address": "0x0024b110",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stSoundProcedure",
+      "size": 540,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
+      "status": "MATCH"
+    },
     "0x0024b330": {
       "address": "0x0024b330",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -59615,6 +59788,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stSoundProcedureStopRequest",
       "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
+      "status": "MATCH"
+    },
+    "0x0024b540": {
+      "address": "0x0024b540",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stSoundProcedureChangeVolumeId",
+      "size": 228,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AiProcSound.c",
       "status": "MATCH"
     },

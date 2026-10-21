@@ -2912,33 +2912,11 @@ struct SCT_tdstListOfSoundEvent_ {
     _SND_tduRefEvt uSoundEvent; /* +0x4 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 42–42 */
-/* addr: 0x001fe9c0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0008 -> line 42
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vOnAIErm_M_UpdateLastError(int FatalErrorNum, char* szMsg)
 {
     Erm_fn_v_UpdateLastError(67, g_ucAIModuleId, 0, FatalErrorNum, -1, 255, 255, szMsg);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 262–271 */
-/* addr: 0x001fe9f0  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 262
- *   +0x0010 -> line 263
- *   +0x001c -> line 264
- *   +0x0028 -> line 265
- *   +0x002c -> line 266
- *   +0x0038 -> line 268
- *   +0x0044 -> line 269
- *   +0x0048 -> line 270
- *   +0x004c -> line 271
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int WPARCLST_fn_lGetWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int* p_lWeight)
 {
     WP_tdstArc_* hElement;
@@ -2957,20 +2935,6 @@ int WPARCLST_fn_lGetWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNo
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 245–255 */
-/* addr: 0x001fea50  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 245
- *   +0x0010 -> line 246
- *   +0x001c -> line 247
- *   +0x0028 -> line 248
- *   +0x002c -> line 249
- *   +0x0034 -> line 251
- *   +0x0040 -> line 254
- *   +0x0044 -> line 255
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int WPARCLST_fn_lChangeWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, int lWeight)
 {
     WP_tdstArc_* hElement;
@@ -2989,21 +2953,6 @@ int WPARCLST_fn_lChangeWeight(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* 
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 229–238 */
-/* addr: 0x001feaa0  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 229
- *   +0x0010 -> line 230
- *   +0x001c -> line 231
- *   +0x0028 -> line 232
- *   +0x002c -> line 233
- *   +0x0038 -> line 235
- *   +0x0044 -> line 236
- *   +0x0048 -> line 237
- *   +0x004c -> line 238
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int WPARCLST_fn_lGetCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int* p_ulCapability)
 {
     WP_tdstArc_* hElement;
@@ -3022,27 +2971,6 @@ int WPARCLST_fn_lGetCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 187–213 */
-/* addr: 0x001feb00  size: 164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 187
- *   +0x0010 -> line 188
- *   +0x001c -> line 189
- *   +0x0028 -> line 190
- *   +0x004c -> line 194
- *   +0x0054 -> line 195
- *   +0x005c -> line 199
- *   +0x0064 -> line 201
- *   +0x0070 -> line 202
- *   +0x0078 -> line 204
- *   +0x007c -> line 207
- *   +0x0088 -> line 209
- *   +0x0094 -> line 211
- *   +0x0098 -> line 212
- *   +0x009c -> line 213
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int WPARCLST_fn_lChangeCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, unsigned int ulCapability, int lValue)
 {
     WP_tdstArc_* param0;
@@ -3077,27 +3005,6 @@ int WPARCLST_fn_lChangeCapabilities(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphN
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 118–146 */
-/* addr: 0x001febb0  size: 428 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 118
- *   +0x002c -> line 124
- *   +0x0034 -> line 126
- *   +0x0040 -> line 128
- *   +0x004c -> line 130
- *   +0x0050 -> line 134
- *   +0x0054 -> line 131
- *   +0x0058 -> line 132
- *   +0x005c -> line 135
- *   +0x0064 -> line 137
- *   +0x0070 -> line 138
- *   +0x0080 -> line 140
- *   +0x00c8 -> line 141
- *   +0x00d0 -> line 142
- *   +0x018c -> line 146
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* LST2 list insertion: unlink the element from its previous list, then append
    it to the given anchor. */
 #define LST2_M_vAddElementToList(_p_stList, _hElement) \
@@ -3154,24 +3061,6 @@ void WPARCLST_fn_vAdd(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, i
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WParc.c lines 81–106 */
-/* addr: 0x001fed60  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 81
- *   +0x000c -> line 86
- *   +0x001c -> line 90
- *   +0x0024 -> line 92
- *   +0x0030 -> line 94
- *   +0x004c -> line 96
- *   +0x00d4 -> line 97
- *   +0x0100 -> line 98
- *   +0x0120 -> line 100
- *   +0x012c -> line 102
- *   +0x0130 -> line 105
- *   +0x0138 -> line 106
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void WPARCLST_fn_vDestroy(WP_tdstListOfArc_* hList)
 {
     WP_tdstArc_* hNextElement;
@@ -3181,10 +3070,8 @@ void WPARCLST_fn_vDestroy(WP_tdstListOfArc_* hList)
         WPG_fn_vSetAllocMode();
         if (hList != NULL)
         {
-            hElement = hList->m_hArc.hFirstElementDyn;
-            while (hElement != NULL)
+            for (hElement = hList->m_hArc.hFirstElementDyn, hNextElement = hElement ? hElement->hNextBrotherDyn : NULL; hElement; hElement = hNextElement, hNextElement = hElement ? hElement->hNextBrotherDyn : NULL)
             {
-                hNextElement = hElement->hNextBrotherDyn;
                 if (hElement->hNextBrotherDyn) hElement->hNextBrotherDyn->hPrevBrotherDyn = hElement->hPrevBrotherDyn;
                 if (hElement->hPrevBrotherDyn) hElement->hPrevBrotherDyn->hNextBrotherDyn = hElement->hNextBrotherDyn;
                 if (hElement->hFatherDyn)
@@ -3196,16 +3083,20 @@ void WPARCLST_fn_vDestroy(WP_tdstListOfArc_* hList)
                 hElement->hNextBrotherDyn = NULL;
                 hElement->hPrevBrotherDyn = NULL;
                 hElement->hFatherDyn = NULL;
-                WPG_fn_vSetAllocMode();
-                if (hElement != NULL)
                 {
-                    HMU_fn_vFree((void**)&hElement, 1);
+                    WP_tdstArc_* hArc = hElement;
+                    WPG_fn_vSetAllocMode();
+                    if (hArc != NULL)
+                    {
+                        HMU_fn_vFree((void**)&hArc, 1);
+                        hArc = NULL;
+                    }
+                    WPG_fn_vClearAllocMode();
                 }
-                WPG_fn_vClearAllocMode();
-                hElement = hNextElement;
             }
+            HMU_fn_vFree((void**)&hList, 1);
+            hList = NULL;
         }
-        HMU_fn_vFree((void**)&hList, 1);
         WPG_fn_vClearAllocMode();
     }
 }

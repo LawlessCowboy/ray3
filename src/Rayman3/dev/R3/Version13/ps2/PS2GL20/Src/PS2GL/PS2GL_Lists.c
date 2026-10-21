@@ -2228,7 +2228,7 @@ void impPS2glPartialDeleteLists(unsigned int list)
         {
             PS2glFreeListData(pSingleIndex->pData);
             pSingleIndex->pData = NULL;
-            break;
+            return;
         }
     }
 }
