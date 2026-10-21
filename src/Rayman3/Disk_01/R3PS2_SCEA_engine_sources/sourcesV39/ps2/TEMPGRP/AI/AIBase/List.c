@@ -3274,6 +3274,7 @@ tdstNodeInterpret_* fn_p_stListSelect(tdstList_* p_List, char b_cInverse, tdstNo
 HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition)
 {
     HIE_tdstSuperObject_* pNull;
+    int lOffset;
 
     if (p_List->ucNbElt == 0)
     {
@@ -3284,8 +3285,10 @@ HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucP
     if ((ucPosition >= p_List->ucNbElt) && (ucPosition != 0xff))
         return NULL;
 
+    /* Not original source, needs cleaning up: permuter-found int-address form;
+     * retail keeps the -4 on the base instead of folding it into the load. */
     if (ucPosition == 0xff)
-        return p_List->p_hTabElt[p_List->ucNbElt - 1];
+        return *(HIE_tdstSuperObject_**)((int)p_List->p_hTabElt - 4 + (lOffset = p_List->ucNbElt * 4));
     else
         return p_List->p_hTabElt[ucPosition];
 }
@@ -3675,6 +3678,28 @@ void fn_vUnionList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: retail inlines fn_p_stGetPersoInList
+ * here with the -4 folded into the load, unlike its standalone copy, so this
+ * caller gets a pointer-form duplicate of it. */
+static inline HIE_tdstSuperObject_* fn_p_stGetPersoInListInline(tdstList_* p_List, unsigned char ucPosition)
+{
+    HIE_tdstSuperObject_* pNull;
+
+    if (p_List->ucNbElt == 0)
+    {
+        pNull = NULL;
+        return pNull;
+    }
+
+    if ((ucPosition >= p_List->ucNbElt) && (ucPosition != 0xff))
+        return NULL;
+
+    if (ucPosition == 0xff)
+        return p_List->p_hTabElt[p_List->ucNbElt - 1];
+    else
+        return p_List->p_hTabElt[ucPosition];
+}
+
 void fn_vSortListByModel(tdstList_* p_stList, AI_tdstAIModel_* _p_stModel)
 {
     HIE_tdstSuperObject_* hPerso;
@@ -3686,13 +3711,13 @@ void fn_vSortListByModel(tdstList_* p_stList, AI_tdstAIModel_* _p_stModel)
     ucPos = 0;
     ucJ = 0;
     p_hSupObjElt = (HIE_tdstSuperObject_**)HMU_fn_p_vMalloc(p_stList->ucNbElt, 1);
-    hPerso = fn_p_stGetPersoInList(p_stList, 0);
+    hPerso = fn_p_stGetPersoInListInline(p_stList, 0);
     while (hPerso != NULL)
     {
         if ((hPerso->hLinkedObject.p_stCharacter->h_Brain != NULL) && (hPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stAIModel == _p_stModel))
             p_hSupObjElt[ucJ++] = hPerso;
         ucPos++;
-        hPerso = fn_p_stGetPersoInList(p_stList, ucPos);
+        hPerso = fn_p_stGetPersoInListInline(p_stList, ucPos);
     }
 
     p_stList->ucNbElt = 0;

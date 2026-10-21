@@ -3125,6 +3125,14 @@ tdstEngineStructure_ g_stEngineStructure;
 
 void WPG_fn_vSetAllocMode(void);
 void WPG_fn_vClearAllocMode(void);
+unsigned char fn_bScriptTransitionDeallocationCondition(void);
+void GAM_fn_vPushAllocMode(int eMode);
+void GAM_fn_vPopAllocMode(void);
+void HMU_fn_vFree(void** p_vPointer, unsigned char bTempMalloc);
+void WPARCLST_fn_vDestroy(WP_tdstListOfArc_* hList);
+int WPG_fn_lAddWayPoint(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hWayPoint, int _lTypeOfWP);
+int WPG_fn_lAddArcToWayPoint(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight, unsigned int ulCapability);
+int WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, WP_tdstGraphNode_** _p_hListOfUsefulNodes, int _iNbOfElementInTheGraph, WP_tdstGraphNode_** _p_hListOfResultNodes, int bIsRandom);
 /* Debug info says void; the allocation is returned in $v0. */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 void WPG_fn_vReinitGraph(WP_tdstGraph_* hGraph);
@@ -3413,19 +3421,90 @@ WP_tdstGraph_* WPG_fn_lBuildOrderedPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: the retail inlines these node-level
+ * link queries (no out-of-line copies exist). */
+inline int WPG_fn_lGetNodeLinkCapabilities(WP_tdstGraphNode_* hSrcNode, WP_tdstGraphNode_* hDstNode, unsigned int* p_ulCapability)
+{
+    if ((hSrcNode != NULL) && (hDstNode != NULL))
+        return WPARCLST_fn_lGetCapabilities(hSrcNode->m_hListOfArc, hDstNode, p_ulCapability);
+    return -1;
+}
+
+inline int WPG_fn_lGetNodeLinkWeight(WP_tdstGraphNode_* hSrcNode, WP_tdstGraphNode_* hDstNode, int* p_lWeight)
+{
+    if ((hSrcNode != NULL) && (hDstNode != NULL))
+        return WPARCLST_fn_lGetWeight(hSrcNode->m_hListOfArc, hDstNode, p_lWeight);
+    return -1;
+}
+
+/* Not original source, needs cleaning up: the retail has no out-of-line copy
+ * of the graph constructor; it is inlined into WPG_fn_hBuildOrderedPathFromAtoB. */
+inline WP_tdstGraph_* WPG_fn_hCreateGraph(void)
+{
+    WP_tdstGraph_* hGraph;
+
+    GAM_fn_vPushAllocMode(2);
+    hGraph = (WP_tdstGraph_*)HMU_fn_p_vMalloc(sizeof(WP_tdstGraph_), 1);
+    if (hGraph != NULL)
+    {
+        hGraph->m_hListOfNode.hFirstElementDyn = NULL;
+        hGraph->m_hListOfNode.hLastElementDyn = NULL;
+        hGraph->m_hListOfNode.lNumberOfElementsDyn = 0;
+    }
+    GAM_fn_vPopAllocMode();
+    return hGraph;
+}
+
 WP_tdstGraph_* WPG_fn_hBuildOrderedPathFromAtoB(WP_tdstGraph_* _hGraph, WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, int bIsRandom)
 {
-    int lIndex;
-    int lWeight;
-    unsigned int ulCapability;
-    int iNbElementInTheGraph;
-    int j;
-    int i;
-    WP_tdstGraphNode_** p_hListOfResultNodes;
-    WP_tdstGraphNode_** p_hListOfUsefulNodes;
     int lSizeOfResult;
     WP_tdstGraphNode_* param0;
-    /* TODO: decompile from asm/... */
+    int lIndex;
+    int i;
+    int j;
+    int iNbElementInTheGraph;
+    WP_tdstGraphNode_** p_hListOfUsefulNodes;
+    WP_tdstGraphNode_** p_hListOfResultNodes;
+    unsigned int ulCapability;
+    int lWeight;
+    int lOffset;
+
+    iNbElementInTheGraph = _hGraph->m_hListOfNode.lNumberOfElementsDyn;
+    p_hListOfUsefulNodes = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
+    p_hListOfResultNodes = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
+
+    for (i = 0; i < iNbElementInTheGraph; i++)
+    {
+        for (j = 0, param0 = _hGraph->m_hListOfNode.hFirstElementDyn; j < i; j++, param0 = param0->hNextBrotherDyn);
+        p_hListOfUsefulNodes[i] = param0;
+        p_hListOfResultNodes[i] = NULL;
+    }
+
+    _hGraph = WPG_fn_hCreateGraph();
+
+    lSizeOfResult = WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(_hStartingNode, _hEndingNode, p_hListOfUsefulNodes, iNbElementInTheGraph, p_hListOfResultNodes, bIsRandom);
+
+    if (lSizeOfResult)
+    {
+        lIndex = 0;
+        WPG_fn_lAddWayPoint(_hGraph, p_hListOfResultNodes[lIndex]->m_hWayPoint, p_hListOfResultNodes[lIndex]->m_lTypeOfWP);
+        for (lIndex++; lIndex < lSizeOfResult; lIndex++)
+        {
+            WPG_fn_lAddWayPoint(_hGraph, p_hListOfResultNodes[lIndex]->m_hWayPoint, p_hListOfResultNodes[lIndex]->m_lTypeOfWP);
+            WPG_fn_lGetNodeLinkCapabilities(p_hListOfResultNodes[lIndex], p_hListOfResultNodes[lIndex - 1], &ulCapability);
+            WPG_fn_lGetNodeLinkWeight(p_hListOfResultNodes[lIndex], p_hListOfResultNodes[lIndex - 1], &lWeight);
+            WPG_fn_lAddArcToWayPoint(_hGraph, p_hListOfResultNodes[lIndex]->m_hWayPoint, p_hListOfResultNodes[lIndex - 1]->m_hWayPoint, lWeight, ulCapability);
+        }
+        /* Not original source, needs cleaning up: int-address form keeps the
+         * retail's unfolded -4 base offset (see fn_p_stGetPersoInList). */
+        WPG_fn_lGetNodeLinkCapabilities(p_hListOfResultNodes[0], *(WP_tdstGraphNode_**)((int)p_hListOfResultNodes - 4 + (lOffset = lSizeOfResult * 4)), &ulCapability);
+        WPG_fn_lGetNodeLinkWeight(p_hListOfResultNodes[0], *(WP_tdstGraphNode_**)((int)p_hListOfResultNodes - 4 + lOffset), &lWeight);
+        WPG_fn_lAddArcToWayPoint(_hGraph, p_hListOfResultNodes[0]->m_hWayPoint, (*(WP_tdstGraphNode_**)((int)p_hListOfResultNodes - 4 + lOffset))->m_hWayPoint, lWeight, ulCapability);
+    }
+
+    HMU_fn_vFree((void**)&p_hListOfUsefulNodes, 1);
+    HMU_fn_vFree((void**)&p_hListOfResultNodes, 1);
+    return _hGraph;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1016–1125 */
@@ -3488,15 +3567,80 @@ WP_tdstGraph_* WPG_fn_hBuildOrderedPathFromAtoB(WP_tdstGraph_* _hGraph, WP_tdstG
 int WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, WP_tdstGraphNode_** _p_hListOfUsefulNodes, int _iNbOfElementInTheGraph, WP_tdstGraphNode_** _p_hListOfResultNodes, int bIsRandom)
 {
     WP_tdstArc_* hElement;
-    WP_tdstGraphNode_** ap_hListOfTmpResultNodes;
     int lBestWeight;
     int lSizeOfResultForNextNode;
     int lSizeOfResult;
     int lTmpPonderation;
-    int lWeight;
     unsigned int ulCapability;
+    int lWeight;
+    WP_tdstGraphNode_** ap_hListOfTmpResultNodes;
     int i;
-    /* TODO: decompile from asm/... */
+    int lOffset;
+
+    lBestWeight = 0x7FFFFFFF;
+    lSizeOfResult = 0;
+    ap_hListOfTmpResultNodes = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(_iNbOfElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
+
+    for (i = 0; i < _iNbOfElementInTheGraph; i++)
+    {
+        if ((_p_hListOfUsefulNodes[i] != NULL) && (_hStartingNode->m_hWayPoint == _p_hListOfUsefulNodes[i]->m_hWayPoint))
+        {
+            _p_hListOfUsefulNodes[i] = NULL;
+            break;
+        }
+    }
+
+    if ((WPG_fn_lGetNodeLinkCapabilities(_hStartingNode, _hEndingNode, &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(_hStartingNode, _hEndingNode, &lWeight) != -1))
+    {
+        lSizeOfResult = 1;
+    }
+    else
+    {
+        for (i = 0; i < _iNbOfElementInTheGraph; i++)
+        {
+            if (_p_hListOfUsefulNodes[i] != NULL)
+            {
+                if (_hStartingNode->m_hListOfArc != NULL)
+                {
+                    hElement = _hStartingNode->m_hListOfArc->m_hArc.hFirstElementDyn;
+                    while (hElement != NULL)
+                    {
+                        if (hElement->m_hNode == _p_hListOfUsefulNodes[i])
+                        {
+                            ulCapability = hElement->m_ulCapability;
+                            lWeight = hElement->m_lWeight;
+                            lSizeOfResultForNextNode = WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(_p_hListOfUsefulNodes[i], _hEndingNode, _p_hListOfUsefulNodes, _iNbOfElementInTheGraph, ap_hListOfTmpResultNodes, bIsRandom);
+                            if (lSizeOfResultForNextNode)
+                            {
+                                if (bIsRandom)
+                                    lTmpPonderation = rand() % 0x7FFFFFFF;
+                                else
+                                    lTmpPonderation = lWeight;
+                                if (lTmpPonderation < lBestWeight)
+                                {
+                                    lSizeOfResult = lSizeOfResultForNextNode + 1;
+                                    lBestWeight = lTmpPonderation;
+                                    memcpy(_p_hListOfResultNodes, ap_hListOfTmpResultNodes, (lSizeOfResult - 1) * sizeof(WP_tdstGraphNode_*));
+                                }
+                            }
+                            break;
+                        }
+                        hElement = hElement->hNextBrotherDyn;
+                    }
+                }
+            }
+        }
+    }
+
+    if (lSizeOfResult == 1)
+        _p_hListOfResultNodes[0] = _hStartingNode;
+    else if (lSizeOfResult > 1)
+        /* Not original source, needs cleaning up: int-address form keeps the
+         * retail's unfolded -4 base offset (see fn_p_stGetPersoInList). */
+        *(WP_tdstGraphNode_**)((int)_p_hListOfResultNodes - 4 + (lOffset = lSizeOfResult * 4)) = _hStartingNode;
+
+    HMU_fn_vFree((void**)&ap_hListOfTmpResultNodes, 1);
+    return lSizeOfResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 819–1008 */
@@ -4107,9 +4251,65 @@ int WPG_fn_lAddArcToWayPoint(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoi
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define LST2_M_vAddElementToList(_p_stList, _hElement) \
+{ \
+    if ((_hElement)->hNextBrotherDyn) (_hElement)->hNextBrotherDyn->hPrevBrotherDyn = (_hElement)->hPrevBrotherDyn; \
+    if ((_hElement)->hPrevBrotherDyn) (_hElement)->hPrevBrotherDyn->hNextBrotherDyn = (_hElement)->hNextBrotherDyn; \
+    if ((_hElement)->hFatherDyn) \
+    { \
+        (_hElement)->hFatherDyn->lNumberOfElementsDyn--; \
+        if ((_hElement)->hFatherDyn->hFirstElementDyn == (_hElement)) (_hElement)->hFatherDyn->hFirstElementDyn = (_hElement)->hNextBrotherDyn; \
+        if ((_hElement)->hFatherDyn->hLastElementDyn == (_hElement)) (_hElement)->hFatherDyn->hLastElementDyn = (_hElement)->hPrevBrotherDyn; \
+    } \
+    (_hElement)->hNextBrotherDyn = NULL; \
+    (_hElement)->hPrevBrotherDyn = NULL; \
+    (_hElement)->hFatherDyn = NULL; \
+    (_hElement)->hNextBrotherDyn = NULL; \
+    (_hElement)->hPrevBrotherDyn = (_p_stList)->hLastElementDyn; \
+    (_hElement)->hFatherDyn = (_p_stList); \
+    if ((_p_stList)->hFirstElementDyn == NULL) (_p_stList)->hFirstElementDyn = (_hElement); \
+    else (_p_stList)->hLastElementDyn->hNextBrotherDyn = (_hElement); \
+    (_p_stList)->hLastElementDyn = (_hElement); \
+    (_p_stList)->lNumberOfElementsDyn++; \
+}
+
+/* Not original source, needs cleaning up: the retail has no out-of-line copy
+ * of the node constructor; it is inlined into WPG_fn_lAddWayPoint. */
+inline WP_tdstGraphNode_* WPG_fn_hCreateGraphNode(WP_tdstWayPoint_* hWayPoint, int lTypeOfWP)
+{
+    WP_tdstGraphNode_* hNode;
+
+    hNode = NULL;
+    GAM_fn_vPushAllocMode(2);
+    if (hWayPoint != NULL)
+    {
+        hNode = (WP_tdstGraphNode_*)HMU_fn_p_vMalloc(sizeof(WP_tdstGraphNode_), 1);
+        if (hNode != NULL)
+        {
+            hNode->hNextBrotherDyn = NULL;
+            hNode->hPrevBrotherDyn = NULL;
+            hNode->hFatherDyn = NULL;
+            hNode->m_hWayPoint = hWayPoint;
+            hNode->m_lTypeOfWP = lTypeOfWP;
+            hNode->m_lTypeOfWPInit = lTypeOfWP;
+            hNode->m_hListOfArc = WPARCLST_fn_hInit();
+        }
+    }
+    GAM_fn_vPopAllocMode();
+    return hNode;
+}
+
 int WPG_fn_lAddWayPoint(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hWayPoint, int _lTypeOfWP)
 {
-    /* TODO: decompile from asm/... */
+    WP_tdstGraphNode_* hNode;
+
+    if ((_hGraph != NULL) && (_hWayPoint != NULL))
+    {
+        hNode = WPG_fn_hCreateGraphNode(_hWayPoint, _lTypeOfWP);
+        LST2_M_vAddElementToList(&_hGraph->m_hListOfNode, hNode);
+        return 0;
+    }
+    return -1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 265–292 */
@@ -4128,11 +4328,50 @@ int WPG_fn_lAddWayPoint(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hWayPoint, in
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: the retail has no out-of-line copy
+ * of the node destructor; it is inlined into WPG_fn_vDestroy. */
+inline void WPG_fn_vDestroyGraphNode(WP_tdstGraphNode_* hNode)
+{
+    if (fn_bScriptTransitionDeallocationCondition())
+    {
+        GAM_fn_vPushAllocMode(2);
+        if (hNode != NULL)
+        {
+            WPARCLST_fn_vDestroy(hNode->m_hListOfArc);
+            HMU_fn_vFree((void**)&hNode, 1);
+            hNode = NULL;
+        }
+        GAM_fn_vPopAllocMode();
+    }
+}
+
 void WPG_fn_vDestroy(WP_tdstGraph_* hGraph)
 {
     WP_tdstGraphNode_* hNextElement;
     WP_tdstGraphNode_* hElement;
-    /* TODO: decompile from asm/... */
+
+    if (fn_bScriptTransitionDeallocationCondition())
+    {
+        GAM_fn_vPushAllocMode(2);
+        for (hElement = hGraph->m_hListOfNode.hFirstElementDyn, hNextElement = hElement ? hElement->hNextBrotherDyn : NULL; hElement; hElement = hNextElement, hNextElement = hElement ? hElement->hNextBrotherDyn : NULL)
+        {
+            if (hElement->hNextBrotherDyn) hElement->hNextBrotherDyn->hPrevBrotherDyn = hElement->hPrevBrotherDyn;
+            if (hElement->hPrevBrotherDyn) hElement->hPrevBrotherDyn->hNextBrotherDyn = hElement->hNextBrotherDyn;
+            if (hElement->hFatherDyn)
+            {
+                hElement->hFatherDyn->lNumberOfElementsDyn--;
+                if (hElement->hFatherDyn->hFirstElementDyn == hElement) hElement->hFatherDyn->hFirstElementDyn = hElement->hNextBrotherDyn;
+                if (hElement->hFatherDyn->hLastElementDyn == hElement) hElement->hFatherDyn->hLastElementDyn = hElement->hPrevBrotherDyn;
+            }
+            hElement->hNextBrotherDyn = NULL;
+            hElement->hPrevBrotherDyn = NULL;
+            hElement->hFatherDyn = NULL;
+            WPG_fn_vDestroyGraphNode(hElement);
+        }
+        HMU_fn_vFree((void**)&hGraph, 1);
+        hGraph = NULL;
+        GAM_fn_vPopAllocMode();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 186–186 */

@@ -42181,6 +42181,36 @@
       "status": "MISMATCH",
       "target_size": 848,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fb590",
+      "candidate_size": 396,
+      "first_difference": 66,
+      "implementation": "void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType);\n\n/* Inlined into fn_vReinitAIWithFlags and fn_vReinitAI: each call site\n * attributes the whole block to one line (1421 and 1390). */\nstatic inline void fn_vReinitComports(AI_tdstMind_* p_stMind)\n{\n    fn_vSetUltraOperatorPerso(NULL, NULL);\n    if (p_stMind)\n    {\n        if (p_stMind->p_stIntelligence)\n            fn_vReinitComport(p_stMind->p_stIntelligence);\n        if (p_stMind->p_stReflex)\n            fn_vReinitComport(p_stMind->p_stReflex);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vReinitDesignerVariablesWithFlags",
+      "reason": "396/396; nested-if body (aligned epilogue nop) and 'eObjIniType > eFlags' fix size and slt at. Residual is registers only: ptrSrc/ulMyVarOffset s5/s3 swap plus dst/src address order in the List branch. Declaration permutations (200) and 15 min of permuter did not move it; the BufferInit==0 test trick that matched ReinitDesignerVariables makes this one worse.",
+      "size": 396,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MISMATCH",
+      "target_size": 396,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001fb130",
+      "candidate_size": 784,
+      "first_difference": 110,
+      "implementation": "void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind)\n{\n    tdeDsgVarTypeId_ eDsgVarTypeId;\n    tdstArray_* p_stArray;\n    unsigned char ucIndex;\n    tdeDsgVarTypeId_ eDsgVarType;\n    char* p_MyVarAddr;\n    unsigned short eFlags;\n    unsigned char ucVarId;\n\n    if (p_stMind != NULL)\n    {\n        if ((p_stMind->p_stDsgMem != NULL) && (p_stMind->p_stAIModel->p_stDsgVar != NULL))\n        {\n            for (ucIndex = 0; ucIndex < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucIndex++)\n            {\n                eFlags = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eSaveType;\n                if (eFlags != 0)\n                {\n                    p_MyVarAddr = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].ulOffsetInDsgMem;\n                    eDsgVarType = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucIndex].eDsgVarTypeId;\n                    if (fn_GetDsgVarType(eDsgVarType) == 42)\n                    {\n                        p_stArray = (tdstArray_*)p_MyVarAddr;\n                        eDsgVarTypeId = p_stArray->eType;\n                        for (ucVarId = 0; ucVarId < p_stArray->ucMaxSize; ucVarId++)\n                        {\n                            fn_vInsertOneDsgVarInSAI(&p_stArray->d_ArrayElement[(p_stArray->eType == eDsgVarType_Vector) ? ucVarId * 3 : ucVarId], eDsgVarTypeId, eFlags);\n                        }\n                    }\n                    else\n                    {\n                        fn_vInsertOneDsgVarInSAI(p_MyVarAddr, eDsgVarType, eFlags);\n                    }\n                }\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AI_fn_vInsertDsgVarInSAI",
+      "reason": "784/784 with an inline helper (one switch: pointer cases, skip cases, default array insert; labels in reverse order) and nested-if body. Element index is (eType==Vector ? i*3 : i). A macro version is worse (address not precomputed). Residual is callee-saved register assignment only (eFlags s0 vs s6 etc.); signature/declaration permutations and 20 min of permuter did not fix it.",
+      "size": 784,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MISMATCH",
+      "target_size": 784,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -54273,6 +54303,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
       "status": "MATCH"
     },
+    "0x001fac50": {
+      "address": "0x001fac50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vSimulateMindAllocationFromAnotherMind",
+      "size": 732,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MATCH"
+    },
     "0x001faf30": {
       "address": "0x001faf30",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -54302,6 +54340,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vSecondPassOfMindLoading",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MATCH"
+    },
+    "0x001fb440": {
+      "address": "0x001fb440",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "ReinitDesignerVariables",
+      "size": 328,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
       "status": "MATCH"
     },
@@ -55265,6 +55311,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
       "status": "MATCH"
     },
+    "0x001fd900": {
+      "address": "0x001fd900",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_p_stGetPersoInList",
+      "size": 120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/List.c",
+      "status": "MATCH"
+    },
     "0x001fd980": {
       "address": "0x001fd980",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -55529,6 +55583,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
       "status": "MATCH"
     },
+    "0x001ff670": {
+      "address": "0x001ff670",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPG_fn_hBuildOrderedPathFromAtoB",
+      "size": 704,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x001ff930": {
+      "address": "0x001ff930",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB",
+      "size": 660,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
     "0x00200130": {
       "address": "0x00200130",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -55590,6 +55660,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "WPG_fn_lAddArcToWayPoint",
       "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x002007a0": {
+      "address": "0x002007a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPG_fn_lAddWayPoint",
+      "size": 356,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x00200910": {
+      "address": "0x00200910",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPG_fn_vDestroy",
+      "size": 340,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
       "status": "MATCH"
     },
