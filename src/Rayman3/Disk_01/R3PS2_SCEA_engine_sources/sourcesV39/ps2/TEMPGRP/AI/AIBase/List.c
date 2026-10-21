@@ -2953,60 +2953,6 @@ void* memcpy(void* _pDst, const void* _pSrc, unsigned int _ulSize);
 void fn_vThisTypeVsThisType(HIE_tdstSuperObject_* _hCharacter, unsigned short _wCharacterMask, unsigned short _wOthersMask, HIE_tdstSuperObject_** _p_hObjectTable, unsigned short* _p_uwNumber);
 
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 216–296 */
-/* addr: 0x001fd340  size: 436 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 216
- *   +0x002c -> line 233
- *   +0x0030 -> line 231
- *   +0x0034 -> line 235
- *   +0x003c -> line 233
- *   +0x0044 -> line 235
- *   +0x004c -> line 236
- *   +0x0050 -> line 235
- *   +0x0054 -> line 236
- *   +0x0068 -> line 241
- *   +0x0074 -> line 242
- *   +0x007c -> line 246
- *   +0x0084 -> line 247
- *   +0x0090 -> line 249
- *   +0x00a0 -> line 253
- *   +0x00b4 -> line 255
- *   +0x00b8 -> line 258
- *   +0x00bc -> line 257
- *   +0x00c0 -> line 258
- *   +0x00c4 -> line 257
- *   +0x00c8 -> line 258
- *   +0x00d0 -> line 261
- *   +0x00d4 -> line 266
- *   +0x00d8 -> line 261
- *   +0x00dc -> line 262
- *   +0x00e0 -> line 266
- *   +0x00e4 -> line 261
- *   +0x00ec -> line 262
- *   +0x00f4 -> line 266
- *   +0x00fc -> line 269
- *   +0x010c -> line 271
- *   +0x0110 -> line 273
- *   +0x0114 -> line 271
- *   +0x0118 -> line 273
- *   +0x011c -> line 271
- *   +0x0124 -> line 273
- *   +0x012c -> line 277
- *   +0x0138 -> line 278
- *   +0x013c -> line 277
- *   +0x0140 -> line 278
- *   +0x0154 -> line 281
- *   +0x015c -> line 282
- *   +0x016c -> line 285
- *   +0x0174 -> line 288
- *   +0x017c -> line 290
- *   +0x018c -> line 292
- *   +0x0190 -> line 295
- *   +0x0194 -> line 296
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern unsigned char g_ucIsInMacro;
 extern tdstNodeInterpret_* g_p_stTreeMacro;
 extern unsigned char g_ucNRule;
@@ -3068,78 +3014,6 @@ tdstNodeInterpret_* fn_p_stEvalSubRoutine(HIE_tdstSuperObject_* p_SuperObjPerso,
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 544–618 */
-/* addr: 0x001fd500  size: 744 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 544
- *   +0x0030 -> line 558
- *   +0x0034 -> line 544
- *   +0x0038 -> line 552
- *   +0x003c -> line 544
- *   +0x0040 -> line 557
- *   +0x0044 -> line 558
- *   +0x0054 -> line 562
- *   +0x005c -> line 563
- *   +0x006c -> line 565
- *   +0x0070 -> line 563
- *   +0x0074 -> line 565
- *   +0x0094 -> line 567
- *   +0x0098 -> line 565
- *   +0x009c -> line 568
- *   +0x00bc -> line 570
- *   +0x00cc -> line 572
- *   +0x00d0 -> line 573
- *   +0x00d4 -> line 572
- *   +0x00d8 -> line 573
- *   +0x00dc -> line 572
- *   +0x00e0 -> line 573
- *   +0x00e8 -> line 575
- *   +0x00f8 -> line 577
- *   +0x0110 -> line 579
- *   +0x0114 -> line 580
- *   +0x0118 -> line 582
- *   +0x011c -> line 580
- *   +0x0120 -> line 582
- *   +0x0138 -> line 584
- *   +0x0144 -> line 589
- *   +0x014c -> line 584
- *   +0x015c -> line 586
- *   +0x0164 -> line 587
- *   +0x0168 -> line 586
- *   +0x016c -> line 587
- *   +0x0174 -> line 588
- *   +0x0184 -> line 589
- *   +0x01ac -> line 590
- *   +0x01b4 -> line 595
- *   +0x01b8 -> line 596
- *   +0x01bc -> line 595
- *   +0x01c0 -> line 596
- *   +0x01c4 -> line 595
- *   +0x01c8 -> line 596
- *   +0x01d0 -> line 598
- *   +0x01e0 -> line 600
- *   +0x01f8 -> line 602
- *   +0x01fc -> line 603
- *   +0x0200 -> line 605
- *   +0x0204 -> line 603
- *   +0x0208 -> line 605
- *   +0x0220 -> line 607
- *   +0x022c -> line 611
- *   +0x0234 -> line 607
- *   +0x0244 -> line 608
- *   +0x024c -> line 609
- *   +0x0250 -> line 608
- *   +0x0254 -> line 609
- *   +0x025c -> line 610
- *   +0x026c -> line 611
- *   +0x0294 -> line 612
- *   +0x0298 -> line 614
- *   +0x02a8 -> line 616
- *   +0x02b8 -> line 617
- *   +0x02bc -> line 618
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeInterpret_* fn_p_stListSort(tdstList_* p_List, unsigned char ucWantedNbElt, char b_cIncrease, tdstNodeInterpret_* p_stTree)
 {
     HIE_tdstSuperObject_** p_p_stPerso;
@@ -3207,26 +3081,6 @@ tdstNodeInterpret_* fn_p_stListSort(tdstList_* p_List, unsigned char ucWantedNbE
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 451–476 */
-/* addr: 0x001fd7f0  size: 272 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 451
- *   +0x0028 -> line 455
- *   +0x002c -> line 458
- *   +0x0030 -> line 460
- *   +0x0038 -> line 462
- *   +0x0048 -> line 465
- *   +0x004c -> line 462
- *   +0x0050 -> line 465
- *   +0x0064 -> line 466
- *   +0x00b0 -> line 468
- *   +0x00b4 -> line 469
- *   +0x00d4 -> line 471
- *   +0x00ec -> line 475
- *   +0x00f0 -> line 476
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tdstNodeInterpret_* fn_p_stListSelect(tdstList_* p_List, char b_cInverse, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stParam;
@@ -3256,20 +3110,6 @@ tdstNodeInterpret_* fn_p_stListSelect(tdstList_* p_List, char b_cInverse, tdstNo
     return p_stTree;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 433–445 */
-/* addr: 0x001fd900  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 433
- *   +0x000c -> line 434
- *   +0x0014 -> line 437
- *   +0x002c -> line 438
- *   +0x0034 -> line 441
- *   +0x0040 -> line 442
- *   +0x0058 -> line 444
- *   +0x0070 -> line 445
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma auto_inline on
 HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition)
 {
@@ -3294,23 +3134,6 @@ HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucP
 }
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 406–410 */
-/* addr: 0x001fd980  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 406
- *   +0x0008 -> line 408
- *   +0x000c -> line 406
- *   +0x0010 -> line 407
- *   +0x0014 -> line 408
- *   +0x0018 -> line 407
- *   +0x001c -> line 408
- *   +0x0028 -> line 409
- *   +0x002c -> line 410
- *   +0x0030 -> line 409
- *   +0x0034 -> line 410
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vGetAllCharactersInContactWithThisZde(HIE_tdstSuperObject_*, unsigned char, unsigned char, HIE_tdstSuperObject_**, unsigned short*, unsigned short);
 void fn_vGetAllObjectsInZdd(HIE_tdstSuperObject_*, unsigned char, unsigned char, HIE_tdstSuperObject_**, unsigned short*);
 
@@ -3322,21 +3145,6 @@ unsigned char fn_ucAtLeastOnePersoInZde(HIE_tdstSuperObject_* p_stPerso, unsigne
     return uwNbDetectedPerso != 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 399–403 */
-/* addr: 0x001fd9c0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 399
- *   +0x0004 -> line 401
- *   +0x0008 -> line 399
- *   +0x000c -> line 400
- *   +0x0014 -> line 401
- *   +0x0024 -> line 402
- *   +0x0028 -> line 403
- *   +0x002c -> line 402
- *   +0x0030 -> line 403
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_ucAtLeastOnePersoInZdd(HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId)
 {
     unsigned short uwNbDetectedPerso;
@@ -3345,23 +3153,6 @@ unsigned char fn_ucAtLeastOnePersoInZdd(HIE_tdstSuperObject_* p_stPerso, unsigne
     return uwNbDetectedPerso != 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 386–395 */
-/* addr: 0x001fda00  size: 212 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 386
- *   +0x0008 -> line 391
- *   +0x000c -> line 386
- *   +0x001c -> line 388
- *   +0x0020 -> line 390
- *   +0x0024 -> line 391
- *   +0x0028 -> line 390
- *   +0x002c -> line 391
- *   +0x0040 -> line 393
- *   +0x004c -> line 394
- *   +0x00bc -> line 395
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vAffectTypeZdeWithTypeZdeInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned short xPersoMask, unsigned short xOthersMask)
 {
     unsigned short uwNbDetectedPerso;
@@ -3380,27 +3171,6 @@ void fn_vAffectTypeZdeWithTypeZdeInList(tdstList_* p_List, HIE_tdstSuperObject_*
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 372–381 */
-/* addr: 0x001fdae0  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 372
- *   +0x0004 -> line 377
- *   +0x0008 -> line 372
- *   +0x0014 -> line 377
- *   +0x0018 -> line 372
- *   +0x0024 -> line 377
- *   +0x0028 -> line 374
- *   +0x002c -> line 377
- *   +0x0030 -> line 376
- *   +0x0034 -> line 377
- *   +0x0038 -> line 376
- *   +0x003c -> line 377
- *   +0x0048 -> line 379
- *   +0x0054 -> line 380
- *   +0x00c4 -> line 381
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vAffectZdeInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId, unsigned short xMask)
 {
     unsigned short uwNbDetectedPerso;
@@ -3419,28 +3189,6 @@ void fn_vAffectZdeInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, uns
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 359–368 */
-/* addr: 0x001fdbc0  size: 212 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 359
- *   +0x0004 -> line 364
- *   +0x0008 -> line 359
- *   +0x000c -> line 364
- *   +0x0010 -> line 359
- *   +0x0014 -> line 364
- *   +0x0018 -> line 359
- *   +0x0024 -> line 364
- *   +0x0028 -> line 361
- *   +0x002c -> line 363
- *   +0x0030 -> line 364
- *   +0x0034 -> line 363
- *   +0x0038 -> line 364
- *   +0x0044 -> line 366
- *   +0x0050 -> line 367
- *   +0x00bc -> line 368
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vAffectZddInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, unsigned char ucModulOrCharact, short xZoneId)
 {
     unsigned short uwNbDetectedPerso;
@@ -3459,26 +3207,6 @@ void fn_vAffectZddInList(tdstList_* p_List, HIE_tdstSuperObject_* p_stPerso, uns
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 336–354 */
-/* addr: 0x001fdca0  size: 292 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 336
- *   +0x0028 -> line 340
- *   +0x002c -> line 341
- *   +0x0034 -> line 343
- *   +0x0038 -> line 346
- *   +0x0040 -> line 343
- *   +0x0048 -> line 346
- *   +0x0088 -> line 349
- *   +0x00a4 -> line 351
- *   +0x00dc -> line 352
- *   +0x00e0 -> line 353
- *   +0x00e4 -> line 351
- *   +0x00e8 -> line 353
- *   +0x0104 -> line 354
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vAddList(tdstList_* p_ListA, tdstList_* p_ListB)
 {
     HIE_tdstSuperObject_* hPerso;
@@ -3502,28 +3230,6 @@ void fn_vAddList(tdstList_* p_ListA, tdstList_* p_ListB)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 302–317 */
-/* addr: 0x001fddd0  size: 292 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 302
- *   +0x002c -> line 306
- *   +0x0034 -> line 308
- *   +0x0038 -> line 309
- *   +0x0040 -> line 308
- *   +0x0048 -> line 309
- *   +0x0050 -> line 311
- *   +0x0054 -> line 309
- *   +0x0058 -> line 311
- *   +0x0088 -> line 312
- *   +0x00a4 -> line 314
- *   +0x00dc -> line 315
- *   +0x00e0 -> line 316
- *   +0x00e4 -> line 314
- *   +0x00e8 -> line 316
- *   +0x0104 -> line 317
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vDiffList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
 {
     unsigned char ucC;
@@ -3545,29 +3251,6 @@ void fn_vDiffList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 280–297 */
-/* addr: 0x001fdf00  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 280
- *   +0x002c -> line 284
- *   +0x0034 -> line 286
- *   +0x0038 -> line 288
- *   +0x0040 -> line 286
- *   +0x0048 -> line 288
- *   +0x0050 -> line 290
- *   +0x0064 -> line 292
- *   +0x009c -> line 293
- *   +0x00a4 -> line 294
- *   +0x00a8 -> line 295
- *   +0x00ac -> line 293
- *   +0x00b0 -> line 295
- *   +0x00c8 -> line 296
- *   +0x00cc -> line 295
- *   +0x00d0 -> line 296
- *   +0x00ec -> line 297
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vInterList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
 {
     unsigned char ucC;
@@ -3591,35 +3274,6 @@ void fn_vInterList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 254–275 */
-/* addr: 0x001fe010  size: 420 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 254
- *   +0x0018 -> line 259
- *   +0x001c -> line 254
- *   +0x002c -> line 259
- *   +0x0034 -> line 261
- *   +0x0080 -> line 262
- *   +0x0084 -> line 261
- *   +0x0088 -> line 262
- *   +0x00a4 -> line 264
- *   +0x00b0 -> line 265
- *   +0x00b4 -> line 267
- *   +0x00bc -> line 265
- *   +0x00c4 -> line 267
- *   +0x00d0 -> line 269
- *   +0x00d4 -> line 267
- *   +0x00d8 -> line 269
- *   +0x0108 -> line 270
- *   +0x0124 -> line 272
- *   +0x015c -> line 273
- *   +0x0160 -> line 274
- *   +0x0164 -> line 272
- *   +0x0168 -> line 274
- *   +0x0184 -> line 275
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vUnionList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
 {
     HIE_tdstSuperObject_* p_Perso;
@@ -3650,34 +3304,6 @@ void fn_vUnionList(tdstList_* p_ListA, tdstList_* p_ListB, tdstList_* p_ListC)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 219–248 */
-/* addr: 0x001fe1c0  size: 464 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 219
- *   +0x0020 -> line 226
- *   +0x0028 -> line 221
- *   +0x002c -> line 226
- *   +0x0038 -> line 228
- *   +0x006c -> line 229
- *   +0x0078 -> line 239
- *   +0x007c -> line 231
- *   +0x009c -> line 236
- *   +0x00b8 -> line 239
- *   +0x00bc -> line 238
- *   +0x00c0 -> line 236
- *   +0x00c4 -> line 239
- *   +0x0128 -> line 240
- *   +0x0130 -> line 242
- *   +0x0134 -> line 243
- *   +0x0140 -> line 245
- *   +0x0188 -> line 246
- *   +0x018c -> line 245
- *   +0x0190 -> line 246
- *   +0x01ac -> line 247
- *   +0x01b4 -> line 248
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Not original source, needs cleaning up: retail inlines fn_p_stGetPersoInList
  * here with the -4 folded into the load, unlike its standalone copy, so this
  * caller gets a pointer-form duplicate of it. */
@@ -3733,29 +3359,6 @@ void fn_vSortListByModel(tdstList_* p_stList, AI_tdstAIModel_* _p_stModel)
     HMU_fn_vFree((void**)&p_hSupObjElt, 1);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 193–216 */
-/* addr: 0x001fe390  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 193
- *   +0x0020 -> line 199
- *   +0x0034 -> line 202
- *   +0x0044 -> line 204
- *   +0x0050 -> line 206
- *   +0x0064 -> line 207
- *   +0x0080 -> line 208
- *   +0x0084 -> line 207
- *   +0x0088 -> line 208
- *   +0x00a4 -> line 210
- *   +0x00a8 -> line 211
- *   +0x00b4 -> line 213
- *   +0x0100 -> line 214
- *   +0x0104 -> line 213
- *   +0x0108 -> line 214
- *   +0x0124 -> line 215
- *   +0x012c -> line 216
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSortListByFamily(tdstList_* p_List, tdstFamilyList_* hFamily)
 {
     unsigned char ucI;
@@ -3785,23 +3388,6 @@ void fn_vSortListByFamily(tdstList_* p_List, tdstFamilyList_* hFamily)
     HMU_fn_vFree((void**)&p_hSupObjElt, 1);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 173–190 */
-/* addr: 0x001fe4e0  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 173
- *   +0x0004 -> line 176
- *   +0x0020 -> line 178
- *   +0x0038 -> line 180
- *   +0x0040 -> line 181
- *   +0x0044 -> line 182
- *   +0x004c -> line 181
- *   +0x0064 -> line 182
- *   +0x0080 -> line 184
- *   +0x0088 -> line 187
- *   +0x00ac -> line 190
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vDeletePersoAtPositionInList(tdstList_* p_List, unsigned char ucPosition)
 {
     unsigned char ucI;
@@ -3819,23 +3405,6 @@ void fn_vDeletePersoAtPositionInList(tdstList_* p_List, unsigned char ucPosition
         Erm_fn_v_UpdateLastError(67, g_ucAIModuleId, 0, 16, -1, 255, 255, NULL);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 157–168 */
-/* addr: 0x001fe5a0  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 157
- *   +0x0040 -> line 159
- *   +0x005c -> line 161
- *   +0x0064 -> line 162
- *   +0x0068 -> line 163
- *   +0x0070 -> line 162
- *   +0x0088 -> line 163
- *   +0x00a0 -> line 164
- *   +0x00a4 -> line 165
- *   +0x00a8 -> line 164
- *   +0x00ac -> line 168
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 char fn_bFindPersoAndDeleteInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
 {
     unsigned char ucPosition;
@@ -3854,18 +3423,6 @@ char fn_bFindPersoAndDeleteInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Per
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 132–145 */
-/* addr: 0x001fe660  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 132
- *   +0x000c -> line 133
- *   +0x0014 -> line 135
- *   +0x0020 -> line 140
- *   +0x0058 -> line 144
- *   +0x005c -> line 145
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 char fn_bFindFamilyInList(tdstList_* p_List, tdstFamilyList_* hFamily)
 {
     unsigned char ucPosition;
@@ -3880,18 +3437,6 @@ char fn_bFindFamilyInList(tdstList_* p_List, tdstFamilyList_* hFamily)
     return ucPosition < p_List->ucNbElt;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 102–115 */
-/* addr: 0x001fe6d0  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 102
- *   +0x000c -> line 103
- *   +0x0014 -> line 105
- *   +0x0020 -> line 110
- *   +0x0060 -> line 114
- *   +0x0064 -> line 115
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 char fn_bFindModelInList(tdstList_* p_List, AI_tdstAIModel_* _p_stModel)
 {
     unsigned char ucPosition;
@@ -3906,17 +3451,6 @@ char fn_bFindModelInList(tdstList_* p_List, AI_tdstAIModel_* _p_stModel)
     return ucPosition < p_List->ucNbElt;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 77–85 */
-/* addr: 0x001fe740  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 77
- *   +0x000c -> line 78
- *   +0x0014 -> line 80
- *   +0x0050 -> line 84
- *   +0x0054 -> line 85
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 char fn_bFindPersoInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
 {
     unsigned char ucPosition;
@@ -3931,27 +3465,6 @@ char fn_bFindPersoInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso)
     return ucPosition < p_List->ucNbElt;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\List.c lines 51–67 */
-/* addr: 0x001fe7a0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 51
- *   +0x0004 -> line 54
- *   +0x0008 -> line 51
- *   +0x000c -> line 54
- *   +0x0020 -> line 56
- *   +0x0030 -> line 58
- *   +0x0044 -> line 59
- *   +0x0048 -> line 60
- *   +0x0050 -> line 59
- *   +0x0068 -> line 60
- *   +0x0078 -> line 61
- *   +0x0088 -> line 62
- *   +0x0090 -> line 63
- *   +0x0098 -> line 65
- *   +0x00a4 -> line 67
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vInsertPersoAtPositionInList(tdstList_* p_List, HIE_tdstSuperObject_* p_Perso, unsigned char ucPosition)
 {
     unsigned char ucI;
