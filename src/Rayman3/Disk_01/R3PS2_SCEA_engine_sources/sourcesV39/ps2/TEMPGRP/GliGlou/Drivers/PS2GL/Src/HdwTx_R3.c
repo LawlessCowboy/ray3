@@ -1242,7 +1242,8 @@ int GLI_g_TXC_File;
 int GLI_g_TXC_NumberOfFiles;
 static int BufferHasRead;
 static int BufferPosition;
-int pTXCHeaders;
+/* Retyped from int: the retail code indexes it in 0x104-byte ConcatFileHeader_ records. */
+ConcatFileHeader_* pTXCHeaders;
 unsigned int GLI_g_NbTexturesForThisBloc[4];
 unsigned int GLI_g_NbTexturesAllocatedForThisBloc[4];
 int GLI_g_BaseChannelForThisBloc[4];
@@ -1353,10 +1354,27 @@ void GLI_vClearSendMatStates(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void PS2glBindTexture(unsigned int target, unsigned int texture);
+void PS2glColorTableEXT(unsigned int target, unsigned int internalformat, int width, unsigned int format, unsigned int type, void* table);
+void PS2glTexImage2D(unsigned int target, int level, int internalformat, int width, int height, int border, unsigned int format, unsigned int type, void* pixels);
+
 int GLI_iGetOneMenuTextureNames(void)
 {
     int TexName;
-    /* TODO: decompile from asm/... */
+
+    TexName = GLI_g_TextureNames[0][GLI_g_NbTexturesForThisBloc[0]++];
+    g_PS2glContext.nTextureEnableBits |= g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200; g_gsContext.PRMODE.TME = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    PS2glBindTexture(0xDE1, TexName);
+    g_PS2glContext.eTexUserMaintainMode = 2;
+    g_PS2glContext.eTexConvMode = 3;
+    g_PS2glContext.eClutConvMode = 2;
+    if (!GLI_g_CurrentTexture)
+        GLI_g_CurrentTexture = GLI_g_TextureMemSpace[0];
+    PS2glColorTableEXT(0xDE1, 0x8058, 0x100, 0x1908, 0x1401, (void*)GLI_g_CurrentTexture);
+    PS2glTexImage2D(0xDE1, 0, 0x1900, 0x200, 0x200, 0, 0x80E5, 0x1401, (void*)(GLI_g_CurrentTexture + 0x400));
+    g_PS2glContext.eTexUserMaintainMode = 0;
+    g_PS2glContext.eTexConvMode = 0;
+    return TexName;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2410–2480 */
@@ -1434,9 +1452,31 @@ void GLI_vUncompressScreenShotIntoMaterial(GLI_tdstMaterial_** ppMaterial)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vFreeTempTexture(GLI_tdstTexture_* p_stTexture);
+
 void GLI_vFreeTempMaterial(GLI_tdstMaterial_** ppMaterial)
 {
-    /* TODO: decompile from asm/... */
+    if (*ppMaterial)
+    {
+        GLI_tdstMaterial_* p_stMaterial = *ppMaterial;
+        GLI_tdstTexture_* p_stTexture;
+
+        if (p_stMaterial->p_stTexture)
+        {
+            if (p_stMaterial->p_stTexture->p_vBitMap)
+            {
+                PS2glLiberator((void*)p_stMaterial->p_stTexture->p_vBitMap);
+                p_stMaterial->p_stTexture->p_vBitMap = 0;
+            }
+            p_stTexture = p_stMaterial->p_stTexture;
+            GLI_vFreeTempTexture(p_stTexture);
+            if (p_stMaterial->p_stTexture)
+                PS2glLiberator(p_stMaterial->p_stTexture);
+            p_stMaterial->p_stTexture = NULL;
+        }
+        PS2glLiberator(p_stMaterial);
+    }
+    *ppMaterial = NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2342–2367 */
@@ -1458,6 +1498,9 @@ void PS2_fn_vEnterGLCriticalSection(void);
 void PS2_fn_vLeaveGLCriticalSection(void);
 void PS2glDeleteTextures(int NbTextures, void* pTextures);
 
+/* Not original source, needs cleaning up: retail inlines this into GLI_vFreeTempMaterial
+   (deferred inlining); scoped auto_inline reproduces that without affecting other functions. */
+#pragma auto_inline on
 void GLI_vFreeTempTexture(GLI_tdstTexture_* p_stTexture)
 {
     GLI_tdstTexturePS2GL_* p_stSpecParam;
@@ -1474,6 +1517,7 @@ void GLI_vFreeTempTexture(GLI_tdstTexture_* p_stTexture)
         }
     }
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 2297–2328 */
 /* addr: 0x002c4d90  size: 240 bytes */
@@ -2097,12 +2141,35 @@ int GLI_xLoadTextureTXR(GLI_tdstTexture_* p_stTexture, char* FileName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern char* PLD_szPrependGamedataName(char*);
+extern int CD_OpenFileWithNameConversion(char*);
+void ReadFromBufferedCD(int MyFile, char* Dest, unsigned int Size);
+char* strstr(const char* s1, const char* s2);
+
 void GLI_vOpenTXCFile(void)
 {
     char* pTemp;
     int TextSize;
     int i;
-    /* TODO: decompile from asm/... */
+
+    GLI_g_TXC_Opened = 1;
+    GLI_g_TXC_File = CD_OpenFileWithNameConversion(PLD_szPrependGamedataName("TEXTURES.TXC"));
+    if (GLI_g_TXC_File < 0)
+    {
+        printf("\n\nOUHHH !! TEXTURES.TXC NOT FOUND !!!\n\n");
+        return;
+    }
+    CD_Read(GLI_g_TXC_File, &GLI_g_TXC_NumberOfFiles, 4);
+    pTXCHeaders = (ConcatFileHeader_*)malloc(GLI_g_TXC_NumberOfFiles * sizeof(ConcatFileHeader_));
+    for (i = 0; i < GLI_g_TXC_NumberOfFiles; i++)
+    {
+        ReadFromBufferedCD(GLI_g_TXC_File, (char*)&TextSize, 4);
+        ReadFromBufferedCD(GLI_g_TXC_File, pTXCHeaders[i].Name, TextSize);
+        pTemp = strstr(pTXCHeaders[i].Name, ".TXR");
+        if (pTemp)
+            strcpy(pTemp, ".TGA");
+        ReadFromBufferedCD(GLI_g_TXC_File, (char*)&pTXCHeaders[i].PositionInFile, 4);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 938–972 */
@@ -2131,7 +2198,30 @@ void GLI_vOpenTXCFile(void)
 void ReadFromBufferedCD(int MyFile, char* Dest, unsigned int Size)
 {
     int AlreadyReadSize;
-    /* TODO: decompile from asm/... */
+
+    if (BufferPosition + Size > BufferHasRead)
+    {
+        AlreadyReadSize = 0;
+        if (BufferPosition < BufferHasRead)
+        {
+            AlreadyReadSize = BufferHasRead - BufferPosition;
+            memcpy(Dest, ReadBuffer + BufferPosition, AlreadyReadSize);
+        }
+        CD_Read(MyFile, ReadBuffer, 0x5000);
+        Size -= AlreadyReadSize;
+        BufferPosition = 0;
+        BufferHasRead = 0x5000;
+        if (Size)
+        {
+            memcpy(Dest + AlreadyReadSize, ReadBuffer, Size);
+            BufferPosition += Size;
+        }
+    }
+    else
+    {
+        memcpy(Dest, ReadBuffer + BufferPosition, Size);
+        BufferPosition += Size;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 888–912 */
@@ -2152,11 +2242,26 @@ void ReadFromBufferedCD(int MyFile, char* Dest, unsigned int Size)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CTL_Load_Ini_File(void);
+
+int toupper(char c);
+char* strstr(const char* s1, const char* s2);
+
 void CTL_SetCurrentMap(char* Map)
 {
     char Temp[16];
     int i;
-    /* TODO: decompile from asm/... */
+
+    CTL_Load_Ini_File();
+    for (i = 0; Map[i]; i++)
+        Temp[i] = toupper(Map[i]);
+    Temp[i] = 0;
+    for (i = 0; i < CTL_g_Infos.NumberOfMapsInIniFile && !strstr(CTL_g_Infos.Maps[i].MapName, Temp); i++)
+        ;
+    CTL_g_CurrentMap = i;
+    if (i == CTL_g_Infos.NumberOfMapsInIniFile)
+        CTL_g_CurrentMap = -1;
+    strcpy(GLI_g_MapBeingLoaded, Temp);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 801–881 */
@@ -2248,12 +2353,49 @@ void CTL_Load_Ini_File(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int CTL_ReadLine(char* TempLine)
+/* Not original source, needs cleaning up: one-character read from the INI buffer
+   (retail expands it on a single line). */
+static inline int CTL_iReadChar(char* pc)
 {
-    int eof;
-    int i;
+    if (CTL_BufferPos >= CTL_BufferSize)
+        return 0;
+    else
+    {
+        *pc = *(char*)(CTL_Buffer + CTL_BufferPos++);
+        return 1;
+    }
+}
+
+/* The debug record lists only (TempLine); the retail code reads it from a1 and
+   CTL_Load_Ini_File passes the INI file handle first. */
+int CTL_ReadLine(int MyFile, char* TempLine)
+{
     char c;
-    /* TODO: decompile from asm/... */
+    int i;
+    int eof;
+
+    eof = 0;
+    do
+    {
+        TempLine[0] = 0;
+        i = 0;
+        do
+        {
+            if (CTL_iReadChar(&c) != 1)
+                eof = 1;
+            else if (c != ' ' && c != '\t' && c != '\n' && c != '\r')
+            {
+                TempLine[i] = toupper(c);
+                i++;
+                TempLine[i] = 0;
+            }
+        } while (!eof && c != '\n' && c != '\r');
+        if (TempLine[0] == ';')
+            TempLine[0] = 0;
+    } while (TempLine[0] == 0 && !eof);
+    if (TempLine[0] == 0)
+        return 0;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 604–697 */
@@ -2330,7 +2472,9 @@ int CTL_ReadLine(char* TempLine)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void GLI_v_SendTextureBitmapToPS2GL(GLI_tdstTexture_* p_stTexture, unsigned int uTexFormat)
+/* The debug record lists (p_stTexture, uTexFormat), but the retail body reads the format
+   from a2 and overwrites a1 unread, and GLI_vProcessRegisteredTextures passes (tex, 0, format). */
+void GLI_v_SendTextureBitmapToPS2GL(GLI_tdstTexture_* p_stTexture, unsigned int ulUnused, unsigned int uTexFormat)
 {
     unsigned int CurrentLevel;
     unsigned int CurrentSize;
@@ -2442,9 +2586,56 @@ void LoadTextureBloc(int DestTextureBlocID, int ChannelId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int TBF_pReadFix(void);
+extern int TBF_pReadLevel(char* szLevelName);
+extern int TBF_pReadLevelTRSBloc(char* szLevelName, int SourceBlocId);
+extern void TBF_vCreateFix(void);
+extern void TBF_vCreateLevel(char* szLevelName);
+extern void TBF_vCreateLevelTRSBloc(char* szLevelName, int SourceBlocId);
+extern void TBF_vClose(void);
+
 void GLI_vLoadTBF_File(int DestBlocId, int SourceBlocId)
 {
-    /* TODO: decompile from asm/... */
+    switch (DestBlocId)
+    {
+    case 0:
+        GLI_g_TextureMemSpace[DestBlocId] = TBF_pReadFix();
+        break;
+    case 1:
+        GLI_g_TextureMemSpace[DestBlocId] = TBF_pReadLevel(GLI_g_MapBeingLoaded);
+        break;
+    case 2:
+    case 3:
+        GLI_g_TextureMemSpace[DestBlocId] = TBF_pReadLevelTRSBloc(GLI_g_MapBeingLoaded, SourceBlocId);
+        break;
+    }
+    if (!GLI_g_TextureMemSpace[DestBlocId])
+    {
+        GLI_g_CreatingTBF = 1;
+        switch (DestBlocId)
+        {
+        case 0:
+            TBF_vCreateFix();
+            break;
+        case 1:
+            TBF_vCreateLevel(GLI_g_MapBeingLoaded);
+            break;
+        case 2:
+        case 3:
+            TBF_vCreateLevelTRSBloc(GLI_g_MapBeingLoaded, SourceBlocId);
+            break;
+        }
+    }
+    else
+    {
+        GLI_g_CurrentTBF_Buffer = GLI_g_TextureMemSpace[DestBlocId];
+    }
+    LoadTextureBlocInternal(DestBlocId, SourceBlocId);
+    if (GLI_g_CreatingTBF)
+    {
+        TBF_vClose();
+        GLI_g_CreatingTBF = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 372–400 */
@@ -2476,12 +2667,32 @@ void GLI_vLoadTBF_File(int DestBlocId, int SourceBlocId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void LS_Destroy(void);
+void PS2glBindTexture(unsigned int target, unsigned int texture);
+
 void GLI_vProcessRegisteredTextures(void)
 {
-    GLI_st_RegisteredTexture_* pReg;
-    unsigned int GL_iTextureFormat;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    unsigned int GL_iTextureFormat;
+    GLI_st_RegisteredTexture_* pReg;
+
+    LS_Destroy();
+    g_PS2glContext.nTextureEnableBits |= g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200; g_gsContext.PRMODE.TME = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    for (i = 0; i < GLI_g_NbTexturesToRegister; i++)
+    {
+        pReg = &GLI_g_RegisteredTextures[i];
+        if (pReg->Flags & 0x10000000)
+            GL_iTextureFormat = 0x1908;
+        else
+            GL_iTextureFormat = 0x1907;
+        PS2_fn_vEnterGLCriticalSection();
+        PS2glBindTexture(0xDE1, pReg->TextureName);
+        GLI_g_GlobalBpp = pReg->Flags & 0xEFFFFFFF;
+        GLI_g_CurrentTexture = pReg->pTextureData;
+        GLI_v_SendTextureBitmapToPS2GL(pReg->p_stTexture, 0, GL_iTextureFormat);
+        PS2_fn_vLeaveGLCriticalSection();
+    }
+    GLI_g_NbTexturesToRegister = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 284–284 */

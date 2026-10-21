@@ -1437,7 +1437,24 @@ void MEC_fn_vSlowMode(DNM_stDynamics* p_stDynamic, int lMode)
  */
 unsigned char MEC_fn_bNoMove(DNM_stDynamics* p_stDynamic)
 {
-    /* TODO: decompile from asm/... */
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX != 0.0f) || (p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY != 0.0f) || (p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ != 0.0f)) return 0;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x4) ? 1 : 0) return 0;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x1) ? 1 : 0) return 0;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0xE00000) ? 1 : 0) return 0;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x20000000) ? 1 : 0) return 0;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x700000) ? 1 : 0) return 0;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
+    {
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x400) ? 1 : 0) return 0;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x20000000) ? 1 : 0) return 0;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x800) ? 1 : 0) return 0;
+        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x3800000) ? 1 : 0) return 0;
+    }
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4) ? 1 : 0)
+    {
+        if ((p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != NULL) ? 1 : 0) return 0;
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1363–1366 */

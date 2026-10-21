@@ -32,6 +32,14 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/SOL.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/Culling.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Domat_PS2GL.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLLights.cpp
+# SDLCheap.cpp: moved to 3.0.3 on 2026-10-21 (user-approved trade, +2/-1).
+# Gains CHEAP_DrawActorInstance and HIE_fn_vFastPS2ForcedPushMatrix (3.0.1
+# leaves a dead duplicate of each delay-slot-hoisted instruction in these
+# asm-bearing functions; 3.0.3 matches retail). Loses
+# HIE_fn_vFastPS2ForcedRefreshHierarchy, byte-exact under 3.0.1, because 3.0.3
+# pads its innermost short loop one nop less; no pragma, flag or loop form
+# under 3.0.3 restores that padding.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/VisuaSet.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMRepor.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Mat/specif/MatPS2.c

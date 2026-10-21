@@ -3728,7 +3728,33 @@ void CloseInGameMenu2D(void)
  */
 void ActivateInGameMenu2D(void)
 {
-    /* TODO: decompile from asm/... */
+    g_NotRight = 0;
+    g_NotLeft = 0;
+    g_NoBonusShortcut = 0;
+    g_NoGameShortcut = 0;
+    g_2DMenuID = 0;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
+    fn_vSaveEngineClock();
+    g_CurrentActionMenu2D = eActionBeginOfPage;
+    g_stEngineStructure.bEngineFrozen = 1;
+    g_CurrentIndSubMenu = -1;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    g_InGameMenu2DActivated = 1;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_CurrentSelection = 0;
+    PS2M2D_vReinitMenuTextures();
+    if (g_IndCurrentEnv > 0)
+    {
+        g_CurrentMenu2DPage = g_IndCurrentEnv - 1;
+    }
+    else
+    {
+        g_CurrentMenu2DPage = 0;
+    }
+    fn_vInitSoundInGameMenu2D(1);
+    g_XTextLeft = 18.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 542–581 */

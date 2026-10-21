@@ -225,8 +225,8 @@ struct GEO_tdstGeometricObject_ {
     MTH3D_tdstVector_* d_stListOfPoints; /* +0x0 */
     MTH3D_tdstVector_* d_stListOfPointsNormals; /* +0x4 */
     int d_dfVertexTransparency; /* +0x8 */
-    int d_xListOfElementsTypes; /* +0xc */
-    int d_stListOfElements; /* +0x10 */
+    short* d_xListOfElementsTypes; /* +0xc */
+    GEO_tdstElementIndexedTriangles_** d_stListOfElements; /* +0x10 */
     GEO_tdstEdge_* d_stListOfEdges; /* +0x14 */
     GEO_tdstParallelBox_* d_stListOfParallelBoxes; /* +0x18 */
     unsigned int ulType; /* +0x1c */
@@ -359,8 +359,8 @@ struct SDC_VertexArrays_ {
     GLI_tdstMaterial_** pArrayOfMaterials; /* +0x8 */
     float ** pArrayOfVertexArrays; /* +0xc */
     int pVertexArraySizes; /* +0x10 */
-    int pNbTrianglesPerElement; /* +0x14 */
-    int pbIsTransparent; /* +0x18 */
+    unsigned int* pNbTrianglesPerElement; /* +0x14 */
+    unsigned int* pbIsTransparent; /* +0x18 */
     unsigned int FrameDeformed; /* +0x1c */
     C_InstanceList* pInstanceList; /* +0x20 */
 };
@@ -1151,7 +1151,7 @@ struct TransparentSpriteGen_ {
     float Norme; /* +0x54 */
     unsigned char _extractor_padding_00[8]; /* implicitly added by extractor; +0x58..0x5f */
     MTH4D_tdstMatrix_ Matrix; /* +0x60 */
-    int pVT; /* +0xa0 */
+    float** pVT; /* +0xa0 */
 };
 
 struct PO_tdstPhysicalObject_ {
@@ -1328,8 +1328,10 @@ struct C_Sdl {
     int m_bIsBlinking; /* +0x44 */
     /* vtable pointer at +0x48 (retail __vt__5C_Sdl: Start). */
     virtual void Start(void);
+    C_Sdl() { Init(); }
     ~C_Sdl() { Destruct(); }
     void Destruct(void);
+    static void* operator new(unsigned int size);
     static void operator delete(void* p);
     void UpdateFogs(void);
     void Draw(int bProcessRefs);
@@ -1338,6 +1340,7 @@ struct C_Sdl {
     void Init(void);
     void AddRef(C_SdlRef* pRef);
     void RemoveSPOInterpol(HIE_tdstSuperObject_* pSPO);
+    void ProcessAllRefs(void);
 };
 
 struct C_CharacterSdl : C_Sdl {
@@ -1914,7 +1917,7 @@ struct _UnoptimizedTransparentCharacters_ {
     GEO_tdstGeometricObject_* pObj; /* +0x40 */
     GEO_tdstElementIndexedTriangles_* p_stEIT; /* +0x44 */
     unsigned int iElement; /* +0x48 */
-};
+} __attribute__((aligned(16)));
 
 struct tdstObjectsTableElement_ {
     MTH3D_tdstVector_* p_stCustomZoom; /* +0x0 */
@@ -2051,7 +2054,7 @@ struct RegisteredTransparentUnoptimizedMap_ {
     float fFogStart; /* +0x60 */
     float fFogEnd; /* +0x64 */
     float fvFogColor[4]; /* +0x68 */
-};
+} __attribute__((aligned(16)));
 
 struct MTH3D_tdstMatrix_ {
     MTH3D_tdstVector_ stCol_0; /* +0x0 */
@@ -2830,6 +2833,18 @@ void GLI_vFreeAllSinusCopies(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void sceVu0CopyMatrix(float (*m0)[4], float (*m1)[4]);
+extern "C" void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (**pVOrg)[4], float (**pUV1)[4], float (**pUV2)[4], float (**pUVChrome)[4], float (**pNormals)[4]);
+extern "C" void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
+extern "C" void GLI_AddNormalInterpolation(void* pMatrix);
+extern "C" void PS2glNormalPointer(unsigned int type, int stride, void* pointer);
+extern "C" void PS2glTexCoordPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glVertexPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glMatrixMode(unsigned int mode);
+extern "C" void PS2glLoadMatrixf(float* m);
+extern "C" void PS2glDrawArrays(unsigned int mode, int first, int count);
+
+/* Not original source, needs cleaning up: 16-byte vertex-pointer slots (see SDLCheap.cpp CHEAP_UpdateDeformation). */
 void GLI_c_DrawUnoptimizedCharacter(GEO_tdstGeometricObject_* pObj)
 {
     unsigned int bUsingStrips;
@@ -2840,13 +2855,94 @@ void GLI_c_DrawUnoptimizedCharacter(GEO_tdstGeometricObject_* pObj)
     unsigned int NbVertices;
     unsigned int NbStages;
     unsigned int stage;
-    float (*pNormals)[4];
-    float (*pUVChrome)[4];
-    float (*pUV2)[4];
-    float (*pUV1)[4];
-    float (*pVOrg)[4];
     unsigned int iElement;
-    /* TODO: decompile from asm/... */
+
+    float (*pVOrg)[4] __attribute__((aligned(16)));
+    float (*pUV1)[4] __attribute__((aligned(16)));
+    float (*pUV2)[4] __attribute__((aligned(16)));
+    float (*pUVChrome)[4] __attribute__((aligned(16)));
+    float (*pNormals)[4] __attribute__((aligned(16)));
+
+    pSDC = pObj->pSDC;
+    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x600) { *(int*)g_PS2glContext.pnColorMatMasks |= 0x200; *(int*)g_PS2glContext.pnColorMatMasks |= 0x100; } g_PS2glContext.uiDmaOmitDataBits = 0x644;
+    g_PS2glContext.nLightBits |= 0x400;
+
+    for (iElement = 0; iElement < pObj->xNbElements; iElement++)
+    {
+        bUsingStrips = 1;
+        if (pObj->d_xListOfElementsTypes[iElement] == 1)
+        {
+            p_stEIT = pObj->d_stListOfElements[iElement];
+            if (pSDC->pbIsTransparent[iElement])
+            {
+                if (GLI_g_NbUnOptChars < 500)
+                {
+                    _UnoptimizedTransparentCharacters_* p = &GLI_g_UnOptCharList[GLI_g_NbUnOptChars++];
+                    sceVu0CopyMatrix(p->GlobalMatrix, (float (*)[4])&((MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CurrentMatrix)->stTransformMatrix);
+                    p->pObj = pObj;
+                    p->p_stEIT = p_stEIT;
+                    p->iElement = iElement;
+                }
+                continue;
+            }
+
+            if ((pSDC->OptType & 0xf) == 5)
+            {
+                NbVertices = *(unsigned int*)pSDC->pArrayOfVertexArrays[iElement];
+            }
+            else
+            {
+                bUsingStrips = 0;
+                NbVertices = 3 * pSDC->pNbTrianglesPerElement[iElement];
+            }
+            GLI_vGetVertexPointersFromSDCStructure(pSDC, iElement, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pNormals);
+
+            if (pSDC->pArrayOfMaterials[iElement] && pSDC->pArrayOfMaterials[iElement]->ulNbTextureStages)
+                NbStages = pSDC->pArrayOfMaterials[iElement]->ulNbTextureStages;
+            else
+                NbStages = 0;
+            OrgNbStages = NbStages;
+            if (NbStages == 0)
+                NbStages++;
+
+            for (stage = 0; stage < NbStages; stage++)
+            {
+                if (OrgNbStages)
+                {
+                    switch (p_stEIT->hVisualMaterial->a_stMultiMaterial[stage].c_UVSource)
+                    {
+                    case 0: pUsedUV = pUV1; break;
+                    case 1: pUsedUV = pUV2; break;
+                    case 4: pUsedUV = pUVChrome; break;
+                    }
+                }
+                else
+                {
+                    pUsedUV = pUV1;
+                }
+                GlobalAlphaVal = GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+                GLI_g_CurrentStage = stage;
+                GLI_g_LastCyclingMode = 0xff;
+                GLI_DRV_SendMaterialToViewport(pSDC->pArrayOfMaterials[iElement]);
+                PS2glNormalPointer(0x1406, -2, pNormals);
+                PS2glTexCoordPointer(NbVertices, 0x1406, -2, pUsedUV);
+                PS2glVertexPointer(NbVertices, 0x1406, -2, pVOrg);
+                PS2glMatrixMode(0x1700);
+                PS2glLoadMatrixf(&((MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CurrentMatrix)->stTransformMatrix.stCol_0.xX);
+                GLI_AddNormalInterpolation(&((MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CurrentMatrix)->stTransformMatrix);
+                if (bUsingStrips)
+                    PS2glDrawArrays(5, 0, NbVertices);
+                else
+                    PS2glDrawArrays(4, 0, NbVertices);
+            }
+        }
+        else
+        {
+            globale = bUsingStrips;
+        }
+    }
+
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 2325–2426 */
@@ -2929,23 +3025,100 @@ void GLI_c_DrawUnoptimizedCharacter(GEO_tdstGeometricObject_* pObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void impPS2glColorPointer(int size, unsigned int type, int stride, void* pointer);
+
+/* Not original source, needs cleaning up: 16-byte vertex-pointer slots (see SDLCheap.cpp CHEAP_UpdateDeformation). */
 void DisplayAllUnOptChar(void)
 {
-    unsigned int bUsingStrips;
+    unsigned int stage;
+    unsigned int i;
+    float (*pUsedUV)[4];
+    unsigned int NbStages;
     _UnoptimizedTransparentCharacters_* p;
     SDC_VertexArrays_* pSDC;
-    float (*pUsedUV)[4];
     unsigned int OrgNbStages;
+    unsigned int bUsingStrips;
     unsigned int NbVertices;
-    unsigned int NbStages;
-    unsigned int stage;
-    float (*pNormals)[4];
-    float (*pUVChrome)[4];
-    float (*pUV2)[4];
-    float (*pUV1)[4];
-    float (*pVOrg)[4];
-    unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    float (*pVOrg)[4] __attribute__((aligned(16)));
+    float (*pUV1)[4] __attribute__((aligned(16)));
+    float (*pUV2)[4] __attribute__((aligned(16)));
+    float (*pUVChrome)[4] __attribute__((aligned(16)));
+    float (*pNormals)[4] __attribute__((aligned(16)));
+
+    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x600) { *(int*)g_PS2glContext.pnColorMatMasks |= 0x200; *(int*)g_PS2glContext.pnColorMatMasks |= 0x100; } g_PS2glContext.uiDmaOmitDataBits = 0x644;
+    g_PS2glContext.nLightBits |= 0x400;
+
+    for (i = 0; i < GLI_g_NbUnOptChars; i++)
+    {
+        p = &GLI_g_UnOptCharList[i];
+        pSDC = p->pObj->pSDC;
+        if ((pSDC->OptType & 0xf) == 6)
+        {
+            NbVertices = *(unsigned int*)pSDC->pArrayOfVertexArrays[p->iElement];
+            bUsingStrips = 1;
+        }
+        else
+        {
+            NbVertices = 3 * pSDC->pNbTrianglesPerElement[p->iElement];
+            bUsingStrips = 0;
+        }
+        GLI_vGetVertexPointersFromSDCStructure(pSDC, p->iElement, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pNormals);
+
+        if (pSDC->pArrayOfMaterials[p->iElement] && pSDC->pArrayOfMaterials[p->iElement]->ulNbTextureStages)
+            NbStages = pSDC->pArrayOfMaterials[p->iElement]->ulNbTextureStages;
+        else
+            NbStages = 0;
+        OrgNbStages = NbStages;
+        if (NbStages == 0)
+            NbStages++;
+
+        for (stage = 0; stage < NbStages; stage++)
+        {
+            if (OrgNbStages)
+            {
+                switch (p->p_stEIT->hVisualMaterial->a_stMultiMaterial[stage].c_UVSource)
+                {
+                case 0: pUsedUV = pUV1; break;
+                case 1: pUsedUV = pUV2; break;
+                case 4: pUsedUV = pUVChrome; break;
+                }
+            }
+            else
+            {
+                pUsedUV = pUV1;
+            }
+            GlobalAlphaVal = GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+            GLI_g_CurrentStage = stage;
+            GLI_g_LastCyclingMode = 0xff;
+            GLI_DRV_SendMaterialToViewport(pSDC->pArrayOfMaterials[p->iElement]);
+            PS2glNormalPointer(0x1406, -2, pNormals);
+            PS2glTexCoordPointer(NbVertices, 0x1406, -2, pUsedUV);
+            PS2glVertexPointer(NbVertices, 0x1406, -2, pVOrg);
+            if (p->p_stEIT->hVisualMaterial->a_stMultiMaterial[stage].ulTextureProperties & 0x20)
+            {
+                if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x200) { *(int*)g_PS2glContext.pnColorMatMasks |= 0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0x341;
+                g_PS2glContext.nLightBits &= ~0x400;
+                impPS2glColorPointer(NbVertices, 0x1406, -2, pNormals);
+            }
+            else
+            {
+                if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x600) { *(int*)g_PS2glContext.pnColorMatMasks |= 0x200; *(int*)g_PS2glContext.pnColorMatMasks |= 0x100; } g_PS2glContext.uiDmaOmitDataBits = 0x644;
+                g_PS2glContext.nLightBits |= 0x400;
+            }
+            PS2glMatrixMode(0x1700);
+            PS2glLoadMatrixf(&p->GlobalMatrix[0][0]);
+            GLI_AddNormalInterpolation(p->GlobalMatrix);
+            if (bUsingStrips)
+                PS2glDrawArrays(5, 0, NbVertices);
+            else
+                PS2glDrawArrays(4, 0, NbVertices);
+        }
+    }
+
+    GLI_g_NbUnOptChars = 0;
+    g_PS2glContext.nLightBits &= ~0x400;
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 2070–2293 */
@@ -3146,14 +3319,82 @@ void GLI_c_DrawUnoptimizedMap(GEO_tdstGeometricObject_* pObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void PS2glMatrixMode(unsigned int mode);
+extern "C" void PS2glLoadMatrixf(float* m);
+extern "C" void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
+extern "C" void GLI_AddNormalInterpolation(void* pMatrix);
+extern "C" void impPS2glColorPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glTexCoordPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glVertexPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glDrawArrays(unsigned int mode, int first, int count);
+
 void GLI_vDisplayAllTransparentUnoptimizedMapElements(void)
 {
-    RegisteredTransparentUnoptimizedMap_* p;
-    float fFogEnd;
-    float fFogStart;
-    unsigned int iFogIsOn;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    float fFogStart;
+    float fFogEnd;
+    unsigned int iFogIsOn;
+    RegisteredTransparentUnoptimizedMap_* p;
+    float fFogColor0, fFogColor1, fFogColor2, fFogColor3;
+
+    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x200) { *(int*)g_PS2glContext.pnColorMatMasks |= 0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0x341;
+    g_PS2glContext.nLightBits &= ~0x400;
+
+    GLI_vInitGLProjectionMatrix();
+
+    iFogIsOn = GLI_BIG_GLOBALS_xFogIsOn;
+    fFogStart = g_fFogStart;
+    fFogEnd = g_fFogEnd;
+    fFogColor0 = g_fFogColor[0];
+    fFogColor1 = g_fFogColor[1];
+    fFogColor2 = g_fFogColor[2];
+    fFogColor3 = g_fFogColor[3];
+
+    for (i = 0; i < GLI_g_NbTransparentUnoptimizedMap; i++)
+    {
+        p = &GLI_g_TransparentUnoptimizedMapElements[i];
+        GLI_BIG_GLOBALS_lCurrentDrawMask &= ~8;
+        GLI_BIG_GLOBALS_xGlobalAlpha = 0.2f;
+        GlobalAlphaVal = 0.2f;
+        GLI_g_CurrentStage = p->stage;
+        GLI_g_LastCyclingMode = 0xff;
+
+        GLI_BIG_GLOBALS_xFogIsOn = p->iFogIsOn;
+        g_fFogStart = p->fFogStart;
+        g_fFogEnd = p->fFogEnd;
+        g_fFogColor[0] = p->fvFogColor[0];
+        g_fFogColor[1] = p->fvFogColor[1];
+        g_fFogColor[2] = p->fvFogColor[2];
+        g_fFogColor[3] = p->fvFogColor[3];
+
+        GLI_DRV_SendMaterialToViewport(p->pMat);
+
+        impPS2glColorPointer(p->NbVertices, 0x1406, -2, (void*)p->pColors);
+        PS2glTexCoordPointer(p->NbVertices, 0x1406, -2, (void*)p->pUsedUV);
+        PS2glVertexPointer(p->NbVertices, 0x1406, -2, (void*)p->pVOrg);
+
+        PS2glMatrixMode(0x1700);
+        PS2glLoadMatrixf((float*)p->CurrentMatrix);
+
+        GLI_AddNormalInterpolation(p->CurrentMatrix);
+
+        if (p->bUseStrips)
+            PS2glDrawArrays(5, 0, p->NbVertices);
+        else
+            PS2glDrawArrays(4, 0, p->NbVertices);
+    }
+    GLI_g_NbTransparentUnoptimizedMap = 0;
+
+    GLI_BIG_GLOBALS_xFogIsOn = iFogIsOn;
+    g_fFogStart = fFogStart;
+    g_fFogEnd = fFogEnd;
+    g_fFogColor[0] = fFogColor0;
+    g_fFogColor[1] = fFogColor1;
+    g_fFogColor[2] = fFogColor2;
+    g_fFogColor[3] = fFogColor3;
+    GLI_g_CurrentFogMode = 0;
+
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 1959–1989 */
@@ -3191,7 +3432,41 @@ void GLI_vDisplayAllTransparentUnoptimizedMapElements(void)
 void GLI_vRegisterUnoptimizedMapTransparentElements(unsigned int NbVertices, unsigned int stage, float* CurrentMatrix, GLI_tdstMaterial_* pMat, float* pColors, float* pUsedUV, float* pVOrg, unsigned int bUseStrips)
 {
     RegisteredTransparentUnoptimizedMap_* p;
-    /* TODO: decompile from asm/... */
+
+    if (GLI_g_NbTransparentUnoptimizedMap < 256)
+    {
+        p = &GLI_g_TransparentUnoptimizedMapElements[GLI_g_NbTransparentUnoptimizedMap++];
+
+        p->NbVertices = NbVertices;
+        p->stage = stage;
+        p->pMat = pMat;
+        p->pColors = (int)pColors;
+        p->pUsedUV = (int)pUsedUV;
+        p->pVOrg = (int)pVOrg;
+        p->bUseStrips = bUseStrips;
+
+        p->iFogIsOn = GLI_BIG_GLOBALS_xFogIsOn;
+        p->fFogStart = g_fFogStart;
+        p->fFogEnd = g_fFogEnd;
+        p->fvFogColor[0] = g_fFogColor[0];
+        p->fvFogColor[1] = g_fFogColor[1];
+        p->fvFogColor[2] = g_fFogColor[2];
+        p->fvFogColor[3] = g_fFogColor[3];
+
+        /* VU0 macro-mode matrix copy (lqc2/sqc2 are not emitted by MWCC from C);
+           the target line map has one line per instruction. */
+        asm
+        {
+            lqc2 vf1, 0x0(CurrentMatrix)
+            lqc2 vf2, 0x10(CurrentMatrix)
+            lqc2 vf3, 0x20(CurrentMatrix)
+            lqc2 vf4, 0x30(CurrentMatrix)
+            sqc2 vf1, 0x0(p)
+            sqc2 vf2, 0x10(p)
+            sqc2 vf3, 0x20(p)
+            sqc2 vf4, 0x30(p)
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 1726–1911 */
@@ -3631,10 +3906,34 @@ void GT3_DisplayAllReflections(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLI_vSendEITToSpriteGeneratorNew(GEO_tdstElementIndexedTriangles_* p_stEIT, ISI_tdstColor_* pRLIs, float* LightMaps, float (*pV1)[4], float (*pU1)[4], float** pVertexTransparency);
+
 void GLI_vDisplayAllTransparentSpriteGens(void)
 {
+    TransparentSpriteGen_* p;
+    MAT_tdstTransformation_* pDst;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    int LightMapU;
+
+    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x200) { *(int*)g_PS2glContext.pnColorMatMasks |= 0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0x341;
+    g_PS2glContext.nLightBits &= ~0x400;
+
+    GLI_vInitGLProjectionMatrix();
+
+    for (i = 0; i < GLI_g_NbTransparentSpriteGens; i++)
+    {
+        p = &GLI_g_TransparentSpriteGens[i];
+        pDst = (MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CurrentMatrix; pDst->stTransformMatrix.stCol_0.xX = p->Matrix.stCol_0.xX; pDst->stTransformMatrix.stCol_0.xY = p->Matrix.stCol_0.xY; pDst->stTransformMatrix.stCol_0.xZ = p->Matrix.stCol_0.xZ; pDst->stTransformMatrix.stCol_0.xW = p->Matrix.stCol_0.xW; pDst->stTransformMatrix.stCol_1.xX = p->Matrix.stCol_1.xX; pDst->stTransformMatrix.stCol_1.xY = p->Matrix.stCol_1.xY; pDst->stTransformMatrix.stCol_1.xZ = p->Matrix.stCol_1.xZ; pDst->stTransformMatrix.stCol_1.xW = p->Matrix.stCol_1.xW; pDst->stTransformMatrix.stCol_2.xX = p->Matrix.stCol_2.xX; pDst->stTransformMatrix.stCol_2.xY = p->Matrix.stCol_2.xY; pDst->stTransformMatrix.stCol_2.xZ = p->Matrix.stCol_2.xZ; pDst->stTransformMatrix.stCol_2.xW = p->Matrix.stCol_2.xW; pDst->stTransformMatrix.stCol_3.xX = p->Matrix.stCol_3.xX; pDst->stTransformMatrix.stCol_3.xY = p->Matrix.stCol_3.xY; pDst->stTransformMatrix.stCol_3.xZ = p->Matrix.stCol_3.xZ; pDst->stTransformMatrix.stCol_3.xW = p->Matrix.stCol_3.xW;
+        PS2glMatrixMode(0x1700);
+        PS2glLoadMatrixf((float*)p->CurrentMatrix);
+        LightMapU = p->LightMapU; g_p_stLightMapUForNextObjectToDraw = LightMapU;
+        GLI_g_SpriteGenNorme = p->Norme;
+        GLI_vSendEITToSpriteGeneratorNew(p->p_stEIT, p->pRLIs, (float*)LightMapU, p->pV1, p->pU1, p->pVT);
+    }
+    g_p_stLightMapUForNextObjectToDraw = 0;
+    GLI_g_NbTransparentSpriteGens = 0;
+
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 1247–1280 */
@@ -3658,12 +3957,33 @@ void GLI_vDisplayAllTransparentSpriteGens(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLI_vRemoveCharacterVAFromProcessList(float (*pDest)[4]);
+
 void GLI_vRemoveAllInstances(GEO_tdstGeometricObject_* pObj)
 {
+    SDC_VertexArrays_* pSDC;
     _SDC_Instance_* pInstance;
     C_InstanceList* pInstanceList;
-    SDC_VertexArrays_* pSDC;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+
+    pSDC = pObj->pSDC;
+    if (pSDC != NULL)
+    {
+        if ((pInstanceList = pSDC->pInstanceList) != NULL)
+        {
+            if (pInstanceList != NULL)
+            {
+                while (pInstanceList->m_NbInstances)
+                {
+                    pInstance = pInstanceList->m_pList[0];
+                    for (i = 0; i < GLI_G_NumberOfInstancesToDisplay; i++) { if ((_SDC_Instance_*)GLI_G_InstancesToDisplay[i] == pInstance) GLI_G_InstancesToDisplay[i] = 0; } GLI_vRemoveCharacterVAFromProcessList(pInstance->pVertexArray);
+                    pInstanceList->DeleteInstance(pInstance);
+                }
+                delete pInstanceList;
+                pSDC->pInstanceList = NULL;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 1198–1244 */
@@ -3696,7 +4016,6 @@ void GLI_vRemoveInstanceIfExists(GEO_tdstGeometricObject_* pObj)
         {
             if (pInstanceList != NULL)
             {
-                pSPO = (HIE_tdstSuperObject_*)Global_CharacterModuleBeingDisplayed;
                 pInstanceList->SearchAndDestroyInstanceForThisSPO(pSPO);
                 if (pInstanceList->m_NbInstances == 0)
                 {
@@ -4046,7 +4365,25 @@ void GLI_c_DrawActorInstance(GEO_tdstGeometricObject_* pObj)
 int GLIPS2_bCharacterHasTheRightSkin(GLI_tdstMaterial_* hMat, int Index)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    short xIndex;
+
+    GLI_g_CurrentSkinIndex = -1;
+    GLI_g_CurrentSkinMaterial = 0;
+
+    if (GLI_g_NbSkinsForThisCharacter == 0)
+        return 1;
+
+    for (i = 0; i < GLI_g_NbSkinsForThisCharacter; i++)
+    {
+        if ((GLI_tdstMaterial_*)GLI_g_SkinMaterials[i] == hMat)
+        {
+            xIndex = GLI_g_SkinIndice[i];
+            GLI_g_CurrentSkinMaterial = (int)hMat;
+            GLI_g_CurrentSkinIndex = xIndex;
+            return Index == xIndex;
+        }
+    }
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 507–509 */
@@ -4076,9 +4413,29 @@ void GLIPS2_vSetNoInterpolationForThisCharacter(HIE_tdstSuperObject_* hPerso)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLI_vUpdateAllSPORefs(void);
+extern "C" void CHEAP_UpdateAllRefs(void);
+extern "C" void GLI_vUpdateAllVAs(void);
+extern "C" int printf(const char* format, ...);
+
 void GLI_vUpdateAllRefs(int bInterpol)
 {
-    /* TODO: decompile from asm/... */
+    _SDC_Instance_* pInstance;
+    unsigned int i;
+
+    if (!bInterpol)
+        g_ffFrameTimeLastFrame = g_ffFrameTime;
+    GLI_g_bInterpol = bInterpol;
+    GLI_vUpdateAllVAs();
+    for (i = 0; i < GLI_G_NumberOfInstancesToDisplay; i++)
+    {
+        pInstance = (_SDC_Instance_*)GLI_G_InstancesToDisplay[i];
+        if (pInstance != NULL && pInstance->pSDL != NULL)
+            pInstance->pSDL->ProcessAllRefs();
+    }
+    GLI_vUpdateAllSPORefs();
+    CHEAP_UpdateAllRefs();
+    GLI_g_bInterpol = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 399–431 */
@@ -4106,11 +4463,37 @@ void GLI_vUpdateAllRefs(int bInterpol)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLI_vUpdateCharacterVAReal(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints, unsigned int NbDestPoints);
+extern "C" void GLI_vUpdateCharacterVARealInterp(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints, unsigned int NbDestPoints);
+
 void GLI_vUpdateAllVAs(void)
 {
-    GLI_tdstVAToUpdate_* p;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    GLI_tdstVAToUpdate_* p;
+
+    if (GLI_g_bInterpol && !GLI_g_NO_INTERPOLATION_FOR_NEXT_FRAME)
+    {
+        for (i = 0; i < GLI_g_NbVAToUpdate; i++)
+        {
+            p = &GLI_VAToUpdate[i];
+            if (p->pDestPV)
+            {
+                if (p->bNoInterpol)
+                    GLI_vUpdateCharacterVAReal(p->pDestPV, p->p_stEIT, p->p_stPoints, p->NbPoints, p->NbDestPoints);
+                else
+                    GLI_vUpdateCharacterVARealInterp(p->pDestPV, p->p_stEIT, p->p_stPoints, p->NbPoints, p->NbDestPoints);
+            }
+        }
+    }
+    else
+    {
+        for (i = 0; i < GLI_g_NbVAToUpdate; i++)
+        {
+            p = &GLI_VAToUpdate[i];
+            if (p->pDestPV)
+                GLI_vUpdateCharacterVAReal(p->pDestPV, p->p_stEIT, p->p_stPoints, p->NbPoints, p->NbDestPoints);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 372–380 */
@@ -4163,9 +4546,29 @@ void GLI_vRemoveCharacterVAFromProcessList(float (*pDest)[4])
  */
 void GLI_vUpdateCharacterVA(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles_* p_stEIT, MTH3D_tdstVector_* p_stPoints, unsigned int NbPoints, unsigned int NbDestPoints, unsigned int bNoInterpol)
 {
-    unsigned int i;
     GLI_tdstVAToUpdate_* p;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+
+    if (GLI_g_NbVAToUpdate == 500)
+    {
+        printf("Too much VAs to update !!!\n");
+        return;
+    }
+
+    p = GLI_VAToUpdate;
+    for (i = GLI_g_NbVAToUpdate; i != 0; i--)
+    {
+        if (p->pDestPV == pDestPV && p->p_stEIT == p_stEIT)
+            return;
+        p++;
+    }
+    p = &GLI_VAToUpdate[GLI_g_NbVAToUpdate++];
+    p->pDestPV = pDestPV;
+    p->p_stEIT = p_stEIT;
+    p->p_stPoints = p_stPoints;
+    p->NbPoints = NbPoints;
+    p->NbDestPoints = NbDestPoints;
+    p->bNoInterpol = bNoInterpol;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 243–309 */
@@ -4204,10 +4607,50 @@ void GLI_vUpdateCharacterVA(float (*pDestPV)[4], GEO_tdstElementIndexedTriangles
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLI_vSetOptimizedSDC(int flag);
+extern "C" void GLI_vSetDummyLighting(void);
+extern "C" void PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+extern "C" void PS2glLightfv(unsigned int light, unsigned int pname, float* params);
+extern "C" float light_specular0[4];
+
 void GLI_vDrawAllActors(unsigned int bTransparent)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    _SDC_Instance_* pInstance;
+
+    GLI_vSetOptimizedSDC(1);
+
+    for (i = GLI_G_NextStartForThisViewport; i < GLI_G_NumberOfInstancesToDisplay; i++)
+    {
+        pInstance = (_SDC_Instance_*)GLI_G_InstancesToDisplay[i];
+        if (pInstance != NULL && pInstance->pSDL != NULL && bTransparent == pInstance->pSDL->m_bIsTransparent)
+            pInstance->pSDL->Draw(0);
+    }
+
+    if (GLIPS2_vDummySDL == NULL)
+    {
+        GLIPS2_vDummySDL = new C_CharacterSdl;
+        GLIPS2_vDummySDL->m_SDL_InitSize = 500;
+        GLIPS2_vDummySDL->m_bReduce = 1;
+        GLIPS2_vDummySDL->Start();
+        g_PS2glContext.nLightBits |= 0x400;
+        GLI_vSetDummyLighting();
+        g_PS2glContext.nLightBits |= 0x400;
+        g_PS2glContext.bLightsChanged = 1; g_PS2glContext.nLightBits |= 1;
+        PS2glLightfv(0x4000, 0x1202, light_specular0);
+        GLIPS2_vDummySDL->End();
+        GLIPS2_vDummySDL->Preprocess();
+    }
+
+    if (!SDL_g_HasDrawn)
+        GLIPS2_vDummySDL->Draw(0);
+
+    GLI_vSetOptimizedSDC(0);
+
+    PS2glColorMask(1, 1, 1, 1);
+
+    if (bTransparent)
+        GLI_G_NextStartForThisViewport = GLI_G_NumberOfInstancesToDisplay;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 225–234 */
@@ -4356,7 +4799,19 @@ void GLI_vDeleteAllWaitingPointers(void)
 void MyDelayedFree(void* p)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    if (!DelayedFreesInit) { unsigned int j; DelayedFreesInit = 1; for (j = 0; j < sizeof(GLI_g_DelayedFrees) / sizeof(GLI_g_DelayedFrees[0]); j++) { GLI_g_DelayedFrees[j].Pointer = 0; GLI_g_DelayedFrees[j].DisplayList = 0; } }
+    i = 0;
+    while (i < sizeof(GLI_g_DelayedFrees) / sizeof(GLI_g_DelayedFrees[0]) && (GLI_g_DelayedFrees[i].DisplayList || GLI_g_DelayedFrees[i].Pointer))
+        i++;
+    if (i == sizeof(GLI_g_DelayedFrees) / sizeof(GLI_g_DelayedFrees[0]))
+    {
+        printf("\n\nNOT ENOUGH ROOM IN THE DELAYED FREE ARRAY !!\n\n");
+        PS2glLiberator(p);
+        return;
+    }
+    GLI_g_DelayedFrees[i].Pointer = (int)p;
+    GLI_g_DelayedFrees[i].CurrentFrame = GLI_g_FrameNumber;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SDL.cpp lines 102–117 */
@@ -4384,5 +4839,17 @@ void MyDelayedFree(void* p)
 void MyglDeleteLists(unsigned int DisplayList)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    if (!DelayedFreesInit) { unsigned int j; DelayedFreesInit = 1; for (j = 0; j < sizeof(GLI_g_DelayedFrees) / sizeof(GLI_g_DelayedFrees[0]); j++) { GLI_g_DelayedFrees[j].Pointer = 0; GLI_g_DelayedFrees[j].DisplayList = 0; } }
+    i = 0;
+    while (i < sizeof(GLI_g_DelayedFrees) / sizeof(GLI_g_DelayedFrees[0]) && (GLI_g_DelayedFrees[i].DisplayList || GLI_g_DelayedFrees[i].Pointer))
+        i++;
+    if (i == sizeof(GLI_g_DelayedFrees) / sizeof(GLI_g_DelayedFrees[0]))
+    {
+        printf("\n\nNOT ENOUGH ROOM IN THE DELAYED FREE ARRAY !!\n\n");
+        PS2glDeleteLists(DisplayList, 1);
+        return;
+    }
+    GLI_g_DelayedFrees[i].DisplayList = DisplayList;
+    GLI_g_DelayedFrees[i].CurrentFrame = GLI_g_FrameNumber;
 }

@@ -4759,6 +4759,7 @@ tdstNodeInterpret_* LNK_fn_p_GetCutPoint(HIE_tdstSuperObject_* p_SuperObjPerso, 
             ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xX;
             ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xY;
             ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xZ;
+            p_stValue->eType = (tdeVariableType_)0x15;
         } else {
             ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&vNullVector)->xX;
             ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&vNullVector)->xY;

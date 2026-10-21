@@ -711,12 +711,27 @@ struct C_SdlRef {
     virtual void Process(void);
     virtual void ProcessWithInterpol(void);
     virtual void ProcessNoInterpol(void);
+    ~C_SdlRef() {}
+    static void operator delete(void* p);
 };
 
 struct C_SdlRef_FogParameters : C_SdlRef {
     int m_pDestFogColor; /* +0x14 */
     int m_pDestFogStart; /* +0x18 */
     int m_pDestFogEnd; /* +0x1c */
+};
+
+struct C_SdlRef_TextureMatrix : C_SdlRef {
+    int m_fpOffsetU; /* +0x14 */
+    int m_fpOffsetV; /* +0x18 */
+};
+
+struct C_SdlRef_TextureOffset : C_SdlRef {
+    GLI_tdstMaterial_* m_hMaterial; /* +0x14 */
+    float m_du; /* +0x18 */
+    float m_dv; /* +0x1c */
+    int m_fpOffsetU; /* +0x20 */
+    int m_fpOffsetV; /* +0x24 */
 };
 
 struct _sceDmaTag {
@@ -906,7 +921,13 @@ struct C_Sdl {
     void Destruct(void);
     void RemoveSPOInterpol(HIE_tdstSuperObject_* pSPO);
     void Init(void);
-    void __dl(void* ptr);
+    static void operator delete(void* ptr);
+};
+
+struct C_CharacterSdl : C_Sdl {
+    void PreprocessLightingForCheap(HIE_tdstSuperObject_* pSPO);
+    void PreprocessLighting(HIE_tdstSuperObject_* pSPO);
+    void Start(void);
 };
 
 struct sceGsSt {
@@ -1227,12 +1248,6 @@ struct HIE_tdstModifierObject_ {
     int lAddIntensity; /* +0x8 */
 };
 
-struct C_CharacterSdl {
-    /* C++ base C_Sdl at +0x0. */
-    void PreprocessLightingForCheap(HIE_tdstSuperObject_* pSPO);
-    void PreprocessLighting(HIE_tdstSuperObject_* pSPO);
-    void Start(void);
-};
 
 struct tag_GLtexture_set {
     float vTexEnvColor[4]; /* +0x0 */
@@ -2022,6 +2037,54 @@ struct sceGsLabel {
     unsigned int IDMSK; /* +0x4 */
 };
 
+/* GS register modified-flag bitmap, recovered in u_drawSprites.c (anon_3). */
+struct tdstGsModFlgs_ {
+    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x4 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x4 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x4 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x4 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x4 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x4 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x4 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x4 */
+    unsigned char _extractor_padding_00[3]; /* +0x5..0x7 */
+    /* The remaining extracted flags (FBA_1_Modified .. LABEL_Modified, bits
+       40..53) have no name in the retail 8-byte bitmap and would start a
+       second container, so they stay unnamed here. */
+};
+
 struct tagGScontext {
     sceGsPrim PRIM; /* +0x0 */
     sceGsRgbaq RGBAQ; /* +0x8 */
@@ -2077,10 +2140,8 @@ struct tagGScontext {
     sceGsSignal SIGNAL; /* +0x198 */
     tagsceGsReg FINISH; /* +0x1a0 */
     sceGsLabel LABEL; /* +0x1a8 */
-    /* aggregate */ int ModFlgs; /* +0x1b0 */
-    unsigned char _extractor_padding_00[4]; /* implicitly added by extractor; +0x1b4..0x1b7 */
-    /* aggregate */ int GlobalModFlgs; /* +0x1b8 */
-    unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x1bc..0x1bf */
+    tdstGsModFlgs_ ModFlgs; /* +0x1b0 */
+    tdstGsModFlgs_ GlobalModFlgs; /* +0x1b8 */
     QWORD PackageBuffer[518]; /* +0x1c0 */
     int iBufCount; /* +0x2220 */
     QWORD* pqCurrent; /* +0x2224 */
@@ -2281,6 +2342,10 @@ extern "C" void PS2glBlendFunc(unsigned int src, unsigned int dst);
 extern "C" void PS2glDepthMask(unsigned int flag);
 extern "C" void PS2glEndList(void);
 extern "C" tagListData** PS2glSearchList(unsigned int list);
+extern "C" void PS2glMatrixMode(unsigned int mode);
+extern "C" void PS2glLoadIdentity(void);
+extern "C" void GLI_vClearSendMatStates(void);
+extern "C" void PS2glGetIntegerv(unsigned int pname, int* params);
 
 unsigned int GLI_g_MaxSDLSize;
 unsigned int GLI_g_NbSDLs;
@@ -2292,7 +2357,7 @@ unsigned int GLI_g_SDLIsBlinking;
 anon_2 __vt__14C_CharacterSdl;
 unsigned int GLI_g_InstanceLists;
 tagGLcontext g_PS2glContext;
-void (*PS2glLiberator)(void);
+void (*PS2glLiberator)(void*);
 int GLI_g_ChristianSlaterMode;
 tagGScontext g_gsContext;
 float GLI_g_SDL_pInterpolatedCameraMatrix[4][4];
@@ -2443,13 +2508,26 @@ void GLI_vPrintSDLStatsBefore(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLIPS2_vRecurseRemoveInterpolationForSPOs(HIE_tdstSuperObject_* _hLinkedSpo, C_Sdl* pOpaqueSDL, C_Sdl* pTranspSDL);
+
 void GLIPS2_vSetNoInterpolationForSPO(HIE_tdstSuperObject_* _hLinkedSpo)
 {
-    C_Sdl* pTranspSDL;
     C_Sdl* pOpaqueSDL;
+    C_Sdl* pTranspSDL;
     SECT_tdstSector_* hSectorObject;
     HIE_tdstSuperObject_* hFatherSpo;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hChild;
+
+    hFatherSpo = _hLinkedSpo;
+    while (hFatherSpo && hFatherSpo->ulTypeOfLinkedObject != 4)
+        hFatherSpo = hFatherSpo->hFatherDyn;
+
+    if (hFatherSpo && hFatherSpo->ulTypeOfLinkedObject == 4)
+    {
+        hSectorObject = hFatherSpo->hLinkedObject.p_stSector;
+        pOpaqueSDL = (C_Sdl*)hSectorObject->glOpaqueDisplayList; pTranspSDL = (C_Sdl*)hSectorObject->glTransparentDisplayList;
+        if (_hLinkedSpo) { if (pTranspSDL) pTranspSDL->RemoveSPOInterpol(_hLinkedSpo); if (pOpaqueSDL) pOpaqueSDL->RemoveSPOInterpol(_hLinkedSpo); for (hChild = _hLinkedSpo->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn) GLIPS2_vRecurseRemoveInterpolationForSPOs(hChild, pOpaqueSDL, pTranspSDL); }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1258–1272 */
@@ -2516,12 +2594,20 @@ end:
  */
 void GLI_vSetOptimizedSDC(int flag)
 {
-    if (flag == 1) {
+    if (flag == 1)
+    {
         SDL_g_OptimizedSDC = 1;
         SDL_g_HasDrawn = 0;
-    } else {
+    }
+    else
+    {
         SDL_g_HasDrawn = 0;
-        SDL_g_OptimizedSDC = 0;
+        g_PS2glContext.uiBoundingSphereBits = 0; SDL_g_OptimizedSDC = 0;
+        if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *g_PS2glContext.pnColorMatMasks &= ~0x200; *g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;
+        g_PS2glContext.uiStaticDisplayListBits &= 0xFF000000;
+        GLI_vClearSendMatStates();
+        PS2glMatrixMode(0x1700);
+        PS2glLoadIdentity();
     }
 }
 
@@ -2540,9 +2626,36 @@ void GLI_vSetOptimizedSDC(int flag)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void MyglDeleteLists(unsigned int DisplayList);
+extern "C" void impPS2glPartialDeleteLists(unsigned int list);
+
 void C_Sdl::StealthDestroy(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+
+    if (m_NbReservedRefs)
+    {
+        for (i = 0; i < m_NbRefs; i++)
+        {
+            if (m_ppRefs[i])
+            {
+                delete m_ppRefs[i];
+                m_ppRefs[i] = NULL;
+            }
+        }
+        PS2glLiberator(m_ppRefs);
+        m_ppRefs = NULL;
+    }
+    m_NbReservedRefs = 0;
+    m_NbRefs = 0;
+    if (m_DisplayList)
+    {
+        MyglDeleteLists(m_DisplayList);
+        impPS2glPartialDeleteLists(m_DisplayList);
+        m_DisplayList = 0;
+        m_pListData = 0;
+        m_SDL_Size = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1086–1194 */
@@ -2629,9 +2742,109 @@ void C_Sdl::StealthDestroy(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void fn_vAddSdlToProcessLater(C_Sdl* pSdl);
+extern "C" void GLI_vInitGLProjectionMatrix(void);
+extern "C" void PS2glLoadMatrixf(const float* m);
+extern "C" void InterpolAndSaveCameraMatrix(unsigned int Mirror);
+extern "C" void PS2glSetGsRegister(int address, unsigned long value, unsigned long mask);
+extern "C" void SetFogc(void);
+extern "C" void PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+extern "C" void PS2glCallSDL(tagListData* pListData);
+extern "C" void GLI_vAddMatriceOutSDL(void);
+extern "C" void PS2glTexParameteri(unsigned int target, unsigned int pname, int param);
+
+/* VU0 column scaling: lqc2/sqc2/vmul have no C form (same helper as u_drawAGO2.c). */
+inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])
+{
+    asm {
+        lqc2 vf5, 0x0(_vec)
+        lqc2 vf1, 0x0(_src)
+        lqc2 vf2, 0x10(_src)
+        lqc2 vf3, 0x20(_src)
+        lqc2 vf4, 0x30(_src)
+        vmul.xyzw vf1, vf1, vf5
+        vmul.xyzw vf2, vf2, vf5
+        vmul.xyzw vf3, vf3, vf5
+        vmul.xyzw vf4, vf4, vf5
+        sqc2 vf1, 0x0(_dst)
+        sqc2 vf2, 0x10(_dst)
+        sqc2 vf3, 0x20(_dst)
+        sqc2 vf4, 0x30(_dst)
+    }
+}
+
 void C_Sdl::Draw(int bProcessRefs)
 {
-    /* TODO: decompile from asm/... */
+    if (!m_pListData)
+        return;
+
+    if (bProcessRefs)
+        fn_vAddSdlToProcessLater(this);
+
+    if (!SDL_g_OptimizedSDC || !SDL_g_HasDrawn)
+    {
+        GLI_g_ProjectionMode = 2;
+        GLI_vInitGLProjectionMatrix();
+        PS2glMatrixMode(0x1700);
+        if (GLI_g_MatricesInterpolationTime[SCT_g_DrawingMirrored] == GLI_g_FrameNumber)
+        {
+            if (SCT_g_DrawingMirrored)
+                PS2glLoadMatrixf(&GLI_g_SDL_pInterpolatedCameraMatrixMirror[0][0]);
+            else
+                PS2glLoadMatrixf(&GLI_g_SDL_pInterpolatedCameraMatrix[0][0]);
+        }
+        else
+        {
+            if (SCT_g_DrawingMirrored)
+            {
+                PS2_M_vMulMatrixColumnsByVector((float (*)[4])(GLI_BIG_GLOBALS_gs_st_CameraMatrix + 0x10), GLI_g_NegVect, GLI_g_SDL_pInterpolatedCameraMatrixMirror); GLI_g_SDL_pInterpolatedCameraMatrixMirror[3][3] = 1.0f;
+                InterpolAndSaveCameraMatrix(SCT_g_DrawingMirrored);
+                PS2glLoadMatrixf(&GLI_g_SDL_pInterpolatedCameraMatrixMirror[0][0]);
+            }
+            else
+            {
+                PS2_M_vMulMatrixColumnsByVector((float (*)[4])(GLI_BIG_GLOBALS_gs_st_CameraMatrix + 0x10), GLI_g_NegVect, GLI_g_SDL_pInterpolatedCameraMatrix); GLI_g_SDL_pInterpolatedCameraMatrix[3][3] = 1.0f;
+                InterpolAndSaveCameraMatrix(SCT_g_DrawingMirrored);
+                PS2glLoadMatrixf(&GLI_g_SDL_pInterpolatedCameraMatrix[0][0]);
+            }
+        }
+
+        g_PS2glContext.nTextureEnableBits |= g_PS2glContext.iCurTextureSet == 0 ? 2 : 0x200; g_gsContext.PRMODE.TME = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        g_PS2glContext.nEnableBits &= ~0x100; g_gsContext.PRMODE.ABE = 0 & 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glSetGsRegister(0x42, 0x80000000a8, 0);
+        g_PS2glContext.nLightBits &= ~0x400;
+        GLI_vClearSendMatStates();
+        SetFogc();
+
+        if (GLI_g_ChristianSlaterMode)
+        {
+            PS2glTexParameteri(0xde1, 0x2800, 0x2600);
+            PS2glTexParameteri(0xde1, 0x2801, 0x2600);
+            PS2glTexParameteri(0xde1, 0x2800, 0x2600);
+            PS2glTexParameteri(0xde1, 0x2801, 0x2600);
+        }
+        else
+        {
+            PS2glTexParameteri(0xde1, 0x2800, 0x2601);
+            PS2glTexParameteri(0xde1, 0x2801, 0x2701);
+        }
+
+        g_PS2glContext.usDontUpdateBits = 0;
+        g_PS2glContext.eClippingFunction = 3;
+        g_PS2glContext.uiFastPathBits = 1;
+        if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *g_PS2glContext.pnColorMatMasks &= ~0x200; *g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;
+        g_PS2glContext.uiStaticDisplayListBits &= 0xFF000000;
+        PS2glColorMask(1, 1, 1, 1);
+    }
+
+    PS2glCallSDL(m_pListData);
+
+    if (!SDL_g_OptimizedSDC || !SDL_g_HasDrawn)
+    {
+        GLI_vAddMatriceOutSDL();
+        SDL_g_HasDrawn = 1;
+        g_PS2glContext.uiStaticDisplayListBits &= 0xFF000000; g_PS2glContext.uiStaticDisplayListBits |= 0x7000;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1046–1083 */
@@ -2765,15 +2978,86 @@ void C_Sdl::End(void)
  */
 void C_CharacterSdl::PreprocessLightingForCheap(HIE_tdstSuperObject_* pSPO)
 {
-    int NbIndices;
-    unsigned int i;
-    char* pNextPointer;
-    unsigned int uiMask;
     float (*pMatrix)[4][4];
-    tag_stVU1MatriceL* pMatriceLighting;
-    tag_stVU1MatriceTinSDL* pMTinSDL;
     tag_stVU1Parameters** ppP;
-    /* TODO: decompile from asm/... */
+    int NbIndices;
+    tag_stVU1MatriceTinSDL* pMTinSDL;
+    unsigned int uiMask;
+    char* pNextPointer;
+    tag_stVU1MatriceL* pMatriceLighting;
+    unsigned int i;
+
+    NbIndices = (int)(ppP = (tag_stVU1Parameters**)m_DisplayList);
+    PS2glGetIntegerv(0xF19, &NbIndices);
+    PS2glGetIntegerv(0xF18, (int*)&ppP);
+
+    i = 0;
+    while (i < NbIndices)
+    {
+        uiMask = (unsigned int)ppP[1];
+        pNextPointer = (char*)ppP[0] + 0x110;
+        pMTinSDL = (tag_stVU1MatriceTinSDL*)pNextPointer;
+        pNextPointer += sizeof(tag_stVU1MatriceTinSDL);
+        if (uiMask & 0x02000000)
+            pNextPointer += 0x70;
+        if (uiMask & 0x04000000)
+            pNextPointer += 0x90;
+        if (uiMask & 0x08000000)
+            pNextPointer += 0x20;
+        pMatriceLighting = (tag_stVU1MatriceL*)pNextPointer;
+
+        {
+            float (*pNormal)[4];
+
+            pMatrix = (float (*)[4][4])&pSPO->hGlobalMatrix->stTransformMatrix; pNormal = pMTinSDL->mNormal;
+            asm {
+                lqc2 vf1, 0x0(pMatrix)
+                lqc2 vf2, 0x10(pMatrix)
+                lqc2 vf3, 0x20(pMatrix)
+                sqc2 vf1, 0x0(pNormal)
+                sqc2 vf2, 0x10(pNormal)
+                sqc2 vf3, 0x20(pNormal)
+            }
+        }
+        {
+            float* pAmbientDst;
+            float (*pColorDst)[4];
+            float (*pPositionDst)[4];
+            float* pAmbient;
+            float (*pColors)[4];
+            float (*pPositions)[4];
+
+            pAmbientDst = ppP[0]->vAmbient; pAmbient = GLI_g_AmbientLight; pColors = GLI_g_LightColors; pPositions = GLI_g_LightPositions;
+            pPositionDst = pMatriceLighting->mDiffuseLightPosition; pColorDst = pMatriceLighting->mDiffuseLightColor;
+            asm {
+                lqc2 vf1, 0x0(pAmbient)
+
+                lqc2 vf2, 0x0(pColors)
+                lqc2 vf3, 0x10(pColors)
+                lqc2 vf4, 0x20(pColors)
+                lqc2 vf5, 0x30(pColors)
+
+                lqc2 vf6, 0x0(pPositions)
+                lqc2 vf7, 0x10(pPositions)
+                lqc2 vf8, 0x20(pPositions)
+                lqc2 vf9, 0x30(pPositions)
+
+                sqc2 vf1, 0x0(pAmbientDst)
+
+                sqc2 vf2, 0x0(pColorDst)
+                sqc2 vf3, 0x10(pColorDst)
+                sqc2 vf4, 0x20(pColorDst)
+                sqc2 vf5, 0x30(pColorDst)
+
+                sqc2 vf6, 0x0(pPositionDst)
+                sqc2 vf7, 0x10(pPositionDst)
+                sqc2 vf8, 0x20(pPositionDst)
+                sqc2 vf9, 0x30(pPositionDst)
+            }
+        }
+        ppP += 2;
+        i++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 739–942 */
@@ -2896,7 +3180,149 @@ void C_CharacterSdl::PreprocessLighting(HIE_tdstSuperObject_* pSPO)
     tag_stVU1MatriceL* pMatriceLighting;
     tag_stVU1MatriceTinSDL* pMTinSDL;
     tag_stVU1Parameters** ppP;
-    /* TODO: decompile from asm/... */
+
+    ppP = (tag_stVU1Parameters**)m_ppP;
+    pMTinSDL = (tag_stVU1MatriceTinSDL*)((char*)ppP[0] + 0x110); pNextPointer = (char*)pMTinSDL + sizeof(tag_stVU1MatriceTinSDL);
+    if ((unsigned int)ppP[1] & 0x02000000)
+        pNextPointer += 0x70;
+    pNextPointer += 0x20;
+    pMatriceLighting = (tag_stVU1MatriceL*)pNextPointer;
+
+    if (ppP)
+    {
+        {
+            float (*pNormal)[4];
+
+            pMatrix = (float (*)[4][4])&pSPO->hGlobalMatrix->stTransformMatrix; pNormal = pMTinSDL->mNormal;
+            asm {
+                lqc2 vf1, 0x0(pMatrix)
+                lqc2 vf2, 0x10(pMatrix)
+                lqc2 vf3, 0x20(pMatrix)
+                sqc2 vf1, 0x0(pNormal)
+                sqc2 vf2, 0x10(pNormal)
+                sqc2 vf3, 0x20(pNormal)
+            }
+        }
+
+        if (m_LastFrameUsed >= GLI_g_FrameNumber - 1)
+        {
+            float* pAmbientDst;
+            float (*pColorDst)[4];
+            float (*pPositionDst)[4];
+            float* pAmbient;
+            float (*pColors)[4];
+            float (*pPositions)[4];
+
+            coeff = 0.4f;
+            invcoeff = 0.6f;
+            pAmbientDst = ((tag_stVU1Parameters**)m_ppP)[0]->vAmbient; pAmbient = GLI_g_AmbientLight; pColors = GLI_g_LightColors; pPositions = GLI_g_LightPositions;
+            pPositionDst = pMatriceLighting->mDiffuseLightPosition; pColorDst = pMatriceLighting->mDiffuseLightColor;
+            asm {
+                lw t2, coeff
+                lw t3, invcoeff
+                qmtc2 t3, vf10
+                qmtc2 t2, vf11
+
+                lqc2 vf1, 0x0(pAmbient)
+                lqc2 vf2, 0x0(pAmbientDst)
+
+                lqc2 vf3, 0x0(pColors)
+                lqc2 vf4, 0x10(pColors)
+                lqc2 vf5, 0x20(pColors)
+                lqc2 vf6, 0x30(pColors)
+                lqc2 vf7, 0x0(pColorDst)
+                lqc2 vf8, 0x10(pColorDst)
+                lqc2 vf9, 0x20(pColorDst)
+                lqc2 vf12, 0x30(pColorDst)
+
+                lqc2 vf13, 0x0(pPositions)
+                lqc2 vf14, 0x10(pPositions)
+                lqc2 vf15, 0x20(pPositions)
+                lqc2 vf16, 0x30(pPositions)
+                lqc2 vf17, 0x0(pPositionDst)
+                lqc2 vf18, 0x10(pPositionDst)
+                lqc2 vf19, 0x20(pPositionDst)
+                lqc2 vf20, 0x30(pPositionDst)
+
+                vmulx.xyzw vf1, vf1, vf11x
+                vmulx.xyzw vf2, vf2, vf10x
+                vmulx.xyzw vf3, vf3, vf11x
+                vmulx.xyzw vf7, vf7, vf10x
+                vmulx.xyzw vf4, vf4, vf11x
+                vmulx.xyzw vf8, vf8, vf10x
+                vmulx.xyzw vf5, vf5, vf11x
+                vmulx.xyzw vf9, vf9, vf10x
+                vmulx.xyzw vf6, vf6, vf11x
+                vmulx.xyzw vf12, vf12, vf10x
+                vmulx.xyzw vf13, vf13, vf11x
+                vmulx.xyzw vf17, vf17, vf10x
+                vmulx.xyzw vf14, vf14, vf11x
+                vmulx.xyzw vf18, vf18, vf10x
+                vmulx.xyzw vf15, vf15, vf11x
+                vmulx.xyzw vf19, vf19, vf10x
+                vmulx.xyzw vf16, vf16, vf11x
+                vmulx.xyzw vf20, vf20, vf10x
+
+                vadd.xyzw vf1, vf1, vf2
+                vadd.xyzw vf3, vf3, vf7
+                vadd.xyzw vf4, vf4, vf8
+                vadd.xyzw vf5, vf5, vf9
+                vadd.xyzw vf6, vf6, vf12
+                vadd.xyzw vf13, vf13, vf17
+                vadd.xyzw vf14, vf14, vf18
+                vadd.xyzw vf15, vf15, vf19
+                vadd.xyzw vf16, vf16, vf20
+
+                sqc2 vf1, 0x0(pAmbientDst)
+                sqc2 vf3, 0x0(pColorDst)
+                sqc2 vf4, 0x10(pColorDst)
+                sqc2 vf5, 0x20(pColorDst)
+                sqc2 vf6, 0x30(pColorDst)
+                sqc2 vf13, 0x0(pPositionDst)
+                sqc2 vf14, 0x10(pPositionDst)
+                sqc2 vf15, 0x20(pPositionDst)
+                sqc2 vf16, 0x30(pPositionDst)
+            }
+            m_LastFrameUsed = GLI_g_FrameNumber;
+        }
+        else
+        {
+            float* pAmbientDst;
+            float (*pColorDst)[4];
+            float (*pPositionDst)[4];
+            float* pAmbient;
+            float (*pColors)[4];
+            float (*pPositions)[4];
+
+            m_LastFrameUsed = GLI_g_FrameNumber;
+            pAmbientDst = ((tag_stVU1Parameters**)m_ppP)[0]->vAmbient; pAmbient = GLI_g_AmbientLight; pColors = GLI_g_LightColors; pPositions = GLI_g_LightPositions; pPositionDst = pMatriceLighting->mDiffuseLightPosition; pColorDst = pMatriceLighting->mDiffuseLightColor;
+            asm {
+                lqc2 vf1, 0x0(pAmbient)
+
+                lqc2 vf2, 0x0(pColors)
+                lqc2 vf3, 0x10(pColors)
+                lqc2 vf4, 0x20(pColors)
+                lqc2 vf5, 0x30(pColors)
+
+                lqc2 vf6, 0x0(pPositions)
+                lqc2 vf7, 0x10(pPositions)
+                lqc2 vf8, 0x20(pPositions)
+                lqc2 vf9, 0x30(pPositions)
+
+                sqc2 vf1, 0x0(pAmbientDst)
+
+                sqc2 vf2, 0x0(pColorDst)
+                sqc2 vf3, 0x10(pColorDst)
+                sqc2 vf4, 0x20(pColorDst)
+                sqc2 vf5, 0x30(pColorDst)
+
+                sqc2 vf6, 0x0(pPositionDst)
+                sqc2 vf7, 0x10(pPositionDst)
+                sqc2 vf8, 0x20(pPositionDst)
+                sqc2 vf9, 0x30(pPositionDst)
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 661–730 */
@@ -2960,10 +3386,67 @@ void C_CharacterSdl::PreprocessLighting(HIE_tdstSuperObject_* pSPO)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern "C" void GLI_DRV_vSetCommonGLRenderStates(void);
+extern "C" void PS2glAlphaFunc(unsigned int func, float ref);
+extern "C" unsigned int PS2glGenLists(int range);
+extern "C" void PS2glNewList(unsigned int list, unsigned int mode);
+extern "C" void PS2glTexParameteri(unsigned int target, unsigned int pname, int param);
+
 void C_CharacterSdl::Start(void)
 {
     unsigned char zTst;
-    /* TODO: decompile from asm/... */
+
+    g_PS2glContext.bPointLighting = 0;
+    g_PS2glContext.uiBoundingSphereBits = 2;
+    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x600) { *g_PS2glContext.pnColorMatMasks |= 0x200; *g_PS2glContext.pnColorMatMasks |= 0x100; } g_PS2glContext.uiDmaOmitDataBits = 0x644;
+    g_PS2glContext.usDontUpdateBits = 0;
+    g_PS2glContext.eClippingFunction = 3;
+    g_PS2glContext.uiFastPathBits = 1;
+    g_PS2glContext.uiStaticDisplayListBits &= 0xFF000000; g_PS2glContext.uiStaticDisplayListBits |= 0x103;
+    g_fBSMultiplicator = GLI_g_fBSMultiplicatorActor;
+
+    g_PS2glContext.uiStaticDisplayListMaxSize = m_SDL_InitSize;
+    if (m_bReduce)
+    {
+        PS2GL_g_DontReallocSDLs = 0;
+    }
+    else
+    {
+        PS2GL_g_DontReallocSDLs = 1;
+    }
+    if (m_SDL_InitSize == 500)
+    {
+        PS2GL_SDL_DataBufferToUse = 0x70000000;
+    }
+    else
+    {
+        PS2GL_SDL_DataBufferToUse = PS2GL_SDL_DataBuffer;
+    }
+
+    GLI_DRV_vSetCommonGLRenderStates();
+    g_PS2glContext.nLightBits &= ~0x400;
+    PS2glDepthMask(1);
+    g_PS2glContext.nEnableBits |= 0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; zTst = 1; switch (g_PS2glContext.eDepthFunc) { case 0x200: zTst = 0; break; case 0x207: zTst = 1; break; case 0x203: zTst = 2; break; case 0x201: zTst = 3; break; case 0x202: case 0x204: case 0x205: case 0x206: break; } g_gsContext.TEST_1.ZTST = zTst; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    PS2glDepthMask(1);
+    g_PS2glContext.nEnableBits |= 0x400; g_gsContext.TEST_1.ATE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    PS2glAlphaFunc(0x204, 0.1f);
+    g_PS2glContext.nEnableBits &= ~0x100; g_gsContext.PRMODE.ABE = 0 & 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+
+    m_DisplayList = PS2glGenLists(1);
+    PS2glNewList(m_DisplayList, 0x1300);
+
+    if (GLI_g_ChristianSlaterMode)
+    {
+        PS2glTexParameteri(0xde1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xde1, 0x2801, 0x2600);
+        PS2glTexParameteri(0xde1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xde1, 0x2801, 0x2600);
+    }
+    else
+    {
+        PS2glTexParameteri(0xde1, 0x2800, 0x2601);
+        PS2glTexParameteri(0xde1, 0x2801, 0x2701);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 605–653 */
@@ -3022,7 +3505,43 @@ void C_CharacterSdl::Start(void)
 void C_Sdl::Start(void)
 {
     unsigned char zTst;
-    /* TODO: decompile from asm/... */
+
+    g_PS2glContext.bPointLighting = 0;
+    g_PS2glContext.uiBoundingSphereBits = 10;
+    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x200) { *g_PS2glContext.pnColorMatMasks |= 0x200; *g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0x341;
+    g_PS2glContext.usDontUpdateBits = 0;
+    g_PS2glContext.eClippingFunction = 3;
+    g_PS2glContext.uiFastPathBits = 1;
+    g_PS2glContext.uiStaticDisplayListBits &= 0xFF000000; g_PS2glContext.uiStaticDisplayListBits |= 0x103;
+    g_fBSMultiplicator = GLI_g_fBSMultiplicatorMap;
+
+    GLI_DRV_vSetCommonGLRenderStates();
+    g_PS2glContext.nLightBits &= ~0x400;
+    PS2glDepthMask(1);
+    g_PS2glContext.nEnableBits |= 0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; zTst = 1; switch (g_PS2glContext.eDepthFunc) { case 0x200: zTst = 0; break; case 0x207: zTst = 1; break; case 0x203: zTst = 2; break; case 0x201: zTst = 3; break; case 0x202: case 0x204: case 0x205: case 0x206: break; } g_gsContext.TEST_1.ZTST = zTst; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    PS2glDepthMask(1);
+    g_PS2glContext.nEnableBits |= 0x400; g_gsContext.TEST_1.ATE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    PS2glAlphaFunc(0x204, 0.1f);
+    g_PS2glContext.nEnableBits &= ~0x100; g_gsContext.PRMODE.ABE = 0 & 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+
+    PS2GL_g_DontReallocSDLs = 0;
+    PS2GL_SDL_DataBufferToUse = 0;
+
+    m_DisplayList = PS2glGenLists(1);
+    PS2glNewList(m_DisplayList, 0x1300);
+
+    if (GLI_g_ChristianSlaterMode)
+    {
+        PS2glTexParameteri(0xde1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xde1, 0x2801, 0x2600);
+        PS2glTexParameteri(0xde1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xde1, 0x2801, 0x2600);
+    }
+    else
+    {
+        PS2glTexParameteri(0xde1, 0x2800, 0x2601);
+        PS2glTexParameteri(0xde1, 0x2801, 0x2701);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 575–598 */
@@ -3049,10 +3568,12 @@ void C_Sdl::Start(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 void C_Sdl::UpdateFogs(void)
-{    C_SdlRef** ppRefs;
+{
+    unsigned int FogColor;
     float FogStart;
     float FogEnd;
-    unsigned int FogColor;
+    C_SdlRef** ppRefs;
+    C_SdlRef* pRef;
     unsigned int i;
 
     FogColor = GLI_g_CurrentSDLFogColor;
@@ -3068,9 +3589,10 @@ void C_Sdl::UpdateFogs(void)
     }
     for (i = m_NbRefs; i; i--, ppRefs++)
     {
-        if ((*ppRefs)->m_uRefType == 4 && ((C_SdlRef_FogParameters*)*ppRefs)->m_pDestFogColor)
+        pRef = *ppRefs;
+        if (pRef->m_uRefType == 4 && ((C_SdlRef_FogParameters*)pRef)->m_pDestFogColor)
         {
-            *(unsigned int*)((C_SdlRef_FogParameters*)*ppRefs)->m_pDestFogColor = FogColor;
+            *(unsigned int*)((C_SdlRef_FogParameters*)pRef)->m_pDestFogColor = FogColor;
             *(float*)((C_SdlRef_FogParameters*)*ppRefs)->m_pDestFogStart = FogStart;
             *(float*)((C_SdlRef_FogParameters*)*ppRefs)->m_pDestFogEnd = FogEnd;
         }
@@ -3134,11 +3656,8 @@ void C_Sdl::ProcessAllRefs(void)
                 if (m_ppRefs[i]->m_uRefType != 4)
                     m_ppRefs[i]->Process();
             }
-            /* The retail hoists this store into the delay slot of the branch
-             * that ends the if/else; MWCC keeps it here. */
-            GLI_g_SDLIsBlinking = 0;
+            m_bNoInterpolation = 0;
         }
-        m_bNoInterpolation = 0;
         GLI_g_SDLIsBlinking = 0;
     }
     else
@@ -3322,22 +3841,205 @@ void C_Sdl::ProcessAllRefs(void)
  */
 void C_Sdl::Preprocess(void)
 {
-    C_SdlRef_FogParameters* pFogRef;
-    unsigned int* pFogColorSearcher;
-    char* pNextPointer;
-    tag_stVU1MatriceL* pMatriceLighting;
-    tag_stVU1MatriceTexture* pTexMatrix;
-    unsigned char MustLoop;
-    float (*pLocalScreen)[4][4];
-    unsigned int uiMask;
-    tag_stVU1MatriceTinSDL* pMTinSDL;
-    tag_stMultiTextureParameters* pMTP;
-    tag_stVU1Parameters** ppP;
-    int j;
     int refindex;
-    int i;
+    int j;
+    unsigned char MustLoop;
+    tag_stVU1MatriceTinSDL* pMTinSDL;
+    unsigned int* pFogColorSearcher;
+    float (*pLocalScreen)[4][4];
     int NbIndices;
-    /* TODO: decompile from asm/... */
+    unsigned int uiMask;
+    tag_stVU1Parameters** ppP;
+    tag_stMultiTextureParameters* pMTP;
+    C_SdlRef_FogParameters* pFogRef;
+    int i;
+    tag_stVU1MatriceL* pMatriceLighting;
+    char* pNextPointer;
+    tag_stVU1MatriceTexture* pTexMatrix;
+
+    if (m_NbRefs == 0)
+    {
+        m_SDL_Size = m_DisplayList;
+        PS2glGetIntegerv(0xF15, &m_SDL_Size);
+        if (m_SDL_Size >= GLI_g_MaxSDLSize)
+            GLI_g_MaxSDLSize = m_SDL_Size;
+        return;
+    }
+
+    m_SDL_Size = NbIndices = (int)(ppP = (tag_stVU1Parameters**)m_DisplayList);
+    PS2glGetIntegerv(0xF15, &m_SDL_Size);
+    PS2glGetIntegerv(0xF19, &NbIndices);
+    PS2glGetIntegerv(0xF18, (int*)&ppP);
+    if (m_SDL_Size >= GLI_g_MaxSDLSize)
+        GLI_g_MaxSDLSize = m_SDL_Size;
+
+    refindex = 0;
+    m_ppP = ppP;
+    for (i = 0; i < NbIndices; i++)
+    {
+        uiMask = (unsigned int)ppP[1];
+        if (uiMask & 0x01000000)
+        {
+            pMTP = (tag_stMultiTextureParameters*)((char*)ppP[0] + 0xA0);
+            pMTinSDL = (tag_stVU1MatriceTinSDL*)((char*)pMTP + 0x70);
+            pNextPointer = (char*)pMTinSDL + sizeof(tag_stVU1MatriceTinSDL);
+            if (uiMask & 0x02000000)
+            {
+                pTexMatrix = (tag_stVU1MatriceTexture*)pNextPointer;
+                pNextPointer += 0x70;
+            }
+            if (uiMask & 0x04000000)
+                pNextPointer += 0x90;
+            if (uiMask & 0x08000000)
+                pNextPointer += 0x20;
+            pMatriceLighting = (tag_stVU1MatriceL*)pNextPointer;
+            pLocalScreen = (float (*)[4][4])pMTinSDL->mLocalWorld;
+            do
+            {
+                MustLoop = 0;
+                if (m_ppRefs[refindex]->m_uIndexInList == i)
+                {
+                    if (m_ppRefs[refindex]->m_uRefType == 1)
+                    {
+                        m_ppRefs[refindex]->m_vpDestinationPointer = (int)pLocalScreen;
+                    }
+                    else if (m_ppRefs[refindex]->m_uRefType == 0x10)
+                    {
+                        if (uiMask & 0x02000000)
+                            m_ppRefs[refindex]->m_vpDestinationPointer = (int)pTexMatrix->mTexture1;
+                        else
+                            printf("Couldn't find texture ID matrix for chrome !!\n");
+                    }
+                    else if (m_ppRefs[refindex]->m_uRefType == 8)
+                    {
+                        if (uiMask & 0x02000000)
+                        {
+                            m_ppRefs[refindex]->m_vpDestinationPointer = (int)pTexMatrix->mTexture1;
+                            ((C_SdlRef_TextureMatrix*)m_ppRefs[refindex])->m_fpOffsetU = (int)&pMTP->fTexture0UOffset;
+                            ((C_SdlRef_TextureMatrix*)m_ppRefs[refindex])->m_fpOffsetV = (int)&pMTP->fTexture0VOffset;
+                        }
+                        else
+                            printf("Couldn't find texture matrix for chrome !!\n");
+                    }
+                    else if (m_ppRefs[refindex]->m_uRefType == 0x20)
+                    {
+                        m_ppRefs[refindex]->m_vpDestinationPointer = (int)pMatriceLighting->mDiffuseLightColor;
+                    }
+                    else if (m_ppRefs[refindex]->m_uRefType == 2)
+                    {
+                        ((C_SdlRef_TextureOffset*)m_ppRefs[refindex])->m_fpOffsetU = (int)&pMTP->fTexture0UOffset;
+                        ((C_SdlRef_TextureOffset*)m_ppRefs[refindex])->m_fpOffsetV = (int)&pMTP->fTexture0VOffset;
+                    }
+                    else if (m_ppRefs[refindex]->m_uRefType == 4)
+                    {
+                        pFogRef = (C_SdlRef_FogParameters*)m_ppRefs[refindex];
+                        pFogColorSearcher = (unsigned int*)ppP[0];
+                        while (*pFogColorSearcher != 0x563412)
+                            pFogColorSearcher--;
+                        pFogRef->m_pDestFogColor = (int)pFogColorSearcher;
+                        pFogRef->m_pDestFogStart = (int)((char*)ppP[0] + 0x78);
+                        pFogRef->m_pDestFogEnd = (int)((char*)ppP[0] + 0x7C);
+                    }
+                    refindex++;
+                    if (refindex == m_NbRefs)
+                        return;
+                    MustLoop = 1;
+                }
+            } while (MustLoop);
+        }
+        else
+        {
+            pMTP = (tag_stMultiTextureParameters*)((char*)ppP[0] + 0xA0);
+            do
+            {
+                MustLoop = 0;
+                if (m_ppRefs[refindex]->m_uIndexInList == i)
+                {
+                    if (m_ppRefs[refindex]->m_uRefType == 1)
+                    {
+                        printf("C_Sdl::Preprocess -> Matrix reference not found !!\n");
+                    }
+                    else if (m_ppRefs[refindex]->m_uRefType == 2)
+                    {
+                        ((C_SdlRef_TextureOffset*)m_ppRefs[refindex])->m_fpOffsetU = (int)&pMTP->fTexture0UOffset;
+                        ((C_SdlRef_TextureOffset*)m_ppRefs[refindex])->m_fpOffsetV = (int)&pMTP->fTexture0VOffset;
+                    }
+                    else if (m_ppRefs[refindex]->m_uRefType == 4)
+                    {
+                        pFogRef = (C_SdlRef_FogParameters*)m_ppRefs[refindex];
+                        pFogColorSearcher = (unsigned int*)ppP[0];
+                        while (*pFogColorSearcher != 0x563412)
+                            pFogColorSearcher--;
+                        pFogRef->m_pDestFogColor = (int)pFogColorSearcher;
+                        pFogRef->m_pDestFogStart = (int)((char*)ppP[0] + 0x78);
+                        pFogRef->m_pDestFogEnd = (int)((char*)ppP[0] + 0x7C);
+                    }
+                    refindex++;
+                    if (refindex == m_NbRefs)
+                        return;
+                    MustLoop = 1;
+                }
+            } while (MustLoop);
+        }
+        ppP += 2;
+    }
+
+    for (j = 0; j < m_NbRefs; j++)
+    {
+        switch (m_ppRefs[j]->m_uRefType)
+        {
+        case 1:
+        case 0x10:
+        case 0x20:
+            if (!m_ppRefs[j]->m_vpDestinationPointer)
+            {
+                delete m_ppRefs[j];
+                m_ppRefs[j] = NULL;
+            }
+            break;
+        case 8:
+            if (!m_ppRefs[j]->m_vpDestinationPointer || !((C_SdlRef_TextureMatrix*)m_ppRefs[j])->m_fpOffsetU || !((C_SdlRef_TextureMatrix*)m_ppRefs[j])->m_fpOffsetV)
+            {
+                delete m_ppRefs[j];
+                m_ppRefs[j] = NULL;
+            }
+            break;
+        case 2:
+            if (!((C_SdlRef_TextureOffset*)m_ppRefs[j])->m_fpOffsetU || !((C_SdlRef_TextureOffset*)m_ppRefs[j])->m_fpOffsetV)
+            {
+                delete m_ppRefs[j];
+                m_ppRefs[j] = NULL;
+            }
+            break;
+        case 4:
+            if (!((C_SdlRef_FogParameters*)m_ppRefs[j])->m_pDestFogColor || !((C_SdlRef_FogParameters*)m_ppRefs[j])->m_pDestFogStart || !((C_SdlRef_FogParameters*)m_ppRefs[j])->m_pDestFogEnd)
+            {
+                delete m_ppRefs[j];
+                m_ppRefs[j] = NULL;
+            }
+            break;
+        }
+    }
+
+    refindex = 0;
+    for (j = 0; j < m_NbRefs;)
+    {
+        if (j != refindex && m_ppRefs[j])
+        {
+            printf("\n\nNON VALID REFERENCE : MUST BE A PS2GL MEMORY PROBLEM !!!\n\n");
+            m_ppRefs[refindex++] = m_ppRefs[j++];
+        }
+        else if (m_ppRefs[j] == NULL)
+        {
+            j++;
+        }
+        else
+        {
+            j++;
+            refindex++;
+        }
+    }
+    m_NbRefs = refindex;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 204–213 */
@@ -3379,7 +4081,31 @@ void C_Sdl::AddRef(C_SdlRef* pRef)
  */
 void C_Sdl::Destruct(void)
 {
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+
+    if (m_NbReservedRefs)
+    {
+        for (i = 0; i < m_NbRefs; i++)
+        {
+            if (m_ppRefs[i])
+            {
+                delete m_ppRefs[i];
+                m_ppRefs[i] = NULL;
+            }
+        }
+        PS2glLiberator(m_ppRefs);
+        m_ppRefs = NULL;
+    }
+    m_NbReservedRefs = 0;
+    m_NbRefs = 0;
+    if (m_DisplayList)
+    {
+        MyglDeleteLists(m_DisplayList);
+        m_DisplayList = 0;
+        m_pListData = 0;
+        m_SDL_Size = 0;
+    }
+    GLI_g_NbSDLs--;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 157–174 */
@@ -3471,7 +4197,7 @@ void C_Sdl::Init(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void C_Sdl::__dl(void* ptr)
+void C_Sdl::operator delete(void* ptr)
 {
-    PS2glLiberator();
+    PS2glLiberator(ptr);
 }

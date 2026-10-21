@@ -3518,7 +3518,7 @@ tdstNodeInterpret_* fn_p_stCode4AirPointsProcedures(HIE_tdstSuperObject_* p_Supe
     case 0x1ab:
         xSign = -1.0f;
     case 0x1a9:
-        stExtendDatas4Ray.xAirPoints4Ray = xAirPoints = stExtendDatas4Ray.xAirPoints4Ray + xSign * xAirPoints;
+        stExtendDatas4Ray.xAirPoints4Ray += xSign * xAirPoints; xAirPoints = stExtendDatas4Ray.xAirPoints4Ray;
         if (xAirPoints > stExtendDatas4Ray.xAirPointsMax4Ray)
             stExtendDatas4Ray.xAirPoints4Ray = stExtendDatas4Ray.xAirPointsMax4Ray;
         else if (xAirPoints < 0.0f)
@@ -3527,7 +3527,7 @@ tdstNodeInterpret_* fn_p_stCode4AirPointsProcedures(HIE_tdstSuperObject_* p_Supe
     case 0x1ac:
         xSign = -1.0f;
     case 0x1aa:
-        stExtendDatas4Ray.xAirPointsMax4Ray = xAirPoints = stExtendDatas4Ray.xAirPointsMax4Ray + xSign * xAirPoints;
+        xAirPoints = stExtendDatas4Ray.xAirPointsMax4Ray + xSign * xAirPoints; stExtendDatas4Ray.xAirPointsMax4Ray = xAirPoints;
         if (xAirPoints < 0.0f)
             stExtendDatas4Ray.xAirPointsMax4Ray = 0.0f;
         if (stExtendDatas4Ray.xAirPoints4Ray > stExtendDatas4Ray.xAirPointsMax4Ray)

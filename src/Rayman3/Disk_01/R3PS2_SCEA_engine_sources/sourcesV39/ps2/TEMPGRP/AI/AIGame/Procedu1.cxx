@@ -1801,13 +1801,13 @@ tdstNodeInterpret_* fn_p_SetMechanicListParameter(HIE_tdstSuperObject_* p_SuperO
     tduVector3Words stVector;
     HIE_tdstSuperObject_* hSuperObject;
     tdeProcedureId_ eProcedureId;
+    tdstList_* p_stList;
     unsigned int ulCounter;
-    unsigned int ulMaxList;
     tdstDynam_* h_Dynam;
+    tdstGetSetParam_ stValue;
+    unsigned int ulMaxList;
     DNM_stDynamics* pstDynamic;
     MTH3D_tdstVector_* p_stVector;
-    tdstList_* p_stList;
-    tdstGetSetParam_ stValue;
     int lNoDynam;
     eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
@@ -1821,7 +1821,7 @@ tdstNodeInterpret_* fn_p_SetMechanicListParameter(HIE_tdstSuperObject_* p_SuperO
             hSuperObject = fn_p_stGetPersoInList(p_stList, ulCounter);
             h_Dynam = ((tdstEngineObject_*)hSuperObject->hLinkedObject.p_stCharacter)->h_Dynam;
             lNoDynam = (int)h_Dynam & (int)fn_p_stDynamGetDynamics(h_Dynam);
-            if (!lNoDynam)
+            if ((lNoDynam != 0) ^ 1)
                 return p_stTree;
             pstDynamic = fn_p_stDynamGetDynamics(h_Dynam);
             stVector.v.xX = pstDynamic->m_uStreamSpeed.v.xX + p_stVector->xX;

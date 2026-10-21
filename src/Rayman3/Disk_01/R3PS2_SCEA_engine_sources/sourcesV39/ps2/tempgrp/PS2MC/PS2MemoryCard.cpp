@@ -30,100 +30,100 @@ typedef struct sceCdCLOCK sceCdCLOCK;
 typedef struct _SceeMemCardFunctionResult _SceeMemCardFunctionResult;
 
 typedef enum ESceeMemCardState {
-    EMEMCARD_STATE_NULL = 1162040319,
-    EMEMCARD_STATE_IDLE = 1162040064,
-    EMEMCARD_STATE_ENTERING_STATE = 1162040065,
-    EMEMCARD_STATE_FORMAT = 1162040066,
-    EMEMCARD_STATE_FIND_DIR = 1162040067,
-    EMEMCARD_STATE_CREATE_DIR = 1162040068,
-    EMEMCARD_STATE_GET_NUM_FILES_IN_DIR = 1162040069,
-    EMEMCARD_STATE_GET_DIR_LIST = 1162040070,
-    EMEMCARD_STATE_FIND_FILE = 1162040071,
-    EMEMCARD_STATE_LOAD_FILE = 1162040072,
-    EMEMCARD_STATE_SAVE_FILE = 1162040073,
-    EMEMCARD_STATE_NUM_STATES = 1162040074,
+    EMEMCARD_STATE_NULL = 255,
+    EMEMCARD_STATE_IDLE = 0,
+    EMEMCARD_STATE_ENTERING_STATE = 1,
+    EMEMCARD_STATE_FORMAT = 2,
+    EMEMCARD_STATE_FIND_DIR = 3,
+    EMEMCARD_STATE_CREATE_DIR = 4,
+    EMEMCARD_STATE_GET_NUM_FILES_IN_DIR = 5,
+    EMEMCARD_STATE_GET_DIR_LIST = 6,
+    EMEMCARD_STATE_FIND_FILE = 7,
+    EMEMCARD_STATE_LOAD_FILE = 8,
+    EMEMCARD_STATE_SAVE_FILE = 9,
+    EMEMCARD_STATE_NUM_STATES = 10,
 } ESceeMemCardState;
 
 typedef enum PS2MC_tdstState {
-    STATE_DO_NOTHING = 1598246144,
-    STATE_ENTERING_IDLE = 1598246145,
-    STATE_IDLE = 1598246146,
-    STATE_WARNING = 1598246147,
-    STATE_MANAGE_CHECK_ONE_DIRECTORY = 1598246148,
-    STATE_BOOT_CHECK = 1598246149,
-    STATE_SAVE_ARE_YOU_SURE = 1598246150,
-    STATE_SAVE_GAME = 1598246151,
-    STATE_AUTO_SAVE_GAME = 1598246152,
-    STATE_MANAGE_FORMATTING = 1598246153,
-    STATE_GET_SAVED_GAMES_ENTRIES = 1598246154,
-    STATE_GET_SCREENSHOTS_ENTRIES = 1598246155,
-    STATE_SAVE_SCREENSHOT = 1598246156,
-    STATE_PROMPT_LAST_ERROR = 1598246157,
-    STATE_LOAD_GAME = 1598246158,
-    STATE_LOAD_SCREENSHOT = 1598246159,
-    STATE_END = 1598246160,
+    STATE_DO_NOTHING = 0,
+    STATE_ENTERING_IDLE = 1,
+    STATE_IDLE = 2,
+    STATE_WARNING = 3,
+    STATE_MANAGE_CHECK_ONE_DIRECTORY = 4,
+    STATE_BOOT_CHECK = 5,
+    STATE_SAVE_ARE_YOU_SURE = 6,
+    STATE_SAVE_GAME = 7,
+    STATE_AUTO_SAVE_GAME = 8,
+    STATE_MANAGE_FORMATTING = 9,
+    STATE_GET_SAVED_GAMES_ENTRIES = 10,
+    STATE_GET_SCREENSHOTS_ENTRIES = 11,
+    STATE_SAVE_SCREENSHOT = 12,
+    STATE_PROMPT_LAST_ERROR = 13,
+    STATE_LOAD_GAME = 14,
+    STATE_LOAD_SCREENSHOT = 15,
+    STATE_END = 16,
 } PS2MC_tdstState;
 
 typedef enum PS2MC_tdeMessageID {
-    MC_eFullMCForSavedGame = 844320768,
-    MC_eFullMCForPhotos = 844320769,
-    MC_eFullMCCancelSave = 844320770,
-    MC_eFullMCWithSG = 844320771,
-    MC_eFullMCForPhotosWithPhotos = 844320772,
-    MC_eFullMCForPhotosCancelSave = 844320773,
-    MC_eNoMC = 844320774,
-    MC_eNoGameInMC = 844320775,
-    MC_eUnformatted = 844320776,
-    MC_eFormatting = 844320777,
-    MC_eErrorWhileFormatting = 844320778,
-    MC_eSavingGame = 844320779,
-    MC_eAutoSaveFailed = 844320780,
-    MC_eAutoSaving = 844320781,
-    MC_eNoMCAtBoot = 844320782,
-    MC_eNoMCAtBootScreenShots = 844320783,
-    MC_eNoMCForSave = 844320784,
-    MC_eNoMCForPhotos = 844320785,
-    MC_eCancelSave = 844320786,
-    MC_eCancelSaveYesNo = 844320787,
-    MC_eErrorWhileSaving = 844320788,
-    MC_eErrorWhileSavingMCRemoved = 844320789,
-    MC_eAutoSaveExplanation = 844320790,
-    MC_eRemovedMC_AutoSaveDisabled = 844320791,
-    MC_eChangedMC_AutoSaveDisabled = 844320792,
-    MC_eOverwriteWarning = 844320793,
-    MC_eOverwriteWarningPhotos = 844320794,
-    MC_eCorruptedFile = 844320795,
-    MC_eLoadingData = 844320796,
-    MC_eErrorWhileLoading = 844320797,
-    MC_eErrorWhileLoadingBecauseMCRemoved = 844320798,
-    MC_eErrorWhileLoadingBecauseMCRemovedForPhotos = 844320799,
-    MC_eLoadingAreYouSure = 844320800,
-    MC_eAutoSavingIconOnly = 844320801,
-    MC_eAccessingMemoryCard = 844320802,
-    MC_eAreYouSureFormat = 844320803,
-    MC_eAreYouSureSave = 844320804,
-    MC_eAreYouSureSaveNo = 844320805,
-    MC_eSaveOk = 844320806,
-    MC_eLoadOk = 844320807,
-    MC_eEndMessage = 844320808,
+    MC_eFullMCForSavedGame = 0,
+    MC_eFullMCForPhotos = 1,
+    MC_eFullMCCancelSave = 2,
+    MC_eFullMCWithSG = 3,
+    MC_eFullMCForPhotosWithPhotos = 4,
+    MC_eFullMCForPhotosCancelSave = 5,
+    MC_eNoMC = 6,
+    MC_eNoGameInMC = 7,
+    MC_eUnformatted = 8,
+    MC_eFormatting = 9,
+    MC_eErrorWhileFormatting = 10,
+    MC_eSavingGame = 11,
+    MC_eAutoSaveFailed = 12,
+    MC_eAutoSaving = 13,
+    MC_eNoMCAtBoot = 14,
+    MC_eNoMCAtBootScreenShots = 15,
+    MC_eNoMCForSave = 16,
+    MC_eNoMCForPhotos = 17,
+    MC_eCancelSave = 18,
+    MC_eCancelSaveYesNo = 19,
+    MC_eErrorWhileSaving = 20,
+    MC_eErrorWhileSavingMCRemoved = 21,
+    MC_eAutoSaveExplanation = 22,
+    MC_eRemovedMC_AutoSaveDisabled = 23,
+    MC_eChangedMC_AutoSaveDisabled = 24,
+    MC_eOverwriteWarning = 25,
+    MC_eOverwriteWarningPhotos = 26,
+    MC_eCorruptedFile = 27,
+    MC_eLoadingData = 28,
+    MC_eErrorWhileLoading = 29,
+    MC_eErrorWhileLoadingBecauseMCRemoved = 30,
+    MC_eErrorWhileLoadingBecauseMCRemovedForPhotos = 31,
+    MC_eLoadingAreYouSure = 32,
+    MC_eAutoSavingIconOnly = 33,
+    MC_eAccessingMemoryCard = 34,
+    MC_eAreYouSureFormat = 35,
+    MC_eAreYouSureSave = 36,
+    MC_eAreYouSureSaveNo = 37,
+    MC_eSaveOk = 38,
+    MC_eLoadOk = 39,
+    MC_eEndMessage = 40,
 } PS2MC_tdeMessageID;
 
 typedef enum PS2MC_tdstFunctionFlags {
-    FFlag_Save = 1598246144,
-    FFlag_AutoSave = 1598246145,
-    FFlag_GetSavedGamesHeaders = 1598246146,
-    FFlag_GetScreenShotsHeaders = 1598246147,
-    FFlag_BootCheck = 1598246148,
-    FFlag_SaveScreenShot = 1598246149,
-    FFlag_LoadGame = 1598246150,
-    FFlag_LoadScreenShot = 1598246151,
-    FFlag_End = 1598246152,
+    FFlag_Save = 0,
+    FFlag_AutoSave = 1,
+    FFlag_GetSavedGamesHeaders = 2,
+    FFlag_GetScreenShotsHeaders = 3,
+    FFlag_BootCheck = 4,
+    FFlag_SaveScreenShot = 5,
+    FFlag_LoadGame = 6,
+    FFlag_LoadScreenShot = 7,
+    FFlag_End = 8,
 } PS2MC_tdstFunctionFlags;
 
 typedef enum ESceeResult {
-    E_FAIL = 1162040064,
-    E_SUCCESS = 1162040065,
-    E_INDETERMINATE = 1162040319,
+    E_FAIL = 0,
+    E_SUCCESS = 1,
+    E_INDETERMINATE = 255,
 } ESceeResult;
 
 struct sceMcIconSys {
@@ -302,7 +302,8 @@ struct sceCdCLOCK {
 };
 
 struct _SceeMemCardFunctionResult {
-    ESceeResult success; /* +0x0 */
+    signed char success; /* +0x0 - the retail loads this status with 'lb', so the
+                            field is a single signed byte (ESceeResult) */
     int subState; /* +0x4 */
     int libMCErrorCode; /* +0x8 */
 };
@@ -560,6 +561,10 @@ void PS2MC_fn_vEnablePrompts(void)
  * compare a candidate object's line table as an extra checkpoint.
  */
 extern "C" void PS2MC_RemoveCurrentMessage(void);
+extern "C" void PS2MC_SetDisplayMessage(int, int);
+extern "C" void FlushCache(void*);
+extern "C" int sceeMemCardSaveFile(unsigned int, unsigned int, char*, char*, void*, unsigned int);
+extern "C" int sceeMemCardGetFunctionResult(int, _SceeMemCardFunctionResult*);
 
 void PS2MC_fn_vStopPrompts(void)
 {
@@ -1610,7 +1615,103 @@ void C_PS2MC_Manager::ManageAutoSaveGame(void)
 {
     _SceeMemCardFunctionResult functionResult;
     int returnVal;
-    /* TODO: decompile from asm/... */
+
+    if (m_MemoryCardInternalStatus.type == 0 || m_bMCChangedSinceLastSave)
+    {
+        m_AutoSaveErrorMessage = MC_eRemovedMC_AutoSaveDisabled;
+        PS2MC_RemoveCurrentMessage();
+        m_Flags[1] = 2;
+        m_bMCChangedSinceLastSave = 1;
+        m_bAutoSaveEnabled = 0;
+        m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+        return;
+    }
+    switch (m_uiSubState)
+    {
+        case 0:
+        {
+            if (m_MemoryCardInternalStatus.type == -10) break;
+            m_uiSubState = 10;
+            PS2MC_SetDisplayMessage(MC_eAutoSaving, m_RequiredGameDataSize);
+            break;
+        }
+        case 10:
+        {
+            FlushCache(0);
+            if (sceeMemCardSaveFile(m_uiPort, m_uiSlot, m_aDirExtension, m_aFullFileName, (void*)m_pDataToSave, 0x3DE) == 0L || m_MemoryCardInternalStatus.type == 0)
+            {
+                m_AutoSaveErrorMessage = MC_eAutoSaveFailed;
+                PS2MC_RemoveCurrentMessage();
+                m_Flags[1] = 2;
+                m_bMCChangedSinceLastSave = 1;
+                m_bAutoSaveEnabled = 0;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 11:
+        {
+            sceeMemCardGetFunctionResult(9, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                m_uiSubState++;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                m_AutoSaveErrorMessage = MC_eAutoSaveFailed;
+                PS2MC_RemoveCurrentMessage();
+                m_Flags[1] = 2;
+                m_bMCChangedSinceLastSave = 1;
+                m_bAutoSaveEnabled = 0;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            break;
+        }
+        case 12:
+        {
+            FillIconSys(m_aGameName, 0);
+            FlushCache(0);
+            if (sceeMemCardSaveFile(m_uiPort, m_uiSlot, m_aDirExtension, "icon.sys", &m_iconSys, 0x3C4) == 0L || m_MemoryCardInternalStatus.type == 0)
+            {
+                m_AutoSaveErrorMessage = MC_eAutoSaveFailed;
+                PS2MC_RemoveCurrentMessage();
+                m_Flags[1] = 2;
+                m_bMCChangedSinceLastSave = 1;
+                m_bAutoSaveEnabled = 0;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else
+            {
+                m_uiSubState++;
+            }
+            break;
+        }
+        case 13:
+        {
+            sceeMemCardGetFunctionResult(9, &functionResult);
+            if (functionResult.success == E_SUCCESS)
+            {
+                PS2MC_RemoveCurrentMessage();
+                printf("Auto-Saved with success\n");
+                m_Flags[1] = 1;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            else if (functionResult.success == E_FAIL || m_MemoryCardInternalStatus.type == 0)
+            {
+                m_AutoSaveErrorMessage = MC_eAutoSaveFailed;
+                PS2MC_RemoveCurrentMessage();
+                m_Flags[1] = 2;
+                m_bMCChangedSinceLastSave = 1;
+                m_bAutoSaveEnabled = 0;
+                m_MemoryCardInternalStatus.type = -10; m_uiState = 2; m_uiSubState = 0; m_uiNextState = 2;
+            }
+            break;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 2881–3078 */
