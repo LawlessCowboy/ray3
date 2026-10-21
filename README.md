@@ -19,9 +19,9 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **2,900 / 4,134** (+1 register-equivalent) | **382,172 / 1,507,864** (**25.3453%**) |
-| Library code | 1,062 / 3,521 (+1 register-equivalent) | 105,460 / 737,336 (14.3028%) |
-| **Total** | **3,962 / 7,655** (+2 register-equivalent) | **487,632 / 2,245,200** (**21.7189%**) |
+| **Game code** | **2,920 / 4,134** (+1 register-equivalent) | **388,772 / 1,507,864** (**25.7830%**) |
+| Library code | 1,067 / 3,521 (+1 register-equivalent) | 107,316 / 737,336 (14.5546%) |
+| **Total** | **3,987 / 7,655** (+2 register-equivalent) | **496,088 / 2,245,200** (**22.0955%**) |
 
 - Translation units (`python3 tools/match.py tus --summary`): **149 / 356**
   fully matched (game 143 / 334, library 6 / 22), with 197 more partially
