@@ -1347,6 +1347,7 @@ void fn_v_InitSinTab(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_v_MergePositions(tdstChannel_* p_stChannel, tdstAChannel_* p_stCurrentChannel, unsigned char bHierarchized);
 void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObject, tdstAnim3d_* _p_stAnim3d)
 {
     unsigned char bHierarchized;
@@ -1355,7 +1356,27 @@ void fn_vComputeFinalFrameMatrixForInterAnim(HIE_tdstSuperObject_* p_stSuperObje
     tdstChannel_* p_stPreviousChannel;
     tdstA3dGENERAL_* p_stPreviousA3dGeneral;
     tdstA3dGENERAL_ForTransitions_* p_stA3dGENERAL;
-    /* TODO: decompile from asm/... */
+    /* Not original source, needs cleaning up: retail loads the channel array before the first call; debug lists no local for it. */
+    tdstAChannel_* hArrayOfChannels;
+    extern tdstA3dGENERAL_ForTransitions_* fn_p_GetA3dGENERALForTransitions(unsigned short);
+
+    hArrayOfChannels = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels;
+
+    p_stA3dGENERAL = fn_p_GetA3dGENERALForTransitions(_p_stAnim3d->uwNumOfA3dGENERAL);
+    p_stPreviousA3dGeneral = fn_p_GetA3dGENERAL(p_stA3dGENERAL->uwPrevious, p_stA3dGENERAL->uwPreviousFrame);
+
+    fn_p_GetA3dGENERAL(p_stA3dGENERAL->uwNext, p_stA3dGENERAL->uwNextFrame);
+
+    uwPreviousT_NTTO = gp_stOnlyFrames[p_stPreviousA3dGeneral->uwNumOfFirstOnlyFrame + p_stA3dGENERAL->uwPreviousFrame].uwNumOfSavedFrame;
+    for (uwCnt1 = 0, p_stPreviousChannel = &gp_stChannels[p_stPreviousA3dGeneral->uwNumOfFirstChannel]; uwCnt1 < p_stPreviousA3dGeneral->uwNumberOfChannels; uwCnt1++, p_stPreviousChannel++)
+    {
+        if ((p_stPreviousChannel->uwChannelNumber != 0xFFFF) && !hArrayOfChannels[p_stPreviousChannel->uwChannelNumber].bControlledChannel && !hArrayOfChannels[p_stPreviousChannel->uwChannelNumber].bLipsChannel)
+        {
+            bHierarchized = (gp_stNTTO[gp_FramesNumOfNTTO[p_stPreviousChannel->uwNumOfFirstFrame + uwPreviousT_NTTO]].uwTypeOfObject != 0xFFFF) ? (unsigned char)(gp_stNTTO[gp_FramesNumOfNTTO[p_stPreviousChannel->uwNumOfFirstFrame + uwPreviousT_NTTO]].uwTypeOfObject & 0x800) : 0;
+
+            fn_v_MergePositions(p_stPreviousChannel, &hArrayOfChannels[p_stPreviousChannel->uwChannelNumber], bHierarchized);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_intn.c lines 1959–2018 */

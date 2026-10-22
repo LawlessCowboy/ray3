@@ -5465,12 +5465,34 @@ int PageConv4to32(int width, int height, unsigned char* p_input, unsigned char* 
  */
 int BlockConv8to32(unsigned char* p_input, unsigned char* p_output)
 {
+    static int lut[128] = {
+        0, 36, 8, 44, 1, 37, 9, 45, 2, 38, 10, 46, 3, 39, 11, 47,
+        4, 32, 12, 40, 5, 33, 13, 41, 6, 34, 14, 42, 7, 35, 15, 43,
+        16, 52, 24, 60, 17, 53, 25, 61, 18, 54, 26, 62, 19, 55, 27, 63,
+        20, 48, 28, 56, 21, 49, 29, 57, 22, 50, 30, 58, 23, 51, 31, 59,
+        4, 32, 12, 40, 5, 33, 13, 41, 6, 34, 14, 42, 7, 35, 15, 43,
+        0, 36, 8, 44, 1, 37, 9, 45, 2, 38, 10, 46, 3, 39, 11, 47,
+        20, 48, 28, 56, 21, 49, 29, 57, 22, 50, 30, 58, 23, 51, 31, 59,
+        16, 52, 24, 60, 17, 53, 25, 61, 18, 54, 26, 62, 19, 55, 27, 63,
+    };
     unsigned char* pIn;
     unsigned int index1;
     unsigned int index0;
     unsigned int i0;
     unsigned int k;
     unsigned int i;
-    int lut[128];
-    /* TODO: decompile from asm/... */
+
+    k = 0;
+    pIn = p_input;
+    for (index0 = 0; index0 < 4; index0++)
+    {
+        i0 = (index0 & 1) * 64;
+        for (index1 = 0; index1 < 16; index1++)
+        {
+            for (i = 0; i < 4; i++)
+                p_output[k++] = pIn[lut[i0++]];
+        }
+        pIn += 64;
+    }
+    return 0;
 }

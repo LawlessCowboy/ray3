@@ -3558,12 +3558,43 @@ unsigned int DEMO_fn_u32GetCurrentEventOffset(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_lGetSubMapNumber(void);
+char* fn_p_szGetLevelName(void);
+char* FMN_SCE_ConvertPath2DVD(char* buffer);
+char* FMN_SCE_AddBaseDirectory(char* buffer);
+char* strstr(const char* s1, const char* s2);
+unsigned int strlen(const char* s);
+
 char* DEMO_fn_pcBuildDemoPath(char* szFilename)
 {
     char ax_cName[256];
     char* p_cFilename;
     int lSubMapNumber;
-    /* TODO: decompile from asm/... */
+
+    lSubMapNumber = ((unsigned int)fn_lGetSubMapNumber() & 0xFFFF0000) >> 16;
+
+    if (lSubMapNumber == 0)
+    {
+        sprintf(szFilename, "\\Demos\\%s\\", fn_p_szGetLevelName());
+    }
+    else
+    {
+        sprintf(szFilename, "\\Demos\\%s\\%02d\\", fn_p_szGetLevelName(), lSubMapNumber);
+    }
+
+    strcpy(ax_cName, FMN_SCE_AddBaseDirectory(FMN_SCE_ConvertPath2DVD(szFilename)));
+
+    if (strstr(ax_cName, "cdrom0:") == ax_cName)
+        /* Not original source, needs cleaning up: int-cast keeps the unfolded sp+0x30 addressing. */
+        strcpy(szFilename, (char*)((int)ax_cName + strlen("cdrom0:")));
+    else
+        strcpy(szFilename, ax_cName);
+
+    p_cFilename = strstr(szFilename, ";1");
+    if (p_cFilename == szFilename + strlen(szFilename) - 2)
+        *p_cFilename = 0;
+
+    return szFilename + strlen(szFilename);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1448–1448 */

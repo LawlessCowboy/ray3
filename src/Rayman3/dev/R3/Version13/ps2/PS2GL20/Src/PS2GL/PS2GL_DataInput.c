@@ -2718,10 +2718,36 @@ void impPS2glLighti(unsigned int light, unsigned int pname, int param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+double cos(double x);
 void impPS2glLightf(unsigned int light, unsigned int pname, float param)
 {
     tag_GLlight* pLight;
-    /* TODO: decompile from asm/... */
+
+    if (light < 0x4000 || light > 0x4008)
+        return;
+    {
+        pLight = &g_PS2glContext.Lights[light - 0x4000];
+        switch (pname)
+        {
+        case 0x1205:
+            pLight->fSpotExponent = param;
+            break;
+        case 0x1206:
+            pLight->fSpotCutoff = param;
+            pLight->fCosCutoff = cos(param * 0.017453292f);
+            break;
+        case 0x1207:
+            pLight->fConstantAttenuation = param;
+            break;
+        case 0x1208:
+            pLight->fLinearAttenuation = param;
+            break;
+        case 0x1209:
+            pLight->fQuadraticAttenuation = param;
+            break;
+        }
+        g_PS2glContext.bLightsChanged = 1;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1212–1232 */

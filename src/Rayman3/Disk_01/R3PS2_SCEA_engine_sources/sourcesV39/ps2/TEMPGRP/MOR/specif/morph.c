@@ -1524,10 +1524,10 @@ unsigned char MOR_fn_bIsCharacterMorphed(HIE_tdstSuperObject_* _hActorSuperObjec
  */
 unsigned char MOR_fn_bIsChannelMorphed(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex)
 {
-    unsigned char j;
-    int bEveryTargetIsFinishedMorphing;
-    MOR_stMorphStruct_* mp;
     short i;
+    MOR_stMorphStruct_* mp;
+    int bEveryTargetIsFinishedMorphing;
+    unsigned char j;
 
     for (i = 0; i < 50; i++) {
         mp = &g_MorphTasksList[i];
@@ -1540,13 +1540,10 @@ unsigned char MOR_fn_bIsChannelMorphed(HIE_tdstSuperObject_* _hActorSuperObject,
                 bEveryTargetIsFinishedMorphing = 0;
             }
         }
-        if (mp->ucMorphType == 3) {
+        if (mp->ucMorphType == 3 || !bEveryTargetIsFinishedMorphing) {
             return 1;
         }
-        if (bEveryTargetIsFinishedMorphing) {
-            return 0;
-        }
-        return 1;
+        return 0;
     }
     return 0;
 }

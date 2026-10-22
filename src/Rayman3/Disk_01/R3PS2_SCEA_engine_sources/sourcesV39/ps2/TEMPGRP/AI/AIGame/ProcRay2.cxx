@@ -2707,6 +2707,41 @@ tdstNodeInterpret_* fn_p_stACTSetRangeValue(HIE_tdstSuperObject_* p_SuperObjPers
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+struct WP_tdstWayPoint_ {
+    MTH3D_tdstVector_ m_stVertex; /* +0x0 */
+    float m_xRadius; /* +0xc */
+    HIE_tdstSuperObject_* m_hSuperObject; /* +0x10 */
+};
+extern "C" unsigned char WP_fnb_WayPoint_IsDynamic(WP_tdstWayPoint_* _hWayPoint);
+extern "C" void WP_fnv_WayPoint_SetVertex(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _p_stVertex);
+extern "C" void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSrc);
+
+/* MatSp.h inline (as in WPWayPt.c): the VU0 macro-mode instructions have no C form. */
+inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    MTH4D_tdstVector_* p_stVtmp;
+
+    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
+    *(unsigned int*)&Vtmp.xX = ((unsigned int*)VectA)[0]; *(unsigned int*)&Vtmp.xY = ((unsigned int*)VectA)[1]; *(unsigned int*)&Vtmp.xZ = ((unsigned int*)VectA)[2];
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
+}
+
 tdstNodeInterpret_* fn_p_stSetCoordWP(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdeProcedureId_ eProcedureId;
@@ -2714,7 +2749,35 @@ tdstNodeInterpret_* fn_p_stSetCoordWP(HIE_tdstSuperObject_* p_SuperObjPerso, tds
     WP_tdstWayPoint_* hWP;
     tdstGetSetParam_ stParam2;
     tdstGetSetParam_ stParam1;
-    /* TODO: decompile from asm/... */
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+
+    hWP = (WP_tdstWayPoint_*)stParam1.uParam.pValue;
+    stV = stParam2.uParam.stVectorValue;
+
+    if (WP_fnb_WayPoint_IsDynamic(hWP))
+    {
+        eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+        switch (eProcedureId)
+        {
+        case 0x1ba:
+            WP_fnv_WayPoint_SetVertex(hWP, &stV);
+            break;
+
+        case 0x1b9:
+            MAT_fn_vInvert(hWP->m_hSuperObject->hGlobalMatrix, hWP->m_hSuperObject->hGlobalMatrix);
+            MAT_fn_vApplyOnVertex(&stV, hWP->m_hSuperObject->hGlobalMatrix, &stV);
+            hWP->m_stVertex = stV;
+            break;
+        }
+    }
+    else
+    {
+        WP_fnv_WayPoint_SetVertex(hWP, &stV);
+    }
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\ProcRay2.cxx lines 1552–1563 */
@@ -3592,17 +3655,18 @@ tdstNodeInterpret_* fn_p_stCode4ChangeCaractere(HIE_tdstSuperObject_* p_SuperObj
     ucPosLetter = (unsigned char)stParam.uParam.ulValue;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     ucLetter = (unsigned char)stParam.uParam.ulValue;
-    if (eProcedureId == 0x215) {
+    if (eProcedureId != 0x215)
+        return p_stTree;
+    {
         if (pszString) {
-            iStrLen = strlen(pszString);
             iCpt = 0;
-            do {
+            iStrLen = strlen(pszString);
+            while (pszString[iCpt++] == '/')
                 while (pszString[iCpt++] != ':')
                     ;
-            } while (pszString[iCpt++] == '/');
             iTrueLetterPos = ucPosLetter + iCpt - 1;
             if (iStrLen < iTrueLetterPos)
-                pszString[iStrLen - 1] = ucLetter;
+                (pszString - 1)[iStrLen] = ucLetter;
             else
                 pszString[iTrueLetterPos] = ucLetter;
             TFMT_vChangeLetter(fn_h_StandardGameGetSuperObject(p_stEngineObject->h_StandardGame), ucPosLetter, ucLetter);

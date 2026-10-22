@@ -1339,6 +1339,8 @@ void impPS2glLoadIdentity(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: scoped auto-inline so impPS2glLoadMatrixd inlines impPS2glLoadMatrixf. */
+#pragma auto_inline on
 void impPS2glLoadMatrixf(float* m)
 {
     __int128 v3, v2, v1, v0;
@@ -1367,9 +1369,27 @@ void impPS2glLoadMatrixf(float* m)
  */
 void impPS2glLoadMatrixd(double* m)
 {
-    float fm[16];
-    /* TODO: decompile from asm/... */
+    float fm[4][4];
+
+    fm[0][0] = m[0];
+    fm[0][1] = m[1];
+    fm[0][2] = m[2];
+    fm[0][3] = m[3];
+    fm[1][0] = m[4];
+    fm[1][1] = m[5];
+    fm[1][2] = m[6];
+    fm[1][3] = m[7];
+    fm[2][0] = m[8];
+    fm[2][1] = m[9];
+    fm[2][2] = m[10];
+    fm[2][3] = m[11];
+    fm[3][0] = m[12];
+    fm[3][1] = m[13];
+    fm[3][2] = m[14];
+    fm[3][3] = m[15];
+    impPS2glLoadMatrixf((float*)fm);
 }
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 445–454 */
 /* addr: 0x00181370  size: 168 bytes */
