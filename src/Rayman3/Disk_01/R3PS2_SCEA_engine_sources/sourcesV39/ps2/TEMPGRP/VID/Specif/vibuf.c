@@ -505,19 +505,19 @@ void viBufBeginPut(anon_3* f, unsigned char** ptr0, int* len0, unsigned char** p
     en = (((f->dmaStart + f->dmaN) << 11) + f->readBytes) % f->buffSize;
     es = (((f->n - 2) - f->dmaN) << 11) - f->readBytes;
 
-    if ((f->buffSize - en) < es)
-    {
-        *ptr0 = (unsigned char*)(f->data + en);
-        *len0 = f->buffSize - en;
-        *ptr1 = (unsigned char*)f->data;
-        *len1 = es - (f->buffSize - en);
-    }
-    else
+    if (es <= f->buffSize - en)
     {
         *ptr0 = (unsigned char*)(f->data + en);
         *len0 = es;
         *ptr1 = 0;
         *len1 = 0;
+    }
+    else
+    {
+        *ptr0 = (unsigned char*)(f->data + en);
+        *len0 = f->buffSize - en;
+        *ptr1 = (unsigned char*)f->data;
+        *len1 = es - (f->buffSize - en);
     }
 
     SignalSema(f->sema);

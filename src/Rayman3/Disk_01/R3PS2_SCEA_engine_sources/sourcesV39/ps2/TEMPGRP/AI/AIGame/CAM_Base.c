@@ -4367,12 +4367,33 @@ void CAM_fn_vRotateCameraAxis(MTH3D_tdstVector_* _p_stCameraAxis, float _xHorAng
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vComputeAnglesBetweenTwoVectors(tdstInternalStructurCineinfo_* _hCineinfo, MTH3D_tdstVector_* _p_stSourceVector, MTH3D_tdstVector_* _p_stTargetVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle, MTH3D_tdstVector_* _p_stRefAxisZ);
+void CAM_fn_vBoundAngleWithTolerance(CAM_tdstUpdateCamera_* _p_stStruct, float* _p_xAngleToBound, float* _p_xCutAngle, float* _p_xDeltaAngle, float _xRequestAngle, float _xTolerance);
 void CAM_fn_vComputeCameraAxisAngles(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stCameraAxis, MTH3D_tdstVector_* _p_stCamTargetAxis, float* _p_xHorAngle, float* _p_xVerAngle)
 {
     float xShiftTheta;
     float xShiftAlpha;
     float xTemp;
-    /* TODO: decompile from asm/... */
+
+    CAM_fn_vComputeAnglesBetweenTwoVectors(_p_stStruct->hCineinfoWork, _p_stCameraAxis, _p_stCamTargetAxis, _p_xHorAngle, _p_xVerAngle, &_p_stStruct->stCptPos.stRefAxisZ);
+
+    if ((_p_stStruct->hCineinfo->ucPerIAFlags & 4) || (_p_stStruct->hCineinfoWork->uwIAFlags & 0x40))
+    {
+        xShiftAlpha = 0.0f;
+        xShiftTheta = xShiftAlpha;
+    }
+    else
+    {
+        xShiftAlpha = _p_stStruct->hCineinfoWork->xAngleShiftAlpha;
+        xShiftTheta = _p_stStruct->hCineinfoWork->xAngleShiftTheta;
+    }
+
+    _p_stStruct->cHasCutAlpha = 0;
+    CAM_fn_vBoundAngleWithTolerance(_p_stStruct, _p_xHorAngle, &_p_stStruct->xAngleAlphaCut, &_p_stStruct->xAngleDeltaAlphaCut, _p_stStruct->hCineinfoWork->xAngleAlpha, xShiftAlpha);
+    if (*_p_xHorAngle != _p_stStruct->xAngleAlphaCut)
+        _p_stStruct->cHasCutAlpha = 1;
+
+    CAM_fn_vBoundAngleWithTolerance(_p_stStruct, _p_xVerAngle, &xTemp, &xTemp, (_p_stStruct->hCineinfo->eState == 1) ? _p_stStruct->hCineinfoCurrent->xAngleTheta : _p_stStruct->hCineinfoWork->xAngleTheta, xShiftTheta);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 401–486 */
@@ -4424,7 +4445,9 @@ void CAM_fn_vComputeCameraAxisAngles(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CAM_fn_vBoundAngleWithTolerance(float* _p_xAngleToBound, float* _p_xCutAngle, float* _p_xDeltaAngle, float _xRequestAngle, float _xTolerance)
+/* The recovered debug lists five parameters, but the target ignores a0 and reads the three pointers from a1-a3;
+ * CAM_fn_vComputeCameraAxisAngles passes the camera structure in a0. */
+void CAM_fn_vBoundAngleWithTolerance(CAM_tdstUpdateCamera_* _p_stStruct, float* _p_xAngleToBound, float* _p_xCutAngle, float* _p_xDeltaAngle, float _xRequestAngle, float _xTolerance)
 {
     int bInTolerance;
     float xNewAngle;

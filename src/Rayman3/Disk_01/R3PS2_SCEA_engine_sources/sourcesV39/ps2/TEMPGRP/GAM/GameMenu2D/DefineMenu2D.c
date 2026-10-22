@@ -2758,7 +2758,39 @@ void fn_vPreviousSelection(void)
  */
 void fn_vNextSelection(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_CurrentSelection == aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1)
+    {
+        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+        {
+            g_CurrentSelection = 0;
+        }
+        else
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry = 0;
+                g_CurrentSelection = 0;
+            }
+            else
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry++;
+            }
+        }
+    }
+    else
+    {
+        g_CurrentSelection++;
+    }
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection != 0)
+    {
+        fn_vPlaySoundInGameMenu2D(2);
+    }
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+    {
+        fn_vNextSelection();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1556–1589 */
@@ -3754,7 +3786,7 @@ void ActivateInGameMenu2D(void)
         g_CurrentMenu2DPage = 0;
     }
     fn_vInitSoundInGameMenu2D(1);
-    g_XTextLeft = 18.0f;
+    g_XTextLeft = 39.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 542–581 */
@@ -3786,9 +3818,34 @@ void ActivateInGameMenu2D(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int PS2MC_fn_bHasBootCheckBeenDoneYet(void);
 void ActivateInGameMenu2DStart(void)
 {
-    /* TODO: decompile from asm/... */
+    g_NotRight = 1;
+    g_NotLeft = 1;
+    g_NoBonusShortcut = 1;
+    g_NoGameShortcut = 1;
+    g_CurrentMenu2DPage = g_StartMenuPage;
+    g_IsSaveOK = 0;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
+    fn_vSaveEngineClock();
+    g_CurrentActionMenu2D = eActionBeginOfPage;
+    g_stEngineStructure.bEngineFrozen = 1;
+    g_CurrentIndSubMenu = -1;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    g_InGameMenu2DActivated = 1;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_CurrentSelection = 0;
+    PS2M2D_vReinitMenuTextures();
+    fn_vInitSoundInGameMenu2D(1);
+    g_XTextLeft = 39.0f;
+    g_2DMenuID = 1;
+    aMenu2DPages[g_StartMenuPage].abGrayed[1] = 1;
+    if (g_CurrentSelection == 1)
+        fn_vPreviousSelection();
+    PS2MC_fn_bHasBootCheckBeenDoneYet();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 509–537 */
@@ -3921,7 +3978,28 @@ void ActivateInGameMenu2DPhoto(void)
  */
 void M2D_fn_vDisplayEndOfGameRecapPage(void)
 {
-    /* TODO: decompile from asm/... */
+    g_NotRight = 1;
+    g_NotLeft = 1;
+    g_NoBonusShortcut = 1;
+    g_NoGameShortcut = 1;
+    g_CurrentMenu2DPage = g_RecapMenuPage;
+    g_2DMenuID = 4;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
+    fn_vSaveEngineClock();
+    g_CurrentActionMenu2D = eActionBeginOfPage;
+    g_stEngineStructure.bEngineFrozen = 1;
+    g_CurrentIndSubMenu = -1;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    g_InGameMenu2DActivated = 1;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_CurrentSelection = 0;
+    PS2M2D_vReinitMenuTextures();
+    fn_vInitSoundInGameMenu2D(0);
+    g_CurrentSelectedCharNumber = 0;
+    g_XTextLeft = 39.0f;
+    g_XText = 39.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 466–486 */
@@ -3965,7 +4043,32 @@ void M2D_fn_vDisplayEndOfGameRecapPage(void)
  */
 void ActivateInGameMenu2DBonus(int WithExit)
 {
-    /* TODO: decompile from asm/... */
+    g_NotRight = 0;
+    g_NotLeft = 0;
+    g_NoBonusShortcut = 0;
+    g_NoGameShortcut = 0;
+    g_CurrentMenu2DPage = g_BonusPage;
+    g_IsSaveOK = 0;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 0;
+    fn_vSaveEngineClock();
+    g_CurrentActionMenu2D = eActionBeginOfPage;
+    g_stEngineStructure.bEngineFrozen = 1;
+    g_CurrentIndSubMenu = -1;
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    g_InGameMenu2DActivated = 1;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_stEngineStructure.stEngineTimer.ulCurrentTimerCount++;
+    IPT_fn_vReadInput(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount);
+    g_CurrentSelection = 0;
+    PS2M2D_vReinitMenuTextures();
+    fn_vInitSoundInGameMenu2D(1);
+    g_2DMenuID = 3;
+    g_BonusWithExit = WithExit;
+    g_XTextLeft = 39.0f;
+    g_MaxIndCurrentEnv = 1;
+    g_IndCurrentEnv = -1;
+    g_ExitForbidden = WithExit ? 0 : 1;
+    aMenu2DPages[g_GamePage].abGrayed[2] = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 418–418 */

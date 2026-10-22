@@ -1885,7 +1885,49 @@ void DMMBloc::remove_from_hashtable(DMM_tdstFreeBloc_* pFreeBloc)
  */
 void DMMBloc::remove_FreeBloc(DMM_tdstFreeBloc_* pFreeBloc)
 {
-    /* TODO: decompile from asm/... */
+    if (pFreeBloc != NULL)
+    {
+        unsigned int HashTableIndex = ((unsigned int)pFreeBloc - (unsigned int)m_pMemoryBloc) >> 10;
+        if (m_pHashTable[HashTableIndex] == pFreeBloc)
+        {
+            if (pFreeBloc->pNext != NULL)
+            {
+                if (((unsigned int)pFreeBloc->pNext - (unsigned int)m_pMemoryBloc) >> 10 == HashTableIndex)
+                    m_pHashTable[HashTableIndex] = pFreeBloc->pNext;
+                else
+                    m_pHashTable[HashTableIndex] = NULL;
+            }
+            else
+                m_pHashTable[HashTableIndex] = NULL;
+        }
+    }
+    if (pFreeBloc == m_pFreeBlocsChain)
+    {
+        m_pFreeBlocsChain = m_pFreeBlocsChain->pNext;
+        if (m_pFreeBlocsChain != NULL)
+        {
+            m_pFreeBlocsChain->pPrevious = NULL;
+            if (m_pFreeBlocsChain != NULL)
+            {
+                unsigned int uiHashIndex = ((unsigned int)m_pFreeBlocsChain - (unsigned int)m_pMemoryBloc) >> 10;
+                if (m_pHashTable[uiHashIndex] == NULL || m_pFreeBlocsChain < m_pHashTable[uiHashIndex])
+                    m_pHashTable[uiHashIndex] = m_pFreeBlocsChain;
+            }
+        }
+        else
+        {
+            m_pFreeBlocsChainEnd = NULL;
+        }
+    }
+    else
+    {
+        if (pFreeBloc->pPrevious != NULL)
+            pFreeBloc->pPrevious->pNext = pFreeBloc->pNext;
+        if (pFreeBloc->pNext != NULL)
+            pFreeBloc->pNext->pPrevious = pFreeBloc->pPrevious;
+        if (pFreeBloc->pNext == NULL)
+            m_pFreeBlocsChainEnd = pFreeBloc;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 237–278 */
@@ -1918,8 +1960,36 @@ void DMMBloc::remove_FreeBloc(DMM_tdstFreeBloc_* pFreeBloc)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void DMMBloc_ctor(unsigned int MemoryBlocSize, unsigned int Alignment)
+extern "C" void* malloc(unsigned int size);
+DMMBloc::DMMBloc(unsigned int MemoryBlocSize, unsigned int Alignment)
 {
     unsigned int i;
-    /* TODO: decompile from asm/... */
+
+    m_BlocAlignment = Alignment;
+    m_MemoryBlocSize = m_BlocAlignment + ((MemoryBlocSize + (m_BlocAlignment - 1)) & ~(m_BlocAlignment - 1));
+    m_pMemoryBloc = (int)malloc(m_MemoryBlocSize);
+    m_pFreeBlocsChain = (DMM_tdstFreeBloc_*)m_pMemoryBloc;
+    m_pFreeBlocsChainEnd = m_pFreeBlocsChain;
+    m_AllocMode = 0;
+    m_UsedMemory = 0;
+    m_HashTableSize = m_MemoryBlocSize >> 10;
+    if (m_HashTableSize == 0)
+        m_HashTableSize = 1;
+    m_pHashTable = (DMM_tdstFreeBloc_**)malloc(m_HashTableSize * 4);
+    printf("HASH SIZE = %d\n", m_HashTableSize * 4);
+    /* Not original source, needs cleaning up: the block temps reproduce the
+     * retail's single load of each value for the first free bloc header. */
+    {
+        DMM_tdstFreeBloc_* pFreeBloc;
+        unsigned int uiSize;
+        uiSize = m_MemoryBlocSize;
+        pFreeBloc = m_pFreeBlocsChain;
+        pFreeBloc->PADMarker1 = 0xC0DEC0DE;
+        pFreeBloc->BlocSize = uiSize;
+        pFreeBloc->pNext = NULL;
+        pFreeBloc->pPrevious = NULL;
+    }
+    for (i = 0; i < m_HashTableSize; i++)
+        m_pHashTable[i] = NULL;
+    m_pHashTable[0] = m_pFreeBlocsChain;
 }

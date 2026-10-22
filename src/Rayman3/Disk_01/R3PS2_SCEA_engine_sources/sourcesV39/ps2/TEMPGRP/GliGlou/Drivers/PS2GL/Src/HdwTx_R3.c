@@ -2252,10 +2252,13 @@ void CTL_SetCurrentMap(char* Map)
     char Temp[16];
     int i;
 
+    i = 0;
     CTL_Load_Ini_File();
-    for (i = 0; Map[i]; i++)
-        Temp[i] = toupper(Map[i]);
-    Temp[i] = 0;
+    for (; Map[i]; i++)
+        /* Not original source, needs cleaning up: the int-cast address keeps
+         * sp+0x30 and the index as a separate addu, as in retail. */
+        *(char*)((int)Temp + i) = toupper(Map[i]);
+    *(char*)((int)Temp + i) = 0;
     for (i = 0; i < CTL_g_Infos.NumberOfMapsInIniFile && !strstr(CTL_g_Infos.Maps[i].MapName, Temp); i++)
         ;
     CTL_g_CurrentMap = i;

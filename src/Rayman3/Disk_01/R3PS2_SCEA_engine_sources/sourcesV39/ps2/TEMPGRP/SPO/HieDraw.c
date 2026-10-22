@@ -1757,42 +1757,25 @@ void HIE_fn_hFindAllMirrorsInHierarchy(GLD_tdstViewportAttributes_* _hVpt, HIE_t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: scoped auto_inline makes MWCC
+ * inline the recursive call one level, as in retail. */
+#pragma auto_inline on
 int HIE_fn_bFindMirrorInHierarchy(HIE_tdstSuperObject_* _hSprObj)
 {
-    int bResult;
     HIE_tdstSuperObject_* hChild;
-    HIE_tdstSuperObject_* hSub;
 
     if (_hSprObj->ulTypeOfLinkedObject & 0x250)
-    {
         return 1;
-    }
 
     for (hChild = _hSprObj->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
     {
-        int bFound = 0;
-        if (hChild->ulTypeOfLinkedObject & 0x250)
-        {
-            bFound = 1;
-        }
-        else
-        {
-            for (hSub = hChild->hFirstElementDyn; hSub != NULL; hSub = hSub->hNextBrotherDyn)
-            {
-                if (HIE_fn_bFindMirrorInHierarchy(hSub))
-                {
-                    bFound = 1;
-                    break;
-                }
-            }
-        }
-        if (bFound)
-        {
+        if (HIE_fn_bFindMirrorInHierarchy(hChild))
             return 1;
-        }
     }
+
     return 0;
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 589–619 */
 /* addr: 0x0031fa10  size: 768 bytes */

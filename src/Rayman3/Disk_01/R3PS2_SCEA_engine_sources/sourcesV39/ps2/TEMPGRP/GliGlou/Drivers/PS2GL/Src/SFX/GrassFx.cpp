@@ -862,9 +862,14 @@ struct C_BaseFx {
     float m_fFogEnd; /* +0x1c */
     int m_pSearchKey; /* +0x20 */
     /* vtable pointer at +0x24 (retail __vt__8C_BaseFx: ~C_BaseFx, DeleteSDLs). */
+    C_BaseFx() {}
     virtual ~C_BaseFx();
     virtual void DeleteSDLs(void);
 };
+
+extern "C" void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (**pVOrg)[4], float (**pUV1)[4], float (**pUV2)[4], float (**pUVChrome)[4], float (**pNormals)[4]);
+extern "C" void* memcpy(void* dst, const void* src, unsigned int n);
+extern void* (*PS2glAllocator64)(unsigned int size);
 
 struct C_GrassFx : C_BaseFx {
     GEO_tdstElementIndexedTriangles_* m_p_stEIT; /* +0x28 */
@@ -873,6 +878,17 @@ struct C_GrassFx : C_BaseFx {
     GLI_tdstMaterial_* m_hFootVisualMaterial; /* +0x34 */
     unsigned int m_NbVertices; /* +0x38 */
     float (*m_pVNew)[4]; /* +0x3c */
+    C_GrassFx()
+    {
+        m_p_stEIT = 0;
+        m_pSDC = 0;
+        m_hGrassVisualMaterial = 0;
+        m_hFootVisualMaterial = 0;
+        m_pSearchKey = 0;
+        m_NbVertices = 0;
+        m_pVNew = 0;
+    }
+    void Init(GEO_tdstElementIndexedTriangles_* p_stEIT, SDC_VertexArrays_* pSDC);
     void Display(void);
     void DisplayGrassLayer(float X, float Y, float Z, float* a16_fWorldMatrix);
 };
@@ -1387,9 +1403,7 @@ struct tagGScontext {
 
 C_FxList GrassFx_g_List;
 C_FxList GrassFx_g_ListToDisplay;
-int __vt__9C_GrassFx;
-int PS2glAllocator64;
-int __vt__8C_BaseFx;
+void* (*PS2glAllocator64)(unsigned int size);
 float myColorRange[4];
 tagGScontext g_gsContext;
 tagGLcontext g_PS2glContext;
@@ -1453,18 +1467,20 @@ int PS2glLiberator;
 extern float light_ambient0[4];
 extern float light_specular0[4];
 extern float ambientMaterial[4];
-extern void PS2glLightfv(unsigned int light, unsigned int pname, float* params);
-extern void PS2glLighti(unsigned int light, unsigned int pname, int param);
-extern void PS2glMaterialfv(unsigned int face, unsigned int pname, float* params);
+extern "C" void PS2glLightfv(unsigned int light, unsigned int pname, float* params);
+extern "C" void PS2glLighti(unsigned int light, unsigned int pname, int param);
+extern "C" void PS2glMaterialfv(unsigned int face, unsigned int pname, float* params);
 
 void GLI_vSetDummyLighting(void)
 {
-    float light_direction[4];
     float light_diffuse[4];
+    float light_direction[4];
+    /* Not original source, needs cleaning up: retail negates these at runtime (neg.s); debug lists only the two arrays. */
+    float x = 0.3f, y = 0.2f, z = -1.0f;
 
-    light_direction[0] = -0.3f;
-    light_direction[1] = -0.2f;
-    light_direction[2] = 1.0f;
+    light_direction[0] = -x;
+    light_direction[1] = -y;
+    light_direction[2] = -z;
     light_direction[3] = 0.0f;
     light_diffuse[0] = 0.4f;
     light_diffuse[1] = 0.4f;
@@ -1558,9 +1574,38 @@ void GrassFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+inline void C_GrassFx::Init(GEO_tdstElementIndexedTriangles_* p_stEIT, SDC_VertexArrays_* pSDC)
+{
+    float (*pVOrg)[4];
+    float (*pUV1)[4];
+    float (*pUV2)[4];
+    float (*pUVChrome)[4];
+    float (*pNormals)[4];
+
+    m_hGrassVisualMaterial = p_stEIT->hVisualMaterial;
+    m_p_stEIT = p_stEIT;
+    m_pSearchKey = (int)m_p_stEIT;
+    m_pSDC = pSDC;
+    /* Not original source, needs cleaning up: recovered SDC_VertexArrays_ layout overlaps here; retail reads the count as an int through two pointers. */
+    m_NbVertices = *(unsigned int*)m_pSDC->pArrayOfVertexArrays[0][0];
+    GLI_vGetVertexPointersFromSDCStructure(m_pSDC, 0, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pNormals);
+    m_pVNew = (float (*)[4])PS2glAllocator64(m_NbVertices * 16);
+    memcpy(m_pVNew, pVOrg, m_NbVertices * 16);
+}
+
 void GrassFx_vCreateEffectFromObjectAndEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
-    /* TODO: decompile from asm/... */
+    C_GrassFx* p;
+
+    if (GrassFx_g_List.SearchElement(p_stEIT))
+        return;
+
+    p = new C_GrassFx;
+
+    p->Init(p_stEIT, (SDC_VertexArrays_*)pObj->pSDC_Data);
+
+    GrassFx_g_List.vAddElement(p);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 209–503 */

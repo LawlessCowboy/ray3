@@ -817,12 +817,56 @@ HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void);
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
 HIE_tdstSuperObject_* HIE_fn_p_stCreateSuperObjectTab(int lSize)
 {
-    int lIndex;
-    HIE_tdstSuperObject_* hNewSuperObject;
     HIE_tdstSuperObject_* hNewSuperObjectTab;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hNewSuperObject;
+    int lIndex;
+
+    hNewSuperObjectTab = (HIE_tdstSuperObject_*)HMU_fn_p_vMalloc(lSize * sizeof(HIE_tdstSuperObject_), 0);
+    for (lIndex = 0, hNewSuperObject = hNewSuperObjectTab; lIndex < lSize; lIndex++, hNewSuperObject++)
+    {
+        hNewSuperObject->hFirstElementDyn = NULL; hNewSuperObject->hLastElementDyn = NULL; hNewSuperObject->lNumberOfElementsDyn = 0;
+        hNewSuperObject->hNextBrotherDyn = NULL; hNewSuperObject->hPrevBrotherDyn = NULL; hNewSuperObject->hFatherDyn = NULL;
+        hNewSuperObject->ulTypeOfLinkedObject = 1;
+        hNewSuperObject->hLinkedObject.p_stCharacter = NULL;
+
+        hNewSuperObject->hVisualBoundingVolume = 0;
+        hNewSuperObject->hCollideBoundingVolume = 0;
+
+        hNewSuperObject->lDrawModeMask = -1;
+        hNewSuperObject->ulFlags = 0;
+
+        hNewSuperObject->hGlobalMatrix = GEO_fn_hCreateMatrix();
+        MAT_fn_vSetIdentity(hNewSuperObject->hGlobalMatrix);
+
+        hNewSuperObject->lLastComputeFrame = 0;
+        HIE_M_vInvalidateOneGlobalMatrix(hNewSuperObject);
+
+        hNewSuperObject->stSemiLookAtVector.xX = 0.0f; hNewSuperObject->stSemiLookAtVector.xY = 0.0f; hNewSuperObject->stSemiLookAtVector.xZ = 0.0f;
+
+        hNewSuperObject->fTransparenceLevel = 255.0f;
+
+        hNewSuperObject->ulFlags &= ~0x20000;
+
+        hNewSuperObject->lDisplayPrioriry = 0;
+
+        hNewSuperObject->ulOutlineColor = 0;
+
+        hNewSuperObject->bIsSPO = 0;
+
+        hNewSuperObject->lIL_Status = 0;
+
+        hNewSuperObject->stIL_AmbientColor.xX = 0.0f; hNewSuperObject->stIL_AmbientColor.xY = 0.0f; hNewSuperObject->stIL_AmbientColor.xZ = 0.0f;
+        hNewSuperObject->stIL_ParallelDirection.xX = 0.0f; hNewSuperObject->stIL_ParallelDirection.xY = 0.0f; hNewSuperObject->stIL_ParallelDirection.xZ = 0.0f;
+        hNewSuperObject->stIL_ParallelColor.xX = 0.0f; hNewSuperObject->stIL_ParallelColor.xY = 0.0f; hNewSuperObject->stIL_ParallelColor.xZ = 0.0f;
+
+        hNewSuperObject->ucSuperImposedOnWhichViewport = 0;
+    }
+    return hNewSuperObjectTab;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 201–202 */

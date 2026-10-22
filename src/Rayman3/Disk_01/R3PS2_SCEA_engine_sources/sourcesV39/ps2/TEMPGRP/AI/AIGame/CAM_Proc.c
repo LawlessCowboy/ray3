@@ -4401,16 +4401,65 @@ tdstNodeInterpret_* CAM_fn_p_stChangeSecondTgtPerso(HIE_tdstSuperObject_* p_Supe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* _hStdGame);
+void CAM_fn_vUpdateTargetPosition(tdstCineinfo_* _hCineinfo);
 tdstNodeInterpret_* CAM_fn_p_stChangeTgtPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stValue;
-    int lTypeOfChange;
-    int lChangingMode;
-    HIE_tdstSuperObject_* hNewSuperObjectTargeted;
-    HIE_tdstSuperObject_* hCamera;
-    tdstInternalStructurCineinfo_* hCineInfoCurrent;
     tdstCineinfo_* hCineInfo;
-    /* TODO: decompile from asm/... */
+    tdstInternalStructurCineinfo_* hCineInfoCurrent;
+    HIE_tdstSuperObject_* hCamera;
+    HIE_tdstSuperObject_* hNewSuperObjectTargeted;
+    int lChangingMode;
+    int lTypeOfChange;
+    tdstGetSetParam_ stValue;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lTypeOfChange = stValue.uDummy.uParam.lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lChangingMode = stValue.uDummy.uParam.lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    hNewSuperObjectTargeted = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+
+    if (lTypeOfChange == 1)
+    {
+        CAM_fn_vSetCineinfoWorkFromCurrent(hCineInfo);
+        hCineInfoCurrent = hCineInfo->hWork;
+    }
+    else
+    {
+        hCineInfoCurrent = hCineInfo->hCurrent;
+    }
+
+    switch (lChangingMode)
+    {
+    case -1:
+        hNewSuperObjectTargeted = hCineInfo->hInit->hSuperObjectTargeted;
+        break;
+
+    case 0:
+        hNewSuperObjectTargeted = NULL;
+        break;
+
+    case 1:
+        break;
+    }
+
+    hCineInfoCurrent->hSuperObjectTargeted = hNewSuperObjectTargeted;
+    if (lTypeOfChange != 1)
+    {
+        hCineInfo->hVisibility->hSuperObjectTargeted = hNewSuperObjectTargeted;
+        hCineInfo->hWork->hSuperObjectTargeted = hNewSuperObjectTargeted;
+    }
+
+    CAM_fn_vUpdateTargetPosition(hCineInfo);
+
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 452–652 */

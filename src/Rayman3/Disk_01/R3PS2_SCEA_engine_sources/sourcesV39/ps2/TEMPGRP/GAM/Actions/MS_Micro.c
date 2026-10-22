@@ -1504,19 +1504,52 @@ int fn_rGetMicroTangentX(int s32_ObjectId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* p_stStandardGame);
+void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* p_stMatrix, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2, MTH3D_tdstVector_* p_stV3);
 int fn_bGetMicroTangent(int s32_ObjectId, _stVector* pst_Vector)
 {
-    MTH3D_tdstVector_ stW3;
-    MTH3D_tdstVector_ stW2;
-    MTH3D_tdstVector_ stW1;
-    MTH3D_tdstVector_ stV3;
-    MTH3D_tdstVector_ stV2;
     MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+    MTH3D_tdstVector_ stV3;
+    MTH3D_tdstVector_ stW1;
+    MTH3D_tdstVector_ stW2;
+    MTH3D_tdstVector_ stW3;
     MAT_tdstTransformation_* pMatrix2;
     tdstMicro_* h_MSMicro;
     HIE_tdstSuperObject_* h_SuperObj;
     int b_Answer;
-    /* TODO: decompile from asm/... */
+    b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        /* Not original source, needs cleaning up: debug lists no engine-object local, so h_SuperObj briefly holds it;
+         * the block temporaries below are likewise not in the debug locals. */
+        h_SuperObj = (HIE_tdstSuperObject_*)fn_hReturnHandleMicroFromIndex(s32_ObjectId);
+        if (h_SuperObj != NULL)
+        {
+            h_SuperObj = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)h_SuperObj)->h_StandardGame);
+            if (h_SuperObj != NULL)
+            {
+                h_MSMicro = h_SuperObj->hLinkedObject.p_stCharacter->h_Micro;
+                if (h_MSMicro != NULL)
+                {
+                    pMatrix2 = h_MSMicro->hMicroMatrix;
+                    MAT_fn_vGetRotationVectors(h_SuperObj->hGlobalMatrix, &stV1, &stV2, &stV3);
+                    MAT_fn_vGetRotationVectors(pMatrix2, &stW1, &stW2, &stW3);
+                    {
+                        float xY, xZ;
+                        xY = stV1.xY * stW2.xX + stV2.xY * stW2.xY + stV3.xY * stW2.xZ;
+                        xZ = stV1.xZ * stW2.xX + stV2.xZ * stW2.xY + stV3.xZ * stW2.xZ;
+                        pst_Vector->f32x = stV1.xX * stW2.xX + stV2.xX * stW2.xY + stV3.xX * stW2.xZ;
+                        pst_Vector->f32y = xY;
+                        pst_Vector->f32z = xZ;
+                    }
+                    b_Answer = 1;
+                }
+            }
+        }
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 618–626 */
@@ -1626,17 +1659,47 @@ int fn_rGetMicroNormalX(int s32_ObjectId)
  */
 int fn_bGetMicroNormal(int s32_ObjectId, _stVector* pst_Vector)
 {
-    MTH3D_tdstVector_ stW3;
-    MTH3D_tdstVector_ stW2;
-    MTH3D_tdstVector_ stW1;
-    MTH3D_tdstVector_ stV3;
-    MTH3D_tdstVector_ stV2;
     MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+    MTH3D_tdstVector_ stV3;
+    MTH3D_tdstVector_ stW1;
+    MTH3D_tdstVector_ stW2;
+    MTH3D_tdstVector_ stW3;
     MAT_tdstTransformation_* pMatrix2;
     tdstMicro_* h_MSMicro;
     HIE_tdstSuperObject_* h_SuperObj;
     int b_Answer;
-    /* TODO: decompile from asm/... */
+    b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        /* Not original source, needs cleaning up: debug lists no engine-object local, so h_SuperObj briefly holds it;
+         * the block temporaries below are likewise not in the debug locals. */
+        h_SuperObj = (HIE_tdstSuperObject_*)fn_hReturnHandleMicroFromIndex(s32_ObjectId);
+        if (h_SuperObj != NULL)
+        {
+            h_SuperObj = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)h_SuperObj)->h_StandardGame);
+            if (h_SuperObj != NULL)
+            {
+                h_MSMicro = h_SuperObj->hLinkedObject.p_stCharacter->h_Micro;
+                if (h_MSMicro != NULL)
+                {
+                    pMatrix2 = h_MSMicro->hMicroMatrix;
+                    MAT_fn_vGetRotationVectors(h_SuperObj->hGlobalMatrix, &stV1, &stV2, &stV3);
+                    MAT_fn_vGetRotationVectors(pMatrix2, &stW1, &stW2, &stW3);
+                    {
+                        float xY, xZ;
+                        xY = stV1.xY * stW1.xX + stV2.xY * stW1.xY + stV3.xY * stW1.xZ;
+                        xZ = stV1.xZ * stW1.xX + stV2.xZ * stW1.xY + stV3.xZ * stW1.xZ;
+                        pst_Vector->f32x = stV1.xX * stW1.xX + stV2.xX * stW1.xY + stV3.xX * stW1.xZ;
+                        pst_Vector->f32y = xY;
+                        pst_Vector->f32z = xZ;
+                    }
+                    b_Answer = 1;
+                }
+            }
+        }
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 530–538 */
@@ -1748,17 +1811,74 @@ HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* p_stSta
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_*);
+float fn_rClampValue(float r_Value);
+/* Not original source, needs cleaning up: inferred inline helper (retail keeps a third stack vector and null-tests &st_Velocity). */
+static inline MTH3D_tdstVector_ fn_stClampVector(MTH3D_tdstVector_* p_stVector)
+{
+    MTH3D_tdstVector_ stResult;
+    stResult.xX = 0.0f;
+    if (p_stVector != NULL)
+    {
+        stResult.xX = fn_rClampValue(p_stVector->xX);
+        stResult.xY = fn_rClampValue(p_stVector->xY);
+        stResult.xZ = fn_rClampValue(p_stVector->xZ);
+    }
+    return stResult;
+}
+
 int fn_bGetMicroVelocity(int s32_ObjectId, _stVector* pst_Vector)
 {
     float xInvDTInSecond;
     MTH3D_tdstVector_* param0;
-    MTH3D_tdstVector_ st_Clamped;
     MTH3D_tdstVector_ st_Velocity;
+    MTH3D_tdstVector_ st_Clamped;
     DNM_stDynamics* p_stDynamics;
     tdstDynam_* h_Dynam;
     HIE_tdstSuperObject_* h_SuperObj;
     int b_Answer;
-    /* TODO: decompile from asm/... */
+    b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        /* Not original source, needs cleaning up: debug lists no engine-object local, so h_SuperObj briefly holds it. */
+        h_SuperObj = (HIE_tdstSuperObject_*)fn_hReturnHandleMicroFromIndex(s32_ObjectId);
+        if (h_SuperObj != NULL)
+        {
+            h_SuperObj = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)h_SuperObj)->h_StandardGame);
+            if (h_SuperObj != NULL)
+            {
+                h_Dynam = h_SuperObj->hLinkedObject.p_stCharacter->h_Dynam;
+                if (h_Dynam != NULL)
+                {
+                    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+                    if (p_stDynamics != NULL)
+                    {
+                        if (p_stDynamics->m_tdstDynamicsBaseBlock.m_lObjectType == 0)
+                        {
+                            param0 = &p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport->m_stAbsolutePrevSpeed.m_stLinear;
+                            xInvDTInSecond = 1000.0f / (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;
+                            st_Velocity.xX = param0->xX * xInvDTInSecond;
+                            st_Velocity.xY = param0->xY * xInvDTInSecond;
+                            st_Velocity.xZ = param0->xZ * xInvDTInSecond;
+                        }
+                        else
+                        {
+                            st_Velocity.xX = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX;
+                            st_Velocity.xY = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY;
+                            st_Velocity.xZ = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
+                        }
+
+                        st_Clamped = fn_stClampVector(&st_Velocity);
+                        pst_Vector->f32x = st_Clamped.xX;
+                        pst_Vector->f32y = st_Clamped.xY;
+                        pst_Vector->f32z = st_Clamped.xZ;
+                        b_Answer = 1;
+                    }
+                }
+            }
+        }
+    }
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 438–438 */

@@ -1849,11 +1849,34 @@ void GAM_fn_vUpdateDynamicHierarchy_New(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, tdstEngineObject_* p_stObject);
+extern void SND_fn_vKillObjectSound2(HIE_tdstSuperObject_* p_stSuperObject, int s32_TypeId);
 void fn_vDesinitInactivePerso(void)
 {
-    HIE_tdstSuperObject_* hChild;
     HIE_tdstSuperObject_* hCharacter;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hChild;
+
+    for (hCharacter = ((HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld)->hFirstElementDyn; hCharacter != NULL; hCharacter = hCharacter->hNextBrotherDyn)
+    {
+        if (((unsigned char)((hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0)) == 1)
+        {
+            if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+            {
+                for (hChild = hCharacter->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+                {
+                    if (hChild->ulTypeOfLinkedObject == 2)
+                    {
+                        PLA_fn_vDesInitAllChildOfCharacter(hChild, hChild->hLinkedObject.p_stCharacter);
+                        hChild->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags &= ~4;
+                        SND_fn_vKillObjectSound2(hChild, g_lSoundObjectTypeAnim);
+                    }
+                }
+            }
+            PLA_fn_vDesInitAllChildOfCharacter(hCharacter, hCharacter->hLinkedObject.p_stCharacter);
+            hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags &= ~4;
+            SND_fn_vKillObjectSound2(hCharacter, g_lSoundObjectTypeAnim);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1613–1650 */

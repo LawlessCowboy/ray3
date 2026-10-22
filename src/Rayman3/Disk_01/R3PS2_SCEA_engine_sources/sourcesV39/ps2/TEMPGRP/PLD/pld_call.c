@@ -4570,10 +4570,11 @@ int g_pcLvlTimeStamp;
 int g_pcLanguageTimeStamp;
 LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn g_hMainCharacterList;
 tdstEngineStructure_ g_stEngineStructure;
-void (*fn_vResetTransitionAllocatorEven)(void);
-void (*fn_vTransitionDeallocatorEven)(void*);
-void (*fn_vResetTransitionAllocatorOdd)(void);
-void (*fn_vTransitionDeallocatorOdd)(void*);
+/* These are functions in the retail ELF (FUNC symbols), not pointer variables. */
+void fn_vResetTransitionAllocatorEven(void);
+void fn_vTransitionDeallocatorEven(void*);
+void fn_vResetTransitionAllocatorOdd(void);
+void fn_vTransitionDeallocatorOdd(void*);
 _tdstFixInfo g_stFixInfo;
 unsigned int GLI_g_ulNumberOfVisualMaterials;
 int GLI_g_StaticCopyOfArrayOfVisualMaterial[256];
@@ -4724,14 +4725,57 @@ void PLD_fn_vUnLoadFix(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_lGetTransitionBloc(void);
+unsigned char fn_bDoTransition(void);
+unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void);
+unsigned char HMU_fn_ucGetTransition2NormalMemoryBlock(void);
+void HMU_fn_vDeleteTransition1Memories(void);
+void HMU_fn_vDeleteTransition2Memories(void);
+void GLI_TEX_vKillMemoryChannel(unsigned char ucChannel);
+void MNC_fn_vUnLoadAreaWithDeallocator(_tdeAreaName eArea, void (*fn_vDeallocator)(void*));
 void PLD_fn_vUnLoadTransition(void)
 {
-    void (*fn_vAllocatorReset)(void);
-    void (*fn_vDeallocator)(void*);
-    char szTransitIdentifier[9];
-    _tdeAreaName eAreaToFree;
     int TransitionNumber;
-    /* TODO: decompile from asm/... */
+    _tdeAreaName eAreaToFree;
+    char szTransitIdentifier[9] = "transit ";
+    void (*fn_vDeallocator)(void*);
+    void (*fn_vAllocatorReset)(void);
+
+    TransitionNumber = fn_lGetTransitionBloc();
+
+    if (fn_bDoTransition())
+        TransitionNumber = (TransitionNumber == 1) ? 2 : 1;
+
+    eAreaToFree = 2;
+    if (TransitionNumber == 2)
+    {
+        fn_vDeallocator = fn_vTransitionDeallocatorOdd;
+        fn_vAllocatorReset = fn_vResetTransitionAllocatorOdd;
+    }
+    else
+    {
+        eAreaToFree = 3;
+        fn_vDeallocator = fn_vTransitionDeallocatorEven;
+        fn_vAllocatorReset = fn_vResetTransitionAllocatorEven;
+    }
+
+    if (TransitionNumber == 2)
+    {
+        GLI_TEX_vKillMemoryChannel(HMU_fn_ucGetTransition1NormalMemoryBlock());
+        HMU_fn_vDeleteTransition1Memories();
+    }
+    else
+    {
+        GLI_TEX_vKillMemoryChannel(HMU_fn_ucGetTransition2NormalMemoryBlock());
+        HMU_fn_vDeleteTransition2Memories();
+    }
+
+    szTransitIdentifier[7] = '0' + TransitionNumber;
+    SND_fn_bUnloadBank(szTransitIdentifier);
+
+    MNC_fn_vUnLoadAreaWithDeallocator(eAreaToFree, fn_vDeallocator);
+
+    fn_vAllocatorReset();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2615–2668 */
@@ -5648,12 +5692,29 @@ void PLD_fn_vLoadLevel(char* _szLevelName)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_v_Transition_CorrectTextureChannel(GLI_tdstTexture_* p_stTexture);
 void fn_v_Transition_CorrectTextureChannelTable(void)
 {
-    int j;
-    GLI_tdstMaterial_* pMat;
     int i;
-    /* TODO: decompile from asm/... */
+    GLI_tdstMaterial_* pMat;
+    int j;
+
+    *(int*)(gs_aDEFTableOfTextureMemoryChannels + g_lNumberOfTexturesInFix * 4) = 2;
+    *(int*)(gs_aDEFTableOfTextureMemoryChannels + 4 + g_lNumberOfTexturesInFix * 4) = 2;
+
+    for (i = PLD_g_ulNumberOfFixVisualMaterials; i < PLD_g_ulNumberOfTransitionVisualMaterials; i++)
+    {
+        pMat = (GLI_tdstMaterial_*)GLI_g_StaticCopyOfArrayOfVisualMaterial[i];
+        if (!pMat->ulMultiTextureType)
+        {
+            fn_v_Transition_CorrectTextureChannel(pMat->p_stTexture);
+        }
+        else
+        {
+            for (j = 0; j < pMat->ulNbTextureStages; j++)
+                fn_v_Transition_CorrectTextureChannel(pMat->a_stMultiMaterial[j].pst_Texture);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1402–1441 */
@@ -5683,10 +5744,41 @@ void fn_v_Transition_CorrectTextureChannelTable(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void debug_printf(char* format, ...);
 void fn_v_Transition_CorrectTextureChannel(GLI_tdstTexture_* p_stTexture)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    for (i = 0; i < gs_lNumberOfTextureToCreate; i++)
+        if (((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[i] == p_stTexture)
+            break;
+    if (i == gs_lNumberOfTextureToCreate)
+    {
+        printf("unknown texture ????\n");
+        return;
+    }
+    debug_printf("transit. texture 0x%08x :", p_stTexture);
+    switch (((int*)gs_aDEFTableOfTextureMemoryChannels)[i])
+    {
+    case 0:
+        debug_printf("fix texture channel -> ok\n");
+        break;
+    case 2:
+        debug_printf("level texture channel -> changing to next transition channel\n");
+        ((int*)gs_aDEFTableOfTextureMemoryChannels)[i] = g_ucIdOfNextTransitionbloc;
+        break;
+    case 4:
+    case 6:
+        debug_printf("transition texture channel : ");
+        if (((int*)gs_aDEFTableOfTextureMemoryChannels)[i] == g_ucIdOfNextTransitionbloc)
+            debug_printf("ok\n");
+        else
+            debug_printf("not ok -> changing\n");
+        break;
+    default:
+        debug_printf("Unknown channel value !!!\n");
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1385–1398 */
@@ -5730,11 +5822,33 @@ void debug_printf(char* format, ...)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int toupper(char c);
+char* strstr(const char* s1, const char* s2);
 void CheckForTutorial(char* Name)
 {
     int i;
     char TempString[256];
-    /* TODO: decompile from asm/... */
+    g_bIsInTutorial = 1;
+    g_bIsInMapinter = 0;
+    g_bIsInMenuMap = 0;
+    g_bIsInEncyclo = 0;
+    bSwamp_60 = 0;
+    G_IsLept15 = 0;
+    g_bEndGame = 0;
+    i = 0;
+    while (Name[i])
+    {
+        /* Not original source, needs cleaning up: the int-cast address keeps
+         * sp+0x30 and the index as a separate addu, as in retail. */
+        *(char*)((int)TempString + i) = toupper(Name[i]);
+        i++;
+    }
+    *(char*)((int)TempString + i) = 0;
+    if (strstr(TempString, "LEPT_15")) G_IsLept15 = 1;
+    if (strstr(TempString, "MAPINTER")) g_bIsInMapinter = 1;
+    if (strstr(TempString, "MENUMAP")) g_bIsInMenuMap = 1;
+    if (strstr(TempString, "ENCYCLO")) g_bIsInEncyclo = 1;
+    if (strstr(TempString, "ENDGAME")) g_bEndGame = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1200–1220 */
