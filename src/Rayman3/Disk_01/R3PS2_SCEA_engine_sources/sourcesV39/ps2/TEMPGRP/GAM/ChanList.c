@@ -1210,9 +1210,33 @@ void fn_vSetCapabilities(tdstEngineObject_* _p_stObject, unsigned int _ubf32Capa
  */
 PO_tdstPhysicalObject_* MOR_fn_hGetMorphedObject(short _xIndex);
 
-PO_tdstPhysicalObject_* fn_hGetMorphedObjectInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel) {
-    tdstMorphChannelList_* p_stMorph; short lIndex = -1; if (hMorphList == NULL) { lIndex = -1; } else { for (p_stMorph = hMorphList->hFirstElementDyn; p_stMorph != NULL; p_stMorph = p_stMorph->hNextBrotherDyn) { if (p_stMorph->uwChannelNumber == uwChannel) { lIndex = p_stMorph->MorphListIndex; break; } if (uwChannel < p_stMorph->uwChannelNumber) { lIndex = -1; break; } } }
-    if (lIndex != -1) { return MOR_fn_hGetMorphedObject(lIndex); } return NULL;
+/* Not original source, needs cleaning up: retail inlines fn_hMorphListIndex
+ * (defined below) here; this inline copy of its body reproduces that while
+ * keeping the out-of-line definition. */
+inline short CHN_fn_hMorphListIndexInline(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
+{
+    tdstMorphChannelList_* p_stMorph;
+
+    if (hMorphList == NULL) { return -1; }
+    for (p_stMorph = hMorphList->hFirstElementDyn; p_stMorph != NULL; p_stMorph = p_stMorph->hNextBrotherDyn)
+    {
+        if (p_stMorph->uwChannelNumber == uwChannel)
+        {
+            return p_stMorph->MorphListIndex;
+        }
+        if (uwChannel < p_stMorph->uwChannelNumber)
+        {
+            return -1;
+        }
+    }
+    return -1;
+}
+
+PO_tdstPhysicalObject_* fn_hGetMorphedObjectInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
+{
+    short lIndex = CHN_fn_hMorphListIndexInline(hMorphList, uwChannel);
+    if (lIndex != -1) { return MOR_fn_hGetMorphedObject(lIndex); }
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 513–528 */
@@ -1271,9 +1295,24 @@ short fn_hMorphListIndex(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorph
  */
 void fn_vRemoveChannelFromMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel)
 {
-    tdstMorphChannelList_* p_stMorph_Next;
     tdstMorphChannelList_* p_stMorph;
-    /* TODO: decompile from asm/... */
+    tdstMorphChannelList_* p_stMorph_Next;
+
+    if (hMorphList == NULL)
+        return;
+
+    for (p_stMorph = hMorphList->hFirstElementDyn, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL; p_stMorph != NULL; p_stMorph = p_stMorph_Next, p_stMorph_Next = p_stMorph ? p_stMorph->hNextBrotherDyn : NULL)
+    {
+        if (p_stMorph->uwChannelNumber == uwChannel)
+        {
+            if (hMorphList->lNumberOfElementsDyn != 0)
+            {
+                if (p_stMorph->hNextBrotherDyn) p_stMorph->hNextBrotherDyn->hPrevBrotherDyn = p_stMorph->hPrevBrotherDyn; if (p_stMorph->hPrevBrotherDyn) p_stMorph->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn) { p_stMorph->hFatherDyn->lNumberOfElementsDyn--; if (p_stMorph->hFatherDyn->hFirstElementDyn == p_stMorph) p_stMorph->hFatherDyn->hFirstElementDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn->hLastElementDyn == p_stMorph) p_stMorph->hFatherDyn->hLastElementDyn = p_stMorph->hPrevBrotherDyn; } p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL;
+                { void* p_vPointer = p_stMorph; HMU_fn_vFree(&p_vPointer, 1); }
+            }
+            break;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 425–463 */
@@ -1301,10 +1340,47 @@ void fn_vRemoveChannelFromMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElement
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void* HMU_fn_p_vMalloc(unsigned int ulSize, unsigned char ucChannel);
+
 void fn_vPutMorphElementInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel, short IndexOfMorphList)
 {
     tdstMorphChannelList_* p_stMorph2;
-    /* TODO: decompile from asm/... */
+
+    if (hMorphList == NULL)
+        return;
+
+    p_stMorph2 = hMorphList->hFirstElementDyn;
+    while (p_stMorph2 != NULL)
+    {
+        if (p_stMorph2->uwChannelNumber == uwChannel)
+        {
+            p_stMorph2->MorphListIndex = IndexOfMorphList;
+            break;
+        }
+        if (p_stMorph2->uwChannelNumber > uwChannel)
+        {
+            break;
+        }
+        p_stMorph2 = p_stMorph2->hNextBrotherDyn;
+    }
+    if (p_stMorph2 == NULL)
+    {
+        tdstMorphChannelList_* p_stMorph;
+
+        p_stMorph = (tdstMorphChannelList_*)HMU_fn_p_vMalloc(sizeof(tdstMorphChannelList_), 1); p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL;
+        p_stMorph->uwChannelNumber = uwChannel;
+        p_stMorph->MorphListIndex = IndexOfMorphList;
+        if (p_stMorph->hNextBrotherDyn) p_stMorph->hNextBrotherDyn->hPrevBrotherDyn = p_stMorph->hPrevBrotherDyn; if (p_stMorph->hPrevBrotherDyn) p_stMorph->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn) { p_stMorph->hFatherDyn->lNumberOfElementsDyn--; if (p_stMorph->hFatherDyn->hFirstElementDyn == p_stMorph) p_stMorph->hFatherDyn->hFirstElementDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn->hLastElementDyn == p_stMorph) p_stMorph->hFatherDyn->hLastElementDyn = p_stMorph->hPrevBrotherDyn; } p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL; p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = hMorphList->hLastElementDyn; p_stMorph->hFatherDyn = hMorphList; if (hMorphList->hFirstElementDyn == NULL) hMorphList->hFirstElementDyn = p_stMorph; else hMorphList->hLastElementDyn->hNextBrotherDyn = p_stMorph; hMorphList->hLastElementDyn = p_stMorph; hMorphList->lNumberOfElementsDyn++;
+    }
+    else if (p_stMorph2->uwChannelNumber != uwChannel)
+    {
+        tdstMorphChannelList_* p_stMorph;
+
+        p_stMorph = (tdstMorphChannelList_*)HMU_fn_p_vMalloc(sizeof(tdstMorphChannelList_), 1); p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL;
+        p_stMorph->uwChannelNumber = uwChannel;
+        p_stMorph->MorphListIndex = IndexOfMorphList;
+        if (p_stMorph->hNextBrotherDyn) p_stMorph->hNextBrotherDyn->hPrevBrotherDyn = p_stMorph->hPrevBrotherDyn; if (p_stMorph->hPrevBrotherDyn) p_stMorph->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn) { p_stMorph->hFatherDyn->lNumberOfElementsDyn--; if (p_stMorph->hFatherDyn->hFirstElementDyn == p_stMorph) p_stMorph->hFatherDyn->hFirstElementDyn = p_stMorph->hNextBrotherDyn; if (p_stMorph->hFatherDyn->hLastElementDyn == p_stMorph) p_stMorph->hFatherDyn->hLastElementDyn = p_stMorph->hPrevBrotherDyn; } p_stMorph->hNextBrotherDyn = NULL; p_stMorph->hPrevBrotherDyn = NULL; p_stMorph->hFatherDyn = NULL; p_stMorph->hNextBrotherDyn = p_stMorph2; p_stMorph->hPrevBrotherDyn = p_stMorph2->hPrevBrotherDyn; if (p_stMorph2->hPrevBrotherDyn) { p_stMorph2->hPrevBrotherDyn->hNextBrotherDyn = p_stMorph; p_stMorph->hFatherDyn = p_stMorph2->hPrevBrotherDyn->hFatherDyn; } else p_stMorph2->hFatherDyn->hFirstElementDyn = p_stMorph; if (p_stMorph2) { p_stMorph2->hPrevBrotherDyn = p_stMorph; p_stMorph->hFatherDyn = p_stMorph2->hFatherDyn; } else p_stMorph2->hPrevBrotherDyn->hFatherDyn->hLastElementDyn = p_stMorph; p_stMorph->hFatherDyn->lNumberOfElementsDyn++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 394–409 */
@@ -1327,7 +1403,18 @@ void fn_vPutMorphElementInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDy
 void fn_vFreeMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorphList)
 {
     tdstMorphChannelList_* p_hMorphElt;
-    /* TODO: decompile from asm/... */
+
+    if (*p_hMorphList == NULL)
+        return;
+
+    while ((*p_hMorphList)->lNumberOfElementsDyn > 0)
+    {
+        p_hMorphElt = (*p_hMorphList)->hFirstElementDyn;
+        if (p_hMorphElt->hNextBrotherDyn) p_hMorphElt->hNextBrotherDyn->hPrevBrotherDyn = p_hMorphElt->hPrevBrotherDyn; if (p_hMorphElt->hPrevBrotherDyn) p_hMorphElt->hPrevBrotherDyn->hNextBrotherDyn = p_hMorphElt->hNextBrotherDyn; if (p_hMorphElt->hFatherDyn) { p_hMorphElt->hFatherDyn->lNumberOfElementsDyn--; if (p_hMorphElt->hFatherDyn->hFirstElementDyn == p_hMorphElt) p_hMorphElt->hFatherDyn->hFirstElementDyn = p_hMorphElt->hNextBrotherDyn; if (p_hMorphElt->hFatherDyn->hLastElementDyn == p_hMorphElt) p_hMorphElt->hFatherDyn->hLastElementDyn = p_hMorphElt->hPrevBrotherDyn; } p_hMorphElt->hNextBrotherDyn = NULL; p_hMorphElt->hPrevBrotherDyn = NULL; p_hMorphElt->hFatherDyn = NULL;
+        { void* p_vPointer = p_hMorphElt; HMU_fn_vFree(&p_vPointer, 1); }
+    }
+    HMU_fn_vFree((void**)p_hMorphList, 1);
+    *p_hMorphList = NULL;
 }
 
 void* HMU_fn_p_vMalloc(unsigned int ulSize, unsigned char ucChannel);
@@ -1378,12 +1465,62 @@ void fn_vInitMorphList(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn** p_hMorp
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: retail inlines
+ * fn_vUpdateSPOFlagsOfChannelForActivation (defined below) into
+ * fn_vActivateChannel; this inline copy reproduces that while keeping the
+ * out-of-line definition. */
+inline void CHN_fn_vUpdateSPOFlagsInline(HIE_tdstSuperObject_* _hSOChannel, unsigned char _bActivate)
+{
+    unsigned int ulSpoFlags;
+
+    if (g_DEMO_KeybTest != 2 && _hSOChannel)
+    {
+        ulSpoFlags = _hSOChannel->ulFlags;
+        if (_bActivate)
+            _hSOChannel->ulFlags = ulSpoFlags & ~0x83;
+        else
+            _hSOChannel->ulFlags = ulSpoFlags | 0x83;
+    }
+}
+
 void fn_vActivateChannel(HIE_tdstSuperObject_* _hPerso, unsigned short _uwChannel, unsigned char _bActivate)
 {
     unsigned int ulI;
     tdstAChannel_* p_stChannel;
     tdst3dData_* h_3dData;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hSO;
+    tdstAChannel_* p_stArray;
+    unsigned int ulNumberOfChannels;
+
+    h_3dData = _hPerso->hLinkedObject.p_stCharacter->h_3dData;
+    p_stArray = h_3dData->hArrayOfChannels;
+    if (p_stArray != NULL)
+    {
+        ulNumberOfChannels = h_3dData->ulNumberOfChannels;
+        if (_uwChannel != 0xffff)
+        {
+            p_stChannel = &p_stArray[_uwChannel];
+            p_stChannel->bActiveChannel = _bActivate;
+            if (p_stChannel->hZoomSupObject)
+                hSO = p_stChannel->hZoomSupObject;
+            else
+                hSO = p_stChannel->hSupObject;
+            CHN_fn_vUpdateSPOFlagsInline(hSO, _bActivate);
+        }
+        else
+        {
+            for (ulI = 0; ulI < ulNumberOfChannels; ulI++)
+            {
+                p_stChannel = &p_stArray[ulI];
+                p_stChannel->bActiveChannel = _bActivate;
+                if (p_stChannel->hZoomSupObject)
+                    hSO = p_stChannel->hZoomSupObject;
+                else
+                    hSO = p_stChannel->hSupObject;
+                CHN_fn_vUpdateSPOFlagsInline(hSO, _bActivate);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 257–274 */
@@ -1423,20 +1560,19 @@ void fn_vUpdateSPOFlagsOfChannelForActivation(HIE_tdstSuperObject_* _hSOChannel,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#pragma optimization_level 1
-
 void fn_vLooseControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel)
 {
     tdstAChannel_* p_stChannel;
+    int iIndex;
 
     p_stChannel = _hActor->h_3dData->hArrayOfChannels;
     if (p_stChannel != NULL)
     {
-        *((unsigned char*)&p_stChannel->bLipsChannel + _uwChannel * sizeof(tdstAChannel_)) = 0;
+        /* Not original source, needs cleaning up: the scaled-index assignment
+         * keeps the bLipsChannel offset unfolded, as retail does. */
+        *((unsigned char*)&p_stChannel->bLipsChannel + (iIndex = _uwChannel * sizeof(tdstAChannel_))) = 0;
     }
 }
-
-#pragma optimization_level reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ChanList.c lines 194–214 */
 /* addr: 0x0025dd20  size: 112 bytes */
@@ -1459,6 +1595,7 @@ void fn_vTakeControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwC
 {
     static tdstAChannel_* p_stLastControlledChannel = NULL;
     tdstAChannel_* p_stChannel;
+    unsigned int iIndex;
 
     if (_hActor == NULL && _uwChannel == 0)
     {
@@ -1473,8 +1610,12 @@ void fn_vTakeControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwC
             {
                 p_stLastControlledChannel->bLipsChannel = 0;
             }
-            ((unsigned char*)&p_stChannel->bLipsChannel)[_uwChannel * sizeof(tdstAChannel_)] = 1;
-            p_stLastControlledChannel = &p_stChannel[_uwChannel];
+            /* Not original source, needs cleaning up: the split index keeps the
+             * bLipsChannel offset unfolded and shared with the channel pointer. */
+            iIndex = _uwChannel;
+            iIndex *= sizeof(tdstAChannel_);
+            *((unsigned char*)&p_stChannel->bLipsChannel + iIndex) = 1;
+            p_stLastControlledChannel = (tdstAChannel_*)((char*)p_stChannel + iIndex);
         }
     }
 }
@@ -1512,8 +1653,9 @@ void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChan
         ulNumberOfChannels = *(unsigned int*)((char*)hCurrent3dData + 0xac);
         if (_uwChannel != 0xffff)
         {
-            ulOffset = (unsigned int)_uwChannel * sizeof(tdstAChannel_);
-            *((unsigned char*)&p_stChannel->bControlledChannel + ulOffset) = _bControlled;
+            /* Not original source, needs cleaning up: the offset assignment inside
+             * the address keeps bControlledChannel's offset unfolded. */
+            *((unsigned char*)&p_stChannel->bControlledChannel + (ulOffset = (unsigned int)_uwChannel * sizeof(tdstAChannel_))) = _bControlled;
         }
         else
         {

@@ -1615,10 +1615,7 @@ static inline HIE_tdstSuperObject_* fn_hGetAlwaysGenerator(HIE_tdstSuperObject_*
     {
         tdstEngineObject_* p_stChar = _hAlways->hLinkedObject.p_stCharacter;
         tdstStandardGame_* p_stGame = p_stChar->h_StandardGame;
-        if (p_stGame == NULL || p_stChar == NULL)
-            return NULL;
-        else
-            return g_stAlways.d_hAlwaysGenerator[(unsigned int)(p_stGame->otObjectPersonalType - 0x10000)];
+        return (p_stGame == NULL || p_stChar == NULL) ? NULL : g_stAlways.d_hAlwaysGenerator[(unsigned int)(p_stGame->otObjectPersonalType - 0x10000)];
     }
     return NULL;
 }
@@ -1629,8 +1626,7 @@ unsigned char fn_ucIsAlwaysGeneratedByMe(HIE_tdstSuperObject_* _hAlways, HIE_tds
     if (_hGenerator == NULL)
         return 0;
 
-    hGen = fn_hGetAlwaysGenerator(_hAlways);
-    return (hGen == _hGenerator);
+    return (fn_hGetAlwaysGenerator(_hAlways) == _hGenerator);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1187–1240 */
@@ -1668,17 +1664,10 @@ void fn_vKillAllAlwaysInNonActiveSectors(void)
         p_stAlwaysEngObj = hAlwaysSuperObject->hLinkedObject.p_stCharacter;
         if (p_stAlwaysEngObj->h_StandardGame != NULL && p_stAlwaysEngObj->h_StandardGame->otObjectFamilyType != -1)
         {
-            if (p_stAlwaysEngObj->h_StandardGame->eInitFlagWhenOutOfZone != 7 || ((((*p_hGenerator)->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4)) != 0))
-            {
-                if (p_stAlwaysEngObj->h_StandardGame->ulCustomBits & 0x20000)
-                {
-                    if (PLA_fn_bTestIfEndOfAction(hAlwaysSuperObject))
-                    {
-                        fn_vKillEngineObjectOrAlwaysByPointer(p_stAlwaysEngObj);
-                    }
-                }
-            }
-            else
+            /* The misc-flag test is a materialised unsigned char boolean compared with 1, probably an
+               inlined flag accessor in the original. Not original source, needs cleaning up. */
+            if (((p_stAlwaysEngObj->h_StandardGame->eInitFlagWhenOutOfZone == 7) && ((unsigned char)(((*p_hGenerator)->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) ? 1 : 0) != 1)) ||
+                ((p_stAlwaysEngObj->h_StandardGame->ulCustomBits & 0x20000) && PLA_fn_bTestIfEndOfAction(hAlwaysSuperObject)))
             {
                 fn_vKillEngineObjectOrAlwaysByPointer(p_stAlwaysEngObj);
             }
@@ -1710,12 +1699,14 @@ unsigned int fn_ulGetNumberOfAlwaysBelongingToMe(HIE_tdstSuperObject_* _hGenerat
 {
     tdstEngineObject_* hAlwaysObject;
     unsigned int ulReturn;
-    unsigned int i;
+    int i;
 
     ulReturn = 0;
     for (i = 0; i < g_stAlways.ulMaxNumberOfAlways; i++)
     {
-        hAlwaysObject = g_stAlways.d_stAlwaysSuperObject[i].hLinkedObject.p_stCharacter;
+        /* The (unsigned int) index keeps the superobject address unreduced (sll 7 per iteration)
+           as retail does. Not original source, needs cleaning up. */
+        hAlwaysObject = g_stAlways.d_stAlwaysSuperObject[(unsigned int)i].hLinkedObject.p_stCharacter;
         if (hAlwaysObject != NULL && hAlwaysObject->h_3dData != NULL)
         {
             if (g_stAlways.d_hAlwaysGenerator[i] == _hGenerator)

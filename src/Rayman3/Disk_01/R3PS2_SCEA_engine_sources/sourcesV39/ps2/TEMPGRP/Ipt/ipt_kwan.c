@@ -166,6 +166,15 @@ unsigned int INO_fn_ulJoyPreviousButtons(stDevice* _hDev);
 void Erm_fn_ClearLastError(unsigned int ulChannelId);
 void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigned char ucModuleId, unsigned int ulChannelId, unsigned short uwErrNum, int lDebugInfo, unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug, char* szPersonalMsg);
 
+typedef struct IPT_tdstJoystickState_ IPT_tdstJoystickState_;
+struct IPT_tdstJoystickState_ {
+    short sStatus;
+    short sDirections;
+    unsigned int ulButtons;
+};
+
+unsigned short INO_fn_uwJoyPreviousDirections(stDevice* _hDev);
+
 static inline unsigned char IPT_fn_bIsNextKeyWordValid(IPT_tdstKeyWordElement_* hKeyWordElement)
 {
     unsigned char ucReturn = 0;
@@ -577,8 +586,45 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadJustReleased(IPT_tdstKeyWordEl
 {
     unsigned short uwJustReleasedDirections;
     stDevice* hPad;
-    unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn = 0;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
+    {
+        uwJustReleasedDirections = ~((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & (short)INO_fn_uwJoyPreviousDirections(hPad);
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        switch (swKeyWord)
+        {
+        case 0:
+            ucReturn = (uwJustReleasedDirections & 4) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = (uwJustReleasedDirections & 8) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = (uwJustReleasedDirections & 1) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = (uwJustReleasedDirections & 2) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                /* The (unsigned char) casts materialise each mask test before the
+                   && branches, as retail does. Not original source, needs cleaning up. */
+                ucReturn = (!((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask)) &&
+                            (unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask)) ? 1 : 0;
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 814–850 */
@@ -632,8 +678,46 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickOrPadJustPressed(IPT_tdstKeyWordEle
 {
     unsigned short uwNewDirections;
     stDevice* hPad;
-    unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn = 0;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
+    {
+        IPT_tdstJoystickState_* pState = (IPT_tdstJoystickState_*)hPad->m_p_stState;
+        short sDirections = pState->sDirections;
+        uwNewDirections = sDirections & ~(short)INO_fn_uwJoyPreviousDirections(hPad);
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        switch (swKeyWord)
+        {
+        case 0:
+            ucReturn = (uwNewDirections & 4) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = (uwNewDirections & 8) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = (uwNewDirections & 1) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = (uwNewDirections & 2) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                /* See IPT_fn_bIsKeyWordValid_PadJustReleased. Not original source, needs cleaning up. */
+                ucReturn = ((unsigned char)((ulMask & pState->ulButtons) == ulMask) &&
+                            !((unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask))) ? 1 : 0;
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 791–809 */
@@ -787,13 +871,9 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickJustReleased(IPT_tdstKeyWordElement
         if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
         {
             ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
-            if (!((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask))
-            {
-                if ((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask)
-                {
-                    ucReturn = 1;
-                }
-            }
+            /* See IPT_fn_bIsKeyWordValid_PadJustReleased. Not original source, needs cleaning up. */
+            ucReturn = (!((unsigned char)((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask)) &&
+                        (unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask)) ? 1 : 0;
         }
     }
     IPT_g_hNextParameter += 12;
@@ -843,8 +923,9 @@ unsigned char IPT_fn_bIsKeyWordValid_JoystickJustPressed(IPT_tdstKeyWordElement_
         if (swKeyWord >= 0x1C && swKeyWord <= 0x2B)
         {
             ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 28];
-            ucReturn = ((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask) &&
-                       ((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) != ulMask);
+            /* See IPT_fn_bIsKeyWordValid_PadJustReleased. Not original source, needs cleaning up. */
+            ucReturn = ((unsigned char)((ulMask & *(unsigned int*)((char*)hPad->m_p_stState + 4)) == ulMask) &&
+                        !((unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask))) ? 1 : 0;
         }
     }
     IPT_g_hNextParameter += 12;
@@ -1164,8 +1245,53 @@ unsigned char IPT_fn_bIsKeyWordValid_PadReleased(IPT_tdstKeyWordElement_* _hKeyW
 {
     unsigned short uwInvertedDirection;
     stDevice* hPad;
-    unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn = 0;
+    short swPadNumber;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
+    {
+        uwInvertedDirection = ~((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections;
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        switch (swKeyWord)
+        {
+        case 0:
+            ucReturn = ((uwInvertedDirection & 4) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = ((uwInvertedDirection & 8) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = ((uwInvertedDirection & 1) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = ((uwInvertedDirection & 2) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                ucReturn = (!(unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
+                            (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 264–312 */
@@ -1205,8 +1331,53 @@ unsigned char IPT_fn_bIsKeyWordValid_PadPressed(IPT_tdstKeyWordElement_* _hKeyWo
 {
     unsigned short uwDirection;
     stDevice* hPad;
-    unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn = 0;
+    short swPadNumber;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swPadNumber = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)(((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter) + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swPadNumber + 2].ucValideAndActiveDevice == 2)
+    {
+        uwDirection = ((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections;
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        switch (swKeyWord)
+        {
+        case 0:
+            ucReturn = ((uwDirection & 4) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = ((uwDirection & 8) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = ((uwDirection & 1) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = ((uwDirection & 2) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                ucReturn = ((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask) &&
+                            (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] >= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMinCounterInput) &&
+                        (IPT_g_hInputStructure.a_stDevice[swPadNumber].ucPadAndJoyCounter[swKeyWord] <= ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->ucMaxCounterInput)) ? 1 : 0;
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 217–253 */
@@ -1258,8 +1429,45 @@ unsigned char IPT_fn_bIsKeyWordValid_PadJustReleased(IPT_tdstKeyWordElement_* _h
 {
     unsigned short uwJustReleasedDirections;
     stDevice* hPad;
-    unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn = 0;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
+    {
+        uwJustReleasedDirections = ~((IPT_tdstJoystickState_*)hPad->m_p_stState)->sDirections & (short)INO_fn_uwJoyPreviousDirections(hPad);
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        switch (swKeyWord)
+        {
+        case 0:
+            ucReturn = (uwJustReleasedDirections & 4) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = (uwJustReleasedDirections & 8) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = (uwJustReleasedDirections & 1) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = (uwJustReleasedDirections & 2) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                /* The (unsigned char) casts materialise each mask test before the
+                   && branches, as retail does. Not original source, needs cleaning up. */
+                ucReturn = (!((unsigned char)((ulMask & ((IPT_tdstJoystickState_*)hPad->m_p_stState)->ulButtons) == ulMask)) &&
+                            (unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask)) ? 1 : 0;
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 175–212 */
@@ -1313,8 +1521,46 @@ unsigned char IPT_fn_bIsKeyWordValid_PadJustPressed(IPT_tdstKeyWordElement_* _hK
 {
     unsigned short uwNewDirections;
     stDevice* hPad;
-    unsigned char ucReturn;
-    /* TODO: decompile from asm/... */
+    unsigned char ucReturn = 0;
+    short swKeyWord;
+    unsigned int ulMask;
+
+    IPT_g_hNextParameter = (int)(_hKeyWordElement + 1);
+    swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+    hPad = IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].hDeviceHandle;
+    IPT_g_hNextParameter = (int)((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter + 1);
+    if (IPT_g_hInputStructure.a_stDevice[swKeyWord + 2].ucValideAndActiveDevice == 2)
+    {
+        IPT_tdstJoystickState_* pState = (IPT_tdstJoystickState_*)hPad->m_p_stState;
+        short sDirections = pState->sDirections;
+        uwNewDirections = sDirections & ~(short)INO_fn_uwJoyPreviousDirections(hPad);
+        swKeyWord = ((IPT_tdstKeyWordElement_*)IPT_g_hNextParameter)->u_ElementUnion.swKeyWord;
+        switch (swKeyWord)
+        {
+        case 0:
+            ucReturn = (uwNewDirections & 4) ? 1 : 0;
+            break;
+        case 1:
+            ucReturn = (uwNewDirections & 8) ? 1 : 0;
+            break;
+        case 2:
+            ucReturn = (uwNewDirections & 1) ? 1 : 0;
+            break;
+        case 3:
+            ucReturn = (uwNewDirections & 2) ? 1 : 0;
+            break;
+        default:
+            if (swKeyWord >= 12 && swKeyWord < 28)
+            {
+                ulMask = IPT_g_ulPadAndJoyButtonFlag[swKeyWord - 12];
+                /* See IPT_fn_bIsKeyWordValid_PadJustReleased. Not original source, needs cleaning up. */
+                ucReturn = ((unsigned char)((ulMask & pState->ulButtons) == ulMask) &&
+                            !((unsigned char)((ulMask & INO_fn_ulJoyPreviousButtons(hPad)) == ulMask))) ? 1 : 0;
+            }
+        }
+    }
+    IPT_g_hNextParameter += 12;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_kwan.c lines 98–106 */

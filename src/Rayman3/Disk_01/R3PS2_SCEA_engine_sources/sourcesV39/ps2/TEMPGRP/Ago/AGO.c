@@ -169,7 +169,7 @@ struct AGO_Part_ {
     unsigned int Displayed; /* +0x80 */
     unsigned int Channel; /* +0x84 */
     unsigned char _extractor_padding_01[8]; /* +0x88..0x8f */
-};
+} __attribute__((aligned(16)));
 
 struct tdstSubAnimInUse_ {
     tdstSubAnimInUse_* hNextBrotherDyn; /* +0x0 */
@@ -6897,12 +6897,34 @@ void AGO_vSetGauge(int NumeroVp, int NumeroGauge, float* V1, float* V2, float xN
  */
 void AGO_vDestroyAllParts(void)
 {
-    unsigned int Limit;
-    AGO_Part_* pdst;
-    AGO_Part_* psrc;
-    unsigned int NumToSkip;
     unsigned int Source;
-    /* TODO: decompile from asm/... */
+    unsigned int NumToSkip;
+    AGO_Part_* psrc;
+    AGO_Part_* pdst;
+    unsigned int Limit;
+
+    Source = 0;
+    NumToSkip = 0;
+    Limit = g_ulNumberOfAgos;
+
+    pdst = psrc = g_AGO;
+
+    for (; Source < Limit; Source++, psrc++)
+    {
+        if (psrc->ulType & 0x1000000)
+        {
+            if (psrc->ulType & 0x80000)
+                g_NumberOfZeldaAgos--;
+            NumToSkip++;
+        }
+        else
+        {
+            if (psrc != pdst)
+                *pdst = *psrc;
+            pdst++;
+        }
+    }
+    g_ulNumberOfAgos -= NumToSkip;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 969–1151 */
