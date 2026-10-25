@@ -1439,8 +1439,8 @@ static inline unsigned char fn_bIsMiscFlag80(tdstStandardGame_* p_stStdGame)
 }
 static inline int fn_bHasEndFlag4000(DNM_stDynamics* p_stDyn)
 {
-    int bFlag = p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000;
-    if (bFlag != 0) bFlag = 1;
+    int bFlag = 0;
+    if (p_stDyn->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) bFlag = 1;
     return bFlag;
 }
 /* The target writes COP0 register 24 (mtc0 zero, $24); C cannot express it.

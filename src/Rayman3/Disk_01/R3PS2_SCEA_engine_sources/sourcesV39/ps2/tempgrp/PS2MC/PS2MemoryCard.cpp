@@ -416,7 +416,9 @@ void PS2MC_DisableAutoSave(void)
  */
 void PS2MC_vClearFlag(int FlagID)
 {
-    ((C_PS2MC_Manager*)PS2MC_g_Manager)->m_Flags[FlagID] = 0xFFFFFFFF;
+    /* Not original source, needs cleaning up: the scaled-index assignment keeps
+     * the +0x2c member offset unfolded, as retail does. */
+    *(int *)((char *)&((C_PS2MC_Manager*)PS2MC_g_Manager)->m_Flags + (FlagID *= 4)) = 0xFFFFFFFF;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MemoryCard.cpp lines 5512–5514 */

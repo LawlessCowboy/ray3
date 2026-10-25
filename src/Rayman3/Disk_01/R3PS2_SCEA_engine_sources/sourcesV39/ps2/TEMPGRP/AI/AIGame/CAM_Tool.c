@@ -18,6 +18,16 @@ inline float MTH_xAbs(float xValue)
     return xResult;
 }
 
+/* R5900 accumulator dot product (mula.s/madda.s/madd.s). */
+inline float MTH_xDotProduct3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2)
+{
+    float xRet;
+    asm { mula.s _x1, _x2 }
+    asm { madda.s _y1, _y2 }
+    asm { madd.s xRet, _z1, _z2 }
+    return xRet;
+}
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
@@ -3427,7 +3437,28 @@ void Cam_fn_vComputeMovingOnRail(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstV
 float Cam_fn_xComputeProjectionRail(MTH3D_tdstVector_* _p_stTargetedPersoPos, MTH3D_tdstVector_* _p_stWpPosition, MTH3D_tdstVector_* _p_stDestWpPosition)
 {
     float xFactor;
-    /* TODO: decompile from asm/... */
+    float xAx, xAy, xAz, xBx, xBy, xBz, xNorm2, xD1, xD2, xX, xY, xZ, xSqr;
+
+    xAx = _p_stTargetedPersoPos->xX - _p_stWpPosition->xX; xAy = _p_stTargetedPersoPos->xY - _p_stWpPosition->xY; xAz = _p_stTargetedPersoPos->xZ - _p_stWpPosition->xZ;
+    xBx = _p_stDestWpPosition->xX - _p_stWpPosition->xX; xBy = _p_stDestWpPosition->xY - _p_stWpPosition->xY; xBz = _p_stDestWpPosition->xZ - _p_stWpPosition->xZ;
+
+    MTH_SQR3_TO(xNorm2, xBx, xBy, xBz);
+    if (xNorm2 == 0.0f)
+    {
+        return 3.4028220466166163e+38f;
+    }
+    xFactor = (xBx * xAx + xBy * xAy + xBz * xAz) / xNorm2;
+
+    if (xFactor < 0.0f)
+    {
+        xX = _p_stWpPosition->xX - _p_stTargetedPersoPos->xX; xY = _p_stWpPosition->xY - _p_stTargetedPersoPos->xY; xZ = _p_stWpPosition->xZ - _p_stTargetedPersoPos->xZ; MTH_SQR3_TO(xSqr, xX, xY, xZ); asm { sqrt.s xD1, xSqr }
+        xX = _p_stDestWpPosition->xX - _p_stTargetedPersoPos->xX; xY = _p_stDestWpPosition->xY - _p_stTargetedPersoPos->xY; xZ = _p_stDestWpPosition->xZ - _p_stTargetedPersoPos->xZ; MTH_SQR3_TO(xSqr, xX, xY, xZ); asm { sqrt.s xD2, xSqr }
+
+        if (xD1 <= xD2) return xD1; else return xD2;
+    }
+
+    xZ = xFactor * xBz + _p_stWpPosition->xZ - _p_stTargetedPersoPos->xZ; xY = xFactor * xBy + _p_stWpPosition->xY - _p_stTargetedPersoPos->xY; xX = xFactor * xBx + _p_stWpPosition->xX - _p_stTargetedPersoPos->xX; MTH_SQR3_TO(xSqr, xX, xY, xZ); asm { sqrt.s xD1, xSqr }
+    return xD1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 537–573 */
@@ -3603,16 +3634,6 @@ float CAM_fn_xComputeRotation(MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVect
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* R5900 accumulator dot product (mula.s/madda.s/madd.s). */
-inline float MTH_xDotProduct3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2)
-{
-    float xRet;
-    asm { mula.s _x1, _x2 }
-    asm { madda.s _y1, _y2 }
-    asm { madd.s xRet, _z1, _z2 }
-    return xRet;
-}
-
 void CAM_fn_vComputeProjection(MTH3D_tdstVector_* _p_sDestVector, MTH3D_tdstVector_* _p_sSrcVector, MTH3D_tdstVector_* _p_sNormVector)
 {
     float xScalar;
@@ -3652,7 +3673,19 @@ HIE_tdstSuperObject_* CAM_fn_hGetFather(HIE_tdstSuperObject_* _h_SuperObjPerso)
 {
     DNM_stDynamics* p_stDynamics;
     tdstDynam_* h_Dynam;
-    /* TODO: decompile from asm/... */
+
+    if (_h_SuperObjPerso == NULL)
+        return NULL;
+    h_Dynam = _h_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam == NULL)
+        return NULL;
+    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+    if (p_stDynamics == NULL)
+        return NULL;
+
+    if (!((p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0)) return NULL;
+
+    return p_stDynamics->m_tdstDynamicsComplexBlock.m_hPlatform;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 267–293 */
@@ -3682,7 +3715,22 @@ unsigned char CAM_fn_bPersoOnFace(HIE_tdstSuperObject_* _h_SuperObjPerso, MTH3D_
     DNM_stReport* param0;
     DNM_stDynamics* p_stDynamics;
     tdstDynam_* h_Dynam;
-    /* TODO: decompile from asm/... */
+
+    h_Dynam = _h_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam == NULL)
+        return 0;
+    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+    if (p_stDynamics == NULL)
+        return 0;
+    param0 = p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
+    if (param0 == NULL)
+        return 0;
+
+    if (!(param0->m_ulCurrSurfaceState & 1))
+        return 0;
+
+    *(int*)&_p_stNormal->xX = *(int*)&param0->m_stGround.m_stNorm.xX; *(int*)&_p_stNormal->xY = *(int*)&param0->m_stGround.m_stNorm.xY; *(int*)&_p_stNormal->xZ = *(int*)&param0->m_stGround.m_stNorm.xZ;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 228–259 */
@@ -3716,7 +3764,30 @@ unsigned char CAM_fn_bPersoIsTurning(HIE_tdstSuperObject_* _h_SuperObjPerso, flo
     DNM_stReport* p_stReport;
     DNM_stDynamics* p_stDynamics;
     tdstDynam_* h_Dynam;
-    /* TODO: decompile from asm/... */
+
+    if (_p_xAngularSpeed)
+        *_p_xAngularSpeed = 0.0f;
+
+    h_Dynam = _h_SuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam == NULL)
+        return 0;
+    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+    if (p_stDynamics == NULL)
+        return 0;
+    p_stReport = p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
+    if (p_stReport == NULL)
+        return 0;
+
+    xAngle = p_stReport->m_stAbsoluteCurrSpeed.m_stAngular.m_xAngle;
+
+    if (xAngle > CAM_g_stCameraConstants.xMinAngularSpeedTgtPerso)
+    {
+        if (_p_xAngularSpeed)
+            *_p_xAngularSpeed = xAngle;
+        return 1;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 201–220 */
@@ -3738,8 +3809,27 @@ unsigned char CAM_fn_bPersoIsTurning(HIE_tdstSuperObject_* _h_SuperObjPerso, flo
  */
 unsigned char CAM_fn_bPersoIsMoving(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stMove)
 {
-    MTH3D_tdstVector_ stMove;
-    /* TODO: decompile from asm/... */
+    /* Not original source, needs cleaning up: the word view of stMove keeps
+     * retail's lw/sw copy of the vector. */
+    union { MTH3D_tdstVector_ v; int i[3]; } stMove;
+    float xNorm, xX, xY, xZ;
+
+    CAM_fn_vAverageSpeed(_p_stStruct->hCineinfo, CAM_g_stCameraConstants.xAverageForComputeLinearSpeed, &stMove.v);
+    xX = stMove.v.xX; xY = stMove.v.xY; xZ = stMove.v.xZ; MTH_SQR3_TO(xNorm, xX, xY, xZ); asm { sqrt.s xNorm, xNorm } if (xNorm > CAM_g_stCameraConstants.xMinLinearSpeedTgtPerso)
+    {
+        if (_p_stMove)
+        {
+            *(int*)&_p_stMove->xX = stMove.i[0]; *(int*)&_p_stMove->xY = stMove.i[1]; *(int*)&_p_stMove->xZ = stMove.i[2];
+        }
+        return 1;
+    }
+
+    if (_p_stMove)
+    {
+        *(int*)&_p_stMove->xX = 0; *(int*)&_p_stMove->xY = 0; *(int*)&_p_stMove->xZ = 0;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 142–193 */
@@ -3802,10 +3892,35 @@ void CAM_fn_vForceCameraTgt(HIE_tdstSuperObject_* _hSuperObjCamera, MTH3D_tdstVe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned char fn_bIsTransitionInProgress(void);
+void fn_vSectInfoInitForSingleCharacter(HIE_tdstSuperObject_* hCharacter, MTH3D_tdstVector_* hPosition);
+
+/* Not original source, needs cleaning up: retail inlines a set-translation
+ * helper twice; the float* component view keeps its copy addresses. */
+inline void CAM_fn_vSetTranslationInline(MAT_tdstTransformation_* hMatrix, float* p_stTrs)
+{
+    if (hMatrix->eType == 1) hMatrix->eType = 2;
+    *(int*)&hMatrix->stTransformMatrix.stCol_3.xX = *(int*)&p_stTrs[0];
+    *(int*)&hMatrix->stTransformMatrix.stCol_3.xY = *(int*)&p_stTrs[1];
+    *(int*)&hMatrix->stTransformMatrix.stCol_3.xZ = *(int*)&p_stTrs[2];
+    hMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+}
+
 void CAM_fn_vForceCameraPos(HIE_tdstSuperObject_* _hSuperObjCamera, MTH3D_tdstVector_* _p_stPosition)
 {
     DNM_stReport* p_stReport;
-    /* TODO: decompile from asm/... */
+
+    p_stReport = fn_pstGetDNMReport(_hSuperObjCamera);
+
+    CAM_fn_vSetTranslationInline(_hSuperObjCamera->hGlobalMatrix, (float*)_p_stPosition);
+    CAM_fn_vSetTranslationInline(_hSuperObjCamera->hLocalMatrix, (float*)_p_stPosition);
+
+    p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xX = 0.0f; p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xY = 0.0f; p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xZ = 0.0f;
+
+    if (!fn_bIsTransitionInProgress())
+    {
+        fn_vSectInfoInitForSingleCharacter(_hSuperObjCamera, _p_stPosition);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 74–98 */
@@ -3834,7 +3949,29 @@ void CAM_fn_vForceCameraPos(HIE_tdstSuperObject_* _hSuperObjCamera, MTH3D_tdstVe
  */
 void CAM_fn_vSetResetInternalFlag(tdstCineinfo_* _hCineInfo, unsigned short* _p_uwCurrentValue, unsigned short* _p_uwVisibilityValue, unsigned short* _p_uwWorkValue, int _lTypeOfChange, int _lChangingMode, unsigned short _uwFlag)
 {
-    /* TODO: decompile from asm/... */
+    if (_lTypeOfChange == 1)
+    {
+        CAM_fn_vSetCineinfoWorkFromCurrent(_hCineInfo);
+        if (_lChangingMode)
+            *_p_uwWorkValue |= _uwFlag;
+        else
+            *_p_uwWorkValue &= ~_uwFlag;
+    }
+    else
+    {
+        if (_lChangingMode)
+        {
+            *_p_uwCurrentValue |= _uwFlag;
+            *_p_uwVisibilityValue |= _uwFlag;
+            *_p_uwWorkValue |= _uwFlag;
+        }
+        else
+        {
+            *_p_uwCurrentValue &= ~_uwFlag;
+            *_p_uwVisibilityValue &= ~_uwFlag;
+            *_p_uwWorkValue &= ~_uwFlag;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 47–57 */

@@ -1255,7 +1255,9 @@ void impPS2glPopMatrix(void)
     __int128* dest;
     const volatile __int128* src;
     --*(int*)g_PS2glContext.piCurStackDepth;
-    src = (const volatile __int128*)--g_PS2glContext.pCurStack;
+    src = (const volatile __int128*)g_PS2glContext.pCurStack;
+    src -= 4;
+    g_PS2glContext.pCurStack--;
     dest = (__int128*)g_PS2glContext.pCurMatrix;
     v0 = src[0];
     v1 = src[1];
@@ -1367,27 +1369,32 @@ void impPS2glLoadMatrixf(float* m)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: retail inlines a copy of
+ * impPS2glLoadMatrixf whose matrix pointer is loaded before the source
+ * quadwords; this inline copy reproduces that schedule. */
+inline void PS2GL_vLoadMatrixfInline(float* m)
+{
+    __int128* dest;
+    __int128 v0, v1, v2, v3;
+    dest = (__int128*)g_PS2glContext.pCurMatrix;
+    v0 = ((const volatile __int128*)m)[0];
+    v1 = ((const volatile __int128*)m)[1];
+    v2 = ((const volatile __int128*)m)[2];
+    v3 = ((const volatile __int128*)m)[3];
+    dest[0] = v0;
+    dest[1] = v1;
+    dest[2] = v2;
+    dest[3] = v3;
+    g_PS2glContext.bMatrixChanged = 1;
+}
+
 void impPS2glLoadMatrixd(double* m)
 {
-    float fm[4][4];
+    float fm[16];
+    float *p = (float*)&fm;
 
-    fm[0][0] = m[0];
-    fm[0][1] = m[1];
-    fm[0][2] = m[2];
-    fm[0][3] = m[3];
-    fm[1][0] = m[4];
-    fm[1][1] = m[5];
-    fm[1][2] = m[6];
-    fm[1][3] = m[7];
-    fm[2][0] = m[8];
-    fm[2][1] = m[9];
-    fm[2][2] = m[10];
-    fm[2][3] = m[11];
-    fm[3][0] = m[12];
-    fm[3][1] = m[13];
-    fm[3][2] = m[14];
-    fm[3][3] = m[15];
-    impPS2glLoadMatrixf((float*)fm);
+    *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++; *p++ = *m++;
+    PS2GL_vLoadMatrixfInline(fm);
 }
 #pragma auto_inline reset
 
@@ -1556,7 +1563,12 @@ void impPS2glMultMatrixf(float* m)
 void impPS2glMultMatrixd(double* dm)
 {
     float m[4][4];
-    /* TODO: decompile from asm/... */
+    float *p = (float*)&m;
+
+    *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++; *p++ = *dm++;
+    sceVu0MulMatrix(*g_PS2glContext.pCurMatrix, *g_PS2glContext.pCurMatrix, m);
+
+    g_PS2glContext.bMatrixChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Matrix.c lines 352–373 */

@@ -3,6 +3,7 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#pragma defer_codegen off
 
 /* Recovered from the original PS2 MTH floating-point helper convention.
    MTH_SQRT_TO carries no explicit nop: MWCC inserts the sqrt.s hazard nop
@@ -17,6 +18,13 @@
     asm { mula.s _x, _x }                       \
     asm { madda.s _y, _y }                      \
     asm { madd.s _result, _z, _z }
+/* abs.s is not emittable from C under the baseline (fabsf lowers to a call). */
+inline float CSH_MTH_xAbs(float _v)
+{
+    float _r;
+    asm { abs.s _r, _v }
+    return _r;
+}
 #define MTH_VECTOR_NORM_TO(_result, _vector)           \
     do {                                                   \
         float _mthX = (_vector).xX;                        \
@@ -2459,11 +2467,14 @@ struct CAM_Shooter_ {
     int iViewportIndex; /* +0x27c */
     unsigned char iMode; /* +0x280 */
     MTH3D_tdstVector_ vCeilingCollisionPoint; /* +0x284 */
-    int iOldInputAxisZ; /* +0x290 */
-    int iAxisVThreshold; /* +0x294 */
+    /* The extractor typed +0x290 as two ints and +0x2a0 as padding; retail
+       stores both with sd (an int widened by sd in fn_BackMode, zero in
+       fn_p_InitCamShooter), so they are 64-bit integers. */
+    long long iOldInputAxisZ; /* +0x290 */
     unsigned int m_ulOldButtons; /* +0x298 */
     unsigned int m_ulJustPressedButtons; /* +0x29c */
-    unsigned char _extractor_padding_04[16]; /* explicit retail gap; +0x2a0..0x2af */
+    long long llUnknown2A0; /* +0x2a0 */
+    unsigned char _extractor_padding_04[8]; /* explicit retail gap; +0x2a8..0x2af */
     GMT_tdstGameMaterial_* hWaterGMT; /* +0x2b0 */
     float xViewFinderWidth_2; /* +0x2b4 */
     float xViewFinderHeight_2; /* +0x2b8 */
@@ -3488,9 +3499,18 @@ int bMovedY;
 int bMovedX;
 CAM_Shooter_CV_ stCamShooter_CV;
 CAM_Shooter_ a_stCamShooter[4];
-MTH3D_tdstVector_ g_stCollideResultPoint;
+/* Word-copy view of a vector: retail copies vRayCast/vHorizon, vVectorZ and
+   g_stCollideResultPoint with lw/sw (the globals with folded %lo addressing,
+   which needs the global itself to carry the int view). Not original source, needs cleaning up. */
+typedef union CSH_tduWordVector
+{
+    MTH3D_tdstVector_ v;
+    int i[3];
+} CSH_tduWordVector;
+
+CSH_tduWordVector g_stCollideResultPoint;
 int g_hColMatHit;
-MTH3D_tdstVector_ vVectorZ;
+CSH_tduWordVector vVectorZ;
 tdstEngineStructure_ g_stEngineStructure;
 int g_hSuperObjectHit;
 MTH3D_tdstVector_ g_stCollideResultVector;
@@ -3523,7 +3543,345 @@ void fn_CreateRaycastDirection(CAM_Shooter_* pcs, MTH3D_tdstVector_* vRayCastDir
 void fn_GetTheoreticalPosition_UsingRealPosition(MTH3D_tdstVector_* vTPosition, CAM_Shooter_* pcs, unsigned int iMode);
 void fn_PutCameraAgainstWall(CAM_Shooter_* pcs, float xDistanceToTarget);
 int fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcId);
+tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);
 void fn_vGetUltraOperatorPerso(int bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
+
+/* Bit view of a float for the sign/zero tests (retail spills the value to a
+   stack slot and tests/masks it with integer ops). Not original source, needs
+   cleaning up. */
+typedef union CSH_tduFloatBits
+{
+    float f;
+    unsigned int u;
+} CSH_tduFloatBits;
+
+inline float CSH_MTH_xSign(float _xValue)
+{
+    CSH_tduFloatBits uValue;
+    CSH_tduFloatBits uSign;
+
+    uValue.f = _xValue;
+    if ((uValue.u & 0x7FFFFFFF) == 0)
+        return 0.0f;
+    uSign.u = uValue.u;
+    uSign.u &= 0x80000000;
+    uSign.u |= 0x3F800000;
+    return uSign.f;
+}
+
+inline void CSH_M_vSubVector(MTH3D_tdstVector_* p_vDest, MTH3D_tdstVector_* p_vA, MTH3D_tdstVector_* p_vB)
+{
+    p_vDest->xX = p_vA->xX - p_vB->xX; p_vDest->xY = p_vA->xY - p_vB->xY; p_vDest->xZ = p_vA->xZ - p_vB->xZ;
+}
+
+inline int CSH_fn_bIsInComport(AI_tdstMind_* p_stMind, tdstComport_* p_stComport)
+{
+    int bResult;
+
+    if (p_stMind->p_stIntelligence)
+        bResult = p_stMind->p_stIntelligence->p_stCurrentComport == p_stComport;
+    else
+        bResult = 0;
+    return bResult;
+}
+
+/* Retail inlines this viewfinder update into fn_StrafeLockMode on a single
+   source line (3751) with its own stack slots, so it was a separate inline
+   helper; the name is not recovered. Not original source, needs cleaning up. */
+inline void CSH_fn_vUpdateViewFinder(CAM_Shooter_* pcs)
+{
+    MTH3D_tdstVector_ vDir;
+    CSH_tduWordVector vPos;
+    CSH_tduWordVector vLocked;
+    MTH3D_tdstVector_ vIcon2;
+    CSH_tduWordVector vIcon1;
+    MTH3D_tdstVector_ vSighting;
+    MTH3D_tdstVector_ vHorizon;
+    float xNorm;
+    float xX, xY, xZ, xSquared;
+
+    vPos.i[0] = ((int *)pcs->pTargetActor_position)[0]; vPos.i[1] = ((int *)pcs->pTargetActor_position)[1]; vPos.i[2] = ((int *)pcs->pTargetActor_position)[2];
+    *(float *)&vPos.v.xZ += 1.0f;
+    if (*(char *)pcs->abExternDsgVarBoolean[1])
+    {
+        pcs->pLockedActor = *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[0];
+        if (fn_bIsValidObject(pcs->pLockedActor))
+        {
+            AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderRedIconUV1, &stCamShooter_CV.vViewFinderRedIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);
+            vLocked.i[0] = ((int *)&pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3)[0]; vLocked.i[1] = ((int *)&pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3)[1]; vLocked.i[2] = ((int *)&pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3)[2];
+            *(float *)&vLocked.v.xZ += 1.0f;
+            vDir.xX = vLocked.v.xX - vPos.v.xX; vDir.xY = vLocked.v.xY - vPos.v.xY; vDir.xZ = vLocked.v.xZ - vPos.v.xZ;
+            xX = vDir.xX; xY = vDir.xY; xZ = 0.0f; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xNorm, xSquared);
+            fn_GetPersoSighting(&vSighting, pcs->pTargetActor);
+            vDir.xX = xNorm * vSighting.xX; vDir.xY = xNorm * vSighting.xY; vDir.xZ = xNorm * vSighting.xZ;
+            vDir.xZ = vLocked.v.xZ - vPos.v.xZ;
+            if (pcs->xAlphaLock != 0.0f)
+                fn_RotateVectorByAngle(&vDir, pcs->xAlphaLock, &vVectorZ.v);
+            if (pcs->xThetaLock != 0.0f)
+            {
+                fn_GetPersoHorizon(&vHorizon, pcs->pCamera);
+                fn_RotateVectorByAngle(&vDir, pcs->xThetaLock, &vHorizon);
+            }
+            pcs->vViewFinderPosition.xX = vPos.v.xX + vDir.xX; pcs->vViewFinderPosition.xY = vPos.v.xY + vDir.xY; pcs->vViewFinderPosition.xZ = vPos.v.xZ + vDir.xZ;
+        }
+        else
+            AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);
+    }
+    else
+    {
+        AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);
+        fn_GetPersoSighting(&vDir, pcs->pTargetActor);
+        if (pcs->xAlphaLock != 0.0f)
+            fn_RotateVectorByAngle(&vDir, pcs->xAlphaLock, &vVectorZ.v);
+        if (pcs->xThetaLock != 0.0f)
+        {
+            fn_GetPersoHorizon(&vHorizon, pcs->pCamera);
+            fn_RotateVectorByAngle(&vDir, pcs->xThetaLock, &vHorizon);
+        }
+        vDir.xX = 5.0f * vDir.xX; vDir.xY = 5.0f * vDir.xY; vDir.xZ = 5.0f * vDir.xZ;
+        pcs->vViewFinderPosition.xX = vPos.v.xX + vDir.xX; pcs->vViewFinderPosition.xY = vPos.v.xY + vDir.xY; pcs->vViewFinderPosition.xZ = vPos.v.xZ + vDir.xZ;
+    }
+
+    fn_vGetViewportCoordinates(&pcs->v2DViewFinderPosition, &pcs->vViewFinderPosition, pcs->p_stViewport);
+    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
+        pcs->v2DViewFinderPosition.xY = pcs->v2DViewFinderPosition.xY * 2.0f;
+    if (pcs->v2DViewFinderPosition.xX < -5.0f || pcs->v2DViewFinderPosition.xX > 105.0f || pcs->v2DViewFinderPosition.xY < 0.0f)
+    {
+        pcs->v2DViewFinderPosition.xX = pcs->v2DViewFinderPosition.xY = -300.0f;
+        pcs->v2DViewFinderPosition.xZ = 0.0f;
+        fn_GetPersoSighting((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0], pcs->pTargetActor);
+    }
+    else
+    {
+        vDir.xX = pcs->vViewFinderPosition.xX - vPos.v.xX; vDir.xY = pcs->vViewFinderPosition.xY - vPos.v.xY; vDir.xZ = pcs->vViewFinderPosition.xZ - vPos.v.xZ;
+        xX = vDir.xX; xY = vDir.xY; xZ = vDir.xZ; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xNorm, xSquared); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xX = xNorm * vDir.xX; ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xY = xNorm * vDir.xY; ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xZ = xNorm * vDir.xZ; } else *(MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0] = vDir;
+    }
+
+    vIcon1.i[0] = ((int *)&pcs->v2DViewFinderPosition)[0]; vIcon1.i[1] = ((int *)&pcs->v2DViewFinderPosition)[1]; vIcon1.i[2] = ((int *)&pcs->v2DViewFinderPosition)[2];
+    vIcon2.xX = pcs->v2DViewFinderPosition.xX - pcs->xViewFinderWidth_2;
+    vIcon2.xY = pcs->v2DViewFinderPosition.xY - pcs->xViewFinderHeight_2;
+    vIcon1.v.xX += pcs->xViewFinderWidth_2;
+    vIcon1.v.xY += pcs->xViewFinderHeight_2;
+    AGO_vSetIcon(pcs->iViewportIndex, pcs->iViewFinderIconId, &vIcon2.xX, &vIcon1.v.xX, 255.0f, stCamShooter_CV.hVMTViewFinder_red);
+}
+
+/* Retail inlines these two steps at the top of fn_StrafeLockMode, fn_BackMode
+   and fn_MarioMode on single source lines with identical code, so they were
+   shared inline helpers; the names are not recovered. Not original source,
+   needs cleaning up. */
+inline void CSH_fn_vCheckRestart(CAM_Shooter_* pcs)
+{
+    if (*(char *)pcs->abExternDsgVarBoolean[3])
+    {
+        float xDistanceX;
+        float xDistanceY;
+        float xDistanceZ;
+        float xDistanceSquared;
+        float xDistance;
+
+        xDistanceX = pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX;
+        xDistanceY = pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY;
+        xDistanceZ = pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ;
+        MTH_SQR3_TO(xDistanceSquared, xDistanceX, xDistanceY, xDistanceZ);
+        MTH_SQRT_TO(xDistance, xDistanceSquared);
+        if (xDistance < 1.0f)
+        {
+            tdstCineinfo_* hLocalCineInfo;
+            HIE_tdstSuperObject_* pLocalTargetActor;
+
+            CAM_fn_vInitCompleteCineinfo(hCineInfo);
+            hLocalCineInfo = hCineInfo;
+            pLocalTargetActor = pcs->pTargetActor;
+            hLocalCineInfo->hCurrent->hSuperObjectTargeted = pLocalTargetActor;
+            hLocalCineInfo->hVisibility->hSuperObjectTargeted = pLocalTargetActor;
+            hLocalCineInfo->hWork->hSuperObjectTargeted = pLocalTargetActor;
+            CAM_fn_vUpdateTargetPosition(hLocalCineInfo);
+            switch (pcs->iMode)
+            {
+            case 2:
+                fn_InitMarioMode(pcs);
+                break;
+            case 1:
+                fn_InitBackMode(pcs);
+                break;
+            case 3:
+                fn_InitStrafeLockMode(pcs);
+                break;
+            }
+            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
+            hLocalCineInfo = hCineInfo;
+            *(int *)&hLocalCineInfo->stForceRefAxisY.xX = *(int *)&pcs->vRefAxis.xX; *(int *)&hLocalCineInfo->stForceRefAxisY.xY = *(int *)&pcs->vRefAxis.xY; *(int *)&hLocalCineInfo->stForceRefAxisY.xZ = *(int *)&pcs->vRefAxis.xZ;
+            *(int *)&hLocalCineInfo->stForceRefAxisZ.xX = vVectorZ.i[0]; *(int *)&hLocalCineInfo->stForceRefAxisZ.xY = vVectorZ.i[1]; *(int *)&hLocalCineInfo->stForceRefAxisZ.xZ = vVectorZ.i[2];
+            CAM_fn_vSetResetInternalFlag(hLocalCineInfo, &hLocalCineInfo->hCurrent->uwIAFlags, &hLocalCineInfo->hVisibility->uwIAFlags, &hLocalCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
+            pcs->ulAlignDelayTime = 0;
+            *(char *)pcs->abExternDsgVarBoolean[3] = 0;
+        }
+    }
+}
+
+inline void CSH_fn_vReadInputs(CAM_Shooter_* pcs)
+{
+    lInputAxisX = *(int *)pcs->aiExternDsgVarInt[0];
+    lInputAxisY = *(int *)pcs->aiExternDsgVarInt[1];
+    lInputAxisV = pcs->bIsBot ? 0 : *(int *)pcs->aiExternDsgVarInt[2];
+    lInputAxisZ = *(int *)pcs->aiExternDsgVarInt[3];
+    bMovedX = lInputAxisX < -25 || lInputAxisX >= 26;
+    bMovedY = lInputAxisY < -25 || lInputAxisY >= 26;
+    if (pcs->bMouseDriven)
+    {
+        bMovedCameraX = lInputAxisV != 0;
+        bMovedCameraY = lInputAxisZ != 0;
+    }
+    else
+    {
+        bMovedCameraX = lInputAxisV < -25 || lInputAxisV >= 26;
+        bMovedCameraY = lInputAxisZ < -25 || lInputAxisZ >= 26;
+    }
+}
+
+/* Retail inlines the target-angle update (lines 3757 and 3762) and the side
+   collision check (line 3759) into fn_StrafeLockMode on single source lines
+   with their own stack slots, so they were separate inline helpers; the names
+   are not recovered. Not original source, needs cleaning up. */
+inline void CSH_fn_vComputeTargetAngle(CAM_Shooter_* pcs)
+{
+    MTH3D_tdstVector_ vSighting;
+
+    fn_GetPersoSighting(&vSighting, pcs->pTargetActor);
+    pcs->xTargetAngle = fn_xAngleVectorXOY(&pcs->vCameraSighting, &vSighting);
+}
+
+inline void CSH_fn_vCheckCameraCollision(CAM_Shooter_* pcs)
+{
+    CSH_tduWordVector vCollisionPoint;
+    MTH3D_tdstVector_ vOrigin;
+    MTH3D_tdstVector_ vHorizon;
+    MTH3D_tdstVector_ vDir;
+    float xCameraDistanceZ, xCameraDistanceY, xCameraDistanceX;
+    float xNorm;
+    float xX, xY, xZ, xSquared, xDist;
+
+    xNorm = pcs->xDistMax;
+    xCameraDistanceX = xNorm * pcs->vCameraSighting.xX; xCameraDistanceY = xNorm * pcs->vCameraSighting.xY; xCameraDistanceZ = xNorm * pcs->vCameraSighting.xZ;
+    vOrigin.xX = pcs->pTargetActor_position->xX; vOrigin.xY = pcs->pTargetActor_position->xY; vOrigin.xZ = pcs->pTargetActor_position->xZ + 1.5f;
+    vCollisionPoint.v.xX = 0.0f; vCollisionPoint.v.xY = 0.0f; vCollisionPoint.v.xZ = 0.0f;
+    fn_GetPersoHorizon(&vHorizon, pcs->pCamera);
+    vHorizon.xX = 0.7f * vHorizon.xX; vHorizon.xY = 0.7f * vHorizon.xY; vHorizon.xZ = 0.7f * vHorizon.xZ;
+    {
+        vDir.xX = vHorizon.xX - xCameraDistanceX; vDir.xY = vHorizon.xY - xCameraDistanceY; vDir.xZ = vHorizon.xZ - xCameraDistanceZ;
+        fn_CollisionRayCast(pcs->pCamera, &vOrigin, &vDir, 0);
+        if (g_stCollideResultPoint.v.xX != 0.0f || g_stCollideResultPoint.v.xY != 0.0f || g_stCollideResultPoint.v.xZ != 0.0f)
+        {
+            if (pcs->hWaterGMT)
+            {
+                if (g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
+                {
+                    xX = g_stCollideResultPoint.v.xX - vHorizon.xX - vOrigin.xX; xY = g_stCollideResultPoint.v.xY - vHorizon.xY - vOrigin.xY; xZ = g_stCollideResultPoint.v.xZ - vHorizon.xZ - vOrigin.xZ; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xDist, xSquared);
+                    if (xDist < xNorm)
+                    {
+                        xNorm = xDist;
+                        vCollisionPoint.i[0] = g_stCollideResultPoint.i[0]; vCollisionPoint.i[1] = g_stCollideResultPoint.i[1]; vCollisionPoint.i[2] = g_stCollideResultPoint.i[2];
+                    }
+                }
+            }
+            else
+            {
+                xX = g_stCollideResultPoint.v.xX - vHorizon.xX - vOrigin.xX; xY = g_stCollideResultPoint.v.xY - vHorizon.xY - vOrigin.xY; xZ = g_stCollideResultPoint.v.xZ - vHorizon.xZ - vOrigin.xZ; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xDist, xSquared);
+                if (xDist < xNorm)
+                {
+                    xNorm = xDist;
+                    vCollisionPoint.i[0] = g_stCollideResultPoint.i[0]; vCollisionPoint.i[1] = g_stCollideResultPoint.i[1]; vCollisionPoint.i[2] = g_stCollideResultPoint.i[2];
+                }
+            }
+        }
+    }
+    vHorizon.xX = -vHorizon.xX; vHorizon.xY = -vHorizon.xY; vHorizon.xZ = -vHorizon.xZ;
+    {
+        vDir.xX = vHorizon.xX - xCameraDistanceX; vDir.xY = vHorizon.xY - xCameraDistanceY; vDir.xZ = vHorizon.xZ - xCameraDistanceZ;
+        fn_CollisionRayCast(pcs->pCamera, &vOrigin, &vDir, 0);
+        if (g_stCollideResultPoint.v.xX != 0.0f || g_stCollideResultPoint.v.xY != 0.0f || g_stCollideResultPoint.v.xZ != 0.0f)
+        {
+            if (pcs->hWaterGMT)
+            {
+                if (g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
+                {
+                    xX = g_stCollideResultPoint.v.xX - vHorizon.xX - vOrigin.xX; xY = g_stCollideResultPoint.v.xY - vHorizon.xY - vOrigin.xY; xZ = g_stCollideResultPoint.v.xZ - vHorizon.xZ - vOrigin.xZ; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xDist, xSquared);
+                    if (xDist < xNorm)
+                    {
+                        xNorm = xDist;
+                        vCollisionPoint.i[0] = g_stCollideResultPoint.i[0]; vCollisionPoint.i[1] = g_stCollideResultPoint.i[1]; vCollisionPoint.i[2] = g_stCollideResultPoint.i[2];
+                    }
+                }
+            }
+            else
+            {
+                xX = g_stCollideResultPoint.v.xX - vHorizon.xX - vOrigin.xX; xY = g_stCollideResultPoint.v.xY - vHorizon.xY - vOrigin.xY; xZ = g_stCollideResultPoint.v.xZ - vHorizon.xZ - vOrigin.xZ; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xDist, xSquared);
+                if (xDist < xNorm)
+                {
+                    xNorm = xDist;
+                    vCollisionPoint.i[0] = g_stCollideResultPoint.i[0]; vCollisionPoint.i[1] = g_stCollideResultPoint.i[1]; vCollisionPoint.i[2] = g_stCollideResultPoint.i[2];
+                }
+            }
+        }
+    }
+    if (vCollisionPoint.v.xX != 0.0f || vCollisionPoint.v.xY != 0.0f || vCollisionPoint.v.xZ != 0.0f)
+    {
+        xNorm -= 0.6f;
+        if (xNorm < 1.3f)
+            xNorm = 1.3f;
+        vCollisionPoint.v.xX = vCollisionPoint.v.xX - vHorizon.xX; vCollisionPoint.v.xY = vCollisionPoint.v.xY - vHorizon.xY; *(float *)&vCollisionPoint.v.xZ = vCollisionPoint.v.xZ - vHorizon.xZ;
+        pcs->xDistMax = xNorm;
+        if (xNorm < 2.0f)
+        {
+            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 1, 1, 4);
+            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 1, 1, 0x20);
+        }
+    }
+}
+
+/* Retail inlines these fast-align steps into fn_StrafeLockMode on single
+   source lines (3762, 3763) with their own stack slots, so they were separate
+   inline helpers; the names are not recovered. Not original source, needs
+   cleaning up. */
+inline void CSH_fn_vCheckFastAlign(CAM_Shooter_* pcs)
+{
+    CSH_fn_vComputeTargetAngle(pcs);
+    if (CSH_MTH_xAbs(pcs->xTargetAngle) > 0.2f &&
+        !CSH_fn_bIsInComport(pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind, pcs->pMAComport_Hang) &&
+        !CSH_fn_bIsInComport(pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind, pcs->pMAComport_Climb))
+    {
+        pcs->bFastAlign = 1;
+        pcs->xFastAlign_StartDistance = pcs->xDistMax;
+    }
+}
+
+inline void CSH_fn_vFastAlign(CAM_Shooter_* pcs)
+{
+    float xAngle;
+    float xDist;
+
+    fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
+    xAngle = CSH_MTH_xAbs(pcs->xTargetAngle);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 180.0f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 180.0f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 1, 1, 180.0f);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 1, 1, 0x80);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 8);
+    if (xAngle > 1.5707964f)
+    {
+        xDist = 6.0f + ((xAngle - 1.5707964f) / 1.5707964f) * (pcs->xFastAlign_StartDistance - 6.0f);
+        if (pcs->xDistMax > xDist)
+            pcs->xDistMax = xDist;
+    }
+    else if (xAngle > 0.2f)
+    {
+        xDist = 6.0f + ((xAngle - 1.5707964f) / 1.5707964f) * (pcs->xDistMax_Default - 6.0f);
+        if (pcs->xDistMax > xDist)
+            pcs->xDistMax = xDist;
+    }
+    else
+        pcs->bFastAlign = 0;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 3662–3782 */
 /* addr: 0x00241ad0  size: 6128 bytes */
@@ -3591,81 +3949,22 @@ unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
 {
     float xNorm;
     float xD2r;
+    float xTheta;
+    float xAlpha;
     MTH3D_tdstVector_ vTemp2;
     MTH3D_tdstVector_ vTemp1;
 
     fn_GetPersoSighting(&pcs->vCameraSighting, pcs->pCamera);
     if (*(char *)pcs->abExternDsgVarBoolean[0])
     {
-        if (*(char *)pcs->abExternDsgVarBoolean[3])
-        {
-            float xDistanceX;
-            float xDistanceY;
-            float xDistanceZ;
-            float xDistanceSquared;
-            float xDistance;
-
-            xDistanceX = pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX;
-            xDistanceY = pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY;
-            xDistanceZ = pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ;
-            MTH_SQR3_TO(xDistanceSquared, xDistanceX, xDistanceY, xDistanceZ);
-            MTH_SQRT_TO(xDistance, xDistanceSquared);
-            if (xDistance < 1.0f)
-            {
-                tdstCineinfo_* hLocalCineInfo;
-                HIE_tdstSuperObject_* pLocalTargetActor;
-
-                CAM_fn_vInitCompleteCineinfo(hCineInfo);
-                hLocalCineInfo = hCineInfo;
-                pLocalTargetActor = pcs->pTargetActor;
-                hLocalCineInfo->hCurrent->hSuperObjectTargeted = pLocalTargetActor;
-                hLocalCineInfo->hVisibility->hSuperObjectTargeted = pLocalTargetActor;
-                hLocalCineInfo->hWork->hSuperObjectTargeted = pLocalTargetActor;
-                CAM_fn_vUpdateTargetPosition(hLocalCineInfo);
-                switch (pcs->iMode)
-                {
-                case 2:
-                    fn_InitMarioMode(pcs);
-                    break;
-                case 1:
-                    fn_InitBackMode(pcs);
-                    break;
-                case 3:
-                    fn_InitStrafeLockMode(pcs);
-                    break;
-                }
-                fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
-                hLocalCineInfo = hCineInfo;
-                hLocalCineInfo->stForceRefAxisY = pcs->vRefAxis;
-                hLocalCineInfo->stForceRefAxisZ = vVectorZ;
-                CAM_fn_vSetResetInternalFlag(hLocalCineInfo, &hLocalCineInfo->hCurrent->uwIAFlags, &hLocalCineInfo->hVisibility->uwIAFlags, &hLocalCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
-                pcs->ulAlignDelayTime = 0;
-                *(char *)pcs->abExternDsgVarBoolean[3] = 0;
-            }
-        }
+        CSH_fn_vCheckRestart(pcs);
 
         pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;
         pcs->xTheta_Min = -0.8f;
         pcs->xTheta_Max = 1.2f;
-        pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
-        pcs->xDistMax = stCamShooter_CV.xDistMax_Init;
+        pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
 
-        lInputAxisV = *(int *)pcs->aiExternDsgVarInt[0];
-        lInputAxisZ = *(int *)pcs->aiExternDsgVarInt[1];
-        lInputAxisY = pcs->bIsBot ? 0 : *(int *)pcs->aiExternDsgVarInt[2];
-        lInputAxisX = *(int *)pcs->aiExternDsgVarInt[3];
-        bMovedCameraY = lInputAxisV < -25 || lInputAxisV >= 26;
-        bMovedCameraX = lInputAxisZ < -25 || lInputAxisZ >= 26;
-        if (pcs->bMouseDriven)
-        {
-            bMovedY = lInputAxisY != 0;
-            bMovedX = lInputAxisX != 0;
-        }
-        else
-        {
-            bMovedY = lInputAxisY < -25 || lInputAxisY >= 26;
-            bMovedX = lInputAxisX < -25 || lInputAxisX >= 26;
-        }
+        CSH_fn_vReadInputs(pcs);
 
         if (*(char *)pcs->abExternDsgVarBoolean[1])
         {
@@ -3675,204 +3974,98 @@ unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
                 vTemp1.xX = pcs->pTargetActor_position->xX - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
                 vTemp1.xY = pcs->pTargetActor_position->xY - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
                 vTemp1.xZ = pcs->pTargetActor_position->xZ - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
-                vTemp2 = vTemp1;
+                vTemp2.xX = vTemp1.xX; vTemp2.xY = vTemp1.xY;
                 vTemp2.xZ = 0.0f;
                 xD2r = fn_xAngleVectorVertical(&vTemp1, &vTemp2);
-                if (vTemp1.xZ == 0.0f)
-                    xNorm = 0.0f;
-                else
-                    xNorm = vTemp1.xZ / fabsf(vTemp1.xZ);
-                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f + xNorm * fabsf(xD2r));
-                fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
-                vTemp1.xZ = 0.0f;
-                if (vTemp1.xX != 0.0f || vTemp1.xY != 0.0f || vTemp1.xZ != 0.0f)
+                fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f + CSH_MTH_xSign(vTemp1.xZ) * CSH_MTH_xAbs(xD2r));
+                fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
+                vTemp2.xZ = 0.0f;
+                if (vTemp2.xX != 0.0f || vTemp2.xY != 0.0f || vTemp2.xZ != 0.0f)
                 {
                     float xInvNorm;
 
-                    MTH_VECTOR_NORM_TO(xInvNorm, vTemp1);
+                    MTH_VECTOR_NORM_TO(xInvNorm, vTemp2);
                     if (xInvNorm != 0.0f)
                     {
                         xInvNorm = 1.0f / xInvNorm;
-                        pcs->vRefAxis.xX = xInvNorm * vTemp1.xX;
-                        pcs->vRefAxis.xY = xInvNorm * vTemp1.xY;
-                        pcs->vRefAxis.xZ = xInvNorm * vTemp1.xZ;
+                        pcs->vRefAxis.xX = xInvNorm * vTemp2.xX;
+                        pcs->vRefAxis.xY = xInvNorm * vTemp2.xY;
+                        pcs->vRefAxis.xZ = xInvNorm * vTemp2.xZ;
                     }
                     else
-                        pcs->vRefAxis = vTemp1;
+                        pcs->vRefAxis = vTemp2;
                 }
                 else
-                    fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
+                    fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
             }
             else
             {
-                fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
-                vTemp1.xZ = 0.0f;
-                if (vTemp1.xX != 0.0f || vTemp1.xY != 0.0f || vTemp1.xZ != 0.0f)
+                fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
+                vTemp2.xZ = 0.0f;
+                if (vTemp2.xX != 0.0f || vTemp2.xY != 0.0f || vTemp2.xZ != 0.0f)
                 {
                     float xInvNorm;
 
-                    MTH_VECTOR_NORM_TO(xInvNorm, vTemp1);
+                    MTH_VECTOR_NORM_TO(xInvNorm, vTemp2);
                     if (xInvNorm != 0.0f)
                     {
                         xInvNorm = 1.0f / xInvNorm;
-                        pcs->vRefAxis.xX = xInvNorm * vTemp1.xX;
-                        pcs->vRefAxis.xY = xInvNorm * vTemp1.xY;
-                        pcs->vRefAxis.xZ = xInvNorm * vTemp1.xZ;
+                        pcs->vRefAxis.xX = xInvNorm * vTemp2.xX;
+                        pcs->vRefAxis.xY = xInvNorm * vTemp2.xY;
+                        pcs->vRefAxis.xZ = xInvNorm * vTemp2.xZ;
                     }
                     else
-                        pcs->vRefAxis = vTemp1;
+                        pcs->vRefAxis = vTemp2;
                 }
                 else
-                    fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
+                    fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
                 fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);
             }
         }
         else
         {
             pcs->pLockedActor = 0;
-            fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
-            vTemp1.xZ = 0.0f;
-            if (vTemp1.xX != 0.0f || vTemp1.xY != 0.0f || vTemp1.xZ != 0.0f)
+            fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
+            vTemp2.xZ = 0.0f;
+            if (vTemp2.xX != 0.0f || vTemp2.xY != 0.0f || vTemp2.xZ != 0.0f)
             {
                 float xInvNorm;
 
-                MTH_VECTOR_NORM_TO(xInvNorm, vTemp1);
+                MTH_VECTOR_NORM_TO(xInvNorm, vTemp2);
                 if (xInvNorm != 0.0f)
                 {
                     xInvNorm = 1.0f / xInvNorm;
-                    pcs->vRefAxis.xX = xInvNorm * vTemp1.xX;
-                    pcs->vRefAxis.xY = xInvNorm * vTemp1.xY;
-                    pcs->vRefAxis.xZ = xInvNorm * vTemp1.xZ;
+                    pcs->vRefAxis.xX = xInvNorm * vTemp2.xX;
+                    pcs->vRefAxis.xY = xInvNorm * vTemp2.xY;
+                    pcs->vRefAxis.xZ = xInvNorm * vTemp2.xZ;
                 }
                 else
-                    pcs->vRefAxis = vTemp1;
+                    pcs->vRefAxis = vTemp2;
             }
             else
-                fn_GetPersoNegativeSighting(&vTemp1, pcs->pTargetActor);
+                fn_GetPersoNegativeSighting(&vTemp2, pcs->pTargetActor);
             fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, 0.15f);
         }
 
-        hCineInfo->stForceRefAxisY = pcs->vRefAxis;
-        hCineInfo->stForceRefAxisZ = vVectorZ;
-        CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
-
-        if (!g_stEngineStructure.bEngineIsInPaused)
         {
-            if (pcs->axExternDsgVarFloat[0])
-                xD2r = *(float *)pcs->axExternDsgVarFloat[0] * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;
-            else
-                xD2r = 0.001f * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;
+            tdstCineinfo_* hLocalCineInfo;
 
-            if (lInputAxisX < -25)
-                xNorm = 0.45f * (((float)(lInputAxisX + 25) / 75.0f) * ((float)(lInputAxisX + 25) / 75.0f));
-            else if (lInputAxisX >= 26)
-                xNorm = 0.45f * (-((float)(lInputAxisX - 25) / 75.0f) * ((float)(lInputAxisX - 25) / 75.0f));
-            else
-                xNorm = 0.0f;
-            if (!(fabsf(pcs->xThetaLock - xNorm) < xD2r))
-                xNorm = pcs->xThetaLock + (pcs->xThetaLock < xNorm ? xD2r : -xD2r);
-            pcs->xThetaLock = xNorm;
-
-            if (lInputAxisY < -25)
-                xNorm = 0.45f * (((float)(lInputAxisY + 25) / 75.0f) * ((float)(lInputAxisY + 25) / 75.0f));
-            else if (lInputAxisY >= 26)
-                xNorm = 0.45f * (-((float)(lInputAxisY - 25) / 75.0f) * ((float)(lInputAxisY - 25) / 75.0f));
-            else
-                xNorm = 0.0f;
-            if (!(fabsf(pcs->xAlphaLock - xNorm) < xD2r))
-                pcs->xAlphaLock += pcs->xAlphaLock < xNorm ? xD2r : -xD2r;
-            else
-                pcs->xAlphaLock = xNorm;
+            hLocalCineInfo = hCineInfo;
+            *(int *)&hLocalCineInfo->stForceRefAxisY.xX = *(int *)&pcs->vRefAxis.xX; *(int *)&hLocalCineInfo->stForceRefAxisY.xY = *(int *)&pcs->vRefAxis.xY; *(int *)&hLocalCineInfo->stForceRefAxisY.xZ = *(int *)&pcs->vRefAxis.xZ;
+            *(int *)&hLocalCineInfo->stForceRefAxisZ.xX = vVectorZ.i[0]; *(int *)&hLocalCineInfo->stForceRefAxisZ.xY = vVectorZ.i[1]; *(int *)&hLocalCineInfo->stForceRefAxisZ.xZ = vVectorZ.i[2];
+            CAM_fn_vSetResetInternalFlag(hLocalCineInfo, &hLocalCineInfo->hCurrent->uwIAFlags, &hLocalCineInfo->hVisibility->uwIAFlags, &hLocalCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
         }
 
-        vTemp2 = *pcs->pTargetActor_position;
-        vTemp2.xZ += 1.0f;
-        if (*(char *)pcs->abExternDsgVarBoolean[1])
+        if (!bGCubeVersion)
         {
-            pcs->pLockedActor = *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[0];
-            if (fn_bIsValidObject(pcs->pLockedActor))
-            {
-                AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderRedIconUV1, &stCamShooter_CV.vViewFinderRedIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);
-                vTemp1.xX = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
-                vTemp1.xY = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
-                vTemp1.xZ = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ + 1.0f;
-                xNorm = (vTemp1.xX - vTemp2.xX) * (vTemp1.xX - vTemp2.xX) + (vTemp1.xY - vTemp2.xY) * (vTemp1.xY - vTemp2.xY) + (vTemp1.xZ - vTemp2.xZ) * (vTemp1.xZ - vTemp2.xZ);
-                MTH_SQRT_IN_PLACE(xNorm);
-                fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);
-                vTemp1.xX *= xNorm;
-                vTemp1.xY *= xNorm;
-                vTemp1.xZ *= xNorm;
-                vTemp1.xZ = pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ + 1.0f - vTemp2.xZ;
-                if (pcs->xAlphaLock != 0.0f)
-                    fn_RotateVectorByAngle(&vTemp1, pcs->xAlphaLock, &vVectorZ);
-                if (pcs->xThetaLock != 0.0f)
-                {
-                    fn_GetPersoHorizon(&pcs->vRayCastDirection, pcs->pCamera);
-                    fn_RotateVectorByAngle(&vTemp1, pcs->xThetaLock, &pcs->vRayCastDirection);
-                }
-                pcs->vViewFinderPosition.xX = vTemp2.xX + vTemp1.xX;
-                pcs->vViewFinderPosition.xY = vTemp2.xY + vTemp1.xY;
-                pcs->vViewFinderPosition.xZ = vTemp2.xZ + vTemp1.xZ;
-            }
-            else
-                AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);
-        }
-        else
-        {
-            AGO_vAddParticle(50, &stCamShooter_CV.vViewFinderWhiteIconUV1, &stCamShooter_CV.vViewFinderWhiteIconUV2, stCamShooter_CV.hVMTViewFinder_white, 0.0f);
-            fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);
-            if (pcs->xAlphaLock != 0.0f)
-                fn_RotateVectorByAngle(&vTemp1, pcs->xAlphaLock, &vVectorZ);
-            if (pcs->xThetaLock != 0.0f)
-            {
-                fn_GetPersoHorizon(&vTemp2, pcs->pCamera);
-                fn_RotateVectorByAngle(&vTemp1, pcs->xThetaLock, &vTemp2);
-            }
-            vTemp1.xX *= 5.0f;
-            vTemp1.xY *= 5.0f;
-            vTemp1.xZ *= 5.0f;
-            pcs->vViewFinderPosition.xX = pcs->pTargetActor_position->xX + vTemp1.xX;
-            pcs->vViewFinderPosition.xY = pcs->pTargetActor_position->xY + vTemp1.xY;
-            pcs->vViewFinderPosition.xZ = pcs->pTargetActor_position->xZ + 1.0f + vTemp1.xZ;
+            if (pcs->axExternDsgVarFloat[0]) { xD2r = *(float *)pcs->axExternDsgVarFloat[0] * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime; if (xD2r == 0.0f) xD2r = 0.001f * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime; } else xD2r = 0.001f * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime; if (lInputAxisZ < -25) xTheta = 0.45f * (((float)(lInputAxisZ + 25) / 75.0f) * ((float)(lInputAxisZ + 25) / 75.0f)); else if (lInputAxisZ >= 26) xTheta = 0.45f * (-((float)(lInputAxisZ - 25) / 75.0f) * ((float)(lInputAxisZ - 25) / 75.0f)); else xTheta = 0.0f; if (lInputAxisV < -25) xAlpha = 0.45f * (((float)(lInputAxisV + 25) / 75.0f) * ((float)(lInputAxisV + 25) / 75.0f)); else if (lInputAxisV >= 26) xAlpha = 0.45f * (-((float)(lInputAxisV - 25) / 75.0f) * ((float)(lInputAxisV - 25) / 75.0f)); else xAlpha = 0.0f; if (!(CSH_MTH_xAbs(pcs->xAlphaLock - xAlpha) < xD2r)) pcs->xAlphaLock += pcs->xAlphaLock < xAlpha ? xD2r : -xD2r; else pcs->xAlphaLock = xAlpha; if (!(CSH_MTH_xAbs(pcs->xThetaLock - xTheta) < xD2r)) pcs->xThetaLock += pcs->xThetaLock < xTheta ? xD2r : -xD2r; else pcs->xThetaLock = xTheta;
         }
 
-        fn_vGetViewportCoordinates(&pcs->v2DViewFinderPosition, &pcs->vViewFinderPosition, pcs->p_stViewport);
-        if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
-            pcs->v2DViewFinderPosition.xY *= 2.0f;
-        if (pcs->v2DViewFinderPosition.xX >= -5.0f && pcs->v2DViewFinderPosition.xX <= 105.0f && pcs->v2DViewFinderPosition.xY >= 0.0f)
-        {
-            vTemp1.xX = pcs->vViewFinderPosition.xX - pcs->pTargetActor_position->xX;
-            vTemp1.xY = pcs->vViewFinderPosition.xY - pcs->pTargetActor_position->xY;
-            vTemp1.xZ = pcs->vViewFinderPosition.xZ - (pcs->pTargetActor_position->xZ + 1.0f);
-            xNorm = vTemp1.xX * vTemp1.xX + vTemp1.xY * vTemp1.xY + vTemp1.xZ * vTemp1.xZ;
-            MTH_SQRT_IN_PLACE(xNorm);
-            if (xNorm != 0.0f)
-            {
-                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xX = vTemp1.xX / xNorm;
-                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xY = vTemp1.xY / xNorm;
-                ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0])->xZ = vTemp1.xZ / xNorm;
-            }
-            else
-                *(MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0] = vTemp1;
-        }
-        else
-        {
-            pcs->v2DViewFinderPosition.xX = -300.0f;
-            pcs->v2DViewFinderPosition.xY = -300.0f;
-            pcs->v2DViewFinderPosition.xZ = 0.0f;
-            fn_GetPersoSighting((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0], pcs->pTargetActor);
-        }
-
-        vTemp1 = pcs->v2DViewFinderPosition;
-        vTemp2.xX = pcs->v2DViewFinderPosition.xX - pcs->xViewFinderWidth_2;
-        vTemp2.xY = pcs->v2DViewFinderPosition.xY - pcs->xViewFinderHeight_2;
-        vTemp1.xX += pcs->xViewFinderWidth_2;
-        vTemp1.xY += pcs->xViewFinderHeight_2;
-        AGO_vSetIcon(pcs->iViewportIndex, pcs->iViewFinderIconId, &vTemp2.xX, &vTemp1.xX, 255.0f, stCamShooter_CV.hVMTViewFinder_red);
+        CSH_fn_vUpdateViewFinder(pcs);
 
         pcs->xTheta_Current = hCineInfo->hCurrent->xAngleTheta;
-        if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb &&
-            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&
+        if (!CSH_fn_bIsInComport(pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind, pcs->pMAComport_Climb) &&
+            !CSH_fn_bIsInComport(pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind, pcs->pMAComport_Hang) &&
             pcs->xTheta_Current < pcs->xTheta_Default)
         {
             xNorm = 3.0f + (pcs->xDistMax_Default - 3.0f) * ((pcs->xTheta_Current - pcs->xTheta_Min) / (pcs->xTheta_Default - pcs->xTheta_Min));
@@ -3880,174 +4073,12 @@ unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
                 pcs->xDistMax = xNorm;
         }
 
-        fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);
-        pcs->xTargetAngle = fn_xAngleVectorXOY(&pcs->vCameraSighting, &vTemp1);
-        vTemp2 = *pcs->pTargetActor_position;
-        vTemp2.xZ += 1.5f;
-        vTemp1.xX = vTemp1.xY = vTemp1.xZ = 0.0f;
-        xNorm = pcs->xDistMax;
-        {
-            float xCameraDistanceX;
-            float xCameraDistanceY;
-            float xCameraDistanceZ;
-            MTH3D_tdstVector_ vCollisionDirection;
-            MTH3D_tdstVector_ vCollisionPoint;
+        CSH_fn_vComputeTargetAngle(pcs);
 
-            xCameraDistanceX = xNorm * pcs->vCameraSighting.xX;
-            xCameraDistanceY = xNorm * pcs->vCameraSighting.xY;
-            xCameraDistanceZ = xNorm * pcs->vCameraSighting.xZ;
-            vCollisionPoint.xX = 0.0f;
-            vCollisionPoint.xY = 0.0f;
-            vCollisionPoint.xZ = 0.0f;
-            fn_GetPersoHorizon(&vTemp1, pcs->pCamera);
-            vTemp1.xX *= 0.7f;
-            vTemp1.xY *= 0.7f;
-            vTemp1.xZ *= 0.7f;
-            vCollisionDirection.xX = vTemp1.xX - xCameraDistanceX;
-            vCollisionDirection.xY = vTemp1.xY - xCameraDistanceY;
-            vCollisionDirection.xZ = vTemp1.xZ - xCameraDistanceZ;
-            fn_CollisionRayCast(pcs->pCamera, &vTemp2, &vCollisionDirection, 0);
-        if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)
-        {
-            if (pcs->hWaterGMT)
-            {
-                if (g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
-                {
-                    float xCollisionX;
-                    float xCollisionY;
-                    float xCollisionZ;
-                    float xCollisionDistance;
+        CSH_fn_vCheckCameraCollision(pcs);
 
-                    xCollisionX = g_stCollideResultPoint.xX - vTemp2.xX - vTemp1.xX;
-                    xCollisionY = g_stCollideResultPoint.xY - vTemp2.xY - vTemp1.xY;
-                    xCollisionZ = g_stCollideResultPoint.xZ - vTemp2.xZ - vTemp1.xZ;
-                    MTH_SQR3_TO(xCollisionDistance, xCollisionX, xCollisionY, xCollisionZ);
-                    MTH_SQRT_IN_PLACE(xCollisionDistance);
-                    if (xCollisionDistance < xNorm)
-                    {
-                        xNorm = xCollisionDistance;
-                        vCollisionPoint = g_stCollideResultPoint;
-                    }
-                }
-            }
-            else
-            {
-                float xCollisionX;
-                float xCollisionY;
-                float xCollisionZ;
-                float xCollisionDistance;
-
-                xCollisionX = g_stCollideResultPoint.xX - vTemp2.xX - vTemp1.xX;
-                xCollisionY = g_stCollideResultPoint.xY - vTemp2.xY - vTemp1.xY;
-                xCollisionZ = g_stCollideResultPoint.xZ - vTemp2.xZ - vTemp1.xZ;
-                MTH_SQR3_TO(xCollisionDistance, xCollisionX, xCollisionY, xCollisionZ);
-                MTH_SQRT_IN_PLACE(xCollisionDistance);
-                if (xCollisionDistance < xNorm)
-                {
-                    xNorm = xCollisionDistance;
-                    vCollisionPoint = g_stCollideResultPoint;
-                }
-            }
-        }
-        vTemp1.xX = -vTemp1.xX;
-        vTemp1.xY = -vTemp1.xY;
-        vTemp1.xZ = -vTemp1.xZ;
-        vCollisionDirection.xX = vTemp1.xX - xCameraDistanceX;
-        vCollisionDirection.xY = vTemp1.xY - xCameraDistanceY;
-        vCollisionDirection.xZ = vTemp1.xZ - xCameraDistanceZ;
-        fn_CollisionRayCast(pcs->pCamera, &vTemp2, &vCollisionDirection, 0);
-        if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)
-        {
-            if (pcs->hWaterGMT)
-            {
-                if (g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
-                {
-                    float xCollisionX;
-                    float xCollisionY;
-                    float xCollisionZ;
-                    float xCollisionDistance;
-
-                    xCollisionX = g_stCollideResultPoint.xX - vTemp2.xX - vTemp1.xX;
-                    xCollisionY = g_stCollideResultPoint.xY - vTemp2.xY - vTemp1.xY;
-                    xCollisionZ = g_stCollideResultPoint.xZ - vTemp2.xZ - vTemp1.xZ;
-                    MTH_SQR3_TO(xCollisionDistance, xCollisionX, xCollisionY, xCollisionZ);
-                    MTH_SQRT_IN_PLACE(xCollisionDistance);
-                    if (xCollisionDistance < xNorm)
-                    {
-                        xNorm = xCollisionDistance;
-                        vCollisionPoint = g_stCollideResultPoint;
-                    }
-                }
-            }
-            else
-            {
-                float xCollisionX;
-                float xCollisionY;
-                float xCollisionZ;
-                float xCollisionDistance;
-
-                xCollisionX = g_stCollideResultPoint.xX - vTemp2.xX - vTemp1.xX;
-                xCollisionY = g_stCollideResultPoint.xY - vTemp2.xY - vTemp1.xY;
-                xCollisionZ = g_stCollideResultPoint.xZ - vTemp2.xZ - vTemp1.xZ;
-                MTH_SQR3_TO(xCollisionDistance, xCollisionX, xCollisionY, xCollisionZ);
-                MTH_SQRT_IN_PLACE(xCollisionDistance);
-                if (xCollisionDistance < xNorm)
-                {
-                    xNorm = xCollisionDistance;
-                    vCollisionPoint = g_stCollideResultPoint;
-                }
-            }
-        }
-        if (vCollisionPoint.xX != 0.0f || vCollisionPoint.xY != 0.0f || vCollisionPoint.xZ != 0.0f)
-        {
-            xNorm -= 0.6f;
-            if (xNorm < 1.3f)
-                xNorm = 1.3f;
-            vCollisionPoint.xX -= vTemp1.xX;
-            vCollisionPoint.xY -= vTemp1.xY;
-            vCollisionPoint.xZ -= vTemp1.xZ;
-            pcs->xDistMax = xNorm;
-            if (xNorm < 2.0f)
-            {
-                CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
-                CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
-            }
-        }
-        }
-
-        fn_GetPersoSighting(&vTemp1, pcs->pTargetActor);
-        pcs->xTargetAngle = fn_xAngleVectorXOY(&pcs->vCameraSighting, &vTemp1);
-        if (fabsf(pcs->xTargetAngle) > 0.2f &&
-            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Hang &&
-            pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb)
-        {
-            pcs->bFastAlign = 1;
-            pcs->xFastAlign_StartDistance = pcs->xDistMax;
-        }
-        if (pcs->bFastAlign)
-        {
-            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
-            xNorm = fabsf(pcs->xTargetAngle);
-            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 180.0f);
-            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 180.0f);
-            fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 1, 1, 180.0f);
-            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
-            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
-            if (xNorm > 1.5707964f)
-            {
-                xD2r = 6.0f + ((xNorm - 1.5707964f) / 1.5707964f) * (pcs->xFastAlign_StartDistance - 6.0f);
-                if (pcs->xDistMax > xD2r)
-                    pcs->xDistMax = xD2r;
-            }
-            else if (xNorm > 0.2f)
-            {
-                xD2r = 6.0f + ((xNorm - 1.5707964f) / 1.5707964f) * (pcs->xDistMax_Default - 6.0f);
-                if (pcs->xDistMax > xD2r)
-                    pcs->xDistMax = xD2r;
-            }
-            else
-                pcs->bFastAlign = 0;
-        }
+        CSH_fn_vCheckFastAlign(pcs);
+        if (pcs->bFastAlign) CSH_fn_vFastAlign(pcs);
         fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23C, 0, 1, pcs->xDistMax);
         fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23D, 0, 1, pcs->xDistMax);
         return 0;
@@ -4110,12 +4141,84 @@ unsigned char fn_StrafeLockMode(CAM_Shooter_* pcs)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_InitStrafeLockMode(CAM_Shooter_* pcs)
+inline void fn_InitStrafeLockMode(CAM_Shooter_* pcs)
 {
     float xNorm;
-    MTH3D_tdstVector_ vTemp1;
+    float xX;
     MTH3D_tdstVector_ vShiftPos;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ vTemp1;
+
+    vShiftPos.xX = 0.0f;
+    vShiftPos.xY = 0.0f;
+    vShiftPos.xZ = 2.5f;
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x80);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 4);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 0, 1, bGCubeVersion ? 60.0f : 5.7f);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 1);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x10);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 8);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 2);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x20);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x40);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 8);
+    fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 0, 1, &vShiftPos);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, 0.0f);
+    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
+    {
+        vShiftPos.xX = 0.0f;
+        vShiftPos.xY = 0.0f;
+        vShiftPos.xZ = 2.5f;
+        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, bGCubeVersion ? 60.0f : 26.0f);
+    }
+    else
+        fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, bGCubeVersion ? 60.0f : 36.0f);
+
+    pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;
+    pcs->xTheta_Min = -0.8f;
+    pcs->xTheta_Max = 1.2f;
+    pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
+    pcs->xTheta_User = pcs->xTheta_Current = pcs->xTheta_Default;
+
+    if (*(char *)pcs->abExternDsgVarBoolean[1])
+    {
+        pcs->pLockedActor = *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[0];
+        if (fn_bIsValidObject(pcs->pLockedActor))
+        {
+            vTemp1.xX = pcs->pTargetActor_position->xX - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
+            vTemp1.xY = pcs->pTargetActor_position->xY - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
+            vTemp1.xZ = pcs->pTargetActor_position->xZ - pcs->pLockedActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+            vTemp1.xZ = 0.0f;
+            xX = vTemp1.xX;
+            if (xX != 0.0f || vTemp1.xY != 0.0f || vTemp1.xZ != 0.0f)
+            {
+                {
+                    float xY = vTemp1.xY;
+                    float xZ = vTemp1.xZ;
+                    float xSq;
+                    MTH_SQR3_TO(xSq, xX, xY, xZ);
+                    MTH_SQRT_TO(xNorm, xSq);
+                }
+                if (xNorm != 0.0f)
+                {
+                    xNorm = 1.0f / xNorm;
+                    pcs->vRefAxis.xX = xNorm * xX;
+                    pcs->vRefAxis.xY = xNorm * vTemp1.xY;
+                    pcs->vRefAxis.xZ = xNorm * vTemp1.xZ;
+                }
+                else
+                    pcs->vRefAxis = vTemp1;
+            }
+            else
+                fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
+        }
+        else
+            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
+    }
+    else
+        fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
+
+    pcs->xFastAlign_StartDistance = pcs->xDistMax;
+    pcs->bFastAlign = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 1173–1213 */
@@ -4158,10 +4261,36 @@ void fn_InitStrafeLockMode(CAM_Shooter_* pcs)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_InitBackMode(CAM_Shooter_* pcs)
+inline void fn_InitBackMode(CAM_Shooter_* pcs)
 {
     MTH3D_tdstVector_ vShiftPos;
-    /* TODO: decompile from asm/... */
+
+    pcs->bIsBot = pcs->bRaiseCamera = pcs->bSideCollision = pcs->bStartAlignCamera = pcs->bVerticalCollision = pcs->bWasClimbing = pcs->bFastAlign = pcs->bIsJumpFalling = pcs->bLowCeiling = pcs->bObstacleCollision = pcs->bAlignCamera = pcs->bAutoAlign = pcs->bCollision = pcs->bCollisionAlign = 0;
+    vShiftPos.xX = 0.0f;
+    vShiftPos.xY = 0.0f;
+    vShiftPos.xZ = 2.5f;
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x80);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 4);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 0, 1, 35.7f);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 1);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x10);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 8);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 2);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x20);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x40);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 8);
+    fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 0, 1, &vShiftPos);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, 0.0f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, 56.0f);
+
+    pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;
+    pcs->xTheta_Min = -0.8f;
+    pcs->xTheta_Max = 1.2f;
+    pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init;
+    pcs->xTheta_User = pcs->xTheta_Current = pcs->xTheta_Default;
+    pcs->xDeltaTheta_User = 0.0f;
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, pcs->xTheta_Current);
+    pcs->hWaterGMT = (GMT_tdstGameMaterial_*)stCamShooter_CV.hVMTViewFinder_white;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 1935–1984 */
@@ -4207,10 +4336,48 @@ void fn_InitBackMode(CAM_Shooter_* pcs)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_InitMarioMode(CAM_Shooter_* pcs)
+inline void fn_InitMarioMode(CAM_Shooter_* pcs)
 {
     MTH3D_tdstVector_ vShiftPos;
-    /* TODO: decompile from asm/... */
+
+    pcs->bIsBot = pcs->bRaiseCamera = pcs->bSideCollision = pcs->bStartAlignCamera = pcs->bVerticalCollision = pcs->bWasClimbing = pcs->bFastAlign = pcs->bIsJumpFalling = pcs->bLowCeiling = pcs->bObstacleCollision = pcs->bAlignCamera = pcs->bAutoAlign = pcs->bCollision = pcs->bCollisionAlign = 0;
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 0, 0x80);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 4);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 1);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 0x10);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 8);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 2);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 0, 0x20);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x248, 0, 1, 0.5f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x249, 0, 1, 0.5f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x245, 0, 1, 5.0f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x246, 0, 1, 0.0f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 0, 1, 24.0f);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x24A, 0, 1, 24.0f);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x40);
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 8);
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, 0.0f);
+    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 2)
+    {
+        vShiftPos.xX = 0.0f;
+        vShiftPos.xY = 0.0f;
+        vShiftPos.xZ = 4.5f;
+    }
+    else
+    {
+        vShiftPos.xX = 0.0f;
+        vShiftPos.xY = 0.0f;
+        vShiftPos.xZ = 3.0f;
+    }
+    fn_ChangeCameraVectorParameter(hCineInfo, (tdeProcedureId_)0x23B, 0, 1, &vShiftPos);
+
+    pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_mario;
+    pcs->xTheta_Min = -0.6f;
+    pcs->xTheta_Max = 1.3f;
+    pcs->xDistMax = pcs->xDistMax_Default = stCamShooter_CV.xDistMax_Init_mario;
+    pcs->xTheta_User = pcs->xTheta_Current = pcs->xTheta_Default;
+    fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, pcs->xTheta_Current);
+    pcs->bIsBot = *(char *)pcs->abExternDsgVarBoolean[4];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 3314–3398 */
@@ -4259,58 +4426,11 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
 {
     float xAngularSpeed;
 
-    if (*(char *)pcs->abExternDsgVarBoolean[3])
-    {
-        xAngularSpeed = sqrtf(
-            (pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX) * (pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX) +
-            (pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY) * (pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY) +
-            (pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ) * (pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ));
-        if (xAngularSpeed < 1.0f)
-        {
-            CAM_fn_vInitCompleteCineinfo(hCineInfo);
-            hCineInfo->hCurrent->hSuperObjectTargeted = pcs->pTargetActor;
-            hCineInfo->hVisibility->hSuperObjectTargeted = pcs->pTargetActor;
-            hCineInfo->hWork->hSuperObjectTargeted = pcs->pTargetActor;
-            CAM_fn_vUpdateTargetPosition(hCineInfo);
-            switch (pcs->iMode)
-            {
-            case 2:
-                fn_InitMarioMode(pcs);
-                break;
-            case 1:
-                fn_InitBackMode(pcs);
-                break;
-            case 3:
-                fn_InitStrafeLockMode(pcs);
-                break;
-            }
-            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
-            hCineInfo->stForceRefAxisY = pcs->vRefAxis;
-            hCineInfo->stForceRefAxisZ = vVectorZ;
-            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
-            pcs->ulAlignDelayTime = 0;
-            *(char *)pcs->abExternDsgVarBoolean[3] = 0;
-        }
-    }
+    CSH_fn_vCheckRestart(pcs);
     if (*(char *)pcs->abExternDsgVarBoolean[0] && !pcs->bIsBot)
         return 3;
 
-    lInputAxisV = *(int *)pcs->aiExternDsgVarInt[0];
-    lInputAxisZ = *(int *)pcs->aiExternDsgVarInt[1];
-    lInputAxisY = pcs->bIsBot ? 0 : *(int *)pcs->aiExternDsgVarInt[2];
-    lInputAxisX = *(int *)pcs->aiExternDsgVarInt[3];
-    bMovedCameraY = lInputAxisV < -25 || lInputAxisV >= 26;
-    bMovedCameraX = lInputAxisZ < -25 || lInputAxisZ >= 26;
-    if (pcs->bMouseDriven)
-    {
-        bMovedY = lInputAxisY != 0;
-        bMovedX = lInputAxisX != 0;
-    }
-    else
-    {
-        bMovedY = lInputAxisY < -25 || lInputAxisY >= 26;
-        bMovedX = lInputAxisX < -25 || lInputAxisX >= 26;
-    }
+    CSH_fn_vReadInputs(pcs);
 
     pcs->xTheta_Default = stCamShooter_CV.xTheta_Init_mario;
     pcs->xTheta_Min = -0.6f;
@@ -4319,12 +4439,12 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
     pcs->xDistMax = stCamShooter_CV.xDistMax_Init_mario;
     fn_GetPersoSighting(&pcs->vCameraSighting, pcs->pCamera);
 
-    xAngularSpeed = bMovedY ? (float)(lInputAxisY < 0 ? lInputAxisY + 25 : lInputAxisY - 25) : 0.0f;
+    xAngularSpeed = bMovedCameraX ? (float)(lInputAxisV < 0 ? lInputAxisV + 25 : lInputAxisV - 25) : 0.0f;
     fn_GetPersoHorizon(&pcs->vProposedSpeed, pcs->pCamera);
     pcs->vProposedSpeed.xX *= xAngularSpeed;
     pcs->vProposedSpeed.xY *= xAngularSpeed;
     pcs->vProposedSpeed.xZ *= xAngularSpeed;
-    xAngularSpeed = bMovedX ? (float)((lInputAxisX < 0 ? 25 : -25) - lInputAxisX) : 0.0f;
+    xAngularSpeed = bMovedCameraY ? (float)((lInputAxisZ < 0 ? 25 : -25) - lInputAxisZ) : 0.0f;
     fn_GetPersoBanking(&pcs->vCheckCollisionShift, pcs->pCamera);
     pcs->vProposedSpeed.xX += xAngularSpeed * pcs->vCheckCollisionShift.xX;
     pcs->vProposedSpeed.xY += xAngularSpeed * pcs->vCheckCollisionShift.xY;
@@ -4387,7 +4507,7 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
         {
             CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
             pcs->xTheta_Default = 0.1f;
-            bMovedX = 0;
+            bMovedCameraY = 0;
         }
         else if (!fn_bCollideWithGround(pcs->pTargetSkin) && pcs->pTargetActor_speed->xZ < -0.2f &&
                  pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport != pcs->pMAComport_Climb)
@@ -4410,7 +4530,7 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
     {
         if (!pcs->bIsDigitalInput)
         {
-            if (!bMovedX)
+            if (!bMovedCameraY)
             {
                 pcs->xDeltaTheta_User /= 2.0f;
                 if (fabsf(pcs->xDeltaTheta_User) < 0.05f)
@@ -4423,7 +4543,7 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
             }
             else
             {
-                xAngularSpeed = (float)lInputAxisX;
+                xAngularSpeed = (float)lInputAxisZ;
                 xAngularSpeed = (xAngularSpeed < 0.0f ? xAngularSpeed + 12.0f : xAngularSpeed - 12.0f);
                 xAngularSpeed = ((float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime * xAngularSpeed) / 13000.0f;
                 pcs->xDeltaTheta_User -= xAngularSpeed * fabsf(xAngularSpeed);
@@ -4444,15 +4564,15 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
 
     if (!pcs->bAlignCamera)
     {
-        if (bMovedY)
+        if (bMovedCameraX)
         {
             CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
             CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, 0, 1, 0x4000);
             fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 6.0f);
             fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 67.0f);
             pcs->ulAlignDelayTime = 0;
-            xAngularSpeed = (float)(lInputAxisY > 0 ? lInputAxisY - 12 : lInputAxisY + 12);
-            fn_RotateVectorByAngle(&pcs->vRefAxis, (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime * (-0.000025f * xAngularSpeed), &vVectorZ);
+            xAngularSpeed = (float)(lInputAxisV > 0 ? lInputAxisV - 12 : lInputAxisV + 12);
+            fn_RotateVectorByAngle(&pcs->vRefAxis, (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime * (-0.000025f * xAngularSpeed), &vVectorZ.v);
         }
         else if (!pcs->bSideCollision)
         {
@@ -4479,7 +4599,7 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
     pcs->vCheckCollisionShift.xY = pcs->xDistMax * pcs->vRefAxis.xY;
     pcs->vCheckCollisionShift.xZ = pcs->xDistMax * pcs->vRefAxis.xZ;
     pcs->vCheckCollisionShift1 = pcs->vRefAxis;
-    fn_RotateVectorByAngle(&pcs->vCheckCollisionShift1, -1.5707964f, &vVectorZ);
+    fn_RotateVectorByAngle(&pcs->vCheckCollisionShift1, -1.5707964f, &vVectorZ.v);
     fn_RotateVectorByAngle(&pcs->vCheckCollisionShift, pcs->xTheta_User, &pcs->vCheckCollisionShift1);
     pcs->vTheoreticalPosition.xX += pcs->vCheckCollisionShift.xX;
     pcs->vTheoreticalPosition.xY += pcs->vCheckCollisionShift.xY;
@@ -4502,9 +4622,9 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
     fn_GetPersoHorizon(&pcs->vCheckCollisionShift, pcs->pCamera);
     fn_CreateRaycastDirection(pcs, &pcs->vRayCastDirection, &pcs->vCollisionDirectionV);
     fn_CollisionRayCast(pcs->pCamera, &pcs->vRayCastOrigin, &pcs->vRayCastDirection, 0);
-    pcs->bCollision = g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f;
+    pcs->bCollision = g_stCollideResultPoint.v.xX != 0.0f || g_stCollideResultPoint.v.xY != 0.0f || g_stCollideResultPoint.v.xZ != 0.0f;
     pcs->vNormalCollision = g_stCollideResultVector;
-    pcs->vCollisionPoint = g_stCollideResultPoint;
+    pcs->vCollisionPoint = g_stCollideResultPoint.v;
     if (pcs->bCollision)
         fn_PutCameraAgainstWall(pcs, sqrtf(
             (pcs->vRayCastOrigin.xX - pcs->vCollisionPoint.xX) * (pcs->vRayCastOrigin.xX - pcs->vCollisionPoint.xX) +
@@ -4513,7 +4633,7 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
     else
         pcs->bObstacleCollision = 0;
 
-    if (bMovedCameraY || bMovedCameraX || bMovedY || bMovedX)
+    if (bMovedX || bMovedY || bMovedCameraX || bMovedCameraY)
         pcs->ulAlignDelayTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
     else if ((float)(g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - pcs->ulAlignDelayTime) > xCameraDelayAlign || *(char *)pcs->abExternDsgVarBoolean[2])
     {
@@ -4542,7 +4662,7 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
             pcs->bStartAlignCamera = 0;
         }
     }
-    else if (!bMovedY && !pcs->bAlignCamera && !pcs->bFastAlign)
+    else if (!bMovedCameraX && !pcs->bAlignCamera && !pcs->bFastAlign)
         fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x241, 1, 1, 3.2f);
 
     if (!pcs->bVerticalCollision && !pcs->bObstacleCollision)
@@ -4566,7 +4686,7 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
 
     fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, pcs->xTheta_Current);
     hCineInfo->stForceRefAxisY = pcs->vRefAxis;
-    hCineInfo->stForceRefAxisZ = vVectorZ;
+    hCineInfo->stForceRefAxisZ = vVectorZ.v;
     CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
     fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23C, 0, 1, pcs->xDistMax);
     fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x23D, 0, 1, pcs->xDistMax);
@@ -4580,7 +4700,7 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
     if (!pcs->bFastAlign)
     {
         xAngularSpeed = 3.5f * (pcs->xDistMax / 10.0f);
-        if (xAngularSpeed > 3.5f || bMovedY || bMovedX)
+        if (xAngularSpeed > 3.5f || bMovedCameraX || bMovedCameraY)
             xAngularSpeed = 3.5f;
         else if (xAngularSpeed < 1.0f)
             xAngularSpeed = 1.0f;
@@ -4589,7 +4709,7 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
 
     if (pcs->xTargetAngle < -1.5707964f || pcs->xTargetAngle > 1.5707964f)
     {
-        AGO_vSetIcon(pcs->iViewportIndex, pcs->iViewFinderIconId, &vVectorZ.xX, &vVectorZ.xX, 0.0f, stCamShooter_CV.hVMTViewFinder_red);
+        AGO_vSetIcon(pcs->iViewportIndex, pcs->iViewFinderIconId, &vVectorZ.v.xX, &vVectorZ.v.xX, 0.0f, stCamShooter_CV.hVMTViewFinder_red);
         fn_GetPersoSighting((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[0], pcs->pTargetActor);
     }
     else
@@ -4610,7 +4730,7 @@ unsigned char fn_MarioMode(CAM_Shooter_* pcs)
         }
         else if (g_hSuperObjectHit)
         {
-            pcs->vViewFinderPosition = g_stCollideResultPoint;
+            pcs->vViewFinderPosition = g_stCollideResultPoint.v;
             *(int *)pcs->apExternDsgVarPerso[1] = 0;
         }
         else
@@ -4753,14 +4873,67 @@ void fn_CreateRaycastDirection(CAM_Shooter_* pcs, MTH3D_tdstVector_* vRayCastDir
  */
 void fn_PutCameraAgainstWall(CAM_Shooter_* pcs, float xDistanceToTarget)
 {
-    MTH3D_tdstVector_ vHorizon;
-    MTH3D_tdstVector_ vRayCast;
+    CSH_tduWordVector vRayCast;
+    CSH_tduWordVector vHorizon;
     float xFactor;
     float xAngle;
     float xTheoreticalDistance;
     float xNewTheta;
-    float xMultiplier;
-    /* TODO: decompile from asm/... */
+    static float xMultiplier = 1.0f;
+    float xX, xY, xZ, xSquared;
+
+    xAngle = fn_xAngleVectorVertical(&pcs->vNormalCollision, &vVectorZ.v);
+    if (CSH_MTH_xAbs(xAngle) < 0.7853982f || CSH_MTH_xAbs(xAngle) > 2.3561945f)
+    {
+        pcs->xDistMax = xDistanceToTarget;
+        pcs->xTheta_Imposed = pcs->xTheta_User;
+    }
+    else
+    {
+        xTheoreticalDistance = pcs->xDistMax_Default + 0.6f;
+        xFactor = (xTheoreticalDistance - xDistanceToTarget) / xTheoreticalDistance;
+        if (xFactor < 0.0f)
+            xFactor = 0.0f;
+        else
+            xFactor *= xMultiplier;
+        xNewTheta = pcs->xTheta_Default + (1.0f - pcs->xTheta_Default) * xFactor;
+        if (xNewTheta > 1.0f)
+            xNewTheta = 1.0f;
+        pcs->xTheta_Imposed = xNewTheta;
+        vRayCast.i[0] = ((int*)&pcs->vRayCastDirection)[0];
+        vRayCast.i[1] = ((int*)&pcs->vRayCastDirection)[1];
+        vRayCast.i[2] = ((int*)&pcs->vRayCastDirection)[2];
+        vRayCast.v.xZ = 0.0f;
+        if (vRayCast.v.xX == 0.0f && vRayCast.v.xY == 0.0f && vRayCast.v.xZ == 0.0f)
+            fn_GetPersoNegativeSighting(&vRayCast.v, pcs->pTargetActor);
+        MTH_VECTOR_NORM_TO(xSquared, vRayCast.v); vRayCast.v.xX = vRayCast.v.xX * (xTheoreticalDistance / xSquared);
+        MTH_VECTOR_NORM_TO(xSquared, vRayCast.v); vRayCast.v.xY = vRayCast.v.xY * (xTheoreticalDistance / xSquared);
+        MTH_VECTOR_NORM_TO(xSquared, vRayCast.v); vRayCast.v.xZ = vRayCast.v.xZ * (xTheoreticalDistance / xSquared);
+
+        vHorizon.i[0] = ((int*)&pcs->vRefAxis)[0];
+        vHorizon.i[1] = ((int*)&pcs->vRefAxis)[1];
+        vHorizon.i[2] = ((int*)&pcs->vRefAxis)[2];
+        fn_RotateVectorByAngle(&vHorizon.v, -1.5707964f, &vVectorZ.v);
+        fn_RotateVectorByAngle(&vRayCast.v, xNewTheta, &vHorizon.v);
+        fn_CollisionRayCast(pcs->pCamera, &pcs->vRayCastOrigin, &vRayCast.v, 0);
+        if (g_stCollideResultPoint.v.xX == 0.0f && g_stCollideResultPoint.v.xY == 0.0f && g_stCollideResultPoint.v.xZ == 0.0f)
+        {
+            pcs->xDistMax = pcs->xDistMax_Default;
+        }
+        else
+        {
+            xX = g_stCollideResultPoint.v.xX - pcs->vRayCastOrigin.xX; xY = g_stCollideResultPoint.v.xY - pcs->vRayCastOrigin.xY; xZ = g_stCollideResultPoint.v.xZ - pcs->vRayCastOrigin.xZ;
+            MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xX, xSquared); pcs->xDistMax = xX - 0.6f;
+            if (pcs->xDistMax < pcs->xDistMax_Default)
+            {
+                pcs->bObstacleCollision = 1;
+                if (pcs->xDistMax < 1.0f)
+                    pcs->xDistMax = 1.0f;
+            }
+            else
+                pcs->xDistMax = pcs->xDistMax_Default;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 2477–2509 */
@@ -4795,9 +4968,36 @@ void fn_PutCameraAgainstWall(CAM_Shooter_* pcs, float xDistanceToTarget)
 void fn_GetTheoreticalPosition_UsingRealPosition(MTH3D_tdstVector_* vTPosition, CAM_Shooter_* pcs, unsigned int iMode)
 {
     float xNorm;
-    MTH3D_tdstVector_ vHorizon;
     MTH3D_tdstVector_ vDiff;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ vHorizon;
+    MTH3D_tdstVector_ vCenter;
+    float xX, xY, xZ, xSquared;
+
+    vCenter.xX = pcs->pTargetActor_position->xX + (iMode == 0 ? &hCineInfo->hCurrent->stShiftPos : &hCineInfo->hWork->stShiftPos)->xX; vCenter.xY = pcs->pTargetActor_position->xY + (iMode == 0 ? &hCineInfo->hCurrent->stShiftPos : &hCineInfo->hWork->stShiftPos)->xY; vCenter.xZ = pcs->pTargetActor_position->xZ + (iMode == 0 ? &hCineInfo->hCurrent->stShiftPos : &hCineInfo->hWork->stShiftPos)->xZ;
+
+    vDiff.xX = pcs->vCameraPosition->xX - vCenter.xX; vDiff.xY = pcs->vCameraPosition->xY - vCenter.xY; vDiff.xZ = pcs->vCameraPosition->xZ - vCenter.xZ;
+
+    vDiff.xZ = xZ = 0.0f;
+
+    xX = vDiff.xX; xY = vDiff.xY; MTH_SQR3_TO(xSquared, xX, xY, xZ); MTH_SQRT_TO(xNorm, xSquared);
+
+    if (xNorm == 0.0f)
+    {
+        *(int *)&vTPosition->xX = *(int *)&pcs->vCameraPosition->xX; *(int *)&vTPosition->xY = *(int *)&pcs->vCameraPosition->xY; *(int *)&vTPosition->xZ = *(int *)&pcs->vCameraPosition->xZ;
+        return;
+    }
+
+    vDiff.xX = vDiff.xX * (pcs->xDistMax / xNorm); vDiff.xY = vDiff.xY * (pcs->xDistMax / xNorm); vDiff.xZ = vDiff.xZ * (pcs->xDistMax / xNorm);
+
+    fn_GetPersoNegativeSighting(&vHorizon, pcs->pCamera);
+    vHorizon.xZ = 0.0f;
+    fn_RotateVectorByAngle(&vHorizon, -1.5707964f, &vVectorZ.v);
+
+    MTH_VECTOR_NORM_TO(xNorm, vHorizon); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; vHorizon.xX = xNorm * vHorizon.xX; vHorizon.xY = xNorm * vHorizon.xY; vHorizon.xZ = xNorm * vHorizon.xZ; }
+
+    fn_RotateVectorByAngle(&vDiff, pcs->bObstacleCollision ? pcs->xTheta_Imposed : pcs->xTheta_User, &vHorizon);
+
+    vTPosition->xX = vCenter.xX + vDiff.xX; vTPosition->xY = vCenter.xY + vDiff.xY; vTPosition->xZ = vCenter.xZ + vDiff.xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 1850–1915 */
@@ -4852,56 +5052,10 @@ unsigned char fn_BackMode(CAM_Shooter_* pcs)
 {
     MTH3D_tdstVector_ vPos;
 
-    if (*(char *)pcs->abExternDsgVarBoolean[3])
-    {
-        vPos.xX = pcs->pTargetActor_position->xX - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xX;
-        vPos.xY = pcs->pTargetActor_position->xY - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xY;
-        vPos.xZ = pcs->pTargetActor_position->xZ - ((MTH3D_tdstVector_ *)pcs->avExternDsgVarVector[1])->xZ;
-        if (sqrtf(vPos.xX * vPos.xX + vPos.xY * vPos.xY + vPos.xZ * vPos.xZ) < 1.0f)
-        {
-            CAM_fn_vInitCompleteCineinfo(hCineInfo);
-            hCineInfo->hCurrent->hSuperObjectTargeted = pcs->pTargetActor;
-            hCineInfo->hVisibility->hSuperObjectTargeted = pcs->pTargetActor;
-            hCineInfo->hWork->hSuperObjectTargeted = pcs->pTargetActor;
-            CAM_fn_vUpdateTargetPosition(hCineInfo);
-            switch (pcs->iMode)
-            {
-            case 2:
-                fn_InitMarioMode(pcs);
-                break;
-            case 1:
-                fn_InitBackMode(pcs);
-                break;
-            case 3:
-                fn_InitStrafeLockMode(pcs);
-                break;
-            }
-            fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
-            hCineInfo->stForceRefAxisY = pcs->vRefAxis;
-            hCineInfo->stForceRefAxisZ = vVectorZ;
-            CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
-            pcs->ulAlignDelayTime = 0;
-            *(char *)pcs->abExternDsgVarBoolean[3] = 0;
-        }
-    }
+    CSH_fn_vCheckRestart(pcs);
 
     fn_GetPersoSighting(&pcs->vCameraSighting, pcs->pCamera);
-    lInputAxisV = *(int *)pcs->aiExternDsgVarInt[0];
-    lInputAxisZ = *(int *)pcs->aiExternDsgVarInt[1];
-    lInputAxisY = pcs->bIsBot ? 0 : *(int *)pcs->aiExternDsgVarInt[2];
-    lInputAxisX = *(int *)pcs->aiExternDsgVarInt[3];
-    bMovedCameraY = lInputAxisV < -25 || lInputAxisV >= 26;
-    bMovedCameraX = lInputAxisZ < -25 || lInputAxisZ >= 26;
-    if (pcs->bMouseDriven)
-    {
-        bMovedY = lInputAxisY != 0;
-        bMovedX = lInputAxisX != 0;
-    }
-    else
-    {
-        bMovedY = lInputAxisY < -25 || lInputAxisY >= 26;
-        bMovedX = lInputAxisX < -25 || lInputAxisX >= 26;
-    }
+    CSH_fn_vReadInputs(pcs);
 
     pcs->xTheta_Default = stCamShooter_CV.xTheta_Init;
     pcs->xTheta_Min = -0.8f;
@@ -4959,21 +5113,21 @@ unsigned char fn_BackMode(CAM_Shooter_* pcs)
 
     fn_GetPersoNegativeSighting(&pcs->vRefAxis, pcs->pTargetActor);
     hCineInfo->stForceRefAxisY = pcs->vRefAxis;
-    hCineInfo->stForceRefAxisZ = vVectorZ;
+    hCineInfo->stForceRefAxisZ = vVectorZ.v;
     CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, 0, 1, 0x4000);
 
-    fn_CollisionRayCast(pcs->pCamera, pcs->vCameraPosition, &vVectorZ, 0);
-    pcs->vCeilingCollisionPoint = g_stCollideResultPoint;
-    if (bMovedX && (lInputAxisX <= 0 ||
+    fn_CollisionRayCast(pcs->pCamera, pcs->vCameraPosition, &vVectorZ.v, 0);
+    pcs->vCeilingCollisionPoint = g_stCollideResultPoint.v;
+    if (bMovedCameraY && (lInputAxisZ <= 0 ||
         (pcs->vCeilingCollisionPoint.xX == 0.0f && pcs->vCeilingCollisionPoint.xY == 0.0f && pcs->vCeilingCollisionPoint.xZ == 0.0f)) &&
         !*(char *)pcs->abExternDsgVarBoolean[2])
     {
         if (pcs->bMouseDriven)
-            vPos.xX = (-(float)lInputAxisX * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime) / stCamShooter_CV.xMouseFactorY;
+            vPos.xX = (-(float)lInputAxisZ * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime) / stCamShooter_CV.xMouseFactorY;
         else
         {
-            vPos.xX = (float)(lInputAxisX < 0 ? lInputAxisX + 12 : lInputAxisX - 12) * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 11000.0f;
-            vPos.xX = lInputAxisX < 0 ? -(vPos.xX * vPos.xX) : vPos.xX * vPos.xX;
+            vPos.xX = (float)(lInputAxisZ < 0 ? lInputAxisZ + 12 : lInputAxisZ - 12) * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 11000.0f;
+            vPos.xX = lInputAxisZ < 0 ? -(vPos.xX * vPos.xX) : vPos.xX * vPos.xX;
         }
         pcs->xDeltaTheta_User -= vPos.xX;
         pcs->xTheta_User = pcs->xTheta_Default + pcs->xDeltaTheta_User;
@@ -4994,19 +5148,19 @@ unsigned char fn_BackMode(CAM_Shooter_* pcs)
         pcs->xTheta_User = pcs->xTheta_Default;
         pcs->xDeltaTheta_User = 0.0f;
     }
-    pcs->iOldInputAxisZ = lInputAxisX;
+    pcs->iOldInputAxisZ = lInputAxisZ;
 
     if (pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Hang ||
         pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence->p_stCurrentComport == pcs->pMAComport_Climb)
     {
-        if (bMovedY)
+        if (bMovedCameraX)
         {
             if (pcs->bMouseDriven)
-                vPos.xX = (float)lInputAxisY * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / stCamShooter_CV.xMouseFactorX;
+                vPos.xX = (float)lInputAxisV * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / stCamShooter_CV.xMouseFactorX;
             else
             {
-                vPos.xX = (float)(lInputAxisY < 0 ? lInputAxisY + 12 : lInputAxisY - 12) * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 13000.0f;
-                vPos.xX = lInputAxisY < 0 ? -(vPos.xX * vPos.xX) : vPos.xX * vPos.xX;
+                vPos.xX = (float)(lInputAxisV < 0 ? lInputAxisV + 12 : lInputAxisV - 12) * (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 13000.0f;
+                vPos.xX = lInputAxisV < 0 ? -(vPos.xX * vPos.xX) : vPos.xX * vPos.xX;
             }
             pcs->xAlpha_User -= vPos.xX;
             if (pcs->xAlpha_User > 1.0f)
@@ -5053,7 +5207,7 @@ unsigned char fn_BackMode(CAM_Shooter_* pcs)
             *(HIE_tdstSuperObject_ **)pcs->apExternDsgVarPerso[1] = (HIE_tdstSuperObject_ *)g_hSuperObjectHit;
         }
         else
-            pcs->vViewFinderPosition = g_stCollideResultPoint;
+            pcs->vViewFinderPosition = g_stCollideResultPoint.v;
     }
     else
     {
@@ -5155,16 +5309,16 @@ unsigned char fn_BackMode(CAM_Shooter_* pcs)
     pcs->vCollisionPoint.xY = 0.0f;
     pcs->vCollisionPoint.xZ = 0.0f;
     pcs->xOldDistMax = pcs->xDistMax;
-    if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)
+    if (g_stCollideResultPoint.v.xX != 0.0f || g_stCollideResultPoint.v.xY != 0.0f || g_stCollideResultPoint.v.xZ != 0.0f)
     {
         if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
         {
             pcs->xOldDistMax = sqrtf(
-                (g_stCollideResultPoint.xX - vPos.xX) * (g_stCollideResultPoint.xX - vPos.xX) +
-                (g_stCollideResultPoint.xY - vPos.xY) * (g_stCollideResultPoint.xY - vPos.xY) +
-                (g_stCollideResultPoint.xZ - vPos.xZ) * (g_stCollideResultPoint.xZ - vPos.xZ));
+                (g_stCollideResultPoint.v.xX - vPos.xX) * (g_stCollideResultPoint.v.xX - vPos.xX) +
+                (g_stCollideResultPoint.v.xY - vPos.xY) * (g_stCollideResultPoint.v.xY - vPos.xY) +
+                (g_stCollideResultPoint.v.xZ - vPos.xZ) * (g_stCollideResultPoint.v.xZ - vPos.xZ));
             if (pcs->xOldDistMax < pcs->xDistMax)
-                pcs->vCollisionPoint = g_stCollideResultPoint;
+                pcs->vCollisionPoint = g_stCollideResultPoint.v;
         }
     }
     pcs->vCheckCollisionShift.xX = -pcs->vCheckCollisionShift.xX;
@@ -5174,18 +5328,18 @@ unsigned char fn_BackMode(CAM_Shooter_* pcs)
     pcs->vCollisionDirectionV.xY = pcs->vCheckCollisionShift.xY - pcs->xDistMax * pcs->vCameraSighting.xY;
     pcs->vCollisionDirectionV.xZ = pcs->vCheckCollisionShift.xZ - pcs->xDistMax * pcs->vCameraSighting.xZ;
     fn_CollisionRayCast(pcs->pCamera, &vPos, &pcs->vCollisionDirectionV, 0);
-    if (g_stCollideResultPoint.xX != 0.0f || g_stCollideResultPoint.xY != 0.0f || g_stCollideResultPoint.xZ != 0.0f)
+    if (g_stCollideResultPoint.v.xX != 0.0f || g_stCollideResultPoint.v.xY != 0.0f || g_stCollideResultPoint.v.xZ != 0.0f)
     {
         if (!pcs->hWaterGMT || g_hColMatHit != (int)pcs->hWaterGMT->hCollideMaterial)
         {
             vPos.xX = sqrtf(
-                (g_stCollideResultPoint.xX - pcs->pTargetActor_position->xX) * (g_stCollideResultPoint.xX - pcs->pTargetActor_position->xX) +
-                (g_stCollideResultPoint.xY - pcs->pTargetActor_position->xY) * (g_stCollideResultPoint.xY - pcs->pTargetActor_position->xY) +
-                (g_stCollideResultPoint.xZ - pcs->pTargetActor_position->xZ - 1.5f) * (g_stCollideResultPoint.xZ - pcs->pTargetActor_position->xZ - 1.5f));
+                (g_stCollideResultPoint.v.xX - pcs->pTargetActor_position->xX) * (g_stCollideResultPoint.v.xX - pcs->pTargetActor_position->xX) +
+                (g_stCollideResultPoint.v.xY - pcs->pTargetActor_position->xY) * (g_stCollideResultPoint.v.xY - pcs->pTargetActor_position->xY) +
+                (g_stCollideResultPoint.v.xZ - pcs->pTargetActor_position->xZ - 1.5f) * (g_stCollideResultPoint.v.xZ - pcs->pTargetActor_position->xZ - 1.5f));
             if (vPos.xX < pcs->xOldDistMax)
             {
                 pcs->xOldDistMax = vPos.xX;
-                pcs->vCollisionPoint = g_stCollideResultPoint;
+                pcs->vCollisionPoint = g_stCollideResultPoint.v;
             }
         }
     }
@@ -5221,7 +5375,7 @@ unsigned char fn_BackMode(CAM_Shooter_* pcs)
     fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x242, 0, 1, pcs->xTheta_Current);
     fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x240, 0, 1, pcs->xAlpha_User);
 
-    if (pcs->bMouseDriven && fabsf((float)lInputAxisY) > 400.0f)
+    if (pcs->bMouseDriven && fabsf((float)lInputAxisV) > 400.0f)
     {
         fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x247, 1, 1, 290.0f);
         fn_ChangeCameraRealParameter(hCineInfo, (tdeProcedureId_)0x244, 1, 1, 290.0f);
@@ -5234,7 +5388,7 @@ unsigned char fn_BackMode(CAM_Shooter_* pcs)
         pcs->vDirection.xY *= pcs->xDistMax;
         pcs->vDirection.xZ *= pcs->xDistMax;
         fn_RotateVectorByAngle(&pcs->vDirection, pcs->xTheta_Current, &pcs->vCheckCollisionShift);
-        fn_RotateVectorByAngle(&pcs->vDirection, pcs->xAlpha_User, &vVectorZ);
+        fn_RotateVectorByAngle(&pcs->vDirection, pcs->xAlpha_User, &vVectorZ.v);
         hCineInfo->stForcePosition.xX = vPos.xX + pcs->vDirection.xX;
         hCineInfo->stForcePosition.xY = vPos.xY + pcs->vDirection.xY;
         hCineInfo->stForcePosition.xZ = vPos.xZ + pcs->vDirection.xZ;
@@ -5738,7 +5892,9 @@ tdstNodeInterpret_* fn_p_SetSkin(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNode
     int iSkinIndex;
     CAM_Shooter_* pcs;
     tdstGetSetParam_ stValue;
-    char* pc;
+    /* Unfolded member offset with the scaled index computed inside the last &&
+       operand (it lands in the bltz delay slot, as in retail). Not original
+       source, needs cleaning up. */
     int iIndex;
 
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
@@ -5747,10 +5903,9 @@ tdstNodeInterpret_* fn_p_SetSkin(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNode
     iSkinIndex = stValue.uDummy.uParam.ulValue;
     hCineInfo = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
     pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
-    if (fn_bIsValidObject(pSkin) && iSkinIndex < pcs->iNumberOfMainActors && iSkinIndex >= 0)
+    if (fn_bIsValidObject(pSkin) && iSkinIndex < pcs->iNumberOfMainActors && (iIndex = iSkinIndex * 4, iSkinIndex >= 0))
     {
-        pc = (char*)&pcs->apSkins + iSkinIndex * 4;
-        *(HIE_tdstSuperObject_**)pc = pSkin;
+        *(HIE_tdstSuperObject_**)((char*)&pcs->apSkins + iIndex) = pSkin;
     }
     return p_stTree;
 }
@@ -5898,15 +6053,54 @@ tdstNodeInterpret_* fn_p_AddMainActor(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  */
 tdstNodeInterpret_* fn_p_RegisterDesignVar(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_tdstSuperObject_* p_stResultOwnerPerso;
-    HIE_tdstSuperObject_* hCamera;
-    tdeProcedureId_ eProcedureId;
-    AI_tdstMind_* param0;
-    unsigned char ucVarId;
-    CAM_Shooter_* pCamShooter;
-    unsigned char iCSVarId;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    unsigned char iCSVarId;
+    CAM_Shooter_* pCamShooter;
+    unsigned char ucVarId;
+    AI_tdstMind_* param0;
+    tdeProcedureId_ eProcedureId;
+    HIE_tdstSuperObject_* hCamera;
+    HIE_tdstSuperObject_* p_stResultOwnerPerso;
+    /* Unfolded member offset with the index scaled first: field address as a
+       char* plus a dead scaled-index assignment (insight: unfolded element-offset,
+       single-access case). Not original source, needs cleaning up. */
+    int iIndex;
+
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pCamShooter = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+
+    iCSVarId = stValue.uDummy.uParam.ucValue; if (p_stTree->eType == 2) p_stTree = fn_p_stOperatorGetPerso(p_SuperObjPerso, p_stTree + 1, &p_stResultOwnerPerso); else p_stResultOwnerPerso = p_SuperObjPerso; param0 = p_stResultOwnerPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind; ucVarId = p_stTree->uDummy.uParam.ucValue;
+
+    switch (eProcedureId)
+    {
+    case eProc_CSHRegisterIntegerVar:
+        if (iCSVarId >= 0 && iCSVarId < 5)
+            *(int *)((char *)&pCamShooter->aiExternDsgVarInt + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
+        break;
+    case eProc_CSHRegisterVectorVar:
+        if (iCSVarId >= 0 && iCSVarId < 5)
+            *(int *)((char *)&pCamShooter->avExternDsgVarVector + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
+        break;
+    case eProc_CSHRegisterPersoVar:
+        if (iCSVarId >= 0 && iCSVarId < 5)
+            *(int *)((char *)&pCamShooter->apExternDsgVarPerso + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
+        break;
+    case eProc_CSHRegisterBooleanVar:
+        if (iCSVarId >= 0 && iCSVarId < 5)
+            *(int *)((char *)&pCamShooter->abExternDsgVarBoolean + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
+        break;
+    case eProc_CSHRegisterFloatVar:
+        if (iCSVarId >= 0 && iCSVarId < 5)
+            *(int *)((char *)&pCamShooter->axExternDsgVarFloat + (iIndex = iCSVarId * 4)) = param0->p_stDsgMem->p_cDsgMemBuffer + (*param0->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
+        break;
+    }
+
+    return p_stTree + 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 375–385 */
@@ -6088,7 +6282,12 @@ tdstNodeInterpret_* fn_p_StrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstNodeI
 tdstNodeInterpret_* fn_p_InitStrafeLockMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree)
 {
     CAM_Shooter_* pcs;
-    /* TODO: decompile from asm/... */
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    fn_InitStrafeLockMode(pcs);
+    pcs->iMode = 3;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 267–274 */
@@ -6143,7 +6342,12 @@ tdstNodeInterpret_* fn_p_MarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterp
 tdstNodeInterpret_* fn_p_InitMarioMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree)
 {
     CAM_Shooter_* pcs;
-    /* TODO: decompile from asm/... */
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    fn_InitMarioMode(pcs);
+    pcs->iMode = 2;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 237–246 */
@@ -6199,7 +6403,12 @@ tdstNodeInterpret_* fn_p_BackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpr
 tdstNodeInterpret_* fn_p_InitBackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInterpret_* p_stTree)
 {
     CAM_Shooter_* pcs;
-    /* TODO: decompile from asm/... */
+
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    fn_InitBackMode(pcs);
+    pcs->iMode = 1;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Shooter.c lines 102–208 */
@@ -6266,6 +6475,8 @@ tdstNodeInterpret_* fn_p_InitBackMode(HIE_tdstSuperObject_* hCamera, tdstNodeInt
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+
 tdstNodeInterpret_* fn_p_InitCamShooter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     DNM_stDynamics* p_stDynamic;
@@ -6274,5 +6485,68 @@ tdstNodeInterpret_* fn_p_InitCamShooter(HIE_tdstSuperObject_* p_SuperObjPerso, t
     tdstDynam_* h_Dynam;
     tdstGetSetParam_ stValue;
     CAM_Shooter_* pcs;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    pcs = &a_stCamShooter[hCineInfo->hCurrent->eTypeOfViewport];
+    pcs->pCamera = hCamera;
+    pcs->hCineInfo = hCineInfo;
+    pcs->vCameraPosition = (MTH3D_tdstVector_*)&pcs->pCamera->hGlobalMatrix->stTransformMatrix.stCol_3;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pTargetActor = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->pTargetSkin = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->iViewFinderIconId = stValue.uDummy.uParam.ulValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->bMouseDriven = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    pcs->bAutoAim = stValue.uDummy.uParam.lValue;
+    pcs->pTargetActor_position = (MTH3D_tdstVector_*)&pcs->pTargetActor->hGlobalMatrix->stTransformMatrix.stCol_3;
+    h_Dynam = pcs->pTargetActor->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam != NULL)
+    {
+        p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+        if (p_stDynamic != NULL)
+            pcs->pTargetActor_speed = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed;
+        else
+        {
+            pcs->pTargetActor_speed->xX = 0.0f;
+            pcs->pTargetActor_speed->xY = 0.0f;
+            pcs->pTargetActor_speed->xZ = 0.0f;
+        }
+    }
+    else
+    {
+        pcs->pTargetActor_speed->xX = 0.0f;
+        pcs->pTargetActor_speed->xY = 0.0f;
+        pcs->pTargetActor_speed->xZ = 0.0f;
+    }
+    pcs->vStartProjectilePosition.xX = -0.5f;
+    pcs->vStartProjectilePosition.xY = 0.0f;
+    pcs->vStartProjectilePosition.xZ = 1.4f;
+    pcs->iOldInputAxisZ = 0;
+    pcs->llUnknown2A0 = 0;
+    pcs->xAlpha_User = 0.0f;
+    pcs->iNumberOfMainActors = 0;
+    pcs->vCollisionDirectionV.xY = 0.0f;
+    pcs->vCollisionDirectionV.xX = 0.0f;
+    pcs->vCollisionDirectionH.xZ = 0.0f;
+    _p_stViewport = &g_stEngineStructure.a_stViewportAttr[hCineInfo->hCurrent->eTypeOfViewport];
+    pcs->p_stViewport = _p_stViewport;
+    if (GAM_MultiVP_fn_ucGetNumberOfPlayers() == 1)
+    {
+        pcs->xViewFinderWidth_2 = 4.0f;
+        pcs->xViewFinderHeight_2 = 1.3333334f * pcs->xViewFinderWidth_2;
+        pcs->iViewportIndex = 0;
+    }
+    else
+    {
+        pcs->xViewFinderWidth_2 = 6.0f;
+        pcs->xViewFinderHeight_2 = 1.3333334f * pcs->xViewFinderWidth_2;
+        pcs->iViewportIndex = hCineInfo->hCurrent->eTypeOfViewport + 1;
+    }
+    fn_InitCSH_Common();
+    pcs->bIsBot = pcs->bRaiseCamera = pcs->bSideCollision = pcs->bStartAlignCamera = pcs->bVerticalCollision = pcs->bWasClimbing = pcs->bFastAlign = pcs->bIsJumpFalling = pcs->bLowCeiling = pcs->bObstacleCollision = pcs->bAlignCamera = pcs->bAutoAlign = pcs->bCollision = pcs->bCollisionAlign = 0;
+    return p_stTree;
 }
