@@ -43139,6 +43139,222 @@
       "status": "MISMATCH",
       "target_size": 176,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001da300",
+      "candidate_size": 412,
+      "first_difference": 0,
+      "implementation": "void CreateType21AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)\n{\n    AGO_Part_* p;\n    float fTemp;\n    int i;\n    float Pos[3];\n    float Direction[3];\n    static float Offset;\n\n    fTemp = 1.0f / parameter;\n\n    AGO_vScaleDiffInline(&Direction[0], fTemp, p_stDirection->xX, p_stPosition->xX); AGO_vScaleDiffInline(&Direction[1], fTemp, p_stDirection->xY, p_stPosition->xY); AGO_vScaleDiffInline(&Direction[2], fTemp, p_stDirection->xZ, p_stPosition->xZ);\n\n    for (i = 0; i < parameter; i++)\n    {\n        Pos[0] = AGO_xAddScaledInline(&p_stPosition->xX, (float)i + Offset, &Direction[0]); Pos[1] = AGO_xAddScaledInline(&p_stPosition->xY, (float)i + Offset, &Direction[1]); Pos[2] = AGO_xAddScaledInline(&p_stPosition->xZ, (float)i + Offset, &Direction[2]);\n\n        p = AGO_vCreatePart(0x6000, Pos, NULL, 2.0f, 0.7f, 0.7f, hVisualMaterial);\n        if (p) p->Transparency = 400.0f;\n    }\n    Offset += 6.123456f * g_fTimeDifference;\n    while (Offset >= 1.0f) Offset -= 1.0f;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CreateType21AGO",
+      "reason": "Logic reconstructed (static Offset, per-component direction/lerp, Transparency 400). Retail keeps Direction in memory and holds &Direction[0..2] and &p_stPosition->xY/xZ in s7..s2 across the loop (frame 0xc0); our build registerizes Direction (frame 0x60). Inline float* helpers did not change it.",
+      "size": 468,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 468,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001d1d60",
+      "candidate_size": 132,
+      "first_difference": 2,
+      "implementation": "void AGO_Define_OrthogonalVectorsV1Flat(MTH3D_tdstVector_* p_stDirection, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2)\n{\n    float fNorm1;\n    float x, y, z;\n    x = -p_stDirection->xY;\n    y = p_stDirection->xX;\n    z = 0.0f;\n    fNorm1 = 1.0f / AGO_MTH_xSqrt(x * x + y * y + z * z);\n    x *= fNorm1;\n    y *= fNorm1;\n    z *= fNorm1;\n    p_stV2->xX = p_stDirection->xY * z - p_stDirection->xZ * y;\n    p_stV2->xY = p_stDirection->xZ * x - p_stDirection->xX * z;\n    p_stV2->xZ = p_stDirection->xX * y - p_stDirection->xY * x;\n    p_stV1->xX = x;\n    p_stV1->xY = y;\n    p_stV1->xZ = z;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_Define_OrthogonalVectorsV1Flat",
+      "reason": "Plain C x*x+y*y+z*z gives target mula/madd; 3.0.1 sinks Dir->z load below sqrt/div (asm barrier). Under 3.0.3 132/132 differing only in x*norm scheduling/f5-f6 swap, but 3.0.3 loses CreateType52AGO so AGO.c stays 3.0.1. Struct local is not register-promoted.",
+      "size": 132,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 132,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001d1c00",
+      "candidate_size": 336,
+      "first_difference": 0,
+      "implementation": "void AGO_vCreateTriangle(float* c1, float* c2, float* c3, void* VisualMat, float U1, float V1, float U2, float V2, float U3, float V3, float DelayTime, unsigned int Parameter)\n{\n    AGO_Triangles_* p;\n    int i;\n    unsigned int Least;\n    int LeastIndex;\n\n    if (g_NbAGO_Triangles == 200)\n    {\n        LeastIndex = 0;\n        Least = g_pAGO_Triangles[0].CreationTime;\n        for (i = 0; i < 200; i++)\n        {\n            if (g_pAGO_Triangles[i].CreationTime < Least)\n            {\n                Least = g_pAGO_Triangles[i].CreationTime;\n                LeastIndex = i;\n            }\n        }\n        p = &g_pAGO_Triangles[LeastIndex];\n    }\n    else\n    {\n        p = &g_pAGO_Triangles[g_NbAGO_Triangles++];\n    }\n\n    p->CreationTime = g_AGO_NbEngineFramesSinceStart;\n\n    for (i = 0; i < 3; i++)\n    {\n        p->c[0][i] = c1[i];\n        p->c[1][i] = c2[i];\n        p->c[2][i] = c3[i];\n    }\n\n    p->uv[0][0] = U1; p->uv[0][1] = V1;\n    p->uv[1][0] = U2; p->uv[1][1] = V2;\n    p->uv[2][0] = U3; p->uv[2][1] = V3;\n\n    p->fTransparency = 255.0f;\n    p->VisualMaterial = (int)VisualMat;\n    p->DelayTime = (unsigned int)DelayTime;\n\n    p->type = 0;\n    if (Parameter & 2)\n        p->type |= 2;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vCreateTriangle",
+      "reason": "Byte-exact MATCH under MWCC 3.0.3 (inline float->unsigned DelayTime conversion); 3.0.1 calls fptoui. AGO.c not moved to 3.0.3: that loses CreateType52AGO (3.0.3 folds sp+0x70 into the loop store offset; Pos[i]/p1[i]/cast variants don't recover it). Trade is +1/-1 so far.",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 352,
+      "unresolved_relocations": [
+        {
+          "offset": 280,
+          "symbol": "fptoui",
+          "type": 4
+        }
+      ]
+    },
+    {
+      "address": "0x001df270",
+      "candidate_size": 596,
+      "first_difference": 248,
+      "implementation": "void AGO_vDisplayGAUGES(GLD_tdstViewportAttributes_* p_stVpt)\n{\n    int i;\n    float diffx;\n    float diffy;\n    float position;\n\n    AGO_g_b_DisplayingAGOs = 1;\n\n    GLI_vPrepareDisplayingAGOs(p_stVpt);\n\n    if (!fn_bIsEngineInPause() || !g_stEngineStructure.bEngineFrozen)\n    {\n        AGO_vDisplayIcones(p_stVpt);\n\n        for (i = 0; i < 40; i++)\n        {\n            if (g_TheGauges[i].Transparency > 0 && g_ucCurrentViewport == g_TheGauges[i].DestinationViewport)\n            {\n                diffx = g_TheGauges[i].Coords[2] - g_TheGauges[i].Coords[0];\n                diffy = g_TheGauges[i].Coords[3] - g_TheGauges[i].Coords[1];\n\n                if (diffx > diffy)\n                {\n                    position = g_TheGauges[i].Coords[0] + diffx * g_TheGauges[i].Position / 100.0f;\n                    GLI_vSetGlobalAlpha((float)g_TheGauges[i].Transparency);\n                    GLI_vDraw2DSpriteWithPercent(p_stVpt, g_TheGauges[i].Coords[0], g_TheGauges[i].Coords[1], position, g_TheGauges[i].Coords[3], (void*)g_TheGauges[i].FullMaterial);\n                    if (g_TheGauges[i].Position < 100.0f)\n                        GLI_vDraw2DSpriteWithPercent(p_stVpt, position, g_TheGauges[i].Coords[1], g_TheGauges[i].Coords[2], g_TheGauges[i].Coords[3], (void*)g_TheGauges[i].EmptyMaterial);\n                }\n                else\n                {\n                    position = g_TheGauges[i].Coords[3] - diffy * g_TheGauges[i].Position / 100.0f;\n                    GLI_vSetGlobalAlpha((float)g_TheGauges[i].Transparency);\n                    GLI_vDraw2DSpriteWithPercent(p_stVpt, g_TheGauges[i].Coords[0], position, g_TheGauges[i].Coords[2], g_TheGauges[i].Coords[3], (void*)g_TheGauges[i].FullMaterial);\n                    if (g_TheGauges[i].Position < 100.0f)\n                        GLI_vDraw2DSpriteWithPercent(p_stVpt, g_TheGauges[i].Coords[0], g_TheGauges[i].Coords[1], g_TheGauges[i].Coords[2], position, (void*)g_TheGauges[i].EmptyMaterial);\n                }\n            }\n        }\n\n        GLI_vEndNewSprite();\n    }\n\n    TXT_vAffiche(p_stVpt, g_fTimeDifference);\n\n    AGO_g_b_DisplayingAGOs = 0;\n\n    if (g_ucCurrentViewport == 0xff)\n        ProcessOldMovieEffect();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vDisplayGAUGES",
+      "reason": "596/596, relocs 21/21. Only residual: in the diffx>diffy branch the two GLI_vDraw2DSpriteWithPercent calls load the material (a1) before Coords args; retail loads f12/f13 first. Else-branch matches exactly. Statement order (position before alpha) and decl order (i, diffx, diffy, position) already fixed.",
+      "size": 596,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 596,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001da6d0",
+      "candidate_size": 612,
+      "first_difference": 64,
+      "implementation": "void CreateType35AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)\n{\n    float sin1;\n    float cos1;\n    float Mul2;\n    float Mul1;\n    float Pos[3];\n    float Direction[3];\n    MTH3D_tdstVector_ stV2;\n    MTH3D_tdstVector_ stV3;\n    MTH3D_tdstVector_ stV1;\n\n    stV1.xX = p_stPosition->xX - p_stDirection->xX;\n    stV1.xY = p_stPosition->xY - p_stDirection->xY;\n    stV1.xZ = p_stPosition->xZ - p_stDirection->xZ;\n    Mul1 = stV1.xX * stV1.xX + stV1.xY * stV1.xY + stV1.xZ * stV1.xZ;\n    AGO_MTH_INVSQRT_TO(Mul1);\n    stV1.xX *= Mul1;\n    stV1.xY *= Mul1;\n    stV1.xZ *= Mul1;\n    AGO_Define_OrthogonalVectors(&stV1, &stV2, &stV3);\n\n    Mul1 = -6.28f + (6.28f - -6.28f) * (float)rand() / 2147483648.0f;\n    cos1 = PS2_dl_cosf(Mul1);\n    sin1 = PS2_dl_sinf(Mul1);\n    stV1.xX = cos1 * stV2.xX + sin1 * stV3.xX;\n    stV1.xY = cos1 * stV2.xY + sin1 * stV3.xY;\n    stV1.xZ = cos1 * stV2.xZ + sin1 * stV3.xZ;\n\n    Mul2 = stV1.xX * stV1.xX + stV1.xY * stV1.xY + stV1.xZ * stV1.xZ;\n    if (Mul2 < 1.0f && AGO_g_OddFrame)\n        Mul2 = Mul2 * parameter;\n    else\n        Mul2 = parameter * (1.0f / AGO_MTH_xSqrt(Mul2));\n\n    Pos[0] = p_stDirection->xX + Mul2 * stV1.xX;\n    Pos[1] = p_stDirection->xY + Mul2 * stV1.xY;\n    Pos[2] = p_stDirection->xZ + Mul2 * stV1.xZ;\n    Direction[0] = p_stPosition->xX;\n    Direction[1] = p_stPosition->xY;\n    Direction[2] = p_stPosition->xZ;\n    AGO_vCreatePart(0x4000000a, Pos, Direction, 2.0f, 0.9f, 0.9f, hVisualMaterial);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CreateType35AGO",
+      "reason": "Byte-exact MATCH under MWCC 3.0.3 (asm not a scheduling barrier, so the call-arg addiu's hoist above sqrt). Needs AGO_MTH_INVSQRT_TO (sqrt.s+div.s asm pair: retail has no hazard nop between them). Under 3.0.1 only the three Define_OrthogonalVectors arg addiu's sit after the asm. AGO.c stays 3.0.1 because 3.0.3 loses CreateType52AGO.",
+      "size": 612,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 612,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001dacd0",
+      "candidate_size": 460,
+      "first_difference": 212,
+      "implementation": "void CreateType52AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial)\n{\n    float* p1;\n    float* p2;\n    int i;\n    float scale;\n    float Pos[3];\n    float Direction[3];\n\n    p1 = (float*)&Pos; p1[0] = p_stPosition->xX; p1[1] = p_stPosition->xY; p1[2] = p_stPosition->xZ;\n    p2 = (float*)&Direction; p2[0] = p_stDirection->xX; p2[1] = p_stDirection->xY; p2[2] = p_stDirection->xZ;\n\n    for (i = 0; i < 3; i++)\n    {\n        ((float*)&Pos)[i] = ((float*)p_stPosition)[i] + 4.0f * ((float*)p_stDirection)[i] + (-4.0f + (4.0f - -4.0f) * (float)rand() / 2147483648.0f) + 0.3f * AGO_gExtraParameter1[i];\n        ((float*)&Direction)[i] = AGO_gExtraParameter1[i] + (-0.2f + (0.2f - -0.2f) * (float)rand() / 2147483648.0f);\n    }\n\n    scale = 0.4f + (0.45f - 0.4f) * (float)rand() / 2147483648.0f;\n    AGO_vCreatePart(0x90003, Pos, Direction, 1.0f, scale, scale, hVisualMaterial);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CreateType52AGO",
+      "reason": "Was MATCH under 3.0.1; AGO.c moved to 3.0.3 (user-approved trade). 3.0.3 folds sp+0x70 into the loop's swc1 offset (addu v0,s1,sp; swc1 0x70(v0)) where retail materialises addiu v0,sp,0x70 then addu. Pos[i], p1[i], *(p+i), (&Pos[0])[i] spellings don't recover it.",
+      "size": 468,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 468,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001dfb60",
+      "candidate_size": 176,
+      "first_difference": 88,
+      "implementation": "void AGO_vDestroyAllParts(void);\nunsigned int AGO_g_PreviousCurrentFrame;\nunsigned int AGO_g_CurrentFrame;\nint GLI_g_AnimatedTextureToUse;\nunsigned int GLI_g_DontRefreshAnimated;\nchar GLI_g_StereoVisionMode;\nchar GLI_g_AfterEffect;\nunsigned int GLI_g_MustBlocIn30FPS;\nint AGO_g_SuperObjectForAGOs;\nchar GLI_g_NextMapWillHaveAStereoScopicEffect;\nchar GLI_g_NextMapWillHaveACinemaEffect;\nfloat GLI_g_MotionBlurIntensity;\nfloat GLI_g_FarValue;\nfloat GLI_g_NearValue;\nfloat AGO2_g_pfCosTable[512];\nunsigned char g_bInGameMenu;\nunsigned char g_bOneShotAnim;\nunsigned char g_bTakeCareOfAnimationCoordination;\nunsigned int SCT_g_DrawingMirrored;\ntdstEngineStructure_ g_stEngineStructure;\nunsigned char g_bHasTextureAnimationFinished;\nfloat g_BaseTimeForParticleAnimation;\nunsigned char g_ucCurrentViewport;\nfloat gs_fCoefOfMultiplicationForAnimatedTexture;\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\Ago\\AGO.c lines 93\u2013143 */\n/* addr: 0x001d1410  size: 392 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 93\n *   +0x001c -> line 98\n *   +0x002c -> line 100\n *   +0x0038 -> line 102\n *   +0x0054 -> line 103\n *   +0x006c -> line 104\n *   +0x0074 -> line 111\n *   +0x0078 -> line 110\n *   +0x007c -> line 111\n *   +0x0088 -> line 113\n *   +0x009c -> line 115\n *   +0x00a4 -> line 117\n *   +0x00b4 -> line 118\n *   +0x00b8 -> line 119\n *   +0x00c0 -> line 121\n *   +0x00cc -> line 125\n *   +0x00d0 -> line 126\n *   +0x00e4 -> line 128\n *   +0x00f8 -> line 130\n *   +0x0104 -> line 132\n *   +0x010c -> line 133\n *   +0x0110 -> line 134\n *   +0x013c -> line 135\n *   +0x0144 -> line 137\n *   +0x0158 -> line 138\n *   +0x0160 -> line 141\n *   +0x0168 -> line 143\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n/* The .c TU is built in C mode.  This orphaned C++ method is represented by\n * its recovered ABI symbol until its owning class is emitted in this TU. */\nvoid RebuildSwitch__10SwitchDataFv(void)\n{\n    unsigned int pos;\n    unsigned int i;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vDestroyAllParts",
+      "reason": "Was MATCH under 3.0.1; AGO.c moved to 3.0.3 (user-approved trade). 3.0.3 pads the *pdst=*psrc lq/sq copy loop with one nop fewer before bgtz (known padloop build difference); padloop/peephole/schedule/optimization_level pragmas don't recover it.",
+      "size": 176,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 176,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001d8ab0",
+      "candidate_size": 760,
+      "first_difference": 0,
+      "implementation": "void CreateType6AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)\n{\n    unsigned int ulCpt;\n    AGO_Part_* p;\n    float fDist;\n    float fTime;\n    float scale;\n    float Pos[3];\n    float Direction[3];\n    MTH3D_tdstVector_ stHit;\n    float fT;\n\n    if (!AGO_bPrevAGOWasExtraParam)\n    {\n        AGO_gExtraParameter2[0] = 0.0f;\n        AGO_gExtraParameter1[0] = 5.0f;\n        AGO_gExtraParameter2[1] = 5.0f;\n        AGO_gExtraParameter1[1] = 0.15f;\n        AGO_gExtraParameter1[2] = 0.75f;\n        AGO_gExtraParameter2[2] = 1.0f;\n    }\n\n    ulCpt = (unsigned int)parameter;\n    while (ulCpt--)\n    {\n        Direction[0] = p_stDirection->xX;\n        Direction[1] = p_stDirection->xY;\n        Direction[2] = p_stDirection->xZ;\n        fTime = AGO_gExtraParameter1[0] + (-AGO_gExtraParameter2[0] + (AGO_gExtraParameter2[0] - -AGO_gExtraParameter2[0]) * (float)rand() / 2147483648.0f);\n        scale = AGO_gExtraParameter1[1];\n        do\n        {\n            Pos[0] = p_stPosition->xX + (-AGO_gExtraParameter1[2] + (AGO_gExtraParameter1[2] - -AGO_gExtraParameter1[2]) * (float)rand() / 2147483648.0f);\n            Pos[1] = p_stPosition->xY + (-AGO_gExtraParameter1[2] + (AGO_gExtraParameter1[2] - -AGO_gExtraParameter1[2]) * (float)rand() / 2147483648.0f);\n            Pos[2] = p_stPosition->xZ + (-AGO_gExtraParameter1[2] + (AGO_gExtraParameter1[2] - -AGO_gExtraParameter1[2]) * (float)rand() / 2147483648.0f);\n            /* Squared length and sqrt.s use the R5900 accumulator ops, which\n               MWCC does not emit from C. */\n            {\n                float z = Pos[2] - p_stPosition->xZ;\n                float x = Pos[0] - p_stPosition->xX;\n                float y = Pos[1] - p_stPosition->xY;\n                float xSqr;\n                asm { mula.s x, x }\n                asm { madda.s y, y }\n                asm { madd.s xSqr, z, z }\n                asm { sqrt.s fDist, xSqr }\n            }\n        } while (fDist > AGO_gExtraParameter1[2]);\n\n        fDist = INT_fn_xDistancePointToLine((MTH3D_tdstVector_*)Pos, p_stPosition, p_stDirection, &fT, &stHit);\n        fTime *= 1.0f / (1.0f + AGO_gExtraParameter2[1] * (fDist * fDist / (AGO_gExtraParameter1[2] * AGO_gExtraParameter1[2])));\n        p = AGO_vCreatePart(0xb018, Pos, Direction, fTime, scale, scale, hVisualMaterial);\n        if (p)\n            p->a3_fAdditionnalVector[0] = AGO_gExtraParameter2[2];\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CreateType6AGO",
+      "reason": "Logic, constants, calls and relocs right (3.0.3). Residual: candidate keeps &Pos[1] in an extra callee-saved s-register (frame 0xa0 vs 0x90) and lacks the retry do-while's loop-head alignment nop; retail addresses Pos[1]/Pos[2] as plain sp offsets. Pos[N], cast-to-vector, ((float*)&Pos)[N], *(Pos+N), while-loop forms all keep the s-register.",
+      "size": 740,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 740,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001d15a0",
+      "candidate_size": 760,
+      "first_difference": 2,
+      "implementation": "void AGO_vCreateFootStep(float* Pos, float* Direction, MTH4D_tdstVector_* p_stNormal, void* hVisualMaterial)\n{\n    MTH4D_tdstVector_ Normal;\n    unsigned int i;\n    unsigned int Mini;\n    MTH4D_tdstVector_ Temp;\n    tdstFootStep_* p;\n\n    Normal = *p_stNormal;\n\n    if (AGO_g_NbFootSteps == 100)\n    {\n        Mini = 0;\n        for (i = 1; i < AGO_g_NbFootSteps; i++)\n        {\n            if (AGO_g_FootSteps[i].fAlpha < AGO_g_FootSteps[Mini].fAlpha)\n                Mini = i;\n        }\n        p = &AGO_g_FootSteps[Mini];\n    }\n    else\n    {\n        p = &AGO_g_FootSteps[AGO_g_NbFootSteps++];\n    }\n\n    p->Position.xX = Pos[0];\n    p->Position.xY = Pos[1];\n    p->Position.xZ = Pos[2];\n    p->Position.xW = 1.0f;\n    p->Direction1.xX = Direction[0];\n    p->Direction1.xY = Direction[1];\n    p->Direction1.xZ = Direction[2];\n    p->Direction1.xW = 0.0f;\n\n    AGO_vCrossProductVector4D(&p->Direction2, &p->Direction1, &Normal);\n    AGO_vCrossProductVector4D(&Temp, &p->Direction2, &Normal);\n\n    /* Dot product with the R5900 accumulator ops (not emittable from C). */\n    {\n        float x1 = Temp.xX, y1 = Temp.xY, z1 = Temp.xZ;\n        float x2 = p->Direction1.xX, y2 = p->Direction1.xY, z2 = p->Direction1.xZ;\n        float xDot;\n        asm { mula.s x1, x2 }\n        asm { madda.s y1, y2 }\n        asm { madd.s xDot, z1, z2 }\n        if (xDot > 0.0f)\n        {\n            p->Direction1.xX = Temp.xX;\n            p->Direction1.xY = Temp.xY;\n            p->Direction1.xZ = Temp.xZ;\n        }\n        else\n        {\n            p->Direction1.xX = -Temp.xX;\n            p->Direction1.xY = -Temp.xY;\n            p->Direction1.xZ = -Temp.xZ;\n        }\n    }\n\n    p->fAlpha = 1.0f;\n    p->hVisualMaterial = (int)hVisualMaterial;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vCreateFootStep",
+      "reason": "Structure right (Mini search, Position/Direction1 fill, two MTH4D cross products with dst==a||dst==b temp path, mula/madda/madd sign test). Debug signature omits a by-value 16-byte normal (caller builds it on stack, passes &tmp in a2; material in a3). Residuals: retail copies the normal and the temp->dst with 4 lwc1 then 4 swc1 (ours lq/sq for MTH4D struct assignment, or interleaved for component copies); temp-path cross product gets mul/sub instead of mula/msub for one component. Frame 0x40 reached with inline cross-product helper + struct assignment.",
+      "size": 800,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 800,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ddf10",
+      "candidate_size": 868,
+      "first_difference": 0,
+      "implementation": "void AGO_vReDisplayAllPartsREAL(GLD_tdstViewportAttributes_* _p_stViewport)\n{\n    int NextTexture;\n    int CurrentTexture;\n    int Start;\n    float AlphaTemp;\n    unsigned int i;\n    tdstFootStep_* pFootStep;\n\n    AGO_vClearCop0Register24();\n    ChangeClippingMode();\n    GLI_vPrepareDisplayingAGOs(_p_stViewport);\n    if (SCT_g_DrawingMirrored == 0 && fn_bIsEngineInPause() == 0 && EngineIsFrozen() == 0)\n    {\n        GLI_vRemoveLights();\n    }\n    GLI_g_AnimatedTextureToUse = 0;\n    for (i = 0, pFootStep = AGO_g_FootSteps; i < AGO_g_NbFootSteps; i++, pFootStep++)\n    {\n        if (pFootStep->fAlpha > 0.0f)\n        {\n            GLI_vSetGlobalAlpha(255.0f * pFootStep->fAlpha);\n            GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)pFootStep, (GLI_tdstMaterial_*)pFootStep->hVisualMaterial, 0.75f, 0.75f, _p_stViewport, 1, (MTH3D_tdstVector_*)&pFootStep->Direction2, (MTH3D_tdstVector_*)&pFootStep->Direction1, 0);\n        }\n    }\n    GLI_vSetGlobalAlpha(255.0f);\n    GLI_g_AnimatedTextureToUse = 0;\n    AGO2_vDisplayAllParts(_p_stViewport);\n    AGO3_vDisplayAll(_p_stViewport);\n    GLI_v_DisplayTobies(_p_stViewport);\n    GLI_vEndWorldSprites();\n    if (LUM_g_NumberOfLums != 0)\n    {\n        GLI_g_DontRefreshAnimated = 1;\n        GLI_g_AnimatedTextureToUse = GLI_xRefreshAnimatedTextureIfNeeded(LUM_g_pMaterial);\n        GLI_vSetGlobalAlpha(255.0f);\n        for (i = 0; i < LUM_g_NumberOfLums; i++)\n        {\n            if (LUM_g_LumActivity[i] != 0)\n            {\n                GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)LUM_g_LumPositions[i], (GLI_tdstMaterial_*)LUM_g_pMaterial, 1.0f, 1.0f, _p_stViewport, 1);\n            }\n        }\n        GLI_vEndWorldSprites();\n    }\n    GLI_g_DontRefreshAnimated = 0;\n    GLI_g_AnimatedTextureToUse = 0;\n    if (g_ulNumberOfAgos == 0)\n    {\n        AGO_vDisplayTriangles(_p_stViewport);\n        AGO_vClearCop0Register24();\n        return;\n    }\n    AlphaTemp = GLI_vGetGlobalAlpha();\n    AGO_g_pCurrentMaterial = 0;\n    g_bTakeCareOfAnimationCoordination = 1;\n    AGO_g_b_DisplayingAGOs = 1;\n    if (g_ulNumberOfAgos != 0)\n    {\n        Start = 0;\n        for (i = 0; i < g_ulNumberOfAgos; i++)\n            ((unsigned int*)&g_AGO[0].Displayed)[i * 36] = 0;\n        do\n        {\n            NextTexture = -1;\n            CurrentTexture = ((int*)&g_AGO[0].pTempTexture)[Start * 36];\n            GLI_vEndWorldSprites();\n            GLI_g_AnimatedTextureToUse = CurrentTexture;\n            GLI_g_DontRefreshAnimated = 1;\n            for (i = Start; i < g_ulNumberOfAgos; i++)\n            {\n                if (((int*)&g_AGO[0].pTempTexture)[i * 36] == CurrentTexture)\n                {\n                    AGO_vDisplayPart(i, _p_stViewport);\n                    ((unsigned int*)&g_AGO[0].Displayed)[i * 36] = 1;\n                }\n                else if (NextTexture == -1 && !((unsigned int*)&g_AGO[0].Displayed)[i * 36])\n                {\n                    NextTexture = ((int*)&g_AGO[0].pTempTexture)[i * 36];\n                    Start = i;\n                }\n            }\n        } while (NextTexture != -1);\n    }\n    GLI_vEndWorldSprites();\n    GLI_g_DontRefreshAnimated = 0;\n    GLI_g_AnimatedTextureToUse = 0;\n    g_bTakeCareOfAnimationCoordination = 0;\n    AGO_g_pCurrentMaterial = 0;\n    AGO_vDisplayTriangles(_p_stViewport);\n    AGO_g_b_DisplayingAGOs = 0;\n    AGO_g_pCurrentMaterial = 0;\n    GLI_vSetGlobalAlpha(AlphaTemp);\n    g_AGO_MustReinitStaticVars = 0;\n    AGO_vClearCop0Register24();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vReDisplayAllPartsREAL",
+      "reason": "868/872 (3.0.3). Target register roles: s1=i, s2=Start (restart index), s3=CurrentTexture, s4=NextTexture(-1 sentinel); source rewritten to that shape (no extra j). Residuals: candidate keeps i*144 live across AGO_vDisplayPart in an extra s5 (retail recomputes it, frame 0x70 vs 0x80), footstep loop counter/pointer registers swapped plus one loop-alignment nop. Folded %lo(g_AGO+0x7c/0x80) addressing needs the ((int*)&g_AGO[0].field)[i*36] spelling.",
+      "size": 872,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 872,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ddf10",
+      "candidate_size": 868,
+      "first_difference": 0,
+      "implementation": "void AGO_vReDisplayAllPartsREAL(GLD_tdstViewportAttributes_* _p_stViewport)\n{\n    int NextTexture;\n    int CurrentTexture;\n    int Start;\n    float AlphaTemp;\n    tdstFootStep_* pFootStep;\n    unsigned int i;\n\n    AGO_vClearCop0Register24();\n    ChangeClippingMode();\n    GLI_vPrepareDisplayingAGOs(_p_stViewport);\n    if (SCT_g_DrawingMirrored == 0 && fn_bIsEngineInPause() == 0 && EngineIsFrozen() == 0)\n    {\n        GLI_vRemoveLights();\n    }\n    GLI_g_AnimatedTextureToUse = 0;\n    for (pFootStep = AGO_g_FootSteps, i = 0; i < AGO_g_NbFootSteps; i++, pFootStep++)\n    {\n        if (pFootStep->fAlpha > 0.0f)\n        {\n            GLI_vSetGlobalAlpha(255.0f * pFootStep->fAlpha);\n            GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)pFootStep, (GLI_tdstMaterial_*)pFootStep->hVisualMaterial, 0.75f, 0.75f, _p_stViewport, 1, (MTH3D_tdstVector_*)&pFootStep->Direction2, (MTH3D_tdstVector_*)&pFootStep->Direction1, 0);\n        }\n    }\n    GLI_vSetGlobalAlpha(255.0f);\n    GLI_g_AnimatedTextureToUse = 0;\n    AGO2_vDisplayAllParts(_p_stViewport);\n    AGO3_vDisplayAll(_p_stViewport);\n    GLI_v_DisplayTobies(_p_stViewport);\n    GLI_vEndWorldSprites();\n    if (LUM_g_NumberOfLums != 0)\n    {\n        GLI_g_DontRefreshAnimated = 1;\n        GLI_g_AnimatedTextureToUse = GLI_xRefreshAnimatedTextureIfNeeded(LUM_g_pMaterial);\n        GLI_vSetGlobalAlpha(255.0f);\n        for (i = 0; i < LUM_g_NumberOfLums; i++)\n        {\n            if (LUM_g_LumActivity[i] != 0)\n            {\n                GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)LUM_g_LumPositions[i], (GLI_tdstMaterial_*)LUM_g_pMaterial, 1.0f, 1.0f, _p_stViewport, 1);\n            }\n        }\n        GLI_vEndWorldSprites();\n    }\n    GLI_g_DontRefreshAnimated = 0;\n    GLI_g_AnimatedTextureToUse = 0;\n    if (g_ulNumberOfAgos == 0)\n    {\n        AGO_vDisplayTriangles(_p_stViewport);\n        AGO_vClearCop0Register24();\n        return;\n    }\n    AlphaTemp = GLI_vGetGlobalAlpha();\n    AGO_g_pCurrentMaterial = 0;\n    g_bTakeCareOfAnimationCoordination = 1;\n    AGO_g_b_DisplayingAGOs = 1;\n    if (g_ulNumberOfAgos != 0)\n    {\n        Start = 0;\n        for (i = 0; i < g_ulNumberOfAgos; i++)\n            ((unsigned int*)&g_AGO[0].Displayed)[i * 36] = 0;\n        do\n        {\n            NextTexture = -1;\n            CurrentTexture = ((int*)&g_AGO[0].pTempTexture)[Start * 36];\n            GLI_vEndWorldSprites();\n            GLI_g_AnimatedTextureToUse = CurrentTexture;\n            GLI_g_DontRefreshAnimated = 1;\n            for (i = Start; i < g_ulNumberOfAgos; i++)\n            {\n                if (((int*)&g_AGO[0].pTempTexture)[i * 36] == CurrentTexture)\n                {\n                    AGO_vDisplayPart(i, _p_stViewport);\n                    ((unsigned int*)&g_AGO[0].Displayed)[i * 36] = 1;\n                }\n                else if (NextTexture == -1 && !((unsigned int*)&g_AGO[0].Displayed)[i * 36])\n                {\n                    NextTexture = ((int*)&g_AGO[0].pTempTexture)[i * 36];\n                    Start = i;\n                }\n            }\n        } while (NextTexture != -1);\n    }\n    GLI_vEndWorldSprites();\n    GLI_g_DontRefreshAnimated = 0;\n    GLI_g_AnimatedTextureToUse = 0;\n    g_bTakeCareOfAnimationCoordination = 0;\n    AGO_g_pCurrentMaterial = 0;\n    AGO_vDisplayTriangles(_p_stViewport);\n    AGO_g_b_DisplayingAGOs = 0;\n    AGO_g_pCurrentMaterial = 0;\n    GLI_vSetGlobalAlpha(AlphaTemp);\n    g_AGO_MustReinitStaticVars = 0;\n    AGO_vClearCop0Register24();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vReDisplayAllPartsREAL",
+      "reason": "868/872 under 3.0.3. Footstep loop now exact (declare pFootStep before i; init pFootStep first). Only residual: in the texture-batching loop MWCC keeps i*144 live across AGO_vDisplayPart in a callee-saved register (extra s5, frame 0x80 vs 0x70); retail recomputes it after the call. 3.0.1 is worse (876).",
+      "size": 872,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 872,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001de4e0",
+      "candidate_size": 1996,
+      "first_difference": 0,
+      "implementation": "void AGO_vProcessAllPartsREAL(GLD_tdstViewportAttributes_* _p_stViewport)\n{\n    float AlphaTemp;\n    static int LastFrozen;\n    int CurrentTexture;\n    int Start;\n    unsigned int j;\n    unsigned int Type;\n    int NextTexture;\n    tdstFootStep_* pFootStep;\n    unsigned int i;\n    unsigned int MustDestroy;\n    AGO_Part_* p;\n\n    AGO_vClearCop0Register24();\n    ChangeClippingMode();\n    GLI_vPrepareDisplayingAGOs(_p_stViewport);\n    if (SCT_g_DrawingMirrored == 0 && fn_bIsEngineInPause() == 0 && EngineIsFrozen() == 0)\n    {\n        GLI_vRemoveLights();\n    }\n\n    g_ffFrameTime = AGO_G_fCurrentTime;\n    if (g_ffLastFrameTime != 0.0f)\n    {\n        if (fn_bIsEngineInPause() != 0 || EngineIsFrozen() != 0)\n        {\n            g_fTimeDifference = 0.0f;\n            g_ffFrameTime = g_ffLastFrameTime;\n        }\n        else\n        {\n            g_fTimeDifference = g_ffFrameTime - g_ffLastFrameTime;\n            g_ffLastFrameTime = g_ffFrameTime;\n        }\n    }\n    else\n    {\n        g_fTimeDifference = 0.0f;\n        g_ffLastFrameTime = g_ffFrameTime;\n    }\n    if (g_fTimeDifference > 0.083333336f)\n    {\n        g_fTimeDifference = 0.016666668f;\n    }\n    if (g_fTimeDifference < 0.0f)\n    {\n        g_fTimeDifference = 0.0f;\n    }\n\n    if (g_bInGameMenu != 0 && LastFrozen == 0 && g_bUsingMapMondeAGOs == 0)\n    {\n        g_ulNumberOfAgos = 0;\n        LastFrozen = 1;\n        g_NumberOfZeldaAgos = 0;\n    }\n    else if (g_bInGameMenu == 0 && LastFrozen != 0 && g_bUsingMapMondeAGOs == 0)\n    {\n        LastFrozen = 0;\n        g_ulNumberOfAgos = 0;\n        g_NumberOfZeldaAgos = 0;\n    }\n\n    if (g_bForceWhiteFog != 0)\n    {\n        g_bForceWhiteFog++;\n        if (g_bForceWhiteFog == 10)\n        {\n            g_bForceWhiteFog = 0;\n        }\n    }\n\n    for (pFootStep = AGO_g_FootSteps, i = 0; i < AGO_g_NbFootSteps; i++, pFootStep++)\n    {\n        if (pFootStep->fAlpha > 0.0f)\n        {\n            pFootStep->fAlpha -= 0.01f * g_fTimeDifference;\n        }\n    }\n\n    GLI_g_AnimatedTextureToUse = 0;\n    for (pFootStep = AGO_g_FootSteps, i = 0; i < AGO_g_NbFootSteps; i++, pFootStep++)\n    {\n        if (pFootStep->fAlpha > 0.0f)\n        {\n            GLI_vSetGlobalAlpha(255.0f * pFootStep->fAlpha);\n            GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)pFootStep, (GLI_tdstMaterial_*)pFootStep->hVisualMaterial, 0.75f, 0.75f, _p_stViewport, 1, (MTH3D_tdstVector_*)&pFootStep->Direction2, (MTH3D_tdstVector_*)&pFootStep->Direction1, 0);\n        }\n    }\n    GLI_vSetGlobalAlpha(255.0f);\n    AGO2_vProcessAllParts();\n    GLI_g_AnimatedTextureToUse = 0;\n    AGO2_vDisplayAllParts(_p_stViewport);\n    AGO3_vBurryDiedParts();\n    AGO3_vProcessAll();\n    GLI_g_AnimatedTextureToUse = 0;\n    AGO3_vDisplayAll(_p_stViewport);\n    GLI_v_DisplayTobies(_p_stViewport);\n    GLI_vEndWorldSprites();\n    if (LUM_g_NumberOfLums != 0)\n    {\n        GLI_g_DontRefreshAnimated = 1;\n        GLI_g_AnimatedTextureToUse = GLI_xRefreshAnimatedTextureIfNeeded(LUM_g_pMaterial);\n        GLI_vSetGlobalAlpha(255.0f);\n        for (i = 0; i < LUM_g_NumberOfLums; i++)\n        {\n            if (LUM_g_LumActivity[i] != 0)\n            {\n                GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)LUM_g_LumPositions[i], (GLI_tdstMaterial_*)LUM_g_pMaterial, 1.0f, 1.0f, _p_stViewport, 1);\n            }\n        }\n        GLI_vEndWorldSprites();\n    }\n    GLI_g_DontRefreshAnimated = 0;\n    GLI_g_AnimatedTextureToUse = 0;\n    if (g_ulNumberOfAgos == 0)\n    {\n        AGO_vDisplayTriangles(_p_stViewport);\n        AGO_vClearCop0Register24();\n        return;\n    }\n\n    if (AGO_g_OddFrame != 0)\n    {\n        AGO_g_OddFrame = 0;\n    }\n    else\n    {\n        AGO_g_OddFrame = 1;\n    }\n    AlphaTemp = GLI_vGetGlobalAlpha();\n    i = 0;\n    g_bTakeCareOfAnimationCoordination = 1;\n    while (i < g_ulNumberOfAgos)\n    {\n        p = &g_AGO[i];\n        Type = p->ulType;\n        MustDestroy = 0;\n        if ((Type & 0x10000) != 0)\n        {\n            if (g_ffFrameTime - p->fCreationTime > p->LimitParam.fTimeLimit)\n            {\n                MustDestroy = 1;\n            }\n        }\n        else if ((Type & 0x200000) != 0)\n        {\n            p->LimitParam.fTimeLimit -= 1.0f;\n            if (p->LimitParam.fTimeLimit < 0.0f)\n            {\n                MustDestroy = 1;\n            }\n        }\n        if ((Type & 0x40000) != 0)\n        {\n            if (p->a3_fPosition[2] > p->LimitParam.f_ZLimit)\n            {\n                MustDestroy = 1;\n            }\n        }\n        else if ((Type & 0x100000) != 0)\n        {\n            if (p->a3_fPosition[2] < p->LimitParam.f_ZLimit)\n            {\n                MustDestroy = 1;\n            }\n        }\n        if (p->Transparency <= 0.0f)\n        {\n            MustDestroy = 1;\n        }\n        g_bHasTextureAnimationFinished = 0;\n        if ((p->ulType & 0x4000000) == 0)\n        {\n            g_bOneShotAnim = 1;\n        }\n        if ((unsigned char)p->ulType == 12)\n        {\n            g_AGO_AnimTimeScale = 1.0f;\n        }\n        else\n        {\n            g_AGO_AnimTimeScale = p->fAnimTimeScale;\n        }\n        if ((p->ulType & 0x400000) != 0)\n        {\n            g_bTakeCareOfAnimationCoordination = 0;\n        }\n        else\n        {\n            g_bTakeCareOfAnimationCoordination = 1;\n        }\n        g_BaseTimeForParticleAnimation = (float)p->AnimTime;\n        p->pTempTexture = GLI_xRefreshAnimatedTextureIfNeeded(p->VisualMaterial);\n        g_bOneShotAnim = 0;\n        p->Displayed = 0;\n        if (g_bHasTextureAnimationFinished != 0)\n        {\n            g_bHasTextureAnimationFinished = 0;\n            MustDestroy = 1;\n        }\n        if (MustDestroy != 0 || (p->ulType & 0x1000000) != 0)\n        {\n            if ((p->ulType & 0x20000) != 0 && (p->ulType & 0x80000) != 0)\n            {\n                if (-6.0f + 7.0f * (float)rand() / 2147483648.0f > 0.0f)\n                {\n                    AGO_vAddParticle(0x44, (MTH3D_tdstVector_*)p->a3_fPosition, (MTH3D_tdstVector_*)p->a3_fDirection, (void*)p->VisualMaterial, 1.0f);\n                }\n            }\n            p->ulType |= 0x1000000;\n            i++;\n        }\n        else\n        {\n            i++;\n        }\n    }\n\n    AGO_vDestroyAllParts();\n    AGO_g_b_DisplayingAGOs = 1;\n    AGO_g_pCurrentMaterial = 0;\n    if (g_ulNumberOfAgos != 0)\n    {\n        i = 0;\n        do\n        {\n            Start = -1;\n            CurrentTexture = *(int*)((char*)&g_AGO[0].pTempTexture + i * 0x90);\n            j = i;\n            GLI_vEndWorldSprites();\n            GLI_g_AnimatedTextureToUse = CurrentTexture;\n            GLI_g_DontRefreshAnimated = 1;\n            for (; j < g_ulNumberOfAgos; j++)\n            {\n                NextTexture = *(int*)((char*)&g_AGO[0].pTempTexture + j * 0x90);\n                if (NextTexture == CurrentTexture)\n                {\n                    AGO_vProcessPart(j, _p_stViewport);\n                    *(unsigned int*)((char*)&g_AGO[0].Displayed + j * 0x90) = 1;\n                }\n                else if (Start == -1 && *(unsigned int*)((char*)&g_AGO[0].Displayed + j * 0x90) == 0)\n                {\n                    Start = NextTexture;\n                    i = j;\n                }\n            }\n        } while (Start != -1);\n    }\n    GLI_vEndWorldSprites();\n    GLI_g_DontRefreshAnimated = 0;\n    GLI_g_AnimatedTextureToUse = 0;\n    g_bTakeCareOfAnimationCoordination = 0;\n    AGO_g_pCurrentMaterial = 0;\n    AGO_vDisplayTriangles(_p_stViewport);\n    AGO_g_b_DisplayingAGOs = 0;\n    AGO_g_pCurrentMaterial = 0;\n    GLI_vSetGlobalAlpha(AlphaTemp);\n    g_AGO_MustReinitStaticVars = 0;\n    AGO_vClearCop0Register24();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vProcessAllPartsREAL",
+      "reason": "1996/2024 under 3.0.3 (pre-existing reconstruction). Footstep loop decl/init order fixed as in ReDisplayAllPartsREAL; remaining: same i*144-across-call callee-saved residual (frame 0x80 vs 0x70), FP temp numbering in the time block, g_bInGameMenu reload, and OddFrame toggle shape (retail move v0,zero/sw vs candidate two-store branch).",
+      "size": 2024,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 2024,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001de4e0",
+      "candidate_size": 2024,
+      "first_difference": 110,
+      "implementation": "void AGO_vProcessAllPartsREAL(GLD_tdstViewportAttributes_* _p_stViewport)\n{\n    float AlphaTemp;\n    AGO_Part_* p;\n    unsigned int MustDestroy;\n    int Start;\n    tdstFootStep_* pFootStep;\n    int NextTexture;\n    unsigned int i;\n    static int LastFrozen;\n    unsigned int j;\n    unsigned int Type;\n    int CurrentTexture;\n\n    AGO_vClearCop0Register24();\n    ChangeClippingMode();\n    GLI_vPrepareDisplayingAGOs(_p_stViewport);\n    if (SCT_g_DrawingMirrored == 0 && fn_bIsEngineInPause() == 0 && EngineIsFrozen() == 0)\n    {\n        GLI_vRemoveLights();\n    }\n\n    g_ffFrameTime = AGO_G_fCurrentTime;\n    if (g_ffLastFrameTime != 0.0f)\n    {\n        if (fn_bIsEngineInPause() != 0 || EngineIsFrozen() != 0)\n        {\n            g_fTimeDifference = 0.0f;\n            g_ffFrameTime = g_ffLastFrameTime;\n        }\n        else\n        {\n            g_fTimeDifference = g_ffFrameTime - g_ffLastFrameTime;\n            g_ffLastFrameTime = g_ffFrameTime;\n        }\n    }\n    else\n    {\n        g_fTimeDifference = 0.0f;\n        g_ffLastFrameTime = g_ffFrameTime;\n    }\n    if (g_fTimeDifference > 0.083333336f)\n    {\n        g_fTimeDifference = 0.016666668f;\n    }\n    if (g_fTimeDifference < 0.0f)\n    {\n        g_fTimeDifference = 0.0f;\n    }\n\n    if (g_bInGameMenu != 0 && LastFrozen == 0 && g_bUsingMapMondeAGOs == 0)\n    {\n        g_ulNumberOfAgos = 0;\n        LastFrozen = 1;\n        g_NumberOfZeldaAgos = 0;\n    }\n    else if (g_bInGameMenu == 0 && LastFrozen != 0 && g_bUsingMapMondeAGOs == 0)\n    {\n        LastFrozen = 0;\n        g_ulNumberOfAgos = 0;\n        g_NumberOfZeldaAgos = 0;\n    }\n\n    if (g_bForceWhiteFog != 0)\n    {\n        g_bForceWhiteFog++;\n        if (g_bForceWhiteFog == 10)\n        {\n            g_bForceWhiteFog = 0;\n        }\n    }\n\n    {\n        float fDecrease = 0.01f * g_fTimeDifference;\n        for (pFootStep = AGO_g_FootSteps, i = 0; i < AGO_g_NbFootSteps; i++, pFootStep++)\n        {\n            if (pFootStep->fAlpha > 0.0f)\n            {\n                pFootStep->fAlpha -= fDecrease;\n            }\n        }\n    }\n\n    GLI_g_AnimatedTextureToUse = 0;\n    for (pFootStep = AGO_g_FootSteps, i = 0; i < AGO_g_NbFootSteps; i++, pFootStep++)\n    {\n        if (pFootStep->fAlpha > 0.0f)\n        {\n            GLI_vSetGlobalAlpha(255.0f * pFootStep->fAlpha);\n            GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)pFootStep, (GLI_tdstMaterial_*)pFootStep->hVisualMaterial, 0.75f, 0.75f, _p_stViewport, 1, (MTH3D_tdstVector_*)&pFootStep->Direction2, (MTH3D_tdstVector_*)&pFootStep->Direction1, 0);\n        }\n    }\n    GLI_vSetGlobalAlpha(255.0f);\n    AGO2_vProcessAllParts();\n    GLI_g_AnimatedTextureToUse = 0;\n    AGO2_vDisplayAllParts(_p_stViewport);\n    AGO3_vBurryDiedParts();\n    AGO3_vProcessAll();\n    GLI_g_AnimatedTextureToUse = 0;\n    AGO3_vDisplayAll(_p_stViewport);\n    GLI_v_DisplayTobies(_p_stViewport);\n    GLI_vEndWorldSprites();\n    if (LUM_g_NumberOfLums != 0)\n    {\n        GLI_g_DontRefreshAnimated = 1;\n        GLI_g_AnimatedTextureToUse = GLI_xRefreshAnimatedTextureIfNeeded(LUM_g_pMaterial);\n        GLI_vSetGlobalAlpha(255.0f);\n        for (i = 0; i < LUM_g_NumberOfLums; i++)\n        {\n            if (LUM_g_LumActivity[i] != 0)\n            {\n                GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)LUM_g_LumPositions[i], (GLI_tdstMaterial_*)LUM_g_pMaterial, 1.0f, 1.0f, _p_stViewport, 1);\n            }\n        }\n        GLI_vEndWorldSprites();\n    }\n    GLI_g_DontRefreshAnimated = 0;\n    GLI_g_AnimatedTextureToUse = 0;\n    if (g_ulNumberOfAgos == 0)\n    {\n        AGO_vDisplayTriangles(_p_stViewport);\n        AGO_vClearCop0Register24();\n        return;\n    }\n\n    {\n        int bOddFrame = 1;\n        if (AGO_g_OddFrame)\n            bOddFrame = 0;\n        AGO_g_OddFrame = bOddFrame;\n    }\n    AlphaTemp = GLI_vGetGlobalAlpha();\n    i = 0;\n    g_bTakeCareOfAnimationCoordination = 1;\n    while (i < g_ulNumberOfAgos)\n    {\n        p = &g_AGO[i];\n        Type = p->ulType;\n        MustDestroy = 0;\n        if ((Type & 0x10000) != 0)\n        {\n            if (g_ffFrameTime - p->fCreationTime > p->LimitParam.fTimeLimit)\n            {\n                MustDestroy = 1;\n            }\n        }\n        else if ((Type & 0x200000) != 0)\n        {\n            p->LimitParam.fTimeLimit -= 1.0f;\n            if (p->LimitParam.fTimeLimit < 0.0f)\n            {\n                MustDestroy = 1;\n            }\n        }\n        if ((Type & 0x40000) != 0)\n        {\n            if (p->a3_fPosition[2] > p->LimitParam.f_ZLimit)\n            {\n                MustDestroy = 1;\n            }\n        }\n        else if ((Type & 0x100000) != 0)\n        {\n            if (p->a3_fPosition[2] < p->LimitParam.f_ZLimit)\n            {\n                MustDestroy = 1;\n            }\n        }\n        if (p->Transparency <= 0.0f)\n        {\n            MustDestroy = 1;\n        }\n        g_bHasTextureAnimationFinished = 0;\n        if ((p->ulType & 0x4000000) == 0)\n        {\n            g_bOneShotAnim = 1;\n        }\n        if ((unsigned char)p->ulType == 12)\n        {\n            g_AGO_AnimTimeScale = 1.0f;\n        }\n        else\n        {\n            g_AGO_AnimTimeScale = p->fAnimTimeScale;\n        }\n        if ((p->ulType & 0x400000) != 0)\n        {\n            g_bTakeCareOfAnimationCoordination = 0;\n        }\n        else\n        {\n            g_bTakeCareOfAnimationCoordination = 1;\n        }\n        g_BaseTimeForParticleAnimation = (float)p->AnimTime;\n        p->pTempTexture = GLI_xRefreshAnimatedTextureIfNeeded(((int*)&g_AGO[0].VisualMaterial)[(int)i * 36]);\n        g_bOneShotAnim = 0;\n        p->Displayed = 0;\n        if (g_bHasTextureAnimationFinished != 0)\n        {\n            g_bHasTextureAnimationFinished = 0;\n            MustDestroy = 1;\n        }\n        if (MustDestroy != 0 || (p->ulType & 0x1000000) != 0)\n        {\n            if ((p->ulType & 0x20000) != 0 && (p->ulType & 0x80000) != 0)\n            {\n                if (-6.0f + 7.0f * (float)rand() / 2147483648.0f > 0.0f)\n                {\n                    AGO_vAddParticle(0x44, (MTH3D_tdstVector_*)p->a3_fPosition, (MTH3D_tdstVector_*)p->a3_fDirection, (void*)p->VisualMaterial, 1.0f);\n                }\n            }\n            p->ulType |= 0x1000000;\n            i++;\n        }\n        else\n        {\n            i++;\n        }\n    }\n\n    AGO_vDestroyAllParts();\n    AGO_g_b_DisplayingAGOs = 1;\n    AGO_g_pCurrentMaterial = 0;\n    if (g_ulNumberOfAgos != 0)\n    {\n        i = 0;\n        do\n        {\n            CurrentTexture = *(int*)((char*)&g_AGO[0].pTempTexture + i * 0x90);\n            Start = -1;\n            j = i;\n            GLI_vEndWorldSprites();\n            GLI_g_AnimatedTextureToUse = CurrentTexture;\n            GLI_g_DontRefreshAnimated = 1;\n            for (; j < g_ulNumberOfAgos; j++)\n            {\n                NextTexture = *(int*)((char*)&g_AGO[0].pTempTexture + j * 0x90);\n                if (NextTexture == CurrentTexture)\n                {\n                    AGO_vProcessPart(j, _p_stViewport);\n                    ((unsigned int*)&g_AGO[0].Displayed)[(int)j * 36] = 1;\n                }\n                else if (Start == -1 && *(unsigned int*)((char*)&g_AGO[0].Displayed + j * 0x90) == 0)\n                {\n                    Start = NextTexture;\n                    i = j;\n                }\n            }\n        } while (Start != -1);\n    }\n    GLI_vEndWorldSprites();\n    GLI_g_DontRefreshAnimated = 0;\n    GLI_g_AnimatedTextureToUse = 0;\n    g_bTakeCareOfAnimationCoordination = 0;\n    AGO_g_pCurrentMaterial = 0;\n    AGO_vDisplayTriangles(_p_stViewport);\n    AGO_g_b_DisplayingAGOs = 0;\n    AGO_g_pCurrentMaterial = 0;\n    GLI_vSetGlobalAlpha(AlphaTemp);\n    g_AGO_MustReinitStaticVars = 0;\n    AGO_vClearCop0Register24();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vProcessAllPartsREAL",
+      "reason": "2024/2024, instructions identical; residual is register numbering only: FP f1/f2 swap in the frame-time block, v0/v1 in the OddFrame temp, and saved-register assignment (i/MustDestroy, display-loop i/j/Start/CurrentTexture). Fixed: OddFrame via local temp, hoisted 0.01f*g_fTimeDifference, volatile g_bInGameMenu, (int) index stops address CSE across calls, CurrentTexture before Start=-1.",
+      "size": 2024,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 2024,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001db5a0",
+      "candidate_size": 4608,
+      "first_difference": 581,
+      "implementation": "void AGO_vProcessPart(unsigned int ulPartNumber, GLD_tdstViewportAttributes_* _p_stViewport)\n{\n    float pos2;\n    float pos1;\n    float pos0;\n    float sinz;\n    float cosz;\n    float siny;\n    float cosy;\n    float sinx;\n    float cosx;\n    float Angle;\n    float Cos1;\n    float Sin1;\n    MTH3D_tdstVector_ V1;\n    MTH3D_tdstVector_ V2;\n    float* pp;\n    float untransparency;\n    float unscale;\n    float* pp2;\n    int i;\n    int Finished;\n    float Val2;\n    float Val1;\n    float TempValue;\n    AGO_Part_* p;\n\n    p = &g_AGO[ulPartNumber];\n\n    switch ((unsigned char)p->ulType)\n    {\n    case 16:\n        p->a3_fDirection[2] += 4.0f * (-9.81f * g_fTimeDifference);\n        AGO_M_vMovePart(p);\n        break;\n\n    case 1:\n    case 4:\n        p->a3_fDirection[2] += -9.81f * g_fTimeDifference;\n        AGO_M_vMovePart(p);\n        break;\n\n    case 5:\n        p->a3_fDirection[2] += -3.5f * g_fTimeDifference;\n        AGO_M_vMovePart(p);\n        break;\n\n    case 3:\n        AGO_M_vMovePart(p);\n        break;\n\n    case 24:\n        AGO_M_vMovePart(p);\n        p->a3_fDirection[2] *= powf(p->a3_fAdditionnalVector[0], g_fTimeDifference);\n        break;\n\n    case 14:\n        Finished = 0;\n        for (i = 0; i < 3; i++)\n        {\n            pp = &p->a3_fPosition[i];\n            pp2 = &p->a3_fDirection[i];\n            TempValue = *pp2 - *pp;\n            Val2 = AGO_MTH_xAbs(TempValue);\n            if (Val2 <= 0.1f)\n            {\n                Finished++;\n            }\n            else\n            {\n                p->a3_fInitialPosition[i] = *pp;\n                Val1 = 6.5f * TempValue * g_fTimeDifference;\n                if (AGO_MTH_xAbs(Val1) >= Val2)\n                {\n                    *pp = *pp2;\n                    Finished++;\n                }\n                else\n                {\n                    *pp += Val1;\n                }\n            }\n        }\n        if (Finished != 0)\n            p->ulType |= 0x1000000;\n        break;\n\n    case 10:\n        Finished = 0;\n        for (i = 0; i < 3; i++)\n        {\n            pp2 = &p->a3_fDirection[i];\n            pp = &p->a3_fPosition[i];\n            TempValue = *pp2 - *pp;\n            Val2 = AGO_MTH_xAbs(TempValue);\n            if (Val2 <= 0.1f)\n            {\n                Finished++;\n            }\n            else\n            {\n                p->a3_fInitialPosition[i] = *pp;\n                Val1 = 1.5f * TempValue * g_fTimeDifference;\n                if (AGO_MTH_xAbs(Val1) >= Val2)\n                {\n                    *pp = *pp2;\n                    Finished++;\n                }\n                else\n                {\n                    *pp += Val1;\n                }\n            }\n        }\n        if (Finished != 0)\n            p->ulType |= 0x1000000;\n        break;\n\n    case 18:\n        for (i = 0; i < 3; i++)\n            p->a3_fPosition[i] += p->a3_fInitialPosition[i];\n        p->LimitParam.fTimeLimit += 1.0f;\n        if (p->LimitParam.fTimeLimit >= 8.0f)\n            p->ulType |= 0x1000000;\n        break;\n\n    case 9:\n        Val1 = -1.6f * g_fTimeDifference;\n        p->a3_fDirection[0] += Val1;\n        p->a3_fDirection[1] += Val1;\n        p->a3_fDirection[2] += Val1;\n        AGO_M_vMovePart(p);\n        break;\n\n    case 7:\n    case 11:\n        AGO_M_vMovePart(p);\n        break;\n\n    case 19:\n        p->a3_fPosition[0] += -0.2f + 0.4f * (float)rand() / 2147483648.0f;\n        p->a3_fPosition[1] += -0.2f + 0.4f * (float)rand() / 2147483648.0f;\n        p->a3_fPosition[2] += 0.2f + 0.3f * (float)rand() / 2147483648.0f;\n        unscale = 6.0f + 4.0f * (float)rand() / 2147483648.0f;\n        untransparency = 100.0f + 50.0f * (float)rand() / 2147483648.0f;\n        p->fScale[0] -= unscale * g_fTimeDifference;\n        p->fScale[1] -= unscale * g_fTimeDifference;\n        p->Transparency -= untransparency * g_fTimeDifference;\n        if ((p->fScale[0] <= 0.0f) || (p->fScale[1] <= 0.0f) || (p->Transparency <= 0.0f))\n        {\n            p->Transparency = 0.0f;\n            p->fScale[0] = 0.01f;\n            p->fScale[1] = 0.01f;\n            p->ulType |= 0x1000000;\n        }\n        break;\n\n    case 8:\n        pp = p->a3_fInitialPosition;\n        if (pp[0] < 0.25f)\n        {\n            pp[0] *= 1.51f;\n            pp[1] *= 1.1f;\n        }\n        else if (pp[0] < 0.5f)\n        {\n            pp[0] *= 1.1f;\n            pp[1] *= 1.01f;\n        }\n        else\n        {\n            pp[0] *= 0.9f;\n            pp[1] *= 0.98f;\n        }\n        break;\n\n    case 12:\n        p->fAnimTimeScale += 6.5f * g_fTimeDifference * *((float*)&p->AnimTime);\n        *((float*)&p->AnimTime) += 0.2f * g_fTimeDifference;\n        p->LimitParam.fTimeLimit -= g_fTimeDifference;\n        if (p->LimitParam.fTimeLimit <= 0.01f)\n            p->ulType |= 0x1000000;\n        Angle = p->fAnimTimeScale;\n        Sin1 = p->LimitParam.fTimeLimit * PS2_dl_sinf(Angle);\n        Cos1 = p->LimitParam.fTimeLimit * PS2_dl_cosf(Angle);\n        AGO_Define_OrthogonalVectors((MTH3D_tdstVector_*)p->a3_fDirection, &V1, &V2);\n        for (i = 0; i < 3; i++)\n            p->a3_fPosition[i] = p->a3_fInitialPosition[i] + ((float*)&V1)[i] * Sin1 + ((float*)&V2)[i] * Cos1;\n        break;\n\n    case 6:\n        pos0 = p->a3_fInitialPosition[0] * g_ffFrameTime;\n        pos1 = p->a3_fInitialPosition[1] * g_ffFrameTime;\n        pos2 = p->a3_fInitialPosition[2] * g_ffFrameTime;\n        cosx = PS2_dl_cosf(pos0);\n        sinx = PS2_dl_sinf(pos0);\n        cosy = PS2_dl_cosf(pos1);\n        siny = PS2_dl_sinf(pos1);\n        cosz = PS2_dl_cosf(pos2);\n        sinz = PS2_dl_sinf(pos2);\n        pos0 = 0.707f * (cosy * cosz) + 0.5f * (cosz * (-siny * cosx) - cosx * sinz) + 0.5f * (cosz * (-siny * cosx) + sinx * sinz);\n        pos1 = 0.707f * (cosy * sinz) + 0.5f * (sinx * (-sinz * siny) + cosx * cosz) + 0.5f * (cosx * (-sinz * siny) - sinx * cosz);\n        pos2 = siny * 0.707f + 0.5f * (sinx * siny) + 0.5f * (cosx * cosy);\n        p->a3_fPosition[0] = p->a3_fDirection[0] + p->LimitParam.fTimeLimit * pos0;\n        p->a3_fPosition[1] = p->a3_fDirection[1] + p->LimitParam.fTimeLimit * pos1;\n        p->a3_fPosition[2] = p->a3_fDirection[2] + p->LimitParam.fTimeLimit * pos2;\n        p->LimitParam.fTimeLimit -= 4.5f * g_fTimeDifference;\n        if (p->LimitParam.fTimeLimit <= 0.01f)\n            p->ulType |= 0x1000000;\n        break;\n    case 0:\n        break;\n    }\n\n    if (((p->ulType & 0x20000) != 0) && (g_AGO_PloufMaterial != 0) && ((p->ulType & 0x80000) == 0))\n    {\n        if (p->a3_fPosition[2] <= p->LimitParam.f_ZLimit)\n        {\n            p->a3_fPosition[2] = p->LimitParam.f_ZLimit;\n            p->ulType = 0x10003100;\n            p->fScale[0] = 0.1f;\n            p->fScale[1] = 0.1f;\n            p->fCreationTime = g_ffFrameTime;\n            p->Transparency = 250.0f;\n            p->VisualMaterial = g_AGO_PloufMaterial;\n        }\n    }\n\n    unscale = 0.0f;\n    switch (p->ulType & 0xf00)\n    {\n    case 0:\n        break;\n    case 0x900:\n        p->fScale[0] += 5.3f * g_fTimeDifference;\n        p->fScale[1] += 20.5f * g_fTimeDifference;\n        break;\n    case 0xa00:\n        p->fScale[0] += 60.0f * g_fTimeDifference;\n        p->fScale[1] -= 16.5f * g_fTimeDifference;\n        if (p->fScale[0] >= 5.0f)\n        {\n            p->ulType &= ~0xf00;\n            p->ulType |= 0xb00;\n        }\n        break;\n    case 0xb00:\n        p->fScale[0] -= 60.0f * g_fTimeDifference;\n        if (p->fScale[0] <= 1.0f)\n        {\n            p->fScale[0] = 2.0f;\n            p->ulType &= ~0xf00;\n            p->ulType |= 0xd00;\n        }\n        break;\n    case 0xd00:\n        p->fScale[0] -= 16.5f * g_fTimeDifference;\n        p->fScale[1] += 61.5f * g_fTimeDifference;\n        if (p->fScale[1] >= 10.0f)\n            p->ulType |= 0x1000000;\n        break;\n    case 0x800:\n        unscale = 0.05f;\n        break;\n    case 0x100:\n        unscale = 1.3f;\n        break;\n    case 0x200:\n        unscale = 3.7f;\n        break;\n    case 0x300:\n        unscale = 6.5f;\n        break;\n    case 0x400:\n        unscale = 9.5f;\n        break;\n    case 0x500:\n        unscale = -0.5f;\n        break;\n    case 0x700:\n        p->fScale[0] += p->a2_fScaleSpeed[0] * g_fTimeDifference;\n        p->fScale[1] += p->a2_fScaleSpeed[1] * g_fTimeDifference;\n        break;\n    case 0x600:\n        unscale = -0.2f;\n        break;\n    }\n\n    if (unscale != 0.0f)\n    {\n        unscale *= g_fTimeDifference;\n        p->fScale[0] += unscale;\n        p->fScale[1] += unscale;\n    }\n\n    if ((p->ulType & 0xf00) == 0xe00)\n    {\n        unscale = (float)rand() / 2147483648.0f;\n        p->fScale[0] = unscale;\n        p->fScale[1] = unscale;\n    }\n    else if ((p->ulType & 0xf00) == 0xf00)\n    {\n        unscale = 0.2f + 0.40000004f * (float)rand() / 2147483648.0f;\n        p->fScale[0] = unscale;\n        p->fScale[1] = unscale;\n    }\n\n    if (p->fScale[0] <= 0.0f)\n    {\n        p->fScale[0] = 0.01f;\n        p->ulType |= 0x1000000;\n    }\n    if (p->fScale[1] <= 0.0f)\n    {\n        p->fScale[1] = 0.01f;\n        p->ulType |= 0x1000000;\n    }\n\n    switch (p->ulType & 0xf000)\n    {\n    case 0:\n        break;\n    case 0x8000:\n        if ((g_ffFrameTime - p->fCreationTime) > p->LimitParam.fTimeLimit)\n        {\n            p->ulType &= 0xffff0fff;\n            p->ulType |= 0x3000;\n        }\n        break;\n    case 0x7000:\n        p->Transparency += 350.0f * g_fTimeDifference;\n        if (p->Transparency >= 255.0f)\n        {\n            p->Transparency = 255.0f;\n            p->ulType &= 0xffff0fff;\n            p->ulType |= 0x8000;\n            p->fCreationTime = g_ffFrameTime;\n        }\n        break;\n    case 0x1000:\n        p->Transparency -= 100.0f * g_fTimeDifference;\n        break;\n    case 0x2000:\n        p->Transparency -= 160.0f * g_fTimeDifference;\n        break;\n    case 0x3000:\n        p->Transparency -= 260.0f * g_fTimeDifference;\n        break;\n    case 0x4000:\n        p->Transparency -= 350.0f * g_fTimeDifference;\n        break;\n    case 0x5000:\n        p->Transparency -= 850.0f * g_fTimeDifference;\n        break;\n    case 0x6000:\n        p->Transparency -= 2500.0f * g_fTimeDifference;\n        break;\n    case 0xf000:\n        if ((p->CreationFrame != AGO_g_PreviousCurrentFrame) && (AGO_G_CurrentVU1Frame == 1))\n        {\n            p->ulType |= 0x1000000;\n            p->Transparency = 0.0f;\n        }\n        break;\n    case 0x9000:\n        p->Transparency = 100.0f + 155.0f * (float)rand() / 2147483648.0f;\n        break;\n    case 0xa000:\n        p->Transparency += 100.0f * g_fTimeDifference;\n        break;\n    case 0xb000:\n        p->Transparency = 255.0f * (1.0f - ((g_ffFrameTime - p->fCreationTime) / p->LimitParam.fTimeLimit));\n        break;\n    case 0xc000:\n        p->Transparency -= p->fShadeSpeed * g_fTimeDifference;\n        break;\n    }\n\n    if ((p->Transparency < 0.0f) && ((p->ulType & 0xf000) != 0x7000))\n    {\n        p->ulType |= 0x1000000;\n        p->Transparency = 0.0f;\n    }\n\n    if ((p->ulType & 0x1000000) == 0)\n        AGO_vDisplayPart(ulPartNumber, _p_stViewport);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vProcessPart",
+      "reason": "4608/4608, instructions identical apart from register numbering (jump table resolved). Residual: case 14/10 Finished/i/offset GPRs, case 12 Sin1/Cos1 f20/f21, case 6 trig temps f20-f24 order. Fixes: case 0 labels for jump table/compare chains, powf prototype + abs.s helper, single-dt move macro, split case 14/10 loops, &=/|= flag updates, case 6 formula with 0.707f.",
+      "size": 4608,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 4608,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -54567,6 +54783,270 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
       "status": "MATCH"
     },
+    "0x001d1a00": {
+      "address": "0x001d1a00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO_vDisplayTriangles",
+      "size": 508,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d1c00": {
+      "address": "0x001d1c00",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "AGO_vCreateTriangle",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d1df0": {
+      "address": "0x001d1df0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO_Define_OrthogonalVectors",
+      "size": 232,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "EQUIVALENT"
+    },
+    "0x001d7cc0": {
+      "address": "0x001d7cc0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CreateType25AGO",
+      "size": 764,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d7fc0": {
+      "address": "0x001d7fc0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CreateType24AGO",
+      "size": 620,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d8230": {
+      "address": "0x001d8230",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CreateType22AGO",
+      "size": 636,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d84b0": {
+      "address": "0x001d84b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType18AGO",
+      "size": 604,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d8710": {
+      "address": "0x001d8710",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CreateType17AGO",
+      "size": 684,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d89c0": {
+      "address": "0x001d89c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType13AGO",
+      "size": 240,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d8da0": {
+      "address": "0x001d8da0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CreateType3AGO",
+      "size": 840,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d90f0": {
+      "address": "0x001d90f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType1204AGO",
+      "size": 556,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d9320": {
+      "address": "0x001d9320",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType1203AGO",
+      "size": 664,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d95c0": {
+      "address": "0x001d95c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType1202AGO",
+      "size": 632,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d9840": {
+      "address": "0x001d9840",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType104AGO",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d9990": {
+      "address": "0x001d9990",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CreateType83AGO",
+      "size": 692,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d9c50": {
+      "address": "0x001d9c50",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CreateType67AGO",
+      "size": 756,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001d9f50": {
+      "address": "0x001d9f50",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CreateType28AGO",
+      "size": 712,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001da220": {
+      "address": "0x001da220",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType65AGO",
+      "size": 216,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001da4e0": {
+      "address": "0x001da4e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType15AGO",
+      "size": 488,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001da6d0": {
+      "address": "0x001da6d0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CreateType35AGO",
+      "size": 612,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001da940": {
+      "address": "0x001da940",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType62AGO",
+      "size": 488,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001dab30": {
+      "address": "0x001dab30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType60AGO",
+      "size": 412,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001daeb0": {
+      "address": "0x001daeb0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType72AGO",
+      "size": 348,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001db010": {
+      "address": "0x001db010",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CreateType8AGO",
+      "size": 592,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001db260": {
+      "address": "0x001db260",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CreateType5AGO",
+      "size": 820,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001de280": {
+      "address": "0x001de280",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "AGO_vReDisplayAllParts",
+      "size": 600,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001decd0": {
+      "address": "0x001decd0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "AGO_vProcessAllParts",
+      "size": 816,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001df000": {
+      "address": "0x001df000",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "AGO_fn_vDisplayBitmaps",
+      "size": 612,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001df270": {
+      "address": "0x001df270",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "AGO_vDisplayGAUGES",
+      "size": 596,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001df4d0": {
+      "address": "0x001df4d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO_vDisplayIcones",
+      "size": 288,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001df5f0": {
+      "address": "0x001df5f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AddIconeWithUVs",
+      "size": 348,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001df750": {
+      "address": "0x001df750",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AddIcone",
+      "size": 344,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001df8b0": {
+      "address": "0x001df8b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO_vSetIcon",
+      "size": 460,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
     "0x001dfa80": {
       "address": "0x001dfa80",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -54575,11 +55055,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
       "status": "MATCH"
     },
+    "0x001dfc10": {
+      "address": "0x001dfc10",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "AGO_vCreatePart",
+      "size": 1880,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
     "0x001e0370": {
       "address": "0x001e0370",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "AGO_ulGetElderOne",
       "size": 220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001e0450": {
+      "address": "0x001e0450",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "AGO_vInit",
+      "size": 392,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
       "status": "MATCH"
     },

@@ -79,15 +79,19 @@ inline assembly.
 ## 4. Handle large or advanced functions
 
 For functions around 100 bytes or larger, or functions with loops, many calls,
-or substantial stack traffic, generate an m2c seed first:
+or substantial stack traffic, start from the best existing source: the
+canonical body and any recorded attempt in `config/matches.json`. Snapshot it
+with:
 
 ```sh
 python3 tools/large_match.py start FUNCTION
 ```
 
-Preserve the generated seed in `m2c-seeds/FUNCTION.c`. Use it only as a
-control-flow and memory-access scaffold; transfer evidence-supported code into
-the canonical source and keep the recovered signature and layouts. Iterate with:
+The m2c seed it writes to `m2c-seeds/FUNCTION.c` is a reading aid for
+functions with no usable reconstruction. Never paste it into the source; write
+the C by hand into the debug scaffold. Fix residuals in this order: size and
+control flow, data access, scheduling, then register numbering (see
+`AGENTS.md`, "Large and advanced functions"). Iterate with:
 
 ```sh
 python3 tools/large_match.py check FUNCTION --note "short hypothesis"

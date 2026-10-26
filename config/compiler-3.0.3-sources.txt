@@ -179,3 +179,14 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/L
 # sceMpegAddCallback calls in the opposite order); all 15 other recorded
 # matches in the file still verify under 3.0.3.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/videodec.c
+# Ago/AGO.c: moved to 3.0.3 on 2026-10-26 with the user's approval despite one
+# loss. Nine AGO.c functions inline the (unsigned int)float conversion that only
+# 3.0.3 emits (AGO_vCreateTriangle, CreateType3/6/17/22/24/25AGO,
+# AGO_vAddParticle/Contd), and CreateType35AGO needs 3.0.3's freer scheduling
+# around an asm sqrt.s/div.s pair. Cost: two recorded matches stop matching:
+# CreateType52AGO (3.0.3 folds sp+0x70 into the loop store offset where retail
+# materialises the array base) and AGO_vDestroyAllParts (3.0.3 pads the
+# struct-copy loop with one nop fewer; padloop/peephole/schedule pragmas don't
+# recover it). Measured +2/-2 at the switch, with the seven conversion
+# functions above only matchable under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c

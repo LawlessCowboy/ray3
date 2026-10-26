@@ -198,67 +198,90 @@ since matches can depend on them. Run `verify-recorded` after such a change.
 `tools/match.py` hashes `include/r3/*.h` into its object cache key, so header
 edits rebuild every object.
 
-## m2c-first workflow for advanced functions
+## Large and advanced functions
 
-For every large or advanced function (roughly 100+ bytes, many basic blocks,
-loops, calls, or substantial stack traffic), workers must generate an m2c
-starting-point candidate before attempting handwritten reconstruction. This is
-an iteration aid, not a claim about the original source. Keep the seed in
-`m2c-seeds/` and use it to establish the target's control-flow skeleton,
-stack slots, calls, and likely memory accesses.
+This covers functions of roughly 100+ bytes with many basic blocks, loops,
+calls or heavy stack traffic. The hard part is rarely the overall shape. It is
+the last few percent: source details that decide how MWCC schedules, reuses
+values and allocates registers. Spend effort there, driven by the diff.
 
-Generate the seed with:
+### 1. Start from the best existing source
+
+Before writing anything, check what is already there:
+
+- the canonical TU body (the extractor's debug scaffold, or an earlier
+  worker's reconstruction);
+- recorded attempts in `config/matches.json` (their `reason` names the
+  known residuals);
+- `build/large-match/FUNCTION/` history and `insight list`.
+
+If a compilable reconstruction exists, keep it as the baseline and refine it.
+Do not regenerate it from scratch.
+
+### 2. Use m2c as a map, not as source
+
+Generate an m2c seed when the function has **no usable reconstruction**: a
+stub or TODO body, or a scaffold too thin to follow the control flow. This
+matters most for very large functions, where the seed quickly shows branch
+structure, stack slots, call arguments and field accesses. When a working
+reconstruction already exists, the seed is optional and rarely adds anything.
 
 ```sh
 python3 tools/m2c_seed.py FUNCTION --output m2c-seeds/FUNCTION.c
-```
-
-The wrapper resolves the function's owning assembly file, selects the
-`mipsel-mwcc-c` or `mipsel-mwcc-c++` target, and passes the recovered source as
-context. Install m2c locally if needed:
-
-```sh
+# install if needed:
 python3 -m pip install 'm2c @ git+https://github.com/matt-kempster/m2c.git'
 ```
 
-m2c output is scaffolding only. Do not copy it over canonical source or claim
-a match from visual similarity. Preserve the generated seed outside
-`src/Rayman3/`, then transfer evidence-supported natural C into the leased
-source file in two phases:
+The wrapper picks the owning assembly file and the `mipsel-mwcc-c`/`-c++`
+target, and passes the recovered source as context. Keep seeds in
+`m2c-seeds/`. Never paste m2c output into `src/Rayman3/`. Its gotos,
+temporaries, flattened expressions and guessed types and globals are
+decompiler artefacts. Read it beside the asm and write the C by hand into
+the debug scaffold, keeping the scaffold's signature, field names, locals
+and source order. Get a compilable baseline and run `check` before tuning.
 
-1. **Compile first.** Make the seed-derived candidate compile in the owning
-   translation unit with the project compiler. Resolve syntax, missing types,
-   declarations, and helper/global names using the debug signature and nearby
-   source context. Run `python3 tools/match.py check FUNCTION` as soon as it
-   compiles; a non-matching but compilable baseline is required before tuning.
-   Before transferring code, compare the m2c seed line-by-line with the
-   recovered debug C scaffold in the canonical TU. Keep the scaffold's
-   recovered signature, aggregate field names/offsets, local declarations,
-   source order, and line-boundary comments when m2c guessed them poorly;
-   import only m2c control-flow and instruction-shape evidence that agrees
-   with that debug evidence.
-2. **Refine against the target.** Use `check FUNCTION --diff` after every
-   meaningful change. Compare all aligned differences (and `--diff-words` for exact bytes) and the
-   target line map, then adjust natural control flow, declaration types and
-   lifetime, loop form, field/layout accesses, calls, and source ordering.
-   Record only a verified `MATCH`; record a useful failed attempt with its
-   concrete diagnosis. Never force progress with assembly, intrinsics, or
-   guessed opcodes (see Constraints for the evidence-backed asm exception).
+### 3. Refine one hypothesis at a time
 
-Use `python3 tools/large_match.py start FUNCTION` to create the seed, source
-snapshot, and an automatic canonical baseline check, then
-`python3 tools/large_match.py check FUNCTION --note "hypothesis"` for every
-verifier iteration. The helper saves the complete decoded diff, classifies the
-residual, hashes the candidate source, and keeps the hypothesis history under
-`build/large-match/`. Add reusable observations with
-`python3 tools/large_match.py note FUNCTION "observation"`. This gives future
-workers a reproducible baseline and prevents repeated experiments from being
-mistaken for independent evidence.
+Run `check FUNCTION --diff` after every change, and fix residuals in this
+order, because each class hides the next:
 
-Use the debug signature, line map, recovered layouts, and relocation names to
-correct m2c's guessed types, globals, and calls. For genuinely small wrappers
-under the threshold, direct reconstruction remains acceptable and usually
-faster than a seed.
+1. **Size and control flow**: extra or missing instructions, branch shape,
+   loop form, else-if versus separate ifs, conditional move (`movz`/`movn`)
+   versus branches.
+2. **Data access**: relocations, field offsets folded into `%lo` versus
+   `lw off(base)`, address values reused across calls, reloads of the same
+   global.
+3. **Scheduling**: statement order within a block, loop-invariant hoists.
+4. **Register numbering only**: try local declaration order and block
+   scoping, then hand off to the permuter (`docs/permuter.md`).
+
+Recurring causes seen so far:
+
+- retail recomputing `i*size` after a call, where MWCC keeps it in a saved
+  register (a differently typed index expression stops the reuse);
+- a ternary becoming `movz` where retail branches (assign through a local
+  temp);
+- an expression hoisted out of a loop in retail (precompute it into a local);
+- a global reloaded where MWCC reuses the value (evidence for `volatile`);
+- statement order at a loop head changing the delay-slot fill.
+
+Check `insight list` for the specific idioms.
+
+Run quick variant sweeps from a scratch script that rewrites the canonical
+file, runs `check`, and restores it afterwards. Change one construct per
+variant, and keep only changes the diff confirms. Prefer the most natural
+spelling that matches.
+
+Use `python3 tools/large_match.py start FUNCTION` for the source snapshot,
+seed and baseline, then `python3 tools/large_match.py check FUNCTION --note
+"hypothesis"` for each meaningful iteration. It saves the decoded diff,
+classifies the residual and keeps the history under `build/large-match/`.
+Add reusable observations with `large_match.py note`, and add compiler-level
+findings with `insight add`. Record only a verified `MATCH`. Record a useful
+failed attempt with `--record-attempt` and a concrete residual diagnosis.
+Never force progress with assembly, intrinsics or guessed opcodes (see
+Constraints for the evidence-backed asm exception). Small wrappers under the
+threshold can be reconstructed directly.
 
 ## Constraints
 
