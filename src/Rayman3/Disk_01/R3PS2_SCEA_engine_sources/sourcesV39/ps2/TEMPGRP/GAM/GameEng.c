@@ -2514,10 +2514,47 @@ void fn_vTreatDynamicHierarchy(HIE_tdstSuperObject_* hSuperObj, HIE_tdstSuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* R5900 absolute value: MWCC never emits abs.s from plain C. */
+inline float GAM_xAbs(float x)
+{
+    float r = x;
+    asm { abs.s r, r }
+    return r;
+}
+
+extern int MC_fn_hGetNextMainCharNode(int hNode);
 void GAM_fn_vUpdateTooFarFlag(HIE_tdstSuperObject_* _hSO)
 {
-    tdstNodeMainCharacter_* hMCN;
-    HIE_tdstSuperObject_* hMainActor;
     tdstStandardGame_* hStdGame;
-    /* TODO: decompile from asm/... */
+    int hMCN;
+    HIE_tdstSuperObject_* hMainActor;
+
+    hStdGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame;
+    if (hStdGame != NULL)
+    {
+        hStdGame->ucMiscFlags |= 0x80;
+        for (hMCN = MC_fn_hGetFirstMainCharNode(); hMCN != 0; )
+        {
+            hMainActor = MC_fn_hGetCharacterInMainCharacterNode(hMCN);
+            if (((unsigned char)((hMainActor->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 1) ? 1 : 0)))
+            {
+                hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+                continue;
+            }
+            if (_hSO == hMainActor)
+            {
+                hStdGame->ucMiscFlags &= ~0x80;
+                return;
+            }
+            if (GAM_xAbs(_hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xZ - hMainActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ)
+                + (GAM_xAbs(_hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xX - hMainActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX)
+                   + GAM_xAbs(_hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xY - hMainActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY))
+                < (float)(unsigned int)hStdGame->ucTooFarLimit)
+            {
+                hStdGame->ucMiscFlags &= ~0x80;
+                return;
+            }
+            hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+        }
+    }
 }

@@ -43686,6 +43686,32 @@
       "status": "MISMATCH",
       "target_size": 916,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00151fb0",
+      "candidate_size": 460,
+      "first_difference": 0,
+      "implementation": "void impPS2glNewList(unsigned int list, unsigned int mode)\n{\n    tagListData* pData;\n    tagListData** ppData;\n\n    ppData = PS2glSearchList(list);\n    if (g_pPS2glApiTable == (int)&g_PS2glApiTableList)\n        printf(\"CAUTION: Missing glEndList before glNewList\\n\");\n    if (ppData == NULL)\n    {\n        ppData = PS2glAddLists(list, 1);\n        if (ppData == NULL)\n            return;\n    }\n    if (*ppData != NULL)\n        PS2glFreeListData(*ppData);\n    *ppData = pData = (tagListData*)PS2glAllocator(0x38);\n    memset(pData, 0, 0x38);\n    g_PS2glContext.pCurListData = pData;\n    g_PS2glContext.pCurListCalls = NULL;\n    g_PS2glContext.pPreListCalls = NULL;\n    *(quad*)g_PS2glContext.valistColor[0] = *(quad*)g_PS2glContext.vacurColor[0];\n    *(quad*)g_PS2glContext.valistColor[1] = *(quad*)g_PS2glContext.vacurColor[1];\n    *(quad*)g_PS2glContext.vlistNormal = *(quad*)g_PS2glContext.vcurNormal;\n    *(quad*)g_PS2glContext.valistTexCoords[0] = *(quad*)g_PS2glContext.vacurTexCoords[0];\n    *(quad*)g_PS2glContext.valistTexCoords[1] = *(quad*)g_PS2glContext.vacurTexCoords[1];\n    pData->eMode = mode;\n    if (g_PS2glContext.uiStaticDisplayListBits & 1)\n        pData->pDmaBuffer = (float (*)[4])1;\n    pData->uiSDLBits = g_PS2glContext.uiStaticDisplayListBits;\n    pData->uiSDLSize = g_PS2glContext.uiStaticDisplayListMaxSize;\n    pData->ucSDLObjectReserveSize = g_PS2glContext.ucSDLObjectReserveSize;\n    g_PS2glContext.pCurListVData = g_PS2glListVBuf.avData;\n    g_PS2glContext.pCurListVCode = g_PS2glListVBuf.abCode;\n    g_PS2glContext.pCurListTexUnit = (int*)g_PS2glListVBuf.aeTexUnit;\n    g_PS2glListVBuf.nCount = 0;\n    g_pPS2glApiTable = (int)&g_PS2glApiTableList;\n    g_PS2glContext.bFinalCompile = 1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "impPS2glNewList",
+      "reason": "460/464: chain of list-state copies reconstructed; residual register assignment (s2/s1 for list/mode), g_pPS2glApiTable address recompute, dead sltiu on mode-0x1302",
+      "size": 464,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
+      "status": "MISMATCH",
+      "target_size": 464,
+      "unresolved_relocations": [
+        {
+          "offset": 56,
+          "symbol": "@153",
+          "type": 5
+        },
+        {
+          "offset": 64,
+          "symbol": "@153",
+          "type": 6
+        }
+      ]
     }
   ],
   "data": {},
@@ -52623,6 +52649,14 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glCopyTexImage1D",
       "size": 8,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x00174ec0": {
+      "address": "0x00174ec0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glBindTexture",
+      "size": 432,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
     },

@@ -2301,11 +2301,46 @@ int PS2glComposeStaticDisplayList(tagListData* pListData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void PS2glFreeListData(tagListData* pData);
+extern void* memset(void* dst, int c, unsigned int n);
 void impPS2glNewList(unsigned int list, unsigned int mode)
 {
     tagListData* pData;
     tagListData** ppData;
-    /* TODO: decompile from asm/... */
+
+    ppData = PS2glSearchList(list);
+    if (g_pPS2glApiTable == (int)&g_PS2glApiTableList)
+        printf("CAUTION: Missing glEndList before glNewList\n");
+    if (ppData == NULL)
+    {
+        ppData = PS2glAddLists(list, 1);
+        if (ppData == NULL)
+            return;
+    }
+    if (*ppData != NULL)
+        PS2glFreeListData(*ppData);
+    *ppData = pData = (tagListData*)PS2glAllocator(0x38);
+    memset(pData, 0, 0x38);
+    g_PS2glContext.pCurListData = pData;
+    g_PS2glContext.pCurListCalls = NULL;
+    g_PS2glContext.pPreListCalls = NULL;
+    *(quad*)g_PS2glContext.valistColor[0] = *(quad*)g_PS2glContext.vacurColor[0];
+    *(quad*)g_PS2glContext.valistColor[1] = *(quad*)g_PS2glContext.vacurColor[1];
+    *(quad*)g_PS2glContext.vlistNormal = *(quad*)g_PS2glContext.vcurNormal;
+    *(quad*)g_PS2glContext.valistTexCoords[0] = *(quad*)g_PS2glContext.vacurTexCoords[0];
+    *(quad*)g_PS2glContext.valistTexCoords[1] = *(quad*)g_PS2glContext.vacurTexCoords[1];
+    pData->eMode = mode;
+    if (g_PS2glContext.uiStaticDisplayListBits & 1)
+        pData->pDmaBuffer = (float (*)[4])1;
+    pData->uiSDLBits = g_PS2glContext.uiStaticDisplayListBits;
+    pData->uiSDLSize = g_PS2glContext.uiStaticDisplayListMaxSize;
+    pData->ucSDLObjectReserveSize = g_PS2glContext.ucSDLObjectReserveSize;
+    g_PS2glContext.pCurListVData = g_PS2glListVBuf.avData;
+    g_PS2glContext.pCurListVCode = g_PS2glListVBuf.abCode;
+    g_PS2glContext.pCurListTexUnit = (int*)g_PS2glListVBuf.aeTexUnit;
+    g_PS2glListVBuf.nCount = 0;
+    g_pPS2glApiTable = (int)&g_PS2glApiTableList;
+    g_PS2glContext.bFinalCompile = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1702–1718 */
