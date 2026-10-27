@@ -637,7 +637,7 @@ struct tagGScontext {
     anon_18 SIGNAL; /* +0x198 */
     tagsceGsReg FINISH; /* +0x1a0 */
     anon_23 LABEL; /* +0x1a8 */
-    anon_33 ModFlgs; /* +0x1b0 */
+    unsigned long ModFlgs; /* +0x1b0 */
     anon_33 GlobalModFlgs; /* +0x1b8 */
     anon_31 PackageBuffer[518]; /* +0x1c0 */
     int iBufCount; /* +0x2220 */
@@ -1906,10 +1906,27 @@ void PS2glCallSDL(tagListData* pListData)
  */
 void PS2glReinitAfterSDLs(void)
 {
-    tagGLtexblock theDefaultTexBlock;
     int i;
     tagGLcontext* pctx;
-    /* TODO: decompile from asm/... */
+
+    pctx = &g_PS2glContext;
+    if (g_gsContext.ModFlgs)
+        GsUpdate();
+    {
+        tagGLtexblock theDefaultTexBlock = {0, 0, pctx->iMaxTexBlockCount};
+        for (i = 0; i < 512; i++)
+        {
+            if (pctx->aTexName[i].bAllocated)
+                pctx->aTexName[i].bResident = 0;
+        }
+        for (i = 0; i < pctx->iMaxTexBlockCount; i++)
+            pctx->aBlockMap[i] = theDefaultTexBlock;
+    }
+    for (i = 0; i < 10; i++)
+        pctx->aTexLevelCount[i] = 0;
+    ((unsigned char*)pctx->abTex2DChanged)[pctx->iCurTextureSet] = 1;
+    ((unsigned char*)pctx->abTex1DChanged)[pctx->iCurTextureSet] = 1;
+    pctx->bTexCubeChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2026–2102 */

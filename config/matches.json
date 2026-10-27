@@ -63666,6 +63666,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
       "status": "MATCH"
     },
+    "0x00260520": {
+      "address": "0x00260520",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "GAM_fn_vAddActorsFromNewlyActiveSectors",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
+      "status": "MATCH"
+    },
     "0x00260bd0": {
       "address": "0x00260bd0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -71351,6 +71359,70 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_DRV_IsMaterialTransparent",
       "size": 132,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
+    "0x002bfa60": {
+      "address": "0x002bfa60",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SEND_MAT_OPT_MULT_ADD",
+      "size": 1008,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
+    "0x002bfe50": {
+      "address": "0x002bfe50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SEND_MAT_OPT_MULT_NZ",
+      "size": 1020,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
+    "0x002c0250": {
+      "address": "0x002c0250",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SEND_MAT_OPT_MULT_OPAQUE",
+      "size": 1000,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
+    "0x002c0640": {
+      "address": "0x002c0640",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SEND_MAT_OPT_MULT_ALPHA",
+      "size": 992,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
+    "0x002c0a20": {
+      "address": "0x002c0a20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SEND_MAT_OPT_ALPHA",
+      "size": 908,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
+    "0x002c0db0": {
+      "address": "0x002c0db0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SEND_MAT_OPT_ADD",
+      "size": 928,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
+    "0x002c1150": {
+      "address": "0x002c1150",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SEND_MAT_OPT_NZ",
+      "size": 936,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
+    "0x002c1500": {
+      "address": "0x002c1500",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SEND_MAT_OPT_OPAQUE",
+      "size": 916,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
       "status": "MATCH"
     },
