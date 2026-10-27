@@ -1506,6 +1506,12 @@ tagGLcontext g_PS2glContext;
 
 void PS2glFlushBuffer(int bForce);
 void impPS2glLightfv(unsigned int light, unsigned int pname, float* params);
+void* memcpy(void* dst, const void* src, unsigned int n);
+void sceVu0ApplyMatrix(float* v0, float m[4][4], float* v1);
+void sceVu0Normalize(float* v0, float* v1);
+void sceVu0ScaleVector(float* v0, float* v1, float s);
+void PS2glUpdateNormalMatrix(void);
+double cos(double x);
 void impPS2glLightf(unsigned int light, unsigned int pname, float param);
 tagPS2glApiTable g_PS2glApiTableList;
 int g_pPS2glApiTable;
@@ -1619,10 +1625,33 @@ void PS2glAssembleQuads(void)
     float (*pC1)[4];
     float (*pC)[4];
     float (*pN1)[4];
-    float (*param0)[4];
+    float (*pN)[4];
     float (*pV1)[4];
     float (*pV)[4];
-    /* TODO: decompile from asm/... */
+    iQuadCount = g_PS2glContext.iBufCount >> 2;
+    if (g_PS2glContext.pVBuf < g_PS2glContext.pVBuf1) {
+        pV = g_PS2glContext.pVBuf0; pN = g_PS2glContext.pNBuf0; pC = g_PS2glContext.pCBuf0;
+        pT = g_PS2glContext.pTBuf0; pC_b = g_PS2glContext.pCBuf0_b; pT_b = g_PS2glContext.pTBuf0_b;
+    } else {
+        pV = g_PS2glContext.pVBuf1; pN = g_PS2glContext.pNBuf1; pC = g_PS2glContext.pCBuf1;
+        pT = g_PS2glContext.pTBuf1; pC_b = g_PS2glContext.pCBuf1_b; pT_b = g_PS2glContext.pTBuf1_b;
+    }
+    pV1 = pV + iQuadCount * 6; pN1 = pN + iQuadCount * 6; pC1 = pC + iQuadCount * 6;
+    pT1 = pT + iQuadCount * 6; pC1_b = pC_b + iQuadCount * 6; pT1_b = pT_b + iQuadCount * 6;
+    pV += g_PS2glContext.iBufCount; pN += g_PS2glContext.iBufCount; pC += g_PS2glContext.iBufCount;
+    pT += g_PS2glContext.iBufCount; pC_b += g_PS2glContext.iBufCount; pT_b += g_PS2glContext.iBufCount;
+#define COPY6(d, s) *(quad*)&(d)[-1] = *(quad*)&(s)[-1]; *(quad*)&(d)[-2] = *(quad*)&(s)[-2]; *(quad*)&(d)[-4] = *(quad*)&(s)[-1]; *(quad*)&(d)[-3] = *(quad*)&(s)[-3]; *(quad*)&(d)[-5] = *(quad*)&(s)[-3]; *(quad*)&(d)[-6] = *(quad*)&(s)[-4];
+    for (I = 0; I < iQuadCount; I++) {
+        COPY6(pV1, pV)
+        if (g_PS2glContext.nLightBits & 0x400) { COPY6(pN1, pN) } else { COPY6(pC1, pC) }
+        COPY6(pC1_b, pC_b)
+        COPY6(pT1, pT)
+        COPY6(pT1_b, pT_b)
+        pV1 -= 6; pN1 -= 6; pC1 -= 6; pT1 -= 6; pC1_b -= 6; pT1_b -= 6;
+        pV -= 4; pN -= 4; pC -= 4; pT -= 4; pC_b -= 4; pT_b -= 4;
+    }
+#undef COPY6
+    g_PS2glContext.iBufCount = iQuadCount * 6;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1796–1800 */
@@ -2676,8 +2705,60 @@ void impPS2glLightfv(unsigned int light, unsigned int pname, float* params)
     unsigned char bDirectionalLight;
     float (*pVector)[4];
     tag_GLlight* pLight;
-    float vParams[4];
-    /* TODO: decompile from asm/... */
+    static float vParams[4];
+
+    if (light < 0x4000 || light > 0x4008)
+        return;
+    if ((unsigned int)params & 0xf)
+        memcpy(vParams, params, 16);
+    else
+        *(quad*)vParams = *(quad*)params;
+    pLight = &g_PS2glContext.Lights[light - 0x4000];
+    switch (pname)
+    {
+    case 0x1200:
+        *(quad*)pLight->vAmbient = *(quad*)vParams;
+        break;
+    case 0x1201:
+        *(quad*)pLight->vDiffuse = *(quad*)vParams;
+        break;
+    case 0x1202:
+        *(quad*)pLight->vSpecular = *(quad*)vParams;
+        break;
+    case 0x1203:
+        vParams[3] = 0.0f;
+        bDirectionalLight = vParams[3] == 0.0f;
+        pVector = (float (*)[4])pLight->vPosition;
+        sceVu0ApplyMatrix(*pVector, g_PS2glContext.ModelViewMatrix, vParams);
+        if (bDirectionalLight)
+            sceVu0Normalize(*pVector, *pVector);
+        else
+            sceVu0ScaleVector(*pVector, *pVector, 1.0f / (*pVector)[3]);
+        break;
+    case 0x1204:
+        if (g_PS2glContext.bMatrixChanged)
+            PS2glUpdateNormalMatrix();
+        sceVu0ApplyMatrix(pLight->vDirection, g_PS2glContext.NormalMatrix, vParams);
+        sceVu0Normalize(pLight->vDirection, pLight->vDirection);
+        break;
+    case 0x1205:
+        pLight->fSpotExponent = vParams[0];
+        break;
+    case 0x1206:
+        pLight->fSpotCutoff = vParams[0];
+        pLight->fCosCutoff = cos(vParams[0] * 0.017453292f);
+        break;
+    case 0x1207:
+        pLight->fConstantAttenuation = vParams[0];
+        break;
+    case 0x1208:
+        pLight->fLinearAttenuation = vParams[0];
+        break;
+    case 0x1209:
+        pLight->fQuadraticAttenuation = vParams[0];
+        break;
+    }
+    g_PS2glContext.bLightsChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1274–1274 */
@@ -2718,7 +2799,6 @@ void impPS2glLighti(unsigned int light, unsigned int pname, int param)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-double cos(double x);
 void impPS2glLightf(unsigned int light, unsigned int pname, float param)
 {
     tag_GLlight* pLight;

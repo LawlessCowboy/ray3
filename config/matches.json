@@ -43596,6 +43596,21 @@
       "status": "MISMATCH",
       "target_size": 668,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001439c0",
+      "candidate_size": 620,
+      "first_difference": 41,
+      "implementation": "void PS2glAssembleQuads(void)\n{\n    int I;\n    int iQuadCount;\n    float (*pT1_b)[4];\n    float (*pT_b)[4];\n    float (*pC1_b)[4];\n    float (*pC_b)[4];\n    float (*pT1)[4];\n    float (*pT)[4];\n    float (*pC1)[4];\n    float (*pC)[4];\n    float (*pN1)[4];\n    float (*pN)[4];\n    float (*pV1)[4];\n    float (*pV)[4];\n    iQuadCount = g_PS2glContext.iBufCount >> 2;\n    if (g_PS2glContext.pVBuf < g_PS2glContext.pVBuf1) {\n        pV = g_PS2glContext.pVBuf0; pN = g_PS2glContext.pNBuf0; pC = g_PS2glContext.pCBuf0;\n        pT = g_PS2glContext.pTBuf0; pC_b = g_PS2glContext.pCBuf0_b; pT_b = g_PS2glContext.pTBuf0_b;\n    } else {\n        pV = g_PS2glContext.pVBuf1; pN = g_PS2glContext.pNBuf1; pC = g_PS2glContext.pCBuf1;\n        pT = g_PS2glContext.pTBuf1; pC_b = g_PS2glContext.pCBuf1_b; pT_b = g_PS2glContext.pTBuf1_b;\n    }\n    pV1 = pV + iQuadCount * 6; pN1 = pN + iQuadCount * 6; pC1 = pC + iQuadCount * 6;\n    pT1 = pT + iQuadCount * 6; pC1_b = pC_b + iQuadCount * 6; pT1_b = pT_b + iQuadCount * 6;\n    pV += g_PS2glContext.iBufCount; pN += g_PS2glContext.iBufCount; pC += g_PS2glContext.iBufCount;\n    pT += g_PS2glContext.iBufCount; pC_b += g_PS2glContext.iBufCount; pT_b += g_PS2glContext.iBufCount;\n#define COPY6(d, s) *(quad*)&(d)[-1] = *(quad*)&(s)[-1]; *(quad*)&(d)[-2] = *(quad*)&(s)[-2]; *(quad*)&(d)[-4] = *(quad*)&(s)[-1]; *(quad*)&(d)[-3] = *(quad*)&(s)[-3]; *(quad*)&(d)[-5] = *(quad*)&(s)[-3]; *(quad*)&(d)[-6] = *(quad*)&(s)[-4];\n    for (I = 0; I < iQuadCount; I++) {\n        COPY6(pV1, pV)\n        if (g_PS2glContext.nLightBits & 0x400) { COPY6(pN1, pN) } else { COPY6(pC1, pC) }\n        COPY6(pC1_b, pC_b)\n        COPY6(pT1, pT)\n        COPY6(pT1_b, pT_b)\n        pV1 -= 6; pN1 -= 6; pC1 -= 6; pT1 -= 6; pC1_b -= 6; pT1_b -= 6;\n        pV -= 4; pN -= 4; pC -= 4; pT -= 4; pC_b -= 4; pT_b -= 4;\n    }\n#undef COPY6\n    g_PS2glContext.iBufCount = iQuadCount * 6;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "PS2glAssembleQuads",
+      "reason": "Structure right (620/624): reverse 4->6 vertex expansion loop; residual is register numbering (target allocates src/dst pairs ascending from a0, iQuadCount t6) and a nop at loop exit + later lui for final iBufCount store; decl order/loop form/permuter 2230 did not close it",
+      "size": 624,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MISMATCH",
+      "target_size": 624,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -46821,6 +46836,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
       "name": "impPS2glLightiv",
       "size": 148,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
+    "0x00145250": {
+      "address": "0x00145250",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glLightfv",
+      "size": 604,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
       "status": "MATCH"
     },
