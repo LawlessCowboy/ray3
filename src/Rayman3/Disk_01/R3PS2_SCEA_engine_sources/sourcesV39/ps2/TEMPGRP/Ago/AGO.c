@@ -292,12 +292,15 @@ struct LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn {
     int lNumberOfElementsDyn; /* +0x8 */
 };
 
+/* Not 16-byte aligned in this unit: retail AGO_vCreateFootStep copies a
+   vector through a pointer with four lwc1 then four swc1, where an
+   aligned(16) type gives lq/sq. */
 struct MTH4D_tdstVector_ {
     float xX; /* +0x0 */
     float xY; /* +0x4 */
     float xZ; /* +0x8 */
     float xW; /* +0xc */
-} __attribute__((aligned(16)));
+};
 
 struct MTH4D_tdstMatrix_ {
     MTH4D_tdstVector_ stCol_0; /* +0x0 */
@@ -396,13 +399,14 @@ struct SECT_tdstListOfDNMLights_ {
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn* hFatherDyn; /* +0xc */
 };
 
+/* 64-byte stride in retail (index << 6). */
 struct tdstFootStep_ {
     MTH4D_tdstVector_ Position; /* +0x0 */
     MTH4D_tdstVector_ Direction1; /* +0x10 */
     MTH4D_tdstVector_ Direction2; /* +0x20 */
     int hVisualMaterial; /* +0x30 */
     float fAlpha; /* +0x34 */
-};
+} __attribute__((aligned(16)));
 
 struct tdstPLA_Hierarchy_ {
     unsigned int ulNbOfCouples; /* +0x0 */
@@ -1213,48 +1217,6 @@ unsigned char g_bHasTextureAnimationFinished;
 float g_BaseTimeForParticleAnimation;
 unsigned char g_ucCurrentViewport;
 float gs_fCoefOfMultiplicationForAnimatedTexture;
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 93–143 */
-/* addr: 0x001d1410  size: 392 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 93
- *   +0x001c -> line 98
- *   +0x002c -> line 100
- *   +0x0038 -> line 102
- *   +0x0054 -> line 103
- *   +0x006c -> line 104
- *   +0x0074 -> line 111
- *   +0x0078 -> line 110
- *   +0x007c -> line 111
- *   +0x0088 -> line 113
- *   +0x009c -> line 115
- *   +0x00a4 -> line 117
- *   +0x00b4 -> line 118
- *   +0x00b8 -> line 119
- *   +0x00c0 -> line 121
- *   +0x00cc -> line 125
- *   +0x00d0 -> line 126
- *   +0x00e4 -> line 128
- *   +0x00f8 -> line 130
- *   +0x0104 -> line 132
- *   +0x010c -> line 133
- *   +0x0110 -> line 134
- *   +0x013c -> line 135
- *   +0x0144 -> line 137
- *   +0x0158 -> line 138
- *   +0x0160 -> line 141
- *   +0x0168 -> line 143
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* The .c TU is built in C mode.  This orphaned C++ method is represented by
- * its recovered ABI symbol until its owning class is emitted in this TU. */
-void RebuildSwitch__10SwitchDataFv(void)
-{
-    unsigned int pos;
-    unsigned int i;
-    /* TODO: decompile from asm/... */
-}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 8674–8708 */
 /* addr: 0x001d15a0  size: 800 bytes */
@@ -3193,25 +3155,479 @@ void AGO_vAddParticleContd(unsigned int PartType, MTH3D_tdstVector_* p_stPositio
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void AGO3_vAddPart(unsigned int PartNumber, MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fParam1, float fParam2, MTH3D_tdstVector_* V1, MTH3D_tdstVector_* V2, MTH3D_tdstVector_* V3);
+void AGO2_vFirstInitAndRegisterAGO2Types(void);
+extern float PS2_dl_cosf(float val);
+extern float PS2_dl_sinf(float val);
+void CreateType3AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType5AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType6AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType8AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial);
+void CreateType13AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType15AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType17AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType18AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType21AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType22AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType24AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType25AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType28AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType35AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType52AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType60AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType62AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType65AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+void CreateType67AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter);
+
 void AGO_vAddParticle(unsigned int PartType, MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)
 {
     int j;
     AGO_Part_* p;
-    float* p2;
     float* p1;
+    float* p2;
     float* param0;
     float fNorm;
     float angle;
     int Number;
-    float sin1;
     float cos1;
+    float sin1;
     float fRadius;
     float scale;
     int i;
-    float Direction[3];
     float Pos[3];
-    float NextBubble;
-    /* TODO: decompile from asm/... */
+    float Direction[3];
+    static float NextBubble;
+
+    g_AGO_AnimTimeScale = 1.0f;
+    g_AGO_AnimTimeLag = 0;
+
+    if (!HasAGO2BeenInit)
+    {
+        HasAGO2BeenInit = 1;
+        AGO2_vFirstInitAndRegisterAGO2Types();
+    }
+
+    if (PartType >= 10000)
+    {
+        if (AGO_bPrevAGOWasExtraParam)
+        {
+            AGO3_vAddPart(PartType - 10000, p_stPosition, p_stDirection, (GLI_tdstMaterial_*)hVisualMaterial, parameter, AGO_gExtraFloatParameter, (MTH3D_tdstVector_*)AGO_gExtraParameter1, (MTH3D_tdstVector_*)AGO_gExtraParameter2, (MTH3D_tdstVector_*)AGO_gExtraMaterial);
+            AGO_bPrevAGOWasExtraParam = 0;
+        }
+        else
+        {
+            AGO3_vAddPart(PartType - 10000, p_stPosition, p_stDirection, (GLI_tdstMaterial_*)hVisualMaterial, parameter, 0.0f, NULL, NULL, NULL);
+        }
+        return;
+    }
+
+    p1 = (float*)&Pos; p1[0] = p_stPosition->xX; p1[1] = p_stPosition->xY; p1[2] = p_stPosition->xZ;
+    p2 = (float*)&Direction; p2[0] = p_stDirection->xX; p2[1] = p_stDirection->xY; p2[2] = p_stDirection->xZ;
+
+    if (EngineIsFrozen() || fn_bIsEngineInPause())
+    {
+        if (PartType != 110 && PartType != 125 && PartType != 120 && PartType != 50 && PartType != 4600 && PartType != 4601)
+            return;
+    }
+
+    switch (PartType)
+    {
+    case 1:
+        parameter += 1.0f;
+        AGO_vCreatePart(0x10000, Pos, NULL, 2.0f, parameter, parameter, hVisualMaterial);
+        break;
+
+    case 2:
+        parameter += 1.0f;
+        AGO_vCreatePart(0x10000, Pos, NULL, Direction[0], parameter, parameter, hVisualMaterial);
+        break;
+
+    case 3:
+        CreateType3AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 4:
+    {
+        float a3_fSpeed[3];
+        float a3_fPos[3];
+
+        p1 = (float*)&a3_fPos; p1[0] = p_stPosition->xX; p1[1] = p_stPosition->xY; p1[2] = p_stPosition->xZ; a3_fSpeed[0] = 0.0f; a3_fSpeed[1] = 0.0f; a3_fSpeed[2] = 0.0f; g_AGO_AnimTimeScale = p_stDirection->xZ; p = AGO_vCreatePart(0x100705, a3_fPos, a3_fSpeed, parameter, p_stDirection->xX, p_stDirection->xX, hVisualMaterial);
+        if (p) p->a2_fScaleSpeed[0] = p->a2_fScaleSpeed[1] = p_stDirection->xY;
+        break;
+    }
+
+    case 5:
+        CreateType5AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 6:
+        CreateType6AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 7:
+        g_AGO_PloufMaterial = (int)hVisualMaterial;
+        g_ffFrameTime = AGO_G_fCurrentTime;
+        if (g_fNextPlouf == 0.0f)
+            g_fNextPlouf = AGO_G_fCurrentTime;
+        if (g_fNextPlouf > AGO_G_fCurrentTime)
+            return;
+        g_fNextPlouf = 0.2f + AGO_G_fCurrentTime;
+        if (Direction[0] > 300.0f)
+            Direction[0] = 250.0f;
+        if (g_DoSmallPlouf)
+        {
+            AGO_vCreatePart(0x10003100, Pos, Direction, Direction[0], Direction[2], Direction[2], hVisualMaterial);
+        }
+        else
+        {
+            AGO_vCreatePart(0x10003300, Pos, Direction, Direction[0], Direction[2], Direction[2], hVisualMaterial);
+        }
+        break;
+
+    case 8:
+        /* TODO: retail also passes parameter in f12, but CreateType8AGO only
+           matches with its three-argument definition. */
+        CreateType8AGO(p_stPosition, p_stDirection, hVisualMaterial);
+        break;
+
+    case 9:
+        scale = 0.5f + 0.3f * (float)rand() / 2147483648.0f;
+        AGO_vCreatePart(0x4500, Pos, NULL, parameter, scale, scale, hVisualMaterial);
+        for (i = 8; i; i--)
+        {
+            Direction[0] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;
+            Direction[1] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;
+            Direction[2] = -0.2f + (6.0f - -0.2f) * (float)rand() / 2147483648.0f;
+            scale = 0.19f + 0.16f * (float)rand() / 2147483648.0f;
+            AGO_vCreatePart(0x3001, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        }
+        break;
+
+    case 10:
+        g_ffFrameTime = AGO_G_fCurrentTime; if (g_AGO_MustReinitStaticVars || NextBubble == 0.0f) NextBubble = AGO_G_fCurrentTime; if (NextBubble > AGO_G_fCurrentTime) return; NextBubble = 0.1f + AGO_G_fCurrentTime;
+        Direction[0] = 0.0f; Direction[1] = 0.0f; Direction[2] = 0.0f;
+        AGO_vCreatePart(0x1605, Pos, Direction, parameter, 0.4f, 0.4f, hVisualMaterial);
+        break;
+
+    case 11:
+        fRadius = p_stDirection->xX;
+        Number = (int)p_stDirection->xY;
+        for (i = 0; i < Number; i++)
+        {
+            angle = 6.28f * (float)i / (float)Number;
+            cos1 = PS2_dl_cosf(angle);
+            sin1 = PS2_dl_sinf(angle);
+            g_AGO_AnimTimeScale = 0.2f + 2.8f * (float)rand() / 2147483648.0f;
+            Pos[0] = p_stPosition->xX + fRadius * cos1; Pos[1] = p_stPosition->xY + fRadius * sin1; Pos[2] = p_stPosition->xZ;
+            Direction[0] = fRadius * cos1; Direction[1] = fRadius * sin1; Direction[2] = 1.53f;
+            scale = 0.2f + (1.2f - 0.2f) * (float)rand() / 2147483648.0f;
+            AGO_vCreatePart(0x3303, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        }
+        break;
+
+    case 12:
+        for (i = 8; i; i--)
+        {
+            Direction[0] = p_stDirection->xX * (-2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f);
+            Direction[1] = p_stDirection->xX * (-2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f);
+            Direction[2] = p_stDirection->xX * (-0.2f + (6.0f - -0.2f) * (float)rand() / 2147483648.0f);
+            AGO_vCreatePart(0xb001, Pos, Direction, p_stDirection->xX, parameter, parameter, hVisualMaterial);
+        }
+        break;
+
+    case 13:
+        CreateType13AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 14:
+    {
+        float a3_fSpeed[3];
+        float a3_fPos[3];
+
+        p1 = (float*)&a3_fPos; p1[0] = p_stPosition->xX; p1[1] = p_stPosition->xY; p1[2] = p_stPosition->xZ; a3_fSpeed[0] = p_stDirection->xX; a3_fSpeed[1] = p_stDirection->xY; a3_fSpeed[2] = 0.0f; AGO_vCreatePart(0x30200000, a3_fPos, a3_fSpeed, 1.0f, parameter, parameter, hVisualMaterial);
+        break;
+    }
+
+    case 15:
+        CreateType15AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 16:
+        break;
+
+    case 17:
+        CreateType17AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 18:
+        CreateType18AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 19:
+        fNorm = p_stDirection->xX * p_stDirection->xX + p_stDirection->xY * p_stDirection->xY + p_stDirection->xZ * p_stDirection->xZ;
+        if (fNorm <= 0.001f)
+            return;
+        fNorm = 1.0f / AGO_MTH_xSqrt(fNorm);
+        p_stDirection->xX *= fNorm; p_stDirection->xY *= fNorm; p_stDirection->xZ *= fNorm;
+
+        p2 = (float*)&Direction; p2[0] = p_stDirection->xX; p2[1] = p_stDirection->xY; p2[2] = p_stDirection->xZ;
+
+        AGO_vCreatePart(0x20002100, Pos, Direction, parameter, 0.5f, 0.5f, hVisualMaterial);
+        break;
+
+    case 20:
+        fNorm = p_stDirection->xX * p_stDirection->xX + p_stDirection->xY * p_stDirection->xY + p_stDirection->xZ * p_stDirection->xZ;
+        if (fNorm <= 0.001f)
+            return;
+        fNorm = 1.0f / AGO_MTH_xSqrt(fNorm);
+        p_stDirection->xX *= fNorm; p_stDirection->xY *= fNorm; p_stDirection->xZ *= fNorm;
+
+        p2 = (float*)&Direction; p2[0] = p_stDirection->xX; p2[1] = p_stDirection->xY; p2[2] = p_stDirection->xZ;
+
+        AGO_vCreatePart(0x20005400, Pos, Direction, parameter, 0.5f, 0.5f, hVisualMaterial);
+        break;
+
+    case 21:
+        CreateType21AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 22:
+        CreateType22AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 23:
+        Pos[0] += 0.13f * Direction[0]; Pos[1] += 0.13f * Direction[1]; Pos[2] += 0.2f + 0.1f * Direction[2]; Pos[0] += 0.3f * Direction[1]; Pos[1] += 0.3f * -Direction[0];
+        p2 = (float*)&Direction; p2[0] = p_stPosition->xX; p2[1] = p_stPosition->xY; p2[2] = p_stPosition->xZ;
+
+        scale = 0.1f + (0.15f - 0.1f) * (float)rand() / 2147483648.0f;
+
+        for (i = 0; i < 3; i++)
+            Pos[i] = Direction[i] + (-1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f);
+
+        AGO_vCreatePart(0xe, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        break;
+
+    case 24:
+        CreateType24AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 25:
+        CreateType25AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 26:
+    {
+        static float NextBubble;
+
+        g_ffFrameTime = AGO_G_fCurrentTime; if (g_AGO_MustReinitStaticVars || NextBubble == 0.0f) NextBubble = AGO_G_fCurrentTime; if (NextBubble > AGO_G_fCurrentTime) return; NextBubble = g_ffFrameTime + 0.5f * (float)rand() / 2147483648.0f;
+        if (Pos[2] > parameter)
+            return;
+        scale = 0.02f + 0.08f * (float)rand() / 2147483648.0f;
+        Direction[0] = -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;
+        Direction[1] = -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;
+        Direction[2] = 1.0f + (4.0f - 1.0f) * (float)rand() / 2147483648.0f;
+        AGO_vCreatePart(0x40807, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        Pos[1] += 0.2f; Pos[2] += 0.2f;
+        if (Pos[2] < parameter)
+            AGO_vCreatePart(0x40807, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        Pos[1] -= 0.5f; Pos[2] += 0.1f;
+        if (Pos[2] < parameter)
+            AGO_vCreatePart(0x40807, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        break;
+    }
+
+    case 27:
+    {
+        static float NextBubble;
+
+        g_ffFrameTime = AGO_G_fCurrentTime; if (g_AGO_MustReinitStaticVars || NextBubble == 0.0f) NextBubble = AGO_G_fCurrentTime; if (NextBubble > AGO_G_fCurrentTime) return; NextBubble = g_ffFrameTime + 0.5f * (float)rand() / 2147483648.0f;
+        if (parameter > 7.0f)
+            parameter = 7.0f;
+        scale = 0.02f + 0.08f * (float)rand() / 2147483648.0f;
+        Direction[0] = -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;
+        Direction[1] = -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;
+        Direction[2] = 2.0f + (4.0f - 2.0f) * (float)rand() / 2147483648.0f;
+        AGO_vCreatePart(0x10807, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        Pos[1] += 0.2f; Pos[2] += 0.2f;
+        AGO_vCreatePart(0x10807, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        Pos[1] -= 0.5f; Pos[2] += 0.1f;
+        AGO_vCreatePart(0x10807, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        break;
+    }
+
+    case 28:
+        CreateType28AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 29:
+        for (i = 0; i < 3; i++)
+        {
+            Pos[i] = ((float*)p_stPosition)[i] + 8.0f * ((float*)p_stDirection)[i] + (-4.0f + (4.0f - -4.0f) * (float)rand() / 2147483648.0f);
+            Direction[i] = -0.5f + (0.5f - -0.5f) * (float)rand() / 2147483648.0f;
+        }
+        scale = 0.12f + 0.07f * (float)rand() / 2147483648.0f;
+        AGO_vCreatePart(0x87007, Pos, Direction, 0.5f, scale, scale, hVisualMaterial);
+        break;
+
+    case 30:
+        scale = 0.5f + 0.3f * (float)rand() / 2147483648.0f;
+        AGO_vCreatePart(0x4500, Pos, NULL, parameter, scale, scale, hVisualMaterial);
+        for (Number = (int)parameter; Number; Number--)
+        {
+            Direction[0] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;
+            Direction[1] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;
+            Direction[2] = -0.2f + (3.0f - -0.2f) * (float)rand() / 2147483648.0f;
+            scale = 0.1f + (0.15f - 0.1f) * (float)rand() / 2147483648.0f;
+            AGO_vCreatePart(0x3001, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        }
+        break;
+
+    case 31:
+    {
+        static float NextBubble;
+
+        g_ffFrameTime = AGO_G_fCurrentTime; if (g_AGO_MustReinitStaticVars || NextBubble == 0.0f) NextBubble = AGO_G_fCurrentTime; if (NextBubble > AGO_G_fCurrentTime) return; NextBubble = 0.5f + AGO_G_fCurrentTime;
+        Direction[0] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;
+        Direction[1] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;
+        Direction[2] = 0.0f + (6.0f - 0.0f) * (float)rand() / 2147483648.0f;
+        scale = 0.35f + (0.65f - 0.35f) * (float)rand() / 2147483648.0f;
+        AGO_vCreatePart(0x1008, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        break;
+    }
+
+    case 32:
+        if (Direction[0] > 300.0f)
+            Direction[0] = 250.0f;
+        AGO_vCreatePart(0x10006200, Pos, Direction, Direction[0], Direction[2], Direction[2], hVisualMaterial);
+        break;
+
+    case 33:
+        fRadius = -parameter + (parameter - -parameter) * (float)rand() / 2147483648.0f;
+        Pos[0] -= fRadius * p_stDirection->xY;
+        Pos[1] += fRadius * p_stDirection->xX;
+        AGO_vCreatePart(0x3000, Pos, NULL, 2.0f, 2.0f, 2.0f, hVisualMaterial);
+        break;
+
+    case 35:
+        CreateType35AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 39:
+        scale = 0.5f * p_stDirection->xY;
+        AGO_vCreatePart(0x8001100, Pos, NULL, 0.01f, scale, scale, hVisualMaterial);
+        break;
+
+    case 42:
+        g_AGO_AnimTimeScale = 0.7f + (1.8f - 0.7f) * (float)rand() / 2147483648.0f;
+        scale = 0.2f + (0.8f - 0.2f) * (float)rand() / 2147483648.0f;
+        Pos[0] += -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;
+        Pos[1] += -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;
+        Direction[0] = -0.2f + (0.2f - -0.2f) * (float)rand() / 2147483648.0f;
+        Direction[1] = -0.2f + (0.2f - -0.2f) * (float)rand() / 2147483648.0f;
+        Direction[2] = 1.0f + (2.0f - 1.0f) * (float)rand() / 2147483648.0f;
+        AGO_vCreatePart(0x103, Pos, Direction, 0.01f, scale, scale, hVisualMaterial);
+        break;
+
+    case 45:
+        for (i = 9; i; i--)
+        {
+            Direction[0] = -2.0f * parameter + (2.0f * parameter - -2.0f * parameter) * (float)rand() / 2147483648.0f;
+            Direction[1] = -2.0f * parameter + (2.0f * parameter - -2.0f * parameter) * (float)rand() / 2147483648.0f;
+            Direction[2] = -0.2f * parameter + (6.0f * parameter - -0.2f * parameter) * (float)rand() / 2147483648.0f;
+            scale = 0.8f * parameter + (0.16f * parameter - 0.8f * parameter) * (float)rand() / 2147483648.0f;
+            AGO_vCreatePart(0x2501, Pos, Direction, parameter, scale, scale, hVisualMaterial);
+        }
+        break;
+
+    case 46:
+        g_AGO_AnimTimeScale = 0.7f;
+        AGO_vCreatePart(0x100, Pos, NULL, 0.01f, 0.5f * parameter, 0.5f * parameter, hVisualMaterial);
+        Pos[0] += -2.0f * parameter + (2.0f * parameter - -2.0f * parameter) * (float)rand() / 2147483648.0f;
+        Pos[1] += -2.0f * parameter + (2.0f * parameter - -2.0f * parameter) * (float)rand() / 2147483648.0f;
+        g_AGO_AnimTimeScale = 1.25f;
+        AGO_vCreatePart(0x100, Pos, NULL, 0.01f, 0.5f * parameter, 0.5f * parameter, hVisualMaterial);
+        break;
+
+    case 47:
+        AGO_vCreatePart(0x6400, Pos, NULL, 0.01f, parameter, parameter, hVisualMaterial);
+        break;
+
+    case 48:
+        if (parameter >= 9.0f)
+        {
+            AGO_vCreatePart(0x10002400, Pos, NULL, 0.1f, 0.7f * parameter, 0.7f * parameter, hVisualMaterial);
+        }
+        else
+        {
+            AGO_vCreatePart(0x10003400, Pos, NULL, 0.1f, 0.05f * parameter, 0.05f * parameter, hVisualMaterial);
+        }
+        break;
+
+    case 49:
+        p = AGO_vCreatePart(0x5a00, Pos, NULL, 255.0f, 0.7f * parameter, 0.7f * parameter, hVisualMaterial);
+        if (p)
+        {
+            p->Transparency = 300.0f;
+        }
+        break;
+
+    case 50:
+        p1 = AGO_gExtraParameter1; p1[0] = Pos[0]; p1[1] = Pos[1]; p1[2] = Pos[2];
+        p2 = AGO_gExtraParameter2; p2[0] = Direction[0]; p2[1] = Direction[1]; p2[2] = Direction[2];
+        AGO_gExtraFloatParameter = parameter;
+
+        AGO_gExtraMaterial = (int)hVisualMaterial;
+
+        AGO_bPrevAGOWasExtraParam = 1;
+
+        break;
+
+    case 51:
+        p = AGO_vCreatePart(0x50005000, Pos, NULL, 0.1f, 1.0f, 1.0f, hVisualMaterial);
+        if (p)
+        {
+            p->a3_fInitialPosition[0] = Direction[0]; p->a3_fInitialPosition[1] = Direction[1]; p->a3_fInitialPosition[2] = Direction[2];
+        }
+        break;
+
+    case 52:
+        CreateType52AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 55:
+        Number = (int)Direction[1] + 1;
+        scale = Direction[0];
+        for (; Number; Number--)
+        {
+            for (j = 0; j < 3; j++)
+                Direction[j] = -parameter + (parameter - -parameter) * (float)rand() / 2147483648.0f;
+            AGO_vCreatePart(0x3003, Pos, Direction, 1.0f, scale, scale, hVisualMaterial);
+        }
+        break;
+
+    case 60:
+        CreateType60AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 62:
+        CreateType62AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 65:
+        CreateType65AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    case 67:
+        CreateType67AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+
+    default:
+        AGO_vAddParticleContd(PartType, p_stPosition, p_stDirection, hVisualMaterial, parameter);
+        break;
+    }
+
+    if (PartType != 50)
+        AGO_bPrevAGOWasExtraParam = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO.c lines 4928–4974 */
@@ -4622,32 +5038,22 @@ void CreateType65AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDir
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-inline void AGO_vScaleDiffInline(float* _pDst, float _xScale, float _xA, float _xB)
-{
-    *_pDst = _xScale * (_xA - _xB);
-}
-
-inline float AGO_xAddScaledInline(float* _pA, float _xScale, float* _pB)
-{
-    return *_pA + _xScale * *_pB;
-}
-
 void CreateType21AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)
 {
     AGO_Part_* p;
     float fTemp;
-    int i;
+    int i, j;
     float Pos[3];
     float Direction[3];
     static float Offset;
 
     fTemp = 1.0f / parameter;
 
-    AGO_vScaleDiffInline(&Direction[0], fTemp, p_stDirection->xX, p_stPosition->xX); AGO_vScaleDiffInline(&Direction[1], fTemp, p_stDirection->xY, p_stPosition->xY); AGO_vScaleDiffInline(&Direction[2], fTemp, p_stDirection->xZ, p_stPosition->xZ);
+    for (j = 0; j < 3; j++) Direction[j] = fTemp * (((float*)p_stDirection)[j] - ((float*)p_stPosition)[j]);
 
     for (i = 0; i < parameter; i++)
     {
-        Pos[0] = AGO_xAddScaledInline(&p_stPosition->xX, (float)i + Offset, &Direction[0]); Pos[1] = AGO_xAddScaledInline(&p_stPosition->xY, (float)i + Offset, &Direction[1]); Pos[2] = AGO_xAddScaledInline(&p_stPosition->xZ, (float)i + Offset, &Direction[2]);
+        for (j = 0; j < 3; j++) Pos[j] = ((float*)p_stPosition)[j] + ((float)i + Offset) * Direction[j];
 
         p = AGO_vCreatePart(0x6000, Pos, NULL, 2.0f, 0.7f, 0.7f, hVisualMaterial);
         if (p) p->Transparency = 400.0f;
@@ -4844,7 +5250,7 @@ void CreateType35AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDir
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CreateType62AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial)
+void CreateType62AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)
 {
     float* p1;
     float* p2;
@@ -4898,7 +5304,7 @@ void CreateType62AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDir
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CreateType60AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial)
+void CreateType60AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)
 {
     float* p1;
     float* p2;
@@ -4952,7 +5358,7 @@ void CreateType60AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDir
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CreateType52AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial)
+void CreateType52AGO(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)
 {
     float* p1;
     float* p2;
@@ -7220,7 +7626,7 @@ void AGO_vReDisplayAllPartsREAL(GLD_tdstViewportAttributes_* _p_stViewport)
                 if (((int*)&g_AGO[0].pTempTexture)[i * 36] == CurrentTexture)
                 {
                     AGO_vDisplayPart(i, _p_stViewport);
-                    ((unsigned int*)&g_AGO[0].Displayed)[i * 36] = 1;
+                    ((unsigned int*)&g_AGO[0].Displayed)[(int)i * 36] = 1;
                 }
                 else if (NextTexture == -1 && !((unsigned int*)&g_AGO[0].Displayed)[i * 36])
                 {

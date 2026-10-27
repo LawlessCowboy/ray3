@@ -3300,11 +3300,14 @@ inline float PS2gl_xSqrt(float x)
 
 void PS2glComputeBSfromBB(float* pfvBS, float* pBB)
 {
+    float* pfFirst;
     float fHeight;
     float fDepth;
     float fWidth;
 
-    fWidth = 0.5f * (pBB[1] - pBB[0]);
+    /* Not original source, needs cleaning up: found by the permuter. Reading
+       pBB[0] through a pointer local swaps the f5/f6 temporaries as retail has them. */
+    fWidth = 0.5f * (pBB[1] - (*(pfFirst = &pBB[0])));
     fHeight = 0.5f * (pBB[3] - pBB[2]);
     fDepth = 0.5f * (pBB[5] - pBB[4]);
     pfvBS[0] = pBB[0] + fWidth;

@@ -3969,8 +3969,12 @@ void GLI_vRemoveAllInstances(GEO_tdstGeometricObject_* pObj)
     pSDC = pObj->pSDC;
     if (pSDC != NULL)
     {
-        if ((pInstanceList = pSDC->pInstanceList) != NULL)
+        /* Not original source, needs cleaning up: a switch with its default body
+         * first keeps every conditional branch delay slot in this function empty,
+         * as retail has them. */
+        switch ((int)(pInstanceList = pSDC->pInstanceList))
         {
+        default:
             if (pInstanceList != NULL)
             {
                 while (pInstanceList->m_NbInstances)
@@ -3982,6 +3986,9 @@ void GLI_vRemoveAllInstances(GEO_tdstGeometricObject_* pObj)
                 delete pInstanceList;
                 pSDC->pInstanceList = NULL;
             }
+            break;
+        case 0:
+            break;
         }
     }
 }
@@ -4012,8 +4019,12 @@ void GLI_vRemoveInstanceIfExists(GEO_tdstGeometricObject_* pObj)
     pSDC = pObj->pSDC;
     if (pSDC != NULL)
     {
-        if ((pInstanceList = pSDC->pInstanceList) != NULL)
+        /* Not original source, needs cleaning up: a switch with its default body
+         * first keeps every conditional branch delay slot in this function empty,
+         * as retail has them. */
+        switch ((int)(pInstanceList = pSDC->pInstanceList))
         {
+        default:
             if (pInstanceList != NULL)
             {
                 pInstanceList->SearchAndDestroyInstanceForThisSPO(pSPO);
@@ -4023,6 +4034,9 @@ void GLI_vRemoveInstanceIfExists(GEO_tdstGeometricObject_* pObj)
                     pSDC->pInstanceList = NULL;
                 }
             }
+            break;
+        case 0:
+            break;
         }
     }
 }

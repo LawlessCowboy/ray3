@@ -1581,6 +1581,19 @@ inline unsigned char MTH3D_M_bIsNullVector(MTH3D_tdstVector_* p_stVector)
     return (MTH_xAbs(p_stVector->xX) < 0.001f) && (MTH_xAbs(p_stVector->xY) < 0.001f) && (MTH_xAbs(p_stVector->xZ) < 0.001f);
 }
 
+#define MTH3D_M_vCopyVector(p_stDst, p_stSrc) { (p_stDst)->xX = (p_stSrc)->xX; (p_stDst)->xY = (p_stSrc)->xY; (p_stDst)->xZ = (p_stSrc)->xZ; }
+#define MTH3D_M_vMulScalarVector(p_stDst, xScalar, p_stSrc) { (p_stDst)->xX = (xScalar) * (p_stSrc)->xX; (p_stDst)->xY = (xScalar) * (p_stSrc)->xY; (p_stDst)->xZ = (xScalar) * (p_stSrc)->xZ; }
+#define MTH3D_M_vAddVector(p_stDst, p_stA, p_stB) { (p_stDst)->xX = (p_stA)->xX + (p_stB)->xX; (p_stDst)->xY = (p_stA)->xY + (p_stB)->xY; (p_stDst)->xZ = (p_stA)->xZ + (p_stB)->xZ; }
+
+/* sqrt.s has no C form under MWCC; only that instruction is asm. */
+inline float MTH_xSqrt(float xValue) { float xResult; asm { sqrt.s xResult, xValue } return xResult; }
+
+/* mula.s/madda.s/madd.s have no C form under MWCC; only those instructions are asm. */
+inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2) { float _r; asm { mula.s _x1, _x2 } asm { madda.s _y1, _y2 } asm { madd.s _r, _z1, _z2 } return _r; }
+inline float MTH_xSqr3(float _x, float _y, float _z) { float _r; asm { mula.s _x, _x } asm { madda.s _y, _y } asm { madd.s _r, _z, _z } return _r; }
+
+inline unsigned char MEC_fn_bIn(float x, float b) { unsigned char r; if (x > -b && x < b) r = 1; else r = 0; return r; }
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1263–1269 */
 /* addr: 0x00311700  size: 200 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1657,10 +1670,57 @@ void MEC_fn_vDeleteHangingObstacle(int lObstacle, DNM_stMecObstacle* p_stObstacl
     DNM_stMecObstacle* p_stGroundObstacle;
     DNM_stMecObstacle* p_stTmpObstacle;
     int lCounter;
-    /* TODO: decompile from asm/... */
+
+    xZ = 3.4028231e+38f;
+    p_stGroundObstacle = NULL;
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        p_stTmpObstacle = &p_stObstacle[lCounter];
+        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99)
+            && ((p_stTmpObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0)
+            && p_stTmpObstacle->m_stContact.xZ < xZ)
+        {
+            p_stGroundObstacle = p_stTmpObstacle;
+            xZ = p_stTmpObstacle->m_stContact.xZ;
+        }
+    }
+
+    if ((unsigned char)(p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != NULL))
+        xHandZPosition = p_stDynamic->m_tdstDynamicsComplexBlock.m_xHangingLimit + p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+    else
+        xHandZPosition = p_stDynamic->m_tdstDynamicsComplexBlock.m_xHangingLimit;
+
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        p_stTmpObstacle = &p_stObstacle[lCounter];
+        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))
+        {
+            if (!((p_stTmpObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0)
+                && p_stTmpObstacle->m_xRate <= 1.0f
+                && !(unsigned char)((p_stTmpObstacle->m_xCollidedEntity == 7 || p_stTmpObstacle->m_xCollidedEntity == 8) ? 1 : 0))
+            {
+                if (p_stGroundObstacle != NULL)
+                {
+                    if (MTH_xDot3(p_stGroundObstacle->m_stNorm.xX, p_stTmpObstacle->m_stContact.xX - p_stGroundObstacle->m_stContact.xX, p_stGroundObstacle->m_stNorm.xY, p_stTmpObstacle->m_stContact.xY - p_stGroundObstacle->m_stContact.xY, p_stGroundObstacle->m_stNorm.xZ, p_stTmpObstacle->m_stContact.xZ - p_stGroundObstacle->m_stContact.xZ) < 0.005f)
+                        p_stTmpObstacle->m_xCollidedEntity = 99;
+                }
+                else if (p_stTmpObstacle->m_stContact.xZ <= xHandZPosition)
+                    p_stTmpObstacle->m_xCollidedEntity = 99;
+            }
+            else
+                p_stTmpObstacle->m_xCollidedEntity = 99;
+        }
+    }
 }
 
 #define GMT_C_InvalidCollideMaterial ((GMT_tdstCollideMaterial_*)-1)
+
+inline unsigned char MEC_fn_bMaterialHasType(GMT_tdstGameMaterial_* hMaterial, unsigned short uwType)
+{
+    GMT_tdstCollideMaterial_* hCollideMaterial = hMaterial->hCollideMaterial;
+    return (hCollideMaterial != GMT_C_InvalidCollideMaterial) && ((hCollideMaterial->xIdentifier & uwType) == uwType);
+}
+
 
 /* Retail evaluates this test with its own collide-material temporary, as an
  * inlined helper (the original name is not in the debug data). */
@@ -1765,12 +1825,33 @@ void MEC_fn_vDeleteBaseBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MAT_fn_vGetRotationVectorBaseJ(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVector);
+
 void MEC_fn_vDeleteClimbBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector)
 {
     MTH3D_tdstVector_ stY;
-    DNM_stMecObstacle* p_stCurrentObstacle;
     int lCounter;
-    /* TODO: decompile from asm/... */
+    DNM_stMecObstacle* p_stCurrentObstacle;
+    float xDot;
+
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        p_stCurrentObstacle = &p_stObstacle[lCounter];
+        if ((unsigned char)(p_stCurrentObstacle->m_xCollidedEntity != 99))
+        {
+            MAT_fn_vGetRotationVectorBaseJ(&p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix, &stY);
+            xDot = MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, stY.xX, p_stCurrentObstacle->m_stNorm.xY, stY.xY, p_stCurrentObstacle->m_stNorm.xZ, stY.xZ);
+            if (MEC_fn_bMaterialHasType(p_stCurrentObstacle->hCollidedMaterial, 0x40) && !MEC_fn_bMaterialHasType(p_stCurrentObstacle->hCollidedMaterial, 0x8000))
+            {
+                if (xDot < -0.707f)
+                    p_stCurrentObstacle->m_xCollidedEntity = 99;
+            }
+            else if (xDot < -0.95f)
+                p_stCurrentObstacle->m_xCollidedEntity = 99;
+            else if (MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, p_stVector->xX, p_stCurrentObstacle->m_stNorm.xY, p_stVector->xY, p_stCurrentObstacle->m_stNorm.xZ, p_stVector->xZ) > 0.001f)
+                p_stCurrentObstacle->m_xCollidedEntity = 99;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 1030–1058 */
@@ -1802,9 +1883,26 @@ void MEC_fn_vDeleteClimbBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle,
  */
 void MEC_fn_vDeleteGiBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector)
 {
-    DNM_stMecObstacle* p_stCurrentObstacle;
     int lCounter;
-    /* TODO: decompile from asm/... */
+    DNM_stMecObstacle* p_stCurrentObstacle;
+
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        p_stCurrentObstacle = &p_stObstacle[lCounter];
+        if ((unsigned char)(p_stCurrentObstacle->m_xCollidedEntity != 99))
+        {
+            if (MEC_fn_bMaterialHasType(p_stCurrentObstacle->hCollidedMaterial, 0x20) && !MEC_fn_bMaterialHasType(p_stCurrentObstacle->hCollidedMaterial, 0x8000))
+            {
+                if (MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, 0.0f, p_stCurrentObstacle->m_stNorm.xY, 0.0f, p_stCurrentObstacle->m_stNorm.xZ, 1.0f) > 0.0f)
+                    p_stCurrentObstacle->m_xCollidedEntity = 99;
+            }
+            else if ((unsigned char)((p_stCurrentObstacle->m_stNorm.xZ < -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0))
+                p_stCurrentObstacle->m_xCollidedEntity = 99;
+            else if (MEC_fn_bIn(p_stCurrentObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
+                && MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, p_stVector->xX, p_stCurrentObstacle->m_stNorm.xY, p_stVector->xY, p_stCurrentObstacle->m_stNorm.xZ, p_stVector->xZ) > 0.0f)
+                p_stCurrentObstacle->m_xCollidedEntity = 99;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 988–1022 */
@@ -1853,9 +1951,35 @@ void MEC_fn_vDeleteGiBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, DN
  */
 void MEC_fn_vDeleteOnGroundBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector, DNM_stMecObstacle* p_stGroundObstacle)
 {
-    DNM_stMecObstacle* p_stCurrentObstacle;
     int lCounter;
-    /* TODO: decompile from asm/... */
+    DNM_stMecObstacle* p_stCurrentObstacle;
+    MTH3D_tdstVector_ stVector;
+
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        p_stCurrentObstacle = &p_stObstacle[lCounter];
+        if ((unsigned char)(p_stCurrentObstacle->m_xCollidedEntity != 99))
+        {
+            if (MEC_fn_bIn(p_stCurrentObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope))
+            {
+                if (MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, p_stVector->xX, p_stCurrentObstacle->m_stNorm.xY, p_stVector->xY, p_stCurrentObstacle->m_stNorm.xZ, p_stVector->xZ) <= 0.0f)
+                {
+                    stVector.xX = p_stCurrentObstacle->m_stContact.xX - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX; stVector.xY = p_stCurrentObstacle->m_stContact.xY - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY; stVector.xZ = p_stCurrentObstacle->m_stContact.xZ - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ;
+                    stVector.xX -= p_stCurrentObstacle->m_xZoneRadius * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xX; stVector.xY -= p_stCurrentObstacle->m_xZoneRadius * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xY; stVector.xZ -= p_stCurrentObstacle->m_xZoneRadius * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xZ;
+                    if (MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, stVector.xX, p_stCurrentObstacle->m_stNorm.xY, stVector.xY, p_stCurrentObstacle->m_stNorm.xZ, stVector.xZ) > 0.0f)
+                        p_stCurrentObstacle->m_xCollidedEntity = 99;
+                }
+                else
+                    p_stCurrentObstacle->m_xCollidedEntity = 99;
+            }
+            else if (!((p_stCurrentObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0) && p_stGroundObstacle)
+            {
+                stVector.xX = p_stCurrentObstacle->m_stContact.xX - p_stGroundObstacle->m_stContact.xX; stVector.xY = p_stCurrentObstacle->m_stContact.xY - p_stGroundObstacle->m_stContact.xY; stVector.xZ = p_stCurrentObstacle->m_stContact.xZ - p_stGroundObstacle->m_stContact.xZ;
+                if (MTH_xDot3(p_stGroundObstacle->m_stNorm.xX, stVector.xX, p_stGroundObstacle->m_stNorm.xY, stVector.xY, p_stGroundObstacle->m_stNorm.xZ, stVector.xZ) < 0.7f)
+                    p_stCurrentObstacle->m_xCollidedEntity = 99;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 897–921 */
@@ -2461,12 +2585,40 @@ unsigned char fn_bIsTheSameCollidedEdge(int i, MTH3D_tdstVector_* pV1, MTH3D_tds
  */
 void MEC_fn_vDeleteUnderGroundWall(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stGroundObstacle)
 {
-    MTH3D_tdstVector_ stContact;
+    union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } stContact;
     MTH3D_tdstVector_* p_stNormal;
     DNM_stMecObstacle* p_stGroundEdge;
     DNM_stMecObstacle* p_stTmpObstacle;
     int lCounter;
-    /* TODO: decompile from asm/... */
+
+    if (p_stGroundObstacle == NULL)
+        return;
+
+    p_stGroundEdge = NULL;
+    for (lCounter = 0; lCounter < lObstacle && p_stGroundEdge == NULL; lCounter++)
+    {
+        p_stTmpObstacle = &p_stObstacle[lCounter];
+        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99)
+            && ((p_stTmpObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0)
+            && (unsigned char)((p_stTmpObstacle->m_xCollidedEntity == 7 || p_stTmpObstacle->m_xCollidedEntity == 8) ? 1 : 0)
+            && p_stTmpObstacle->m_stContact.xZ <= p_stGroundObstacle->m_stContact.xZ)
+            p_stGroundEdge = p_stTmpObstacle;
+    }
+
+    p_stNormal = &p_stGroundObstacle->m_stNorm;
+    stContact.a3_ulWord[0] = ((unsigned int*)&(p_stGroundEdge ? p_stGroundEdge : p_stGroundObstacle)->m_stContact)[0];
+    stContact.a3_ulWord[1] = ((unsigned int*)&(p_stGroundEdge ? p_stGroundEdge : p_stGroundObstacle)->m_stContact)[1];
+    stContact.a3_ulWord[2] = ((unsigned int*)&(p_stGroundEdge ? p_stGroundEdge : p_stGroundObstacle)->m_stContact)[2];
+
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        p_stTmpObstacle = &p_stObstacle[lCounter];
+        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99) && MEC_fn_bIn(p_stTmpObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope))
+        {
+            if (MTH_xDot3(p_stTmpObstacle->m_stContact.xX - stContact.stVector.xX, p_stNormal->xX, p_stTmpObstacle->m_stContact.xY - stContact.stVector.xY, p_stNormal->xY, p_stTmpObstacle->m_stContact.xZ - stContact.stVector.xZ, p_stNormal->xZ) <= 0.0f)
+                p_stTmpObstacle->m_xCollidedEntity = 99;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 248–288 */
@@ -2506,12 +2658,42 @@ void MEC_fn_vDeleteUnderGroundWall(int lObstacle, DNM_stMecObstacle* p_stObstacl
  */
 void MEC_fn_vDeleteWallEdge(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic)
 {
-    unsigned char bRemoveEdge;
+    unsigned char bRemoveEdge = 1;
     DNM_stMecObstacle* p_stTmpObstacle1;
     DNM_stMecObstacle* p_stTmpObstacle;
     int lCounter1;
     int lCounter;
-    /* TODO: decompile from asm/... */
+
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        p_stTmpObstacle = &p_stObstacle[lCounter];
+        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99)
+            && MEC_fn_bIn(p_stTmpObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
+            && p_stTmpObstacle->m_xCollidedEntity == 8
+            && !(unsigned char)((p_stTmpObstacle->m_eType & 4) == 4))
+        {
+            for (lCounter1 = 0; lCounter1 < lObstacle; lCounter1++)
+            {
+                if (lCounter1 != lCounter)
+                {
+                    p_stTmpObstacle1 = &p_stObstacle[lCounter1];
+                    if ((unsigned char)(p_stTmpObstacle1->m_xCollidedEntity != 99)
+                        && (unsigned char)((p_stTmpObstacle1->m_xCollidedEntity == 7 || p_stTmpObstacle1->m_xCollidedEntity == 8) ? 1 : 0)
+                        && MEC_fn_bIn(p_stTmpObstacle1->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope))
+                    {
+                        MTH3D_tdstVector_ stVector;
+                        stVector.xX = p_stTmpObstacle->m_stContact.xX - p_stTmpObstacle1->m_stContact.xX;
+                        stVector.xY = p_stTmpObstacle->m_stContact.xY - p_stTmpObstacle1->m_stContact.xY;
+                        stVector.xZ = p_stTmpObstacle->m_stContact.xZ - p_stTmpObstacle1->m_stContact.xZ;
+                        if (MTH3D_M_bIsNullVector(&stVector))
+                            bRemoveEdge = 0;
+                    }
+                }
+            }
+            if (bRemoveEdge)
+                p_stTmpObstacle->m_xCollidedEntity = 99;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 213–239 */
@@ -2543,14 +2725,45 @@ void MEC_fn_vDeleteWallEdge(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
 void MEC_fn_vComputeCollisionTranslation(int lObstacle, DNM_stMecObstacle* p_stObstacle, MTH3D_tdstVector_* p_stMove)
 {
     float xNorm;
     MTH3D_tdstVector_ stVector;
-    DNM_stMecObstacle* p_stTmpObstacle;
-    float xRate;
     int lCounter;
-    /* TODO: decompile from asm/... */
+    float xRate;
+    DNM_stMecObstacle* p_stTmpObstacle;
+
+    for (lCounter = 0; lCounter < lObstacle; lCounter++)
+    {
+        p_stTmpObstacle = &p_stObstacle[lCounter];
+        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))
+        {
+            xRate = p_stTmpObstacle->m_xRate;
+            if (xRate > 1.0f)
+            {
+                p_stTmpObstacle->m_xRate = 1.0f;
+                xNorm = MTH_xSqrt(MTH_xSqr3(p_stTmpObstacle->m_stZoneMove.xX, p_stTmpObstacle->m_stZoneMove.xY, p_stTmpObstacle->m_stZoneMove.xZ));
+                if (xNorm != 0.0f)
+                {
+                    MTH3D_M_vMulScalarVector(&stVector, 1.0f / xNorm, &p_stTmpObstacle->m_stZoneMove);
+                }
+                else
+                {
+                    stVector = p_stTmpObstacle->m_stZoneMove;
+                }
+                MTH3D_M_vMulScalarVector(&stVector, p_stTmpObstacle->m_xZoneRadius, &stVector);
+                MTH3D_M_vAddVector(&stVector, &stVector, &p_stTmpObstacle->m_stZonePosition);
+                *(int*)&p_stTmpObstacle->m_stContact.xX = *(int*)&stVector.xX;
+                *(int*)&p_stTmpObstacle->m_stContact.xY = *(int*)&stVector.xY;
+                *(int*)&p_stTmpObstacle->m_stContact.xZ = *(int*)&stVector.xZ;
+            }
+            else if (xRate >= 0.0f)
+            {
+                MTH3D_M_vMulScalarVector(&p_stTmpObstacle->m_stTranslation, 1.0f - p_stTmpObstacle->m_xRate, p_stMove);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECTools.c lines 201–209 */

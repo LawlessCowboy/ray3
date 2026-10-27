@@ -43355,6 +43355,247 @@
       "status": "MISMATCH",
       "target_size": 4608,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ddf10",
+      "candidate_size": 872,
+      "first_difference": 472,
+      "implementation": "void AGO_vReDisplayAllPartsREAL(GLD_tdstViewportAttributes_* _p_stViewport)\n{\n    int NextTexture;\n    int CurrentTexture;\n    int Start;\n    float AlphaTemp;\n    tdstFootStep_* pFootStep;\n    unsigned int i;\n\n    AGO_vClearCop0Register24();\n    ChangeClippingMode();\n    GLI_vPrepareDisplayingAGOs(_p_stViewport);\n    if (SCT_g_DrawingMirrored == 0 && fn_bIsEngineInPause() == 0 && EngineIsFrozen() == 0)\n    {\n        GLI_vRemoveLights();\n    }\n    GLI_g_AnimatedTextureToUse = 0;\n    for (pFootStep = AGO_g_FootSteps, i = 0; i < AGO_g_NbFootSteps; i++, pFootStep++)\n    {\n        if (pFootStep->fAlpha > 0.0f)\n        {\n            GLI_vSetGlobalAlpha(255.0f * pFootStep->fAlpha);\n            GLI_vDrawWorldOrthoPlanarSprite((MTH3D_tdstVector_*)pFootStep, (GLI_tdstMaterial_*)pFootStep->hVisualMaterial, 0.75f, 0.75f, _p_stViewport, 1, (MTH3D_tdstVector_*)&pFootStep->Direction2, (MTH3D_tdstVector_*)&pFootStep->Direction1, 0);\n        }\n    }\n    GLI_vSetGlobalAlpha(255.0f);\n    GLI_g_AnimatedTextureToUse = 0;\n    AGO2_vDisplayAllParts(_p_stViewport);\n    AGO3_vDisplayAll(_p_stViewport);\n    GLI_v_DisplayTobies(_p_stViewport);\n    GLI_vEndWorldSprites();\n    if (LUM_g_NumberOfLums != 0)\n    {\n        GLI_g_DontRefreshAnimated = 1;\n        GLI_g_AnimatedTextureToUse = GLI_xRefreshAnimatedTextureIfNeeded(LUM_g_pMaterial);\n        GLI_vSetGlobalAlpha(255.0f);\n        for (i = 0; i < LUM_g_NumberOfLums; i++)\n        {\n            if (LUM_g_LumActivity[i] != 0)\n            {\n                GLI_vDrawWorldSpriteOpt((MTH3D_tdstVector_*)LUM_g_LumPositions[i], (GLI_tdstMaterial_*)LUM_g_pMaterial, 1.0f, 1.0f, _p_stViewport, 1);\n            }\n        }\n        GLI_vEndWorldSprites();\n    }\n    GLI_g_DontRefreshAnimated = 0;\n    GLI_g_AnimatedTextureToUse = 0;\n    if (g_ulNumberOfAgos == 0)\n    {\n        AGO_vDisplayTriangles(_p_stViewport);\n        AGO_vClearCop0Register24();\n        return;\n    }\n    AlphaTemp = GLI_vGetGlobalAlpha();\n    AGO_g_pCurrentMaterial = 0;\n    g_bTakeCareOfAnimationCoordination = 1;\n    AGO_g_b_DisplayingAGOs = 1;\n    if (g_ulNumberOfAgos != 0)\n    {\n        Start = 0;\n        for (i = 0; i < g_ulNumberOfAgos; i++)\n            ((unsigned int*)&g_AGO[0].Displayed)[i * 36] = 0;\n        do\n        {\n            NextTexture = -1;\n            CurrentTexture = ((int*)&g_AGO[0].pTempTexture)[Start * 36];\n            GLI_vEndWorldSprites();\n            GLI_g_AnimatedTextureToUse = CurrentTexture;\n            GLI_g_DontRefreshAnimated = 1;\n            for (i = Start; i < g_ulNumberOfAgos; i++)\n            {\n                if (((int*)&g_AGO[0].pTempTexture)[i * 36] == CurrentTexture)\n                {\n                    AGO_vDisplayPart(i, _p_stViewport);\n                    ((unsigned int*)&g_AGO[0].Displayed)[(int)i * 36] = 1;\n                }\n                else if (NextTexture == -1 && !((unsigned int*)&g_AGO[0].Displayed)[i * 36])\n                {\n                    NextTexture = ((int*)&g_AGO[0].pTempTexture)[i * 36];\n                    Start = i;\n                }\n            }\n        } while (NextTexture != -1);\n    }\n    GLI_vEndWorldSprites();\n    GLI_g_DontRefreshAnimated = 0;\n    GLI_g_AnimatedTextureToUse = 0;\n    g_bTakeCareOfAnimationCoordination = 0;\n    AGO_g_pCurrentMaterial = 0;\n    AGO_vDisplayTriangles(_p_stViewport);\n    AGO_g_b_DisplayingAGOs = 0;\n    AGO_g_pCurrentMaterial = 0;\n    GLI_vSetGlobalAlpha(AlphaTemp);\n    g_AGO_MustReinitStaticVars = 0;\n    AGO_vClearCop0Register24();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vReDisplayAllPartsREAL",
+      "reason": "872/872 (3.0.3). Writing the post-call store as ((unsigned int*)&g_AGO[0].Displayed)[(int)i * 36] = 1 stops MWCC keeping i*144 live in an extra s-register (frame now 0x70 like retail). Residual is register/scheduling only: retail keeps i in s1 for both the clear loop and the batching loop (ours uses a0 for the clear loop, so s1..s4 roles shift) and loads g_ulNumberOfAgos after the TakeCare/DisplayingAGOs/pCurrentMaterial stores. Statement reorders per line map and scoped opt_* pragmas did not help; permuter candidate.",
+      "size": 872,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 872,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001d15a0",
+      "candidate_size": 808,
+      "first_difference": 64,
+      "implementation": "/* Not 16-byte aligned in this unit: retail AGO_vCreateFootStep copies a\n   vector through a pointer with four lwc1 then four swc1, where an\n   aligned(16) type gives lq/sq. */\nstruct MTH4D_tdstVector_ {\n    float xX; /* +0x0 */\n    float xY; /* +0x4 */\n    float xZ; /* +0x8 */\n    float xW; /* +0xc */\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vCreateFootStep",
+      "reason": "808/800 (3.0.3). Prologue Normal copy and both struct copies now exact: MTH4D_tdstVector_ is NOT aligned(16) in AGO.c (pointer copies are 4 lwc1 + 4 swc1; local-to-local stTmp->Temp still lq/sq), with tdstFootStep_ aligned(16) to keep its 64-byte stride. Residual: in the cross product's temp path retail fuses the Y component into mula.s/msub.s holding A.x in f6; ours reuses f2 for A.x (reload between the muls) so Y becomes mul/mul/sub, and the stTmp.xW=1.0f lui/sw plus &stTmp addiu are scheduled early (+8 bytes over the two cross products). W-first, pointer-temp and helper-call variants unchanged.",
+      "size": 800,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 800,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001d5f00",
+      "candidate_size": 7592,
+      "first_difference": 124,
+      "implementation": "void AGO_vAddParticle(unsigned int PartType, MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector_* p_stDirection, void* hVisualMaterial, float parameter)\n{\n    int j;\n    AGO_Part_* p;\n    float* p1;\n    float* p2;\n    float* param0;\n    float fNorm;\n    float angle;\n    int Number;\n    float cos1;\n    float sin1;\n    float fRadius;\n    float scale;\n    int i;\n    float Pos[3];\n    float Direction[3];\n    static float NextBubble;\n\n    g_AGO_AnimTimeScale = 1.0f;\n    g_AGO_AnimTimeLag = 0;\n\n    if (!HasAGO2BeenInit)\n    {\n        HasAGO2BeenInit = 1;\n        AGO2_vFirstInitAndRegisterAGO2Types();\n    }\n\n    if (PartType >= 10000)\n    {\n        if (AGO_bPrevAGOWasExtraParam)\n        {\n            AGO3_vAddPart(PartType - 10000, p_stPosition, p_stDirection, (GLI_tdstMaterial_*)hVisualMaterial, parameter, AGO_gExtraFloatParameter, (MTH3D_tdstVector_*)AGO_gExtraParameter1, (MTH3D_tdstVector_*)AGO_gExtraParameter2, (MTH3D_tdstVector_*)AGO_gExtraMaterial);\n            AGO_bPrevAGOWasExtraParam = 0;\n        }\n        else\n        {\n            AGO3_vAddPart(PartType - 10000, p_stPosition, p_stDirection, (GLI_tdstMaterial_*)hVisualMaterial, parameter, 0.0f, NULL, NULL, NULL);\n        }\n        return;\n    }\n\n    p1 = (float*)&Pos; p1[0] = p_stPosition->xX; p1[1] = p_stPosition->xY; p1[2] = p_stPosition->xZ;\n    p2 = (float*)&Direction; p2[0] = p_stDirection->xX; p2[1] = p_stDirection->xY; p2[2] = p_stDirection->xZ;\n\n    if (EngineIsFrozen() || fn_bIsEngineInPause())\n    {\n        if (PartType != 110 && PartType != 125 && PartType != 120 && PartType != 50 && PartType != 4600 && PartType != 4601)\n            return;\n    }\n\n    switch (PartType)\n    {\n    case 1:\n        parameter += 1.0f;\n        AGO_vCreatePart(0x10000, Pos, NULL, 2.0f, parameter, parameter, hVisualMaterial);\n        break;\n\n    case 2:\n        parameter += 1.0f;\n        AGO_vCreatePart(0x10000, Pos, NULL, Direction[0], parameter, parameter, hVisualMaterial);\n        break;\n\n    case 3:\n        CreateType3AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 4:\n    {\n        float a3_fSpeed[3];\n        float a3_fPos[3];\n\n        p1 = (float*)&a3_fPos; p1[0] = p_stPosition->xX; p1[1] = p_stPosition->xY; p1[2] = p_stPosition->xZ; a3_fSpeed[0] = 0.0f; a3_fSpeed[1] = 0.0f; a3_fSpeed[2] = 0.0f; g_AGO_AnimTimeScale = p_stDirection->xZ; p = AGO_vCreatePart(0x100705, a3_fPos, a3_fSpeed, parameter, p_stDirection->xX, p_stDirection->xX, hVisualMaterial);\n        if (p) p->a2_fScaleSpeed[0] = p->a2_fScaleSpeed[1] = p_stDirection->xY;\n        break;\n    }\n\n    case 5:\n        CreateType5AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 6:\n        CreateType6AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 7:\n        g_AGO_PloufMaterial = (int)hVisualMaterial;\n        g_ffFrameTime = AGO_G_fCurrentTime;\n        if (g_fNextPlouf == 0.0f)\n            g_fNextPlouf = AGO_G_fCurrentTime;\n        if (g_fNextPlouf > AGO_G_fCurrentTime)\n            return;\n        g_fNextPlouf = 0.2f + AGO_G_fCurrentTime;\n        if (Direction[0] > 300.0f)\n            Direction[0] = 250.0f;\n        if (g_DoSmallPlouf)\n        {\n            AGO_vCreatePart(0x10003100, Pos, Direction, Direction[0], Direction[2], Direction[2], hVisualMaterial);\n        }\n        else\n        {\n            AGO_vCreatePart(0x10003300, Pos, Direction, Direction[0], Direction[2], Direction[2], hVisualMaterial);\n        }\n        break;\n\n    case 8:\n        /* TODO: retail also passes parameter in f12, but CreateType8AGO only\n           matches with its three-argument definition. */\n        CreateType8AGO(p_stPosition, p_stDirection, hVisualMaterial);\n        break;\n\n    case 9:\n        scale = 0.5f + 0.3f * (float)rand() / 2147483648.0f;\n        AGO_vCreatePart(0x4500, Pos, NULL, parameter, scale, scale, hVisualMaterial);\n        for (i = 8; i; i--)\n        {\n            Direction[0] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;\n            Direction[1] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;\n            Direction[2] = -0.2f + (6.0f - -0.2f) * (float)rand() / 2147483648.0f;\n            scale = 0.19f + 0.16f * (float)rand() / 2147483648.0f;\n            AGO_vCreatePart(0x3001, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        }\n        break;\n\n    case 10:\n        g_ffFrameTime = AGO_G_fCurrentTime; if (g_AGO_MustReinitStaticVars || NextBubble == 0.0f) NextBubble = AGO_G_fCurrentTime; if (NextBubble > AGO_G_fCurrentTime) return; NextBubble = 0.1f + AGO_G_fCurrentTime;\n        Direction[0] = 0.0f; Direction[1] = 0.0f; Direction[2] = 0.0f;\n        AGO_vCreatePart(0x1605, Pos, Direction, parameter, 0.4f, 0.4f, hVisualMaterial);\n        break;\n\n    case 11:\n        fRadius = p_stDirection->xX;\n        Number = (int)p_stDirection->xY;\n        for (i = 0; i < Number; i++)\n        {\n            angle = 6.28f * (float)i / (float)Number;\n            cos1 = PS2_dl_cosf(angle);\n            sin1 = PS2_dl_sinf(angle);\n            g_AGO_AnimTimeScale = 0.2f + 2.8f * (float)rand() / 2147483648.0f;\n            Pos[0] = p_stPosition->xX + fRadius * cos1; Pos[1] = p_stPosition->xY + fRadius * sin1; Pos[2] = p_stPosition->xZ;\n            Direction[0] = fRadius * cos1; Direction[1] = fRadius * sin1; Direction[2] = 1.53f;\n            scale = 0.2f + (1.2f - 0.2f) * (float)rand() / 2147483648.0f;\n            AGO_vCreatePart(0x3303, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        }\n        break;\n\n    case 12:\n        for (i = 8; i; i--)\n        {\n            Direction[0] = p_stDirection->xX * (-2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f);\n            Direction[1] = p_stDirection->xX * (-2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f);\n            Direction[2] = p_stDirection->xX * (-0.2f + (6.0f - -0.2f) * (float)rand() / 2147483648.0f);\n            AGO_vCreatePart(0xb001, Pos, Direction, p_stDirection->xX, parameter, parameter, hVisualMaterial);\n        }\n        break;\n\n    case 13:\n        CreateType13AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 14:\n    {\n        float a3_fSpeed[3];\n        float a3_fPos[3];\n\n        p1 = (float*)&a3_fPos; p1[0] = p_stPosition->xX; p1[1] = p_stPosition->xY; p1[2] = p_stPosition->xZ; a3_fSpeed[0] = p_stDirection->xX; a3_fSpeed[1] = p_stDirection->xY; a3_fSpeed[2] = 0.0f; AGO_vCreatePart(0x30200000, a3_fPos, a3_fSpeed, 1.0f, parameter, parameter, hVisualMaterial);\n        break;\n    }\n\n    case 15:\n        CreateType15AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 16:\n        break;\n\n    case 17:\n        CreateType17AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 18:\n        CreateType18AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 19:\n        fNorm = p_stDirection->xX * p_stDirection->xX + p_stDirection->xY * p_stDirection->xY + p_stDirection->xZ * p_stDirection->xZ;\n        if (fNorm <= 0.001f)\n            return;\n        fNorm = 1.0f / AGO_MTH_xSqrt(fNorm);\n        p_stDirection->xX *= fNorm; p_stDirection->xY *= fNorm; p_stDirection->xZ *= fNorm;\n\n        p2 = (float*)&Direction; p2[0] = p_stDirection->xX; p2[1] = p_stDirection->xY; p2[2] = p_stDirection->xZ;\n\n        AGO_vCreatePart(0x20002100, Pos, Direction, parameter, 0.5f, 0.5f, hVisualMaterial);\n        break;\n\n    case 20:\n        fNorm = p_stDirection->xX * p_stDirection->xX + p_stDirection->xY * p_stDirection->xY + p_stDirection->xZ * p_stDirection->xZ;\n        if (fNorm <= 0.001f)\n            return;\n        fNorm = 1.0f / AGO_MTH_xSqrt(fNorm);\n        p_stDirection->xX *= fNorm; p_stDirection->xY *= fNorm; p_stDirection->xZ *= fNorm;\n\n        p2 = (float*)&Direction; p2[0] = p_stDirection->xX; p2[1] = p_stDirection->xY; p2[2] = p_stDirection->xZ;\n\n        AGO_vCreatePart(0x20005400, Pos, Direction, parameter, 0.5f, 0.5f, hVisualMaterial);\n        break;\n\n    case 21:\n        CreateType21AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 22:\n        CreateType22AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 23:\n        Pos[0] += 0.13f * Direction[0]; Pos[1] += 0.13f * Direction[1]; Pos[2] += 0.2f + 0.1f * Direction[2]; Pos[0] += 0.3f * Direction[1]; Pos[1] += 0.3f * -Direction[0];\n        p2 = (float*)&Direction; p2[0] = p_stPosition->xX; p2[1] = p_stPosition->xY; p2[2] = p_stPosition->xZ;\n\n        scale = 0.1f + (0.15f - 0.1f) * (float)rand() / 2147483648.0f;\n\n        for (i = 0; i < 3; i++)\n            Pos[i] = Direction[i] + (-1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f);\n\n        AGO_vCreatePart(0xe, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        break;\n\n    case 24:\n        CreateType24AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 25:\n        CreateType25AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 26:\n    {\n        static float NextBubble;\n\n        g_ffFrameTime = AGO_G_fCurrentTime; if (g_AGO_MustReinitStaticVars || NextBubble == 0.0f) NextBubble = AGO_G_fCurrentTime; if (NextBubble > AGO_G_fCurrentTime) return; NextBubble = g_ffFrameTime + 0.5f * (float)rand() / 2147483648.0f;\n        if (Pos[2] > parameter)\n            return;\n        scale = 0.02f + 0.08f * (float)rand() / 2147483648.0f;\n        Direction[0] = -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;\n        Direction[1] = -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;\n        Direction[2] = 1.0f + (4.0f - 1.0f) * (float)rand() / 2147483648.0f;\n        AGO_vCreatePart(0x40807, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        Pos[1] += 0.2f; Pos[2] += 0.2f;\n        if (Pos[2] < parameter)\n            AGO_vCreatePart(0x40807, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        Pos[1] -= 0.5f; Pos[2] += 0.1f;\n        if (Pos[2] < parameter)\n            AGO_vCreatePart(0x40807, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        break;\n    }\n\n    case 27:\n    {\n        static float NextBubble;\n\n        g_ffFrameTime = AGO_G_fCurrentTime; if (g_AGO_MustReinitStaticVars || NextBubble == 0.0f) NextBubble = AGO_G_fCurrentTime; if (NextBubble > AGO_G_fCurrentTime) return; NextBubble = g_ffFrameTime + 0.5f * (float)rand() / 2147483648.0f;\n        if (parameter > 7.0f)\n            parameter = 7.0f;\n        scale = 0.02f + 0.08f * (float)rand() / 2147483648.0f;\n        Direction[0] = -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;\n        Direction[1] = -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;\n        Direction[2] = 2.0f + (4.0f - 2.0f) * (float)rand() / 2147483648.0f;\n        AGO_vCreatePart(0x10807, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        Pos[1] += 0.2f; Pos[2] += 0.2f;\n        AGO_vCreatePart(0x10807, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        Pos[1] -= 0.5f; Pos[2] += 0.1f;\n        AGO_vCreatePart(0x10807, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        break;\n    }\n\n    case 28:\n        CreateType28AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 29:\n        for (i = 0; i < 3; i++)\n        {\n            Pos[i] = ((float*)p_stPosition)[i] + 8.0f * ((float*)p_stDirection)[i] + (-4.0f + (4.0f - -4.0f) * (float)rand() / 2147483648.0f);\n            Direction[i] = -0.5f + (0.5f - -0.5f) * (float)rand() / 2147483648.0f;\n        }\n        scale = 0.12f + 0.07f * (float)rand() / 2147483648.0f;\n        AGO_vCreatePart(0x87007, Pos, Direction, 0.5f, scale, scale, hVisualMaterial);\n        break;\n\n    case 30:\n        scale = 0.5f + 0.3f * (float)rand() / 2147483648.0f;\n        AGO_vCreatePart(0x4500, Pos, NULL, parameter, scale, scale, hVisualMaterial);\n        for (Number = (int)parameter; Number; Number--)\n        {\n            Direction[0] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;\n            Direction[1] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;\n            Direction[2] = -0.2f + (3.0f - -0.2f) * (float)rand() / 2147483648.0f;\n            scale = 0.1f + (0.15f - 0.1f) * (float)rand() / 2147483648.0f;\n            AGO_vCreatePart(0x3001, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        }\n        break;\n\n    case 31:\n    {\n        static float NextBubble;\n\n        g_ffFrameTime = AGO_G_fCurrentTime; if (g_AGO_MustReinitStaticVars || NextBubble == 0.0f) NextBubble = AGO_G_fCurrentTime; if (NextBubble > AGO_G_fCurrentTime) return; NextBubble = 0.5f + AGO_G_fCurrentTime;\n        Direction[0] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;\n        Direction[1] = -2.0f + (2.0f - -2.0f) * (float)rand() / 2147483648.0f;\n        Direction[2] = 0.0f + (6.0f - 0.0f) * (float)rand() / 2147483648.0f;\n        scale = 0.35f + (0.65f - 0.35f) * (float)rand() / 2147483648.0f;\n        AGO_vCreatePart(0x1008, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        break;\n    }\n\n    case 32:\n        if (Direction[0] > 300.0f)\n            Direction[0] = 250.0f;\n        AGO_vCreatePart(0x10006200, Pos, Direction, Direction[0], Direction[2], Direction[2], hVisualMaterial);\n        break;\n\n    case 33:\n        fRadius = -parameter + (parameter - -parameter) * (float)rand() / 2147483648.0f;\n        Pos[0] -= fRadius * p_stDirection->xY;\n        Pos[1] += fRadius * p_stDirection->xX;\n        AGO_vCreatePart(0x3000, Pos, NULL, 2.0f, 2.0f, 2.0f, hVisualMaterial);\n        break;\n\n    case 35:\n        CreateType35AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 39:\n        scale = 0.5f * p_stDirection->xY;\n        AGO_vCreatePart(0x8001100, Pos, NULL, 0.01f, scale, scale, hVisualMaterial);\n        break;\n\n    case 42:\n        g_AGO_AnimTimeScale = 0.7f + (1.8f - 0.7f) * (float)rand() / 2147483648.0f;\n        scale = 0.2f + (0.8f - 0.2f) * (float)rand() / 2147483648.0f;\n        Pos[0] += -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;\n        Pos[1] += -1.0f + (1.0f - -1.0f) * (float)rand() / 2147483648.0f;\n        Direction[0] = -0.2f + (0.2f - -0.2f) * (float)rand() / 2147483648.0f;\n        Direction[1] = -0.2f + (0.2f - -0.2f) * (float)rand() / 2147483648.0f;\n        Direction[2] = 1.0f + (2.0f - 1.0f) * (float)rand() / 2147483648.0f;\n        AGO_vCreatePart(0x103, Pos, Direction, 0.01f, scale, scale, hVisualMaterial);\n        break;\n\n    case 45:\n        for (i = 9; i; i--)\n        {\n            Direction[0] = -2.0f * parameter + (2.0f * parameter - -2.0f * parameter) * (float)rand() / 2147483648.0f;\n            Direction[1] = -2.0f * parameter + (2.0f * parameter - -2.0f * parameter) * (float)rand() / 2147483648.0f;\n            Direction[2] = -0.2f * parameter + (6.0f * parameter - -0.2f * parameter) * (float)rand() / 2147483648.0f;\n            scale = 0.8f * parameter + (0.16f * parameter - 0.8f * parameter) * (float)rand() / 2147483648.0f;\n            AGO_vCreatePart(0x2501, Pos, Direction, parameter, scale, scale, hVisualMaterial);\n        }\n        break;\n\n    case 46:\n        g_AGO_AnimTimeScale = 0.7f;\n        AGO_vCreatePart(0x100, Pos, NULL, 0.01f, 0.5f * parameter, 0.5f * parameter, hVisualMaterial);\n        Pos[0] += -2.0f * parameter + (2.0f * parameter - -2.0f * parameter) * (float)rand() / 2147483648.0f;\n        Pos[1] += -2.0f * parameter + (2.0f * parameter - -2.0f * parameter) * (float)rand() / 2147483648.0f;\n        g_AGO_AnimTimeScale = 1.25f;\n        AGO_vCreatePart(0x100, Pos, NULL, 0.01f, 0.5f * parameter, 0.5f * parameter, hVisualMaterial);\n        break;\n\n    case 47:\n        AGO_vCreatePart(0x6400, Pos, NULL, 0.01f, parameter, parameter, hVisualMaterial);\n        break;\n\n    case 48:\n        if (parameter >= 9.0f)\n        {\n            AGO_vCreatePart(0x10002400, Pos, NULL, 0.1f, 0.7f * parameter, 0.7f * parameter, hVisualMaterial);\n        }\n        else\n        {\n            AGO_vCreatePart(0x10003400, Pos, NULL, 0.1f, 0.05f * parameter, 0.05f * parameter, hVisualMaterial);\n        }\n        break;\n\n    case 49:\n        p = AGO_vCreatePart(0x5a00, Pos, NULL, 255.0f, 0.7f * parameter, 0.7f * parameter, hVisualMaterial);\n        if (p)\n        {\n            p->Transparency = 300.0f;\n        }\n        break;\n\n    case 50:\n        p1 = AGO_gExtraParameter1; p1[0] = Pos[0]; p1[1] = Pos[1]; p1[2] = Pos[2];\n        p2 = AGO_gExtraParameter2; p2[0] = Direction[0]; p2[1] = Direction[1]; p2[2] = Direction[2];\n        AGO_gExtraFloatParameter = parameter;\n\n        AGO_gExtraMaterial = (int)hVisualMaterial;\n\n        AGO_bPrevAGOWasExtraParam = 1;\n\n        break;\n\n    case 51:\n        p = AGO_vCreatePart(0x50005000, Pos, NULL, 0.1f, 1.0f, 1.0f, hVisualMaterial);\n        if (p)\n        {\n            p->a3_fInitialPosition[0] = Direction[0]; p->a3_fInitialPosition[1] = Direction[1]; p->a3_fInitialPosition[2] = Direction[2];\n        }\n        break;\n\n    case 52:\n        CreateType52AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 55:\n        Number = (int)Direction[1] + 1;\n        scale = Direction[0];\n        for (; Number; Number--)\n        {\n            for (j = 0; j < 3; j++)\n                Direction[j] = -parameter + (parameter - -parameter) * (float)rand() / 2147483648.0f;\n            AGO_vCreatePart(0x3003, Pos, Direction, 1.0f, scale, scale, hVisualMaterial);\n        }\n        break;\n\n    case 60:\n        CreateType60AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 62:\n        CreateType62AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 65:\n        CreateType65AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    case 67:\n        CreateType67AGO(p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n\n    default:\n        AGO_vAddParticleContd(PartType, p_stPosition, p_stDirection, hVisualMaterial, parameter);\n        break;\n    }\n\n    if (PartType != 50)\n        AGO_bPrevAGOWasExtraParam = 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_vAddParticle",
+      "reason": "First full reconstruction (was an 8-byte stub): 7592/7616 under 3.0.3, all 49 jump-table cases, AGO3 forwarding, frozen-engine filter and the PartType!=50 tail. CreateType52/60/62AGO now take the float parameter retail passes in f12 (they still verify); CreateType8AGO only matches with three arguments, so case 8 lacks the mov.s f12. Main residual: in cases 23, 29, 50 and 55 retail keeps the array base unfolded (addiu a1,sp,0x80 then addu, reused as the next call's argument; case 50 copies through a0..a3 interleaved) where MWCC 3.0.1/3.0.3/3.0 all fold sp+off into the load/store offset; struct copy gives the base registers but groups the loads. Smaller: case 23 one-line Pos update scheduling, case 51 constant load order, AGO3 call loads AGO_gExtraFloatParameter before AGO_gExtraMaterial.",
+      "size": 7616,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MISMATCH",
+      "target_size": 7616,
+      "unresolved_relocations": [
+        {
+          "offset": 1356,
+          "symbol": "NextBubble$109",
+          "type": 7
+        },
+        {
+          "offset": 1384,
+          "symbol": "NextBubble$109",
+          "type": 7
+        },
+        {
+          "offset": 1468,
+          "symbol": "NextBubble$109",
+          "type": 7
+        },
+        {
+          "offset": 3112,
+          "symbol": "NextBubble$194",
+          "type": 7
+        },
+        {
+          "offset": 3140,
+          "symbol": "NextBubble$194",
+          "type": 7
+        },
+        {
+          "offset": 3144,
+          "symbol": "NextBubble$194",
+          "type": 7
+        },
+        {
+          "offset": 3216,
+          "symbol": "NextBubble$194",
+          "type": 7
+        },
+        {
+          "offset": 3740,
+          "symbol": "NextBubble$207",
+          "type": 7
+        },
+        {
+          "offset": 3768,
+          "symbol": "NextBubble$207",
+          "type": 7
+        },
+        {
+          "offset": 3772,
+          "symbol": "NextBubble$207",
+          "type": 7
+        },
+        {
+          "offset": 3860,
+          "symbol": "NextBubble$207",
+          "type": 7
+        },
+        {
+          "offset": 5044,
+          "symbol": "NextBubble$229",
+          "type": 7
+        },
+        {
+          "offset": 5072,
+          "symbol": "NextBubble$229",
+          "type": 7
+        },
+        {
+          "offset": 5076,
+          "symbol": "NextBubble$229",
+          "type": 7
+        },
+        {
+          "offset": 5116,
+          "symbol": "NextBubble$229",
+          "type": 7
+        }
+      ]
+    },
+    {
+      "address": "0x003138b0",
+      "candidate_size": 480,
+      "first_difference": 0,
+      "implementation": "void MEC_fn_vDeleteUnderGroundWall(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stGroundObstacle)\n{\n    union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } stContact;\n    MTH3D_tdstVector_* p_stNormal;\n    DNM_stMecObstacle* p_stGroundEdge;\n    DNM_stMecObstacle* p_stTmpObstacle;\n    int lCounter;\n\n    if (p_stGroundObstacle == NULL)\n        return;\n\n    p_stGroundEdge = NULL;\n    for (lCounter = 0; lCounter < lObstacle && p_stGroundEdge == NULL; lCounter++)\n    {\n        p_stTmpObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99)\n            && ((p_stTmpObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0)\n            && (unsigned char)((p_stTmpObstacle->m_xCollidedEntity == 7 || p_stTmpObstacle->m_xCollidedEntity == 8) ? 1 : 0)\n            && p_stTmpObstacle->m_stContact.xZ <= p_stGroundObstacle->m_stContact.xZ)\n            p_stGroundEdge = p_stTmpObstacle;\n    }\n\n    p_stNormal = &p_stGroundObstacle->m_stNorm;\n    stContact.a3_ulWord[0] = ((unsigned int*)&(p_stGroundEdge ? p_stGroundEdge : p_stGroundObstacle)->m_stContact)[0];\n    stContact.a3_ulWord[1] = ((unsigned int*)&(p_stGroundEdge ? p_stGroundEdge : p_stGroundObstacle)->m_stContact)[1];\n    stContact.a3_ulWord[2] = ((unsigned int*)&(p_stGroundEdge ? p_stGroundEdge : p_stGroundObstacle)->m_stContact)[2];\n\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stTmpObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99) && MEC_fn_bIn(p_stTmpObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope))\n        {\n            if (MTH_xDot3(p_stTmpObstacle->m_stContact.xX - stContact.stVector.xX, p_stNormal->xX, p_stTmpObstacle->m_stContact.xY - stContact.stVector.xY, p_stNormal->xY, p_stTmpObstacle->m_stContact.xZ - stContact.stVector.xZ, p_stNormal->xZ) <= 0.0f)\n                p_stTmpObstacle->m_xCollidedEntity = 99;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vDeleteUnderGroundWall",
+      "reason": "480/472: full reconstruction (ground-edge search loop, per-component ternary int copy into a union stContact kept on the stack, MEC_fn_bIn symmetric slope test, dot with the ground normal). Residual: retail tests m_xCollidedEntity 7/8 as 'addiu -7; sltiu 2; bnez' with the flag set to 1 in the delay slot (switch-range lowering); ==7||==8 gives xori chains, an unsigned (e-7)<2 cast gives the right compare with inverted polarity, switch helpers grow to 496.",
+      "size": 472,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 472,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00313a90",
+      "candidate_size": 504,
+      "first_difference": 8,
+      "implementation": "void MEC_fn_vDeleteWallEdge(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic)\n{\n    unsigned char bRemoveEdge = 1;\n    DNM_stMecObstacle* p_stTmpObstacle1;\n    DNM_stMecObstacle* p_stTmpObstacle;\n    int lCounter1;\n    int lCounter;\n\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stTmpObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99)\n            && MEC_fn_bIn(p_stTmpObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)\n            && p_stTmpObstacle->m_xCollidedEntity == 8\n            && !(unsigned char)((p_stTmpObstacle->m_eType & 4) == 4))\n        {\n            for (lCounter1 = 0; lCounter1 < lObstacle; lCounter1++)\n            {\n                if (lCounter1 != lCounter)\n                {\n                    p_stTmpObstacle1 = &p_stObstacle[lCounter1];\n                    if ((unsigned char)(p_stTmpObstacle1->m_xCollidedEntity != 99)\n                        && (unsigned char)((p_stTmpObstacle1->m_xCollidedEntity == 7 || p_stTmpObstacle1->m_xCollidedEntity == 8) ? 1 : 0)\n                        && MEC_fn_bIn(p_stTmpObstacle1->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope))\n                    {\n                        MTH3D_tdstVector_ stVector;\n                        stVector.xX = p_stTmpObstacle->m_stContact.xX - p_stTmpObstacle1->m_stContact.xX;\n                        stVector.xY = p_stTmpObstacle->m_stContact.xY - p_stTmpObstacle1->m_stContact.xY;\n                        stVector.xZ = p_stTmpObstacle->m_stContact.xZ - p_stTmpObstacle1->m_stContact.xZ;\n                        if (MTH3D_M_bIsNullVector(&stVector))\n                            bRemoveEdge = 0;\n                    }\n                }\n            }\n            if (bRemoveEdge)\n                p_stTmpObstacle->m_xCollidedEntity = 99;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vDeleteWallEdge",
+      "reason": "504/496: full reconstruction (bRemoveEdge initialised once in its declaration, outer type-8/no-bit-4 filter, inner loop with the 7/8 entity test, MEC_fn_bIn slope test and abs.s 0.001 null-vector test of the contact difference); everything matches except the inner 7/8 entity test: retail emits 'addiu t1,e,-7; sltiu at,t1,2; bnez' with the flag set in the delay slot, our builds (3.0/3.0.1/3.0.3/3.0b38) emit two beq tests for ==7||==8; range, unsigned-cast and switch-helper spellings all differ.",
+      "size": 496,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 496,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00313c80",
+      "candidate_size": 440,
+      "first_difference": 314,
+      "implementation": "void MEC_fn_vComputeCollisionTranslation(int lObstacle, DNM_stMecObstacle* p_stObstacle, MTH3D_tdstVector_* p_stMove)\n{\n    float xNorm;\n    MTH3D_tdstVector_ stVector;\n    int lCounter;\n    float xRate;\n    DNM_stMecObstacle* p_stTmpObstacle;\n\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stTmpObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))\n        {\n            xRate = p_stTmpObstacle->m_xRate;\n            if (xRate > 1.0f)\n            {\n                p_stTmpObstacle->m_xRate = 1.0f;\n                xNorm = MTH_xSqrt(MTH_xSqr3(p_stTmpObstacle->m_stZoneMove.xX, p_stTmpObstacle->m_stZoneMove.xY, p_stTmpObstacle->m_stZoneMove.xZ));\n                if (xNorm != 0.0f)\n                {\n                    MTH3D_M_vMulScalarVector(&stVector, 1.0f / xNorm, &p_stTmpObstacle->m_stZoneMove);\n                }\n                else\n                {\n                    stVector = p_stTmpObstacle->m_stZoneMove;\n                }\n                MTH3D_M_vMulScalarVector(&stVector, p_stTmpObstacle->m_xZoneRadius, &stVector);\n                MTH3D_M_vAddVector(&stVector, &stVector, &p_stTmpObstacle->m_stZonePosition);\n                *(int*)&p_stTmpObstacle->m_stContact.xX = *(int*)&stVector.xX;\n                *(int*)&p_stTmpObstacle->m_stContact.xY = *(int*)&stVector.xY;\n                *(int*)&p_stTmpObstacle->m_stContact.xZ = *(int*)&stVector.xZ;\n            }\n            else if (xRate >= 0.0f)\n            {\n                MTH3D_M_vMulScalarVector(&p_stTmpObstacle->m_stTranslation, 1.0f - p_stTmpObstacle->m_xRate, p_stMove);\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vComputeCollisionTranslation",
+      "reason": "440/440, all registers match; only the final int copy of stVector into m_stContact differs: retail loads 0(sp)/4(sp)/8(sp) directly, ours reuses the hoisted &stVector/.xY/.xZ registers (a3/t3/t4) from the pointer-style MTH3D macros. Struct assignment drops the copy to 424 bytes; (int*)[i], unsigned and vector-pointer spellings keep the hoisted bases.",
+      "size": 440,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 440,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x003120b0",
+      "candidate_size": 408,
+      "first_difference": 0,
+      "implementation": "void MEC_fn_vDeleteGiBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector)\n{\n    int lCounter;\n    DNM_stMecObstacle* p_stCurrentObstacle;\n\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stCurrentObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stCurrentObstacle->m_xCollidedEntity != 99))\n        {\n            if (MEC_fn_bMaterialHasType(p_stCurrentObstacle->hCollidedMaterial, 0x20) && !MEC_fn_bMaterialHasType(p_stCurrentObstacle->hCollidedMaterial, 0x8000))\n            {\n                if (MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, 0.0f, p_stCurrentObstacle->m_stNorm.xY, 0.0f, p_stCurrentObstacle->m_stNorm.xZ, 1.0f) > 0.0f)\n                    p_stCurrentObstacle->m_xCollidedEntity = 99;\n            }\n            else if ((unsigned char)((p_stCurrentObstacle->m_stNorm.xZ < -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0))\n                p_stCurrentObstacle->m_xCollidedEntity = 99;\n            else if (MEC_fn_bIn(p_stCurrentObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)\n                && MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, p_stVector->xX, p_stCurrentObstacle->m_stNorm.xY, p_stVector->xY, p_stCurrentObstacle->m_stNorm.xZ, p_stVector->xZ) > 0.0f)\n                p_stCurrentObstacle->m_xCollidedEntity = 99;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vDeleteGiBackFace",
+      "reason": "408/408 full reconstruction; registers otherwise match. Residual: retail materialises the 0.0f constant at function entry (mtc1 zero,f7 before the loop guard), ours in the loop preheader in f6. Material tests via an inline MEC_fn_bMaterialHasType, slope band via an unsigned-char-flag inline MEC_fn_bIn(x, cos).",
+      "size": 408,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 408,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00312250",
+      "candidate_size": 440,
+      "first_difference": 176,
+      "implementation": "void MEC_fn_vDeleteOnGroundBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector, DNM_stMecObstacle* p_stGroundObstacle)\n{\n    int lCounter;\n    DNM_stMecObstacle* p_stCurrentObstacle;\n    MTH3D_tdstVector_ stVector;\n\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stCurrentObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stCurrentObstacle->m_xCollidedEntity != 99))\n        {\n            if (MEC_fn_bIn(p_stCurrentObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope))\n            {\n                if (MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, p_stVector->xX, p_stCurrentObstacle->m_stNorm.xY, p_stVector->xY, p_stCurrentObstacle->m_stNorm.xZ, p_stVector->xZ) <= 0.0f)\n                {\n                    stVector.xX = p_stCurrentObstacle->m_stContact.xX - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX; stVector.xY = p_stCurrentObstacle->m_stContact.xY - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY; stVector.xZ = p_stCurrentObstacle->m_stContact.xZ - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ;\n                    stVector.xX -= p_stCurrentObstacle->m_xZoneRadius * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xX; stVector.xY -= p_stCurrentObstacle->m_xZoneRadius * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xY; stVector.xZ -= p_stCurrentObstacle->m_xZoneRadius * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xZ;\n                    if (MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, stVector.xX, p_stCurrentObstacle->m_stNorm.xY, stVector.xY, p_stCurrentObstacle->m_stNorm.xZ, stVector.xZ) > 0.0f)\n                        p_stCurrentObstacle->m_xCollidedEntity = 99;\n                }\n                else\n                    p_stCurrentObstacle->m_xCollidedEntity = 99;\n            }\n            else if (!((p_stCurrentObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0) && p_stGroundObstacle)\n            {\n                stVector.xX = p_stCurrentObstacle->m_stContact.xX - p_stGroundObstacle->m_stContact.xX; stVector.xY = p_stCurrentObstacle->m_stContact.xY - p_stGroundObstacle->m_stContact.xY; stVector.xZ = p_stCurrentObstacle->m_stContact.xZ - p_stGroundObstacle->m_stContact.xZ;\n                if (MTH_xDot3(p_stGroundObstacle->m_stNorm.xX, stVector.xX, p_stGroundObstacle->m_stNorm.xY, stVector.xY, p_stGroundObstacle->m_stNorm.xZ, stVector.xZ) < 0.7f)\n                    p_stCurrentObstacle->m_xCollidedEntity = 99;\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vDeleteOnGroundBackFace",
+      "reason": "440/440 full reconstruction; the only residual is load order in the contact-minus-translation x component (retail loads translation 0xc0(a2) before contact 0x10(t3)); pointer, copy-first, zyx and negated spellings tried.",
+      "size": 440,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 440,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x003117d0",
+      "candidate_size": 504,
+      "first_difference": 2,
+      "implementation": "void MEC_fn_vDeleteHangingObstacle(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic)\n{\n    float xHandZPosition;\n    float xZ;\n    DNM_stMecObstacle* p_stGroundObstacle;\n    DNM_stMecObstacle* p_stTmpObstacle;\n    int lCounter;\n\n    xZ = 3.4028231e+38f;\n    p_stGroundObstacle = NULL;\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stTmpObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99)\n            && ((p_stTmpObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0)\n            && p_stTmpObstacle->m_stContact.xZ < xZ)\n        {\n            p_stGroundObstacle = p_stTmpObstacle;\n            xZ = p_stTmpObstacle->m_stContact.xZ;\n        }\n    }\n\n    if ((unsigned char)(p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != NULL))\n        xHandZPosition = p_stDynamic->m_tdstDynamicsComplexBlock.m_xHangingLimit + p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;\n    else\n        xHandZPosition = p_stDynamic->m_tdstDynamicsComplexBlock.m_xHangingLimit;\n\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stTmpObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))\n        {\n            if (!((p_stTmpObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0)\n                && p_stTmpObstacle->m_xRate <= 1.0f\n                && !(unsigned char)((p_stTmpObstacle->m_xCollidedEntity == 7 || p_stTmpObstacle->m_xCollidedEntity == 8) ? 1 : 0))\n            {\n                if (p_stGroundObstacle != NULL)\n                {\n                    if (MTH_xDot3(p_stGroundObstacle->m_stNorm.xX, p_stTmpObstacle->m_stContact.xX - p_stGroundObstacle->m_stContact.xX, p_stGroundObstacle->m_stNorm.xY, p_stTmpObstacle->m_stContact.xY - p_stGroundObstacle->m_stContact.xY, p_stGroundObstacle->m_stNorm.xZ, p_stTmpObstacle->m_stContact.xZ - p_stGroundObstacle->m_stContact.xZ) < 0.005f)\n                        p_stTmpObstacle->m_xCollidedEntity = 99;\n                }\n                else if (p_stTmpObstacle->m_stContact.xZ <= xHandZPosition)\n                    p_stTmpObstacle->m_xCollidedEntity = 99;\n            }\n            else\n                p_stTmpObstacle->m_xCollidedEntity = 99;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vDeleteHangingObstacle",
+      "reason": "504/488: full reconstruction (lowest ground search from FLT_MAX, hand Z from m_xHangingLimit plus the platform's global translation Z, then a filter loop whose final store is the else of '!ground && rate <= 1 && !edge'). Everything else matches; the 16-byte residual is the 7/8 entity test, which retail compiles as one addiu -7/sltiu 2 range check that no available MWCC build produces (see the MECTools insight).",
+      "size": 488,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 488,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0024cfe0",
+      "candidate_size": 412,
+      "first_difference": 41,
+      "implementation": "unsigned char COL_fn_bDetectCollisionStaticGeomObjWithStaticGeomObj(COL_tdstBoundingSphere_* _hDynamicGeometricObject, MAT_tdstTransformation_* _p_stDynamicGeometricObjectMatrix, void* _hStaticGeometricObject, MAT_tdstTransformation_* _p_stStaticGeometricObjectMatrix, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale, unsigned char _bHasABoxBoundingVolume)\n{\n    float fGap;\n    float xRadiusDinG;\n    float xRadiusSum;\n    MTH4D_tdstVector_* pResult;\n    MTH4D_tdstMatrix_* p_stMatrix;\n    MTH4D_tdstVector_* p_stMax;\n    MTH4D_tdstVector_* p_stTranslation;\n\n    p_stMatrix = &_p_stDynamicGeometricObjectMatrix->stTransformMatrix;\n    asm {\n        lqc2 vf5, 0x0(_hDynamicGeometricObject)\n        lqc2 vf1, 0x0(p_stMatrix)\n        lqc2 vf2, 0x10(p_stMatrix)\n        lqc2 vf3, 0x20(p_stMatrix)\n        lqc2 vf4, 0x30(p_stMatrix)\n\n        vmulax.xyzw ACC, vf1, vf5x\n        vmadday.xyzw ACC, vf2, vf5y\n        vmaddaz.xyzw ACC, vf3, vf5z\n        vmaddw.xyzw vf30, vf4, vf0w\n    }\n\n    if (!_bHasABoxBoundingVolume)\n    {\n        if (_bStaticGeomObjHasNoTransformationMatrix)\n        {\n            MTH4D_tdstVector_* p_stVector = &_p_stStaticGeometricObjectMatrix->stTransformMatrix.stCol_3;\n            asm {\n                lqc2 vf5, 0x0(_hStaticGeometricObject)\n                lqc2 vf6, 0x0(p_stVector)\n                vadd.xyzw vf31, vf5, vf6\n            }\n        }\n        else\n        {\n            p_stMatrix = &_p_stStaticGeometricObjectMatrix->stTransformMatrix;\n            asm {\n                lqc2 vf5, 0x0(_hStaticGeometricObject)\n                lqc2 vf1, 0x0(p_stMatrix)\n                lqc2 vf2, 0x10(p_stMatrix)\n                lqc2 vf3, 0x20(p_stMatrix)\n                lqc2 vf4, 0x30(p_stMatrix)\n\n                vmulax.xyzw ACC, vf1, vf5x\n                vmadday.xyzw ACC, vf2, vf5y\n                vmaddaz.xyzw ACC, vf3, vf5z\n                vmaddw.xyzw vf31, vf4, vf0w\n            }\n        }\n\n        xRadiusSum = (_bStaticGeomObjHasNoTransformationMatrix ? GEO_fn_xGetBoundingSphereRadius((COL_tdstBoundingSphere_*)_hStaticGeometricObject) : GEO_fn_xGetBoundingSphereRadius((COL_tdstBoundingSphere_*)_hStaticGeometricObject) * MAT_fn_xGetMaxScaleTest(_p_stStaticGeometricObjectMatrix)) + GEO_fn_xGetBoundingSphereRadius(_hDynamicGeometricObject) * MAT_fn_xGetMaxScaleTest(_p_stDynamicGeometricObjectMatrix);\n\n        asm {\n            vsub.xyzw vf5, vf30, vf31\n            vmul.xyz vf5, vf5, vf5\n            vaddy.x vf5, vf5, vf5y\n            vaddz.x vf5, vf5, vf5z\n            qmfc2 v0, vf5\n            mtc1 v0, fGap\n        }\n\n        return fGap <= xRadiusSum * xRadiusSum;\n    }\n\n    xRadiusDinG = GEO_fn_xGetBoundingSphereRadius(_hDynamicGeometricObject) * MAT_fn_xGetMaxScaleTest(_p_stDynamicGeometricObjectMatrix);\n    pResult = (MTH4D_tdstVector_*)0x70000000;\n    p_stTranslation = &_p_stStaticGeometricObjectMatrix->stTransformMatrix.stCol_3; p_stMax = &((COL_tdstParallelBox_*)_hStaticGeometricObject)->stMaxPoint;\n    asm {\n        mfc1 v0, xRadiusDinG\n\n        lqc2 vf1, 0x0(p_stMax)\n        lqc2 vf3, 0x0(p_stTranslation)\n        lqc2 vf2, 0x0(_hStaticGeometricObject)\n\n        qmtc2 v0, vf5\n\n        vadd.xyzw vf1, vf3, vf1\n        vadd.xyzw vf2, vf3, vf2\n        vsubx.xyz vf6, vf30, vf5x\n        vaddx.xyz vf7, vf30, vf5x\n        vsub.xyz vf9, vf6, vf1\n        vsub.xyz vf8, vf2, vf7\n\n        vmax.xyzw vf10, vf8, vf9\n        vmaxz.x vf10, vf10, vf10z\n        vmaxy.x vf10, vf10, vf10y\n\n        sqc2 vf10, 0x0(pResult)\n    }\n\n    return (*(unsigned int*)0x70000000 & 0x80000000) != 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "COL_fn_bDetectCollisionStaticGeomObjWithStaticGeomObj",
+      "reason": "412/412 size, same control flow/asm; residual: a2/a3 param copies get s1/s0 instead of s0/s1 (an explicit '!= 0' on the t0 test flips them right but adds andi), and box-case 'lui v1,0x7000' (pResult) scheduled after both addiu pointer setups instead of between. Signature needs a 7th param (callers pass t2); radii read via inline accessor so they load before the scale call.",
+      "size": 412,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollGO.c",
+      "status": "MISMATCH",
+      "target_size": 412,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002f5c40",
+      "candidate_size": 668,
+      "first_difference": 242,
+      "implementation": "void IPT_fn_vReadInput(unsigned int ulCurrentTime)\n{\n    unsigned char ucValid;\n    unsigned char ucIsActionValid;\n    unsigned int i;\n    IPT_tdstEntryElement_* hEntryElement;\n    long lState;\n    int iOk;\n\n    ucValid = 0;\n    if (IPT_g_hInputStructure.ucOnePadActivate == 2)\n    {\n        if (INO_fn_wReadAllDevices(0x10, 2) != 0)\n        {\n            ucValid = 1;\n        }\n    }\n    if (IPT_g_hInputStructure.a_stDevice[1].ucValideAndActiveDevice == 2)\n    {\n        int iValue;\n\n        if (IPT_g_hInputStructure.a_stDevice[1].hDeviceHandle->m_pfnRead != NULL)\n        {\n            iValue = IPT_g_hInputStructure.a_stDevice[1].hDeviceHandle->m_pfnRead(IPT_g_hInputStructure.a_stDevice[1].hDeviceHandle);\n        }\n        else\n        {\n            iValue = -1;\n        }\n        if (iValue != 0)\n        {\n            ucValid = 1;\n        }\n    }\n    switch (IPT_fn_bIsEnabled())\n    {\n    default:\n            if (ucValid == 1)\n            {\n                IPT_fn_vActualizeHistoric();\n                IPT_g_hInputStructure.bAtLeastOneActionIsValidated = 0;\n                for (i = 0; i < IPT_g_hInputStructure.ulNumberOfEntryElement; i++)\n                {\n                    hEntryElement = &IPT_g_hInputStructure.d_stEntryElementArray[i];\n                    if (hEntryElement->bIsActivate == 1)\n                    {\n                        ucIsActionValid = IPT_fn_bIsEntryActionValid(hEntryElement);\n                        IPT_g_hInputStructure.bAtLeastOneActionIsValidated |= ucIsActionValid;\n                        if (ucIsActionValid == 1)\n                        {\n                            if ((hEntryElement != NULL) && (hEntryElement->lState > 0))\n                            {\n                                iOk = 1;\n                            }\n                            else\n                            {\n                                iOk = 0;\n                            }\n                            if (iOk != 0)\n                            {\n                                lState = (long)(hEntryElement->lState + 1);\n                                if (lState > 0x7FFFFFFFL)\n                                {\n                                    lState = 0x7FFFFFFFL;\n                                }\n                                hEntryElement->lState = (int)lState;\n                            }\n                        }\n                        if (ucIsActionValid == 0)\n                        {\n                            if ((hEntryElement != NULL) && (hEntryElement->lState < 0))\n                            {\n                                iOk = 1;\n                            }\n                            else\n                            {\n                                iOk = 0;\n                            }\n                            if (iOk != 0)\n                            {\n                                lState = (long)(hEntryElement->lState - 1);\n                                if (lState < (long)(-2147483647 - 1))\n                                {\n                                    lState = (long)(-2147483647 - 1);\n                                }\n                                hEntryElement->lState = (int)lState;\n                            }\n                        }\n                        if (ucIsActionValid == 0)\n                        {\n                            if ((hEntryElement != NULL) && (hEntryElement->lState > 0))\n                            {\n                                iOk = 1;\n                            }\n                            else\n                            {\n                                iOk = 0;\n                            }\n                            if (iOk != 0)\n                            {\n                                hEntryElement->lState = -1;\n                            }\n                        }\n                        if (ucIsActionValid == 1)\n                        {\n                            if ((hEntryElement != NULL) && (hEntryElement->lState < 0))\n                            {\n                                iOk = 1;\n                            }\n                            else\n                            {\n                                iOk = 0;\n                            }\n                            if (iOk != 0)\n                            {\n                                hEntryElement->lState = 1;\n                            }\n                        }\n                    }\n                }\n            }\n            IPT_fn_vForceFeedBackRunTime(ulCurrentTime);\n        break;\n    case 0:\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "IPT_fn_vReadInput",
+      "reason": "668/668 bytes, 21/21 relocs, first diff +0xf2 (was 652/668, +0x50). The default-first switch lever (switch (IPT_fn_bIsEnabled()) { default: <body> break; case 0: break; } in place of 'if (IPT_fn_bIsEnabled() != 0)', plus 'unsigned int i' declared before 'hEntryElement') empties the conditional delay slots and fixes the first 0xf0 bytes exactly. Residual: the four lState update blocks. Retail fills some slots there (beqz s1,..; li v0,1) and uses bgtz/bltz where we emit blez/bgez plus nop and extra b; the switch empties all slots, so retail's mix of filled/empty slots in those blocks needs a different source shape. Variant saved in the scratchpad as ipt_base2.c.",
+      "size": 668,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_hist.c",
+      "status": "MISMATCH",
+      "target_size": 668,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -47541,7 +47782,7 @@
       "name": "PS2glComputeBSfromBB",
       "size": 124,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c",
-      "status": "EQUIVALENT"
+      "status": "MATCH"
     },
     "0x00153dd0": {
       "address": "0x00153dd0",
@@ -54767,6 +55008,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
       "status": "MATCH"
     },
+    "0x001d1410": {
+      "address": "0x001d1410",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "RebuildSwitch__10SwitchDataFv",
+      "size": 392,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/SwitchMgr.cpp",
+      "status": "MATCH"
+    },
     "0x001d18c0": {
       "address": "0x001d18c0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -54924,6 +55173,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CreateType65AGO",
       "size": 216,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "MATCH"
+    },
+    "0x001da300": {
+      "address": "0x001da300",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "CreateType21AGO",
+      "size": 468,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
       "status": "MATCH"
     },
@@ -71159,6 +71416,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
       "status": "MATCH"
     },
+    "0x002ca6f0": {
+      "address": "0x002ca6f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vRemoveAllInstances",
+      "size": 212,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
+    "0x002ca7d0": {
+      "address": "0x002ca7d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vRemoveInstanceIfExists",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_SDL.cpp",
+      "status": "MATCH"
+    },
     "0x002cb760": {
       "address": "0x002cb760",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -74716,6 +74989,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MEC_fn_vDeleteNoCollidedGroundFace",
       "size": 160,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x00311ef0": {
+      "address": "0x00311ef0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MEC_fn_vDeleteClimbBackFace",
+      "size": 440,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },

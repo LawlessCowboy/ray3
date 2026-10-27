@@ -440,13 +440,109 @@ void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char COL_fn_bDetectCollisionStaticGeomObjWithStaticGeomObj(COL_tdstBoundingSphere_* _hDynamicGeometricObject, MAT_tdstTransformation_* _p_stDynamicGeometricObjectMatrix, void* _hStaticGeometricObject, MAT_tdstTransformation_* _p_stStaticGeometricObjectMatrix, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bHasABoxBoundingVolume)
+/* Retail loads each radius before the scale call, which MWCC only does
+ * for an inline accessor. */
+inline float GEO_fn_xGetBoundingSphereRadius(COL_tdstBoundingSphere_* p_stSphere)
+{
+    return p_stSphere->xRadius;
+}
+
+/* The debug record lists six parameters, but both callers (GAM/Collisio.c)
+ * pass a seventh in t2 and this body tests t2: the unused sixth parameter is
+ * omitted from the debug record. */
+unsigned char COL_fn_bDetectCollisionStaticGeomObjWithStaticGeomObj(COL_tdstBoundingSphere_* _hDynamicGeometricObject, MAT_tdstTransformation_* _p_stDynamicGeometricObjectMatrix, void* _hStaticGeometricObject, MAT_tdstTransformation_* _p_stStaticGeometricObjectMatrix, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale, unsigned char _bHasABoxBoundingVolume)
 {
     float fGap;
     float xRadiusDinG;
     float xRadiusSum;
     MTH4D_tdstVector_* pResult;
-    /* TODO: decompile from asm/... */
+    MTH4D_tdstMatrix_* p_stMatrix;
+    MTH4D_tdstVector_* p_stMax;
+    MTH4D_tdstVector_* p_stTranslation;
+
+    p_stMatrix = &_p_stDynamicGeometricObjectMatrix->stTransformMatrix;
+    asm {
+        lqc2 vf5, 0x0(_hDynamicGeometricObject)
+        lqc2 vf1, 0x0(p_stMatrix)
+        lqc2 vf2, 0x10(p_stMatrix)
+        lqc2 vf3, 0x20(p_stMatrix)
+        lqc2 vf4, 0x30(p_stMatrix)
+
+        vmulax.xyzw ACC, vf1, vf5x
+        vmadday.xyzw ACC, vf2, vf5y
+        vmaddaz.xyzw ACC, vf3, vf5z
+        vmaddw.xyzw vf30, vf4, vf0w
+    }
+
+    if (!_bHasABoxBoundingVolume)
+    {
+        if (_bStaticGeomObjHasNoTransformationMatrix)
+        {
+            MTH4D_tdstVector_* p_stVector = &_p_stStaticGeometricObjectMatrix->stTransformMatrix.stCol_3;
+            asm {
+                lqc2 vf5, 0x0(_hStaticGeometricObject)
+                lqc2 vf6, 0x0(p_stVector)
+                vadd.xyzw vf31, vf5, vf6
+            }
+        }
+        else
+        {
+            p_stMatrix = &_p_stStaticGeometricObjectMatrix->stTransformMatrix;
+            asm {
+                lqc2 vf5, 0x0(_hStaticGeometricObject)
+                lqc2 vf1, 0x0(p_stMatrix)
+                lqc2 vf2, 0x10(p_stMatrix)
+                lqc2 vf3, 0x20(p_stMatrix)
+                lqc2 vf4, 0x30(p_stMatrix)
+
+                vmulax.xyzw ACC, vf1, vf5x
+                vmadday.xyzw ACC, vf2, vf5y
+                vmaddaz.xyzw ACC, vf3, vf5z
+                vmaddw.xyzw vf31, vf4, vf0w
+            }
+        }
+
+        xRadiusSum = (_bStaticGeomObjHasNoTransformationMatrix ? GEO_fn_xGetBoundingSphereRadius((COL_tdstBoundingSphere_*)_hStaticGeometricObject) : GEO_fn_xGetBoundingSphereRadius((COL_tdstBoundingSphere_*)_hStaticGeometricObject) * MAT_fn_xGetMaxScaleTest(_p_stStaticGeometricObjectMatrix)) + GEO_fn_xGetBoundingSphereRadius(_hDynamicGeometricObject) * MAT_fn_xGetMaxScaleTest(_p_stDynamicGeometricObjectMatrix);
+
+        asm {
+            vsub.xyzw vf5, vf30, vf31
+            vmul.xyz vf5, vf5, vf5
+            vaddy.x vf5, vf5, vf5y
+            vaddz.x vf5, vf5, vf5z
+            qmfc2 v0, vf5
+            mtc1 v0, fGap
+        }
+
+        return fGap <= xRadiusSum * xRadiusSum;
+    }
+
+    xRadiusDinG = GEO_fn_xGetBoundingSphereRadius(_hDynamicGeometricObject) * MAT_fn_xGetMaxScaleTest(_p_stDynamicGeometricObjectMatrix);
+    pResult = (MTH4D_tdstVector_*)0x70000000;
+    p_stTranslation = &_p_stStaticGeometricObjectMatrix->stTransformMatrix.stCol_3; p_stMax = &((COL_tdstParallelBox_*)_hStaticGeometricObject)->stMaxPoint;
+    asm {
+        mfc1 v0, xRadiusDinG
+
+        lqc2 vf1, 0x0(p_stMax)
+        lqc2 vf3, 0x0(p_stTranslation)
+        lqc2 vf2, 0x0(_hStaticGeometricObject)
+
+        qmtc2 v0, vf5
+
+        vadd.xyzw vf1, vf3, vf1
+        vadd.xyzw vf2, vf3, vf2
+        vsubx.xyz vf6, vf30, vf5x
+        vaddx.xyz vf7, vf30, vf5x
+        vsub.xyz vf9, vf6, vf1
+        vsub.xyz vf8, vf2, vf7
+
+        vmax.xyzw vf10, vf8, vf9
+        vmaxz.x vf10, vf10, vf10z
+        vmaxy.x vf10, vf10, vf10y
+
+        sqc2 vf10, 0x0(pResult)
+    }
+
+    return (*(unsigned int*)0x70000000 & 0x80000000) != 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 114–167 */

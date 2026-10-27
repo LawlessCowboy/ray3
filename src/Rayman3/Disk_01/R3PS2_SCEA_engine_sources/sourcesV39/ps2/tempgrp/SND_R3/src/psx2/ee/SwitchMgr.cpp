@@ -415,16 +415,12 @@ struct usnd::CResType {
 namespace usnd {
 template <class T> struct CIdObjPtr {
     CLookupElement* m_poElmt; /* +0x0 */
+    ~CIdObjPtr(void);
     const CUUID& f_roGetId(void) const;
     operator T*(void) const;
 };
 }
 typedef usnd::CIdObjPtr<CResData> CIdObjPtr;
-
-struct CSwitchElement {
-    CIdObjPtr m_pTarget; /* +0x0 */
-    unsigned int m_uiValue; /* +0x4 */
-};
 
 struct SwitchElt {
     unsigned int m_uiVal; /* +0x0 */
@@ -528,6 +524,11 @@ struct CLinkTypeActorCont : usnd::smap<int, CLinkTypeActor*, usnd::less<int>, us
 };
 
 struct usnd::CSwitchResData : CResData {
+    struct CSwitchElement {
+        CSwitchElement(unsigned int ui_Value, const CUUID& ro_Id);
+        CIdObjPtr<CResData> m_pTarget; /* +0x0 */
+        unsigned int m_uiValue; /* +0x4 */
+    };
     unsigned int m_uiNbElmts; /* +0x18 */
     unsigned int m_uiInfoType; /* +0x1c */
     unsigned int m_uiDefaultIndex; /* +0x20 */
@@ -716,6 +717,49 @@ struct CPS2WaveFileIdObj {
 };
 }
 extern "C" void usnd_memcpy(void* pvDest, void* pvSrc, unsigned int uiSize);
+
+/* The retail debug attributes this method to AGO.c lines 93-143, but it is
+ * C++ (usnd templates and constructors) and belongs with SwitchData. */
+void SwitchData::RebuildSwitch(void)
+{
+    unsigned int pos;
+    unsigned int i;
+
+    if (m_pSwitchData->m_paElements)
+    {
+        for (i = 0; i < m_pSwitchData->m_uiNbElmts; i++)
+            m_pSwitchData->m_paElements[i].~CSwitchElement();
+        usnd_free(m_pSwitchData->m_paElements);
+    }
+
+    pos = 0;
+    for (i = 0; i < m_nbElt; i++)
+    {
+        if (m_pElt[i].m_pData)
+            pos++;
+    }
+
+    m_pSwitchData->m_uiNbElmts = pos;
+    if (pos)
+    {
+        m_pSwitchData->m_paElements = (CSwitchResData::CSwitchElement*)usnd_malloc(pos * sizeof(CSwitchResData::CSwitchElement));
+        pos = 0;
+        for (i = 0; i < m_nbElt; i++)
+        {
+            if (m_pElt[i].m_pData)
+            {
+                if (i == m_uiDefault)
+                    m_pSwitchData->m_uiDefaultIndex = pos;
+                new (&m_pSwitchData->m_paElements[pos]) CSwitchResData::CSwitchElement(m_pElt[i].m_uiVal, m_pElt[i].m_oId);
+                pos++;
+            }
+        }
+    }
+    else
+    {
+        m_pSwitchData->m_paElements = NULL;
+    }
+}
 
 struct SwitchMgr {
     static unsigned int ms_nbTex;
