@@ -993,6 +993,14 @@ def register_equivalent(candidate: bytes, target: bytes,
     return True, 'registers differ only by consistent renaming'
 
 
+def _inside_root(path: Path | str) -> bool:
+    try:
+        Path(path).resolve().relative_to(ROOT)
+    except ValueError:
+        return False
+    return True
+
+
 def compare(entry: dict, verbose: bool = False, source_override: Path | None = None,
             owner: Path | None = None) -> dict:
     sections, target_symbols, main, _, target_names = target_context()
@@ -1005,7 +1013,16 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
     # ``owner`` lets a caller compiling a scratch copy of a unit (the permuter)
     # keep the canonical unit's compiler profile.
     if owner is None:
-        owner = source if source_override else (entry.get('source') or source)
+        if source_override is None:
+            owner = entry.get('source') or source
+        elif _inside_root(source_override):
+            owner = source_override
+        else:
+            # A scratch copy outside the repository has no profile of its own
+            # (it would silently build as library code): keep the function's
+            # canonical owner so check --source gives the same answer as the
+            # real unit.
+            owner = entry.get('source') or source
     obj_path, build_state = compile_source(source, owner=owner)
     if obj_path is None:
         return {'status': 'COMPILE_ERROR', 'entry': entry, 'detail': build_state}

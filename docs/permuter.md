@@ -62,3 +62,28 @@ function whose own body contains an `asm` block cannot be permuted, and
 Use bounded manual `PERM_GENERAL` / `PERM_VAR` experiments for a known set of
 source-shape choices.  Random mode is useful only near the end; it can produce
 unnatural code and it cannot diagnose a wrong debug type or global layout.
+
+## Faster iterations: the compile bridge
+
+Each permuter iteration runs the job's `compile.sh`. Starting a fresh
+`permute.py compile` re-imports the matcher and re-parses the retail ELF and
+source index every time, which is about 80% of a ~0.5 s iteration (the compile
+itself is ~0.1 s). Leave a bridge server running instead:
+
+```sh
+python3 tools/permute_bridge.py serve        # socket: build/permuter/bridge.sock
+tools/run-permuter.sh build/permuter/FUNCTION --stop-on-zero -j4
+```
+
+Jobs written by `prepare` call the bridge client, which uses the server when
+one is listening and otherwise falls back to `permute.py compile`, so a server
+is optional. Objects are byte-identical either way, and the verifier gate is
+unchanged. Measured about 4.8-5x more iterations per second at `-j3` on small
+translation units; very large units are limited by the permuter's own
+parse/print step. Set `PERMUTE_BRIDGE_SOCKET` (client and server) to run one
+server per concurrent permuter run.
+
+Screen cheaply: both permuter matches found so far (PS2glComputeBSfromBB,
+fn_vTakeControlOfChannel) scored zero within about 50 iterations, while runs
+that fail go thousands of iterations without one. A short screen (60-90 s) per
+function finds most hits.
