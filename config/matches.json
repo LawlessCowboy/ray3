@@ -47828,6 +47828,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
       "status": "MATCH"
     },
+    "0x0014e470": {
+      "address": "0x0014e470",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glFinish",
+      "size": 248,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_DataInput.c",
+      "status": "MATCH"
+    },
     "0x0014e630": {
       "address": "0x0014e630",
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
