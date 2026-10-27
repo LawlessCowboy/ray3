@@ -1493,7 +1493,7 @@ struct tagGScontext {
     anon_18 SIGNAL; /* +0x198 */
     tagsceGsReg FINISH; /* +0x1a0 */
     anon_23 LABEL; /* +0x1a8 */
-    anon_28 ModFlgs; /* +0x1b0 */
+    unsigned long ModFlgs; /* +0x1b0 */
     anon_28 GlobalModFlgs; /* +0x1b8 */
     anon_27 PackageBuffer[518]; /* +0x1c0 */
     int iBufCount; /* +0x2220 */
@@ -5024,10 +5024,130 @@ void impPS2glEnd(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int sceGsSyncPath(int mode, unsigned short timeout);
+extern int printf(const char*, ...);
+extern void sceDevVu1Pause(void);
+extern int sceDevVif1Reset(void);
+extern void sceDevVu1Reset(void);
+extern void sceDevGifReset(void);
+extern void sceDevVu1Exec(unsigned short addr);
+extern void PS2glFlushNotify(void);
+extern void GsUpdate(void);
+extern void GsUpdateLimited(void);
+extern void VU1FlushBuffer(void);
+extern unsigned int VU1BufferFreeSpace(void);
+extern void VU1UpdateParameters(tagGLcontext* pContext, unsigned int mode);
+extern void PS2glUpdateTexture(unsigned int target);
+extern void PS2glActiveTextureARB(unsigned int target);
 void impPS2glBegin(unsigned int mode)
 {
     signed char iPrimMode;
-    /* TODO: decompile from asm/... */
+
+    if (VU1BufferFreeSpace() < 0x80)
+    {
+        g_PS2glContext.uiCurrentDmaBuffer++;
+        while (sceGsSyncPath(1, 0) & 4) { if (sceGsSyncPath(0, 100)) { printf("****** VU1 busy ...\n"); sceDevVu1Pause(); sceDevVif1Reset(); sceDevVu1Reset(); sceDevGifReset(); sceDevVu1Exec(0); break; } }
+        PS2glFlushNotify();
+        if (g_gsContext.ModFlgs) GsUpdate();
+        VU1FlushBuffer();
+    }
+    g_PS2glContext.iPackageBSIndex = 0;
+    if (g_PS2glContext.eOldBeginMode != mode)
+    {
+        g_PS2glContext.eBeginMode = mode;
+        g_PS2glContext.iBufLimit = 0x3c;
+        switch (mode)
+        {
+        case 4:
+            iPrimMode = 3;
+            break;
+        case 8:
+            g_PS2glContext.eBeginMode = 5;
+        case 5:
+            iPrimMode = 4;
+            if (g_PS2glContext.nTextureEnableBits & 8)
+            {
+                iPrimMode = 3;
+                g_PS2glContext.iBufLimit = 0x16;
+            }
+            break;
+        case 9:
+            g_PS2glContext.eBeginMode = 6;
+        case 6:
+            iPrimMode = 5;
+            if (g_PS2glContext.nTextureEnableBits & 8)
+            {
+                iPrimMode = 3;
+                g_PS2glContext.iBufLimit = 0x16;
+            }
+            break;
+        case 7:
+            iPrimMode = 3;
+            g_PS2glContext.iBufLimit = 0x28;
+            break;
+        case 1:
+            iPrimMode = 1;
+            break;
+        case 3:
+            iPrimMode = 2;
+            break;
+        case 2:
+            iPrimMode = 2;
+            break;
+        case 0:
+            iPrimMode = 0;
+            break;
+        case 10:
+            iPrimMode = 6;
+            break;
+        default:
+            g_PS2glContext.eBeginMode = -1;
+            return;
+        }
+        g_gsContext.PRIM.PRIM = iPrimMode;
+    }
+    if (!(g_PS2glContext.usDontUpdateBits & 1))
+    {
+        if ((g_PS2glContext.nTextureEnableBits & 8) && g_PS2glContext.bTexCubeChanged)
+        {
+            PS2glUpdateTexture(0x8513);
+            g_PS2glContext.bTexCubeChanged = 0;
+        }
+        else if ((g_PS2glContext.nTextureEnableBits & 2) && g_PS2glContext.abTex2DChanged[0])
+        {
+            PS2glUpdateTexture(0xde1);
+            g_PS2glContext.abTex2DChanged[0] = 0;
+        }
+        else if ((g_PS2glContext.nTextureEnableBits & 1) && g_PS2glContext.abTex1DChanged[0])
+        {
+            PS2glUpdateTexture(0xde0);
+            g_PS2glContext.abTex1DChanged[0] = 0;
+        }
+        PS2glActiveTextureARB(1);
+        if ((g_PS2glContext.nTextureEnableBits & 0x200) && g_PS2glContext.abTex2DChanged[1])
+        {
+            PS2glUpdateTexture(0xde1);
+            g_PS2glContext.abTex2DChanged[1] = 0;
+        }
+        else if ((g_PS2glContext.nTextureEnableBits & 0x100) && g_PS2glContext.abTex1DChanged[1])
+        {
+            PS2glUpdateTexture(0xde0);
+            g_PS2glContext.abTex1DChanged[1] = 0;
+        }
+        PS2glActiveTextureARB(0);
+    }
+    if (!(g_PS2glContext.usDontUpdateBits & 2))
+    {
+        if (g_gsContext.ModFlgs) GsUpdate();
+    }
+    else
+    {
+        if (g_gsContext.ModFlgs) GsUpdateLimited();
+    }
+    if (!(g_PS2glContext.nEnableBits & 0x40000))
+        VU1UpdateParameters(&g_PS2glContext, mode);
+    g_PS2glContext.bInBeginEndPair = 1;
+    g_PS2glContext.eOldBeginMode = g_PS2glContext.eBeginMode;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 112–122 */
@@ -5058,7 +5178,7 @@ void impPS2glFinish(void)
 {
     int iRet;
 
-    g_PS2glContext.uiCurrentDmaBuffer++; while (sceGsSyncPath(1, 0) & 4) { if (sceGsSyncPath(0, 100)) { printf("****** VU1 busy ...\n"); sceDevVu1Pause(); sceDevVif1Reset(); sceDevVu1Reset(); sceDevGifReset(); sceDevVu1Exec(0); break; } } PS2glFlushNotify(); if (*(unsigned long*)&g_gsContext.ModFlgs) GsUpdate(); VU1FlushBuffer();
+    g_PS2glContext.uiCurrentDmaBuffer++; while (sceGsSyncPath(1, 0) & 4) { if (sceGsSyncPath(0, 100)) { printf("****** VU1 busy ...\n"); sceDevVu1Pause(); sceDevVif1Reset(); sceDevVu1Reset(); sceDevGifReset(); sceDevVu1Exec(0); break; } } PS2glFlushNotify(); if (g_gsContext.ModFlgs) GsUpdate(); VU1FlushBuffer();
 
     iRet = sceGsSyncPath(0, 0); if (iRet) { printf("\n\n************************************************\n************ sceGsSyncPath timeout.*************\n************************************************\n\n"); Bug_Please_ReloadMenu_40 = 1; }
     if (iRet) printf("In PS2glFinish, SyncPath failure!\n");
@@ -5083,7 +5203,7 @@ void impPS2glFinish(void)
 void impPS2glFlush(void)
 {
     g_PS2glContext.uiCurrentDmaBuffer++;
-    while (sceGsSyncPath(1, 0) & 4) { if (sceGsSyncPath(0, 100)) { printf("****** VU1 busy ...\n"); sceDevVu1Pause(); sceDevVif1Reset(); sceDevVu1Reset(); sceDevGifReset(); sceDevVu1Exec(0); break; } } PS2glFlushNotify(); if (*(unsigned long*)&g_gsContext.ModFlgs) GsUpdate(); VU1FlushBuffer();
+    while (sceGsSyncPath(1, 0) & 4) { if (sceGsSyncPath(0, 100)) { printf("****** VU1 busy ...\n"); sceDevVu1Pause(); sceDevVif1Reset(); sceDevVu1Reset(); sceDevGifReset(); sceDevVu1Exec(0); break; } } PS2glFlushNotify(); if (g_gsContext.ModFlgs) GsUpdate(); VU1FlushBuffer();
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 47–74 */
