@@ -63262,7 +63262,7 @@
       "name": "fn_vTakeControlOfChannel",
       "size": 120,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ChanList.c",
-      "status": "EQUIVALENT"
+      "status": "MATCH"
     },
     "0x0025de10": {
       "address": "0x0025de10",

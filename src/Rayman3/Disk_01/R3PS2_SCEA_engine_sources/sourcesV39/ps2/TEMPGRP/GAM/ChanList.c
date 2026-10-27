@@ -1638,8 +1638,16 @@ void fn_vTakeControlOfLipChannel(tdstEngineObject_* _hActor, unsigned short _uwC
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Not original source, needs cleaning up: permuter-found. The inline helper
+ * fixes the operand order of the channel address, as in retail. */
+inline unsigned char* inline_fn(unsigned char* arg0, unsigned int arg1)
+{
+    return ((unsigned char*)arg0) + arg1;
+}
+
 void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChannel, unsigned char _bControlled)
 {
+    char* new_var;
     unsigned int ulI;
     tdstAChannel_* p_stChannel;
     tdst3dData_* hCurrent3dData;
@@ -1650,12 +1658,13 @@ void fn_vTakeControlOfChannel(tdstEngineObject_* _hActor, unsigned short _uwChan
     p_stChannel = *(tdstAChannel_**)((char*)hCurrent3dData + 0xa8);
     if (p_stChannel != NULL)
     {
-        ulNumberOfChannels = *(unsigned int*)((char*)hCurrent3dData + 0xac);
+        new_var = (char*)hCurrent3dData + 0xac;
+        ulNumberOfChannels = *(unsigned int*)new_var;
         if (_uwChannel != 0xffff)
         {
             /* Not original source, needs cleaning up: the offset assignment inside
              * the address keeps bControlledChannel's offset unfolded. */
-            *((unsigned char*)&p_stChannel->bControlledChannel + (ulOffset = (unsigned int)_uwChannel * sizeof(tdstAChannel_))) = _bControlled;
+            *inline_fn(&p_stChannel->bControlledChannel, ulOffset = (unsigned int)_uwChannel * sizeof(tdstAChannel_)) = _bControlled;
         }
         else
         {
