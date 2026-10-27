@@ -1992,10 +1992,14 @@ void fn_v_RotateMechanicsLinkedToOneSPO(DNM_stDynamics* _p_stDynamic, MAT_tdstTr
         MAT_fn_vCompose(hCurrentMatrix, _p_Transformation, hCurrentMatrix);
         MAT_fn_vNormalize(hCurrentMatrix);
         hPreviousMatrix = &_p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+        /* Not original source: redundant block and re-assignment found by the permuter. */
+        if (1) {
         MAT_fn_vCompose(hPreviousMatrix, _p_Transformation, hPreviousMatrix);
         MAT_fn_vNormalize(hPreviousMatrix);
         hAbsolutePreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
+        }
         if ((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) {
+            hAbsolutePreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
             MAT_fn_vCompose(hAbsolutePreviousMatrix, _p_Transformation, hAbsolutePreviousMatrix);
             MAT_fn_vNormalize(hAbsolutePreviousMatrix);
             hPrevPreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix;

@@ -61228,6 +61228,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcRay2.cxx",
       "status": "MATCH"
     },
+    "0x0022d500": {
+      "address": "0x0022d500",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stTractionFactorProcedure",
+      "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcRay2.cxx",
+      "status": "MATCH"
+    },
     "0x0022d730": {
       "address": "0x0022d730",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -67252,6 +67260,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/SOL.c",
       "status": "MATCH"
     },
+    "0x00281bd0": {
+      "address": "0x00281bd0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "fn_v_RotateMechanicsLinkedToOneSPO",
+      "size": 200,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/SOL.c",
+      "status": "MATCH"
+    },
     "0x00282160": {
       "address": "0x00282160",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -68977,6 +68993,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GEO_vInitGeometricObject",
       "size": 272,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GeoObj.c",
+      "status": "MATCH"
+    },
+    "0x002a2460": {
+      "address": "0x002a2460",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GEO_xComputeIndexUsedByElements",
+      "size": 1080,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/GeoObj.c",
       "status": "MATCH"
     },
