@@ -3083,9 +3083,20 @@ void impPS2glColorMaterial(unsigned int face, unsigned int mode)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void impPS2glBegin(unsigned int mode);
+
 void impPS2glRects(short x1, short y1, short x2, short y2)
 {
-    /* TODO: decompile from asm/... */
+    quad* pQuad;
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1035–1037 */
@@ -3099,7 +3110,16 @@ void impPS2glRects(short x1, short y1, short x2, short y2)
  */
 void impPS2glRecti(int x1, int y1, int x2, int y2)
 {
-    /* TODO: decompile from asm/... */
+    quad* pQuad;
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1024–1032 */
@@ -3138,7 +3158,16 @@ void impPS2glRecti(int x1, int y1, int x2, int y2)
  */
 void impPS2glRectf(float x1, float y1, float x2, float y2)
 {
-    /* TODO: decompile from asm/... */
+    quad* pQuad;
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1019–1021 */
@@ -3152,7 +3181,16 @@ void impPS2glRectf(float x1, float y1, float x2, float y2)
  */
 void impPS2glRectd(double x1, double y1, double x2, double y2)
 {
-    /* TODO: decompile from asm/... */
+    quad* pQuad;
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x2; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x1; (*g_PS2glContext.pVBuf)[1] = (float)y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1014–1016 */
@@ -3166,7 +3204,18 @@ void impPS2glRectd(double x1, double y1, double x2, double y2)
  */
 void impPS2glRectsv(short* v1, short* v2)
 {
-    /* TODO: decompile from asm/... */
+    quad* pQuad;
+    float x1, y1, x2, y2;
+    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1009–1011 */
@@ -3180,7 +3229,18 @@ void impPS2glRectsv(short* v1, short* v2)
  */
 void impPS2glRectiv(int* v1, int* v2)
 {
-    /* TODO: decompile from asm/... */
+    quad* pQuad;
+    float x1, y1, x2, y2;
+    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 1004–1006 */
@@ -3194,7 +3254,18 @@ void impPS2glRectiv(int* v1, int* v2)
  */
 void impPS2glRectfv(float* v1, float* v2)
 {
-    /* TODO: decompile from asm/... */
+    quad* pQuad;
+    float x1, y1, x2, y2;
+    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 999–1001 */
@@ -3208,7 +3279,18 @@ void impPS2glRectfv(float* v1, float* v2)
  */
 void impPS2glRectdv(double* v1, double* v2)
 {
-    /* TODO: decompile from asm/... */
+    quad* pQuad;
+    float x1, y1, x2, y2;
+    y2 = (float)v2[1]; x2 = (float)v2[0]; y1 = (float)v1[1]; x1 = (float)v1[0];
+    impPS2glBegin(9);
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y1; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x2; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x1; (*g_PS2glContext.pVBuf)[1] = y2; (*g_PS2glContext.pVBuf)[2] = 0.0f; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
+    if (g_PS2glContext.eBeginMode == 7)
+        PS2glAssembleQuads();
+    PS2glFlushBuffer(1);
+    g_PS2glContext.bInBeginEndPair = 0;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 991–994 */
@@ -3224,7 +3306,9 @@ void impPS2glRectdv(double* v1, double* v2)
  */
 void impPS2glVertex4sv(short* v)
 {
-    /* TODO: decompile from asm/... */
+    float x, y, z, w;
+    quad* pQuad;
+    w = (float)v[3]; z = (float)v[2]; y = (float)v[1]; x = (float)v[0]; if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = x; (*g_PS2glContext.pVBuf)[1] = y; (*g_PS2glContext.pVBuf)[2] = z; (*g_PS2glContext.pVBuf++)[3] = w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 985–988 */
@@ -3494,7 +3578,8 @@ void impPS2glVertex4s(short x, short y, short z, short w)
  */
 void impPS2glVertex4i(int x, int y, int z, int w)
 {
-    /* TODO: decompile from asm/... */
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = (float)w; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 887–889 */
@@ -3510,7 +3595,8 @@ void impPS2glVertex4i(int x, int y, int z, int w)
  */
 void impPS2glVertex4d(double X, double Y, double Z, double W)
 {
-    /* TODO: decompile from asm/... */
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)X; (*g_PS2glContext.pVBuf)[1] = (float)Y; (*g_PS2glContext.pVBuf)[2] = (float)Z; (*g_PS2glContext.pVBuf++)[3] = (float)W; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 844–884 */
@@ -3645,7 +3731,8 @@ void impPS2glVertex3f(float x, float y, float z)
  */
 void impPS2glVertex3d(double x, double y, double z)
 {
-    /* TODO: decompile from asm/... */
+    quad* pQuad;
+    if (g_PS2glContext.iBufCount >= g_PS2glContext.iBufLimit) { if (g_PS2glContext.eBeginMode == 7) PS2glAssembleQuads(); PS2glFlushBuffer(0); } (*g_PS2glContext.pVBuf)[0] = (float)x; (*g_PS2glContext.pVBuf)[1] = (float)y; (*g_PS2glContext.pVBuf)[2] = (float)z; (*g_PS2glContext.pVBuf++)[3] = 1.0f; pQuad = (quad*)g_PS2glContext.pNBuf++; *pQuad = *(quad*)g_PS2glContext.vcurNormal; pQuad = (quad*)g_PS2glContext.pCBuf++; *pQuad = *(quad*)g_PS2glContext.vacurColor[0]; pQuad = (quad*)g_PS2glContext.pCBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurColor[1]; pQuad = (quad*)g_PS2glContext.pTBuf++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[0]; pQuad = (quad*)g_PS2glContext.pTBuf_b++; *pQuad = *(quad*)g_PS2glContext.vacurTexCoords[1]; g_PS2glContext.iBufCount++;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_DataInput.c lines 819–821 */

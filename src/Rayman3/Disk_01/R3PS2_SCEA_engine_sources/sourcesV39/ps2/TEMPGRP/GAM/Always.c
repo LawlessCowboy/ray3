@@ -1702,7 +1702,9 @@ unsigned int fn_ulGetNumberOfAlwaysBelongingToMe(HIE_tdstSuperObject_* _hGenerat
     int i;
 
     ulReturn = 0;
-    for (i = 0; i < g_stAlways.ulMaxNumberOfAlways; i++)
+    /* Permuter-found (verified): the (int) cast in the bound and the empty 'if (1)'
+       below only renumber the temporaries (t0/t1 swap).  Not original source. */
+    for (i = 0; (int)i < g_stAlways.ulMaxNumberOfAlways; i++)
     {
         /* The (unsigned int) index keeps the superobject address unreduced (sll 7 per iteration)
            as retail does. Not original source, needs cleaning up. */
@@ -1710,7 +1712,12 @@ unsigned int fn_ulGetNumberOfAlwaysBelongingToMe(HIE_tdstSuperObject_* _hGenerat
         if (hAlwaysObject != NULL && hAlwaysObject->h_3dData != NULL)
         {
             if (g_stAlways.d_hAlwaysGenerator[i] == _hGenerator)
+            {
+                if (1)
+                {
+                }
                 ulReturn++;
+            }
         }
     }
     return ulReturn;

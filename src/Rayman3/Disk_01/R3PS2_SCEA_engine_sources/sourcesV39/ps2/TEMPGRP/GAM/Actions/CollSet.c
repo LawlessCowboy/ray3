@@ -2119,7 +2119,14 @@ float fn_xCollSetGetColliderReal(tdstCollSet_* _hCollSet, short _wIndex)
     /* Matching idiom: a char* base plus a dead scaled-index assignment keeps
        the retail's unfolded address (base addiu + index shift) with the whole
        index chain in one register.  Not original source, needs cleanup. */
-    int index = _wIndex; int iIndex; char *pc = (char*)_hCollSet; pc = pc + 0x64; return (index >= 0 && index < 2) ? *(float*)((char*)pc + (iIndex = index * 4)) : 0.0f;
+    /* Permuter-found (verified): the constant bound in a local and the masked
+       index assignment change only the temporary numbering.  Not original source. */
+    int new_var;
+    int index = _wIndex; int iIndex; char *pc = (char*)_hCollSet;
+    int new_var2;
+    pc = pc + 0x64;
+    new_var = 2;
+    return (index >= 0 && index < new_var) ? *(float*)((char*)pc + (iIndex = (new_var2 = (index & 0xFFFFFFFF) * 4))) : 0.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\CollSet.c lines 520–526 */
