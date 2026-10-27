@@ -43656,6 +43656,36 @@
       "status": "MATCH",
       "target_size": 248,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002c0a20",
+      "candidate_size": 908,
+      "first_difference": 46,
+      "implementation": "void SEND_MAT_OPT_ALPHA(GLI_tdstMaterial_* hVisualMaterial)\n{\n    anon_2* pMat;\n    unsigned int Local_LastTextureMode;\n    void* p_stLastTexture;\n    GLI_tdstTexture_* p_stTexture;\n    GLI_tdstTexturePS2GL_* p_stSpecParam;\n    p_stLastTexture = (void*)GLI_g_p_stLastTexture;\n    Local_LastTextureMode = GLI_g_LastTextureMode;\n    pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];\n    PS2GL_g_DontUpdateTexture = 0;\n    GLI_g_p_stLastTexture = 0;\n    GLI_g_LastTextureMode = 0;\n    p_stTexture = hVisualMaterial->p_stTexture;\n    if ((void*)p_stTexture == p_stLastTexture)\n    {\n        PS2GL_g_DontUpdateTexture = 1;\n    }\n    else\n    {\n        p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam;\n        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet ? 0x200 : 2);\n        g_gsContext.PRMODE.TME = 1;\n        g_gsContext.ModFlgs.PRMODE_Modified = 1;\n        PS2glBindTexture(0xDE1, *(unsigned int*)p_stSpecParam);\n        GLI_g_p_stLastTexture = (int)p_stTexture;\n        PS2GL_g_DontUpdateTexture = 0;\n    }\n    if (g_TextMatrixIsIdentity == 0)\n    {\n        PS2glMatrixMode(0x1702);\n        PS2glLoadIdentity();\n        g_TextMatrixIsIdentity = 1;\n    }\n    if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))\n    {\n        if (pMat->ulTextureProperties & 1)\n            PS2glTexParameteri(0xDE1, 0x2802, 0x2901);\n        else\n            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);\n        if (pMat->ulTextureProperties & 2)\n            PS2glTexParameteri(0xDE1, 0x2803, 0x2901);\n        else\n            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);\n        PS2GL_g_DontUpdateTexture = 0;\n        GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;\n    }\n    if (Local_LastTextureMode != 3)\n    {\n        g_PS2glContext.nEnableBits |= 0x100;\n        g_gsContext.PRMODE.ABE = 1;\n        g_gsContext.ModFlgs.PRMODE_Modified = 1;\n        PS2glBlendFunc(0x302, 0x303);\n        PS2glDepthMask(0);\n        g_PS2glContext.nEnableBits &= ~0x400;\n        g_gsContext.TEST_1.ATE = 0;\n        g_gsContext.ModFlgs.TEST_1_Modified = 1;\n    }\n    GLI_g_LastTextureMode = 3;\n    SET_FOGC();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "SEND_MAT_OPT_ALPHA",
+      "reason": "Structure and size right (908/908); residual: s0/s2 swap of p_stTexture/pMat and movn vs movz for nTextureEnableBits select, one delay-slot store",
+      "size": 908,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MISMATCH",
+      "target_size": 908,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002c1500",
+      "candidate_size": 916,
+      "first_difference": 46,
+      "implementation": "void SEND_MAT_OPT_OPAQUE(GLI_tdstMaterial_* hVisualMaterial)\n{\n    anon_2* pMat;\n    unsigned int Local_LastTextureMode;\n    void* p_stLastTexture;\n    GLI_tdstTexture_* p_stTexture;\n    GLI_tdstTexturePS2GL_* p_stSpecParam;\n    p_stLastTexture = (void*)GLI_g_p_stLastTexture;\n    Local_LastTextureMode = GLI_g_LastTextureMode;\n    pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];\n    PS2GL_g_DontUpdateTexture = 0;\n    GLI_g_p_stLastTexture = 0;\n    GLI_g_LastTextureMode = 0;\n    p_stTexture = hVisualMaterial->p_stTexture;\n    if ((void*)p_stTexture == p_stLastTexture)\n    {\n        PS2GL_g_DontUpdateTexture = 1;\n    }\n    else\n    {\n        p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam;\n        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet ? 0x200 : 2);\n        g_gsContext.PRMODE.TME = 1;\n        g_gsContext.ModFlgs.PRMODE_Modified = 1;\n        PS2glBindTexture(0xDE1, *(unsigned int*)p_stSpecParam);\n        GLI_g_p_stLastTexture = (int)p_stTexture;\n        PS2GL_g_DontUpdateTexture = 0;\n    }\n    if (g_TextMatrixIsIdentity == 0)\n    {\n        PS2glMatrixMode(0x1702);\n        PS2glLoadIdentity();\n        g_TextMatrixIsIdentity = 1;\n    }\n    if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))\n    {\n        if (pMat->ulTextureProperties & 1)\n            PS2glTexParameteri(0xDE1, 0x2802, 0x2901);\n        else\n            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);\n        if (pMat->ulTextureProperties & 2)\n            PS2glTexParameteri(0xDE1, 0x2803, 0x2901);\n        else\n            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);\n        PS2GL_g_DontUpdateTexture = 0;\n        GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;\n    }\n    if (Local_LastTextureMode != 1)\n    {\n        PS2glDepthMask(1);\n        g_PS2glContext.nEnableBits &= ~0x400;\n        g_gsContext.TEST_1.ATE = 0;\n        g_gsContext.ModFlgs.TEST_1_Modified = 1;\n        g_PS2glContext.nEnableBits &= ~0x100;\n        g_gsContext.PRMODE.ABE = 0;\n        g_gsContext.ModFlgs.PRMODE_Modified = 1;\n    }\n    SET_FOGC();\n    GLI_g_LastTextureMode = 1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "SEND_MAT_OPT_OPAQUE",
+      "reason": "916/916; same prefix residuals as OPT_ALPHA (s0/s2 swap, movn)",
+      "size": 916,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MISMATCH",
+      "target_size": 916,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -71321,6 +71351,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_DRV_IsMaterialTransparent",
       "size": 132,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
+    "0x002c44f0": {
+      "address": "0x002c44f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SetFogc",
+      "size": 328,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
       "status": "MATCH"
     },
