@@ -43742,6 +43742,21 @@
       "status": "MISMATCH",
       "target_size": 492,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00208920",
+      "candidate_size": 388,
+      "first_difference": 28,
+      "implementation": "tdstNodeInterpret_* CAM_fn_p_stAssociateViewport(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stValue;\n    int lDeactived;\n    int lViewport;\n    HIE_tdstSuperObject_* hOldCamera;\n    HIE_tdstSuperObject_* hNewCamera;\n    tdstCineinfo_* hOldCineInfo;\n    tdstCineinfo_* hNewCineInfo;\n\n    hNewCineInfo = NULL;\n    hOldCineInfo = NULL;\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n    lViewport = stValue.uDummy.uParam.lValue;\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n    lDeactived = stValue.uDummy.uParam.lValue;\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n    hNewCamera = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);\n    hOldCamera = CAM_fn_hGetActiveCamera(lViewport);\n    if (hNewCamera == hOldCamera)\n        return p_stTree;\n    if (lViewport < 3)\n    {\n        if (lViewport == -1)\n            return p_stTree;\n        if (hNewCamera != NULL)\n            hNewCineInfo = hNewCamera->hLinkedObject.p_stCharacter->h_Cineinfo;\n        if (hOldCamera != NULL)\n            hOldCineInfo = hOldCamera->hLinkedObject.p_stCharacter->h_Cineinfo;\n        if (hNewCamera != NULL)\n        {\n            CAM_fn_vActivateCamera(hNewCineInfo, 0, 1);\n            hNewCineInfo->hWork->eTypeOfViewport = lViewport;\n            CAM_fn_vAssignCameraToAViewport(lViewport, hNewCamera);\n            hNewCineInfo->hCurrent->eTypeOfViewport = lViewport;\n            hNewCineInfo->hVisibility->eTypeOfViewport = lViewport;\n            GAM_fn_vChangeCharacterForMicro(hNewCamera);\n        }\n        if (hOldCamera != NULL)\n        {\n            if (g_stEngineStructure.h_StdCamCaracter != hOldCamera)\n            {\n                if (lDeactived == 1)\n                    CAM_fn_vActivateCamera(hOldCineInfo, 0, 0);\n                hOldCineInfo->hCurrent->eTypeOfViewport = -1;\n                hOldCineInfo->hVisibility->eTypeOfViewport = -1;\n                hOldCineInfo->hWork->eTypeOfViewport = -1;\n            }\n        }\n    }\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "CAM_fn_p_stAssociateViewport",
+      "reason": "388/396: structure right; target leaves an unfilled nop after 'lViewport == -1' early return and holds new/old camera in different saved regs",
+      "size": 396,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MISMATCH",
+      "target_size": 396,
+      "unresolved_relocations": []
     }
   ],
   "data": {},

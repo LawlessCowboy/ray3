@@ -4491,6 +4491,11 @@ tdstNodeInterpret_* CAM_fn_p_stSetIAFlags(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vActivateCamera(tdstCineinfo_* _hCineInfo, int _lTypeOfChange, unsigned char _bActive);
+void CAM_fn_vAssignCameraToAViewport(int lViewport, HIE_tdstSuperObject_* hCamera);
+void GAM_fn_vChangeCharacterForMicro(HIE_tdstSuperObject_* hCharacter);
+HIE_tdstSuperObject_* CAM_fn_hGetActiveCamera(int lViewport);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* _hStdGame);
 tdstNodeInterpret_* CAM_fn_p_stAssociateViewport(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stValue;
@@ -4500,7 +4505,48 @@ tdstNodeInterpret_* CAM_fn_p_stAssociateViewport(HIE_tdstSuperObject_* p_SuperOb
     HIE_tdstSuperObject_* hNewCamera;
     tdstCineinfo_* hOldCineInfo;
     tdstCineinfo_* hNewCineInfo;
-    /* TODO: decompile from asm/... */
+
+    hNewCineInfo = NULL;
+    hOldCineInfo = NULL;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lViewport = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lDeactived = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    hNewCamera = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    hOldCamera = CAM_fn_hGetActiveCamera(lViewport);
+    if (hNewCamera == hOldCamera)
+        return p_stTree;
+    if (lViewport < 3)
+    {
+        if (lViewport == -1)
+            return p_stTree;
+        if (hNewCamera != NULL)
+            hNewCineInfo = hNewCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+        if (hOldCamera != NULL)
+            hOldCineInfo = hOldCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+        if (hNewCamera != NULL)
+        {
+            CAM_fn_vActivateCamera(hNewCineInfo, 0, 1);
+            hNewCineInfo->hWork->eTypeOfViewport = lViewport;
+            CAM_fn_vAssignCameraToAViewport(lViewport, hNewCamera);
+            hNewCineInfo->hCurrent->eTypeOfViewport = lViewport;
+            hNewCineInfo->hVisibility->eTypeOfViewport = lViewport;
+            GAM_fn_vChangeCharacterForMicro(hNewCamera);
+        }
+        if (hOldCamera != NULL)
+        {
+            if (g_stEngineStructure.h_StdCamCaracter != hOldCamera)
+            {
+                if (lDeactived == 1)
+                    CAM_fn_vActivateCamera(hOldCineInfo, 0, 0);
+                hOldCineInfo->hCurrent->eTypeOfViewport = -1;
+                hOldCineInfo->hVisibility->eTypeOfViewport = -1;
+                hOldCineInfo->hWork->eTypeOfViewport = -1;
+            }
+        }
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 917–952 */
