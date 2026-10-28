@@ -3856,6 +3856,7 @@ tdstNodeInterpret_* CAM_fn_p_stReset(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vSetResetInternalFlag(tdstCineinfo_* hCineInfo, unsigned short* p_uwCurrent, unsigned short* p_uwVisibility, unsigned short* p_uwWork, int lTypeOfChange, int lChangingMode, unsigned short uwFlag);
 tdstNodeInterpret_* CAM_fn_p_stSetForce(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     MTH3D_tdstVector_ stTempVector;
@@ -3867,7 +3868,56 @@ tdstNodeInterpret_* CAM_fn_p_stSetForce(HIE_tdstSuperObject_* p_SuperObjPerso, t
     int lChangingMode;
     HIE_tdstSuperObject_* hCamera;
     tdstCineinfo_* hCineInfo;
-    /* TODO: decompile from asm/... */
+
+    uwFlag = 0;
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lTypeOfChange = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lChangingMode = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    stTempVector.xX = stValue.uDummy.uParam.stVectorValue.xX;
+    stTempVector.xY = stValue.uDummy.uParam.stVectorValue.xY;
+    stTempVector.xZ = stValue.uDummy.uParam.stVectorValue.xZ;
+    p_stValue = &stValue.uDummy.uParam.stVectorValue;
+    switch (eProcedureId)
+    {
+    case 0x26e:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        if (lChangingMode == 1)
+        {
+            hCineInfo->stForceRefAxisY.xX = stTempVector.xX;
+            hCineInfo->stForceRefAxisY.xY = stTempVector.xY;
+            hCineInfo->stForceRefAxisY.xZ = stTempVector.xZ;
+            hCineInfo->stForceRefAxisZ.xX = (*p_stValue).xX;
+            hCineInfo->stForceRefAxisZ.xY = (*p_stValue).xY;
+            hCineInfo->stForceRefAxisZ.xZ = (*p_stValue).xZ;
+        }
+        uwFlag = 0x4000;
+        break;
+    case 0x26d:
+        if (lChangingMode == 1)
+        {
+            uwFlag = 0x2000;
+            hCineInfo->stForcePosition.xX = (*p_stValue).xX;
+            hCineInfo->stForcePosition.xY = (*p_stValue).xY;
+            hCineInfo->stForcePosition.xZ = (*p_stValue).xZ;
+        }
+        break;
+    case 0x26c:
+        if (lChangingMode == 1)
+        {
+            uwFlag = 0x1000;
+            hCineInfo->stForceTarget.xX = (*p_stValue).xX;
+            hCineInfo->stForceTarget.xY = (*p_stValue).xY;
+            hCineInfo->stForceTarget.xZ = (*p_stValue).xZ;
+        }
+        break;
+    }
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, lTypeOfChange, lChangingMode, uwFlag);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 1537–1553 */
@@ -4112,14 +4162,120 @@ tdstNodeInterpret_* CAM_fn_p_stShowInfo(HIE_tdstSuperObject_* p_SuperObjPerso, t
  */
 tdstNodeInterpret_* CAM_fn_p_stSetDNMFlags(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdeProcedureId_ eProcedureId;
-    unsigned short uwFlag;
-    tdstGetSetParam_ stValue;
+    tdstCineinfo_* hCineInfo;
+    HIE_tdstSuperObject_* hCamera;
     int lTypeOfChange;
     int lChangingMode;
-    HIE_tdstSuperObject_* hCamera;
-    tdstCineinfo_* hCineInfo;
-    /* TODO: decompile from asm/... */
+    unsigned short uwFlag;
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stValue;
+
+    uwFlag = 0;
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lTypeOfChange = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lChangingMode = stValue.uDummy.uParam.lValue;
+    switch (eProcedureId)
+    {
+    case 0x25e:
+        uwFlag = hCineInfo->hInit->uwDNMFlags;
+        break;
+    case 0x25f:
+        uwFlag = 0x1;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwDNMFlags & 0x1)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x260:
+        uwFlag = 0x2;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwDNMFlags & 0x2)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x261:
+        uwFlag = 0x4;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwDNMFlags & 0x4)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x262:
+        uwFlag = 0x8;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwDNMFlags & 0x8)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x263:
+        uwFlag = 0x10;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwDNMFlags & 0x10)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x264:
+        uwFlag = 0x20;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwDNMFlags & 0x20)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x265:
+        uwFlag = 0x80;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwDNMFlags & 0x80)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x266:
+        uwFlag = 0x40;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwDNMFlags & 0x40)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x267:
+        uwFlag = 0x100;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwDNMFlags & 0x100)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    }
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwDNMFlags, &hCineInfo->hVisibility->uwDNMFlags, &hCineInfo->hWork->uwDNMFlags, lTypeOfChange, lChangingMode, uwFlag);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 1067–1212 */
@@ -4182,14 +4338,110 @@ tdstNodeInterpret_* CAM_fn_p_stSetDNMFlags(HIE_tdstSuperObject_* p_SuperObjPerso
  */
 tdstNodeInterpret_* CAM_fn_p_stSetIAFlags(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdeProcedureId_ eProcedureId;
-    unsigned short uwFlag;
-    tdstGetSetParam_ stValue;
+    tdstCineinfo_* hCineInfo;
+    HIE_tdstSuperObject_* hCamera;
     int lTypeOfChange;
     int lChangingMode;
-    HIE_tdstSuperObject_* hCamera;
-    tdstCineinfo_* hCineInfo;
-    /* TODO: decompile from asm/... */
+    unsigned short uwFlag;
+    tdeProcedureId_ eProcedureId;
+    tdstGetSetParam_ stValue;
+
+    uwFlag = 0;
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lTypeOfChange = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lChangingMode = stValue.uDummy.uParam.lValue;
+    switch (eProcedureId)
+    {
+    case 0x255:
+        uwFlag = hCineInfo->hInit->uwIAFlags;
+        break;
+    case 0x256:
+        uwFlag = 0x1;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwIAFlags & 0x1)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x257:
+        uwFlag = 0x2;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwIAFlags & 0x2)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x258:
+        uwFlag = 0x4;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwIAFlags & 0x4)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x259:
+        uwFlag = 0x8;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwIAFlags & 0x8)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x25a:
+        uwFlag = 0x10;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwIAFlags & 0x10)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x25b:
+        uwFlag = 0x20;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwIAFlags & 0x20)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x25c:
+        uwFlag = 0x40;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwIAFlags & 0x40)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    case 0x25d:
+        uwFlag = 0x80;
+        if (lChangingMode == -1)
+        {
+            if (hCineInfo->hInit->uwIAFlags & 0x80)
+                lChangingMode = 1;
+            else
+                lChangingMode = 0;
+        }
+        break;
+    }
+    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, lTypeOfChange, lChangingMode, uwFlag);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 971–1055 */

@@ -43727,6 +43727,21 @@
       "status": "MISMATCH",
       "target_size": 476,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00207ef0",
+      "candidate_size": 484,
+      "first_difference": 10,
+      "implementation": "tdstNodeInterpret_* CAM_fn_p_stSetForce(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    MTH3D_tdstVector_ stTempVector;\n    MTH3D_tdstVector_* p_stValue;\n    tdeProcedureId_ eProcedureId;\n    unsigned short uwFlag;\n    tdstGetSetParam_ stValue;\n    int lTypeOfChange;\n    int lChangingMode;\n    HIE_tdstSuperObject_* hCamera;\n    tdstCineinfo_* hCineInfo;\n\n    uwFlag = 0;\n    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;\n    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hCamera);\n    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n    lTypeOfChange = stValue.uDummy.uParam.lValue;\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n    lChangingMode = stValue.uDummy.uParam.lValue;\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n    stTempVector.xX = stValue.uDummy.uParam.stVectorValue.xX;\n    stTempVector.xY = stValue.uDummy.uParam.stVectorValue.xY;\n    stTempVector.xZ = stValue.uDummy.uParam.stVectorValue.xZ;\n    p_stValue = &stValue.uDummy.uParam.stVectorValue;\n    switch (eProcedureId)\n    {\n    case 0x26e:\n        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n        if (lChangingMode == 1)\n        {\n            hCineInfo->stForceRefAxisY.xX = stTempVector.xX;\n            hCineInfo->stForceRefAxisY.xY = stTempVector.xY;\n            hCineInfo->stForceRefAxisY.xZ = stTempVector.xZ;\n            hCineInfo->stForceRefAxisZ.xX = (*p_stValue).xX;\n            hCineInfo->stForceRefAxisZ.xY = (*p_stValue).xY;\n            hCineInfo->stForceRefAxisZ.xZ = (*p_stValue).xZ;\n        }\n        uwFlag = 0x4000;\n        break;\n    case 0x26d:\n        if (lChangingMode == 1)\n        {\n            uwFlag = 0x2000;\n            hCineInfo->stForcePosition.xX = (*p_stValue).xX;\n            hCineInfo->stForcePosition.xY = (*p_stValue).xY;\n            hCineInfo->stForcePosition.xZ = (*p_stValue).xZ;\n        }\n        break;\n    case 0x26c:\n        if (lChangingMode == 1)\n        {\n            uwFlag = 0x1000;\n            hCineInfo->stForceTarget.xX = (*p_stValue).xX;\n            hCineInfo->stForceTarget.xY = (*p_stValue).xY;\n            hCineInfo->stForceTarget.xZ = (*p_stValue).xZ;\n        }\n        break;\n    }\n    CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, lTypeOfChange, lChangingMode, uwFlag);\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "CAM_fn_p_stSetForce",
+      "reason": "484/492: force-vector setter reconstructed; target copies vectors with integer lw/sw through stTempVector pointers (s8/s7), ours uses FPU copies; extra stack alignment",
+      "size": 492,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MISMATCH",
+      "target_size": 492,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -58408,6 +58423,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CAM_fn_p_stShowInfo",
       "size": 164,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MATCH"
+    },
+    "0x002083f0": {
+      "address": "0x002083f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_p_stSetDNMFlags",
+      "size": 680,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MATCH"
+    },
+    "0x002086a0": {
+      "address": "0x002086a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_p_stSetIAFlags",
+      "size": 632,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
       "status": "MATCH"
     },
