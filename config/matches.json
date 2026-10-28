@@ -44042,6 +44042,36 @@
       "status": "MISMATCH",
       "target_size": 708,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002f1fa0",
+      "candidate_size": 620,
+      "first_difference": 84,
+      "implementation": "void IPO_fn_vInternalComputeRLI_Add(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio, float _fPreviousRatio)\n{\n    short xNumberOfVerticesToUse;\n    short xNumberOfVerticesInSource;\n    short xNumberOfVerticesInCurrent;\n    short xCurrentVertex;\n    ISI_tdstColor_* p_tdstColor2;\n    ISI_tdstColor_* p_tdstColor1;\n\n    if (_hIPO->_hCurrentRadiosity == NULL)\n        return;\n\n    if (_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd] == NULL)\n        return;\n\n    p_tdstColor1 = ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd]);\n\n    xNumberOfVerticesInCurrent = ISI_fn_xGetNbVertexRLILOD(_hIPO->_hCurrentRadiosity, 0);\n    xNumberOfVerticesInSource = ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd], 0);\n\n    xNumberOfVerticesToUse = (xNumberOfVerticesInCurrent <= xNumberOfVerticesInSource) ? xNumberOfVerticesInCurrent : xNumberOfVerticesInSource;\n\n    p_tdstColor2 = ISI_fn_dGetVertexRLI(_hIPO->_hCurrentRadiosity);\n\n    for (xCurrentVertex = 0; xCurrentVertex < xNumberOfVerticesToUse; xCurrentVertex++)\n    {\n        p_tdstColor2[xCurrentVertex].xRed = p_tdstColor2[xCurrentVertex].xRed - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xRed);\n        p_tdstColor2[xCurrentVertex].xRed = p_tdstColor2[xCurrentVertex].xRed + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xRed);\n\n        p_tdstColor2[xCurrentVertex].xGreen = p_tdstColor2[xCurrentVertex].xGreen - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xGreen);\n        p_tdstColor2[xCurrentVertex].xGreen = p_tdstColor2[xCurrentVertex].xGreen + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xGreen);\n\n        p_tdstColor2[xCurrentVertex].xBlue = p_tdstColor2[xCurrentVertex].xBlue - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xBlue);\n        p_tdstColor2[xCurrentVertex].xBlue = p_tdstColor2[xCurrentVertex].xBlue + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xBlue);\n\n        p_tdstColor2[xCurrentVertex].xAlpha = p_tdstColor2[xCurrentVertex].xAlpha - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xAlpha);\n        p_tdstColor2[xCurrentVertex].xAlpha = p_tdstColor2[xCurrentVertex].xAlpha + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xAlpha);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "IPO_fn_vInternalComputeRLI_Add",
+      "reason": "620/620, everything matches except one scheduling swap at +0x54: retail keeps 'move s1,v0' (p_tdstColor1 = ISI_fn_dGetVertexRLI result) before the next statement's 'lw a0,4(s2)'; ours hoists the load above the move. Needs short locals declared before the color pointers, '(cur <= src) ? cur : src' for the min (movn), and explicit 'x = x - ...' component assignments.",
+      "size": 620,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MISMATCH",
+      "target_size": 620,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002f2210",
+      "candidate_size": 920,
+      "first_difference": 28,
+      "implementation": "void IPO_fn_vInternalComputeRLI_Normal(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio)\n{\n    float* p_fUV_LM2;\n    float* p_fUV_LM1;\n    float* p_fUV_LM;\n    ISI_tdstColor_* p_tdstColorResult;\n    ISI_tdstColor_* p_tdstUsedColor2;\n    ISI_tdstColor_* param0;\n    ISI_tdstColor_* p_tdstColor2;\n    ISI_tdstColor_* p_tdstColor1;\n    short xNumberOfVerticesInCurrent;\n    short xNumberOfVertices2;\n    short xNumberOfVertices1;\n    short xCurrentVertex;\n    float fOtherRatio;\n\n    fOtherRatio = 1.0f - _fRatio;\n\n    if (_hIPO->_hCurrentRadiosity == NULL)\n        return;\n\n    p_tdstColorResult = ISI_fn_dGetVertexRLI(_hIPO->_hCurrentRadiosity);\n    p_tdstColor1 = _hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex] ? ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex]) : NULL;\n    p_tdstColor2 = _hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex] ? ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex]) : NULL;\n\n    xNumberOfVerticesInCurrent = ISI_fn_xGetNbVertexRLILOD(_hIPO->_hCurrentRadiosity, 0);\n    xNumberOfVertices1 = _hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex] ? ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex], 0) : xNumberOfVerticesInCurrent;\n    xNumberOfVertices2 = _hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex] ? ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex], 0) : xNumberOfVerticesInCurrent;\n    xNumberOfVertices1 = (xNumberOfVertices1 < xNumberOfVertices2) ? xNumberOfVertices1 : xNumberOfVertices2;\n\n    p_fUV_LM1 = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex], 0);\n    p_fUV_LM2 = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex], 0);\n    p_fUV_LM = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->_hCurrentRadiosity, 0);\n\n    for (xCurrentVertex = 0; xCurrentVertex < xNumberOfVertices1; xCurrentVertex++)\n    {\n        param0 = (p_tdstColor1 == NULL) ? &IPO_g_tdstBlack : &p_tdstColor1[xCurrentVertex];\n        p_tdstUsedColor2 = (p_tdstColor2 == NULL) ? &IPO_g_tdstBlack : &p_tdstColor2[xCurrentVertex];\n\n        p_tdstColorResult[xCurrentVertex].xRed = (short)(fOtherRatio * (float)param0->xRed + _fRatio * (float)p_tdstUsedColor2->xRed);\n        p_tdstColorResult[xCurrentVertex].xGreen = (short)(fOtherRatio * (float)param0->xGreen + _fRatio * (float)p_tdstUsedColor2->xGreen);\n        p_tdstColorResult[xCurrentVertex].xBlue = (short)(fOtherRatio * (float)param0->xBlue + _fRatio * (float)p_tdstUsedColor2->xBlue);\n        p_tdstColorResult[xCurrentVertex].xAlpha = (short)(fOtherRatio * (float)param0->xAlpha + _fRatio * (float)p_tdstUsedColor2->xAlpha);\n\n        p_fUV_LM[xCurrentVertex] = fOtherRatio * p_fUV_LM1[xCurrentVertex] + _fRatio * p_fUV_LM2[xCurrentVertex];\n    }\n\n    if (xNumberOfVertices1 < xNumberOfVerticesInCurrent)\n    {\n        for (xCurrentVertex = xNumberOfVertices1; xCurrentVertex < xNumberOfVerticesInCurrent; xCurrentVertex++)\n        {\n            p_tdstColorResult[xCurrentVertex].xRed = 0;\n            p_tdstColorResult[xCurrentVertex].xGreen = 0;\n            p_tdstColorResult[xCurrentVertex].xBlue = 0;\n            p_tdstColorResult[xCurrentVertex].xAlpha = 0;\n            p_fUV_LM[xCurrentVertex] = 0.5f;\n        }\n    }\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "IPO_fn_vInternalComputeRLI_Normal",
+      "reason": "920/920, relocs and line map ok; only register allocation differs: retail saves _hIPO in s5 early (+0x1c) and numbers s0..s6 differently (colorResult s3, color1 s1, color2 s2, count s0). Needs the guarded second loop 'if (n1 < nCur) for (i = n1; ...)' and '(p == NULL) ? &IPO_g_tdstBlack : &p[i]' ternaries. Permuter candidate.",
+      "size": 920,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MISMATCH",
+      "target_size": 920,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -74550,6 +74580,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
       "status": "MATCH"
     },
+    "0x002f1c00": {
+      "address": "0x002f1c00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "IPO_fn_vSetRadiosityFromIndex",
+      "size": 920,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MATCH"
+    },
     "0x002f25b0": {
       "address": "0x002f25b0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -74566,11 +74604,43 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
       "status": "MATCH"
     },
+    "0x002f2760": {
+      "address": "0x002f2760",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "IPO_fn_vUpdateAllIPOAfterTransition",
+      "size": 468,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MATCH"
+    },
+    "0x002f2940": {
+      "address": "0x002f2940",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "IPO_fn_vFrameEndForRLITables",
+      "size": 500,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MATCH"
+    },
     "0x002f2b40": {
       "address": "0x002f2b40",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "IPO_fn_vFrameInitForRLITables",
       "size": 280,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MATCH"
+    },
+    "0x002f2c60": {
+      "address": "0x002f2c60",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "IPO_fn_vSetAddRLITable",
+      "size": 284,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
+      "status": "MATCH"
+    },
+    "0x002f2d80": {
+      "address": "0x002f2d80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "IPO_fn_vSetChangeOfRLITable",
+      "size": 452,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/IPO/IPO_RLI.c",
       "status": "MATCH"
     },
