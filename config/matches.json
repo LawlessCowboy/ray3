@@ -43802,6 +43802,21 @@
       "status": "MISMATCH",
       "target_size": 312,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00282da0",
+      "candidate_size": 356,
+      "first_difference": 84,
+      "implementation": "void DEMO_fn_vReadDemoTableFile(void)\n{\n    char buffer[1024];\n    char LevelName[128];\n    char FileName[128];\n    int ret;\n    int fh;\n    unsigned int u32FileSize;\n    char* p;\n    int i;\n\n    fh = CD_OpenFile(FMN_SCE_ConvertPath2DVD(\"demos/demotbl.txt\"));\n    if (fh >= 0)\n    {\n        g_stEngineStructure.ucNumberOfDemos = 0;\n        memset(buffer, 0, 1024);\n        u32FileSize = CD_Read(fh, buffer, 1024);\n        i = 0;\n        p = buffer;\n        while (p != NULL && p < buffer + u32FileSize)\n        {\n            if (sscanf(p, \"%s %s\", LevelName, FileName) == -1)\n                break;\n            if (strlen(LevelName) < 12 && strlen(FileName) < 12)\n            {\n                strcpy(g_stEngineStructure.a_szDemoLevelName[i], LevelName);\n                strcpy(g_stEngineStructure.a_szDemoName[i], FileName);\n                i++;\n                g_stEngineStructure.ucNumberOfDemos = i;\n                if (i == 30)\n                    break;\n            }\n            p = Strchr(p, '\\n');\n            if (p != NULL)\n                p++;\n        }\n        CD_Close(fh);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "DEMO_fn_vReadDemoTableFile",
+      "reason": "356/356: demo table reader reconstructed (sscanf loop, 12-byte name arrays); residual scheduling of buffer address vs fh move and saved register assignment",
+      "size": 356,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MISMATCH",
+      "target_size": 356,
+      "unresolved_relocations": []
     }
   ],
   "data": {},

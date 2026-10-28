@@ -1830,17 +1830,51 @@ void fn_vDisplayFix(unsigned char _ucVPIndex)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int CD_OpenFile(char* szName);
+unsigned int CD_Read(int fh, void* pBuffer, unsigned int ulSize);
+void CD_Close(int fh);
+char* Strchr(char* s, int c);
+int sscanf(const char* s, const char* fmt, ...);
+char* FMN_SCE_ConvertPath2DVD(char* buffer);
+unsigned int strlen(const char* s);
 void DEMO_fn_vReadDemoTableFile(void)
 {
+    char buffer[1024];
+    char LevelName[128];
+    char FileName[128];
     int ret;
-    int i;
+    int fh;
     unsigned int u32FileSize;
     char* p;
-    char FileName[128];
-    char LevelName[128];
-    char buffer[1024];
-    int fh;
-    /* TODO: decompile from asm/... */
+    int i;
+
+    fh = CD_OpenFile(FMN_SCE_ConvertPath2DVD("demos/demotbl.txt"));
+    if (fh >= 0)
+    {
+        g_stEngineStructure.ucNumberOfDemos = 0;
+        memset(buffer, 0, 1024);
+        u32FileSize = CD_Read(fh, buffer, 1024);
+        i = 0;
+        p = buffer;
+        while (p != NULL && p < buffer + u32FileSize)
+        {
+            if (sscanf(p, "%s %s", LevelName, FileName) == -1)
+                break;
+            if (strlen(LevelName) < 12 && strlen(FileName) < 12)
+            {
+                strcpy(g_stEngineStructure.a_szDemoLevelName[i], LevelName);
+                strcpy(g_stEngineStructure.a_szDemoName[i], FileName);
+                i++;
+                g_stEngineStructure.ucNumberOfDemos = i;
+                if (i == 30)
+                    break;
+            }
+            p = Strchr(p, '\n');
+            if (p != NULL)
+                p++;
+        }
+        CD_Close(fh);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7476–7476 */
