@@ -43757,6 +43757,36 @@
       "status": "MISMATCH",
       "target_size": 396,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00131a10",
+      "candidate_size": 312,
+      "first_difference": 120,
+      "implementation": "int viBufPutTs(anon_3* f, anon_2* ts)\n{\n    int ret;\n\n    ret = 0;\n    WaitSema(f->sema);\n    if (f->count_ts < f->n_ts)\n    {\n        viBufModifyPts(f, ts);\n        if (ts->pts >= 0 || ts->dts >= 0)\n        {\n            f->ts[f->wt_ts].pts = ts->pts;\n            ((anon_2*)((char*)f->ts + 8))[f->wt_ts].pts = ts->dts;\n            ((anon_2*)((char*)f->ts + 0x10))[f->wt_ts].pts = ts->pos;\n            ((anon_2*)((char*)f->ts + 0x14))[f->wt_ts].pos = ts->len;\n            f->count_ts++;\n            f->wt_ts = (f->wt_ts + 1) % f->n_ts;\n        }\n        ret = 1;\n    }\n    SignalSema(f->sema);\n    return ret;\n}",
+      "line_offsets_equal": true,
+      "model": "claude-sonnet-5-5",
+      "name": "viBufPutTs",
+      "reason": "312/312: field addresses written as (anon_2*)((char*)f->ts+off)[idx]; residual operand/load scheduling order of the +8 base add",
+      "size": 312,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
+      "status": "MISMATCH",
+      "target_size": 312,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002825c0",
+      "candidate_size": 384,
+      "first_difference": 54,
+      "implementation": "void GAM_fn_vAddObjetToSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj, tdeSOL_ObjType_ _eType, MAT_tdstTransformation_* p_MatrixInit, tdeSOL_ObjPersistence_ _ePersistence)\n{\n    unsigned int* p_ulNbLinkedObjects;\n    unsigned int i;\n    unsigned int ulFound;\n\n    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;\n    ulFound = 0;\n    for (i = 0; i < _hSOL->ulNbLinkedObjects; i++)\n    {\n        if (((void**)_hSOL->LinkedObj)[i] == _pLinkedObj)\n        {\n            ulFound = i + 1;\n            break;\n        }\n    }\n    if (ulFound)\n        return;\n    switch (_ePersistence)\n    {\n    case eSOL_Persistent:\n        GAM_fn_vReAllocSOL(_hSOL, 1);\n        break;\n    case eSOL_NonPersistent:\n        if (_hSOL->ulNbLinksAllocated <= _hSOL->ulNbLinkedObjects)\n            return;\n        (*p_ulNbLinkedObjects)++;\n        break;\n    default:\n        return;\n    }\n    (((void**)_hSOL->LinkedObj) - 1)[*p_ulNbLinkedObjects] = _pLinkedObj;\n    (_hSOL->eTypeOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _eType;\n    (_hSOL->ePersistenceOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _ePersistence;\n    _hSOL->POS_InitOfLinkedObj[*p_ulNbLinkedObjects - 1] = *p_MatrixInit;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "GAM_fn_vAddObjetToSOLinks",
+      "reason": "384/416: add-linked-object reconstructed (search loop, persistence switch, (arr-1)[n] stores); residual register assignment of loop vars and a shared tail at +0xe8",
+      "size": 416,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/SOL.c",
+      "status": "MISMATCH",
+      "target_size": 416,
+      "unresolved_relocations": []
     }
   ],
   "data": {},

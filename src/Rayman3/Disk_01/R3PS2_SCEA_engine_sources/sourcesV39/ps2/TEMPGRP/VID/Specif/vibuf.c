@@ -151,7 +151,25 @@ int viBufGetTs(anon_3* f, anon_2* ts)
 int viBufPutTs(anon_3* f, anon_2* ts)
 {
     int ret;
-    /* TODO: decompile from asm/... */
+
+    ret = 0;
+    WaitSema(f->sema);
+    if (f->count_ts < f->n_ts)
+    {
+        viBufModifyPts(f, ts);
+        if (ts->pts >= 0 || ts->dts >= 0)
+        {
+            f->ts[f->wt_ts].pts = ts->pts;
+            ((anon_2*)((char*)f->ts + 8))[f->wt_ts].pts = ts->dts;
+            ((anon_2*)((char*)f->ts + 0x10))[f->wt_ts].pts = ts->pos;
+            ((anon_2*)((char*)f->ts + 0x14))[f->wt_ts].pos = ts->len;
+            f->count_ts++;
+            f->wt_ts = (f->wt_ts + 1) % f->n_ts;
+        }
+        ret = 1;
+    }
+    SignalSema(f->sema);
+    return ret;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 530–567 */
