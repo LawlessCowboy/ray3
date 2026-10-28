@@ -68990,6 +68990,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/Specif/MemoryCard.cxx",
       "status": "MATCH"
     },
+    "0x0029ddd0": {
+      "address": "0x0029ddd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vManageValidatePalAndProgressiveVideoPage",
+      "size": 440,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/Specif/MemoryCard.cxx",
+      "status": "MATCH"
+    },
+    "0x0029df90": {
+      "address": "0x0029df90",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vDefineProgressiveScanPages",
+      "size": 620,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/Specif/MemoryCard.cxx",
+      "status": "MATCH"
+    },
+    "0x0029e200": {
+      "address": "0x0029e200",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vDefinePalVideoPages",
+      "size": 620,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/Specif/MemoryCard.cxx",
+      "status": "MATCH"
+    },
     "0x0029e470": {
       "address": "0x0029e470",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -69003,6 +69027,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_dwFindPreviousSnappedPicture",
       "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/Specif/MemoryCard.cxx",
+      "status": "MATCH"
+    },
+    "0x0029e5c0": {
+      "address": "0x0029e5c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vSpecificManageMenu2D",
+      "size": 3656,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/Specif/MemoryCard.cxx",
       "status": "MATCH"
     },
