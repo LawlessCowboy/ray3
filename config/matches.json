@@ -43712,6 +43712,21 @@
           "type": 6
         }
       ]
+    },
+    {
+      "address": "0x00208160",
+      "candidate_size": 484,
+      "first_difference": 110,
+      "implementation": "tdstNodeInterpret_* CAM_fn_p_stChangeConstants(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    tdstGetSetParam_ stValue;\n    float xVal;\n    int lMode;\n    HIE_tdstSuperObject_* hCamera;\n    tdstCineinfo_* hCineInfo;\n\n    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n    lMode = stValue.uDummy.uParam.lValue;\n    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);\n    xVal = stValue.uDummy.uParam.xValue;\n    if (lMode == 0x27)\n    {\n        int lValue = (int)xVal;\n        short wValue = (short)lValue;\n        hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;\n        if (wValue & 2)\n        {\n            hCineInfo->ucVolIAFlags &= ~1;\n            CAM_g_stCameraConstants.wFlags &= ~wValue;\n        }\n        else\n        {\n            CAM_g_stCameraConstants.wFlags |= lValue;\n        }\n    }\n    else if (lMode < 0x11)\n    {\n        ((float*)&CAM_g_stCameraConstants)[lMode - 1] = xVal;\n    }\n    else if (lMode < 0x17)\n    {\n        ((short*)&CAM_g_stCameraConstants.xNumRayCameraCanGo)[lMode - 0x11] = (short)(int)xVal;\n    }\n    else if (lMode < 0x1e)\n    {\n        return p_stTree;\n    }\n    else if (lMode < 0x27)\n    {\n        ((float*)&CAM_g_stCameraConstants.xDynSpeed_LinearFactNorm)[lMode - 0x1e] = xVal;\n    }\n    else if (lMode == 0x28)\n    {\n        CAM_g_stCameraConstants.wFlags &= ~(int)xVal;\n    }\n    else if (lMode < 0x2c)\n    {\n        ((float*)&CAM_g_stCameraConstants.xBaseCutAngle)[lMode - 0x29] = xVal;\n    }\n    else if (lMode == 0x2c)\n    {\n        hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->bCanDoBestPos = (xVal == 0.0f) ? 0 : 1;\n    }\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "CAM_fn_p_stChangeConstants",
+      "reason": "484/476: switch-by-range cascade reconstructed; residual register numbering in mode 0x27 flag branch (sign-extended short in a2 vs a3) and extra instrs",
+      "size": 476,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MISMATCH",
+      "target_size": 476,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -52668,6 +52683,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
     },
+    "0x00175170": {
+      "address": "0x00175170",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glDeleteTextures",
+      "size": 284,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
     "0x00175290": {
       "address": "0x00175290",
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
@@ -58401,6 +58424,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CAM_fn_p_stChangeChannel",
       "size": 288,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
+      "status": "MATCH"
+    },
+    "0x00208c80": {
+      "address": "0x00208c80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_p_stChangeSecondTgtPerso",
+      "size": 384,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c",
       "status": "MATCH"
     },

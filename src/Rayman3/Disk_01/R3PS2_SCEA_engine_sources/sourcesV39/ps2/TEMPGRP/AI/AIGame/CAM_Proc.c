@@ -3708,6 +3708,7 @@ tdstNodeInterpret_* CAM_fn_p_stForceMovingOnRail(HIE_tdstSuperObject_* p_SuperOb
 unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcedureId);
 void fn_vGetUltraOperatorPerso(unsigned char bYouHaveRightToUseThisFunction, HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_** hNewSuperObjPerso);
 void CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_* hCineinfo);
+void CAM_fn_vSetCineinfoWorkFromVisibility(tdstCineinfo_* hCineinfo);
 
 tdstNodeInterpret_* CAM_fn_p_stForceNormalState(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
@@ -3959,7 +3960,56 @@ tdstNodeInterpret_* CAM_fn_p_stChangeConstants(HIE_tdstSuperObject_* p_SuperObjP
     int lMode;
     HIE_tdstSuperObject_* hCamera;
     tdstCineinfo_* hCineInfo;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lMode = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    xVal = stValue.uDummy.uParam.xValue;
+    if (lMode == 0x27)
+    {
+        int lValue = (int)xVal;
+        short wValue = (short)lValue;
+        hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+        if (wValue & 2)
+        {
+            hCineInfo->ucVolIAFlags &= ~1;
+            CAM_g_stCameraConstants.wFlags &= ~wValue;
+        }
+        else
+        {
+            CAM_g_stCameraConstants.wFlags |= lValue;
+        }
+    }
+    else if (lMode < 0x11)
+    {
+        ((float*)&CAM_g_stCameraConstants)[lMode - 1] = xVal;
+    }
+    else if (lMode < 0x17)
+    {
+        ((short*)&CAM_g_stCameraConstants.xNumRayCameraCanGo)[lMode - 0x11] = (short)(int)xVal;
+    }
+    else if (lMode < 0x1e)
+    {
+        return p_stTree;
+    }
+    else if (lMode < 0x27)
+    {
+        ((float*)&CAM_g_stCameraConstants.xDynSpeed_LinearFactNorm)[lMode - 0x1e] = xVal;
+    }
+    else if (lMode == 0x28)
+    {
+        CAM_g_stCameraConstants.wFlags &= ~(int)xVal;
+    }
+    else if (lMode < 0x2c)
+    {
+        ((float*)&CAM_g_stCameraConstants.xBaseCutAngle)[lMode - 0x29] = xVal;
+    }
+    else if (lMode == 0x2c)
+    {
+        hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->bCanDoBestPos = (xVal == 0.0f) ? 0 : 1;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 1397–1429 */
@@ -4355,17 +4405,62 @@ tdstNodeInterpret_* CAM_fn_p_stChangeChannel(HIE_tdstSuperObject_* p_SuperObjPer
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* _hStdGame);
 tdstNodeInterpret_* CAM_fn_p_stChangeSecondTgtPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdstGetSetParam_ stValue;
-    int lTypeOfChange;
-    int lChangingMode;
+    tdstCineinfo_* hCineInfo;
     float xRatio;
+    tdstInternalStructurCineinfo_* hCineInfoCurrent;
     HIE_tdstSuperObject_* hNewSuperObjectTargeted;
     HIE_tdstSuperObject_* hCamera;
-    tdstInternalStructurCineinfo_* hCineInfoCurrent;
-    tdstCineinfo_* hCineInfo;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stValue;
+    int lChangingMode;
+    int lTypeOfChange;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lTypeOfChange = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lChangingMode = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    hNewSuperObjectTargeted = fn_h_StandardGameGetSuperObject(stValue.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    xRatio = stValue.uDummy.uParam.xValue;
+    if (hCineInfo->ucPerIAFlags & 2)
+    {
+        CAM_fn_vSetCineinfoCurrentFromVisibility(hCineInfo);
+        if (hCineInfo->ucVolIAFlags & 1)
+            CAM_fn_vSetCineinfoWorkFromVisibility(hCineInfo);
+    }
+    if (lTypeOfChange == 1)
+    {
+        CAM_fn_vSetCineinfoWorkFromCurrent(hCineInfo);
+        hCineInfoCurrent = hCineInfo->hWork;
+    }
+    else
+    {
+        hCineInfoCurrent = hCineInfo->hCurrent;
+    }
+    switch (lChangingMode)
+    {
+    case -1:
+        hNewSuperObjectTargeted = hCineInfo->hInit->hSuperObjectTargeted;
+        break;
+    case 0:
+        hNewSuperObjectTargeted = NULL;
+        break;
+    case 1:
+        break;
+    }
+    hCineInfoCurrent->hSecondSuperObjectTargeted = hNewSuperObjectTargeted;
+    if (lTypeOfChange != 1)
+    {
+        hCineInfo->hVisibility->hSecondSuperObjectTargeted = hNewSuperObjectTargeted;
+        hCineInfo->hWork->hSecondSuperObjectTargeted = hNewSuperObjectTargeted;
+    }
+    hCineInfo->xApexRatio = xRatio;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 664–736 */

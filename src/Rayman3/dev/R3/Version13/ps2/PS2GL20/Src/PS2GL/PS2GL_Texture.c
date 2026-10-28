@@ -4975,7 +4975,7 @@ void impPS2glDeleteTextures(int n, unsigned int* textures)
     unsigned int tex;
     int I;
     tagGLtexname* pTexName;
-    long lLength;
+    int lLength;
 
     for (I = 0; I < n; I++)
     {
@@ -4987,8 +4987,7 @@ void impPS2glDeleteTextures(int n, unsigned int* textures)
         if (pTexName->bResident)
         {
             lLength = g_PS2glContext.aBlockMap[pTexName->iTexBlock].nLength;
-            PS2glFreeTexBlock(pTexName->iTexBlock, -1);
-            if (lLength != 0)
+            if (PS2glFreeTexBlock(pTexName->iTexBlock, -1))
                 PS2glUpdateTexIndex(lLength);
         }
         pTexName->bResident = 0;
