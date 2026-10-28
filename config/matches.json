@@ -43907,6 +43907,141 @@
       "status": "MISMATCH",
       "target_size": 100,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002e6310",
+      "candidate_size": 272,
+      "first_difference": 6,
+      "implementation": "void AE_PrepareMatrixEffect(void)\n{\n    anon_1 qword;\n\n    if (((unsigned long long *)&g_gsContext)[0x36])\n    {\n        GsUpdate();\n    }\n    qword.u64Data[1] = 0;\n    qword.u64Data[0] = 0;\n\n    ((anon_25*)&qword)->ZTE = 1;\n    ((anon_25*)&qword)->ZTST = 2;\n    ((anon_25*)&qword)->ATE = 1;\n    ((anon_25*)&qword)->ATST = 0;\n    ((anon_25*)&qword)->AFAIL = 1;\n    qword.ubData[8] = 0x47;\n    GsSendData(0xE, &qword);\n\n    qword.u64Data[0] = 0x158;\n    qword.ubData[8] = 0x1B;\n    GsSendData(0xE, &qword);\n\n    ((anon_42*)&qword)->PRIM = 3;\n    qword.ubData[8] = 0;\n    GsSendData(0xE, &qword);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AE_PrepareMatrixEffect",
+      "reason": "272/272, relocs ok. Two residuals: (1) retail reads ModFlgs as 'lui at; ld %lo(g_gsContext+0x1b0)(at)', which only a direct 64-bit member access produces (g_gsContext.FINISH.DATA probe does it), but this TU's debug types ModFlgs as a bitfield struct (anon_32) and every pointer cast gives addiu+ld; (2) the TEST/PRIM bitfield writes match exactly when made through union members of the local (probe union {anon_1; anon_25 test; anon_42 prim}), but the debug anon_1 has no such members and ((anon_25*)&qword)-> casts address through a base register. Retail source probably used a ModFlgs/qword union that the debug does not show.",
+      "size": 272,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 272,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002e9660",
+      "candidate_size": 280,
+      "first_difference": 173,
+      "implementation": "void GLI_vReduceBackBufferTo256x256(void)\n{\n    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;\n    AE_Begin();\n\n    PS2glColorMask(1, 1, 1, 0);\n    PS2glDepthMask(0);\n    PS2glDisable(0xB71);\n\n    AE_SetDrawTarget(4);\n    AE_SetTexture(1);\n    AE_SetGS(0, 2, 2, 2, 0x80);\n\n    AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 25600.0f / XRESf, 25600.0f / YRESf, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);\n\n    AE_End();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vReduceBackBufferTo256x256",
+      "reason": "280/288, relocs 23/23, everything before the AE_DrawWindowWithoutOptimization call matches. Retail stores the four stack float args (0,0,1,1) first and leaves div.s/div.s adjacent (two dividefix nops each, +8 bytes); MWCC 3.0.1 schedules the stack sw after the first div.s. Constant spellings, int literals, prototype forms and 3.0/3.0.3 builds don't change it; 3.0b38 is 288 bytes but its order differs too. Same arg-order residual in AE_Filter_BlurUsingDestAlpha2; every caller of this 12-float function is in u_effects.c and none is matched.",
+      "size": 288,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 288,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002e1fd0",
+      "candidate_size": 340,
+      "first_difference": 8,
+      "implementation": "void GLIPS2_Water2D_DisplayNearClippedTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2)\n{\n    float Pos2D2u[4];\n    float Pos2D1u[4];\n    float Pos2D0u[4];\n    float Pos2D2[4];\n    float Pos2D1[4];\n    float Pos2D0[4];\n\n    asm {\n        lqc2 $vf1, 0x0(Pos0)\n        lqc2 $vf2, 0x0(Pos1)\n        lqc2 $vf3, 0x0(Pos2)\n        vmulax.xyzw $ACC, $vf22, $vf1x\n        vmadday.xyzw $ACC, $vf23, $vf1y\n        vmaddaz.xyzw $ACC, $vf24, $vf1z\n        vmaddw.xyzw $vf1, $vf25, $vf1w\n        vdiv $Q, $vf0w, $vf1w\n\n        vmulax.xyzw $ACC, $vf22, $vf2x\n        vmadday.xyzw $ACC, $vf23, $vf2y\n        vmaddaz.xyzw $ACC, $vf24, $vf2z\n        vmaddw.xyzw $vf2, $vf25, $vf2w\n\n        vwaitq\n        vmulq.xyzw $vf1, $vf1, $Q\n\n        vadd.xyzw $vf1, $vf1, $vf19\n        vmul.xyzw $vf1, $vf1, $vf20\n        vadd.xyzw $vf1, $vf1, $vf21\n        sqc2 $vf1, Pos2D0\n\n        vdiv $Q, $vf0w, $vf2w\n\n        vmulax.xyzw $ACC, $vf22, $vf3x\n        vmadday.xyzw $ACC, $vf23, $vf3y\n        vmaddaz.xyzw $ACC, $vf24, $vf3z\n        vmaddw.xyzw $vf3, $vf25, $vf3w\n\n        vwaitq\n        vmulq.xyzw $vf2, $vf2, $Q\n        vadd.xyzw $vf2, $vf2, $vf19\n        vmul.xyzw $vf2, $vf2, $vf20\n        vadd.xyzw $vf2, $vf2, $vf21\n        sqc2 $vf2, Pos2D1\n\n        vdiv $Q, $vf0w, $vf3w\n        nop\n        vwaitq\n        vmulq.xyzw $vf3, $vf3, $Q\n        vadd.xyzw $vf3, $vf3, $vf19\n        vmul.xyzw $vf3, $vf3, $vf20\n        vadd.xyzw $vf3, $vf3, $vf21\n        sqc2 $vf3, Pos2D2\n    }\n\n    asm {\n        lqc2 $vf1, 0x0(U0)\n        lqc2 $vf2, 0x0(U1)\n        lqc2 $vf3, 0x0(U2)\n        vmulax.xyzw $ACC, $vf22, $vf1x\n        vmadday.xyzw $ACC, $vf23, $vf1y\n        vmaddaz.xyzw $ACC, $vf24, $vf1z\n        vmaddw.xyzw $vf1, $vf25, $vf1w\n        vdiv $Q, $vf0w, $vf1w\n\n        vmulax.xyzw $ACC, $vf22, $vf2x\n        vmadday.xyzw $ACC, $vf23, $vf2y\n        vmaddaz.xyzw $ACC, $vf24, $vf2z\n        vmaddw.xyzw $vf2, $vf25, $vf2w\n\n        vwaitq\n        vmulq.xyzw $vf1, $vf1, $Q\n        vmul.xyzw $vf1, $vf1, $vf17\n        vadd.xyzw $vf1, $vf1, $vf18\n        sqc2 $vf1, Pos2D0u\n\n        vdiv $Q, $vf0w, $vf2w\n        vmulax.xyzw $ACC, $vf22, $vf3x\n        vmadday.xyzw $ACC, $vf23, $vf3y\n        vmaddaz.xyzw $ACC, $vf24, $vf3z\n        vmaddw.xyzw $vf3, $vf25, $vf3w\n\n        vwaitq\n        vmulq.xyzw $vf2, $vf2, $Q\n        vmul.xyzw $vf2, $vf2, $vf17\n        vadd.xyzw $vf2, $vf2, $vf18\n        sqc2 $vf2, Pos2D1u\n\n        vdiv $Q, $vf0w, $vf3w\n        nop\n        vwaitq\n        vmulq.xyzw $vf3, $vf3, $Q\n        vmul.xyzw $vf3, $vf3, $vf17\n        vadd.xyzw $vf3, $vf3, $vf18\n        sqc2 $vf3, Pos2D2u\n    }\n\n    ClipTriangleOverXLow(Pos2D0, Pos2D1, Pos2D2, Pos2D0u, Pos2D1u, Pos2D2u, C0, C1, C2);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLIPS2_Water2D_DisplayNearClippedTriangle",
+      "reason": "340/364. Hand-written VU0 asm (one line-map entry per instruction) projecting Pos0-2 and U0-2 into six local float[4] arrays, then ClipTriangleOverXLow(...). The VU code matches. Retail computes the array addresses into v0/v1/t4 and t5/t6/t7 at each asm block start (sqc2 0(v0)), then reuses them as the call args. MWCC (3.0, 3.0.1, 3.0.3, b38) rejects an array as a base operand ('could not be assigned to a register', also with &a, &a[0] or casts), and a bare 'sqc2 $vf1, Pos2D0' gives sp-relative stores. The debug has no pointer locals, so the original operand form is unknown.",
+      "size": 364,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 364,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002dffd0",
+      "candidate_size": 644,
+      "first_difference": 28,
+      "implementation": "void AE_SimpleBlurWINDOWED(int Counter)\n{\n    float v2;\n    float u2;\n    float v1;\n    float u1;\n\n    v1 = u1 = 10.0f * 0.01f;\n    u2 = v2 = 60.0f * 0.01f;\n\n    AE_DrawWindow(10.0f, 10.0f - 1.0f * 100.0f / 224.0f, 60.0f, 60.0f - 1.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindow(10.0f - 1.0f * 100.0f / 320.0f, 10.0f, 60.0f - 1.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    if (!--Counter)\n        return;\n\n    AE_DrawWindow(10.0f, 10.0f - 2.0f * 100.0f / 224.0f, 60.0f, 60.0f - 2.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindow(10.0f - 2.0f * 100.0f / 320.0f, 10.0f, 60.0f - 2.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    if (!--Counter)\n        return;\n\n    AE_DrawWindow(10.0f, 10.0f + 3.0f * 100.0f / 224.0f, 60.0f, 60.0f + 3.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindow(10.0f + 3.0f * 100.0f / 320.0f, 10.0f, 60.0f + 3.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AE_SimpleBlurWINDOWED",
+      "reason": "Full reconstruction (u1/v1=10*0.01f and u2/v2=60*0.01f via chained 'v1 = u1 =' / 'u2 = v2 =', six AE_DrawWindow* calls with pixel offsets n*100/224, n*100/320 or n*100/256 (WithDirectionPAL uses literals 10.371f/10.841f/10.601f/10.901f), 'if (!--Counter) return;' between pairs). Correct size for non-PAL variants; the only residual is argument scheduling: retail stores the stack args and $f16 before the $f12-$f15 args. This varies with unrelated TU content (see the u_effects.c argument-scheduling insight). These bodies were reverted to stubs so that GLI_vReduceBackBufferTo256x256 keeps matching; restore from this attempt when retrying.",
+      "size": 644,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 644,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002dfd40",
+      "candidate_size": 644,
+      "first_difference": 28,
+      "implementation": "void AE_SimpleBlurWINDOWEDNoOpt(int Counter)\n{\n    float v2;\n    float u2;\n    float v1;\n    float u1;\n\n    v1 = u1 = 10.0f * 0.01f;\n    u2 = v2 = 60.0f * 0.01f;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.0f - 1.0f * 100.0f / 224.0f, 60.0f, 60.0f - 1.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.0f - 1.0f * 100.0f / 320.0f, 10.0f, 60.0f - 1.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    if (!--Counter)\n        return;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.0f - 2.0f * 100.0f / 224.0f, 60.0f, 60.0f - 2.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.0f - 2.0f * 100.0f / 320.0f, 10.0f, 60.0f - 2.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    if (!--Counter)\n        return;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 3.0f * 100.0f / 224.0f, 60.0f, 60.0f + 3.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.0f + 3.0f * 100.0f / 320.0f, 10.0f, 60.0f + 3.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AE_SimpleBlurWINDOWEDNoOpt",
+      "reason": "Full reconstruction (u1/v1=10*0.01f and u2/v2=60*0.01f via chained 'v1 = u1 =' / 'u2 = v2 =', six AE_DrawWindow* calls with pixel offsets n*100/224, n*100/320 or n*100/256 (WithDirectionPAL uses literals 10.371f/10.841f/10.601f/10.901f), 'if (!--Counter) return;' between pairs). Correct size for non-PAL variants; the only residual is argument scheduling: retail stores the stack args and $f16 before the $f12-$f15 args. This varies with unrelated TU content (see the u_effects.c argument-scheduling insight). These bodies were reverted to stubs so that GLI_vReduceBackBufferTo256x256 keeps matching; restore from this attempt when retrying.",
+      "size": 644,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 644,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002dfab0",
+      "candidate_size": 664,
+      "first_difference": 28,
+      "implementation": "void AE_SimpleBlurWINDOWEDNoOptPAL(int Counter)\n{\n    float v2;\n    float u2;\n    float v1;\n    float u1;\n\n    v1 = u1 = 10.0f * 0.01f;\n    u2 = v2 = 60.0f * 0.01f;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.0f - 1.0f * 100.0f / 256.0f, 60.0f, 60.0f - 1.0f * 100.0f / 256.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.0f - 1.0f * 100.0f / 256.0f, 10.0f, 60.0f - 1.0f * 100.0f / 256.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    if (!--Counter)\n        return;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.0f - 2.0f * 100.0f / 256.0f, 60.0f, 60.0f - 2.0f * 100.0f / 256.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.0f - 2.0f * 100.0f / 256.0f, 10.0f, 60.0f - 2.0f * 100.0f / 256.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    if (!--Counter)\n        return;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 3.0f * 100.0f / 256.0f, 60.0f, 60.0f + 3.0f * 100.0f / 256.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.0f + 3.0f * 100.0f / 256.0f, 10.0f, 60.0f + 3.0f * 100.0f / 256.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AE_SimpleBlurWINDOWEDNoOptPAL",
+      "reason": "Full reconstruction (u1/v1=10*0.01f and u2/v2=60*0.01f via chained 'v1 = u1 =' / 'u2 = v2 =', six AE_DrawWindow* calls with pixel offsets n*100/224, n*100/320 or n*100/256 (WithDirectionPAL uses literals 10.371f/10.841f/10.601f/10.901f), 'if (!--Counter) return;' between pairs). Correct size for non-PAL variants; the only residual is argument scheduling: retail stores the stack args and $f16 before the $f12-$f15 args. This varies with unrelated TU content (see the u_effects.c argument-scheduling insight). These bodies were reverted to stubs so that GLI_vReduceBackBufferTo256x256 keeps matching; restore from this attempt when retrying.",
+      "size": 656,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 656,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002df820",
+      "candidate_size": 644,
+      "first_difference": 28,
+      "implementation": "void AE_SimpleBlurWINDOWEDNoOptWithDirection(int Counter)\n{\n    float v2;\n    float u2;\n    float v1;\n    float u1;\n\n    v1 = u1 = 10.0f * 0.01f;\n    u2 = v2 = 60.0f * 0.01f;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 1.0f * 100.0f / 224.0f, 60.0f, 60.0f + 1.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.0f + 1.0f * 100.0f / 320.0f, 10.0f, 60.0f + 1.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    if (!--Counter)\n        return;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 2.0f * 100.0f / 224.0f, 60.0f, 60.0f + 2.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.0f + 2.0f * 100.0f / 320.0f, 10.0f, 60.0f + 2.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    if (!--Counter)\n        return;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 3.0f * 100.0f / 224.0f, 60.0f, 60.0f + 3.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.0f + 3.0f * 100.0f / 320.0f, 10.0f, 60.0f + 3.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AE_SimpleBlurWINDOWEDNoOptWithDirection",
+      "reason": "Full reconstruction (u1/v1=10*0.01f and u2/v2=60*0.01f via chained 'v1 = u1 =' / 'u2 = v2 =', six AE_DrawWindow* calls with pixel offsets n*100/224, n*100/320 or n*100/256 (WithDirectionPAL uses literals 10.371f/10.841f/10.601f/10.901f), 'if (!--Counter) return;' between pairs). Correct size for non-PAL variants; the only residual is argument scheduling: retail stores the stack args and $f16 before the $f12-$f15 args. This varies with unrelated TU content (see the u_effects.c argument-scheduling insight). These bodies were reverted to stubs so that GLI_vReduceBackBufferTo256x256 keeps matching; restore from this attempt when retrying.",
+      "size": 644,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 644,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002df590",
+      "candidate_size": 660,
+      "first_difference": 28,
+      "implementation": "void AE_SimpleBlurWINDOWEDNoOptWithDirectionPAL(int Counter)\n{\n    float v2;\n    float u2;\n    float v1;\n    float u1;\n\n    v1 = u1 = 10.0f * 0.01f;\n    u2 = v2 = 60.0f * 0.01f;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.371f, 60.0f, 60.371f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.371f, 10.0f, 60.371f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    if (!--Counter)\n        return;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.841f, 60.0f, 60.841f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.601f, 10.0f, 60.601f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    if (!--Counter)\n        return;\n\n    AE_DrawWindowWithoutOptimization(10.0f, 10.901f, 60.0f, 60.901f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n\n    AE_DrawWindowWithoutOptimization(10.901f, 10.0f, 60.901f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AE_SimpleBlurWINDOWEDNoOptWithDirectionPAL",
+      "reason": "Full reconstruction (u1/v1=10*0.01f and u2/v2=60*0.01f via chained 'v1 = u1 =' / 'u2 = v2 =', six AE_DrawWindow* calls with pixel offsets n*100/224, n*100/320 or n*100/256 (WithDirectionPAL uses literals 10.371f/10.841f/10.601f/10.901f), 'if (!--Counter) return;' between pairs). Correct size for non-PAL variants; the only residual is argument scheduling: retail stores the stack args and $f16 before the $f12-$f15 args. This varies with unrelated TU content (see the u_effects.c argument-scheduling insight). These bodies were reverted to stubs so that GLI_vReduceBackBufferTo256x256 keeps matching; restore from this attempt when retrying.",
+      "size": 656,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 656,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002e8e90",
+      "candidate_size": 708,
+      "first_difference": 524,
+      "implementation": "void GLI_vProcessMirrorAfterEffect(void)\n{\n    if (AE_MirrorFX)\n    {\n        if (AE_MirrorFX & 8)\n        {\n            DoFullScreenWaterEffectForMirror();\n        }\n        if (AE_MirrorFX & 1)\n        {\n            AE_Begin();\n            PS2glDepthMask(0);\n            AE_SetDrawTarget(0);\n            AE_SetTexture(0);\n            if (AE_Blur_M > 4.0f)\n            {\n                AE_SetGS(0, 2, 2, 1, 0x20);\n                AE_SimpleBlur(2);\n                AE_SetGS(0, 1, 2, 1, 0x40);\n                AE_SimpleBlur(2);\n                AE_End();\n            }\n            else if (AE_Blur_M > 3.0f)\n            {\n                AE_SetGS(0, 2, 2, 1, 0x40);\n                AE_SimpleBlur(1);\n                AE_SetGS(0, 1, 2, 1, 0x40);\n                AE_SimpleBlur(1);\n            }\n            else if (AE_Blur_M > 2.0f)\n            {\n                AE_SetGS(0, 2, 2, 1, 0x20);\n                AE_SimpleBlur(1);\n                AE_SetGS(0, 1, 2, 1, 0x40);\n                AE_SimpleBlur(1);\n            }\n            else if (AE_Blur_M > 1.0f)\n            {\n                AE_SetDrawTarget(0);\n                AE_SetTexture(0);\n                AE_SetGS(0, 1, 2, 1, 0x40);\n                AE_SimpleBlur(1);\n                AE_End();\n            }\n            else\n            {\n                AE_SetDrawTarget(0);\n                AE_SetTexture(0);\n                AE_SetGS(0, 1, 2, 1, 0x40);\n                AE_DrawWindow(0.2f, 0.3f, 100.2f, 100.3f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);\n                AE_End();\n            }\n        }\n\n        if (AE_MirrorFX & 2)\n        {\n            AE_Filter_Glow(AE_Glow_M[0], AE_Glow_M[1], AE_Glow_M[2], AE_Glow_M[3]);\n            PS2glClear(0x100);\n        }\n\n        if (AE_MirrorFX & 4)\n        {\n            AE_Filter_BrightNess_n_Contrast(AE_Bright_Cont_M);\n        }\n    }\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vProcessMirrorAfterEffect",
+      "reason": "708/708, relocs 47/47, lines ok: full reconstruction (AE_MirrorFX flag dispatch; AE_Blur_M >4/>3/>2/>1/else chain, where only the >4 and >1 branches and the else call AE_End; Glow and BrightNess_n_Contrast tails). The only residual is argument scheduling of the AE_DrawWindow(0.2f, 0.3f, 100.2f, 100.3f, ...) call in the else branch, the TU-sensitive residual in the u_effects.c insight. Reverted to a stub because this body flips the recorded GLI_vReduceBackBufferTo256x256 match; restore it from this attempt when the TU is finished.",
+      "size": 708,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 708,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -73519,6 +73654,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
+    "0x002e4950": {
+      "address": "0x002e4950",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLIPS2_vMakeWaterEffect",
+      "size": 552,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
     "0x002e4b80": {
       "address": "0x002e4b80",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -73532,6 +73675,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLIPS2_vReinitMatrixDeformations",
       "size": 16,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
+    "0x002e51c0": {
+      "address": "0x002e51c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLIPS2_vAddMatrixDeformationEffect",
+      "size": 316,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
@@ -73567,6 +73718,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
+    "0x002e66a0": {
+      "address": "0x002e66a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DoFullScreenWaterEffectForMirror",
+      "size": 608,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
     "0x002e76d0": {
       "address": "0x002e76d0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -73588,6 +73747,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vSaveCurrentFrameBuffer",
       "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
+    "0x002e8250": {
+      "address": "0x002e8250",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vProcessPSX_FX",
+      "size": 316,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
@@ -73636,6 +73803,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLIPS2_vSetMirrorBlur",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MATCH"
+    },
+    "0x002e9660": {
+      "address": "0x002e9660",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vReduceBackBufferTo256x256",
+      "size": 288,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
       "status": "MATCH"
     },
