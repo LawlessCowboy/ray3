@@ -43817,6 +43817,21 @@
       "status": "MISMATCH",
       "target_size": 356,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00206440",
+      "candidate_size": 416,
+      "first_difference": 132,
+      "implementation": "tdstNodeInterpret_* CAM_fn_p_stGetBestPos(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)\n{\n    MTH3D_tdstVector_ stVec;\n    CAM_tdstUpdateCamera_ stStruct;\n    tdstCineinfo_* hCineinfo;\n    HIE_tdstSuperObject_* hCamera;\n\n    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator((p_stTree - 1)->uDummy.uId.eFuncId), p_SuperObjPerso, &hCamera);\n    hCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;\n    if (!hCineinfo->bCanDoBestPos)\n    {\n        ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[0] = ((unsigned int*)&hCamera->hGlobalMatrix->stTransformMatrix.stCol_3)[0]; ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[1] = ((unsigned int*)&hCamera->hGlobalMatrix->stTransformMatrix.stCol_3)[1]; ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[2] = ((unsigned int*)&hCamera->hGlobalMatrix->stTransformMatrix.stCol_3)[2];\n        p_stValue->eType = E_vt_Vector;\n        return p_stTree;\n    }\n    CAM_fn_vSetCineinfoWorkFromCurrent(hCineinfo);\n    CAM_fn_vInitCameraStructure(hCamera, &stStruct);\n    cRefAxisIsAlreadyComputed = (stStruct.hCineinfoWork->uwIAFlags & 0x4000) ? 1 : 0;\n    cCanTestStatic = 1;\n    cNoDynChangeTheta = (stStruct.hCineinfoWork->uwIAFlags & 0x20) ? 1 : 0;\n    CAM_fn_vComputeReferencePoint(&stStruct);\n    CAM_fn_vComputeTarget(&stStruct);\n    CAM_fn_vComputeRealWantedPos(&stStruct);\n    CAM_fn_vComputeMovePosWithDynTheta(&stStruct);\n    if (stStruct.hCineinfoCurrent->hSuperObjectTargeted == 0)\n        return p_stTree;\n    CAM_fn_vForceFailureVisibility(&stStruct);\n    if (stStruct.hCineinfo->eState == 2)\n    {\n        stVec = stStruct.hCineinfo->stLastFailedWanted;\n        hCineinfo->bCanDoBestPos = 0;\n    }\n    else\n    {\n        stVec.xX = 0.0f; stVec.xY = 0.0f; stVec.xZ = 0.0f;\n    }\n    stStruct.hCineinfo->eState = 0;\n    p_stValue->uDummy.uParam.stVectorValue = stVec;\n    p_stValue->eType = E_vt_Vector;\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "CAM_fn_p_stGetBestPos",
+      "reason": "416/420: best-pos getter reconstructed; target copies vector via integer lw/sw on stack stVec with pointer reloads, FPU copies here; flags use hoisted 1 register",
+      "size": 420,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Fnct.c",
+      "status": "MISMATCH",
+      "target_size": 420,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
