@@ -62179,6 +62179,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/procMorf.c",
       "status": "MATCH"
     },
+    "0x0023c440": {
+      "address": "0x0023c440",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stPrepareMorphMT",
+      "size": 720,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/procMorf.c",
+      "status": "MATCH"
+    },
     "0x0023c710": {
       "address": "0x0023c710",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -62835,6 +62843,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollGOCo.c",
       "status": "MATCH"
     },
+    "0x0024da20": {
+      "address": "0x0024da20",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "COL_fn_hTransformTableOfObjectInOneObjectForGAM",
+      "size": 652,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c",
+      "status": "MATCH"
+    },
     "0x0024dcb0": {
       "address": "0x0024dcb0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -62952,6 +62968,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "COL_vEndModifyObject",
       "size": 188,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c",
+      "status": "MATCH"
+    },
+    "0x0024e500": {
+      "address": "0x0024e500",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "COL_vComputeObjectParallelBox",
+      "size": 1632,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollObj.c",
       "status": "MATCH"
     },
