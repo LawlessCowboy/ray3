@@ -70079,6 +70079,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
       "status": "MATCH"
     },
+    "0x002a9740": {
+      "address": "0x002a9740",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_Material_fn_lSetTextureOp",
+      "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Material.c",
+      "status": "MATCH"
+    },
     "0x002a9780": {
       "address": "0x002a9780",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",

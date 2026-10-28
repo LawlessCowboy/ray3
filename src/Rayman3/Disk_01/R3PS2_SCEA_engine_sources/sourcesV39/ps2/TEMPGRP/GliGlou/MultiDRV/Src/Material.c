@@ -963,11 +963,15 @@ GLI_tdstMaterial_* fn_hGetVisualMaterialFromIndex(unsigned short uwIndex)
  */
 int GLI_Material_fn_lSetTextureOp(GLI_tdstMaterial_* _hVisualMat, int _lIndex, int _lTextureOp)
 {
+    /* Not original source: permuter-derived (unsigned index mask and extra
+       temporary) to get retail's addu operand order; verified MATCH. */
+    int new_var;
     int lOffset;
     if (_lIndex < 0 || _lIndex >= 4)
         return 0;
-    lOffset = _lIndex * 80;
-    ((char*)&_hVisualMat->a_stMultiMaterial[0].c_Operator)[lOffset] = _lTextureOp;
+    new_var = _lIndex * 80;
+    lOffset = new_var;
+    ((char*)&_hVisualMat->a_stMultiMaterial[0].c_Operator)[lOffset & 0xFFFFFFFFu] = _lTextureOp;
     return 1;
 }
 
