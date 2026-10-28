@@ -428,6 +428,14 @@ def source_index(target_symbols: list[Symbol], main: Section) -> list[dict]:
             previous = entries_by_address.get(address)
             if previous is None or (previous['todo'] and not entry['todo']):
                 entries_by_address[address] = entry
+    # Cleanup of a DONE translation unit removes its address comments, so the
+    # scan above no longer sees those functions.  Their owner is still
+    # recorded in the manifest; use it so a refresh keeps them assigned.
+    recorded_sources = {}
+    for record in load_manifest().get('functions', {}).values():
+        source = record.get('source')
+        if source and (ROOT / source).is_file():
+            recorded_sources[int(record['address'], 16)] = source
     # The debug parser currently owns only part of the ELF's function set.
     # Keep a difficulty record for every remaining code symbol as well, but
     # leave it unassigned until source ownership is recovered.
@@ -438,15 +446,22 @@ def source_index(target_symbols: list[Symbol], main: Section) -> list[dict]:
         code_offset = symbol.value - main.addr
         code = main.data[code_offset:code_offset + symbol.size]
         preferred = preferred_symbol(target_symbols, symbol.value)
+        source = recorded_sources.get(symbol.value)
+        if source is None:
+            language = 'unknown'
+        elif Path(source).suffix.lower() in {'.cpp', '.cxx', '.hpp', '.hxx'}:
+            language = 'C++'
+        else:
+            language = 'C'
         entries_by_address[symbol.value] = {
             'address': symbol.value,
             'size': symbol.size,
             'name': preferred.name if preferred else symbol.name or f'sym_{symbol.value:08x}',
-            'source': None,
-            'language': 'unknown',
-            'todo': True,
+            'source': source,
+            'language': language,
+            'todo': source is None,
             'line_map': [],
-            'difficulty': difficulty_for(code, 0, 'unknown'),
+            'difficulty': difficulty_for(code, 0, language),
         }
     return list(entries_by_address.values())
 
@@ -469,11 +484,15 @@ def cached_source_index(target_symbols: list[Symbol], main: Section,
             pass
     entries = source_index(target_symbols, main)
     INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
-    INDEX_PATH.write_text(json.dumps({
+    # Write atomically: concurrent matcher processes (permuter compiles) read
+    # this file, and a partial read would make them rebuild it.
+    temporary = INDEX_PATH.with_name(f'{INDEX_PATH.name}.{os.getpid()}.tmp')
+    temporary.write_text(json.dumps({
         'schema_version': 3,
         'target_size': TARGET_PATH.stat().st_size,
         'entries': entries,
     }, separators=(',', ':')))
+    os.replace(temporary, INDEX_PATH)
     return entries
 
 
