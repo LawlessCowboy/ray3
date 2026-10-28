@@ -43787,6 +43787,21 @@
       "status": "MISMATCH",
       "target_size": 416,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0031efa0",
+      "candidate_size": 312,
+      "first_difference": 42,
+      "implementation": "unsigned char HIE_fn_bSendSPOToFixViewport(GLD_tdstViewportAttributes_* p_stFixViewportAttr, int _lDrawMask)\n{\n    char cSaveGlobalFog;\n    char cSaveSinusEffectState;\n    HIE_tdstSuperObject_** hSPO;\n    short xI;\n\n    cSaveGlobalFog = GLI_cGlobalFogIsOn;\n    GLI_cGlobalFogIsOn = 0;\n    GLI_vFogOff();\n    cSaveSinusEffectState = GLI_fn_SinusEffect_vGetState();\n    if (!GLI_fn_SinusEffect_cIsSecondViewportAffected(p_stFixViewportAttr))\n        GLI_fn_SinusEffect_vSetState(0);\n    HIE_fn_bInitCameraMatrixStack(p_stFixViewportAttr);\n    for (xI = 0, hSPO = (HIE_tdstSuperObject_**)gd_hFixSPO; xI < g_xFixIndex; xI++, hSPO++)\n    {\n        if ((*hSPO)->ulFlags |= 0x40000)\n            GAM_fn_vClipFixObject(p_stFixViewportAttr);\n        HIE_fn_vSendSPOToFixViewport(p_stFixViewportAttr, (*hSPO), _lDrawMask & (*hSPO)->lDrawModeMask, 0);\n        if ((*hSPO)->ulFlags |= 0x40000)\n            GAM_fn_vResetClipFixObject(p_stFixViewportAttr);\n    }\n    GLI_fn_SinusEffect_vSetState(cSaveSinusEffectState);\n    GLI_cGlobalFogIsOn = cSaveGlobalFog;\n    if (cSaveGlobalFog)\n        GLI_vFogOn();\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "HIE_fn_bSendSPOToFixViewport",
+      "reason": "312/312: fix-viewport SPO loop reconstructed (hSPO++ pointer loop, |= used as condition); residual saved-register assignment and delay-slot placement of move a0",
+      "size": 312,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c",
+      "status": "MISMATCH",
+      "target_size": 312,
+      "unresolved_relocations": []
     }
   ],
   "data": {},

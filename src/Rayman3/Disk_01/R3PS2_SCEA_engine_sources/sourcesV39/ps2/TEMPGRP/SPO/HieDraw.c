@@ -1593,13 +1593,42 @@ GEO_tdstGeometricObject_* HIE_fn_p_stGetGeometricObjectFromSuperObject(HIE_tdstS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vFogOff(void);
+void GLI_vFogOn(void);
+char GLI_fn_SinusEffect_vGetState(void);
+void GLI_fn_SinusEffect_vSetState(char cState);
+char GLI_fn_SinusEffect_cIsSecondViewportAffected(GLD_tdstViewportAttributes_* p_stViewportAttr);
+unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* p_stViewportAttr);
+void GAM_fn_vClipFixObject(GLD_tdstViewportAttributes_* p_stViewportAttr);
+void GAM_fn_vResetClipFixObject(GLD_tdstViewportAttributes_* p_stViewportAttr);
+void HIE_fn_vSendSPOToFixViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);
 unsigned char HIE_fn_bSendSPOToFixViewport(GLD_tdstViewportAttributes_* p_stFixViewportAttr, int _lDrawMask)
 {
     char cSaveGlobalFog;
     char cSaveSinusEffectState;
     HIE_tdstSuperObject_** hSPO;
     short xI;
-    /* TODO: decompile from asm/... */
+
+    cSaveGlobalFog = GLI_cGlobalFogIsOn;
+    GLI_cGlobalFogIsOn = 0;
+    GLI_vFogOff();
+    cSaveSinusEffectState = GLI_fn_SinusEffect_vGetState();
+    if (!GLI_fn_SinusEffect_cIsSecondViewportAffected(p_stFixViewportAttr))
+        GLI_fn_SinusEffect_vSetState(0);
+    HIE_fn_bInitCameraMatrixStack(p_stFixViewportAttr);
+    for (xI = 0, hSPO = (HIE_tdstSuperObject_**)gd_hFixSPO; xI < g_xFixIndex; xI++, hSPO++)
+    {
+        if ((*hSPO)->ulFlags |= 0x40000)
+            GAM_fn_vClipFixObject(p_stFixViewportAttr);
+        HIE_fn_vSendSPOToFixViewport(p_stFixViewportAttr, (*hSPO), _lDrawMask & (*hSPO)->lDrawModeMask, 0);
+        if ((*hSPO)->ulFlags |= 0x40000)
+            GAM_fn_vResetClipFixObject(p_stFixViewportAttr);
+    }
+    GLI_fn_SinusEffect_vSetState(cSaveSinusEffectState);
+    GLI_cGlobalFogIsOn = cSaveGlobalFog;
+    if (cSaveGlobalFog)
+        GLI_vFogOn();
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieDraw.c lines 901–1066 */
