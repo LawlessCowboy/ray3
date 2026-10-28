@@ -3072,16 +3072,86 @@ void CheckData(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void TXT_vAfficheSimple(int stVpt, char *String, float x, float y, float z);
+void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewValue);
+void TR_Report(void);
+void GLI_vManageStuffForRasters(void);
+
+/* mfc0 (COP0 Count) has no C form under MWCC; only that instruction is asm. */
+static inline unsigned int TR_ulGetCount(void)
+{
+    register unsigned int counter;
+    asm { mfc0 counter, $9 }
+    return counter;
+}
+
+static inline unsigned int TR_ulEndAfterStart(unsigned int ulEnd, unsigned int ulStart, unsigned int ulDefault)
+{
+    if (ulEnd < ulStart) return ulDefault;
+    return ulEnd;
+}
+
 void GLI_fn_vEndOfDisplay(void)
 {
     unsigned int iS;
     unsigned int iM;
     unsigned int iH;
     char string[1024];
-    float fTotalTime;
-    unsigned int NewStartFrame;
-    unsigned int NewEndFrame;
-    /* TODO: decompile from asm/... */
+    static float fTotalTime;
+    static unsigned int NewStartFrame;
+    static volatile unsigned int NewEndFrame;
+
+    if (G_MessageNotSet)
+    {
+        PS2MC_fn_vDoBootCheck();
+        G_MessageNotSet = 0;
+    }
+    if (GLI_g_bAskedToTakeAPicture)
+    {
+        GLI_vTakePicture();
+        GLI_g_bAskedToTakeAPicture = 0;
+    }
+    PS2MC_fn_vUpdateStatus();
+    if (g_p_stCurrentViewport && GLI_g_AgingTestTimeMarker)
+    {
+        NewEndFrame = TR_ulGetCount();
+        fTotalTime += (float)(NewEndFrame - NewStartFrame) / 294912000.0f;
+        NewStartFrame = NewEndFrame;
+        iH = (unsigned int)(fTotalTime / 3600.0f);
+        iM = (unsigned int)((fTotalTime - (float)(iH * 3600)) / 60.0f);
+        iS = (unsigned int)(fTotalTime - (float)(iM * 60) - (float)(iH * 3600));
+        sprintf(string, "\\c1:1:1:Time = %2d : %02d : %02d", iH, iM, iS);
+        TXT_vAfficheSimple(g_p_stCurrentViewport, string, 61.5f, 851.8f, 500.0f);
+        sprintf(string, "\\c255:255:255:Time = %2d : %02d : %02d", iH, iM, iS);
+        TXT_vAfficheSimple(g_p_stCurrentViewport, string, 60.0f, 850.0f, 500.0f);
+    }
+    PS2glInternalSetScreenCalebration(0xf43, (unsigned int)(GLI_g_ScreenPos_DXBase + GLI_g_ScreenPos_DX));
+    PS2glInternalSetScreenCalebration(0xf44, (unsigned int)(GLI_g_ScreenPos_DYBase + GLI_g_ScreenPos_DY));
+    TR_EndDisplayCPU = TR_ulGetCount();
+    GLI_vStartNormalRecomp();
+    GLI_vRecomputeAllCharacterNormalsAndWaitForSyncPath();
+    TR_EndDisp2 = TR_ulEndAfterStart(VU1FinishCounter, TR_StartFrame, TR_EndDisplayCPU);
+    TR_EndFrame = TR_ulGetCount();
+    TR_Report();
+    GLI_vManageStuffForRasters();
+    PS2MC_DisplayCurrentMessage();
+    fn_vRedrawPauseStringIfRequired();
+    Fog_RandomValue = (float)rand() / 2147483648.0f; GLI_g_ulDynShadowCpt = 0; PS2_fn_vSignalEndOfDisplay(); PS2GL_thingsToDoWhenYoureDead = (int)GLI_vRecomputeNormalsWhileWaitingForVBL; GLI_g_EnableSwapBufferCallback = 1; PS2glFakeSwapBuffers(); GLI_g_EnableSwapBufferCallback = 0; PS2GL_thingsToDoWhenYoureDead = 0;
+    TR_StartFrame = TR_ulGetCount();
+    GLI_vUpdateAllRefs(1);
+    if (GLI_g_NO_INTERPOLATION_FOR_NEXT_FRAME)
+        GLI_vUpdateAllMatricesOutSDL();
+    GLI_vInterpolAllNormalMatrix();
+    fn_vPutBackOldGeometricObjectsBeforeAnimPlayer();
+    PS2glGsSyncPath();
+    GLI_vReinitFrame(0);
+    if (GLIPS2_CurrentFrameVector)
+        *(int *)GLIPS2_CurrentFrameVector = 1;
+    if (Bug_Please_ReloadMenu_40)
+        GAM_fn_vAskToChangeLevel("MENUMAP", 0);
+    VU1_FlushCurrentBuffer();
+    TR_InterpolDisp1 = TR_ulGetCount();
+    PS2GL_SetDestinationFrame(0);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 2622–2673 */
@@ -3116,9 +3186,38 @@ void GLI_fn_vEndOfDisplay(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline unsigned int TR_ulDelta(unsigned int ulEnd, unsigned int ulStart)
+{
+    if (ulEnd < ulStart) return ulEnd;
+    return ulEnd - ulStart;
+}
+
 void GLI_vEndOfAI(void)
 {
-    /* TODO: decompile from asm/... */
+    TR_IAMeca = TR_ulGetCount();
+    GLI_vRecomputeAllCharacterNormalsAndWaitForSyncPath();
+    TR_EndDisp1VU1 = TR_ulEndAfterStart(VU1FinishCounter, TR_StartFrame, TR_IAMeca);
+    Fog_RandomValue = (float)rand() / 2147483648.0f; GLI_g_ulDynShadowCpt = 0; PS2_fn_vSignalEndOfDisplay(); PS2GL_thingsToDoWhenYoureDead = (int)GLI_vRecomputeNormalsWhileWaitingForVBL; GLI_g_EnableSwapBufferCallback = 1; PS2glFakeSwapBuffers(); GLI_g_EnableSwapBufferCallback = 0; PS2GL_thingsToDoWhenYoureDead = 0;
+    GLI_vEndNormalRecomputation();
+    TR_IAMecaPlusDisp1 = TR_ulGetCount();
+    while ((float)TR_ulDelta(TR_IAMecaPlusDisp1, TR_StartFrame_Copy) / 4915200.0f < 1.0f) TR_IAMecaPlusDisp1 = TR_ulGetCount();
+    GLI_vUpdateAllRefs(0);
+    GLI_vUpdateAllMatricesOutSDL();
+    GLI_vFinalUpdateAllNormalMatrix();
+    GLI_g_NO_INTERPOLATION_FOR_NEXT_FRAME = 0;
+    PS2glGsSyncPath();
+    GLI_vReinitFrame(1);
+    GLI_g_FrameNumber++;
+    if (GLIPS2_CurrentFrameVector)
+        *(int *)GLIPS2_CurrentFrameVector = 2;
+    VU1_FlushPreviousBuffer();
+    GLI_vRemoveRefs();
+    GLI_vDeleteAllWaitingPointers();
+    fn_vClearPlayanimTempGeometricObjects();
+    MOR_fn_vTerminateMorphsForThisFrame();
+    GLI_vSaveCameraMatrix();
+    GLIPS2_CurrentFrameVector = VU1SetCurrentFrameInDMABuffer();
+    TR_UpdateDisp2 = TR_ulGetCount();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Init_PS2GL.c lines 1760–2506 */
