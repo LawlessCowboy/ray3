@@ -2730,7 +2730,39 @@ void fn_vGotoSubMenu(int SubPage)
  */
 void fn_vPreviousSelection(void)
 {
-    /* TODO: decompile from asm/... */
+    if (g_CurrentSelection == 0)
+    {
+        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+        {
+            g_CurrentSelection = aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1;
+        }
+        else
+        {
+            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry = aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection;
+                g_CurrentSelection = aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1;
+            }
+            else
+            {
+                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;
+            }
+        }
+    }
+    else
+    {
+        g_CurrentSelection--;
+    }
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection != 0)
+    {
+        fn_vPlaySoundInGameMenu2D(2);
+    }
+
+    if (((signed char*)aMenu2DPages[g_CurrentMenu2DPage].abGrayed)[g_CurrentSelection] != 0)
+    {
+        fn_vPreviousSelection();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DefineMenu2D.c lines 1593–1622 */
@@ -2787,7 +2819,7 @@ void fn_vNextSelection(void)
         fn_vPlaySoundInGameMenu2D(2);
     }
 
-    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+    if (((signed char*)aMenu2DPages[g_CurrentMenu2DPage].abGrayed)[g_CurrentSelection] != 0)
     {
         fn_vNextSelection();
     }
@@ -2934,7 +2966,7 @@ void fn_vNextSelectionNoWrap(void)
 
     fn_vPlaySoundInGameMenu2D(u32Sound2Play);
 
-    if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+    if (((signed char*)aMenu2DPages[g_CurrentMenu2DPage].abGrayed)[g_CurrentSelection] != 0)
     {
         u32Sound2Play = 2;
 
@@ -2964,7 +2996,7 @@ void fn_vNextSelectionNoWrap(void)
 
         fn_vPlaySoundInGameMenu2D(u32Sound2Play);
 
-        if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[g_CurrentSelection] != 0)
+        if (((signed char*)aMenu2DPages[g_CurrentMenu2DPage].abGrayed)[g_CurrentSelection] != 0)
         {
             fn_vNextSelectionNoWrap();
         }
