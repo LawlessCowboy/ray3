@@ -55045,6 +55045,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
       "status": "MATCH"
     },
+    "0x00187a80": {
+      "address": "0x00187a80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vUpdateSwitches__FPCc",
+      "size": 616,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
+      "status": "MATCH"
+    },
+    "0x00188700": {
+      "address": "0x00188700",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vLoadSwitches__FP9CBankDesc",
+      "size": 424,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
+      "status": "MATCH"
+    },
+    "0x00188ad0": {
+      "address": "0x00188ad0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_fn_vFinishLoad",
+      "size": 472,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
+      "status": "MATCH"
+    },
     "0x00188cb0": {
       "address": "0x00188cb0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -55066,6 +55090,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SND_fn_bUnloadBank",
       "size": 168,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
+      "status": "MATCH"
+    },
+    "0x00188dd0": {
+      "address": "0x00188dd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_fn_bLoadBank",
+      "size": 980,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeldbin.cpp",
       "status": "MATCH"
     },

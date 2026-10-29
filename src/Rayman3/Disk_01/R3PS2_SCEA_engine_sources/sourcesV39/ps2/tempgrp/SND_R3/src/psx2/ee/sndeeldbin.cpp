@@ -15,13 +15,16 @@ typedef struct _tdstTypeThemeMem _tdstTypeThemeMem;
 typedef struct CIndexAllocator CIndexAllocator;
 typedef struct less less;
 typedef struct stree stree;
-typedef struct CSwitchResData CSwitchResData;
-typedef struct CUUID CUUID;
+namespace usnd { struct CSwitchResData; }
+typedef usnd::CSwitchResData CSwitchResData;
+namespace usnd { struct CUUID; }
+typedef usnd::CUUID CUUID;
 typedef struct sTreeNode sTreeNode;
 typedef struct smap smap;
 typedef struct sTreeLink sTreeLink;
 typedef struct _tdstRandomElement _tdstRandomElement;
-typedef struct sstring sstring;
+namespace usnd { struct sstring; }
+typedef usnd::sstring sstring;
 typedef struct CBankDesc CBankDesc;
 typedef struct iterator_base iterator_base;
 typedef struct _tdstThemePartOutro _tdstThemePartOutro;
@@ -60,13 +63,15 @@ typedef struct CEventResData CEventResData;
 typedef struct sset sset;
 typedef struct CBankDescCont CBankDescCont;
 typedef struct _tdstRangeSplitMem _tdstRangeSplitMem;
-typedef struct CIdObj CIdObj;
+namespace usnd { struct CIdObj; }
+typedef usnd::CIdObj CIdObj;
 typedef struct CLookupElement CLookupElement;
 typedef struct streebase streebase;
 typedef struct CTextFile CTextFile;
 typedef struct _tdstSwitchElement _tdstSwitchElement;
 typedef struct CRefIdObj CRefIdObj;
-typedef struct CPS2IdObjInfo CPS2IdObjInfo;
+namespace usnd { struct CPS2IdObjInfo; }
+typedef usnd::CPS2IdObjInfo CPS2IdObjInfo;
 typedef struct CTextFileSrc CTextFileSrc;
 
 typedef enum tdeTypeStorage {
@@ -195,17 +200,157 @@ struct stree : streebase {
     less key_compare; /* +0x3c */
 };
 
-struct sstring {
-    int m_pcData; /* +0x0 */
+extern "C" void* usnd_malloc(unsigned int ui_Size);
+extern "C" void usnd_free(void* p_Mem);
+extern "C" void* usnd_memcpy(void* p_Dst, const void* p_Src, unsigned int ui_Size);
+extern "C" unsigned int strlen(const char*);
+
+struct usnd::sstring {
+    char* m_pcData; /* +0x0 */
+    static char* ms_czNil;
+
+    sstring(void) { m_pcData = ms_czNil; }
+    sstring(const char* pch_Str) { _Init(pch_Str, strlen(pch_Str)); }
+    ~sstring(void)
+    {
+        if (m_pcData != ms_czNil)
+            usnd_free(m_pcData);
+    }
+    void _Init(const char* pch_Str, unsigned int ui_Length)
+    {
+        if (ui_Length == 0)
+            m_pcData = ms_czNil;
+        else {
+            m_pcData = (char*)usnd_malloc(ui_Length + 1);
+            usnd_memcpy(m_pcData, pch_Str, ui_Length + 1);
+        }
+    }
+    const char* c_str(void) const { return m_pcData; }
 };
 
-struct CUUID {
+struct usnd::CUUID {
     unsigned int m_uiHighWord; /* +0x0 */
     unsigned int m_uiLowWord; /* +0x4 */
+
+    CUUID(void);
+    CUUID(unsigned int ui_HighWord, unsigned int ui_LowWord)
+    {
+        m_uiHighWord = ui_HighWord;
+        m_uiLowWord = ui_LowWord;
+    }
 };
 
-struct CIdObj {
-    /* C++ base CRTTIClass at +0x0. */
+/* The usnd set of CUUIDs that gs_oListToLoad holds (renamed Dinkumware
+   xtree); only the members this unit uses are declared. */
+struct CLesser {};
+namespace usnd {
+struct streebase {
+    enum _Redbl {
+        _Red = 0,
+        _Black = 1
+    };
+    struct sTreeLink {
+        sTreeLink* m_poLeft; /* +0x0 */
+        sTreeLink* m_poParent; /* +0x4 */
+        sTreeLink* m_poRight; /* +0x8 */
+        _Redbl m_eColor; /* +0xc */
+    };
+    struct iterator_base {
+        iterator_base(void) {}
+        iterator_base(sTreeLink* po_Link);
+        void _Inc(void);
+        sTreeLink* _Ptr; /* +0x0 */
+    };
+    streebase(bool b_Multi) : _Multi(b_Multi) {}
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+template <class T> struct binary_function {
+};
+
+template <class T> struct less : binary_function<T> {
+    bool operator()(const T& ro_Left, const T& ro_Right) const;
+};
+
+template <class T> struct sallocator {};
+
+template <class T, int N> struct CIndexAllocator {
+    CIndexAllocator(void);
+    CIndexAllocator(const CIndexAllocator& ro_Other);
+    ~CIndexAllocator(void);
+    CAllocBlock* m_poAllocBlocks; /* +0x0 */
+    char m_cRootNodeBuffer[N]; /* +0x4 */
+    unsigned int m_uiNbAllocs;
+};
+
+template <class T1, class T2> struct spair {
+    T1 first;
+    T2 second;
+};
+
+template <class K, class V, class KFN, class CMP, class ALLOC>
+struct stree : streebase {
+    struct sTreeNode : sTreeLink {
+        V m_oValue; /* +0x10 */
+    };
+    struct iterator : iterator_base {
+        iterator(void) {}
+        iterator(sTreeLink* po_Link) : iterator_base(po_Link) {}
+        iterator(const iterator& ro_It) { _Ptr = ro_It._Ptr; }
+        V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
+        iterator& operator++(void) { _Inc(); return *this; }
+        bool operator!=(const iterator& ro_It) const { return !(_Ptr == ro_It._Ptr); }
+    };
+    stree(const CMP& ro_Pred, bool b_Multi, const ALLOC& ro_Alloc) : streebase(b_Multi), allocator(ro_Alloc), key_compare(ro_Pred)
+    {
+        _Init();
+    }
+    ~stree(void);
+    void _Init(void);
+    sTreeLink* _GetHead(void) const;
+    sTreeLink*& _Lmost(void) { return _GetHead()->m_poLeft; }
+    iterator begin(void) { return iterator(_Lmost()); }
+    iterator end(void) { return iterator(_HeadLink); }
+    iterator erase(iterator o_First, iterator o_Last);
+    void clear(void) { erase(begin(), end()); }
+    spair<iterator, bool> insert(const V& ro_Value);
+    ALLOC allocator; /* +0xc */
+    CMP key_compare; /* +0xd */
+};
+
+template <class K, class CMP, class ALLOC>
+struct sset {
+    struct _Kfn {};
+    typedef stree<K, K, _Kfn, CMP, ALLOC> _Imp;
+    typedef typename _Imp::iterator iterator;
+    sset(const CMP& ro_Pred = CMP(), const ALLOC& ro_Alloc = ALLOC()) : _Tr(ro_Pred, false, ro_Alloc) {}
+    iterator begin(void) { return _Tr.begin(); }
+    iterator end(void) { return _Tr.end(); }
+    spair<iterator, bool> insert(const K& ro_Value) { return _Tr.insert(ro_Value); }
+    _Imp _Tr; /* +0x0 */
+};
+
+template <class K, class T, class CMP, class ALLOC>
+struct smap {
+    struct _Kfn {};
+    typedef stree<K, spair<const K, T>, _Kfn, CMP, ALLOC> _Imp;
+    smap(const CMP& ro_Pred = CMP(), const ALLOC& ro_Alloc = ALLOC()) : _Tr(ro_Pred, false, ro_Alloc) {}
+    _Imp _Tr; /* +0x0 */
+};
+}
+
+typedef usnd::sset<CUUID, CLesser, usnd::sallocator<CUUID> > TS_UUIDSet;
+
+namespace usnd {
+struct CRTTIClass {
+    /* C++ base with a virtual destructor: the vtable pointer sits at +0x0. */
+    virtual ~CRTTIClass();
+};
+}
+
+struct usnd::CIdObj : usnd::CRTTIClass {
     CUUID m_oId; /* +0x4 */
 };
 
@@ -232,6 +377,7 @@ template <class T> struct CIdObjPtr {
             return (T*)m_poElmt->m_poIdObj;
         return NULL;
     }
+    const CUUID& f_roGetId(void) const;
 };
 }
 
@@ -249,7 +395,7 @@ struct usnd::CResData : CRefIdObj {
     sstring m_strName; /* +0x14 */
 };
 
-struct CSwitchResData : CResData {
+struct usnd::CSwitchResData : CResData {
     unsigned int m_uiNbElmts; /* +0x18 */
     unsigned int m_uiInfoType; /* +0x1c */
     unsigned int m_uiDefaultIndex; /* +0x20 */
@@ -285,6 +431,8 @@ struct sset {
 struct CBankDesc : sset {
     CPS2IdObjLoader* mroLoader; /* +0x10 */
     sstring mostringName; /* +0x14 */
+    CResData* mfn_poAddCResDataAlone(const CUUID& ro_Id);
+    CResData* mfn_poAddCResData(const CUUID& ro_Id);
 };
 
 struct iterator_base {
@@ -336,6 +484,8 @@ public:
     unsigned int m_uiPos; /* +0x14 */
     unsigned int m_uiEndPos; /* +0x18 */
     unsigned char m_bUseCache; /* +0x1c */
+    ~CPS2FileSrcFlow(void);
+    static void fs_vStopCache(void);
     static void fs_vUseCache(void* p_Buffer, unsigned int ui_Size);
 };
 
@@ -348,9 +498,16 @@ struct CAllocBlock {
     int m_pcBufferPos; /* +0xc */
 };
 
+struct usnd::CPS2IdObjInfo {
+    CUUID m_oId; /* +0x0 */
+    unsigned int m_uiOffset; /* +0x8 */
+    sstring m_strFileName; /* +0xc */
+};
+
 struct usnd::CPS2IdObjLoader {
-    smap m_oIdObjsCache; /* +0x0 */
-    smap m_oIndex; /* +0x10 */
+    smap<CUUID, CIdObj*, less<CUUID>, sallocator<CIdObj*> > m_oIdObjsCache; /* +0x0 */
+    smap<CUUID, CPS2IdObjInfo, less<CUUID>, CIndexAllocator<CPS2IdObjInfo, 40> > m_oIndex; /* +0x10 */
+    unsigned char f_bLoadBank(const char* pch_FileName);
     void fv_FlushCache(void);
     void f_vClearIndex(void);
 };
@@ -500,6 +657,7 @@ struct CEventResData : CResData {
 struct CBankDescCont : smap {
     CPS2IdObjLoader moLoader; /* +0x10 */
     unsigned char mfn_bRemoveBankDesc(const char* pIdStr);
+    CBankDesc* mfn_poAddBankDesc(const char* pIdStr);
 };
 
 struct _tdstRangeSplitMem {
@@ -526,11 +684,6 @@ struct _tdstSwitchElement {
     int hIndice; /* +0x4 */
 };
 
-struct CPS2IdObjInfo {
-    CUUID m_oId; /* +0x0 */
-    unsigned int m_uiOffset; /* +0x8 */
-    sstring m_strFileName; /* +0xc */
-};
 
 struct CTextFileSrc : CTextFile {
     anon_enum_001a8842 eCTextFileSrc; /* +0x34 */
@@ -540,6 +693,9 @@ struct CTextFileSrc : CTextFile {
     char mchBuffer[2048]; /* +0x44 */
     int mpchCurrent; /* +0x844 */
     unsigned int mdwPosition; /* +0x848 */
+    CTextFileSrc(const char* pch_FileName);
+    unsigned char mfn_bRead(sstring& ro_Sentence);
+    unsigned char mfn_bOpen(const char* pch_FileName);
 };
 
 
@@ -605,8 +761,69 @@ static CPS2IdObjLoader* gro_BankLoader;
 static char gch_Title[256];
 static char gch_SoundFolder[1024];
 static char gch_DivertSoundFolder[1024];
-sset gs_oListToLoad;
+TS_UUIDSet gs_oListToLoad;
 void* g_pSoundCache;
+
+namespace usnd {
+struct CIdObjPtrMgr {
+    static CIdObjPtrMgr& fs_roGetInst(void);
+    CIdObj* f_poGetIdObj(const CUUID& ro_Id);
+};
+}
+
+namespace usnd {
+struct CPS2WaveFileIdObj {
+    static void fs_vLoadStatic(void);
+};
+}
+
+extern "C" int LS_fn_iRemainingSizeToLoad(void);
+extern "C" int atoi(const char*);
+
+struct SwitchMgr {
+    static void fs_vUpdateWaves(CPS2IdObjLoader*);
+    static void fs_vClearTexture(void);
+    static void fs_vAddTexture(unsigned int);
+    static void fs_vAdd(CSwitchResData* po_Data);
+};
+
+extern "C" int strncmp(const char*, const char*, unsigned int);
+extern "C" int strcmp(const char*, const char*);
+extern "C" char* strcpy(char*, const char*);
+extern "C" int printf(const char*, ...);
+extern "C" int sprintf(char*, const char*, ...);
+extern "C" unsigned int usnd_uiGetTime(void);
+extern "C" char* fn_szGetGameDataPath(void);
+extern "C" char* FMN_SCE_AddBaseDirectory(char* szFileName);
+void fn_vUpdateSwitches(const char* pIdStr);
+unsigned char fn_s8Digit(unsigned char s8_Digit);
+extern "C" void SND_fn_vClearLastTheme(void);
+extern "C" int SND_fn_iGetSwitchMaterial(void);
+extern "C" void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int uiSize);
+extern "C" void fn_vFreeInBinaryPreservingTheCurrentMode(void* p_Mem);
+extern "C" int SND_fn_bLoadBank(char* pch_NameWithoutExt);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 89–94 */
+/* addr: 0x00189600  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 89
+ *   +0x0008 -> line 91
+ *   +0x0030 -> line 92
+ *   +0x0034 -> line 93
+ *   +0x0044 -> line 94
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* Retail expands this into SND_fn_bLoadBank and also keeps it out of line. */
+#pragma auto_inline on
+void fs_vUppercase(char* p)
+{
+    for (; *p; p++) {
+        if (*p >= 'a' && *p <= 'z')
+            *p -= 'a' - 'A';
+    }
+}
+#pragma auto_inline reset
 
 /* The debug record for the retail function at 0x00187a60 names it
    _NilElmt__Q24usnd9streebase, but the ELF symbol there is the indexed
@@ -652,13 +869,37 @@ void* g_pSoundCache;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vUpdateSwitches__FPCc(char* pIdStr)
+void fn_vUpdateSwitches(const char* pIdStr)
 {
-    CPS2IdObjLoader oLoader;
-    sstring o_Sentence;
-    CTextFileSrc o_File;
     char ch_Path[1024];
-    /* TODO: decompile from asm/... */
+
+    sprintf(ch_Path, "\\%sBIN\\WORLD\\SOUND\\%s.SMT;1", fn_szGetGameDataPath(), pIdStr);
+    strcpy(ch_Path, FMN_SCE_AddBaseDirectory(ch_Path));
+    fs_vUppercase(ch_Path);
+
+    CTextFileSrc o_File("");
+
+    if (o_File.mfn_bOpen(ch_Path))
+    {
+        sstring o_Sentence;
+        CPS2IdObjLoader oLoader;
+
+        SwitchMgr::fs_vClearTexture();
+
+        while (o_File.mfn_bRead(o_Sentence))
+        {
+            SwitchMgr::fs_vAddTexture(atoi(o_Sentence.c_str()));
+        }
+
+        sprintf(ch_Path, "\\%sBIN\\WORLD\\SOUND\\FIXESW.HX2;1", fn_szGetGameDataPath());
+        strcpy(ch_Path, FMN_SCE_AddBaseDirectory(ch_Path));
+        fs_vUppercase(ch_Path);
+
+        oLoader.f_bLoadBank(ch_Path);
+        SwitchMgr::fs_vUpdateWaves(&oLoader);
+        oLoader.fv_FlushCache();
+        oLoader.f_vClearIndex();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 352–412 */
@@ -695,13 +936,48 @@ void fn_vUpdateSwitches__FPCc(char* pIdStr)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void fn_vLoadSwitches__FP9CBankDesc(CBankDesc* po_BankDesc)
+void fn_vLoadSwitches(CBankDesc* po_BankDesc)
 {
-    CUUID switchId;
-    CSwitchResData* pSwitchData;
-    CEventResData* pEventData;
-    iterator it;
-    /* TODO: decompile from asm/... */
+    TS_UUIDSet::iterator it;
+
+    g_pSoundCache = fn_pvMallocInBinaryPreservingTheCurrentMode(0x7D000);
+
+    usnd::CPS2FileSrcFlow::fs_vUseCache(g_pSoundCache, 0x7D000);
+
+    SND_fn_bLoadBank("fixeSW");
+
+    for (it = gs_oListToLoad.begin(); it != gs_oListToLoad.end(); ++it)
+    {
+        if ((*it).m_uiHighWord == 1)
+        {
+            CUUID switchId;
+            CSwitchResData* pSwitchData;
+            CEventResData* pEventData;
+
+            po_BankDesc->mfn_poAddCResDataAlone(*it);
+            pEventData = (CEventResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(*it);
+            if (pEventData)
+            {
+                switchId = pEventData->m_pTargetRes.f_roGetId();
+                po_BankDesc->mfn_poAddCResDataAlone(switchId);
+                pSwitchData = (CSwitchResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(switchId);
+                if (pSwitchData)
+                {
+                    SwitchMgr::fs_vAdd(pSwitchData);
+                }
+            }
+        }
+    }
+
+    SwitchMgr::fs_vUpdateWaves(gro_BankLoader);
+
+    gs_oListToLoad._Tr.clear();
+
+    gro_BankLoader->fv_FlushCache();
+    gro_BankLoader->f_vClearIndex();
+
+    usnd::CPS2FileSrcFlow::fs_vStopCache();
+    fn_vFreeInBinaryPreservingTheCurrentMode(g_pSoundCache);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 293–345 */
@@ -739,15 +1015,55 @@ void fn_vLoadSwitches__FP9CBankDesc(CBankDesc* po_BankDesc)
  */
 void SND_fn_vFinishLoad(char* pIdStr)
 {
-    iterator it;
-    unsigned int uiTime;
-    int iStepSize;
-    int iNbBanks;
+    TS_UUIDSet::iterator it;
     CBankDesc* po_BankDesc;
-    /* TODO: decompile from asm/... */
+    int iStepSize;
+    unsigned int uiTime;
+    int iNbBanks;
+
+    iStepSize = 0;
+    uiTime = usnd_uiGetTime();
+
+    po_BankDesc = gro_BankCont->mfn_poAddBankDesc(pIdStr);
+
+    if (CD_ProgressCallBack)
+    {
+        iNbBanks = gs_oListToLoad._Tr._Size;
+        iStepSize = (LS_fn_iRemainingSizeToLoad() - 1300000) / iNbBanks;
+    }
+
+    for (it = gs_oListToLoad.begin(); it != gs_oListToLoad.end(); ++it)
+    {
+        po_BankDesc->mfn_poAddCResData(*it);
+
+        if (CD_ProgressCallBack)
+            ((void (*)(int))CD_ProgressCallBack)(iStepSize);
+    }
+
+    gs_oListToLoad._Tr.clear();
+
+    printf("TIME spent to read the HX2 files \n");
+    printf("FINISH Time = %d\n", usnd_uiGetTime() - uiTime);
+
+    uiTime = usnd_uiGetTime();
+
+    usnd::CPS2WaveFileIdObj::fs_vLoadStatic();
+
+    printf("TIME spent to load the sound ressources in SPU RAM \n");
+    printf("FINISH Time = %d\n", usnd_uiGetTime() - uiTime);
+
+    gro_BankLoader->fv_FlushCache();
+    gro_BankLoader->f_vClearIndex();
+
+    usnd::CPS2FileSrcFlow::fs_vStopCache();
+    fn_vFreeInBinaryPreservingTheCurrentMode(g_pSoundCache);
+
+    if (!strcmp("fixe", pIdStr))
+    {
+        fn_vLoadSwitches(po_BankDesc);
+    }
 }
 
-extern "C" void* fn_pvMallocInBinaryPreservingTheCurrentMode(unsigned int uiSize);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 283–288 */
 /* addr: 0x00188cb0  size: 52 bytes */
@@ -778,27 +1094,13 @@ void SND_fn_vStartLoad(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-struct CIdObjPtrMgr;
-extern "C" CIdObjPtrMgr& fs_roGetInst__Q24usnd12CIdObjPtrMgrFv(void);
-extern "C" CIdObj* f_poGetIdObj__Q24usnd12CIdObjPtrMgrFRCQ24usnd5CUUID(CIdObjPtrMgr* pThis, const CUUID& id);
 _SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId)
 {
     CEventResData* po_Answer;
-    CUUID id;
-    id.m_uiHighWord = 1; id.m_uiLowWord = u32_EvtId;
-    po_Answer = (CEventResData*)f_poGetIdObj__Q24usnd12CIdObjPtrMgrFRCQ24usnd5CUUID(&fs_roGetInst__Q24usnd12CIdObjPtrMgrFv(), id);
+
+    po_Answer = (CEventResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(CUUID(1, u32_EvtId));
     return (_SND_tdstBlockEvent*)po_Answer;
 }
-
-struct SwitchMgr {
-    static void fs_vUpdateWaves(CPS2IdObjLoader*);
-    static void fs_vClearTexture(void);
-    static void fs_vAddTexture(unsigned int);
-};
-
-extern "C" int strncmp(const char*, const char*, unsigned int);
-extern "C" void SND_fn_vClearLastTheme(void);
-extern "C" int SND_fn_iGetSwitchMaterial(void);
 
 static inline void fs_vUpdateSwitchTextures(void)
 {
@@ -883,11 +1185,54 @@ int SND_fn_bUnloadBank(char* pIdStr)
  */
 int SND_fn_bLoadBank(char* pch_NameWithoutExt)
 {
-    sstring o_Sentence;
-    CTextFileSrc o_File;
     unsigned int uiTime;
     char ch_Path[1024];
-    /* TODO: decompile from asm/... */
+
+    uiTime = usnd_uiGetTime();
+
+    if (strcmp(pch_NameWithoutExt, "fixe"))
+    {
+        fn_vUpdateSwitches(pch_NameWithoutExt);
+    }
+
+    printf("TIME spent to update switches files \n");
+    printf("LOAD Time = %d\n", usnd_uiGetTime() - uiTime);
+
+    uiTime = usnd_uiGetTime();
+
+    sprintf(ch_Path, "\\%sBIN\\WORLD\\SOUND\\%s.HX2;1", fn_szGetGameDataPath(), pch_NameWithoutExt);
+    strcpy(ch_Path, FMN_SCE_AddBaseDirectory(ch_Path));
+    fs_vUppercase(ch_Path);
+
+    gro_BankLoader->f_bLoadBank(ch_Path);
+
+    printf("TIME spent to read the HX2 index files \n");
+    printf("LOAD Time = %d\n", usnd_uiGetTime() - uiTime);
+
+    uiTime = usnd_uiGetTime();
+
+    sprintf(ch_Path, "\\%sBIN\\WORLD\\SOUND\\%s.BNH;1", fn_szGetGameDataPath(), pch_NameWithoutExt);
+    strcpy(ch_Path, FMN_SCE_AddBaseDirectory(ch_Path));
+    fs_vUppercase(ch_Path);
+
+    CTextFileSrc o_File(ch_Path);
+
+    sstring o_Sentence("");
+    while (o_File.mfn_bRead(o_Sentence))
+    {
+        const char* pch = o_Sentence.c_str();
+        CUUID oId(
+            (fn_s8Digit(pch[9]) << 28) | (fn_s8Digit(pch[10]) << 24) | (fn_s8Digit(pch[11]) << 20) | (fn_s8Digit(pch[12]) << 16) |
+            (fn_s8Digit(pch[13]) << 12) | (fn_s8Digit(pch[14]) << 8) | (fn_s8Digit(pch[15]) << 4) | fn_s8Digit(pch[16]),
+            (fn_s8Digit(pch[21]) << 28) | (fn_s8Digit(pch[22]) << 24) | (fn_s8Digit(pch[23]) << 20) | (fn_s8Digit(pch[24]) << 16) |
+            (fn_s8Digit(pch[25]) << 12) | (fn_s8Digit(pch[26]) << 8) | (fn_s8Digit(pch[27]) << 4) | fn_s8Digit(pch[28]));
+        gs_oListToLoad.insert(oId);
+    }
+
+    printf("TIME spent to read the BNH files \n");
+    printf("LOAD Time = %d\n", usnd_uiGetTime() - uiTime);
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 120–136 */
@@ -905,7 +1250,7 @@ int SND_fn_bLoadBank(char* pch_NameWithoutExt)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_s8Digit__FUc(unsigned char s8_Digit)
+unsigned char fn_s8Digit(unsigned char s8_Digit)
 {
     unsigned char s8_Answer;
 
@@ -956,23 +1301,4 @@ int SND_fn_bInitDataLoadSnd(void)
 {
     fn_bSetLanguage();
     return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeldbin.cpp lines 89–94 */
-/* addr: 0x00189600  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 89
- *   +0x0008 -> line 91
- *   +0x0030 -> line 92
- *   +0x0034 -> line 93
- *   +0x0044 -> line 94
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fs_vUppercase__FPc(char* p)
-{
-    for (; *p; p++) {
-        if (*p >= 'a' && *p <= 'z')
-            *p -= 'a' - 'A';
-    }
 }
