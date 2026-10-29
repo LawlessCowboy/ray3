@@ -431,19 +431,207 @@ struct GEO_tdstEdge_ {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+struct tdstBrain_ {
+    void* p_stMind; /* +0x0 */
+    GMT_tdstGameMaterial_* hLastCollidedGoThroughMaterial; /* +0x4 */
+    unsigned char bWarnMechanicsFlag; /* +0x8 */
+    unsigned char bActiveDuringTransition; /* +0x9 */
+};
+
+struct tdstEngineObject_ {
+    void* h_3dData; /* +0x0 */
+    void* h_StandardGame; /* +0x4 */
+    void* h_Dynam; /* +0x8 */
+    struct tdstBrain_* h_Brain; /* +0xc */
+};
+
+extern MTH3D_tdstVector_ g_stPersoMoveForCollision;
+extern float g_xZWater;
+extern int lZWaterValidity;
+
+extern void* memcpy(void*, const void*, size_t);
+extern void COL_fn_vResetNbCollidedEdges(void);
+extern int COL_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle*, HIE_tdstSuperObject_*, MAT_tdstTransformation_*, MAT_tdstTransformation_*);
+extern unsigned char MEC_fn_EdgeAnalysisForCliff(DNM_stDynamics*, int, DNM_stMecObstacle*);
+extern void MEC_fn_vDeleteBaseBackFace(int, DNM_stMecObstacle*, DNM_stDynamics*);
+extern void MEC_fn_vDeleteNoCollidedGroundFace(int, DNM_stMecObstacle*, DNM_stDynamics*);
+extern void MEC_fn_vDeleteHangingObstacle(int, DNM_stMecObstacle*, DNM_stDynamics*);
+extern void MEC_fn_vComputeCollisionTranslation(int, DNM_stMecObstacle*, MTH3D_tdstVector_*);
+extern int MEC_fn_bGroundNormal(DNM_stDynamics*, MTH3D_tdstVector_*);
+extern void MEC_fn_vReportCollision(DNM_stDynamics*, HIE_tdstSuperObject_*, int, DNM_stMecObstacle*, int);
+extern void MAT_fn_vGetRotationVectorBaseJ(MAT_tdstTransformation_*, MTH3D_tdstVector_*);
+
+#define GMT_C_InvalidCollideMaterial ((GMT_tdstCollideMaterial_*)-1)
+
+inline unsigned char MEC_fn_bMaterialHasType(GMT_tdstGameMaterial_* hMaterial, unsigned short uwType)
+{
+    GMT_tdstCollideMaterial_* hCollideMaterial = hMaterial->hCollideMaterial;
+    return (hCollideMaterial != GMT_C_InvalidCollideMaterial) && ((hCollideMaterial->xIdentifier & uwType) == uwType);
+}
+
+inline unsigned char MEC_fn_bMaterialIsSolid(GMT_tdstGameMaterial_* hMaterial)
+{
+    GMT_tdstCollideMaterial_* hCollideMaterial = hMaterial->hCollideMaterial;
+    return (hCollideMaterial != GMT_C_InvalidCollideMaterial) && ((hCollideMaterial->xIdentifier & 0x1F88) != 0.0f);
+}
+
+/* R5900 abs.s; MWCC cannot emit it from plain C (fabsf lowers to a call). */
+inline float MTH_M_xAbs(float _xA)
+{
+    float _xResult;
+    asm { abs.s _xResult, _xA }
+    return _xResult;
+}
+
+/* Obstacles discarded by the filters have their collided entity set to 99. */
+inline unsigned char MEC_fn_bObstacleNotDeleted(DNM_stMecObstacle* p_stObstacle) { return p_stObstacle->m_xCollidedEntity != 99; }
+
+static inline void MEC_vCopyVector(MTH3D_tdstVector_* _d, MTH3D_tdstVector_* _s) { ((int*)(_d))[0] = ((int*)(_s))[0]; ((int*)(_d))[1] = ((int*)(_s))[1]; ((int*)(_d))[2] = ((int*)(_s))[2]; }
+
+static inline void MEC_vDivScalarVector(MTH3D_tdstVector_* _d, MTH3D_tdstVector_* _a, float _s) { (_d)->xX = (_a)->xX / _s; (_d)->xY = (_a)->xY / _s; (_d)->xZ = (_a)->xZ / _s; }
+inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2) { float _r; asm { mula.s _x1, _x2 } asm { madda.s _y1, _y2 } asm { madd.s _r, _z1, _z2 } return _r; }
+
 unsigned char MEC_fn_bCollision(int* p_lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* p_stSupObj, MAT_tdstTransformation_* p_stStartPosition, MAT_tdstTransformation_* p_stEndPosition, unsigned char bBackFace)
 {
     unsigned char bCollisionOk;
-    MTH3D_tdstVector_ stTmpHandVector;
     int lNbHandObstacle;
     unsigned char bWaterFace;
     unsigned char bObstacleOk;
-    MTH3D_tdstVector_ stY;
     MTH3D_tdstVector_ stMove;
+    MTH3D_tdstVector_ stY;
+    MTH3D_tdstVector_ stTmpHandVector;
     DNM_stMecObstacle stHandObstacle;
     DNM_stMecObstacle* p_stTmpObstacle;
     int lCounter;
-    /* TODO: decompile from asm/... */
+
+    bCollisionOk = 0;
+    bWaterFace = 0;
+    lNbHandObstacle = 0;
+    *p_lObstacle = 0;
+    COL_fn_vResetNbCollidedEdges();
+    *p_lObstacle = COL_lHaveITakeSThgIntoTheMug(p_stObstacle, p_stSupObj, p_stStartPosition, p_stEndPosition);
+
+    g_stPersoMoveForCollision.xX = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xX - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX;
+    g_stPersoMoveForCollision.xY = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xY - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY;
+    g_stPersoMoveForCollision.xZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xZ - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ;
+
+    MEC_fn_EdgeAnalysisForCliff(p_stDynamic, *p_lObstacle, p_stObstacle);
+    if (!bBackFace)
+        MEC_fn_vDeleteBaseBackFace(*p_lObstacle, p_stObstacle, p_stDynamic);
+    MEC_fn_vDeleteNoCollidedGroundFace(*p_lObstacle, p_stObstacle, p_stDynamic);
+    if (*p_lObstacle <= 0)
+        return 0;
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x400000) ? 1 : 0)
+        MEC_fn_vDeleteHangingObstacle(*p_lObstacle, p_stObstacle, p_stDynamic);
+
+    stMove.xX = p_stStartPosition->stTransformMatrix.stCol_3.xX - p_stEndPosition->stTransformMatrix.stCol_3.xX;
+    stMove.xY = p_stStartPosition->stTransformMatrix.stCol_3.xY - p_stEndPosition->stTransformMatrix.stCol_3.xY;
+    stMove.xZ = p_stStartPosition->stTransformMatrix.stCol_3.xZ - p_stEndPosition->stTransformMatrix.stCol_3.xZ;
+    MEC_fn_vComputeCollisionTranslation(*p_lObstacle, p_stObstacle, &stMove);
+
+    MAT_fn_vGetRotationVectorBaseJ(p_stSupObj->hGlobalMatrix, &stY);
+
+    for (lCounter = 0; lCounter < *p_lObstacle; lCounter++)
+    {
+        p_stTmpObstacle = p_stObstacle + lCounter;
+        if (MEC_fn_bObstacleNotDeleted(p_stTmpObstacle))
+        {
+            bObstacleOk = 1;
+            if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hMyMaterial, 0x8))
+            {
+                bObstacleOk = 0;
+                if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 0x4)
+                    && MEC_fn_bGroundNormal(p_stDynamic, &p_stTmpObstacle->m_stNorm)
+                    && p_stTmpObstacle->m_xCollidedEntity != 7
+                    && p_stTmpObstacle->m_xCollidedEntity != 8)
+                {
+                    if (!lNbHandObstacle)
+                        memcpy(&stHandObstacle, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                    else
+                    {
+                        stTmpHandVector.xX = stHandObstacle.m_stContact.xX + p_stTmpObstacle->m_stContact.xX;
+                        stTmpHandVector.xY = stHandObstacle.m_stContact.xY + p_stTmpObstacle->m_stContact.xY;
+                        stTmpHandVector.xZ = stHandObstacle.m_stContact.xZ + p_stTmpObstacle->m_stContact.xZ;
+                        MEC_vCopyVector(&stHandObstacle.m_stContact, &stTmpHandVector);
+                    }
+                    lNbHandObstacle++;
+                }
+            }
+            else if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 0x4000))
+            {
+                g_xZWater = p_stTmpObstacle->m_stContact.xZ;
+                lZWaterValidity = 0;
+                if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hMyMaterial, 0x4000))
+                {
+                    if (!bWaterFace)
+                    {
+                        float xDot;
+                        xDot = MTH_xDot3(p_stTmpObstacle->m_stNorm.xX, p_stTmpObstacle->m_stZoneMove.xX, p_stTmpObstacle->m_stNorm.xY, p_stTmpObstacle->m_stZoneMove.xY, p_stTmpObstacle->m_stNorm.xZ, p_stTmpObstacle->m_stZoneMove.xZ);
+                        if (MTH_M_xAbs(p_stTmpObstacle->m_stZoneMove.xZ) > 0.03f)
+                        {
+                            if (xDot < 0.0f)
+                            {
+                                MEC_fn_vReportCollision(p_stDynamic, p_stSupObj, 1, p_stTmpObstacle, 0);
+                                bObstacleOk = p_stSupObj->hLinkedObject.p_stCharacter->h_Brain->bWarnMechanicsFlag;
+                                bWaterFace = 1;
+                            }
+                            else
+                                bObstacleOk = 0;
+                        }
+                        else
+                        {
+                            MTH3D_tdstVector_ stZoneVector;
+                            stZoneVector.xX = p_stTmpObstacle->m_stContact.xX - p_stTmpObstacle->m_stZonePosition.xX; stZoneVector.xY = p_stTmpObstacle->m_stContact.xY - p_stTmpObstacle->m_stZonePosition.xY; stZoneVector.xZ = p_stTmpObstacle->m_stContact.xZ - p_stTmpObstacle->m_stZonePosition.xZ;
+                            stZoneVector.xX = stZoneVector.xX + p_stTmpObstacle->m_stZoneMove.xX; stZoneVector.xY = stZoneVector.xY + p_stTmpObstacle->m_stZoneMove.xY; stZoneVector.xZ = stZoneVector.xZ + p_stTmpObstacle->m_stZoneMove.xZ;
+                            xDot = MTH_xDot3(p_stTmpObstacle->m_stNorm.xX, stZoneVector.xX, p_stTmpObstacle->m_stNorm.xY, stZoneVector.xY, p_stTmpObstacle->m_stNorm.xZ, stZoneVector.xZ);
+                            if (xDot <= 0.0f)
+                            {
+                                MEC_fn_vReportCollision(p_stDynamic, p_stSupObj, 1, p_stTmpObstacle, 0);
+                                bObstacleOk = p_stSupObj->hLinkedObject.p_stCharacter->h_Brain->bWarnMechanicsFlag;
+                                bWaterFace = 1;
+                            }
+                            else
+                                bObstacleOk = 0;
+                        }
+                        if (p_stTmpObstacle->m_stNorm.xZ > 0.0f)
+                            bObstacleOk = 0;
+                    }
+                    else
+                        bObstacleOk = 0;
+                }
+                else
+                    bObstacleOk = 0;
+            }
+            else if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 0x8000))
+            {
+                if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 0x40))
+                    bObstacleOk = (unsigned char)((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40) ? 1 : 0);
+                else if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 0x20))
+                    bObstacleOk = (unsigned char)((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x10) ? 1 : 0);
+                else if (MEC_fn_bMaterialIsSolid(p_stTmpObstacle->hCollidedMaterial))
+                {
+                    MEC_fn_vReportCollision(p_stDynamic, p_stSupObj, 1, p_stTmpObstacle, 0);
+                    bObstacleOk = 0;
+                }
+                else
+                    bObstacleOk = 0;
+            }
+
+            if (!bObstacleOk)
+                p_stTmpObstacle->m_xCollidedEntity = 99;
+            else
+                bCollisionOk = 1;
+        }
+    }
+
+    if (lNbHandObstacle)
+    {
+        p_stTmpObstacle = &stHandObstacle;
+        MEC_vDivScalarVector(&stTmpHandVector, &p_stTmpObstacle->m_stContact, (float)lNbHandObstacle);
+        MEC_vCopyVector(&p_stTmpObstacle->m_stContact, &stTmpHandVector);
+        MEC_fn_vReportCollision(p_stDynamic, p_stSupObj, 1, p_stTmpObstacle, 0);
+    }
+    return bCollisionOk;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECOpt.c lines 530–572 */
@@ -494,12 +682,47 @@ unsigned char MEC_fn_bCollision(int* p_lObstacle, DNM_stMecObstacle* p_stObstacl
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void MAT_fn_vInvert(MAT_tdstTransformation_*, MAT_tdstTransformation_*);
+extern void MAT_fn_vRotateVector(MTH3D_tdstVector_*, MAT_tdstTransformation_*, MTH3D_tdstVector_*);
+extern void MEC_fn_vAdjustScaleVector(DNM_stDynamics*, MTH3D_tdstVector_*);
+
 void MEC_fn_vAdjustScaleData(DNM_stDynamics* p_stDynamic, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix)
 {
     MTH3D_tdstVector_ stTranslation;
     MAT_tdstTransformation_* hCurrentMatrix;
     MAT_tdstTransformation_* hPreviousMatrix;
-    /* TODO: decompile from asm/... */
+    unsigned int ulEndFlags;
+    MTH3D_tdstVector_* p_stPreviousPosition;
+    union { MTH3D_tdstVector_ v; int i[3]; } stPosition;
+
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+    hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+
+    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x800) ? 1 : 0) { MAT_fn_vInvert(hInvMatrix, hMatrix); ulEndFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFFF7FF; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags; p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulEndFlags; }
+    p_stPreviousPosition = (MTH3D_tdstVector_*)&hPreviousMatrix->stTransformMatrix.stCol_3;
+    stTranslation.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX - hPreviousMatrix->stTransformMatrix.stCol_3.xX; stTranslation.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY - hPreviousMatrix->stTransformMatrix.stCol_3.xY; stTranslation.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ - hPreviousMatrix->stTransformMatrix.stCol_3.xZ;
+    MAT_fn_vRotateVector(&stTranslation, hInvMatrix, &stTranslation);
+    MEC_fn_vAdjustScaleVector(p_stDynamic, &stTranslation);
+    MAT_fn_vRotateVector(&stTranslation, hMatrix, &stTranslation);
+    stPosition.v.xX = p_stPreviousPosition->xX + stTranslation.xX; stPosition.v.xY = p_stPreviousPosition->xY + stTranslation.xY; stPosition.v.xZ = p_stPreviousPosition->xZ + stTranslation.xZ; if (hCurrentMatrix->eType == MAT_eTransform_Identity) hCurrentMatrix->eType = MAT_eTransform_Translation; *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xX = stPosition.i[0]; *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xY = stPosition.i[1]; *(int*)&hCurrentMatrix->stTransformMatrix.stCol_3.xZ = stPosition.i[2]; hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+
+    MEC_vCopyVector(&stTranslation, &p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeSpeed);
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x4000) ? 0 : 1)) MAT_fn_vRotateVector(&stTranslation, hInvMatrix, &stTranslation);
+    MEC_fn_vAdjustScaleVector(p_stDynamic, &stTranslation);
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x4000) ? 0 : 1)) MAT_fn_vRotateVector(&stTranslation, hMatrix, &stTranslation);
+    MEC_vCopyVector(&p_stDynamic->m_tdstDynamicsBaseBlock.m_stImposeSpeed, &stTranslation);
+
+    MEC_vCopyVector(&stTranslation, &p_stDynamic->m_tdstDynamicsBaseBlock.m_stProposeSpeed);
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x8000) ? 0 : 1)) MAT_fn_vRotateVector(&stTranslation, hInvMatrix, &stTranslation);
+    MEC_fn_vAdjustScaleVector(p_stDynamic, &stTranslation);
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x4000) ? 0 : 1)) MAT_fn_vRotateVector(&stTranslation, hMatrix, &stTranslation);
+    MEC_vCopyVector(&p_stDynamic->m_tdstDynamicsBaseBlock.m_stProposeSpeed, &stTranslation);
+
+    MEC_vCopyVector(&stTranslation, &p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stAddSpeed);
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x10000) ? 0 : 1)) MAT_fn_vRotateVector(&stTranslation, hInvMatrix, &stTranslation);
+    MEC_fn_vAdjustScaleVector(p_stDynamic, &stTranslation);
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x4000) ? 0 : 1)) MAT_fn_vRotateVector(&stTranslation, hMatrix, &stTranslation);
+    MEC_vCopyVector(&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stAddSpeed, &stTranslation);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECOpt.c lines 486–522 */
@@ -549,13 +772,6 @@ void MEC_fn_vAdjustScaleData(DNM_stDynamics* p_stDynamic, MAT_tdstTransformation
 extern void MAT_fn_vInvert(MAT_tdstTransformation_*, MAT_tdstTransformation_*);
 extern void MAT_fn_vRotateVector(MTH3D_tdstVector_*, MAT_tdstTransformation_*, MTH3D_tdstVector_*);
 
-/* R5900 abs.s; MWCC cannot emit it from plain C (fabsf lowers to a call). */
-inline float MTH_M_xAbs(float _xA)
-{
-    float _xResult;
-    asm { abs.s _xResult, _xA }
-    return _xResult;
-}
 
 /* Clamp one speed component to the limit, keeping the sign of the value.
    The sign is taken from the raw bit pattern of the float. */

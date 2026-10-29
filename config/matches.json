@@ -44087,6 +44087,354 @@
       "status": "MISMATCH",
       "target_size": 432,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x002955b0",
+      "candidate_size": 1048,
+      "first_difference": 358,
+      "implementation": "void fn_vDrawClassicPage(void)\n{\n    float Y;\n    unsigned int i;\n    char szTmp[50];\n\n    if (strlen(aMenu2DPages[g_CurrentMenu2DPage].Title) == 0)\n        Y = 300.0f;\n    else\n        Y = 400.0f;\n\n    for (i = 0; i < aMenu2DPages[g_CurrentMenu2DPage].NbSelection; i++)\n    {\n        if (i == g_CurrentSelection)\n        {\n            sprintf(szTmp, \"%s\", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);\n            fn_vDrawSelectedText(szTmp, 10.0f * g_XText, Y);\n        }\n        else if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[i])\n        {\n            sprintf(szTmp, \"\\\\jc\\\\z250:%s\", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);\n            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp, 10.0f * g_XText, Y, 0.0f, 0xFF003264);\n        }\n        else\n        {\n            sprintf(szTmp, \"\\\\jc\\\\z250:%s\", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);\n            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp, 10.0f * g_XText, Y, 0.0f, 0xFFF5E9CF);\n        }\n\n        if (strstr(aMenu2DPages[g_CurrentMenu2DPage].aText[i], \"\\\\l\") != NULL)\n            Y += 140.0f;\n        else\n            Y += 110.0f;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vDrawClassicPage",
+      "reason": "Size 1048/1048, relocs 47/47, stack exact. Selected-entry code (line 716) is an inlined static helper fn_vDrawSelectedText(szText, X, Y) with own fWidth/fHeight/char szMsg[100] (same helper inlined in fn_vDrawAreYouSurePage with X=350). Residual: FP scheduling/regalloc of the four GLI_vDraw2DSpriteWithPercentAndUVs rect args in both strstr branches; temp-order, operand-order and decl-order variants did not converge. Permuter cannot reach the inlined helper.",
+      "size": 1048,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 1048,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002945f0",
+      "candidate_size": 1180,
+      "first_difference": 40,
+      "implementation": "void fn_vDrawVideoOptionPage(void)\n{\n    char szMsg[50];\n    unsigned int i;\n    int g_XTextOld;\n\n    g_XTextOld = 0;\n\n    for (i = 0; i < aMenu2DPages[g_CurrentMenu2DPage].NbSelection; i++)\n    {\n        if (i == 1)\n        {\n            g_XTextOld = g_XText;\n            g_XText -= 12.0f;\n        }\n\n        if (i == g_CurrentSelection)\n        {\n            sprintf(szMsg, \"%s\", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);\n            fn_vDrawSelectedText(szMsg, 10.0f * g_XText, 400 + 110 * i);\n        }\n        else\n        {\n            sprintf(szMsg, \"\\\\jc\\\\z250:%s\", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);\n            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, 10.0f * g_XText, 400 + 110 * i, 0.0f, 0xFFF5E9CF);\n        }\n\n        if (i == 1)\n        {\n            fn_vDrawOnOff(250.0f + 10.0f * g_XText, 400 + 110 * i, aMenu2DPages[g_CurrentMenu2DPage].aValue[i]);\n            g_XText = g_XTextOld;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vDrawVideoOptionPage",
+      "reason": "Blocked by retail add-zero family: aMenu2DPages[cur].aValue[i] argument to fn_vDrawOnOff needs 'addiu v0,v0,0' + base-first addu (MWCC folds it). Otherwise structure right: inlined fn_vDrawSelectedText(szMsg, 10*g_XText, 400+110*i) with Y substituted per use; text 1180/1204, remaining residual is arg evaluation order (X before branchy unsigned->float Y) and missing join nops.",
+      "size": 1204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 1204,
+      "unresolved_relocations": [
+        {
+          "offset": 716,
+          "symbol": "@365",
+          "type": 5
+        },
+        {
+          "offset": 724,
+          "symbol": "@365",
+          "type": 6
+        },
+        {
+          "offset": 820,
+          "symbol": "@366",
+          "type": 5
+        },
+        {
+          "offset": 836,
+          "symbol": "@366",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x002955b0",
+      "candidate_size": 1048,
+      "first_difference": 340,
+      "implementation": "void fn_vDrawClassicPage(void)\n{\n    float Y;\n    unsigned int i;\n    char szTmp[50];\n\n    if (strlen(aMenu2DPages[g_CurrentMenu2DPage].Title) == 0)\n        Y = 300.0f;\n    else\n        Y = 400.0f;\n\n    for (i = 0; i < aMenu2DPages[g_CurrentMenu2DPage].NbSelection; i++)\n    {\n        if (i == g_CurrentSelection)\n        {\n            sprintf(szTmp, \"%s\", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);\n            fn_vDrawSelectedText(szTmp, 10.0f * g_XText, Y);\n        }\n        else if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[i])\n        {\n            sprintf(szTmp, \"\\\\jc\\\\z250:%s\", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);\n            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp, 10.0f * g_XText, Y, 0.0f, 0xFF003264);\n        }\n        else\n        {\n            sprintf(szTmp, \"\\\\jc\\\\z250:%s\", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);\n            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp, 10.0f * g_XText, Y, 0.0f, 0xFFF5E9CF);\n        }\n\n        if (strstr(aMenu2DPages[g_CurrentMenu2DPage].aText[i], \"\\\\l\") != NULL)\n            Y += 140.0f;\n        else\n            Y += 110.0f;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vDrawClassicPage",
+      "reason": "Also blocked by retail add-zero family at +0x38c (strstr(aMenu2DPages[cur].aText[i]) needs 'addiu v0,v0,0' + base-first addu). Size 1048/1048, relocs 47/47, stack exact via inlined static fn_vDrawSelectedText(szText, X, Y) with own fWidth/fHeight/char szMsg[100]; other residual is FP scheduling of the GLI_vDraw2DSpriteWithPercentAndUVs rect args.",
+      "size": 1048,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 1048,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00290f10",
+      "candidate_size": 1404,
+      "first_difference": 36,
+      "implementation": "void fn_vDrawGlobalInfo(void)\n{\n    float XChar;\n    unsigned int ulNbCage;\n    unsigned int ulValue;\n    unsigned int ulScore;\n    char* szGlobalScore;\n    char szTmp1[50];\n\n    szGlobalScore = FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[61].hText);\n    XChar = 755.0f;\n    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szGlobalScore, 750.0f, 220.0f, 0.0f, 0xFF7A7777);\n\n    ulScore = fn_ulR3GetEnvScore(0);\n\n    ulValue = ulScore / 100000;\n    sprintf(szTmp1, \"\\\\jc\\\\z%d:%d\", 250, ulValue);\n    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp1, XChar, 334.0f, 0.0f, 0xFF7A7777);\n    XChar += 29.0f;\n\n    ulScore -= ulValue * 100000;\n    ulValue = ulScore / 10000;\n    sprintf(szTmp1, \"\\\\jc\\\\z%d:%d\", 250, ulValue);\n    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp1, XChar, 334.0f, 0.0f, 0xFF7A7777);\n    XChar += 29.0f;\n\n    ulScore -= ulValue * 10000;\n    ulValue = ulScore / 1000;\n    sprintf(szTmp1, \"\\\\jc\\\\z%d:%d\", 250, ulValue);\n    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp1, XChar, 334.0f, 0.0f, 0xFF7A7777);\n    XChar += 29.0f;\n\n    ulScore -= ulValue * 1000;\n    ulValue = ulScore / 100;\n    sprintf(szTmp1, \"\\\\jc\\\\z%d:%d\", 250, ulValue);\n    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp1, XChar, 334.0f, 0.0f, 0xFF7A7777);\n    XChar += 29.0f;\n\n    ulScore -= ulValue * 100;\n    ulValue = ulScore / 10;\n    sprintf(szTmp1, \"\\\\jc\\\\z%d:%d\", 250, ulValue);\n    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp1, XChar, 334.0f, 0.0f, 0xFF7A7777);\n    XChar += 29.0f;\n\n    ulScore -= ulValue * 10;\n    sprintf(szTmp1, \"\\\\jc\\\\z%d:%d\", 250, ulScore);\n    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp1, XChar, 334.0f, 0.0f, 0xFF7A7777);\n\n    ulNbCage = fn_ulR3GetEnvNbCage(0);\n    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[42].hText), 782.0f, 420.0f, 0.0f, 0xFF7A7777);\n\n    ulValue = ulNbCage / 10;\n    sprintf(szTmp1, \"\\\\jc\\\\z%d:%d\", 250, ulValue);\n    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp1, 861.0f, 422.0f, 0.0f, 0xFF7A7777);\n\n    ulNbCage -= ulValue * 10;\n    sprintf(szTmp1, \"\\\\jc\\\\z%d:%d\", 250, ulNbCage);\n    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp1, 890.0f, 422.0f, 0.0f, 0xFF7A7777);\n\n    fn_vDrawButtonsHelp();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vDrawGlobalInfo",
+      "reason": "Full reconstruction 1404/1408, relocs 87/87 (score digits via /100000../10, cage count, button hints as inlined static helper on line 2111). Residuals: TU-state-dependent FP constant arg order (retail x before y; same effect flips recorded fn_vDrawRecapPage, so body reverted to stub until TU is fuller), ulScore/ulValue s0/s1 swap, g_CurrentIndSubMenu>=0 emits bltz vs retail slti/bnez.",
+      "size": 1408,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 1408,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00292000",
+      "candidate_size": 1120,
+      "first_difference": 994,
+      "implementation": "void fn_vDrawCinematicPage(void)\n{\n    int l;\n    int c;\n    int j;\n\n    j = 0;\n    CheckMenu2DTextures();\n\n    for (l = 0; l < g_NbLineForSelection; l++)\n    {\n        for (c = 0; c < g_NbColForSelection; c++)\n        {\n            int bSelected = (c == g_CurrentColForSelection && l == g_CurrentLineForSelection);\n\n            if (j < g_NbCinematicOpen)\n            {\n                if (bSelected)\n                {\n                    fn_vDraw2DSelectedSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,\n                        22.0f + 11.0f * c, 28.0f + 17.0f * l,\n                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,\n                        0.33f * c, 0.33f + 0.33f * c, 0.33f * l, 0.33f + 0.33f * l,\n                        (GLI_tdstMaterial_*)g_hFixMaterialForSelectedFilms);\n                }\n                else\n                {\n                    GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,\n                        22.0f + 11.0f * c, 28.0f + 17.0f * l,\n                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,\n                        0.33f * c, 0.33f + 0.33f * c, 0.33f * l, 0.33f + 0.33f * l,\n                        (GLI_tdstMaterial_*)g_hFixMaterialForSelectedFilms);\n                }\n            }\n            else\n            {\n                if (bSelected)\n                {\n                    fn_vDraw2DSelectedSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,\n                        22.0f + 11.0f * c, 28.0f + 17.0f * l,\n                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,\n                        0.5f, 1.0f, 0.0f, 0.5f,\n                        (GLI_tdstMaterial_*)g_hFixMaterialForArcadeAndFilms);\n                }\n                else\n                {\n                    GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,\n                        22.0f + 11.0f * c, 28.0f + 17.0f * l,\n                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,\n                        0.5f, 1.0f, 0.0f, 0.5f,\n                        (GLI_tdstMaterial_*)g_hFixMaterialForArcadeAndFilms);\n                }\n            }\n\n            j++;\n        }\n    }\n\n    if (g_CurrentColForSelection + g_NbColForSelection * g_CurrentLineForSelection < g_NbCinematicOpen)\n    {\n        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt,\n            FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[g_FirstCineNameText + g_CurrentColForSelection + g_NbColForSelection * g_CurrentLineForSelection].hText),\n            120.0f, 825.0f, 0.0f, 0xFFF5E9CF);\n    }\n    else\n    {\n        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[99].hText), 120.0f, 825.0f, 0.0f, 0xFFF5E9CF);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vDrawCinematicPage",
+      "reason": "Only residual is FP constant arg scheduling (120/825/0.0 into f12/f13/f14) of the two final TXT_vAfficheSimpleWithShadow calls; this flips with unrelated TU content (filling fn_vDrawGlobalInfo fixed the first call), so revisit once more of DisplayMenu2D is filled. Grid loop, selection flag, UVs and caption index all exact.",
+      "size": 1120,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 1120,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002959d0",
+      "candidate_size": 2040,
+      "first_difference": 964,
+      "implementation": "void fn_vDrawAreYouSurePage(void)\n{\n    char szMsg[50];\n    float fL;\n    float fH;\n    float fY_YesNo;\n\n    TXT_fn_fComputePixelLengthOfString((char*)g_szAreYouSureQuestion, &fL, &fH);\n    fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);\n    fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);\n    fL = 5.0f + fL / 2.0f;\n\n    fn_vDrawAreYouSureFrame(fL, 40.0f + fL, 50.0f + fH);\n\n    fY_YesNo = 10.0f * (50.0f + fH - 5.0f);\n    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, (char*)g_szAreYouSureQuestion, 400.0f, 400.0f, 0.0f, 0xFFF5E9CF);\n\n    if (g_AreYouSureValue)\n    {\n        sprintf(szMsg, \"%s\", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText));\n        fn_vDrawSelectedText(szMsg, 350.0f, fY_YesNo);\n        sprintf(szMsg, \"\\\\jc%s\", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText));\n        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, 450.0f, fY_YesNo, 0.0f, 0xFFF5E9CF);\n    }\n    else\n    {\n        sprintf(szMsg, \"\\\\jc%s\", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText));\n        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, 350.0f, fY_YesNo, 0.0f, 0xFFF5E9CF);\n        sprintf(szMsg, \"%s\", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText));\n        fn_vDrawSelectedText(szMsg, 450.0f, fY_YesNo);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vDrawAreYouSurePage",
+      "reason": "Size 2040/2040, relocs 78/78, frame + question + yes/no exact. Frame is an inlined static helper (line 610) taking (fL, 40+fL, 50+fH); yes/no use inlined fn_vDrawSelectedText with X=350/450. Only residual: FP constant materialisation order in the two GLI_vDraw2DSpriteWithPercentAndUVs rect-arg blocks (retail 0.1,7,1,35,2; ours 35,0.1,2,7,1); 24 temp orders and operand variants don't fix it, consistent with the TU-wide constant-pool ordering effect, so retry once DisplayMenu2D is fuller.",
+      "size": 2040,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 2040,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002916f0",
+      "candidate_size": 2300,
+      "first_difference": 42,
+      "implementation": "void fn_vDrawXTraPage(void)\n{\n    unsigned int i;\n    unsigned int j;\n    unsigned int N;\n    char szMsg[50];\n\n    N = g_NbArcadeOpen;\n    i = 0;\n    if (N >= 10)\n        N = 9;\n\n    for (j = aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry; j < aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry + aMenu2DPages[g_CurrentMenu2DPage].NbSelection; j++, i++)\n    {\n        if (j < N)\n        {\n            if (i == g_CurrentSelection)\n            {\n                sprintf(szMsg, \"%s%s\", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[48].hText), g_aNumLesson[j]);\n                fn_vDrawSelectedText(10.0f * g_XText, 380 + 100 * i, szMsg);\n            }\n            else\n            {\n                sprintf(szMsg, \"\\\\jc%s%s\", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[48].hText), g_aNumLesson[j]);\n                fn_vDrawUnselectedText(szMsg, 10.0f * g_XText, 380 + 100 * i);\n            }\n        }\n        else\n        {\n            if (i == g_CurrentSelection)\n            {\n                fn_vDrawSelectedText(10.0f * g_XText, 380 + 100 * i, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[99].hText));\n            }\n            else\n            {\n                sprintf(szMsg, \"\\\\jc%s\", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[99].hText));\n                fn_vDrawUnselectedText(szMsg, 10.0f * g_XText, 380 + 100 * i);\n            }\n        }\n    }\n\n    if (aMenu2DPages[g_CurrentMenu2DPage].NbEntry >= aMenu2DPages[g_CurrentMenu2DPage].NbSelection)\n    {\n        if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry != 0)\n            GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt, 37.0f, 26.0f, 42.0f, 30.0f, 0.31f, 0.41f, 0.12f, 0.19f, (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);\n        if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry + aMenu2DPages[g_CurrentMenu2DPage].NbSelection < aMenu2DPages[g_CurrentMenu2DPage].NbEntry)\n            GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt, 37.0f, 79.0f, 42.0f, 83.0f, 0.3f, 0.41f, 0.007f, 0.086f, (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vDrawXTraPage",
+      "reason": "Structure, calls and data exact (2300/2316, relocs 85/95 only from the helper blocks): lesson list j=CurrentFirstEntry.., i counter, Y=380+100*i, locked entries FON[99], scroll arrows. Uses inlined fn_vDrawSelectedText(X, Y, szText) (param order needed so FON() is evaluated before X) and inlined fn_vDrawUnselectedText(szText, X, Y) (needed so X is evaluated before the substituted unsigned Y). Residuals: helper sprite-arg FP constant order (TU-state), i/j s0/s1 swap.",
+      "size": 2316,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 2316,
+      "unresolved_relocations": [
+        {
+          "offset": 764,
+          "symbol": "@408",
+          "type": 5
+        },
+        {
+          "offset": 772,
+          "symbol": "@408",
+          "type": 6
+        },
+        {
+          "offset": 880,
+          "symbol": "@782",
+          "type": 5
+        },
+        {
+          "offset": 896,
+          "symbol": "@782",
+          "type": 6
+        },
+        {
+          "offset": 1196,
+          "symbol": "@407",
+          "type": 5
+        },
+        {
+          "offset": 1208,
+          "symbol": "@407",
+          "type": 6
+        },
+        {
+          "offset": 1628,
+          "symbol": "@408",
+          "type": 5
+        },
+        {
+          "offset": 1644,
+          "symbol": "@408",
+          "type": 6
+        },
+        {
+          "offset": 1740,
+          "symbol": "@409",
+          "type": 5
+        },
+        {
+          "offset": 1756,
+          "symbol": "@409",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x0028ee90",
+      "candidate_size": 2708,
+      "first_difference": 80,
+      "implementation": "void DrawTitle(void)\n{\n    char* szTmp;\n    char szTitle1[50];\n    char szTitle2[50];\n    int x1;\n    int y1f;\n    int x2;\n    int y2;\n    int _x1;\n    int _y1;\n    int _x2;\n    int _y2;\n    int D;\n    int D1;\n    int D2;\n\n    if (strlen(aMenu2DPages[g_CurrentMenu2DPage].Title))\n    {\n        szTmp = strstr(aMenu2DPages[g_CurrentMenu2DPage].Title, \"\\\\l\");\n        if (szTmp)\n        {\n            strncpy(szTitle2, aMenu2DPages[g_CurrentMenu2DPage].Title, szTmp - aMenu2DPages[g_CurrentMenu2DPage].Title);\n            szTitle2[szTmp - aMenu2DPages[g_CurrentMenu2DPage].Title] = 0;\n            sprintf(szTitle1, \"\\\\jc\\\\z300:%s\", szTitle2);\n            sprintf(szTitle2, \"\\\\jc\\\\z300:%s\", szTmp + 2);\n\n            TXT_GetBoundingBox2((GLD_tdstViewportAttributes_*)g_p_stVpt, (unsigned char*)szTitle1, &x1, &y1f, &x2, &y2, 35, (int)(10.0f + g_YTitle));\n            TXT_GetBoundingBox2((GLD_tdstViewportAttributes_*)g_p_stVpt, (unsigned char*)szTitle2, &_x1, &_y1, &_x2, &_y2, 40, (int)(16.0f + g_YTitle));\n\n            D1 = x2 - x1;\n            D2 = _x2 - _x1;\n            if (D1 > D2)\n                D = (D1 + 13) / 2;\n            else\n                D = (D2 + 13) / 2;\n            if (x1 > _x1)\n                x1 = _x1;\n\n            fn_vDrawTitleFrame(35 - D, g_YTitle, 43 + D, _y2 + 4);\n\n            szTitle1[2] = 'l';\n            szTitle2[2] = 'l';\n            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTitle1, 390 - 10 * D, 100.0f + 10.0f * g_YTitle, 0.0f, 0xFFF8E0AC);\n            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTitle2, 490 - 10 * D, 160.0f + 10.0f * g_YTitle, 0.0f, 0xFFF8E0AC);\n        }\n        else\n        {\n            sprintf(szTitle2, \"\\\\z300:%s\", aMenu2DPages[g_CurrentMenu2DPage].Title);\n            TXT_GetBoundingBox2((GLD_tdstViewportAttributes_*)g_p_stVpt, (unsigned char*)szTitle2, &x1, &y1f, &x2, &y2, 37, (int)(10.0f + g_YTitle));\n            D = (x2 - x1 + 13) / 2;\n\n            fn_vDrawTitleFrame(35 - D, g_YTitle, 43 + D, y2 + 4);\n\n            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTitle2, 390 - 10 * D, 100.0f + 10.0f * g_YTitle, 0.0f, 0xFFF8E0AC);\n        }\n\n        if (aMenu2DPages[g_CurrentMenu2DPage].hMaterial)\n            GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt, 29 + D, g_YTitle, 39 + D, 13.0f + g_YTitle, 0.0f, 1.0f, 0.0f, 1.0f, aMenu2DPages[g_CurrentMenu2DPage].hMaterial);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "DrawTitle",
+      "reason": "Full reconstruction 2708/2692, relocs 106/110: title split on \\\\l (strncpy/sprintf), TXT_GetBoundingBox2 x2, D=(max width+13)/2, 9-slice frame as inlined static fn_vDrawTitleFrame(float x1,y1,x2,y2) called (35-D, g_YTitle, 43+D, y2+4), left-justified titles, page icon. Residuals: frame sprite FP-constant scheduling (TU-state class), szTitle2[n]=0 address folding. Body reverted to stub because filling it flips recorded fn_vDrawRecapPage (TU-wide constant-order effect).",
+      "size": 2692,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 2692,
+      "unresolved_relocations": [
+        {
+          "offset": 212,
+          "symbol": "@909",
+          "type": 5
+        },
+        {
+          "offset": 224,
+          "symbol": "@909",
+          "type": 6
+        },
+        {
+          "offset": 1508,
+          "symbol": "@910",
+          "type": 5
+        },
+        {
+          "offset": 1520,
+          "symbol": "@910",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x001d1df0",
+      "candidate_size": 232,
+      "first_difference": 2,
+      "implementation": "void AGO_Define_OrthogonalVectors(MTH3D_tdstVector_* p_stDirection, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2)\n{\n    float fNorm3;\n    float fNorm2;\n    float fNorm1;\n    float x, y, z;\n    float x1, y1, z1, x2, y2, z2, x3, y3, z3;\n\n    x1 = -p_stDirection->xY;\n    y1 = p_stDirection->xX;\n    z1 = 0.0f;\n    x2 = 0.0f;\n    y2 = -p_stDirection->xZ;\n    z2 = p_stDirection->xY;\n    x3 = -p_stDirection->xZ;\n    y3 = 0.0f;\n    z3 = p_stDirection->xX;\n    fNorm1 = x1 * x1 + y1 * y1 + z1 * z1;\n    fNorm3 = x3 * x3 + y3 * y3 + z3 * z3;\n    fNorm2 = x2 * x2 + y2 * y2 + z2 * z2;\n    x = x1;\n    y = y1;\n    z = z1;\n    if (fNorm2 > fNorm1)\n    {\n        x = x2;\n        y = y2;\n        z = z2;\n        fNorm1 = fNorm2;\n    }\n    if (fNorm3 > fNorm1)\n    {\n        x = x3;\n        y = y3;\n        z = z3;\n        fNorm1 = fNorm3;\n    }\n    fNorm1 = 1.0f / AGO_MTH_xSqrt(fNorm1);\n    x *= fNorm1;\n    y *= fNorm1;\n    z *= fNorm1;\n    p_stV2->xX = p_stDirection->xY * z - p_stDirection->xZ * y;\n    p_stV2->xY = p_stDirection->xZ * x - p_stDirection->xX * z;\n    p_stV2->xZ = p_stDirection->xX * y - p_stDirection->xY * x;\n    p_stV1->xX = x;\n    p_stV1->xY = y;\n    p_stV1->xZ = z;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AGO_Define_OrthogonalVectors",
+      "reason": "EQUIVALENT: code/size/relocs exact; FPR colouring swapped in two pairs (retail xX f6/xY f8, xZ f9/zero-z f10; candidate xX f8/xY f6, xZ f10/z f9). ~180 manual variants (decl order, init/norm statement order, struct field locals, initialised decls, direction-field locals, 3.0.1 vs 3.0.3) and 25 min permuter (best 60, reusing z as norm temp) did not fix it.",
+      "size": 232,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c",
+      "status": "EQUIVALENT",
+      "target_size": 232,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00299b70",
+      "candidate_size": 304,
+      "first_difference": 230,
+      "implementation": "void fn_vPreviousSelection(void)\n{\n    if (g_CurrentSelection == 0)\n    {\n        if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection == aMenu2DPages[g_CurrentMenu2DPage].NbEntry)\n        {\n            g_CurrentSelection = aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1;\n        }\n        else\n        {\n            if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry == 0)\n            {\n                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry = aMenu2DPages[g_CurrentMenu2DPage].NbEntry - aMenu2DPages[g_CurrentMenu2DPage].NbSelection;\n                g_CurrentSelection = aMenu2DPages[g_CurrentMenu2DPage].NbSelection - 1;\n            }\n            else\n            {\n                aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry--;\n            }\n        }\n    }\n    else\n    {\n        g_CurrentSelection--;\n    }\n\n    if (aMenu2DPages[g_CurrentMenu2DPage].NbSelection != 0)\n    {\n        fn_vPlaySoundInGameMenu2D(2);\n    }\n\n    if (((signed char*)aMenu2DPages[g_CurrentMenu2DPage].abGrayed)[g_CurrentSelection] != 0)\n    {\n        fn_vPreviousSelection();\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vPreviousSelection",
+      "reason": "Only residual at +0xe4: retail forms aMenu2DPages[page].abGrayed[sel] as %lo(aMenu2DPages+0x22e) + page*0x250 + explicit 'addiu v1,v1,0' + sel (base v1, index a0), the documented zero-constant-offset family; ~40 spellings (casts, pointer locals, 2D/row casts, retyped member, dead-index idiom) all fold it (300 bytes) or add 0x22e late (304 bytes). Same blocker in fn_vNextSelection/NoWrap siblings.",
+      "size": 304,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DefineMenu2D.c",
+      "status": "MISMATCH",
+      "target_size": 304,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00131dd0",
+      "candidate_size": 944,
+      "first_difference": 36,
+      "implementation": "int viBufRestartDMA(anon_3* f)\n{\n    int index_next;\n    int index;\n    unsigned int d4tadr_next;\n    int bp;\n    unsigned int d4madr_next;\n    unsigned int d4qwc_next;\n    unsigned int d4chcr_next;\n\n    bp = f->env.ipubp & 0x7f;\n    d4madr_next = f->env.d4madr - ((((f->env.ipubp >> 16) & 3) + ((f->env.ipubp >> 8) & 0xf)) << 4);\n    d4qwc_next = f->env.d4qwc + (((f->env.ipubp >> 16) & 3) + ((f->env.ipubp >> 8) & 0xf));\n    d4tadr_next = f->env.d4tadr;\n    d4chcr_next = f->env.d4chcr | 0x100;\n\n    WaitSema(f->sema);\n\n    if (d4madr_next < f->data)\n    {\n        d4qwc_next = (f->data - d4madr_next) / 16;\n        d4madr_next += f->n * 2048;\n        d4tadr_next = f->tag;\n        d4tadr_next &= 0x0fffffff;\n        index = (f->env.d4madr == f->data || f->env.d4madr == f->data + f->n * 2048) ? 0 : 3;\n        d4chcr_next = (f->env.d4chcr & 0x0fffffff) | (index << 28) | 0x100;\n\n        if (!(0 <= (f->n - f->dmaStart) % f->n && (f->n - f->dmaStart) % f->n < f->dmaN))\n        {\n            f->dmaStart = f->n - 1;\n            f->dmaN++;\n        }\n    }\n    else\n    {\n        index = (f->env.d4madr == ((f->tag + (f->n + 1) * 16) & 0x0fffffff)) ? 0 : (f->env.d4madr - f->data) / 2048;\n        index_next = (d4madr_next == ((f->tag + (f->n + 1) * 16) & 0x0fffffff)) ? 0 : (d4madr_next - f->data) / 2048;\n\n        if (index != index_next)\n        {\n            d4tadr_next = (f->tag + index * 16) & 0x0fffffff;\n            d4qwc_next = (f->data + index * 2048 - d4madr_next) / 16;\n            index = ((f->data + (f->env.d4madr - f->data) % (f->n * 2048)) == f->data + ((f->dmaStart + f->dmaN) % f->n) * 2048) ? 0 : 3;\n            d4chcr_next = (f->env.d4chcr & 0x0fffffff) | (index << 28) | 0x100;\n\n            if (!(0 <= (index_next + f->n - f->dmaStart) % f->n && (index_next + f->n - f->dmaStart) % f->n < f->dmaN))\n            {\n                f->dmaStart = index_next;\n                f->dmaN++;\n            }\n        }\n    }\n\n    if (f->env.d3madr && f->env.d3qwc)\n    {\n        *(volatile unsigned int*)0x1000B010 = f->env.d3madr;\n        *(volatile unsigned int*)0x1000B020 = f->env.d3qwc;\n        setD3_CHCR(f->env.d3chcr | 0x100);\n    }\n\n    if (f->dmaN)\n    {\n        while (*(volatile int*)0x10002010 < 0)\n            ;\n        *(volatile unsigned int*)0x10002000 = bp;\n        while (*(volatile int*)0x10002010 < 0)\n            ;\n    }\n\n    *(volatile unsigned int*)0x1000B410 = d4madr_next;\n    *(volatile unsigned int*)0x1000B430 = d4tadr_next;\n    *(volatile unsigned int*)0x1000B420 = d4qwc_next;\n\n    if (f->dmaN)\n    {\n        setD4_CHCR(d4chcr_next);\n    }\n\n    *(volatile unsigned int*)0x10002010 = f->env.ipuctrl;\n    f->isActive = 1;\n\n    SignalSema(f->sema);\n\n    return 1;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "viBufRestartDMA",
+      "reason": "944/944, frame and control flow exact (setD3/D4_CHCR inline helpers, id ternary as its own statement in index, split tag mask). Residual is callee-saved allocation: retail d4tadr_next=s0, f=s1; ours f=s0, d4tadr_next=s1 (no declaration order changes it), plus a1/a2 swap and one subu (d4madr-data) scheduled 4 bytes earlier in the else branch. 25-min permuter best 140, no fix.",
+      "size": 944,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
+      "status": "MISMATCH",
+      "target_size": 944,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00316170",
+      "candidate_size": 716,
+      "first_difference": 76,
+      "implementation": "void GEO_fn_vMorphAddInMainLoop(void)\n{\n    float axTmp[10];\n    float axRate[10];\n    float xDeltaTime;\n    short i;\n    MOR_stMorphStruct_* mp;\n    float* p_xRate;\n    short j;\n\n    for (i = 0; i < 50; i++)\n    {\n        mp = &g_MorphTasksList[i];\n        if (!mp->bInUse)\n            continue;\n        if (mp->iNbMillisecond == 0)\n            continue;\n        if (mp->ucMorphType == 4)\n            continue;\n        p_xRate = axRate;\n        for (j = 0; j < mp->ucNbTarget; j++)\n        {\n            p_xRate[j] = (mp->axEnd[j] - mp->axStart[j]) / (float)mp->iNbMillisecond;\n            xDeltaTime = (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;\n            mp->axCurrent[j] += xDeltaTime * p_xRate[j];\n        }\n        switch (mp->ucMorphType)\n        {\n        case 1:\n            if (MOR_fn_bIsMorphOver(mp, axRate))\n            {\n                fn_vPushAllocModeAccordingToObject(mp->hActorSuperObject);\n                fn_vRemoveChannelFromMorphList(((tdstEngineObject_*)mp->hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, mp->xChannelIndex);\n                GAM_fn_vPopAllocMode();\n                MOR_fn_vDeletePhysicalObject(mp->pMorphedPhysicalObject);\n                if (mp->bInUse)\n                {\n                    memset(mp, 0, sizeof(MOR_stMorphStruct_));\n                    mp->bInUse = 0;\n                }\n            }\n            else\n            {\n                MOR_fn_vMorphTo(mp);\n            }\n            break;\n        case 2:\n            if (MOR_fn_bIsMorphOver(mp, axRate))\n            {\n                memcpy(mp->axCurrent, mp->axEnd, mp->ucNbTarget * sizeof(float));\n                mp->iNbMillisecond = 0;\n            }\n            MOR_fn_vMorphTo(mp);\n            break;\n        case 3:\n            if (MOR_fn_bIsMorphOver(mp, axRate))\n            {\n                memcpy(axTmp, mp->axStart, mp->ucNbTarget * sizeof(float));\n                memcpy(mp->axStart, mp->axEnd, mp->ucNbTarget * sizeof(float));\n                memcpy(mp->axCurrent, mp->axEnd, mp->ucNbTarget * sizeof(float));\n                memcpy(mp->axEnd, axTmp, mp->ucNbTarget * sizeof(float));\n                mp->ucMorphType = 2;\n            }\n            MOR_fn_vMorphTo(mp);\n            break;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GEO_fn_vMorphAddInMainLoop",
+      "reason": "716/716, 17/17 relocs; 2 rows off. Fixed via axRate pointer local (p_xRate) for the inner loop, '+=' on axCurrent, plain (float)ulUsefulDeltaTime, axTmp declared before axRate, and an 'inline unsigned int MOR_fn_bIsMorphOver(mp, axRate)' returning 'cur*rate > end*rate' (gives the retail materialised bool). Residual: retail emits 'j=0' before 'p_xRate=&axRate' at the inner-loop head (move a2,zero / addiu a1,sp,0x70 in the b delay slot); every loop-head spelling gives the reverse order. 22k permuter iterations found nothing better.",
+      "size": 716,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MISMATCH",
+      "target_size": 716,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00316690",
+      "candidate_size": 1196,
+      "first_difference": 54,
+      "implementation": "void MOR_fn_vMorphTo(MOR_stMorphStruct_* mp);\nint MOR_fn_bRemoveMorphedObjectFromHierarchy(HIE_tdstSuperObject_* hSuperObject, PO_tdstPhysicalObject_* p_stPhysicalObjectToRemove, PO_tdstPhysicalObject_* p_stPhysicalObjectToPut);\n\nvoid MOR_fn_vDoMorph(short _xIndex)\n{\n    MOR_stMorphStruct_* mp;\n\n    mp = &g_MorphTasksList[_xIndex];\n    if (mp->ucMorphType != 5)\n        MOR_fn_vMorphTo(mp);\n    else\n        MOR_fn_vMorphTo2(mp);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MOR_fn_vMorphTo",
+      "reason": "1196/1196, 7/7 relocs. Three paths (single target at ratio 1 = copy target points; all ratios 0 via 'if (++k == n)' = copy start points; general blend). VU0 blend loop is retail hand asm (one line per instruction 987-1020, explicit delay slots): needs '.set noreorder'/'.set reorder' or MWCC reschedules it and drops the last addiu. Bounding-sphere centre uses a block-local MTH3D vector (sub, scale, add as 3 statements). Residual: delay-slot placement of 'geo3 = NULL' vs the i*4 offset init, a reordered memcpy argument load in the all-zero path, and register numbering in the blend (pV3/pV3Arg copy).",
+      "size": 1196,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MISMATCH",
+      "target_size": 1196,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x003170a0",
+      "candidate_size": 1648,
+      "first_difference": 37,
+      "implementation": "short MOR_fn_xMorphing(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartIndexInObjectTable, short* _xEndIndexInObjectTable, unsigned char _ucNbTargets, float* _xRatio, short _xChannelIndex, unsigned char _ucMorphType)\n{\n    unsigned char uc;\n    unsigned char bCreateObject;\n    unsigned char bNewMorph;\n    PO_tdstPhysicalObject_* pEndPhysicalObject;\n    PO_tdstPhysicalObject_* pNewPhysicalObject;\n    MOR_stMorphStruct_* mp;\n    short j;\n    PO_tdstPhysicalObject_* pStartPhysicalObject;\n    short xMorphListIndex;\n    unsigned short uwChannelNumber;\n\n    bCreateObject = 0;\n    pStartPhysicalObject = *(PO_tdstPhysicalObject_**)(void*)((char*)&((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[0].h_Target + _xStartIndexInObjectTable * sizeof(tdstObjectsTableElement_));\n    for (uc = 0; uc < _ucNbTargets; uc++)\n    {\n        pEndPhysicalObject = ((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[_xEndIndexInObjectTable[uc]].h_Target;\n        if (GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet) != GLI_lGetVisualSetNumbertOfLOD(pEndPhysicalObject->_hVisualSet))\n            return -1;\n        for (j = 0; j < GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet); j++)\n        {\n            if (pStartPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject->xNbPoints != pEndPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject->xNbPoints)\n            {\n                printf(\"***** MORPHING IMPOSSIBLE : %d != %d *******\\n\", pStartPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject->xNbPoints, pEndPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject->xNbPoints);\n                return -1;\n            }\n        }\n    }\n\n    xMorphListIndex = fn_hMorphListIndex(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, uwChannelNumber = _xChannelIndex);\n\n    if (xMorphListIndex == -1 || !g_MorphTasksList[xMorphListIndex].bInUse)\n    {\n        bNewMorph = 1;\n        xMorphListIndex = -1;\n        for (j = 0; j < 50; j++)\n        {\n            mp = &g_MorphTasksList[j];\n            if (!mp->bInUse && mp->pOriginalPhysicalObject == pStartPhysicalObject && !mp->ucbMarkedForTermination)\n            {\n                xMorphListIndex = j;\n                bCreateObject = 0;\n                break;\n            }\n        }\n        if (xMorphListIndex == -1)\n        {\n            for (j = 0; j < 50; j++)\n            {\n                if (!g_MorphTasksList[j].bInUse && !g_MorphTasksList[j].ucbMarkedForTermination)\n                {\n                    if (g_MorphTasksList[j].pMorphedPhysicalObject == NULL)\n                    {\n                        bCreateObject = 1;\n                        xMorphListIndex = j;\n                        memset(&g_MorphTasksList[j], 0, sizeof(MOR_stMorphStruct_));\n                        break;\n                    }\n                    g_MorphTasksList[j].ucbMarkedForTermination = 1;\n                }\n            }        }\n        if (xMorphListIndex == -1)\n            return -1;\n    }\n    else\n    {\n        bNewMorph = 0;\n        bCreateObject = 0;\n    }\n\n    mp = &g_MorphTasksList[xMorphListIndex];\n    mp->bInUse = 1;\n    mp->xChannelIndex = _xChannelIndex;\n    mp->hActorSuperObject = _hActorSuperObject;\n    mp->xStartIndexInObjectTable = _xStartIndexInObjectTable;\n    mp->iNbMillisecond = g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;\n    mp->ucNbTarget = _ucNbTargets;\n    for (uc = 0; uc < _ucNbTargets; uc++)\n    {\n        mp->axEndIndexInObjectTable[uc] = _xEndIndexInObjectTable[uc];\n        if (_xRatio[uc] <= 1.0f)\n        {\n            mp->axCurrent[uc] = mp->axStart[uc] = mp->axEnd[uc] = _xRatio[uc];\n        }\n        else\n        {\n            mp->axEnd[uc] = 1.0f;\n            mp->axStart[uc] = 1.0f;\n            mp->axCurrent[uc] = 1.0f;\n        }\n    }\n    mp->ucMorphType = _ucMorphType;\n    mp->pOriginalPhysicalObject = pStartPhysicalObject;\n\n    if (bCreateObject)\n    {\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        pNewPhysicalObject = (PO_tdstPhysicalObject_*)HMU_fn_p_vMalloc(sizeof(PO_tdstPhysicalObject_), 1);\n        mp->pMorphedPhysicalObject = pNewPhysicalObject;\n        pNewPhysicalObject->_hVisualSet = GLI_p_stCreateTMPVisualSet(GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet));\n        pNewPhysicalObject->_hVisualSet->xLastDistance = pStartPhysicalObject->_hVisualSet->xLastDistance;\n        pNewPhysicalObject->_hVisualSet->xNbLodDefinitions = GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet);\n        GAM_fn_vPopAllocMode();\n        pNewPhysicalObject->_hCollideSet = pStartPhysicalObject->_hCollideSet;\n        for (uc = 0; uc < _ucNbTargets; uc++)\n        {\n            pEndPhysicalObject = ((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[_xEndIndexInObjectTable[uc]].h_Target;\n            if (pEndPhysicalObject->_hCollideBoundingVolume != NULL && pStartPhysicalObject->_hCollideBoundingVolume != NULL)\n            {\n                if (pEndPhysicalObject->_hCollideBoundingVolume->xRadius < pStartPhysicalObject->_hCollideBoundingVolume->xRadius)\n                    pNewPhysicalObject->_hCollideBoundingVolume = pStartPhysicalObject->_hCollideBoundingVolume;\n                else\n                    pNewPhysicalObject->_hCollideBoundingVolume = pEndPhysicalObject->_hCollideBoundingVolume;\n            }\n            else\n                pNewPhysicalObject->_hCollideBoundingVolume = pStartPhysicalObject->_hCollideBoundingVolume;\n\n            if (pEndPhysicalObject->_hVisualBoundingVolume != NULL && pStartPhysicalObject->_hVisualBoundingVolume != NULL)\n            {\n                if (pEndPhysicalObject->_hVisualBoundingVolume->xRadius < pStartPhysicalObject->_hVisualBoundingVolume->xRadius)\n                    pNewPhysicalObject->_hVisualBoundingVolume = pStartPhysicalObject->_hVisualBoundingVolume;\n                else\n                    pNewPhysicalObject->_hVisualBoundingVolume = pEndPhysicalObject->_hVisualBoundingVolume;\n            }\n            else\n                pNewPhysicalObject->_hVisualBoundingVolume = pStartPhysicalObject->_hVisualBoundingVolume;\n        }\n\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        for (j = 0; j < GLI_lGetVisualSetNumbertOfLOD(pNewPhysicalObject->_hVisualSet); j++)\n        {\n            ((float*)pNewPhysicalObject->_hVisualSet->d_xThresholdsTable)[j] = ((float*)mp->pOriginalPhysicalObject->_hVisualSet->d_xThresholdsTable)[j];\n            pNewPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject = MOR_fn_xCopyGeometricObjectForMorph(mp->pOriginalPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject);\n        }\n        GAM_fn_vPopAllocMode();\n    }\n\n    if (bNewMorph)\n    {\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        fn_vPutMorphElementInChannel(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, uwChannelNumber, xMorphListIndex);\n        GAM_fn_vPopAllocMode();\n    }\n    return xMorphListIndex;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MOR_fn_xMorphing",
+      "reason": "First full reconstruction: 1648/1648, 31/31 relocs, 0 structural rows, 12 register rows. Validation loop (per target: LOD count must match, per LOD xNbPoints must match else printf('***** MORPHING IMPOSSIBLE : %d != %d *******') and return -1); morph index reuse test is (idx == -1 || !inUse) without the original-object check; second search loop indexes g_MorphTasksList[j] directly (not through mp); stack uwChannelNumber via 'uwChannelNumber = _xChannelIndex' inside the fn_hMorphListIndex call; pStart uses the '&d_stObjectsTable[0].h_Target + idx*sizeof' form; chained 'axCurrent = axStart = axEnd = ratio'. Residual: v0/v1 swap in the pStart table expression and a0/a1 in the first search loop.",
+      "size": 1648,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MISMATCH",
+      "target_size": 1648,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00316b40",
+      "candidate_size": 1372,
+      "first_difference": 64,
+      "implementation": "short MOR_fn_xMorphing2(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartIndexInObjectTable, short* _xEndIndexInObjectTable, unsigned char _ucNbTargets, float* _xRatio, short _xChannelIndex, unsigned char _ucMorphType)\n{\n    unsigned char uc;\n    unsigned char bCreateObject;\n    unsigned char bNewMorph;\n    PO_tdstPhysicalObject_* pEndPhysicalObject;\n    PO_tdstPhysicalObject_* pNewPhysicalObject;\n    MOR_stMorphStruct_* mp;\n    short j;\n    PO_tdstPhysicalObject_* pStartPhysicalObject;\n    short xMorphListIndex;\n    unsigned short uwChannelNumber;\n\n    uwChannelNumber = (unsigned short)_xChannelIndex;\n    bCreateObject = 0;\n    pStartPhysicalObject = *(PO_tdstPhysicalObject_**)(void*)((char*)&((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[0].h_Target + _xStartIndexInObjectTable * sizeof(tdstObjectsTableElement_));\n    xMorphListIndex = fn_hMorphListIndex(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, _xChannelIndex);\n\n    if (xMorphListIndex == -1 || !g_MorphTasksList[xMorphListIndex].bInUse || g_MorphTasksList[xMorphListIndex].pOriginalPhysicalObject != pStartPhysicalObject)\n    {\n        xMorphListIndex = -1;\n        bNewMorph = 1;\n        for (j = 0; j < 50; j++)\n        {\n            mp = &g_MorphTasksList[j];\n            if (!mp->bInUse && mp->pOriginalPhysicalObject == pStartPhysicalObject && !mp->ucbMarkedForTermination)\n            {\n                xMorphListIndex = j;\n                bCreateObject = 0;\n                break;\n            }\n        }\n        if (xMorphListIndex == -1)\n        {\n            for (j = 0; j < 50; j++)\n            {\n                if (!g_MorphTasksList[j].bInUse && !g_MorphTasksList[j].ucbMarkedForTermination)\n                {\n                    if (g_MorphTasksList[j].pMorphedPhysicalObject == NULL)\n                    {\n                        bCreateObject = 1;\n                        xMorphListIndex = j;\n                        memset(&g_MorphTasksList[j], 0, sizeof(MOR_stMorphStruct_));\n                        break;\n                    }\n                    g_MorphTasksList[j].ucbMarkedForTermination = 1;\n                }\n            }        }\n        if (xMorphListIndex == -1)\n            return -1;\n    }\n    else\n    {\n        bNewMorph = 0;\n    }\n\n    mp = &g_MorphTasksList[xMorphListIndex];\n    mp->bInUse = 1;\n    mp->xChannelIndex = _xChannelIndex;\n    mp->hActorSuperObject = _hActorSuperObject;\n    mp->xStartIndexInObjectTable = _xStartIndexInObjectTable;\n    mp->iNbMillisecond = g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;\n    mp->ucNbTarget = _ucNbTargets;\n    for (uc = 0; uc < _ucNbTargets; uc++)\n    {\n        mp->axEndIndexInObjectTable[uc] = _xEndIndexInObjectTable[uc];\n        if (_xRatio[uc] <= 1.0f)\n        {\n            mp->axCurrent[uc] = mp->axStart[uc] = mp->axEnd[uc] = _xRatio[uc];\n        }\n        else\n        {\n            mp->axEnd[uc] = 1.0f;\n            mp->axStart[uc] = 1.0f;\n            mp->axCurrent[uc] = 1.0f;\n        }\n    }\n    mp->ucMorphType = _ucMorphType;\n    mp->pOriginalPhysicalObject = pStartPhysicalObject;\n\n    if (bCreateObject)\n    {\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        pNewPhysicalObject = (PO_tdstPhysicalObject_*)HMU_fn_p_vMalloc(sizeof(PO_tdstPhysicalObject_), 1);\n        mp->pMorphedPhysicalObject = pNewPhysicalObject;\n        pNewPhysicalObject->_hVisualSet = GLI_p_stCreateTMPVisualSet(GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet));\n        pNewPhysicalObject->_hVisualSet->xLastDistance = pStartPhysicalObject->_hVisualSet->xLastDistance;\n        pNewPhysicalObject->_hVisualSet->xNbLodDefinitions = GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet);\n        GAM_fn_vPopAllocMode();\n        pNewPhysicalObject->_hCollideSet = pStartPhysicalObject->_hCollideSet;\n        for (uc = 0; uc < _ucNbTargets; uc++)\n        {\n            pEndPhysicalObject = ((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[_xEndIndexInObjectTable[uc]].h_Target;\n            if (pEndPhysicalObject->_hCollideBoundingVolume != NULL && pStartPhysicalObject->_hCollideBoundingVolume != NULL)\n            {\n                if (pEndPhysicalObject->_hCollideBoundingVolume->xRadius < pStartPhysicalObject->_hCollideBoundingVolume->xRadius)\n                    pNewPhysicalObject->_hCollideBoundingVolume = pStartPhysicalObject->_hCollideBoundingVolume;\n                else\n                    pNewPhysicalObject->_hCollideBoundingVolume = pEndPhysicalObject->_hCollideBoundingVolume;\n            }\n            else\n                pNewPhysicalObject->_hCollideBoundingVolume = pStartPhysicalObject->_hCollideBoundingVolume;\n\n            if (pEndPhysicalObject->_hVisualBoundingVolume != NULL && pStartPhysicalObject->_hVisualBoundingVolume != NULL)\n            {\n                if (pEndPhysicalObject->_hVisualBoundingVolume->xRadius < pStartPhysicalObject->_hVisualBoundingVolume->xRadius)\n                    pNewPhysicalObject->_hVisualBoundingVolume = pStartPhysicalObject->_hVisualBoundingVolume;\n                else\n                    pNewPhysicalObject->_hVisualBoundingVolume = pEndPhysicalObject->_hVisualBoundingVolume;\n            }\n            else\n                pNewPhysicalObject->_hVisualBoundingVolume = pStartPhysicalObject->_hVisualBoundingVolume;\n        }\n\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        for (j = 0; j < GLI_lGetVisualSetNumbertOfLOD(pNewPhysicalObject->_hVisualSet); j++)\n        {\n            ((float*)pNewPhysicalObject->_hVisualSet->d_xThresholdsTable)[j] = ((float*)mp->pOriginalPhysicalObject->_hVisualSet->d_xThresholdsTable)[j];\n            pNewPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject = MOR_fn_xCopyGeometricObjectForMorph(mp->pOriginalPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject);\n        }\n        GAM_fn_vPopAllocMode();\n    }\n\n    if (bNewMorph)\n    {\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        fn_vPutMorphElementInChannel(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, uwChannelNumber, xMorphListIndex);\n        GAM_fn_vPopAllocMode();\n    }\n    return xMorphListIndex;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MOR_fn_xMorphing2",
+      "reason": "First full reconstruction: 1372/1372, 27/27 relocs, 1 structural row (retail copies _xRatio into s3 in the prologue). Same shape as MOR_fn_xMorphing without the validation loop, and with the reuse test also requiring pOriginalPhysicalObject == pStart. bCreateObject declared before bNewMorph (stack slots 0xa0/0xb0), uwChannelNumber local spilled at 0xc0. Rest is saved-register numbering.",
+      "size": 1372,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MISMATCH",
+      "target_size": 1372,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x003170a0",
+      "candidate_size": 1648,
+      "first_difference": 37,
+      "implementation": "short MOR_fn_xMorphing(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartIndexInObjectTable, short* _xEndIndexInObjectTable, unsigned char _ucNbTargets, float* _xRatio, short _xChannelIndex, unsigned char _ucMorphType)\n{\n    unsigned char uc;\n    unsigned char bCreateObject;\n    unsigned char bNewMorph;\n    PO_tdstPhysicalObject_* pEndPhysicalObject;\n    PO_tdstPhysicalObject_* pNewPhysicalObject;\n    MOR_stMorphStruct_* mp;\n    short j;\n    PO_tdstPhysicalObject_* pStartPhysicalObject;\n    short xMorphListIndex;\n    unsigned short uwChannelNumber;\n\n    bCreateObject = 0;\n    pStartPhysicalObject = *(PO_tdstPhysicalObject_**)(void*)((char*)&((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[0].h_Target + _xStartIndexInObjectTable * sizeof(tdstObjectsTableElement_));\n    for (uc = 0; uc < _ucNbTargets; uc++)\n    {\n        pEndPhysicalObject = ((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[_xEndIndexInObjectTable[uc]].h_Target;\n        if (GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet) != GLI_lGetVisualSetNumbertOfLOD(pEndPhysicalObject->_hVisualSet))\n            return -1;\n        for (j = 0; j < GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet); j++)\n        {\n            if (pStartPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject->xNbPoints != pEndPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject->xNbPoints)\n            {\n                printf(\"***** MORPHING IMPOSSIBLE : %d != %d *******\\n\", pStartPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject->xNbPoints, pEndPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject->xNbPoints);\n                return -1;\n            }\n        }\n    }\n\n    xMorphListIndex = fn_hMorphListIndex(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, uwChannelNumber = _xChannelIndex);\n\n    if (xMorphListIndex == -1 || !g_MorphTasksList[xMorphListIndex].bInUse)\n    {\n        bNewMorph = 1;\n        xMorphListIndex = -1;\n        for (j = 0; j < 50; j++)\n        {\n            mp = &g_MorphTasksList[j];\n            if (!mp->bInUse && mp->pOriginalPhysicalObject == pStartPhysicalObject && !g_MorphTasksList[j].ucbMarkedForTermination)\n            {\n                xMorphListIndex = j;\n                bCreateObject = 0;\n                break;\n            }\n        }\n        if (xMorphListIndex == -1)\n        {\n            for (j = 0; j < 50; j++)\n            {\n                if (!g_MorphTasksList[j].bInUse && !g_MorphTasksList[j].ucbMarkedForTermination)\n                {\n                    if (g_MorphTasksList[j].pMorphedPhysicalObject == NULL)\n                    {\n                        bCreateObject = 1;\n                        xMorphListIndex = j;\n                        memset(&g_MorphTasksList[j], 0, sizeof(MOR_stMorphStruct_));\n                        break;\n                    }\n                    g_MorphTasksList[j].ucbMarkedForTermination = 1;\n                }\n            }        }\n        if (xMorphListIndex == -1)\n            return -1;\n    }\n    else\n    {\n        bNewMorph = 0;\n        bCreateObject = 0;\n    }\n\n    mp = &g_MorphTasksList[xMorphListIndex];\n    mp->bInUse = 1;\n    mp->xChannelIndex = _xChannelIndex;\n    mp->hActorSuperObject = _hActorSuperObject;\n    mp->xStartIndexInObjectTable = _xStartIndexInObjectTable;\n    mp->iNbMillisecond = g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;\n    mp->ucNbTarget = _ucNbTargets;\n    for (uc = 0; uc < _ucNbTargets; uc++)\n    {\n        mp->axEndIndexInObjectTable[uc] = _xEndIndexInObjectTable[uc];\n        if (_xRatio[uc] <= 1.0f)\n        {\n            mp->axCurrent[uc] = mp->axStart[uc] = mp->axEnd[uc] = _xRatio[uc];\n        }\n        else\n        {\n            mp->axEnd[uc] = 1.0f;\n            mp->axStart[uc] = 1.0f;\n            mp->axCurrent[uc] = 1.0f;\n        }\n    }\n    mp->ucMorphType = _ucMorphType;\n    mp->pOriginalPhysicalObject = pStartPhysicalObject;\n\n    if (bCreateObject)\n    {\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        pNewPhysicalObject = (PO_tdstPhysicalObject_*)HMU_fn_p_vMalloc(sizeof(PO_tdstPhysicalObject_), 1);\n        mp->pMorphedPhysicalObject = pNewPhysicalObject;\n        pNewPhysicalObject->_hVisualSet = GLI_p_stCreateTMPVisualSet(GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet));\n        pNewPhysicalObject->_hVisualSet->xLastDistance = pStartPhysicalObject->_hVisualSet->xLastDistance;\n        pNewPhysicalObject->_hVisualSet->xNbLodDefinitions = GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet);\n        GAM_fn_vPopAllocMode();\n        pNewPhysicalObject->_hCollideSet = pStartPhysicalObject->_hCollideSet;\n        for (uc = 0; uc < _ucNbTargets; uc++)\n        {\n            pEndPhysicalObject = ((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[_xEndIndexInObjectTable[uc]].h_Target;\n            if (pEndPhysicalObject->_hCollideBoundingVolume != NULL && pStartPhysicalObject->_hCollideBoundingVolume != NULL)\n            {\n                if (pEndPhysicalObject->_hCollideBoundingVolume->xRadius < pStartPhysicalObject->_hCollideBoundingVolume->xRadius)\n                    pNewPhysicalObject->_hCollideBoundingVolume = pStartPhysicalObject->_hCollideBoundingVolume;\n                else\n                    pNewPhysicalObject->_hCollideBoundingVolume = pEndPhysicalObject->_hCollideBoundingVolume;\n            }\n            else\n                pNewPhysicalObject->_hCollideBoundingVolume = pStartPhysicalObject->_hCollideBoundingVolume;\n\n            if (pEndPhysicalObject->_hVisualBoundingVolume != NULL && pStartPhysicalObject->_hVisualBoundingVolume != NULL)\n            {\n                if (pEndPhysicalObject->_hVisualBoundingVolume->xRadius < pStartPhysicalObject->_hVisualBoundingVolume->xRadius)\n                    pNewPhysicalObject->_hVisualBoundingVolume = pStartPhysicalObject->_hVisualBoundingVolume;\n                else\n                    pNewPhysicalObject->_hVisualBoundingVolume = pEndPhysicalObject->_hVisualBoundingVolume;\n            }\n            else\n                pNewPhysicalObject->_hVisualBoundingVolume = pStartPhysicalObject->_hVisualBoundingVolume;\n        }\n\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        for (j = 0; j < GLI_lGetVisualSetNumbertOfLOD(pNewPhysicalObject->_hVisualSet); j++)\n        {\n            ((float*)pNewPhysicalObject->_hVisualSet->d_xThresholdsTable)[j] = ((float*)mp->pOriginalPhysicalObject->_hVisualSet->d_xThresholdsTable)[j];\n            pNewPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject = MOR_fn_xCopyGeometricObjectForMorph(mp->pOriginalPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject);\n        }\n        GAM_fn_vPopAllocMode();\n    }\n\n    if (bNewMorph)\n    {\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        fn_vPutMorphElementInChannel(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, uwChannelNumber, xMorphListIndex);\n        GAM_fn_vPopAllocMode();\n    }\n    return xMorphListIndex;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MOR_fn_xMorphing",
+      "reason": "1648/1648, 31/31 relocs, 0 structural rows, 6 register rows (v0/v1 swap in the pStart '&d_stObjectsTable[0].h_Target + idx*sizeof' address; the hTable-copy trick that fixed MOR_fn_xStopMorph does not help here). Got there by: declaring pStart after j, indexing g_MorphTasksList[j] directly in the second search loop, and reading ucbMarkedForTermination through g_MorphTasksList[j] in the first loop (any mix of mp/array access in that condition gives 6 rows, all-mp 12, all-array 38). The validation loop prints '***** MORPHING IMPOSSIBLE : %d != %d *******'.",
+      "size": 1648,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MISMATCH",
+      "target_size": 1648,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00316b40",
+      "candidate_size": 1372,
+      "first_difference": 64,
+      "implementation": "short MOR_fn_xMorphing2(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartIndexInObjectTable, short* _xEndIndexInObjectTable, unsigned char _ucNbTargets, float* _xRatio, short _xChannelIndex, unsigned char _ucMorphType)\n{\n    unsigned char uc;\n    unsigned char bCreateObject;\n    unsigned char bNewMorph;\n    PO_tdstPhysicalObject_* pEndPhysicalObject;\n    PO_tdstPhysicalObject_* pNewPhysicalObject;\n    MOR_stMorphStruct_* mp;\n    short j;\n    PO_tdstPhysicalObject_* pStartPhysicalObject;\n    short xMorphListIndex;\n    unsigned short uwChannelNumber;\n\n    uwChannelNumber = (unsigned short)_xChannelIndex;\n    bCreateObject = 0;\n    pStartPhysicalObject = *(PO_tdstPhysicalObject_**)(void*)((char*)&((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[0].h_Target + _xStartIndexInObjectTable * sizeof(tdstObjectsTableElement_));\n    xMorphListIndex = fn_hMorphListIndex(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, _xChannelIndex);\n\n    if (xMorphListIndex == -1 || !g_MorphTasksList[xMorphListIndex].bInUse || g_MorphTasksList[xMorphListIndex].pOriginalPhysicalObject != pStartPhysicalObject)\n    {\n        xMorphListIndex = -1;\n        bNewMorph = 1;\n        for (j = 0; j < 50; j++)\n        {\n            if (!g_MorphTasksList[j].bInUse && g_MorphTasksList[j].pOriginalPhysicalObject == pStartPhysicalObject && !g_MorphTasksList[j].ucbMarkedForTermination)\n            {\n                xMorphListIndex = j;\n                bCreateObject = 0;\n                break;\n            }\n        }\n        if (xMorphListIndex == -1)\n        {\n            for (j = 0; j < 50; j++)\n            {\n                if (!g_MorphTasksList[j].bInUse && !g_MorphTasksList[j].ucbMarkedForTermination)\n                {\n                    if (g_MorphTasksList[j].pMorphedPhysicalObject == NULL)\n                    {\n                        bCreateObject = 1;\n                        xMorphListIndex = j;\n                        memset(&g_MorphTasksList[j], 0, sizeof(MOR_stMorphStruct_));\n                        break;\n                    }\n                    g_MorphTasksList[j].ucbMarkedForTermination = 1;\n                }\n            }        }\n        if (xMorphListIndex == -1)\n            return -1;\n    }\n    else\n    {\n        bNewMorph = 0;\n    }\n\n    mp = &g_MorphTasksList[xMorphListIndex];\n    mp->bInUse = 1;\n    mp->xChannelIndex = _xChannelIndex;\n    mp->hActorSuperObject = _hActorSuperObject;\n    mp->xStartIndexInObjectTable = _xStartIndexInObjectTable;\n    mp->iNbMillisecond = g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;\n    mp->ucNbTarget = _ucNbTargets;\n    for (uc = 0; uc < _ucNbTargets; uc++)\n    {\n        mp->axEndIndexInObjectTable[uc] = _xEndIndexInObjectTable[uc];\n        if (_xRatio[uc] <= 1.0f)\n        {\n            mp->axCurrent[uc] = mp->axStart[uc] = mp->axEnd[uc] = _xRatio[uc];\n        }\n        else\n        {\n            mp->axEnd[uc] = 1.0f;\n            mp->axStart[uc] = 1.0f;\n            mp->axCurrent[uc] = 1.0f;\n        }\n    }\n    mp->ucMorphType = _ucMorphType;\n    mp->pOriginalPhysicalObject = pStartPhysicalObject;\n\n    if (bCreateObject)\n    {\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        pNewPhysicalObject = (PO_tdstPhysicalObject_*)HMU_fn_p_vMalloc(sizeof(PO_tdstPhysicalObject_), 1);\n        mp->pMorphedPhysicalObject = pNewPhysicalObject;\n        pNewPhysicalObject->_hVisualSet = GLI_p_stCreateTMPVisualSet(GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet));\n        pNewPhysicalObject->_hVisualSet->xLastDistance = pStartPhysicalObject->_hVisualSet->xLastDistance;\n        pNewPhysicalObject->_hVisualSet->xNbLodDefinitions = GLI_lGetVisualSetNumbertOfLOD(pStartPhysicalObject->_hVisualSet);\n        GAM_fn_vPopAllocMode();\n        pNewPhysicalObject->_hCollideSet = pStartPhysicalObject->_hCollideSet;\n        for (uc = 0; uc < _ucNbTargets; uc++)\n        {\n            pEndPhysicalObject = ((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable->d_stObjectsTable[_xEndIndexInObjectTable[uc]].h_Target;\n            if (pEndPhysicalObject->_hCollideBoundingVolume != NULL && pStartPhysicalObject->_hCollideBoundingVolume != NULL)\n            {\n                if (pEndPhysicalObject->_hCollideBoundingVolume->xRadius < pStartPhysicalObject->_hCollideBoundingVolume->xRadius)\n                    pNewPhysicalObject->_hCollideBoundingVolume = pStartPhysicalObject->_hCollideBoundingVolume;\n                else\n                    pNewPhysicalObject->_hCollideBoundingVolume = pEndPhysicalObject->_hCollideBoundingVolume;\n            }\n            else\n                pNewPhysicalObject->_hCollideBoundingVolume = pStartPhysicalObject->_hCollideBoundingVolume;\n\n            if (pEndPhysicalObject->_hVisualBoundingVolume != NULL && pStartPhysicalObject->_hVisualBoundingVolume != NULL)\n            {\n                if (pEndPhysicalObject->_hVisualBoundingVolume->xRadius < pStartPhysicalObject->_hVisualBoundingVolume->xRadius)\n                    pNewPhysicalObject->_hVisualBoundingVolume = pStartPhysicalObject->_hVisualBoundingVolume;\n                else\n                    pNewPhysicalObject->_hVisualBoundingVolume = pEndPhysicalObject->_hVisualBoundingVolume;\n            }\n            else\n                pNewPhysicalObject->_hVisualBoundingVolume = pStartPhysicalObject->_hVisualBoundingVolume;\n        }\n\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        for (j = 0; j < GLI_lGetVisualSetNumbertOfLOD(pNewPhysicalObject->_hVisualSet); j++)\n        {\n            ((float*)pNewPhysicalObject->_hVisualSet->d_xThresholdsTable)[j] = ((float*)mp->pOriginalPhysicalObject->_hVisualSet->d_xThresholdsTable)[j];\n            pNewPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject = MOR_fn_xCopyGeometricObjectForMorph(mp->pOriginalPhysicalObject->_hVisualSet->d_p_stLodDefinitions[j].p_stGeometricObject);\n        }\n        GAM_fn_vPopAllocMode();\n    }\n\n    if (bNewMorph)\n    {\n        fn_vPushAllocModeAccordingToObject(_hActorSuperObject);\n        fn_vPutMorphElementInChannel(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, uwChannelNumber, xMorphListIndex);\n        GAM_fn_vPopAllocMode();\n    }\n    return xMorphListIndex;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MOR_fn_xMorphing2",
+      "reason": "1372/1372, 27/27 relocs, 1 structural row: retail copies _xRatio (t0) into s3 in the prologue, ours keeps it elsewhere. Both search loops index g_MorphTasksList[j] directly (90 -> 39 register rows), chained 'axCurrent = axStart = axEnd = ratio' (no _xRatio reload), stack uwChannelNumber at 0xc0, bCreateObject declared before bNewMorph. Rest is saved-register numbering; permuter outputs improve only with unnatural pStart arrays.",
+      "size": 1372,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MISMATCH",
+      "target_size": 1372,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -44643,6 +44991,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/strfile.c",
       "status": "MATCH"
     },
+    "0x00131840": {
+      "address": "0x00131840",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "viBufGetTs",
+      "size": 452,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
+      "status": "MATCH"
+    },
+    "0x00131b50": {
+      "address": "0x00131b50",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "viBufModifyPts",
+      "size": 336,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
+      "status": "MATCH"
+    },
     "0x00131ca0": {
       "address": "0x00131ca0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -44667,11 +45031,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
       "status": "MATCH"
     },
+    "0x00132180": {
+      "address": "0x00132180",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "viBufStopDMA",
+      "size": 356,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
+      "status": "MATCH"
+    },
+    "0x001322f0": {
+      "address": "0x001322f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "viBufAddDMA",
+      "size": 756,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
+      "status": "MATCH"
+    },
     "0x001325f0": {
       "address": "0x001325f0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "viBufEndPut",
       "size": 92,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
+      "status": "MATCH"
+    },
+    "0x00132750": {
+      "address": "0x00132750",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "viBufReset",
+      "size": 404,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/vibuf.c",
       "status": "MATCH"
     },
@@ -64177,7 +64565,7 @@
       "name": "GAM_fn_lGetNbPersoActive",
       "size": 252,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c",
-      "status": "EQUIVALENT"
+      "status": "MATCH"
     },
     "0x002612e0": {
       "address": "0x002612e0",
@@ -68787,6 +69175,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
       "status": "MATCH"
     },
+    "0x00294ab0": {
+      "address": "0x00294ab0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vDrawCenteredYesNo",
+      "size": 1740,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MATCH"
+    },
+    "0x00295180": {
+      "address": "0x00295180",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vDrawOnOff",
+      "size": 1064,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameMenu2D/DisplayMenu2D.c",
+      "status": "MATCH"
+    },
     "0x002961d0": {
       "address": "0x002961d0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -71219,6 +71623,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/jparticle.c",
       "status": "MATCH"
     },
+    "0x002b0f60": {
+      "address": "0x002b0f60",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "J_GetParticleSpriteFromInterpolatedPoints",
+      "size": 300,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/jparticle.c",
+      "status": "MATCH"
+    },
     "0x002b1090": {
       "address": "0x002b1090",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -72497,6 +72909,14 @@
       "name": "__ct__22C_VertexArrayContainerFUi",
       "size": 308,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_newSG.c",
+      "status": "MATCH"
+    },
+    "0x002cfd30": {
+      "address": "0x002cfd30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "J_New_GetParticleSpriteFromInterpolatedPoints",
+      "size": 232,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/DMM.CPP",
       "status": "MATCH"
     },
     "0x002cfe20": {
@@ -75731,6 +76151,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECCol.c",
       "status": "MATCH"
     },
+    "0x0030efe0": {
+      "address": "0x0030efe0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "MEC_fn_vAdjustScaleData",
+      "size": 828,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECOpt.c",
+      "status": "MATCH"
+    },
     "0x0030f630": {
       "address": "0x0030f630",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -76107,6 +76535,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/dupobjmp.c",
       "status": "MATCH"
     },
+    "0x00315990": {
+      "address": "0x00315990",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MOR_fn_vRemoveMorph2",
+      "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MATCH"
+    },
     "0x00315ae0": {
       "address": "0x00315ae0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -76128,6 +76564,22 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MOR_fn_hGetMorphedObject",
       "size": 48,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MATCH"
+    },
+    "0x00315c20": {
+      "address": "0x00315c20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MOR_fn_bRemoveMorphedObjectFromHierarchy",
+      "size": 248,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MATCH"
+    },
+    "0x00315d20": {
+      "address": "0x00315d20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MOR_fn_vRemoveAllMorphedObjects",
+      "size": 336,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
       "status": "MATCH"
     },
@@ -76168,6 +76620,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MOR_fn_vMorphTo2",
       "size": 588,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
+      "status": "MATCH"
+    },
+    "0x00317710": {
+      "address": "0x00317710",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MOR_fn_xStopMorph",
+      "size": 472,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MOR/specif/morph.c",
       "status": "MATCH"
     },

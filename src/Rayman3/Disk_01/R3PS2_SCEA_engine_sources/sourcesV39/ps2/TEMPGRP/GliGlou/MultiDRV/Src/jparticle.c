@@ -498,10 +498,12 @@ void J_GetParticleSpriteFromInterpolatedPoints(J_ParticleSprite_* p, J_InterpolP
     float* pCol2;
     float* pW;
     float* pDstCol;
+    float U;
 
     vA[1] = (V - p1->UVs[1]) / (p2->UVs[1] - p1->UVs[1]);
 
-    fSum = p1->UVs[0] * 1.5564321f + V * 3.4659879f;
+    U = p1->UVs[0];
+    fSum = U * 1.5564321f + V * 3.4659879f;
     index = (int)(1024.0f * fSum);
     index = ((index & 0x7FF) + 3) & ~3u;
 
