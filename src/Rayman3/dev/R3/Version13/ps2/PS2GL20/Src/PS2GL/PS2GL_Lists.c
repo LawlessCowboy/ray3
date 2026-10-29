@@ -637,7 +637,7 @@ struct tagGScontext {
     anon_18 SIGNAL; /* +0x198 */
     tagsceGsReg FINISH; /* +0x1a0 */
     anon_23 LABEL; /* +0x1a8 */
-    anon_33 ModFlgs; /* +0x1b0 */
+    unsigned long ModFlgs; /* +0x1b0 */
     anon_33 GlobalModFlgs; /* +0x1b8 */
     anon_31 PackageBuffer[518]; /* +0x1c0 */
     int iBufCount; /* +0x2220 */
@@ -1906,10 +1906,27 @@ void PS2glCallSDL(tagListData* pListData)
  */
 void PS2glReinitAfterSDLs(void)
 {
-    tagGLtexblock theDefaultTexBlock;
     int i;
     tagGLcontext* pctx;
-    /* TODO: decompile from asm/... */
+
+    pctx = &g_PS2glContext;
+    if (g_gsContext.ModFlgs)
+        GsUpdate();
+    {
+        tagGLtexblock theDefaultTexBlock = {0, 0, pctx->iMaxTexBlockCount};
+        for (i = 0; i < 512; i++)
+        {
+            if (pctx->aTexName[i].bAllocated)
+                pctx->aTexName[i].bResident = 0;
+        }
+        for (i = 0; i < pctx->iMaxTexBlockCount; i++)
+            pctx->aBlockMap[i] = theDefaultTexBlock;
+    }
+    for (i = 0; i < 10; i++)
+        pctx->aTexLevelCount[i] = 0;
+    ((unsigned char*)pctx->abTex2DChanged)[pctx->iCurTextureSet] = 1;
+    ((unsigned char*)pctx->abTex1DChanged)[pctx->iCurTextureSet] = 1;
+    pctx->bTexCubeChanged = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2026–2102 */
@@ -2284,11 +2301,46 @@ int PS2glComposeStaticDisplayList(tagListData* pListData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void PS2glFreeListData(tagListData* pData);
+extern void* memset(void* dst, int c, unsigned int n);
 void impPS2glNewList(unsigned int list, unsigned int mode)
 {
     tagListData* pData;
     tagListData** ppData;
-    /* TODO: decompile from asm/... */
+
+    ppData = PS2glSearchList(list);
+    if (g_pPS2glApiTable == (int)&g_PS2glApiTableList)
+        printf("CAUTION: Missing glEndList before glNewList\n");
+    if (ppData == NULL)
+    {
+        ppData = PS2glAddLists(list, 1);
+        if (ppData == NULL)
+            return;
+    }
+    if (*ppData != NULL)
+        PS2glFreeListData(*ppData);
+    *ppData = pData = (tagListData*)PS2glAllocator(0x38);
+    memset(pData, 0, 0x38);
+    g_PS2glContext.pCurListData = pData;
+    g_PS2glContext.pCurListCalls = NULL;
+    g_PS2glContext.pPreListCalls = NULL;
+    *(quad*)g_PS2glContext.valistColor[0] = *(quad*)g_PS2glContext.vacurColor[0];
+    *(quad*)g_PS2glContext.valistColor[1] = *(quad*)g_PS2glContext.vacurColor[1];
+    *(quad*)g_PS2glContext.vlistNormal = *(quad*)g_PS2glContext.vcurNormal;
+    *(quad*)g_PS2glContext.valistTexCoords[0] = *(quad*)g_PS2glContext.vacurTexCoords[0];
+    *(quad*)g_PS2glContext.valistTexCoords[1] = *(quad*)g_PS2glContext.vacurTexCoords[1];
+    pData->eMode = mode;
+    if (g_PS2glContext.uiStaticDisplayListBits & 1)
+        pData->pDmaBuffer = (float (*)[4])1;
+    pData->uiSDLBits = g_PS2glContext.uiStaticDisplayListBits;
+    pData->uiSDLSize = g_PS2glContext.uiStaticDisplayListMaxSize;
+    pData->ucSDLObjectReserveSize = g_PS2glContext.ucSDLObjectReserveSize;
+    g_PS2glContext.pCurListVData = g_PS2glListVBuf.avData;
+    g_PS2glContext.pCurListVCode = g_PS2glListVBuf.abCode;
+    g_PS2glContext.pCurListTexUnit = (int*)g_PS2glListVBuf.aeTexUnit;
+    g_PS2glListVBuf.nCount = 0;
+    g_pPS2glApiTable = (int)&g_PS2glApiTableList;
+    g_PS2glContext.bFinalCompile = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1702–1718 */
@@ -3300,11 +3352,14 @@ inline float PS2gl_xSqrt(float x)
 
 void PS2glComputeBSfromBB(float* pfvBS, float* pBB)
 {
+    float* pfFirst;
     float fHeight;
     float fDepth;
     float fWidth;
 
-    fWidth = 0.5f * (pBB[1] - pBB[0]);
+    /* Not original source, needs cleaning up: found by the permuter. Reading
+       pBB[0] through a pointer local swaps the f5/f6 temporaries as retail has them. */
+    fWidth = 0.5f * (pBB[1] - (*(pfFirst = &pBB[0])));
     fHeight = 0.5f * (pBB[3] - pBB[2]);
     fDepth = 0.5f * (pBB[5] - pBB[4]);
     pfvBS[0] = pBB[0] + fWidth;

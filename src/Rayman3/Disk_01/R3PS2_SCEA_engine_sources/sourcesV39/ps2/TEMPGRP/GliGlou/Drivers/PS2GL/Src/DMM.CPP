@@ -1227,10 +1227,59 @@ C_SdlCache* GLI_g_SdlCache;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+struct J_New_InterpolPoint_ {
+    float Pos[4]; /* +0x0 */
+    float Color[4]; /* +0x10 */
+    float UVs[2]; /* +0x20 */
+};
+
+extern "C" float* J_New_g_pNoiseTable;
+
 void J_New_GetParticleSpriteFromInterpolatedPoints(float (*pParticles)[4], J_New_InterpolPoint_* p1, J_New_InterpolPoint_* p2, float V)
 {
     float vA[4];
-    /* TODO: decompile from asm/... */
+    unsigned int index;
+    float* pNoise;
+    float* pCol1;
+    float* pCol2;
+    float* pW;
+    float U;
+
+    vA[1] = (V - p1->UVs[1]) / (p2->UVs[1] - p1->UVs[1]);
+    U = p1->UVs[0];
+    index = (int)(1024.0f * (U * 1.5564321f + V * 3.4659879f));    vA[0] = 1.0f - vA[1];
+
+    pNoise = J_New_g_pNoiseTable + (((index & 0x7FF) + 3) & ~3u);
+    pCol1 = &p1->Color[0];
+    pCol2 = &p2->Color[0];
+    pW = &vA[0];
+
+    asm {
+        vsubx.w vf12, vf0, vf0x
+        lqc2 vf1, 0(pNoise)
+        lqc2 vf2, 0(p1)
+        lqc2 vf3, 0(p2)
+        lqc2 vf6, 0(pW)
+        vsubz.z vf1, vf1, vf1z
+        lqc2 vf4, 0(pCol1)
+        lqc2 vf5, 0(pCol2)
+
+        vmulx.xy vf1, vf1, vf25x
+        vmulx.xyz vf8, vf2, vf6x
+        vmuly.xyz vf9, vf3, vf6y
+
+        vadd.xyz vf12, vf8, vf9
+
+        vmulx.xyzw vf10, vf4, vf6x
+        vmuly.xyzw vf11, vf5, vf6y
+
+        vadd.xyz vf12, vf12, vf1
+
+        vadd.xyzw vf13, vf10, vf11
+
+        sqc2 vf12, 0(pParticles)
+        sqc2 vf13, 16(pParticles)
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\DMM.CPP lines 1351–1351 */

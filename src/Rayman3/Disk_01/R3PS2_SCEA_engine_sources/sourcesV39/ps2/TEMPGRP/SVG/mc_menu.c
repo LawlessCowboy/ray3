@@ -1471,6 +1471,9 @@ int MC_HasEnoughtSpace(void)
     unsigned int ulValue;
     ulValue = 0;
     Bidon = 0;
+    /* Not original source: dead test that keeps the initial ulValue = 0 alive
+       (retail has move s0,zero before the sw zero); the real code is lost. */
+    if (ulValue) ulValue = 0;
 
 
 

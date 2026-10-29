@@ -1727,11 +1727,44 @@ void GAM_fn_vAddAlwaysActiveActors(unsigned char _bIsAnInit)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListHead(void);
+extern HIE_tdstSuperObject_* SECT_fn_hGetActiveSectorListNext(HIE_tdstSuperObject_* hSectorSO);
+extern int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* hSectorSO);
+extern void HIE_fn_vSuperObjectAddHead(HIE_tdstSuperObject_* hFather, HIE_tdstSuperObject_* hChild);
+extern void HIE_fn_vSuperObjectAddTail(HIE_tdstSuperObject_* hFather, HIE_tdstSuperObject_* hChild);
 void GAM_fn_vAddActorsFromNewlyActiveSectors(void)
 {
-    HIE_tdstSuperObject_* hSectorSO;
     SECT_tdstListOfSOCharacters_* hCharacterList;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hSectorSO;
+    HIE_tdstSuperObject_* hActor;
+    tdstEngineObject_* p_stCharacter;
+    tdstStandardGame_* p_stStandardGame;
+
+    for (hSectorSO = SECT_fn_hGetActiveSectorListHead(); hSectorSO != NULL; hSectorSO = SECT_fn_hGetActiveSectorListNext(hSectorSO))
+    {
+        if (SECT_fn_bIsSectorNewlyActive(hSectorSO))
+        {
+            for (hCharacterList = hSectorSO->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharacterList != NULL; hCharacterList = hCharacterList->hNextBrotherDyn)
+            {
+                hActor = hCharacterList->hPointerOfCharacter;
+                p_stCharacter = hActor->hLinkedObject.p_stCharacter;
+                p_stStandardGame = p_stCharacter->h_StandardGame;
+                if (((unsigned char)((p_stStandardGame->ucMiscFlags & 2) ? 1 : 0)) == 1
+                    && p_stStandardGame->ucImportance <= g_stEngineStructure.ucCurrentImportance
+                    && !(((unsigned char)((p_stStandardGame->ucMiscFlags & 1) ? 1 : 0))
+                         && p_stStandardGame->eInitFlagWhenDeadOrTaken >= 2
+                         && ((unsigned char)((p_stStandardGame->ucMiscFlags & 1) ? 1 : 0)))
+                    && hActor->hFatherDyn == (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld)
+                {
+                    if (hActor->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+                        HIE_fn_vSuperObjectAddHead((HIE_tdstSuperObject_*)gp_stDynamicWorld, hActor);
+                    else
+                        HIE_fn_vSuperObjectAddTail((HIE_tdstSuperObject_*)gp_stDynamicWorld, hActor);
+                    p_stCharacter->h_StandardGame->ucMiscFlags |= 4;
+                }
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1982–2012 */
@@ -1953,33 +1986,32 @@ int MC_fn_hGetFirstMainCharNode(void);
 HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(int);
 HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_*);
 
+inline int GAM_fn_lGetNbPersoActiveInSector(SECT_tdstSector_* hSector)
+{
+    SECT_tdstListOfSOCharacters_* hCharList;
+    int lCount;
+
+    lCount = 0;
+    for (hCharList = hSector->stListOfCharacters.hFirstElementDyn; hCharList != NULL; hCharList = hCharList->hNextBrotherDyn)
+    {
+        if (((unsigned char)((hCharList->hPointerOfCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 2) ? 1 : 0)) == 1)
+            lCount++;
+    }
+    return lCount;
+}
+
 int GAM_fn_lGetNbPersoActive(void)
 {
     int i;
     SECT_tdstListOfSOSectorsInActivityInteraction_* hActivityList;
     HIE_tdstSuperObject_* hActiveSector;
     int lNbPerso;
-    SECT_tdstSector_* hSector;
-    SECT_tdstListOfSOCharacters_* hCharList;
-    int lCount;
 
     hActiveSector = fn_h_SectInfoGetCurrentSector(MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode())->hLinkedObject.p_stCharacter->h_SectInfo);
-    hSector = hActiveSector->hLinkedObject.p_stSector;
-    lNbPerso = 0;
-    for (hCharList = hSector->stListOfCharacters.hFirstElementDyn; hCharList != NULL; hCharList = hCharList->hNextBrotherDyn)
-    {
-        if (((unsigned char)((hCharList->hPointerOfCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 2) ? 1 : 0)) == 1)
-            lNbPerso++;
-    }
-    for (i = hSector->stListOfSectorsInActivityInteraction.lNumberOfElementsOpt, hActivityList = hSector->stListOfSectorsInActivityInteraction.hFirstElementOpt; i > 0; i--, hActivityList++)
-    {
-        lCount = 0;
-        for (hCharList = hActivityList->hPointerOfSectorSO->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hCharList != NULL; hCharList = hCharList->hNextBrotherDyn)
-        {
-            if (((unsigned char)((hCharList->hPointerOfCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 2) ? 1 : 0)) == 1)
-                lCount++;
-        }
-        lNbPerso += lCount;
+    lNbPerso = GAM_fn_lGetNbPersoActiveInSector(hActiveSector->hLinkedObject.p_stSector);
+    /* permuter: the doubled assignment to i gives retail register allocation */
+    for (i = (i = hActiveSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.lNumberOfElementsOpt), hActivityList = hActiveSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.hFirstElementOpt; i > 0; i--, hActivityList++)    {
+        lNbPerso += GAM_fn_lGetNbPersoActiveInSector(hActivityList->hPointerOfSectorSO->hLinkedObject.p_stSector);
     }
     return lNbPerso;
 }
@@ -1999,12 +2031,51 @@ int GAM_fn_lGetNbPersoActive(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObject);
+extern void HIE_fn_vChangeFather(HIE_tdstSuperObject_* hSuperObject, HIE_tdstSuperObject_* hNewFather, int lFlag);
 void fn_vDestructAllFatherSonLinks(void)
 {
     HIE_tdstSuperObject_* hMainCharacter;
     HIE_tdstSuperObject_* hNextChild;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hGrandChild;
+    HIE_tdstSuperObject_* hNextGrandChild;
+    HIE_tdstSuperObject_* hWorld;
+
+    hMainCharacter = MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode());
+    for (hChild = hMainCharacter->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
+    {
+        if (hChild->ulTypeOfLinkedObject == 2)
+            HIE_fn_vChangeFather(hChild, (HIE_tdstSuperObject_*)gp_stDynamicWorld, hChild->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType);
+    }
+    hWorld = (HIE_tdstSuperObject_*)gp_stDynamicWorld;
+    for (hChild = hWorld->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
+    {
+        if (hChild->ulTypeOfLinkedObject == 2)
+        {
+            if (!hChild->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+                break;
+            for (hGrandChild = hChild->hFirstElementDyn, hNextGrandChild = HIE_fn_hForceGetSuperObjectNextBrother(hGrandChild); hGrandChild != NULL; hGrandChild = hNextGrandChild, hNextGrandChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextGrandChild))
+            {
+                if (hGrandChild->ulTypeOfLinkedObject == 2)
+                    HIE_fn_vChangeFather(hGrandChild, hWorld, 0);
+            }
+        }
+    }
+    hWorld = (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld;
+    for (hChild = hWorld->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
+    {
+        if (hChild->ulTypeOfLinkedObject == 2)
+        {
+            if (!hChild->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+                break;
+            for (hGrandChild = hChild->hFirstElementDyn, hNextGrandChild = HIE_fn_hForceGetSuperObjectNextBrother(hGrandChild); hGrandChild != NULL; hGrandChild = hNextGrandChild, hNextGrandChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextGrandChild))
+            {
+                if (hGrandChild->ulTypeOfLinkedObject == 2)
+                    HIE_fn_vChangeFather(hGrandChild, hWorld, 0);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1476–1476 */
@@ -2442,10 +2513,47 @@ void fn_vTreatDynamicHierarchy(HIE_tdstSuperObject_* hSuperObj, HIE_tdstSuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* R5900 absolute value: MWCC never emits abs.s from plain C. */
+inline float GAM_xAbs(float x)
+{
+    float r = x;
+    asm { abs.s r, r }
+    return r;
+}
+
+extern int MC_fn_hGetNextMainCharNode(int hNode);
 void GAM_fn_vUpdateTooFarFlag(HIE_tdstSuperObject_* _hSO)
 {
-    tdstNodeMainCharacter_* hMCN;
-    HIE_tdstSuperObject_* hMainActor;
     tdstStandardGame_* hStdGame;
-    /* TODO: decompile from asm/... */
+    int hMCN;
+    HIE_tdstSuperObject_* hMainActor;
+
+    hStdGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame;
+    if (hStdGame != NULL)
+    {
+        hStdGame->ucMiscFlags |= 0x80;
+        for (hMCN = MC_fn_hGetFirstMainCharNode(); hMCN != 0; )
+        {
+            hMainActor = MC_fn_hGetCharacterInMainCharacterNode(hMCN);
+            if (((unsigned char)((hMainActor->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 1) ? 1 : 0)))
+            {
+                hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+                continue;
+            }
+            if (_hSO == hMainActor)
+            {
+                hStdGame->ucMiscFlags &= ~0x80;
+                return;
+            }
+            if (GAM_xAbs(_hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xZ - hMainActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ)
+                + (GAM_xAbs(_hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xX - hMainActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX)
+                   + GAM_xAbs(_hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xY - hMainActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY))
+                < (float)(unsigned int)hStdGame->ucTooFarLimit)
+            {
+                hStdGame->ucMiscFlags &= ~0x80;
+                return;
+            }
+            hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+        }
+    }
 }

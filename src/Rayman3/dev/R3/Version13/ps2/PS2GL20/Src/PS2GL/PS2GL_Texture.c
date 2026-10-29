@@ -4829,10 +4829,51 @@ void impPS2glCopyTexImage1D(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void PS2glUpdateTexIndex(int iLength);
 void impPS2glBindTexture(unsigned int target, unsigned int texture)
 {
     tagGLtexname* pTexName;
-    /* TODO: decompile from asm/... */
+
+    if (target == 0x8514)
+        target = 0x8513;
+    if (target == g_PS2glContext.eTexLastBindTarget && texture == g_PS2glContext.nTexLastBindName)
+        return;
+    if (texture < 0x200)
+    {
+        pTexName = &g_PS2glContext.aTexName[texture];
+        if (pTexName->eDimension != target)
+        {
+            if (pTexName->bResident)
+            {
+                int iLength = g_PS2glContext.aBlockMap[pTexName->iTexBlock].nLength;
+                if (PS2glFreeTexBlock(pTexName->iTexBlock, -1))
+                    PS2glUpdateTexIndex(iLength);
+            }
+            pTexName->bResident = 0;
+            pTexName->bResident = 0;
+        }
+        switch (target)
+        {
+        case 0xDE0:
+            g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
+            g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet] = texture;
+            break;
+        case 0xDE1:
+            g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
+            g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet] = texture;
+            break;
+        case 0x8513:
+            g_PS2glContext.nCurTexNameCube = texture;
+            g_PS2glContext.bTexCubeChanged = 1;
+            break;
+        default:
+            return;
+        }
+        pTexName->eDimension = target;
+        pTexName->bAllocated = 1;
+        g_PS2glContext.eTexLastBindTarget = target;
+        g_PS2glContext.nTexLastBindName = texture;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Texture.c lines 1004–1014 */
@@ -4934,7 +4975,7 @@ void impPS2glDeleteTextures(int n, unsigned int* textures)
     unsigned int tex;
     int I;
     tagGLtexname* pTexName;
-    long lLength;
+    int lLength;
 
     for (I = 0; I < n; I++)
     {
@@ -4946,8 +4987,7 @@ void impPS2glDeleteTextures(int n, unsigned int* textures)
         if (pTexName->bResident)
         {
             lLength = g_PS2glContext.aBlockMap[pTexName->iTexBlock].nLength;
-            PS2glFreeTexBlock(pTexName->iTexBlock, -1);
-            if (lLength != 0)
+            if (PS2glFreeTexBlock(pTexName->iTexBlock, -1))
                 PS2glUpdateTexIndex(lLength);
         }
         pTexName->bResident = 0;

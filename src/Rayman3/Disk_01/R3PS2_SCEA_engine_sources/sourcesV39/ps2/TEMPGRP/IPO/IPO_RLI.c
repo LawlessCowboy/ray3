@@ -1124,47 +1124,71 @@ PO_tdstPhysicalObject_* IPO_fn_hGetPhysicalObject(IPO_tdstInstanciatedPhysicalOb
  */
 void IPO_fn_vSetRadiosityFromIndex(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject, char _cRadiosityIndex)
 {
-    void* pISI;
-    short* pSrc;
-    short* pDst;
-    short* pU1;
-    short* pU2;
-    short xNbVertexInCurrent;
-    short xNbVertexInSource;
-    short xIndex;
-    int lOffset;
-
     GLI_vResetVertexColorsForIPO(_hInstanciatedPhysicalObject);
-    if ((IPO_g_ucNumberOfRLITables != 0) && (_cRadiosityIndex < IPO_g_ucNumberOfRLITables) && (_cRadiosityIndex >= 0))
+
+    if ((_cRadiosityIndex < IPO_g_ucNumberOfRLITables) && (_cRadiosityIndex >= 0))
     {
-        if (_hInstanciatedPhysicalObject->a_hRadiosity != NULL)
+        if (_hInstanciatedPhysicalObject->a_hRadiosity == NULL)
+            return;
+
+        if (_hInstanciatedPhysicalObject->a_hRadiosity[_cRadiosityIndex])
         {
-            pISI = _hInstanciatedPhysicalObject->a_hRadiosity[_cRadiosityIndex];
-            if (pISI != NULL)
+            ISI_tdstColor_* p_tdstColor;
+            float* p_fLMU;
+            short xCurrentIndex;
+            short iNumberOfVerticesInSourceRLI;
+            short iNumberOfVerticesInCurrentRLI;
+
+            iNumberOfVerticesInCurrentRLI = ISI_fn_xGetNbVertexRLILOD(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0);
+            iNumberOfVerticesInSourceRLI = ISI_fn_xGetNbVertexRLILOD(_hInstanciatedPhysicalObject->a_hRadiosity[_cRadiosityIndex], 0);
+
+            if (iNumberOfVerticesInCurrentRLI <= iNumberOfVerticesInSourceRLI)
             {
-                xNbVertexInCurrent = ISI_fn_xGetNbVertexRLILOD(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0);
-                xNbVertexInSource = ISI_fn_xGetNbVertexRLILOD(pISI, 0);
-                if (xNbVertexInSource < xNbVertexInCurrent)
+                memcpy(ISI_fn_dGetVertexRLI(_hInstanciatedPhysicalObject->_hCurrentRadiosity), ISI_fn_dGetVertexRLI(_hInstanciatedPhysicalObject->a_hRadiosity[_cRadiosityIndex]), iNumberOfVerticesInCurrentRLI * sizeof(ISI_tdstColor_));
+
+                memcpy((void*)ISI_fn_dGetVertexRLILODLightMapU(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0), (void*)ISI_fn_dGetVertexRLILODLightMapU(_hInstanciatedPhysicalObject->a_hRadiosity[_cRadiosityIndex], 0), iNumberOfVerticesInCurrentRLI * sizeof(float));
+            }
+            else
+            {
+                p_tdstColor = ISI_fn_dGetVertexRLI(_hInstanciatedPhysicalObject->_hCurrentRadiosity);
+
+                p_fLMU = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0);
+
+                memcpy(ISI_fn_dGetVertexRLI(_hInstanciatedPhysicalObject->_hCurrentRadiosity), ISI_fn_dGetVertexRLI(_hInstanciatedPhysicalObject->a_hRadiosity[_cRadiosityIndex]), iNumberOfVerticesInSourceRLI * sizeof(ISI_tdstColor_));
+
+                memcpy((void*)ISI_fn_dGetVertexRLILODLightMapU(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0), (void*)ISI_fn_dGetVertexRLILODLightMapU(_hInstanciatedPhysicalObject->a_hRadiosity[_cRadiosityIndex], 0), iNumberOfVerticesInSourceRLI * sizeof(float));
+
+                for (xCurrentIndex = iNumberOfVerticesInSourceRLI; xCurrentIndex < iNumberOfVerticesInCurrentRLI; xCurrentIndex++)
                 {
-                    for (xIndex = 0, lOffset = 0; xIndex < xNbVertexInCurrent; xIndex++, lOffset += 64)
-                    {
-                        pDst = (short*)((char*)ISI_fn_dGetVertexRLI(_hInstanciatedPhysicalObject->_hCurrentRadiosity) + lOffset);
-                        pSrc = (short*)((char*)ISI_fn_dGetVertexRLI(pISI) + lOffset);
-                        pU1 = (short*)((char*)ISI_fn_dGetVertexRLILODLightMapU(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0) + lOffset);
-                        pU2 = (short*)((char*)ISI_fn_dGetVertexRLILODLightMapU(pISI, 0) + lOffset);
-                        memcpy(pDst, pSrc, (unsigned int)xNbVertexInCurrent * 8);
-                        memcpy(pU1, pU2, (unsigned int)xNbVertexInCurrent * 4);
-                    }
+                    p_tdstColor[xCurrentIndex].xRed = 0;
+                    p_tdstColor[xCurrentIndex].xGreen = 0;
+                    p_tdstColor[xCurrentIndex].xBlue = 0;
+                    p_tdstColor[xCurrentIndex].xAlpha = 0;
+
+                    p_fLMU[xCurrentIndex] = 0.5f;
                 }
-                else
-                {
-                    pDst = (short*)ISI_fn_dGetVertexRLI(_hInstanciatedPhysicalObject->_hCurrentRadiosity);
-                    pSrc = (short*)ISI_fn_dGetVertexRLI(pISI);
-                    memcpy(pDst, pSrc, (unsigned int)xNbVertexInCurrent * 8);
-                    pU1 = (short*)ISI_fn_dGetVertexRLILODLightMapU(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0);
-                    pU2 = (short*)ISI_fn_dGetVertexRLILODLightMapU(pISI, 0);
-                    memcpy(pU1, pU2, (unsigned int)xNbVertexInCurrent * 4);
-                }
+            }
+        }
+        else
+        {
+            float* p_fLMU;
+            ISI_tdstColor_* p_tdstColor;
+            short xNumberOfVertices;
+            short xCurrentVertex;
+
+            xNumberOfVertices = ISI_fn_xGetNbVertexRLILOD(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0);
+
+            p_fLMU = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hInstanciatedPhysicalObject->_hCurrentRadiosity, 0);
+
+            p_tdstColor = ISI_fn_dGetVertexRLI(_hInstanciatedPhysicalObject->_hCurrentRadiosity);
+
+            for (xCurrentVertex = 0; xCurrentVertex < xNumberOfVertices; xCurrentVertex++)
+            {
+                p_tdstColor[xCurrentVertex].xRed = 0;
+                p_tdstColor[xCurrentVertex].xGreen = 0;
+                p_tdstColor[xCurrentVertex].xBlue = 0;
+                p_tdstColor[xCurrentVertex].xAlpha = 0;
+                p_fLMU[xCurrentVertex] = 0.5f;
             }
         }
     }
@@ -1206,34 +1230,41 @@ void IPO_fn_vSetRadiosityFromIndex(IPO_tdstInstanciatedPhysicalObject_* _hInstan
  */
 void IPO_fn_vInternalComputeRLI_Add(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio, float _fPreviousRatio)
 {
-    short xNbVertex;
-    short xNbVertex2;
-    short* pSrc;
-    short* pDst;
-    short xIndex;
-    int lOffset;
+    short xNumberOfVerticesToUse;
+    short xNumberOfVerticesInSource;
+    short xNumberOfVerticesInCurrent;
+    short xCurrentVertex;
+    ISI_tdstColor_* p_tdstColor2;
+    ISI_tdstColor_* p_tdstColor1;
 
-    if (_hIPO->_hCurrentRadiosity != 0)
+    if (_hIPO->_hCurrentRadiosity == NULL)
+        return;
+
+    if (_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd] == NULL)
+        return;
+
+    p_tdstColor1 = ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd]);
+
+    xNumberOfVerticesInCurrent = ISI_fn_xGetNbVertexRLILOD(_hIPO->_hCurrentRadiosity, 0);
+    xNumberOfVerticesInSource = ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd], 0);
+
+    xNumberOfVerticesToUse = (xNumberOfVerticesInCurrent <= xNumberOfVerticesInSource) ? xNumberOfVerticesInCurrent : xNumberOfVerticesInSource;
+
+    p_tdstColor2 = ISI_fn_dGetVertexRLI(_hIPO->_hCurrentRadiosity);
+
+    for (xCurrentVertex = 0; xCurrentVertex < xNumberOfVerticesToUse; xCurrentVertex++)
     {
-        if (_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd] != NULL)
-        {
-            pSrc = (short*)ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd]);
-            xNbVertex = ISI_fn_xGetNbVertexRLILOD(_hIPO->_hCurrentRadiosity, 0);
-            xNbVertex2 = ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucRadiosityIndexToAdd], 0);
-            xNbVertex = (xNbVertex2 < xNbVertex) ? xNbVertex2 : xNbVertex;
-            pDst = (short*)ISI_fn_dGetVertexRLI(_hIPO->_hCurrentRadiosity);
-            for (xIndex = 0, lOffset = 0; xIndex < xNbVertex; xIndex++, lOffset += 8)
-            {
-                pDst[0] = pDst[0] - (short)(_fPreviousRatio * (float)pSrc[0]);
-                pDst[0] = pDst[0] + (short)(_fRatio * (float)pSrc[0]);
-                pDst[1] = pDst[1] - (short)(_fPreviousRatio * (float)pSrc[1]);
-                pDst[1] = pDst[1] + (short)(_fRatio * (float)pSrc[1]);
-                pDst[2] = pDst[2] - (short)(_fPreviousRatio * (float)pSrc[2]);
-                pDst[2] = pDst[2] + (short)(_fRatio * (float)pSrc[2]);
-                pDst[3] = pDst[3] - (short)(_fPreviousRatio * (float)pSrc[3]);
-                pDst[3] = pDst[3] + (short)(_fRatio * (float)pSrc[3]);
-            }
-        }
+        p_tdstColor2[xCurrentVertex].xRed = p_tdstColor2[xCurrentVertex].xRed - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xRed);
+        p_tdstColor2[xCurrentVertex].xRed = p_tdstColor2[xCurrentVertex].xRed + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xRed);
+
+        p_tdstColor2[xCurrentVertex].xGreen = p_tdstColor2[xCurrentVertex].xGreen - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xGreen);
+        p_tdstColor2[xCurrentVertex].xGreen = p_tdstColor2[xCurrentVertex].xGreen + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xGreen);
+
+        p_tdstColor2[xCurrentVertex].xBlue = p_tdstColor2[xCurrentVertex].xBlue - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xBlue);
+        p_tdstColor2[xCurrentVertex].xBlue = p_tdstColor2[xCurrentVertex].xBlue + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xBlue);
+
+        p_tdstColor2[xCurrentVertex].xAlpha = p_tdstColor2[xCurrentVertex].xAlpha - (short)(_fPreviousRatio * (float)p_tdstColor1[xCurrentVertex].xAlpha);
+        p_tdstColor2[xCurrentVertex].xAlpha = p_tdstColor2[xCurrentVertex].xAlpha + (short)(_fRatio * (float)p_tdstColor1[xCurrentVertex].xAlpha);
     }
 }
 
@@ -1312,7 +1343,49 @@ void IPO_fn_vInternalComputeRLI_Normal(IPO_tdstInstanciatedPhysicalObject_* _hIP
     short xNumberOfVertices1;
     short xCurrentVertex;
     float fOtherRatio;
-    /* TODO: decompile from asm/... */
+
+    fOtherRatio = 1.0f - _fRatio;
+
+    if (_hIPO->_hCurrentRadiosity == NULL)
+        return;
+
+    p_tdstColorResult = ISI_fn_dGetVertexRLI(_hIPO->_hCurrentRadiosity);
+    p_tdstColor1 = _hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex] ? ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex]) : NULL;
+    p_tdstColor2 = _hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex] ? ISI_fn_dGetVertexRLI(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex]) : NULL;
+
+    xNumberOfVerticesInCurrent = ISI_fn_xGetNbVertexRLILOD(_hIPO->_hCurrentRadiosity, 0);
+    xNumberOfVertices1 = _hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex] ? ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex], 0) : xNumberOfVerticesInCurrent;
+    xNumberOfVertices2 = _hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex] ? ISI_fn_xGetNbVertexRLILOD(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex], 0) : xNumberOfVerticesInCurrent;
+    xNumberOfVertices1 = (xNumberOfVertices1 < xNumberOfVertices2) ? xNumberOfVertices1 : xNumberOfVertices2;
+
+    p_fUV_LM1 = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->a_hRadiosity[IPO_g_ucCurrentRadiosityIndex], 0);
+    p_fUV_LM2 = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->a_hRadiosity[IPO_g_ucNextRadiosityIndex], 0);
+    p_fUV_LM = (float*)ISI_fn_dGetVertexRLILODLightMapU(_hIPO->_hCurrentRadiosity, 0);
+
+    for (xCurrentVertex = 0; xCurrentVertex < xNumberOfVertices1; xCurrentVertex++)
+    {
+        param0 = (p_tdstColor1 == NULL) ? &IPO_g_tdstBlack : &p_tdstColor1[xCurrentVertex];
+        p_tdstUsedColor2 = (p_tdstColor2 == NULL) ? &IPO_g_tdstBlack : &p_tdstColor2[xCurrentVertex];
+
+        p_tdstColorResult[xCurrentVertex].xRed = (short)(fOtherRatio * (float)param0->xRed + _fRatio * (float)p_tdstUsedColor2->xRed);
+        p_tdstColorResult[xCurrentVertex].xGreen = (short)(fOtherRatio * (float)param0->xGreen + _fRatio * (float)p_tdstUsedColor2->xGreen);
+        p_tdstColorResult[xCurrentVertex].xBlue = (short)(fOtherRatio * (float)param0->xBlue + _fRatio * (float)p_tdstUsedColor2->xBlue);
+        p_tdstColorResult[xCurrentVertex].xAlpha = (short)(fOtherRatio * (float)param0->xAlpha + _fRatio * (float)p_tdstUsedColor2->xAlpha);
+
+        p_fUV_LM[xCurrentVertex] = fOtherRatio * p_fUV_LM1[xCurrentVertex] + _fRatio * p_fUV_LM2[xCurrentVertex];
+    }
+
+    if (xNumberOfVertices1 < xNumberOfVerticesInCurrent)
+    {
+        for (xCurrentVertex = xNumberOfVertices1; xCurrentVertex < xNumberOfVerticesInCurrent; xCurrentVertex++)
+        {
+            p_tdstColorResult[xCurrentVertex].xRed = 0;
+            p_tdstColorResult[xCurrentVertex].xGreen = 0;
+            p_tdstColorResult[xCurrentVertex].xBlue = 0;
+            p_tdstColorResult[xCurrentVertex].xAlpha = 0;
+            p_fUV_LM[xCurrentVertex] = 0.5f;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 482–511 */
@@ -1354,29 +1427,7 @@ static inline float IPO_fn_fGetPreviousRatio(IPO_tdstInstanciatedPhysicalObject_
     return 0.0f;
 }
 
-void IPO_fn_vInternalComputeRLI(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio)
-{
-    if (IPO_g_cChangeMode == 1)
-    {
-        IPO_fn_vInternalComputeRLI_Normal(_hIPO, _fRatio);
-
-        _hIPO->fLastRatioUsed = IPO_g_fCurrentGlobalRatio;
-        _hIPO->ulLastTransitionID = IPO_g_ulCurrentTransitionID;
-
-        GLI_vResetVertexColorsForIPO(_hIPO);
-    }
-    else if (IPO_g_cChangeMode == 2)
-    {
-        IPO_fn_vInternalComputeRLI_Add(_hIPO, _fRatio, IPO_fn_fGetPreviousRatio(_hIPO));
-
-        _hIPO->fLastRatioUsed = IPO_g_fCurrentGlobalRatio;
-        _hIPO->ulLastTransitionID = IPO_g_ulCurrentTransitionID;
-
-        GLI_vResetVertexColorsForIPO(_hIPO);
-    }
-}
-
-static inline void IPO_fn_vInternalComputeRLI_Inlined(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio)
+inline void IPO_fn_vInternalComputeRLI(IPO_tdstInstanciatedPhysicalObject_* _hIPO, float _fRatio)
 {
     if (IPO_g_cChangeMode == 1)
     {
@@ -1412,7 +1463,7 @@ void IPO_fn_vComputeRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
 {
     if (IPO_g_cTransitionInProgress)
     {
-        IPO_fn_vInternalComputeRLI_Inlined(_hIPO, IPO_g_fCurrentGlobalRatio);
+        IPO_fn_vInternalComputeRLI(_hIPO, IPO_g_fCurrentGlobalRatio);
     }
 }
 
@@ -1431,12 +1482,35 @@ void IPO_fn_vComputeRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline int IPO_fn_bIsUpToDate(IPO_tdstInstanciatedPhysicalObject_* _hIPO)
+{
+    if (_hIPO->ulLastTransitionID != IPO_g_ulCurrentTransitionID)
+        return 0;
+    if (_hIPO->fLastRatioUsed != IPO_g_fPreviousGlobalRatio)
+        return 0;
+    return 1;
+}
+
+#pragma auto_inline on
 void IPO_fn_vUpdateAllIPOAfterTransition(HIE_tdstSuperObject_* _hSO)
 {
     IPO_tdstInstanciatedPhysicalObject_* hIPO;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    for (hChild = _hSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+    {
+        IPO_fn_vUpdateAllIPOAfterTransition(hChild);
+    }
+
+    if (_hSO->ulTypeOfLinkedObject == 0x20)
+    {
+        hIPO = _hSO->hLinkedObject.p_stInstanciatedPhysicalObject;
+
+        if (!IPO_fn_bIsUpToDate(hIPO))
+            IPO_fn_vInternalComputeRLI(hIPO, IPO_g_fCurrentGlobalRatio);
+    }
 }
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 390–444 */
 /* addr: 0x002f2940  size: 500 bytes */
@@ -1474,107 +1548,42 @@ void IPO_fn_vUpdateAllIPOAfterTransition(HIE_tdstSuperObject_* _hSO)
  */
 void IPO_fn_vFrameEndForRLITables(void)
 {
-    char cMode;
-    int lFlag;
-    int lFlag2;
-    long lEnd;
-    HIE_tdstSuperObject_* hChild;
-    HIE_tdstSuperObject_* hWorld;
-    IPO_tdstInstanciatedPhysicalObject_* hIPO;
+    char cMustEndTransition;
 
     if (IPO_g_cTransitionInProgress)
     {
-        cMode = IPO_g_cChangeMode;
-        lFlag = 1;
-        lEnd = 0;
-        if (cMode == 1)
+        cMustEndTransition = 0;
+        if (IPO_g_cChangeMode == 1)
         {
             if (IPO_g_fCurrentGlobalRatio >= 1.0f)
             {
                 IPO_g_ucCurrentRadiosityIndex = IPO_g_ucNextRadiosityIndex;
                 if (IPO_g_ucCurrentRadiosityIndex == IPO_g_ucRadiosityIndexToReach)
                 {
-                    lEnd = lFlag;
+                    cMustEndTransition = 1;
                 }
                 else
                 {
                     IPO_g_fCurrentGlobalRatio = 0.0f;
-                    IPO_g_fIncrementByMilliSecond = 0.0f;
+                    IPO_g_fCurrentIncrementRatio = 0.0f;
                     IPO_g_ucNextRadiosityIndex = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + 1) % IPO_g_ucNumberOfRLITables);
                 }
             }
         }
-        else if (cMode == 2)
+        else if (IPO_g_cChangeMode == 2)
         {
-            float fWanted = IPO_g_fAddWantedRatio;
-
-            lFlag = 1;
-            if (fWanted <= 0.0f)
-            {
-                lFlag = 0;
-            }
-            if (lFlag != 0)
-            {
-                if (IPO_g_fCurrentGlobalRatio < fWanted)
-                {
-                    lFlag = 0;
-                }
-                else
-                {
-                    lFlag = 1;
-                }
-            }
-            if (lFlag == 0)
-            {
-                lFlag2 = 1;
-                if (!(fWanted < 0.0f))
-                {
-                    lFlag2 = 0;
-                }
-                if (lFlag2 != 0)
-                {
-                    if (IPO_g_fCurrentGlobalRatio <= fWanted)
-                    {
-                        lFlag2 = 1;
-                    }
-                    else
-                    {
-                        lFlag2 = 0;
-                    }
-                }
-                lEnd = (long)lFlag2;
-            }
+            cMustEndTransition = (IPO_g_fAddWantedRatio > 0.0f && IPO_g_fCurrentGlobalRatio >= IPO_g_fAddWantedRatio) || (IPO_g_fAddWantedRatio < 0.0f && IPO_g_fCurrentGlobalRatio <= IPO_g_fAddWantedRatio);
         }
         else
         {
-            lEnd = 1;
+            cMustEndTransition = 1;
         }
-        if (lEnd != 0)
+        if (cMustEndTransition)
         {
-            hWorld = gp_stActualWorld;
             IPO_g_fPreviousGlobalRatio = IPO_g_fCurrentGlobalRatio;
-            for (hChild = hWorld->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
-            {
-                IPO_fn_vUpdateAllIPOAfterTransition(hChild);
-            }
-            if (hWorld->ulTypeOfLinkedObject == 0x20)
-            {
-                hIPO = hWorld->hLinkedObject.p_stInstanciatedPhysicalObject;
-                lFlag = 0;
-                if (hIPO->ulLastTransitionID == IPO_g_ulCurrentTransitionID)
-                {
-                    if (hIPO->fLastRatioUsed == IPO_g_fPreviousGlobalRatio)
-                    {
-                        lFlag = 1;
-                    }
-                }
-                if (lFlag == 0)
-                {
-                    IPO_fn_vInternalComputeRLI(hIPO, IPO_g_fCurrentGlobalRatio);
-                }
-            }
+            IPO_fn_vUpdateAllIPOAfterTransition(gp_stActualWorld);
             IPO_g_cChangeMode = 0;
-            IPO_g_fIncrementByMilliSecond = 0.0f;
+            IPO_g_fCurrentIncrementRatio = 0.0f;
             IPO_g_fCurrentGlobalRatio = 0.0f;
             IPO_g_cTransitionInProgress = 0;
         }
@@ -1682,40 +1691,39 @@ void IPO_fn_vFrameInitForRLITables(void)
  */
 void IPO_fn_vSetAddRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, float _fFinalRatio)
 {
-    float fDuration;
+    if (IPO_g_ucNumberOfRLITables == 0)
+        return;
 
-    if (IPO_g_ucNumberOfRLITables != 0)
+    if ((_cIndexToReach >= IPO_g_ucNumberOfRLITables) || (_cIndexToReach < 0))
+        return;
+
+    if (IPO_g_cBlockingTransitions && IPO_g_cTransitionInProgress)
+        return;
+
+    if (_fFinalRatio == 0.0f)
+        return;
+
+    IPO_g_ucRadiosityIndexToAdd = (unsigned char)_cIndexToReach;
+    IPO_g_fAddWantedRatio = _fFinalRatio;
+    if (_ulChangeDuration == 0)
     {
-        if ((_cIndexToReach < IPO_g_ucNumberOfRLITables) && (_cIndexToReach >= 0))
-        {
-            if ((IPO_g_cBlockingTransitions == 0 || IPO_g_cTransitionInProgress == 0) && (_fFinalRatio != 0.0f))
-            {
-                IPO_g_ucRadiosityIndexToAdd = (unsigned char)_cIndexToReach;
-                if (_ulChangeDuration == 0)
-                {
-                    IPO_g_fAddWantedRatio = _fFinalRatio;
-                    IPO_g_fCurrentGlobalRatio = _fFinalRatio;
-                    IPO_g_fIncrementByMilliSecond = 0.0f;
-                }
-                else
-                {
-                    IPO_g_ulChangeDuration = _ulChangeDuration;
-                    IPO_g_fCurrentIncrementRatio = 0.0f;
-                    IPO_g_fCurrentGlobalRatio = 0.0f;
-                    fDuration = (int)_ulChangeDuration >= 0 ? (float)_ulChangeDuration : (float)((int)((unsigned int)_ulChangeDuration >> 1) | (_ulChangeDuration & 1)) + (float)((int)((unsigned int)_ulChangeDuration >> 1) | (_ulChangeDuration & 1));
-                    IPO_g_ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - 1;
-                    IPO_g_fIncrementByMilliSecond = _fFinalRatio / fDuration;
-                    if (IPO_g_fIncrementByMilliSecond == 0.0f)
-                    {
-                        IPO_g_fIncrementByMilliSecond = 1e-9f;
-                    }
-                }
-                IPO_g_cChangeMode = 2;
-                IPO_g_cTransitionInProgress = 1;
-                IPO_g_ulCurrentTransitionID++;
-            }
-        }
+        IPO_g_fCurrentGlobalRatio = _fFinalRatio;
+        IPO_g_fIncrementByMilliSecond = 0.0f;
     }
+    else
+    {
+        IPO_g_ulChangeDuration = _ulChangeDuration;
+        IPO_g_ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - 1;
+        IPO_g_fCurrentIncrementRatio = 0.0f;
+        IPO_g_fCurrentGlobalRatio = 0.0f;
+        IPO_g_fIncrementByMilliSecond = _fFinalRatio / (float)_ulChangeDuration;
+        if (IPO_g_fIncrementByMilliSecond == 0.0f)
+            IPO_g_fIncrementByMilliSecond = 1e-9f;
+    }
+
+    IPO_g_cTransitionInProgress = 1;
+    IPO_g_cChangeMode = 2;
+    IPO_g_ulCurrentTransitionID++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 245–290 */
@@ -1757,54 +1765,51 @@ void IPO_fn_vSetAddRLITable(char _cIndexToReach, unsigned int _ulChangeDuration,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void IPO_fn_vSetChangeOfRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, char _cAdd)
+void IPO_fn_vSetChangeOfRLITable(char _cIndexToReach, unsigned int _ulChangeDuration, char _cIncrementOrJump)
 {
-    int lNumberOfSteps;
-    float fDuration;
+    if (IPO_g_ucNumberOfRLITables == 0)
+        return;
 
-    if ((IPO_g_ucNumberOfRLITables != 0) && (_cIndexToReach < IPO_g_ucNumberOfRLITables) && (_cIndexToReach >= 0))
+    if ((_cIndexToReach >= IPO_g_ucNumberOfRLITables) || (_cIndexToReach < 0))
+        return;
+
+    if (IPO_g_cBlockingTransitions && IPO_g_cTransitionInProgress)
+        return;
+
+    if (_cIncrementOrJump == 0)
+        IPO_g_ucRadiosityIndexToReach = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + _cIndexToReach) % IPO_g_ucNumberOfRLITables);
+    else
+        IPO_g_ucRadiosityIndexToReach = (unsigned char)_cIndexToReach;
+
+    if (_ulChangeDuration == 0)
     {
-        if ((IPO_g_cBlockingTransitions == 0 || IPO_g_cTransitionInProgress == 0) && (_cAdd == 0))
-        {
-            IPO_g_ucRadiosityIndexToReach = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + _cIndexToReach) % IPO_g_ucNumberOfRLITables);
-        }
-        else
-        {
-            IPO_g_ucRadiosityIndexToReach = (unsigned char)_cIndexToReach;
-        }
-        if (_ulChangeDuration == 0)
-        {
-            IPO_g_fCurrentIncrementRatio = 0.0f;
-            IPO_g_fCurrentGlobalRatio = 1.0f;
-            IPO_g_ucNextRadiosityIndex = IPO_g_ucRadiosityIndexToReach;
-            IPO_g_ucCurrentRadiosityIndex = IPO_g_ucRadiosityIndexToReach;
-        }
-        else
-        {
-            IPO_g_ulChangeDuration = _ulChangeDuration;
-            IPO_g_fCurrentIncrementRatio = 0.0f;
-            IPO_g_fCurrentGlobalRatio = 0.0f;
-            IPO_g_ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - 1;
-            if (IPO_g_ucCurrentRadiosityIndex < IPO_g_ucRadiosityIndexToReach)
-            {
-                IPO_g_ucNextRadiosityIndex = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + 1) % IPO_g_ucNumberOfRLITables);
-                lNumberOfSteps = IPO_g_ucRadiosityIndexToReach - IPO_g_ucCurrentRadiosityIndex;
-            }
-            else
-            {
-                lNumberOfSteps = IPO_g_ucRadiosityIndexToReach + IPO_g_ucNumberOfRLITables - IPO_g_ucCurrentRadiosityIndex;
-            }
-            fDuration = (float)(_ulChangeDuration / 2) * 2.0f;
-            IPO_g_fIncrementByMilliSecond = (float)lNumberOfSteps / fDuration;
-            if (IPO_g_fIncrementByMilliSecond == 0.0f)
-            {
-                IPO_g_fIncrementByMilliSecond = 1e-9f;
-            }
-        }
-        IPO_g_cTransitionInProgress = 1;
-        IPO_g_cChangeMode = 1;
-        IPO_g_ulCurrentTransitionID++;
+        IPO_g_ucNextRadiosityIndex = IPO_g_ucRadiosityIndexToReach;
+        IPO_g_fCurrentIncrementRatio = 0.0f;
+        IPO_g_fCurrentGlobalRatio = 1.0f;
+        IPO_g_ucCurrentRadiosityIndex = IPO_g_ucRadiosityIndexToReach;
     }
+    else
+    {
+        IPO_g_ucNextRadiosityIndex = (unsigned char)((IPO_g_ucCurrentRadiosityIndex + 1) % IPO_g_ucNumberOfRLITables);
+
+        IPO_g_ulChangeDuration = _ulChangeDuration;
+        IPO_g_ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - 1;
+
+        IPO_g_fCurrentIncrementRatio = 0.0f;
+        IPO_g_fCurrentGlobalRatio = 0.0f;
+
+        if (IPO_g_ucCurrentRadiosityIndex < IPO_g_ucRadiosityIndexToReach)
+            IPO_g_fIncrementByMilliSecond = (float)(IPO_g_ucRadiosityIndexToReach - IPO_g_ucCurrentRadiosityIndex) / (float)_ulChangeDuration;
+        else
+            IPO_g_fIncrementByMilliSecond = (float)(IPO_g_ucRadiosityIndexToReach + (IPO_g_ucNumberOfRLITables - IPO_g_ucCurrentRadiosityIndex)) / (float)_ulChangeDuration;
+
+        if (IPO_g_fIncrementByMilliSecond == 0.0f)
+            IPO_g_fIncrementByMilliSecond = 1e-9f;
+    }
+
+    IPO_g_cTransitionInProgress = 1;
+    IPO_g_cChangeMode = 1;
+    IPO_g_ulCurrentTransitionID++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\IPO\IPO_RLI.c lines 234–234 */

@@ -742,7 +742,9 @@ void GEO_xComputeIndexUsedByElements(GEO_tdstGeometricObject_* p_stObj)
             memset(aDEF_ulCountBuffer, 0, (p_stObj->xNbPoints + 7) >> 3);
             for (xTriangleIndex = 0; xTriangleIndex < p_stLocalElement->xNbFaces; xTriangleIndex++)
             {
-                ((unsigned char*)aDEF_ulCountBuffer)[(unsigned int)p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[0] / 8] |= (unsigned char)(1 << (p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[0] & 7));
+                /* Not original source: temp assignment found by the permuter. */
+                xObjIndex = p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[0];
+                ((unsigned char*)aDEF_ulCountBuffer)[(unsigned int)xObjIndex / 8] |= (unsigned char)(1 << (p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[0] & 7));
                 ((unsigned char*)aDEF_ulCountBuffer)[(unsigned int)p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[1] / 8] |= (unsigned char)(1 << (p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[1] & 7));
                 ((unsigned char*)aDEF_ulCountBuffer)[(unsigned int)p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[2] / 8] |= (unsigned char)(1 << (p_stLocalElement->d_stListOfFacesTripled[xTriangleIndex].a3_xIndex[2] & 7));
             }

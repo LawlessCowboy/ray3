@@ -428,6 +428,14 @@ def source_index(target_symbols: list[Symbol], main: Section) -> list[dict]:
             previous = entries_by_address.get(address)
             if previous is None or (previous['todo'] and not entry['todo']):
                 entries_by_address[address] = entry
+    # Cleanup of a DONE translation unit removes its address comments, so the
+    # scan above no longer sees those functions.  Their owner is still
+    # recorded in the manifest; use it so a refresh keeps them assigned.
+    recorded_sources = {}
+    for record in load_manifest().get('functions', {}).values():
+        source = record.get('source')
+        if source and (ROOT / source).is_file():
+            recorded_sources[int(record['address'], 16)] = source
     # The debug parser currently owns only part of the ELF's function set.
     # Keep a difficulty record for every remaining code symbol as well, but
     # leave it unassigned until source ownership is recovered.
@@ -438,15 +446,22 @@ def source_index(target_symbols: list[Symbol], main: Section) -> list[dict]:
         code_offset = symbol.value - main.addr
         code = main.data[code_offset:code_offset + symbol.size]
         preferred = preferred_symbol(target_symbols, symbol.value)
+        source = recorded_sources.get(symbol.value)
+        if source is None:
+            language = 'unknown'
+        elif Path(source).suffix.lower() in {'.cpp', '.cxx', '.hpp', '.hxx'}:
+            language = 'C++'
+        else:
+            language = 'C'
         entries_by_address[symbol.value] = {
             'address': symbol.value,
             'size': symbol.size,
             'name': preferred.name if preferred else symbol.name or f'sym_{symbol.value:08x}',
-            'source': None,
-            'language': 'unknown',
-            'todo': True,
+            'source': source,
+            'language': language,
+            'todo': source is None,
             'line_map': [],
-            'difficulty': difficulty_for(code, 0, 'unknown'),
+            'difficulty': difficulty_for(code, 0, language),
         }
     return list(entries_by_address.values())
 
@@ -469,11 +484,15 @@ def cached_source_index(target_symbols: list[Symbol], main: Section,
             pass
     entries = source_index(target_symbols, main)
     INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
-    INDEX_PATH.write_text(json.dumps({
+    # Write atomically: concurrent matcher processes (permuter compiles) read
+    # this file, and a partial read would make them rebuild it.
+    temporary = INDEX_PATH.with_name(f'{INDEX_PATH.name}.{os.getpid()}.tmp')
+    temporary.write_text(json.dumps({
         'schema_version': 3,
         'target_size': TARGET_PATH.stat().st_size,
         'entries': entries,
     }, separators=(',', ':')))
+    os.replace(temporary, INDEX_PATH)
     return entries
 
 
@@ -993,6 +1012,14 @@ def register_equivalent(candidate: bytes, target: bytes,
     return True, 'registers differ only by consistent renaming'
 
 
+def _inside_root(path: Path | str) -> bool:
+    try:
+        Path(path).resolve().relative_to(ROOT)
+    except ValueError:
+        return False
+    return True
+
+
 def compare(entry: dict, verbose: bool = False, source_override: Path | None = None,
             owner: Path | None = None) -> dict:
     sections, target_symbols, main, _, target_names = target_context()
@@ -1005,7 +1032,16 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
     # ``owner`` lets a caller compiling a scratch copy of a unit (the permuter)
     # keep the canonical unit's compiler profile.
     if owner is None:
-        owner = source if source_override else (entry.get('source') or source)
+        if source_override is None:
+            owner = entry.get('source') or source
+        elif _inside_root(source_override):
+            owner = source_override
+        else:
+            # A scratch copy outside the repository has no profile of its own
+            # (it would silently build as library code): keep the function's
+            # canonical owner so check --source gives the same answer as the
+            # real unit.
+            owner = entry.get('source') or source
     obj_path, build_state = compile_source(source, owner=owner)
     if obj_path is None:
         return {'status': 'COMPILE_ERROR', 'entry': entry, 'detail': build_state}
@@ -1330,12 +1366,21 @@ def coverage() -> dict:
     # game-code decompilation effort: they are excluded from the coverage
     # totals and reported separately.
     header_addresses = {entry['address'] for entry in entries if is_header_owned(entry)}
+    # Library functions without recovered source (SCE SDK, C/C++ runtime and
+    # most of the harmonx sound middleware, built without debug info) are
+    # third-party code outside the decompilation effort and are likewise
+    # reported separately.  Unowned game helpers stay in scope.
+    unowned_library_addresses = {entry['address'] for entry in entries
+                                 if entry['source'] is None
+                                 and categories[entry['address']] == 'library'
+                                 and entry['address'] not in header_addresses}
+    excluded_addresses = header_addresses | unowned_library_addresses
     scope_addresses = {entry['address'] for entry in entries
-                       if entry['address'] not in header_addresses}
+                       if entry['address'] not in excluded_addresses}
     split = {}
     for category in ('game', 'library'):
         members = [entry for entry in entries if categories[entry['address']] == category
-                   and entry['address'] not in header_addresses]
+                   and entry['address'] not in excluded_addresses]
         addresses = {entry['address'] for entry in members}
         split[category] = {
             'matched_functions': len([r for r in function_records if r.get('status') == 'MATCH'
@@ -1376,6 +1421,7 @@ def coverage() -> dict:
                                               if span[0] in scope_addresses]),
         'data_bytes_total': intervals_size(scope_data),
         'header_functions_excluded': len(header_addresses),
+        'unowned_library_functions_excluded': len(unowned_library_addresses),
         'split': split,
     }
 
@@ -1399,6 +1445,9 @@ def print_coverage(result: dict) -> None:
     if result.get('header_functions_excluded'):
         print(f"excluded (library header functions, out of scope): "
               f"{result['header_functions_excluded']}")
+    if result.get('unowned_library_functions_excluded'):
+        print(f"excluded (third-party library code without debug info, out of scope): "
+              f"{result['unowned_library_functions_excluded']}")
 
 
 def translation_units() -> dict:

@@ -2556,6 +2556,10 @@ tdstNodeInterpret_* fn_p_stTractionFactorProcedure(HIE_tdstSuperObject_* p_Super
     tdstEngineObject_* hCharacter;
     tdeProcedureId_ eProcedureId = p_stTree[-1].uDummy.uId.eProcedureId;
     fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    /* Not original source: empty test found by the permuter (changes scheduling only). */
+    if (!hNewSuperObjPerso->ulTypeOfLinkedObject && !hNewSuperObjPerso->ulTypeOfLinkedObject && !hNewSuperObjPerso->ulTypeOfLinkedObject)
+    {
+    }
     hCharacter = hNewSuperObjPerso->ulTypeOfLinkedObject != 2 ? 0 : hNewSuperObjPerso->hLinkedObject.p_stCharacter;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
     ucTractionFactor = (unsigned char)stParam.uParam.ulValue;

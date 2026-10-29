@@ -936,68 +936,25 @@ float g_AGO_AnimTimeScale;
 extern GLI_tdstMaterial_* GLI_g_StaticCopyOfArrayOfVisualMaterial[];
 extern GLI_tdstMaterial_** GLI_g_pArrayOfVisualMaterial;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 2358–2359 */
-/* addr: 0x002a9720  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2358
- *   +0x0010 -> line 2359
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 GLI_tdstMaterial_* fn_hGetVisualMaterialFromIndex(unsigned short uwIndex)
 {
     return GLI_g_pArrayOfVisualMaterial[uwIndex];
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 949–953 */
-/* addr: 0x002a9740  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 949
- *   +0x0014 -> line 950
- *   +0x0020 -> line 951
- *   +0x002c -> line 952
- *   +0x0030 -> line 951
- *   +0x0038 -> line 953
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GLI_Material_fn_lSetTextureOp(GLI_tdstMaterial_* _hVisualMat, int _lIndex, int _lTextureOp)
 {
+    /* Not original source: permuter-derived (unsigned index mask and extra
+       temporary) to get retail's addu operand order; verified MATCH. */
+    int new_var;
     int lOffset;
     if (_lIndex < 0 || _lIndex >= 4)
         return 0;
-    lOffset = _lIndex * 80;
-    ((char*)&_hVisualMat->a_stMultiMaterial[0].c_Operator)[lOffset] = _lTextureOp;
+    new_var = _lIndex * 80;
+    lOffset = new_var;
+    ((char*)&_hVisualMat->a_stMultiMaterial[0].c_Operator)[lOffset & 0xFFFFFFFFu] = _lTextureOp;
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 813–880 */
-/* addr: 0x002a9780  size: 252 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 813
- *   +0x0018 -> line 820
- *   +0x001c -> line 813
- *   +0x0020 -> line 820
- *   +0x0028 -> line 826
- *   +0x0038 -> line 831
- *   +0x004c -> line 832
- *   +0x0054 -> line 833
- *   +0x0060 -> line 837
- *   +0x0064 -> line 839
- *   +0x0068 -> line 837
- *   +0x0070 -> line 838
- *   +0x007c -> line 839
- *   +0x0088 -> line 840
- *   +0x0094 -> line 844
- *   +0x0098 -> line 879
- *   +0x009c -> line 847
- *   +0x00b4 -> line 848
- *   +0x00cc -> line 877
- *   +0x00d0 -> line 879
- *   +0x00e0 -> line 880
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vRefreshMultiTexturePart(GLI_tdstMaterial_* _pst_Material)
 {
     float fSin;
@@ -1023,27 +980,6 @@ void GLI_vRefreshMultiTexturePart(GLI_tdstMaterial_* _pst_Material)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 782–796 */
-/* addr: 0x002a9880  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 782
- *   +0x0004 -> line 785
- *   +0x0008 -> line 782
- *   +0x000c -> line 785
- *   +0x0010 -> line 782
- *   +0x0018 -> line 785
- *   +0x0020 -> line 786
- *   +0x0024 -> line 788
- *   +0x0028 -> line 789
- *   +0x0034 -> line 791
- *   +0x003c -> line 792
- *   +0x0040 -> line 793
- *   +0x0044 -> line 794
- *   +0x0048 -> line 795
- *   +0x0058 -> line 796
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_Material_fn_vInitMultiTexturePart(GLI_tdstMaterial_* _hVisualMat)
 {
     anon_0* pst_MTM;
@@ -1065,54 +1001,6 @@ void GLI_Material_fn_vInitMultiTexturePart(GLI_tdstMaterial_* _hVisualMat)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 612–714 */
-/* addr: 0x002a98f0  size: 740 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 612
- *   +0x000c -> line 619
- *   +0x001c -> line 620
- *   +0x0024 -> line 622
- *   +0x0030 -> line 627
- *   +0x0050 -> line 632
- *   +0x0060 -> line 634
- *   +0x00d8 -> line 635
- *   +0x00e0 -> line 642
- *   +0x00ec -> line 644
- *   +0x00f0 -> line 646
- *   +0x00f8 -> line 644
- *   +0x00fc -> line 646
- *   +0x010c -> line 647
- *   +0x0114 -> line 649
- *   +0x0120 -> line 650
- *   +0x0130 -> line 653
- *   +0x0138 -> line 656
- *   +0x0144 -> line 659
- *   +0x014c -> line 663
- *   +0x0154 -> line 665
- *   +0x0158 -> line 666
- *   +0x016c -> line 667
- *   +0x0190 -> line 669
- *   +0x0198 -> line 670
- *   +0x01a0 -> line 674
- *   +0x01bc -> line 676
- *   +0x01c0 -> line 678
- *   +0x01c8 -> line 681
- *   +0x01d4 -> line 682
- *   +0x01e4 -> line 683
- *   +0x01f0 -> line 685
- *   +0x01f8 -> line 686
- *   +0x0204 -> line 687
- *   +0x0224 -> line 688
- *   +0x0228 -> line 690
- *   +0x0234 -> line 700
- *   +0x023c -> line 701
- *   +0x02b8 -> line 702
- *   +0x02c0 -> line 712
- *   +0x02cc -> line 713
- *   +0x02d4 -> line 714
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xRefreshAnimatedTexture(GLI_tdstMaterial_* hMaterial)
 {
     GLI_tdstTexture_* p_stTexture;
@@ -1185,21 +1073,6 @@ void GLI_xRefreshAnimatedTexture(GLI_tdstMaterial_* hMaterial)
         hMaterial->lActualRefreshNumber = gs_lActualRefreshNumberForScolledTextures;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 595–603 */
-/* addr: 0x002a9be0  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 595
- *   +0x000c -> line 596
- *   +0x002c -> line 599
- *   +0x0030 -> line 600
- *   +0x003c -> line 598
- *   +0x0040 -> line 599
- *   +0x0044 -> line 600
- *   +0x0058 -> line 601
- *   +0x0064 -> line 603
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bIsEngineInPause(void);
 unsigned char EngineIsFrozen(void);
 
@@ -1215,45 +1088,16 @@ void GLI_vRefreshAllCyclingTextures(float fCoefOfMultiplication)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 577–577 */
-/* addr: 0x002a9c60  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 577
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vUnLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial)
 {
     _hMaterial->xIsLocked = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 571–572 */
-/* addr: 0x002a9c70  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 571
- *   +0x0004 -> line 572
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vLockAnimatedTexture(GLI_tdstMaterial_* _hMaterial)
 {
     _hMaterial->xIsLocked = 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 494–503 */
-/* addr: 0x002a9c80  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 496
- *   +0x0004 -> line 494
- *   +0x0008 -> line 497
- *   +0x0010 -> line 500
- *   +0x0014 -> line 499
- *   +0x0018 -> line 501
- *   +0x0028 -> line 502
- *   +0x0040 -> line 503
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vSetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial, int lTextureNumber)
 {
     GLI_tdstAnimatedTextureNode_* p_Node;
@@ -1266,19 +1110,6 @@ void GLI_vSetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial, int lTex
     hMaterial->p_stActualAnimatedTExtureNode = p_Node ? p_Node : hMaterial->p_stFistAnimatedTExtureNode;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 473–484 */
-/* addr: 0x002a9cd0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 473
- *   +0x0004 -> line 474
- *   +0x0010 -> line 477
- *   +0x0014 -> line 476
- *   +0x0018 -> line 478
- *   +0x002c -> line 481
- *   +0x0040 -> line 484
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GLI_lGetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial)
 {
     int lNumber = 1;
@@ -1294,27 +1125,11 @@ int GLI_lGetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial)
         return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 436–436 */
-/* addr: 0x002a9d20  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 436
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GLI_lGetMaterialNumberOfAnimatedTexture(GLI_tdstMaterial_* hMaterial)
 {
     return hMaterial->lNumberOfDisplayNode;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 367–370 */
-/* addr: 0x002a9d30  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 367
- *   +0x0034 -> line 369
- *   +0x0038 -> line 370
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xSetMaterialTextureScrollingOnOff(GLI_tdstMaterial_* hMaterial, int bSwitch)
 {
     /* Retail tests the same U-translation value twice. */
@@ -1322,16 +1137,6 @@ void GLI_xSetMaterialTextureScrollingOnOff(GLI_tdstMaterial_* hMaterial, int bSw
         hMaterial->lIncrementIsEnable = bSwitch;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 355–358 */
-/* addr: 0x002a9d70  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 355
- *   +0x0008 -> line 356
- *   +0x0010 -> line 357
- *   +0x0014 -> line 358
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed)
 {
     *p_fUSpeed = hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0];
@@ -1339,15 +1144,6 @@ void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnu
     *p_bSwitch = hMaterial->lIncrementIsEnable;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 341–346 */
-/* addr: 0x002a9d90  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 341
- *   +0x0004 -> line 342
- *   +0x0008 -> line 346
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xSetMaterialTextureDecalage(GLI_tdstMaterial_* hMaterial, float fUSpeed, float fVSpeed, int unused, int bSwitch)
 {
     (void)unused;
@@ -1356,20 +1152,6 @@ void GLI_xSetMaterialTextureDecalage(GLI_tdstMaterial_* hMaterial, float fUSpeed
     hMaterial->lIncrementIsEnable = bSwitch;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 325–332 */
-/* addr: 0x002a9da0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 325
- *   +0x0004 -> line 326
- *   +0x0008 -> line 330
- *   +0x000c -> line 327
- *   +0x0014 -> line 328
- *   +0x001c -> line 330
- *   +0x003c -> line 331
- *   +0x0040 -> line 332
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xSetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int bSwitch, float fUSpeed, float fVSpeed)
 {
     hMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0] = fUSpeed;
@@ -1381,21 +1163,6 @@ void GLI_xSetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnu
         hMaterial->lIncrementIsEnable = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 289–301 */
-/* addr: 0x002a9df0  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 289
- *   +0x0008 -> line 291
- *   +0x0018 -> line 292
- *   +0x0028 -> line 294
- *   +0x0038 -> line 295
- *   +0x0050 -> line 297
- *   +0x005c -> line 298
- *   +0x0064 -> line 300
- *   +0x0074 -> line 301
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xSetMaterialTexture(GLI_tdstMaterial_* hMaterial, GLI_tdstTexture_* p_stTexture)
 {
     hMaterial->p_stTexture = p_stTexture;
@@ -1418,55 +1185,21 @@ void GLI_xSetMaterialTexture(GLI_tdstMaterial_* hMaterial, GLI_tdstTexture_* p_s
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 259–259 */
-/* addr: 0x002a9e70  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 259
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vSetMaterialAsChromed(void)
 {
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 249–249 */
-/* addr: 0x002a9e80  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 249
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xSetMaterialType(GLI_tdstMaterial_* hMaterial, unsigned int xMType)
 {
     hMaterial->xMaterialType = xMType;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 234–236 */
-/* addr: 0x002a9e90  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 234
- *   +0x0020 -> line 235
- *   +0x0024 -> line 236
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xGetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int* p_lSpecularExponent, GEO_tdstColor_* p_stColor)
 {
     *p_stColor = hMaterial->stSpecular;
     *p_lSpecularExponent = hMaterial->lSpecularExponent;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 226–230 */
-/* addr: 0x002a9ec0  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 226
- *   +0x001c -> line 227
- *   +0x0024 -> line 228
- *   +0x0044 -> line 229
- *   +0x0048 -> line 230
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExponent, GEO_tdstColor_* p_stColor)
 {
     GLI_xSetUpdateGeometricForMaterialCoefChange();
@@ -1474,88 +1207,33 @@ void GLI_xSetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int lSpecularExp
     hMaterial->lSpecularExponent = lSpecularExponent;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 219–220 */
-/* addr: 0x002a9f20  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 219
- *   +0x001c -> line 220
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xGetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
     *(GEO_tdstColor_*)p_stColor = hMaterial->stDiffuse;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 212–215 */
-/* addr: 0x002a9f50  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 212
- *   +0x0014 -> line 213
- *   +0x001c -> line 214
- *   +0x003c -> line 215
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xSetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
     GLI_xSetUpdateGeometricForMaterialCoefChange();
     hMaterial->stDiffuse = *p_stColor;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 205–206 */
-/* addr: 0x002a9fa0  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 205
- *   +0x001c -> line 206
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xGetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
     *(GEO_tdstColor_*)p_stColor = hMaterial->stColor;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 198–201 */
-/* addr: 0x002a9fd0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 198
- *   +0x0014 -> line 199
- *   +0x001c -> line 200
- *   +0x003c -> line 201
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xSetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
     GLI_xSetUpdateGeometricForMaterialCoefChange();
     hMaterial->stColor = *p_stColor;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 190–192 */
-/* addr: 0x002aa020  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 190
- *   +0x001c -> line 192
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xGetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
     *(GEO_tdstColor_*)p_stColor = hMaterial->stAmbient;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Material.c lines 179–186 */
-/* addr: 0x002aa050  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 179
- *   +0x0008 -> line 180
- *   +0x0068 -> line 183
- *   +0x0084 -> line 184
- *   +0x008c -> line 186
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_xSetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor)
 {
     if (hMaterial->stAmbient.xR != p_stColor->xR || hMaterial->stAmbient.xG != p_stColor->xG || hMaterial->stAmbient.xB != p_stColor->xB || hMaterial->stAmbient.xA != p_stColor->xA)

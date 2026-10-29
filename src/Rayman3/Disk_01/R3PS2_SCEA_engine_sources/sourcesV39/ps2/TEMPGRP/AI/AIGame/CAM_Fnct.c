@@ -3541,13 +3541,53 @@ tdstNodeInterpret_* CAM_fn_p_stGetSetTransparencyFlag(HIE_tdstSuperObject_* p_Su
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vInitCameraStructure(HIE_tdstSuperObject_* _hSuperObjPerso, CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vComputeReferencePoint(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vComputeTarget(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vComputeRealWantedPos(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vComputeMovePosWithDynTheta(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vForceFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct);
 tdstNodeInterpret_* CAM_fn_p_stGetBestPos(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     MTH3D_tdstVector_ stVec;
     CAM_tdstUpdateCamera_ stStruct;
     tdstCineinfo_* hCineinfo;
     HIE_tdstSuperObject_* hCamera;
-    /* TODO: decompile from asm/... */
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator((p_stTree - 1)->uDummy.uId.eFuncId), p_SuperObjPerso, &hCamera);
+    hCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    if (!hCineinfo->bCanDoBestPos)
+    {
+        ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[0] = ((unsigned int*)&hCamera->hGlobalMatrix->stTransformMatrix.stCol_3)[0]; ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[1] = ((unsigned int*)&hCamera->hGlobalMatrix->stTransformMatrix.stCol_3)[1]; ((unsigned int*)&p_stValue->uDummy.uParam.stVectorValue)[2] = ((unsigned int*)&hCamera->hGlobalMatrix->stTransformMatrix.stCol_3)[2];
+        p_stValue->eType = E_vt_Vector;
+        return p_stTree;
+    }
+    CAM_fn_vSetCineinfoWorkFromCurrent(hCineinfo);
+    CAM_fn_vInitCameraStructure(hCamera, &stStruct);
+    cRefAxisIsAlreadyComputed = (stStruct.hCineinfoWork->uwIAFlags & 0x4000) ? 1 : 0;
+    cCanTestStatic = 1;
+    cNoDynChangeTheta = (stStruct.hCineinfoWork->uwIAFlags & 0x20) ? 1 : 0;
+    CAM_fn_vComputeReferencePoint(&stStruct);
+    CAM_fn_vComputeTarget(&stStruct);
+    CAM_fn_vComputeRealWantedPos(&stStruct);
+    CAM_fn_vComputeMovePosWithDynTheta(&stStruct);
+    if (stStruct.hCineinfoCurrent->hSuperObjectTargeted == 0)
+        return p_stTree;
+    CAM_fn_vForceFailureVisibility(&stStruct);
+    if (stStruct.hCineinfo->eState == 2)
+    {
+        stVec = stStruct.hCineinfo->stLastFailedWanted;
+        hCineinfo->bCanDoBestPos = 0;
+    }
+    else
+    {
+        stVec.xX = 0.0f; stVec.xY = 0.0f; stVec.xZ = 0.0f;
+    }
+    stStruct.hCineinfo->eState = 0;
+    p_stValue->uDummy.uParam.stVectorValue = stVec;
+    p_stValue->eType = E_vt_Vector;
+    return p_stTree;
 }
 
 DNM_stParsingDatas* fn_p_stDynamGetParsingDatas(tdstDynam_* _hDynam);

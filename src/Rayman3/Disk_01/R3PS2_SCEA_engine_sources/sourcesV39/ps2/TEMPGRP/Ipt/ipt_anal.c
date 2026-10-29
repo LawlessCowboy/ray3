@@ -190,11 +190,12 @@ unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement)
     /* The retail body keeps the keyword result in a saved register and masks
      * it once on return (andi v0,s0,0xff), so the local is int-sized even
      * though the debug record types it as unsigned char. */
-    int ucReturn;
+    unsigned char ucReturn;
 
     g_h_ActualEntryInput = _hEntryElement;
     _hEntryElement->xAnalogicValue = 0.0f;
     IPT_g_hNextParameter = _hEntryElement->d_stKeyWordElementArray;
+    ucReturn = 0;
     if (IPT_g_hNextParameter)
     {
         ucReturn = 0;
@@ -207,9 +208,8 @@ unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement)
             Erm_fn_ClearLastError(0);
             Erm_fn_v_UpdateLastError(14, g_ucIPTModuleId, 0, 12, -1, 255, 255, NULL);
         }
-        return ucReturn;
     }
-    return 0;
+    return ucReturn;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 182–203 */

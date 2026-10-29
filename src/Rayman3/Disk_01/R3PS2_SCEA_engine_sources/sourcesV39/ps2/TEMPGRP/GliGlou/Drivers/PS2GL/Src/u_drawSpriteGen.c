@@ -2648,13 +2648,71 @@ void J_Draw3DSpriteGenList(GLI_tdstMaterial_* pMat, J_ParticleSprite_* pParticle
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* sqrt.s and the R5900 accumulator ops have no C form under MWCC; only
+ * those instructions are asm. */
+inline float MTH_M_xSqrNorm(float _xX, float _xY, float _xZ)
+{
+    float _xResult;
+    asm { mula.s _xX, _xX }
+    asm { madda.s _xY, _xY }
+    asm { madd.s _xResult, _xZ, _xZ }
+    return _xResult;
+}
+inline float MTH_M_xSqrt(float _xA)
+{
+    float _xResult;
+    asm { sqrt.s _xResult, _xA }
+    return _xResult;
+}
+inline float MTH_M_xMulSubMul(float _xA, float _xB, float _xC, float _xD)
+{
+    float _xResult;
+    asm { mula.s _xA, _xB }
+    asm { msub.s _xResult, _xC, _xD }
+    return _xResult;
+}
+#define MTH3D_M_vCrossProductVector(_d, _a, _b)                                    \
+    {                                                                               \
+        (_d)->xX = MTH_M_xMulSubMul((_a)->xY, (_b)->xZ, (_a)->xZ, (_b)->xY);        \
+        (_d)->xY = MTH_M_xMulSubMul((_a)->xZ, (_b)->xX, (_a)->xX, (_b)->xZ);        \
+        (_d)->xZ = MTH_M_xMulSubMul((_a)->xX, (_b)->xY, (_a)->xY, (_b)->xX);        \
+    }
+
 void GLI_v_CalculateVectorsFor3DSpriteGen(MAT_tdstTransformation_* param0, J_ParticleSprite_* p, float sx, float sy)
 {
     float xNorm;
-    MTH3D_tdstVector_ V3;
-    MTH3D_tdstVector_ V2;
     MTH3D_tdstVector_ V1;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ V2;
+    MTH3D_tdstVector_ V3;
+
+    V1.xX = 0.0f;
+    V1.xY = 0.0f;
+    V1.xZ = -1.0f;
+    MAT_fn_vApplyOnVector(&V2, param0, &V1);
+
+    GLI_g_stYVect.xX = p->FaceNormal[0];
+    GLI_g_stYVect.xY = p->FaceNormal[1];
+    GLI_g_stYVect.xZ = p->FaceNormal[2];
+
+    MTH3D_M_vCrossProductVector(&V3, &GLI_g_stYVect, &V2);
+    xNorm = MTH_M_xSqrt(MTH_M_xSqrNorm(V3.xX, V3.xY, V3.xZ));
+    if (xNorm != 0.0f)
+    {
+        xNorm = 1.0f / xNorm;
+        GLI_g_stXVect.xX = xNorm * V3.xX; GLI_g_stXVect.xY = xNorm * V3.xY; GLI_g_stXVect.xZ = xNorm * V3.xZ;
+    }
+    else
+    {
+        GLI_g_stXVect = V3;
+    }
+
+    GLI_g_stXVect.xX *= sx;
+    GLI_g_stXVect.xY *= sx;
+    GLI_g_stXVect.xZ *= sx;
+
+    GLI_g_stYVect.xX *= sy;
+    GLI_g_stYVect.xY *= sy;
+    GLI_g_stYVect.xZ *= sy;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawSpriteGen.c lines 352–419 */

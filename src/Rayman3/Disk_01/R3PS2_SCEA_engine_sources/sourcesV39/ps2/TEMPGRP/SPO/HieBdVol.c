@@ -76,19 +76,8 @@ int HIE_g_hCurrentMatrix;
 /* aggregate */ int HIE_g_a_hMatrixStack;
 int HIE_g_lNbMatrixInStack;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieBdVol.c lines 634–723 */
-/* addr: 0x003200c0  size: 476 bytes */
 /* Debug signature rejected: type-record data leaked into it. */
 void HIE_fn_vFastPS2PushMatrix(void)
 {
-    /* line map: */
-    /*   line 634 @ +0x000 */
-    /*   line 637 @ +0x000 */
-    /*   line 639 @ +0x000 */
-    /*   line 641 @ +0x000 */
-    /*   line 643 @ +0x000 */
-    /*   line 648 @ +0x000 */
-    /*   line 651 @ +0x000 */
-    /*   line 653 @ +0x000 */
     /* TODO: decompile from asm/... */
 }

@@ -877,9 +877,10 @@ void fn_vMSLightSetRLIParameter(tdstMSLight_* hMSLight, int lNbRLI, int lIndex1,
  */
 unsigned char fn_ucGetNumberOfRLIFromCharacter(HIE_tdstSuperObject_* hSprObj, unsigned char* p_ucIndex1, unsigned char* p_ucIndex2, float* p_xPercent)
 {
+    int new_var;
     int lNbRLIUse;
     float xPercent;
-    if (hSprObj->ulTypeOfLinkedObject == 2)
+    if (hSprObj->ulTypeOfLinkedObject == (new_var = 2))
     {
         tdstMSLight_* hMSLight = hSprObj->hLinkedObject.p_stCharacter->h_MSLight; if (hMSLight != NULL) { *p_ucIndex1 = hMSLight->ucFirstRLI; *p_ucIndex2 = hMSLight->ucSecondRLI; xPercent = hMSLight->ucBlendPercent; *p_xPercent = xPercent / 100.0f; lNbRLIUse = hMSLight->ucNbRLIUse; } else { lNbRLIUse = 0; } return (unsigned char)lNbRLIUse;
     }

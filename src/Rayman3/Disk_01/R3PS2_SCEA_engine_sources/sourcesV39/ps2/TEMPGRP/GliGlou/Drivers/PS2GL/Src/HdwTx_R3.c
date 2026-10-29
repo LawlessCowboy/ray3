@@ -1924,6 +1924,32 @@ void GLI_vReloadMenuTextureData(GLI_tdstMaterial_* pMaterial, void* pWhereToLoad
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern char* PLD_szPrependGamedataName(char*);
+extern int sprintf(char* buffer, const char* format, ...);
+int toupper(char c);
+extern unsigned int fn_uiOpenStream(char* szName);
+extern int fn_bStreamSize(unsigned int uiStream);
+extern void FlushCache(int mode);
+extern void InvalidDCache(void* start, void* end);
+extern int fn_uiReadStream(unsigned int uiStream, int lOffset, void* pDest, int lSize, int lFlag);
+extern int fn_bSyncStream(int hRead);
+extern void fn_vCloseStream(unsigned int uiStream);
+extern int printf(const char* format, ...);
+inline void GLI_vRegisterLoadedTexture(int pTextureData, unsigned int TextureName, unsigned char Bpp, GLI_tdstTexture_* p_stTexture)
+{
+    if (GLI_g_NbTexturesToRegister >= 500)
+    {
+        printf("Oula !! Too much textures !!!\n\n");
+    }
+    else
+    {
+        GLI_st_RegisteredTexture_* pRegistered = &GLI_g_RegisteredTextures[GLI_g_NbTexturesToRegister++];
+        pRegistered->pTextureData = pTextureData;
+        pRegistered->TextureName = TextureName;
+        pRegistered->Flags = Bpp | 0x10000000;
+        pRegistered->p_stTexture = p_stTexture;
+    }
+}
 int GLI_iLoadTexture(GLI_tdstTexture_* p_stTexture, void* pWhereDoIPutTheData, int MaxFileSize)
 {
     unsigned int Flag;
@@ -1934,7 +1960,40 @@ int GLI_iLoadTexture(GLI_tdstTexture_* p_stTexture, void* pWhereDoIPutTheData, i
     char buffer[1024];
     int ReadHandle;
     int TheFile;
-    /* TODO: decompile from asm/... */
+
+    sprintf(buffer, "\\%s;1", PLD_szPrependGamedataName(p_stTexture->a255_cFileName));
+    for (ptr = buffer; *ptr != 0; ptr++)
+        *ptr = toupper(*ptr);
+    TheFile = fn_uiOpenStream(buffer);
+    if (TheFile == -1)
+        return 0;
+    FileSize = fn_bStreamSize(TheFile);
+    if (FileSize > MaxFileSize)
+        FileSize = MaxFileSize;
+    FlushCache(0);
+    InvalidDCache(pWhereDoIPutTheData, (char*)pWhereDoIPutTheData + FileSize + 1);
+    ReadHandle = fn_uiReadStream(TheFile, 0, pWhereDoIPutTheData, FileSize, 0);
+    fn_bSyncStream(ReadHandle);
+    pHeader = (S_TXR_Header_*)pWhereDoIPutTheData;
+    p_stTexture->lHeight = pHeader->SizeY;
+    p_stTexture->lWidth = pHeader->SizeX;
+    p_stTexture->lRealHeight = pHeader->SizeY;
+    p_stTexture->lRealWidth = pHeader->SizeX;
+    param0 = p_stTexture->p_stSpecParam;
+    p_stTexture->bIsAvailable = 1;
+    GLI_g_CurrentTexture = (int)((char*)pHeader + 0x10);
+    GLI_g_CurrentTextureBuffer = (int)((char*)pHeader + 0x10);
+    g_LevelTextureLoaded++;
+    Flag = pHeader->Flags & 0xF;
+    if (Flag == 1)
+        GLI_g_GlobalBpp = 4;
+    else if (Flag == 2)
+        GLI_g_GlobalBpp = 8;
+    else if (Flag == 4)
+        GLI_g_GlobalBpp = 0x20;
+    GLI_vRegisterLoadedTexture(GLI_g_CurrentTexture, param0->TextureID, GLI_g_GlobalBpp, p_stTexture);
+    fn_vCloseStream(TheFile);
+    return FileSize;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\HdwTx_R3.c lines 1454–1537 */

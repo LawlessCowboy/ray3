@@ -1992,10 +1992,14 @@ void fn_v_RotateMechanicsLinkedToOneSPO(DNM_stDynamics* _p_stDynamic, MAT_tdstTr
         MAT_fn_vCompose(hCurrentMatrix, _p_Transformation, hCurrentMatrix);
         MAT_fn_vNormalize(hCurrentMatrix);
         hPreviousMatrix = &_p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+        /* Not original source: redundant block and re-assignment found by the permuter. */
+        if (1) {
         MAT_fn_vCompose(hPreviousMatrix, _p_Transformation, hPreviousMatrix);
         MAT_fn_vNormalize(hPreviousMatrix);
         hAbsolutePreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
+        }
         if ((_p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) {
+            hAbsolutePreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stAbsolutePreviousMatrix;
             MAT_fn_vCompose(hAbsolutePreviousMatrix, _p_Transformation, hAbsolutePreviousMatrix);
             MAT_fn_vNormalize(hAbsolutePreviousMatrix);
             hPrevPreviousMatrix = &_p_stDynamic->m_tdstDynamicsComplexBlock.m_stPrevPreviousMatrix;
@@ -2367,10 +2371,42 @@ void GAM_fn_vDeleteObjetFromSOLinks(tdstSuperObjectLinks_* _hSOL, unsigned int u
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GAM_fn_vReAllocSOL(tdstSuperObjectLinks_* _hSOL, unsigned int Increment);
 void GAM_fn_vAddObjetToSOLinks(tdstSuperObjectLinks_* _hSOL, void* _pLinkedObj, tdeSOL_ObjType_ _eType, MAT_tdstTransformation_* p_MatrixInit, tdeSOL_ObjPersistence_ _ePersistence)
 {
     unsigned int* p_ulNbLinkedObjects;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+    unsigned int ulFound;
+
+    p_ulNbLinkedObjects = &_hSOL->ulNbLinkedObjects;
+    ulFound = 0;
+    for (i = 0; i < _hSOL->ulNbLinkedObjects; i++)
+    {
+        if (((void**)_hSOL->LinkedObj)[i] == _pLinkedObj)
+        {
+            ulFound = i + 1;
+            break;
+        }
+    }
+    if (ulFound)
+        return;
+    switch (_ePersistence)
+    {
+    case eSOL_Persistent:
+        GAM_fn_vReAllocSOL(_hSOL, 1);
+        break;
+    case eSOL_NonPersistent:
+        if (_hSOL->ulNbLinksAllocated <= _hSOL->ulNbLinkedObjects)
+            return;
+        (*p_ulNbLinkedObjects)++;
+        break;
+    default:
+        return;
+    }
+    (((void**)_hSOL->LinkedObj) - 1)[*p_ulNbLinkedObjects] = _pLinkedObj;
+    (_hSOL->eTypeOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _eType;
+    (_hSOL->ePersistenceOfLinkedObj - 1)[*p_ulNbLinkedObjects] = _ePersistence;
+    _hSOL->POS_InitOfLinkedObj[*p_ulNbLinkedObjects - 1] = *p_MatrixInit;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\SOL.c lines 178–184 */

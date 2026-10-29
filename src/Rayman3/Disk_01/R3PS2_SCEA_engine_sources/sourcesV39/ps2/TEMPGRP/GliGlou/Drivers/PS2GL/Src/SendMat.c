@@ -1233,6 +1233,42 @@ char g_bForceWhiteFog;
 
 extern int GLI_xRefreshAnimatedTexture(GLI_tdstMaterial_* hVisualMaterial);
 extern void PS2glEnable(unsigned int cap);
+void SetFogc(void);
+#define SET_FOG(ON_MODE, OFF_MODE, COLOR) do { \
+    if (GLI_BIG_GLOBALS_xFogIsOn != 0) \
+    { \
+        if (GLI_g_CurrentFogMode != (ON_MODE)) \
+        { \
+            g_PS2glContext.nEnableBits |= 0x80; \
+            g_gsContext.PRMODE.FGE = 1; \
+            g_gsContext.ModFlgs.PRMODE_Modified = 1; \
+            *(unsigned char*)g_PS2glContext.pbFogging = 1; \
+            PS2glFogi(0xB65, 0x2601); \
+            PS2glFogf(0xB63, g_fFogStart); \
+            PS2glFogf(0xB64, g_fFogEnd); \
+            PS2glFogfv(0xB66, COLOR); \
+            GLI_g_CurrentFogMode = (ON_MODE); \
+        } \
+    } \
+    else if (GLI_g_CurrentFogMode != (OFF_MODE)) \
+    { \
+        g_PS2glContext.nEnableBits &= ~0x80; \
+        g_gsContext.PRMODE.FGE = 0; \
+        g_gsContext.ModFlgs.PRMODE_Modified = 1; \
+        *(unsigned char*)g_PS2glContext.pbFogging = 0; \
+        GLI_g_CurrentFogMode = (OFF_MODE); \
+    } \
+} while (0)
+#define SET_FOGC() SET_FOG(1, 3, g_fFogColor)
+extern void PS2glSetGsRegister(int reg, unsigned long data, unsigned long mask);
+extern void PS2glBindTexture(unsigned int target, unsigned int texture);
+extern void PS2glMatrixMode(unsigned int mode);
+extern void PS2glLoadIdentity(void);
+extern void PS2glTexParameteri(unsigned int target, unsigned int pname, int param);
+extern void PS2glBlendFunc(unsigned int sfactor, unsigned int dfactor);
+extern void PS2glDepthMask(unsigned char flag);
+extern void PS2glAlphaFunc(unsigned int func, float ref);
+extern void PS2glFogfv(unsigned int pname, float* params);
 extern void PS2glFogi(unsigned int pname, int param);
 extern void PS2glFogf(unsigned int pname, float param);
 extern void PS2glFogiv(unsigned int pname, const unsigned int* params);
@@ -1837,14 +1873,72 @@ int GLI_DRV_IsMaterialTransparent(GLI_tdstMaterial_* hVisualMaterial)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline signed char GLI_cGetUVSource(anon_2* pMat)
+{
+    return pMat ? pMat->c_UVSource : 0;
+}
 void SEND_MAT_OPT_MULT_ADD(GLI_tdstMaterial_* hVisualMaterial)
 {
-    anon_2* pMat;
+    unsigned int Local_LastTextureMode;
     GLI_tdstTexture_* p_stTexture;
-    GLI_tdstTexturePS2GL_* p_stSpecParam;
-    int Local_LastTextureMode;
+    anon_2* pMat;
     void* p_stLastTexture;
-    /* TODO: decompile from asm/... */
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+    p_stLastTexture = (void*)GLI_g_p_stLastTexture;
+    Local_LastTextureMode = GLI_g_LastTextureMode;
+    pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];
+    PS2GL_g_DontUpdateTexture = 0;
+    GLI_g_p_stLastTexture = 0;
+    GLI_g_LastTextureMode = 0;
+    p_stTexture = pMat->pst_Texture;
+    if ((void*)p_stTexture == p_stLastTexture)
+    {
+        PS2GL_g_DontUpdateTexture = 1;
+    }
+    else
+    {
+        p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam;
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0) ? 2 : 0x200;
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBindTexture(0xDE1, *(unsigned int*)p_stSpecParam);
+        GLI_g_p_stLastTexture = (int)p_stTexture;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (GLI_cGetUVSource(&hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage]) == 4)
+        GLI_g_bChromeEffectOnThisLayer = 1;
+    if (g_TextMatrixIsIdentity == 0)
+    {
+        PS2glMatrixMode(0x1702);
+        PS2glLoadIdentity();
+        g_TextMatrixIsIdentity = 1;
+    }
+    if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))
+    {
+        if (pMat->ulTextureProperties & 1)
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+        if (pMat->ulTextureProperties & 2)
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+        GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (Local_LastTextureMode != 4)
+    {
+        g_PS2glContext.nEnableBits |= 0x100;
+        g_gsContext.PRMODE.ABE = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glSetGsRegister(0x42, 0x8000000048, 0);
+        g_PS2glContext.nEnableBits &= ~0x400;
+        g_gsContext.TEST_1.ATE = 0;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        PS2glDepthMask(0);
+    }
+    GLI_g_LastTextureMode = 4;
+    SET_FOG(4, 3, g_fFogColorZero);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1148–1181 */
@@ -1882,12 +1976,66 @@ void SEND_MAT_OPT_MULT_ADD(GLI_tdstMaterial_* hVisualMaterial)
  */
 void SEND_MAT_OPT_MULT_NZ(GLI_tdstMaterial_* hVisualMaterial)
 {
-    anon_2* pMat;
+    unsigned int Local_LastTextureMode;
     GLI_tdstTexture_* p_stTexture;
-    GLI_tdstTexturePS2GL_* p_stSpecParam;
-    int Local_LastTextureMode;
+    anon_2* pMat;
     void* p_stLastTexture;
-    /* TODO: decompile from asm/... */
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+    p_stLastTexture = (void*)GLI_g_p_stLastTexture;
+    Local_LastTextureMode = GLI_g_LastTextureMode;
+    pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];
+    PS2GL_g_DontUpdateTexture = 0;
+    GLI_g_p_stLastTexture = 0;
+    GLI_g_LastTextureMode = 0;
+    p_stTexture = pMat->pst_Texture;
+    if ((void*)p_stTexture == p_stLastTexture)
+    {
+        PS2GL_g_DontUpdateTexture = 1;
+    }
+    else
+    {
+        p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam;
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0) ? 2 : 0x200;
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBindTexture(0xDE1, *(unsigned int*)p_stSpecParam);
+        GLI_g_p_stLastTexture = (int)p_stTexture;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (GLI_cGetUVSource(&hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage]) == 4)
+        GLI_g_bChromeEffectOnThisLayer = 1;
+    if (g_TextMatrixIsIdentity == 0)
+    {
+        PS2glMatrixMode(0x1702);
+        PS2glLoadIdentity();
+        g_TextMatrixIsIdentity = 1;
+    }
+    if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))
+    {
+        if (pMat->ulTextureProperties & 1)
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+        if (pMat->ulTextureProperties & 2)
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+        GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (Local_LastTextureMode != 2)
+    {
+        PS2glDepthMask(1);
+        g_PS2glContext.nEnableBits |= 0x400;
+        g_gsContext.TEST_1.ATE = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        PS2glAlphaFunc(0x204, 0.1f);
+        g_PS2glContext.nEnableBits &= ~0x100;
+        g_gsContext.PRMODE.ABE = 0;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    }
+    SET_FOGC();
+    GLI_g_LastTextureMode = 2;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1113–1145 */
@@ -1926,12 +2074,65 @@ void SEND_MAT_OPT_MULT_NZ(GLI_tdstMaterial_* hVisualMaterial)
  */
 void SEND_MAT_OPT_MULT_OPAQUE(GLI_tdstMaterial_* hVisualMaterial)
 {
-    anon_2* pMat;
+    unsigned int Local_LastTextureMode;
     GLI_tdstTexture_* p_stTexture;
-    GLI_tdstTexturePS2GL_* p_stSpecParam;
-    int Local_LastTextureMode;
+    anon_2* pMat;
     void* p_stLastTexture;
-    /* TODO: decompile from asm/... */
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+    p_stLastTexture = (void*)GLI_g_p_stLastTexture;
+    Local_LastTextureMode = GLI_g_LastTextureMode;
+    pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];
+    PS2GL_g_DontUpdateTexture = 0;
+    GLI_g_p_stLastTexture = 0;
+    GLI_g_LastTextureMode = 0;
+    p_stTexture = pMat->pst_Texture;
+    if ((void*)p_stTexture == p_stLastTexture)
+    {
+        PS2GL_g_DontUpdateTexture = 1;
+    }
+    else
+    {
+        p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam;
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0) ? 2 : 0x200;
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBindTexture(0xDE1, *(unsigned int*)p_stSpecParam);
+        GLI_g_p_stLastTexture = (int)p_stTexture;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (GLI_cGetUVSource(&hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage]) == 4)
+        GLI_g_bChromeEffectOnThisLayer = 1;
+    if (g_TextMatrixIsIdentity == 0)
+    {
+        PS2glMatrixMode(0x1702);
+        PS2glLoadIdentity();
+        g_TextMatrixIsIdentity = 1;
+    }
+    if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))
+    {
+        if (pMat->ulTextureProperties & 1)
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+        if (pMat->ulTextureProperties & 2)
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+        GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (Local_LastTextureMode != 1)
+    {
+        PS2glDepthMask(1);
+        g_PS2glContext.nEnableBits &= ~0x400;
+        g_gsContext.TEST_1.ATE = 0;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_PS2glContext.nEnableBits &= ~0x100;
+        g_gsContext.PRMODE.ABE = 0;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    }
+    SET_FOGC();
+    GLI_g_LastTextureMode = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1083–1110 */
@@ -1966,12 +2167,66 @@ void SEND_MAT_OPT_MULT_OPAQUE(GLI_tdstMaterial_* hVisualMaterial)
  */
 void SEND_MAT_OPT_MULT_ALPHA(GLI_tdstMaterial_* hVisualMaterial)
 {
-    anon_2* pMat;
+    unsigned int Local_LastTextureMode;
     GLI_tdstTexture_* p_stTexture;
-    GLI_tdstTexturePS2GL_* p_stSpecParam;
-    int Local_LastTextureMode;
+    anon_2* pMat;
     void* p_stLastTexture;
-    /* TODO: decompile from asm/... */
+    GLI_tdstTexturePS2GL_* p_stSpecParam;
+    p_stLastTexture = (void*)GLI_g_p_stLastTexture;
+    Local_LastTextureMode = GLI_g_LastTextureMode;
+    pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];
+    PS2GL_g_DontUpdateTexture = 0;
+    GLI_g_p_stLastTexture = 0;
+    GLI_g_LastTextureMode = 0;
+    p_stTexture = pMat->pst_Texture;
+    if ((void*)p_stTexture == p_stLastTexture)
+    {
+        PS2GL_g_DontUpdateTexture = 1;
+    }
+    else
+    {
+        p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam;
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0) ? 2 : 0x200;
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBindTexture(0xDE1, *(unsigned int*)p_stSpecParam);
+        GLI_g_p_stLastTexture = (int)p_stTexture;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (GLI_cGetUVSource(&hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage]) == 4)
+        GLI_g_bChromeEffectOnThisLayer = 1;
+    if (g_TextMatrixIsIdentity == 0)
+    {
+        PS2glMatrixMode(0x1702);
+        PS2glLoadIdentity();
+        g_TextMatrixIsIdentity = 1;
+    }
+    if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))
+    {
+        if (pMat->ulTextureProperties & 1)
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+        if (pMat->ulTextureProperties & 2)
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+        GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (Local_LastTextureMode != 3)
+    {
+        g_PS2glContext.nEnableBits |= 0x100;
+        g_gsContext.PRMODE.ABE = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBlendFunc(0x302, 0x303);
+        PS2glDepthMask(0);
+        g_PS2glContext.nEnableBits &= ~0x400;
+        g_gsContext.TEST_1.ATE = 0;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    }
+    GLI_g_LastTextureMode = 3;
+    SET_FOGC();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1053–1080 */
@@ -2002,12 +2257,64 @@ void SEND_MAT_OPT_MULT_ALPHA(GLI_tdstMaterial_* hVisualMaterial)
  */
 void SEND_MAT_OPT_ALPHA(GLI_tdstMaterial_* hVisualMaterial)
 {
-    anon_2* pMat;
-    unsigned int Local_LastTextureMode;
-    void* p_stLastTexture;
     GLI_tdstTexture_* p_stTexture;
+    unsigned int Local_LastTextureMode;
+    anon_2* pMat;
+    void* p_stLastTexture;
     GLI_tdstTexturePS2GL_* p_stSpecParam;
-    /* TODO: decompile from asm/... */
+    p_stLastTexture = (void*)GLI_g_p_stLastTexture;
+    Local_LastTextureMode = GLI_g_LastTextureMode;
+    pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];
+    PS2GL_g_DontUpdateTexture = 0;
+    GLI_g_p_stLastTexture = 0;
+    GLI_g_LastTextureMode = 0;
+    p_stTexture = hVisualMaterial->p_stTexture;
+    if ((void*)p_stTexture == p_stLastTexture)
+    {
+        PS2GL_g_DontUpdateTexture = 1;
+    }
+    else
+    {
+        p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam;
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0) ? 2 : 0x200;
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBindTexture(0xDE1, *(unsigned int*)p_stSpecParam);
+        GLI_g_p_stLastTexture = (int)p_stTexture;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (g_TextMatrixIsIdentity == 0)
+    {
+        PS2glMatrixMode(0x1702);
+        PS2glLoadIdentity();
+        g_TextMatrixIsIdentity = 1;
+    }
+    if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))
+    {
+        if (pMat->ulTextureProperties & 1)
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+        if (pMat->ulTextureProperties & 2)
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+        GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (Local_LastTextureMode != 3)
+    {
+        g_PS2glContext.nEnableBits |= 0x100;
+        g_gsContext.PRMODE.ABE = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBlendFunc(0x302, 0x303);
+        PS2glDepthMask(0);
+        g_PS2glContext.nEnableBits &= ~0x400;
+        g_gsContext.TEST_1.ATE = 0;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    }
+    GLI_g_LastTextureMode = 3;
+    SET_FOGC();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1022–1049 */
@@ -2045,12 +2352,64 @@ void SEND_MAT_OPT_ALPHA(GLI_tdstMaterial_* hVisualMaterial)
  */
 void SEND_MAT_OPT_ADD(GLI_tdstMaterial_* hVisualMaterial)
 {
-    anon_2* pMat;
-    int Local_LastTextureMode;
-    void* p_stLastTexture;
     GLI_tdstTexture_* p_stTexture;
+    unsigned int Local_LastTextureMode;
+    anon_2* pMat;
+    void* p_stLastTexture;
     GLI_tdstTexturePS2GL_* p_stSpecParam;
-    /* TODO: decompile from asm/... */
+    p_stLastTexture = (void*)GLI_g_p_stLastTexture;
+    Local_LastTextureMode = GLI_g_LastTextureMode;
+    pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];
+    PS2GL_g_DontUpdateTexture = 0;
+    GLI_g_p_stLastTexture = 0;
+    GLI_g_LastTextureMode = 0;
+    p_stTexture = hVisualMaterial->p_stTexture;
+    if ((void*)p_stTexture == p_stLastTexture)
+    {
+        PS2GL_g_DontUpdateTexture = 1;
+    }
+    else
+    {
+        p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam;
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0) ? 2 : 0x200;
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBindTexture(0xDE1, *(unsigned int*)p_stSpecParam);
+        GLI_g_p_stLastTexture = (int)p_stTexture;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (g_TextMatrixIsIdentity == 0)
+    {
+        PS2glMatrixMode(0x1702);
+        PS2glLoadIdentity();
+        g_TextMatrixIsIdentity = 1;
+    }
+    if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))
+    {
+        if (pMat->ulTextureProperties & 1)
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+        if (pMat->ulTextureProperties & 2)
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+        GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (Local_LastTextureMode != 4)
+    {
+        g_PS2glContext.nEnableBits |= 0x100;
+        g_gsContext.PRMODE.ABE = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glSetGsRegister(0x42, 0x8000000068, 0);
+        g_PS2glContext.nEnableBits &= ~0x400;
+        g_gsContext.TEST_1.ATE = 0;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        SET_FOG(4, 3, g_fFogColorZero);
+        PS2glDepthMask(0);
+    }
+    GLI_g_LastTextureMode = 4;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 992–1018 */
@@ -2084,12 +2443,64 @@ void SEND_MAT_OPT_ADD(GLI_tdstMaterial_* hVisualMaterial)
  */
 void SEND_MAT_OPT_NZ(GLI_tdstMaterial_* hVisualMaterial)
 {
-    anon_2* pMat;
-    int Local_LastTextureMode;
-    void* p_stLastTexture;
     GLI_tdstTexture_* p_stTexture;
+    unsigned int Local_LastTextureMode;
+    anon_2* pMat;
+    void* p_stLastTexture;
     GLI_tdstTexturePS2GL_* p_stSpecParam;
-    /* TODO: decompile from asm/... */
+    p_stLastTexture = (void*)GLI_g_p_stLastTexture;
+    Local_LastTextureMode = GLI_g_LastTextureMode;
+    pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];
+    PS2GL_g_DontUpdateTexture = 0;
+    GLI_g_p_stLastTexture = 0;
+    GLI_g_LastTextureMode = 0;
+    p_stTexture = hVisualMaterial->p_stTexture;
+    if ((void*)p_stTexture == p_stLastTexture)
+    {
+        PS2GL_g_DontUpdateTexture = 1;
+    }
+    else
+    {
+        p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam;
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0) ? 2 : 0x200;
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBindTexture(0xDE1, *(unsigned int*)p_stSpecParam);
+        GLI_g_p_stLastTexture = (int)p_stTexture;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (g_TextMatrixIsIdentity == 0)
+    {
+        PS2glMatrixMode(0x1702);
+        PS2glLoadIdentity();
+        g_TextMatrixIsIdentity = 1;
+    }
+    if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))
+    {
+        if (pMat->ulTextureProperties & 1)
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+        if (pMat->ulTextureProperties & 2)
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+        GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (Local_LastTextureMode != 2)
+    {
+        PS2glDepthMask(1);
+        g_PS2glContext.nEnableBits |= 0x400;
+        g_gsContext.TEST_1.ATE = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        PS2glAlphaFunc(0x204, 0.1f);
+        g_PS2glContext.nEnableBits &= ~0x100;
+        g_gsContext.PRMODE.ABE = 0;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    }
+    SET_FOGC();
+    GLI_g_LastTextureMode = 2;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 955–989 */
@@ -2124,12 +2535,63 @@ void SEND_MAT_OPT_NZ(GLI_tdstMaterial_* hVisualMaterial)
  */
 void SEND_MAT_OPT_OPAQUE(GLI_tdstMaterial_* hVisualMaterial)
 {
-    anon_2* pMat;
-    int Local_LastTextureMode;
-    void* p_stLastTexture;
     GLI_tdstTexture_* p_stTexture;
+    unsigned int Local_LastTextureMode;
+    anon_2* pMat;
+    void* p_stLastTexture;
     GLI_tdstTexturePS2GL_* p_stSpecParam;
-    /* TODO: decompile from asm/... */
+    p_stLastTexture = (void*)GLI_g_p_stLastTexture;
+    Local_LastTextureMode = GLI_g_LastTextureMode;
+    pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];
+    PS2GL_g_DontUpdateTexture = 0;
+    GLI_g_p_stLastTexture = 0;
+    GLI_g_LastTextureMode = 0;
+    p_stTexture = hVisualMaterial->p_stTexture;
+    if ((void*)p_stTexture == p_stLastTexture)
+    {
+        PS2GL_g_DontUpdateTexture = 1;
+    }
+    else
+    {
+        p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam;
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0) ? 2 : 0x200;
+        g_gsContext.PRMODE.TME = 1;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glBindTexture(0xDE1, *(unsigned int*)p_stSpecParam);
+        GLI_g_p_stLastTexture = (int)p_stTexture;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (g_TextMatrixIsIdentity == 0)
+    {
+        PS2glMatrixMode(0x1702);
+        PS2glLoadIdentity();
+        g_TextMatrixIsIdentity = 1;
+    }
+    if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))
+    {
+        if (pMat->ulTextureProperties & 1)
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+        if (pMat->ulTextureProperties & 2)
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+        else
+            PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+        GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;
+        PS2GL_g_DontUpdateTexture = 0;
+    }
+    if (Local_LastTextureMode != 1)
+    {
+        PS2glDepthMask(1);
+        g_PS2glContext.nEnableBits &= ~0x400;
+        g_gsContext.TEST_1.ATE = 0;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_PS2glContext.nEnableBits &= ~0x100;
+        g_gsContext.PRMODE.ABE = 0;
+        g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    }
+    SET_FOGC();
+    GLI_g_LastTextureMode = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 253–864 */
@@ -2667,7 +3129,7 @@ void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* hVisualMaterial)
  */
 void SetFogc(void)
 {
-    /* TODO: decompile from asm/... */
+    SET_FOGC();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 117–168 */

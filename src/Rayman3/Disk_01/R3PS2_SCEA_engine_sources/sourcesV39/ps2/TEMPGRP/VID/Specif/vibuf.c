@@ -65,6 +65,10 @@ struct SemaParam {
     unsigned int option; /* +0x14 */
 };
 
+/* The bit-pointer shift is a named constant: a literal '>> 3' makes MWCC
+   swap the operands of the following addu (found by the permuter). */
+static const int bpShift = 3;
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 605–650 */
 /* addr: 0x00131840  size: 452 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -112,17 +116,45 @@ struct SemaParam {
  */
 int viBufGetTs(anon_3* f, anon_2* ts)
 {
-    int rd;
-    int i;
-    int wt;
-    int tscount;
-    int isEnd;
-    int datasize;
+    unsigned int d4madr = *(volatile unsigned int*)0x1000B410;
+    unsigned int ipubp = *(volatile unsigned int*)0x10002020;
+    int bp = f->env.ipubp & 0x7f;
     unsigned int stop;
-    int bp;
-    unsigned int ipubp;
-    unsigned int d4madr;
-    /* TODO: decompile from asm/... */
+    int datasize = f->n * 2048;
+    int isEnd = 0;
+    int tscount;
+    int wt;
+    int i;
+    int rd;
+
+    WaitSema(f->sema);
+
+    ts->pts = -1;
+    ts->dts = -1;
+
+    stop = (datasize + (d4madr - ((((ipubp >> 16) & 3) + ((ipubp >> 8) & 0xf)) << 4) + (bp >> bpShift)) - f->data) % datasize;
+
+    tscount = f->count_ts;
+    wt = f->wt_ts;
+
+    for (i = 0; i < tscount && !isEnd; i++)
+    {
+        rd = (i + (f->n_ts + (wt - tscount))) % f->n_ts;
+
+        if ((int)(stop + datasize - f->ts[rd].pos) % datasize < f->ts[rd].len)
+        {
+            ts->pts = f->ts[rd].pts;
+            ts->dts = f->ts[rd].dts;
+            f->ts[rd].pts = -1;
+            f->ts[rd].dts = -1;
+            isEnd = 1;
+            f->count_ts -= (f->count_ts < 1) ? f->count_ts : 1;
+        }
+    }
+
+    SignalSema(f->sema);
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 574–599 */
@@ -151,7 +183,25 @@ int viBufGetTs(anon_3* f, anon_2* ts)
 int viBufPutTs(anon_3* f, anon_2* ts)
 {
     int ret;
-    /* TODO: decompile from asm/... */
+
+    ret = 0;
+    WaitSema(f->sema);
+    if (f->count_ts < f->n_ts)
+    {
+        viBufModifyPts(f, ts);
+        if (ts->pts >= 0 || ts->dts >= 0)
+        {
+            f->ts[f->wt_ts].pts = ts->pts;
+            ((anon_2*)((char*)f->ts + 8))[f->wt_ts].pts = ts->dts;
+            ((anon_2*)((char*)f->ts + 0x10))[f->wt_ts].pts = ts->pos;
+            ((anon_2*)((char*)f->ts + 0x14))[f->wt_ts].pos = ts->len;
+            f->count_ts++;
+            f->wt_ts = (f->wt_ts + 1) % f->n_ts;
+        }
+        ret = 1;
+    }
+    SignalSema(f->sema);
+    return ret;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 530–567 */
@@ -189,11 +239,52 @@ int viBufPutTs(anon_3* f, anon_2* ts)
  */
 int viBufModifyPts(anon_3* f, anon_2* new_ts)
 {
-    int loop;
-    int datasize;
-    int rd;
     anon_2* ts;
-    /* TODO: decompile from asm/... */
+    int rd = (f->n_ts + (f->wt_ts - f->count_ts)) % f->n_ts;
+    int datasize = f->n * 2048;
+    int loop = 1;
+
+    if (f->count_ts > 0)
+    {
+        do
+        {
+            ts = f->ts + rd;
+
+            if (ts->len == 0 || new_ts->len == 0)
+            {
+                break;
+            }
+
+            if ((ts->pos + datasize - new_ts->pos) % datasize < new_ts->len)
+            {
+                int len = new_ts->pos + new_ts->len - ts->pos;
+                len = (ts->len < len) ? ts->len : len;
+
+                ts->pos = (ts->pos + len) % datasize;
+                ts->len -= len;
+
+                if (ts->len == 0)
+                {
+                    if (ts->pts >= 0)
+                    {
+                        ts->pts = -1;
+                        ts->dts = -1;
+                        ts->pos = 0;
+                        ts->len = 0;
+                    }
+                    f->count_ts = (f->count_ts - 1 < 0) ? 0 : f->count_ts - 1;
+                }
+            }
+            else
+            {
+                loop = 0;
+            }
+
+            rd = (rd + 1) % f->n_ts;
+        } while (loop);
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 515–521 */
@@ -262,6 +353,16 @@ int viBufDelete(anon_3* f)
     *(volatile unsigned int*)0x1000B430 = 0;
     DeleteSema(f->sema);
     return 1;
+}
+
+static inline void setD3_CHCR(unsigned int val)
+{
+    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B000 = val; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
+}
+
+static inline void setD4_CHCR(unsigned int val)
+{
+    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = val; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 379–459 */
@@ -347,12 +448,86 @@ int viBufRestartDMA(anon_3* f)
 {
     int index_next;
     int index;
-    unsigned int d4chcr_next;
     unsigned int d4tadr_next;
-    unsigned int d4qwc_next;
-    unsigned int d4madr_next;
     int bp;
-    /* TODO: decompile from asm/... */
+    unsigned int d4madr_next;
+    unsigned int d4qwc_next;
+    unsigned int d4chcr_next;
+
+    bp = f->env.ipubp & 0x7f;
+    d4madr_next = f->env.d4madr - ((((f->env.ipubp >> 16) & 3) + ((f->env.ipubp >> 8) & 0xf)) << 4);
+    d4qwc_next = f->env.d4qwc + (((f->env.ipubp >> 16) & 3) + ((f->env.ipubp >> 8) & 0xf));
+    d4tadr_next = f->env.d4tadr;
+    d4chcr_next = f->env.d4chcr | 0x100;
+
+    WaitSema(f->sema);
+
+    if (d4madr_next < f->data)
+    {
+        d4qwc_next = (f->data - d4madr_next) / 16;
+        d4madr_next += f->n * 2048;
+        d4tadr_next = f->tag;
+        d4tadr_next &= 0x0fffffff;
+        index = (f->env.d4madr == f->data || f->env.d4madr == f->data + f->n * 2048) ? 0 : 3;
+        d4chcr_next = (f->env.d4chcr & 0x0fffffff) | (index << 28) | 0x100;
+
+        if (!(0 <= (f->n - f->dmaStart) % f->n && (f->n - f->dmaStart) % f->n < f->dmaN))
+        {
+            f->dmaStart = f->n - 1;
+            f->dmaN++;
+        }
+    }
+    else
+    {
+        index = (f->env.d4madr == ((f->tag + (f->n + 1) * 16) & 0x0fffffff)) ? 0 : (f->env.d4madr - f->data) / 2048;
+        index_next = (d4madr_next == ((f->tag + (f->n + 1) * 16) & 0x0fffffff)) ? 0 : (d4madr_next - f->data) / 2048;
+
+        if (index != index_next)
+        {
+            d4tadr_next = (f->tag + index * 16) & 0x0fffffff;
+            d4qwc_next = (f->data + index * 2048 - d4madr_next) / 16;
+            index = ((f->data + (f->env.d4madr - f->data) % (f->n * 2048)) == f->data + ((f->dmaStart + f->dmaN) % f->n) * 2048) ? 0 : 3;
+            d4chcr_next = (f->env.d4chcr & 0x0fffffff) | (index << 28) | 0x100;
+
+            if (!(0 <= (index_next + f->n - f->dmaStart) % f->n && (index_next + f->n - f->dmaStart) % f->n < f->dmaN))
+            {
+                f->dmaStart = index_next;
+                f->dmaN++;
+            }
+        }
+    }
+
+    if (f->env.d3madr && f->env.d3qwc)
+    {
+        *(volatile unsigned int*)0x1000B010 = f->env.d3madr;
+        *(volatile unsigned int*)0x1000B020 = f->env.d3qwc;
+        setD3_CHCR(f->env.d3chcr | 0x100);
+    }
+
+    if (f->dmaN)
+    {
+        while (*(volatile int*)0x10002010 < 0)
+            ;
+        *(volatile unsigned int*)0x10002000 = bp;
+        while (*(volatile int*)0x10002010 < 0)
+            ;
+    }
+
+    *(volatile unsigned int*)0x1000B410 = d4madr_next;
+    *(volatile unsigned int*)0x1000B430 = d4tadr_next;
+    *(volatile unsigned int*)0x1000B420 = d4qwc_next;
+
+    if (f->dmaN)
+    {
+        setD4_CHCR(d4chcr_next);
+    }
+
+    *(volatile unsigned int*)0x10002010 = f->env.ipuctrl;
+    f->isActive = 1;
+
+    SignalSema(f->sema);
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 344–372 */
@@ -381,7 +556,31 @@ int viBufRestartDMA(anon_3* f)
  */
 int viBufStopDMA(anon_3* f)
 {
-    /* TODO: decompile from asm/... */
+    WaitSema(f->sema);
+
+    f->isActive = 0;
+
+    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = 5; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
+
+    f->env.d4madr = *(volatile unsigned int*)0x1000B410;
+    f->env.d4tadr = *(volatile unsigned int*)0x1000B430;
+    f->env.d4qwc = *(volatile unsigned int*)0x1000B420;
+    f->env.d4chcr = *(volatile unsigned int*)0x1000B400;
+
+    while (*(volatile unsigned int*)0x10002010 & 0xF0)
+        ;
+
+    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B000 = 0; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
+    f->env.d3madr = *(volatile unsigned int*)0x1000B010;
+    f->env.d3qwc = *(volatile unsigned int*)0x1000B020;
+    f->env.d3chcr = *(volatile unsigned int*)0x1000B000;
+
+    f->env.ipubp = *(volatile unsigned int*)0x10002020;
+    f->env.ipuctrl = *(volatile unsigned int*)0x10002010;
+
+    SignalSema(f->sema);
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 247–337 */
@@ -438,15 +637,64 @@ int viBufStopDMA(anon_3* f)
  */
 int viBufAddDMA(anon_3* f)
 {
-    int read_n;
-    int read_start;
-    int consume;
-    int isNewData;
-    unsigned int d4chcr;
-    int last;
-    int index;
     int i;
-    /* TODO: decompile from asm/... */
+    int index;
+    int last;
+    unsigned int d4chcr;
+    int isNewData = 0;
+    int consume;
+    int read_start;
+    int read_n;
+    unsigned long addr;
+
+    WaitSema(f->sema);
+
+    if (!f->isActive)
+    {
+        ErrMessage("DMA ADD not active\n");
+        return 0;
+    }
+
+    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = 5; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
+    d4chcr = *(volatile unsigned int*)0x1000B400;
+
+    index = (*(unsigned int*)0x1000B410 == ((unsigned int)(f->tag + (f->n + 1) * 16) & 0x0fffffff)) ? 0 : (*(unsigned int*)0x1000B410 - f->data) / 2048;
+    consume = (index + f->n - f->dmaStart) % f->n;
+    f->dmaStart = (f->dmaStart + consume) % f->n;
+    f->dmaN -= consume;
+
+    read_start = (f->dmaStart + f->dmaN) % f->n;
+    read_n = f->readBytes / 2048;
+    f->readBytes %= 2048;
+
+    if (read_n > 0)
+    {
+        index = (f->n + (f->dmaStart + f->dmaN - 1)) % f->n;
+        *(unsigned long*)(f->tag + index * 16) = ((unsigned long)(unsigned int)(f->data + index * 2048) << 32) | 0x30000080;
+        isNewData = 1;
+    }
+
+    for (i = 0; i < read_n; i++)
+    {
+        addr = (unsigned long)(unsigned int)(f->data + read_start * 2048) << 32;
+        *(unsigned long*)(f->tag + read_start * 16) = addr | ((unsigned long)(unsigned int)((i == read_n - 1) ? 0 : 3) << 28) | 0x80;
+        read_start = (read_start + 1) % f->n;
+    }
+
+    f->dmaN += read_n;
+
+    if (f->dmaN)
+    {
+        if (isNewData)
+        {
+            d4chcr = (d4chcr & 0x0fffffff) | 0x30000000;
+        }
+        DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = d4chcr | 0x100; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
+    }
+
+    SignalSema(f->sema);
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 233–240 */
@@ -565,7 +813,35 @@ void viBufBeginPut(anon_3* f, unsigned char** ptr0, int* len0, unsigned char** p
 int viBufReset(anon_3* f)
 {
     int i;
-    /* TODO: decompile from asm/... */
+
+    f->dmaStart = 0;
+    f->dmaN = 0;
+    f->readBytes = 0;
+    f->isActive = 1;
+
+    f->count_ts = 0;
+    f->wt_ts = 0;
+    for (i = 0; i < f->n_ts; i++)
+    {
+        f->ts[i].pts = -1;
+        f->ts[i].dts = -1;
+        f->ts[i].pos = 0;
+        f->ts[i].len = 0;
+    }
+
+    for (i = 0; i < f->n; i++)
+    {
+        ((unsigned long*)f->tag)[i * 2] = (((unsigned long)(unsigned int)(f->data + i * 2048) & 0x0fffffff) << 32) | 0x30000080;
+    }
+
+    ((unsigned long*)f->tag)[i * 2] = ((unsigned long)((unsigned int)f->tag & 0x0fffffff) << 32) | 0x20000000;
+
+    *(volatile unsigned int*)0x1000B420 = 0;
+    *(volatile unsigned int*)0x1000B410 = (unsigned int)f->data & 0x0fffffff;
+    *(volatile unsigned int*)0x1000B430 = (unsigned int)f->tag & 0x0fffffff;
+    DIntr(); *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 | 0x10000; *(volatile unsigned int*)0x1000B400 = 5; *(volatile unsigned int*)0x1000F590 = *(volatile unsigned int*)0x1000F520 & 0xFFFEFFFF; EIntr();
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\VID\Specif\vibuf.c lines 114–142 */

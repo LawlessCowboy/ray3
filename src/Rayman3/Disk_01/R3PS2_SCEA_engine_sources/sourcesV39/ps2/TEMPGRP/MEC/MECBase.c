@@ -1213,6 +1213,57 @@ int DNM_fn_eIdentityCardGetType(void* _hCurrent)
     return ((DNM_stDynamicsBaseBlock*)_hCurrent)->m_lObjectType;
 }
 
+extern DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+extern void MAT_fn_vGetRotationVectorBaseJ(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecJ);
+float acosf(float x);
+
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+#define MTH3D_M_vSetVectorElements(_d, _x, _y, _z) { (_d)->xX = (_x); (_d)->xY = (_y); (_d)->xZ = (_z); }
+
+/* R5900 accumulator and min.s/max.s forms have no C equivalent under the
+ * baseline (see MECOpt.c and DNMCame.c). */
+inline float MTH3D_M_xDotProductVector(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
+{
+    float _xAX, _xAY, _xAZ, _xBX, _xBY, _xBZ, _xResult;
+
+    _xBX = _p_stB->xX; _xBY = _p_stB->xY; _xBZ = _p_stB->xZ;
+    _xAX = _p_stA->xX; _xAY = _p_stA->xY; _xAZ = _p_stA->xZ;
+    asm { mula.s _xAX, _xBX }
+    asm { madda.s _xAY, _xBY }
+    asm { madd.s _xResult, _xAZ, _xBZ }
+    return _xResult;
+}
+
+#define MTH3D_M_vCrossProductVector(_d, _a, _b)                 \
+    {                                                            \
+        float _xAX, _xAY, _xAZ, _xBX, _xBY, _xBZ, _xResult;      \
+        _xBX = (_b)->xX; _xBY = (_b)->xY; _xBZ = (_b)->xZ;       \
+        _xAX = (_a)->xX; _xAY = (_a)->xY; _xAZ = (_a)->xZ;       \
+        asm { mula.s _xAY, _xBZ }                                \
+        asm { msub.s _xResult, _xAZ, _xBY }                      \
+        (_d)->xX = _xResult;                                     \
+        asm { mula.s _xAZ, _xBX }                                \
+        asm { msub.s _xResult, _xAX, _xBZ }                      \
+        (_d)->xY = _xResult;                                     \
+        asm { mula.s _xAX, _xBY }                                \
+        asm { msub.s _xResult, _xAY, _xBX }                      \
+        (_d)->xZ = _xResult;                                     \
+    }
+
+inline float MTH_M_xMin(float _xA, float _xB)
+{
+    float _xResult;
+    asm { min.s _xResult, _xA, _xB }
+    return _xResult;
+}
+
+inline float MTH_M_xMax(float _xA, float _xB)
+{
+    float _xResult;
+    asm { max.s _xResult, _xA, _xB }
+    return _xResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 1062–1101 */
 /* addr: 0x00302c90  size: 360 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1251,7 +1302,35 @@ void MEC_fn_vUpdateSpeed(HIE_tdstSuperObject_* hSupObj)
     MTH3D_tdstVector_ stCurrentY;
     DNM_stDynamics* p_stDynamic;
     tdstDynam_* h_Dynam;
-    /* TODO: decompile from asm/... */
+
+    h_Dynam = hSupObj->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam == NULL)
+        return;
+    p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 4) ? 1 : 0) || !((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x4000) ? 1 : 0))
+        return;
+    {
+        {
+            MAT_fn_vGetRotationVectorBaseJ(&p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix, &stCurrentY);
+
+            p_stMove = &p_stDynamic->m_tdstDynamicsBaseBlock.m_pstReport->m_stAbsoluteCurrSpeed;
+            MTH3D_M_vCopyVector(&stPreviousY, &p_stMove->m_stAngular.m_stAxis);
+
+            xAngle = MTH3D_M_xDotProductVector(&stPreviousY, &stCurrentY);
+            MTH3D_M_vCrossProductVector(&stAxis, &stPreviousY, &stCurrentY);
+
+            xAngle = MTH_M_xMin(MTH_M_xMax(xAngle, -1.0f), 1.0f);
+
+            if (stAxis.xZ > 0.0f)
+                xAngle = acosf(xAngle);
+            else
+                xAngle = -acosf(xAngle);
+
+            MTH3D_M_vSetVectorElements(&stAxis, 0.0f, 0.0f, 1.0f);
+            p_stMove->m_stAngular.m_xAngle = xAngle;
+            MTH3D_M_vCopyVector(&p_stMove->m_stAngular.m_stAxis, &stAxis);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBase.c lines 1053–1057 */
