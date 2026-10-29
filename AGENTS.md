@@ -31,6 +31,14 @@ functions, out of scope)*, and `translation_units` ignores them so a
 translation unit is never held open by a header function. Do not take header
 functions from a worklist, and do not edit library headers to chase them.
 
+Library functions with no recovered source (built without debug info: the
+Sony SDK, C/C++ runtime, most of the harmonx `usnd` sound middleware and the
+memory-card library) are third-party code and are also out of scope.
+`coverage` excludes them and reports them as *excluded (third-party library
+code without debug info, out of scope)*; `list --include-unowned` still shows
+them. Short runs of unowned compiler-generated helpers between game objects
+(constructors, `__arraydtor` thunks) stay counted as game code.
+
 Game translation units may still *include* a library header, and a game
 function whose retail debug points at a header is verified with
 `check FUNCTION --source <the game unit that uses it>`.

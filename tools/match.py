@@ -1366,12 +1366,21 @@ def coverage() -> dict:
     # game-code decompilation effort: they are excluded from the coverage
     # totals and reported separately.
     header_addresses = {entry['address'] for entry in entries if is_header_owned(entry)}
+    # Library functions without recovered source (SCE SDK, C/C++ runtime and
+    # most of the harmonx sound middleware, built without debug info) are
+    # third-party code outside the decompilation effort and are likewise
+    # reported separately.  Unowned game helpers stay in scope.
+    unowned_library_addresses = {entry['address'] for entry in entries
+                                 if entry['source'] is None
+                                 and categories[entry['address']] == 'library'
+                                 and entry['address'] not in header_addresses}
+    excluded_addresses = header_addresses | unowned_library_addresses
     scope_addresses = {entry['address'] for entry in entries
-                       if entry['address'] not in header_addresses}
+                       if entry['address'] not in excluded_addresses}
     split = {}
     for category in ('game', 'library'):
         members = [entry for entry in entries if categories[entry['address']] == category
-                   and entry['address'] not in header_addresses]
+                   and entry['address'] not in excluded_addresses]
         addresses = {entry['address'] for entry in members}
         split[category] = {
             'matched_functions': len([r for r in function_records if r.get('status') == 'MATCH'
@@ -1412,6 +1421,7 @@ def coverage() -> dict:
                                               if span[0] in scope_addresses]),
         'data_bytes_total': intervals_size(scope_data),
         'header_functions_excluded': len(header_addresses),
+        'unowned_library_functions_excluded': len(unowned_library_addresses),
         'split': split,
     }
 
@@ -1435,6 +1445,9 @@ def print_coverage(result: dict) -> None:
     if result.get('header_functions_excluded'):
         print(f"excluded (library header functions, out of scope): "
               f"{result['header_functions_excluded']}")
+    if result.get('unowned_library_functions_excluded'):
+        print(f"excluded (third-party library code without debug info, out of scope): "
+              f"{result['unowned_library_functions_excluded']}")
 
 
 def translation_units() -> dict:
