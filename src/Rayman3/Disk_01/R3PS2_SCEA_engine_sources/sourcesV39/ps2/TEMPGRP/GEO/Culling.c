@@ -274,18 +274,156 @@ void GEO_xInitGEOError(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define M_Min(a, b) (((a) < (b)) ? (a) : (b))
+#define M_Max(a, b) (((a) > (b)) ? (a) : (b))
+
 int GEO_lCullingBox(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax, int _lCullingResult)
 {
-    unsigned char bComputed;
-    GLI_tdstCamera_* hCamera;
-    float xValue5;
-    float xValue4;
-    float xValue3;
-    float xValue2;
-    float xValue1;
-    float xValue0;
     float xCompute;
-    /* TODO: decompile from asm/... */
+    float xValue0;
+    float xValue1;
+    float xValue2;
+    float xValue3;
+    float xValue4;
+    float xValue5;
+    GLI_tdstCamera_* hCamera;
+    unsigned char bComputed;
+    float xMinX, xMinY, xMinZ, xMaxX, xMaxY, xMaxZ;
+
+    bComputed = 0;
+    xCompute = 0.0f;
+    hCamera = *(GLI_tdstCamera_**)p_stVpt->p_vSpecificToXD;
+
+    xMinX = p_stMin->xX - gs_stCameraPosInGlobal.xX; xMinY = p_stMin->xY - gs_stCameraPosInGlobal.xY; xMinZ = p_stMin->xZ - gs_stCameraPosInGlobal.xZ;
+    xMaxX = p_stMax->xX - gs_stCameraPosInGlobal.xX; xMaxY = p_stMax->xY - gs_stCameraPosInGlobal.xY; xMaxZ = p_stMax->xZ - gs_stCameraPosInGlobal.xZ;
+
+    _lCullingResult |= 0x40;
+
+    if (!(_lCullingResult & 0x10))
+    {
+        xValue0 = xMinX * gs_stGlobalNormPlaneNear.xX;
+        /* Routing this product through xCompute gives retail's f9/f10
+           allocation (found by the permuter); a direct assignment is only
+           register-equivalent. */
+        xCompute = xMinY * gs_stGlobalNormPlaneNear.xY;
+        xValue1 = xCompute;
+        xValue2 = xMinZ * gs_stGlobalNormPlaneNear.xZ;
+        xValue3 = xMaxX * gs_stGlobalNormPlaneNear.xX;
+        xValue4 = xMaxY * gs_stGlobalNormPlaneNear.xY;
+        xValue5 = xMaxZ * gs_stGlobalNormPlaneNear.xZ;
+
+        if (M_Min(xValue0, xValue3) + M_Min(xValue1, xValue4) + M_Min(xValue2, xValue5) > -hCamera->xNear)
+            return 0;
+
+        xCompute = M_Max(xValue0, xValue3) + M_Max(xValue1, xValue4) + M_Max(xValue2, xValue5);
+        bComputed = 1;
+        if (xCompute < -hCamera->xNear)
+            _lCullingResult |= 0x10;
+    }
+
+    if (!(_lCullingResult & 0x20))
+    {
+        if (GEO_g_xZFar != 0.0f)
+        {
+            if (!bComputed)
+            {
+                xValue0 = xMinX * gs_stGlobalNormPlaneNear.xX;
+                xValue1 = xMinY * gs_stGlobalNormPlaneNear.xY;
+                xValue2 = xMinZ * gs_stGlobalNormPlaneNear.xZ;
+                xValue3 = xMaxX * gs_stGlobalNormPlaneNear.xX;
+                xValue4 = xMaxY * gs_stGlobalNormPlaneNear.xY;
+                xValue5 = xMaxZ * gs_stGlobalNormPlaneNear.xZ;
+                xCompute = -(M_Max(xValue0, xValue3) + M_Max(xValue1, xValue4) + M_Max(xValue2, xValue5));
+            }
+            else
+                xCompute = -xCompute;
+
+            if (xCompute > GEO_g_xZFar)
+                return 0;
+
+            GEO_g_xZFarTransparencyLevel = GEO_g_xZFar - GEO_g_xZFarTransparencyZone;
+            if (xCompute > GEO_g_xZFarTransparencyLevel)
+                GEO_g_xZFarTransparencyLevel = 1.0f - GEO_g_xOoZFarTransparencyZone * (xCompute - GEO_g_xZFarTransparencyLevel);
+            else
+            {
+                _lCullingResult |= 0x20;
+                GEO_g_xZFarTransparencyLevel = 1.0f;
+            }
+        }
+        else
+        {
+            _lCullingResult |= 0x20;
+            GEO_g_xZFarTransparencyLevel = 1.0f;
+        }
+    }
+    else
+        GEO_g_xZFarTransparencyLevel = 1.0f;
+
+    if (!(_lCullingResult & 1))
+    {
+        xValue0 = xMinX * gs_stGlobalNormPlaneLeft.xX;
+        xValue1 = xMinY * gs_stGlobalNormPlaneLeft.xY;
+        xValue2 = xMinZ * gs_stGlobalNormPlaneLeft.xZ;
+        xValue3 = xMaxX * gs_stGlobalNormPlaneLeft.xX;
+        xValue4 = xMaxY * gs_stGlobalNormPlaneLeft.xY;
+        xValue5 = xMaxZ * gs_stGlobalNormPlaneLeft.xZ;
+
+        if (M_Min(xValue0, xValue3) + M_Min(xValue1, xValue4) + M_Min(xValue2, xValue5) > hCamera->xDistPlaneLeft)
+            return 0;
+
+        if (M_Max(xValue0, xValue3) + M_Max(xValue1, xValue4) + M_Max(xValue2, xValue5) < hCamera->xDistPlaneLeft)
+            _lCullingResult |= 1;
+    }
+
+    if (!(_lCullingResult & 2))
+    {
+        xValue0 = xMinX * gs_stGlobalNormPlaneRight.xX;
+        xValue1 = xMinY * gs_stGlobalNormPlaneRight.xY;
+        xValue2 = xMinZ * gs_stGlobalNormPlaneRight.xZ;
+        xValue3 = xMaxX * gs_stGlobalNormPlaneRight.xX;
+        xValue4 = xMaxY * gs_stGlobalNormPlaneRight.xY;
+        xValue5 = xMaxZ * gs_stGlobalNormPlaneRight.xZ;
+
+        if (M_Min(xValue0, xValue3) + M_Min(xValue1, xValue4) + M_Min(xValue2, xValue5) > hCamera->xDistPlaneRight)
+            return 0;
+
+        if (M_Max(xValue0, xValue3) + M_Max(xValue1, xValue4) + M_Max(xValue2, xValue5) < hCamera->xDistPlaneRight)
+            _lCullingResult |= 2;
+    }
+
+    if (!(_lCullingResult & 4))
+    {
+        xValue0 = xMinX * gs_stGlobalNormPlaneUp.xX;
+        xValue1 = xMinY * gs_stGlobalNormPlaneUp.xY;
+        xValue2 = xMinZ * gs_stGlobalNormPlaneUp.xZ;
+        xValue3 = xMaxX * gs_stGlobalNormPlaneUp.xX;
+        xValue4 = xMaxY * gs_stGlobalNormPlaneUp.xY;
+        xValue5 = xMaxZ * gs_stGlobalNormPlaneUp.xZ;
+
+        if (M_Min(xValue0, xValue3) + M_Min(xValue1, xValue4) + M_Min(xValue2, xValue5) > hCamera->xDistPlaneUp)
+            return 0;
+
+        if (M_Max(xValue0, xValue3) + M_Max(xValue1, xValue4) + M_Max(xValue2, xValue5) < hCamera->xDistPlaneUp)
+            _lCullingResult |= 4;
+    }
+
+    if (!(_lCullingResult & 8))
+    {
+        xValue0 = xMinX * gs_stGlobalNormPlaneDown.xX;
+        xValue1 = xMinY * gs_stGlobalNormPlaneDown.xY;
+        xValue2 = xMinZ * gs_stGlobalNormPlaneDown.xZ;
+        xValue3 = xMaxX * gs_stGlobalNormPlaneDown.xX;
+        xValue4 = xMaxY * gs_stGlobalNormPlaneDown.xY;
+        xValue5 = xMaxZ * gs_stGlobalNormPlaneDown.xZ;
+
+        if (M_Min(xValue0, xValue3) + M_Min(xValue1, xValue4) + M_Min(xValue2, xValue5) > hCamera->xDistPlaneDown)
+            return 0;
+
+        if (M_Max(xValue0, xValue3) + M_Max(xValue1, xValue4) + M_Max(xValue2, xValue5) < hCamera->xDistPlaneDown)
+            _lCullingResult |= 8;
+    }
+
+    return _lCullingResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 258–295 */
@@ -406,12 +544,140 @@ void GEO_fn_vComputeCameraParametersForCulling(GLD_tdstViewportAttributes_* p_st
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int GEO_lMainCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stShereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, int _lCullingResult)
+float MAT_fn_xGetMaxScaleNonOpt(MAT_tdstTransformation_* _hTransform);
+
+/* R5900 accumulator dot product (mula.s/madda.s/madd.s), not emittable from C. */
+inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2) { float _r; asm { mula.s _x1, _x2 } asm { madda.s _y1, _y2 } asm { madd.s _r, _z1, _z2 } return _r; }
+
+inline unsigned char MAT_M_bTransformHasScale(MAT_tdstTransformation_* _hTransform)
+{
+    return _hTransform->eType == MAT_eTransform_Scale || _hTransform->eType == MAT_eTransform_Zoom
+        || _hTransform->eType == MAT_eTransform_RotationScale || _hTransform->eType == MAT_eTransform_RotationZoom
+        || _hTransform->eType == MAT_eTransform_ComplexRotationScale;
+}
+
+inline float MAT_M_xGetMaxScale(MAT_tdstTransformation_* _hTransform)
+{
+    if ((unsigned int)(_hTransform->eType - MAT_eTransform_Identity) < 2 || _hTransform->eType == MAT_eTransform_Rotation)
+        return 1.0f;
+    return MAT_fn_xGetMaxScaleNonOpt(_hTransform);
+}
+
+/* The debug scaffold lists five parameters, but retail reads _lCullingResult
+   from t0 and every caller (SPO/HieDraw.c, GEO/GEO_Ed/ElemEd.c) passes an
+   object matrix before it, which this function does not use. */
+int GEO_lMainCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stShereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, MAT_tdstTransformation_* p_stObjectMatrix, int _lCullingResult)
 {
     float xDotProduct;
     GLI_tdstCamera_* param0;
     MTH3D_tdstVector_ stCenter;
-    /* TODO: decompile from asm/... */
+    MTH4D_tdstVector_ stVect;
+    MTH4D_tdstMatrix_* pMat;
+    MTH4D_tdstVector_* pVect;
+
+    xDotProduct = 0.0f;
+    if (MAT_M_bTransformHasScale(p_stMatrix))
+        xRadius *= MAT_M_xGetMaxScale(p_stMatrix);
+
+    param0 = *(GLI_tdstCamera_**)p_stVpt->p_vSpecificToXD;
+
+    pMat = &p_stMatrix->stTransformMatrix;
+    pVect = &stVect;
+    *(int*)&stVect.xX = *(int*)&p_stShereCenter->xX;
+    *(int*)&stVect.xY = *(int*)&p_stShereCenter->xY;
+    *(int*)&stVect.xZ = *(int*)&p_stShereCenter->xZ;
+    asm {
+        lqc2 vf1, 0x0(pVect)
+        lqc2 vf2, 0x0(pMat)
+        lqc2 vf3, 0x10(pMat)
+        lqc2 vf4, 0x20(pMat)
+        lqc2 vf5, 0x30(pMat)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(pVect)
+    }
+    ((int*)&stCenter)[0] = *(int*)&stVect.xX;
+    ((int*)&stCenter)[1] = *(int*)&stVect.xY;
+    ((int*)&stCenter)[2] = *(int*)&stVect.xZ;
+
+    _lCullingResult |= 0x40;
+
+    if (!(_lCullingResult & 0x10))
+    {
+        if (stCenter.xZ + xRadius < param0->xNear)
+            return 0;
+        xDotProduct = stCenter.xZ - xRadius;
+        if (xDotProduct > param0->xNear)
+            _lCullingResult |= 0x10;
+    }
+
+    if (!(_lCullingResult & 0x20))
+    {
+        if (GEO_g_xZFar != 0.0f)
+        {
+            if (xDotProduct > GEO_g_xZFar)
+            {
+                GEO_g_xZFarTransparencyLevel = 0.0f;
+                return 0;
+            }
+            if (xDotProduct > GEO_g_xZFar - GEO_g_xZFarTransparencyZone)
+                GEO_g_xZFarTransparencyLevel = 1.0f - GEO_g_xOoZFarTransparencyZone * (stCenter.xZ - xRadius - GEO_g_xZFar + GEO_g_xZFarTransparencyZone);
+            else
+            {
+                _lCullingResult |= 0x20;
+                GEO_g_xZFarTransparencyLevel = 1.0f;
+            }
+        }
+        else
+        {
+            _lCullingResult |= 0x20;
+            GEO_g_xZFarTransparencyLevel = 1.0f;
+        }
+    }
+    else
+        GEO_g_xZFarTransparencyLevel = 1.0f;
+
+    if (!(_lCullingResult & 1))
+    {
+        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneRight.xX, stCenter.xY, param0->stNormPlaneRight.xY, stCenter.xZ, param0->stNormPlaneRight.xZ);
+        if (xDotProduct > xRadius + param0->xDistPlaneLeft)
+            return 0;
+        if (xDotProduct < param0->xDistPlaneLeft - xRadius)
+            _lCullingResult |= 1;
+    }
+
+    if (!(_lCullingResult & 2))
+    {
+        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneLeft.xX, stCenter.xY, param0->stNormPlaneLeft.xY, stCenter.xZ, param0->stNormPlaneLeft.xZ);
+        if (xDotProduct > xRadius + param0->xDistPlaneRight)
+            return 0;
+        if (xDotProduct < param0->xDistPlaneRight - xRadius)
+            _lCullingResult |= 2;
+    }
+
+    if (!(_lCullingResult & 4))
+    {
+        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneUp.xX, stCenter.xY, param0->stNormPlaneUp.xY, stCenter.xZ, param0->stNormPlaneUp.xZ);
+        if (xDotProduct > xRadius + param0->xDistPlaneUp)
+            return 0;
+        if (xDotProduct < param0->xDistPlaneUp - xRadius)
+            _lCullingResult |= 4;
+    }
+
+    if (!(_lCullingResult & 8))
+    {
+        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneDown.xX, stCenter.xY, param0->stNormPlaneDown.xY, stCenter.xZ, param0->stNormPlaneDown.xZ);
+        if (xDotProduct > xRadius + param0->xDistPlaneDown)
+            return 0;
+        if (xDotProduct < param0->xDistPlaneDown - xRadius)
+            _lCullingResult |= 8;
+    }
+
+    return _lCullingResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\Culling.c lines 76–76 */
