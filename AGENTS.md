@@ -199,12 +199,34 @@ from function reconstruction changes so it can be reviewed independently.
 
 Shared types live in `include/r3/`, one header per engine module (`MTH.h`,
 `MAT.h`, `HIE.h`, `LST2.h`, `GEO.h`, `SECT.h`, ...; `ENG.h` holds the rest),
-each including the headers its types need by value. A completed translation unit may drop its own copy of a
-type and include the header only when its copy is identical to the header's;
-keep differing copies, function prototypes and global declarations local,
-since matches can depend on them. Run `verify-recorded` after such a change.
-`tools/match.py` hashes `include/r3/*.h` into its object cache key, so header
-edits rebuild every object.
+each including the headers its types need by value.
+
+### Grouping typedefs into shared headers
+
+Grouping a `DONE` unit's extracted typedefs into these headers is part of its
+cleanup. Make it a cleanup-only change, kept apart from matching work like
+the comment removal above:
+
+- Replace a local type with an `#include "r3/<MODULE>.h"` only when the local
+  copy is identical to the header's. A type not yet in a header may move into
+  its module's header only when it is identical in every completed unit that
+  defines it.
+- In headers, write pointer members to other types as `struct X*` tags, so a
+  header pulls in other headers only for types it holds by value.
+- Keep these local: copies that differ, function prototypes, global
+  declarations, `anon_N` types, anonymous `typedef struct { ... } Name;`
+  copies (they clash with a header's tagged definition), types that need a
+  non-shared type by value, and C++ library types (the usnd STL, `CIdObjPtr`
+  and the like). Matches can depend on them.
+- Treat a `} __attribute__((aligned(16)));` struct and a
+  `typedef enum X { ... } X;` as whole blocks when comparing or moving them;
+  a partial move skips the header or redefines the enumerators ("illegal name
+  overloading").
+- Extracted types and forward typedefs that nothing in the unit uses may be
+  deleted outright.
+- Compile-check each touched unit, then run `verify-recorded`; the recorded
+  match count must not drop. `tools/match.py` hashes `include/r3/*.h` into its
+  object cache key, so header edits rebuild every object.
 
 ## Large and advanced functions
 
