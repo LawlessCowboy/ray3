@@ -44465,6 +44465,187 @@
       "status": "EQUIVALENT",
       "target_size": 1768,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00324890",
+      "candidate_size": 1528,
+      "first_difference": 840,
+      "implementation": "void TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p);\nvoid GLI_vDisplayFrame(float* a3_fPosition, float* a3_fDirection, float fTransparency, GLD_tdstViewportAttributes_* p_stVpt);\nvoid GLI_vSetGlobalAlpha(float fAlpha);\nvoid GLI_vEnd2DSpritesWithUVs(void);\nunsigned char fn_bIsEngineInPause(void);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\TXT\\DisplayText.c lines 81\u201386 */\n/* addr: 0x003236a0  size: 56 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 84\n *   +0x0004 -> line 81\n *   +0x0008 -> line 84\n *   +0x000c -> line 81\n *   +0x0010 -> line 82\n *   +0x0014 -> line 84\n *   +0x0018 -> line 83\n *   +0x001c -> line 84\n *   +0x0024 -> line 85\n *   +0x002c -> line 86\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\nextern unsigned char g_NbFont;\nextern unsigned char g_ucNbFontBitmap;\nvoid TXT_ChangeDefaultColor(float xR, float xG, float xB);\nvoid TXT_vInit(void);\n\nvoid fn_vInitFont(void)\n{\n    g_NbFont = 0;\n    g_ucNbFontBitmap = 0;\n    TXT_ChangeDefaultColor(1.0f, 1.0f, 1.0f);\n    TXT_vInit();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "TXT_vDrawString",
+      "reason": "Byte-exact MATCH under MWCC 3.0.1 (MWCC env override); under the file's 3.0.3 profile the only residual is one missing padloop nop before the back-branch of the inlined strlen loop (+0x370, retail lb/addiu/nop/bnez). Loop spellings (while/for/!=0, int/uint/ushort counters, char/const) all keep it; known 3.0.3 straight-loop under-padding. DisplayText.c is in compiler-3.0.3 only for TXT_vAfficheSpecialWithTransparency.",
+      "size": 1528,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
+      "status": "MISMATCH",
+      "target_size": 1528,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00326c10",
+      "candidate_size": 1964,
+      "first_difference": 12,
+      "implementation": "float fn_fDrawAChar(float fX, float fY, unsigned char cChar)\n{\n    float fUorigin;\n    float fVorigin;\n    float fU;\n    float fV;\n    float fHeight;\n    float fWidth;\n    _tdstDefCharacter stDefC;\n    float fKerning;\n    float dx1;\n    float dx2;\n    float dy1;\n    float dy2;\n    float alphaval;\n\n    stDefC = g_ListOfFonts[g_ucCurrentNumFont].TabOfCharacter[cChar];\n\n    if (!stDefC.ucDef)\n        return 16.0f;\n\n    if (stDefC.ucRefToFontBitmap != g_ucCurrentNumTextureFont)\n    {\n        g_ucCurrentNumTextureFont = stDefC.ucRefToFontBitmap;\n        g_p_TextData = (int)g_TabBitmapFont[stDefC.ucRefToFontBitmap].p_TextureData;\n        TEX_fn_vSetTextureCaps(g_p_TextData, TEX_fn_lGetTextureCaps(g_p_TextData) | 0x200);\n        GLI_xSetMaterialAmbientCoef(g_hMaterialForText, &g_stColor);\n        GLI_xSetMaterialTextureForTXT(g_hMaterialForText, g_p_TextData);\n        g_fOOTexWidth = 1.0f / (float)TEX_fn_lGetTextureRealWidth(g_p_TextData);\n        g_fOOTexHeight = 1.0f / (float)TEX_fn_lGetTextureRealHeight(g_p_TextData);\n    }\n\n    fUorigin = (float)stDefC.uwX * g_fOOTexWidth;\n    fVorigin = (float)stDefC.uwY * g_fOOTexHeight;\n    fU = (float)stDefC.uwW * g_fOOTexWidth;\n    fV = (float)stDefC.uwH * g_fOOTexHeight;\n\n    fWidth = g_fCurrentSizeFontW * (float)stDefC.uwW;\n    fHeight = g_fCurrentSizeFontH * (float)stDefC.uwH;\n\n    fWidth = TXT_g_CurrentWidthRatio * (fWidth * (0.0015625f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth));\n    fHeight = TXT_g_CurrentHeightRatio * (fHeight * (0.0020833f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight));\n\n    if (!g_ucPreviousChar)\n        fKerning = 0.0f;\n    else\n        fKerning = TXT_fn_fGetKerning(g_ucPreviousChar, cChar, &stDefC);\n    fX += g_fCurrentSizeFontW * fKerning;\n\n    fY -= fHeight; fY += TXT_g_CurrentHeightRatio * (0.0020833f * ((float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight * (g_fCurrentSizeFontH * (float)stDefC.wYBaseLine)));\n\n    if (!TXT_g_GettingExtents)\n    {\n        if (TXT_g_WeirdThing)\n        {\n            dx1 = 0.7f * -fWidth + (0.0f - 0.7f * -fWidth) * rand() / RAND_MAX;\n            dx2 = 0.7f * fWidth * rand() / RAND_MAX;\n            dy1 = 0.7f * -fHeight + (0.0f - 0.7f * -fHeight) * rand() / RAND_MAX;\n            dy2 = 0.7f * fHeight * rand() / RAND_MAX;\n\n            alphaval = GLI_vGetGlobalAlpha();\n            GLI_vSetGlobalAlpha(80.0f + 120.0f * rand() / RAND_MAX);\n\n            GLI_vDraw2DSpriteWithUVWithOptimization((GLD_tdstViewportAttributes_*)g_p_stVpt, fX + dx1, fX + fWidth + dx2, fY + dy1, fY + fHeight + dy2, fUorigin, fUorigin + fU, 1.0f - fVorigin, 1.0f - (fVorigin + fV), g_hMaterialForText);\n\n            GLI_vSetGlobalAlpha(alphaval);\n        }\n        else\n        {\n            GLI_vDraw2DSpriteWithUVWithOptimization((GLD_tdstViewportAttributes_*)g_p_stVpt, fX, fX + fWidth, fY, fY + fHeight, fUorigin, fUorigin + fU, 1.0f - fVorigin, 1.0f - (fVorigin + fV), g_hMaterialForText);\n        }\n    }\n    else\n    {\n        if (fX < TXT_g_StringExtents[0]) TXT_g_StringExtents[0] = fX;\n        if (fY < TXT_g_StringExtents[1]) TXT_g_StringExtents[1] = fY;\n        if (fX + fWidth > TXT_g_StringExtents[2]) TXT_g_StringExtents[2] = fX + fWidth;\n        if (fY + fHeight > TXT_g_StringExtents[3]) TXT_g_StringExtents[3] = fY + fHeight;\n    }\n\n    if (fHeight > g_fLetterHeightMax)\n        g_fLetterHeightMax = fHeight;\n\n    g_ucPreviousChar = cChar;\n    return g_fInterLetterRatio * (fWidth + g_fCurrentSizeFontW * fKerning);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_fDrawAChar",
+      "reason": "Full reconstruction, 1964/1972 bytes, relocs 73/73. Residuals: (1) the stDefC = g_ListOfFonts[n].TabOfCharacter[cChar] struct copy: retail computes cChar*14 first and keeps an explicit 'addiu v0,v0,0' (unfolded member offset); a padloop nop in the copy loop is missing under 3.0.3 but present under 3.0.1. (2) The inlined kerning lookup (line 1009): retail loads TabOfKerningPairsNotNull[i].wKernAmount via addiu t1,0xe04 + i*6 after the uwW/uwXBlackBox div.s; MWCC hoists the lh above the unsigned conversions (temp, operand order and field-address spellings all keep it). (3) In the TXT_g_WeirdThing draw call, retail schedules 1-(fVorigin+fV) first. Reversed debug declaration order is needed for the dx1/dx2 stack spills.",
+      "size": 1972,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
+      "status": "MISMATCH",
+      "target_size": 1972,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00325b70",
+      "candidate_size": 4176,
+      "first_difference": 100,
+      "implementation": "void TXT_vDrawAStringOnLine(float fX, float fY, unsigned char* szText, _JFFTXT_* p);\nvoid TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p);\nvoid GLI_vDisplayFrame(float* a3_fPosition, float* a3_fDirection, float fTransparency, GLD_tdstViewportAttributes_* p_stVpt);\nvoid GLI_vSetGlobalAlpha(float fAlpha);\nvoid GLI_vEnd2DSpritesWithUVs(void);\nunsigned char fn_bIsEngineInPause(void);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\TXT\\DisplayText.c lines 81\u201386 */\n/* addr: 0x003236a0  size: 56 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 84\n *   +0x0004 -> line 81\n *   +0x0008 -> line 84\n *   +0x000c -> line 81\n *   +0x0010 -> line 82\n *   +0x0014 -> line 84\n *   +0x0018 -> line 83\n *   +0x001c -> line 84\n *   +0x0024 -> line 85\n *   +0x002c -> line 86\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\nextern unsigned char g_NbFont;\nextern unsigned char g_ucNbFontBitmap;\nvoid TXT_ChangeDefaultColor(float xR, float xG, float xB);\nvoid TXT_vInit(void);\n\nvoid fn_vInitFont(void)\n{\n    g_NbFont = 0;\n    g_ucNbFontBitmap = 0;\n    TXT_ChangeDefaultColor(1.0f, 1.0f, 1.0f);\n    TXT_vInit();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "TXT_vDrawAStringOnLine",
+      "reason": "Byte-exact MATCH (4240/4240, relocs 121/121) under MWCC 3.0.1 via the MWCC env override. Under the file's 3.0.3 profile it is 4176/4240: only the R5900 padloop nops in the inlined strlen loops and the in-loop case-label alignment nops are missing. Compiler-build residual: DisplayText.c is listed for 3.0.3 only for TXT_vAfficheSpecialWithTransparency.",
+      "size": 4240,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
+      "status": "MISMATCH",
+      "target_size": 4240,
+      "unresolved_relocations": [
+        {
+          "offset": 364,
+          "symbol": "@987",
+          "type": 5
+        },
+        {
+          "offset": 388,
+          "symbol": "@987",
+          "type": 6
+        },
+        {
+          "offset": 424,
+          "symbol": "@988",
+          "type": 5
+        },
+        {
+          "offset": 432,
+          "symbol": "@988",
+          "type": 6
+        },
+        {
+          "offset": 788,
+          "symbol": "@987",
+          "type": 5
+        },
+        {
+          "offset": 812,
+          "symbol": "@987",
+          "type": 6
+        },
+        {
+          "offset": 848,
+          "symbol": "@988",
+          "type": 5
+        },
+        {
+          "offset": 856,
+          "symbol": "@988",
+          "type": 6
+        },
+        {
+          "offset": 1324,
+          "symbol": "@987",
+          "type": 5
+        },
+        {
+          "offset": 1348,
+          "symbol": "@987",
+          "type": 6
+        },
+        {
+          "offset": 1384,
+          "symbol": "@988",
+          "type": 5
+        },
+        {
+          "offset": 1392,
+          "symbol": "@988",
+          "type": 6
+        },
+        {
+          "offset": 1772,
+          "symbol": "@987",
+          "type": 5
+        },
+        {
+          "offset": 1796,
+          "symbol": "@987",
+          "type": 6
+        },
+        {
+          "offset": 1832,
+          "symbol": "@988",
+          "type": 5
+        },
+        {
+          "offset": 1840,
+          "symbol": "@988",
+          "type": 6
+        },
+        {
+          "offset": 2220,
+          "symbol": "@987",
+          "type": 5
+        },
+        {
+          "offset": 2244,
+          "symbol": "@987",
+          "type": 6
+        },
+        {
+          "offset": 2280,
+          "symbol": "@988",
+          "type": 5
+        },
+        {
+          "offset": 2288,
+          "symbol": "@988",
+          "type": 6
+        },
+        {
+          "offset": 3252,
+          "symbol": "@987",
+          "type": 5
+        },
+        {
+          "offset": 3276,
+          "symbol": "@987",
+          "type": 6
+        },
+        {
+          "offset": 3312,
+          "symbol": "@988",
+          "type": 5
+        },
+        {
+          "offset": 3320,
+          "symbol": "@988",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x00324e90",
+      "candidate_size": 3292,
+      "first_difference": 86,
+      "implementation": "void ComputePixelWidthAndHeightOfString(unsigned char* szText, float* W, float* H);\nvoid TXT_vDrawAStringOnLine(float fX, float fY, unsigned char* szText, _JFFTXT_* p);\nvoid TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p);\nvoid GLI_vDisplayFrame(float* a3_fPosition, float* a3_fDirection, float fTransparency, GLD_tdstViewportAttributes_* p_stVpt);\nvoid GLI_vSetGlobalAlpha(float fAlpha);\nvoid GLI_vEnd2DSpritesWithUVs(void);\nunsigned char fn_bIsEngineInPause(void);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\TXT\\DisplayText.c lines 81\u201386 */\n/* addr: 0x003236a0  size: 56 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 84\n *   +0x0004 -> line 81\n *   +0x0008 -> line 84\n *   +0x000c -> line 81\n *   +0x0010 -> line 82\n *   +0x0014 -> line 84\n *   +0x0018 -> line 83\n *   +0x001c -> line 84\n *   +0x0024 -> line 85\n *   +0x002c -> line 86\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\nextern unsigned char g_NbFont;\nextern unsigned char g_ucNbFontBitmap;\nvoid TXT_ChangeDefaultColor(float xR, float xG, float xB);\nvoid TXT_vInit(void);\n\nvoid fn_vInitFont(void)\n{\n    g_NbFont = 0;\n    g_ucNbFontBitmap = 0;\n    TXT_ChangeDefaultColor(1.0f, 1.0f, 1.0f);\n    TXT_vInit();\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "ComputePixelWidthAndHeightOfString",
+      "reason": "Full reconstruction, size exact 3292/3292, relocs 21/21, 3.0.1 profile. It reuses the TXT_strchr/TXT_memcpy/TXT_atoi/TXT_strlen inlines and adds TXT_fn_fGetCharPixelWidth/Height inlines (16.0f/66.0f fallbacks); initialised declarations in original line order fix the float registers. Residual is only the outer-default height inline (line 1457): retail keeps the font base and cChar*14 from the width inline and re-adds them, with the 66.0f path as the bnez fall-through. MWCC re-masks cChar, recomputes *14, and puts the 66.0f block last. Pointer-local vs field-access forms, ternary/if/var shapes, param types and caller-side max forms do not change it.",
+      "size": 3292,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
+      "status": "MISMATCH",
+      "target_size": 3292,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -58629,6 +58810,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
       "status": "MATCH"
     },
+    "0x001fef80": {
+      "address": "0x001fef80",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPG_fn_lBuildOrderedPath",
+      "size": 1768,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
     "0x001ff670": {
       "address": "0x001ff670",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -58645,11 +58834,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
       "status": "MATCH"
     },
+    "0x001ffbd0": {
+      "address": "0x001ffbd0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPG_fn_lShortestPath",
+      "size": 1364,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
     "0x00200130": {
       "address": "0x00200130",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "WPG_fn_hGetNearestGraph",
       "size": 160,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
+      "status": "MATCH"
+    },
+    "0x002001d0": {
+      "address": "0x002001d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "WPG_xGetCloserWPDistInGraph",
+      "size": 396,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/WPgraphe.c",
       "status": "MATCH"
     },
@@ -77885,6 +78090,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
       "status": "MATCH"
     },
+    "0x00324530": {
+      "address": "0x00324530",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "TXT_GetBoundingBox2",
+      "size": 852,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
+      "status": "MATCH"
+    },
+    "0x00324890": {
+      "address": "0x00324890",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "TXT_vDrawString",
+      "size": 1528,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
+      "status": "MATCH"
+    },
+    "0x00325b70": {
+      "address": "0x00325b70",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "TXT_vDrawAStringOnLine",
+      "size": 4240,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
+      "status": "MATCH"
+    },
     "0x00326c00": {
       "address": "0x00326c00",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -77906,6 +78135,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "TXT_vInit",
       "size": 112,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
+      "status": "MATCH"
+    },
+    "0x003274a0": {
+      "address": "0x003274a0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "TXT_vAffiche",
+      "size": 1232,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c",
       "status": "MATCH"
     },

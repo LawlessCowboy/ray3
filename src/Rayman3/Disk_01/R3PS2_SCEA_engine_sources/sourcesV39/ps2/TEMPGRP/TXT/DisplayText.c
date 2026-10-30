@@ -3780,10 +3780,16 @@ float TXT_g_StringExtents[4];
 char g_GLI_bForceAAAColor;
 char g_bCanResize2DSpriteWithPercentAccordingToViewportRatio;
 tdstEngineStructure_ g_stEngineStructure;
-_tdstFont g_ListOfFonts;
-_tdstBitmapFont g_TabBitmapFont;
+_tdstFont g_ListOfFonts[2];
+_tdstBitmapFont g_TabBitmapFont[50];
 unsigned char g_ucCurrentViewport;
 
+char* strstr(const char* _pszString, const char* _pszSubString);
+unsigned int strlen(const char* _pszString);
+void* memcpy(void* _pDst, const void* _pSrc, unsigned int _ulSize);
+void GLI_xSetMaterialAmbientCoef(int hMaterial, GEO_tdstColor_* p_stColor);
+void ComputePixelWidthAndHeightOfString(unsigned char* szText, float* W, float* H);
+void TXT_vDrawAStringOnLine(float fX, float fY, unsigned char* szText, _JFFTXT_* p);
 void TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p);
 void GLI_vDisplayFrame(float* a3_fPosition, float* a3_fDirection, float fTransparency, GLD_tdstViewportAttributes_* p_stVpt);
 void GLI_vSetGlobalAlpha(float fAlpha);
@@ -4357,9 +4363,52 @@ void TXT_vReinitStates(void)
 void TXT_GetBoundingBox2(GLD_tdstViewportAttributes_* p_stVpt, unsigned char* String, int* x1, int* y1f, int* x2, int* y2, int XPosText, int YPosText)
 {
     float fRatioVpt;
-    float H;
     float W;
-    /* TODO: decompile from asm/... */
+    float H;
+
+    if (String)
+    {
+        g_p_stVpt = (int)p_stVpt;
+        TXT_g_CurrentWidthRatio = 1.0f;
+        TXT_g_CurrentHeightRatio = 1.0f;
+        fRatioVpt = (float)p_stVpt->dwHeight / (float)p_stVpt->dwWidth;
+        if (fRatioVpt > 0.75f)
+        {
+            TXT_g_CurrentHeightRatio = 0.75f / fRatioVpt;
+        }
+        else if (fRatioVpt < 0.75f)
+        {
+            TXT_g_CurrentWidthRatio = fRatioVpt / 0.75f;
+        }
+
+        g_ucCurrentNumFont = 0;
+        ComputePixelWidthAndHeightOfString(String, &W, &H);
+        *x1 = XPosText;
+        if (String[0] == '\\')
+        {
+            switch (String[1])
+            {
+            case 'j':
+                switch (String[2])
+                {
+                case 'c':
+                    *x1 = (int)((float)XPosText - 50.0f * W / (float)p_stVpt->dwWidth);
+                    break;
+                case 'l':
+                    *x1 = XPosText;
+                    break;
+                case 'r':
+                    *x1 = (int)((float)XPosText - 100.0f * W / (float)p_stVpt->dwWidth);
+                    break;
+                }
+                break;
+            }
+        }
+
+        *y2 = YPosText;
+        *y1f = (int)((float)*y2 - 100.0f * H / (float)p_stVpt->dwHeight);
+        *x2 = (int)((float)*x1 + 100.0f * W / (float)p_stVpt->dwWidth);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1694–1709 */
@@ -4481,19 +4530,142 @@ void TXT_GetBoundingBox(int Index, int* x1, int* y1f, int* x2, int* y2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline float MTH_M_xMul(float _xA, float _xB)
+{
+    return _xA * _xB;
+}
+
+static inline unsigned int TXT_strlen(const char* s)
+{
+    unsigned int n = 0;
+    while (*s++) n++;
+    return n;
+}
+
 void TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p)
 {
+    float H;
     float Lp;
     unsigned short L;
+    unsigned char* pDest;
     unsigned char* szDisplayString;
     unsigned char g_ucFormatCenter;
-    float H;
     float fRatioVpt;
     float fX;
     float fY;
-    unsigned char* pDest;
     unsigned char* szString;
-    /* TODO: decompile from asm/... */
+
+    TXT_Time += 0.016f;
+
+    g_p_stVpt = (int)p_stVpt;
+    g_ucCurrentNumFont = 0;
+    g_fCurrentSizeFontW = 1.0f;
+    g_fCurrentSizeFontH = 1.0f;
+    g_fInterLetterRatio = 1.0f;
+
+    TXT_g_CurrentWidthRatio = 1.0f;
+    TXT_g_CurrentHeightRatio = 1.0f;
+    fRatioVpt = (float)p_stVpt->dwHeight / (float)p_stVpt->dwWidth;
+    if (fRatioVpt > 0.75f)
+    {
+        TXT_g_CurrentHeightRatio = 0.75f / fRatioVpt;
+    }
+    else if (fRatioVpt < 0.75f)
+    {
+        TXT_g_CurrentWidthRatio = fRatioVpt / 0.75f;
+    }
+
+    g_stColor.xR = MTH_M_xMul((float)((p->ulColor >> 16) & 0xFF), 0.003921569f);
+    g_stColor.xG = MTH_M_xMul((float)((p->ulColor >> 8) & 0xFF), 0.003921569f);
+    g_stColor.xB = MTH_M_xMul((float)(p->ulColor & 0xFF), 0.003921569f);
+    g_stColor.xA = 1.0f;
+
+    GLI_xSetMaterialAmbientCoef(g_hMaterialForText, &g_stColor);
+    GLI_vSetGlobalAlpha((float)p->ucTransparency);
+
+    szString = (unsigned char*)p->pString;
+    if (szString)
+    {
+        fY = p->a3_Pos[1] * (float)p_stVpt->dwHeight / 1000.0f;
+
+        if (TXT_g_GettingExtents)
+        {
+            if (fY < TXT_g_StringExtents[1]) TXT_g_StringExtents[1] = fY;
+            if (fY > TXT_g_StringExtents[3]) TXT_g_StringExtents[3] = fY;
+        }
+
+        g_ucCurrentNumTextureFont = 50;
+
+        g_ucFormatCenter = 1;
+
+        do
+        {
+            g_fLetterHeightMax = 0.0f;
+            pDest = (unsigned char*)strstr((char*)szString, "\\l");
+            if (pDest)
+            {
+                L = pDest - szString;
+                pDest += 2;
+            }
+            else
+            {
+                L = TXT_strlen((char*)szString);
+            }
+            {
+                char* szDst = (char*)g_szTmpStringToDisplay;
+                char* szSrc = (char*)szString;
+                unsigned int n = L;
+                while (n--) *szDst++ = *szSrc++;
+            }
+            szDisplayString = g_szTmpStringToDisplay;
+            g_szTmpStringToDisplay[L] = 0;
+            szString = pDest;
+
+            fX = p->a3_Pos[0] * (float)p_stVpt->dwWidth / 1000.0f;
+
+            if (g_szTmpStringToDisplay[0] == '\\')
+            {
+                switch (g_szTmpStringToDisplay[1])
+                {
+                case 'j':
+                    switch (g_szTmpStringToDisplay[2])
+                    {
+                    case 'c':
+                        g_ucFormatCenter = 3;
+                        break;
+                    case 'l':
+                        g_ucFormatCenter = 1;
+                        break;
+                    case 'r':
+                        g_ucFormatCenter = 2;
+                        break;
+                    }
+                    szDisplayString += 3;
+                    break;
+                }
+            }
+
+            switch (g_ucFormatCenter)
+            {
+            case 3:
+                ComputePixelWidthAndHeightOfString(szDisplayString, &Lp, &H);
+                fX -= Lp * 0.5f;
+                break;
+            case 1:
+                break;
+            case 2:
+                ComputePixelWidthAndHeightOfString(szDisplayString, &Lp, &H);
+                fX -= Lp;
+                break;
+            }
+            TXT_vDrawAStringOnLine(fX, fY, szDisplayString, p);
+
+            fY += (4.0f + g_fCurrentSizeFontH * (float)g_ListOfFonts[g_ucCurrentNumFont].TabOfCharacter['a'].uwH > 4.0f + g_fLetterHeightMax) ? 4.0f + g_fCurrentSizeFontH * (float)g_ListOfFonts[g_ucCurrentNumFont].TabOfCharacter['a'].uwH : 4.0f + g_fLetterHeightMax;
+        } while (pDest);
+    }
+
+    TXT_g_CurrentWidthRatio = 1.0f;
+    TXT_g_CurrentHeightRatio = 1.0f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1327–1468 */
@@ -4637,21 +4809,171 @@ void TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline char* TXT_strchr(char* s, char c)
+{
+    while (*s && *s != c) s++;
+    return *s ? s : NULL;
+}
+
+inline void TXT_memcpy(char* d, char* s, unsigned int n)
+{
+    while (n--) *d++ = *s++;
+}
+
+inline int TXT_atoi(char* s)
+{
+    int n = 0;
+    while (*s) n = n * 10 + (*s++ - '0');
+    return n;
+}
+
+inline float TXT_fn_fGetCharPixelWidth(unsigned char ucFont, unsigned char cChar, float fSizeW)
+{
+    _tdstDefCharacter* p_stDefC = &g_ListOfFonts[ucFont].TabOfCharacter[cChar];
+
+    if (!p_stDefC->ucDef)
+        return 16.0f;
+    return fSizeW * (TXT_g_CurrentWidthRatio * ((float)p_stDefC->uwW * (0.0015625f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth)));
+}
+
+inline float TXT_fn_fGetCharPixelHeight(unsigned char ucFont, unsigned char cChar, float fSizeH)
+{
+    if (!g_ListOfFonts[ucFont].TabOfCharacter[cChar].ucDef)
+        return 66.0f;
+    return fSizeH * (TXT_g_CurrentHeightRatio * ((float)g_ListOfFonts[ucFont].TabOfCharacter[cChar].uwH * (0.0020833f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight))
+                   + TXT_g_CurrentHeightRatio * (0.0020833f * ((float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight * (float)g_ListOfFonts[ucFont].TabOfCharacter[cChar].wYBaseLine)));
+}
+
 void ComputePixelWidthAndHeightOfString(unsigned char* szText, float* W, float* H)
 {
-    unsigned short L;
-    unsigned short i;
-    unsigned char szNum[5];
-    unsigned char* szTmp2;
+    float fWidthMax = 0.0f, fPixelSize = 0.0f;
+    float fHeightMax = 0.0f, fHeightMax2 = 0.0f;
+    float fCurrentSizeFontW = g_fCurrentSizeFontW;
+    float fCurrentSizeFontH = g_fCurrentSizeFontH;
+    unsigned char ucCurrentNumFont = g_ucCurrentNumFont;
     unsigned char* szTmp;
-    unsigned char ucCurrentNumFont;
-    float fCurrentSizeFontH;
-    float fCurrentSizeFontW;
-    float fHeightMax;
-    float fHeightMax2;
-    float fPixelSize;
-    float fWidthMax;
-    /* TODO: decompile from asm/... */
+    unsigned char* szTmp2;
+    unsigned char szNum[5];
+    unsigned short i;
+    unsigned short L;
+
+    L = TXT_strlen((char*)szText);
+    for (i = 0; i < L; i++)
+    {
+        switch (szText[i])
+        {
+        case '\\':
+            i++;
+            switch (szText[i])
+            {
+            case 'l':
+                if (fPixelSize > fWidthMax)
+                    fWidthMax = fPixelSize;
+                fPixelSize = 0.0f;
+                fHeightMax += 4.0f + fHeightMax2;
+                break;
+            case 'f':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                ucCurrentNumFont = TXT_atoi((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                break;
+            case 'z':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                fCurrentSizeFontW = 0.004901961f * (float)TXT_atoi((char*)szNum);
+                fCurrentSizeFontH = 0.004901961f * (float)TXT_atoi((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                break;
+            case 'w':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                fCurrentSizeFontW = 0.004901961f * (float)TXT_atoi((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                break;
+            case 'h':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                fCurrentSizeFontH = 0.004901961f * (float)TXT_atoi((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                break;
+            case 's':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                i += TXT_strlen((char*)szNum) + 1;
+                break;
+            case 'b':
+                break;
+            case 'c':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, ':');
+                i += (unsigned short)(szTmp2 - szTmp + 1);
+                szTmp = szTmp2 + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, ':');
+                i += (unsigned short)(szTmp2 - szTmp + 1);
+                szTmp = szTmp2 + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                i += (unsigned short)(szTmp2 - szTmp + 1);
+                break;
+            case 'j':
+                i++;
+                break;
+            default:
+                fPixelSize += TXT_fn_fGetCharPixelWidth(ucCurrentNumFont, szText[i - 1], fCurrentSizeFontW);
+                fPixelSize += TXT_fn_fGetCharPixelWidth(ucCurrentNumFont, szText[i], fCurrentSizeFontW);
+                break;
+            }
+            break;
+        default:
+            fPixelSize += TXT_fn_fGetCharPixelWidth(ucCurrentNumFont, szText[i], fCurrentSizeFontW);
+            {
+                float fCharHeight = TXT_fn_fGetCharPixelHeight(ucCurrentNumFont, szText[i], fCurrentSizeFontH);
+                if (fCharHeight > fHeightMax2)
+                    fHeightMax2 = fCharHeight;
+            }
+            break;
+        }
+    }
+
+    if (fPixelSize > fWidthMax)
+        fWidthMax = fPixelSize;
+    fHeightMax += fHeightMax2;
+    *W = fWidthMax;
+    *H = fHeightMax;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1111–1296 */
@@ -4856,17 +5178,197 @@ void ComputePixelWidthAndHeightOfString(unsigned char* szText, float* W, float* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int sprintf(char* szBuffer, const char* szFormat, ...);
+int Erm_fn_iMessageBox(char* _szText, char* _szTitle, int _iType);
+float atoff(const char* _szString);
+float sinf(float _xValue);
+float fn_fDrawAChar(float fX, float fY, unsigned char cChar);
+
 void TXT_vDrawAStringOnLine(float fX, float fY, unsigned char* szText, _JFFTXT_* p)
 {
-    char Str[100];
-    float sintime;
-    unsigned short i;
-    unsigned short L;
-    float fCurX;
-    unsigned char szNum[5];
-    unsigned char* szTmp2;
     unsigned char* szTmp;
-    /* TODO: decompile from asm/... */
+    unsigned char* szTmp2;
+    unsigned char szNum[5];
+    float fCurX;
+    unsigned short L;
+    unsigned short i;
+    float sintime;
+    char Str[100];
+
+    fCurX = fX;
+
+    if (p->bOther & 0x80)
+        TXT_g_WeirdThing = 1;
+
+    L = TXT_strlen((char*)szText);
+    for (i = 0; i < L; i++)
+    {
+        switch (szText[i])
+        {
+        case '\\':
+            i++;
+            switch (szText[i])
+            {
+            case 'f':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    if (TXT_bFirstAlert)
+                    {
+                        char Str[100];
+                        TXT_bFirstAlert = 0;
+                        sprintf(Str, "Num = %d, String = %s", p - g_JFFTXT, p->pString);
+                        Erm_fn_iMessageBox(Str, "Bad Text", 0);
+                    }
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                g_ucCurrentNumFont = TXT_atoi((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                break;
+            case 'z':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    if (TXT_bFirstAlert)
+                    {
+                        char Str[100];
+                        TXT_bFirstAlert = 0;
+                        sprintf(Str, "Num = %d, String = %s", p - g_JFFTXT, p->pString);
+                        Erm_fn_iMessageBox(Str, "Bad Text", 0);
+                    }
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                g_fCurrentSizeFontW = 0.004901961f * (float)TXT_atoi((char*)szNum);
+                g_fCurrentSizeFontH = 0.004901961f * (float)TXT_atoi((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                break;
+            case 'w':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    if (TXT_bFirstAlert)
+                    {
+                        char Str[100];
+                        TXT_bFirstAlert = 0;
+                        sprintf(Str, "Num = %d, String = %s", p - g_JFFTXT, p->pString);
+                        Erm_fn_iMessageBox(Str, "Bad Text", 0);
+                    }
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                g_fCurrentSizeFontW = 0.004901961f * (float)TXT_atoi((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                break;
+            case 'h':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    if (TXT_bFirstAlert)
+                    {
+                        char Str[100];
+                        TXT_bFirstAlert = 0;
+                        sprintf(Str, "Num = %d, String = %s", p - g_JFFTXT, p->pString);
+                        Erm_fn_iMessageBox(Str, "Bad Text", 0);
+                    }
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                g_fCurrentSizeFontH = 0.004901961f * (float)TXT_atoi((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                break;
+            case 's':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    if (TXT_bFirstAlert)
+                    {
+                        char Str[100];
+                        TXT_bFirstAlert = 0;
+                        sprintf(Str, "Num = %d, String = %s", p - g_JFFTXT, p->pString);
+                        Erm_fn_iMessageBox(Str, "Bad Text", 0);
+                    }
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                g_fInterLetterRatio = atoff((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                break;
+            case 'b':
+                sintime = sinf(5.0f * TXT_Time);
+                g_stColor.xR = 0.65f + 0.35f * sintime;
+                g_stColor.xG = 0.2f + 0.2f * sintime;
+                g_stColor.xB = 0.2f + 0.2f * sintime;
+                GLI_xSetMaterialAmbientCoef(g_hMaterialForText, &g_stColor);
+                break;
+            case 'c':
+                szTmp = szText + i + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, ':');
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                g_stColor.xR = 0.003921569f * (float)TXT_atoi((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                szTmp = szTmp2 + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, ':');
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                g_stColor.xG = 0.003921569f * (float)TXT_atoi((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                szTmp = szTmp2 + 1;
+                szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, TXT_g_EndCode[0]);
+                if (!szTmp2)
+                {
+                    if (TXT_bFirstAlert)
+                    {
+                        char Str[100];
+                        TXT_bFirstAlert = 0;
+                        sprintf(Str, "Num = %d, String = %s", p - g_JFFTXT, p->pString);
+                        Erm_fn_iMessageBox(Str, "Bad Text", 0);
+                    }
+                    szTmp2 = (unsigned char*)TXT_strchr((char*)szTmp, '\\');
+                }
+                TXT_memcpy((char*)szNum, (char*)szTmp, szTmp2 - szTmp);
+                ((char*)szNum)[szTmp2 - szTmp] = 0;
+                g_stColor.xB = 0.003921569f * (float)TXT_atoi((char*)szNum);
+                i += TXT_strlen((char*)szNum) + 1;
+                if (g_stColor.xR == 0.0f && g_stColor.xG == 0.0f && g_stColor.xB == 0.0f)
+                {
+                    g_stColor.xR = MTH_M_xMul((float)((p->ulColor >> 16) & 0xFF), 0.003921569f);
+                    g_stColor.xG = MTH_M_xMul((float)((p->ulColor >> 8) & 0xFF), 0.003921569f);
+                    g_stColor.xB = MTH_M_xMul((float)(p->ulColor & 0xFF), 0.003921569f);
+                }
+                GLI_xSetMaterialAmbientCoef(g_hMaterialForText, &g_stColor);
+                break;
+            default:
+                fCurX += fn_fDrawAChar(fCurX, fY, szText[i - 1]);
+                fCurX += fn_fDrawAChar(fCurX, fY, szText[i]);
+                break;
+            }
+            break;
+        default:
+            fCurX += fn_fDrawAChar(fCurX, fY, szText[i]);
+            break;
+        }
+
+        if (TXT_g_GettingExtents)
+        {
+            if (fCurX < TXT_g_StringExtents[0]) TXT_g_StringExtents[0] = fCurX;
+            if (fCurX > TXT_g_StringExtents[2]) TXT_g_StringExtents[2] = fCurX;
+        }
+    }
+
+    TXT_g_WeirdThing = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1079–1079 */
@@ -4961,22 +5463,118 @@ void TXT_fn_fComputePixelLengthOfString(char* _szText, float* W, float* H)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int rand(void);
+#define RAND_MAX 0x7fffffff
+int TEX_fn_lGetTextureCaps(int p_stTexture);
+void TEX_fn_vSetTextureCaps(int p_stTexture, int _lTextureCaps);
+int TEX_fn_lGetTextureRealWidth(int p_stTexture);
+int TEX_fn_lGetTextureRealHeight(int p_stTexture);
+void GLI_xSetMaterialTextureForTXT(int hMaterial, int p_stTexture);
+float GLI_vGetGlobalAlpha(void);
+void GLI_vDraw2DSpriteWithUVWithOptimization(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xXMax, float xYMin, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, int hMaterial);
+
+inline float TXT_fn_fGetKerning(unsigned char ucFirst, unsigned char ucSecond, _tdstDefCharacter* p_stDefC)
+{
+    unsigned short i;
+    _tdstFont* p_stFont = &g_ListOfFonts[g_ucCurrentNumFont];
+
+    for (i = 0; i < p_stFont->uwNbKerning; i++)
+    {
+        if (p_stFont->TabOfKerningPairsNotNull[i].wFirst == ucFirst && p_stFont->TabOfKerningPairsNotNull[i].wSecond == ucSecond)
+        {
+            if (p_stDefC->uwXBlackBox == 0)
+                return 0.0f;
+            return (float)p_stDefC->uwW / (float)p_stDefC->uwXBlackBox * (float)p_stFont->TabOfKerningPairsNotNull[i].wKernAmount;
+        }
+    }
+    return 0.0f;
+}
+
 float fn_fDrawAChar(float fX, float fY, unsigned char cChar)
 {
-    float alphaval;
-    float dy2;
-    float dy1;
-    float dx2;
-    float dx1;
-    float fKerning;
-    _tdstDefCharacter stDefC;
-    float fWidth;
-    float fHeight;
-    float fV;
-    float fU;
-    float fVorigin;
     float fUorigin;
-    /* TODO: decompile from asm/... */
+    float fVorigin;
+    float fU;
+    float fV;
+    float fHeight;
+    float fWidth;
+    _tdstDefCharacter stDefC;
+    float fKerning;
+    float dx1;
+    float dx2;
+    float dy1;
+    float dy2;
+    float alphaval;
+
+    stDefC = g_ListOfFonts[g_ucCurrentNumFont].TabOfCharacter[cChar];
+
+    if (!stDefC.ucDef)
+        return 16.0f;
+
+    if (stDefC.ucRefToFontBitmap != g_ucCurrentNumTextureFont)
+    {
+        g_ucCurrentNumTextureFont = stDefC.ucRefToFontBitmap;
+        g_p_TextData = (int)g_TabBitmapFont[stDefC.ucRefToFontBitmap].p_TextureData;
+        TEX_fn_vSetTextureCaps(g_p_TextData, TEX_fn_lGetTextureCaps(g_p_TextData) | 0x200);
+        GLI_xSetMaterialAmbientCoef(g_hMaterialForText, &g_stColor);
+        GLI_xSetMaterialTextureForTXT(g_hMaterialForText, g_p_TextData);
+        g_fOOTexWidth = 1.0f / (float)TEX_fn_lGetTextureRealWidth(g_p_TextData);
+        g_fOOTexHeight = 1.0f / (float)TEX_fn_lGetTextureRealHeight(g_p_TextData);
+    }
+
+    fUorigin = (float)stDefC.uwX * g_fOOTexWidth;
+    fVorigin = (float)stDefC.uwY * g_fOOTexHeight;
+    fU = (float)stDefC.uwW * g_fOOTexWidth;
+    fV = (float)stDefC.uwH * g_fOOTexHeight;
+
+    fWidth = g_fCurrentSizeFontW * (float)stDefC.uwW;
+    fHeight = g_fCurrentSizeFontH * (float)stDefC.uwH;
+
+    fWidth = TXT_g_CurrentWidthRatio * (fWidth * (0.0015625f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth));
+    fHeight = TXT_g_CurrentHeightRatio * (fHeight * (0.0020833f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight));
+
+    if (!g_ucPreviousChar)
+        fKerning = 0.0f;
+    else
+        fKerning = TXT_fn_fGetKerning(g_ucPreviousChar, cChar, &stDefC);
+    fX += g_fCurrentSizeFontW * fKerning;
+
+    fY -= fHeight; fY += TXT_g_CurrentHeightRatio * (0.0020833f * ((float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight * (g_fCurrentSizeFontH * (float)stDefC.wYBaseLine)));
+
+    if (!TXT_g_GettingExtents)
+    {
+        if (TXT_g_WeirdThing)
+        {
+            dx1 = 0.7f * -fWidth + (0.0f - 0.7f * -fWidth) * rand() / RAND_MAX;
+            dx2 = 0.7f * fWidth * rand() / RAND_MAX;
+            dy1 = 0.7f * -fHeight + (0.0f - 0.7f * -fHeight) * rand() / RAND_MAX;
+            dy2 = 0.7f * fHeight * rand() / RAND_MAX;
+
+            alphaval = GLI_vGetGlobalAlpha();
+            GLI_vSetGlobalAlpha(80.0f + 120.0f * rand() / RAND_MAX);
+
+            GLI_vDraw2DSpriteWithUVWithOptimization((GLD_tdstViewportAttributes_*)g_p_stVpt, fX + dx1, fX + fWidth + dx2, fY + dy1, fY + fHeight + dy2, fUorigin, fUorigin + fU, 1.0f - fVorigin, 1.0f - (fVorigin + fV), g_hMaterialForText);
+
+            GLI_vSetGlobalAlpha(alphaval);
+        }
+        else
+        {
+            GLI_vDraw2DSpriteWithUVWithOptimization((GLD_tdstViewportAttributes_*)g_p_stVpt, fX, fX + fWidth, fY, fY + fHeight, fUorigin, fUorigin + fU, 1.0f - fVorigin, 1.0f - (fVorigin + fV), g_hMaterialForText);
+        }
+    }
+    else
+    {
+        if (fX < TXT_g_StringExtents[0]) TXT_g_StringExtents[0] = fX;
+        if (fY < TXT_g_StringExtents[1]) TXT_g_StringExtents[1] = fY;
+        if (fX + fWidth > TXT_g_StringExtents[2]) TXT_g_StringExtents[2] = fX + fWidth;
+        if (fY + fHeight > TXT_g_StringExtents[3]) TXT_g_StringExtents[3] = fY + fHeight;
+    }
+
+    if (fHeight > g_fLetterHeightMax)
+        g_fLetterHeightMax = fHeight;
+
+    g_ucPreviousChar = cChar;
+    return g_fInterLetterRatio * (fWidth + g_fCurrentSizeFontW * fKerning);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 915–918 */
@@ -5166,9 +5764,8 @@ void TXT_vAffiche(GLD_tdstViewportAttributes_* p_stVpt, float fFrameLenght)
                     x1[1] = p->a3_Pos[1] * (float)p_stVpt->dwHeight * 0.001f;
                     TXT_g_StringExtents[2] = x1[0]; TXT_g_StringExtents[0] = x1[0];
                     TXT_g_StringExtents[3] = x1[1]; TXT_g_StringExtents[1] = x1[1];
-                    g_ucCurrentNumTextureFont = 50;
+                    g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f; g_ucCurrentNumFont = 0;
                     TXT_g_GettingExtents = 1;
-                    g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f; g_ucCurrentNumFont = 0;
                     TXT_vDrawString(p_stVpt, p);
 
                     TXT_g_GettingExtents = 0;

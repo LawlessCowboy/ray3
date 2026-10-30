@@ -164,11 +164,14 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECBhv.
 # address, 3.0.1 materialises it in a register); all six pre-existing recorded
 # matches in the file still verify under 3.0.3.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AICommonTools.c
-# TXT/DisplayText.c: TXT_vAfficheSpecialWithTransparency is byte-exact (bytes,
-# relocations and line map) only under MWCC 3.0.3-020716, which inlines the
-# (unsigned int)float conversion where 3.0.1 emits a jal fptoui; every other
-# recorded match in the file is identical under both builds.
-src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/TXT/DisplayText.c
+# TXT/DisplayText.c was listed here for TXT_vAfficheSpecialWithTransparency,
+# byte-exact only under 3.0.3-020716 (3.0.1 emits a jal fptoui for its
+# (unsigned int)float conversion). It is now back on the 3.0.1 default: the
+# file's inlined strlen loops and in-loop case labels need 3.0.1's padloop and
+# label-alignment nops, which makes TXT_vDrawString and TXT_vDrawAStringOnLine
+# byte-exact (3.0.3 drops one to several nops in each). Trade-off: 25 recorded
+# matches under 3.0.1 against 24 under 3.0.3, with
+# TXT_vAfficheSpecialWithTransparency lost.
 # AI/AIGame/LNK_Proc.c: fn_CollisionRayCastLnKProc matches only under MWCC
 # 3.0.3-020716 (3.0.3 emits the retail's split lui $at,%hi(g) / sw %lo(g+off)($at)
 # form for a punned global vector member, 3.0.1 materialises the 32-bit
