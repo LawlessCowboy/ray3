@@ -44661,6 +44661,171 @@
       "status": "MISMATCH",
       "target_size": 2112,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x0017c750",
+      "candidate_size": 2264,
+      "first_difference": 1748,
+      "implementation": "void impPS2glClear(unsigned int mask)\n{\n    anon_35 qword;\n    anon_35 qword2;\n    unsigned int X1;\n    unsigned int XLAST;\n    unsigned int X2;\n    unsigned int i;\n\n    GsUpdateRegisters();\n\n    qword.u64Data[1] = 0;\n    qword.u64Data[0] = 0;\n    qword2.u64Data[1] = 0;\n    qword2.u64Data[0] = 0;\n\n    qword.s.f3 = 1;\n    qword.s.f4 = 1;\n\n    if ((mask & 0x4100) != 0x4100)\n    {\n        qword.s.f0 = 1;\n        qword.s.f1 = 0;\n        switch (mask & 0x4100)\n        {\n        case 0:\n            qword.s.f2 = 0;\n            break;\n        case 0x4000:\n            qword.s.f2 = 1;\n            break;\n        case 0x100:\n            qword.s.f2 = 2;\n            break;\n        }\n    }\n    qword.ubData[8] = 0x47;\n    GsSendData(0xE, &qword);\n\n    qword.u64Data[0] = 0;\n    qword.ubData[8] = 0x1b;\n    GsSendData(0xE, &qword);\n\n    qword.e.low3 = 6;\n    qword.ubData[8] = 0;\n    GsSendData(0xE, &qword);\n\n    if (g_stBufferInfo.iAuxBufferBase && g_PS2glContext.eDrawBuffer == 0x409)\n    {\n        qword.c.r = 0x78;\n        qword.c.g = 0x78;\n        qword.c.b = 0x78;\n        qword.c.a = 0x78;\n    }\n    else\n    {\n        {\n            float c = g_PS2glContext.vColorClearValue[0];\n            c = (c < 0.0f) ? 0.0f : ((c > 1.0f) ? 1.0f : c);\n            qword.c.r = (unsigned char)(int)(255.0f * c);\n        }\n        {\n            float c = g_PS2glContext.vColorClearValue[1];\n            c = (c < 0.0f) ? 0.0f : ((c > 1.0f) ? 1.0f : c);\n            qword.c.g = (unsigned char)(int)(255.0f * c);\n        }\n        {\n            float c = g_PS2glContext.vColorClearValue[2];\n            c = (c < 0.0f) ? 0.0f : ((c > 1.0f) ? 1.0f : c);\n            qword.c.b = (unsigned char)(int)(255.0f * c);\n        }\n        {\n            float c = g_PS2glContext.vColorClearValue[3];\n            c = (c < 0.0f) ? 0.0f : ((c > 1.0f) ? 1.0f : c);\n            qword.c.a = (unsigned char)(int)(255.0f * c);\n        }\n    }\n    qword.ubData[8] = 1;\n    GsSendData(0xE, &qword);\n\n    ((anon_35 *)&qword)->s.f5 = (unsigned int)((1.0f - g_PS2glContext.fDepthClearValue) * (g_PS2glContext.DepthRange[1] - g_PS2glContext.DepthRange[0]));\n    ((anon_35 *)&qword2)->s.f5 = (unsigned int)((1.0f - g_PS2glContext.fDepthClearValue) * (g_PS2glContext.DepthRange[1] - g_PS2glContext.DepthRange[0]));\n    X1 = (unsigned int)(16.0f * g_PS2glContext.ViewPort[0]);\n    XLAST = (unsigned int)(16.0f * (g_PS2glContext.ViewPort[0] + g_PS2glContext.ViewPort[2]));\n    *(unsigned short *)(&qword.c.b) = (unsigned short)(16.0f * g_PS2glContext.ViewPort[1]);\n    qword2.d.y = (unsigned short)(16.0f * (g_PS2glContext.ViewPort[1] + g_PS2glContext.ViewPort[3]));\n\n    if (g_stBufferInfo.iFrameBufferDepth == 0x20)\n    {\n        if (X1 & 0x1ff)\n        {\n            X2 = (X1 + 0x1ff) & ~0x1ff;\n            if (XLAST < X2) X2 = XLAST;\n            qword.d.x = X1;\n            qword.ubData[8] = 5;\n            GsSendData(0xE, &qword);\n            qword2.d.x = X2;\n            qword2.ubData[8] = 5;\n            GsSendData(0xE, &qword2);\n            X1 = X2;\n        }\n        X2 = (XLAST - X1) >> 9;\n        for (i = 0; i < X2; i++)\n        {\n            qword.d.x = X1;\n            qword.ubData[8] = 5;\n            GsSendData(0xE, &qword);\n            X1 += 0x200;\n            qword2.d.x = X1;\n            qword2.ubData[8] = 5;\n            GsSendData(0xE, &qword2);\n        }\n    }\n    else\n    {\n        if (X1 & 0x3ff)\n        {\n            X2 = (X1 + 0x3ff) & ~0x3ff;\n            if (XLAST < X2) X2 = XLAST;\n            qword.d.x = X1;\n            qword.ubData[8] = 5;\n            GsSendData(0xE, &qword);\n            qword2.d.x = X2;\n            qword2.ubData[8] = 5;\n            GsSendData(0xE, &qword2);\n            X1 = X2;\n        }\n        X2 = (XLAST - X1) >> 10;\n        for (i = 0; i < X2; i++)\n        {\n            qword.d.x = X1;\n            qword.ubData[8] = 5;\n            GsSendData(0xE, &qword);\n            X1 += 0x40;\n            qword2.d.x = X1;\n            qword2.ubData[8] = 5;\n            GsSendData(0xE, &qword2);\n        }\n    }\n    if (XLAST > X1)\n    {\n        qword.d.x = X1;\n        qword.ubData[8] = 5;\n        GsSendData(0xE, &qword);\n        qword2.d.x = XLAST;\n        qword2.ubData[8] = 5;\n        GsSendData(0xE, &qword2);\n    }\n\n    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.PRMODE;\n    qword.ubData[8] = 0x1b;\n    GsSendData(0xE, &qword);\n\n    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext;\n    qword.ubData[8] = 0;\n    GsSendData(0xE, &qword);\n\n    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.TEST_1;\n    qword.ubData[8] = 0x47;\n    GsSendData(0xE, &qword);\n\n    qword.ubData[8] = 0x48;\n    GsSendData(0xE, &qword);\n\n    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.RGBAQ;\n    qword.ubData[8] = 1;\n    GsSendData(0xE, &qword);\n\n    GsFlushBuffer();\n\n    if ((mask & 0x200) && g_stBufferInfo.iAccumBufferDepth)\n    {\n        impPS2glAccum(0x1500, 0.0f);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-sonnet-5-5",
+      "name": "impPS2glClear",
+      "reason": "Everything byte-matches (2264/2264, 68/68 relocs) except one delay slot: retail leaves nop in the 'b' after the 0x20-depth loop, MWCC fills it with a copy of the join's 'sltu at,s0,s1' (known fill-heuristic residual, see insight list). Tried if/else, switch, loop forms, comparison spellings.",
+      "size": 2264,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Fragment.c",
+      "status": "MISMATCH",
+      "target_size": 2264,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001f4440",
+      "candidate_size": 632,
+      "first_difference": 6,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Process__14AGO3_CanRippleFv",
+      "reason": "632/628: retail fills the ulSpriteLimit bnez delay slot with 'li a1,1' for m_Finished while we copy the join's lui into it; retail also delays the 85/340 constants past the fPosition mul. FP register order already right with decls fTransparency,fPosition,fMultiplier,fPercentage",
+      "size": 628,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 628,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001f69c0",
+      "candidate_size": 760,
+      "first_difference": 308,
+      "implementation": "",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "Display__21AGO3_TurningFistSmokeFP27GLD_tdstViewportAttributes_",
+      "reason": "760/760 bytes, one scheduling residual: in the first loop's else draw retail materialises the 0.5f V2 constant before the sprite address (+0x134..+0x148); everything else byte-exact. Handed to permuter",
+      "size": 760,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 760,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001f76e0",
+      "candidate_size": 808,
+      "first_difference": 297,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Display__15AGO3_ShootSmokeFP27GLD_tdstViewportAttributes_",
+      "reason": "808/808, no structural rows: register allocation only (arg regs a0/a1/a2/a3 and f0-f5 assigned differently; retail x/y/z in f5/f4/f3, matrix f0/f1/f2). Needs Vtmp int-word copy, in-loop field pointers, AGO3_M_xDot3 accumulator helper",
+      "size": 808,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 808,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001f8000",
+      "candidate_size": 820,
+      "first_difference": 321,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Process__23AGO3_WaveEnvelopedFist2Fv",
+      "reason": "820/820; only residual is scheduling of the delta setup at +0x140..+0x178: retail loads pPosition x/y/z before finishing the sprite offset (sll/addu after the lwc1s) with t9/s1/s0 swapped; plain subtraction left in source",
+      "size": 820,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 820,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001f8880",
+      "candidate_size": 832,
+      "first_difference": 36,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Process__22AGO3_WaveEnvelopedFistFv",
+      "reason": "832/832; body byte-exact bar loop-entry; residual is prologue scheduling of hoisted float constants (retail materialises 750/50/255/0.5 in a different order from 0x20..0x74)",
+      "size": 832,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 832,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001f5b20",
+      "candidate_size": 1004,
+      "first_difference": 316,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Display__14AGO3_FistSmokeFP27GLD_tdstViewportAttributes_",
+      "reason": "1004/1004: control flow and relocs right; residual is only argument scheduling in the else-branch draw calls (retail computes the position address last and reuses f14 as U0)",
+      "size": 1004,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 1004,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001f4910",
+      "candidate_size": 980,
+      "first_difference": 604,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Process__19AGO3_HurricaneUpperFv",
+      "reason": "980/980: logic right; residual is loop-tail schedule of the sprite index and t3/t4, f4/f5 register swap in the respawn block; permute.py cannot resolve mangled C++ method names",
+      "size": 980,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 980,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ee1a0",
+      "candidate_size": 1004,
+      "first_difference": 104,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Display__19AGO3_OrientedTargetFP27GLD_tdstViewportAttributes_",
+      "reason": "1004/1004, relocs ok: only residual is two adjacent loads swapped at +0x68 (retail reads m_Position.x before m_stDirection.x)",
+      "size": 1004,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 1004,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001f7120",
+      "candidate_size": 1464,
+      "first_difference": 46,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Init__21AGO3_TurningFistSmokeFP17MTH3D_tdstVector_P17MTH3D_tdstVector_P17GLI_tdstMaterial_f",
+      "reason": "1464/1464, relocs ok: residual is callee-saved colouring (pPosition s0/pDirection s3 in retail) and one scheduled load at +0x19c",
+      "size": 1464,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 1464,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001efa20",
+      "candidate_size": 1192,
+      "first_difference": 24,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Init__25AGO3_Snowboard_SnowEffectFP17MTH3D_tdstVector_P17MTH3D_tdstVector_P17GLI_tdstMaterial_f",
+      "reason": "1192/1220: retail keeps dead copies of a delay-slot-filled instruction (srl after b at +0xfc/+0x1c0/+0x260, li at +0x45c) and an unfilled bc1f at +0x41c; pragmas, 3.0.1 (calls fptoui) and removed-dead-code probes do not reproduce them",
+      "size": 1220,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MISMATCH",
+      "target_size": 1220,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -57009,6 +57174,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001edde0": {
+      "address": "0x001edde0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "DisplayLoadingMessage__15AGO3_TransitionFP27GLD_tdstViewportAttributes_",
+      "size": 596,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001ee150": {
       "address": "0x001ee150",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -57030,6 +57203,22 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "Display__17AGO3_CustomRippleFP27GLD_tdstViewportAttributes_",
       "size": 208,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001ee680": {
+      "address": "0x001ee680",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Process__17AGO3_CustomRippleFv",
+      "size": 1052,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001eeaa0": {
+      "address": "0x001eeaa0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Init__17AGO3_CustomRippleFP17MTH3D_tdstVector_P17MTH3D_tdstVector_P17GLI_tdstMaterial_f",
+      "size": 1196,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
@@ -57065,11 +57254,43 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001ef180": {
+      "address": "0x001ef180",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "GeneratePartsOnLanding__25AGO3_Snowboard_SnowEffectFv",
+      "size": 420,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001ef330": {
+      "address": "0x001ef330",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "GeneratePartsOnAir__25AGO3_Snowboard_SnowEffectFv",
+      "size": 840,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001ef680": {
+      "address": "0x001ef680",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "GeneratePartsOnGround__25AGO3_Snowboard_SnowEffectFv",
+      "size": 916,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f1c00": {
       "address": "0x001f1c00",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "DesInit__24AGO3_DigitalScoreDisplayFv",
       "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f1c90": {
+      "address": "0x001f1c90",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "SetSizes__24AGO3_DigitalScoreDisplayFf",
+      "size": 704,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
@@ -57105,6 +57326,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001f2190": {
+      "address": "0x001f2190",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Display__19AGO3_LightExplosionFP27GLD_tdstViewportAttributes_",
+      "size": 336,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f3160": {
       "address": "0x001f3160",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -57121,6 +57350,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001f4cf0": {
+      "address": "0x001f4cf0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Init__19AGO3_HurricaneUpperFP17MTH3D_tdstVector_P17MTH3D_tdstVector_P17GLI_tdstMaterial_f",
+      "size": 724,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f5160": {
       "address": "0x001f5160",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -57129,11 +57366,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001f54a0": {
+      "address": "0x001f54a0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Process__16AGO3_ScrollMatUVFv",
+      "size": 580,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f56f0": {
       "address": "0x001f56f0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "DesInit__16AGO3_ScrollMatUVFv",
       "size": 36,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f5720": {
+      "address": "0x001f5720",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Init__16AGO3_ScrollMatUVFP17MTH3D_tdstVector_P17MTH3D_tdstVector_P17GLI_tdstMaterial_f",
+      "size": 472,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
@@ -57169,11 +57422,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001f5f10": {
+      "address": "0x001f5f10",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Process__14AGO3_FistSmokeFv",
+      "size": 1008,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f6990": {
       "address": "0x001f6990",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "DesInit__14AGO3_FistSmokeFv",
       "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f6cc0": {
+      "address": "0x001f6cc0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Process__21AGO3_TurningFistSmokeFv",
+      "size": 1108,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
@@ -57185,11 +57454,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
+    "0x001f7a50": {
+      "address": "0x001f7a50",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Init__15AGO3_ShootSmokeFP17MTH3D_tdstVector_P17MTH3D_tdstVector_P17GLI_tdstMaterial_f",
+      "size": 592,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f7ca0": {
+      "address": "0x001f7ca0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Display__23AGO3_WaveEnvelopedFist2FP27GLD_tdstViewportAttributes_",
+      "size": 860,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
     "0x001f84f0": {
       "address": "0x001f84f0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "DesInit__23AGO3_WaveEnvelopedFist2Fv",
       "size": 40,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f8520": {
+      "address": "0x001f8520",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Display__22AGO3_WaveEnvelopedFistFP27GLD_tdstViewportAttributes_",
+      "size": 852,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
@@ -57214,6 +57507,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "Process__16AGO3_BeamWithUVsFv",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f9060": {
+      "address": "0x001f9060",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Init__10AGO3_SmokeFP17MTH3D_tdstVector_P17GLI_tdstMaterial_f",
+      "size": 820,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },
@@ -57270,6 +57571,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "DesInit__17AGO3_SimpleSparksFv",
       "size": 56,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
+      "status": "MATCH"
+    },
+    "0x001f99c0": {
+      "address": "0x001f99c0",
+      "compiler_profile": "mwccps2-3.0.3-020716-o3",
+      "name": "Init__17AGO3_SimpleSparksFP17MTH3D_tdstVector_P17GLI_tdstMaterial_P17MTH3D_tdstVector_f",
+      "size": 548,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cpp",
       "status": "MATCH"
     },

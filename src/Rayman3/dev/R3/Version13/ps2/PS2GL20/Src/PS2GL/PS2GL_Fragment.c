@@ -567,14 +567,55 @@ struct anon_35s {
     unsigned long f5 : 32; /* bit 32, byte +0x0 */
 };
 
+/* The same word viewed as RGBA bytes, as X/Y halfwords, and as a 3-bit
+ * low field. */
+struct anon_35c {
+    unsigned long r : 8; /* bit 0 */
+    unsigned long g : 8; /* bit 8 */
+    unsigned long b : 8; /* bit 16 */
+    unsigned long a : 8; /* bit 24 */
+    unsigned long z : 32; /* bit 32 */
+};
+
+struct anon_35d {
+    unsigned long x : 16; /* bit 0 */
+    unsigned long y : 16; /* bit 16 */
+    unsigned long z : 32; /* bit 32 */
+};
+
+struct anon_35e {
+    unsigned long low3 : 3; /* bit 0 */
+    unsigned long rest : 61; /* bit 3 */
+};
+
+struct anon_35t {
+    unsigned long ate : 1; /* bit 0 */
+    unsigned long atst : 3; /* bit 1 */
+    unsigned long aref : 8; /* bit 4 */
+    unsigned long afail : 2; /* bit 12 */
+    unsigned long date : 1; /* bit 14 */
+    unsigned long datm : 1; /* bit 15 */
+    unsigned long rest : 48; /* bit 16 */
+};
+
 union anon_35 {
     struct anon_35s s; /* +0x0 */
+    struct anon_35t t; /* +0x0 */
+    struct anon_35c c; /* +0x0 */
+    struct anon_35d d; /* +0x0 */
+    struct anon_35e e; /* +0x0 */
     unsigned char ubData[16]; /* +0x0 */
     unsigned short usData[8]; /* +0x0 */
     unsigned int uiData[4]; /* +0x0 */
     unsigned long u64Data[2]; /* +0x0 */
     float fData[4]; /* +0x0 */
 } __attribute__((aligned(16)));
+
+/* 16-byte copies of GS registers use two 8-byte moves (not lq/sq). */
+typedef struct GSQword8 {
+    unsigned long lo;
+    unsigned long hi;
+} GSQword8;
 
 struct tagGScontext {
     anon_40 PRIM; /* +0x0 */
@@ -1905,21 +1946,204 @@ void internalFullScreenQuadJeffWithoutOptimization(unsigned int mask, float x1, 
  */
 void internalFullScreenQuadJeff(unsigned int mask, float x1, float y1, float x2, float y2, float R, float G, float B, float A, float u1, float v1, float u2, float v2)
 {
-    int j;
-    int i;
-    int V2;
-    int V1;
-    int ULAST;
-    int U2;
-    int U1;
-    unsigned int XLAST;
-    unsigned int X2;
-    unsigned int X1;
-    anon_35 qworduv;
-    anon_35 qword2;
-    anon_35 qword1;
     anon_35 qword;
-    /* TODO: decompile from asm/... */
+    anon_35 qword1;
+    anon_35 qword2;
+    anon_35 qworduv;
+    unsigned int X1;
+    unsigned int X2;
+    unsigned int XLAST;
+    int U1;
+    int U2;
+    int ULAST;
+    int V1;
+    int V2;
+    int i;
+    int j;
+    int step;
+
+    if (((unsigned long long *)&g_gsContext)[0x36])
+    {
+        GsUpdate();
+    }
+
+    qword.u64Data[1] = 0;
+    qword.u64Data[0] = 0;
+
+    qword.s.f3 = 1;
+    qword.s.f4 = 1;
+
+    if ((mask & 0x4100) != 0x4100)
+    {
+        qword.s.f0 = 1;
+        qword.s.f1 = 0;
+        switch (mask & 0x4100)
+        {
+        case 0:
+            qword.s.f2 = 0;
+            break;
+        case 0x4000:
+            qword.s.f2 = 1;
+            break;
+        case 0x100:
+            qword.s.f2 = 2;
+            break;
+        }
+    }
+    if (AE_g_UseAlphaTestValues)
+    {
+        qword.t.ate = AE_g_ATE;
+        qword.t.atst = AE_g_ATST;
+        qword.t.aref = AE_g_AREF;
+        qword.t.afail = AE_g_AFAIL;
+        qword.t.date = AE_g_DATE;
+        qword.t.datm = AE_g_DATM;
+    }
+    qword.ubData[8] = 0x47;
+    GsSendData(0xE, &qword);
+
+    qword.u64Data[0] = 0x150;
+    qword.ubData[8] = 0x1b;
+    GsSendData(0xE, &qword);
+
+    qword.e.low3 = 6;
+    qword.ubData[8] = 0;
+    GsSendData(0xE, &qword);
+
+    {
+        R = (R < 0.0f) ? 0.0f : ((R > 1.0f) ? 1.0f : R);
+        qword.c.r = (unsigned char)(int)(255.0f * R);
+        G = (G < 0.0f) ? 0.0f : ((G > 1.0f) ? 1.0f : G);
+        qword.c.g = (unsigned char)(int)(255.0f * G);
+        B = (B < 0.0f) ? 0.0f : ((B > 1.0f) ? 1.0f : B);
+        qword.c.b = (unsigned char)(int)(255.0f * B);
+        A = (A < 0.0f) ? 0.0f : ((A > 1.0f) ? 1.0f : A);
+        qword.c.a = (unsigned char)(int)(255.0f * A);
+    }
+    qword.ubData[8] = 1;
+    GsSendData(0xE, &qword);
+
+    qword1.u64Data[1] = 0;
+    qword1.u64Data[0] = 0;
+    qword2.u64Data[1] = 0;
+    qword2.u64Data[0] = 0;
+    qworduv.u64Data[1] = 0;
+    qworduv.u64Data[0] = 0;
+
+    ((anon_35 *)&qword1)->s.f5 = (unsigned int)((1.0f - g_PS2glContext.fDepthClearValue) * (g_PS2glContext.DepthRange[1] - g_PS2glContext.DepthRange[0]));
+    ((anon_35 *)&qword2)->s.f5 = (unsigned int)((1.0f - g_PS2glContext.fDepthClearValue) * (g_PS2glContext.DepthRange[1] - g_PS2glContext.DepthRange[0]));
+    ((anon_35 *)&qword1)->d.y = (unsigned short)(16.0f * (g_PS2glContext.ViewPort[1] + 0.01f * (y1 * g_PS2glContext.ViewPort[3]) - 0.5f));
+    ((anon_35 *)&qword2)->d.y = (unsigned short)(16.0f * (g_PS2glContext.ViewPort[1] + 0.01f * (y2 * g_PS2glContext.ViewPort[3]) - 0.5f));
+    X1 = (unsigned int)(16.0f * (g_PS2glContext.ViewPort[0] + 0.01f * (x1 * g_PS2glContext.ViewPort[2]) - 0.5f));
+    XLAST = (unsigned int)(16.0f * (g_PS2glContext.ViewPort[0] + 0.01f * (x2 * g_PS2glContext.ViewPort[2]) - 0.5f));
+    U2 = (int)u2;
+    U1 = (int)u1;
+    V1 = (int)v1;
+    V2 = (int)v2;
+
+    if (g_stBufferInfo.iFrameBufferDepth == 0x20)
+    {
+        if (X1 & 0x1ff)
+        {
+            X2 = (X1 + 0x1ff) & ~0x1ff;
+            if (XLAST < X2) X2 = XLAST;
+            qworduv.u64Data[0] = (long)U1 | ((long)V1 << 16);
+            qworduv.ubData[8] = 3;
+            GsSendData(0xE, &qworduv);
+            qword1.d.x = X1;
+            qword1.ubData[8] = 5;
+            GsSendData(0xE, &qword1);
+            U1 += (U2 - U1) * (X2 - X1) / (XLAST - X1);
+            qworduv.u64Data[0] = (long)U1 | ((long)V2 << 16);
+            qworduv.ubData[8] = 3;
+            GsSendData(0xE, &qworduv);
+            qword2.d.x = X2;
+            qword2.ubData[8] = 5;
+            GsSendData(0xE, &qword2);
+            X1 = X2;
+        }
+        step = 0x200;
+        ULAST = (U2 - U1) * 0x200 / (XLAST - X1);
+        j = (XLAST - X1) >> 9;
+    }
+    else
+    {
+        if (X1 & 0x3ff)
+        {
+            X2 = (X1 + 0x3ff) & ~0x3ff;
+            if (XLAST < X2) X2 = XLAST;
+            qworduv.u64Data[0] = (long)U1 | ((long)V1 << 16);
+            qworduv.ubData[8] = 3;
+            GsSendData(0xE, &qworduv);
+            qword1.d.x = X1;
+            qword1.ubData[8] = 5;
+            GsSendData(0xE, &qword1);
+            U1 += (U2 - U1) * (X2 - X1) / (XLAST - X1);
+            qworduv.u64Data[0] = (long)U1 | ((long)V2 << 16);
+            qworduv.ubData[8] = 3;
+            GsSendData(0xE, &qworduv);
+            qword2.d.x = X2;
+            qword2.ubData[8] = 5;
+            GsSendData(0xE, &qword2);
+            X1 = X2;
+        }
+        step = 0x400;
+        ULAST = (U2 - U1) * 0x400 / (XLAST - X1);
+        j = (XLAST - X1) >> 10;
+    }
+    for (i = 0; i < j; i++)
+    {
+        qworduv.u64Data[0] = (long)U1 | ((long)V1 << 16);
+        qworduv.ubData[8] = 3;
+        GsSendData(0xE, &qworduv);
+        qword1.d.x = X1;
+        qword1.ubData[8] = 5;
+        GsSendData(0xE, &qword1);
+        X1 += step;
+        U1 += ULAST;
+        qworduv.u64Data[0] = (long)U1 | ((long)V2 << 16);
+        qworduv.ubData[8] = 3;
+        GsSendData(0xE, &qworduv);
+        qword2.d.x = X1;
+        qword2.ubData[8] = 5;
+        GsSendData(0xE, &qword2);
+    }
+    if (XLAST > X1)
+    {
+        qworduv.u64Data[0] = (long)U1 | ((long)V1 << 16);
+        qworduv.ubData[8] = 3;
+        GsSendData(0xE, &qworduv);
+        qword1.d.x = X1;
+        qword1.ubData[8] = 5;
+        GsSendData(0xE, &qword1);
+        qworduv.u64Data[0] = (long)U2 | ((long)V2 << 16);
+        qworduv.ubData[8] = 3;
+        GsSendData(0xE, &qworduv);
+        qword2.d.x = XLAST;
+        qword2.ubData[8] = 5;
+        GsSendData(0xE, &qword2);
+    }
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.PRMODE;
+    qword.ubData[8] = 0x1b;
+    GsSendData(0xE, &qword);
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext;
+    qword.ubData[8] = 0;
+    GsSendData(0xE, &qword);
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.TEST_1;
+    qword.ubData[8] = 0x47;
+    GsSendData(0xE, &qword);
+
+    qword.ubData[8] = 0x48;
+    GsSendData(0xE, &qword);
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.RGBAQ;
+    qword.ubData[8] = 1;
+    GsSendData(0xE, &qword);
+
+    GsFlushBuffer();
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 588–692 */
@@ -2052,6 +2276,8 @@ void internalFullScreenQuad(unsigned int mask, float R, float G, float B, float 
      * struct anon_35s.
      */
 }
+
+void impPS2glAccum(unsigned int op, float value);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 400–585 */
 /* addr: 0x0017c750  size: 2264 bytes */
@@ -2225,13 +2451,178 @@ void internalFullScreenQuad(unsigned int mask, float R, float G, float B, float 
  */
 void impPS2glClear(unsigned int mask)
 {
-    unsigned int i;
-    unsigned int X2;
-    unsigned int XLAST;
-    unsigned int X1;
-    anon_35 qword2;
     anon_35 qword;
-    /* TODO: decompile from asm/... */
+    anon_35 qword2;
+    unsigned int X1;
+    unsigned int XLAST;
+    unsigned int X2;
+    unsigned int i;
+
+    GsUpdateRegisters();
+
+    qword.u64Data[1] = 0;
+    qword.u64Data[0] = 0;
+    qword2.u64Data[1] = 0;
+    qword2.u64Data[0] = 0;
+
+    qword.s.f3 = 1;
+    qword.s.f4 = 1;
+
+    if ((mask & 0x4100) != 0x4100)
+    {
+        qword.s.f0 = 1;
+        qword.s.f1 = 0;
+        switch (mask & 0x4100)
+        {
+        case 0:
+            qword.s.f2 = 0;
+            break;
+        case 0x4000:
+            qword.s.f2 = 1;
+            break;
+        case 0x100:
+            qword.s.f2 = 2;
+            break;
+        }
+    }
+    qword.ubData[8] = 0x47;
+    GsSendData(0xE, &qword);
+
+    qword.u64Data[0] = 0;
+    qword.ubData[8] = 0x1b;
+    GsSendData(0xE, &qword);
+
+    qword.e.low3 = 6;
+    qword.ubData[8] = 0;
+    GsSendData(0xE, &qword);
+
+    if (g_stBufferInfo.iAuxBufferBase && g_PS2glContext.eDrawBuffer == 0x409)
+    {
+        qword.c.r = 0x78;
+        qword.c.g = 0x78;
+        qword.c.b = 0x78;
+        qword.c.a = 0x78;
+    }
+    else
+    {
+        {
+            float c = g_PS2glContext.vColorClearValue[0];
+            c = (c < 0.0f) ? 0.0f : ((c > 1.0f) ? 1.0f : c);
+            qword.c.r = (unsigned char)(int)(255.0f * c);
+        }
+        {
+            float c = g_PS2glContext.vColorClearValue[1];
+            c = (c < 0.0f) ? 0.0f : ((c > 1.0f) ? 1.0f : c);
+            qword.c.g = (unsigned char)(int)(255.0f * c);
+        }
+        {
+            float c = g_PS2glContext.vColorClearValue[2];
+            c = (c < 0.0f) ? 0.0f : ((c > 1.0f) ? 1.0f : c);
+            qword.c.b = (unsigned char)(int)(255.0f * c);
+        }
+        {
+            float c = g_PS2glContext.vColorClearValue[3];
+            c = (c < 0.0f) ? 0.0f : ((c > 1.0f) ? 1.0f : c);
+            qword.c.a = (unsigned char)(int)(255.0f * c);
+        }
+    }
+    qword.ubData[8] = 1;
+    GsSendData(0xE, &qword);
+
+    ((anon_35 *)&qword)->s.f5 = (unsigned int)((1.0f - g_PS2glContext.fDepthClearValue) * (g_PS2glContext.DepthRange[1] - g_PS2glContext.DepthRange[0]));
+    ((anon_35 *)&qword2)->s.f5 = (unsigned int)((1.0f - g_PS2glContext.fDepthClearValue) * (g_PS2glContext.DepthRange[1] - g_PS2glContext.DepthRange[0]));
+    X1 = (unsigned int)(16.0f * g_PS2glContext.ViewPort[0]);
+    XLAST = (unsigned int)(16.0f * (g_PS2glContext.ViewPort[0] + g_PS2glContext.ViewPort[2]));
+    *(unsigned short *)(&qword.c.b) = (unsigned short)(16.0f * g_PS2glContext.ViewPort[1]);
+    qword2.d.y = (unsigned short)(16.0f * (g_PS2glContext.ViewPort[1] + g_PS2glContext.ViewPort[3]));
+
+    if (g_stBufferInfo.iFrameBufferDepth == 0x20)
+    {
+        if (X1 & 0x1ff)
+        {
+            X2 = (X1 + 0x1ff) & ~0x1ff;
+            if (XLAST < X2) X2 = XLAST;
+            qword.d.x = X1;
+            qword.ubData[8] = 5;
+            GsSendData(0xE, &qword);
+            qword2.d.x = X2;
+            qword2.ubData[8] = 5;
+            GsSendData(0xE, &qword2);
+            X1 = X2;
+        }
+        X2 = (XLAST - X1) >> 9;
+        for (i = 0; i < X2; i++)
+        {
+            qword.d.x = X1;
+            qword.ubData[8] = 5;
+            GsSendData(0xE, &qword);
+            X1 += 0x200;
+            qword2.d.x = X1;
+            qword2.ubData[8] = 5;
+            GsSendData(0xE, &qword2);
+        }
+    }
+    else
+    {
+        if (X1 & 0x3ff)
+        {
+            X2 = (X1 + 0x3ff) & ~0x3ff;
+            if (XLAST < X2) X2 = XLAST;
+            qword.d.x = X1;
+            qword.ubData[8] = 5;
+            GsSendData(0xE, &qword);
+            qword2.d.x = X2;
+            qword2.ubData[8] = 5;
+            GsSendData(0xE, &qword2);
+            X1 = X2;
+        }
+        X2 = (XLAST - X1) >> 10;
+        for (i = 0; i < X2; i++)
+        {
+            qword.d.x = X1;
+            qword.ubData[8] = 5;
+            GsSendData(0xE, &qword);
+            X1 += 0x40;
+            qword2.d.x = X1;
+            qword2.ubData[8] = 5;
+            GsSendData(0xE, &qword2);
+        }
+    }
+    if (XLAST > X1)
+    {
+        qword.d.x = X1;
+        qword.ubData[8] = 5;
+        GsSendData(0xE, &qword);
+        qword2.d.x = XLAST;
+        qword2.ubData[8] = 5;
+        GsSendData(0xE, &qword2);
+    }
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.PRMODE;
+    qword.ubData[8] = 0x1b;
+    GsSendData(0xE, &qword);
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext;
+    qword.ubData[8] = 0;
+    GsSendData(0xE, &qword);
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.TEST_1;
+    qword.ubData[8] = 0x47;
+    GsSendData(0xE, &qword);
+
+    qword.ubData[8] = 0x48;
+    GsSendData(0xE, &qword);
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.RGBAQ;
+    qword.ubData[8] = 1;
+    GsSendData(0xE, &qword);
+
+    GsFlushBuffer();
+
+    if ((mask & 0x200) && g_stBufferInfo.iAccumBufferDepth)
+    {
+        impPS2glAccum(0x1500, 0.0f);
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 393–397 */
