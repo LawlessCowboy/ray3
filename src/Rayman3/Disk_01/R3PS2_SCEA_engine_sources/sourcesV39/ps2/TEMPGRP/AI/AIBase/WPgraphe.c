@@ -3,12 +3,16 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/COL.h"
+#include "r3/GLI.h"
+#include "r3/GMT.h"
+#include "r3/MAT.h"
+#include "r3/MTH.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct FIL_tdstFileNameList_ FIL_tdstFileNameList_;
 typedef struct GLI_tdstLight_ GLI_tdstLight_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
-typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct IPO_tdstInstanciatedPhysicalObject_ IPO_tdstInstanciatedPhysicalObject_;
 typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
 typedef struct WP_tdstWayPoint_ WP_tdstWayPoint_;
@@ -42,12 +46,6 @@ typedef struct LST2_tdstAnchorTotdxHandleToTransitionOpt LST2_tdstAnchorTotdxHan
 typedef struct LST2_tdstAnchorTotdxHandleToProhibitOpt LST2_tdstAnchorTotdxHandleToProhibitOpt;
 typedef struct tdstState_ tdstState_;
 typedef struct tdstSubAnim_ tdstSubAnim_;
-typedef struct MTH4D_tdstVector_ MTH4D_tdstVector_;
-typedef struct MTH4D_tdstMatrix_ MTH4D_tdstMatrix_;
-typedef struct MAT_tdstTransformation_ MAT_tdstTransformation_;
-typedef struct GLI_tdst2DVertex_ GLI_tdst2DVertex_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct GLI_tdstCamera_ GLI_tdstCamera_;
 typedef union HIE_tduLinkedObject_ HIE_tduLinkedObject_;
 typedef struct LST2_tdstAnchorToWP_tdhGraphNodeDyn LST2_tdstAnchorToWP_tdhGraphNodeDyn;
 typedef struct WP_tdstGraph_ WP_tdstGraph_;
@@ -84,11 +82,9 @@ typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstCollisionInteractionOp
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstActivityInteractionOpt;
 typedef struct LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt LST2_tdstAnchorToSECT_tdxHandleOfElementLstSoundInteractionOpt;
 typedef struct SECT_tdstSector_ SECT_tdstSector_;
-typedef struct GMT_tdstGameMaterial_ GMT_tdstGameMaterial_;
 typedef struct LST2_tdstAnchorToWP_tdHandleOfArcDyn LST2_tdstAnchorToWP_tdHandleOfArcDyn;
 typedef struct WP_tdstListOfArc_ WP_tdstListOfArc_;
 typedef struct SECT_tdstListOfDNMLights_ SECT_tdstListOfDNMLights_;
-typedef struct GMT_tdstCollideMaterial_ GMT_tdstCollideMaterial_;
 typedef struct tdstComport_ tdstComport_;
 typedef struct tdstEngineObject_ tdstEngineObject_;
 typedef struct GEO_tdstParallelBox_ GEO_tdstParallelBox_;
@@ -111,7 +107,6 @@ typedef struct GLD_tdstViewportAttributes_ GLD_tdstViewportAttributes_;
 typedef struct tdstPLA_Deformation_ tdstPLA_Deformation_;
 typedef struct LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn LST2_tdstAnchorToMC_tdxHandleToMainCharacterNodeDyn;
 typedef struct WP_tdstArc_ WP_tdstArc_;
-typedef struct COL_tdstBoundingSphere_ COL_tdstBoundingSphere_;
 typedef struct tdstEngineTimerStructure_ tdstEngineTimerStructure_;
 typedef union tduGetSetParam_ tduGetSetParam_;
 typedef struct tdstActionParam_ tdstActionParam_;
@@ -143,11 +138,9 @@ typedef struct _RollOffParam _RollOffParam;
 typedef struct tdstMSSound_ tdstMSSound_;
 typedef struct tdstDsgVarInfo_ tdstDsgVarInfo_;
 typedef struct CINE_Manager_ CINE_Manager_;
-typedef struct MTH3D_tdstMatrix_ MTH3D_tdstMatrix_;
 typedef struct AI_tdstMind_ AI_tdstMind_;
 typedef struct tdstTransparentSuperObjectForCamera_ tdstTransparentSuperObjectForCamera_;
 typedef struct MOR_stMorphVector_ MOR_stMorphVector_;
-typedef struct GLI_tdstSpecificAttributesFor3D_ GLI_tdstSpecificAttributesFor3D_;
 typedef struct tdstEngineStructure_ tdstEngineStructure_;
 typedef struct tdstBrain_ tdstBrain_;
 typedef struct tdst3dData_ tdst3dData_;
@@ -1846,18 +1839,6 @@ typedef enum tdeMetaActionId_ {
     eNbMetaAction = 13,
 } tdeMetaActionId_;
 
-typedef enum MAT_tdeTranformationType_ {
-    MAT_eTransform_Uninitialized = 0,
-    MAT_eTransform_Identity = 1,
-    MAT_eTransform_Translation = 2,
-    MAT_eTransform_Zoom = 3,
-    MAT_eTransform_Scale = 4,
-    MAT_eTransform_Rotation = 5,
-    MAT_eTransform_RotationZoom = 6,
-    MAT_eTransform_RotationScale = 7,
-    MAT_eTransform_ComplexRotationScale = 8,
-    MAT_eTransform_Undefined = 9,
-} MAT_tdeTranformationType_;
 
 struct tdstProhibit_ {
     tdstState_* h_ProhibitedState; /* +0x0 */
@@ -1994,65 +1975,11 @@ struct tdstSubAnim_ {
     tdstAnim3d_* p_stSubAnim; /* +0x0 */
 };
 
-struct MTH4D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-    float xW; /* +0xc */
-} __attribute__((aligned(16)));
 
-struct MTH4D_tdstMatrix_ {
-    MTH4D_tdstVector_ stCol_0; /* +0x0 */
-    MTH4D_tdstVector_ stCol_1; /* +0x10 */
-    MTH4D_tdstVector_ stCol_2; /* +0x20 */
-    MTH4D_tdstVector_ stCol_3; /* +0x30 */
-};
 
-struct MAT_tdstTransformation_ {
-    MAT_tdeTranformationType_ eType; /* +0x0 */
-    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
-    MTH4D_tdstMatrix_ stTransformMatrix; /* +0x10 */
-    MTH4D_tdstVector_ stScaleVector; /* +0x50 */
-};
 
-struct GLI_tdst2DVertex_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xOoZ; /* +0x8 */
-};
 
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
 
-struct GLI_tdstCamera_ {
-    int lCameraMode; /* +0x0 */
-    unsigned char _extractor_padding_00[12]; /* implicitly added by extractor; +0x4..0xf */
-    MAT_tdstTransformation_ stMatrix; /* +0x10 */
-    float xAlphaX; /* +0x70 */
-    float xAlphaY; /* +0x74 */
-    float xNear; /* +0x78 */
-    float xFar; /* +0x7c */
-    float xScreen; /* +0x80 */
-    GLI_tdst2DVertex_ stScale; /* +0x84 */
-    GLI_tdst2DVertex_ stTrans; /* +0x90 */
-    float xXProjectionRatio; /* +0x9c */
-    float xYProjectionRatio; /* +0xa0 */
-    MTH3D_tdstVector_ stNormPlaneLeft; /* +0xa4 */
-    float xDistPlaneLeft; /* +0xb0 */
-    MTH3D_tdstVector_ stNormPlaneRight; /* +0xb4 */
-    float xDistPlaneRight; /* +0xc0 */
-    MTH3D_tdstVector_ stNormPlaneUp; /* +0xc4 */
-    float xDistPlaneUp; /* +0xd0 */
-    MTH3D_tdstVector_ stNormPlaneDown; /* +0xd4 */
-    float xDistPlaneDown; /* +0xe0 */
-    float xRatio; /* +0xe4 */
-    unsigned char ucCameraTransparency; /* +0xe8 */
-    float xTranspDist; /* +0xec */
-    unsigned char bCameraIsMirrored; /* +0xf0 */
-};
 
 union HIE_tduLinkedObject_ {
     HIE_tdstSuperObject_* p_stSuperObject; /* +0x0 */
@@ -2363,10 +2290,6 @@ struct SECT_tdstSector_ {
     _SND_tduRefEvt hTransitionSoundEvent; /* +0x90 */
 };
 
-struct GMT_tdstGameMaterial_ {
-    int hSoundMaterial; /* +0x0 */
-    GMT_tdstCollideMaterial_* hCollideMaterial; /* +0x4 */
-};
 
 struct LST2_tdstAnchorToWP_tdHandleOfArcDyn {
     WP_tdstArc_* hFirstElementDyn; /* +0x0 */
@@ -2385,13 +2308,6 @@ struct SECT_tdstListOfDNMLights_ {
     LST2_tdstAnchorToSECT_tdxHandleOfElementLstDNMLightsDyn* hFatherDyn; /* +0xc */
 };
 
-struct GMT_tdstCollideMaterial_ {
-    short wTypeOfZone; /* +0x0 */
-    unsigned short xIdentifier; /* +0x2 */
-    MTH3D_tdstVector_ stDirection; /* +0x4 */
-    float xCoeff; /* +0x10 */
-    unsigned short wTypeForAi; /* +0x14 */
-};
 
 struct tdstComport_ {
     tdstTreeInterpret_* p_stRules; /* +0x0 */
@@ -2619,10 +2535,6 @@ struct WP_tdstArc_ {
     int m_lWeightInit; /* +0x1c */
 };
 
-struct COL_tdstBoundingSphere_ {
-    MTH4D_tdstVector_ stCenterPoint; /* +0x0 */
-    float xRadius; /* +0x10 */
-};
 
 struct tdstEngineTimerStructure_ {
     unsigned int ulTrameNumber; /* +0x0 */
@@ -2901,11 +2813,6 @@ struct CINE_Manager_ {
     HIE_tdstSuperObject_* gp_stSPOHandleCamera; /* +0x70 */
 };
 
-struct MTH3D_tdstMatrix_ {
-    MTH3D_tdstVector_ stCol_0; /* +0x0 */
-    MTH3D_tdstVector_ stCol_1; /* +0xc */
-    MTH3D_tdstVector_ stCol_2; /* +0x18 */
-};
 
 struct AI_tdstMind_ {
     AI_tdstAIModel_* p_stAIModel; /* +0x0 */
@@ -2928,10 +2835,6 @@ struct MOR_stMorphVector_ {
     MTH3D_tdstVector_ stDeformationVector; /* +0x4 */
 };
 
-struct GLI_tdstSpecificAttributesFor3D_ {
-    GLI_tdstCamera_* p_stCam; /* +0x0 */
-    float xNear; /* +0x4 */
-};
 
 struct tdstEngineStructure_ {
     unsigned char eEngineMode; /* +0x0 */
@@ -3144,30 +3047,17 @@ void WPARCLST_fn_vAdd(WP_tdstListOfArc_* hListOfArc, WP_tdstGraphNode_* hNode, i
 float WPG_xGetCloserWPDistInGraph(WP_tdstGraph_* hGraph, MTH3D_tdstVector_* p_stPos);
 void WP_fnv_WayPoint_ComputeLocation(WP_tdstWayPoint_* hWayPoint, MTH3D_tdstVector_* p_stVertex);
 /* Recovered PS2 MTH scalar helpers: the R5900 accumulator ops and sqrt.s have
-   no C form under the baseline. */
+   no C form under the baseline.  The retail schedules an ordinary instruction
+   between madd.s and sqrt.s and has no leading hazard nops; MWCC 3.0.1 adds
+   two in front of a reorderable asm sqrt.s, so the block is pinned with
+   .set noreorder and carries the retail's two trailing nops itself. */
 #define MTH_SQRT_TO(_result, _value) \
-    asm { sqrt.s _result, _value }     \
-    asm { nop }                        \
-    asm { nop }
+    asm { .set noreorder; sqrt.s _result, _value; nop; nop; .set reorder }
 #define MTH_SQR3_TO(_result, _x, _y, _z) \
     asm { mula.s _x, _x }                  \
     asm { madda.s _y, _y }                 \
     asm { madd.s _result, _z, _z }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 56–71 */
-/* addr: 0x001feeb0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 56
- *   +0x0008 -> line 59
- *   +0x0010 -> line 63
- *   +0x0020 -> line 65
- *   +0x0028 -> line 66
- *   +0x0034 -> line 68
- *   +0x003c -> line 70
- *   +0x0040 -> line 71
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 WP_tdstListOfArc_* WPARCLST_fn_hInit(void)
 {
     WP_tdstListOfArc_* hList;
@@ -3188,14 +3078,6 @@ WP_tdstListOfArc_* WPARCLST_fn_hInit(void)
     return hList;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1660–1662 */
-/* addr: 0x001fef00  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1660
- *   +0x0010 -> line 1662
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 WP_tdstListOfArc_* WPG_fn_hGetArcList(WP_tdstGraphNode_* hSrcNode)
 {
     if (hSrcNode != NULL) {
@@ -3205,15 +3087,6 @@ WP_tdstListOfArc_* WPG_fn_hGetArcList(WP_tdstGraphNode_* hSrcNode)
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1494–1497 */
-/* addr: 0x001fef20  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1494
- *   +0x0030 -> line 1495
- *   +0x0038 -> line 1497
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 WP_tdstWayPoint_* WPG_fn_hGetWaypointOfGraph(WP_tdstGraph_* hGraph, int iIndex, int* _plTypeOfWP)
 {
     WP_tdstGraphNode_* hElement;
@@ -3225,202 +3098,16 @@ WP_tdstWayPoint_* WPG_fn_hGetWaypointOfGraph(WP_tdstGraph_* hGraph, int iIndex, 
     return hElement->m_hWayPoint;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1480–1480 */
-/* addr: 0x001fef60  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1480
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int WPG_fn_lNumberOfWaypointOfGraph(WP_tdstGraph_* hGraph)
 {
     return hGraph->m_hListOfNode.lNumberOfElementsDyn;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1441–1441 */
-/* addr: 0x001fef70  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1441
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 WP_tdstGraph_* WPG_fn_lBuildRandomPath(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hStartWP, int _bIsCircular)
 {
     return WPG_fn_lBuildOrderedPath(_hGraph, _hStartWP, _bIsCircular, 1);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1233–1436 */
-/* addr: 0x001fef80  size: 1768 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1233
- *   +0x003c -> line 1253
- *   +0x0040 -> line 1254
- *   +0x0048 -> line 1256
- *   +0x0050 -> line 1260
- *   +0x0064 -> line 1261
- *   +0x0074 -> line 1262
- *   +0x0084 -> line 1263
- *   +0x0090 -> line 1264
- *   +0x0094 -> line 1263
- *   +0x0098 -> line 1264
- *   +0x00a4 -> line 1268
- *   +0x00a8 -> line 1269
- *   +0x00b8 -> line 1271
- *   +0x00c4 -> line 1273
- *   +0x00c8 -> line 1274
- *   +0x00cc -> line 1275
- *   +0x00d4 -> line 1277
- *   +0x00e0 -> line 1281
- *   +0x00ec -> line 1286
- *   +0x00f0 -> line 1288
- *   +0x00f8 -> line 1291
- *   +0x0128 -> line 1292
- *   +0x0134 -> line 1293
- *   +0x013c -> line 1292
- *   +0x0140 -> line 1293
- *   +0x0144 -> line 1292
- *   +0x0150 -> line 1293
- *   +0x015c -> line 1294
- *   +0x0160 -> line 1295
- *   +0x0168 -> line 1299
- *   +0x016c -> line 1300
- *   +0x0170 -> line 1304
- *   +0x0178 -> line 1301
- *   +0x017c -> line 1299
- *   +0x0180 -> line 1301
- *   +0x0188 -> line 1302
- *   +0x019c -> line 1309
- *   +0x01a0 -> line 1311
- *   +0x01a4 -> line 1309
- *   +0x01a8 -> line 1308
- *   +0x01ac -> line 1311
- *   +0x01c0 -> line 1313
- *   +0x01c8 -> line 1315
- *   +0x025c -> line 1331
- *   +0x0294 -> line 1334
- *   +0x02a0 -> line 1336
- *   +0x02a4 -> line 1338
- *   +0x02a8 -> line 1337
- *   +0x02b0 -> line 1339
- *   +0x02b8 -> line 1343
- *   +0x02c8 -> line 1344
- *   +0x02d0 -> line 1347
- *   +0x0364 -> line 1352
- *   +0x0390 -> line 1355
- *   +0x0394 -> line 1358
- *   +0x0398 -> line 1360
- *   +0x03a8 -> line 1368
- *   +0x03ac -> line 1363
- *   +0x03b4 -> line 1369
- *   +0x03b8 -> line 1360
- *   +0x03c0 -> line 1362
- *   +0x03cc -> line 1363
- *   +0x03e8 -> line 1364
- *   +0x0408 -> line 1365
- *   +0x041c -> line 1366
- *   +0x0430 -> line 1368
- *   +0x043c -> line 1370
- *   +0x0440 -> line 1371
- *   +0x044c -> line 1375
- *   +0x0450 -> line 1379
- *   +0x0454 -> line 1375
- *   +0x0458 -> line 1376
- *   +0x0460 -> line 1379
- *   +0x04e8 -> line 1385
- *   +0x04f4 -> line 1386
- *   +0x04fc -> line 1387
- *   +0x0504 -> line 1390
- *   +0x0510 -> line 1392
- *   +0x051c -> line 1393
- *   +0x0528 -> line 1394
- *   +0x0534 -> line 1395
- *   +0x0540 -> line 1396
- *   +0x054c -> line 1398
- *   +0x0568 -> line 1404
- *   +0x05a0 -> line 1405
- *   +0x05c8 -> line 1406
- *   +0x05d4 -> line 1407
- *   +0x05e0 -> line 1410
- *   +0x0600 -> line 1412
- *   +0x0630 -> line 1417
- *   +0x063c -> line 1418
- *   +0x0648 -> line 1419
- *   +0x0678 -> line 1429
- *   +0x0684 -> line 1430
- *   +0x0690 -> line 1431
- *   +0x069c -> line 1432
- *   +0x06a8 -> line 1433
- *   +0x06b4 -> line 1435
- *   +0x06b8 -> line 1436
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-WP_tdstGraph_* WPG_fn_lBuildOrderedPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hStartWP, int bIsCircular, int bIsRandom)
-{
-    int lPonderationTmp;
-    int lPonderationMin;
-    int i;
-    int iIndex;
-    int* d_hListOfDestWeight;
-    unsigned int* d_hListOfDestCaps;
-    int* d_hListOfTypeOfWP;
-    WP_tdstWayPoint_** d_hListOfDestWP;
-    int iIndexOfBestNode;
-    unsigned int ulCapsOfBestNode;
-    int lBestArcWeight;
-    int lRealArcWeight;
-    unsigned int ulCapability;
-    int iCurrentIndex;
-    int iStartingIndex;
-    int iCount;
-    int iNbElementInTheGraph;
-    WP_tdstGraphNode_* hFirstNode;
-    WP_tdstGraphNode_** d_hListOfWPNode;
-    WP_tdstGraphNode_* hCurrentNode;
-    WP_tdstGraph_* tdhNewPath;
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1131–1195 */
-/* addr: 0x001ff670  size: 704 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1131
- *   +0x0030 -> line 1141
- *   +0x0034 -> line 1142
- *   +0x0044 -> line 1143
- *   +0x0048 -> line 1142
- *   +0x004c -> line 1143
- *   +0x0054 -> line 1145
- *   +0x0058 -> line 1143
- *   +0x005c -> line 1145
- *   +0x0068 -> line 1147
- *   +0x0098 -> line 1148
- *   +0x009c -> line 1150
- *   +0x00a4 -> line 1148
- *   +0x00ac -> line 1149
- *   +0x00b8 -> line 1150
- *   +0x00c0 -> line 1152
- *   +0x00f4 -> line 1154
- *   +0x0114 -> line 1161
- *   +0x011c -> line 1166
- *   +0x0138 -> line 1167
- *   +0x013c -> line 1168
- *   +0x0148 -> line 1171
- *   +0x0164 -> line 1173
- *   +0x0190 -> line 1174
- *   +0x01c0 -> line 1175
- *   +0x01e8 -> line 1180
- *   +0x01ec -> line 1181
- *   +0x01f8 -> line 1182
- *   +0x0228 -> line 1183
- *   +0x0254 -> line 1184
- *   +0x0280 -> line 1191
- *   +0x028c -> line 1192
- *   +0x0298 -> line 1194
- *   +0x029c -> line 1195
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Not original source, needs cleaning up: the retail inlines these node-level
  * link queries (no out-of-line copies exist). */
 inline int WPG_fn_lGetNodeLinkCapabilities(WP_tdstGraphNode_* hSrcNode, WP_tdstGraphNode_* hDstNode, unsigned int* p_ulCapability)
@@ -3453,6 +3140,155 @@ inline WP_tdstGraph_* WPG_fn_hCreateGraph(void)
     }
     GAM_fn_vPopAllocMode();
     return hGraph;
+}
+
+WP_tdstGraph_* WPG_fn_hBuildOrderedPathFromAtoB(WP_tdstGraph_* _hGraph, WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, int bIsRandom);
+int rand(void);
+
+WP_tdstGraph_* WPG_fn_lBuildOrderedPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hStartWP, int bIsCircular, int bIsRandom)
+{
+    WP_tdstGraph_* tdhNewPath;
+    WP_tdstGraphNode_* hCurrentNode;
+    WP_tdstGraphNode_** d_hListOfWPNode;
+    WP_tdstGraphNode_* hFirstNode;
+    int iNbElementInTheGraph;
+    int lBestArcWeight;
+    int iStartingIndex;
+    unsigned int ulCapsOfBestNode;
+    unsigned int ulCapability;
+    int lRealArcWeight;
+    int iCount;
+    int iIndex;
+    int iIndexOfBestNode;
+    WP_tdstWayPoint_** d_hListOfDestWP;
+    int* d_hListOfTypeOfWP;
+    unsigned int* d_hListOfDestCaps;
+    int* d_hListOfDestWeight;
+    int iCurrentIndex;
+    int i;
+    int lPonderationMin;
+    int lPonderationTmp;
+
+    ulCapsOfBestNode = 0;
+    iNbElementInTheGraph = hGraph->m_hListOfNode.lNumberOfElementsDyn;
+    if (iNbElementInTheGraph == 0)
+    {
+        return NULL;
+    }
+
+    d_hListOfWPNode = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstGraphNode_*), 1);
+    d_hListOfDestWP = (WP_tdstWayPoint_**)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(WP_tdstWayPoint_*), 1);
+    d_hListOfTypeOfWP = (int*)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(int), 1);
+    d_hListOfDestCaps = (unsigned int*)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(unsigned int), 1);
+    d_hListOfDestWeight = (int*)HMU_fn_p_vMalloc(iNbElementInTheGraph * sizeof(int), 1);
+
+    iStartingIndex = -1;
+    for (i = 0, hCurrentNode = hGraph->m_hListOfNode.hFirstElementDyn; hCurrentNode != NULL; i++, hCurrentNode = hCurrentNode->hNextBrotherDyn)
+    {
+        if (hCurrentNode->m_hWayPoint == hStartWP)
+        {
+            d_hListOfWPNode[0] = hCurrentNode;
+            iStartingIndex = i;
+            break;
+        }
+    }
+
+    tdhNewPath = NULL;
+    if (iStartingIndex != -1)
+    {
+        iCurrentIndex = iStartingIndex + 1;
+        while (iCurrentIndex != -1)
+        {
+            for (iIndex = 0, hCurrentNode = hGraph->m_hListOfNode.hFirstElementDyn; iIndex < iCurrentIndex % iNbElementInTheGraph; iIndex++, hCurrentNode = hCurrentNode->hNextBrotherDyn) ;
+            d_hListOfWPNode[(iCurrentIndex - iStartingIndex) % iNbElementInTheGraph] = hCurrentNode;
+            if (++iCurrentIndex % iNbElementInTheGraph == iStartingIndex)
+                iCurrentIndex = -1;
+        }
+
+        hFirstNode = d_hListOfWPNode[0];
+        iCurrentIndex = 0;
+        d_hListOfDestWP[0] = hFirstNode->m_hWayPoint;
+        d_hListOfTypeOfWP[0] = d_hListOfWPNode[0]->m_lTypeOfWP;
+        iCount = 0;
+
+        do
+        {
+            iIndexOfBestNode = -1;
+            lBestArcWeight = lPonderationMin = 0x7FFFFFFF;
+            for (i = 1; i < iNbElementInTheGraph; i++)
+            {
+                if (i != iCurrentIndex)
+                {
+                    if ((WPG_fn_lGetNodeLinkCapabilities(d_hListOfWPNode[iCurrentIndex], d_hListOfWPNode[i], &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(d_hListOfWPNode[iCurrentIndex], d_hListOfWPNode[i], &lRealArcWeight) != -1))
+                    {
+                        lPonderationTmp = bIsRandom ? rand() % 0x7FFFFFFF : lRealArcWeight;
+                        if (lPonderationTmp < lPonderationMin)
+                        {
+                            lPonderationMin = lPonderationTmp;
+                            lBestArcWeight = lRealArcWeight;
+                            iIndexOfBestNode = i;
+                            ulCapsOfBestNode = ulCapability;
+                        }
+                    }
+                }
+            }
+            if (bIsRandom)
+            {
+                if ((WPG_fn_lGetNodeLinkCapabilities(d_hListOfWPNode[iCurrentIndex], hFirstNode, &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(d_hListOfWPNode[iCurrentIndex], hFirstNode, &lRealArcWeight) != -1))
+                {
+                    if (rand() % 0x7FFFFFFF < lPonderationMin)
+                    {
+                        iIndexOfBestNode = -1;
+                    }
+                }
+            }
+            if (iIndexOfBestNode != -1)
+            {
+                iCount++;
+                d_hListOfDestWP[iCount] = d_hListOfWPNode[iIndexOfBestNode]->m_hWayPoint;
+                d_hListOfTypeOfWP[iCount] = d_hListOfWPNode[iIndexOfBestNode]->m_lTypeOfWP;
+                d_hListOfDestCaps[iCount] = ulCapsOfBestNode;
+                d_hListOfDestWeight[iCount] = lBestArcWeight;
+                d_hListOfWPNode[iCurrentIndex] = NULL;
+                iCurrentIndex = iIndexOfBestNode;
+            }
+        } while (iIndexOfBestNode != -1);
+
+        d_hListOfDestCaps[0] = 0;
+        d_hListOfDestWeight[0] = 0;
+        if ((WPG_fn_lGetNodeLinkCapabilities(d_hListOfWPNode[iCurrentIndex], hFirstNode, &ulCapability) != -1) && (WPG_fn_lGetNodeLinkWeight(d_hListOfWPNode[iCurrentIndex], hFirstNode, &lRealArcWeight) != -1))
+        {
+            d_hListOfDestCaps[0] = ulCapability;
+            d_hListOfDestWeight[0] = lRealArcWeight;
+        }
+        else if (bIsCircular)
+        {
+            HMU_fn_vFree((void**)&d_hListOfWPNode, 1);
+            HMU_fn_vFree((void**)&d_hListOfDestWP, 1);
+            HMU_fn_vFree((void**)&d_hListOfTypeOfWP, 1);
+            HMU_fn_vFree((void**)&d_hListOfDestCaps, 1);
+            HMU_fn_vFree((void**)&d_hListOfDestWeight, 1);
+            return WPG_fn_hBuildOrderedPathFromAtoB(hGraph, hFirstNode, hFirstNode, bIsRandom);
+        }
+
+        tdhNewPath = WPG_fn_hCreateGraph();
+        WPG_fn_lAddWayPoint(tdhNewPath, d_hListOfDestWP[iCount], d_hListOfTypeOfWP[iCount]);
+        iCount--;
+        while (iCount >= 0)
+        {
+            WPG_fn_lAddWayPoint(tdhNewPath, d_hListOfDestWP[iCount], d_hListOfTypeOfWP[iCount]);
+            WPG_fn_lAddArcToWayPoint(tdhNewPath, d_hListOfDestWP[iCount], d_hListOfDestWP[iCount + 1], d_hListOfDestWeight[iCount + 1], d_hListOfDestCaps[iCount + 1]);
+            iCount--;
+        }
+        WPG_fn_lAddArcToWayPoint(tdhNewPath, d_hListOfWPNode[iCurrentIndex]->m_hWayPoint, d_hListOfDestWP[0], d_hListOfDestWeight[0], d_hListOfDestCaps[0]);
+    }
+
+    HMU_fn_vFree((void**)&d_hListOfWPNode, 1);
+    HMU_fn_vFree((void**)&d_hListOfDestWP, 1);
+    HMU_fn_vFree((void**)&d_hListOfTypeOfWP, 1);
+    HMU_fn_vFree((void**)&d_hListOfDestCaps, 1);
+    HMU_fn_vFree((void**)&d_hListOfDestWeight, 1);
+    return tdhNewPath;
 }
 
 WP_tdstGraph_* WPG_fn_hBuildOrderedPathFromAtoB(WP_tdstGraph_* _hGraph, WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, int bIsRandom)
@@ -3507,63 +3343,6 @@ WP_tdstGraph_* WPG_fn_hBuildOrderedPathFromAtoB(WP_tdstGraph_* _hGraph, WP_tdstG
     return _hGraph;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 1016–1125 */
-/* addr: 0x001ff930  size: 660 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1016
- *   +0x0004 -> line 1022
- *   +0x0008 -> line 1016
- *   +0x000c -> line 1022
- *   +0x0010 -> line 1016
- *   +0x0028 -> line 1026
- *   +0x002c -> line 1016
- *   +0x0048 -> line 1026
- *   +0x004c -> line 1016
- *   +0x0054 -> line 1019
- *   +0x0058 -> line 1026
- *   +0x0060 -> line 1029
- *   +0x0064 -> line 1026
- *   +0x0068 -> line 1029
- *   +0x0074 -> line 1031
- *   +0x0084 -> line 1033
- *   +0x0094 -> line 1035
- *   +0x009c -> line 1036
- *   +0x00a4 -> line 1039
- *   +0x00b8 -> line 1042
- *   +0x0110 -> line 1051
- *   +0x0118 -> line 1055
- *   +0x0128 -> line 1057
- *   +0x0138 -> line 1062
- *   +0x0144 -> line 1064
- *   +0x0150 -> line 1066
- *   +0x015c -> line 1068
- *   +0x0160 -> line 1071
- *   +0x0170 -> line 1068
- *   +0x0174 -> line 1069
- *   +0x017c -> line 1071
- *   +0x018c -> line 1073
- *   +0x0194 -> line 1081
- *   +0x01cc -> line 1084
- *   +0x01dc -> line 1090
- *   +0x01e0 -> line 1088
- *   +0x01e4 -> line 1090
- *   +0x01ec -> line 1087
- *   +0x01f0 -> line 1090
- *   +0x01f8 -> line 1103
- *   +0x0200 -> line 1105
- *   +0x020c -> line 1108
- *   +0x0214 -> line 1109
- *   +0x0220 -> line 1113
- *   +0x022c -> line 1115
- *   +0x0230 -> line 1116
- *   +0x0238 -> line 1117
- *   +0x0240 -> line 1119
- *   +0x0254 -> line 1122
- *   +0x0260 -> line 1124
- *   +0x0264 -> line 1125
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(WP_tdstGraphNode_* _hStartingNode, WP_tdstGraphNode_* _hEndingNode, WP_tdstGraphNode_** _p_hListOfUsefulNodes, int _iNbOfElementInTheGraph, WP_tdstGraphNode_** _p_hListOfResultNodes, int bIsRandom)
 {
     WP_tdstArc_* hElement;
@@ -3643,162 +3422,156 @@ int WPG_fn_hRecursiveBuildBestOrderedPathFromAtoB(WP_tdstGraphNode_* _hStartingN
     return lSizeOfResult;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 819–1008 */
-/* addr: 0x001ffbd0  size: 1364 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 819
- *   +0x0030 -> line 840
- *   +0x0034 -> line 819
- *   +0x0040 -> line 840
- *   +0x0054 -> line 841
- *   +0x0064 -> line 842
- *   +0x0074 -> line 843
- *   +0x0084 -> line 844
- *   +0x0090 -> line 845
- *   +0x0094 -> line 844
- *   +0x0098 -> line 845
- *   +0x00a4 -> line 847
- *   +0x00a8 -> line 851
- *   +0x00ac -> line 848
- *   +0x00b0 -> line 849
- *   +0x00b4 -> line 850
- *   +0x00b8 -> line 851
- *   +0x00bc -> line 852
- *   +0x00c8 -> line 853
- *   +0x00d4 -> line 854
- *   +0x00d8 -> line 855
- *   +0x00dc -> line 854
- *   +0x00e0 -> line 855
- *   +0x00e8 -> line 856
- *   +0x00ec -> line 857
- *   +0x00f4 -> line 859
- *   +0x0100 -> line 861
- *   +0x0110 -> line 867
- *   +0x0118 -> line 876
- *   +0x0120 -> line 880
- *   +0x0134 -> line 881
- *   +0x013c -> line 880
- *   +0x0140 -> line 881
- *   +0x0154 -> line 882
- *   +0x0158 -> line 883
- *   +0x015c -> line 884
- *   +0x0160 -> line 885
- *   +0x0170 -> line 891
- *   +0x0174 -> line 897
- *   +0x0178 -> line 894
- *   +0x017c -> line 897
- *   +0x0180 -> line 891
- *   +0x0188 -> line 897
- *   +0x018c -> line 895
- *   +0x0190 -> line 891
- *   +0x01a0 -> line 892
- *   +0x01b8 -> line 893
- *   +0x01cc -> line 894
- *   +0x01d0 -> line 893
- *   +0x01d4 -> line 897
- *   +0x01e4 -> line 900
- *   +0x01f8 -> line 903
- *   +0x020c -> line 911
- *   +0x021c -> line 912
- *   +0x022c -> line 913
- *   +0x0230 -> line 917
- *   +0x0248 -> line 924
- *   +0x025c -> line 931
- *   +0x026c -> line 932
- *   +0x0274 -> line 931
- *   +0x0278 -> line 932
- *   +0x0288 -> line 934
- *   +0x0298 -> line 935
- *   +0x02a0 -> line 939
- *   +0x02ac -> line 940
- *   +0x02b4 -> line 939
- *   +0x02b8 -> line 940
- *   +0x02c8 -> line 942
- *   +0x02d8 -> line 943
- *   +0x02e0 -> line 947
- *   +0x02e4 -> line 951
- *   +0x02e8 -> line 947
- *   +0x02f0 -> line 948
- *   +0x0310 -> line 950
- *   +0x031c -> line 952
- *   +0x0328 -> line 957
- *   +0x0358 -> line 958
- *   +0x035c -> line 960
- *   +0x0368 -> line 964
- *   +0x0374 -> line 965
- *   +0x0388 -> line 971
- *   +0x0390 -> line 972
- *   +0x03c4 -> line 977
- *   +0x03d0 -> line 978
- *   +0x03f0 -> line 980
- *   +0x03f4 -> line 981
- *   +0x03f8 -> line 980
- *   +0x0400 -> line 981
- *   +0x0408 -> line 986
- *   +0x0410 -> line 987
- *   +0x044c -> line 988
- *   +0x0484 -> line 989
- *   +0x04c0 -> line 993
- *   +0x04cc -> line 994
- *   +0x04d4 -> line 998
- *   +0x04d8 -> line 1000
- *   +0x04e4 -> line 1001
- *   +0x04f0 -> line 1002
- *   +0x04fc -> line 1003
- *   +0x0508 -> line 1004
- *   +0x0514 -> line 1005
- *   +0x0520 -> line 1007
- *   +0x0524 -> line 1008
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+int WPG_fn_lGetLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int* p_lWeight);
+int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int* p_ulCapability);
+void* memmove(void*, const void*, size_t);
+
 WP_tdstGraph_* WPG_fn_lShortestPath(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int ulCapability)
 {
-    int lWeight;
-    WP_tdstGraph_* tdhShortestPath;
+    WP_tdstGraphNode_* param0;
+    WP_tdstGraphNode_* hNeighbor;
+    WP_tdstArc_* hArc;
+    WP_tdstGraphNode_** d_hExplored;
+    WP_tdstGraphNode_** d_hReached;
+    int* d_iWayOfExplored;
+    int* d_iWayOfReached;
+    int* d_iValuationOfExplored;
+    int* d_iValuationOfReached;
+    int iNbElementInExplored;
+    int iCurrentWayPointInReached;
+    int iNbElementInReached;
+    int iCurrentWayPointInExplored;
+    int iDone;
+    int iIndex;
     int i;
     int iValuation;
-    int iIndex;
-    int iDone;
-    int iNbElementInReached;
-    int iCurrentWayPointInReached;
-    int iNbElementInExplored;
-    int iCurrentWayPointInExplored;
-    int* d_iValuationOfReached;
-    int* d_iValuationOfExplored;
-    int* d_iWayOfReached;
-    int* d_iWayOfExplored;
-    WP_tdstGraphNode_** d_hReached;
-    WP_tdstGraphNode_** d_hExplored;
-    WP_tdstArc_* hArc;
-    WP_tdstGraphNode_* hNeighbor;
-    WP_tdstGraphNode_* param0;
-    /* TODO: decompile from asm/... */
+    WP_tdstGraph_* tdhShortestPath;
+    int lWeight;
+
+    iCurrentWayPointInExplored = hGraph->m_hListOfNode.lNumberOfElementsDyn;
+    d_hExplored = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(iCurrentWayPointInExplored * sizeof(WP_tdstGraphNode_*), 1);
+    d_hReached = (WP_tdstGraphNode_**)HMU_fn_p_vMalloc(iCurrentWayPointInExplored * sizeof(WP_tdstGraphNode_*), 1);
+    d_iWayOfExplored = (int*)HMU_fn_p_vMalloc(iCurrentWayPointInExplored * sizeof(int), 1);
+    d_iValuationOfExplored = (int*)HMU_fn_p_vMalloc(iCurrentWayPointInExplored * sizeof(int), 1);
+    d_iWayOfReached = (int*)HMU_fn_p_vMalloc(iCurrentWayPointInExplored * sizeof(int), 1);
+    d_iValuationOfReached = (int*)HMU_fn_p_vMalloc(iCurrentWayPointInExplored * sizeof(int), 1);
+
+    iCurrentWayPointInExplored = 0;
+    iCurrentWayPointInReached = 0;
+    iNbElementInExplored = 0;
+    iNbElementInReached = 1;
+    d_hReached[0] = NULL;
+    for (param0 = hGraph->m_hListOfNode.hFirstElementDyn, iIndex = 0; param0 != NULL; param0 = param0->hNextBrotherDyn, iIndex++)
+    {
+        if (param0->m_hWayPoint == hSrcWayPoint)
+        {
+            d_hReached[0] = param0;
+            d_iWayOfReached[0] = -1;
+            d_iValuationOfReached[0] = 0;
+            break;
+        }
+    }
+
+    iDone = 0;
+    if (d_hReached[0] == NULL)
+    {
+        tdhShortestPath = NULL;
+    }
+    else
+    {
+        while (iNbElementInReached && !iDone)
+        {
+            iValuation = 0x7FFFFFFF;
+            for (i = 0; i < iNbElementInReached; i++)
+            {
+                if (d_iValuationOfReached[i] < iValuation)
+                {
+                    iValuation = d_iValuationOfReached[i];
+                    iCurrentWayPointInReached = i;
+                }
+            }
+
+            iCurrentWayPointInExplored = iNbElementInExplored;
+            d_hExplored[iNbElementInExplored] = d_hReached[iCurrentWayPointInReached];
+            d_iValuationOfExplored[iNbElementInExplored] = d_iValuationOfReached[iCurrentWayPointInReached];
+            d_iWayOfExplored[iNbElementInExplored] = d_iWayOfReached[iCurrentWayPointInReached];
+            iNbElementInExplored++;
+
+            memmove(&d_iValuationOfReached[iCurrentWayPointInReached], &d_iValuationOfReached[iCurrentWayPointInReached] + 1, (iNbElementInReached - iCurrentWayPointInReached) * sizeof(int));
+            memmove(&d_iWayOfReached[iCurrentWayPointInReached], &d_iWayOfReached[iCurrentWayPointInReached] + 1, (iNbElementInReached - iCurrentWayPointInReached) * sizeof(int));
+            memmove(&d_hReached[iCurrentWayPointInReached], &d_hReached[iCurrentWayPointInReached] + 1, (iNbElementInReached - iCurrentWayPointInReached) * sizeof(WP_tdstGraphNode_*));
+            iNbElementInReached--;
+
+            if (d_hExplored[iCurrentWayPointInExplored]->m_hWayPoint == hDstWayPoint)
+            {
+                iDone = 1;
+            }
+
+            for (hArc = d_hExplored[iCurrentWayPointInExplored]->m_hListOfArc->m_hArc.hFirstElementDyn, i = 0; hArc != NULL; hArc = hArc->hNextBrotherDyn, i++)
+            {
+                hNeighbor = hArc->m_hNode;
+                if (hArc->m_ulCapability & ulCapability)
+                {
+                    for (iIndex = 0; iIndex < iNbElementInExplored; iIndex++)
+                    {
+                        if (d_hExplored[iIndex] == hNeighbor) break;
+                    }
+                    if (iIndex == iNbElementInExplored)
+                    {
+                        for (iIndex = 0; iIndex < iNbElementInReached; iIndex++)
+                        {
+                            if (d_hReached[iIndex] == hNeighbor) break;
+                        }
+                        if (iIndex == iNbElementInReached)
+                        {
+                            d_hReached[iNbElementInReached] = hNeighbor;
+                            d_iValuationOfReached[iNbElementInReached] = hArc->m_lWeight + d_iValuationOfExplored[iCurrentWayPointInExplored];
+                            d_iWayOfReached[iNbElementInReached] = iCurrentWayPointInExplored;
+                            iNbElementInReached++;
+                        }
+                        else
+                        {
+                            if (d_iValuationOfReached[iIndex] > hArc->m_lWeight + d_iValuationOfExplored[iCurrentWayPointInExplored])
+                            {
+                                d_iValuationOfReached[iIndex] = hArc->m_lWeight + d_iValuationOfExplored[iCurrentWayPointInExplored];
+                                d_iWayOfReached[iIndex] = iCurrentWayPointInExplored;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        tdhShortestPath = NULL;
+        if (iDone)
+        {
+            tdhShortestPath = WPG_fn_hCreateGraph();
+            iIndex = iCurrentWayPointInExplored;
+            while (iIndex != -1)
+            {
+                WPG_fn_lAddWayPoint(tdhShortestPath, d_hExplored[iIndex]->m_hWayPoint, d_hExplored[iIndex]->m_lTypeOfWP);
+                iIndex = d_iWayOfExplored[iIndex];
+            }
+
+            while (iCurrentWayPointInExplored != 0)
+            {
+                WPG_fn_lGetLinkCapabilities(hGraph, d_hExplored[d_iWayOfExplored[iCurrentWayPointInExplored]]->m_hWayPoint, d_hExplored[iCurrentWayPointInExplored]->m_hWayPoint, &ulCapability);
+                WPG_fn_lGetLinkWeight(hGraph, d_hExplored[d_iWayOfExplored[iCurrentWayPointInExplored]]->m_hWayPoint, d_hExplored[iCurrentWayPointInExplored]->m_hWayPoint, &lWeight);
+                WPG_fn_lAddArcToWayPoint(tdhShortestPath, d_hExplored[d_iWayOfExplored[iCurrentWayPointInExplored]]->m_hWayPoint, d_hExplored[iCurrentWayPointInExplored]->m_hWayPoint, lWeight, ulCapability);
+                iCurrentWayPointInExplored = d_iWayOfExplored[iCurrentWayPointInExplored];
+            }
+        }
+    }
+
+    HMU_fn_vFree((void**)&d_hExplored, 1);
+    HMU_fn_vFree((void**)&d_hReached, 1);
+    HMU_fn_vFree((void**)&d_iWayOfExplored, 1);
+    HMU_fn_vFree((void**)&d_iValuationOfExplored, 1);
+    HMU_fn_vFree((void**)&d_iWayOfReached, 1);
+    HMU_fn_vFree((void**)&d_iValuationOfReached, 1);
+    return tdhShortestPath;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 781–805 */
-/* addr: 0x00200130  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 781
- *   +0x0004 -> line 786
- *   +0x0008 -> line 781
- *   +0x001c -> line 786
- *   +0x0020 -> line 787
- *   +0x0028 -> line 790
- *   +0x0030 -> line 792
- *   +0x003c -> line 793
- *   +0x0040 -> line 794
- *   +0x0044 -> line 795
- *   +0x004c -> line 797
- *   +0x0058 -> line 798
- *   +0x0068 -> line 800
- *   +0x0070 -> line 802
- *   +0x0074 -> line 803
- *   +0x0080 -> line 804
- *   +0x0084 -> line 805
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 WP_tdstGraph_* WPG_fn_hGetNearestGraph(MTH3D_tdstVector_* _p_stPos)
 {
     tdstGraphChainedListNode_* p_stGraphListNode;
@@ -3826,36 +3599,11 @@ WP_tdstGraph_* WPG_fn_hGetNearestGraph(MTH3D_tdstVector_* _p_stPos)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 746–769 */
-/* addr: 0x002001d0  size: 396 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 746
- *   +0x002c -> line 754
- *   +0x0030 -> line 755
- *   +0x0034 -> line 756
- *   +0x0040 -> line 757
- *   +0x0078 -> line 758
- *   +0x008c -> line 759
- *   +0x0090 -> line 758
- *   +0x009c -> line 759
- *   +0x00a8 -> line 761
- *   +0x00e0 -> line 762
- *   +0x00ec -> line 763
- *   +0x011c -> line 764
- *   +0x013c -> line 765
- *   +0x014c -> line 766
- *   +0x0150 -> line 767
- *   +0x0160 -> line 769
- *   +0x0164 -> line 768
- *   +0x0168 -> line 769
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 float WPG_xGetCloserWPDistInGraph(WP_tdstGraph_* _hGraph, MTH3D_tdstVector_* _p_stPos)
 {
     float xDistMin;
     MTH3D_tdstVector_ stWpPos;
-    int lNbWp;
+    long lNbWp;
     long lIndex;
     WP_tdstGraphNode_* hNode;
     int i;
@@ -3875,7 +3623,7 @@ float WPG_xGetCloserWPDistInGraph(WP_tdstGraph_* _hGraph, MTH3D_tdstVector_* _p_
         lIndex = 1;
         MTH_SQRT_TO(xDistMin, xSqrNorm)
     }
-    while ((int)lIndex < lNbWp)
+    while (lIndex < lNbWp)
     {
         for (i = 0, hNode = _hGraph->m_hListOfNode.hFirstElementDyn; i < (int)lIndex; i++, hNode = hNode->hNextBrotherDyn) ;
         WP_fnv_WayPoint_ComputeLocation(hNode->m_hWayPoint, &stWpPos);
@@ -3896,18 +3644,6 @@ float WPG_xGetCloserWPDistInGraph(WP_tdstGraph_* _hGraph, MTH3D_tdstVector_* _p_
     return xDistMin;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 726–735 */
-/* addr: 0x00200360  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 726
- *   +0x0008 -> line 728
- *   +0x0010 -> line 730
- *   +0x0070 -> line 731
- *   +0x0074 -> line 733
- *   +0x0080 -> line 735
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void WPG_fn_vReinitAllGraphs(void)
 {
     tdstGraphChainedListNode_* p_stGraphListNode;
@@ -3920,22 +3656,6 @@ void WPG_fn_vReinitAllGraphs(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 688–700 */
-/* addr: 0x002003f0  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 688
- *   +0x0008 -> line 690
- *   +0x0014 -> line 692
- *   +0x001c -> line 693
- *   +0x0030 -> line 695
- *   +0x0038 -> line 696
- *   +0x0040 -> line 697
- *   +0x0050 -> line 698
- *   +0x005c -> line 699
- *   +0x0060 -> line 700
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma auto_inline on
 void WPG_fn_vReinitGraph(WP_tdstGraph_* hGraph)
 {
@@ -3957,24 +3677,6 @@ void WPG_fn_vReinitGraph(WP_tdstGraph_* hGraph)
 }
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 655–679 */
-/* addr: 0x00200460  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 655
- *   +0x0004 -> line 659
- *   +0x001c -> line 663
- *   +0x0028 -> line 664
- *   +0x0034 -> line 667
- *   +0x0040 -> line 668
- *   +0x0048 -> line 669
- *   +0x0050 -> line 670
- *   +0x005c -> line 671
- *   +0x0084 -> line 673
- *   +0x0090 -> line 677
- *   +0x0094 -> line 679
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int WPG_fn_lGetLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int* p_lWeight)
 {
     WP_tdstGraphNode_* hDstNode;
@@ -4013,24 +3715,6 @@ int WPG_fn_lGetLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint,
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 626–650 */
-/* addr: 0x00200500  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 626
- *   +0x0004 -> line 630
- *   +0x001c -> line 634
- *   +0x0028 -> line 635
- *   +0x0034 -> line 638
- *   +0x0040 -> line 639
- *   +0x0048 -> line 640
- *   +0x0050 -> line 641
- *   +0x005c -> line 642
- *   +0x0084 -> line 644
- *   +0x0090 -> line 648
- *   +0x0094 -> line 650
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int WPG_fn_lChangeLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight)
 {
     WP_tdstGraphNode_* hDstNode;
@@ -4069,24 +3753,6 @@ int WPG_fn_lChangeLinkWeight(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoi
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 597–621 */
-/* addr: 0x002005a0  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 597
- *   +0x0004 -> line 601
- *   +0x001c -> line 605
- *   +0x0028 -> line 606
- *   +0x0034 -> line 609
- *   +0x0040 -> line 610
- *   +0x0048 -> line 611
- *   +0x0050 -> line 612
- *   +0x005c -> line 613
- *   +0x0084 -> line 615
- *   +0x0090 -> line 619
- *   +0x0094 -> line 621
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int* p_ulCapability)
 {
     WP_tdstGraphNode_* hDstNode;
@@ -4125,25 +3791,6 @@ int WPG_fn_lGetLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWay
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 561–584 */
-/* addr: 0x00200640  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 561
- *   +0x0004 -> line 565
- *   +0x001c -> line 569
- *   +0x0028 -> line 570
- *   +0x0034 -> line 573
- *   +0x0040 -> line 574
- *   +0x0048 -> line 575
- *   +0x0050 -> line 576
- *   +0x005c -> line 577
- *   +0x0088 -> line 579
- *   +0x0094 -> line 582
- *   +0x0098 -> line 583
- *   +0x009c -> line 584
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int WPG_fn_lChangeLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, unsigned int ulCapability, int lValue)
 {
     WP_tdstGraphNode_* hDstNode;
@@ -4182,25 +3829,6 @@ int WPG_fn_lChangeLinkCapabilities(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrc
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 488–513 */
-/* addr: 0x002006f0  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 488
- *   +0x0004 -> line 492
- *   +0x001c -> line 496
- *   +0x0028 -> line 497
- *   +0x0034 -> line 500
- *   +0x0040 -> line 501
- *   +0x0048 -> line 502
- *   +0x0050 -> line 503
- *   +0x005c -> line 504
- *   +0x0080 -> line 505
- *   +0x008c -> line 507
- *   +0x0098 -> line 511
- *   +0x009c -> line 513
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int WPG_fn_lAddArcToWayPoint(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoint, WP_tdstWayPoint_* hDstWayPoint, int lWeight, unsigned int ulCapability)
 {
     WP_tdstGraphNode_* hDstNode;
@@ -4236,21 +3864,6 @@ int WPG_fn_lAddArcToWayPoint(WP_tdstGraph_* hGraph, WP_tdstWayPoint_* hSrcWayPoi
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 335–345 */
-/* addr: 0x002007a0  size: 356 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 335
- *   +0x0020 -> line 338
- *   +0x0030 -> line 340
- *   +0x0080 -> line 341
- *   +0x0130 -> line 342
- *   +0x0134 -> line 341
- *   +0x013c -> line 342
- *   +0x0144 -> line 344
- *   +0x0148 -> line 345
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #define LST2_M_vAddElementToList(_p_stList, _hElement) \
 { \
     if ((_hElement)->hNextBrotherDyn) (_hElement)->hNextBrotherDyn->hPrevBrotherDyn = (_hElement)->hPrevBrotherDyn; \
@@ -4312,22 +3925,6 @@ int WPG_fn_lAddWayPoint(WP_tdstGraph_* _hGraph, WP_tdstWayPoint_* _hWayPoint, in
     return -1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 265–292 */
-/* addr: 0x00200910  size: 340 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 265
- *   +0x000c -> line 270
- *   +0x001c -> line 274
- *   +0x0024 -> line 276
- *   +0x0044 -> line 278
- *   +0x00cc -> line 279
- *   +0x0110 -> line 280
- *   +0x0130 -> line 287
- *   +0x013c -> line 291
- *   +0x0144 -> line 292
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Not original source, needs cleaning up: the retail has no out-of-line copy
  * of the node destructor; it is inlined into WPG_fn_vDestroy. */
 inline void WPG_fn_vDestroyGraphNode(WP_tdstGraphNode_* hNode)
@@ -4374,13 +3971,6 @@ void WPG_fn_vDestroy(WP_tdstGraph_* hGraph)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\WPgraphe.c lines 186–186 */
-/* addr: 0x00200a70  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 186
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void WPG_fn_vClearAllocMode(void)
 {
     GAM_fn_vPopAllocMode();
