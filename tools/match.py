@@ -2455,14 +2455,40 @@ def command_verify_recorded(args: argparse.Namespace) -> int:
     return 1 if failures else 0
 
 
+def search_insights(query: str, category: str | None, limit: int, full: bool) -> int:
+    """Print insights containing every term, newest first; line numbers point into the doc."""
+    terms = query.lower().split()
+    lines = INSIGHTS_PATH.read_text().splitlines() if INSIGHTS_PATH.exists() else []
+    hits = []
+    for number, line in enumerate(lines, 1):
+        if not line.startswith('- ['):
+            continue
+        if category and not line.startswith(f'- [{category}]'):
+            continue
+        lowered = line.lower()
+        if all(term in lowered for term in terms):
+            hits.append((number, line[2:]))
+    hits.reverse()
+    for number, line in hits[:limit]:
+        if not full and len(line) > 300:
+            line = line[:297] + '...'
+        print(f'{INSIGHTS_PATH.name}:{number}: {line}')
+    print(f'{min(len(hits), limit)} of {len(hits)} matching insights shown')
+    return 0
+
+
 def command_insight(args: argparse.Namespace) -> int:
     if args.action == 'list':
         print(INSIGHTS_PATH.read_text() if INSIGHTS_PATH.exists() else 'No insights recorded.')
         return 0
+    if args.action == 'search':
+        if not args.text:
+            raise SystemExit('insight search needs search terms')
+        return search_insights(args.text, args.category, args.limit, args.full)
     INSIGHTS_PATH.parent.mkdir(parents=True, exist_ok=True)
     with INSIGHTS_PATH.open('a', encoding='utf-8') as file:
         fcntl.flock(file.fileno(), fcntl.LOCK_EX)
-        file.write(f"\n- [{args.category}] {args.text} ({date.today().isoformat()})\n")
+        file.write(f"\n- [{args.category or 'general'}] {args.text} ({date.today().isoformat()})\n")
         fcntl.flock(file.fileno(), fcntl.LOCK_UN)
     print('recorded shared insight')
     return 0
@@ -2668,9 +2694,11 @@ def main() -> int:
     verify_parser.add_argument('--jobs', type=int, default=4)
     verify_parser.set_defaults(func=command_verify_recorded)
     insight_parser = sub.add_parser('insight')
-    insight_parser.add_argument('action', choices=['add', 'list'])
-    insight_parser.add_argument('text', nargs='?')
-    insight_parser.add_argument('--category', default='general')
+    insight_parser.add_argument('action', choices=['add', 'list', 'search'])
+    insight_parser.add_argument('text', nargs='?', help="insight text, or search terms (all must match, case-insensitive)")
+    insight_parser.add_argument('--category', default=None, help="add: defaults to general; search: only this category")
+    insight_parser.add_argument('--limit', type=int, default=15, help='search: maximum results (default 15)')
+    insight_parser.add_argument('--full', action='store_true', help='search: do not shorten long entries')
     insight_parser.set_defaults(func=command_insight)
     preflight_parser = sub.add_parser('preflight')
     preflight_parser.add_argument('--jobs', type=int, default=4)

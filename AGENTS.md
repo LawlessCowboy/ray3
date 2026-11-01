@@ -248,7 +248,7 @@ Before writing anything, check what is already there:
   worker's reconstruction);
 - recorded attempts in `config/matches.json` (their `reason` names the
   known residuals);
-- `build/large-match/FUNCTION/` history and `insight list`.
+- `build/large-match/FUNCTION/` history and `insight search`.
 
 If a compilable reconstruction exists, keep it as the baseline and refine it.
 Do not regenerate it from scratch.
@@ -300,7 +300,63 @@ Recurring causes seen so far:
 - a global reloaded where MWCC reuses the value (evidence for `volatile`);
 - statement order at a loop head changing the delay-slot fill.
 
-Check `insight list` for the specific idioms.
+### First things to try, by symptom
+
+These have all produced matches in this project, though some on only a few
+functions. Try the matching one before sweeping or running the permuter, and
+use `insight search` for details.
+
+Registers:
+
+- Register-only residual: reverse the scaffold's local declarations. The debug
+  list is usually the reverse of source order.
+- Still register-only: try block-scoping a local, or assigning it after its
+  declaration instead of initialising it. Then hand off to the permuter.
+- A sequence of flag or value updates in the wrong register: split one
+  expression into statements (`x &= ~m; x |= v & m;`).
+
+Control flow:
+
+- Compare-chain switch: the `beq` tests run in the reverse order of the case
+  labels, so write the cases in the reverse of retail's test order.
+- Switch tail wrong: compare `default: return p;`, `default: err; return p;`,
+  no `default`, and `break` versus `return` in a case. The first case to reach
+  the epilogue often gets `move v0` in its delay slot.
+- `movz` where retail branches, or the reverse: move between a ternary and
+  `if`/`else`, or assign through a local.
+- Branch to an arm that looks empty: try `if (x == 0) { } else { ... }`.
+
+Data access:
+
+- Retail keeps an address in a register where we fold the offset: use an inline
+  helper with pointer parameters, or `*(float*)(int)&v.y`.
+- `lwc1`/`swc1` where retail uses `lw`/`sw`, or the reverse: copy through
+  `unsigned int` words, or use a helper taking pointers.
+- Unfolded offset on an array element (`addiu base,OFF; addu base,i*size`):
+  search `unfolded`.
+- Two stores of the same value to one field: `p->f = (p->f |= m);`.
+- A pad or byte value read with `lw` and then `andi`: cast the whole word,
+  `(unsigned char)u.lValue`, rather than reading `u.ucValue`.
+- A global re-read where we reuse the value: try `volatile`.
+
+Size and source shape:
+
+- A run of the line map on one source line: an inlined helper, not hand-expanded
+  code. Write it as `inline` above the caller.
+- A file matches some functions under 3.0.1 and others under 3.0.3: check which
+  compiler the residual suggests (`fptoui` call versus inline conversion, loop
+  padding nops) before changing the source.
+
+For anything else:
+
+```sh
+python3 tools/match.py insight search "unfolded offset"
+python3 tools/match.py insight search "delay slot" --category compiler --limit 5
+```
+
+All terms must match, case-insensitive, newest first. Long entries are shortened
+unless you pass `--full`. Avoid `insight list`: it prints the whole doc, about
+600 KB.
 
 Run variant sweeps with `python3 tools/sweep.py FUNCTION variants.py`. It
 compiles scratch copies through `check FUNCTION --candidate FILE` (the owner's
@@ -377,10 +433,12 @@ so run `verify-recorded` after adding initialisers.
 
 ## Shared findings
 
-Before reporting a reusable compiler or code-generation observation, check:
+Before recording a reusable compiler or code-generation observation, search for
+it, and do not add it if it is already there or listed under *First things to
+try*:
 
 ```sh
-python3 tools/match.py insight list
+python3 tools/match.py insight search "declaration order"
 ```
 
 Record a concise, reproduced insight with:
