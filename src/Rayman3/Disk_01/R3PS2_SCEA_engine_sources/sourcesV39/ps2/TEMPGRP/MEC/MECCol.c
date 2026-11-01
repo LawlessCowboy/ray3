@@ -1729,25 +1729,48 @@ void MEC_fn_vFillCollisionReport(DNM_stDynamics* p_stDynamic)
  */
 void MEC_fn_vReportCollideActor(HIE_tdstSuperObject_* hCollideSupObj, DNM_stMecObstacle* p_stCollideObstacle);
 
+inline unsigned char MEC_fn_bIsEntity7or8(short xEntity)
+{
+    int bResult = 1;
+    if ((unsigned int)(xEntity - 7) > 1)
+        bResult = 0;
+    return bResult;
+}
+
+inline unsigned char MEC_fn_bMaterialHasType(GMT_tdstGameMaterial_* hMaterial, unsigned short uwType)
+{
+    GMT_tdstCollideMaterial_* hCollideMaterial = hMaterial->hCollideMaterial;
+    return (hCollideMaterial != (GMT_tdstCollideMaterial_*)-1) && ((hCollideMaterial->xIdentifier & uwType) == uwType);
+}
+
+inline unsigned char MEC_fn_bMaterialsHaveType(DNM_stMecObstacle* p_stObstacle, unsigned short uwType)
+{
+    int bResult = MEC_fn_bMaterialHasType(p_stObstacle->hCollidedMaterial, uwType) != 0;
+    if (bResult)
+        bResult = MEC_fn_bMaterialHasType(p_stObstacle->hMyMaterial, uwType) != 0;
+    return bResult;
+}
+
 void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lNbObstacle, DNM_stMecObstacle* a_stObstacle, int lObstacle)
 {
-    unsigned char bWaterEdge;
-    unsigned char bActorEdge;
-    unsigned char bGroundEdge;
-    unsigned char bWallEdge;
-    unsigned char bCeilEdge;
-    unsigned char bObstacleEdge;
-    unsigned char bWater;
-    unsigned char bActor;
-    unsigned char bGround;
-    unsigned char bWall;
-    unsigned char bCeil;
-    unsigned char bObstacle;
     unsigned char bStop;
-    int lCounter;
-    DNM_stMecObstacle* p_stTmpObstacle;
+    unsigned char bObstacle;
+    unsigned char bCeil;
+    unsigned char bWall;
+    unsigned char bGround;
+    unsigned char bActor;
+    unsigned char bWater;
+    unsigned char bObstacleEdge;
+    unsigned char bCeilEdge;
+    unsigned char bWallEdge;
+    unsigned char bGroundEdge;
+    unsigned char bActorEdge;
+    unsigned char bWaterEdge;
     MTH3D_tdstVector_* p_stNormalVector;
+    DNM_stMecObstacle* p_stTmpObstacle;
+    int lCounter;
     float xCurrentRate;
+    float xRate;
     unsigned char bEdge;
 
     bStop = 0;
@@ -1765,26 +1788,27 @@ void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* 
     bWaterEdge = 0;
     xCurrentRate = 2.0f;
 
-    for (lCounter = 0; (lCounter < lNbObstacle) && (bStop == 0); lCounter++)
+    for (lCounter = 0; (lCounter < lNbObstacle) && !bStop; lCounter++)
     {
         p_stTmpObstacle = a_stObstacle + lCounter;
 
         if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))
         {
-            if ((lObstacle >= lCounter) && (xCurrentRate == p_stTmpObstacle->m_xRate))
+            xRate = p_stTmpObstacle->m_xRate;
+            if ((lCounter <= lObstacle) || (xCurrentRate == xRate))
             {
                 p_stNormalVector = &p_stTmpObstacle->m_stNorm;
 
-                bEdge = ((unsigned int)(p_stTmpObstacle->m_xCollidedEntity - 7) < 2) ? 1 : 0;
+                bEdge = MEC_fn_bIsEntity7or8(p_stTmpObstacle->m_xCollidedEntity);
+                xCurrentRate = xRate;
 
-                if (bObstacle == 0)
+                if (!bObstacle)
                 {
-                    xCurrentRate = p_stTmpObstacle->m_xRate;
                     memcpy(&g_stReport.m_stObstacle, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
                     bObstacleEdge = bEdge;
                     bObstacle = 1;
                 }
-                else if ((bObstacleEdge != 0) && (bEdge == 0))
+                else if (bObstacleEdge && !bEdge)
                 {
                     memcpy(&g_stReport.m_stObstacle, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
                     bObstacleEdge = 0;
@@ -1792,31 +1816,28 @@ void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* 
 
                 if (((p_stTmpObstacle->m_eType & 2) == 2) || ((p_stTmpObstacle->m_eType & 9) == 9))
                 {
-                    if (bActor == 0)
+                    if (!bActor)
                     {
                         memcpy(&g_stReport.m_stCharacter, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
                         bActorEdge = bEdge;
                         bActor = 1;
                     }
-                    else if ((bActorEdge != 0) && (bEdge == 0))
+                    else if (bActorEdge && !bEdge)
                     {
                         memcpy(&g_stReport.m_stCharacter, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
                         bActorEdge = 0;
                     }
                 }
 
-                if ((p_stTmpObstacle->hCollidedMaterial->hCollideMaterial != NULL) &&
-                    (((p_stTmpObstacle->hCollidedMaterial->hCollideMaterial->xIdentifier & 0x4000) == 0x4000) ? 1 : 0) &&
-                    (p_stTmpObstacle->hMyMaterial->hCollideMaterial != NULL) &&
-                    (((p_stTmpObstacle->hMyMaterial->hCollideMaterial->xIdentifier & 0x4000) == 0x4000) ? 1 : 0))
+                if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 0x4000) && MEC_fn_bMaterialHasType(p_stTmpObstacle->hMyMaterial, 0x4000))
                 {
-                    if (bWater == 0)
+                    if (!bWater)
                     {
                         memcpy(&g_stReport.m_stWater, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
                         bWaterEdge = bEdge;
                         bWater = 1;
                     }
-                    else if ((bWaterEdge != 0) && (bEdge == 0))
+                    else if (bWaterEdge && !bEdge)
                     {
                         memcpy(&g_stReport.m_stWater, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
                         bWaterEdge = 0;
@@ -1828,57 +1849,59 @@ void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* 
                     float xX = p_stNormalVector->xX;
                     float xY = p_stNormalVector->xY;
                     float xZ = p_stNormalVector->xZ;
-                    float xZero = 0.0f;
                     float xOne = 1.0f;
+                    float xZero = 0.0f;
                     MTH_DOT3_TO(xDot, xX, xY, xZ, xZero, xZero, xOne);
 
-                    if (xDot <= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
+                    if (xDot > p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
                     {
-                        if (bWall == 0)
+                        if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 1))
                         {
-                            memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                            bWallEdge = bEdge;
-                            bWall = 1;
-                        }
-                        else if ((bWallEdge != 0) && (bEdge == 0))
-                        {
-                            memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                            bWallEdge = 0;
-                        }
-                    }
-                    else
-                    {
-                        if ((p_stTmpObstacle->hCollidedMaterial->hCollideMaterial != NULL) &&
-                            (((p_stTmpObstacle->hCollidedMaterial->hCollideMaterial->xIdentifier & 1) == 1) ? 1 : 0))
-                        {
-                            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x8000000;
+                            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = (p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x8000000);
                         }
 
-                        if (bGround == 0)
+                        if (!bGround)
                         {
                             memcpy(&g_stReport.m_stGround, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
                             bGroundEdge = bEdge;
                             bGround = 1;
                         }
-                        else if ((bGroundEdge != 0) && (bEdge == 0))
+                        else if (bGroundEdge && !bEdge)
                         {
                             memcpy(&g_stReport.m_stGround, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
                             bGroundEdge = 0;
                         }
                     }
 
-                    if (xDot <= -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
+                    else
                     {
-                        if (bCeil == 0)
+                        if (xDot > -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)
                         {
-                            memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                            bCeilEdge = bEdge;
-                            bCeil = 1;
+                            if (!bWall)
+                            {
+                                memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                                bWallEdge = bEdge;
+                                bWall = 1;
+                            }
+                            else if (bWallEdge && !bEdge)
+                            {
+                                memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                                bWallEdge = 0;
+                            }
                         }
-                        else if ((bCeilEdge != 0) && (bEdge == 0))
+                        else
                         {
-                            memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
-                            bCeilEdge = 0;
+                            if (!bCeil)
+                            {
+                                memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                                bCeilEdge = bEdge;
+                                bCeil = 1;
+                            }
+                            else if (bCeilEdge && !bEdge)
+                            {
+                                memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));
+                                bCeilEdge = 0;
+                            }
                         }
                     }
                 }
@@ -1904,9 +1927,9 @@ void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* 
         g_stReport.m_ulCurrSurfaceState |= 0x1;
         if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
         {
-            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xX = g_stReport.m_stGround.m_stNorm.xX;
-            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xY = g_stReport.m_stGround.m_stNorm.xY;
-            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xZ = g_stReport.m_stGround.m_stNorm.xZ;
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[0] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[0];
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[1] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[1];
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[2] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[2];
         }
     }
     if (bWall)
@@ -1914,9 +1937,9 @@ void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* 
         g_stReport.m_ulCurrSurfaceState |= 0x4;
         if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)
         {
-            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal.xX = g_stReport.m_stWall.m_stNorm.xX;
-            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal.xY = g_stReport.m_stWall.m_stNorm.xY;
-            p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal.xZ = g_stReport.m_stWall.m_stNorm.xZ;
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[0] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[0];
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[1] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[1];
+            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[2] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[2];
         }
     }
     if (bCeil)

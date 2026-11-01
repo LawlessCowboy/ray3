@@ -235,6 +235,7 @@ struct CExtraEventActor {
         int m_s32Handle; /* +0x10 */
         CResData* m_poResData; /* +0x14 */
         void (*m_pfn_Proc)(int); /* +0x18 */
+        static void* operator new(unsigned int uiSize) { return usnd_malloc(uiSize); }
         CResObjParams() : m_poNext(0), m_poPrevious(0), m_uiNbRefs(0), m_s32Handle(0), m_poResData(0), m_pfn_Proc(0) {}
         virtual void fv_vRelease(void);
         virtual void fv_vAddRef(void);
@@ -281,20 +282,22 @@ struct CExtraEventActor {
     unsigned char mbAllSoundPaused; /* +0x49 */
     CResObjParams m_oResObjParams; /* +0x4c */
     static int ss32RefreshChannelCount[8];
+    static int ss32CurrentRefreshChannel;
     static void operator delete(void* pv) { usnd_free(pv); }
     static void* operator new(unsigned int uiSize) { return usnd_malloc(uiSize); }
     CExtraEventActor();
+    CExtraEventActor(int s32_ACPObjectId);
     ~CExtraEventActor();
     unsigned char mfn_bExecute(int s32_CmdId, const CUUID& roId);
-    unsigned char mfn_bPlay(CEventResData* ro_EventResData, int s32_EventId, void (*pfn_Proc)(int));
+    unsigned char mfn_bPlay(const CEventResData& ro_EventResData, int s32_EventId, void (*pfn_Proc)(int));
     unsigned char fn_bIsSoundPlaying(int s32_Handle);
     unsigned char fn_bIsSoundPlaying(CResData* po_ResData);
-    unsigned char fn_bIsResourcesAllowed(CResData* ro_ResData);
+    unsigned char fn_bIsResourcesAllowed(const CResData& ro_ResData);
     unsigned char mfn_bApplyPositionAndVelocity(void);
-    unsigned char mfn_bApplyAllParams(unsigned char bforce);
+    unsigned char mfn_bApplyAllParams(bool bforce);
     unsigned char mfn_bApplySectorActivation(void);
     void f_vDesInit(void);
-    void f_vInit(CLinkTypeActor* ro_ActorType, int s32_ACPObjectId, int s32_ACPChannelId, CEventResData* poResData);
+    void f_vInit(const CLinkTypeActor& ro_ActorType, int s32_ACPObjectId, int s32_ACPChannelId, const CEventResData* poResData);
     void f_vInitActorObj(int s32_ACPObjectId);
     void f_vInsertAfter(CExtraEventActor* pParam);
     void f_vIsolate(void);
@@ -443,10 +446,11 @@ struct usnd::CRolloffParam {
     float m_fStabilisationDistance; /* +0x0 */
     float m_fSaturationDistance; /* +0x4 */
     float m_fStabilisationVolume; /* +0x8 */
+    CRolloffParam(float fStabilisationDistance, float fStabilisationVolume, float fSaturationDistance);
+    CRolloffParam(void) {}
 };
 
-struct usnd::CEventResData {
-    /* C++ base CResData at +0x0. */
+struct usnd::CEventResData : CResData {
     float m_fCoeffA; /* +0x18 */
     float m_fCoeffB; /* +0x1c */
     float m_fCoeffC; /* +0x20 */
@@ -462,6 +466,7 @@ struct smap {
 struct usnd::CResObj {
     virtual ~CResObj();
     virtual void fv_vExecCmd(unsigned int ui_CmdId, void* pv_Data);
+    CResData& f_roGetResData(void);
     CResType* m_roType; /* +0x4 */
     CResData* m_poResData; /* +0x8 */
 };
@@ -535,7 +540,7 @@ struct usnd::CVarNotifTarget : CNotifTarget {
 };
 
 struct CMusicMarkerNotifTarget : usnd::CVarNotifTarget {
-    void fv_vVarChanged(CVar* roVar);
+    void fv_vVarChanged(CVar& roVar);
     void fv_vVarDestroyed(CVar& roVar);
 };
 
@@ -543,13 +548,13 @@ struct usnd::CVarData {
     CSndVarType* m_poType; /* +0x4 */
 };
 
-struct usnd::CSwitchResData {
-    /* C++ base CResData at +0x0. */
+struct usnd::CSwitchResData : CResData {
     unsigned int m_uiNbElmts; /* +0x18 */
     unsigned int m_uiInfoType; /* +0x1c */
     unsigned int m_uiDefaultIndex; /* +0x20 */
     float m_fVolume; /* +0x24 */
     CSwitchElement* m_paElements; /* +0x28 */
+    CResObj* f_poCreateResObjForValue(unsigned int uiValue);
 };
 
 struct usnd::C3DParam {
@@ -559,6 +564,9 @@ struct usnd::C3DParam {
 };
 
 struct usnd::CActorModifiers : usnd::CVarNotifTarget {
+    virtual void fv_vUnknown10(void);
+    virtual void f_vAddVar(TTypedVar* poVar, float fCoeff); /* vtable +0x14 */
+    virtual void f_vRemoveVar(TTypedVar* poVar); /* vtable +0x18 */
     CActorResObj* m_pActor; /* +0x4 */
     smap m_oVariables; /* +0x8 */
     float m_fDirectValue; /* +0x18 */
@@ -573,6 +581,10 @@ struct usnd::CVolumeActorModifier : CActorModifiers {
 };
 
 struct usnd::CActorResObj : CResObj {
+    virtual void fv_vApply3DParams(void); /* vtable +0x10 */
+    virtual void fv_vCallHandler(const char* pcName, void* pvData); /* vtable +0x14 */
+    C3DParam& f_roGet3DParams(void);
+    void f_vRefresh(void);
     C3DParam m_o3DParams; /* +0xc */
     CPitchActorModifier m_oPitchModifier; /* +0x3c */
     CRolloffParam m_oRolloff; /* +0x60 */
@@ -587,6 +599,11 @@ struct usnd::CActorResObj : CResObj {
 
 struct usnd::CFloatVarType {
     /* C++ base TBaseVarType at +0x0. */
+    virtual void fv_vUnknown8(void);
+    virtual void fv_vUnknownC(void);
+    virtual void fv_vUnknown10(void);
+    virtual TTypedVar* fv_poCreateVar(const char* pcName, void* pvData); /* vtable +0x14 */
+    static CFloatVarType& fs_roGetInst(void);
 };
 
 struct _stVector {
@@ -687,6 +704,8 @@ struct usnd::CIdObjPtrMgr {
     sset m_oLookupTables; /* +0x0 */
     smap m_oElmtReferences; /* +0x10 */
     unsigned char m_bEnable; /* +0x20 */
+    static CIdObjPtrMgr& fs_roGetInst(void);
+    CRefIdObj* f_poGetIdObj(const CUUID& roId);
 };
 
 struct usnd::CClassInfo {
@@ -746,6 +765,7 @@ struct CMarkerNotifTarget {
 };
 
 struct PostponedPlay {
+    static unsigned char fs_bIsPending(CExtraEventActor* pEActor);
     static unsigned char fs_bExecute(int s32_CmdId, const usnd::CUUID& roId, CExtraEventActor* pEActor);
     static unsigned char fs_bIsSoundPlaying(int s32_Handle, CExtraEventActor* pEActor);
     static unsigned char fs_bIsSoundPlaying(usnd::CResData* po_ResData, CExtraEventActor* pEActor);
@@ -756,43 +776,7 @@ unsigned int g_uiNextSwitchValue;
 int SND_g_iNbMusicMarkerSlots;
 stMusicMarkerSlot* SND_g_a_tdstMusicMarkerSlots;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 83–138 */
-/* addr: 0x001cd970  size: 384 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 83
- *   +0x0024 -> line 90
- *   +0x0030 -> line 92
- *   +0x0038 -> line 94
- *   +0x0048 -> line 97
- *   +0x0050 -> line 105
- *   +0x0054 -> line 101
- *   +0x0058 -> line 110
- *   +0x0074 -> line 112
- *   +0x007c -> line 115
- *   +0x0090 -> line 112
- *   +0x0094 -> line 115
- *   +0x00d4 -> line 119
- *   +0x00e0 -> line 124
- *   +0x0110 -> line 127
- *   +0x0114 -> line 128
- *   +0x0118 -> line 129
- *   +0x011c -> line 127
- *   +0x0124 -> line 130
- *   +0x0130 -> line 131
- *   +0x013c -> line 132
- *   +0x0148 -> line 134
- *   +0x0154 -> line 135
- *   +0x015c -> line 137
- *   +0x0160 -> line 138
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int ms_czNil__Q24usnd7sstring(void* uiIOPAddr, unsigned int uiSize)
-{
-    int iTransfered;
-    int iLength;
-    /* TODO: decompile from asm/... */
-}
+/* fn_iTransferIOPData (retail debug: lines 83-138 here) lives in psx2/ee/sndeevid.cpp. */
 
 #pragma auto_inline on
 
@@ -851,6 +835,13 @@ void CExtraEventActorPool::f_vSalvageActor(CExtraEventActor* poEventActor)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline CExtraEventActor::CExtraEventActor(int s32_ACPObjectId)
+    : m_poNext(0), m_poPrevious(0), m_poIntSwitchVar(0), mpoActorObj(0),
+      mpoVolumeModifier(0), mpoPitchModifier(0), mpoActorType(0)
+{
+    f_vInitActorObj(s32_ACPObjectId);
+}
+
 CExtraEventActor* CExtraEventActorPool::fs_poGetAnActor(int s32_ACPObjectId)
 {
     CExtraEventActor* poEventActor;
@@ -862,9 +853,7 @@ CExtraEventActor* CExtraEventActorPool::fs_poGetAnActor(int s32_ACPObjectId)
         poEventActor->f_vIsolate();
     else
     {
-        poEventActor = new CExtraEventActor;
-        if (poEventActor)
-            poEventActor->f_vInitActorObj(s32_ACPObjectId);
+        poEventActor = new CExtraEventActor(s32_ACPObjectId);
     }
     return poEventActor;
 }
@@ -914,6 +903,17 @@ unsigned char CExtraEventActor::mfn_bExecute(int s32_CmdId, const CUUID& roId)
     }
     return bAnswer | PostponedPlay::fs_bExecute(s32_CmdId, roId, this);
 }
+
+namespace usnd {
+template <class T> struct CIdObjPtr {
+    operator T*(void) const;
+};
+struct CSwitchResType { static CSwitchResType* fs_roGetInst(void); };
+struct CWavResType { static CWavResType* fs_roGetInst(void); };
+}
+extern "C" int rand(void);
+extern unsigned char g_bUseMarkersForNextRequest;
+extern CMarkerNotifTarget g_oMarkerNotifTarget;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 820–953 */
 /* addr: 0x001cdd90  size: 1336 bytes */
@@ -983,25 +983,132 @@ unsigned char CExtraEventActor::mfn_bExecute(int s32_CmdId, const CUUID& roId)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CExtraEventActor::mfn_bPlay(CEventResData* ro_EventResData, int s32_EventId, void (*pfn_Proc)(int))
+unsigned char CExtraEventActor::mfn_bPlay(const CEventResData& ro_EventResData, int s32_EventId, void (*pfn_Proc)(int))
 {
-    float fNewPitch;
-    CEventResData* po_EventResData;
-    CIdObjPtrMgr* ro_IdObjPtrMgr;
-    CUUID o_PlayId;
-    CUUID o_StopId;
-    stMiniStackDesc st_Stack[4];
-    int s32_PlayHighWord;
-    int s32_PlayLowWord;
-    int s32_StopHighWord;
-    int s32_StopLowWord;
-    int a1_Params[1];
-    unsigned int uiInfoType;
-    CSwitchResData* pSwitchResData;
+    CProgramContext* poContext;
+    unsigned char b_Answer;
     CResObj* po_ResObj;
     CResData* po_ResData;
-    unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
+    CSwitchResData* pSwitchResData;
+    unsigned int uiInfoType;
+    const CEventResData* po_EventResData;
+    CResObjParams* poParams;
+    CResObjState* pState;
+
+    if (mbAllSoundPaused)
+        return 0;
+
+    po_ResData = (CResData*)*(const usnd::CIdObjPtr<CResData>*)&ro_EventResData.m_pTargetRes;
+    if (!po_ResData)
+        return 0;
+
+    poContext = &mpoActorObj->m_oProgramContext;
+    if (!fn_bIsResourcesAllowed(*po_ResData))
+        return 0;
+
+    if (&po_ResData->fv_roGetResType() == (CResType*)usnd::CSwitchResType::fs_roGetInst())
+    {
+        pSwitchResData = (CSwitchResData*)po_ResData;
+        uiInfoType = pSwitchResData->m_uiInfoType;
+        if (g_uiNextSwitchValue == (unsigned int)-1)
+            g_uiLastSwitchValue = mpoActorType->mstIActor.Switch(ms32ACPObjectId, uiInfoType);
+        else
+            g_uiLastSwitchValue = g_uiNextSwitchValue;
+        po_ResObj = pSwitchResData->f_poCreateResObjForValue(g_uiLastSwitchValue);
+    }
+    else
+    {
+        po_ResObj = po_ResData->fv_poCreateResObj();
+        g_uiLastSwitchValue = (unsigned int)-1;
+    }
+    if (!po_ResObj)
+        return 0;
+
+    if (&po_ResObj->f_roGetResData().fv_roGetResType() == (CResType*)usnd::CWavResType::fs_roGetInst())
+    {
+        switch (g_bUseMarkersForNextRequest)
+        {
+        case 1:
+        {
+            int a1_Params[1];
+            a1_Params[0] = (int)&g_oMarkerNotifTarget;
+            po_ResObj->fv_vExecCmd(0x3F5, a1_Params);
+        }
+        }
+    }
+
+    poParams = CResObjParamsPool::ms_oPool.m_poNext;
+    if (poParams)
+        poParams->f_vIsolate();
+    else
+        poParams = new CResObjParams;
+    poParams->fv_vAddRef();
+    poParams->m_s32Handle = s32_EventId;
+    poParams->m_poResData = po_ResData;
+    poParams->m_pfn_Proc = pfn_Proc;
+    poParams->m_poNext = m_oResObjParams.m_poNext;
+    poParams->m_poPrevious = &m_oResObjParams;
+    if (poParams->m_poNext)
+        poParams->m_poNext->m_poPrevious = poParams;
+    m_oResObjParams.m_poNext = poParams;
+
+    poContext->fv_vAddRunningObj(*po_ResObj, poParams, -1, false, 0);
+
+    switch (ro_EventResData.m_eEventType)
+    {
+    case ESTOPANDGO:
+    {
+        int s32_StopLowWord = 0;
+        int s32_StopHighWord = 0;
+        int s32_PlayLowWord = 0;
+        int s32_PlayHighWord = 0;
+        stMiniStackDesc st_Stack[4] = {
+            {1, (int)&s32_StopLowWord},
+            {1, (int)&s32_StopHighWord},
+            {1, (int)&s32_PlayLowWord},
+            {1, (int)&s32_PlayHighWord},
+        };
+        CUUID o_StopId;
+        CUUID o_PlayId;
+
+        mpoActorObj->fv_vCallHandler("OnGetStopNGoIds", st_Stack);
+        poContext->fv_vRemoveRunningObj(*po_ResObj);
+
+        o_StopId.m_uiHighWord = s32_StopHighWord;
+        o_StopId.m_uiLowWord = s32_StopLowWord;
+        o_PlayId.m_uiHighWord = s32_PlayHighWord;
+        o_PlayId.m_uiLowWord = s32_PlayLowWord;
+        po_EventResData = (const CEventResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(o_PlayId);
+
+        b_Answer = 0;
+        poParams = m_oResObjParams.m_poNext;
+        while (poParams)
+        {
+            if (poParams->m_poResData->m_oId == o_StopId)
+            {
+                pState = mpoActorObj->m_oProgramContext.m_oObjStates.m_poNext; while (pState) { if (pState->f_bHasUserData(poParams, -1)) pState->f_vExecCmd(1, NULL); pState = pState->m_poNext; }
+                b_Answer = 1;
+            }
+            poParams = poParams->m_poNext;
+        }
+        b_Answer |= PostponedPlay::fs_bExecute(1, o_StopId, this);
+        if (po_EventResData)
+            return mfn_bPlay(*po_EventResData, s32_EventId, pfn_Proc) && b_Answer;
+        return 0;
+    }
+    default:
+    {
+        if (ro_EventResData.m_fCoeffA != 0.0f)
+        {
+            float fNewPitch = 1.0f + ro_EventResData.m_fCoeffA * (float)(rand() * 2 - 0x7FFFFFFF) / 2147483648.0f;
+            if (fNewPitch <= 0.0f)
+                fNewPitch = 1e-7f;
+            po_ResObj->fv_vExecCmd(0xC, &fNewPitch);
+        }
+        po_ResObj->fv_vExecCmd(0, 0);
+        return 1;
+    }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 815–815 */
@@ -1177,7 +1284,7 @@ unsigned char CExtraEventActor::fn_bIsSoundPlaying(CResData* po_ResData)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CExtraEventActor::fn_bIsResourcesAllowed(CResData* ro_ResData)
+unsigned char CExtraEventActor::fn_bIsResourcesAllowed(const CResData& ro_ResData)
 {
     CBoolRefParam oBoolRef;
     unsigned int uiObjNum;
@@ -1187,6 +1294,20 @@ unsigned char CExtraEventActor::fn_bIsResourcesAllowed(CResData* ro_ResData)
     CProgramHdr* ro_ProgHdr;
     int apObjects[100];
     /* TODO: decompile from asm/... */
+}
+
+namespace usnd {
+float FASTPS2SQRTF(float f);
+template <class T> struct TTypedVar {
+    const T& f_oGetValue(void);
+    void f_vSetValue(T oValue);
+};
+}
+float int2dB(int s32_volume);
+
+inline bool fn_bDiffers(const V3Ds& roA, float fX, float fY, float fZ)
+{
+    return fX != roA.fX || fY != roA.fY || fZ != roA.fZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 589–646 */
@@ -1231,9 +1352,45 @@ unsigned char CExtraEventActor::mfn_bApplyPositionAndVelocity(void)
 {
     float f32_Value;
     C3DParam* ro_Params;
-    _stVector stVelocity;
     _stVector stPos;
-    /* TODO: decompile from asm/... */
+    _stVector stVelocity;
+
+    if (ms32ACPObjectId == -1)
+        return 1;
+    if (!mpoActorType->mstIActor.pfnPosition(ms32ACPObjectId, ms32ACPChannelId, &stPos))
+        return 0;
+
+    ro_Params = &mpoActorObj->f_roGet3DParams();
+    if (fn_bDiffers(ro_Params->m_oPos, stPos.f32x, stPos.f32y, stPos.f32z))
+        mpoActorObj->fv_vApply3DParams();
+
+    if (meExtraCoeff && mpoActorType->mstIActor.pfnVelocity(ms32ACPObjectId, ms32ACPChannelId, &stVelocity))
+    {
+        if (fn_bDiffers(ro_Params->m_oSpeed, stVelocity.f32x, stVelocity.f32y, stVelocity.f32z))
+        {
+            float fDist = usnd::FASTPS2SQRTF(stVelocity.f32x * stVelocity.f32x + stVelocity.f32y * stVelocity.f32y + stVelocity.f32z * stVelocity.f32z);
+            f32_Value = mfCoeffB + mfCoeffA * fDist;
+            switch (meExtraCoeff)
+            {
+            case EVOLUMEEVENT:
+                ((usnd::TTypedVar<float>*)mpoVolumeModifier)->f_vSetValue(int2dB((int)f32_Value));
+                break;
+            case EPITCHEVENT:
+                ((usnd::TTypedVar<float>*)mpoPitchModifier)->f_vSetValue(f32_Value);
+                break;
+            case EEXTRAEVENT:
+                ((usnd::TTypedVar<float>*)mpoVolumeModifier)->f_vSetValue(f32_Value);
+                ((usnd::TTypedVar<float>*)mpoPitchModifier)->f_vSetValue(mfCoeffD + mfCoeffC * fDist);
+                break;
+            }
+        }
+    }
+    return 1;
+}
+
+inline void fn_vSendRolloff(CActorResObj* po, const CRolloffParam& ro)
+{
+    po->fv_vExecCmd(0x44C, (void*)&ro);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 545–586 */
@@ -1261,10 +1418,59 @@ unsigned char CExtraEventActor::mfn_bApplyPositionAndVelocity(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char CExtraEventActor::mfn_bApplyAllParams(unsigned char bforce)
+unsigned char CExtraEventActor::mfn_bApplyAllParams(bool bforce)
 {
     unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
+    CActorProgramContext* poContext = &mpoActorObj->m_oProgramContext;
+    unsigned char bApply;
+
+    if (ms32RefreshChannel != ss32CurrentRefreshChannel && !bforce)
+        return 1;
+
+    b_Answer = ms32ACPObjectId == -1;
+    bApply = 1;
+    {
+        bool bBusy = PostponedPlay::fs_bIsPending(this) || poContext->fv_bAreThereRunningObjs();
+        if (!bBusy && !bforce)
+            bApply = 0;
+    }
+
+    if (!b_Answer && bApply && !mbWaitForKill)
+    {
+        unsigned char bNoObject;
+        _RollOffParam stRollOff;
+
+        mbWaitForKill = !mfn_bApplyPositionAndVelocity();
+        bNoObject = ms32ACPObjectId == -1;
+        if (!bNoObject && mpoActorType->mstIActor.pfnRollOff(ms32ACPObjectId, ms32ACPChannelId, &stRollOff))
+        {
+            int iBackGround = stRollOff.rDistBackGround;
+            if (iBackGround != mstRollOff.rDistBackGround || stRollOff.rDistSatur != mstRollOff.rDistSatur)
+            {
+                float fSatur = stRollOff.rDistSatur / 65536.0f;
+                float fVolume = int2dB(stRollOff.ucBackgroundVol);
+                fn_vSendRolloff(mpoActorObj, CRolloffParam(fSatur, iBackGround / 65536.0f, fVolume));
+                mstRollOff.rDistBackGround = stRollOff.rDistBackGround;
+                mstRollOff.rDistSatur = stRollOff.rDistSatur;
+                mstRollOff.ucBackgroundVol = stRollOff.ucBackgroundVol;
+            }
+            bNoObject = 1;
+        }
+        {
+            unsigned char bWait = !bNoObject;
+            if (bWait)
+                bWait = mbWaitForKill;
+            mbWaitForKill = bWait;
+        }
+        if (mbWaitForKill)
+            mpoActorObj->fv_vExecCmd(1, 0);
+        mfn_bApplySectorActivation();
+        b_Answer = 1;
+    }
+
+    if (bApply && !mbAllSoundPaused)
+        mpoActorObj->f_vRefresh();
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 505–542 */
@@ -1354,6 +1560,8 @@ CExtraEventActor::~CExtraEventActor()
     }
 }
 
+extern "C" void SND_fn_vGetDefaultRollOff(_RollOffParam* pst_RollOff);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 330–418 */
 /* addr: 0x001cef60  size: 632 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1407,12 +1615,70 @@ CExtraEventActor::~CExtraEventActor()
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CExtraEventActor::f_vInit(CLinkTypeActor* ro_ActorType, int s32_ACPObjectId, int s32_ACPChannelId, CEventResData* poResData)
+void CExtraEventActor::f_vInit(const CLinkTypeActor& ro_ActorType, int s32_ACPObjectId, int s32_ACPChannelId, const CEventResData* poResData)
 {
     CFloatVarType* roFloatVarType;
-    int min;
     int i;
-    /* TODO: decompile from asm/... */
+    int min;
+
+    min = 0;
+    for (i = 0; i < 5 && ss32RefreshChannelCount[i] != 0; i++)
+    {
+        if (ss32RefreshChannelCount[i] < ss32RefreshChannelCount[min])
+            min = i;
+    }
+    if (i < 5)
+        ms32RefreshChannel = i;
+    else
+        ms32RefreshChannel = min;
+    ss32RefreshChannelCount[ms32RefreshChannel]++;
+
+    if (mpoActorType != &ro_ActorType)
+    {
+        if (mpoActorType)
+            mpoActorObj->m_oVolModifier.f_vRemoveVar(mpoActorType->mroVolumeModifier);
+        mpoActorType = (CLinkTypeActor*)&ro_ActorType;
+        mpoActorObj->m_oVolModifier.f_vAddVar(mpoActorType->mroVolumeModifier, 1.0f);
+    }
+
+    ms32ACPObjectId = s32_ACPObjectId;
+    ms32ACPChannelId = s32_ACPChannelId;
+    mbWaitForKill = 0;
+    mbAllSoundPaused = 0;
+    if (poResData)
+    {
+        meExtraCoeff = poResData->m_eEventType;
+        mfCoeffA = poResData->m_fCoeffA;
+        mfCoeffB = poResData->m_fCoeffB;
+        mfCoeffC = poResData->m_fCoeffC;
+        mfCoeffD = poResData->m_fCoeffD;
+    }
+    else
+    {
+        meExtraCoeff = (tdeEventType)0;
+        mfCoeffA = mfCoeffB = mfCoeffC = mfCoeffD = 0.0f;
+    }
+
+    if (meExtraCoeff)
+    {
+        roFloatVarType = &CFloatVarType::fs_roGetInst();
+        mpoVolumeModifier = roFloatVarType->fv_poCreateVar("Vol", 0);
+        mpoPitchModifier = roFloatVarType->fv_poCreateVar("Pitch", 0);
+        mpoActorObj->m_oVolModifier.f_vAddVar(mpoVolumeModifier, 1.0f);
+        mpoActorObj->m_oPitchModifier.f_vAddVar(mpoPitchModifier, 1.0f);
+    }
+
+    if (ms32ACPObjectId != -1)
+    {
+        mpoActorType->mstIActor.pfnRollOff(ms32ACPObjectId, ms32ACPChannelId, &mstRollOff);
+        mstRollOff.rDistSatur--;
+        mstRollOff.rDistBackGround--;
+        mfn_bApplyAllParams(true);
+    }
+    else
+    {
+        SND_fn_vGetDefaultRollOff(&mstRollOff);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 287–326 */
@@ -1588,6 +1854,37 @@ stMusicMarkerSlot* SND_fn_p_stGetMusicMarkerSlots(void)
     return SND_g_a_tdstMusicMarkerSlots;
 }
 
+extern "C" unsigned int strlen(const char* pc);
+extern "C" int strncasecmp(const char* a, const char* b, unsigned int n);
+extern "C" char* strncpy(char* d, const char* a, unsigned int n);
+extern "C" void* memset(void* d, int v, unsigned int n);
+extern "C" void* usnd_memcpy(void* d, const void* a, unsigned int n);
+
+namespace usnd {
+struct sstring {
+    char* m_pcData;
+    static char* ms_czNil;
+    unsigned short f_usLength(void) const
+    {
+        if (m_pcData)
+            return strlen(m_pcData);
+        return 0;
+    }
+    void f_vAssign(const char* pc, unsigned int usLen)
+    {
+        if (!usLen)
+            m_pcData = ms_czNil;
+        else
+        {
+            m_pcData = (char*)usnd_malloc(usLen + 1);
+            usnd_memcpy(m_pcData, pc, usLen + 1);
+        }
+    }
+    sstring(const sstring& ro) { f_vAssign(ro.m_pcData, ro.f_usLength()); }
+    ~sstring() { if (m_pcData != ms_czNil) usnd_free(m_pcData); }
+};
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 92–109 */
 /* addr: 0x001cf460  size: 412 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1610,11 +1907,25 @@ stMusicMarkerSlot* SND_fn_p_stGetMusicMarkerSlots(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void CMusicMarkerNotifTarget::fv_vVarChanged(CVar* roVar)
+void CMusicMarkerNotifTarget::fv_vVarChanged(CVar& roVar)
 {
     int i;
-    sstring szMarker;
-    /* TODO: decompile from asm/... */
+    usnd::sstring szMarker(((usnd::TTypedVar<usnd::sstring>&)roVar).f_oGetValue());
+
+    if (SND_g_a_tdstMusicMarkerSlots)
+    {
+        for (i = 0; i < SND_g_iNbMusicMarkerSlots - 1; i++)
+        {
+            const char* pcMarker = szMarker.m_pcData;
+            if (!strncasecmp(SND_g_a_tdstMusicMarkerSlots[i].szName, pcMarker, strlen(SND_g_a_tdstMusicMarkerSlots[i].szName)))
+            {
+                memset((void*)SND_g_a_tdstMusicMarkerSlots[i].szBuffer, 0, SND_g_a_tdstMusicMarkerSlots[i].iBufferSize);
+                strncpy((char*)SND_g_a_tdstMusicMarkerSlots[i].szBuffer, szMarker.m_pcData, SND_g_a_tdstMusicMarkerSlots[i].iBufferSize - 1);
+            }
+        }
+        memset(*(void**)(((int)SND_g_a_tdstMusicMarkerSlots - 8) + SND_g_iNbMusicMarkerSlots * 40), 0, *(int*)(((int)SND_g_a_tdstMusicMarkerSlots - 4) + SND_g_iNbMusicMarkerSlots * 40));
+        strncpy(*(char**)(((int)SND_g_a_tdstMusicMarkerSlots - 8) + SND_g_iNbMusicMarkerSlots * 40), szMarker.m_pcData, *(int*)(((int)SND_g_a_tdstMusicMarkerSlots - 4) + SND_g_iNbMusicMarkerSlots * 40) - 1);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcextraeventactor.cpp lines 110–110 */

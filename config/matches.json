@@ -47716,6 +47716,675 @@
       "status": "MISMATCH",
       "target_size": 1060,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ce790",
+      "candidate_size": 564,
+      "first_difference": 102,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "mfn_bApplyPositionAndVelocity__16CExtraEventActorFv",
+      "reason": "564/564, all instructions and relocs match; only FP registers differ: retail holds the position floats in f12-f14 where MWCC picks f1-f3 for the first comparison (velocity comparison f1-f3 already matches). Inline helper with float params gives everything else.",
+      "size": 564,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MISMATCH",
+      "target_size": 564,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001ce9d0",
+      "candidate_size": 576,
+      "first_difference": 236,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "mfn_bApplyAllParams__16CExtraEventActorFb",
+      "reason": "576/576, relocs and registers all match; only residual is stack layout: retail has the temporary CRolloffParam at sp+0x70 and the _RollOffParam callback buffer at sp+0x80, MWCC lays them out the other way because the buffer's declaration comes first. Placement new adds a null guard; explicit ctor calls add a temporary.",
+      "size": 576,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MISMATCH",
+      "target_size": 576,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x001cdd90",
+      "candidate_size": 1352,
+      "first_difference": 44,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "mfn_bPlay__16CExtraEventActorFRCQ24usnd13CEventResDataiPFi_v",
+      "reason": "1352/1336 with all calls, data, and control flow reconstructed. switch() gives the retail beq+b shapes for the event type and marker flag. Remaining: 16 bytes of extra moves/li (delay-slot fills at ResObj null test, marker address, and the CResObjParams new), plus a register cycle (retail this=s2, res=s1, context=s0; candidate this=s1, res=s0, context=s2).",
+      "size": 1336,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MISMATCH",
+      "target_size": 1336,
+      "unresolved_relocations": [
+        {
+          "offset": 640,
+          "symbol": "@79",
+          "type": 5
+        },
+        {
+          "offset": 652,
+          "symbol": "@79",
+          "type": 6
+        },
+        {
+          "offset": 644,
+          "symbol": "@664",
+          "type": 5
+        },
+        {
+          "offset": 736,
+          "symbol": "@664",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x002864f0",
+      "candidate_size": 4592,
+      "first_difference": 32,
+      "implementation": "void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* p_stCompressedTransform);\nfloat fn_fUncompressNumber(short n);\nvoid fn_vDecompressTransform(MAT_tdstTransformation_* p_stTransform, tdstDemoCompressedTransform_* p_stCompressedTransform);\nunsigned char CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_* hSO);\nfloat MTH4D_fn_xSqrVector(MTH4D_tdstVector_* p_stVector);\nfloat MTH_fn_xSqrtOpt2(float xValue);\nunsigned char PLA_fn_bSetNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_WantedState, unsigned char bForce, unsigned char bHandleSkippedEventsIfRelevant, unsigned char bIgnoreTransitions, unsigned int ulNbFrameForIntermAnim, float xNLParameter, unsigned char bProportionnal);\nunsigned char PLA_fn_bDoAnimPlayerForCharacter(HIE_tdstSuperObject_* p_stSuperObject, unsigned char bNoDisplay, unsigned char bHandleSkippedEventsIfRelevant);\nvoid PLA_fn_vSetCurrFrame(HIE_tdstSuperObject_* p_stSuperObject, float xFrame);\nvoid PLA_fn_vUpdateTransparencyForModules(HIE_tdstSuperObject_* p_stSuperObject);\nvoid MAT_fn_vQuatToMatrix(MTH4D_tdstMatrix_* p_stMatrix, float xX, float xY, float xZ, float xW);\nvoid DEMO_fn_vPrepareForReadNow(void);\nvoid DEMO_fn_vStopEventFlow(void);\nvoid DEMO_fn_vMoveModuleDelayedHandling(void);\nvoid DEMO_fn_vReadOneCompleteStateUpdate(void);\nvoid GAM_fn_vAskToChangeLevel(char* szNewLevelName, int lParameter);\nvoid fn_vKillAllAlways(void);\nvoid fn_vReinitTheMap(void);\nvoid AGO_vClearUnwanted110AGOsForDemos(void);\nvoid SND_fn_vSynchroSound(void);\nvoid TMR_fn_wWait(unsigned int ulTimeToWait);\nint printf(const char* fmt, ...);\nunsigned char DEMO_fn_bUpdateDynamicHierarchy(void)\n{\n    unsigned int ulDEMO_ElapsedEngineTimerCount;\n    int iEndOfUpdate;\n    int iNewFrameInRecord;\n\n    if (g_iNbFramesToWaitBeforePlaying)\n    {\n        if (--g_iNbFramesToWaitBeforePlaying == 0) { DEMO_fn_vPrepareForReadNow(); }\n        return 1;\n    }\n\n    if (!(gl_DEMO_CurrentFrame < gl_DEMO_NumberOfFrames) || (g_bTestInputDuringDemo && gl_DEMO_CurrentFrame > 0x3C && (unsigned char)IPT_fn_bIsValidated(g_st_3DOS_EntryActions.hFlyingModeDoubleSpeed) == 1))\n    {\n        g_DEMO_KeybTest = 0; if (g_DEMO_AutoPlay == 1) { g_DEMO_AutoPlay = 0; printf(\"fn_vChangeEngineMode() comment\\351 pour tests\\n\"); }\n        if (g_DEMO_u32PlayMode == 2)\n        {\n            DEMO_fn_vStopEventFlow();\n            g_DEMO_u32PlayMode = 0;\n        }\n        if (g_szMapNameToLoadWhenDemoFinished[0])\n        {\n            GAM_fn_vAskToChangeLevel(g_szMapNameToLoadWhenDemoFinished, 0);\n            g_szMapNameToLoadWhenDemoFinished[0] = 0;\n        }\n        else\n        {\n            fn_vKillAllAlways();\n            fn_vReinitTheMap();\n        }\n        return 0;\n    }\n    else\n    {\n        ulDEMO_ElapsedEngineTimerCount = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - g_ulDEMO_StartDEMO_EngineTimerCount;\n        iNewFrameInRecord = 0;\n        do\n        {\n            g_iFrameTimeOffset = g_ulDEMO_ElapsedDemoTimerCount - ulDEMO_ElapsedEngineTimerCount;\n            iEndOfUpdate = !((!gl_DEMO_ConstantSpeed) && (g_iFrameTimeOffset < 0));\n            if (!iEndOfUpdate)\n            {\n                if (iNewFrameInRecord)\n                {\n                    AGO_vClearUnwanted110AGOsForDemos();\n                    SND_fn_vSynchroSound();\n                    g_iNbMoveModule = 0; } else if (!gl_DEMO_ConstantSpeed &&\n                    g_iFrameTimeOffset > 0)\n                {\n                    printf(\"(wait %d)\\n\", g_iFrameTimeOffset);\n                    TMR_fn_wWait(g_iFrameTimeOffset);\n                    g_iFrameTimeOffset = 0;\n                }\n            }\n            g_xInterpolCoef = 1.0f - (float)g_iFrameTimeOffset / (float)g_ulDEMO_DeltaTimerCount;\n            DEMO_fn_vReadOneCompleteStateUpdate();\n            iNewFrameInRecord = 1;\n        } while (gl_DEMO_CurrentFrame < gl_DEMO_NumberOfFrames &&\n                 !iEndOfUpdate);\n        DEMO_fn_vMoveModuleDelayedHandling();\n        return 1;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_vDemoReadCompressedTransform",
+      "reason": "Shape reconstructed: inline fn_sCompressNumber with per-copy char[80], DEMO_M_COMPRESS_VECTOR per column, jump table 0-9 from ELF; text 4592/4600. Residual: register choice in the compress helper (retail value a2/sign s2/exp t0/mant a3, mask hoisted) and case 6, where retail keeps eleven element addresses in t/s registers around the scale multiply while MWCC folds them.",
+      "size": 4600,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MISMATCH",
+      "target_size": 4600,
+      "unresolved_relocations": [
+        {
+          "offset": 2800,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 2808,
+          "symbol": "@659",
+          "type": 6
+        },
+        {
+          "offset": 2944,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 2952,
+          "symbol": "@659",
+          "type": 6
+        },
+        {
+          "offset": 3088,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 3096,
+          "symbol": "@659",
+          "type": 6
+        },
+        {
+          "offset": 3232,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 3240,
+          "symbol": "@659",
+          "type": 6
+        },
+        {
+          "offset": 3376,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 3384,
+          "symbol": "@659",
+          "type": 6
+        },
+        {
+          "offset": 3520,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 3528,
+          "symbol": "@659",
+          "type": 6
+        },
+        {
+          "offset": 3664,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 3672,
+          "symbol": "@659",
+          "type": 6
+        },
+        {
+          "offset": 3808,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 3816,
+          "symbol": "@659",
+          "type": 6
+        },
+        {
+          "offset": 3952,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 3960,
+          "symbol": "@659",
+          "type": 6
+        },
+        {
+          "offset": 4096,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 4104,
+          "symbol": "@659",
+          "type": 6
+        },
+        {
+          "offset": 4240,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 4248,
+          "symbol": "@659",
+          "type": 6
+        },
+        {
+          "offset": 4384,
+          "symbol": "@659",
+          "type": 5
+        },
+        {
+          "offset": 4392,
+          "symbol": "@659",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x002836a0",
+      "candidate_size": 2244,
+      "first_difference": 60,
+      "implementation": "void DEMO_fn_vGetACompleteCharacterPosition(HIE_tdstSuperObject_* hSO)\n{\n    tdstDemoCompressedTransform_ stCompressedTransform;\n    MAT_tdstTransformation_ stNewlyReadTransform;\n    tduDemoV stTranslation;\n    tduDemoV stDeltaTranslation;\n    char szOutputMsg[8];\n    char a3_cCoef[3];\n    short wStateNumber;\n    unsigned short wSO_Number;\n    unsigned short uwForcedFrame;\n    unsigned short Demo_Flag;\n    unsigned char ucSO_Number;\n    tdstDemoSOList_* p_stListElement;\n    tdst3dData_* h3dData;\n    unsigned char bIsCamera;\n    MAT_tdstTransformation_* hMatrix;\n    tdstState_* p_stTmpState;\n    float xForcedFrame;\n    int* pY;\n    int* pZ;\n    int* pSrc;\n    float xInvNorm;\n    int lOldConstantSpeed;\n\n    h3dData = hSO->hLinkedObject.p_stCharacter->h_3dData;\n    wStateNumber = 0;\n    wSO_Number = 0;\n    Demo_Flag = 0;\n    if (g_DEMO_KeybTest != 2)\n    {\n        return;\n    }\n    if (g_iNbFramesToWaitBeforePlaying)\n    {\n        return;\n    }\n    p_stListElement = DEMO_p_stFindSO(hSO);\n    hMatrix = hSO->hLocalMatrix;\n    memcpy(&Demo_Flag, (void*)gp_DEMO_CurrentPosInMemory, 2);\n    gp_DEMO_CurrentPosInMemory += 2;\n    bIsCamera = (unsigned char)CAM_fn_bSuperObjectIsACamera(hSO);\n    if (((Demo_Flag & 0x2000) == 0x2000 ? 1 : 0))\n    {\n        memcpy(&ucSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 1);\n        gp_DEMO_CurrentPosInMemory += 1;\n        wSO_Number = ucSO_Number;\n    }\n    else\n    {\n        memcpy(&wSO_Number, (void*)gp_DEMO_CurrentPosInMemory, 2);\n        gp_DEMO_CurrentPosInMemory += 2;\n    }\n    if (((Demo_Flag & 0x10) == 0x10 ? 1 : 0))\n    {\n        memcpy(&p_stListElement->_stTrs, (void*)gp_DEMO_CurrentPosInMemory, 12);\n        gp_DEMO_CurrentPosInMemory += 12;\n        DEMO_vSetTranslation(hMatrix, (tduDemoV*)&p_stListElement->_stTrs);\n    }\n    if (((Demo_Flag & 0x20) == 0x20 ? 1 : 0))\n    {\n        memcpy(a3_cCoef, (void*)gp_DEMO_CurrentPosInMemory, 3);\n        gp_DEMO_CurrentPosInMemory += 3;\n        p_stListElement->_stTrs.xX += (float)a3_cCoef[0] / 128.0f;\n        p_stListElement->_stTrs.xY += (float)a3_cCoef[1] / 128.0f;\n        p_stListElement->_stTrs.xZ += (float)a3_cCoef[2] / 128.0f;\n        DEMO_vSetTranslation(hMatrix, (tduDemoV*)&p_stListElement->_stTrs);\n    }\n    if (((Demo_Flag & 0x40) == 0x40 ? 1 : 0))\n    {\n        memcpy(&stTranslation, (void*)gp_DEMO_CurrentPosInMemory, 12);\n        gp_DEMO_CurrentPosInMemory += 12;\n        fn_vDemoReadCompressedTransform(&stCompressedTransform);\n        stDeltaTranslation.v.xX = stTranslation.v.xX - p_stListElement->_stTrs.xX;\n        stDeltaTranslation.v.xY = stTranslation.v.xY - p_stListElement->_stTrs.xY;\n        stDeltaTranslation.v.xZ = stTranslation.v.xZ - p_stListElement->_stTrs.xZ;\n    }\n    if (((Demo_Flag & 0x80) == 0x80 ? 1 : 0))\n    {\n        fn_vDemoReadCompressedTransform(&stCompressedTransform);\n    }\n    fn_vDecompressTransform(&stNewlyReadTransform, &stCompressedTransform);\n    memcpy(&p_stListElement->stCompressedTransform, &stCompressedTransform, 42);\n    if (((Demo_Flag & 0x80) == 0x80 ? 1 : 0))\n    {\n        pSrc = (int*)&stNewlyReadTransform.stTransformMatrix.stCol_3;\n        stDeltaTranslation.i[0] = pSrc[0];\n        stDeltaTranslation.i[1] = pSrc[1];\n        stDeltaTranslation.i[2] = pSrc[2];\n        stTranslation.v.xX = p_stListElement->_stTrs.xX + stDeltaTranslation.v.xX;\n        stTranslation.v.xY = p_stListElement->_stTrs.xY + stDeltaTranslation.v.xY;\n        stTranslation.v.xZ = p_stListElement->_stTrs.xZ + stDeltaTranslation.v.xZ;\n    }\n    *hMatrix = stNewlyReadTransform;\n    pY = &stTranslation.i[1];\n    pZ = &stTranslation.i[2];\n    *(int*)&hMatrix->stTransformMatrix.stCol_3.xX = stTranslation.i[0];\n    *(int*)&hMatrix->stTransformMatrix.stCol_3.xY = *pY;\n    *(int*)&hMatrix->stTransformMatrix.stCol_3.xZ = *pZ;\n    *(int*)&p_stListElement->_stTrs.xX = stTranslation.i[0];\n    *(int*)&p_stListElement->_stTrs.xY = *pY;\n    *(int*)&p_stListElement->_stTrs.xZ = *pZ;\n    if (bIsCamera)\n    {\n        xInvNorm = 1.0f / MTH_fn_xSqrtOpt2(MTH4D_fn_xSqrVector(&hMatrix->stTransformMatrix.stCol_0));\n        hMatrix->stTransformMatrix.stCol_0.xX = xInvNorm * hMatrix->stTransformMatrix.stCol_0.xX;\n        hMatrix->stTransformMatrix.stCol_0.xY = xInvNorm * hMatrix->stTransformMatrix.stCol_0.xY;\n        hMatrix->stTransformMatrix.stCol_0.xZ = xInvNorm * hMatrix->stTransformMatrix.stCol_0.xZ;\n        hMatrix->stTransformMatrix.stCol_0.xW = 1.0f;\n        xInvNorm = 1.0f / MTH_fn_xSqrtOpt2(MTH4D_fn_xSqrVector(&hMatrix->stTransformMatrix.stCol_1));\n        hMatrix->stTransformMatrix.stCol_1.xX = xInvNorm * hMatrix->stTransformMatrix.stCol_1.xX;\n        hMatrix->stTransformMatrix.stCol_1.xY = xInvNorm * hMatrix->stTransformMatrix.stCol_1.xY;\n        hMatrix->stTransformMatrix.stCol_1.xZ = xInvNorm * hMatrix->stTransformMatrix.stCol_1.xZ;\n        hMatrix->stTransformMatrix.stCol_1.xW = 1.0f;\n        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_2.xX, hMatrix->stTransformMatrix.stCol_0.xY, hMatrix->stTransformMatrix.stCol_1.xZ, hMatrix->stTransformMatrix.stCol_0.xZ, hMatrix->stTransformMatrix.stCol_1.xY)\n        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_2.xY, hMatrix->stTransformMatrix.stCol_0.xZ, hMatrix->stTransformMatrix.stCol_1.xX, hMatrix->stTransformMatrix.stCol_0.xX, hMatrix->stTransformMatrix.stCol_1.xZ)\n        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_2.xZ, hMatrix->stTransformMatrix.stCol_0.xX, hMatrix->stTransformMatrix.stCol_1.xY, hMatrix->stTransformMatrix.stCol_0.xY, hMatrix->stTransformMatrix.stCol_1.xX)\n        hMatrix->stTransformMatrix.stCol_2.xW = 1.0f;\n        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_1.xX, hMatrix->stTransformMatrix.stCol_2.xY, hMatrix->stTransformMatrix.stCol_0.xZ, hMatrix->stTransformMatrix.stCol_2.xZ, hMatrix->stTransformMatrix.stCol_0.xY)\n        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_1.xY, hMatrix->stTransformMatrix.stCol_2.xZ, hMatrix->stTransformMatrix.stCol_0.xX, hMatrix->stTransformMatrix.stCol_2.xX, hMatrix->stTransformMatrix.stCol_0.xZ)\n        DEMO_M_CROSS(hMatrix->stTransformMatrix.stCol_1.xZ, hMatrix->stTransformMatrix.stCol_2.xX, hMatrix->stTransformMatrix.stCol_0.xY, hMatrix->stTransformMatrix.stCol_2.xY, hMatrix->stTransformMatrix.stCol_0.xX)\n        hMatrix->stTransformMatrix.stCol_1.xW = 1.0f;\n    }\n    if (((Demo_Flag & 0x2) == 0x2 ? 1 : 0))\n    {\n        memcpy(&wStateNumber, (void*)gp_DEMO_CurrentPosInMemory, 2);\n        gp_DEMO_CurrentPosInMemory += 2;\n        p_stListElement->wStateNumber = wStateNumber;\n    }\n    else\n    {\n        wStateNumber = p_stListElement->wStateNumber;\n    }\n    if (((Demo_Flag & 0x4) == 0x4 ? 1 : 0))\n    {\n        memcpy(&uwForcedFrame, (void*)gp_DEMO_CurrentPosInMemory, 2);\n        gp_DEMO_CurrentPosInMemory += 2;\n        sprintf(szOutputMsg, \"%4d\\n\", uwForcedFrame);\n        p_stListElement->uwCurrentFrame = uwForcedFrame;\n    }\n    else\n    {\n        uwForcedFrame = p_stListElement->uwCurrentFrame;\n    }\n    xForcedFrame = fn_fUncompressNumberInline(uwForcedFrame);\n    *hSO->hGlobalMatrix = *hSO->hLocalMatrix;\n    if (((Demo_Flag & 0x4) == 0x4 ? 1 : 0) || ((Demo_Flag & 0x2) == 0x2 ? 1 : 0))\n    {\n        unsigned char bNoDisplay;\n\n        bNoDisplay = 0;\n        if (wStateNumber == 0x7FFF)\n        {\n            p_stTmpState = h3dData->h_CurrentState;\n        }\n        else if (wStateNumber >= 0)\n        {\n            p_stTmpState = &h3dData->h_Family->hForStateArray.hFirstElementOpt[wStateNumber];\n        }\n        else\n        {\n            wStateNumber = -1 - wStateNumber;\n            p_stTmpState = (tdstState_*)a_hTemporaryStateCorrespondance[wStateNumber];\n            if (p_stTmpState == NULL)\n            {\n                printf(\"interm state is null : ignore it !\\n\");\n                p_stTmpState = h3dData->h_CurrentState;\n            }\n        }\n        if (p_stTmpState != h3dData->h_CurrentState || uwForcedFrame == 0)\n        {\n            PLA_fn_bSetNewState(hSO, p_stTmpState, 1, 0, 1, 0, 0.0f, 0);\n            if (hSO->hLinkedObject.p_stCharacter->h_Micro == NULL)\n            {\n                PLA_fn_vSetCurrFrame(hSO, (int)xForcedFrame);\n            }\n        }\n        else\n        {\n            lOldConstantSpeed = g_bAnimConstantSpeed;\n            if (h3dData->h_CurrentState->p_stAnim)\n            {\n                if (!(xForcedFrame <= (float)(unsigned int)*(unsigned short*)h3dData->h_CurrentState->p_stAnim))\n                {\n                    bNoDisplay = 1;\n                    xForcedFrame = 1.0f;\n                }\n            }\n            h3dData->xCurrentFrame = xForcedFrame - 1.0f;\n            g_bAnimConstantSpeed = 1;\n            PLA_fn_bDoAnimPlayerForCharacter(hSO, bNoDisplay, 0);\n            g_bAnimConstantSpeed = lOldConstantSpeed;\n        }\n    }\n    if (((Demo_Flag & 0x8) == 0x8 ? 1 : 0))\n    {\n        memcpy(&p_stListElement->ucTransparence, (void*)gp_DEMO_CurrentPosInMemory, 1);\n        gp_DEMO_CurrentPosInMemory += 1;\n        hSO->fTransparenceLevel = (float)(unsigned int)p_stListElement->ucTransparence;\n        if (p_stListElement->ucTransparence == 0xFF)\n        {\n            hSO->lDrawModeMask |= 8;\n        }\n        else\n        {\n            hSO->lDrawModeMask &= ~8;\n            PLA_fn_vUpdateTransparencyForModules(hSO);\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "DEMO_fn_vGetACompleteCharacterPosition",
+      "reason": "Rewritten from retail: text 2244/2360, 82 diff rows, stack layout and calls right. Residual: retail keeps the long flag-test form (bne; move; b; li; move) everywhere and duplicated delay-slot copies/nops where MWCC produces the short form, and holds the forced frame in f20 where the candidate rereads 0x130(sp). Moving the mula/msub asm directly into the function did not change it.",
+      "size": 2360,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MISMATCH",
+      "target_size": 2360,
+      "unresolved_relocations": [
+        {
+          "offset": 1468,
+          "symbol": "@756",
+          "type": 5
+        },
+        {
+          "offset": 1480,
+          "symbol": "@756",
+          "type": 6
+        },
+        {
+          "offset": 1788,
+          "symbol": "@957",
+          "type": 5
+        },
+        {
+          "offset": 1796,
+          "symbol": "@957",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x00204000",
+      "candidate_size": 812,
+      "first_difference": 24,
+      "implementation": "void CAM_fn_vConstraintMoveAfterVisFailure(CAM_tdstUpdateCamera_* _p_stStruct);\nvoid CAM_fn_vConstraintMoveCutAngles(CAM_tdstUpdateCamera_* _p_stStruct);\n\nvoid CAM_fn_vConstraintMove(CAM_tdstUpdateCamera_* _p_stStruct)\n{\n    if ((_p_stStruct->hCineinfo->ucVolIAFlags & 2) || (_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000) || _p_stStruct->hCineinfoWork->hSuperObjectTargeted == NULL)\n        return;\n\n    if (CAM_fn_cCanResetConstraintMoveVisFailure(_p_stStruct, &_p_stStruct->stWantedCameraPos))\n        _p_stStruct->hCineinfo->ucPerIAFlags &= ~8;\n\n    if (_p_stStruct->hCineinfo->ucPerIAFlags & 8)\n        CAM_fn_vConstraintMoveAfterVisFailure(_p_stStruct);\n    else if (_p_stStruct->cHasCutAlpha && !(_p_stStruct->hCineinfoWork->uwIAFlags & 4))\n        CAM_fn_vConstraintMoveCutAngles(_p_stStruct);\n    else\n        _p_stStruct->hCineinfo->cLastCutAngleSens = 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CAM_fn_vConstraintMoveAfterVisFailure",
+      "reason": "Right frame/control flow via union word-vector local and cast y/z member stores; residual: extra nop before div, zero reg f3 vs f2 numbering, a3 hoist of &stLastFailedWanted into else copy, final copy address reg (addiu s0,s2,0x30 vs v0 base)",
+      "size": 804,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MISMATCH",
+      "target_size": 804,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002039f0",
+      "candidate_size": 704,
+      "first_difference": 28,
+      "implementation": "void CAM_fn_vConstraintMoveCutAngles(CAM_tdstUpdateCamera_* _p_stStruct);\n\nvoid CAM_fn_vConstraintMove(CAM_tdstUpdateCamera_* _p_stStruct)\n{\n    if ((_p_stStruct->hCineinfo->ucVolIAFlags & 2) || (_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000) || _p_stStruct->hCineinfoWork->hSuperObjectTargeted == NULL)\n        return;\n\n    if (CAM_fn_cCanResetConstraintMoveVisFailure(_p_stStruct, &_p_stStruct->stWantedCameraPos))\n        _p_stStruct->hCineinfo->ucPerIAFlags &= ~8;\n\n    if (_p_stStruct->hCineinfo->ucPerIAFlags & 8)\n        CAM_fn_vConstraintMoveAfterVisFailure(_p_stStruct);\n    else if (_p_stStruct->cHasCutAlpha && !(_p_stStruct->hCineinfoWork->uwIAFlags & 4))\n        CAM_fn_vConstraintMoveCutAngles(_p_stStruct);\n    else\n        _p_stStruct->hCineinfo->cLastCutAngleSens = 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CAM_fn_vConstraintMoveCutAngles",
+      "reason": "Control flow right; xNewAngle allocated to f0 where retail keeps it in f12 with an explicit mov.s after each call, which also moves delay-slot fills; permuter running",
+      "size": 716,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MISMATCH",
+      "target_size": 716,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00204ac0",
+      "candidate_size": 1096,
+      "first_difference": 621,
+      "implementation": "void CAM_fn_vComputeMovePos(CAM_tdstUpdateCamera_* _p_stStruct);\nchar CAM_fn_cDynChangeTheta(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stTestedPos);\nvoid CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _p_stCineinfo, CAM_tdstUpdateCamera_* _p_stStruct);\nvoid CAM_fn_vInitCameraStructure(HIE_tdstSuperObject_* _h_SuperObjPerso, MTH3D_tdstVector_* _p_stVector);\nchar CAM_fn_cIsWantedPosIncorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stVector, char _cMode);\nunsigned char CAM_fn_bPersoIsMoving(HIE_tdstSuperObject_* _h_SuperObjPerso);\nunsigned char CAM_fn_bPersoIsTurning(HIE_tdstSuperObject_* _h_SuperObjPerso);\nvoid CAM_fn_vComputeTarget(CAM_tdstUpdateCamera_* _p_stStruct);\nvoid CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_* _p_stCineinfo);\nunsigned char CAM_fn_vTestBadVisibility(CAM_tdstUpdateCamera_* _p_stStruct);\nunsigned char CAM_fn_vTestBadDistance(CAM_tdstUpdateCamera_* _p_stStruct);\nunsigned char CAM_fn_vTestOppositeCollision(CAM_tdstUpdateCamera_* _p_stStruct);\nvoid CAM_fn_vCheckForABetterPos(CAM_tdstUpdateCamera_* _p_stStruct);\nvoid CAM_fn_vComputeFailureVisibility(CAM_tdstUpdateCamera_* _p_stStruct);\nvoid CAM_fn_vComputeSpeed(CAM_tdstUpdateCamera_* _p_stStruct);\nvoid CAM_fn_vConstraintMove(CAM_tdstUpdateCamera_* _p_stStruct);\nvoid CAM_fn_vComputeTargetedPersoPos(CAM_tdstUpdateCamera_* _p_stStruct, HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stTargetedPersoPos, MTH3D_tdstVector_* _p_stTargetedPersoRealPos);\nvoid CAM_fn_vRotateCameraAxis(MTH3D_tdstVector_* _p_stCameraAxis, float _xHorAngle, float _xVerAngle, MTH3D_tdstVector_* _p_stRefAxisZ);\nvoid CAM_fn_vComputeRefAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stRefAxis);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\AI\\AIGame\\CAM_Base.c lines 1388\u20131681 */\n/* addr: 0x00203190  size: 1928 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 1388\n *   +0x0014 -> line 1395\n *   +0x001c -> line 1405\n *   +0x0028 -> line 1416\n *   +0x0038 -> line 1417\n *   +0x003c -> line 1416\n *   +0x0048 -> line 1417\n *   +0x004c -> line 1416\n *   +0x0054 -> line 1417\n *   +0x0088 -> line 1420\n *   +0x008c -> line 1425\n *   +0x0098 -> line 1420\n *   +0x00a4 -> line 1425\n *   +0x00d8 -> line 1427\n *   +0x0110 -> line 1429\n *   +0x0118 -> line 1432\n *   +0x0120 -> line 1438\n *   +0x012c -> line 1440\n *   +0x0134 -> line 1441\n *   +0x0148 -> line 1442\n *   +0x0150 -> line 1448\n *   +0x0154 -> line 1449\n *   +0x0158 -> line 1452\n *   +0x015c -> line 1442\n *   +0x0160 -> line 1443\n *   +0x0168 -> line 1444\n *   +0x0170 -> line 1445\n *   +0x0178 -> line 1446\n *   +0x0180 -> line 1447\n *   +0x0188 -> line 1448\n *   +0x0190 -> line 1449\n *   +0x0198 -> line 1450\n *   +0x01a0 -> line 1451\n *   +0x01a8 -> line 1452\n *   +0x01b0 -> line 1458\n *   +0x01cc -> line 1464\n *   +0x01d0 -> line 1466\n *   +0x01d4 -> line 1464\n *   +0x01e0 -> line 1465\n *   +0x01f0 -> line 1466\n *   +0x01f8 -> line 1484\n *   +0x0200 -> line 1485\n *   +0x0204 -> line 1484\n *   +0x0214 -> line 1485\n *   +0x0228 -> line 1492\n *   +0x0340 -> line 1493\n *   +0x0348 -> line 1494\n *   +0x0440 -> line 1499\n *   +0x0444 -> line 1494\n *   +0x0454 -> line 1499\n *   +0x045c -> line 1501\n *   +0x04ac -> line 1510\n *   +0x04c0 -> line 1511\n *   +0x04c8 -> line 1518\n *   +0x04f0 -> line 1524\n *   +0x0538 -> line 1537\n *   +0x0550 -> line 1538\n *   +0x0560 -> line 1539\n *   +0x0570 -> line 1540\n *   +0x0578 -> line 1547\n *   +0x05ac -> line 1554\n *   +0x05c4 -> line 1564\n *   +0x05d8 -> line 1565\n *   +0x05e0 -> line 1566\n *   +0x05f0 -> line 1567\n *   +0x0600 -> line 1568\n *   +0x0604 -> line 1570\n *   +0x060c -> line 1572\n *   +0x0610 -> line 1584\n *   +0x0634 -> line 1594\n *   +0x063c -> line 1595\n *   +0x0644 -> line 1596\n *   +0x064c -> line 1606\n *   +0x0694 -> line 1615\n *   +0x069c -> line 1616\n *   +0x06a4 -> line 1620\n *   +0x06ac -> line 1621\n *   +0x06b4 -> line 1622\n *   +0x06bc -> line 1629\n *   +0x06c4 -> line 1630\n *   +0x06cc -> line 1640\n *   +0x06d4 -> line 1648\n *   +0x06d8 -> line 1661\n *   +0x06e4 -> line 1664\n *   +0x0720 -> line 1672\n *   +0x0738 -> line 1673\n *   +0x0750 -> line 1674\n *   +0x0758 -> line 1675\n *   +0x0760 -> line 1676\n *   +0x0770 -> line 1680\n *   +0x0774 -> line 1681\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\nvoid CAM_fn_vUpdateGeneralCamera(CAM_tdstUpdateCamera_* _p_stStruct)\n{\n    MTH3D_tdstVector_ stMoveVector;\n\n    cCanTestStatic = 1;\n    CAM_fn_hGetFather(_p_stStruct->hCineinfoWork->hSuperObjectTargeted);\n    stMoveVector.xX = _p_stStruct->p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xX;\n    stMoveVector.xY = _p_stStruct->p_stReport->m_stAbsoluteCurrSpeed.m_stLinear.xX;\n    stMoveVector.xZ = _p_stStruct->p_stReport->m_stAbsolutePrevPosition.m_stLinear.xX;\n    {\n        float xNorm;\n        CAM_MTH_NORM3_TO(xNorm, &stMoveVector);\n        if (xNorm < CAM_g_stCameraConstants.xRayCameraSphereToGo1)\n        {\n            _p_stStruct->hCineinfo->ucPerIAFlags |= 4;\n        }\n    }\n    CAM_fn_vInitCompleteCineinfo(_p_stStruct->hCineinfo, _p_stStruct);\n    CAM_fn_vComputeTargetedPersoPos(_p_stStruct, _p_stStruct->hCineinfoWork->hSuperObjectTargeted, &_p_stStruct->stTargetedPersoPos, &_p_stStruct->stTargetedPersoRealPos);\n    CAM_fn_vComputeTargetedPersoPos(_p_stStruct, _p_stStruct->hCineinfoWork->hSecondSuperObjectTargeted, &_p_stStruct->stSecondTargetedPersoPos, &_p_stStruct->stSecondTargetedPersoRealPos);\n    CAM_fn_vComputeTarget(_p_stStruct);\n    CAM_fn_vComputeMovePos(_p_stStruct);\n    if (CAM_fn_cDynChangeTheta(_p_stStruct, &_p_stStruct->stWantedCameraPos))\n    {\n        CAM_fn_vComputeMovePos(_p_stStruct);\n    }\n    CAM_fn_vComputeMovePos(_p_stStruct);\n    if (CAM_fn_bEqualVectorWithEpsilon(&_p_stStruct->stWantedCameraPos, &_p_stStruct->stRealWantedCameraPos, 0.001f))\n    {\n        CAM_fn_vSetCineinfoCurrentFromVisibility(_p_stStruct->hCineinfo);\n    }\n    if (CAM_fn_vTestBadVisibility(_p_stStruct) || CAM_fn_vTestBadDistance(_p_stStruct) || CAM_fn_vTestOppositeCollision(_p_stStruct))\n    {\n        CAM_fn_vConstraintMove(_p_stStruct);\n    }\n    else\n    {\n        CAM_fn_vCheckForABetterPos(_p_stStruct);\n        CAM_fn_vConstraintMove(_p_stStruct);\n    }\n    CAM_fn_vComputeFailureVisibility(_p_stStruct);\n    CAM_fn_vComputeSpeed(_p_stStruct);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CAM_fn_vComputeMovePos",
+      "reason": "Bytes right apart from FP numbering: retail squared norm lands in f2 with xDist in f3 (ours f3/f1) and c.eq/add operands swap on the stDir test; handed to permuter",
+      "size": 1096,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MISMATCH",
+      "target_size": 1096,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00204330",
+      "candidate_size": 1816,
+      "first_difference": 124,
+      "implementation": "void CAM_fn_vComputeSpeed(CAM_tdstUpdateCamera_* _p_stStruct);\nvoid CAM_fn_vConstraintMove(CAM_tdstUpdateCamera_* _p_stStruct);\nvoid CAM_fn_vComputeTargetedPersoPos(CAM_tdstUpdateCamera_* _p_stStruct, HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stTargetedPersoPos, MTH3D_tdstVector_* _p_stTargetedPersoRealPos);\nvoid CAM_fn_vRotateCameraAxis(MTH3D_tdstVector_* _p_stCameraAxis, float _xHorAngle, float _xVerAngle, MTH3D_tdstVector_* _p_stRefAxisZ);\nvoid CAM_fn_vComputeRefAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stRefAxis);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\AI\\AIGame\\CAM_Base.c lines 1388\u20131681 */\n/* addr: 0x00203190  size: 1928 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 1388\n *   +0x0014 -> line 1395\n *   +0x001c -> line 1405\n *   +0x0028 -> line 1416\n *   +0x0038 -> line 1417\n *   +0x003c -> line 1416\n *   +0x0048 -> line 1417\n *   +0x004c -> line 1416\n *   +0x0054 -> line 1417\n *   +0x0088 -> line 1420\n *   +0x008c -> line 1425\n *   +0x0098 -> line 1420\n *   +0x00a4 -> line 1425\n *   +0x00d8 -> line 1427\n *   +0x0110 -> line 1429\n *   +0x0118 -> line 1432\n *   +0x0120 -> line 1438\n *   +0x012c -> line 1440\n *   +0x0134 -> line 1441\n *   +0x0148 -> line 1442\n *   +0x0150 -> line 1448\n *   +0x0154 -> line 1449\n *   +0x0158 -> line 1452\n *   +0x015c -> line 1442\n *   +0x0160 -> line 1443\n *   +0x0168 -> line 1444\n *   +0x0170 -> line 1445\n *   +0x0178 -> line 1446\n *   +0x0180 -> line 1447\n *   +0x0188 -> line 1448\n *   +0x0190 -> line 1449\n *   +0x0198 -> line 1450\n *   +0x01a0 -> line 1451\n *   +0x01a8 -> line 1452\n *   +0x01b0 -> line 1458\n *   +0x01cc -> line 1464\n *   +0x01d0 -> line 1466\n *   +0x01d4 -> line 1464\n *   +0x01e0 -> line 1465\n *   +0x01f0 -> line 1466\n *   +0x01f8 -> line 1484\n *   +0x0200 -> line 1485\n *   +0x0204 -> line 1484\n *   +0x0214 -> line 1485\n *   +0x0228 -> line 1492\n *   +0x0340 -> line 1493\n *   +0x0348 -> line 1494\n *   +0x0440 -> line 1499\n *   +0x0444 -> line 1494\n *   +0x0454 -> line 1499\n *   +0x045c -> line 1501\n *   +0x04ac -> line 1510\n *   +0x04c0 -> line 1511\n *   +0x04c8 -> line 1518\n *   +0x04f0 -> line 1524\n *   +0x0538 -> line 1537\n *   +0x0550 -> line 1538\n *   +0x0560 -> line 1539\n *   +0x0570 -> line 1540\n *   +0x0578 -> line 1547\n *   +0x05ac -> line 1554\n *   +0x05c4 -> line 1564\n *   +0x05d8 -> line 1565\n *   +0x05e0 -> line 1566\n *   +0x05f0 -> line 1567\n *   +0x0600 -> line 1568\n *   +0x0604 -> line 1570\n *   +0x060c -> line 1572\n *   +0x0610 -> line 1584\n *   +0x0634 -> line 1594\n *   +0x063c -> line 1595\n *   +0x0644 -> line 1596\n *   +0x064c -> line 1606\n *   +0x0694 -> line 1615\n *   +0x069c -> line 1616\n *   +0x06a4 -> line 1620\n *   +0x06ac -> line 1621\n *   +0x06b4 -> line 1622\n *   +0x06bc -> line 1629\n *   +0x06c4 -> line 1630\n *   +0x06cc -> line 1640\n *   +0x06d4 -> line 1648\n *   +0x06d8 -> line 1661\n *   +0x06e4 -> line 1664\n *   +0x0720 -> line 1672\n *   +0x0738 -> line 1673\n *   +0x0750 -> line 1674\n *   +0x0758 -> line 1675\n *   +0x0760 -> line 1676\n *   +0x0770 -> line 1680\n *   +0x0774 -> line 1681\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\nvoid CAM_fn_vUpdateGeneralCamera(CAM_tdstUpdateCamera_* _p_stStruct)\n{\n    MTH3D_tdstVector_ stMoveVector;\n\n    cCanTestStatic = 1;\n    CAM_fn_hGetFather(_p_stStruct->hCineinfoWork->hSuperObjectTargeted);\n    stMoveVector.xX = _p_stStruct->p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xX;\n    stMoveVector.xY = _p_stStruct->p_stReport->m_stAbsoluteCurrSpeed.m_stLinear.xX;\n    stMoveVector.xZ = _p_stStruct->p_stReport->m_stAbsolutePrevPosition.m_stLinear.xX;\n    {\n        float xNorm;\n        CAM_MTH_NORM3_TO(xNorm, &stMoveVector);\n        if (xNorm < CAM_g_stCameraConstants.xRayCameraSphereToGo1)\n        {\n            _p_stStruct->hCineinfo->ucPerIAFlags |= 4;\n        }\n    }\n    CAM_fn_vInitCompleteCineinfo(_p_stStruct->hCineinfo, _p_stStruct);\n    CAM_fn_vComputeTargetedPersoPos(_p_stStruct, _p_stStruct->hCineinfoWork->hSuperObjectTargeted, &_p_stStruct->stTargetedPersoPos, &_p_stStruct->stTargetedPersoRealPos);\n    CAM_fn_vComputeTargetedPersoPos(_p_stStruct, _p_stStruct->hCineinfoWork->hSecondSuperObjectTargeted, &_p_stStruct->stSecondTargetedPersoPos, &_p_stStruct->stSecondTargetedPersoRealPos);\n    CAM_fn_vComputeTarget(_p_stStruct);\n    CAM_fn_vComputeMovePos(_p_stStruct);\n    if (CAM_fn_cDynChangeTheta(_p_stStruct, &_p_stStruct->stWantedCameraPos))\n    {\n        CAM_fn_vComputeMovePos(_p_stStruct);\n    }\n    CAM_fn_vComputeMovePos(_p_stStruct);\n    if (CAM_fn_bEqualVectorWithEpsilon(&_p_stStruct->stWantedCameraPos, &_p_stStruct->stRealWantedCameraPos, 0.001f))\n    {\n        CAM_fn_vSetCineinfoCurrentFromVisibility(_p_stStruct->hCineinfo);\n    }\n    if (CAM_fn_vTestBadVisibility(_p_stStruct) || CAM_fn_vTestBadDistance(_p_stStruct) || CAM_fn_vTestOppositeCollision(_p_stStruct))\n    {\n        CAM_fn_vConstraintMove(_p_stStruct);\n    }\n    else\n    {\n        CAM_fn_vCheckForABetterPos(_p_stStruct);\n        CAM_fn_vConstraintMove(_p_stStruct);\n    }\n    CAM_fn_vComputeFailureVisibility(_p_stStruct);\n    CAM_fn_vComputeSpeed(_p_stStruct);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "CAM_fn_vComputeSpeed",
+      "reason": "Full control flow and size right; residual is z-forwarded norm register (madd f1,f0,f0), s0/s1 y/z swap in the first block, and reload of hCineinfoWork before the DNM 0x10 test",
+      "size": 1816,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MISMATCH",
+      "target_size": 1816,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00310ea0",
+      "candidate_size": 496,
+      "first_difference": 24,
+      "implementation": "unsigned char MEC_fn_vBasePlatformManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj)\n{\n    HIE_tdstSuperObject_* hObstacleSuperObject;\n    HIE_tdstSuperObject_* hGeomSuperObject;\n    DNM_stMecObstacle* p_stObstacle;\n\n    if (!MEC_fn_bHasIdentityCardOfType1(p_stDynamic))\n        return 0;\n    if (g_stReport.m_ulCurrSurfaceState & 0x10000)\n    {\n        p_stObstacle = &g_stReport.m_stCharacter;\n        hObstacleSuperObject = p_stObstacle->mp_stSupObj;\n        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x10) ? 1 : 0)\n        {\n            if (!MEC_fn_bCeilObstacle(p_stDynamic, p_stObstacle))\n                return 0;\n        }\n        else if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40) ? 1 : 0)\n        {\n            if (!MEC_fn_bWallNormal(p_stDynamic, &p_stObstacle->m_stNorm))\n                return 0;\n        }\n        else if (!MEC_fn_bGroundNormal(p_stDynamic, &p_stObstacle->m_stNorm))\n            return 0;\n        if (hObstacleSuperObject != NULL)\n        {\n            hGeomSuperObject = MEC_fn_hGetFatherActor(hObstacleSuperObject);\n            if ((hGeomSuperObject != NULL) && fn_bStandardGameIsAPlatform(hGeomSuperObject))\n            {\n                if (fn_bStandardGameIsAPlatform(hSupObj))\n                    return 0;\n                if ((unsigned char)(p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != NULL))\n                {\n                    if (p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform == hGeomSuperObject)\n                        return 0;\n                    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40000000) ? 1 : 0))\n                    {\n                        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = NULL;\n                        fn_vReputCharacterSuperObjectAtTheWorld(hSupObj);\n                    }\n                    MEC_fn_vSetPlatformLink(p_stDynamic, hSupObj, hGeomSuperObject);\n                    return 1;\n                }\n                MEC_fn_vSetPlatformLink(p_stDynamic, hSupObj, hGeomSuperObject);\n                return 1;\n            }\n        }\n    }\n    if ((unsigned char)(p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform != NULL))\n    {\n        if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40000000) ? 1 : 0))\n        {\n            p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = NULL;\n            fn_vReputCharacterSuperObjectAtTheWorld(hSupObj);\n        }\n        return 1;\n    }\n    return 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vBasePlatformManagement",
+      "reason": "496/500, all logic and relocs match. Sole residual: retail keeps 'move s1,a1' in the prologue at +0x18 and leaves 'beqz v0 / nop' unfilled at +0x24; MWCC sinks the copy into that delay slot. Inline helper, hCard local/param, dead inits and other compilers (3.0, 3.0.1) do not move it.",
+      "size": 500,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 500,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00312790",
+      "candidate_size": 304,
+      "first_difference": 22,
+      "implementation": "void MEC_fn_vTranslateMatrixOn(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stMatrixTranslation)\n{\n    MAT_tdstTransformation_* hCurrentMatrix;\n    MAT_tdstTransformation_* hPreviousMatrix;\n\n    hPreviousMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;\n    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;\n    {\n        MTH3D_tdstVector_* p_stPrevTrans = (MTH3D_tdstVector_*)&hPreviousMatrix->stTransformMatrix.stCol_3;\n        int lX = MTH_M_xRealToLong(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX);\n        int lY = MTH_M_xRealToLong(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY);\n        int lZ = MTH_M_xRealToLong(p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ);\n        p_stMatrixTranslation->xX = (float)lX;\n        p_stMatrixTranslation->xY = (float)lY;\n        p_stMatrixTranslation->xZ = MTH_M_xLastLongToReal();\n        {\n            union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;\n            uVector.stVector.xX = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xX - p_stMatrixTranslation->xX;\n            uVector.stVector.xY = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xY - p_stMatrixTranslation->xY;\n            uVector.stVector.xZ = p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix.stTransformMatrix.stCol_3.xZ - p_stMatrixTranslation->xZ;\n            if (hCurrentMatrix->eType == MAT_eTransform_Identity)\n                hCurrentMatrix->eType = MAT_eTransform_Translation;\n            ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[0] = uVector.a3_ulWord[0];\n            ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[1] = uVector.a3_ulWord[1];\n            ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[2] = uVector.a3_ulWord[2];\n            hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;\n        }\n        {\n            union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uVector;\n            uVector.stVector.xX = p_stPrevTrans->xX - p_stMatrixTranslation->xX;\n            uVector.stVector.xY = p_stPrevTrans->xY - p_stMatrixTranslation->xY;\n            uVector.stVector.xZ = p_stPrevTrans->xZ - p_stMatrixTranslation->xZ;\n            if (hPreviousMatrix->eType == MAT_eTransform_Identity)\n                hPreviousMatrix->eType = MAT_eTransform_Translation;\n            ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[0] = uVector.a3_ulWord[0];\n            ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[1] = uVector.a3_ulWord[1];\n            ((unsigned int*)&hPreviousMatrix->stTransformMatrix.stCol_3)[2] = uVector.a3_ulWord[2];\n            hPreviousMatrix->stTransformMatrix.stCol_3.xW = 1.0f;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vTranslateMatrixOn",
+      "reason": "304/300: z now uses a separate cvt.s.w f30 helper placed at its store, matching order. Residual: mfc1 registers (retail x=a2,y=t1,z=v1,ptr=t2; ours v1,a2,t2,t1) and 'li v1,1' at +0x40 sinks to +0x58, leaving a nop.",
+      "size": 300,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 300,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x003120b0",
+      "candidate_size": 408,
+      "first_difference": 1,
+      "implementation": "void MEC_fn_vDeleteGiBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector)\n{\n    float xZero = 0.0f;\n    int lCounter;\n    DNM_stMecObstacle* p_stCurrentObstacle;\n\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stCurrentObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stCurrentObstacle->m_xCollidedEntity != 99))\n        {\n            if (MEC_fn_bMaterialHasType(p_stCurrentObstacle->hCollidedMaterial, 0x20) && !MEC_fn_bMaterialHasType(p_stCurrentObstacle->hCollidedMaterial, 0x8000))\n            {\n                if (MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, xZero, p_stCurrentObstacle->m_stNorm.xY, xZero, p_stCurrentObstacle->m_stNorm.xZ, 1.0f) > xZero)\n                    p_stCurrentObstacle->m_xCollidedEntity = 99;\n            }\n            else if ((unsigned char)((p_stCurrentObstacle->m_stNorm.xZ < -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0))\n                p_stCurrentObstacle->m_xCollidedEntity = 99;\n            else if (MEC_fn_bIn(p_stCurrentObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)\n                && MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, p_stVector->xX, p_stCurrentObstacle->m_stNorm.xY, p_stVector->xY, p_stCurrentObstacle->m_stNorm.xZ, p_stVector->xZ) > xZero)\n                p_stCurrentObstacle->m_xCollidedEntity = 99;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vDeleteGiBackFace",
+      "reason": "408/408: an xZero local moves mtc1 zero to function entry as retail. Only residual: f6/f7 swapped between xZero and norm Z; declaration order has no effect.",
+      "size": 408,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 408,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00312250",
+      "candidate_size": 440,
+      "first_difference": 176,
+      "implementation": "void MEC_fn_vDeleteOnGroundBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stVector, DNM_stMecObstacle* p_stGroundObstacle)\n{\n    int lCounter;\n    DNM_stMecObstacle* p_stCurrentObstacle;\n    MTH3D_tdstVector_ stVector;\n\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stCurrentObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stCurrentObstacle->m_xCollidedEntity != 99))\n        {\n            if (MEC_fn_bIn(p_stCurrentObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope))\n            {\n                if (MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, p_stVector->xX, p_stCurrentObstacle->m_stNorm.xY, p_stVector->xY, p_stCurrentObstacle->m_stNorm.xZ, p_stVector->xZ) <= 0.0f)\n                {\n                    stVector.xX = p_stCurrentObstacle->m_stContact.xX - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xX; stVector.xY = p_stCurrentObstacle->m_stContact.xY - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xY; stVector.xZ = p_stCurrentObstacle->m_stContact.xZ - p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3.xZ;\n                    stVector.xX -= p_stCurrentObstacle->m_xZoneRadius * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xX; stVector.xY -= p_stCurrentObstacle->m_xZoneRadius * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xY; stVector.xZ -= p_stCurrentObstacle->m_xZoneRadius * p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal.xZ;\n                    if (MTH_xDot3(p_stCurrentObstacle->m_stNorm.xX, stVector.xX, p_stCurrentObstacle->m_stNorm.xY, stVector.xY, p_stCurrentObstacle->m_stNorm.xZ, stVector.xZ) > 0.0f)\n                        p_stCurrentObstacle->m_xCollidedEntity = 99;\n                }\n                else\n                    p_stCurrentObstacle->m_xCollidedEntity = 99;\n            }\n            else if (!((p_stCurrentObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0) && p_stGroundObstacle)\n            {\n                stVector.xX = p_stCurrentObstacle->m_stContact.xX - p_stGroundObstacle->m_stContact.xX; stVector.xY = p_stCurrentObstacle->m_stContact.xY - p_stGroundObstacle->m_stContact.xY; stVector.xZ = p_stCurrentObstacle->m_stContact.xZ - p_stGroundObstacle->m_stContact.xZ;\n                if (MTH_xDot3(p_stGroundObstacle->m_stNorm.xX, stVector.xX, p_stGroundObstacle->m_stNorm.xY, stVector.xY, p_stGroundObstacle->m_stNorm.xZ, stVector.xZ) < 0.7f)\n                    p_stCurrentObstacle->m_xCollidedEntity = 99;\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vDeleteOnGroundBackFace",
+      "reason": "440/440: only residual is x-component load order (retail loads translation before contact). Local, pointer, negated and add-neg spellings no effect.",
+      "size": 440,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 440,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x003138b0",
+      "candidate_size": 472,
+      "first_difference": 302,
+      "implementation": "void MEC_fn_vDeleteUnderGroundWall(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stGroundObstacle)\n{\n    union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } stContact;\n    MTH3D_tdstVector_* p_stNormal;\n    int lCounter;\n    DNM_stMecObstacle* p_stTmpObstacle;\n    DNM_stMecObstacle* p_stGroundEdge;\n\n    if (p_stGroundObstacle == NULL)\n        return;\n\n    p_stGroundEdge = NULL;\n    for (lCounter = 0; lCounter < lObstacle && p_stGroundEdge == NULL; lCounter++)\n    {\n        p_stTmpObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99)\n            && ((p_stTmpObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0)\n            && MEC_fn_bIsEntity7or8(p_stTmpObstacle->m_xCollidedEntity)\n            && p_stTmpObstacle->m_stContact.xZ <= p_stGroundObstacle->m_stContact.xZ)\n            p_stGroundEdge = p_stTmpObstacle;\n    }\n\n    p_stNormal = &p_stGroundObstacle->m_stNorm;\n    stContact.a3_ulWord[0] = ((unsigned int*)&(p_stGroundEdge ? p_stGroundEdge : p_stGroundObstacle)->m_stContact)[0];\n    stContact.a3_ulWord[1] = ((unsigned int*)&(p_stGroundEdge ? p_stGroundEdge : p_stGroundObstacle)->m_stContact)[1];\n    stContact.a3_ulWord[2] = ((unsigned int*)&(p_stGroundEdge ? p_stGroundEdge : p_stGroundObstacle)->m_stContact)[2];\n\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stTmpObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99) && MEC_fn_bIn(p_stTmpObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope))\n        {\n            MTH3D_tdstVector_ stVector;\n            stVector.xX = p_stTmpObstacle->m_stContact.xX - stContact.stVector.xX;\n            stVector.xY = p_stTmpObstacle->m_stContact.xY - stContact.stVector.xY;\n            stVector.xZ = p_stTmpObstacle->m_stContact.xZ - stContact.stVector.xZ;\n            if (MTH_xDot3(stVector.xX, p_stNormal->xX, stVector.xY, p_stNormal->xY, stVector.xZ, p_stNormal->xZ) <= 0.0f)\n                p_stTmpObstacle->m_xCollidedEntity = 99;\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vDeleteUnderGroundWall",
+      "reason": "472/472 after MEC_fn_bIsEntity7or8 range-check helper and block stVector: only f2/f3 swapped between cos and norm Z in MEC_fn_bIn (5 rows).",
+      "size": 472,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 472,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00312540",
+      "candidate_size": 508,
+      "first_difference": 38,
+      "implementation": "void MEC_fn_vAdjustSpeed(DNM_stDynamics* p_stDynamic, float xDT)\n{\n    float xNorm;\n    float xX;\n    union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uTranslation;\n    MAT_tdstTransformation_* hCurrentMatrix;\n    MTH3D_tdstVector_* p_stPrevious;\n    union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uPosition;\n\n    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;\n    p_stPrevious = (MTH3D_tdstVector_*)&p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix.stTransformMatrix.stCol_3;\n    uTranslation.stVector.xX = hCurrentMatrix->stTransformMatrix.stCol_3.xX - p_stPrevious->xX;\n    uTranslation.stVector.xY = hCurrentMatrix->stTransformMatrix.stCol_3.xY - p_stPrevious->xY;\n    uTranslation.stVector.xZ = hCurrentMatrix->stTransformMatrix.stCol_3.xZ - p_stPrevious->xZ;\n    xX = uTranslation.stVector.xX;\n    if (!((unsigned char)((MTH_xAbs(xX) < 0.001f) && (MTH_xAbs(uTranslation.stVector.xY) < 0.001f) && (MTH_xAbs(uTranslation.stVector.xZ) < 0.001f))))\n    {\n        xNorm = MTH_xSqrt(MTH_xSqr3(xX, uTranslation.stVector.xY, uTranslation.stVector.xZ));\n        if (xNorm != 0.0f)\n        {\n            xNorm = 1.0f / xNorm;\n            uTranslation.stVector.xX = xNorm * xX;\n            uTranslation.stVector.xY = xNorm * uTranslation.stVector.xY;\n            uTranslation.stVector.xZ = xNorm * uTranslation.stVector.xZ;\n        }\n    }\n    else\n    {\n        uTranslation.a3_ulWord[0] = 0;\n        uTranslation.stVector.xY = 0.0f;\n        uTranslation.stVector.xZ = 0.0f;\n    }\n    xNorm = xDT * MTH_xDot3(uTranslation.stVector.xX, p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX, uTranslation.stVector.xY, p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY, uTranslation.stVector.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ);\n    uTranslation.stVector.xX = uTranslation.stVector.xX * xNorm;\n    uTranslation.stVector.xY = uTranslation.stVector.xY * xNorm;\n    uTranslation.stVector.xZ = uTranslation.stVector.xZ * xNorm;\n    uPosition.stVector.xX = p_stPrevious->xX + uTranslation.stVector.xX;\n    uPosition.stVector.xY = (*(float*)(int)&p_stPrevious->xY) + uTranslation.stVector.xY;\n    uPosition.stVector.xZ = (*(float*)(int)&p_stPrevious->xZ) + uTranslation.stVector.xZ;\n    if (hCurrentMatrix->eType == MAT_eTransform_Identity)\n        hCurrentMatrix->eType = MAT_eTransform_Translation;\n    ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[0] = uPosition.a3_ulWord[0];\n    ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[1] = uPosition.a3_ulWord[1];\n    ((unsigned int*)&hCurrentMatrix->stTransformMatrix.stCol_3)[2] = uPosition.a3_ulWord[2];\n    hCurrentMatrix->stTransformMatrix.stCol_3.xW = 1.0f;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vAdjustSpeed",
+      "reason": "508/508: union translation, (int)-cast y/z reloads and xX local give right size. Residual: translation X kept in f4 is reloaded at +0x114 (nop in retail), plus a2/a3 and f2-f4 numbering. 25 min permuter: no match.",
+      "size": 508,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 508,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00312c30",
+      "candidate_size": 492,
+      "first_difference": 9,
+      "implementation": "DNM_stMecObstacle* MEC_fn_pSelectGround(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle, MTH3D_tdstVector_* p_stTangentMove, unsigned char* bFirstGround)\n{\n    int lCounter;\n    float xCos;\n    float xDelta;\n    float xGroundDeltaRate;\n    DNM_stMecObstacle* p_stGroundObstacle;\n    DNM_stMecObstacle* p_stTmpObstacle;\n\n    xGroundDeltaRate = 0.0f;\n    p_stGroundObstacle = NULL;\n    *bFirstGround = 1;\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stTmpObstacle = &p_stObstacle[lCounter];\n        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99) && (unsigned char)((p_stTmpObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0))\n        {\n            if (p_stGroundObstacle == NULL)\n            {\n                p_stGroundObstacle = p_stTmpObstacle;\n                if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x10) ? 1 : 0)\n                {\n                    if (!(unsigned char)(p_stTmpObstacle->m_xRate < 0.0f))\n                        return p_stTmpObstacle;\n                }\n                xGroundDeltaRate = MTH_xAbs(p_stTmpObstacle->m_xRate - 0.5f);\n            }\n            else\n            {\n                xDelta = p_stGroundObstacle->m_stContact.xZ - p_stTmpObstacle->m_stContact.xZ;\n                if (xDelta > 0.3f)\n                {\n                    xCos = MTH_xDot3(p_stTangentMove->xX, p_stTmpObstacle->m_stNorm.xX, p_stTangentMove->xY, p_stTmpObstacle->m_stNorm.xY, p_stTangentMove->xZ, p_stTmpObstacle->m_stNorm.xZ);\n                    if (xCos < 0.001f)\n                    {\n                        xCos = MTH_xSqrt(MTH_xSqr3(p_stTangentMove->xX, p_stTangentMove->xY, p_stTangentMove->xZ));\n                        xDelta = MTH_xAbs(xDelta);\n                        xDelta = MTH_xSqrt(MTH_xSqr2(xCos, xDelta));\n                        if (xDelta == 0.0f)\n                            xCos = 1.0f;\n                        else\n                            xCos = xCos / xDelta;\n                        xDelta = MTH_xDot3(p_stGroundObstacle->m_stNorm.xX, p_stTmpObstacle->m_stNorm.xX, p_stGroundObstacle->m_stNorm.xY, p_stTmpObstacle->m_stNorm.xY, p_stGroundObstacle->m_stNorm.xZ, p_stTmpObstacle->m_stNorm.xZ);\n                        if (xDelta > xCos)\n                        {\n                            xCos = MTH_xAbs(p_stTmpObstacle->m_xRate - 0.5f);\n                            if (xCos < xGroundDeltaRate)\n                            {\n                                p_stGroundObstacle = p_stTmpObstacle;\n                                *bFirstGround = 0;\n                                xGroundDeltaRate = xCos;\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n    return p_stGroundObstacle;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_pSelectGround",
+      "reason": "492/500: logic complete, xCos/xDelta reused as retail. Residual: ground/counter and FP numbering (xCos f4 vs f0) and a missing join nop from the size shift.",
+      "size": 500,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 500,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00312e30",
+      "candidate_size": 1688,
+      "first_difference": 76,
+      "implementation": "unsigned char MEC_fn_EdgeAnalysisForCliff(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle)\n{\n    unsigned char bThereIsAWallGround;\n    unsigned short xM;\n    int j;\n    int i;\n    int Ind;\n    DNM_stMecObstacle* param0;\n    DNM_stMecObstacle* p_stTmpObstacle;\n    MTH3D_tdstVector_ V1;\n    union { MTH3D_tdstVector_ stVector; unsigned int a3_ulWord[3]; } uV2;\n    int IndWallGround;\n    int lCounter;\n\n    bThereIsAWallGround = 0;\n    IndWallGround = 0;\n    g_NbTrameSinceLastCanFall++;\n    if (lObstacle == 0)\n        return 0;\n    if ((lObstacle == 1) && (unsigned char)((p_stObstacle->m_xCollidedEntity == 7) || (p_stObstacle->m_xCollidedEntity == 8)) && ((p_stObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0))\n    {\n        g_NbTrameSinceLastCanFall = 0;\n        return 0;\n    }\n    if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x100) ? 1 : 0)\n    {\n        for (lCounter = 0; lCounter < lObstacle; lCounter++)\n        {\n            p_stTmpObstacle = &p_stObstacle[lCounter];\n            if (p_stTmpObstacle->hCollidedMaterial != NULL)\n            {\n                GMT_tdstCollideMaterial_* hCollideMaterial = p_stTmpObstacle->hCollidedMaterial->hCollideMaterial;\n                if ((hCollideMaterial != GMT_C_InvalidCollideMaterial) && (hCollideMaterial != NULL))\n                {\n                    xM = GMT_fn_hGetCollideMaterialIdentifier(hCollideMaterial);\n                    if ((xM & 0x10) && (xM & 8))\n                        p_stTmpObstacle->m_xCollidedEntity = 99;\n                }\n            }\n        }\n    }\n    if (lObstacle >= COL_g_lMaxNumberOfCollisions)\n    {\n        printf(\"***************************************************************\\n\");\n        printf(\"WARNING COLLISION :\\n\");\n        printf(\"Too much collision : %d; number of collided edges : %d\\n\", lObstacle, COL_fn_iNbCollidedEdges());\n        printf(\"***************************************************************\\n\");\n        return 0;\n    }\n    for (lCounter = 0; lCounter < lObstacle; lCounter++)\n    {\n        p_stTmpObstacle = &p_stObstacle[lCounter];\n        if (!MEC_fn_bMaterialHasType(p_stTmpObstacle->hMyMaterial, 8)\n            && !(unsigned char)((p_stTmpObstacle->m_xCollidedEntity == 7) || (p_stTmpObstacle->m_xCollidedEntity == 8))\n            && ((p_stTmpObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0))\n            return 0;\n    }\n    for (lCounter = 0; lCounter < COL_fn_iNbCollidedEdges(); lCounter++)\n    {\n        COL_fn_vGetCollidedEgde(lCounter, &V1, &uV2.stVector, &Ind);\n        if (Ind < lObstacle)\n        {\n            param0 = &p_stObstacle[Ind];\n            if ((param0->m_eType != 0) && !MEC_fn_bMaterialHasType(param0->hMyMaterial, 8) && ((param0->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0))\n            {\n                for (i = 0; i < COL_fn_iNbCollidedEdges(); i++)\n                {\n                    if ((i != lCounter) && fn_bIsTheSameCollidedEdge(i, &V1, &uV2.stVector, &Ind))\n                    {\n                        p_stTmpObstacle = &p_stObstacle[Ind];\n                        if (!MEC_fn_bMaterialHasType(param0->hMyMaterial, 8)\n                            && (MEC_fn_bIn(p_stTmpObstacle->m_stNorm.xZ, p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) || (p_stTmpObstacle->m_stNorm.xZ < 0.0f))\n                            && (p_stTmpObstacle->m_xCollidedEntity == 8))\n                        {\n                            V1.xX = p_stTmpObstacle->m_stZonePosition.xX - p_stTmpObstacle->m_stContact.xX;\n                            V1.xY = p_stTmpObstacle->m_stZonePosition.xY - p_stTmpObstacle->m_stContact.xY;\n                            V1.xZ = p_stTmpObstacle->m_stZonePosition.xZ - p_stTmpObstacle->m_stContact.xZ;\n                            if ((p_stTmpObstacle->m_stNorm.xX != 0.0f) || (p_stTmpObstacle->m_stNorm.xY != 0.0f))\n                            {\n                                uV2.a3_ulWord[0] = *(unsigned int*)&p_stTmpObstacle->m_stNorm.xX;\n                                uV2.a3_ulWord[1] = *(unsigned int*)&p_stTmpObstacle->m_stNorm.xY;\n                                *(unsigned int*)(int)&uV2.a3_ulWord[2] = *(unsigned int*)&p_stTmpObstacle->m_stNorm.xZ;\n                                *(float*)(int)&uV2.stVector.xZ = 0.0f;\n                                if (MTH_xDot3(V1.xX, uV2.stVector.xX, V1.xY, uV2.stVector.xY, V1.xZ, uV2.stVector.xZ) > 0.0f)\n                                {\n                                    if ((g_stPersoMoveForCollision.xX == 0.0f) && (g_stPersoMoveForCollision.xY == 0.0f) && (g_stPersoMoveForCollision.xZ == 0.0f))\n                                    {\n                                        IndWallGround = i;\n                                        bThereIsAWallGround = 1;\n                                        break;\n                                    }\n                                    if (MTH_xDot3(g_stPersoMoveForCollision.xX, uV2.stVector.xX, g_stPersoMoveForCollision.xY, uV2.stVector.xY, g_stPersoMoveForCollision.xZ, uV2.stVector.xZ) > -0.7f)\n                                    {\n                                        IndWallGround = i;\n                                        bThereIsAWallGround = 1;\n                                        break;\n                                    }\n                                    param0->m_stContact.xX = param0->m_stZonePosition.xX;\n                                    param0->m_stContact.xY = param0->m_stZonePosition.xY;\n                                    break;\n                                }\n                            }\n                        }\n                    }\n                }\n                if (bThereIsAWallGround)\n                {\n                    g_NbTrameSinceLastCanFall = 0;\n                    for (j = 0; j < COL_fn_iNbCollidedEdges(); j++)\n                    {\n                        COL_fn_vGetCollidedEgde(j, &V1, &uV2.stVector, &Ind);\n                        p_stTmpObstacle = &p_stObstacle[Ind];\n                        if (((p_stTmpObstacle->m_stNorm.xZ >= p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) ? 1 : 0) && fn_bIsOneEdgeInCommon(IndWallGround, j))\n                            p_stTmpObstacle->m_xCollidedEntity = 99;\n                    }\n                    return 1;\n                }\n            }\n        }\n        else\n        {\n            printf(\"*****************************************************************\\n\");\n            printf(\"WARNING COLLISION :\\n\");\n            printf(\"Edge collide Index is too big : %d; number of collision : %d\\n\", Ind, lObstacle);\n            printf(\"*****************************************************************\\n\");\n        }\n    }\n    return 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_EdgeAnalysisForCliff",
+      "reason": "1688/1696: full reconstruction. Residual: '&p[Ind]' addu sinks into a delay slot at +0x35c where retail keeps it at +0x350 with nop (same symptom as vBasePlatformManagement's arg copy); z copy stored via address register, not direct; follow-on padding nops.",
+      "size": 1696,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MISMATCH",
+      "target_size": 1696,
+      "unresolved_relocations": [
+        {
+          "offset": 628,
+          "symbol": "@1146",
+          "type": 5
+        },
+        {
+          "offset": 1564,
+          "symbol": "@1146",
+          "type": 6
+        },
+        {
+          "offset": 1568,
+          "symbol": "@1144",
+          "type": 5
+        },
+        {
+          "offset": 1576,
+          "symbol": "@1144",
+          "type": 6
+        },
+        {
+          "offset": 1584,
+          "symbol": "@1147",
+          "type": 5
+        },
+        {
+          "offset": 1588,
+          "symbol": "@1147",
+          "type": 6
+        },
+        {
+          "offset": 1600,
+          "symbol": "@1146",
+          "type": 5
+        },
+        {
+          "offset": 1608,
+          "symbol": "@1146",
+          "type": 6
+        }
+      ]
+    },
+    {
+      "address": "0x0030e2e0",
+      "candidate_size": 1416,
+      "first_difference": 656,
+      "implementation": "void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lNbObstacle, DNM_stMecObstacle* a_stObstacle, int lObstacle)\n{\n    unsigned char bStop;\n    unsigned char bObstacle;\n    unsigned char bCeil;\n    unsigned char bWall;\n    unsigned char bGround;\n    unsigned char bActor;\n    unsigned char bWater;\n    unsigned char bObstacleEdge;\n    unsigned char bCeilEdge;\n    unsigned char bWallEdge;\n    unsigned char bGroundEdge;\n    unsigned char bActorEdge;\n    unsigned char bWaterEdge;\n    MTH3D_tdstVector_* p_stNormalVector;\n    DNM_stMecObstacle* p_stTmpObstacle;\n    int lCounter;\n    float xCurrentRate;\n    float xRate;\n    unsigned char bEdge;\n\n    bStop = 0;\n    bObstacle = 0;\n    bCeil = 0;\n    bWall = 0;\n    bGround = 0;\n    bWater = 0;\n    bObstacleEdge = 0;\n    bCeilEdge = 0;\n    bWallEdge = 0;\n    bGroundEdge = 0;\n    bActor = 0;\n    bActorEdge = 0;\n    bWaterEdge = 0;\n    xCurrentRate = 2.0f;\n\n    for (lCounter = 0; (lCounter < lNbObstacle) && !bStop; lCounter++)\n    {\n        p_stTmpObstacle = a_stObstacle + lCounter;\n\n        if ((unsigned char)(p_stTmpObstacle->m_xCollidedEntity != 99))\n        {\n            xRate = p_stTmpObstacle->m_xRate;\n            if ((lCounter <= lObstacle) || (xCurrentRate == xRate))\n            {\n                p_stNormalVector = &p_stTmpObstacle->m_stNorm;\n\n                bEdge = MEC_fn_bIsEntity7or8(p_stTmpObstacle->m_xCollidedEntity);\n                xCurrentRate = xRate;\n\n                if (!bObstacle)\n                {\n                    memcpy(&g_stReport.m_stObstacle, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                    bObstacleEdge = bEdge;\n                    bObstacle = 1;\n                }\n                else if (bObstacleEdge && !bEdge)\n                {\n                    memcpy(&g_stReport.m_stObstacle, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                    bObstacleEdge = 0;\n                }\n\n                if (((p_stTmpObstacle->m_eType & 2) == 2) || ((p_stTmpObstacle->m_eType & 9) == 9))\n                {\n                    if (!bActor)\n                    {\n                        memcpy(&g_stReport.m_stCharacter, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                        bActorEdge = bEdge;\n                        bActor = 1;\n                    }\n                    else if (bActorEdge && !bEdge)\n                    {\n                        memcpy(&g_stReport.m_stCharacter, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                        bActorEdge = 0;\n                    }\n                }\n\n                if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 0x4000) && MEC_fn_bMaterialHasType(p_stTmpObstacle->hMyMaterial, 0x4000))\n                {\n                    if (!bWater)\n                    {\n                        memcpy(&g_stReport.m_stWater, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                        bWaterEdge = bEdge;\n                        bWater = 1;\n                    }\n                    else if (bWaterEdge && !bEdge)\n                    {\n                        memcpy(&g_stReport.m_stWater, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                        bWaterEdge = 0;\n                    }\n                }\n                else\n                {\n                    float xDot;\n                    float xX = p_stNormalVector->xX;\n                    float xY = p_stNormalVector->xY;\n                    float xZ = p_stNormalVector->xZ;\n                    float xOne = 1.0f;\n                    float xZero = 0.0f;\n                    MTH_DOT3_TO(xDot, xX, xY, xZ, xZero, xZero, xOne);\n\n                    if (xDot > p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)\n                    {\n                        if (MEC_fn_bMaterialHasType(p_stTmpObstacle->hCollidedMaterial, 1))\n                        {\n                            p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = (p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags |= 0x8000000);\n                        }\n\n                        if (!bGround)\n                        {\n                            memcpy(&g_stReport.m_stGround, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                            bGroundEdge = bEdge;\n                            bGround = 1;\n                        }\n                        else if (bGroundEdge && !bEdge)\n                        {\n                            memcpy(&g_stReport.m_stGround, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                            bGroundEdge = 0;\n                        }\n                    }\n\n                    else\n                    {\n                        if (xDot > -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope)\n                        {\n                            if (!bWall)\n                            {\n                                memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                                bWallEdge = bEdge;\n                                bWall = 1;\n                            }\n                            else if (bWallEdge && !bEdge)\n                            {\n                                memcpy(&g_stReport.m_stWall, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                                bWallEdge = 0;\n                            }\n                        }\n                        else\n                        {\n                            if (!bCeil)\n                            {\n                                memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                                bCeilEdge = bEdge;\n                                bCeil = 1;\n                            }\n                            else if (bCeilEdge && !bEdge)\n                            {\n                                memcpy(&g_stReport.m_stCeil, p_stTmpObstacle, sizeof(DNM_stMecObstacle));\n                                bCeilEdge = 0;\n                            }\n                        }\n                    }\n                }\n            }\n            else\n            {\n                bStop = 1;\n            }\n        }\n    }\n\n    if (bActor)\n    {\n        g_stReport.m_ulCurrSurfaceState |= 0x10000;\n        MEC_fn_vReportCollideActor(hSupObj, &g_stReport.m_stCharacter);\n    }\n    if (bWater)\n    {\n        g_stReport.m_ulCurrSurfaceState |= 0x40;\n    }\n    if (bGround)\n    {\n        g_stReport.m_ulCurrSurfaceState |= 0x1;\n        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)\n        {\n            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[0] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[0];\n            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[1] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[1];\n            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stGroundNormal)[2] = ((unsigned int*)&g_stReport.m_stGround.m_stNorm)[2];\n        }\n    }\n    if (bWall)\n    {\n        g_stReport.m_ulCurrSurfaceState |= 0x4;\n        if ((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x2) ? 1 : 0)\n        {\n            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[0] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[0];\n            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[1] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[1];\n            ((unsigned int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stWallNormal)[2] = ((unsigned int*)&g_stReport.m_stWall.m_stNorm)[2];\n        }\n    }\n    if (bCeil)\n    {\n        g_stReport.m_ulCurrSurfaceState |= 0x10;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MEC_fn_vReportCollision",
+      "reason": "1416/1432 after range-check helper, bare truth tests, nested wall/ceil and (lCounter<=lObstacle||rate) logic: all but 20 rows match. Residual: retail copies g_stReport normals with per-word 'lui at; lw %lo(...)(at)' while every word/helper spelling gives a shared base register (1416) or hoisted addresses (1448); plus xDot f0 vs f1.",
+      "size": 1432,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECCol.c",
+      "status": "MISMATCH",
+      "target_size": 1432,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002a10a0",
+      "candidate_size": 988,
+      "first_difference": 292,
+      "implementation": "int GEO_lMainCullingSphere(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stShereCenter, float xRadius, MAT_tdstTransformation_* p_stMatrix, MAT_tdstTransformation_* p_stObjectMatrix, int _lCullingResult)\n{\n    float xDotProduct;\n    GLI_tdstCamera_* param0;\n    MTH3D_tdstVector_ stCenter;\n    MTH4D_tdstVector_ stVect;\n    MTH4D_tdstMatrix_* pMat;\n    MTH4D_tdstVector_* pVect;\n\n    xDotProduct = 0.0f;\n    if (MAT_M_bTransformHasScale(p_stMatrix))\n        xRadius *= MAT_M_xGetMaxScale(p_stMatrix);\n\n    param0 = *(GLI_tdstCamera_**)p_stVpt->p_vSpecificToXD;\n\n    pMat = &p_stMatrix->stTransformMatrix;\n    pVect = &stVect;\n    *(int*)&stVect.xX = *(int*)&p_stShereCenter->xX;\n    *(int*)&stVect.xY = *(int*)&p_stShereCenter->xY;\n    *(int*)&stVect.xZ = *(int*)&p_stShereCenter->xZ;\n    asm {\n        lqc2 vf1, 0x0(pVect)\n        lqc2 vf2, 0x0(pMat)\n        lqc2 vf3, 0x10(pMat)\n        lqc2 vf4, 0x20(pMat)\n        lqc2 vf5, 0x30(pMat)\n        vmulax.xyzw ACC, vf2, vf1x\n        vmadday.xyzw ACC, vf3, vf1y\n        vmaddaz.xyzw ACC, vf4, vf1z\n        vmaddw.xyzw vf6, vf5, vf0w\n        nop\n        nop\n        sqc2 vf6, 0x0(pVect)\n    }\n    ((int*)&stCenter)[0] = *(int*)&stVect.xX;\n    ((int*)&stCenter)[1] = *(int*)&stVect.xY;\n    ((int*)&stCenter)[2] = *(int*)&stVect.xZ;\n\n    _lCullingResult |= 0x40;\n\n    if (!(_lCullingResult & 0x10))\n    {\n        if (stCenter.xZ + xRadius < param0->xNear)\n            return 0;\n        xDotProduct = stCenter.xZ - xRadius;\n        if (xDotProduct > param0->xNear)\n            _lCullingResult |= 0x10;\n    }\n\n    if (!(_lCullingResult & 0x20))\n    {\n        if (GEO_g_xZFar != 0.0f)\n        {\n            if (xDotProduct > GEO_g_xZFar)\n            {\n                GEO_g_xZFarTransparencyLevel = 0.0f;\n                return 0;\n            }\n            if (xDotProduct > GEO_g_xZFar - GEO_g_xZFarTransparencyZone)\n                GEO_g_xZFarTransparencyLevel = 1.0f - GEO_g_xOoZFarTransparencyZone * (stCenter.xZ - xRadius - GEO_g_xZFar + GEO_g_xZFarTransparencyZone);\n            else\n            {\n                _lCullingResult |= 0x20;\n                GEO_g_xZFarTransparencyLevel = 1.0f;\n            }\n        }\n        else\n        {\n            _lCullingResult |= 0x20;\n            GEO_g_xZFarTransparencyLevel = 1.0f;\n        }\n    }\n    else\n        GEO_g_xZFarTransparencyLevel = 1.0f;\n\n    if (!(_lCullingResult & 1))\n    {\n        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneRight.xX, stCenter.xY, param0->stNormPlaneRight.xY, stCenter.xZ, param0->stNormPlaneRight.xZ);\n        if (xDotProduct > xRadius + param0->xDistPlaneLeft)\n            return 0;\n        if (xDotProduct < param0->xDistPlaneLeft - xRadius)\n            _lCullingResult |= 1;\n    }\n\n    if (!(_lCullingResult & 2))\n    {\n        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneLeft.xX, stCenter.xY, param0->stNormPlaneLeft.xY, stCenter.xZ, param0->stNormPlaneLeft.xZ);\n        if (xDotProduct > xRadius + param0->xDistPlaneRight)\n            return 0;\n        if (xDotProduct < param0->xDistPlaneRight - xRadius)\n            _lCullingResult |= 2;\n    }\n\n    if (!(_lCullingResult & 4))\n    {\n        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneUp.xX, stCenter.xY, param0->stNormPlaneUp.xY, stCenter.xZ, param0->stNormPlaneUp.xZ);\n        if (xDotProduct > xRadius + param0->xDistPlaneUp)\n            return 0;\n        if (xDotProduct < param0->xDistPlaneUp - xRadius)\n            _lCullingResult |= 4;\n    }\n\n    if (!(_lCullingResult & 8))\n    {\n        xDotProduct = MTH_xDot3(stCenter.xX, param0->stNormPlaneDown.xX, stCenter.xY, param0->stNormPlaneDown.xY, stCenter.xZ, param0->stNormPlaneDown.xZ);\n        if (xDotProduct > xRadius + param0->xDistPlaneDown)\n            return 0;\n        if (xDotProduct < param0->xDistPlaneDown - xRadius)\n            _lCullingResult |= 8;\n    }\n\n    return _lCullingResult;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GEO_lMainCullingSphere",
+      "reason": "988/988: range test fixed with '(unsigned)(eType-1) <= 1' (gives sltiu at). Sole residual: retail schedules 'lw v1,0x60(sp)' before 'ori s0,0x40; andi v0,s0,0x10', ours after them. Word-copy spellings do not move it.",
+      "size": 988,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/Culling.c",
+      "status": "MISMATCH",
+      "target_size": 988,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002fd370",
+      "candidate_size": 448,
+      "first_difference": 162,
+      "implementation": "void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stSource)\n{\n    switch (_hTransform->eType)\n    {\n    case MAT_eTransform_Identity:\n    case MAT_eTransform_Translation:\n        if (_p_stDest != _p_stSource)\n        {\n            *(int*)&_p_stDest->xX = *(int*)&_p_stSource->xX;\n            *(int*)&_p_stDest->xY = *(int*)&_p_stSource->xY;\n            *(int*)&_p_stDest->xZ = *(int*)&_p_stSource->xZ;\n        }\n        break;\n\n    case MAT_eTransform_Zoom:\n    case MAT_eTransform_Scale:\n        _p_stDest->xX = _p_stSource->xX * _hTransform->stScaleVector.xX;\n        _p_stDest->xY = _p_stSource->xY * _hTransform->stScaleVector.xY;\n        _p_stDest->xZ = _p_stSource->xZ * _hTransform->stScaleVector.xZ;\n        break;\n\n    case MAT_eTransform_Rotation:\n    case MAT_eTransform_RotationZoom:\n    case MAT_eTransform_RotationScale:\n    case MAT_eTransform_ComplexRotationScale:\n        if (_p_stSource == _p_stDest)\n        {\n            MTH_tduVectorWords uT;\n#define stTemp uT.stVector\n            uT.auWords[0] = ((MTH_tduVectorWords*)_p_stSource)->auWords[0];\n            uT.auWords[1] = ((MTH_tduVectorWords*)_p_stSource)->auWords[1];\n            uT.auWords[2] = ((MTH_tduVectorWords*)_p_stSource)->auWords[2];\n            _p_stDest->xX = _hTransform->stTransformMatrix.stCol_0.xX * stTemp.xX + _hTransform->stTransformMatrix.stCol_1.xX * ((float*)&uT)[1] + _hTransform->stTransformMatrix.stCol_2.xX * ((float*)&uT)[2];\n            _p_stDest->xY = _hTransform->stTransformMatrix.stCol_0.xY * stTemp.xX + _hTransform->stTransformMatrix.stCol_1.xY * ((float*)&uT)[1] + _hTransform->stTransformMatrix.stCol_2.xY * ((float*)&uT)[2];\n            _p_stDest->xZ = _hTransform->stTransformMatrix.stCol_0.xZ * stTemp.xX + _hTransform->stTransformMatrix.stCol_1.xZ * ((float*)&uT)[1] + _hTransform->stTransformMatrix.stCol_2.xZ * ((float*)&uT)[2];\n        }\n#undef stTemp\n        else\n        {\n            _p_stDest->xX = _hTransform->stTransformMatrix.stCol_0.xX * _p_stSource->xX + _hTransform->stTransformMatrix.stCol_1.xX * _p_stSource->xY + _hTransform->stTransformMatrix.stCol_2.xX * _p_stSource->xZ;\n            _p_stDest->xY = _hTransform->stTransformMatrix.stCol_0.xY * _p_stSource->xX + _hTransform->stTransformMatrix.stCol_1.xY * _p_stSource->xY + _hTransform->stTransformMatrix.stCol_2.xY * _p_stSource->xZ;\n            _p_stDest->xZ = _hTransform->stTransformMatrix.stCol_0.xZ * _p_stSource->xX + _hTransform->stTransformMatrix.stCol_1.xZ * _p_stSource->xY + _hTransform->stTransformMatrix.stCol_2.xZ * _p_stSource->xZ;\n        }\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MAT_fn_vApplyOnVector",
+      "reason": "3.0.3 size and control flow exact; only the first dot product differs by register (retail X load f4, col0.x f5; candidate f2, f3), caused by the early-scheduled X load; word union copy fixes all structure",
+      "size": 448,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MISMATCH",
+      "target_size": 448,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002fcf30",
+      "candidate_size": 1084,
+      "first_difference": 130,
+      "implementation": "void MAT_fn_vRotateVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stSource)\n{\n    MAT_tdstTransformation_ stTemp;\n    MTH4D_tdstMatrix_ TmpMat;\n\n    switch (_hTransform->eType)\n    {\n    case MAT_eTransform_Identity:\n    case MAT_eTransform_Translation:\n    case MAT_eTransform_Zoom:\n    case MAT_eTransform_Scale:\n        if (_p_stDest != _p_stSource)\n        {\n            *(int*)&_p_stDest->xX = *(int*)&_p_stSource->xX;\n            *(int*)&_p_stDest->xY = *(int*)&_p_stSource->xY;\n            *(int*)&_p_stDest->xZ = *(int*)&_p_stSource->xZ;\n        }\n        break;\n\n    case MAT_eTransform_Rotation:\n        if (_p_stSource == _p_stDest)\n        {\n            MTH_tduVector4Words uS;\n            uS.auWords[0] = ((MTH_tduVectorWords*)_p_stSource)->auWords[0];\n            uS.auWords[1] = ((MTH_tduVectorWords*)_p_stSource)->auWords[1];\n            uS.auWords[2] = ((MTH_tduVectorWords*)_p_stSource)->auWords[2];\n            _p_stDest->xX = _hTransform->stTransformMatrix.stCol_0.xX * uS.st.xX + _hTransform->stTransformMatrix.stCol_1.xX * ((float*)&uS)[1] + _hTransform->stTransformMatrix.stCol_2.xX * ((float*)&uS)[2];\n            _p_stDest->xY = _hTransform->stTransformMatrix.stCol_0.xY * uS.st.xX + _hTransform->stTransformMatrix.stCol_1.xY * ((float*)&uS)[1] + _hTransform->stTransformMatrix.stCol_2.xY * ((float*)&uS)[2];\n            _p_stDest->xZ = _hTransform->stTransformMatrix.stCol_0.xZ * uS.st.xX + _hTransform->stTransformMatrix.stCol_1.xZ * ((float*)&uS)[1] + _hTransform->stTransformMatrix.stCol_2.xZ * ((float*)&uS)[2];\n        }\n        else\n        {\n            _p_stDest->xX = _hTransform->stTransformMatrix.stCol_0.xX * _p_stSource->xX + _hTransform->stTransformMatrix.stCol_1.xX * _p_stSource->xY + _hTransform->stTransformMatrix.stCol_2.xX * _p_stSource->xZ;\n            _p_stDest->xY = _hTransform->stTransformMatrix.stCol_0.xY * _p_stSource->xX + _hTransform->stTransformMatrix.stCol_1.xY * _p_stSource->xY + _hTransform->stTransformMatrix.stCol_2.xY * _p_stSource->xZ;\n            _p_stDest->xZ = _hTransform->stTransformMatrix.stCol_0.xZ * _p_stSource->xX + _hTransform->stTransformMatrix.stCol_1.xZ * _p_stSource->xY + _hTransform->stTransformMatrix.stCol_2.xZ * _p_stSource->xZ;\n        }\n        break;\n\n    case MAT_eTransform_RotationZoom:\n    case MAT_eTransform_RotationScale:\n        MAT_fn_vRemoveScale(&stTemp, _hTransform);\n        if (_p_stSource == _p_stDest)\n        {\n            MTH_tduVector4Words uS;\n            uS.auWords[0] = ((MTH_tduVectorWords*)_p_stSource)->auWords[0];\n            uS.auWords[1] = ((MTH_tduVectorWords*)_p_stSource)->auWords[1];\n            uS.auWords[2] = ((MTH_tduVectorWords*)_p_stSource)->auWords[2];\n            _p_stDest->xX = stTemp.stTransformMatrix.stCol_0.xX * uS.st.xX + stTemp.stTransformMatrix.stCol_1.xX * ((float*)&uS)[1] + stTemp.stTransformMatrix.stCol_2.xX * ((float*)&uS)[2];\n            _p_stDest->xY = stTemp.stTransformMatrix.stCol_0.xY * uS.st.xX + stTemp.stTransformMatrix.stCol_1.xY * ((float*)&uS)[1] + stTemp.stTransformMatrix.stCol_2.xY * ((float*)&uS)[2];\n            _p_stDest->xZ = stTemp.stTransformMatrix.stCol_0.xZ * uS.st.xX + stTemp.stTransformMatrix.stCol_1.xZ * ((float*)&uS)[1] + stTemp.stTransformMatrix.stCol_2.xZ * ((float*)&uS)[2];\n        }\n        else\n        {\n            _p_stDest->xX = stTemp.stTransformMatrix.stCol_0.xX * _p_stSource->xX + stTemp.stTransformMatrix.stCol_1.xX * _p_stSource->xY + stTemp.stTransformMatrix.stCol_2.xX * _p_stSource->xZ;\n            _p_stDest->xY = stTemp.stTransformMatrix.stCol_0.xY * _p_stSource->xX + stTemp.stTransformMatrix.stCol_1.xY * _p_stSource->xY + stTemp.stTransformMatrix.stCol_2.xY * _p_stSource->xZ;\n            _p_stDest->xZ = stTemp.stTransformMatrix.stCol_0.xZ * _p_stSource->xX + stTemp.stTransformMatrix.stCol_1.xZ * _p_stSource->xY + stTemp.stTransformMatrix.stCol_2.xZ * _p_stSource->xZ;\n        }\n        break;\n\n    case MAT_eTransform_ComplexRotationScale:\n        MAT_fn_vQuatToMatrix(&TmpMat, _hTransform->stScaleVector.xX, _hTransform->stScaleVector.xY, _hTransform->stScaleVector.xZ, _hTransform->stScaleVector.xW);\n        if (_p_stSource == _p_stDest)\n        {\n            MTH_tduVector4Words uS;\n            uS.auWords[0] = ((MTH_tduVectorWords*)_p_stSource)->auWords[0];\n            uS.auWords[1] = ((MTH_tduVectorWords*)_p_stSource)->auWords[1];\n            uS.auWords[2] = ((MTH_tduVectorWords*)_p_stSource)->auWords[2];\n            _p_stDest->xX = TmpMat.stCol_0.xX * uS.st.xX + TmpMat.stCol_1.xX * ((float*)&uS)[1] + TmpMat.stCol_2.xX * ((float*)&uS)[2];\n            _p_stDest->xY = TmpMat.stCol_0.xY * uS.st.xX + TmpMat.stCol_1.xY * ((float*)&uS)[1] + TmpMat.stCol_2.xY * ((float*)&uS)[2];\n            _p_stDest->xZ = TmpMat.stCol_0.xZ * uS.st.xX + TmpMat.stCol_1.xZ * ((float*)&uS)[1] + TmpMat.stCol_2.xZ * ((float*)&uS)[2];\n        }\n        else\n        {\n            _p_stDest->xX = TmpMat.stCol_0.xX * _p_stSource->xX + TmpMat.stCol_1.xX * _p_stSource->xY + TmpMat.stCol_2.xX * _p_stSource->xZ;\n            _p_stDest->xY = TmpMat.stCol_0.xY * _p_stSource->xX + TmpMat.stCol_1.xY * _p_stSource->xY + TmpMat.stCol_2.xY * _p_stSource->xZ;\n            _p_stDest->xZ = TmpMat.stCol_0.xZ * _p_stSource->xX + TmpMat.stCol_1.xZ * _p_stSource->xY + TmpMat.stCol_2.xZ * _p_stSource->xZ;\n        }\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MAT_fn_vRotateVector",
+      "reason": "Same residual as MAT_fn_vApplyOnVector in all three copy branches: first dot-product register numbering only, sizes and relocations exact",
+      "size": 1084,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MISMATCH",
+      "target_size": 1084,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002fb870",
+      "candidate_size": 2000,
+      "first_difference": 296,
+      "implementation": "void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB)\n{\n    MAT_tdstTransformation_* hResult;\n    unsigned char bComposeMatrixes;\n    unsigned char bComposeTranslations;\n    unsigned char bTestScale;\n    MAT_tdstTransformation_ stTemp;\n    long bEqual;\n    static unsigned int uiSimplification;\n    static unsigned int uiTotal;\n\n    if (_hA->eType == MAT_eTransform_Identity)\n    {\n        MAT_COPY_TRANSFORMATION(_hDest, _hB);\n        return;\n    }\n\n    if (_hB->eType == MAT_eTransform_Identity)\n    {\n        MAT_COPY_TRANSFORMATION(_hDest, _hA);\n        return;\n    }\n\n    if ((_hDest == _hA) || (_hDest == _hB))\n    {\n        hResult = &stTemp;\n        stTemp.eType = MAT_eTransform_Identity;\n    }\n    else\n    {\n        hResult = _hDest;\n    }\n\n    bComposeMatrixes = 0;\n    bComposeTranslations = 0;\n    bTestScale = 0;\n\n    switch (_hA->eType)\n    {\n    case MAT_eTransform_Translation:\n        hResult->eType = _hB->eType;\n        hResult->stTransformMatrix.stCol_3.xX = _hA->stTransformMatrix.stCol_3.xX + _hB->stTransformMatrix.stCol_3.xX;\n        hResult->stTransformMatrix.stCol_3.xY = _hA->stTransformMatrix.stCol_3.xY + _hB->stTransformMatrix.stCol_3.xY;\n        hResult->stTransformMatrix.stCol_3.xZ = _hA->stTransformMatrix.stCol_3.xZ + _hB->stTransformMatrix.stCol_3.xZ;\n        hResult->stTransformMatrix.stCol_3.xW = 1.0f;\n        MAT_COPY_ROTATION_AND_SCALE(hResult, _hB);\n        break;\n\n    case MAT_eTransform_Rotation:\n    case MAT_eTransform_RotationZoom:\n        bComposeTranslations = 1;\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Rotation:\n            hResult->eType = _hA->eType;\n            bComposeMatrixes = 1;\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hA->stScaleVector);\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_RotationZoom:\n            hResult->eType = MAT_eTransform_RotationZoom;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_Scale:\n        case MAT_eTransform_RotationScale:\n            hResult->eType = MAT_eTransform_RotationScale;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = MAT_eTransform_ComplexRotationScale;\n            bComposeMatrixes = 1;\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    case MAT_eTransform_Zoom:\n        bComposeTranslations = 1;\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Rotation:\n            hResult->eType = MAT_eTransform_RotationZoom;\n            bComposeMatrixes = 1;\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hA->stScaleVector);\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n            bTestScale = 1;\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = _hB->eType;\n            bComposeMatrixes = 1;\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    case MAT_eTransform_Scale:\n    case MAT_eTransform_RotationScale:\n    case MAT_eTransform_ComplexRotationScale:\n        bComposeTranslations = 1;\n        switch (_hB->eType)\n        {\n        case MAT_eTransform_Translation:\n            hResult->eType = _hA->eType;\n            MAT_COPY_ROTATION_AND_SCALE(hResult, _hA);\n            break;\n\n        case MAT_eTransform_Zoom:\n        case MAT_eTransform_Scale:\n            hResult->eType = _hA->eType;\n            bComposeMatrixes = 1;\n            bTestScale = 1;\n            MAT_MULTIPLY_SCALES(hResult, _hA, _hB);\n            break;\n\n        case MAT_eTransform_Rotation:\n        case MAT_eTransform_RotationZoom:\n        case MAT_eTransform_RotationScale:\n            bTestScale = 1;\n        case MAT_eTransform_ComplexRotationScale:\n            hResult->eType = MAT_eTransform_ComplexRotationScale;\n            bComposeMatrixes = 1;\n            MAT_COPY_VECTOR(hResult->stScaleVector, _hB->stScaleVector);\n            break;\n\n        default:\n            break;\n        }\n        break;\n\n    default:\n        break;\n    }\n\n    if (bComposeMatrixes)\n    {\n        MTH4D_fn_vSpecializedMulMatrixMatrixWithoutBuffer(&hResult->stTransformMatrix,\n                                                         &_hA->stTransformMatrix,\n                                                         &_hB->stTransformMatrix);\n    }\n    else if (bComposeTranslations)\n    {\n        MTH4D_fn_vMulMatrixVertexWithoutBuffer(&hResult->stTransformMatrix.stCol_3,\n                                               &_hA->stTransformMatrix,\n                                               &_hB->stTransformMatrix.stCol_3);\n        hResult->stTransformMatrix.stCol_3.xW = 1.0f;\n    }\n\n    if (bTestScale)\n    {\n        uiTotal++;\n        switch (hResult->eType)\n        {\n        case MAT_eTransform_Scale:\n            bEqual = (MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) ? ((MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f) ? 1 : 0) : 0;\n            if (bEqual)\n            {\n                hResult->eType = MAT_eTransform_Zoom;\n                uiSimplification++;\n            }\n        case MAT_eTransform_Zoom:\n            if (MTH_xAbs(hResult->stScaleVector.xX - 1.0f) < 0.0001f)\n            {\n                hResult->eType = MAT_eTransform_Translation;\n                uiSimplification++;\n            }\n            break;\n\n        case MAT_eTransform_RotationScale:\n            bEqual = (MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) ? ((MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f) ? 1 : 0) : 0;\n            if (bEqual)\n            {\n                hResult->eType = MAT_eTransform_RotationZoom;\n                uiSimplification++;\n            }\n        case MAT_eTransform_RotationZoom:\n            if (MTH_xAbs(hResult->stScaleVector.xX - 1.0f) < 0.0001f)\n            {\n                uiSimplification++;\n                hResult->eType = MAT_eTransform_Rotation;\n            }\n            break;\n\n        case MAT_eTransform_Uninitialized:\n        case MAT_eTransform_Identity:\n        case MAT_eTransform_Translation:\n        case MAT_eTransform_Rotation:\n        case MAT_eTransform_ComplexRotationScale:\n        default:\n            break;\n        }\n    }\n\n    if (_hDest != hResult)\n    {\n        MAT_COPY_TRANSFORMATION(_hDest, hResult);\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "MAT_fn_vCompose",
+      "reason": "Size 2000/2000 and relocations exact. Residuals: MAT_COPY_VECTOR needs X,Y,Z,W in f3,f2,f1,f0 (24 setter orders and local orders tried, best has X/W swapped); epsilon test needs daddiu 1 in the bc1f delay slot then b/nop/move zero",
+      "size": 2000,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MISMATCH",
+      "target_size": 2000,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0016be70",
+      "candidate_size": 600,
+      "first_difference": 145,
+      "implementation": "void PS2glUpdateTexIndex(int iLevelByTexSize);\nvoid PS2glFreeTexBlockSafe(int iBlock, int iSize)\n{\n    g_PS2glContext.abTex1DChanged[0] = 1;\n    g_PS2glContext.abTex2DChanged[0] = 1;\n    g_PS2glContext.abTex1DChanged[1] = 1;\n    g_PS2glContext.abTex2DChanged[1] = 1;\n    g_PS2glContext.bTexCubeChanged = 1;\n    PS2glFreeTexBlock(iBlock, iSize);\n    PS2glUpdateTexIndex(-1);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PS2glUpdateTexIndex",
+      "reason": "600/600 bytes, relocs ok; 7 register rows: retail gives the moved-count local s4 and the i*4 induction s3, candidate swaps them. Declaration swaps did not fix it; permuter stopped at user request with no improvement on base 40.",
+      "size": 600,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MISMATCH",
+      "target_size": 600,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00174a70",
+      "candidate_size": 1044,
+      "first_difference": 113,
+      "implementation": "void impPS2glTexSubImage1D(unsigned int target, int level, int xoffset, int width, unsigned int format, unsigned int type, void* pixels)\n{\n    PS2glTexSubImage(target, level, xoffset, 0, width, 1, format, type, pixels);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "impPS2glTexSubImage1D",
+      "reason": "Inlined PS2glTexSubImage helper; residual is only the image-slot getter: retail keeps pTex in a1, merges the result in a0, and hoists sll level,2 into the null-check delay slot with unfolded addiu 0x24/addu. Result-variable and int-cast spellings did not reproduce it.",
+      "size": 1040,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MISMATCH",
+      "target_size": 1040,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00174610",
+      "candidate_size": 1064,
+      "first_difference": 76,
+      "implementation": "void impPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int width, int height, unsigned int format, unsigned int type, void* pixels)\n{\n    PS2glTexSubImage(target, level, xoffset, yoffset, width, height, format, type, pixels);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "impPS2glTexSubImage2D",
+      "reason": "1060/1120 via same helper. Retail standalone 2D leaves branch delay slots as nop and keeps dead moves after branches, while the inlined 1D copy fills them, so the 2D body is probably written out with separate lines (map shows 1159-1170) and not through the helper.",
+      "size": 1120,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MISMATCH",
+      "target_size": 1120,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0016a540",
+      "candidate_size": 1756,
+      "first_difference": 125,
+      "implementation": "void impPS2glColorSubTableEXT(unsigned int target, int start, int count, unsigned int format, unsigned int type, unsigned int* pSrcData)\n{\n    unsigned int eInternalTarget;\n    unsigned int* pDstData;\n    int i;\n    int width;\n    union { unsigned char c[4]; unsigned int u; } aTemp;\n    unsigned char* pbDstData;\n    tag_GLtexture* pTexture;\n\n    eInternalTarget = target;\n    switch (target)\n    {\n    case 0x8515:\n    case 0x8516:\n    case 0x8517:\n    case 0x8518:\n    case 0x8519:\n    case 0x851A:\n        eInternalTarget = 0x8513;\n        break;\n    }\n\n    if (eInternalTarget == 0x81FB)\n    {\n        g_PS2glContext.bClutResident = 0;\n        width = g_PS2glContext.iClutSize;\n        pDstData = (unsigned int*)g_PS2glContext.clut + start;\n    }\n    else\n    {\n        pTexture = PS2glGetTargetTexture(eInternalTarget);\n        width = pTexture->iClutSize;\n        pDstData = (unsigned int*)pTexture->clut + start;\n    }\n\n    if (start < 0 || count <= 0 || start + count > width)\n        return;\n\n    switch (format)\n    {\n    case 0x1907:\n        aTemp.c[3] = 0x80;\n        if (width == 16)\n        {\n            for (i = 0; i < count; i++)\n            {\n                memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);\n                pDstData[i] = aTemp.u;\n            }\n        }\n        else\n        {\n            for (i = 0; i < count; i++)\n            {\n                if ((i & 8) && !(i & 0x10))\n                {\n                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);\n                    pDstData[i + 8] = aTemp.u;\n                }\n                else if (!(i & 8) && (i & 0x10))\n                {\n                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);\n                    pDstData[i - 8] = aTemp.u;\n                }\n                else\n                {\n                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);\n                    pDstData[i] = aTemp.u;\n                }\n            }\n        }\n        break;\n    case 0x1908:\n        if (width == 16)\n        {\n            for (i = 0; i < count; i++)\n                pDstData[i] = pSrcData[i];\n        }\n        else if (g_PS2glContext.eClutConvMode == 0)\n        {\n            for (i = 0; i < count; i++)\n            {\n                if ((i & 8) && !(i & 0x10))\n                    pDstData[i + 8] = pSrcData[i];\n                else if (!(i & 8) && (i & 0x10))\n                    pDstData[i - 8] = pSrcData[i];\n                else\n                    pDstData[i] = pSrcData[i];\n            }\n        }\n        if (g_PS2glContext.eClutConvMode != 2 && g_PS2glContext.bAlphaChannelReduce == 1)\n        {\n            pbDstData = (unsigned char*)pDstData + 3;\n            for (i = 0; i < width; i++)\n            {\n                if (*pbDstData == 0xFF)\n                    *pbDstData = 0x80;\n                else\n                    *pbDstData >>= 1;\n                pbDstData += 4;\n            }\n        }\n        break;\n    }\n\n    switch (eInternalTarget)\n    {\n    case 0xDE0:\n        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;\n        PS2glTexUnloadName(g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]);\n        break;\n    case 0xDE1:\n        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;\n        PS2glTexUnloadName(g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]);\n        break;\n    case 0x8513:\n        g_PS2glContext.bTexCubeChanged = 1;\n        PS2glTexUnloadName(g_PS2glContext.nCurTexNameCube);\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "impPS2glColorSubTableEXT",
+      "reason": "1756/1756 bytes and relocs ok; 11 register rows only, a0/a1 swapped between the scaled start and the clut pointer. Declaration and pointer spellings do not change it.",
+      "size": 1756,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MISMATCH",
+      "target_size": 1756,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00174a70",
+      "candidate_size": 1040,
+      "first_difference": 370,
+      "implementation": "void impPS2glTexSubImage1D(unsigned int target, int level, int xoffset, int width, unsigned int format, unsigned int type, void* pixels)\n{\n    PS2glTexSubImage(target, level, xoffset, 0, width, 1, format, type, pixels);\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "impPS2glTexSubImage1D",
+      "reason": "One word left: retail 'addu slot,base,scaled' at the image-slot address, candidate 'addu slot,scaled,base'; MWCC canonicalises integer-first (see insight on pointer + unsigned offset). All other bytes match.",
+      "size": 1040,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MISMATCH",
+      "target_size": 1040,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00174610",
+      "candidate_size": 1120,
+      "first_difference": 386,
+      "implementation": "void impPS2glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int width, int height, unsigned int format, unsigned int type, void* pixels)\n{\n    tag_GLtexture_image* pTexImage;\n\n    pTexImage = PS2glGetTargetTexImage(target, level);\n    if (!pTexImage)\n        return;\n    if (xoffset < 0 || yoffset < 0 || width <= 0 || xoffset + width > pTexImage->width || yoffset + height > pTexImage->height)\n        return;\n    if (pTexImage->target == 0x8513)\n        yoffset += (target - 0x8515) * height;\n    PS2glTexCopyImage(pTexImage, (unsigned char*)pixels, xoffset, yoffset, width, height, 0, format, type);\n    PS2glTexUnload(target);\n    PS2glTexMarkChanged(target);\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "impPS2glTexSubImage2D",
+      "reason": "One word left: retail 'addu slot,base,scaled' at the image-slot address, candidate 'addu slot,scaled,base'; MWCC canonicalises integer-first (see insight on pointer + unsigned offset). All other bytes match.",
+      "size": 1120,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MISMATCH",
+      "target_size": 1120,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0016ce30",
+      "candidate_size": 2380,
+      "first_difference": 846,
+      "implementation": "void impPS2glTexImage2D(unsigned int target, int level, int components, int width, int height, int border, unsigned int format, unsigned int type, void* pixels)\n{\n    unsigned int eInternalTarget;\n    int iInternalWidth;\n    int iInternalHeight;\n    unsigned int eInternalFormat;\n    int yOffset;\n    unsigned char* pOriginalTexture;\n    tag_GLtexture_image* pTexImage;\n\n    eInternalTarget = target;\n\n    switch (format)\n    {\n    case 0x80E4:\n        eInternalFormat = 0x80E4;\n        break;\n    case 0x80E5:\n    case 0x1900:\n        eInternalFormat = 0x80E5;\n        break;\n    case 0x2A10:\n    case 0x8055:\n    case 0x804F:\n    case 0x8050:\n    case 0x8056:\n    case 0x8057:\n        eInternalFormat = 0x8057;\n        break;\n    case 0x1909:\n    case 0x1903:\n    case 0x1904:\n    case 0x1905:\n    case 0x1907:\n        eInternalFormat = 0x8051;\n        break;\n    case 0x1906:\n    case 0x1908:\n    case 0x80E0:\n    case 0x80E1:\n    case 0x190A:\n        eInternalFormat = 0x8058;\n        break;\n    default:\n        eInternalFormat = 0x8051;\n        break;\n    }\n\n    iInternalWidth = width - border * 2;\n    iInternalHeight = height - border * 2;\n\n    switch (target)\n    {\n    case 0xDE0:\n        if (height != 1)\n            return;\n        break;\n    case 0xDE1:\n        break;\n    case 0x8515:\n    case 0x8516:\n    case 0x8517:\n    case 0x8518:\n    case 0x8519:\n    case 0x851A:\n        eInternalTarget = 0x8513;\n        if (eInternalFormat == 0x8051)\n            eInternalFormat = 0x8058;\n        break;\n    default:\n        return;\n    }\n\n    pTexImage = PS2glGetTargetTexImage(eInternalTarget, level);\n    if (!pTexImage)\n        return;\n\n    pTexImage->inputComponents = components;\n    pTexImage->format = eInternalFormat;\n    pTexImage->width = iInternalWidth;\n    pTexImage->height = iInternalHeight;\n    pTexImage->target = eInternalTarget;\n    pTexImage->bConverted = 0;\n\n    if (pixels)\n    {\n        yOffset = 0;\n        if (eInternalTarget == 0x8513)\n            yOffset = (target - 0x8515) * height;\n\n        if (g_PS2glContext.eTexUserMaintainMode && eInternalTarget != 0x8513)\n        {\n            pTexImage->pixels = pixels;\n            if (g_PS2glContext.eTexUserMaintainMode == 2)\n                pTexImage->bUserMaintain = 1;\n            else\n                pTexImage->bUserMaintain = 0;\n        }\n        else\n        {\n            PS2glTexCopyImage(pTexImage, (unsigned char*)pixels, 0, yOffset, width, height, border, format, type);\n            pTexImage->bUserMaintain = 0;\n        }\n\n        if (g_PS2glContext.eTexConvMode && eInternalTarget != 0x8513)\n        {\n            if (pTexImage->format == 0x80E5)\n            {\n                if (g_PS2glContext.eTexConvMode >= 3)\n                {\n                    if (g_PS2glContext.eTexConvMode == 4)\n                    {\n                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x40)\n                            pTexImage->bConverted = 1;\n                    }\n                    else\n                    {\n                        if (pTexImage->width >= 2 && pTexImage->height >= 2)\n                            pTexImage->bConverted = 1;\n                    }\n                }\n                else\n                {\n                    if (g_PS2glContext.eTexConvMode == 2)\n                    {\n                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x40)\n                            pTexImage->bConverted = 1;\n                    }\n                    else\n                    {\n                        if (pTexImage->width >= 2 && pTexImage->height >= 2)\n                            pTexImage->bConverted = 1;\n                    }\n                    if (pTexImage->bConverted == 1)\n                    {\n                        pOriginalTexture = (unsigned char*)pTexImage->pixels;\n                        pTexImage->pixels = ((void* (*)(int))PS2glAllocator64)(pTexImage->width * pTexImage->height);\n                        PS2glTexImageConv8to32(pTexImage->width, pTexImage->height, pOriginalTexture, pTexImage->pixels);\n                        if (!g_PS2glContext.eTexUserMaintainMode)\n                        {\n                            PS2glLiberator(pOriginalTexture);\n                        }\n                        else\n                        {\n                            memcpy(pOriginalTexture, pTexImage->pixels, pTexImage->width * pTexImage->height);\n                            PS2glLiberator(pTexImage->pixels);\n                            pTexImage->pixels = pOriginalTexture;\n                        }\n                    }\n                }\n            }\n            else if (pTexImage->format == 0x80E4)\n            {\n                if (g_PS2glContext.eTexConvMode >= 3)\n                {\n                    if (g_PS2glContext.eTexConvMode == 4)\n                    {\n                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x80)\n                            pTexImage->bConverted = 1;\n                    }\n                    else\n                    {\n                        if (pTexImage->width >= 2 && pTexImage->height >= 4)\n                            pTexImage->bConverted = 1;\n                    }\n                }\n                else\n                {\n                    if (g_PS2glContext.eTexConvMode == 2)\n                    {\n                        if (pTexImage->width >= 0x80 && pTexImage->height >= 0x80)\n                            pTexImage->bConverted = 1;\n                    }\n                    else\n                    {\n                        if (pTexImage->width >= 2 && pTexImage->height >= 4)\n                            pTexImage->bConverted = 1;\n                    }\n                    if (pTexImage->bConverted == 1)\n                    {\n                        pOriginalTexture = (unsigned char*)pTexImage->pixels;\n                        pTexImage->pixels = ((void* (*)(int))PS2glAllocator64)((pTexImage->width * pTexImage->height) >> 1);\n                        PS2glTexImageConv4to32(pTexImage->width, pTexImage->height, pOriginalTexture, pTexImage->pixels);\n                        if (!g_PS2glContext.eTexUserMaintainMode)\n                        {\n                            PS2glLiberator(pOriginalTexture);\n                        }\n                        else\n                        {\n                            memcpy(pOriginalTexture, pTexImage->pixels, (pTexImage->width * pTexImage->height) >> 1);\n                            PS2glLiberator(pTexImage->pixels);\n                            pTexImage->pixels = pOriginalTexture;\n                        }\n                    }\n                }\n            }\n        }\n    }\n\n    switch (eInternalTarget)\n    {\n    case 0xDE0:\n        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;\n        PS2glTexUnloadName(g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]);\n        break;\n    case 0xDE1:\n        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;\n        PS2glTexUnloadName(g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]);\n        break;\n    case 0x8513:\n        g_PS2glContext.bTexCubeChanged = 1;\n        PS2glTexUnloadName(g_PS2glContext.nCurTexNameCube);\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "impPS2glTexImage2D",
+      "reason": "One word left: retail 'addu slot,base,scaled' at the image-slot address, candidate 'addu slot,scaled,base'; MWCC canonicalises integer-first (see insight on pointer + unsigned offset). All other bytes match.",
+      "size": 2380,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MISMATCH",
+      "target_size": 2380,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0016a540",
+      "candidate_size": 1756,
+      "first_difference": 154,
+      "implementation": "void impPS2glColorSubTableEXT(unsigned int target, int start, int count, unsigned int format, unsigned int type, unsigned int* pSrcData)\n{\n    unsigned int eInternalTarget;\n    unsigned int* pDstData;\n    int i;\n    int width;\n    union { unsigned char c[4]; unsigned int u; } aTemp;\n    unsigned char* pbDstData;\n    tag_GLtexture* pTexture;\n\n    eInternalTarget = target;\n    switch (target)\n    {\n    case 0x8515:\n    case 0x8516:\n    case 0x8517:\n    case 0x8518:\n    case 0x8519:\n    case 0x851A:\n        eInternalTarget = 0x8513;\n        break;\n    }\n\n    if (eInternalTarget == 0x81FB)\n    {\n        g_PS2glContext.bClutResident = 0;\n        width = g_PS2glContext.iClutSize;\n        pDstData = (unsigned int*)((start << 2) + (int)g_PS2glContext.clut);\n    }\n    else\n    {\n        pTexture = PS2glGetTargetTexture(eInternalTarget);\n        width = pTexture->iClutSize;\n        pDstData = (unsigned int*)((start << 2) + (int)pTexture->clut);\n    }\n\n    if (start < 0 || count <= 0 || start + count > width)\n        return;\n\n    switch (format)\n    {\n    case 0x1907:\n        aTemp.c[3] = 0x80;\n        if (width == 16)\n        {\n            for (i = 0; i < count; i++)\n            {\n                memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);\n                pDstData[i] = aTemp.u;\n            }\n        }\n        else\n        {\n            for (i = 0; i < count; i++)\n            {\n                if ((i & 8) && !(i & 0x10))\n                {\n                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);\n                    pDstData[i + 8] = aTemp.u;\n                }\n                else if (!(i & 8) && (i & 0x10))\n                {\n                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);\n                    pDstData[i - 8] = aTemp.u;\n                }\n                else\n                {\n                    memcpy(aTemp.c, (unsigned char*)pSrcData + (i + i * 2), 3);\n                    pDstData[i] = aTemp.u;\n                }\n            }\n        }\n        break;\n    case 0x1908:\n        if (width == 16)\n        {\n            for (i = 0; i < count; i++)\n                pDstData[i] = pSrcData[i];\n        }\n        else if (g_PS2glContext.eClutConvMode == 0)\n        {\n            for (i = 0; i < count; i++)\n            {\n                if ((i & 8) && !(i & 0x10))\n                    pDstData[i + 8] = pSrcData[i];\n                else if (!(i & 8) && (i & 0x10))\n                    pDstData[i - 8] = pSrcData[i];\n                else\n                    pDstData[i] = pSrcData[i];\n            }\n        }\n        if (g_PS2glContext.eClutConvMode != 2 && g_PS2glContext.bAlphaChannelReduce == 1)\n        {\n            pbDstData = (unsigned char*)pDstData + 3;\n            for (i = 0; i < width; i++)\n            {\n                if (*pbDstData == 0xFF)\n                    *pbDstData = 0x80;\n                else\n                    *pbDstData >>= 1;\n                pbDstData += 4;\n            }\n        }\n        break;\n    }\n\n    switch (eInternalTarget)\n    {\n    case 0xDE0:\n        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;\n        PS2glTexUnloadName(g_PS2glContext.anCurTexName1D[g_PS2glContext.iCurTextureSet]);\n        break;\n    case 0xDE1:\n        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;\n        PS2glTexUnloadName(g_PS2glContext.anCurTexName2D[g_PS2glContext.iCurTextureSet]);\n        break;\n    case 0x8513:\n        g_PS2glContext.bTexCubeChanged = 1;\n        PS2glTexUnloadName(g_PS2glContext.nCurTexNameCube);\n        break;\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "impPS2glColorSubTableEXT",
+      "reason": "One word left in each of two branches: retail 'addu dst,clut,scaled', candidate 'addu dst,scaled,clut'; same canonicalisation as the TexImage image slot.",
+      "size": 1756,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MISMATCH",
+      "target_size": 1756,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0016b2f0",
+      "candidate_size": 2244,
+      "first_difference": 104,
+      "implementation": "int PS2glAllocTexMem(int iTexSize, unsigned int nTexID);\nvoid PS2glTexUpdateClut(tag_GLtexture* pTexture, unsigned int uiAddress);\nvoid PS2glTexUpdateImage(tag_GLtexture_image* pTexImage, unsigned int level, unsigned char bResident);\n\ninline void PS2glTexUnloadName(unsigned int nName)\n{\n    tagGLtexname* pName;\n    int iSize;\n\n    pName = &g_PS2glContext.aTexName[nName];\n    if (pName->bResident)\n    {\n        iSize = g_PS2glContext.aBlockMap[pName->iTexBlock].nLength;\n        if (PS2glFreeTexBlock(pName->iTexBlock, -1))\n            PS2glUpdateTexIndex(iSize);\n    }\n    pName->bResident = 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "PS2glAllocTexMem",
+      "reason": "2244/2256: control flow, calls and relocations right. Residual: the final else-block index and count update (retail keeps count and base addresses in v1/a0, 3 instructions longer) and register numbering in the small-texture split branch.",
+      "size": 2256,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MISMATCH",
+      "target_size": 2256,
+      "unresolved_relocations": []
     }
   ],
   "data": {},
@@ -56672,6 +57341,46 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PushPopAttrib.c",
       "status": "MATCH"
     },
+    "0x00169d60": {
+      "address": "0x00169d60",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glGetColorTableParameterfvEXT",
+      "size": 424,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x00169f10": {
+      "address": "0x00169f10",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glGetColorTableParameterivEXT",
+      "size": 484,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x0016a100": {
+      "address": "0x0016a100",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glGetColorTableEXT",
+      "size": 1080,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x0016ac20": {
+      "address": "0x0016ac20",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glColorTableEXT",
+      "size": 1744,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x0016bbc0": {
+      "address": "0x0016bbc0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glFreeTexBlock",
+      "size": 600,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
     "0x0016be20": {
       "address": "0x0016be20",
       "compiler_profile": "mwccps2-3.0-011126-o3",
@@ -56680,11 +57389,83 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
     },
+    "0x0016c0d0": {
+      "address": "0x0016c0d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glTexParameteriv",
+      "size": 1144,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x0016c550": {
+      "address": "0x0016c550",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glTexParameterfv",
+      "size": 1084,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x0016c990": {
+      "address": "0x0016c990",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glTexParameterf",
+      "size": 596,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x0016cbf0": {
+      "address": "0x0016cbf0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glTexParameteri",
+      "size": 572,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
     "0x0016d780": {
       "address": "0x0016d780",
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glTexImage1D",
       "size": 48,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x0016edc0": {
+      "address": "0x0016edc0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glUpdateTexture",
+      "size": 1928,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x0016f550": {
+      "address": "0x0016f550",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glUpdateScreenTexture",
+      "size": 1016,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x0016f950": {
+      "address": "0x0016f950",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glTexUpdateClut",
+      "size": 416,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x00173b40": {
+      "address": "0x00173b40",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "GsTransferTexture",
+      "size": 364,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x00173cb0": {
+      "address": "0x00173cb0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glUpdateTexParameter",
+      "size": 1016,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
     },
@@ -56733,6 +57514,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
       "name": "impPS2glTexGeni",
       "size": 100,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x001744b0": {
+      "address": "0x001744b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glTexEnviv",
+      "size": 148,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
     },
@@ -56808,6 +57597,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
     },
+    "0x001750e0": {
+      "address": "0x001750e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "impPS2glAreTexturesResident",
+      "size": 136,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
     "0x00175170": {
       "address": "0x00175170",
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
@@ -56837,6 +57634,38 @@
       "compiler_profile": "mwccps2-3.0-011126-o3",
       "name": "impPS2glIsTexture",
       "size": 56,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x00175410": {
+      "address": "0x00175410",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glTexImageConv8to32",
+      "size": 692,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x001756d0": {
+      "address": "0x001756d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glTexImageConv4to32",
+      "size": 708,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x001759a0": {
+      "address": "0x001759a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PageConv8to32",
+      "size": 884,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
+      "status": "MATCH"
+    },
+    "0x00175d20": {
+      "address": "0x00175d20",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PageConv4to32",
+      "size": 884,
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Texture.c",
       "status": "MATCH"
     },
@@ -59088,6 +59917,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
       "status": "MATCH"
     },
+    "0x001cd630": {
+      "address": "0x001cd630",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_VID_fn_vInitVideoSound",
+      "size": 272,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
+      "status": "MATCH"
+    },
     "0x001cd740": {
       "address": "0x001cd740",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -59104,11 +59941,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
       "status": "MATCH"
     },
+    "0x001cd7f0": {
+      "address": "0x001cd7f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_VID_fn_iAddIOPData",
+      "size": 380,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
+      "status": "MATCH"
+    },
+    "0x001cd970": {
+      "address": "0x001cd970",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_iTransferIOPData__FPvUi",
+      "size": 384,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeevid.cpp",
+      "status": "MATCH"
+    },
     "0x001cdaf0": {
       "address": "0x001cdaf0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "f_vSalvageActor__20CExtraEventActorPoolFP16CExtraEventActor",
       "size": 68,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cdb40": {
+      "address": "0x001cdb40",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fs_poGetAnActor__20CExtraEventActorPoolFi",
+      "size": 244,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
       "status": "MATCH"
     },
@@ -59173,6 +60034,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "__dt__16CExtraEventActorFv",
       "size": 264,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cef60": {
+      "address": "0x001cef60",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "f_vInit__16CExtraEventActorFRC14CLinkTypeActoriiPCQ24usnd13CEventResData",
+      "size": 632,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
       "status": "MATCH"
     },
@@ -59253,6 +60122,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "SND_fn_p_stGetMusicMarkerSlots",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001cf460": {
+      "address": "0x001cf460",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fv_vVarChanged__23CMusicMarkerNotifTargetFRQ24usnd4CVar",
+      "size": 412,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndcextraeventactor.cpp",
       "status": "MATCH"
     },
@@ -62592,11 +63469,43 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Act.c",
       "status": "MATCH"
     },
+    "0x00203190": {
+      "address": "0x00203190",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_vUpdateGeneralCamera",
+      "size": 1928,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MATCH"
+    },
+    "0x00203920": {
+      "address": "0x00203920",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_vConstraintMove",
+      "size": 208,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MATCH"
+    },
+    "0x00203cc0": {
+      "address": "0x00203cc0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_cConstraintMoveCutTestAngle",
+      "size": 824,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MATCH"
+    },
     "0x00204a50": {
       "address": "0x00204a50",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CAM_fn_vComputeMovePosWithDynTheta",
       "size": 108,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MATCH"
+    },
+    "0x00204f10": {
+      "address": "0x00204f10",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_cDynChangeTheta",
+      "size": 612,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
       "status": "MATCH"
     },
@@ -62608,6 +63517,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
       "status": "MATCH"
     },
+    "0x002052b0": {
+      "address": "0x002052b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_vRotateCameraAxis",
+      "size": 320,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MATCH"
+    },
     "0x002053f0": {
       "address": "0x002053f0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -62616,11 +63533,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
       "status": "MATCH"
     },
+    "0x00205500": {
+      "address": "0x00205500",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_vBoundAngleWithTolerance",
+      "size": 556,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MATCH"
+    },
+    "0x00205730": {
+      "address": "0x00205730",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_vComputeTarget",
+      "size": 408,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MATCH"
+    },
     "0x002058d0": {
       "address": "0x002058d0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CAM_fn_vComputeReferencePoint",
       "size": 300,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
+      "status": "MATCH"
+    },
+    "0x00205a00": {
+      "address": "0x00205a00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "CAM_fn_vComputeTargetedPersoPos",
+      "size": 484,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Base.c",
       "status": "MATCH"
     },
@@ -72280,11 +73221,59 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/PC/DspFix.c",
       "status": "MATCH"
     },
+    "0x00282da0": {
+      "address": "0x00282da0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DEMO_fn_vReadDemoTableFile",
+      "size": 356,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MATCH"
+    },
     "0x00282f10": {
       "address": "0x00282f10",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "DEMO_fn_vDesInitGame",
       "size": 8,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MATCH"
+    },
+    "0x00282f20": {
+      "address": "0x00282f20",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DEMO_fn_bUpdateDynamicHierarchy",
+      "size": 552,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MATCH"
+    },
+    "0x00283150": {
+      "address": "0x00283150",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DEMO_fn_vMoveModuleDelayedHandling",
+      "size": 592,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MATCH"
+    },
+    "0x002833a0": {
+      "address": "0x002833a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DEMO_fn_vReadOneCompleteStateUpdate",
+      "size": 760,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MATCH"
+    },
+    "0x00284020": {
+      "address": "0x00284020",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DEMO_fn_vReadAlwaysActivationDesactivation",
+      "size": 392,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
+      "status": "MATCH"
+    },
+    "0x002841b0": {
+      "address": "0x002841b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "DEMO_fn_vReadAndChangeActivationDesactivation",
+      "size": 528,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/Demos.c",
       "status": "MATCH"
     },
@@ -80032,6 +81021,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsppla.c",
       "status": "MATCH"
     },
+    "0x002fa270": {
+      "address": "0x002fa270",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "MAT_fn_vInitTransformationWithNonDiagonalScale",
+      "size": 416,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MATCH"
+    },
     "0x002fa460": {
       "address": "0x002fa460",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -80048,11 +81045,67 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
       "status": "MATCH"
     },
+    "0x002fac50": {
+      "address": "0x002fac50",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MAT_fn_vInitTransformationAndType",
+      "size": 476,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MATCH"
+    },
     "0x002fae30": {
       "address": "0x002fae30",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MAT_fn_vTranslate",
       "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MATCH"
+    },
+    "0x002faec0": {
+      "address": "0x002faec0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MAT_fn_vComposeWithoutTranslation",
+      "size": 2480,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MATCH"
+    },
+    "0x002fb870": {
+      "address": "0x002fb870",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MAT_fn_vCompose",
+      "size": 2000,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MATCH"
+    },
+    "0x002fc070": {
+      "address": "0x002fc070",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MAT_fn_vFastInvert",
+      "size": 1848,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MATCH"
+    },
+    "0x002fc7b0": {
+      "address": "0x002fc7b0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MAT_fn_vInvert",
+      "size": 1908,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MATCH"
+    },
+    "0x002fcf30": {
+      "address": "0x002fcf30",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MAT_fn_vRotateVector",
+      "size": 1084,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
+      "status": "MATCH"
+    },
+    "0x002fd370": {
+      "address": "0x002fd370",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MAT_fn_vApplyOnVector",
+      "size": 448,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c",
       "status": "MATCH"
     },
@@ -80440,6 +81493,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },
+    "0x003111f0": {
+      "address": "0x003111f0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MEC_fn_vNormalMode",
+      "size": 200,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x003112c0": {
+      "address": "0x003112c0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MEC_fn_vSlowMode",
+      "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x00311390": {
+      "address": "0x00311390",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MEC_fn_bNoMove",
+      "size": 408,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
     "0x00311530": {
       "address": "0x00311530",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -80488,11 +81565,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },
+    "0x003117d0": {
+      "address": "0x003117d0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MEC_fn_vDeleteHangingObstacle",
+      "size": 488,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
     "0x003119c0": {
       "address": "0x003119c0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MEC_fn_vDeleteNoCollidedGroundFace",
       "size": 160,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x00311a60": {
+      "address": "0x00311a60",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MEC_fn_vDeleteBaseBackFace",
+      "size": 1164,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },
@@ -80560,6 +81653,46 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },
+    "0x00312a30": {
+      "address": "0x00312a30",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MEC_fn_bDetectStep",
+      "size": 512,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x003134d0": {
+      "address": "0x003134d0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_bIsOneEdgeInCommon",
+      "size": 512,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x003136d0": {
+      "address": "0x003136d0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_bIsTheSameCollidedEdge",
+      "size": 472,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x00313a90": {
+      "address": "0x00313a90",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MEC_fn_vDeleteWallEdge",
+      "size": 496,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x00313c80": {
+      "address": "0x00313c80",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MEC_fn_vComputeCollisionTranslation",
+      "size": 440,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
     "0x00313e40": {
       "address": "0x00313e40",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -80581,6 +81714,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "MEC_fn_bDynamicsNeedCollide",
       "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
+      "status": "MATCH"
+    },
+    "0x00313ef0": {
+      "address": "0x00313ef0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MEC_fn_bCanCrashActor",
+      "size": 112,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c",
       "status": "MATCH"
     },

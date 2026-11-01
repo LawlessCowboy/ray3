@@ -234,3 +234,5 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/P
 # AI/AIGame/CAM_Proc.c: CAM_fn_p_stChangeConstants fixes 16 register rows only under
 # 3.0.3; the file's 18 recorded matches all hold.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c
+# matsp.c: +MAT_fn_vInitTransformationAndType (scheduling of the sqrt.s asm blocks), none of its 4 recorded matches lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/mat/matsp.c
