@@ -537,6 +537,8 @@ inline void GAM_vClearCop0Register24(void)
  * the flag away, so the scoped pragma below keeps it. */
 #pragma push
 #pragma opt_propagation off
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
 int readMpeg(anon_2* vd, anon_0* rb, anon_8* file, int interruptable)
 {
     int isPaused;
@@ -609,6 +611,8 @@ int readMpeg(anon_2* vd, anon_0* rb, anon_8* file, int interruptable)
     GAM_vClearCop0Register24();
     return 1;
 }
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
 #pragma pop
 
 int vagStop(void);

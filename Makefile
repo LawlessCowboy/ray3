@@ -18,7 +18,8 @@ OBJ_DIR := $(BUILD_DIR)/obj
 WIBO ?= wibo-x86_64
 MWCC ?= mwccps2.exe
 GAME_MWCC ?= $(MWCC)
-# Game files listed here build with 3.0.3 (2002-07-16) instead; see the file header.
+# Game files listed here build with 3.0.3 (2002-07-16) patched by
+# tools/patch_mwcc_303.py (Compiler/mwcps2-3.0.3-pad7b); see the file header.
 LATE_GAME_MWCC ?= $(GAME_MWCC)
 LATE_GAME_SOURCES := $(patsubst src/Rayman3/%,%,$(shell grep -v '^\#' config/compiler-3.0.3-sources.txt))
 # Library files that also take -O3,p (evidence in the list file).

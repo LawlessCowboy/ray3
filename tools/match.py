@@ -8,6 +8,7 @@ without reconstructing the game's final linker environment.
 
 from __future__ import annotations
 
+import bisect
 import argparse
 import contextlib
 import fcntl
@@ -62,7 +63,9 @@ DEFAULT_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0-011126' / 'mwccps2.exe'
 # PS2GL loses matches under the later builds, so the library stays on 3.0.
 # ``MWCC`` in the environment overrides both (probes, sweeps).
 GAME_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0.1-020123' / 'mwccps2.exe'
-LATE_GAME_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0.3-020716' / 'mwccps2.exe'
+# 3.0.3-020716 with the padloop limit raised from 6 to 7; retail's build was
+# never released. Built by tools/patch_mwcc_303.py.
+LATE_GAME_MWCC = ROOT / 'Compiler' / 'mwcps2-3.0.3-pad7b' / 'mwccps2.exe'
 LATE_GAME_SOURCES_PATH = ROOT / 'config' / 'compiler-3.0.3-sources.txt'
 # Library files that additionally take '-O3,p' (see that file for evidence).
 LIBRARY_O3P_SOURCES_PATH = ROOT / 'config' / 'library-O3p-sources.txt'
@@ -130,7 +133,7 @@ _LATE_GAME_SOURCES: set[str] | None = None
 
 
 def late_game_sources() -> set[str]:
-    """Game files built with 3.0.3 (config/compiler-3.0.3-sources.txt)."""
+    """Game files built with patched 3.0.3 (config/compiler-3.0.3-sources.txt)."""
     global _LATE_GAME_SOURCES
     if _LATE_GAME_SOURCES is None:
         lines = LATE_GAME_SOURCES_PATH.read_text().splitlines() if LATE_GAME_SOURCES_PATH.exists() else []
@@ -178,12 +181,12 @@ def owner_compiler(owner: Path | str) -> tuple[Path, str]:
     """(compiler, profile name) for a translation unit's owning source."""
     if not is_game_source(owner):
         if _relative_owner(owner) in library_303_sources():
-            return LATE_GAME_MWCC, 'mwccps2-3.0.3-020716-lib'
+            return LATE_GAME_MWCC, 'mwccps2-3.0.3-pad7b-lib'
         if _relative_owner(owner) in library_301_sources():
             return GAME_MWCC, 'mwccps2-3.0.1-020123-lib'
         return DEFAULT_MWCC, 'mwccps2-3.0-011126-o3'
     if _relative_owner(owner) in late_game_sources():
-        return LATE_GAME_MWCC, 'mwccps2-3.0.3-020716-o3'
+        return LATE_GAME_MWCC, 'mwccps2-3.0.3-pad7b-o3'
     return GAME_MWCC, 'mwccps2-3.0.1-020123-o3'
 
 
@@ -847,6 +850,74 @@ def _register_operands(instr) -> tuple[list, list, int]:
     return reads, writes, mask
 
 
+def nop_equivalent(candidate: bytes, target: bytes, anonymous_pairs: list[tuple[int, int, str]],
+                   object_matches) -> tuple[bool, str]:
+    """Decide whether two functions differ only by removable ``nop`` padding.
+
+    A ``nop`` is removable unless it fills a delay slot or follows an
+    instruction where it can be a required hazard gap (COP0/COP1 moves, HI/LO
+    access, sync).  What remains must be identical, with branches compared by
+    their target's position among the remaining instructions. ``anonymous_pairs``
+    lists unresolved (hi_offset, lo_offset, name) literal pairs, checked against
+    the retail words at their shifted offsets. Errs towards rejecting.
+    """
+    if len(candidate) % 4 or len(target) % 4 or rabbitizer is None:
+        return False, 'not word aligned'
+    category = rabbitizer.InstrCategory.R5900
+    def decode(code: bytes) -> list:
+        return [rabbitizer.Instruction(int.from_bytes(code[i:i + 4], 'little'), category=category)
+                for i in range(0, len(code), 4)]
+    hazard = ('mtc', 'mfc', 'ctc', 'cfc', 'mthi', 'mtlo', 'mfhi', 'mflo', 'sync', 'eret', 'tlb', 'di', 'ei', 'bc')
+    def kept(words: list) -> tuple[list[int], list[int]]:
+        keep, position = [], []
+        for index, word in enumerate(words):
+            position.append(len(keep))
+            previous = words[index - 1] if index else None
+            removable = (word.getRaw() == 0 and previous is not None
+                         and not previous.hasDelaySlot()
+                         and not previous.getOpcodeName().lower().startswith(hazard))
+            if not removable:
+                keep.append(index)
+        position.append(len(keep))
+        return keep, position
+    cand, targ = decode(candidate), decode(target)
+    cand_keep, cand_position = kept(cand)
+    targ_keep, targ_position = kept(targ)
+    if len(cand_keep) != len(targ_keep):
+        return False, 'different instructions after removing nops'
+    to_target = dict(zip(cand_keep, targ_keep))
+    skip: set[int] = set()
+    for hi, lo, name in anonymous_pairs:
+        hi_index, lo_index = hi // 4, lo // 4
+        if hi_index not in to_target or lo_index not in to_target:
+            return False, 'unresolved literal in removed code'
+        hi_word = targ[to_target[hi_index]].getRaw()
+        lo_word = targ[to_target[lo_index]].getRaw()
+        address = ((hi_word & 0xFFFF) << 16) + signed16(lo_word & 0xFFFF) & 0xFFFFFFFF
+        if not object_matches(name, address):
+            return False, f'literal {name} differs'
+        skip.update((hi_index, lo_index))
+    for ours, theirs in zip(cand_keep, targ_keep):
+        a, b = cand[ours], targ[theirs]
+        if a.isBranch() or b.isBranch():
+            mask = 0xFFFF0000
+            if not (a.isBranch() and b.isBranch()) or a.getRaw() & mask != b.getRaw() & mask:
+                return False, f'branch differs at +0x{ours * 4:x}'
+            a_to = ours + 1 + signed16(a.getRaw() & 0xFFFF)
+            b_to = theirs + 1 + signed16(b.getRaw() & 0xFFFF)
+            if not (0 <= a_to <= len(cand) and 0 <= b_to <= len(targ)):
+                return False, 'branch leaves the function'
+            if cand_position[a_to] != targ_position[b_to]:
+                return False, f'branch target differs at +0x{ours * 4:x}'
+        elif ours in skip:
+            if a.getRaw() & 0xFFFF0000 != b.getRaw() & 0xFFFF0000:
+                return False, f'instruction differs at +0x{ours * 4:x}'
+        elif a.getRaw() != b.getRaw():
+            return False, f'instruction differs at +0x{ours * 4:x}'
+    removed = (len(cand) - len(cand_keep), len(targ) - len(targ_keep))
+    return True, f'identical apart from nop padding ({removed[0]} removed from candidate, {removed[1]} from retail)'
+
+
 def register_equivalent(candidate: bytes, target: bytes,
                         register_jumps_are_tail_calls: bool = False) -> tuple[bool, str]:
     """Decide whether two functions differ only by a consistent register renaming.
@@ -1134,6 +1205,7 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
     # symbols so unresolved named globals still fail loudly.
     unresolved_by_key = {(entry['offset'], entry['type'], entry['symbol']): entry
                          for entry in unresolved}
+    patched_lo16: set[int] = set()
     for record, target_symbol in relocation_records:
         name = record['symbol']
         if target_symbol is None and name.startswith('@') and record['type'] in (7, 8):
@@ -1158,10 +1230,19 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
             continue
         # MWCC may schedule unrelated instructions between the HI16 and its
         # LO16, so pair with the nearest following LO16 of the same symbol.
+        # A LO16 already paired is skipped first: two HI16s of one literal can
+        # precede two LO16s when one HI16 sits in a branch delay slot. If none
+        # is free, several HI16s really do share one LO16 across a join.
         lo = min((other for other, other_target in relocation_records
                   if other['symbol'] == name and other['type'] == 6
-                  and other['offset'] > record['offset']),
+                  and other['offset'] > record['offset']
+                  and other['offset'] not in patched_lo16),
                  key=lambda other: other['offset'], default=None)
+        if lo is None:
+            lo = min((other for other, other_target in relocation_records
+                      if other['symbol'] == name and other['type'] == 6
+                      and other['offset'] > record['offset']),
+                     key=lambda other: other['offset'], default=None)
         if lo is None:
             # MWCC can also hoist the %hi into a branch delay slot, so the
             # HI16 may follow its LO16; pair with the nearest preceding one.
@@ -1176,8 +1257,11 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
             continue
         if not anonymous_object_matches(name, address, obj_sections, obj_symbols, sections):
             continue
+        # patch_relocation adds to the word's addend, so a LO16 is patched once.
         if (patch_relocation(candidate_bytes, record['offset'], 5, address, gp)
-                and patch_relocation(candidate_bytes, lo['offset'], 6, address, gp)):
+                and (lo['offset'] in patched_lo16
+                     or patch_relocation(candidate_bytes, lo['offset'], 6, address, gp))):
+            patched_lo16.add(lo['offset'])
             unresolved_by_key.pop((record['offset'], record['type'], name), None)
             unresolved_by_key.pop((lo['offset'], lo['type'], name), None)
     unresolved = list(unresolved_by_key.values())
@@ -1208,6 +1292,30 @@ def compare(entry: dict, verbose: bool = False, source_override: Path | None = N
                                                       register_jumps_are_tail_calls=no_tables)
         if equivalent:
             status = 'EQUIVALENT'
+    if status == 'MISMATCH' and rabbitizer is not None:
+        # Only anonymous literal pairs may stay unresolved, and switch tables
+        # (which hold shifted addresses) are refused by the literal check.
+        anonymous: list[tuple[int, int, str]] = []
+        lows = {}
+        for item in unresolved:
+            if item['type'] == 6:
+                lows.setdefault(item['symbol'], []).append(item['offset'])
+        usable = all(item['symbol'].startswith('@') and item['type'] in (5, 6) for item in unresolved)
+        for item in unresolved:
+            if not usable or item['type'] != 5:
+                continue
+            following = [low for low in lows.get(item['symbol'], []) if low > item['offset']]
+            if not following:
+                usable = False
+                break
+            anonymous.append((item['offset'], min(following), item['symbol']))
+        if usable and sum(len(v) for v in lows.values()) == len(anonymous):
+            equivalent, reason = nop_equivalent(
+                bytes(candidate_bytes), target_bytes, anonymous,
+                lambda name, address: anonymous_object_matches(name, address, obj_sections,
+                                                               obj_symbols, sections))
+            if equivalent:
+                status, equivalence = 'EQUIVALENT', reason
     first_difference = None
     for offset, (got, want) in enumerate(zip(candidate_bytes, target_bytes)):
         if got != want:
@@ -1347,6 +1455,225 @@ def code_category(entries: list[dict]) -> dict[int, str]:
     return categories
 
 
+def data_ownership() -> dict[int, dict]:
+    """Classify every initialised retail data object from the ``.relmain`` links.
+
+    Returns address -> {name, size, owners, scope}.  ``owners`` holds the
+    sources whose functions refer to the object, directly or through another
+    data object such as a pointer table.  ``scope`` is 'owned' (one source),
+    'shared' (several), 'unreferenced' (nothing links to it, so nothing shows
+    who owns it; kept in scope), or 'third-party' (only out-of-scope code, such
+    as the SDK or the C runtime, refers to it; excluded from coverage).
+    """
+    sections, symbols, main, _, _ = target_context()
+    entries = cached_source_index(symbols, main)
+    categories = code_category(entries)
+    objects: dict[int, dict] = {}
+    for symbol in symbols:
+        if (symbol.type == STT_OBJECT and symbol.size
+                and main.addr <= symbol.value < main.addr + main.size):
+            known = objects.get(symbol.value)
+            if known is None or symbol.size > known['size']:
+                objects[symbol.value] = {'name': symbol.name, 'size': symbol.size, 'owners': set(),
+                                         'external': False, 'parents': set()}
+    functions = sorted(entries, key=lambda entry: entry['address'])
+    function_starts = [entry['address'] for entry in functions]
+    object_starts = sorted(objects)
+
+    def containing_function(address: int) -> dict | None:
+        index = bisect.bisect_right(function_starts, address) - 1
+        if index >= 0 and address < functions[index]['address'] + functions[index]['size']:
+            return functions[index]
+        return None
+
+    def containing_object(address: int) -> int | None:
+        index = bisect.bisect_right(object_starts, address) - 1
+        if index >= 0 and address < object_starts[index] + objects[object_starts[index]]['size']:
+            return object_starts[index]
+        return None
+
+    relocations = next(section for section in sections if section.name == '.relmain')
+    for offset, symbol_index, _ in parse_relocations(relocations):
+        target = containing_object(symbols[symbol_index].value)
+        if target is None:
+            continue
+        function = containing_function(offset)
+        if function is not None:
+            address = function['address']
+            if function['source'] is None and categories[address] == 'library':
+                objects[target]['external'] = True
+            elif function['source'] is not None and not is_header_owned(function):
+                objects[target]['owners'].add(function['source'])
+            continue
+        parent = containing_object(offset)
+        if parent is not None and parent != target:
+            objects[target]['parents'].add(parent)
+    # A table's owner also owns what only the table points to.
+    changed = True
+    while changed:
+        changed = False
+        for item in objects.values():
+            if item['owners']:
+                continue
+            for parent in item['parents']:
+                if objects[parent]['owners']:
+                    item['owners'] |= objects[parent]['owners']
+                    changed = True
+    for item in objects.values():
+        external = item['external'] or any(objects[parent]['external'] for parent in item['parents'])
+        count = len(item['owners'])
+        item['scope'] = ('owned' if count == 1 else 'shared' if count else
+                         'third-party' if external else 'unreferenced')
+    return objects
+
+
+def data_scope_addresses(objects: dict[int, dict] | None = None) -> set[int]:
+    objects = data_ownership() if objects is None else objects
+    return {address for address, item in objects.items() if item['scope'] != 'third-party'}
+
+
+def _object_bytes(symbol: Symbol, obj_sections: list[Section]) -> bytes:
+    return obj_sections[symbol.shndx].data[symbol.value:symbol.value + symbol.size]
+
+
+def compare_data_object(address: int, item: dict, retail: bytes, obj_sections: list[Section],
+                        obj_symbols: list[Symbol], target_names: dict[str, Symbol],
+                        target_symbols: list[Symbol], sections: list[Section]) -> tuple[str, str]:
+    """Compare one retail data object with one compiled object: (status, reason).
+
+    Words a candidate relocation fills are compared by linked address, using
+    the absolute value the retail word already holds.
+    """
+    name = item['name']
+    anonymous = name.startswith('@')
+    if anonymous:
+        # @N numbering differs per compilation, so a literal pairs by content.
+        for symbol in obj_symbols:
+            if (symbol.name.startswith('@') and symbol.size == item['size']
+                    and 0 < symbol.shndx < len(obj_sections)
+                    and obj_sections[symbol.shndx].type != 8
+                    and _object_bytes(symbol, obj_sections) == retail):
+                return 'MATCH', ''
+        return 'MISMATCH', 'no byte-identical literal in this unit (or a relocated table)'
+    symbol = next((entry for entry in obj_symbols if entry.name == name), None)
+    if symbol is None and '$' in name:
+        statics = [entry for entry in obj_symbols if '$' in entry.name and entry.size == item['size']
+                   and local_static_base(entry.name) == local_static_base(name)]
+        symbol = statics[0] if len(statics) == 1 else None
+    if symbol is None:
+        return 'SKIP', 'not in this object'
+    if not 0 < symbol.shndx < len(obj_sections) or obj_sections[symbol.shndx].type == 8:
+        return 'SKIP', 'declared here without an initialiser'
+    if symbol.size != item['size']:
+        return 'MISMATCH', f"size {symbol.size}, retail {item['size']}"
+    candidate = bytearray(_object_bytes(symbol, obj_sections))
+    expected = bytearray(retail)
+    for section in obj_sections:
+        if section.type != 9 or section.info != symbol.shndx:
+            continue
+        for offset, symbol_index, reloc_type in parse_relocations(section):
+            position = offset - symbol.value
+            if not 0 <= position <= symbol.size - 4:
+                continue
+            if reloc_type != 2:
+                return 'MISMATCH', f'unhandled relocation type {reloc_type} at +{position:#x}'
+            referent = obj_symbols[symbol_index]
+            addend = struct.unpack_from('<I', candidate, position)[0]
+            retail_word = struct.unpack_from('<I', retail, position)[0]
+            linked = target_names.get(referent.name)
+            if referent.name.startswith('@') or not referent.name:
+                if not anonymous_object_matches(referent.name, (retail_word - addend) & 0xFFFFFFFF,
+                                                obj_sections, obj_symbols, sections):
+                    return 'MISMATCH', f'+{position:#x} points to a different literal'
+            else:
+                if linked is None and '$' in referent.name:
+                    linked = local_static_target(referent, target_symbols)
+                if linked is None or (linked.value + addend) & 0xFFFFFFFF != retail_word:
+                    return 'MISMATCH', f'+{position:#x} should point to {referent.name}+{addend:#x}'
+            candidate[position:position + 4] = b'\0\0\0\0'
+            expected[position:position + 4] = b'\0\0\0\0'
+    if candidate != expected:
+        first = next(index for index in range(len(candidate)) if candidate[index] != expected[index])
+        return 'MISMATCH', f'first difference at +{first:#x}'
+    return 'MATCH', ''
+
+
+def check_data_source(source: str, objects: dict[int, dict]) -> tuple[list[dict], str]:
+    """Compare the data objects one translation unit can own."""
+    sections, symbols, main, _, names = target_context()
+    obj_path, message = compile_source(ROOT / source, source)
+    if obj_path is None:
+        return [], message
+    obj_sections = read_sections(obj_path)
+    obj_symbols = parse_symbols(obj_sections)
+    rows = []
+    for address, item in sorted(objects.items()):
+        if source not in item['owners']:
+            continue
+        start = address - main.addr
+        retail = main.data[start:start + item['size']]
+        status, reason = compare_data_object(address, item, retail, obj_sections, obj_symbols,
+                                             names, symbols, sections)
+        rows.append({'address': address, 'name': item['name'], 'size': item['size'],
+                     'scope': item['scope'], 'status': status, 'reason': reason})
+    return rows, ''
+
+
+def command_check_data(args: argparse.Namespace) -> int:
+    _, symbols, main, _, _ = target_context()
+    objects = data_ownership()
+    manifest = load_manifest()
+    if args.recorded:
+        sources = sorted({record['source'] for record in manifest.get('data', {}).values()})
+    else:
+        if not args.source:
+            print('give a SOURCE or --recorded')
+            return 2
+        known = sorted({entry['source'] for entry in cached_source_index(symbols, main)
+                        if entry['source']})
+        sources = [source for source in known if source == args.source or args.source in source]
+        if len(sources) != 1:
+            print(f'{len(sources)} sources match {args.source!r}')
+            return 2
+    failed = False
+    matches = []
+    for source in sources:
+        rows, error = check_data_source(source, objects)
+        if error:
+            print(f'COMPILE_ERROR {source}\n{error}')
+            failed = True
+            continue
+        recorded = {record['address'] for record in manifest.get('data', {}).values()
+                    if record.get('status') == 'MATCH'}
+        totals = {'MATCH': 0, 'MISMATCH': 0, 'SKIP': 0}
+        for row in rows:
+            key = f"0x{row['address']:08x}"
+            totals[row['status']] += 1
+            if row['status'] == 'MATCH':
+                matches.append({'address': key, 'name': row['name'], 'size': row['size'],
+                                'source': source, 'status': 'MATCH',
+                                'compiler_profile': compiler_profile(source)})
+            elif key in recorded and manifest['data'][key].get('source') == source:
+                print(f"REGRESSED {key} {row['name']}: {row['reason']}")
+                failed = True
+            if args.recorded:
+                continue
+            if args.verbose or row['status'] == 'MISMATCH':
+                print(f"{row['status']:8s} {key} {row['size']:6d} {row['scope']:6s} "
+                      f"{row['name']}  {row['reason']}".rstrip())
+        print(f"{source}: match {totals['MATCH']}, mismatch {totals['MISMATCH']}, "
+              f"skipped {totals['SKIP']}")
+    if args.record and matches:
+        with manifest_lock():
+            manifest = load_manifest()
+            data = manifest.setdefault('data', {})
+            for record in matches:
+                data[record['address']] = record
+            save_manifest(manifest)
+        print(f'recorded {len(matches)} data objects')
+    return 1 if failed else 0
+
+
 def coverage() -> dict:
     _, symbols, main, _, _ = target_context()
     manifest = load_manifest()
@@ -1399,7 +1726,10 @@ def coverage() -> dict:
     scope_code = [span for span in scope_code if span[0] in scope_addresses]
     scope_data = [(s.value, s.value + s.size) for s in symbols if s.type == STT_OBJECT and s.size
                   and main.addr <= s.value < main.addr + main.size]
-    scope_data = [span for span in scope_data if span[0] in scope_addresses]
+    # Data has no source index entries: ownership comes from the .relmain links.
+    data_objects = data_ownership()
+    data_in_scope = data_scope_addresses(data_objects)
+    scope_data = [span for span in scope_data if span[0] in data_in_scope]
     return {
         'matched_functions': len([r for r in function_records if r.get('status') == 'MATCH'
                                   and int(r['address'], 16) in scope_addresses]),
@@ -1413,14 +1743,18 @@ def coverage() -> dict:
                                               if span[0] in scope_addresses]),
         'code_bytes_total': intervals_size(scope_code),
         'data_objects_matched': len([r for r in data_records if r.get('status') == 'MATCH'
-                                     and int(r['address'], 16) in scope_addresses]),
+                                     and int(r['address'], 16) in data_in_scope]),
         'data_objects_total': len({(s.value, s.size) for s in symbols if s.type == STT_OBJECT and s.size
                                    and main.addr <= s.value < main.addr + main.size
-                                   and s.value in scope_addresses}),
+                                   and s.value in data_in_scope}),
         'data_bytes_matched': intervals_size([span for span in matched_data
-                                              if span[0] in scope_addresses]),
+                                              if span[0] in data_in_scope]),
         'data_bytes_total': intervals_size(scope_data),
         'header_functions_excluded': len(header_addresses),
+        'third_party_data_objects_excluded': len(data_objects) - len(data_in_scope),
+        'data_by_scope': {scope: sum(item['size'] for item in data_objects.values()
+                                     if item['scope'] == scope)
+                          for scope in ('owned', 'shared', 'unreferenced', 'third-party')},
         'unowned_library_functions_excluded': len(unowned_library_addresses),
         'split': split,
     }
@@ -1442,6 +1776,12 @@ def print_coverage(result: dict) -> None:
     print(f"data bytes: {result['data_bytes_matched']}/{result['data_bytes_total']} "
           f"({pct(result['data_bytes_matched'], result['data_bytes_total'])})")
     print(f"data objects: {result['data_objects_matched']}/{result['data_objects_total']}")
+    scopes = result.get('data_by_scope', {})
+    if scopes:
+        print(f"  data bytes by owner: one unit {scopes['owned']}, shared {scopes['shared']}, "
+              f"unreferenced {scopes['unreferenced']}")
+        print(f"excluded (third-party data objects, out of scope): "
+              f"{result['third_party_data_objects_excluded']} ({scopes['third-party']} bytes)")
     if result.get('header_functions_excluded'):
         print(f"excluded (library header functions, out of scope): "
               f"{result['header_functions_excluded']}")
@@ -1747,7 +2087,20 @@ def command_check(args: argparse.Namespace) -> int:
         if not source_override.exists():
             print(f"COMPILE_ERROR {entry['name']}: no such source {args.source}")
             return 1
-    result = compare(entry, args.diff or args.diff_words, source_override=source_override)
+    candidate = getattr(args, 'candidate', None)
+    if candidate:
+        if source_override is not None:
+            print('--candidate and --source are mutually exclusive')
+            return 2
+        if args.record or args.record_equivalent or args.record_attempt:
+            print('--candidate never records: apply the change to the canonical source first')
+            return 2
+        source_override = Path(candidate).resolve()
+        if not source_override.exists():
+            print(f"COMPILE_ERROR {entry['name']}: no such candidate {candidate}")
+            return 1
+    result = compare(entry, args.diff or args.diff_words, source_override=source_override,
+                     owner=entry['source'] if candidate else None)
     if args.json:
         print(json.dumps(result, indent=2))
     elif result['status'] == 'COMPILE_ERROR':
@@ -2287,7 +2640,19 @@ def main() -> int:
         'compile this translation unit instead of the owning source; use it for '
         'template members the retail debug attributes to the defining header, '
         'whose instantiation lives in a using unit'))
+    check_parser.add_argument('--candidate', help=(
+        'compile this scratch copy of the owning source with the owner\'s compiler '
+        'and flags, wherever the copy lives; never records, and never touches the '
+        'canonical file'))
     check_parser.set_defaults(func=command_check)
+    check_data_parser = sub.add_parser('check-data',
+                                       help="compare a unit's data objects with the retail bytes")
+    check_data_parser.add_argument('source', nargs='?')
+    check_data_parser.add_argument('--record', action='store_true', help='record the matches')
+    check_data_parser.add_argument('--recorded', action='store_true',
+                                   help='recheck every source with recorded data')
+    check_data_parser.add_argument('--verbose', action='store_true', help='also list matches and skips')
+    check_data_parser.set_defaults(func=command_check_data)
     coverage_parser = sub.add_parser('coverage')
     coverage_parser.add_argument('--json', action='store_true')
     coverage_parser.set_defaults(func=command_coverage)

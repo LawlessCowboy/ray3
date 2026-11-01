@@ -3627,7 +3627,7 @@ inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransform
     MTH4D_tdstVector_* p_stVtmp;
 
     p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
-    *(unsigned int*)&Vtmp.xX = ((unsigned int*)VectA)[0]; *(unsigned int*)&Vtmp.xY = ((unsigned int*)VectA)[1]; *(unsigned int*)&Vtmp.xZ = ((unsigned int*)VectA)[2];
+    *(unsigned int*)&Vtmp.xX = *(unsigned int*)&VectA->xX; *(unsigned int*)&Vtmp.xY = *(unsigned int*)&VectA->xY; *(unsigned int*)&Vtmp.xZ = *(unsigned int*)&VectA->xZ;
     asm {
         lqc2 vf1, 0x0(p_stVtmp)
         lqc2 vf2, 0x0(p_stMatrix)

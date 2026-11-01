@@ -3466,15 +3466,125 @@ CAM_tdstCameraConstants_ CAM_g_stCameraConstants;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#ifndef CAM_PROC_FP_HELPERS
+#define CAM_PROC_FP_HELPERS
+inline float CAM_xNorm3(float _xX, float _xY, float _xZ)
+{
+    float _xSq;
+    float _xResult;
+    asm { mula.s _xX, _xX }
+    asm { madda.s _xY, _xY }
+    asm { madd.s _xSq, _xZ, _xZ }
+    asm { sqrt.s _xResult, _xSq }
+    return _xResult;
+}
+
+inline float CAM_xCrossComponent(float _xA, float _xB, float _xC, float _xD)
+{
+    float _xResult;
+    asm { mula.s _xA, _xB }
+    asm { msub.s _xResult, _xC, _xD }
+    return _xResult;
+}
+#endif
+
+inline void CAM_vSetTranslation(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stVector)
+{
+    if (_hMatrix->eType == MAT_eTransform_Identity)
+        _hMatrix->eType = MAT_eTransform_Translation;
+    *(int*)&_hMatrix->stTransformMatrix.stCol_3.xX = ((int*)_p_stVector)[0];
+    *(int*)&_hMatrix->stTransformMatrix.stCol_3.xY = ((int*)_p_stVector)[1];
+    *(int*)&_hMatrix->stTransformMatrix.stCol_3.xZ = ((int*)_p_stVector)[2];
+    _hMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+}
+
+extern void fn_vSectInfoInitForSingleCharacter(HIE_tdstSuperObject_*, MTH3D_tdstVector_*);
+extern void MAT_fn_vRotateAroundAxisNoTranslation(MAT_tdstTransformation_*, MTH3D_tdstVector_*, float);
+extern void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
+void CAM_fn_vSetLightComputation(tdstCineinfo_* _hCineinfo, unsigned char _ucValue);
+void CAM_fn_vSetCineinfoWorkFromCurrent(tdstCineinfo_* hCineinfo);
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* _h_Dynam);
+
 tdstNodeInterpret_* CAM_fn_p_stUpdatePosition2(HIE_tdstSuperObject_* _hSuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    float xNorm;
-    MTH3D_tdstVector_ stSight;
-    MTH3D_tdstVector_ stHorizontal;
-    MTH3D_tdstVector_ stVertical;
-    tdstDynam_* hDynam;
     tdstCineinfo_* hCineinfo;
-    /* TODO: decompile from asm/... */
+    tdstDynam_* hDynam;
+    MTH3D_tdstVector_ stVertical;
+    MTH3D_tdstVector_ stHorizontal;
+    MTH3D_tdstVector_ stSight;
+    float xNorm;
+    MAT_tdstTransformation_* hLocal;
+    MAT_tdstTransformation_* hGlobal;
+
+    hCineinfo = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
+    hLocal = _hSuperObjPerso->hLocalMatrix;
+    hGlobal = _hSuperObjPerso->hGlobalMatrix;
+    CAM_fn_vSetLightComputation(hCineinfo, 1);
+    CAM_fn_vSetCineinfoWorkFromCurrent(hCineinfo);
+    CAM_vSetTranslation(hLocal, &hCineinfo->stForcePosition);
+    CAM_vSetTranslation(hGlobal, &hCineinfo->stForcePosition);
+    ((int*)&stVertical)[0] = ((int*)&hCineinfo->stForceRefAxisZ)[0];
+    ((int*)&stVertical)[1] = ((int*)&hCineinfo->stForceRefAxisZ)[1];
+    ((int*)&stVertical)[2] = ((int*)&hCineinfo->stForceRefAxisZ)[2];
+    if ((stVertical.xX == 0.0f) && (stVertical.xY == 0.0f) && (stVertical.xZ == 0.0f))
+    {
+        stVertical.xY = 0.0f;
+        stVertical.xX = 0.0f;
+        stVertical.xZ = 1.0f;
+    }
+    stSight.xX = hCineinfo->stForceTarget.xX - hCineinfo->stForcePosition.xX;
+    stSight.xY = hCineinfo->stForceTarget.xY - hCineinfo->stForcePosition.xY;
+    stSight.xZ = hCineinfo->stForceTarget.xZ - hCineinfo->stForcePosition.xZ;
+    if ((stSight.xX != 0.0f) || (stSight.xY != 0.0f) || (stSight.xZ != 0.0f))
+    {
+        xNorm = CAM_xNorm3(stSight.xX, stSight.xY, stSight.xZ);
+        if (xNorm != 0.0f)
+        {
+            xNorm = 1.0f / xNorm;
+            stSight.xX = xNorm * stSight.xX;
+            stSight.xY = xNorm * stSight.xY;
+            stSight.xZ = xNorm * stSight.xZ;
+        }
+    }
+    else
+    {
+        stSight.xX = 1.0f;
+        stSight.xZ = 0.0f;
+        stSight.xY = 0.0f;
+    }
+    stHorizontal.xX = CAM_xCrossComponent(stVertical.xY, stSight.xZ, stVertical.xZ, stSight.xY);
+    stHorizontal.xY = CAM_xCrossComponent(stVertical.xZ, stSight.xX, stVertical.xX, stSight.xZ);
+    stHorizontal.xZ = CAM_xCrossComponent(stVertical.xX, stSight.xY, stVertical.xY, stSight.xX);
+    xNorm = CAM_xNorm3(stHorizontal.xX, stHorizontal.xY, stHorizontal.xZ);
+    if (xNorm != 0.0f)
+    {
+        xNorm = 1.0f / xNorm;
+        stHorizontal.xX = xNorm * stHorizontal.xX;
+        stHorizontal.xY = xNorm * stHorizontal.xY;
+        stHorizontal.xZ = xNorm * stHorizontal.xZ;
+    }
+    stVertical.xX = CAM_xCrossComponent(stSight.xY, stHorizontal.xZ, stSight.xZ, stHorizontal.xY);
+    stVertical.xY = CAM_xCrossComponent(stSight.xZ, stHorizontal.xX, stSight.xX, stHorizontal.xZ);
+    stVertical.xZ = CAM_xCrossComponent(stSight.xX, stHorizontal.xY, stSight.xY, stHorizontal.xX);
+    stSight.xX = -stSight.xX;
+    stSight.xY = -stSight.xY;
+    stSight.xZ = -stSight.xZ;
+    MAT_fn_vSetRotationVectors(hLocal, &stHorizontal, &stSight, &stVertical);
+    stSight.xX = 0.0f;
+    stSight.xY = -1.0f;
+    stSight.xZ = 0.0f;
+    MAT_fn_vRotateAroundAxisNoTranslation(hLocal, &stSight, 0.017453292f * hCineinfo->hCurrent->xAngleShiftAlpha);
+    *hGlobal = *hLocal;
+    hDynam = _hSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if ((hDynam != NULL) && (fn_p_stDynamGetDynamics(hDynam) != NULL))
+    {
+        DNM_stDynamics* p_stDynamics = fn_p_stDynamGetDynamics(hDynam);
+        unsigned int ulFlags = p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags | 0x80;
+        p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+        fn_p_stDynamGetDynamics(hDynam)->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+    }
+    fn_vSectInfoInitForSingleCharacter(_hSuperObjPerso, (MTH3D_tdstVector_*)&hGlobal->stTransformMatrix.stCol_3);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 2115–2140 */
@@ -3660,33 +3770,214 @@ tdstNodeInterpret_* CAM_fn_p_stCameraMode(HIE_tdstSuperObject_* p_SuperObjPerso,
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vSetResetInternalFlag(tdstCineinfo_* hCineInfo, unsigned short* p_uwCurrent, unsigned short* p_uwVisibility, unsigned short* p_uwWork, int lTypeOfChange, int lChangingMode, unsigned short uwFlag);
+
+unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MTH3D_tdstVector_* _p_stVector2, float _xEpsilon);
+
+inline float CAM_xAbs(float _xValue)
+{
+    float _xResult;
+    asm { abs.s _xResult, _xValue }
+    return _xResult;
+}
+
+extern int MSWay_fn_lGetCurrentIndexInPath(tdstMSWay_*);
+extern WP_tdstWayPoint_* MSWay_fn_hGetWayPointOfPath(tdstMSWay_*, int);
+extern int MSWay_fn_lGetNumberWayPointInPath(tdstMSWay_*);
+extern int MSWay_fn_lIncrementCurrentIndexInPath(tdstMSWay_*, int);
+extern void WP_fnv_WayPoint_GetVertex(WP_tdstWayPoint_*, MTH3D_tdstVector_*);
+extern float WP_fnx_WayPoint_GetRadius(WP_tdstWayPoint_*);
+extern float Cam_fn_xComputeProjectionRail(MTH3D_tdstVector_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*);
+extern void Cam_fn_vComputeMovingOnRail(CAM_tdstUpdateCamera_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, MTH3D_tdstVector_*, float);
+
+#define CAM_M_vCopyWords(_d, _s) \
+    { \
+        int _iZ, _iY, _iX; \
+        _iX = ((int*)(_s))[0]; \
+        _iY = ((int*)(_s))[1]; \
+        _iZ = ((int*)(_s))[2]; \
+        ((int*)(_d))[2] = _iZ; \
+        ((int*)(_d))[0] = _iX; \
+        ((int*)(_d))[1] = _iY; \
+    }
+
 tdstNodeInterpret_* CAM_fn_p_stForceMovingOnRail(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    unsigned char bWantedPositionIsAlreadyComputed;
-    char cCas;
-    float xDist3;
-    float xDist2;
-    float xDist1;
-    float xDistWanted;
-    float xDistMax;
-    float xDistMin;
-    MTH3D_tdstVector_ stWantedPosition;
-    MTH3D_tdstVector_ stNextWpPosition;
-    MTH3D_tdstVector_ stOldPreviousWpPosition;
-    MTH3D_tdstVector_ stPreviousWpPosition;
-    MTH3D_tdstVector_ stWpPosition;
-    MTH3D_tdstVector_ stTargetPosition;
-    tdstMSWay_* h_MSWay;
-    WP_tdstWayPoint_* hOldPreviousWayPoint;
-    WP_tdstWayPoint_* hPreviousWayPoint;
-    WP_tdstWayPoint_* hNextWayPoint;
-    WP_tdstWayPoint_* hWayPoint;
-    int lCurrentIndex;
-    CAM_tdstUpdateCamera_ stStruct;
+    static int lSens;
     tdstCineinfo_* hCineinfo;
+    CAM_tdstUpdateCamera_ stStruct;
+    int lCurrentIndex;
+    WP_tdstWayPoint_* hWayPoint;
+    WP_tdstWayPoint_* hNextWayPoint;
+    WP_tdstWayPoint_* hPreviousWayPoint;
+    WP_tdstWayPoint_* hOldPreviousWayPoint;
+    tdstMSWay_* h_MSWay;
+    MTH3D_tdstVector_ stTargetPosition;
+    MTH3D_tdstVector_ stWpPosition;
+    MTH3D_tdstVector_ stPreviousWpPosition;
+    MTH3D_tdstVector_ stOldPreviousWpPosition;
+    MTH3D_tdstVector_ stNextWpPosition;
+    MTH3D_tdstVector_ stWantedPosition;
+    float xDistMin;
+    float xDistMax;
+    float xDistWanted;
+    float xDist1;
+    float xDist2;
+    float xDist3;
+    char cCas;
+    unsigned char bWantedPositionIsAlreadyComputed;
     HIE_tdstSuperObject_* hCamera;
-    int lSens;
-    /* TODO: decompile from asm/... */
+
+    xDistWanted = 0.0f;
+    bWantedPositionIsAlreadyComputed = 0;
+    cCas = 0;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+    h_MSWay = hCamera->hLinkedObject.p_stCharacter->h_MSWay;
+    hCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    if (h_MSWay == NULL)
+        return p_stTree;
+    CAM_fn_vSetCineinfoWorkFromCurrent(hCineinfo);
+    CAM_fn_vInitCameraStructure(hCamera, &stStruct);
+    xDistMin = hCineinfo->hWork->xDistMin;
+    xDistMax = hCineinfo->hWork->xDistMax;
+    if (xDistMin == xDistMax)
+        cCas = 1;
+    {
+        MAT_tdstTransformation_* hMatrix = hCineinfo->hWork->hSuperObjectTargeted->hLocalMatrix;
+        ((int*)&stTargetPosition)[0] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[0];
+        ((int*)&stTargetPosition)[1] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[1];
+        ((int*)&stTargetPosition)[2] = ((int*)&hMatrix->stTransformMatrix.stCol_3)[2];
+    }
+    {
+        xDist1 = CAM_xNorm3(stStruct.stCurrentCameraPos.xX - stTargetPosition.xX, stStruct.stCurrentCameraPos.xY - stTargetPosition.xY, stStruct.stCurrentCameraPos.xZ - stTargetPosition.xZ);
+    }
+    if (cCas)
+    {
+        if (CAM_xAbs(xDistMin - xDist1) >= 0.1f)
+            xDistWanted = xDistMin;
+        else
+        {
+            bWantedPositionIsAlreadyComputed = 1;
+            ((int*)&stWantedPosition)[0] = ((int*)&stStruct.stCurrentCameraPos)[0];
+            ((int*)&stWantedPosition)[1] = ((int*)&stStruct.stCurrentCameraPos)[1];
+            ((int*)&stWantedPosition)[2] = ((int*)&stStruct.stCurrentCameraPos)[2];
+        }
+    }
+    else if (xDist1 < xDistMin)
+        xDistWanted = xDistMin;
+    else if (xDist1 > xDistMax)
+        xDistWanted = xDistMax;
+    else
+    {
+        xDistWanted = xDistMax;
+        bWantedPositionIsAlreadyComputed = 1;
+        ((int*)&stWantedPosition)[0] = ((int*)&stStruct.stCurrentCameraPos)[0];
+        ((int*)&stWantedPosition)[1] = ((int*)&stStruct.stCurrentCameraPos)[1];
+        ((int*)&stWantedPosition)[2] = ((int*)&stStruct.stCurrentCameraPos)[2];
+    }
+    *(int*)&stWantedPosition.xX = ((int*)&stStruct.stCurrentCameraPos)[0];
+    *(int*)&stWantedPosition.xY = ((int*)&stStruct.stCurrentCameraPos)[1];
+    *(int*)&stWantedPosition.xZ = ((int*)&stStruct.stCurrentCameraPos)[2];
+    if (!bWantedPositionIsAlreadyComputed)
+    {
+        CAM_fn_vComputeReferencePoint(&stStruct);
+        lCurrentIndex = MSWay_fn_lGetCurrentIndexInPath(h_MSWay);
+        hWayPoint = MSWay_fn_hGetWayPointOfPath(h_MSWay, lCurrentIndex);
+        MSWay_fn_lGetNumberWayPointInPath(h_MSWay);
+        WP_fnv_WayPoint_GetVertex(hWayPoint, &stWpPosition);
+        if (CAM_fn_bEqualVectorWithEpsilon(&stWpPosition, &stStruct.stCurrentCameraPos, WP_fnx_WayPoint_GetRadius(hWayPoint)))
+        {
+            hPreviousWayPoint = MSWay_fn_hGetWayPointOfPath(h_MSWay, lCurrentIndex - 1);
+            if (hPreviousWayPoint)
+                WP_fnv_WayPoint_GetVertex(hPreviousWayPoint, &stOldPreviousWpPosition);
+            else
+                CAM_M_vCopyWords(&stOldPreviousWpPosition, &stWpPosition);
+            hNextWayPoint = MSWay_fn_hGetWayPointOfPath(h_MSWay, lCurrentIndex + 1);
+            CAM_M_vCopyWords(&stPreviousWpPosition, &stWpPosition);
+            if (hNextWayPoint)
+                WP_fnv_WayPoint_GetVertex(hNextWayPoint, &stWpPosition);
+            xDist1 = Cam_fn_xComputeProjectionRail(&stStruct.stTargetedPersoPos, &stPreviousWpPosition, &stOldPreviousWpPosition);
+            xDist2 = Cam_fn_xComputeProjectionRail(&stStruct.stTargetedPersoPos, &stPreviousWpPosition, &stWpPosition);
+            if (xDist1 <= xDist2)
+            {
+                lSens = -1;
+                MSWay_fn_lIncrementCurrentIndexInPath(h_MSWay, lSens);
+                Cam_fn_vComputeMovingOnRail(&stStruct, &stWantedPosition, &stPreviousWpPosition, &stOldPreviousWpPosition, xDistWanted);
+            }
+            else
+            {
+                lSens = 1;
+                MSWay_fn_lIncrementCurrentIndexInPath(h_MSWay, lSens);
+                Cam_fn_vComputeMovingOnRail(&stStruct, &stWantedPosition, &stWpPosition, &stPreviousWpPosition, xDistWanted);
+            }
+        }
+        else
+        {
+            hPreviousWayPoint = MSWay_fn_hGetWayPointOfPath(h_MSWay, lCurrentIndex - lSens);
+            if (hPreviousWayPoint)
+                WP_fnv_WayPoint_GetVertex(hPreviousWayPoint, &stPreviousWpPosition);
+            else
+            {
+                CAM_M_vCopyWords(&stPreviousWpPosition, &stWpPosition);
+                hPreviousWayPoint = hWayPoint;
+            }
+            xDist1 = Cam_fn_xComputeProjectionRail(&stStruct.stTargetedPersoPos, &stPreviousWpPosition, &stWpPosition);
+            hOldPreviousWayPoint = MSWay_fn_hGetWayPointOfPath(h_MSWay, lCurrentIndex - 2 * lSens);
+            if (hOldPreviousWayPoint)
+                WP_fnv_WayPoint_GetVertex(hOldPreviousWayPoint, &stOldPreviousWpPosition);
+            else
+                CAM_M_vCopyWords(&stOldPreviousWpPosition, &stPreviousWpPosition);
+            xDist2 = Cam_fn_xComputeProjectionRail(&stStruct.stTargetedPersoPos, &stPreviousWpPosition, &stOldPreviousWpPosition);
+            hNextWayPoint = MSWay_fn_hGetWayPointOfPath(h_MSWay, lCurrentIndex + lSens);
+            if (hNextWayPoint)
+                WP_fnv_WayPoint_GetVertex(hNextWayPoint, &stNextWpPosition);
+            else
+                CAM_M_vCopyWords(&stNextWpPosition, &stWpPosition);
+            xDist3 = Cam_fn_xComputeProjectionRail(&stStruct.stTargetedPersoPos, &stNextWpPosition, &stWpPosition);
+            if (xDist3 <= xDist1)
+            {
+                if (xDist3 <= xDist2)
+                {
+                    *(int*)&stWantedPosition.xX = ((int*)&stWpPosition)[0];
+                    *(int*)&stWantedPosition.xY = ((int*)&stWpPosition)[1];
+                    *(int*)&stWantedPosition.xZ = ((int*)&stWpPosition)[2];
+                }
+                else if (xDist1 <= xDist2)
+                    Cam_fn_vComputeMovingOnRail(&stStruct, &stWantedPosition, &stWpPosition, &stPreviousWpPosition, xDistWanted);
+                else if (CAM_fn_bEqualVectorWithEpsilon(&stPreviousWpPosition, &stStruct.stCurrentCameraPos, WP_fnx_WayPoint_GetRadius(hPreviousWayPoint)))
+                {
+                    Cam_fn_vComputeMovingOnRail(&stStruct, &stWantedPosition, &stPreviousWpPosition, &stOldPreviousWpPosition, xDistWanted);
+                    lSens = -lSens;
+                    MSWay_fn_lIncrementCurrentIndexInPath(h_MSWay, lSens);
+                }
+                else
+                {
+                    *(int*)&stWantedPosition.xX = ((int*)&stPreviousWpPosition)[0];
+                    *(int*)&stWantedPosition.xY = ((int*)&stPreviousWpPosition)[1];
+                    *(int*)&stWantedPosition.xZ = ((int*)&stPreviousWpPosition)[2];
+                }
+            }
+            else if (xDist1 <= xDist2)
+                Cam_fn_vComputeMovingOnRail(&stStruct, &stWantedPosition, &stWpPosition, &stPreviousWpPosition, xDistWanted);
+            else if (CAM_fn_bEqualVectorWithEpsilon(&stPreviousWpPosition, &stStruct.stCurrentCameraPos, WP_fnx_WayPoint_GetRadius(hPreviousWayPoint)))
+            {
+                lSens = -lSens;
+                MSWay_fn_lIncrementCurrentIndexInPath(h_MSWay, lSens);
+                Cam_fn_vComputeMovingOnRail(&stStruct, &stWantedPosition, &stPreviousWpPosition, &stOldPreviousWpPosition, xDistWanted);
+            }
+            else
+            {
+                *(int*)&stWantedPosition.xX = ((int*)&stPreviousWpPosition)[0];
+                *(int*)&stWantedPosition.xY = ((int*)&stPreviousWpPosition)[1];
+                *(int*)&stWantedPosition.xZ = ((int*)&stPreviousWpPosition)[2];
+            }
+        }
+    }
+    *(int*)&hCineinfo->stForcePosition.xX = *(int*)&stWantedPosition.xX;
+    *(int*)&hCineinfo->stForcePosition.xY = *(int*)&stWantedPosition.xY;
+    *(int*)&hCineinfo->stForcePosition.xZ = *(int*)&stWantedPosition.xZ;
+    CAM_fn_vSetResetInternalFlag(hCineinfo, &hCineinfo->hCurrent->uwIAFlags, &hCineinfo->hVisibility->uwIAFlags, &hCineinfo->hWork->uwIAFlags, 1, 1, 0x2000);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 1784–1809 */
@@ -3766,12 +4057,41 @@ tdstNodeInterpret_* CAM_fn_p_stForceNormalState(HIE_tdstSuperObject_* p_SuperObj
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vSetResetInternalFlag(tdstCineinfo_* hCineInfo, unsigned short* p_uwCurrent, unsigned short* p_uwVisibility, unsigned short* p_uwWork, int lTypeOfChange, int lChangingMode, unsigned short uwFlag);
+
 tdstNodeInterpret_* CAM_fn_p_stForceBestPos(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    CAM_tdstUpdateCamera_ stStruct;
-    tdstCineinfo_* hCineinfo;
     HIE_tdstSuperObject_* hCamera;
-    /* TODO: decompile from asm/... */
+    tdstCineinfo_* hCineinfo;
+    CAM_tdstUpdateCamera_ stStruct;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineinfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    if (!hCineinfo->bCanDoBestPos)
+    {
+        *(int*)&hCineinfo->stForcePosition.xX = *(int*)&hCamera->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
+        *(int*)&hCineinfo->stForcePosition.xY = *(int*)&hCamera->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
+        *(int*)&hCineinfo->stForcePosition.xZ = *(int*)&hCamera->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+        CAM_fn_vSetResetInternalFlag(hCineinfo, &hCineinfo->hCurrent->uwIAFlags, &hCineinfo->hVisibility->uwIAFlags, &hCineinfo->hWork->uwIAFlags, 1, 1, 0x2000);
+        return p_stTree;
+    }
+    CAM_fn_vSetCineinfoWorkFromCurrent(hCineinfo);
+    CAM_fn_vInitCameraStructure(hCamera, &stStruct);
+    cRefAxisIsAlreadyComputed = (stStruct.hCineinfoWork->uwIAFlags & 0x4000) ? 1 : 0;
+    cNoDynChangeTheta = (stStruct.hCineinfoWork->uwIAFlags & 0x20) ? 1 : 0;
+    cCanTestStatic = 1;
+    CAM_fn_vComputeReferencePoint(&stStruct);
+    CAM_fn_vComputeTarget(&stStruct);
+    CAM_fn_vComputeRealWantedPos(&stStruct);
+    CAM_fn_vComputeMovePosWithDynTheta(&stStruct);
+    if (stStruct.hCineinfoCurrent->hSuperObjectTargeted == NULL)
+        return p_stTree;
+    CAM_fn_vForceFailureVisibility(&stStruct);
+    CAM_fn_vComputeFailureVisibility(&stStruct);
+    stStruct.hCineinfoWork->uwDNMFlags |= 5;
+    if (!fn_bIsTransitionInProgress())
+        hCineinfo->bCanDoBestPos = 0;
+    return p_stTree;
 }
 
 unsigned char fn_ucGetProcedureUltraOperator(tdeProcedureId_ eProcedureId);
@@ -3859,15 +4179,15 @@ tdstNodeInterpret_* CAM_fn_p_stReset(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
 void CAM_fn_vSetResetInternalFlag(tdstCineinfo_* hCineInfo, unsigned short* p_uwCurrent, unsigned short* p_uwVisibility, unsigned short* p_uwWork, int lTypeOfChange, int lChangingMode, unsigned short uwFlag);
 tdstNodeInterpret_* CAM_fn_p_stSetForce(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    MTH3D_tdstVector_ stTempVector;
-    MTH3D_tdstVector_* p_stValue;
-    tdeProcedureId_ eProcedureId;
-    unsigned short uwFlag;
-    tdstGetSetParam_ stValue;
-    int lTypeOfChange;
-    int lChangingMode;
-    HIE_tdstSuperObject_* hCamera;
     tdstCineinfo_* hCineInfo;
+    HIE_tdstSuperObject_* hCamera;
+    int lChangingMode;
+    int lTypeOfChange;
+    tdstGetSetParam_ stValue;
+    unsigned short uwFlag;
+    tdeProcedureId_ eProcedureId;
+    MTH3D_tdstVector_* p_stValue;
+    MTH3D_tdstVector_ stTempVector;
 
     uwFlag = 0;
     eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
@@ -3878,42 +4198,42 @@ tdstNodeInterpret_* CAM_fn_p_stSetForce(HIE_tdstSuperObject_* p_SuperObjPerso, t
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
     lChangingMode = stValue.uDummy.uParam.lValue;
     p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    stTempVector.xX = stValue.uDummy.uParam.stVectorValue.xX;
-    stTempVector.xY = stValue.uDummy.uParam.stVectorValue.xY;
-    stTempVector.xZ = stValue.uDummy.uParam.stVectorValue.xZ;
+    *(int*)&stTempVector.xX = *(int*)&stValue.uDummy.uParam.stVectorValue.xX;
+    *(int*)&stTempVector.xY = *(int*)&stValue.uDummy.uParam.stVectorValue.xY;
+    *(int*)&stTempVector.xZ = *(int*)&stValue.uDummy.uParam.stVectorValue.xZ;
     p_stValue = &stValue.uDummy.uParam.stVectorValue;
     switch (eProcedureId)
     {
+    case 0x26c:
+        uwFlag = 0x1000;
+        if (lChangingMode == 1)
+        {
+            *(int*)&hCineInfo->stForceTarget.xX = *(int*)&(*p_stValue).xX;
+            *(int*)&hCineInfo->stForceTarget.xY = *(int*)&(*p_stValue).xY;
+            *(int*)&hCineInfo->stForceTarget.xZ = *(int*)&(*p_stValue).xZ;
+        }
+        break;
+    case 0x26d:
+        uwFlag = 0x2000;
+        if (lChangingMode == 1)
+        {
+            *(int*)&hCineInfo->stForcePosition.xX = *(int*)&(*p_stValue).xX;
+            *(int*)&hCineInfo->stForcePosition.xY = *(int*)&(*p_stValue).xY;
+            *(int*)&hCineInfo->stForcePosition.xZ = *(int*)&(*p_stValue).xZ;
+        }
+        break;
     case 0x26e:
         p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
         if (lChangingMode == 1)
         {
-            hCineInfo->stForceRefAxisY.xX = stTempVector.xX;
-            hCineInfo->stForceRefAxisY.xY = stTempVector.xY;
-            hCineInfo->stForceRefAxisY.xZ = stTempVector.xZ;
-            hCineInfo->stForceRefAxisZ.xX = (*p_stValue).xX;
-            hCineInfo->stForceRefAxisZ.xY = (*p_stValue).xY;
-            hCineInfo->stForceRefAxisZ.xZ = (*p_stValue).xZ;
+            *(int*)&hCineInfo->stForceRefAxisY.xX = *(int*)&stTempVector.xX;
+            *(int*)&hCineInfo->stForceRefAxisY.xY = *(int*)&stTempVector.xY;
+            *(int*)&hCineInfo->stForceRefAxisY.xZ = *(int*)&stTempVector.xZ;
+            *(int*)&hCineInfo->stForceRefAxisZ.xX = *(int*)&(*p_stValue).xX;
+            *(int*)&hCineInfo->stForceRefAxisZ.xY = *(int*)&(*p_stValue).xY;
+            *(int*)&hCineInfo->stForceRefAxisZ.xZ = *(int*)&(*p_stValue).xZ;
         }
         uwFlag = 0x4000;
-        break;
-    case 0x26d:
-        if (lChangingMode == 1)
-        {
-            uwFlag = 0x2000;
-            hCineInfo->stForcePosition.xX = (*p_stValue).xX;
-            hCineInfo->stForcePosition.xY = (*p_stValue).xY;
-            hCineInfo->stForcePosition.xZ = (*p_stValue).xZ;
-        }
-        break;
-    case 0x26c:
-        if (lChangingMode == 1)
-        {
-            uwFlag = 0x1000;
-            hCineInfo->stForceTarget.xX = (*p_stValue).xX;
-            hCineInfo->stForceTarget.xY = (*p_stValue).xY;
-            hCineInfo->stForceTarget.xZ = (*p_stValue).xZ;
-        }
         break;
     }
     CAM_fn_vSetResetInternalFlag(hCineInfo, &hCineInfo->hCurrent->uwIAFlags, &hCineInfo->hVisibility->uwIAFlags, &hCineInfo->hWork->uwIAFlags, lTypeOfChange, lChangingMode, uwFlag);
@@ -4049,7 +4369,7 @@ tdstNodeInterpret_* CAM_fn_p_stChangeConstants(HIE_tdstSuperObject_* p_SuperObjP
     }
     else if (lMode == 0x28)
     {
-        CAM_g_stCameraConstants.wFlags &= ~(int)xVal;
+        { int lV = (int)xVal; lV = ~lV; CAM_g_stCameraConstants.wFlags &= lV; }
     }
     else if (lMode < 0x2c)
     {
@@ -4057,7 +4377,8 @@ tdstNodeInterpret_* CAM_fn_p_stChangeConstants(HIE_tdstSuperObject_* p_SuperObjP
     }
     else if (lMode == 0x2c)
     {
-        hCamera->hLinkedObject.p_stCharacter->h_Cineinfo->bCanDoBestPos = (xVal == 0.0f) ? 0 : 1;
+        hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+        hCineInfo->bCanDoBestPos = (xVal != 0.0f) ? 1 : 0;
     }
     return p_stTree;
 }
@@ -4499,12 +4820,12 @@ HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* _hStdGa
 tdstNodeInterpret_* CAM_fn_p_stAssociateViewport(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stValue;
-    int lDeactived;
     int lViewport;
-    HIE_tdstSuperObject_* hOldCamera;
-    HIE_tdstSuperObject_* hNewCamera;
-    tdstCineinfo_* hOldCineInfo;
+    int lDeactived;
     tdstCineinfo_* hNewCineInfo;
+    tdstCineinfo_* hOldCineInfo;
+    HIE_tdstSuperObject_* hNewCamera;
+    HIE_tdstSuperObject_* hOldCamera;
 
     hNewCineInfo = NULL;
     hOldCineInfo = NULL;
@@ -4517,10 +4838,9 @@ tdstNodeInterpret_* CAM_fn_p_stAssociateViewport(HIE_tdstSuperObject_* p_SuperOb
     hOldCamera = CAM_fn_hGetActiveCamera(lViewport);
     if (hNewCamera == hOldCamera)
         return p_stTree;
-    if (lViewport < 3)
+    if ((lViewport >= 3) || (lViewport == -1))
+        return p_stTree;
     {
-        if (lViewport == -1)
-            return p_stTree;
         if (hNewCamera != NULL)
             hNewCineInfo = hNewCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
         if (hOldCamera != NULL)
@@ -5045,20 +5365,160 @@ tdstNodeInterpret_* CAM_fn_p_stChangeTgtPerso(HIE_tdstSuperObject_* p_SuperObjPe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vChangeARealParameter(tdstCineinfo_* _hCineInfo, float* _p_xInitialValue, float* _p_xCurrentValue, float* _p_xVisibilityValue, float* _p_xWorkValue, int _lTypeOfChange, int _lChangingMode, float _xValue);
+
 tdstNodeInterpret_* CAM_fn_p_stChangeRealParameter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    tdeProcedureId_ eProcedureId;
-    float* p_xWorkValue;
-    float* p_xVisibilityValue;
-    float* p_xCurrentValue;
-    float* p_xInitialValue;
-    tdstGetSetParam_ stValue;
-    int lTypeOfChange;
-    int lChangingMode;
-    float xValue;
-    HIE_tdstSuperObject_* hCamera;
     tdstCineinfo_* hCineInfo;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* hCamera;
+    float xValue;
+    int lChangingMode;
+    int lTypeOfChange;
+    tdstGetSetParam_ stValue;
+    float* p_xInitialValue;
+    float* p_xCurrentValue;
+    float* p_xVisibilityValue;
+    float* p_xWorkValue;
+    tdeProcedureId_ eProcedureId;
+
+    p_xInitialValue = NULL;
+    p_xCurrentValue = NULL;
+    p_xVisibilityValue = NULL;
+    p_xWorkValue = NULL;
+    eProcedureId = (p_stTree - 1)->uDummy.uId.eProcedureId;
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(eProcedureId), p_SuperObjPerso, &hCamera);
+    hCineInfo = hCamera->hLinkedObject.p_stCharacter->h_Cineinfo;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lTypeOfChange = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    lChangingMode = stValue.uDummy.uParam.lValue;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    xValue = stValue.uDummy.uParam.xValue;
+    switch ((int)eProcedureId)
+    {
+    case 0x23c:
+        p_xInitialValue = &hCineInfo->hInit->xDistMin;
+        p_xCurrentValue = &hCineInfo->hCurrent->xDistMin;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xDistMin;
+        p_xWorkValue = &hCineInfo->hWork->xDistMin;
+        break;
+    case 0x23d:
+        p_xInitialValue = &hCineInfo->hInit->xDistMax;
+        p_xCurrentValue = &hCineInfo->hCurrent->xDistMax;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xDistMax;
+        p_xWorkValue = &hCineInfo->hWork->xDistMax;
+        break;
+    case 0x23e:
+        p_xInitialValue = &hCineInfo->hInit->xBoundDistMin;
+        p_xCurrentValue = &hCineInfo->hCurrent->xBoundDistMin;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xBoundDistMin;
+        p_xWorkValue = &hCineInfo->hWork->xBoundDistMin;
+        break;
+    case 0x23f:
+        p_xInitialValue = &hCineInfo->hInit->xBoundDistMax;
+        p_xCurrentValue = &hCineInfo->hCurrent->xBoundDistMax;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xBoundDistMax;
+        p_xWorkValue = &hCineInfo->hWork->xBoundDistMax;
+        break;
+    case 0x240:
+        p_xInitialValue = &hCineInfo->hInit->xAngleAlpha;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleAlpha;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleAlpha;
+        p_xWorkValue = &hCineInfo->hWork->xAngleAlpha;
+        break;
+    case 0x241:
+        p_xInitialValue = &hCineInfo->hInit->xAngleShiftAlpha;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleShiftAlpha;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleShiftAlpha;
+        p_xWorkValue = &hCineInfo->hWork->xAngleShiftAlpha;
+        break;
+    case 0x242:
+        p_xInitialValue = &hCineInfo->hInit->xAngleTheta;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleTheta;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleTheta;
+        p_xWorkValue = &hCineInfo->hWork->xAngleTheta;
+        break;
+    case 0x243:
+        p_xInitialValue = &hCineInfo->hInit->xAngleShiftTheta;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngleShiftTheta;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngleShiftTheta;
+        p_xWorkValue = &hCineInfo->hWork->xAngleShiftTheta;
+        break;
+    case 0x244:
+        p_xInitialValue = &hCineInfo->hInit->xLinearSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xLinearSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xLinearSpeed;
+        break;
+    case 0x245:
+        p_xInitialValue = &hCineInfo->hInit->xLinearIncreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xLinearIncreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearIncreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xLinearIncreaseSpeed;
+        break;
+    case 0x246:
+        p_xInitialValue = &hCineInfo->hInit->xLinearDecreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xLinearDecreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xLinearDecreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xLinearDecreaseSpeed;
+        break;
+    case 0x247:
+        p_xInitialValue = &hCineInfo->hInit->xAngularSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngularSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xAngularSpeed;
+        break;
+    case 0x248:
+        p_xInitialValue = &hCineInfo->hInit->xAngularIncreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngularIncreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularIncreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xAngularIncreaseSpeed;
+        break;
+    case 0x249:
+        p_xInitialValue = &hCineInfo->hInit->xAngularDecreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xAngularDecreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xAngularDecreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xAngularDecreaseSpeed;
+        break;
+    case 0x24a:
+        p_xInitialValue = &hCineInfo->hInit->xTargetSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xTargetSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xTargetSpeed;
+        break;
+    case 0x24b:
+        p_xInitialValue = &hCineInfo->hInit->xTargetIncreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xTargetIncreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetIncreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xTargetIncreaseSpeed;
+        break;
+    case 0x24c:
+        p_xInitialValue = &hCineInfo->hInit->xTargetDecreaseSpeed;
+        p_xCurrentValue = &hCineInfo->hCurrent->xTargetDecreaseSpeed;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xTargetDecreaseSpeed;
+        p_xWorkValue = &hCineInfo->hWork->xTargetDecreaseSpeed;
+        break;
+    case 0x24d:
+        p_xInitialValue = &hCineInfo->hInit->xFocal;
+        p_xCurrentValue = &hCineInfo->hCurrent->xFocal;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xFocal;
+        p_xWorkValue = &hCineInfo->hWork->xFocal;
+        break;
+    case 0x24e:
+        p_xInitialValue = &hCineInfo->hInit->xZMin;
+        p_xCurrentValue = &hCineInfo->hCurrent->xZMin;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xZMin;
+        p_xWorkValue = &hCineInfo->hWork->xZMin;
+        break;
+    case 0x24f:
+        p_xInitialValue = &hCineInfo->hInit->xZMax;
+        p_xCurrentValue = &hCineInfo->hCurrent->xZMax;
+        p_xVisibilityValue = &hCineInfo->hVisibility->xZMax;
+        p_xWorkValue = &hCineInfo->hWork->xZMax;
+        break;
+    }
+    CAM_fn_vChangeARealParameter(hCineInfo, p_xInitialValue, p_xCurrentValue, p_xVisibilityValue, p_xWorkValue, lTypeOfChange, lChangingMode, xValue);
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Proc.c lines 367–440 */
@@ -5376,12 +5836,47 @@ void CAM_fn_vChangeARealParameter(tdstCineinfo_* _hCineInfo, float* _p_xInitialV
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vSetLightComputation(tdstCineinfo_* _hCineinfo, unsigned char _ucValue);
+void CAM_fn_vUpdateTargetPosition(tdstCineinfo_* _hCineinfo);
+void CAM_fn_vRemindSpeed(tdstCineinfo_* _hCineinfo, MTH_stMove* _p_stSpeed);
+void CAM_fn_vRemindPos(tdstCineinfo_* _hCineinfo, MTH3D_tdstVector_* _p_stPos);
+void CAM_fn_vRemindTime(tdstCineinfo_* _hCineinfo, float _xTime);
+void CAM_fn_vUpdateGeneralCamera(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vSendParametersToParsing(CAM_tdstUpdateCamera_* _p_stStruct);
+void MEC_fn_vUpdateSpeed(HIE_tdstSuperObject_* hSupObj);
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* _h_Dynam);
+
 tdstNodeInterpret_* CAM_fn_p_stUpdatePosition(HIE_tdstSuperObject_* _hSuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    DNM_stDynamics* p_stDynamics;
-    tdstDynam_* h_Dynam;
-    CAM_tdstUpdateCamera_ stStruct;
     tdstCineinfo_* hCineinfo;
-    /* TODO: decompile from asm/... */
+    CAM_tdstUpdateCamera_ stStruct;
+    tdstDynam_* h_Dynam;
+    DNM_stDynamics* p_stDynamics;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    DNM_stReport* p_stReport;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator((p_stTree - 1)->uDummy.uId.eProcedureId), _hSuperObjPerso, &hNewSuperObjPerso);
+    hCineinfo = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Cineinfo;
+    CAM_fn_vSetLightComputation(hCineinfo, 0);
+    CAM_fn_vSetCineinfoWorkFromCurrent(hCineinfo);
+    CAM_fn_vInitCameraStructure(hNewSuperObjPerso, &stStruct);
+    CAM_fn_vUpdateTargetPosition(hCineinfo);
+    h_Dynam = stStruct.hCineinfoWork->hSuperObjectTargeted->hLinkedObject.p_stCharacter->h_Dynam;
+    if ((h_Dynam == NULL) || ((p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam)) == NULL))
+        return p_stTree;
+    if (!((p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags & 0x80) ? 1 : 0))
+        MEC_fn_vUpdateSpeed(stStruct.hCineinfoWork->hSuperObjectTargeted);
+    if (!hCineinfo->bCanDoBestPos && ((p_stDynamics->m_tdstDynamicsBaseBlock.ulEndFlags & 0x1000000) ? 1 : 0))
+        hCineinfo->bCanDoBestPos = 1;
+    p_stReport = p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport;
+    if ((p_stReport->m_stAbsoluteCurrPosition.m_stLinear.xX != 0.0f) || (p_stReport->m_stAbsoluteCurrPosition.m_stLinear.xY != 0.0f) || (p_stReport->m_stAbsoluteCurrPosition.m_stLinear.xZ != 0.0f))
+    {
+        CAM_fn_vRemindSpeed(hCineinfo, &p_stReport->m_stAbsoluteCurrSpeed);
+        CAM_fn_vRemindPos(stStruct.hCineinfo, &p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport->m_stAbsoluteCurrPosition.m_stLinear);
+        CAM_fn_vRemindTime(stStruct.hCineinfo, (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / 1000.0f);
+    }
+    CAM_fn_vUpdateGeneralCamera(&stStruct);
+    CAM_fn_vSendParametersToParsing(&stStruct);
+    hCineinfo->ucVolIAFlags = 0;
+    return p_stTree;
 }

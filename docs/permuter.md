@@ -53,6 +53,15 @@ struct/union tags get typedefs. MWCC chooses C or C++ from the file suffix, so
 `compile`, `verify` and `run` splice the candidate's definition of the target
 function back into the canonical source and compile that under its own suffix.
 Only the target function's definition in `candidate.c` matters for C++ jobs.
+
+A C++ method, or any function in a unit that declares derived classes, gets a
+reduced `candidate.c`: other functions become prototypes or are dropped, class
+declarations lose their bases and methods, the method becomes a free function
+under its mangled name, and the data members it reaches implicitly become
+file-scope variables so upstream knows their types. Splicing puts the canonical
+qualified signature back around the permuted body. Overloads of the same method
+name, and bodies using a qualified name such as `Base::m_x`, are refused.
+
 C sources that contain MWCC `asm { ... }` helpers (such as an inline `sqrt.s`
 wrapper) are handled the same way: the helpers are stripped from `candidate.c`
 and the target definition is spliced back into the canonical source. A target

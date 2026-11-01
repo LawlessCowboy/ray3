@@ -19,21 +19,22 @@ Checked with `python3 tools/match.py coverage` at each matching commit:
 
 | Scope | Functions | Code bytes |
 | --- | --- | --- |
-| **Game code** | **3,146 / 4,134** (+2 register-equivalent) | **511,048 / 1,507,864** (**33.8922%**) |
-| Library code | 1,103 / 1,200 | 127,180 / 298,548 (42.5995%) |
-| **Total** | **4,249 / 5,334** (+2 register-equivalent) | **638,228 / 1,806,412** (**35.3313%**) |
+| **Game code** | **3,221 / 4,134** (+2 register-equivalent) | **554,840 / 1,507,864** (**36.7964%**) |
+| Library code | 1,112 / 1,200 | 131,984 / 298,548 (44.2086%) |
+| **Total** | **4,333 / 5,334** (+2 register-equivalent) | **686,824 / 1,806,412** (**38.0214%**) |
 
 - Out of scope and excluded from these totals: 177 library header functions
   (Pustl STL, `CIdObjPtr`, MTH/PS2GL support headers) and 2,321 third-party
   library functions built without debug info (Sony SDK, C/C++ runtime, most
   of the harmonx `usnd` sound middleware, memory-card library). Library code
   above is only the PS2GL and harmonx sources with recovered debug info.
-- Translation units (`python3 tools/match.py tus --summary`): **154 / 356**
-  fully matched (game 148 / 334, library 6 / 22), with 193 more partially
+- Translation units (`python3 tools/match.py tus --summary`): **158 / 356**
+  fully matched (game 152 / 334, library 6 / 22), with 189 more partially
   matched. Only sources recovered into `src/Rayman3/` are counted, so SDK and
   runtime code without a source file is excluded.
-- Data: **0 / 168,050 bytes** (**0.0000%**); data-object matching has not
-  started yet.
+- Data: **0 / 141,992 bytes** (**0.0000%**) in scope, 500 third-party objects
+  (26,058 bytes) excluded; `tools/match.py check-data SOURCE` compares a unit's
+  data, and none has been recorded yet.
 - Register-equivalent functions differ only by register renaming and are not
   counted as matched.
 - *Game code* is the engine and game sources (including the SND_R3 sound glue)
@@ -92,7 +93,8 @@ The optional compile workflow additionally needs:
 - Metrowerks CodeWarrior PS2 compilers 3.0 (26 November 2001), 3.0.1
   (23 January 2002) and 3.0.3 (16 July 2002), as packaged by
   [decomp.me](https://github.com/decompme/compilers), placed under
-  `Compiler/mwcps2-<version>/`;
+  `Compiler/mwcps2-<version>/`, then `python3 tools/patch_mwcc_303.py` to build
+  the patched 3.0.3 that the project uses;
 - [Wibo](https://github.com/decompals/wibo) (or an equivalent way to run that
   Windows compiler); and
 - the matching PS2 SDK headers/libraries.
@@ -148,8 +150,10 @@ so the precise 3.0 build remains to be discriminated with additional functions.
 Whole-repo sweeps over every recorded match and attempt then picked the
 compiler per owner. Game sources build with **3.0.1 (2002-01-23)**: 27 more
 game matches than 3.0 and none lost. The files listed in
-`config/compiler-3.0.3-sources.txt` (21 files) build with **3.0.3 (2002-07-16)**,
-because each of them matches more functions under it. Retail game code sits
+`config/compiler-3.0.3-sources.txt` build with **3.0.3 (2002-07-16) patched to
+pad short loops to 7 instructions** (`tools/patch_mwcc_303.py`, two bytes),
+because each of them matches more functions under it. Retail does this but no
+released build does, so this compiler is a stand-in for an unreleased build. Retail game code sits
 between those two builds, and no file has matches that only one build can
 produce on both sides, which fits per-file builds made at different times.
 PS2GL keeps **3.0 (2001-11-26)**, since it loses about 90 matches under the

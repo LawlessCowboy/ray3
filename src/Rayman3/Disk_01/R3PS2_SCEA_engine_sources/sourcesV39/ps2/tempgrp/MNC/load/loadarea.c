@@ -40,7 +40,7 @@ struct anon_2 {
 extern int CD_OpenFile(char* FileName);
 extern unsigned int CD_Length(int FileHandle);
 extern unsigned int CD_Seek(int FileHandle, int Position, int WhereFrom);
-extern int CD_Read(int FileHandle, char* Buffer, int Size);
+extern int CD_Read();
 extern void CD_Close(int FileHandle);
 extern char* FMN_SCE_ConvertPath2DVD(char* buffer);
 extern char* Strcat(char*, const char*);
@@ -364,7 +364,7 @@ char* MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId,
     }
 
     CD_Seek(fh, 0, 0);
-    if (CD_Read(fh, (char*)&u32NbLinks, 4) != 4)
+    if (CD_Read(fh, &u32NbLinks, 4) != 4)
         return NULL;
 
     u32FileSize = CD_Length(fh) - 4;

@@ -1624,7 +1624,7 @@ int gp_stInactiveDynamicWorld;
 tdstEngineStructure_ g_stEngineStructure;
 short g_xFixIndex;
 tdstAlways_ g_stAlways;
-int g_a_hSOCurrentMainSector[4];
+HIE_tdstSuperObject_* g_a_hSOCurrentMainSector[4];
 int g_lSoundObjectTypeAnim;
 unsigned char g_ucIsEdInGhostMode;
 unsigned short g_DEMO_KeybTest;
@@ -1696,17 +1696,84 @@ void fn_vToggleCinemascope(int bValue)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void HIE_fn_vSuperObjectAddHead(HIE_tdstSuperObject_* hFather, HIE_tdstSuperObject_* hChild);
+extern void HIE_fn_vSuperObjectAddTail(HIE_tdstSuperObject_* hFather, HIE_tdstSuperObject_* hChild);
+extern HIE_tdstSuperObject_* HIE_fn_hGetElementFormFixViewport(short xIndex);
+extern tdstAlwaysActiveCharacter_* fn_hGetFirstAlwaysActiveCharNode(void);
+extern tdstAlwaysActiveCharacter_* fn_hGetNextAlwaysActiveCharNode(tdstAlwaysActiveCharacter_* hCharNode, unsigned char bTestDynamicAlwaysActive);
+extern HIE_tdstSuperObject_* fn_hGetCharacterInAlwaysActiveCharacterNode(tdstAlwaysActiveCharacter_* hCharNode);
+extern HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_*);
+inline int GAM_bCounterDiffers(HIE_tdstSuperObject_* hSector, char cCounter)
+{
+    return cCounter != hSector->hLinkedObject.p_stSector->cCounter;
+}
+inline void GAM_vActivateActor(HIE_tdstSuperObject_* hActor, unsigned char bIsAnInit)
+{
+    tdstEngineObject_* p_stCharacter;
+
+    p_stCharacter = hActor->hLinkedObject.p_stCharacter;
+    if (((unsigned char)((p_stCharacter->h_StandardGame->ucMiscFlags & 2) ? 1 : 0)) == 1
+        && p_stCharacter->h_StandardGame->ucImportance <= g_stEngineStructure.ucCurrentImportance
+        && !((!bIsAnInit || (((unsigned char)((p_stCharacter->h_StandardGame->ucMiscFlags & 1) ? 1 : 0)) && p_stCharacter->h_StandardGame->eInitFlagWhenDeadOrTaken >= 2))
+             && ((unsigned char)((p_stCharacter->h_StandardGame->ucMiscFlags & 1) ? 1 : 0)))
+        && hActor->hFatherDyn == (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld)
+    {
+        if (hActor->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+            HIE_fn_vSuperObjectAddHead((HIE_tdstSuperObject_*)gp_stDynamicWorld, hActor);
+        else
+            HIE_fn_vSuperObjectAddTail((HIE_tdstSuperObject_*)gp_stDynamicWorld, hActor);
+        p_stCharacter->h_StandardGame->ucMiscFlags |= 4;
+    }
+}
 void GAM_fn_vAddAlwaysActiveActors(unsigned char _bIsAnInit)
 {
     HIE_tdstSuperObject_* hFixSPO;
     char cCounter;
     unsigned char bNewSector;
     short xIndex;
+    short xFixIndex;
     tdstAlwaysActiveCharacter_* hCharAlwaysActiveNode;
-    HIE_tdstSuperObject_** p_hLastGenerator;
     HIE_tdstSuperObject_** p_hGenerator;
+    HIE_tdstSuperObject_** p_hLastGenerator;
+    int lNewSector;
+    int bChanged;
     HIE_tdstSuperObject_* hCharacter;
-    /* TODO: decompile from asm/... */
+
+    cCounter = (char)g_stEngineStructure.stEngineTimer.ulTrameNumber;
+    for (hCharAlwaysActiveNode = fn_hGetFirstAlwaysActiveCharNode(); hCharAlwaysActiveNode != NULL; hCharAlwaysActiveNode = fn_hGetNextAlwaysActiveCharNode(hCharAlwaysActiveNode, 1))
+        GAM_vActivateActor(fn_hGetCharacterInAlwaysActiveCharacterNode(hCharAlwaysActiveNode), _bIsAnInit);
+    hCharacter = g_stAlways.d_stAlwaysSuperObject;
+    p_hGenerator = g_stAlways.d_hAlwaysGenerator;
+    p_hLastGenerator = p_hGenerator + g_stAlways.ulMaxNumberOfAlways;
+    for (; p_hGenerator < p_hLastGenerator; p_hGenerator++, hCharacter++)
+    {
+        if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame != NULL)
+        {
+            lNewSector = 1;
+            if (!_bIsAnInit)
+            {
+                int bValid;
+                bChanged = 0;
+                bValid = hCharacter->hLinkedObject.p_stCharacter->h_SectInfo != NULL
+                    && fn_h_SectInfoGetCurrentSector(hCharacter->hLinkedObject.p_stCharacter->h_SectInfo) != NULL;
+                if (bValid)
+                {
+                    if (GAM_bCounterDiffers(fn_h_SectInfoGetCurrentSector(hCharacter->hLinkedObject.p_stCharacter->h_SectInfo), cCounter))
+                        bChanged = 1;
+                }
+                if (!bChanged)
+                    lNewSector = 0;
+            }
+            bNewSector = lNewSector;
+            GAM_vActivateActor(hCharacter, bNewSector);
+        }
+    }
+    xFixIndex = g_xFixIndex;
+    for (xIndex = 0; xIndex < xFixIndex; xIndex++)
+    {
+        hFixSPO = HIE_fn_hGetElementFormFixViewport(xIndex);
+        GAM_vActivateActor(hFixSPO, _bIsAnInit);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 2016–2041 */
@@ -1787,12 +1854,80 @@ void GAM_fn_vAddActorsFromNewlyActiveSectors(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* The dynamic list operations are macros in retail: they expand in place. */
+#define GAM_M_ListIsolate(h) \
+    if ((h)->hNextBrotherDyn != NULL) \
+        (h)->hNextBrotherDyn->hPrevBrotherDyn = (h)->hPrevBrotherDyn; \
+    if ((h)->hPrevBrotherDyn != NULL) \
+        (h)->hPrevBrotherDyn->hNextBrotherDyn = (h)->hNextBrotherDyn; \
+    if ((h)->hFatherDyn != NULL) \
+    { \
+        (h)->hFatherDyn->lNumberOfElementsDyn--; \
+        if ((h)->hFatherDyn->hFirstElementDyn == (h)) \
+            (h)->hFatherDyn->hFirstElementDyn = (h)->hNextBrotherDyn; \
+        if ((h)->hFatherDyn->hLastElementDyn == (h)) \
+            (h)->hFatherDyn->hLastElementDyn = (h)->hPrevBrotherDyn; \
+    } \
+    (h)->hNextBrotherDyn = NULL; \
+    (h)->hPrevBrotherDyn = NULL; \
+    (h)->hFatherDyn = NULL;
+
+#define GAM_M_ListAddHead(w, h) \
+    (h)->hPrevBrotherDyn = NULL; \
+    (h)->hNextBrotherDyn = (w)->hFirstElementDyn; \
+    (h)->hFatherDyn = (w); \
+    if ((w)->hLastElementDyn == NULL) \
+        (w)->hLastElementDyn = (h); \
+    else \
+        (w)->hFirstElementDyn->hPrevBrotherDyn = (h); \
+    (w)->hFirstElementDyn = (h); \
+    (w)->lNumberOfElementsDyn++;
+
+#define GAM_M_ListAddTail(w, h) \
+    (h)->hNextBrotherDyn = NULL; \
+    (h)->hPrevBrotherDyn = (w)->hLastElementDyn; \
+    (h)->hFatherDyn = (w); \
+    if ((w)->hFirstElementDyn == NULL) \
+        (w)->hFirstElementDyn = (h); \
+    else \
+        (w)->hLastElementDyn->hNextBrotherDyn = (h); \
+    (w)->hLastElementDyn = (h); \
+    (w)->lNumberOfElementsDyn++;
+
+extern void HIE_fn_vIsolate(HIE_tdstSuperObject_* hSuperObject);
+extern int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* hSectorSO);
+extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObject);
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_*);
+int CAM_fn_bSuperObjectIsACamera(HIE_tdstSuperObject_*);
 void GAM_fn_vRemoveActorsFromNewlyInactiveSectors(void)
 {
     HIE_tdstSuperObject_* hSector;
     HIE_tdstSuperObject_* hNextCharacter;
     HIE_tdstSuperObject_* hCharacter;
-    /* TODO: decompile from asm/... */
+
+    for (hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn, hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); hCharacter != NULL; hCharacter = hNextCharacter, hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hNextCharacter))
+    {
+        if (hCharacter->ulTypeOfLinkedObject == 2 && !CAM_fn_bSuperObjectIsACamera(hCharacter))
+        {
+            if (SECT_fn_bIsSectorNewlyInactive(fn_h_SectInfoGetCurrentSector(hCharacter->hLinkedObject.p_stCharacter->h_SectInfo)))
+            {
+                HIE_fn_vIsolate(hCharacter);
+                if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+                {
+                    HIE_tdstSuperObject_* hWorld = (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld;
+                    GAM_M_ListIsolate(hCharacter);
+                    GAM_M_ListAddHead(hWorld, hCharacter);
+                }
+                else
+                {
+                    HIE_tdstSuperObject_* hWorld = (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld;
+                    GAM_M_ListIsolate(hCharacter);
+                    GAM_M_ListAddTail(hWorld, hCharacter);
+                }
+                hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags &= ~4;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1821–1914 */
@@ -1847,15 +1982,88 @@ void GAM_fn_vRemoveActorsFromNewlyInactiveSectors(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern int SECT_fn_cSetWantedActivity(HIE_tdstSuperObject_* hSectorSO, char cActivity);
+extern HIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* hSectorSO);
+extern int MC_fn_hGetFirstMainCharNode(void);
+extern int MC_fn_hGetNextMainCharNode(int hNode);
+extern HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(int hNode);
+extern unsigned char fn_bIsTransitionInProgress(void);
+void GAM_fn_vAddAlwaysActiveActors(unsigned char _bIsAnInit);
+void GAM_fn_vAddActorsFromNewlyActiveSectors(void);
+void GAM_fn_vRemoveActorsFromNewlyInactiveSectors(void);
+void fn_vDesinitInactivePerso(void);
+void fn_vClearDynamicHierarchy(HIE_tdstSuperObject_* _hSOCurrentSector);
+inline void GAM_vSetSectorActivity(HIE_tdstSuperObject_* hSector, char cActivity)
+{
+    int i;
+    SECT_tdstListOfSOSectorsInActivityInteraction_* hActivityList;
+
+    SECT_fn_cSetWantedActivity(hSector, cActivity);
+    for (i = hSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.lNumberOfElementsOpt, hActivityList = hSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.hFirstElementOpt; i > 0; i--, hActivityList++)
+        SECT_fn_cSetWantedActivity(hActivityList->hPointerOfSectorSO, cActivity);
+}
 void GAM_fn_vUpdateDynamicHierarchy_New(void)
 {
-    tdstNodeMainCharacter_* hMCN;
+    int hMCN;
     unsigned char bIsAnInit;
     unsigned char bMustRebuildSectorList;
     HIE_tdstSuperObject_* hMainActor;
     HIE_tdstSuperObject_* hCurrentSector;
     unsigned char ucIndex;
-    /* TODO: decompile from asm/... */
+
+    bMustRebuildSectorList = 0;
+    bIsAnInit = 0;
+    hMCN = MC_fn_hGetFirstMainCharNode();
+    if (fn_bIsTransitionInProgress())
+        return;
+    for (ucIndex = 0; hMCN != 0; ucIndex++)
+    {
+        hMainActor = MC_fn_hGetCharacterInMainCharacterNode(hMCN);
+        hCurrentSector = fn_h_SectInfoGetCurrentSector(hMainActor->hLinkedObject.p_stCharacter->h_SectInfo);
+        if (hCurrentSector != g_a_hSOCurrentMainSector[ucIndex])
+            bMustRebuildSectorList = 1;
+        if (g_a_hSOCurrentMainSector[ucIndex] == NULL)
+            bIsAnInit = 1;
+        hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+    }
+    if (bIsAnInit && !fn_bIsTransitionInProgress())
+        fn_vClearDynamicHierarchy(NULL);
+    if (bIsAnInit || bMustRebuildSectorList)
+    {
+        hMCN = MC_fn_hGetFirstMainCharNode();
+        for (ucIndex = 0; hMCN != 0; ucIndex++)
+        {
+            hMainActor = MC_fn_hGetCharacterInMainCharacterNode(hMCN);
+            hCurrentSector = fn_h_SectInfoGetCurrentSector(hMainActor->hLinkedObject.p_stCharacter->h_SectInfo);
+            if (hCurrentSector != g_a_hSOCurrentMainSector[ucIndex])
+            {
+                if (g_a_hSOCurrentMainSector[ucIndex] != NULL)
+                    GAM_vSetSectorActivity(g_a_hSOCurrentMainSector[ucIndex], 0);
+                g_a_hSOCurrentMainSector[ucIndex] = hCurrentSector;
+            }
+            hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+        }
+        hMCN = MC_fn_hGetFirstMainCharNode();
+        for (ucIndex = 0; hMCN != 0; )
+        {
+            hMainActor = MC_fn_hGetCharacterInMainCharacterNode(hMCN);
+            if ((unsigned char)((hMainActor->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 1) ? 1 : 0))
+            {
+                hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+                ucIndex++;
+                continue;
+            }
+            GAM_vSetSectorActivity(g_a_hSOCurrentMainSector[ucIndex], 1);
+            hMCN = MC_fn_hGetNextMainCharNode(hMCN);
+            ucIndex++;
+        }
+        GAM_fn_vRemoveActorsFromNewlyInactiveSectors();
+        GAM_fn_vAddActorsFromNewlyActiveSectors();
+        GAM_fn_vAddAlwaysActiveActors(bIsAnInit);
+        fn_vDesinitInactivePerso();
+        for (hCurrentSector = SECT_fn_hGetActiveSectorListHead(); hCurrentSector != NULL; )
+            hCurrentSector = SECT_fn_hResolveSectorNextActivity(hCurrentSector);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1662–1687 */
@@ -1944,11 +2152,38 @@ void fn_vDesinitInactivePerso(void)
 void fn_vClearDynamicHierarchy(HIE_tdstSuperObject_* _hSOCurrentSector)
 {
     char cCounter;
+    HIE_tdstSuperObject_* hNextCharacter;
     int i;
     SECT_tdstListOfSOSectorsInActivityInteraction_* param0;
-    HIE_tdstSuperObject_* hNextCharacter;
     HIE_tdstSuperObject_* hCharacter;
-    /* TODO: decompile from asm/... */
+
+    i = 0;
+    for (hCharacter = ((HIE_tdstSuperObject_*)gp_stDynamicWorld)->hFirstElementDyn, hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hCharacter); hCharacter != NULL; i++, hCharacter = hNextCharacter, hNextCharacter = HIE_fn_hForceGetSuperObjectNextBrother(hNextCharacter))
+    {
+        if (hCharacter->ulTypeOfLinkedObject == 2 && !CAM_fn_bSuperObjectIsACamera(hCharacter))
+        {
+            HIE_fn_vIsolate(hCharacter);
+            if (hCharacter->hLinkedObject.p_stCharacter->h_StandardGame->ucPlatFormType)
+            {
+                HIE_tdstSuperObject_* hWorld = (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld;
+                GAM_M_ListIsolate(hCharacter);
+                GAM_M_ListAddHead(hWorld, hCharacter);
+            }
+            else
+            {
+                HIE_tdstSuperObject_* hWorld = (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld;
+                GAM_M_ListIsolate(hCharacter);
+                GAM_M_ListAddTail(hWorld, hCharacter);
+            }
+        }
+    }
+    if (_hSOCurrentSector != NULL)
+    {
+        cCounter = (char)g_stEngineStructure.stEngineTimer.ulTrameNumber;
+        _hSOCurrentSector->hLinkedObject.p_stSector->cCounter = cCounter;
+        for (i = _hSOCurrentSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.lNumberOfElementsOpt, param0 = _hSOCurrentSector->hLinkedObject.p_stSector->stListOfSectorsInActivityInteraction.hFirstElementOpt; i > 0; i--, param0++)
+            param0->hPointerOfSectorSO->hLinkedObject.p_stSector->cCounter = cCounter;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 1591–1596 */
@@ -2379,6 +2614,14 @@ void fn_vEngine(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* hSuperObject);
+extern HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectPrevBrother(HIE_tdstSuperObject_* hSuperObject);
+extern void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter);
+void GAM_fn_vUpdateTooFarFlag(HIE_tdstSuperObject_* _hSO);
+inline unsigned char GAM_ucTestMiscFlag(tdstStandardGame_* p_stGame, unsigned char ucMask)
+{
+    return (p_stGame->ucMiscFlags & ucMask) ? 1 : 0;
+}
 void fn_vTreatCameraHierarchy(HIE_tdstSuperObject_* hSuperObj, unsigned char bForcedActivity)
 {
     HIE_tdstSuperObject_* hSprObjCamera;
@@ -2386,7 +2629,41 @@ void fn_vTreatCameraHierarchy(HIE_tdstSuperObject_* hSuperObj, unsigned char bFo
     unsigned char bTmp;
     tdstEngineObject_* p_stObj;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    bTmp = 0;
+    HIE_fn_vPushMatrix(hSuperObj);
+    if (hSuperObj->ulTypeOfLinkedObject == 2
+        && (!g_stEngineStructure.bEngineFrozen || (hSuperObj->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits & 0x100000)))
+    {
+        p_stObj = hSuperObj->hLinkedObject.p_stCharacter;
+        if (bForcedActivity)
+            bTmp = 1;
+        if (GAM_ucTestMiscFlag(p_stObj->h_StandardGame, 2) == 1
+            && g_stEngineStructure.stEngineTimer.ulTrameNumber != p_stObj->h_StandardGame->ulLastTrame)
+        {
+            hSprObjCamera = CAM_fn_hGetActiveCamera(0);
+            if (hSprObjCamera != NULL)
+                CAM_fn_hCineInfoGetSuperObjectTargeted(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent);
+            hStdGame = hSuperObj->hLinkedObject.p_stCharacter->h_StandardGame;
+            if (hStdGame != NULL && (hStdGame->ulCustomBits & 0x4C0000))
+                GAM_fn_vUpdateTooFarFlag(hSuperObj);
+            fn_vTreatCharactersInSector(hSuperObj);
+            bTmp = 1;
+        }
+        if (HIE_g_lNbMatrixInStack)
+        {
+            HIE_g_lNbMatrixInStack--;
+            g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+        }
+        HIE_fn_vPushMatrix(hSuperObj);
+    }
+    for (hChild = hSuperObj->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+        fn_vTreatCameraHierarchy(hChild, bTmp);
+    if (HIE_g_lNbMatrixInStack)
+    {
+        HIE_g_lNbMatrixInStack--;
+        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 752–830 */
@@ -2422,12 +2699,51 @@ void fn_vTreatCameraHierarchy(HIE_tdstSuperObject_* hSuperObj, unsigned char bFo
 void fn_vTreatDynamicHierarchyOfPlatForms(HIE_tdstSuperObject_* hSuperObj)
 {
     HIE_tdstSuperObject_* hSprObjCamera;
+    HIE_tdstSuperObject_* hNextChild;
     HIE_tdstSuperObject_* hMainChar;
     tdstEngineObject_* p_stObj;
     tdstStandardGame_* hStdGame;
-    HIE_tdstSuperObject_* hNextChild;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    hMainChar = NULL;
+    hSprObjCamera = CAM_fn_hGetActiveCamera(0);
+    if (hSprObjCamera != NULL)
+        hMainChar = CAM_fn_hCineInfoGetSuperObjectTargeted(hSprObjCamera->hLinkedObject.p_stCharacter->h_Cineinfo->hCurrent);
+    HIE_fn_vPushMatrix(hSuperObj);
+    for (hChild = hSuperObj->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
+    {
+        if (hChild->ulTypeOfLinkedObject == 2)
+        {
+            p_stObj = hChild->hLinkedObject.p_stCharacter;
+            hStdGame = p_stObj->h_StandardGame;
+            if (hStdGame != NULL
+                && GAM_ucTestMiscFlag(p_stObj->h_StandardGame, 4) == 1
+                && (!g_stEngineStructure.bEngineFrozen || !(hStdGame->ulCustomBits ^ 0x100000)))
+            {
+                if (!hStdGame->ucPlatFormType)
+                    break;
+                if (g_stEngineStructure.stEngineTimer.ulTrameNumber != hStdGame->ulLastTrame)
+                {
+                    if (hChild == hMainChar)
+                        hStdGame->ucMiscFlags &= ~0x80;
+                    else if (hStdGame->ulCustomBits & 0x4C0000)
+                        GAM_fn_vUpdateTooFarFlag(hChild);
+                    HIE_fn_vPushMatrix(hChild);
+                    fn_vTreatCharactersInSector(hChild);
+                    if (HIE_g_lNbMatrixInStack)
+                    {
+                        HIE_g_lNbMatrixInStack--;
+                        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+                    }
+                }
+            }
+        }
+    }
+    if (HIE_g_lNbMatrixInStack)
+    {
+        HIE_g_lNbMatrixInStack--;
+        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 655–746 */
@@ -2480,7 +2796,76 @@ void fn_vTreatDynamicHierarchy(HIE_tdstSuperObject_* hSuperObj, HIE_tdstSuperObj
     HIE_tdstSuperObject_* hPrevChild;
     HIE_tdstSuperObject_* hNextChild;
     HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
+
+    if (hSuperObj->ulTypeOfLinkedObject == 2)
+    {
+        p_stObj = hSuperObj->hLinkedObject.p_stCharacter;
+        hStdGame = p_stObj->h_StandardGame;
+        if (hStdGame == NULL
+            || (!hStdGame->ucPlatFormType
+                && (GAM_ucTestMiscFlag(p_stObj->h_StandardGame, 4) != 1
+                    || g_stEngineStructure.stEngineTimer.ulTrameNumber == hStdGame->ulLastTrame)))
+        {
+            return;
+        }
+        HIE_fn_vPushMatrix(hSuperObj);
+        if (!hStdGame->ucPlatFormType)
+        {
+            if (!g_stEngineStructure.bEngineFrozen || (hStdGame->ulCustomBits & 0x100000))
+            {
+                if (hSuperObj == hMainChar)
+                    hStdGame->ucMiscFlags &= ~0x80;
+                else if (hStdGame->ulCustomBits & 0x4C0000)
+                    GAM_fn_vUpdateTooFarFlag(hSuperObj);
+                fn_vTreatCharactersInSector(hSuperObj);
+            }
+            if (HIE_g_lNbMatrixInStack)
+            {
+                HIE_g_lNbMatrixInStack--;
+                g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+            }
+            HIE_fn_vPushMatrix(hSuperObj);
+            if (hSuperObj == MC_fn_hGetCharacterInMainCharacterNode(MC_fn_hGetFirstMainCharNode()))
+            {
+                for (hChild = hSuperObj->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
+                {
+                    if (hChild->ulTypeOfLinkedObject == 2)
+                    {
+                        if (!CAM_fn_bSuperObjectIsACamera(hChild))
+                            fn_vTreatDynamicHierarchy(hChild, hMainChar, p_stMainCharTranslation);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (hChild = hSuperObj->hLastElementDyn, hPrevChild = HIE_fn_hForceGetSuperObjectPrevBrother(hChild); hChild != NULL; hChild = hPrevChild, hPrevChild = HIE_fn_hForceGetSuperObjectPrevBrother(hPrevChild))
+            {
+                if (hChild->ulTypeOfLinkedObject == 2)
+                {
+                    if (!CAM_fn_bSuperObjectIsACamera(hSuperObj))
+                        fn_vTreatDynamicHierarchy(hChild, hMainChar, p_stMainCharTranslation);
+                }
+            }
+        }
+    }
+    else
+    {
+        HIE_fn_vPushMatrix(hSuperObj);
+        for (hChild = hSuperObj->hFirstElementDyn, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hChild); hChild != NULL; hChild = hNextChild, hNextChild = HIE_fn_hForceGetSuperObjectNextBrother(hNextChild))
+        {
+            if (hChild->ulTypeOfLinkedObject == 2)
+            {
+                if (!CAM_fn_bSuperObjectIsACamera(hChild))
+                    fn_vTreatDynamicHierarchy(hChild, hMainChar, p_stMainCharTranslation);
+            }
+        }
+    }
+    if (HIE_g_lNbMatrixInStack)
+    {
+        HIE_g_lNbMatrixInStack--;
+        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameEng.c lines 597–645 */
@@ -2516,8 +2901,8 @@ void fn_vTreatDynamicHierarchy(HIE_tdstSuperObject_* hSuperObj, HIE_tdstSuperObj
 /* R5900 absolute value: MWCC never emits abs.s from plain C. */
 inline float GAM_xAbs(float x)
 {
-    float r = x;
-    asm { abs.s r, r }
+    float r;
+    asm { abs.s r, x }
     return r;
 }
 
@@ -2527,6 +2912,8 @@ void GAM_fn_vUpdateTooFarFlag(HIE_tdstSuperObject_* _hSO)
     tdstStandardGame_* hStdGame;
     int hMCN;
     HIE_tdstSuperObject_* hMainActor;
+    MTH3D_tdstVector_ stDiff;
+    MAT_tdstTransformation_* hMainMatrix;
 
     hStdGame = _hSO->hLinkedObject.p_stCharacter->h_StandardGame;
     if (hStdGame != NULL)
@@ -2545,9 +2932,11 @@ void GAM_fn_vUpdateTooFarFlag(HIE_tdstSuperObject_* _hSO)
                 hStdGame->ucMiscFlags &= ~0x80;
                 return;
             }
-            if (GAM_xAbs(_hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xZ - hMainActor->hGlobalMatrix->stTransformMatrix.stCol_3.xZ)
-                + (GAM_xAbs(_hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xX - hMainActor->hGlobalMatrix->stTransformMatrix.stCol_3.xX)
-                   + GAM_xAbs(_hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xY - hMainActor->hGlobalMatrix->stTransformMatrix.stCol_3.xY))
+            hMainMatrix = hMainActor->hGlobalMatrix;
+            stDiff.xX = _hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xX - hMainMatrix->stTransformMatrix.stCol_3.xX;
+            stDiff.xY = _hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xY - hMainMatrix->stTransformMatrix.stCol_3.xY;
+            stDiff.xZ = _hSO->hGlobalMatrix->stTransformMatrix.stCol_3.xZ - hMainMatrix->stTransformMatrix.stCol_3.xZ;
+            if (GAM_xAbs(stDiff.xZ) + (GAM_xAbs(stDiff.xX) + GAM_xAbs(stDiff.xY))
                 < (float)(unsigned int)hStdGame->ucTooFarLimit)
             {
                 hStdGame->ucMiscFlags &= ~0x80;

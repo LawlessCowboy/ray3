@@ -2,7 +2,8 @@
 
 Read this before making any matching change. The project uses the Korean PS2
 ELF with CodeWarrior PS2 through Wibo: game sources build with 3.0.1
-(2002-01-23), or 3.0.3 (2002-07-16) for the files in
+(2002-01-23), or a patched 3.0.3 (2002-07-16; padloop limit 7, built by
+`tools/patch_mwcc_303.py`) for the files in
 `config/compiler-3.0.3-sources.txt`, and the PS2GL library with 3.0
 (2001-11-26), or 3.0.1 for the files in `config/library-3.0.1-sources.txt`. Game sources also take `-pragma "dividefix on" -inline deferred
 -O3,p`. The only accepted baseline profile is encoded in `tools/match.py` and
@@ -130,6 +131,10 @@ and checks function bytes, size, relocation targets, and line offsets.
 For cross-project Metrowerks context, read `docs/mwcc-reference.md`; it is
 methodology only. Never copy another project's compiler version or flags into
 this project's baseline without a local reproduction.
+
+`check` also reports `EQUIVALENT` when the code is identical apart from removable
+`nop` padding (never a delay-slot `nop` or one after a hazard instruction), with
+branches compared by target position; the size may then differ.
 
 `check` may also report `EQUIVALENT`: the code is identical except for a
 consistent per-value register renaming, verified by dataflow with EABI
@@ -297,10 +302,19 @@ Recurring causes seen so far:
 
 Check `insight list` for the specific idioms.
 
-Run quick variant sweeps from a scratch script that rewrites the canonical
-file, runs `check`, and restores it afterwards. Change one construct per
-variant, and keep only changes the diff confirms. Prefer the most natural
-spelling that matches.
+Run variant sweeps with `python3 tools/sweep.py FUNCTION variants.py`. It
+compiles scratch copies through `check FUNCTION --candidate FILE` (the owner's
+compiler and flags, never records, never touches the canonical file), and
+reports the rows each variant fixes and introduces by class. Do not judge a
+variant by its row count: a correct fix can add rows until the next fix lands.
+Change one construct per variant, and keep only changes the diff confirms.
+Prefer the most natural spelling that matches.
+
+To choose what to work on, `python3 tools/rank_patterns.py` ranks unmatched
+functions by how much of their retail code has precedent in matched functions
+and names the closest example; `--function NAME` shows the code with no
+precedent. Compare scores within a similar size (`--min-size`): size alone
+predicts a match better than this score does (`--validate`).
 
 Use `python3 tools/large_match.py start FUNCTION` for the source snapshot,
 seed and baseline, then `python3 tools/large_match.py check FUNCTION --note
@@ -349,6 +363,17 @@ threshold can be reconstructed directly.
   report it rather than silently weakening or inventing a type.
 - Work source-file by source-file so the cached object and local context are
   reused and concurrent workers do not edit the same translation unit.
+
+## Data objects
+
+`python3 tools/match.py check-data SOURCE` compiles a unit and compares its
+initialised data objects with the retail bytes (`--verbose` lists every row,
+`--record` records the matches, `--recorded` rechecks all recorded data).
+Pointer words compare by linked address; `@N` literals pair by content, so a
+relocated `@N` table such as a switch table reports a mismatch for now. Owners
+come from `.relmain`: objects only out-of-scope code refers to are excluded
+from coverage. BSS is not checked. Defining data can change code generation,
+so run `verify-recorded` after adding initialisers.
 
 ## Shared findings
 

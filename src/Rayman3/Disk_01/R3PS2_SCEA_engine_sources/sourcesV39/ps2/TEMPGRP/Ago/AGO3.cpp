@@ -797,6 +797,26 @@ struct AGO3_DigitalScoreDisplay : AGO3_Part {
     static float m_a_fDigitScreenXY[2][5][2];
     static float m_a_fDigitSizeOnContainer[4];
     static float m_a_fDigitSizeOnScreen[4];
+    static float m_a_fGlowingPos[4];
+    static float m_a_fGlowing[4];
+    static float m_a_fDigitSize[4];
+    static float m_a_fDigitUV[10][2];
+    static float m_a_fDigitValue[2][5];
+    static int m_a_dwDigit[2][5];
+    static unsigned int m_a_dwNumDigits[3];
+    static float m_a_fVibrationDisplacement[2];
+    static float m_fHeightDifference[3];
+    static unsigned int m_dwComboID;
+    static int m_bPaused;
+    static float m_fComboSpeed;
+    static float m_fInvComboSpeed;
+    static float m_fComboBlinkTime;
+    static float m_fVibrationTime;
+    static float m_fGlowingTime;
+    static float m_a_fDigitNumTurns[2][5];
+    static float m_a_fVibrationDelay[2];
+    static float m_a_fVibrationFrequency[4];
+    static float m_a_fVibrationRange[4];
     void DisplayScore(GLD_tdstViewportAttributes_* hVp);
     void Process(void);
     void Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fScoreToAdd);
@@ -1723,6 +1743,7 @@ extern "C" void GLI_vDrawWorldSemiLookatSprite(MTH3D_tdstVector_* param0, MTH3D_
 extern "C" int GLI_vDrawWorldSpriteWithUVsOrientedOpt(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime, float fAngle);
 extern "C" int GLI_vDrawWorldSpriteWithUVsOpt(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime);
 extern "C" void GLI_vDrawWorldQuadWithUVsAndAlpha(GLD_tdstViewportAttributes_* hVp, float* x1, float* x2, float* x3, float* x4, float U1, float V1, float U2, float V2, float fAlpha1, float fAlpha2, float fAlpha3, float fAlpha4, GLI_tdstMaterial_* pMaterial);
+extern "C" void GLI_vDraw2DSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* _p_stViewport, float XMin, float YMin, float XMax, float YMax, float u1, float u2, float v1, float v2, GLI_tdstMaterial_* hMaterial);
 extern "C" void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy);
 extern "C" MTH3D_tdstVector_ GLI_g_stXVect;
 extern "C" MTH3D_tdstVector_ GLI_g_stYVect;
@@ -1755,6 +1776,7 @@ extern "C" void MAT_fn_vInvert(MAT_tdstTransformation_* _p_stDest, MAT_tdstTrans
 extern "C" int GLI_vDrawWorldSpriteColor(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime, unsigned int ulColor);
 extern "C" int GLI_vDrawWorldOrthoPlanarSpriteColor(MTH3D_tdstVector_* param0, GLI_tdstMaterial_* hVisualMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2, unsigned int ulColor);
 extern "C" float acosf(float x);
+extern "C" float fabsf(float x);
 extern "C" float cosf(float x);
 extern "C" float sinf(float x);
 /* sqrt.s has no C form under the baseline (MWCC calls sqrtf). */
@@ -2257,119 +2279,110 @@ void AGO3_LinkChainComputing::Display(GLD_tdstViewportAttributes_* hVp)
     float x2[3];
     float x3[3];
     float x4[3];
-    float fYZ;
-    float fLeftZ;
-    unsigned int ulSpriteType;
     float fXY;
-    float fXX;
-    float fYX;
-    float fYY;
-    float fMidZ;
     float fMidX;
-    float fXZ;
-    unsigned int ulLLink;
-    float fLeftX;
-    float fLeftY;
-    float xNorm;
+    unsigned int ulSpriteType;
     float fMidY;
+    float fXZ;
+    float fMidZ;
+    unsigned int ulLLink;
+    float fYX;
+    float fXX;
+    float fYY;
+    float xNorm;
+    float fYZ;
 
-    if (!m_bCanDisplay && !m_bInitWasDone)
-        return;
-    if (!m_ulNbLightnings)
-        return;
-    if (!m_ulNbLinks)
-        return;
-
-    MAT_fn_vInvert(&TempMatrix, &((GLI_tdstCamera_*)*(int*)hVp->p_vSpecificToXD)->stMatrix);
-
-    v1.xX = m_a_stLLinkPos[0].xX;
-    v1.xY = m_a_stLLinkPos[0].xY;
-    v1.xZ = m_a_stLLinkPos[0].xZ;
-
-    ulLLink = 1;
-    ulSpriteType = 0;
-    while (ulLLink <= m_ulNbLightnings)
+    if (m_bCanDisplay || m_bInitWasDone)
     {
-        v2.xX = m_a_stLLinkPos[ulLLink].xX;
-        v2.xY = m_a_stLLinkPos[ulLLink].xY;
-        v2.xZ = m_a_stLLinkPos[ulLLink].xZ;
-
-        if (m_ulNbLightnings == 1)
+        if (m_ulNbLightnings && m_ulNbLinks)
         {
-            GLI_vDrawWorldSemiLookatSpriteWithUVs(&v1, &v2, m_pLightningMat, hVp, 0.3f, 0.0f, 0.0f, 1.0f, 1.0f);
-            break;
-        }
+            MAT_fn_vInvert(&TempMatrix, &((GLI_tdstCamera_*)*(int*)hVp->p_vSpecificToXD)->stMatrix);
 
-        direction[0] = v2.xX - v1.xX;
-        direction[1] = v2.xY - v1.xY;
-        direction[2] = v2.xZ - v1.xZ;
+            v1.xX = m_a_stLLinkPos[0].xX;
+            v1.xY = m_a_stLLinkPos[0].xY;
+            v1.xZ = m_a_stLLinkPos[0].xZ;
 
-        if (direction[0] == 0.0f && direction[1] == 0.0f && direction[2] == 0.0f)
-        {
-            ulLLink++;
-            continue;
-        }
-
-        {
-            float xX = ((MTH3D_tdstVector_*)direction)->xX, xY = ((MTH3D_tdstVector_*)direction)->xY, xZ = ((MTH3D_tdstVector_*)direction)->xZ;
-            xNorm = AGO3_SQRT(AGO3_M_xDot3(xX, xX, xY, xY, xZ, xZ));
-        }
-
-        fMidX = v1.xX + 0.5f * direction[0];
-        fMidY = v1.xY + 0.5f * direction[1];
-        fMidZ = v1.xZ + 0.5f * direction[2];
-
-        GLI_v_CalculateVectorsFor3DRain(&TempMatrix, direction, 0.3f, 0.5f * xNorm);
-
-        fXX = GLI_g_stXVect.xX;
-        fXY = GLI_g_stXVect.xY;
-        fXZ = GLI_g_stXVect.xZ;
-        fYX = GLI_g_stYVect.xX;
-        fYY = GLI_g_stYVect.xY;
-        fYZ = GLI_g_stYVect.xZ;
-
-        if (ulLLink & 1)
-        {
-            fLeftX = fMidX - fXX;
-            x1[0] = fLeftX - fYX;
-            fLeftY = fMidY - fXY;
-            x1[1] = fLeftY - fYY;
-            fLeftZ = fMidZ - fXZ;
-            x1[2] = fLeftZ - fYZ;
-
-            fMidX += fXX;
-            x2[0] = fMidX - fYX;
-            fMidY += fXY;
-            x2[1] = fMidY - fYY;
-            fMidZ += fXZ;
-            x2[2] = fMidZ - fYZ;
-
-            if (ulSpriteType == 1)
-                GLI_vDrawWorldQuadWithUVsAndAlpha(hVp, x4, x3, x2, x1, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, m_pLightningMat);
-
-            x3[0] = fYX + fMidX;
-            x4[0] = fYX + fLeftX;
-            x3[1] = fYY + fMidY;
-            x4[1] = fYY + fLeftY;
-            x3[2] = fYZ + fMidZ;
-            x4[2] = fYZ + fLeftZ;
-
-            if (ulLLink == m_ulNbLightnings)
+            ulLLink = 1;
+            ulSpriteType = 0;
+            while (ulLLink <= m_ulNbLightnings)
             {
-                ulSpriteType = 2;
-            }
-            else
-            {
-                ulSpriteType = 1;
-            }
+                v2.xX = m_a_stLLinkPos[ulLLink].xX;
+                v2.xY = m_a_stLLinkPos[ulLLink].xY;
+                v2.xZ = m_a_stLLinkPos[ulLLink].xZ;
 
-            GLI_vDrawWorldQuadWithUVsAndAlpha(hVp, x1, x2, x3, x4, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, m_pLightningMat);
+                if (m_ulNbLightnings == 1)
+                {
+                    GLI_vDrawWorldSemiLookatSpriteWithUVs(&v1, &v2, m_pLightningMat, hVp, 0.3f, 0.0f, 0.0f, 1.0f, 1.0f);
+                    break;
+                }
+
+                direction[0] = v2.xX - v1.xX;
+                direction[1] = v2.xY - v1.xY;
+                direction[2] = v2.xZ - v1.xZ;
+
+                if (direction[0] == 0.0f && direction[1] == 0.0f && direction[2] == 0.0f)
+                {
+                    ulLLink++;
+                    continue;
+                }
+
+                {
+                    float xX = ((MTH3D_tdstVector_*)direction)->xX, xY = ((MTH3D_tdstVector_*)direction)->xY, xZ = ((MTH3D_tdstVector_*)direction)->xZ;
+                    xNorm = AGO3_SQRT(AGO3_M_xDot3(xX, xX, xY, xY, xZ, xZ));
+                }
+
+                fMidX = v1.xX + 0.5f * direction[0];
+                fMidY = v1.xY + 0.5f * direction[1];
+                fMidZ = v1.xZ + 0.5f * direction[2];
+
+                GLI_v_CalculateVectorsFor3DRain(&TempMatrix, direction, 0.3f, 0.5f * xNorm);
+
+                fXX = GLI_g_stXVect.xX;
+                fXY = GLI_g_stXVect.xY;
+                fXZ = GLI_g_stXVect.xZ;
+                fYX = GLI_g_stYVect.xX;
+                fYY = GLI_g_stYVect.xY;
+                fYZ = GLI_g_stYVect.xZ;
+
+                if (ulLLink & 1)
+                {
+                    x1[0] = fMidX - fXX - fYX;
+                    x1[1] = fMidY - fXY - fYY;
+                    x1[2] = fMidZ - fXZ - fYZ;
+
+                    x2[0] = fMidX + fXX - fYX;
+                    x2[1] = fMidY + fXY - fYY;
+                    x2[2] = fMidZ + fXZ - fYZ;
+
+                    if (ulSpriteType == 1)
+                        GLI_vDrawWorldQuadWithUVsAndAlpha(hVp, x4, x3, x2, x1, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, m_pLightningMat);
+
+                    x3[0] = fYX + (fMidX + fXX);
+                    x3[1] = fYY + (fMidY + fXY);
+                    x3[2] = fYZ + (fMidZ + fXZ);
+
+                    x4[0] = fYX + (fMidX - fXX);
+                    x4[1] = fYY + (fMidY - fXY);
+                    x4[2] = fYZ + (fMidZ - fXZ);
+
+                    if (ulLLink == m_ulNbLightnings)
+                    {
+                        ulSpriteType = 2;
+                    }
+                    else
+                    {
+                        ulSpriteType = 1;
+                    }
+
+                    GLI_vDrawWorldQuadWithUVsAndAlpha(hVp, x1, x2, x3, x4, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, m_pLightningMat);
+                }
+
+                v1.xX = v2.xX;
+                v1.xY = v2.xY;
+                v1.xZ = v2.xZ;
+                ulLLink++;
+            }
         }
-
-        v1.xX = v2.xX;
-        v1.xY = v2.xY;
-        v1.xZ = v2.xZ;
-        ulLLink++;
     }
 }
 
@@ -2578,9 +2591,9 @@ void AGO3_LinkChainComputing::Process(void)
  */
 void AGO3_LinkChainComputing::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3D_tdstVector_* p_stEndingDirection, GLI_tdstMaterial_* pMat1, float fFist)
 {
-    MTH3D_tdstVector_ v2;
-    MTH3D_tdstVector_ v1;
     MTH3D_tdstVector_ v0;
+    MTH3D_tdstVector_ v1;
+    MTH3D_tdstVector_ v2;
     float fYProgression;
     float fXProgression;
     float fYCurrentBalance;
@@ -2603,7 +2616,138 @@ void AGO3_LinkChainComputing::Init(MTH3D_tdstVector_* p_stStartingPosition, MTH3
     unsigned int ulFirst;
     unsigned int ulNbLinks;
     unsigned int ulFist;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stPerp1;
+    MTH3D_tdstVector_ stPerp2;
+
+    m_bInitWasDone = 1;
+    if (AGO_bPrevAGOWasExtraParam)
+    {
+        m_pLightningMat = (GLI_tdstMaterial_*)AGO_gExtraMaterial;
+        fTemp = AGO_gExtraParameter1[0];
+        m_fImpulseDuration = fTemp;
+        m_bImpulse = fTemp == 0.0f ? 0 : 1;
+        m_bLightning = 1;
+    }
+    else
+    {
+        m_bLightning = 0;
+        m_bImpulse = 0;
+        m_fImpulseTime = 0;
+    }
+    ulFist = fFist < 0.0f ? 1 : 0;
+    if (p_stEndingDirection->xX == 0.0f && p_stEndingDirection->xY == 0.0f && p_stEndingDirection->xZ == 0.0f)
+    {
+        *(float*)((char*)&m_stInitialFistPosition[0].xX + ulFist * 12) = p_stStartingPosition->xX;
+        *(float*)((char*)&m_stInitialFistPosition[0].xY + ulFist * 12) = p_stStartingPosition->xY;
+        *(float*)((char*)&m_stInitialFistPosition[0].xZ + ulFist * 12) = p_stStartingPosition->xZ;
+        return;
+    }
+    fR = (p_stStartingPosition->xX - p_stEndingDirection->xX) * (p_stStartingPosition->xX - p_stEndingDirection->xX) + (p_stStartingPosition->xY - p_stEndingDirection->xY) * (p_stStartingPosition->xY - p_stEndingDirection->xY) + (p_stStartingPosition->xZ - p_stEndingDirection->xZ) * (p_stStartingPosition->xZ - p_stEndingDirection->xZ);
+    if (!(fR <= 0.0f))
+        fR = AGO3_SQRT(fR);
+    ulNbLinks = (unsigned int)(2.0f * fR);
+    ulNbLinks2 = ulNbLinks;
+    v0 = *p_stEndingDirection;
+    fNbLinks = (float)ulNbLinks;
+    fConst1 = 0.5f * fNbLinks;
+    fConst2 = -0.5f / fNbLinks;
+    fTemp = p_stStartingPosition->xX - *(float*)((char*)&m_stInitialFistPosition[0].xX + ulFist * 12);
+    fLength = p_stStartingPosition->xY - *(float*)((char*)&m_stInitialFistPosition[0].xY + ulFist * 12);
+    fConst3 = p_stStartingPosition->xZ - *(float*)((char*)&m_stInitialFistPosition[0].xZ + ulFist * 12);
+    fCoef = 1.0f;
+    fAverageLightningLength = fConst1 * fConst1;
+    pLinkPos = m_a_stLinkPos;
+    ulFirst = 0;
+    if (m_bLightning)
+    {
+        *pLinkPos = v0;
+        pLinkPos++;
+    }
+    m_ulNbLinks = ulNbLinks;
+    for (; ulNbLinks != 0; ulNbLinks--)
+    {
+        fOneMinusCoef = fConst2 * (fAverageLightningLength - (fCoef - fConst1) * (fCoef - fConst1));
+        v1.xX = fTemp * fOneMinusCoef;
+        v1.xY = fLength * fOneMinusCoef;
+        v1.xZ = fConst3 * fOneMinusCoef;
+        fXBalance = fCoef * (1.0f / fNbLinks);
+        fYBalance = 1.0f - fXBalance;
+        v1.xX += p_stStartingPosition->xX * fXBalance + p_stEndingDirection->xX * fYBalance;
+        v1.xY += p_stStartingPosition->xY * fXBalance + p_stEndingDirection->xY * fYBalance;
+        v1.xZ += p_stStartingPosition->xZ * fXBalance + p_stEndingDirection->xZ * fYBalance;
+        AGO3_vAddPart(20, &v0, &v1, pMat1, (float)ulFirst, 0.0f, 0, 0, 0);
+        if (m_bLightning)
+        {
+            *pLinkPos = v1;
+            pLinkPos++;
+        }
+        fCoef += 1.0f;
+        ulFirst = 1;
+        v0 = v1;
+    }
+    m_ulNbLightnings = 0;
+    if (m_bLightning && ulNbLinks2)
+    {
+        v0 = m_a_stLinkPos[0];
+        m_a_stLLinkPos[0] = m_a_stLinkPos[0];
+        ulLLink = 1;
+        fXBalance = -1.0f;
+        if (!(AGO3_M_xRand(-1.0f, 1.0f) <= 0.0f))
+            fXBalance = 1.0f;
+        fXCurrentBalance = 1.0f;
+        fXProgression = fXBalance;
+        fYBalance = -1.0f;
+        if (!(AGO3_M_xRand(-1.0f, 1.0f) <= 0.0f))
+            fYBalance = 1.0f;
+        fYCurrentBalance = 1.0f;
+        fYProgression = fYBalance;
+        while (1)
+        {
+            m_ulNbLightnings++;
+            ulLLink += (unsigned int)(2.0f + (float)rand() / 2147483648.0f);
+            if (ulLLink > ulNbLinks2)
+            {
+                if (ulNbLinks2 - 1 == 0)
+                {
+                    m_ulNbLightnings = 0;
+                }
+                else
+                {
+                    *(float*)((char*)&m_a_stLLinkPos[0].xX + m_ulNbLightnings * 12) = *(float*)((char*)&m_a_stLinkPos[0].xX + (ulNbLinks2 - 1) * 12);
+                    *(float*)((char*)&m_a_stLLinkPos[0].xY + m_ulNbLightnings * 12) = *(float*)((char*)&m_a_stLinkPos[0].xY + (ulNbLinks2 - 1) * 12);
+                    *(float*)((char*)&m_a_stLLinkPos[0].xZ + m_ulNbLightnings * 12) = *(float*)((char*)&m_a_stLinkPos[0].xZ + (ulNbLinks2 - 1) * 12);
+                }
+                break;
+            }
+            v2.xX = (&m_a_stLinkPos[ulLLink])->xX - (&m_a_stLinkPos[ulLLink - 1])->xX;
+            v2.xY = (&m_a_stLinkPos[ulLLink])->xY - (&m_a_stLinkPos[ulLLink - 1])->xY;
+            v2.xZ = (&m_a_stLinkPos[ulLLink])->xZ - (&m_a_stLinkPos[ulLLink - 1])->xZ;
+            AGO_Define_OrthogonalVectorsV1Flat(&v2, &stPerp1, &stPerp2);
+            fTemp = (&m_a_stLinkPos[ulLLink])->xX + stPerp1.xX * (fXProgression * (float)rand() / 2147483648.0f);
+            (&m_a_stLLinkPos[m_ulNbLightnings])->xX = fTemp + stPerp2.xX * (fYProgression * (float)rand() / 2147483648.0f);
+            fTemp = (&m_a_stLinkPos[ulLLink])->xY + stPerp1.xY * (fXProgression * (float)rand() / 2147483648.0f);
+            (&m_a_stLLinkPos[m_ulNbLightnings])->xY = fTemp + stPerp2.xY * (fYProgression * (float)rand() / 2147483648.0f);
+            fTemp = (&m_a_stLinkPos[ulLLink])->xZ + stPerp1.xZ * (fXProgression * (float)rand() / 2147483648.0f);
+            (&m_a_stLLinkPos[m_ulNbLightnings])->xZ = fTemp + stPerp2.xZ * (fYProgression * (float)rand() / 2147483648.0f);
+            fXCurrentBalance -= AGO3_M_xRand(0.2f, 0.4f);
+            fXProgression = fXBalance * fXCurrentBalance;
+            if (fXCurrentBalance < 0.0f)
+            {
+                fXCurrentBalance = 1.0f;
+                fXBalance = -fXBalance;
+            }
+            fYCurrentBalance -= AGO3_M_xRand(0.2f, 0.4f);
+            fYProgression = fYBalance * fYCurrentBalance;
+            if (fYCurrentBalance < 0.0f)
+            {
+                fYCurrentBalance = 1.0f;
+                fYBalance = -fYBalance;
+            }
+        }
+    }
+    *(float*)((char*)&m_stInitialFistPosition[0].xX + ulFist * 12) = *(float*)((char*)&m_stInitialFistPosition[0].xX + ulFist * 12) * 0.1f + p_stStartingPosition->xX * 0.9f;
+    *(float*)((char*)&m_stInitialFistPosition[0].xY + ulFist * 12) = *(float*)((char*)&m_stInitialFistPosition[0].xY + ulFist * 12) * 0.1f + p_stStartingPosition->xY * 0.9f;
+    *(float*)((char*)&m_stInitialFistPosition[0].xZ + ulFist * 12) = *(float*)((char*)&m_stInitialFistPosition[0].xZ + ulFist * 12) * 0.1f + p_stStartingPosition->xZ * 0.9f;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 7130–7167 */
@@ -3971,7 +4115,80 @@ void AGO3_DigitalScoreDisplay::DisplayScore(GLD_tdstViewportAttributes_* hVp)
     float fX;
     int iScoreID;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    float fBaseY;
+    float fLoopY;
+    float fCutY;
+    float* pSize;
+    float* pXY;
+
+    if (m_hHandleID == 1 && m_bVisible[0])
+    {
+        fX = m_Position.Vector[0];
+        fBaseY = m_Position.Vector[1];
+        GLI_vSetGlobalAlpha(255.0f);
+        if (m_dwVibrationType >= 3)
+            GLI_vDraw2DSpriteWithPercentAndUVs(hVp, m_a_fGlowingPos[0], m_a_fGlowingPos[1], m_a_fGlowingPos[2], m_a_fGlowingPos[3], m_a_fGlowing[0], m_a_fGlowing[2], m_a_fGlowing[1], m_a_fGlowing[3], m_pMat1);
+        for (iScoreID = 1; iScoreID >= 0; iScoreID--)
+        {
+            if (iScoreID == 1)
+                fLoopY = fBaseY + m_a_fComboPositionOnScreen[2][1];
+            else
+                fLoopY = fBaseY;
+            fLoopY += m_a_fVibrationDisplacement[iScoreID];
+            if (m_fSpinningTime[iScoreID] == 0.0f)
+            {
+                for (i = 0; i < m_a_dwNumDigits[iScoreID]; i++)
+                {
+                    fY1 = fLoopY + m_a_fDigitScreenXY[iScoreID][i][1];
+                    fX2 = fX + m_a_fDigitScreenXY[iScoreID][i][0];
+                    fY2 = fY1 + m_a_fDigitSizeOnScreen[iScoreID * 2 + 1];
+                    param0 = m_a_fDigitUV[m_a_dwDigit[iScoreID][i]];
+                    GLI_vDraw2DSpriteWithPercentAndUVs(hVp, fX2, fY1, fX2 + m_a_fDigitSizeOnScreen[iScoreID * 2], fY2, param0[0], m_a_fDigitSize[0] + param0[0], param0[1], m_a_fDigitSize[1] + param0[1], m_pMat1);
+                }
+            }
+            else
+            {
+                for (i = 0; i < m_a_dwNumDigits[iScoreID]; i++)
+                {
+                    fDigit = m_a_fDigitValue[iScoreID][i];
+                    if (fDigit < 0.0f)
+                        fDigit = 10.0f + fDigit;
+                    dwDigit = (unsigned int)fDigit;
+                    fPercentage = fDigit - (float)dwDigit;
+                    if (dwDigit != 9)
+                    {
+                        fV = 0.09375f * fPercentage;
+                        param0 = m_a_fDigitUV[dwDigit];
+                        fY1 = fLoopY + m_a_fDigitScreenXY[iScoreID][i][1];
+                        fX2 = fX + m_a_fDigitScreenXY[iScoreID][i][0];
+                        GLI_vDraw2DSpriteWithPercentAndUVs(hVp, fX2, fY1, fX2 + m_a_fDigitSizeOnScreen[iScoreID * 2], fY1 + m_a_fDigitSizeOnScreen[iScoreID * 2 + 1], param0[0], m_a_fDigitSize[0] + param0[0], param0[1] - fV, m_a_fDigitSize[1] + param0[1] - fV, m_pMat1);
+                    }
+                    else
+                    {
+                        fV = 0.09375f * (1.0f - fPercentage);
+                        pSize = &m_a_fDigitSizeOnScreen[iScoreID * 2];
+                        pXY = m_a_fDigitScreenXY[iScoreID][i];
+                        fCutY = fPercentage * pSize[1];
+                        fY1 = fLoopY + pXY[1];
+                        fX2 = fX + pXY[0];
+                        GLI_vDraw2DSpriteWithPercentAndUVs(hVp, fX2, fY1, fX2 + pSize[0], fCutY + fY1, m_a_fDigitUV[0][0], m_a_fDigitUV[0][0] + m_a_fDigitSize[0], m_a_fDigitUV[0][1] + fV, m_a_fDigitUV[0][1] + m_a_fDigitSize[1] - m_fHeightDifference[0], m_pMat1);
+                        fY1 = fLoopY + pXY[1];
+                        fX2 = fX + pXY[0];
+                        GLI_vDraw2DSpriteWithPercentAndUVs(hVp, fX2, fCutY + fY1, fX2 + pSize[0], fY1 + pSize[1], m_a_fDigitUV[9][0], m_a_fDigitUV[9][0] + m_a_fDigitSize[0], m_a_fDigitUV[9][1], m_fHeightDifference[0] + (m_a_fDigitUV[9][1] + fV), m_pMat1);
+                    }
+                }
+            }
+            if (iScoreID == 1)
+            {
+                param0 = &m_a_fScoreContainer[m_dwComboID * 4];
+                fX2 = fX + m_a_fComboPositionOnScreen[0][0];
+                fY2 = m_a_fVibrationDisplacement[1] + (fBaseY + m_a_fComboPositionOnScreen[2][1]);
+                GLI_vDraw2DSpriteWithPercentAndUVs(hVp, fX2, fY2, fX2 + m_a_fScoreOnScreen[2], fY2 + m_a_fScoreOnScreen[3], param0[0], param0[2], param0[1], param0[3], m_pMat1);
+            }
+        }
+        fBaseY += m_a_fVibrationDisplacement[0];
+        GLI_vDraw2DSpriteWithPercentAndUVs(hVp, fX, fBaseY, fX + m_a_fScoreOnScreen[0], fBaseY + m_a_fScoreOnScreen[1], m_a_fScoreContainer[0], m_a_fScoreContainer[2], m_a_fScoreContainer[1], m_a_fScoreContainer[3], m_pMat1);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5378–5579 */
@@ -4183,7 +4400,154 @@ void AGO3_DigitalScoreDisplay::Process(void)
     float fCarry;
     float fScoreToAdd;
     float fPercentage;
-    /* TODO: decompile from asm/... */
+
+    if (!m_bPaused)
+    {
+        if (m_hHandleID == 1)
+        {
+            if (m_dwComboStatus == 1)
+            {
+                m_fComboTime += g_fTimeDifference;
+                if (!(m_fComboTime < m_fComboSpeed))
+                {
+                    m_fComboTime = m_fComboSpeed;
+                    m_dwComboStatus = 2;
+                }
+                fPercentage = m_fComboTime * m_fInvComboSpeed;
+                m_a_fComboPositionOnScreen[2][1] = (1.0f - fPercentage) * m_a_fComboPositionOnScreen[0][1] + fPercentage * m_a_fComboPositionOnScreen[1][1];
+            }
+            else if (m_dwComboStatus == 3)
+            {
+                m_fComboTime += g_fTimeDifference;
+                if (!(m_fComboTime < m_fComboSpeed))
+                {
+                    m_fComboTime = m_fComboSpeed;
+                    m_dwComboStatus = 0;
+                    m_bVisible[1] = 0;
+                }
+                fPercentage = m_fComboTime * m_fInvComboSpeed;
+                m_a_fComboPositionOnScreen[2][1] = (1.0f - fPercentage) * m_a_fComboPositionOnScreen[1][1] + fPercentage * m_a_fComboPositionOnScreen[0][1];
+            }
+            else
+            {
+                m_fComboTime = 0.0f;
+            }
+        }
+        fCarry = 0.0f;
+        if (m_fSpinningTime[m_hHandleID] != fCarry)
+        {
+            m_fSpinningTime[m_hHandleID] -= g_fTimeDifference;
+            if (m_fSpinningTime[m_hHandleID] <= fCarry)
+            {
+                m_fSpinningTime[m_hHandleID] = fCarry;
+                m_a_fScoreToAdd[m_hHandleID] = fCarry;
+                m_a_fScoreToAddPerSec[m_hHandleID] = fCarry;
+                for (i = 0; i < 5; i++)
+                {
+                    m_a_fDigitNumTurns[m_hHandleID][i] = fCarry;
+                    m_a_fDigitValue[m_hHandleID][i] = (float)(int)m_a_dwDigit[m_hHandleID][i];
+                }
+                m_a_fVibrationDisplacement[m_hHandleID] = fCarry;
+            }
+            else
+            {
+                fScoreToAdd = m_a_fScoreToAddPerSec[m_hHandleID] * g_fTimeDifference;
+                m_a_fScoreToAdd[m_hHandleID] -= fScoreToAdd;
+                m_fScore += fScoreToAdd;
+                m_dwScore = (unsigned int)m_fScore;
+                bCarryWasDone = 0;
+                if (fScoreToAdd > 0.0f)
+                {
+                    bOkToCarry = m_dwCarryScoreUp != m_dwScore;
+                    for (i = 0; i < 5; i++)
+                    {
+                        m_a_fDigitNumTurns[m_hHandleID][i] += fCarry;
+                        if (m_a_fDigitNumTurns[m_hHandleID][i] < fScoreToAdd)
+                            fScoreToAdd = m_a_fDigitNumTurns[m_hHandleID][i];
+                        m_a_fDigitNumTurns[m_hHandleID][i] -= fScoreToAdd;
+                        m_a_fDigitValue[m_hHandleID][i] += fScoreToAdd;
+                        if (m_a_fDigitValue[m_hHandleID][i] > 9.0f && bOkToCarry)
+                        {
+                            fCarry = (float)(unsigned int)(0.1f * (1.0f + m_a_fDigitValue[m_hHandleID][i]));
+                            m_a_fDigitValue[m_hHandleID][i] -= 10.0f * fCarry;
+                            bCarryWasDone = 1;
+                        }
+                        else
+                        {
+                            fCarry = 0.0f;
+                        }
+                    }
+                    if (bCarryWasDone)
+                        m_dwCarryScoreUp = m_dwScore;
+                }
+                else if (fScoreToAdd < 0.0f)
+                {
+                    bOkToCarry = m_dwCarryScoreDown != m_dwScore;
+                    for (i = 0; i < 5; i++)
+                    {
+                        m_a_fDigitNumTurns[m_hHandleID][i] -= fCarry;
+                        if (!(m_a_fDigitNumTurns[m_hHandleID][i] <= fScoreToAdd))
+                            fScoreToAdd = m_a_fDigitNumTurns[m_hHandleID][i];
+                        m_a_fDigitNumTurns[m_hHandleID][i] -= fScoreToAdd;
+                        m_a_fDigitValue[m_hHandleID][i] += fScoreToAdd;
+                        if (m_a_fDigitValue[m_hHandleID][i] < 0.0f && bOkToCarry)
+                        {
+                            fCarry = (float)(unsigned int)(0.1f * (10.0f - m_a_fDigitValue[m_hHandleID][i]));
+                            m_a_fDigitValue[m_hHandleID][i] += 10.0f * fCarry;
+                            bCarryWasDone = 1;
+                        }
+                        else
+                        {
+                            fCarry = 0.0f;
+                        }
+                    }
+                    if (bCarryWasDone)
+                        m_dwCarryScoreDown = m_dwScore;
+                }
+            }
+            if (m_fVibrationTime > m_a_fVibrationDelay[0])
+                m_dwVibrationType = 2;
+            if (m_fVibrationTime > m_a_fVibrationDelay[1])
+                m_dwVibrationType = 3;
+            m_fVibrationTime += g_fTimeDifference;
+            fVibrationPos = (m_fSpinningTime[m_hHandleID] - (float)(unsigned int)(m_fInvCurrentVibrationFrequency * m_fSpinningTime[m_hHandleID]) * m_a_fVibrationFrequency[m_dwVibrationType]) * m_fInvCurrentVibrationFrequency;
+            m_a_fVibrationDisplacement[m_hHandleID] = ((float*)p_fCosTable)[((int)(81.48733f * fVibrationPos) + 0x80) & 0x1ff] * m_a_fVibrationRange[m_dwVibrationType];
+            if (m_hHandleID == 1 && m_dwVibrationType >= 3)
+            {
+                if (!(m_fComboBlinkTime < 0.1f))
+                {
+                    m_fComboBlinkTime -= 0.1f;
+                    m_dwComboID ^= 3;
+                }
+                m_fGlowingTime += 2.0f * g_fTimeDifference;
+                m_fComboBlinkTime += g_fTimeDifference;
+                fGlowingStrength = 7.0f * ((float*)p_fCosTable)[((int)(81.48733f * (10.0f * m_fGlowingTime)) + 0x80) & 0x1ff];
+                if (fGlowingStrength < 0.0f)
+                    fGlowingStrength = -fGlowingStrength;
+                m_a_fGlowingPos[0] = m_Position.Vector[0] - fGlowingStrength;
+                m_a_fGlowingPos[1] = m_Position.Vector[1] - fGlowingStrength;
+                m_a_fGlowingPos[2] = fGlowingStrength + (m_a_fScoreOnScreen[0] + m_Position.Vector[0]);
+                m_a_fGlowingPos[3] = fGlowingStrength + (m_a_fScoreOnScreen[3] + (m_a_fComboPositionOnScreen[2][1] + m_Position.Vector[1]));
+            }
+        }
+        else
+        {
+            m_dwVibrationType = 0;
+            m_a_fVibrationDisplacement[m_hHandleID] = fCarry;
+            if (m_fSpinningTime[m_hHandleID ^ 1] == fCarry)
+                m_fVibrationTime = fCarry;
+            if (m_hHandleID == 1)
+            {
+                m_dwComboID = 1;
+                m_fComboBlinkTime = 0.0f;
+            }
+        }
+        if (m_hHandleID == 1)
+        {
+            m_a_fVibrationDisplacement[m_hHandleID] += m_fImpulse;
+            m_fImpulse = 0.75f * -m_fImpulse;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5157–5371 */
@@ -4353,7 +4717,208 @@ void AGO3_DigitalScoreDisplay::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVect
     unsigned int dwAuxScore;
     unsigned int dwScoreToSub;
     unsigned int dwScoreToAdd;
-    /* TODO: decompile from asm/... */
+    float fComboSpeed;
+
+    m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    if (AGO_bPrevAGOWasExtraParam)
+    {
+        m_a_fVibrationRange[1] = AGO_gExtraParameter1[0];
+        m_a_fVibrationRange[2] = AGO_gExtraParameter1[1];
+        m_a_fVibrationRange[3] = AGO_gExtraParameter1[2];
+        m_a_fVibrationDelay[0] = AGO_gExtraParameter2[0];
+        m_a_fVibrationDelay[1] = AGO_gExtraParameter2[1];
+    }
+    if (m_bFirstTime)
+    {
+        m_dwScore = 0;
+        for (i = 0; i < 5; i++)
+        {
+            m_a_dwDigit[m_hHandleID][i] = 0;
+            m_a_fDigitValue[m_hHandleID][i] = 0;
+            m_a_fDigitNumTurns[m_hHandleID][i] = 0;
+        }
+        m_bFirstTime = 0;
+        m_a_fVibrationDisplacement[m_hHandleID] = 0;
+    }
+    if (pPosition->xZ != 0.0f && pPosition->xZ != m_fContainerWidthPercentage)
+        SetSizes(pPosition->xZ);
+    fComboSpeed = pDirection->xY;
+    if (fComboSpeed != 0.0f && m_fComboSpeed != fComboSpeed)
+    {
+        m_fComboSpeed = fComboSpeed;
+        m_fInvComboSpeed = 1.0f / fComboSpeed;
+    }
+    if (pDirection->xX == 1.0f)
+    {
+        m_dwScore = 0;
+        for (i = 0; i < 5; i++)
+        {
+            m_a_dwDigit[m_hHandleID][i] = 0;
+            m_a_fDigitValue[m_hHandleID][i] = 0;
+            m_a_fDigitNumTurns[m_hHandleID][i] = 0;
+        }
+    }
+    else if (pDirection->xX == 0.0f)
+    {
+        if (m_hHandleID == 1)
+        {
+            if (m_dwComboStatus == 3)
+            {
+                if (m_fComboSpeed == -1.0f)
+                {
+                    m_bVisible[1] = 1;
+                    m_dwComboStatus = 2;
+                    m_fComboSpeed = 0.0f;
+                    m_a_fComboPositionOnScreen[2][1] = m_a_fComboPositionOnScreen[1][1];
+                    m_fImpulse = 1.0f;
+                }
+                else
+                {
+                    m_dwComboStatus = 1;
+                    m_fComboTime = m_fComboSpeed - m_fComboTime;
+                }
+            }
+            else if (!m_bVisible[1])
+            {
+                if (m_fComboSpeed == -1.0f)
+                {
+                    m_bVisible[1] = 1;
+                    m_dwComboStatus = 2;
+                    m_fComboSpeed = 0.0f;
+                    m_a_fComboPositionOnScreen[2][1] = m_a_fComboPositionOnScreen[1][1];
+                    m_fImpulse = 1.0f;
+                }
+                else
+                {
+                    m_dwComboStatus = 1;
+                }
+            }
+        }
+        else
+        {
+            m_bVisible[m_hHandleID] = 1;
+        }
+    }
+    else if (pDirection->xX == 2.0f)
+    {
+        if (m_hHandleID == 1)
+        {
+            if (m_dwComboStatus == 1)
+            {
+                if (m_fComboSpeed == -1.0f)
+                {
+                    m_bVisible[1] = 0;
+                    m_dwComboStatus = 0;
+                    m_fComboSpeed = 0.0f;
+                    m_a_fComboPositionOnScreen[2][1] = m_a_fComboPositionOnScreen[0][1];
+                    m_fImpulse = -1.0f;
+                }
+                else
+                {
+                    m_dwComboStatus = 3;
+                    m_fComboTime = m_fComboSpeed - m_fComboTime;
+                }
+            }
+            else if (m_bVisible[1] == 1)
+            {
+                if (m_fComboSpeed == -1.0f)
+                {
+                    m_bVisible[1] = 0;
+                    m_dwComboStatus = 0;
+                    m_fComboSpeed = 0.0f;
+                    m_a_fComboPositionOnScreen[2][1] = m_a_fComboPositionOnScreen[0][1];
+                    m_fImpulse = -1.0f;
+                }
+                else
+                {
+                    m_dwComboStatus = 3;
+                }
+            }
+        }
+        else
+        {
+            m_bVisible[0] = 0;
+        }
+    }
+    else if (pDirection->xX == 3.0f)
+    {
+        if (m_bPaused == 1)
+            m_bPaused = 0;
+        else
+            m_bPaused = 1;
+    }
+    else if (pDirection->xX == 4.0f)
+    {
+        m_bPaused = 0;
+    }
+    if (pDirection->xX == 5.0f)
+    {
+        for (i = 0; i < 5; i++)
+            m_a_dwDigit[m_hHandleID][i] = 0;
+    }
+    else if (fScoreToAdd != 0.0f)
+    {
+        m_a_fScoreToAdd[m_hHandleID] += fScoreToAdd;
+        m_fSpinningTime[m_hHandleID] += 0.5f;
+        if (m_fSpinningTime[m_hHandleID] > 1.0f)
+            m_fSpinningTime[m_hHandleID] = 1.0f;
+        m_fSpinningBaseTime[m_hHandleID] = m_fSpinningTime[m_hHandleID];
+        m_a_fScoreToAddPerSec[m_hHandleID] = m_a_fScoreToAdd[m_hHandleID] / m_fSpinningBaseTime[m_hHandleID];
+    }
+    if (fScoreToAdd > 0.0f)
+    {
+        dwScoreToAdd = (unsigned int)fScoreToAdd;
+        dwAuxScore = dwScoreToAdd / 10;
+        m_a_dwDigitToAdd[0] = dwScoreToAdd - dwAuxScore * 10;
+        m_a_dwDigitToAdd[1] = dwAuxScore - (dwAuxScore / 10) * 10;
+        m_a_dwDigitToAdd[2] = dwAuxScore / 10 - (dwAuxScore / 100) * 10;
+        m_a_dwDigitToAdd[3] = dwAuxScore / 100 - (dwAuxScore / 1000) * 10;
+        m_a_dwDigitToAdd[4] = dwAuxScore / 1000 - (dwAuxScore / 10000) * 10;
+        iCarry = 0;
+        for (i = 0; i < 5; i++)
+        {
+            m_a_dwDigit[m_hHandleID][i] += m_a_dwDigitToAdd[i] + iCarry;
+            if (m_a_dwDigit[m_hHandleID][i] >= 10)
+            {
+                m_a_dwDigit[m_hHandleID][i] -= 10;
+                iCarry = 1;
+            }
+            else
+            {
+                iCarry = 0;
+            }
+        }
+    }
+    else if (fScoreToAdd < 0.0f)
+    {
+        dwScoreToSub = (unsigned int)-fScoreToAdd;
+        dwAuxScore = dwScoreToSub / 10;
+        m_a_dwDigitToAdd[0] = dwScoreToSub - dwAuxScore * 10;
+        m_a_dwDigitToAdd[1] = dwAuxScore - (dwAuxScore / 10) * 10;
+        m_a_dwDigitToAdd[2] = dwAuxScore / 10 - (dwAuxScore / 100) * 10;
+        m_a_dwDigitToAdd[3] = dwAuxScore / 100 - (dwAuxScore / 1000) * 10;
+        m_a_dwDigitToAdd[4] = dwAuxScore / 1000 - (dwAuxScore / 10000) * 10;
+        iCarry = 0;
+        for (i = 0; i < 5; i++)
+        {
+            m_a_dwDigit[m_hHandleID][i] -= m_a_dwDigitToAdd[i] + iCarry;
+            if (m_a_dwDigit[m_hHandleID][i] < 0)
+            {
+                m_a_dwDigit[m_hHandleID][i] += 10;
+                iCarry = 1;
+            }
+            else
+            {
+                iCarry = 0;
+            }
+        }
+    }
+    if (pDirection->xX != 5.0f)
+        m_a_fDigitNumTurns[m_hHandleID][0] += fScoreToAdd;
+    m_dwVibrationType = (unsigned int)pDirection->xZ;
+    m_dwVibrationType = m_fSpinningTime[m_hHandleID] != 0.0f ? 1 : 0;
+    m_fInvCurrentVibrationFrequency = m_dwVibrationType ? 1.0f / m_a_fVibrationFrequency[m_dwVibrationType] : 1.0f;
+    m_fCurrentHalfFrequency = 0.5f * m_a_fVibrationFrequency[m_dwVibrationType];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 5143–5153 */
@@ -5015,16 +5580,96 @@ void AGO3_LightExplosion::Init(MTH3D_tdstVector_* p_stPosition, MTH3D_tdstVector
 {
     float fNorm;
     float fSpriteAngle;
-    float s2;
     float c2;
     float s1;
     float c1;
+    float s2;
     float fi;
-    float fAnglez;
     float fAnglex;
-    unsigned int i;
+    float fAnglez;
     AGO3_LE_SpriteData* pSpriteData;
-    /* TODO: decompile from asm/... */
+    unsigned int i;
+
+    m_Finished = 0; m_Position.Vector[0] = p_stPosition->xX; m_Position.Vector[1] = p_stPosition->xY; m_Position.Vector[2] = p_stPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    if (AGO_bPrevAGOWasExtraParam)
+        m_pLightMat = (int)AGO_gExtraMaterial;
+    m_stDirection = *p_stDirection;
+    m_fSize = fSize;
+    m_bInit = 1;
+    pSpriteData = m_a_stCloud;
+    fi = g_ffFrameTime - (float)(unsigned int)g_ffFrameTime;
+    fi = 8.647f + 0.1f * fi;
+    fSpriteAngle = 0.0f;
+    for (i = 0; i < 12; i++)
+    {
+        fAnglex = 0.1354f * fi;
+        fAnglez = 0.2321f * fi;
+        fAnglex -= (float)(unsigned int)(int)fAnglex;
+        fAnglez -= (float)(unsigned int)(int)fAnglez;
+        fAnglex *= 6.2831855f;
+        fAnglez *= 6.2831855f;
+        s1 = ((float*)p_fCosTable)[(int)(81.48733f * fAnglex) & 0x1ff];
+        c1 = ((float*)p_fCosTable)[((int)(81.48733f * fAnglex) + 0x80) & 0x1ff];
+        s2 = ((float*)p_fCosTable)[(int)(81.48733f * fAnglez) & 0x1ff];
+        c2 = ((float*)p_fCosTable)[((int)(81.48733f * fAnglez) + 0x80) & 0x1ff];
+        pSpriteData->stDirection.xX = c1 + s1 * s2 + s1 * c2;
+        pSpriteData->stDirection.xY = s1 + -c1 * s2 - c1 * c2;
+        pSpriteData->stDirection.xZ = -c2 + s2;
+        fNorm = pSpriteData->stDirection.xX * pSpriteData->stDirection.xX + pSpriteData->stDirection.xY * pSpriteData->stDirection.xY + pSpriteData->stDirection.xZ * pSpriteData->stDirection.xZ;
+        if (fNorm != 0.0f)
+        {
+            fNorm = 1.0f / AGO3_SQRT(fNorm);
+            pSpriteData->stDirection.xX *= fNorm;
+            pSpriteData->stDirection.xY *= fNorm;
+            pSpriteData->stDirection.xZ *= fNorm;
+            pSpriteData->stDirection.xX += p_stDirection->xX;
+            pSpriteData->stDirection.xY += p_stDirection->xY;
+            pSpriteData->stDirection.xZ += p_stDirection->xZ;
+        }
+        pSpriteData->fSize = m_fSize;
+        pSpriteData->fTransparency = 255.0f;
+        pSpriteData->fAngle = fSpriteAngle;
+        pSpriteData->stPosition = *p_stPosition;
+        fi += 1.0f;
+        fSpriteAngle += 0.13f * 6.2831855f;
+        pSpriteData++;
+    }
+    pSpriteData = m_a_stParticle;
+    fi = (float)rand() / 2147483648.0f;
+    for (i = 0; i < 20; i++)
+    {
+        fAnglex = 0.1354f * fi;
+        fAnglez = 0.2321f * fi;
+        fAnglex -= (float)(unsigned int)(int)fAnglex;
+        fAnglez -= (float)(unsigned int)(int)fAnglez;
+        fAnglex *= 6.2831855f;
+        fAnglez *= 6.2831855f;
+        s1 = ((float*)p_fCosTable)[(int)(81.48733f * fAnglex) & 0x1ff];
+        c1 = ((float*)p_fCosTable)[((int)(81.48733f * fAnglex) + 0x80) & 0x1ff];
+        s2 = ((float*)p_fCosTable)[(int)(81.48733f * fAnglez) & 0x1ff];
+        c2 = ((float*)p_fCosTable)[((int)(81.48733f * fAnglez) + 0x80) & 0x1ff];
+        pSpriteData->stDirection.xX = c1 + s1 * s2 + s1 * c2;
+        pSpriteData->stDirection.xY = s1 + -c1 * s2 - c1 * c2;
+        pSpriteData->stDirection.xZ = -c2 + s2;
+        fNorm = pSpriteData->stDirection.xX * pSpriteData->stDirection.xX + pSpriteData->stDirection.xY * pSpriteData->stDirection.xY + pSpriteData->stDirection.xZ * pSpriteData->stDirection.xZ;
+        if (fNorm != 0.0f)
+        {
+            fNorm = 2.0f * (1.0f / AGO3_SQRT(fNorm));
+            pSpriteData->stDirection.xX *= fNorm;
+            pSpriteData->stDirection.xY *= fNorm;
+            pSpriteData->stDirection.xZ *= fNorm;
+            pSpriteData->stDirection.xX += p_stDirection->xX;
+            pSpriteData->stDirection.xY += p_stDirection->xY;
+            pSpriteData->stDirection.xZ += p_stDirection->xZ;
+        }
+        pSpriteData->fSize = 0.25f * m_fSize;
+        pSpriteData->fTransparency = 0.0f;
+        pSpriteData->fAngle = 0.0f;
+        pSpriteData->stPosition = *p_stPosition;
+        m_a_ulParticleID[i] = i & 3;
+        fi += 1.0f;
+        pSpriteData++;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 4218–4238 */
@@ -5289,7 +5934,132 @@ void AGO3_SphericalRadiance::Process(void)
     float anglez;
     float anglex;
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    float fX1;
+    float fY1;
+    float fZ1;
+    float fX2;
+    float fY2;
+    float fZ2;
+    float fX3;
+    float fY3;
+    float fZ3;
+
+    if (m_Finished != 1)
+    {
+        m_fDuration -= g_fTimeDifference;
+        if (m_fCurrentTime == 0.0f)
+        {
+            m_fFinalValue[1] = m_a_stScroll[1].fFirstOffset;
+            m_fCurrentTime += g_fTimeDifference;
+        }
+        else
+        {
+            m_fCurrentTime += g_fTimeDifference;
+            if (m_fDuration <= 0.0f)
+                m_Finished = 1;
+            time = m_fCurrentTime * m_fInverseOfDuration;
+            fValue = AGO3_SQRT(time);
+            for (ulUV = 1; ulUV < 2; ulUV++)
+            {
+                switch (m_a_stScroll[ulUV].ulAcceleratorType)
+                {
+                case 0:
+                    m_fFinalValue[ulUV] = 0.0f;
+                    break;
+                case 1:
+                    m_fFinalValue[ulUV] = fValue;
+                    break;
+                case 2:
+                    m_fFinalValue[ulUV] = time;
+                    break;
+                case 3:
+                    m_fFinalValue[ulUV] = time;
+                    for (ulIterator = 0; ulIterator < (unsigned int)m_a_stScroll[ulUV].fAcceleration; ulIterator++)
+                        m_fFinalValue[ulUV] *= time;
+                    break;
+                }
+                m_fFinalValue[ulUV] = m_a_stScroll[ulUV].fFirstOffset + m_fFinalValue[ulUV] * (m_a_stScroll[ulUV].fFinalOffset - m_a_stScroll[ulUV].fFirstOffset);
+            }
+        }
+        if (m_fDuration <= 0.0f)
+        {
+            m_Finished = 1;
+        }
+        else
+        {
+            fi = 0.0f;
+            time = 0.1f * g_ffFrameTime;
+            pstSprite = m_a_stSprite;
+            for (i = 0; i < m_ulNumRays; i++)
+            {
+                anglex = 0.9f * time + 0.1354f * fi;
+                anglez = 0.81112f * time + 0.2321f * fi;
+                basex = ((float*)p_fCosTable)[(int)(81.48733f * (time + fi)) & 0x1ff];
+                basey = ((float*)p_fCosTable)[((int)(81.48733f * (time + fi)) + 0x80) & 0x1ff];
+                anglez2 = anglez + 0.035f * basey;
+                anglex2 = anglex + 0.035f * basex;
+                anglex3 = 0.5f * (anglex + anglex2);
+                anglez3 = 0.5f * (anglez + anglez2);
+                anglex -= (float)(unsigned int)(int)anglex;
+                anglez -= (float)(unsigned int)(int)anglez;
+                anglex2 -= (float)(unsigned int)(int)anglex2;
+                anglez2 -= (float)(unsigned int)(int)anglez2;
+                anglex3 -= (float)(unsigned int)(int)anglex3;
+                anglez3 -= (float)(unsigned int)(int)anglez3;
+                anglex *= 6.283f;
+                anglez *= 6.283f;
+                anglex2 *= 6.283f;
+                anglez2 *= 6.283f;
+                anglex3 *= 6.283f;
+                anglez3 *= 6.283f;
+                s1 = ((float*)p_fCosTable)[(int)(81.48733f * anglex) & 0x1ff];
+                c1 = ((float*)p_fCosTable)[((int)(81.48733f * anglex) + 0x80) & 0x1ff];
+                s2 = ((float*)p_fCosTable)[(int)(81.48733f * anglez) & 0x1ff];
+                c2 = ((float*)p_fCosTable)[((int)(81.48733f * anglez) + 0x80) & 0x1ff];
+                fX1 = 0.57735026f * (c1 + s1 * s2 + s1 * c2);
+                fY1 = 0.57735026f * (s1 + -c1 * s2 - c1 * c2);
+                fZ1 = 0.57735026f * (-c2 + s2);
+                s3 = ((float*)p_fCosTable)[(int)(81.48733f * anglex2) & 0x1ff];
+                c3 = ((float*)p_fCosTable)[((int)(81.48733f * anglex2) + 0x80) & 0x1ff];
+                s4 = ((float*)p_fCosTable)[(int)(81.48733f * anglez2) & 0x1ff];
+                c4 = ((float*)p_fCosTable)[((int)(81.48733f * anglez2) + 0x80) & 0x1ff];
+                fX2 = 0.57735026f * (c3 + s3 * s4 + s3 * c4);
+                fY2 = 0.57735026f * (s3 + -c3 * s4 - c3 * c4);
+                fZ2 = 0.57735026f * (-c4 + s4);
+                ss1 = ((float*)p_fCosTable)[(int)(81.48733f * anglex3) & 0x1ff];
+                cc1 = ((float*)p_fCosTable)[((int)(81.48733f * anglex3) + 0x80) & 0x1ff];
+                ss2 = ((float*)p_fCosTable)[(int)(81.48733f * anglez3) & 0x1ff];
+                cc2 = ((float*)p_fCosTable)[((int)(81.48733f * anglez3) + 0x80) & 0x1ff];
+                fX3 = 0.57735026f * (cc1 + ss1 * ss2 + ss1 * cc2);
+                fY3 = 0.57735026f * (ss1 + -cc1 * ss2 - cc1 * cc2);
+                fZ3 = 0.57735026f * (-cc2 + ss2);
+                if (m_bHalfSphere)
+                {
+                    fZ1 = fabsf(fZ1);
+                    fZ2 = fabsf(fZ2);
+                    fZ3 = fabsf(fZ3);
+                }
+                pstSprite->P3.xX = m_Position.Vector[0] + fX1 * m_fOuterRadius;
+                pstSprite->P3.xY = m_Position.Vector[1] + fY1 * m_fOuterRadius;
+                pstSprite->P3.xZ = m_Position.Vector[2] + fZ1 * m_fOuterRadius;
+                pstSprite->P4.xX = m_Position.Vector[0] + fX2 * m_fOuterRadius;
+                pstSprite->P4.xY = m_Position.Vector[1] + fY2 * m_fOuterRadius;
+                pstSprite->P4.xZ = m_Position.Vector[2] + fZ2 * m_fOuterRadius;
+                fInternalDistance = m_fOuterRadius - m_fInnerRadius;
+                fX3 *= fInternalDistance;
+                fY3 *= fInternalDistance;
+                fZ3 *= fInternalDistance;
+                pstSprite->P5.xX = pstSprite->P3.xX - fX3;
+                pstSprite->P5.xY = pstSprite->P3.xY - fY3;
+                pstSprite->P5.xZ = pstSprite->P3.xZ - fZ3;
+                pstSprite->P6.xX = pstSprite->P4.xX - fX3;
+                pstSprite->P6.xY = pstSprite->P4.xY - fY3;
+                pstSprite->P6.xZ = pstSprite->P4.xZ - fZ3;
+                fi += 1.0f;
+                pstSprite++;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3950–3999 */
@@ -5571,13 +6341,23 @@ void AGO3_SwirlingBubbles::Display(GLD_tdstViewportAttributes_* hVp)
  */
 void AGO3_SwirlingBubbles::Process(void)
 {
-    float fBackwardMultiplier;
     float fDelay;
+    float fBackwardMultiplier;
     unsigned int ulNbBubbles;
     unsigned int ulBubble2;
-    unsigned int ulBubble;
-    AGO3_SB_SpriteData* pSpriteData;
     MTH3D_tdstVector_* pV1;
+    float fV1Y;
+    float fV1Z;
+    float fV1X;
+    float fDX;
+    float fDY;
+    float fDZ;
+    float fOffY;
+    float fOffX;
+    float fNegX;
+    float fOffZ;
+    float fNegY;
+    float fNegZ;
     float fSin;
     float fCos;
     float fNorm1;
@@ -5585,8 +6365,139 @@ void AGO3_SwirlingBubbles::Process(void)
     float fInvNbRaws;
     float fAngle;
     unsigned int ulNbRaws;
+    AGO3_SB_SpriteData* pSpriteData;
     MTH3D_tdstVector_ stPosition;
-    /* TODO: decompile from asm/... */
+    unsigned int ulBubble;
+
+    pV1 = &stPosition;
+    if (m_bAlive)
+    {
+        fAngle = 25.132742f * g_fTimeDifference;
+        fDX = fDY = fDZ = 0.0f;
+        if (m_bGenerationInProgress)
+        {
+            ulNbRaws = 2 * (int)(0.5f + g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength);
+            fInvNbRaws = 1.0f / (float)ulNbRaws;
+            fAngle *= fInvNbRaws;
+            fDX = fInvNbRaws * (m_Position.Vector[0] - m_stLastPos.xX);
+            fDY = fInvNbRaws * (m_Position.Vector[1] - m_stLastPos.xY);
+            fDZ = fInvNbRaws * (m_Position.Vector[2] - m_stLastPos.xZ);
+            stPosition.xX = m_stLastPos.xX + fDX;
+            stPosition.xY = m_stLastPos.xY + fDY;
+            stPosition.xZ = m_stLastPos.xZ + fDZ;
+        }
+        else
+        {
+            ulNbRaws = 1;
+            stPosition.xX = m_Position.Vector[0];
+            stPosition.xY = m_Position.Vector[1];
+            stPosition.xZ = m_Position.Vector[2];
+        }
+        ulNbNewBubbles = ulNbRaws * 4;
+        if (m_ulNbBubbles + ulNbNewBubbles >= 0x200)
+        {
+            m_ulFirstSet = (m_ulFirstSet + ulNbNewBubbles) & 0x1ff;
+            m_ulNbBubbles -= ulNbNewBubbles;
+        }
+        while (ulNbRaws--)
+        {
+            m_fAngle += fAngle;
+            if (m_fAngle >= 6.2831855f)
+                fCos = 6.2831855f;
+            else
+                fCos = 0.0f;
+            m_fAngle -= fCos;
+            fV1X = -m_stDirection.xY;
+            fV1Y = m_stDirection.xX;
+            fV1Z = 0.0f;
+            fNorm1 = 1.0f / AGO3_SQRT(fV1Z + (fV1X * fV1X + fV1Y * fV1Y));
+            fV1X *= fNorm1;
+            fV1Y *= fNorm1;
+            fV1Z *= fNorm1;
+            fSin = ((float*)p_fCosTable)[(int)(81.48733f * m_fAngle) & 0x1ff];
+            fCos = ((float*)p_fCosTable)[((int)(81.48733f * m_fAngle) + 0x80) & 0x1ff];
+            fOffX = 0.9f * (fCos * (m_stDirection.xY * fV1Z - m_stDirection.xZ * fV1Y) + fSin * fV1X);
+            fOffY = 0.9f * (fCos * (m_stDirection.xZ * fV1X - m_stDirection.xX * fV1Z) + fSin * fV1Y);
+            fOffZ = 0.9f * (fCos * (m_stDirection.xX * fV1Y - m_stDirection.xY * fV1X) + fSin * fV1Z);
+            fNegX = -fOffX;
+            fNegY = -fOffY;
+            fNegZ = -fOffZ;
+            for (ulBubble = 0; ulBubble < 1; ulBubble++)
+            {
+                pSpriteData = &m_stSprite[m_ulFirstFree];
+                pSpriteData->stPosition.xX = stPosition.xX + fOffX;
+                pSpriteData->stPosition.xY = stPosition.xY + fOffY;
+                pSpriteData->stPosition.xZ = stPosition.xZ + fOffZ;
+                pSpriteData->stDirection.xX = -m_stDirection.xX;
+                pSpriteData->stDirection.xY = -m_stDirection.xY;
+                pSpriteData->stDirection.xZ = -m_stDirection.xZ;
+                pSpriteData->fSize = 0.04f * AGO3_M_xRand(0.5f, 2.0f);
+                pSpriteData->fDelay = 1.0f;
+                pSpriteData->fTimeBeforeDeath = 10.0f;
+                m_ulFirstFree = (m_ulFirstFree + 1) & 0x1ff;
+                m_ulNbBubbles++;
+            }
+            for (ulBubble = 0; ulBubble < 1; ulBubble++)
+            {
+                pSpriteData = &m_stSprite[m_ulFirstFree];
+                pSpriteData->stPosition.xX = stPosition.xX + fNegX;
+                pSpriteData->stPosition.xY = stPosition.xY + fNegY;
+                pSpriteData->stPosition.xZ = stPosition.xZ + fNegZ;
+                pSpriteData->stDirection.xX = -m_stDirection.xX;
+                pSpriteData->stDirection.xY = -m_stDirection.xY;
+                pSpriteData->stDirection.xZ = -m_stDirection.xZ;
+                pSpriteData->fSize = 0.04f * AGO3_M_xRand(0.5f, 2.0f);
+                pSpriteData->fDelay = 1.0f;
+                pSpriteData->fTimeBeforeDeath = 10.0f;
+                m_ulFirstFree = (m_ulFirstFree + 1) & 0x1ff;
+                m_ulNbBubbles++;
+            }
+            if (m_bGenerationInProgress & ulNbRaws)
+            {
+                stPosition.xX += fDX;
+                stPosition.xY += fDY;
+                stPosition.xZ += fDZ;
+            }
+        }
+    }
+    m_bGenerationInProgress = m_bAlive;
+    ulNbBubbles = m_ulNbBubbles;
+    if (ulNbBubbles == 0)
+    {
+        if (AGO_G_CurrentVU1Frame == 2)
+            m_Finished = 1;
+    }
+    else
+    {
+        ulBubble = m_ulFirstSet;
+        pSpriteData = &m_stSprite[ulBubble];
+        for (ulBubble2 = 0; ulBubble2 < ulNbBubbles; ulBubble2++)
+        {
+            pSpriteData->fTimeBeforeDeath -= g_fTimeDifference;
+            if (pSpriteData->fTimeBeforeDeath <= 0.0f)
+            {
+                m_ulFirstSet = (m_ulFirstSet + 1) & 0x200;
+                ulBubble = (ulBubble + 1) & 0x1ff;
+                pSpriteData = &m_stSprite[ulBubble];
+                m_ulNbBubbles--;
+            }
+            else
+            {
+                pSpriteData->fDelay -= g_fTimeDifference;
+                fDelay = pSpriteData->fDelay;
+                if (fDelay < 0.0f)
+                    fDelay = 0.0f;
+                fBackwardMultiplier = fDelay * g_fTimeDifference;
+                pSpriteData->stPosition.xX += AGO3_M_xRand(-0.02f, 0.02f) + pSpriteData->stDirection.xX * fBackwardMultiplier;
+                pSpriteData->stPosition.xY += AGO3_M_xRand(-0.02f, 0.02f) + pSpriteData->stDirection.xY * fBackwardMultiplier;
+                pSpriteData->stPosition.xZ += pSpriteData->stDirection.xZ * fBackwardMultiplier + (1.0f - fDelay) * g_fTimeDifference + 0.1f * pSpriteData->fSize;
+                ulBubble = (ulBubble + 1) & 0x1ff;
+                pSpriteData = &m_stSprite[ulBubble];
+            }
+        }
+    }
+    if (AGO_G_CurrentVU1Frame == 2)
+        m_bAlive = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 3467–3508 */
@@ -7132,20 +8043,112 @@ void AGO3_FistSmoke::Process(void)
  */
 void AGO3_FistSmoke::Init(MTH3D_tdstVector_* pPosition, MTH3D_tdstVector_* pDirection, GLI_tdstMaterial_* pMat1, float fForwardSpeed)
 {
+    unsigned int i;
     unsigned int ulDirSwitch;
     AGO3_FS_SpriteData* pSpriteData;
     unsigned int ulFirstEntry;
+    int iIndex;
     unsigned int ulFist;
-    C_Vector cvRandomDirection;
-    C_Vector a_cvDirection[2];
     C_Vector cvDirection;
-    float fY;
+    C_Vector a_cvDirection[2];
+    C_Vector cvRandomDirection;
     float fX;
-    float fMultiplier;
+    float fY;
     float fInterval;
+    float fMultiplier;
     unsigned int iSprite;
-    unsigned int i;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_* pPrevious;
+    unsigned int* pT;
+    unsigned int* pNb;
+    unsigned int* pFree;
+    float fDX, fDY, fDZ, fMX, fMY, fMZ;
+
+    ulFist = fForwardSpeed < 0.0f ? 1 : 0;
+    iIndex = ulFist * 4;
+    pT = m_a_ulNbAGOs;
+    pNb = (unsigned int*)((char*)pT + iIndex);
+    if (*pNb == 0)
+    {
+        m_Finished = 0; m_Position.Vector[0] = pPosition->xX; m_Position.Vector[1] = pPosition->xY; m_Position.Vector[2] = pPosition->xZ; m_Position.Vector[3] = 1.0f; m_pMat1 = pMat1; m_fCreationTime = g_ffFrameTime;
+    }
+    pT = m_a_ulFirstFree;
+    pFree = (unsigned int*)((char*)pT + iIndex);
+    ulFirstEntry = *pFree;
+    pSpriteData = &m_stSprite[ulFist][ulFirstEntry];
+    pSpriteData->fSize = m_fMainSize;
+    pSpriteData->fTransparency = 300.0f;
+    pSpriteData->stPosition = *pPosition;
+    for (i = 0; i < 6; i++)
+        pSpriteData->a_stSpritePosition[0][i] = *pPosition;
+    if (*pNb)
+    {
+        pPrevious = &m_stSprite[ulFist][ulFirstEntry == 0 ? 63 : ulFirstEntry - 1].stPosition;
+        fDX = pPrevious->xX - pPosition->xX;
+        fDY = pPrevious->xY - pPosition->xY;
+        fDZ = pPrevious->xZ - pPosition->xZ;
+        pSpriteData->ulNbIntermediates = (int)(0.5f + g_fTimeDifference / g_stEngineStructure.stEngineTimer.xFrameLength) - 1;
+        if (pSpriteData->ulNbIntermediates > 5)
+            pSpriteData->ulNbIntermediates = 5;
+        fInterval = 1.0f / (float)pSpriteData->ulNbIntermediates;
+        fMultiplier = fInterval;
+        for (iSprite = 1; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
+        {
+            fMX = fDX * fMultiplier;
+            fMY = fDY * fMultiplier;
+            fMZ = fDZ * fMultiplier;
+            for (i = 0; i < 6; i++)
+            {
+                pSpriteData->a_stSpritePosition[iSprite][i].xX = pPosition->xX + fMX;
+                pSpriteData->a_stSpritePosition[iSprite][i].xY = pPosition->xY + fMY;
+                pSpriteData->a_stSpritePosition[iSprite][i].xZ = pPosition->xZ + fMZ;
+            }
+            fMultiplier += fInterval;
+        }
+    }
+    else
+    {
+        pSpriteData->ulNbIntermediates = 0;
+    }
+    cvDirection.Vector[0] = pDirection->xX;
+    cvDirection.Vector[1] = pDirection->xY;
+    cvDirection.Vector[2] = pDirection->xZ;
+    cvDirection.Vector[3] = 1.0f;
+    sceVu0Normalize(&cvDirection, &cvDirection);
+    fX = 0.02f * cvDirection.Vector[0];
+    fY = 0.02f * cvDirection.Vector[1];
+    a_cvDirection[0].Vector[0] = fY;
+    a_cvDirection[0].Vector[1] = -fX;
+    a_cvDirection[0].Vector[2] = AGO3_M_xRand(0.02f, 0.1f);
+    a_cvDirection[1].Vector[0] = -fY;
+    a_cvDirection[1].Vector[1] = fX;
+    a_cvDirection[1].Vector[2] = AGO3_M_xRand(0.02f, 0.1f);
+    fX = 0.01f * cvDirection.Vector[0];
+    fY = 0.01f * cvDirection.Vector[1];
+    pSpriteData->a_stSpriteDirection[0].Vector[0] = fY;
+    pSpriteData->a_stSpriteDirection[0].Vector[1] = -fX;
+    pSpriteData->a_stSpriteDirection[0].Vector[2] = AGO3_M_xRand(0.01f, 0.05f);
+    pSpriteData->a_stSpriteDirection[1].Vector[0] = -fY;
+    pSpriteData->a_stSpriteDirection[1].Vector[1] = fX;
+    pSpriteData->a_stSpriteDirection[1].Vector[2] = pSpriteData->a_stSpriteDirection[0].Vector[2];
+    ulDirSwitch = 0;
+    for (iSprite = 0; iSprite < pSpriteData->ulNbIntermediates + 1; iSprite++)
+    {
+        for (i = 0; i < 6; i++)
+        {
+            sceVu0CopyVector(&cvRandomDirection, &cvDirection);
+            sceVu0ScaleVectorXYZ(&cvRandomDirection, &cvRandomDirection, AGO3_M_xRand(-1.1f, 1.1f));
+            sceVu0AddVector(&cvRandomDirection, &cvRandomDirection, ulDirSwitch == 0 ? &a_cvDirection[0] : &a_cvDirection[1]);
+            pSpriteData->a_stSpritePosition[iSprite][i].xX = pPosition->xX + cvRandomDirection.Vector[0];
+            pSpriteData->a_stSpritePosition[iSprite][i].xY = pPosition->xY + cvRandomDirection.Vector[1];
+            pSpriteData->a_ulType[iSprite] = cvRandomDirection.Vector[2] >= 0.0f ? 0 : 1;
+            pSpriteData->a_stSpritePosition[iSprite][i].xZ = pPosition->xZ + cvRandomDirection.Vector[2];
+        }
+        ulDirSwitch ^= 1;
+    }
+    (*pFree)++;
+    if (*pFree == 0x40)
+        *pFree = 0;
+    (*pNb)++;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ago\AGO3.cpp lines 2064–2069 */

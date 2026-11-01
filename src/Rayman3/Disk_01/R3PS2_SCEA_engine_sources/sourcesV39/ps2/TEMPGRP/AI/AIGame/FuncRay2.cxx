@@ -2744,6 +2744,8 @@ tdstNodeInterpret_* fn_p_stCode4PointsDeMagie(HIE_tdstSuperObject_* p_SuperObjPe
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma opt_lifetimes off
+#pragma opt_strength_reduction off
 tdstNodeInterpret_* fn_p_stCode4PointsDair(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     tdeFuncId_ eFuncId;
@@ -2791,6 +2793,8 @@ tdstNodeInterpret_* fn_p_stCode4PointsDair(HIE_tdstSuperObject_* p_SuperObjPerso
     p_stValue->eType = (tdeVariableType_)8;
     return p_stTree;
 }
+#pragma opt_lifetimes reset
+#pragma opt_strength_reduction reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\FuncRay2.cxx lines 95–523 */
 /* addr: 0x0021fd30  size: 2804 bytes */

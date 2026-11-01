@@ -3029,9 +3029,8 @@ tdstNodeInterpret_* fn_p_stEngineGotoKeyWord(HIE_tdstSuperObject_* p_SuperObjPer
     {
         sprintf(szForErrorString, "parameter zero in %s", fn_szFindPersonalTypeNameOfPersonalType(M_GetEngineObject(p_SuperObjPerso)->h_StandardGame->otObjectPersonalType));
         Erm_fn_v_UpdateLastError(0x43, g_ucAIModuleId, 0, 0x4e, -1, 0xff, 0, szForErrorString); Erm_fn_ClearLastError(0);
-        return p_stTree;
     }
-    if (lJump < 0)
+    else if (lJump < 0)
     {
         p_stTempTree = p_stTree + lJump;
         if (p_stTempTree < g_p_stIntelligence->p_stCurrentComport->p_stRules[g_ucNRule].p_stNodeInterpret)
@@ -3446,7 +3445,11 @@ inline tdstNodeInterpret_* fn_p_stSkipElseNode(tdstNodeInterpret_* p_stNode)
 {
     tdstNodeInterpret_* p_stNext;
     if (p_stNode->uwNodeToSkip)
-        return (tdstNodeInterpret_*)((char*)p_stNode + p_stNode->uwNodeToSkip * sizeof(tdstNodeInterpret_));
+    {
+        p_stNext = p_stNode;
+        p_stNext += p_stNode->uwNodeToSkip;
+        return p_stNext;
+    }
     p_stNext = fn_p_stSwapNextParameter(p_stNode + 1);
     p_stNode->uwNodeToSkip = (unsigned short)(p_stNext - p_stNode);
     return p_stNext;

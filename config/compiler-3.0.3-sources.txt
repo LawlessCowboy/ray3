@@ -1,5 +1,7 @@
-# Game sources compiled with MWCC 3.0.3-020716 instead of the 3.0.1-020123 game
-# baseline (both with the game flags, including -O3,p). Retail game code sits
+# Game sources compiled with MWCC 3.0.3-020716, patched by tools/patch_mwcc_303.py
+# (padloop limit 7, retail's count; whole-game sweep against the released 3.0.3:
+# +82 matches, none lost), instead of the 3.0.1-020123 game baseline (both with
+# the game flags, including -O3,p). Notes below call this compiler 3.0.3. Retail game code sits
 # between the two builds; each listed file matches at least as many functions
 # under 3.0.3 and keeps every recorded match, which fits per-file builds made
 # at different times. Re-derived after adopting -O3,p, which also accounted for
@@ -16,17 +18,11 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/W
 # fn_xDistanceBetweenPersoAndWP, fn_vGetCenterOfBoundingVolume) and gains one,
 # so the trade is -4/+1.  Verified 11/11 under 3.0.3, 7/11 under 3.0.1.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/AITools.c
-# ERM/CpaError.c was measured against 3.0.3 on 2026-10-20 and NOT added: its
-# three recorded matches verify under both builds (3/3 each), and
-# Erm_fn_v_UpdateLastError matches under neither (the retail pads an empty
-# infinite loop to 7 instructions; 3.0.3 pads to 6, 3.0.1 to 1, 3.0b38 to 9),
-# so the switch would gain nothing.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedur.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO2.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollGO.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/3dData.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/BlackBox.c
-src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GameEng.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Anim.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/SOL.c
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GEO/Culling.c
@@ -193,3 +189,48 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/VID/Specif/
 # recover it). Measured +2/-2 at the switch, with the seven conversion
 # functions above only matchable under 3.0.3.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO.c
+# GameEng.c: moved back to 3.0.1. fn_vClearDynamicHierarchy and
+# GAM_fn_vUpdateDynamicHierarchy_New need 3.0.1's short-loop padding and delay
+# slots and cannot reach retail size under 3.0.3. Trade-off: fn_vToggleCinemascope
+# matches only under 3.0.3 (store scheduling; 30 statement orders tried).
+# AI/AIGame/Operator.c: fn_p_stAffectOperator matches 2564/2564 only under MWCC
+# 3.0.3-020716 (3.0.1 misses its delay-slot fills and grows it by over 100
+# bytes); all 11 other recorded matches in the file still verify under 3.0.3.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Operator.c
+# Moved with the patched compiler (2026-10-31): each gains the named functions
+# and keeps every recorded match in the file.
+# AlwAct.c: fn_hGetNextAlwaysActiveCharNode
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/AlwAct.c
+# sndpostponedplay.cpp: fs_bIsPending__13PostponedPlayFP16CExtraEventActor
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndpostponedplay.cpp
+# MECTools.c: MEC_fn_vComputeInertiaTranslation
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECTools.c
+# cineinfo.c: CAM_fn_vUpdateTargetPosition
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/cineinfo.c
+# SDLRefs.cpp: Process__22C_SdlRef_TextureMatrixFv
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLRefs.cpp
+# Procedu1.cxx: fn_p_stReleaseAnalogJoystick
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Procedu1.cxx
+# mc_menu.c: MC_AskForInsertion
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SVG/mc_menu.c
+# SDLMain.cpp: PreprocessLightingForCheap__14C_CharacterSdlFP20HIE_tdstSuperObject_, __ct__17CSpriteControllerFUi
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp
+# TextFrmt.c: TEXT_vComputeLengthOgString
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/TextFrmt.c
+# PlayAnim.c: PLA_fn_vRefreshFrameNumber
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c
+# ERM/CpaError.c: Erm_fn_v_UpdateLastError needs the padded empty loops; the file
+# keeps every recorded match.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/ERM/CpaError.c
+# MEC/MECBase.c: MEC_fn_vUpdateSpeed reaches its exact 360-byte shape only under
+# 3.0.3 (no asm hazard nop after max.s); the file's 6 recorded matches all hold.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECBase.c
+# SFX/GrassFx.cpp: C_GrassFx::Display inlines float-to-unsigned (3.0.1 calls
+# fptoui); the file's 6 recorded matches all hold.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/GrassFx.cpp
+# AI/AIGame/ProcRay2.cxx: fn_p_stMiscProcOnTypeOfWP folds its stack byte read and
+# loses a loop nop only under 3.0.3; the file's 41 recorded matches all hold.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/ProcRay2.cxx
+# AI/AIGame/CAM_Proc.c: CAM_fn_p_stChangeConstants fixes 16 register rows only under
+# 3.0.3; the file's 18 recorded matches all hold.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Proc.c

@@ -23,9 +23,12 @@ Setup (both paths are git-ignored):
 """
 from __future__ import annotations
 
+import atexit
 import bisect
 import json
+import os
 import re
+import shutil
 import struct
 import subprocess
 import sys
@@ -458,8 +461,10 @@ def render(result: dict, context, helpers: dict, fmt: str = 'plain',
     symbol = result['candidate_symbol']
     sites: dict[int, tuple[int, list[int]]] = {}
     code, relocs = recover_relocations(target_code, entry['address'], symbolizer, sites)
-    build = ROOT / 'build' / 'asmdiff'
+    # One directory per process: parallel checks must not share these objects.
+    build = ROOT / 'build' / 'asmdiff' / str(os.getpid())
     build.mkdir(parents=True, exist_ok=True)
+    atexit.register(shutil.rmtree, build, ignore_errors=True)
 
     obj_path = ROOT / result['object']
     obj_sections = read_sections(obj_path)

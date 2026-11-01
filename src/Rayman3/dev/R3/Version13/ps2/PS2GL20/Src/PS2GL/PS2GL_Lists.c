@@ -1773,23 +1773,117 @@ void impPS2glCallList(unsigned int list)
  */
 unsigned int PS2glSDLModificationHelper(unsigned int pname, unsigned int* params)
 {
-    unsigned int uiLastStructureSize;
-    tag_stVU1MatriceL* param0;
-    tag_stVU1MatriceT* pMT;
-    tag_stVU1MatriceTinSDL* pMTinSDL;
-    tag_stMultiTextureParameters* pMTP;
-    unsigned int* pCurrent;
-    int iCount;
-    int i;
-    unsigned int uiMask;
-    unsigned int uiTargetObject;
+    unsigned int uiReturn;
+    tagListData* pListData;
+    tagListData** ppListData;
     int iDmaBufferOffset;
     unsigned int uiSDLIndicesSize;
-    tagListData** ppListData;
-    tagListData* pListData;
-    unsigned int uiReturn;
-    /* TODO: decompile from asm/... */
+    unsigned int uiTargetObject;
+    unsigned int uiMask;
+    int i;
+    int iCount;
+    unsigned int* pCurrent;
+    tag_stMultiTextureParameters* pMTP;
+    tag_stVU1MatriceL* param0;
+    unsigned int uiLastStructureSize;
+
+    pListData = NULL;
+    ppListData = PS2glSearchList(params[0]);
+    if (ppListData)
+    {
+        pListData = *ppListData;
+        if (pListData->pDmaBuffer)
+            uiReturn = 1;
+        else
+            uiReturn = 0;
+    }
+    else
+    {
+        uiReturn = 0;
+    }
+    if (uiReturn)
+    {
+        uiSDLIndicesSize = pListData->uiSDLIndicesSize;
+        iDmaBufferOffset = (int)pListData->pLastExecDmaBuffer;
+        iDmaBufferOffset -= (int)pListData->pDmaBuffer;
+        uiTargetObject = params[1];
+        uiMask = 0;
+        iCount = 0;
+        pCurrent = (unsigned int*)pListData->pSDLIndices;
+        uiReturn = 0;
+        for (i = 0; i < uiSDLIndicesSize; i++)
+        {
+            uiMask = pCurrent[1];
+            if (!(uiMask & 0x80000000))
+            {
+                if (iCount == uiTargetObject)
+                    break;
+                iCount++;
+            }
+            pCurrent += 2;
+        }
+        if (iCount == uiTargetObject)
+        {
+            pMTP = (tag_stMultiTextureParameters*)pCurrent[0];
+            if (iDmaBufferOffset)
+                pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + iDmaBufferOffset);
+            pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + 0xA0);
+            if (pname == 0xF38)
+                return (unsigned int)&pMTP->fTexture0UOffset;
+            uiLastStructureSize = sizeof(tag_stMultiTextureParameters);
+            if (uiMask & 0x01000000)
+            {
+                pMTP = pMTP + 1;
+                if (pname == 0xF31)
+                    return (unsigned int)((tag_stVU1MatriceTinSDL*)pMTP)->mLocalWorld;
+                if (pname == 0xF33)
+                    return (unsigned int)((tag_stVU1MatriceTinSDL*)pMTP)->mNormal;
+                uiLastStructureSize = sizeof(tag_stVU1MatriceTinSDL);
+            }
+            else if (uiMask & 0x00100000)
+            {
+                pMTP = pMTP + 1;
+                if (pname == 0xF32)
+                    return (unsigned int)((tag_stVU1MatriceT*)pMTP)->mModelView;
+                if (pname == 0xF33)
+                    return (unsigned int)((tag_stVU1MatriceT*)pMTP)->mNormal;
+                uiLastStructureSize = sizeof(tag_stVU1MatriceT);
+            }
+            if (uiMask & 0x04000000)
+            {
+                pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + uiLastStructureSize);
+                uiLastStructureSize = 0x90;
+            }
+            else if (uiMask & 0x08000000)
+            {
+                pMTP = (tag_stMultiTextureParameters*)((char*)pMTP + uiLastStructureSize);
+                uiLastStructureSize = 0x20;
+            }
+            if (uiMask & 0x00200000)
+            {
+                param0 = (tag_stVU1MatriceL*)((char*)pMTP + uiLastStructureSize);
+                if (pname == 0xF34)
+                    return (unsigned int)param0->mDiffuseLightColor;
+                if (pname == 0xF35)
+                    return (unsigned int)param0->mDiffuseLightPosition;
+                if (pname == 0xF36)
+                    return (unsigned int)param0->mSpecularLightColor;
+                if (pname == 0xF37)
+                    return (unsigned int)param0->mSpecularLightReflection;
+            }
+        }
+    }
+    return uiReturn;
 }
+
+extern void impPS2glBegin(unsigned int mode);
+extern void impPS2glEnd(void);
+extern void impPS2glFlush(void);
+extern void PS2glUpdateTexture(unsigned int target);
+extern void PS2glActiveTextureARB(unsigned int texture);
+extern void GsUpdateLimited(void);
+extern unsigned int VU1BufferFreeSpace(void);
+extern void VU1UpdateMatriceOutsideSDL(tagGLcontext* pctx);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2140–2248 */
 /* addr: 0x00151330  size: 992 bytes */
@@ -1868,12 +1962,110 @@ unsigned int PS2glSDLModificationHelper(unsigned int pname, unsigned int* params
  */
 void PS2glCallSDL(tagListData* pListData)
 {
-    tagGLtexblock theDefaultTexBlock;
-    int i;
-    unsigned int uiSize;
-    tagGLcontext* pctx;
     _sceDmaTag* pDmaTag;
-    /* TODO: decompile from asm/... */
+    tagGLcontext* pctx;
+    unsigned int uiSize;
+    int i;
+    tagGLtexblock theDefaultTexBlock;
+
+    pctx = &g_PS2glContext;
+    if ((int)pListData->pDmaBuffer == 1)
+        return;
+    if (!(pctx->uiStaticDisplayListBits & 0x1000))
+    {
+        if (!(pListData->uiSDLBits & 0x100))
+        {
+            pctx->bMatrixChanged = 1;
+            impPS2glBegin(4);
+            impPS2glEnd();
+        }
+        else
+        {
+            if ((pctx->uiStaticDisplayListBits & 0x10) && !(pctx->usDontUpdateBits & 1))
+            {
+                if ((pctx->nTextureEnableBits & 8) && pctx->bTexCubeChanged)
+                {
+                    PS2glUpdateTexture(0x8513);
+                    pctx->bTexCubeChanged = 0;
+                }
+                else if ((pctx->nTextureEnableBits & 2) && pctx->abTex2DChanged[0])
+                {
+                    PS2glUpdateTexture(0xde1);
+                    pctx->abTex2DChanged[0] = 0;
+                }
+                else if ((pctx->nTextureEnableBits & 1) && pctx->abTex1DChanged[0])
+                {
+                    PS2glUpdateTexture(0xde0);
+                    pctx->abTex1DChanged[0] = 0;
+                }
+                PS2glActiveTextureARB(1);
+                if ((pctx->nTextureEnableBits & 0x200) && pctx->abTex2DChanged[1])
+                {
+                    PS2glUpdateTexture(0xde1);
+                    pctx->abTex2DChanged[1] = 0;
+                }
+                else if ((pctx->nTextureEnableBits & 0x100) && pctx->abTex1DChanged[1])
+                {
+                    PS2glUpdateTexture(0xde0);
+                    pctx->abTex1DChanged[1] = 0;
+                }
+                PS2glActiveTextureARB(0);
+            }
+            if (!(pctx->usDontUpdateBits & 2))
+            {
+                if (g_gsContext.ModFlgs)
+                    GsUpdate();
+            }
+            else
+            {
+                if (g_gsContext.ModFlgs)
+                    GsUpdateLimited();
+            }
+            VU1UpdateMatriceOutsideSDL(&g_PS2glContext);
+        }
+    }
+    if (!(pctx->uiStaticDisplayListBits & 0x30000))
+    {
+        if (!VU1BufferFreeSpace())
+            impPS2glFlush();
+        pDmaTag = (_sceDmaTag*)pctx->pVIFIBufTail;
+        pctx->pVIFIBufTail++;
+        pDmaTag->qwc = 0;
+        pDmaTag->id = 0x50;
+        pDmaTag->next = (_sceDmaTag*)pListData->pDmaBuffer;
+        pDmaTag->p[1] = 0;
+        pDmaTag->p[0] = 0;
+        pListData->pLastExecDmaBuffer = pListData->pDmaBuffer;
+    }
+    else if (pctx->uiStaticDisplayListBits & 0x10000)
+    {
+        uiSize = pListData->uiSDLSize - 1;
+        if (VU1BufferFreeSpace() < uiSize)
+            impPS2glFlush();
+        memcpy(pctx->pVIFIBufTail, pListData->pDmaBuffer, uiSize << 4);
+        pListData->pLastExecDmaBuffer = pctx->pVIFIBufTail;
+        pctx->pVIFIBufTail += uiSize;
+    }
+    if (!(pctx->uiStaticDisplayListBits & 0x2000))
+        g_gsContext.ModFlgs |= pListData->ModFlgs;
+    if (!(pctx->uiStaticDisplayListBits & 0x4010))
+    {
+        tagGLtexblock theBlock = {0x3FF, 0, pctx->iMaxTexBlockCount};
+        theDefaultTexBlock = theBlock;
+        for (i = 0; i < 512; i++)
+        {
+            if (pctx->aTexName[i].bAllocated)
+                pctx->aTexName[i].bResident = 0;
+        }
+        for (i = 0; i < pctx->iMaxTexBlockCount; i++)
+            pctx->aBlockMap[i] = theDefaultTexBlock;
+        for (i = 0; i < 10; i++)
+            pctx->aTexLevelCount[i] = 0;
+        *(unsigned char*)((unsigned int)pctx->iCurTextureSet + (int)pctx->abTex2DChanged) = 1;
+        i = pctx->iCurTextureSet;
+        *(unsigned char*)((unsigned int)pctx->abTex1DChanged + i) = 1;
+        pctx->bTexCubeChanged = 1;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2106–2137 */
@@ -1913,7 +2105,7 @@ void PS2glReinitAfterSDLs(void)
     if (g_gsContext.ModFlgs)
         GsUpdate();
     {
-        tagGLtexblock theDefaultTexBlock = {0, 0, pctx->iMaxTexBlockCount};
+        tagGLtexblock theDefaultTexBlock = {0x3FF, 0, pctx->iMaxTexBlockCount};
         for (i = 0; i < 512; i++)
         {
             if (pctx->aTexName[i].bAllocated)
@@ -1924,8 +2116,9 @@ void PS2glReinitAfterSDLs(void)
     }
     for (i = 0; i < 10; i++)
         pctx->aTexLevelCount[i] = 0;
-    ((unsigned char*)pctx->abTex2DChanged)[pctx->iCurTextureSet] = 1;
-    ((unsigned char*)pctx->abTex1DChanged)[pctx->iCurTextureSet] = 1;
+    *(unsigned char*)((unsigned int)pctx->iCurTextureSet + (int)pctx->abTex2DChanged) = 1;
+    i = pctx->iCurTextureSet;
+    *(unsigned char*)((unsigned int)pctx->abTex1DChanged + i) = 1;
     pctx->bTexCubeChanged = 1;
 }
 
@@ -2098,6 +2291,9 @@ void impPS2glEndList(void)
     g_PS2glContext.pCurListData = NULL;
 }
 
+void PS2glFreeListDataPartially(tagListData* pDataOfList);
+void PS2glFreeListData(tagListData* pDataOfList);
+
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1789–1966 */
 /* addr: 0x00151b20  size: 1168 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2214,20 +2410,119 @@ void impPS2glEndList(void)
  */
 int PS2glComposeStaticDisplayList(tagListData* pListData)
 {
-    int iOffset;
-    int* param0;
-    void* pData2;
-    unsigned int uiRealSize;
-    tagGLtexblock theDefaultTexBlock;
-    int count;
-    void* pData;
-    _sceDmaTag* pDmaTag;
-    unsigned int uiOldSDLBits;
-    unsigned int uiOldMaxVifDmaBufLength;
-    float (*pOldVIFInBuf)[4];
-    float (*pOldVIFTail)[4];
     int i;
-    /* TODO: decompile from asm/... */
+    float (*pOldVIFTail)[4];
+    float (*pOldVIFInBuf)[4];
+    unsigned int uiOldMaxVifDmaBufLength;
+    unsigned int uiOldSDLBits;
+    _sceDmaTag* pDmaTag;
+    void* pData;
+    int count;
+    unsigned int uiRealSize;
+    void* pData2;
+    int* param0;
+    int iOffset;
+
+    pOldVIFTail = g_PS2glContext.pVIFIBufTail;
+    pData = (void*)PS2GL_SDL_DataBufferToUse;
+    uiOldMaxVifDmaBufLength = uiMaxVifDmaBufLength;
+    pOldVIFInBuf = g_PS2glContext.pVIFInBuf;
+    if (pData)
+    {
+        pData = (void*)PS2GL_SDL_DataBufferToUse;
+    }
+    else
+    {
+        pData = PS2glAllocator(pListData->uiSDLSize << 4);
+        if (!pData)
+            return 0;
+    }
+    impPS2glBegin(4);
+    impPS2glEnd();
+    if (pListData->uiSDLBits & 0x100)
+        g_PS2glContext.bMatrixChanged = 1;
+    if (!(pListData->uiSDLBits & 0x10))
+    {
+        g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
+        g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
+        g_PS2glContext.bTexCubeChanged = 1;
+    }
+    uiMaxVifDmaBufLength = pListData->uiSDLSize;
+    g_PS2glContext.pVIFInBuf = (float (*)[4])pData;
+    g_PS2glContext.pVIFIBufTail = (float (*)[4])pData;
+    pListData->pDmaBuffer = (float (*)[4])pData;
+    count = PS2glCountListObject(pListData);
+    if (count)
+    {
+        pListData->pSDLIndices = (int)PS2glAllocator((count * ((pListData->uiSDLBits & 0x800) ? 4 : 2)) << 2);
+    }
+    if (!(pListData->uiSDLBits & 0x10))
+    {
+        tagGLtexblock theDefaultTexBlock = {0x3FF, 0, g_PS2glContext.iMaxTexBlockCount};
+        for (i = 0; i < 512; i++)
+        {
+            if (g_PS2glContext.aTexName[i].bAllocated)
+                g_PS2glContext.aTexName[i].bResident = 0;
+        }
+        for (i = 0; i < g_PS2glContext.iMaxTexBlockCount; i++)
+            g_PS2glContext.aBlockMap[i] = theDefaultTexBlock;
+        for (i = 0; i < 10; i++)
+            g_PS2glContext.aTexLevelCount[i] = 0;
+    }
+    uiOldSDLBits = g_PS2glContext.uiStaticDisplayListBits;
+    g_PS2glContext.uiStaticDisplayListBits = pListData->uiSDLBits;
+    *(unsigned long*)&g_gsContext.GlobalModFlgs = 0;
+    g_PS2glContext.pCurListData = pListData;
+    g_PS2glContext.uiStaticDisplayListBits |= 0x01000000;
+    PS2glExecuteListData(pListData);
+    g_PS2glContext.uiStaticDisplayListBits = uiOldSDLBits;
+    pListData->uiSDLIndicesSize >>= 1;
+    g_PS2glContext.pCurListData = NULL;
+    pListData->ModFlgs = *(unsigned long*)&g_gsContext.GlobalModFlgs & 0x1FFFD0560000;
+    if (pListData->uiSDLBits & 4)
+        pListData->ModFlgs |= 0x100000;
+    pDmaTag = (_sceDmaTag*)g_PS2glContext.pVIFIBufTail;
+    pDmaTag->qwc = 0;
+    pDmaTag->mark = 0;
+    pDmaTag->id = 0x60;
+    pDmaTag->next = (_sceDmaTag*)pListData->pDmaBuffer;
+    pDmaTag->p[1] = 0;
+    pDmaTag->p[0] = 0;
+    if (!PS2GL_g_DontReallocSDLs || PS2GL_SDL_DataBufferToUse)
+    {
+        if ((VU1BufferFreeSpace() > 0x400) || PS2GL_SDL_DataBufferToUse)
+        {
+            uiRealSize = (((int)g_PS2glContext.pVIFIBufTail - (int)g_PS2glContext.pVIFInBuf) / 16) + 1;
+            pListData->uiSDLSize = uiRealSize;
+            uiRealSize <<= 4;
+            pData2 = PS2glAllocator(uiRealSize);
+            if (pData2)
+            {
+                pListData->pDmaBuffer = (float (*)[4])pData2;
+                memcpy(pListData->pDmaBuffer, g_PS2glContext.pVIFInBuf, uiRealSize);
+                iOffset = (int)pListData->pDmaBuffer - (int)g_PS2glContext.pVIFInBuf;
+                param0 = (int*)pListData->pSDLIndices;
+                for (i = 0; i < pListData->uiSDLIndicesSize; i++)
+                {
+                    *param0 += iOffset;
+                    param0 += 2;
+                }
+                if (!PS2GL_SDL_DataBufferToUse)
+                    PS2glLiberator(g_PS2glContext.pVIFInBuf);
+            }
+            else
+            {
+                printf("******** Panic in PS2GL ************* !!\n");
+            }
+        }
+    }
+    pListData->pLastExecDmaBuffer = pListData->pDmaBuffer;
+    if (!(pListData->ModFlgs & 8))
+        PS2glFreeListDataPartially(pListData);
+    uiMaxVifDmaBufLength = uiOldMaxVifDmaBufLength;
+    g_PS2glContext.pVIFIBufTail = pOldVIFTail;
+    g_PS2glContext.pVIFInBuf = pOldVIFInBuf;
+    return 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1722–1783 */
@@ -2309,12 +2604,11 @@ void impPS2glNewList(unsigned int list, unsigned int mode)
     tagListData** ppData;
 
     ppData = PS2glSearchList(list);
-    if (g_pPS2glApiTable == (int)&g_PS2glApiTableList)
-        printf("CAUTION: Missing glEndList before glNewList\n");
+    if ((unsigned int)g_pPS2glApiTable == (unsigned int)&g_PS2glApiTableList)
+        printf("CAUTION: Missing glEndList before glNewList!\n");
     if (ppData == NULL)
     {
-        ppData = PS2glAddLists(list, 1);
-        if (ppData == NULL)
+        if ((ppData = PS2glAddLists(list, 1)) == NULL)
             return;
     }
     if (*ppData != NULL)
@@ -2339,6 +2633,9 @@ void impPS2glNewList(unsigned int list, unsigned int mode)
     g_PS2glContext.pCurListVCode = g_PS2glListVBuf.abCode;
     g_PS2glContext.pCurListTexUnit = (int*)g_PS2glListVBuf.aeTexUnit;
     g_PS2glListVBuf.nCount = 0;
+    if ((mode == 0x1302) || (mode == 0x1303))
+    {
+    }
     g_pPS2glApiTable = (int)&g_PS2glApiTableList;
     g_PS2glContext.bFinalCompile = 1;
 }
@@ -2443,19 +2740,94 @@ void impPS2glPartialDeleteLists(unsigned int list)
  */
 void impPS2glDeleteLists(unsigned int list, int range)
 {
-    int iMove;
-    tagListData** param0;
-    tagListData** ppData;
-    int iDel;
-    int iNodeSize;
-    tagListNode* pNode1;
+    tagListNodeSingle* pSingleIndex;
+    tagListNode* pNode;
+    tagListNode* pNodePre;
+    int I;
     int iNewNodeSize;
     int iNewSize;
-    int I;
-    tagListNode* pNodePre;
-    tagListNode* pNode;
-    tagListNodeSingle* pSingleIndex;
-    /* TODO: decompile from asm/... */
+    tagListNode* pNode1;
+    int iNodeSize;
+    int iDel;
+    tagListData** ppData;
+    tagListData** param0;
+    int iMove;
+
+    pSingleIndex = g_PS2glContext.ListPool.aSingleIndex;
+    pNodePre = NULL;
+    pNode = g_PS2glContext.ListPool.pFirstNode;
+    if (range <= 0)
+        return;
+    if (range == 1)
+    {
+        for (I = 0; I < 64; I++, pSingleIndex++)
+        {
+            if (pSingleIndex->nIndex == list)
+            {
+                PS2glFreeListData(pSingleIndex->pData);
+                pSingleIndex->nIndex = 0;
+                pSingleIndex->pData = NULL;
+                return;
+            }
+        }
+    }
+    while (pNode)
+    {
+        if ((pNode->nIndex < list) && (list < pNode->nIndex + pNode->iSize))
+        {
+            iNewNodeSize = list - pNode->nIndex;
+            iNewSize = (iNewNodeSize - 1) * 4 + sizeof(tagListNode);
+            pNode1 = (tagListNode*)PS2glAllocator(iNewSize);
+            memcpy(pNode1, pNode, iNewSize);
+            pNode1->iSize = iNewNodeSize;
+            pNode1->pNext = pNode;
+            if (pNodePre == NULL)
+            {
+                g_PS2glContext.ListPool.pFirstNode = pNode1;
+            }
+            else
+            {
+                pNodePre->pNext = pNode1->pNext;
+            }
+            pNode->nIndex = list;
+            pNode->iSize -= iNewNodeSize;
+            memcpy(pNode->apData, (void*)pNode->apData[iNewNodeSize], iNewNodeSize * 4);
+        }
+        if (pNode->nIndex == list)
+        {
+            iNodeSize = pNode->iSize;
+            iDel = (iNodeSize < range) ? iNodeSize : range;
+            ppData = (tagListData**)pNode->apData;
+            for (; iDel > 0; iDel--)
+                PS2glFreeListData(*ppData++);
+            if (range < iNodeSize)
+            {
+                iMove = iNodeSize - range;
+                param0 = (tagListData**)pNode->apData;
+                for (; iMove > 0; iMove--)
+                    *param0++ = *ppData++;
+                return;
+            }
+            if (pNode->pNext == NULL)
+                g_PS2glContext.ListPool.pLastNode = pNodePre;
+            if (pNodePre == NULL)
+            {
+                g_PS2glContext.ListPool.pFirstNode = pNode->pNext;
+            }
+            else
+            {
+                pNodePre->pNext = pNode->pNext;
+            }
+            PS2glLiberator(pNode);
+            if (iNodeSize < range)
+            {
+                impPS2glDeleteLists(list + iNodeSize, range - iNodeSize);
+            }
+            return;
+        }
+        pNodePre = pNode;
+        pNode = pNode->pNext;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1596–1601 */
@@ -2589,10 +2961,10 @@ void PS2glExecuteListData(tagListData* pData)
  */
 int PS2glCountListObject(tagListData* pData)
 {
-    unsigned int cbNode;
+    tagGLlistcalls* pCalls;
     tagGLlistnode* pNode;
     unsigned int cbCalls;
-    tagGLlistcalls* pCalls;
+    unsigned int cbNode;
     int iCount;
 
     pCalls = pData->pCalls;
@@ -2601,21 +2973,23 @@ int PS2glCountListObject(tagListData* pData)
     {
         pNode = (tagGLlistnode*)pCalls->aNodes;
         cbCalls = 0;
-        while (cbCalls < pCalls->cbCalls)
+        while (pCalls && (cbCalls < pCalls->cbCalls))
         {
             cbNode = pNode->cbParamCount;
             if (cbNode)
             {
                 if ((pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glBegin) ||
-                    ((pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glDrawArrays) &&
-                     (pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glDrawElements)))
+                    (pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glDrawArrays) ||
+                    (pNode->pfns.pfnPlayParam == (void (*)(void*))plyPS2glDrawElements))
                 {
                     iCount++;
+                    /* Not original source: a redundant reload the compiler removes,
+                       found by the permuter; it gives cbNode retail's register. */
+                    cbNode = pNode->cbParamCount;
                 }
             }
-            cbNode = cbNode + 8;
-            pNode = (tagGLlistnode*)((char*)pNode + cbNode);
-            cbCalls += cbNode;
+            pNode = (tagGLlistnode*)((char*)pNode + (cbNode + 8));
+            cbCalls += cbNode + 8;
         }
         pCalls = pCalls->pNext;
     }
@@ -2669,6 +3043,11 @@ void PS2glAddPrimBuffer(tagGLprimbuf* pBuf, unsigned char EOP)
     if (EOP)
         g_PS2glContext.pCurListData->pPrimBufTail = pBuf;
 }
+
+#define VIFCODE(p) ((tagstVIFCode*)&(*(p))[3])
+void PS2glListBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart);
+void PS2glComputeBS(float* pfvBS, float (*pV)[4], int iCount, float* pBB, unsigned char bDivQ);
+void PS2glMergeBB(float* pDstBB, float* pSrcBB);
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 686–1339 */
 /* addr: 0x001526c0  size: 5776 bytes */
@@ -3289,33 +3668,508 @@ void PS2glAddPrimBuffer(tagGLprimbuf* pBuf, unsigned char EOP)
  */
 void PS2glListSaveBuffer(unsigned char EOP)
 {
-    tagGLprimbuf* pBuf_c;
-    tagGLprimbuf* pBufA;
-    unsigned int A;
-    unsigned int B;
-    unsigned int G;
-    unsigned int R;
-    unsigned int* puiDst;
-    int Q;
-    int V;
-    int U;
-    float* pfDst;
-    int W;
-    int Z;
-    int Y;
-    int X;
-    float vBB[6];
-    float fvPackageBS[4];
-    int i;
-    unsigned char bPackageBoundingSphere;
-    float (*pSrc)[4];
+    unsigned int cbPartSize;
+    unsigned int uiBufNumber;
+    unsigned int iBufSize;
+    unsigned int iBufSizeReduction;
     float (*pDst)[4];
     tagGLprimbuf* pBuf;
-    unsigned int iBufSizeReduction;
-    unsigned int iBufSize;
-    unsigned int uiBufNumber;
-    unsigned int cbPartSize;
-    /* TODO: decompile from asm/... */
+    float (*pSrc)[4];
+    unsigned char bPackageBoundingSphere;
+    int i;
+    float fvPackageBS[4];
+    float vBB[6];
+    int X;
+    int Y;
+    int Z;
+    int W;
+    int U;
+    int V;
+    int Q;
+    unsigned int* puiDst;
+    unsigned int R;
+    unsigned int G;
+    unsigned int B;
+    unsigned int A;
+    tagGLprimbuf* pBufA;
+    tagGLprimbuf* pBuf_c;
+
+    iBufSizeReduction = 0;
+    if (g_PS2glContext.nTextureEnableBits & 8)
+    {
+        switch (g_PS2glContext.pCurParamBegin->mode)
+        {
+        case 5:
+            uiBufNumber = g_PS2glContext.iBufCount - 3;
+            iBufSize = uiBufNumber + uiBufNumber * 2;
+            PS2glListBufferTriangleStripToTriangle(g_PS2glContext.pVBuf0, uiBufNumber, iBufSize);
+            PS2glListBufferTriangleStripToTriangle(g_PS2glContext.pNBuf0, uiBufNumber, iBufSize);
+            PS2glListBufferTriangleStripToTriangle(g_PS2glContext.pCBuf0, uiBufNumber, iBufSize);
+            PS2glListBufferTriangleStripToTriangle(g_PS2glContext.pTBuf0, uiBufNumber, iBufSize);
+            g_PS2glContext.iBufCount = (g_PS2glContext.iBufCount - 2) * 3;
+            break;
+        case 6:
+            uiBufNumber = g_PS2glContext.iBufCount - 3;
+            iBufSize = uiBufNumber + uiBufNumber * 2;
+            PS2glBufferTriangleFanToTriangle(g_PS2glContext.pVBuf0, uiBufNumber, iBufSize);
+            PS2glBufferTriangleFanToTriangle(g_PS2glContext.pNBuf0, uiBufNumber, iBufSize);
+            PS2glBufferTriangleFanToTriangle(g_PS2glContext.pCBuf0, uiBufNumber, iBufSize);
+            PS2glBufferTriangleFanToTriangle(g_PS2glContext.pTBuf0, uiBufNumber, iBufSize);
+            g_PS2glContext.iBufCount = (g_PS2glContext.iBufCount - 2) * 3;
+            break;
+        }
+    }
+    uiBufNumber = 4;
+    if (g_PS2glContext.uiDmaOmitDataBits & 1)
+    {
+        uiBufNumber--;
+    }
+    else if (g_PS2glContext.uiDmaOmitDataBits & 0x400)
+    {
+        iBufSizeReduction += g_PS2glContext.iBufCount - ((g_PS2glContext.iBufCount + 3) >> 2);
+    }
+    else if (g_PS2glContext.uiDmaOmitDataBits & 2)
+    {
+        iBufSizeReduction += (g_PS2glContext.iBufCount + 3) >> 2;
+    }
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x10)
+    {
+        uiBufNumber--;
+    }
+    else if (g_PS2glContext.uiDmaOmitDataBits & 0x200)
+    {
+        if (g_PS2glContext.uiDmaOmitDataBits & 0x40)
+            iBufSizeReduction += g_PS2glContext.iBufCount - ((g_PS2glContext.iBufCount + 3) >> 2);
+        else
+            iBufSizeReduction += g_PS2glContext.iBufCount - ((g_PS2glContext.iBufCount + 1) >> 1);
+    }
+    else if (g_PS2glContext.uiDmaOmitDataBits & 0x40)
+    {
+        iBufSizeReduction += g_PS2glContext.iBufCount - ((g_PS2glContext.iBufCount + 1) >> 1);
+    }
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x100)
+    {
+        iBufSizeReduction += g_PS2glContext.iBufCount - ((g_PS2glContext.iBufCount + 3) >> 2);
+    }
+    else if (g_PS2glContext.uiDmaOmitDataBits & 4)
+    {
+        uiBufNumber--;
+    }
+    cbPartSize = g_PS2glContext.iBufCount * 16;
+    iBufSize = ((g_PS2glContext.iBufCount + 1) * uiBufNumber - 1) - iBufSizeReduction;
+    if (g_PS2glContext.uiBoundingSphereBits & 0xE)
+    {
+        bPackageBoundingSphere = 0;
+        if (g_PS2glContext.uiBoundingSphereBits & 0xC)
+        {
+            iBufSize += 2;
+            bPackageBoundingSphere = 1;
+        }
+        if (g_PS2glContext.uiBoundingSphereBits & 0xA)
+        {
+            if (g_PS2glContext.uiBoundingSphereBits & 2)
+            {
+                PS2glComputeBS(fvPackageBS, g_PS2glContext.pVBuf0, g_PS2glContext.iBufCount, vBB, 0);
+                PS2glMergeBB(g_PS2glContext.faObjectBoundingBox, vBB);
+            }
+            else
+            {
+                PS2glComputeBS(fvPackageBS, g_PS2glContext.pVBuf0, g_PS2glContext.iBufCount, NULL, 0);
+            }
+        }
+        if (g_PS2glContext.uiBoundingSphereBits & 4)
+        {
+            *(quad*)fvPackageBS = *(quad*)g_PS2glContext.pfvPackaeBSs[g_PS2glContext.iPackageBSIndex];
+            g_PS2glContext.iPackageBSIndex++;
+        }
+    }
+    else
+    {
+        bPackageBoundingSphere = 0;
+    }
+    pBuf = (tagGLprimbuf*)PS2glAllocator(iBufSize * 16 + sizeof(tagGLprimbuf));
+    memset(pBuf, 0, sizeof(tagGLprimbuf));
+    pBuf->tagDma.qwc = iBufSize + 2;
+    pBuf->tagDma.mark = 0;
+    pBuf->tagDma.id = 0x20;
+    pBuf->tagDma.p[0] = 0x01000404;
+    pBuf->tagDma.p[1] = 0x6CC78000;
+    ((tagstVIFCode*)&pBuf->tagDma.p[1])->NUM = g_PS2glContext.iBufCount + 1;
+    *(quad*)&pBuf->tagGif = *(quad*)g_PS2glContext.pGifTagBuf0;
+    pBuf->tagGif.NLOOP = g_PS2glContext.iBufCount;
+    pBuf->tagGif.EOP = 1;
+    ((int*)&pBuf->tagGif)[3] = (unsigned char)((g_PS2glContext.nTextureEnableBits & 0x200) ? 1 : 0);
+    pDst = (float (*)[4])pBuf->vData;
+    memcpy(pDst, g_PS2glContext.pVBuf0, cbPartSize);
+    pDst += g_PS2glContext.iBufCount;
+    if (!(g_PS2glContext.uiDmaOmitDataBits & 1))
+    {
+        if (g_PS2glContext.uiDmaOmitDataBits & 0x400)
+        {
+            *(quad*)pDst = *(quad*)MY_UNPACKR;
+            VIFCODE(pDst)->CMD += 2;
+            VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+            VIFCODE(pDst)->IMMEDIATE = 0x803D;
+            pSrc = g_PS2glContext.pNBuf0;
+            pDst++;
+            puiDst = (unsigned int*)pDst;
+            for (i = 0; i < g_PS2glContext.iBufCount; i++)
+            {
+                X = (int)(127.0f * (*pSrc)[0]);
+                Y = (int)(127.0f * (*pSrc)[1]);
+                Z = (int)(127.0f * (*pSrc)[2]);
+                W = (int)(127.0f * (*pSrc)[3]);
+                pSrc++;
+                if (X > 127)
+                    X = 127;
+                else if (X < -127)
+                    X = -127;
+                if (Y > 127)
+                    Y = 127;
+                else if (Y < -127)
+                    Y = -127;
+                if (Z > 127)
+                    Z = 127;
+                else if (Z < -127)
+                    Z = -127;
+                if (W > 127)
+                    W = 127;
+                else if (W < -127)
+                    W = -127;
+                *puiDst++ = (W << 24) | ((Z << 16) | (X | (Y << 8)));
+            }
+            pDst += g_PS2glContext.iBufCount >> 2;
+            if (g_PS2glContext.iBufCount % 4)
+            {
+                pDst++;
+                memset(puiDst, 0, (char*)pDst - (char*)puiDst);
+            }
+        }
+        else if (g_PS2glContext.uiDmaOmitDataBits & 2)
+        {
+            *(quad*)pDst = *(quad*)MY_UNPACKR;
+            VIFCODE(pDst)->CMD -= 4;
+            VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+            VIFCODE(pDst)->IMMEDIATE = 0x803D;
+            pSrc = g_PS2glContext.pNBuf0;
+            pDst++;
+            puiDst = (unsigned int*)pDst;
+            for (i = 0; i < g_PS2glContext.iBufCount; i++)
+            {
+                memcpy(puiDst, pSrc++, 12);
+                puiDst += 3;
+            }
+            pDst += (g_PS2glContext.iBufCount * 3) >> 2;
+            if (g_PS2glContext.iBufCount % 4)
+            {
+                pDst++;
+                memset(puiDst, 0, (char*)pDst - (char*)puiDst);
+            }
+        }
+        else
+        {
+            *(quad*)pDst = *(quad*)MY_UNPACKR;
+            VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+            VIFCODE(pDst)->IMMEDIATE = 0x803D;
+            pDst++;
+            memcpy(pDst, g_PS2glContext.pNBuf0, cbPartSize);
+            pDst += g_PS2glContext.iBufCount;
+        }
+    }
+    if (!(g_PS2glContext.uiDmaOmitDataBits & 0x10))
+    {
+        if (g_PS2glContext.uiDmaOmitDataBits & 0x200)
+        {
+            if (g_PS2glContext.uiDmaOmitDataBits & 0x40)
+            {
+                *(quad*)pDst = *(quad*)MY_UNPACKR;
+                VIFCODE(pDst)->CMD -= 7;
+                VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+                VIFCODE(pDst)->IMMEDIATE = 0x8079;
+                pSrc = g_PS2glContext.pTBuf0;
+                pDst++;
+                puiDst = (unsigned int*)pDst;
+                for (i = 0; i < g_PS2glContext.iBufCount; i++)
+                {
+                    U = (int)(4096.0f * (*pSrc)[0]);
+                    V = (int)(4096.0f * (*pSrc)[1]);
+                    pSrc++;
+                    *puiDst++ = (U & 0xFFFF) | ((V & 0xFFFF) << 16);
+                }
+                pDst += g_PS2glContext.iBufCount >> 2;
+                if (g_PS2glContext.iBufCount % 4)
+                {
+                    pDst++;
+                    memset(puiDst, 0, (char*)pDst - (char*)puiDst);
+                }
+            }
+            else
+            {
+                *(quad*)pDst = *(quad*)MY_UNPACKR;
+                VIFCODE(pDst)->CMD += 1;
+                VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+                VIFCODE(pDst)->IMMEDIATE = 0x8079;
+                pSrc = g_PS2glContext.pTBuf0;
+                pDst++;
+                puiDst = (unsigned int*)pDst;
+                for (i = 0; i < g_PS2glContext.iBufCount; i++)
+                {
+                    U = (int)(4096.0f * (*pSrc)[0]);
+                    V = (int)(4096.0f * (*pSrc)[1]);
+                    Q = (int)(4096.0f * (*pSrc)[2]);
+                    W = (int)(4096.0f * (*pSrc)[3]);
+                    pSrc++;
+                    puiDst[0] = (U & 0xFFFF) | ((V & 0xFFFF) << 16);
+                    puiDst[1] = (Q & 0xFFFF) | ((W & 0xFFFF) << 16);
+                    puiDst += 2;
+                }
+                pDst += g_PS2glContext.iBufCount >> 1;
+                if (g_PS2glContext.iBufCount % 2)
+                {
+                    pDst++;
+                    memset(puiDst, 0, (char*)pDst - (char*)puiDst);
+                }
+            }
+        }
+        else if (g_PS2glContext.uiDmaOmitDataBits & 0x40)
+        {
+            *(quad*)pDst = *(quad*)MY_UNPACKR;
+            VIFCODE(pDst)->CMD -= 8;
+            VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+            VIFCODE(pDst)->IMMEDIATE = 0x8079;
+            pSrc = g_PS2glContext.pTBuf0;
+            pDst++;
+            for (i = 0; i < (g_PS2glContext.iBufCount >> 1); i++)
+            {
+                memcpy(pDst, pSrc++, 8);
+                memcpy((char*)pDst + 8, pSrc++, 8);
+                pDst++;
+            }
+            if (g_PS2glContext.iBufCount % 2)
+            {
+                memcpy(pDst, pSrc, 8);
+                memset((char*)pDst + 8, 0, 8);
+                pDst++;
+            }
+        }
+        else
+        {
+            *(quad*)pDst = *(quad*)MY_UNPACKR;
+            VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+            VIFCODE(pDst)->IMMEDIATE = 0x8079;
+            pDst++;
+            memcpy(pDst, g_PS2glContext.pTBuf0, cbPartSize);
+            pDst += g_PS2glContext.iBufCount;
+        }
+    }
+    if (g_PS2glContext.uiDmaOmitDataBits & 0x100)
+    {
+        *(quad*)pDst = *(quad*)MY_UNPACKR;
+        VIFCODE(pDst)->CMD += 2;
+        VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+        VIFCODE(pDst)->IMMEDIATE = 0xC0B5;
+        pSrc = g_PS2glContext.pCBuf0;
+        pDst++;
+        puiDst = (unsigned int*)pDst;
+        for (i = 0; i < g_PS2glContext.iBufCount; i++)
+        {
+            R = (unsigned int)((*pSrc)[0] * vColorLimit128[0]);
+            G = (unsigned int)((*pSrc)[1] * vColorLimit128[1]);
+            B = (unsigned int)((*pSrc)[2] * vColorLimit128[2]);
+            A = (unsigned int)((*pSrc)[3] * vColorLimit128[3]);
+            pSrc++;
+            if (R > 255)
+                R = 255;
+            if (G > 255)
+                G = 255;
+            if (B > 255)
+                B = 255;
+            if (A > 255)
+                A = 255;
+            *puiDst++ = (A << 24) | ((B << 16) | (R | (G << 8)));
+        }
+        pDst += g_PS2glContext.iBufCount >> 2;
+        if (g_PS2glContext.iBufCount % 4)
+        {
+            pDst++;
+            memset(puiDst, 0, (char*)pDst - (char*)puiDst);
+        }
+    }
+    else if (!(g_PS2glContext.uiDmaOmitDataBits & 4))
+    {
+        *(quad*)pDst = *(quad*)MY_UNPACKR;
+        VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+        VIFCODE(pDst)->IMMEDIATE = 0x80B5;
+        pDst++;
+        memcpy(pDst, g_PS2glContext.pCBuf0, cbPartSize);
+        pDst += g_PS2glContext.iBufCount;
+    }
+    if (bPackageBoundingSphere)
+    {
+        *(quad*)pDst = *(quad*)MY_UNPACKR;
+        VIFCODE(pDst)->NUM = 1;
+        VIFCODE(pDst)->IMMEDIATE = 0x80F2;
+        *(quad*)(pDst + 1) = *(quad*)fvPackageBS;
+        pDst += 2;
+    }
+    *(quad*)pDst = *(quad*)MY_MSCNT;
+    PS2glAddPrimBuffer(pBuf, 0);
+    if (g_PS2glContext.nTextureEnableBits & 0x200)
+    {
+        iBufSizeReduction = 0;
+        uiBufNumber = 3;
+        if (g_PS2glContext.uiDmaOmitDataBits & 0x20)
+        {
+            uiBufNumber--;
+        }
+        else if (g_PS2glContext.uiDmaOmitDataBits & 0x80)
+        {
+            iBufSizeReduction += g_PS2glContext.iBufCount - ((g_PS2glContext.iBufCount + 1) >> 1);
+        }
+        if (g_PS2glContext.uiDmaOmitDataBits & 8)
+            uiBufNumber--;
+        cbPartSize = g_PS2glContext.iBufCount * 16;
+        iBufSize = ((g_PS2glContext.iBufCount + 1) * uiBufNumber - 1) - iBufSizeReduction;
+        pBufA = (tagGLprimbuf*)PS2glAllocator(iBufSize * 16 + sizeof(tagGLprimbuf));
+        memcpy(pBufA, pBuf, sizeof(tagGLprimbuf));
+        ((int*)&pBufA->tagGif)[3] = (unsigned char)(((g_PS2glContext.nTextureEnableBits & 0x200) ? 1 : 0) | 0x10);
+        pDst = (float (*)[4])pBufA->vData;
+        pBufA->tagDma.qwc = iBufSize + 2;
+        memcpy(pDst, g_PS2glContext.pVBuf0, cbPartSize);
+        pDst += g_PS2glContext.iBufCount;
+        if (!(g_PS2glContext.uiDmaOmitDataBits & 0x20))
+        {
+            if (g_PS2glContext.uiDmaOmitDataBits & 0x80)
+            {
+                *(quad*)pDst = *(quad*)MY_UNPACKR;
+                VIFCODE(pDst)->CMD -= 8;
+                VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+                VIFCODE(pDst)->IMMEDIATE = 0x8079;
+                pSrc = g_PS2glContext.pTBuf0_b;
+                pDst++;
+                for (i = 0; i < (g_PS2glContext.iBufCount >> 1); i++)
+                {
+                    memcpy(pDst, pSrc++, 8);
+                    memcpy((char*)pDst + 8, pSrc++, 8);
+                    pDst++;
+                }
+                if (g_PS2glContext.iBufCount % 2)
+                {
+                    memcpy(pDst, pSrc, 8);
+                    memset((char*)pDst + 8, 0, 8);
+                    pDst++;
+                }
+            }
+            else
+            {
+                *(quad*)pDst = *(quad*)MY_UNPACKR;
+                VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+                VIFCODE(pDst)->IMMEDIATE = 0x8079;
+                pDst++;
+                memcpy(pDst, g_PS2glContext.pTBuf0_b, cbPartSize);
+                pDst += g_PS2glContext.iBufCount;
+            }
+        }
+        if (!(g_PS2glContext.uiDmaOmitDataBits & 8))
+        {
+            *(quad*)pDst = *(quad*)MY_UNPACKR;
+            VIFCODE(pDst)->NUM = g_PS2glContext.iBufCount;
+            VIFCODE(pDst)->IMMEDIATE = 0x80B5;
+            pDst++;
+            memcpy(pDst, g_PS2glContext.pCBuf0_b, cbPartSize);
+            pDst += g_PS2glContext.iBufCount;
+        }
+        *(quad*)pDst = *(quad*)MY_MSCNT;
+        PS2glAddPrimBuffer(pBufA, 0);
+    }
+    if (EOP)
+    {
+        pBuf_c = (tagGLprimbuf*)PS2glAllocator(sizeof(tagGLprimbuf));
+        memset(pBuf_c, 0, sizeof(tagGLprimbuf));
+        pBuf_c->tagDma.qwc = 2;
+        pBuf_c->tagDma.mark = 0;
+        pBuf_c->tagDma.id = 0x60;
+        memset(&pBuf_c->tagGif, 0, 16);
+        memset(pBuf_c->vData, 0, 16);
+        PS2glAddPrimBuffer(pBuf_c, 1);
+    }
+    if (!EOP)
+    {
+        switch (g_PS2glContext.pCurParamBegin->mode)
+        {
+        case 5:
+            if (g_PS2glContext.nTextureEnableBits & 8)
+            {
+                *(quad*)g_PS2glContext.pVBuf0[0] = *(quad*)g_PS2glContext.pVBuf0[g_PS2glContext.iBufCount - 1];
+                *(quad*)g_PS2glContext.pNBuf0[0] = *(quad*)g_PS2glContext.pNBuf0[g_PS2glContext.iBufCount - 1];
+                *(quad*)g_PS2glContext.pTBuf0[0] = *(quad*)g_PS2glContext.pTBuf0[g_PS2glContext.iBufCount - 1];
+                *(quad*)g_PS2glContext.pCBuf0[0] = *(quad*)g_PS2glContext.pCBuf0[g_PS2glContext.iBufCount - 1];
+                *(quad*)g_PS2glContext.pVBuf0[1] = *(quad*)g_PS2glContext.pVBuf0[g_PS2glContext.iBufCount - 2];
+                *(quad*)g_PS2glContext.pNBuf0[1] = *(quad*)g_PS2glContext.pNBuf0[g_PS2glContext.iBufCount - 2];
+                *(quad*)g_PS2glContext.pTBuf0[1] = *(quad*)g_PS2glContext.pTBuf0[g_PS2glContext.iBufCount - 2];
+                *(quad*)g_PS2glContext.pCBuf0[1] = *(quad*)g_PS2glContext.pCBuf0[g_PS2glContext.iBufCount - 2];
+                *(quad*)g_PS2glContext.pTBuf0_b[0] = *(quad*)g_PS2glContext.pTBuf0_b[g_PS2glContext.iBufCount - 1];
+                *(quad*)g_PS2glContext.pCBuf0_b[0] = *(quad*)g_PS2glContext.pCBuf0_b[g_PS2glContext.iBufCount - 1];
+                *(quad*)g_PS2glContext.pTBuf0_b[1] = *(quad*)g_PS2glContext.pTBuf0_b[g_PS2glContext.iBufCount - 2];
+                *(quad*)g_PS2glContext.pCBuf0_b[1] = *(quad*)g_PS2glContext.pCBuf0_b[g_PS2glContext.iBufCount - 2];
+            }
+            else
+            {
+                *(quad*)g_PS2glContext.pVBuf0[0] = *(quad*)g_PS2glContext.pVBuf0[g_PS2glContext.iBufCount - 2];
+                *(quad*)g_PS2glContext.pNBuf0[0] = *(quad*)g_PS2glContext.pNBuf0[g_PS2glContext.iBufCount - 2];
+                *(quad*)g_PS2glContext.pTBuf0[0] = *(quad*)g_PS2glContext.pTBuf0[g_PS2glContext.iBufCount - 2];
+                *(quad*)g_PS2glContext.pCBuf0[0] = *(quad*)g_PS2glContext.pCBuf0[g_PS2glContext.iBufCount - 2];
+                *(quad*)g_PS2glContext.pVBuf0[1] = *(quad*)g_PS2glContext.pVBuf0[g_PS2glContext.iBufCount - 1];
+                *(quad*)g_PS2glContext.pNBuf0[1] = *(quad*)g_PS2glContext.pNBuf0[g_PS2glContext.iBufCount - 1];
+                *(quad*)g_PS2glContext.pTBuf0[1] = *(quad*)g_PS2glContext.pTBuf0[g_PS2glContext.iBufCount - 1];
+                *(quad*)g_PS2glContext.pCBuf0[1] = *(quad*)g_PS2glContext.pCBuf0[g_PS2glContext.iBufCount - 1];
+                *(quad*)g_PS2glContext.pTBuf0_b[0] = *(quad*)g_PS2glContext.pTBuf0_b[g_PS2glContext.iBufCount - 2];
+                *(quad*)g_PS2glContext.pCBuf0_b[0] = *(quad*)g_PS2glContext.pCBuf0_b[g_PS2glContext.iBufCount - 2];
+                *(quad*)g_PS2glContext.pTBuf0_b[1] = *(quad*)g_PS2glContext.pTBuf0_b[g_PS2glContext.iBufCount - 1];
+                *(quad*)g_PS2glContext.pCBuf0_b[1] = *(quad*)g_PS2glContext.pCBuf0_b[g_PS2glContext.iBufCount - 1];
+            }
+            g_PS2glContext.iBufCount = 2;
+            g_PS2glContext.pVBuf = g_PS2glContext.pVBuf0 + 2;
+            g_PS2glContext.pNBuf = g_PS2glContext.pNBuf0 + 2;
+            g_PS2glContext.pTBuf = g_PS2glContext.pTBuf0 + 2;
+            g_PS2glContext.pCBuf = g_PS2glContext.pCBuf0 + 2;
+            g_PS2glContext.pTBuf_b = g_PS2glContext.pTBuf0_b + 2;
+            g_PS2glContext.pCBuf_b = g_PS2glContext.pCBuf0_b + 2;
+            return;
+        case 6:
+            *(quad*)g_PS2glContext.pVBuf0[1] = *(quad*)g_PS2glContext.pVBuf0[g_PS2glContext.iBufCount - 1];
+            *(quad*)g_PS2glContext.pNBuf0[1] = *(quad*)g_PS2glContext.pNBuf0[g_PS2glContext.iBufCount - 1];
+            *(quad*)g_PS2glContext.pTBuf0[1] = *(quad*)g_PS2glContext.pTBuf0[g_PS2glContext.iBufCount - 1];
+            *(quad*)g_PS2glContext.pCBuf0[1] = *(quad*)g_PS2glContext.pCBuf0[g_PS2glContext.iBufCount - 1];
+            g_PS2glContext.iBufCount = 2;
+            g_PS2glContext.pVBuf = g_PS2glContext.pVBuf0 + 2;
+            g_PS2glContext.pNBuf = g_PS2glContext.pNBuf0 + 2;
+            g_PS2glContext.pTBuf = g_PS2glContext.pTBuf0 + 2;
+            g_PS2glContext.pCBuf = g_PS2glContext.pCBuf0 + 2;
+            g_PS2glContext.pTBuf_b = g_PS2glContext.pTBuf0_b + 2;
+            g_PS2glContext.pCBuf_b = g_PS2glContext.pCBuf0_b + 2;
+            return;
+        default:
+            g_PS2glContext.iBufCount = 0;
+            g_PS2glContext.pVBuf = g_PS2glContext.pVBuf0;
+            g_PS2glContext.pNBuf = g_PS2glContext.pNBuf0;
+            g_PS2glContext.pCBuf = g_PS2glContext.pCBuf0;
+            g_PS2glContext.pTBuf = g_PS2glContext.pTBuf0;
+            g_PS2glContext.pCBuf_b = g_PS2glContext.pCBuf0_b;
+            g_PS2glContext.pTBuf_b = g_PS2glContext.pTBuf0_b;
+            return;
+        }
+    }
+    else
+    {
+        g_PS2glContext.iBufCount = 0;
+        g_PS2glContext.pVBuf = g_PS2glContext.pVBuf0;
+        g_PS2glContext.pNBuf = g_PS2glContext.pNBuf0;
+        g_PS2glContext.pCBuf = g_PS2glContext.pCBuf0;
+        g_PS2glContext.pTBuf = g_PS2glContext.pTBuf0;
+        g_PS2glContext.pCBuf_b = g_PS2glContext.pCBuf0_b;
+        g_PS2glContext.pTBuf_b = g_PS2glContext.pTBuf0_b;
+    }
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 671–678 */
@@ -3500,19 +4354,95 @@ void PS2glMergeBB(float* pDstBB, float* pSrcBB)
  */
 void PS2glComputeBS(float* pfvBS, float (*pV)[4], int iCount, float* pBB, unsigned char bDivQ)
 {
-    float fDepth;
-    float fHeight;
-    float fWidth;
-    float fQ;
-    float fTemp;
-    float fPZ;
-    float fNZ;
-    float fPY;
-    float fNY;
-    float fPX;
-    float fNX;
     int i;
-    /* TODO: decompile from asm/... */
+    float fNX;
+    float fPX;
+    float fNY;
+    float fPY;
+    float fNZ;
+    float fPZ;
+    float fTemp;
+    float fQ;
+    float fWidth;
+    float fHeight;
+    float fDepth;
+
+    if (!bDivQ)
+    {
+        fPX = (*pV)[0];
+        fPY = (*pV)[1];
+        fPZ = (*pV)[2];
+        fNX = fPX;
+        fNY = fPY;
+        fNZ = fPZ;
+        pV++;
+        for (i = 1; i < iCount; i++)
+        {
+            fTemp = (*pV)[0];
+            if (fTemp < fNX)
+                fNX = fTemp;
+            else if (fTemp > fPX)
+                fPX = fTemp;
+            fTemp = (*pV)[1];
+            if (fTemp < fNY)
+                fNY = fTemp;
+            else if (fTemp > fPY)
+                fPY = fTemp;
+            fTemp = (*pV)[2];
+            if (fTemp < fNZ)
+                fNZ = fTemp;
+            else if (fTemp > fPZ)
+                fPZ = fTemp;
+            pV++;
+        }
+    }
+    else
+    {
+        fQ = 1.0f / (*pV)[3];
+        fPX = (*pV)[0] * fQ;
+        fPY = (*pV)[1] * fQ;
+        fPZ = (*pV)[2] * fQ;
+        fNX = fPX;
+        fNY = fPY;
+        fNZ = fPZ;
+        pV++;
+        for (i = 1; i < iCount; i++)
+        {
+            fQ = 1.0f / (*pV)[3];
+            fTemp = (*pV)[0] * fQ;
+            if (fTemp < fNX)
+                fNX = fTemp;
+            else if (fTemp > fPX)
+                fPX = fTemp;
+            fTemp = (*pV)[1] * fQ;
+            if (fTemp < fNY)
+                fNY = fTemp;
+            else if (fTemp > fPY)
+                fPY = fTemp;
+            fTemp = (*pV)[2] * fQ;
+            if (fTemp < fNZ)
+                fNZ = fTemp;
+            else if (fTemp > fPZ)
+                fPZ = fTemp;
+            pV++;
+        }
+    }
+    fWidth = 0.5f * (fPX - fNX);
+    fHeight = 0.5f * (fPY - fNY);
+    fDepth = 0.5f * (fPZ - fNZ);
+    if (pBB)
+    {
+        pBB[0] = fNX;
+        pBB[1] = fPX;
+        pBB[2] = fNY;
+        pBB[3] = fPY;
+        pBB[4] = fNZ;
+        pBB[5] = fPZ;
+    }
+    pfvBS[0] = fNX + fWidth;
+    pfvBS[1] = fNY + fHeight;
+    pfvBS[2] = fNZ + fDepth;
+    pfvBS[3] = PS2gl_xSqrt(g_fBSMultiplicator * (fWidth * fWidth + fHeight * fHeight + fDepth * fDepth));
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 453–552 */
@@ -3608,21 +4538,98 @@ void PS2glComputeBS(float* pfvBS, float (*pV)[4], int iCount, float* pBB, unsign
  */
 void PS2glListAssembleQuads(void)
 {
-    int I;
-    int iQuadCount;
-    float (*pT1_b)[4];
-    float (*pT_b)[4];
-    float (*pC1_b)[4];
-    float (*pC_b)[4];
-    float (*pT1)[4];
-    float (*pT)[4];
-    float (*pC1)[4];
-    float (*pC)[4];
-    float (*param0)[4];
-    float (*pN)[4];
     float (*pV1)[4];
+    float (*param0)[4];
+    float (*pC1)[4];
+    float (*pT1)[4];
+    float (*pC1_b)[4];
+    float (*pT1_b)[4];
+    int iQuadCount;
+    int I;
     float (*pV)[4];
-    /* TODO: decompile from asm/... */
+    float (*pN)[4];
+    float (*pC)[4];
+    float (*pT)[4];
+    float (*pC_b)[4];
+    float (*pT_b)[4];
+
+    iQuadCount = g_PS2glContext.iBufCount >> 2;
+    pV = g_PS2glContext.pVBuf0;
+    pN = g_PS2glContext.pNBuf0;
+    pC = g_PS2glContext.pCBuf0;
+    pT = g_PS2glContext.pTBuf0;
+    pC_b = g_PS2glContext.pCBuf0_b;
+    pT_b = g_PS2glContext.pTBuf0_b;
+    pV1 = pV + iQuadCount * 6;
+    param0 = pN + iQuadCount * 6;
+    pC1 = pC + iQuadCount * 6;
+    pT1 = pT + iQuadCount * 6;
+    pC1_b = pC_b + iQuadCount * 6;
+    pT1_b = pT_b + iQuadCount * 6;
+    pV += g_PS2glContext.iBufCount;
+    pN += g_PS2glContext.iBufCount;
+    pC += g_PS2glContext.iBufCount;
+    pT += g_PS2glContext.iBufCount;
+    pC_b += g_PS2glContext.iBufCount;
+    pT_b += g_PS2glContext.iBufCount;
+    for (I = 0; I < iQuadCount; I++)
+    {
+        *(quad*)(pV1 - 1) = *(quad*)(pV - 1);
+        *(quad*)(pV1 - 2) = *(quad*)(pV - 2);
+        *(quad*)(pV1 - 4) = *(quad*)(pV - 1);
+        *(quad*)(pV1 - 3) = *(quad*)(pV - 3);
+        *(quad*)(pV1 - 5) = *(quad*)(pV - 3);
+        *(quad*)(pV1 - 6) = *(quad*)(pV - 4);
+        if (g_PS2glContext.nLightBits & 0x400)
+        {
+            *(quad*)(param0 - 1) = *(quad*)(pN - 1);
+            *(quad*)(param0 - 2) = *(quad*)(pN - 2);
+            *(quad*)(param0 - 4) = *(quad*)(pN - 1);
+            *(quad*)(param0 - 3) = *(quad*)(pN - 3);
+            *(quad*)(param0 - 5) = *(quad*)(pN - 3);
+            *(quad*)(param0 - 6) = *(quad*)(pN - 4);
+        }
+        else
+        {
+            *(quad*)(pC1 - 1) = *(quad*)(pC - 1);
+            *(quad*)(pC1 - 2) = *(quad*)(pC - 2);
+            *(quad*)(pC1 - 4) = *(quad*)(pC - 1);
+            *(quad*)(pC1 - 3) = *(quad*)(pC - 3);
+            *(quad*)(pC1 - 5) = *(quad*)(pC - 3);
+            *(quad*)(pC1 - 6) = *(quad*)(pC - 4);
+            *(quad*)(pC1_b - 1) = *(quad*)(pC_b - 1);
+            *(quad*)(pC1_b - 2) = *(quad*)(pC_b - 2);
+            *(quad*)(pC1_b - 4) = *(quad*)(pC_b - 1);
+            *(quad*)(pC1_b - 3) = *(quad*)(pC_b - 3);
+            *(quad*)(pC1_b - 5) = *(quad*)(pC_b - 3);
+            *(quad*)(pC1_b - 6) = *(quad*)(pC_b - 4);
+        }
+        *(quad*)(pT1 - 1) = *(quad*)(pT - 1);
+        *(quad*)(pT1 - 2) = *(quad*)(pT - 2);
+        *(quad*)(pT1 - 4) = *(quad*)(pT - 1);
+        *(quad*)(pT1 - 3) = *(quad*)(pT - 3);
+        *(quad*)(pT1 - 5) = *(quad*)(pT - 3);
+        *(quad*)(pT1 - 6) = *(quad*)(pT - 4);
+        *(quad*)(pT1_b - 1) = *(quad*)(pT_b - 1);
+        *(quad*)(pT1_b - 2) = *(quad*)(pT_b - 2);
+        *(quad*)(pT1_b - 4) = *(quad*)(pT_b - 1);
+        *(quad*)(pT1_b - 3) = *(quad*)(pT_b - 3);
+        *(quad*)(pT1_b - 5) = *(quad*)(pT_b - 3);
+        *(quad*)(pT1_b - 6) = *(quad*)(pT_b - 4);
+        pV1 -= 6;
+        param0 -= 6;
+        pC1 -= 6;
+        pT1 -= 6;
+        pC1_b -= 6;
+        pT1_b -= 6;
+        pV -= 4;
+        pN -= 4;
+        pC -= 4;
+        pT -= 4;
+        pC_b -= 4;
+        pT_b -= 4;
+    }
+    g_PS2glContext.iBufCount = iQuadCount * 6;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 412–422 */
@@ -3793,41 +4800,34 @@ void PS2glSaveListCallMultiTex(unsigned int eCode, unsigned int texture, float (
  */
 tagGLlistnode* PS2glListAllocNode(int cbParams)
 {
+    tagGLlistcalls* pCurCalls = g_PS2glContext.pCurListCalls;
     tagGLlistnode* param0;
     int cbNode;
     int cbTotal;
-    tagGLlistcalls* pCurCalls;
 
-    cbTotal = cbParams + 8;
-    cbNode = cbParams - cbTotal;
-    cbTotal = (cbTotal + 3) & ~3;
-    pCurCalls = g_PS2glContext.pCurListCalls;
-    if (pCurCalls != NULL)
+    cbNode = cbParams + 8;
+    cbParams -= cbNode;
+    cbTotal = (cbNode + 3) & ~3;
+    cbParams += cbTotal;
+    if ((pCurCalls == NULL) || (pCurCalls->cbCalls + cbTotal > 0x400))
     {
-        cbNode = cbNode + cbTotal;
-        if (pCurCalls->cbCalls + cbTotal > 0x400)
-            goto alloc;
-        goto reuse;
+        pCurCalls = (tagGLlistcalls*)PS2glAllocator(0x408);
+        if (g_PS2glContext.pCurListCalls == NULL)
+        {
+            g_PS2glContext.pCurListData->pCalls = pCurCalls;
+        }
+        else
+        {
+            g_PS2glContext.pCurListCalls->pNext = pCurCalls;
+            g_PS2glContext.pPreListCalls = g_PS2glContext.pCurListCalls;
+        }
+        g_PS2glContext.pCurListCalls = pCurCalls;
+        pCurCalls->cbCalls = 0;
+        pCurCalls->pNext = 0;
     }
-    /* The retail code has a single allocation block and a single node tail,
-       so the two exits jump to shared labels instead of duplicating them. */
-alloc:
-    pCurCalls = (tagGLlistcalls*)PS2glAllocator(0x408);
-    if (g_PS2glContext.pCurListCalls == NULL)
-    {
-        g_PS2glContext.pCurListData->pCalls = pCurCalls;
-    }
-    else
-    {
-        g_PS2glContext.pCurListCalls->pNext = pCurCalls;
-    }
-    g_PS2glContext.pPreListCalls = g_PS2glContext.pCurListCalls;
-    g_PS2glContext.pCurListCalls = pCurCalls;
-    pCurCalls->cbCalls = 0;
-    pCurCalls->pNext = 0;
-reuse:
-    param0 = (tagGLlistnode*)((char*)pCurCalls + 8 + pCurCalls->cbCalls);
-    param0->cbParamCount = cbNode;
+    cbNode = pCurCalls->cbCalls;
+    param0 = (tagGLlistnode*)((int)pCurCalls->aNodes + cbNode);
+    param0->cbParamCount = cbParams;
     pCurCalls->cbCalls += cbTotal;
     return param0;
 }
