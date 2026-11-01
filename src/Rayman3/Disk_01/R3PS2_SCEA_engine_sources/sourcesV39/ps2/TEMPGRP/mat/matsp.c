@@ -17,12 +17,7 @@
 #define MTH_SQRT_TO(_result, _value) \
     asm { sqrt.s _result, _value }
 
-#define MAT_COPY_VECTOR(_stDest, _stSource) do { \
-    (_stDest).xX = (_stSource).xX; \
-    (_stDest).xY = (_stSource).xY; \
-    (_stDest).xZ = (_stSource).xZ; \
-    (_stDest).xW = (_stSource).xW; \
-} while (0)
+#define MAT_COPY_VECTOR(_stDest, _stSource) (*(struct MAT_v4*)&(_stDest) = *(struct MAT_v4*)&(_stSource))
 
 #define MAT_COPY_ROTATION_AND_SCALE(_hDest, _hSource) do { \
     MAT_COPY_VECTOR((_hDest)->stTransformMatrix.stCol_0, (_hSource)->stTransformMatrix.stCol_0); \
@@ -31,14 +26,7 @@
     MAT_COPY_VECTOR((_hDest)->stScaleVector, (_hSource)->stScaleVector); \
 } while (0)
 
-#define MAT_COPY_TRANSFORMATION(_hDest, _hSource) do { \
-    (_hDest)->eType = (_hSource)->eType; \
-    (_hDest)->stTransformMatrix.stCol_0 = (_hSource)->stTransformMatrix.stCol_0; \
-    (_hDest)->stTransformMatrix.stCol_1 = (_hSource)->stTransformMatrix.stCol_1; \
-    (_hDest)->stTransformMatrix.stCol_2 = (_hSource)->stTransformMatrix.stCol_2; \
-    (_hDest)->stTransformMatrix.stCol_3 = (_hSource)->stTransformMatrix.stCol_3; \
-    (_hDest)->stScaleVector = (_hSource)->stScaleVector; \
-} while (0)
+#define MAT_COPY_TRANSFORMATION(_hDest, _hSource) (*(_hDest) = *(_hSource))
 
 #define MAT_MULTIPLY_SCALES(_hDest, _hA, _hB) do { \
     (_hDest)->stScaleVector.xX = (_hA)->stScaleVector.xX * (_hB)->stScaleVector.xX; \
@@ -47,24 +35,47 @@
     (_hDest)->stScaleVector.xW = 1.0f; \
 } while (0)
 
-#define MAT_SCALE_MATRIX(_hDest, _hMatrix, _hScale) do { \
-    (_hDest)->stTransformMatrix.stCol_0.xX = (_hScale)->stScaleVector.xX * (_hMatrix)->stTransformMatrix.stCol_0.xX; \
-    (_hDest)->stTransformMatrix.stCol_0.xY = (_hScale)->stScaleVector.xX * (_hMatrix)->stTransformMatrix.stCol_0.xY; \
-    (_hDest)->stTransformMatrix.stCol_0.xZ = (_hScale)->stScaleVector.xX * (_hMatrix)->stTransformMatrix.stCol_0.xZ; \
-    (_hDest)->stTransformMatrix.stCol_0.xW = 1.0f; \
-    (_hDest)->stTransformMatrix.stCol_1.xX = (_hScale)->stScaleVector.xY * (_hMatrix)->stTransformMatrix.stCol_1.xX; \
-    (_hDest)->stTransformMatrix.stCol_1.xY = (_hScale)->stScaleVector.xY * (_hMatrix)->stTransformMatrix.stCol_1.xY; \
-    (_hDest)->stTransformMatrix.stCol_1.xZ = (_hScale)->stScaleVector.xY * (_hMatrix)->stTransformMatrix.stCol_1.xZ; \
-    (_hDest)->stTransformMatrix.stCol_1.xW = 1.0f; \
-    (_hDest)->stTransformMatrix.stCol_2.xX = (_hScale)->stScaleVector.xZ * (_hMatrix)->stTransformMatrix.stCol_2.xX; \
-    (_hDest)->stTransformMatrix.stCol_2.xY = (_hScale)->stScaleVector.xZ * (_hMatrix)->stTransformMatrix.stCol_2.xY; \
-    (_hDest)->stTransformMatrix.stCol_2.xZ = (_hScale)->stScaleVector.xZ * (_hMatrix)->stTransformMatrix.stCol_2.xZ; \
-    (_hDest)->stTransformMatrix.stCol_2.xW = 1.0f; \
-    MAT_COPY_VECTOR((_hDest)->stTransformMatrix.stCol_3, (_hMatrix)->stTransformMatrix.stCol_3); \
-    (_hDest)->stTransformMatrix.stCol_0.xW = 0.0f; \
-    (_hDest)->stTransformMatrix.stCol_1.xW = 0.0f; \
-    (_hDest)->stTransformMatrix.stCol_2.xW = 0.0f; \
+#define MAT_SCALE_COLUMN(_stDest, _stSource, _xScale) do { \
+    float _xS = (_xScale); \
+    (_stDest).xX = _xS * (_stSource).xX; \
+    (_stDest).xY = _xS * (_stSource).xY; \
+    (_stDest).xZ = _xS * (_stSource).xZ; \
+    (_stDest).xW = 1.0f; \
 } while (0)
+
+#define MAT_SCALE_MATRIX(_hDest, _hMatrix, _hScale) do { \
+    MAT_SCALE_COLUMN((_hDest)->stTransformMatrix.stCol_0, (_hMatrix)->stTransformMatrix.stCol_0, (_hScale)->stScaleVector.xX); \
+    MAT_SCALE_COLUMN((_hDest)->stTransformMatrix.stCol_1, (_hMatrix)->stTransformMatrix.stCol_1, (_hScale)->stScaleVector.xY); \
+    MAT_SCALE_COLUMN((_hDest)->stTransformMatrix.stCol_2, (_hMatrix)->stTransformMatrix.stCol_2, (_hScale)->stScaleVector.xZ); \
+    MAT_COPY_VECTOR((_hDest)->stTransformMatrix.stCol_3, (_hMatrix)->stTransformMatrix.stCol_3); \
+    (_hDest)->stTransformMatrix.stCol_2.xW = 0.0f; \
+    (_hDest)->stTransformMatrix.stCol_1.xW = 0.0f; \
+    (_hDest)->stTransformMatrix.stCol_0.xW = 0.0f; \
+} while (0)
+
+#define MAT_SWAP_FLOATS(_xA, _xB) do { \
+    float _xTemp1 = (_xA); \
+    float _xTemp2 = (_xB); \
+    (_xA) = _xTemp2; \
+    (_xB) = _xTemp1; \
+} while (0)
+
+#define MAT_TRANSPOSE_3X3(_hMat) do { \
+    MAT_SWAP_FLOATS((_hMat)->stTransformMatrix.stCol_0.xY, (_hMat)->stTransformMatrix.stCol_1.xX); \
+    MAT_SWAP_FLOATS((_hMat)->stTransformMatrix.stCol_0.xZ, (_hMat)->stTransformMatrix.stCol_2.xX); \
+    MAT_SWAP_FLOATS((_hMat)->stTransformMatrix.stCol_1.xZ, (_hMat)->stTransformMatrix.stCol_2.xY); \
+} while (0)
+
+#define MAT_INVERT_TRANSLATION(_hDest, _hSource) do { \
+    (_hDest)->stTransformMatrix.stCol_3.xX = -(_hSource)->stTransformMatrix.stCol_3.xX; \
+    (_hDest)->stTransformMatrix.stCol_3.xY = -(_hSource)->stTransformMatrix.stCol_3.xY; \
+    (_hDest)->stTransformMatrix.stCol_3.xZ = -(_hSource)->stTransformMatrix.stCol_3.xZ; \
+    (_hDest)->stTransformMatrix.stCol_3.xW = 1.0f; \
+    MTH4D_fn_vMulMatrixVectorWithoutBuffer(&(_hDest)->stTransformMatrix.stCol_3, &(_hDest)->stTransformMatrix, &(_hDest)->stTransformMatrix.stCol_3); \
+} while (0)
+
+/* Unaligned view: copying it moves four floats through registers rather than lq/sq. */
+struct MAT_v4 { float a, b, c, d; };
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
@@ -125,11 +136,106 @@ void MTH4D_fn_vSpecializedMulMatrixMatrixWithoutBuffer(MTH4D_tdstMatrix_* _p_stR
 void MTH4D_fn_vMulMatrixVertexWithoutBuffer(MTH4D_tdstVector_* _p_stResult,
                                             MTH4D_tdstMatrix_* _p_stMatrix,
                                             MTH4D_tdstVector_* _p_stVector);
+void MTH4D_fn_vMulMatrixVectorWithoutBuffer(MTH4D_tdstVector_* _p_stResult, MTH4D_tdstMatrix_* _p_stMatrix, MTH4D_tdstVector_* _p_stVector);
+void MTH4D_fn_vSetIdentityMatrix(MTH4D_tdstMatrix_* _p_stMatrix);
+void MTH4D_fn_vInvertRotationMatrix2(MTH4D_tdstMatrix_* _p_stDest, MTH4D_tdstMatrix_* _p_stSource);
+void MAT_fn_vInvertRotation(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
+void MAT_fn_v_MatrixToQuat(MTH4D_tdstMatrix_* _p_stMatrix, float* _xX, float* _xY, float* _xZ, float* _xW);
 void MAT_fn_vRemoveScale(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
 void MAT_fn_vQuatToMatrix(MTH4D_tdstMatrix_* _p_stMatrix, float _xX, float _xY, float _xZ, float _xW);
 
 unsigned char g_ucMATModuleId;
 int MAT_g_hTransformationIdentity;
+
+/* Word view of an MTH vector: retail copies vectors with lw/sw at folded offsets. */
+typedef union MTH_tduVectorWords {
+    MTH3D_tdstVector_ stVector;
+    unsigned int auWords[3];
+} MTH_tduVectorWords;
+
+typedef union MTH_tduVector4Words {
+    MTH4D_tdstVector_ st;
+    unsigned int auWords[4];
+} MTH_tduVector4Words;
+
+inline float MTH_xMulSubMul(float _a, float _b, float _c, float _d) { float _r; asm { mula.s _a, _b } asm { msub.s _r, _c, _d } return _r; }
+inline float MTH_xAbs(float _x) { float _r; asm { abs.s _r, _x } return _r; }
+
+inline void MTH4D_fn_vCopy3DTo4DVector(MTH4D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA)
+{
+    ((MTH_tduVectorWords*)VectDest)->auWords[0] = ((MTH_tduVectorWords*)VectA)->auWords[0];
+    ((MTH_tduVectorWords*)VectDest)->auWords[1] = ((MTH_tduVectorWords*)VectA)->auWords[1];
+    ((MTH_tduVectorWords*)VectDest)->auWords[2] = ((MTH_tduVectorWords*)VectA)->auWords[2];
+    VectDest->xW = 1.0f;
+}
+
+inline void MAT_fn_vMulScaleTranspose(MTH4D_tdstMatrix_* _p_stDest, MTH4D_tdstMatrix_* _p_stSrc, MTH4D_tdstVector_* _p_stScale)
+{
+    MTH4D_tdstMatrix_ stScaled;
+    MTH4D_tdstMatrix_* p_stA;
+    MTH4D_tdstMatrix_* p_stB;
+    float x00 = _p_stSrc->stCol_0.xX * (float)_p_stScale->xX;
+    float x01 = _p_stSrc->stCol_1.xX * _p_stScale->xX;
+    float x02 = _p_stSrc->stCol_2.xX * _p_stScale->xX;
+    float x10 = _p_stSrc->stCol_0.xY * _p_stScale->xY;
+    float x11 = _p_stSrc->stCol_1.xY * _p_stScale->xY;
+    float x12 = _p_stSrc->stCol_2.xY * _p_stScale->xY;
+    float x20 = _p_stSrc->stCol_0.xZ * _p_stScale->xZ;
+    float x21 = _p_stSrc->stCol_1.xZ * _p_stScale->xZ;
+    float x22 = _p_stSrc->stCol_2.xZ * _p_stScale->xZ;
+
+    stScaled.stCol_0.xX = x00;
+    stScaled.stCol_0.xY = x01;
+    stScaled.stCol_0.xZ = x02;
+    stScaled.stCol_1.xX = x10;
+    stScaled.stCol_1.xY = x11;
+    stScaled.stCol_1.xZ = x12;
+    stScaled.stCol_2.xX = x20;
+    stScaled.stCol_2.xY = x21;
+    stScaled.stCol_2.xZ = x22;
+
+    p_stA = &stScaled;
+    p_stB = _p_stSrc;
+
+    /* VU0 macro-mode matrix product: no C form. */
+    asm {
+        lqc2 vf1, 0x0(p_stA)
+        lqc2 vf2, 0x10(p_stA)
+        lqc2 vf3, 0x20(p_stA)
+        lqc2 vf4, 0x30(p_stA)
+        lqc2 vf5, 0x0(p_stB)
+        lqc2 vf6, 0x10(p_stB)
+        lqc2 vf7, 0x20(p_stB)
+        lqc2 vf8, 0x30(p_stB)
+
+        vmulax.xyz ACC, vf1, vf5x
+        vmadday.xyz ACC, vf2, vf5y
+        vmaddz.xyz vf9, vf3, vf5z
+
+        vmulax.xyz ACC, vf1, vf6x
+        vmadday.xyz ACC, vf2, vf6y
+        vmaddz.xyz vf10, vf3, vf6z
+
+        vmulax.xyz ACC, vf1, vf7x
+        vmadday.xyz ACC, vf2, vf7y
+        vmaddz.xyz vf11, vf3, vf7z
+
+        vmulax.xyz ACC, vf1, vf8x
+        vmadday.xyz ACC, vf2, vf8y
+        vmaddaz.xyz ACC, vf3, vf8z
+        vmaddw.xyz vf12, vf4, vf0w
+
+        sqc2 vf9, 0x0(_p_stDest)
+        sqc2 vf10, 0x10(_p_stDest)
+        sqc2 vf11, 0x20(_p_stDest)
+        sqc2 vf12, 0x30(_p_stDest)
+    }
+
+    _p_stDest->stCol_2.xW = 0.0f;
+    _p_stDest->stCol_1.xW = 0.0f;
+    _p_stDest->stCol_0.xW = 0.0f;
+    _p_stDest->stCol_3.xW = 1.0f;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsp.c lines 28–60 */
 /* addr: 0x002fa270  size: 416 bytes */
@@ -153,10 +259,36 @@ int MAT_g_hTransformationIdentity;
  */
 void MAT_fn_vInitTransformationWithNonDiagonalScale(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stScale, float* _a_xQuaternion)
 {
-    MTH4D_tdstVector_ st4DScaleVec;
-    MTH4D_tdstMatrix_* p_stResult;
     MTH4D_tdstMatrix_ stTempMat;
-    /* TODO: decompile from asm/... */
+    MTH4D_tdstMatrix_* p_stResult;
+    union { MTH4D_tdstVector_ v; unsigned int auWords[4]; } st4DScaleVec;
+
+    st4DScaleVec.auWords[0] = ((MTH_tduVectorWords*)_p_stScale)->auWords[0];
+    st4DScaleVec.auWords[1] = ((MTH_tduVectorWords*)_p_stScale)->auWords[1];
+    st4DScaleVec.auWords[2] = ((MTH_tduVectorWords*)_p_stScale)->auWords[2];
+    st4DScaleVec.v.xW = 1.0f;
+
+    p_stResult = &_hTransform->stTransformMatrix;
+    MAT_fn_vQuatToMatrix(&stTempMat, _a_xQuaternion[0], _a_xQuaternion[1], _a_xQuaternion[2], _a_xQuaternion[3]);
+
+    MAT_fn_vMulScaleTranspose(p_stResult, &stTempMat, &st4DScaleVec.v);
+    p_stResult->stCol_3.xX = 0.0f;
+    p_stResult->stCol_3.xY = 0.0f;
+    p_stResult->stCol_3.xZ = 0.0f;
+    p_stResult->stCol_3.xW = 1.0f;
+
+    _hTransform->eType = MAT_eTransform_ComplexRotationScale;
+    {
+        float xX, xY, xZ, xW;
+        xW = _a_xQuaternion[3];
+        xZ = _a_xQuaternion[2];
+        xY = _a_xQuaternion[1];
+        xX = _a_xQuaternion[0];
+        _hTransform->stScaleVector.xX = xX;
+        _hTransform->stScaleVector.xY = xY;
+        _hTransform->stScaleVector.xZ = xZ;
+        _hTransform->stScaleVector.xW = xW;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsp.c lines 1742–1794 */
@@ -411,6 +543,8 @@ unsigned char MAT_fn_bAreEquivalent(MAT_tdstTransformation_* _hTransform1, MAT_t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline void MAT_vSetS(MTH4D_tdstVector_* d, float x, float y, float z) { d->xX=x; d->xY=y; d->xZ=z; d->xW=1.0f; }
+
 void MAT_fn_vInitTransformationAndType(MAT_tdstTransformation_* _hTransform, MAT_tdeTranformationType_ _eType, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK, MTH3D_tdstVector_* _p_stTranslation)
 {
     _hTransform->eType = _eType;
@@ -492,13 +626,7 @@ void MAT_fn_vInitTransformationAndType(MAT_tdstTransformation_* _hTransform, MAT
     case MAT_eTransform_Zoom:
     case MAT_eTransform_Scale:
     {
-        float _mthX = _hTransform->stTransformMatrix.stCol_0.xX;
-        float _mthY = _hTransform->stTransformMatrix.stCol_1.xY;
-        float _mthZ = _hTransform->stTransformMatrix.stCol_2.xZ;
-        _hTransform->stScaleVector.xX = _mthX;
-        _hTransform->stScaleVector.xY = _mthY;
-        _hTransform->stScaleVector.xZ = _mthZ;
-        _hTransform->stScaleVector.xW = 1.0f;
+        MAT_vSetS(&_hTransform->stScaleVector, _hTransform->stTransformMatrix.stCol_0.xX, _hTransform->stTransformMatrix.stCol_1.xY, _hTransform->stTransformMatrix.stCol_2.xZ);
         break;
     }
 
@@ -692,10 +820,11 @@ void MAT_fn_vTranslate(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* 
  */
 void MAT_fn_vComposeWithoutTranslation(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB)
 {
-    unsigned char bTestScale;
-    unsigned char bComposeMatrixes;
     MAT_tdstTransformation_* hResult;
+    unsigned char bComposeMatrixes;
+    unsigned char bTestScale;
     MAT_tdstTransformation_ stTemp;
+    unsigned char bEqual;
     static unsigned int uiSimplification;
     static unsigned int uiTotal;
 
@@ -749,6 +878,10 @@ void MAT_fn_vComposeWithoutTranslation(MAT_tdstTransformation_* _hDest, MAT_tdst
         case MAT_eTransform_Rotation:
             hResult->eType = MAT_eTransform_Rotation;
             bComposeMatrixes = 1;
+            hResult->stScaleVector.xX = 1.0f;
+            hResult->stScaleVector.xY = 1.0f;
+            hResult->stScaleVector.xZ = 1.0f;
+            hResult->stScaleVector.xW = 1.0f;
             break;
 
         case MAT_eTransform_Zoom:
@@ -869,14 +1002,22 @@ void MAT_fn_vComposeWithoutTranslation(MAT_tdstTransformation_* _hDest, MAT_tdst
         switch (hResult->eType)
         {
         case MAT_eTransform_Scale:
-            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&
-                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
+            if ((MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) && (MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
             {
-                hResult->eType = MAT_eTransform_Zoom;
-                uiSimplification++;
+                bEqual = 1;
             }
+            else
+            {
+                bEqual = 0;
+            }
+            if (!bEqual)
+            {
+                break;
+            }
+            hResult->eType = MAT_eTransform_Zoom;
+            uiSimplification++;
         case MAT_eTransform_Zoom:
-            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
+            if (MTH_xAbs(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
             {
                 hResult->eType = MAT_eTransform_Translation;
                 uiSimplification++;
@@ -884,20 +1025,33 @@ void MAT_fn_vComposeWithoutTranslation(MAT_tdstTransformation_* _hDest, MAT_tdst
             break;
 
         case MAT_eTransform_RotationScale:
-            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&
-                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
+            if ((MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) && (MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
             {
-                hResult->eType = MAT_eTransform_RotationZoom;
-                uiSimplification++;
+                bEqual = 1;
             }
+            else
+            {
+                bEqual = 0;
+            }
+            if (!bEqual)
+            {
+                break;
+            }
+            hResult->eType = MAT_eTransform_RotationZoom;
+            uiSimplification++;
         case MAT_eTransform_RotationZoom:
-            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
+            if (MTH_xAbs(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
             {
                 uiSimplification++;
                 hResult->eType = MAT_eTransform_Rotation;
             }
             break;
 
+        case MAT_eTransform_Uninitialized:
+        case MAT_eTransform_Identity:
+        case MAT_eTransform_Translation:
+        case MAT_eTransform_Rotation:
+        case MAT_eTransform_ComplexRotationScale:
         default:
             break;
         }
@@ -1023,11 +1177,12 @@ void MAT_fn_vComposeWithoutTranslation(MAT_tdstTransformation_* _hDest, MAT_tdst
  */
 void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB)
 {
-    unsigned char bTestScale;
-    unsigned char bComposeTranslations;
-    unsigned char bComposeMatrixes;
     MAT_tdstTransformation_* hResult;
+    unsigned char bComposeMatrixes;
+    unsigned char bComposeTranslations;
+    unsigned char bTestScale;
     MAT_tdstTransformation_ stTemp;
+    unsigned char bEqual;
     static unsigned int uiSimplification;
     static unsigned int uiTotal;
 
@@ -1200,14 +1355,22 @@ void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _
         switch (hResult->eType)
         {
         case MAT_eTransform_Scale:
-            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&
-                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
+            if ((MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) && (MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
             {
-                hResult->eType = MAT_eTransform_Zoom;
-                uiSimplification++;
+                bEqual = 1;
             }
+            else
+            {
+                bEqual = 0;
+            }
+            if (!bEqual)
+            {
+                break;
+            }
+            hResult->eType = MAT_eTransform_Zoom;
+            uiSimplification++;
         case MAT_eTransform_Zoom:
-            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
+            if (MTH_xAbs(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
             {
                 hResult->eType = MAT_eTransform_Translation;
                 uiSimplification++;
@@ -1215,20 +1378,33 @@ void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _
             break;
 
         case MAT_eTransform_RotationScale:
-            if ((fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) &&
-                (fabsf(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
+            if ((MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xY) < 0.0001f) && (MTH_xAbs(hResult->stScaleVector.xX - hResult->stScaleVector.xZ) < 0.0001f))
             {
-                hResult->eType = MAT_eTransform_RotationZoom;
-                uiSimplification++;
+                bEqual = 1;
             }
+            else
+            {
+                bEqual = 0;
+            }
+            if (!bEqual)
+            {
+                break;
+            }
+            hResult->eType = MAT_eTransform_RotationZoom;
+            uiSimplification++;
         case MAT_eTransform_RotationZoom:
-            if (fabsf(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
+            if (MTH_xAbs(hResult->stScaleVector.xX - 1.0f) < 0.0001f)
             {
                 uiSimplification++;
                 hResult->eType = MAT_eTransform_Rotation;
             }
             break;
 
+        case MAT_eTransform_Uninitialized:
+        case MAT_eTransform_Identity:
+        case MAT_eTransform_Translation:
+        case MAT_eTransform_Rotation:
+        case MAT_eTransform_ComplexRotationScale:
         default:
             break;
         }
@@ -1333,13 +1509,206 @@ void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _
  */
 void MAT_fn_vFastInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource)
 {
+    MTH4D_tdstMatrix_* p_stMatrixDest;
+    MTH4D_tdstMatrix_* p_stMatrixSource;
+    MTH4D_tdstVector_* p_stScale;
+    MTH4D_tdstMatrix_* p_stTranspMatrix;
     MTH4D_tdstVector_* p_stVec;
     float xZoom;
-    MTH4D_tdstMatrix_* p_stTranspMatrix;
-    MTH4D_tdstVector_* p_stScale;
-    MTH4D_tdstMatrix_* p_stMatrixSource;
-    MTH4D_tdstMatrix_* p_stMatrixDest;
-    /* TODO: decompile from asm/... */
+
+    switch (_hSource->eType)
+    {
+    case MAT_eTransform_Identity:
+        if (_hDest != _hSource)
+        {
+            _hDest->eType = MAT_eTransform_Identity;
+            MTH4D_fn_vSetIdentityMatrix(&_hDest->stTransformMatrix);
+            _hDest->stScaleVector.xX = 1.0f;
+            _hDest->stScaleVector.xY = 1.0f;
+            _hDest->stScaleVector.xZ = 1.0f;
+            _hDest->stScaleVector.xW = 1.0f;
+        }
+        break;
+
+    case MAT_eTransform_Translation:
+        if (_hDest != _hSource)
+        {
+            _hDest->eType = MAT_eTransform_Identity;
+            MTH4D_fn_vSetIdentityMatrix(&_hDest->stTransformMatrix);
+            _hDest->stScaleVector.xX = 1.0f;
+            _hDest->stScaleVector.xY = 1.0f;
+            _hDest->stScaleVector.xZ = 1.0f;
+            _hDest->stScaleVector.xW = 1.0f;
+            _hDest->eType = MAT_eTransform_Translation;
+        }
+        _hDest->stTransformMatrix.stCol_3.xX = -_hSource->stTransformMatrix.stCol_3.xX;
+        _hDest->stTransformMatrix.stCol_3.xY = -_hSource->stTransformMatrix.stCol_3.xY;
+        _hDest->stTransformMatrix.stCol_3.xZ = -_hSource->stTransformMatrix.stCol_3.xZ;
+        _hDest->stTransformMatrix.stCol_3.xW = 1.0f;
+        break;
+
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_Scale:
+        p_stMatrixDest = &_hDest->stTransformMatrix;
+        p_stMatrixSource = &_hSource->stTransformMatrix;
+        p_stScale = &_hDest->stScaleVector;
+        if (_hDest != _hSource)
+        {
+            MAT_COPY_TRANSFORMATION(_hDest, _hSource);
+        }
+        xZoom = 1.0f / p_stMatrixSource->stCol_0.xX;
+        p_stMatrixDest->stCol_0.xX = xZoom;
+        p_stScale->xX = xZoom;
+        xZoom = 1.0f / p_stMatrixSource->stCol_1.xY;
+        p_stMatrixDest->stCol_1.xY = xZoom;
+        p_stScale->xY = xZoom;
+        xZoom = 1.0f / p_stMatrixSource->stCol_2.xZ;
+        p_stMatrixDest->stCol_2.xZ = xZoom;
+        p_stScale->xZ = xZoom;
+        _hDest->stTransformMatrix.stCol_3.xX = -_hSource->stTransformMatrix.stCol_3.xX;
+        _hDest->stTransformMatrix.stCol_3.xY = -_hSource->stTransformMatrix.stCol_3.xY;
+        _hDest->stTransformMatrix.stCol_3.xZ = -_hSource->stTransformMatrix.stCol_3.xZ;
+        _hDest->stTransformMatrix.stCol_3.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_3.xX = p_stScale->xX * _hDest->stTransformMatrix.stCol_3.xX;
+        _hDest->stTransformMatrix.stCol_3.xY = p_stScale->xY * _hDest->stTransformMatrix.stCol_3.xY;
+        _hDest->stTransformMatrix.stCol_3.xZ = p_stScale->xZ * _hDest->stTransformMatrix.stCol_3.xZ;
+        _hDest->stTransformMatrix.stCol_3.xW = 1.0f;
+        break;
+
+    case MAT_eTransform_Rotation:
+        p_stTranspMatrix = &_hDest->stTransformMatrix;
+        p_stMatrixSource = &_hSource->stTransformMatrix;
+        p_stVec = &_hDest->stTransformMatrix.stCol_3;
+        _hDest->eType = MAT_eTransform_Rotation;
+        if (p_stTranspMatrix == p_stMatrixSource)
+        {
+            MAT_TRANSPOSE_3X3(_hSource);
+        }
+        else
+        {
+            MTH4D_fn_vInvertRotationMatrix2(p_stTranspMatrix, p_stMatrixSource);
+        }
+        p_stVec->xX = -_hSource->stTransformMatrix.stCol_3.xX;
+        p_stVec->xY = -_hSource->stTransformMatrix.stCol_3.xY;
+        p_stVec->xZ = -_hSource->stTransformMatrix.stCol_3.xZ;
+        p_stVec->xW = 1.0f;
+        MTH4D_fn_vMulMatrixVectorWithoutBuffer(p_stVec, p_stTranspMatrix, p_stVec);
+        _hDest->stScaleVector.xX = 1.0f;
+        _hDest->stScaleVector.xY = 1.0f;
+        _hDest->stScaleVector.xZ = 1.0f;
+        _hDest->stScaleVector.xW = 1.0f;
+        break;
+
+    case MAT_eTransform_RotationZoom:
+        p_stTranspMatrix = &_hDest->stTransformMatrix;
+        p_stMatrixSource = &_hSource->stTransformMatrix;
+        p_stVec = &_hDest->stTransformMatrix.stCol_3;
+        _hDest->eType = MAT_eTransform_RotationZoom;
+        if (p_stTranspMatrix == p_stMatrixSource)
+        {
+            MAT_TRANSPOSE_3X3(_hSource);
+        }
+        else
+        {
+            MTH4D_fn_vInvertRotationMatrix2(p_stTranspMatrix, p_stMatrixSource);
+        }
+        xZoom = _hSource->stScaleVector.xX;
+        xZoom = 1.0f / (xZoom * xZoom);
+        p_stTranspMatrix->stCol_0.xX = xZoom * p_stTranspMatrix->stCol_0.xX;
+        p_stTranspMatrix->stCol_0.xY = xZoom * p_stTranspMatrix->stCol_0.xY;
+        p_stTranspMatrix->stCol_0.xZ = xZoom * p_stTranspMatrix->stCol_0.xZ;
+        p_stTranspMatrix->stCol_0.xW = 1.0f;
+        p_stTranspMatrix->stCol_1.xX = xZoom * p_stTranspMatrix->stCol_1.xX;
+        p_stTranspMatrix->stCol_1.xY = xZoom * p_stTranspMatrix->stCol_1.xY;
+        p_stTranspMatrix->stCol_1.xZ = xZoom * p_stTranspMatrix->stCol_1.xZ;
+        p_stTranspMatrix->stCol_1.xW = 1.0f;
+        p_stTranspMatrix->stCol_2.xX = xZoom * p_stTranspMatrix->stCol_2.xX;
+        p_stTranspMatrix->stCol_2.xY = xZoom * p_stTranspMatrix->stCol_2.xY;
+        p_stTranspMatrix->stCol_2.xZ = xZoom * p_stTranspMatrix->stCol_2.xZ;
+        p_stTranspMatrix->stCol_2.xW = 1.0f;
+        p_stTranspMatrix->stCol_2.xW = 0.0f;
+        p_stTranspMatrix->stCol_1.xW = 0.0f;
+        p_stTranspMatrix->stCol_0.xW = 0.0f;
+        xZoom = 1.0f / _hSource->stScaleVector.xX;
+        _hDest->stScaleVector.xX = xZoom;
+        _hDest->stScaleVector.xY = xZoom;
+        _hDest->stScaleVector.xZ = xZoom;
+        _hDest->stScaleVector.xW = 1.0f;
+        p_stVec->xX = -_hSource->stTransformMatrix.stCol_3.xX;
+        p_stVec->xY = -_hSource->stTransformMatrix.stCol_3.xY;
+        p_stVec->xZ = -_hSource->stTransformMatrix.stCol_3.xZ;
+        p_stVec->xW = 1.0f;
+        MTH4D_fn_vMulMatrixVectorWithoutBuffer(p_stVec, p_stTranspMatrix, p_stVec);
+        break;
+
+    case MAT_eTransform_RotationScale:
+    {
+        float xSX, xSY, xSZ;
+        _hDest->eType = MAT_eTransform_ComplexRotationScale;
+        xSX = _hSource->stScaleVector.xX;
+        xSY = _hSource->stScaleVector.xY;
+        xSZ = _hSource->stScaleVector.xZ;
+        xSX = 1.0f / (xSX * xSX);
+        xSY = 1.0f / (xSY * xSY);
+        xSZ = 1.0f / (xSZ * xSZ);
+        _hDest->stTransformMatrix.stCol_0.xX = xSX * _hSource->stTransformMatrix.stCol_0.xX;
+        _hDest->stTransformMatrix.stCol_0.xY = xSX * _hSource->stTransformMatrix.stCol_0.xY;
+        _hDest->stTransformMatrix.stCol_0.xZ = xSX * _hSource->stTransformMatrix.stCol_0.xZ;
+        _hDest->stTransformMatrix.stCol_0.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_1.xX = xSY * _hSource->stTransformMatrix.stCol_1.xX;
+        _hDest->stTransformMatrix.stCol_1.xY = xSY * _hSource->stTransformMatrix.stCol_1.xY;
+        _hDest->stTransformMatrix.stCol_1.xZ = xSY * _hSource->stTransformMatrix.stCol_1.xZ;
+        _hDest->stTransformMatrix.stCol_1.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_2.xX = xSZ * _hSource->stTransformMatrix.stCol_2.xX;
+        _hDest->stTransformMatrix.stCol_2.xY = xSZ * _hSource->stTransformMatrix.stCol_2.xY;
+        _hDest->stTransformMatrix.stCol_2.xZ = xSZ * _hSource->stTransformMatrix.stCol_2.xZ;
+        _hDest->stTransformMatrix.stCol_2.xW = 1.0f;
+        MAT_COPY_VECTOR(_hDest->stTransformMatrix.stCol_3, _hSource->stTransformMatrix.stCol_3);
+        _hDest->stTransformMatrix.stCol_2.xW = 0.0f;
+        _hDest->stTransformMatrix.stCol_1.xW = 0.0f;
+        _hDest->stTransformMatrix.stCol_0.xW = 0.0f;
+        MAT_TRANSPOSE_3X3(_hDest);
+        MAT_INVERT_TRANSLATION(_hDest, _hSource);
+        break;
+    }
+
+    case MAT_eTransform_ComplexRotationScale:
+    {
+        float xDet;
+        _hDest->eType = MAT_eTransform_ComplexRotationScale;
+        _hDest->stTransformMatrix.stCol_0.xX = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_1.xY, _hSource->stTransformMatrix.stCol_2.xZ, _hSource->stTransformMatrix.stCol_1.xZ, _hSource->stTransformMatrix.stCol_2.xY);
+        xDet = _hSource->stTransformMatrix.stCol_0.xX * _hDest->stTransformMatrix.stCol_0.xX;
+        _hDest->stTransformMatrix.stCol_1.xX = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_1.xZ, _hSource->stTransformMatrix.stCol_2.xX, _hSource->stTransformMatrix.stCol_1.xX, _hSource->stTransformMatrix.stCol_2.xZ);
+        xDet = xDet + _hSource->stTransformMatrix.stCol_0.xY * _hDest->stTransformMatrix.stCol_1.xX;
+        _hDest->stTransformMatrix.stCol_2.xX = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_1.xX, _hSource->stTransformMatrix.stCol_2.xY, _hSource->stTransformMatrix.stCol_1.xY, _hSource->stTransformMatrix.stCol_2.xX);
+        xDet = xDet + _hSource->stTransformMatrix.stCol_0.xZ * _hDest->stTransformMatrix.stCol_2.xX;
+        _hDest->stTransformMatrix.stCol_0.xY = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xZ, _hSource->stTransformMatrix.stCol_2.xY, _hSource->stTransformMatrix.stCol_0.xY, _hSource->stTransformMatrix.stCol_2.xZ);
+        xDet = 1.0f / xDet;
+        _hDest->stTransformMatrix.stCol_0.xZ = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xY, _hSource->stTransformMatrix.stCol_1.xZ, _hSource->stTransformMatrix.stCol_0.xZ, _hSource->stTransformMatrix.stCol_1.xY);
+        _hDest->stTransformMatrix.stCol_1.xY = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xX, _hSource->stTransformMatrix.stCol_2.xZ, _hSource->stTransformMatrix.stCol_0.xZ, _hSource->stTransformMatrix.stCol_2.xX);
+        _hDest->stTransformMatrix.stCol_1.xZ = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xZ, _hSource->stTransformMatrix.stCol_1.xX, _hSource->stTransformMatrix.stCol_0.xX, _hSource->stTransformMatrix.stCol_1.xZ);
+        _hDest->stTransformMatrix.stCol_2.xY = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xY, _hSource->stTransformMatrix.stCol_2.xX, _hSource->stTransformMatrix.stCol_0.xX, _hSource->stTransformMatrix.stCol_2.xY);
+        _hDest->stTransformMatrix.stCol_2.xZ = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xX, _hSource->stTransformMatrix.stCol_1.xY, _hSource->stTransformMatrix.stCol_0.xY, _hSource->stTransformMatrix.stCol_1.xX);
+        _hDest->stTransformMatrix.stCol_0.xX = xDet * _hDest->stTransformMatrix.stCol_0.xX;
+        _hDest->stTransformMatrix.stCol_0.xY = xDet * _hDest->stTransformMatrix.stCol_0.xY;
+        _hDest->stTransformMatrix.stCol_0.xZ = xDet * _hDest->stTransformMatrix.stCol_0.xZ;
+        _hDest->stTransformMatrix.stCol_0.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_1.xX = xDet * _hDest->stTransformMatrix.stCol_1.xX;
+        _hDest->stTransformMatrix.stCol_1.xY = xDet * _hDest->stTransformMatrix.stCol_1.xY;
+        _hDest->stTransformMatrix.stCol_1.xZ = xDet * _hDest->stTransformMatrix.stCol_1.xZ;
+        _hDest->stTransformMatrix.stCol_1.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_2.xX = xDet * _hDest->stTransformMatrix.stCol_2.xX;
+        _hDest->stTransformMatrix.stCol_2.xY = xDet * _hDest->stTransformMatrix.stCol_2.xY;
+        _hDest->stTransformMatrix.stCol_2.xZ = xDet * _hDest->stTransformMatrix.stCol_2.xZ;
+        _hDest->stTransformMatrix.stCol_2.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_2.xW = 0.0f;
+        _hDest->stTransformMatrix.stCol_1.xW = 0.0f;
+        _hDest->stTransformMatrix.stCol_0.xW = 0.0f;
+        MAT_INVERT_TRANSLATION(_hDest, _hSource);
+        MAT_INVERT_TRANSLATION(_hDest, _hSource);
+        break;
+    }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsp.c lines 362–525 */
@@ -1438,17 +1807,223 @@ void MAT_fn_vFastInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_
  */
 void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource)
 {
-    MTH4D_tdstVector_* p_stVec;
-    float xQW;
-    float xQZ;
-    float xQY;
-    float xQX;
-    float xZoom;
-    MTH4D_tdstMatrix_* p_stTranspMatrix;
-    MTH4D_tdstVector_* p_stScale;
-    MTH4D_tdstMatrix_* p_stMatrixSource;
     MTH4D_tdstMatrix_* p_stMatrixDest;
-    /* TODO: decompile from asm/... */
+    MTH4D_tdstMatrix_* p_stMatrixSource;
+    MTH4D_tdstVector_* p_stScale;
+    MTH4D_tdstMatrix_* p_stTranspMatrix;
+    MTH4D_tdstVector_* p_stVec;
+    float xZoom;
+    float xQX;
+    float xQY;
+    float xQZ;
+    float xQW;
+
+    switch (_hSource->eType)
+    {
+    case MAT_eTransform_Identity:
+        if (_hDest != _hSource)
+        {
+            _hDest->eType = MAT_eTransform_Identity;
+            MTH4D_fn_vSetIdentityMatrix(&_hDest->stTransformMatrix);
+            _hDest->stScaleVector.xX = 1.0f;
+            _hDest->stScaleVector.xY = 1.0f;
+            _hDest->stScaleVector.xZ = 1.0f;
+            _hDest->stScaleVector.xW = 1.0f;
+        }
+        break;
+
+    case MAT_eTransform_Translation:
+        if (_hDest != _hSource)
+        {
+            _hDest->eType = MAT_eTransform_Identity;
+            MTH4D_fn_vSetIdentityMatrix(&_hDest->stTransformMatrix);
+            _hDest->stScaleVector.xX = 1.0f;
+            _hDest->stScaleVector.xY = 1.0f;
+            _hDest->stScaleVector.xZ = 1.0f;
+            _hDest->stScaleVector.xW = 1.0f;
+            _hDest->eType = MAT_eTransform_Translation;
+        }
+        _hDest->stTransformMatrix.stCol_3.xX = -_hSource->stTransformMatrix.stCol_3.xX;
+        _hDest->stTransformMatrix.stCol_3.xY = -_hSource->stTransformMatrix.stCol_3.xY;
+        _hDest->stTransformMatrix.stCol_3.xZ = -_hSource->stTransformMatrix.stCol_3.xZ;
+        _hDest->stTransformMatrix.stCol_3.xW = 1.0f;
+        break;
+
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_Scale:
+        p_stMatrixDest = &_hDest->stTransformMatrix;
+        p_stMatrixSource = &_hSource->stTransformMatrix;
+        p_stScale = &_hDest->stScaleVector;
+        if (_hDest != _hSource)
+        {
+            MAT_COPY_TRANSFORMATION(_hDest, _hSource);
+        }
+        xZoom = 1.0f / p_stMatrixSource->stCol_0.xX;
+        p_stMatrixDest->stCol_0.xX = xZoom;
+        p_stScale->xX = xZoom;
+        xZoom = 1.0f / p_stMatrixSource->stCol_1.xY;
+        p_stMatrixDest->stCol_1.xY = xZoom;
+        p_stScale->xY = xZoom;
+        xZoom = 1.0f / p_stMatrixSource->stCol_2.xZ;
+        p_stMatrixDest->stCol_2.xZ = xZoom;
+        p_stScale->xZ = xZoom;
+        _hDest->stTransformMatrix.stCol_3.xX = -_hSource->stTransformMatrix.stCol_3.xX;
+        _hDest->stTransformMatrix.stCol_3.xY = -_hSource->stTransformMatrix.stCol_3.xY;
+        _hDest->stTransformMatrix.stCol_3.xZ = -_hSource->stTransformMatrix.stCol_3.xZ;
+        _hDest->stTransformMatrix.stCol_3.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_3.xX = p_stScale->xX * _hDest->stTransformMatrix.stCol_3.xX;
+        _hDest->stTransformMatrix.stCol_3.xY = p_stScale->xY * _hDest->stTransformMatrix.stCol_3.xY;
+        _hDest->stTransformMatrix.stCol_3.xZ = p_stScale->xZ * _hDest->stTransformMatrix.stCol_3.xZ;
+        _hDest->stTransformMatrix.stCol_3.xW = 1.0f;
+        break;
+
+    case MAT_eTransform_Rotation:
+        p_stTranspMatrix = &_hDest->stTransformMatrix;
+        p_stMatrixSource = &_hSource->stTransformMatrix;
+        p_stVec = &_hDest->stTransformMatrix.stCol_3;
+        _hDest->eType = MAT_eTransform_Rotation;
+        if (p_stTranspMatrix == p_stMatrixSource)
+        {
+            MAT_TRANSPOSE_3X3(_hSource);
+        }
+        else
+        {
+            MTH4D_fn_vInvertRotationMatrix2(p_stTranspMatrix, p_stMatrixSource);
+        }
+        p_stVec->xX = -_hSource->stTransformMatrix.stCol_3.xX;
+        p_stVec->xY = -_hSource->stTransformMatrix.stCol_3.xY;
+        p_stVec->xZ = -_hSource->stTransformMatrix.stCol_3.xZ;
+        p_stVec->xW = 1.0f;
+        MTH4D_fn_vMulMatrixVectorWithoutBuffer(p_stVec, p_stTranspMatrix, p_stVec);
+        _hDest->stScaleVector.xX = 1.0f;
+        _hDest->stScaleVector.xY = 1.0f;
+        _hDest->stScaleVector.xZ = 1.0f;
+        _hDest->stScaleVector.xW = 1.0f;
+        break;
+
+    case MAT_eTransform_RotationZoom:
+        p_stTranspMatrix = &_hDest->stTransformMatrix;
+        p_stMatrixSource = &_hSource->stTransformMatrix;
+        p_stVec = &_hDest->stTransformMatrix.stCol_3;
+        _hDest->eType = MAT_eTransform_RotationZoom;
+        if (p_stTranspMatrix == p_stMatrixSource)
+        {
+            MAT_TRANSPOSE_3X3(_hSource);
+        }
+        else
+        {
+            MTH4D_fn_vInvertRotationMatrix2(p_stTranspMatrix, p_stMatrixSource);
+        }
+        xZoom = _hSource->stScaleVector.xX;
+        xZoom = 1.0f / (xZoom * xZoom);
+        p_stTranspMatrix->stCol_0.xX = xZoom * p_stTranspMatrix->stCol_0.xX;
+        p_stTranspMatrix->stCol_0.xY = xZoom * p_stTranspMatrix->stCol_0.xY;
+        p_stTranspMatrix->stCol_0.xZ = xZoom * p_stTranspMatrix->stCol_0.xZ;
+        p_stTranspMatrix->stCol_0.xW = 1.0f;
+        p_stTranspMatrix->stCol_1.xX = xZoom * p_stTranspMatrix->stCol_1.xX;
+        p_stTranspMatrix->stCol_1.xY = xZoom * p_stTranspMatrix->stCol_1.xY;
+        p_stTranspMatrix->stCol_1.xZ = xZoom * p_stTranspMatrix->stCol_1.xZ;
+        p_stTranspMatrix->stCol_1.xW = 1.0f;
+        p_stTranspMatrix->stCol_2.xX = xZoom * p_stTranspMatrix->stCol_2.xX;
+        p_stTranspMatrix->stCol_2.xY = xZoom * p_stTranspMatrix->stCol_2.xY;
+        p_stTranspMatrix->stCol_2.xZ = xZoom * p_stTranspMatrix->stCol_2.xZ;
+        p_stTranspMatrix->stCol_2.xW = 1.0f;
+        p_stTranspMatrix->stCol_2.xW = 0.0f;
+        p_stTranspMatrix->stCol_1.xW = 0.0f;
+        p_stTranspMatrix->stCol_0.xW = 0.0f;
+        xZoom = 1.0f / _hSource->stScaleVector.xX;
+        _hDest->stScaleVector.xX = xZoom;
+        _hDest->stScaleVector.xY = xZoom;
+        _hDest->stScaleVector.xZ = xZoom;
+        _hDest->stScaleVector.xW = 1.0f;
+        p_stVec->xX = -_hSource->stTransformMatrix.stCol_3.xX;
+        p_stVec->xY = -_hSource->stTransformMatrix.stCol_3.xY;
+        p_stVec->xZ = -_hSource->stTransformMatrix.stCol_3.xZ;
+        p_stVec->xW = 1.0f;
+        MTH4D_fn_vMulMatrixVectorWithoutBuffer(p_stVec, p_stTranspMatrix, p_stVec);
+        break;
+
+    case MAT_eTransform_RotationScale:
+    {
+        float xSX, xSY, xSZ;
+        MAT_fn_vInvertRotation(_hDest, _hSource);
+        MAT_fn_v_MatrixToQuat(&_hDest->stTransformMatrix, &xQX, &xQY, &xQZ, &xQW);
+        _hDest->eType = MAT_eTransform_ComplexRotationScale;
+        xSX = _hSource->stScaleVector.xX;
+        xSY = _hSource->stScaleVector.xY;
+        xSZ = _hSource->stScaleVector.xZ;
+        xSX = 1.0f / (xSX * xSX);
+        xSY = 1.0f / (xSY * xSY);
+        xSZ = 1.0f / (xSZ * xSZ);
+        _hDest->stTransformMatrix.stCol_0.xX = xSX * _hSource->stTransformMatrix.stCol_0.xX;
+        _hDest->stTransformMatrix.stCol_0.xY = xSX * _hSource->stTransformMatrix.stCol_0.xY;
+        _hDest->stTransformMatrix.stCol_0.xZ = xSX * _hSource->stTransformMatrix.stCol_0.xZ;
+        _hDest->stTransformMatrix.stCol_0.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_1.xX = xSY * _hSource->stTransformMatrix.stCol_1.xX;
+        _hDest->stTransformMatrix.stCol_1.xY = xSY * _hSource->stTransformMatrix.stCol_1.xY;
+        _hDest->stTransformMatrix.stCol_1.xZ = xSY * _hSource->stTransformMatrix.stCol_1.xZ;
+        _hDest->stTransformMatrix.stCol_1.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_2.xX = xSZ * _hSource->stTransformMatrix.stCol_2.xX;
+        _hDest->stTransformMatrix.stCol_2.xY = xSZ * _hSource->stTransformMatrix.stCol_2.xY;
+        _hDest->stTransformMatrix.stCol_2.xZ = xSZ * _hSource->stTransformMatrix.stCol_2.xZ;
+        _hDest->stTransformMatrix.stCol_2.xW = 1.0f;
+        MAT_COPY_VECTOR(_hDest->stTransformMatrix.stCol_3, _hSource->stTransformMatrix.stCol_3);
+        _hDest->stTransformMatrix.stCol_2.xW = 0.0f;
+        _hDest->stTransformMatrix.stCol_1.xW = 0.0f;
+        _hDest->stTransformMatrix.stCol_0.xW = 0.0f;
+        MAT_TRANSPOSE_3X3(_hDest);
+        MAT_INVERT_TRANSLATION(_hDest, _hSource);
+        {
+            float xX, xY, xZ, xW;
+            xW = xQW;
+            xZ = xQZ;
+            xY = xQY;
+            xX = xQX;
+            _hDest->stScaleVector.xX = xX;
+            _hDest->stScaleVector.xY = xY;
+            _hDest->stScaleVector.xZ = xZ;
+            _hDest->stScaleVector.xW = xW;
+        }
+        break;
+    }
+
+    case MAT_eTransform_ComplexRotationScale:
+    {
+        float xDet;
+        _hDest->eType = MAT_eTransform_ComplexRotationScale;
+        _hDest->stTransformMatrix.stCol_0.xX = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_1.xY, _hSource->stTransformMatrix.stCol_2.xZ, _hSource->stTransformMatrix.stCol_1.xZ, _hSource->stTransformMatrix.stCol_2.xY);
+        xDet = _hSource->stTransformMatrix.stCol_0.xX * _hDest->stTransformMatrix.stCol_0.xX;
+        _hDest->stTransformMatrix.stCol_1.xX = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_1.xZ, _hSource->stTransformMatrix.stCol_2.xX, _hSource->stTransformMatrix.stCol_1.xX, _hSource->stTransformMatrix.stCol_2.xZ);
+        xDet = xDet + _hSource->stTransformMatrix.stCol_0.xY * _hDest->stTransformMatrix.stCol_1.xX;
+        _hDest->stTransformMatrix.stCol_2.xX = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_1.xX, _hSource->stTransformMatrix.stCol_2.xY, _hSource->stTransformMatrix.stCol_1.xY, _hSource->stTransformMatrix.stCol_2.xX);
+        xDet = xDet + _hSource->stTransformMatrix.stCol_0.xZ * _hDest->stTransformMatrix.stCol_2.xX;
+        _hDest->stTransformMatrix.stCol_0.xY = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xZ, _hSource->stTransformMatrix.stCol_2.xY, _hSource->stTransformMatrix.stCol_0.xY, _hSource->stTransformMatrix.stCol_2.xZ);
+        xDet = 1.0f / xDet;
+        _hDest->stTransformMatrix.stCol_0.xZ = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xY, _hSource->stTransformMatrix.stCol_1.xZ, _hSource->stTransformMatrix.stCol_0.xZ, _hSource->stTransformMatrix.stCol_1.xY);
+        _hDest->stTransformMatrix.stCol_1.xY = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xX, _hSource->stTransformMatrix.stCol_2.xZ, _hSource->stTransformMatrix.stCol_0.xZ, _hSource->stTransformMatrix.stCol_2.xX);
+        _hDest->stTransformMatrix.stCol_1.xZ = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xZ, _hSource->stTransformMatrix.stCol_1.xX, _hSource->stTransformMatrix.stCol_0.xX, _hSource->stTransformMatrix.stCol_1.xZ);
+        _hDest->stTransformMatrix.stCol_2.xY = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xY, _hSource->stTransformMatrix.stCol_2.xX, _hSource->stTransformMatrix.stCol_0.xX, _hSource->stTransformMatrix.stCol_2.xY);
+        _hDest->stTransformMatrix.stCol_2.xZ = MTH_xMulSubMul(_hSource->stTransformMatrix.stCol_0.xX, _hSource->stTransformMatrix.stCol_1.xY, _hSource->stTransformMatrix.stCol_0.xY, _hSource->stTransformMatrix.stCol_1.xX);
+        _hDest->stTransformMatrix.stCol_0.xX = xDet * _hDest->stTransformMatrix.stCol_0.xX;
+        _hDest->stTransformMatrix.stCol_0.xY = xDet * _hDest->stTransformMatrix.stCol_0.xY;
+        _hDest->stTransformMatrix.stCol_0.xZ = xDet * _hDest->stTransformMatrix.stCol_0.xZ;
+        _hDest->stTransformMatrix.stCol_0.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_1.xX = xDet * _hDest->stTransformMatrix.stCol_1.xX;
+        _hDest->stTransformMatrix.stCol_1.xY = xDet * _hDest->stTransformMatrix.stCol_1.xY;
+        _hDest->stTransformMatrix.stCol_1.xZ = xDet * _hDest->stTransformMatrix.stCol_1.xZ;
+        _hDest->stTransformMatrix.stCol_1.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_2.xX = xDet * _hDest->stTransformMatrix.stCol_2.xX;
+        _hDest->stTransformMatrix.stCol_2.xY = xDet * _hDest->stTransformMatrix.stCol_2.xY;
+        _hDest->stTransformMatrix.stCol_2.xZ = xDet * _hDest->stTransformMatrix.stCol_2.xZ;
+        _hDest->stTransformMatrix.stCol_2.xW = 1.0f;
+        _hDest->stTransformMatrix.stCol_2.xW = 0.0f;
+        _hDest->stTransformMatrix.stCol_1.xW = 0.0f;
+        _hDest->stTransformMatrix.stCol_0.xW = 0.0f;
+        MAT_INVERT_TRANSLATION(_hDest, _hSource);
+        MAT_INVERT_TRANSLATION(_hDest, _hSource);
+        break;
+    }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\mat\matsp.c lines 301–352 */
@@ -1492,13 +2067,15 @@ void MAT_fn_vRotateVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_*
     case MAT_eTransform_Rotation:
         if (_p_stSource == _p_stDest)
         {
-            MTH4D_tdstVector_ stSrc;
-            *(int*)&stSrc.xX = *(int*)&_p_stSource->xX;
-            *(int*)&stSrc.xY = *(int*)&_p_stSource->xY;
-            *(int*)&stSrc.xZ = *(int*)&_p_stSource->xZ;
-            _p_stDest->xX = _hTransform->stTransformMatrix.stCol_0.xX * stSrc.xX + _hTransform->stTransformMatrix.stCol_1.xX * stSrc.xY + _hTransform->stTransformMatrix.stCol_2.xX * stSrc.xZ;
-            _p_stDest->xY = _hTransform->stTransformMatrix.stCol_0.xY * stSrc.xX + _hTransform->stTransformMatrix.stCol_1.xY * stSrc.xY + _hTransform->stTransformMatrix.stCol_2.xY * stSrc.xZ;
-            _p_stDest->xZ = _hTransform->stTransformMatrix.stCol_0.xZ * stSrc.xX + _hTransform->stTransformMatrix.stCol_1.xZ * stSrc.xY + _hTransform->stTransformMatrix.stCol_2.xZ * stSrc.xZ;
+            MTH_tduVector4Words uS;
+            float* p_xY = &uS.st.xY;
+            float* p_xZ = &uS.st.xZ;
+            uS.auWords[0] = ((MTH_tduVectorWords*)_p_stSource)->auWords[0];
+            uS.auWords[1] = ((MTH_tduVectorWords*)_p_stSource)->auWords[1];
+            uS.auWords[2] = ((MTH_tduVectorWords*)_p_stSource)->auWords[2];
+            _p_stDest->xX = _hTransform->stTransformMatrix.stCol_0.xX * uS.st.xX + _hTransform->stTransformMatrix.stCol_1.xX * *p_xY + _hTransform->stTransformMatrix.stCol_2.xX * *p_xZ;
+            _p_stDest->xY = _hTransform->stTransformMatrix.stCol_0.xY * uS.st.xX + _hTransform->stTransformMatrix.stCol_1.xY * *p_xY + _hTransform->stTransformMatrix.stCol_2.xY * *p_xZ;
+            _p_stDest->xZ = _hTransform->stTransformMatrix.stCol_0.xZ * uS.st.xX + _hTransform->stTransformMatrix.stCol_1.xZ * *p_xY + _hTransform->stTransformMatrix.stCol_2.xZ * *p_xZ;
         }
         else
         {
@@ -1513,13 +2090,15 @@ void MAT_fn_vRotateVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_*
         MAT_fn_vRemoveScale(&stTemp, _hTransform);
         if (_p_stSource == _p_stDest)
         {
-            MTH4D_tdstVector_ stSrc;
-            *(int*)&stSrc.xX = *(int*)&_p_stSource->xX;
-            *(int*)&stSrc.xY = *(int*)&_p_stSource->xY;
-            *(int*)&stSrc.xZ = *(int*)&_p_stSource->xZ;
-            _p_stDest->xX = stTemp.stTransformMatrix.stCol_0.xX * stSrc.xX + stTemp.stTransformMatrix.stCol_1.xX * stSrc.xY + stTemp.stTransformMatrix.stCol_2.xX * stSrc.xZ;
-            _p_stDest->xY = stTemp.stTransformMatrix.stCol_0.xY * stSrc.xX + stTemp.stTransformMatrix.stCol_1.xY * stSrc.xY + stTemp.stTransformMatrix.stCol_2.xY * stSrc.xZ;
-            _p_stDest->xZ = stTemp.stTransformMatrix.stCol_0.xZ * stSrc.xX + stTemp.stTransformMatrix.stCol_1.xZ * stSrc.xY + stTemp.stTransformMatrix.stCol_2.xZ * stSrc.xZ;
+            MTH_tduVector4Words uS;
+            float* p_xY = &uS.st.xY;
+            float* p_xZ = &uS.st.xZ;
+            uS.auWords[0] = ((MTH_tduVectorWords*)_p_stSource)->auWords[0];
+            uS.auWords[1] = ((MTH_tduVectorWords*)_p_stSource)->auWords[1];
+            uS.auWords[2] = ((MTH_tduVectorWords*)_p_stSource)->auWords[2];
+            _p_stDest->xX = stTemp.stTransformMatrix.stCol_0.xX * uS.st.xX + stTemp.stTransformMatrix.stCol_1.xX * *p_xY + stTemp.stTransformMatrix.stCol_2.xX * *p_xZ;
+            _p_stDest->xY = stTemp.stTransformMatrix.stCol_0.xY * uS.st.xX + stTemp.stTransformMatrix.stCol_1.xY * *p_xY + stTemp.stTransformMatrix.stCol_2.xY * *p_xZ;
+            _p_stDest->xZ = stTemp.stTransformMatrix.stCol_0.xZ * uS.st.xX + stTemp.stTransformMatrix.stCol_1.xZ * *p_xY + stTemp.stTransformMatrix.stCol_2.xZ * *p_xZ;
         }
         else
         {
@@ -1533,13 +2112,15 @@ void MAT_fn_vRotateVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_*
         MAT_fn_vQuatToMatrix(&TmpMat, _hTransform->stScaleVector.xX, _hTransform->stScaleVector.xY, _hTransform->stScaleVector.xZ, _hTransform->stScaleVector.xW);
         if (_p_stSource == _p_stDest)
         {
-            MTH4D_tdstVector_ stSrc;
-            *(int*)&stSrc.xX = *(int*)&_p_stSource->xX;
-            *(int*)&stSrc.xY = *(int*)&_p_stSource->xY;
-            *(int*)&stSrc.xZ = *(int*)&_p_stSource->xZ;
-            _p_stDest->xX = TmpMat.stCol_0.xX * stSrc.xX + TmpMat.stCol_1.xX * stSrc.xY + TmpMat.stCol_2.xX * stSrc.xZ;
-            _p_stDest->xY = TmpMat.stCol_0.xY * stSrc.xX + TmpMat.stCol_1.xY * stSrc.xY + TmpMat.stCol_2.xY * stSrc.xZ;
-            _p_stDest->xZ = TmpMat.stCol_0.xZ * stSrc.xX + TmpMat.stCol_1.xZ * stSrc.xY + TmpMat.stCol_2.xZ * stSrc.xZ;
+            MTH_tduVector4Words uS;
+            float* p_xY = &uS.st.xY;
+            float* p_xZ = &uS.st.xZ;
+            uS.auWords[0] = ((MTH_tduVectorWords*)_p_stSource)->auWords[0];
+            uS.auWords[1] = ((MTH_tduVectorWords*)_p_stSource)->auWords[1];
+            uS.auWords[2] = ((MTH_tduVectorWords*)_p_stSource)->auWords[2];
+            _p_stDest->xX = TmpMat.stCol_0.xX * uS.st.xX + TmpMat.stCol_1.xX * *p_xY + TmpMat.stCol_2.xX * *p_xZ;
+            _p_stDest->xY = TmpMat.stCol_0.xY * uS.st.xX + TmpMat.stCol_1.xY * *p_xY + TmpMat.stCol_2.xY * *p_xZ;
+            _p_stDest->xZ = TmpMat.stCol_0.xZ * uS.st.xX + TmpMat.stCol_1.xZ * *p_xY + TmpMat.stCol_2.xZ * *p_xZ;
         }
         else
         {
@@ -1592,13 +2173,15 @@ void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_
     case MAT_eTransform_ComplexRotationScale:
         if (_p_stSource == _p_stDest)
         {
-            MTH3D_tdstVector_ stTemp;
-            *(int*)&stTemp.xX = *(int*)&_p_stSource->xX;
-            *(int*)&stTemp.xY = *(int*)&_p_stSource->xY;
-            *(int*)&stTemp.xZ = *(int*)&_p_stSource->xZ;
-            _p_stDest->xX = _hTransform->stTransformMatrix.stCol_0.xX * stTemp.xX + _hTransform->stTransformMatrix.stCol_1.xX * stTemp.xY + _hTransform->stTransformMatrix.stCol_2.xX * stTemp.xZ;
-            _p_stDest->xY = _hTransform->stTransformMatrix.stCol_0.xY * stTemp.xX + _hTransform->stTransformMatrix.stCol_1.xY * stTemp.xY + _hTransform->stTransformMatrix.stCol_2.xY * stTemp.xZ;
-            _p_stDest->xZ = _hTransform->stTransformMatrix.stCol_0.xZ * stTemp.xX + _hTransform->stTransformMatrix.stCol_1.xZ * stTemp.xY + _hTransform->stTransformMatrix.stCol_2.xZ * stTemp.xZ;
+            MTH_tduVectorWords uT;
+            float* p_xY = &uT.stVector.xY;
+            float* p_xZ = &uT.stVector.xZ;
+            uT.auWords[0] = ((MTH_tduVectorWords*)_p_stSource)->auWords[0];
+            uT.auWords[1] = ((MTH_tduVectorWords*)_p_stSource)->auWords[1];
+            uT.auWords[2] = ((MTH_tduVectorWords*)_p_stSource)->auWords[2];
+            _p_stDest->xX = _hTransform->stTransformMatrix.stCol_0.xX * uT.stVector.xX + _hTransform->stTransformMatrix.stCol_1.xX * *p_xY + _hTransform->stTransformMatrix.stCol_2.xX * *p_xZ;
+            _p_stDest->xY = _hTransform->stTransformMatrix.stCol_0.xY * uT.stVector.xX + _hTransform->stTransformMatrix.stCol_1.xY * *p_xY + _hTransform->stTransformMatrix.stCol_2.xY * *p_xZ;
+            _p_stDest->xZ = _hTransform->stTransformMatrix.stCol_0.xZ * uT.stVector.xX + _hTransform->stTransformMatrix.stCol_1.xZ * *p_xY + _hTransform->stTransformMatrix.stCol_2.xZ * *p_xZ;
         }
         else
         {

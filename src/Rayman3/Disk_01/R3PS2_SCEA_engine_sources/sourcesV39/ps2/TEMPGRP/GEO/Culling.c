@@ -558,7 +558,7 @@ inline unsigned char MAT_M_bTransformHasScale(MAT_tdstTransformation_* _hTransfo
 
 inline float MAT_M_xGetMaxScale(MAT_tdstTransformation_* _hTransform)
 {
-    if ((unsigned int)(_hTransform->eType - MAT_eTransform_Identity) < 2 || _hTransform->eType == MAT_eTransform_Rotation)
+    if ((unsigned int)(_hTransform->eType - MAT_eTransform_Identity) <= 1 || _hTransform->eType == MAT_eTransform_Rotation)
         return 1.0f;
     return MAT_fn_xGetMaxScaleNonOpt(_hTransform);
 }

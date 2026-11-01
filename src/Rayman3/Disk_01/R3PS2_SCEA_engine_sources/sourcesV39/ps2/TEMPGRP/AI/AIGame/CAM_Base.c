@@ -3374,6 +3374,54 @@ inline float MTH_xAbs(float _xValue)
     return _xResult;
 }
 
+/* Retail copies these vectors word by word with lw/sw. */
+#define CAM_MTH_WORDCOPY3(_d, _s) \
+    ((int*)(_d))[0] = ((int*)(_s))[0]; \
+    ((int*)(_d))[1] = ((int*)(_s))[1]; \
+    ((int*)(_d))[2] = ((int*)(_s))[2]
+
+typedef union { MTH3D_tdstVector_ v; int i[3]; } tduCamWordVector;
+
+inline void CAM_vWordCopy3(MTH3D_tdstVector_* _d, MTH3D_tdstVector_* _s)
+{
+    ((int*)_d)[0] = ((int*)_s)[0];
+    ((int*)_d)[1] = ((int*)_s)[1];
+    ((int*)_d)[2] = ((int*)_s)[2];
+}
+
+inline float CAM_xCrossComponent(float _xA, float _xB, float _xC, float _xD)
+{
+    float _xResult;
+    asm { mula.s _xA, _xB }
+    asm { msub.s _xResult, _xC, _xD }
+    return _xResult;
+}
+
+inline float CAM_xNorm3(float _x, float _y, float _z)
+{
+    float _s, _r;
+    CAM_MTH_SQR3_TO(_s, _x, _y, _z);
+    CAM_MTH_SQRT_TO(_r, _s);
+    return _r;
+}
+
+void* memcpy(void* _dst, const void* _src, unsigned int _n);
+inline float CAM_xSqr3(float _x, float _y, float _z)
+{
+    float _s;
+    CAM_MTH_SQR3_TO(_s, _x, _y, _z);
+    return _s;
+}
+
+inline float CAM_xDot3(float _xAX, float _xBX, float _xAY, float _xBY, float _xAZ, float _xBZ)
+{
+    float _xResult;
+    asm { mula.s _xAX, _xBX }
+    asm { madda.s _xAY, _xBY }
+    asm { madd.s _xResult, _xAZ, _xBZ }
+    return _xResult;
+}
+
 unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MTH3D_tdstVector_* _p_stVector2, float _xEpsilon);
 void CAM_fn_vGetPersoSightAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stAxis, MTH3D_tdstVector_* _p_stAxisZ);
 /* The retail caller tests the result without re-extending it, so this unit
@@ -3388,11 +3436,12 @@ void CAM_fn_vComputeCameraAxisAngles(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_t
 HIE_tdstSuperObject_* CAM_fn_hGetFather(HIE_tdstSuperObject_* _h_SuperObjPerso);
 void CAM_fn_vComputeMovePos(CAM_tdstUpdateCamera_* _p_stStruct);
 char CAM_fn_cDynChangeTheta(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stTestedPos);
-void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _p_stCineinfo, CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vInitCompleteCineinfo(tdstCineinfo_* _p_stCineinfo);
 void CAM_fn_vInitCameraStructure(HIE_tdstSuperObject_* _h_SuperObjPerso, MTH3D_tdstVector_* _p_stVector);
-char CAM_fn_cIsWantedPosIncorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stVector);
-unsigned char CAM_fn_bPersoIsMoving(HIE_tdstSuperObject_* _h_SuperObjPerso);
-unsigned char CAM_fn_bPersoIsTurning(HIE_tdstSuperObject_* _h_SuperObjPerso);
+char CAM_fn_cIsWantedPosIncorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stVector, char _cMode);
+unsigned char CAM_fn_bPersoIsMoving(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stMove);
+unsigned char CAM_fn_bPersoIsTurning(HIE_tdstSuperObject_* _h_SuperObjPerso, float* _p_xAngularSpeed);
+void* fn_p_stDynamGetParsingDatas(tdstDynam_* _hDynam);
 void CAM_fn_vComputeTarget(CAM_tdstUpdateCamera_* _p_stStruct);
 void CAM_fn_vSetCineinfoCurrentFromVisibility(tdstCineinfo_* _p_stCineinfo);
 unsigned char CAM_fn_vTestBadVisibility(CAM_tdstUpdateCamera_* _p_stStruct);
@@ -3503,48 +3552,168 @@ void CAM_fn_vComputeRefAxis(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vComputeRealWantedPos(CAM_tdstUpdateCamera_* _p_stStruct);
+void CAM_fn_vComputeReferencePoint(CAM_tdstUpdateCamera_* _p_stStruct);
 void CAM_fn_vUpdateGeneralCamera(CAM_tdstUpdateCamera_* _p_stStruct)
 {
-    MTH3D_tdstVector_ stMoveVector;
+    tduCamWordVector stMoveVector;
+    float xNorm;
+    int* p_lWantedCameraPos;
+    CAM_tdstUpdateCamera_ stTempStruct;
 
+restart:
     cCanTestStatic = 1;
     CAM_fn_hGetFather(_p_stStruct->hCineinfoWork->hSuperObjectTargeted);
-    stMoveVector.xX = _p_stStruct->p_stReport->m_stAbsolutePrevSpeed.m_stLinear.xX;
-    stMoveVector.xY = _p_stStruct->p_stReport->m_stAbsoluteCurrSpeed.m_stLinear.xX;
-    stMoveVector.xZ = _p_stStruct->p_stReport->m_stAbsolutePrevPosition.m_stLinear.xX;
+    stMoveVector.i[0] = ((int*)&(*(DNM_stReport* volatile*)&_p_stStruct->p_stReport)->m_stAbsolutePrevSpeed.m_stLinear)[0];
+    stMoveVector.i[1] = ((int*)&(*(DNM_stReport* volatile*)&_p_stStruct->p_stReport)->m_stAbsolutePrevSpeed.m_stLinear)[1];
+    stMoveVector.i[2] = ((int*)&(*(DNM_stReport* volatile*)&_p_stStruct->p_stReport)->m_stAbsolutePrevSpeed.m_stLinear)[2];
+    xNorm = CAM_xNorm3(stMoveVector.v.xX, stMoveVector.v.xY, stMoveVector.v.xZ);
+    if (xNorm < CAM_g_stCameraConstants.xMinLinearSpeedCamera)
     {
-        float xNorm;
-        CAM_MTH_NORM3_TO(xNorm, &stMoveVector);
-        if (xNorm < CAM_g_stCameraConstants.xRayCameraSphereToGo1)
-        {
-            _p_stStruct->hCineinfo->ucPerIAFlags |= 4;
-        }
-    }
-    CAM_fn_vInitCompleteCineinfo(_p_stStruct->hCineinfo, _p_stStruct);
-    CAM_fn_vComputeTargetedPersoPos(_p_stStruct, _p_stStruct->hCineinfoWork->hSuperObjectTargeted, &_p_stStruct->stTargetedPersoPos, &_p_stStruct->stTargetedPersoRealPos);
-    CAM_fn_vComputeTargetedPersoPos(_p_stStruct, _p_stStruct->hCineinfoWork->hSecondSuperObjectTargeted, &_p_stStruct->stSecondTargetedPersoPos, &_p_stStruct->stSecondTargetedPersoRealPos);
-    CAM_fn_vComputeTarget(_p_stStruct);
-    CAM_fn_vComputeMovePos(_p_stStruct);
-    if (CAM_fn_cDynChangeTheta(_p_stStruct, &_p_stStruct->stWantedCameraPos))
-    {
-        CAM_fn_vComputeMovePos(_p_stStruct);
-    }
-    CAM_fn_vComputeMovePos(_p_stStruct);
-    if (CAM_fn_bEqualVectorWithEpsilon(&_p_stStruct->stWantedCameraPos, &_p_stStruct->stRealWantedCameraPos, 0.001f))
-    {
-        CAM_fn_vSetCineinfoCurrentFromVisibility(_p_stStruct->hCineinfo);
-    }
-    if (CAM_fn_vTestBadVisibility(_p_stStruct) || CAM_fn_vTestBadDistance(_p_stStruct) || CAM_fn_vTestOppositeCollision(_p_stStruct))
-    {
-        CAM_fn_vConstraintMove(_p_stStruct);
+        _p_stStruct->hCineinfo->ucVolIAFlags |= 4;
+        if (_p_stStruct->hCineinfo->xCounter4 < 1000.0f * (float)CAM_g_stCameraConstants.xTickFindBetterPosIfNoMove * g_stEngineStructure.stEngineTimer.xFrameLength)
+            _p_stStruct->hCineinfo->xCounter4 = _p_stStruct->hCineinfo->xCounter4 + (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;
     }
     else
     {
+        _p_stStruct->hCineinfo->xCounter4 = 0.0f;
+    }
+
+    if (g_ucIsEdInGhostMode)
+    {
+        CAM_fn_vInitCompleteCineinfo(_p_stStruct->hCineinfo);
+        memcpy(_p_stStruct->hCineinfo->hWork, _p_stStruct->hCineinfo->hCurrent, sizeof(tdstInternalStructurCineinfo_));
+        _p_stStruct->hCineinfoWork->xDistMin = 2.0f;
+        _p_stStruct->hCineinfoWork->xDistMax = 2.0f;
+        _p_stStruct->hCineinfoWork->xAngleAlpha = 0.0f;
+        _p_stStruct->hCineinfoWork->xAngleShiftAlpha = 0.0f;
+        _p_stStruct->hCineinfoWork->xAngleTheta = 0.0f;
+        _p_stStruct->hCineinfoWork->xAngleShiftTheta = 0.0f;
+        _p_stStruct->hCineinfoWork->uwDNMFlags = 0x55;
+        _p_stStruct->hCineinfoWork->uwIAFlags = 0xA;
+        _p_stStruct->hCineinfo->ucPerIAFlags = 0;
+        _p_stStruct->hCineinfo->ucVolIAFlags = 0;
+        _p_stStruct->hCineinfo->eState = 4;
+    }
+
+    if (_p_stStruct->hCineinfoWork->hSuperObjectTargeted != NULL && _p_stStruct->hCineinfoWork->hSecondSuperObjectTargeted != NULL)
+    {
+        _p_stStruct->hCineinfo->ucPerIAFlags &= ~8;
+        _p_stStruct->hCineinfoWork->uwIAFlags |= 8;
+        _p_stStruct->hCineinfo->eState = 5;
+    }
+
+    cRefAxisIsAlreadyComputed = (_p_stStruct->hCineinfoWork->uwIAFlags & 0x4000) ? 1 : 0;
+    cNoDynChangeTheta = (_p_stStruct->hCineinfoWork->uwIAFlags & 0x20) ? 1 : 0;
+
+    if (_p_stStruct->hCineinfoWork->hSecondSuperObjectTargeted != NULL)
+        _p_stStruct->hCineinfoWork->uwIAFlags |= 2;
+    CAM_fn_vComputeTargetedPersoPos(_p_stStruct, _p_stStruct->hCineinfoWork->hSuperObjectTargeted, &_p_stStruct->stTargetedPersoPos, &_p_stStruct->stTargetedPersoRealPos);
+    if (_p_stStruct->hCineinfoWork->hSecondSuperObjectTargeted != NULL)
+    {
+        CAM_fn_vComputeTargetedPersoPos(_p_stStruct, _p_stStruct->hCineinfoWork->hSecondSuperObjectTargeted, &_p_stStruct->stSecondTargetedPersoPos, &_p_stStruct->stSecondTargetedPersoRealPos);
+        _p_stStruct->stTargetedPersoPos.xX = _p_stStruct->stTargetedPersoPos.xX + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoPos.xX - _p_stStruct->stTargetedPersoPos.xX); _p_stStruct->stTargetedPersoPos.xY = _p_stStruct->stTargetedPersoPos.xY + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoPos.xY - _p_stStruct->stTargetedPersoPos.xY); _p_stStruct->stTargetedPersoPos.xZ = _p_stStruct->stTargetedPersoPos.xZ + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoPos.xZ - _p_stStruct->stTargetedPersoPos.xZ);
+        _p_stStruct->stTargetedPersoRealPos.xX = _p_stStruct->stTargetedPersoRealPos.xX + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoRealPos.xX - _p_stStruct->stTargetedPersoRealPos.xX); _p_stStruct->stTargetedPersoRealPos.xY = _p_stStruct->stTargetedPersoRealPos.xY + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoRealPos.xY - _p_stStruct->stTargetedPersoRealPos.xY); _p_stStruct->stTargetedPersoRealPos.xZ = _p_stStruct->stTargetedPersoRealPos.xZ + _p_stStruct->hCineinfo->xApexRatio * (_p_stStruct->stSecondTargetedPersoRealPos.xZ - _p_stStruct->stTargetedPersoRealPos.xZ);
+    }
+    CAM_fn_vComputeTarget(_p_stStruct);
+    memcpy(&stTempStruct, _p_stStruct, sizeof(CAM_tdstUpdateCamera_));
+    if (_p_stStruct->hCineinfo->ucPerIAFlags & 2) {
+        memcpy(&gst_Ideal, _p_stStruct->hCineinfoVisibility, sizeof(tdstInternalStructurCineinfo_));
+        gst_Ideal.xDistMin = _p_stStruct->hCineinfoWork->xDistMin;
+        gst_Ideal.xDistMax = _p_stStruct->hCineinfoWork->xDistMax;
+    } else {
+        memcpy(&gst_Ideal, _p_stStruct->hCineinfoWork, sizeof(tdstInternalStructurCineinfo_));
+    }
+    gst_Ideal.uwIAFlags |= 0x40;
+    stTempStruct.hCineinfoWork = &gst_Ideal;
+    CAM_fn_vComputeMovePos(&stTempStruct);
+    if (((stTempStruct.hCineinfo->ucVolIAFlags & 2) == 0) &&
+        (stTempStruct.hCineinfoWork->hSuperObjectTargeted != NULL) &&
+        (cNoDynChangeTheta == 0) &&
+        CAM_fn_cDynChangeTheta(&stTempStruct, &stTempStruct.stWantedCameraPos)) {
+        CAM_fn_vComputeMovePos(&stTempStruct);
+    }
+    p_lWantedCameraPos = (int*)&stTempStruct.stWantedCameraPos;
+    *(int*)&_p_stStruct->stRealWantedCameraPos.xX = p_lWantedCameraPos[0];
+    *(int*)&_p_stStruct->stRealWantedCameraPos.xY = p_lWantedCameraPos[1];
+    *(int*)&_p_stStruct->stRealWantedCameraPos.xZ = p_lWantedCameraPos[2];
+    CAM_fn_vComputeMovePos(_p_stStruct);
+
+    if (!(_p_stStruct->hCineinfo->ucVolIAFlags & 2) && _p_stStruct->hCineinfoWork->hSuperObjectTargeted != NULL && !cNoDynChangeTheta &&
+        !(_p_stStruct->hCineinfo->ucPerIAFlags & 8) && !(_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000))
+    {
+        if (CAM_fn_cDynChangeTheta(_p_stStruct, &_p_stStruct->stWantedCameraPos))
+            CAM_fn_vComputeMovePos(_p_stStruct);
+    }
+
+    if ((_p_stStruct->hCineinfo->ucPerIAFlags & 4) || (_p_stStruct->hCineinfoWork->uwIAFlags & 0x40))
+    {
+        if ((_p_stStruct->hCineinfoWork->uwIAFlags & 0x1000) || (_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000) || (_p_stStruct->hCineinfo->ucVolIAFlags & 2) ||
+            CAM_fn_bEqualVectorWithEpsilon(&_p_stStruct->stCurrentCameraPos, &_p_stStruct->stWantedCameraPos, CAM_g_stCameraConstants.xEpsilonForEqualVectors))
+        {
+            _p_stStruct->hCineinfoCurrent->uwIAFlags &= (unsigned short)~0x40;
+            _p_stStruct->hCineinfoWork->uwIAFlags &= ~0x40;
+            _p_stStruct->hCineinfo->ucPerIAFlags &= ~4;
+            _p_stStruct->hCineinfo->cLastCutAngleSens = 0;
+        }
+    }
+
+    if ((CAM_g_stCameraConstants.wFlags & 0x10) && _p_stStruct->hCineinfo->eState == 1 && _p_stStruct->cTgtPersoIsMovingRelative &&
+        CAM_fn_bEqualVectorWithEpsilon(&_p_stStruct->stCurrentCameraPos, &_p_stStruct->stWantedCameraPos, CAM_g_stCameraConstants.xEpsilonForEqualVectors))
+    {
+        if (_p_stStruct->hCineinfo->ucPerIAFlags & 2)
+            CAM_fn_vSetCineinfoCurrentFromVisibility(_p_stStruct->hCineinfo);
+        _p_stStruct->hCineinfo->ucPerIAFlags &= ~8;
+        _p_stStruct->hCineinfo->ucVolIAFlags &= ~1;
+        _p_stStruct->hCineinfo->eState = 0;
+        goto restart;
+    }
+
+    switch (_p_stStruct->hCineinfo->eState)
+    {
+    case 0:
+    case 1:
+        CAM_fn_vTestBadVisibility(_p_stStruct);
+        CAM_fn_vTestBadDistance(_p_stStruct);
+        CAM_fn_vTestOppositeCollision(_p_stStruct);
+        break;
+    }
+
+    switch (_p_stStruct->hCineinfo->eState)
+    {
+    case 0:
+        CAM_fn_vConstraintMove(_p_stStruct);
+        break;
+    case 1:
         CAM_fn_vCheckForABetterPos(_p_stStruct);
         CAM_fn_vConstraintMove(_p_stStruct);
+        break;
+    case 2:
+        CAM_fn_vComputeFailureVisibility(_p_stStruct);
+        break;
+    case 5:
+        _p_stStruct->hCineinfo->eState = 0;
+        break;
+    case 4:
+        _p_stStruct->hCineinfo->eState = 0;
+        break;
     }
-    CAM_fn_vComputeFailureVisibility(_p_stStruct);
+
     CAM_fn_vComputeSpeed(_p_stStruct);
+
+    if ((_p_stStruct->hCineinfoWork->uwIAFlags & 0x1000) || (_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000) || (_p_stStruct->hCineinfo->ucVolIAFlags & 2) || _p_stStruct->hCineinfo->eState == 0)
+    {
+        _p_stStruct->hCineinfo->stLastFailedOrigin.xX = 0.0f;
+        _p_stStruct->hCineinfo->stLastFailedOrigin.xY = 0.0f;
+        _p_stStruct->hCineinfo->stLastFailedOrigin.xZ = 0.0f;
+        _p_stStruct->hCineinfo->stLastFailedWanted.xX = 0.0f;
+        _p_stStruct->hCineinfo->stLastFailedWanted.xY = 0.0f;
+        _p_stStruct->hCineinfo->stLastFailedWanted.xZ = 0.0f;
+        _p_stStruct->hCineinfo->xCounter1 = 0.0f;
+        _p_stStruct->hCineinfo->xCounter3 = 0.0f;
+        _p_stStruct->hCineinfo->ucPerIAFlags &= ~8;
+    }
+    cJustBetterPos = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 1305–1358 */
@@ -3572,21 +3741,18 @@ void CAM_fn_vConstraintMoveCutAngles(CAM_tdstUpdateCamera_* _p_stStruct);
 
 void CAM_fn_vConstraintMove(CAM_tdstUpdateCamera_* _p_stStruct)
 {
-    if (!(_p_stStruct->hCineinfo->ucVolIAFlags & 2) && !(_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000))
-    {
-        if (_p_stStruct->hCineinfoWork->hSuperObjectTargeted != NULL)
-        {
-            if (CAM_fn_cCanResetConstraintMoveVisFailure(_p_stStruct, &_p_stStruct->stWantedCameraPos))
-                _p_stStruct->hCineinfo->ucPerIAFlags &= ~8;
+    if ((_p_stStruct->hCineinfo->ucVolIAFlags & 2) || (_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000) || _p_stStruct->hCineinfoWork->hSuperObjectTargeted == NULL)
+        return;
 
-            if (_p_stStruct->hCineinfo->ucPerIAFlags & 8)
-                CAM_fn_vConstraintMoveAfterVisFailure(_p_stStruct);
-            else if (_p_stStruct->cHasCutAlpha && !(_p_stStruct->hCineinfoWork->uwIAFlags & 4))
-                CAM_fn_vConstraintMoveCutAngles(_p_stStruct);
-            else
-                _p_stStruct->hCineinfo->cLastCutAngleSens = 0;
-        }
-    }
+    if (CAM_fn_cCanResetConstraintMoveVisFailure(_p_stStruct, &_p_stStruct->stWantedCameraPos))
+        _p_stStruct->hCineinfo->ucPerIAFlags &= ~8;
+
+    if (_p_stStruct->hCineinfo->ucPerIAFlags & 8)
+        CAM_fn_vConstraintMoveAfterVisFailure(_p_stStruct);
+    else if (_p_stStruct->cHasCutAlpha && !(_p_stStruct->hCineinfoWork->uwIAFlags & 4))
+        CAM_fn_vConstraintMoveCutAngles(_p_stStruct);
+    else
+        _p_stStruct->hCineinfo->cLastCutAngleSens = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 1208–1287 */
@@ -3627,85 +3793,71 @@ void CAM_fn_vConstraintMove(CAM_tdstUpdateCamera_* _p_stStruct)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#define CAM_M_vOppositeCutAngle(_xAngle, _p_stStruct) \
+    do { \
+        _xAngle = 2.0f * CAM_g_stCameraConstants.xBaseCutAngle; \
+        if ((_p_stStruct)->xAngleDeltaAlphaCut > 0.0f) \
+            _xAngle = -_xAngle; \
+        _xAngle = CAM_fn_xSetAngleInInterval02Pi((_p_stStruct)->xAngleAlphaCut + _xAngle); \
+    } while (0)
+
 void CAM_fn_vConstraintMoveCutAngles(CAM_tdstUpdateCamera_* _p_stStruct)
 {
     float xNewAngle;
 
     if (_p_stStruct->hCineinfo->cLastCutAngleSens == -2)
-    {
         return;
-    }
-    if ((!(_p_stStruct->p_stReport->m_cBitField & 1)) && (!(CAM_g_stCameraConstants.wFlags & 1)))
+
+    if (((_p_stStruct->p_stReport->m_cBitField & 1) ? 1 : 0) && !(CAM_g_stCameraConstants.wFlags & 1))
     {
         _p_stStruct->hCineinfo->cLastCutAngleSens = -2;
         return;
     }
+
     if ((_p_stStruct->hCineinfo->xLastDeltaCut * _p_stStruct->xAngleDeltaAlphaCut) < 0.0f)
     {
         if (MTH_xAbs(_p_stStruct->xAngleDeltaAlphaCut) < (3.1415927f - CAM_g_stCameraConstants.xBaseCutAngle))
-        {
             _p_stStruct->hCineinfo->cLastCutAngleSens = 0;
-        }
     }
+
     if (_p_stStruct->hCineinfo->cLastCutAngleSens == 0)
-    {
         _p_stStruct->hCineinfo->xLastDeltaCut = _p_stStruct->xAngleDeltaAlphaCut;
-    }
+
     xNewAngle = _p_stStruct->xAngleAlphaCut;
-    if (_p_stStruct->hCineinfo->cLastCutAngleSens == -1)
-    {
-        if (_p_stStruct->xAngleDeltaAlphaCut > 0.0f)
-        {
-            xNewAngle = CAM_fn_xSetAngleInInterval02Pi(xNewAngle - 2.0f * CAM_g_stCameraConstants.xBaseCutAngle);
-        }
-    }
-    else if (_p_stStruct->hCineinfo->cLastCutAngleSens == 1)
-    {
-        if (_p_stStruct->xAngleDeltaAlphaCut < 0.0f)
-        {
-            xNewAngle = CAM_fn_xSetAngleInInterval02Pi(xNewAngle - 2.0f * CAM_g_stCameraConstants.xBaseCutAngle);
-        }
-    }
+    if (_p_stStruct->hCineinfo->cLastCutAngleSens == -1 && _p_stStruct->xAngleDeltaAlphaCut > 0.0f)
+        CAM_M_vOppositeCutAngle(xNewAngle, _p_stStruct);
+    if (_p_stStruct->hCineinfo->cLastCutAngleSens == 1 && _p_stStruct->xAngleDeltaAlphaCut < 0.0f)
+        CAM_M_vOppositeCutAngle(xNewAngle, _p_stStruct);
+
     if (CAM_fn_cConstraintMoveCutTestAngle(_p_stStruct, xNewAngle))
     {
         if (_p_stStruct->hCineinfo->cLastCutAngleSens == 0)
         {
-            if (_p_stStruct->xAngleDeltaAlphaCut <= 0.0f)
-            {
+            if (_p_stStruct->xAngleDeltaAlphaCut > 0.0f)
                 _p_stStruct->hCineinfo->cLastCutAngleSens = 1;
-            }
             else
-            {
                 _p_stStruct->hCineinfo->cLastCutAngleSens = -1;
-            }
-            return;
         }
+        return;
     }
-    if (_p_stStruct->hCineinfo->cLastCutAngleSens != 0)
+
+    if (_p_stStruct->hCineinfo->cLastCutAngleSens == 0)
     {
-        _p_stStruct->hCineinfo->cLastCutAngleSens = -2;
-    }
-    else
-    {
-        if (MTH_xAbs(_p_stStruct->xAngleDeltaAlphaCut) < (3.1415927f - CAM_g_stCameraConstants.xBaseCutAngle))
+        if (MTH_xAbs(_p_stStruct->xAngleDeltaAlphaCut) >= (3.1415927f - CAM_g_stCameraConstants.xBaseCutAngle))
         {
-            if (CAM_fn_cConstraintMoveCutTestAngle(_p_stStruct, CAM_fn_xSetAngleInInterval02Pi(_p_stStruct->xAngleAlphaCut - 2.0f * CAM_g_stCameraConstants.xBaseCutAngle)))
+            CAM_M_vOppositeCutAngle(xNewAngle, _p_stStruct);
+            if (CAM_fn_cConstraintMoveCutTestAngle(_p_stStruct, xNewAngle))
             {
-                if (_p_stStruct->xAngleDeltaAlphaCut <= 0.0f)
-                {
+                if (_p_stStruct->xAngleDeltaAlphaCut > 0.0f)
                     _p_stStruct->hCineinfo->cLastCutAngleSens = -1;
-                }
                 else
-                {
                     _p_stStruct->hCineinfo->cLastCutAngleSens = 1;
-                }
-            }
-            else
-            {
-                _p_stStruct->hCineinfo->cLastCutAngleSens = -2;
+                return;
             }
         }
     }
+
+    _p_stStruct->hCineinfo->cLastCutAngleSens = -2;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 1117–1181 */
@@ -3754,31 +3906,57 @@ void CAM_fn_vConstraintMoveCutAngles(CAM_tdstUpdateCamera_* _p_stStruct)
 char CAM_fn_cConstraintMoveCutTestAngle(CAM_tdstUpdateCamera_* _p_stStruct, float _xAngle)
 {
     char cMode;
-    CAM_tdstUpdateCamera_ stStruct;
     tdstInternalStructurCineinfo_ stTemp;
+    CAM_tdstUpdateCamera_ stStruct;
+    MTH3D_tdstVector_ stA, stB;
+    float xNorm1, xNorm2;
 
-    stTemp = *_p_stStruct->hCineinfoWork;
-    stTemp.xAngleTheta = _xAngle;
-    stStruct = *_p_stStruct;
-    if (stTemp.hSecondSuperObjectTargeted == NULL)
+    memcpy(&stTemp, _p_stStruct->hCineinfoWork, sizeof(tdstInternalStructurCineinfo_));
+    stTemp.xAngleAlpha = _xAngle;
+    CAM_fn_vInitCameraStructure(_p_stStruct->hSuperObjCamera, (MTH3D_tdstVector_*)&stStruct);
+    stStruct.hCineinfoWork = &stTemp;
+    if (stStruct.hCineinfoWork->hSecondSuperObjectTargeted != NULL)
+        stStruct.hCineinfoWork->uwIAFlags |= 2;
+    CAM_fn_vComputeTargetedPersoPos(&stStruct, stStruct.hCineinfoWork->hSuperObjectTargeted, &stStruct.stTargetedPersoPos, &stStruct.stTargetedPersoRealPos);
+    if (stStruct.hCineinfoWork->hSecondSuperObjectTargeted != NULL)
     {
-        stTemp.uwIAFlags |= 2;
+        CAM_fn_vComputeTargetedPersoPos(&stStruct, stStruct.hCineinfoWork->hSecondSuperObjectTargeted, &stStruct.stSecondTargetedPersoPos, &stStruct.stSecondTargetedPersoRealPos);
+        stStruct.stTargetedPersoPos.xX = stStruct.stTargetedPersoPos.xX + stStruct.hCineinfo->xApexRatio * (stStruct.stSecondTargetedPersoPos.xX - stStruct.stTargetedPersoPos.xX); stStruct.stTargetedPersoPos.xY = stStruct.stTargetedPersoPos.xY + stStruct.hCineinfo->xApexRatio * (stStruct.stSecondTargetedPersoPos.xY - stStruct.stTargetedPersoPos.xY); stStruct.stTargetedPersoPos.xZ = stStruct.stTargetedPersoPos.xZ + stStruct.hCineinfo->xApexRatio * (stStruct.stSecondTargetedPersoPos.xZ - stStruct.stTargetedPersoPos.xZ);
+        stStruct.stTargetedPersoRealPos.xX = stStruct.stTargetedPersoRealPos.xX + stStruct.hCineinfo->xApexRatio * (stStruct.stSecondTargetedPersoRealPos.xX - stStruct.stTargetedPersoRealPos.xX); stStruct.stTargetedPersoRealPos.xY = stStruct.stTargetedPersoRealPos.xY + stStruct.hCineinfo->xApexRatio * (stStruct.stSecondTargetedPersoRealPos.xY - stStruct.stTargetedPersoRealPos.xY); stStruct.stTargetedPersoRealPos.xZ = stStruct.stTargetedPersoRealPos.xZ + stStruct.hCineinfo->xApexRatio * (stStruct.stSecondTargetedPersoRealPos.xZ - stStruct.stTargetedPersoRealPos.xZ);
     }
-    CAM_fn_vComputeTargetedPersoPos(&stStruct, stTemp.hSuperObjectTargeted, &stStruct.stCptPos.stTarget, &stStruct.stCptPos.stMovePos);
-    if (stTemp.hSecondSuperObjectTargeted != NULL)
+    CAM_fn_vComputeMovePos(&stStruct);
+    if (((stStruct.hCineinfo->ucVolIAFlags & 2) == 0) && (stStruct.hCineinfoWork->hSuperObjectTargeted != NULL) && (cNoDynChangeTheta == 0) &&
+        CAM_fn_cDynChangeTheta(&stStruct, &stStruct.stWantedCameraPos))
+        CAM_fn_vComputeMovePos(&stStruct);
+
+    if (cJustBetterPos)
     {
-        CAM_fn_vComputeTargetedPersoPos(&stStruct, stTemp.hSecondSuperObjectTargeted, &stStruct.stCptPos.stTarget, &stStruct.stCptPos.stMovePos);
+        stA.xX = _p_stStruct->hCineinfo->stLastFailedOrigin.xX - _p_stStruct->stCurrentCameraPos.xX;
+        stA.xY = _p_stStruct->hCineinfo->stLastFailedOrigin.xY - _p_stStruct->stCurrentCameraPos.xY;
+        stA.xZ = _p_stStruct->hCineinfo->stLastFailedOrigin.xZ - _p_stStruct->stCurrentCameraPos.xZ;
+        stB.xX = _p_stStruct->hCineinfo->stLastFailedOrigin.xX - stStruct.stWantedCameraPos.xX;
+        stB.xY = _p_stStruct->hCineinfo->stLastFailedOrigin.xY - stStruct.stWantedCameraPos.xY;
+        stB.xZ = _p_stStruct->hCineinfo->stLastFailedOrigin.xZ - stStruct.stWantedCameraPos.xZ;
+        CAM_MTH_NORM3_TO(xNorm1, &stA);
+        CAM_MTH_NORM3_TO(xNorm2, &stB);
+        if (xNorm1 > xNorm2)
+            return 0;
     }
-    CAM_fn_vComputeMovePos(_p_stStruct);
-    if (((_p_stStruct->hCineinfo->ucPerIAFlags & 2) == 0) && (_p_stStruct->hCineinfoWork->hSuperObjectTargeted != NULL))
+
+    cMode = 0;
+    if ((_p_stStruct->hCineinfo->ucPerIAFlags & 4) && _p_stStruct->hCineinfo->eState == 1)
     {
-        if (CAM_fn_cDynChangeTheta(_p_stStruct, &stStruct.stCptPos.stTarget))
-        {
-            CAM_fn_vComputeMovePos(_p_stStruct);
-        }
+        cMode = 3;
+        if (_p_stStruct->hCineinfoWork->uwIAFlags & 8)
+            cMode &= ~1;
     }
-    cMode = CAM_fn_cIsWantedPosIncorrect(_p_stStruct, &stStruct.stCptPos.stTarget);
-    return cMode;
+
+    if (CAM_fn_cIsWantedPosIncorrect(&stStruct, &stStruct.stWantedCameraPos, cMode))
+        return 0;
+
+    CAM_vWordCopy3(&_p_stStruct->stWantedCameraPos, &stStruct.stWantedCameraPos);
+    CAM_vWordCopy3(&_p_stStruct->stCptPos.stMovePos, &stStruct.stCptPos.stMovePos);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 1066–1109 */
@@ -3812,12 +3990,67 @@ char CAM_fn_cConstraintMoveCutTestAngle(CAM_tdstUpdateCamera_* _p_stStruct, floa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vComputeCineinfoCurrentForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPos);
+
+inline void CAM_vSubVector(MTH3D_tdstVector_* _d, MTH3D_tdstVector_* _a, MTH3D_tdstVector_* _b)
+{
+    _d->xX = _a->xX - _b->xX;
+    _d->xY = _a->xY - _b->xY;
+    _d->xZ = _a->xZ - _b->xZ;
+}
+
 void CAM_fn_vConstraintMoveAfterVisFailure(CAM_tdstUpdateCamera_* _p_stStruct)
 {
     float xNorm;
-    MTH3D_tdstVector_ stTempVector1;
-    MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+    tduCamWordVector stTempVector1;
+    tduCamWordVector stTempVector;
+
+    if (_p_stStruct->cTgtPersoIsMovingRelative && !(CAM_g_stCameraConstants.wFlags & 8))
+    {
+        stTempVector1.v.xX = _p_stStruct->stWantedCameraPos.xX - _p_stStruct->hCineinfo->stLastFailedWanted.xX;
+        stTempVector1.v.xY = _p_stStruct->stWantedCameraPos.xY - _p_stStruct->hCineinfo->stLastFailedWanted.xY;
+        stTempVector1.v.xZ = _p_stStruct->stWantedCameraPos.xZ - _p_stStruct->hCineinfo->stLastFailedWanted.xZ;
+        { MTH3D_tdstVector_* _b = &_p_stStruct->hCineinfo->stLastFailedWanted;
+          stTempVector.v.xX = _p_stStruct->stTargetedPersoPos.xX - _b->xX;
+          *(float*)(int)&stTempVector.v.xY = _p_stStruct->stTargetedPersoPos.xY - _b->xY;
+          *(float*)(int)&stTempVector.v.xZ = _p_stStruct->stTargetedPersoPos.xZ - _b->xZ; }
+
+        if (!(0.0f == stTempVector1.v.xX && 0.0f == stTempVector1.v.xY && 0.0f == stTempVector1.v.xZ) &&
+            !(0.0f == stTempVector.v.xX && 0.0f == stTempVector.v.xY && 0.0f == stTempVector.v.xZ))
+        {
+            xNorm = CAM_xNorm3(stTempVector.v.xX, stTempVector.v.xY, stTempVector.v.xZ);
+            if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stTempVector.v.xX = xNorm * stTempVector.v.xX; stTempVector.v.xY = xNorm * stTempVector.v.xY; stTempVector.v.xZ = xNorm * stTempVector.v.xZ; }
+            stTempVector1.v.xX = stTempVector.v.xX * CAM_xDot3(stTempVector1.v.xX, stTempVector.v.xX, stTempVector1.v.xY, stTempVector.v.xY, stTempVector1.v.xZ, stTempVector.v.xZ);
+            stTempVector1.v.xY = stTempVector.v.xY * CAM_xDot3(stTempVector1.v.xX, stTempVector.v.xX, stTempVector1.v.xY, stTempVector.v.xY, stTempVector1.v.xZ, stTempVector.v.xZ);
+            stTempVector1.v.xZ = stTempVector.v.xZ * CAM_xDot3(stTempVector1.v.xX, stTempVector.v.xX, stTempVector1.v.xY, stTempVector.v.xY, stTempVector1.v.xZ, stTempVector.v.xZ);
+            stTempVector1.v.xX = stTempVector1.v.xX + _p_stStruct->hCineinfo->stLastFailedWanted.xX;
+            stTempVector1.v.xY = stTempVector1.v.xY + _p_stStruct->hCineinfo->stLastFailedWanted.xY;
+            stTempVector1.v.xZ = stTempVector1.v.xZ + _p_stStruct->hCineinfo->stLastFailedWanted.xZ;
+        }
+        else
+        {
+            stTempVector1.i[0] = ((int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[0];
+            stTempVector1.i[1] = ((int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[1];
+            stTempVector1.i[2] = ((int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[2];
+        }
+    }
+    else
+    {
+        stTempVector1.i[0] = ((int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[0];
+        stTempVector1.i[1] = ((int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[1];
+        stTempVector1.i[2] = ((int*)&_p_stStruct->hCineinfo->stLastFailedWanted)[2];
+    }
+
+    _p_stStruct->stCptPos.stMovePos.xX = stTempVector1.v.xX - _p_stStruct->stCurrentCameraPos.xX;
+    _p_stStruct->stCptPos.stMovePos.xY = stTempVector1.v.xY - _p_stStruct->stCurrentCameraPos.xY;
+    _p_stStruct->stCptPos.stMovePos.xZ = stTempVector1.v.xZ - _p_stStruct->stCurrentCameraPos.xZ;
+    ((tduCamWordVector*)&_p_stStruct->stWantedCameraPos)->i[0] = stTempVector1.i[0];
+    ((tduCamWordVector*)&_p_stStruct->stWantedCameraPos)->i[1] = stTempVector1.i[1];
+    ((tduCamWordVector*)&_p_stStruct->stWantedCameraPos)->i[2] = stTempVector1.i[2];
+    CAM_fn_vComputeCineinfoCurrentForAPosition(_p_stStruct, &stTempVector1.v);
+    ((tduCamWordVector*)&_p_stStruct->hCineinfo->stLastFailedWanted)->i[0] = ((tduCamWordVector*)&_p_stStruct->stWantedCameraPos)->i[0];
+    ((tduCamWordVector*)&_p_stStruct->hCineinfo->stLastFailedWanted)->i[1] = ((tduCamWordVector*)&_p_stStruct->stWantedCameraPos)->i[1];
+    ((tduCamWordVector*)&_p_stStruct->hCineinfo->stLastFailedWanted)->i[2] = ((tduCamWordVector*)&_p_stStruct->stWantedCameraPos)->i[2];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 909–1046 */
@@ -3920,55 +4153,123 @@ void CAM_fn_vConstraintMoveAfterVisFailure(CAM_tdstUpdateCamera_* _p_stStruct)
 void CAM_fn_vComputeSpeed(CAM_tdstUpdateCamera_* _p_stStruct)
 {
     float xNorm;
-    float xNorm2;
-    float xAngle;
-    float xNorm3;
-    MTH3D_tdstVector_ stMoveTgt;
-    MTH3D_tdstVector_ stTempVector1;
-    MTH3D_tdstVector_ stTempVector;
+    float xSpeed;
+    float xPersoSpeed;
+    tduCamWordVector stTempVector;
+    tduCamWordVector stMoveTgt;
+    tduCamWordVector stTempVector1;
 
-    if ((_p_stStruct->hCineinfoWork->uwIAFlags & 0x80) != 0)
+    if (_p_stStruct->hCineinfoWork->uwIAFlags & 0x80)
     {
-        if ((_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000) != 0)
-        {
-            _p_stStruct->stCptPos.xLinearSpeed = _p_stStruct->hCineinfoWork->xLinearSpeed;
-            _p_stStruct->stCptPos.xAngularSpeed = _p_stStruct->hCineinfoWork->xAngularSpeed;
-            _p_stStruct->stCptPos.xTargetSpeed = _p_stStruct->hCineinfoWork->xTargetSpeed;
-        }
-        else if (_p_stStruct->hCineinfoWork->hSuperObjectTargeted == NULL)
-        {
-            _p_stStruct->stCptPos.xLinearSpeed = _p_stStruct->hCineinfoWork->xLinearSpeed;
-            _p_stStruct->stCptPos.xAngularSpeed = _p_stStruct->hCineinfoWork->xAngularSpeed;
-        }
-        else
-        {
-            stTempVector.xX = _p_stStruct->stCptPos.stTarget.xX - _p_stStruct->stCurrentCameraPos.xX;
-            stTempVector.xY = _p_stStruct->stCptPos.stTarget.xY - _p_stStruct->stCurrentCameraPos.xY;
-            stTempVector.xZ = _p_stStruct->stCptPos.stTarget.xZ - _p_stStruct->stCurrentCameraPos.xZ;
-            CAM_MTH_NORM3_TO(xNorm, &stTempVector);
-            stMoveTgt = _p_stStruct->stCptPos.stTarget;
-            stTempVector1 = _p_stStruct->stCurrentCameraPos;
-            CAM_fn_xComputeRotation(&stMoveTgt, &stTempVector1, NULL);
-            CAM_fn_bPersoIsTurning(_p_stStruct->hCineinfoWork->hSuperObjectTargeted);
-            _p_stStruct->stCptPos.xLinearSpeed = xNorm;
-            _p_stStruct->stCptPos.xAngularSpeed = xAngle;
-            _p_stStruct->stCptPos.xTargetSpeed = xNorm3;
-        }
+        _p_stStruct->stCptPos.xLinearSpeed = _p_stStruct->hCineinfoWork->xLinearSpeed;
+        _p_stStruct->stCptPos.xAngularSpeed = _p_stStruct->hCineinfoWork->xAngularSpeed;
+        _p_stStruct->stCptPos.xTargetSpeed = _p_stStruct->hCineinfoWork->xTargetSpeed;
+        return;
+    }
+
+    if ((_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000) || _p_stStruct->hCineinfoWork->hSuperObjectTargeted == NULL)
+    {
+        _p_stStruct->stCptPos.xLinearSpeed = _p_stStruct->hCineinfoWork->xLinearSpeed;
+        _p_stStruct->stCptPos.xAngularSpeed = _p_stStruct->hCineinfoWork->xAngularSpeed;
     }
     else
     {
-        if ((_p_stStruct->hCineinfoWork->uwDNMFlags & 1) == 0)
+        xSpeed = 0.0f;
+        if (!(_p_stStruct->hCineinfoWork->uwDNMFlags & 1))
         {
-            stTempVector.xX = _p_stStruct->stCptPos.stTarget.xX - _p_stStruct->stCurrentCameraPos.xX;
-            stTempVector.xY = _p_stStruct->stCptPos.stTarget.xY - _p_stStruct->stCurrentCameraPos.xY;
-            stTempVector.xZ = _p_stStruct->stCptPos.stTarget.xZ - _p_stStruct->stCurrentCameraPos.xZ;
-            CAM_MTH_NORM3_TO(xNorm, &stTempVector);
-            stMoveTgt = _p_stStruct->stCptPos.stTarget;
-            stTempVector1 = _p_stStruct->stCurrentCameraPos;
-            CAM_fn_xComputeRotation(&stMoveTgt, &stTempVector1, NULL);
-            _p_stStruct->stCptPos.xLinearSpeed = xNorm;
-            _p_stStruct->stCptPos.xAngularSpeed = xAngle;
-            _p_stStruct->stCptPos.xTargetSpeed = xNorm3;
+            stTempVector.v.xX = _p_stStruct->stWantedCameraPos.xX - _p_stStruct->stCurrentCameraPos.xX;
+            stTempVector.v.xY = _p_stStruct->stWantedCameraPos.xY - _p_stStruct->stCurrentCameraPos.xY;
+            stTempVector.v.xZ = _p_stStruct->stWantedCameraPos.xZ - _p_stStruct->stCurrentCameraPos.xZ;
+            CAM_MTH_NORM3X_TO(xSpeed, stTempVector.v.xX, stTempVector.v.xY, stTempVector.v.xZ);
+            xSpeed = xSpeed * CAM_g_stCameraConstants.xDynSpeed_LinearFactNorm;
+            if (xSpeed > CAM_g_stCameraConstants.xDynSpeed_LinearMax)
+                xSpeed = CAM_g_stCameraConstants.xDynSpeed_LinearMax;
+            CAM_fn_bPersoIsMoving(_p_stStruct, &stTempVector.v);
+            CAM_MTH_NORM3X_TO(xNorm, stTempVector.v.xX, stTempVector.v.xY, stTempVector.v.xZ);
+            xNorm = xNorm * CAM_g_stCameraConstants.xDynSpeed_LinearMulPerso;
+            if (xSpeed < xNorm)
+                xSpeed = xNorm;
+        }
+        _p_stStruct->stCptPos.xLinearSpeed = xSpeed;
+
+        if (!(_p_stStruct->hCineinfoWork->uwDNMFlags & 4))
+        {
+            xSpeed = 0.0f;
+            stTempVector.v.xX = _p_stStruct->stTargetedPersoPos.xX - _p_stStruct->stCurrentCameraPos.xX;
+            stTempVector.v.xY = _p_stStruct->stTargetedPersoPos.xY - _p_stStruct->stCurrentCameraPos.xY;
+            stTempVector.v.xZ = _p_stStruct->stTargetedPersoPos.xZ - _p_stStruct->stCurrentCameraPos.xZ;
+            if (!(0.0f == stTempVector.v.xX && 0.0f == stTempVector.v.xY && 0.0f == stTempVector.v.xZ))
+            {
+                if (!(0.0f == stTempVector.v.xX && 0.0f == stTempVector.v.xY && 0.0f == stTempVector.v.xZ)) { CAM_MTH_NORM3_TO(xNorm, &stTempVector.v); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stTempVector.v.xX = xNorm * stTempVector.v.xX; stTempVector.v.xY = xNorm * stTempVector.v.xY; stTempVector.v.xZ = xNorm * stTempVector.v.xZ; } }
+                stMoveTgt.v.xX = _p_stStruct->stTargetedPersoPos.xX - _p_stStruct->stWantedCameraPos.xX;
+                stMoveTgt.v.xY = _p_stStruct->stTargetedPersoPos.xY - _p_stStruct->stWantedCameraPos.xY;
+                stMoveTgt.v.xZ = _p_stStruct->stTargetedPersoPos.xZ - _p_stStruct->stWantedCameraPos.xZ;
+                if (!(0.0f == stMoveTgt.v.xX && 0.0f == stMoveTgt.v.xY && 0.0f == stMoveTgt.v.xZ)) { CAM_MTH_NORM3_TO(xNorm, &stMoveTgt.v); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stMoveTgt.v.xX = xNorm * stMoveTgt.v.xX; stMoveTgt.v.xY = xNorm * stMoveTgt.v.xY; stMoveTgt.v.xZ = xNorm * stMoveTgt.v.xZ; } }
+                xSpeed = CAM_fn_xComputeRotation(&stTempVector.v, &stMoveTgt.v, NULL);
+            }
+            xSpeed = xSpeed * CAM_g_stCameraConstants.xDynSpeed_AngularFactNorm;
+            if (xSpeed > CAM_g_stCameraConstants.xDynSpeed_AngularMax)
+                xSpeed = CAM_g_stCameraConstants.xDynSpeed_AngularMax;
+            CAM_fn_bPersoIsTurning(_p_stStruct->hCineinfoWork->hSuperObjectTargeted, &xPersoSpeed);
+            if (xSpeed < xPersoSpeed * CAM_g_stCameraConstants.xDynSpeed_AngularMulPerso)
+                xSpeed = xPersoSpeed;
+
+            xPersoSpeed = _p_stStruct->hCineinfoWork->xDistMin;
+            stTempVector.v.xX = _p_stStruct->stTargetedPersoPos.xX - _p_stStruct->stCurrentCameraPos.xX;
+            stTempVector.v.xY = _p_stStruct->stTargetedPersoPos.xY - _p_stStruct->stCurrentCameraPos.xY;
+            stTempVector.v.xZ = _p_stStruct->stTargetedPersoPos.xZ - _p_stStruct->stCurrentCameraPos.xZ;
+            CAM_MTH_NORM3X_TO(xNorm, stTempVector.v.xX, stTempVector.v.xY, stTempVector.v.xZ);
+            xPersoSpeed = xPersoSpeed - xNorm;
+            xNorm = 1.0f;
+            if (xPersoSpeed > xNorm)
+                xSpeed = xSpeed / xPersoSpeed;
+            else if (xPersoSpeed < -xNorm)
+                xSpeed = xSpeed * MTH_xAbs(xPersoSpeed);
+            _p_stStruct->stCptPos.xAngularSpeed = xSpeed;
+        }
+    }
+
+    if ((_p_stStruct->hCineinfo->ucPerIAFlags & 0x1000) || _p_stStruct->hCineinfoWork->hSuperObjectTargeted == NULL)
+    {
+        _p_stStruct->stCptPos.xTargetSpeed = _p_stStruct->hCineinfoWork->xTargetSpeed;
+        return;
+    }
+
+    stTempVector1.v.xX = 0.0f;
+    stTempVector1.v.xY = 0.0f;
+    stTempVector1.v.xZ = 0.0f;
+    xSpeed = 0.0f;
+    if (!(_p_stStruct->hCineinfoWork->uwDNMFlags & 0x10))
+    {
+        stTempVector.i[0] = ((int*)fn_p_stDynamGetParsingDatas(_p_stStruct->hSuperObjCamera->hLinkedObject.p_stCharacter->h_Dynam))[4];
+        stTempVector.i[1] = ((int*)fn_p_stDynamGetParsingDatas(_p_stStruct->hSuperObjCamera->hLinkedObject.p_stCharacter->h_Dynam))[5];
+        stTempVector.i[2] = ((int*)fn_p_stDynamGetParsingDatas(_p_stStruct->hSuperObjCamera->hLinkedObject.p_stCharacter->h_Dynam))[6];
+        stTempVector.v.xX = _p_stStruct->stCptPos.stTarget.xX - stTempVector.v.xX;
+        stTempVector.v.xY = _p_stStruct->stCptPos.stTarget.xY - stTempVector.v.xY;
+        stTempVector.v.xZ = _p_stStruct->stCptPos.stTarget.xZ - stTempVector.v.xZ;
+        CAM_MTH_NORM3X_TO(xSpeed, stTempVector.v.xX, stTempVector.v.xY, stTempVector.v.xZ);
+        stTempVector1.i[0] = stTempVector.i[0];
+        stTempVector1.i[1] = stTempVector.i[1];
+        stTempVector1.i[2] = stTempVector.i[2];
+    }
+    xSpeed = xSpeed * CAM_g_stCameraConstants.xDynSpeed_TargetFactNorm;
+    if (xSpeed > CAM_g_stCameraConstants.xDynSpeed_TargetMax)
+        xSpeed = CAM_g_stCameraConstants.xDynSpeed_TargetMax;
+    CAM_fn_bPersoIsMoving(_p_stStruct, &stTempVector.v);
+    if (xSpeed < CAM_g_stCameraConstants.xDynSpeed_TargetMulPerso * CAM_xNorm3(stTempVector.v.xX, stTempVector.v.xY, stTempVector.v.xZ))
+        xSpeed = CAM_g_stCameraConstants.xDynSpeed_TargetMulPerso * CAM_xNorm3(stTempVector.v.xX, stTempVector.v.xY, stTempVector.v.xZ);
+    _p_stStruct->stCptPos.xTargetSpeed = xSpeed;
+
+    if (!(0.0f == stTempVector1.v.xX && 0.0f == stTempVector1.v.xY && 0.0f == stTempVector1.v.xZ))
+    {
+        DNM_stReport* p_stReport = _p_stStruct->p_stReport;
+        if (!(0.0f == p_stReport->m_stAbsolutePrevPosition.m_stLinear.xX && 0.0f == p_stReport->m_stAbsolutePrevPosition.m_stLinear.xY && 0.0f == p_stReport->m_stAbsolutePrevPosition.m_stLinear.xZ))
+        {
+            if (CAM_xDot3(stTempVector1.v.xX, p_stReport->m_stAbsolutePrevPosition.m_stLinear.xX, stTempVector1.v.xY, p_stReport->m_stAbsolutePrevPosition.m_stLinear.xY, stTempVector1.v.xZ, p_stReport->m_stAbsolutePrevPosition.m_stLinear.xZ) < -0.9f)
+            {
+                _p_stStruct->hCineinfoWork->xTargetDecreaseSpeed = 40.0f;
+                _p_stStruct->hCineinfoWork->xTargetIncreaseSpeed = 40.0f;
+            }
         }
     }
 }
@@ -4049,8 +4350,8 @@ void CAM_fn_vComputeMovePos(CAM_tdstUpdateCamera_* _p_stStruct)
     float xNorm;
     float xThetaAngle;
     float xAlphaAngle;
+    float xDist;
     float xDistMax;
-    float xDistMin;
     MTH3D_tdstVector_ stCamTargetVector;
     MTH3D_tdstVector_ stDir;
 
@@ -4074,85 +4375,88 @@ void CAM_fn_vComputeMovePos(CAM_tdstUpdateCamera_* _p_stStruct)
         else
         {
             _p_stStruct->stCptPos.stRefAxisZ.xX = 0.0f; _p_stStruct->stCptPos.stRefAxisZ.xY = 0.0f; _p_stStruct->stCptPos.stRefAxisZ.xZ = 1.0f;
-            cNoDynChangeTheta = 1;
         }
-        _p_stStruct->stRealWantedCameraPos.xX = _p_stStruct->hCineinfo->stForcePosition.xX;
-        _p_stStruct->stRealWantedCameraPos.xY = _p_stStruct->hCineinfo->stForcePosition.xY;
-        _p_stStruct->stRealWantedCameraPos.xZ = _p_stStruct->hCineinfo->stForcePosition.xZ;
-        _p_stStruct->stCptPos.stMovePos.xX = _p_stStruct->stRealWantedCameraPos.xX - _p_stStruct->stCurrentCameraPos.xX;
-        _p_stStruct->stCptPos.stMovePos.xY = _p_stStruct->stRealWantedCameraPos.xY - _p_stStruct->stCurrentCameraPos.xY;
-        _p_stStruct->stCptPos.stMovePos.xZ = _p_stStruct->stRealWantedCameraPos.xZ - _p_stStruct->stCurrentCameraPos.xZ;
+        cNoDynChangeTheta = 1;
+        CAM_MTH_WORDCOPY3(&_p_stStruct->stWantedCameraPos, &_p_stStruct->hCineinfo->stForcePosition);
+        _p_stStruct->stCptPos.stMovePos.xX = _p_stStruct->stWantedCameraPos.xX - _p_stStruct->stCurrentCameraPos.xX;
+        _p_stStruct->stCptPos.stMovePos.xY = _p_stStruct->stWantedCameraPos.xY - _p_stStruct->stCurrentCameraPos.xY;
+        _p_stStruct->stCptPos.stMovePos.xZ = _p_stStruct->stWantedCameraPos.xZ - _p_stStruct->stCurrentCameraPos.xZ;
+        return;
     }
+
+    if (_p_stStruct->hCineinfoWork->hSuperObjectTargeted == NULL)
     {
-        if (_p_stStruct->hCineinfoWork->hSuperObjectTargeted == NULL)
+        if (cRefAxisIsAlreadyComputed)
         {
-            if (cRefAxisIsAlreadyComputed)
+            CAM_MTH_NORM3_TO(xNorm, &_p_stStruct->hCineinfo->stForceRefAxisZ);
+            if (xNorm != 0.0f)
             {
-                CAM_MTH_NORM3_TO(xNorm, &_p_stStruct->hCineinfo->stForceRefAxisZ);
-                if (xNorm != 0.0f)
-                {
-                    xNorm = 1.0f / xNorm;
-                    _p_stStruct->stCptPos.stRefAxisZ.xX = xNorm * _p_stStruct->hCineinfo->stForceRefAxisZ.xX;
-                    _p_stStruct->stCptPos.stRefAxisZ.xY = xNorm * _p_stStruct->hCineinfo->stForceRefAxisZ.xY;
-                    _p_stStruct->stCptPos.stRefAxisZ.xZ = xNorm * _p_stStruct->hCineinfo->stForceRefAxisZ.xZ;
-                }
-                else
-                {
-                    CAM_MTH_COPY3_TO(&_p_stStruct->stCptPos.stRefAxisZ, &_p_stStruct->hCineinfo->stForceRefAxisZ);
-                }
+                xNorm = 1.0f / xNorm;
+                _p_stStruct->stCptPos.stRefAxisZ.xX = xNorm * _p_stStruct->hCineinfo->stForceRefAxisZ.xX;
+                _p_stStruct->stCptPos.stRefAxisZ.xY = xNorm * _p_stStruct->hCineinfo->stForceRefAxisZ.xY;
+                _p_stStruct->stCptPos.stRefAxisZ.xZ = xNorm * _p_stStruct->hCineinfo->stForceRefAxisZ.xZ;
             }
             else
             {
-                _p_stStruct->stCptPos.stRefAxisZ.xX = 0.0f; _p_stStruct->stCptPos.stRefAxisZ.xY = 0.0f; _p_stStruct->stCptPos.stRefAxisZ.xZ = 1.0f;
+                CAM_MTH_COPY3_TO(&_p_stStruct->stCptPos.stRefAxisZ, &_p_stStruct->hCineinfo->stForceRefAxisZ);
             }
-            CAM_fn_vComputeRefAxis(_p_stStruct, &stCamTargetVector);
-            _p_stStruct->stRealWantedCameraPos.xX = _p_stStruct->stCurrentCameraPos.xX;
-            _p_stStruct->stRealWantedCameraPos.xY = _p_stStruct->stCurrentCameraPos.xY;
-            _p_stStruct->stRealWantedCameraPos.xZ = _p_stStruct->stCurrentCameraPos.xZ;
-            _p_stStruct->stCptPos.stMovePos.xX = 0.0f; _p_stStruct->stCptPos.stMovePos.xY = 0.0f; _p_stStruct->stCptPos.stMovePos.xZ = 0.0f;
         }
-        stDir.xX = _p_stStruct->stCurrentCameraPos.xX - _p_stStruct->stTargetedPersoPos.xX;
-        stDir.xY = _p_stStruct->stCurrentCameraPos.xY - _p_stStruct->stTargetedPersoPos.xY;
-        stDir.xZ = _p_stStruct->stCurrentCameraPos.xZ - _p_stStruct->stTargetedPersoPos.xZ;
-        if ((stDir.xX == _p_stStruct->stCptPos.stRefAxisZ.xX) && (stDir.xY == _p_stStruct->stCptPos.stRefAxisZ.xY))
+        else
         {
-            stDir.xX = stDir.xX + 0.5f;
+            _p_stStruct->stCptPos.stRefAxisZ.xX = 0.0f; _p_stStruct->stCptPos.stRefAxisZ.xY = 0.0f; _p_stStruct->stCptPos.stRefAxisZ.xZ = 1.0f;
         }
         CAM_fn_vComputeRefAxis(_p_stStruct, &stCamTargetVector);
-        CAM_fn_vComputeCameraAxisAngles(_p_stStruct, &stCamTargetVector, &stDir, &xThetaAngle, &xAlphaAngle);
-        CAM_fn_vRotateCameraAxis(&stCamTargetVector, xThetaAngle, xAlphaAngle, &_p_stStruct->stCptPos.stRefAxisZ);
-        CAM_MTH_NORM3_TO(xNorm, &stDir);
-        xDistMax = _p_stStruct->hCineinfoWork->xBoundDistMax;
-        xDistMin = _p_stStruct->hCineinfoWork->xBoundDistMin;
-        if (!(xNorm < (xDistMin * xDistMin)))
-        {
-            if (xNorm <= (xDistMax * xDistMax))
-            {
-                xDistMax = xDistMax;
-            }
-            else
-            {
-                xDistMax = xDistMax;
-            }
-        }
-        stCamTargetVector.xX = stCamTargetVector.xX * xDistMax;
-        stCamTargetVector.xY = stCamTargetVector.xY * xDistMax;
-        stCamTargetVector.xZ = stCamTargetVector.xZ * xDistMax;
-        _p_stStruct->stRealWantedCameraPos.xX = _p_stStruct->stRealWantedCameraPos.xX + stCamTargetVector.xX;
-        _p_stStruct->stRealWantedCameraPos.xY = _p_stStruct->stRealWantedCameraPos.xY + stCamTargetVector.xY;
-        _p_stStruct->stRealWantedCameraPos.xZ = _p_stStruct->stRealWantedCameraPos.xZ + stCamTargetVector.xZ;
-        if (_p_stStruct->stRealWantedCameraPos.xZ > _p_stStruct->hCineinfoWork->xTargetSpeed)
-        {
-            _p_stStruct->stRealWantedCameraPos.xZ = _p_stStruct->hCineinfoWork->xTargetSpeed;
-        }
-        else if (_p_stStruct->stRealWantedCameraPos.xZ < _p_stStruct->hCineinfoWork->xTargetDecreaseSpeed)
-        {
-            _p_stStruct->stRealWantedCameraPos.xZ = _p_stStruct->hCineinfoWork->xTargetDecreaseSpeed;
-        }
-        _p_stStruct->stCptPos.stMovePos.xX = _p_stStruct->stRealWantedCameraPos.xX - _p_stStruct->stCurrentCameraPos.xX;
-        _p_stStruct->stCptPos.stMovePos.xY = _p_stStruct->stRealWantedCameraPos.xY - _p_stStruct->stCurrentCameraPos.xY;
-        _p_stStruct->stCptPos.stMovePos.xZ = _p_stStruct->stRealWantedCameraPos.xZ - _p_stStruct->stCurrentCameraPos.xZ;
+        CAM_MTH_WORDCOPY3(&_p_stStruct->stWantedCameraPos, &_p_stStruct->stCurrentCameraPos);
+        _p_stStruct->stCptPos.stMovePos.xX = 0.0f; _p_stStruct->stCptPos.stMovePos.xY = 0.0f; _p_stStruct->stCptPos.stMovePos.xZ = 0.0f;
+        return;
     }
+
+    stDir.xX = _p_stStruct->stCurrentCameraPos.xX - _p_stStruct->stTargetedPersoPos.xX;
+    stDir.xY = _p_stStruct->stCurrentCameraPos.xY - _p_stStruct->stTargetedPersoPos.xY;
+    stDir.xZ = _p_stStruct->stCurrentCameraPos.xZ - _p_stStruct->stTargetedPersoPos.xZ;
+    if ((_p_stStruct->stCptPos.stRefAxisZ.xX == stDir.xX) && (stDir.xY == _p_stStruct->stCptPos.stRefAxisZ.xY))
+    {
+        stDir.xX = stDir.xX + 0.5f;
+    }
+    CAM_fn_vComputeRefAxis(_p_stStruct, &stCamTargetVector);
+    CAM_fn_vComputeCameraAxisAngles(_p_stStruct, &stCamTargetVector, &stDir, &xThetaAngle, &xAlphaAngle);
+    CAM_fn_vRotateCameraAxis(&stCamTargetVector, xThetaAngle, xAlphaAngle, &_p_stStruct->stCptPos.stRefAxisZ);
+
+    xNorm = CAM_xSqr3(stDir.xX, stDir.xY, stDir.xZ);
+    xDist = _p_stStruct->hCineinfoWork->xDistMin;
+    xDistMax = _p_stStruct->hCineinfoWork->xDistMax;
+    if (xNorm < xDist * xDist)
+    {
+        xDist = xDist;
+    }
+    else if (xNorm > xDistMax * xDistMax)
+    {
+        xDist = xDistMax;
+    }
+    else
+    {
+        CAM_MTH_SQRT_TO(xDist, xNorm);
+    }
+    if (xDist <= 0.01f)
+        xDist = 0.01f;
+
+    stCamTargetVector.xX = xDist * stCamTargetVector.xX;
+    stCamTargetVector.xY = xDist * stCamTargetVector.xY;
+    stCamTargetVector.xZ = xDist * stCamTargetVector.xZ;
+    _p_stStruct->stWantedCameraPos.xX = _p_stStruct->stTargetedPersoPos.xX + stCamTargetVector.xX;
+    _p_stStruct->stWantedCameraPos.xY = _p_stStruct->stTargetedPersoPos.xY + stCamTargetVector.xY;
+    _p_stStruct->stWantedCameraPos.xZ = _p_stStruct->stTargetedPersoPos.xZ + stCamTargetVector.xZ;
+    {
+        tdstCineinfo_* hCineinfo = _p_stStruct->hCineinfo;
+        float xZ = _p_stStruct->stWantedCameraPos.xZ;
+        if (xZ > hCineinfo->hWork->xZMax)
+            _p_stStruct->stWantedCameraPos.xZ = hCineinfo->hWork->xZMax;
+        if (xZ < hCineinfo->hWork->xZMin)
+            _p_stStruct->stWantedCameraPos.xZ = hCineinfo->hWork->xZMin;
+    }
+    _p_stStruct->stCptPos.stMovePos.xX = _p_stStruct->stWantedCameraPos.xX - _p_stStruct->stCurrentCameraPos.xX;
+    _p_stStruct->stCptPos.stMovePos.xY = _p_stStruct->stWantedCameraPos.xY - _p_stStruct->stCurrentCameraPos.xY;
+    _p_stStruct->stCptPos.stMovePos.xZ = _p_stStruct->stWantedCameraPos.xZ - _p_stStruct->stCurrentCameraPos.xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 665–741 */
@@ -4232,18 +4536,17 @@ char CAM_fn_cDynChangeTheta(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector
         }
         if (xThetaAngle * xAngle < 0.0f)
         {
-            xAngle = xThetaAngle + xAngle;
+            xAngle = xAngle;
         }
         else if (MTH_xAbs(xThetaAngle) <= MTH_xAbs(xAngle))
         {
-            xAngle = xThetaAngle + xAngle;
+            xAngle = xAngle - xThetaAngle;
         }
         else
         {
-            xAngle = xAngle - xThetaAngle;
             return 0;
         }
-        _p_stStruct->hCineinfoWork->xAngleTheta = xAngle;
+        _p_stStruct->hCineinfoWork->xAngleTheta = xThetaAngle + xAngle;
         return 1;
     }
 }
@@ -4330,19 +4633,11 @@ void CAM_fn_vRotateCameraAxis(MTH3D_tdstVector_* _p_stCameraAxis, float _xHorAng
     ((int*)&stRotation.m_stAxis)[2] = ((int*)_p_stRefAxisZ)[2];
     MTH_p_stRotationMulVector(&stRotation, _p_stCameraAxis, _p_stCameraAxis);
 
-    stRotation.m_stAxis.xX = _p_stRefAxisZ->xZ * _p_stCameraAxis->xY - _p_stRefAxisZ->xY * _p_stCameraAxis->xZ;
-    stRotation.m_stAxis.xY = _p_stRefAxisZ->xX * _p_stCameraAxis->xZ - _p_stRefAxisZ->xZ * _p_stCameraAxis->xX;
-    stRotation.m_stAxis.xZ = _p_stRefAxisZ->xY * _p_stCameraAxis->xX - _p_stRefAxisZ->xX * _p_stCameraAxis->xY;
+    stRotation.m_stAxis.xX = CAM_xCrossComponent(_p_stCameraAxis->xY, _p_stRefAxisZ->xZ, _p_stCameraAxis->xZ, _p_stRefAxisZ->xY);
+    stRotation.m_stAxis.xY = CAM_xCrossComponent(_p_stCameraAxis->xZ, _p_stRefAxisZ->xX, _p_stCameraAxis->xX, _p_stRefAxisZ->xZ);
+    stRotation.m_stAxis.xZ = CAM_xCrossComponent(_p_stCameraAxis->xX, _p_stRefAxisZ->xY, _p_stCameraAxis->xY, _p_stRefAxisZ->xX);
 
-    xNorm = __builtin_sqrtf(stRotation.m_stAxis.xX * stRotation.m_stAxis.xX +
-                            stRotation.m_stAxis.xY * stRotation.m_stAxis.xY +
-                            stRotation.m_stAxis.xZ * stRotation.m_stAxis.xZ);
-    if (xNorm != 0.0f) {
-        xNorm = 1.0f / xNorm;
-        stRotation.m_stAxis.xX *= xNorm;
-        stRotation.m_stAxis.xY *= xNorm;
-        stRotation.m_stAxis.xZ *= xNorm;
-    }
+    xNorm = CAM_xNorm3(stRotation.m_stAxis.xX, stRotation.m_stAxis.xY, stRotation.m_stAxis.xZ); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stRotation.m_stAxis.xX = xNorm * stRotation.m_stAxis.xX; stRotation.m_stAxis.xY = xNorm * stRotation.m_stAxis.xY; stRotation.m_stAxis.xZ = xNorm * stRotation.m_stAxis.xZ; }
 
     stRotation.m_xAngle = _xVerAngle;
     MTH_p_stRotationMulVector(&stRotation, _p_stCameraAxis, _p_stCameraAxis);
@@ -4447,14 +4742,67 @@ void CAM_fn_vComputeCameraAxisAngles(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_t
  */
 /* The recovered debug lists five parameters, but the target ignores a0 and reads the three pointers from a1-a3;
  * CAM_fn_vComputeCameraAxisAngles passes the camera structure in a0. */
+float CAM_fn_xSetAngleInIntervalPiPi(float _xAngle);
 void CAM_fn_vBoundAngleWithTolerance(CAM_tdstUpdateCamera_* _p_stStruct, float* _p_xAngleToBound, float* _p_xCutAngle, float* _p_xDeltaAngle, float _xRequestAngle, float _xTolerance)
 {
     int bInTolerance;
     float xNewAngle;
     float xDelta;
-    float xAngleMax;
     float xAngleMin;
-    /* TODO: decompile from asm/... */
+    float xAngleMax;
+
+    if (_xTolerance >= 3.1415927f)
+    {
+        *_p_xCutAngle = *_p_xAngleToBound;
+        return;
+    }
+
+    xNewAngle = _xRequestAngle;
+    if (_xTolerance > 0.0f)
+    {
+        _xTolerance = 0.0001f + _xTolerance;
+        xAngleMin = _xRequestAngle - _xTolerance;
+        if (xAngleMin < 0.0f)
+            xAngleMin = xAngleMin + 6.2831855f;
+        xAngleMax = _xRequestAngle + _xTolerance;
+        if (xAngleMax > 6.2831855f)
+            xAngleMax = xAngleMax - 6.2831855f;
+
+        bInTolerance = (xAngleMax > xAngleMin) ? (*_p_xAngleToBound >= xAngleMin && *_p_xAngleToBound <= xAngleMax) : !(*_p_xAngleToBound > xAngleMax && *_p_xAngleToBound < xAngleMin);
+
+        if (!bInTolerance)
+        {
+            _xRequestAngle = CAM_fn_xSetAngleInIntervalPiPi(*_p_xAngleToBound - _xRequestAngle);
+            if (_xRequestAngle > 0.0f)
+            {
+                xNewAngle = xAngleMax;
+            }
+            else
+            {
+                xNewAngle = xAngleMin;
+            }
+        }
+        else
+        {
+            xNewAngle = *_p_xAngleToBound;
+        }
+    }
+
+    _xRequestAngle = CAM_fn_xSetAngleInIntervalPiPi(xNewAngle - *_p_xAngleToBound);
+    *_p_xDeltaAngle = _xRequestAngle;
+    if (MTH_xAbs(_xRequestAngle) >= CAM_g_stCameraConstants.xBaseCutAngle)
+    {
+        if (_xRequestAngle > 0.0f)
+            *_p_xCutAngle = *_p_xAngleToBound + CAM_g_stCameraConstants.xBaseCutAngle;
+        else
+            *_p_xCutAngle = *_p_xAngleToBound - CAM_g_stCameraConstants.xBaseCutAngle;
+        *_p_xCutAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xCutAngle);
+    }
+    else
+    {
+        *_p_xCutAngle = xNewAngle;
+    }
+    *_p_xAngleToBound = xNewAngle;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 303–371 */
@@ -4482,12 +4830,54 @@ void CAM_fn_vBoundAngleWithTolerance(CAM_tdstUpdateCamera_* _p_stStruct, float* 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+char CAM_fn_cCineInfoGetChannel(tdstInternalStructurCineinfo_* _hIntCineinfo);
+void MAT_fn_vRotateVector(MTH3D_tdstVector_* _p_stDst, MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stSrc);
+
 void CAM_fn_vComputeTarget(CAM_tdstUpdateCamera_* _p_stStruct)
 {
     unsigned char ucChannel;
     HIE_tdstSuperObject_* h_Perso;
-    MTH3D_tdstVector_ stTempLook;
-    /* TODO: decompile from asm/... */
+    tduCamWordVector stTempLook;
+
+    if (_p_stStruct->hCineinfoWork->uwIAFlags & 0x1000)
+    {
+        CAM_MTH_WORDCOPY3(&_p_stStruct->stCptPos.stTarget, &_p_stStruct->hCineinfo->stForceTarget);
+        return;
+    }
+
+    h_Perso = _p_stStruct->hCineinfoWork->hSuperObjectTargeted;
+    if (h_Perso == NULL)
+    {
+        _p_stStruct->stCptPos.stTarget.xX = 0.0f;
+        _p_stStruct->stCptPos.stTarget.xY = 0.0f;
+        _p_stStruct->stCptPos.stTarget.xZ = 0.0f;
+        return;
+    }
+
+    if (_p_stStruct->hCineinfoWork->hSecondSuperObjectTargeted != NULL)
+    {
+        CAM_MTH_WORDCOPY3(&_p_stStruct->stCptPos.stTarget, &_p_stStruct->stTargetedPersoPos);
+        return;
+    }
+
+    ucChannel = CAM_fn_cCineInfoGetChannel(_p_stStruct->hCineinfoWork);
+    if (ucChannel != 0xFF)
+    {
+        h_Perso = h_Perso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels != NULL
+            ? h_Perso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels[(unsigned short)ucChannel].hSupObject
+            : NULL;
+    }
+
+    stTempLook.i[0] = ((int*)&_p_stStruct->hCineinfoWork->stShiftTarget)[0];
+    stTempLook.i[1] = ((int*)&_p_stStruct->hCineinfoWork->stShiftTarget)[1];
+    stTempLook.i[2] = ((int*)&_p_stStruct->hCineinfoWork->stShiftTarget)[2];
+    MAT_fn_vRotateVector(&stTempLook.v, h_Perso->hGlobalMatrix, &stTempLook.v);
+    _p_stStruct->stCptPos.stTarget.xX = _p_stStruct->stTargetedPersoPos.xX + stTempLook.v.xX;
+    _p_stStruct->stCptPos.stTarget.xY = _p_stStruct->stTargetedPersoPos.xY + stTempLook.v.xY;
+    _p_stStruct->stCptPos.stTarget.xZ = _p_stStruct->stTargetedPersoPos.xZ + stTempLook.v.xZ;
+    _p_stStruct->stCptPos.stTarget.xX = _p_stStruct->stTargetedPersoPos.xX + stTempLook.v.xX;
+    _p_stStruct->stCptPos.stTarget.xY = _p_stStruct->stTargetedPersoPos.xY + stTempLook.v.xY;
+    _p_stStruct->stCptPos.stTarget.xZ = _p_stStruct->stTargetedPersoPos.xZ + stTempLook.v.xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 191–239 */
@@ -4550,11 +4940,54 @@ void CAM_fn_vComputeReferencePoint(CAM_tdstUpdateCamera_* _p_stStruct)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void CAM_fn_vAveragePosition(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_tdstVector_* p_result);
+
 void CAM_fn_vComputeTargetedPersoPos(CAM_tdstUpdateCamera_* _p_stStruct, HIE_tdstSuperObject_* _hPerso, MTH3D_tdstVector_* _p_stTargetedPersoPos, MTH3D_tdstVector_* _p_stTargetedPersoRealPos)
 {
     unsigned char ucChannel;
-    MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+    tduCamWordVector stTempVector;
+
+    if (_hPerso == NULL)
+    {
+        _p_stTargetedPersoPos->xX = 0.0f;
+        _p_stTargetedPersoPos->xY = 0.0f;
+        _p_stTargetedPersoPos->xZ = 0.0f;
+        _p_stTargetedPersoRealPos->xX = 0.0f;
+        _p_stTargetedPersoRealPos->xY = 0.0f;
+        _p_stTargetedPersoRealPos->xZ = 0.0f;
+        return;
+    }
+
+    ucChannel = CAM_fn_cCineInfoGetChannel(_p_stStruct->hCineinfoWork);
+    if (ucChannel != 0xFF)
+    {
+        _hPerso = _hPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels != NULL
+            ? _hPerso->hLinkedObject.p_stCharacter->h_3dData->hArrayOfChannels[(unsigned short)ucChannel].hSupObject
+            : NULL;
+    }
+
+    CAM_vWordCopy3(_p_stTargetedPersoRealPos, (MTH3D_tdstVector_*)&_hPerso->hGlobalMatrix->stTransformMatrix.stCol_3);
+
+    if ((_p_stStruct->hCineinfo->ucVolIAFlags & 2) || (_p_stStruct->hCineinfoWork->uwIAFlags & 2) ||
+        (ucChannel == 0xFF && _hPerso->hLinkedObject.p_stCharacter->h_Dynam == NULL) || ucChannel != 0xFF)
+    {
+        CAM_MTH_WORDCOPY3(_p_stTargetedPersoPos, _p_stTargetedPersoRealPos);
+    }
+    else
+    {
+        CAM_fn_vAveragePosition(_p_stStruct->hCineinfo, CAM_g_stCameraConstants.xAverageForComputePos, _p_stTargetedPersoPos);
+    }
+
+    stTempVector.i[0] = ((int*)&_p_stStruct->hCineinfoWork->stShiftPos)[0];
+    stTempVector.i[1] = ((int*)&_p_stStruct->hCineinfoWork->stShiftPos)[1];
+    stTempVector.i[2] = ((int*)&_p_stStruct->hCineinfoWork->stShiftPos)[2];
+    MAT_fn_vRotateVector(&stTempVector.v, _hPerso->hGlobalMatrix, &stTempVector.v);
+    _p_stTargetedPersoPos->xX = _p_stTargetedPersoPos->xX + stTempVector.v.xX;
+    _p_stTargetedPersoPos->xY = _p_stTargetedPersoPos->xY + stTempVector.v.xY;
+    _p_stTargetedPersoPos->xZ = _p_stTargetedPersoPos->xZ + stTempVector.v.xZ;
+    _p_stTargetedPersoRealPos->xX = _p_stTargetedPersoRealPos->xX + stTempVector.v.xX;
+    _p_stTargetedPersoRealPos->xY = _p_stTargetedPersoRealPos->xY + stTempVector.v.xY;
+    _p_stTargetedPersoRealPos->xZ = _p_stTargetedPersoRealPos->xZ + stTempVector.v.xZ;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Base.c lines 50–99 */
